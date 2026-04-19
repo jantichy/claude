@@ -1,6 +1,13 @@
 {
   "version": 2,
   "plugins": {
+    "autocommit@local": [
+      {
+        "scope": "user",
+        "installPath": "/Users/honza/.claude/plugins/marketplaces/claude-plugins-official/plugins/autocommit",
+        "version": "local"
+      }
+    ],
     "chrome-devtools-mcp@claude-plugins-official": [
       {
         "scope": "user",
