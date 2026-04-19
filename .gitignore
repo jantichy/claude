@@ -1,0 +1,34 @@
+# Historie a session data
+history.jsonl
+sessions/
+session-env/
+shell-snapshots/
+
+# Cache
+cache/
+image-cache/
+paste-cache/
+file-history/
+downloads/
+telemetry/
+
+# Per-project data (paths, contexts, settings per project)
+projects/
+
+# Plány (dočasné, session-specific)
+plans/
+
+# Tasks
+tasks/
+
+# Pluginy (instalované binárky a cache, ne konfigurace)
+plugins/cache/
+plugins/data/
+plugins/install-counts-cache.json
+plugins/marketplaces/
+
+# Zálohy
+backups/
+
+# macOS
+.DS_Store

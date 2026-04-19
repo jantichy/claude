@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "plugins": {
+    "chrome-devtools-mcp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/honza/.claude/plugins/cache/claude-plugins-official/chrome-devtools-mcp/latest",
+        "version": "latest",
+        "installedAt": "2026-04-02T08:17:51.234Z",
+        "lastUpdated": "2026-04-02T08:17:51.234Z",
+        "gitCommitSha": "c2d8009ff75f76bce1ec4cf79c2467b50d81725e"
+      }
+    ]
+  }
+}
