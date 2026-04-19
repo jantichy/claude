@@ -30,7 +30,15 @@ Tato pravidla platí pro všechny projekty. Výjimky dokumentuj v PR pod **Secur
 
 ## Verzování a nasazení
 - Git autor email: `jantichy@jantichy.cz` (Vercel odmítá commity bez něj).
-- **Nikdy necommituj ani nepushuj automaticky.** Jen na explicitní žádost, nebo se nejdřív zeptej. Toto výchozí pravidlo může být přepsáno v konkrétním projektu — pokud projektový CLAUDE.md stanoví jinak (např. autocommit+autopush po každé změně), řiď se jím.
+- **Defaultně necommituj ani nepushuj automaticky.** Jen na explicitní žádost. Výjimkou jsou projekty s autocommitem — viz sekce Autocommit níže.
 - Používej feature větve a otevírej Pull Requesty před mergem do `main`.
 - Commit messages: stručné, rozkazovací způsob (imperativ).
 - Deploy strategie: Git → GitHub → Vercel (auto-deploy). Pro logy a debugování používej `vercel` CLI (`vercel logs`, `vercel inspect`, `vercel env`).
+
+## Autocommit
+
+**Definice pojmu:** Kdykoli v projektu řeknu „zapni autocommit" (nebo použiji `/autocommit on`), platí: na konci každého promptu, kde dojde k jakékoli změně verzovaného souboru nebo přidání nového souboru, proveď automaticky `git add`, `git commit` (krátká imperativní zpráva) a `git push`. Vypnutý autocommit (`/autocommit off`) vrací výchozí chování (commit jen na explicitní žádost).
+
+Stav autocommitu pro projekt poznáš podle přítomnosti `<!-- autocommit: on -->` v projektovém `CLAUDE.md`.
+
+**Globální pravidlo pro `~/.claude`:** Tento repozitář má autocommit **trvale zapnutý**. Kdykoli v průběhu konverzace upravíš nebo přidáš soubor v `~/.claude`, proveď na konci promptu: `git -C ~/.claude add -A`, commit s výstižnou zprávou, `git -C ~/.claude push`.
