@@ -28,11 +28,13 @@ Uživatel zavolal skill s argumenty: $ARGUMENTS
 
 ### 1. Zjisti projekt root
 
+Použij Glob tool k hledání souboru `.git` nebo adresáře `.git` v aktuálním a nadřazených adresářích — nebo spusť příkaz přesměrováním stderr na `/dev/null`, aby se žádná chybová hláška neukázala uživateli:
+
 ```bash
-git rev-parse --show-toplevel
+git rev-parse --show-toplevel 2>/dev/null
 ```
 
-Pokud příkaz selže, oznam chybu: autocommit lze nastavit jen v git repozitáři.
+Pokud příkaz vrátí prázdný výstup nebo exit code != 0, **bez spouštění dalších příkazů** jednoduše oznam: „Aktuální adresář není git repozitář." a skonči.
 
 ### 2. Zjisti aktuální stav
 
