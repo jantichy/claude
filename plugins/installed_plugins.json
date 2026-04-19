@@ -4,7 +4,7 @@
     "autocommit@local": [
       {
         "scope": "user",
-        "installPath": "/Users/honza/.claude/plugins/marketplaces/claude-plugins-official/plugins/autocommit",
+        "installPath": "/Users/honza/.claude",
         "version": "local"
       }
     ],
