@@ -37,8 +37,14 @@ Tato pravidla platí pro všechny projekty. Výjimky dokumentuj v PR pod **Secur
 
 ## Autocommit
 
-**Definice pojmu:** Kdykoli v projektu řeknu „zapni autocommit" (nebo použiji `/autocommit on`), platí: na konci každého promptu, kde dojde k jakékoli změně verzovaného souboru nebo přidání nového souboru, proveď automaticky `git add`, `git commit` (krátká imperativní zpráva) a `git push`. Vypnutý autocommit (`/autocommit off`) vrací výchozí chování (commit jen na explicitní žádost).
+**Definice pojmu:** Kdykoli v projektu řeknu „zapni autocommit" (nebo použiji `/autocommit on`), platí tato pravidla commitování:
 
-Stav autocommitu pro projekt poznáš podle přítomnosti `<!-- autocommit: on -->` v projektovém `CLAUDE.md`.
+- **Commitovat po každé zásadní ucelené změně** — ne po každém dílčím kroku, ale po každém logickém celku
+- **Amend místo nového commitu** — pokud bezprostředně po commitu dále řešíme stejné téma a ještě ho upravujeme → amend posledního commitu, ne nový commit (čistá historie)
+- **Push vždy** — po každém commitu nebo amendu automaticky `git push`
+
+Vypnutý autocommit (`/autocommit off`) vrací výchozí chování (commit jen na explicitní žádost).
+
+Stav autocommitu pro projekt poznáš podle přítomnosti nadpisu `## Autocommit` v projektovém `CLAUDE.md`.
 
 **Globální pravidlo pro `~/.claude`:** Tento repozitář má autocommit **trvale zapnutý**. Kdykoli v průběhu konverzace upravíš nebo přidáš soubor v `~/.claude`, proveď na konci promptu: `git -C ~/.claude add -A`, commit s výstižnou zprávou, `git -C ~/.claude push`.
