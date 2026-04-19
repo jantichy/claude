@@ -28,13 +28,13 @@ Uživatel zavolal skill s argumenty: $ARGUMENTS
 
 ### 1. Zjisti projekt root
 
-Použij Glob tool k hledání souboru `.git` nebo adresáře `.git` v aktuálním a nadřazených adresářích — nebo spusť příkaz přesměrováním stderr na `/dev/null`, aby se žádná chybová hláška neukázala uživateli:
+**DŮLEŽITÉ:** Bash tool zobrazuje červenou chybu pro jakýkoliv nenulový exit kód. Proto NIKDY nespouštěj `git` přímo pro detekci repozitáře — vždy použij Glob tool.
 
-```bash
-git rev-parse --show-toplevel 2>/dev/null
-```
+Použij Glob tool s pattern `**/.git` (nebo `.git`) v aktuálním adresáři. Pokud Glob nevrátí žádný výsledek, použij Glob s `../.git`, `../../.git` atd. pro hledání v nadřazených adresářích (maximálně 3 úrovně výš).
 
-Pokud příkaz vrátí prázdný výstup nebo exit code != 0, **bez spouštění dalších příkazů** jednoduše oznam: „Aktuální adresář není git repozitář." a skonči.
+Pokud `.git` nenajdeš ani jedním způsobem, jednoduše oznam: „Aktuální adresář není git repozitář." a skonči — **bez spouštění jakéhokoliv Bash příkazu**.
+
+Pokud `.git` najdeš, projekt root je adresář obsahující `.git`.
 
 ### 2. Zjisti aktuální stav
 
