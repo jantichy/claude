@@ -36,6 +36,17 @@ KOSMETICKÉ (konzistence stylu):
 - Komentáře které nepopisují kód pod nimi (zastaralé, mylné)
 - Inconsistentní formátování nebo struktura podobných souborů (např. různá struktura API route handlerů)
 
+SKUPINY SOUBORŮ SE SDÍLENOU STRUKTUROU (kontroluj vždy samostatně):
+Aktivně hledej adresáře, kde více souborů stejného typu (MD, JSON, YAML, TS...) zřejmě reprezentuje instance stejného konceptu — každý soubor = jeden systém, jedna entita, jeden modul apod. Typické signály: soubory mají podobné názvy, leží v jednom adresáři, obsahují podobné sekce nebo klíče.
+
+Pro každou takovou skupinu:
+1. Urči společnou strukturu (průnik sekcí/klíčů přítomných ve většině souborů)
+2. Zkontroluj, zda ji mají opravdu VŠECHNY soubory skupiny
+3. Odchylky, které jsou zřejmě záměrné (daný soubor má navíc sekci pro specifickou vlastnost té entity), jsou v pořádku a nehlásit je
+4. Hlásit pouze: chybějící sekce ze společného průniku, sekce přítomné jen v podmnožině souborů bez zjevného důvodu, strukturální rozdíly (u jednoho je seznam, u jiného volný text pro stejnou informaci)
+
+Závažnost: obvykle STŘEDNÍ — výjimkou je případ, kdy chybějící sekce způsobuje neúplnost dat (pak KRITICKÉ).
+
 Pro každý nalezený problém uveď:
 - Kategorie (KRITICKÉ / STŘEDNÍ / KOSMETICKÉ)
 - Stručný popis problému (1-2 věty)
