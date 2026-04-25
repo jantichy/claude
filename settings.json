@@ -8,7 +8,6 @@
       "Skill",
       "Read(/Users/honza/.claude/**)",
       "Read(~/.claude/**)",
-
       "Bash(osascript:*)",
       "Bash(screencapture:*)",
       "Bash(node --input-type=module)",
@@ -16,7 +15,6 @@
       "Read(//usr/local/bin/**)",
       "Read(//Users/honza/.nvm/versions/**)",
       "Bash(export PATH=\"$PATH:/opt/homebrew/bin:/usr/local/bin:$HOME/.nvm/versions/node/$\\(ls ~/.nvm/versions/node/)",
-
       "Bash(find:*)",
       "Bash(ls:*)",
       "Bash(grep:*)",
@@ -44,7 +42,6 @@
       "Bash(awk:*)",
       "Bash(openssl:*)",
       "Bash(git checkout:*)",
-
       "Bash(git status:*)",
       "Bash(git log:*)",
       "Bash(git diff:*)",
@@ -59,7 +56,6 @@
       "Bash(git tag:*)",
       "Bash(git init:*)",
       "Bash(git ls-tree:*)",
-
       "Bash(python:*)",
       "Bash(python3:*)",
       "Bash(pip show:*)",
@@ -68,11 +64,9 @@
       "Bash(.venv/bin/python:*)",
       "Bash(source .venv/bin/activate)",
       "Bash(pytest:*)",
-
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "Bash(npx tsc:*)",
-
       "Bash(gh api:*)",
       "Bash(gh auth status:*)",
       "Bash(gh repo view:*)",
@@ -105,7 +99,6 @@
       "Bash(/opt/homebrew/bin/gh release list:*)",
       "Bash(/opt/homebrew/bin/gh release view:*)",
       "Bash(/opt/homebrew/bin/gh mcp list:*)",
-
       "WebFetch(domain:github.com)"
     ],
     "deny": [
@@ -202,13 +195,6 @@
     ],
     "defaultMode": "plan"
   },
-  "statusLine": {
-    "type": "command",
-    "command": "bash /Users/honza/.claude/statusline-command.sh"
-  },
-  "enabledPlugins": {
-    "chrome-devtools-mcp@claude-plugins-official": true
-  },
   "hooks": {
     "PostToolUse": [
       {
@@ -228,8 +214,19 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/honza/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "chrome-devtools-mcp@claude-plugins-official": true
+  },
   "language": "Czech",
   "autoUpdatesChannel": "stable",
   "minimumVersion": "2.1.90",
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  }
 }
