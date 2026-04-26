@@ -102,14 +102,16 @@ Navrhované řešení:
 [konkrétní popis co přesně změnit — ne vágní "refaktoruj to", ale "přesuň funkci X ze souboru A do B a aktualizuj import v C"]
 ```
 
-2. Zeptej se uživatele jednou otázkou:
-   - **Opravit** — proveď změnu hned
-   - **Přeskočit** — zapiš si to a jdi dál (nebude v závěrečném přehledu jako "odloženo")
-   - **Odložit** — zapiš si to jako odloženou položku
+2. Zeptej se uživatele jednou otázkou ve formátu:
+   `Opravit (A) / Odložit (B) / Přeskočit (C)?`
+   Přijímej jak celá slova, tak samotná písmena (bez ohledu na velikost):
+   - **A / Opravit** — proveď změnu hned
+   - **B / Odložit** — zapiš si to jako odloženou položku
+   - **C / Přeskočit** — zapiš si to a jdi dál (nebude v závěrečném přehledu jako "odloženo")
 
-3. Pokud uživatel zvolí **Opravit**: proveď změnu, ověř že funguje (Bash pro kompilaci/testy pokud jsou k dispozici). Commituj dle autocommit nastavení projektu (zjistíš ho přečtením projektového CLAUDE.md — pokud obsahuje sekci `## Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message).
+3. Pokud uživatel zvolí **A / Opravit**: proveď změnu, ověř že funguje (Bash pro kompilaci/testy pokud jsou k dispozici). Commituj dle autocommit nastavení projektu (zjistíš ho přečtením projektového CLAUDE.md — pokud obsahuje sekci `## Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message).
 
-4. Pokud uživatel napíše cokoli jiného než volbu, interpretuj to jako doplňující instrukci k aktuálnímu problému (upravi navrhované řešení nebo odpověz na dotaz) — NEdávej to jako "přeskočeno".
+4. Pokud uživatel napíše cokoli jiného než volbu (A/B/C nebo celé slovo), interpretuj to jako doplňující instrukci k aktuálnímu problému (upravi navrhované řešení nebo odpověz na dotaz) — NEdávej to jako "přeskočeno".
 
 5. Pokračuj na další problém.
 
