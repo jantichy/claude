@@ -28,6 +28,7 @@ STŘEDNÍ (technický dluh):
 - Špatně zatříděné soubory (utilita v komponentách, komponenta v utils/)
 - README nebo dokumentace popisující funkce, které neexistují nebo fungují jinak
 - Nepoužívané exporty, funkce, proměnné (dead code)
+- Zapomenuté zbytky po odstranění: když se v minulosti odstraňoval kód, feature nebo komponenta, mohly na dalších místech zůstat pozapomenuté části — importy smazaného modulu, konfigurace pro zrušenou funkci, typy/interfacy pro odstraněnou entitu, registrace odebrané route nebo pluginu, zmínky v dokumentaci nebo komentářích, testy odstraněné funkcionality, env proměnné pro mrtvou feature, reference v package.json apod.
 - Závislosti v package.json které nejsou použity (nebo naopak)
 
 KOSMETICKÉ (konzistence stylu):
