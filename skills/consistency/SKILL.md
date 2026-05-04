@@ -6,6 +6,16 @@ allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent]
 
 # Consistency audit
 
+## Úvodní hláška (vždy jako první)
+
+Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
+
+> Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
+
+Teprve pak pokračuj plněním skillu.
+
+## Účel
+
 Proveď kompletní audit vnitřní konzistence aktuálního projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní — a opravit to spolu s uživatelem.
 
 ## Fáze 1: Pre-flight — kontext a baseline
