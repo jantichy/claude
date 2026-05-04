@@ -179,6 +179,7 @@
     ],
     "defaultMode": "acceptEdits"
   },
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -212,6 +213,5 @@
     "enabled": true,
     "mode": "hold"
   },
-  "voiceEnabled": true,
-  "model": "opus"
+  "voiceEnabled": true
 }
