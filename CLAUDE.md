@@ -46,9 +46,9 @@ Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `## Autoprompt
 
 Každý můj vlastní skill v `~/.claude/skills/` (i ty, co teprve vzniknou) musí na úvod své činnosti vypsat tento jeden řádek:
 
-> Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
+Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
 
-Pravidlo: při zakládání nového vlastního skillu (nebo úpravě existujícího) doplnit do `SKILL.md` hned za hlavní `#` nadpis sekci `## Úvodní hláška (vždy jako první)` s pokynem, aby se hláška vytiskla **dřív, než se začne plnit zbytek skillu**. Hláška platí pouze pro mé vlastní skilly, ne pro skilly z pluginů či vestavěné Claude Code skilly.
+Pravidlo: při zakládání nového vlastního skillu (nebo úpravě existujícího) doplnit do `SKILL.md` hned za hlavní `#` nadpis sekci `## Úvodní hláška (vždy jako první)` s pokynem, aby se hláška vytiskla **dřív, než se začne plnit zbytek skillu**. Důležité: řádek se musí vypsat jako prostý text — nezačínat ho znakem `>`, který by ho v Markdownu zformátoval jako odsazenou citaci. Hláška platí pouze pro mé vlastní skilly, ne pro skilly z pluginů či vestavěné Claude Code skilly.
 
 ## Práce s dokumentací a rozhodováním
 
