@@ -4,7 +4,7 @@
 
 Tyto soubory obsahují **závazná pravidla**, kterými se řiď při každém úkolu. Dodržuj je vždy, stejně jako pravidla psaná přímo v tomto souboru.
 
-- `@~/.claude/RULES.md` — obecná pravidla práce: persistence znalosti, rozhodování, komunikace, struktura souborů a kódu
+- `@~/.claude/RULES.md` — obecná pravidla práce: persistence znalostí, rozhodování, komunikace, struktura souborů a kódu
 - `@~/.claude/CODING.md` — standardy psaní kódu a bezpečnosti
 
 Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nevadí, že bude veřejně vidět na githubu, navrhni jeho extrakci do `~/.claude/`.
@@ -17,17 +17,7 @@ Aplikují se podmíněně — jen když pracuju v dané doméně. Nejsou to prav
 
 Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/dev/claude/`. 
 
-## Jazyk
-
-- S uživatelem komunikuj **česky**
-- Obsah MD dokumentů piš **česky**, pokud není v daném projektu nebo situaci řečeno jinak
-- Kód piš **anglicky** (proměnné, funkce, třídy, soubory)
-- Komentáře v kódu piš **česky**, pokud není v daném projektu nebo situaci řečeno jinak
-
-## Styl odpovědí
-
-- Odpovědi krátké a věcné — nepřepisuj co uživatel řekl, rovnou jednej
-- Nepoužívej emoji, pokud o ně uživatel nepožádá
+------
 
 ## Git a commitování
 

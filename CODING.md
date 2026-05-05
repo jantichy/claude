@@ -20,6 +20,8 @@ Tato pravidla platí pro všechny projekty. Výjimky dokumentuj v PR pod **Secur
 - **Ochrana na úrovni aplikace**: Rate limiting na write endpointech. Bezpečné nahrávání souborů (kontrola velikosti, typu, úložiště mimo public root).
 - Proaktivně navrhuj `/security-review` při práci na autentizaci, platbách, uživatelských datech, API endpointech nebo jiných bezpečnostně citlivých funkcích.
 
+------
+
 ## Platform-specific
 
 ### TypeScript
