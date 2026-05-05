@@ -17,7 +17,7 @@ Teprve pak pokračuj plněním skillu.
 
 ## Co skill dělá
 
-Zapíná/vypíná logování každého prompt uživatele do `PROMPTS.md` v projektu. Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/save-prompt.sh` — ten připíše každý prompt jako `**N.**\n<prompt>`.
+Zapíná/vypíná logování každého prompt uživatele do `PROMPTS.md` v projektu. Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/skills/autoprompt/autoprompt.sh` — ten připíše každý prompt jako `**N.**\n<prompt>`.
 
 Stav v projektu = přítomnost nadpisu `## Autoprompt` v projektovém `CLAUDE.md`.
 
@@ -49,7 +49,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
        "UserPromptSubmit": [
          {
            "hooks": [
-             { "type": "command", "command": "bash /Users/honza/.claude/save-prompt.sh" }
+             { "type": "command", "command": "bash /Users/honza/.claude/skills/autoprompt/autoprompt.sh" }
            ]
          }
        ]
@@ -57,7 +57,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
    }
    ```
 
-   Pokud `UserPromptSubmit` už existuje, přidej do něj nový objekt. Pokud `save-prompt.sh` v hooku už je, neduplikuj.
+   Pokud `UserPromptSubmit` už existuje, přidej do něj nový objekt. Pokud `autoprompt.sh` v hooku už je, neduplikuj.
 
 3. **Založ `PROMPTS.md`** (pokud neexistuje):
 
@@ -82,7 +82,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 Pokud je už vypnutý → jen oznam, nic neměň. Jinak:
 
 1. Odstraň sekci `## Autoprompt` z `CLAUDE.md` (od nadpisu po další `##` nebo konec souboru).
-2. Odstraň hook ze `.claude/settings.local.json` — ze všech objektů v `hooks.UserPromptSubmit[*].hooks[*]` odstraň ty, kde `command` obsahuje `save-prompt.sh`. Pokud po odstranění zůstane prázdný `UserPromptSubmit` array nebo prázdné `hooks`, vyčisti i je.
+2. Odstraň hook ze `.claude/settings.local.json` — ze všech objektů v `hooks.UserPromptSubmit[*].hooks[*]` odstraň ty, kde `command` obsahuje `autoprompt.sh`. Pokud po odstranění zůstane prázdný `UserPromptSubmit` array nebo prázdné `hooks`, vyčisti i je.
 3. `PROMPTS.md` **nemaž** — historie zůstane.
 
 ## Po dokončení
