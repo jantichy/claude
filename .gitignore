@@ -24,11 +24,8 @@ tasks/
 # Autoprompt log (kdyby se v ~/.claude někdy objevil, neverzovat)
 PROMPTS.md
 
-# Pluginy (instalované binárky a cache, ne konfigurace)
-plugins/cache/
-plugins/data/
-plugins/install-counts-cache.json
-plugins/marketplaces/
+# Pluginy
+plugins/
 
 # Zálohy
 backups/
