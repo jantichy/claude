@@ -19,11 +19,11 @@ Teprve pak pokračuj plněním skillu.
 
 Zapíná/vypíná logování každého prompt uživatele do `PROMPTS.md` v projektu. Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/skills/autoprompt/autoprompt.sh` — ten připíše každý prompt jako `**N.**\n<prompt>`.
 
-Stav v projektu = přítomnost nadpisu `## Autoprompt` v projektovém `CLAUDE.md`.
+Stav v projektu = přítomnost nadpisu `### Autoprompt` v projektovém `CLAUDE.md`.
 
 ## Postup
 
-Projekt root = `pwd`. Stav zjisti přečtením `CLAUDE.md` a hledáním nadpisu `## Autoprompt`.
+Projekt root = `pwd`. Stav zjisti přečtením `CLAUDE.md` a hledáním nadpisu `### Autoprompt`.
 
 ### `status` (nebo žádný argument)
 
@@ -33,18 +33,18 @@ Vypiš stav (zapnutý/vypnutý). Pokud zapnutý, uveď i počet promptů v `PROM
 
 Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
-1. **Zkontroluj globální `~/.claude/CLAUDE.md`** — pokud neobsahuje nadpis `### Autoprompt`, doplň ho s tímto textem (vlož do sekce `## Git a commitování`, jinak na konec souboru):
+1. **Zkontroluj globální `~/.claude/CLAUDE.md`** — pokud neobsahuje nadpis `### Autoprompt`, doplň ho s tímto textem (vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
 
    ```
    ### Autoprompt
 
-   Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `## Autoprompt` v projektovém `CLAUDE.md`. Kdykoli je v projektu zapnutý autoprompt, každý můj prompt se automaticky uloží do `PROMPTS.md` v rootu projektu (přes `UserPromptSubmit` hook).
+   Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `### Autoprompt` v projektovém `CLAUDE.md`. Kdykoli je v projektu zapnutý autoprompt, každý můj prompt se automaticky uloží do `PROMPTS.md` v rootu projektu (přes `UserPromptSubmit` hook).
    ```
 
-2. **Přidej sekci `## Autoprompt` do projektového `CLAUDE.md`** (vytvoř soubor s minimální hlavičkou, pokud neexistuje):
+2. **Přidej sekci `### Autoprompt` do projektového `CLAUDE.md`** (vytvoř soubor s minimální hlavičkou, pokud neexistuje; vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
 
    ```
-   ## Autoprompt
+   ### Autoprompt
 
    Autoprompt je zapnutý.
    ```
@@ -89,7 +89,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
 Pokud je už vypnutý → jen oznam, nic neměň. Jinak:
 
-1. Odstraň sekci `## Autoprompt` z `CLAUDE.md` (od nadpisu po další `##` nebo konec souboru).
+1. Odstraň sekci `### Autoprompt` z `CLAUDE.md` (pokud poté zbyde prázdná sekce `## Automatické akce`, odstraň i ji).
 2. Odstraň hook ze `.claude/settings.local.json` — ze všech objektů v `hooks.UserPromptSubmit[*].hooks[*]` odstraň ty, kde `command` obsahuje `autoprompt.sh`. Pokud po odstranění zůstane prázdný `UserPromptSubmit` array nebo prázdné `hooks`, vyčisti i je.
 3. `PROMPTS.md` **nemaž** — historie zůstane.
 
