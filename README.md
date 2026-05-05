@@ -28,6 +28,8 @@ Zapne pro projekt automatické logování všech mých promptů na jedno snadno 
 
 Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání 5hodinového i týdenního limitu, aktuální adresář i stav Gitu. Vizualizace ukazuje čerpání pomocí teploměru, procent i zbývajícího času. Navíc mění barvy, čím je okno plnější nebo limit vyčerpanější, tím jasněji příslušná položka svítí.
 
+![Status line](statusline.png)
+
 ## `settings.json` – průběžně laděné permissions
 
 Allowlist/denylist/asklist se snažím držet ve vyváženém poměru „bezpečnost vs. flow“. Cíl je nemuset odklikávat každou trivialitu, ale zároveň nenechat bez kontroly moc bezpečnostních děr. Tohle je vždycky lavírování na hraně a občas tu jdu vědomě lehce za hranu – ve prospěch svého pohodlí a na úkor středně rizikových operací. Takže si to k sobě rozhodně nekopírujte bezhlavě, ale můžete to vzít čistě inspiračně pro porovnání s vlastním nastavením.
