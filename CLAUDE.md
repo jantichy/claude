@@ -4,8 +4,8 @@
 
 Tyto soubory obsahují **závazná pravidla**, kterými se řiď při každém úkolu. Dodržuj je vždy, stejně jako pravidla psaná přímo v tomto souboru.
 
-- `@~/.claude/RULES.md` — obecná pravidla práce: persistence znalostí, rozhodování, komunikace, struktura souborů a kódu
-- `@~/.claude/CODING.md` — standardy psaní kódu a bezpečnosti
+- `@~/.claude/RULES.md` — obecná pravidla práce: komunikace s uživatelem, organizace souborů a obsahu, práce se změnami
+- `@~/.claude/CODING.md` — standardy psaní kódu, bezpečnosti a verzování
 
 Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nevadí, že bude veřejně vidět na githubu, navrhni jeho extrakci do `~/.claude/`.
 
@@ -18,13 +18,6 @@ Aplikují se podmíněně — jen když pracuju v dané doméně. Nejsou to prav
 Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/dev/claude/`. 
 
 ------
-
-## Git a commitování
-
-- Git autor je globálně nastaven (`jantichy@jantichy.cz` / `Jan Tichý`). Neměň bez explicitní žádosti.
-- Necommituj ani nepushuj automaticky. Jen na explicitní žádost nebo v projektech s autocommitem.
-- Používej feature větve a otevírej Pull Requesty před mergem do `main`.
-- Commit messages: stručné, rozkazovací způsob (imperativ).
 
 ## Automatické akce
 

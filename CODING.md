@@ -10,9 +10,15 @@ Závazná pravidla pro psaní kódu a bezpečnostní praktiky platná napříč 
 - Používej nejnovější stabilní verze závislostí. Žádné beta/alpha/RC verze, pokud nejsou explicitně vyžadovány.
 - Při úpravách existujících aplikací nebo webů zachovávej konzistenci se zavedeným vizuálním stylem, tónem textů a vzory v kódu. Nejdřív se přizpůsob tomu, co tam je.
 
+### Git
+
+- Používej feature větve a otevírej Pull Requesty před mergem do `main`.
+- Commit messages: stručné, rozkazovací způsob (imperativ).
+- Necommituj ani nepushuj automaticky. Jen na explicitní žádost nebo v projektech s autocommitem.
+
 ### Bezpečnost
 
-Tato pravidla platí pro všechny projekty. Výjimky dokumentuj v PR pod **Security Exception**.
+Tato pravidla platí pro všechny projekty. Na výjimky explicitně upozorňuj a dokumentuj je v PR pod **Security Exception**.
 
 - **Žádné tajné hodnoty v kódu ani v gitu.** Žádné API klíče, tokeny, hesla ani přihlašovací údaje ve zdrojovém kódu, konfiguračních souborech ani v git historii. Výhradně proměnné prostředí a `.env` soubory. Vždy ověř, že `.env` je v `.gitignore`.
 - **Princip nejmenšího oprávnění**: Role, klíče a tokeny mají mít pouze nutná oprávnění.
