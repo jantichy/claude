@@ -65,6 +65,4 @@ Hranice: pokud je obsah obecný a hodí se ostatním pro inspiraci → `~/.claud
 
 **Autocommit pro `~/.claude`:** Tento repozitář má autocommit **trvale zapnutý** podle pravidel v sekci „Autocommit" výše. Kdykoli v průběhu konverzace upravíš nebo přidáš soubor v `~/.claude`, na konci své odpovědi proveď: `git -C ~/.claude add -A`, commit s výstižnou message vystihující věcnou podstatu změny (ne výpis souborů, ale lidské shrnutí, co a proč se měnilo), `git -C ~/.claude push`. Tohle pravidlo má prioritu — nezapomínej na něj.
 
-Repozitář `~/Dev/claude/` se z hlediska autocommitu chová jako jakýkoli jiný projekt — řídí se přítomností sekce `## Autocommit` ve svém vlastním `CLAUDE.md`.
-
 Když identifikuju znovupoužitelný checklist nebo standard, který by se hodil ve víc projektech, navrhnu jeho extrakci — do `~/.claude/` pokud je obecný, do `~/Dev/claude/` pokud je doménový a soukromý.
