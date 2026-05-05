@@ -39,13 +39,23 @@ Vypiš stav (zapnutý/vypnutý).
 
 ### `on`
 
-Pokud je už zapnutý → jen oznam, nic neměň. Jinak přidej na konec `CLAUDE.md` (vytvoř soubor s minimální hlavičkou, pokud neexistuje):
+Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
-```
-## Autocommit
+1. **Zkontroluj globální `~/.claude/CLAUDE.md`** — pokud neobsahuje nadpis `### Autocommit`, doplň ho s tímto textem (vlož do sekce `## Git a commitování`, jinak na konec souboru):
 
-Autocommit je zapnutý.
-```
+   ```
+   ### Autocommit
+
+   Stav autocommitu pro projekt poznáš podle přítomnosti nadpisu `## Autocommit` v projektovém `CLAUDE.md`. Kdykoli je v projektu zapnutý autocommit, commituj po každé zásadní ucelené změně (ne po každém dílčím kroku, ale po každém logickém celku). Pokud má repo nastavený nějaký git remote, ihned po commitu rovněž pushuj.
+   ```
+
+2. **Přidej sekci `## Autocommit` do projektového `CLAUDE.md`** (vytvoř soubor s minimální hlavičkou, pokud neexistuje):
+
+   ```
+   ## Autocommit
+
+   Autocommit je zapnutý.
+   ```
 
 ### `off`
 

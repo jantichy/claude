@@ -33,7 +33,15 @@ Vypiš stav (zapnutý/vypnutý). Pokud zapnutý, uveď i počet promptů v `PROM
 
 Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
-1. **Přidej sekci `## Autoprompt` do `CLAUDE.md`** (vytvoř soubor s minimální hlavičkou, pokud neexistuje):
+1. **Zkontroluj globální `~/.claude/CLAUDE.md`** — pokud neobsahuje nadpis `### Autoprompt`, doplň ho s tímto textem (vlož do sekce `## Git a commitování`, jinak na konec souboru):
+
+   ```
+   ### Autoprompt
+
+   Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `## Autoprompt` v projektovém `CLAUDE.md`. Kdykoli je v projektu zapnutý autoprompt, každý můj prompt se automaticky uloží do `PROMPTS.md` v rootu projektu (přes `UserPromptSubmit` hook).
+   ```
+
+2. **Přidej sekci `## Autoprompt` do projektového `CLAUDE.md`** (vytvoř soubor s minimální hlavičkou, pokud neexistuje):
 
    ```
    ## Autoprompt
@@ -41,7 +49,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
    Autoprompt je zapnutý.
    ```
 
-2. **Přidej hook do `.claude/settings.local.json`** (vytvoř adresář a soubor, pokud chybí). Hook patří do `hooks.UserPromptSubmit`:
+3. **Přidej hook do `.claude/settings.local.json`** (vytvoř adresář a soubor, pokud chybí). Hook patří do `hooks.UserPromptSubmit`:
 
    ```json
    {
@@ -59,7 +67,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
    Pokud `UserPromptSubmit` už existuje, přidej do něj nový objekt. Pokud `autoprompt.sh` v hooku už je, neduplikuj.
 
-3. **Založ `PROMPTS.md`** (pokud neexistuje):
+4. **Založ `PROMPTS.md`** (pokud neexistuje):
 
    ```
    # Prompty
@@ -69,7 +77,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
    ---
    ```
 
-4. **Backfill historie ze session souborů Claude Code.** Adresář: `~/.claude/projects/<encoded-cwd>/`, kde `<encoded-cwd>` = absolutní cesta k projekt rootu se znaky `/` nahrazenými za `-` (vč. počátečního). Pokud adresář neexistuje, backfill přeskoč.
+5. **Backfill historie ze session souborů Claude Code.** Adresář: `~/.claude/projects/<encoded-cwd>/`, kde `<encoded-cwd>` = absolutní cesta k projekt rootu se znaky `/` nahrazenými za `-` (vč. počátečního). Pokud adresář neexistuje, backfill přeskoč.
 
    Z každého `*.jsonl` extrahuj user prompty: řádky kde `type == "user"`, `message.content` je textový string (ne `tool_result` array, ne objekt s `tool_use_id`), text nezačíná `<command-` ani `<local-command-`, a `isMeta` není `true`. Páry `(timestamp, text)` deduplikuj a chronologicky seřaď.
 
