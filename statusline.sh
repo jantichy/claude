@@ -138,9 +138,9 @@ if [ -z "$project_dir" ]; then project_dir="$cwd"; fi
 project_dir_real=$(echo "$project_dir" | sed "s|^~|$HOME|")
 
 if [ -d "$project_dir_real" ] && git -C "$project_dir_real" rev-parse --git-dir >/dev/null 2>&1; then
-  changed=$(git -C "$project_dir_real" diff --no-lock-index --stat HEAD 2>/dev/null | tail -1 | grep -oE '[0-9]+ file' | grep -oE '[0-9]+')
-  unstaged=$(git -C "$project_dir_real" diff --no-lock-index --name-only 2>/dev/null | wc -l | tr -d ' ')
-  staged=$(git -C "$project_dir_real" diff --no-lock-index --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
+  changed=$(git -C "$project_dir_real" diff --stat HEAD 2>/dev/null | tail -1 | grep -oE '[0-9]+ file' | grep -oE '[0-9]+')
+  unstaged=$(git -C "$project_dir_real" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
+  staged=$(git -C "$project_dir_real" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
   total=$(( unstaged + staged ))
   if [ "$total" -gt 0 ]; then
     git_part=$(printf "\033[33mGit: ~%d changes\033[0m" "$total")

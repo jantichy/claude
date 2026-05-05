@@ -184,7 +184,7 @@ Navrhované řešení:
       - Pokud existují relevantní testy pro upravený soubor a jdou rychle pustit: pusť je
    c. Pokud kontrola selže: **zastav se**, ukaž uživateli chybu a diff a zeptej se jak pokračovat. Nepokračuj automaticky na další problém.
    d. Po úspěšné opravě KRITICKÉHO problému přepočítej zbývající seznam — projdi položky s `related_root === <title opraveného>` a krátce ověř (Read/Grep), zda už nejsou neaktuální. Ty, co se vyřešily samy, vyhoď z fronty a započítej je do "vyřešeno automaticky" v závěrečném shrnutí.
-   e. Commit dle autocommit nastavení projektu — pokud projektový `CLAUDE.md` obsahuje sekci `## Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
+   e. Commit dle autocommit nastavení projektu — pokud projektový `CLAUDE.md` obsahuje sekci `### Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
 
 4. Pokud uživatel napíše cokoli jiného než volbu (A/B/C/D nebo celé slovo), interpretuj to jako doplňující instrukci k aktuálnímu problému (uprav navrhované řešení nebo odpověz na dotaz) — NEdávej to jako "přeskočeno".
 
