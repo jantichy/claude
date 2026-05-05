@@ -21,6 +21,9 @@ plans/
 # Tasks
 tasks/
 
+# Autoprompt log (kdyby se v ~/.claude někdy objevil, neverzovat)
+PROMPTS.md
+
 # Pluginy (instalované binárky a cache, ne konfigurace)
 plugins/cache/
 plugins/data/
