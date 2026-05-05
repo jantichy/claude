@@ -257,7 +257,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash /Users/honza/.claude/statusline-command.sh"
+    "command": "bash /Users/honza/.claude/statusline.sh"
   },
   "enabledPlugins": {
     "chrome-devtools-mcp@claude-plugins-official": true
