@@ -2,13 +2,6 @@
 
 Závazná pravidla pro psaní kódu a bezpečnostní praktiky platná napříč všemi projekty.
 
-Importováno z globálního `~/.claude/CLAUDE.md` přes odkaz `@~/.claude/CODING.md`.
-
-Soubor je rozdělen na:
-
-- **Obecné principy** — jazyk-agnostické, platí všude
-- **Platform-specific** — pravidla vázaná na konkrétní jazyk, runtime nebo technologii
-
 ## Obecné principy
 
 ### Standardy kódu

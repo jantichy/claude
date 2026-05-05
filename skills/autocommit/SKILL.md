@@ -17,7 +17,7 @@ Teprve pak pokračuj plněním skillu.
 
 ## Co skill dělá
 
-Zapíná/vypíná autocommit pro aktuální projekt — Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy amend, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce Autocommit.
+Zapíná/vypíná autocommit pro aktuální projekt — Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce Autocommit.
 
 Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md`.
 
