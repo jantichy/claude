@@ -1,6 +1,6 @@
 ---
 name: autoprompt
-description: This skill should be used when the user invokes "/autoprompt", "/autoprompt on", "/autoprompt off", "/autoprompt status", or asks to "zapnout autoprompt", "vypnout autoprompt", "zkontrolovat autoprompt". Manages per-project automatic logging of user prompts to PROMPTS.md.
+description: Skill se použije, když uživatel zadá "/autoprompt", "/autoprompt on", "/autoprompt off", "/autoprompt status", nebo zadá "zapnout autoprompt", "vypnout autoprompt", "zkontrolovat autoprompt". Spravuje per-project automatické logování promptů uživatele do PROMPTS.md.
 argument-hint: [on|off|status]
 allowed-tools: [Read, Edit, Write, Bash]
 ---
