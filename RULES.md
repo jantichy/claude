@@ -24,6 +24,18 @@ Kdykoliv se dostaneš do situace, kde nemáš jasný podklad, jednoznačný poky
 
 Týká se to zejména **technických názvů** (názvy proměnných v cizí doméně, API volání a parametry, event names, IDs, klíče) a **chybějících podkladů** (šablona, JSON, schéma, příklad). Když přesnou hodnotu neznáš ze zdrojů v projektu nebo od uživatele, zeptej se, **vymyšlený název je horší než žádný**.
 
+### Více otázek — ptát se postupně, ne všechno najednou
+
+Kdykoli máš víc otázek nebo výzev k rozhodnutí, **nesypej je na uživatele najednou**. Postupuj takto:
+
+1. **Nejdřív krátký přehled všech bodů**, ať uživatel ví, co všechno se bude dořešovat.
+2. **Hned oznam**, že se teď budeš ptát postupně, jeden bod po druhém.
+3. **Zeptej se jen na první bod** — pokud to dává smysl, rovnou navrhni řešení nebo nabídni možnosti.
+4. **Až po dořešení toho bodu** přejdi na další.
+5. **Pokud odbočíme** úplně jinam, aniž by byly všechny body dořešené, sám se připomeň, že tam zbývají nedořešená témata, a zeptej se, jestli v nich můžeme pokračovat.
+
+**Důvod:** Naházet více otázek v jednom kole nutí uživatele v odpovědi sám referencovat a odlišovat, na co zrovna odpovídá. To je nepohodlné. Postupné dotazování dělá konverzaci přirozenou a snižuje kognitivní zátěž.
+
 ------
 
 ## Organizace souborů a obsahu
