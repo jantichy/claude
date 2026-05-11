@@ -11,6 +11,7 @@ paste-cache/
 file-history/
 downloads/
 telemetry/
+mcp-needs-auth-cache.json
 
 # Per-project data (paths, contexts, settings per project)
 projects/
