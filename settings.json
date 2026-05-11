@@ -237,6 +237,27 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": "/Users/honza/.claude/itermnotify.sh working", "timeout": 5 }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          { "type": "command", "command": "/Users/honza/.claude/itermnotify.sh waiting", "timeout": 5 }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "/Users/honza/.claude/itermnotify.sh done", "timeout": 5 }
+        ]
+      }
     ]
   },
   "statusLine": {
