@@ -7,7 +7,7 @@ input=$(cat)
 # ---------------------------------------------------------------------------
 # 1. CONTEXT / RATE LIMIT PROGRESS BAR
 # ---------------------------------------------------------------------------
-BAR_WIDTH=10
+BAR_WIDTH=7
 
 make_bar() {
   local pct="$1"
@@ -19,8 +19,29 @@ make_bar() {
   echo "$bar"
 }
 
+# Naformátuje počet tokenů: 1234567 → "1.2M", 49883 → "50k", 999 → "999"
+fmt_tokens() {
+  echo "$1" | awk '{
+    n = $1
+    if (n >= 1000000) {
+      v = n / 1000000
+      if (v == int(v)) printf "%dM", v
+      else printf "%.1fM", v
+    } else if (n >= 1000) {
+      printf "%dk", int(n / 1000 + 0.5)
+    } else {
+      printf "%d", n
+    }
+  }'
+}
+
 # Context window (tokeny)
 ctx_used=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
+ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // empty')
+ctx_in=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')
+ctx_cc=$(echo "$input" | jq -r '.context_window.current_usage.cache_creation_input_tokens // 0')
+ctx_cr=$(echo "$input" | jq -r '.context_window.current_usage.cache_read_input_tokens // 0')
+ctx_used_tokens=$(( ctx_in + ctx_cc + ctx_cr ))
 # Rate limits – 5h session a 7day týdenní
 five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
 five_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
@@ -31,7 +52,7 @@ usage_part=""
 
 if [ -n "$ctx_used" ]; then
   bar=$(make_bar "$ctx_used")
-  ctx_int=$(printf "%.0f" "$ctx_used")
+  ctx_int=$(echo "$ctx_used" | awk '{printf "%.0f", $1}')
   # Barva: zelená < 60 %, žlutá < 85 %, červená >= 85 %
   if [ "$ctx_int" -ge 85 ]; then
     color="\033[31m"     # svítivá červená
@@ -43,12 +64,18 @@ if [ -n "$ctx_used" ]; then
     color="\033[2;32m"   # tlumená zelená
   fi
   reset="\033[0m"
-  usage_part=$(printf "${color}Context: [%s] %d%%${reset}" "$bar" "$ctx_int")
+  if [ -n "$ctx_size" ] && [ "$ctx_used_tokens" -gt 0 ]; then
+    used_str=$(fmt_tokens "$ctx_used_tokens")
+    size_str=$(fmt_tokens "$ctx_size")
+    usage_part=$(printf "${color}Context: %s/%s [%s] %d%%${reset}" "$used_str" "$size_str" "$bar" "$ctx_int")
+  else
+    usage_part=$(printf "${color}Context: [%s] %d%%${reset}" "$bar" "$ctx_int")
+  fi
 fi
 
 # Přidej rate limit info pokud je k dispozici
 if [ -n "$five_pct" ]; then
-  five_int=$(printf "%.0f" "$five_pct")
+  five_int=$(echo "$five_pct" | awk '{printf "%.0f", $1}')
   bar5=$(make_bar "$five_pct")
   if [ "$five_int" -ge 80 ]; then
     limit_color="\033[35m"    # svítivá magenta
@@ -75,7 +102,7 @@ fi
 
 # Přidej týdenní rate limit info pokud je k dispozici
 if [ -n "$week_pct" ]; then
-  week_int=$(printf "%.0f" "$week_pct")
+  week_int=$(echo "$week_pct" | awk '{printf "%.0f", $1}')
   barw=$(make_bar "$week_pct")
   if [ "$week_int" -ge 80 ]; then
     week_color="\033[36m"    # svítivá cyan
@@ -106,6 +133,33 @@ fi
 # ---------------------------------------------------------------------------
 model_name=$(echo "$input" | jq -r '.model.display_name // .model.id // "unknown"')
 model_short=$(echo "$model_name" | sed 's/Claude //i' | sed 's/ (.*)//')
+effort_level=$(echo "$input" | jq -r '.effort.level // empty')
+if [ -n "$effort_level" ]; then
+  model_short="$model_short $effort_level"
+fi
+
+# Barva modelu: Opus = cyan (svítivější baseline), ostatní = modrá.
+# Intenzita roste s effort levelem; Opus má gradient posunutý výš,
+# takže Opus medium vizuálně koresponduje se Sonnet xhigh.
+case "$model_short" in
+  Opus*)
+    case "$effort_level" in
+      max|xhigh)   model_color="\033[96m"   ;;  # bright cyan
+      high|medium) model_color="\033[36m"   ;;  # cyan
+      low)         model_color="\033[2;36m" ;;  # dim cyan
+      *)           model_color="\033[36m"   ;;  # default - cyan
+    esac
+    ;;
+  *)
+    case "$effort_level" in
+      max)        model_color="\033[1;94m" ;;  # bold bright blue
+      xhigh)      model_color="\033[94m"   ;;  # bright blue
+      high)       model_color="\033[34m"   ;;  # blue
+      low|medium) model_color="\033[2;34m" ;;  # dim blue
+      *)          model_color="\033[34m"   ;;  # default - blue
+    esac
+    ;;
+esac
 
 # ---------------------------------------------------------------------------
 # 3. PRACOVNÍ ADRESÁŘ (zkrácený – max 4 segmenty od konce)
@@ -167,9 +221,9 @@ append() {
   fi
 }
 
-append "$(printf "\033[34m%s\033[0m" "$model_short")"
-append "$usage_part"
 append "$(printf "\033[2;33m%s\033[0m" "$short_cwd")"
+append "$(printf "${model_color}%s\033[0m" "$model_short")"
+append "$usage_part"
 [ -n "$git_part" ] && append "$git_part"
 
 printf "%b\n" "$line"
