@@ -244,7 +244,11 @@
     "command": "bash /Users/honza/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "chrome-devtools-mcp@claude-plugins-official": true
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "context7@claude-plugins-official": true
   },
   "language": "Czech",
   "autoUpdatesChannel": "stable",
@@ -253,6 +257,6 @@
     "enabled": true,
     "mode": "hold"
   },
-  "voiceEnabled": true,
-  "autoCompactEnabled": false
+  "autoCompactEnabled": false,
+  "voiceEnabled": true
 }
