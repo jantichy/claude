@@ -31,5 +31,13 @@ plugins/
 # Zálohy
 backups/
 
+# Runtime (daemon, background jobs, stavové soubory)
+daemon/
+daemon.lock
+daemon.status.json
+jobs/
+.last-cleanup
+.last-update-result.json
+
 # macOS
 .DS_Store

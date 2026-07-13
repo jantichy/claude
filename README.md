@@ -24,6 +24,10 @@ Zapne pro daný projekt režim, kdy Claude po každém logickém celku automatic
 
 Zapne pro projekt automatické logování všech mých promptů na jedno snadno přístupné a čitelné místo, do souboru `PROMPTS.md` v rootu projektu. Při zapnutí dokonce backfilluje historii ze session souborů, takže získám kompletní záznam i zpětně. Ač to na první pohled nevypadá, dříve či později to opravdu doceníte. Pro sledování, jak se projekt vyvíjel, pro učení se vlastních anti-patternů v promptech, překvapivě často tam pošlete Clauda, aby si z toho něco zpětně vytahal nebo naučil…
 
+## [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
+
+Hodím do složky pár zvukových nahrávek (schůzka, rozhovor, hlasová poznámka) a tenhle skill z nich udělá pořádek: každou přepíše do Markdownu a k tomu napíše jedno strukturované shrnutí napříč všemi – s tématy, klíčovými poznatky a hlavně soupisem domluv a úkolů na konci. Celý přepis běží **lokálně a offline** přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp), takže žádná nahrávka neopustí můj počítač – u citlivých firemních schůzek k nezaplacení. Doslovný přepis navíc rovnou uhladí: vyhází „ehm", odstraní halucinace rozpoznávače, opraví přeslechnuté názvy podle kontextu a rozseká text do kapitol s nadpisy. Na začátku si sám ověří, že má vše potřebné nainstalované, takže si ho můžete rovnou zkopírovat a spustit.
+
 ## [`statusline.sh`](statusline.sh) – krásná a užitečná status line
 
 Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání 5hodinového i týdenního limitu, aktuální adresář i stav Gitu. Vizualizace ukazuje čerpání pomocí teploměru, procent i zbývajícího času. Navíc mění barvy, čím je okno plnější nebo limit vyčerpanější, tím jasněji příslušná položka svítí.
