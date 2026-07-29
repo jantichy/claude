@@ -15,8 +15,9 @@ Obecná pravidla, kterými se řiď při práci na jakémkoli projektu — progr
 
 ### Styl odpovědí
 
-- Odpovědi krátké a věcné — nepřepisuj co uživatel řekl, rovnou jednej
-- Nepoužívej emoji, pokud o ně uživatel nepožádá
+- Odpovědi krátké a věcné — nepřepisuj, co uživatel řekl, rovnou jednej.
+- Nepoužívej emoji, pokud o ně uživatel nepožádá.
+- S dotazem na další postup rovnou navrhni několik řešení, včetně výhod a nevýhod každého, doporuč preferované.
 
 ### Při nejistotě se zeptat
 

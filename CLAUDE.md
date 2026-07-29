@@ -13,7 +13,7 @@ Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nev
 
 Aplikují se podmíněně — jen když pracuju v dané doméně. Nejsou to pravidla pro každý úkol, ale soubory znalostí pro konkrétní typy práce.
 
-- `@~/dev/claude/WEB.md` — checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...)
+- `~/dev/claude/WEB.md` — checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...) — načti si ho vždy, když pracuješ na webovém rozhraní
 
 Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/dev/claude/`. 
 

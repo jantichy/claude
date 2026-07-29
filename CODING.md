@@ -6,7 +6,7 @@ Závazná pravidla pro psaní kódu a bezpečnostní praktiky platná napříč 
 
 ### Standardy kódu
 
-- Před implementací používej MCP `context7` pro načtení aktuální dokumentace knihoven, frameworků a SDK.
+- Pokud je MCP `context7` k dispozici, používej ho před implementací pro načtení aktuální dokumentace knihoven, frameworků a SDK.
 - Používej nejnovější stabilní verze závislostí. Žádné beta/alpha/RC verze, pokud nejsou explicitně vyžadovány.
 - Při úpravách existujících aplikací nebo webů zachovávej konzistenci se zavedeným vizuálním stylem, tónem textů a vzory v kódu. Nejdřív se přizpůsob tomu, co tam je.
 
