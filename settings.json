@@ -150,17 +150,6 @@
       "Read(**/config/master.key)",
       "Read(**/*.jks)",
       "Read(**/.htpasswd)",
-      "Write(**/.env)",
-      "Write(**/.env.*)",
-      "Write(**/credentials.json)",
-      "Write(**/secrets.json)",
-      "Write(**/*.pem)",
-      "Write(**/*.key)",
-      "Write(**/.ssh/*)",
-      "Write(**/credentials*)",
-      "Write(**/*credentials*)",
-      "Write(**/secrets*)",
-      "Write(**/*secrets*)",
       "Edit(**/.env)",
       "Edit(**/.env.*)",
       "Edit(**/credentials.json)",
@@ -207,19 +196,16 @@
       "Read(**/*token*)",
       "Read(**/apikey*)",
       "Read(**/*apikey*)",
-      "Write(**/package.json)",
       "Edit(**/package.json)",
-      "Write(**/composer.json)",
       "Edit(**/composer.json)",
-      "Write(**/package-lock.json)",
-      "Write(**/composer.lock)",
-      "Write(**/yarn.lock)",
-      "Write(**/.gitignore)",
+      "Edit(**/package-lock.json)",
+      "Edit(**/composer.lock)",
+      "Edit(**/yarn.lock)",
       "Edit(**/.gitignore)"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "fable",
   "hooks": {
     "PostToolUse": [
       {
@@ -241,21 +227,33 @@
     "UserPromptSubmit": [
       {
         "hooks": [
-          { "type": "command", "command": "/Users/honza/.claude/itermnotify.sh working", "timeout": 5 }
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/itermnotify.sh working",
+            "timeout": 5
+          }
         ]
       }
     ],
     "Notification": [
       {
         "hooks": [
-          { "type": "command", "command": "/Users/honza/.claude/itermnotify.sh waiting", "timeout": 5 }
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/itermnotify.sh waiting",
+            "timeout": 5
+          }
         ]
       }
     ],
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "/Users/honza/.claude/itermnotify.sh done", "timeout": 5 }
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/itermnotify.sh done",
+            "timeout": 5
+          }
         ]
       }
     ]
@@ -267,19 +265,36 @@
   "enabledPlugins": {
     "chrome-devtools-mcp@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": false,
     "frontend-design@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true
+    "context7@claude-plugins-official": false,
+    "vercel@claude-plugins-official": false,
+    "document-skills@anthropic-agent-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    }
   },
   "language": "Czech",
   "effortLevel": "medium",
   "autoUpdatesChannel": "stable",
   "minimumVersion": "2.1.90",
+  "tui": "fullscreen",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
+  "theme": "dark",
+  "preferredNotifChannel": "terminal_bell",
   "autoCompactEnabled": false,
-  "voiceEnabled": true
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true,
+  "skillOverrides": {
+    "transcript": "off"
+  }
 }
