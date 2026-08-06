@@ -98,6 +98,17 @@
       "Bash(gh release list:*)",
       "Bash(gh release view:*)",
       "Bash(gh mcp list:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker inspect:*)",
+      "Bash(docker images:*)",
+      "Bash(docker version:*)",
+      "Bash(docker info:*)",
+      "Bash(docker compose ps:*)",
+      "Bash(docker compose logs:*)",
+      "Bash(kubectl get:*)",
+      "Bash(kubectl describe:*)",
+      "Bash(kubectl logs:*)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:cs.wikipedia.org)",
       "WebFetch(domain:en.wikipedia.org)",
@@ -163,38 +174,18 @@
       "Edit(**/*secrets*)"
     ],
     "ask": [
-      "Bash(npx:*)",
-      "Bash(make:*)",
       "Bash(go install:*)",
       "Bash(brew install:*)",
       "Bash(brew upgrade:*)",
-      "Bash(kill:*)",
-      "Bash(pkill:*)",
       "Bash(curl -X POST:*)",
       "Bash(curl -X PUT:*)",
       "Bash(curl -X DELETE:*)",
-      "Bash(git submodule add:*)",
-      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__evaluate_script",
-      "Bash(git reset:*)",
-      "Bash(git rebase:*)",
-      "Bash(chmod:*)",
-      "Bash(xargs:*)",
-      "Bash(sed:*)",
-      "Bash(rm:*)",
-      "Bash(git clean:*)",
       "Bash(yarn add:*)",
       "Bash(pip install:*)",
-      "Bash(docker:*)",
-      "Bash(kubectl:*)",
-      "Read(**/secrets*)",
       "Read(**/*secrets*)",
-      "Read(**/credentials*)",
       "Read(**/*credentials*)",
-      "Read(**/password*)",
       "Read(**/*password*)",
-      "Read(**/token*)",
       "Read(**/*token*)",
-      "Read(**/apikey*)",
       "Read(**/*apikey*)",
       "Edit(**/package.json)",
       "Edit(**/composer.json)",
@@ -205,7 +196,10 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "fable",
+  "model": "claude-opus-4-8[1m]",
+  "skillOverrides": {
+    "transcript": "off"
+  },
   "hooks": {
     "PostToolUse": [
       {
@@ -293,8 +287,5 @@
   "autoCompactEnabled": false,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true,
-  "skillOverrides": {
-    "transcript": "off"
-  }
+  "voiceEnabled": true
 }
