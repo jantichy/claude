@@ -196,7 +196,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-opus-4-8[1m]",
+  "model": "fable",
   "skillOverrides": {
     "transcript": "off"
   },
