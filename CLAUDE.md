@@ -28,3 +28,7 @@ Stav autocommitu pro projekt poznáš podle přítomnosti nadpisu `### Autocommi
 ### Autoprompt
 
 Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `### Autoprompt` v projektovém `CLAUDE.md`. Kdykoli je v projektu zapnutý autoprompt, každý můj prompt se automaticky uloží do `PROMPTS.md` v rootu projektu (přes `UserPromptSubmit` hook).
+
+### README.md tohoto repa
+
+Platí jen pro tento projekt (`~/.claude`), ne globálně. `README.md` popisuje mé skilly a další vypíchnuté součásti konfigurace. Kdykoli přidáš nový skill nebo uděláš zásadní změnu chování existujícího skillu, rovnou k tomu přidej/aktualizuj odpovídající sekci v `README.md` — stejný styl a tón jako ostatní sekce (osobní, věcné, s konkrétním přínosem). Nečekej na vyžádání, udělej to jako součást té změny.

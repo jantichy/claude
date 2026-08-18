@@ -24,6 +24,14 @@ Zapne pro daný projekt režim, kdy Claude po každém logickém celku automatic
 
 Zapne pro projekt automatické logování všech mých promptů na jedno snadno přístupné a čitelné místo, do souboru `PROMPTS.md` v rootu projektu. Při zapnutí dokonce backfilluje historii ze session souborů, takže získám kompletní záznam i zpětně. Ač to na první pohled nevypadá, dříve či později to opravdu doceníte. Pro sledování, jak se projekt vyvíjel, pro učení se vlastních anti-patternů v promptech, překvapivě často tam pošlete Clauda, aby si z toho něco zpětně vytahal nebo naučil…
 
+## [`/project`](skills/project/) – nový projekt na pár kliknutí
+
+Kdykoli zakládám nový projekt v čistém adresáři, řeším pořád dokola ty samé věci: git a remote, autocommit, autoprompt, jestli si Claude smí něco pamatovat do Memory nebo má všechno psát do `CLAUDE.md`, jaký je to vlastně typ projektu (vývoj, web, psaní, data...). Tenhle skill se mě na to všechno postupně zeptá – jedna otázka po druhé – a rovnou to nastaví, včetně `README.md` a `.gitignore`. Odklikávám, místo abych to pokaždé psal znovu.
+
+## [`/compose`](skills/compose/) – texty, co znějí jako já
+
+Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní (styl, ustálené obraty, jejich horní mez, ať to nesklouzne do parodie) a k tématu si navíc dohledá pár nejpodobnějších textů z archivu jako živé vzory. Moje názory a pointy si ale nikdy nevymýšlí – ty musím dodat sám.
+
 ## [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
 Hodím do složky pár zvukových nahrávek (schůzka, rozhovor, hlasová poznámka) a tenhle skill z nich udělá pořádek: každou přepíše do Markdownu a k tomu napíše jedno strukturované shrnutí napříč všemi – s tématy, klíčovými poznatky a hlavně soupisem domluv a úkolů na konci. Celý přepis běží **lokálně a offline** přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp), takže žádná nahrávka neopustí můj počítač – u citlivých firemních schůzek k nezaplacení. Doslovný přepis navíc rovnou uhladí: vyhází „ehm", odstraní halucinace rozpoznávače, opraví přeslechnuté názvy podle kontextu a rozseká text do kapitol s nadpisy. Na začátku si sám ověří, že má vše potřebné nainstalované, takže si ho můžete rovnou zkopírovat a spustit.
