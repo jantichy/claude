@@ -35,6 +35,8 @@ backups/
 daemon/
 daemon.lock
 daemon.status.json
+daemon-auth-cooldown
+daemon-auth-status.json
 jobs/
 .last-cleanup
 .last-update-result.json
