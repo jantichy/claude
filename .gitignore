@@ -22,7 +22,7 @@ plans/
 # Tasks
 tasks/
 
-# Autoprompt log (kdyby se v ~/.claude někdy objevil, neverzovat)
+# Autoprompt log – nikdy neverzovat, obsahoval by soukromé prompty
 PROMPTS.md
 
 # Pluginy
