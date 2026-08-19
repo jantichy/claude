@@ -8,6 +8,11 @@
       "Skill",
       "Read(/Users/honza/.claude/**)",
       "Read(~/.claude/**)",
+      "Read(~/Dev/claude/**)",
+      "Read(~/Dev/archiv/**)",
+      "Bash(ffprobe:*)",
+      "Bash(whisper-cli:*)",
+      "Bash(/Users/honza/.claude/skills/transcript/*.sh:*)",
       "Bash(osascript:*)",
       "Bash(screencapture:*)",
       "Bash(node --input-type=module)",
@@ -197,9 +202,6 @@
     "defaultMode": "auto"
   },
   "model": "opus",
-  "skillOverrides": {
-    "transcript": "off"
-  },
   "hooks": {
     "PostToolUse": [
       {

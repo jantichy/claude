@@ -3,9 +3,20 @@ name: compose
 description: Skill se použije, když uživatel zadá "/compose" nebo chce
   napsat článek, post na sociální sítě či vlákno svým jménem a stylem.
   Piš text hlasem Jana Tichého podle znalostní báze v ~/Dev/claude/compose/.
+allowed-tools: [Read, Grep, Glob, Write, Edit]
 ---
 
 # Compose — psaní textů hlasem Jana Tichého
+
+## Úvodní hláška (vždy jako první)
+
+Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
+
+Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
+
+Teprve pak pokračuj plněním skillu.
+
+## Účel
 
 Proces psaní textu, který má znít jako od Honzy. Znalostní báze žije
 v `~/Dev/claude/compose/`, archiv všech jeho textů v `~/Dev/archiv/`.
