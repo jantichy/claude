@@ -130,6 +130,12 @@
       "mcp__context7__query-docs"
     ],
     "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean -f:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git branch -D:*)",
       "Read(**/.env)",
       "Read(**/.env.*)",
       "Read(**/credentials.json)",
