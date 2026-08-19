@@ -67,6 +67,12 @@ Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracu
 
 2. **Projdi ho od úplného začátku.** Zajímají tě uživatelovy prompty i tvoje odpovědi. U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti kontext nesnědla surová data — předej mu cestu k souboru a seznam kategorií níže a nech si vrátit strukturovaný výtah.
 
+   **Pozor na zprávy poslané uprostřed běžícího tahu.** Ty **nejsou** uložené jako `type: "user"`, ale jako `type: "queue-operation"` s `operation: "enqueue"` a textem v poli `content`. Kdo filtruje jen `type=="user"`, tiše o ně přijde — a přitom to bývají důležité dovětky („ještě ať to udělá i…"). Vytáhni je vždy taky:
+   ```
+   jq -r 'select(.type=="queue-operation" and .operation=="enqueue") | .content' <transcript>
+   ```
+   Stejná past hrozí u `type: "attachment"`. Když si nejsi jistý, že máš všechno, projdi si rozložení `.type` v souboru (`grep -o '"type":"[a-z_-]*"' <transcript> | sort | uniq -c`) a ověř, že jsi nic nevynechal.
+
 3. **Vytěž šest kategorií:**
 
    1. **Dohody a rozhodnutí** — na čem jste se shodli. Vždy včetně **„proč"** a **zavržených variant**: „nejdřív jsme chtěli X, ale kvůli Y jsme zvolili Z". Samotný závěr bez zdůvodnění je pro příští session málo — nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.

@@ -219,6 +219,8 @@ Navrhované řešení:
      - **Přeskočit** — neopravovat, zapíšu do CLAUDE.md jako „won't fix"
      - **Rozbalit** — *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
 
+   Tool má strop **4 volby** na otázku — tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej; kdyby byla potřeba, musí se otázka rozdělit na dvě.
+
    Volbu **Other** doplňuje tool sám — uživatel přes ni může napsat vlastní instrukci nebo se doptat. Když ji použije, ber to jako doplňující instrukci k aktuálnímu problému (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno".
 
    Zpracování odpovědí:
