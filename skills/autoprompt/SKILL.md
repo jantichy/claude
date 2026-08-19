@@ -23,7 +23,15 @@ Stav v projektu = přítomnost nadpisu `### Autoprompt` v projektovém `CLAUDE.m
 
 ## Postup
 
-Projekt root = `pwd`. Stav zjisti přečtením `CLAUDE.md` a hledáním nadpisu `### Autoprompt`.
+### Zjisti projekt root
+
+Najdi `.git` adresář pomocí **Glob** (NIKDY nespouštěj `git` přes Bash – červená chyba při nenulovém exit kódu by uživatele zbytečně vyděsila). Zkus patterny `.git`, pak `../.git`, `../../.git`, `../../../.git` (max 3 úrovně výš). Projekt root = adresář obsahující `.git`. Když `.git` nenajdeš, použij `pwd` – autoprompt dává smysl i mimo git repozitář, na rozdíl od autocommitu.
+
+Bez tohohle kroku by spuštění z podadresáře projektu založilo `PROMPTS.md` na špatném místě.
+
+### Zjisti stav
+
+Stav zjisti přečtením `CLAUDE.md` v projekt rootu a hledáním nadpisu `### Autoprompt`.
 
 ### `status` (nebo žádný argument)
 
