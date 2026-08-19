@@ -1,6 +1,6 @@
 ---
 name: consistency
-description: Audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Problémy řeší interaktivně jeden po druhém.
+description: Audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
 allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent]
 ---
 
@@ -131,6 +131,29 @@ Výstup strukturuj jako JSON pole objektů:
 
 Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak KOSMETICKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
 
+### Rozdělení na mechanické a sporné
+
+Než seznam předložíš, rozděl ho na dvě skupiny — uživatele nemá smysl obtěžovat odklikáváním věcí, u kterých existuje jen jedno správné řešení.
+
+**Mechanické** — oprava je jednoznačná, bezriziková a nemění chování ani strukturu. Typicky:
+- rozbitý nebo neexistující odkaz, import na přesunutý soubor, špatná cesta
+- nepoužitý import, nepoužitá lokální proměnná
+- překlep v komentáři, názvu sekce nebo odkazu
+- počet uvedený v textu nesedící se skutečným obsahem tabulky nebo seznamu
+- formátovací nekonzistence (odsazení, uvozovky, struktura podobných souborů)
+- zastaralý komentář nebo věta v dokumentaci, kde platný stav jednoznačně vyplývá z kódu
+- chybějící položka v `.env.example` u proměnné prokazatelně použité v kódu
+
+**Sporné** — všechno ostatní, tedy vždy když existuje víc rozumných řešení nebo oprava zasahuje dál než na jedno místo:
+- přejmenování, přesuny souborů, změny struktury
+- slučování duplicit (které z míst je to správné?)
+- změny typů, schémat, API kontraktů, bezpečnostních pravidel
+- mazání kódu, který vypadá mrtvý, ale nemusí být
+- `batch` nálezy (>20 výskytů) — vždy sporné, i když je jednotlivá oprava triviální
+- cokoliv, co mění chování
+
+Při pochybnosti patří nález mezi sporné. Nálezy s tagem `toolchain` posuzuj stejně jako ostatní.
+
 ## Fáze 4: Přehled
 
 Zobraz uživateli přehled před tím, než začneš procházet problémy:
@@ -147,14 +170,31 @@ Z toho:
 - [toolchain] hlášeno již existujícím nástrojem: N
 - [batch] hromadné (>20 výskytů): N
 
-Problémy budu procházet od nejzávažnějších. U každého navrhnu řešení a zeptám se co s ním udělat.
+Mechanických (jednoznačná bezriziková oprava): N — ty opravím rovnou a jen je vypíšu.
+Sporných: M — ty projdeme spolu od nejzávažnějších, u každého navrhnu řešení a zeptám se.
 ```
 
 Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
+## Fáze 4b: Mechanické opravy
+
+Mechanické nálezy (viz Fáze 3) oprav **rovnou, bez ptaní**. Pak:
+
+1. Spusť verifikaci podle kroku 3b Fáze 5 (tsc/build/testy). Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
+2. Vypiš, co jsi opravil — jeden řádek na nález:
+   ```
+   ## Opraveno rovnou (N mechanických)
+   - 🔵 [název] — soubor:řádek — [co konkrétně změněno]
+   ```
+3. Commit dle autocommit nastavení projektu. Mechanické opravy commituj **jedním commitem** dohromady, ne po jedné.
+
+Pokud uživatel na některou z těchto oprav zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
+
+Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné shrnutí.
+
 ## Fáze 5: Interaktivní průchod
 
-Pro KAŽDÝ problém (jeden po druhém, nikdy víc najednou):
+Pro KAŽDÝ **sporný** problém (jeden po druhém, nikdy víc najednou):
 
 1. Zobraz problém v tomto formátu:
 ```
@@ -211,7 +251,8 @@ Po projití všech problémů zobraz:
 ```
 ## Hotovo
 
-- ✅ Opraveno: N problémů
+- ⚡ Opraveno rovnou (mechanické): N problémů
+- ✅ Opraveno po odsouhlasení: N problémů
 - 🪄 Vyřešeno automaticky (následek root opravy): N problémů
 - 📌 Odloženo: N problémů
 - ⏭️ Přeskočeno (zapsáno do CLAUDE.md → Consistency): N problémů
