@@ -1,6 +1,6 @@
 ---
 name: consistency
-description: Skill se použije, když uživatel zadá "/consistency", nebo chce audit projektu — konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+description: Skill se použije, když uživatel zadá "/consistency", nebo chce audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
 allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 ---
 
@@ -14,40 +14,40 @@ Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude
 
 Teprve pak pokračuj plněním skillu.
 
-## Účel
+## Co skill dělá
 
-Proveď kompletní audit vnitřní konzistence aktuálního projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní — a opravit to spolu s uživatelem.
+Proveď kompletní audit vnitřní konzistence aktuálního projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
 
-## Fáze 1: Pre-flight — kontext a baseline
+## Fáze 1 – Pre-flight: kontext a baseline
 
 Před spuštěním Explore agenta nasbírej baseline. Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
 ### 1.1 Načti dokumentaci konvencí
 
 Pokud existují, přečti:
-- Projektový `CLAUDE.md` (zejména kapitolu `## Consistency`, viz Fáze 5)
+- Projektový `CLAUDE.md` (zejména kapitolu `## Consistency`, viz Fáze 6)
 - `README.md`, `CONTRIBUTING.md`, `STYLEGUIDE.md`
 - `eslint.config.*`, `.eslintrc*`, `prettier.config.*`, `.prettierrc*`, `biome.json`
 - `tsconfig.json` (zejména `strict`, `target`, `lib`, paths)
 - `.editorconfig`
 - `package.json` (engines, scripts, workspaces)
 
-Z těchto souborů sestav **baseline konvencí** — co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako kosmetickou odchylku; naopak rozpor s baseline hlas důsledněji.
+Z těchto souborů sestav **baseline konvencí** – co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako kosmetickou odchylku; naopak rozpor s baseline hlas důsledněji.
 
 ### 1.2 Načti seznam ignorovaných položek
 
-Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech — uživatel je dříve označil jako "won't fix".
+Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako "won't fix".
 
 ### 1.3 Spusť existující nástroje
 
-Pokud jsou v projektu k dispozici (zjisti z `package.json` scripts a devDeps), spusť — paralelně:
+Pokud jsou v projektu k dispozici (zjisti z `package.json` scripts a devDeps), spusť – paralelně:
 - `tsc --noEmit` (jen u TypeScript projektů)
 - linter v `--quiet` módu (eslint, biome apod.)
 - `knip` nebo `depcheck`, pokud jsou nainstalované
 
 Výstupy si zapamatuj a předej Explore agentovi. Pokud nástroj selže nebo není dostupný, pokračuj a poznamenej to. Nálezy z toolchainu se v dalších fázích označí tagem `[toolchain]`.
 
-## Fáze 2: Průzkum projektu
+## Fáze 2 – Průzkum projektu
 
 Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, baseline z 1.1, seznam ignorovaných z 1.2 a výstupy nástrojů z 1.3):
 
@@ -55,9 +55,9 @@ Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k proje
 Prohledej celý projekt a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
 
 PŘED HLÁŠENÍM PROBLÉMU vždy zkontroluj, že:
-- Není uveden v sekci "Ignorované položky" (předané v zadání) — pokud ano, neuváděj ho
-- Není přímo nad řádkem komentář `consistency-ignore: <důvod>` — pokud ano, respektuj ho
-- Soubor není v cestě označené jako legacy/vendored/generated (`*.gen.*`, `vendor/`, `legacy/`, `generated/`, `node_modules/`, `dist/`, `build/`) — pokud ano, neuváděj ho
+- Není uveden v sekci "Ignorované položky" (předané v zadání) – pokud ano, neuváděj ho
+- Není přímo nad řádkem komentář `consistency-ignore: <důvod>` – pokud ano, respektuj ho
+- Soubor není v cestě označené jako legacy/vendored/generated (`*.gen.*`, `vendor/`, `legacy/`, `generated/`, `node_modules/`, `dist/`, `build/`) – pokud ano, neuváděj ho
 - Pokud baseline projektu (předaný v zadání) explicitně dovoluje to, co bys hlásil jako odchylku, neuváděj to
 
 KRITICKÉ (mohou rozbít funkčnost):
@@ -77,7 +77,7 @@ STŘEDNÍ (technický dluh):
 - Špatně zatříděné soubory (utilita v komponentách, komponenta v utils/)
 - README nebo dokumentace popisující funkce, které neexistují nebo fungují jinak
 - Nepoužívané exporty, funkce, proměnné (dead code)
-- Zapomenuté zbytky po odstranění: když se v minulosti odstraňoval kód, feature nebo komponenta, mohly na dalších místech zůstat pozapomenuté části — importy smazaného modulu, konfigurace pro zrušenou funkci, typy/interfacy pro odstraněnou entitu, registrace odebrané route nebo pluginu, zmínky v dokumentaci nebo komentářích, testy odstraněné funkcionality, env proměnné pro mrtvou feature, reference v package.json apod.
+- Zapomenuté zbytky po odstranění: když se v minulosti odstraňoval kód, feature nebo komponenta, mohly na dalších místech zůstat pozapomenuté části – importy smazaného modulu, konfigurace pro zrušenou funkci, typy/interfacy pro odstraněnou entitu, registrace odebrané route nebo pluginu, zmínky v dokumentaci nebo komentářích, testy odstraněné funkcionality, env proměnné pro mrtvou feature, reference v package.json apod.
 - Závislosti v package.json které nejsou použity (nebo naopak)
 - i18n a UI texty: chybějící překladové klíče (použité v kódu, nejsou ve slovníku); nepoužité klíče (ve slovníku, nikde nereferencované); stejný UI koncept různě pojmenovaný napříč obrazovkami ("Smazat" vs "Odstranit" vs "Vymazat"); nesystematický mix jazyků v UI textech
 - Časový drift: TODO/FIXME starší než ~6 měsíců (zjistitelné `git blame`); komentáře s deadlinem v minulosti ("remove after 2025-01"); feature flagy s trvale stejnou hodnotou na všech check-pointech (ready to inline/remove); pozastavené migrace (částečná DB migrace bez follow-upu)
@@ -90,7 +90,7 @@ KOSMETICKÉ (konzistence stylu):
 - Naming napříč boundaries: stejná entita s různými názvy v různých vrstvách (`User` v DB / `UserAccount` v API / `userObj` v UI); inkonzistentní pluralizace v adresářích a routes (`users/user`, `items/item`); stejný koncept různými slovy v komentářích / UI / kódu (mix čeština/angličtina bez systému)
 
 SKUPINY SOUBORŮ SE SDÍLENOU STRUKTUROU (kontroluj vždy samostatně):
-Aktivně hledej adresáře, kde více souborů stejného typu (MD, JSON, YAML, TS...) zřejmě reprezentuje instance stejného konceptu — každý soubor = jeden systém, jedna entita, jeden modul apod. Typické signály: soubory mají podobné názvy, leží v jednom adresáři, obsahují podobné sekce nebo klíče.
+Aktivně hledej adresáře, kde více souborů stejného typu (MD, JSON, YAML, TS...) zřejmě reprezentuje instance stejného konceptu – každý soubor = jeden systém, jedna entita, jeden modul apod. Typické signály: soubory mají podobné názvy, leží v jednom adresáři, obsahují podobné sekce nebo klíče.
 
 Pro každou takovou skupinu:
 1. Urči společnou strukturu (průnik sekcí/klíčů přítomných ve většině souborů)
@@ -98,12 +98,12 @@ Pro každou takovou skupinu:
 3. Odchylky, které jsou zřejmě záměrné (daný soubor má navíc sekci pro specifickou vlastnost té entity), jsou v pořádku a nehlásit je
 4. Hlásit pouze: chybějící sekce ze společného průniku, sekce přítomné jen v podmnožině souborů bez zjevného důvodu, strukturální rozdíly (u jednoho je seznam, u jiného volný text pro stejnou informaci)
 
-Závažnost: obvykle STŘEDNÍ — výjimkou je případ, kdy chybějící sekce způsobuje neúplnost dat (pak KRITICKÉ).
+Závažnost: obvykle STŘEDNÍ – výjimkou je případ, kdy chybějící sekce způsobuje neúplnost dat (pak KRITICKÉ).
 
 GROUPING (povinné):
 - Pokud má víc nálezů stejný root cause (jedno přejmenování → desítky souborů, jeden chybný typ → mnoho dotčených míst), seskup je do jedné položky s podproblémy a v poli `related_root` u následků uveď title root položky.
-- Pokud má jeden problém >20 výskytů, neuváděj jednotlivé řádky — uveď pattern, počet výskytů, příklad 3 lokací a navrhni hromadnou změnu (codemod / find-replace). Označ tagem `batch`.
-- Nálezy, které pocházejí z toolchain výstupů předaných v zadání (tsc/lint/knip), uveď, ale označ tagem `toolchain` — uživatel může chtít řešit přes nástroj, ne ručně.
+- Pokud má jeden problém >20 výskytů, neuváděj jednotlivé řádky – uveď pattern, počet výskytů, příklad 3 lokací a navrhni hromadnou změnu (codemod / find-replace). Označ tagem `batch`.
+- Nálezy, které pocházejí z toolchain výstupů předaných v zadání (tsc/lint/knip), uveď, ale označ tagem `toolchain` – uživatel může chtít řešit přes nástroj, ne ručně.
 
 Pro každý nalezený problém uveď:
 - Kategorie (KRITICKÉ / STŘEDNÍ / KOSMETICKÉ)
@@ -111,7 +111,7 @@ Pro každý nalezený problém uveď:
 - Konkrétní soubory a řádky (file:line); u batch uveď root + počet + 3 příklady
 - Navrhované nejlepší řešení (konkrétní akce, ne vágní "refaktoruj to")
 - Tagy `toolchain` / `batch`, pokud se hodí
-- `related_root` — title jiného problému, jehož je tento následkem (volitelné)
+- `related_root` – title jiného problému, jehož je tento následkem (volitelné)
 
 Výstup strukturuj jako JSON pole objektů:
 [
@@ -127,15 +127,15 @@ Výstup strukturuj jako JSON pole objektů:
 ]
 ```
 
-## Fáze 3: Zpracování výsledků
+## Fáze 3 – Zpracování výsledků
 
 Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak KOSMETICKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
 
 ### Rozdělení na mechanické a sporné
 
-Než seznam předložíš, rozděl ho na dvě skupiny — uživatele nemá smysl obtěžovat odklikáváním věcí, u kterých existuje jen jedno správné řešení.
+Než seznam předložíš, rozděl ho na dvě skupiny – uživatele nemá smysl obtěžovat odklikáváním věcí, u kterých existuje jen jedno správné řešení.
 
-**Mechanické** — oprava je jednoznačná, bezriziková a nemění chování ani strukturu. Typicky:
+**Mechanické** – oprava je jednoznačná, bezriziková a nemění chování ani strukturu. Typicky:
 - rozbitý nebo neexistující odkaz, import na přesunutý soubor, špatná cesta
 - nepoužitý import, nepoužitá lokální proměnná
 - překlep v komentáři, názvu sekce nebo odkazu
@@ -144,17 +144,17 @@ Než seznam předložíš, rozděl ho na dvě skupiny — uživatele nemá smysl
 - zastaralý komentář nebo věta v dokumentaci, kde platný stav jednoznačně vyplývá z kódu
 - chybějící položka v `.env.example` u proměnné prokazatelně použité v kódu
 
-**Sporné** — všechno ostatní, tedy vždy když existuje víc rozumných řešení nebo oprava zasahuje dál než na jedno místo:
+**Sporné** – všechno ostatní, tedy vždy když existuje víc rozumných řešení nebo oprava zasahuje dál než na jedno místo:
 - přejmenování, přesuny souborů, změny struktury
 - slučování duplicit (které z míst je to správné?)
 - změny typů, schémat, API kontraktů, bezpečnostních pravidel
 - mazání kódu, který vypadá mrtvý, ale nemusí být
-- `batch` nálezy (>20 výskytů) — vždy sporné, i když je jednotlivá oprava triviální
+- `batch` nálezy (>20 výskytů) – vždy sporné, i když je jednotlivá oprava triviální
 - cokoliv, co mění chování
 
 Při pochybnosti patří nález mezi sporné. Nálezy s tagem `toolchain` posuzuj stejně jako ostatní.
 
-## Fáze 4: Přehled
+## Fáze 4 – Přehled
 
 Zobraz uživateli přehled před tím, než začneš procházet problémy:
 
@@ -170,29 +170,29 @@ Z toho:
 - [toolchain] hlášeno již existujícím nástrojem: N
 - [batch] hromadné (>20 výskytů): N
 
-Mechanických (jednoznačná bezriziková oprava): N — ty opravím rovnou a jen je vypíšu.
-Sporných: M — ty projdeme spolu od nejzávažnějších, u každého navrhnu řešení a zeptám se.
+Mechanických (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
+Sporných: M – ty projdeme spolu od nejzávažnějších, u každého navrhnu řešení a zeptám se.
 ```
 
 Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
-## Fáze 4b: Mechanické opravy
+## Fáze 5 – Mechanické opravy
 
 Mechanické nálezy (viz Fáze 3) oprav **rovnou, bez ptaní**. Pak:
 
-1. Spusť verifikaci podle kroku 3b Fáze 5 (tsc/build/testy). Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
-2. Vypiš, co jsi opravil — jeden řádek na nález:
+1. Spusť verifikaci podle kroku 3b Fáze 6 (tsc/build/testy). Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
+2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N mechanických)
-   - 🔵 [název] — soubor:řádek — [co konkrétně změněno]
+   - 🔵 [název] – soubor:řádek – [co konkrétně změněno]
    ```
 3. Commit dle autocommit nastavení projektu. Mechanické opravy commituj **jedním commitem** dohromady, ne po jedné.
 
 Pokud uživatel na některou z těchto oprav zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
 
-Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné shrnutí.
+Pokud nejsou žádné sporné nálezy, přeskoč Fázi 6 rovnou na závěrečné shrnutí.
 
-## Fáze 5: Interaktivní průchod
+## Fáze 6 – Interaktivní průchod
 
 Pro KAŽDÝ **sporný** problém (jeden po druhém, nikdy víc najednou):
 
@@ -205,45 +205,45 @@ Problém: [popis]
 Kde: [soubory:řádky, nebo "X výskytů, např. ..." u batch]
 
 Navrhované řešení:
-[konkrétní popis co přesně změnit — ne vágní "refaktoruj to", ale "přesuň funkci X ze souboru A do B a aktualizuj import v C"]
+[konkrétní popis co přesně změnit – ne vágní "refaktoruj to", ale "přesuň funkci X ze souboru A do B a aktualizuj import v C"]
 ```
 
-2. Zeptej se **vždy přes tool `AskUserQuestion`** — nikdy ne vypsáním voleb jako text v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena.
+2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena.
 
    Jedno volání = jeden problém = jedna otázka (`multiSelect: false`):
    - `header`: `Nález N/celkem` (max 12 znaků, klidně zkrať na `N/celkem`)
    - `question`: název problému a v čem je, jednou větou
    - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
-     - **Opravit** — provedu navrhovanou změnu
-     - **Odložit** — nechám být, vrátíme se k tomu později
-     - **Přeskočit** — neopravovat, zapíšu do CLAUDE.md jako „won't fix"
-     - **Rozbalit** — *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
+     - **Opravit** – provedu navrhovanou změnu
+     - **Odložit** – nechám být, vrátíme se k tomu později
+     - **Přeskočit** – neopravovat, zapíšu do CLAUDE.md jako „won't fix"
+     - **Rozbalit** – *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
 
-   Tool má strop **4 volby** na otázku — tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej; kdyby byla potřeba, musí se otázka rozdělit na dvě.
+   Tool má strop **4 volby** na otázku – tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej; kdyby byla potřeba, musí se otázka rozdělit na dvě.
 
-   Volbu **Other** doplňuje tool sám — uživatel přes ni může napsat vlastní instrukci nebo se doptat. Když ji použije, ber to jako doplňující instrukci k aktuálnímu problému (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno".
+   Volbu **Other** doplňuje tool sám – uživatel přes ni může napsat vlastní instrukci nebo se doptat. Když ji použije, ber to jako doplňující instrukci k aktuálnímu problému (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno".
 
    Zpracování odpovědí:
-   - **Opravit** — proveď změnu hned (krok 3)
-   - **Odložit** — zapiš do interního seznamu odložených, neřeš teď
-   - **Přeskočit** — zeptej se na krátký důvod („Proč to neopravovat?") a zapiš do projektového `CLAUDE.md` do kapitoly `## Consistency` (krok 6). Pokud uživatel nechce uvést důvod, zapiš `(bez uvedeného důvodu)`.
-   - **Rozbalit** — vypiš všechny lokace a začni je řešit jednotlivě jako samostatné podproblémy
+   - **Opravit** – proveď změnu hned (krok 3)
+   - **Odložit** – zapiš do interního seznamu odložených, neřeš teď
+   - **Přeskočit** – zeptej se na krátký důvod („Proč to neopravovat?") a zapiš do projektového `CLAUDE.md` do kapitoly `## Consistency` (krok 6). Pokud uživatel nechce uvést důvod, zapiš `(bez uvedeného důvodu)`.
+   - **Rozbalit** – vypiš všechny lokace a začni je řešit jednotlivě jako samostatné podproblémy
 
 3. Pokud uživatel zvolí **Opravit**:
-   a. Proveď změnu. U batch problému (>20 výskytů) řeš hromadně — find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
-   b. **Verifikace po opravě — vždy, ne občas.** Spusť relevantní kontroly:
+   a. Proveď změnu. U batch problému (>20 výskytů) řeš hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
+   b. **Verifikace po opravě – vždy, ne občas.** Spusť relevantní kontroly:
       - U TS projektu: `tsc --noEmit`
       - Pokud projekt má build script a oprava se týká buildovaného kódu a build je rychlý (~30s): `<package manager> run build`
       - Pokud existují relevantní testy pro upravený soubor a jdou rychle pustit: pusť je
    c. Pokud kontrola selže: **zastav se**, ukaž uživateli chybu a diff a zeptej se jak pokračovat. Nepokračuj automaticky na další problém.
-   d. Po úspěšné opravě KRITICKÉHO problému přepočítej zbývající seznam — projdi položky s `related_root === <title opraveného>` a krátce ověř (Read/Grep), zda už nejsou neaktuální. Ty, co se vyřešily samy, vyhoď z fronty a započítej je do "vyřešeno automaticky" v závěrečném shrnutí.
-   e. Commit dle autocommit nastavení projektu — pokud projektový `CLAUDE.md` obsahuje sekci `### Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
+   d. Po úspěšné opravě KRITICKÉHO problému přepočítej zbývající seznam – projdi položky s `related_root === <title opraveného>` a krátce ověř (Read/Grep), zda už nejsou neaktuální. Ty, co se vyřešily samy, vyhoď z fronty a započítej je do "vyřešeno automaticky" v závěrečném shrnutí.
+   e. Commit dle autocommit nastavení projektu – pokud projektový `CLAUDE.md` obsahuje sekci `### Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
 
-4. Pokud uživatel použije volbu **Other** nebo napíše vlastní text mimo nabídku, interpretuj to jako doplňující instrukci k aktuálnímu problému (uprav navrhované řešení nebo odpověz na dotaz) — NEdávej to jako "přeskočeno". Po vyřešení se na tentýž problém zeptej znovu.
+4. Pokud uživatel použije volbu **Other** nebo napíše vlastní text mimo nabídku, interpretuj to jako doplňující instrukci k aktuálnímu problému (uprav navrhované řešení nebo odpověz na dotaz) – NEdávej to jako "přeskočeno". Po vyřešení se na tentýž problém zeptej znovu.
 
 5. Pokračuj na další problém.
 
-6. Zápis do `## Consistency` v projektovém CLAUDE.md (krok 2 — Přeskočit):
+6. Zápis do `## Consistency` v projektovém CLAUDE.md (krok 2 – Přeskočit):
    - Pokud projektový `CLAUDE.md` neexistuje, vytvoř ho s minimálním obsahem (hlavička + kapitola `## Consistency`)
    - Pokud kapitola `## Consistency` neexistuje, doplň ji na konec souboru
    - Formát záznamu (přidávat na konec kapitoly):
@@ -252,12 +252,12 @@ Navrhované řešení:
 
    Položky vyhodnocené při /consistency auditu jako "neopravovat". Při dalším auditu se neuvádějí.
 
-   - **YYYY-MM-DD** — *<title>*: <důvod>
+   - **YYYY-MM-DD** – *<title>*: <důvod>
      - Lokace: <soubor:řádek, ...>
    ```
    - Datum vezmi z `Today's date is ...` v system-reminderu.
 
-## Fáze 6: Závěrečné shrnutí
+## Fáze 7 – Závěrečné shrnutí
 
 Po projití všech problémů zobraz:
 

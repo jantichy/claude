@@ -17,7 +17,7 @@ Teprve pak pokračuj plněním skillu.
 
 ## Co skill dělá
 
-Zapíná/vypíná logování každého prompt uživatele do `PROMPTS.md` v projektu. Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/skills/autoprompt/autoprompt.sh` — ten připíše každý prompt jako oddělovač `---`, pořadové číslo `**N.**` a text promptu.
+Zapíná/vypíná logování každého prompt uživatele do `PROMPTS.md` v projektu. Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/skills/autoprompt/autoprompt.sh` – ten připíše každý prompt jako oddělovač `---`, pořadové číslo `**N.**` a text promptu.
 
 Stav v projektu = přítomnost nadpisu `### Autoprompt` v projektovém `CLAUDE.md`.
 
@@ -33,7 +33,7 @@ Vypiš stav (zapnutý/vypnutý). Pokud zapnutý, uveď i počet promptů v `PROM
 
 Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
-1. **Zkontroluj globální `~/.claude/CLAUDE.md`** — pokud neobsahuje nadpis `### Autoprompt`, doplň ho s tímto textem (vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
+1. **Zkontroluj globální `~/.claude/CLAUDE.md`** – pokud neobsahuje nadpis `### Autoprompt`, doplň ho s tímto textem (vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
 
    ```
    ### Autoprompt
@@ -77,11 +77,11 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
    ---
    ```
 
-5. **Backfill historie ze session souborů Claude Code.** Adresář: `~/.claude/projects/<encoded-cwd>/`, kde `<encoded-cwd>` = absolutní cesta k projekt rootu se znaky `/` **a `.`** nahrazenými za `-` (vč. počátečního) — např. `/Users/honza/.claude` → `-Users-honza--claude`. Pokud adresář neexistuje, backfill přeskoč.
+5. **Backfill historie ze session souborů Claude Code.** Adresář: `~/.claude/projects/<encoded-cwd>/`, kde `<encoded-cwd>` = absolutní cesta k projekt rootu se znaky `/` **a `.`** nahrazenými za `-` (vč. počátečního) – např. `/Users/honza/.claude` → `-Users-honza--claude`. Pokud adresář neexistuje, backfill přeskoč.
 
    Z každého `*.jsonl` extrahuj user prompty: řádky kde `type == "user"`, `message.content` je textový string (ne `tool_result` array, ne objekt s `tool_use_id`), text nezačíná `<command-` ani `<local-command-`, a `isMeta` není `true`. Páry `(timestamp, text)` deduplikuj a chronologicky seřaď.
 
-   **Nezapomeň na zprávy poslané uprostřed běžícího tahu** — ty nejsou uložené jako `type == "user"`, ale jako `type == "queue-operation"` s `operation == "enqueue"` a textem v poli `content`. Bez nich v `PROMPTS.md` tiše chybí část promptů. Extrahuj je taky a zařaď podle jejich `timestamp`.
+   **Nezapomeň na zprávy poslané uprostřed běžícího tahu** – ty nejsou uložené jako `type == "user"`, ale jako `type == "queue-operation"` s `operation == "enqueue"` a textem v poli `content`. Bez nich v `PROMPTS.md` tiše chybí část promptů. Extrahuj je taky a zařaď podle jejich `timestamp`.
 
    Diff oproti `PROMPTS.md`: vynech ty, jejichž text už je v souboru (pod `**N.**` markery). Zbylé připoj na konec, číslováno od `N+1`.
 
@@ -92,8 +92,8 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 Pokud je už vypnutý → jen oznam, nic neměň. Jinak:
 
 1. Odstraň sekci `### Autoprompt` z `CLAUDE.md` (pokud poté zbyde prázdná sekce `## Automatické akce`, odstraň i ji).
-2. Odstraň hook ze `.claude/settings.local.json` — ze všech objektů v `hooks.UserPromptSubmit[*].hooks[*]` odstraň ty, kde `command` obsahuje `autoprompt.sh`. Pokud po odstranění zůstane prázdný `UserPromptSubmit` array nebo prázdné `hooks`, vyčisti i je.
-3. `PROMPTS.md` **nemaž** — historie zůstane.
+2. Odstraň hook ze `.claude/settings.local.json` – ze všech objektů v `hooks.UserPromptSubmit[*].hooks[*]` odstraň ty, kde `command` obsahuje `autoprompt.sh`. Pokud po odstranění zůstane prázdný `UserPromptSubmit` array nebo prázdné `hooks`, vyčisti i je.
+3. `PROMPTS.md` **nemaž** – historie zůstane.
 
 ## Po dokončení
 

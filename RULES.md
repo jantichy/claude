@@ -1,6 +1,6 @@
 # Pravidla práce
 
-Obecná pravidla, kterými se řiď při práci na jakémkoli projektu — programátorském, znalostním i obsahovém.
+Obecná pravidla, kterými se řiď při práci na jakémkoli projektu – programátorském, znalostním i obsahovém.
 
 ------
 
@@ -15,9 +15,14 @@ Obecná pravidla, kterými se řiď při práci na jakémkoli projektu — progr
 
 ### Styl odpovědí
 
-- Odpovědi krátké a věcné — nepřepisuj, co uživatel řekl, rovnou jednej.
-- Nepoužívej emoji, pokud o ně uživatel nepožádá. Výjimkou jsou skilly, které mají emoji explicitně ve své výstupní šabloně (např. `/consistency` a `/cleanup`, kde barevné tečky odlišují závažnost nálezů) — tam se šablona dodržuje doslova.
+- Odpovědi krátké a věcné – nepřepisuj, co uživatel řekl, rovnou jednej.
+- Nepoužívej emoji, pokud o ně uživatel nepožádá. Výjimkou jsou skilly, které mají emoji explicitně ve své výstupní šabloně (např. `/consistency` a `/cleanup`, kde barevné tečky odlišují závažnost nálezů) – tam se šablona dodržuje doslova.
 - S dotazem na další postup rovnou navrhni několik řešení, včetně výhod a nevýhod každého, doporuč preferované.
+
+### Česká typografie
+
+- **Pomlčka je vždy en dash `–`** (U+2013), obklopená mezerami. Em dash `—` se v české sazbě nepoužívá; nepiš ho ani do MD dokumentů, ani do odpovědí.
+- **Uvozovky jsou české `„…"`** – dolní otevírací, horní zavírací.
 
 ### Při nejistotě se zeptat
 
@@ -25,13 +30,13 @@ Kdykoliv se dostaneš do situace, kde nemáš jasný podklad, jednoznačný poky
 
 Týká se to zejména **technických názvů** (názvy proměnných v cizí doméně, API volání a parametry, event names, IDs, klíče) a **chybějících podkladů** (šablona, JSON, schéma, příklad). Když přesnou hodnotu neznáš ze zdrojů v projektu nebo od uživatele, zeptej se, **vymyšlený název je horší než žádný**.
 
-### Více otázek — ptát se postupně, ne všechno najednou
+### Více otázek – ptát se postupně, ne všechno najednou
 
 Kdykoli máš víc otázek nebo výzev k rozhodnutí, **nesypej je na uživatele najednou**. Postupuj takto:
 
 1. **Nejdřív krátký přehled všech bodů**, ať uživatel ví, co všechno se bude dořešovat.
 2. **Hned oznam**, že se teď budeš ptát postupně, jeden bod po druhém.
-3. **Zeptej se jen na první bod** — pokud to dává smysl, rovnou navrhni řešení nebo nabídni možnosti.
+3. **Zeptej se jen na první bod** – pokud to dává smysl, rovnou navrhni řešení nebo nabídni možnosti.
 4. **Až po dořešení toho bodu** přejdi na další.
 5. **Pokud odbočíme** úplně jinam, aniž by byly všechny body dořešené, sám se připomeň, že tam zbývají nedořešená témata, a zeptej se, jestli v nich můžeme pokračovat.
 
@@ -43,13 +48,13 @@ Kdykoli máš víc otázek nebo výzev k rozhodnutí, **nesypej je na uživatele
 
 ### Pravda v souborech, ne v konverzaci
 
-Cokoliv se v konverzaci dohodne (pravidlo, konvence, rozhodnutí, struktura, nový poznatek) → **okamžitě zapsat** do příslušných souborů projektu (typicky `CLAUDE.md` nebo specializovaný soubor). **Soubory jsou jediný autoritativní zdroj** — nikdy se nespoléhat na historii konverzace ani memory. „Až někdy později to zapíšeš" znamená, že se to ztratí.
+Cokoliv se v konverzaci dohodne (pravidlo, konvence, rozhodnutí, struktura, nový poznatek) → **okamžitě zapsat** do příslušných souborů projektu (typicky `CLAUDE.md` nebo specializovaný soubor). **Soubory jsou jediný autoritativní zdroj** – nikdy se nespoléhat na historii konverzace ani memory. „Až někdy později to zapíšeš" znamená, že se to ztratí.
 
-### Single source of truth — každá informace na právě jednom místě
+### Single source of truth – každá informace na právě jednom místě
 
-Každé pravidlo / fakt / instrukce existuje na **právě jednom** místě. Jiné soubory jen odkazují, nekopírují. Pokud by stejná informace měla žít na dvou místech, je to chyba designu — najdi vyšší úroveň nebo jiné nové společné místo, kam patří, a ostatní jen referencují.
+Každé pravidlo / fakt / instrukce existuje na **právě jednom** místě. Jiné soubory jen odkazují, nekopírují. Pokud by stejná informace měla žít na dvou místech, je to chyba designu – najdi vyšší úroveň nebo jiné nové společné místo, kam patří, a ostatní jen referencují.
 
-Když přesto narazíš na situaci, kde stejná informace existuje na víc místech, a chystáš se ji přejmenovat / změnit (soubor, termín, konvenci, klíč…), projdi celý repozitář a **aktualizuj všechny výskyty** — odkazy, zmínky v textu, komentáře, strukturální diagramy. Žádná reference nesmí zůstat zastaralá.
+Když přesto narazíš na situaci, kde stejná informace existuje na víc místech, a chystáš se ji přejmenovat / změnit (soubor, termín, konvenci, klíč…), projdi celý repozitář a **aktualizuj všechny výskyty** – odkazy, zmínky v textu, komentáře, strukturální diagramy. Žádná reference nesmí zůstat zastaralá.
 
 ### K pravidlům ukládat i „proč" a kontext
 
@@ -59,13 +64,13 @@ Když uživatel přidá zdůvodnění (proč to tak je, co k tomu vedlo, jaký i
 
 Když má jeden koncept víc cílových čtenářů (interní vývojář vs. klient; backend dev vs. frontend dev; LLM vs. člověk; veřejnost vs. soukromé knowhow), každý čtenář dostává **vlastní soubor** (a často i vlastní repozitář). Mixovat cílové skupiny v jednom souboru znamená, že nikomu neslouží 100%.
 
-### Naming — jedno výstižné slovo
+### Naming – jedno výstižné slovo
 
 Preferuj **jednoslovné, sémantické** názvy souborů a adresářů. Víceslovné jen když jedno slovo nestačí (a i pak co nejstručnější, oddělené pomlčkou). Bez prefixů, čísel nebo datumů v názvu (pokud nejde o explicitně časovou věc). Žádné `utils-helpers-misc.ts`, žádné `MyFinalDocumentV2.md`. Anglicky, i když obsah je česky.
 
 ### Žádný „smetiště" adresář
 
-Žádné `misc/`, `tmp/`, `other/`, `stuff/`, `helpers/`. Když nevíš, kam soubor patří, **neumísťuj ho do smetiště** — buď najdi správné místo, nebo přiznej, že struktura tomu souboru nedává smysl, a uprav strukturu.
+Žádné `misc/`, `tmp/`, `other/`, `stuff/`, `helpers/`. Když nevíš, kam soubor patří, **neumísťuj ho do smetiště** – buď najdi správné místo, nebo přiznej, že struktura tomu souboru nedává smysl, a uprav strukturu.
 
 ### Generic-base + delta files
 
@@ -73,7 +78,7 @@ Když máš víc variant stejného konceptu (platforem, systémů, prostředí, 
 
 ### Jednoduchost před úplností
 
-Vyhýbej se kombinatorické explozi. Když máš dimenze A, B, C, neudržuj `A×B×C` souborů — udržuj `A` souborů, `B` souborů, `C` souborů a kombinace skládej v rámci procesu. **Přímočará jednoduchost před překomplikovaným systémem kombinací všeho se vším.**
+Vyhýbej se kombinatorické explozi. Když máš dimenze A, B, C, neudržuj `A×B×C` souborů – udržuj `A` souborů, `B` souborů, `C` souborů a kombinace skládej v rámci procesu. **Přímočará jednoduchost před překomplikovaným systémem kombinací všeho se vším.**
 
 ------
 
@@ -81,7 +86,7 @@ Vyhýbej se kombinatorické explozi. Když máš dimenze A, B, C, neudržuj `A×
 
 ### Mechanická pravidla nad rozhodováním případ od případu
 
-Pro opakované rozhodování („kam tenhle soubor / koncept patří", „jakou strukturu zvolit") vždy formulovat **explicitní pravidlo** s deterministickými kritérii, ne soudit ad hoc. A hned pravidlo uložit do odpovídajícího souboru. Snižuje decision fatigue a drží konzistenci. Když se pravidlo musí porušit, je to **signál**, že pravidlo je špatně formulované — ne výjimka.
+Pro opakované rozhodování („kam tenhle soubor / koncept patří", „jakou strukturu zvolit") vždy formulovat **explicitní pravidlo** s deterministickými kritérii, ne soudit ad hoc. A hned pravidlo uložit do odpovídajícího souboru. Snižuje decision fatigue a drží konzistenci. Když se pravidlo musí porušit, je to **signál**, že pravidlo je špatně formulované – ne výjimka.
 
 ### Detekce konfliktů před přidáním
 
@@ -115,4 +120,4 @@ Soubory leží tam, kam **dnes patří podle smyslu**, ne tam, kde historicky vz
 
 ### Při odstranění nechat stopu
 
-Když mažeš funkci / pravidlo / pole / soubor, který by se mohl jindy „vrátit" omylem (kopírováním z jiného projektu, z legacy, z dokumentace), nech stopu — sekce „Odstraněné položky" v relevantním souboru, řádek v CHANGELOGu, krátká poznámka. Ne pro každé smazání, ale pro to, kde má smysl chránit se před nechtěným návratem.
+Když mažeš funkci / pravidlo / pole / soubor, který by se mohl jindy „vrátit" omylem (kopírováním z jiného projektu, z legacy, z dokumentace), nech stopu – sekce „Odstraněné položky" v relevantním souboru, řádek v CHANGELOGu, krátká poznámka. Ne pro každé smazání, ale pro to, kde má smysl chránit se před nechtěným návratem.

@@ -17,7 +17,7 @@ Teprve pak pokračuj plněním skillu.
 
 ## Co skill dělá
 
-Zapíná/vypíná autocommit pro aktuální projekt — Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce Autocommit.
+Zapíná/vypíná autocommit pro aktuální projekt – Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce Autocommit.
 
 Stav v projektu = přítomnost nadpisu `### Autocommit` v projektovém `CLAUDE.md`.
 
@@ -25,7 +25,7 @@ Stav v projektu = přítomnost nadpisu `### Autocommit` v projektovém `CLAUDE.m
 
 ### Zjisti projekt root
 
-Najdi `.git` adresář pomocí **Glob** (NIKDY nespouštěj `git` přes Bash — červená chyba při nenulovém exit kódu by uživatele zbytečně vyděsila). Zkus patterny `.git`, pak `../.git`, `../../.git`, `../../../.git` (max 3 úrovně výš). Projekt root = adresář obsahující `.git`.
+Najdi `.git` adresář pomocí **Glob** (NIKDY nespouštěj `git` přes Bash – červená chyba při nenulovém exit kódu by uživatele zbytečně vyděsila). Zkus patterny `.git`, pak `../.git`, `../../.git`, `../../../.git` (max 3 úrovně výš). Projekt root = adresář obsahující `.git`.
 
 Pokud `.git` nenajdeš, oznam „Aktuální adresář není git repozitář." a skonči **bez jakéhokoliv dalšího příkazu**.
 
@@ -41,7 +41,7 @@ Vypiš stav (zapnutý/vypnutý).
 
 Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
-1. **Zkontroluj globální `~/.claude/CLAUDE.md`** — pokud neobsahuje nadpis `### Autocommit`, doplň ho s tímto textem (vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
+1. **Zkontroluj globální `~/.claude/CLAUDE.md`** – pokud neobsahuje nadpis `### Autocommit`, doplň ho s tímto textem (vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
 
    ```
    ### Autocommit

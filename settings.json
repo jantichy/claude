@@ -224,7 +224,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/honza/.claude/itermnotify.sh working",
+            "command": "/Users/honza/.claude/iterm-notify.sh working",
             "timeout": 5
           }
         ]
@@ -235,7 +235,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/honza/.claude/itermnotify.sh waiting",
+            "command": "/Users/honza/.claude/iterm-notify.sh waiting",
             "timeout": 5
           }
         ]
@@ -246,7 +246,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/honza/.claude/itermnotify.sh done",
+            "command": "/Users/honza/.claude/iterm-notify.sh done",
             "timeout": 5
           }
         ]
@@ -255,7 +255,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash /Users/honza/.claude/statusline.sh"
+    "command": "/Users/honza/.claude/statusline.sh"
   },
   "enabledPlugins": {
     "chrome-devtools-mcp@claude-plugins-official": true,

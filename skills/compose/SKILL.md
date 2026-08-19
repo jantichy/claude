@@ -1,12 +1,10 @@
 ---
 name: compose
-description: Skill se použije, když uživatel zadá "/compose" nebo chce
-  napsat článek, post na sociální sítě či vlákno svým jménem a stylem.
-  Piš text hlasem Jana Tichého podle znalostní báze v ~/Dev/claude/compose/.
+description: Skill se použije, když uživatel zadá "/compose" nebo chce napsat článek, post na sociální sítě či vlákno svým jménem a stylem. Piš text hlasem Jana Tichého podle znalostní báze v ~/Dev/claude/compose/.
 allowed-tools: [Read, Grep, Glob, Write, Edit]
 ---
 
-# Compose — psaní textů hlasem Jana Tichého
+# Compose – psaní textů hlasem Jana Tichého
 
 ## Úvodní hláška (vždy jako první)
 
@@ -16,29 +14,14 @@ Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude
 
 Teprve pak pokračuj plněním skillu.
 
-## Účel
+## Co skill dělá
 
-Proces psaní textu, který má znít jako od Honzy. Znalostní báze žije
-v `~/Dev/claude/compose/`, archiv všech jeho textů v `~/Dev/archiv/`.
+Proces psaní textu, který má znít jako od Honzy. Znalostní báze žije v `~/Dev/claude/compose/`, archiv všech jeho textů v `~/Dev/archiv/`.
 
 ## Postup
 
-1. **Zadání.** Zjisti: formát (článek / post / vlákno), téma, publikum,
-   kanál — a hlavně Honzovy názory a pointy k tématu. Honza může dodat
-   jen téma, osnovu, nebo hrubý draft. Jeho názory si NIKDY nevymýšlej:
-   když k tématu nezná jeho postoj ani ty, doptej se, než začneš psát.
-2. **Kontext.** Načti `~/Dev/claude/compose/STYLE.md` + profil formátu
-   (`ARTICLE.md` / `POST.md` / `THREAD.md`) + odpovídající
-   `*-EXAMPLES.md`. K tomu dohledej v `~/Dev/archiv/` 3–5 textů
-   nejpodobnějších tématem a formátem (přes zlatý fond a grep) a přečti
-   je celé jako živé vzory.
+1. **Zadání.** Zjisti: formát (článek / post / vlákno), téma, publikum, kanál – a hlavně Honzovy názory a pointy k tématu. Honza může dodat jen téma, osnovu, nebo hrubý draft. Jeho názory si NIKDY nevymýšlej: když k tématu nezná jeho postoj ani ty, doptej se, než začneš psát.
+2. **Kontext.** Načti `~/Dev/claude/compose/STYLE.md` + profil formátu (`ARTICLE.md` / `POST.md` / `THREAD.md`) + odpovídající `*-EXAMPLES.md`. K tomu dohledej v `~/Dev/archiv/` 3–5 textů nejpodobnějších tématem a formátem (přes zlatý fond a grep) a přečti je celé jako živé vzory.
 3. **Draft.** Napiš text podle STYLE.md a profilu formátu.
-4. **Self-check.** Před odevzdáním ověř: struktura vykládá od A k B;
-   šťouralové předjati (vynechané detaily explicitně zmíněné a
-   zdůvodněné); srozumitelné pro cílové publikum; projdi text proti
-   anti-patternům ze STYLE.md — zní to jako Honza, ne jako AI?
-   Zkontroluj i horní mez: ustálené obraty a expresiva ze STYLE.md
-   („za mě", „neasi", „Akorát že vůbec." apod.) smí být v textu
-   nanejvýš jednou — víc už je parodie; klidně žádný.
-5. **Iterace.** Předlož draft, zapracuj připomínky. Připomínky obecné
-   platnosti navrhni promítnout zpět do STYLE.md či profilů.
+4. **Self-check.** Před odevzdáním ověř: struktura vykládá od A k B; šťouralové předjati (vynechané detaily explicitně zmíněné a zdůvodněné); srozumitelné pro cílové publikum; projdi text proti anti-patternům ze STYLE.md – zní to jako Honza, ne jako AI? Zkontroluj i horní mez: ustálené obraty a expresiva ze STYLE.md („za mě", „neasi", „Akorát že vůbec." apod.) smí být v textu nanejvýš jednou – víc už je parodie; klidně žádný.
+5. **Iterace.** Předlož draft, zapracuj připomínky. Připomínky obecné platnosti navrhni promítnout zpět do STYLE.md či profilů.
