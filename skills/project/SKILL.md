@@ -122,7 +122,7 @@ Do CLAUDE.md vždy přidej sekci `## Typ projektu` s krátkým popisem podle vol
   ## Hotovo
   ```
   a do CLAUDE.md přidej pravidlo: "Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first). Necháváš `docs/` jako zdroj pravdy pro zadání a rozhodnutí."
-- **Web**: text "Webové rozhraní — obsah, struktura, šablony, ne klasický PRD/implementační proces." Do CLAUDE.md přidej: "Při každé úpravě webového rozhraní projdi checklist `~/dev/claude/WEB.md` (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR...)."
+- **Web**: text "Webové rozhraní — obsah, struktura, šablony, ne klasický PRD/implementační proces." Do CLAUDE.md přidej: "Při každé úpravě webového rozhraní projdi checklist `~/Dev/claude/WEB.md` (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR...)."
 - **Psaní a obsah**: text "Projekt zaměřený na psaní/obsah, ne na vývoj software — bez PRD/implementačního procesu."
 - **Data a výzkum**: text "Jednorázová datová/výzkumná analýza — bez PRD procesu, výstupem jsou zjištění/report, ne nasazovaný kód."
 - **Ostatní**: text "Projekt mimo výše uvedené kategorie." (bez dalších kroků)

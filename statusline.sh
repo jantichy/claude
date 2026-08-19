@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Claude Code status line – globální konfigurace
-# Zobrazuje: context bar | model | cwd | git změny | čas session
+# Zobrazuje: cwd | model | context bar | 5h limit | týdenní limit | git změny
 
 input=$(cat)
 
@@ -53,7 +53,7 @@ usage_part=""
 if [ -n "$ctx_used" ]; then
   bar=$(make_bar "$ctx_used")
   ctx_int=$(echo "$ctx_used" | awk '{printf "%.0f", $1}')
-  # Barva: zelená < 60 %, žlutá < 85 %, červená >= 85 %
+  # Barva: zelená < 60 %, tlumená žlutá < 80 %, žlutá < 85 %, červená >= 85 %
   if [ "$ctx_int" -ge 85 ]; then
     color="\033[31m"     # svítivá červená
   elif [ "$ctx_int" -ge 80 ]; then

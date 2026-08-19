@@ -2,7 +2,7 @@
 name: transcript
 description: Skill se použije, když uživatel zadá "/transcript", nebo když chce přepsat zvukové nahrávky (MP3, M4A, WAV, AAC…) do Markdownu — přepis a strukturované shrnutí schůzky/nahrávky. Přepis běží kompletně lokálně a offline (whisper.cpp).
 argument-hint: ""
-allowed-tools: [Bash, Read, Write, Edit, Task]
+allowed-tools: [Bash, Read, Write, Edit, Agent]
 ---
 
 # Transcript

@@ -27,7 +27,7 @@ v `~/Dev/claude/compose/`, archiv všech jeho textů v `~/Dev/archiv/`.
    zdůvodněné); srozumitelné pro cílové publikum; projdi text proti
    anti-patternům ze STYLE.md — zní to jako Honza, ne jako AI?
    Zkontroluj i horní mez: ustálené obraty a expresiva ze STYLE.md
-   („za mě“, „neasi“, „Akorát že vůbec.“ apod.) smí být v textu
+   („za mě", „neasi", „Akorát že vůbec." apod.) smí být v textu
    nanejvýš jednou — víc už je parodie; klidně žádný.
 5. **Iterace.** Předlož draft, zapracuj připomínky. Připomínky obecné
    platnosti navrhni promítnout zpět do STYLE.md či profilů.

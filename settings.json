@@ -207,12 +207,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [[ \"$CLAUDE_FILE_PATH\" == *.py ]]; then python -m py_compile \"$CLAUDE_FILE_PATH\"; fi",
+            "command": "bash -c 'p=$(jq -r \".tool_input.file_path // empty\"); case \"$p\" in *.py) python3 -m py_compile \"$p\";; esac; true'",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "if [[ \"$CLAUDE_FILE_PATH\" == *.ts ]]; then npx tsc --noEmit; fi",
+            "command": "bash -c 'p=$(jq -r \".tool_input.file_path // empty\"); case \"$p\" in *.ts|*.tsx) npx tsc --noEmit;; esac; true'",
             "timeout": 30
           }
         ]

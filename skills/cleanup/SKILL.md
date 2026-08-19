@@ -52,7 +52,7 @@ Zjisti kontext, ve kterém pracuješ:
    - **kódový** — `package.json`, `pyproject.toml`, `tests/`, zdrojové adresáře
    - **dokumentační / znalostní** — převažují MD soubory, žádný build ani testy
    - **smíšený** — dokumentace i kód
-   - **webové rozhraní** — pokud ano, načti závazný checklist `~/dev/claude/WEB.md`
+   - **webové rozhraní** — pokud ano, načti závazný checklist `~/Dev/claude/WEB.md`
 5. **Dokumentační mapa** — jaké soubory jsou v projektu nositeli pravdy: `README.md`, `CLAUDE.md`, `TODO.md`, `docs/*`, specializované soubory. Zapamatuj si, co je čí doména.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
@@ -148,7 +148,7 @@ Podle typu projektu z Fáze 0. **Každý krok vypiš zvlášť s jeho výsledkem
 
 - **Testy** — všechny sady, které projekt má (najdi je v `package.json` scripts, `Makefile`, `tests/`, README). Spusť je všechny, ne jen jednu.
 - **Typecheck / lint / build** — `tsc --noEmit`, eslint/biome, build script, pokud existují a jsou rychlé.
-- **Coding standards** — soulad s `~/.claude/CODING.md` a projektovými konvencemi. U webového rozhraní projdi checklist `~/dev/claude/WEB.md`.
+- **Coding standards** — soulad s `~/.claude/CODING.md` a projektovými konvencemi. U webového rozhraní projdi checklist `~/Dev/claude/WEB.md`.
 - **Nekódový projekt** — tahle část odpadá. **Řekni to explicitně** („projekt nemá testy ani build, technická kontrola se neprováděla"), ať nevzniká dojem, že se něco ověřilo.
 
 **Když něco selže: upozorni a zeptej se.** Vypiš, co selhalo a s jakým výstupem, a zeptej se přes `AskUserQuestion` s volbami **Opravit a pokračovat** / **Pokračovat bez opravy** / **Zastavit úklid**. **Nikdy selhání nezameť** a nikdy netvrď, že je hotovo, když testy neprocházejí — pokud se pokračuje bez opravy, musí to být vidět ve verdiktu ve Fázi 6.
