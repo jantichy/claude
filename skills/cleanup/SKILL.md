@@ -183,7 +183,7 @@ REPOZITÁŘ: <absolutní cesta>
 Přečti si v tomhle pořadí (jako by ses do projektu zaučoval):
 <seznam souborů v pořadí od obecného ke konkrétnímu>
 
-Referenční archivy (<vyjmenuj, typicky docs/research/, PROMPTS.md>) nečti celé – jen ověř, že soubory, na které se hlavní dokumenty odkazují, existují a sedí čísla kapitol tam, kde se citují.
+Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, PROMPTS.md, runtime adresáře>) nečti celé – jen ověř, že soubory, na které se hlavní dokumenty odkazují, existují a sedí čísla kapitol tam, kde se citují.
 
 ODPOVĚZ NA TYTO OTÁZKY:
 
@@ -191,11 +191,11 @@ ODPOVĚZ NA TYTO OTÁZKY:
 
 **B. Rozumím tomu, co se navrhuje?** Popiš vlastními slovy jádro projektu a jeho hlavní mechaniku. Kde jsi musel hádat nebo dohledávat?
 
-**C. Rozpory a nepravdy.** Tvrdí někde dokumentace něco, co jinde popírá? Zvlášť sleduj: **počty** (sedí čísla uváděná v textu se skutečným obsahem tabulek a seznamů?), názvy polí a stavů, hodnoty výčtů, co je v rozsahu a co ne, co je vyřešené a co otevřené.
+**C. Rozpory a nepravdy.** Tvrdí někde dokumentace něco, co jinde popírá? Zvlášť sleduj: **počty** (sedí čísla uváděná v textu se skutečným obsahem tabulek a seznamů?), názvy souborů, cest, sekcí a dalších pojmenovaných věcí, hodnoty výčtů, co je v rozsahu a co ne, co je vyřešené a co otevřené.
 
 **D. Chybějící kontext.** Je něco, co dokumenty předpokládají jako známé, ale nikde to nevysvětlují? Odkazují na rozhodnutí, jehož zdůvodnění chybí?
 
-**E. Zastaralé zbytky.** Věty typu „viz níže" / „zatím" / „odloženo" / „zvažuje se", které už neplatí. Sekce, které vypadají jako pozůstatek po přepisování. Odkazy na sekce, funkce nebo pole, které neexistují. Pozor: části dokumentace se měnily chirurgicky (nahrazením konkrétních vět), takže hrozí zbytky po zrušených konceptech.
+**E. Zastaralé zbytky.** Věty typu „viz níže" / „zatím" / „odloženo" / „zvažuje se", které už neplatí. Sekce, které vypadají jako pozůstatek po přepisování. Odkazy na sekce, soubory nebo pojmy, které neexistují nebo se jmenují jinak. Pozor: části dokumentace se měnily chirurgicky (nahrazením konkrétních vět, přejmenováním sekcí, přečíslováním), takže hrozí zbytky po zrušených konceptech a viséci v křížových odkazech. Aktivně je hledej.
 
 **F. Co bych se musel zeptat?** Vyjmenuj konkrétní otázky, na které bys nenašel odpověď a musel se ptát autora.
 
@@ -207,7 +207,7 @@ Nezapisuj do žádného souboru.
 **Zpracování nálezů:**
 
 - Každý nález vrať do Fáze 3 a oprav – mechanické sám, sporné s uživatelem.
-- Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Uživatel tenhle druhý průchod výslovně chce: *„ověř to celé znovu, ať jsme si fakt jistí"*.
+- Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanášejí nové viséce – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není. První průchod tohle z principu zachytit nemůže.
 - Po opravách zopakuj Fázi 4d – vzniklé změny musí být zase commitnuté a pushnuté.
 
 ------
