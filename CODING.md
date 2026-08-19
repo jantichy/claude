@@ -32,7 +32,7 @@ Pravidla pro pojmenování tříd, entit, polí, proměnných a funkcí. Cíl: k
 
 ### Git
 
-- Používej feature větve a otevírej Pull Requesty před mergem do `main`.
+- Používej feature větve a otevírej Pull Requesty před mergem do `main`. **Neplatí pro projekty se zapnutým autocommitem** (viz `~/.claude/CLAUDE.md`, kapitola *Autocommit*) — tam se commituje a pushuje přímo do aktuální větve, protože smyslem autocommitu je průběžně zálohovat rychlé iterace, ne připravovat je k revizi.
 - Commit messages: stručné, rozkazovací způsob (imperativ).
 - Necommituj ani nepushuj automaticky. Jen na explicitní žádost nebo v projektech s autocommitem.
 

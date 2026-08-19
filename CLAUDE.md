@@ -32,3 +32,12 @@ Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `### Autopromp
 ### README.md tohoto repa
 
 Platí jen pro tento projekt (`~/.claude`), ne globálně. `README.md` popisuje mé skilly a další vypíchnuté součásti konfigurace. Kdykoli přidáš nový skill nebo uděláš zásadní změnu chování existujícího skillu, rovnou k tomu přidej/aktualizuj odpovídající sekci v `README.md` — stejný styl a tón jako ostatní sekce (osobní, věcné, s konkrétním přínosem). Nečekej na vyžádání, udělej to jako součást té změny.
+
+------
+
+## Consistency
+
+Položky vyhodnocené při `/consistency` auditu jako "neopravovat". Při dalším auditu se neuvádějí.
+
+- **2026-08-19** — *Skill project duplikuje globální pravidla místo odkazu na ně*: projektový `CLAUDE.md` má být soběstačný a čitelný bez skládání odkazů — model si pravidlo přečte rovnou. Vědomě přijatá daň: při změně globálního pravidla zůstanou staré kopie v dříve založených projektech.
+  - Lokace: `skills/project/SKILL.md:124`, `skills/project/SKILL.md:125`

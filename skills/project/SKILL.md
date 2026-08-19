@@ -46,7 +46,7 @@ Zeptej se (AskUserQuestion), jedna otázka, 4 možnosti:
 - **Nic** — git se vůbec neřeší, přeskoč i krok 4 (gitignore).
 - **Jen lokální** — `git init`, žádný remote.
 - **Remote (napojit na existující)** — `git init`, pak se v chatu zeptej na URL existujícího remote repozitáře, a spusť `git remote add origin <url>`.
-- **Remote (založit nový)** — `git init`, pak AskUserQuestion na hostitele (GitHub / GitLab). Pokud GitHub a je dostupný `gh` CLI (`which gh`), zeptej se AskUserQuestion na viditelnost (soukromý/veřejný) a spusť `gh repo create <název-adresáře> --private|--public --source=. --remote=origin` (bez push, jen založení a napojení). Pokud `gh`/`glab` není dostupný nebo je zvoleno GitLab bez CLI, vypiš instrukci: "Založ prázdné repo na <platforma>, pak mi dej URL" — počkej na URL v chatu a spusť `git remote add origin <url>`.
+- **Remote (založit nový)** — `git init`, pak AskUserQuestion na hostitele (GitHub / GitLab). Pokud GitHub a je dostupný `gh` CLI (`which gh`), zeptej se AskUserQuestion na viditelnost (soukromý/veřejný) a spusť `gh repo create <název-adresáře> --private|--public --source=. --remote=origin` (bez push, jen založení a napojení). Pokud `gh` není dostupný nebo je zvoleno GitLab, vypiš instrukci: "Založ prázdné repo na <platforma>, pak mi dej URL" — počkej na URL v chatu a spusť `git remote add origin <url>`.
 
 Pokud padla jiná volba než "Nic", proveď `git init` (přes Bash), pokud ještě není inicializováno.
 
