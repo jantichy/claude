@@ -4,7 +4,7 @@ description: Skill se použije, když uživatel zadá "/cleanup", nebo chce pře
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, Skill, AskUserQuestion]
 ---
 
-# Cleanup (úklid po session)
+# Cleanup
 
 ## Úvodní hláška (vždy jako první)
 

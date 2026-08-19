@@ -46,6 +46,10 @@ Jednořádková status line, která mi ukazuje všechno, co potřebuju průběž
 
 ![Status line](statusline.png)
 
+## [`iterm-notify.sh`](iterm-notify.sh) – záložka, která si řekne o pozornost
+
+Když Claude doběhne nebo se na něco ptá, obarví se mi záložka iTermu do modra. Zní to jako drobnost, ale při práci ve víc záložkách naráz je to přesně to, co potřebuju – nemusím přepínat a koukat, jestli už. Nejlepší je na tom detail, který mi dělal radost: záložka se odbarví sama ve chvíli, kdy na ni přepnu. Hlídá to watcher na pozadí, který se zeptá iTermu přes AppleScript, jestli je zrovna aktivní ta moje session – a jakmile je, uklidí barvu a skončí. Když je záložka aktivní už v momentě, kdy Claude doskončí, neobarví se vůbec, protože bych to stejně viděl. Napojené na tři hooky: `UserPromptSubmit` barvu maže, `Notification` a `Stop` ji rozsvítí. Funguje jen v iTerm2.
+
 ## [`settings.json`](settings.json) – průběžně laděné permissions
 
 Allowlist/denylist/asklist se snažím držet ve vyváženém poměru „bezpečnost vs. flow". Cíl je nemuset odklikávat každou trivialitu, ale zároveň nenechat bez kontroly moc bezpečnostních děr. Tohle je vždycky lavírování na hraně a občas tu jdu vědomě lehce za hranu – ve prospěch svého pohodlí a na úkor středně rizikových operací. Takže si to k sobě rozhodně nekopírujte bezhlavě, ale můžete to vzít čistě inspiračně pro porovnání s vlastním nastavením.
@@ -55,7 +59,7 @@ Allowlist/denylist/asklist se snažím držet ve vyváženém poměru „bezpeč
 Tohle je obsah mého `~/.claude`, ne balíček k instalaci. Když si budete něco kopírovat, počítejte s pár věcmi:
 
 - **Absolutní cesty.** `settings.json` i skilly mají natvrdo `/Users/honza/…` – v hoocích, ve statusline, v permissions. Přepište je na své, jinak vám budou tiše selhávat.
-- **Předpoklady.** macOS s [Homebrew](https://brew.sh), `jq` (bez něj nefunguje statusline ani dva hooky, které kontrolují uložené soubory) a iTerm2 (na něj jsou navázané notifikace přes `iterm-notify.sh` – na jiném terminálu ty tři hooky selžou).
+- **Předpoklady.** macOS s [Homebrew](https://brew.sh), `jq` (bez něj nefunguje statusline ani dva hooky, které kontrolují uložené soubory) a iTerm2 (na něj je navázané barvení záložky přes `iterm-notify.sh` – na jiném terminálu ty tři hooky selžou).
 - **Část znalostí v repu není.** `/compose` čte `~/Dev/claude/compose/` a `~/Dev/archiv/`, checklist pro weby žije v `~/Dev/claude/WEB.md` a standardy psaní kódu v `~/Dev/claude/CODING.md` – na něj odkazuje `CLAUDE.md` i `/cleanup`. To je moje soukromé know-how a osobní archiv, takže je tu nenajdete – ty skilly jsou k mání jako kostra, ne jako hotová věc.
 - **Berte to po částech.** `RULES.md` funguje samostatně a použitelný je nejspíš hned. Skilly si projděte a upravte. `settings.json` si rozhodně proberte řádek po řádku – kromě permissions v něm jsou i hooky, statusline, pluginy a osobní nastavení modelu a jazyka.
 - **Licence.** Všechno tady je pod [MIT](LICENSE) – berte si, co chcete, jen si to nechte na vlastní triko.

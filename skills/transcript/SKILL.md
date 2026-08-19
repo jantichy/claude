@@ -26,7 +26,7 @@ Spusť `~/.claude/skills/transcript/check-deps.sh`. Když skončí nenulově, n�
 - **whisper.cpp** – `brew install whisper-cpp` (poskytuje `whisper-cli`)
 - **model `large-v3-turbo`** – stáhne se do `~/.whisper-models/` z HuggingFace (~1,5 GB); dobrý poměr kvalita/rychlost, zvládá i češtinu
 
-Instalace whisper.cpp/ffmpeg předpokládá [Homebrew](https://brew.sh) na macOS/Linuxu.
+Instalace whisper.cpp/ffmpeg předpokládá [Homebrew](https://brew.sh). Vyvinuto a testováno na macOS.
 
 ## Vstup a výstup
 

@@ -4,7 +4,7 @@ description: Skill se použije, když uživatel zadá "/compose" nebo chce napsa
 allowed-tools: [Read, Grep, Glob, Write, Edit]
 ---
 
-# Compose – psaní textů hlasem Jana Tichého
+# Compose
 
 ## Úvodní hláška (vždy jako první)
 

@@ -4,7 +4,7 @@ description: Skill se použije, když uživatel zadá "/consistency", nebo chce 
 allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 ---
 
-# Consistency audit
+# Consistency
 
 ## Úvodní hláška (vždy jako první)
 

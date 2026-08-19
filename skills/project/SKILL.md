@@ -4,7 +4,7 @@ description: Skill se použije, když uživatel zadá "/project", nebo chce zalo
 allowed-tools: [Read, Write, Edit, Glob, Bash, AskUserQuestion]
 ---
 
-# Project (nový projekt wizard)
+# Project
 
 ## Úvodní hláška (vždy jako první)
 
