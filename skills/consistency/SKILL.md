@@ -1,7 +1,7 @@
 ---
 name: consistency
 description: Audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
-allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent]
+allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 ---
 
 # Consistency audit
@@ -208,15 +208,26 @@ Navrhované řešení:
 [konkrétní popis co přesně změnit — ne vágní "refaktoruj to", ale "přesuň funkci X ze souboru A do B a aktualizuj import v C"]
 ```
 
-2. Zeptej se uživatele jednou otázkou ve formátu:
-   `Opravit (A) / Odložit (B) / Přeskočit (C)?` — u batch problémů přidej `/ Rozbalit (D)`
-   Přijímej jak celá slova, tak samotná písmena (bez ohledu na velikost):
-   - **A / Opravit** — proveď změnu hned (krok 3)
-   - **B / Odložit** — zapiš do interního seznamu odložených, neřeš teď
-   - **C / Přeskočit** — zeptej se na krátký důvod ("Proč to neopravovat?") a zapiš do projektového `CLAUDE.md` do kapitoly `## Consistency` (krok 6). Pokud uživatel nechce uvést důvod, zapiš `(bez uvedeného důvodu)`.
-   - **D / Rozbalit** (jen u batch) — vypiš všechny lokace a začni je řešit jednotlivě jako samostatné podproblémy
+2. Zeptej se **vždy přes tool `AskUserQuestion`** — nikdy ne vypsáním voleb jako text v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena.
 
-3. Pokud uživatel zvolí **A / Opravit**:
+   Jedno volání = jeden problém = jedna otázka (`multiSelect: false`):
+   - `header`: `Nález N/celkem` (max 12 znaků, klidně zkrať na `N/celkem`)
+   - `question`: název problému a v čem je, jednou větou
+   - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
+     - **Opravit** — provedu navrhovanou změnu
+     - **Odložit** — nechám být, vrátíme se k tomu později
+     - **Přeskočit** — neopravovat, zapíšu do CLAUDE.md jako „won't fix"
+     - **Rozbalit** — *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
+
+   Volbu **Other** doplňuje tool sám — uživatel přes ni může napsat vlastní instrukci nebo se doptat. Když ji použije, ber to jako doplňující instrukci k aktuálnímu problému (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno".
+
+   Zpracování odpovědí:
+   - **Opravit** — proveď změnu hned (krok 3)
+   - **Odložit** — zapiš do interního seznamu odložených, neřeš teď
+   - **Přeskočit** — zeptej se na krátký důvod („Proč to neopravovat?") a zapiš do projektového `CLAUDE.md` do kapitoly `## Consistency` (krok 6). Pokud uživatel nechce uvést důvod, zapiš `(bez uvedeného důvodu)`.
+   - **Rozbalit** — vypiš všechny lokace a začni je řešit jednotlivě jako samostatné podproblémy
+
+3. Pokud uživatel zvolí **Opravit**:
    a. Proveď změnu. U batch problému (>20 výskytů) řeš hromadně — find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
    b. **Verifikace po opravě — vždy, ne občas.** Spusť relevantní kontroly:
       - U TS projektu: `tsc --noEmit`
@@ -226,7 +237,7 @@ Navrhované řešení:
    d. Po úspěšné opravě KRITICKÉHO problému přepočítej zbývající seznam — projdi položky s `related_root === <title opraveného>` a krátce ověř (Read/Grep), zda už nejsou neaktuální. Ty, co se vyřešily samy, vyhoď z fronty a započítej je do "vyřešeno automaticky" v závěrečném shrnutí.
    e. Commit dle autocommit nastavení projektu — pokud projektový `CLAUDE.md` obsahuje sekci `### Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
 
-4. Pokud uživatel napíše cokoli jiného než volbu (A/B/C/D nebo celé slovo), interpretuj to jako doplňující instrukci k aktuálnímu problému (uprav navrhované řešení nebo odpověz na dotaz) — NEdávej to jako "přeskočeno".
+4. Pokud uživatel použije volbu **Other** nebo napíše vlastní text mimo nabídku, interpretuj to jako doplňující instrukci k aktuálnímu problému (uprav navrhované řešení nebo odpověz na dotaz) — NEdávej to jako "přeskočeno". Po vyřešení se na tentýž problém zeptej znovu.
 
 5. Pokračuj na další problém.
 

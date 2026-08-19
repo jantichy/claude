@@ -30,6 +30,7 @@ Skill je **opakovatelný**. Když ho uživatel spustí podruhé, co je zapsané 
 - **Dvourychlostní režim.** Jednoznačné a mechanické věci dělej rovnou sám a jen je vypiš. Sporné věci předkládej uživateli jeden po druhém, nikdy víc najednou.
   - **Dělej sám:** zápis jednoznačné dohody na zjevně správné místo, oprava rozbitého odkazu nebo nesedícího počtu, aktualizace README / TODO / CLAUDE.md, spuštění testů a kontrol, commit a push.
   - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky; cokoliv, co jde nad rámec toho, co v session padlo.
+- **Ptej se vždy přes tool `AskUserQuestion`**, nikdy ne vypsáním voleb jako textu v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena. Platí pro každou otázku v celém skillu — sporné položky ve Fázi 3, selhání kontrol ve Fázi 4b i cokoliv dalšího. Jedno volání = jedna otázka (`multiSelect: false`), `header` max 12 znaků, `description` u každé volby konkrétně říká, co se stane. Volbu **Other** doplňuje tool sám — uživatel přes ni napíše vlastní instrukci nebo se doptá; ber to jako doplňující instrukci k dané položce, ne jako odmítnutí, a po vyřešení se zeptej znovu.
 - Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládat i „proč"*, *Živá struktura*, *Žádný „smetiště" adresář*) a `~/.claude/CODING.md`.
 - **Nezakládej nové soubory, když to jde bez nich.** Struktura projektu je daná; hledej v ní správné místo. Když žádné neexistuje, zeptej se, než nějaké vytvoříš.
 - Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
@@ -109,7 +110,7 @@ Když u položky není jasné, kam patří, **zeptej se** — ale až ve Fázi 3
 
 1. **Mechanické zápisy proveď rovnou.** Po dokončení vypiš stručný seznam: co bylo dopsáno, kam, a jednou větou proč.
 
-2. **Sporné položky předlož jednu po druhé** ve stejné mechanice jako `/consistency`:
+2. **Sporné položky předlož jednu po druhé** ve stejné mechanice jako `/consistency`. Nejdřív položku vypiš:
 
 ```
 ---
@@ -121,7 +122,7 @@ Stav: [chybí / zastaralé / špatné místo / duplicita / nejasné zařazení]
 Návrh: [konkrétně co kam zapsat nebo jak přepsat — ne vágně „doplnit dokumentaci"]
 ```
 
-   Zeptej se `Provést (A) / Odložit (B) / Přeskočit (C)?`. Přijímej písmena i celá slova, bez ohledu na velikost. Cokoliv jiného než volbu ber jako doplňující instrukci k dané položce, ne jako přeskočení.
+   Pak se zeptej **přes tool `AskUserQuestion`** (viz Zásady výše) — jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou, volby **Provést** / **Odložit** / **Přeskočit**. U položky s nejasným zařazením nabídni místo toho **konkrétní cílové soubory** jako volby (např. `CLAUDE.md` / `docs/rozhodnuti.md` / `TODO.md`) — je to rychlejší než se ptát dvakrát.
 
 3. **Piš tak, aby to bylo čisté, jasné, systematické, čitelné a přímočaré.** Když při zápisu narazíš na to, že okolní text je rozbředlý, redundantní nebo si protiřečí, přestrukturuj ho — to je smyslem úklidu, ne zásah nad rámec zadání.
 
@@ -144,7 +145,7 @@ Podle typu projektu z Fáze 0. **Každý krok vypiš zvlášť s jeho výsledkem
 - **Coding standards** — soulad s `~/.claude/CODING.md` a projektovými konvencemi. U webového rozhraní projdi checklist `~/dev/claude/WEB.md`.
 - **Nekódový projekt** — tahle část odpadá. **Řekni to explicitně** („projekt nemá testy ani build, technická kontrola se neprováděla"), ať nevzniká dojem, že se něco ověřilo.
 
-**Když něco selže: upozorni a zeptej se.** Vypiš, co selhalo a s jakým výstupem, a zeptej se, jestli to má skill opravit a jet dál, nebo se zastavit. **Nikdy selhání nezameť** a nikdy netvrď, že je hotovo, když testy neprocházejí.
+**Když něco selže: upozorni a zeptej se.** Vypiš, co selhalo a s jakým výstupem, a zeptej se přes `AskUserQuestion` s volbami **Opravit a pokračovat** / **Pokračovat bez opravy** / **Zastavit úklid**. **Nikdy selhání nezameť** a nikdy netvrď, že je hotovo, když testy neprocházejí — pokud se pokračuje bez opravy, musí to být vidět ve verdiktu ve Fázi 6.
 
 ### 4c — Aktuálnost hlavních souborů
 
