@@ -69,7 +69,7 @@ def main():
 
     now = datetime.now()
     now_clk = now.hour * 3600 + now.minute * 60 + now.second
-    eta_txt, rate_txt = "—", "—"
+    eta_txt, rate_txt = "–", "–"
     if first_start_clock is not None:
         elapsed = now_clk - first_start_clock
         if elapsed < 0:

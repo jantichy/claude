@@ -16,7 +16,7 @@ Obecná pravidla, kterými se řiď při práci na jakémkoli projektu – progr
 ### Styl odpovědí
 
 - Odpovědi krátké a věcné – nepřepisuj, co uživatel řekl, rovnou jednej.
-- Nepoužívej emoji, pokud o ně uživatel nepožádá. Výjimkou jsou skilly, které mají emoji explicitně ve své výstupní šabloně (např. `/consistency` a `/cleanup`, kde barevné tečky odlišují závažnost nálezů) – tam se šablona dodržuje doslova.
+- Nepoužívej emoji, pokud o ně uživatel nepožádá. Výjimkou jsou skilly, které mají emoji explicitně ve své výstupní šabloně (např. `/consistency`, kde barevné tečky odlišují závažnost nálezů) – tam se šablona dodržuje doslova.
 - S dotazem na další postup rovnou navrhni několik řešení, včetně výhod a nevýhod každého, doporuč preferované.
 
 ### Česká typografie

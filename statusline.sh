@@ -162,16 +162,16 @@ case "$model_short" in
 esac
 
 # ---------------------------------------------------------------------------
-# 3. PRACOVNÍ ADRESÁŘ (zkrácený – max 4 segmenty od konce)
+# 3. PRACOVNÍ ADRESÁŘ (celá cesta do 4 segmentů, jinak poslední 3)
 # ---------------------------------------------------------------------------
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 if [ -z "$cwd" ]; then cwd=$(pwd); fi
-# Zkrátit na posledních 3 složky, předřadit ~ pokud je v $HOME
+# Předřadit ~, pokud je cesta v $HOME
 home_prefix="${HOME}"
 if [[ "$cwd" == "$home_prefix"* ]]; then
   cwd="~${cwd#$home_prefix}"
 fi
-# Max 4 segmenty
+# Do 4 segmentů vypsat celou cestu, delší zkrátit na poslední 3
 short_cwd=$(echo "$cwd" | awk -F'/' '{
   n = NF
   if (n <= 4) { print $0 }
@@ -192,7 +192,6 @@ if [ -z "$project_dir" ]; then project_dir="$cwd"; fi
 project_dir_real=$(echo "$project_dir" | sed "s|^~|$HOME|")
 
 if [ -d "$project_dir_real" ] && git -C "$project_dir_real" rev-parse --git-dir >/dev/null 2>&1; then
-  changed=$(git -C "$project_dir_real" diff --stat HEAD 2>/dev/null | tail -1 | grep -oE '[0-9]+ file' | grep -oE '[0-9]+')
   unstaged=$(git -C "$project_dir_real" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
   staged=$(git -C "$project_dir_real" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
   total=$(( unstaged + staged ))

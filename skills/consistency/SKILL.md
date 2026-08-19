@@ -25,7 +25,7 @@ Před spuštěním Explore agenta nasbírej baseline. Tam, kde jsou nezávislé 
 ### 1.1 Načti dokumentaci konvencí
 
 Pokud existují, přečti:
-- Projektový `CLAUDE.md` (zejména kapitolu `## Consistency`, viz Fáze 6)
+- Projektový `CLAUDE.md`
 - `README.md`, `CONTRIBUTING.md`, `STYLEGUIDE.md`
 - `eslint.config.*`, `.eslintrc*`, `prettier.config.*`, `.prettierrc*`, `biome.json`
 - `tsconfig.json` (zejména `strict`, `target`, `lib`, paths)
@@ -36,7 +36,7 @@ Z těchto souborů sestav **baseline konvencí** – co je v projektu explicitn�
 
 ### 1.2 Načti seznam ignorovaných položek
 
-Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako "won't fix".
+Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako „won't fix".
 
 ### 1.3 Spusť existující nástroje
 
@@ -55,7 +55,7 @@ Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k proje
 Prohledej celý projekt a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
 
 PŘED HLÁŠENÍM PROBLÉMU vždy zkontroluj, že:
-- Není uveden v sekci "Ignorované položky" (předané v zadání) – pokud ano, neuváděj ho
+- Není uveden v kapitole `## Consistency` projektového `CLAUDE.md` (předané v zadání) – pokud ano, neuváděj ho
 - Není přímo nad řádkem komentář `consistency-ignore: <důvod>` – pokud ano, respektuj ho
 - Soubor není v cestě označené jako legacy/vendored/generated (`*.gen.*`, `vendor/`, `legacy/`, `generated/`, `node_modules/`, `dist/`, `build/`) – pokud ano, neuváděj ho
 - Pokud baseline projektu (předaný v zadání) explicitně dovoluje to, co bys hlásil jako odchylku, neuváděj to

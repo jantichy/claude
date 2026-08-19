@@ -13,21 +13,21 @@ echo "Kontrola závislostí skillu /transcript:"
 if command -v ffmpeg >/dev/null 2>&1; then
   echo "  ✓ ffmpeg"
 else
-  echo "  ✗ ffmpeg — chybí"
+  echo "  ✗ ffmpeg – chybí"
   missing=1
 fi
 
 if command -v whisper-cli >/dev/null 2>&1; then
   echo "  ✓ whisper.cpp (whisper-cli)"
 else
-  echo "  ✗ whisper.cpp (whisper-cli) — chybí"
+  echo "  ✗ whisper.cpp (whisper-cli) – chybí"
   missing=1
 fi
 
 if [ -f "$MODEL" ]; then
   echo "  ✓ model large-v3-turbo"
 else
-  echo "  ✗ model large-v3-turbo — chybí ($MODEL)"
+  echo "  ✗ model large-v3-turbo – chybí ($MODEL)"
   missing=1
 fi
 
@@ -38,7 +38,7 @@ if [ "$missing" -eq 1 ]; then
   command -v whisper-cli >/dev/null 2>&1 || echo "  brew install whisper-cpp"
   [ -f "$MODEL" ] || echo "  mkdir -p ~/.whisper-models && curl -L -o \"$MODEL\" \"$MODEL_URL\""
   echo ""
-  echo "(whisper.cpp a ffmpeg jsou dostupné přes Homebrew — https://brew.sh)"
+  echo "(whisper.cpp a ffmpeg jsou dostupné přes Homebrew – https://brew.sh)"
   exit 1
 fi
 

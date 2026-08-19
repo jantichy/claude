@@ -127,7 +127,7 @@ Stav: [chybí / zastaralé / špatné místo / duplicita / nejasné zařazení]
 Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit dokumentaci"]
 ```
 
-   Pak se zeptej **přes tool `AskUserQuestion`** (viz Zásady výše) – jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou, volby **Provést** / **Odložit** / **Přeskočit**. U položky s nejasným zařazením nabídni místo toho **konkrétní cílové soubory** jako volby (např. `CLAUDE.md` / `docs/rozhodnuti.md` / `TODO.md`) – je to rychlejší než se ptát dvakrát.
+   Pak se zeptej **přes tool `AskUserQuestion`** (viz Zásady výše) – jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou, volby **Opravit** / **Odložit** / **Přeskočit**. U položky s nejasným zařazením nabídni místo toho **konkrétní cílové soubory** jako volby (např. `CLAUDE.md` / `docs/rozhodnuti.md` / `TODO.md`) – je to rychlejší než se ptát dvakrát.
 
 3. **Piš tak, aby to bylo čisté, jasné, systematické, čitelné a přímočaré.** Když při zápisu narazíš na to, že okolní text je rozbředlý, redundantní nebo si protiřečí, přestrukturuj ho – to je smyslem úklidu, ne zásah nad rámec zadání.
 

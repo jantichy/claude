@@ -6,7 +6,7 @@
 #
 # Pro každý vstup vznikne <workdir>/<název_bez_přípony>.txt (surový přepis).
 # Do <log_file> se píše průběh, ze kterého čte progress.py:
-#   ### DURATION N SECONDS      (délky souborů — pro odhad postupu)
+#   ### DURATION N SECONDS      (délky souborů – pro odhad postupu)
 #   ### START zaznam-N HH:MM:SS
 #   [HH:MM:SS ...] segmenty      (píše whisper)
 #   ### DONE zaznam-N HH:MM:SS

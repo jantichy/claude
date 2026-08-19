@@ -6,7 +6,7 @@ SESSION_KEY=$(printf '%s' "$ITERM_SESSION_ID" | tr -c 'a-zA-Z0-9' '_')
 PIDFILE="/tmp/claude-tab-watcher-${SESSION_KEY}.pid"
 CLAUDE_PID=$PPID
 
-# Najdi TTY iTerm session — hook subprocess nemá vlastní controlling TTY.
+# Najdi TTY iTerm session – hook subprocess nemá vlastní controlling TTY.
 find_iterm_tty() {
   local pid=$PPID
   local tty_name
