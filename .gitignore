@@ -34,6 +34,7 @@ backups/
 # Runtime (daemon, background jobs, stavové soubory)
 daemon/
 daemon.lock
+daemon.log
 daemon.status.json
 daemon-auth-cooldown
 daemon-auth-status.json

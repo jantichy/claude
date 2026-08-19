@@ -55,6 +55,7 @@ Allowlist/denylist/asklist se snažím držet ve vyváženém poměru „bezpeč
 Tohle je obsah mého `~/.claude`, ne balíček k instalaci. Když si budete něco kopírovat, počítejte s pár věcmi:
 
 - **Absolutní cesty.** `settings.json` i skilly mají natvrdo `/Users/honza/…` – v hoocích, ve statusline, v permissions. Přepište je na své, jinak vám budou tiše selhávat.
-- **Předpoklady.** macOS s [Homebrew](https://brew.sh), `jq` (statusline i hooky bez něj nefungují) a iTerm2 (na něj jsou navázané notifikace přes `iterm-notify.sh` – na jiném terminálu ty tři hooky selžou).
-- **Znalostní báze skillů nejsou v repu.** `/compose` čte `~/Dev/claude/compose/` a `~/Dev/archiv/`, checklist pro weby žije v `~/Dev/claude/WEB.md`. To je moje soukromé know-how a osobní archiv, takže je tu nenajdete – ty skilly jsou k mání jako kostra, ne jako hotová věc.
-- **Berte to po částech.** `RULES.md` funguje samostatně a použitelný je nejspíš hned. Skilly si projděte a upravte. `settings.json` si rozhodně proberte řádek po řádku – co v něm je a proč, popisuje sekce o kus výš.
+- **Předpoklady.** macOS s [Homebrew](https://brew.sh), `jq` (bez něj nefunguje statusline ani dva hooky, které kontrolují uložené soubory) a iTerm2 (na něj jsou navázané notifikace přes `iterm-notify.sh` – na jiném terminálu ty tři hooky selžou).
+- **Část znalostí v repu není.** `/compose` čte `~/Dev/claude/compose/` a `~/Dev/archiv/`, checklist pro weby žije v `~/Dev/claude/WEB.md` a standardy psaní kódu v `~/Dev/claude/CODING.md` – na něj odkazuje `CLAUDE.md` i `/cleanup`. To je moje soukromé know-how a osobní archiv, takže je tu nenajdete – ty skilly jsou k mání jako kostra, ne jako hotová věc.
+- **Berte to po částech.** `RULES.md` funguje samostatně a použitelný je nejspíš hned. Skilly si projděte a upravte. `settings.json` si rozhodně proberte řádek po řádku – kromě permissions v něm jsou i hooky, statusline, pluginy a osobní nastavení modelu a jazyka.
+- **Licence.** Všechno tady je pod [MIT](LICENSE) – berte si, co chcete, jen si to nechte na vlastní triko.

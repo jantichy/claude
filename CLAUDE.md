@@ -1,8 +1,8 @@
 # Globální konfigurace Claude Code
 
-## Závazná pravidla a standardy
+## Závazná pravidla
 
-Tento soubor obsahuje **závazná pravidla**, kterými se řiď při každém úkolu. Dodržuj je vždy, stejně jako pravidla psaná přímo v tomto souboru.
+Tento soubor obsahuje **závazná pravidla**, kterými se řiď při každém úkolu. Dodržuj ho vždy, stejně jako pravidla psaná přímo v tomto souboru.
 
 - `@~/.claude/RULES.md` – obecná pravidla práce: komunikace s uživatelem, organizace souborů a obsahu, práce se změnami
 
@@ -15,7 +15,7 @@ Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to prav
 - `~/Dev/claude/WEB.md` – checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...) – načti si ho vždy, když pracuješ na webovém rozhraní
 - `~/Dev/claude/CODING.md` – standardy psaní kódu, bezpečnosti a verzování (naming, git, bezpečnost, TypeScript, SQL, frontend) – načti si ho vždy, když píšeš nebo upravuješ kód
 
-Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/Dev/claude/`. 
+Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/Dev/claude/`.
 
 ------
 

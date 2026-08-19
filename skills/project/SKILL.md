@@ -113,7 +113,7 @@ Zeptej se (AskUserQuestion), jedna otázka, 5 možností: **Vývoj** / **Web** /
 
 Do CLAUDE.md vždy přidej sekci `## Typ projektu` s krátkým popisem podle volby a proveď případné dodatečné kroky:
 
-- **Vývoj**: text "Vývojářský projekt – postupuj podle standardního postupu návrhu a implementace (brainstorming → PRD/design → implementační plán → implementace), viz superpowers skilly." Navíc založ `docs/` (prázdný adresář, případně `docs/.gitkeep`) a `TODO.md`:
+- **Vývoj**: text "Vývojářský projekt – postupuj podle standardního postupu návrhu a implementace (brainstorming → PRD/design → implementační plán → implementace), viz superpowers skilly. Při psaní a úpravách kódu se řiď standardy v `~/Dev/claude/CODING.md` (naming, git, bezpečnost, TypeScript, SQL, frontend)." Navíc založ `docs/` (prázdný adresář, případně `docs/.gitkeep`) a `TODO.md`:
   ```
   # TODO
 
