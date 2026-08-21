@@ -56,7 +56,7 @@ Zjisti kontext, ve kterém pracuješ:
 1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
 2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `### Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
 3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`.
-4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy: `README.md`, `CLAUDE.md`, `TODO.md`, `docs/*`, specializované soubory. Zapamatuj si, co je čí doména.
+4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura podle `~/.claude/STRUCTURE.md` je `CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`; k tomu specializované soubory v `docs/`. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
 
@@ -106,16 +106,70 @@ Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zaps
 | Typ položky | Cílové místo |
 |---|---|
 | Pravidla, konvence, jak se v projektu pracuje | projektový `CLAUDE.md` |
-| Rozhodnutí a jejich zdůvodnění, zavržené varianty | `docs/` (soubor typu rozhodnutí/ADR), jinak `CLAUDE.md` |
-| Úkoly a odložené věci | `TODO.md` |
-| Otevřené otázky čekající na rozhodnutí uživatele | sekce `## Otevřené otázky` v `TODO.md` |
+| Rozhodnutí a jejich zdůvodnění, zavržené varianty | `docs/decisions.md` |
+| Obecné principy a hranice, ve kterých se projekt pohybuje | `docs/rules.md` |
+| Úkoly a odložené věci | `docs/todo.md` |
+| Otevřené otázky čekající na rozhodnutí uživatele | sekce `## Otevřené otázky` v `docs/todo.md` |
 | Změny dotýkající se toho, co projekt je a umí | `README.md` |
 | Doménová specifika (model, procesy, katalogy) | příslušný soubor v `docs/` |
 | Cokoliv v Memory | **přesuň do projektového `CLAUDE.md`**, pokud projekt nemá explicitně povolenou Memory |
 
-Zvlášť projdi hlavní soubory – `README.md`, všechna `TODO` (nejen to v rootu) a `CLAUDE.md` (projektový i vnořené) – a ověř, jestli se do nich promítlo, co ze session vzešlo, a jestli v nich nezůstalo pravidlo, které v session přestalo platit. **Jen v rozsahu session**, ne jako obecná revize obsahu.
+Zvlášť projdi hlavní soubory – `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md` a `CLAUDE.md` (projektový i vnořené) – a ověř, jestli se do nich promítlo, co ze session vzešlo, a jestli v nich nezůstalo pravidlo, které v session přestalo platit. **Jen v rozsahu session**, ne jako obecná revize obsahu.
 
 Když u položky není jasné, kam patří, **zeptej se** – ale až ve Fázi 3, v jednom společném průchodu, ne rozsypaně.
+
+------
+
+## Fáze 2b – Ověř, že průběžná aktualizace opravdu proběhla
+
+`~/.claude/STRUCTURE.md` ukládá udržovat pět souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 2**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
+
+Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomíná** – proto tenhle krok existuje a proto se nedá odbýt.
+
+### Postup
+
+1. **Zjisti, kdy se každý ze souborů naposledy měnil.** U projektu s gitem `git log --oneline -3 -- <soubor>` a `git status`; jinak čas modifikace. Zajímá tě, jestli se soubor během téhle session vůbec dotkl.
+
+   ```
+   CLAUDE.md  README.md  docs/todo.md  docs/decisions.md  docs/rules.md
+   ```
+
+2. **Projdi celou session znovu** – celý transcript z Fáze 1, ne jen vytěžený seznam – a u každého z pěti souborů se ptej, co do něj **mělo** během session přibýt:
+
+   | Soubor | Co v session zakládá povinnost zápisu |
+   |---|---|
+   | `CLAUDE.md` | vzniklo nebo se změnilo pravidlo, konvence, způsob práce v projektu |
+   | `README.md` | změnilo se, co projekt je, umí nebo jak se spouští |
+   | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později"; něco se dokončilo → přesun do `## Hotovo` |
+   | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
+   | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky" |
+
+3. **Porovnej s tím, co v souborech skutečně je.** Nestačí, že se soubor během session změnil – ověř, že obsahuje **všechno**, co tam podle bodu 2 patří.
+
+4. **Chybějící doplň zpětně z celé session.** Ne jen holé odrážky – ve stejné kvalitě, jako by to bylo zapsané v okamžiku, kdy to padlo:
+   - u rozhodnutí i **proč**, jaké varianty byly ve hře a proč padly,
+   - u odložených věcí **celou úvahu**, ne jen název,
+   - u principů **obecnou formulaci**, ne popis jednoho případu.
+
+   Zároveň **přeformuluj**, co bylo zapsáno ve spěchu nebo se od té doby posunulo. Platí poslední verze, ne první.
+
+5. **Nahlas výsledek** – i když je čistý:
+
+   ```
+   Průběžná aktualizace: docs/decisions.md – 3 rozhodnutí doplněna zpětně
+                         docs/todo.md      – OK
+                         docs/rules.md     – 1 princip doplněn
+                         CLAUDE.md         – OK
+                         README.md         – OK
+   ```
+
+   Doplňoval-li jsi hodně, řekni to uživateli otevřeně jako selhání průběžné aktualizace, ne jako běžnou práci úklidu. Je to informace o tom, že mechanismus nefungoval.
+
+### Když soubory neexistují
+
+Chybí-li některý ze standardních souborů úplně, **nezakládej ho tady potichu**. Vypiš, které chybí, a nabídni spuštění `/project`, který strukturu doplní celou a konzistentně. Výjimka: má-li session obsah, který do chybějícího souboru jednoznačně patří, soubor založ a obsah zapiš – jinak by se ztratil.
+
+Nedává-li standardní struktura pro tenhle projekt smysl (jednorázový scratch, cizí read-only repozitář), konstatuj to jednou větou a fázi přeskoč.
 
 ------
 
@@ -135,7 +189,7 @@ Stav: [chybí / zastaralé / špatné místo / duplicita / nejasné zařazení]
 Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit dokumentaci"]
 ```
 
-   Pak se zeptej **přes tool `AskUserQuestion`** (viz Zásady výše) – jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou, volby **Zapsat** / **Odložit** / **Přeskočit**. U položky s nejasným zařazením nabídni místo toho **konkrétní cílové soubory** jako volby (např. `CLAUDE.md` / `docs/rozhodnuti.md` / `TODO.md`) – je to rychlejší než se ptát dvakrát.
+   Pak se zeptej **přes tool `AskUserQuestion`** (viz Zásady výše) – jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou, volby **Zapsat** / **Odložit** / **Přeskočit**. U položky s nejasným zařazením nabídni místo toho **konkrétní cílové soubory** jako volby (např. `CLAUDE.md` / `docs/decisions.md` / `docs/todo.md`) – je to rychlejší než se ptát dvakrát.
 
 3. **Piš tak, aby to bylo čisté, jasné, systematické, čitelné a přímočaré.** Když při zápisu narazíš na to, že okolní text je rozbředlý, redundantní nebo si protiřečí, přestrukturuj ho – to je smyslem úklidu, ne zásah nad rámec zadání.
 
