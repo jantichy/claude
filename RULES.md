@@ -82,6 +82,14 @@ Cokoliv se v konverzaci dohodne (pravidlo, konvence, rozhodnutí, struktura, nov
 
 Pokud projekt v `CLAUDE.md` zakazuje ukládání do trvalé Memory, platí to i proti pobídkám harnessu – vše jde do souborů projektu.
 
+### Rozhodnutí zapisuj do žijícího záznamu, včetně cesty k nim
+
+Každý projekt má **jeden soubor s rozhodnutími** (`rozhodnuti.md` nebo obdoba), do kterého průběžně přibývá, co se dohodlo. Nezapisuje se tam jen výsledek, ale celá cesta: **jaký problém to řešilo, jaké varianty byly ve hře, proč vyhrála ta jedna a proč padly ostatní.** Zapisuj to hned, jak rozhodnutí padne, ne až na konci – z odstupu se zdůvodnění rekonstruuje špatně nebo vůbec.
+
+Důvod je praktický: za měsíc nikdo nepozná, jestli je něco promyšlené rozhodnutí, nebo náhoda – a nikdo si netroufne to změnit. **Zapsaná motivace je to, co dovoluje rozhodnutí později revidovat**, protože je vidět, které předpoklady musely platit. A zapsané zavržené varianty brání tomu, aby se táž slepá ulička procházela znovu.
+
+Odlišuj to od dokumentace návrhu: ta popisuje **jak to je**, záznam rozhodnutí **proč to tak je**. Když se návrh změní, záznam se nepřepisuje – přibude do něj revize s odůvodněním, co se ukázalo jinak.
+
 ### Single source of truth – každá informace na právě jednom místě
 
 Každé pravidlo / fakt / instrukce existuje na **právě jednom** místě. Jiné soubory jen odkazují, nekopírují. Pokud by stejná informace měla žít na dvou místech, je to chyba designu – najdi vyšší úroveň nebo jiné nové společné místo, kam patří, a ostatní jen referencují.
@@ -129,6 +137,16 @@ Vyhýbej se kombinatorické explozi. Když máš dimenze A, B, C, neudržuj `A×
 ------
 
 ## Rozhodování a rozsah
+
+### Stavěj doménové principy a rozhoduj proti nim
+
+V každém projektu průběžně **formuluj silné obecné principy jeho domény** – ne popis toho, co systém dělá, ale věty, které rozhodují: „o penězích u brány rozhoduje jen brána", „ručně jde vzít zpět jen to, co bylo ručně uděláno". Vznikají z konkrétních rozhodnutí, ale zapisují se obecně, aby platily i tam, kam se ještě nedošlo. Patří do vlastního souboru (`zasady.md` nebo obdoba) a odkazuje se na ně odjinud.
+
+**Každou další otázku pak validuj proti nim, ne od nuly.** Nejdřív se ptej, který princip na to sedí, a odpověď odvoď z něj. Většina „nových" rozhodnutí je jen aplikace principu, který už existuje – a když se ukáže, že žádný nesedí, je to nález: chybí princip, formuluj ho.
+
+**Cíl je nula výjimek.** Když řešení potřebuje výjimku z principu, je to skoro vždy signál, že řešení je špatně, ne že princip má díru. Systémově správné řešení výjimky ruší, nepřidává. Než výjimku připustíš, hledej variantu, ve které princip platí beze zbytku; a připustíš-li ji přece, platí pro ni „Výjimka platí jen tam, kde platí její důvod".
+
+**Principy se vzájemně kontrolují.** Když si dva odporují, není to drobnost k překlenutí – je to nedořešené rozhodnutí. Vyřeší se tím, že se aspoň jednomu z nich **vymezí rozsah**: kdy platí a kdy ne, a proč.
 
 ### Mechanická pravidla nad rozhodováním případ od případu
 
