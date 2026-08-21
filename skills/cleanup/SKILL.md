@@ -1,6 +1,6 @@
 ---
 name: cleanup
-description: Skill se použije, když uživatel zadá "/cleanup", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí.
+description: Skill se použije, když uživatel zadá "/cleanup" nebo "/cleanup full", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
 
@@ -29,6 +29,13 @@ Skill je **opakovatelný**. Když ho uživatel spustí podruhé, co je zapsané 
 Tohle **není** audit projektu ani technická brána. Nespouštěj `/consistency`, `/code-review` ani `/ultrareview` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 
 Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), uveď to ve verdiktu ve Fázi 5. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj.
+
+## Rozsah fresh-reader kontroly
+
+- **`/cleanup`** (výchozí) – fresh-reader ve Fázi 4 se soustředí na to, čeho se dotkla tahle session. Nálezy mimo její rozsah jen vypíše jako doporučení, neopravuje je.
+- **`/cleanup full`** – fresh-reader projde celou dokumentaci projektu bez omezení na session a nálezy se řeší všechny. Použij, jen když uživatel napíše `full`.
+
+Rozsah ovlivňuje **výhradně Fázi 4**. Fáze 1–3 vytěžují session vždy celou – to je smysl skillu a nedá se zúžit ani rozšířit.
 
 ## Zásady pro celý průběh
 
@@ -138,7 +145,7 @@ Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit d
 
 ## Fáze 4 – Fresh-reader verifikace
 
-Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Není to audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci.
+Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Ve výchozím rozsahu to není audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci. V režimu `full` naopak projdi dokumentaci celou (viz *Rozsah fresh-reader kontroly* výše) a v zadání pro subagenta vynech řádek se shrnutím session i větu o soustředění se na poslední session.
 
 Spusť subagenta s tímto zadáním (doplň absolutní cestu k repozitáři, pořadí souborů ke čtení podle dokumentační mapy z Fáze 0 a **stručné shrnutí toho, co se v session řešilo a kam se to zapsalo**):
 
@@ -155,6 +162,7 @@ Přečti si v tomhle pořadí (jako by ses do projektu zaučoval):
 Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, PROMPTS.md, runtime adresáře>) nečti celé.
 
 Soustřeď se na oblasti, kterých se dotýkala poslední session. ODPOVĚZ NA TYTO OTÁZKY:
+<v režimu `full` tenhle odstavec vynech – procházej dokumentaci celou>
 
 **A. Co bych měl dělat dál?** Je z dokumentace jednoznačné, jaký je další krok? Kdyby ti někdo řekl „pokračuj", věděl bys jak?
 
@@ -176,7 +184,7 @@ Nezapisuj do žádného souboru.
 **Zpracování nálezů:**
 
 - Nálezy, které se týkají téhle session, vrať do Fáze 3 a oprav – mechanické sám, sporné s uživatelem.
-- Nálezy mimo rozsah session (starší dluh v dokumentaci) **neopravuj** – vypiš je ve verdiktu jako doporučení pustit `/consistency`.
+- Nálezy mimo rozsah session (starší dluh v dokumentaci) ve výchozím režimu **neopravuj** – vypiš je ve verdiktu jako doporučení pustit `/consistency`. V režimu `full` je řeš stejně jako ostatní.
 - Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanášejí nové viséce – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
 
 ------

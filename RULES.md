@@ -217,7 +217,7 @@ Když mažeš funkci / pravidlo / pole / soubor, který by se mohl jindy „vrá
 Když je feature hotová a session se chystá skončit, projdi tyhle kroky **v tomhle pořadí**:
 
 1. **Testy a build** – nemá smysl posílat na review kód, který neběží.
-2. **Doménový checklist** podle typu práce (`WEB.md`, `ADMIN.md`, `CODING.md`) – vzejdou z něj změny kódu, takže patří před review, ne po něm.
+2. **`/standards`** – soulad s doménovými standardy (`CODING.md`, `WEB.md`, `ADMIN.md`). Vzejdou z něj změny kódu, takže patří před review, ne po něm.
 3. **`/code-review`** – korektnost provedených změn.
 4. **`/consistency`** – audit celého projektu. Uklidí i to, co nastřílely kroky 2 a 3.
 5. **`/cleanup`** – úplně poslední. Vytěží celou session a zapíše i rozhodnutí, která padla v krocích 3 a 4 (co bylo odmítnuto a proč).
