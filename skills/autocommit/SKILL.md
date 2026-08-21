@@ -19,7 +19,7 @@ Teprve pak pokračuj plněním skillu.
 
 Zapíná/vypíná autocommit pro aktuální projekt – Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce Autocommit.
 
-Stav v projektu = přítomnost nadpisu `### Autocommit` v projektovém `CLAUDE.md`.
+Stav v projektu = přítomnost nadpisu `### Autocommit` v projektovém `CLAUDE.md` (kanonicky pod `## Automatické akce`). Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. Nadpis `### Autocommit v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Najdeš-li sekci `Autocommit` na jiné úrovni nebo mimo `## Automatické akce`, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar.
 
 ## Postup
 
@@ -31,7 +31,7 @@ Pokud `.git` nenajdeš, oznam „Aktuální adresář není git repozitář." a 
 
 ### Zjisti stav
 
-Přečti `<PROJECT_ROOT>/CLAUDE.md` a hledej nadpis `### Autocommit`. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
+Přečti `<PROJECT_ROOT>/CLAUDE.md` a hledej nadpis `### Autocommit` v projektovém `CLAUDE.md` (kanonicky pod `## Automatické akce`). Nadpis `### Autocommit v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Najdeš-li sekci `Autocommit` na jiné úrovni nebo mimo `## Automatické akce`, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
 
 ### `status` (nebo žádný argument)
 
@@ -41,12 +41,12 @@ Vypiš stav (zapnutý/vypnutý).
 
 Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
-1. **Zkontroluj globální `~/.claude/CLAUDE.md`** – pokud neobsahuje nadpis `### Autocommit`, doplň ho s tímto textem (vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
+1. **Zkontroluj globální `~/.claude/CLAUDE.md`** – pokud neobsahuje nadpis `### Autocommit v projektech`, doplň ho s tímto textem (vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
 
    ```
-   ### Autocommit
+   ### Autocommit v projektech
 
-   Stav autocommitu pro projekt poznáš podle přítomnosti nadpisu `### Autocommit` v projektovém `CLAUDE.md`. Kdykoli je v projektu zapnutý autocommit, commituj po každé zásadní ucelené změně (ne po každém dílčím kroku, ale po každém logickém celku). Pokud má repo nastavený nějaký git remote, po commitu hned pushuj.
+   Stav autocommitu pro projekt poznáš podle přítomnosti nadpisu `### Autocommit` v projektovém `CLAUDE.md`, kanonicky pod `## Automatické akce`. Nadpis téhle sekce se od něj schválně liší, aby ji detekce nebrala jako přepínač – tenhle soubor mechanismus definuje, nezapíná ho. Kdykoli je v projektu zapnutý autocommit, commituj po každé zásadní ucelené změně (ne po každém dílčím kroku, ale po každém logickém celku). Pokud má repo nastavený nějaký git remote, po commitu hned pushuj.
    ```
 
 2. **Přidej sekci `### Autocommit` do projektového `CLAUDE.md`** (vytvoř soubor s minimální hlavičkou, pokud neexistuje; vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):
