@@ -91,32 +91,9 @@ Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 ### Když padne worktree layout
 
-*Nový projekt* – vyrob rovnou:
+**Postup zřízení kontejneru neopisuj z hlavy** – řiď se `~/Dev/claude/WORKTREES.md`, sekce *Zřízení kontejneru*. Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`.
 
-```bash
-git init --bare .bare
-printf 'gitdir: ./.bare\n' > .git
-git worktree add master -b master     # nebo main podle preference uživatele
-```
-
-*Existující projekt* – přeskládej. **Před přeskládáním povinně:**
-
-1. Ověř `git status` – necommitnuté nebo nepushnuté změny **nejdřív vyřeš**, teprve pak přeskládávej.
-2. Udělej zálohu celého adresáře (`cp -c -R` na macOS je instantní a nezabírá místo).
-3. Řekni nahlas, že jde o přeskládání adresáře, a nech si ho potvrdit.
-
-Pak:
-
-```bash
-mv <projekt> <projekt>.migrating
-mkdir <projekt>
-mv <projekt>.migrating/.git <projekt>/.bare
-git --git-dir=<projekt>/.bare config core.bare true
-printf 'gitdir: ./.bare\n' > <projekt>/.git
-git -C <projekt> worktree add master master
-```
-
-Nakonec **ověř `diff -r <projekt>.migrating <projekt>/master --exclude=.git`** – musí být prázdný – a teprve pak smaž `<projekt>.migrating`. Netrackované a gitignorované soubory (`.env`, `node_modules`) přesuň do `master/`, je to jejich kanonické místo.
+U existujícího projektu jde o **přeskládání adresáře** – řekni to nahlas a nech si ho potvrdit, než začneš.
 
 Do projektového `CLAUDE.md` (do **kontejneru**, ne do `master/`) přidej:
 
