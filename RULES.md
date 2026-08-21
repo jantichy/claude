@@ -66,7 +66,7 @@ Když se odložený bod mezitím stal bezpředmětným, řekni to a proč, míst
 
 ### Než přejdeš dál, ověř, že se nic neztratilo
 
-Před přechodem na další velké téma nebo na konci session projdi celou dosavadní konverzaci a zkontroluj tři věci: (1) zbyly nedořešené otázky? (2) nevznikly novými rozhodnutími nekonzistence a slepá místa jinde? (3) je všechno dohodnuté zapsané v souborech? Na bod (2) je skill `/consistency`, na body (1) a (3) skill `/cleanup` – používej je.
+Před přechodem na další velké téma nebo na konci session projdi celou dosavadní konverzaci a zkontroluj tři věci: (1) zbyly nedořešené otázky? (2) nevznikly novými rozhodnutími nekonzistence a slepá místa jinde? (3) je všechno dohodnuté zapsané v souborech? Na bod (2) je skill `/consistency`, na body (1) a (3) skill `/cleanup` – používej je. Celé pořadí kroků viz *Pořadí uzavírání hotové feature*.
 
 ### Velké průzkumné úkoly deleguj
 
@@ -211,3 +211,15 @@ Před jakoukoli destruktivní nebo těžko vratnou operací (mazání, přepis, 
 ### Při odstranění nechat stopu
 
 Když mažeš funkci / pravidlo / pole / soubor, který by se mohl jindy „vrátit" omylem (kopírováním z jiného projektu, z legacy, z dokumentace), nech stopu – sekce „Odstraněné položky" v relevantním souboru, řádek v CHANGELOGu, krátká poznámka. Ne pro každé smazání, ale pro to, kde má smysl chránit se před nechtěným návratem.
+
+### Pořadí uzavírání hotové feature
+
+Když je feature hotová a session se chystá skončit, projdi tyhle kroky **v tomhle pořadí**:
+
+1. **Testy a build** – nemá smysl posílat na review kód, který neběží.
+2. **Doménový checklist** podle typu práce (`WEB.md`, `ADMIN.md`, `CODING.md`) – vzejdou z něj změny kódu, takže patří před review, ne po něm.
+3. **`/code-review`** – korektnost provedených změn.
+4. **`/consistency`** – audit celého projektu. Uklidí i to, co nastřílely kroky 2 a 3.
+5. **`/cleanup`** – úplně poslední. Vytěží celou session a zapíše i rozhodnutí, která padla v krocích 3 a 4 (co bylo odmítnuto a proč).
+
+Proč zrovna takhle: každý krok vyrábí vstup pro ten další, takže obráceně bys uklízel nad stavem, který se ještě změní. A `/cleanup` je jediný z nich odolný vůči kompaktaci – čte surový transcript ze souboru, ne kontext –, takže patří na konec i tehdy, když se kontext mezitím zaplní.
