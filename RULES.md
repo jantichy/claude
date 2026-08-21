@@ -66,7 +66,7 @@ Když se odložený bod mezitím stal bezpředmětným, řekni to a proč, míst
 
 ### Než přejdeš dál, ověř, že se nic neztratilo
 
-Před přechodem na další velké téma nebo na konci session projdi celou dosavadní konverzaci a zkontroluj tři věci: (1) zbyly nedořešené otázky? (2) nevznikly novými rozhodnutími nekonzistence a slepá místa jinde? (3) je všechno dohodnuté zapsané v souborech? Na tohle je skill `/cleanup` – používej ho.
+Před přechodem na další velké téma nebo na konci session projdi celou dosavadní konverzaci a zkontroluj tři věci: (1) zbyly nedořešené otázky? (2) nevznikly novými rozhodnutími nekonzistence a slepá místa jinde? (3) je všechno dohodnuté zapsané v souborech? Na bod (2) je skill `/consistency`, na body (1) a (3) skill `/cleanup` – používej je.
 
 ### Velké průzkumné úkoly deleguj
 
