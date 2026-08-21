@@ -16,6 +16,16 @@ Doménové checklisty (`~/Dev/claude/CODING.md`, `WEB.md`, `ADMIN.md`) se do pro
 - Kód piš **anglicky** (proměnné, funkce, třídy, soubory), komentáře v kódu **česky**.
 - Pokud projekt nebo situace určí jinak, platí to.
 
+### Typografie
+
+V českých textech (MD dokumenty, dokumentace, texty rozhraní):
+
+- **pomlčka `–` (en, U+2013)** – ve větách s mezerami kolem, v rozsazích bez nich (`2019–2023`). Dlouhá em pomlčka `—` je americká a v českém textu nemá co dělat.
+- **české uvozovky** ve tvaru „text" (otevírací U+201E, zavírací rovná).
+- **elipsa jedním znakem `…`**, ne třemi tečkami.
+
+Neplatí pro obsah kódu, kódových bloků a backticků, ani pro doslovné citace, kde se přebírá znění zdroje.
+
 ### Styl odpovědí
 
 - Krátce a věcně. Nepřepisuj, co uživatel řekl – rovnou jednej.
