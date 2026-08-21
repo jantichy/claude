@@ -213,7 +213,7 @@ Předchozí session řešila: <shrnutí témat a seznam souborů, do kterých se
 Přečti si v tomhle pořadí (jako by ses do projektu zaučoval):
 <seznam souborů v pořadí od obecného ke konkrétnímu>
 
-Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, PROMPTS.md, runtime adresáře>) nečti celé.
+Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, docs/prompts.md, runtime adresáře>) nečti celé.
 
 Soustřeď se na oblasti, kterých se dotýkala poslední session. ODPOVĚZ NA TYTO OTÁZKY:
 <v režimu `full` tenhle odstavec vynech – procházej dokumentaci celou>

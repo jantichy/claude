@@ -29,7 +29,7 @@ Stav autocommitu pro projekt poznáš podle přítomnosti nadpisu `### Autocommi
 
 ### Autoprompt v projektech
 
-Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `### Autoprompt` v projektovém `CLAUDE.md`, kanonicky pod `## Automatické akce`. Stejně jako výše: nadpis téhle sekce se od něj schválně liší, aby ji detekce nebrala jako přepínač. Kdykoli je v projektu zapnutý autoprompt, každý můj prompt se automaticky uloží do `PROMPTS.md` v rootu projektu (přes `UserPromptSubmit` hook).
+Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `### Autoprompt` v projektovém `CLAUDE.md`, kanonicky pod `## Automatické akce`. Stejně jako výše: nadpis téhle sekce se od něj schválně liší, aby ji detekce nebrala jako přepínač. Kdykoli je v projektu zapnutý autoprompt, každý můj prompt se automaticky uloží do `docs/prompts.md` v projektu (přes `UserPromptSubmit` hook).
 
 ------
 
