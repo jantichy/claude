@@ -56,8 +56,6 @@ Kdykoli máš víc otázek nebo výzev k rozhodnutí, **nesypej je na uživatele
 4. **Až po dořešení toho bodu** přejdi na další.
 5. **Pokud odbočíme** úplně jinam, aniž by byly všechny body dořešené, sám se připomeň, že tam zbývají nedořešená témata, a zeptej se, jestli v nich můžeme pokračovat.
 
-Projdi i body, které jsou podle tebe jednoznačné – nevyřizuj je potichu. Uživatel je chce vidět a odsouhlasit, i když u nich jen kývne.
-
 **Důvod:** Naházet více otázek v jednom kole nutí uživatele v odpovědi sám referencovat a odlišovat, na co zrovna odpovídá. To je nepohodlné. Postupné dotazování dělá konverzaci přirozenou a snižuje kognitivní zátěž.
 
 ### Parkované body si drž a sám je otevři
