@@ -190,10 +190,19 @@ project_dir=$(echo "$input" | jq -r '.workspace.project_dir // empty')
 if [ -z "$project_dir" ]; then project_dir="$cwd"; fi
 # Rozvinout ~ pokud je potřeba
 project_dir_real=$(echo "$project_dir" | sed "s|^~|$HOME|")
+cwd_real=$(echo "$cwd" | sed "s|^~|$HOME|")
 
-if [ -d "$project_dir_real" ] && git -C "$project_dir_real" rev-parse --git-dir >/dev/null 2>&1; then
-  unstaged=$(git -C "$project_dir_real" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
-  staged=$(git -C "$project_dir_real" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
+# Změny se počítají v adresáři, ve kterém se pracuje (cwd), ne v kořeni projektu.
+# U worktree layoutu je kořen projektu bare repo – to nemá working tree a jeho
+# index si drží zastaralý stav, takže by statusline hlásil trvale falešný počet.
+git_root_candidate="$cwd_real"
+[ -d "$git_root_candidate" ] || git_root_candidate="$project_dir_real"
+
+if [ -d "$git_root_candidate" ] \
+   && git -C "$git_root_candidate" rev-parse --git-dir >/dev/null 2>&1 \
+   && [ "$(git -C "$git_root_candidate" rev-parse --is-bare-repository 2>/dev/null)" = "false" ]; then
+  unstaged=$(git -C "$git_root_candidate" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
+  staged=$(git -C "$git_root_candidate" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
   total=$(( unstaged + staged ))
   if [ "$total" -gt 0 ]; then
     git_part=$(printf "\033[33mGit: ~%d changes\033[0m" "$total")
