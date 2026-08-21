@@ -2,7 +2,9 @@
 
 Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém.
 
-Doménové soubory se načítají samy podle typu souboru, na který saháš: `~/Dev/claude/CODING.md`, `WEB.md`, `ADMIN.md`.
+Standardní strukturu projektu (`CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`) definuje `~/.claude/STRUCTURE.md`.
+
+Doménové checklisty (`~/Dev/claude/CODING.md`, `WEB.md`, `ADMIN.md`) se do projektu načítají `@import`em v jeho `CLAUDE.md` – tam, kde jsou pro jeho charakter relevantní.
 
 ------
 
@@ -79,7 +81,7 @@ Zakazuje-li projektový `CLAUDE.md` ukládání do trvalé Memory, platí to i p
 
 ### Rozhodnutí zapisuj i s cestou k nim
 
-Každý projekt má **jeden soubor s rozhodnutími** (`rozhodnuti.md` nebo obdoba). Zapisuj do něj hned, jak rozhodnutí padne, a nejen výsledek, ale celou cestu: **jaký problém to řešilo, jaké varianty byly ve hře, proč vyhrála tahle a proč padly ostatní.**
+Rozhodnutí projektu patří do `docs/decisions.md` (viz `STRUCTURE.md`). Zapisuj do něj hned, jak rozhodnutí padne, a nejen výsledek, ale celou cestu: **jaký problém to řešilo, jaké varianty byly ve hře, proč vyhrála tahle a proč padly ostatní.**
 
 **Proč:** za měsíc nikdo nepozná, jestli je něco promyšlené, nebo náhoda – a netroufne si to změnit. Zapsaná motivace je to, co dovoluje rozhodnutí revidovat, protože je vidět, které předpoklady musely platit. Zapsané zavržené varianty brání procházení téže slepé uličky znovu.
 
@@ -135,7 +137,7 @@ Vyhýbej se kombinatorické explozi. Máš-li dimenze A, B, C, neudržuj `A×B×
 
 ### Stavěj doménové principy a rozhoduj proti nim
 
-Průběžně **formuluj silné principy domény** – ne popis toho, co systém dělá, ale věty, které rozhodují: „o penězích u brány rozhoduje jen brána". Vznikají z konkrétních rozhodnutí, ale zapisují se obecně, aby platily i tam, kam se ještě nedošlo. Patří do vlastního souboru (`zasady.md` nebo obdoba).
+Průběžně **formuluj silné principy domény** – ne popis toho, co systém dělá, ale věty, které rozhodují: „o penězích u brány rozhoduje jen brána". Vznikají z konkrétních rozhodnutí, ale zapisují se obecně, aby platily i tam, kam se ještě nedošlo. Patří do `docs/rules.md` (viz `STRUCTURE.md`).
 
 **Každou další otázku validuj proti nim, ne od nuly.** Ptej se, který princip na to sedí, a odpověď odvoď z něj. Nesedí-li žádný, je to nález: chybí princip, formuluj ho.
 
@@ -178,7 +180,7 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 ### Odložené věci pojmenuj a zaparkuj
 
-Vše mimo aktuální osu – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí – patří okamžitě do `TODO.md`, a to **s celou úvahou a zdůvodněním**, ne jako holá odrážka. Účel je mít téma připravené, ne se k němu zavázat.
+Vše mimo aktuální osu – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí – patří okamžitě do `docs/todo.md`, a to **s celou úvahou a zdůvodněním**, ne jako holá odrážka. Účel je mít téma připravené, ne se k němu zavázat.
 
 ------
 
