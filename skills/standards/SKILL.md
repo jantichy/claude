@@ -62,13 +62,13 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 | `~/Dev/claude/CODING.md` | jakýkoliv kód, datový model, migrace, konfigurace, CI |
 | `~/Dev/claude/WEB.md` | webové rozhraní – šablony, komponenty, styly, stránky |
 | `~/Dev/claude/ADMIN.md` | administrace, backoffice, interní nástroj (**navíc** k `WEB.md`, ne místo něj) |
-| `~/Dev/claude/TEXT.md` | souvislé české texty – dokumentace, obsah stránek, newslettery, delší mikrocopy |
+| `~/Dev/claude/TEXT.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `WEB.md`) |
 
 `~/Dev/claude/WORKTREES.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat.
 
 Vypiš uživateli, které sady jsi vybral a proč. Když si u některé nejsi jistý, radši ji zahrň.
 
-Pokud žádná sada nesedí (čistě dokumentační projekt), řekni to explicitně a skonči – nevymýšlej si vlastní standardy.
+Pokud žádná sada nesedí, řekni to explicitně a skonči – nevymýšlej si vlastní standardy. Pozor, čistě dokumentační projekt sadou bez pokrytí není: na české texty sedí `TEXT.md`.
 
 ### 1.3 Načti kontext projektu
 

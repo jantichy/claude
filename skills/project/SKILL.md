@@ -227,6 +227,8 @@ Zeptej se (AskUserQuestion, **`multiSelect: true`**): „Které doménové check
 | Psaní českých textů | `@~/Dev/claude/TEXT.md` |
 | Žádný | – |
 
+`WORKTREES.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
+
 Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako prozaické odkazy:
 
 ```
@@ -240,7 +242,7 @@ Závazné pro tenhle projekt:
 
 **Proč `@import` a ne odkaz:** `@import` Claude Code při startu session textově rozbalí do kontextu, takže obsah platí vždy. Prozaický odkaz („řiď se souborem X") je jen instrukce, kterou si model musí sám všimnout a sám se rozhodnout ji splnit – to se v praxi dodržuje nespolehlivě.
 
-Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `WEB.md` a `ADMIN.md` jsou dohromady přes 600 řádků.
+Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `WEB.md` a `ADMIN.md` mají dohromady skoro 500 řádků.
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
