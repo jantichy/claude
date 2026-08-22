@@ -224,6 +224,7 @@ Zeptej se (AskUserQuestion, **`multiSelect: true`**): „Které doménové check
 | Psaní kódu | `@~/Dev/claude/CODING.md` |
 | Webové rozhraní | `@~/Dev/claude/WEB.md` |
 | Administrace / backoffice | `@~/Dev/claude/ADMIN.md` |
+| Psaní českých textů | `@~/Dev/claude/TEXT.md` |
 | Žádný | – |
 
 Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako prozaické odkazy:

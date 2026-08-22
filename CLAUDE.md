@@ -15,7 +15,7 @@ Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to prav
 
 - `~/Dev/claude/WEB.md` – checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...) – načti si ho vždy, když pracuješ na webovém rozhraní
 - `~/Dev/claude/ADMIN.md` – checklist pro administrační a backoffice rozhraní (struktura, seznamy a tabulky, akce a potvrzování, editace, oprávnění, auditní stopa) – načti si ho vždy, když děláš administraci nebo interní nástroj; platí navíc k `WEB.md`
-- `~/Dev/claude/TEXT.md` – redakční standard pro psaní textů (stavba článku, obsah, zakázané obraty, stylistika, gramatika, česká typografie) – načti si ho vždy, když píšeš nebo edituješ souvislý text v češtině: článek, newsletter, dokumentaci, obsah webu
+- `~/Dev/claude/TEXT.md` – redakční standard pro psaní textů (stavba textu, obsah, zakázané obraty, stylistika, gramatika, česká typografie) – načti si ho vždy, když píšeš nebo edituješ souvislý text v češtině: článek, newsletter, dokumentaci, obsah webu
 - `~/Dev/claude/CODING.md` – standardy návrhu a psaní kódu (návrh a modelování stavu, rozhraní a guardy, automatika a vnější systémy, naming, git, bezpečnost, TypeScript, SQL, frontend) – načti si ho vždy, když navrhuješ datový model nebo píšeš či upravuješ kód
 
 Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/Dev/claude/`.

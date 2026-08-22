@@ -4,7 +4,7 @@ Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalos
 
 Standardní strukturu projektu (`CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`) definuje `~/.claude/STRUCTURE.md`.
 
-Doménové checklisty (`~/Dev/claude/CODING.md`, `WEB.md`, `ADMIN.md`) se do projektu načítají `@import`em v jeho `CLAUDE.md` – tam, kde jsou pro jeho charakter relevantní.
+Doménové checklisty (`~/Dev/claude/CODING.md`, `WEB.md`, `ADMIN.md`, `TEXT.md`) se do projektu načítají `@import`em v jeho `CLAUDE.md` – tam, kde jsou pro jeho charakter relevantní.
 
 ------
 

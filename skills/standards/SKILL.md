@@ -1,6 +1,6 @@
 ---
 name: standards
-description: Skill se použije, když uživatel zadá "/standards" nebo "/standards full", nebo chce prověřit kód a rozhraní proti doménovým standardům (CODING.md, WEB.md, ADMIN.md). Výchozí rozsah jsou změny na větvi, "full" projede celý projekt. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+description: Skill se použije, když uživatel zadá "/standards" nebo "/standards full", nebo chce prověřit kód, rozhraní a texty proti doménovým standardům (CODING.md, WEB.md, ADMIN.md, TEXT.md). Výchozí rozsah jsou změny na větvi, "full" projede celý projekt. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
 allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 ---
 
@@ -62,6 +62,7 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 | `~/Dev/claude/CODING.md` | jakýkoliv kód, datový model, migrace, konfigurace, CI |
 | `~/Dev/claude/WEB.md` | webové rozhraní – šablony, komponenty, styly, stránky |
 | `~/Dev/claude/ADMIN.md` | administrace, backoffice, interní nástroj (**navíc** k `WEB.md`, ne místo něj) |
+| `~/Dev/claude/TEXT.md` | souvislé české texty – dokumentace, obsah stránek, newslettery, delší mikrocopy |
 
 Vypiš uživateli, které sady jsi vybral a proč. Když si u některé nejsi jistý, radši ji zahrň.
 
@@ -131,7 +132,7 @@ Nezapisuj do žádného souboru.
 
 Slož nálezy ze všech agentů do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, KOSMETICKÉ; v rámci kategorie root položky před jejich následky.
 
-**Deduplikuj napříč sadami.** `WEB.md` a `ADMIN.md` se překrývají – když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba dotčené body standardů.
+**Deduplikuj napříč sadami.** `WEB.md` a `ADMIN.md` se překrývají, stejně tak `WEB.md` a `TEXT.md` v typografii – když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba dotčené body standardů.
 
 Pak rozděl na dvě skupiny:
 
@@ -160,7 +161,7 @@ Při pochybnosti patří nález mezi sporné.
 ## Výsledky kontroly standardů
 
 Rozsah: [změny na větvi – N souborů / celý projekt – N souborů]
-Sady: [CODING.md, WEB.md, ADMIN.md – které se použily]
+Sady: [CODING.md, WEB.md, ADMIN.md, TEXT.md – které se použily]
 
 Nalezeno X nálezů celkem:
 - 🔴 Kritické: N

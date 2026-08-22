@@ -43,7 +43,7 @@ Rozdíl proti `decisions.md`: tam je konkrétní rozhodnutí (občas i výjimka 
 **Hranice – co sem nepatří:**
 
 - Pravidla platná napříč všemi projekty → `~/.claude/RULES.md`
-- Doménové standardy a checklisty (kód, web, administrace) → `~/Dev/claude/CODING.md`, `WEB.md`, `ADMIN.md`
+- Doménové standardy a checklisty (kód, web, administrace, psaní textů, worktree layout) → `~/Dev/claude/CODING.md`, `WEB.md`, `ADMIN.md`, `TEXT.md`, `WORKTREES.md`
 - Sem patří **jen to, co je specifické pro tenhle projekt.** Duplikovat sem obecné pravidlo je chyba.
 
 ------
