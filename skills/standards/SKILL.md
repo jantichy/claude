@@ -64,6 +64,8 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 | `~/Dev/claude/ADMIN.md` | administrace, backoffice, interní nástroj (**navíc** k `WEB.md`, ne místo něj) |
 | `~/Dev/claude/TEXT.md` | souvislé české texty – dokumentace, obsah stránek, newslettery, delší mikrocopy |
 
+`~/Dev/claude/WORKTREES.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat.
+
 Vypiš uživateli, které sady jsi vybral a proč. Když si u některé nejsi jistý, radši ji zahrň.
 
 Pokud žádná sada nesedí (čistě dokumentační projekt), řekni to explicitně a skonči – nevymýšlej si vlastní standardy.
