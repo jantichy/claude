@@ -16,7 +16,7 @@ Teprve pak pokračuj plněním skillu.
 
 ## Co skill dělá
 
-Prověří kód a rozhraní proti **doménovým standardům** v `~/Dev/claude/` a nálezy opraví spolu s uživatelem.
+Prověří kód, rozhraní a texty proti **doménovým standardům** v `~/Dev/claude/` a nálezy opraví spolu s uživatelem.
 
 Kontroluje soulad s **explicitně sepsanými pravidly** – jedno pravidlo, jeden nález. Tím se liší od sousedních skillů:
 

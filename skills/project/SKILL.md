@@ -186,7 +186,7 @@ Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď toté�
 
 ## Krok 7 – Autoprompt
 
-Zeptej se (AskUserQuestion): zapnout autoprompt? Ano/Ne. Při ano proveď totéž co `/autoprompt on` (viz `~/.claude/skills/autoprompt/SKILL.md`): globální `CLAUDE.md`, projektová sekce, hook do `.claude/settings.local.json`, založení `PROMPTS.md`.
+Zeptej se (AskUserQuestion): zapnout autoprompt? Ano/Ne. Při ano proveď totéž co `/autoprompt on` (viz `~/.claude/skills/autoprompt/SKILL.md`): globální `CLAUDE.md`, projektová sekce, hook do `.claude/settings.local.json`, založení `docs/prompts.md`.
 
 *Nový projekt:* backfill historie přeskoč, není co dohledávat.
 *Existující projekt:* zjisti stav stejně jako u autocommitu a backfill nabídni.
