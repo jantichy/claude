@@ -95,7 +95,7 @@ Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 U existujícího projektu jde o **přeskládání adresáře** – řekni to nahlas a nech si ho potvrdit, než začneš.
 
-Do projektového `CLAUDE.md` (do **kontejneru**, ne do `master/`) přidej:
+Do projektového `CLAUDE.md` (do **kontejneru**, ne do `main/`) přidej:
 
 ```
 Tenhle adresář není projekt, ale kontejner s worktree layoutem. Pravidla práce s ním:
@@ -106,13 +106,13 @@ Níže jen odchylky od obecného postupu.
 
 ## Odchylky
 
-- **Hlavní větev je `<master|main>`.**
-- <co konkrétně se přebírá z master/, nebo že zatím není co>
+- <odchylka v pojmenování hlavní větve – uveď jen u staršího projektu, kde se nejmenuje `main`>
+- <co konkrétně se přebírá z main/, nebo že zatím není co>
 ```
 
 Upozorni uživatele, že **při příštím spuštění dostane dialog na schválení externího importu a musí ho odsouhlasit** – při odmítnutí se importy pro ten projekt trvale vypnou a dialog se už neukáže.
 
-Ve worktree layoutu platí pro všechny další kroky: **projektové soubory zakládej v `master/`**, ne v kontejneru. Výjimkou je `CLAUDE.md` kontejneru, který popisuje layout.
+Ve worktree layoutu platí pro všechny další kroky: **projektové soubory zakládej v `main/`**, ne v kontejneru. Výjimkou je `CLAUDE.md` kontejneru, který popisuje layout.
 
 ## Krok 4 – Standardní struktura
 
