@@ -1,6 +1,6 @@
 ---
 name: standards
-description: Skill se použije, když uživatel zadá "/standards" nebo "/standards full", nebo chce prověřit kód, rozhraní a texty proti doménovým standardům (CODING.md, WEB.md, ADMIN.md, TEXT.md). Výchozí rozsah jsou změny na větvi, "full" projede celý projekt. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+description: Skill se použije, když uživatel zadá "/standards" nebo "/standards full", nebo chce prověřit kód, rozhraní a texty proti doménovým standardům (coding.md, web.md, admin.md, text.md). Výchozí rozsah jsou změny na větvi, "full" projede celý projekt. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
 allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 ---
 
@@ -16,7 +16,7 @@ Teprve pak pokračuj plněním skillu.
 
 ## Co skill dělá
 
-Prověří kód, rozhraní a texty proti **doménovým standardům** v `~/Dev/claude/` a nálezy opraví spolu s uživatelem.
+Prověří kód, rozhraní a texty proti **doménovým standardům** v `~/Dev/context/` a nálezy opraví spolu s uživatelem.
 
 Kontroluje soulad s **explicitně sepsanými pravidly** – jedno pravidlo, jeden nález. Tím se liší od sousedních skillů:
 
@@ -59,16 +59,16 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 
 | Sada | Kdy se aplikuje |
 |---|---|
-| `~/Dev/claude/CODING.md` | jakýkoliv kód, datový model, migrace, konfigurace, CI |
-| `~/Dev/claude/WEB.md` | webové rozhraní – šablony, komponenty, styly, stránky |
-| `~/Dev/claude/ADMIN.md` | administrace, backoffice, interní nástroj (**navíc** k `WEB.md`, ne místo něj) |
-| `~/Dev/claude/TEXT.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `WEB.md`) |
+| `~/Dev/context/coding.md` | jakýkoliv kód, datový model, migrace, konfigurace, CI |
+| `~/Dev/context/web.md` | webové rozhraní – šablony, komponenty, styly, stránky |
+| `~/Dev/context/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web.md`, ne místo něj) |
+| `~/Dev/context/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web.md`) |
 
-`~/Dev/claude/WORKTREES.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat.
+`~/Dev/context/worktrees.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat.
 
 Vypiš uživateli, které sady jsi vybral a proč. Když si u některé nejsi jistý, radši ji zahrň.
 
-Pokud žádná sada nesedí, řekni to explicitně a skonči – nevymýšlej si vlastní standardy. Pozor, čistě dokumentační projekt sadou bez pokrytí není: na české texty sedí `TEXT.md`.
+Pokud žádná sada nesedí, řekni to explicitně a skonči – nevymýšlej si vlastní standardy. Pozor, čistě dokumentační projekt sadou bez pokrytí není: na české texty sedí `text.md`.
 
 ### 1.3 Načti kontext projektu
 
@@ -134,7 +134,7 @@ Nezapisuj do žádného souboru.
 
 Slož nálezy ze všech agentů do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, KOSMETICKÉ; v rámci kategorie root položky před jejich následky.
 
-**Deduplikuj napříč sadami.** `WEB.md` a `ADMIN.md` se překrývají, stejně tak `WEB.md` a `TEXT.md` v typografii – když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba dotčené body standardů.
+**Deduplikuj napříč sadami.** `web.md` a `admin.md` se překrývají, stejně tak `web.md` a `text.md` v typografii – když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba dotčené body standardů.
 
 Pak rozděl na dvě skupiny:
 
@@ -163,7 +163,7 @@ Při pochybnosti patří nález mezi sporné.
 ## Výsledky kontroly standardů
 
 Rozsah: [změny na větvi – N souborů / celý projekt – N souborů]
-Sady: [CODING.md, WEB.md, ADMIN.md, TEXT.md – které se použily]
+Sady: [coding.md, web.md, admin.md, text.md – které se použily]
 
 Nalezeno X nálezů celkem:
 - 🔴 Kritické: N

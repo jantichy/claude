@@ -5,7 +5,7 @@
 Tento soubor obsahuje **závazná pravidla**, kterými se řiď při každém úkolu. Dodržuj ho vždy, stejně jako pravidla psaná přímo v tomto souboru.
 
 - `@~/.claude/RULES.md` – obecná pravidla práce: komunikace s uživatelem, organizace souborů a obsahu, práce se změnami
-- `@~/.claude/STRUCTURE.md` – standardní struktura projektu: `CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md` a povinnost průběžně je aktualizovat
+- `@~/Dev/context/structure.md` – standardní struktura projektu: `CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md` a povinnost průběžně je aktualizovat
 
 Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nevadí, že bude veřejně vidět na githubu, navrhni jeho extrakci do `~/.claude/`.
 
@@ -13,13 +13,13 @@ Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nev
 
 Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to pravidla pro každý úkol, ale soubory znalostí pro konkrétní typy práce.
 
-- `~/Dev/claude/WEB.md` – checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...) – načti si ho vždy, když pracuješ na webovém rozhraní
-- `~/Dev/claude/ADMIN.md` – checklist pro administrační a backoffice rozhraní (struktura, seznamy a tabulky, akce a potvrzování, editace, oprávnění, auditní stopa) – načti si ho vždy, když děláš administraci nebo interní nástroj; platí navíc k `WEB.md`
-- `~/Dev/claude/TEXT.md` – redakční standard pro psaní textů (stavba textu, obsah, zakázané obraty, stylistika, gramatika, česká typografie) – načti si ho vždy, když píšeš nebo edituješ souvislý text v češtině: článek, newsletter, dokumentaci, obsah webu
-- `~/Dev/claude/WORKTREES.md` – worktree layout projektu (kontejner s `.bare`, jeden pracovní adresář na větev, založení a dokončení větve) – načti si ho vždy, když zakládáš nebo rušíš větev v projektu s tímhle layoutem
-- `~/Dev/claude/CODING.md` – standardy návrhu a psaní kódu (návrh a modelování stavu, rozhraní a guardy, automatika a vnější systémy, naming, git, bezpečnost, TypeScript, SQL, frontend) – načti si ho vždy, když navrhuješ datový model nebo píšeš či upravuješ kód
+- `~/Dev/context/web.md` – checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...) – načti si ho vždy, když pracuješ na webovém rozhraní
+- `~/Dev/context/admin.md` – checklist pro administrační a backoffice rozhraní (struktura, seznamy a tabulky, akce a potvrzování, editace, oprávnění, auditní stopa) – načti si ho vždy, když děláš administraci nebo interní nástroj; platí navíc k `web.md`
+- `~/Dev/context/text.md` – redakční standard pro psaní textů (stavba textu, obsah, zakázané obraty, stylistika, gramatika, česká typografie) – načti si ho vždy, když píšeš nebo edituješ souvislý text v češtině: článek, newsletter, dokumentaci, obsah webu
+- `~/Dev/context/worktrees.md` – worktree layout projektu (kontejner s `.bare`, jeden pracovní adresář na větev, založení a dokončení větve) – načti si ho vždy, když zakládáš nebo rušíš větev v projektu s tímhle layoutem
+- `~/Dev/context/coding.md` – standardy návrhu a psaní kódu (návrh a modelování stavu, rozhraní a guardy, automatika a vnější systémy, naming, git, bezpečnost, TypeScript, SQL, frontend) – načti si ho vždy, když navrhuješ datový model nebo píšeš či upravuješ kód
 
-Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/Dev/claude/`.
+Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/Dev/context/`.
 
 ------
 

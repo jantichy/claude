@@ -28,7 +28,7 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
-- Konvenci standardní struktury **neopisuj z hlavy** – řiď se `~/.claude/STRUCTURE.md`, který ji definuje. Tenhle skill je jen instalátor.
+- Konvenci standardní struktury **neopisuj z hlavy** – řiď se `~/Dev/context/structure.md`, který ji definuje. Tenhle skill je jen instalátor.
 
 ------
 
@@ -87,11 +87,11 @@ Zeptej se (AskUserQuestion), 4 možnosti:
 Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 - **Jeden pracovní adresář (jednoduché)** – klasika: `.git` a rozbalený projekt přímo v adresáři. Vhodné, když nad projektem pracuješ vždy v jedné session.
-- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/Dev/claude/WORKTREES.md`.
+- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/Dev/context/worktrees.md`.
 
 ### Když padne worktree layout
 
-**Postup zřízení kontejneru neopisuj z hlavy** – řiď se `~/Dev/claude/WORKTREES.md`, sekce *Zřízení kontejneru*. Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`.
+**Postup zřízení kontejneru neopisuj z hlavy** – řiď se `~/Dev/context/worktrees.md`, sekce *Zřízení kontejneru*. Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`.
 
 U existujícího projektu jde o **přeskládání adresáře** – řekni to nahlas a nech si ho potvrdit, než začneš.
 
@@ -100,7 +100,7 @@ Do projektového `CLAUDE.md` (do **kontejneru**, ne do `main/`) přidej:
 ```
 Tenhle adresář není projekt, ale kontejner s worktree layoutem. Pravidla práce s ním:
 
-@~/Dev/claude/WORKTREES.md
+@~/Dev/context/worktrees.md
 
 Níže jen odchylky od obecného postupu.
 
@@ -116,7 +116,7 @@ Ve worktree layoutu platí pro všechny další kroky: **projektové soubory zak
 
 ## Krok 4 – Standardní struktura
 
-Řiď se `~/.claude/STRUCTURE.md`. Založ, co chybí:
+Řiď se `~/Dev/context/structure.md`. Založ, co chybí:
 
 ```
 CLAUDE.md
@@ -147,7 +147,7 @@ Přidej sekci – konkrétní deklaraci, ne opis konvence:
 ```
 ## Struktura a dokumentace
 
-Projekt drží standardní strukturu podle `~/.claude/STRUCTURE.md`:
+Projekt drží standardní strukturu podle `~/Dev/context/structure.md`:
 
 - `README.md` – co projekt je, pro člověka
 - `docs/todo.md` – co je odložené na později
@@ -200,7 +200,7 @@ Při první volbě přidej do `CLAUDE.md`:
 ```
 ## Paměť
 
-Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/.claude/STRUCTURE.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
+Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/Dev/context/structure.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
 ```
 
 ## Krok 9 – Typ projektu
@@ -221,13 +221,13 @@ Zeptej se (AskUserQuestion, **`multiSelect: true`**): „Které doménové check
 
 | Volba | Import |
 |---|---|
-| Psaní kódu | `@~/Dev/claude/CODING.md` |
-| Webové rozhraní | `@~/Dev/claude/WEB.md` |
-| Administrace / backoffice | `@~/Dev/claude/ADMIN.md` |
-| Psaní českých textů | `@~/Dev/claude/TEXT.md` |
+| Psaní kódu | `@~/Dev/context/coding.md` |
+| Webové rozhraní | `@~/Dev/context/web.md` |
+| Administrace / backoffice | `@~/Dev/context/admin.md` |
+| Psaní českých textů | `@~/Dev/context/text.md` |
 | Žádný | – |
 
-`WORKTREES.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
+`worktrees.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
 
 Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako prozaické odkazy:
 
@@ -236,13 +236,13 @@ Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako prozaické od
 
 Závazné pro tenhle projekt:
 
-@~/Dev/claude/CODING.md
-@~/Dev/claude/WEB.md
+@~/Dev/context/coding.md
+@~/Dev/context/web.md
 ```
 
 **Proč `@import` a ne odkaz:** `@import` Claude Code při startu session textově rozbalí do kontextu, takže obsah platí vždy. Prozaický odkaz („řiď se souborem X") je jen instrukce, kterou si model musí sám všimnout a sám se rozhodnout ji splnit – to se v praxi dodržuje nespolehlivě.
 
-Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `WEB.md` a `ADMIN.md` mají dohromady skoro 500 řádků.
+Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `web.md` a `admin.md` mají dohromady skoro 500 řádků.
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 

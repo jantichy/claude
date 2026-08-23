@@ -7,7 +7,7 @@
       "WebSearch",
       "Skill",
       "Read(~/.claude/**)",
-      "Read(~/Dev/claude/**)",
+      "Read(~/Dev/context/**)",
       "Read(~/Dev/archiv/**)",
       "Bash(ffprobe:*)",
       "Bash(whisper-cli:*)",
