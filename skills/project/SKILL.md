@@ -1,6 +1,6 @@
 ---
 name: project
-description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři či přenastavit už existující projekt (git, worktree layout, standardní struktura docs/, autocommit, autoprompt, paměťová politika, typ projektu, doménové checklisty). Interaktivní wizard, který se ptá krok po kroku.
+description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři či přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, autoprompt, paměťová politika, typ projektu, doménové checklisty). Interaktivní wizard, který se ptá krok po kroku.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
@@ -51,23 +51,40 @@ V režimu *existující projekt* si nejdřív udělej inventuru a **vypiš ji u�
 
 Pak řekni, že se teď budeš ptát postupně, a pokračuj. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.**
 
-## Krok 1 – Popis projektu
+## Krok 1 – Metadata projektu
 
-*Nový projekt:* zeptej se v chatu: „Jednou větou – o čem tenhle projekt je?"
+Formát bloku metadat definuje `~/Dev/context/structure.md`, sekce *`CLAUDE.md`* – **neopisuj ho z hlavy, přečti si ho.** Řeší se čtyři údaje: **slug**, **lidský název**, **popisek** a **URL projektu**.
 
-*Existující projekt:* pokud `CLAUDE.md` popis už má, přečti ho, ukaž uživateli a zeptej se, jestli platí, nebo ho chce upravit.
+Slug je daný adresářem. Zbylé tři **navrhni sám** – u nového projektu z toho, co ti uživatel řekl, u existujícího z toho, co v repozitáři najdeš (`CLAUDE.md`, `README.md`, `package.json`, obsah). Předlož návrh k odsouhlasení, ať ho uživatel může jen potvrdit, nebo přepsat:
+
+```
+Slug:     rezervace
+Název:    Rezervační systém
+Popisek:  Rezervační systém pro školení, konference a webináře – správa událostí, účastníků, objednávek a faktur.
+Web:      (žádný)
+```
+
+Zeptej se v chatu (ne AskUserQuestion – jde o volný text) a počkej na odpověď. **Nic si nevymýšlej**: nevíš-li, jestli projekt má veřejnou URL, zeptej se místo hádání.
+
+*Existující projekt:* najdeš-li v `CLAUDE.md` nebo `README.md` popis, který už platí, nabídni ho beze změny. Rozcházejí-li se popisy v `CLAUDE.md` a `README.md`, ukaž oba a nech rozhodnout, který je pravda.
 
 ## Krok 2 – Založení nebo doplnění CLAUDE.md
 
-*Nový projekt:* vytvoř `CLAUDE.md` v rootu:
+Zapiš blok metadat na **začátek** `CLAUDE.md`, ve formátu podle `structure.md`:
 
 ```
-# <název aktuálního adresáře>
+# Rezervační systém
 
-<popis z kroku 1>
+Rezervační systém pro školení, konference a webináře – správa událostí, účastníků, objednávek a faktur.
+
+- **Slug:** `rezervace`
+- **Web:** https://rezervace.example.cz
+- **Repozitář:** https://github.com/jantichy/rezervace
 ```
 
-*Existující projekt:* nezakládej znovu, doplňuj do stávajícího. Sekce, které přidávají další kroky, vkládej za stávající obsah; existující sekce téhož jména neduplikuj, ale aktualizuj.
+Řádky `Web` a `Repozitář` vynech, pokud neexistují. `Repozitář` doplň v kroku 3, jakmile je remote známý.
+
+*Existující projekt:* nezakládej znovu, doplňuj do stávajícího. Má-li soubor generický nadpis (`# CLAUDE.md`) nebo popis rozsypaný v sekci `## Projekt`, **navrhni jeho nahrazení blokem metadat** – ukaž rozdíl a nech si to potvrdit. Sekce, které přidávají další kroky, vkládej za stávající obsah; existující sekce téhož jména neduplikuj, ale aktualizuj.
 
 ## Krok 3 – Git
 
@@ -79,6 +96,20 @@ Zeptej se (AskUserQuestion), 4 možnosti:
 - **Remote (založit nový)** – `git init`, pak AskUserQuestion na hostitele (GitHub / GitLab). U GitHubu s dostupným `gh` (`which gh`) se zeptej na viditelnost a spusť `gh repo create <název-adresáře> --private|--public --source=. --remote=origin`. Jinak vypiš instrukci „Založ prázdné repo na <platforma>, pak mi dej URL" a počkej.
 
 *Existující projekt:* je-li git už inicializovaný, `git init` nespouštěj. **Ověř remote přes `git remote get-url origin`**, ne jen `git remote -v` – remote může existovat s prázdnou URL a `-v` to nepozná. Chybí-li nebo je-li rozbitý, nabídni doplnění.
+
+### Propsání metadat do Repository details
+
+*Jen u GitHubu s dostupným `gh`.* Description a website repozitáře nejdou nastavit souborem v repu – jsou to metadata na straně GitHubu. Propiš tam popisek a URL z kroku 1:
+
+```bash
+gh repo edit <owner>/<slug> -d "<popisek>" -h "<web>"
+```
+
+Nejdřív si přes `gh repo view <owner>/<slug> --json description,homepageUrl` **zjisti současný stav**. Liší-li se od popisku z kroku 1, ukaž rozdíl a přepiš. Je-li shodný, nech být a jen to zmiň. Web se nepředává, když projekt žádný nemá – prázdné `-h ""` existující hodnotu smaže.
+
+Do bloku metadat v `CLAUDE.md` zároveň doplň řádek `Repozitář` s URL remote.
+
+U GitLabu a jiných hostitelů tenhle krok přeskoč a řekni uživateli, že popisek si tam musí nastavit ručně.
 
 ## Krok 3b – Layout repozitáře
 
@@ -126,7 +157,7 @@ docs/decisions.md
 docs/rules.md
 ```
 
-`README.md` u nového projektu: nadpis s názvem adresáře a popis z kroku 1. Soubory v `docs/` zakládej **prázdné, jen s nadpisem** – obsah nevymýšlej dopředu.
+`README.md` u nového projektu: nadpis s **lidským názvem** a popiskem z kroku 1 jako prvním odstavcem – tam se popisek smí rozvést do víc vět. U existujícího projektu zkontroluj, že nadpis a první odstavec sedí s blokem metadat v `CLAUDE.md`; rozcházejí-li se, srovnej je. Soubory v `docs/` zakládej **prázdné, jen s nadpisem** – obsah nevymýšlej dopředu.
 
 ### Migrace staršího pojmenování
 
@@ -251,7 +282,7 @@ Upozorni uživatele, že při příštím spuštění dostane dialog na schvále
 Vypiš přehledně:
 
 - **Co bylo založeno** (nový projekt) nebo **co se změnilo a co zůstalo** (existující projekt).
-- Git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, autocommit, autoprompt, paměťová politika, typ, importované checklisty.
+- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, autocommit, autoprompt, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 
 U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí.
