@@ -242,9 +242,11 @@ Typů je šest, ale AskUserQuestion bere najednou nejvýš čtyři volby. Ptej s
 
 | Volba | Co následuje |
 |---|---|
-| Vývoj software | typ je rovnou **Vývoj**, druhá otázka odpadá |
-| Web a měření | druhá otázka: **Web** / **Nasazení webové analytiky** |
-| Obsah a data | druhá otázka: **Psaní a obsah** / **Data a výzkum** |
+| Vývoj software a webů | druhá otázka: **Vývoj** / **Web** |
+| Analytika | druhá otázka: **Nasazení webové analytiky** / **Data a výzkum** |
+| Obsah | typ je rovnou **Psaní a obsah**, druhá otázka odpadá |
+
+Oblasti jsou schválně dělené podle **povahy práce, ne podle použité technologie** – vývoj software a webů je stavění, analytika je měření a vyhodnocování, obsah je psaní. Až přibude další typ, patří do té oblasti, jejíž povahu sdílí; pokud do žádné, je to signál, že chybí čtvrtá oblast, ne že se má nacpat do nejbližší.
 
 Volbu „Ostatní" mezi možnosti **nedávej** – AskUserQuestion ji nabízí sám jako „Other". Když ji uživatel použije, typ je **Ostatní** a druhá otázka odpadá.
 
