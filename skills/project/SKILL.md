@@ -236,12 +236,13 @@ Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na č
 
 ## Krok 9 – Typ projektu
 
-Zeptej se (AskUserQuestion), 5 možností: **Vývoj** / **Web** / **Psaní a obsah** / **Data a výzkum** / **Ostatní**.
+Zeptej se (AskUserQuestion), 6 možností: **Vývoj** / **Web** / **Nasazení webové analytiky** / **Psaní a obsah** / **Data a výzkum** / **Ostatní**. Nabídni je ve dvou kolech, protože AskUserQuestion bere najednou nejvýš čtyři volby.
 
 Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 - **Vývoj** – „Vývojářský projekt – postupuj podle standardního postupu návrhu a implementace (brainstorming → PRD/design → implementační plán → implementace), viz superpowers skilly." Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first)."
 - **Web** – „Webové rozhraní – obsah, struktura, šablony, ne klasický PRD/implementační proces."
+- **Nasazení webové analytiky** – „Implementace měření na cizím webu – revize existujícího nastavení, měřicí plán, GTM, GA4, consent, reklamní systémy. Výstupem je funkční a doložitelné měření plus dokumentace, ne aplikační kód." Navíc přidej pravidlo: „Každá změna v měření musí být před publikováním ověřená v Preview/DebugView a po nasazení znovu na produkci; do `docs/decisions.md` patří i to, co se měřit záměrně nebude a proč."
 - **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez PRD/implementačního procesu."
 - **Data a výzkum** – „Jednorázová datová/výzkumná analýza – výstupem jsou zjištění a report, ne nasazovaný kód."
 - **Ostatní** – „Projekt mimo výše uvedené kategorie."
@@ -250,11 +251,14 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 Zeptej se (AskUserQuestion, **`multiSelect: true`**): „Které doménové checklisty jsou pro tenhle projekt relevantní?" Volby předvyplň podle typu z kroku 9, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
+U typu **Nasazení webové analytiky** přihraj napevno `analytics.md` a `web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
+
 | Volba | Import |
 |---|---|
 | Psaní kódu | `@~/Dev/context/coding.md` |
 | Webové rozhraní | `@~/Dev/context/web.md` |
 | Administrace / backoffice | `@~/Dev/context/admin.md` |
+| Webová analytika a měření | `@~/Dev/context/analytics.md` |
 | Psaní českých textů | `@~/Dev/context/text.md` |
 | Žádný | – |
 
