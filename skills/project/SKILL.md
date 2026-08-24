@@ -236,7 +236,17 @@ Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na č
 
 ## Krok 9 – Typ projektu
 
-Zeptej se (AskUserQuestion), 6 možností: **Vývoj** / **Web** / **Nasazení webové analytiky** / **Psaní a obsah** / **Data a výzkum** / **Ostatní**. Nabídni je ve dvou kolech, protože AskUserQuestion bere najednou nejvýš čtyři volby.
+Typů je šest, ale AskUserQuestion bere najednou nejvýš čtyři volby. Ptej se proto ve dvou úrovních – nejdřív na oblast, pak na typ uvnitř ní. Uživatel klikne nejvýš dvakrát a žádný typ se neztratí.
+
+**První otázka** (AskUserQuestion): „Čeho se projekt hlavně týká?" Tři volby:
+
+| Volba | Co následuje |
+|---|---|
+| Vývoj software | typ je rovnou **Vývoj**, druhá otázka odpadá |
+| Web a měření | druhá otázka: **Web** / **Nasazení webové analytiky** |
+| Obsah a data | druhá otázka: **Psaní a obsah** / **Data a výzkum** |
+
+Volbu „Ostatní" mezi možnosti **nedávej** – AskUserQuestion ji nabízí sám jako „Other". Když ji uživatel použije, typ je **Ostatní** a druhá otázka odpadá.
 
 Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
