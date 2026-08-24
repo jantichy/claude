@@ -248,6 +248,10 @@ Typů je šest, ale AskUserQuestion bere najednou nejvýš čtyři volby. Ptej s
 
 Oblasti jsou schválně dělené podle **povahy práce, ne podle použité technologie** – vývoj software a webů je stavění, analytika je měření a vyhodnocování, obsah je psaní. Až přibude další typ, patří do té oblasti, jejíž povahu sdílí; pokud do žádné, je to signál, že chybí čtvrtá oblast, ne že se má nacpat do nejbližší.
 
+**Až se oblasti zaplní.** Dvouúrovňová otázka má strop 16 typů (4 oblasti × 4 typy). Až na něj narazíš, nepřidávej třetí úroveň – přejdi na **N kol po čtyřech**: jedno kolo na každou oblast, `multiSelect: true`, uvozené „Co všechno z oblasti <oblast> pro tenhle projekt platí? Když nic, nic nezaškrtávej." Kol může být libovolně mnoho, takže limit AskUserQuestion přestane omezovat.
+
+Ta změna má důsledek, který je potřeba unést vědomě: projekt tím přestane mít jeden typ a bude mít **sadu typů** – klidně prázdnou (= **Ostatní**), klidně **Vývoj** i **Web** zároveň. Do `CLAUDE.md` pak nelep popisy pod sebe mechanicky: slož je do jednoho odstavce a **vyřeš rozpory**. „Vývoj" předepisuje PRD proces, „Web" ho výslovně nechce – když padnou oba, rozhodni podle hlavní náplně projektu a napiš jen to, co platí.
+
 Volbu „Ostatní" mezi možnosti **nedávej** – AskUserQuestion ji nabízí sám jako „Other". Když ji uživatel použije, typ je **Ostatní** a druhá otázka odpadá.
 
 Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
