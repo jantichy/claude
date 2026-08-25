@@ -8,7 +8,6 @@
 			"Skill",
 			"Read(~/.claude/**)",
 			"Read(~/Dev/context/**)",
-			"Read(~/Dev/archiv/**)",
 			"Bash(ffprobe:*)",
 			"Bash(whisper-cli:*)",
 			"Bash(/Users/honza/.claude/skills/transcript/*.sh:*)",
