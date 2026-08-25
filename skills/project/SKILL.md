@@ -121,11 +121,11 @@ U GitLabu a jiných hostitelů tenhle krok přeskoč a řekni uživateli, že po
 Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 - **Jeden pracovní adresář (jednoduché)** – klasika: `.git` a rozbalený projekt přímo v adresáři. Vhodné, když nad projektem pracuješ vždy v jedné session.
-- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/Dev/context/worktrees/worktrees.md`.
+- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/Dev/context/worktree/worktree.md`.
 
 ### Když padne worktree layout
 
-**Postup zřízení kontejneru neopisuj z hlavy** – řiď se `~/Dev/context/worktrees/worktrees.md`, sekce *Zřízení kontejneru*. Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`.
+**Postup zřízení kontejneru neopisuj z hlavy** – řiď se `~/Dev/context/worktree/worktree.md`, sekce *Zřízení kontejneru*. Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`.
 
 U existujícího projektu jde o **přeskládání adresáře** – řekni to nahlas a nech si ho potvrdit, než začneš.
 
@@ -147,7 +147,7 @@ Do `<projekt>/CLAUDE.md` (do **kontejneru**) zapiš tenhle stub a nic víc:
 
 Tenhle adresář není projekt, ale kontejner s worktree layoutem. Pravidla práce s ním:
 
-@~/Dev/context/worktrees/worktrees.md
+@~/Dev/context/worktree/worktree.md
 
 Vlastní pravidla projektu jsou v `main/CLAUDE.md` a importují se odsud:
 
@@ -314,7 +314,7 @@ U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md`
 | Psaní českých textů | `@~/Dev/context/text/text.md` |
 | Žádný | – |
 
-`worktrees.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
+`worktree.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
 
 Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako prozaické odkazy:
 

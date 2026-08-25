@@ -51,7 +51,7 @@ git status --porcelain
 
 Sjednoť commitnuté změny na větvi s necommitnutými. Vynech smazané soubory. Když jsi na hlavní větvi a diff je prázdný, vezmi necommitnuté změny; když nejsou ani ty, řekni to a nabídni `full`.
 
-*Worktree layout* (`~/Dev/context/worktrees/worktrees.md`): pouštěj to ve **worktree větve**. V kořeni kontejneru `git diff` spadne a `git status` taky – kořen není pracovní strom. Stojíš-li tam, přesuň se nejdřív do adresáře té větve, kterou máš auditovat, a rozsah `full` počítej rovněž jen nad ním, ne nad celým kontejnerem (jinak bys projel všechny větve naráz).
+*Worktree layout* (`~/Dev/context/worktree/worktree.md`): pouštěj to ve **worktree větve**. V kořeni kontejneru `git diff` spadne a `git status` taky – kořen není pracovní strom. Stojíš-li tam, přesuň se nejdřív do adresáře té větve, kterou máš auditovat, a rozsah `full` počítej rovněž jen nad ním, ne nad celým kontejnerem (jinak bys projel všechny větve naráz).
 
 **Režim `full`:** všechny zdrojové soubory projektu. Vynech `node_modules/`, `dist/`, `build/`, `vendor/`, `generated/`, `*.gen.*` a cokoliv v `.gitignore`.
 
@@ -67,7 +67,7 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 | `~/Dev/context/analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`, ne místo něj) |
 | `~/Dev/context/text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web/web.md`) |
 
-`~/Dev/context/worktrees/worktrees.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat.
+`~/Dev/context/worktree/worktree.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat.
 
 Vypiš uživateli, které sady jsi vybral a proč. Když si u některé nejsi jistý, radši ji zahrň.
 
