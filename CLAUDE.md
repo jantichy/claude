@@ -23,7 +23,7 @@ Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to prav
 
 Pozor na zařazení `brand/`: sám o sobě je to **korpus** (fakt o tom, kdo Honza je), ne standard – v `~/Dev/context/CLAUDE.md` je vedený tak. V seznamu výš je proto, že se na rozdíl od zbytku korpusu načítá **podmíněně jako doménová znalost**, protože platí pro každý text mířící ven.
 
-Zbytek korpusu se nenačítá paušálně: `archive/` (všechny Honzovy texty), `compose/` (jeho hlas, spouští se skillem `/compose`) a připravované `speaking/` (školení, přednášky, ohlasy). Sáhni po nich, když potřebuješ doklad nebo data, ne pravidlo. Rozcestník je v `~/Dev/context/CLAUDE.md`.
+Zbytek korpusu se nenačítá paušálně: `archive/` (všechny Honzovy texty), `compose/` (jeho hlas, spouští se skillem `/compose`) a `speaking/` (školení, přednášky, klienti, ohlasy). Sáhni po nich, když potřebuješ doklad nebo data, ne pravidlo. Rozcestník je v `~/Dev/context/CLAUDE.md`.
 
 Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/Dev/context/`.
 
