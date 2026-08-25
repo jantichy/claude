@@ -1,296 +1,303 @@
 {
-  "permissions": {
-    "allow": [
-      "Grep",
-      "Glob",
-      "WebFetch",
-      "WebSearch",
-      "Skill",
-      "Read(~/.claude/**)",
-      "Read(~/Dev/context/**)",
-      "Read(~/Dev/archiv/**)",
-      "Bash(ffprobe:*)",
-      "Bash(whisper-cli:*)",
-      "Bash(/Users/honza/.claude/skills/transcript/*.sh:*)",
-      "Bash(osascript:*)",
-      "Bash(screencapture:*)",
-      "Bash(node --input-type=module)",
-      "Bash(node -e:*)",
-      "Read(/usr/local/bin/**)",
-      "Read(/Users/honza/.nvm/versions/**)",
-      "Bash(find:*)",
-      "Bash(ls:*)",
-      "Bash(grep:*)",
-      "Bash(head:*)",
-      "Bash(tail:*)",
-      "Bash(wc:*)",
-      "Bash(which:*)",
-      "Bash(where:*)",
-      "Bash(pwd:*)",
-      "Bash(whoami:*)",
-      "Bash(echo:*)",
-      "Bash(file:*)",
-      "Bash(stat:*)",
-      "Bash(cat:*)",
-      "Bash(tree:*)",
-      "Bash(test:*)",
-      "Bash(iconv:*)",
-      "Bash(xxd:*)",
-      "Bash(cd:*)",
-      "Bash(lsof:*)",
-      "Bash(mkdir -p:*)",
-      "Bash(open:*)",
-      "Bash(timeout:*)",
-      "Bash(env:*)",
-      "Bash(ps:*)",
-      "Bash(awk:*)",
-      "Bash(openssl:*)",
-      "Bash(curl -s:*)",
-      "Bash(curl -I:*)",
-      "Bash(curl -L:*)",
-      "Bash(jq:*)",
-      "Bash(pdftotext:*)",
-      "Bash(pdfinfo:*)",
-      "Bash(pdftoppm:*)",
-      "Bash(brew list:*)",
-      "Bash(brew info:*)",
-      "Bash(brew --prefix:*)",
-      "Bash(pandoc:*)",
-      "Bash(textutil:*)",
-      "Bash(identify:*)",
-      "Bash(unzip:*)",
-      "Bash(go build:*)",
-      "Bash(go test:*)",
-      "Bash(go mod:*)",
-      "Bash(go fmt:*)",
-      "Bash(go vet:*)",
-      "Bash(go list:*)",
-      "Bash(go env:*)",
-      "Bash(go version:*)",
-      "Bash(go doc:*)",
-      "Bash(go run:*)",
-      "Read(/opt/homebrew/**)",
-      "Read(/Users/honza/go/**)",
-      "Read(/usr/local/go/**)",
-      "Read(/tmp/**)",
-      "Read(/private/tmp/**)",
-      "Bash(git *)",
-      "Bash(python:*)",
-      "Bash(python3:*)",
-      "Bash(pip show:*)",
-      "Bash(pip install -r requirements.txt:*)",
-      "Bash(python3 -m venv .venv:*)",
-      "Bash(.venv/bin/python:*)",
-      "Bash(source .venv/bin/activate)",
-      "Bash(pytest:*)",
-      "Bash(npm install:*)",
-      "Bash(npm run:*)",
-      "Bash(npx tsc:*)",
-      "Bash(gh api:*)",
-      "Bash(gh auth status:*)",
-      "Bash(gh repo view:*)",
-      "Bash(gh repo list:*)",
-      "Bash(gh repo create:*)",
-      "Bash(gh pr list:*)",
-      "Bash(gh pr view:*)",
-      "Bash(gh pr checks:*)",
-      "Bash(gh pr diff:*)",
-      "Bash(gh issue list:*)",
-      "Bash(gh issue view:*)",
-      "Bash(gh run list:*)",
-      "Bash(gh run view:*)",
-      "Bash(gh release list:*)",
-      "Bash(gh release view:*)",
-      "Bash(gh mcp list:*)",
-      "Bash(docker logs:*)",
-      "Bash(docker ps:*)",
-      "Bash(docker inspect:*)",
-      "Bash(docker images:*)",
-      "Bash(docker version:*)",
-      "Bash(docker info:*)",
-      "Bash(docker compose ps:*)",
-      "Bash(docker compose logs:*)",
-      "Bash(kubectl get:*)",
-      "Bash(kubectl describe:*)",
-      "Bash(kubectl logs:*)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:cs.wikipedia.org)",
-      "WebFetch(domain:en.wikipedia.org)",
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:docs.anthropic.com)",
-      "WebFetch(domain:code.claude.com)",
-      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages",
-      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__select_page",
-      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
-      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot",
-      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_console_messages",
-      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page",
-      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__query-docs"
-    ],
-    "deny": [
-      "Bash(git push --force:*)",
-      "Bash(git push -f:*)",
-      "Bash(git reset --hard:*)",
-      "Bash(git clean -f:*)",
-      "Bash(git filter-branch:*)",
-      "Bash(git branch -D:*)",
-      "Read(**/.env)",
-      "Read(**/.env.*)",
-      "Read(**/credentials.json)",
-      "Read(**/credentials.yaml)",
-      "Read(**/credentials.yml)",
-      "Read(**/.credentials)",
-      "Read(**/secrets.json)",
-      "Read(**/secrets.yaml)",
-      "Read(**/secrets.yml)",
-      "Read(**/.secrets)",
-      "Read(**/*.pem)",
-      "Read(**/*.key)",
-      "Read(**/*.p12)",
-      "Read(**/*.pfx)",
-      "Read(**/*.keystore)",
-      "Read(**/*id_rsa*)",
-      "Read(**/*id_dsa*)",
-      "Read(**/*id_ecdsa*)",
-      "Read(**/*id_ed25519*)",
-      "Read(**/.ssh/*)",
-      "Read(**/.aws/credentials)",
-      "Read(**/.aws/config)",
-      "Read(**/.kube/config)",
-      "Read(**/.docker/config.json)",
-      "Read(**/.npmrc)",
-      "Read(**/.pypirc)",
-      "Read(**/.netrc)",
-      "Read(**/.git-credentials)",
-      "Read(**/auth.json)",
-      "Read(**/.config/composer/auth.json)",
-      "Read(**/.config/gh/hosts.yml)",
-      "Read(**/master.key)",
-      "Read(**/config/master.key)",
-      "Read(**/*.jks)",
-      "Read(**/.htpasswd)",
-      "Edit(**/.env)",
-      "Edit(**/.env.*)",
-      "Edit(**/credentials.json)",
-      "Edit(**/secrets.json)",
-      "Edit(**/*.pem)",
-      "Edit(**/*.key)",
-      "Edit(**/.ssh/*)",
-      "Edit(**/credentials*)",
-      "Edit(**/*credentials*)",
-      "Edit(**/secrets*)",
-      "Edit(**/*secrets*)"
-    ],
-    "ask": [
-      "Bash(go install:*)",
-      "Bash(brew install:*)",
-      "Bash(brew upgrade:*)",
-      "Bash(curl -X POST:*)",
-      "Bash(curl -X PUT:*)",
-      "Bash(curl -X DELETE:*)",
-      "Bash(yarn add:*)",
-      "Bash(pip install:*)",
-      "Read(**/*secrets*)",
-      "Read(**/*credentials*)",
-      "Read(**/*password*)",
-      "Read(**/*token*)",
-      "Read(**/*apikey*)",
-      "Edit(**/package.json)",
-      "Edit(**/composer.json)",
-      "Edit(**/package-lock.json)",
-      "Edit(**/composer.lock)",
-      "Edit(**/yarn.lock)",
-      "Edit(**/.gitignore)"
-    ],
-    "defaultMode": "auto"
-  },
-  "model": "opus",
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash -c 'p=$(jq -r \".tool_input.file_path // empty\"); case \"$p\" in *.py) python3 -m py_compile \"$p\";; esac; true'",
-            "timeout": 30
-          },
-          {
-            "type": "command",
-            "command": "bash -c 'p=$(jq -r \".tool_input.file_path // empty\"); case \"$p\" in *.ts|*.tsx) npx tsc --noEmit;; esac; true'",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/honza/.claude/iterm-notify.sh working",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/honza/.claude/iterm-notify.sh waiting",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/honza/.claude/iterm-notify.sh done",
-            "timeout": 5
-          }
-        ]
-      }
-    ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "/Users/honza/.claude/statusline.sh"
-  },
-  "enabledPlugins": {
-    "chrome-devtools-mcp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": false,
-    "frontend-design@claude-plugins-official": true,
-    "vercel@claude-plugins-official": false,
-    "document-skills@anthropic-agent-skills": true
-  },
-  "extraKnownMarketplaces": {
-    "anthropic-agent-skills": {
-      "source": {
-        "source": "github",
-        "repo": "anthropics/skills"
-      }
-    }
-  },
-  "language": "Czech",
-  "effortLevel": "medium",
-  "autoUpdatesChannel": "stable",
-  "minimumVersion": "2.1.90",
-  "tui": "fullscreen",
-  "voice": {
-    "enabled": true,
-    "mode": "hold"
-  },
-  "theme": "dark",
-  "preferredNotifChannel": "terminal_bell",
-  "autoCompactEnabled": false,
-  "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true
+	"permissions": {
+		"allow": [
+			"Grep",
+			"Glob",
+			"WebFetch",
+			"WebSearch",
+			"Skill",
+			"Read(~/.claude/**)",
+			"Read(~/Dev/context/**)",
+			"Read(~/Dev/archiv/**)",
+			"Bash(ffprobe:*)",
+			"Bash(whisper-cli:*)",
+			"Bash(/Users/honza/.claude/skills/transcript/*.sh:*)",
+			"Bash(osascript:*)",
+			"Bash(screencapture:*)",
+			"Bash(node --input-type=module)",
+			"Bash(node -e:*)",
+			"Read(/usr/local/bin/**)",
+			"Read(/Users/honza/.nvm/versions/**)",
+			"Bash(find:*)",
+			"Bash(ls:*)",
+			"Bash(grep:*)",
+			"Bash(head:*)",
+			"Bash(tail:*)",
+			"Bash(wc:*)",
+			"Bash(which:*)",
+			"Bash(where:*)",
+			"Bash(pwd:*)",
+			"Bash(whoami:*)",
+			"Bash(echo:*)",
+			"Bash(file:*)",
+			"Bash(stat:*)",
+			"Bash(cat:*)",
+			"Bash(tree:*)",
+			"Bash(test:*)",
+			"Bash(iconv:*)",
+			"Bash(xxd:*)",
+			"Bash(cd:*)",
+			"Bash(lsof:*)",
+			"Bash(mkdir -p:*)",
+			"Bash(open:*)",
+			"Bash(timeout:*)",
+			"Bash(env:*)",
+			"Bash(ps:*)",
+			"Bash(awk:*)",
+			"Bash(openssl:*)",
+			"Bash(curl -s:*)",
+			"Bash(curl -I:*)",
+			"Bash(curl -L:*)",
+			"Bash(jq:*)",
+			"Bash(pdftotext:*)",
+			"Bash(pdfinfo:*)",
+			"Bash(pdftoppm:*)",
+			"Bash(brew list:*)",
+			"Bash(brew info:*)",
+			"Bash(brew --prefix:*)",
+			"Bash(pandoc:*)",
+			"Bash(textutil:*)",
+			"Bash(identify:*)",
+			"Bash(unzip:*)",
+			"Bash(go build:*)",
+			"Bash(go test:*)",
+			"Bash(go mod:*)",
+			"Bash(go fmt:*)",
+			"Bash(go vet:*)",
+			"Bash(go list:*)",
+			"Bash(go env:*)",
+			"Bash(go version:*)",
+			"Bash(go doc:*)",
+			"Bash(go run:*)",
+			"Read(/opt/homebrew/**)",
+			"Read(/Users/honza/go/**)",
+			"Read(/usr/local/go/**)",
+			"Read(/tmp/**)",
+			"Read(/private/tmp/**)",
+			"Bash(git *)",
+			"Bash(python:*)",
+			"Bash(python3:*)",
+			"Bash(pip show:*)",
+			"Bash(pip install -r requirements.txt:*)",
+			"Bash(python3 -m venv .venv:*)",
+			"Bash(.venv/bin/python:*)",
+			"Bash(source .venv/bin/activate)",
+			"Bash(pytest:*)",
+			"Bash(npm install:*)",
+			"Bash(npm run:*)",
+			"Bash(npx tsc:*)",
+			"Bash(gh api:*)",
+			"Bash(gh auth status:*)",
+			"Bash(gh repo view:*)",
+			"Bash(gh repo list:*)",
+			"Bash(gh repo create:*)",
+			"Bash(gh pr list:*)",
+			"Bash(gh pr view:*)",
+			"Bash(gh pr checks:*)",
+			"Bash(gh pr diff:*)",
+			"Bash(gh issue list:*)",
+			"Bash(gh issue view:*)",
+			"Bash(gh run list:*)",
+			"Bash(gh run view:*)",
+			"Bash(gh release list:*)",
+			"Bash(gh release view:*)",
+			"Bash(gh mcp list:*)",
+			"Bash(docker logs:*)",
+			"Bash(docker ps:*)",
+			"Bash(docker inspect:*)",
+			"Bash(docker images:*)",
+			"Bash(docker version:*)",
+			"Bash(docker info:*)",
+			"Bash(docker compose ps:*)",
+			"Bash(docker compose logs:*)",
+			"Bash(kubectl get:*)",
+			"Bash(kubectl describe:*)",
+			"Bash(kubectl logs:*)",
+			"WebFetch(domain:github.com)",
+			"WebFetch(domain:cs.wikipedia.org)",
+			"WebFetch(domain:en.wikipedia.org)",
+			"WebFetch(domain:raw.githubusercontent.com)",
+			"WebFetch(domain:docs.anthropic.com)",
+			"WebFetch(domain:code.claude.com)",
+			"mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages",
+			"mcp__plugin_chrome-devtools-mcp_chrome-devtools__select_page",
+			"mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
+			"mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot",
+			"mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_console_messages",
+			"mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page",
+			"mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page",
+			"mcp__context7__resolve-library-id",
+			"mcp__context7__query-docs"
+		],
+		"deny": [
+			"Bash(git push --force:*)",
+			"Bash(git push -f:*)",
+			"Bash(git reset --hard:*)",
+			"Bash(git clean -f:*)",
+			"Bash(git filter-branch:*)",
+			"Bash(git branch -D:*)",
+			"Read(**/.env)",
+			"Read(**/.env.*)",
+			"Read(**/credentials.json)",
+			"Read(**/credentials.yaml)",
+			"Read(**/credentials.yml)",
+			"Read(**/.credentials)",
+			"Read(**/secrets.json)",
+			"Read(**/secrets.yaml)",
+			"Read(**/secrets.yml)",
+			"Read(**/.secrets)",
+			"Read(**/*.pem)",
+			"Read(**/*.key)",
+			"Read(**/*.p12)",
+			"Read(**/*.pfx)",
+			"Read(**/*.keystore)",
+			"Read(**/*id_rsa*)",
+			"Read(**/*id_dsa*)",
+			"Read(**/*id_ecdsa*)",
+			"Read(**/*id_ed25519*)",
+			"Read(**/.ssh/*)",
+			"Read(**/.aws/credentials)",
+			"Read(**/.aws/config)",
+			"Read(**/.kube/config)",
+			"Read(**/.docker/config.json)",
+			"Read(**/.npmrc)",
+			"Read(**/.pypirc)",
+			"Read(**/.netrc)",
+			"Read(**/.git-credentials)",
+			"Read(**/auth.json)",
+			"Read(**/.config/composer/auth.json)",
+			"Read(**/.config/gh/hosts.yml)",
+			"Read(**/master.key)",
+			"Read(**/config/master.key)",
+			"Read(**/*.jks)",
+			"Read(**/.htpasswd)",
+			"Edit(**/.env)",
+			"Edit(**/.env.*)",
+			"Edit(**/credentials.json)",
+			"Edit(**/secrets.json)",
+			"Edit(**/*.pem)",
+			"Edit(**/*.key)",
+			"Edit(**/.ssh/*)",
+			"Edit(**/credentials*)",
+			"Edit(**/*credentials*)",
+			"Edit(**/secrets*)",
+			"Edit(**/*secrets*)"
+		],
+		"ask": [
+			"Bash(go install:*)",
+			"Bash(brew install:*)",
+			"Bash(brew upgrade:*)",
+			"Bash(curl -X POST:*)",
+			"Bash(curl -X PUT:*)",
+			"Bash(curl -X DELETE:*)",
+			"Bash(yarn add:*)",
+			"Bash(pip install:*)",
+			"Read(**/*secrets*)",
+			"Read(**/*credentials*)",
+			"Read(**/*password*)",
+			"Read(**/*token*)",
+			"Read(**/*apikey*)",
+			"Edit(**/package.json)",
+			"Edit(**/composer.json)",
+			"Edit(**/package-lock.json)",
+			"Edit(**/composer.lock)",
+			"Edit(**/yarn.lock)",
+			"Edit(**/.gitignore)"
+		],
+		"defaultMode": "auto"
+	},
+	"model": "opus",
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "Write|Edit",
+				"hooks": [
+					{
+						"type":    "command",
+						"command": "bash -c 'p=$(jq -r \".tool_input.file_path // empty\"); case \"$p\" in *.py) python3 -m py_compile \"$p\";; esac; true'",
+						"timeout": 30
+					},
+					{
+						"type":    "command",
+						"command": "bash -c 'p=$(jq -r \".tool_input.file_path // empty\"); case \"$p\" in *.ts|*.tsx) npx tsc --noEmit;; esac; true'",
+						"timeout": 30
+					}
+				]
+			}
+		],
+		"UserPromptSubmit": [
+			{
+				"hooks": [
+					{
+						"type":    "command",
+						"command": "/Users/honza/.claude/iterm-notify.sh working",
+						"timeout": 5
+					}
+				]
+			}
+		],
+		"Notification": [
+			{
+				"hooks": [
+					{
+						"type":    "command",
+						"command": "/Users/honza/.claude/iterm-notify.sh waiting",
+						"timeout": 5
+					}
+				]
+			}
+		],
+		"Stop": [
+			{
+				"hooks": [
+					{
+						"type":    "command",
+						"command": "/Users/honza/.claude/iterm-notify.sh done",
+						"timeout": 5
+					}
+				]
+			}
+		]
+	},
+	"statusLine": {
+		"type":    "command",
+		"command": "/Users/honza/.claude/statusline.sh"
+	},
+	"enabledPlugins": {
+		"chrome-devtools-mcp@claude-plugins-official": true,
+		"document-skills@anthropic-agent-skills":      true,
+		"frontend-design@claude-plugins-official":     true,
+		"gitkraken-hooks@gitkraken":                   true,
+		"skill-creator@claude-plugins-official":       false,
+		"superpowers@claude-plugins-official":         true,
+		"vercel@claude-plugins-official":              false
+	},
+	"extraKnownMarketplaces": {
+		"anthropic-agent-skills": {
+			"source": {
+				"repo":   "anthropics/skills",
+				"source": "github"
+			}
+		},
+		"gitkraken": {
+			"source": {
+				"path":   "/Users/honza/.claude/plugins/marketplaces/gitkraken",
+				"source": "directory"
+			}
+		}
+	},
+	"language":           "Czech",
+	"effortLevel":        "medium",
+	"autoUpdatesChannel": "stable",
+	"minimumVersion":     "2.1.90",
+	"tui":                "fullscreen",
+	"voice": {
+		"enabled": true,
+		"mode":    "hold"
+	},
+	"theme":                   "dark",
+	"preferredNotifChannel":   "terminal_bell",
+	"autoCompactEnabled":      false,
+	"inputNeededNotifEnabled": true,
+	"agentPushNotifEnabled":   true
 }
