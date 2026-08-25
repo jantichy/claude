@@ -8,7 +8,7 @@ set -euo pipefail
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-}"
 [ -z "$PROJECT_DIR" ] && exit 0
 
-# Worktree layout (viz ~/Dev/context/worktrees.md): kořen kontejneru není pracovní
+# Worktree layout (viz ~/Dev/context/worktrees/worktrees.md): kořen kontejneru není pracovní
 # strom, takže cokoli v něm by nešlo commitnout. Log patří do worktree hlavní větve.
 TARGET_DIR="$PROJECT_DIR"
 if [ -d "$PROJECT_DIR/.bare" ]; then
