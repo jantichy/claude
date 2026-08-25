@@ -8,7 +8,19 @@ set -euo pipefail
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-}"
 [ -z "$PROJECT_DIR" ] && exit 0
 
-PROMPTS_FILE="$PROJECT_DIR/docs/prompts.md"
+# Worktree layout (viz ~/Dev/context/worktrees.md): kořen kontejneru není pracovní
+# strom, takže cokoli v něm by nešlo commitnout. Log patří do worktree hlavní větve.
+TARGET_DIR="$PROJECT_DIR"
+if [ -d "$PROJECT_DIR/.bare" ]; then
+    MAIN_BRANCH=$(git --git-dir="$PROJECT_DIR/.bare" symbolic-ref --short HEAD 2>/dev/null || true)
+    if [ -n "$MAIN_BRANCH" ]; then
+        MAIN_WT=$(git --git-dir="$PROJECT_DIR/.bare" worktree list --porcelain 2>/dev/null \
+            | awk -v b="refs/heads/$MAIN_BRANCH" '/^worktree /{w=substr($0,10)} /^branch /{if ($2==b) {print w; exit}}')
+        [ -n "$MAIN_WT" ] && [ -d "$MAIN_WT" ] && TARGET_DIR="$MAIN_WT"
+    fi
+fi
+
+PROMPTS_FILE="$TARGET_DIR/docs/prompts.md"
 [ -f "$PROMPTS_FILE" ] || exit 0
 
 INPUT=$(cat)

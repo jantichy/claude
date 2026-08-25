@@ -19,15 +19,19 @@ Teprve pak pokračuj plněním skillu.
 
 Zapíná/vypíná logování každého prompt uživatele do `docs/prompts.md` v projektu. Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/skills/autoprompt/autoprompt.sh` – ten připíše každý prompt jako oddělovač `---`, pořadové číslo `**N.**` a text promptu.
 
+Ve worktree layoutu si hook sám najde worktree hlavní větve a píše do `main/docs/prompts.md`, aby byl log ve gitu. Je to jediná povolená rozpracovaná změna v `main/`; commituje se při mergi větve nebo při `/cleanup`.
+
 Stav v projektu = přítomnost nadpisu `### Autoprompt` v projektovém `CLAUDE.md` (kanonicky pod `## Automatické akce`). Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. Nadpis `### Autoprompt v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Najdeš-li sekci `Autoprompt` na jiné úrovni nebo mimo `## Automatické akce`, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar.
 
 ## Postup
 
 ### Zjisti projekt root
 
-Najdi `.git` adresář pomocí **Glob** (NIKDY nespouštěj `git` přes Bash – červená chyba při nenulovém exit kódu by uživatele zbytečně vyděsila). Zkus patterny `.git`, pak `../.git`, `../../.git`, `../../../.git` (max 3 úrovně výš). Projekt root = adresář obsahující `.git`. Když `.git` nenajdeš, použij `pwd` – autoprompt dává smysl i mimo git repozitář, na rozdíl od autocommitu.
+Najdi `.git` pomocí **Glob** (NIKDY nespouštěj `git` přes Bash – červená chyba při nenulovém exit kódu by uživatele zbytečně vyděsila). Zkus patterny `.git`, pak `../.git`, `../../.git`, `../../../.git` (max 3 úrovně výš). Když `.git` nenajdeš, použij `pwd` – autoprompt dává smysl i mimo git repozitář, na rozdíl od autocommitu.
 
-Bez tohohle kroku by spuštění z podadresáře projektu založilo `docs/prompts.md` na špatném místě.
+**Pozor na worktree layout.** Najdeš-li vedle `.git` také `.bare/`, stojíš v kořeni kontejneru, který není pracovní strom – projekt root je pak `<kontejner>/main`. Pravidlo i s tabulkou je v `~/Dev/context/worktrees.md`, sekce *Jak si skill najde projektový adresář*; `docs/prompts.md` a projektový `CLAUDE.md` patří do projekt rootu, `.claude/settings.local.json` naopak do kořene kontejneru.
+
+Bez tohohle kroku by spuštění z podadresáře projektu nebo z kontejneru založilo `docs/prompts.md` na špatném místě.
 
 ### Zjisti stav
 
@@ -59,7 +63,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
 3. **Zkontroluj starší umístění** – pokud v rootu projektu existuje `PROMPTS.md` (dřívější umístění logu), přesuň ho na `docs/prompts.md` (v git repozitáři přes `git mv`, pokud je soubor verzovaný) a případný záznam v `.gitignore` nebo v projektovém `CLAUDE.md` narovnej na novou cestu.
 
-4. **Přidej hook do `.claude/settings.local.json`** (vytvoř adresář a soubor, pokud chybí). Hook patří do `hooks.UserPromptSubmit`:
+4. **Přidej hook do `.claude/settings.local.json`** (vytvoř adresář a soubor, pokud chybí). Ve worktree layoutu patří do **kořene kontejneru**, ne do projekt rootu – odtud se pouští session a odtud si ho Claude Code čte. Hook patří do `hooks.UserPromptSubmit`:
 
    ```json
    {
@@ -87,7 +91,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
    ---
    ```
 
-6. **Backfill historie ze session souborů Claude Code.** Adresář: `~/.claude/projects/<encoded-cwd>/`, kde `<encoded-cwd>` = absolutní cesta k projekt rootu se znaky `/` **a `.`** nahrazenými za `-` (vč. počátečního) – např. `/Users/honza/.claude` → `-Users-honza--claude`. Pokud adresář neexistuje, backfill přeskoč.
+6. **Backfill historie ze session souborů Claude Code.** Adresář: `~/.claude/projects/<encoded-cwd>/`, kde `<encoded-cwd>` = absolutní cesta k **adresáři, ze kterého se session pouští**, se znaky `/` **a `.`** nahrazenými za `-` (vč. počátečního) – např. `/Users/honza/.claude` → `-Users-honza--claude`. Ve worktree layoutu je to **kořen kontejneru**, ne projekt root; sessions se ukládají podle adresáře spuštění, ne podle toho, kde leží `docs/prompts.md`. Pokud adresář neexistuje, backfill přeskoč.
 
    Z každého `*.jsonl` extrahuj user prompty: řádky kde `type == "user"`, `message.content` je textový string (ne `tool_result` array, ne objekt s `tool_use_id`), text nezačíná `<command-` ani `<local-command-`, a `isMeta` není `true`. Páry `(timestamp, text)` deduplikuj a chronologicky seřaď.
 

@@ -46,6 +46,7 @@ V režimu *existující projekt* si nejdřív udělej inventuru a **vypiš ji u�
 | Git a jeho podoba | je `.git` adresář (běžný), nebo `.bare` + `.git` soubor (worktree layout)? má remote? |
 | Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, autoprompt, paměť, typ, importy)? |
 | Standardní struktura | existuje `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`? |
+| *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni stub s `@main/CLAUDE.md`? |
 | Starší pojmenování | existuje `TODO.md` v rootu, `docs/rozhodnuti.md`, `docs/zasady.md`? (viz Krok 4) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
 
@@ -69,6 +70,8 @@ Zeptej se v chatu (ne AskUserQuestion – jde o volný text) a počkej na odpov�
 *Existující projekt:* najdeš-li v `CLAUDE.md` nebo `README.md` popis, který už platí, nabídni ho beze změny. Rozcházejí-li se popisy v `CLAUDE.md` a `README.md`, ukaž oba a nech rozhodnout, který je pravda.
 
 ## Krok 2 – Založení nebo doplnění CLAUDE.md
+
+**Existuje-li už worktree layout** (z inventury v kroku 0, nebo protože ho zvolíš v kroku 3b), je „projektový `CLAUDE.md`“ vždy `main/CLAUDE.md` – viz krok 3b. U nového projektu, kde se o layoutu rozhoduje až v kroku 3b, zapiš zatím do kořene; krok 3b soubor přesune.
 
 Zapiš blok metadat na **začátek** `CLAUDE.md`, ve formátu podle `structure.md`:
 
@@ -126,14 +129,29 @@ Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 U existujícího projektu jde o **přeskládání adresáře** – řekni to nahlas a nech si ho potvrdit, než začneš.
 
-Do projektového `CLAUDE.md` (do **kontejneru**, ne do `main/`) přidej:
+### Dva `CLAUDE.md` – tohle si přečti pozorně
+
+Ve worktree layoutu jsou `CLAUDE.md` **dva** a mají různý účel. Zaměnit je je nejčastější chyba tohohle skillu, protože kořen kontejneru **není pracovní strom** – nic v něm není ve gitu a nikdy to nepůjde commitnout.
+
+| Soubor | Co v něm je | Píší do něj kroky |
+|---|---|---|
+| `<projekt>/CLAUDE.md` (kontejner) | jen popis layoutu, odchylky a import toho druhého | pouze tenhle krok 3b |
+| `<projekt>/main/CLAUDE.md` (**projektový**) | všechno ostatní – metadata, struktura, autocommit, autoprompt, paměť, typ, doménové importy | kroky 2, 4, 6, 7, 8, 9, 10 |
+
+**Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se `main/CLAUDE.md`.** Totéž platí pro `README.md`, `docs/*` a `.gitignore` – všechny patří do `main/`. Jedinou výjimkou je `.claude/settings.local.json` (krok 7), který naopak musí být v **kořeni kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte.
+
+Do `<projekt>/CLAUDE.md` (do **kontejneru**) zapiš tenhle stub a nic víc:
 
 ```
+# <Lidský název projektu>
+
 Tenhle adresář není projekt, ale kontejner s worktree layoutem. Pravidla práce s ním:
 
 @~/Dev/context/worktrees.md
 
-Níže jen odchylky od obecného postupu.
+Vlastní pravidla projektu jsou v `main/CLAUDE.md` a importují se odsud:
+
+@main/CLAUDE.md
 
 ## Odchylky
 
@@ -141,9 +159,25 @@ Níže jen odchylky od obecného postupu.
 - <co konkrétně se přebírá z main/, nebo že zatím není co>
 ```
 
+Import `@main/CLAUDE.md` je nutný: `CLAUDE.md` z podadresáře se načte až on-demand, když z něj něco čteš, kdežto session startuje v kontejneru. Bez importu by pravidla projektu na začátku session vůbec nebyla v kontextu. Relativní cesta se resolvuje vůči souboru, který import obsahuje.
+
+**Pravidla projektu do stubu nekopíruj.** Dvě kopie se rozejdou a načtou se pak obě.
+
+*Nový projekt:* krok 2 už `CLAUDE.md` založil v kořeni, protože tehdy ještě nebylo rozhodnuto o layoutu. **Přesuň ho teď do `main/`** (`mv <projekt>/CLAUDE.md <projekt>/main/CLAUDE.md`) a v kořeni na jeho místo napiš stub. Totéž udělej s čímkoli dalším, co v kořeni mezitím vzniklo a patří do projektu.
+
+*Konverze existujícího projektu:* původní `CLAUDE.md` se přesunul do `main/` spolu se zbytkem repozitáře a **je správně tam** – nech ho být, jen do něj dál doplňuj. V kořeni založ nový, prázdný stub.
+
+Po tomhle kroku si **ověř výsledek** a vypiš ho uživateli: v kořeni smí být jen `.bare/`, `.git`, `CLAUDE.md` (stub) a `.claude/`; `README.md`, `docs/` a projektový `CLAUDE.md` musí být v `main/`.
+
 Upozorni uživatele, že **při příštím spuštění dostane dialog na schválení externího importu a musí ho odsouhlasit** – při odmítnutí se importy pro ten projekt trvale vypnou a dialog se už neukáže.
 
-Ve worktree layoutu platí pro všechny další kroky: **projektové soubory zakládej v `main/`**, ne v kontejneru. Výjimkou je `CLAUDE.md` kontejneru, který popisuje layout.
+### Náprava špatně rozděleného kontejneru
+
+*Existující projekt, kde worktree layout už je.* Najdeš-li v kořeni kontejneru projektové soubory, které tam nepatří – plnohodnotný `CLAUDE.md` s pravidly místo stubu, `README.md`, `docs/` – nabídni nápravu: přesun do `main/` a nahrazení kořenového `CLAUDE.md` stubem. Ukaž konkrétní seznam souborů a nech si to potvrdit, protože jde o přesouvání obsahu.
+
+Existují-li oba `CLAUDE.md` a mají překrývající se sekce, **obsah slouč do `main/CLAUDE.md`** a v kořeni nech jen stub; nikdy jeden z nich mlčky nepřepiš.
+
+Přesun je `git mv` jen tehdy, je-li zdroj verzovaný – v kořeni kontejneru **nikdy není**, takže tam jde o obyčejný `mv`. Po přesunu soubory v `main/` commitni.
 
 ## Krok 4 – Standardní struktura
 
@@ -218,6 +252,8 @@ Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď toté�
 ## Krok 7 – Autoprompt
 
 Zeptej se (AskUserQuestion): zapnout autoprompt? Ano/Ne. Při ano proveď totéž co `/autoprompt on` (viz `~/.claude/skills/autoprompt/SKILL.md`): globální `CLAUDE.md`, projektová sekce, hook do `.claude/settings.local.json`, založení `docs/prompts.md`.
+
+*Worktree layout:* `.claude/settings.local.json` patří do **kořene kontejneru**, `docs/prompts.md` do **`main/`**. Hook si worktree hlavní větve najde sám, takže se nikde nemusí konfigurovat cesta.
 
 *Nový projekt:* backfill historie přeskoč, není co dohledávat.
 *Existující projekt:* zjisti stav stejně jako u autocommitu a backfill nabídni.

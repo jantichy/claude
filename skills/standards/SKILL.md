@@ -51,6 +51,8 @@ git status --porcelain
 
 Sjednoť commitnuté změny na větvi s necommitnutými. Vynech smazané soubory. Když jsi na hlavní větvi a diff je prázdný, vezmi necommitnuté změny; když nejsou ani ty, řekni to a nabídni `full`.
 
+*Worktree layout* (`~/Dev/context/worktrees.md`): pouštěj to ve **worktree větve**. V kořeni kontejneru `git diff` spadne a `git status` taky – kořen není pracovní strom. Stojíš-li tam, přesuň se nejdřív do adresáře té větve, kterou máš auditovat, a rozsah `full` počítej rovněž jen nad ním, ne nad celým kontejnerem (jinak bys projel všechny větve naráz).
+
 **Režim `full`:** všechny zdrojové soubory projektu. Vynech `node_modules/`, `dist/`, `build/`, `vendor/`, `generated/`, `*.gen.*` a cokoliv v `.gitignore`.
 
 ### 1.2 Vyber sady standardů

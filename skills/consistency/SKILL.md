@@ -24,6 +24,8 @@ Před spuštěním Explore agenta nasbírej baseline. Tam, kde jsou nezávislé 
 
 ### 1.1 Načti dokumentaci konvencí
 
+*Worktree layout* (`~/Dev/context/worktrees.md`): auditovaný projekt je **pracovní adresář jedné větve**, ne kontejner. Stojíš-li v kořeni kontejneru, přesuň se nejdřív do adresáře té větve – jinak bys projel všechny větve naráz a hlásil rozdíly mezi nimi jako nekonzistence. „Projektový `CLAUDE.md`“ je pak ten ve worktree, ne stub v kořeni.
+
 Pokud existují, přečti:
 - Projektový `CLAUDE.md`
 - `README.md`, `CONTRIBUTING.md`, `STYLEGUIDE.md`
