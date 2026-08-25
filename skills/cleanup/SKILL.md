@@ -56,7 +56,7 @@ Zjisti kontext, ve kterém pracuješ:
 1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
 2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `### Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
 3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`.
-4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura podle `~/Dev/context/structure.md` je `CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`; k tomu specializované soubory v `docs/`. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
+4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura podle `~/Dev/context/structure/structure.md` je `CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`; k tomu specializované soubory v `docs/`. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
 
@@ -122,7 +122,7 @@ Když u položky není jasné, kam patří, **zeptej se** – ale až ve Fázi 3
 
 ## Fáze 2b – Ověř, že průběžná aktualizace opravdu proběhla
 
-`~/Dev/context/structure.md` ukládá udržovat pět souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 2**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
+`~/Dev/context/structure/structure.md` ukládá udržovat pět souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 2**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
 
 Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomíná** – proto tenhle krok existuje a proto se nedá odbýt.
 

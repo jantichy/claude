@@ -28,7 +28,7 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
-- Konvenci standardní struktury **neopisuj z hlavy** – řiď se `~/Dev/context/structure.md`, který ji definuje. Tenhle skill je jen instalátor.
+- Konvenci standardní struktury **neopisuj z hlavy** – řiď se `~/Dev/context/structure/structure.md`, který ji definuje. Tenhle skill je jen instalátor.
 
 ------
 
@@ -54,7 +54,7 @@ Pak řekni, že se teď budeš ptát postupně, a pokračuj. V dalších krocíc
 
 ## Krok 1 – Metadata projektu
 
-Formát bloku metadat definuje `~/Dev/context/structure.md`, sekce *`CLAUDE.md`* – **neopisuj ho z hlavy, přečti si ho.** Řeší se čtyři údaje: **slug**, **lidský název**, **popisek** a **URL projektu**.
+Formát bloku metadat definuje `~/Dev/context/structure/structure.md`, sekce *`CLAUDE.md`* – **neopisuj ho z hlavy, přečti si ho.** Řeší se čtyři údaje: **slug**, **lidský název**, **popisek** a **URL projektu**.
 
 Slug je daný adresářem. Zbylé tři **navrhni sám** – u nového projektu z toho, co ti uživatel řekl, u existujícího z toho, co v repozitáři najdeš (`CLAUDE.md`, `README.md`, `package.json`, obsah). Předlož návrh k odsouhlasení, ať ho uživatel může jen potvrdit, nebo přepsat:
 
@@ -121,11 +121,11 @@ U GitLabu a jiných hostitelů tenhle krok přeskoč a řekni uživateli, že po
 Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 - **Jeden pracovní adresář (jednoduché)** – klasika: `.git` a rozbalený projekt přímo v adresáři. Vhodné, když nad projektem pracuješ vždy v jedné session.
-- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/Dev/context/worktrees.md`.
+- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/Dev/context/worktrees/worktrees.md`.
 
 ### Když padne worktree layout
 
-**Postup zřízení kontejneru neopisuj z hlavy** – řiď se `~/Dev/context/worktrees.md`, sekce *Zřízení kontejneru*. Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`.
+**Postup zřízení kontejneru neopisuj z hlavy** – řiď se `~/Dev/context/worktrees/worktrees.md`, sekce *Zřízení kontejneru*. Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`.
 
 U existujícího projektu jde o **přeskládání adresáře** – řekni to nahlas a nech si ho potvrdit, než začneš.
 
@@ -147,7 +147,7 @@ Do `<projekt>/CLAUDE.md` (do **kontejneru**) zapiš tenhle stub a nic víc:
 
 Tenhle adresář není projekt, ale kontejner s worktree layoutem. Pravidla práce s ním:
 
-@~/Dev/context/worktrees.md
+@~/Dev/context/worktrees/worktrees.md
 
 Vlastní pravidla projektu jsou v `main/CLAUDE.md` a importují se odsud:
 
@@ -181,7 +181,7 @@ Přesun je `git mv` jen tehdy, je-li zdroj verzovaný – v kořeni kontejneru *
 
 ## Krok 4 – Standardní struktura
 
-Řiď se `~/Dev/context/structure.md`. Založ, co chybí:
+Řiď se `~/Dev/context/structure/structure.md`. Založ, co chybí:
 
 ```
 CLAUDE.md
@@ -212,7 +212,7 @@ Přidej sekci – konkrétní deklaraci, ne opis konvence:
 ```
 ## Struktura a dokumentace
 
-Projekt drží standardní strukturu podle `~/Dev/context/structure.md`:
+Projekt drží standardní strukturu podle `~/Dev/context/structure/structure.md`:
 
 - `README.md` – co projekt je, pro člověka
 - `docs/todo.md` – co je odložené na později
@@ -267,7 +267,7 @@ Při první volbě přidej do `CLAUDE.md`:
 ```
 ## Paměť
 
-Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/Dev/context/structure.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
+Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/Dev/context/structure/structure.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
 ```
 
 ## Krok 9 – Typ projektu
@@ -303,15 +303,15 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 Zeptej se (AskUserQuestion, **`multiSelect: true`**): „Které doménové checklisty jsou pro tenhle projekt relevantní?" Volby předvyplň podle typu z kroku 9, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
-U typu **Nasazení webové analytiky** přihraj napevno `analytics/overview.md` a `web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
+U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md` a `web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text/text.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
 
 | Volba | Import |
 |---|---|
-| Psaní kódu | `@~/Dev/context/coding.md` |
-| Webové rozhraní | `@~/Dev/context/web.md` |
-| Administrace / backoffice | `@~/Dev/context/admin.md` |
-| Webová analytika a měření | `@~/Dev/context/analytics/overview.md` |
-| Psaní českých textů | `@~/Dev/context/text.md` |
+| Psaní kódu | `@~/Dev/context/coding/coding.md` |
+| Webové rozhraní | `@~/Dev/context/web/web.md` |
+| Administrace / backoffice | `@~/Dev/context/admin/admin.md` |
+| Webová analytika a měření | `@~/Dev/context/analytics/analytics.md` |
+| Psaní českých textů | `@~/Dev/context/text/text.md` |
 | Žádný | – |
 
 `worktrees.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
@@ -323,13 +323,13 @@ Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako prozaické od
 
 Závazné pro tenhle projekt:
 
-@~/Dev/context/coding.md
-@~/Dev/context/web.md
+@~/Dev/context/coding/coding.md
+@~/Dev/context/web/web.md
 ```
 
 **Proč `@import` a ne odkaz:** `@import` Claude Code při startu session textově rozbalí do kontextu, takže obsah platí vždy. Prozaický odkaz („řiď se souborem X") je jen instrukce, kterou si model musí sám všimnout a sám se rozhodnout ji splnit – to se v praxi dodržuje nespolehlivě.
 
-Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `web.md` a `admin.md` mají dohromady skoro 500 řádků.
+Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `web/web.md` a `admin/admin.md` mají dohromady skoro 500 řádků.
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 

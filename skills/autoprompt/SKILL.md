@@ -29,7 +29,7 @@ Stav v projektu = přítomnost nadpisu `### Autoprompt` v projektovém `CLAUDE.m
 
 Najdi `.git` pomocí **Glob** (NIKDY nespouštěj `git` přes Bash – červená chyba při nenulovém exit kódu by uživatele zbytečně vyděsila). Zkus patterny `.git`, pak `../.git`, `../../.git`, `../../../.git` (max 3 úrovně výš). Když `.git` nenajdeš, použij `pwd` – autoprompt dává smysl i mimo git repozitář, na rozdíl od autocommitu.
 
-**Pozor na worktree layout.** Najdeš-li vedle `.git` také `.bare/`, stojíš v kořeni kontejneru, který není pracovní strom – projekt root je pak `<kontejner>/main`. Pravidlo i s tabulkou je v `~/Dev/context/worktrees.md`, sekce *Jak si skill najde projektový adresář*; `docs/prompts.md` a projektový `CLAUDE.md` patří do projekt rootu, `.claude/settings.local.json` naopak do kořene kontejneru.
+**Pozor na worktree layout.** Najdeš-li vedle `.git` také `.bare/`, stojíš v kořeni kontejneru, který není pracovní strom – projekt root je pak `<kontejner>/main`. Pravidlo i s tabulkou je v `~/Dev/context/worktrees/worktrees.md`, sekce *Jak si skill najde projektový adresář*; `docs/prompts.md` a projektový `CLAUDE.md` patří do projekt rootu, `.claude/settings.local.json` naopak do kořene kontejneru.
 
 Bez tohohle kroku by spuštění z podadresáře projektu nebo z kontejneru založilo `docs/prompts.md` na špatném místě.
 
