@@ -1,6 +1,6 @@
 ---
 name: standards
-description: Skill se použije, když uživatel zadá "/standards" nebo "/standards full", nebo chce prověřit kód, rozhraní a texty proti doménovým standardům (coding.md, web.md, admin.md, analytics.md, text.md). Výchozí rozsah jsou změny na větvi, "full" projede celý projekt. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+description: Skill se použije, když uživatel zadá "/standards" nebo "/standards full", nebo chce prověřit kód, rozhraní a texty proti doménovým standardům (coding.md, web.md, admin.md, analytics/, text.md). Výchozí rozsah jsou změny na větvi, "full" projede celý projekt. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
 allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 ---
 
@@ -64,7 +64,7 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 | `~/Dev/context/coding.md` | jakýkoliv kód, datový model, migrace, konfigurace, CI |
 | `~/Dev/context/web.md` | webové rozhraní – šablony, komponenty, styly, stránky |
 | `~/Dev/context/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web.md`, ne místo něj) |
-| `~/Dev/context/analytics.md` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web.md`, ne místo něj) |
+| `~/Dev/context/analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web.md`, ne místo něj) |
 | `~/Dev/context/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web.md`) |
 
 `~/Dev/context/worktrees.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat.
@@ -137,7 +137,7 @@ Nezapisuj do žádného souboru.
 
 Slož nálezy ze všech agentů do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, KOSMETICKÉ; v rámci kategorie root položky před jejich následky.
 
-**Deduplikuj napříč sadami.** `web.md` a `admin.md` se překrývají, stejně tak `web.md` a `text.md` v typografii a `web.md` a `analytics.md` v consentu a GDPR – když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba dotčené body standardů.
+**Deduplikuj napříč sadami.** `web.md` a `admin.md` se překrývají, stejně tak `web.md` a `text.md` v typografii a `web.md` a `analytics/` v consentu a GDPR – když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba dotčené body standardů.
 
 Pak rozděl na dvě skupiny:
 
@@ -166,7 +166,7 @@ Při pochybnosti patří nález mezi sporné.
 ## Výsledky kontroly standardů
 
 Rozsah: [změny na větvi – N souborů / celý projekt – N souborů]
-Sady: [coding.md, web.md, admin.md, analytics.md, text.md – které se použily]
+Sady: [coding.md, web.md, admin.md, analytics/, text.md – které se použily]
 
 Nalezeno X nálezů celkem:
 - 🔴 Kritické: N

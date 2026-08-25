@@ -303,14 +303,14 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 Zeptej se (AskUserQuestion, **`multiSelect: true`**): „Které doménové checklisty jsou pro tenhle projekt relevantní?" Volby předvyplň podle typu z kroku 9, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
-U typu **Nasazení webové analytiky** přihraj napevno `analytics.md` a `web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
+U typu **Nasazení webové analytiky** přihraj napevno `analytics/overview.md` a `web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
 
 | Volba | Import |
 |---|---|
 | Psaní kódu | `@~/Dev/context/coding.md` |
 | Webové rozhraní | `@~/Dev/context/web.md` |
 | Administrace / backoffice | `@~/Dev/context/admin.md` |
-| Webová analytika a měření | `@~/Dev/context/analytics.md` |
+| Webová analytika a měření | `@~/Dev/context/analytics/overview.md` |
 | Psaní českých textů | `@~/Dev/context/text.md` |
 | Žádný | – |
 
