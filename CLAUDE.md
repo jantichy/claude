@@ -21,7 +21,9 @@ Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to prav
 - `~/Dev/context/brand/brand.md` – osobní brand a pozicování Jana Tichého (zastřešení, čím se odlišuje, cílové skupiny, vztah k samostatné značce kurzu AI) – načti si ho vždy, když píšeš cokoli, co Honzu prezentuje navenek: web, prodejní stránku, inzerát, medailonek, bio, nabídku. Je to zdroj pravdy; projekty z něj vychází a drží jen svůj překlad do kanálu
 - `~/Dev/context/coding/coding.md` – standardy návrhu a psaní kódu (návrh a modelování stavu, rozhraní a guardy, automatika a vnější systémy, naming, git, bezpečnost, TypeScript, SQL, frontend) – načti si ho vždy, když navrhuješ datový model nebo píšeš či upravuješ kód
 
-Kromě těchhle doménových znalostí drží `~/Dev/context/` i **korpus podkladů o Honzovi** – `archive/` (všechny jeho texty), `compose/` (jeho hlas, spouští se skillem `/compose`) a připravované `speaking/` (školení, přednášky, ohlasy). Ty se nenačítají paušálně; sáhni po nich, když potřebuješ doklad nebo data, ne pravidlo. Rozcestník je v `~/Dev/context/CLAUDE.md`.
+Pozor na zařazení `brand/`: sám o sobě je to **korpus** (fakt o tom, kdo Honza je), ne standard – v `~/Dev/context/CLAUDE.md` je vedený tak. V seznamu výš je proto, že se na rozdíl od zbytku korpusu načítá **podmíněně jako doménová znalost**, protože platí pro každý text mířící ven.
+
+Zbytek korpusu se nenačítá paušálně: `archive/` (všechny Honzovy texty), `compose/` (jeho hlas, spouští se skillem `/compose`) a připravované `speaking/` (školení, přednášky, ohlasy). Sáhni po nich, když potřebuješ doklad nebo data, ne pravidlo. Rozcestník je v `~/Dev/context/CLAUDE.md`.
 
 Když identifikuješ znovupoužitelný doménový standard nebo checklist, který se může hodit ve více projektech, ale měl by zůstat soukromý, protože je citlivý nebo patří do osobního know-how, navrhni jeho extrakci do `~/Dev/context/`.
 
