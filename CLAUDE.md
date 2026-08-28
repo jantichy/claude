@@ -14,7 +14,7 @@ Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nev
 Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to pravidla pro každý úkol, ale soubory znalostí pro konkrétní typy práce.
 
 - `~/Dev/context/web/web.md` – checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...) – načti si ho vždy, když pracuješ na webovém rozhraní
-- `~/Dev/context/admin/admin.md` – checklist pro administrační a backoffice rozhraní (struktura, seznamy a tabulky, akce a potvrzování, editace, oprávnění, auditní stopa) – načti si ho vždy, když děláš administraci nebo interní nástroj; platí navíc k `~/Dev/context/web/web.md`
+- `~/Dev/context/web/admin.md` – checklist pro administrační a backoffice rozhraní (struktura, seznamy a tabulky, akce a potvrzování, editace, oprávnění, auditní stopa) – načti si ho vždy, když děláš administraci nebo interní nástroj; platí navíc k `~/Dev/context/web/web.md`
 - `~/Dev/context/analytics/` – knowledge base pro implementační webovou analytiku (principy, revize měření a katalog nálezů, měřicí architektura, datová vrstva, GTM konvence, consent, features, systémy, consent lišty, platformy, šablony pro vývojáře) – načti si `~/Dev/context/analytics/analytics.md` vždy, když reviduješ, nasazuješ nebo konfiguruješ webové měření, a z něj se prokliknij dál; platí navíc k `~/Dev/context/web/web.md`
 - `~/Dev/context/text/text.md` – redakční standard pro psaní textů (stavba textu, obsah, zakázané obraty, stylistika, gramatika, česká typografie) – načti si ho vždy, když píšeš nebo edituješ souvislý text v češtině: článek, newsletter, dokumentaci, obsah webu
 - `~/Dev/context/worktree/worktree.md` – worktree layout projektu (kontejner s `.bare`, jeden pracovní adresář na větev, založení a dokončení větve) – načti si ho vždy, když zakládáš nebo rušíš větev v projektu s tímhle layoutem
@@ -23,7 +23,7 @@ Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to prav
 
 Pozor na zařazení `brand/`: sám o sobě je to **korpus** (fakt o tom, kdo Honza je), ne standard – v `~/Dev/context/CLAUDE.md` je vedený tak. V seznamu výš je proto, že se na rozdíl od zbytku korpusu načítá **podmíněně jako doménová znalost**, protože platí pro každý text mířící ven.
 
-Zbytek korpusu se nenačítá paušálně: `archive/` (všechny Honzovy texty), `compose/` (jeho hlas, spouští se skillem `/compose`) a `speaking/` (školení, přednášky, klienti, ohlasy). Sáhni po nich, když potřebuješ doklad nebo data, ne pravidlo. Rozcestník je v `~/Dev/context/CLAUDE.md`.
+Zbytek korpusu se nenačítá paušálně: `archive/` (všechny Honzovy texty), `compose/` (jeho hlas, spouští se skillem `/compose`) a `speaking/` (školení, přednášky, konzultační i školicí klienti, ohlasy). Sáhni po nich, když potřebuješ doklad nebo data, ne pravidlo. Rozcestník je v `~/Dev/context/CLAUDE.md`.
 
 Když identifikuješ znovupoužitelnou doménovou znalost, která se může hodit ve více projektech, ale měla by zůstat soukromá, protože je citlivá nebo patří do osobního know-how, navrhni její extrakci do `~/Dev/context/`.
 

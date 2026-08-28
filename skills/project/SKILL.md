@@ -309,7 +309,7 @@ U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md`
 |---|---|
 | Psaní kódu | `@~/Dev/context/coding/coding.md` |
 | Webové rozhraní | `@~/Dev/context/web/web.md` |
-| Administrace / backoffice | `@~/Dev/context/admin/admin.md` |
+| Administrace / backoffice | `@~/Dev/context/web/admin.md` |
 | Webová analytika a měření | `@~/Dev/context/analytics/analytics.md` |
 | Psaní českých textů | `@~/Dev/context/text/text.md` |
 | Žádný | – |

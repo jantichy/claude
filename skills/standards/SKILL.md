@@ -63,7 +63,7 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 |---|---|
 | `~/Dev/context/coding/coding.md` | jakýkoliv kód, datový model, migrace, konfigurace, CI |
 | `~/Dev/context/web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky |
-| `~/Dev/context/admin/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) |
+| `~/Dev/context/web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) |
 | `~/Dev/context/analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`, ne místo něj) |
 | `~/Dev/context/text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web/web.md`) |
 
