@@ -110,7 +110,7 @@ Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zaps
 | Obecné principy a hranice, ve kterých se projekt pohybuje | `docs/rules.md` |
 | Úkoly a odložené věci | `docs/todo.md` |
 | Otevřené otázky čekající na rozhodnutí uživatele | sekce `## Otevřené otázky` v `docs/todo.md` |
-| Změny dotýkající se toho, co projekt je a umí | `README.md` |
+| Změny dotýkající se toho, co projekt je, umí a jak se používá – **popis pro člověka**, nikdy pokyn pro Clauda | `README.md` |
 | Doménová specifika (model, procesy, katalogy) | příslušný soubor v `docs/` |
 | Cokoliv v Memory | **přesuň do projektového `CLAUDE.md`**, pokud projekt nemá explicitně povolenou Memory |
 
@@ -139,7 +139,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    | Soubor | Co v session zakládá povinnost zápisu |
    |---|---|
    | `CLAUDE.md` | vzniklo nebo se změnilo pravidlo, konvence, způsob práce v projektu |
-   | `README.md` | změnilo se, co projekt je, umí nebo jak se spouští |
+   | `README.md` | změnilo se, co projekt je, umí nebo jak se spouští; zároveň ověř, že v něm nezůstal normativní pokyn pro Clauda – ten patří do `CLAUDE.md` nebo `docs/`, viz `~/Dev/context/structure/structure.md` |
    | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později"; něco se dokončilo → přesun do `## Hotovo` |
    | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky" |

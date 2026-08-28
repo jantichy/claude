@@ -193,6 +193,8 @@ docs/rules.md
 
 `README.md` u nového projektu: nadpis s **lidským názvem** a popiskem z kroku 1 jako prvním odstavcem – tam se popisek smí rozvést do víc vět. U existujícího projektu zkontroluj, že nadpis a první odstavec sedí s blokem metadat v `CLAUDE.md`; rozcházejí-li se, srovnej je. Soubory v `docs/` zakládej **prázdné, jen s nadpisem** – obsah nevymýšlej dopředu.
 
+**README je pro člověka, ne pro Clauda.** Definici, co do něj patří a co ne, má `~/Dev/context/structure/structure.md`, sekce `README.md`; drž se jí doslova. U existujícího projektu README **projdi celé** a co je normativní pokyn pro Clauda – pravidla práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit – přesuň do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md` podle povahy. Nekopíruj, přesouvej: informace má žít na jednom místě.
+
 ### Migrace staršího pojmenování
 
 *Existující projekt:* najdeš-li starší varianty, nabídni přejmenování přes AskUserQuestion (jedna otázka na všechny nálezy dohromady, protože jde o jedno rozhodnutí):
@@ -214,7 +216,7 @@ Přidej sekci – konkrétní deklaraci, ne opis konvence:
 
 Projekt drží standardní strukturu podle `~/Dev/context/structure/structure.md`:
 
-- `README.md` – co projekt je, pro člověka
+- `README.md` – co projekt je, pro člověka (ne instrukce pro Clauda)
 - `docs/todo.md` – co je odložené na později
 - `docs/decisions.md` – co jsme rozhodli a proč, včetně zamítnutých variant
 - `docs/rules.md` – principy, ve kterých se projekt pohybuje
