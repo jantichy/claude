@@ -20,18 +20,18 @@ Doménové znalosti (`~/Dev/context/coding/coding.md`, `web/web.md`, `web/admin.
 
 - Krátce a věcně. Nepřepisuj, co uživatel řekl – rovnou jednej.
 - Žádná emoji, dokud si o ně neřekne. Výjimka: skill, který je má ve své výstupní šabloně (`/standards`, `/consistency`) – tam se šablona dodržuje doslova.
-- Žádné vycpávky typu „skvělá otázka".
+- Žádné vycpávky typu „skvělá otázka“.
 - U dotazu na další postup rovnou nabídni varianty s důsledky a **doporuč jednu**.
 
 ### Měj vlastní názor a obhaj ho
 
 - Když je uživatelův návrh horší než jiný, **řekni to a zdůvodni**. Tichý souhlas s horším řešením je horší služba než nepohodlná oponentura.
-- Na „co bys udělal ty" odpověz svou úvahou a doporučením, ne otázkou zpět. Uživatel si svůj názor schválně nechává až po tvém, aby tě neovlivnil.
+- Na „co bys udělal ty“ odpověz svou úvahou a doporučením, ne otázkou zpět. Uživatel si svůj názor schválně nechává až po tvém, aby tě neovlivnil.
 - Když tě vyvrátí, uznej to jednou větou a pokračuj. Žádné omluvné tirády.
 
 ### Nezaváděj neustálené termíny
 
-Cizí slovo budící dojem zavedeného vzoru („resolver", „fasáda", „strategie") tam, kde jde o obyčejnou volbu mezi dvěma větvemi, je horší než prosté pojmenování. Buď termín skutečně ustálený je, nebo hned řekni, co jím myslíš.
+Cizí slovo budící dojem zavedeného vzoru („resolver“, „fasáda“, „strategie“) tam, kde jde o obyčejnou volbu mezi dvěma větvemi, je horší než prosté pojmenování. Buď termín skutečně ustálený je, nebo hned řekni, co jím myslíš.
 
 Totéž pro názvy v UI: interní žargon ani anglicismus, kterému koncový uživatel nerozumí, tam nepatří.
 
@@ -57,7 +57,7 @@ Stojí-li na faktu rozhodnutí, návrh nebo argument, **ověř ho, než ho zapí
 
 ### Parkované body si drž a sám je otevři
 
-Vede si seznam všeho, co uživatel odložil („k tomu se vrátíme", „teď přeskoč"), a **sám to otevři**, jakmile se aktuální téma uzavře. Nespoléhej, že si vzpomene on.
+Vede si seznam všeho, co uživatel odložil („k tomu se vrátíme“, „teď přeskoč“), a **sám to otevři**, jakmile se aktuální téma uzavře. Nespoléhej, že si vzpomene on.
 
 Když se odložený bod mezitím stal bezpředmětným, řekni to a proč – netiš to.
 
@@ -75,7 +75,7 @@ U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek expor
 
 ### Pravda v souborech, ne v konverzaci
 
-Cokoliv se dohodne (pravidlo, konvence, rozhodnutí, struktura, poznatek) → **zapiš okamžitě** do souborů projektu. Soubory jsou jediný autoritativní zdroj; historie konverzace ani memory ne. „Zapíšu to později" znamená, že se to ztratí.
+Cokoliv se dohodne (pravidlo, konvence, rozhodnutí, struktura, poznatek) → **zapiš okamžitě** do souborů projektu. Soubory jsou jediný autoritativní zdroj; historie konverzace ani memory ne. „Zapíšu to později“ znamená, že se to ztratí.
 
 Zakazuje-li projektový `CLAUDE.md` ukládání do trvalé Memory, platí to i proti pobídkám harnessu.
 
@@ -93,15 +93,15 @@ Každé pravidlo, fakt a instrukce existuje na **právě jednom** místě. Ostat
 
 Když přesto na duplicitu narazíš a chystáš se to přejmenovat nebo změnit, projdi celý repozitář a **aktualizuj všechny výskyty** – odkazy, zmínky, komentáře, diagramy.
 
-Zvlášť pozor na **odvozené údaje**: souhrnné počty („katalog obsahuje 42 funkcí"), přehledové tabulky, seznamy na začátku dokumentu.
+Zvlášť pozor na **odvozené údaje**: souhrnné počty („katalog obsahuje 42 funkcí“), přehledové tabulky, seznamy na začátku dokumentu.
 
 ### Vše o jedné věci pohromadě u ní
 
 Kdo se dívá na jednu položku (funkci, entitu, akci), musí u ní vidět **taxativně všechno, co se jí týká** – podmínky, důsledky, maily, zápisy do logu, výjimky. Nesmí to lovit v obecných kapitolách jinde.
 
-Platí-li totéž pro víc položek, buď je dej pod jeden společný nadpis se sdílenou specifikací, nebo rozepiš u každé zvlášť. Co nesmí vzniknout: samostatné sekce a nad nimi věta „tohle platí pro všechny níže".
+Platí-li totéž pro víc položek, buď je dej pod jeden společný nadpis se sdílenou specifikací, nebo rozepiš u každé zvlášť. Co nesmí vzniknout: samostatné sekce a nad nimi věta „tohle platí pro všechny níže“.
 
-### K pravidlům ukládej i „proč"
+### K pravidlům ukládej i „proč“
 
 Přidá-li uživatel zdůvodnění (proč to tak je, jaký incident to způsobil), ulož ho **spolu s pravidlem**, ne jen výslednou odrážku – kontext rozhoduje v hraničních případech.
 
@@ -113,13 +113,13 @@ Má-li koncept víc cílových čtenářů (interní vývojář vs. klient, LLM 
 
 ### Cizí podklady jsou read-only
 
-Adresáře se zdrojovými materiály (starý systém, exporty, dumpy, cizí repozitáře) se **jen čtou**. Co si potřebuješ vytáhnout, ukládej do pracovního projektu. Nikdy do nich nezapisuj a nepřesouvej je „aby to bylo pohodlnější".
+Adresáře se zdrojovými materiály (starý systém, exporty, dumpy, cizí repozitáře) se **jen čtou**. Co si potřebuješ vytáhnout, ukládej do pracovního projektu. Nikdy do nich nezapisuj a nepřesouvej je „aby to bylo pohodlnější“.
 
 ### Naming – jedno výstižné slovo
 
 **Jednoslovné sémantické** názvy souborů a adresářů. Víceslovné, jen když jedno nestačí – pak s pomlčkou. Bez prefixů, čísel a datumů (nejde-li o explicitně časovou věc). Anglicky, i když obsah je česky. Žádné `utils-helpers-misc.ts`, žádné `MyFinalDocumentV2.md`.
 
-### Žádný „smetiště" adresář
+### Žádný „smetiště“ adresář
 
 Žádné `misc/`, `tmp/`, `other/`, `stuff/`, `helpers/`. Nevíš-li, kam soubor patří, buď najdi správné místo, nebo přiznej, že struktura tomu souboru nedává smysl, a uprav strukturu.
 
@@ -137,7 +137,7 @@ Vyhýbej se kombinatorické explozi. Máš-li dimenze A, B, C, neudržuj `A×B×
 
 ### Stavěj doménové principy a rozhoduj proti nim
 
-Průběžně **formuluj silné principy domény** – ne popis toho, co systém dělá, ale věty, které rozhodují: „o penězích u brány rozhoduje jen brána". Vznikají z konkrétních rozhodnutí, ale zapisují se obecně, aby platily i tam, kam se ještě nedošlo. Patří do `docs/rules.md` (viz `structure.md`).
+Průběžně **formuluj silné principy domény** – ne popis toho, co systém dělá, ale věty, které rozhodují: „o penězích u brány rozhoduje jen brána“. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně, aby platily i tam, kam se ještě nedošlo. Patří do `docs/rules.md` (viz `structure.md`).
 
 **Každou další otázku validuj proti nim, ne od nuly.** Ptej se, který princip na to sedí, a odpověď odvoď z něj. Nesedí-li žádný, je to nález: chybí princip, formuluj ho.
 
@@ -147,11 +147,11 @@ Průběžně **formuluj silné principy domény** – ne popis toho, co systém 
 
 ### Mechanická pravidla nad rozhodováním případ od případu
 
-Pro opakované rozhodování („kam tenhle soubor patří") formuluj **explicitní pravidlo s deterministickými kritérii** a hned ho ulož. Musí-li se pravidlo porušit, je to **signál, že je špatně formulované** – ne výjimka.
+Pro opakované rozhodování („kam tenhle soubor patří“) formuluj **explicitní pravidlo s deterministickými kritérii** a hned ho ulož. Musí-li se pravidlo porušit, je to **signál, že je špatně formulované** – ne výjimka.
 
 ### Výjimka platí jen tam, kde platí její důvod
 
-Děláš-li něco volitelné, podmíněné nebo výjimečné, **zapiš proč**. Kde ten důvod neplatí, výjimka padá – nepřenášej ji mechanicky jen proto, že „to tak je jinde".
+Děláš-li něco volitelné, podmíněné nebo výjimečné, **zapiš proč**. Kde ten důvod neplatí, výjimka padá – nepřenášej ji mechanicky jen proto, že „to tak je jinde“.
 
 ### Detekce konfliktů před přidáním
 
@@ -198,7 +198,7 @@ V projektech s vlastní živou dokumentací (typicky `docs/`):
 
 Soubory leží tam, kam **dnes patří podle smyslu**, ne kde historicky vznikly. Dělají-li dva soubory totéž, jeden dělá dvě věci, nebo jeden patří jinam → **průběžná reorganizace je normální a chtěná**. Aktivně ji navrhuj.
 
-Totéž pro rozdělaný návrh: ukáže-li se v půlce, že model vznikl přilepováním záplat, je legitimní říct „sestavme to od scénářů znovu".
+Totéž pro rozdělaný návrh: ukáže-li se v půlce, že model vznikl přilepováním záplat, je legitimní říct „sestavme to od scénářů znovu“.
 
 ### Před nevratnou akcí ověř skutečný stav
 
@@ -206,7 +206,7 @@ Před destruktivní nebo těžko vratnou operací (mazání, přepis, zrušení,
 
 ### Při odstranění nechej stopu
 
-Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrátit" (kopírováním odjinud, z legacy, z dokumentace), nech stopu – sekce „Odstraněné položky", řádek v CHANGELOGu, poznámka. Ne u každého smazání, ale tam, kde má smysl chránit se před nechtěným návratem.
+Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrátit“ (kopírováním odjinud, z legacy, z dokumentace), nech stopu – sekce „Odstraněné položky“, řádek v CHANGELOGu, poznámka. Ne u každého smazání, ale tam, kde má smysl chránit se před nechtěným návratem.
 
 ### Životní cyklus práce
 

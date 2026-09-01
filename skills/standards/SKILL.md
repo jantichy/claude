@@ -26,6 +26,13 @@ Kontroluje soulad s **explicitně sepsanými pravidly** – jedno pravidlo, jede
 
 Když nález sedí do víc kategorií, patří sem jen tehdy, když ho lze opřít o konkrétní bod ze standardů. Jinak ho nehlas.
 
+## Co skill nedělá
+
+- **Nehlásí nic, co nejde opřít o konkrétní bod standardu.** Ani když je to zjevně špatně – na to jsou ostatní skilly.
+- **Nemění samotné standardy.** Ukáže-li se, že je pravidlo špatně, řekni to a nech rozhodnout uživatele; oprava patří do `~/Dev/context/`, ne do projektu.
+- **Nevytěžuje session ani nepíše dokumentaci projektu.** To je `/cleanup`.
+- **Neaudituje vnitřní konzistenci.** To je `/consistency`, který běží až po tomhle.
+
 ## Rozsah
 
 - **`/standards`** (výchozí) – jen změny na aktuální větvi, tedy diff proti hlavní větvi plus necommitnuté změny. Rychlé, sedí do postupu uzavírání feature.
@@ -35,11 +42,11 @@ U `full` na starším projektu počítej s tím, že vyplave existující dluh. 
 
 ------
 
-## Fáze 1 – Pre-flight
+## Fáze 0 – Pre-flight
 
 Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
-### 1.1 Urči rozsah souborů
+### 0.1 Urči rozsah souborů
 
 **Výchozí režim (změny):**
 
@@ -55,7 +62,7 @@ Sjednoť commitnuté změny na větvi s necommitnutými. Vynech smazané soubory
 
 **Režim `full`:** všechny zdrojové soubory projektu. Vynech `node_modules/`, `dist/`, `build/`, `vendor/`, `generated/`, `*.gen.*` a cokoliv v `.gitignore`.
 
-### 1.2 Vyber sady standardů
+### 0.2 Vyber sady standardů
 
 Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – neposílej agenta na sadu, ke které v rozsahu není co kontrolovat.
 
@@ -73,7 +80,7 @@ Vypiš uživateli, které sady jsi vybral a proč. Když si u některé nejsi ji
 
 Pokud žádná sada nesedí, řekni to explicitně a skonči – nevymýšlej si vlastní standardy. Pozor, čistě dokumentační projekt sadou bez pokrytí není: na české texty sedí `text/text.md`.
 
-### 1.3 Načti kontext projektu
+### 0.3 Načti kontext projektu
 
 - Projektový `CLAUDE.md` – zejména `### Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Standards`, pokud existuje.
 - **Kapitola `## Standards`** obsahuje dříve zamítnuté nálezy (won't fix). Ty se **vůbec neuvádějí** – ani v tomhle běhu, ani v žádném dalším.
@@ -81,7 +88,7 @@ Pokud žádná sada nesedí, řekni to explicitně a skonči – nevymýšlej si
 
 ------
 
-## Fáze 2 – Audit
+## Fáze 1 – Audit
 
 Na **každou** vybranou sadu pošli **samostatného subagenta** – všechny paralelně, jedním blokem tool callů. Každý agent si svou sadu načte sám, ať ti její obsah nesní kontext.
 
@@ -133,7 +140,7 @@ Nezapisuj do žádného souboru.
 
 ------
 
-## Fáze 3 – Zpracování výsledků
+## Fáze 2 – Zpracování výsledků
 
 Slož nálezy ze všech agentů do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, KOSMETICKÉ; v rámci kategorie root položky před jejich následky.
 
@@ -160,7 +167,7 @@ Při pochybnosti patří nález mezi sporné.
 
 ------
 
-## Fáze 4 – Přehled
+## Fáze 3 – Přehled
 
 ```
 ## Výsledky kontroly standardů
@@ -183,7 +190,7 @@ Když nálezy nejsou, řekni to a skonči.
 
 ------
 
-## Fáze 5 – Mechanické opravy
+## Fáze 4 – Mechanické opravy
 
 Mechanické nálezy oprav **rovnou, bez ptaní**. Pak:
 
@@ -197,11 +204,11 @@ Mechanické nálezy oprav **rovnou, bez ptaní**. Pak:
 
 Když uživatel na některou opravu zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
 
-Pokud nejsou žádné sporné nálezy, přeskoč Fázi 6 rovnou na shrnutí.
+Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na shrnutí.
 
 ------
 
-## Fáze 6 – Interaktivní průchod
+## Fáze 5 – Interaktivní průchod
 
 Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 
@@ -227,12 +234,12 @@ Navrhované řešení:
    - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
      - **Opravit** – provedu navrhovanou změnu
      - **Odložit** – nechám být, vrátíme se k tomu později
-     - **Přeskočit** – neopravovat, zapíšu do `CLAUDE.md` jako „won't fix"
+     - **Přeskočit** – neopravovat, zapíšu do `CLAUDE.md` jako „won't fix“
      - **Rozbalit** – *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
 
    Tool má strop **4 volby** na otázku – tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej.
 
-   Volbu **Other** doplňuje tool sám – uživatel přes ni napíše vlastní instrukci nebo se doptá. Ber to jako doplňující instrukci k aktuálnímu nálezu (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno".
+   Volbu **Other** doplňuje tool sám – uživatel přes ni napíše vlastní instrukci nebo se doptá. Ber to jako doplňující instrukci k aktuálnímu nálezu (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno“.
 
    Zpracování odpovědí:
    - **Opravit** – proveď změnu hned (krok 3)
@@ -244,7 +251,7 @@ Navrhované řešení:
    a. Proveď změnu. U `batch` nálezu hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
    b. **Ověř – vždy, ne občas.** `tsc --noEmit` u TS projektu; build, pokud je rychlý a týká se ho to; relevantní testy, jdou-li rychle pustit.
    c. Když kontrola selže: **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat. Nepokračuj automaticky na další nález.
-   d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Ty vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky".
+   d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Ty vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky“.
    e. Commit dle autocommit nastavení projektu.
 
 4. Zápis do `## Standards` v projektovém `CLAUDE.md` (volba Přeskočit):
@@ -263,7 +270,7 @@ Navrhované řešení:
 
 ------
 
-## Fáze 7 – Shrnutí
+## Fáze 6 – Shrnutí
 
 ```
 ## Hotovo
@@ -280,3 +287,8 @@ Rozsah: [změny na větvi / celý projekt] · Sady: [které]
 ```
 
 Když běžel jen výchozí rozsah a projekt je starší, připomeň, že `/standards full` projede i to, čeho se tahle větev nedotkla.
+
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `V prověřeném rozsahu projekt standardy drží.`
+- `Standardy nedrží – zbývá: <konkrétní seznam>.`

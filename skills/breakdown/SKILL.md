@@ -22,7 +22,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) navazuje na `/spec` a p�
 
 ## Co skill nedělá
 
-- **Neimplementuje.** Ani první úkol „na ukázku". Realizaci dělá `/implement`.
+- **Neimplementuje.** Ani první úkol „na ukázku“. Realizaci dělá `/implement`.
 - **Nepíše zadání.** Když chybí, pošle tě na `/spec`.
 - **Neřeže rozsah sám.** Co je v MVP, rozhodl `/spec`. Tady se to jen respektuje.
 
@@ -91,7 +91,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 `writing-plans` má vlastní sebe-revizi. **Neopakuj ji – ověř, že proběhla**, a doplň, co jí chybí:
 
-1. **Proběhla vůbec?** Plán musí být bez „TBD", „doplnit později", „ošetřit chyby" a bez „podobně jako úkol N".
+1. **Proběhla vůbec?** Plán musí být bez „TBD“, „doplnit později“, „ošetřit chyby“ a bez „podobně jako úkol N“.
 2. **Pokrytí MVP.** Projdi MVP checklist ze zadání položku po položce a ukaž, který úkol ji plní. Nepokrytá položka je nález, ne detail.
 3. **Nic navíc.** Obráceně: je v plánu úkol, který v MVP není? Buď patří do další fáze, nebo se zapomnělo aktualizovat zadání. Zeptej se, neřeš to sám.
 4. **Konzistence názvů.** Funkce, typy a parametry použité v pozdějších úkolech musí sedět s tím, co definují dřívější. `clearLayers()` v úkolu 3 a `clearFullLayers()` v úkolu 7 je chyba.

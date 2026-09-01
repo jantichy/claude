@@ -56,17 +56,17 @@ Instalace whisper.cpp/ffmpeg předpokládá [Homebrew](https://brew.sh). Vyvinut
 
 5. **Po dokončení vyrob doslovné přepisy.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více/delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor) – každému předej kontext nahrávky (téma, vlastní jména, odborné termíny), ať umí opravit přeslechy. Nech si od každého vrátit i stručný brief pro shrnutí.
 
-6. **Napiš souhrnné shrnutí.** Navrhni uživateli „Výstižný název" celé nahrávky a **nech si ho odsouhlasit** (ať nemusí nic vymýšlet ani psát), pak zapiš `YYYYMMDD - Výstižný název.md` dle [Formátu souhrnného MD](#formát-souhrnného-md).
+6. **Napiš souhrnné shrnutí.** Navrhni uživateli „Výstižný název“ celé nahrávky a **nech si ho odsouhlasit** (ať nemusí nic vymýšlet ani psát), pak zapiš `YYYYMMDD - Výstižný název.md` dle [Formátu souhrnného MD](#formát-souhrnného-md).
 
 7. **Úklid.** Smaž mezivýstupy: všechny `<název>.txt` a `whisper-progress.log`. Ponech zdrojové audio, doslovné přepisy (`<název>.md`) a souhrnné MD.
 
 ## Pravidla doslovného přepisu
 
-Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis" v souhrnu. Připrav doslovný přepis v jazyce nahrávky:
+Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v souhrnu. Připrav doslovný přepis v jazyce nahrávky:
 
 - Uprav jen **stylistiku a slovosled** tam, kde je to potřeba, aby se text dal plynule a smysluplně číst.
 - Odstraň **výplňová slova** (hesitační výplně) a **opakovaná slova** / místa, kde se řečník zamotal při hledání formulace.
-- **Odstraň halucinace ASR** – whisper na tichu a v šumu často vygeneruje nesmyslné opakující se řádky (např. dokola tatáž věta, „Titulky vytvořil …" apod.). Takové smyčky celé smaž.
+- **Odstraň halucinace ASR** – whisper na tichu a v šumu často vygeneruje nesmyslné opakující se řádky (např. dokola tatáž věta, „Titulky vytvořil …“ apod.). Takové smyčky celé smaž.
 - Rozděl text do **ucelených kapitol** s výstižnými mezinadpisy (`##`).
 - Každou kapitolu rozděl do **kratších odstavců** – žádné dlouhé bloky.
 - Nosné pojmy a důležitá sdělení vyznač **tučně**.
@@ -86,7 +86,7 @@ Soubor `YYYYMMDD - Výstižný název.md` má tuto strukturu:
 
 ## Pravidla shrnutí
 
-Platí pro sekci „Shrnutí". Připrav stručné, logické, strukturované shrnutí celé nahrávky – důležitých témat, poznatků a klíčových informací:
+Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované shrnutí celé nahrávky – důležitých témat, poznatků a klíčových informací:
 
 - Využij **přehledné formátování** – mezinadpisy, odstavce, odrážky, **tučný** text pro důležité pojmy.
 - **Nedodržuj chronologické pořadí**, ve kterém informace zazněly. Uspořádej vše do logických sekcí/skupin tak, aby to dávalo při čtení smysl.

@@ -31,15 +31,15 @@ Mají **jinou životnost**. Produktový záměr se mění zřídka; technické �
 
 **Nerozejdou se, protože se nepřekrývají.** Hranice je tvrdá:
 
-- **Do PRD patří omezení**, do designu **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí" je produktové omezení a patří do PRD. „Použijeme SQLite, protože…" je volba a patří do designu.
-- **PRD nesmí obsahovat architekturu.** Ani „nejspíš to bude na Vercelu". Jakmile to tam napíšeš, začne se to rozcházet s designem.
+- **Do PRD patří omezení**, do designu **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je produktové omezení a patří do PRD. „Použijeme SQLite, protože…“ je volba a patří do designu.
+- **PRD nesmí obsahovat architekturu.** Ani „nejspíš to bude na Vercelu“. Jakmile to tam napíšeš, začne se to rozcházet s designem.
 - **Design nesmí obsahovat zdůvodnění produktu.** Argumentuje z PRD odkazem, neopisuje ho.
 
 Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → design. Ne → PRD.
 
 ## Co skill nedělá
 
-- **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt". Tvrdá brána – viz *Zákaz implementace*.
+- **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá brána – viz *Zákaz implementace*.
 - **Nezakládá projekt.** Strukturu, git, autocommit a doménové importy dělá `/project`. Když chybí, skill na to upozorní a nabídne ho.
 - **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill mu jen předá řízení, až je zadání schválené.
 - **Neduplikuje `superpowers:brainstorming`.** Dialog, klasifikaci rozsahu i návrh řešení řídí ten skill.
@@ -75,15 +75,15 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 
 ## Zákaz implementace
 
-**Dokud není návrh hotový a schválený, nesmí vzniknout ani řádek produkčního kódu.** Žádný scaffold, žádné `npm create`, žádná databáze, žádné „jen si ověřím, že to jde".
+**Dokud není návrh hotový a schválený, nesmí vzniknout ani řádek produkčního kódu.** Žádný scaffold, žádné `npm create`, žádná databáze, žádné „jen si ověřím, že to jde“.
 
-Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnutí v návrhu („zvládne to hosting?", „má to API tenhle endpoint?"). Pak řekni dopředu, co zkoušíš a proč, výsledek použij jako podklad a **kód zahoď** – označ ho jako jednorázový a nenechávej ho v projektu.
+Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnutí v návrhu („zvládne to hosting?“, „má to API tenhle endpoint?“). Pak řekni dopředu, co zkoušíš a proč, výsledek použij jako podklad a **kód zahoď** – označ ho jako jednorázový a nenechávej ho v projektu.
 
 | Myšlenka | Realita |
 |---|---|
-| „Zadání je jasné, začnu rovnou" | Když je jasné, sepsání trvá deset minut. Když ne, právě proto se píše. |
-| „Udělám scaffold, ať máme na čem stavět" | Scaffold zamkne tech stack dřív, než se rozhodl. |
-| „Uživatel mi řekl ‚udělej to'" | Řekl `/spec`. Kdyby chtěl kód, řekl by to. |
+| „Zadání je jasné, začnu rovnou“ | Když je jasné, sepsání trvá deset minut. Když ne, právě proto se píše. |
+| „Udělám scaffold, ať máme na čem stavět“ | Scaffold zamkne tech stack dřív, než se rozhodl. |
+| „Uživatel mi řekl ‚udělej to'“ | Řekl `/spec`. Kdyby chtěl kód, řekl by to. |
 
 ------
 
@@ -194,7 +194,7 @@ Success metrics. Konkrétní, měřitelné, s cílovou hodnotou a termínem.
 Co ještě není rozhodnuté a co to blokuje.
 ```
 
-**Jak psát:** česky, věcně, bez omáčky, typografie podle `~/Dev/context/text/text.md`. Konkrétně – „rychlé načítání" je nic, „LCP pod 2,5 s na 4G" je požadavek. Bez placeholderů; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
+**Jak psát:** česky, věcně, bez omáčky, typografie podle `~/Dev/context/text/text.md`. Konkrétně – „rychlé načítání“ je nic, „LCP pod 2,5 s na 4G“ je požadavek. Bez placeholderů; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
 
 **Brána uživatele.** Po sebe-revizi (Fáze 4) napiš:
 
@@ -275,7 +275,7 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 
 **Sebe-revize** (rozšíření *Spec Self-Review* z brainstormingu):
 
-1. **Placeholdery** – „TBD", „TODO", nedokončené sekce, vágní požadavky. Oprav.
+1. **Placeholdery** – „TBD“, „TODO“, nedokončené sekce, vágní požadavky. Oprav.
 2. **Vnitřní rozpory** – neodporují si sekce? Sedí počty a výčty s obsahem?
 3. **Vymyšlené věci** – je tam technický název, ID, parametr nebo číslo, které jsi neměl od uživatele ani z podkladů? To je nález. Dohledej, nebo přesuň do *Otevřených otázek*.
 4. **Prosakování hranice** – je v PRD architektura nebo volba technologie? Je v designu zdůvodnění produktu? Přesuň.
@@ -301,7 +301,7 @@ Počkej na odpověď. Chce-li změny, proveď je a projdi sebe-revizi znovu.
 
 Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání udělá `docs/plan.md`. Ten si sám najde spec i kontext a ohlídá rozsah – nemusíš mu nic předávat ručně, jen ho vyvolej.
 
-**Sám plán nepiš.** Ani „ať se to nemusí volat zvlášť". Rozpad na úkoly má vlastní pravidla, vlastní kontrolu pokrytí MVP a vlastní schvalovací bránu.
+**Sám plán nepiš.** Ani „ať se to nemusí volat zvlášť“. Rozpad na úkoly má vlastní pravidla, vlastní kontrolu pokrytí MVP a vlastní schvalovací bránu.
 
 **U projektu bez kódu** `/breakdown` nevyvolávej – rozepiš kroky do `docs/todo.md`.
 

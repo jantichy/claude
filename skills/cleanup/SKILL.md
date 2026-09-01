@@ -26,7 +26,7 @@ Skill je **opakovatelný**. Když ho uživatel spustí podruhé, co je zapsané 
 
 ## Co skill nedělá
 
-Tohle **není** audit projektu ani technická brána. Nespouštěj `/consistency`, `/code-review` ani `/ultrareview` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
+Tohle **není** audit projektu ani technická brána. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 
 Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), uveď to ve verdiktu ve Fázi 5. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj.
 
@@ -43,7 +43,7 @@ Rozsah ovlivňuje **výhradně Fázi 4**. Fáze 1–3 vytěžují session vždy 
   - **Dělej sám:** zápis jednoznačné dohody na zjevně správné místo, oprava rozbitého odkazu, který tvým zápisem vznikl, dorovnání README / TODO / CLAUDE.md v rozsahu session, commit a push.
   - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky; cokoliv, co jde nad rámec toho, co v session padlo.
 - **Ptej se vždy přes tool `AskUserQuestion`**, nikdy ne vypsáním voleb jako textu v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena. Jedno volání = jedna otázka (`multiSelect: false`), `header` max 12 znaků, `description` u každé volby konkrétně říká, co se stane. Volbu **Other** doplňuje tool sám – uživatel přes ni napíše vlastní instrukci nebo se doptá; ber to jako doplňující instrukci k dané položce, ne jako odmítnutí, a po vyřešení se zeptej znovu.
-- Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč"*, *Živá struktura*, *Žádný „smetiště" adresář*).
+- Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč“*, *Živá struktura*, *Žádný „smetiště“ adresář*).
 - **Nezakládej nové soubory, když to jde bez nich.** Struktura projektu je daná; hledej v ní správné místo. Když žádné neexistuje, zeptej se, než nějaké vytvoříš.
 - Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
@@ -72,7 +72,7 @@ Tohle je jádro celého skillu. Všechno ostatní je servis kolem něj.
 
 2. **Projdi ho od úplného začátku.** Zajímají tě uživatelovy prompty i tvoje odpovědi. U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti kontext nesnědla surová data – předej mu cestu k souboru a seznam kategorií níže a nech si vrátit strukturovaný výtah.
 
-   **Pozor na zprávy poslané uprostřed běžícího tahu.** Ty **nejsou** uložené jako `type: "user"`, ale jako `type: "queue-operation"` s `operation: "enqueue"` a textem v poli `content`. Kdo filtruje jen `type=="user"`, tiše o ně přijde – a přitom to bývají důležité dovětky („ještě ať to udělá i…"). Vytáhni je vždy taky:
+   **Pozor na zprávy poslané uprostřed běžícího tahu.** Ty **nejsou** uložené jako `type: "user"`, ale jako `type: "queue-operation"` s `operation: "enqueue"` a textem v poli `content`. Kdo filtruje jen `type=="user"`, tiše o ně přijde – a přitom to bývají důležité dovětky („ještě ať to udělá i…“). Vytáhni je vždy taky:
    ```
    jq -r 'select(.type=="queue-operation" and .operation=="enqueue") | .content' <transcript>
    ```
@@ -80,11 +80,11 @@ Tohle je jádro celého skillu. Všechno ostatní je servis kolem něj.
 
 3. **Vytěž šest kategorií:**
 
-   1. **Dohody a rozhodnutí** – na čem jste se shodli. Vždy včetně **„proč"** a **zavržených variant**: „nejdřív jsme chtěli X, ale kvůli Y jsme zvolili Z". Samotný závěr bez zdůvodnění je pro příští session málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
+   1. **Dohody a rozhodnutí** – na čem jste se shodli. Vždy včetně **„proč“** a **zavržených variant**: „nejdřív jsme chtěli X, ale kvůli Y jsme zvolili Z“. Samotný závěr bez zdůvodnění je pro příští session málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
    2. **Pravidla a konvence**, které v session vznikly nebo se změnily.
    3. **Odvedená práce** – co se reálně změnilo v souborech a kódu.
-   4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme", „to necháme na potom".
-   5. **Postřehy mimo hlavní osu** – všechno, u čeho padlo „ať se to neztratí", „poznamenej si to", „to je důležité do budoucna". Bývá to mimo téma session, a proto to nejčastěji zapadne.
+   4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“.
+   5. **Postřehy mimo hlavní osu** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
    6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
 
 4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej.
@@ -143,9 +143,9 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    |---|---|
    | `CLAUDE.md` | vzniklo nebo se změnilo pravidlo, konvence, způsob práce v projektu |
    | `README.md` | změnilo se, co projekt je, umí nebo jak se spouští; zároveň ověř, že v něm nezůstal normativní pokyn pro Clauda – ten patří do `CLAUDE.md` nebo `docs/`, viz `~/Dev/context/structure/structure.md` |
-   | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později"; něco se dokončilo → přesun do `## Hotovo` |
+   | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později“; něco se dokončilo → přesun do `## Hotovo` |
    | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
-   | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky" |
+   | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky“ |
 | `docs/prd.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
 | `docs/design.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie |
 | `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |

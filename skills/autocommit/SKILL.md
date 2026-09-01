@@ -29,7 +29,7 @@ Najdi `.git` pomocí **Glob** (NIKDY nespouštěj `git` přes Bash – červená
 
 **Pozor na worktree layout.** Najdeš-li vedle `.git` také `.bare/`, stojíš v kořeni kontejneru, který není pracovní strom – projektový `CLAUDE.md` je pak `<kontejner>/main/CLAUDE.md`, ne ten v kořeni. Ten v kořeni je jen stub s popisem layoutu a sekce `### Autocommit` do něj **nepatří**. Pravidlo i s tabulkou je v `~/Dev/context/worktree/worktree.md`, sekce *Jak si skill najde projektový adresář*.
 
-Pokud `.git` nenajdeš, oznam „Aktuální adresář není git repozitář." a skonči **bez jakéhokoliv dalšího příkazu**.
+Pokud `.git` nenajdeš, oznam „Aktuální adresář není git repozitář.“ a skonči **bez jakéhokoliv dalšího příkazu**.
 
 ### Zjisti stav
 

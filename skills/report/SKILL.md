@@ -18,6 +18,13 @@ Teprve pak pokračuj plněním skillu.
 
 Ze zdrojových dat udělá **jeden samostatný HTML soubor**, který jde vzít, poslat mailem nebo nahrát na web, a kdekoliv se otevře a funguje – bez serveru, bez internetu, bez závislostí.
 
+## Co skill nedělá
+
+- **Nepouští data ven neagregovaná.** V reportu jsou jen souhrny, nikdy původní řádky.
+- **Nezakrývá nejistotu.** Malá čísla, krátké období a chybějící segmenty se přiznávají, ne obcházejí formulací.
+- **Nepočítá od oka.** Výpočet je vždycky skript, který zůstane v projektu, protože report se přegeneruje.
+- **Neinterpretuje za hranicí dat.** Co z čísel neplyne, do komentáře nepatří.
+
 ## Nepřekročitelné požadavky na výstup
 
 Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni to**, místo abys ho potichu obešel.
@@ -26,7 +33,7 @@ Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni
 2. **Funguje z `file://`.** Uživatel si ho otevře dvojklikem z disku. Žádný `fetch`, žádné moduly přes `type="module"` se sítí, žádné CORS.
 3. **Žádné CDN.** Ani jeden `<script src="https://…">`, ani jeden `<link rel="stylesheet" href="https://…">`. Report musí fungovat offline i za pět let, až ta knihovna zmizí. Grafy kresli inline SVG nebo do `<canvas>` vlastním kódem; potřebuješ-li knihovnu, vlož ji do souboru celou a řekni, o kolik tím soubor narostl.
 4. **`<meta charset="utf-8">` jako první věc v `<head>`.** Bez toho se diakritika rozsype – a rozsype se právě až u příjemce, ne u tebe.
-5. **Žádná surová data.** V reportu jsou jen agregované hodnoty. Originální řádky, ID uživatelů, e-maily, IP adresy ani nic, z čeho jdou zpětně sestavit, do souboru nepatří – viz *Osobní údaje* níž.
+5. **Žádná surová data.** V reportu jsou jen agregované hodnoty. Originální řádky, ID uživatelů, e-maily, IP adresy ani nic, z čeho jdou zpětně sestavit, do souboru nepatří – viz *Co nesmí ven ze souboru* níž.
 6. **Datum vygenerování je statické.** Skutečný okamžik, kdy report vznikl, zapsaný natvrdo do HTML. **Nikdy `new Date()` v JavaScriptu** – ten by ukazoval, kdy si to příjemce otevřel, což je nesmysl a zastírá stáří dat.
 7. **Zdroj dat a období** jsou v reportu vidět. Kdo se na to podívá za půl roku, musí poznat, odkud čísla jsou a k jakému datu platí.
 
@@ -50,7 +57,7 @@ Ptej se **postupně, jednu otázku za druhou**, přes `AskUserQuestion` (viz `~/
 
 Co potřebuješ vědět, než začneš počítat:
 
-1. **Otázka, na kterou report odpovídá.** Ne „report z dat", ale „jak moc Wimbledon zvedl návštěvnost". Bez ní vznikne přehlídka grafů, ze které si nikdo nic neodnese.
+1. **Otázka, na kterou report odpovídá.** Ne „report z dat“, ale „jak moc Wimbledon zvedl návštěvnost“. Bez ní vznikne přehlídka grafů, ze které si nikdo nic neodnese.
 2. **Kdo to bude číst.** Management, klient, kolega z oboru, nebo jen uživatel sám. Určuje to hloubku i tonalitu.
 3. **Období a rozsah dat.**
 4. **Jednotka analýzy a normalizace.** Počítá se to na řádky, na uživatele, na návštěvy, na dny? Může jeden uživatel přispět víc záznamy? **Tohle je nejčastější zdroj chybných čísel** – zeptej se výslovně a odpověď zapiš do metodiky.
@@ -90,10 +97,10 @@ Má-li report víc tematických celků, udělej záložky. Nesmí to ale rozbít
 Tohle je místo, kde se reporty nejčastěji kazí. Platí `~/Dev/context/text/text.md` a k tomu:
 
 - **Věcně a krátce.** Co se stalo, o kolik, oproti čemu.
-- **Žádné nadšení.** Ne „skvělý nárůst!", ne „úžasný výsledek", ne vykřičníky. Konstatuj číslo a jeho význam.
+- **Žádné nadšení.** Ne „skvělý nárůst!“, ne „úžasný výsledek“, ne vykřičníky. Konstatuj číslo a jeho význam.
 - **Žádná klišé a agenturní žargon.** Píše se to pro člověka, který nemá čas a nemusí rozumět analytice.
-- **Interpretuj, nepopisuj.** „Návštěvnost vzrostla 5×" je popisek grafu. „Nárůst je organický z Googlu, tedy zvýšené vyhledávání značky – ne odkazy z médií" je komentář.
-- **Nejistotu přiznej.** Malá čísla, krátké období, chybějící segment. Radši „na tohle jsou data příliš malá" než opatrná formulace, která vypadá jako závěr.
+- **Interpretuj, nepopisuj.** „Návštěvnost vzrostla 5×“ je popisek grafu. „Nárůst je organický z Googlu, tedy zvýšené vyhledávání značky – ne odkazy z médií“ je komentář.
+- **Nejistotu přiznej.** Malá čísla, krátké období, chybějící segment. Radši „na tohle jsou data příliš malá“ než opatrná formulace, která vypadá jako závěr.
 
 ### Grafy
 

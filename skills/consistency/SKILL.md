@@ -18,11 +18,19 @@ Teprve pak pokračuj plněním skillu.
 
 Proveď kompletní audit vnitřní konzistence aktuálního projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
 
-## Fáze 1 – Pre-flight: kontext a baseline
+## Co skill nedělá
+
+- **Nehledá chyby v kódu.** Na korektnost provedených změn je `/code-review`.
+- **Nekontroluje soulad s doménovými standardy.** Na odchylky od předpisů v `~/Dev/context/` je `/standards`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat standard.
+- **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
+- **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
+- **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
+
+## Fáze 0 – Pre-flight: kontext a baseline
 
 Před spuštěním Explore agenta nasbírej baseline. Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
-### 1.1 Načti dokumentaci konvencí
+### 0.1 Načti dokumentaci konvencí
 
 *Worktree layout* (`~/Dev/context/worktree/worktree.md`): auditovaný projekt je **pracovní adresář jedné větve**, ne kontejner. Stojíš-li v kořeni kontejneru, přesuň se nejdřív do adresáře té větve – jinak bys projel všechny větve naráz a hlásil rozdíly mezi nimi jako nekonzistence. „Projektový `CLAUDE.md`“ je pak ten ve worktree, ne stub v kořeni.
 
@@ -36,11 +44,11 @@ Pokud existují, přečti:
 
 Z těchto souborů sestav **baseline konvencí** – co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako kosmetickou odchylku; naopak rozpor s baseline hlas důsledněji.
 
-### 1.2 Načti seznam ignorovaných položek
+### 0.2 Načti seznam ignorovaných položek
 
-Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako „won't fix".
+Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako „won't fix“.
 
-### 1.3 Spusť existující nástroje
+### 0.3 Spusť existující nástroje
 
 Pokud jsou v projektu k dispozici (zjisti z `package.json` scripts a devDeps), spusť – paralelně:
 - `tsc --noEmit` (jen u TypeScript projektů)
@@ -49,7 +57,7 @@ Pokud jsou v projektu k dispozici (zjisti z `package.json` scripts a devDeps), s
 
 Výstupy si zapamatuj a předej Explore agentovi. Pokud nástroj selže nebo není dostupný, pokračuj a poznamenej to. Nálezy z toolchainu se v dalších fázích označí tagem `[toolchain]`.
 
-## Fáze 2 – Průzkum projektu
+## Fáze 1 – Průzkum projektu
 
 Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, baseline z 1.1, seznam ignorovaných z 1.2 a výstupy nástrojů z 1.3):
 
@@ -130,7 +138,7 @@ Výstup strukturuj jako JSON pole objektů:
 ]
 ```
 
-## Fáze 3 – Zpracování výsledků
+## Fáze 2 – Zpracování výsledků
 
 Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak KOSMETICKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
 
@@ -157,7 +165,7 @@ Než seznam předložíš, rozděl ho na dvě skupiny – uživatele nemá smysl
 
 Při pochybnosti patří nález mezi sporné. Nálezy s tagem `toolchain` posuzuj stejně jako ostatní.
 
-## Fáze 4 – Přehled
+## Fáze 3 – Přehled
 
 Zobraz uživateli přehled před tím, než začneš procházet problémy:
 
@@ -179,11 +187,11 @@ Sporných: M – ty projdeme spolu od nejzávažnějších, u každého navrhnu 
 
 Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
-## Fáze 5 – Mechanické opravy
+## Fáze 4 – Mechanické opravy
 
-Mechanické nálezy (viz Fáze 3) oprav **rovnou, bez ptaní**. Pak:
+Mechanické nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
 
-1. Spusť verifikaci podle kroku 3b Fáze 6 (tsc/build/testy). Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
+1. Spusť verifikaci podle kroku 3b Fáze 5 (tsc/build/testy). Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N mechanických)
@@ -193,9 +201,9 @@ Mechanické nálezy (viz Fáze 3) oprav **rovnou, bez ptaní**. Pak:
 
 Pokud uživatel na některou z těchto oprav zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
 
-Pokud nejsou žádné sporné nálezy, přeskoč Fázi 6 rovnou na závěrečné shrnutí.
+Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné shrnutí.
 
-## Fáze 6 – Interaktivní průchod
+## Fáze 5 – Interaktivní průchod
 
 Pro KAŽDÝ **sporný** problém (jeden po druhém, nikdy víc najednou):
 
@@ -219,17 +227,17 @@ Navrhované řešení:
    - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
      - **Opravit** – provedu navrhovanou změnu
      - **Odložit** – nechám být, vrátíme se k tomu později
-     - **Přeskočit** – neopravovat, zapíšu do CLAUDE.md jako „won't fix"
+     - **Přeskočit** – neopravovat, zapíšu do CLAUDE.md jako „won't fix“
      - **Rozbalit** – *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
 
    Tool má strop **4 volby** na otázku – tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej; kdyby byla potřeba, musí se otázka rozdělit na dvě.
 
-   Volbu **Other** doplňuje tool sám – uživatel přes ni může napsat vlastní instrukci nebo se doptat. Když ji použije, ber to jako doplňující instrukci k aktuálnímu problému (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno".
+   Volbu **Other** doplňuje tool sám – uživatel přes ni může napsat vlastní instrukci nebo se doptat. Když ji použije, ber to jako doplňující instrukci k aktuálnímu problému (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno“.
 
    Zpracování odpovědí:
    - **Opravit** – proveď změnu hned (krok 3)
    - **Odložit** – zapiš do interního seznamu odložených, neřeš teď
-   - **Přeskočit** – zeptej se na krátký důvod („Proč to neopravovat?") a zapiš do projektového `CLAUDE.md` do kapitoly `## Consistency` (krok 6). Pokud uživatel nechce uvést důvod, zapiš `(bez uvedeného důvodu)`.
+   - **Přeskočit** – zeptej se na krátký důvod („Proč to neopravovat?“) a zapiš do projektového `CLAUDE.md` do kapitoly `## Consistency` (krok 6). Pokud uživatel nechce uvést důvod, zapiš `(bez uvedeného důvodu)`.
    - **Rozbalit** – vypiš všechny lokace a začni je řešit jednotlivě jako samostatné podproblémy
 
 3. Pokud uživatel zvolí **Opravit**:
@@ -260,7 +268,7 @@ Navrhované řešení:
    ```
    - Datum vezmi z `Today's date is ...` v system-reminderu.
 
-## Fáze 7 – Závěrečné shrnutí
+## Fáze 6 – Závěrečné shrnutí
 
 Po projití všech problémů zobraz:
 
@@ -275,3 +283,8 @@ Po projití všech problémů zobraz:
 
 [Pokud jsou odložené: seznam odložených s jejich popisy]
 ```
+
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `Projekt je konzistentní, všechny nálezy jsou vypořádané.`
+- `Konzistentní zatím není – zbývá: <konkrétní seznam>.`

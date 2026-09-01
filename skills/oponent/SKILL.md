@@ -24,7 +24,7 @@ Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každ�
 
 - **Není to kontrola kódu.** Na kód je `/code-review`.
 - **Není to kontrola proti standardům.** Na soulad s `~/Dev/context/*` je `/standards`.
-- **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?", ne „sedí to na sebe?".
+- **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují.
 
@@ -47,7 +47,7 @@ Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každ�
 **Zkontroluj, že to má smysl oponovat:**
 
 - **Je to kód?** → přesměruj na `/code-review` a zastav se.
-- **Je to rozpracované torzo?** → zeptej se, jestli má smysl oponovat teď, nebo počkat. Posudek na kostru vygeneruje hlavně nálezy „chybí obsah", což uživatel ví.
+- **Je to rozpracované torzo?** → zeptej se, jestli má smysl oponovat teď, nebo počkat. Posudek na kostru vygeneruje hlavně nálezy „chybí obsah“, což uživatel ví.
 - **Je toho moc?** Nad zhruba pět dokumentů nebo řádově stovky kB se posudek rozmělní. Zeptej se, co je jádro, a oponuj to.
 
 **Načti kontext, který posudek potřebuje:** projektový `CLAUDE.md`, `docs/rules.md` (principy, proti kterým se v projektu rozhoduje) a `docs/decisions.md` (co už bylo rozhodnuto a proč). Bez toho subagenti navrhnou znovu to, co už bylo vědomě zamítnuto – a to je nejotravnější druh oponentury.
@@ -155,7 +155,7 @@ C) Nechat být – <proč to může být v pořádku>
 Doporučuji: <jedna z nich a proč>
 ```
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou konkrétní varianty řešení (ne „Opravit / Odložit / Přeskočit", to nic neříká). Vždy nech mezi volbami i **Nechat být**.
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou konkrétní varianty řešení (ne „Opravit / Odložit / Přeskočit“, to nic neříká). Vždy nech mezi volbami i **Nechat být**.
 
 **Zpracování odpovědi:**
 
@@ -197,4 +197,4 @@ Zakonči jednou z těchto vět:
 - `Všechny nálezy jsou vypořádané, dokument je po oponentuře.`
 - `Vypořádané nejsou: <konkrétní seznam>.`
 
-Nikdy nekonči tím, že je dokument „v dobrém stavu" – to není verdikt oponenta, ale autora.
+Nikdy nekonči tím, že je dokument „v dobrém stavu“ – to není verdikt oponenta, ale autora.
