@@ -73,8 +73,9 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 | `~/Dev/context/web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) |
 | `~/Dev/context/analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`, ne místo něj) |
 | `~/Dev/context/text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web/web.md`) |
+| `~/Dev/context/training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály pro účastníky (**navíc** k `text/text.md`, ne místo něj: text řeší, jak je to napsané, training to, jak je to postavené) |
 
-`~/Dev/context/worktree/worktree.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat.
+`~/Dev/context/worktree/worktree.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat. Ze stejného důvodu tu není `~/Dev/context/organizations/` – **je to korpus, ne standard**: říká, jaká organizace je, ne jak se má něco dělat, takže se proti němu nedá nic auditovat.
 
 Vypiš uživateli, které sady jsi vybral a proč. Když si u některé nejsi jistý, radši ji zahrň.
 

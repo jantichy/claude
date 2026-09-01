@@ -4,7 +4,9 @@ Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalos
 
 Standardní strukturu projektu definuje `~/Dev/context/structure/structure.md`.
 
-Doménové znalosti (`~/Dev/context/coding/coding.md`, `web/web.md`, `web/admin.md`, `text/text.md`, `analytics/analytics.md`) se do projektu načítají `@import`em v jeho `CLAUDE.md` – tam, kde jsou pro jeho charakter relevantní. `worktree/worktree.md` se importuje jen do `CLAUDE.md` kontejneru s worktree layoutem.
+Doménové znalosti (`~/Dev/context/coding/coding.md`, `web/web.md`, `web/admin.md`, `text/text.md`, `analytics/analytics.md`, `training/training.md`) se do projektu načítají `@import`em v jeho `CLAUDE.md` – tam, kde jsou pro jeho charakter relevantní. `worktree/worktree.md` se importuje jen do `CLAUDE.md` kontejneru s worktree layoutem.
+
+**Projekt dělaný pro konkrétní organizaci si navíc importuje její profil** z `~/Dev/context/organizations/` – například `@~/Dev/context/organizations/planetum.md`. Není to standard, ale korpus: kdo v organizaci sedí, kdo co schvaluje a na čem jedou. Profil drží knowledge base, projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil.
 
 ------
 
