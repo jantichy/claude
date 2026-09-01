@@ -20,29 +20,31 @@ CWD=$(printf '%s' "$INPUT" | jq -r '.cwd // empty' 2>/dev/null)
 [ "${CLAUDE_NO_GREEN_LINE:-0}" = "1" ] && exit 0
 [ -f .claude/no-green-line ] && exit 0
 
-# Jen v gitovém pracovním stromu.
-git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
-
-ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
-
 # Kontrakt příkazů: sekce "## Příkazy" v projektovém CLAUDE.md.
 # PROJ je adresář, ve kterém se příkazy spouštějí – tedy ten, kde leží nalezený
-# CLAUDE.md. Ve worktree layoutu to je main/, ne kořen kontejneru: tam žádný
-# package.json není a příkazy by padaly z úplně jiného důvodu, než skript hlásí.
+# CLAUDE.md. Ve worktree layoutu (~/Dev/context/worktree/worktree.md) stojí session
+# často v kořeni kontejneru, který sám pracovní strom NENÍ – git tam selže a
+# package.json tam nikdy neleží. Proto se hledá i v main/ a git operace pak běží
+# v PROJ, ne tam, kde je cwd.
+ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
+
 CLAUDE_MD=""; PROJ=""
-for c in "$PWD/CLAUDE.md" "$ROOT/CLAUDE.md" "$ROOT/main/CLAUDE.md"; do
+for c in "$PWD/CLAUDE.md" "$PWD/main/CLAUDE.md" "${ROOT:-/nonexistent}/CLAUDE.md" "${ROOT:-/nonexistent}/main/CLAUDE.md"; do
   if [ -f "$c" ] && grep -q '^## Příkazy' "$c"; then
     CLAUDE_MD="$c"; PROJ=$(dirname "$c"); break
   fi
 done
 [ -z "$CLAUDE_MD" ] && exit 0   # projekt kontrakt nemá – není co spouštět
 
+# Bez pracovního stromu se nedá zjistit, co je rozpracované – a pak není co kontrolovat.
+git -C "$PROJ" rev-parse --show-toplevel >/dev/null 2>&1 || exit 0
+
 # Nic rozpracovaného → není co kontrolovat.
-[ -z "$(git status --porcelain 2>/dev/null)" ] && exit 0
+[ -z "$(git -C "$PROJ" status --porcelain 2>/dev/null)" ] && exit 0
 
 # Pojistka proti smyčce: po třech zablokováních pustíme dál s varováním.
 STATE="${TMPDIR:-/tmp}/claude-green-line-$SESSION"
-STAMP=$(git status --porcelain 2>/dev/null | shasum | cut -d' ' -f1)
+STAMP=$(git -C "$PROJ" status --porcelain 2>/dev/null | shasum | cut -d' ' -f1)
 COUNT=0
 if [ -f "$STATE" ]; then
   read -r OLDSTAMP OLDCOUNT < "$STATE" 2>/dev/null || true
@@ -54,7 +56,7 @@ if [ "$COUNT" -ge 3 ]; then
   exit 0
 fi
 
-# macOS nemá timeout(1); použij gtimeout, když je, jinak běž bez limitu.
+# timeout(1) na macOS chybí; pak se zkusí gtimeout z coreutils, jinak se běží bez limitu.
 # 90 s na příkaz: tři kroky se pak vejdou do timeoutu hooku v settings.json.
 # Krok zelené linky, který trvá déle, do ní nepatří – běží po každém tahu.
 if command -v timeout >/dev/null 2>&1; then TIMEOUT="timeout 90"

@@ -101,7 +101,7 @@ Zjištěné shrň do tří až pěti řádků. **Ještě nenasazuj.**
 Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracované. Neprojde-li kterákoliv, **skonči** a řekni, co je potřeba dodělat.
 
 1. **Pracovní strom je čistý** a větev je pushnutá. Necommitnutá změna při nasazení znamená, že v produkci bude něco jiného, než co je v gitu – a to se hledá měsíce.
-2. **Zelená linka na čistém buildu.** Nikoliv „běželo to ráno“. Produkční `build` zvlášť, i když ho testy nepotřebují: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
+2. **Zelená linka a produkční build, obojí na čistém stromu.** Nikoliv „běželo to ráno“. `build` je tu navíc oproti zelené lince, do které schválně nepatří: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
 3. **Proběhlo `/review`?** Nevíš-li, zeptej se. U změny v citlivé oblasti je to **podmínka**, ne doporučení.
 4. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují.
 5. **Tajemství v repu** – `gitleaks detect`, je-li k dispozici. Nález blokuje vždy; a co bylo commitnuté, patří **rotovat**, ne jen smazat.
@@ -175,7 +175,7 @@ Nasazeno neznamená funguje. Ověř, a ověř na **produkční URL**, ne na loca
 3. **Data sedí.** Proběhla-li migrace, ověř na produkčních datech, že se čtou a zapisují správně.
 4. **Chyby.** Podívej se do logu nebo monitoringu, jestli po nasazení nepřibyla nová třída chyb.
 
-**Když je zle:** vrať se cestou z Fáze 3, hned. Neladí se to v produkci pod tlakem – nejdřív návrat, potom hledání příčiny.
+**Když je zle:** vrať se cestou, kterou jsi popsal v poli `**Návrat:**` ve Fázi 3, hned. Neladí se to v produkci pod tlakem – nejdřív návrat, potom hledání příčiny.
 
 ------
 

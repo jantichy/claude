@@ -362,7 +362,7 @@ Zapiš do projektového `CLAUDE.md` sekci `## Příkazy`:
 
 Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
 
-**Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json` a v projektu bez `## Příkazy` neudělá nic, takže se nikde nic dalšího nenastavuje. Vypnout se dá souborem `.claude/no-green-line` v projektu.
+**Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json` a v projektu bez `## Příkazy` neudělá nic, takže se nikde nic dalšího nenastavuje. Vypnout se dá souborem `.claude/no-green-line` v projektu nebo proměnnou `CLAUDE_NO_GREEN_LINE=1`.
 
 Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Řekni uživateli jednou větou, co se právě zapnulo – ne aby ho to překvapilo, až mu hook poprvé zablokuje konec tahu.
 
@@ -426,7 +426,7 @@ Upozorni uživatele, že při příštím spuštění dostane dialog na schvále
 Vypiš přehledně:
 
 - **Co bylo založeno** (nový projekt) nebo **co se změnilo a co zůstalo** (existující projekt).
-- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, autocommit, autoprompt, paměťová politika, typ, importované checklisty.
+- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka**, autocommit, autoprompt, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 
 U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí.

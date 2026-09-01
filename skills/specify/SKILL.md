@@ -24,7 +24,7 @@ Mají **jinou životnost**. Produktový záměr se mění zřídka; technické �
 **Nerozejdou se, protože se nepřekrývají.** Hranice je tvrdá:
 
 - **Do požadavků patří omezení**, do návrhu řešení **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je produktové omezení a patří do `requirements.md`. „Použijeme SQLite, protože…“ je volba a patří do `architecture.md`.
-- **`requirements.md` nesmí obsahovat architekturu.** Ani „nejspíš to bude na Vercelu“. Jakmile to tam napíšeš, začne se to rozcházet s designem.
+- **`requirements.md` nesmí obsahovat architekturu.** Ani „nejspíš to bude na Vercelu“. Jakmile to tam napíšeš, začne se to rozcházet s `architecture.md`.
 - **`architecture.md` nesmí obsahovat zdůvodnění produktu.** Argumentuje z požadavků odkazem, neopisuje je.
 
 Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → `architecture.md`. Ne → `requirements.md`.
@@ -207,7 +207,7 @@ Co ještě není rozhodnuté a co to blokuje.
 
 **Nepíše se, když** je to přírůstek uvnitř už navrženého systému – pak rozšiř stávající `architecture.md`. A **nikdy** u projektu bez kódu.
 
-Přeskočíš-li ho, **řekni to i s důvodem** a jako zadání pro plán použij requirements.md.
+Přeskočíš-li ho, **řekni to i s důvodem** a jako zadání pro plán použij `requirements.md`.
 
 Návrh vytvoří `brainstorming` v dialogu s uživatelem – po sekcích, se schválením po každé. Zapiš do **`docs/architecture.md`**:
 
@@ -311,7 +311,7 @@ Počkej na odpověď. Chce-li změny, proveď je a projdi sebe-revizi znovu.
 
 ## Fáze 5 – Předání do plánu
 
-Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání udělá `docs/plan.md`. Ten si sám najde spec i kontext a ohlídá rozsah – nemusíš mu nic předávat ručně, jen ho vyvolej.
+Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání udělá `docs/plan.md`. Ten si sám najde zadání i kontext a ohlídá rozsah – nemusíš mu nic předávat ručně, jen ho vyvolej.
 
 **Sám plán nepiš.** Ani „ať se to nemusí volat zvlášť“. Rozpad na úkoly má vlastní pravidla, vlastní kontrolu pokrytí MVP a vlastní schvalovací bránu.
 
