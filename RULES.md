@@ -221,10 +221,14 @@ Kroky, které volají skilly třetích stran, je volají jako svůj vnitřek. **
 kdykoliv změnit, aniž se změní, jak se krok volá** – proto se v téhle ose objevují
 jen vlastní názvy.
 
+Nad dokumentem, který vznikne v kroku `/spec` nebo `/breakdown`, je navíc volitelný
+**`/oponent`** – nezávislý posudek čerstvýma očima. V ose není proto, že se nedělá
+vždycky; u většího projektu se ale vyplatí.
+
 **Zakládání (1–4)**
 
 1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez `docs/` není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti.
-2. **`/spec`** – produktová specifikace (`docs/prd.md`) a návrh řešení (`docs/design.md`). Nejdřív rozhodne, jestli je to vůbec případ na specifikaci; u drobné změny v existujícím kódu se zastaví a pošle tě rovnou k implementaci.
+2. **`/spec`** – produktová specifikace (`docs/prd.md`) a návrh řešení (`docs/design.md`). Nejdřív rozhodne, jestli je to vůbec případ na specifikaci. U drobné změny v existujícím kódu se zastaví a předá na krátký návrh v chatu a rovnou implementaci – ta větev osu opouští a kroky 3 a 4 přeskakuje, protože bez plánu není co odpracovat.
 3. **`/breakdown`** – implementační plán (`docs/plan.md`), jen na to, co je v MVP. Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat.
 4. **`/implement`** – realizace úkol po úkolu, každý s testem, ověřením a commitem.
 
