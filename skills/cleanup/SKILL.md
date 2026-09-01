@@ -48,7 +48,7 @@ Zjisti kontext, ve kterém pracuješ:
 1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
 2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `### Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
 3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`.
-4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` čtveřice `todo.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `prd.md`, `design.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
+4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` čtveřice `todo.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
 
@@ -127,7 +127,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    CLAUDE.md  README.md  docs/todo.md  docs/done.md  docs/decisions.md  docs/rules.md
    ```
 
-   Má-li projekt zadání, přidej k nim `docs/prd.md`, `docs/design.md` a `docs/plan.md`.
+   Má-li projekt zadání, přidej k nim `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`.
    Neexistují-li, přeskoč je – nezakládají se tady.
 
 2. **Projdi celou session znovu** – celý transcript z Fáze 1, ne jen vytěžený seznam – a u každého souboru se ptej, co do něj **mělo** během session přibýt:
@@ -140,8 +140,8 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    | `docs/done.md` | ověř, že v `todo.md` nezbylo nic hotového – přesouvá se průběžně, tohle je jen záchranná síť |
    | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky“ |
-   | `docs/prd.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
-   | `docs/design.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie |
+   | `docs/requirements.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
+   | `docs/architecture.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie |
    | `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |
 
 3. **Porovnej s tím, co v souborech skutečně je.** Nestačí, že se soubor během session změnil – ověř, že obsahuje **všechno**, co tam podle bodu 2 patří.

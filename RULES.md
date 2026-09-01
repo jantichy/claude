@@ -284,7 +284,7 @@ Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrá
 Od nápadu k uzavřené feature vede jedna osa. Celá vypadá takhle:
 
 ```
-Zakládání   /project → /spec → /breakdown → /implement
+Zakládání   /project → /specify → /breakdown → /implement
 Uzavírání   testy → /standards → /code-review → /consistency → /cleanup
 ```
 
@@ -295,14 +295,14 @@ aniž se změní, jak se krok volá.
 
 `testy` není skill, ale krok, který se udělá čímkoliv, co projekt na testy má.
 
-Nad dokumentem, který vznikne v kroku `/spec` nebo `/breakdown`, je navíc volitelný
+Nad dokumentem, který vznikne v kroku `/specify` nebo `/breakdown`, je navíc volitelný
 **`/oponent`** – nezávislý posudek čerstvýma očima. V ose není proto, že se nedělá
 vždycky; u většího projektu se ale vyplatí.
 
 **Zakládání (1–4)**
 
 1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti.
-2. **`/spec`** – produktová specifikace (`docs/prd.md`) a návrh řešení (`docs/design.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
+2. **`/specify`** – produktová specifikace (`docs/requirements.md`) a návrh řešení (`docs/architecture.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
 3. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat.
 4. **`/implement`** – realizace podle plánu.
 

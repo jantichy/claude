@@ -32,7 +32,7 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
 
    | Stav | Co dělat |
    |---|---|
-   | `docs/plan.md` neexistuje | **Zastav se.** Nabídni `/breakdown`, a pokud chybí i zadání, `/spec`. |
+   | `docs/plan.md` neexistuje | **Zastav se.** Nabídni `/breakdown`, a pokud chybí i zadání, `/specify`. |
    | Existuje, nic není odškrtnuté | Normální běh od prvního úkolu. |
    | Existuje, část odškrtnutá | **Naváž na prvním neodškrtnutém úkolu.** Nejdřív ale ověř, že odškrtnuté opravdu hotové jsou – viz bod 5. |
    | Vše odškrtnuté | Řekni to a nabídni uzavírání podle *Životního cyklu práce*. Nehledej si práci navíc. |
@@ -79,7 +79,7 @@ Podle toho, jak hluboko problém sahá:
 | Kam sahá | Co udělat |
 |---|---|
 | Jen úkol – špatný název souboru, chybějící krok | Oprav plán i kód, řekni to v jedné větě a pokračuj. |
-| Návrh – takhle postavené to nefunguje | **Zastav se.** Vrať se do `docs/design.md`, uprav ho a nech přepsat dotčené nehotové úkoly. |
+| Návrh – takhle postavené to nefunguje | **Zastav se.** Vrať se do `docs/architecture.md`, uprav ho a nech přepsat dotčené nehotové úkoly. |
 | Zadání – ukázalo se, že chceme něco jiného | **Zastav se a zeptej se.** Změna produktového záměru není tvoje rozhodnutí; teče shora dolů, viz `structure.md`. |
 
 **Nikdy neškrtej úkol jako hotový, aby se dalo pokračovat.** Zablokovaný úkol nech neodškrtnutý, zapiš proč, a zeptej se.

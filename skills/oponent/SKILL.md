@@ -34,7 +34,7 @@ Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každ�
 
 ## Fáze 0 – Co se oponuje
 
-**Předmět posudku.** Uživatel ho může zadat jako argument (`/oponent docs/prd.md`, `/oponent 01 až 04`, `/oponent pozicování`). Když ho nezadá, **nabídni mu, co jsi našel** – projdi projekt, vypiš kandidáty (dokumenty, na kterých se v poslední době pracovalo) a nech ho vybrat přes `AskUserQuestion`.
+**Předmět posudku.** Uživatel ho může zadat jako argument (`/oponent docs/requirements.md`, `/oponent 01 až 04`, `/oponent pozicování`). Když ho nezadá, **nabídni mu, co jsi našel** – projdi projekt, vypiš kandidáty (dokumenty, na kterých se v poslední době pracovalo) a nech ho vybrat přes `AskUserQuestion`.
 
 **Zkontroluj, že to má smysl oponovat:**
 

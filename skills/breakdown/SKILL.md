@@ -10,13 +10,13 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 Vezme schválené zadání a rozpadne ho na **`docs/plan.md`** – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu, příkaz na spuštění a commit. Plán je psaný pro někoho, kdo projekt vůbec nezná.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) navazuje na `/spec` a předává na `/implement`.
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) navazuje na `/specify` a předává na `/implement`.
 
 ## Co skill nedělá
 
 - **Neimplementuje.** Ani první úkol „na ukázku“. Realizaci dělá `/implement`.
-- **Nepíše zadání.** Když chybí, pošle tě na `/spec`.
-- **Neřeže rozsah sám.** Co je v MVP, rozhodl `/spec`. Tady se to jen respektuje.
+- **Nepíše zadání.** Když chybí, pošle tě na `/specify`.
+- **Neřeže rozsah sám.** Co je v MVP, rozhodl `/specify`. Tady se to jen respektuje.
 
 ## Jak je to postavené uvnitř
 
@@ -37,11 +37,11 @@ Co je naopak **závazné a nesmí se změnit tiše**:
 2. **Přečti projektový `CLAUDE.md`** – typ projektu, `### Autocommit`, `## Výjimky z obecných pravidel`, importované doménové standardy.
 3. **Najdi zadání.** V tomhle pořadí:
 
-   | Co existuje | Co je spec pro plán |
+   | Co existuje | Co je zadání pro plán |
    |---|---|
-   | `docs/design.md` | **design.md** jako spec, `docs/prd.md` jako doplňkový kontext |
-   | jen `docs/prd.md` | **prd.md** – design byl vědomě přeskočen, což je legitimní |
-   | ani jedno | **Zastav se.** Nabídni `/spec` a skonči. Plán bez zadání je jen seznam dohadů. |
+   | `docs/architecture.md` | **architecture.md** jako spec, `docs/requirements.md` jako doplňkový kontext |
+   | jen `docs/requirements.md` | **requirements.md** – návrh řešení byl vědomě přeskočen, což je legitimní |
+   | ani jedno | **Zastav se.** Nabídni `/specify` a skonči. Plán bez zadání je jen seznam dohadů. |
 
 4. **Ověř, že je zadání schválené.** Není-li jasné, že jím uživatel prošel, zeptej se. Plán postavený na neschváleném zadání se zahazuje celý.
 5. **Existuje už `docs/plan.md`?** Nepřepisuj ho:
@@ -70,8 +70,8 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 **Vyvolej `superpowers:writing-plans`** a předej mu výslovně:
 
-- **spec** = `docs/design.md` (nebo `docs/prd.md`, byl-li design přeskočen),
-- **kontext** = `docs/prd.md` – ať v hlavičce plánu sedí pole `**Spec:**` a je vidět, proč se to staví,
+- **zadání** = `docs/architecture.md` (nebo `docs/requirements.md`, byl-li návrh řešení přeskočen),
+- **kontext** = `docs/requirements.md` – ať v hlavičce plánu sedí pole `**Spec:**` a je vidět, proč se to staví,
 - **cíl** = `docs/plan.md`, **ne** `docs/superpowers/plans/…` – tohle mu musíš říct, jinak si založí vlastní adresářový strom vedle tvého (`~/Dev/context/structure/structure.md`: v `docs/` jednoslovné anglické názvy bez datumových prefixů),
 - **rozsah** = jen položky MVP odsouhlasené ve Fázi 1,
 - **doménové standardy** z Fáze 1,
@@ -87,7 +87,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 2. **Pokrytí MVP.** Projdi MVP checklist ze zadání položku po položce a ukaž, který úkol ji plní. Nepokrytá položka je nález, ne detail.
 3. **Nic navíc.** Obráceně: je v plánu úkol, který v MVP není? Buď patří do další fáze, nebo se zapomnělo aktualizovat zadání. Zeptej se, neřeš to sám.
 4. **Konzistence názvů.** Funkce, typy a parametry použité v pozdějších úkolech musí sedět s tím, co definují dřívější. `clearLayers()` v úkolu 3 a `clearFullLayers()` v úkolu 7 je chyba.
-5. **Zadání se nezměnilo pod rukama.** Sáhl-li někdo během psaní plánu do `prd.md` nebo `design.md`, ohlas to.
+5. **Zadání se nezměnilo pod rukama.** Sáhl-li někdo během psaní plánu do `requirements.md` nebo `architecture.md`, ohlas to.
 
 Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuestion`.
 
@@ -107,7 +107,7 @@ Nabídni před tím ještě `/oponent docs/plan.md` s úhly *technická provedit
 ## Plán hotový
 
 **Soubor:** docs/plan.md – <N> úkolů
-**Spec:** <design.md / prd.md>
+**Spec:** <architecture.md / requirements.md>
 **Rozsah:** <které položky MVP>
 
 **Nepokryto vědomě**

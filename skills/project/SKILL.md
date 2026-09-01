@@ -17,7 +17,7 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 
 ## Co skill nedělá
 
-- **Nepíše zadání ani plán.** Je první článek osy *Životního cyklu práce* (`~/.claude/RULES.md`); co se staví, řeší `/spec`, rozpad na úkoly `/breakdown`. `docs/prd.md`, `docs/design.md` ani `docs/plan.md` proto nezakládá.
+- **Nepíše zadání ani plán.** Je první článek osy *Životního cyklu práce* (`~/.claude/RULES.md`); co se staví, řeší `/specify`, rozpad na úkoly `/breakdown`. `docs/requirements.md`, `docs/architecture.md` ani `docs/plan.md` proto nezakládá.
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
 - **Nepřepisuje nic naslepo.** U existujícího projektu se na každý rozpor ptá.
 - **Nenaplňuje soubory obsahem.** `docs/` zakládá prázdné, jen s nadpisem.
@@ -217,7 +217,7 @@ Povinný je jen `CLAUDE.md`. U zbytku se zeptej (AskUserQuestion, `multiSelect: 
 
 Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUDE.md` (krok 4, *Zápis*) vypiš jen ty, které vznikly.
 
-`prompts.md` sem nepatří – zakládá ho autoprompt v kroku 7. `prd.md`, `design.md` a `plan.md` **nezakládej**, vznikají prací přes `/spec` a `/breakdown`.
+`prompts.md` sem nepatří – zakládá ho autoprompt v kroku 7. `requirements.md`, `architecture.md` a `plan.md` **nezakládej**, vznikají prací přes `/specify` a `/breakdown`.
 
 *Existující projekt:* co už existuje, ber jako zvolené; ptej se jen na to, co chybí.
 
@@ -331,7 +331,7 @@ Volbu „Ostatní“ mezi možnosti **nedávej** – AskUserQuestion ji nabízí
 
 Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
-- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu práce* v `~/.claude/RULES.md`: `/spec` → `/breakdown` → `/implement`.“ Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first).“
+- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu práce* v `~/.claude/RULES.md`: `/specify` → `/breakdown` → `/implement`.“ Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first).“
 - **Web** – „Webové rozhraní – obsah, struktura, šablony, ne proces zadání a plánu.“
 - **Nasazení webové analytiky** – „Implementace měření na cizím webu – revize existujícího nastavení, měřicí plán, GTM, GA4, consent, reklamní systémy. Výstupem je funkční a doložitelné měření plus dokumentace, ne aplikační kód.“ Navíc přidej pravidlo: „Každá změna v měření musí být před publikováním ověřená v Preview/DebugView a po nasazení znovu na produkci; do `docs/decisions.md` patří i to, co se měřit záměrně nebude a proč.“
 - **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez procesu zadání a plánu.“

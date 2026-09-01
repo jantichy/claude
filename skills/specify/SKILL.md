@@ -1,6 +1,6 @@
 ---
-name: spec
-description: Skill se použije, když uživatel zadá "/spec", nebo chce z nápadu udělat zadání – produktovou specifikaci a návrh řešení nového projektu, aplikace, webu nebo větší feature, ještě než se začne programovat. Vede debrief otázku po otázce, sepíše docs/prd.md a docs/design.md a předá to do implementačního plánu.
+name: specify
+description: Skill se použije, když uživatel zadá "/specify", nebo chce z nápadu udělat zadání – produktovou specifikaci a návrh řešení nového projektu, aplikace, webu nebo větší feature, ještě než se začne programovat. Vede debrief otázku po otázce, sepíše docs/requirements.md a docs/architecture.md a předá to do implementačního plánu.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
@@ -12,8 +12,8 @@ Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skil
 
 | Dokument | Odpovídá na otázku | Pro koho |
 |---|---|---|
-| **`docs/prd.md`** | Co stavíme a proč | Zadavatel, produkt, obchod – a ty za půl roku |
-| **`docs/design.md`** | Jak to postavíme | Ten, kdo to bude implementovat |
+| **`docs/requirements.md`** | Co stavíme a proč | Zadavatel, produkt, obchod – a ty za půl roku |
+| **`docs/architecture.md`** | Jak to postavíme | Ten, kdo to bude implementovat |
 
 Pak je předá do implementačního plánu.
 
@@ -47,11 +47,11 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 | Implementační plán | `/breakdown` |
 | Realizace plánu | `/implement` |
 
-**Přepis výchozí cesty.** `brainstorming` ukládá design doc do `docs/superpowers/specs/YYYY-MM-DD-<téma>-design.md`. Explicitně přitom respektuje uživatelovu preferenci a ta zní jinak – podle `~/Dev/context/structure/structure.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů, takže cíl je **`docs/design.md`**.
+**Přepis výchozí cesty.** `brainstorming` ukládá design doc do `docs/superpowers/specs/YYYY-MM-DD-<téma>-design.md`. Explicitně přitom respektuje uživatelovu preferenci a ta zní jinak – podle `~/Dev/context/structure/structure.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů, takže cíl je **`docs/architecture.md`**.
 
 **Řekni mu to výslovně**, když ho vyvoláváš. Jinak si založí vlastní adresářový strom vedle toho tvého. Totéž platí pro plán, ale ten už si hlídá `/breakdown`.
 
-**Spec pro plán je `docs/design.md`**, ne PRD. Plán argumentuje z návrhu řešení; PRD jde jako doplňkový kontext, aby bylo vidět, proč se to staví. O předání se stará `/breakdown`.
+**Zadání pro plán je `docs/architecture.md`**, ne PRD. Plán argumentuje z návrhu řešení; PRD jde jako doplňkový kontext, aby bylo vidět, proč se to staví. O předání se stará `/breakdown`.
 
 ## Zásady pro celý průběh
 
@@ -73,7 +73,7 @@ Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnut
 |---|---|
 | „Zadání je jasné, začnu rovnou“ | Když je jasné, sepsání trvá deset minut. Když ne, právě proto se píše. |
 | „Udělám scaffold, ať máme na čem stavět“ | Scaffold zamkne tech stack dřív, než se rozhodl. |
-| „Uživatel mi řekl ‚udělej to'“ | Řekl `/spec`. Kdyby chtěl kód, řekl by to. |
+| „Uživatel mi řekl ‚udělej to'“ | Řekl `/specify`. Kdyby chtěl kód, řekl by to. |
 
 ------
 
@@ -87,10 +87,10 @@ Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnut
 
    | Stav | Kde začít |
    |---|---|
-   | `prd.md` ani `design.md` neexistují | Fáze 1, celý běh |
-   | `prd.md` existuje, `design.md` ne | Zeptej se: **navázat návrhem řešení**, nebo revidovat PRD? Tohle je běžný případ – produkt se schválí dnes, návrh se dělá jindy. Při navázání **projdi Fázi 2 i tak** – `brainstorming` musíš vyvolat, jinak nemá kdo návrh vytvořit; jen mu místo produktových otázek předej hotové `docs/prd.md` jako zadání a rovnou jdi na varianty řešení. |
+   | `requirements.md` ani `architecture.md` neexistují | Fáze 1, celý běh |
+   | `requirements.md` existuje, `architecture.md` ne | Zeptej se: **navázat návrhem řešení**, nebo revidovat PRD? Tohle je běžný případ – produkt se schválí dnes, návrh se dělá jindy. Při navázání **projdi Fázi 2 i tak** – `brainstorming` musíš vyvolat, jinak nemá kdo návrh vytvořit; jen mu místo produktových otázek předej hotové `docs/requirements.md` jako zadání a rovnou jdi na varianty řešení. |
    | Existují oba | Jde o revizi, nebo o novou část projektu? Při revizi **nepřepisuj** – rozšiř a přeformuluj stávající. |
-   | `design.md` existuje a přidává se feature | Rozšiř ho. **Nezakládej druhý návrhový dokument** – jeden systém, jeden návrh. |
+   | `architecture.md` existuje a přidává se feature | Rozšiř ho. **Nezakládej druhý návrhový dokument** – jeden systém, jeden návrh. |
 
 Zjištěné shrň do tří až pěti řádků a pokračuj.
 
@@ -115,7 +115,7 @@ Nemá-li nic, přeskoč. Ale zeptej se – v praxi něco má skoro vždycky a ne
 
 - co ses dozvěděl z podkladů ve Fázi 1,
 - že se má ptát přes `AskUserQuestion`, jednu otázku na volání,
-- že **návrhovou část zapíše do `docs/design.md`**, ne do `docs/superpowers/specs/`, a až ve Fázi 3b – tedy po schválení produktové části.
+- že **návrhovou část zapíše do `docs/architecture.md`**, ne do `docs/superpowers/specs/`, a až ve Fázi 3b – tedy po schválení produktové části.
 
 **Co udělat s klasifikací:**
 
@@ -133,7 +133,7 @@ Nemá-li nic, přeskoč. Ale zeptej se – v praxi něco má skoro vždycky a ne
 
 ## Fáze 3a – Produktová specifikace
 
-Zapiš do **`docs/prd.md`**. Sekci, která pro projekt nedává smysl, vynech, ale **řekni, že jsi ji vynechal a proč**:
+Zapiš do **`docs/requirements.md`**. Sekci, která pro projekt nedává smysl, vynech, ale **řekni, že jsi ji vynechal a proč**:
 
 ```markdown
 # <Lidský název> – produktová specifikace
@@ -188,7 +188,7 @@ Co ještě není rozhodnuté a co to blokuje.
 
 **Brána uživatele.** Po sebe-revizi (Fáze 4) napiš:
 
-> PRD je sepsané a commitnuté v `docs/prd.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než se pustíme do návrhu řešení.
+> PRD je sepsané a commitnuté v `docs/requirements.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než se pustíme do návrhu řešení.
 
 **Počkej na odpověď.** Bez výslovného souhlasu nepokračuj na 3b – návrh postavený na neschváleném zadání se zahazuje celý.
 
@@ -205,16 +205,16 @@ Co ještě není rozhodnuté a co to blokuje.
 - má stavový prostor s přechody,
 - existuje víc než jedna rozumná cesta, jak to postavit.
 
-**Nepíše se, když** je to přírůstek uvnitř už navrženého systému – pak rozšiř stávající `design.md`. A **nikdy** u projektu bez kódu.
+**Nepíše se, když** je to přírůstek uvnitř už navrženého systému – pak rozšiř stávající `architecture.md`. A **nikdy** u projektu bez kódu.
 
-Přeskočíš-li ho, **řekni to i s důvodem** a jako spec pro plán použij PRD.
+Přeskočíš-li ho, **řekni to i s důvodem** a jako zadání pro plán použij requirements.md.
 
-Návrh vytvoří `brainstorming` v dialogu s uživatelem – po sekcích, se schválením po každé. Zapiš do **`docs/design.md`**:
+Návrh vytvoří `brainstorming` v dialogu s uživatelem – po sekcích, se schválením po každé. Zapiš do **`docs/architecture.md`**:
 
 ```markdown
 # <Lidský název> – návrh řešení
 
-Vychází z [produktové specifikace](prd.md). Co a proč se staví, je tam;
+Vychází z [produktové specifikace](requirements.md). Co a proč se staví, je tam;
 tady je, jak.
 
 ## Zvolený přístup
@@ -278,12 +278,12 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 
 Povinné úhly *Vnitřní rozpor* a *Co chybí* platí vždy; k nim se podle dokumentu přidávají:
 
-- **`/oponent docs/prd.md`** – cílová skupina, ekonomika, konkurence
-- **`/oponent docs/design.md`** – technická proveditelnost, hraniční případy, provoz
+- **`/oponent docs/requirements.md`** – cílová skupina, ekonomika, konkurence
+- **`/oponent docs/architecture.md`** – technická proveditelnost, hraniční případy, provoz
 
 **Brána uživatele** – po PRD (viz 3a) i po designu:
 
-> Návrh řešení je sepsaný a commitnutý v `docs/design.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než z něj uděláme implementační plán.
+> Návrh řešení je sepsaný a commitnutý v `docs/architecture.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než z něj uděláme implementační plán.
 
 Počkej na odpověď. Chce-li změny, proveď je a projdi sebe-revizi znovu.
 
@@ -305,8 +305,8 @@ Celý řetěz i s tím, co následuje po realizaci, je v `~/.claude/RULES.md`, *
 
 Platí *Doc-first vývoj* z `~/.claude/RULES.md`; posloupnost souborů definuje `structure.md`:
 
-1. Změní se požadavek → uprav **`prd.md`**.
-2. Zkontroluj, jestli to mění návrh → uprav **`design.md`**.
+1. Změní se požadavek → uprav **`requirements.md`**.
+2. Zkontroluj, jestli to mění návrh → uprav **`architecture.md`**.
 3. Zkontroluj, jestli to mění nehotové úkoly → uprav **`plan.md`**.
 4. Rozhodnutí a důvod změny zapiš do `docs/decisions.md`. Původní záznam nepřepisuj – přibude revize.
 
@@ -320,8 +320,8 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 ## Zadání hotové
 
 **Dokumenty**
-- docs/prd.md    – <počet> sekcí
-- docs/design.md – <počet> sekcí   (nebo „přeskočeno: <důvod>")
+- docs/requirements.md    – <počet> sekcí
+- docs/architecture.md – <počet> sekcí   (nebo „přeskočeno: <důvod>")
 
 **Zapsáno mimo ně**
 - docs/decisions.md: N rozhodnutí
