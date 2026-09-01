@@ -112,11 +112,39 @@ U rozsáhlejších analýz udělej **podrobnou i stručnou verzi**. Stručná je
 
 Zeptej se, jestli je chce obě, ne že to uděláš automaticky.
 
-### Osobní údaje
+### Co nesmí ven ze souboru
 
-Report je soubor, který se posílá dál – e-mailem, do Slacku, klientovi. Než ho uzavřeš, projdi ho, jestli v něm nezůstalo něco, co tam nepatří: `user_id`, `user_pseudo_id`, e-maily, jména, IP adresy, ID objednávek, cokoliv, z čeho jde identifikovat konkrétního člověka.
+Report je soubor, který se posílá dál – e-mailem, do Slacku, klientovi – a jednou venku už ho nevezmeš zpátky. Proto se **kontroluje až hotový vygenerovaný soubor**, ne zdroje. Únik vzniká přesně v tom kroku, kdy se do HTML něco zapeče.
 
-Zůstalo-li tam něco takového a je to nutné pro smysl reportu, **upozorni na to výslovně** a nech si to potvrdit. Nezamlčuj to.
+Hledej dvě skupiny.
+
+**1. Osobní údaje.** `user_id`, `user_pseudo_id`, `client_id`, e-maily, jména, telefony, adresy, IP adresy, ID objednávek a faktur, cokoliv, z čeho jde identifikovat konkrétního člověka. Pozor i na nepřímou identifikaci: segment o třech lidech je taky osobní údaj.
+
+**2. Přístupové a autentizační údaje.** Tohle je zrádnější, protože to do reportu nikdo vědomě nedává – proteče to tam samo z výpočetního skriptu, konfigurace nebo odkazu:
+
+- API klíče a tokeny (`api_key`, `api_secret`, `access_token`, `refresh_token`, `bearer`, `client_secret`, měřicí API secret GA4, tokeny MCP serverů)
+- hesla, connection stringy k databázi, přihlašovací údaje v jakékoliv podobě
+- privátní klíče a certifikáty (`BEGIN … PRIVATE KEY`, `.pem`, `.p12`)
+- session cookies a hodnoty hlaviček `Authorization`
+- **autentizace v URL** – podepsané odkazy (presigned S3 a GCS, token auth Bunny, sdílecí odkazy Google Drive) a query parametry typu `?token=`, `?key=`, `?sig=`, `?signature=`, `?auth=`. Odkaz do zdroje dat vypadá nevinně, dokud si nevšimneš, že v sobě nese platný podpis.
+- interní věci, které nikomu venku nic nedají a jen prozrazují prostředí: absolutní cesty `/Users/honza/…`, interní hostnames a IP, názvy projektů a datasetů, poznámky v komentářích
+
+**Kde hledat.** Ne jen v textu, který je vidět:
+
+- zapečená datová proměnná
+- inlinovaný JavaScript a jeho komentáře
+- HTML komentáře
+- **`data:` URI obrázků** – screenshot z administrace může mít token přímo na obrazovce; když do reportu vkládáš obrázek, který jsi sám nevyrobil z dat, podívej se na něj
+- atributy odkazů a `<iframe src>`
+
+**Jak.** Nejdřív mechanicky – grep přes celý soubor na výše uvedené řetězce a na typické tvary (`sk-`, `ghp_`, `AIza`, `eyJ` na začátku JWT, `-----BEGIN`, dlouhé náhodné řetězce v query stringu). Pak si soubor přečti; grep nechytí to, co se jmenuje jinak.
+
+**Když něco najdeš, zastav se.** Neodmazávej to potichu a nepokračuj – nález u druhé skupiny znamená dvě věci, ne jednu:
+
+1. Ten údaj je i **ve zdroji, ze kterého report vznikl** – ve výpočetním skriptu, konfiguraci nebo mezidatech. A ty jsou nejspíš commitnuté v gitu, kde zůstanou i po smazání ze souboru.
+2. Unikl-li ven i jen do rozpracované verze, kterou už někdo viděl, **je potřeba ho rotovat**. Řekni to výslovně; to není tvoje rozhodnutí, ale uživatel to musí vědět.
+
+U osobních údajů, které jsou pro smysl reportu opravdu nutné, upozorni výslovně a nech si to potvrdit. **Nikdy to nezamlčuj a nikdy si to neodsouhlas sám.**
 
 ------
 
@@ -134,6 +162,7 @@ Nespoléhej na to, že to vypadá dobře ve zdrojáku.
    - Čísla v textu komentářů sedí s čísly v grafech a tabulkách.
    - Stránka se nerozpadne na úzkém okně a v tisku do PDF.
 3. **Přepočítej namátkou** dva tři údaje z reportu zpátky proti zdrojovým datům.
+4. **Projdi hotový soubor na úniky** podle *Co nesmí ven ze souboru* výš. Tohle je poslední krok před předáním, protože až teď je soubor v podobě, ve které odejde – a všechny předchozí opravy do něj mohly něco vnést zpátky.
 
 ------
 
