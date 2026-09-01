@@ -253,6 +253,12 @@
             "type": "command",
             "command": "/Users/honza/.claude/iterm-notify.sh done",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/green-line.sh",
+            "timeout": 320,
+            "statusMessage": "Zelená linka…"
           }
         ]
       }

@@ -14,12 +14,30 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo uzavírán
 
 ## Tvrdá pravidla
 
-Tahle čtyři platí bez výjimky a bez ohledu na to, jak triviální změna to je:
+Tahle pětice platí bez výjimky a bez ohledu na to, jak triviální změna to je:
 
 1. **Nikdy se nespouští sám.** Ani jako pokračování `/implement`, `/review` nebo `/cleanup`. Ani když uživatel řekl „a nasaď to“ na začátku dlouhé session – to byl záměr, ne potvrzení. Potvrzení se dává **teď a k tomuhle konkrétnímu nasazení**.
 2. **Nasazuje se jen zelený, prověřený stav.** Neproběhlo `/review`? Řekni to a zeptej se, jestli opravdu chce nasadit neprověřenou práci.
 3. **Návrat musí existovat dřív, než se nasadí.** Když neumíš odpovědět na otázku „jak se vrátíme za deset minut zpátky“, nenasazuj a vyřeš nejdřív ji.
 4. **Migrace dat se nikdy nemíchá s nasazením kódu do jednoho nevratného kroku.** Viz *Migrace*.
+5. **Do produkční větve se nemerguje mimo tenhle skill.** Nasazuje-li platforma automaticky (a to je výchozí chování), je merge do `main` **totéž co nasazení**. Kdo mergne mimo `/release`, nasadil bez bran – a nevěděl o tom.
+
+## Když nasazuje platforma sama
+
+Vercel, Netlify i Cloudflare Pages nasazují **pushnutím do produkční větve**. Nedá se to obejít tím, že se „nasadí až potom“ – žádné potom není. Z toho plynou dva důsledky, které si stojí za to přečíst dvakrát:
+
+- **`/release` je brána *před* mergem, ne krok po něm.** Všechny kontroly z Fáze 1 a 2 běží na větvi. Merge je poslední úkon skillu, ne jeho předpoklad.
+- **Na produkční větvi se nepracuje.** Nikdy na ni necommituj přímo. Ve worktree layoutu to vychází samo (`~/Dev/context/worktree/worktree.md`), jinde založ větev. Commit do `main` „jen na opravu překlepu“ je nasazení bez jediné brány.
+
+**Pojistky, které stojí za zvážení** – nabídni je, když projekt žádnou nemá, ale nevnucuj je:
+
+| Pojistka | Co dělá | Cena |
+|---|---|---|
+| Ochrana větve na GitHubu | `main` jde měnit jen přes pull request | u sólo projektu trochu obřadné, ale funguje |
+| Produkční deploy jen z tagu | platforma nasazuje na tag, ne na push | rozbije preview workflow, nastavuje se jednou |
+| `pre-push` hook | odmítne push do `main` bez značky od `/release` | lokální, snadno obejitelné, ale chytí zapomnětlivost |
+
+Zjistíš-li v Pre-flightu, že projekt má auto-deploy a **žádnou pojistku**, řekni to nahlas jednou větou. Ne jako výtku – jako informaci, že jediná brána mezi rozpracovanou prací a produkcí je tenhle skill.
 
 ## Co skill nedělá
 
@@ -105,7 +123,7 @@ Bez výslovné odpovědi se nenasazuje. Ticho není souhlas.
 **Platforma s auto-deployem** (Vercel, Netlify, Cloudflare Pages) – nasazuje se pushnutím, ne příkazem:
 
 1. **Nejdřív preview.** Push do větve vyrobí preview URL. Otevři ji a projdi na ní smoke test z Fáze 5, **než** cokoliv půjde do hlavní větve. Preview je zdarma a je to jediné místo, kde se chyba dá najít bez následků.
-2. **Merge do produkční větve** teprve po zeleném preview.
+2. **Merge do produkční větve** teprve po zeleném preview. **Tenhle merge je samotné nasazení** – od jeho provedení je změna venku, takže se dělá vědomě a jako poslední, ne mimochodem uprostřed jiné práce.
 3. **Sleduj build na platformě** a jeho log. Build padá jinak než lokální – kvůli proměnným, verzi Node a cache.
 4. **Tag.** Označ vydání tagem, ať je co vrátit a proti čemu příště diffovat.
 
