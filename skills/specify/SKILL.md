@@ -4,7 +4,7 @@ description: Skill se použije, když uživatel zadá "/specify", nebo chce z n�
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
-# Spec
+# Specify
 
 ## Co skill dělá
 
@@ -23,11 +23,11 @@ Mají **jinou životnost**. Produktový záměr se mění zřídka; technické �
 
 **Nerozejdou se, protože se nepřekrývají.** Hranice je tvrdá:
 
-- **Do PRD patří omezení**, do designu **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je produktové omezení a patří do PRD. „Použijeme SQLite, protože…“ je volba a patří do designu.
-- **PRD nesmí obsahovat architekturu.** Ani „nejspíš to bude na Vercelu“. Jakmile to tam napíšeš, začne se to rozcházet s designem.
-- **Design nesmí obsahovat zdůvodnění produktu.** Argumentuje z PRD odkazem, neopisuje ho.
+- **Do požadavků patří omezení**, do návrhu řešení **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je produktové omezení a patří do `requirements.md`. „Použijeme SQLite, protože…“ je volba a patří do `architecture.md`.
+- **`requirements.md` nesmí obsahovat architekturu.** Ani „nejspíš to bude na Vercelu“. Jakmile to tam napíšeš, začne se to rozcházet s designem.
+- **`architecture.md` nesmí obsahovat zdůvodnění produktu.** Argumentuje z požadavků odkazem, neopisuje je.
 
-Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → design. Ne → PRD.
+Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → `architecture.md`. Ne → `requirements.md`.
 
 ## Co skill nedělá
 
@@ -42,7 +42,7 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 |---|---|
 | Klasifikace rozsahu (spike / bounded / architectural) | `superpowers:brainstorming` |
 | Doptávání, varianty řešení, návrh, schvalovací brány | `superpowers:brainstorming` |
-| **Produktový rámec a sepsání PRD** | **tenhle skill** |
+| **Produktový rámec a sepsání požadavků** | **tenhle skill** |
 | Sepsání návrhu řešení | `brainstorming` ho vytvoří, tenhle skill mu určí cíl a tvar |
 | Implementační plán | `/breakdown` |
 | Realizace plánu | `/implement` |
@@ -51,14 +51,14 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 
 **Řekni mu to výslovně**, když ho vyvoláváš. Jinak si založí vlastní adresářový strom vedle toho tvého. Totéž platí pro plán, ale ten už si hlídá `/breakdown`.
 
-**Zadání pro plán je `docs/architecture.md`**, ne PRD. Plán argumentuje z návrhu řešení; PRD jde jako doplňkový kontext, aby bylo vidět, proč se to staví. O předání se stará `/breakdown`.
+**Zadání pro plán je `docs/architecture.md`**, ne `requirements.md`. Plán argumentuje z návrhu řešení; požadavky jdou jako doplňkový kontext, aby bylo vidět, proč se to staví. O předání se stará `/breakdown`.
 
 ## Zásady pro celý průběh
 
 - **Ptej se postupně a přes tool `AskUserQuestion`** – postup, tvar otázky i mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 - **Nic si nevymýšlej** – technický název, ID, parametr, cizí API, cena. Viz `~/.claude/RULES.md`, *Při nejistotě se zeptej*.
 - **Zapisuj průběžně** – ve chvíli, kdy rozhodnutí padne, ne až na konci. Viz `~/.claude/RULES.md`, *Pravda v souborech, ne v konverzaci*; kam co patří, definuje `structure.md`.
-- **Navrhuj kompletně, realizuj postupně** – viz `~/.claude/RULES.md`. Tady to znamená: PRD i design popisují celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
+- **Navrhuj kompletně, realizuj postupně** – viz `~/.claude/RULES.md`. Tady to znamená: požadavky i návrh řešení popisují celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
 - **YAGNI.** Z každého návrhu vyhoď, co není potřeba – ale zapiš to do *Mimo rozsah*, ať je vidět, že to bylo zvážené a zamítnuté, ne opomenuté.
 
 ------
@@ -88,7 +88,7 @@ Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnut
    | Stav | Kde začít |
    |---|---|
    | `requirements.md` ani `architecture.md` neexistují | Fáze 1, celý běh |
-   | `requirements.md` existuje, `architecture.md` ne | Zeptej se: **navázat návrhem řešení**, nebo revidovat PRD? Tohle je běžný případ – produkt se schválí dnes, návrh se dělá jindy. Při navázání **projdi Fázi 2 i tak** – `brainstorming` musíš vyvolat, jinak nemá kdo návrh vytvořit; jen mu místo produktových otázek předej hotové `docs/requirements.md` jako zadání a rovnou jdi na varianty řešení. |
+   | `requirements.md` existuje, `architecture.md` ne | Zeptej se: **navázat návrhem řešení**, nebo revidovat požadavky? Tohle je běžný případ – produkt se schválí dnes, návrh se dělá jindy. Při navázání **projdi Fázi 2 i tak** – `brainstorming` musíš vyvolat, jinak nemá kdo návrh vytvořit; jen mu místo produktových otázek předej hotové `docs/requirements.md` jako zadání a rovnou jdi na varianty řešení. |
    | Existují oba | Jde o revizi, nebo o novou část projektu? Při revizi **nepřepisuj** – rozšiř a přeformuluj stávající. |
    | `architecture.md` existuje a přidává se feature | Rozšiř ho. **Nezakládej druhý návrhový dokument** – jeden systém, jeden návrh. |
 
@@ -122,12 +122,12 @@ Nemá-li nic, přeskoč. Ale zeptej se – v praxi něco má skoro vždycky a ne
 | Cesta | Co dělat |
 |---|---|
 | **Architectural** | Normální běh skillu. Tohle je jeho případ. |
-| **Bounded** | Specifikace nedává smysl – je to změna v existujícím kódu. **Řekni to a zastav se.** Nabídni pokračovat rovnou přes `brainstorming` (krátký návrh v chatu → schválení → implementace). Nenech se zatlačit do psaní PRD na jednosouborovou změnu. |
+| **Bounded** | Specifikace nedává smysl – je to změna v existujícím kódu. **Řekni to a zastav se.** Nabídni pokračovat rovnou přes `brainstorming` (krátký návrh v chatu → schválení → implementace). Nenech se zatlačit do psaní specifikace na jednosouborovou změnu. |
 | **Spike** | Totéž – výstupem je odpověď, ne dokument. Zastav se a nabídni sondu. |
 
 **Rozsah.** Popisuje-li zadání víc nezávislých podsystémů, řekni to hned a rozlož to na dílčí projekty dřív, než se začnou ladit detaily. Každý dílčí projekt pak dostane vlastní dokumenty i vlastní plán.
 
-**Projekt bez kódu.** Je-li to znalostní, obsahový nebo obchodní projekt (kurz, brand, pozicování, evidence), PRD dává smysl, ale **design ani `writing-plans` ne** – ty předpokládají kód, testy a commity. Skonči po Fázi 3a a místo plánu nabídni postupný rozpis kroků do `docs/todo.md`.
+**Projekt bez kódu.** Je-li to znalostní, obsahový nebo obchodní projekt (kurz, brand, pozicování, evidence), `requirements.md` dává smysl, ale **návrh řešení ani `writing-plans` ne** – ty předpokládají kód, testy a commity. Skonči po Fázi 3a a místo plánu nabídni postupný rozpis kroků do `docs/todo.md`.
 
 ------
 
@@ -188,7 +188,7 @@ Co ještě není rozhodnuté a co to blokuje.
 
 **Brána uživatele.** Po sebe-revizi (Fáze 4) napiš:
 
-> PRD je sepsané a commitnuté v `docs/requirements.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než se pustíme do návrhu řešení.
+> Požadavky jsou sepsané a commitnuté v `docs/requirements.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než se pustíme do návrhu řešení.
 
 **Počkej na odpověď.** Bez výslovného souhlasu nepokračuj na 3b – návrh postavený na neschváleném zadání se zahazuje celý.
 
@@ -251,7 +251,7 @@ nahrávání souborů, osobní údaje, mazání dat, odesílání pošty ven. Zm
 se nemerguje bez lidského pohledu na diff; `/review` na ně sahá přísněji.
 
 ## Technologie
-Konkrétní volba a proč – proti omezením z PRD.
+Konkrétní volba a proč – proti omezením z requirements.md.
 
 ## Testovací strategie
 Co se testuje a na jaké úrovni. U každého *Hlavního scénáře* a *Varianty*
@@ -271,7 +271,7 @@ Konkrétní příkazy, které projekt bude mít – `test`, `typecheck`, `lint`,
 Co je na tom nejistého a co by to znamenalo, kdyby se ukázalo jinak.
 ```
 
-**Kontrola proti PRD:** projdi *Hlavní scénáře*, *Varianty* a *Nefunkční požadavky* v PRD a u každého ukaž, co v návrhu ho pokrývá. Nepokryté je nález, ne detail.
+**Kontrola proti požadavkům:** projdi *Hlavní scénáře*, *Varianty* a *Nefunkční požadavky* v `requirements.md` a u každého ukaž, co v návrhu ho pokrývá. Nepokryté je nález, ne detail.
 
 **Bezpečnost se navrhuje, neaudituje.** Zhruba polovina kódu psaného modely obsahuje bezpečnostní chybu a je to předvídatelná množina. Nejúčinnější obrana není kontrola na konci, ale struktura, ve které díra nejde udělat – jedna vrstva autorizace, kterou nelze obejít, výhradně parametrizované dotazy, validace na hranici, tajemství jen z prostředí. Proto má návrh sekci *Bezpečnostní model*, a proto v ní nesmí stát „ošetříme to při implementaci“.
 
@@ -288,11 +288,11 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 1. **Placeholdery** – „TBD“, „TODO“, nedokončené sekce, vágní požadavky. Oprav.
 2. **Vnitřní rozpory** – neodporují si sekce? Sedí počty a výčty s obsahem?
 3. **Vymyšlené věci** – je tam technický název, ID, parametr nebo číslo, které jsi neměl od uživatele ani z podkladů? To je nález. Dohledej, nebo přesuň do *Otevřených otázek*.
-4. **Prosakování hranice** – je v PRD architektura nebo volba technologie? Je v designu zdůvodnění produktu? Přesuň.
-5. **Pokrytí** – u designu proti PRD (viz 3b), u PRD proti tomu, co padlo v dialogu.
+4. **Prosakování hranice** – je v `requirements.md` architektura nebo volba technologie? Je v `architecture.md` zdůvodnění produktu? Přesuň.
+5. **Pokrytí** – u návrhu proti požadavkům (viz 3b), u požadavků proti tomu, co padlo v dialogu.
 6. **Dvojznačnost** – dá se něco přečíst dvěma způsoby? Vyber jeden a napiš ho jednoznačně.
 7. **Rozsah** – vejde se to do jednoho implementačního plánu? Pokud ne, dekomponuj.
-8. **Mimo rozsah není prázdné** (jen PRD) – prázdná sekce znamená, že se neřezalo.
+8. **Mimo rozsah není prázdné** (jen `requirements.md`) – prázdná sekce znamená, že se neřezalo.
 
 **Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. Nabídni `/oponent` – u většího projektu doporuč, u malého jen nabídni. Úhly se pro každý dokument liší:
 
@@ -301,7 +301,7 @@ Povinné úhly *Vnitřní rozpor* a *Co chybí* platí vždy; k nim se podle dok
 - **`/oponent docs/requirements.md`** – cílová skupina, ekonomika, konkurence
 - **`/oponent docs/architecture.md`** – technická proveditelnost, hraniční případy, provoz
 
-**Brána uživatele** – po PRD (viz 3a) i po designu:
+**Brána uživatele** – po požadavcích (viz 3a) i po návrhu řešení:
 
 > Návrh řešení je sepsaný a commitnutý v `docs/architecture.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než z něj uděláme implementační plán.
 
@@ -330,7 +330,7 @@ Platí *Doc-first vývoj* z `~/.claude/RULES.md`; posloupnost souborů definuje 
 3. Zkontroluj, jestli to mění nehotové úkoly → uprav **`plan.md`**.
 4. Rozhodnutí a důvod změny zapiš do `docs/decisions.md`. Původní záznam nepřepisuj – přibude revize.
 
-Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neopravuj to potichu v kódu**. Vrať se do designu, uprav ho, a je-li dotčený i produktový záměr, řekni to a nech rozhodnout uživatele.
+Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neopravuj to potichu v kódu**. Vrať se do návrhu řešení, uprav ho, a je-li dotčený i produktový záměr, řekni to a nech rozhodnout uživatele.
 
 ------
 

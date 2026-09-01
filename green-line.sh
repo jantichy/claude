@@ -26,9 +26,14 @@ git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 
 # Kontrakt příkazů: sekce "## Příkazy" v projektovém CLAUDE.md.
-CLAUDE_MD=""
-for c in "$ROOT/CLAUDE.md" "$ROOT/main/CLAUDE.md" "$PWD/CLAUDE.md"; do
-  if [ -f "$c" ] && grep -q '^## Příkazy' "$c"; then CLAUDE_MD="$c"; break; fi
+# PROJ je adresář, ve kterém se příkazy spouštějí – tedy ten, kde leží nalezený
+# CLAUDE.md. Ve worktree layoutu to je main/, ne kořen kontejneru: tam žádný
+# package.json není a příkazy by padaly z úplně jiného důvodu, než skript hlásí.
+CLAUDE_MD=""; PROJ=""
+for c in "$PWD/CLAUDE.md" "$ROOT/CLAUDE.md" "$ROOT/main/CLAUDE.md"; do
+  if [ -f "$c" ] && grep -q '^## Příkazy' "$c"; then
+    CLAUDE_MD="$c"; PROJ=$(dirname "$c"); break
+  fi
 done
 [ -z "$CLAUDE_MD" ] && exit 0   # projekt kontrakt nemá – není co spouštět
 
@@ -50,8 +55,10 @@ if [ "$COUNT" -ge 3 ]; then
 fi
 
 # macOS nemá timeout(1); použij gtimeout, když je, jinak běž bez limitu.
-if command -v timeout >/dev/null 2>&1; then TIMEOUT="timeout 300"
-elif command -v gtimeout >/dev/null 2>&1; then TIMEOUT="gtimeout 300"
+# 90 s na příkaz: tři kroky se pak vejdou do timeoutu hooku v settings.json.
+# Krok zelené linky, který trvá déle, do ní nepatří – běží po každém tahu.
+if command -v timeout >/dev/null 2>&1; then TIMEOUT="timeout 90"
+elif command -v gtimeout >/dev/null 2>&1; then TIMEOUT="gtimeout 90"
 else TIMEOUT=""; fi
 
 cmd_for() {
@@ -63,8 +70,7 @@ FAILED=""
 for step in typecheck lint test; do
   CMD=$(cmd_for "$step")
   [ -z "$CMD" ] && continue
-  case "$CMD" in \(*\)|"") continue;; esac   # "(řeší /release)" a podobné poznámky
-  if ! OUT=$(cd "$ROOT" && $TIMEOUT bash -lc "$CMD" 2>&1); then
+  if ! OUT=$(cd "$PROJ" && $TIMEOUT bash -lc "$CMD" 2>&1); then
     FAILED="${FAILED}
 --- ${step}: ${CMD} ---
 $(printf '%s' "$OUT" | tail -40)"

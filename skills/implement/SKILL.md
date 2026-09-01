@@ -60,9 +60,9 @@ Podle volby vyvolej `superpowers:subagent-driven-development`, respektive `super
 
 ## Fáze 2 – Průběh
 
-Během realizace hlídej šest věcí, které se z plánu samy neuhlídají:
+Během realizace hlídej osm věcí, které se z plánu samy neuhlídají:
 
-**Zelená linka po každém úkolu.** Úkol není hotový, když je napsaný kód – je hotový, když projde `typecheck`, `lint`, `test` a případně `build` podle *Kontraktu příkazů* v projektovém `CLAUDE.md`. Teprve pak commit a další úkol. Podrobně `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*.
+**Zelená linka po každém úkolu.** Úkol není hotový, když je napsaný kód – je hotový, když projde `typecheck`, `lint` a `test` podle *Kontraktu příkazů* v projektovém `CLAUDE.md`. Teprve pak commit a další úkol. Podrobně `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*.
 
 **Netvrď, že to prošlo, bez výstupu.** Do shrnutí patří příkaz a jeho návratový kód, ne věta „testy procházejí“. Nemá-li projekt příkaz v kontraktu, řekni, co se tím nezkontrolovalo.
 

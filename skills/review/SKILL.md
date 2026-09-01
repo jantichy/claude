@@ -24,7 +24,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to první krok uzaví
 
 ## Co skill nedělá
 
-- **Nenahrazuje zelenou linku.** Ta běží průběžně u každého úkolu (viz `~/.claude/RULES.md`, *Zelená linka*). Sem se přichází se stavem, který už je zelený; není-li, skill se zastaví a pošle tě to dodělat.
+- **Nenahrazuje zelenou linku.** Ta běží průběžně u každého úkolu (viz `~/.claude/RULES.md`, *Ověřitelná brána místo dojmu*, a `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*). Sem se přichází se stavem, který už je zelený; není-li, skill se zastaví a pošle tě to dodělat.
 - **Neaudituje vnitřní konzistenci projektu.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`, který běží až po tomhle.
 - **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session ani nepíše dokumentaci projektu.** To je `/cleanup`.
@@ -105,11 +105,12 @@ Nesedí-li **žádná** role, řekni to explicitně a skonči – nevymýšlej s
 
 Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*). Chybí-li řádek, krok se přeskočí a **do výstupu se napíše, co se tím nezkontrolovalo**. Nevymýšlej příkazy, které jsi neověřil.
 
-1. **Zelená linka** – `typecheck`, `lint`, `test`, případně `build`. Není-li zelená, **zastav se**: review nad rozbitým stavem nemá smysl. Vypiš, co padá, a pošli to dodělat.
-2. **Audit závislostí** – `audit`. Nálezy `HIGH` a `CRITICAL` jsou automaticky kritické nálezy, nejdou přes panel.
-3. **Tajemství v repu** – `gitleaks detect --no-banner` nebo `git log -p | grep`-heuristika, není-li nástroj po ruce. Nález je vždy kritický a **nikdy se neopravuje jen smazáním**: co bylo commitnuté, je v historii a patří rotovat.
-4. **Statická analýza nad rámec lintu** – `semgrep --config p/owasp-top-ten`, je-li k dispozici.
-5. **Mutation testing** – `mutation`, jen v rozsahu změn a jen když projekt příkaz má. Odpovídá na otázku, kterou pokrytí nezodpoví: *tvrdí ty testy vůbec něco?* Je pomalé; u `full` se ptej, jestli ho pouštět.
+1. **Zelená linka** – `typecheck`, `lint`, `test`. Není-li zelená, **zastav se**: review nad rozbitým stavem nemá smysl. Vypiš, co padá, a pošli to dodělat.
+2. **Build** – `build`. Do zelené linky nepatří, protože je na běh po každém tahu moc pomalý – ale před uzavřením feature se ověřit musí.
+3. **Audit závislostí** – `audit`. Nálezy `HIGH` a `CRITICAL` jsou automaticky kritické nálezy, nejdou přes panel.
+4. **Tajemství v repu** – `gitleaks detect --no-banner` nebo `git log -p | grep`-heuristika, není-li nástroj po ruce. Nález je vždy kritický a **nikdy se neopravuje jen smazáním**: co bylo commitnuté, je v historii a patří rotovat.
+5. **Statická analýza nad rámec lintu** – `semgrep --config p/owasp-top-ten`, je-li k dispozici.
+6. **Mutation testing** – `mutation`, jen v rozsahu změn a jen když projekt příkaz má. Odpovídá na otázku, kterou pokrytí nezodpoví: *tvrdí ty testy vůbec něco?* Je pomalé; u `full` se ptej, jestli ho pouštět.
 
 Výsledky si odlož – ve Fázi 4 se slijí s nálezy panelu, ale **neprocházejí ověřením ve Fázi 3**. Nástroj nehalucinuje.
 
@@ -342,7 +343,7 @@ Navrhované řešení:
    - `question`: název nálezu a v čem je, jednou větou
    - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
      - **Opravit** – provedu navrhovanou změnu
-     - **Odložit** – nechám být, vrátíme se k tomu později
+     - **Odložit** – zapíšu do `docs/todo.md` i s úvahou, vrátíme se k tomu později
      - **Přeskočit** – neopravovat, zapíšu do `CLAUDE.md` jako „won't fix“
      - **Rozbalit** – *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
 
