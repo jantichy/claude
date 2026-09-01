@@ -44,7 +44,7 @@ V režimu *existující projekt* si nejdřív udělej inventuru a **vypiš ji u�
 |---|---|
 | Git a jeho podoba | je `.git` adresář (běžný), nebo `.bare` + `.git` soubor (worktree layout)? má remote? |
 | Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, autoprompt, paměť, typ, importy)? |
-| Standardní struktura | existuje `README.md`, `todo.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 4a) |
+| Standardní struktura | existuje `README.md`, `todo.md`, `done.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 4a) |
 | *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni stub s `@main/CLAUDE.md`? |
 | Starší pojmenování | existuje `TODO.md` v rootu, `docs/rozhodnuti.md`, `docs/zasady.md`? (viz Krok 4) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
@@ -80,6 +80,7 @@ Zapiš blok metadat na **začátek** `CLAUDE.md`, ve formátu podle `structure.m
 Rezervační systém pro školení, konference a webináře – správa událostí, účastníků, objednávek a faktur.
 
 - **Slug:** `rezervace`
+- **Struktura:** docs/
 - **Web:** https://rezervace.example.cz
 - **Repozitář:** https://github.com/jantichy/rezervace
 ```
@@ -253,6 +254,7 @@ Projekt drží standardní strukturu podle `~/Dev/context/structure/structure.md
 
 - `README.md` – co projekt je, pro člověka (ne instrukce pro Clauda)
 - `docs/todo.md` – co je odložené na později
+- `docs/done.md` – co je hotové
 - `docs/decisions.md` – co jsme rozhodli a proč, včetně zamítnutých variant
 - `docs/rules.md` – principy, ve kterých se projekt pohybuje
 

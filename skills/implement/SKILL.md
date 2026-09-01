@@ -104,7 +104,8 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 - [zablokované úkoly i s důvodem, nebo „nic"]
 
 **Zapsáno mimo kód**
-- docs/decisions.md: N   docs/todo.md: N   docs/rules.md: N
+- docs/decisions.md: N
+- docs/done.md: N   docs/todo.md: N   docs/rules.md: N
 
 **Další krok:** uzavírání podle RULES.md, *Životní cyklus práce* – druhá půlka osy
 ```

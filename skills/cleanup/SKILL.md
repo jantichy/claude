@@ -48,7 +48,7 @@ Zjisti kontext, ve kterém pracuješ:
 1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
 2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `### Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
 3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`.
-4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` trojice `todo.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `prd.md`, `design.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
+4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` čtveřice `todo.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `prd.md`, `design.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
 
@@ -101,12 +101,13 @@ Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zaps
 | Rozhodnutí a jejich zdůvodnění, zavržené varianty | `docs/decisions.md` |
 | Obecné principy a hranice, ve kterých se projekt pohybuje | `docs/rules.md` |
 | Úkoly a odložené věci | `docs/todo.md` |
+| Hotové úkoly | `docs/done.md` |
 | Otevřené otázky čekající na rozhodnutí uživatele | sekce `## Otevřené otázky` v `docs/todo.md` |
 | Změny dotýkající se toho, co projekt je, umí a jak se používá – **popis pro člověka**, nikdy pokyn pro Clauda | `README.md` |
 | Doménová specifika (model, procesy, katalogy) | příslušný soubor v `docs/` |
 | Cokoliv v Memory | **přesuň do projektového `CLAUDE.md`**, pokud projekt nemá explicitně povolenou Memory |
 
-Zvlášť projdi hlavní soubory – `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md` a `CLAUDE.md` (projektový i vnořené) – a ověř, jestli se do nich promítlo, co ze session vzešlo, a jestli v nich nezůstalo pravidlo, které v session přestalo platit. **Jen v rozsahu session**, ne jako obecná revize obsahu.
+Zvlášť projdi hlavní soubory – `README.md`, `docs/todo.md`, `docs/done.md`, `docs/decisions.md`, `docs/rules.md` a `CLAUDE.md` (projektový i vnořené) – a ověř, jestli se do nich promítlo, co ze session vzešlo, a jestli v nich nezůstalo pravidlo, které v session přestalo platit. **Jen v rozsahu session**, ne jako obecná revize obsahu.
 
 Když u položky není jasné, kam patří, **zeptej se** – ale až ve Fázi 3, v jednom společném průchodu, ne rozsypaně.
 
@@ -123,7 +124,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
 1. **Zjisti, kdy se každý ze souborů naposledy měnil.** U projektu s gitem `git log --oneline -3 -- <soubor>` a `git status`; jinak čas modifikace. Zajímá tě, jestli se soubor během téhle session vůbec dotkl.
 
    ```
-   CLAUDE.md  README.md  docs/todo.md  docs/decisions.md  docs/rules.md
+   CLAUDE.md  README.md  docs/todo.md  docs/done.md  docs/decisions.md  docs/rules.md
    ```
 
    Má-li projekt zadání, přidej k nim `docs/prd.md`, `docs/design.md` a `docs/plan.md`.

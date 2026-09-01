@@ -1,7 +1,7 @@
 #!/bin/bash
 # Sdílený UserPromptSubmit hook pro skill /autoprompt.
 # Aktivuje se v projektech, které mají /autoprompt zapnutý – přidává každý
-# uživatelský prompt na konec docs/prompts.md v projektu.
+# uživatelský prompt na konec prompts.md v projektu (docs/, nebo kořen podle režimu).
 set -euo pipefail
 
 # Project root z env (nastaveno Claude Code pro hooky)

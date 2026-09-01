@@ -53,7 +53,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
    Autoprompt je zapnutý.
    ```
 
-3. **Zkontroluj starší umístění** – pokud v rootu projektu existuje `PROMPTS.md` (dřívější umístění logu), přesuň ho na `docs/prompts.md` (v git repozitáři přes `git mv`, pokud je soubor verzovaný) a případný záznam v `.gitignore` nebo v projektovém `CLAUDE.md` narovnej na novou cestu.
+3. **Zkontroluj starší umístění** – pokud v rootu projektu existuje `PROMPTS.md` (dřívější umístění logu), přesuň ho na `prompts.md` podle režimu umístění (v git repozitáři přes `git mv`, pokud je soubor verzovaný) a případný záznam v `.gitignore` nebo v projektovém `CLAUDE.md` narovnej na novou cestu.
 
 4. **Přidej hook do `.claude/settings.local.json`** (vytvoř adresář a soubor, pokud chybí). Ve worktree layoutu patří do **kořene kontejneru**, ne do projekt rootu – odtud se pouští session a odtud si ho Claude Code čte. Hook patří do `hooks.UserPromptSubmit`:
 
