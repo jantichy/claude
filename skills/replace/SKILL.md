@@ -6,14 +6,6 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 
 # Replace
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Uživatel chce něco přejmenovat nebo změnit **všude**. Skill najde úplně všechny výskyty, ukáže je ke schválení, provede změnu a **ověří, že nikde nezůstal starý tvar**.
@@ -126,7 +118,7 @@ Po každém kroku ověř, že se změnilo přesně to, co mělo.
 1. **Grep na všechny staré tvary znovu.** Musí vrátit nulu – kromě míst vědomě vyloučených ve Fázi 1, ta vypiš zvlášť.
 2. **Grep na nový tvar.** Sedí počet s tím, co jsi měnil? Nevzniklo dvojité přejmenování (`sitesite`, `siteId` z `marketId` už přejmenovaného)?
 3. **Rozbité odkazy.** Ověř, že každý odkaz na přejmenovaný soubor, sekci nebo kotvu míří někam, co existuje.
-4. **Odvozené údaje.** Souhrnné počty, přehledové tabulky a seznamy na začátku dokumentů, které jmenují přejmenovanou věc.
+4. **Odvozené údaje.** Souhrnné počty, přehledové tabulky a seznamy na začátku dokumentů – viz `~/.claude/RULES.md`, *Propagace změny*, kde se přehlížejí nejčastěji.
 5. **Vnější místa.** Byl-li přejmenovaný celý projekt: remote, popis repozitáře, odkazy z jiných projektů v `~/Dev`.
 6. **Testy a build**, existují-li a jde-li to rychle.
 

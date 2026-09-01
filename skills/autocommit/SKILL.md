@@ -7,14 +7,6 @@ allowed-tools: [Read, Edit, Write, Glob]
 
 # Autocommit
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Zapíná/vypíná autocommit pro aktuální projekt – Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce Autocommit.

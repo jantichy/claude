@@ -6,14 +6,6 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 
 # Cleanup
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Uživatel je na konci nějakého problému a chystá se session opustit nebo zkompaktovat. Tvým jediným úkolem je zajistit, že **nic z téhle session nezůstane jen v konverzaci**:
@@ -42,8 +34,8 @@ Rozsah ovlivňuje **výhradně Fázi 4**. Fáze 1–3 vytěžují session vždy 
 - **Dvourychlostní režim.** Jednoznačné a mechanické věci dělej rovnou sám a jen je vypiš. Sporné věci předkládej uživateli jeden po druhém, nikdy víc najednou.
   - **Dělej sám:** zápis jednoznačné dohody na zjevně správné místo, oprava rozbitého odkazu, který tvým zápisem vznikl, dorovnání README / TODO / CLAUDE.md v rozsahu session, commit a push.
   - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky; cokoliv, co jde nad rámec toho, co v session padlo.
-- **Ptej se vždy přes tool `AskUserQuestion`**, nikdy ne vypsáním voleb jako textu v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena. Jedno volání = jedna otázka (`multiSelect: false`), `header` max 12 znaků, `description` u každé volby konkrétně říká, co se stane. Volbu **Other** doplňuje tool sám – uživatel přes ni napíše vlastní instrukci nebo se doptá; ber to jako doplňující instrukci k dané položce, ne jako odmítnutí, a po vyřešení se zeptej znovu.
-- Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč“*, *Živá struktura*, *Žádný „smetiště“ adresář*).
+- **Ptej se vždy přes tool `AskUserQuestion`** – mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
+- Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč“*, *Živá struktura*, *Naming – jedno výstižné slovo*).
 - **Nezakládej nové soubory, když to jde bez nich.** Struktura projektu je daná; hledej v ní správné místo. Když žádné neexistuje, zeptej se, než nějaké vytvoříš.
 - Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
@@ -80,7 +72,7 @@ Tohle je jádro celého skillu. Všechno ostatní je servis kolem něj.
 
 3. **Vytěž šest kategorií:**
 
-   1. **Dohody a rozhodnutí** – na čem jste se shodli. Vždy včetně **„proč“** a **zavržených variant**: „nejdřív jsme chtěli X, ale kvůli Y jsme zvolili Z“. Samotný závěr bez zdůvodnění je pro příští session málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
+   1. **Dohody a rozhodnutí** – na čem jste se shodli. Vždy včetně **„proč“** a **zavržených variant** (viz `~/.claude/RULES.md`, *Rozhodnutí zapisuj i s cestou k nim*): „nejdřív jsme chtěli X, ale kvůli Y jsme zvolili Z“. Samotný závěr bez zdůvodnění je pro příští session málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
    2. **Pravidla a konvence**, které v session vznikly nebo se změnily.
    3. **Odvedená práce** – co se reálně změnilo v souborech a kódu.
    4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“.
@@ -101,7 +93,7 @@ Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zaps
 - **Špatné místo** – je zapsaná jinde, než kam podle struktury patří → přesuň
 - **Duplicitní** – je na víc místech → nech na jednom, ostatní ať jen odkazují
 
-**Kam co patří** (odvoď od skutečné struktury projektu, tohle je obecné vodítko):
+**Kam co patří** (odvoď od skutečné struktury projektu, tohle je obecné vodítko). Obsah jednotlivých souborů definuje `~/Dev/context/structure/structure.md` – tahle tabulka je jen obrácený pohled od položky k souboru, ne druhá definice:
 
 | Typ položky | Cílové místo |
 |---|---|

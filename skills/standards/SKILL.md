@@ -6,14 +6,6 @@ allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 
 # Standards
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Prověří kód, rozhraní a texty proti **doménovým standardům** v `~/Dev/context/` a nálezy opraví spolu s uživatelem.
@@ -230,7 +222,7 @@ Navrhované řešení:
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena.
 
    Jedno volání = jeden nález = jedna otázka (`multiSelect: false`):
-   - `header`: `Nález N/celkem` (max 12 znaků, klidně zkrať na `N/celkem`)
+   - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`
    - `question`: název nálezu a v čem je, jednou větou
    - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
      - **Opravit** – provedu navrhovanou změnu
@@ -240,7 +232,7 @@ Navrhované řešení:
 
    Tool má strop **4 volby** na otázku – tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej.
 
-   Volbu **Other** doplňuje tool sám – uživatel přes ni napíše vlastní instrukci nebo se doptá. Ber to jako doplňující instrukci k aktuálnímu nálezu (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno“.
+   Chování volby **Other** viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 
    Zpracování odpovědí:
    - **Opravit** – proveď změnu hned (krok 3)

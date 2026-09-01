@@ -13,6 +13,8 @@ Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nev
 
 Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to pravidla pro každý úkol, ale soubory znalostí pro konkrétní typy práce.
 
+**Proč odkaz a ne `@import`:** projektový `CLAUDE.md` doménu importuje natvrdo, protože tam platí vždy. Tady je to naopak – naráz platí jedna doména z osmi, a `@import` všech by stál kontext v každé session (samotné `web.md` a `admin.md` mají skoro 500 řádků, `analytics/` je celá knowledge base). Odkaz se dodržuje hůř než import, ale je to vědomá volba: cenu za nespolehlivost platím jen tady, ne v projektech.
+
 - `~/Dev/context/web/web.md` – checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...) – načti si ho vždy, když pracuješ na webovém rozhraní
 - `~/Dev/context/web/admin.md` – checklist pro administrační a backoffice rozhraní (struktura, seznamy a tabulky, akce a potvrzování, editace, oprávnění, auditní stopa) – načti si ho vždy, když děláš administraci nebo interní nástroj; platí navíc k `~/Dev/context/web/web.md`
 - `~/Dev/context/analytics/` – knowledge base pro implementační webovou analytiku (principy, revize měření a katalog nálezů, měřicí architektura, datová vrstva, GTM konvence, consent, features, systémy, consent lišty, platformy, šablony pro vývojáře) – načti si `~/Dev/context/analytics/analytics.md` vždy, když reviduješ, nasazuješ nebo konfiguruješ webové měření, a z něj se prokliknij dál; platí navíc k `~/Dev/context/web/web.md`

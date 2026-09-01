@@ -6,14 +6,6 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 # Report
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Ze zdrojových dat udělá **jeden samostatný HTML soubor**, který jde vzít, poslat mailem nebo nahrát na web, a kdekoliv se otevře a funguje – bez serveru, bez internetu, bez závislostí.
@@ -53,7 +45,7 @@ Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni
 
 ## Fáze 1 – Co se reportuje
 
-Ptej se **postupně, jednu otázku za druhou**, přes `AskUserQuestion` (viz `~/.claude/RULES.md`). Nemá-li otázka nabídnutelné varianty, ptej se normálně.
+Ptej se **postupně, jednu otázku za druhou**, přes `AskUserQuestion` (viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*). Nemá-li otázka nabídnutelné varianty, ptej se normálně.
 
 Co potřebuješ vědět, než začneš počítat:
 

@@ -7,14 +7,6 @@ allowed-tools: [Read, Edit, Write, Bash]
 
 # Autoprompt
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Zapíná/vypíná logování každého prompt uživatele do `docs/prompts.md` v projektu. Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/skills/autoprompt/autoprompt.sh` – ten připíše každý prompt jako oddělovač `---`, pořadové číslo `**N.**` a text promptu.

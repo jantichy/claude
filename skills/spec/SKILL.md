@@ -6,14 +6,6 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 # Spec
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skill ho provede debriefem a sepíše **dva dokumenty**:
@@ -63,12 +55,10 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 
 ## Zásady pro celý průběh
 
-- **Ptej se postupně, jednu otázku za druhou.** Nikdy víc naráz. Nejdřív vypiš, co všechno se bude řešit, oznam, že se budeš ptát postupně, a zeptej se jen na první. Viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
-- **Ptej se přes tool `AskUserQuestion`**, ne vypsáním voleb jako textu. Jedno volání = jedna otázka (`multiSelect: false`), `header` max 12 znaků, u každé volby konkrétní důsledek. Volbu **Other** doplňuje tool sám – ber ji jako doplňující instrukci, ne jako odmítnutí, a po vyřešení se zeptej znovu. Otevřená otázka, na kterou nejdou nabídnout varianty (názvy, texty, čísla), se ptá normálně v odpovědi.
-- **U každé otázky nabídni varianty s důsledky a doporuč jednu.** Uživatel si svůj názor schválně nechává až po tvém.
-- **Nic si nevymýšlej.** Technický název, ID, parametr, cizí API, cena – když to nevíš, zeptej se. Vymyšlený název je horší než žádný.
-- **Zapisuj průběžně.** Rozhodnutí i se zavrženými variantami do `docs/decisions.md`, odložené věci do `docs/todo.md`, vybroušené principy do `docs/rules.md` – ve chvíli, kdy padnou, ne až na konci.
-- **Navrhuj kompletně, realizuj postupně.** PRD i design popisují celou věc včetně toho, co bude až později. Řeže se až plán – ten se dělá jen na MVP.
+- **Ptej se postupně a přes tool `AskUserQuestion`** – postup, tvar otázky i mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
+- **Nic si nevymýšlej** – technický název, ID, parametr, cizí API, cena. Viz `~/.claude/RULES.md`, *Při nejistotě se zeptej*.
+- **Zapisuj průběžně** – ve chvíli, kdy rozhodnutí padne, ne až na konci. Viz `~/.claude/RULES.md`, *Pravda v souborech, ne v konverzaci*; kam co patří, definuje `structure.md`.
+- **Navrhuj kompletně, realizuj postupně** – viz `~/.claude/RULES.md`. Tady to znamená: PRD i design popisují celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
 - **YAGNI.** Z každého návrhu vyhoď, co není potřeba – ale zapiš to do *Mimo rozsah*, ať je vidět, že to bylo zvážené a zamítnuté, ne opomenuté.
 
 ------
@@ -313,7 +303,7 @@ Celý řetěz i s tím, co následuje po realizaci, je v `~/.claude/RULES.md`, *
 
 ## Když se zadání změní později
 
-Změna teče **odshora dolů, nikdy obráceně**. Platí *Doc-first vývoj* z `~/.claude/RULES.md`:
+Platí *Doc-first vývoj* z `~/.claude/RULES.md`; posloupnost souborů definuje `structure.md`:
 
 1. Změní se požadavek → uprav **`prd.md`**.
 2. Zkontroluj, jestli to mění návrh → uprav **`design.md`**.

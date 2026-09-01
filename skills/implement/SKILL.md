@@ -6,14 +6,6 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 # Implement
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, implementace, ověření a commit. V ose *Životního cyklu práce* (`~/.claude/RULES.md`) navazuje na `/breakdown` a předává na uzavírání.
@@ -88,7 +80,7 @@ Podle toho, jak hluboko problém sahá:
 |---|---|
 | Jen úkol – špatný název souboru, chybějící krok | Oprav plán i kód, řekni to v jedné větě a pokračuj. |
 | Návrh – takhle postavené to nefunguje | **Zastav se.** Vrať se do `docs/design.md`, uprav ho a nech přepsat dotčené nehotové úkoly. |
-| Zadání – ukázalo se, že chceme něco jiného | **Zastav se a zeptej se.** Změna produktového záměru není tvoje rozhodnutí. Teče shora dolů: `prd.md` → `design.md` → `plan.md` → kód. |
+| Zadání – ukázalo se, že chceme něco jiného | **Zastav se a zeptej se.** Změna produktového záměru není tvoje rozhodnutí; teče shora dolů, viz `structure.md`. |
 
 **Nikdy neškrtej úkol jako hotový, aby se dalo pokračovat.** Zablokovaný úkol nech neodškrtnutý, zapiš proč, a zeptej se.
 

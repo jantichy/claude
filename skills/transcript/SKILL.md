@@ -6,14 +6,6 @@ allowed-tools: [Bash, Read, Write, Edit, Agent]
 
 # Transcript
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Lokální, offline přepis zvukových nahrávek do Markdownu – doslovný přepis každé nahrávky plus jedno strukturované shrnutí napříč všemi. Nic neopouští počítač (rozpoznání řeči běží přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp)).

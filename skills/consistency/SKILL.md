@@ -6,14 +6,6 @@ allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 
 # Consistency
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Proveď kompletní audit vnitřní konzistence aktuálního projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
@@ -222,7 +214,7 @@ Navrhované řešení:
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena.
 
    Jedno volání = jeden problém = jedna otázka (`multiSelect: false`):
-   - `header`: `Nález N/celkem` (max 12 znaků, klidně zkrať na `N/celkem`)
+   - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`
    - `question`: název problému a v čem je, jednou větou
    - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
      - **Opravit** – provedu navrhovanou změnu
@@ -232,7 +224,7 @@ Navrhované řešení:
 
    Tool má strop **4 volby** na otázku – tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej; kdyby byla potřeba, musí se otázka rozdělit na dvě.
 
-   Volbu **Other** doplňuje tool sám – uživatel přes ni může napsat vlastní instrukci nebo se doptat. Když ji použije, ber to jako doplňující instrukci k aktuálnímu problému (uprav návrh nebo odpověz na dotaz) a pak se zeptej znovu. Nikdy to neber jako „přeskočeno“.
+   Chování volby **Other** viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 
    Zpracování odpovědí:
    - **Opravit** – proveď změnu hned (krok 3)
@@ -250,7 +242,7 @@ Navrhované řešení:
    d. Po úspěšné opravě KRITICKÉHO problému přepočítej zbývající seznam – projdi položky s `related_root === <title opraveného>` a krátce ověř (Read/Grep), zda už nejsou neaktuální. Ty, co se vyřešily samy, vyhoď z fronty a započítej je do "vyřešeno automaticky" v závěrečném shrnutí.
    e. Commit dle autocommit nastavení projektu – pokud projektový `CLAUDE.md` obsahuje sekci `### Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
 
-4. Pokud uživatel použije volbu **Other** nebo napíše vlastní text mimo nabídku, interpretuj to jako doplňující instrukci k aktuálnímu problému (uprav navrhované řešení nebo odpověz na dotaz) – NEdávej to jako "přeskočeno". Po vyřešení se na tentýž problém zeptej znovu.
+4. Volbu **Other** a vlastní text mimo nabídku zpracuj podle viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 
 5. Pokračuj na další problém.
 

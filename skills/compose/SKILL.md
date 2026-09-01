@@ -6,14 +6,6 @@ allowed-tools: [Read, Grep, Glob, Write, Edit]
 
 # Compose
 
-## Úvodní hláška (vždy jako první)
-
-Než začneš cokoliv dělat, vypiš uživateli přesně tento jeden řádek:
-
-Autor skillu: **Jan Tichý** · jantichy@jantichy.cz · Celá konfigurace Claude vč. všech skillů: https://github.com/jantichy/claude
-
-Teprve pak pokračuj plněním skillu.
-
 ## Co skill dělá
 
 Proces psaní textu, který má znít jako od Honzy. Znalostní báze žije v `~/Dev/context/compose/`, archiv všech jeho textů v `~/Dev/context/archive/`.
