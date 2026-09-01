@@ -55,12 +55,9 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 | Implementační plán | `/breakdown` |
 | Realizace plánu | `/implement` |
 
-**Přepis výchozích cest.** `brainstorming` ukládá design doc do `docs/superpowers/specs/YYYY-MM-DD-<téma>-design.md` a `writing-plans` plán do `docs/superpowers/plans/…`. Obojí explicitně respektuje uživatelovu preferenci a ta zní jinak – podle `~/Dev/context/structure/structure.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů:
+**Přepis výchozí cesty.** `brainstorming` ukládá design doc do `docs/superpowers/specs/YYYY-MM-DD-<téma>-design.md`. Explicitně přitom respektuje uživatelovu preferenci a ta zní jinak – podle `~/Dev/context/structure/structure.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů, takže cíl je **`docs/design.md`**.
 
-- návrh řešení → **`docs/design.md`**
-- implementační plán → **`docs/plan.md`**
-
-Tuhle preferenci **řekni oběma skillům výslovně**, když je vyvoláváš. Jinak si založí vlastní adresářový strom vedle toho tvého.
+**Řekni mu to výslovně**, když ho vyvoláváš. Jinak si založí vlastní adresářový strom vedle toho tvého. Totéž platí pro plán, ale ten už si hlídá `/breakdown`.
 
 **Spec pro plán je `docs/design.md`**, ne PRD. Plán argumentuje z návrhu řešení; PRD jde jako doplňkový kontext, aby bylo vidět, proč se to staví. O předání se stará `/breakdown`.
 
