@@ -5,7 +5,10 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 - **Slug:** `claude`
 - **Repozitář:** https://github.com/jantichy/claude
 
-Blok metadat je tady, a ne v kořenovém `CLAUDE.md`, jak velí `~/Dev/context/structure/structure.md`. Ten je uživatelský a rozbaluje se do každé session v každém projektu – metadata tohohle repozitáře tam nepatří, mátla by v cizím projektu.
+## Výjimky z obecných pravidel
+
+- **Blok metadat je tady, ne v kořenovém `CLAUDE.md`**, jak jinak velí `~/Dev/context/structure/structure.md`. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata tohohle repozitáře tam nepatří, mátla by v cizím projektu.
+- **`docs/` neexistuje.** Repozitář není vyvíjený projekt, ale konfigurace; `todo.md`, `decisions.md` ani `rules.md` nemá a nezakládají se.
 
 ## Instrukce pro tenhle repozitář
 
