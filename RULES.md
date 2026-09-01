@@ -279,21 +279,32 @@ Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrá
 
 **Kam:** do `docs/decisions.md` nebo CHANGELOGu, podle toho, co projekt má. Nezakládej kvůli stopě zvláštní soubor.
 
+### Ověřitelná brána místo dojmu
+
+Práce, u které jde spustit kontrola, se **nehlásí jako hotová bez jejího výstupu**. Doklad je příkaz a jeho návratový kód, ne věta „funguje to“.
+
+U projektu s kódem je tou kontrolou **zelená linka** – typecheck, lint, testy a build procházejí – a kontroluje se **po každém dokončeném úkolu**, ne až před uzavřením feature. Projekt své příkazy deklaruje v *Kontraktu příkazů* v projektovém `CLAUDE.md`; chybějící příkaz znamená, že to projekt nemá, a krok se přeskočí nahlas i s tím, co se tím nezkontrolovalo.
+
+Definice zelené linky, prahy jednotlivých bran a to, proč jsou testy během realizace jen ke čtení, jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Sem to nepatří: platí to jen u kódu, kdežto tenhle soubor se načítá i nad projekty, kde se nic nespouští.
+
+Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit, ověř, než ho napíšeš** – viz *Neopírej rozhodnutí o neověřené tvrzení*.
+
 ### Životní cyklus práce
 
-Od nápadu k uzavřené feature vede jedna osa. Celá vypadá takhle:
+Od nápadu k nasazené feature vede jedna osa. Celá vypadá takhle:
 
 ```
 Zakládání   /project → /specify → /breakdown → /implement
-Uzavírání   testy → /standards → /code-review → /consistency → /cleanup
+Uzavírání   /review → /consistency → /cleanup
+Nasazení    /release
 ```
+
+Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → zelená linka → commit.
 
 V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je
 rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v ose
 nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit,
 aniž se změní, jak se krok volá.
-
-`testy` není skill, ale krok, který se udělá čímkoliv, co projekt na testy má.
 
 Nad dokumentem, který vznikne v kroku `/specify` nebo `/breakdown`, je navíc volitelný
 **`/oponent`** – nezávislý posudek čerstvýma očima. V ose není proto, že se nedělá
@@ -301,19 +312,21 @@ vždycky; u většího projektu se ale vyplatí.
 
 **Zakládání (1–4)**
 
-1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti.
+1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů* a `Stop` hook pro zelenou linku.
 2. **`/specify`** – produktová specifikace (`docs/requirements.md`) a návrh řešení (`docs/architecture.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
-3. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat.
-4. **`/implement`** – realizace podle plánu.
+3. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis prózou.
+4. **`/implement`** – realizace podle plánu, úkol po úkolu, každý do zelené linky a do commitu.
 
-**Uzavírání (5–9)**
+**Uzavírání (5–7)**
 
-5. **Testy a build** – jediný krok bez skillu: spusť, co projekt má (`npm test`, `pytest`, build), a než půjdeš dál, musí to projít. Nemá smysl posílat na review kód, který neběží.
-6. **`/standards`** – soulad s doménovými standardy. Vzejdou z něj změny kódu, patří tedy před review.
-7. **`/code-review`** – korektnost provedených změn. Vestavěný skill Claude Code, ne vlastní.
-8. **`/consistency`** – audit celého projektu. Uklidí i to, co nastřílely kroky 6 a 7.
-9. **`/cleanup`** – poslední. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí ze všech uzavíracích kroků (co bylo odmítnuto a proč).
+5. **`/review`** – paralelní panel rolí nad změnami: korektnost, bezpečnost, data a stavy, provoz, testy a doménové standardy z `~/Dev/context/`. Role se vybírají podle toho, čeho se změny týkají, takže nad obsahovým projektem poběží jen textové. Vlastní skill; uvnitř si volá vestavěné `/code-review` a `/security-review` jako dvě z rolí.
+6. **`/consistency`** – audit celého projektu, ne jen změn. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všechny role v `/review`, a uklidí i to, co nastřílel krok 5.
+7. **`/cleanup`** – poslední. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč).
 
-**Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
+**Nasazení (8)**
 
-**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown` ani testy. **Přeskočení řekni nahlas i s důvodem.**
+8. **`/release`** – nasazení do produkce. **Stojí mimo uzavírání schválně:** uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť.
+
+**Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
+
+**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, zelenou linku ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
