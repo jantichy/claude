@@ -181,7 +181,7 @@ Přesun je `git mv` jen tehdy, je-li zdroj verzovaný – v kořeni kontejneru *
 
 ## Krok 4 – Standardní struktura
 
-Řiď se `~/Dev/context/structure/structure.md`. Založ, co chybí:
+Řiď se `~/Dev/context/structure/structure.md` – ten je autoritativní, tenhle výčet je jen pracovní. Založ, co chybí:
 
 ```
 CLAUDE.md
@@ -190,6 +190,8 @@ docs/todo.md
 docs/decisions.md
 docs/rules.md
 ```
+
+`docs/prd.md`, `docs/design.md` ani `docs/plan.md` **nezakládej** – vznikají až prací, přes `/spec` a `/breakdown`.
 
 `README.md` u nového projektu: nadpis s **lidským názvem** a popiskem z kroku 1 jako prvním odstavcem – tam se popisek smí rozvést do víc vět. U existujícího projektu zkontroluj, že nadpis a první odstavec sedí s blokem metadat v `CLAUDE.md`; rozcházejí-li se, srovnej je. Soubory v `docs/` zakládej **prázdné, jen s nadpisem** – obsah nevymýšlej dopředu.
 

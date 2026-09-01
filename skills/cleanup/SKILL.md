@@ -56,7 +56,7 @@ Zjisti kontext, ve kterém pracuješ:
 1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
 2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `### Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
 3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`.
-4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura podle `~/Dev/context/structure/structure.md` je `CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`; k tomu specializované soubory v `docs/`. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
+4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` trojice `todo.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `prd.md`, `design.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
 

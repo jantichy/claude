@@ -2,7 +2,7 @@
 
 Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém.
 
-Standardní strukturu projektu (`CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`) definuje `~/Dev/context/structure/structure.md`.
+Standardní strukturu projektu definuje `~/Dev/context/structure/structure.md`.
 
 Doménové znalosti (`~/Dev/context/coding/coding.md`, `web/web.md`, `web/admin.md`, `text/text.md`, `analytics/analytics.md`) se do projektu načítají `@import`em v jeho `CLAUDE.md` – tam, kde jsou pro jeho charakter relevantní. `worktree/worktree.md` se importuje jen do `CLAUDE.md` kontejneru s worktree layoutem.
 
