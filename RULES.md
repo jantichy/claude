@@ -237,7 +237,9 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 Vše mimo aktuální osu – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
 
-Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vlastní sekci a po uzavření je odtud rovnou uklízej – na rozdíl od skutečných úkolů nemají přežít session (viz *Parkované body zapiš a sám je otevři*).
+Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vlastní sekci a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
+
+Skutečný úkol se po dokončení nemaže ani neodškrtává na místě – **přesune se do `done.md`**, hned jak je hotový.
 
 ------
 

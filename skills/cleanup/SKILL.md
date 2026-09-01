@@ -135,7 +135,8 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    |---|---|
    | `CLAUDE.md` | vzniklo nebo se změnilo pravidlo, konvence, způsob práce v projektu |
    | `README.md` | změnilo se, co projekt je, umí nebo jak se spouští; zároveň ověř, že v něm nezůstal normativní pokyn pro Clauda – ten patří do `CLAUDE.md` nebo `docs/`, viz `~/Dev/context/structure/structure.md` |
-   | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později“; něco se dokončilo → přesun do `## Hotovo` |
+   | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později“ |
+   | `docs/done.md` | ověř, že v `todo.md` nezbylo nic hotového – přesouvá se průběžně, tohle je jen záchranná síť |
    | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky“ |
 | `docs/prd.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |

@@ -210,7 +210,7 @@ Povinný je jen `CLAUDE.md`. U zbytku se zeptej (AskUserQuestion, `multiSelect: 
 | Soubor | Popis pro uživatele |
 |---|---|
 | `README.md` | Co projekt je, pro člověka. U privátního projektu bez publika nemusí být. |
-| `todo.md` | Co je odložené na později. |
+| `todo.md` + `done.md` | Co je odložené na později, a záznam hotového. **Jedna volba pro obojí** – samostatně nedávají smysl. |
 | `decisions.md` | Co jsme rozhodli a proč, včetně zamítnutých variant. |
 | `rules.md` | Principy, ve kterých se projekt pohybuje. |
 
