@@ -56,7 +56,7 @@ else TIMEOUT=""; fi
 
 cmd_for() {
   sed -n '/^## Příkazy/,/^## /p' "$CLAUDE_MD" \
-    | sed -n "s/^[-*] *$1: *//p" | head -1 | sed 's/[[:space:]]*$//'
+    | sed -n "s/^[-*][[:space:]]*$1:[[:space:]]\{1,\}//p" | head -1 | sed 's/[[:space:]]*$//'
 }
 
 FAILED=""
