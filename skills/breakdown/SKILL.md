@@ -18,7 +18,7 @@ Teprve pak pokračuj plněním skillu.
 
 Vezme schválené zadání a rozpadne ho na **`docs/plan.md`** – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu, příkaz na spuštění a commit. Plán je psaný pro někoho, kdo projekt vůbec nezná.
 
-Je to **třetí článek** řetězu `/project → /spec → /breakdown → /implement` (viz `~/.claude/RULES.md`, *Životní cyklus práce*).
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) navazuje na `/spec` a předává na `/implement`.
 
 ## Co skill nedělá
 
