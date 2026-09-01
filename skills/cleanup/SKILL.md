@@ -122,7 +122,7 @@ Když u položky není jasné, kam patří, **zeptej se** – ale až ve Fázi 3
 
 ## Fáze 2b – Ověř, že průběžná aktualizace opravdu proběhla
 
-`~/Dev/context/structure/structure.md` ukládá udržovat pět souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 2**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
+`~/Dev/context/structure/structure.md` ukládá udržovat sadu souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 2**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
 
 Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomíná** – proto tenhle krok existuje a proto se nedá odbýt.
 
@@ -134,7 +134,10 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    CLAUDE.md  README.md  docs/todo.md  docs/decisions.md  docs/rules.md
    ```
 
-2. **Projdi celou session znovu** – celý transcript z Fáze 1, ne jen vytěžený seznam – a u každého z pěti souborů se ptej, co do něj **mělo** během session přibýt:
+   Má-li projekt zadání, přidej k nim `docs/prd.md`, `docs/design.md` a `docs/plan.md`.
+   Neexistují-li, přeskoč je – nezakládají se tady.
+
+2. **Projdi celou session znovu** – celý transcript z Fáze 1, ne jen vytěžený seznam – a u každého souboru se ptej, co do něj **mělo** během session přibýt:
 
    | Soubor | Co v session zakládá povinnost zápisu |
    |---|---|
@@ -143,6 +146,9 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později"; něco se dokončilo → přesun do `## Hotovo` |
    | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky" |
+| `docs/prd.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
+| `docs/design.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie |
+| `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |
 
 3. **Porovnej s tím, co v souborech skutečně je.** Nestačí, že se soubor během session změnil – ověř, že obsahuje **všechno**, co tam podle bodu 2 patří.
 
