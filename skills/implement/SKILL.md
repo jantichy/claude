@@ -14,7 +14,7 @@ Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, im
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md`, ne do kódu.
-- **Neuzavírá feature.** Testy, standardy, review a úklid jsou samostatné kroky po tomhle – viz *Životní cyklus práce* v `~/.claude/RULES.md`, druhá půlka osy.
+- **Neuzavírá feature.** Review, audit konzistence a úklid jsou samostatné kroky po tomhle – viz *Životní cyklus práce* v `~/.claude/RULES.md`, druhá půlka osy.
 
 ## Jak je to postavené uvnitř
 
@@ -27,7 +27,9 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
 ## Fáze 0 – Pre-flight
 
 1. **Kořen projektu.** Ve worktree layoutu (`~/Dev/context/worktree/worktree.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
-2. **Přečti projektový `CLAUDE.md`** – `### Autocommit`, paměťovou politiku, importované doménové standardy, výjimky.
+2. **Přečti projektový `CLAUDE.md`** – `## Příkazy` (*Kontrakt příkazů*), `### Autocommit`, paměťovou politiku, importované doménové standardy, výjimky.
+   **Chybí-li `## Příkazy` a projekt má kód, zastav se a doplň je** – bez nich nemá zelená linka co spouštět a realizace by běžela bez brány. Zjisti je z `package.json`, `composer.json`, `Makefile` nebo obdoby, ukaž návrh a nech ho potvrdit.
+   **Ověř, že je linka zelená ještě před startem.** Dědíš-li červený stav z dřívějška, ohlas to a zeptej se – jinak nepůjde poznat, co jsi rozbil ty.
 3. **Najdi plán.**
 
    | Stav | Co dělat |
@@ -58,15 +60,23 @@ Podle volby vyvolej `superpowers:subagent-driven-development`, respektive `super
 
 ## Fáze 2 – Průběh
 
-Během realizace hlídej čtyři věci, které se z plánu samy neuhlídají:
+Během realizace hlídej šest věcí, které se z plánu samy neuhlídají:
+
+**Zelená linka po každém úkolu.** Úkol není hotový, když je napsaný kód – je hotový, když projde `typecheck`, `lint`, `test` a případně `build` podle *Kontraktu příkazů* v projektovém `CLAUDE.md`. Teprve pak commit a další úkol. Podrobně `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*.
+
+**Netvrď, že to prošlo, bez výstupu.** Do shrnutí patří příkaz a jeho návratový kód, ne věta „testy procházejí“. Nemá-li projekt příkaz v kontraktu, řekni, co se tím nezkontrolovalo.
+
+**Testy jsou jen ke čtení.** Plán je napsal a uživatel je schválil dřív, než vznikl kód – v tom je jejich cena. Nesedí-li test s implementací, **první hypotéza je, že je špatně kód**. Ukáže-li se, že je špatně test, je jeho změna **samostatný zásah, který ohlásíš a necháš schválit**, ne tichá součást úkolu. Přidání `skip`, zeslabení `assert` nebo smazání testu je vždycky chyba, i když je pak zeleno.
 
 **Commity.** Plán má commit jako poslední krok každého úkolu. Má-li projekt zapnutý autocommit, **necommituj dvakrát** – řiď se plánem a autocommit nech na změny mimo úkoly. Commit message piš česky a věcně: co se změnilo, ne které soubory.
 
-**Doménové standardy.** Kód se má psát podle nich rovnou, ne se k nim vracet až v `/standards`. Neznamená to duplikovat kontrolu – znamená to je respektovat.
+**Doménové standardy.** Kód se má psát podle nich rovnou, ne se k nim vracet až v `/review`. Neznamená to duplikovat kontrolu – znamená to je respektovat.
 
 **Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, jde do `docs/todo.md` s celou úvahou. Do kódu ne. *Nerozhoduj potichu nad rámec zadání.*
 
 **Průběžné zápisy.** Padne-li během realizace rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. Nečekej na `/cleanup`.
+
+**Po každém větším celku levné review.** Po skupině souvisejících úkolů (ne po každém) spusť `/code-review` na nízké úrovni. Běží v čerstvém kontextu, takže vidí, co ty už nevidíš, a chyba nalezená teď stojí minuty. Plný panel je až `/review` při uzavírání.
 
 ------
 
@@ -107,10 +117,12 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 - docs/decisions.md: N
 - docs/done.md: N   docs/todo.md: N   docs/rules.md: N
 
-**Další krok:** uzavírání podle RULES.md, *Životní cyklus práce* – druhá půlka osy
+**Zelená linka:** <výstup posledního běhu – příkaz a návratový kód>
+
+**Další krok:** `/review`, pak `/consistency` a `/cleanup` (RULES.md, *Životní cyklus práce*)
 ```
 
 Zakonči jednou z těchto vět:
 
-- `Plán je odpracovaný, můžeš jít na uzavírání feature.`
+- `Plán je odpracovaný a linka je zelená, můžeš jít na /review.`
 - `Odpracovaný není – zbývá: <konkrétní seznam>.`

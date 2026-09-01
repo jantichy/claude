@@ -243,17 +243,37 @@ Na co se to napojuje, co od toho očekáváme a co dělat, když to nefunguje.
 ## Chybové stavy
 Co může selhat, jak se to pozná a co se stane pak.
 
+## Bezpečnostní model
+Kde se autorizuje a proč to nejde obejít. Jak se validuje vstup a na které
+hranici. Kde žijí tajemství. Co se loguje a co se logovat nesmí.
+Na konci **jmenný seznam citlivých oblastí** – přihlášení, oprávnění, platby,
+nahrávání souborů, osobní údaje, mazání dat, odesílání pošty ven. Změna v nich
+se nemerguje bez lidského pohledu na diff; `/review` na ně sahá přísněji.
+
 ## Technologie
 Konkrétní volba a proč – proti omezením z PRD.
 
 ## Testovací strategie
-Co se testuje a na jaké úrovni.
+Co se testuje a na jaké úrovni. U každého *Hlavního scénáře* a *Varianty*
+z requirements.md řekni, čím bude pokrytý – akceptačním testem, jednotkovým,
+nebo vědomě ničím a proč.
+Dál prahy, které bude projekt držet (pokrytí, mutation score) a čím se měří.
+Výchozí hodnoty a nástroje viz `~/Dev/context/coding/coding.md`,
+*Ověřování a brány kvality*.
+
+## Ověřování a brány
+Konkrétní příkazy, které projekt bude mít – `test`, `typecheck`, `lint`,
+`build`, `audit`, případně `e2e` a `mutation`. Odsud je `/project` (nebo první
+úkol plánu) přepíše do *Kontraktu příkazů* v `CLAUDE.md`.
+Řekni i, co se **nebude** kontrolovat automaticky a proč.
 
 ## Rizika
 Co je na tom nejistého a co by to znamenalo, kdyby se ukázalo jinak.
 ```
 
 **Kontrola proti PRD:** projdi *Hlavní scénáře*, *Varianty* a *Nefunkční požadavky* v PRD a u každého ukaž, co v návrhu ho pokrývá. Nepokryté je nález, ne detail.
+
+**Bezpečnost se navrhuje, neaudituje.** Zhruba polovina kódu psaného modely obsahuje bezpečnostní chybu a je to předvídatelná množina. Nejúčinnější obrana není kontrola na konci, ale struktura, ve které díra nejde udělat – jedna vrstva autorizace, kterou nelze obejít, výhradně parametrizované dotazy, validace na hranici, tajemství jen z prostředí. Proto má návrh sekci *Bezpečnostní model*, a proto v ní nesmí stát „ošetříme to při implementaci“.
 
 **Doménové standardy.** Návrh se řídí tím, co si projekt importuje v `CLAUDE.md` – `~/Dev/context/coding/coding.md` vždy, dál podle povahy `web/web.md`, `web/admin.md`, `analytics/analytics.md`. Načti je, než začneš navrhovat, ne až při kontrole.
 

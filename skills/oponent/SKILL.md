@@ -15,7 +15,7 @@ Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každ�
 ## Co skill nedělá
 
 - **Není to kontrola kódu.** Na kód je `/code-review`.
-- **Není to kontrola proti standardům.** Na soulad s `~/Dev/context/*` je `/standards`.
+- **Není to kontrola proti standardům.** Na soulad s `~/Dev/context/*` je `/review`.
 - **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují.
@@ -25,7 +25,7 @@ Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každ�
 | Otázka | Skill |
 |---|---|
 | Je ten kód správně? | `/code-review` |
-| Odpovídá to mým doménovým standardům? | `/standards` |
+| Odpovídá to mým doménovým standardům? | `/review` |
 | Nesedí si něco v projektu navzájem? | `/consistency` |
 | **Je to vůbec dobře vymyšlené a bude to fungovat?** | **`/oponent`** |
 | Je všechno ze session zapsané? | `/cleanup` |
@@ -149,7 +149,7 @@ Doporučuji: <jedna z nich a proč>
 
 Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“ – u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Vždy nech mezi volbami i **Nechat být**.
 
-(V `/consistency` a `/standards` je to naopak správně: tam má nález jedno navrhované řešení a otázka zní jen ano / později / ne.)
+(V `/consistency` a `/review` je to naopak správně: tam má nález jedno navrhované řešení a otázka zní jen ano / později / ne.)
 
 **Zpracování odpovědi:**
 
