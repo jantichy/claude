@@ -208,6 +208,19 @@ Před destruktivní nebo těžko vratnou operací (mazání, přepis, zrušení,
 
 Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrátit" (kopírováním odjinud, z legacy, z dokumentace), nech stopu – sekce „Odstraněné položky", řádek v CHANGELOGu, poznámka. Ne u každého smazání, ale tam, kde má smysl chránit se před nechtěným návratem.
 
+### Zakládání nové práce
+
+Nová věc – projekt, podsystém, větší feature – se zakládá v tomhle pořadí:
+
+1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez `docs/` není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti.
+2. **`/prd`** – produktová specifikace. Řídí `superpowers:brainstorming`, který nejdřív rozhodne, jestli je to vůbec případ na PRD; u drobné změny v existujícím kódu se zastaví a pošle tě rovnou k implementaci.
+3. **`superpowers:writing-plans`** – implementační plán, jen na to, co je v MVP. Vyvolá ho `/prd` po schválení PRD. Dřív ne: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat.
+4. **`superpowers:subagent-driven-development`** (nebo `executing-plans`) – realizace úkol po úkolu. Nabídne ji `writing-plans`.
+
+Krok se přeskakuje jen tam, kde pro něj není důvod, ne když se nechce: existující projekt nepotřebuje `/project`, bounded změna nepotřebuje PRD ani plán. **Přeskočení řekni nahlas i s důvodem.**
+
+Konec téhle osy řeší *Uzavírání hotové feature* níž.
+
 ### Uzavírání hotové feature
 
 Když je feature hotová a session končí, projdi kroky **v tomhle pořadí**:
