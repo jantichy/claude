@@ -134,7 +134,7 @@ Než cokoliv předložíš, nálezy **zpracuj**:
 
 ## Fáze 4 – Průchod nálezy
 
-Podle `~/.claude/RULES.md` (*Ptej se postupně*) projdi nálezy **jeden po druhém**, od nejzávažnějšího.
+Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího.
 
 U každého nejdřív vypiš:
 

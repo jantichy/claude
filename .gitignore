@@ -23,6 +23,7 @@ plans/
 tasks/
 
 # Autoprompt log – nikdy neverzovat, obsahoval by soukromé prompty
+docs/prompts.md
 PROMPTS.md
 
 # Pluginy

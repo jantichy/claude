@@ -66,7 +66,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 ## Fáze 1 – Rozsah plánu
 
-**Jen MVP.** Zadání popisuje celou věc, plán jen první verzi – to je vaše pravidlo *Navrhuj kompletně, realizuj postupně*. Vypiš, které položky z MVP checklistu plán pokryje, a nech to potvrdit.
+**Jen MVP.** Zadání popisuje celou věc, plán jen první verzi – viz `~/.claude/RULES.md`, *Navrhuj kompletně, realizuj postupně*. Vypiš, které položky z MVP checklistu plán pokryje, a nech to potvrdit.
 
 **Když je toho moc.** Pokrývá-li zadání víc nezávislých podsystémů, řekni to a rozděl to na víc plánů – každý musí sám o sobě dát funkční, otestovatelný software. Neposílej do realizace plán, který nejde dokončit v rozumném celku.
 

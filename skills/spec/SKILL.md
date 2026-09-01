@@ -66,7 +66,7 @@ Tuhle preferenci **řekni oběma skillům výslovně**, když je vyvoláváš. J
 
 ## Zásady pro celý průběh
 
-- **Ptej se postupně, jednu otázku za druhou.** Nikdy víc naráz. Nejdřív vypiš, co všechno se bude řešit, oznam, že se budeš ptát postupně, a zeptej se jen na první. Viz `~/.claude/RULES.md`, *Ptej se postupně*.
+- **Ptej se postupně, jednu otázku za druhou.** Nikdy víc naráz. Nejdřív vypiš, co všechno se bude řešit, oznam, že se budeš ptát postupně, a zeptej se jen na první. Viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 - **Ptej se přes tool `AskUserQuestion`**, ne vypsáním voleb jako textu. Jedno volání = jedna otázka (`multiSelect: false`), `header` max 12 znaků, u každé volby konkrétní důsledek. Volbu **Other** doplňuje tool sám – ber ji jako doplňující instrukci, ne jako odmítnutí, a po vyřešení se zeptej znovu. Otevřená otázka, na kterou nejdou nabídnout varianty (názvy, texty, čísla), se ptá normálně v odpovědi.
 - **U každé otázky nabídni varianty s důsledky a doporuč jednu.** Uživatel si svůj názor schválně nechává až po tvém.
 - **Nic si nevymýšlej.** Technický název, ID, parametr, cizí API, cena – když to nevíš, zeptej se. Vymyšlený název je horší než žádný.
@@ -343,7 +343,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 - [seznam, nebo „žádné"]
 
 **Další krok**
-- [implementační plán přes writing-plans / rozpis kroků do todo.md]
+- [/breakdown / u projektu bez kódu rozpis kroků do docs/todo.md]
 ```
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:

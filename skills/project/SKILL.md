@@ -288,16 +288,16 @@ Oblasti jsou schválně dělené podle **povahy práce, ne podle použité techn
 
 **Až se oblasti zaplní.** Dvouúrovňová otázka má strop 16 typů (4 oblasti × 4 typy). Až na něj narazíš, nepřidávej třetí úroveň – přejdi na **N kol po čtyřech**: jedno kolo na každou oblast, `multiSelect: true`, uvozené „Co všechno z oblasti <oblast> pro tenhle projekt platí? Když nic, nic nezaškrtávej." Kol může být libovolně mnoho, takže limit AskUserQuestion přestane omezovat.
 
-Ta změna má důsledek, který je potřeba unést vědomě: projekt tím přestane mít jeden typ a bude mít **sadu typů** – klidně prázdnou (= **Ostatní**), klidně **Vývoj** i **Web** zároveň. Do `CLAUDE.md` pak nelep popisy pod sebe mechanicky: slož je do jednoho odstavce a **vyřeš rozpory**. „Vývoj" předepisuje PRD proces, „Web" ho výslovně nechce – když padnou oba, rozhodni podle hlavní náplně projektu a napiš jen to, co platí.
+Ta změna má důsledek, který je potřeba unést vědomě: projekt tím přestane mít jeden typ a bude mít **sadu typů** – klidně prázdnou (= **Ostatní**), klidně **Vývoj** i **Web** zároveň. Do `CLAUDE.md` pak nelep popisy pod sebe mechanicky: slož je do jednoho odstavce a **vyřeš rozpory**. „Vývoj" předepisuje proces zadání a plánu, „Web" ho výslovně nechce – když padnou oba, rozhodni podle hlavní náplně projektu a napiš jen to, co platí.
 
 Volbu „Ostatní" mezi možnosti **nedávej** – AskUserQuestion ji nabízí sám jako „Other". Když ji uživatel použije, typ je **Ostatní** a druhá otázka odpadá.
 
 Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
-- **Vývoj** – „Vývojářský projekt – postupuj podle standardního postupu návrhu a implementace (brainstorming → PRD/design → implementační plán → implementace), viz superpowers skilly." Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first)."
-- **Web** – „Webové rozhraní – obsah, struktura, šablony, ne klasický PRD/implementační proces."
+- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu práce* v `~/.claude/RULES.md`: `/spec` → `/breakdown` → `/implement`." Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first)."
+- **Web** – „Webové rozhraní – obsah, struktura, šablony, ne proces zadání a plánu."
 - **Nasazení webové analytiky** – „Implementace měření na cizím webu – revize existujícího nastavení, měřicí plán, GTM, GA4, consent, reklamní systémy. Výstupem je funkční a doložitelné měření plus dokumentace, ne aplikační kód." Navíc přidej pravidlo: „Každá změna v měření musí být před publikováním ověřená v Preview/DebugView a po nasazení znovu na produkci; do `docs/decisions.md` patří i to, co se měřit záměrně nebude a proč."
-- **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez PRD/implementačního procesu."
+- **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez procesu zadání a plánu."
 - **Data a výzkum** – „Jednorázová datová/výzkumná analýza – výstupem jsou zjištění a report, ne nasazovaný kód."
 - **Ostatní** – „Projekt mimo výše uvedené kategorie."
 
@@ -331,7 +331,7 @@ Závazné pro tenhle projekt:
 
 **Proč `@import` a ne odkaz:** `@import` Claude Code při startu session textově rozbalí do kontextu, takže obsah platí vždy. Prozaický odkaz („řiď se souborem X") je jen instrukce, kterou si model musí sám všimnout a sám se rozhodnout ji splnit – to se v praxi dodržuje nespolehlivě.
 
-Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `web/web.md` a `admin/admin.md` mají dohromady skoro 500 řádků.
+Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `web/web.md` a `web/admin.md` mají dohromady skoro 500 řádků.
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 

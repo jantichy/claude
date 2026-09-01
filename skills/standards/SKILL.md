@@ -137,7 +137,7 @@ Nezapisuj do žádného souboru.
 
 Slož nálezy ze všech agentů do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, KOSMETICKÉ; v rámci kategorie root položky před jejich následky.
 
-**Deduplikuj napříč sadami.** `web/web.md` a `admin/admin.md` se překrývají, stejně tak `web/web.md` a `text/text.md` v typografii a `web/web.md` a `analytics/` v consentu a GDPR – když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba dotčené body standardů.
+**Deduplikuj napříč sadami.** `web/web.md` a `web/admin.md` se překrývají, stejně tak `web/web.md` a `text/text.md` v typografii a `web/web.md` a `analytics/` v consentu a GDPR – když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba dotčené body standardů.
 
 Pak rozděl na dvě skupiny:
 

@@ -43,7 +43,7 @@ Rozsah ovlivňuje **výhradně Fázi 4**. Fáze 1–3 vytěžují session vždy 
   - **Dělej sám:** zápis jednoznačné dohody na zjevně správné místo, oprava rozbitého odkazu, který tvým zápisem vznikl, dorovnání README / TODO / CLAUDE.md v rozsahu session, commit a push.
   - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky; cokoliv, co jde nad rámec toho, co v session padlo.
 - **Ptej se vždy přes tool `AskUserQuestion`**, nikdy ne vypsáním voleb jako textu v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena. Jedno volání = jedna otázka (`multiSelect: false`), `header` max 12 znaků, `description` u každé volby konkrétně říká, co se stane. Volbu **Other** doplňuje tool sám – uživatel přes ni napíše vlastní instrukci nebo se doptá; ber to jako doplňující instrukci k dané položce, ne jako odmítnutí, a po vyřešení se zeptej znovu.
-- Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládat i „proč"*, *Živá struktura*, *Žádný „smetiště" adresář*).
+- Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč"*, *Živá struktura*, *Žádný „smetiště" adresář*).
 - **Nezakládej nové soubory, když to jde bez nich.** Struktura projektu je daná; hledej v ní správné místo. Když žádné neexistuje, zeptej se, než nějaké vytvoříš.
 - Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
