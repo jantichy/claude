@@ -14,6 +14,8 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
 Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen tady, na rozdíl od `~/.claude/CLAUDE.md`, který je uživatelský a jde do každé session v každém projektu.
 
+- **Skill je sloveso, jeho výstup podstatné jméno.** `/specify` vyrábí `requirements.md` a `architecture.md`, `/breakdown` vyrábí `plan.md`, `/implement` vyrábí kód. **Žádný skill se nejmenuje stejně jako svůj výstup** – jinak vzniká otázka, jestli je „plan“ věc, nebo činnost. Do té pasti spadl GitHub Spec Kit s `/plan` → `plan.md` a je to důvod, proč se od jeho názvosloví jinde záměrně odchyluju.
+- **Žádné zkratky v názvech.** Ani v názvech skillů, ani v názvech souborů, které vyrábějí.
 - Každý skill má v `README.md` svou sekci. Když nějaký přidáš nebo zásadně změníš jeho chování, aktualizuj ji rovnou jako součást té změny – stejný styl a tón jako ostatní sekce (osobní, věcné, s konkrétním přínosem). Nečekej na vyžádání.
 
 ## Automatické akce
