@@ -63,7 +63,7 @@ Když se odložený bod mezitím stal bezpředmětným, řekni to a proč – ne
 
 ### Než přejdeš dál, ověř, že se nic neztratilo
 
-Před dalším velkým tématem nebo na konci session projdi konverzaci a zkontroluj: (1) zbyly nedořešené otázky? (2) nevznikly novými rozhodnutími nekonzistence jinde? (3) je vše dohodnuté zapsané? Na (2) je `/consistency`, na (1) a (3) `/cleanup`. Pořadí viz *Uzavírání hotové feature*.
+Před dalším velkým tématem nebo na konci session projdi konverzaci a zkontroluj: (1) zbyly nedořešené otázky? (2) nevznikly novými rozhodnutími nekonzistence jinde? (3) je vše dohodnuté zapsané? Na (2) je `/consistency`, na (1) a (3) `/cleanup`. Pořadí viz *Životní cyklus práce*.
 
 ### Velké průzkumné úkoly deleguj
 
@@ -208,27 +208,34 @@ Před destruktivní nebo těžko vratnou operací (mazání, přepis, zrušení,
 
 Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrátit" (kopírováním odjinud, z legacy, z dokumentace), nech stopu – sekce „Odstraněné položky", řádek v CHANGELOGu, poznámka. Ne u každého smazání, ale tam, kde má smysl chránit se před nechtěným návratem.
 
-### Zakládání nové práce
+### Životní cyklus práce
 
-Nová věc – projekt, podsystém, větší feature – se zakládá v tomhle pořadí:
+Od nápadu k uzavřené feature vede jedna osa. Celá vypadá takhle:
+
+```
+/project → /spec → /breakdown → /implement → testy → /standards
+         → /code-review → /consistency → /cleanup
+```
+
+Kroky, které volají skilly třetích stran, je volají jako svůj vnitřek. **Ten se může
+kdykoliv změnit, aniž se změní, jak se krok volá** – proto se v téhle ose objevují
+jen vlastní názvy.
+
+**Zakládání (1–4)**
 
 1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez `docs/` není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti.
-2. **`/spec`** – produktová specifikace a návrh řešení. Řídí `superpowers:brainstorming`, který nejdřív rozhodne, jestli je to vůbec případ na PRD; u drobné změny v existujícím kódu se zastaví a pošle tě rovnou k implementaci.
-3. **`superpowers:writing-plans`** – implementační plán, jen na to, co je v MVP. Vyvolá ho `/spec` po schválení návrhu. Dřív ne: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat.
-4. **`superpowers:subagent-driven-development`** (nebo `executing-plans`) – realizace úkol po úkolu. Nabídne ji `writing-plans`.
+2. **`/spec`** – produktová specifikace (`docs/prd.md`) a návrh řešení (`docs/design.md`). Nejdřív rozhodne, jestli je to vůbec případ na specifikaci; u drobné změny v existujícím kódu se zastaví a pošle tě rovnou k implementaci.
+3. **`/breakdown`** – implementační plán (`docs/plan.md`), jen na to, co je v MVP. Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat.
+4. **`/implement`** – realizace úkol po úkolu, každý s testem, ověřením a commitem.
 
-Krok se přeskakuje jen tam, kde pro něj není důvod, ne když se nechce: existující projekt nepotřebuje `/project`, bounded změna nepotřebuje PRD ani plán. **Přeskočení řekni nahlas i s důvodem.**
+**Uzavírání (5–9)**
 
-Konec téhle osy řeší *Uzavírání hotové feature* níž.
+5. **Testy a build** – nemá smysl posílat na review kód, který neběží.
+6. **`/standards`** – soulad s doménovými standardy. Vzejdou z něj změny kódu, patří tedy před review.
+7. **`/code-review`** – korektnost provedených změn.
+8. **`/consistency`** – audit celého projektu. Uklidí i to, co nastřílely kroky 6 a 7.
+9. **`/cleanup`** – poslední. Vytěží session a zapíše i rozhodnutí z kroků 7 a 8 (co bylo odmítnuto a proč).
 
-### Uzavírání hotové feature
+**Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. A `/cleanup` je jediný odolný vůči kompaktaci – čte surový transcript ze souboru, ne kontext.
 
-Když je feature hotová a session končí, projdi kroky **v tomhle pořadí**:
-
-1. **Testy a build** – nemá smysl posílat na review kód, který neběží.
-2. **`/standards`** – soulad s doménovými standardy. Vzejdou z něj změny kódu, patří tedy před review.
-3. **`/code-review`** – korektnost provedených změn.
-4. **`/consistency`** – audit celého projektu. Uklidí i to, co nastřílely kroky 2 a 3.
-5. **`/cleanup`** – poslední. Vytěží session a zapíše i rozhodnutí z kroků 3 a 4 (co bylo odmítnuto a proč).
-
-**Proč takhle:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. A `/cleanup` je jediný odolný vůči kompaktaci – čte surový transcript ze souboru, ne kontext.
+**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: existující projekt nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown` ani testy. **Přeskočení řekni nahlas i s důvodem.**

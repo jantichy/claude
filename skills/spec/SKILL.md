@@ -41,7 +41,7 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt". Tvrdá brána – viz *Zákaz implementace*.
 - **Nezakládá projekt.** Strukturu, git, autocommit a doménové importy dělá `/project`. Když chybí, skill na to upozorní a nabídne ho.
-- **Nepíše implementační plán.** Ten dělá `superpowers:writing-plans`. Skill mu jen připraví vstup a předá řízení.
+- **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill mu jen předá řízení, až je zadání schválené.
 - **Neduplikuje `superpowers:brainstorming`.** Dialog, klasifikaci rozsahu i návrh řešení řídí ten skill.
 
 ## Vztah k superpowers
@@ -52,8 +52,8 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 | Doptávání, varianty řešení, návrh, schvalovací brány | `superpowers:brainstorming` |
 | **Produktový rámec a sepsání PRD** | **tenhle skill** |
 | Sepsání návrhu řešení | `brainstorming` ho vytvoří, tenhle skill mu určí cíl a tvar |
-| Implementační plán | `superpowers:writing-plans` |
-| Realizace plánu | `superpowers:subagent-driven-development` nebo `executing-plans` |
+| Implementační plán | `/breakdown` |
+| Realizace plánu | `/implement` |
 
 **Přepis výchozích cest.** `brainstorming` ukládá design doc do `docs/superpowers/specs/YYYY-MM-DD-<téma>-design.md` a `writing-plans` plán do `docs/superpowers/plans/…`. Obojí explicitně respektuje uživatelovu preferenci a ta zní jinak – podle `~/Dev/context/structure/structure.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů:
 
@@ -62,7 +62,7 @@ Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní
 
 Tuhle preferenci **řekni oběma skillům výslovně**, když je vyvoláváš. Jinak si založí vlastní adresářový strom vedle toho tvého.
 
-**Spec pro `writing-plans` je `docs/design.md`**, ne PRD. Plán argumentuje z návrhu řešení; PRD se mu předá jako doplňkový kontext, aby věděl, proč se to staví.
+**Spec pro plán je `docs/design.md`**, ne PRD. Plán argumentuje z návrhu řešení; PRD jde jako doplňkový kontext, aby bylo vidět, proč se to staví. O předání se stará `/breakdown`.
 
 ## Zásady pro celý průběh
 
@@ -302,17 +302,13 @@ Počkej na odpověď. Chce-li změny, proveď je a projdi sebe-revizi znovu.
 
 ## Fáze 5 – Předání do plánu
 
-Po schválení návrhu **vyvolej `superpowers:writing-plans`** a předej mu:
+Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání udělá `docs/plan.md`. Ten si sám najde spec i kontext a ohlídá rozsah – nemusíš mu nic předávat ručně, jen ho vyvolej.
 
-- **spec = `docs/design.md`** (byl-li přeskočen, tak `docs/prd.md`),
-- **kontext = `docs/prd.md`** – ať v hlavičce plánu sedí `**Spec:**` a ať je vidět, proč se to staví,
-- **cíl = `docs/plan.md`** (ne `docs/superpowers/plans/…`),
-- **jen to, co je v MVP.** Plán se dělá na první verzi. Zbytek je zapsaný a počká.
-- odkaz na doménové standardy, které si projekt importuje v `CLAUDE.md`.
+**Sám plán nepiš.** Ani „ať se to nemusí volat zvlášť". Rozpad na úkoly má vlastní pravidla, vlastní kontrolu pokrytí MVP a vlastní schvalovací bránu.
 
-**U projektu bez kódu** `writing-plans` nevyvolávej – rozepiš kroky do `docs/todo.md`.
+**U projektu bez kódu** `/breakdown` nevyvolávej – rozepiš kroky do `docs/todo.md`.
 
-Řízení předej a **do plánu sám nezasahuj** – `writing-plans` má vlastní sebe-revizi i vlastní předání do realizace.
+Celý řetěz i s tím, co následuje po realizaci, je v `~/.claude/RULES.md`, *Životní cyklus práce*.
 
 ------
 
