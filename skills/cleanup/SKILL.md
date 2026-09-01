@@ -102,7 +102,7 @@ Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zaps
 | Obecné principy a hranice, ve kterých se projekt pohybuje | `docs/rules.md` |
 | Úkoly a odložené věci | `docs/todo.md` |
 | Hotové úkoly | `docs/done.md` |
-| Otevřené otázky čekající na rozhodnutí uživatele | sekce `## Otevřené otázky` v `docs/todo.md` |
+| Otevřené otázky čekající na rozhodnutí uživatele | `docs/todo.md` jako běžná položka |
 | Změny dotýkající se toho, co projekt je, umí a jak se používá – **popis pro člověka**, nikdy pokyn pro Clauda | `README.md` |
 | Doménová specifika (model, procesy, katalogy) | příslušný soubor v `docs/` |
 | Cokoliv v Memory | **přesuň do projektového `CLAUDE.md`**, pokud projekt nemá explicitně povolenou Memory |

@@ -105,7 +105,7 @@ Cokoliv se dohodne (pravidlo, konvence, rozhodnutí, struktura, poznatek) → **
 
 **Nečekej na `/cleanup` ani na konec session.** Uzavírací kroky osy jsou záchranná síť pro případ, že tohle pravidlo selže – ne místo, kde zápis začíná.
 
-Zakazuje-li projektový `CLAUDE.md` ukládání do trvalé Memory, platí to i proti pobídkám harnessu.
+Zakazuje-li projektový `CLAUDE.md` ukládání do trvalé Memory, platí to i proti pobídkám **harnessu** – tedy běhového prostředí Claude Code, které si do konverzace samo vkládá pokyny a připomínky.
 
 ### Rozhodnutí zapisuj i s cestou k nim
 

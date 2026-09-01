@@ -13,7 +13,7 @@ Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nev
 
 Aplikují se podmíněně – jen když pracuju v dané doméně. Nejsou to pravidla pro každý úkol, ale soubory znalostí pro konkrétní typy práce.
 
-**Proč odkaz a ne `@import`:** projektový `CLAUDE.md` doménu importuje natvrdo, protože tam platí vždy. Tady je to naopak – naráz platí jedna doména z devíti, a `@import` všech by stál kontext v každé session (samotné `web.md` a `admin.md` mají skoro 500 řádků, `analytics/` je celá knowledge base). Odkaz se dodržuje hůř než import, ale je to vědomá volba: cenu za nespolehlivost platím jen tady, ne v projektech.
+**Proč odkaz a ne `@import`:** projektový `CLAUDE.md` doménu importuje natvrdo, protože tam platí vždy. Tady je to naopak – naráz platí jedna doména, ne všechny, a `@import` celého seznamu by stál kontext v každé session (samotné `web.md` a `admin.md` mají skoro 500 řádků, `analytics/` je celá knowledge base). Odkaz se dodržuje hůř než import, ale je to vědomá volba: cenu za nespolehlivost platím jen tady, ne v projektech.
 
 - `~/Dev/context/web/web.md` – checklist pro každé webové rozhraní (použitelnost, přístupnost, typografie, formuláře, výkon, GDPR, ...) – načti si ho vždy, když pracuješ na webovém rozhraní
 - `~/Dev/context/web/admin.md` – checklist pro administrační a backoffice rozhraní (struktura, seznamy a tabulky, akce a potvrzování, editace, oprávnění, auditní stopa) – načti si ho vždy, když děláš administraci nebo interní nástroj; platí navíc k `~/Dev/context/web/web.md`

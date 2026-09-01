@@ -33,7 +33,7 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 
 ## Krok 0 – Zjisti režim a stav
 
-Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md`, `README.md`, `docs/`, `TODO.md`, `docs/prompts.md` (příp. starší `PROMPTS.md` v rootu), `.gitignore`, zdrojové soubory.
+Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md`, `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 4a pozná režim); starší pojmenování `TODO.md` a `PROMPTS.md` v kořeni; `prompts.md`, zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim *nový projekt*.
 - **Cokoliv jiného** → režim *existující projekt*.
