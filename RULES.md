@@ -239,7 +239,7 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 Vše mimo aktuální osu – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
 
-Aby se seznam nezaplevelil, drž body odložené **v rámci session** v sekci `## Parkované v session` a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
+Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vyhrazené sekci (definuje ji `structure.md`) a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
 
 Skutečný úkol se po dokončení nemaže ani neodškrtává na místě – **přesune se do `done.md`**, hned jak je hotový.
 
@@ -301,7 +301,7 @@ vždycky; u většího projektu se ale vyplatí.
 
 **Zakládání (1–4)**
 
-1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez `docs/` není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti.
+1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti.
 2. **`/spec`** – produktová specifikace (`docs/prd.md`) a návrh řešení (`docs/design.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
 3. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat.
 4. **`/implement`** – realizace podle plánu.

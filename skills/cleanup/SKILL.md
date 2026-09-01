@@ -140,9 +140,9 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    | `docs/done.md` | ověř, že v `todo.md` nezbylo nic hotového – přesouvá se průběžně, tohle je jen záchranná síť |
    | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky“ |
-| `docs/prd.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
-| `docs/design.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie |
-| `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |
+   | `docs/prd.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
+   | `docs/design.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie |
+   | `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |
 
 3. **Porovnej s tím, co v souborech skutečně je.** Nestačí, že se soubor během session změnil – ověř, že obsahuje **všechno**, co tam podle bodu 2 patří.
 
