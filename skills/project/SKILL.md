@@ -44,7 +44,7 @@ V režimu *existující projekt* si nejdřív udělej inventuru a **vypiš ji u�
 |---|---|
 | Git a jeho podoba | je `.git` adresář (běžný), nebo `.bare` + `.git` soubor (worktree layout)? má remote? |
 | Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, autoprompt, paměť, typ, importy)? |
-| Standardní struktura | existuje `README.md`, `docs/todo.md`, `docs/decisions.md`, `docs/rules.md`? |
+| Standardní struktura | existuje `README.md`, `todo.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 4a) |
 | *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni stub s `@main/CLAUDE.md`? |
 | Starší pojmenování | existuje `TODO.md` v rootu, `docs/rozhodnuti.md`, `docs/zasady.md`? (viz Krok 4) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
@@ -180,17 +180,47 @@ Přesun je `git mv` jen tehdy, je-li zdroj verzovaný – v kořeni kontejneru *
 
 ## Krok 4 – Standardní struktura
 
-Řiď se `~/Dev/context/structure/structure.md` – ten je autoritativní, tenhle výčet je jen pracovní. Založ, co chybí:
+Řiď se `~/Dev/context/structure/structure.md` – ten je autoritativní, tenhle krok je jen provedení.
+
+### 4a – Režim umístění
+
+Standardní soubory leží buď v `docs/`, nebo přímo v kořeni projektu. Obojí je rovnocenné.
+
+*Nový projekt:* zeptej se (AskUserQuestion, jedna otázka):
+
+| Volba | Popis pro uživatele |
+|---|---|
+| `docs/` (výchozí) | Meta-vrstva odděleně od vlastní práce. Sedí na projekt s kódem nebo obsahem. |
+| `root` | Soubory přímo v kořeni. Sedí na knowledge base a malé projekty, kde by `docs/` byl prázdný obal. |
+
+*Existující projekt:* režim **detekuj a rovnou zapiš**, neptej se. Leží-li `todo.md` nebo `decisions.md` v kořeni → `root`; leží-li v `docs/` → `docs/`; nenajdeš-li ani jedno → `docs/`. Co jsi zjistil a zapsal, **řekni nahlas** v závěrečném souhrnu. Najdeš-li soubory na obou místech, je to nepořádek, ne třetí režim – vypiš, co je kde, a nech si vybrat, na který režim to srovnat.
+
+**Ve worktree layoutu** je kořen projektu `main/`, ne kořen kontejneru (viz krok 3b).
+
+Zapiš do bloku metadat v `CLAUDE.md`, za řádek `Slug`:
 
 ```
-CLAUDE.md
-README.md
-docs/todo.md
-docs/decisions.md
-docs/rules.md
+- **Struktura:** docs/
 ```
 
-`docs/prd.md`, `docs/design.md` ani `docs/plan.md` **nezakládej** – vznikají až prací, přes `/spec` a `/breakdown`.
+### 4b – Které soubory založit
+
+Povinný je jen `CLAUDE.md`. U zbytku se zeptej (AskUserQuestion, `multiSelect: true`, vše předvybrané):
+
+| Soubor | Popis pro uživatele |
+|---|---|
+| `README.md` | Co projekt je, pro člověka. U privátního projektu bez publika nemusí být. |
+| `todo.md` | Co je odložené na později. |
+| `decisions.md` | Co jsme rozhodli a proč, včetně zamítnutých variant. |
+| `rules.md` | Principy, ve kterých se projekt pohybuje. |
+
+Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUDE.md` (krok 4, *Zápis*) vypiš jen ty, které vznikly.
+
+`prompts.md` sem nepatří – zakládá ho autoprompt v kroku 7. `prd.md`, `design.md` a `plan.md` **nezakládej**, vznikají prací přes `/spec` a `/breakdown`.
+
+*Existující projekt:* co už existuje, ber jako zvolené; ptej se jen na to, co chybí.
+
+### 4c – Obsah
 
 `README.md` u nového projektu: nadpis s **lidským názvem** a popiskem z kroku 1 jako prvním odstavcem – tam se popisek smí rozvést do víc vět. U existujícího projektu zkontroluj, že nadpis a první odstavec sedí s blokem metadat v `CLAUDE.md`; rozcházejí-li se, srovnej je. Soubory v `docs/` zakládej **prázdné, jen s nadpisem** – obsah nevymýšlej dopředu.
 
@@ -202,15 +232,19 @@ docs/rules.md
 
 | Staré | Nové |
 |---|---|
-| `TODO.md` v rootu | `docs/todo.md` |
-| `docs/rozhodnuti.md` | `docs/decisions.md` |
-| `docs/zasady.md` | `docs/rules.md` |
+| `TODO.md` v rootu | `todo.md` na místě podle režimu |
+| `rozhodnuti.md` | `decisions.md` |
+| `zasady.md` | `rules.md` |
+
+Cílové umístění se řídí režimem z kroku 4a. `TODO.md` velkými písmeny v kořeni **není** režim `root` – je to staré pojmenování, které se migruje tak jako tak.
 
 Přejmenovávej přes `git mv`, ať se zachová historie. Po přejmenování **projdi celý repozitář a aktualizuj všechny odkazy** na staré názvy – v `CLAUDE.md`, `README.md`, dokumentaci i komentářích. Existuje-li cílový soubor už také, obsah **slouč** a na sloučení upozorni; nikdy nepřepisuj.
 
 ### Zápis do CLAUDE.md
 
 Přidej sekci – konkrétní deklaraci, ne opis konvence:
+
+Vypiš **jen soubory, které v projektu opravdu jsou**, s cestou podle zvoleného režimu:
 
 ```
 ## Struktura a dokumentace

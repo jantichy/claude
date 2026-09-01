@@ -4,6 +4,8 @@ Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalos
 
 Standardní strukturu projektu definuje `~/Dev/context/structure/structure.md`.
 
+Kde v projektu leží standardní soubory, je volba ze dvou režimů (`docs/`, nebo kořen projektu) – definuje ji `structure.md`. **Cesty jako `docs/todo.md` se tu píšou v podobě pro režim `docs/` a znamenají soubor na místě podle režimu daného projektu.**
+
 Doménové znalosti z `~/Dev/context/` se do projektu načítají **tvrdým `@import`em** v jeho `CLAUDE.md` – jen ty, které jsou pro jeho charakter relevantní. Rozcestník po doménách je `~/Dev/context/CLAUDE.md`, importy zakládá `/project`.
 
 **Projekt dělaný pro konkrétní organizaci si navíc importuje její profil** z `~/Dev/context/organizations/` – například `@~/Dev/context/organizations/planetum.md`. Není to standard, ale korpus: kdo v organizaci sedí, kdo co schvaluje a na čem jedou. Profil drží knowledge base, projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil.
@@ -310,4 +312,4 @@ vždycky; u většího projektu se ale vyplatí.
 
 **Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 
-**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založeným `docs/` nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown` ani testy. **Přeskočení řekni nahlas i s důvodem.**
+**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown` ani testy. **Přeskočení řekni nahlas i s důvodem.**

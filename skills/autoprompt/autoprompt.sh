@@ -20,7 +20,18 @@ if [ -d "$PROJECT_DIR/.bare" ]; then
     fi
 fi
 
-PROMPTS_FILE="$TARGET_DIR/docs/prompts.md"
+# Umístění standardních souborů má dva režimy (viz structure.md, Dva režimy
+# umístění). Existující log vždycky vyhrává, ať se nerozdvojí; jinak se režim
+# pozná podle toho, kde leží todo.md / decisions.md.
+if [ -f "$TARGET_DIR/docs/prompts.md" ]; then
+    PROMPTS_FILE="$TARGET_DIR/docs/prompts.md"
+elif [ -f "$TARGET_DIR/prompts.md" ]; then
+    PROMPTS_FILE="$TARGET_DIR/prompts.md"
+elif [ -f "$TARGET_DIR/todo.md" ] || [ -f "$TARGET_DIR/decisions.md" ]; then
+    PROMPTS_FILE="$TARGET_DIR/prompts.md"
+else
+    PROMPTS_FILE="$TARGET_DIR/docs/prompts.md"
+fi
 [ -f "$PROMPTS_FILE" ] || exit 0
 
 INPUT=$(cat)

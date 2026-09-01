@@ -9,7 +9,7 @@ allowed-tools: [Read, Edit, Write, Bash]
 
 ## Co skill dělá
 
-Zapíná/vypíná logování každého prompt uživatele do `docs/prompts.md` v projektu. Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/skills/autoprompt/autoprompt.sh` – ten připíše každý prompt jako oddělovač `---`, pořadové číslo `**N.**` a text promptu.
+Zapíná/vypíná logování každého prompt uživatele do `prompts.md` v projektu (v `docs/`, nebo v kořeni – podle režimu umístění). Funguje přes `UserPromptSubmit` hook, který spouští `~/.claude/skills/autoprompt/autoprompt.sh` – ten připíše každý prompt jako oddělovač `---`, pořadové číslo `**N.**` a text promptu.
 
 Ve worktree layoutu si hook sám najde worktree hlavní větve a píše do `main/docs/prompts.md`, aby byl log ve gitu. Je to jediná povolená rozpracovaná změna v `main/`; commituje se při mergi větve nebo při `/cleanup`.
 
@@ -73,7 +73,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
    Pokud `UserPromptSubmit` už existuje, přidej do něj nový objekt. Pokud `autoprompt.sh` v hooku už je, neduplikuj.
 
-5. **Založ `docs/prompts.md`** (pokud neexistuje; adresář `docs/` případně vytvoř):
+5. **Založ `prompts.md`** (pokud neexistuje) – **na místě podle režimu umístění** (`~/Dev/context/structure/structure.md`, *Dva režimy umístění*): v režimu `docs/` jako `docs/prompts.md` a adresář případně vytvoř, v režimu `root` přímo v kořeni projektu. Hook si obojí najde sám:
 
    ```
    # Prompty
