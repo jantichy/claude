@@ -49,12 +49,31 @@ Zjištěné shrň do tří až pěti řádků.
 
 ## Fáze 1 – Volba režimu
 
-Zeptej se **přes `AskUserQuestion`** – jedna otázka, dvě volby, v lidské řeči:
+Zeptej se **přes `AskUserQuestion`** – jedna otázka, tři volby, v lidské řeči:
 
 - **Po úkolech se čtením mezi nimi** *(doporuč tuhle)* – na každý úkol jde čerstvý pracovník, který nevidí předchozí konverzaci, a mezi úkoly se výsledek zkontroluje. Chytá to, když se plán někde rozejde se skutečností, a nehromadí se kontext. Vhodné na cokoliv delšího než pár úkolů.
 - **V jednom kuse s kontrolními body** – rychlejší, méně režie, ale chyba se odhalí až o několik úkolů dál. Vhodné na krátký plán a na práci, kterou dobře znáš.
+- **Bez zastávek do splnění cíle** – nabízej **jen tehdy, když jsou splněné všechny podmínky níž**, jinak tuhle volbu vůbec neuváděj.
 
 Podle volby vyvolej `superpowers:subagent-driven-development`, respektive `superpowers:executing-plans`, a předej mu cestu k plánu, kořen projektu a doménové standardy z `CLAUDE.md`.
+
+### Bez zastávek do splnění cíle
+
+Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal`, oddělený evaluátor ji přehodnocuje po každém tahu a práce běží, dokud se cíl nevyřeší. **Není to rychlejší varianta předchozích dvou, je to výměna** – míň přerušení za horší bezpečnostní profil, protože zranitelností v kódu přibývá s počtem iterací, které nad ním agent stráví bez nezávislé kontroly.
+
+**Nabídni ho, jen když platí všech pět** (`~/Dev/context/coding/coding.md`, *Autonomie se stupňuje, nezapíná*):
+
+1. **Každý úkol v plánu má akceptační kritérium rozsouditelné strojem** – příkaz z kontraktu, ne věta.
+2. **Projekt má `test` v kontraktu a testy něco tvrdí** – ideálně doložené mutation score, ne jen pokrytím.
+3. **Zadání se během práce nemění** – refactoring, migrace, oprava reprodukovatelné chyby ano; rozdělaný nový produkt ne.
+4. **Zelená linka je vynucená hookem**, ne jen instrukcí.
+5. **Uživatel o tom režimu ví a vybral si ho** – nikdy ho nezapínej sám proto, že se ti zdá vhodný.
+
+**Když ho pustíš, drž tři pojistky:**
+
+- **Strop na iterace i na tokeny**, řečený dopředu. Smyčka bez stropu se nezastaví, jen dojde.
+- **Diff testovacích souborů hlídej zvlášť.** Jakákoliv změna v testech během běhu je **zásah, který se ohlásí** – ne tichá součást práce. Čím delší smyčka, tím větší pokušení ohnout to, co ji měří.
+- **Po doběhnutí povinné `/review`**, i když je všechno zelené. Zelená linka říká, že testy prošly, ne že kód dělá, co má.
 
 ------
 
