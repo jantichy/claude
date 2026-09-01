@@ -285,7 +285,7 @@ Práce, u které jde spustit kontrola, se **nehlásí jako hotová bez jejího v
 
 U projektu s kódem je tou kontrolou **zelená linka** a kontroluje se **po každém dokončeném úkolu**, ne až před uzavřením feature. Projekt své příkazy deklaruje v *Kontraktu příkazů* v projektovém `CLAUDE.md`; chybějící příkaz znamená, že to projekt nemá, a krok se přeskočí nahlas i s tím, co se tím nezkontrolovalo.
 
-Definice zelené linky, prahy jednotlivých bran a to, proč jsou testy během realizace jen ke čtení, jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Sem to nepatří: platí to jen u kódu, kdežto tenhle soubor se načítá i nad projekty, kde se nic nespouští.
+Definice zelené linky, prahy jednotlivých bran a to, proč jsou testy během psaní kódu jen ke čtení, jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Sem to nepatří: platí to jen u kódu, kdežto tenhle soubor se načítá i nad projekty, kde se nic nespouští.
 
 Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit, ověř, než ho napíšeš** – viz *Neopírej rozhodnutí o neověřené tvrzení*.
 
@@ -315,7 +315,7 @@ vždycky; u většího projektu se ale vyplatí.
 1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*, kterým se v projektu zapne zelená linka.
 2. **`/specify`** – produktová specifikace (`docs/requirements.md`) a návrh řešení (`docs/architecture.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
 3. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis prózou.
-4. **`/implement`** – realizace podle plánu, úkol po úkolu, každý do zelené linky a do commitu.
+4. **`/implement`** – odpracování plánu, úkol po úkolu, každý do zelené linky a do commitu.
 
 **Uzavírání (5–7)**
 

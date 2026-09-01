@@ -43,7 +43,7 @@ main        →  merge do production →  tohle a jedině tohle je nasazení
 | Netlify | Site configuration → Build & deploy → Production branch |
 | Cloudflare Pages | Settings → Builds & deployments → Production branch |
 
-Ostatní větve včetně `main` pak deployují jako **preview**, což je čistý zisk: každý merge do `main` dostane vlastní URL, na které se dá věc proklikat dřív, než ji uvidí kdokoliv jiný.
+Ostatní větve včetně `main` se pak nasazují jako **preview**, což je čistý zisk: každý merge do `main` dostane vlastní URL, na které se dá věc proklikat dřív, než ji uvidí kdokoliv jiný.
 
 **Dvě alternativy**, když oddělená větev z nějakého důvodu nesedí:
 
@@ -122,7 +122,7 @@ Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracovan
 
 **Během okna, kdy se dá vrátit zpátky, se nic neodstraňuje ani nepřejmenovává.** Odebraný sloupec znamená, že rollback kódu shodí aplikaci na datech, která nová verze zapsala – a máš rozbito na obou stranách.
 
-**Nasazuješ starší commit než je v produkci?** Pak platí to nejnepříjemnější pravidlo celého skillu: **kód se vrátí, data ne.** Proběhla-li od té doby migrace, běží starý kód na novém schématu. Právě proto se migruje dopředu kompatibilně – expand/contract existuje kvůli téhle situaci, ne kvůli eleganci. Nemá-li projekt expand/contract a mezi cílem a produkcí je migrace, **řekni, že návrat kódu sám o sobě nestačí**, a vyřeš data zvlášť, než cokoliv nasadíš.
+**Nasazuješ starší commit, než je v produkci?** Pak platí to nejnepříjemnější pravidlo celého skillu: **kód se vrátí, data ne.** Proběhla-li od té doby migrace, běží starý kód na novém schématu. Právě proto se migruje dopředu kompatibilně – expand/contract existuje kvůli téhle situaci, ne kvůli eleganci. Nemá-li projekt expand/contract a mezi cílem a produkcí je migrace, **řekni, že návrat kódu sám o sobě nestačí**, a vyřeš data zvlášť, než cokoliv nasadíš.
 
 **Před migrací záloha, která je ověřená.** Ne „hosting to nějak zálohuje“ – konkrétní soubor nebo snapshot, o kterém víš, kdy vznikl a jak se z něj obnovuje. U nevratné migrace to řekni nahlas a nech si to zvlášť potvrdit; platí `~/.claude/RULES.md`, *Před nevratnou akcí ověř skutečný stav*.
 
@@ -162,7 +162,7 @@ Bez výslovné odpovědi se nenasazuje. Ticho není souhlas.
 
 **Jiné prostředí** (VPS, kontejner, klasický hosting) – použij příkaz z `## Nasazení`; chybí-li, vyžádej si ho a zapiš. Nikdy nevymýšlej deploy příkaz sám: špatně odhadnutý cíl přepíše cizí web.
 
-Během nasazení **nic jiného neděl**. Žádné „ještě rychle opravím“.
+Během nasazení **nic jiného nedělej**. Žádné „ještě rychle opravím“.
 
 ------
 

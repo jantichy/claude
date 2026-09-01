@@ -127,7 +127,7 @@ Na **každou** vybranou roli pošli **samostatného subagenta** – všechny par
 
 Vlastní zadání piš jen pro role, které vestavěný protějšek nemají.
 
-**Model a effort podle role.** Levné a mechanické role (standardové sady, testy) nech na výchozím modelu. **Bezpečnost a Data a stavy pouštěj na nejsilnějším dostupném modelu s vysokým effortem** – tam přehlédnutí stojí nejvíc a levný model tam mlčí místo aby hlásil.
+**Model a effort podle role.** Levné a mechanické role (standardové sady, testy) nech na výchozím modelu. **Bezpečnost a Data a stavy pouštěj na nejsilnějším dostupném modelu s vysokým effortem** – tam přehlédnutí stojí nejvíc a levný model tam mlčí, místo aby hlásil.
 
 ### Zadání pro pracovní roli
 
