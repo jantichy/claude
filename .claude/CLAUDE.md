@@ -11,6 +11,8 @@ Blok metadat je tady, a ne v kořenovém `CLAUDE.md`, jak velí `~/Dev/context/s
 
 Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen tady, na rozdíl od `~/.claude/CLAUDE.md`, který je uživatelský a jde do každé session v každém projektu.
 
+- Každý skill má v `README.md` svou sekci. Když nějaký přidáš nebo zásadně změníš jeho chování, aktualizuj ji rovnou jako součást té změny – stejný styl a tón jako ostatní sekce (osobní, věcné, s konkrétním přínosem). Nečekej na vyžádání.
+
 ## Automatické akce
 
 ### Autocommit
