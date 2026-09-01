@@ -127,7 +127,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    CLAUDE.md  README.md  docs/todo.md  docs/done.md  docs/decisions.md  docs/rules.md
    ```
 
-   Má-li projekt zadání, přidej k nim `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`.
+   Má-li projekt zadání, přidej k nim `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`. Má-li projekt kód, ověř i **`## Příkazy`** v `CLAUDE.md` (*Kontrakt příkazů*) – přibyl-li během session příkaz, kterým se něco spouští, patří tam.
    Neexistují-li, přeskoč je – nezakládají se tady.
 
 2. **Projdi celou session znovu** – celý transcript z Fáze 1, ne jen vytěžený seznam – a u každého souboru se ptej, co do něj **mělo** během session přibýt:
@@ -141,7 +141,8 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky“ |
    | `docs/requirements.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
-   | `docs/architecture.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie |
+   | `docs/architecture.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie, bezpečnostní model |
+   | `CLAUDE.md` → `## Příkazy` | přibyl nebo se změnil příkaz na testy, lint, build nebo audit |
    | `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |
 
 3. **Porovnej s tím, co v souborech skutečně je.** Nestačí, že se soubor během session změnil – ověř, že obsahuje **všechno**, co tam podle bodu 2 patří.

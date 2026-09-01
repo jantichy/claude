@@ -236,6 +236,8 @@ Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUD
 | `TODO.md` v rootu | `todo.md` na místě podle režimu |
 | `rozhodnuti.md` | `decisions.md` |
 | `zasady.md` | `rules.md` |
+| `prd.md` | `requirements.md` |
+| `design.md` | `architecture.md` |
 
 Cílové umístění se řídí režimem z kroku 4a. `TODO.md` velkými písmeny v kořeni **není** režim `root` – je to staré pojmenování, které se migruje tak jako tak.
 
@@ -337,6 +339,34 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 - **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez procesu zadání a plánu.“
 - **Data a výzkum** – „Jednorázová datová/výzkumná analýza – výstupem jsou zjištění a report, ne nasazovaný kód.“
 - **Ostatní** – „Projekt mimo výše uvedené kategorie.“
+
+## Krok 9b – Kontrakt příkazů a zelená linka
+
+**Jen u projektu, ve kterém se něco spouští** – tedy typ *Vývoj*, *Web*, nebo kdekoliv, kde v repozitáři najdeš `package.json`, `composer.json`, `Makefile`, `pyproject.toml` a podobně. U obsahového, znalostního nebo výzkumného projektu **krok přeskoč a řekni to jednou větou**; kontrakt tam nemá co dělat.
+
+**Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
+
+Zapiš do projektového `CLAUDE.md` sekci `## Příkazy`:
+
+```markdown
+## Příkazy
+
+- test:      npm test
+- typecheck: npm run typecheck
+- lint:      npm run lint
+- build:     npm run build
+- e2e:       npx playwright test
+- audit:     npm audit --omit=dev
+- mutation:  npx stryker run
+```
+
+Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
+
+**Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json` a v projektu bez `## Příkazy` neudělá nic, takže se nikde nic dalšího nenastavuje. Vypnout se dá souborem `.claude/no-green-line` v projektu.
+
+Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Řekni uživateli jednou větou, co se právě zapnulo – ne aby ho to překvapilo, až mu hook poprvé zablokuje konec tahu.
+
+**Nasazuje se projekt někam?** Zjisti to (`vercel.json`, `netlify.toml`, `.github/workflows/`) a najdeš-li automatické nasazení z produkční větve, zapiš to do `## Nasazení` v `CLAUDE.md` i s upozorněním, že **merge do produkční větve je samotné nasazení** – detail řeší `/release`.
 
 ## Krok 10 – Doménové checklisty
 
