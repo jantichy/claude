@@ -22,7 +22,7 @@ Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, im
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md`, ne do kódu.
-- **Neuzavírá feature.** Testy, standardy, review a úklid jsou samostatné kroky po tomhle – viz *Životní cyklus práce*, část *Uzavírání*.
+- **Neuzavírá feature.** Testy, standardy, review a úklid jsou samostatné kroky po tomhle – viz *Životní cyklus práce* v `~/.claude/RULES.md`, druhá půlka osy.
 
 ## Jak je to postavené uvnitř
 
@@ -114,7 +114,7 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 **Zapsáno mimo kód**
 - docs/decisions.md: N   docs/todo.md: N   docs/rules.md: N
 
-**Další krok:** uzavírání podle RULES.md, *Životní cyklus práce* – část *Uzavírání*
+**Další krok:** uzavírání podle RULES.md, *Životní cyklus práce* – druhá půlka osy
 ```
 
 Zakonči jednou z těchto vět:

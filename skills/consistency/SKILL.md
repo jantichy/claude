@@ -59,7 +59,7 @@ Výstupy si zapamatuj a předej Explore agentovi. Pokud nástroj selže nebo nen
 
 ## Fáze 1 – Průzkum projektu
 
-Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, baseline z 1.1, seznam ignorovaných z 1.2 a výstupy nástrojů z 1.3):
+Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, baseline z 0.1, seznam ignorovaných z 0.2 a výstupy nástrojů z 0.3):
 
 ```
 Prohledej celý projekt a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.

@@ -62,7 +62,7 @@ Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill v
 | camelCase | `marketId`, `perMarket` → `siteId`, `perSite` |
 | snake_case / kebab | `market_id`, `market-config` → `site_id`, `site-config` |
 | Verzálky a konstanty | `MARKET`, `Market` → `SITE`, `Site` |
-| Česky, i skloňovaně | „trh", „trhu", „trhy" → „web", „webu", „weby" |
+| Česky, i skloňovaně | „trh“, „trhu“, „trhy“ → „web“, „webu“, „weby“ |
 | Názvy souborů a adresářů | `market.md`, `markets/` → `site.md`, `sites/` |
 | Hodnoty v datech | `"type": "market"` v JSONu |
 

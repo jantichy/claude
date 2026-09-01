@@ -92,13 +92,13 @@ Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnut
 1. **Kořen projektu.** Pracovní adresář, případně kořen repozitáře. Ve worktree layoutu (`~/Dev/context/worktree/worktree.md`) je projektem pracovní adresář větve – dokumenty patří do `main/docs/`, ne do kořene kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – metadata projektu, typ projektu, paměťová politika, `### Autocommit`, `## Výjimky z obecných pravidel`.
 3. **Zkontroluj strukturu.** Existuje `docs/` s `todo.md`, `decisions.md`, `rules.md`? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce.
-4. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. Cizí podklady jsou read-only.
+4. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
 5. **Urči vstupní bod.** Skill se dá spustit i uprostřed – neběží vždycky celý:
 
    | Stav | Kde začít |
    |---|---|
    | `prd.md` ani `design.md` neexistují | Fáze 1, celý běh |
-   | `prd.md` existuje, `design.md` ne | Zeptej se: **navázat návrhem řešení** (Fáze 3b), nebo revidovat PRD? Tohle je běžný případ – produkt se schválí dnes, návrh se dělá jindy. |
+   | `prd.md` existuje, `design.md` ne | Zeptej se: **navázat návrhem řešení**, nebo revidovat PRD? Tohle je běžný případ – produkt se schválí dnes, návrh se dělá jindy. Při navázání **projdi Fázi 2 i tak** – `brainstorming` musíš vyvolat, jinak nemá kdo návrh vytvořit; jen mu místo produktových otázek předej hotové `docs/prd.md` jako zadání a rovnou jdi na varianty řešení. |
    | Existují oba | Jde o revizi, nebo o novou část projektu? Při revizi **nepřepisuj** – rozšiř a přeformuluj stávající. |
    | `design.md` existuje a přidává se feature | Rozšiř ho. **Nezakládej druhý návrhový dokument** – jeden systém, jeden návrh. |
 
@@ -286,8 +286,10 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 
 **Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. Nabídni `/oponent` – u většího projektu doporuč, u malého jen nabídni. Úhly se pro každý dokument liší:
 
-- **`/oponent docs/prd.md`** – cílová skupina, ekonomika, konkurence, co chybí
-- **`/oponent docs/design.md`** – technická proveditelnost, hraniční případy, provoz, vnitřní rozpor
+Povinné úhly *Vnitřní rozpor* a *Co chybí* platí vždy; k nim se podle dokumentu přidávají:
+
+- **`/oponent docs/prd.md`** – cílová skupina, ekonomika, konkurence
+- **`/oponent docs/design.md`** – technická proveditelnost, hraniční případy, provoz
 
 **Brána uživatele** – po PRD (viz 3a) i po designu:
 

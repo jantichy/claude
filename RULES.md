@@ -213,8 +213,8 @@ Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrá
 Od nápadu k uzavřené feature vede jedna osa. Celá vypadá takhle:
 
 ```
-/project → /spec → /breakdown → /implement → testy → /standards
-         → /code-review → /consistency → /cleanup
+Zakládání   /project → /spec → /breakdown → /implement
+Uzavírání   testy → /standards → /code-review → /consistency → /cleanup
 ```
 
 Kroky, které volají skilly třetích stran, je volají jako svůj vnitřek. **Ten se může
@@ -234,9 +234,9 @@ vždycky; u většího projektu se ale vyplatí.
 
 **Uzavírání (5–9)**
 
-5. **Testy a build** – nemá smysl posílat na review kód, který neběží.
+5. **Testy a build** – jediný krok bez skillu: spusť, co projekt má (`npm test`, `pytest`, build), a než půjdeš dál, musí to projít. Nemá smysl posílat na review kód, který neběží.
 6. **`/standards`** – soulad s doménovými standardy. Vzejdou z něj změny kódu, patří tedy před review.
-7. **`/code-review`** – korektnost provedených změn.
+7. **`/code-review`** – korektnost provedených změn. Vestavěný skill Claude Code, ne vlastní.
 8. **`/consistency`** – audit celého projektu. Uklidí i to, co nastřílely kroky 6 a 7.
 9. **`/cleanup`** – poslední. Vytěží session a zapíše i rozhodnutí z kroků 7 a 8 (co bylo odmítnuto a proč).
 

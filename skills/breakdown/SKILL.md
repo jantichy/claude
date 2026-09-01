@@ -114,7 +114,7 @@ Nabídni před tím ještě `/oponent docs/plan.md` s úhly *technická provedit
 ```
 ## Plán hotový
 
-**Soubor:** docs/plan.md – <N> úkolů, <M> kroků
+**Soubor:** docs/plan.md – <N> úkolů
 **Spec:** <design.md / prd.md>
 **Rozsah:** <které položky MVP>
 
