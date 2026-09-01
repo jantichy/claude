@@ -16,7 +16,7 @@ Tenhle soubor drží **obecná pravidla práce**. Než sem něco zapíšeš, pro
 
 1. Jmenuje pravidlo konkrétní soubor v `docs/`? → `structure.md`
 2. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu
-3. Týká se psaní kódu, webu, textu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
+3. Týká se psaní kódu, webu, textu, vizuálu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
 4. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, kapitola *Výjimky z obecných pravidel*
 5. Nic z toho → patří sem
 

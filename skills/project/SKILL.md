@@ -350,9 +350,13 @@ U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md`
 | Webová analytika a měření | `@~/Dev/context/analytics/analytics.md` |
 | Psaní českých textů | `@~/Dev/context/text/text.md` |
 | Školení a kurzy | `@~/Dev/context/training/training.md` |
+| Vizuální tvorba a grafika | `@~/Dev/context/design/design.md` |
+| Prezentace a slajdy | `@~/Dev/context/design/slides.md` |
 | Žádný | – |
 
-U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvyplň `training/training.md` spolu s `text/text.md` – materiály pro účastníky jsou text a řídí se obojím.
+U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvyplň `training/training.md` spolu s `text/text.md` – materiály pro účastníky jsou text a řídí se obojím. Přihoď i `design/slides.md`, pokud k tomu vzniká promítaná prezentace.
+
+`design/slides.md` nabízej i mimo školení – všude, kde se dělá deck: konferenční přednáška, prodejní pitch, prezentace výsledků klientovi. Importuje se **navíc** k `design/design.md`, ne místo něj.
 
 `worktree.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
 

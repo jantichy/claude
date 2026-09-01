@@ -1,6 +1,6 @@
 ---
 name: standards
-description: Skill se použije, když uživatel zadá "/standards" nebo "/standards full", nebo chce prověřit kód, rozhraní a texty proti doménovým standardům (coding, web, admin, analytics, text). Výchozí rozsah jsou změny na větvi, "full" projede celý projekt. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+description: Skill se použije, když uživatel zadá "/standards" nebo "/standards full", nebo chce prověřit kód, rozhraní a texty proti doménovým standardům (coding, web, admin, analytics, text, design). Výchozí rozsah jsou změny na větvi, "full" projede celý projekt. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
 allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
 ---
 
@@ -65,6 +65,8 @@ Podle toho, čeho se soubory v rozsahu týkají. Aplikuj jen ty relevantní – 
 | `~/Dev/context/web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) |
 | `~/Dev/context/analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`, ne místo něj) |
 | `~/Dev/context/text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web/web.md`) |
+| `~/Dev/context/design/design.md` | vizuální výstupy – grafika, barevné systémy, typografie, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu |
+| `~/Dev/context/design/slides.md` | promítané prezentace – decky pro školení, přednášku, pitch nebo prezentaci výsledků (**navíc** k `design/design.md`, ne místo něj) |
 | `~/Dev/context/training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály pro účastníky (**navíc** k `text/text.md`, ne místo něj: text řeší, jak je to napsané, training to, jak je to postavené) |
 
 `~/Dev/context/worktree/worktree.md` mezi sadami schválně není. Popisuje layout repozitáře, ne pravidla pro zdrojové soubory, takže proti diffu se nedá auditovat. Ze stejného důvodu tu není `~/Dev/context/organizations/` – **je to korpus, ne standard**: říká, jaká organizace je, ne jak se má něco dělat, takže se proti němu nedá nic auditovat.
