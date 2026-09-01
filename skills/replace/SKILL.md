@@ -1,10 +1,10 @@
 ---
-name: propagate
-description: Skill se použije, když uživatel zadá "/propagate", nebo chce něco přejmenovat či změnit napříč celým projektem – termín, název souboru, adresáře, klíče, eventu, hodnoty – a promítnout to důsledně do všech míst, kde se to zmiňuje, včetně dokumentace, JSONů a názvů souborů.
+name: replace
+description: Skill se použije, když uživatel zadá "/replace", nebo chce něco přejmenovat či změnit napříč celým projektem – termín, název souboru, adresáře, klíče, eventu, hodnoty – a promítnout to důsledně do všech míst, kde se to zmiňuje, včetně dokumentace, JSONů a názvů souborů.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
 
-# Propagate
+# Replace
 
 ## Úvodní hláška (vždy jako první)
 
@@ -47,7 +47,7 @@ Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill v
 1. **Kořen projektu.** Ve worktree layoutu (`~/Dev/context/worktree/worktree.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – `### Autocommit`, konvence pojmenování, `## Výjimky z obecných pravidel`.
 3. **Git musí být čistý.** Rozpracované změny před startem se smíchají s přejmenováním a přestane být poznat, co je čí. Vypiš je a zeptej se, jestli je commitnout, odložit, nebo pokračovat i tak.
-4. **Zjisti zadání.** Uživatel ho obvykle dá jako argument (`/propagate market → site`). Když ne, zeptej se na starý a nový tvar.
+4. **Zjisti zadání.** Uživatel ho obvykle dá jako argument (`/replace market → site`). Když ne, zeptej se na starý a nový tvar.
 
 ------
 
