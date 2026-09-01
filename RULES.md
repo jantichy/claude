@@ -206,6 +206,8 @@ Odporují-li si dvě platná pravidla, vyhrává to výš v seznamu:
 3. **Tenhle soubor**
 4. **Pobídka harnessu**
 
+**Proč v tomhle pořadí:** čím blíž ke konkrétní situaci pravidlo vzniklo, tím líp ji zná. Projekt ví o svém kontextu víc než obecná pravidla, a šablona skillu ví o svém výstupu víc než ony – ale jen v jeho rozsahu. Harness je nejdál: nezná ani projekt, ani tvoje konvence.
+
 Kolizi uvnitř tohohle souboru **neřeš svépomocí** – ohlas ji a nech rozhodnout; tichá volba jedné strany je rozhodnutí nad rámec zadání.
 
 ### Rozlišuj typ změny
@@ -237,7 +239,7 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 Vše mimo aktuální osu – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
 
-Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vlastní sekci a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
+Aby se seznam nezaplevelil, drž body odložené **v rámci session** v sekci `## Parkované v session` a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
 
 Skutečný úkol se po dokončení nemaže ani neodškrtává na místě – **přesune se do `done.md`**, hned jak je hotový.
 
