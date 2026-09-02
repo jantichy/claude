@@ -93,7 +93,31 @@ Je to **kontrola, ne náhrada průběžného zápisu** – u bodu (3) má správ
 
 ### Velké průzkumné úkoly deleguj
 
-U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek exportu, hromadné hledání) nabídni delegaci na subagenty, klidně v levnějším modelu. Řídící úvahu a syntézu si nech, mechanický sběr ne.
+U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek exportu, hromadné hledání) nabídni delegaci na subagenty. Řídící úvahu a syntézu si nech, mechanický sběr ne.
+
+**Deleguj kvůli kontextu, ne kvůli úspoře.** Fan-out šetří hlavně kontext hlavní session – celkové tokeny spíš zvýší, protože každý agent si musí načíst svoje. Když se data do hlavní session vejdou a nepřekáží, je levnější je přečíst rovnou.
+
+### Model a effort podle úkolu
+
+Volba není „vždycky to nejchytřejší“ ani „vždycky to nejlevnější“. Rozhoduje, **čí výstup je vstupem pro koho**: chyba v návrhu nebo v ověření nálezu se násobí do všeho, co po ní přijde, kdežto chyba v mechanickém sběru se pozná hned.
+
+| Práce | Model | Effort |
+|---|---|---|
+| Mechanický sběr – hledání, čtení, převod formátu, přepis | nejlevnější (dnes Haiku) | nepodporuje |
+| Rutinní agent s jasným zadáním a úzkým rozsahem | výchozí model session | `low` |
+| Běžná práce – psaní kódu a textu, průzkum, kontrola proti standardu | výchozí model session | `medium`–`high` |
+| Návrh, rozpad na úkoly, ověřování nálezů, bezpečnost, explorativní útok | nejsilnější (dnes Opus) | `xhigh` |
+| Dlouhá agentní práce, kde nejsilnější model na `xhigh` nestačil | Fable | `high`–`xhigh` |
+
+Jména modelů zastarají, role ne – rozhoduje sloupec *Práce*. Aktuální rozdělení drží [přehled modelů](https://platform.claude.com/docs/en/about-claude/models/overview) a [dokumentace k effortu](https://platform.claude.com/docs/en/build-with-claude/effort).
+
+**Pravidlo nula: nejlevnější práce je ta, kterou neudělá model.** Co chytne typecheck, linter nebo test, se nemá hledat čtením kódu. Každá brána posunutá do vrstvy, která nestojí tokeny, je úspora, kterou žádná volba modelu nedožene.
+
+**Effort lad dřív než model.** Je to plynulá páka na tomtéž modelu, kdežto výměna modelu je skok. Silný model na nízkém effortu zůstává silný – u agentů s úzkým zadáním je `low` doporučená volba, ne nouzová. Eskaluj po krocích: `high` → `xhigh` → `max` → teprve pak silnější model.
+
+**Na návrhu a na ověřování se nešetří.** Slabý plánovač rozseje chyby do všech úkolů pod sebou a slabý ověřovatel nález nepotvrdí ani nevyvrátí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko. Obojí je přesně ten případ, kdy se vyplatí `xhigh`.
+
+**Nejsilnější neznamená nejdražší dostupný.** Nejvyšší tier (dnes Fable) je dvojnásobně drahý a pomalejší; sahá se po něm teprve tehdy, když silný model na vyšším effortu prokazatelně nestačil, ne preventivně.
 
 ------
 

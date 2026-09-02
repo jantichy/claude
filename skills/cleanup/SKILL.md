@@ -67,7 +67,7 @@ Tohle je jádro celého skillu. Všechno ostatní je servis kolem něj.
 
 1. **Najdi transcript aktuální session.** Leží v `~/.claude/projects/<slug-pracovního-adresáře>/<session-id>.jsonl`, kde slug vznikne z absolutní cesty nahrazením `/` a `.` pomlčkami (`/Users/honza/Dev/score` → `-Users-honza-Dev-score`). Když si nejsi jistý, který soubor je ten aktuální, vezmi v tom adresáři naposledy modifikovaný `.jsonl` a ověř si obsah proti tomu, co si z konverzace pamatuješ.
 
-2. **Projdi ho od úplného začátku.** Zajímají tě uživatelovy prompty i tvoje odpovědi. U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti kontext nesnědla surová data – předej mu cestu k souboru a seznam kategorií níže a nech si vrátit strukturovaný výtah.
+2. **Projdi ho od úplného začátku.** Zajímají tě uživatelovy prompty i tvoje odpovědi. U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti kontext nesnědla surová data – předej mu cestu k souboru a seznam kategorií níže a nech si vrátit strukturovaný výtah. Je to **výtah podle daného seznamu, ne posouzení: nejlevnější model** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Rozhodnout, co s vytěženým, je práce hlavní session ve Fázi 2.
 
    **Pozor na zprávy poslané uprostřed běžícího tahu.** Ty **nejsou** uložené jako `type: "user"`, ale jako `type: "queue-operation"` s `operation: "enqueue"` a textem v poli `content`. Kdo filtruje jen `type=="user"`, tiše o ně přijde – a přitom to bývají důležité dovětky („ještě ať to udělá i…“). Vytáhni je vždy taky:
    ```
@@ -206,6 +206,8 @@ Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit d
 ## Fáze 4 – Fresh-reader verifikace
 
 Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Ve výchozím rozsahu to není audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci. V režimu `full` naopak projdi dokumentaci celou (viz *Rozsah fresh-reader kontroly* výše) a v zadání pro subagenta vynech řádek se shrnutím session i větu o soustředění se na poslední session.
+
+**Fresh-reader je posouzení, ne sběr: výchozí model, `high`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Má odpovědět na otázku „dá se na tohle navázat?“, a to je úsudek – levný model přečte, co tam stojí, a přikývne, místo aby našel, co chybí.
 
 Spusť subagenta s tímto zadáním (doplň absolutní cestu k repozitáři, pořadí souborů ke čtení podle dokumentační mapy z Fáze 0 a **stručné shrnutí toho, co se v session řešilo a kam se to zapsalo**):
 

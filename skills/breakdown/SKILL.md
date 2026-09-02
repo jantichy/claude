@@ -68,6 +68,9 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 ## Fáze 2 – Sepsání plánu
 
+**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Plán řídí veškerou práci pod sebou: špatně nařezaný úkol nebo chybějící akceptační kritérium rozsévá chyby do všech kroků, které po něm přijdou, a projeví se až u posledního. Proto se na plánovači nešetří, i když samotné sepsání vypadá mechanicky. Odpovídá to i vestavěnému režimu `opusplan` – plánuje silný model, provádí levnější.
+
+
 **Vyvolej `superpowers:writing-plans`** a předej mu výslovně:
 
 - **zadání** = `docs/architecture.md` (nebo `docs/requirements.md`, byl-li návrh řešení přeskočen),

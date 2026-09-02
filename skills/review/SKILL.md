@@ -128,7 +128,7 @@ Na **každou** vybranou roli pošli **samostatného subagenta** – všechny par
 
 Vlastní zadání piš jen pro role, které vestavěný protějšek nemají.
 
-**Model a effort podle role.** Levné a mechanické role (standardové sady, testy) nech na výchozím modelu. **Bezpečnost a Data a stavy pouštěj na nejsilnějším dostupném modelu s vysokým effortem** – tam přehlédnutí stojí nejvíc a levný model tam mlčí, místo aby hlásil.
+**Model a effort podle role** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Standardové role měří text proti textu, takže jim stačí **výchozí model na `low`–`medium`** – mají checklist a nevymýšlejí. **Bezpečnost a Data a stavy pouštěj na nejsilnějším modelu s `xhigh`**: tam přehlédnutí stojí nejvíc a levný model mlčí, místo aby hlásil.
 
 ### Zadání pro pracovní roli
 
@@ -220,7 +220,7 @@ Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 
 **Tohle je krok, na kterém stojí použitelnost celého skillu.** Panel hlásí i to, co není – reviewer požádaný o hledání mezer nějaké najde vždycky, protože o to byl požádán.
 
-**Na verifikaci se nešetří.** Ověřovatele pouštěj na **nejsilnějším dostupném modelu s vysokým effortem**, i když nález hlásila levná role. Slabý model nález nepotvrdí ani nevyvrátí – přizvukuje tomu, co má před sebou, a tím z ověření udělá razítko. Ověřovatelů je přitom míň než nálezů z panelu, protože běží jen na KRITICKÉ a STŘEDNÍ a až po deduplikaci.
+**Na verifikaci se nešetří.** Ověřovatele pouštěj na **nejsilnějším modelu s `xhigh`**, i když nález hlásila levná role. Slabý model nález nepotvrdí ani nevyvrátí – přizvukuje tomu, co má před sebou, a tím z ověření udělá razítko. Ověřovatelů je přitom míň než nálezů z panelu, protože běží jen na KRITICKÉ a STŘEDNÍ a až po deduplikaci.
 
 Na každý nález ze závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci:
 

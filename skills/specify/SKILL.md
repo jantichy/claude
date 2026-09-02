@@ -196,6 +196,9 @@ Co ještě není rozhodnuté a co to blokuje.
 
 ## Fáze 3b – Návrh řešení
 
+**Na návrhu se nešetří: nejsilnější model, `xhigh`.** Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*. Tohle není výroba dokumentu – dokument je jen zápis. Je to rozhodnutí, které se propíše do každého úkolu plánu a do každého řádku kódu pod ním, a **špatný návrh se dobrou implementací nezachrání**: špatná věc se jen udělá pořádně. Zápis hotového rozhodnutí do šablony už chytrý být nemusí.
+
+
 **Píše se, když platí aspoň jedno:**
 
 - je to nový projekt nebo nový podsystém,

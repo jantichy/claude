@@ -111,6 +111,8 @@ Nech si otevřený přístup ke **konzoli, síti a logu serveru** – většina 
 
 Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři až pět podle toho, čeho se rozsah týká. Každý má vlastní kontext a vlastní úhel; společné mají jen to, že hlásí jen doložené.
 
+**Útočníci potřebují nejvíc chytrosti z celé osy: nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Zadání zní „najdi, co nikoho nenapadlo“, a to je pravý opak mechanické práce – levný model odzkouší učebnicové payloady ze seznamu, silný vymyslí kombinaci, na kterou seznam nestačí. Je to zároveň **dlouhá agentní práce**, tedy přesně profil, na který je `xhigh` určený. Nedaří-li se ani tak, je to jeden z mála případů, kdy má smysl sáhnout po nejvyšším tieru (dnes Fable) – ale až potom, ne rovnou.
+
 **Rozděl jim data, ne jen vektory.** Agenti běží nad jednou instancí, takže se přepisují navzájem: jeden ti změní jméno na profilu, který druhý zrovna měří, a oba pak popisují stav, který nikdy nenastal. Každému v zadání urči **vlastní účty a vlastní záznamy** (typicky vlastní e-mailovou doménu) a ulož mu, ať cizí nechá být. Sdílený účet smí mít nanejvýš jeden z nich.
 
 **Prohlížeč je jeden a subagentům ho nedávej.** `chrome-devtools` řídí jednu instanci Chrome; dva agenti v ní přepisují jeden druhému stránku a výsledek je nepoužitelný. Vektory, které potřebují reálné rozhraní – *prostředí*, *vykreslení* a proklikání toků – si **nech v hlavní session** a subagentům dej to, co jde přes `curl` a databázi. Vyjde to i časově: hlavní session tak není jen dispečer a útočí spolu s nimi.

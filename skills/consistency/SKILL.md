@@ -59,6 +59,8 @@ Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označ
 
 ## Fáze 1 – Průzkum projektu
 
+**Explore agent je sběr, ne posouzení: výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
+
 Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, baseline z 0.1, seznam ignorovaných z 0.2 a výstupy nástrojů z 0.3):
 
 ```

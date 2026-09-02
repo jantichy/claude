@@ -46,7 +46,7 @@ Instalace whisper.cpp/ffmpeg předpokládá [Homebrew](https://brew.sh). Vyvinut
    ```
    Ukáže procenta, zpracované/celkové minuty, kolik zbývá, tempo (× realtime) a ETA.
 
-5. **Po dokončení vyrob doslovné přepisy.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více/delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor) – každému předej kontext nahrávky (téma, vlastní jména, odborné termíny), ať umí opravit přeslechy. Nech si od každého vrátit i stručný brief pro shrnutí.
+5. **Po dokončení vyrob doslovné přepisy.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více/delších nahrávek to udělej **paralelně přes subagenty na nejlevnějším modelu** (jeden na soubor; Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*. – je to převod formátu podle pravidel, ne úsudek) – každému předej kontext nahrávky (téma, vlastní jména, odborné termíny), ať umí opravit přeslechy. Nech si od každého vrátit i stručný brief pro shrnutí.
 
 6. **Napiš souhrnné shrnutí.** Navrhni uživateli „Výstižný název“ celé nahrávky a **nech si ho odsouhlasit** (ať nemusí nic vymýšlet ani psát), pak zapiš `YYYYMMDD - Výstižný název.md` dle [Formátu souhrnného MD](#formát-souhrnného-md).
 

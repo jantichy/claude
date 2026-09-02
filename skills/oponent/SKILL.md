@@ -76,6 +76,8 @@ Vyber **tři až pět úhlů podle povahy dokumentu** z katalogu níž – nebo 
 
 Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní úhel a **žádný kontext z téhle session** – to je celý smysl.
 
+**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Oponentura je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
+
 Zadání pro každého (doplň úhel, cesty a projektový kontext):
 
 ```

@@ -79,6 +79,8 @@ Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vesta
 
 ## Fáze 2 – Průběh
 
+**Výchozí model, `medium`–`high`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Odpracování dobrého plánu je z velké části uplatnění hotového rozhodnutí, ne vymýšlení – proto sem nepatří nejdražší tier. **Eskaluj ale u konkrétního úkolu**, který se nedaří: nejdřív zvyš effort, teprve pak sáhni po silnějším modelu. Opakované „skoro to funguje“ na jednom úkolu je signál, že je málo chytrosti nebo špatný plán, ne že se má zkoušet dál totéž.
+
 Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
 **Zelená linka po každém úkolu.** Úkol není hotový, když je napsaný kód – je hotový, když projde `typecheck`, `lint` a `test` podle *Kontraktu příkazů* v projektovém `CLAUDE.md`. Teprve pak commit a další úkol. Podrobně `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*.
