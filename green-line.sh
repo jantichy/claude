@@ -173,13 +173,8 @@ if [ -n "$CWD" ]; then cd "$CWD" 2>/dev/null || die "adresář $CWD neexistuje."
 # Ve worktree layoutu stojí session často v kořeni kontejneru, který sám pracovní
 # strom není – proto se hledá i v main/ a příkazy pak běží tam, ne v cwd.
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
-CLAUDE_MD=""; PROJ=""
-for c in "$PWD/CLAUDE.md" "$PWD/.claude/CLAUDE.md" "$PWD/main/CLAUDE.md" \
-         "${ROOT:-/nonexistent}/CLAUDE.md" "${ROOT:-/nonexistent}/.claude/CLAUDE.md" \
-         "${ROOT:-/nonexistent}/main/CLAUDE.md"; do
-  if [ -f "$c" ] && grep -q '^## Příkazy' "$c" 2>/dev/null; then CLAUDE_MD="$c"; PROJ=$(proj_for_md "$c"); break; fi
-done
-[ -z "$CLAUDE_MD" ] && exit 0   # projekt kontrakt nemá – není co spouštět
+CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || exit 0
+PROJ=$(proj_for_md "$CLAUDE_MD")
 
 [ -f "$PROJ/.claude/no-green-line" ] && exit 0
 [ -f "$PWD/.claude/no-green-line" ] && exit 0
