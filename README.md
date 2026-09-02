@@ -44,7 +44,7 @@ Kompletní audit projektu na vnitřní konzistenci: protichůdné instrukce, dup
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
-Před opuštěním nebo zkompaktováním session projde celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak pošle na projekt agenta bez kontextu, který ověří, jestli z dokumentace jde na dnešní práci navázat, commitne a dá jednoznačný verdikt: můžeš jít, nebo tohle ještě zbývá. **`/cleanup full`** nezvětšuje vytěžení session – to běží vždycky celé –, ale rozšiřuje závěrečnou kontrolu čerstvýma očima z dnešní práce na celou dokumentaci.
+Před opuštěním nebo zkompaktováním session projde celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak pošle na projekt agenta bez kontextu, který ověří, jestli z dokumentace jde na dnešní práci navázat, commitne a dá jednoznačný verdikt: je zapsáno, nebo tohle ještě zbývá. Stojím-li ve worktree větve, zeptá se navíc, co s ní – nechat otevřenou, dokončit, nebo jen zmergovat – a vypíše hotovou sekvenci příkazů; merge nikdy nedělá sám od sebe. **`/cleanup full`** nezvětšuje vytěžení session – to běží vždycky celé –, ale rozšiřuje závěrečnou kontrolu čerstvýma očima z dnešní práce na celou dokumentaci.
 
 ### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 
