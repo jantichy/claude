@@ -165,15 +165,19 @@ FAILED=""; SKIPPED=""
 for step in typecheck lint test; do
   CMD=$(cmd_for "$step")
   [ -z "$CMD" ] && { SKIPPED="${SKIPPED:+$SKIPPED, }$step"; continue; }
-  if ! run "$CMD"; then
-    RC=$?
+  run "$CMD"; RC=$?
+  if [ "$RC" -ne 0 ]; then
+    # RC se bere hned po volání: uvnitř `if ! run …` by $? byl vždycky 0
+    # a diagnostika timeoutu by se nikdy nezobrazila.
     BODY=$(tail -40 "$TMP")
     N=$(wc -l < "$TMP" | tr -d ' ')
     [ "$N" -gt 40 ] && BODY="(zobrazeno posledních 40 ze $N řádků)
 $BODY"
     [ ! -s "$TMP" ] && BODY="(příkaz skončil kódem $RC bez výstupu)"
-    [ "$RC" = "124" ] || [ "$RC" = "137" ] && BODY="(krok nedoběhl do ${LIMIT} s a byl ukončen – do zelené linky patří jen to, co je rychlé)
+    if [ "$RC" = "124" ] || [ "$RC" = "137" ]; then
+      BODY="(krok nedoběhl do ${LIMIT} s a byl ukončen – do zelené linky patří jen to, co je rychlé)
 $BODY"
+    fi
     FAILED="${FAILED}
 --- ${step}: ${CMD} ---
 ${BODY}"

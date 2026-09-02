@@ -104,7 +104,9 @@ Když Claude doběhne nebo se na něco ptá, obarví se mi záložka iTermu do m
 
 ## [`green-line.sh`](green-line.sh) – nad rozbitým projektem se práce neuzavře
 
-Nejlevnější věc z celého repozitáře a možná nejužitečnější. Je to `Stop` hook: než Claude ukončí tah, spustí typecheck, lint a testy, a když něco padá, **prostě ho nepustí skončit** – dostane zpátky výstup a musí to dořešit. Rozdíl proti instrukci v pravidlech je zásadní: instrukce je doporučení, hook je záruka.
+Nejlevnější věc z celého repozitáře a možná nejužitečnější. Je to `Stop` hook: než Claude ukončí tah, spustí typecheck, lint a testy, a když něco padá, **nepustí ho skončit** – dostane zpátky výstup a musí to dořešit. Rozdíl proti instrukci v pravidlech je zásadní: instrukce se dá zracionalizovat, skript ne.
+
+Jedna výjimka, kterou přiznávám rovnou: když **druhý pokus nad týmž stavem** taky neprojde, hook pustí dál a nahlas to řekne. Nekonečná smyčka je horší než rozbitý build – ale znamená to, že brána je tvrdá jednou, ne napořád.
 
 Skript přitom **nic neví o mém projektu** – přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí. Je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic.
 
