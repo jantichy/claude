@@ -137,7 +137,7 @@ U KAŽDÉHO NÁLEZU UVEĎ:
 
 PRAVIDLA:
 - Co je v pořádku, nepiš. Žádné shrnutí kladů, žádné „jinak je to dobře promyšlené“.
-- Nenavrhuj to, co je v docs/decisions.md už vědomě zamítnuté. Přečti si to nejdřív.
+- Nenavrhuj to, co je v docs/decisions.md nebo v bloku VĚDOMĚ ZAMÍTNUTÉ výš už zavržené. Přečti si obojí nejdřív.
   Výjimka: myslíš-li si, že to rozhodnutí bylo chybné, řekni to výslovně jako revizi
   rozhodnutí a zdůvodni, který jeho předpoklad neplatí.
 - Neopírej nález o neověřené tvrzení. Stojí-li na faktu, ověř ho.
@@ -209,7 +209,7 @@ Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/Dev/context/structure
 
 **Průběžně do něj zapisuj stav** každého nálezu (`prijato`, `zamitnuto`, `odlozeno`, `open`), jak jimi procházíš. Po dokončení Fáze 6 soubor smaž.
 
-Panel v tom souboru je jen po dobu běhu – trvalý záznam úhlů mezi běhy vědomě nemáme, viz Fáze 6.
+Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který Fáze 6 zapisuje do `docs/done.md`** – z něj vychází příští oponentura při volbě úhlů.
 
 ------
 
