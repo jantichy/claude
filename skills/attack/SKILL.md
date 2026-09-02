@@ -48,6 +48,8 @@ Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna
 - **`/attack`** (výchozí) – útočí se na to, čeho se dotkla práce na aktuální větvi: obrazovky, endpointy a toky, které se změnily nebo na změněný kód navazují.
 - **`/attack full`** – celá aplikace bez ohledu na diff. Použij, jen když uživatel napíše `full`; u větší aplikace se předem dohodni, kolik času tomu dát.
 
+**Když jsi na hlavní větvi a diff je prázdný**, výchozí rozsah nedává nic. Řekni to a zeptej se, jestli pustit `full`, nebo omezit rozsah na konkrétní tok. Nedomýšlej si rozsah sám – útok na náhodně vybranou část je drahý a nic neuzavírá.
+
 ------
 
 ## Hranice
@@ -80,6 +82,10 @@ Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
 4. **Na čem to jede** – ověř, na jakou databázi a jaké externí služby je lokální instance napojená (`.env.example`, konfigurace, docker compose). Sáhne-li aplikace při útoku ven – odešle mail, zaplatí, zavolá cizí API – **řekni to uživateli předem** a domluvte se, jestli útok ty cesty vynechá, nebo se služba přepne na testovací režim.
 
+   **Pozor na projekt, který už běží v produkci.** Tam bývá jediná konfigurace (`.env.local`) a míří na ostrou databázi, takže `dev` na localhostu píše reálným uživatelům. Do souborů s tajemstvími nekoukej – místo toho zjisti, jestli projekt umí zvednout **vlastní lokální stack** (`supabase/config.toml`, `docker compose`, testcontainers). Když neumí a izolaci nejde vyrobit, útok se nekoná; viz *Hranice*, bod 2.
+
+5. **Co v té testovací databázi je.** Prázdná bývá málokdy – zůstávají v ní data po dřívějších testech a někdy i kopie produkce. Než na ni sáhneš, **ověř původ**: rozložení domén u e-mailů (`select split_part(email,'@',2), count(*) … group by 1`) a stáří záznamů. Vidíš-li reálné domény, zastav se – je to sdílená nebo zkopírovaná produkce.
+
 Zjištěné shrň do pěti řádků a **zeptej se na potvrzení, než něco spustíš** (`AskUserQuestion`): cíl, databáze, co poběží ven, rozsah.
 
 ------
@@ -90,6 +96,13 @@ Spusť `dev` na pozadí, počkej, až odpoví, a ověř, že běží. Port si zj
 
 Když se aplikace nezvedne, **je to nález** – ale jiného druhu: zastav se a nahlas to. Útočit na nespuštěnou aplikaci nejde a nezvednutelný projekt je problém sám o sobě.
 
+**Než na ni sáhneš, dokaž, že míří tam, kam si myslíš.** Konfigurace se skládá z několika vrstev a proměnná z prostředí nemusí přebít soubor v repozitáři – to je přesně ten omyl, po kterém útok skončí v produkci. Doklad hledej v tom, co aplikace opravdu dělá, ne v tom, co jsi nastavil:
+
+- **Klient:** stáhni si vykreslenou stránku a její skripty a grepni v nich adresu lokální služby **a zvlášť identifikátor produkčního projektu**. Ten se v nich nesmí objevit ani jednou.
+- **Server:** proveď zápis (založ testovací záznam) a ověř ho **dotazem do lokální databáze**. Když tam není, píše se jinam.
+
+Vyjde-li kterákoliv z těch dvou kontrol jinak, než čekáš, **okamžitě zastav prostředí** a nahlas to.
+
 Nech si otevřený přístup ke **konzoli, síti a logu serveru** – většina nálezů se pozná odtud dřív než z obrazovky. U webového rozhraní to obstará `chrome-devtools`, u API `curl`, u CLI přímé volání.
 
 ------
@@ -97,6 +110,12 @@ Nech si otevřený přístup ke **konzoli, síti a logu serveru** – většina 
 ## Fáze 2 – Útok
 
 Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři až pět podle toho, čeho se rozsah týká. Každý má vlastní kontext a vlastní úhel; společné mají jen to, že hlásí jen doložené.
+
+**Rozděl jim data, ne jen vektory.** Agenti běží nad jednou instancí, takže se přepisují navzájem: jeden ti změní jméno na profilu, který druhý zrovna měří, a oba pak popisují stav, který nikdy nenastal. Každému v zadání urči **vlastní účty a vlastní záznamy** (typicky vlastní e-mailovou doménu) a ulož mu, ať cizí nechá být. Sdílený účet smí mít nanejvýš jeden z nich.
+
+**Prohlížeč je jeden a subagentům ho nedávej.** `chrome-devtools` řídí jednu instanci Chrome; dva agenti v ní přepisují jeden druhému stránku a výsledek je nepoužitelný. Vektory, které potřebují reálné rozhraní – *prostředí*, *vykreslení* a proklikání toků – si **nech v hlavní session** a subagentům dej to, co jde přes `curl` a databázi. Vyjde to i časově: hlavní session tak není jen dispečer a útočí spolu s nimi.
+
+**Po sobě uklízí každý agent sám** – co zapsal, na konci vrátí do výchozího stavu. Ulož mu to v zadání a v Fázi 6 to po nich zkontroluj; agent, který nález doloží a stav nechá ležet, ti rozbije reprodukci ostatním.
 
 **Vektory** – vyber, co na projekt sedí:
 
@@ -107,6 +126,9 @@ Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři a
 | **Autorizace** | odhlášený na chráněnou adresu, cizí ID v URL i v těle požadavku, přímé volání endpointu mimo rozhraní, akce po vypršení sezení |
 | **Prostředí** | offline uprostřed odeslání, pomalá síť, úzké okno, zvětšené písmo, klávesnice bez myši |
 | **Data** | prázdný seznam, jediná položka, tisíc položek, chybějící vazba, smazaný navázaný záznam |
+| **Vykreslení** | ulož do textových polí `<img src=x onerror=…>`, `"><script>`, `</script><svg onload=…>` – a pak **otevři každé místo, kde se ten text zobrazuje**: seznam, detail, bublinu na mapě, e-mail. Uložit se to smí, spustit ne |
+
+**Vektor *vykreslení* si nech v hlavní session** a nespoléhej na to, že escapovaný text v odpovědi serveru stačí. Rozhoduje, co s ním udělá klientská knihovna při vykreslení – mapová bublina nebo editor, kterým se předává HTML řetězec, ho spustí i tehdy, když ho server poslal zaescapovaný. Doklad je otevřená bublina a odchycené `window.alert`, ne obsah HTML.
 
 Zadání pro subagenta:
 
@@ -227,9 +249,11 @@ Při volbě **Přeskočit** se zeptej na důvod a zapiš do projektového `CLAUD
 
 ## Fáze 6 – Úklid a shrnutí
 
-**Zastav, co jsi zvedl** – dev server, kontejnery, otevřené stránky prohlížeče. Ověř to, ne že to předpokládej: běžící server na portu rozbije příští běh.
+**Zastav, co jsi zvedl** – dev server, databázový stack, kontejnery, otevřené stránky prohlížeče. Ověř to, ne že to předpokládej: běžící server na portu rozbije příští běh.
 
-Zkontroluj, že po útoku nezůstala **rozsypaná testovací data**, která by mátla další práci.
+**Rozliš, co jsi zvedl ty, a co běželo předtím.** Zvedl-li jsi kvůli útoku infrastrukturu, která tu předtím nebyla – kontejnerový runtime, lokální databázový stack –, **zeptej se, jestli ji zastavit**: uživatel na ní může chtít pokračovat, ale nechat běžet něco, co si nezapnul, je horší. Co běželo už předtím, nech být.
+
+Zkontroluj, že po útoku nezůstala **rozsypaná testovací data**, která by mátla další práci – včetně toho, co po sobě měli uklidit subagenti. Účty a záznamy založené útokem klidně nech, ale profil, na kterém se měřilo, vrať do výchozího stavu.
 
 ```
 ## Hotovo
@@ -243,7 +267,7 @@ Cíl: <adresa> · Vektory: [které]
 
 **Nezkoušelo se:** [vektory vynechané kvůli hranicím, nebo „nic"]
 
-**Prostředí:** [zastaveno / co zůstalo běžet a proč]
+**Prostředí:** [co bylo zastaveno · co jsem kvůli útoku zvedl a zůstalo běžet, s důvodem]
 
 **Další krok:** /release
 ```
