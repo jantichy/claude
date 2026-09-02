@@ -157,6 +157,10 @@ PRAVIDLA HLÁŠENÍ:
 - Každý nález musí mít konkrétní selhání: vstupy nebo stav → co se stane špatně.
   „Mohla by tu být race condition“ není nález. „Když dva požadavky dorazí mezi
   read a write v foo.ts:42, druhý přepíše první" nález je.
+- **Můžeš-li nález ověřit spuštěním, udělej to** a do pole `evidence` napiš příkaz i jeho
+  výstup. Ušetříš tím celý ověřovací krok – doložené pozorování se nepřezkoumává, jen
+  přehraje. Pracuj přitom výhradně v `/tmp` a s absolutními cestami; do auditovaného
+  projektu nezapisuj.
 - Nehlas soubory v cestách legacy/vendored/generated.
 - Když je totéž porušené na mnoha místech (>20 výskytů), neuváděj jednotlivé řádky –
   uveď pattern, počet, tři příklady a navrhni hromadnou opravu. Označ tagem `batch`.
@@ -179,6 +183,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
     "failure": "konkrétní vstupy nebo stav → co se stane špatně",
     "locations": ["soubor:řádek", ...],
     "suggested_fix": "konkrétní akce, ne vágní doporučení",
+    "evidence": "ověřil-li jsi nález spuštěním: co jsi pustil a co to vrátilo (jinak vynech)",
     "tags": ["batch"?],
     "related_root": "title jiného nálezu, jehož je tento následkem (volitelné)"
   }
@@ -237,7 +242,7 @@ VÝSTUP: JSON, nic jiného.
 {"refuted": true|false, "reason": "čím konkrétně je vyvrácený nebo potvrzený"}
 ```
 
-**Nález doložený reprodukovatelným experimentem ověřovatele nepotřebuje** – přehraj si ten experiment sám. Ověřuje se tvrzení, ne pozorování; skeptik nad doloženým pozorováním jen stojí čas.
+**Nález s vyplněným polem `evidence` ověřovatele nepotřebuje** – přehraj si ten experiment sám a rozhodni podle výsledku; nesedí-li s tím, co agent tvrdil, nález zahoď. Ověřuje se tvrzení, ne pozorování, a skeptik nad doloženým pozorováním jen stojí čas.
 
 **Deduplikuj ještě před ověřením**, ne až po něm. Role se překrývají schválně, takže tentýž problém přijde třikrát jinými slovy – posílat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď.
 

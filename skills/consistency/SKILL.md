@@ -142,26 +142,11 @@ Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITI
 
 ### Rozdělení na mechanické a sporné
 
-Než seznam předložíš, rozděl ho na dvě skupiny – uživatele nemá smysl obtěžovat odklikáváním věcí, u kterých existuje jen jedno správné řešení.
+**Kritérium je společné s `/review`** – plná definice obou skupin i s výčtem typických případů je v `~/.claude/skills/review/SKILL.md`, *Fáze 4 – Zpracování výsledků*. Neopisuj ji sem; drž se jí a přidej jen to, co platí navíc tady:
 
-**Mechanické** – oprava je jednoznačná, bezriziková a nemění chování ani strukturu. Typicky:
-- rozbitý nebo neexistující odkaz, import na přesunutý soubor, špatná cesta
-- nepoužitý import, nepoužitá lokální proměnná
-- překlep v komentáři, názvu sekce nebo odkazu
-- počet uvedený v textu nesedící se skutečným obsahem tabulky nebo seznamu
-- formátovací nekonzistence (odsazení, uvozovky, struktura podobných souborů)
-- zastaralý komentář nebo věta v dokumentaci, kde platný stav jednoznačně vyplývá z kódu
-- chybějící položka v `.env.example` u proměnné prokazatelně použité v kódu
-
-**Sporné** – všechno ostatní, tedy vždy když existuje víc rozumných řešení nebo oprava zasahuje dál než na jedno místo:
-- přejmenování, přesuny souborů, změny struktury
-- slučování duplicit (které z míst je to správné?)
-- změny typů, schémat, API kontraktů, bezpečnostních pravidel
-- mazání kódu, který vypadá mrtvý, ale nemusí být
-- `batch` nálezy (>20 výskytů) – vždy sporné, i když je jednotlivá oprava triviální
-- cokoliv, co mění chování
-
-Při pochybnosti patří nález mezi sporné. Nálezy s tagem `toolchain` posuzuj stejně jako ostatní.
+- Nálezy s tagem **`toolchain`** (z `knip`/`depcheck`) posuzuj stejně jako ostatní – nástroj ukazuje, že se něco nepoužívá, ne že se to má smazat.
+- **Mazání kódu, který vypadá mrtvý, je vždy sporné.** Může být volaný dynamicky, z konfigurace nebo z jiného repozitáře.
+- Práh pro `batch` je **>20 výskytů** (shodně s `/review`), a `batch` nález je vždy sporný.
 
 ## Fáze 3 – Přehled
 
@@ -189,7 +174,7 @@ Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
 Mechanické nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
 
-1. Spusť verifikaci podle kroku 3b Fáze 5 (tsc/build/testy). Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
+1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/coding.md`): `typecheck` a `test` po každé opravě, která se dotkla kódu, `build` jen když je rychlý a oprava se ho týká. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N mechanických)
@@ -203,69 +188,24 @@ Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné
 
 ## Fáze 5 – Interaktivní průchod
 
-Pro KAŽDÝ **sporný** problém (jeden po druhém, nikdy víc najednou):
+**Postup je společný s `/review`** – tvar výpisu nálezu, volání `AskUserQuestion` (jeden nález = jedna otázka, volby *Opravit / Odložit / Přeskočit*, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Fáze 7 – Interaktivní průchod*. Řiď se jím a lišíš se jen v těchhle bodech:
 
-1. Zobraz problém v tomto formátu:
+**Kam se zapisuje „won't fix“.** Do kapitoly `## Consistency` v projektovém `CLAUDE.md`, ne `## Review` – jsou to odpovědi na jinou otázku a nemají se míchat. Kapitolu založ, když chybí, a zapisuj na její konec:
+
 ```
----
-[N/celkem] 🔴/🟡/🔵 [tagy] NÁZEV PROBLÉMU
+## Consistency
 
-Problém: [popis]
-Kde: [soubory:řádky, nebo "X výskytů, např. ..." u batch]
+Položky vyhodnocené při /consistency auditu jako „neopravovat". Při dalším auditu se neuvádějí.
 
-Navrhované řešení:
-[konkrétní popis co přesně změnit – ne vágní "refaktoruj to", ale "přesuň funkci X ze souboru A do B a aktualizuj import v C"]
+- **YYYY-MM-DD** – *<title>*: <důvod>
+  - Lokace: <soubor:řádek, ...>
 ```
 
-2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text v odpovědi. Uživatel si tak vybírá šipkami a Enterem, místo aby psal písmena.
+Datum vezmi z `Today's date is …` v system-reminderu.
 
-   Jedno volání = jeden problém = jedna otázka (`multiSelect: false`):
-   - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`
-   - `question`: název problému a v čem je, jednou větou
-   - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
-     - **Opravit** – provedu navrhovanou změnu
-     - **Odložit** – zapíšu do `docs/todo.md` i s úvahou, vrátíme se k tomu později
-     - **Přeskočit** – neopravovat, zapíšu do CLAUDE.md jako „won't fix“
-     - **Rozbalit** – *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
+**Verifikace po opravě.** Po každé odsouhlasené opravě platí bod 1 z *Fáze 4* – příkazy z *Kontraktu příkazů*, chybějící krok přeskočit nahlas, u projektu bez kontraktu ověřit aspoň čtením, že cíl opravovaného odkazu existuje.
 
-   Tool má strop **4 volby** na otázku – tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej; kdyby byla potřeba, musí se otázka rozdělit na dvě.
-
-   Chování volby **Other** viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
-
-   Zpracování odpovědí:
-   - **Opravit** – proveď změnu hned (krok 3)
-   - **Odložit** – **zapiš hned do `docs/todo.md`** i s celou úvahou, ne jen do interního seznamu; konverzace není úložiště a při kompaktaci se parkovaný bod ztratí (`~/.claude/RULES.md`, *Parkované body zapiš a sám je otevři*). Nemá-li projekt `todo.md`, **nezakládej ho potichu** – řekni to, nabídni `/project` a do té doby si položku drž v seznamu odložených, ať ji aspoň vypíšeš v závěrečném shrnutí.
-   - **Přeskočit** – zeptej se na krátký důvod („Proč to neopravovat?“) a zapiš do projektového `CLAUDE.md` do kapitoly `## Consistency` (krok 6). Pokud uživatel nechce uvést důvod, zapiš `(bez uvedeného důvodu)`.
-   - **Rozbalit** – vypiš všechny lokace a začni je řešit jednotlivě jako samostatné podproblémy
-
-3. Pokud uživatel zvolí **Opravit**:
-   a. Proveď změnu. U batch problému (>20 výskytů) řeš hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
-   b. **Verifikace po opravě – vždy, ne občas.** Tady nejde o audit, ale o ověření, že tvůj vlastní zásah nic nerozbil, takže se nejedná o duplicitu s Fází 0.3. Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/coding.md`):
-      - `typecheck` a `test` po každé opravě, která se dotkla kódu
-      - `build` jen tehdy, když se oprava týká buildovaného kódu a build je rychlý
-      - Chybí-li řádek v kontraktu, krok **přeskoč nahlas** a napiš, co se tím neověřilo. Nevymýšlej příkazy, které jsi neověřil.
-      - Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje.
-   c. Pokud kontrola selže: **zastav se**, ukaž uživateli chybu a diff a zeptej se jak pokračovat. Nepokračuj automaticky na další problém.
-   d. Po úspěšné opravě KRITICKÉHO problému přepočítej zbývající seznam – projdi položky s `related_root === <title opraveného>` a krátce ověř (Read/Grep), zda už nejsou neaktuální. Ty, co se vyřešily samy, vyhoď z fronty a započítej je do "vyřešeno automaticky" v závěrečném shrnutí.
-   e. Commit dle autocommit nastavení projektu – pokud projektový `CLAUDE.md` obsahuje sekci `### Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
-
-4. Volbu **Other** a vlastní text mimo nabídku zpracuj podle `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
-
-5. Pokračuj na další problém.
-
-6. Zápis do `## Consistency` v projektovém CLAUDE.md (krok 2 – Přeskočit):
-   - Pokud projektový `CLAUDE.md` neexistuje, vytvoř ho s minimálním obsahem (hlavička + kapitola `## Consistency`)
-   - Pokud kapitola `## Consistency` neexistuje, doplň ji na konec souboru
-   - Formát záznamu (přidávat na konec kapitoly):
-   ```
-   ## Consistency
-
-   Položky vyhodnocené při /consistency auditu jako "neopravovat". Při dalším auditu se neuvádějí.
-
-   - **YYYY-MM-DD** – *<title>*: <důvod>
-     - Lokace: <soubor:řádek, ...>
-   ```
-   - Datum vezmi z `Today's date is ...` v system-reminderu.
+**Co tu nehrozí.** `/consistency` nemění chování, takže odpadá pravidlo z `/review` o doplnění testu k opravě – nálezy, které by chování měnily, jsou tu vždy sporné a jdou přes uživatele.
 
 ## Fáze 6 – Závěrečné shrnutí
 
