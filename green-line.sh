@@ -12,6 +12,27 @@
 
 set -uo pipefail
 
+state_dir() { printf '%s' "${XDG_STATE_HOME:-$HOME/.local/state}/claude-green-line"; }
+proj_key()  { printf '%s' "$1" | tr -cd 'A-Za-z0-9' | tail -c 40; }
+contract_sig() {
+  sed -n '/^## Příkazy/,/^## /p' "$1" | { shasum 2>/dev/null || cksum; } | cut -d' ' -f1
+}
+
+# Schválení kontraktu: `green-line.sh --trust [cesta]`
+# Kontrakt je spustitelný kód ležící v repozitáři, takže se s ním zachází jako
+# s nedůvěryhodným vstupem, dokud ho člověk jednou neschválí. Bez toho by stačilo
+# naklonovat cizí projekt a hook by spustil, co si do CLAUDE.md napsal jeho autor.
+if [ "${1:-}" = "--trust" ]; then
+  T_PROJ=$(cd "${2:-$PWD}" 2>/dev/null && pwd) || { echo "Neznámá cesta: ${2:-$PWD}" >&2; exit 1; }
+  T_MD="$T_PROJ/CLAUDE.md"
+  [ -f "$T_MD" ] && grep -q '^## Příkazy' "$T_MD" || { echo "V $T_PROJ není CLAUDE.md se sekcí ## Příkazy." >&2; exit 1; }
+  mkdir -p "$(state_dir)" && chmod 700 "$(state_dir)"
+  contract_sig "$T_MD" > "$(state_dir)/trusted-$(proj_key "$T_PROJ")"
+  echo "Kontrakt příkazů v $T_MD schválen. Zelená linka v tomhle projektu poběží."
+  sed -n '/^## Příkazy/,/^## /p' "$T_MD" | grep -E '^[[:space:]]*[-*]' || true
+  exit 0
+fi
+
 LIMIT=60          # strop na jeden krok; 3 × 60 s + režie se vejde do timeoutu hooku (320 s)
 MAX_FAILS=3       # po kolika marných pokusech nad týmž stavem pustit dál
 
@@ -70,12 +91,12 @@ sig() {
 SIG=$(sig)
 
 # Stav patří mimo repozitář – ~/.claude je git a stavové soubory by se commitovaly.
-STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/claude-green-line"
+STATE_DIR=$(state_dir)
 mkdir -p "$STATE_DIR" 2>/dev/null || true
 chmod 700 "$STATE_DIR" 2>/dev/null || true
 # Jméno stavu odvozené ze session i z cesty projektu, ať stav nepřeteče mezi projekty.
 SESSION_SAFE=$(printf '%s' "$SESSION" | tr -cd 'A-Za-z0-9._-'); [ -n "$SESSION_SAFE" ] || SESSION_SAFE=nosession
-PROJ_KEY=$(printf '%s' "$PROJ" | tr -cd 'A-Za-z0-9' | tail -c 40)
+PROJ_KEY=$(proj_key "$PROJ")
 STATE="$STATE_DIR/$SESSION_SAFE-$PROJ_KEY"
 
 # Úklid: stavy starší než čtyři hodiny nemají co říct k dnešnímu běhu.
@@ -91,6 +112,26 @@ fi
 [ -n "${OK_SIG:-}" ] && [ "$OK_SIG" = "$SIG" ] && exit 0
 
 save() { printf '%s %s %s\n' "${1:--}" "${2:--}" "${3:-0}" > "$STATE" 2>/dev/null || true; }
+
+# --- Důvěryhodnost kontraktu ---------------------------------------------------
+# Sekce ## Příkazy je kód z repozitáře. Dokud ji člověk neschválí, nespouští se nic.
+TRUST_FILE="$STATE_DIR/trusted-$PROJ_KEY"
+CONTRACT_SIG=$(contract_sig "$CLAUDE_MD")
+TRUSTED=""; [ -f "$TRUST_FILE" ] && TRUSTED=$(cat "$TRUST_FILE" 2>/dev/null)
+if [ "$TRUSTED" != "$CONTRACT_SIG" ]; then
+  {
+    if [ -z "$TRUSTED" ]; then
+      echo "Zelená linka: kontrakt příkazů v $CLAUDE_MD zatím není schválený, nic jsem nespustil."
+    else
+      echo "Zelená linka: kontrakt příkazů v $CLAUDE_MD se od schválení ZMĚNIL, nic jsem nespustil."
+    fi
+    echo "Je to kód z repozitáře – projdi si ho a schval příkazem:"
+    echo "  ~/.claude/green-line.sh --trust $PROJ"
+    echo "Obsahuje:"
+    sed -n '/^## Příkazy/,/^## /p' "$CLAUDE_MD" | grep -E '^[[:space:]]*[-*]' || true
+  } >&2
+  exit 1
+fi
 
 # --- Čtení kontraktu -----------------------------------------------------------
 cmd_for() {

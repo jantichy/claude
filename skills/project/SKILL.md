@@ -364,6 +364,12 @@ Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **ř
 
 **Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json` a v projektu bez `## Příkazy` neudělá nic, takže se nikde nic dalšího nenastavuje. Vypnout se dá souborem `.claude/no-green-line` v projektu nebo proměnnou `CLAUDE_NO_GREEN_LINE=1`.
 
+**Kontrakt musí uživatel schválit, jinak linka neběží.** Je to kód v repozitáři a hook běží mimo permission systém, takže se schvaluje jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá brána ztratila smysl:
+
+```
+~/.claude/green-line.sh --trust <kořen projektu>
+```
+
 Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Řekni uživateli jednou větou, co se právě zapnulo – ne aby ho to překvapilo, až mu hook poprvé zablokuje konec tahu.
 
 **Nasazuje se projekt někam?** Zjisti to (`vercel.json`, `netlify.toml`, `.github/workflows/`) a najdeš-li automatické nasazení z produkční větve, zapiš to do `## Nasazení` v `CLAUDE.md` i s upozorněním, že **merge do produkční větve je samotné nasazení** – detail řeší `/release`.

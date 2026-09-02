@@ -90,6 +90,8 @@ Když Claude doběhne nebo se na něco ptá, obarví se mi záložka iTermu do m
 
 Nejlevnější věc z celého repozitáře a možná nejužitečnější. Je to `Stop` hook: než Claude ukončí tah, spustí typecheck, lint a testy, a když něco padá, **prostě ho nepustí skončit** – dostane zpátky výstup toho, co selhalo, a musí to dořešit. Rozdíl proti instrukci v pravidlech je zásadní: instrukce je doporučení, hook je záruka. „Vypadá to hotově“ je pro model pořád dostupný signál a jediné, co ho nahradí něčím ověřitelným, je kontrola, kterou si může spustit.
 
+Bezpečnostní vrstva, na kterou jsem přišel až při review vlastní práce: ten kontrakt je **kód ležící v repozitáři** a hooky se na povolení neptají. Naklonovat cizí projekt by tedy stačilo k tomu, aby se mi spustilo, co si tam někdo napsal. Skript proto kontrakt bere jako nedůvěryhodný, dokud ho jednou neschválím (`green-line.sh --trust`), a při každé jeho změně se zeptá znovu.
+
 Netriviální je na tom to, že skript **nic neví o mém projektu** – přečte si sekci `## Příkazy` v projektovém `CLAUDE.md` (říkám tomu kontrakt příkazů) a spustí, co tam stojí. Takže je registrovaný globálně jednou, ale v projektu, který kontrakt nemá, neudělá vůbec nic a mlčky skončí. Obsahové a znalostní projekty tím pádem neobtěžuje. Nespouští se ani tehdy, když nejsou žádné rozpracované změny. A má pojistku proti zacyklení: když třikrát po sobě neprojde a stav se mezitím nezmění, pustí to dál s poznámkou, ať to vyřeším s ním – nekonečná smyčka je horší než rozbitý build.
 
 ## [`settings.json`](settings.json) – průběžně laděné permissions
