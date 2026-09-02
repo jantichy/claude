@@ -43,7 +43,7 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 ### 0.3 Spusť nástroje, které předchozí kroky osy nedělají
 
-**Typecheck ani linter tady nespouštěj.** Pustil je `/review` o krok dřív jako zelenou linku a od té doby se nic nezměnilo – opakovat je znamená platit časem i tokeny za tentýž výsledek. Viz `~/.claude/RULES.md`, *Životní cyklus práce*.
+**Typecheck ani linter tady nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. Viz `~/.claude/RULES.md`, *Životní cyklus práce*.
 
 Spusť jen to, co je vlastní téhle otázce – hledání mrtvého kódu a nepoužitých závislostí, tedy „sedí si projekt sám se sebou?“, na což se `/review` neptá:
 
@@ -249,7 +249,7 @@ Navrhované řešení:
    d. Po úspěšné opravě KRITICKÉHO problému přepočítej zbývající seznam – projdi položky s `related_root === <title opraveného>` a krátce ověř (Read/Grep), zda už nejsou neaktuální. Ty, co se vyřešily samy, vyhoď z fronty a započítej je do "vyřešeno automaticky" v závěrečném shrnutí.
    e. Commit dle autocommit nastavení projektu – pokud projektový `CLAUDE.md` obsahuje sekci `### Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
 
-4. Volbu **Other** a vlastní text mimo nabídku zpracuj podle viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
+4. Volbu **Other** a vlastní text mimo nabídku zpracuj podle `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 
 5. Pokračuj na další problém.
 

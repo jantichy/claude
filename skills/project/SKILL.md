@@ -362,7 +362,7 @@ Zapiš do projektového `CLAUDE.md` sekci `## Příkazy`:
 
 Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
 
-**Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json` a v projektu bez `## Příkazy` neudělá nic, takže se nikde nic dalšího nenastavuje. Vypnout se dá souborem `.claude/no-green-line` v projektu nebo proměnnou `CLAUDE_NO_GREEN_LINE=1`.
+**Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json`, takže se nikde nic dalšího **neinstaluje** – ale spustit se v projektu ještě nesmí: chybí mu souhlas, viz níž. Vypnout se dá souborem `.claude/no-green-line` v projektu nebo proměnnou `CLAUDE_NO_GREEN_LINE=1`.
 
 **Uživatel musí vydat souhlas, jinak linka neběží.** Kontrakt je kód v repozitáři a hook běží mimo permission systém, takže se souhlas dává jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá brána ztratila smysl:
 

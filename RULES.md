@@ -312,7 +312,7 @@ vždycky; u většího projektu se ale vyplatí.
 
 **Zakládání (1–4)**
 
-1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*, kterým se v projektu zapne zelená linka.
+1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*. Ten sám o sobě zelenou linku **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/green-line.sh --allow`), protože kontrakt je kód z repozitáře a hooky se na povolení neptají.
 2. **`/specify`** – produktová specifikace (`docs/requirements.md`) a návrh řešení (`docs/architecture.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
 3. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis prózou.
 4. **`/implement`** – odpracování plánu, úkol po úkolu, každý do zelené linky a do commitu.
