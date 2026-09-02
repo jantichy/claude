@@ -108,7 +108,7 @@ Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuest
 
 > Plán je hotový a commitnutý v `docs/plan.md` – <N> úkolů. Přečti si ho prosím; až ho odsouhlasíš, pustíme realizaci přes `/implement`.
 
-Nabídni před tím ještě `/oponent docs/plan.md` s úhly *technická proveditelnost* a *hraniční případy*, je-li plán rozsáhlý.
+Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Úhly nevypisuj – sestaví si je sám podle svého katalogu (`~/.claude/RULES.md`, *Single source of truth*).
 
 ```
 ## Plán hotový

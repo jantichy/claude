@@ -306,12 +306,9 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 7. **Rozsah** – vejde se to do jednoho implementačního plánu? Pokud ne, dekomponuj.
 8. **Mimo rozsah není prázdné** (jen `requirements.md`) – prázdná sekce znamená, že se neřezalo.
 
-**Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. Nabídni `/oponent` – u většího projektu doporuč, u malého jen nabídni. Úhly se pro každý dokument liší:
+**Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. Nabídni `/oponent` – u většího projektu doporuč, u malého jen nabídni. Nabízej ho pro každý dokument zvlášť (`/oponent docs/requirements.md`, `/oponent docs/architecture.md`), protože panel úhlů se pro požadavky a pro návrh řešení liší.
 
-Povinné úhly *Vnitřní rozpor* a *Co chybí* platí vždy; k nim se podle dokumentu přidávají:
-
-- **`/oponent docs/requirements.md`** – cílová skupina, ekonomika, konkurence
-- **`/oponent docs/architecture.md`** – technická proveditelnost, hraniční případy, provoz
+**Úhly nevypisuj** – sestaví si je sám podle sloupce *Kdy zvolit* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Fáze 1*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/RULES.md`, *Single source of truth*).
 
 **Brána uživatele** – po požadavcích (viz 3a) i po návrhu řešení:
 
