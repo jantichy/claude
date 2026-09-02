@@ -41,6 +41,8 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 **Nejdřív se podívej, jestli neexistuje `.claude/run/oponent.json`** – přerušený běh. Vzniká na konci Fáze 4; nabídni navázání dřív, než začneš cokoliv počítat znovu.
 
+**Pak zjisti, jestli nad tímhle předmětem oponentura už neběžela** – `docs/done.md`, sekce `## Průchody osou`. Najdeš-li záznam, přečti z něj panel úhlů a počty nálezů: Fáze 1 z toho vyjde při volbě úhlů a Fáze 6 podle toho pozná, jestli smí srovnávat počty. Porovnej i hash s aktuálním – `git log --oneline <zapsaný hash>..HEAD` ukáže, co se od té doby změnilo.
+
 **Zkontroluj, že to má smysl oponovat:**
 
 - **Je to kód?** → přesměruj na `/review` a zastav se.
@@ -98,6 +100,7 @@ Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; o
 - Vyber **aspoň jednu položku z každého bloku**. Samé domény dají audit a nula oponentur; samé metody obecné kritiky bez věcné opory.
 - Metodický úhel pouštěj **vždy s určenou doménou** – vypiš ji do jeho zadání. Metoda bez domény je slepá.
 - **Kolik jich pustit podle rozsahu předmětu:** čtyři u jednoho dokumentu zhruba do 15 kB, pět nad tím nebo když je dokumentů víc. Je-li předmět velký (blíží se hranici z Fáze 0), dělí se **úhel × podmnožina dokumentů**, ne jen úhel – jinak čte každý agent celý objem a dělba škáluje jen jedním směrem.
+- **Běžela-li už oponentura nad tímhle předmětem** (Fáze 0 to zjistila z `docs/done.md`), **začni jejím panelem**. Nález, který se vrátí ve stejném úhlu, znamená, že se neopravil; nález, který zmizel s vyměněným úhlem, neznamená nic. Vyměnit úhel smíš, ale řekni, který a proč – Fáze 6 pak počty nesrovnává.
 - **Volbu dolož.** U každého zvoleného úhlu napiš jednou větou, co konkrétně v dokumentu tě k němu vedlo, a jmenuj **jeden úhel, který jsi vědomě nevzal, a proč**. Nevybraný úhel totiž nevrátí nula nálezů, ale neexistenci – a ta neprojde žádným počítadlem ve Fázi 4 ani ve verdiktu. Volbu přitom dělá ten, kdo dokument spoluautorsky psal, takže je to jediné místo, kde má jeho slepota volnou ruku (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
 
 ------
@@ -264,7 +267,7 @@ Tool má strop čtyři volby, takže věcných variant nabízej **nejvýš dvě*
 **Opakované spuštění.** Skill je určený k opakování nad revidovanou verzí. Když ho uživatel spustí znovu:
 
 - **Nález, který se vrátil**, znamená, že se neopravil, jen přeformuloval. Řekni to výslovně.
-- **Míň nálezů** znamená, že se to lepší, a **víc**, že revize otevřela nové problémy – ale jen tehdy, **běžel-li stejný panel úhlů**. Panel se nikam nezapisuje, takže to zpravidla nevíš: pak počty nesrovnávej a řekni místo toho, které úhly běžely teď.
+- **Míň nálezů** znamená, že se to lepší, a **víc**, že revize otevřela nové problémy – ale jen tehdy, **běžel-li stejný panel úhlů**. Zjistíš to ze záznamu předchozího běhu (viz níž); nenajdeš-li ho, počty nesrovnávej a řekni místo toho, které úhly běžely teď.
 
 Ve verdiktu:
 
@@ -287,7 +290,13 @@ Ve verdiktu:
 - <jedna až tři věty – co to reálně změnilo>
 ```
 
-Nakonec **smaž `.claude/run/oponent.json`**.
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody osou`** (`~/Dev/context/structure/structure.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
+
+```
+- **YYYY-MM-DD** · `/oponent` · `<short HEAD>` · <předmět> · úhly: <seznam> · N nálezů (X zapracováno, Y zamítnuto, Z odloženo)
+```
+
+Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*). **Ten řádek je jediné, co z běhu přežije**: bez seznamu úhlů neví příští oponentura, s čím se má srovnávat, a bez hashe nepozná, jestli se předmět od té doby vůbec změnil. Nemá-li projekt `done.md` (viz Fáze 0, režim bez `docs/`), řekni nahlas, že se záznam nezapsal a srovnání s příštím během nebude možné.
 
 Zakonči jednou z těchto vět:
 

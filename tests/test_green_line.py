@@ -110,6 +110,22 @@ class ZelenaLinka(unittest.TestCase):
         self.assertEqual(r.returncode, PUSTI,
                          f"na nové větvi brána neběžela: {r.stderr}")
 
+    def test_souhlas_prezije_symlink_v_ceste(self):
+        """Souhlas vydaný přes symlink se musí potkat s během, který ho má rozřešený.
+
+        Na macOS je /var symlink na /private/var, takže stačí projekt v dočasném
+        adresáři – ale platí to pro každý symlinkovaný adresář s projekty. Bez
+        kanonizace obou stran brána mlčky neběží a jediné, co uživatel dostane,
+        je hláška "není vydaný souhlas".
+        """
+        self.kontrakt(typecheck="-", lint="-", test="true")
+        odkaz = self.tmp / "odkaz"
+        odkaz.symlink_to(self.repo)
+        self.allow(odkaz)                       # souhlas přes symlink
+        r = self.spust(cwd=self.repo.resolve())  # běh přes skutečnou cestu
+        self.assertEqual(r.returncode, PUSTI,
+                         f"souhlas se nepotkal kvůli symlinku v cestě: {r.stderr}")
+
     # --- exit kódy ---------------------------------------------------------
 
     def test_cervena_linka_blokuje_a_mluvi_k_modelu(self):
