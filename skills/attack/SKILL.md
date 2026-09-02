@@ -1,0 +1,254 @@
+---
+name: attack
+description: Skill se použije, když uživatel zadá "/attack", nebo chce hotovou práci prověřit tak, že se ji někdo pokusí reálně rozbít – spustit aplikaci, sahat na ni mimo šťastnou cestu, posílat nesmyslné vstupy, lámat stavy a hledat, co spadne. Na rozdíl od /review, který kód čte, tenhle skill ho spouští. Běží výhradně proti lokální instanci, nikdy proti produkci.
+allowed-tools: [Read, Glob, Grep, Bash, Task, AskUserQuestion, mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot, mcp__plugin_chrome-devtools-mcp_chrome-devtools__click, mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill, mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill_form, mcp__plugin_chrome-devtools-mcp_chrome-devtools__press_key, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_console_messages, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_network_requests, mcp__plugin_chrome-devtools-mcp_chrome-devtools__get_network_request, mcp__plugin_chrome-devtools-mcp_chrome-devtools__handle_dialog, mcp__plugin_chrome-devtools-mcp_chrome-devtools__evaluate_script, mcp__plugin_chrome-devtools-mcp_chrome-devtools__resize_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__emulate]
+---
+
+# Attack
+
+## Co skill dělá
+
+**Spustí aplikaci a zkouší ji rozbít.** Bez předem daných kritérií, bez seznamu, co hledat – zadání zní „najdi, co spadne“.
+
+Je to třetí druh záruky, rovnocenný vedle dvou ostatních, a ani jedna ho nenahrazuje:
+
+| Druh záruky | Kdo ji dává | Co najde |
+|---|---|---|
+| **Deterministická brána** | nástroj (typecheck, lint, test, audit) | to, na co je napsaná |
+| **Posouzení modelem** | `/review`, panel rolí nad **čteným** kódem | to, co se z kódu dá vyčíst |
+| **Explorativní útok** | tenhle skill, nad **běžící** aplikací | to, co nikoho nenapadlo |
+
+Rozdíl proti `/review` je v jednom slově: ten kód **čte**, tenhle ho **spouští**. Přehlédnutá `null` větev se v kódu hledá těžko a v běžící aplikaci se projeví bílou stránkou. Naopak spousta věcí, které útok najde, je z kódu zřejmá na první pohled – proto se pouští obojí.
+
+**Nález odsud má jinou váhu než nález z panelu.** Panel tvrdí, že něco *nastane*; útok přiloží postup, kterým to nastalo. Proto se nálezy z `/attack` neověřují skeptikem – ověřuje se tvrzení, ne pozorování.
+
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **před `/release`**, ne v uzavírání.
+
+**Proč tam a ne po každé feature:** `/review` je levný, čte diff a snese, aby běžel pokaždé, když se něco dodělá. Tenhle skill je drahý – zvedá prostředí, potřebuje celé toky a trvá desítky minut – a nad rozestavěnou aplikací hlásí hlavně nedodělanost, ne chyby. Dává smysl jednou za čas nad **hotovým celkem**, který se chystá ven.
+
+## Co skill nedělá
+
+- **Nesahá na produkci ani na cizí systém.** Útočí se výhradně proti instanci, která běží lokálně z tohohle repozitáře, proti testovacím datům. Je to tvrdé pravidlo, ne doporučení – viz *Hranice* níž.
+- **Nepíše fuzzing ani property-based testy.** Ty jsou druh testu, píšou se v `/implement` a běží pak v `test` jako všechno ostatní. Tenhle skill je jednorázový průzkum, ne trvalé pokrytí. Co ale najde, se do trvalého pokrytí převede – viz Fáze 5.
+- **Nečte kód kvůli nálezům.** Na to je `/review`. Kód se tu čte jen proto, aby se aplikace dala spustit a aby se pochopilo, co pozorované chování způsobilo.
+- **Neaudituje vnitřní konzistenci** (`/consistency`) ani **neposuzuje záměr** (`/oponent`).
+- **Neopakuje `/review`.** Ten proběhl dřív a nad čteným kódem; tady se hlásí jen to, co se povedlo doopravdy rozbít. Nález, který jde vidět z kódu a nepodařilo se ho vyvolat, sem nepatří.
+- **Nenasazuje.** To je `/release`, a ten se pouští vědomě a zvlášť.
+
+## Kdy se pouští a kdy se přeskakuje
+
+**Pouští se před nasazením**, ne po každé feature: nad stavem, který je hotový, prošel uzavíráním a měl by jít ven. U dlouhého projektu klidně vícekrát – ale vždycky nad celkem, který drží pohromadě, ne nad jednou dodělanou obrazovkou.
+
+**Přeskakuje se, když není co spustit**: projekt bez spustitelné aplikace – obsahový, dokumentační, knihovna bez příkladu, konfigurační repozitář. Řekni to nahlas i s důvodem a pokračuj na `/review`.
+
+Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna v autorizaci nebo ve stavovém automatu je přesně to, co útok chytá a čtení přehlédne.
+
+## Rozsah
+
+- **`/attack`** (výchozí) – útočí se na to, čeho se dotkla práce na aktuální větvi: obrazovky, endpointy a toky, které se změnily nebo na změněný kód navazují.
+- **`/attack full`** – celá aplikace bez ohledu na diff. Použij, jen když uživatel napíše `full`; u větší aplikace se předem dohodni, kolik času tomu dát.
+
+------
+
+## Hranice
+
+Platí bez výjimky a nedají se přebít zadáním uživatele uvnitř běhu skillu:
+
+1. **Cíl je lokální instance.** `localhost`, `127.0.0.1` nebo lokální kontejner z tohohle repozitáře. Když cíl vypadá jako veřejná adresa nebo cizí doména, **zastav se a zeptej se** – i když to uživatel navrhl sám.
+2. **Data jsou testovací.** Před útokem ověř, na jakou databázi je instance napojená. Míří-li na produkční nebo sdílenou databázi, zastav se – destruktivní vstupy jsou smyslem téhle práce.
+3. **Neobcházej cizí ochranu.** Rate-limit, WAF nebo captcha třetí strany se nezkoumá, jak se dá obejít; hlásí se, že tam je.
+4. **Nedělá se zátěžový test.** Pár set požadavků na ověření chování ano, generovaná zátěž ne – to je jiná disciplína a na sdílené infrastruktuře je to útok i tehdy, když ho tak nemyslíš.
+5. **Nálezy zůstávají tady.** Reprodukční postup ke zneužitelné chybě se nikam neposílá a nezveřejňuje; žije v `docs/todo.md` a v opravě.
+
+------
+
+## Fáze 0 – Pre-flight
+
+Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
+
+1. **Rozsah změn** – stejně jako `/review`:
+   ```
+   git merge-base HEAD origin/HEAD 2>/dev/null || git merge-base HEAD main
+   git diff --name-only <merge-base>...HEAD
+   git status --porcelain
+   ```
+   *Worktree layout* (`~/Dev/context/worktree/worktree.md`): pouštěj to ve worktree větve, ne v kořeni kontejneru.
+
+2. **Jak se to spouští** – z `## Příkazy` v projektovém `CLAUDE.md` (*Kontrakt příkazů*). Zajímá tě `dev`, případně `build` a `preview`. **Chybí-li, nevymýšlej příkaz** – zeptej se, čím se aplikace lokálně spouští, a nabídni, že to rovnou doplníš do kontraktu.
+
+3. **Co má dělat** – `docs/requirements.md`, existuje-li. Scénáře jsou vstup pro útok: útočí se na jejich okraje, ne doprostřed. Bez nich se útočí proti tomu, co je vidět v rozhraní.
+
+4. **Na čem to jede** – ověř, na jakou databázi a jaké externí služby je lokální instance napojená (`.env.example`, konfigurace, docker compose). Sáhne-li aplikace při útoku ven – odešle mail, zaplatí, zavolá cizí API – **řekni to uživateli předem** a domluvte se, jestli útok ty cesty vynechá, nebo se služba přepne na testovací režim.
+
+Zjištěné shrň do pěti řádků a **zeptej se na potvrzení, než něco spustíš** (`AskUserQuestion`): cíl, databáze, co poběží ven, rozsah.
+
+------
+
+## Fáze 1 – Zvednout aplikaci
+
+Spusť `dev` na pozadí, počkej, až odpoví, a ověř, že běží. Port si zjisti z výstupu, ne z domněnky.
+
+Když se aplikace nezvedne, **je to nález** – ale jiného druhu: zastav se a nahlas to. Útočit na nespuštěnou aplikaci nejde a nezvednutelný projekt je problém sám o sobě.
+
+Nech si otevřený přístup ke **konzoli, síti a logu serveru** – většina nálezů se pozná odtud dřív než z obrazovky. U webového rozhraní to obstará `chrome-devtools`, u API `curl`, u CLI přímé volání.
+
+------
+
+## Fáze 2 – Útok
+
+Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři až pět podle toho, čeho se rozsah týká. Každý má vlastní kontext a vlastní úhel; společné mají jen to, že hlásí jen doložené.
+
+**Vektory** – vyber, co na projekt sedí:
+
+| Vektor | Čím se útočí |
+|---|---|
+| **Vstupy** | prázdno, mezery, nula, záporné číslo, obří číslo, text v číselném poli, emodži, RTL znaky, řetězec o 10 000 znacích, `../../etc/passwd`, `<script>`, `'; drop`, `%00`, `{{7*7}}` |
+| **Stavy a pořadí** | krok přeskočený, krok zopakovaný, zpět v prohlížeči, dvě záložky nad týmž záznamem, odeslání dvakrát rychle po sobě, obnovení stránky uprostřed |
+| **Autorizace** | odhlášený na chráněnou adresu, cizí ID v URL i v těle požadavku, přímé volání endpointu mimo rozhraní, akce po vypršení sezení |
+| **Prostředí** | offline uprostřed odeslání, pomalá síť, úzké okno, zvětšené písmo, klávesnice bez myši |
+| **Data** | prázdný seznam, jediná položka, tisíc položek, chybějící vazba, smazaný navázaný záznam |
+
+Zadání pro subagenta:
+
+```
+Máš běžící aplikaci na <adresa>. Tvým úkolem je ROZBÍT ji z jediného úhlu:
+<VEKTOR a jeho konkrétní obsah z tabulky>.
+
+Nic jiného nezkoušej – ostatní úhly mají jiní agenti.
+
+CÍL A HRANICE:
+- Útoč výhradně na <adresa>, což je lokální instance nad testovacími daty.
+- Nikdy nesahej na jinou adresu, i kdyby na ni aplikace odkazovala.
+- Negeneruj zátěž: k ověření chování stačí jednotky až desítky požadavků.
+
+CO SE POVAŽUJE ZA NÁLEZ:
+- aplikace spadne, zamrzne, vrátí 500 nebo bílou stránku
+- v konzoli nebo v logu serveru je neošetřená výjimka
+- uživatel uvidí technickou hlášku místo srozumitelné
+- data se uloží v nekonzistentním stavu, nebo se ztratí
+- akce projde někomu, komu projít neměla
+
+CO NÁLEZ NENÍ:
+- srozumitelná chybová hláška na nesmyslný vstup – to je správné chování
+- estetika, formulace, rozložení; na to je /review
+
+KAŽDÝ NÁLEZ MUSÍ MÍT REPRODUKČNÍ POSTUP – kroky, které jsi opravdu provedl,
+a pozorovaný výsledek. Nález bez postupu nehlas: bez něj je to domněnka
+a domněnky vyrábí panel v /review, ne ty.
+
+VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
+[
+  {
+    "severity": "KRITICKÉ" | "STŘEDNÍ" | "KOSMETICKÉ",
+    "vector": "<vektor>",
+    "title": "krátký název",
+    "repro": ["krok 1", "krok 2", "..."],
+    "observed": "co se stalo – hláška, stav, výstup z konzole nebo logu",
+    "expected": "co se stát mělo",
+    "locations": ["soubor:řádek, pokud se dá dohledat"]
+  }
+]
+
+Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
+```
+
+**Závažnost:** KRITICKÉ – ztráta dat, akce bez oprávnění, nedostupnost. STŘEDNÍ – pád nebo nekonzistence v běžném toku. KOSMETICKÉ – technická hláška bez dalšího dopadu.
+
+------
+
+## Fáze 3 – Přehrát nálezy
+
+**Každý nález si přehraj sám**, podle jeho reprodukčního postupu. Tohle nahrazuje ověřovatele z `/review`: skeptik nad pozorováním jen stojí čas, ale postup, který nejde zopakovat, nález není.
+
+- **Reprodukovalo se** → jde dál.
+- **Nereprodukovalo se** → zahoď a spočítej do souhrnu. Neptej se agenta znovu.
+- **Reprodukovalo se jinak, než tvrdil** → platí, co jsi viděl ty.
+
+Deduplikuj: jedna příčina se projeví přes víc vektorů. Nech jeden nález a vypiš u něj všechny cesty, kterými se k ní dá dojít.
+
+------
+
+## Fáze 4 – Přehled
+
+```
+## Výsledky útoku
+
+Cíl: <adresa> · Rozsah: [změny na větvi – N obrazovek/endpointů / celá aplikace]
+Vektory: [které běžely]
+
+Nálezů: X, z toho Y se nepodařilo zopakovat, zbývá Z:
+- 🔴 Kritické: N
+- 🟡 Střední: N
+- 🔵 Kosmetické: N
+
+Nezkoušelo se: [vektory vynechané kvůli hranicím – platby, odesílání mailů, …]
+```
+
+Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup nebyl prázdný** – prázdný výsledek je taky výsledek a je to ten lepší.
+
+------
+
+## Fáze 5 – Průchod s uživatelem
+
+**Všechny nálezy jsou sporné.** Mechanická větev tady není: každý nález z útoku znamená změnu chování a ta se neopravuje bez souhlasu.
+
+Pro každý, jeden po druhém, od nejzávažnějšího:
+
+```
+---
+[N/celkem] 🔴/🟡/🔵 [vektor] NÁZEV NÁLEZU
+
+Reprodukce:
+  1. …
+  2. …
+Pozorováno: [co se stalo]
+Mělo být:   [co se stát mělo]
+Kde: [soubor:řádek, když se dá dohledat]
+
+Navrhované řešení:
+[konkrétně co změnit]
+```
+
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby **Opravit** / **Odložit** / **Přeskočit**. Chování volby *Other* viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
+
+Při volbě **Opravit**:
+
+1. Proveď změnu.
+2. **Napiš regresní test, který ten postup pokrývá.** U nálezu z útoku to není volitelné: reprodukční postup je hotové zadání testu a bez něj se chyba vrátí a nikdo se to nedozví. Tímhle krokem se z jednorázového průzkumu stává trvalé pokrytí.
+3. **Ověř** – zelená linka podle kontraktu příkazů, a pak **přehraj reprodukční postup znovu** proti opravené instanci. Test může projít i nad chybou, kterou pokrývá špatně.
+4. Když kontrola selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
+5. Commit dle autocommit nastavení projektu.
+
+Při volbě **Odložit** zapiš nález do `docs/todo.md` **i s reprodukčním postupem** – bez něj je za měsíc nepoužitelný.
+
+Při volbě **Přeskočit** se zeptej na důvod a zapiš do projektového `CLAUDE.md` do kapitoly `## Review`, stejným formátem jako `/review` (nálezy odtud a odtamtud se přeskakují ze stejných důvodů a hledat je na dvou místech nemá smysl). Řádek doplň o `(útok)`. **Nález, který dovolí akci bez oprávnění nebo ztrátu dat, sem nezapisuj bez výslovného potvrzení.**
+
+------
+
+## Fáze 6 – Úklid a shrnutí
+
+**Zastav, co jsi zvedl** – dev server, kontejnery, otevřené stránky prohlížeče. Ověř to, ne že to předpokládej: běžící server na portu rozbije příští běh.
+
+Zkontroluj, že po útoku nezůstala **rozsypaná testovací data**, která by mátla další práci.
+
+```
+## Hotovo
+
+Cíl: <adresa> · Vektory: [které]
+
+- ✅ Opraveno po odsouhlasení: N (z toho N s regresním testem)
+- 📌 Odloženo do docs/todo.md: N
+- ⏭️ Přeskočeno (zapsáno do CLAUDE.md → Review): N
+- 🚫 Nepodařilo se zopakovat (nezobrazeno): N
+
+**Nezkoušelo se:** [vektory vynechané kvůli hranicím, nebo „nic"]
+
+**Prostředí:** [zastaveno / co zůstalo běžet a proč]
+
+**Další krok:** /release
+```
+
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `Rozbít se to nepodařilo, v prověřených vektorech aplikace drží.`
+- `Rozbít se to podařilo a není vypořádané – zbývá: <konkrétní seznam>.`

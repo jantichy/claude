@@ -296,7 +296,7 @@ Od nápadu k nasazené feature vede jedna osa. Celá vypadá takhle:
 ```
 Zakládání   /project → /specify → /breakdown → /implement
 Uzavírání   /review → /consistency → /cleanup
-Nasazení    /release
+Nasazení    /attack → /release
 ```
 
 Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → zelená linka → commit.
@@ -318,12 +318,13 @@ Nad dokumentem, který vznikne v kroku `/specify` nebo `/breakdown`, je navíc v
 6. **`/consistency`** – audit celého projektu, ne jen změn. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všechny role v `/review`, a uklidí i to, co nastřílel krok 5.
 7. **`/cleanup`** – poslední. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč).
 
-**Nasazení (8)**
+**Nasazení (8–9)**
 
-8. **`/release`** – nasazení do produkce. **Stojí mimo uzavírání schválně:** uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť.
+8. **`/attack`** – explorativní útok: aplikace se **spustí** a zkouší se rozbít vstupy, pořadím kroků, cizími identitami a nesmyslnými daty. Je to třetí druh záruky vedle deterministických bran a posouzení modelem, a ani jedna ho nenahrazuje – `/review` kód čte, tenhle ho spouští. **Stojí až tady schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost, kdežto `/review` je levný a běží po každé feature. Projekt bez spustitelné aplikace ho nemá.
+9. **`/release`** – nasazení do produkce. **Stojí mimo uzavírání schválně:** uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť.
 
 **Žádný krok neopakuje, co udělal krok před ním.** Každý má v *Co skill nedělá* jmenovitě napsané, čí práci nepřebírá. Test: *kdyby ten krok neproběhl, zjistil by to někdo jiný?* Když ano, je to duplicita – stojí čas i tokeny a hlavně rozmazává odpovědnost, protože u věci, kterou hlídají tři kroky, ji nakonec neudělá pořádně žádný.
 
 **Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 
-**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, zelenou linku ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
+**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, zelenou linku, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**

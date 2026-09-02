@@ -64,11 +64,23 @@ Proč pro to mít vlastní skilly, když jde volat rovnou je? **Protože čím t
 
 Plán je zároveň jediné místo, kde si testy přečtu **dřív, než existuje kód** – potom už je posuzuju podle toho, jestli procházejí.
 
+## [`/attack`](skills/attack/) – zkusit to rozbít, ne o tom číst
+
+Dlouho jsem měl pocit, že mám ověřování pokryté: nástroje hlídají, co umí, a `/review` nad kódem přemýšlí. Jenže obojí ten kód **čte**. Chybí třetí věc – někdo, kdo aplikaci spustí a půl hodiny do ní mlátí. Přehlédnutou větev, kvůli které se místo stránky ukáže bílo, z kódu nevyčtu; z otevřeného prohlížeče ano.
+
+Skill zvedne aplikaci lokálně a pošle na ni pár agentů, každého s jedním úhlem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, prázdná i přeplněná data, offline uprostřed odesílání. Zadání zní „najdi, co spadne“, ne „zkontroluj tenhle seznam“.
+
+Nálezy odsud mají jinou váhu než z panelu. Panel tvrdí, že něco nastane; útok přiloží postup, kterým to nastalo – proto se tady nic nedává ověřovat skeptikovi, jen si to přehraju. A každá oprava si odnese regresní test, jinak by z drahého odpoledne nezbylo nic trvalého.
+
+Pouštím ho **jednou za čas před nasazením**, ne po každé feature. `/review` je levný a snese opakování; tenhle potřebuje běžící prostředí, trvá desítky minut a nad rozestavěnou prací by hlásil hlavně to, že ještě není hotová.
+
+Jedna věc je v něm zadrátovaná natvrdo: útočí se **výhradně na lokální instanci nad testovacími daty**. Ne proto, že bych si nevěřil, ale protože destruktivní vstupy jsou celý smysl té práce a spletená adresa by byla průšvih, který se neodestane.
+
 ## [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
 
 Používám platformy, které nasazují automaticky po pushnutí do produkční větve, a ty si po založení projektu nastaví jako produkční `main`. To znamená, že každá přimergovaná feature jde rovnou na produkci. Skill z toho nedělá danost, ale chybu, kterou má smysl narovnat: nasazovací větev se **oddělí od integrační**. `main` zůstane tím, čím má být, a produkci mění jedině vědomé povýšení do větve `production`.
 
-Před ním hlídá čistý strom, zelenou linku, produkční build, audit závislostí a jestli vůbec proběhlo `/review`. Zvlášť řeší **migrace**: dopředu kompatibilně, tedy nejdřív se jen přidává a odebírá se až v dalším vydání – jinak by rollback kódu shodil aplikaci na datech, která zapsala nová verze. A nepustí mě dál, dokud neumí odpovědět, jak se za deset minut vrátit zpátky.
+Před ním hlídá čistý strom, zelenou linku, produkční build, audit závislostí a jestli vůbec proběhlo `/review` a `/attack`. Zvlášť řeší **migrace**: dopředu kompatibilně, tedy nejdřív se jen přidává a odebírá se až v dalším vydání – jinak by rollback kódu shodil aplikaci na datech, která zapsala nová verze. A nepustí mě dál, dokud neumí odpovědět, jak se za deset minut vrátit zpátky.
 
 Vedlejší zisk oddělené větve je ten nejpraktičtější: každý merge do `main` dostane vlastní **preview URL**, takže si věc proklikám dřív, než ji uvidí kdokoliv jiný. `/release` pak preview vůbec neřeší – testování proběhlo průběžně a stavět ho znovu by znamenalo čekat na něco, co už bylo.
 
