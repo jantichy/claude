@@ -1,6 +1,7 @@
 ---
 name: cleanup
 description: Skill se použije, když uživatel zadá "/cleanup" nebo "/cleanup full", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí.
+argument-hint: [full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
 

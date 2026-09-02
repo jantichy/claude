@@ -1,7 +1,7 @@
 ---
 name: consistency
 description: Skill se použije, když uživatel zadá "/consistency", nebo chce audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
-allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
 
 # Consistency

@@ -1,7 +1,7 @@
 ---
 name: compose
 description: Skill se použije, když uživatel zadá "/compose" nebo chce napsat článek, post na sociální sítě či vlákno svým jménem a stylem. Piš text hlasem Jana Tichého podle znalostní báze v ~/Dev/context/compose/.
-allowed-tools: [Read, Grep, Glob, Write, Edit]
+allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 
 # Compose

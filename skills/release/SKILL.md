@@ -1,7 +1,8 @@
 ---
 name: release
 description: Skill se použije, když uživatel zadá "/release" (volitelně s větví, tagem nebo hashem commitu; výchozí je main), nebo chce nasadit hotovou práci do produkce – projít brány před nasazením, ošetřit migrace databáze, nasadit, ověřit smoke testem a vědět, jak se vrátit zpátky. Nikdy se nespouští sám ani jako pokračování jiného skillu.
-allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, AskUserQuestion, Skill]
+argument-hint: [větev|tag|hash]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
 # Release

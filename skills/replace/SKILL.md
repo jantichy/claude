@@ -1,7 +1,8 @@
 ---
 name: replace
 description: Skill se použije, když uživatel zadá "/replace", nebo chce něco přejmenovat či změnit napříč celým projektem – termín, název souboru, adresáře, klíče, eventu, hodnoty – a promítnout to důsledně do všech míst, kde se to zmiňuje, včetně dokumentace, JSONů a názvů souborů.
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
+argument-hint: [starý → nový]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
 # Replace

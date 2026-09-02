@@ -2,7 +2,7 @@
 name: autocommit
 description: Skill se použije, když uživatel zadá "/autocommit", "/autocommit on", "/autocommit off", "/autocommit status", nebo zadá "zapnout autocommit", "vypnout autocommit", "zkontrolovat autocommit". Spravuje nastavení autocommitu pro daný projekt uložené v CLAUDE.md.
 argument-hint: [on|off|status]
-allowed-tools: [Read, Edit, Write, Glob]
+allowed-tools: [Read, Write, Edit, Glob]
 ---
 
 # Autocommit

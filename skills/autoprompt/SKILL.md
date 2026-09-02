@@ -2,7 +2,7 @@
 name: autoprompt
 description: Skill se použije, když uživatel zadá "/autoprompt", "/autoprompt on", "/autoprompt off", "/autoprompt status", nebo zadá "zapnout autoprompt", "vypnout autoprompt", "zkontrolovat autoprompt". Spravuje per-project automatické logování promptů uživatele do docs/prompts.md.
 argument-hint: [on|off|status]
-allowed-tools: [Read, Edit, Write, Glob, Bash]
+allowed-tools: [Read, Write, Edit, Glob, Bash]
 ---
 
 # Autoprompt

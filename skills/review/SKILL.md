@@ -1,7 +1,8 @@
 ---
 name: review
 description: Skill se použije, když uživatel zadá "/review" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz, testy a soulad s doménovými standardy (coding, web, admin, analytics, text, design, training). Pouští deterministické nástroje, pak paralelní panel rolí, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
-allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion, Skill]
+argument-hint: [full]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
 # Review
@@ -157,7 +158,7 @@ PRAVIDLA HLÁŠENÍ:
   „Mohla by tu být race condition" není nález. „Když dva požadavky dorazí mezi
   read a write v foo.ts:42, druhý přepíše první" nález je.
 - Nehlas soubory v cestách legacy/vendored/generated.
-- Když je totéž porušené na mnoha místech (>10 výskytů), neuváděj jednotlivé řádky –
+- Když je totéž porušené na mnoha místech (>20 výskytů), neuváděj jednotlivé řádky –
   uveď pattern, počet, tři příklady a navrhni hromadnou opravu. Označ tagem `batch`.
 - Když má víc nálezů společnou příčinu, seskup je: root nález + u následků vyplň
   `related_root` s titulkem rootu.
@@ -295,7 +296,7 @@ Panel: X nálezů, Y vyvráceno při ověření, zbývá Z:
 - 🟡 Střední: N
 - 🔵 Kosmetické: N
 
-Z toho [batch] hromadných (>10 výskytů): N
+Z toho [batch] hromadných (>20 výskytů): N
 
 Mechanických (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
 Sporných: M – ty projdeme spolu od nejzávažnějších.
