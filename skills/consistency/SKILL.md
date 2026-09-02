@@ -17,6 +17,7 @@ Proveď kompletní audit vnitřní konzistence aktuálního projektu. Cíl: naj�
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
+- **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství tu neběží – proběhly o krok dřív a od té doby se nic nezměnilo. Tenhle skill dorovnává jen ten konzistenční zbytek přes celý projekt, který předchozí kroky osy nepokrývají.
 
 ## Fáze 0 – Pre-flight: kontext a baseline
 
@@ -40,14 +41,19 @@ Z těchto souborů sestav **baseline konvencí** – co je v projektu explicitn�
 
 Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako „won't fix“.
 
-### 0.3 Spusť existující nástroje
+### 0.3 Spusť nástroje, které předchozí kroky osy nedělají
 
-Pokud jsou v projektu k dispozici (zjisti z `package.json` scripts a devDeps), spusť – paralelně:
-- `tsc --noEmit` (jen u TypeScript projektů)
-- linter v `--quiet` módu (eslint, biome apod.)
-- `knip` nebo `depcheck`, pokud jsou nainstalované
+**Typecheck ani linter tady nespouštěj.** Pustil je `/review` o krok dřív jako zelenou linku a od té doby se nic nezměnilo – opakovat je znamená platit časem i tokeny za tentýž výsledek. Viz `~/.claude/RULES.md`, *Životní cyklus práce*.
 
-Výstupy si zapamatuj a předej Explore agentovi. Pokud nástroj selže nebo není dostupný, pokračuj a poznamenej to. Nálezy z toolchainu se v dalších fázích označí tagem `[toolchain]`.
+Spusť jen to, co je vlastní téhle otázce – hledání mrtvého kódu a nepoužitých závislostí, tedy „sedí si projekt sám se sebou?“, na což se `/review` neptá:
+
+- `knip` nebo `depcheck`, jsou-li v projektu nainstalované (zjisti z `package.json`)
+
+Nemá-li je projekt (nebo nemá `package.json` vůbec, což je u obsahového či znalostního projektu normální), **krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo. Audit v dalších fázích běží stejně, jen bez téhle vrstvy.
+
+Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označí tagem `[toolchain]`.
+
+**Běží-li `/consistency` samostatně mimo osu** (tedy bez předchozího `/review`) a projekt má *Kontrakt příkazů*, řekni uživateli jednou větou, že zelená linka teď prověřená není a že `/review` se dělá dřív.
 
 ## Fáze 1 – Průzkum projektu
 
@@ -218,7 +224,7 @@ Navrhované řešení:
    - `question`: název problému a v čem je, jednou větou
    - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
      - **Opravit** – provedu navrhovanou změnu
-     - **Odložit** – nechám být, vrátíme se k tomu později
+     - **Odložit** – zapíšu do `docs/todo.md` i s úvahou, vrátíme se k tomu později
      - **Přeskočit** – neopravovat, zapíšu do CLAUDE.md jako „won't fix“
      - **Rozbalit** – *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
 
@@ -228,16 +234,17 @@ Navrhované řešení:
 
    Zpracování odpovědí:
    - **Opravit** – proveď změnu hned (krok 3)
-   - **Odložit** – zapiš do interního seznamu odložených, neřeš teď
+   - **Odložit** – **zapiš hned do `docs/todo.md`** i s celou úvahou, ne jen do interního seznamu; konverzace není úložiště a při kompaktaci se parkovaný bod ztratí (`~/.claude/RULES.md`, *Parkované body zapiš a sám je otevři*). Nemá-li projekt `todo.md`, **nezakládej ho potichu** – řekni to, nabídni `/project` a do té doby si položku drž v seznamu odložených, ať ji aspoň vypíšeš v závěrečném shrnutí.
    - **Přeskočit** – zeptej se na krátký důvod („Proč to neopravovat?“) a zapiš do projektového `CLAUDE.md` do kapitoly `## Consistency` (krok 6). Pokud uživatel nechce uvést důvod, zapiš `(bez uvedeného důvodu)`.
    - **Rozbalit** – vypiš všechny lokace a začni je řešit jednotlivě jako samostatné podproblémy
 
 3. Pokud uživatel zvolí **Opravit**:
    a. Proveď změnu. U batch problému (>20 výskytů) řeš hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
-   b. **Verifikace po opravě – vždy, ne občas.** Spusť relevantní kontroly:
-      - U TS projektu: `tsc --noEmit`
-      - Pokud projekt má build script a oprava se týká buildovaného kódu a build je rychlý (~30s): `<package manager> run build`
-      - Pokud existují relevantní testy pro upravený soubor a jdou rychle pustit: pusť je
+   b. **Verifikace po opravě – vždy, ne občas.** Tady nejde o audit, ale o ověření, že tvůj vlastní zásah nic nerozbil, takže se nejedná o duplicitu s Fází 0.3. Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/coding.md`):
+      - `typecheck` a `test` po každé opravě, která se dotkla kódu
+      - `build` jen tehdy, když se oprava týká buildovaného kódu a build je rychlý
+      - Chybí-li řádek v kontraktu, krok **přeskoč nahlas** a napiš, co se tím neověřilo. Nevymýšlej příkazy, které jsi neověřil.
+      - Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje.
    c. Pokud kontrola selže: **zastav se**, ukaž uživateli chybu a diff a zeptej se jak pokračovat. Nepokračuj automaticky na další problém.
    d. Po úspěšné opravě KRITICKÉHO problému přepočítej zbývající seznam – projdi položky s `related_root === <title opraveného>` a krátce ověř (Read/Grep), zda už nejsou neaktuální. Ty, co se vyřešily samy, vyhoď z fronty a započítej je do "vyřešeno automaticky" v závěrečném shrnutí.
    e. Commit dle autocommit nastavení projektu – pokud projektový `CLAUDE.md` obsahuje sekci `### Autocommit`, commituj a pushni hned po každé opravě s výstižnou commit message.
