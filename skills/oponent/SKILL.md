@@ -53,22 +53,22 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 **Nepouštěj tři stejné kritiky.** Redundantní subagenti najdou třikrát totéž. Diverzita úhlů chytá selhání, která opakování nechytí.
 
-Vyber **tři až pět úhlů podle povahy dokumentu** z katalogu níž – nebo si vymysli vlastní, sedne-li to líp. Výběr **vypiš uživateli** předtím, než je pustíš, ať může jeden vyměnit.
+Vyber **tři až pět úhlů** z katalogu níž podle sloupce *Kdy zvolit* – nebo si vymysli vlastní, sedne-li to líp. Výběr **vypiš uživateli** předtím, než je pustíš, ať může jeden vyměnit.
 
-| Úhel | Ptá se |
-|---|---|
-| **Vnitřní rozpor** | Tvrdí dokument někde něco, co jinde popírá? Sedí čísla, výčty a souhrny s obsahem? Nezůstal tam zbytek po zrušeném konceptu? |
-| **Skeptik** | Nedůvěřuj ničemu a hledej chyby. Plyne závěr z toho, co mu předchází? Je tvrzení podané jako fakt doopravdy fakt? Nesahej na čísla, právo, provoz ani technologii – ty mají vlastní úhly; ptáš se na logiku argumentace. Ber ho jako záložní volbu pro dokument, na který žádný doménový úhel nesedne. |
-| **Předpoklady** | Vypiš předpoklady, na kterých dokument mlčky stojí a nikde je nepojmenovává. Co musí platit, aby závěr plynul z podkladu? U každého: jak se pozná, že neplatí, a co z dokumentu padá s ním. |
-| **Pre-mortem** | Je za osmnáct měsíců a tohle prokazatelně selhalo. Napiš, co se stalo – konkrétní sled událostí, ne obavu. Který předpoklad padl první? Jako jediný úhel smíš skládat příběh napříč doménami: nález, který leží na rozhraní dvou jiných úhlů, jinak nemá majitele. |
-| **Cílová skupina** | Čte to očima persony, které se to týká. Rozumí tomu? Koupí si to? Co ji odradí? Co v tom nenajde? |
-| **Ekonomika** | Sedí čísla? Break-even, cena, kapacita, náklady na provoz. Co se stane při desetinásobku a při desetině? |
-| **Právo a compliance** | Osobní údaje, spotřebitelské právo, daně, autorská práva, smluvní závazky. Co je napsané tak, že to nejde dodržet? |
-| **Provoz** | Kdo to bude reálně dělat, jak často a co se stane, když to neudělá? Co vyžaduje ruční zásah a neškáluje? |
-| **Konkurence a trh** | Existuje to už? Čím se to liší? Proč by si někdo vybral tohle? |
-| **Co chybí** | Ne co je špatně, ale co v dokumentu vůbec není a mělo by být. Nejcennější a nejhůř se hledá. |
-| **Technická proveditelnost** | Dá se to postavit tak, jak je to popsané? Kde je skryté riziko? |
-| **Hraniční případy** | Co se stane, když je vstup prázdný, obojí najednou, uprostřed zrušené, dvakrát za sebou? |
+| Úhel | Ptá se | Kdy zvolit |
+|---|---|---|
+| **Vnitřní rozpor** | Tvrdí dokument někde něco, co jinde popírá? Sedí čísla, výčty a souhrny s obsahem? Nezůstal tam zbytek po zrušeném konceptu? | vždy – povinný |
+| **Skeptik** | Nedůvěřuj ničemu a hledej chyby. Plyne závěr z toho, co mu předchází? Je tvrzení podané jako fakt doopravdy fakt? Nesahej na čísla, právo, provoz ani technologii – ty mají vlastní úhly; ptáš se na logiku argumentace. | záložní volba pro dokument, na který nesedne žádný doménový úhel |
+| **Předpoklady** | Vypiš předpoklady, na kterých dokument mlčky stojí a nikde je nepojmenovává. Co musí platit, aby závěr plynul z podkladu? U každého: jak se pozná, že neplatí, a co z dokumentu padá s ním. | cokoli, co tvrdí něco o světě – strategie, pozicování, koncepce, cenotvorba |
+| **Pre-mortem** | Je za osmnáct měsíců a tohle prokazatelně selhalo. Napiš, co se stalo – konkrétní sled událostí, ne obavu. Který předpoklad padl první? Jako jediný úhel smíš skládat příběh napříč doménami: nález, který leží na rozhraní dvou jiných úhlů, jinak nemá majitele. | cokoli, co se bude realizovat – PRD, koncepce, plán, cenotvorba |
+| **Cílová skupina** | Čte to očima persony, které se to týká. Rozumí tomu? Koupí si to? Co ji odradí? Co v tom nenajde? | pozicování, prodejní text, PRD, cenotvorba |
+| **Ekonomika** | Sedí čísla? Break-even, cena, kapacita, náklady na provoz. Co se stane při desetinásobku a při desetině? | cenotvorba, strategie, obchodní model |
+| **Právo a compliance** | Osobní údaje, spotřebitelské právo, daně, autorská práva, smluvní závazky. Co je napsané tak, že to nejde dodržet? | cenotvorba, obchodní podmínky, analytická dokumentace (souhlas, osobní údaje) |
+| **Provoz** | Kdo to bude reálně dělat, jak často a co se stane, když to neudělá? Co vyžaduje ruční zásah a neškáluje? | koncepce, PRD, analytická dokumentace – cokoli s opakovanou ruční prací |
+| **Konkurence a trh** | Existuje to už? Čím se to liší? Proč by si někdo vybral tohle? | pozicování, strategie, nový produkt nebo služba |
+| **Co chybí** | Ne co je špatně, ale co v dokumentu vůbec není a mělo by být. Nejcennější a nejhůř se hledá. | vždy – povinný |
+| **Technická proveditelnost** | Dá se to postavit tak, jak je to popsané? Kde je skryté riziko? | architektura, datový model, PRD, analytická dokumentace |
+| **Hraniční případy** | Co se stane, když je vstup prázdný, obojí najednou, uprostřed zrušené, dvakrát za sebou? | datový model, PRD, cenotvorba – všude, kde dokument stanoví pravidlo s okraji |
 
 **Pravidlo:** úhel *Vnitřní rozpor* a *Co chybí* ber jako povinné, ať je dokument jakýkoliv. Zbytek podle povahy.
 
@@ -89,7 +89,7 @@ které si přečteš. Autor dokumentu tě neslyší, takže nemá smysl být ohl
 DOKUMENT: <absolutní cesty>
 KONTEXT PROJEKTU (přečti, ale neoponuj to): <CLAUDE.md, docs/rules.md, docs/decisions.md>
 
-TVŮJ ÚHEL POHLEDU: <úhel a jeho otázky z katalogu>
+TVŮJ ÚHEL POHLEDU: <úhel a jeho otázky ze sloupce *Ptá se*>
 
 Přečti dokument celý a hledej výhradně ze svého úhlu. Ostatní úhly pokrývají jiní
 oponenti – nepřebíhej k nim.

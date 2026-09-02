@@ -45,14 +45,58 @@ sha()  { shasum | cut -d' ' -f1; }   # dostupnost se ověřuje v need_tools
 # Proto se u parseru neověřuje existence, ale výsledek na známém vstupu.
 probe_jq() { [ "$(printf '{"a":1}' | jq -r '.a' 2>/dev/null)" = "1" ]; }
 
+# Na macOS je timeout z coreutils jako gtimeout, na Linuxu jako timeout. Bez
+# fallbacku by hook na Linuxu po každém tahu zemřel na "chybí gtimeout" a brána
+# by neběžela vůbec – tedy nejhorší možný způsob, jak zjistit, že něco chybí.
+TIMEOUT_BIN=""
+pick_timeout() {
+  if have gtimeout; then TIMEOUT_BIN=gtimeout
+  elif have timeout; then TIMEOUT_BIN=timeout
+  fi
+  [ -n "$TIMEOUT_BIN" ]
+}
+
 need_tools() {
-  for t in jq git sed shasum mktemp gtimeout; do have "$t" || die "chybí $t, hook neběží."; done
+  for t in jq git sed shasum mktemp; do have "$t" || die "chybí $t, hook neběží."; done
+  pick_timeout || die "chybí gtimeout ani timeout (coreutils), hook neběží."
   probe_jq || die "jq je na PATH, ale nefunguje (nevrátilo očekávaný výstup) – hook neběží."
 }
 
-# Klíč projektu je hash CELÉ cesty. Dřívější "posledních 40 alfanumerických znaků"
+# Markdown bez bloků kódu. Ukázka formátu kontraktu v dokumentaci se jinak čte
+# jako kontrakt – a coding.md takovou ukázku obsahuje, takže kdo si ji zkopíruje
+# do svého CLAUDE.md, dostane po každém tahu běžící `npm test` a `npx stryker run`,
+# aniž by kontrakt vůbec zaváděl. Je to zároveň cesta, kudy jde do repozitáře
+# propašovat příkaz schovaný jako dokumentace.
+md_body() { awk '/^[[:space:]]*(```|~~~)/ { f = !f; next } !f' "$1"; }
+
+# Klíč je hash CELÉHO řetězce. Dřívější "posledních 40 alfanumerických znaků"
 # kolidovalo: /a/con-text a /a/context daly týž klíč, a tím i týž souhlas.
 proj_key() { printf '%s' "$1" | sha; }
+
+# Identita REPOZITÁŘE, ne pracovního adresáře. Ve worktree layoutu má každá větev
+# vlastní adresář, takže klíč z cesty znamenal nový souhlas na každé nové větvi –
+# tedy vypnutou bránu právě tam, kde se pracuje, a funkční na main, kde se
+# nepracuje. Sdílený .git je pro všechny worktree téhož repozitáře týž, takže
+# souhlas konečně platí pro repozitář, jak celou dobu slibuje.
+# Mimo git repozitář se vrací zadaná cesta, aby se chování nezměnilo.
+repo_id() {
+  d=$(git -C "$1" rev-parse --git-common-dir 2>/dev/null) || { printf '%s' "$1"; return; }
+  case "$d" in /*) ;; *) d="$1/$d" ;; esac
+  (cd "$d" 2>/dev/null && pwd) || printf '%s' "$1"
+}
+
+# Soubor se souhlasem pro daný pracovní adresář, existuje-li. Souhlasy vydané
+# před přechodem na klíč podle repozitáře se při prvním použití přeznačí – bez
+# migrace by se změnou klíče brána ze dne na den vypnula ve všech projektech.
+allow_file() {
+  k=$(proj_key "$(repo_id "$1")")
+  if [ -f "$ALLOW_DIR/$k" ]; then printf '%s' "$ALLOW_DIR/$k"; return 0; fi
+  old=$(proj_key "$1")
+  if [ -f "$ALLOW_DIR/$old" ] && mv "$ALLOW_DIR/$old" "$ALLOW_DIR/$k" 2>/dev/null; then
+    printf '%s' "$ALLOW_DIR/$k"; return 0
+  fi
+  return 1
+}
 
 # Adresář, ve kterém se příkazy spustí. U kontraktu v .claude/CLAUDE.md je to
 # kořen repozitáře, ne .claude/ – jinak by testy běžely o adresář níž.
@@ -67,10 +111,13 @@ proj_for_md() {
 # "bez kontraktu" právě o repozitářích, kvůli kterým ta cesta vznikla.
 find_contract() {
   for c in "$1/CLAUDE.md" "$1/.claude/CLAUDE.md" "$1/main/CLAUDE.md"; do
-    if [ -f "$c" ] && grep -q '^## Příkazy' "$c" 2>/dev/null; then printf '%s' "$c"; return 0; fi
+    if [ -f "$c" ] && md_body "$c" | grep -q '^## Příkazy'; then printf '%s' "$c"; return 0; fi
   done
   return 1
 }
+
+# Sekce ## Příkazy, vždy z těla bez bloků kódu. Jedna definice pro --allow i běh.
+contract_section() { md_body "$1" | sed -n '/^## Příkazy/,/^## /p'; }
 
 # --- Výpis a odebrání souhlasu -------------------------------------------------
 # Souhlas musí jít i zjistit a odebrat, ne jen vydat: po naklonování cizího
@@ -78,11 +125,16 @@ find_contract() {
 
 # Cesta, pro kterou se souhlas hledá. Nepoužívá cd: odebrat se musí dát i souhlas
 # pro adresář, který už neexistuje.
+# Existuje-li adresář, jde se přes cd: jinak `--revoke .` a `--revoke cesta/`
+# nesedly na uložený řetězec a odvolání souhlasu tiše neproběhlo – přičemž hláška
+# zněla jako fakt o stavu ("žádný souhlas vydaný nebyl"), ne jako chyba vstupu.
+# Neexistující adresář se skládá ručně, aby šel odvolat i souhlas pro smazanou cestu.
 norm_path() {
-  case "$1" in
-    /*) printf '%s' "${1%/}" ;;
-    *)  printf '%s' "${PWD%/}/${1#./}" ;;
-  esac
+  if [ -d "$1" ]; then (cd "$1" && pwd) && return 0; fi
+  p=$1
+  case "$p" in /*) ;; *) p="${PWD%/}/${p#./}" ;; esac
+  while :; do case "$p" in */) p=${p%/} ;; *) break ;; esac; done
+  printf '%s' "$p"
 }
 
 if [ "${1:-}" = "--list" ]; then
@@ -107,12 +159,13 @@ if [ "${1:-}" = "--revoke" ]; then
   [ -n "${2:-}" ] || die "použití: green-line.sh --revoke <projekt>"
   P=$(norm_path "$2")
   N=0
-  # Porovnává se obsah souboru, ne hash: souhlas se ukládá pro adresář s CLAUDE.md,
-  # což bývá <kontejner>/main, takže samotný hash zadané cesty by ho netrefil.
+  # Odvolat se musí dát i souhlas zadaný přes jinou větev téhož repozitáře, proto
+  # se kromě uložené cesty porovnává i klíč podle repozitáře.
+  RKEY=$(proj_key "$(repo_id "$P")")
   for f in "$ALLOW_DIR"/*; do
     [ -f "$f" ] || continue
     STORED=$(head -1 "$f")
-    if [ "$STORED" = "$P" ] || [ "$STORED" = "$P/main" ]; then
+    if [ "$STORED" = "$P" ] || [ "$STORED" = "$P/main" ] || [ "$(basename "$f")" = "$RKEY" ]; then
       rm -f "$f" || die "nelze smazat $f"
       echo "Souhlas odebrán: $STORED"
       N=$((N+1))
@@ -133,9 +186,10 @@ if [ "${1:-}" = "--allow" ]; then
   P=$(proj_for_md "$MD")
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
   chmod 700 "$(dirname "$ALLOW_DIR")" "$ALLOW_DIR" 2>/dev/null || true
-  printf '%s\n' "$P" > "$ALLOW_DIR/$(proj_key "$P")" || die "nelze zapsat souhlas do $ALLOW_DIR"
-  [ -s "$ALLOW_DIR/$(proj_key "$P")" ] || die "souhlas se nezapsal."
-  SEC=$(sed -n '/^## Příkazy/,/^## /p' "$MD")
+  RKEY=$(proj_key "$(repo_id "$P")")
+  printf '%s\n' "$P" > "$ALLOW_DIR/$RKEY" || die "nelze zapsat souhlas do $ALLOW_DIR"
+  [ -s "$ALLOW_DIR/$RKEY" ] || die "souhlas se nezapsal."
+  SEC=$(contract_section "$MD")
   echo "Zelená linka poběží v $P, podle kontraktu v $MD."
   echo
   echo "Po každém tahu spustí:"
@@ -150,6 +204,8 @@ if [ "${1:-}" = "--allow" ]; then
   OTHER=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]].*/\1/p' \
           | grep -vxE 'typecheck|lint|test' | paste -sd, - | sed 's/,/, /g')
   [ -n "$OTHER" ] && echo "  Nespouští: $OTHER (jen dokumentace v kontraktu)"
+  echo
+  echo "Platí pro celý repozitář včetně jeho worktree – nová větev si o souhlas znovu neříká."
   echo
   echo "Souhlas platí pro REPOZITÁŘ, ne pro ty konkrétní řádky:"
   echo "co ty příkazy udělají, určuje package.json, Makefile nebo konfigurace v tomhle repu"
@@ -196,13 +252,13 @@ done
 need_tools
 [ -d "$ALLOW_DIR" ] && [ ! -O "$ALLOW_DIR" ] && die "$ALLOW_DIR nepatří tobě, nespouštím nic."
 
-KEY=$(proj_key "$PROJ")
-if [ ! -f "$ALLOW_DIR/$KEY" ]; then
+KEY=$(proj_key "$(repo_id "$PROJ")")
+if ! allow_file "$PROJ" >/dev/null; then
   {
     echo "Zelená linka: pro $PROJ není vydaný souhlas, nespustil jsem nic."
     echo "Kontrakt je kód z repozitáře. Projdi si ho a jestli tomu repozitáři věříš:"
     echo "  ~/.claude/green-line.sh --allow $PROJ"
-    sed -n '/^## Příkazy/,/^## /p' "$CLAUDE_MD" \
+    contract_section "$CLAUDE_MD" \
       | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}/  \1: /p' || true
   } >&2
   exit 1
@@ -216,7 +272,7 @@ git -C "$PROJ" rev-parse --show-toplevel >/dev/null 2>&1 || exit 0   # není to 
 # --- Kontrakt: přečíst JEDNOU -------------------------------------------------
 # Dřív se soubor četl znovu pro každý krok, takže mezi kontrolou a spuštěním bylo
 # okno, ve kterém šel obsah vyměnit.
-SECTION=$(sed -n '/^## Příkazy/,/^## /p' "$CLAUDE_MD")
+SECTION=$(contract_section "$CLAUDE_MD")
 [ -n "$SECTION" ] || die "sekci ## Příkazy se nepodařilo přečíst z $CLAUDE_MD."
 cmd_for() {
   printf '%s\n' "$SECTION" | sed -n "s/^[[:space:]]*[-*][[:space:]]*$1:[[:space:]]\{1,\}//p" \
@@ -231,23 +287,39 @@ cmd_for() {
 # stejně pro první i desátou úpravu téhož souboru. Se samotným porcelainem tedy
 # platilo, že po první zelené kontrole šlo tentýž rozpracovaný soubor libovolně
 # rozbít a hook to prohlásil za "tenhle stav už prošel" a pustil dál.
-STATUS=$(git -C "$PROJ" status --porcelain 2>/dev/null)
-NCHANGED=$(printf '%s' "$STATUS" | grep -c . || true)
-CONTENT=""
+# -uall rozbalí neverzované adresáře na jednotlivé soubory. Bez něj je celý nový
+# adresář jedinou položkou "?? dir/", test [ -f ] na ní neprojde a obsah se do
+# otisku vůbec nedostane – takže po první zelené kontrole šlo do něj psát cokoliv
+# a hook to prohlásil za "tenhle stav už prošel". Nová feature přitom skoro vždycky
+# začíná novým adresářem, tedy brána byla mrtvá právě tam, kde se pracuje.
+# -z navíc vypíná kvotování cest, čímž odpadá ruční ořezávání uvozovek, po kterém
+# soubor s escapovaným znakem ve jméně z otisku vypadl.
+STATUS=""; NCHANGED=0; CONTENT=""
+PATHS=()
+while IFS= read -r -d '' rec; do
+  st=${rec:0:2}
+  p=${rec:3}
+  STATUS="$STATUS$st $p
+"
+  NCHANGED=$((NCHANGED + 1))
+  PATHS+=("$p")
+  # U přejmenování a kopie následuje druhá cesta jako samostatný záznam. Bere se
+  # taky – která z dvojice je zdroj a která cíl, se mezi verzemi gitu lišilo,
+  # a hashovat obě je levnější než se v tom spoléhat na verzi.
+  case "$st" in
+    R*|C*) if IFS= read -r -d '' src; then STATUS="$STATUS   $src
+"; PATHS+=("$src"); fi ;;
+  esac
+done < <(git -C "$PROJ" status --porcelain=v1 -z --untracked-files=all 2>/dev/null)
+
 if [ "$NCHANGED" -le 200 ]; then
   # Hash obsahu každého vyjmenovaného souboru. Smazané a nečitelné se přeskočí –
   # jejich zmizení už je vidět v porcelainu.
-  while IFS= read -r line; do
-    [ -z "$line" ] && continue
-    f=${line#???}
-    f=${f##* -> }                      # přejmenování: bere se cílová cesta
-    f=$(printf '%s' "$f" | sed 's/^"//; s/"$//')
+  for f in ${PATHS+"${PATHS[@]}"}; do
     [ -f "$PROJ/$f" ] || continue
     CONTENT="$CONTENT$(git -C "$PROJ" hash-object -- "$f" 2>/dev/null || echo unreadable) $f
 "
-  done <<EOF
-$STATUS
-EOF
+  done
 else
   # Přes dvě stě změněných souborů: hashování by stálo víc než kontrola sama.
   # Otisk se pak nedá spolehlivě porovnat, takže se kontrola pustí pokaždé.
@@ -257,7 +329,21 @@ SIG=$(printf '%s\n%s\n%s' "$(git -C "$PROJ" rev-parse HEAD 2>/dev/null || echo n
                           "$STATUS" "$CONTENT" | sha)
 
 mkdir -p "$RUN_DIR" 2>/dev/null || die "nelze založit $RUN_DIR"
-STATE="$RUN_DIR/$SESSION-$KEY"
+# Stav je klíčovaný projektem, ne session: o tom, jestli je strom zelený, rozhoduje
+# otisk stromu, a ten je pro obě session týž. Dřív si každá platila tutéž kontrolu
+# zvlášť.
+STATE="$RUN_DIR/$KEY"
+# Zámek proti souběhu. Dvě session, které skončí tah zároveň, jinak pustí testy
+# nad jedním stromem současně: kolize na portu, na testovací databázi, na dist/ –
+# a hlavně obojí přeteče LIMIT, oba kroky dostanou 124 a obě session dostanou
+# červenou nad kódem, který je v pořádku.
+LOCK="$RUN_DIR/$KEY.lock"
+find "$RUN_DIR" -maxdepth 1 -type d -name '*.lock' -mmin +10 -exec rm -rf {} + 2>/dev/null || true
+if ! mkdir "$LOCK" 2>/dev/null; then
+  echo "Zelená linka: kontrola tohohle projektu běží v jiné session, nespouštím ji podruhé." >&2
+  exit 0
+fi
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
 find "$RUN_DIR" -maxdepth 1 -type f -mmin +240 -delete 2>/dev/null || true
 : > "$STATE.test" 2>/dev/null || die "do $RUN_DIR nejde zapsat, hook by běžel bez pojistky."
 rm -f "$STATE.test"
@@ -274,14 +360,29 @@ STOP_ACTIVE=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/n
 
 # --- Spuštění kroků ------------------------------------------------------------
 TMP=$(mktemp "${TMPDIR:-/tmp}/green-line.XXXXXX") || die "nelze založit dočasný soubor."
-trap 'rm -f "$TMP"' EXIT INT TERM
+# Jeden trap na obojí: druhý `trap ... EXIT` by ten první tiše přepsal a zámek
+# by po doběhnutí zůstal ležet, takže by se brána v dalším tahu přeskočila.
+trap 'rm -f "$TMP"; rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
+
+# Adresář, ve kterém se kroky spustí. Monorepo a projekt, kde příkazy nejsou
+# v kořeni, se jinak nemají jak deklarovat: buď se do kořene napíše příkaz, který
+# pustí všechno (a přeteče LIMIT po každém tahu), nebo se kontrakt nenapíše vůbec.
+WORKDIR="$PROJ"
+CWD_KEY=$(cmd_for cwd)
+if [ -n "$CWD_KEY" ] && [ "$CWD_KEY" != "-" ]; then
+  case "$CWD_KEY" in
+    /*|*..*) die "kontrakt v $CLAUDE_MD má cwd mimo projekt: $CWD_KEY" ;;
+  esac
+  [ -d "$PROJ/$CWD_KEY" ] || die "kontrakt v $CLAUDE_MD ukazuje cwd na $CWD_KEY, ten adresář neexistuje."
+  WORKDIR="$PROJ/$CWD_KEY"
+fi
 
 run() {
-  # gtimeout bez --foreground schválně: pak běží krok ve vlastní procesní skupině
+  # timeout bez --foreground schválně: pak běží krok ve vlastní procesní skupině
   # a signál dostane celá, takže po zabitém kroku nezůstanou viset vnukové
   # (npm → node → vitest). S --foreground přežijí a drží otevřenou rouru.
   # head -c drží výstup v mezích – smyčkující příkaz jinak zaplní disk.
-  ( cd "$PROJ" && gtimeout --kill-after=5 "$LIMIT" bash -c "$1" 2>&1 ) \
+  ( cd "$WORKDIR" && "$TIMEOUT_BIN" --kill-after=5 "$LIMIT" bash -c "$1" 2>&1 ) \
     | head -c "$MAX_OUT" > "$TMP"
   return "${PIPESTATUS[0]}"
 }
