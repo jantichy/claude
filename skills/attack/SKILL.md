@@ -1,6 +1,7 @@
 ---
 name: attack
 description: Skill se použije, když uživatel zadá "/attack", nebo chce hotovou práci prověřit tak, že se ji někdo pokusí reálně rozbít – spustit aplikaci, sahat na ni mimo šťastnou cestu, posílat nesmyslné vstupy, lámat stavy a hledat, co spadne. Na rozdíl od /review, který kód čte, tenhle skill ho spouští. Běží výhradně proti lokální instanci, nikdy proti produkci.
+argument-hint: [full]
 allowed-tools: [Read, Glob, Grep, Bash, Task, AskUserQuestion, mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot, mcp__plugin_chrome-devtools-mcp_chrome-devtools__click, mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill, mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill_form, mcp__plugin_chrome-devtools-mcp_chrome-devtools__press_key, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_console_messages, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_network_requests, mcp__plugin_chrome-devtools-mcp_chrome-devtools__get_network_request, mcp__plugin_chrome-devtools-mcp_chrome-devtools__handle_dialog, mcp__plugin_chrome-devtools-mcp_chrome-devtools__evaluate_script, mcp__plugin_chrome-devtools-mcp_chrome-devtools__resize_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__emulate]
 ---
 
@@ -39,7 +40,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **před `/release
 
 **Pouští se před nasazením**, ne po každé feature: nad stavem, který je hotový, prošel uzavíráním a měl by jít ven. U dlouhého projektu klidně vícekrát – ale vždycky nad celkem, který drží pohromadě, ne nad jednou dodělanou obrazovkou.
 
-**Přeskakuje se, když není co spustit**: projekt bez spustitelné aplikace – obsahový, dokumentační, knihovna bez příkladu, konfigurační repozitář. Řekni to nahlas i s důvodem a pokračuj na `/review`.
+**Přeskakuje se, když není co spustit**: projekt bez spustitelné aplikace – obsahový, dokumentační, knihovna bez příkladu, konfigurační repozitář. Řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten je krok 5 a proběhl dávno.)
 
 Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna v autorizaci nebo ve stavovém automatu je přesně to, co útok chytá a čtení přehlédne.
 

@@ -263,6 +263,11 @@ nebo vědomě ničím a proč.
 Dál prahy, které bude projekt držet (pokrytí, mutation score) a čím se měří.
 Výchozí hodnoty a nástroje viz `~/Dev/context/coding/coding.md`,
 *Ověřování a brány kvality*.
+Zvlášť rozhodni o **generativních testech** – fuzzingu a property-based testech.
+Vyplatí se u parserů, validace vstupu, převodů formátů, výpočtů nad rozsahy
+a stavových automatů: najdou vstup, na který nikdo nepomyslel, a stojí tokeny
+jen jednou. Napiš, kde je projekt bude mít, nebo že je mít nebude a proč –
+prázdné místo tady znamená, že se nenapíšou nikdy.
 
 ## Ověřování a brány
 Konkrétní příkazy, které projekt bude mít – `test`, `typecheck`, `lint`,

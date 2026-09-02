@@ -57,6 +57,26 @@ Nemáš jasný podklad, jednoznačný pokyn nebo deterministické kritérium →
 
 Platí zejména pro **technické názvy** (proměnné v cizí doméně, API volání a parametry, event names, ID, klíče) a **chybějící podklady** (šablona, JSON, schéma, příklad). **Vymyšlený název je horší než žádný** – způsobuje chyby, které se těžko dohledávají.
 
+### Zapiš i to, co vědomě nemáš
+
+Chybějící věc se z projektu nepozná od zapomenuté. Rozhodl-li ses něco **nemít** – nezakládat vrstvu, nepoužít nástroj, nepodporovat režim –, patří to do `docs/decisions.md` i s důvodem, ne do prázdného místa. Bez toho to za půl roku někdo navrhne znovu, projde celou úvahou znovu a dojde ke stejnému závěru, nebo hůř k opačnému, protože si nevzpomene na argument, který tehdy rozhodl.
+
+Zvlášť to platí pro věci, které **vypadají jako opomenutí**: chybějící staging, chybějící vrstva cache, chybějící validace tam, kde ji čtenář čeká. U nich napiš i **čím se to nahrazuje**, ne jen že to není.
+
+Rozdíl proti `todo.md`: tam patří to, co **chceš a zatím nemáš**. Sem to, co **mít nechceš**.
+
+### Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem
+
+Má-li do souboru přijít údaj, se kterým pak někdo dál počítá – datum, časové razítko, hash commitu, číslo verze, počet položek – **nepiš ho z hlavy ani z kontextu, ale spusť příkaz, který ho vyrobí**, a zapiš jeho výstup. Instrukce v pravidlech a skillech proto ten příkaz jmenují (`date +%F`, `git rev-parse --short HEAD`), místo aby popisovaly, co má být uvnitř.
+
+**Proč:** zapamatovaná hodnota se tiše rozejde se skutečností a nikdo si toho nevšimne, protože vypadá správně. Datum o dva měsíce vedle nikoho netrkne, ale filtr nebo řazení nad ním dá špatný výsledek. U hodnoty vyrobené příkazem je nejhorší možný výsledek to, že příkaz selže – a to je vidět.
+
+### Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové
+
+Vyrobíš-li soubor, který má mít strukturu – konfiguraci, data, diagram, tabulku –, **načti ho zpátky a ověř, že platí to, co jsi zamýšlel**: parsuje se, má povinná pole, cesty v něm existují, počty sedí. Teprve pak ohlas hotovo. **Selže-li ověření, zastav se a řekni to** i s tím, na kterém řádku – neopravuj naslepo a hlavně nehlas úspěch.
+
+**Proč:** generátor, který svůj výstup nečte, ohlásí hotovo i nad souborem, který se nedá otevřít. Chyba se pak najde až ve chvíli, kdy ji hledá někdo jiný a nemá kontext, ve kterém vznikla. Přečíst si vlastní výstup stojí jeden krok; najít tu chybu později stojí hodinu.
+
 ### Neopírej rozhodnutí o neověřené tvrzení
 
 Stojí-li na faktu rozhodnutí, návrh nebo argument, **ověř ho, než ho zapíšeš jako danost**. Nepodložené tvrzení v dokumentaci se dál opakuje jako fakt a přežije i několik kol revize – pak padá celá argumentace nad ním.
@@ -138,6 +158,8 @@ Nezapisuj jen výsledek, ale **celou cestu k němu**. Obsah a umístění definu
 **Proč:** za měsíc nikdo nepozná, jestli je něco promyšlené, nebo náhoda – a netroufne si to změnit. Zapsaná motivace je to, co dovoluje rozhodnutí revidovat, protože je vidět, které předpoklady musely platit. Zapsané zavržené varianty brání procházení téže slepé uličky znovu.
 
 **Zavržená varianta jde tam, kde žije její vítězný protějšek:** u rozhodnutí do `decisions.md`, u pravidla k tomu pravidlu (viz *K pravidlům ukládej i „proč“*). Nikdy do `todo.md` – **todo drží, co zbývá, ne proč se něco rozhodlo.** Zamítnuto natrvalo → `decisions.md`; odloženo s otevřeným koncem → `todo.md`.
+
+**Výjimka – zamítnutý nález prověřovacího kroku.** Nález, který `/review`, `/attack` nebo `/consistency` označí jako „won't fix“, jde do **projektového `CLAUDE.md`** (kapitoly `## Review`, respektive `## Consistency`), ne do `decisions.md`. Není to nekonzistence, ale funkční důvod: `CLAUDE.md` se rozbaluje do každé session, takže filtr platí automaticky a příští běh nález znovu nenahlásí. `decisions.md` by se musel přečíst, což udělá člověk, ale ne skill uprostřed panelu. Rozhodnutí *o projektu* dál patří do `decisions.md`; tohle je seznam umlčených nálezů, ne rozhodnutí.
 
 Dokumentace návrhu říká **jak to je**, záznam rozhodnutí **proč to tak je**. Nesměšuj je.
 
@@ -340,7 +362,7 @@ Nad dokumentem, který vznikne v kroku `/specify` nebo `/breakdown`, je navíc v
 
 5. **`/review`** – paralelní panel rolí nad změnami: korektnost, bezpečnost, data a stavy, provoz, testy a doménové standardy z `~/Dev/context/`. Role se vybírají podle toho, čeho se změny týkají, takže nad obsahovým projektem poběží jen textové. Vlastní skill; uvnitř si volá vestavěné `/code-review` a `/security-review` jako dvě z rolí.
 6. **`/consistency`** – audit celého projektu, ne jen změn. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všechny role v `/review`, a uklidí i to, co nastřílel krok 5.
-7. **`/cleanup`** – poslední. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč).
+7. **`/cleanup`** – poslední krok **uzavírání**, ne osy. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč). Běží-li po něm ještě `/attack` nebo `/release`, ty si své zápisy dělají samy a na konci se `/cleanup` **pouští znovu** – je opakovatelný a druhý průchod slouží jako verifikace.
 
 **Nasazení (8–9)**
 

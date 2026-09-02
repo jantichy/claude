@@ -355,10 +355,14 @@ Zapiš do projektového `CLAUDE.md` sekci `## Příkazy`:
 - typecheck: npm run typecheck
 - lint:      npm run lint
 - build:     npm run build
+- dev:       npm run dev
 - e2e:       npx playwright test
+- coverage:  npm run coverage
 - audit:     npm audit --omit=dev
 - mutation:  npx stryker run
 ```
+
+Zapisuj **jen ty klíče, které projekt opravdu umí spustit** – vymyšlený příkaz je horší než chybějící. U klíče, který chybí, napiš pod seznam, co tím odpadne: bez `dev` nemá `/attack` co spustit, bez `e2e` neproběhne průchod aplikací před nasazením, bez `coverage` neporovná `/review` pokrytí s prahem.
 
 Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
 

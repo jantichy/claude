@@ -17,7 +17,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 ## Co skill nedělá
 
-- **Není to kontrola kódu.** Na kód je `/code-review`.
+- **Není to kontrola kódu.** Na kód je `/review`.
 - **Není to kontrola proti standardům.** Na soulad s `~/Dev/context/*` je `/review`.
 - **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
@@ -27,7 +27,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 | Otázka | Skill |
 |---|---|
-| Je ten kód správně? | `/code-review` |
+| Je ten kód správně? | `/review` |
 | Odpovídá to mým doménovým standardům? | `/review` |
 | Nesedí si něco v projektu navzájem? | `/consistency` |
 | **Je to vůbec dobře vymyšlené a bude to fungovat?** | **`/oponent`** |
@@ -41,7 +41,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 **Zkontroluj, že to má smysl oponovat:**
 
-- **Je to kód?** → přesměruj na `/code-review` a zastav se.
+- **Je to kód?** → přesměruj na `/review` a zastav se.
 - **Je to rozpracované torzo?** → zeptej se, jestli má smysl oponovat teď, nebo počkat. Posudek na kostru vygeneruje hlavně nálezy „chybí obsah“, což uživatel ví.
 - **Je toho moc?** Nad zhruba pět dokumentů nebo řádově stovky kB se posudek rozmělní. Zeptej se, co je jádro, a oponuj to.
 

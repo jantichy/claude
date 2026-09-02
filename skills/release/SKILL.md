@@ -104,11 +104,12 @@ Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracovan
 
 1. **Pracovní strom je čistý** a větev je pushnutá. Necommitnutá změna při nasazení znamená, že v produkci bude něco jiného, než co je v gitu – a to se hledá měsíce.
 2. **Zelená linka a produkční build, obojí na čistém stromu.** Nikoliv „běželo to ráno“. `build` je tu navíc oproti zelené lince, do které schválně nepatří: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
-3. **Proběhlo `/review`?** Nevíš-li, zeptej se. U změny v citlivé oblasti je to **podmínka**, ne doporučení.
-4. **Proběhl `/attack`?** U aplikace, kterou jde spustit, se ptej zvlášť: `/review` kód čte, `/attack` ho spouští, a poslední místo, kde má smysl zkusit věc rozbít nanečisto, je právě tady. Neproběhl-li nikdy, řekni to nahlas – nasadit se dá i tak, ale ať je to rozhodnutí, ne opomenutí.
-5. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují.
-6. **Tajemství v repu** – `gitleaks detect`, je-li k dispozici. Nález blokuje vždy; a co bylo commitnuté, patří **rotovat**, ne jen smazat.
-7. **Proměnné prostředí.** Přibyla-li v kódu nová, **ověř, že je nastavená v produkci**, ne jen lokálně v `.env`. Tohle je nejčastější příčina toho, že build projde a aplikace spadne až na produkci.
+3. **Průchod aplikací** – `e2e` z kontraktu, má-li ho projekt. **Tohle je jeho jediné místo v ose**: do zelené linky je moc pomalý a v `/review` by běžel nad stavem, který se do nasazení ještě několikrát změní. Tady běží naposledy před tím, než se kód potká s uživateli. Chybí-li příkaz, napiš do přehledu, že průchod aplikací nikdo neověřil.
+4. **Proběhlo `/review`?** Nevíš-li, zeptej se. U změny v citlivé oblasti je to **podmínka**, ne doporučení.
+5. **Proběhl `/attack`?** U aplikace, kterou jde spustit, se ptej zvlášť: `/review` kód čte, `/attack` ho spouští, a poslední místo, kde má smysl zkusit věc rozbít nanečisto, je právě tady. Neproběhl-li nikdy, řekni to nahlas – nasadit se dá i tak, ale ať je to rozhodnutí, ne opomenutí.
+6. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují. **Pouštěl ho i `/review` a není to duplicita:** mezi ním a tímhle krokem proběhl `/consistency`, `/cleanup` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tam se ptáme „je čisté, co jsme napsali?“, tady „je čisté to, co právě posíláme ven?“.
+7. **Tajemství v repu** – `gitleaks detect`, je-li k dispozici. Nález blokuje vždy; a co bylo commitnuté, patří **rotovat**, ne jen smazat.
+8. **Proměnné prostředí.** Přibyla-li v kódu nová, **ověř, že je nastavená v produkci**, ne jen lokálně v `.env`. Tohle je nejčastější příčina toho, že build projde a aplikace spadne až na produkci.
 
 ------
 
@@ -141,7 +142,7 @@ Teprve teď se ptáš, a ptáš se **jednou otázkou přes `AskUserQuestion`** n
 **Co:** <N commitů> · <oblasti> · <verze/tag>
 **Nasazuje se:** <main / zadaná větev / hash> → <nasazovací větev>
 **Kam:** <prostředí a URL>
-**Brány:** zelená linka ✅ · build ✅ · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
+**Brány:** zelená linka ✅ · build ✅ · e2e ✅/– · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
 **Migrace:** <žádné / expand krok N, záloha z HH:MM>
 **Citlivé oblasti:** <které se mění, nebo „žádné“>
 **Návrat:** <konkrétně – revert commitu a redeploy / promote předchozí verze / obnovení ze zálohy>

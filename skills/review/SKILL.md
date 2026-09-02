@@ -25,10 +25,10 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to první krok uzaví
 
 ## Co skill nedělá
 
-- **Nenahrazuje zelenou linku.** Ta běží průběžně u každého úkolu (viz `~/.claude/RULES.md`, *Ověřitelná brána místo dojmu*, a `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*). Sem se přichází se stavem, který už je zelený; není-li, skill se zastaví a pošle tě to dodělat.
+- **Zelenou linku nenahrazuje, ale ověřuje ji jako vstupní podmínku.** Běží průběžně u každého úkolu (viz `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*), takže sem se přichází se stavem, který už zelený byl. Ověřuje se přesto znovu, a je pro to důvod: hook ji vynutil po **posledním tahu**, kdežto tady se pouští **na celém rozsahu větve** a proti aktuálnímu stromu – „prošlo to po posledním úkolu“ a „prochází to jako celek“ jsou dvě různá tvrzení. Není-li zelená, skill se zastaví a pošle tě to dodělat.
 - **Neaudituje vnitřní konzistenci projektu.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`, který běží až po tomhle.
 - **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
-- **Nevytěžuje session ani nepíše dokumentaci projektu.** To je `/cleanup`.
+- **Nevytěžuje session** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/cleanup`. Vlastní nálezy si ale zapisuje sám: odložené do `docs/todo.md`, zamítnuté do `## Review` v `CLAUDE.md`.
 - **Nenasazuje.** To je `/release`, a ten se pouští vědomě a zvlášť.
 
 ## Rozsah
@@ -64,6 +64,7 @@ Sjednoť commitnuté změny na větvi s necommitnutými. Vynech smazané soubory
 - **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Ty se **vůbec neuvádějí** – ani v tomhle běhu, ani v žádném dalším. U staršího projektu může mít ještě starý název `## Standards`; přečti obojí a při prvním zápisu ji přejmenuj.
 - **`## Výjimky z obecných pravidel`** – vědomé odchylky projektu. Co je tam popsané jako výjimka, není nález.
 - **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Role *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit.
+- **Jmenný seznam citlivých oblastí** na konci `docs/architecture.md` – přihlášení, oprávnění, platby, nahrávání souborů, osobní údaje, mazání dat, odesílání pošty ven. Zakládá ho `/specify` s příslibem, že *„`/review` na ně sahá přísněji“*, takže ten příslib je potřeba splnit: **dotkne-li se rozsah kterékoliv z nich, role Bezpečnost je povinná** (nevybírá se podle typu souborů) **a pouští se na nejsilnějším modelu s `xhigh`**. Do zadání té role seznam vlož a napiš, které položky se rozsahu týkají. Neexistuje-li `architecture.md`, řekni to a rozhodni podle obsahu rozsahu.
 
 ### 0.3 Vyber role panelu
 
@@ -94,9 +95,17 @@ Role se vybírají **podle toho, čeho se soubory v rozsahu týkají**, ne podle
 
 `worktree/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
 
-Vypiš uživateli, které role a sady jsi vybral a proč. Když si u některé nejsi jistý, radši ji zahrň.
+**Kolik rolí.** Běžná feature snese **tři až čtyři role**; plný panel patří před nasazení nebo na změnu v citlivé oblasti. Není to úspora pro úsporu: panel, který vygeneruje víc nálezů, než kdo přečte, se přestane číst celý, a nálezy stojí čas i po skončení běhu. Nad sedm rolí nechoď nikdy – při pochybnosti raději pusť `/review` podruhé s jinou sadou než všechno naráz.
+
+Vyber tedy ty role, které mají v rozsahu nejvíc co prověřovat, a **vypiš uživateli, které jsi vybral, které jsi vynechal a proč**. Vynechaná role se jmenuje – tichý výběr vypadá jako úplný panel. Povinné jsou jen role vynucené citlivou oblastí (viz 0.2).
 
 Nesedí-li **žádná** role, řekni to explicitně a skonči – nevymýšlej si vlastní kritéria. Pozor, čistě dokumentační projekt bez pokrytí není: na české texty sedí `text/text.md`.
+
+### 0.4 U velkého rozsahu napřed pošli explorera
+
+Je-li v rozsahu **víc než zhruba patnáct souborů**, pusť před panelem jednoho agenta navíc: **explorera na nejlevnějším modelu**. Jeho úkolem je **zmapovat, ne posoudit** – vrátí, čeho se změny dotýkají, kudy vede tok dat, které soubory na sebe navazují a kde jsou vstupní body. **Nehlásí žádné nálezy**; kdyby hlásil, dubloval by panel na modelu, který na to nemá.
+
+Mapu pak vlož do zadání každé role. Bez ní si stejnou orientaci musí udělat **každý agent zvlášť a na drahém modelu** – tedy pětkrát totéž. U malého rozsahu se to nevyplatí a explorer se vynechává.
 
 ------
 
@@ -113,7 +122,11 @@ Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontr
 5. **Statická analýza nad rámec lintu** – `semgrep --config p/owasp-top-ten`. Jsou-li v rozsahu shellové skripty, k tomu `shellcheck -S warning`; u shellu je to nejlevnější kontrola vůbec a chytá věci, které se jinak projeví až v provozu (neošetřené `cd`, nekvotované expanze, maskované návratové kódy).
 6. **Mutation testing** – `mutation`, jen v rozsahu změn a jen když projekt příkaz má. Odpovídá na otázku, kterou pokrytí nezodpoví: *tvrdí ty testy vůbec něco?* Je pomalé; u `full` se ptej, jestli ho pouštět.
 
+7. **Pokrytí testy** – `coverage`, má-li ho projekt v kontraktu. Porovnej s prahem z `coding.md` (80 % na kritických cestách) a vypiš **naměřenou hodnotu i práh**, ne jen číslo. Samo o sobě to nic nedokazuje – na to je krok 6 – ale odhalí modul, ke kterému se testy vůbec nenapsaly.
+
 Výsledky si odlož – ve Fázi 4 se slijí s nálezy panelu, ale **neprocházejí ověřením ve Fázi 3**. Nástroj nehalucinuje.
+
+**Audit závislostí a scan tajemství pouští znovu i `/release`, a není to duplicita:** mezi tímhle krokem a nasazením proběhne `/consistency`, `/cleanup` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tady se ptáme „je čisté, co jsme napsali?“, tam „je čisté to, co právě teď posíláme ven?“.
 
 ------
 
@@ -123,7 +136,7 @@ Na **každou** vybranou roli pošli **samostatného subagenta** – všechny par
 
 **Dvě role nepiš sám – vyvolej vestavěné skilly Claude Code:**
 
-- **Korektnost** → `/code-review`. Je na to postavený, běží v čerstvém kontextu a hledá přesně chyby v diffu.
+- **Korektnost** → **`/code-review high`**. Je na to postavený, běží v čerstvém kontextu a hledá přesně chyby v diffu. **Úroveň uveď vždy explicitně:** bez parametru se použije ta, kterou uživatel zadal naposledy – klidně v jiném projektu před dvěma dny – a hloubka nejdražšího posouzení v celé ose by závisela na náhodě. Před nasazením nebo u změny v citlivé oblasti použij `ultra`.
 - **Bezpečnost** → `/security-review`.
 
 Vlastní zadání piš jen pro role, které vestavěný protějšek nemají.
@@ -142,8 +155,20 @@ svou roli, jen zdvojíš práci a zašumíš výstup.
 PODKLAD:
 - docs/requirements.md – scénáře a varianty, proti kterým se měří
 - docs/architecture.md – jak to má být postavené
-<u role Bezpečnost navíc: checklist OWASP ASVS / Top 10, ne vlastní úvaha o tom,
-co by se mohlo pokazit>
+<u role Bezpečnost navíc: JMENNÝ SEZNAM tříd zranitelností, proti kterému se měří –
+vlož ho do zadání celý, ne jako odkaz na dokument, který si má agent vybavit z paměti:
+1. Řízení přístupu – chybějící kontrola oprávnění, cizí ID v požadavku, akce mimo rozhraní
+2. Kryptografie a data v klidu – tajemství v kódu, slabý hash hesla, nešifrovaný přenos
+3. Injektáž – SQL/NoSQL, příkazová řádka, cesta k souboru, šablona, LDAP
+4. Nezabezpečený návrh – chybějící limit pokusů, oracle na existenci účtu, chybějící audit
+5. Chybná konfigurace – výchozí hesla, otevřený debug, přehnaně volný CORS
+6. Zranitelné závislosti – zastaralý balíček s CVE (deterministicky pokrývá Fáze 1)
+7. Autentizace – vypršení sezení, obnova hesla, správa tokenů
+8. Integrita dat – nepodepsaná aktualizace, deserializace nedůvěryhodného vstupu
+9. Logování a detekce – chybí stopa u citlivé akce, nebo se do logu píše tajemství
+10. SSRF – server volá adresu, kterou určil uživatel
+Ke každému bodu buď nález, nebo výslovné „v rozsahu se nevyskytuje“.
+Seznam odpovídá OWASP Top 10; kde projekt drží ASVS, měř podle něj a uveď úroveň.>
 
 SOUBORY K PROVĚŘENÍ:
 <seznam absolutních cest>

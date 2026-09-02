@@ -14,6 +14,10 @@
 # "ty konkrétní příkazy jsem přečetl a jsou neškodné" – `npm test` spustí, co je
 # v package.json, a to se neschvaluje. Do cizího repozitáře souhlas nedávej.
 #
+# Krok, který nejde spustit (chybí nástroj, exit 126/127), NENÍ červená linka:
+# hlásí se zvlášť a tah neblokuje – jinak by Claude opravoval kód kvůli rozbitému
+# prostředí.
+#
 # Vypnout: .claude/no-green-line v projektu, nebo CLAUDE_NO_GREEN_LINE=1.
 
 set -uo pipefail
@@ -199,8 +203,35 @@ cmd_for() {
 # --- Otisk stavu ---------------------------------------------------------------
 # HEAD i rozpracované změny: v projektu se zapnutým autocommitem je strom na konci
 # tahu čistý, takže "jsou tu rozpracované změny" by bránu tiše vypnulo.
-SIG=$(printf '%s\n%s' "$(git -C "$PROJ" rev-parse HEAD 2>/dev/null || echo nohead)" \
-                      "$(git -C "$PROJ" status --porcelain 2>/dev/null)" | sha)
+#
+# Musí zahrnovat OBSAH, ne jen jména: `git status --porcelain` vypíše " M soubor"
+# stejně pro první i desátou úpravu téhož souboru. Se samotným porcelainem tedy
+# platilo, že po první zelené kontrole šlo tentýž rozpracovaný soubor libovolně
+# rozbít a hook to prohlásil za "tenhle stav už prošel" a pustil dál.
+STATUS=$(git -C "$PROJ" status --porcelain 2>/dev/null)
+NCHANGED=$(printf '%s' "$STATUS" | grep -c . || true)
+CONTENT=""
+if [ "$NCHANGED" -le 200 ]; then
+  # Hash obsahu každého vyjmenovaného souboru. Smazané a nečitelné se přeskočí –
+  # jejich zmizení už je vidět v porcelainu.
+  while IFS= read -r line; do
+    [ -z "$line" ] && continue
+    f=${line#???}
+    f=${f##* -> }                      # přejmenování: bere se cílová cesta
+    f=$(printf '%s' "$f" | sed 's/^"//; s/"$//')
+    [ -f "$PROJ/$f" ] || continue
+    CONTENT="$CONTENT$(git -C "$PROJ" hash-object -- "$f" 2>/dev/null || echo unreadable) $f
+"
+  done <<EOF
+$STATUS
+EOF
+else
+  # Přes dvě stě změněných souborů: hashování by stálo víc než kontrola sama.
+  # Otisk se pak nedá spolehlivě porovnat, takže se kontrola pustí pokaždé.
+  CONTENT="many-$NCHANGED-$(date +%s 2>/dev/null || echo x)"
+fi
+SIG=$(printf '%s\n%s\n%s' "$(git -C "$PROJ" rev-parse HEAD 2>/dev/null || echo nohead)" \
+                          "$STATUS" "$CONTENT" | sha)
 
 mkdir -p "$RUN_DIR" 2>/dev/null || die "nelze založit $RUN_DIR"
 STATE="$RUN_DIR/$SESSION-$KEY"
@@ -232,7 +263,7 @@ run() {
   return "${PIPESTATUS[0]}"
 }
 
-FAILED=""; SKIPPED=""
+FAILED=""; SKIPPED=""; BROKEN=""
 for step in typecheck lint test; do
   CMD=$(cmd_for "$step")
   # Pomlčka znamená "tenhle krok se v projektu neaplikuje" – vědomé rozhodnutí,
@@ -252,6 +283,16 @@ $BODY"
       BODY="(krok nedoběhl do ${LIMIT} s a byl ukončen – do zelené linky patří jen to, co je rychlé)
 $BODY"
     fi
+    # "Test našel chybu" a "test nejde spustit" jsou různé stavy. První je
+    # informace pro Clauda – má co opravovat. Druhý je rozbité prostředí:
+    # blokovat tah by ho hnalo opravovat kód, který za to nemůže.
+    # 127 = příkaz neexistuje, 126 = existuje, ale nejde spustit.
+    if [ "$RC" = "127" ] || [ "$RC" = "126" ]; then
+      BROKEN="${BROKEN}
+--- ${step}: ${CMD} ---
+${BODY}"
+      continue
+    fi
     FAILED="${FAILED}
 --- ${step}: ${CMD} ---
 ${BODY}"
@@ -259,6 +300,11 @@ ${BODY}"
 done
 
 note_skipped() { [ -n "$SKIPPED" ] && echo "Nekontrolovalo se: $SKIPPED (chybí v kontraktu příkazů)."; }
+note_broken() {
+  [ -n "$BROKEN" ] && { echo "Tyhle kroky nejde spustit – chybí nástroj, nebo je špatně kontrakt v $CLAUDE_MD."
+                        echo "Není to červená linka: neopravuj kód, oprav prostředí nebo kontrakt."
+                        echo "$BROKEN"; }
+}
 
 if [ -n "$FAILED" ]; then
   if [ "$STOP_ACTIVE" = "true" ]; then
@@ -270,11 +316,18 @@ if [ -n "$FAILED" ]; then
   fi
   { echo "Zelená linka není zelená – práci nelze uzavřít. Oprav to, nebo se zeptej uživatele."
     echo "Netvrď, že něco prošlo, bez výstupu příkazu."
-    note_skipped; echo "$FAILED"; } >&2
+    note_skipped; note_broken; echo "$FAILED"; } >&2
   exit 2
 fi
 
 printf '%s %s\n' "$SIG" "-" > "$STATE" 2>/dev/null || true
+if [ -n "$BROKEN" ]; then
+  # Nespuštěný krok se nezapočítá jako "prošlo": stav se neuloží jako zelený,
+  # jinak by po opravě prostředí brána mlčela, protože otisk už zná.
+  printf '%s %s\n' "-" "-" > "$STATE" 2>/dev/null || true
+  { note_broken; note_skipped; } >&2
+  exit 1
+fi
 if [ -n "$SKIPPED" ]; then
   echo "Zelená linka prošla, ale nekontrolovalo se: $SKIPPED (chybí v kontraktu v $CLAUDE_MD)." >&2
   exit 1

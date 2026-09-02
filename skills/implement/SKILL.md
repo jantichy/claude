@@ -95,9 +95,9 @@ Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
 **Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, jde do `docs/todo.md` s celou úvahou. Do kódu ne. *Nerozhoduj potichu nad rámec zadání.*
 
-**Průběžné zápisy.** Padne-li během práce rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. Nečekej na `/cleanup`.
+**Průběžné zápisy.** Padne-li během práce rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. **Hotovou položku z `docs/todo.md` přesuň do `docs/done.md`** hned, jak je hotová – neodškrtává se na místě (`~/.claude/RULES.md`, *Odložené věci pojmenuj a zaparkuj*). Nečekej na `/cleanup`; ten je jen záchranná síť.
 
-**Po každém větším celku levné review.** Po skupině souvisejících úkolů (ne po každém) spusť `/code-review` na nízké úrovni. Běží v čerstvém kontextu, takže vidí, co ty už nevidíš, a chyba nalezená teď stojí minuty. Plný panel je až `/review` při uzavírání.
+**Po každém větším celku levné review.** Po skupině souvisejících úkolů (ne po každém) spusť **`/code-review low`** – úroveň uveď jako parametr, ne slovem: bez ní se použije ta, kterou uživatel zadal naposledy, klidně v jiném projektu. Běží v čerstvém kontextu, takže vidí, co ty už nevidíš, a chyba nalezená teď stojí minuty. Plný panel je až `/review` při uzavírání.
 
 ------
 
