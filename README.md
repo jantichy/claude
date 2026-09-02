@@ -36,7 +36,7 @@ Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` o
 
 ### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
-Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu (testy, lint, audit závislostí, scan tajemství, statická analýza), pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, moje doménové standardy – a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí. Výchozí rozsah jsou změny na větvi; **`/review full`** pustí týž panel nad celým projektem, což se hodí u zděděného kódu nebo když se dlouho nedělalo.
+Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu (testy, lint, audit závislostí, scan tajemství, statická analýza), pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, moje doménové standardy – a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí. Výchozí rozsah jsou změny na větvi; **`/review full`** pustí týž panel nad celým projektem – hodí se u zděděného kódu nebo když se dlouho nedělalo, ale je to z celé soustavy nejdražší běh, takže se předem zeptá, kolik souborů projde.
 
 ### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
 
@@ -48,7 +48,7 @@ Před opuštěním nebo zkompaktováním session projde celou konverzaci – vč
 
 ### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 
-Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test. Pouštím ho před nasazením, ne po každé feature, a útočí se výhradně na lokální instanci nad testovacími daty.
+Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test. Pouštím ho před nasazením, ne po každé feature, a útočí se výhradně na lokální instanci nad testovacími daty. Výchozí rozsah je to, čeho se dotkla práce na větvi; **`/attack full`** jde po celé aplikaci – u větší je rozumné se předem dohodnout, kolik času tomu dát.
 
 ### [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
 
