@@ -76,7 +76,7 @@ Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označ
 Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, baseline z 0.1, seznam ignorovaných z 0.2 a výstupy nástrojů z 0.3):
 
 ```
-Prohledej celý projekt a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
+Prohledej zadaný rozsah (viz *Rozsah* výš) a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
 
 PŘED HLÁŠENÍM PROBLÉMU vždy zkontroluj, že:
 - Není uveden v kapitole `## Consistency` projektového `CLAUDE.md` (předané v zadání) – pokud ano, neuváděj ho

@@ -40,7 +40,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **před `/release
 
 **Pouští se před nasazením**, ne po každé feature: nad stavem, který je hotový, prošel uzavíráním a měl by jít ven. U dlouhého projektu klidně vícekrát – ale vždycky nad celkem, který drží pohromadě, ne nad jednou dodělanou obrazovkou.
 
-**Přeskakuje se, když není co spustit**: projekt bez spustitelné aplikace – obsahový, dokumentační, knihovna bez příkladu, konfigurační repozitář. Řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten je krok 5 a proběhl dávno.)
+**Přeskakuje se, když není co spustit**: projekt bez spustitelné aplikace – obsahový, dokumentační, knihovna bez příkladu, konfigurační repozitář. Řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten je krok 6 a proběhl dávno.)
 
 Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna v autorizaci nebo ve stavovém automatu je přesně to, co útok chytá a čtení přehlédne.
 
@@ -301,6 +301,9 @@ Cíl: <adresa> · Vektory: [které]
 
 **Prostředí:** [co bylo zastaveno · co jsem kvůli útoku zvedl a zůstalo běžet, s důvodem]
 
+**Další krok:** /release · po nasazení ještě `/cleanup` podruhé
+```
+
 **Zapiš průchod do `docs/done.md`, sekce `## Průchody osou`** (`~/Dev/context/structure/structure.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
 
 ```
@@ -308,9 +311,6 @@ Cíl: <adresa> · Vektory: [které]
 ```
 
 Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
-
-**Další krok:** /release · po nasazení ještě `/cleanup` podruhé (`~/.claude/RULES.md`, *Životní cyklus práce*, krok 7)
-```
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

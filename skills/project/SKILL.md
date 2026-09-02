@@ -137,9 +137,9 @@ Ve worktree layoutu jsou `CLAUDE.md` **dva** a mají různý účel. Zaměnit je
 | Soubor | Co v něm je | Píší do něj kroky |
 |---|---|---|
 | `<projekt>/CLAUDE.md` (kontejner) | jen popis layoutu, odchylky a import toho druhého | pouze tenhle krok 3b |
-| `<projekt>/main/CLAUDE.md` (**projektový**) | všechno ostatní – metadata, struktura, autocommit, paměť, typ, doménové importy | kroky 2, 3, 4, 6, 7, 8, 9, 9b, 10 |
+| `<projekt>/main/CLAUDE.md` (**projektový**) | všechno ostatní – metadata, struktura, autocommit, paměť, typ, doménové importy | kroky 2, 3, 4, 6, 7, 8, 8b, 9 |
 
-**Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se `main/CLAUDE.md`.** Totéž platí pro `README.md`, `docs/*` a `.gitignore` – všechny patří do `main/`. Jedinou výjimkou je `.claude/settings.local.json` (krok 7), který naopak musí být v **kořeni kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte.
+**Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se `main/CLAUDE.md`.** Totéž platí pro `README.md`, `docs/*` a `.gitignore` – všechny patří do `main/`. Jedinou výjimkou je `.claude/settings.local.json`: ten patří do **kořene kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte. Tenhle skill ho **nezakládá** – vznikal v kroku, který zmizel se zrušeným autopromptem –, ale existuje-li, patří tam.
 
 Do `<projekt>/CLAUDE.md` (do **kontejneru**) zapiš tenhle stub a nic víc:
 
@@ -328,7 +328,7 @@ Volbu „Ostatní“ mezi možnosti **nedávej** – AskUserQuestion ji nabízí
 
 Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
-- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu práce* v `~/.claude/RULES.md`: `/specify` → `/breakdown` → `/implement`.“ Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first).“
+- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu práce* v `~/.claude/RULES.md`: `/specify` → `/oponent` → `/breakdown` → `/implement`.“ Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first).“
 - **Web** – „Webové rozhraní – obsah, struktura, šablony, ne proces zadání a plánu.“
 - **Nasazení webové analytiky** – „Implementace měření na cizím webu – revize existujícího nastavení, měřicí plán, GTM, GA4, consent, reklamní systémy. Výstupem je funkční a doložitelné měření plus dokumentace, ne aplikační kód.“ Navíc přidej pravidlo: „Každá změna v měření musí být před publikováním ověřená v Preview/DebugView a po nasazení znovu na produkci; do `docs/decisions.md` patří i to, co se měřit záměrně nebude a proč.“
 - **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez procesu zadání a plánu.“

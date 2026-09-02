@@ -22,12 +22,6 @@ plans/
 # Tasks
 tasks/
 
-# Autoprompt log – nikdy neverzovat, obsahoval by soukromé prompty.
-# Preventivně: autoprompt tu zapnutý není a docs/ podle .claude/CLAUDE.md neexistuje,
-# ale kdyby se to změnilo, log se nesmí dostat do veřejného repozitáře ani omylem.
-docs/prompts.md
-prompts.md
-PROMPTS.md
 
 # Pluginy
 plugins/

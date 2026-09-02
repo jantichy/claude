@@ -336,7 +336,7 @@ V projektech s vlastní živou dokumentací (typicky `docs/`):
 
 Změna teče **shora dolů, nikdy obráceně** – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód. Konkrétní posloupnost souborů definuje `structure.md`.
 
-Na ose *Životního cyklu práce* plní doc-first kroky 2 a 3. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
+Na ose *Životního cyklu práce* plní doc-first kroky 2 a 4. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
 
 ### Živá struktura
 
@@ -403,7 +403,7 @@ V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u oboj
 **Uzavírání (6–8)**
 
 6. **`/review`** – paralelní panel rolí nad změnami: korektnost, bezpečnost, data a stavy, provoz, testy a doménové standardy z `~/Dev/context/`. Role se vybírají podle toho, čeho se změny týkají, takže nad obsahovým projektem poběží jen textové. Vlastní skill; uvnitř si volá vestavěné `/code-review` a `/security-review` jako dvě z rolí.
-7. **`/consistency`** – audit celého projektu, ne jen změn. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všechny role v `/review`, a uklidí i to, co nastřílel krok 5.
+7. **`/consistency`** – audit vnitřní konzistence. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všechny role v `/review`, a uklidí i to, co nastřílel krok 6. Výchozí rozsah jsou soubory dotčené větví a ty, které na ně odkazují; `full` projede celý projekt a pouští se zřídka – kompletní audit po každé feature znovu předkládá tentýž starý dluh, a umlčet ho je pak levnější než odklikat.
 8. **`/cleanup`** – poslední krok **uzavírání**, ne osy. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč). Běží-li po něm ještě `/attack` nebo `/release`, ty si své zápisy dělají samy a na konci se `/cleanup` **pouští znovu** – je opakovatelný a druhý průchod slouží jako verifikace.
 
 **Nasazení (9–10)**

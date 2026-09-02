@@ -57,7 +57,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to **třetí krok zak
 
 **Načti kontext, který posudek potřebuje:** projektový `CLAUDE.md`, `docs/rules.md` (principy, proti kterým se v projektu rozhoduje) a `docs/decisions.md` (co už bylo rozhodnuto a proč). Bez toho subagenti navrhnou znovu to, co už bylo vědomě zamítnuto – a to je nejotravnější druh oponentury.
 
-**Na soubory ale nespoléhej.** Oponentura se často pouští hned po `/specify`, tedy v kroku 2 osy – kdežto rozhodnutí z debriefu zapisuje `/cleanup` až v kroku 7. `decisions.md` je v tu chvíli skoro prázdný, ačkoliv se v téhle session vědomě zamítla spousta věcí. **Projdi proto session a to, co jste zavrhli, vypiš do zadání oponentů** jako samostatný blok *Vědomě zamítnuté* – i s důvodem, ne jen výčtem. Bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy, a druhý už nespustíš.
+**Na soubory ale nespoléhej.** Oponentura se často pouští hned po `/specify`, tedy v kroku 2 osy – kdežto rozhodnutí z debriefu zapisuje `/cleanup` až v kroku 8. `decisions.md` je v tu chvíli skoro prázdný, ačkoliv se v téhle session vědomě zamítla spousta věcí. **Projdi proto session a to, co jste zavrhli, vypiš do zadání oponentů** jako samostatný blok *Vědomě zamítnuté* – i s důvodem, ne jen výčtem. Bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy, a druhý už nespustíš.
 
 **Nemá-li projekt `docs/`** (konfigurační repozitář, samostatný dokument mimo projekt, text v knowledge base), řekni to nahlas a veď posudek bez nich: kontextem je pak projektový `CLAUDE.md` a příslušná doména v `~/Dev/context/`, a přijatá i zamítnutá rozhodnutí jdou tam, kam patří v tom projektu – ne do založeného `docs/`.
 

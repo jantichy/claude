@@ -21,7 +21,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to poslední krok uza
 
 ## Co skill nedělá
 
-**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel celý projekt; fresh-reader tady se ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
+**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel soubory dotčené větví (v režimu `full` celý projekt); fresh-reader tady se ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
 
 Tohle **není** audit projektu ani technická brána. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 

@@ -166,7 +166,7 @@ Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontr
 
 8. **Přístupnost a výkon** – `a11y` a `perf` z kontraktu, jsou-li v rozsahu soubory webového rozhraní. Prahy drží `~/Dev/context/web/web.md` (přístupnost: nula nálezů `serious` a `critical`; výkon: Core Web Vitals). **Deterministicky schválně:** chybějící `alt`, `label`, `lang`, nedostatečný kontrast a přeskočená úroveň nadpisu jsou zjistitelné nástrojem za nulu tokenů a pokaždé, kdežto standardová role je najde jen tehdy, když se vůbec vybere. Vypisuj **naměřenou hodnotu i práh**, ne jen počet.
 
-9. **Pokrytí testy** – `coverage`, má-li ho projekt v kontraktu. Porovnej s prahem z `coding.md` (80 % na kritických cestách) a vypiš **naměřenou hodnotu i práh**, ne jen číslo. Samo o sobě to nic nedokazuje – na to je krok 6 – ale odhalí modul, ke kterému se testy vůbec nenapsaly.
+9. **Pokrytí testy** – `coverage`, má-li ho projekt v kontraktu. Porovnej s prahem z `coding.md` (80 % na kritických cestách) a vypiš **naměřenou hodnotu i práh**, ne jen číslo. Samo o sobě to nic nedokazuje – na to je *Mutation testing* výš – ale odhalí modul, ke kterému se testy vůbec nenapsaly.
 
 **Nespuštěný nástroj není nula.** U každého kroku téhle fáze si poznamenej **nástroj a jeho návratový kód**, ne jen počet nálezů. Nástroj, který na stroji není (návratový kód 127), se do výstupu píše jako `nespuštěno – nástroj není k dispozici`, nikdy jako `0`: tři nespuštěné kontroly vypsané jako tři nuly čte uživatel jako tři čisté výsledky, což je opak pravdy. Totéž pro krok, který spadl na chybu.
 
