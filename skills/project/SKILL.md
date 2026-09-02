@@ -382,10 +382,8 @@ Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ov
 **Zapni i brány, které se nespouštějí příkazem, ale konfigurací.** Kontrakt říká, *čím* se kontroluje; tyhle určují, *jak přísně*. Bez nich zůstanou prahy z `coding.md` jen napsané a nikdo je neměří:
 
 1. **Přísnost překladače.** Ověř, že konfigurace projektu drží řádek *Přísnost překladače* z tabulky bran – u TypeScriptu je to `tsconfig.json`, u ostatních jazyků odpovídající přepínač (Python `mypy --strict`, Go `go vet`, PHP `declare(strict_types=1)` a maximální úroveň statické analýzy). Chybí-li, **navrhni změnu a nech ji potvrdit** – u staršího projektu může zapnutí `strict` vyrobit stovky chyb naráz, takže to nikdy neprováděj rovnou.
-2. **Metriky složitosti v lintru.** Prahy z řádku *Metriky složitosti* přenes do konfigurace lintru – v ESLintu jsou to pravidla `complexity`, `max-lines-per-function`, `max-depth`, `max-params`. **Hodnoty opisuj z tabulky, ne odsud:** kdyby stály na dvou místech, rozejdou se. U existujícího projektu je nastav jako varování, ne jako chybu, a řekni to: brána, která hned první den shodí build, se vypne a už se nezapne.
-3. **Vlastní pravidla statické analýzy.** Nabídni založení `.semgrep/` s prázdným souborem pravidel a poznámkou, k čemu je: kóduje se do něj **projektová znalost, kterou model nemá** – „tenhle ORM pattern u nás nepoužíváme, dělá N+1“, „sem se nesmí volat přímo, jde se přes službu“. Zakládej ho jen tam, kde takové pravidlo už teď existuje v hlavě nebo v `CLAUDE.md`; prázdný adresář pro jistotu je jen další nepořádek.
-
-U projektu bez kódu tenhle blok celý odpadá – řekni to a pokračuj.
+2. **Metriky složitosti v lintru.** Prahy z řádku *Metriky složitosti* přenes do konfigurace lintru – v ESLintu jsou to pravidla `complexity`, `max-lines-per-function`, `max-depth`, `max-params`. **Hodnoty opisuj z tabulky, ne odsud:** kdyby stály na dvou místech, rozejdou se. U existujícího projektu jich naráz vyplavou stovky, takže se nabízí nastavit je jako varování – jenže **varování `lint` neshodí, a brána se tím vypne**. Je to změkčení prahu, které podle `coding.md` smí schválit **jen člověk a s důvodem zapsaným do `docs/decisions.md`**, a to i s termínem, kdy se přitvrdí. Zeptej se tedy a rozhodnutí nech zapsat; sám to nezměkčuj.
+3. **Vlastní pravidla statické analýzy.** Ptej se, jestli projekt má pravidlo, které by šlo zakódovat: do `.semgrep/` patří **projektová znalost, kterou model nemá** – „tenhle ORM pattern u nás nepoužíváme, dělá N+1“, „sem se nesmí volat přímo, jde se přes službu“. **Existuje-li takové pravidlo, adresář založ a rovnou ho tam zapiš** i s poznámkou, k čemu je. Neexistuje-li, nezakládej nic – prázdný adresář pro jistotu je jen další nepořádek.
 
 **Nasazuje se projekt někam?** Zjisti to (`vercel.json`, `netlify.toml`, `.github/workflows/`) a najdeš-li automatické nasazení z produkční větve, zapiš to do `## Nasazení` v `CLAUDE.md` i s upozorněním, že **merge do produkční větve je samotné nasazení** – detail řeší `/release`.
 
@@ -457,7 +455,7 @@ Upozorni uživatele, že při příštím spuštění dostane dialog na schvále
 Vypiš přehledně:
 
 - **Co bylo založeno** (nový projekt) nebo **co se změnilo a co zůstalo** (existující projekt).
-- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka**, autocommit, autoprompt, paměťová politika, typ, importované checklisty.
+- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka, konfigurační brány (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, autoprompt, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 
 U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí.

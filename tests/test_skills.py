@@ -115,6 +115,13 @@ class SablonyProtiOriginalu(unittest.TestCase):
         i = text.index(nadpis)
         return text[i:].split("\n\n")[1].strip()
 
+    def test_sablona_autocommitu_sedi_s_claude_md(self):
+        claude_md = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        original = self._odstavec_pod_nadpisem(claude_md, "### Autocommit v projektech")
+        skill = (ROOT / "skills/autocommit/SKILL.md").read_text(encoding="utf-8")
+        self.assertIn(original, "\n".join(l.strip() for l in skill.splitlines()),
+            "šablona v /autocommit se rozešla se zněním v CLAUDE.md, *Autocommit v projektech*")
+
     def test_sablona_autopromptu_sedi_s_claude_md(self):
         claude_md = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
         original = self._odstavec_pod_nadpisem(claude_md, "### Autoprompt v projektech")

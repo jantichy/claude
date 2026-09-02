@@ -282,6 +282,8 @@ Nezapisuj do žádného souboru.
 
 **Mimo rozsah úklidu**
 - [rozbité věci známé ze session, nálezy na starší dluh – nebo „žádné“]
+
+**Další krok:** /attack a /release, nasazuje-li se – jinak je práce uzavřená
 ```
 
 Zakonči **jednoznačným verdiktem** – jednou z těchto dvou vět, nikdy ničím vágním mezi tím:
