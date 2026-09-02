@@ -364,11 +364,13 @@ Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **ř
 
 **Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json` a v projektu bez `## Příkazy` neudělá nic, takže se nikde nic dalšího nenastavuje. Vypnout se dá souborem `.claude/no-green-line` v projektu nebo proměnnou `CLAUDE_NO_GREEN_LINE=1`.
 
-**Kontrakt musí uživatel schválit, jinak linka neběží.** Je to kód v repozitáři a hook běží mimo permission systém, takže se schvaluje jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá brána ztratila smysl:
+**Uživatel musí vydat souhlas, jinak linka neběží.** Kontrakt je kód v repozitáři a hook běží mimo permission systém, takže se souhlas dává jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá brána ztratila smysl:
 
 ```
-~/.claude/green-line.sh --trust <kořen projektu>
+~/.claude/green-line.sh --allow <kořen projektu>
 ```
+
+Řekni mu u toho pravdu o tom, co schvaluje: souhlas platí **pro repozitář, ne pro ty konkrétní řádky**. `npm test` spustí, co je v `package.json`, a to se neschvaluje. Do cizího naklonovaného repozitáře souhlas nepatří.
 
 Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Řekni uživateli jednou větou, co se právě zapnulo – ne aby ho to překvapilo, až mu hook poprvé zablokuje konec tahu.
 
