@@ -31,13 +31,28 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to druhý krok uzaví
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
-- **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek přes celý projekt, který předchozí kroky osy nepokrývají.
+- **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky osy nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
 
 ## Fáze 0 – Pre-flight: kontext a baseline
 
 Před spuštěním Explore agenta nasbírej baseline. Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
-### 0.1 Načti dokumentaci konvencí
+### 0.1 Urči rozsah
+
+**Postupem z `/review`, Fáze 0.1** (`~/.claude/skills/review/SKILL.md`) – včetně toho, co dělat, když se hlavní větev nenajde nebo je diff prázdný. Neopisuj ho sem; jeden postup, jedno místo.
+
+K souborům z diffu přidej **druhý půlkruh: soubory, které na ně odkazují.** Bez něj rozsah nedává smysl, protože nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví. Hledej je takhle:
+
+```
+git diff --name-only <merge-base>...HEAD          # co se změnilo
+grep -rl "<jméno souboru bez přípony>" . --exclude-dir=.git   # kdo o tom mluví
+```
+
+U přejmenované sekce, funkce nebo klíče grepuj **starý i nový název** – zbytek po přejmenování je nejčastější nález celého skillu a najde se právě v tom druhém půlkruhu.
+
+**V režimu `full`** tenhle krok přeskoč: rozsahem jsou všechny zdrojové soubory projektu. Vynech `node_modules/`, `dist/`, `build/`, `vendor/`, `generated/`, `*.gen.*` a cokoliv v `.gitignore`.
+
+### 0.2 Načti dokumentaci konvencí
 
 *Worktree layout* (`~/Dev/context/worktree/worktree.md`): auditovaný projekt je **pracovní adresář jedné větve**, ne kontejner. Stojíš-li v kořeni kontejneru, přesuň se nejdřív do adresáře té větve – jinak bys projel všechny větve naráz a hlásil rozdíly mezi nimi jako nekonzistence. „Projektový `CLAUDE.md`“ je pak ten ve worktree, ne stub v kořeni.
 
@@ -51,11 +66,11 @@ Pokud existují, přečti:
 
 Z těchto souborů sestav **baseline konvencí** – co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako kosmetickou odchylku; naopak rozpor s baseline hlas důsledněji.
 
-### 0.2 Načti seznam ignorovaných položek
+### 0.3 Načti seznam ignorovaných položek
 
 Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako „won't fix“.
 
-### 0.3 Spusť nástroje, které předchozí kroky osy nedělají
+### 0.4 Spusť nástroje, které předchozí kroky osy nedělají
 
 **Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tuhle baseline: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/RULES.md`, *Životní cyklus práce*.
 

@@ -109,9 +109,7 @@ Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracovan
 5. **Proběhl `/attack`?** Stejným způsobem jako bod 4, ze stejné sekce. U aplikace, kterou jde spustit, se ptej zvlášť: `/review` kód čte, `/attack` ho spouští, a poslední místo, kde má smysl zkusit věc rozbít nanečisto, je právě tady. Neproběhl-li nikdy, řekni to nahlas – nasadit se dá i tak, ale ať je to rozhodnutí, ne opomenutí.
 6. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují. **Pouštěl ho i `/review` a není to duplicita:** mezi ním a tímhle krokem proběhl `/consistency`, `/cleanup` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tam se ptáme „je čisté, co jsme napsali?“, tady „je čisté to, co právě posíláme ven?“.
 7. **Tajemství v repu** – `gitleaks detect`, je-li k dispozici. Nález blokuje vždy; a co bylo commitnuté, patří **rotovat**, ne jen smazat.
-8. **Měření**, má-li projekt implementované (`~/Dev/context/analytics/`). Přejmenovaná třída nebo přesunutý formulář, kvůli kterému přestane chodit konverzní event, **projde vším ostatním**: typy sedí, testy jsou zelené, panel se do měřicích souborů nemusel trefit a `/attack` sleduje pády, ne to, co se neodeslalo. Projeví se to za týden dírou v datech, kterou nejde zpětně dopočítat. Po nasazení proto projdi hlavní konverzní tok s otevřenou síťovou záložkou a ověř **jmenovitě očekávané eventy a stav consentu**, ne jen že se stránka načte.
-
-9. **Proměnné prostředí.** Přibyla-li v kódu nová, **ověř, že je nastavená v produkci**, ne jen lokálně v `.env`. Tohle je nejčastější příčina toho, že build projde a aplikace spadne až na produkci.
+8. **Proměnné prostředí.** Přibyla-li v kódu nová, **ověř, že je nastavená v produkci**, ne jen lokálně v `.env`. Tohle je nejčastější příčina toho, že build projde a aplikace spadne až na produkci.
 
 ------
 
@@ -181,6 +179,7 @@ Nasazeno neznamená funguje. Ověř, a ověř na **produkční URL**, ne na loca
 2. **Projde hlavní scénář.** Ten první z `docs/requirements.md` – klidně ručně přes prohlížeč (`chrome-devtools`), ale projdi ho celý, včetně odeslání formuláře nebo přihlášení.
 3. **Data sedí.** Proběhla-li migrace, ověř na produkčních datech, že se čtou a zapisují správně.
 4. **Chyby.** Podívej se do logu nebo monitoringu, jestli po nasazení nepřibyla nová třída chyb.
+5. **Měření**, má-li ho projekt implementované (`~/Dev/context/analytics/`). Projdi hlavní konverzní tok s otevřenou síťovou záložkou a ověř **jmenovitě očekávané eventy a stav consentu**, ne jen že se stránka načte. Přejmenovaná třída nebo přesunutý formulář, kvůli kterému přestane chodit konverzní event, **projde vším ostatním**: typy sedí, testy jsou zelené, panel se do měřicích souborů nemusel trefit a `/attack` sleduje pády, ne to, co se neodeslalo. Projeví se to za týden dírou v datech, kterou nejde zpětně dopočítat.
 
 **Když je zle:** vrať se cestou, kterou jsi popsal v poli `**Návrat:**` ve Fázi 3, hned. Neladí se to v produkci pod tlakem – nejdřív návrat, potom hledání příčiny.
 
@@ -214,7 +213,7 @@ Zapiš do `docs/decisions.md` jen to, co má trvalou hodnotu (změna postupu nas
 
 Co se v okně dělá:
 
-1. **Sleduj to, co jsi ve Fázi 3 vyjmenoval** – ne „obecně jestli to jede“. Chybové logy, míra chyb, fronta úloh, u webu i to, co ověřovala Fáze 5 bod 8 (eventy a consent).
+1. **Sleduj to, co jsi ve Fázi 3 vyjmenoval** – ne „obecně jestli to jede“. Chybové logy, míra chyb, fronta úloh, u webu i to, co ověřovala *Fáze 5*, bod 5 (eventy a consent).
 2. **Nezavírej ho tichem.** Okno se uzavírá **výslovnou větou**, ať je výsledek jakýkoliv:
 
    ```

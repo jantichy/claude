@@ -40,7 +40,7 @@ Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje 
 
 ### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
 
-Audit vnitřní konzistence – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Nálezy roztřídí od kritických po kosmetické, jednoznačné opravy udělá rovnou a o sporných se mnou mluví jednu po druhé. Výchozí rozsah jsou soubory dotčené prací na větvi **a ti, kdo na ně odkazují** – nekonzistence skoro nikdy nežije v jednom souboru; **`/consistency full`** projde celý projekt bez ohledu na diff, což se vyplatí jednou za čas a před nasazením, ne po každé feature.
+Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Nálezy roztřídí od kritických po kosmetické, jednoznačné opravy udělá rovnou a o sporných se mnou mluví jednu po druhé. Výchozí rozsah jsou soubory dotčené prací na větvi **a ti, kdo na ně odkazují** – nekonzistence skoro nikdy nežije v jednom souboru; **`/consistency full`** projde celý projekt bez ohledu na diff, což se vyplatí jednou za čas a před nasazením, ne po každé feature.
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 

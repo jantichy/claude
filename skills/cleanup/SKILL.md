@@ -230,11 +230,11 @@ Soustřeď se na oblasti, kterých se dotýkala poslední session. ODPOVĚZ NA T
 
 **B. Rozumím tomu, co se nedávno rozhodlo?** Popiš vlastními slovy, co se v projektu naposledy změnilo a proč. Kde jsi musel hádat nebo dohledávat?
 
-**C. Rozpory a nepravdy – ale jen v tom, co přibylo dnes.** Celoprojektový audit konzistence dělá `/consistency`, který běží o krok dřív; neopakuj ho. Zajímá tě jen to, jestli si **dnešní zápisy** neodporují mezi sebou nebo s tím, co v souborech bylo: sedí počty v textu s obsahem tabulek, na které se dnes sahalo? Odpovídají nové věty tomu, co tvrdí okolí?
+**C. Rozpory a nepravdy – ale jen v tom, co přibylo dnes.** Audit konzistence dělá `/consistency`, který běží o krok dřív; neopakuj ho. Zajímá tě jen to, jestli si **dnešní zápisy** neodporují mezi sebou nebo s tím, co v souborech bylo: sedí počty v textu s obsahem tabulek, na které se dnes sahalo? Odpovídají nové věty tomu, co tvrdí okolí?
 
 **D. Chybějící kontext.** Předpokládá se něco jako známé, ale nikde to není vysvětlené? Odkazuje se na rozhodnutí, jehož zdůvodnění chybí?
 
-**E. Viséci po dnešních zásazích.** Do dokumentace se dnes zasahovalo chirurgicky, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency`.
+**E. Viséci po dnešních zásazích.** Do dokumentace se dnes zasahovalo chirurgicky, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.
 
 **F. Co bych se musel zeptat?** Konkrétní otázky, na které bys nenašel odpověď.
 
@@ -246,7 +246,7 @@ Nezapisuj do žádného souboru.
 **Zpracování nálezů:**
 
 - Nálezy, které se týkají téhle session, vrať do Fáze 3 a oprav – mechanické sám, sporné s uživatelem.
-- Nálezy mimo rozsah session (starší dluh v dokumentaci) ve výchozím režimu **neopravuj** – vypiš je ve verdiktu jako doporučení pustit `/consistency`. V režimu `full` je řeš stejně jako ostatní.
+- Nálezy mimo rozsah session (starší dluh v dokumentaci) ve výchozím režimu **neopravuj** – vypiš je ve verdiktu jako doporučení pustit `/consistency full`. V režimu `full` je řeš stejně jako ostatní.
 - Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanášejí nové viséce – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
 
 ------
