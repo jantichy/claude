@@ -221,7 +221,7 @@ Předchozí session řešila: <shrnutí témat a seznam souborů, do kterých se
 Přečti si v tomhle pořadí (jako by ses do projektu zaučoval):
 <seznam souborů v pořadí od obecného ke konkrétnímu>
 
-Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, docs/prompts.md, runtime adresáře>) nečti celé.
+Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, runtime adresáře>) nečti celé.
 
 Soustřeď se na oblasti, kterých se dotýkala poslední session. ODPOVĚZ NA TYTO OTÁZKY:
 <v režimu `full` tenhle odstavec vynech – procházej dokumentaci celou>
@@ -256,7 +256,7 @@ Nezapisuj do žádného souboru.
 **Git:**
 
 - `git status` musí být **čistý** – žádné rozpracované ani neotrackované soubory. Co tam být nemá, patří do `.gitignore`; co tam patří, se commitne.
-- *Worktree layout:* `git status` pouštěj ve worktree větve, ne v kořeni kontejneru – tam by spadl na `must be run in a work tree`. Navíc zkontroluj `git -C <kontejner>/main status`: hook autopromptu tam nechává rozepsaný `docs/prompts.md`, který se commituje právě tady (`git -C <kontejner>/main commit -m "Zaznamenej prompty" docs/prompts.md`). Nic jiného v `main/` rozpracované být nemá – když ano, ohlas to.
+- *Worktree layout:* `git status` pouštěj ve worktree větve, ne v kořeni kontejneru – tam by spadl na `must be run in a work tree`. Navíc zkontroluj `git -C <kontejner>/main status`: v `main/` nemá být nic rozpracovaného – když je, ohlas to.
 - Všechno **commitnuté** s výstižnými zprávami.
 - Když má repozitář remote, všechno **pushnuté**.
 - Ověř výsledek znovu (`git status`, `git log origin/<větev>..HEAD`) – ne že to jen předpokládej.

@@ -63,7 +63,7 @@ Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill v
 
 Zeptej se přes `AskUserQuestion`, které tvary zahrnout, jsou-li sporné. Rozhodni sám tam, kde je to jednoznačné.
 
-**Vymez, kam se nesahá:** `.git/`, `node_modules/`, `dist/`, generované soubory, `docs/prompts.md` (log promptů se needituje), `docs/research/` a jiné archivy cizích podkladů, historické záznamy, které mají zůstat v původním znění.
+**Vymez, kam se nesahá:** `.git/`, `node_modules/`, `dist/`, generované soubory, `docs/research/` a jiné archivy cizích podkladů, historické záznamy, které mají zůstat v původním znění.
 
 ------
 
@@ -90,7 +90,7 @@ markets/             1         –  (název adresáře)
 
 Celkem: 95 výskytů ve 18 souborech + 2 přejmenování
 
-Nesahám na: docs/research/ (12 výskytů), docs/prompts.md (31 výskytů)
+Nesahám na: docs/research/ (12 výskytů), CHANGELOG.md (31 výskytů)
 ```
 
 **Projdi podezřelé výskyty ručně.** Grep najde i to, co se přejmenovat nemá – cizí termín, který se náhodou jmenuje stejně, citaci, historický záznam. Vypiš je zvlášť a zeptej se.

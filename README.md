@@ -20,7 +20,7 @@ Následující skilly tvoří jednu osu od založení projektu po nasazení. Nem
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
-Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znovu – lidský název, git a remote, autocommit, autoprompt, typ projektu, kontrakt příkazů – a rovnou to nastaví včetně `README.md`, `.gitignore` a standardní struktury. Umí i projekty, které už existují: udělá inventuru a dorovná je na moje dnešní preference, nikdy nepřepíše soubor bez zeptání. Zvládá i **worktree layout**, tedy kontejner s `.bare` a jedním podadresářem na větev.
+Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znovu – lidský název, git a remote, autocommit, typ projektu, kontrakt příkazů – a rovnou to nastaví včetně `README.md`, `.gitignore` a standardní struktury. Umí i projekty, které už existují: udělá inventuru a dorovná je na moje dnešní preference, nikdy nepřepíše soubor bez zeptání. Zvládá i **worktree layout**, tedy kontejner s `.bare` a jedním podadresářem na větev.
 
 ### [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
 
@@ -61,10 +61,6 @@ Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu.
 ### [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
 
 Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
-
-### [`/autoprompt`](skills/autoprompt/) – ukládá všechny prompty
-
-Zapne pro projekt automatické logování všech mých promptů do souboru `prompts.md` a při zapnutí backfilluje i historii ze session souborů, takže mám kompletní záznam zpětně. Ač to na první pohled nevypadá, dříve či později to opravdu doceníte – pro sledování, jak se projekt vyvíjel, i pro učení se vlastních anti-patternů v promptech.
 
 ### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
 

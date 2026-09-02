@@ -105,9 +105,9 @@ class SkillOdkazy(unittest.TestCase):
 class SablonyProtiOriginalu(unittest.TestCase):
     """Text, který skill zapisuje jinam, se nesmí rozejít se svým originálem.
 
-    `/autoprompt` a `/autocommit` nesou opsané znění sekce, kterou mají zapsat do
-    globálního `CLAUDE.md`. Duplicitu nelze odstranit – skill ten text musí umět
-    zapsat i tam, kde ještě není –, takže ji aspoň hlídáme. Rozejít se umí tiše:
+    `/autocommit` nese opsané znění sekce, kterou má zapsat do globálního
+    `CLAUDE.md`. Duplicitu nelze odstranit – skill ten text musí umět zapsat
+    i tam, kde ještě není –, takže ji aspoň hlídáme. Rozejít se umí tiše:
     přeformuluje se originál a kopie ve skillu zůstane stará.
     """
 
@@ -121,15 +121,6 @@ class SablonyProtiOriginalu(unittest.TestCase):
         skill = (ROOT / "skills/autocommit/SKILL.md").read_text(encoding="utf-8")
         self.assertIn(original, "\n".join(l.strip() for l in skill.splitlines()),
             "šablona v /autocommit se rozešla se zněním v CLAUDE.md, *Autocommit v projektech*")
-
-    def test_sablona_autopromptu_sedi_s_claude_md(self):
-        claude_md = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-        original = self._odstavec_pod_nadpisem(claude_md, "### Autoprompt v projektech")
-        skill = (ROOT / "skills/autoprompt/SKILL.md").read_text(encoding="utf-8")
-        # ve skillu je text odsazený uvnitř bloku, proto porovnáváme bez odsazení
-        self.assertIn(original, "\n".join(l.strip() for l in skill.splitlines()),
-            "šablona v /autoprompt se rozešla se zněním v CLAUDE.md, *Autoprompt v projektech*")
-
 
 class NosneCasti(unittest.TestCase):
     """Ne že skill má správný tvar, ale že v něm je to, co nese jeho funkci.

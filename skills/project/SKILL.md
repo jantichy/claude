@@ -1,6 +1,6 @@
 ---
 name: project
-description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři či přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, autoprompt, paměťová politika, typ projektu, doménové checklisty). Interaktivní wizard, který se ptá krok po kroku.
+description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři či přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty). Interaktivní wizard, který se ptá krok po kroku.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
@@ -34,7 +34,7 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 
 ## Krok 0 – Zjisti režim a stav
 
-Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md`, `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 4a pozná režim); starší pojmenování `TODO.md` a `PROMPTS.md` v kořeni; `prompts.md`, zdrojové soubory.
+Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md`, `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 4a pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim *nový projekt*.
 - **Cokoliv jiného** → režim *existující projekt*.
@@ -44,7 +44,7 @@ V režimu *existující projekt* si nejdřív udělej inventuru a **vypiš ji u�
 | Co zjistit | Jak |
 |---|---|
 | Git a jeho podoba | je `.git` adresář (běžný), nebo `.bare` + `.git` soubor (worktree layout)? má remote? |
-| Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, autoprompt, paměť, typ, importy)? |
+| Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, paměť, typ, importy)? |
 | Standardní struktura | existuje `README.md`, `todo.md`, `done.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 4a) |
 | *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni stub s `@main/CLAUDE.md`? |
 | Starší pojmenování | existuje `TODO.md` v rootu, `rozhodnuti.md`, `zasady.md` (na místě podle režimu z Kroku 4a)? (viz Krok 4) |
@@ -137,7 +137,7 @@ Ve worktree layoutu jsou `CLAUDE.md` **dva** a mají různý účel. Zaměnit je
 | Soubor | Co v něm je | Píší do něj kroky |
 |---|---|---|
 | `<projekt>/CLAUDE.md` (kontejner) | jen popis layoutu, odchylky a import toho druhého | pouze tenhle krok 3b |
-| `<projekt>/main/CLAUDE.md` (**projektový**) | všechno ostatní – metadata, struktura, autocommit, autoprompt, paměť, typ, doménové importy | kroky 2, 3, 4, 6, 7, 8, 9, 9b, 10 |
+| `<projekt>/main/CLAUDE.md` (**projektový**) | všechno ostatní – metadata, struktura, autocommit, paměť, typ, doménové importy | kroky 2, 3, 4, 6, 7, 8, 9, 9b, 10 |
 
 **Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se `main/CLAUDE.md`.** Totéž platí pro `README.md`, `docs/*` a `.gitignore` – všechny patří do `main/`. Jedinou výjimkou je `.claude/settings.local.json` (krok 7), který naopak musí být v **kořeni kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte.
 
@@ -218,7 +218,7 @@ Povinný je jen `CLAUDE.md`. U zbytku se zeptej (AskUserQuestion, `multiSelect: 
 
 Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUDE.md` (krok 4, *Zápis*) vypiš jen ty, které vznikly.
 
-`prompts.md` sem nepatří – zakládá ho autoprompt v kroku 7. `requirements.md`, `architecture.md` a `plan.md` **nezakládej**, vznikají prací přes `/specify` a `/breakdown`.
+`requirements.md`, `architecture.md` a `plan.md` **nezakládej**, vznikají prací přes `/specify` a `/breakdown`.
 
 *Existující projekt:* co už existuje, ber jako zvolené; ptej se jen na to, co chybí.
 
@@ -294,16 +294,7 @@ Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď toté�
 
 *Existující projekt:* nejdřív **zjisti aktuální stav** – hledej sekci `Autocommit` v projektovém `CLAUDE.md` **bez ohledu na úroveň nadpisu** (`##` i `###`). Aktuální stav uveď v otázce, ať uživatel ví, co mění.
 
-## Krok 7 – Autoprompt
-
-Zeptej se (AskUserQuestion): zapnout autoprompt? Ano/Ne. Při ano proveď totéž co `/autoprompt on` (viz `~/.claude/skills/autoprompt/SKILL.md`): globální `CLAUDE.md`, projektová sekce, hook do `.claude/settings.local.json`, založení `docs/prompts.md`.
-
-*Worktree layout:* `.claude/settings.local.json` patří do **kořene kontejneru**, `docs/prompts.md` do **`main/`**. Hook si worktree hlavní větve najde sám, takže se nikde nemusí konfigurovat cesta.
-
-*Nový projekt:* backfill historie přeskoč, není co dohledávat.
-*Existující projekt:* zjisti stav stejně jako u autocommitu a backfill nabídni.
-
-## Krok 8 – Paměťová politika
+## Krok 7 – Paměťová politika
 
 Zeptej se (AskUserQuestion): „Má Claude v tomto projektu ukládat poznatky do trvalé Memory, nebo vše explicitně do lokálních .md souborů?“ Možnosti: **Jen lokální .md soubory (doporučeno)** / **Normální chování (Memory povolena)**.
 
@@ -315,7 +306,7 @@ Při první volbě přidej do `CLAUDE.md`:
 Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/Dev/context/structure/structure.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
 ```
 
-## Krok 9 – Typ projektu
+## Krok 8 – Typ projektu
 
 Typů je šest, ale AskUserQuestion bere najednou nejvýš čtyři volby. Ptej se proto ve dvou úrovních – nejdřív na oblast, pak na typ uvnitř ní. Uživatel klikne nejvýš dvakrát a žádný typ se neztratí.
 
@@ -344,7 +335,7 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 - **Data a výzkum** – „Jednorázová datová/výzkumná analýza – výstupem jsou zjištění a report, ne nasazovaný kód.“
 - **Ostatní** – „Projekt mimo výše uvedené kategorie.“
 
-## Krok 9b – Kontrakt příkazů a zelená linka
+## Krok 8b – Kontrakt příkazů a zelená linka
 
 **Jen u projektu, ve kterém se něco spouští** – tedy typ *Vývoj*, *Web*, nebo kdekoliv, kde v repozitáři najdeš `package.json`, `composer.json`, `Makefile`, `pyproject.toml` a podobně. U obsahového, znalostního nebo výzkumného projektu **krok přeskoč a řekni to jednou větou**; kontrakt tam nemá co dělat.
 
@@ -390,9 +381,9 @@ Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ov
 
 **Nasazuje se projekt někam?** Zjisti to (`vercel.json`, `netlify.toml`, `.github/workflows/`) a najdeš-li automatické nasazení z produkční větve, zapiš to do `## Nasazení` v `CLAUDE.md` i s upozorněním, že **merge do produkční větve je samotné nasazení** – detail řeší `/release`.
 
-## Krok 10 – Doménové checklisty
+## Krok 9 – Doménové checklisty
 
-Checklistů je osm a `AskUserQuestion` bere najednou nejvýš čtyři volby (týž strop jako v kroku 9). Ptej se proto **ve dvou kolech po čtyřech**, obě s `multiSelect: true`. Volby předvyplň podle typu z kroku 9, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
+Checklistů je osm a `AskUserQuestion` bere najednou nejvýš čtyři volby (týž strop jako v kroku 8). Ptej se proto **ve dvou kolech po čtyřech**, obě s `multiSelect: true`. Volby předvyplň podle typu z kroku 8, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
 | Kolo | Otázka | Volby |
 |---|---|---|
@@ -453,12 +444,12 @@ Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stoj�
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
-## Krok 11 – Závěrečný souhrn
+## Krok 10 – Závěrečný souhrn
 
 Vypiš přehledně:
 
 - **Co bylo založeno** (nový projekt) nebo **co se změnilo a co zůstalo** (existující projekt).
-- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka, konfigurační brány (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, autoprompt, paměťová politika, typ, importované checklisty.
+- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka, konfigurační brány (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 
 U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí.
