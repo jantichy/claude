@@ -93,6 +93,8 @@ Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; o
 - Úhel *Co chybí* ber jako **povinný**, ať je dokument jakýkoliv. Druhý povinný úhel schválně nemáme: dva pevné sloty ze čtyř by z volby podle povahy dokumentu udělaly ozdobu.
 - Vyber **aspoň jednu položku z každého bloku**. Samé domény dají tři audity a nula oponentur; samé metody tři obecné kritiky bez věcné opory.
 - Metodický úhel pouštěj **vždy s určenou doménou** – vypiš ji do jeho zadání. Metoda bez domény je slepá.
+- **Kolik jich pustit podle rozsahu předmětu:** čtyři u jednoho dokumentu zhruba do 15 kB, pět nad tím nebo když je dokumentů víc. Je-li předmět velký (blíží se hranici z Fáze 0), dělí se **úhel × podmnožina dokumentů**, ne jen úhel – jinak čte každý agent celý objem a dělba škáluje jen jedním směrem.
+- **Volbu dolož.** U každého zvoleného úhlu napiš jednou větou, co konkrétně v dokumentu tě k němu vedlo, a jmenuj **jeden úhel, který jsi vědomě nevzal, a proč**. Nevybraný úhel totiž nevrátí nula nálezů, ale neexistenci – a ta neprojde žádným počítadlem ve Fázi 4 ani ve verdiktu. Volbu přitom dělá ten, kdo dokument spoluautorsky psal, takže je to jediné místo, kde má jeho slepota volnou ruku (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
 
 ------
 
@@ -240,7 +242,7 @@ Tool má strop čtyři volby, takže věcných variant nabízej **nejvýš dvě*
 **Opakované spuštění.** Skill je určený k opakování nad revidovanou verzí. Když ho uživatel spustí znovu:
 
 - **Nález, který se vrátil**, znamená, že se neopravil, jen přeformuloval. Řekni to výslovně.
-- **Míň nálezů** znamená, že se to lepší. **Víc** znamená, že revize otevřela nové problémy – taky to řekni.
+- **Míň nálezů** znamená, že se to lepší, a **víc**, že revize otevřela nové problémy – ale jen tehdy, **běžel-li stejný panel úhlů**. Panel se nikam nezapisuje, takže to zpravidla nevíš: pak počty nesrovnávej a řekni místo toho, které úhly běžely teď.
 
 Ve verdiktu:
 
