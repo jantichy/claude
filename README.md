@@ -4,131 +4,101 @@ Tohle je moje osobní konfigurace [Claude Code](https://docs.claude.com/en/docs/
 
 Co bych z celého repozitáře vypíchl, aby to neuteklo vaší pozornosti?
 
-## [`CLAUDE.md`](CLAUDE.md) – hlavní soubor s instrukcemi
+## Instrukce
+
+### [`CLAUDE.md`](CLAUDE.md) – hlavní soubor s instrukcemi
 
 Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Většina instrukcí je dekomponovaná do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou jen když je to podle situace potřeba. Brutálně se tím šetří kontextové okno.
 
-## [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
+### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
-Kdo mě zná, tak ví, že jsem hodně citlivý na strukturovanost a čistotu návrhu. [OCD](https://cs.wikipedia.org/wiki/Obsedantn%C4%9B-kompulzivn%C3%AD_porucha) hadr neasi. A opravdu hodně trpím tím, jakých svévolností se dovede Claude v projektu dopustit, když se chvíli nehlídá. Tenhle soubor ho drží na uzdě napříč všemi mými projekty. Vedlejší efekt je, že mu pak většinu věcí stačí říct jenom jednou. A co se nevychytá tady, to dotáhne do dokonalosti skill `/consistency`.
+Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak zachází se změnami. Je tu i celá osa životního cyklu práce – od `/project` až po `/release` – která říká, co je čí krok a co který krok naopak dělat nemá.
 
-## [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
+## Skilly, jak jdou po sobě
 
-Kompletní audit projektu na vnitřní konzistenci a pořádek: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Nálezy roztřídí od kritických po kosmetické. Co má jen jedno správné řešení – rozbitý odkaz, nepoužitý import, počet v textu nesedící s tabulkou – opraví rovnou a jen mi to vypíše. O sporných se mnou mluví jednu po druhé.
+Následující skilly tvoří jednu osu od založení projektu po nasazení. Nemusí se projít celá – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
 
-## [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
+### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
-Prověří hotovou práci před uzavřením, a to ze tří stran naráz. Nejdřív nástroje, které nestojí ani token a nehalucinují: testy, lint, audit závislostí, scan tajemství, statická analýza. Pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, moje doménové standardy. Agent, který má hledat všechno, nenajde nic; agent s jedním checklistem jde do hloubky.
+Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znovu – lidský název, git a remote, autocommit, autoprompt, typ projektu, kontrakt příkazů – a rovnou to nastaví včetně `README.md`, `.gitignore` a standardní struktury. Umí i projekty, které už existují: udělá inventuru a dorovná je na moje dnešní preference, nikdy nepřepíše soubor bez zeptání. Zvládá i **worktree layout**, tedy kontejner s `.bare` a jedním podadresářem na větev.
 
-Třetí vrstva je ta, na které to celé stojí: každý nález dostane nezávislého ověřovatele, jehož úkolem je ho **vyvrátit**. Bez ní by mě panel zavalil nálezy, které jen věrohodně znějí, a po třetím falešném bych ho přestal pouštět. Vyvrácené se ani nezobrazí. Když jsem ho poprvé pustil na vlastní práci, ze 43 nálezů tři nepřežily ověření – a mezi zbytkem byla chyba, kvůli které mi celá zelená linka tiše neběžela.
+### [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
 
-## [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
+Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak. Hranici mezi nimi drží tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?* A dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold.
 
-Na kód mám `/review`. Ale na dokument, který s Claudem píšu tři dny – pozicování, cenotvorbu, datový model – jsem neměl nic, a je to přesně ten typ práce, kde se nejvíc zmýlím: Claude je spoluautorem, takže na něj nemá nezávislý pohled o nic víc než já.
+### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 
-Skill to obchází tím, že na dokument pošle agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory. Každý dostane jiný úhel: jeden hledá vnitřní rozpory, druhý nejslabší předpoklad, třetí to čte očima cílové skupiny, další počítá ekonomiku. Každý nález musí mít konkrétní důsledek („při 20 000 účastnících vyjde ruční párování na 300 hodin“), ne obecnou obavu. Zapisují se i zamítnuté námitky – jinak by je příští oponentura našla znovu jako nové.
+Nezávislý posudek dokumentu, který jsem psal s Claudem – pozicování, cenotvorby, datového modelu. Pošle na něj agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory; každý s jiným úhlem: vnitřní rozpory, nejslabší předpoklad, pohled cílové skupiny, ekonomika. Zamítnuté námitky se zapisují, aby je příští oponentura nenašla znovu jako nové.
 
-## [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
+### [`/breakdown`](skills/breakdown/) a [`/implement`](skills/implement/) – plán a jeho odpracování
 
-Když mám dlouho otevřenou session a chystám se odejít nebo zkompaktovat, tíží mě pokaždé totéž: neztratí se něco? Skill projde celou session – včetně části, kterou už compact vyhodil z kontextu – a všechno, na čem jsme se dohodli, zapíše tam, kam to patří, i s důvody a zavrženými variantami.
+`/breakdown` vyrobí ze zadání `docs/plan.md` – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu a ověřitelné kritérium – a `/implement` ho odpracuje úkol po úkolu, každý do zelené linky a do commitu. Na pozadí obojí řídí [superpowers](https://github.com/obra/superpowers); moje obálky navíc vynucují cesty v `docs/`, odmítnou se spustit bez schváleného zadání a u rozdělaného plánu nevěří zaškrtávátkům, ale ověří si v kódu, že odškrtnuté úkoly opravdu existují.
 
-Pak to nejlepší: pošle na projekt agenta bez jakéhokoli kontextu, který čte jen repozitář, jako by se do projektu zaučoval. Ten mi řekne, jestli z dokumentace jde na dnešní práci navázat a kde bych musel hádat. Nakonec commitne a dá jednoznačný verdikt: můžeš jít, nebo tohle ještě zbývá.
+### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
-## [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
+Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu (testy, lint, audit závislostí, scan tajemství, statická analýza), pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, moje doménové standardy – a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
 
-Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje. A pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
+### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
 
-## [`/autoprompt`](skills/autoprompt/) – ukládá všechny prompty
+Kompletní audit projektu na vnitřní konzistenci: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Nálezy roztřídí od kritických po kosmetické, jednoznačné opravy udělá rovnou a o sporných se mnou mluví jednu po druhé.
 
-Zapne pro projekt automatické logování všech mých promptů na jedno snadno přístupné a čitelné místo, do souboru `prompts.md` v projektu (ve worktree layoutu si sám najde `main/`, aby log skončil ve gitu, a ne v kontejneru, ze kterého by se nedal commitnout). Při zapnutí dokonce backfilluje historii ze session souborů, takže získám kompletní záznam i zpětně. Ač to na první pohled nevypadá, dříve či později to opravdu doceníte. Pro sledování, jak se projekt vyvíjel, pro učení se vlastních anti-patternů v promptech, překvapivě často tam pošlete Clauda, aby si z toho něco zpětně vytahal nebo naučil…
+### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
-## [`/project`](skills/project/) – projekt nastavený na pár kliknutí
+Před opuštěním nebo zkompaktováním session projde celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak pošle na projekt agenta bez kontextu, který ověří, jestli z dokumentace jde na dnešní práci navázat, commitne a dá jednoznačný verdikt: můžeš jít, nebo tohle ještě zbývá.
 
-Kdykoli zakládám projekt, řeším pořád dokola totéž: jak se ta věc lidsky jmenuje, git a remote, autocommit, autoprompt, jaký je to typ projektu. Skill se na to postupně zeptá a rovnou to nastaví, včetně `README.md`, `.gitignore` a standardní struktury. Umí i projekty, které už existují – udělá inventuru a dorovná je na moje dnešní preference, nikdy nepřepíše soubor bez zeptání.
+### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 
-Dvě věci na něm mám nejradši. Umí **worktree layout** – kontejner s `.bare` a jedním podadresářem na větev – včetně toho nejzrádnějšího detailu: kořen kontejneru není pracovní strom, takže se v něm nedá commitnout, a projektové soubory proto patří do `main/`. A vyplní **metadata projektu**, která se propíšou do `README.md` i do Repository details na GitHubu – ten popisek pod názvem repa, co se nedá nastavit souborem a roky mi proto všude chyběl.
+Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test. Pouštím ho před nasazením, ne po každé feature, a útočí se výhradně na lokální instanci nad testovacími daty.
 
-## [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
+### [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
 
-Pokaždé, když jsem zakládal něco nového, psal jsem tu samou zprávu: teď ještě neprogramuj, nejdřív se mě postupně vyptej, pak z toho udělej zadání a teprve pak plán. Skill z toho dělá jeden příkaz a vyrábí **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak.
+Nasadí do produkce přes **oddělenou nasazovací větev** `production`, takže `main` zůstane integrační a merge feature nic nenasazuje. Před nasazením hlídá čistý strom, zelenou linku, produkční build, audit závislostí a jestli proběhlo `/review` a `/attack`; zvlášť řeší **migrace** dopředu kompatibilně, aby rollback kódu neshodil aplikaci na datech nové verze. Nikdy se nespustí sám, nic neopravuje a po nasazení ověřuje na produkční URL.
 
-Že jsou dva, a ne jeden, je hlavní rozhodnutí za ním – mají jinou životnost. Produktový záměr se mění zřídka, technické řešení s každou úvahou o technologii; v jednom souboru by se při výměně databáze editoval tentýž dokument, kde stojí popis cílové skupiny. Hranici mezi nimi má skill popsanou tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?*
+## Skilly mimo osu
 
-A má v sobě brzdu proti tomu, co Claudovi jde nejhůř odpustit: než je zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold.
+Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu.
 
-## [`/breakdown`](skills/breakdown/) a [`/implement`](skills/implement/) – plán a jeho odpracování
+### [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
 
-Dva tenké články řetězu: `/breakdown` vyrobí ze zadání `docs/plan.md` – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu a ověřitelné kritérium – a `/implement` ho odpracuje úkol po úkolu. Na pozadí obojí řídí [superpowers](https://github.com/obra/superpowers).
+Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
 
-Proč pro to mít vlastní skilly, když jde volat rovnou je? **Protože čím ten krok uvnitř je, je jeho implementační detail.** Až to jednou vyměním za něco jiného, nechci si přeučovat, jak se volá. Obálky navíc dělají věci, které cizí skilly neřeší: vynucují moje cesty v `docs/`, odmítnou se spustit bez schváleného zadání, u navazování na rozdělaný plán nevěří zaškrtávátkům a ověří, jestli odškrtnuté úkoly opravdu existují v kódu.
+### [`/autoprompt`](skills/autoprompt/) – ukládá všechny prompty
 
-Plán je zároveň jediné místo, kde si testy přečtu **dřív, než existuje kód** – potom už je posuzuju podle toho, jestli procházejí.
+Zapne pro projekt automatické logování všech mých promptů do souboru `prompts.md` a při zapnutí backfilluje i historii ze session souborů, takže mám kompletní záznam zpětně. Ač to na první pohled nevypadá, dříve či později to opravdu doceníte – pro sledování, jak se projekt vyvíjel, i pro učení se vlastních anti-patternů v promptech.
 
-## [`/attack`](skills/attack/) – zkusit to rozbít, ne o tom číst
+### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
 
-Dlouho jsem měl pocit, že mám ověřování pokryté: nástroje hlídají, co umí, a `/review` nad kódem přemýšlí. Jenže obojí ten kód **čte**. Chybí třetí věc – někdo, kdo aplikaci spustí a půl hodiny do ní mlátí. Přehlédnutou větev, kvůli které se místo stránky ukáže bílo, z kódu nevyčtu; z otevřeného prohlížeče ano.
+Přejmenuje pojem napříč projektem včetně **odvozených tvarů** a české skloňované varianty, kterou grep na základní tvar nenajde. Sahá i na názvy souborů a adresářů, přesouvá přes `git mv`, ať se neztratí historie, a hlídá pořadí – delší tvary před kratšími. Povinný poslední krok je kontrolní průchod na starý tvar, který musí vrátit nulu.
 
-Skill zvedne aplikaci lokálně a pošle na ni pár agentů, každého s jedním úhlem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, prázdná i přeplněná data, offline uprostřed odesílání. Zadání zní „najdi, co spadne“, ne „zkontroluj tenhle seznam“.
+### [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
 
-Nálezy odsud mají jinou váhu než z panelu. Panel tvrdí, že něco nastane; útok přiloží postup, kterým to nastalo – proto se tady nic nedává ověřovat skeptikovi, jen si to přehraju. A každá oprava si odnese regresní test, jinak by z drahého odpoledne nezbylo nic trvalého.
+Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, `charset=utf-8` hned na začátku a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu proteču samy z výpočetního skriptu nebo ze screenshotu administrace.
 
-Pouštím ho **jednou za čas před nasazením**, ne po každé feature. `/review` je levný a snese opakování; tenhle potřebuje běžící prostředí, trvá desítky minut a nad rozestavěnou prací by hlásil hlavně to, že ještě není hotová.
+### [`/compose`](skills/compose/) – texty, co znějí jako já
 
-Jedna věc je v něm zadrátovaná natvrdo: útočí se **výhradně na lokální instanci nad testovacími daty**. Ne proto, že bych si nevěřil, ale protože destruktivní vstupy jsou celý smysl té práce a spletená adresa by byla průšvih, který se neodestane.
+Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní a k tématu si dohledá nejpodobnější texty z archivu jako živé vzory. Moje názory a pointy si ale nikdy nevymýšlí, ty musím dodat sám.
 
-## [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
+### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
-Používám platformy, které nasazují automaticky po pushnutí do produkční větve, a ty si po založení projektu nastaví jako produkční `main`. To znamená, že každá přimergovaná feature jde rovnou na produkci. Skill z toho nedělá danost, ale chybu, kterou má smysl narovnat: nasazovací větev se **oddělí od integrační**. `main` zůstane tím, čím má být, a produkci mění jedině vědomé povýšení do větve `production`.
+Ze složky zvukových nahrávek udělá pořádek: každou přepíše do Markdownu a k tomu napíše jedno strukturované shrnutí napříč všemi, se soupisem domluv a úkolů na konci. Přepis běží **lokálně a offline** přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp), takže nahrávka neopustí můj počítač. Text rovnou uhladí – vyhází „ehm“, odstraní halucinace rozpoznávače, opraví přeslechnuté názvy a rozseká to do kapitol.
 
-Před ním hlídá čistý strom, zelenou linku, produkční build, audit závislostí a jestli vůbec proběhlo `/review` a `/attack`. Zvlášť řeší **migrace**: dopředu kompatibilně, tedy nejdřív se jen přidává a odebírá se až v dalším vydání – jinak by rollback kódu shodil aplikaci na datech, která zapsala nová verze. A nepustí mě dál, dokud neumí odpovědět, jak se za deset minut vrátit zpátky.
+## Hooky, skripty a nastavení
 
-Vedlejší zisk oddělené větve je ten nejpraktičtější: každý merge do `main` dostane vlastní **preview URL**, takže si věc proklikám dřív, než ji uvidí kdokoliv jiný. `/release` pak preview vůbec neřeší – testování proběhlo průběžně a stavět ho znovu by znamenalo čekat na něco, co už bylo.
+### [`statusline.sh`](statusline.sh) – krásná a užitečná status line
 
-Tři věci dělá schválně nepohodlně: nikdy se nespustí sám, nic neopravuje, a po nasazení ověřuje na produkční URL. Nasazeno není totéž co funguje.
-
-## [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
-
-Když jsem si nechal projít historii svých promptů, tohle vyskočilo jako úplně nejčastější věc, kterou vypisuju znovu a znovu: 91 promptů obsahuje „přejmenuj / sjednoť / nahraď všude“.
-
-Skill řeší přesně to, na čem obyčejný find-replace selhává: hledá **odvozené tvary** včetně české skloňované varianty, které bývá v dokumentaci nejvíc a grep na základní tvar ji nenajde. Sahá i na názvy souborů a adresářů, přesouvá přes `git mv`, ať se neztratí historie, a hlídá pořadí – delší tvary před kratšími, jinak z `marketId` vznikne nesmysl. A nikdy nekončí provedením: povinný poslední krok je kontrolní průchod na starý tvar, který musí vrátit nulu. Zapomenutý výskyt se totiž vrací měsíce později jako záhada.
-
-## [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
-
-Několikrát do měsíce potřebuju z dat – export z GA4, CSV ze souhlasů, výsledek dotazu do BigQuery – udělat něco, co pošlu klientovi. Skill z toho dělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv, a hlídá věci, na kterých jsem se opakovaně spálil: žádné CDN, aby to fungovalo offline i za pět let, `charset=utf-8` hned na začátku, protože diakritika se nerozsype u mě, ale až u příjemce, a datum vygenerování zapsané natvrdo.
-
-Než report pustí ven, projde **hotový soubor** na dvě věci: jestli v něm nezůstaly osobní údaje a jestli tam neutekly přístupové údaje. To druhé je zrádnější, protože to tam nikdo nedává vědomě – proteče to samo z výpočetního skriptu nebo ze screenshotu administrace. A když něco najde, nesmí to potichu smazat: musí říct, že totéž je nejspíš i v gitu a že ty údaje patří rotovat.
-
-## [`/compose`](skills/compose/) – texty, co znějí jako já
-
-Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní (styl, ustálené obraty, jejich horní mez, ať to nesklouzne do parodie) a k tématu si navíc dohledá pár nejpodobnějších textů z archivu jako živé vzory. Moje názory a pointy si ale nikdy nevymýšlí – ty musím dodat sám.
-
-## [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
-
-Hodím do složky pár zvukových nahrávek (schůzka, rozhovor, hlasová poznámka) a tenhle skill z nich udělá pořádek: každou přepíše do Markdownu a k tomu napíše jedno strukturované shrnutí napříč všemi – s tématy, klíčovými poznatky a hlavně soupisem domluv a úkolů na konci. Celý přepis běží **lokálně a offline** přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp), takže žádná nahrávka neopustí můj počítač – u citlivých firemních schůzek k nezaplacení. Doslovný přepis navíc rovnou uhladí: vyhází „ehm“, odstraní halucinace rozpoznávače, opraví přeslechnuté názvy podle kontextu a rozseká text do kapitol s nadpisy. Na začátku si sám ověří, že má vše potřebné nainstalované, takže si ho můžete rovnou zkopírovat a spustit.
-
-## [`statusline.sh`](statusline.sh) – krásná a užitečná status line
-
-Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání 5hodinového i týdenního limitu, aktuální adresář i stav Gitu. Vizualizace ukazuje čerpání pomocí teploměru, procent i zbývajícího času. Navíc mění barvy, čím je okno plnější nebo limit vyčerpanější, tím jasněji příslušná položka svítí.
+Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání 5hodinového i týdenního limitu, aktuální adresář i stav Gitu. Čerpání vizualizuje teploměrem, procenty i zbývajícím časem a mění barvy podle toho, jak je na tom blízko limitu.
 
 ![Status line](statusline.png)
 
-## [`iterm-notify.sh`](iterm-notify.sh) – záložka, která si řekne o pozornost
+### [`iterm-notify.sh`](iterm-notify.sh) – záložka, která si řekne o pozornost
 
-Když Claude doběhne nebo se na něco ptá, obarví se mi záložka iTermu do modra. Zní to jako drobnost, ale při práci ve víc záložkách naráz je to přesně to, co potřebuju – nemusím přepínat a koukat, jestli už. Nejlepší je na tom detail, který mi dělal radost: záložka se odbarví sama ve chvíli, kdy na ni přepnu. Hlídá to watcher na pozadí, který se zeptá iTermu přes AppleScript, jestli je zrovna aktivní ta moje session – a jakmile je, uklidí barvu a skončí. Když je záložka aktivní už v momentě, kdy Claude doskončí, neobarví se vůbec, protože bych to stejně viděl. Napojené na tři hooky: `UserPromptSubmit` barvu maže, `Notification` a `Stop` ji rozsvítí. Funguje jen v iTerm2.
+Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modra, a jakmile na ni přepnu, barva sama zmizí. Je-li záložka aktivní už ve chvíli, kdy Claude doskončí, neobarví se vůbec. Napojené na tři hooky: `UserPromptSubmit` barvu maže, `Notification` a `Stop` ji rozsvítí. Funguje jen v iTerm2.
 
-## [`green-line.sh`](green-line.sh) – nad rozbitým projektem se práce neuzavře
+### [`green-line.sh`](green-line.sh) – nad rozbitým projektem se práce neuzavře
 
-Nejlevnější věc z celého repozitáře a možná nejužitečnější. Je to `Stop` hook: než Claude ukončí tah, spustí typecheck, lint a testy, a když něco padá, **nepustí ho skončit** – dostane zpátky výstup a musí to dořešit. Rozdíl proti instrukci v pravidlech je zásadní: instrukce se dá zracionalizovat, skript ne.
+`Stop` hook, který před ukončením tahu spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu nic neví: přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí, takže je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic. Protože je ten kontrakt kód ležící v repozitáři a hooky se na povolení neptají, nespustí v projektu nic, dokud pro něj nevydám souhlas (`--allow`, výpis `--list`, odebrání `--revoke`). Každý krok má strop 60 sekund a když neprojde ani druhý pokus nad týmž stavem, hook pustí dál a nahlas to řekne.
 
-Strop je 60 sekund na krok a hlídá ho `gtimeout`. To číslo není nahodilé: tři kroky se tak vejdou do timeoutu hooku, který má `settings.json` nastavený na 320 sekund – jinak by Claude Code hook utnul uprostřed a výsledek kontroly by se zahodil.
-
-Jedna výjimka, kterou přiznávám rovnou: když **druhý pokus nad týmž stavem** taky neprojde, hook pustí dál a nahlas to řekne. Nekonečná smyčka je horší než rozbitý build – ale znamená to, že brána je tvrdá jednou, ne napořád.
-
-Skript přitom **nic neví o mém projektu** – přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí. Je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic.
-
-Bezpečnostní vrstva, na kterou jsem přišel až při review vlastní práce: ten kontrakt je **kód ležící v repozitáři** a hooky se na povolení neptají. Naklonovat cizí projekt by stačilo k tomu, aby se mi spustilo, co si tam někdo napsal. Skript proto v projektu nespustí nic, dokud pro něj nevydám souhlas (`--allow`), a říká u toho na rovinu, co ten souhlas znamená: platí pro repozitář, ne pro ty konkrétní řádky. `npm test` spustí, co je v `package.json`, a to se neschvaluje. Vydané souhlasy vypíše `--list` a odebere `--revoke` – u bezpečnostního prvku, který jde jen zapnout, není cesta zpět, když ho omylem dám cizímu repozitáři.
-
-## [`settings.json`](settings.json) – průběžně laděné permissions
+### [`settings.json`](settings.json) – průběžně laděné permissions
 
 Allowlist/denylist/asklist se snažím držet ve vyváženém poměru „bezpečnost vs. flow“. Cíl je nemuset odklikávat každou trivialitu, ale zároveň nenechat bez kontroly moc bezpečnostních děr. Tohle je vždycky lavírování na hraně a občas tu jdu vědomě lehce za hranu – ve prospěch svého pohodlí a na úkor středně rizikových operací. Takže si to k sobě rozhodně nekopírujte bezhlavě, ale můžete to vzít čistě inspiračně pro porovnání s vlastním nastavením.
 
@@ -137,7 +107,7 @@ Allowlist/denylist/asklist se snažím držet ve vyváženém poměru „bezpeč
 Tohle je obsah mého `~/.claude`, ne balíček k instalaci. Když si budete něco kopírovat, počítejte s pár věcmi:
 
 - **Absolutní cesty.** `settings.json` i skilly mají natvrdo `/Users/honza/…` – v hoocích, ve statusline, v permissions. Přepište je na své, jinak vám budou tiše selhávat.
-- **Předpoklady.** Plugin [superpowers](https://github.com/obra/superpowers) – `/specify`, `/breakdown` a `/implement` jsou obálky nad ním a bez něj neběží; ostatní skilly ho nepotřebují. Dál macOS s [Homebrew](https://brew.sh), `jq` (bez něj nefunguje statusline, zelená linka ani dva hooky, které kontrolují uložené soubory), `coreutils` kvůli `gtimeout` (zelená linka jím hlídá strop na krok a zabíjí celou procesní skupinu, aby po zabitém testu nezůstal běžet watch-mode runner) a iTerm2 (na něj je navázané barvení záložky přes `iterm-notify.sh` – na jiném terminálu ty tři hooky selžou).
-- **Část znalostí v repu není.** Skilly se opírají o soukromý adresář `~/Dev/context/` a odkazují do něj – `/compose` čte `compose/` a `archive/`, `/specify` a `/breakdown` se řídí `structure/structure.md`, `/implement` a `/review` stojí na `coding/coding.md` (jsou v něm brány kvality i jejich prahy) a jeho deterministická vrstva navíc počítá s `gitleaks`, `semgrep` a `shellcheck` – bez nich se ty kroky přeskočí a skill to nahlásí. Doménové znalosti žijí v `~/Dev/context/`, kde má každá doména vlastní adresář (`coding/`, `web/` včetně `admin.md`, `analytics/`, `text/`, `design/` včetně `slides.md`, `training/`, `worktree/`, `structure/`, `brand/`, `organizations/`) – odkazuje na ně `CLAUDE.md` a většinu z nich používá skill `/review`, který bez nich odvede jen půlku práce. To je moje soukromé know-how a osobní archiv, takže je tu nenajdete – ty skilly jsou k mání jako kostra, ne jako hotová věc.
+- **Předpoklady.** Plugin [superpowers](https://github.com/obra/superpowers), na kterém stojí `/specify`, `/breakdown` a `/implement`. Dál macOS s [Homebrew](https://brew.sh), `jq`, `coreutils` kvůli `gtimeout` a iTerm2 kvůli barvení záložky. Volitelně `gitleaks`, `semgrep` a `shellcheck` – bez nich se příslušné kroky `/review` přeskočí a skill to nahlásí.
+- **Část znalostí v repu není.** Skilly se opírají o soukromý adresář `~/Dev/context/` s doménovými standardy (`coding/`, `web/`, `analytics/`, `text/`, `design/`, `training/`, `structure/` a další) a odkazují do něj. To je moje soukromé know-how a osobní archiv, takže ho tu nenajdete – ty skilly jsou k mání jako kostra, ne jako hotová věc.
 - **Berte to po částech.** `RULES.md` funguje samostatně a použitelný je nejspíš hned. Skilly si projděte a upravte. `settings.json` si rozhodně proberte řádek po řádku – kromě permissions v něm jsou i hooky, statusline, pluginy a osobní nastavení modelu a jazyka.
 - **Licence.** Všechno tady je pod [MIT](LICENSE) – berte si, co chcete, jen si to nechte na vlastní triko.
