@@ -350,6 +350,16 @@ Totéž pro rozdělaný návrh: ukáže-li se v půlce, že model vznikl přilep
 
 Před destruktivní nebo těžko vratnou operací (mazání, přepis, zrušení, hromadná změna) se **podívej na aktuální skutečný stav** toho, do čeho sáhneš – ne na to, cos měl poznamenáno dřív. Je-li akce nevratná, řekni to nahlas a nech si ji potvrdit.
 
+### Mazání ověř diffem, ne grepem
+
+Mažeš-li **podle značek** – od nadpisu k nadpisu, od markeru k markeru, od řádku po řádek –, ověř výsledek **diffem toho, co zmizelo**, ne hledáním toho, co zbylo.
+
+Grep odpovídá na otázku *„zůstal tam zbytek?“*. Nebezpečnější je ale druhá otázka, *„nezmizelo něco navíc?“*, a na tu grep neodpoví z principu: hledá řetězec, který jsi právě odstranil, takže čím důkladněji jsi mazal, tím čistší výsledek dostaneš – i když jsi vzal půl souboru.
+
+**Konkrétně:** řez „od téhle sekce k nejbližšímu nadpisu“ selže, kdykoliv je nejbližší nadpis o úroveň výš nebo o několik sekcí dál. Ověření grepem to nechytí, protože smazané kapitoly to slovo neobsahovaly. Doloženo: úklid jedné sekce v doménové znalosti smazal šest sousedních kapitol a závěrečná kontrola prohlásila výsledek za čistý.
+
+**Platí i pro nástroje**, které mažou za tebe – hromadná náhrada, codemod, `sed -i`. Diff je jediné místo, kde je vidět rozsah zásahu, ne jeho záměr.
+
 ### Při odstranění nechej stopu
 
 Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrátit“ (kopírováním odjinud, z legacy, z dokumentace), nech stopu.

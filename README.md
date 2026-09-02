@@ -36,7 +36,7 @@ Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` o
 
 ### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
-Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu (testy, lint, audit závislostí, scan tajemství, statická analýza), pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, moje doménové standardy – a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí. Výchozí rozsah jsou změny na větvi; **`/review full`** pustí týž panel nad celým projektem – hodí se u zděděného kódu nebo když se dlouho nedělalo, ale je to z celé soustavy nejdražší běh, takže se předem zeptá, kolik souborů projde.
+Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu (testy, lint, audit závislostí, scan tajemství, statická analýza), pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, agentní infrastruktura, moje doménové standardy – a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí. Výchozí rozsah jsou změny na větvi; **`/review full`** pustí týž panel nad celým projektem – hodí se u zděděného kódu nebo když se dlouho nedělalo, ale je to z celé soustavy nejdražší běh, takže se předem zeptá, kolik souborů projde.
 
 ### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
 
@@ -92,11 +92,11 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 
 ### [`green-line.sh`](green-line.sh) – nad rozbitým projektem se práce neuzavře
 
-`Stop` hook, který před ukončením tahu spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu nic neví: přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí, takže je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic. A protože je ten kontrakt kód ležící v repozitáři, nespustí v něm nic, dokud pro něj nevydám souhlas (`--allow`). Rozlišuje přitom dvě různé věci: **test, který našel chybu**, tah zablokuje, kdežto **krok, který vůbec nejde spustit**, jen ohlásí – tam není co opravovat na kódu, ale na prostředí.
+`Stop` hook, který před ukončením tahu spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu nic neví: přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí, takže je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic. A protože je ten kontrakt kód ležící v repozitáři, nespustí v něm nic, dokud pro něj nevydám souhlas (`--allow`) – ten platí pro **celý repozitář včetně jeho worktree**, takže nová větev si o něj neříká znovu. Rozlišuje přitom dvě různé věci: **test, který našel chybu**, tah zablokuje, kdežto **krok, který vůbec nejde spustit**, jen ohlásí – tam není co opravovat na kódu, ale na prostředí.
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
-Skilly a pravidla jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor, co mezitím zmizel, nebo skill, který v README chybí. Tyhle testy to hlídají – stojí nula tokenů a běží v zelené lince po každém tahu. Napsal jsem je až po roce používání a **první běh hned našel tři vady**, které mi při ručním čtení třikrát utekly. Jen standardní knihovna Pythonu, žádná instalace.
+Skilly a pravidla jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo na sekci, co mezitím zmizela, nebo skill, který v README chybí. Druhá sada testuje **zelenou linku** – jediné místo v celé konfiguraci, které něco doopravdy vynucuje, a tedy to, kde tichá regrese stojí nejvíc: šestnáct scénářů nad dočasným repozitářem, od souhlasu přes rozdíl mezi „test našel chybu“ a „test nejde spustit“ až po zámek proti souběhu dvou session. Obojí stojí nula tokenů a běží v zelené lince po každém tahu. Napsal jsem je až po roce používání a **první běh hned našel tři vady**, které mi při ručním čtení třikrát utekly; testy zelené linky pak hned napoprvé odhalily, že souhlas nesedí na cestu vedoucí přes symlink. Jen standardní knihovna Pythonu, žádná instalace.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 
