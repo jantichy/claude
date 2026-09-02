@@ -318,7 +318,7 @@ if [ -n "$FAILED" ]; then
     # Druhý pokus v řadě nad týmž problémem: dál už jen otravujeme.
     printf '%s %s\n' "${OK_SIG:--}" "$SIG" > "$STATE" 2>/dev/null || true
     { echo "Zelená linka neprošla ani napodruhé – pouštím dál, vyřeš to s uživatelem."
-      note_skipped; echo "$FAILED"; } >&2
+      note_skipped; note_broken; echo "$FAILED"; } >&2
     exit 1
   fi
   { echo "Zelená linka není zelená – práci nelze uzavřít. Oprav to, nebo se zeptej uživatele."

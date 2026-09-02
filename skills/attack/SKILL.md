@@ -272,7 +272,7 @@ Cíl: <adresa> · Vektory: [které]
 
 **Prostředí:** [co bylo zastaveno · co jsem kvůli útoku zvedl a zůstalo běžet, s důvodem]
 
-**Další krok:** /release
+**Další krok:** /release · po nasazení ještě `/cleanup` podruhé (`~/.claude/RULES.md`, *Životní cyklus práce*, krok 7)
 ```
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:

@@ -1,9 +1,9 @@
 """Meta-testy nad konfigurační vrstvou.
 
 Skilly jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu
-a obvykle tiše: flag popsaný v těle, který chybí v `argument-hint`, nebo nástroj
-použitý v postupu, který není v `allowed-tools`. Tohle je nejlevnější vrstva,
-která je chytí – stojí nula tokenů a běží v zelené lince.
+a obvykle tiše: režim popsaný v těle, který chybí v `argument-hint`, nebo odkaz
+na soubor, který mezitím zmizel. Tohle je nejlevnější vrstva, která je chytí –
+stojí nula tokenů a běží v zelené lince.
 
 Spouští se: python3 -m unittest discover -s tests -q
 
@@ -16,10 +16,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS = sorted(p for p in (ROOT / "skills").glob("*/SKILL.md"))
-
-# Nástroje, které Claude Code poskytuje bez deklarace, nebo které se v textu
-# vyskytují jako jméno kroku osy, ne jako volání toolu.
-IMPLICIT_TOOLS = {"Task", "TodoWrite", "Skill", "SlashCommand", "WebSearch", "WebFetch"}
 
 
 def frontmatter(path: Path) -> dict:
