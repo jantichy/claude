@@ -124,6 +124,10 @@ Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontr
 
 7. **Pokrytí testy** – `coverage`, má-li ho projekt v kontraktu. Porovnej s prahem z `coding.md` (80 % na kritických cestách) a vypiš **naměřenou hodnotu i práh**, ne jen číslo. Samo o sobě to nic nedokazuje – na to je krok 6 – ale odhalí modul, ke kterému se testy vůbec nenapsaly.
 
+**Nespuštěný nástroj není nula.** U každého kroku téhle fáze si poznamenej **nástroj a jeho návratový kód**, ne jen počet nálezů. Nástroj, který na stroji není (návratový kód 127), se do výstupu píše jako `nespuštěno – nástroj není k dispozici`, nikdy jako `0`: tři nespuštěné kontroly vypsané jako tři nuly čte uživatel jako tři čisté výsledky, což je opak pravdy. Totéž pro krok, který spadl na chybu.
+
+Kroky 4 a 5 jsou přitom **výjimka z pravidla „jen příkazy z kontraktu“** na začátku téhle fáze: `gitleaks`, `semgrep` ani `shellcheck` nejsou příkazy projektu, ale obecné nástroje, které se pouštějí, jsou-li na PATH. Proto se jejich absence hlásí jako `nespuštěno`, kdežto chybějící řádek v kontraktu jako `nezkontrolováno` – jsou to dvě různé díry a v souhrnu se nesmí slít.
+
 Výsledky si odlož – ve Fázi 4 se slijí s nálezy panelu, ale **neprocházejí ověřením ve Fázi 3**. Nástroj nehalucinuje.
 
 **Audit závislostí a scan tajemství pouští znovu i `/release`** – proč to není duplicita, stojí v `~/.claude/skills/release/SKILL.md`, *Fáze 1*, bod 6.
@@ -315,13 +319,16 @@ Při pochybnosti patří nález mezi sporné.
 Rozsah: [změny na větvi – N souborů / celý projekt – N souborů]
 Role: [korektnost, bezpečnost, testy, coding, web – které běžely]
 
-Deterministická vrstva:
+Deterministická vrstva  [u každého kroku nástroj · návratový kód, ne holé číslo]:
 - zelená linka: ✅ / ❌ [co padá]
-- audit závislostí: N nálezů HIGH/CRITICAL
-- tajemství v repu: N
-- statická analýza: N
+- produkční build: ✅ / ❌ / nespuštěno
+- audit závislostí: [nástroj] rc=N → N nálezů HIGH/CRITICAL
+- tajemství v repu: [gitleaks / grep-heuristika / nespuštěno] rc=N → N
+- statická analýza: [semgrep / nespuštěno] rc=N → N
 - mutation score: X %   [nebo „nespuštěno – projekt nemá příkaz“]
+- pokrytí: X % (práh 80 %)   [nebo „nespuštěno – projekt nemá příkaz“]
 - nezkontrolováno: [co chybělo v kontraktu příkazů]
+- nespuštěno: [nástroje, které nejsou na stroji]
 
 Panel: X nálezů, Y vyvráceno při ověření, zbývá Z:
 - 🔴 Kritické: N
@@ -429,6 +436,7 @@ Rozsah: [změny na větvi / celý projekt] · Role: [které]
 [Pokud jsou odložené: seznam s popisy]
 
 **Nezkontrolováno:** [kroky přeskočené kvůli chybějícímu příkazu v kontraktu, nebo „nic“]
+**Nespuštěno:** [nástroje, které na stroji nejsou – gitleaks, semgrep, shellcheck –, nebo „nic“]
 
 **Další krok:** /consistency
 ```

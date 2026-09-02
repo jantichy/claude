@@ -16,7 +16,12 @@
 #
 # Krok, který nejde spustit (chybí nástroj, exit 126/127), NENÍ červená linka:
 # hlásí se zvlášť a tah neblokuje – jinak by Claude opravoval kód kvůli rozbitému
-# prostředí.
+# prostředí. Je to jediná větev, která končí exit 1: u ní je mlčení k modelu
+# správně, protože opravovat není co.
+#
+# Všechno ostatní, co se nepovedlo zkontrolovat, končí exit 2. Při exit 1 vidí
+# stderr jen uživatel, kdežto shrnutí píše model – a ten by nad neprověřeným
+# stavem nechal stát svoje "hotovo".
 #
 # Vypnout: .claude/no-green-line v projektu, nebo CLAUDE_NO_GREEN_LINE=1.
 
@@ -167,7 +172,12 @@ SESSION=$(printf '%s' "$INPUT" | jq -r '.session_id // "nosession"' 2>/dev/null 
 # Když cwd neexistuje, nepokračovat "někde jinde" – našel by se cizí projekt.
 if [ -n "$CWD" ]; then cd "$CWD" 2>/dev/null || die "adresář $CWD neexistuje."; fi
 
-[ "${CLAUDE_NO_GREEN_LINE:-0}" = "1" ] && exit 0
+# Vypnutá brána se hlásí, nemlčí: brána, o které nikdo neví, že neběží, je horší
+# než chybějící brána – tváří se jako kontrola, která neprobíhá.
+if [ "${CLAUDE_NO_GREEN_LINE:-0}" = "1" ]; then
+  echo "Zelená linka: vypnutá proměnnou CLAUDE_NO_GREEN_LINE, nespustil jsem nic." >&2
+  exit 0
+fi
 
 # --- Kde je projekt ------------------------------------------------------------
 # Ve worktree layoutu stojí session často v kořeni kontejneru, který sám pracovní
@@ -176,8 +186,12 @@ ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
 CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || exit 0
 PROJ=$(proj_for_md "$CLAUDE_MD")
 
-[ -f "$PROJ/.claude/no-green-line" ] && exit 0
-[ -f "$PWD/.claude/no-green-line" ] && exit 0
+for d in "$PROJ" "$PWD"; do
+  if [ -f "$d/.claude/no-green-line" ]; then
+    echo "Zelená linka: vypnutá souborem $d/.claude/no-green-line, nespustil jsem nic." >&2
+    exit 0
+  fi
+done
 
 need_tools
 [ -d "$ALLOW_DIR" ] && [ ! -O "$ALLOW_DIR" ] && die "$ALLOW_DIR nepatří tobě, nespouštím nic."
@@ -319,9 +333,13 @@ if [ -n "$FAILED" ]; then
   if [ "$STOP_ACTIVE" = "true" ]; then
     # Druhý pokus v řadě nad týmž problémem: dál už jen otravujeme.
     printf '%s %s\n' "${OK_SIG:--}" "$SIG" > "$STATE" 2>/dev/null || true
-    { echo "Zelená linka neprošla ani napodruhé – pouštím dál, vyřeš to s uživatelem."
+    # exit 2, ne 1: při exit 1 jde stderr jen uživateli a model o tom neví, takže
+    # svoje "hotovo" nechá stát nad stavem, který branou neprošel. Zacyklit to
+    # nemůže – SKIP_SIG je pro tenhle stav uložený a další volání skončí exit 0.
+    { echo "Zelená linka neprošla ani napodruhé – pouštím dál, ale NENÍ to zelené."
+      echo "Neopravuj to potřetí. Nehlas práci jako hotovou a napiš uživateli, co zbývá."
       note_skipped; note_broken; echo "$FAILED"; } >&2
-    exit 1
+    exit 2
   fi
   { echo "Zelená linka není zelená – práci nelze uzavřít. Oprav to, nebo se zeptej uživatele."
     echo "Netvrď, že něco prošlo, bez výstupu příkazu."
@@ -338,7 +356,10 @@ if [ -n "$BROKEN" ]; then
   exit 1
 fi
 if [ -n "$SKIPPED" ]; then
-  echo "Zelená linka prošla, ale nekontrolovalo se: $SKIPPED (chybí v kontraktu v $CLAUDE_MD)." >&2
-  exit 1
+  # exit 2 ze stejného důvodu jako výš: díra v kontraktu musí do shrnutí, a to
+  # píše model. Stav je uložený jako zelený, takže další volání skončí exit 0.
+  { echo "Zelená linka prošla, ale nekontrolovalo se: $SKIPPED (chybí v kontraktu v $CLAUDE_MD)."
+    echo "Do shrnutí to napiš jako nezkontrolované. Netvrď, že prošlo všechno."; } >&2
+  exit 2
 fi
 exit 0
