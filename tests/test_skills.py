@@ -72,8 +72,10 @@ class SkillFrontmatter(unittest.TestCase):
 
 class SkillOdkazy(unittest.TestCase):
     # Kontroluje se i to, co skilly samy odkazují – RULES.md a CLAUDE.md nesou
-    # nejvíc odkazů ze všech a netestovaly se vůbec.
-    ODKAZUJICI = SKILLS + [ROOT / "RULES.md", ROOT / "CLAUDE.md", ROOT / "README.md"]
+    # nejvíc odkazů ze všech a netestovaly se vůbec. Projektový .claude/CLAUDE.md
+    # nese kontrakt příkazů a odkazy na sekce v jiném repozitáři, takže patří sem taky.
+    ODKAZUJICI = SKILLS + [ROOT / "RULES.md", ROOT / "CLAUDE.md", ROOT / "README.md",
+                           ROOT / ".claude/CLAUDE.md"]
 
     def test_odkazy_na_soubory_existuji(self):
         """Odkaz na neexistující soubor pošle Clauda hledat něco, co tam není."""

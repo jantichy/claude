@@ -419,13 +419,14 @@ V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u oboj
 
 **Test zní: vrací ten krok nad TÝMŽ vstupem tutéž odpověď?** Když ano, je to duplicita. Opakovat se smí jen to, čemu se mezitím **mohl změnit vstup** – stav pracovního stromu, databáze zranitelností, obsah repozitáře. Starší formulace („kdyby ten krok neproběhl, zjistil by to někdo jiný?“) tenhle rozdíl nedělala a označila za duplicitu i případy, které osa sama obhajuje.
 
-**Povolená opakování jsou tři a jmenují se**, aby se seznam nedal rozšiřovat mlčky:
+**Povolená opakování jsou čtyři a jmenují se**, aby se seznam nedal rozšiřovat mlčky:
 
 | Co se opakuje | Kde | Co se mezitím mohlo změnit |
 |---|---|---|
 | zelená linka | `/implement` → `/review` | hook ji vynutil po posledním tahu, `/review` ji pouští nad celým rozsahem větve |
 | audit závislostí | `/review` → `/release` | databáze zranitelností se mění bez ohledu na projekt |
 | scan tajemství | `/review` → `/release` | mezi oběma kroky přibyly commity z `/consistency`, `/cleanup` i `/attack` |
+| produkční build | `/review` → `/release` | uzavírání i útok mezitím commitují, a `/release` ho navíc pouští **na čistém stromu** – „prošlo to při uzavírání“ a „projde to jako to, co posíláme ven“ jsou dvě tvrzení |
 
 **Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 
