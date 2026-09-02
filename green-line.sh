@@ -38,6 +38,14 @@ need_tools() {
 # kolidovalo: /a/con-text a /a/context daly týž klíč, a tím i týž souhlas.
 proj_key() { printf '%s' "$1" | sha; }
 
+# Adresář, ve kterém se příkazy spustí. U kontraktu v .claude/CLAUDE.md je to
+# kořen repozitáře, ne .claude/ – jinak by testy běžely o adresář níž.
+proj_for_md() {
+  d=$(dirname "$1")
+  [ "$(basename "$d")" = ".claude" ] && d=$(dirname "$d")
+  printf '%s' "$d"
+}
+
 # --- Výpis a odebrání souhlasu -------------------------------------------------
 # Souhlas musí jít i zjistit a odebrat, ne jen vydat: po naklonování cizího
 # repozitáře, kterému jsem ho omylem dal, by jinak nebyla cesta zpět.
@@ -96,8 +104,8 @@ if [ "${1:-}" = "--allow" ]; then
   need_tools
   P=$(cd "${2:-$PWD}" 2>/dev/null && pwd) || die "neznámá cesta: ${2:-$PWD}"
   MD=""
-  for c in "$P/CLAUDE.md" "$P/main/CLAUDE.md"; do
-    [ -f "$c" ] && grep -q '^## Příkazy' "$c" && { MD="$c"; P=$(dirname "$c"); break; }
+  for c in "$P/CLAUDE.md" "$P/.claude/CLAUDE.md" "$P/main/CLAUDE.md"; do
+    [ -f "$c" ] && grep -q '^## Příkazy' "$c" && { MD="$c"; P=$(proj_for_md "$c"); break; }
   done
   [ -n "$MD" ] || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Příkazy."
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
@@ -111,7 +119,8 @@ if [ "${1:-}" = "--allow" ]; then
   FOUND=""
   for k in typecheck lint test; do
     v=$(printf '%s\n' "$SEC" | sed -n "s/^[[:space:]]*[-*][[:space:]]*$k:[[:space:]]\{1,\}//p" | head -1 | sed 's/[[:space:]]*$//')
-    [ -n "$v" ] && { printf '  %-10s %s\n' "$k:" "$v"; FOUND="$v"; }
+    if [ "$v" = "-" ]; then printf '  %-10s %s\n' "$k:" "(neaplikuje se)"
+    elif [ -n "$v" ]; then printf '  %-10s %s\n' "$k:" "$v"; FOUND="$v"; fi
   done
   [ -z "$FOUND" ] && echo "  (nic – kontrakt nemá typecheck, lint ani test, hook tu nic nespustí)"
   # Ostatní klíče jsou dokumentace pro člověka; zelená linka je nepouští.
@@ -147,8 +156,10 @@ if [ -n "$CWD" ]; then cd "$CWD" 2>/dev/null || die "adresář $CWD neexistuje."
 # strom není – proto se hledá i v main/ a příkazy pak běží tam, ne v cwd.
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
 CLAUDE_MD=""; PROJ=""
-for c in "$PWD/CLAUDE.md" "$PWD/main/CLAUDE.md" "${ROOT:-/nonexistent}/CLAUDE.md" "${ROOT:-/nonexistent}/main/CLAUDE.md"; do
-  if [ -f "$c" ] && grep -q '^## Příkazy' "$c" 2>/dev/null; then CLAUDE_MD="$c"; PROJ=$(dirname "$c"); break; fi
+for c in "$PWD/CLAUDE.md" "$PWD/.claude/CLAUDE.md" "$PWD/main/CLAUDE.md" \
+         "${ROOT:-/nonexistent}/CLAUDE.md" "${ROOT:-/nonexistent}/.claude/CLAUDE.md" \
+         "${ROOT:-/nonexistent}/main/CLAUDE.md"; do
+  if [ -f "$c" ] && grep -q '^## Příkazy' "$c" 2>/dev/null; then CLAUDE_MD="$c"; PROJ=$(proj_for_md "$c"); break; fi
 done
 [ -z "$CLAUDE_MD" ] && exit 0   # projekt kontrakt nemá – není co spouštět
 
@@ -224,6 +235,9 @@ run() {
 FAILED=""; SKIPPED=""
 for step in typecheck lint test; do
   CMD=$(cmd_for "$step")
+  # Pomlčka znamená "tenhle krok se v projektu neaplikuje" – vědomé rozhodnutí,
+  # ne díra v kontraktu, takže se nehlásí jako nezkontrolované.
+  [ "$CMD" = "-" ] && continue
   [ -z "$CMD" ] && { SKIPPED="${SKIPPED:+$SKIPPED, }$step"; continue; }
   run "$CMD"; RC=$?
   if [ "$RC" -ne 0 ]; then

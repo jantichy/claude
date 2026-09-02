@@ -11,11 +11,12 @@ BAR_WIDTH=7
 
 make_bar() {
   local pct="$1"
-  local filled=$(echo "$pct $BAR_WIDTH" | awk '{printf "%d", int($1 / 100 * $2 + 0.5)}')
+  local filled
+  filled=$(echo "$pct $BAR_WIDTH" | awk '{printf "%d", int($1 / 100 * $2 + 0.5)}')
   local empty=$(( BAR_WIDTH - filled ))
   local bar=""
-  for i in $(seq 1 $filled); do bar="${bar}█"; done
-  for i in $(seq 1 $empty);  do bar="${bar}░"; done
+  for _ in $(seq 1 "$filled"); do bar="${bar}█"; done
+  for _ in $(seq 1 "$empty");  do bar="${bar}░"; done
   echo "$bar"
 }
 
@@ -169,7 +170,7 @@ if [ -z "$cwd" ]; then cwd=$(pwd); fi
 # Předřadit ~, pokud je cesta v $HOME
 home_prefix="${HOME}"
 if [[ "$cwd" == "$home_prefix"* ]]; then
-  cwd="~${cwd#$home_prefix}"
+  cwd="~${cwd#"$home_prefix"}"
 fi
 # Do 4 segmentů vypsat celou cestu, delší zkrátit na poslední 3
 short_cwd=$(echo "$cwd" | awk -F'/' '{
@@ -189,8 +190,8 @@ git_part=""
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir // empty')
 if [ -z "$project_dir" ]; then project_dir="$cwd"; fi
 # Rozvinout ~ pokud je potřeba
-project_dir_real=$(echo "$project_dir" | sed "s|^~|$HOME|")
-cwd_real=$(echo "$cwd" | sed "s|^~|$HOME|")
+project_dir_real="${project_dir/#\~/$HOME}"
+cwd_real="${cwd/#\~/$HOME}"
 
 # Změny se počítají v adresáři, ve kterém se pracuje (cwd), ne v kořeni projektu.
 # U worktree layoutu je kořen projektu bare repo – to nemá working tree a jeho

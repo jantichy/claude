@@ -16,6 +16,16 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 
 - Každý skill má v `README.md` svou sekci. Když nějaký přidáš nebo zásadně změníš jeho chování, aktualizuj ji rovnou jako součást té změny – stejný styl a tón jako ostatní sekce (osobní, věcné, s konkrétním přínosem). Nečekej na vyžádání.
 
+## Příkazy
+
+Kontrakt příkazů (`~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*). Zelená linka ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
+
+- typecheck: -
+- lint: shellcheck --severity=info ./*.sh skills/*/*.sh
+- test: -
+
+`shellcheck` běží se `--severity=info`, ne se `--severity=style`: stylové nálezy jsou preference a brána, která padá na preferenci, se obchází. Pomlčka u `typecheck` a `test` znamená **vědomě se neaplikuje** – repozitář je konfigurace, ne program: nemá typy ani spustitelnou jednotku, kterou by šlo testovat. Kdyby tam řádky chyběly úplně, hook by po každém tahu hlásil, že se něco nezkontrolovalo, a to by byl trvalý šum místo informace.
+
 ## Automatické akce
 
 ### Autocommit
