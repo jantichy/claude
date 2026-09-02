@@ -70,6 +70,8 @@ Používám platformy, které nasazují automaticky po pushnutí do produkční 
 
 Před ním hlídá čistý strom, zelenou linku, produkční build, audit závislostí a jestli vůbec proběhlo `/review`. Zvlášť řeší **migrace**: dopředu kompatibilně, tedy nejdřív se jen přidává a odebírá se až v dalším vydání – jinak by rollback kódu shodil aplikaci na datech, která zapsala nová verze. A nepustí mě dál, dokud neumí odpovědět, jak se za deset minut vrátit zpátky.
 
+Vedlejší zisk oddělené větve je ten nejpraktičtější: každý merge do `main` dostane vlastní **preview URL**, takže si věc proklikám dřív, než ji uvidí kdokoliv jiný. `/release` pak preview vůbec neřeší – testování proběhlo průběžně a stavět ho znovu by znamenalo čekat na něco, co už bylo.
+
 Tři věci dělá schválně nepohodlně: nikdy se nespustí sám, nic neopravuje, a po nasazení ověřuje na produkční URL. Nasazeno není totéž co funguje.
 
 ## [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
@@ -105,6 +107,8 @@ Když Claude doběhne nebo se na něco ptá, obarví se mi záložka iTermu do m
 ## [`green-line.sh`](green-line.sh) – nad rozbitým projektem se práce neuzavře
 
 Nejlevnější věc z celého repozitáře a možná nejužitečnější. Je to `Stop` hook: než Claude ukončí tah, spustí typecheck, lint a testy, a když něco padá, **nepustí ho skončit** – dostane zpátky výstup a musí to dořešit. Rozdíl proti instrukci v pravidlech je zásadní: instrukce se dá zracionalizovat, skript ne.
+
+Strop je 60 sekund na krok a hlídá ho `gtimeout`. To číslo není nahodilé: tři kroky se tak vejdou do timeoutu hooku, který má `settings.json` nastavený na 320 sekund – jinak by Claude Code hook utnul uprostřed a výsledek kontroly by se zahodil.
 
 Jedna výjimka, kterou přiznávám rovnou: když **druhý pokus nad týmž stavem** taky neprojde, hook pustí dál a nahlas to řekne. Nekonečná smyčka je horší než rozbitý build – ale znamená to, že brána je tvrdá jednou, ne napořád.
 

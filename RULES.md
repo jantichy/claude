@@ -301,14 +301,9 @@ Nasazení    /release
 
 Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → zelená linka → commit.
 
-V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je
-rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v ose
-nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit,
-aniž se změní, jak se krok volá.
+V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v ose nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit, aniž se změní, jak se krok volá.
 
-Nad dokumentem, který vznikne v kroku `/specify` nebo `/breakdown`, je navíc volitelný
-**`/oponent`** – nezávislý posudek čerstvýma očima. V ose není proto, že se nedělá
-vždycky; u většího projektu se ale vyplatí.
+Nad dokumentem, který vznikne v kroku `/specify` nebo `/breakdown`, je navíc volitelný **`/oponent`** – nezávislý posudek čerstvýma očima. V ose není proto, že se nedělá vždycky; u většího projektu se ale vyplatí.
 
 **Zakládání (1–4)**
 

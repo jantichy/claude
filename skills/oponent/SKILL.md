@@ -13,6 +13,8 @@ Uživatel má hotový nebo rozpracovaný dokument, na kterém jste spolu dlouho 
 
 Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každého z jiného úhlu, a jejich nálezy s uživatelem probere jeden po druhém.
 
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako volitelný krok** nad dokumentem, který vznikl v `/specify` nebo `/breakdown`. Nedělá se vždycky; u většího projektu se vyplatí.
+
 ## Co skill nedělá
 
 - **Není to kontrola kódu.** Na kód je `/code-review`.

@@ -17,6 +17,8 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 
 Skill je **opakovatelný**. Když ho uživatel spustí podruhé, co je zapsané a v pořádku, projde bez zásahu – druhý průchod slouží jako verifikace.
 
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to poslední krok uzavírání – navazuje na `/consistency`. Poslední je i proto, že jako jediný odolá kompaktaci: co zapíše, přežije ztrátu kontextu.
+
 ## Co skill nedělá
 
 **Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel celý projekt; fresh-reader tady se ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.

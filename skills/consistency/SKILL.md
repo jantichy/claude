@@ -10,6 +10,8 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 
 Proveď kompletní audit vnitřní konzistence aktuálního projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
 
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to druhý krok uzavírání: navazuje na `/review` a předává na `/cleanup`.
+
 ## Co skill nedělá
 
 - **Nehledá chyby v kódu.** Na korektnost provedených změn je `/code-review`.
@@ -84,7 +86,7 @@ STŘEDNÍ (technický dluh):
 - Behaviorální konzistence: stejný typ chyby řešený různě (throw vs. Result vs. silent vs. null); různé loggery/úrovně/formáty pro stejný typ události; podobné endpointy validují vstup jen někdy; auth/authz mechanismy se liší napříč podobnými endpointy bez důvodu; data fetching / state management řeší stejný use-case různě (lokální state vs. global store, fetch vs. React Query vs. SWR)
 - Špatně zatříděné soubory (utilita v komponentách, komponenta v utils/)
 - README nebo dokumentace popisující funkce, které neexistují nebo fungují jinak
-- Obsah ve špatném souboru podle cílového čtenáře: `README.md` je popis projektu **pro člověka**, takže normativní pokyny pro Clauda (pravidla práce v repozitáři, konvence, povinnost něco udržovat) v něm nemají co dělat ani odkazem – patří do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md`. Definice je v `~/Dev/context/structure/structure.md`
+- Obsah ve špatném souboru podle cílového čtenáře (tohle je zatřídění, ne soulad s předpisem – proto to sem patří, i když se opírá o `structure.md`): `README.md` je popis projektu **pro člověka**, takže normativní pokyny pro Clauda (pravidla práce v repozitáři, konvence, povinnost něco udržovat) v něm nemají co dělat ani odkazem – patří do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md`. Definice je v `~/Dev/context/structure/structure.md`
 - Nepoužívané exporty, funkce, proměnné (dead code)
 - Zapomenuté zbytky po odstranění: když se v minulosti odstraňoval kód, feature nebo komponenta, mohly na dalších místech zůstat pozapomenuté části – importy smazaného modulu, konfigurace pro zrušenou funkci, typy/interfacy pro odstraněnou entitu, registrace odebrané route nebo pluginu, zmínky v dokumentaci nebo komentářích, testy odstraněné funkcionality, env proměnné pro mrtvou feature, reference v package.json apod.
 - Závislosti v package.json které nejsou použity (nebo naopak)
