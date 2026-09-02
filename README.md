@@ -12,7 +12,7 @@ Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Vě
 
 ### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
-Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak zachází se změnami. Je tu i celá osa životního cyklu práce – od `/project` až po `/release` – která říká, co je čí krok a co který krok naopak dělat nemá.
+Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i celá osa životního cyklu práce – od `/project` až po `/release` – která říká, co je čí krok a co který krok naopak dělat nemá.
 
 ## Skilly, jak jdou po sobě
 
