@@ -378,9 +378,16 @@ Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ov
 
 ## Krok 10 – Doménové checklisty
 
-Zeptej se (AskUserQuestion, **`multiSelect: true`**): „Které doménové checklisty jsou pro tenhle projekt relevantní?“ Volby předvyplň podle typu z kroku 9, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
+Checklistů je osm a `AskUserQuestion` bere najednou nejvýš čtyři volby (týž strop jako v kroku 9). Ptej se proto **ve dvou kolech po čtyřech**, obě s `multiSelect: true`. Volby předvyplň podle typu z kroku 9, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
-U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md` a `web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text/text.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
+| Kolo | Otázka | Volby |
+|---|---|---|
+| 1 | „Co všechno se v projektu bude dělat s kódem a rozhraním? Když nic, nic nezaškrtávej.“ | Psaní kódu · Webové rozhraní · Administrace / backoffice · Webová analytika a měření |
+| 2 | „A co z tohohle? Když nic, nic nezaškrtávej.“ | Psaní českých textů · Školení a kurzy · Vizuální tvorba a grafika · Prezentace a slajdy |
+
+Volbu **Žádný** nikam nedávej – prázdný výběr v `multiSelect` ji nahrazuje. Přibude-li devátý checklist, přidej **třetí kolo**, nikdy pátou volbu do existujícího.
+
+Přehled všech osmi i s cílem importu:
 
 | Volba | Import |
 |---|---|
@@ -392,7 +399,8 @@ U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md`
 | Školení a kurzy | `@~/Dev/context/training/training.md` |
 | Vizuální tvorba a grafika | `@~/Dev/context/design/design.md` |
 | Prezentace a slajdy | `@~/Dev/context/design/slides.md` |
-| Žádný | – |
+
+U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md` a `web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text/text.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
 
 U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvyplň `training/training.md` spolu s `text/text.md` – materiály pro účastníky jsou text a řídí se obojím. Přihoď i `design/slides.md`, pokud k tomu vzniká promítaná prezentace.
 
