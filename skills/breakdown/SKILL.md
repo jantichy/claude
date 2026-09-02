@@ -10,7 +10,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 Vezme schválené zadání a rozpadne ho na **`docs/plan.md`** – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu, příkaz na spuštění a commit. Plán je psaný pro někoho, kdo projekt vůbec nezná.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) navazuje na `/specify` a předává na `/implement`.
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) navazuje na `/oponent` a předává na `/implement`.
 
 ## Co skill nedělá
 

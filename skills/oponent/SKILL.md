@@ -13,7 +13,7 @@ Uživatel má hotový nebo rozpracovaný dokument, na kterém jste spolu dlouho 
 
 Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každého z jiného úhlu, a jejich nálezy s uživatelem probere jeden po druhém.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako volitelný krok** nad dokumentem, který vznikl v `/specify` nebo `/breakdown`. Nedělá se vždycky; u většího projektu se vyplatí.
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to **třetí krok zakládání**: navazuje na `/specify` a předává na `/breakdown`. Do osy patří proto, že jinak návrh neměří nikdo – `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celou osou jako korektní. Přeskakuje se stejným pravidlem jako každý jiný krok: drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano – a přeskočení se řekne nahlas i s důvodem.
 
 ## Co skill nedělá
 
@@ -25,7 +25,8 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 **Vědomé volby, ať je nikdo neřeší znovu** (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*):
 
-- **Úhel *Vnitřní rozpor* se s `/consistency` částečně překrývá a je to přijatá cena.** Ano, „sedí čísla a výčty" najde i `/consistency`. Ale oponentura běží i nad dokumentem, který `/consistency` nevidí (cizí podklad, text mimo projekt), a rozpor mezi dvěma tvrzeními ve věci samé je jiná práce než rozpor mezi součtem a tabulkou. Nález se vrací při každé oponentuře skillu; není to omyl, je to volba.
+- **Úhel *Vnitřní rozpor* se s `/consistency` částečně překrývá a je to přijatá cena.** Ano, „sedí čísla a výčty“ najde i `/consistency`. Ale oponentura běží i nad dokumentem, který `/consistency` nevidí (cizí podklad, text mimo projekt), a rozpor mezi dvěma tvrzeními ve věci samé je jiná práce než rozpor mezi součtem a tabulkou. Nález se vrací při každé oponentuře skillu; není to omyl, je to volba.
+- **Katalog se jednou vědomě zmenšil z devatenácti na sedmnáct** a ty úhly nepatří zpátky: *Hraniční případy* splynuly s *Co chybí* (byl to týž generátor okrajů dvakrát), *Skeptik* s *Předpoklady* (tatáž otázka zprava a zleva) a *Technická proveditelnost* s *Daty* (měla nejchudší zadání a nad datovým modelem sahala po témže). Navrhne-li je někdo znovu jako „chybějící pokrytí“, tohle je odpověď.
 - **Katalog nemá strop na počet úhlů.** Brzdou je jen kontrola překryvu při přidávání (viz Fáze 1). Tvrdý strop by nutil vyhodit úhel pokaždé, když nějaký skutečně chybí – a chybějící úhel nevrátí nula nálezů, ale neexistenci.
 
 ## Vztah k ostatním skillům
@@ -74,7 +75,7 @@ Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; o
 
 **Metody – jak se dívat.** Dají se přiložit na jakýkoliv dokument; samy o sobě ale nemají věcnou oporu, proto se metodickému úhlu v zadání vždy určí doména, na kterou se má obořit (*Hraniční případy cenového modelu*, *Pre-mortem uvedení kurzu*).
 
-| Úhel | Ptá se | Spouštěč – kdy zvolit | Web |
+| Úhel | Ptá se | Spouštěč | Web |
 |---|---|---|---|
 | **Vnitřní rozpor** | Tvrdí dokument někde něco, co jinde popírá? Sedí čísla, výčty a souhrny s obsahem? Nezůstal tam zbytek po zrušeném konceptu? | dokument vznikal po částech nebo prošel revizemi – je kde nechat zbytek po zrušeném konceptu |  |
 | **Co chybí** | Ne co je špatně, ale co v dokumentu vůbec není a co na jeho okrajích nemá odpověď. **(1)** Vypiš hlavní entity, kroky a pravidla dokumentu a u každého se zeptej, co když nenastane vůbec, nastane víckrát, jen zčásti, spolu s něčím dalším, obráceně, nebo místo něj něco jiného – souběh dvou slev, přechod na vyšší tarif v půlce období, dvojí nárok téhož zákazníka, zrušení uprostřed. Platí to pro pravidlo obchodní a procesní stejně jako pro vstup programu. **(2)** Hlaš jen to, bez čeho podle dokumentu nejde jednat ani rozhodnout: nepojmenovaný vlastník, chybějící kritérium, scénář bez odpovědi. Neptej se na chování kódu, ale na to, jestli dokument na ten případ dává odpověď – a jestli dává jen jednu. Nevypisuj chybějící kapitoly a sekce. | vždy – povinný |  |
@@ -88,7 +89,7 @@ Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; o
 
 **Domény – na co se dívat.** Nesou znalost oboru, ale bez metody sbírají povrch.
 
-| Úhel | Ptá se | Spouštěč – kdy zvolit | Web |
+| Úhel | Ptá se | Spouštěč | Web |
 |---|---|---|---|
 | **Ekonomika provozu** | Sedí čísla? Break-even, cena, marže, kapacita, náklady na provoz. Kdo to bude reálně dělat, jak často a co se stane, když to neudělá? Co vyžaduje ruční zásah? Co se rozbije při desetinásobku a co při desetině? | jsou v něm čísla, ceny, kapacity nebo opakovaná ruční práce | ✔ |
 | **Osobní údaje a souhlas** | Co se sbírá, na jakém právním základu a jak dlouho se to drží? Co dokument slibuje uživateli a co ve skutečnosti dělá? Jde výmaz provést, aniž se rozpadne zbytek? | sbírají se údaje o lidech | ✔ |
@@ -103,7 +104,7 @@ Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; o
 
 - Úhel *Co chybí* ber jako **povinný**, ať je dokument jakýkoliv. Druhý povinný úhel schválně nemáme: dva pevné sloty ze čtyř by z volby podle povahy dokumentu udělaly ozdobu.
 - Vyber **aspoň jednu položku z každého bloku**. Samé domény dají audit a nula oponentur; samé metody obecné kritiky bez věcné opory.
-- **Úhly nerozšiřuj, aby jich stačilo pustit míň.** Vypadá to lákavě – širší úhel přece pokryje víc –, jenže kapacitu neurčuje šířka zadání, ale výstup agenta: ten vrátí pět až deset nálezů, ať má zadání úzké nebo široké. Rozšířením se počet nálezů nezvedne, jen se rozptýlí jejich původ, a přibude riziko úhlu, který „najde cokoliv". Chybí-li ti pokrytí, přidej úhel, nebo rozšiř jeho *Spouštěč* – nerozmazávej úhel, který máš.
+- **Úhly nerozšiřuj, aby jich stačilo pustit míň.** Vypadá to lákavě – širší úhel přece pokryje víc –, jenže kapacitu neurčuje šířka zadání, ale výstup agenta: ten vrátí pět až deset nálezů, ať má zadání úzké nebo široké. Rozšířením se počet nálezů nezvedne, jen se rozptýlí jejich původ, a přibude riziko úhlu, který „najde cokoliv“. Chybí-li ti pokrytí, přidej úhel, nebo rozšiř jeho *Spouštěč* – nerozmazávej úhel, který máš.
 - Metodický úhel pouštěj **vždy s určenou doménou** – vypiš ji do jeho zadání. Metoda bez domény je slepá.
 - **Kolik jich pustit podle rozsahu předmětu:** čtyři u jednoho dokumentu zhruba do 15 kB, pět nad tím nebo když je dokumentů víc. Je-li předmět velký (blíží se hranici z Fáze 0), dělí se **úhel × podmnožina dokumentů**, ne jen úhel – jinak čte každý agent celý objem a dělba škáluje jen jedním směrem.
 - **Běžela-li už oponentura nad tímhle předmětem** (Fáze 0 to zjistila z `docs/done.md`), **začni jejím panelem**. Nález, který se vrátí ve stejném úhlu, znamená, že se neopravil; nález, který zmizel s vyměněným úhlem, neznamená nic. Vyměnit úhel smíš, ale řekni, který a proč – Fáze 6 pak počty nesrovnává.
@@ -162,9 +163,9 @@ Do žádného souboru nezapisuj.
 
 **Nálezy z panelu nejsou závěry, ale tvrzení.** Oponent bez kontextu vyrobí i nález, který stojí na tom, co nemohl vědět – a nález, který nevyrobí nic, vypadá jako selhání běhu, takže tlak na produkci je vestavěný. Kdyby se falešné vyřazovaly až v konsolidaci, dělal by to spoluautor, tedy ten jediný aktér, jehož slepotu má celý skill obcházet. To je přesně ten tichý filtr, který si Fáze 4 zakazuje – jenže bez téhle fáze nemá čím ho nahradit.
 
-**Deduplikuj ještě před ověřením**, ne až po něm (Fáze 4, bod 1). Úhly se překrývají, takže tentýž problém přijde dvakrát jinými slovy a tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď.
+**Deduplikuj ještě před ověřením**, ne až po něm: tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď. **Dva nálezy jsou tentýž**, když míří na totéž místo dokumentu a navrhují změnit touž věc – formulace i závažnost se lišit můžou. Sloučený nález si ponech v obou zněních a poznamenej, které úhly ho našly; Fáze 4 s tím dál pracuje jako se signálem závažnosti.
 
-Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Nejsilnější model**, i u nálezu z levného úhlu: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko. (Effort mu předepsat neumíš: `Agent` bere parametr `model`, ale ne `effort` – ten se bere z definice agenta. Píše-li se jinde „na nejsilnějším modelu s `xhigh`“, splnitelná je dnes první polovina. Je to vědomá mezera, ne opomenutí; zavřela by ji až definice agenta ve `~/.claude/agents/`.)
+Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Nejsilnější model**, i u nálezu z levného úhlu: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko. (Effort mu předepsat nejde – `Agent` bere parametr `model`, ale ne `effort`. Proč a co by to zavřelo, stojí v `~/.claude/skills/review/SKILL.md`, *Fáze 3*; neopisuju to sem podruhé.)
 
 **Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti úhlů vrátí klidně třicet nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat. (Strop je nižší než v `/review`, protože tam ho odlehčuje deterministická vrstva, která část nálezů odčerpá bez ověřování; tady žádná není.)
 
@@ -224,7 +225,7 @@ Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který F
 
 Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – kosmetické jdou nakonec jedním blokem (viz níž).
 
-**KOSMETICKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Zahodit všechny* / *Vrátit se k tomu později*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Jsou to navíc jediné nálezy, které neprošly ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany.
+**KOSMETICKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Zahodit všechny* / *Vrátit se k tomu později*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Neprošly navíc ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany. (Bez ověření jdou dál i nálezy nad stropem – ty se ale procházejí jednotlivě, protože jsou závažné; jen se u nich řekne, že ověřené nejsou.)
 
 U každého nejdřív vypiš:
 
@@ -283,7 +284,7 @@ Ve verdiktu:
 
 **Předmět:** <dokumenty>
 **Úhly:** <seznam>
-**Panel:** N oponentů → K nálezů hrubě → L po dedupu → M ověřeno, N neověřeno
+**Panel:** A oponentů → B nálezů hrubě → C po dedupu → D ověřeno, E neověřeno
 
 **Nálezy:** N celkem – 🔴 X kritických, 🟡 Y středních, 🔵 Z kosmetických
 - Zapracováno: N

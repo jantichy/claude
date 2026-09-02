@@ -202,7 +202,50 @@ Zapiš do `docs/decisions.md` jen to, co má trvalou hodnotu (změna postupu nas
 **Zbývá dokončit:** [contract krok migrace v příštím vydání / nic]
 ```
 
-**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/RULES.md`, *Životní cyklus práce*, krok 7.
+**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/RULES.md`, *Životní cyklus práce*, krok 8.
+
+------
+
+## Fáze 7 – Sledovací okno
+
+**Nasazení není hotové ve chvíli, kdy aplikace odpoví.** Fáze 5 ověřuje, že to běží *teď*; celá třída chyb se ale projeví později – migrace s backfillem, cache, která se plní hodiny, chyba, která nastane až na produkčním objemu dat, kvóta vyčerpaná do večera. Ty nemají v ose vlastníka, dokud tahle fáze neexistuje.
+
+**Okno má konkrétní konec**, dohodnutý ve Fázi 3 (pole *Po nasazení sleduji*). Výchozí volba: **dvě hodiny** u běžného vydání, **do druhého dne** u migrace dat nebo změny v citlivé oblasti.
+
+Co se v okně dělá:
+
+1. **Sleduj to, co jsi ve Fázi 3 vyjmenoval** – ne „obecně jestli to jede“. Chybové logy, míra chyb, fronta úloh, u webu i to, co ověřovala Fáze 5 bod 8 (eventy a consent).
+2. **Nezavírej ho tichem.** Okno se uzavírá **výslovnou větou**, ať je výsledek jakýkoliv:
+
+   ```
+   ## Sledovací okno uzavřeno
+
+   **Trvalo:** <od–do> · **Sledovalo se:** <co konkrétně>
+   **Nové chyby:** <N, nebo „žádné“>
+   **Řešeno:** <co se s nimi udělalo, nebo „nic, nic se neobjevilo“>
+   ```
+
+3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/RULES.md`, *Životní cyklus práce*: jde toutéž osou ve zkrácené podobě, `/review` a zelená linka se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
+
+**Přeruší-li se session dřív, než okno uplyne**, řekni to a zapiš do `docs/todo.md`, do kdy okno běží a co se má sledovat. Okno, o kterém ví jen kontext session, žádné okno není.
+
+------
+
+## Když chyba projde vším
+
+Chyba, kterou nechytila deterministická brána, panel v `/review`, útok v `/attack` **ani sledovací okno**, a projevila se u uživatele, je nejcennější vstup, jaký soustava dostane – a dosud nevedla k ničemu, jen se opravila commitem.
+
+Ke každému takovému defektu proto zapiš **jeden řádek do `docs/decisions.md`, sekce `## Co proklouzlo`**:
+
+```
+- **YYYY-MM-DD** – *<co se stalo>*: měla to chytit <vrstva>, nechytila protože <důvod> → doplněno <co>
+```
+
+Datum vyrob `date +%F` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+
+**„Doplněno“ nesmí být prázdné.** Buď z toho vzejde nová brána (test, semgrep pravidlo, řádek v kontraktu, položka checklistu), nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – a to je přesně ta množina, kterou už chytat umí.
+
+**A vždy regresní test.** Stejným pravidlem jako u nálezu z `/attack`: reprodukce produkčního defektu je hotové zadání testu a bez něj se chyba vrátí.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

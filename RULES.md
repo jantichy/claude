@@ -373,7 +373,7 @@ Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit
 Od nápadu k nasazené feature vede jedna osa. Celá vypadá takhle:
 
 ```
-Zakládání   /project → /specify → /breakdown → /implement
+Zakládání   /project → /specify → /oponent → /breakdown → /implement
 Uzavírání   /review → /consistency → /cleanup
 Nasazení    /attack → /release
 ```
@@ -382,25 +382,28 @@ Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → k
 
 V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v ose nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit, aniž se změní, jak se krok volá.
 
-Nad dokumentem, který vznikne v kroku `/specify` nebo `/breakdown`, je navíc volitelný **`/oponent`** – nezávislý posudek čerstvýma očima. V ose není proto, že se nedělá vždycky; u většího projektu se ale vyplatí.
-
-**Zakládání (1–4)**
+**Zakládání (1–5)**
 
 1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*. Ten sám o sobě zelenou linku **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/green-line.sh --allow`), protože kontrakt je kód z repozitáře a hooky se na povolení neptají.
 2. **`/specify`** – produktová specifikace (`docs/requirements.md`) a návrh řešení (`docs/architecture.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
-3. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis prózou.
-4. **`/implement`** – odpracování plánu, úkol po úkolu, každý do zelené linky a do commitu.
+3. **`/oponent`** – nezávislý posudek zadání čerstvýma očima, subagenty bez kontextu session. **Do osy patří proto, že jinak návrh neměří nikdo:** role *Korektnost* v `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu – vada v ní tedy projde celou osou jako korektní, protože kód poslušně dělá to, co je v ní napsané. Je to zároveň jediná vrstva, kde se chyba násobí do všeho pod ní: `coding.md` tvrdí, že *„bezpečnost se dělá strukturou, ne kontrolou na konci“*, a ta struktura vzniká právě tady. Přeskakuje se stejným pravidlem jako každý jiný krok – drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano.
+4. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis prózou.
+5. **`/implement`** – odpracování plánu, úkol po úkolu, každý do zelené linky a do commitu.
 
-**Uzavírání (5–7)**
+**Uzavírání (6–8)**
 
-5. **`/review`** – paralelní panel rolí nad změnami: korektnost, bezpečnost, data a stavy, provoz, testy a doménové standardy z `~/Dev/context/`. Role se vybírají podle toho, čeho se změny týkají, takže nad obsahovým projektem poběží jen textové. Vlastní skill; uvnitř si volá vestavěné `/code-review` a `/security-review` jako dvě z rolí.
-6. **`/consistency`** – audit celého projektu, ne jen změn. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všechny role v `/review`, a uklidí i to, co nastřílel krok 5.
-7. **`/cleanup`** – poslední krok **uzavírání**, ne osy. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč). Běží-li po něm ještě `/attack` nebo `/release`, ty si své zápisy dělají samy a na konci se `/cleanup` **pouští znovu** – je opakovatelný a druhý průchod slouží jako verifikace.
+6. **`/review`** – paralelní panel rolí nad změnami: korektnost, bezpečnost, data a stavy, provoz, testy a doménové standardy z `~/Dev/context/`. Role se vybírají podle toho, čeho se změny týkají, takže nad obsahovým projektem poběží jen textové. Vlastní skill; uvnitř si volá vestavěné `/code-review` a `/security-review` jako dvě z rolí.
+7. **`/consistency`** – audit celého projektu, ne jen změn. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všechny role v `/review`, a uklidí i to, co nastřílel krok 5.
+8. **`/cleanup`** – poslední krok **uzavírání**, ne osy. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč). Běží-li po něm ještě `/attack` nebo `/release`, ty si své zápisy dělají samy a na konci se `/cleanup` **pouští znovu** – je opakovatelný a druhý průchod slouží jako verifikace.
 
-**Nasazení (8–9)**
+**Nasazení (9–10)**
 
-8. **`/attack`** – explorativní útok: aplikace se **spustí** a zkouší se rozbít vstupy, pořadím kroků, cizími identitami a nesmyslnými daty. Je to třetí druh záruky vedle deterministických bran a posouzení modelem, a ani jedna ho nenahrazuje – `/review` kód čte, tenhle ho spouští. **Stojí až tady schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost, kdežto `/review` je levný a běží po každé feature. Projekt bez spustitelné aplikace ho nemá.
-9. **`/release`** – nasazení do produkce. **Stojí mimo uzavírání schválně:** uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť.
+9. **`/attack`** – explorativní útok: aplikace se **spustí** a zkouší se rozbít vstupy, pořadím kroků, cizími identitami a nesmyslnými daty. Je to třetí druh záruky vedle deterministických bran a posouzení modelem, a ani jedna ho nenahrazuje – `/review` kód čte, tenhle ho spouští. **Stojí až tady schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost, kdežto `/review` je levný a běží po každé feature. Projekt bez spustitelné aplikace ho nemá.
+10. **`/release`** – nasazení do produkce. **Stojí mimo uzavírání schválně:** uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť. **Končí až uzavřením sledovacího okna**, ne nasazením – viz níž.
+
+**Osa nekončí nasazením.** `/release` má poslední fází **sledovací okno**: nasazení se nepovažuje za hotové, dokud okno neuplyne a někdo ho výslovně neuzavře větou *„okno uzavřeno, N nových chyb“*. Bez toho se nasazení uzavře tichem a scénář „spadlo to o dvě hodiny později“ – migrace s backfillem, cache, chyba, která se projeví až na produkčním objemu – nemá vlastníka.
+
+**Hotfix jde toutéž osou, jen zkráceně.** Není to jiný postup, ale tentýž s vědomě přeskočenými kroky: `/specify`, `/oponent` a `/breakdown` odpadají (opravuje se to, co je navržené, ne co se navrhuje), `/consistency` a `/attack` taky. **Nepřeskakuje se `/review` ani zelená linka** – oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější. Přeskočení se hlásí nahlas i s důvodem, jako u každého jiného kroku.
 
 **Žádný krok neopakuje, co udělal krok před ním.** Každý má v *Co skill nedělá* jmenovitě napsané, čí práci nepřebírá. Test: *kdyby ten krok neproběhl, zjistil by to někdo jiný?* Když ano, je to duplicita – stojí čas i tokeny a hlavně rozmazává odpovědnost, protože u věci, kterou hlídají tři kroky, ji nakonec neudělá pořádně žádný.
 

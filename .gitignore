@@ -52,3 +52,6 @@ __pycache__/
 
 # macOS
 .DS_Store
+
+# Běhový stav skillů (fronta nálezů z /review, /oponent – může obsahovat citlivý obsah)
+.claude/run/
