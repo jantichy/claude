@@ -229,6 +229,8 @@ Po projití všech problémů zobraz:
 **Další krok:** /cleanup
 ```
 
+**Byla-li některá oprava rozsáhlá** – přibyl nový blok textu, přepsala se celá sekce, změnilo se víc souborů naráz –, **řekni uživateli, že se vyplatí pustit audit znovu.** Čerstvě napsaný text má vad nejvíc: opakované průchody nad `~/.claude` ukázaly, že **většina nálezů každého kola vznikla opravami z kola předchozího** (druhý průchod 7 z 8, třetí 8 z 10). Po drobných opravách to naopak smysl nemá – další běh by hledal hlavně sám sebe. Doklad a čísla jsou v `~/Dev/context/decisions.md`, *Čtyři průchody `/consistency` za sebou a co z toho plyne*.
+
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Projekt je konzistentní, všechny nálezy jsou vypořádané.`
