@@ -95,7 +95,7 @@ U KAŽDÉHO NÁLEZU UVEĎ:
   „při 20 000 účastnících vyjde ruční párování na 300 hodin práce" je nález.
 - **Návrh** – dvě až tři konkrétní varianty řešení, ne jedna. Nemáš-li řešení, řekni to
   a označ nález jako otázku k rozhodnutí.
-- **Závažnost** – zásadní / důležité / drobnost
+- **Závažnost** – KRITICKÉ / STŘEDNÍ / KOSMETICKÉ, stejná škála jako v `/review` a `/consistency`, ať jdou nálezy z různých skillů porovnat. U oponentury se čte jako síla námitky: **KRITICKÉ** boří předpoklad, na kterém dokument stojí; **STŘEDNÍ** mění závěr nebo rozsah; **KOSMETICKÉ** zpřesňuje.
 
 PRAVIDLA:
 - Co je v pořádku, nepiš. Žádné shrnutí kladů, žádné „jinak je to dobře promyšlené".
@@ -133,7 +133,7 @@ U každého nejdřív vypiš:
 
 ```
 ---
-[N/celkem] NÁZEV NÁLEZU        (zásadní / důležité / drobnost)
+[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU
 Našel: <úhel, případně „2 oponenti nezávisle">
 
 Kde: <soubor, sekce, citace>
@@ -148,7 +148,17 @@ C) Nechat být – <proč to může být v pořádku>
 Doporučuji: <jedna z nich a proč>
 ```
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“ – u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Vždy nech mezi volbami i **Nechat být**.
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“ – u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Vždy nech mezi volbami i **Nechat být** a **Vrátit se k tomu později**.
+
+**Která volba znamená který stav** (bez toho nejde odpověď zpracovat):
+
+| Volba | Stav |
+|---|---|
+| kterákoliv věcná varianta (A, B, C…) | **Přijato** |
+| Nechat být | **Zamítnuto** |
+| Vrátit se k tomu později | **Odloženo** |
+
+Tool má strop čtyři volby, takže věcných variant nabízej **nejvýš dvě** – zbylá dvě místa patří *Nechat být* a *Vrátit se k tomu později*. Je-li rozumných cest víc, vyber dvě nejsilnější a ostatní zmiň v popisu nálezu.
 
 (V `/consistency` a `/review` je to naopak správně: tam má nález jedno navrhované řešení a volby jsou *Opravit / Odložit / Přeskočit*, u hromadných nálezů navíc *Rozbalit*.)
 
@@ -177,7 +187,7 @@ Ve verdiktu:
 **Předmět:** <dokumenty>
 **Úhly:** <seznam>
 
-**Nálezy:** N celkem – X zásadních, Y důležitých, Z drobností
+**Nálezy:** N celkem – 🔴 X kritických, 🟡 Y středních, 🔵 Z kosmetických
 - Zapracováno: N
 - Zamítnuto: N (zapsáno do decisions.md i s důvodem)
 - Odloženo: N (todo.md)
