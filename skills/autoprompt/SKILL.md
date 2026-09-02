@@ -42,7 +42,7 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
    ```
    ### Autoprompt v projektech
 
-   Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `### Autoprompt` v projektovém `CLAUDE.md`, kanonicky pod `## Automatické akce`. Nadpis téhle sekce se od něj schválně liší, aby ji detekce nebrala jako přepínač – tenhle soubor mechanismus definuje, nezapíná ho. Kdykoli je v projektu zapnutý autoprompt, každý můj prompt se automaticky uloží do `prompts.md` v projektu (v `docs/`, nebo v kořeni podle režimu umístění) (přes `UserPromptSubmit` hook).
+   Stav autopromptu pro projekt poznáš podle přítomnosti nadpisu `### Autoprompt` v projektovém `CLAUDE.md`, kanonicky pod `## Automatické akce`. Stejně jako výše: nadpis téhle sekce se od něj schválně liší, aby ji detekce nebrala jako přepínač. Kdykoli je v projektu zapnutý autoprompt, každý můj prompt se automaticky uloží do `prompts.md` v projektu (v `docs/`, nebo v kořeni podle režimu umístění, přes `UserPromptSubmit` hook).
    ```
 
 2. **Přidej sekci `### Autoprompt` do projektového `CLAUDE.md`** (vytvoř soubor s minimální hlavičkou, pokud neexistuje; vlož do sekce `## Automatické akce`, pokud neexistuje, tak ji vytvoř):

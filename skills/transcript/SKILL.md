@@ -12,7 +12,7 @@ Lokální, offline přepis zvukových nahrávek do Markdownu – doslovný přep
 
 ## Závislosti – zkontroluj hned na začátku
 
-Spusť `~/.claude/skills/transcript/check-deps.sh`. Když skončí nenulově, něco chybí – vypiš uživateli co, nabídni instalaci (skript vypsal přesné příkazy) a po jeho souhlasu ji proveď. Teprve s kompletními závislostmi pokračuj. Skill potřebuje:
+Spusť `/Users/honza/.claude/skills/transcript/check-deps.sh`. Když skončí nenulově, něco chybí – vypiš uživateli co, nabídni instalaci (skript vypsal přesné příkazy) a po jeho souhlasu ji proveď. Teprve s kompletními závislostmi pokračuj. Skill potřebuje:
 
 - **ffmpeg** – `brew install ffmpeg` (převod audia na WAV)
 - **whisper.cpp** – `brew install whisper-cpp` (poskytuje `whisper-cli`)
@@ -36,13 +36,13 @@ Instalace whisper.cpp/ffmpeg předpokládá [Homebrew](https://brew.sh). Vyvinut
 
 3. **Spusť přepis na pozadí:**
    ```
-   ~/.claude/skills/transcript/transcribe.sh <workdir> <workdir>/whisper-progress.log <audio1> <audio2> ...
+   /Users/honza/.claude/skills/transcript/transcribe.sh <workdir> <workdir>/whisper-progress.log <audio1> <audio2> ...
    ```
    `<workdir>` = aktuální adresář. Vzniknou v něm `<název>.txt` a `whisper-progress.log`. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
 
 4. **Průběžný stav – NEspouštěj automaticky.** Opakované časovače zbytečně plýtvají kapacitou. Progress bar vypiš **jen když se uživatel zeptá**, jak to jde:
    ```
-   python3 ~/.claude/skills/transcript/progress.py <workdir>/whisper-progress.log
+   python3 /Users/honza/.claude/skills/transcript/progress.py <workdir>/whisper-progress.log
    ```
    Ukáže procenta, zpracované/celkové minuty, kolik zbývá, tempo (× realtime) a ETA.
 

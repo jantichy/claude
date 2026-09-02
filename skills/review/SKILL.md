@@ -126,7 +126,7 @@ Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontr
 
 Výsledky si odlož – ve Fázi 4 se slijí s nálezy panelu, ale **neprocházejí ověřením ve Fázi 3**. Nástroj nehalucinuje.
 
-**Audit závislostí a scan tajemství pouští znovu i `/release`, a není to duplicita:** mezi tímhle krokem a nasazením proběhne `/consistency`, `/cleanup` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tady se ptáme „je čisté, co jsme napsali?“, tam „je čisté to, co právě teď posíláme ven?“.
+**Audit závislostí a scan tajemství pouští znovu i `/release`** – proč to není duplicita, stojí v `~/.claude/skills/release/SKILL.md`, *Fáze 1*, bod 6.
 
 ------
 

@@ -28,7 +28,7 @@ Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` o
 
 ### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 
-Nezávislý posudek dokumentu, který jsem psal s Claudem – pozicování, cenotvorby, datového modelu. Pošle na něj agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory; každý s jiným úhlem: vnitřní rozpory, nejslabší předpoklad, pohled cílové skupiny, ekonomika. Zamítnuté námitky se zapisují, aby je příští oponentura nenašla znovu jako nové.
+**Volitelný krok mimo osu** – nedělá se pokaždé, ale u většího zadání se vyplatí. Nezávislý posudek dokumentu, který jsem psal s Claudem – pozicování, cenotvorby, datového modelu. Pošle na něj agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory; každý s jiným úhlem: vnitřní rozpory, nejslabší předpoklad, pohled cílové skupiny, ekonomika. Zamítnuté námitky se zapisují, aby je příští oponentura nenašla znovu jako nové.
 
 ### [`/breakdown`](skills/breakdown/) a [`/implement`](skills/implement/) – plán a jeho odpracování
 

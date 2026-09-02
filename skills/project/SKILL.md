@@ -24,6 +24,7 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 
 ## Zásady pro celý průběh
 
+- **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu osy. Ostatní kroky osy popisují etapy jednoho běhu, kdežto tenhle je **interaktivní průvodce**: uživatel jimi prochází jeden po druhém, odpovídá a může se kdykoliv zastavit. Proto se taky číslují včetně vsuvek (`3b`, `9b`), na které se odkazuje odjinud.
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.

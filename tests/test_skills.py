@@ -106,6 +106,28 @@ class SkillOdkazy(unittest.TestCase):
                     self.fail(f"{skill}: odkaz na vnitřek `/review` mimo kontext volání:\n  {line.strip()}")
 
 
+class SablonyProtiOriginalu(unittest.TestCase):
+    """Text, který skill zapisuje jinam, se nesmí rozejít se svým originálem.
+
+    `/autoprompt` a `/autocommit` nesou opsané znění sekce, kterou mají zapsat do
+    globálního `CLAUDE.md`. Duplicitu nelze odstranit – skill ten text musí umět
+    zapsat i tam, kde ještě není –, takže ji aspoň hlídáme. Rozejít se umí tiše:
+    přeformuluje se originál a kopie ve skillu zůstane stará.
+    """
+
+    def _odstavec_pod_nadpisem(self, text, nadpis):
+        i = text.index(nadpis)
+        return text[i:].split("\n\n")[1].strip()
+
+    def test_sablona_autopromptu_sedi_s_claude_md(self):
+        claude_md = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        original = self._odstavec_pod_nadpisem(claude_md, "### Autoprompt v projektech")
+        skill = (ROOT / "skills/autoprompt/SKILL.md").read_text(encoding="utf-8")
+        # ve skillu je text odsazený uvnitř bloku, proto porovnáváme bez odsazení
+        self.assertIn(original, "\n".join(l.strip() for l in skill.splitlines()),
+            "šablona v /autoprompt se rozešla se zněním v CLAUDE.md, *Autoprompt v projektech*")
+
+
 class Struktura(unittest.TestCase):
     OSA = {"project", "specify", "breakdown", "implement",
            "review", "consistency", "cleanup", "attack", "release"}
