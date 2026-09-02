@@ -57,6 +57,16 @@ proj_for_md() {
   printf '%s' "$d"
 }
 
+# Kde se hledá kontrakt. Jedna definice pro --allow, --list i běh: dřív měl každý
+# vlastní seznam a --list se po přidání .claude/CLAUDE.md nedorovnal, takže tvrdil
+# "bez kontraktu" právě o repozitářích, kvůli kterým ta cesta vznikla.
+find_contract() {
+  for c in "$1/CLAUDE.md" "$1/.claude/CLAUDE.md" "$1/main/CLAUDE.md"; do
+    if [ -f "$c" ] && grep -q '^## Příkazy' "$c" 2>/dev/null; then printf '%s' "$c"; return 0; fi
+  done
+  return 1
+}
+
 # --- Výpis a odebrání souhlasu -------------------------------------------------
 # Souhlas musí jít i zjistit a odebrat, ne jen vydat: po naklonování cizího
 # repozitáře, kterému jsem ho omylem dal, by jinak nebyla cesta zpět.
@@ -77,7 +87,7 @@ if [ "${1:-}" = "--list" ]; then
     [ -f "$f" ] || continue
     P=$(head -1 "$f")
     if [ ! -d "$P" ]; then STATE_TXT="adresář neexistuje"
-    elif [ -f "$P/CLAUDE.md" ] && grep -q '^## Příkazy' "$P/CLAUDE.md"; then STATE_TXT="kontrakt v CLAUDE.md"
+    elif MD=$(find_contract "$P"); then STATE_TXT="kontrakt v ${MD#"$P"/}"
     else STATE_TXT="bez kontraktu – hook tu nic nespustí"
     fi
     printf '%s\n    %s\n' "$P" "$STATE_TXT"
@@ -114,11 +124,8 @@ fi
 if [ "${1:-}" = "--allow" ]; then
   need_tools
   P=$(cd "${2:-$PWD}" 2>/dev/null && pwd) || die "neznámá cesta: ${2:-$PWD}"
-  MD=""
-  for c in "$P/CLAUDE.md" "$P/.claude/CLAUDE.md" "$P/main/CLAUDE.md"; do
-    [ -f "$c" ] && grep -q '^## Příkazy' "$c" && { MD="$c"; P=$(proj_for_md "$c"); break; }
-  done
-  [ -n "$MD" ] || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Příkazy."
+  MD=$(find_contract "$P") || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Příkazy."
+  P=$(proj_for_md "$MD")
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
   chmod 700 "$(dirname "$ALLOW_DIR")" "$ALLOW_DIR" 2>/dev/null || true
   printf '%s\n' "$P" > "$ALLOW_DIR/$(proj_key "$P")" || die "nelze zapsat souhlas do $ALLOW_DIR"
