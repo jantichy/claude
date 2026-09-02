@@ -236,6 +236,10 @@ VÝSTUP: JSON, nic jiného.
 {"refuted": true|false, "reason": "čím konkrétně je vyvrácený nebo potvrzený"}
 ```
 
+**Nález doložený reprodukovatelným experimentem ověřovatele nepotřebuje** – přehraj si ten experiment sám. Ověřuje se tvrzení, ne pozorování; skeptik nad doloženým pozorováním jen stojí čas.
+
+**Deduplikuj ještě před ověřením**, ne až po něm. Role se překrývají schválně, takže tentýž problém přijde třikrát jinými slovy – posílat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď.
+
 **Vyvrácené nálezy zahoď** a jen je spočítej do souhrnu. KOSMETICKÉ nálezy se neověřují – ověření by stálo víc než jejich oprava.
 
 U nálezů z deterministické vrstvy (Fáze 1) se ověření **nedělá**.
