@@ -78,7 +78,7 @@ Role se vybírají **podle toho, čeho se soubory v rozsahu týkají**, ne podle
 | Role | Ptá se | Zapíná se, když v rozsahu je |
 |---|---|---|
 | **Korektnost** | dělá to, co má, scénář po scénáři? | jakýkoliv kód |
-| **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven |
+| **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven, **a vždy změna manifestu nebo lockfile závislostí** |
 | **Data a stavy** | migrace, konzistence, souběh, idempotence | datový model, migrace, stavový automat, fronta, plánované úlohy |
 | **Provoz a chyby** | co se stane, když to spadne? | volání cizích systémů, I/O, dlouhé operace, cokoliv s timeoutem |
 | **Testy** | co není pokryté a které testy jsou falešně zelené? | jakýkoliv kód, u kterého projekt má `test` v kontraktu příkazů |
@@ -156,7 +156,9 @@ Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontr
 
 7. **Mutation testing** – `mutation`, jen v rozsahu změn a jen když projekt příkaz má. Odpovídá na otázku, kterou pokrytí nezodpoví: *tvrdí ty testy vůbec něco?* Je pomalé; u `full` se ptej, jestli ho pouštět.
 
-8. **Pokrytí testy** – `coverage`, má-li ho projekt v kontraktu. Porovnej s prahem z `coding.md` (80 % na kritických cestách) a vypiš **naměřenou hodnotu i práh**, ne jen číslo. Samo o sobě to nic nedokazuje – na to je krok 6 – ale odhalí modul, ke kterému se testy vůbec nenapsaly.
+8. **Přístupnost a výkon** – `a11y` a `perf` z kontraktu, jsou-li v rozsahu soubory webového rozhraní. Prahy drží `~/Dev/context/web/web.md` (přístupnost: nula nálezů `serious` a `critical`; výkon: Core Web Vitals). **Deterministicky schválně:** chybějící `alt`, `label`, `lang`, nedostatečný kontrast a přeskočená úroveň nadpisu jsou zjistitelné nástrojem za nulu tokenů a pokaždé, kdežto standardová role je najde jen tehdy, když se vůbec vybere. Vypisuj **naměřenou hodnotu i práh**, ne jen počet.
+
+9. **Pokrytí testy** – `coverage`, má-li ho projekt v kontraktu. Porovnej s prahem z `coding.md` (80 % na kritických cestách) a vypiš **naměřenou hodnotu i práh**, ne jen číslo. Samo o sobě to nic nedokazuje – na to je krok 6 – ale odhalí modul, ke kterému se testy vůbec nenapsaly.
 
 **Nespuštěný nástroj není nula.** U každého kroku téhle fáze si poznamenej **nástroj a jeho návratový kód**, ne jen počet nálezů. Nástroj, který na stroji není (návratový kód 127), se do výstupu píše jako `nespuštěno – nástroj není k dispozici`, nikdy jako `0`: tři nespuštěné kontroly vypsané jako tři nuly čte uživatel jako tři čisté výsledky, což je opak pravdy. Totéž pro krok, který spadl na chybu.
 
@@ -392,6 +394,7 @@ Pak rozděl na dvě skupiny:
 
 **Sporné** – všechno ostatní, tedy vždy když existuje víc rozumných řešení nebo oprava zasahuje dál než na jedno místo:
 - **cokoliv z pracovních rolí** – korektnost, bezpečnost, data, provoz a testy jsou vždy sporné, i když se oprava zdá triviální
+- **přidání závislosti** – vždy, i když ji přidal někdo jiný a ty jen prošel diff (`~/Dev/context/coding/coding.md`, *Nová závislost je rozhodnutí, ne detail*)
 - změny struktury, layoutu, informační architektury
 - změny datového modelu, typů, API kontraktů, autorizace
 - přejmenování čehokoliv, na co se odkazuje odjinud
@@ -420,6 +423,8 @@ Deterministická vrstva  [u každého kroku nástroj · návratový kód, ne hol
 - tajemství v repu: [gitleaks / grep-heuristika / nespuštěno] rc=N → N
 - statická analýza: [semgrep / nespuštěno] rc=N → N
 - mutation score: X %   [nebo „nespuštěno – projekt nemá příkaz“]
+- přístupnost: N nálezů serious/critical (práh 0)   [nebo „nespuštěno – projekt nemá příkaz“]
+- výkon: LCP X s / CLS X / INP X ms (prahy z web.md)   [nebo „nespuštěno – projekt nemá příkaz“]
 - pokrytí: X % (práh 80 %)   [nebo „nespuštěno – projekt nemá příkaz“]
 - nezkontrolováno: [co chybělo v kontraktu příkazů]
 - nespuštěno: [nástroje, které nejsou na stroji]
