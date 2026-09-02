@@ -55,25 +55,35 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 Vyber **tři až pět úhlů** z katalogu níž podle sloupce *Kdy zvolit* – nebo si vymysli vlastní, sedne-li to líp. Výběr **vypiš uživateli** předtím, než je pustíš, ať může jeden vyměnit.
 
+**Metody – jak se dívat.** Dají se přiložit na jakýkoliv dokument; samy o sobě ale nemají věcnou oporu, proto se metodickému úhlu v zadání vždy určí doména, na kterou se má obořit (*Hraniční případy cenového modelu*, *Pre-mortem uvedení kurzu*).
+
 | Úhel | Ptá se | Kdy zvolit |
 |---|---|---|
 | **Vnitřní rozpor** | Tvrdí dokument někde něco, co jinde popírá? Sedí čísla, výčty a souhrny s obsahem? Nezůstal tam zbytek po zrušeném konceptu? | vždy – povinný |
-| **Skeptik** | Nedůvěřuj ničemu a hledej chyby. Plyne závěr z toho, co mu předchází? Je tvrzení podané jako fakt doopravdy fakt? Nesahej na čísla, právo, provoz ani technologii – ty mají vlastní úhly; ptáš se na logiku argumentace. | záložní volba pro dokument, na který nesedne žádný doménový úhel |
+| **Co chybí** | Ne co je špatně, ale co v dokumentu vůbec není. Postupuj ve dvou krocích: **(1)** vypiš hlavní entity a kroky dokumentu a u každého se zeptej, co když nenastane vůbec, nastane víckrát, jen zčásti, spolu s něčím dalším, obráceně, nebo místo něj něco jiného – co z toho dokument neřeší? **(2)** hlaš jen to, bez čeho podle dokumentu nejde jednat ani rozhodnout: nepojmenovaný vlastník, chybějící kritérium, scénář bez odpovědi. Nevypisuj chybějící kapitoly a sekce. | vždy – povinný |
 | **Předpoklady** | Vypiš předpoklady, na kterých dokument mlčky stojí a nikde je nepojmenovává. Co musí platit, aby závěr plynul z podkladu? U každého: jak se pozná, že neplatí, a co z dokumentu padá s ním. | cokoli, co tvrdí něco o světě – strategie, pozicování, koncepce, cenotvorba |
 | **Pre-mortem** | Je za osmnáct měsíců a tohle prokazatelně selhalo. Napiš, co se stalo – konkrétní sled událostí, ne obavu. Který předpoklad padl první? Jako jediný úhel smíš skládat příběh napříč doménami: nález, který leží na rozhraní dvou jiných úhlů, jinak nemá majitele. | cokoli, co se bude realizovat – PRD, koncepce, plán, cenotvorba |
+| **Hraniční případy** | Vezmi pravidla, která dokument stanoví, a zkoušej je na okraji: co když nastane obojí najednou, nic, dvakrát, nebo se to zruší uprostřed? Platí to pro pravidlo obchodní a procesní stejně jako pro vstup programu – souběh dvou slev, přechod na vyšší tarif v půlce období, dvojí nárok téhož zákazníka. Neptej se na chování kódu, ale na to, jestli dokument na ten případ dává odpověď – a jestli dává jen jednu. | datový model, PRD, architektura, cenotvorba, obchodní podmínky – všude, kde dokument stanoví pravidlo s okraji |
 | **Alternativy a řez** | Splnil by týž cíl jednodušší nebo úplně jiný postup? Které varianty autor zvažoval a proč je zamítl – je to zdůvodnění v dokumentu, nebo jen v jeho hlavě? Co se stane, když se nezmění nic? Která část jde vyškrtnout, aniž zbytek přestane dávat smysl? | cokoli, co navrhuje řešení – PRD, koncepce, architektura, datový model, cenotvorba |
 | **Cíl a měřitelnost** | Je napsané, čeho to má dosáhnout? Podle čeho se za rok pozná, že to vyšlo, a podle čeho, že ne? Má cíl číslo, práh a termín, nebo je to próza? Co je vědomě mimo rozsah – a je to napsané, nebo se to jen předpokládá? | strategie, pozicování, PRD, plán, analytická dokumentace |
-| **Cílová skupina** | Čte to očima persony, které se to týká. Rozumí tomu? Koupí si to? Co ji odradí? Co v tom nenajde? | pozicování, prodejní text, PRD, cenotvorba |
-| **Ekonomika** | Sedí čísla? Break-even, cena, kapacita, náklady na provoz. Co se stane při desetinásobku a při desetině? | cenotvorba, strategie, obchodní model |
-| **Právo a compliance** | Osobní údaje, spotřebitelské právo, daně, autorská práva, smluvní závazky. Co je napsané tak, že to nejde dodržet? | cenotvorba, obchodní podmínky, analytická dokumentace (souhlas, osobní údaje) |
-| **Provoz** | Kdo to bude reálně dělat, jak často a co se stane, když to neudělá? Co vyžaduje ruční zásah a neškáluje? | koncepce, PRD, analytická dokumentace – cokoli s opakovanou ruční prací |
-| **Konkurence a trh** | Existuje to už? Čím se to liší? Proč by si někdo vybral tohle? | pozicování, strategie, nový produkt nebo služba |
-| **Co chybí** | Ne co je špatně, ale co v dokumentu vůbec není. Postupuj ve dvou krocích: **(1)** vypiš hlavní entity a kroky dokumentu a u každého se zeptej, co když nenastane vůbec, nastane víckrát, jen zčásti, spolu s něčím dalším, obráceně, nebo místo něj něco jiného – co z toho dokument neřeší? **(2)** hlaš jen to, bez čeho podle dokumentu nejde jednat ani rozhodnout: nepojmenovaný vlastník, chybějící kritérium, scénář bez odpovědi. Nevypisuj chybějící kapitoly a sekce. | vždy – povinný |
-| **Technická proveditelnost** | Dá se to postavit tak, jak je to popsané? Kde je skryté riziko? | architektura, datový model, PRD, analytická dokumentace |
 | **Zneužití** | Kdo má motiv to obejít – uživatel, konkurent, robot, insider? Co se dá vytěžit z mezery mezi tím, co dokument slibuje, a tím, co vymáhá? Co jde přečíst, změnit nebo získat zadarmo, aniž na to má někdo nárok? Kde dokument předpokládá, že se aktér chová slušně? | všude, kde jsou peníze, osobní údaje, přihlašování nebo cizí vstup |
-| **Hraniční případy** | Co se stane, když je vstup prázdný, obojí najednou, uprostřed zrušené, dvakrát za sebou? | datový model, PRD, cenotvorba – všude, kde dokument stanoví pravidlo s okraji |
+| **Skeptik** | Nedůvěřuj ničemu a hledej chyby. Plyne závěr z toho, co mu předchází? Je tvrzení podané jako fakt doopravdy fakt? Nesahej na čísla, právo, provoz ani technologii – ty mají vlastní úhly; ptáš se na logiku argumentace. | záložní volba pro dokument, na který nesedne žádný doménový úhel |
 
-**Pravidlo:** úhel *Vnitřní rozpor* a *Co chybí* ber jako povinné, ať je dokument jakýkoliv. Zbytek podle povahy.
+**Domény – na co se dívat.** Nesou znalost oboru, ale bez metody sbírají povrch.
+
+| Úhel | Ptá se | Kdy zvolit |
+|---|---|---|
+| **Ekonomika provozu** | Sedí čísla? Break-even, cena, marže, kapacita, náklady na provoz. Kdo to bude reálně dělat, jak často a co se stane, když to neudělá? Co vyžaduje ruční zásah? Co se rozbije při desetinásobku a co při desetině? | cenotvorba, strategie, obchodní model, koncepce, PRD, analytická dokumentace |
+| **Právo a compliance** | Osobní údaje, spotřebitelské právo, daně, autorská práva, smluvní závazky. Co je napsané tak, že to nejde dodržet? | cenotvorba, obchodní podmínky, analytická dokumentace (souhlas, osobní údaje) |
+| **Konkurence a trh** | Existuje to už? Čím se to liší? Proč by si zákazník vybral tohle, a ne cizí nabídku nebo to, co používá dneska? Obstojí ta odlišnost, když si ji ověří? (Jestli to má vůbec smysl dělat, řeší *Alternativy a řez* – tebe zajímá volba zákazníka, ne náklad příležitosti autora.) | pozicování, strategie, nový produkt nebo služba |
+| **Technická proveditelnost** | Dá se to postavit tak, jak je to popsané? Kde je skryté riziko? | architektura, datový model, PRD, analytická dokumentace |
+| **Cílová skupina** | Čte to očima persony, které se to týká – a ta nezná alternativy, zná jen tenhle text. Rozumí tomu? Věří tomu? Co ji odradí, co v tom nenajde, kde přestane číst? (Srovnání s tím, co nabízí někdo jiný, nech *Konkurenci a trhu* – ten na to má rešerši, ty ne.) | pozicování, prodejní text, PRD, cenotvorba |
+
+**Pravidla výběru:**
+
+- Úhel *Vnitřní rozpor* a *Co chybí* ber jako **povinné**, ať je dokument jakýkoliv.
+- Vyber **aspoň jednu položku z každého bloku**. Samé domény dají tři audity a nula oponentur; samé metody tři obecné kritiky bez věcné opory.
+- Metodický úhel pouštěj **vždy s určenou doménou** – vypiš ji do jeho zadání. Metoda bez domény je slepá.
 
 ------
 
