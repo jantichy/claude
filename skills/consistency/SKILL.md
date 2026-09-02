@@ -178,7 +178,7 @@ Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
 Mechanické nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
 
-1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/coding.md`): `typecheck` a `test` po každé opravě, která se dotkla kódu, `build` jen když je rychlý a oprava se ho týká. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
+1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/coding.md`): celou **zelenou linku** (`typecheck`, `lint`, `test`) po každé opravě, která se dotkla kódu, `build` jen když je rychlý a oprava se ho týká. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N mechanických)
@@ -205,7 +205,7 @@ Položky vyhodnocené při /consistency auditu jako „neopravovat". Při dalš�
   - Lokace: <soubor:řádek, ...>
 ```
 
-Datum vezmi z `Today's date is …` v system-reminderu.
+Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 **Verifikace po opravě.** Po každé odsouhlasené opravě platí bod 1 z *Fáze 4* – příkazy z *Kontraktu příkazů*, chybějící krok přeskočit nahlas, u projektu bez kontraktu ověřit aspoň čtením, že cíl opravovaného odkazu existuje.
 
@@ -225,6 +225,8 @@ Po projití všech problémů zobraz:
 - ⏭️ Přeskočeno (zapsáno do CLAUDE.md → Consistency): N problémů
 
 [Pokud jsou odložené: seznam odložených s jejich popisy]
+
+**Další krok:** /cleanup
 ```
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:

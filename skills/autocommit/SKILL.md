@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob]
 
 ## Co skill dělá
 
-Zapíná/vypíná autocommit pro aktuální projekt – Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce Autocommit.
+Zapíná/vypíná autocommit pro aktuální projekt – Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce *Autocommit v projektech*.
 
 Stav v projektu = přítomnost nadpisu `### Autocommit` v projektovém `CLAUDE.md` (kanonicky pod `## Automatické akce`). Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. Nadpis `### Autocommit v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Najdeš-li sekci `Autocommit` na jiné úrovni nebo mimo `## Automatické akce`, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar.
 

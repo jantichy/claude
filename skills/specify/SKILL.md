@@ -29,6 +29,8 @@ Mají **jinou životnost**. Produktový záměr se mění zřídka; technické �
 
 Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → `architecture.md`. Ne → `requirements.md`.
 
+V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to druhý krok zakládání: navazuje na `/project` a předává na `/breakdown`.
+
 ## Co skill nedělá
 
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá brána – viz *Zákaz implementace*.

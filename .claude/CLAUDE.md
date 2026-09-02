@@ -26,7 +26,7 @@ Kontrakt příkazů (`~/Dev/context/coding/coding.md`, *Ověřování a brány k
 
 `shellcheck` běží se `--severity=info`, ne se `--severity=style`: stylové nálezy jsou preference a brána, která padá na preferenci, se obchází.
 
-`test` jsou **meta-testy nad konfigurační vrstvou** (`tests/test_skills.py`): hlídají, že hlavičky skillů parsují a sedí s adresářem, že režim popsaný v těle je i v `argument-hint`, že odkazy na soubory vedou někam, že se skilly odkazují na kroky osy a ne na jejich vnitřky, že kroky osy mají sekci *Co skill nedělá* a že README zná každý skill. Používají jen stdlib – brána, která si žádá instalaci balíčku, se v cizím prostředí neprojeví jako nález, ale jako rozbitý nástroj, a ten se obchází.
+`test` jsou **meta-testy nad konfigurační vrstvou** (`tests/test_skills.py`): hlídají, že hlavičky skillů parsují a sedí s adresářem, že popis říká, kdy se skill použije, že režim popsaný v těle je i v `argument-hint`, že odkazy na soubory vedou někam, že se skilly odkazují na kroky osy a ne na jejich vnitřky, že kroky osy mají sekci *Co skill nedělá* a že README zná každý skill. Používají jen stdlib – brána, která si žádá instalaci balíčku, se v cizím prostředí neprojeví jako nález, ale jako rozbitý nástroj, a ten se obchází.
 
 Pomlčka u `typecheck` znamená **vědomě se neaplikuje**: repozitář je konfigurace, ne program, a nemá co typovat. Kdyby ten řádek chyběl úplně, hook by po každém tahu hlásil, že se něco nezkontrolovalo, a to by byl trvalý šum místo informace.
 

@@ -407,7 +407,7 @@ Navrhované řešení:
    - **YYYY-MM-DD** – *<title>* (role: <role>, podklad: <basis>): <důvod>
      - Lokace: <soubor:řádek, ...>
    ```
-   - Datum vezmi z `Today's date is ...` v system-reminderu.
+   - Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
    - **Bezpečnostní nález sem nezapisuj bez výslovného potvrzení** a bez důvodu, který obstojí i za rok. „Zatím to nikdo nezneužil“ důvod není.
 
 ------
