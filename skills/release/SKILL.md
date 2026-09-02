@@ -73,6 +73,7 @@ Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` ne
 | Cíl není potomkem nasazovací větve | Fast-forward nejde. Řekni to a nabídni volby; nikdy neřeš silou (`--force`) bez výslovného pokynu. |
 | Cíl je **starší** než to, co je v produkci | **Tohle je návrat, ne vydání.** Řekni to nahlas – a hlavně viz *Migrace* níž, protože data se s kódem nevrátí. |
 | Cíl není na `main` (feature větev) | Nasazuje se něco, co neprošlo integrací. Legitimní u hotfixu, jinak varovný signál – zeptej se, jestli to je záměr. |
+| Cíl je zadaný ručně (větev, tag, hash) | **Zeptej se, jestli uživatel ten konkrétní bod historie viděl na preview.** U výchozího `main` se neptej: preview vzniklo mergem a testování proběhlo průběžně, o to se `/release` nestará. |
 
 **Brány běží nad nasazovaným commitem, ne nad pracovním stromem.** Zadal-li uživatel jiný cíl než `main`, přepni se na něj (nejlépe do samostatného worktree) a zelenou linku, build i audit spusť tam. Kontrolovat něco jiného, než se nasazuje, je horší než nekontrolovat nic – dává to falešnou jistotu.
 
@@ -146,7 +147,7 @@ Teprve teď se ptáš, a ptáš se **jednou otázkou přes `AskUserQuestion`** n
 **Po nasazení sleduji:** <co konkrétně a jak dlouho>
 ```
 
-Volby: **Nasadit** / **Nejdřív na preview** / **Zrušit**.
+Volby: **Nasadit** / **Zrušit**.
 
 Bez výslovné odpovědi se nenasazuje. Ticho není souhlas.
 
@@ -156,10 +157,11 @@ Bez výslovné odpovědi se nenasazuje. Ticho není souhlas.
 
 **Platforma s auto-deployem** (Vercel, Netlify, Cloudflare Pages) – nasazuje se pushnutím, ne příkazem:
 
-1. **Nejdřív preview.** `main` (nebo feature větev) má vlastní preview URL. Otevři ji a projdi na ní smoke test z Fáze 5, **než** se cokoliv povýší. Preview je zdarma a je to jediné místo, kde se chyba dá najít bez následků.
-2. **Povýšení do nasazovací větve** teprve po zeleném preview – ideálně fast-forward merge `main` → `production`, ať je produkce vždy přesně nějakým bodem historie `main`, ne samostatnou linií. **Tenhle krok je samotné nasazení**, takže se dělá vědomě a jako poslední, ne mimochodem uprostřed jiné práce.
-3. **Sleduj build na platformě** a jeho log. Build padá jinak než lokální – kvůli proměnným, verzi Node a cache.
-4. **Tag.** Označ vydání tagem, ať je co vrátit a proti čemu příště diffovat.
+1. **Povýšení do nasazovací větve** – fast-forward merge `main` → `production`, ať je produkce vždy přesně nějakým bodem historie `main`, ne samostatnou linií. **Tenhle krok je samotné nasazení**, takže se dělá vědomě a jako poslední, ne mimochodem uprostřed jiné práce.
+
+   **Preview se tu nestaví ani neověřuje.** Vzniklo samo mergem do `main` a otestované bylo předtím – to je celý smysl oddělené nasazovací větve. Opakovat ho tady by znamenalo čekat na něco, co už proběhlo.
+2. **Sleduj build na platformě** a jeho log. Build padá jinak než lokální – kvůli proměnným, verzi Node a cache. **Tohle je první místo, kde se nový kód potká s produkčním prostředím**, takže se to nepřeskakuje ani u změny, která na preview běžela bez problému.
+3. **Tag.** Označ vydání tagem, ať je co vrátit a proti čemu příště diffovat.
 
 **Jiné prostředí** (VPS, kontejner, klasický hosting) – použij příkaz z `## Nasazení`; chybí-li, vyžádej si ho a zapiš. Nikdy nevymýšlej deploy příkaz sám: špatně odhadnutý cíl přepíše cizí web.
 
