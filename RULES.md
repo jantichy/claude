@@ -327,6 +327,8 @@ vždycky; u většího projektu se ale vyplatí.
 
 8. **`/release`** – nasazení do produkce. **Stojí mimo uzavírání schválně:** uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť.
 
+**Žádný krok neopakuje, co udělal krok před ním.** Každý má v *Co skill nedělá* jmenovitě napsané, čí práci nepřebírá. Test: *kdyby ten krok neproběhl, zjistil by to někdo jiný?* Když ano, je to duplicita – stojí čas i tokeny a hlavně rozmazává odpovědnost, protože u věci, kterou hlídají tři kroky, ji nakonec neudělá pořádně žádný.
+
 **Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 
 **Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, zelenou linku ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
