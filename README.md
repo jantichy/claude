@@ -12,7 +12,7 @@ Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Vě
 
 ### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
-Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i celá osa životního cyklu práce – od `/project` až po `/release` – která říká, co je čí krok a co který krok naopak dělat nemá.
+Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i celá osa životního cyklu práce – od `/project` až po `/release` – která říká, co je čí krok a co který krok naopak dělat nemá. A tabulka, podle které se vybírá model a effort pro každý typ úkolu: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**.
 
 ## Skilly, jak jdou po sobě
 
@@ -97,6 +97,10 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 ### [`green-line.sh`](green-line.sh) – nad rozbitým projektem se práce neuzavře
 
 `Stop` hook, který před ukončením tahu spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu nic neví: přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí, takže je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic. Protože je ten kontrakt kód ležící v repozitáři a hooky se na povolení neptají, nespustí v projektu nic, dokud pro něj nevydám souhlas (`--allow`, výpis `--list`, odebrání `--revoke`). Každý krok má strop 60 sekund a když neprojde ani druhý pokus nad týmž stavem, hook pustí dál a nahlas to řekne. Rozlišuje přitom dvě různé věci: **test, který našel chybu**, tah zablokuje, kdežto **krok, který vůbec nejde spustit** (chybí nástroj), jen ohlásí – v tom případě není co opravovat na kódu, ale na prostředí.
+
+### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
+
+Skilly a pravidla jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor, co mezitím zmizel, nebo skill, který v README chybí. Tyhle testy to hlídají – stojí nula tokenů a běží v zelené lince po každém tahu. Napsal jsem je až po roce používání a **první běh hned našel tři vady**, které mi při ručním čtení třikrát utekly. Jen standardní knihovna Pythonu, žádná instalace.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 
