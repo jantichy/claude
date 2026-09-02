@@ -281,7 +281,10 @@ out/
 *.log
 .idea/
 .vscode/
+.claude/run/
 ```
+
+`.claude/run/` je běhový stav přerušitelných skillů (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*). **Řádek doplň i do existujícího `.gitignore`**, který ho ještě nemá – mění se po každém tahu, takže v projektu se zapnutým autocommitem by se donekonečna commitoval. Zbytek existujícího souboru nech být.
 
 Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a vypiš, co jsi přidal.
 

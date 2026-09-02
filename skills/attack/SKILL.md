@@ -88,7 +88,11 @@ Zjištěné shrň do pěti řádků a **zeptej se na potvrzení, než něco spus
 
 ## Fáze 1 – Zvednout aplikaci
 
+**Nejdřív se podívej, jestli po tobě něco nezůstalo.** Existuje-li `.claude/run/attack.json` z předchozího běhu (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*), znamená to, že se minulý běh nedokončil – vypiš, co je v něm zapsané, a **nabídni úklid, než cokoliv zvedneš**. Zkontroluj taky, jestli na cílovém portu už něco neběží: pokud ano, zastav se a zeptej se. Útok proti serveru ze starého kódu měří něco jiného, než si myslíš, a jeho reprodukční postupy pak nikde neplatí.
+
 Spusť `dev` na pozadí, počkej, až odpoví, a ověř, že běží. Port si zjisti z výstupu, ne z domněnky.
+
+**Co zvedneš, zapiš** do `.claude/run/attack.json`, hned jak to běží: porty, PID, kontejnery, databázový stack, a později i e-mailové domény přidělené jednotlivým agentům. Fáze 6 z něj uklízí. Bez toho záznamu je přerušený běh nezvládnutelný: na stroji zůstane běžet server a kontejnery, v testovací databázi rozsypaná data, a nikdo neví, co z toho tam bylo předtím a co přibylo teď.
 
 Když se aplikace nezvedne, **je to nález** – ale jiného druhu: zastav se a nahlas to. Útočit na nespuštěnou aplikaci nejde a nezvednutelný projekt je problém sám o sobě.
 
@@ -241,13 +245,13 @@ Při volbě **Opravit**:
 
 Při volbě **Odložit** zapiš nález do `docs/todo.md` **i s reprodukčním postupem** – bez něj je za měsíc nepoužitelný.
 
-Při volbě **Přeskočit** se zeptej na důvod a zapiš do projektového `CLAUDE.md` do kapitoly `## Review`, stejným formátem jako `/review` (nálezy odtud a odtamtud se přeskakují ze stejných důvodů a hledat je na dvou místech nemá smysl). Řádek doplň o `(útok)`. **Nález, který dovolí akci bez oprávnění nebo ztrátu dat, sem nezapisuj bez výslovného potvrzení.**
+Při volbě **Přeskočit** se zeptej na důvod a zapiš do projektového `CLAUDE.md` do kapitoly `## Review`, stejným formátem jako `/review` (datum vyrob `date +%F`, nepiš ho z kontextu – `~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*) (nálezy odtud a odtamtud se přeskakují ze stejných důvodů a hledat je na dvou místech nemá smysl). Řádek doplň o `(útok)`. **Nález, který dovolí akci bez oprávnění nebo ztrátu dat, sem nezapisuj bez výslovného potvrzení.**
 
 ------
 
 ## Fáze 6 – Úklid a shrnutí
 
-**Zastav, co jsi zvedl** – dev server, databázový stack, kontejnery, otevřené stránky prohlížeče. Ověř to, ne že to předpokládej: běžící server na portu rozbije příští běh.
+**Zastav, co jsi zvedl** – čti to z `.claude/run/attack.json`, ne z paměti: dev server, databázový stack, kontejnery, otevřené stránky prohlížeče. Ověř to, ne že to předpokládej: běžící server na portu rozbije příští běh. Když je hotovo, soubor smaž – jeho existence je pro příští běh signál, že se ten předchozí nedokončil.
 
 **Rozliš, co jsi zvedl ty, a co běželo předtím.** Zvedl-li jsi kvůli útoku infrastrukturu, která tu předtím nebyla – kontejnerový runtime, lokální databázový stack –, **zeptej se, jestli ji zastavit**: uživatel na ní může chtít pokračovat, ale nechat běžet něco, co si nezapnul, je horší. Co běželo už předtím, nech být.
 
@@ -266,6 +270,12 @@ Cíl: <adresa> · Vektory: [které]
 **Nezkoušelo se:** [vektory vynechané kvůli hranicím, nebo „nic"]
 
 **Prostředí:** [co bylo zastaveno · co jsem kvůli útoku zvedl a zůstalo běžet, s důvodem]
+
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody osou`** (`~/Dev/context/structure/structure.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
+
+```
+- **YYYY-MM-DD** · `/attack` · `<short HEAD>` · <rozsah a vektory> · N nálezů (X opraveno, Y odloženo, Z won't fix)
+```
 
 **Další krok:** /release · po nasazení ještě `/cleanup` podruhé (`~/.claude/RULES.md`, *Životní cyklus práce*, krok 7)
 ```

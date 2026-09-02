@@ -62,6 +62,7 @@ Sjednoť commitnuté změny na větvi s necommitnutými. Vynech smazané soubory
 
 ### 0.2 Načti kontext projektu
 
+- **`.claude/run/review.json`**, pokud existuje – přerušený běh. Viz *Fáze 3*, kde vzniká; nabídni navázání dřív, než začneš cokoliv počítat znovu.
 - Projektový `CLAUDE.md` – zejména `## Příkazy` (*Kontrakt příkazů*), `### Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
 - **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Ty se **vůbec neuvádějí** – ani v tomhle běhu, ani v žádném dalším. U staršího projektu může mít ještě starý název `## Standards`; přečti obojí a při prvním zápisu ji přejmenuj.
 - **`## Výjimky z obecných pravidel`** – vědomé odchylky projektu. Co je tam popsané jako výjimka, není nález.
@@ -320,6 +321,16 @@ KOSMETICKÉ nálezy se neověřují – ověření by stálo víc než jejich op
 
 U nálezů z deterministické vrstvy (Fáze 1) se ověření **nedělá**.
 
+### Ověřený seznam zapiš na disk, než půjdeš dál
+
+Hotovou frontu ulož do **`.claude/run/review.json`** (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "head": "<short HEAD>", "scope": "...", "roles": [...], "findings": [{...nález..., "status": "open"}]}`.
+
+**Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 6 a 7 s ním pak dlouze interagují **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
+
+**Na startu skillu** (Fáze 0) se proto podívej, jestli `.claude/run/review.json` už neexistuje. Existuje-li a sedí `head` na aktuální HEAD, **nabídni navázání** místo nového běhu – stejně jako to `/implement` dělá s rozpracovaným plánem. Nesedí-li HEAD, řekni to a zeptej se: strom se od té fronty posunul, takže část nálezů může být neaktuální.
+
+**Průběžně do něj zapisuj stav** každého nálezu (`fixed`, `deferred`, `wontfix`, `open`), jak jimi procházíš. Po dokončení Fáze 8 soubor smaž.
+
 ------
 
 ## Fáze 4 – Zpracování výsledků
@@ -484,6 +495,12 @@ Rozsah: [změny na větvi / celý projekt] · Role: [které]
 **Nespuštěno:** [nástroje, které na stroji nejsou – gitleaks, semgrep, shellcheck –, nebo „nic“]
 
 **Další krok:** /consistency
+```
+
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody osou`** (`~/Dev/context/structure/structure.md`, *`done.md`*) a **smaž `.claude/run/review.json`**:
+
+```
+- **YYYY-MM-DD** · `/review` · `<short HEAD>` · <rozsah> · N nálezů (X opraveno, Y odloženo, Z won't fix)
 ```
 
 Když běžel jen výchozí rozsah a projekt je starší, připomeň, že `/review full` projede i to, čeho se tahle větev nedotkla.

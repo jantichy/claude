@@ -131,6 +131,73 @@ class SablonyProtiOriginalu(unittest.TestCase):
             "šablona v /autoprompt se rozešla se zněním v CLAUDE.md, *Autoprompt v projektech*")
 
 
+class NosneCasti(unittest.TestCase):
+    """Ne že skill má správný tvar, ale že v něm je to, co nese jeho funkci.
+
+    Dosavadní testy hlídají hlavičky, odkazy a nadpisy – tedy tvar. Z `/review` šlo
+    smazat celou fázi ověřování nálezů, tu, o které skill sám píše, že na ní stojí
+    jeho použitelnost, a zelená linka zůstala zelená. Brána, která nemůže spadnout
+    na věcné vadě, je horší než chybějící brána: uspokojuje pravidlo *Ověřitelná
+    brána místo dojmu*, aniž cokoliv doloží.
+
+    Pořád je to jen tvar – text se nespouští a nic tu neověřuje, že instrukce
+    fungují. Je to ale tvar toho, co funkci nese, a to je rozdíl, na kterém záleží.
+    """
+
+    def test_review_ma_overeni_nalezu(self):
+        """Panel bez skeptika je generátor pravděpodobně znějících nálezů.
+
+        Skill to o sobě píše sám: „bez třetí vrstvy je panel k ničemu“. Kdyby ta
+        fáze vypadla, výstup by se navenek nezměnil – jen by přestal být pravdivý.
+        """
+        text = body(ROOT / "skills/review/SKILL.md")
+        for kus in ("Ověření nálezů", "refuted", "Tenhle nález se snaž VYVRÁTIT"):
+            self.assertIn(kus, text, f"/review přišel o ověřování nálezů: chybí {kus!r}")
+
+    def test_zadani_pro_agenty_maji_povinna_pole(self):
+        """Nález bez `basis` a `severity` nejde ani ověřit, ani zařadit.
+
+        `severity` rozhoduje, jestli nález půjde na ověření; `basis` je to, o co se
+        opírá. Bez nich je výstup panelu próza, ne data.
+        """
+        for jmeno in ("review", "attack"):
+            with self.subTest(skill=jmeno):
+                text = body(ROOT / f"skills/{jmeno}/SKILL.md")
+                self.assertIn('"severity"', text, f"/{jmeno}: zadání agentů nemá pole severity")
+        self.assertIn('"basis"', body(ROOT / "skills/review/SKILL.md"),
+                      "/review: zadání rolí nemá pole basis")
+
+    def test_datum_se_vyrabi_prikazem(self):
+        """Zapamatované datum se tiše rozejde se skutečností a vypadá správně.
+
+        `~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit
+        příkazem*. Skill, který někam zapisuje datovaný záznam, musí ten příkaz
+        jmenovat, ne popisovat, co má být uvnitř.
+        """
+        # Hledá se tvar datovaného ZÁZNAMU (`- **YYYY-MM-DD** – …`), ne jakýkoli
+        # výskyt masky: /specify jmenuje YYYY-MM-DD v cestě, kterou naopak přepisuje.
+        for skill in SKILLS:
+            text = body(skill)
+            if "**YYYY-MM-DD**" not in text:
+                continue
+            with self.subTest(skill=skill.parent.name):
+                self.assertIn("date +%F", text,
+                    f"{skill.parent.name}: zapisuje datovaný záznam, ale nejmenuje `date +%F`")
+
+    def test_behovy_stav_je_gitignorovany(self):
+        """Stav, který se mění po každém tahu, nesmí skončit v gitu.
+
+        `~/Dev/context/structure/structure.md`, *Běhový stav skillů*. Skill, který
+        do `.claude/run/` zapisuje, spoléhá na to, že `/project` ten řádek do
+        `.gitignore` doplní – jinak ho v projektu s autocommitem začne commitovat.
+        """
+        pisou = [s.parent.name for s in SKILLS if ".claude/run/" in body(s)]
+        if not pisou:
+            self.skipTest("do .claude/run/ zatím nikdo nezapisuje")
+        self.assertIn(".claude/run/", body(ROOT / "skills/project/SKILL.md"),
+            f"skilly {pisou} zapisují do .claude/run/, ale /project ho nedává do .gitignore")
+
+
 class Struktura(unittest.TestCase):
     OSA = {"project", "specify", "breakdown", "implement",
            "review", "consistency", "cleanup", "attack", "release"}
