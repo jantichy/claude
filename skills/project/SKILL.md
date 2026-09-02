@@ -408,6 +408,8 @@ U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvypl
 
 `worktree.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
 
+`brand/brand.md` se tu nenabízí taky schválně, ale z jiného důvodu: je to **korpus, ne checklist**. Neříká, jak se něco dělá, ale jak to je – a projekt, který píše ven, si ho načte podle potřeby přes `~/.claude/CLAUDE.md`, kde je vedený mezi podmíněnými doménovými znalostmi. Importovat ho natvrdo do každého takového projektu by znamenalo vozit korpus tam, kde stačí sáhnout.
+
 ### Profil organizace
 
 Když projekt vzniká **pro konkrétní organizaci**, zeptej se, jestli má profil v `~/Dev/context/organizations/`, a když ano, přidej ho do importů:

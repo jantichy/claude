@@ -92,7 +92,7 @@ Role se vybírají **podle toho, čeho se soubory v rozsahu týkají**, ne podle
 | `design/slides.md` | promítané prezentace (**navíc** k `design/design.md`) |
 | `training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) |
 
-`worktree/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/`: **je to korpus, ne standard.**
+`worktree/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
 
 Vypiš uživateli, které role a sady jsi vybral a proč. Když si u některé nejsi jistý, radši ji zahrň.
 
