@@ -1,6 +1,6 @@
 ---
 name: review
-description: Skill se použije, když uživatel zadá "/review" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz, testy a soulad s doménovými standardy (coding, web, admin, analytics, text, design). Pouští deterministické nástroje, pak paralelní panel rolí, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
+description: Skill se použije, když uživatel zadá "/review" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz, testy a soulad s doménovými standardy (coding, web, admin, analytics, text, design, training). Pouští deterministické nástroje, pak paralelní panel rolí, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
 allowed-tools: [Read, Grep, Glob, Bash, Edit, Write, Agent, AskUserQuestion, Skill]
 ---
 

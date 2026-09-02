@@ -340,7 +340,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 ## Zadání hotové
 
 **Dokumenty**
-- docs/requirements.md    – <počet> sekcí
+- docs/requirements.md – <počet> sekcí
 - docs/architecture.md – <počet> sekcí   (nebo „přeskočeno: <důvod>")
 
 **Zapsáno mimo ně**

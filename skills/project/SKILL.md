@@ -46,7 +46,7 @@ V režimu *existující projekt* si nejdřív udělej inventuru a **vypiš ji u�
 | Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, autoprompt, paměť, typ, importy)? |
 | Standardní struktura | existuje `README.md`, `todo.md`, `done.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 4a) |
 | *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni stub s `@main/CLAUDE.md`? |
-| Starší pojmenování | existuje `TODO.md` v rootu, `docs/rozhodnuti.md`, `docs/zasady.md`? (viz Krok 4) |
+| Starší pojmenování | existuje `TODO.md` v rootu, `rozhodnuti.md`, `zasady.md` (na místě podle režimu z Kroku 4a)? (viz Krok 4) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
 
 Pak řekni, že se teď budeš ptát postupně, a pokračuj. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.**
@@ -136,7 +136,7 @@ Ve worktree layoutu jsou `CLAUDE.md` **dva** a mají různý účel. Zaměnit je
 | Soubor | Co v něm je | Píší do něj kroky |
 |---|---|---|
 | `<projekt>/CLAUDE.md` (kontejner) | jen popis layoutu, odchylky a import toho druhého | pouze tenhle krok 3b |
-| `<projekt>/main/CLAUDE.md` (**projektový**) | všechno ostatní – metadata, struktura, autocommit, autoprompt, paměť, typ, doménové importy | kroky 2, 4, 6, 7, 8, 9, 10 |
+| `<projekt>/main/CLAUDE.md` (**projektový**) | všechno ostatní – metadata, struktura, autocommit, autoprompt, paměť, typ, doménové importy | kroky 2, 3, 4, 6, 7, 8, 9, 9b, 10 |
 
 **Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se `main/CLAUDE.md`.** Totéž platí pro `README.md`, `docs/*` a `.gitignore` – všechny patří do `main/`. Jedinou výjimkou je `.claude/settings.local.json` (krok 7), který naopak musí být v **kořeni kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte.
 
