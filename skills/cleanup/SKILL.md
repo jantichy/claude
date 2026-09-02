@@ -286,44 +286,12 @@ Nezapisuj do žádného souboru.
 **Další krok:** /attack a /release, nasazuje-li se – jinak je práce uzavřená
 ```
 
-Zakonči **jednoznačným verdiktem** – jednou z těchto dvou vět, nikdy ničím vágním mezi tím:
+Zakonči **jednoznačným verdiktem** – jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Ze session je všechno zapsané, můžeš pokračovat, zkompaktovat i odejít.`
+- **Stojíš-li ve worktree větve** (`~/Dev/context/worktree/worktree.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji dokončit.`
 - `Zapsané zatím není všechno – brání tomu: <konkrétní seznam>.`
 
-**Nenabízej „opustit session“ jako jedinou cestu.** Zápis je hotový, ale to neznamená, že je hotová práce – uživatel klidně pokračuje dál v téže session a `/cleanup` mu jen zajistil, že ho kompaktace nepřipraví o kontext.
+**Nenabízej „opustit session“ jako jedinou cestu.** Zápis je hotový, ale to neznamená, že je hotová práce: uživatel klidně pokračuje dál v téže session a `/cleanup` mu jen zajistil, že ho kompaktace nepřipraví o kontext. Ve worktree layoutu to platí dvojnásob – „můžeš odejít“ tam neodpovídá na otázku, kterou má uživatel v hlavě, totiž co s tou větví.
 
-------
-
-## Fáze 6 – Dokončení větve
-
-**Jen ve worktree layoutu** (`~/Dev/context/worktree/worktree.md`) a jen tehdy, **stojíš-li v pracovním adresáři větve**, ne v `main/`. Poznáš to podle kontejneru s `.bare` vedle sebe a podle toho, že `git rev-parse --abbrev-ref HEAD` nevrací hlavní větev.
-
-Tam totiž „ze session je zapsáno“ neodpovídá na otázku, kterou má uživatel v hlavě: **co s tou větví?** Nechat ji otevřenou je legitimní a často správné – větev je pracovní prostor, ne obálka na jeden příkaz –, ale musí to být volba, ne důsledek toho, že se o ní nemluvilo.
-
-**Nejdřív zjisti, jestli je vůbec co dokončovat:**
-
-```
-git status --porcelain                          # čistý strom?
-git log --oneline <hlavní větev>..HEAD          # co větev přináší
-git rev-list --count HEAD..origin/<hlavní>      # odskočila hlavní větev?
-```
-
-**Pak se zeptej přes `AskUserQuestion`** – volby v tomhle pořadí, `description` u každé konkrétně říká, co se stane:
-
-- **Nechat větev otevřenou** *(výchozí – uveď ji první)* – pokračuje se v ní příště, nic se nemerguje
-- **Dokončit větev** – provedu celou sekvenci z `worktree.md`, *Dokončení větve*
-- **Jen zmergovat, worktree nechat** – merge do hlavní větve, ale adresář zůstane stát
-
-**Merge nikdy nedělej sám od sebe** (`worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). Tahle otázka je ten výslovný pokyn, který pravidlo vyžaduje – ale jen když na ni uživatel odpoví volbou merge. Ticho, odchod ze session ani „hotovo“ pokynem nejsou.
-
-**Nenabízej dokončení, když osa ještě pokračuje.** Chystá-li se `/attack` nebo `/release`, řekni to a merge nenabízej jako první volbu – nasazuje se ze stavu, který má projít i těmi kroky.
-
-**Ať tak či tak vypiš hotovou sekvenci k překopírování**, i když si uživatel vybere „nechat otevřenou“. Je to to nejbližší, co jde nabídnout místo předvyplněného řádku – vstup terminálu skill ovlivnit neumí:
-
-```bash
-cd <projekt>/main && git merge --no-ff <vetev> && git push \
-  && git worktree remove <projekt>/<adresar> && git branch -d <vetev>
-```
-
-Při volbě **Dokončit větev** se řiď `worktree.md`, *Dokončení větve*: sekvenci proveď najednou, průběžně hlas, co se povedlo, a když `worktree remove` odmítne kvůli neuloženému obsahu, **nepoužívej `--force`, dokud se nezeptáš**.
+**Tou větou to ale končí.** Merge nenabízej, nepřipravuj ani nevypisuj – větev je pracovní prostor, ne obálka na jeden příkaz, a merguje se **jen na výslovný pokyn** (`worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). Zmínka o tom, že jde větev dokončit, je informace o stavu; cokoliv dalšího už je pobízení k akci, o kterou nikdo nežádal.
