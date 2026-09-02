@@ -1,6 +1,6 @@
 ---
 name: review
-description: Skill se použije, když uživatel zadá "/review" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz, testy a soulad s doménovými standardy (coding, web, admin, analytics, text, design, training). Pouští deterministické nástroje, pak paralelní panel rolí, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
+description: Skill se použije, když uživatel zadá "/review" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz, testy a soulad s doménovými standardy (coding, web, admin, analytics, text, design, slides, training). Pouští deterministické nástroje, pak paralelní panel rolí, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
 argument-hint: [full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
@@ -54,6 +54,8 @@ git status --porcelain
 
 Sjednoť commitnuté změny na větvi s necommitnutými. Vynech smazané soubory. Když jsi na hlavní větvi a diff je prázdný, vezmi necommitnuté změny; když nejsou ani ty, řekni to a nabídni `full`.
 
+**Neuspěje-li ani jeden `merge-base`, rozsah si nedomýšlej.** Nastává to ve třech běžných stavech: repozitář bez jediného commitu (`HEAD` neexistuje), hlavní větev pojmenovaná jinak než `main`/`master` bez nastaveného `origin/HEAD`, a čerstvý lokální repozitář bez remote. Ověř si to nejdřív `git rev-parse --verify HEAD` – selže-li, rozsah jsou prostě necommitnuté změny a žádný diff se nedělá. Jinak zkus `git symbolic-ref --short refs/remotes/origin/HEAD`, a když ani to nevyjde, **zeptej se přes `AskUserQuestion`**, proti které větvi diffovat, s nabídkou z `git branch`. Špatně určený rozsah tiše prověří něco jiného, než si myslíš, a to je horší než se zeptat.
+
 *Worktree layout* (`~/Dev/context/worktree/worktree.md`): pouštěj to ve **worktree větve**. V kořeni kontejneru `git diff` spadne a `git status` taky – kořen není pracovní strom. Stojíš-li tam, přesuň se nejdřív do adresáře té větve, kterou máš prověřit, a rozsah `full` počítej rovněž jen nad ním, ne nad celým kontejnerem.
 
 **Režim `full`:** všechny zdrojové soubory projektu. Vynech `node_modules/`, `dist/`, `build/`, `vendor/`, `generated/`, `*.gen.*` a cokoliv v `.gitignore`.
@@ -103,9 +105,9 @@ Nesedí-li **žádná** role, řekni to explicitně a skonči – nevymýšlej s
 
 ### 0.4 U velkého rozsahu napřed pošli explorera
 
-Je-li v rozsahu **víc než zhruba patnáct souborů**, pusť před panelem jednoho agenta navíc: **explorera na výchozím modelu s `low`**. Jeho úkolem je **zmapovat, ne posoudit** – vrátí, čeho se změny dotýkají, kudy vede tok dat, které soubory na sebe navazují a kde jsou vstupní body. **Nehlásí žádné nálezy**; kdyby hlásil, dubloval by panel. Na nejlevnější model ho ale neposílej: jeho mapa jde do zadání **všech rolí naráz**, takže se jeho chyba nenásobí jednou, ale pětkrát – a role si ji ověří jedině tím, že si tu orientaci udělají znovu samy.
+Je-li v rozsahu **víc než zhruba patnáct souborů**, pusť před panelem jednoho agenta navíc: **explorera na výchozím modelu s `low`**. Jeho úkolem je **zmapovat, ne posoudit** – vrátí, čeho se změny dotýkají, kudy vede tok dat, které soubory na sebe navazují a kde jsou vstupní body. **Nehlásí žádné nálezy**; kdyby hlásil, dubloval by panel. Na nejlevnější model ho ale neposílej: jeho mapa jde do zadání **všech rolí naráz**, takže se jeho chyba nenásobí jednou, ale tolikrát, kolik rolí panel má – a role si ji ověří jedině tím, že si tu orientaci udělají znovu samy.
 
-Mapu pak vlož do zadání každé role. Bez ní si stejnou orientaci musí udělat **každý agent zvlášť a na drahém modelu** – tedy pětkrát totéž. U malého rozsahu se to nevyplatí a explorer se vynechává.
+Mapu pak vlož do zadání každé role. Bez ní si stejnou orientaci musí udělat **každý agent zvlášť ve svém kontextu** – tedy tolikrát, kolik je rolí. U malého rozsahu se to nevyplatí a explorer se vynechává.
 
 ------
 
@@ -130,7 +132,7 @@ Kroky 4 a 5 jsou přitom **výjimka z pravidla „jen příkazy z kontraktu“**
 
 Výsledky si odlož – ve Fázi 4 se slijí s nálezy panelu, ale **neprocházejí ověřením ve Fázi 3**. Nástroj nehalucinuje.
 
-**Audit závislostí a scan tajemství pouští znovu i `/release`** – proč to není duplicita, stojí v `~/.claude/skills/release/SKILL.md`, *Fáze 1*, bod 6.
+**Audit závislostí a scan tajemství pouští znovu i `/release`** – proč to není duplicita, stojí v `~/.claude/skills/release/SKILL.md`, *Fáze 1*, body 6 a 7.
 
 ------
 
@@ -141,11 +143,11 @@ Na **každou** vybranou roli pošli **samostatného subagenta** – všechny par
 **Dvě role nepiš sám – vyvolej vestavěné skilly Claude Code:**
 
 - **Korektnost** → **`/code-review high`**. Je na to postavený, běží v čerstvém kontextu a hledá přesně chyby v diffu. **Úroveň uveď vždy explicitně:** bez parametru se použije ta, kterou uživatel zadal naposledy – klidně v jiném projektu před dvěma dny – a hloubka nejdražšího posouzení v celé ose by závisela na náhodě. Před nasazením nebo u změny v citlivé oblasti použij `ultra`.
-- **Bezpečnost** → `/security-review`.
+- **Bezpečnost** → `/security-review`. **Dotkne-li se ale rozsah citlivé oblasti** (viz 0.2), poběží k němu **navíc vlastní agent** s celým jmenným seznamem tříd zranitelností a se seznamem dotčených citlivých oblastí, na nejsilnějším modelu s `xhigh`. To je ta „přísnost“, kterou uživateli slibuje `/specify`; vestavěný skill si vlastní zadání ani volbu modelu předat nenechá, takže bez druhého agenta by se slib neplnil a blok se seznamem by byl mrtvý text. Mimo citlivou oblast druhý agent neběží – tam by to byla duplicita.
 
-Vlastní zadání piš jen pro role, které vestavěný protějšek nemají.
+Vlastní zadání piš jen pro role, které vestavěný protějšek nemají – **a pro Bezpečnost v citlivé oblasti**, kde běží obojí vedle sebe.
 
-**Model a effort podle role** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Standardové role měří text proti textu, takže jim stačí **výchozí model na `low`–`medium`** – mají checklist a nevymýšlejí. **Bezpečnost a Data a stavy pouštěj na nejsilnějším modelu s `xhigh`**: tam přehlédnutí stojí nejvíc a levný model mlčí, místo aby hlásil.
+**Model a effort podle role** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Standardové role měří text proti textu, ale checklist si z pětisetřádkového standardu **teprve samy sestavují**, a to mechanická práce není: jedou proto na **výchozím modelu s `medium`–`high`**, jak pro kontrolu proti standardu předepisuje tabulka. Agent na nižším effortu nad takovým vstupem udělá vzorek – a prázdné pole vypadá stejně, ať prošel šedesát pravidel, nebo dvanáct. **Bezpečnost a Data a stavy pouštěj na nejsilnějším modelu s `xhigh`**: tam přehlédnutí stojí nejvíc a levný model mlčí, místo aby hlásil.
 
 ### Zadání pro pracovní roli
 
@@ -159,7 +161,7 @@ svou roli, jen zdvojíš práci a zašumíš výstup.
 PODKLAD:
 - docs/requirements.md – scénáře a varianty, proti kterým se měří
 - docs/architecture.md – jak to má být postavené
-<u role Bezpečnost navíc: JMENNÝ SEZNAM tříd zranitelností, proti kterému se měří –
+<u role Bezpečnost v citlivé oblasti: JMENNÝ SEZNAM tříd zranitelností, proti kterému se měří –
 vlož ho do zadání celý, ne jako odkaz na dokument, který si má agent vybavit z paměti:
 1. Řízení přístupu – chybějící kontrola oprávnění, cizí ID v požadavku, akce mimo rozhraní
 2. Kryptografie a data v klidu – tajemství v kódu, slabý hash hesla, nešifrovaný přenos

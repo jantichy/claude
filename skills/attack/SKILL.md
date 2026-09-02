@@ -69,12 +69,7 @@ Platí bez výjimky a nedají se přebít zadáním uživatele uvnitř běhu ski
 
 Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
-1. **Rozsah změn** – stejně jako `/review`:
-   ```
-   git merge-base HEAD origin/HEAD 2>/dev/null || git merge-base HEAD main
-   git diff --name-only <merge-base>...HEAD
-   git status --porcelain
-   ```
+1. **Rozsah změn** – **postupem z `/review`, Fáze 0.1**, včetně toho, co dělat, když se hlavní větev nenajde. Neopisuj ho sem: dřív tu stál zkrácený řetěz bez `master` a bez poslední větve, takže `/attack` selhal tam, kde `/review` prošel, přestože obojí tvrdí „stejně“.
    *Worktree layout* (`~/Dev/context/worktree/worktree.md`): pouštěj to ve worktree větve, ne v kořeni kontejneru.
 
 2. **Jak se to spouští** – z `## Příkazy` v projektovém `CLAUDE.md` (*Kontrakt příkazů*). Zajímá tě `dev`, případně `build` a `preview`. **Chybí-li, nevymýšlej příkaz** – zeptej se, čím se aplikace lokálně spouští, a nabídni, že to rovnou doplníš do kontraktu.
@@ -116,9 +111,9 @@ Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři a
 
 **Rozděl jim data, ne jen vektory.** Agenti běží nad jednou instancí, takže se přepisují navzájem: jeden ti změní jméno na profilu, který druhý zrovna měří, a oba pak popisují stav, který nikdy nenastal. Každému v zadání urči **vlastní účty a vlastní záznamy** (typicky vlastní e-mailovou doménu) a ulož mu, ať cizí nechá být. Sdílený účet smí mít nanejvýš jeden z nich.
 
-**Prohlížeč je jeden a subagentům ho nedávej.** `chrome-devtools` řídí jednu instanci Chrome; dva agenti v ní přepisují jeden druhému stránku a výsledek je nepoužitelný. Vektory, které potřebují reálné rozhraní – *prostředí*, *vykreslení* a proklikání toků – si **nech v hlavní session** a subagentům dej to, co jde přes `curl` a databázi. Vyjde to i časově: hlavní session tak není jen dispečer a útočí spolu s nimi.
+**Prohlížeč je jeden a subagentům ho nedávej.** `chrome-devtools` řídí jednu instanci Chrome; dva agenti v ní přepisují jeden druhému stránku a výsledek je nepoužitelný. Vektory, které potřebují reálné rozhraní – *prostředí*, *vykreslení*, *stavy a pořadí* a proklikání toků – si **nech v hlavní session** a subagentům dej to, co jde přes `curl` a databázi. Vyjde to i časově: hlavní session tak není jen dispečer a útočí spolu s nimi.
 
-**Po sobě uklízí každý agent sám** – co zapsal, na konci vrátí do výchozího stavu. Ulož mu to v zadání a v Fázi 6 to po nich zkontroluj; agent, který nález doloží a stav nechá ležet, ti rozbije reprodukci ostatním.
+**Po sobě uklízí každý agent sám, ale ne to, co je v reprodukci.** Co zapsal, na konci vrátí do výchozího stavu – **s výjimkou účtů a záznamů, které jmenuje v nějakém `repro`**. Ty nechává být. Bez té výjimky si úklid a Fáze 3 protiřečí: postup zní „přihlas se jako `attacker3@vektor-c.test` a otevři objednávku #4171“, jenže obojí agent podle instrukce smazal, hlavní session první krok neprovede, nález se „nereprodukuje“ a podle pravidla se **zahodí bez dotazu** – tedy doložený a pravý nález zmizí a v souhrnu z něj zbude číslo. Ulož mu to v zadání a v Fázi 6 to po nich zkontroluj; agent, který nález doloží a **ostatní** stav nechá ležet, ti rozbije reprodukci těm druhým.
 
 **Vektory** – vyber, co na projekt sedí:
 
@@ -177,7 +172,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
 Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 ```
 
-**Závažnost:** KRITICKÉ – ztráta dat, akce bez oprávnění, nedostupnost. STŘEDNÍ – pád nebo nekonzistence v běžném toku. KOSMETICKÉ – technická hláška bez dalšího dopadu.
+**Závažnost:** platí **táž škála jako v `/review`** (`~/.claude/skills/review/SKILL.md`, *Zadání pro pracovní roli*), protože nálezy odsud i odtamtud končí v jedné kapitole `## Review` a podle dvou různých škál pak zpětně nejde poznat, čím byl stupeň měřený. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **KOSMETICKÉ** – technická hláška bez dalšího dopadu.
 
 ------
 

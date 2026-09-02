@@ -61,6 +61,7 @@ Vyber **tři až pět úhlů** z katalogu níž podle sloupce *Kdy zvolit* – n
 | **Skeptik** | Nedůvěřuj ničemu a hledej chyby. Plyne závěr z toho, co mu předchází? Je tvrzení podané jako fakt doopravdy fakt? Nesahej na čísla, právo, provoz ani technologii – ty mají vlastní úhly; ptáš se na logiku argumentace. | záložní volba pro dokument, na který nesedne žádný doménový úhel |
 | **Předpoklady** | Vypiš předpoklady, na kterých dokument mlčky stojí a nikde je nepojmenovává. Co musí platit, aby závěr plynul z podkladu? U každého: jak se pozná, že neplatí, a co z dokumentu padá s ním. | cokoli, co tvrdí něco o světě – strategie, pozicování, koncepce, cenotvorba |
 | **Pre-mortem** | Je za osmnáct měsíců a tohle prokazatelně selhalo. Napiš, co se stalo – konkrétní sled událostí, ne obavu. Který předpoklad padl první? Jako jediný úhel smíš skládat příběh napříč doménami: nález, který leží na rozhraní dvou jiných úhlů, jinak nemá majitele. | cokoli, co se bude realizovat – PRD, koncepce, plán, cenotvorba |
+| **Cíl a měřitelnost** | Je napsané, čeho to má dosáhnout? Podle čeho se za rok pozná, že to vyšlo, a podle čeho, že ne? Má cíl číslo, práh a termín, nebo je to próza? Co je vědomě mimo rozsah – a je to napsané, nebo se to jen předpokládá? | strategie, pozicování, PRD, plán, analytická dokumentace |
 | **Cílová skupina** | Čte to očima persony, které se to týká. Rozumí tomu? Koupí si to? Co ji odradí? Co v tom nenajde? | pozicování, prodejní text, PRD, cenotvorba |
 | **Ekonomika** | Sedí čísla? Break-even, cena, kapacita, náklady na provoz. Co se stane při desetinásobku a při desetině? | cenotvorba, strategie, obchodní model |
 | **Právo a compliance** | Osobní údaje, spotřebitelské právo, daně, autorská práva, smluvní závazky. Co je napsané tak, že to nejde dodržet? | cenotvorba, obchodní podmínky, analytická dokumentace (souhlas, osobní údaje) |
@@ -68,6 +69,7 @@ Vyber **tři až pět úhlů** z katalogu níž podle sloupce *Kdy zvolit* – n
 | **Konkurence a trh** | Existuje to už? Čím se to liší? Proč by si někdo vybral tohle? | pozicování, strategie, nový produkt nebo služba |
 | **Co chybí** | Ne co je špatně, ale co v dokumentu vůbec není a mělo by být. Nejcennější a nejhůř se hledá. | vždy – povinný |
 | **Technická proveditelnost** | Dá se to postavit tak, jak je to popsané? Kde je skryté riziko? | architektura, datový model, PRD, analytická dokumentace |
+| **Zneužití** | Kdo má motiv to obejít – uživatel, konkurent, robot, insider? Co se dá vytěžit z mezery mezi tím, co dokument slibuje, a tím, co vymáhá? Co jde přečíst, změnit nebo získat zadarmo, aniž na to má někdo nárok? Kde dokument předpokládá, že se aktér chová slušně? | všude, kde jsou peníze, osobní údaje, přihlašování nebo cizí vstup |
 | **Hraniční případy** | Co se stane, když je vstup prázdný, obojí najednou, uprostřed zrušené, dvakrát za sebou? | datový model, PRD, cenotvorba – všude, kde dokument stanoví pravidlo s okraji |
 
 **Pravidlo:** úhel *Vnitřní rozpor* a *Co chybí* ber jako povinné, ať je dokument jakýkoliv. Zbytek podle povahy.
