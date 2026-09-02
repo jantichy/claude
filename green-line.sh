@@ -77,7 +77,8 @@ have jq || die "chybí jq, hook neběží."
 CWD=$(printf '%s' "$INPUT" | jq -r '.cwd // empty' 2>/dev/null)
 SESSION=$(printf '%s' "$INPUT" | jq -r '.session_id // "nosession"' 2>/dev/null | tr -cd 'A-Za-z0-9._-')
 [ -n "$SESSION" ] || SESSION=nosession
-[ -n "$CWD" ] && cd "$CWD" 2>/dev/null
+# Když cwd neexistuje, nepokračovat "někde jinde" – našel by se cizí projekt.
+if [ -n "$CWD" ]; then cd "$CWD" 2>/dev/null || die "adresář $CWD neexistuje."; fi
 
 [ "${CLAUDE_NO_GREEN_LINE:-0}" = "1" ] && exit 0
 

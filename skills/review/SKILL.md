@@ -109,7 +109,7 @@ Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontr
 2. **Build** – `build`. Do zelené linky nepatří, protože je na běh po každém tahu moc pomalý – ale před uzavřením feature se ověřit musí.
 3. **Audit závislostí** – `audit`. Nálezy `HIGH` a `CRITICAL` jsou automaticky kritické nálezy, nejdou přes panel.
 4. **Tajemství v repu** – `gitleaks detect --no-banner` nebo `git log -p | grep`-heuristika, není-li nástroj po ruce. Nález je vždy kritický a **nikdy se neopravuje jen smazáním**: co bylo commitnuté, je v historii a patří rotovat.
-5. **Statická analýza nad rámec lintu** – `semgrep --config p/owasp-top-ten`, je-li k dispozici.
+5. **Statická analýza nad rámec lintu** – `semgrep --config p/owasp-top-ten`. Jsou-li v rozsahu shellové skripty, k tomu `shellcheck -S warning`; u shellu je to nejlevnější kontrola vůbec a chytá věci, které se jinak projeví až v provozu (neošetřené `cd`, nekvotované expanze, maskované návratové kódy).
 6. **Mutation testing** – `mutation`, jen v rozsahu změn a jen když projekt příkaz má. Odpovídá na otázku, kterou pokrytí nezodpoví: *tvrdí ty testy vůbec něco?* Je pomalé; u `full` se ptej, jestli ho pouštět.
 
 Výsledky si odlož – ve Fázi 4 se slijí s nálezy panelu, ale **neprocházejí ověřením ve Fázi 3**. Nástroj nehalucinuje.
