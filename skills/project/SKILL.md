@@ -460,6 +460,8 @@ Vypiš přehledně:
 
 U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí.
 
+**Další krok:** /specify, zakládá-li se něco nového – u dorovnaného projektu se rovnou pracuje
+
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Projekt je nastavený, můžeš v něm začít pracovat.`
