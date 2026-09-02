@@ -5,7 +5,7 @@
 input=$(cat)
 
 # ---------------------------------------------------------------------------
-# 1. CONTEXT / RATE LIMIT PROGRESS BAR
+# 1. UKAZATEL KONTEXTU A LIMITŮ
 # ---------------------------------------------------------------------------
 BAR_WIDTH=7
 
@@ -130,7 +130,7 @@ if [ -n "$week_pct" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 2. MODEL
+# 2. MODEL A EFFORT
 # ---------------------------------------------------------------------------
 model_name=$(echo "$input" | jq -r '.model.display_name // .model.id // "unknown"')
 model_short=$(echo "$model_name" | sed 's/Claude //i' | sed 's/ (.*)//')

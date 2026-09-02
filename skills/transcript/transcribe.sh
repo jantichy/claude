@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Přepis audio souborů whisperem (whisper.cpp). Vše vzniká v pracovním adresáři.
 #
-# Usage:
+# Použití:
 #   transcribe.sh <workdir> <log_file> <audio1> [<audio2> ...]
 #
 # Pro každý vstup vznikne <workdir>/<název_bez_přípony>.txt (surový přepis).
