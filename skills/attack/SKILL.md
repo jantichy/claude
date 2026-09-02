@@ -74,13 +74,17 @@ Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
 2. **Jak se to spouští** – z `## Příkazy` v projektovém `CLAUDE.md` (*Kontrakt příkazů*). Zajímá tě `dev`, případně `build` a `preview`. **Chybí-li, nevymýšlej příkaz** – zeptej se, čím se aplikace lokálně spouští, a nabídni, že to rovnou doplníš do kontraktu.
 
-3. **Co má dělat** – `docs/requirements.md`, existuje-li. Scénáře jsou vstup pro útok: útočí se na jejich okraje, ne doprostřed. Bez nich se útočí proti tomu, co je vidět v rozhraní.
+3. **Dřív zamítnuté nálezy** – kapitola `## Review` v projektovém `CLAUDE.md`. Formát, mechaniku i **ověření, jestli umlčení ještě platí**, definuje `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*; řiď se jí, včetně toho, že záznam nad změněným kódem se do filtru nedává. Co projde filtrem, vlož do zadání útočníků jako *VĚDOMÉ VÝJIMKY (nehlásit)*.
 
-4. **Na čem to jede** – ověř, na jakou databázi a jaké externí služby je lokální instance napojená (`.env.example`, konfigurace, docker compose). Sáhne-li aplikace při útoku ven – odešle mail, zaplatí, zavolá cizí API – **řekni to uživateli předem** a domluvte se, jestli útok ty cesty vynechá, nebo se služba přepne na testovací režim.
+   **Bez tohohle kroku byl filtr jednosměrný:** `/attack` do kapitoly zapisoval, ale nikdy ji nečetl, takže nález, který jsi jednou vědomě umlčel, se při každém dalším útoku objevil znovu jako nový – a subagenti o něm nevědí ani z `CLAUDE.md`, protože ten mají v kontextu jen v hlavní session.
+
+4. **Co má dělat** – `docs/requirements.md`, existuje-li. Scénáře jsou vstup pro útok: útočí se na jejich okraje, ne doprostřed. Bez nich se útočí proti tomu, co je vidět v rozhraní.
+
+5. **Na čem to jede** – ověř, na jakou databázi a jaké externí služby je lokální instance napojená (`.env.example`, konfigurace, docker compose). Sáhne-li aplikace při útoku ven – odešle mail, zaplatí, zavolá cizí API – **řekni to uživateli předem** a domluvte se, jestli útok ty cesty vynechá, nebo se služba přepne na testovací režim.
 
    **Pozor na projekt, který už běží v produkci.** Tam bývá jediná konfigurace (`.env.local`) a míří na ostrou databázi, takže `dev` na localhostu píše reálným uživatelům. Do souborů s tajemstvími nekoukej – místo toho zjisti, jestli projekt umí zvednout **vlastní lokální stack** (`supabase/config.toml`, `docker compose`, testcontainers). Když neumí a izolaci nejde vyrobit, útok se nekoná; viz *Hranice*, bod 2.
 
-5. **Co v té testovací databázi je.** Prázdná bývá málokdy – zůstávají v ní data po dřívějších testech a někdy i kopie produkce. Než na ni sáhneš, **ověř původ**: rozložení domén u e-mailů (`select split_part(email,'@',2), count(*) … group by 1`) a stáří záznamů. Vidíš-li reálné domény, zastav se – je to sdílená nebo zkopírovaná produkce.
+6. **Co v té testovací databázi je.** Prázdná bývá málokdy – zůstávají v ní data po dřívějších testech a někdy i kopie produkce. Než na ni sáhneš, **ověř původ**: rozložení domén u e-mailů (`select split_part(email,'@',2), count(*) … group by 1`) a stáří záznamů. Vidíš-li reálné domény, zastav se – je to sdílená nebo zkopírovaná produkce.
 
 Zjištěné shrň do pěti řádků a **zeptej se na potvrzení, než něco spustíš** (`AskUserQuestion`): cíl, databáze, co poběží ven, rozsah.
 
@@ -245,7 +249,7 @@ Při volbě **Opravit**:
 
 Při volbě **Odložit** zapiš nález do `docs/todo.md` **i s reprodukčním postupem** – bez něj je za měsíc nepoužitelný.
 
-Při volbě **Přeskočit** se zeptej na důvod a zapiš do projektového `CLAUDE.md` do kapitoly `## Review`, stejným formátem jako `/review` (datum vyrob `date +%F`, nepiš ho z kontextu – `~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*) (nálezy odtud a odtamtud se přeskakují ze stejných důvodů a hledat je na dvou místech nemá smysl). Řádek doplň o `(útok)`. **Nález, který dovolí akci bez oprávnění nebo ztrátu dat, sem nezapisuj bez výslovného potvrzení.**
+Při volbě **Přeskočit** se zeptej na důvod a zapiš do kapitoly `## Review` v projektovém `CLAUDE.md` – **formát a mechaniku drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`***, včetně toho, že se datum i hash vyrábějí příkazem. Do pole `zdroj` napiš `útok`, do pole `podklad` reprodukční postup. Sdílená kapitola je schválně: nálezy odtud a z `/review` se přeskakují ze stejných důvodů a hledat je na dvou místech nemá smysl. **Nález, který dovolí akci bez oprávnění nebo ztrátu dat, sem nezapisuj bez výslovného potvrzení.**
 
 ------
 
@@ -276,6 +280,8 @@ Cíl: <adresa> · Vektory: [které]
 ```
 - **YYYY-MM-DD** · `/attack` · `<short HEAD>` · <rozsah a vektory> · N nálezů (X opraveno, Y odloženo, Z won't fix)
 ```
+
+Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 **Další krok:** /release · po nasazení ještě `/cleanup` podruhé (`~/.claude/RULES.md`, *Životní cyklus práce*, krok 7)
 ```

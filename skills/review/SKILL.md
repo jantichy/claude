@@ -64,7 +64,7 @@ Sjednoť commitnuté změny na větvi s necommitnutými. Vynech smazané soubory
 
 - **`.claude/run/review.json`**, pokud existuje – přerušený běh. Viz *Fáze 3*, kde vzniká; nabídni navázání dřív, než začneš cokoliv počítat znovu.
 - Projektový `CLAUDE.md` – zejména `## Příkazy` (*Kontrakt příkazů*), `### Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
-- **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Ty se **vůbec neuvádějí** – ani v tomhle běhu, ani v žádném dalším. U staršího projektu může mít ještě starý název `## Standards`; přečti obojí a při prvním zápisu ji přejmenuj.
+- **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Neuvádějí se – ale **jen dokud platí**: u každého záznamu ověř příkazem, jestli se dotčený kód od zápisu nezměnil. Mechanika i formát jsou v kapitole *Kapitola `## Review`* níž; bez toho ověření se z filtru stane ráčna.
 - **`## Výjimky z obecných pravidel`** – vědomé odchylky projektu. Co je tam popsané jako výjimka, není nález.
 - **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Role *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit.
 - **Jmenný seznam citlivých oblastí** na konci `docs/architecture.md` – přihlášení, oprávnění, platby, nahrávání souborů, osobní údaje, mazání dat, odesílání pošty ven. Zakládá ho `/specify` s příslibem, že *„`/review` na ně sahá přísněji“*, takže ten příslib je potřeba splnit: **dotkne-li se rozsah kterékoliv z nich, role Bezpečnost je povinná** (nevybírá se podle typu souborů) **a pouští se na nejsilnějším modelu s `xhigh`**. Do zadání té role seznam vlož a napiš, které položky se rozsahu týkají. Neexistuje-li `architecture.md`, řekni to a rozhodni podle obsahu rozsahu.
@@ -457,20 +457,46 @@ Navrhované řešení:
    d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky“.
    e. Commit dle autocommit nastavení projektu.
 
-4. Zápis do `## Review` v projektovém `CLAUDE.md` (volba Přeskočit):
-   - Když `CLAUDE.md` neexistuje, vytvoř ho s hlavičkou a kapitolou `## Review`.
-   - Když kapitola neexistuje, doplň ji na konec souboru.
-   - Formát (přidávat na konec kapitoly):
-   ```
-   ## Review
+4. Zápis do `## Review` v projektovém `CLAUDE.md` (volba Přeskočit) – **formát a mechanika jsou popsané níž v kapitole *Kapitola `## Review`*.** Píše do ní i `/attack`, takže formát je společný a definuje se na jednom místě.
 
-   Nálezy vyhodnocené při /review jako „neopravovat“. Při dalším review se neuvádějí.
+------
 
-   - **YYYY-MM-DD** – *<title>* (role: <role>, podklad: <basis>): <důvod>
-     - Lokace: <soubor:řádek, ...>
-   ```
-   - Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
-   - **Bezpečnostní nález sem nezapisuj bez výslovného potvrzení** a bez důvodu, který obstojí i za rok. „Zatím to nikdo nezneužil“ důvod není.
+## Kapitola `## Review`
+
+Seznam nálezů, které se vyhodnotily jako „neopravovat“. Píše do něj **`/review` i `/attack`** – jsou to odpovědi na tutéž otázku a hledat je na dvou místech nemá smysl. (`/consistency` má vlastní kapitolu `## Consistency`, protože se ptá na jinou otázku.) Definice je tady; ostatní skilly sem odkazují.
+
+**Kde:** projektový `CLAUDE.md`. Když neexistuje, vytvoř ho s hlavičkou a kapitolou; když chybí kapitola, doplň ji na konec souboru. U staršího projektu může mít ještě starý název `## Standards` – přečti obojí a při prvním zápisu ji přejmenuj. **Zápisy se přidávají na konec kapitoly.**
+
+**Formát:**
+
+```
+## Review
+
+Nálezy vyhodnocené jako „neopravovat“. Při dalším běhu se neuvádějí, dokud se
+nezmění kód, kterého se týkají.
+
+- **YYYY-MM-DD** · `<short HEAD>` · *<title>* (zdroj: review|útok, podklad: <basis>): <důvod>
+  - Lokace: <soubor:řádek, ...>
+```
+
+`zdroj` říká, odkud nález přišel, a nahrazuje dřívější pole `role`, které nález z útoku neměl čím vyplnit; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo standardu, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+
+### Umlčení expiruje změnou kódu
+
+**Záznam neplatí navždy, ale do první změny souborů, kterých se týká.** Ve Fázi 0 u každého záznamu spusť:
+
+```
+git log --oneline <zapsaný hash>..HEAD -- <lokace ze záznamu>
+```
+
+- **Prázdný výstup** → kód se nezměnil, záznam platí, nález se neuvádí.
+- **Neprázdný výstup** → záznam **se do zadání rolí nevkládá**. Najde-li se nález znovu, předlož ho ve Fázi 7 s poznámkou *„zamítnuto YYYY-MM-DD s odůvodněním …, kód se od té doby změnil“*. Uživateli pak stačí potvrdit, že to platí dál – a záznam se přepíše s novým hashem.
+
+**Proč:** důvod zamítnutí je skoro vždy vázaný na stav kódu v ten den – „na tenhle endpoint se nedá dostat zvenčí“, „ten vstup je validovaný o vrstvu výš“. Po refaktoru přestane platit, ale filtr se aplikuje **před** hledáním, takže se to nemá jak dozvědět nikdo: role o umlčeném nálezu nevědí, a proto ho ani nenajdou. Bez expirace je ta kapitola ráčna, která jede jen jedním směrem, a projekt jí za rok používání oslepne.
+
+**Při `/review full` se revaliduje celý seznam** bez ohledu na hashe: vypiš záznamy i s jejich stářím a nech potvrdit, co má platit dál. `full` se pouští zřídka a je to jediné místo, kde má revize seznamu proporční cenu.
+
+**Bezpečnostní nález se sem nezapisuje bez výslovného potvrzení** a bez důvodu, který obstojí i za rok. „Zatím to nikdo nezneužil“ důvod není.
 
 ------
 

@@ -9,6 +9,7 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
 - **Blok metadat je tady, ne v kořenovém `CLAUDE.md`**, jak jinak velí `~/Dev/context/structure/structure.md`. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata tohohle repozitáře tam nepatří, mátla by v cizím projektu.
 - **`/attack` ani `/release` se tu nikdy nepouštějí.** Repozitář je konfigurace, ne aplikace – není co spustit ani kam nasadit. Osa práce tady končí `/cleanupem`. Zapsáno schválně, ne odvozeno (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
+- **Odložený nález z `/review` nebo `/attack` jde do `~/Dev/context/todo.md`**, do sekce podle domény – tenhle repozitář `todo.md` nemá (viz níž) a volba *Odložit* by jinak neměla kam zapsat, takže by se odložený bod ztratil při první kompaktaci. Je to jediné místo, kde struktura tohohle repozitáře sahá ven; důvod je, že konfigurační vrstva je téma, které ta znalostní báze už drží.
 - **`docs/` neexistuje.** Repozitář není vyvíjený projekt, ale konfigurace; `todo.md`, `done.md`, `decisions.md` ani `rules.md` nemá a nezakládají se.
 
 ## Instrukce pro tenhle repozitář

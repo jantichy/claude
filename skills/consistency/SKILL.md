@@ -199,11 +199,14 @@ Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné
 ```
 ## Consistency
 
-Položky vyhodnocené při /consistency auditu jako „neopravovat". Při dalším auditu se neuvádějí.
+Položky vyhodnocené při /consistency auditu jako „neopravovat". Při dalším auditu
+se neuvádějí, dokud se nezmění kód, kterého se týkají.
 
-- **YYYY-MM-DD** – *<title>*: <důvod>
+- **YYYY-MM-DD** · `<short HEAD>` · *<title>*: <důvod>
   - Lokace: <soubor:řádek, ...>
 ```
+
+**Umlčení expiruje změnou kódu, stejně jako u `## Review`** – mechaniku i důvod drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*, a platí tu beze změny. Před aplikací filtru tedy u každého záznamu ověř `git log --oneline <zapsaný hash>..HEAD -- <lokace>`; neprázdný výstup znamená, že se položka předloží znovu i s původním odůvodněním. Hash vyrob `git rev-parse --short HEAD`.
 
 Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
