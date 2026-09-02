@@ -263,8 +263,10 @@ Výchozí hodnoty a nástroje viz `~/Dev/context/coding/coding.md`,
 
 ## Ověřování a brány
 Konkrétní příkazy, které projekt bude mít – `test`, `typecheck`, `lint`,
-`build`, `audit`, případně `e2e` a `mutation`. Odsud je `/project` (nebo první
-úkol plánu) přepíše do *Kontraktu příkazů* v `CLAUDE.md`.
+`build`, `audit`, případně `e2e` a `mutation`.
+Je to **záměr, ne kontrakt**: *Kontrakt příkazů* v `CLAUDE.md` musí odpovídat
+tomu, co projekt opravdu umí spustit, takže ho zapisuje až ten, kdo to vidí –
+první úkol plánu, který příkazy zavede, případně opakovaný běh `/project`.
 Řekni i, co se **nebude** kontrolovat automaticky a proč.
 
 ## Rizika
