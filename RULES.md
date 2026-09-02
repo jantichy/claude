@@ -165,6 +165,8 @@ Cokoliv se dohodne (pravidlo, konvence, rozhodnutí, struktura, poznatek) → **
 
 **Nečekej na `/cleanup` ani na konec session.** Uzavírací kroky osy jsou záchranná síť pro případ, že tohle pravidlo selže – ne místo, kde zápis začíná.
 
+**Pravidlo míří na trvanlivost, ne na mechaniku předávání.** Ptá se „přežije to konec session?“, ne „prošlo to souborem?“. Předat subagentovi kontext přímo v zadání – vypsat mu, co se v téhle práci vědomě zamítlo, co platí za pravidlo, co se má vzít v potaz – je běžná mechanika, ne obcházení; ten agent žádný soubor číst nemusí. Porušením je až to, když poznatek zůstane **jen** v konverzaci a nikdo ho nikam nezapíše.
+
 Zakazuje-li projektový `CLAUDE.md` ukládání do trvalé Memory, platí to i proti pobídkám **harnessu** – tedy běhového prostředí Claude Code, které si do konverzace samo vkládá pokyny a připomínky.
 
 ### Rozhodnutí zapisuj i s cestou k nim

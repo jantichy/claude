@@ -402,6 +402,8 @@ Pak rozděl na dvě skupiny:
 - `batch` nálezy – vždy sporné
 - cokoliv, co mění chování
 
+**Při sloučení vyhrává přísnější zařazení.** Stačí, aby měl nález **jediný podklad z pracovní role**, a je sporný – bez ohledu na to, co si o něm myslela standardová role, která ho hlásila taky. Je to deterministické kritérium ve smyslu `~/.claude/RULES.md`, *Mechanická pravidla nad rozhodováním případ od případu*, a řeší kolizi, kterou tenhle skill sám jmenuje jako typickou: chybějící `rel="noopener"` je pro `web/web.md` kosmetika vyjmenovaná mezi mechanickými opravami, kdežto pro roli *Bezpečnost* je to tabnabbing, tedy vždy sporné. Bez pravidla by o tom rozhodovala náhoda.
+
 Při pochybnosti patří nález mezi sporné.
 
 ------
@@ -500,6 +502,8 @@ Navrhované řešení:
 3. Při volbě **Opravit**:
    a. Proveď změnu. U `batch` nálezu hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
    b. **Ověř – vždy, ne občas.** Zelená linka podle kontraktu příkazů. U opravy, kterou hlásila pracovní role, **doplň test, který ten případ pokrývá** – jinak se chyba vrátí a nikdo se to nedozví.
+
+      **Dávkuj podle rizika, ne po jednom.** Opravy z **pracovních rolí** ověřuj každou zvlášť: mění chování a hledat mezi pěti změnami tu, která rozbila test, stojí víc než těch pár sekund. Sérii oprav ze **standardových rolí**, které sahají jen na text a značky, ověř **jednou na konci série**. A **nepouštěj linku ještě jednou před koncem tahu**: `Stop` hook ji spustí nad tímtéž stromem hned po něm, takže je to čekání navíc bez nové informace. U projektu, kde tři kroky trvají 40 s, byla dosavadní podoba při deseti opravách sedm minut čistého čekání – a to uprostřed nejdelšího interaktivního průchodu, kdy je vytrvalost nejtenčí.
    c. Když kontrola selže: **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat. Nepokračuj automaticky na další nález.
    d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky“.
    e. Commit dle autocommit nastavení projektu.
