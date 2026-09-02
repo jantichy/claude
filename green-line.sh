@@ -50,11 +50,24 @@ if [ "${1:-}" = "--allow" ]; then
   chmod 700 "$(dirname "$ALLOW_DIR")" "$ALLOW_DIR" 2>/dev/null || true
   printf '%s\n' "$P" > "$ALLOW_DIR/$(proj_key "$P")" || die "nelze zapsat souhlas do $ALLOW_DIR"
   [ -s "$ALLOW_DIR/$(proj_key "$P")" ] || die "souhlas se nezapsal."
-  echo "Zelená linka poběží v $P. Spouští příkazy z $MD:"
-  sed -n '/^## Příkazy/,/^## /p' "$MD" | grep -E '^[[:space:]]*[-*]' || true
+  SEC=$(sed -n '/^## Příkazy/,/^## /p' "$MD")
+  echo "Zelená linka poběží v $P, podle kontraktu v $MD."
   echo
-  echo "Pozor: souhlas platí pro repozitář, ne pro ty konkrétní řádky."
-  echo "'npm test' spustí, co je v package.json – a to se neschvaluje."
+  echo "Po každém tahu spustí:"
+  FOUND=""
+  for k in typecheck lint test; do
+    v=$(printf '%s\n' "$SEC" | sed -n "s/^[[:space:]]*[-*][[:space:]]*$k:[[:space:]]\{1,\}//p" | head -1 | sed 's/[[:space:]]*$//')
+    [ -n "$v" ] && { printf '  %-10s %s\n' "$k:" "$v"; FOUND="$v"; }
+  done
+  [ -z "$FOUND" ] && echo "  (nic – kontrakt nemá typecheck, lint ani test, hook tu nic nespustí)"
+  # Ostatní klíče jsou dokumentace pro člověka; zelená linka je nepouští.
+  OTHER=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]].*/\1/p' \
+          | grep -vxE 'typecheck|lint|test' | paste -sd, - | sed 's/,/, /g')
+  [ -n "$OTHER" ] && echo "  Nespouští: $OTHER (jen dokumentace v kontraktu)"
+  echo
+  echo "Souhlas platí pro REPOZITÁŘ, ne pro ty konkrétní řádky:"
+  echo "co ty příkazy udělají, určuje package.json, Makefile nebo konfigurace v tomhle repu"
+  echo "a to se neschvaluje. Do cizího naklonovaného repozitáře souhlas nedávej."
   exit 0
 fi
 
@@ -90,7 +103,8 @@ if [ ! -f "$ALLOW_DIR/$KEY" ]; then
     echo "Zelená linka: pro $PROJ není vydaný souhlas, nespustil jsem nic."
     echo "Kontrakt je kód z repozitáře. Projdi si ho a jestli tomu repozitáři věříš:"
     echo "  ~/.claude/green-line.sh --allow $PROJ"
-    sed -n '/^## Příkazy/,/^## /p' "$CLAUDE_MD" | grep -E '^[[:space:]]*[-*]' || true
+    sed -n '/^## Příkazy/,/^## /p' "$CLAUDE_MD" \
+      | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}/  \1: /p' || true
   } >&2
   exit 1
 fi
