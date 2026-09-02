@@ -71,16 +71,49 @@ class SkillFrontmatter(unittest.TestCase):
 
 
 class SkillOdkazy(unittest.TestCase):
+    # Kontroluje se i to, co skilly samy odkazují – RULES.md a CLAUDE.md nesou
+    # nejvíc odkazů ze všech a netestovaly se vůbec.
+    ODKAZUJICI = SKILLS + [ROOT / "RULES.md", ROOT / "CLAUDE.md", ROOT / "README.md"]
+
     def test_odkazy_na_soubory_existuji(self):
         """Odkaz na neexistující soubor pošle Clauda hledat něco, co tam není."""
-        for skill in SKILLS:
-            with self.subTest(skill=skill.parent.name):
+        for soubor in self.ODKAZUJICI:
+            with self.subTest(soubor=soubor.name if soubor.parent == ROOT else soubor.parent.name):
                 broken = []
                 for ref in set(re.findall(
-                        r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`", body(skill))):
+                        r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`", body(soubor))):
                     if not Path(ref.replace("~", str(Path.home()), 1)).exists():
                         broken.append(ref)
-                self.assertFalse(sorted(broken), f"{skill}: neexistující odkazy: {sorted(broken)}")
+                self.assertFalse(sorted(broken), f"{soubor}: neexistující odkazy: {sorted(broken)}")
+
+    def test_odkazy_na_sekce_miri_na_existujici_nadpis(self):
+        """Odkaz ve tvaru `soubor`, *Sekce* musí v tom souboru najít nadpis.
+
+        Tohle je vada, kterou soustava reálně dostává: přečíslovat fáze uvnitř
+        skillu je jednořádková změna, po které pět odkazů z jiného souboru tiše
+        ukazuje jinam. Kontrola existence souboru to nechytí – ten pořád existuje.
+
+        Kotva se hledá jako *podřetězec* nadpisu, aby prošly i tvary typu
+        *Fáze 1*, bod 6 nebo *`done.md`*.
+        """
+        # Kotva se pozná podle tvaru `soubor`, *Sekce* – tedy čárka hned za
+        # zpětným apostrofem. Volnější vzor bral i běžné zvýraznění v okolní
+        # větě ("`RULES.md`) stojí **před `/release`**") a hlásil samé nesmysly.
+        vzor = re.compile(
+            r"`(~/(?:\.claude|Dev)/[^`\s]+\.md)`,\s*(?:kapitola\s+|sekce\s+)?\*([^*\n]{3,80})\*")
+        for soubor in self.ODKAZUJICI:
+            with self.subTest(soubor=soubor.name if soubor.parent == ROOT else soubor.parent.name):
+                spatne = []
+                for cesta, sekce in set(vzor.findall(body(soubor))):
+                    cil = Path(cesta.replace("~", str(Path.home()), 1))
+                    if not cil.exists():
+                        continue          # hlásí předchozí test
+                    nadpisy = "\n".join(bez_bloku_kodu(cil))
+                    kotva = sekce.strip().strip("`*")
+                    if kotva not in nadpisy:
+                        spatne.append(f"{cesta} -> *{kotva}*")
+                self.assertFalse(sorted(spatne),
+                    f"{soubor}: odkaz na sekci, která tam není: {sorted(spatne)}")
 
     def test_odkazuje_na_kroky_osy_ne_na_jejich_vnitrek(self):
         """`/code-review` je vnitřek `/review`; poslat tam uživatele ho připraví o panel.
@@ -189,9 +222,104 @@ class NosneCasti(unittest.TestCase):
             f"skilly {pisou} zapisují do .claude/run/, ale /project ho nedává do .gitignore")
 
 
+def bez_bloku_kodu(path: Path):
+    """Nadpisy souboru, ale jen skutečné – ne ty uvnitř bloků kódu.
+
+    `worktree.md` má v ukázce stubu `## Odchylky`; brát to jako nadpis dokumentu
+    znamená, že by odkaz na neexistující sekci prošel, kdyby se náhodou jmenovala
+    stejně jako něco v příkladu.
+    """
+    ve_bloku = False
+    for radek in path.read_text(encoding="utf-8").splitlines():
+        if radek.lstrip().startswith(("```", "~~~")):
+            ve_bloku = not ve_bloku
+            continue
+        if not ve_bloku and radek.startswith("#"):
+            yield radek.lstrip("# ").strip()
+
+
+def osa_z_rules() -> set:
+    """Kroky osy se čtou z `RULES.md`, ne z konstanty v testu.
+
+    Ručně opsaný seznam je druhá kopie pravdy: přejmenovaný nebo přidaný krok by
+    testem prošel, a naopak zmizelý krok by ho shodil z jiného důvodu, než je ten
+    skutečný.
+    """
+    text = (ROOT / "RULES.md").read_text(encoding="utf-8")
+    i = text.index("### Životní cyklus práce")
+    blok = text[text.index("```", i) + 3:]
+    blok = blok[:blok.index("```")]
+    return set(re.findall(r"/([a-z][a-z-]*)", blok))
+
+
+class KontraktPrikazu(unittest.TestCase):
+    """Formát kontraktu je závazný, protože ho čte skript – a to se neověřovalo.
+
+    `coding.md` říká „jeden řádek na klíč, `- klíč: příkaz`, a za příkazem už nic“.
+    Změna formátu (komentář za příkazem, jiné odsazení, hodnota v bloku kódu)
+    vypne bránu **tiše**: `sed` v `green-line.sh` prostě nic nenajde a hook se
+    zachová, jako by ten krok projekt neměl.
+    """
+
+    KONTRAKT = ROOT / ".claude/CLAUDE.md"
+
+    def _sekce(self) -> str:
+        """Sekce ## Příkazy z těla bez bloků kódu – stejně jako `md_body`
+        a `contract_section` v `green-line.sh`."""
+        radky, ve_bloku, uvnitr, out = self.KONTRAKT.read_text(encoding="utf-8").splitlines(), False, False, []
+        for r in radky:
+            if r.lstrip().startswith(("```", "~~~")):
+                ve_bloku = not ve_bloku
+                continue
+            if ve_bloku:
+                continue
+            if r.startswith("## Příkazy"):
+                uvnitr = True
+            elif uvnitr and r.startswith("## "):
+                break
+            if uvnitr:
+                out.append(r)
+        return "\n".join(out)
+
+    def _hodnota(self, klic: str):
+        """Týž výraz jako `cmd_for` v green-line.sh."""
+        m = re.search(rf"^[ \t]*[-*][ \t]*{klic}:[ \t]+(.*?)[ \t]*$",
+                      self._sekce(), re.M)
+        return m.group(1) if m else None
+
+    def test_kontrakt_se_da_precist(self):
+        """Kdyby se sekce rozešla s formátem, zelená linka by tu tiše neběžela."""
+        self.assertTrue(self._sekce().strip(), "sekci ## Příkazy se nepodařilo přečíst")
+        for klic in ("typecheck", "lint", "test"):
+            with self.subTest(klic=klic):
+                self.assertIsNotNone(self._hodnota(klic),
+                    f"klíč {klic} se z kontraktu nepřečetl – změnil se formát?")
+
+    def test_prikazy_z_kontraktu_jsou_spustitelne(self):
+        """Pomlčka je vědomé rozhodnutí, ale příkaz musí existovat.
+
+        Jinak hook po každém tahu hlásí nespustitelný krok – a to je šum, ne nález.
+        """
+        import shutil
+        for klic in ("typecheck", "lint", "test"):
+            hodnota = self._hodnota(klic)
+            if hodnota in (None, "-"):
+                continue
+            with self.subTest(klic=klic):
+                binarka = hodnota.split()[0]
+                self.assertTrue(shutil.which(binarka),
+                    f"kontrakt má {klic}: {hodnota}, ale {binarka} není na PATH")
+
+
 class Struktura(unittest.TestCase):
-    OSA = {"project", "specify", "breakdown", "implement",
-           "review", "consistency", "cleanup", "attack", "release"}
+    OSA = osa_z_rules()
+
+    def test_osa_se_precetla(self):
+        """Kdyby se blok v RULES.md přeformátoval, testy osy by tiše zmlkly."""
+        self.assertGreaterEqual(len(self.OSA), 8,
+            f"z RULES.md se přečetlo jen {len(self.OSA)} kroků osy: {sorted(self.OSA)}")
+        chybi = sorted(self.OSA - {s.parent.name for s in SKILLS})
+        self.assertFalse(chybi, f"osa jmenuje kroky, které nemají skill: {chybi}")
 
     def test_kroky_osy_maji_sekci_co_nedela(self):
         """Bez vymezení vůči sousedům se práce buď zdvojí, nebo neudělá vůbec."""
@@ -199,11 +327,30 @@ class Struktura(unittest.TestCase):
                  if s.parent.name in self.OSA and "Co skill nedělá" not in body(s)]
         self.assertFalse(chybi, f"skilly osy bez sekce `Co skill nedělá`: {chybi}")
 
-    def test_readme_zna_kazdy_skill(self):
-        """README je rozcestník; skill, který v něm není, nikdo nenajde."""
+    def _skilly_v_readme(self) -> set:
+        """Skilly jmenované v nadpisech README. Jeden nadpis jich může nést víc –
+        `/breakdown` a `/implement` mají společný, protože jeden předává druhému."""
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        chybi = [s.parent.name for s in SKILLS if f"skills/{s.parent.name}/" not in readme]
-        self.assertFalse(chybi, f"skilly chybějící v README: {chybi}")
+        out = set()
+        for radek in readme.splitlines():
+            if radek.startswith("#"):
+                out |= set(re.findall(r"\[`/([a-z-]+)`\]", radek))
+        return out
+
+    def test_readme_zna_kazdy_skill(self):
+        """README je rozcestník; skill, který v něm není, nikdo nenajde.
+
+        Kontroluje se nadpis, ne výskyt řetězce: `skills/foo/` se v README může
+        objevit i v ukázce adresářové struktury, a test by pak byl spokojený
+        i bez sekce o skillu.
+        """
+        chybi = sorted({s.parent.name for s in SKILLS} - self._skilly_v_readme())
+        self.assertFalse(chybi, f"skilly bez vlastní sekce v README: {chybi}")
+
+    def test_readme_neodkazuje_na_zmizely_skill(self):
+        """Opačný směr: po smazání skillu zůstane v README mrtvá sekce."""
+        navic = sorted(self._skilly_v_readme() - {s.parent.name for s in SKILLS})
+        self.assertFalse(navic, f"README má sekci pro skill, který neexistuje: {navic}")
 
 
 if __name__ == "__main__":
