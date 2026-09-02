@@ -9,6 +9,7 @@
 # BEZPEČNOST: kontrakt je kód ležící v repozitáři a hooky běží mimo permission
 # systém. Proto se v projektu nespustí nic, dokud pro něj člověk jednou nevydá
 # souhlas:  green-line.sh --allow <projekt>
+# Vydané souhlasy vypíše  --list , odebere  --revoke <projekt> .
 # Ten souhlas znamená "spouštěj v tomhle repozitáři jeho vlastní příkazy", ne
 # "ty konkrétní příkazy jsem přečetl a jsou neškodné" – `npm test` spustí, co je
 # v package.json, a to se neschvaluje. Do cizího repozitáře souhlas nedávej.
@@ -36,6 +37,59 @@ need_tools() {
 # Klíč projektu je hash CELÉ cesty. Dřívější "posledních 40 alfanumerických znaků"
 # kolidovalo: /a/con-text a /a/context daly týž klíč, a tím i týž souhlas.
 proj_key() { printf '%s' "$1" | sha; }
+
+# --- Výpis a odebrání souhlasu -------------------------------------------------
+# Souhlas musí jít i zjistit a odebrat, ne jen vydat: po naklonování cizího
+# repozitáře, kterému jsem ho omylem dal, by jinak nebyla cesta zpět.
+
+# Cesta, pro kterou se souhlas hledá. Nepoužívá cd: odebrat se musí dát i souhlas
+# pro adresář, který už neexistuje.
+norm_path() {
+  case "$1" in
+    /*) printf '%s' "${1%/}" ;;
+    *)  printf '%s' "${PWD%/}/${1#./}" ;;
+  esac
+}
+
+if [ "${1:-}" = "--list" ]; then
+  need_tools
+  N=0
+  for f in "$ALLOW_DIR"/*; do
+    [ -f "$f" ] || continue
+    P=$(head -1 "$f")
+    if [ ! -d "$P" ]; then STATE_TXT="adresář neexistuje"
+    elif [ -f "$P/CLAUDE.md" ] && grep -q '^## Příkazy' "$P/CLAUDE.md"; then STATE_TXT="kontrakt v CLAUDE.md"
+    else STATE_TXT="bez kontraktu – hook tu nic nespustí"
+    fi
+    printf '%s\n    %s\n' "$P" "$STATE_TXT"
+    N=$((N+1))
+  done
+  [ "$N" = 0 ] && echo "Souhlas není vydaný pro žádný projekt."
+  exit 0
+fi
+
+if [ "${1:-}" = "--revoke" ]; then
+  need_tools
+  [ -n "${2:-}" ] || die "použití: green-line.sh --revoke <projekt>"
+  P=$(norm_path "$2")
+  N=0
+  # Porovnává se obsah souboru, ne hash: souhlas se ukládá pro adresář s CLAUDE.md,
+  # což bývá <kontejner>/main, takže samotný hash zadané cesty by ho netrefil.
+  for f in "$ALLOW_DIR"/*; do
+    [ -f "$f" ] || continue
+    STORED=$(head -1 "$f")
+    if [ "$STORED" = "$P" ] || [ "$STORED" = "$P/main" ]; then
+      rm -f "$f" || die "nelze smazat $f"
+      echo "Souhlas odebrán: $STORED"
+      N=$((N+1))
+    fi
+  done
+  if [ "$N" = 0 ]; then
+    echo "Pro $P žádný souhlas vydaný nebyl." >&2
+    exit 1
+  fi
+  exit 0
+fi
 
 # --- Vydání souhlasu -----------------------------------------------------------
 if [ "${1:-}" = "--allow" ]; then
@@ -70,6 +124,12 @@ if [ "${1:-}" = "--allow" ]; then
   echo "a to se neschvaluje. Do cizího naklonovaného repozitáře souhlas nedávej."
   exit 0
 fi
+
+# Neznámý přepínač: bez tohohle by hook čekal na stdin a vypadal by jako zaseknutý.
+case "${1:-}" in
+  "") ;;
+  *) die "neznámý přepínač ${1}. Použití: --allow <projekt> | --list | --revoke <projekt>" ;;
+esac
 
 # --- Vstup ---------------------------------------------------------------------
 INPUT=$(cat)

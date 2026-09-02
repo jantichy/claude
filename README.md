@@ -114,7 +114,7 @@ Jedna výjimka, kterou přiznávám rovnou: když **druhý pokus nad týmž stav
 
 Skript přitom **nic neví o mém projektu** – přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí. Je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic.
 
-Bezpečnostní vrstva, na kterou jsem přišel až při review vlastní práce: ten kontrakt je **kód ležící v repozitáři** a hooky se na povolení neptají. Naklonovat cizí projekt by stačilo k tomu, aby se mi spustilo, co si tam někdo napsal. Skript proto v projektu nespustí nic, dokud pro něj nevydám souhlas (`--allow`), a říká u toho na rovinu, co ten souhlas znamená: platí pro repozitář, ne pro ty konkrétní řádky. `npm test` spustí, co je v `package.json`, a to se neschvaluje.
+Bezpečnostní vrstva, na kterou jsem přišel až při review vlastní práce: ten kontrakt je **kód ležící v repozitáři** a hooky se na povolení neptají. Naklonovat cizí projekt by stačilo k tomu, aby se mi spustilo, co si tam někdo napsal. Skript proto v projektu nespustí nic, dokud pro něj nevydám souhlas (`--allow`), a říká u toho na rovinu, co ten souhlas znamená: platí pro repozitář, ne pro ty konkrétní řádky. `npm test` spustí, co je v `package.json`, a to se neschvaluje. Vydané souhlasy vypíše `--list` a odebere `--revoke` – u bezpečnostního prvku, který jde jen zapnout, není cesta zpět, když ho omylem dám cizímu repozitáři.
 
 ## [`settings.json`](settings.json) – průběžně laděné permissions
 
