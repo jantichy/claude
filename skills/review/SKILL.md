@@ -188,9 +188,10 @@ PRAVIDLA HLÁŠENÍ:
 - Každý nález musí mít konkrétní selhání: vstupy nebo stav → co se stane špatně.
   „Mohla by tu být race condition“ není nález. „Když dva požadavky dorazí mezi
   read a write v foo.ts:42, druhý přepíše první" nález je.
-- **Můžeš-li nález ověřit spuštěním, udělej to** a do pole `evidence` napiš příkaz i jeho
-  výstup. Ušetříš tím celý ověřovací krok – doložené pozorování se nepřezkoumává, jen
-  přehraje. Pracuj přitom výhradně v `/tmp` a s absolutními cestami; do auditovaného
+- **Můžeš-li nález ověřit spuštěním, udělej to** a vyplň `evidence` – objekt se třemi
+  poli: `cmd` (přesný příkaz), `exit_code` (jeho návratový kód) a `stdout_tail`
+  (posledních pár řádků výstupu). Uveď jen to, co jsi opravdu spustil; ta trojice se
+  přehrává. Pracuj přitom výhradně v `/tmp` a s absolutními cestami; do auditovaného
   projektu nezapisuj.
 - Nehlas soubory v cestách legacy/vendored/generated.
 - Když je totéž porušené na mnoha místech (>20 výskytů), neuváděj jednotlivé řádky –
@@ -203,6 +204,11 @@ ZÁVAŽNOST:
 - STŘEDNÍ – reálný dopad na správnost, použitelnost nebo udržovatelnost
 - KOSMETICKÉ – bez praktického dopadu
 
+Závažnost si přiděluješ sám, ale rozhoduje o tom, kolik kontroly nález dostane:
+KOSMETICKÝ se neověřuje a část z nich se opraví bez ptaní. Proto u KOSMETICKÉHO
+napiš do `basis` konkrétní pravidlo nebo bod standardu, o který se opíráš – ne
+dojem. Nemáš-li ho čím podložit, je to STŘEDNÍ, nebo to nehlas.
+
 VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
 [
   {
@@ -214,7 +220,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
     "failure": "konkrétní vstupy nebo stav → co se stane špatně",
     "locations": ["soubor:řádek", ...],
     "suggested_fix": "konkrétní akce, ne vágní doporučení",
-    "evidence": "ověřil-li jsi nález spuštěním: co jsi pustil a co to vrátilo (jinak vynech)",
+    "evidence": {"cmd": "...", "exit_code": 1, "stdout_tail": "..."},   // jen když jsi to opravdu spustil, jinak vynech
     "tags": ["batch"?],
     "related_root": "title jiného nálezu, jehož je tento následkem (volitelné)"
   }
@@ -240,6 +246,12 @@ Každý nález **musí být opřený o konkrétní bod standardu** – do pole `
 název sekce a citaci nebo parafrázi pravidla. Nález, který takhle podložit neumíš,
 nehlas: na obecné posouzení jsou pracovní role.
 
+Kromě nálezů vrať i **soupis pravidel, která jsi z bodu 1 odvodil**, každé
+s příznakem `porušeno` / `v pořádku` / `netýká se`. Bez něj vypadá prázdný
+výsledek stejně, ať jsi prošel šedesát pravidel, nebo dvanáct – a orchestrátor
+z prázdného pole usoudí „standard je dodržen“ a uzavře běh větou o tom, že je
+práce v pořádku.
+
 Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 
 <zbytek – soubory, výjimky, pravidla hlášení, závažnost, formát – shodný s pracovní rolí>
@@ -251,7 +263,11 @@ Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 
 **Tohle je krok, na kterém stojí použitelnost celého skillu.** Panel hlásí i to, co není – reviewer požádaný o hledání mezer nějaké najde vždycky, protože o to byl požádán.
 
-**Na verifikaci se nešetří.** Ověřovatele pouštěj na **nejsilnějším modelu s `xhigh`**, i když nález hlásila levná role. Slabý model nález nepotvrdí ani nevyvrátí – přizvukuje tomu, co má před sebou, a tím z ověření udělá razítko. Ověřovatelů je přitom míň než nálezů z panelu, protože běží jen na KRITICKÉ a STŘEDNÍ a až po deduplikaci.
+**Na verifikaci se nešetří.** Ověřovatele pouštěj na **nejsilnějším modelu**, i když nález hlásila levná role. (Effort mu předepsat neumíš: `Agent` bere parametr `model`, ale ne `effort` – ten se bere z definice agenta. Píše-li se v ose „na nejsilnějším modelu s `xhigh`“, splnitelná je dnes první polovina. Je to vědomá mezera, ne opomenutí; zavřela by ji až definice agenta ve `~/.claude/agents/`.) Slabý model nález nepotvrdí ani nevyvrátí – přizvukuje tomu, co má před sebou, a tím z ověření udělá razítko. Ověřovatelů je přitom míň než nálezů z panelu, protože běží jen na KRITICKÉ a STŘEDNÍ a až po deduplikaci.
+
+**Práh není u obou závažností stejný a je to vědomé.** Cena omylu je asymetrická: falešně pozitivní nález stojí jednu otázku ve Fázi 7 (kde je stejně všechno z pracovních rolí sporné), falešně negativní stojí díru v produkci – a je **navždy neviditelný**, protože se nezobrazuje ani titulkem. Symetrický práh proto obětuje pravé nálezy, aby ušetřil jednu otázku.
+
+Zvlášť to platí pro bezpečnost: nálezy z té role jsou ze své podstaty tvrzení o **absenci** (chybí kontrola oprávnění, chybí limit pokusů, chybí auditní stopa). Na „chybí kontrola“ se otázka „nastane to selhání doopravdy?“ nedá z kódu zodpovědět bez pochybnosti nikdy – vždycky *mohl* být guard o vrstvu výš. Kdyby na ni platilo „při pochybnosti vyvracej“, mizely by nálezy té role systematicky.
 
 Na každý nález ze závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci:
 
@@ -259,27 +275,48 @@ Na každý nález ze závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatn�
 Tenhle nález se snaž VYVRÁTIT. Tvým úkolem není ho potvrdit.
 
 NÁLEZ: <title>
+ZÁVAŽNOST: <severity>
 TVRZENÍ: <description>
 SELHÁNÍ, KTERÉ TVRDÍ: <failure>
+O CO SE OPÍRÁ: <basis – scénář z requirements, bod seznamu zranitelností, pravidlo standardu>
 KDE: <locations>
+<u nálezu z citlivé oblasti: TÉHLE OBLASTI SE TÝKÁ: <položky jmenného seznamu z architecture.md>>
 
 Přečti si dotčený kód i jeho okolí a odpověz na jedinou otázku: **nastane to
 popsané selhání doopravdy?** Ověř zejména, jestli problém neošetřuje něco jinde –
 guard o vrstvu výš, validace na vstupu, typový systém, omezení v databázi,
 konfigurace.
 
-Při pochybnosti odpovídej `refuted: true`. Nález, který neumíš doložit, škodí víc,
-než užije.
+DŮKAZNÍ BŘEMENO PODLE ZÁVAŽNOSTI:
+- STŘEDNÍ: při pochybnosti odpovídej `refuted: true`. Nález, který neumíš doložit,
+  škodí víc, než užije.
+- KRITICKÉ: obráceně. Vyvrátit ho smíš jen tehdy, když **jmenuješ konkrétní ochranu
+  a její místo** (`soubor:řádek`) – guard, validaci, omezení v databázi, konfiguraci.
+  „Nejspíš to řeší framework“, „asi je to za autentizací“ ani „nepodařilo se mi to
+  potvrdit“ vyvrácení není; v takovém případě odpovídej `refuted: false` a do
+  `reason` napiš, co se ověřit nepodařilo. Tvrdí-li nález, že něco CHYBÍ, je
+  vyvrácením jedině to, že jsi tu věc našel.
 
 VÝSTUP: JSON, nic jiného.
-{"refuted": true|false, "reason": "čím konkrétně je vyvrácený nebo potvrzený"}
+{"refuted": true|false, "reason": "čím konkrétně je vyvrácený nebo potvrzený",
+ "guard": "soubor:řádek ochrany, o kterou vyvrácení opíráš (u KRITICKÉHO povinné)"}
 ```
 
-**Nález s vyplněným polem `evidence` ověřovatele nepotřebuje** – přehraj si ten experiment sám a rozhodni podle výsledku; nesedí-li s tím, co agent tvrdil, nález zahoď. Ověřuje se tvrzení, ne pozorování, a skeptik nad doloženým pozorováním jen stojí čas.
+**Vyvrácené KRITICKÉ bez vyplněného `guard` neplatí** – ber je jako potvrzené a pusť je do Fáze 7. Je to jediná pojistka proti tomu, aby se z ověření stalo razítko obráceným směrem.
+
+**Nález s vyplněným `evidence` jde ověřovateli taky, ale s jiným zadáním:** *„Spusť `cmd` a porovnej návratový kód a výstup s tím, co nález tvrdí. Nesedí-li to, `refuted: true`.“* Nediskutuje se, přehrává se.
+
+Dřív takový nález ověření **vynechával** a přehrával si ho orchestrátor sám. Byla to díra dvěma způsoby. Za prvé se tím z volnotextového pole stal vypínač skeptika – a agent, který ví, že vyplněné pole ušetří přezkoumání, ho vyplní i tehdy, když nic nespustil. Za druhé je „přehraj si to sám“ krok bez artefaktu: nikdo nepozná, jestli proběhl. Delegovaný krok je aspoň vidět v seznamu volání a stojí zhruba totéž.
 
 **Deduplikuj ještě před ověřením**, ne až po něm. Role se překrývají schválně, takže tentýž problém přijde třikrát jinými slovy – posílat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď.
 
-**Vyvrácené nálezy zahoď** a jen je spočítej do souhrnu. KOSMETICKÉ nálezy se neověřují – ověření by stálo víc než jejich oprava.
+**Strop na počet ověřovatelů: nejvýš 20 v jedné dávce a nejvýš 40 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů – `/review full` na starším projektu vrátí klidně dvě stě nálezů a to je dvě stě agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 7 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat.
+
+**Nález s prázdným `locations` ověřovateli neposílej.** Nemá co číst, a podle pravidla o pochybnosti by ho zahodil, i kdyby platil. Zařaď ho rovnou mezi sporné s poznámkou „bez lokace, ověř ručně“.
+
+**Vyvrácené nálezy zahoď a jen je spočítej do souhrnu – kromě KRITICKÝCH.** Ty vypiš ve Fázi 5 jedním řádkem na nález i s důvodem vyvrácení a s `guard`, o který se opírá. Je to pět řádků a je to jediné místo, kde je vidět, co bylo umlčeno; bez něj se falešně negativní ověření nedá odhalit vůbec.
+
+KOSMETICKÉ nálezy se neověřují – ověření by stálo víc než jejich oprava.
 
 U nálezů z deterministické vrstvy (Fáze 1) se ověření **nedělá**.
 
@@ -315,11 +352,13 @@ Při pochybnosti patří nález mezi sporné.
 
 ## Fáze 5 – Přehled
 
+**Vypisuj poměry, ne absolutní čísla.** Report složený ze samých počtů vypadá stejně po řádném i po odbytém běhu: „5 nálezů“ neřekne, jestli panel běžel celý a jestli se ověřovalo. Každý údaj vyrob příkazem nebo spočítej z výstupů agentů, ne z hlavy (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+
 ```
 ## Výsledky review
 
-Rozsah: [změny na větvi – N souborů / celý projekt – N souborů]
-Role: [korektnost, bezpečnost, testy, coding, web – které běžely]
+Rozsah: [N z M souborů diffu – co a proč vynecháno]
+Role: [které běžely / které vybrané neběžely a proč] · [na čem: code-review high, bezpečnost opus, standardy výchozí]
 
 Deterministická vrstva  [u každého kroku nástroj · návratový kód, ne holé číslo]:
 - zelená linka: ✅ / ❌ [co padá]
@@ -332,12 +371,15 @@ Deterministická vrstva  [u každého kroku nástroj · návratový kód, ne hol
 - nezkontrolováno: [co chybělo v kontraktu příkazů]
 - nespuštěno: [nástroje, které nejsou na stroji]
 
-Panel: X nálezů, Y vyvráceno při ověření, zbývá Z:
+Panel: X nálezů → Y po deduplikaci → Z ověřeno (W neověřeno kvůli stropu) → V přežilo:
 - 🔴 Kritické: N
 - 🟡 Střední: N
 - 🔵 Kosmetické: N
 
 Z toho [batch] hromadných (>20 výskytů): N
+
+Vyvrácené KRITICKÉ (jeden řádek na nález – co bylo umlčeno a čím):
+- [title] – vyvráceno: [reason] (ochrana: [guard])
 
 Mechanických (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
 Sporných: M – ty projdeme spolu od nejzávažnějších.
@@ -433,7 +475,8 @@ Rozsah: [změny na větvi / celý projekt] · Role: [které]
 - 🪄 Vyřešeno automaticky (následek root opravy): N
 - 📌 Odloženo: N
 - ⏭️ Přeskočeno (zapsáno do CLAUDE.md → Review): N
-- 🚫 Vyvráceno při ověření (nezobrazeno): N
+- 🚫 Vyvráceno při ověření: N (z toho kritických: N – ty jsou vypsané ve Fázi 5)
+- ❔ Neověřeno kvůli stropu nebo chybějící lokaci: N
 
 [Pokud jsou odložené: seznam s popisy]
 
