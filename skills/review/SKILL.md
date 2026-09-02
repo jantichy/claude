@@ -155,7 +155,7 @@ PRAVIDLA HLÁŠENÍ:
 - Hlas jen to, co porušuje korektnost nebo zadání. Stylové preference a „šlo by to
   hezčí" nehlas vůbec – z toho vzniká over-engineering, ne lepší kód.
 - Každý nález musí mít konkrétní selhání: vstupy nebo stav → co se stane špatně.
-  „Mohla by tu být race condition" není nález. „Když dva požadavky dorazí mezi
+  „Mohla by tu být race condition“ není nález. „Když dva požadavky dorazí mezi
   read a write v foo.ts:42, druhý přepíše první" nález je.
 - Nehlas soubory v cestách legacy/vendored/generated.
 - Když je totéž porušené na mnoha místech (>20 výskytů), neuváděj jednotlivé řádky –
@@ -196,7 +196,7 @@ Prověř soulad zadaných souborů se standardem v souboru <absolutní cesta k s
 
 POSTUP:
 1. Přečti celý soubor standardů. Sestav si z něj seznam konkrétních prověřitelných
-   pravidel – včetně sekcí „Antipatterns", pokud existují.
+   pravidel – včetně sekcí „Antipatterns“, pokud existují.
 2. Přečti zadané soubory.
 3. Pro každé pravidlo ověř, jestli ho zadané soubory porušují.
 
@@ -288,7 +288,7 @@ Deterministická vrstva:
 - audit závislostí: N nálezů HIGH/CRITICAL
 - tajemství v repu: N
 - statická analýza: N
-- mutation score: X %   [nebo „nespuštěno – projekt nemá příkaz"]
+- mutation score: X %   [nebo „nespuštěno – projekt nemá příkaz“]
 - nezkontrolováno: [co chybělo v kontraktu příkazů]
 
 Panel: X nálezů, Y vyvráceno při ověření, zbývá Z:
@@ -370,7 +370,7 @@ Navrhované řešení:
    ```
    ## Review
 
-   Nálezy vyhodnocené při /review jako „neopravovat". Při dalším review se neuvádějí.
+   Nálezy vyhodnocené při /review jako „neopravovat“. Při dalším review se neuvádějí.
 
    - **YYYY-MM-DD** – *<title>* (role: <role>, podklad: <basis>): <důvod>
      - Lokace: <soubor:řádek, ...>
@@ -396,7 +396,7 @@ Rozsah: [změny na větvi / celý projekt] · Role: [které]
 
 [Pokud jsou odložené: seznam s popisy]
 
-**Nezkontrolováno:** [kroky přeskočené kvůli chybějícímu příkazu v kontraktu, nebo „nic"]
+**Nezkontrolováno:** [kroky přeskočené kvůli chybějícímu příkazu v kontraktu, nebo „nic“]
 
 **Další krok:** /consistency
 ```

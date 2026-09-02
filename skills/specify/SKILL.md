@@ -171,7 +171,7 @@ lokalizace, provoz a zálohy. Jen to, co má reálné důsledky.
 
 ## MVP
 Zaškrtávací seznam toho, co musí být v první verzi. Řež agresivně.
-Každá položka je ověřitelná – ne „hotová registrace", ale co konkrétně umí.
+Každá položka je ověřitelná – ne „hotová registrace“, ale co konkrétně umí.
 
 ## Mimo rozsah
 Co vědomě neděláme a proč. Musí být neprázdné.
@@ -343,7 +343,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 
 **Dokumenty**
 - docs/requirements.md – <počet> sekcí
-- docs/architecture.md – <počet> sekcí   (nebo „přeskočeno: <důvod>")
+- docs/architecture.md – <počet> sekcí   (nebo „přeskočeno: <důvod>“)
 
 **Zapsáno mimo ně**
 - docs/decisions.md: N rozhodnutí
@@ -351,7 +351,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 - docs/rules.md: N principů
 
 **Otevřené otázky**
-- [seznam, nebo „žádné"]
+- [seznam, nebo „žádné“]
 
 **Další krok**
 - [/breakdown / u projektu bez kódu rozpis kroků do docs/todo.md]

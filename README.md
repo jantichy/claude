@@ -1,4 +1,4 @@
-# Moje Claude Code konfigurace
+# Konfigurace Claude Code
 
 Tohle je moje osobní konfigurace [Claude Code](https://docs.claude.com/en/docs/claude-code), kterou tu sdílím pro inspiraci. Třeba tu najdete něco užitečného i pro vaši práci. Budu rád i za jakékoliv vaše nápady a připomínky, napište mi na e-mail [jantichy@jantichy.cz](mailto:jantichy@jantichy.cz)!
 
@@ -26,7 +26,7 @@ Třetí vrstva je ta, na které to celé stojí: každý nález dostane nezávis
 
 Na kód mám `/review`. Ale na dokument, který s Claudem píšu tři dny – pozicování, cenotvorbu, datový model – jsem neměl nic, a je to přesně ten typ práce, kde se nejvíc zmýlím: Claude je spoluautorem, takže na něj nemá nezávislý pohled o nic víc než já.
 
-Skill to obchází tím, že na dokument pošle agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory. Každý dostane jiný úhel: jeden hledá vnitřní rozpory, druhý nejslabší předpoklad, třetí to čte očima cílové skupiny, další počítá ekonomiku. Každý nález musí mít konkrétní důsledek („při 20 000 účastnících vyjde ruční párování na 300 hodin"), ne obecnou obavu. Zapisují se i zamítnuté námitky – jinak by je příští oponentura našla znovu jako nové.
+Skill to obchází tím, že na dokument pošle agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory. Každý dostane jiný úhel: jeden hledá vnitřní rozpory, druhý nejslabší předpoklad, třetí to čte očima cílové skupiny, další počítá ekonomiku. Každý nález musí mít konkrétní důsledek („při 20 000 účastnících vyjde ruční párování na 300 hodin“), ne obecnou obavu. Zapisují se i zamítnuté námitky – jinak by je příští oponentura našla znovu jako nové.
 
 ## [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
@@ -74,7 +74,7 @@ Tři věci dělá schválně nepohodlně: nikdy se nespustí sám, nic neopravuj
 
 ## [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
 
-Když jsem si nechal projít historii svých promptů, tohle vyskočilo jako úplně nejčastější věc, kterou vypisuju znovu a znovu: 91 promptů obsahuje „přejmenuj / sjednoť / nahraď všude".
+Když jsem si nechal projít historii svých promptů, tohle vyskočilo jako úplně nejčastější věc, kterou vypisuju znovu a znovu: 91 promptů obsahuje „přejmenuj / sjednoť / nahraď všude“.
 
 Skill řeší přesně to, na čem obyčejný find-replace selhává: hledá **odvozené tvary** včetně české skloňované varianty, které bývá v dokumentaci nejvíc a grep na základní tvar ji nenajde. Sahá i na názvy souborů a adresářů, přesouvá přes `git mv`, ať se neztratí historie, a hlídá pořadí – delší tvary před kratšími, jinak z `marketId` vznikne nesmysl. A nikdy nekončí provedením: povinný poslední krok je kontrolní průchod na starý tvar, který musí vrátit nulu. Zapomenutý výskyt se totiž vrací měsíce později jako záhada.
 

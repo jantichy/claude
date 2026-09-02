@@ -25,7 +25,7 @@ Pokud `.git` nenajdeš, oznam „Aktuální adresář není git repozitář.“ 
 
 ### Zjisti stav
 
-Přečti `<PROJECT_ROOT>/CLAUDE.md` a hledej nadpis `### Autocommit` v projektovém `CLAUDE.md` (kanonicky pod `## Automatické akce`). Nadpis `### Autocommit v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Najdeš-li sekci `Autocommit` na jiné úrovni nebo mimo `## Automatické akce`, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
+Stav zjisti podle definice v *Co skill dělá* výš – **obě možná umístění projektového `CLAUDE.md`**, kanonické místo nadpisu i to, že nadpis v globálním souboru se nepočítá. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
 
 ### `status` (nebo žádný argument)
 

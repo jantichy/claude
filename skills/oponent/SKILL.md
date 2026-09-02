@@ -91,14 +91,14 @@ oponenti – nepřebíhej k nim.
 U KAŽDÉHO NÁLEZU UVEĎ:
 - **Kde** – soubor a sekce, ideálně citace věty, které se to týká
 - **Co** – jednou větou, co je špatně
-- **Proč to vadí** – konkrétní důsledek, ne obecná obava. „Nebude to škálovat" je nic;
-  „při 20 000 účastnících vyjde ruční párování na 300 hodin práce" je nález.
+- **Proč to vadí** – konkrétní důsledek, ne obecná obava. „Nebude to škálovat“ je nic;
+  „při 20 000 účastnících vyjde ruční párování na 300 hodin práce“ je nález.
 - **Návrh** – dvě až tři konkrétní varianty řešení, ne jedna. Nemáš-li řešení, řekni to
   a označ nález jako otázku k rozhodnutí.
 - **Závažnost** – KRITICKÉ / STŘEDNÍ / KOSMETICKÉ, stejná škála jako v `/review` a `/consistency`, ať jdou nálezy z různých skillů porovnat. U oponentury se čte jako síla námitky: **KRITICKÉ** boří předpoklad, na kterém dokument stojí; **STŘEDNÍ** mění závěr nebo rozsah; **KOSMETICKÉ** zpřesňuje.
 
 PRAVIDLA:
-- Co je v pořádku, nepiš. Žádné shrnutí kladů, žádné „jinak je to dobře promyšlené".
+- Co je v pořádku, nepiš. Žádné shrnutí kladů, žádné „jinak je to dobře promyšlené“.
 - Nenavrhuj to, co je v docs/decisions.md už vědomě zamítnuté. Přečti si to nejdřív.
   Výjimka: myslíš-li si, že to rozhodnutí bylo chybné, řekni to výslovně jako revizi
   rozhodnutí a zdůvodni, který jeho předpoklad neplatí.
@@ -134,7 +134,7 @@ U každého nejdřív vypiš:
 ```
 ---
 [N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU
-Našel: <úhel, případně „2 oponenti nezávisle">
+Našel: <úhel, případně „2 oponenti nezávisle“>
 
 Kde: <soubor, sekce, citace>
 Co: <jednou větou>

@@ -127,10 +127,10 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 **Commity:** <N>
 
 **Odchylky od plánu**
-- [co se muselo změnit a proč, nebo „žádné"]
+- [co se muselo změnit a proč, nebo „žádné“]
 
 **Nedokončeno**
-- [zablokované úkoly i s důvodem, nebo „nic"]
+- [zablokované úkoly i s důvodem, nebo „nic“]
 
 **Zapsáno mimo kód**
 - docs/decisions.md: N

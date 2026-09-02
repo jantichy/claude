@@ -84,7 +84,7 @@ Tvar              Výskytů   Souborů
 market              47        12
 markets              8         4
 marketId            23         6
-„trh" (skloňované)  15         3
+„trh“ (skloňované)  15         3
 market.md            1         –  (název souboru)
 markets/             1         –  (název adresáře)
 
@@ -146,7 +146,7 @@ Nesedí-li něco, **oprav a projdi znovu** – ne že to jen ohlásíš.
 - Vnější: [remote / popis repozitáře / nic]
 
 **Vědomě nezměněno**
-- [cesty a důvod, nebo „nic"]
+- [cesty a důvod, nebo „nic“]
 
 **Kontrolní průchod**
 - Starý tvar: 0 výskytů mimo vyloučené

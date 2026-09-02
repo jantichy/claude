@@ -27,7 +27,7 @@ Bez tohohle kroku by spuštění z podadresáře projektu nebo z kontejneru zalo
 
 ### Zjisti stav
 
-Stav zjisti přečtením `CLAUDE.md` v projekt rootu a hledáním přítomnost nadpisu `### Autoprompt` v projektovém `CLAUDE.md` (kanonicky pod `## Automatické akce`). Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. Nadpis `### Autoprompt v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Najdeš-li sekci `Autoprompt` na jiné úrovni nebo mimo `## Automatické akce`, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar.
+Stav zjisti podle definice v *Co skill dělá* výš – **obě možná umístění projektového `CLAUDE.md`**, kanonické místo nadpisu i to, že nadpis v globálním souboru se nepočítá. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
 
 ### `status` (nebo žádný argument)
 

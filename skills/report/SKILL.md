@@ -107,7 +107,7 @@ Kromě toho, co říká `dataviz`:
 
 ### Dvě verze
 
-U rozsáhlejších analýz udělej **podrobnou i stručnou verzi**. Stručná je zhruba pětina rozsahu, jen to podstatné, bez opakování – ne zkrácená kopie, ale samostatně napsaný text. Pojmenuj `report.html` (stručná, ta se používá častěji) a `report-podrobny.html`.
+U rozsáhlejších analýz udělej **podrobnou i stručnou verzi**. Stručná je zhruba pětina rozsahu, jen to podstatné, bez opakování – ne zkrácená kopie, ale samostatně napsaný text. Pojmenuj `report.html` (stručná, ta se používá častěji) a `report-full.html`.
 
 Zeptej se, jestli je chce obě, ne že to uděláš automaticky.
 
@@ -191,7 +191,7 @@ Nespoléhej na to, že to vypadá dobře ve zdrojáku.
 - [seznam kontrol, které prošly]
 
 **Na co upozorňuji**
-- [limity dat, osobní údaje, nedopočítané věci – nebo „nic"]
+- [limity dat, osobní údaje, nedopočítané věci – nebo „nic“]
 ```
 
 Zakonči jednou z těchto vět:

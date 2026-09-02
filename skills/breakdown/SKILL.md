@@ -116,7 +116,7 @@ Nabídni před tím ještě `/oponent docs/plan.md` s úhly *technická provedit
 **Pokrytí scénářů:** <N z M scénářů z requirements.md má test>
 
 **Nepokryto vědomě**
-- [co zůstalo na další fázi, nebo „nic"]
+- [co zůstalo na další fázi, nebo „nic“]
 
 **Další krok:** /implement
 ```

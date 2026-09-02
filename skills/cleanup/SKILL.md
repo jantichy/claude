@@ -188,7 +188,7 @@ Nedává-li standardní struktura pro tenhle projekt smysl (jednorázový scratc
 Z session: [co v session padlo, případně citace]
 Stav: [chybí / zastaralé / špatné místo / duplicita / nejasné zařazení]
 
-Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit dokumentaci"]
+Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit dokumentaci“]
 ```
 
    Pak se zeptej **přes tool `AskUserQuestion`** (viz Zásady výše) – jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou, volby **Zapsat** / **Odložit** / **Přeskočit**. U položky s nejasným zařazením nabídni místo toho **konkrétní cílové soubory** jako volby (např. `CLAUDE.md` / `docs/decisions.md` / `docs/todo.md`) – je to rychlejší než se ptát dvakrát.
@@ -220,7 +220,7 @@ Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, doc
 Soustřeď se na oblasti, kterých se dotýkala poslední session. ODPOVĚZ NA TYTO OTÁZKY:
 <v režimu `full` tenhle odstavec vynech – procházej dokumentaci celou>
 
-**A. Co bych měl dělat dál?** Je z dokumentace jednoznačné, jaký je další krok? Kdyby ti někdo řekl „pokračuj", věděl bys jak?
+**A. Co bych měl dělat dál?** Je z dokumentace jednoznačné, jaký je další krok? Kdyby ti někdo řekl „pokračuj“, věděl bys jak?
 
 **B. Rozumím tomu, co se nedávno rozhodlo?** Popiš vlastními slovy, co se v projektu naposledy změnilo a proč. Kde jsi musel hádat nebo dohledávat?
 
@@ -228,7 +228,7 @@ Soustřeď se na oblasti, kterých se dotýkala poslední session. ODPOVĚZ NA T
 
 **D. Chybějící kontext.** Předpokládá se něco jako známé, ale nikde to není vysvětlené? Odkazuje se na rozhodnutí, jehož zdůvodnění chybí?
 
-**E. Zastaralé zbytky.** Věty typu „viz níže" / „zatím" / „odloženo" / „zvažuje se", které už neplatí. Odkazy na sekce, soubory nebo pojmy, které neexistují nebo se jmenují jinak. Do dokumentace se zasahovalo chirurgicky, takže hrozí zbytky po zrušených konceptech a viséci v křížových odkazech – aktivně je hledej.
+**E. Zastaralé zbytky.** Věty typu „viz níže“ / „zatím“ / „odloženo“ / „zvažuje se“, které už neplatí. Odkazy na sekce, soubory nebo pojmy, které neexistují nebo se jmenují jinak. Do dokumentace se zasahovalo chirurgicky, takže hrozí zbytky po zrušených konceptech a viséci v křížových odkazech – aktivně je hledej.
 
 **F. Co bych se musel zeptat?** Konkrétní otázky, na které bys nenašel odpověď.
 
@@ -272,10 +272,10 @@ Nezapisuj do žádného souboru.
 - Commity: N, push: [ano / repozitář nemá remote]
 
 **Odložené položky**
-- [seznam, nebo „žádné"]
+- [seznam, nebo „žádné“]
 
 **Mimo rozsah úklidu**
-- [rozbité věci známé ze session, nálezy na starší dluh – nebo „žádné"]
+- [rozbité věci známé ze session, nálezy na starší dluh – nebo „žádné“]
 ```
 
 Zakonči **jednoznačným verdiktem** – jednou z těchto dvou vět, nikdy ničím vágním mezi tím:
