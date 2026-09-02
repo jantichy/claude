@@ -69,6 +69,12 @@ need_tools() {
 # propašovat příkaz schovaný jako dokumentace.
 md_body() { awk '/^[[:space:]]*(```|~~~)/ { f = !f; next } !f' "$1"; }
 
+# Kanonická (fyzická) podoba cesty. Bez ní se souhlas vydaný pro cestu přes
+# symlink nepotká s během hooku, který ji má rozřešenou – na macOS je takový
+# /var -> /private/var, ale stačí i symlinkovaný adresář s projekty. Brána by pak
+# mlčky neběžela a jediné, co by uživatel dostal, je hláška "není vydaný souhlas".
+canon() { (cd "$1" 2>/dev/null && pwd -P) || printf '%s' "$1"; }
+
 # Klíč je hash CELÉHO řetězce. Dřívější "posledních 40 alfanumerických znaků"
 # kolidovalo: /a/con-text a /a/context daly týž klíč, a tím i týž souhlas.
 proj_key() { printf '%s' "$1" | sha; }
@@ -80,9 +86,9 @@ proj_key() { printf '%s' "$1" | sha; }
 # souhlas konečně platí pro repozitář, jak celou dobu slibuje.
 # Mimo git repozitář se vrací zadaná cesta, aby se chování nezměnilo.
 repo_id() {
-  d=$(git -C "$1" rev-parse --git-common-dir 2>/dev/null) || { printf '%s' "$1"; return; }
+  d=$(git -C "$1" rev-parse --git-common-dir 2>/dev/null) || { canon "$1"; return; }
   case "$d" in /*) ;; *) d="$1/$d" ;; esac
-  (cd "$d" 2>/dev/null && pwd) || printf '%s' "$1"
+  canon "$d"
 }
 
 # Soubor se souhlasem pro daný pracovní adresář, existuje-li. Souhlasy vydané
@@ -123,14 +129,12 @@ contract_section() { md_body "$1" | sed -n '/^## Příkazy/,/^## /p'; }
 # Souhlas musí jít i zjistit a odebrat, ne jen vydat: po naklonování cizího
 # repozitáře, kterému jsem ho omylem dal, by jinak nebyla cesta zpět.
 
-# Cesta, pro kterou se souhlas hledá. Nepoužívá cd: odebrat se musí dát i souhlas
-# pro adresář, který už neexistuje.
-# Existuje-li adresář, jde se přes cd: jinak `--revoke .` a `--revoke cesta/`
+# Cesta, pro kterou se souhlas hledá. Existuje-li adresář, jde se přes canon: jinak `--revoke .` a `--revoke cesta/`
 # nesedly na uložený řetězec a odvolání souhlasu tiše neproběhlo – přičemž hláška
 # zněla jako fakt o stavu ("žádný souhlas vydaný nebyl"), ne jako chyba vstupu.
 # Neexistující adresář se skládá ručně, aby šel odvolat i souhlas pro smazanou cestu.
 norm_path() {
-  if [ -d "$1" ]; then (cd "$1" && pwd) && return 0; fi
+  if [ -d "$1" ]; then canon "$1" && return 0; fi
   p=$1
   case "$p" in /*) ;; *) p="${PWD%/}/${p#./}" ;; esac
   while :; do case "$p" in */) p=${p%/} ;; *) break ;; esac; done
@@ -181,7 +185,7 @@ fi
 # --- Vydání souhlasu -----------------------------------------------------------
 if [ "${1:-}" = "--allow" ]; then
   need_tools
-  P=$(cd "${2:-$PWD}" 2>/dev/null && pwd) || die "neznámá cesta: ${2:-$PWD}"
+  P=$(canon "${2:-$PWD}") || die "neznámá cesta: ${2:-$PWD}"
   MD=$(find_contract "$P") || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Příkazy."
   P=$(proj_for_md "$MD")
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
@@ -240,7 +244,7 @@ fi
 # strom není – proto se hledá i v main/ a příkazy pak běží tam, ne v cwd.
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
 CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || exit 0
-PROJ=$(proj_for_md "$CLAUDE_MD")
+PROJ=$(canon "$(proj_for_md "$CLAUDE_MD")")
 
 for d in "$PROJ" "$PWD"; do
   if [ -f "$d/.claude/no-green-line" ]; then

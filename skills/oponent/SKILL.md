@@ -39,6 +39,8 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 **Předmět posudku.** Uživatel ho může zadat jako argument (`/oponent docs/requirements.md`, `/oponent 01 až 04`, `/oponent pozicování`). Když ho nezadá, **nabídni mu, co jsi našel** – projdi projekt, vypiš kandidáty (dokumenty, na kterých se v poslední době pracovalo) a nech ho vybrat přes `AskUserQuestion`.
 
+**Nejdřív se podívej, jestli neexistuje `.claude/run/oponent.json`** – přerušený běh. Vzniká na konci Fáze 4; nabídni navázání dřív, než začneš cokoliv počítat znovu.
+
 **Zkontroluj, že to má smysl oponovat:**
 
 - **Je to kód?** → přesměruj na `/review` a zastav se.
@@ -46,6 +48,10 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 - **Je toho moc?** Nad zhruba pět dokumentů nebo řádově stovky kB se posudek rozmělní. Zeptej se, co je jádro, a oponuj to.
 
 **Načti kontext, který posudek potřebuje:** projektový `CLAUDE.md`, `docs/rules.md` (principy, proti kterým se v projektu rozhoduje) a `docs/decisions.md` (co už bylo rozhodnuto a proč). Bez toho subagenti navrhnou znovu to, co už bylo vědomě zamítnuto – a to je nejotravnější druh oponentury.
+
+**Na soubory ale nespoléhej.** Oponentura se často pouští hned po `/specify`, tedy v kroku 2 osy – kdežto rozhodnutí z debriefu zapisuje `/cleanup` až v kroku 7. `decisions.md` je v tu chvíli skoro prázdný, ačkoliv se v téhle session vědomě zamítla spousta věcí. **Projdi proto session a to, co jste zavrhli, vypiš do zadání oponentů** jako samostatný blok *Vědomě zamítnuté* – i s důvodem, ne jen výčtem. Bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy, a druhý už nespustíš.
+
+**Nemá-li projekt `docs/`** (konfigurační repozitář, samostatný dokument mimo projekt, text v knowledge base), řekni to nahlas a veď posudek bez nich: kontextem je pak projektový `CLAUDE.md` a příslušná doména v `~/Dev/context/`, a přijatá i zamítnutá rozhodnutí jdou tam, kam patří v tom projektu – ne do založeného `docs/`.
 
 ------
 
@@ -55,7 +61,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo ni jako vo
 
 Vyber **čtyři až pět úhlů** z katalogu níž podle sloupce *Kdy zvolit*. Výběr **předlož uživateli přes `AskUserQuestion`** předtím, než kohokoliv pustíš – volby *Pustit tak, jak je* / *Vyměnit jeden úhel* / *Vybrat panel znovu*. **Na odpověď se čeká**; do té doby žádný subagent neběží. Prostý výpis nestačí: další odstavec velí pustit panel jedním voláním, takže by se uživatel k výměně dostal až ve chvíli, kdy čtyři agenti na `xhigh` už pracují (`~/.claude/RULES.md`, *Ptej se postupně*).
 
-**Vlastní úhel** si vymysli, jen když **žádný z katalogu nepokrývá** to, co je na dokumentu specifické. Pak ale: napiš, který katalogový úhel byl nejbližší a čím se od něj tvůj liší; napiš mu **otázky ve stejném tvaru jako v katalogu** (bez nich dorazí k subagentovi holý název a ten pak najde cokoliv); zařaď ho mezi metody, nebo domény. Osvědčí-li se, **navrhni ho doplnit do katalogu** – jinak se poznatek ztratí a příště se vymýšlí znovu a jinak. Úhel, který jde formulovat jako zúžení existujícího na doménu (*Právo → GDPR a consent*), vlastní úhel není.
+**Vlastní úhel** si vymysli, jen když **žádný z katalogu nepokrývá** to, co je na dokumentu specifické. Pak ale: napiš, který katalogový úhel byl nejbližší a čím se od něj tvůj liší; napiš mu **otázky ve stejném tvaru jako v katalogu** (bez nich dorazí k subagentovi holý název a ten pak najde cokoliv); zařaď ho mezi metody, nebo domény. Osvědčí-li se, **navrhni ho doplnit do katalogu** – jinak se poznatek ztratí a příště se vymýšlí znovu a jinak. Před přidáním ale **porovnej jeho otázky se sloupcem *Ptá se* u všech stávajících úhlů**: sdílí-li s některým víc než jednu otázku, do katalogu nepatří jako nový řádek, ale jako zúžení nebo doplněk toho stávajícího (`~/.claude/RULES.md`, *Detekce konfliktů před přidáním*). Katalog roste snadno a nic ho samo nezmenšuje. Úhel, který jde formulovat jako zúžení existujícího na doménu (*Právo → GDPR a consent*), vlastní úhel není.
 
 Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; ostatním se to zakazuje, ať neutíkají od dokumentu.
 
@@ -110,6 +116,7 @@ které si přečteš. Autor dokumentu tě neslyší, takže nemá smysl být ohl
 
 DOKUMENT: <absolutní cesty>
 KONTEXT PROJEKTU (přečti, ale neoponuj to): <CLAUDE.md, docs/rules.md, docs/decisions.md>
+VĚDOMĚ ZAMÍTNUTÉ V TÉHLE PRÁCI (nenavrhuj znovu bez nového argumentu): <výčet i s důvody>
 
 TVŮJ ÚHEL POHLEDU: <úhel a jeho otázky ze sloupce *Ptá se*>
 
@@ -158,6 +165,7 @@ Ověřuješ jedno tvrzení nezávislého oponenta. Nemáš kontext z předchozí
 
 DOKUMENT: <absolutní cesty>
 KONTEXT PROJEKTU: <CLAUDE.md, docs/rules.md, docs/decisions.md>
+VĚDOMĚ ZAMÍTNUTÉ V TÉHLE PRÁCI: <výčet i s důvody>
 
 NÁLEZ K OVĚŘENÍ: <kde, co, proč to vadí, návrh, závažnost>
 
@@ -174,7 +182,7 @@ a u vyvráceného doklad – citaci z dokumentu nebo kontextu, která ho boří.
 Do žádného souboru nezapisuj.
 ```
 
-**KOSMETICKÉ nálezy se neověřují** – ověření by stálo víc než jejich vyřízení. **Vyvrácené zahoď a spočítej je do souhrnu**; kolik jich bylo, se říká nahlas, ne potichu.
+**KOSMETICKÉ nálezy se neověřují** – ne proto, že by ověření bylo drahé (stojí strojový čas), ale proto, že se ani nevypořádávají jednotlivě: jdou ve Fázi 5 jedním blokem, takže na nich nestojí žádné rozhodnutí, které by ověření chránilo. **Vyvrácené zahoď a spočítej je do souhrnu**; kolik jich bylo, se říká nahlas, ne potichu.
 
 ------
 
@@ -188,11 +196,25 @@ Než cokoliv předložíš, nálezy **zpracuj**:
 4. **Seřaď podle závažnosti**, ne podle pořadí v dokumentu.
 5. **Vypiš přehled** – všechny nálezy jednou větou, očíslované, se závažností. Uživatel musí vidět, co ho čeká, než se ho začneš ptát.
 
+### Ověřený seznam zapiš na disk, než půjdeš dál
+
+Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "predmet": [...], "uhly": [...], "nalezy": [{...nález..., "overeno": true/false, "status": "open"}]}`.
+
+**Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 5 s ním pak dlouze interaguje **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
+
+**Na startu skillu** (Fáze 0) se proto podívej, jestli `.claude/run/oponent.json` už neexistuje. Existuje-li, **nabídni navázání** místo nového běhu – a řekni, kolik nálezů v něm zbývá nevypořádaných. Změnil-li se od té doby oponovaný dokument, řekni to a zeptej se: část nálezů může být neaktuální.
+
+**Průběžně do něj zapisuj stav** každého nálezu (`prijato`, `zamitnuto`, `odlozeno`, `open`), jak jimi procházíš. Po dokončení Fáze 6 soubor smaž.
+
+Panel v tom souboru je jen po dobu běhu – trvalý záznam úhlů mezi běhy vědomě nemáme, viz Fáze 6.
+
 ------
 
 ## Fáze 5 – Průchod nálezy
 
-Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího.
+Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – kosmetické jdou nakonec jedním blokem (viz níž).
+
+**KOSMETICKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Zahodit všechny* / *Vrátit se k tomu později*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Jsou to navíc jediné nálezy, které neprošly ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany.
 
 U každého nejdřív vypiš:
 
@@ -264,6 +286,8 @@ Ve verdiktu:
 **Nejzávažnější, co z toho vzešlo**
 - <jedna až tři věty – co to reálně změnilo>
 ```
+
+Nakonec **smaž `.claude/run/oponent.json`**.
 
 Zakonči jednou z těchto vět:
 
