@@ -15,7 +15,7 @@ Doménové znalosti z `~/Dev/context/` se do projektu načítají **tvrdým `@im
 Tenhle soubor drží **obecná pravidla práce**. Než sem něco zapíšeš, projdi test – vyhrává první kritérium, které sedí:
 
 1. Jmenuje pravidlo konkrétní soubor v `docs/`? → `structure.md`
-2. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu
+2. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu. **Výjimka: rozhraní kroku osy sem patří** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí a kdy se smí přeskočit. To je pravidlo o *pořadí práce*, ne o vnitřku skillu, a ve skillu by ho nikdo nenašel celé, protože každý zná jen svoje sousedy. Vnitřek kroku (jeho fáze, šablony, zadání pro agenty) sem naopak nepatří ani zmínkou.
 3. Týká se psaní kódu, webu, textu, vizuálu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
 4. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, kapitola *Výjimky z obecných pravidel*
 5. Nic z toho → patří sem
@@ -378,7 +378,7 @@ Uzavírání   /review → /consistency → /cleanup
 Nasazení    /attack → /release
 ```
 
-Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → zelená linka → commit.
+Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → zelená linka → commit. (Je to rozhraní kroku, ne jeho vnitřek: určuje, co po `/implement` platí o stavu repozitáře, a tím i s čím počítá `/review`.)
 
 V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v ose nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit, aniž se změní, jak se krok volá.
 
@@ -405,7 +405,17 @@ V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u oboj
 
 **Hotfix jde toutéž osou, jen zkráceně.** Není to jiný postup, ale tentýž s vědomě přeskočenými kroky: `/specify`, `/oponent` a `/breakdown` odpadají (opravuje se to, co je navržené, ne co se navrhuje), `/consistency` a `/attack` taky. **Nepřeskakuje se `/review` ani zelená linka** – oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější. Přeskočení se hlásí nahlas i s důvodem, jako u každého jiného kroku.
 
-**Žádný krok neopakuje, co udělal krok před ním.** Každý má v *Co skill nedělá* jmenovitě napsané, čí práci nepřebírá. Test: *kdyby ten krok neproběhl, zjistil by to někdo jiný?* Když ano, je to duplicita – stojí čas i tokeny a hlavně rozmazává odpovědnost, protože u věci, kterou hlídají tři kroky, ji nakonec neudělá pořádně žádný.
+**Žádný krok neopakuje, co udělal krok před ním.** Každý má v *Co skill nedělá* jmenovitě napsané, čí práci nepřebírá. Duplicita stojí čas i tokeny a hlavně rozmazává odpovědnost: u věci, kterou hlídají tři kroky, ji nakonec neudělá pořádně žádný.
+
+**Test zní: vrací ten krok nad TÝMŽ vstupem tutéž odpověď?** Když ano, je to duplicita. Opakovat se smí jen to, čemu se mezitím **mohl změnit vstup** – stav pracovního stromu, databáze zranitelností, obsah repozitáře. Starší formulace („kdyby ten krok neproběhl, zjistil by to někdo jiný?“) tenhle rozdíl nedělala a označila za duplicitu i případy, které osa sama obhajuje.
+
+**Povolená opakování jsou tři a jmenují se**, aby se seznam nedal rozšiřovat mlčky:
+
+| Co se opakuje | Kde | Co se mezitím mohlo změnit |
+|---|---|---|
+| zelená linka | `/implement` → `/review` | hook ji vynutil po posledním tahu, `/review` ji pouští nad celým rozsahem větve |
+| audit závislostí | `/review` → `/release` | databáze zranitelností se mění bez ohledu na projekt |
+| scan tajemství | `/review` → `/release` | mezi oběma kroky přibyly commity z `/consistency`, `/cleanup` i `/attack` |
 
 **Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 

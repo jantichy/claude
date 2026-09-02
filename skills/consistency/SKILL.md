@@ -1,6 +1,7 @@
 ---
 name: consistency
-description: Skill se použije, když uživatel zadá "/consistency", nebo chce audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+description: Skill se použije, když uživatel zadá "/consistency" nebo "/consistency full", nebo chce audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+argument-hint: [full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
 
@@ -8,9 +9,20 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 
 ## Co skill dělá
 
-Proveď kompletní audit vnitřní konzistence aktuálního projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
+Proveď audit vnitřní konzistence projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
 
 V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to druhý krok uzavírání: navazuje na `/review` a předává na `/cleanup`.
+
+## Rozsah
+
+- **`/consistency`** (výchozí) – soubory dotčené prací na aktuální větvi **a soubory, které na ně odkazují**. Ten druhý půlkruh je podstatný: nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví.
+- **`/consistency full`** – celý projekt bez ohledu na diff. Použij, když uživatel napíše `full`, jinak nikdy.
+
+**Proč výchozí rozsah není celý projekt.** Skill je krok uzavírání, tedy běží **po každé feature**, ale cena kompletního auditu je úměrná velikosti projektu, ne velikosti změny. Na projektu s dvěma sty soubory to znamená, že se při každém uzavření znovu najde tentýž starý dluh – a uživatel má dvě možnosti: znovu ho odklikat, nebo ho umlčet do `## Consistency`. Druhá je levnější, takže se stane výchozí, a tím z ní roste umlčovací seznam. Ze stejného důvodu se `/consistency` jako první vynechá, jakmile se spěchá.
+
+**`full` se vyplatí jednou za čas a před `/release`**, ne po každé feature. U staršího projektu předem upozorni, kolik souborů se bude procházet, a při řádově stovkách se zeptej přes `AskUserQuestion`, jestli pokračovat, nebo omezit rozsah na konkrétní adresář – stejně jako to dělá `/review full`.
+
+------
 
 ## Co skill nedělá
 

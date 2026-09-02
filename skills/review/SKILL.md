@@ -54,6 +54,14 @@ git status --porcelain
 
 Sjednoť commitnuté změny na větvi s necommitnutými. Vynech smazané soubory. Když jsi na hlavní větvi a diff je prázdný, vezmi necommitnuté změny; když nejsou ani ty, řekni to a nabídni `full`.
 
+**Zjisti, o kolik hlavní větev mezitím odskočila:**
+
+```
+git rev-list --count HEAD..origin/HEAD 2>/dev/null || git rev-list --count HEAD..main
+```
+
+Je-li výsledek nenulový, **řekni to a nabídni srovnání před review**. Důvod: rozsah se počítá proti bodu, ve kterém větev vznikla, takže cizí změna, která do hlavní větve přibyla mezitím, není v rozsahu **ani jednoho** review – v tvém diffu není a v jejich zase není tvoje. Sémantický konflikt, kde jsou obě změny samy o sobě správné a dohromady rozbité (přejmenovaná funkce vs. nové volání, změněný default vs. nová větev, dvě migrace nad touž tabulkou), tak neprojde žádnou rolí; deterministická brána ho chytí jen tehdy, když je typový nebo pokrytý testem. Review platí pro stav, který půjde do hlavní větve – ne pro svůj výchozí bod.
+
 **Neuspěje-li ani jeden `merge-base`, rozsah si nedomýšlej.** Nastává to ve třech běžných stavech: repozitář bez jediného commitu (`HEAD` neexistuje), hlavní větev pojmenovaná jinak než `main`/`master` bez nastaveného `origin/HEAD`, a čerstvý lokální repozitář bez remote. Ověř si to nejdřív `git rev-parse --verify HEAD` – selže-li, rozsah jsou prostě necommitnuté změny a žádný diff se nedělá. Jinak zkus `git symbolic-ref --short refs/remotes/origin/HEAD`, a když ani to nevyjde, **zeptej se přes `AskUserQuestion`**, proti které větvi diffovat, s nabídkou z `git branch`. Špatně určený rozsah tiše prověří něco jiného, než si myslíš, a to je horší než se zeptat.
 
 *Worktree layout* (`~/Dev/context/worktree/worktree.md`): pouštěj to ve **worktree větve**. V kořeni kontejneru `git diff` spadne a `git status` taky – kořen není pracovní strom. Stojíš-li tam, přesuň se nejdřív do adresáře té větve, kterou máš prověřit, a rozsah `full` počítej rovněž jen nad ním, ne nad celým kontejnerem.
