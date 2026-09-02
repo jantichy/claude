@@ -36,15 +36,15 @@ Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` o
 
 ### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
-Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu (testy, lint, audit závislostí, scan tajemství, statická analýza), pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, moje doménové standardy – a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
+Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu (testy, lint, audit závislostí, scan tajemství, statická analýza), pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, moje doménové standardy – a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí. Výchozí rozsah jsou změny na větvi; **`/review full`** pustí týž panel nad celým projektem, což se hodí u zděděného kódu nebo když se dlouho nedělalo.
 
 ### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
 
-Kompletní audit projektu na vnitřní konzistenci: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Nálezy roztřídí od kritických po kosmetické, jednoznačné opravy udělá rovnou a o sporných se mnou mluví jednu po druhé.
+Kompletní audit projektu na vnitřní konzistenci: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Nálezy roztřídí od kritických po kosmetické, jednoznačné opravy udělá rovnou a o sporných se mnou mluví jednu po druhé. Výchozí rozsah jsou soubory dotčené prací na větvi **a ti, kdo na ně odkazují** – nekonzistence skoro nikdy nežije v jednom souboru; **`/consistency full`** projde celý projekt bez ohledu na diff, což se vyplatí jednou za čas a před nasazením, ne po každé feature.
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
-Před opuštěním nebo zkompaktováním session projde celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak pošle na projekt agenta bez kontextu, který ověří, jestli z dokumentace jde na dnešní práci navázat, commitne a dá jednoznačný verdikt: můžeš jít, nebo tohle ještě zbývá.
+Před opuštěním nebo zkompaktováním session projde celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak pošle na projekt agenta bez kontextu, který ověří, jestli z dokumentace jde na dnešní práci navázat, commitne a dá jednoznačný verdikt: můžeš jít, nebo tohle ještě zbývá. **`/cleanup full`** nezvětšuje vytěžení session – to běží vždycky celé –, ale rozšiřuje závěrečnou kontrolu čerstvýma očima z dnešní práce na celou dokumentaci.
 
 ### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 

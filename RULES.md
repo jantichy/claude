@@ -419,4 +419,8 @@ V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u oboj
 
 **Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 
+**Osa je nástroj pro jednu interaktivní session jednoho člověka.** Je to vědomé omezení, ne opomenutí: skoro celá stojí na `AskUserQuestion` a na souhlasu zelené linky vydaném lokálně pro jednoho uživatele. V CI ani u druhého člověka neplatí ani jedno – hook nespustí nic, protože souhlas je vázaný na `$HOME`, a interaktivní průchod nálezy nemá komu položit otázku.
+
+Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen deterministická vrstva** – typecheck, lint, test, audit, scan tajemství, statická analýza. Ty běží kdekoliv a nepotřebují nikoho, kdo by odpovídal. Panel rolí, průchod nálezy, útok ani nasazení se v neinteraktivním prostředí nepouštějí; kdo je chce, pustí je u sebe.
+
 **Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, zelenou linku, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
