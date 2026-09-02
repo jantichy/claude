@@ -34,8 +34,15 @@ die() { echo "Zelená linka: $1" >&2; exit 1; }
 have() { command -v "$1" >/dev/null 2>&1; }
 sha()  { shasum | cut -d' ' -f1; }   # dostupnost se ověřuje v need_tools
 
+# Přítomnost != funkčnost. Nástroj může být na PATH a přitom nic neumět – typicky
+# zástupný stub, který skončí nenulově a nevypíše nic. `command -v` takový stub
+# najde, hook by ho použil, `jq` by vracelo prázdno a brána by se tiše vypnula.
+# Proto se u parseru neověřuje existence, ale výsledek na známém vstupu.
+probe_jq() { [ "$(printf '{"a":1}' | jq -r '.a' 2>/dev/null)" = "1" ]; }
+
 need_tools() {
   for t in jq git sed shasum mktemp gtimeout; do have "$t" || die "chybí $t, hook neběží."; done
+  probe_jq || die "jq je na PATH, ale nefunguje (nevrátilo očekávaný výstup) – hook neběží."
 }
 
 # Klíč projektu je hash CELÉ cesty. Dřívější "posledních 40 alfanumerických znaků"

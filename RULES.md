@@ -133,9 +133,25 @@ Jména modelů zastarají, role ne – rozhoduje sloupec *Práce*. Aktuální ro
 
 **Pravidlo nula: nejlevnější práce je ta, kterou neudělá model.** Co chytne typecheck, linter nebo test, se nemá hledat čtením kódu. Každá brána posunutá do vrstvy, která nestojí tokeny, je úspora, kterou žádná volba modelu nedožene.
 
+**Levný model se vyplatí jen tam, kde se jeho chyba pozná levně.** Než někam pošleš nejlevnější model, polož si tři otázky:
+
+- **Poznám špatný výstup, aniž bych šel ke zdroji?** Chybu ve výtahu z dlouhé konverzace nepoznáš jinak než tím, že si tu konverzaci přečteš sám – tedy uděláš práci, kvůli které jsi agenta poslal. Chybu ve výpisu sloupců z CSV poznáš na první pohled.
+- **Násobí se jeho výstup do další práce?** Podklad, ze kterého pak vychází pět dalších agentů, nese pětinásobek své chyby.
+- **Co se stane, když to udělá špatně a nikdo si nevšimne?** Ztracená dohoda, kterou nikdo nehledá, je dražší než celý ušetřený běh.
+
+Vyjde-li kterákoliv odpověď špatně, **nešetři – zaplatíš dvakrát**: jednou za špatný výstup a podruhé za práci, kterou musíš udělat znovu. Mechanická práce ve smyslu tohohle pravidla není „nudná práce“, ale práce, u které je **zjevné, že je hotová špatně**.
+
 **Effort lad dřív než model.** Je to plynulá páka na tomtéž modelu, kdežto výměna modelu je skok. Silný model na nízkém effortu zůstává silný – u agentů s úzkým zadáním je `low` doporučená volba, ne nouzová. Eskaluj po krocích: `high` → `xhigh` → `max` → teprve pak silnější model.
 
 **Na návrhu a na ověřování se nešetří.** Slabý plánovač rozseje chyby do všech úkolů pod sebou a slabý ověřovatel nález nepotvrdí ani nevyvrátí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko. Obojí je přesně ten případ, kdy se vyplatí `xhigh`.
+
+**Delegace navíc se vyplatí i za vyšší cenu, když platí aspoň jedno ze tří:**
+
+- **Vynucený tvar výstupu.** Agent vrací strukturu, se kterou pak něco dál počítá – ne prózu, kterou musí někdo číst.
+- **Izolace kontextu.** Agent nemá jak sáhnout na to, co posuzuje. Read-only kontrolor se nemůže stát opravářem uprostřed kontroly, což je celá třída chyb, která jinak vzniká.
+- **Práce, která se neamortizuje.** Jeden vstup, jeden výstup, konec – nemá z čeho těžit rozehraný kontext hlavní session. Opak je iterativní psaní kódu, kde je delegace čistá ztráta.
+
+Neplatí-li ani jedno, **udělej to v hlavní session**: delegace je pak dražší a jediné, co přinese, je ztráta kontextu.
 
 **Nejsilnější neznamená nejdražší dostupný.** Nejvyšší tier (dnes Fable) je dvojnásobně drahý a pomalejší; sahá se po něm teprve tehdy, když silný model na vyšším effortu prokazatelně nestačil, ne preventivně.
 

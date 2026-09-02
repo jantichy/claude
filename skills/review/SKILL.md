@@ -103,7 +103,7 @@ Nesedí-li **žádná** role, řekni to explicitně a skonči – nevymýšlej s
 
 ### 0.4 U velkého rozsahu napřed pošli explorera
 
-Je-li v rozsahu **víc než zhruba patnáct souborů**, pusť před panelem jednoho agenta navíc: **explorera na nejlevnějším modelu**. Jeho úkolem je **zmapovat, ne posoudit** – vrátí, čeho se změny dotýkají, kudy vede tok dat, které soubory na sebe navazují a kde jsou vstupní body. **Nehlásí žádné nálezy**; kdyby hlásil, dubloval by panel na modelu, který na to nemá.
+Je-li v rozsahu **víc než zhruba patnáct souborů**, pusť před panelem jednoho agenta navíc: **explorera na výchozím modelu s `low`**. Jeho úkolem je **zmapovat, ne posoudit** – vrátí, čeho se změny dotýkají, kudy vede tok dat, které soubory na sebe navazují a kde jsou vstupní body. **Nehlásí žádné nálezy**; kdyby hlásil, dubloval by panel. Na nejlevnější model ho ale neposílej: jeho mapa jde do zadání **všech rolí naráz**, takže se jeho chyba nenásobí jednou, ale pětkrát – a role si ji ověří jedině tím, že si tu orientaci udělají znovu samy.
 
 Mapu pak vlož do zadání každé role. Bez ní si stejnou orientaci musí udělat **každý agent zvlášť a na drahém modelu** – tedy pětkrát totéž. U malého rozsahu se to nevyplatí a explorer se vynechává.
 
