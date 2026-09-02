@@ -58,7 +58,9 @@ Vyber **tři až pět úhlů podle povahy dokumentu** z katalogu níž – nebo 
 | Úhel | Ptá se |
 |---|---|
 | **Vnitřní rozpor** | Tvrdí dokument někde něco, co jinde popírá? Sedí čísla, výčty a souhrny s obsahem? Nezůstal tam zbytek po zrušeném konceptu? |
-| **Skeptik** | Proč to nebude fungovat? Který předpoklad je nejslabší a co se stane, když neplatí? |
+| **Skeptik** | Nedůvěřuj ničemu a hledej chyby. Plyne závěr z toho, co mu předchází? Je tvrzení podané jako fakt doopravdy fakt? Nesahej na čísla, právo, provoz ani technologii – ty mají vlastní úhly; ptáš se na logiku argumentace. Ber ho jako záložní volbu pro dokument, na který žádný doménový úhel nesedne. |
+| **Předpoklady** | Vypiš předpoklady, na kterých dokument mlčky stojí a nikde je nepojmenovává. Co musí platit, aby závěr plynul z podkladu? U každého: jak se pozná, že neplatí, a co z dokumentu padá s ním. |
+| **Pre-mortem** | Je za osmnáct měsíců a tohle prokazatelně selhalo. Napiš, co se stalo – konkrétní sled událostí, ne obavu. Který předpoklad padl první? Jako jediný úhel smíš skládat příběh napříč doménami: nález, který leží na rozhraní dvou jiných úhlů, jinak nemá majitele. |
 | **Cílová skupina** | Čte to očima persony, které se to týká. Rozumí tomu? Koupí si to? Co ji odradí? Co v tom nenajde? |
 | **Ekonomika** | Sedí čísla? Break-even, cena, kapacita, náklady na provoz. Co se stane při desetinásobku a při desetině? |
 | **Právo a compliance** | Osobní údaje, spotřebitelské právo, daně, autorská práva, smluvní závazky. Co je napsané tak, že to nejde dodržet? |
@@ -117,19 +119,54 @@ Do žádného souboru nezapisuj.
 
 ------
 
-## Fáze 3 – Konsolidace
+## Fáze 3 – Ověření nálezů
+
+**Nálezy z panelu nejsou závěry, ale tvrzení.** Oponent bez kontextu vyrobí i nález, který stojí na tom, co nemohl vědět – a nález, který nevyrobí nic, vypadá jako selhání běhu, takže tlak na produkci je vestavěný. Kdyby se falešné vyřazovaly až v konsolidaci, dělal by to spoluautor, tedy ten jediný aktér, jehož slepotu má celý skill obcházet. To je přesně ten tichý filtr, který si Fáze 4 zakazuje – jenže bez téhle fáze nemá čím ho nahradit.
+
+**Deduplikuj ještě před ověřením**, ne až po něm (Fáze 4, bod 1). Úhly se překrývají, takže tentýž problém přijde dvakrát jinými slovy a tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď.
+
+Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Nejsilnější model, `xhigh`**, i u nálezu z levného úhlu: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko.
+
+**Ověřovatel dostane projektový kontext, který oponentům chybí** – `CLAUDE.md`, `docs/rules.md`, `docs/decisions.md`. To je rozdíl oproti `/review`: tam se ověřuje pozorování o kódu, tady tvrzení o dokumentu, a nejčastější důvod falešného nálezu je právě kontext, který oponent neměl. Ověřovatel ho má a rozhodne strojově to, co by jinak odhadl spoluautor.
+
+```
+Ověřuješ jedno tvrzení nezávislého oponenta. Nemáš kontext z předchozích rozhovorů.
+
+DOKUMENT: <absolutní cesty>
+KONTEXT PROJEKTU: <CLAUDE.md, docs/rules.md, docs/decisions.md>
+
+NÁLEZ K OVĚŘENÍ: <kde, co, proč to vadí, návrh, závažnost>
+
+Tvůj úkol není nález potvrdit, ale pokusit se ho vyvrátit. Ptej se:
+- Stojí na tom, co v dokumentu doopravdy je? Ověř citaci.
+- Neřeší to dokument někde jinde, kde se oponent nedíval?
+- Neplyne z kontextu projektu, že to tak je schválně?
+- Je důsledek doložený, nebo je to obecná obava? („Nebude to škálovat“ je nic.)
+- Sedí navržená závažnost, nebo je nafouknutá?
+
+Vrať: POTVRZENO / VYVRÁCENO / PŘEKVALIFIKOVÁNO NA <závažnost>, jednou větou proč,
+a u vyvráceného doklad – citaci z dokumentu nebo kontextu, která ho boří.
+
+Do žádného souboru nezapisuj.
+```
+
+**KOSMETICKÉ nálezy se neověřují** – ověření by stálo víc než jejich vyřízení. **Vyvrácené zahoď a spočítej je do souhrnu**; kolik jich bylo, se říká nahlas, ne potichu.
+
+------
+
+## Fáze 4 – Konsolidace
 
 Než cokoliv předložíš, nálezy **zpracuj**:
 
-1. **Slouč duplicity.** Když stejnou věc našli dva oponenti z různých úhlů, je to jeden nález – ale poznamenej, že ho našli dva. Je to signál závažnosti.
-2. **Vyřaď falešné.** Nález stojící na nepochopení kontextu, který subagent neměl, zahoď – ale **jen když si jsi jistý**. Když ne, nech ho a předlož ho s poznámkou. Tichý filtr je přesně to, co má tenhle skill obcházet.
+1. **Duplicity už jsou sloučené** – dedup proběhl před ověřením (Fáze 3). Zůstává jen poznamenat u nálezu, že ho našli dva oponenti z různých úhlů; je to signál závažnosti.
+2. **Vyvrácené nálezy vyřadil ověřovatel**, ne ty. Sám nefiltruj: nález, u kterého máš pochybnost, ale ověřením prošel, předlož s poznámkou. Tichý filtr je přesně to, co má tenhle skill obcházet, a spoluautor je ten poslední, kdo ho má dělat.
 3. **Vyřaď už rozhodnuté.** Nález, který navrhuje zamítnutou variantu bez nového argumentu, zahoď a **řekni, kolik jsi jich zahodil a proč** – ne potichu.
 4. **Seřaď podle závažnosti**, ne podle pořadí v dokumentu.
 5. **Vypiš přehled** – všechny nálezy jednou větou, očíslované, se závažností. Uživatel musí vidět, co ho čeká, než se ho začneš ptát.
 
 ------
 
-## Fáze 4 – Průchod nálezy
+## Fáze 5 – Průchod nálezy
 
 Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího.
 
@@ -176,7 +213,7 @@ Tool má strop čtyři volby, takže věcných variant nabízej **nejvýš dvě*
 
 ------
 
-## Fáze 5 – Závěr
+## Fáze 6 – Závěr
 
 **Opakované spuštění.** Skill je určený k opakování nad revidovanou verzí. Když ho uživatel spustí znovu:
 
@@ -195,6 +232,7 @@ Ve verdiktu:
 - Zapracováno: N
 - Zamítnuto: N (zapsáno do decisions.md i s důvodem)
 - Odloženo: N (todo.md)
+- Vyvráceno při ověření: N (nezobrazeno)
 - Vyřazeno před předložením: N (<proč>)
 
 **Nejzávažnější, co z toho vzešlo**
