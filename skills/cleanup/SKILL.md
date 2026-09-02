@@ -19,6 +19,8 @@ Skill je **opakovatelný**. Když ho uživatel spustí podruhé, co je zapsané 
 
 ## Co skill nedělá
 
+**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel celý projekt; fresh-reader tady se ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
+
 Tohle **není** audit projektu ani technická brána. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 
 Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), uveď to ve verdiktu ve Fázi 5. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj.
@@ -224,11 +226,11 @@ Soustřeď se na oblasti, kterých se dotýkala poslední session. ODPOVĚZ NA T
 
 **B. Rozumím tomu, co se nedávno rozhodlo?** Popiš vlastními slovy, co se v projektu naposledy změnilo a proč. Kde jsi musel hádat nebo dohledávat?
 
-**C. Rozpory a nepravdy.** Tvrdí někde dokumentace něco, co jinde popírá? Zvlášť sleduj počty (sedí čísla v textu se skutečným obsahem tabulek a seznamů?), názvy souborů, cest a sekcí, hodnoty výčtů, co je v rozsahu a co ne, co je vyřešené a co otevřené.
+**C. Rozpory a nepravdy – ale jen v tom, co přibylo dnes.** Celoprojektový audit konzistence dělá `/consistency`, který běží o krok dřív; neopakuj ho. Zajímá tě jen to, jestli si **dnešní zápisy** neodporují mezi sebou nebo s tím, co v souborech bylo: sedí počty v textu s obsahem tabulek, na které se dnes sahalo? Odpovídají nové věty tomu, co tvrdí okolí?
 
 **D. Chybějící kontext.** Předpokládá se něco jako známé, ale nikde to není vysvětlené? Odkazuje se na rozhodnutí, jehož zdůvodnění chybí?
 
-**E. Zastaralé zbytky.** Věty typu „viz níže“ / „zatím“ / „odloženo“ / „zvažuje se“, které už neplatí. Odkazy na sekce, soubory nebo pojmy, které neexistují nebo se jmenují jinak. Do dokumentace se zasahovalo chirurgicky, takže hrozí zbytky po zrušených konceptech a viséci v křížových odkazech – aktivně je hledej.
+**E. Viséci po dnešních zásazích.** Do dokumentace se dnes zasahovalo chirurgicky, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency`.
 
 **F. Co bych se musel zeptat?** Konkrétní otázky, na které bys nenašel odpověď.
 
