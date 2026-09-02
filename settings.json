@@ -80,6 +80,8 @@
       "Bash(git branch:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
+      "Bash(git config --get:*)",
+      "Bash(git config --list:*)",
       "Bash(git rev-parse:*)",
       "Bash(git rev-list:*)",
       "Bash(git merge-base:*)",
@@ -98,9 +100,6 @@
       "Bash(git blame:*)",
       "Bash(git shortlog:*)",
       "Bash(git describe:*)",
-      "Bash(git config:*)",
-      "Bash(git init:*)",
-      "Bash(git clone:*)",
       "Bash(python:*)",
       "Bash(python3:*)",
       "Bash(pip show:*)",
@@ -214,7 +213,10 @@
       "Edit(**/credentials*)",
       "Edit(**/*credentials*)",
       "Edit(**/secrets*)",
-      "Edit(**/*secrets*)"
+      "Edit(**/*secrets*)",
+      "Bash(git checkout --:*)",
+      "Bash(git worktree remove --force:*)",
+      "Bash(git config --global:*)"
     ],
     "ask": [
       "Bash(go install:*)",
@@ -235,7 +237,10 @@
       "Edit(**/package-lock.json)",
       "Edit(**/composer.lock)",
       "Edit(**/yarn.lock)",
-      "Edit(**/.gitignore)"
+      "Edit(**/.gitignore)",
+      "Bash(git config:*)",
+      "Bash(git clone:*)",
+      "Bash(git init:*)"
     ],
     "defaultMode": "auto"
   },
