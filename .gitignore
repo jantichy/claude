@@ -46,5 +46,9 @@ jobs/
 .last-cleanup
 .last-update-result.json
 
+# Python – meta-testy v tests/ vyrábějí bytecode cache
+__pycache__/
+*.pyc
+
 # macOS
 .DS_Store

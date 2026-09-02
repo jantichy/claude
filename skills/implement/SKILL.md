@@ -143,7 +143,7 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 **Další krok:** `/review`, pak `/consistency` a `/cleanup` (RULES.md, *Životní cyklus práce*)
 ```
 
-Zakonči jednou z těchto vět:
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Plán je odpracovaný a linka je zelená, můžeš jít na /review.`
 - `Odpracovaný není – zbývá: <konkrétní seznam>.`

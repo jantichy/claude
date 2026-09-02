@@ -125,7 +125,7 @@ Nabídni před tím ještě `/oponent docs/plan.md` s úhly *technická provedit
 **Další krok:** /implement
 ```
 
-Zakonči jednou z těchto vět:
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Plán je hotový, můžeš ho projít a pak spustit /implement.`
 - `Plán hotový není – brání tomu: <konkrétní seznam>.`
