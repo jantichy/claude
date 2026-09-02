@@ -379,6 +379,14 @@ Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **ř
 
 Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Řekni uživateli jednou větou, co se právě zapnulo – ne aby ho to překvapilo, až mu hook poprvé zablokuje konec tahu.
 
+**Zapni i brány, které se nespouštějí příkazem, ale konfigurací.** Kontrakt říká, *čím* se kontroluje; tyhle určují, *jak přísně*. Bez nich zůstanou prahy z `coding.md` jen napsané a nikdo je neměří:
+
+1. **Přísnost překladače.** U TypeScriptu ověř v `tsconfig.json`, že platí `"strict": true` a `"noUncheckedIndexedAccess": true`; u ostatních jazyků odpovídající přepínač (Python `mypy --strict`, Go `go vet`, PHP `declare(strict_types=1)` a maximální úroveň statické analýzy). Chybí-li, **navrhni změnu a nech ji potvrdit** – u staršího projektu může zapnutí `strict` vyrobit stovky chyb naráz, takže to nikdy neprováděj rovnou.
+2. **Metriky složitosti v lintru.** Prahy z `coding.md` (cyklomatická složitost 10, metoda 30 řádků, zanoření 3, parametrů 5) mají odpovídat pravidlům v konfiguraci lintru – v ESLintu `complexity`, `max-lines-per-function`, `max-depth`, `max-params`. U existujícího projektu je nastav jako varování, ne jako chybu, a řekni to: brána, která hned první den shodí build, se vypne a už se nezapne.
+3. **Vlastní pravidla statické analýzy.** Nabídni založení `.semgrep/` s prázdným souborem pravidel a poznámkou, k čemu je: kóduje se do něj **projektová znalost, kterou model nemá** – „tenhle ORM pattern u nás nepoužíváme, dělá N+1“, „sem se nesmí volat přímo, jde se přes službu“. Zakládej ho jen tam, kde takové pravidlo už teď existuje v hlavě nebo v `CLAUDE.md`; prázdný adresář pro jistotu je jen další nepořádek.
+
+U projektu bez kódu tenhle blok celý odpadá – řekni to a pokračuj.
+
 **Nasazuje se projekt někam?** Zjisti to (`vercel.json`, `netlify.toml`, `.github/workflows/`) a najdeš-li automatické nasazení z produkční větve, zapiš to do `## Nasazení` v `CLAUDE.md` i s upozorněním, že **merge do produkční větve je samotné nasazení** – detail řeší `/release`.
 
 ## Krok 10 – Doménové checklisty

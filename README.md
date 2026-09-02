@@ -96,7 +96,7 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 
 ### [`green-line.sh`](green-line.sh) – nad rozbitým projektem se práce neuzavře
 
-`Stop` hook, který před ukončením tahu spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu nic neví: přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí, takže je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic. Protože je ten kontrakt kód ležící v repozitáři a hooky se na povolení neptají, nespustí v projektu nic, dokud pro něj nevydám souhlas (`--allow`, výpis `--list`, odebrání `--revoke`). Každý krok má strop 60 sekund a když neprojde ani druhý pokus nad týmž stavem, hook pustí dál a nahlas to řekne.
+`Stop` hook, který před ukončením tahu spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu nic neví: přečte si sekci `## Příkazy` v jeho `CLAUDE.md` a spustí, co tam stojí, takže je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic. Protože je ten kontrakt kód ležící v repozitáři a hooky se na povolení neptají, nespustí v projektu nic, dokud pro něj nevydám souhlas (`--allow`, výpis `--list`, odebrání `--revoke`). Každý krok má strop 60 sekund a když neprojde ani druhý pokus nad týmž stavem, hook pustí dál a nahlas to řekne. Rozlišuje přitom dvě různé věci: **test, který našel chybu**, tah zablokuje, kdežto **krok, který vůbec nejde spustit** (chybí nástroj), jen ohlásí – v tom případě není co opravovat na kódu, ale na prostředí.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 
