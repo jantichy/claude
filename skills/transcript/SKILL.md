@@ -226,7 +226,9 @@ Do logu přibude `### DIARSTAT <mluvčích> <úseků>` a `### DIARIZE ELAPSED`, 
 python3 <skill>/merge.py <workdir>/<název>.srt <workdir>/<název>.diarization.json <workdir>/<název>
 ```
 
-Vznikne `<název>.json` a `<název>.vtt`. Přiřazuje se podle **největšího časového překryvu**, protože whisperovy segmenty nekopírují střídání mluvčích. Když je překryv slabý nebo těsný, replika zůstane bez mluvčího – `merge.py` vypíše kolik takových je (`### MERGESTAT <celkem> <nepřiřazeno> <mluvčích>`).
+Vznikne `<název>.json` a `<název>.vtt`. **Oba nesou syrový text z whisperu, ne vyčištěný** – jsou navázané na časové značky, takže přepsat v nich text by je rozešlo s nahrávkou. Vyčištěný text žije jen v `<název>.md`. Neopravuj je ručně.
+
+Přiřazuje se podle **největšího časového překryvu**, protože whisperovy segmenty nekopírují střídání mluvčích. Když je překryv slabý nebo těsný, replika zůstane bez mluvčího – `merge.py` vypíše kolik takových je (`### MERGESTAT <celkem> <nepřiřazeno> <mluvčích>`).
 
 **Nepřiřazené repliky nedoplňuj odhadem.** Chybné přiřazení vypadá stejně věrohodně jako správné a propíše se až do úkolů ve shrnutí, kde je z něj tvrzení, kdo co slíbil.
 
@@ -270,9 +272,9 @@ Repliku bez přiřazeného mluvčího uveď bez jména, ne pod nejbližším mlu
 
 ### 10. Úklid
 
-Smaž mezivýstupy: všechny `<název>.txt`, `<název>.wav`, `<název>.diarization.json`, `whisper-progress.log` a `.transcript-glossary.md`. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<název>.srt` po sobě ukliď, i když mezitím vznikl.
+Smaž mezivýstupy: všechny `<název>.txt`, `<název>.wav` (nebo `<název>.16k.wav`, když byl vstup sám WAV), `<název>.diarization.json`, `whisper-progress.log` a `.transcript-glossary.md`. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<název>.srt` po sobě ukliď, i když mezitím vznikl.
 
-Než slovník smažeš, **vypiš uživateli termíny, které jsi nechal být** – ty, co modely dávaly konzistentně a vypadají jako interní žargon, a ty, kde je zvuk nesrozumitelný a tvar je tvůj odhad. Ať ví, co má ověřit. Do doslovného přepisu je zapiš jako poznámku na konec.
+Než slovník smažeš, **vypiš uživateli termíny, které jsi nechal být** – ty, co modely dávaly konzistentně a vypadají jako interní žargon, a ty, kde je zvuk nesrozumitelný a tvar je tvůj odhad. Ať ví, co má ověřit. Zapiš je i **na konec doslovného přepisu** jako poznámku. Když si uživatel doslovný přepis nevybral, dej tu poznámku na konec shrnutí – nesmí zmizet jen proto, že vznikl jiný výstup.
 
 ---
 
@@ -314,6 +316,8 @@ Soubor `YYYYMMDD - Výstižný název.md` má tuto strukturu:
 
 1. **Hlavní nadpis (H1):** `Výstižný název`.
 2. **Úvodní odstavec (anotace):** do jednoho odstavce základní charakteristika celé nahrávky – o co jde, jednotlivé strany a účastníci.
+
+**Nadpis i anotace jsou tvůj vlastní text**, ne přepis. Platí pro ně jazyková pravidla ze sekce [Pravidla shrnutí](#pravidla-shrnutí) stejně jako pro sekci „Shrnutí“ – ani jedno z nich nespadá pod [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu).
 3. **`## Shrnutí`:** stručné, logické, strukturované shrnutí dle [Pravidel shrnutí](#pravidla-shrnutí).
 4. **`## Doslovný přepis`:** doslovné přepisy všech nahrávek dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu), za sebou; u každého je zřejmé, ze které nahrávky pochází. Tuhle sekci vynech, když si uživatel doslovný přepis nevybral.
 
@@ -325,6 +329,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - **Nedodržuj chronologické pořadí**, ve kterém informace zazněly. Uspořádej vše do logických sekcí a skupin tak, aby to dávalo při čtení smysl.
 - Pokud to není nezbytné pro kontext nebo pochopení, **neopakuj** jednu informaci na více místech.
 - Na **úplném konci** přehledně shrň vzájemné **domluvy, vyplývající úkoly a další kroky**.
+- **Když běžela diarizace, piš ke každému úkolu majitele.** Je to hlavní důvod, proč se rozlišení mluvčích vůbec zapíná: bez něj se dá napsat „dodat seznam“, s ním „**Tomáš** dodá seznam“. U rozhodnutí stejně tak uveď, kdo co navrhl a kdo souhlasil, když to z přepisu plyne. Kde mluvčí chybí nebo je nejistý, majitele **nedoplňuj odhadem** – radši úkol bez majitele než přisouzený špatnému člověku.
 - **Pravopis, gramatika a typografie platí i tady.** Shrnutí není doslovný přepis, ale tvůj vlastní text, takže se na něj pravidla z [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu) nevztahují sama od sebe – drž je vědomě. Pozor hlavně na termíny přebrané z přepisu: chybu opravenou v přepisu snadno zopakuješ ve shrnutí, protože ho píšeš z téhož podkladu. Přesně takhle v ostrém běhu prošly „mrtvoli“ do souhrnného dokumentu, zatímco v přepisu už byly opravené.
 
 (Základní charakteristika a účastníci jsou už v úvodním odstavci – viz [Formát souhrnného MD](#formát-souhrnného-md).)
