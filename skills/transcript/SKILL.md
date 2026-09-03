@@ -24,8 +24,9 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 - **Vstup:** soubory zadané v promptu. Když prompt žádný soubor neuvádí, vezmi všechny audio soubory v aktuálním adresáři. Podporované formáty: `mp3`, `m4a`, `wav`, `aac`, `flac`, `ogg`, `opus`, `m4b`. Když nenajdeš nic, oznam to a skonči.
 - **Výstup – vše vzniká v adresáři vstupní nahrávky, nezakládá se žádný podadresář a nic se nikam nepřesouvá:**
   - `<název>.md` – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu)),
-  - `<název>.srt` **nebo** `<název>.vtt` – tentýž obsah s časovými značkami. SRT bez rozlišených mluvčích, VTT s nimi (`<v Jméno>`), protože SRT pole pro mluvčího nemá,
-  - `<název>.json` – strojově čitelné úseky s časem, mluvčím a textem. Vzniká jen s rozlišením mluvčích,
+  - `<název>.srt` – tentýž obsah s časovými značkami, syrový z whisperu,
+  - `<název>.vtt` – titulky se značkou `<v Jméno>`, protože SRT pole pro mluvčího nemá. Vzniká **vedle** SRT, jen s rozlišením mluvčích,
+  - `<název>.json` – strojově čitelné úseky s časem, mluvčím a textem. Taky jen s rozlišením mluvčích,
   - `YYYYMMDD - Výstižný název.md` – jedno společné shrnutí napříč všemi nahrávkami (viz [Formát souhrnného MD](#formát-souhrnného-md)).
 
   Které z nich vzniknou, vybere uživatel v průvodci.
@@ -131,8 +132,8 @@ Tenhle soubor je vstup pro čištění v kroku 9. **Deset položek stačí whisp
 |---|---|---|
 | 1. | `Doslovný přepis (MD)` | Vyčištěný, bez „ehm“, s kapitolami a opravenými názvy. |
 | 2. | `Strukturované shrnutí (MD)` | Témata, závěry, na konci domluvy a úkoly. |
-| 3. | `Časovaný přepis (SRT/VTT)` | Syrový z whisperu, s časy. Na dohledání místa v nahrávce. |
-| 4. | `Rozlišit mluvčí (JSON)` | Viz níže – jen odhad času, nic víc. |
+| 3. | `Časovaný přepis (SRT)` | Syrový z whisperu, s časy. Na dohledání místa v nahrávce. |
+| 4. | `Rozlišit mluvčí (VTT, JSON)` | Viz níže – jen odhad času, nic víc. |
 
 Když uživatel nevybere nic, ber to jako **první tři**. Rozlišení mluvčích je vždycky vědomá volba, nikdy výchozí stav.
 
@@ -247,7 +248,9 @@ Fáze opravy přeslechů zůstává, i když se slovník použil. Slovník zmen�
 
 **Doplň slovník o to, co jsi našel při čištění.** Když v přepisu narazíš na termín, který v `.transcript-glossary.md` chybí, dopiš ho tam dřív, než budeš psát shrnutí. Shrnutí pak stojí na stejném slovníku jako přepis.
 
-**Časovaný přepis.** Bez rozlišených mluvčích nech ležet `<název>.srt` z kroku 6. S nimi ho nahradí `<název>.vtt` z kroku 8 – **SRT pak smaž**, ať vedle sebe neleží dvě verze téhož.
+**Časovaný přepis.** `<název>.srt` už existuje, vznikl při přepisu. Nech ho ležet vedle `<název>.md`, stejné jméno, jiná přípona. Rozlišení mluvčích ho **nenahrazuje** – `<název>.vtt` a `<název>.json` přibydou vedle něj.
+
+SRT se vyrábí vždycky, protože z něj `merge.py` bere text. Když si ho uživatel nevybral, je to mezivýstup a smaže se v úklidu, i kdyby se mluvčí rozlišovali.
 
 **Rozlišení mluvčích mění doslovný přepis na dialog.** Kapitoly a mezinadpisy zůstávají, uvnitř nich se místo odstavců střídají repliky:
 
