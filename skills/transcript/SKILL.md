@@ -66,6 +66,8 @@ Podle jistoty se zachovej takhle:
 | jistota < 0,9 | **teprve tady se zeptej**, s detekovaným jazykem jako první možností |
 | skript selhal | vezmi výchozí `cs` a řekni, že detekce neproběhla |
 
+**U víc nahrávek pusť detekci na každou zvlášť.** Když vyjdou různé jazyky, nespojuj je do jednoho běhu – `transcribe.sh` bere jeden jazyk na celý běh, takže je pusť po skupinách podle jazyka a řekni to uživateli.
+
 Jazyk pak předej jako `WHISPER_LANG` v kroku 6 a **zapiš ho do `.transcript-glossary.md`**. Neurčuje totiž jen rozpoznávání, ale i to, podle jakých pravidel se v kroku 9 opravuje pravopis a v jakém jazyce vzniká shrnutí.
 
 **Co detekce nevyřeší:** dvojjazyčnou schůzku. Whisper bere jeden jazyk na běh, takže když se v půlce přepne z češtiny do angličtiny, druhá polovina dopadne špatně. Detekce to nezhorší, ale ani nespraví. Když to na nahrávce poznáš, řekni to uživateli.
@@ -116,7 +118,7 @@ Tyhle dvě věci se pletou, a je to rozdíl mezi dobrým a špatným výsledkem.
 
 **Rešerši dělej naplno.** Vytěž ze zdrojů úplně všechno – klidně stovky jmen, názvů, zkratek a interních pojmů. Nic nezahazuj.
 
-**Do `WHISPER_PROMPT` dej nejvýš deset položek**, seřazených podle důležitosti, nejdůležitější první. Whisperův initial prompt má **klesající účinnost směrem k pozdějším položkám**: naměřeno na 31minutové české schůzce – slovník o osmi termínech opravil sledované místní jméno 6× ze 6, tentýž běh se slovníkem o jednadvaceti termínech, kde bylo totéž jméno až páté, spadl na 0 ze 4. Delší seznam je horší než kratší, ne lepší.
+**Do `WHISPER_PROMPT` dej nejvýš deset položek**, seřazených podle důležitosti, nejdůležitější první. Whisperův initial prompt má **klesající účinnost směrem k pozdějším položkám**: naměřeno na 31minutové české schůzce – slovník o osmi termínech opravil sledované místní jméno 6× ze 6, tentýž běh se slovníkem o jednadvaceti termínech, kde bylo totéž jméno až páté, spadl na 0 ze 4. Delší seznam je horší než kratší, ne lepší. **Deset je zvolený strop, ne naměřená hranice** – měření dokládá jen to, že osm funguje a jednadvacet ne; co je mezi tím, nikdo nezkoušel.
 
 Vybírej podle toho, co v nahrávce **opravdu zazní často a co se snadno komolí**. Obecná slova, která model umí sám, do promptu nepatří.
 
@@ -128,6 +130,12 @@ Všechno ostatní, co jsi našel, zapiš do `<workdir>/.transcript-glossary.md`:
 
 ```markdown
 # Kontextový slovník – <název nahrávky>
+
+## Jazyk
+cs (detekováno v kroku 1, jistota 0,99)
+
+## Mluvčí
+(doplní krok 8, když se rozlišují)
 
 ## V promptu whisperu (10)
 Nazev.cz, Značka, interní pojem, místní jméno, …
@@ -202,7 +210,7 @@ Když skončí nenulově, vypiš uživateli, co chybí, nabídni instalaci (skri
 - **whisper.cpp** – `brew install whisper-cpp` (poskytuje `whisper-cli`),
 - **model** – `turbo` (~1,5 GB) nebo `large-v3` (~2,9 GB) v `~/.whisper-models/`,
 - **VAD model Silero** (~865 kB) – detekce řeči, viz níže,
-- **jen pro rozlišení mluvčích:** `pyannote.audio` ve vlastním venv (**1,2 GB**, změřeno po instalaci) a token na HuggingFace.
+- **jen pro rozlišení mluvčích:** `pyannote.audio` ve vlastním venv (**1,2 GB**, změřeno po instalaci) a token na HuggingFace v `~/.whisper-models/hf-token` (nebo v proměnné `HF_TOKEN`).
 
 **Diarizaci nikdy nedoinstaluj sám bez řečí.** Kromě velikosti stažení po uživateli chce dvě věci, které za něj nikdo neudělá: založit token a **odsouhlasit licenci gated modelu v prohlížeči**. Vypiš mu obojí a počkej. Když to odmítne, pokračuj bez rozlišení mluvčích – zbytek skillu funguje beze změny.
 
@@ -276,7 +284,7 @@ Jména ulož do `<workdir>/.speakers.json` a pusť `merge.py` znovu s `--names`,
 
 **Doslovný přepis.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
 
-**Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen těch deset položek z promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i stručný brief pro shrnutí.
+**Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen těch deset položek z promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i **stručný brief pro shrnutí** – témata, závěry a kdo co slíbil. Shrnutí pak píšeš z briefů a slovníku, ne z celých přepisů znovu.
 
 Fáze opravy přeslechů zůstává, i když se slovník použil. Slovník zmenší počet chyb, nevynuluje ho – v ostrém běhu prošlo sledované místní jméno zkomolené i s nasazeným promptem.
 
@@ -348,10 +356,10 @@ Soubor `YYYYMMDD - Výstižný název.md` má tuto strukturu:
 
 1. **Hlavní nadpis (H1):** `Výstižný název`.
 2. **Úvodní odstavec (anotace):** do jednoho odstavce základní charakteristika celé nahrávky – o co jde, jednotlivé strany a účastníci.
-
-**Nadpis i anotace jsou tvůj vlastní text**, ne přepis. Platí pro ně jazyková pravidla ze sekce [Pravidla shrnutí](#pravidla-shrnutí) stejně jako pro sekci „Shrnutí“ – ani jedno z nich nespadá pod [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu).
 3. **`## Shrnutí`:** stručné, logické, strukturované shrnutí dle [Pravidel shrnutí](#pravidla-shrnutí).
 4. **`## Doslovný přepis`:** doslovné přepisy všech nahrávek dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu), za sebou; u každého je zřejmé, ze které nahrávky pochází. Tuhle sekci vynech, když si uživatel doslovný přepis nevybral.
+
+**Body 1 až 3 jsou tvůj vlastní text**, ne přepis. Platí pro ně [Pravidla shrnutí](#pravidla-shrnutí), ne [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu) – ta se vztahují jen na bod 4.
 
 ## Pravidla shrnutí
 
@@ -362,7 +370,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - Pokud to není nezbytné pro kontext nebo pochopení, **neopakuj** jednu informaci na více místech.
 - Na **úplném konci** přehledně shrň vzájemné **domluvy, vyplývající úkoly a další kroky**.
 - **Když běžela diarizace, piš ke každému úkolu majitele.** Je to hlavní důvod, proč se rozlišení mluvčích vůbec zapíná: bez něj se dá napsat „dodat seznam“, s ním „**Tomáš** dodá seznam“. U rozhodnutí stejně tak uveď, kdo co navrhl a kdo souhlasil, když to z přepisu plyne. Kde mluvčí chybí nebo je nejistý, majitele **nedoplňuj odhadem** – radši úkol bez majitele než přisouzený špatnému člověku.
-- **Pravopis, gramatika a typografie platí i tady.** Shrnutí není doslovný přepis, ale tvůj vlastní text, takže se na něj pravidla z [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu) nevztahují sama od sebe – drž je vědomě. Pozor hlavně na termíny přebrané z přepisu: chybu opravenou v přepisu snadno zopakuješ ve shrnutí, protože ho píšeš z téhož podkladu. Přesně takhle v ostrém běhu prošly „mrtvoli“ do souhrnného dokumentu, zatímco v přepisu už byly opravené.
+- **Jazykový standard platí i tady, a v plném rozsahu.** Shrnutí není doslovný přepis, ale tvůj vlastní souvislý text, takže se na něj pravidla z [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu) nevztahují sama od sebe – drž je vědomě. U češtiny navíc platí **celý** `~/Dev/context/text/text.md`, ne jen *Gramatika a pravopis* a *Typografie*: i stavba textu, zakázané obraty a stylistika. U jiného jazyka jeho vlastní konvence, protože souhrn se píše v jazyce nahrávky. Pozor hlavně na termíny přebrané z přepisu: chybu opravenou v přepisu snadno zopakuješ ve shrnutí, protože ho píšeš z téhož podkladu. Přesně takhle v ostrém běhu prošly „mrtvoli“ do souhrnného dokumentu, zatímco v přepisu už byly opravené.
 
 (Základní charakteristika a účastníci jsou už v úvodním odstavci – viz [Formát souhrnného MD](#formát-souhrnného-md).)
 
@@ -376,6 +384,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - **Jazyk** se detekuje v kroku 1 a předává jako `WHISPER_LANG`. Když detekce selže, `transcribe.sh` spadne na výchozí `cs`.
 - **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
 - **Potlačení neřečových tokenů:** `-sns`, zapnuto vždy. Druhá pojistka vedle VAD.
+- **`--carry-initial-prompt`** je zapnutý vždy, když je slovník neprázdný: bez něj by prompt platil jen pro první okno a u delší nahrávky by se vytratil. Na klesající účinnost uvnitř seznamu to nemá vliv – ta je daná pořadím položek, ne pořadím oken.
 - **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto. Naměřeno na Apple M1: **7,13× realtime**, tedy 31,4 minuty zvuku za 4:24. Je to o něco **rychlejší než přepis turbem** (5:14 při kalibrovaných 6,0×), takže zapnutá diarizace zhruba zdvojnásobí celkový čas.
 - **Gated repozitáře jsou tři**, ne jeden: kromě `speaker-diarization-3.1` ještě `segmentation-3.0` a `speaker-diarization-community-1`. Seznam se mezi verzemi pyannote mění, proto `diarize.sh` při selhání vytáhne z chyby konkrétní repozitář (`### DIARIZE FAILED gated:<repo>`). Kontrola v `check-deps.sh` sahá na `config.yaml`, ne na `/api/models/` – **metadata gated repa jsou veřejná, takže endpoint vrací 200 i bez přístupu** a kontrola by byla falešně pozitivní.
 - **Bere se `exclusive_speaker_diarization`**, ne `speaker_diarization`. Je podle dokumentace pyannote určená právě pro navázání na přepis, protože neobsahuje překrývající se úseky.
