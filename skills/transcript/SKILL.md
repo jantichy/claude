@@ -133,11 +133,13 @@ Tyhle dvě věci se pletou, a je to rozdíl mezi dobrým a špatným výsledkem.
 
 **Rešerši dělej naplno.** Vytěž ze zdrojů úplně všechno – klidně stovky jmen, názvů, zkratek a interních pojmů. Nic nezahazuj.
 
-**Do `WHISPER_PROMPT` dej nejvýš deset položek**, seřazených podle důležitosti, nejdůležitější první. Whisperův initial prompt má **klesající účinnost směrem k pozdějším položkám**: naměřeno na 31minutové české schůzce – slovník o osmi termínech opravil sledované místní jméno 6× ze 6, tentýž běh se slovníkem o jednadvaceti termínech, kde bylo totéž jméno až páté, spadl na 0 ze 4. Delší seznam je horší než kratší, ne lepší. **Deset je zvolený strop, ne naměřená hranice** – měření dokládá jen to, že osm funguje a jednadvacet ne; co je mezi tím, nikdo nezkoušel.
+**Do `WHISPER_PROMPT` dej jen termíny, které v nahrávce opravdu zazní**, seřazené podle důležitosti. Žádný strop na počet položek neplatí – dřív tu stálo „nejvýš deset“ s odůvodněním, že delší seznam ředí účinek, a **měření to vyvrátilo** (viz *Technické detaily*).
+
+Co platí: **složení a pořadí celého seznamu rozhoduje, a nedá se odhadnout dopředu.** Dva jednadvacetipoložkové slovníky nad touž nahrávkou daly 5/5 a 0/5. Sestav ho proto z toho, co v nahrávce skutečně padne, a obecná slova, která model umí sám, vynech.
 
 Vybírej podle toho, co v nahrávce **opravdu zazní často a co se snadno komolí**. Obecná slova, která model umí sám, do promptu nepatří.
 
-Vybraných deset slep čárkami do jednoho řetězce a předej jako `WHISPER_PROMPT`.
+Vybrané položky slep čárkami do jednoho řetězce a předej jako `WHISPER_PROMPT`.
 
 #### Zbytek rešerše si ulož
 
@@ -152,7 +154,7 @@ cs (detekováno v kroku 1, jistota 0,99)
 ## Mluvčí
 (doplní krok 8, když se rozlišují)
 
-## V promptu whisperu (10)
+## V promptu whisperu
 Nazev.cz, Značka, interní pojem, místní jméno, …
 
 ## Jména lidí
@@ -168,7 +170,7 @@ zkratky oboru, interní pojmy, názvy rolí a útvarů, …
 prompt / docs/structure.md / session
 ```
 
-Tenhle soubor je vstup pro čištění v kroku 9. **Deset položek stačí whisperu, ale tobě při čištění ne** – tam potřebuješ úplný kontext, abys poznal, co je zkomolenina a co interní žargon. Bez něj hádáš.
+Tenhle soubor je vstup pro čištění v kroku 9. **Whisperu dáváš výběr, tobě při čištění to nestačí** – tam potřebuješ úplný kontext, abys poznal, co je zkomolenina a co interní žargon. Bez něj hádáš.
 
 ### 4. Průvodce, krok třetí: co má vzniknout
 
@@ -394,8 +396,22 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 
 ## Technické detaily
 
-- **Modely:** `turbo` (`ggml-large-v3-turbo.bin`) a `large-v3` (`ggml-large-v3.bin`) v `~/.whisper-models/`. Naměřeno na Apple M1 nad 31 minutami české schůzky: turbo 5,4× realtime, `large-v3` 1,67× realtime, tedy 3,2× pomaleji. Rozdíl v textu byl 13 % slov, ale drtivou většinou šlo o vatu („jo“, „to“, „jako“); rozhodující rozdíl je ve vlastních jménech a řídkých slovech, kde `large-v3` vyhrává. **Slovník jmen ten rozdíl smaže spolehlivěji než volba modelu** – turbo s osmipoložkovým slovníkem porazilo `large-v3` bez slovníku a bylo přitom 3,6× rychlejší.
-- **Délka promptu rozhoduje.** Tentýž zvuk, tentýž model: slovník o 8 termínech dal sledované vlastní jméno 6× ze 6 správně, slovník o 21 termínech 0 ze 4. Účinnost initial promptu klesá s pořadím položky, takže **krátký a seřazený slovník je lepší než dlouhý**. Proto strop deseti položek v kroku 3.
+- **Modely:** `turbo` (`ggml-large-v3-turbo.bin`) a `large-v3` (`ggml-large-v3.bin`) v `~/.whisper-models/`. Naměřeno na Apple M1 nad 31 minutami české schůzky: turbo 5,4× realtime, `large-v3` 1,67× realtime, tedy 3,2× pomaleji. Rozdíl v textu byl 13 % slov, ale drtivou většinou šlo o vatu („jo“, „to“, „jako“); rozhodující rozdíl je ve vlastních jménech a řídkých slovech, kde `large-v3` vyhrává. **Slovník jmen ten rozdíl smaže spolehlivěji než volba modelu** – turbo se slovníkem porazilo `large-v3` bez slovníku a bylo přitom 3,6× rychlejší.
+- **Slovník rozhoduje, ale ne délkou.** Sedm běhů nad touž 31minutovou nahrávkou (turbo, sledované místní jméno, 5 výskytů):
+
+  | Seznam | Položek | Pozice jména | Správně |
+  |---|---|---|---|
+  | A | 8 | 3. | 5/5 |
+  | A | 12 | 3. | 4/5 |
+  | A | 16 | 3. | 4/5 |
+  | A | 21 | 3. | **5/5** |
+  | B | 21 | 5. | **0/5** |
+  | B | 21 | 3. | 1/5 |
+  | B | 21 | 5., jiné psaní | 0/5 |
+
+  **Délka vliv nemá** – tentýž počet položek dal 5/5 i 0/5. **Pozice ani velikost písmena to nevysvětlují** – obojí změněno jednotlivě, výsledek se nehnul. Efekt je reprodukovatelný (seznam B selže pokaždé), ale příčina **zůstává neizolovaná**: seznamy se liší celým složením i pořadím. Dřívější tvrzení o klesající účinnosti k pozdějším položkám bylo vyvozeno z porovnání, které míchalo délku s pozicí, a **neplatí**.
+
+  Praktický dopad: **na slovník se nedá spolehnout naslepo.** Když na přesnosti jmen záleží, ověř výsledek v přepisu a případně slovník přeskládej – dokud nevíme proč, je to jediný spolehlivý postup.
 - **Kalibrace ETA:** `rate.py` drží `~/.whisper-models/rate.json` s naměřeným tempem pro každý model zvlášť. Po každém běhu se hodnota posune k realitě (EWMA, α = 0,35), takže odhady sedí na konkrétní stroj. Výchozí hodnoty jsou z M1. Do kalibrace jde **jen zvuk, který se opravdu přepsal** – soubor, který skončil `### FAILED`, se nezapočítá. Bez toho by selhaný běh (hodina zvuku, pár sekund práce) zapsal tempo v řádu stovek × realtime. **Běhy pod dvě minuty zvuku se do kalibrace nepočítají** – dominuje u nich načtení modelu a tempo vyjde nesmyslně nízké (25s vzorek srazil naměřených 5,96× na 4,75×).
 - **Jazyk** se detekuje v kroku 1 a předává jako `WHISPER_LANG`. Když detekce selže, `transcribe.sh` spadne na výchozí `cs`.
 - **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
