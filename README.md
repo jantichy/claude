@@ -22,6 +22,8 @@ Následující skilly tvoří jednu osu od založení projektu po nasazení. Nem
 
 Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znovu – lidský název, git a remote, autocommit, typ projektu, kontrakt příkazů – a rovnou to nastaví včetně `README.md`, `.gitignore` a standardní struktury. Umí i projekty, které už existují: udělá inventuru a dorovná je na moje dnešní preference, nikdy nepřepíše soubor bez zeptání. Zvládá i **worktree layout**, tedy kontejner s `.bare` a jedním podadresářem na větev.
 
+Nad projektem, kterým už jednou prošel, se chová jinak: přepne se do **revize** a místo otázek projde celý projekt proti tomu, jak standardy vypadají dnes – sekce v `CLAUDE.md`, deklarace a kontrakty, umístění a vnitřní tvar dokumentace, odkazy na skilly a doménové znalosti, které se mezitím mohly přejmenovat. Řeší to jinak nepříjemnou vlastnost celé téhle vrstvy: konfigurace se vyvíjí dál, ale projekty založené za starého nastavení v něm zůstanou stát a samy o tom neřeknou. Tohle je způsob, jak je dorovnat jedním zavoláním.
+
 ### [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
 
 Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak. Hranici mezi nimi drží tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?* A dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold.

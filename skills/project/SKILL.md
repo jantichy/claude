@@ -1,6 +1,6 @@
 ---
 name: project
-description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři či přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty). Interaktivní wizard, který se ptá krok po kroku.
+description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři, přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty), anebo dorovnat dřív nastavený projekt na aktuální podobu standardů a konfigurační vrstvy – revize souladu struktury, dokumentace, sekcí CLAUDE.md, kontraktů a importů. Interaktivní wizard, který se ptá krok po kroku.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
@@ -8,12 +8,13 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 ## Co skill dělá
 
-Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do projektového `CLAUDE.md`. Funguje ve dvou režimech:
+Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do projektového `CLAUDE.md`. Funguje ve třech režimech:
 
 - **Nový projekt** – čistý adresář, všechno se zakládá od nuly.
-- **Existující projekt** – zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference. Nic se nepřepisuje naslepo.
+- **Existující projekt** – adresář, ve kterém už něco je, ale `/project` v něm ještě neběžel. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference. Nic se nepřepisuje naslepo.
+- **Revize** – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/Dev/context/structure/structure.md`, `~/.claude/RULES.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 0b.
 
-Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez zásahu a slouží jako verifikace.
+Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a skilly se vyvíjejí dál, kdežto projekty založené za starého nastavení zůstávají stát – a rozdíl se z projektu sám nepozná. Druhý běh je tedy plnohodnotná kontrola, ne jen verifikace, že se nic nezměnilo.
 
 ## Co skill nedělá
 
@@ -21,6 +22,7 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
 - **Nepřepisuje nic naslepo.** U existujícího projektu se na každý rozpor ptá.
 - **Nenaplňuje soubory obsahem.** `docs/` zakládá prázdné, jen s nadpisem.
+- **Nerediguje obsah dokumentace.** Revize hlídá **tvar** – kde soubor leží, jak se jmenuje, jak je uvnitř seřazený, jestli položka sedí do souboru, ve kterém je. Jestli je zapsané rozhodnutí správné nebo úkol dobře napsaný, neřeší; od toho jsou `/consistency` a `/review`.
 
 ## Zásady pro celý průběh
 
@@ -28,6 +30,7 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
+- **V režimu revize se na hotové volby neptej znovu.** Co je v `CLAUDE.md` zapsané a dává smysl, platí. Otázka se pokládá jen tam, kde revize našla rozpor nebo mezeru – a klade se o tom rozporu, ne o celém kroku.
 - Konvenci standardní struktury **neopisuj z hlavy** – řiď se `~/Dev/context/structure/structure.md`, který ji definuje. Tenhle skill je jen instalátor.
 
 ------
@@ -37,9 +40,12 @@ Skill je **opakovatelný**. Druhý běh nad hotovým projektem má projít bez z
 Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md`, `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 4a pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim *nový projekt*.
+- **Projekt, kterým už `/project` prošel** → režim *revize*. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 0b.
 - **Cokoliv jiného** → režim *existující projekt*.
 
-V režimu *existující projekt* si nejdřív udělej inventuru a **vypiš ji uživateli v pár řádcích**, ať oba víte, z čeho se vychází:
+Řekni nahlas, který režim to je a podle čeho jsi to poznal. Trvá-li uživatel na plném průchodu průvodcem i nad nastaveným projektem, ber to jako pokyn a jeď režim *existující projekt*.
+
+V režimech *existující projekt* i *revize* si nejdřív udělej inventuru a **vypiš ji uživateli v pár řádcích**, ať oba víte, z čeho se vychází:
 
 | Co zjistit | Jak |
 |---|---|
@@ -51,6 +57,51 @@ V režimu *existující projekt* si nejdřív udělej inventuru a **vypiš ji u�
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
 
 Pak řekni, že se teď budeš ptát postupně, a pokračuj. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.**
+
+## Krok 0b – Revize souladu se standardem
+
+*Jen v režimu revize.* Tenhle krok nahrazuje průchod otázkami: volby, které kdysi padly, se znovu nepokládají. Místo nich se projde **celý projekt proti tomu, jak standardy vypadají dnes**, a co se rozešlo, se dorovná.
+
+**Standard si načti, neopisuj ho z hlavy.** Rozdíl mezi projektem a tvou pamětí není nález – tvoje paměť je zrovna to, co je zastaralé. Než začneš kontrolovat, přečti si:
+
+- `~/Dev/context/structure/structure.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
+- `~/.claude/RULES.md` – zejména *Životní cyklus práce* (jaké kroky osy dnes existují) a *Co do tohoto souboru nepatří* (kam co patří);
+- `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality* – jen u projektu, ve kterém se něco spouští;
+- `~/Dev/context/worktree/worktree.md` – jen u worktree layoutu;
+- výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
+
+Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zásad*: co je mechanické a jednoznačné, oprav rovnou a jen to vypiš; co přepisuje nebo maže existující obsah, předlož a nech potvrdit. **Vyžaduje-li nález volbu**, kterou umí jen některý z dalších kroků (typ projektu, doménové importy, kontrakt příkazů), vrať se do toho kroku a udělej ho – tady je popsané, *co se kontroluje*, tam *jak se to nastavuje*.
+
+| Oblast | Co ověřit | Kde je pravda |
+|---|---|---|
+| Blok metadat | Je na začátku projektového `CLAUDE.md`, má dnešní tvar a pořadí řádků, slug sedí s adresářem, `Struktura` sedí se skutečným umístěním souborů, řádky `Web` a `Repozitář` jsou jen tam, kde mají hodnotu. | `structure.md`, *`CLAUDE.md`* (krok 1 a 2) |
+| Tři místa téhož údaje | Lidský název a popisek sedí v `CLAUDE.md`, v `README.md` a v Repository details na GitHubu (`gh repo view <owner>/<slug> --json description,homepageUrl`). Rozejít se smějí jen v tom, že README popisek rozvádí. | `structure.md`, *`CLAUDE.md`* (krok 3) |
+| Sekce v `CLAUDE.md` | Každá sekce, kterou projekt má mít, tam je (struktura a dokumentace, příkazy, nasazení, autocommit, paměť, typ projektu, doménové standardy) – a **žádná zaniklá nepřebývá**. Seznam ber z `structure.md` a z kroků 4–9, ne z paměti. | `structure.md` (kroky 4, 6–9) |
+| Deklarace struktury | Seznam souborů v sekci *Struktura a dokumentace* sedí **přesně** na to, co v projektu opravdu je: nic nechybí, nic nepřebývá, cesty odpovídají režimu umístění. | krok 4, *Zápis do CLAUDE.md* |
+| Umístění a názvy souborů | Standardní soubory leží všechny v jednom režimu (ne půl v `docs/`, půl v kořeni), nikde nezůstalo starší pojmenování. | krok 4a a *Migrace staršího pojmenování* |
+| Vnitřní tvar dokumentace | Viz *Obsah dokumentačních souborů* níž – nejdražší část revize. | `structure.md`, sekce jednotlivých souborů |
+| Kontrakt příkazů a brány | Každý řádek `## Příkazy` jde opravdu spustit (ověř proti `package.json`, `Makefile`, `composer.json`), nechybí klíč, který projekt umí, vědomě neaplikovaný má pomlčku. Souhlas se zelenou linkou ověř `~/.claude/green-line.sh --list`. | krok 8b, `coding.md` |
+| Odkazy ven z projektu | Každá cesta do `~/.claude/` nebo `~/Dev/context/` a každý zmíněný skill **existuje**. Vygrepuj je z `CLAUDE.md`, `README.md` i dokumentace a ověř proti inventáři výš. Tohle chytá přejmenované a zrušené věci v konfigurační vrstvě, aniž bys musel vědět, co se změnilo. | inventář z výpisů výš |
+| Doménové importy | Cíle `@import`ů existují. Nepřibyla doménová znalost, která na projekt sedí a chybí mu? Nezůstal import, který už neplatí, protože se povaha projektu posunula? Přidání ani odebrání **nedělej sám** – nabídni v kroku 9. | krok 9, `~/.claude/CLAUDE.md` |
+| Layout a `.gitignore` | Ve worktree layoutu leží projektové soubory v `main/` a v kořeni je jen stub. `.gitignore` má řádky z jádra včetně `.claude/run/`. | kroky 3b a 5 |
+
+### Obsah dokumentačních souborů
+
+Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím posunul (rozdělení `todo.md` a `done.md`, nové sekce, pravidlo o řazení) a projekt v něm zůstal na starém. Projdi `todo.md`, `done.md`, `decisions.md` a `rules.md` **obsahem, ne jen existencí**, a ověř proti jejich sekcím v `structure.md`:
+
+- **Hotové položky v `todo.md`.** Odškrtnuté a zjevně dokončené věci patří do `done.md` s datem dokončení. Přesun **navrhni seznamem a nech potvrdit** – jestli je něco hotové, ví uživatel, ne ty. Odškrtnutý krok uvnitř nedokončené položky se nepřesouvá.
+- **Řazení.** Nejstarší nahoře, nové na konec – v `decisions.md` i `done.md`, i uvnitř kapitol. Obrácené pořadí **neotáčej sám**: je to přeskládání celého souboru, ukaž to a nech si to potvrdit.
+- **Zrcadlení sekcí.** Je-li `todo.md` členěné, `done.md` drží tytéž sekce.
+- **Tvar záznamů.** Datum u hotové položky jako `(2026-08-28)`, řádky v *Průchody osou* a *Co proklouzlo* podle šablony v `structure.md`.
+- **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu osou nesedí volně v `done.md` mimo *Průchody osou*.
+- **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš.
+- **Prázdná sekce `## Parkované v session`** se ruší.
+
+### Výstup revize
+
+Než začneš cokoliv měnit, **vypiš nálezy jako seznam** – co je v pořádku shrň jednou větou, každý rozpor uveď zvlášť s tím, co se s ním stane (opravím rovnou / potřebuju rozhodnout). Teprve pak jednej. Uživatel tak vidí rozsah dřív, než se sáhne na soubory.
+
+**Nenajdeš-li nic, řekni to a skonči** – běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
 
 ## Krok 1 – Metadata projektu
 
@@ -454,9 +505,16 @@ Vypiš přehledně:
 
 U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí.
 
+*Režim revize:* souhrn je jiný – nevypisuje nastavení, ale **rozdíl proti standardu**. Tři skupiny: co bylo dorovnáno, co čeká na rozhodnutí uživatele a co jsi vědomě nechal být i s důvodem. Oblasti, které vyšly čistě, shrň jednou větou; jejich výčet nikoho nezajímá.
+
 **Další krok:** /specify, zakládá-li se něco nového – u dorovnaného projektu se rovnou pracuje
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Projekt je nastavený, můžeš v něm začít pracovat.`
 - `Nastavený úplně není – zbývá: <konkrétní seznam>.`
+
+V režimu revize jednou z těchto:
+
+- `Projekt je v souladu s aktuálním standardem.`
+- `V souladu úplně není – zbývá: <konkrétní seznam>.`
