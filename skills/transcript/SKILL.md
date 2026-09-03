@@ -70,7 +70,22 @@ Podle jistoty se zachovej takhle:
 
 Jazyk pak předej jako `WHISPER_LANG` v kroku 6 a **zapiš ho do `.transcript-glossary.md`**. Neurčuje totiž jen rozpoznávání, ale i to, podle jakých pravidel se v kroku 9 opravuje pravopis a v jakém jazyce vzniká shrnutí.
 
-**Co detekce nevyřeší:** dvojjazyčnou schůzku. Whisper bere jeden jazyk na běh, takže když se v půlce přepne z češtiny do angličtiny, druhá polovina dopadne špatně. Detekce to nezhorší, ale ani nespraví. Když to na nahrávce poznáš, řekni to uživateli.
+#### Když je nahrávka dvojjazyčná
+
+`detect-lang.sh` vzorkuje na **třech místech** (čtvrtina, půlka, tři čtvrtiny). Když se vzorky neshodnou, přidá na konec `mixed:cs,en`.
+
+```
+en 0.999 mixed:cs,en
+```
+
+**Whisper bere jeden jazyk na běh**, takže tohle skill sám nespraví. Musí to ale říct nahlas a nabídnout, co s tím:
+
+1. **Přepsat po částech** – uživatel řekne, kolikátá minuta je zlom, ty nahrávku rozřízneš `ffmpeg -ss/-t` a pustíš dvakrát, každou část se svým jazykem. Přepisy pak spojíš do jednoho `<název>.md` s mezinadpisem u zlomu.
+2. **Přepsat celé v převažujícím jazyce** a **napsat do poznámky na konci přepisu**, která část je nespolehlivá.
+
+Nerozhoduj sám, zeptej se. Řádově se to liší: první varianta stojí dvojnásobek času, druhá kus obsahu.
+
+**Krátká vsuvka v jiném jazyce mixed nevyvolá** – tři vzorky ji minou. Když se to stane, projeví se to až při čištění jako pasáž, která nedává smysl.
 
 ### 2. Průvodce, krok první: model
 
