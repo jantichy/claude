@@ -49,8 +49,15 @@ audio_s=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$WAV" 2>/d
 echo "### DIARIZE START $(date +%H:%M:%S)" >> "$LOG"
 wall_start=$(date +%s)
 
-HF_TOKEN="$TOKEN" DIAR_WAV="$WAV" DIAR_OUT="$OUT" DIAR_NSPK="$NSPK" DIAR_MODEL="$DIARIZE_MODEL" \
-  "$DIARIZE_PY" "$HERE/diarize.py" >> "$LOG" 2>&1 || fail "pyannote"
+if ! HF_TOKEN="$TOKEN" DIAR_WAV="$WAV" DIAR_OUT="$OUT" DIAR_NSPK="$NSPK" DIAR_MODEL="$DIARIZE_MODEL" \
+     "$DIARIZE_PY" "$HERE/diarize.py" >> "$LOG" 2>&1; then
+  # Neodsouhlasená licence je nejčastější příčina a seznam gated repozitářů se
+  # mezi verzemi pyannote mění. Vytáhni z chyby konkrétní repozitář, ať uživatel
+  # ví, kam přesně kliknout, místo obecného "něco s pyannote".
+  gated=$(grep -o "Access to model [^ ]* is restricted" "$LOG" | tail -1 | awk '{print $4}')
+  [ -n "$gated" ] && fail "gated:$gated"
+  fail "pyannote"
+fi
 
 wall=$(( $(date +%s) - wall_start ))
 [ -f "$OUT" ] || fail "bez-vystupu"

@@ -20,7 +20,12 @@ def main():
     import torch
     from pyannote.audio import Pipeline
 
-    pipeline = Pipeline.from_pretrained(model, use_auth_token=token)
+    # pyannote.audio 4.x přejmenoval `use_auth_token` na `token`. Zkusíme nové
+    # jméno a na starších verzích spadneme zpátky na původní.
+    try:
+        pipeline = Pipeline.from_pretrained(model, token=token)
+    except TypeError:
+        pipeline = Pipeline.from_pretrained(model, use_auth_token=token)
     if pipeline is None:
         # Nastane, když uživatel neodsouhlasil licenci gated modelu na HuggingFace.
         print("Pipeline se nenačetla – nejspíš neodsouhlasená licence modelu.", file=sys.stderr)
@@ -34,7 +39,17 @@ def main():
     if nspk.isdigit() and int(nspk) > 0:
         kwargs["num_speakers"] = int(nspk)
 
-    annotation = pipeline(wav, **kwargs)
+    result = pipeline(wav, **kwargs)
+
+    # pyannote 3.x vracelo rovnou Annotation, 4.x vrací DiarizeOutput se dvěma.
+    # Bereme "exclusive" variantu – je podle dokumentace určená právě pro navázání
+    # na přepis, protože neobsahuje překrývající se úseky, kde dva mluví přes sebe.
+    annotation = result
+    for attr in ("exclusive_speaker_diarization", "speaker_diarization"):
+        candidate = getattr(result, attr, None)
+        if candidate is not None:
+            annotation = candidate
+            break
 
     turns = [
         {"start": round(seg.start, 3), "end": round(seg.end, 3), "speaker": speaker}

@@ -14,6 +14,10 @@ DIARIZE_VENV="$MODELS_DIR/venv-diarize"
 DIARIZE_PY="$DIARIZE_VENV/bin/python3"
 # shellcheck disable=SC2034  # dtto
 DIARIZE_MODEL="pyannote/speaker-diarization-3.1"
+# Pipeline si tahá další gated repozitáře; seznam se mezi verzemi pyannote mění.
+# Kontrola je proto jen předběžná – definitivní verdikt dá až běh, viz diarize.sh.
+# shellcheck disable=SC2034  # dtto
+DIARIZE_REPOS="pyannote/speaker-diarization-3.1 pyannote/segmentation-3.0 pyannote/speaker-diarization-community-1"
 # shellcheck disable=SC2034  # dtto
 HF_TOKEN_FILE="$MODELS_DIR/hf-token"
 

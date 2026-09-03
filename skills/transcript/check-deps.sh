@@ -78,13 +78,29 @@ if [ "$WANT_DIARIZE" -eq 1 ]; then
     missing=1
   fi
 
-  if [ -n "${HF_TOKEN:-}" ] || [ -s "$HF_TOKEN_FILE" ]; then
-    echo "  ✓ HuggingFace token"
-  else
+  tok="${HF_TOKEN:-}"
+  [ -n "$tok" ] || { [ -s "$HF_TOKEN_FILE" ] && tok="$(tr -d '[:space:]' < "$HF_TOKEN_FILE")"; }
+
+  if [ -z "$tok" ]; then
     echo "  ✗ HuggingFace token – chybí ($HF_TOKEN_FILE)"
     fixes+=("token z https://huggingface.co/settings/tokens ulož do $HF_TOKEN_FILE")
-    fixes+=("a odsouhlas licenci na https://huggingface.co/$DIARIZE_MODEL (nutné, jinak se model nestáhne)")
     missing=1
+  else
+    echo "  ✓ HuggingFace token"
+    # Metadata gated repa jsou veřejná, takže /api/models vrátí 200 i bez přístupu.
+    # Jediná spolehlivá zkouška je sáhnout na soubor. Pipeline potřebuje oba modely.
+    for repo in $DIARIZE_REPOS; do
+      code=$(curl -s -o /dev/null -w "%{http_code}" -m 15 \
+        -H "Authorization: Bearer $tok" \
+        "https://huggingface.co/$repo/resolve/main/config.yaml" 2>/dev/null)
+      case "$code" in
+        200|302) echo "  ✓ přístup k $repo" ;;
+        403)     echo "  ✗ $repo – licence neodsouhlasená"
+                 fixes+=("otevři https://huggingface.co/$repo a odsouhlas podmínky (bez toho se model nestáhne)")
+                 missing=1 ;;
+        *)       echo "  ? $repo – nešlo ověřit (HTTP $code), zkusí se až za běhu" ;;
+      esac
+    done
   fi
 fi
 

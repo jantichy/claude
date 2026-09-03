@@ -234,7 +234,9 @@ Vznikne `<název>.json` a `<název>.vtt`. Přiřazuje se podle **největšího �
 
 Až teď, protože dřív nebylo co pojmenovat. Pro každého mluvčího jedna otázka; **návrhy vytáhni z přepisu** – z představování, z oslovování, z toho, kdo o kom mluví ve třetí osobě – a ze slovníku z kroku 3.
 
-Vždycky nabídni i možnost `Nechat SPEAKER_00`. Anonymní mluvčí je lepší než špatně pojmenovaný.
+**U dvou mluvčích se ptej jednou na dvojici**, ne dvakrát zvlášť. Buď přiřazení sedí, nebo je prohozené – dvě otázky by byly zbytečné kliknutí navíc. Od tří mluvčích výš dej otázku každému.
+
+Vždycky nabídni i možnost nechat mluvčí anonymní. Anonymní mluvčí je lepší než špatně pojmenovaný.
 
 Jména ulož do dočasného JSON a pusť `merge.py` znovu s `--names`, ať se propíšou do obou výstupů. Zapiš je i do `.transcript-glossary.md`, aby s nimi počítalo čištění i shrnutí.
 
@@ -334,7 +336,10 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - **Jazyk:** výchozí čeština (`cs`). Lze přebít proměnnou `WHISPER_LANG`.
 - **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
 - **Potlačení neřečových tokenů:** `-sns`, zapnuto vždy. Druhá pojistka vedle VAD.
-- **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto.
+- **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto. Naměřeno na Apple M1: **7,1× realtime**, tedy 31 minut zvuku za 4:24 – zhruba stejně dlouho jako přepis turbem.
+- **Gated repozitáře jsou tři**, ne jeden: kromě `speaker-diarization-3.1` ještě `segmentation-3.0` a `speaker-diarization-community-1`. Seznam se mezi verzemi pyannote mění, proto `diarize.sh` při selhání vytáhne z chyby konkrétní repozitář (`### DIARIZE FAILED gated:<repo>`). Kontrola v `check-deps.sh` sahá na `config.yaml`, ne na `/api/models/` – **metadata gated repa jsou veřejná, takže endpoint vrací 200 i bez přístupu** a kontrola by byla falešně pozitivní.
+- **Bere se `exclusive_speaker_diarization`**, ne `speaker_diarization`. Je podle dokumentace pyannote určená právě pro navázání na přepis, protože neobsahuje překrývající se úseky.
+- **Nepřiřazené repliky jsou v pořádku.** Na 31minutové schůzce dvou lidí zůstalo bez mluvčího 21 replik ze 426 (5 %) a byly to skoro výhradně krátké přitakávací vsuvky („jo, jo, jo“, „to asi ne“). Delší věcné repliky mluvčího dostaly všechny.
 - **Zarovnání po slovech (WhisperX) skill záměrně neřeší.** Táhlo by s sebou faster-whisper, který na Apple Silicon nemá Metal backend a běží jen na CPU, takže by se celý přepis řádově zpomalil. Cenou je, že na rychlých výměnách („jasně, jasně“) bude přiřazení mluvčích plavat. Bereme to vědomě: na dlouhých replikách, ze kterých se dělají úkoly ve shrnutí, se lidé nepřekřikují.
 
 ## Soubory skillu
