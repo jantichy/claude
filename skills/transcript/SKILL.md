@@ -293,6 +293,8 @@ Ukáže procenta, zpracované a celkové minuty, kolik zbývá, tempo (× realti
 Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v souhrnu. Připrav doslovný přepis v jazyce nahrávky:
 
 - Uprav jen **stylistiku a slovosled** tam, kde je to potřeba, aby se text dal plynule a smysluplně číst.
+- **Oprav pravopis a gramatiku** podle pravidel jazyka nahrávky. Rozpoznávač neumí i/y ve shodě přísudku s podmětem, plete si tvary, které znějí stejně, a sází interpunkci od oka. Mluvčí to neřekl špatně – špatně to zapsal model, takže to není zásah do jeho projevu, ale oprava chyby přepisu. Typicky: „mrtvoli“ místo **mrtvoly**, čárky ve vedlejších větách, velká písmena u vlastních jmen. U češtiny platí `~/Dev/context/text/text.md`, sekce *Gramatika a pravopis* a *Typografie*.
+- **Nespisovné tvary a hovorovou mluvu ale nech být.** „Bysme“, „vokno“, „dycky“ nebo „démoni“ místo demonstrátorů jsou to, jak lidé mluví, a do doslovného přepisu patří. Opravuje se chyba zápisu, ne mluvčí.
 - Odstraň **výplňová slova** (hesitační výplně) a **opakovaná slova** / místa, kde se řečník zamotal při hledání formulace.
 - **Odstraň halucinace ASR** – i s VAD se občas objeví nesmyslné opakující se řádky (dokola tatáž věta, „Titulky vytvořil …“). Takové smyčky celé smaž.
 - Rozděl text do **ucelených kapitol** s výstižnými mezinadpisy (`##`).
