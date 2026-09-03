@@ -30,6 +30,7 @@ set -uo pipefail
 # Česká locale by do čísel dala desetinnou čárku a rozbila awk i rate.py.
 export LC_ALL=C
 HERE="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source-path=SCRIPTDIR
 # shellcheck source=common.sh
 . "$HERE/common.sh"
 

@@ -2,9 +2,10 @@
 # Sdílené definice pro skill /transcript. Sourcuje se, nespouští.
 
 MODELS_DIR="$HOME/.whisper-models"
+# shellcheck disable=SC2034  # čtou je skripty, které tenhle soubor sourcují
 VAD_MODEL="$MODELS_DIR/ggml-silero-v5.1.2.bin"
+# shellcheck disable=SC2034  # dtto
 VAD_MODEL_URL="https://huggingface.co/ggml-org/whisper-vad/resolve/main/ggml-silero-v5.1.2.bin"
-RATE_FILE="$MODELS_DIR/rate.json"
 
 # Klíč modelu -> soubor a URL. Klíče: turbo, large-v3
 model_file() {

@@ -7,6 +7,7 @@
 #
 # Exit 0 = vše připraveno, 1 = něco chybí.
 set -u
+# shellcheck source-path=SCRIPTDIR
 # shellcheck source=common.sh
 . "$(dirname "$0")/common.sh"
 

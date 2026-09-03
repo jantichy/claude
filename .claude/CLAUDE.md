@@ -31,7 +31,7 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 Kontrakt příkazů (`~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*). Zelená linka ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
 
 - typecheck: -
-- lint: shellcheck --severity=info ./*.sh skills/*/*.sh
+- lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh
 - test: python3 -m unittest discover -s tests
 
 `shellcheck` běží se `--severity=info`, ne se `--severity=style`: stylové nálezy jsou preference a brána, která padá na preferenci, se obchází.
