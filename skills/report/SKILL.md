@@ -84,9 +84,9 @@ Patička        Jan Tichý · jantichy@jantichy.cz · https://www.jantichy.cz
 
 Má-li report víc tematických celků, udělej záložky. Nesmí to ale rozbít tisk do PDF – co je za neaktivní záložkou, se netiskne.
 
-### Tonalita komentářů
+### Tonalita
 
-Tohle je místo, kde se reporty nejčastěji kazí. Platí `~/Dev/context/text/text.md` a k tomu:
+Tohle je místo, kde se reporty nejčastěji kazí. Platí `~/Dev/context/text/text.md` a k tomu pravidla níž – a to **pro každý psaný text v reportu**, ne jen pro komentáře u grafů. Tedy i pro *Shrnutí*, *Metodiku* a *Limity dat*. U shrnutí to platí nejvíc, protože se podle *Struktury* výš čte jako první a často jako jediné.
 
 - **Věcně a krátce.** Co se stalo, o kolik, oproti čemu.
 - **Žádné nadšení.** Ne „skvělý nárůst!“, ne „úžasný výsledek“, ne vykřičníky. Konstatuj číslo a jeho význam.

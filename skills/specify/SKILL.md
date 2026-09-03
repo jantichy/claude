@@ -214,7 +214,7 @@ Co ještě není rozhodnuté a co to blokuje.
 
 Přeskočíš-li ho, **řekni to i s důvodem** a jako zadání pro plán použij `requirements.md`.
 
-Návrh vytvoří `brainstorming` v dialogu s uživatelem – po sekcích, se schválením po každé. Zapiš do **`docs/architecture.md`**:
+Návrh vytvoří `brainstorming` v dialogu s uživatelem – po sekcích, se schválením po každé. **Jak psát platí stejně jako u `requirements.md`** (viz výš): česky, věcně, bez omáčky, typografie podle `~/Dev/context/text/text.md`, bez placeholderů. Zapiš do **`docs/architecture.md`**:
 
 ```markdown
 # <Lidský název> – návrh řešení

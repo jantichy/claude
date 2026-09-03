@@ -374,6 +374,16 @@ Potřebuješ-li do počítače nainstalovat nástroj a je na výběr víc zdroj�
 
 Instalace je zásah do uživatelova počítače, ne do repozitáře: **než něco nainstaluješ, ověř, že to tam už není**, a sáhneš-li mimo tenhle žebříček (`curl | sh`, stažená binárka, instalátor), řekni to nahlas a nech si to potvrdit.
 
+### Commituj jmenované cesty, ne `-A`
+
+`git add -A`, `git add .` a `git commit -a` seberou **všechno, co je v pracovním stromu**, včetně toho, co tam dala jiná běžící session. Nad jedním repozitářem přitom může pracovat víc session zároveň – to je běžný stav, ne výjimka.
+
+**Do commitu proto vyjmenuj cesty**, kterých se tvoje práce dotkla. Před commitem se podívej na `git status` a soubor, který jsi nezměnil ty, nech být.
+
+Doloženo: 3. 9. 2026 session pracující na `/project` dvakrát smetla `git add -A` rozpracované změny druhé session v jiném skillu. Obsah se neztratil, ale zpráva u jednoho commitu popisuje diff, který v něm není, a `git blame` odkazuje na zdůvodnění týkající se něčeho jiného. **Pushnutá historie se pak už nedá opravit** bez přepsání větve, na které jiná session stojí.
+
+Nejde o hygienu, ale o dohledatelnost: commit message je jediné místo, kde je zapsané *proč*. Když sedí u cizí změny, je to zdůvodnění ztracené.
+
 ### Mazání ověř diffem, ne grepem
 
 Mažeš-li **podle značek** – od nadpisu k nadpisu, od markeru k markeru, od řádku po řádek –, ověř výsledek **diffem toho, co zmizelo**, ne hledáním toho, co zbylo.
