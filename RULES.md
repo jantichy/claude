@@ -350,6 +350,16 @@ Totéž pro rozdělaný návrh: ukáže-li se v půlce, že model vznikl přilep
 
 Před destruktivní nebo těžko vratnou operací (mazání, přepis, zrušení, hromadná změna) se **podívej na aktuální skutečný stav** toho, do čeho sáhneš – ne na to, cos měl poznamenáno dřív. Je-li akce nevratná, řekni to nahlas a nech si ji potvrdit.
 
+### Nástroje instaluj správcem balíčků, v daném pořadí
+
+Potřebuješ-li do počítače nainstalovat nástroj a je na výběr víc zdrojů, drž pořadí **homebrew → npm → uv → pip**. První zdroj, který ten nástroj má, vyhrává; níž se jde jen tehdy, když výš není.
+
+**Proč zrovna takhle:** Homebrew je jediný z těch čtyř, který není vázaný na jeden jazyk – drží i binárky, které nejsou balíčkem žádného ekosystému, a umí je hromadně aktualizovat i odinstalovat. Zbytek je jazykový a platí u něj totéž jen uvnitř svého jazyka. `uv` je před `pip`, protože globální `pip install` je na macOS dnes zablokovaný (PEP 668, `externally-managed-environment`) a projde jen s `--break-system-packages`; `uv tool install` proti tomu dá nástroji izolované prostředí a `uvx` ho spustí bez instalace úplně. `pip` tak zbývá jako poslední záchrana pro balíček, který jinak není, a patří do venv.
+
+**Platí to pro nástroje, které si instaluješ ty, ne pro závislosti projektu.** Uvnitř projektu rozhoduje, co projekt už používá – jeho manifest a lockfile –, a tohle pořadí se neuplatňuje vůbec; viz `~/Dev/context/coding/coding.md`, *Nová závislost je rozhodnutí, ne detail*.
+
+Instalace je zásah do uživatelova počítače, ne do repozitáře: **než něco nainstaluješ, ověř, že to tam už není**, a sáhneš-li mimo tenhle žebříček (`curl | sh`, stažená binárka, instalátor), řekni to nahlas a nech si to potvrdit.
+
 ### Mazání ověř diffem, ne grepem
 
 Mažeš-li **podle značek** – od nadpisu k nadpisu, od markeru k markeru, od řádku po řádek –, ověř výsledek **diffem toho, co zmizelo**, ne hledáním toho, co zbylo.
