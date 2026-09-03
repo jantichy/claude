@@ -325,6 +325,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - **Nedodržuj chronologické pořadí**, ve kterém informace zazněly. Uspořádej vše do logických sekcí a skupin tak, aby to dávalo při čtení smysl.
 - Pokud to není nezbytné pro kontext nebo pochopení, **neopakuj** jednu informaci na více místech.
 - Na **úplném konci** přehledně shrň vzájemné **domluvy, vyplývající úkoly a další kroky**.
+- **Pravopis, gramatika a typografie platí i tady.** Shrnutí není doslovný přepis, ale tvůj vlastní text, takže se na něj pravidla z [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu) nevztahují sama od sebe – drž je vědomě. Pozor hlavně na termíny přebrané z přepisu: chybu opravenou v přepisu snadno zopakuješ ve shrnutí, protože ho píšeš z téhož podkladu. Přesně takhle v ostrém běhu prošly „mrtvoli“ do souhrnného dokumentu, zatímco v přepisu už byly opravené.
 
 (Základní charakteristika a účastníci jsou už v úvodním odstavci – viz [Formát souhrnného MD](#formát-souhrnného-md).)
 
