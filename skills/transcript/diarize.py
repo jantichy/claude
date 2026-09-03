@@ -14,7 +14,7 @@ def main():
     wav = os.environ["DIAR_WAV"]
     out = os.environ["DIAR_OUT"]
     nspk = os.environ.get("DIAR_NSPK", "auto")
-    model = os.environ.get("DIAR_MODEL", "pyannote/speaker-diarization-3.1")
+    model = os.environ["DIAR_MODEL"]  # jediný zdroj pravdy je common.sh
     token = os.environ["HF_TOKEN"]
 
     import torch

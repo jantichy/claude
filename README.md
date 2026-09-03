@@ -76,7 +76,7 @@ Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem �
 
 ### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
-Ze složky zvukových nahrávek udělá pořádek: každou přepíše do Markdownu a k tomu napíše jedno strukturované shrnutí napříč všemi, se soupisem domluv a úkolů na konci. Přepis běží **lokálně a offline** přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp), takže nahrávka neopustí můj počítač. Text rovnou uhladí – vyhází „ehm“, odstraní halucinace rozpoznávače, opraví přeslechnuté názvy a rozseká to do kapitol.
+Ze zvukových nahrávek udělá pořádek: každou přepíše do Markdownu a k tomu napíše jedno strukturované shrnutí se soupisem domluv a úkolů na konci. Přepis běží **lokálně a offline** přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp), takže nahrávka neopustí můj počítač. Než začne, zeptá se na pár věcí a podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy. Text uhladí: vyhází „ehm“, odstraní halucinace rozpoznávače, opraví přeslechy a rozseká to do kapitol. Jazyk pozná sám a na vyžádání rozliší i mluvčí, takže úkoly ve shrnutí mají majitele.
 
 ## Hooky, skripty a nastavení
 
