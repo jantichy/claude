@@ -306,6 +306,16 @@ Zvlášť pozor na **odvozené údaje**: souhrnné počty („katalog obsahuje 4
 
 **Za hranici projektu změna sama nejde.** Globální pravidlo nepropaguj na ostatní projekty bez pokynu – ale vždy **upozorni, které projekty jsou s ním v rozporu**.
 
+### Rozsah pravidla se nešíří sám
+
+Píšeš-li pravidlo do dokumentu, jehož sekce mají **vymezený rozsah** („Platí pro X“), ověř, jestli nemá platit i pro **sourozenecký výstup téhož kroku**. Nešíří se tam samo, a to ani když obojí vzniká najednou a ze stejného podkladu.
+
+Vymezené rozsahy jsou správně – bez nich se pravidla rozlévají tam, kam nepatří. Cenou za ně je, že pravidlo přidané do jedné sekce druhou nepokryje, a autor si toho nevšimne, protože **mu ta platnost připadá samozřejmá**.
+
+Doloženo dvakrát v jednom dni na `/transcript`: pravidlo o opravě pravopisu se zapsalo do *Pravidel doslovného přepisu*, jejichž rozsah je přepis. Shrnutí se řídí *Pravidly shrnutí*, kde o jazyce nebylo nic – a gramatická chyba opravená v přepisu prošla do souhrnného dokumentu, protože se píše z téhož podkladu. Totéž se opakovalo u majitelů úkolů.
+
+Kontrolní otázka po každém novém pravidle: **který další výstup vzniká ve stejném kroku a spadá pod jiný rozsah?**
+
 ### Nerozhoduj potichu nad rámec zadání
 
 Máš nápad na vylepšení nad rámec zadání → zeptej se, neschvaluj si to sám. Nevyžádaná změna je zásah do uživatelovy domény bez jeho vědomí.
