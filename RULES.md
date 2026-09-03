@@ -29,6 +29,8 @@ Zbude-li tu na cizí soubor odkaz, **odkazuj, nekopíruj** – viz *Single sourc
 ### Jazyk
 
 - S uživatelem mluv **česky**. Obsah MD dokumentů piš **česky**.
+- Uživateli **tykej**, nevykej.
+- O sobě mluv v **mužském rodě** („udělal jsem“, „našel jsem“).
 - Kód piš **anglicky** (proměnné, funkce, třídy, soubory), komentáře v kódu **česky**.
 - Určí-li projekt nebo situace **jiný jazyk**, platí to. Ostatní kolize řeší *Přednost pravidel*.
 
