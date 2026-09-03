@@ -30,7 +30,9 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
   - `YYYYMMDD - Výstižný název.md` – jedno společné shrnutí napříč všemi nahrávkami (viz [Formát souhrnného MD](#formát-souhrnného-md)).
 
   Které z nich vzniknou, vybere uživatel v průvodci.
-- **Mezivýstupy** (`<název>.txt` od whisperu, `<název>.wav`, `<název>.diarization.json` a `whisper-progress.log`) vznikají viditelně v adresáři a **po dokončení se uklidí** (viz krok 10). Zdrojové audio zůstává.
+- **Mezivýstupy** vznikají viditelně v adresáři a **po dokončení se uklidí** (viz krok 10): `<název>.txt` od whisperu, `.transcript-glossary.md`, `whisper-progress.log` a při rozlišování mluvčích navíc `<název>.wav` a `<název>.diarization.json`. Zdrojové audio zůstává.
+
+  **Bez rozlišování mluvčích žádný viditelný WAV nevzniká.** `transcribe.sh` si ho v tom případě pojmenuje skrytě (`.<název>.tmp.wav`) a smaže ho hned po zpracování každé nahrávky, ne až v úklidu.
 
 ---
 
@@ -208,6 +210,7 @@ Instalace předpokládá [Homebrew](https://brew.sh). Vyvinuto a testováno na m
 
 ```bash
 WHISPER_MODEL=<turbo|large-v3> \
+WHISPER_LANG=<kód jazyka z kroku 1> \
 WHISPER_PROMPT="<slovník oddělený čárkami>" \
 WHISPER_KEEP_WAV=<0|1> \
 <skill>/transcribe.sh <workdir> <workdir>/whisper-progress.log <audio1> <audio2> ...
@@ -367,7 +370,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - **Jazyk:** výchozí čeština (`cs`). Lze přebít proměnnou `WHISPER_LANG`.
 - **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
 - **Potlačení neřečových tokenů:** `-sns`, zapnuto vždy. Druhá pojistka vedle VAD.
-- **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto. Naměřeno na Apple M1: **7,1× realtime**, tedy 31 minut zvuku za 4:24 – zhruba stejně dlouho jako přepis turbem.
+- **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto. Naměřeno na Apple M1: **7,13× realtime**, tedy 31,4 minuty zvuku za 4:24 – zhruba stejně dlouho jako přepis turbem.
 - **Gated repozitáře jsou tři**, ne jeden: kromě `speaker-diarization-3.1` ještě `segmentation-3.0` a `speaker-diarization-community-1`. Seznam se mezi verzemi pyannote mění, proto `diarize.sh` při selhání vytáhne z chyby konkrétní repozitář (`### DIARIZE FAILED gated:<repo>`). Kontrola v `check-deps.sh` sahá na `config.yaml`, ne na `/api/models/` – **metadata gated repa jsou veřejná, takže endpoint vrací 200 i bez přístupu** a kontrola by byla falešně pozitivní.
 - **Bere se `exclusive_speaker_diarization`**, ne `speaker_diarization`. Je podle dokumentace pyannote určená právě pro navázání na přepis, protože neobsahuje překrývající se úseky.
 - **Nepřiřazené repliky jsou v pořádku.** Na 31minutové schůzce dvou lidí zůstalo bez mluvčího 21 replik ze 426 (5 %) a byly to skoro výhradně krátké přitakávací vsuvky („jo, jo, jo“, „to asi ne“). Delší věcné repliky mluvčího dostaly všechny.
