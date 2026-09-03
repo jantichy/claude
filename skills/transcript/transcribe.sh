@@ -22,7 +22,7 @@
 #   ### DONE zaznam-N HH:MM:SS
 #   ### VADSTAT N SPEECH_S TOTAL_S PERCENT
 #   ### FAILED zaznam-N <důvod>   (běh pokračuje dalším souborem)
-#   ### ELAPSED AUDIO_S WALL_S
+#   ### ELAPSED AUDIO_S WALL_S   (AUDIO_S = jen úspěšně přepsané soubory)
 #   ### ALL DONE
 #
 # Průběžný stav kdykoli:  python3 progress.py <log_file>
@@ -75,18 +75,19 @@ speech_seconds() {
 
 # 1) délky do logu
 n=0
-total_audio=0
 for f in "$@"; do
   n=$((n+1))
   d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f" 2>/dev/null)
   [ -n "$d" ] || d=0
   echo "### DURATION $n $d" >> "$LOG"
-  total_audio=$(awk -v a="$total_audio" -v b="$d" 'BEGIN{printf "%.3f", a+b}')
 done
 
 # 2) přepis – chyba jednoho souboru neshodí zbytek běhu
 wall_start=$(date +%s)
 n=0
+# Do kalibrace jde jen zvuk, který se opravdu přepsal. Bez toho by selhaný běh
+# (hodina zvuku, pár sekund běhu) zapsal tempo v řádu stovek × realtime.
+ok_audio=0
 for f in "$@"; do
   n=$((n+1))
   base=$(basename "$f"); base="${base%.*}"
@@ -100,6 +101,9 @@ for f in "$@"; do
     wav="$WORKDIR/.${base}.tmp.wav"
   fi
 
+  file_dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f" 2>/dev/null)
+  [ -n "$file_dur" ] || file_dur=0
+
   if ! ffmpeg -y -i "$f" -ar 16000 -ac 1 -c:a pcm_s16le "$wav" >>"$LOG" 2>&1; then
     echo "### FAILED zaznam-$n prevod-na-wav" >> "$LOG"
     rm -f "$wav"
@@ -109,13 +113,12 @@ for f in "$@"; do
   echo "### START zaznam-$n $(date +%H:%M:%S)" >> "$LOG"
   if whisper-cli "${WOPTS[@]}" -f "$wav" -of "$WORKDIR/$base" >> "$LOG" 2>&1; then
     echo "### DONE zaznam-$n $(date +%H:%M:%S)" >> "$LOG"
+    ok_audio=$(awk -v a="$ok_audio" -v b="$file_dur" 'BEGIN{printf "%.3f", a+b}')
     srt="$WORKDIR/$base.srt"
     if [ -f "$srt" ]; then
-      dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f" 2>/dev/null)
-      [ -n "$dur" ] || dur=0
       sp=$(speech_seconds "$srt")
-      pct=$(awk -v s="$sp" -v d="$dur" 'BEGIN{ printf "%.0f", (d>0 ? 100*s/d : 0) }')
-      echo "### VADSTAT $n $sp $dur $pct" >> "$LOG"
+      pct=$(awk -v s="$sp" -v d="$file_dur" 'BEGIN{ printf "%.0f", (d>0 ? 100*s/d : 0) }')
+      echo "### VADSTAT $n $sp $file_dur $pct" >> "$LOG"
     fi
   else
     echo "### FAILED zaznam-$n whisper" >> "$LOG"
@@ -124,6 +127,6 @@ for f in "$@"; do
 done
 wall=$(( $(date +%s) - wall_start ))
 
-echo "### ELAPSED $total_audio $wall" >> "$LOG"
-python3 "$HERE/rate.py" update "$MODEL_KEY" "$total_audio" "$wall" 2>/dev/null || true
+echo "### ELAPSED $ok_audio $wall" >> "$LOG"
+python3 "$HERE/rate.py" update "$MODEL_KEY" "$ok_audio" "$wall" 2>/dev/null || true
 echo "### ALL DONE" >> "$LOG"

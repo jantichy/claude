@@ -18,7 +18,7 @@ RATE_FILE = os.path.expanduser("~/.whisper-models/rate.json")
 
 # Výchozí tempo (× realtime) do doby, než se naměří vlastní. Apple M1, 31 min zvuku.
 # Klíč "diarize" je druhý průchod (pyannote), ne přepis.
-DEFAULTS = {"turbo": 5.4, "large-v3": 1.67, "diarize": 7.1}
+DEFAULTS = {"turbo": 5.4, "large-v3": 1.67, "diarize": 7.13}
 FALLBACK = 2.0
 
 # Váha nového měření. Nižší = pomalejší, stabilnější kalibrace.

@@ -39,6 +39,16 @@ else
   missing=1
 fi
 
+if command -v python3 >/dev/null 2>&1; then
+  echo "  ✓ python3"
+else
+  # Visí na něm kalibrace tempa (rate.py) i statistika diarizace. Bez něj by obojí
+  # tiše zmizelo pod přesměrováním chyb, takže se kontroluje výslovně.
+  echo "  ✗ python3 – chybí"
+  fixes+=("xcode-select --install   # nebo: brew install python")
+  missing=1
+fi
+
 if command -v whisper-cli >/dev/null 2>&1; then
   echo "  ✓ whisper.cpp (whisper-cli)"
 else

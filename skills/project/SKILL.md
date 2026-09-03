@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do projektového `CLAUDE.md`. Funguje ve třech režimech:
 
 - **Nový projekt** – čistý adresář, všechno se zakládá od nuly.
-- **Existující projekt** – adresář, ve kterém už něco je, ale `/project` v něm ještě neběžel. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i revize. Nic se nepřepisuje naslepo.
+- **Existující projekt** – adresář, ve kterém už něco je, ale chybí v něm otisk `/project` (blok metadat v `CLAUDE.md`) – ať proto, že skill v něm nikdy neběžel, nebo proto, že ho nastavovala starší verze. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i krok 0b. Nic se nepřepisuje naslepo.
 - **Revize** – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/Dev/context/structure/structure.md`, `~/.claude/RULES.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 0b.
 
 Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a skilly se vyvíjejí dál, kdežto projekty založené za starého nastavení zůstávají stát – a rozdíl se z projektu sám nepozná. Druhý běh je tedy plnohodnotná kontrola, ne jen verifikace, že se nic nezměnilo.
@@ -26,7 +26,7 @@ Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a s
 
 ## Zásady pro celý průběh
 
-- **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu osy. Ostatní kroky osy popisují etapy jednoho běhu, kdežto tenhle je **interaktivní průvodce**: uživatel jimi prochází jeden po druhém, odpovídá a může se kdykoliv zastavit. Proto se taky číslují včetně vsuvek (`3b`, `9b`), na které se odkazuje odjinud.
+- **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu osy. Ostatní kroky osy popisují etapy jednoho běhu, kdežto tenhle je **interaktivní průvodce**: uživatel jimi prochází jeden po druhém, odpovídá a může se kdykoliv zastavit. Proto se taky číslují včetně vsuvek (`3b`, `8b`), na které se odkazuje odjinud.
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
