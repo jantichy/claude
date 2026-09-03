@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do projektového `CLAUDE.md`. Funguje ve třech režimech:
 
 - **Nový projekt** – čistý adresář, všechno se zakládá od nuly.
-- **Existující projekt** – adresář, ve kterém už něco je, ale `/project` v něm ještě neběžel. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference. Nic se nepřepisuje naslepo.
+- **Existující projekt** – adresář, ve kterém už něco je, ale `/project` v něm ještě neběžel. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i revize. Nic se nepřepisuje naslepo.
 - **Revize** – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/Dev/context/structure/structure.md`, `~/.claude/RULES.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 0b.
 
 Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a skilly se vyvíjejí dál, kdežto projekty založené za starého nastavení zůstávají stát – a rozdíl se z projektu sám nepozná. Druhý běh je tedy plnohodnotná kontrola, ne jen verifikace, že se nic nezměnilo.
@@ -60,7 +60,15 @@ Pak řekni, že se teď budeš ptát postupně, a pokračuj. V dalších krocíc
 
 ## Krok 0b – Revize souladu se standardem
 
-*Jen v režimu revize.* Tenhle krok nahrazuje průchod otázkami: volby, které kdysi padly, se znovu nepokládají. Místo nich se projde **celý projekt proti tomu, jak standardy vypadají dnes**, a co se rozešlo, se dorovná.
+*Ve všech režimech kromě nového projektu.* Projde se **celý projekt proti tomu, jak standardy vypadají dnes**, a co se rozešlo, se dorovná. Kdy se krok dělá:
+
+| Režim | Kdy |
+|---|---|
+| Revize | **místo** průchodu otázkami – volby, které kdysi padly, se znovu nepokládají |
+| Existující projekt | **po** krocích 1–9, těsně před souhrnem – teprve tam je ustaveno, jak má projekt vypadat |
+| Nový projekt | vůbec; v adresáři, který právě vznikl, není co revidovat |
+
+**Proč i u existujícího projektu:** otisk `/project` (blok metadat) v něm chybí i tehdy, když ho nastavovala starší verze skillu, která blok ještě nezakládala. Takový projekt vypadá jako neošetřený, ale dokumentaci má z doby, kdy platil jiný standard – a to je zrovna ten případ, na který je tenhle krok.
 
 **Standard si načti, neopisuj ho z hlavy.** Rozdíl mezi projektem a tvou pamětí není nález – tvoje paměť je zrovna to, co je zastaralé. Než začneš kontrolovat, přečti si:
 
@@ -89,8 +97,8 @@ Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zá
 
 Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím posunul (rozdělení `todo.md` a `done.md`, nové sekce, pravidlo o řazení) a projekt v něm zůstal na starém. Projdi `todo.md`, `done.md`, `decisions.md` a `rules.md` **obsahem, ne jen existencí**, a ověř proti jejich sekcím v `structure.md`:
 
-- **Hotové položky v `todo.md`.** Odškrtnuté a zjevně dokončené věci patří do `done.md` s datem dokončení. Přesun **navrhni seznamem a nech potvrdit** – jestli je něco hotové, ví uživatel, ne ty. Odškrtnutý krok uvnitř nedokončené položky se nepřesouvá.
-- **Řazení.** Nejstarší nahoře, nové na konec – v `decisions.md` i `done.md`, i uvnitř kapitol. Obrácené pořadí **neotáčej sám**: je to přeskládání celého souboru, ukaž to a nech si to potvrdit.
+- **Hotové položky v `todo.md`.** Odškrtnuté a zjevně dokončené věci patří do `done.md` s datem dokončení. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny* / *Projít po jedné* / *Nechat být*) – jestli je něco hotové, ví uživatel, ne ty. Odškrtnutý krok uvnitř nedokončené položky se nepřesouvá.
+- **Řazení.** Nejstarší nahoře, nové na konec – v `decisions.md` i `done.md`, i uvnitř kapitol. Obrácené pořadí **neotáčej sám**: je to přeskládání celého souboru. Ukaž, čeho se to týká, a zeptej se přes AskUserQuestion (*Srovnat podle standardu* / *Nechat, jak to je*).
 - **Zrcadlení sekcí.** Je-li `todo.md` členěné, `done.md` drží tytéž sekce.
 - **Tvar záznamů.** Datum u hotové položky jako `(2026-08-28)`, řádky v *Průchody osou* a *Co proklouzlo* podle šablony v `structure.md`.
 - **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu osou nesedí volně v `done.md` mimo *Průchody osou*.
@@ -102,6 +110,8 @@ Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím 
 Než začneš cokoliv měnit, **vypiš nálezy jako seznam** – co je v pořádku shrň jednou větou, každý rozpor uveď zvlášť s tím, co se s ním stane (opravím rovnou / potřebuju rozhodnout). Teprve pak jednej. Uživatel tak vidí rozsah dřív, než se sáhne na soubory.
 
 **Nenajdeš-li nic, řekni to a skonči** – běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
+
+Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady – tedy skoro vždy, protože nález má typicky dvě až tři možná vyústění (opravit / nechat být / rozhodnout jinak). Volný text si nech na to, co se z možností vybrat nedá.
 
 ## Krok 1 – Metadata projektu
 
@@ -463,6 +473,8 @@ U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvypl
 `design/slides.md` nabízej i mimo školení – všude, kde se dělá deck: konferenční přednáška, prodejní pitch, prezentace výsledků klientovi. Importuje se **navíc** k `design/design.md`, ne místo něj.
 
 `worktree.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
+
+**V režimu *existující projekt* teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu *revize* už krok 0b proběhl na začátku a nedělá se podruhé.
 
 `brand/brand.md` se tu nenabízí taky schválně, ale z jiného důvodu: je to **korpus, ne checklist**. Neříká, jak se něco dělá, ale jak to je – a projekt, který píše ven, si ho načte podle potřeby přes `~/.claude/CLAUDE.md`, kde je vedený mezi podmíněnými doménovými znalostmi. Importovat ho natvrdo do každého takového projektu by znamenalo vozit korpus tam, kde stačí sáhnout.
 
