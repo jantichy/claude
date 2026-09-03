@@ -37,7 +37,7 @@ def main():
             if m:
                 dur[m.group(1)] = float(m.group(2))
 
-    started, done = [], set()
+    started, done, failed = [], set(), set()
     first_start_clock = None
     last_pos = 0
 
@@ -55,13 +55,20 @@ def main():
             done.add(m.group(1))
             last_pos = 0
             continue
+        # Selhaný soubor se nikdy nezpracuje. Bez tohohle by jeho délka zůstala
+        # v celku a progress by navždy hlásil, že něco běží.
+        m = re.search(r"### FAILED zaznam-(\d+)", ln)
+        if m:
+            failed.add(m.group(1))
+            last_pos = 0
+            continue
         m = re.match(r"\[(\d\d):(\d\d):(\d\d)", ln)
         if m:
             last_pos = hms_to_s(m.group(1), m.group(2), m.group(3))
 
-    total = sum(dur.values())
+    total = sum(v for k, v in dur.items() if k not in failed)
     done_audio = sum(dur.get(n, 0) for n in done)
-    running = next((n for n in reversed(started) if n not in done), None)
+    running = next((n for n in reversed(started) if n not in done and n not in failed), None)
     cur = last_pos if running else 0
     processed = min(done_audio + cur, total)
     remaining = max(0.0, total - processed)
@@ -91,10 +98,12 @@ def main():
         return f"{int(sec // 60)}:{int(sec % 60):02d}"
 
     n_files = len(dur)
-    if remaining == 0:
+    if remaining == 0 or running is None:
         status = "HOTOVO"
     else:
         status = f"běží soubor {running}/{n_files}"
+    if failed:
+        status += f"  •  selhalo: {len(failed)}"
     print(f"  [{bar}] {pct * 100:5.1f}%")
     print(f"  {mmss(processed)} / {mmss(total)} min   (zbývá {mmss(remaining)})")
     print(f"  {status}  •  hotové: {len(done)}/{n_files}  •  tempo: {rate_txt}  •  ETA: {eta_txt}")

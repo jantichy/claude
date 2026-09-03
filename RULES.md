@@ -308,6 +308,8 @@ Zvlášť pozor na **odvozené údaje**: souhrnné počty („katalog obsahuje 4
 
 ### Rozsah pravidla se nešíří sám
 
+**Je to *Propagace změny* o úroveň níž** – tam napříč soubory, tady napříč sekcemi jednoho souboru. Vlastní sekci to má proto, že se hledá jinak: mezi soubory pomůže grep, mezi sourozeneckými sekcemi ne, protože pravidlo v té druhé nechybí jako řetězec, ale jako platnost.
+
 Píšeš-li pravidlo do dokumentu, jehož sekce mají **vymezený rozsah** („Platí pro X“), ověř, jestli nemá platit i pro **sourozenecký výstup téhož kroku**. Nešíří se tam samo, a to ani když obojí vzniká najednou a ze stejného podkladu.
 
 Vymezené rozsahy jsou správně – bez nich se pravidla rozlévají tam, kam nepatří. Cenou za ně je, že pravidlo přidané do jedné sekce druhou nepokryje, a autor si toho nevšimne, protože **mu ta platnost připadá samozřejmá**.
@@ -416,7 +418,7 @@ V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u oboj
 
 **Zakládání (1–5)**
 
-1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*. Ten sám o sobě zelenou linku **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/green-line.sh --allow`), protože kontrakt je kód z repozitáře a hooky se na povolení neptají.
+1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. **Volá se znovu i nad dávno nastaveným projektem, kdykoliv se posunuly standardy nebo konfigurační vrstva** – pozná sám, že už jednou běžel, a místo ptání projde projekt proti dnešní podobě standardu. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*. Ten sám o sobě zelenou linku **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/green-line.sh --allow`), protože kontrakt je kód z repozitáře a hooky se na povolení neptají.
 2. **`/specify`** – produktová specifikace (`docs/requirements.md`) a návrh řešení (`docs/architecture.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
 3. **`/oponent`** – nezávislý posudek zadání čerstvýma očima, subagenty bez kontextu session. **Do osy patří proto, že jinak návrh neměří nikdo:** role *Korektnost* v `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu – vada v ní tedy projde celou osou jako korektní, protože kód poslušně dělá to, co je v ní napsané. Je to zároveň jediná vrstva, kde se chyba násobí do všeho pod ní: `coding.md` tvrdí, že *„bezpečnost se dělá strukturou, ne kontrolou na konci“*, a ta struktura vzniká právě tady. Přeskakuje se stejným pravidlem jako každý jiný krok – drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano.
 4. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis prózou.

@@ -20,7 +20,8 @@
 #   ### START zaznam-N HH:MM:SS
 #   [HH:MM:SS ...] segmenty       (píše whisper)
 #   ### DONE zaznam-N HH:MM:SS
-#   ### VADSTAT N SPEECH_S TOTAL_S PERCENT
+#   ### SPEECHSTAT N SPEECH_S TOTAL_S PERCENT   (podíl přepsaného zvuku,
+#                                                NE výstup VAD – vyjde stejně i bez něj)
 #   ### FAILED zaznam-N <důvod>   (běh pokračuje dalším souborem)
 #   ### ELAPSED AUDIO_S WALL_S   (AUDIO_S = jen úspěšně přepsané soubory)
 #   ### ALL DONE
@@ -75,10 +76,12 @@ speech_seconds() {
 
 # 1) délky do logu
 n=0
+declare -a DURATIONS=()
 for f in "$@"; do
   n=$((n+1))
   d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f" 2>/dev/null)
   [ -n "$d" ] || d=0
+  DURATIONS+=("$d")
   echo "### DURATION $n $d" >> "$LOG"
 done
 
@@ -101,8 +104,7 @@ for f in "$@"; do
     wav="$WORKDIR/.${base}.tmp.wav"
   fi
 
-  file_dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f" 2>/dev/null)
-  [ -n "$file_dur" ] || file_dur=0
+  file_dur="${DURATIONS[$((n-1))]}"
 
   if ! ffmpeg -y -i "$f" -ar 16000 -ac 1 -c:a pcm_s16le "$wav" >>"$LOG" 2>&1; then
     echo "### FAILED zaznam-$n prevod-na-wav" >> "$LOG"
@@ -118,7 +120,7 @@ for f in "$@"; do
     if [ -f "$srt" ]; then
       sp=$(speech_seconds "$srt")
       pct=$(awk -v s="$sp" -v d="$file_dur" 'BEGIN{ printf "%.0f", (d>0 ? 100*s/d : 0) }')
-      echo "### VADSTAT $n $sp $file_dur $pct" >> "$LOG"
+      echo "### SPEECHSTAT $n $sp $file_dur $pct" >> "$LOG"
     fi
   else
     echo "### FAILED zaznam-$n whisper" >> "$LOG"

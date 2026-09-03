@@ -111,6 +111,10 @@ Než začneš cokoliv měnit, **vypiš nálezy jako seznam** – co je v pořád
 
 **Nenajdeš-li nic, řekni to a skonči** – běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
 
+### Proč se nikam neukládá, proti čemu se revidovalo naposledy
+
+Nabízí se do projektu zapsat otisk – datum revize nebo hash `~/Dev/context` – a příště projít jen to, co se od té doby změnilo. **Vědomě se to nedělá.** Revize je odvoditelná z toho, jak soubory vypadají teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje: rozejde se se skutečností a vypadá přitom pořád stejně. Hlavně by ale zúžil revizi na diff standardu, a tím minul přesně ten případ, kvůli kterému skill vznikl – drift, který se do projektu nikdy nepropsal, protože ho tehdy nikdo nezpropagoval. Ten v žádném diffu od poslední revize není.
+
 Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady – tedy skoro vždy, protože nález má typicky dvě až tři možná vyústění (opravit / nechat být / rozhodnout jinak). Volný text si nech na to, co se z možností vybrat nedá.
 
 ## Krok 1 – Metadata projektu
