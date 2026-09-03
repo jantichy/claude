@@ -7,6 +7,16 @@ VAD_MODEL="$MODELS_DIR/ggml-silero-v5.1.2.bin"
 # shellcheck disable=SC2034  # dtto
 VAD_MODEL_URL="https://huggingface.co/ggml-org/whisper-vad/resolve/main/ggml-silero-v5.1.2.bin"
 
+# Diarizace (volitelná, druhý průchod). Instaluje se zvlášť, viz check-deps.sh --diarize.
+# shellcheck disable=SC2034  # čtou je skripty, které tenhle soubor sourcují
+DIARIZE_VENV="$MODELS_DIR/venv-diarize"
+# shellcheck disable=SC2034  # dtto
+DIARIZE_PY="$DIARIZE_VENV/bin/python3"
+# shellcheck disable=SC2034  # dtto
+DIARIZE_MODEL="pyannote/speaker-diarization-3.1"
+# shellcheck disable=SC2034  # dtto
+HF_TOKEN_FILE="$MODELS_DIR/hf-token"
+
 # Klíč modelu -> soubor a URL. Klíče: turbo, large-v3
 model_file() {
   case "$1" in

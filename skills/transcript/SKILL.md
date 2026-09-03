@@ -24,11 +24,12 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 - **Vstup:** soubory zadané v promptu. Když prompt žádný soubor neuvádí, vezmi všechny audio soubory v aktuálním adresáři. Podporované formáty: `mp3`, `m4a`, `wav`, `aac`, `flac`, `ogg`, `opus`, `m4b`. Když nenajdeš nic, oznam to a skonči.
 - **Výstup – vše vzniká v adresáři vstupní nahrávky, nezakládá se žádný podadresář a nic se nikam nepřesouvá:**
   - `<název>.md` – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu)),
-  - `<název>.srt` – tentýž obsah s časovými značkami, syrový z whisperu,
+  - `<název>.srt` **nebo** `<název>.vtt` – tentýž obsah s časovými značkami. SRT bez rozlišených mluvčích, VTT s nimi (`<v Jméno>`), protože SRT pole pro mluvčího nemá,
+  - `<název>.json` – strojově čitelné úseky s časem, mluvčím a textem. Vzniká jen s rozlišením mluvčích,
   - `YYYYMMDD - Výstižný název.md` – jedno společné shrnutí napříč všemi nahrávkami (viz [Formát souhrnného MD](#formát-souhrnného-md)).
 
-  Které z těch tří vzniknou, vybere uživatel v průvodci.
-- **Mezivýstupy** (`<název>.txt` od whisperu a `whisper-progress.log`) vznikají viditelně v adresáři a **po dokončení se uklidí** (viz krok 9). Zdrojové audio zůstává.
+  Které z nich vzniknou, vybere uživatel v průvodci.
+- **Mezivýstupy** (`<název>.txt` od whisperu, `<název>.wav`, `<název>.diarization.json` a `whisper-progress.log`) vznikají viditelně v adresáři a **po dokončení se uklidí** (viz krok 10). Zdrojové audio zůstává.
 
 ---
 
@@ -120,7 +121,7 @@ zkratky oboru, interní pojmy, názvy rolí a útvarů, …
 prompt / docs/structure.md / session
 ```
 
-Tenhle soubor je vstup pro čištění v kroku 8. **Deset položek stačí whisperu, ale tobě při čištění ne** – tam potřebuješ úplný kontext, abys poznal, co je zkomolenina a co interní žargon. Bez něj hádáš.
+Tenhle soubor je vstup pro čištění v kroku 9. **Deset položek stačí whisperu, ale tobě při čištění ne** – tam potřebuješ úplný kontext, abys poznal, co je zkomolenina a co interní žargon. Bez něj hádáš.
 
 ### 4. Průvodce, krok třetí: co má vzniknout
 
@@ -130,16 +131,43 @@ Tenhle soubor je vstup pro čištění v kroku 8. **Deset položek stačí whisp
 |---|---|---|
 | 1. | `Doslovný přepis (MD)` | Vyčištěný, bez „ehm“, s kapitolami a opravenými názvy. |
 | 2. | `Strukturované shrnutí (MD)` | Témata, závěry, na konci domluvy a úkoly. |
-| 3. | `Časovaný přepis (SRT)` | Syrový z whisperu, s časy. Na dohledání místa v nahrávce. |
+| 3. | `Časovaný přepis (SRT/VTT)` | Syrový z whisperu, s časy. Na dohledání místa v nahrávce. |
+| 4. | `Rozlišit mluvčí (JSON)` | Viz níže – jen odhad času, nic víc. |
 
-Když uživatel nevybere nic, ber to jako všechny tři.
+Když uživatel nevybere nic, ber to jako **první tři**. Rozlišení mluvčích je vždycky vědomá volba, nikdy výchozí stav.
+
+#### Popisek u čtvrté položky
+
+Drž ho holý. Spočítej odhad a napiš jen ten:
+
+```
+Přidá ~M:SS.
+```
+
+Odhad vezmi z `python3 <skill>/rate.py eta diarize <délka_v_sekundách>`.
+
+**Když pyannote nebo token chybí** (zjistíš předem přes `check-deps.sh --diarize`), přilep za odhad druhou větu: `Vyžaduje doinstalování pyannote a token na HuggingFace.` Když je všechno na místě, tuhle větu **vynech** – uživatele nezajímá, co má.
+
+#### Když je čtvrtá položka zaškrtnutá, zeptej se na počet mluvčích
+
+Druhá otázka v témže kroku. Pevný počet dělá výrazně míň chyb než automatický odhad a uživatel ho zná:
+
+| Pořadí | Label | Description |
+|---|---|---|
+| 1. | `Dva` | Nejčastější případ, rozhovor. |
+| 2. | `Tři až čtyři` | |
+| 3. | `Pět a víc` | |
+| 4. | `Ať si to zjistí samo` | Míň přesné, ale nemusíte počítat. |
+
+U „tří až čtyř“ a „pěti a víc“ se doptej na přesné číslo, nebo předej `auto` – rozsah pyannote nebere.
 
 ### 5. Ověř závislosti
 
 Až teď, protože model už znáš:
 
 ```bash
-<skill>/check-deps.sh <model>
+<skill>/check-deps.sh <model>              # bez rozlišení mluvčích
+<skill>/check-deps.sh --diarize <model>    # s ním
 ```
 
 Když skončí nenulově, vypiš uživateli, co chybí, nabídni instalaci (skript vypsal přesné příkazy) a po jeho souhlasu ji proveď. Skill potřebuje:
@@ -147,7 +175,10 @@ Když skončí nenulově, vypiš uživateli, co chybí, nabídni instalaci (skri
 - **ffmpeg** – `brew install ffmpeg` (převod audia na WAV),
 - **whisper.cpp** – `brew install whisper-cpp` (poskytuje `whisper-cli`),
 - **model** – `turbo` (~1,5 GB) nebo `large-v3` (~2,9 GB) v `~/.whisper-models/`,
-- **VAD model Silero** (~865 kB) – detekce řeči, viz níže.
+- **VAD model Silero** (~865 kB) – detekce řeči, viz níže,
+- **jen pro rozlišení mluvčích:** `pyannote.audio` ve vlastním venv (~2,5 GB kvůli PyTorch) a token na HuggingFace.
+
+**Diarizaci nikdy nedoinstaluj sám bez řečí.** Kromě velikosti stažení po uživateli chce dvě věci, které za něj nikdo neudělá: založit token a **odsouhlasit licenci gated modelu v prohlížeči**. Vypiš mu obojí a počkej. Když to odmítne, pokračuj bez rozlišení mluvčích – zbytek skillu funguje beze změny.
 
 Instalace předpokládá [Homebrew](https://brew.sh). Vyvinuto a testováno na macOS.
 
@@ -156,10 +187,13 @@ Instalace předpokládá [Homebrew](https://brew.sh). Vyvinuto a testováno na m
 ```bash
 WHISPER_MODEL=<turbo|large-v3> \
 WHISPER_PROMPT="<slovník oddělený čárkami>" \
+WHISPER_KEEP_WAV=<0|1> \
 <skill>/transcribe.sh <workdir> <workdir>/whisper-progress.log <audio1> <audio2> ...
 ```
 
-`<workdir>` = adresář vstupní nahrávky. Vzniknou v něm `<název>.txt`, `<název>.srt` a `whisper-progress.log`. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
+`<workdir>` = adresář vstupní nahrávky. Vzniknou v něm `<název>.txt`, `<název>.srt` a `whisper-progress.log`.
+
+**`WHISPER_KEEP_WAV=1` nastav právě tehdy, když se bude rozlišovat mluvčí.** Diarizace jede nad tímtéž WAV a bez toho by se musel vyrábět znovu. Jinak nech `0`, ať se po sobě uklidí hned. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
 
 **VAD je vždy zapnutý** a není na co se ptát. Vyřazuje ticho, čímž zabíjí celou třídu halucinací („Titulky vytvořil…“, dokola tatáž věta) a zároveň zrychluje běh. Práh je nastavený konzervativně (`-vt 0.35`, `-vp 200`), aby neuřízl tiché mluvčí. Vypnout ho jde přes `WHISPER_VAD=0`, ale sahej po tom jen jako po nápravě podle kroku 7.
 
@@ -175,7 +209,35 @@ V logu je pro každý soubor řádek:
 
 U mluveného slova čekej zhruba 60 až 90 %. **Když podíl klesne pod 40 %**, je pravděpodobné, že VAD ukrojil tichého mluvčího. Ohlas to uživateli s konkrétním číslem a nabídni opakovaný běh s `WHISPER_VAD=0`. Nerozhoduj o tom sám – u nahrávky s dlouhými pauzami může být nízký podíl v pořádku.
 
-### 8. Vyrob výstupy, které si uživatel vybral
+### 8. Rozliš mluvčí – jen když si to uživatel vybral
+
+Druhý, **samostatný průchod** nad WAV z kroku 6. Když spadne, přepis tím nepřichází vniveč – ohlas selhání a pokračuj krokem 9 bez mluvčích.
+
+```bash
+<skill>/diarize.sh <workdir> <workdir>/whisper-progress.log <workdir>/<název>.wav <počet|auto>
+```
+
+Do logu přibude `### DIARSTAT <mluvčích> <úseků>` a `### DIARIZE ELAPSED`, ze kterého se kalibruje tempo. Při chybě `### DIARIZE FAILED <důvod>`.
+
+#### Spoj mluvčí s textem
+
+```bash
+python3 <skill>/merge.py <workdir>/<název>.srt <workdir>/<název>.diarization.json <workdir>/<název>
+```
+
+Vznikne `<název>.json` a `<název>.vtt`. Přiřazuje se podle **největšího časového překryvu**, protože whisperovy segmenty nekopírují střídání mluvčích. Když je překryv slabý nebo těsný, replika zůstane bez mluvčího – `merge.py` vypíše kolik takových je (`### MERGESTAT <celkem> <nepřiřazeno> <mluvčích>`).
+
+**Nepřiřazené repliky nedoplňuj odhadem.** Chybné přiřazení vypadá stejně věrohodně jako správné a propíše se až do úkolů ve shrnutí, kde je z něj tvrzení, kdo co slíbil.
+
+#### Zeptej se, kdo je kdo
+
+Až teď, protože dřív nebylo co pojmenovat. Pro každého mluvčího jedna otázka; **návrhy vytáhni z přepisu** – z představování, z oslovování, z toho, kdo o kom mluví ve třetí osobě – a ze slovníku z kroku 3.
+
+Vždycky nabídni i možnost `Nechat SPEAKER_00`. Anonymní mluvčí je lepší než špatně pojmenovaný.
+
+Jména ulož do dočasného JSON a pusť `merge.py` znovu s `--names`, ať se propíšou do obou výstupů. Zapiš je i do `.transcript-glossary.md`, aby s nimi počítalo čištění i shrnutí.
+
+### 9. Vyrob výstupy, které si uživatel vybral
 
 **Doslovný přepis.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
 
@@ -185,13 +247,25 @@ Fáze opravy přeslechů zůstává, i když se slovník použil. Slovník zmen�
 
 **Doplň slovník o to, co jsi našel při čištění.** Když v přepisu narazíš na termín, který v `.transcript-glossary.md` chybí, dopiš ho tam dřív, než budeš psát shrnutí. Shrnutí pak stojí na stejném slovníku jako přepis.
 
-**Časovaný přepis.** `<název>.srt` už existuje, vznikl při přepisu. Nech ho ležet vedle `<název>.md`, stejné jméno, jiná přípona.
+**Časovaný přepis.** Bez rozlišených mluvčích nech ležet `<název>.srt` z kroku 6. S nimi ho nahradí `<název>.vtt` z kroku 8 – **SRT pak smaž**, ať vedle sebe neleží dvě verze téhož.
+
+**Rozlišení mluvčích mění doslovný přepis na dialog.** Kapitoly a mezinadpisy zůstávají, uvnitř nich se místo odstavců střídají repliky:
+
+```markdown
+## Životní cyklus člena
+
+**Tomáš:** Jde o to, že když někdo přijde do AK1, tak je to jasné.
+
+**Jan:** A potom to krystalizuje podle toho, jak vypadají prostory.
+```
+
+Repliku bez přiřazeného mluvčího uveď bez jména, ne pod nejbližším mluvčím.
 
 **Shrnutí.** Navrhni uživateli „Výstižný název“ celé nahrávky a **nech si ho odsouhlasit** (ať nemusí nic vymýšlet ani psát), pak zapiš `YYYYMMDD - Výstižný název.md` dle [Formátu souhrnného MD](#formát-souhrnného-md).
 
-### 9. Úklid
+### 10. Úklid
 
-Smaž mezivýstupy: všechny `<název>.txt`, `whisper-progress.log` a `.transcript-glossary.md`. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<název>.srt` po sobě ukliď, i když mezitím vznikl.
+Smaž mezivýstupy: všechny `<název>.txt`, `<název>.wav`, `<název>.diarization.json`, `whisper-progress.log` a `.transcript-glossary.md`. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<název>.srt` po sobě ukliď, i když mezitím vznikl.
 
 Než slovník smažeš, **vypiš uživateli termíny, které jsi nechal být** – ty, co modely dávaly konzistentně a vypadají jako interní žargon, a ty, kde je zvuk nesrozumitelný a tvar je tvůj odhad. Ať ví, co má ověřit. Do doslovného přepisu je zapiš jako poznámku na konec.
 
@@ -225,6 +299,7 @@ Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v
 - **České jméno v cizojazyčné nahrávce piš česky.** Když v anglicky mluveném záznamu zazní české jméno, firma nebo místo, rozpoznávač ho přepíše foneticky tak, jak to vyslovil cizinec – „Novak“, „Yarda“, „Brno“ jako „Burno“, „Škoda“ jako „Skoda“. Vrať mu **původní český tvar i s diakritikou**, i když je zbytek věty anglicky. Platí to oběma směry a je to jediná oprava, kterou děláš i tam, kde přepsané slovo dává v cizím jazyce zdánlivě smysl.
 - **Neopravuj to, čemu jen nerozumíš.** Když stejné podivné slovo dává model opakovaně a konzistentně, je to nejspíš interní žargon, ne přeslech. Nech ho být, případně se zeptej.
 - U dialogu **nepřehazuj pořadí** myšlenek; kde je zřejmé, kdo mluví, můžeš mluvčí odlišit, ale nevymýšlej jména.
+- **Mluvčího nehádej.** S diarizací ber nálepky z `<název>.json` a repliku, která tam mluvčího nemá, nech bez jména. Bez diarizace mluvčí rozlišuj jen tam, kde to plyne přímo z textu. Špatné přiřazení je horší než chyba ve slově – překlep čtenář pozná, „Tomáš slíbil, že to dodá“ ne.
 
 ## Formát souhrnného MD
 
@@ -256,7 +331,8 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - **Jazyk:** výchozí čeština (`cs`). Lze přebít proměnnou `WHISPER_LANG`.
 - **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
 - **Potlačení neřečových tokenů:** `-sns`, zapnuto vždy. Druhá pojistka vedle VAD.
-- **Bez rozlišování mluvčích** (diarizace). Pro ni by bylo potřeba doplnit další nástroj (`whisperx` + `pyannote`), což tenhle skill záměrně neřeší.
+- **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto.
+- **Zarovnání po slovech (WhisperX) skill záměrně neřeší.** Táhlo by s sebou faster-whisper, který na Apple Silicon nemá Metal backend a běží jen na CPU, takže by se celý přepis řádově zpomalil. Cenou je, že na rychlých výměnách („jasně, jasně“) bude přiřazení mluvčích plavat. Bereme to vědomě: na dlouhých replikách, ze kterých se dělají úkoly ve shrnutí, se lidé nepřekřikují.
 
 ## Soubory skillu
 
@@ -267,3 +343,6 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 | `common.sh` | cesty k modelům, počet vláken – sourcuje se |
 | `rate.py` | odhad a kalibrace tempa (`get`, `eta`, `update`) |
 | `progress.py` | progress bar nad logem běhu |
+| `diarize.sh` | volitelný druhý průchod – kdo kdy mluví |
+| `diarize.py` | vlastní běh pyannote uvnitř venv |
+| `merge.py` | spojí časy z whisperu s mluvčími, vyrobí `.json` a `.vtt` |

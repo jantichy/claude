@@ -9,6 +9,7 @@
 #   WHISPER_LANG    kód jazyka                  (výchozí cs)
 #   WHISPER_PROMPT  slovník jmen a termínů      (výchozí prázdný)
 #   WHISPER_VAD     1 | 0 – detekce řeči        (výchozí 1)
+#   WHISPER_KEEP_WAV 1 | 0 – nechat WAV vedle    (výchozí 0; diarizace ho potřebuje)
 #
 # Pro každý vstup vznikne <workdir>/<název>.txt a <workdir>/<název>.srt.
 # SRT vzniká vždy, protože se z něj počítá podíl řeči; když ho volající nechce,
@@ -38,6 +39,7 @@ MODEL_KEY="${WHISPER_MODEL:-turbo}"
 LANG_CODE="${WHISPER_LANG:-cs}"
 PROMPT="${WHISPER_PROMPT:-}"
 USE_VAD="${WHISPER_VAD:-1}"
+KEEP_WAV="${WHISPER_KEEP_WAV:-0}"
 
 MODEL="$(model_file "$MODEL_KEY")"
 if [ -z "$MODEL" ] || [ ! -f "$MODEL" ]; then
@@ -88,7 +90,15 @@ n=0
 for f in "$@"; do
   n=$((n+1))
   base=$(basename "$f"); base="${base%.*}"
-  wav="$WORKDIR/.${base}.tmp.wav"
+  # Skrytý název jen u dočasného WAV; ten, který má přežít pro diarizaci, je vidět.
+  if [ "$KEEP_WAV" = "1" ]; then
+    wav="$WORKDIR/$base.wav"
+    # Vstup už může BÝT tenhle soubor (nahrávka je WAV a leží v pracovním adresáři).
+    # Bez téhle pojistky by ffmpeg přepisoval vlastní vstup a nevznikl by přepis.
+    [ "$wav" = "$f" ] && wav="$WORKDIR/$base.16k.wav"
+  else
+    wav="$WORKDIR/.${base}.tmp.wav"
+  fi
 
   if ! ffmpeg -y -i "$f" -ar 16000 -ac 1 -c:a pcm_s16le "$wav" >>"$LOG" 2>&1; then
     echo "### FAILED zaznam-$n prevod-na-wav" >> "$LOG"
@@ -110,7 +120,7 @@ for f in "$@"; do
   else
     echo "### FAILED zaznam-$n whisper" >> "$LOG"
   fi
-  rm -f "$wav"
+  [ "$KEEP_WAV" = "1" ] || rm -f "$wav"
 done
 wall=$(( $(date +%s) - wall_start ))
 
