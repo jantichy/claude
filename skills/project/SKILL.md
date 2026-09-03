@@ -26,7 +26,7 @@ Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a s
 
 ## Zásady pro celý průběh
 
-- **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu osy. Ostatní kroky osy popisují etapy jednoho běhu, kdežto tenhle je **interaktivní průvodce**: uživatel jimi prochází jeden po druhém, odpovídá a může se kdykoliv zastavit. Proto se taky číslují včetně vsuvek (`3b`, `8b`), na které se odkazuje odjinud.
+- **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu osy. Ostatní kroky osy popisují etapy jednoho běhu, kdežto tenhle je **interaktivní průvodce**: uživatel jimi prochází jeden po druhém, odpovídá a může se kdykoliv zastavit. Proto se taky číslují včetně vsuvek (`0b`, `3b`, `8b`), na které se odkazuje odjinud.
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
@@ -37,7 +37,7 @@ Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a s
 
 ## Krok 0 – Zjisti režim a stav
 
-Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md`, `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 4a pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
+Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen stub bez bloku metadat, takže otisk hledej v `main/` – viz krok 3b), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 4a pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim *nový projekt*.
 - **Projekt, kterým už `/project` prošel** → režim *revize*. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 0b.
@@ -111,11 +111,11 @@ Než začneš cokoliv měnit, **vypiš nálezy jako seznam** – co je v pořád
 
 **Nenajdeš-li nic, řekni to a skonči** – běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
 
+Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady – tedy skoro vždy, protože nález má typicky dvě až tři možná vyústění (opravit / nechat být / rozhodnout jinak). Volný text si nech na to, co se z možností vybrat nedá.
+
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
 
 Nabízí se do projektu zapsat otisk – datum revize nebo hash `~/Dev/context` – a příště projít jen to, co se od té doby změnilo. **Vědomě se to nedělá.** Revize je odvoditelná z toho, jak soubory vypadají teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje: rozejde se se skutečností a vypadá přitom pořád stejně. Hlavně by ale zúžil revizi na diff standardu, a tím minul přesně ten případ, kvůli kterému skill vznikl – drift, který se do projektu nikdy nepropsal, protože ho tehdy nikdo nezpropagoval. Ten v žádném diffu od poslední revize není.
-
-Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady – tedy skoro vždy, protože nález má typicky dvě až tři možná vyústění (opravit / nechat být / rozhodnout jinak). Volný text si nech na to, co se z možností vybrat nedá.
 
 ## Krok 1 – Metadata projektu
 
@@ -478,8 +478,6 @@ U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvypl
 
 `worktree.md` se tu nenabízí schválně – importuje se už v kroku 3b, když si uživatel zvolí worktree layout.
 
-**V režimu *existující projekt* teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu *revize* už krok 0b proběhl na začátku a nedělá se podruhé.
-
 `brand/brand.md` se tu nenabízí taky schválně, ale z jiného důvodu: je to **korpus, ne checklist**. Neříká, jak se něco dělá, ale jak to je – a projekt, který píše ven, si ho načte podle potřeby přes `~/.claude/CLAUDE.md`, kde je vedený mezi podmíněnými doménovými znalostmi. Importovat ho natvrdo do každého takového projektu by znamenalo vozit korpus tam, kde stačí sáhnout.
 
 ### Profil organizace
@@ -510,6 +508,8 @@ Platí to **pro projekt**, kde je doména relevantní pořád. Globální `~/.cl
 Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `web/web.md` a `web/admin.md` mají dohromady skoro 500 řádků.
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
+
+**Tímhle krok 9 končí. V režimu *existující projekt* teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu *revize* už krok 0b proběhl na začátku a nedělá se podruhé.
 
 ## Krok 10 – Závěrečný souhrn
 
