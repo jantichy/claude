@@ -47,6 +47,27 @@ ffprobe -v error -show_entries format_tags=creation_time -of csv=p=0 <audio>
 
 Datum `YYYYMMDD` vezmi z metadat. Obvykle je stejné napříč soubory; když ne, vezmi z prvního. Když metadata s datem chybí, použij dnešek.
 
+#### Zjisti jazyk nahrávky
+
+```bash
+<skill>/detect-lang.sh <audio>          # vypíše např.:  cs 0.993
+```
+
+Whisper má jazyk zakódovaný v modelu a pozná ho ze zvuku dřív, než začne dekódovat slova. Vzorek se bere **zprostřed** nahrávky, protože začátky bývají pozdravy a šoupání židlí. Trvá to jednotky sekund, takže se to dělá vždycky.
+
+Podle jistoty se zachovej takhle:
+
+| Výsledek | Co udělej |
+|---|---|
+| jistota ≥ 0,9, jazyk `cs` | **neptej se a nic nehlas**, jeď dál |
+| jistota ≥ 0,9, jiný jazyk | **neptej se, ale řekni to nahlas**: „Detekoval jsem angličtinu, přepisuji anglicky.“ Kdo nesouhlasí, ozve se |
+| jistota < 0,9 | **teprve tady se zeptej**, s detekovaným jazykem jako první možností |
+| skript selhal | vezmi výchozí `cs` a řekni, že detekce neproběhla |
+
+Jazyk pak předej jako `WHISPER_LANG` v kroku 6 a **zapiš ho do `.transcript-glossary.md`**. Neurčuje totiž jen rozpoznávání, ale i to, podle jakých pravidel se v kroku 9 opravuje pravopis a v jakém jazyce vzniká shrnutí.
+
+**Co detekce nevyřeší:** dvojjazyčnou schůzku. Whisper bere jeden jazyk na běh, takže když se v půlce přepne z češtiny do angličtiny, druhá polovina dopadne špatně. Detekce to nezhorší, ale ani nespraví. Když to na nahrávce poznáš, řekni to uživateli.
+
 ### 2. Průvodce, krok první: model
 
 Spočítej odhad běhu pro obě varianty. Tempo drží `rate.py`, který se sám kalibruje podle skutečnosti:
@@ -295,7 +316,7 @@ Ukáže procenta, zpracované a celkové minuty, kolik zbývá, tempo (× realti
 Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v souhrnu. Připrav doslovný přepis v jazyce nahrávky:
 
 - Uprav jen **stylistiku a slovosled** tam, kde je to potřeba, aby se text dal plynule a smysluplně číst.
-- **Oprav pravopis a gramatiku** podle pravidel jazyka nahrávky. Rozpoznávač neumí i/y ve shodě přísudku s podmětem, plete si tvary, které znějí stejně, a sází interpunkci od oka. Mluvčí to neřekl špatně – špatně to zapsal model, takže to není zásah do jeho projevu, ale oprava chyby přepisu. Typicky: „mrtvoli“ místo **mrtvoly**, čárky ve vedlejších větách, velká písmena u vlastních jmen. U češtiny platí `~/Dev/context/text/text.md`, sekce *Gramatika a pravopis* a *Typografie*.
+- **Oprav pravopis a gramatiku** podle pravidel jazyka nahrávky. Rozpoznávač neumí i/y ve shodě přísudku s podmětem, plete si tvary, které znějí stejně, a sází interpunkci od oka. Mluvčí to neřekl špatně – špatně to zapsal model, takže to není zásah do jeho projevu, ale oprava chyby přepisu. Typicky: „mrtvoli“ místo **mrtvoly**, čárky ve vedlejších větách, velká písmena u vlastních jmen. **Které pravidlo použít, řekne jazyk zjištěný v kroku 1**, ne domněnka, že jde o češtinu. U češtiny platí `~/Dev/context/text/text.md`, sekce *Gramatika a pravopis* a *Typografie*; u jiného jazyka jeho vlastní konvence – anglický text má anglické uvozovky a anglickou interpunkci, ne české.
 - **Nespisovné tvary a hovorovou mluvu ale nech být.** „Bysme“, „vokno“, „dycky“ nebo „démoni“ místo demonstrátorů jsou to, jak lidé mluví, a do doslovného přepisu patří. Opravuje se chyba zápisu, ne mluvčí.
 - Odstraň **výplňová slova** (hesitační výplně) a **opakovaná slova** / místa, kde se řečník zamotal při hledání formulace.
 - **Odstraň halucinace ASR** – i s VAD se občas objeví nesmyslné opakující se řádky (dokola tatáž věta, „Titulky vytvořil …“). Takové smyčky celé smaž.
@@ -311,6 +332,8 @@ Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v
 - **Mluvčího nehádej.** S diarizací ber nálepky z `<název>.json` a repliku, která tam mluvčího nemá, nech bez jména. Bez diarizace mluvčí rozlišuj jen tam, kde to plyne přímo z textu. Špatné přiřazení je horší než chyba ve slově – překlep čtenář pozná, „Tomáš slíbil, že to dodá“ ne.
 
 ## Formát souhrnného MD
+
+**Celý souhrnný dokument piš v jazyce nahrávky**, který jsi zjistil v kroku 1 – včetně nadpisu, anotace a názvů sekcí. Anglicky mluvená schůzka nemá mít české shrnutí.
 
 Soubor `YYYYMMDD - Výstižný název.md` má tuto strukturu:
 
@@ -359,6 +382,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 | `common.sh` | cesty k modelům, počet vláken – sourcuje se |
 | `rate.py` | odhad a kalibrace tempa (`get`, `eta`, `update`) |
 | `progress.py` | progress bar nad logem běhu |
+| `detect-lang.sh` | detekce jazyka ze vzorku zprostřed nahrávky |
 | `diarize.sh` | volitelný druhý průchod – kdo kdy mluví |
 | `diarize.py` | vlastní běh pyannote uvnitř venv |
 | `merge.py` | spojí časy z whisperu s mluvčími, vyrobí `.json` a `.vtt` |
