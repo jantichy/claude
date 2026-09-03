@@ -23,6 +23,11 @@ FALLBACK = 2.0
 # Váha nového měření. Nižší = pomalejší, stabilnější kalibrace.
 ALPHA = 0.35
 
+# Kratší běhy do kalibrace nepouštíme: u nich dominuje načtení modelu (jednotky
+# sekund) a tempo vyjde nesmyslně nízké. Ověřeno – 25s vzorek srazil naměřených
+# 5,96x realtime na 4,75x.
+MIN_AUDIO_S = 120
+
 
 def as_float(value):
     """Tolerantní převod – shell v české locale umí poslat desetinnou čárku."""
@@ -51,7 +56,7 @@ def mmss(seconds):
 
 
 def update(model, audio_s, wall_s):
-    if audio_s <= 0 or wall_s <= 0:
+    if audio_s < MIN_AUDIO_S or wall_s <= 0:
         return
     measured = audio_s / wall_s
     data = load()
