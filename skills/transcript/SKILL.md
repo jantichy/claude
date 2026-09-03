@@ -1,56 +1,213 @@
 ---
 name: transcript
 description: Skill se použije, když uživatel zadá "/transcript", nebo když chce přepsat zvukové nahrávky (MP3, M4A, WAV, AAC…) do Markdownu – přepis a strukturované shrnutí schůzky/nahrávky. Přepis běží kompletně lokálně a offline (whisper.cpp).
-allowed-tools: [Read, Write, Edit, Bash, Agent]
 ---
 
 # Transcript
 
 ## Co skill dělá
 
-Lokální, offline přepis zvukových nahrávek do Markdownu – doslovný přepis každé nahrávky plus jedno strukturované shrnutí napříč všemi. Nic neopouští počítač (rozpoznání řeči běží přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp)).
+Lokální, offline přepis zvukových nahrávek do Markdownu. Nic neopouští počítač (rozpoznání řeči běží přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp)).
 
-## Závislosti – zkontroluj hned na začátku
+Skill se **nespouští s přepínači**. Volá se cestou k souboru a volným popisem:
 
-Spusť `/Users/honza/.claude/skills/transcript/check-deps.sh`. Když skončí nenulově, něco chybí – vypiš uživateli co, nabídni instalaci (skript vypsal přesné příkazy) a po jeho souhlasu ji proveď. Teprve s kompletními závislostmi pokračuj. Skill potřebuje:
+```
+/transcript ~/Desktop/schuzka.m4a Přepiš mi schůzku s Janou Novákovou nad nastavením intranetu
+```
 
-- **ffmpeg** – `brew install ffmpeg` (převod audia na WAV)
-- **whisper.cpp** – `brew install whisper-cpp` (poskytuje `whisper-cli`)
-- **model `large-v3-turbo`** – stáhne se do `~/.whisper-models/` z HuggingFace (~1,5 GB); dobrý poměr kvalita/rychlost, zvládá i češtinu
+Ten volný popis není dekorace. Vytáhneš z něj jména a názvy do slovníku (krok 3), takže **čím konkrétnější popis, tím míň zkomolených jmen**.
 
-Instalace whisper.cpp/ffmpeg předpokládá [Homebrew](https://brew.sh). Vyvinuto a testováno na macOS.
+Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve pak se přepisuje.
 
 ## Vstup a výstup
 
-- **Vstup:** všechny audio soubory v **aktuálním (pracovním) adresáři**. Podporované formáty: `mp3`, `m4a`, `wav`, `aac`, `flac`, `ogg`, `opus`, `m4b`. Když žádné nejsou, oznam to a skonči.
-- **Výstup – vše vzniká v tomtéž adresáři, nezakládá se žádný podadresář a nic se nikam nepřesouvá:**
-  - `<název>.md` pro každou nahrávku – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu)).
+- **Vstup:** soubory zadané v promptu. Když prompt žádný soubor neuvádí, vezmi všechny audio soubory v aktuálním adresáři. Podporované formáty: `mp3`, `m4a`, `wav`, `aac`, `flac`, `ogg`, `opus`, `m4b`. Když nenajdeš nic, oznam to a skonči.
+- **Výstup – vše vzniká v adresáři vstupní nahrávky, nezakládá se žádný podadresář a nic se nikam nepřesouvá:**
+  - `<název>.md` – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu)),
+  - `<název>.srt` – tentýž obsah s časovými značkami, syrový z whisperu,
   - `YYYYMMDD - Výstižný název.md` – jedno společné shrnutí napříč všemi nahrávkami (viz [Formát souhrnného MD](#formát-souhrnného-md)).
-- **Mezivýstupy** (`<název>.txt` od whisperu a `whisper-progress.log`) vznikají viditelně v adresáři a **po dokončení se uklidí** (viz krok 7). Zdrojové audio zůstává.
+
+  Které z těch tří vzniknou, vybere uživatel v průvodci.
+- **Mezivýstupy** (`<název>.txt` od whisperu a `whisper-progress.log`) vznikají viditelně v adresáři a **po dokončení se uklidí** (viz krok 9). Zdrojové audio zůstává.
+
+---
 
 ## Postup
 
-1. **Datum `YYYYMMDD`.** Zjisti z metadat nahrávek (`ffprobe -v error -show_entries format_tags=creation_time ...`). Obvykle je stejné napříč soubory; když ne, vezmi z prvního. Když metadata s datem chybí, použij dnešek.
+### 1. Zjisti si fakta o vstupu
 
-2. **Odhad ETA na začátku (jednorázově).** Sečti délky všech souborů (`ffprobe ... format=duration`) a vypiš hrubý odhad: `ETA ≈ součet délek / 3,5` (3,5× realtime – kulaté a mírně pesimistické; na startu ještě nejsou naměřená data). Převeď na min:s.
+Ještě než se na cokoli zeptáš, potřebuješ délku a datum – bez délky neumíš nabídnout odhady časů v prvním kroku průvodce.
 
-3. **Spusť přepis na pozadí:**
-   ```
-   /Users/honza/.claude/skills/transcript/transcribe.sh <workdir> <workdir>/whisper-progress.log <audio1> <audio2> ...
-   ```
-   `<workdir>` = aktuální adresář. Vzniknou v něm `<název>.txt` a `whisper-progress.log`. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
+```bash
+ffprobe -v error -show_entries format=duration -of csv=p=0 <audio>
+ffprobe -v error -show_entries format_tags=creation_time -of csv=p=0 <audio>
+```
 
-4. **Průběžný stav – NEspouštěj automaticky.** Opakované časovače zbytečně plýtvají kapacitou. Progress bar vypiš **jen když se uživatel zeptá**, jak to jde:
-   ```
-   python3 /Users/honza/.claude/skills/transcript/progress.py <workdir>/whisper-progress.log
-   ```
-   Ukáže procenta, zpracované/celkové minuty, kolik zbývá, tempo (× realtime) a ETA.
+Datum `YYYYMMDD` vezmi z metadat. Obvykle je stejné napříč soubory; když ne, vezmi z prvního. Když metadata s datem chybí, použij dnešek.
 
-5. **Po dokončení vyrob doslovné přepisy.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více/delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.). Nejlevnější model sem nepatří: oprava přeslechnutých jmen a termínů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky – každému předej kontext nahrávky (téma, vlastní jména, odborné termíny), ať umí opravit přeslechy. Nech si od každého vrátit i stručný brief pro shrnutí.
+### 2. Průvodce, krok první: model
 
-6. **Napiš souhrnné shrnutí.** Navrhni uživateli „Výstižný název“ celé nahrávky a **nech si ho odsouhlasit** (ať nemusí nic vymýšlet ani psát), pak zapiš `YYYYMMDD - Výstižný název.md` dle [Formátu souhrnného MD](#formát-souhrnného-md).
+Spočítej odhad běhu pro obě varianty. Tempo drží `rate.py`, který se sám kalibruje podle skutečnosti:
 
-7. **Úklid.** Smaž mezivýstupy: všechny `<název>.txt` a `whisper-progress.log`. Ponech zdrojové audio, doslovné přepisy (`<název>.md`) a souhrnné MD.
+```bash
+python3 <skill>/rate.py eta turbo    <délka_v_sekundách>
+python3 <skill>/rate.py eta large-v3 <délka_v_sekundách>
+```
+
+Zeptej se přes `AskUserQuestion`. **První možnost je vždy ta nejpravděpodobnější**, aby stačil Enter:
+
+| Pořadí | Label | Description |
+|---|---|---|
+| 1. | `Turbo · ~M:SS` | Výchozí volba. Rychlé, na běžnou mluvu stejně dobré. Se slovníkem jmen zvládne i vlastní jména. |
+| 2. | `large-v3 · ~M:SS` | Zhruba 3× pomalejší. Sáhni po něm u špatného zvuku, překřikování nebo když na přesnosti jmen záleží víc než na čase. |
+
+Odhady dosaď skutečné, ne zástupné. Když nahrávek zpracováváš víc, počítej ze součtu délek.
+
+### 3. Průvodce, krok druhý: slovník jmen
+
+**Tohle je nejcennější krok celého skillu.** Whisper dostane seznam vlastních jmen a termínů předem (`--prompt`) a přestane je komolit už při rozpoznávání. Oprava dodatečně je principiálně slabší, protože vymyšlená oprava vypadá stejně věrohodně jako správná.
+
+Návrhy sestav ze tří zdrojů:
+
+1. **volný popis v promptu** – jména, firmy a produkty, které uživatel sám napsal,
+2. **kontext projektu**, ve kterém běžíš – `CLAUDE.md`, `docs/`, `README.md`, názvy v `content/`,
+3. **předchozí komunikace v téhle session**.
+
+Rozděl je do **tří domén** a nabídni je jako jednu otázku s `multiSelect: true`. Konkrétní termíny vypiš v `description` každé možnosti, ať uživatel vidí, co odsouhlasuje:
+
+| Pořadí | Label | Co do ní patří |
+|---|---|---|
+| 1. | `Jména lidí` | účastníci, kolegové, zmínění lidé |
+| 2. | `Značky, produkty, weby` | firmy, nástroje, domény, názvy prostorů |
+| 3. | `Odborné termíny` | žargon oboru, interní pojmy, zkratky |
+
+Volbu „Other“ doplní `AskUserQuestion` samo – tudy uživatel dopíše, co jsi netrefil.
+
+Prázdnou skupinu vůbec nenabízej. Když nemáš návrh ani do jedné, otázku přeskoč a zeptej se rovnou na vlastní termíny.
+
+#### Rešerši dělej naplno, do promptu dej málo
+
+Tyhle dvě věci se pletou, a je to rozdíl mezi dobrým a špatným výsledkem.
+
+**Rešerši dělej naplno.** Vytěž ze zdrojů úplně všechno – klidně stovky jmen, názvů, zkratek a interních pojmů. Nic nezahazuj.
+
+**Do `WHISPER_PROMPT` dej nejvýš deset položek**, seřazených podle důležitosti, nejdůležitější první. Whisperův initial prompt má **klesající účinnost směrem k pozdějším položkám**: naměřeno na 31minutové české schůzce – slovník o osmi termínech opravil sledované místní jméno 6× ze 6, tentýž běh se slovníkem o jednadvaceti termínech, kde bylo totéž jméno až páté, spadl na 0 ze 4. Delší seznam je horší než kratší, ne lepší.
+
+Vybírej podle toho, co v nahrávce **opravdu zazní často a co se snadno komolí**. Obecná slova, která model umí sám, do promptu nepatří.
+
+Vybraných deset slep čárkami do jednoho řetězce a předej jako `WHISPER_PROMPT`.
+
+#### Zbytek rešerše si ulož
+
+Všechno ostatní, co jsi našel, zapiš do `<workdir>/.transcript-glossary.md`:
+
+```markdown
+# Kontextový slovník – <název nahrávky>
+
+## V promptu whisperu (10)
+Nazev.cz, Značka, interní pojem, místní jméno, …
+
+## Jména lidí
+Jana Nováková, Petr Svoboda, …
+
+## Značky, produkty, weby, místa
+Nazev.cz, Značka, s. r. o., …
+
+## Odborné a interní termíny
+zkratky oboru, interní pojmy, názvy rolí a útvarů, …
+
+## Zdroje
+prompt / docs/structure.md / session
+```
+
+Tenhle soubor je vstup pro čištění v kroku 8. **Deset položek stačí whisperu, ale tobě při čištění ne** – tam potřebuješ úplný kontext, abys poznal, co je zkomolenina a co interní žargon. Bez něj hádáš.
+
+### 4. Průvodce, krok třetí: co má vzniknout
+
+`AskUserQuestion` s `multiSelect: true`, v tomhle pořadí:
+
+| Pořadí | Label | Description |
+|---|---|---|
+| 1. | `Doslovný přepis (MD)` | Vyčištěný, bez „ehm“, s kapitolami a opravenými názvy. |
+| 2. | `Strukturované shrnutí (MD)` | Témata, závěry, na konci domluvy a úkoly. |
+| 3. | `Časovaný přepis (SRT)` | Syrový z whisperu, s časy. Na dohledání místa v nahrávce. |
+
+Když uživatel nevybere nic, ber to jako všechny tři.
+
+### 5. Ověř závislosti
+
+Až teď, protože model už znáš:
+
+```bash
+<skill>/check-deps.sh <model>
+```
+
+Když skončí nenulově, vypiš uživateli, co chybí, nabídni instalaci (skript vypsal přesné příkazy) a po jeho souhlasu ji proveď. Skill potřebuje:
+
+- **ffmpeg** – `brew install ffmpeg` (převod audia na WAV),
+- **whisper.cpp** – `brew install whisper-cpp` (poskytuje `whisper-cli`),
+- **model** – `turbo` (~1,5 GB) nebo `large-v3` (~2,9 GB) v `~/.whisper-models/`,
+- **VAD model Silero** (~865 kB) – detekce řeči, viz níže.
+
+Instalace předpokládá [Homebrew](https://brew.sh). Vyvinuto a testováno na macOS.
+
+### 6. Spusť přepis na pozadí
+
+```bash
+WHISPER_MODEL=<turbo|large-v3> \
+WHISPER_PROMPT="<slovník oddělený čárkami>" \
+<skill>/transcribe.sh <workdir> <workdir>/whisper-progress.log <audio1> <audio2> ...
+```
+
+`<workdir>` = adresář vstupní nahrávky. Vzniknou v něm `<název>.txt`, `<název>.srt` a `whisper-progress.log`. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
+
+**VAD je vždy zapnutý** a není na co se ptát. Vyřazuje ticho, čímž zabíjí celou třídu halucinací („Titulky vytvořil…“, dokola tatáž věta) a zároveň zrychluje běh. Práh je nastavený konzervativně (`-vt 0.35`, `-vp 200`), aby neuřízl tiché mluvčí. Vypnout ho jde přes `WHISPER_VAD=0`, ale sahej po tom jen jako po nápravě podle kroku 7.
+
+Chyba jednoho souboru neshodí zbytek běhu – zapíše se `### FAILED` a pokračuje se dalším. Po doběhnutí zkontroluj, jestli v logu nějaké `### FAILED` není, a **ohlas ho uživateli**.
+
+### 7. Zkontroluj, kolik zvuku VAD pustil dál
+
+V logu je pro každý soubor řádek:
+
+```
+### VADSTAT <n> <sekund_řeči> <celkem_sekund> <procent>
+```
+
+U mluveného slova čekej zhruba 60 až 90 %. **Když podíl klesne pod 40 %**, je pravděpodobné, že VAD ukrojil tichého mluvčího. Ohlas to uživateli s konkrétním číslem a nabídni opakovaný běh s `WHISPER_VAD=0`. Nerozhoduj o tom sám – u nahrávky s dlouhými pauzami může být nízký podíl v pořádku.
+
+### 8. Vyrob výstupy, které si uživatel vybral
+
+**Doslovný přepis.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
+
+**Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen těch deset položek z promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i stručný brief pro shrnutí.
+
+Fáze opravy přeslechů zůstává, i když se slovník použil. Slovník zmenší počet chyb, nevynuluje ho – v ostrém běhu prošlo sledované místní jméno zkomolené i s nasazeným promptem.
+
+**Doplň slovník o to, co jsi našel při čištění.** Když v přepisu narazíš na termín, který v `.transcript-glossary.md` chybí, dopiš ho tam dřív, než budeš psát shrnutí. Shrnutí pak stojí na stejném slovníku jako přepis.
+
+**Časovaný přepis.** `<název>.srt` už existuje, vznikl při přepisu. Nech ho ležet vedle `<název>.md`, stejné jméno, jiná přípona.
+
+**Shrnutí.** Navrhni uživateli „Výstižný název“ celé nahrávky a **nech si ho odsouhlasit** (ať nemusí nic vymýšlet ani psát), pak zapiš `YYYYMMDD - Výstižný název.md` dle [Formátu souhrnného MD](#formát-souhrnného-md).
+
+### 9. Úklid
+
+Smaž mezivýstupy: všechny `<název>.txt`, `whisper-progress.log` a `.transcript-glossary.md`. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<název>.srt` po sobě ukliď, i když mezitím vznikl.
+
+Než slovník smažeš, **vypiš uživateli termíny, které jsi nechal být** – ty, co modely dávaly konzistentně a vypadají jako interní žargon, a ty, kde je zvuk nesrozumitelný a tvar je tvůj odhad. Ať ví, co má ověřit. Do doslovného přepisu je zapiš jako poznámku na konec.
+
+---
+
+## Průběžný stav – NEspouštěj automaticky
+
+Opakované časovače zbytečně plýtvají kapacitou. Progress bar vypiš **jen když se uživatel zeptá**, jak to jde:
+
+```bash
+python3 <skill>/progress.py <workdir>/whisper-progress.log
+```
+
+Ukáže procenta, zpracované a celkové minuty, kolik zbývá, tempo (× realtime) a ETA.
+
+---
 
 ## Pravidla doslovného přepisu
 
@@ -58,13 +215,14 @@ Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v
 
 - Uprav jen **stylistiku a slovosled** tam, kde je to potřeba, aby se text dal plynule a smysluplně číst.
 - Odstraň **výplňová slova** (hesitační výplně) a **opakovaná slova** / místa, kde se řečník zamotal při hledání formulace.
-- **Odstraň halucinace ASR** – whisper na tichu a v šumu často vygeneruje nesmyslné opakující se řádky (např. dokola tatáž věta, „Titulky vytvořil …“ apod.). Takové smyčky celé smaž.
+- **Odstraň halucinace ASR** – i s VAD se občas objeví nesmyslné opakující se řádky (dokola tatáž věta, „Titulky vytvořil …“). Takové smyčky celé smaž.
 - Rozděl text do **ucelených kapitol** s výstižnými mezinadpisy (`##`).
 - Každou kapitolu rozděl do **kratších odstavců** – žádné dlouhé bloky.
 - Nosné pojmy a důležitá sdělení vyznač **tučně**.
 - Výčty uveď jako **odrážkový/číslovaný seznam**, kde to dává smysl.
 - **Oprava přeslechů:** podle tématu a kontextu najdi a oprav slova, kterým rozpoznávač rozuměl špatně – tak, jak jsou, nedávají smysl, ale pravděpodobně jde o zkomoleninu jiného slova, které by v daném kontextu smysl dávalo.
-- **Vlastní jména a názvy:** stejně oprav jména/názvy zkomolené špatnou výslovností nebo cizím přízvukem.
+- **Vlastní jména a názvy:** stejně oprav jména a názvy zkomolené špatnou výslovností nebo cizím přízvukem. Slovník z kroku 3 je pro tuhle opravu závazný zdroj správných tvarů.
+- **Neopravuj to, čemu jen nerozumíš.** Když stejné podivné slovo dává model opakovaně a konzistentně, je to nejspíš interní žargon, ne přeslech. Nech ho být, případně se zeptej.
 - U dialogu **nepřehazuj pořadí** myšlenek; kde je zřejmé, kdo mluví, můžeš mluvčí odlišit, ale nevymýšlej jména.
 
 ## Formát souhrnného MD
@@ -74,21 +232,37 @@ Soubor `YYYYMMDD - Výstižný název.md` má tuto strukturu:
 1. **Hlavní nadpis (H1):** `Výstižný název`.
 2. **Úvodní odstavec (anotace):** do jednoho odstavce základní charakteristika celé nahrávky – o co jde, jednotlivé strany a účastníci.
 3. **`## Shrnutí`:** stručné, logické, strukturované shrnutí dle [Pravidel shrnutí](#pravidla-shrnutí).
-4. **`## Doslovný přepis`:** doslovné přepisy všech nahrávek dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu), za sebou; u každého je zřejmé, ze které nahrávky pochází.
+4. **`## Doslovný přepis`:** doslovné přepisy všech nahrávek dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu), za sebou; u každého je zřejmé, ze které nahrávky pochází. Tuhle sekci vynech, když si uživatel doslovný přepis nevybral.
 
 ## Pravidla shrnutí
 
 Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované shrnutí celé nahrávky – důležitých témat, poznatků a klíčových informací:
 
 - Využij **přehledné formátování** – mezinadpisy, odstavce, odrážky, **tučný** text pro důležité pojmy.
-- **Nedodržuj chronologické pořadí**, ve kterém informace zazněly. Uspořádej vše do logických sekcí/skupin tak, aby to dávalo při čtení smysl.
+- **Nedodržuj chronologické pořadí**, ve kterém informace zazněly. Uspořádej vše do logických sekcí a skupin tak, aby to dávalo při čtení smysl.
 - Pokud to není nezbytné pro kontext nebo pochopení, **neopakuj** jednu informaci na více místech.
 - Na **úplném konci** přehledně shrň vzájemné **domluvy, vyplývající úkoly a další kroky**.
 
 (Základní charakteristika a účastníci jsou už v úvodním odstavci – viz [Formát souhrnného MD](#formát-souhrnného-md).)
 
+---
+
 ## Technické detaily
 
-- **Model:** `large-v3-turbo` (`~/.whisper-models/ggml-large-v3-turbo.bin`) jako výchozí. U problémových nahrávek (šum, překřikování) lze doinstalovat přesnější, pomalejší `large-v3` (ne-turbo).
-- **Jazyk:** výchozí čeština (`cs`). Lze přebít proměnnou `WHISPER_LANG` (např. `WHISPER_LANG=en`).
-- **Bez časových značek** a **bez rozlišování mluvčích** (diarizace) – priorita je plynulé čtení. Pro diarizaci by bylo potřeba doplnit další nástroj (např. `whisperx` + `pyannote`).
+- **Modely:** `turbo` (`ggml-large-v3-turbo.bin`) a `large-v3` (`ggml-large-v3.bin`) v `~/.whisper-models/`. Naměřeno na Apple M1 nad 31 minutami české schůzky: turbo 5,4× realtime, `large-v3` 1,67× realtime, tedy 3,2× pomaleji. Rozdíl v textu byl 13 % slov, ale drtivou většinou šlo o vatu („jo“, „to“, „jako“); rozhodující rozdíl je ve vlastních jménech a řídkých slovech, kde `large-v3` vyhrává. **Slovník jmen ten rozdíl smaže spolehlivěji než volba modelu** – turbo s osmipoložkovým slovníkem porazilo `large-v3` bez slovníku a bylo přitom 3,6× rychlejší.
+- **Délka promptu rozhoduje.** Tentýž zvuk, tentýž model: slovník o 8 termínech dal sledované vlastní jméno 6× ze 6 správně, slovník o 21 termínech 0 ze 4. Účinnost initial promptu klesá s pořadím položky, takže **krátký a seřazený slovník je lepší než dlouhý**. Proto strop deseti položek v kroku 3.
+- **Kalibrace ETA:** `rate.py` drží `~/.whisper-models/rate.json` s naměřeným tempem pro každý model zvlášť. Po každém běhu se hodnota posune k realitě (EWMA, α = 0,35), takže odhady sedí na konkrétní stroj. Výchozí hodnoty jsou z M1.
+- **Jazyk:** výchozí čeština (`cs`). Lze přebít proměnnou `WHISPER_LANG`.
+- **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
+- **Potlačení neřečových tokenů:** `-sns`, zapnuto vždy. Druhá pojistka vedle VAD.
+- **Bez rozlišování mluvčích** (diarizace). Pro ni by bylo potřeba doplnit další nástroj (`whisperx` + `pyannote`), což tenhle skill záměrně neřeší.
+
+## Soubory skillu
+
+| Soubor | K čemu |
+|---|---|
+| `check-deps.sh` | kontrola závislostí, volitelně pro konkrétní model |
+| `transcribe.sh` | vlastní přepis, řízený proměnnými prostředí |
+| `common.sh` | cesty k modelům, počet vláken – sourcuje se |
+| `rate.py` | odhad a kalibrace tempa (`get`, `eta`, `update`) |
+| `progress.py` | progress bar nad logem běhu |
