@@ -1,7 +1,7 @@
 ---
 name: skill
-description: Skill se použije, když uživatel zadá "/skill" (volitelně s režimem create, extract, revise nebo delete), nebo chce založit nový vlastní skill, vytěžit rozdělanou konverzaci do skillu, prohnat existující skilly revizí proti dnešní podobě normy, anebo skill zrušit i se všemi jeho stopami. Norma tvaru je v ~/.claude/skills/SKILLS.md; tenhle skill je proti ní instalátor a revizor, měření a vytěžení deleguje na skill-creator a superpowers:writing-skills.
-argument-hint: [create|extract|revise|delete] [jméno]
+description: Skill se použije, když uživatel zadá "/skill" (volitelně s režimem create, extract, update nebo delete), nebo chce založit nový vlastní skill, vytěžit rozdělanou konverzaci do skillu, prohnat existující skilly revizí proti dnešní podobě normy, anebo skill zrušit i se všemi jeho stopami. Norma tvaru je v ~/.claude/skills/SKILLS.md; tenhle skill je proti ní instalátor a revizor, měření a vytěžení deleguje na skill-creator a superpowers:writing-skills.
+argument-hint: [create|extract|update|delete] [jméno]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
@@ -13,10 +13,10 @@ Spravuje vlastní skilly v `~/.claude/skills/` proti normě v `~/.claude/skills/
 
 - **`/skill`** nebo **`/skill create`** – **založení**. Debrief, tabulka švů, baseline, sepsání, ověření, napojení na okolí.
 - **`/skill extract`** – **vytěžení konverzace**. Vstupem není zadání, ale to, co se v session vyladilo. Od sepsání dál je dráha stejná jako u založení.
-- **`/skill revise [jméno]`** – **dorovnání na dnešní normu**. Jeden skill, nebo bez jména všechny. Hlavní důvod, proč je skill opakovatelný.
+- **`/skill update [jméno]`** – **dorovnání na dnešní normu**. Jeden skill, nebo bez jména všechny. Hlavní důvod, proč je skill opakovatelný.
 - **`/skill delete <jméno>`** – **odstranění i se stopami**.
 
-Režim **`revise` je to, co neumí nikdo jiný.** Norma se posouvá dál, patnáct souborů zůstává stát a samy o tom neřeknou – stejná vlastnost, kvůli které má `/project` svůj revizní krok.
+Režim **`update` je to, co neumí nikdo jiný.** Norma se posouvá dál, patnáct souborů zůstává stát a samy o tom neřeknou – stejná vlastnost, kvůli které má `/project` svůj revizní krok.
 
 ## Co skill nedělá
 
@@ -24,7 +24,7 @@ Režim **`revise` je to, co neumí nikdo jiný.** Norma se posouvá dál, patná
 - **Neaudituje konfiguraci.** Rozpory mezi soubory, mrtvé zbytky a drift mezi vrstvami řeší `/consistency`; tenhle skill se dívá jen na skilly a jen proti normě.
 - **Neprověřuje kvalitu práce skillu za běhu.** Že skill dělá dobrou práci, ukáže jeho použití a `/review`. Tady se měří, jestli se **vyvolá** a jestli se pod tlakem **dodrží**.
 - **Nesahá na cizí skilly.** Pluginy a vestavěné skilly se používají, ne udržují.
-- **Nemigruje patnáct skillů mimochodem.** Převod na novou normu je vědomý běh režimu `revise`, ne vedlejší efekt jiné práce.
+- **Nemigruje patnáct skillů mimochodem.** Převod na novou normu je vědomý běh režimu `update`, ne vedlejší efekt jiné práce.
 
 ## Jak je to postavené uvnitř
 
@@ -66,7 +66,7 @@ Je-li režim v argumentu, jeď podle něj a jen ho oznam. Není-li, zeptej se p�
 |---|---|
 | `create` | Fáze 2 |
 | `extract` | Fáze 2, varianta pro session |
-| `revise` | *Režim `revise`* níž |
+| `update` | *Režim `update`* níž |
 | `delete` | *Režim `delete`* níž |
 
 ## Fáze 2 – Zadání
@@ -181,7 +181,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 ------
 
-## Režim `revise`
+## Režim `update`
 
 Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez jména v argumentu jede přes všechny.
 
@@ -218,7 +218,7 @@ Poslední řádek je druhý druh driftu vedle rozejití s normou a **neklade ho 
 
 **Nenajdeš-li nic, řekni to a skonči.** Běh bez zásahu je platný výsledek revize.
 
-Pak pokračuj *Fází 7* – i `revise` sahá na `README.md` a testy.
+Pak pokračuj *Fází 7* – i `update` sahá na `README.md` a testy.
 
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
 
