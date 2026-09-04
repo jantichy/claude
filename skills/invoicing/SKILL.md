@@ -1,8 +1,7 @@
 ---
 name: invoicing
-description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full nebo preview a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Maily nikdy neodesílá, jen zakládá drafty; neúčtuje, nehlídá úhrady ani daňové termíny.
+description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full nebo preview a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail sám od sebe neodesílá – končí draftem a odešle až na vyžádání po druhém potvrzení; neúčtuje, nehlídá úhrady ani daňové termíny.
 argument-hint: [full|preview] [klient]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
 # Invoicing
@@ -20,7 +19,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 
 ## Co skill nedělá
 
-- **Neodesílá maily.** Končí draftem. Odeslání dokladu klientovi je nevratná venkovní akce a zůstává na člověku – i tehdy, když si ho uprostřed běhu vyžádá.
+- **Neodesílá maily sám od sebe.** Končí draftem a odeslání nikdy nenabízí. Vyžádáš-li si ho, ukáže, co přesně a komu odejde, a odešle až po druhém potvrzení – odeslaná faktura se nevrací.
 - **Nedělá analytické reporty.** Výkaz hodin je příloha dokladu, ne report. Na reporty z dat je `/report`.
 - **Neúčtuje.** Nehlídá úhrady, upomínky, DPH přiznání ani kontrolní hlášení. Vystaví doklad a tím jeho práce končí.
 - **Nedrží evidenci vystavených faktur.** Zdrojem pravdy je fakturační systém, ne soubor v repozitáři – viz `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
@@ -32,12 +31,12 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 |---|---|---|
 | Odpracovaný čas za období | timetracking – MCP, když je připojený, jinak jeho API | data jsou tam, nemá cenu je někam kopírovat |
 | Vystavení dokladu a PDF | fakturační systém – MCP, když je připojený, jinak jeho API | doklad má vzniknout tam, kde ho vidí účetní |
-| Draft mailu s přílohami | Gmail MCP, `create_draft` | umí to, a odesílání se schválně nevolá |
+| Draft mailu s přílohami | Gmail MCP, `create_draft` | umí to, a draft je výchozí konec běhu |
 | Co se fakturuje a jak | **vlastní jádro** | výjimky u klientů, neúplný výkaz, podezřelé záznamy – tady se rozhoduje |
 
 **Čím se do systémů sahá, je implementační detail a smí se vyměnit bez ohlášení.** Skill mluví o tom, co potřebuje („odpracovaný čas klienta za období“, „vystavený doklad s poznámkou o období“), ne o konkrétních voláních. Přechod na MCP nebo změna API pak není zásah do skillu, ale do `~/Dev/context/business/invoicing.md`, *Přístupy*.
 
-**Závazné a neměnné tiše je:** že se nic nevystaví bez potvrzení, že se mail neodešle, že se hranice fakturovaného období čte ze systému a nikdy neodhaduje, a že se každá dohodnutá odchylka zapíše do deníku výjimek klienta.
+**Závazné a neměnné tiše je:** že se nic nevystaví bez potvrzení, že se mail neodešle bez druhého výslovného potvrzení, že se hranice fakturovaného období čte ze systému a nikdy neodhaduje, a že se každá dohodnutá odchylka zapíše do deníku výjimek klienta.
 
 ------
 
@@ -116,7 +115,11 @@ Za každého klienta:
 1. Stáhni **PDF faktury** ze systému a **PDF výkazu hodin** z timetrackingu za totéž období.
 2. **Ověř oba soubory, než je přiložíš:** nejsou prázdné a období ve výkazu sedí s obdobím na faktuře. Prázdná nebo posunutá příloha je horší než žádná – klient ji vezme jako doklad.
 3. Sestav mail podle `~/Dev/context/business/invoicing.md`, *Šablona mailu*. Adresáta a tón vezmi z dohody klienta a z jeho profilu v `~/Dev/context/organizations/`.
-4. **Založ draft. Neodesílej.** Ani na vyžádání uprostřed běhu – draft je hotový výstup a odeslání je jedno kliknutí, kdežto odeslaná faktura se nevrací.
+4. **Založ draft a tím skonči.** Odeslání sám nenabízej a nedělej ho jako součást běhu.
+
+**Když odeslání vyžádáš**, skill neodmítne – ale nejdřív vypíše adresáta, předmět a názvy obou příloh a **počká na druhé potvrzení**. Teprve pak odešle.
+
+**Proč zrovna takhle.** Tvrdý zákaz „nikdy neodesílej" si odporoval s obecným pravidlem, že potvrzený požadavek uživatele je jeho rozhodnutí – a rozpor mezi dvěma pravidly se neřeší tím, které z nich model zrovna vybere. Druhé potvrzení dělá totéž, co dělal zákaz: brání odeslání *omylem* nebo *mimochodem*. Nebrání ti odeslat, když to chceš, a to je rozdíl mezi pojistkou a překážkou.
 
 ## Fáze 6 – Závěr
 
