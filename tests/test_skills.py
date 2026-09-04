@@ -213,6 +213,22 @@ class NosneCasti(unittest.TestCase):
         for kus in ("Ověření nálezů", "refuted", "Tenhle nález se snaž VYVRÁTIT"):
             self.assertIn(kus, text, f"/review přišel o ověřování nálezů: chybí {kus!r}")
 
+    def test_cleanup_hleda_zamluvena_temata(self):
+        """Skill sám tvrdí, že tohle je nejčastější ztráta v dlouhé konverzaci.
+
+        Je to druhá ze čtyř záruk v *Co skill dělá*, a jako jediná z nich nestojí
+        na zápisu do souborů – kdyby fáze vypadla, úklid by navenek proběhl stejně
+        a chyběl by jen dotaz, který nikdo nepostrádá, protože o něm neví.
+
+        Hlídá se i způsob dotazování: kdyby se položky jen vypsaly do závěru,
+        uživatel session zavře a zmizí s ní – přesně to, čemu má fáze bránit.
+        """
+        text = body(ROOT / "skills/cleanup/SKILL.md")
+        for kus in ("Zamluvená a nevypořádaná témata", "Práh důležitosti",
+                    "Jak ověřit, že to opravdu visí", "AskUserQuestion"):
+            self.assertIn(kus, text,
+                          f"/cleanup přišel o dohledávání zamluvených témat: chybí {kus!r}")
+
     def test_zadani_pro_agenty_maji_povinna_pole(self):
         """Nález bez `basis` a `severity` nejde ani ověřit, ani zařadit.
 
