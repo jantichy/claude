@@ -117,6 +117,39 @@ class SkillOdkazy(unittest.TestCase):
                 self.assertFalse(sorted(spatne),
                     f"{soubor}: odkaz na sekci, která tam není: {sorted(spatne)}")
 
+    def test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis(self):
+        """Odkaz „vezmi to do Fáze 7“ uvnitř skillu musí trefit jeho vlastní nadpis.
+
+        Tuhle vadu soustava reálně dostává: přečíslovat fáze je jedna dávka
+        náhrad, po které tři odkazy z téhož souboru ukazují jinam. Předchozí test
+        na sekce ji nechytí – ten matchuje jen odkazy s uvedenou cestou k souboru,
+        kdežto vnitroskillový odkaz cestu nemá. Doloženo mutací: `Fáze 7`
+        přepsaná na `Fáze 77` prošla všemi testy.
+
+        Odkazy do jiného skillu se přeskakují – ty hlídá test na sekce.
+        """
+        vzor = re.compile(r"Fáz[eií] (\d+(?:\.\d+)?[a-z]?)")
+        jmena = {s.parent.name for s in SKILLS}
+        for skill in SKILLS:
+            with self.subTest(skill=skill.parent.name):
+                text = body(skill)
+                vlastni = {n.split("–")[0].replace("Fáze", "").strip()
+                           for n in bez_bloku_kodu(skill) if n.startswith("Fáze ")}
+                if not vlastni:
+                    continue          # skill fáze nepoužívá
+                spatne = []
+                for radek in text.splitlines():
+                    # řádek, který jmenuje jiný skill, odkazuje ven na jeho fáze
+                    # („stejně jako `/review` (viz jeho *Fáze 7*)“)
+                    if "SKILL.md" in radek or any(f"/{j}" in radek for j in jmena - {skill.parent.name}):
+                        continue
+                    for cislo in vzor.findall(radek):
+                        if cislo not in vlastni:
+                            spatne.append(f"Fáze {cislo}")
+                self.assertFalse(sorted(set(spatne)),
+                    f"{skill}: odkaz na vlastní fázi, která tam není: "
+                    f"{sorted(set(spatne))} (má {sorted(vlastni)})")
+
     def test_odkazuje_na_kroky_osy_ne_na_jejich_vnitrek(self):
         """`/code-review` je vnitřek `/review`; poslat tam uživatele ho připraví o panel.
 
