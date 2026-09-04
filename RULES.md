@@ -15,10 +15,11 @@ Doménové znalosti z `~/Dev/context/` se do projektu načítají **tvrdým `@im
 Tenhle soubor drží **obecná pravidla práce**. Než sem něco zapíšeš, projdi test – vyhrává první kritérium, které sedí:
 
 1. Jmenuje pravidlo konkrétní soubor v `docs/`? → `structure.md`
-2. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu. **Výjimka: rozhraní kroku osy sem patří** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí a kdy se smí přeskočit. To je pravidlo o *pořadí práce*, ne o vnitřku skillu, a ve skillu by ho nikdo nenašel celé, protože každý zná jen svoje sousedy. Vnitřek kroku (jeho fáze, šablony, zadání pro agenty) sem naopak nepatří ani zmínkou.
-3. Týká se psaní kódu, webu, textu, vizuálu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
-4. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, kapitola *Výjimky z obecných pravidel*
-5. Nic z toho → patří sem
+2. Platí obecně pro skilly – jak vypadají, co v nich musí být, jak se píšou? → `~/.claude/skills/SKILLS.md`
+3. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu. **Výjimka: rozhraní kroku osy sem patří** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí a kdy se smí přeskočit. To je pravidlo o *pořadí práce*, ne o vnitřku skillu, a ve skillu by ho nikdo nenašel celé, protože každý zná jen svoje sousedy. Vnitřek kroku (jeho fáze, šablony, zadání pro agenty) sem naopak nepatří ani zmínkou.
+4. Týká se psaní kódu, webu, textu, vizuálu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
+5. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, kapitola *Výjimky z obecných pravidel*
+6. Nic z toho → patří sem
 
 Zbude-li tu na cizí soubor odkaz, **odkazuj, nekopíruj** – viz *Single source of truth*.
 

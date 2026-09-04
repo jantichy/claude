@@ -123,7 +123,7 @@ Projdi `SKILLS.md` sekci po sekci a splň každou. Zvlášť hlídej to, co se o
 
 - **`Co skill nedělá` jmenuje souseda**, ne obecnou činnost.
 - **`Fáze 0` odkazuje na `PREFLIGHT.md`** a obsahuje jen odchylky.
-- **Dvě koncové věty** jsou doslova ve tvaru z normy.
+- **Dvě koncové věty** splňují vzorec z normy a jsou v těle uvedené doslovně.
 - **Délka** pod měkkou mezí; co ji přetahuje, jde do vedlejšího souboru v adresáři skillu.
 - **`description`** má spouštěč i popis situace a vejde se do 1024 znaků.
 - **`argument-hint` sedí s režimy** popsanými v těle.
@@ -177,7 +177,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Skill je hotový a ověřený, můžeš ho pustit.`
-- `Hotový není – brání tomu: <konkrétní seznam>.`
+- `Skill hotový není – brání tomu: <konkrétní seznam>.`
 
 ------
 
@@ -247,10 +247,10 @@ Hledej **grepem přes všechny ty kořeny**, ne z paměti. Po smazání **proje�
 
 **Nech stopu.** Do `docs/decisions.md` zapiš, co bylo zrušeno a proč, i co se tím vědomě ztratilo. Bez toho se zrušený mechanismus vrátí za půl roku jako „to by šlo udělat".
 
-Zakonči jednou z těchto vět:
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Skill je zrušený, jeho jméno se v konfiguraci nevyskytuje.`
-- `Zrušený není – zbývá: <konkrétní seznam>.`
+- `Skill zrušený není – brání tomu: <konkrétní seznam>.`
 
 ------
 

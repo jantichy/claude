@@ -93,6 +93,16 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 ## Fáze N – Závěr
 ```
 
+**Tohle pořadí platí pro hlavní průběh.** Má-li skill **přílohové sekce** – samostatné režimy, katalog úhlů nebo vektorů –, stojí **za** závěrečnou fází: nejsou její součástí a čtenář se k nim dostane jen tehdy, když je potřebuje. `## Časté chyby` je pak úplně poslední, aby stála za vším, k čemu se vztahuje:
+
+```
+## Fáze N – Závěr        ← konec hlavního průběhu
+## Režim <jméno>         ← příloha
+## Časté chyby           ← naposled
+```
+
+U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstávají před závěrem.
+
 **`## Co skill dělá`** – co to je a jaké má režimy. Tři až deset řádků. Ne převyprávěný postup; ten je níž.
 
 **`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód" je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`."* je vymezení. U skillu, který stojí v ose *Životního cyklu práce* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
@@ -107,12 +117,20 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 
 **`## Fáze N – Závěr`** – šablona výstupu a **dvě koncové věty**:
 
+Skill je **uvádí doslovně**, aby se z nich za běhu nestala parafráze. Jejich znění si ale volí sám – **doslovná napříč skilly být nemůžou**, protože čeština žádá shodu s rodem toho, co je hotové (*„Plán hotový není"* × *„Hotové to není"*). Závazný je tedy vzorec:
+
+1. **První** říká, že věc je hotová a ověřená, a čím se dá pokračovat.
+2. **Druhá** říká, že hotová není, a **jmenuje konkrétně, co tomu brání** – ne „ještě zbývá pár věcí".
+3. **Mezi nimi nic není.** Žádná třetí varianta, žádné smířlivé „v zásadě hotovo".
+
 ```
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `<Věc> je hotová a ověřená, můžeš …`
-- `Hotové to není – brání tomu: <konkrétní seznam>.`
+- `<Věc> hotová není – brání tomu: <konkrétní seznam>.`
 ```
+
+Skill s vlastním koncem pro některý režim (rušení, zamítnutí) smí mít druhou dvojici, ale musí splňovat týž vzorec.
 
 Ty dvě věty jsou celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky" od „výsledek platí". Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
 
