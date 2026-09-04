@@ -1,6 +1,6 @@
 ---
 name: cleanup
-description: Skill se použije, když uživatel zadá "/cleanup" nebo "/cleanup full", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí.
+description: Skill se použije, když uživatel zadá "/cleanup" nebo "/cleanup full", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je.
 argument-hint: [full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
@@ -12,8 +12,9 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 Uživatel je na konci nějakého problému a chystá se session opustit nebo zkompaktovat. Tvým jediným úkolem je zajistit, že **nic z téhle session nezůstane jen v konverzaci**:
 
 1. **Nic se neztratí** – vše, co se řešilo, na čem jste se dohodli a k čemu jste došli, je zapsané v souborech. Nová session nesmí přijít o žádnou informaci, dohodu, princip, výstup ani závěr.
-2. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
-3. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
+2. **Nic nezůstalo viset** – žádná otázka, návrh ani upozornění z konverzace nezapadlo bez vypořádání. Co viselo, se probere s uživatelem, ne vypíše do závěru.
+3. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
+4. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
 
 Skill je **opakovatelný**. Když ho uživatel spustí podruhé, co je zapsané a v pořádku, projde bez zásahu – druhý průchod slouží jako verifikace.
 
@@ -75,16 +76,77 @@ Tohle je jádro celého skillu. Všechno ostatní je servis kolem něj.
    ```
    Stejná past hrozí u `type: "attachment"`. Když si nejsi jistý, že máš všechno, projdi si rozložení `.type` v souboru (`grep -o '"type":"[a-z_-]*"' <transcript> | sort | uniq -c`) a ověř, že jsi nic nevynechal.
 
-3. **Vytěž šest kategorií:**
+3. **Vytěž sedm kategorií:**
 
    1. **Dohody a rozhodnutí** – na čem jste se shodli. Vždy včetně **„proč“** a **zavržených variant** (viz `~/.claude/RULES.md`, *Rozhodnutí zapisuj i s cestou k nim*): „nejdřív jsme chtěli X, ale kvůli Y jsme zvolili Z“. Samotný závěr bez zdůvodnění je pro příští session málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
    2. **Pravidla a konvence**, které v session vznikly nebo se změnily.
    3. **Odvedená práce** – co se reálně změnilo v souborech a kódu.
-   4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“.
+   4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“. Tohle je **vědomé** odložení: někdo ho vyslovil. Co propadlo, aniž si toho kdokoli všiml, je kategorie 7.
    5. **Postřehy mimo hlavní osu** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
    6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
+   7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 1b; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními, ať se transcript nečte dvakrát.
 
-4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej.
+4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej – kromě kategorie 7, kterou hned probereš ve Fázi 1b.
+
+------
+
+## Fáze 1b – Zamluvená a nevypořádaná témata
+
+Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale **zamluvené téma**: napsal jsi dlouhou odpověď s několika body, návrhem nebo otázkou, uživatel měl v hlavě něco jiného, chytil se poloviny – a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil, jen se to nikdy nedořešilo. Tahle fáze je tu proto, aby se to našlo, dokud je ještě koho se zeptat.
+
+Proto stojí **hned po rekonstrukci session a před zápisem**: rozhodnutí, která tady padnou, mění, co se ve Fázi 2 a 3 zapisuje. Kdyby se ptala až v závěru, uživatel už je duchem pryč a odpoví „to je jedno“.
+
+### Co hledáš
+
+Asymetrii mezi tím, co v konverzaci zaznělo, a tím, na co se reagovalo:
+
+- **Otázka, kterou jsi položil** a uživatel na ni neodpověděl – ani přímo, ani tím, co udělal dál.
+- **Návrh nebo varianta**, kterou jsi nabídl, a nikdo ji nepřijal ani nezamítl.
+- **Upozornění na riziko, rozpor nebo důsledek**, které zůstalo bez reakce.
+- **Vícebodová odpověď, vypořádaná jen zčásti** – tenhle případ je zdaleka nejčastější a nejhůř viditelný, protože navenek vypadá jako vyřízený: odpověď přišla, jen ne na všechno.
+- **Uživatelův vlastní bod**, který v jedné zprávě otevřel a v další už se k němu nevrátil.
+
+Rozdíl proti kategorii 4 z Fáze 1: tam jde o **vědomé** odložení, které někdo vyslovil („to necháme na potom“). Tady jde o to, co propadlo, **aniž si toho kdokoli všiml** – a právě proto to nikdo nehledá.
+
+### Jak ověřit, že to opravdu visí
+
+U každého kandidáta projdi **zbytek transcriptu až do konce** a hledej, jestli se to mezitím nevyřešilo jinudy:
+
+- odpovědí, která přišla později a jinými slovy,
+- změnou v souborech, která z otázky udělala fakt,
+- pozdějším rozhodnutím, které téma zrušilo jako bezpředmětné.
+
+Nálezem je jen to, co tímhle sítem projde. **Falešný nález je drahý** – nutí uživatele znovu rozhodovat něco, co už rozhodl, a příště začne fázi přeskakovat.
+
+### Práh důležitosti
+
+Nepředkládej řečnické otázky, zdvořilostní nabídky („mám to ještě vypsat?“) ani věci, které by změnily jen kosmetiku. Předkládej to, co by změnilo **obsah souborů, rozhodnutí, rozsah práce**, nebo kvůli čemu by příští session stavěla na neověřeném předpokladu.
+
+Na hranici rozhoduj **ve prospěch předložení** – cena za zbytečnou otázku je jedno kliknutí, cena za zapomenuté rozhodnutí je celá session. Ale seřaď položky od nejdůležitější a **vyjde-li ti jich víc než zhruba pět, máš práh nízko**: projdi je znovu a nech jen ty, u kterých umíš pojmenovat, co se stane, když se nevyřeší.
+
+### Jak to probrat
+
+Nejdřív uživateli řekni, kolik toho viselo (nebo že nic – to je taky výsledek, nemlč o tom). Pak **jednu položku po druhé**, nikdy víc najednou:
+
+```
+---
+[N/celkem] O ČEM TO BYLO
+
+Kdy: [zhruba kde v konverzaci – čeho se to týkalo]
+Viselo: [citace nebo věrné shrnutí toho, co zůstalo bez odpovědi]
+Proč pořád visí: [co jsi prověřil a proč to nepovažuješ za vyřešené jinudy]
+```
+
+Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu položku, `header` `Viselo N/celkem`. Volby dej **věcné, tedy skutečné odpovědi na tu konkrétní otázku** (varianty, které tehdy byly ve hře), ne obecné „zapsat / odložit“. Ke každé položce vždy přidej volbu **„Bezpředmětné“** pro případ, že to uživatel mezitím vyřešil v hlavě nebo o to už nestojí.
+
+### Co s odpovědí
+
+| Odpověď znamená | Co uděláš |
+|---|---|
+| rozhodnutí | přidej ho jako položku do Fáze 1 (kategorie 1) a normálně zapiš ve Fázi 3 – i se zdůvodněním, které tady padlo |
+| „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka |
+| bezpředmětné | nic nezapisuj; v přehledu ve Fázi 5 to ale uveď, ať je vidět, že se to probralo |
+| práce navíc (dodělat kód, přepsat návrh) | to je nad rámec úklidu. Udělej to **jen na výslovný pokyn** a pak pokračuj skillem dál; jinak do `docs/todo.md` |
 
 ------
 
@@ -296,6 +358,9 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 **Zapsáno ze session**
 - N položek doplněno / M přepsáno / K přesunuto
 - [stručný seznam: co, kam]
+
+**Zamluvená témata**
+- [N probráno, s jakým výsledkem – nebo „žádná“]
 
 **Fresh-reader**
 - [verdikt a co z něj vzešlo]
