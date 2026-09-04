@@ -169,7 +169,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
                          README.md         – OK
    ```
 
-   Doplňoval-li jsi hodně, vypiš to stejně věcně jako zbytek – tenhle skill existuje právě proto, aby zanedbanou průběžnou aktualizaci našel a dorovnal. Nekomentuj to jako selhání a nestěžuj si; seznam doplněného mluví sám za sebe.
+   **Jen ten výpis, žádný komentář k němu** – ani když jsi doplňoval hodně. Nehodnoť, nekomentuj a nezdůvodňuj; co se doplnilo, je v seznamu.
 
 ### Když soubory neexistují
 
