@@ -144,9 +144,9 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 | Odpověď znamená | Co uděláš |
 |---|---|
 | rozhodnutí | přidej ho jako položku do Fáze 1 (kategorie 1) a normálně zapiš ve Fázi 5 – i se zdůvodněním, které tady padlo |
-| „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka |
+| „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) |
 | bezpředmětné | nic nezapisuj; v přehledu ve Fázi 8 to ale uveď, ať je vidět, že se to probralo |
-| práce navíc (dodělat kód, přepsat návrh) | to je nad rámec úklidu. Udělej to **jen na výslovný pokyn** a pak pokračuj skillem dál; jinak do `docs/todo.md` |
+| práce navíc (dodělat kód, přepsat návrh) | to je nad rámec úklidu. Udělej to **jen na výslovný pokyn** a pak pokračuj skillem dál; jinak do `docs/todo.md` (tamtéž) |
 
 ------
 
