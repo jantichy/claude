@@ -127,17 +127,17 @@ Volbu „Other“ doplní `AskUserQuestion` samo – tudy uživatel dopíše, co
 
 Prázdnou skupinu vůbec nenabízej. Když nemáš návrh ani do jedné, otázku přeskoč a zeptej se rovnou na vlastní termíny.
 
-#### Rešerši dělej naplno, do promptu dej málo
+#### Rešerši dělej naplno, do promptu vybírej
 
 Tyhle dvě věci se pletou, a je to rozdíl mezi dobrým a špatným výsledkem.
 
 **Rešerši dělej naplno.** Vytěž ze zdrojů úplně všechno – klidně stovky jmen, názvů, zkratek a interních pojmů. Nic nezahazuj.
 
-**Do `WHISPER_PROMPT` dej jen termíny, které v nahrávce opravdu zazní**, seřazené podle důležitosti. Žádný strop na počet položek neplatí – dřív tu stálo „nejvýš deset“ s odůvodněním, že delší seznam ředí účinek, a **měření to vyvrátilo** (viz *Technické detaily*).
+**Do `WHISPER_PROMPT` vyber to, co v nahrávce opravdu zazní**, seřazené podle důležitosti. Vybírej podle dvou věcí naráz: **jak často to padne** a **jak snadno se to komolí**. Obecná slova, která model umí sám, do promptu nepatří – neuškodí, ale místo zabírají.
 
-Co platí: **složení a pořadí celého seznamu rozhoduje, a nedá se odhadnout dopředu.** Dva jednadvacetipoložkové slovníky nad touž nahrávkou daly 5/5 a 0/5. Sestav ho proto z toho, co v nahrávce skutečně padne, a obecná slova, která model umí sám, vynech.
+**Počet položek pravidlem omezený není.** Dřív tu stálo „nejvýš deset“ s odůvodněním, že delší seznam ředí účinek, a **měření to vyvrátilo** (viz *Technické detaily*). Platí jedině **technický strop whisperu: `n_text_ctx/2`, tedy 224 tokenů** – u češtiny zhruba 100 až 150 slov. Delší prompt se ořízne, a to potichu.
 
-Vybírej podle toho, co v nahrávce **opravdu zazní často a co se snadno komolí**. Obecná slova, která model umí sám, do promptu nepatří.
+Prakticky se tedy vejde **kolem třiceti až padesáti termínů**. To je strop daný modelem, ne doporučení: **složení a pořadí celého seznamu rozhoduje víc než jeho délka a nedá se odhadnout dopředu.** Dva jednadvacetipoložkové slovníky nad touž nahrávkou daly 5/5 a 0/5.
 
 Vybrané položky slep čárkami do jednoho řetězce a předej jako `WHISPER_PROMPT`.
 
