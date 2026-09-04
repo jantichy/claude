@@ -56,7 +56,7 @@ V režimech *existující projekt* i *revize* si nejdřív udělej inventuru a *
 | Starší pojmenování | existuje `TODO.md` v rootu, `rozhodnuti.md`, `zasady.md` (na místě podle režimu z Kroku 4a)? (viz Krok 4) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
 
-Pak řekni, že se teď budeš ptát postupně, a pokračuj. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.**
+*Existující projekt:* pak řekni, že se teď budeš ptát postupně, a pokračuj krokem 1. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.** *Revize:* neptej se na nic a pokračuj krokem 0b.
 
 ## Krok 0b – Revize souladu se standardem
 
@@ -78,7 +78,7 @@ Pak řekni, že se teď budeš ptát postupně, a pokračuj. V dalších krocíc
 - `~/Dev/context/worktree/worktree.md` – jen u worktree layoutu;
 - výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
 
-Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zásad*: co je mechanické a jednoznačné, oprav rovnou a jen to vypiš; co přepisuje nebo maže existující obsah, předlož a nech potvrdit. **Vyžaduje-li nález volbu**, kterou umí jen některý z dalších kroků (typ projektu, doménové importy, kontrakt příkazů), vrať se do toho kroku a udělej ho – tady je popsané, *co se kontroluje*, tam *jak se to nastavuje*.
+Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zásad*: co je mechanické a jednoznačné, oprav rovnou a jen to vypiš; co přepisuje nebo maže existující obsah, předlož a nech potvrdit. **Vyžaduje-li nález volbu**, kterou umí jen některý z dalších kroků (typ projektu, doménové importy, kontrakt příkazů), udělej ten krok – v režimu *existující projekt* je to návrat, v *revizi* se otevírá jen kvůli tomu nálezu – tady je popsané, *co se kontroluje*, tam *jak se to nastavuje*.
 
 | Oblast | Co ověřit | Kde je pravda |
 |---|---|---|
@@ -104,14 +104,17 @@ Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím 
 - **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu osou nesedí volně v `done.md` mimo *Průchody osou*.
 - **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš.
 - **Prázdná sekce `## Parkované v session`** se ruší.
+- **`README.md` je pro člověka, ne pro Clauda.** Zůstal-li v něm normativní pokyn – pravidlo práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit –, přesuň ho do `CLAUDE.md`, `rules.md` nebo `decisions.md` podle povahy. Postup i kritérium má krok 4c a `~/Dev/context/structure/structure.md`, sekce *`README.md`*. U staršího projektu je to častý nález: pravidla se tehdy psala do README, protože jiné místo nebylo.
 
 ### Výstup revize
 
 Než začneš cokoliv měnit, **vypiš nálezy jako seznam** – co je v pořádku shrň jednou větou, každý rozpor uveď zvlášť s tím, co se s ním stane (opravím rovnou / potřebuju rozhodnout). Teprve pak jednej. Uživatel tak vidí rozsah dřív, než se sáhne na soubory.
 
+Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady – tedy skoro vždy, protože nález má typicky dvě až tři možná vyústění (opravit / nechat být / rozhodnout jinak). Volný text si nech na to, co se z možností vybrat nedá.
+
 **Nenajdeš-li nic, řekni to a skonči** – běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
 
-Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady – tedy skoro vždy, protože nález má typicky dvě až tři možná vyústění (opravit / nechat být / rozhodnout jinak). Volný text si nech na to, co se z možností vybrat nedá.
+**V režimu *revize* tímhle běh končí – pokračuj rovnou krokem 10.** Kroky 1–9 se přeskakují celé; otevírá se z nich jen ten, který si vyžádal konkrétní nález. V režimu *existující projekt* se sem naopak přichází až od konce kroku 9 a souhrn následuje stejně.
 
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
 
@@ -509,7 +512,7 @@ Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stoj�
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
-**Tímhle krok 9 končí. V režimu *existující projekt* teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu *revize* už krok 0b proběhl na začátku a nedělá se podruhé.
+**Tímhle krok 9 končí. V režimu *existující projekt* teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu *revize* se sem nedojde – krok 0b tam proběhl místo průchodu otázkami.
 
 ## Krok 10 – Závěrečný souhrn
 
@@ -519,7 +522,7 @@ Vypiš přehledně:
 - Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka, konfigurační brány (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 
-U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí.
+U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí. A protože v tomhle režimu proběhl těsně předtím krok 0b, **připoj za souhrn i jeho tři skupiny** (dorovnáno / čeká na rozhodnutí / vědomě nechal být) – jinak revize proběhne, ale její výsledek se nikde neukáže.
 
 *Režim revize:* souhrn je jiný – nevypisuje nastavení, ale **rozdíl proti standardu**. Tři skupiny: co bylo dorovnáno, co čeká na rozhodnutí uživatele a co jsi vědomě nechal být i s důvodem. Oblasti, které vyšly čistě, shrň jednou větou; jejich výčet nikoho nezajímá.
 
