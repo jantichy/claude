@@ -75,6 +75,12 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 - **Řekni i to, co skill nedělá**, liší-li se od podobného skillu. `/attack` to má takhle: *„Na rozdíl od `/review`, který kód čte, tenhle skill ho spouští."* Bez toho si model vybere špatný ze dvou blízkých.
 - **Vejdi se do 1024 znaků.** Delší popis se nemusí přenést celý.
 
+**Režimy se jmenují anglicky, jedním slovem, malými písmeny** – a **lícují napříč skilly**: co dělá totéž, jmenuje se stejně. Ustálená sada je `create`, `update`, `delete`; k ní podle potřeby další jednoslovné (`extract`, `full`). Výchozí režim se vyjmenovává taky, aby ho šlo napsat explicitně.
+
+**Proč anglicky:** je to jméno akce, ne řeč o ní. České „revize" se skloňuje, píše se s diakritikou a v `argument-hint` vypadá jako věta; `update` je token. Česká podstatná jména v próze („výsledek revize") zůstávají česky – rozdíl je mezi **jménem režimu** a mluvením o něm.
+
+**Proč lícovat:** dva skilly, které dělají tutéž věc pod jiným jménem, nutí uživatele pamatovat si, který má který. Platí to i pro režimy, které se **rozpoznávají samy** a nepředávají se argumentem – uživatel je vidí ve výpisu a pojmenovává je v řeči stejně.
+
 **`argument-hint` musí sedět s tělem.** Režim popsaný v těle a chybějící v hintu uživatel nikdy neuvidí; hint bez opory v těle slibuje funkci, která neexistuje.
 
 **`allowed-tools` drž na minimu.** Dlouhé ruční výčty nástrojů MCP jsou křehké – při přejmenování serveru se rozejdou tiše a skill pak selže až za běhu.

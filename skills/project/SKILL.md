@@ -10,11 +10,11 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do projektového `CLAUDE.md`. Funguje ve třech režimech:
 
-- **Nový projekt** – čistý adresář, všechno se zakládá od nuly.
-- **Existující projekt** – adresář, ve kterém už něco je, ale chybí v něm otisk `/project` (blok metadat v `CLAUDE.md`) – ať proto, že skill v něm nikdy neběžel, nebo proto, že ho nastavovala starší verze. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i krok 0b. Nic se nepřepisuje naslepo.
-- **Revize** – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/Dev/context/structure/structure.md`, `~/.claude/RULES.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 0b.
+- **`create`** *(nový projekt)* – čistý adresář, všechno se zakládá od nuly.
+- **`adopt`** *(existující projekt)* – adresář, ve kterém už něco je, ale chybí v něm otisk `/project` (blok metadat v `CLAUDE.md`) – ať proto, že skill v něm nikdy neběžel, nebo proto, že ho nastavovala starší verze. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i krok 0b. Nic se nepřepisuje naslepo.
+- **`update`** *(revize)* – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/Dev/context/structure/structure.md`, `~/.claude/RULES.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 0b.
 
-Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a skilly se vyvíjejí dál, kdežto projekty založené za starého nastavení zůstávají stát – a rozdíl se z projektu sám nepozná. Druhý běh je tedy plnohodnotná kontrola, ne jen verifikace, že se nic nezměnilo.
+Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a skilly se vyvíjejí dál, kdežto projekty založené za starého nastavení zůstávají stát – a rozdíl se z projektu sám nepozná. Druhý běh je tedy plnohodnotná kontrola, ne jen verifikace, že se nic nezměnilo.
 
 ## Co skill nedělá
 
@@ -22,7 +22,7 @@ Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a s
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
 - **Nepřepisuje nic naslepo.** U existujícího projektu se na každý rozpor ptá.
 - **Nenaplňuje soubory obsahem.** `docs/` zakládá prázdné, jen s nadpisem.
-- **Nerediguje obsah dokumentace.** Revize hlídá **tvar** – kde soubor leží, jak se jmenuje, jak je uvnitř seřazený, jestli položka sedí do souboru, ve kterém je. Jestli je zapsané rozhodnutí správné nebo úkol dobře napsaný, neřeší; od toho jsou `/consistency` a `/review`.
+- **Nerediguje obsah dokumentace.** `update` hlídá **tvar** – kde soubor leží, jak se jmenuje, jak je uvnitř seřazený, jestli položka sedí do souboru, ve kterém je. Jestli je zapsané rozhodnutí správné nebo úkol dobře napsaný, neřeší; od toho jsou `/consistency` a `/review`.
 
 ## Zásady pro celý průběh
 
@@ -30,7 +30,7 @@ Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a s
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
-- **V režimu revize se na hotové volby neptej znovu.** Co je v `CLAUDE.md` zapsané a dává smysl, platí. Otázka se pokládá jen tam, kde revize našla rozpor nebo mezeru – a klade se o tom rozporu, ne o celém kroku.
+- **V režimu `update` se na hotové volby neptej znovu.** Co je v `CLAUDE.md` zapsané a dává smysl, platí. Otázka se pokládá jen tam, kde `update` našel rozpor nebo mezeru – a klade se o tom rozporu, ne o celém kroku.
 - Konvenci standardní struktury **neopisuj z hlavy** – řiď se `~/Dev/context/structure/structure.md`, který ji definuje. Tenhle skill je jen instalátor.
 
 ------
@@ -39,13 +39,13 @@ Režim **revize je hlavní důvod, proč je skill opakovatelný.** Standardy a s
 
 Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen stub bez bloku metadat, takže otisk hledej v `main/` – viz krok 3b), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 4a pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
 
-- **Prázdný nebo skoro prázdný adresář** → režim *nový projekt*.
-- **Projekt, kterým už `/project` prošel** → režim *revize*. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 0b.
-- **Cokoliv jiného** → režim *existující projekt*.
+- **Prázdný nebo skoro prázdný adresář** → režim `create`.
+- **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 0b.
+- **Cokoliv jiného** → režim `adopt`.
 
-Řekni nahlas, který režim to je a podle čeho jsi to poznal. Trvá-li uživatel na plném průchodu průvodcem i nad nastaveným projektem, ber to jako pokyn a jeď režim *existující projekt*.
+Řekni nahlas, který režim to je a podle čeho jsi to poznal. Trvá-li uživatel na plném průchodu průvodcem i nad nastaveným projektem, ber to jako pokyn a jeď režim `adopt`.
 
-V režimech *existující projekt* i *revize* si nejdřív udělej inventuru a **vypiš ji uživateli v pár řádcích**, ať oba víte, z čeho se vychází:
+V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uživateli v pár řádcích**, ať oba víte, z čeho se vychází:
 
 | Co zjistit | Jak |
 |---|---|
@@ -56,15 +56,15 @@ V režimech *existující projekt* i *revize* si nejdřív udělej inventuru a *
 | Starší pojmenování | existuje `TODO.md` v rootu, `rozhodnuti.md`, `zasady.md` (na místě podle režimu z Kroku 4a)? (viz Krok 4) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
 
-*Existující projekt:* pak řekni, že se teď budeš ptát postupně, a pokračuj krokem 1. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.** *Revize:* neptej se na nic a pokračuj krokem 0b.
+*`adopt`:* pak řekni, že se teď budeš ptát postupně, a pokračuj krokem 1. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.** *`update`:* neptej se na nic a pokračuj krokem 0b.
 
-## Krok 0b – Revize souladu se standardem
+## Krok 0b – Soulad se standardem
 
 *Ve všech režimech kromě nového projektu.* Projde se **celý projekt proti tomu, jak standardy vypadají dnes**, a co se rozešlo, se dorovná. Kdy se krok dělá:
 
 | Režim | Kdy |
 |---|---|
-| Revize | **místo** průchodu otázkami – volby, které kdysi padly, se znovu nepokládají |
+| `update` | **místo** průchodu otázkami – volby, které kdysi padly, se znovu nepokládají |
 | Existující projekt | **po** krocích 1–9, těsně před souhrnem – teprve tam je ustaveno, jak má projekt vypadat |
 | Nový projekt | vůbec; v adresáři, který právě vznikl, není co revidovat |
 
@@ -106,7 +106,7 @@ Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím 
 - **Prázdná sekce `## Parkované v session`** se ruší.
 - **`README.md` je pro člověka, ne pro Clauda.** Zůstal-li v něm normativní pokyn – pravidlo práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit –, přesuň ho do `CLAUDE.md`, `rules.md` nebo `decisions.md` podle povahy. Postup i kritérium má krok 4c a `~/Dev/context/structure/structure.md`, sekce *`README.md`*. U staršího projektu je to častý nález: pravidla se tehdy psala do README, protože jiné místo nebylo.
 
-### Výstup revize
+### Výstup
 
 Než začneš cokoliv měnit, **vypiš nálezy jako seznam** – co je v pořádku shrň jednou větou, každý rozpor uveď zvlášť s tím, co se s ním stane (opravím rovnou / potřebuju rozhodnout). Teprve pak jednej. Uživatel tak vidí rozsah dřív, než se sáhne na soubory.
 
@@ -114,7 +114,7 @@ Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady 
 
 **Nenajdeš-li nic, řekni to a skonči** – běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
 
-**V režimu *revize* tímhle běh končí – pokračuj rovnou krokem 10.** Kroky 1–9 se přeskakují celé; otevírá se z nich jen ten, který si vyžádal konkrétní nález. V režimu *existující projekt* se sem naopak přichází až od konce kroku 9 a souhrn následuje stejně.
+**V režimu `update` tímhle běh končí – pokračuj rovnou krokem 10.** Kroky 1–9 se přeskakují celé; otevírá se z nich jen ten, který si vyžádal konkrétní nález. V režimu *existující projekt* se sem naopak přichází až od konce kroku 9 a souhrn následuje stejně.
 
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
 
@@ -512,19 +512,19 @@ Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stoj�
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
-**Tímhle krok 9 končí. V režimu *existující projekt* teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu *revize* se sem nedojde – krok 0b tam proběhl místo průchodu otázkami.
+**Tímhle krok 9 končí. V režimu `adopt` teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu *revize* se sem nedojde – krok 0b tam proběhl místo průchodu otázkami.
 
 ## Krok 10 – Závěrečný souhrn
 
 Vypiš přehledně:
 
-- **Co bylo založeno** (nový projekt) nebo **co se změnilo a co zůstalo** (existující projekt).
+- **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
 - Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka, konfigurační brány (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 
-U existujícího projektu vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí. A protože v tomhle režimu proběhl těsně předtím krok 0b, **připoj za souhrn i jeho tři skupiny** (dorovnáno / čeká na rozhodnutí / vědomě nechal být) – jinak revize proběhne, ale její výsledek se nikde neukáže.
+V režimu `adopt` vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí. A protože v tomhle režimu proběhl těsně předtím krok 0b, **připoj za souhrn i jeho tři skupiny** (dorovnáno / čeká na rozhodnutí / vědomě nechal být) – jinak revize proběhne, ale její výsledek se nikde neukáže.
 
-*Režim revize:* souhrn je jiný – nevypisuje nastavení, ale **rozdíl proti standardu**. Tři skupiny: co bylo dorovnáno, co čeká na rozhodnutí uživatele a co jsi vědomě nechal být i s důvodem. Oblasti, které vyšly čistě, shrň jednou větou; jejich výčet nikoho nezajímá.
+*Režim `update`:* souhrn je jiný – nevypisuje nastavení, ale **rozdíl proti standardu**. Tři skupiny: co bylo dorovnáno, co čeká na rozhodnutí uživatele a co jsi vědomě nechal být i s důvodem. Oblasti, které vyšly čistě, shrň jednou větou; jejich výčet nikoho nezajímá.
 
 **Další krok:** /specify, zakládá-li se něco nového – u dorovnaného projektu se rovnou pracuje
 
@@ -533,7 +533,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - `Projekt je nastavený, můžeš v něm začít pracovat.`
 - `Nastavený úplně není – zbývá: <konkrétní seznam>.`
 
-V režimu revize jednou z těchto:
+V režimu `update` jednou z těchto:
 
 - `Projekt je v souladu s aktuálním standardem.`
 - `V souladu úplně není – zbývá: <konkrétní seznam>.`
