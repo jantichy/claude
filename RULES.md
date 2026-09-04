@@ -220,6 +220,16 @@ Adresáře se zdrojovými materiály (starý systém, exporty, dumpy, cizí repo
 
 Žádné `utils-helpers-misc.ts` ani `MyFinalDocumentV2.md`, a **žádný „smetiště“ adresář** – `misc/`, `tmp/`, `other/`, `stuff/`, `helpers/`. Nevíš-li, kam soubor patří, buď najdi správné místo, nebo přiznej, že struktura tomu souboru nedává smysl, a uprav strukturu.
 
+### Jeden termín pro jednu věc
+
+Jeden pojem má **jedno jméno** – v kódu, v dokumentaci, v UI i v řeči o něm. Nemíchej „nález / problém / vada“, „rozsah / scope / záběr“, „ověřit / zkontrolovat / prověřit“, je-li to táž věc. Platí to napříč soubory a vrstvami, ne jen uvnitř jednoho.
+
+**Proč:** dvě jména pro jednu věc čtenář bere jako **tvrzení, že jsou to dvě věci**, a začne hledat rozdíl, který neexistuje. Strojově je to horší: grep po jednom tvaru najde polovinu výskytů, takže přejmenování a audity systematicky míjejí zbytek.
+
+**Naopak jedno jméno pro dvě věci je táž vada z druhé strany** – rozliš je, i kdyby to stálo delší název.
+
+Ustálený termín se **nemění bez důvodu**; když se mění, mění se všude naráz (viz *Propagace změny*; nástroj na to je `/replace`).
+
 ### Generic-base + delta
 
 Máš-li víc variant téhož konceptu (platforem, prostředí, témat), **neopakuj v každé celou znalost**. Vytvoř kanonickou bázi a varianty popisují **jen své odchylky** s odkazem na ni. Platí pro dokumentaci, kód, konfiguraci i CSS.

@@ -4,7 +4,9 @@ Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo 
 
 **Jak se to používá.** Skill má fázi `## Fáze 0 – Pre-flight`, v ní odkaz sem a **jen to, co má vlastního**: co dalšího si musí načíst, co ověřit, na co se zeptat. Nekopíruj sem nic zpátky a neopisuj odsud do skillu.
 
-**Body 1 až 3 platí pro každý skill.** Body 4 a 5 jen tam, kde dávají smysl – u každého je napsané kde.
+**Body 1 až 3 platí pro každý skill, který pracuje nad projektem.** Body 4 a 5 jen tam, kde dávají smysl – u každého je napsané kde.
+
+**Skill, který nad projektem neběží** – pouští se odkudkoliv a nesahá na repozitář, jako `/invoicing` – **body 1 až 3 vynechá a nahradí je vlastními předpoklady**: co si musí načíst, aby měl podle čeho jednat, a co musí být dostupné, aby běh nespadl v půlce. Sem se ty předpoklady nepíšou, jsou pro každý takový skill jiné. Vynechání se v jeho `Fázi 0` **řekne nahlas**, ať je poznat, že se na to nezapomnělo.
 
 **Nezávislé čtecí operace pouštěj paralelně.** Zjišťování kořene, čtení `CLAUDE.md` a stav gitu na sobě nezávisí.
 

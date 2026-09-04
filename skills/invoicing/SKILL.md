@@ -43,7 +43,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 
 ## Fáze 0 – Pre-flight
 
-Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Body 1 až 3 se tady neuplatní** – skill nepracuje nad projektem, pouští se odkudkoli a nesahá na kód. Místo nich:
+Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Body 1 až 3 se tady vynechávají** – skill nepracuje nad projektem, pouští se odkudkoli a nesahá na kód, což je případ, který `PREFLIGHT.md` výslovně předvídá. Místo nich:
 
 1. **Načti `~/Dev/context/business/invoicing.md` celý.** Nespoléhej na paměť – sazby a dohody se mění. Chybí-li soubor, řekni to a **skonči**; skill bez něj nemá podle čeho fakturovat.
 2. **Zjisti dnešní datum** příkazem `date +%F` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).

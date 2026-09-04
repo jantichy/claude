@@ -154,7 +154,7 @@ Není to výjimka, ale splněné kritérium: co mu vyhoví, revize nesahá; co m
 
 **Neodkazuj se dovnitř jiného skillu.** Potřebuješ-li tentýž postup jako soused, patří ten postup do `PREFLIGHT.md` nebo do doménové znalosti – ne do odkazu na jeho fázi. Cizí fáze se přečíslují a odkaz tiše ukáže jinam.
 
-**Jeden termín pro jednu věc.** V rámci skillu i napříč skilly. Nemíchej „nález / problém / vada", „rozsah / scope / záběr", „ověřit / zkontrolovat / prověřit" pro tutéž věc.
+**Jeden termín pro jednu věc** (`~/.claude/RULES.md`, *Jeden termín pro jednu věc*). Ve skillech to platí navíc **napříč nimi**, ne jen uvnitř jednoho: skilly se čtou jeden po druhém v jedné ose a rozdílné pojmenování téhož kroku vypadá jako rozdílný krok.
 
 ## 6. Délka a progresivní odhalení
 
