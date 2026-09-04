@@ -12,7 +12,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 Uživatel je na konci nějakého problému a chystá se session opustit nebo zkompaktovat. Tvým jediným úkolem je zajistit, že **nic z téhle session nezůstane jen v konverzaci**:
 
 1. **Nic se neztratí** – vše, co se řešilo, na čem jste se dohodli a k čemu jste došli, je zapsané v souborech. Nová session nesmí přijít o žádnou informaci, dohodu, princip, výstup ani závěr.
-2. **Nic nezůstalo viset** – žádná otázka, návrh ani upozornění z konverzace nezapadlo bez vypořádání. Co viselo, se probere s uživatelem, ne vypíše do závěru.
+2. **Nic nezůstalo viset** – žádná otázka, návrh ani upozornění z konverzace nezapadlo bez vypořádání. Co viselo, se probere s uživatelem – ne odloží do závěru jako výčet bez vypořádání.
 3. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
 4. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
 
@@ -33,7 +33,7 @@ Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padaj
 - **`/cleanup`** (výchozí) – fresh-reader ve Fázi 6 se soustředí na to, čeho se dotkla tahle session. Nálezy mimo její rozsah jen vypíše jako doporučení, neopravuje je.
 - **`/cleanup full`** – fresh-reader projde celou dokumentaci projektu bez omezení na session a nálezy se řeší všechny. Použij, jen když uživatel napíše `full`.
 
-Rozsah ovlivňuje **výhradně Fázi 6**. Fáze 1–5 vytěžují session vždy celou – to je smysl skillu a nedá se zúžit ani rozšířit.
+Rozsah ovlivňuje **Fázi 6** a skrze ni i to, co se dostane do Fáze 7. Fáze 1–5 vytěžují session vždy celou – to je smysl skillu a nedá se zúžit ani rozšířit.
 
 ## Zásady pro celý průběh
 
@@ -62,7 +62,7 @@ Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracu
 
 ## Fáze 1 – Rekonstrukce session
 
-Tohle je jádro celého skillu. Všechno ostatní je servis kolem něj.
+Tohle je jádro celého skillu: vychází z něj všechno ostatní včetně Fáze 2.
 
 **Kritické:** nepracuj jen s tím, co máš právě v kontextu. Pokud už session prošla kompaktací, první polovina konverzace je z kontextu pryč – a přesně tam bývají uzavřené dohody, o které tu jde.
 
@@ -84,7 +84,7 @@ Tohle je jádro celého skillu. Všechno ostatní je servis kolem něj.
    4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“. Tohle je **vědomé** odložení: někdo ho vyslovil. Co propadlo, aniž si toho kdokoli všiml, je kategorie 7.
    5. **Postřehy mimo hlavní osu** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
    6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
-   7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními, ať se transcript nečte dvakrát.
+   7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními – ať kvůli ní nemusí číst zvlášť. **Opiš mu do zadání i síto z Fáze 2** (ověření proti zbytku transcriptu a práh důležitosti); bez něj vrátí hrubé kandidáty a hlavní session, která transcript v ruce nemá, je nemá čím proklepnout.
 
 4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej – kromě kategorie 7, kterou hned probereš ve Fázi 2.
 
