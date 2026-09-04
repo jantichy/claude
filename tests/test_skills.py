@@ -74,8 +74,11 @@ class SkillOdkazy(unittest.TestCase):
     # Kontroluje se i to, co skilly samy odkazují – RULES.md a CLAUDE.md nesou
     # nejvíc odkazů ze všech a netestovaly se vůbec. Projektový .claude/CLAUDE.md
     # nese kontrakt příkazů a odkazy na sekce v jiném repozitáři, takže patří sem taky.
+    # `SKILLS.md` nese po zavedení normy nejvíc odkazů na sekce ze všech souborů
+    # a byl jediný mimo kontrolu – uříznutá kotva v něm prošla všemi testy.
     ODKAZUJICI = SKILLS + [ROOT / "RULES.md", ROOT / "CLAUDE.md", ROOT / "README.md",
-                           ROOT / ".claude/CLAUDE.md"]
+                           ROOT / ".claude/CLAUDE.md",
+                           ROOT / "skills/SKILLS.md", ROOT / "skills/PREFLIGHT.md"]
 
     def test_odkazy_na_soubory_existuji(self):
         """Odkaz na neexistující soubor pošle Clauda hledat něco, co tam není."""
@@ -458,20 +461,20 @@ class SouladSNormou(unittest.TestCase):
             out.append("chybí `## Co skill dělá`")
         if "\n## Co skill nedělá" not in text:
             out.append("chybí `## Co skill nedělá`")
-        # Norma jmenuje pre-flight jako povinnou sekci; závěr se jménem
-        # NEkontroluje schválně – devět skillů ho má pod vlastním názvem
-        # (`Úklid a shrnutí`, `Uzavření`, `Předání`) a norma jméno nepředepisuje.
-        # Že závěr existuje a je jednoznačný, hlídá podmínka na koncové věty níž. Bez téhle kontroly
-        # se hlídala jen jejich vnitřní náplň (odkaz na PREFLIGHT.md, koncové věty),
-        # takže skill, který obě sekce nemá vůbec, prošel oběma podmínkami mlčky.
-        if not re.search(r"\n## (?:Fáze|Krok) 0\b", text):
+        # Pre-flight je povinná sekce a pozná se podle **čísla**, ne podle názvu:
+        # `/oponent` ho má jako „Fáze 0 – Co se oponuje“ a `/project` jako
+        # „Krok 0 – Zjisti režim a stav“. Dřív se odkaz na PREFLIGHT.md hledal
+        # jen tehdy, když se v textu vyskytlo slovo „Pre-flight“ – oba tyhle
+        # skilly z kontroly tiše vypadávaly i se svým opsaným pre-flightem.
+        ma_preflight = re.search(r"\n## (?:Fáze|Krok) 0\b", text)
+        if not ma_preflight:
             out.append("chybí `## Fáze 0 – Pre-flight`")
+        elif "PREFLIGHT.md" not in text:
+            out.append("pre-flight neodkazuje na `skills/PREFLIGHT.md`")
 
         radku = len(text.splitlines())
         if radku > 500:
             out.append(f"tělo má {radku} řádků, tvrdá mez je 500")
-        if "Pre-flight" in text and "PREFLIGHT.md" not in text:
-            out.append("pre-flight neodkazuje na `skills/PREFLIGHT.md`")
         if "Zakonči jednou z těchto vět" not in text:
             out.append("chybí dvě koncové věty")
         if self.CIZI_FAZE.search(text):
@@ -504,9 +507,14 @@ class SouladSNormou(unittest.TestCase):
         uvnitr = kde("Jak je to postavené uvnitř")
         prvni_faze = kde("Fáze 0", "Krok 0")
         chyby = kde("Časté chyby")
-        # Závěr je poslední fáze či krok, ne první – proto se hledá odzadu.
+        # Závěr = **poslední** fáze či krok, ne fáze pojmenovaná „Závěr“. Devět
+        # skillů ji má pod vlastním názvem (`Úklid a shrnutí`, `Uzavření`,
+        # `Předání`) a norma jméno nepředepisuje – vázat kontrolu na slovo
+        # „Závěr“ znamenalo, že přejmenování závěru celou kontrolu pořadí tiše
+        # vypnulo. Doloženo mutací: `Fáze 8 – Závěr` → `Fáze 8 – Uzavření`
+        # zneškodnilo jedinou vadu, kterou uměla najít.
         zaver = max((i for n, i in poradi.items()
-                     if n.startswith(("Fáze", "Krok")) and "Závěr" in n), default=None)
+                     if n.startswith(("Fáze", "Krok"))), default=None)
 
         out = []
         for driv, pozdej, popis in (

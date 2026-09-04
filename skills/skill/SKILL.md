@@ -218,7 +218,7 @@ Poslední řádek je druhý druh driftu vedle rozejití s normou a **neklade ho 
 
 **Nenajdeš-li nic, řekni to a skonči.** Běh bez zásahu je platný výsledek revize.
 
-**Vyškrtni opravený skill ze seznamu `MIGRACE`** v `~/.claude/tests/test_skills.py`. Ten seznam je **ráčna**: množina skillů mimo normu se musí *rovnat* jeho obsahu, takže opravený skill, který v něm zůstane, shodí testy stejně jako regrese. Je to schválně – bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit.
+**Vyškrtni ze seznamu `MIGRACE`** skill, u kterého jsi opravil **všechny** jeho vady – ráčna je per skill, ne per vada, takže skill s jednou zbylou vadou v seznamu zůstává v `~/.claude/tests/test_skills.py`. Ten seznam je **ráčna**: množina skillů mimo normu se musí *rovnat* jeho obsahu, takže opravený skill, který v něm zůstane, shodí testy stejně jako regrese. Je to schválně – bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit.
 
 Pak pokračuj *Fází 7* – i `update` sahá na `README.md` a testy.
 
@@ -239,7 +239,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 | `~/.claude/skills/<jméno>/` | celý adresář včetně vedlejších souborů a skriptů |
 | `~/.claude/README.md` | jeho sekce |
 | `~/.claude/RULES.md` | osa *Životního cyklu práce* a zmínky u sousedů |
-| `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
+| `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, je-li tam; jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`" |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
 | projektové `CLAUDE.md` v `~/Dev` | sekce, které skill zakládal |

@@ -115,7 +115,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Časté chyby`** – nepovinná, ale zakládej ji, jakmile má skill za sebou první ostré běhy. Patří sem to, co se v praxi pokazilo, ne co by se pokazit mohlo. Zdroj je `docs/decisions.md` a poučení z běhů; bez téhle sekce se do skillu nikdy nevrátí.
 
-**`## Fáze N – Závěr`** – šablona výstupu a **dvě koncové věty**:
+**`## Fáze N – Závěr`** – **poslední** fáze skillu; nese šablonu výstupu a **dvě koncové věty**. Jméno po pomlčce **závazné není** – `Úklid a shrnutí`, `Uzavření` i `Předání` jsou v pořádku, závěr se pozná podle toho, že je poslední. Naopak **`Fáze 0` je závazná číslem**: pre-flight je vždycky nultý, ať se jmenuje jakkoliv (`/oponent` má „Fáze 0 – Co se oponuje“, `/project` „Krok 0 – Zjisti režim a stav“):
 
 Skill je **uvádí doslovně**, aby se z nich za běhu nestala parafráze. Jejich znění si ale volí sám – **doslovná napříč skilly být nemůžou**, protože čeština žádá shodu s rodem toho, co je hotové (*„Plán hotový není"* × *„Hotové to není"*). Závazný je tedy vzorec:
 
