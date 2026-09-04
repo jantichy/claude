@@ -24,7 +24,9 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
 Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen tady, na rozdíl od `~/.claude/CLAUDE.md`, který je uživatelský a jde do každé session v každém projektu.
 
-- **Když tu zakládáš nebo měníš skill, řiď se `~/.claude/skills/SKILLS.md`** – normou tvaru skillu. Platí to pro každou cestu k té změně: ruční úpravu, `/skill` i cizí nástroj typu `skill-creator` nebo `superpowers:writing-skills`. Ty mají vlastní představu o tvaru a prosadí ji, když jim nic neřekneš; tenhle řádek je to, co jim ji přebíjí (`~/.claude/RULES.md`, *Přednost pravidel*). Postup zakládání, revize a rušení drží `/skill`, ne norma.
+@~/.claude/skills/SKILLS.md
+
+- **Když tu zakládáš nebo měníš skill, řiď se `~/.claude/skills/SKILLS.md`** – normou tvaru skillu. Importuje se výš natvrdo, takže ji máš v kontextu vždycky, když pracuješ v tomhle repozitáři. Platí to pro každou cestu ke změně skillu: ruční úpravu, `/skill` i cizí nástroj typu `skill-creator` nebo `superpowers:writing-skills`. Ty mají vlastní představu o tvaru a prosadí ji, když jim nic neřekneš; tenhle řádek je to, co jim ji přebíjí (`~/.claude/RULES.md`, *Přednost pravidel*). Postup zakládání, revize a rušení drží `/skill`, ne norma.
 - Každý skill má v `README.md` svou sekci. Když nějaký přidáš nebo zásadně změníš jeho chování, aktualizuj ji rovnou jako součást té změny – stejný styl a tón jako ostatní sekce (osobní, věcné, s konkrétním přínosem). Nečekej na vyžádání.
 
 ## Příkazy

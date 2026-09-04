@@ -144,6 +144,12 @@ Ty dvě věty jsou celá bezpečnostní pojistka skillu: nutí odlišit „uděl
 
 **„Fáze" je norma.** Číslují se od nuly (`Fáze 0 – Pre-flight`) a čísla se nemění bezdůvodně – odkazuje se na ně napříč skilly.
 
+**Číslují se plochou vzestupnou řadou, bez písmen.** `0, 1, 2, 3…`, ne `1, 1b, 2`. Čtenář bere číslování jako tvrzení o vztazích, takže `1b`, které o vztahu k `1` nic neříká, lže.
+
+**Písmenná podfáze je v souladu jen tam, kde sdružuje tematicky příbuzné podkroky téhož kroku.** Kritérium je ostré: písmena jen tehdy, když by jinak jeden krok musel vyrábět **dva samostatné výstupy**. Tak to má `/specify` s `Fází 3a` (produktová specifikace) a `3b` (návrh řešení) – dva dokumenty jednoho zadání.
+
+Není to výjimka, ale splněné kritérium: co mu vyhoví, revize nesahá; co mu nevyhoví, je nedodělek a **opraví se**.
+
 **„Krok" jen u interaktivních průvodců**, kterými uživatel prochází jeden po druhém a může se kdykoliv zastavit. Dnes je to `/project`. Skill, který volí „krok", to musí ve svých zásadách zdůvodnit.
 
 **Neodkazuj se dovnitř jiného skillu.** Potřebuješ-li tentýž postup jako soused, patří ten postup do `PREFLIGHT.md` nebo do doménové znalosti – ne do odkazu na jeho fázi. Cizí fáze se přečíslují a odkaz tiše ukáže jinam.
