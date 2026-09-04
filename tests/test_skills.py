@@ -137,16 +137,26 @@ class SkillOdkazy(unittest.TestCase):
 
         Tvar `` `/review`, Fáze 0.1 `` nehlídá ani tenhle test (je cizí), ani test
         na sekce (nemá cestu k souboru). Je to známá díra, ne předpoklad pokrytí.
+
+        **Hlídá se „Fáze“ i „Krok“.** `/project` se člení na kroky, ne na fáze, takže
+        ho původní vzor míjel celý – jeho přečíslování na plochou řadu 0–13 prošlo
+        bez brány a muselo se ověřovat jednorázovým skriptem. Součástí jsou i rozsahy
+        („v krocích 2–12“), protože ty se při přečíslování posouvají zvlášť a první
+        dávka náhrad je nechala být.
         """
-        vzor = re.compile(r"Fáz[eií] (\d+(?:\.\d+)?[a-z]?)")
+        vzor = re.compile(r"(Fáz[eií]|[Kk]roc?[íkyů]?\w*) (\d+(?:\.\d+)?[a-z]?)(?:–(\d+))?")
         jmena = {s.parent.name for s in SKILLS}
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
                 cizi = jmena - {skill.parent.name}
-                vlastni = {re.match(r"Fáze (\S+)", n).group(1)
-                           for n in bez_bloku_kodu(skill) if n.startswith("Fáze ")}
+                vlastni = {re.match(r"(?:Fáze|Krok) (\S+)", n).group(1)
+                           for n in bez_bloku_kodu(skill)
+                           if n.startswith(("Fáze ", "Krok "))}
+                # písmenné podkroky mají vlastní nadpis úrovně ###, např. „6a – Režim“
+                vlastni |= {m.group(1) for m in
+                            (re.match(r"(\d+[a-c]) – ", n) for n in bez_bloku_kodu(skill)) if m}
                 if not vlastni:
-                    continue          # skill fáze nepoužívá
+                    continue          # skill fáze ani kroky nepoužívá
                 spatne = []
                 ve_bloku = False
                 for radek in body(skill).splitlines():
@@ -159,8 +169,15 @@ class SkillOdkazy(unittest.TestCase):
                         okno = radek[max(0, m.start() - 60):m.start()]
                         if "SKILL.md" in okno or any(f"/{j}" in okno for j in cizi):
                             continue  # odkaz do cizího skillu
-                        if m.group(1) not in vlastni:
-                            spatne.append(f"Fáze {m.group(1)}")
+                        # „krok 8 osy“ v RULES.md není vlastní fáze, ale krok
+                        # *Životního cyklu práce* – ty se číslují nezávisle
+                        if "RULES.md" in okno or "Životní cyklus" in okno:
+                            continue
+                        if re.match(r"\s*os[ay]\b", radek[m.end():m.end() + 8]):
+                            continue
+                        for cislo in (m.group(2), m.group(3)):   # i konec rozsahu
+                            if cislo and cislo not in vlastni:
+                                spatne.append(f"{m.group(1)} {cislo}")
                 self.assertFalse(sorted(set(spatne)),
                     f"{skill}: odkaz na vlastní fázi, která tam není: "
                     f"{sorted(set(spatne))} (má {sorted(vlastni)})")
