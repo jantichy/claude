@@ -120,32 +120,44 @@ class SkillOdkazy(unittest.TestCase):
     def test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis(self):
         """Odkaz „vezmi to do Fáze 7“ uvnitř skillu musí trefit jeho vlastní nadpis.
 
-        Tuhle vadu soustava reálně dostává: přečíslovat fáze je jedna dávka
-        náhrad, po které tři odkazy z téhož souboru ukazují jinam. Předchozí test
-        na sekce ji nechytí – ten matchuje jen odkazy s uvedenou cestou k souboru,
-        kdežto vnitroskillový odkaz cestu nemá. Doloženo mutací: `Fáze 7`
-        přepsaná na `Fáze 77` prošla všemi testy.
+        Tuhle vadu soustava reálně dostává: přečíslovat fáze je jedna dávka náhrad,
+        po které tři odkazy z téhož souboru ukazují jinam. Test na sekce ji nechytí –
+        ten matchuje jen odkazy s uvedenou cestou k souboru, kdežto vnitroskillový
+        odkaz cestu nemá. Doloženo mutací: `Fáze 7` přepsaná na `Fáze 77` prošla.
 
-        Odkazy do jiného skillu se přeskakují – ty hlídá test na sekce.
+        **Cizí odkaz se pozná z okna před samotným odkazem**, ne z celého řádku.
+        První verze přeskakovala řádek, kdykoliv se na něm kdekoliv objevilo jméno
+        jiného skillu – a protože se skilly zmiňují průběžně, vypadlo z kontroly
+        dvanáct odkazů v pěti nejrozsáhlejších skillech. Doloženo mutací: `Fáze 4`
+        v `/consistency` šla přepsat na `Fáze 44`, protože se o dvě věty dál mluvilo
+        o `/review`.
+
+        Tvar `` `/review`, Fáze 0.1 `` nehlídá ani tenhle test (je cizí), ani test
+        na sekce (nemá cestu k souboru). Je to známá díra, ne předpoklad pokrytí.
         """
         vzor = re.compile(r"Fáz[eií] (\d+(?:\.\d+)?[a-z]?)")
         jmena = {s.parent.name for s in SKILLS}
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
-                text = body(skill)
-                vlastni = {n.split("–")[0].replace("Fáze", "").strip()
+                cizi = jmena - {skill.parent.name}
+                vlastni = {re.match(r"Fáze (\S+)", n).group(1)
                            for n in bez_bloku_kodu(skill) if n.startswith("Fáze ")}
                 if not vlastni:
                     continue          # skill fáze nepoužívá
                 spatne = []
-                for radek in text.splitlines():
-                    # řádek, který jmenuje jiný skill, odkazuje ven na jeho fáze
-                    # („stejně jako `/review` (viz jeho *Fáze 7*)“)
-                    if "SKILL.md" in radek or any(f"/{j}" in radek for j in jmena - {skill.parent.name}):
+                ve_bloku = False
+                for radek in body(skill).splitlines():
+                    if radek.lstrip().startswith(("```", "~~~")):
+                        ve_bloku = not ve_bloku
                         continue
-                    for cislo in vzor.findall(radek):
-                        if cislo not in vlastni:
-                            spatne.append(f"Fáze {cislo}")
+                    if ve_bloku:
+                        continue      # šablona pro subagenta není odkaz
+                    for m in vzor.finditer(radek):
+                        okno = radek[max(0, m.start() - 60):m.start()]
+                        if "SKILL.md" in okno or any(f"/{j}" in okno for j in cizi):
+                            continue  # odkaz do cizího skillu
+                        if m.group(1) not in vlastni:
+                            spatne.append(f"Fáze {m.group(1)}")
                 self.assertFalse(sorted(set(spatne)),
                     f"{skill}: odkaz na vlastní fázi, která tam není: "
                     f"{sorted(set(spatne))} (má {sorted(vlastni)})")
@@ -220,14 +232,21 @@ class NosneCasti(unittest.TestCase):
         na zápisu do souborů – kdyby fáze vypadla, úklid by navenek proběhl stejně
         a chyběl by jen dotaz, který nikdo nepostrádá, protože o něm neví.
 
-        Hlídá se i způsob dotazování: kdyby se položky jen vypsaly do závěru,
-        uživatel session zavře a zmizí s ní – přesně to, čemu má fáze bránit.
+        **Hledá se uvnitř té fáze, ne kdekoliv v souboru.** První verze ověřovala
+        `AskUserQuestion` nad celým tělem skillu, kde se ten řetězec vyskytuje
+        pětkrát – šlo tedy smazat celou sekci *Jak to probrat* a testy zůstaly
+        zelené. Způsob dotazování je přitom to podstatné: kdyby se položky jen
+        vypsaly do závěru, uživatel session zavře a zmizí s ní.
         """
         text = body(ROOT / "skills/cleanup/SKILL.md")
-        for kus in ("Zamluvená a nevypořádaná témata", "Práh důležitosti",
-                    "Jak ověřit, že to opravdu visí", "AskUserQuestion"):
-            self.assertIn(kus, text,
-                          f"/cleanup přišel o dohledávání zamluvených témat: chybí {kus!r}")
+        nadpis = "## Fáze 2 – Zamluvená a nevypořádaná témata"
+        self.assertIn(nadpis, text, "/cleanup přišel o fázi na zamluvená témata")
+        faze = text[text.index(nadpis):]
+        faze = faze[:faze.index("\n## ")]
+        for kus in ("Jak ověřit, že to opravdu visí", "Práh důležitosti",
+                    "AskUserQuestion", "Bezpředmětné"):
+            self.assertIn(kus, faze,
+                          f"/cleanup, Fáze 2 přišla o {kus!r} – zbyl jen nadpis")
 
     def test_zadani_pro_agenty_maji_povinna_pole(self):
         """Nález bez `basis` a `severity` nejde ani ověřit, ani zařadit.

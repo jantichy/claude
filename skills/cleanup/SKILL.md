@@ -30,7 +30,7 @@ Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padaj
 
 ## Rozsah fresh-reader kontroly
 
-- **`/cleanup`** (výchozí) – fresh-reader ve Fázi 6 se soustředí na to, čeho se dotkla tahle session. Nálezy mimo její rozsah jen vypíše jako doporučení, neopravuje je.
+- **`/cleanup`** (výchozí) – fresh-reader ve Fázi 6 se soustředí na to, čeho se dotkla tahle session. Nálezy mimo její rozsah sám neopravuje – putují do Fáze 7, kde o nich rozhodne uživatel.
 - **`/cleanup full`** – fresh-reader projde celou dokumentaci projektu bez omezení na session a nálezy se řeší všechny. Použij, jen když uživatel napíše `full`.
 
 Rozsah ovlivňuje **Fázi 6** a skrze ni i to, co se dostane do Fáze 7. Fáze 1–5 vytěžují session vždy celou – to je smysl skillu a nedá se zúžit ani rozšířit.
@@ -84,7 +84,7 @@ Tohle je jádro celého skillu: vychází z něj všechno ostatní včetně Fáz
    4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“. Tohle je **vědomé** odložení: někdo ho vyslovil. Co propadlo, aniž si toho kdokoli všiml, je kategorie 7.
    5. **Postřehy mimo hlavní osu** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
    6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
-   7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními – ať kvůli ní nemusí číst zvlášť. **Opiš mu do zadání i síto z Fáze 2** (ověření proti zbytku transcriptu a práh důležitosti); bez něj vrátí hrubé kandidáty a hlavní session, která transcript v ruce nemá, je nemá čím proklepnout.
+   7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními – ať kvůli ní nemusí číst zvlášť. **Opiš mu do zadání i síto z Fáze 2** (ověření proti zbytku transcriptu i práh důležitosti) a nech si u každého kandidáta vrátit, co prověřil. Bez toho vrátí hrubé kandidáty a ty bys je musel proklepávat vlastním čtením transcriptu – tedy udělat práci, kvůli které jsi ho poslal.
 
 4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej – kromě kategorie 7, kterou hned probereš ve Fázi 2.
 
@@ -110,7 +110,7 @@ Rozdíl proti kategorii 4 z Fáze 1: tam jde o **vědomé** odložení, které n
 
 ### Jak ověřit, že to opravdu visí
 
-U každého kandidáta projdi **zbytek transcriptu až do konce** a hledej, jestli se to mezitím nevyřešilo jinudy:
+U každého kandidáta projdi **zbytek transcriptu až do konce** a hledej, jestli se to mezitím nevyřešilo jinudy (**delegoval-li jsi Fázi 1, dělá tohle síto subagent** a ty přebíráš jeho zdůvodnění – nečteš transcript podruhé):
 
 - odpovědí, která přišla později a jinými slovy,
 - změnou v souborech, která z otázky udělala fakt,
@@ -197,7 +197,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    Má-li projekt zadání, přidej k nim `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`. Má-li projekt kód, ověř i **`## Příkazy`** v `CLAUDE.md` (*Kontrakt příkazů*) – přibyl-li během session příkaz, kterým se něco spouští, patří tam.
    Neexistují-li, přeskoč je – nezakládají se tady.
 
-2. **Projdi celou session znovu** – celý transcript z Fáze 1, ne jen vytěžený seznam – a u každého souboru se ptej, co do něj **mělo** během session přibýt:
+2. **Projdi celou session znovu** – celý transcript z Fáze 1, ne jen vytěžený seznam – a u každého souboru se ptej, co do něj **mělo** během session přibýt. **Šel-li na transcript subagent ve Fázi 1, pošli ho i sem**, s tabulkou níž v zadání; hlavní session transcript v ruce nemá a nemá si ho brát, jinak je delegace k ničemu.
 
    | Soubor | Co v session zakládá povinnost zápisu |
    |---|---|
@@ -267,7 +267,7 @@ Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit d
 
 ## Fáze 6 – Fresh-reader verifikace
 
-Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Ve výchozím rozsahu to není audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci. V režimu `full` naopak projdi dokumentaci celou (viz *Rozsah fresh-reader kontroly* výše) a v zadání pro subagenta vynech řádek se shrnutím session, větu o soustředění se na poslední session **a obě omezení na dnešek – v otázce C větu o `/consistency` a slovo „dnešní“, v otázce E větu o zbytcích po dnešní práci.** Bez toho by zadání zakazovalo hlásit přesně ten starší dluh, kvůli kterému se `full` pouští.
+Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Ve výchozím rozsahu to není audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci. V režimu `full` naopak projdi dokumentaci celou (viz *Rozsah fresh-reader kontroly* výše). **V šabloně níž vynech všechno, co je označené `[jen /cleanup]`** – včetně obou omezení uvnitř otázek C a E. Bez toho by zadání zakazovalo hlásit přesně ten starší dluh, kvůli kterému se `full` pouští; vypisovat ta místa slovy se ukázalo jako nespolehlivé, protože výčet se se šablonou rozešel hned první den.
 
 **Fresh-reader je posouzení, ne sběr: výchozí model, `high`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Má odpovědět na otázku „dá se na tohle navázat?“, a to je úsudek – levný model přečte, co tam stojí, a přikývne, místo aby našel, co chybí.
 
@@ -285,18 +285,19 @@ Přečti si v tomhle pořadí (jako by ses do projektu zaučoval):
 
 Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, runtime adresáře>) nečti celé.
 
-Soustřeď se na oblasti, kterých se dotýkala poslední session. ODPOVĚZ NA TYTO OTÁZKY:
-<v režimu `full` tenhle odstavec vynech – procházej dokumentaci celou>
+[jen /cleanup] Soustřeď se na oblasti, kterých se dotýkala poslední session.
+
+ODPOVĚZ NA TYTO OTÁZKY:
 
 **A. Co bych měl dělat dál?** Je z dokumentace jednoznačné, jaký je další krok? Kdyby ti někdo řekl „pokračuj“, věděl bys jak?
 
 **B. Rozumím tomu, co se nedávno rozhodlo?** Popiš vlastními slovy, co se v projektu naposledy změnilo a proč. Kde jsi musel hádat nebo dohledávat?
 
-**C. Rozpory a nepravdy – ale jen v tom, co přibylo dnes.** Audit konzistence dělá `/consistency`, který běží o krok dřív; neopakuj ho. Zajímá tě jen to, jestli si **dnešní zápisy** neodporují mezi sebou nebo s tím, co v souborech bylo: sedí počty v textu s obsahem tabulek, na které se dnes sahalo? Odpovídají nové věty tomu, co tvrdí okolí?
+**C. Rozpory a nepravdy.** [jen /cleanup: ale jen v tom, co přibylo dnes – audit konzistence dělá `/consistency`, který běží o krok dřív; neopakuj ho.] Zajímá tě, jestli si zápisy neodporují mezi sebou nebo s tím, co v souborech bylo: sedí počty v textu s obsahem tabulek? Odpovídají nové věty tomu, co tvrdí okolí?
 
 **D. Chybějící kontext.** Předpokládá se něco jako známé, ale nikde to není vysvětlené? Odkazuje se na rozhodnutí, jehož zdůvodnění chybí?
 
-**E. Viséci po dnešních zásazích.** Do dokumentace se dnes zasahovalo chirurgicky, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.
+**E. Viséci po chirurgických zásazích.** Do dokumentace se zasahuje po větách, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. [jen /cleanup: hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.]
 
 **F. Co bych se musel zeptat?** Konkrétní otázky, na které bys nenašel odpověď.
 
