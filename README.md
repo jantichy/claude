@@ -28,7 +28,7 @@ Následující skilly tvoří jednu osu od založení projektu po nasazení. Nem
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
-Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znovu – lidský název, git a remote, autocommit, typ projektu, kontrakt příkazů – a rovnou to nastaví včetně `README.md`, `.gitignore` a standardní struktury. Umí i projekty, které už existují (**`adopt`**): udělá inventuru a dorovná je na moje dnešní preference, nikdy nepřepíše soubor bez zeptání. Zvládá i **worktree layout**, tedy kontejner s `.bare` a jedním podadresářem na větev.
+Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znovu – lidský název, git a remote, autocommit, typ projektu, kontrakt příkazů – a rovnou to nastaví včetně `README.md`, `.gitignore` a standardní struktury. Nový projekt zakládá režim **`create`**; umí ale i projekty, které už existují (**`adopt`**): udělá inventuru a dorovná je na moje dnešní preference, nikdy nepřepíše soubor bez zeptání. Zvládá i **worktree layout**, tedy kontejner s `.bare` a jedním podadresářem na větev.
 
 Nad projektem, ve kterém pozná svůj vlastní otisk – blok metadat v `CLAUDE.md` –, se chová jinak: přepne se do režimu **`update`** a místo otázek projde celý projekt proti tomu, jak standardy vypadají dnes – sekce v `CLAUDE.md`, deklarace a kontrakty, umístění a vnitřní tvar dokumentace, odkazy na skilly a doménové znalosti, které se mezitím mohly přejmenovat. Řeší to jinak nepříjemnou vlastnost celé téhle vrstvy: konfigurace se vyvíjí dál, ale projekty založené za starého nastavení v něm zůstanou stát a samy o tom neřeknou. Tohle je způsob, jak je dorovnat jedním zavoláním. Projekt bez otisku – ať v něm skill nikdy neběžel, nebo ho nastavovala starší verze – jde nejdřív průvodcem (režim **`adopt`**) a dorovnání na něj přijde na konci.
 
@@ -89,6 +89,10 @@ Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivn
 ### [`/compose`](skills/compose/) – texty, co znějí jako já
 
 Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní a k tématu si dohledá nejpodobnější texty z archivu jako živé vzory. Moje názory a pointy si ale nikdy nevymýšlí, ty musím dodat sám.
+
+### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
+
+Konec měsíce znamenal pokaždé totéž: projít timetracking, sečíst hodiny po projektech, přepsat je do fakturačního systému, stáhnout dvě PDF a napsat ke každému mail. Tenhle skill to udělá za mě a u každého klienta se zastaví, než něco vystaví. Nejdřív mi ukáže, co napočítal, co vyřadil a co je mu podezřelé – běžící časovač, záznam bez popisu, položka na čtrnáct hodin. **Hranici „odkud počítat" nikdy neodhaduje**: čte ji z poslední faktury, do které si ji sám zapsal, takže se to nemůže rozejít ani při faktuře vystavené ručně. Končí rozepsaným draftem s fakturou a výkazem hodin v příloze – odeslat ho musím já, protože odeslanou fakturu nikdo nevrátí. Sazby, daňový režim a dohody s klienty **v tomhle repozitáři nejsou**; skill je rámec a konkrétní čísla si tahá ze soukromé knowledge base.
 
 ### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 

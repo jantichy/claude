@@ -144,7 +144,14 @@ class SkillOdkazy(unittest.TestCase):
         („v krocích 2–12“), protože ty se při přečíslování posouvají zvlášť a první
         dávka náhrad je nechala být.
         """
-        vzor = re.compile(r"(Fáz[eií]|[Kk]roc?[íkyů]?\w*) (\d+(?:\.\d+)?[a-z]?)(?:–(\d+))?")
+        # Za jedním „krok“ může stát celý výčet („kroky 3, 4, 6, 8–12“). Vzor proto
+        # bere všechna čísla až do konce výčtu, ne jen to první. Bez toho zůstala
+        # třída chyb, která reálně nastala: dávka náhrad při přečíslování `/project`
+        # přepsala jen první číslo řádku a zbytek nechala ve starém číslování –
+        # včetně kroku `8b`, který týž commit rušil. Ověřovací skript měl tutéž
+        # slepou skvrnu jako test, takže to prohlásil za v pořádku.
+        vzor = re.compile(r"(Fáz[eií]|[Kk]roc?[íkyů]?\w*)\s+"
+                          r"((?:\d+(?:\.\d+)?[a-c]?)(?:\s*(?:,|a|–|až)\s*\d+(?:\.\d+)?[a-c]?)*)")
         jmena = {s.parent.name for s in SKILLS}
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
@@ -175,8 +182,8 @@ class SkillOdkazy(unittest.TestCase):
                             continue
                         if re.match(r"\s*os[ay]\b", radek[m.end():m.end() + 8]):
                             continue
-                        for cislo in (m.group(2), m.group(3)):   # i konec rozsahu
-                            if cislo and cislo not in vlastni:
+                        for cislo in re.findall(r"\d+(?:\.\d+)?[a-c]?", m.group(2)):
+                            if cislo not in vlastni:
                                 spatne.append(f"{m.group(1)} {cislo}")
                 self.assertFalse(sorted(set(spatne)),
                     f"{skill}: odkaz na vlastní fázi, která tam není: "

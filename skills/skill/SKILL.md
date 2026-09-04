@@ -153,7 +153,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRACE` se **nedoplňuje**, ten seznam se jen zkracuje |
 | `~/.claude/skills/<jméno>/` | vedlejší soubory, skripty, jejich sonda na závislosti |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
-| `docs/decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo |
+| `decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo. **Pozor:** `~/.claude` nemá `docs/` – zapisuje se do `~/Dev/context/decisions.md`, viz `.claude/CLAUDE.md` |
 
 **Commitni**, má-li repozitář zapnutý autocommit.
 
@@ -251,7 +251,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 
 Hledej **grepem přes všechny ty kořeny**, ne z paměti. Po smazání **projeď kontrolní průchod na jméno skillu** – musí vrátit nulu mimo místa vědomě ponechaná.
 
-**Nech stopu.** Do `docs/decisions.md` zapiš, co bylo zrušeno a proč, i co se tím vědomě ztratilo. Bez toho se zrušený mechanismus vrátí za půl roku jako „to by šlo udělat".
+**Nech stopu.** Do `~/Dev/context/decisions.md` zapiš, co bylo zrušeno a proč, i co se tím vědomě ztratilo. Bez toho se zrušený mechanismus vrátí za půl roku jako „to by šlo udělat".
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
