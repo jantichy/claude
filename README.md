@@ -46,7 +46,7 @@ Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zby
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
-Před opuštěním nebo zkompaktováním session projde celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak pošle na projekt agenta bez kontextu, který ověří, jestli z dokumentace jde na dnešní práci navázat, commitne a dá jednoznačný verdikt: je zapsáno, nebo tohle ještě zbývá. Stojím-li ve worktree větve, řekne navíc, že větev zůstává otevřená a dá se dokončit – ale nic dalšího s tím nedělá. **`/cleanup full`** nezvětšuje vytěžení session – to běží vždycky celé –, ale rozšiřuje závěrečnou kontrolu čerstvýma očima z dnešní práce na celou dokumentaci.
+Před opuštěním nebo zkompaktováním session projde celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak pošle na projekt agenta bez kontextu, který ověří, jestli z dokumentace jde na dnešní práci navázat, commitne a dá jednoznačný verdikt: je zapsáno, nebo tohle ještě zbývá. Co by jinak zůstalo „mimo rozsah úklidu“, mi předtím vypíše najednou a zeptá se, jestli to máme vyřešit hned, nebo zapsat do todo – aby se to neztratilo se zavřenou session. Stojím-li ve worktree větve, řekne navíc rovnou, že větev jde bez obav přimergovat do main – ale nemerguje ani nic nepřipravuje. **`/cleanup full`** nezvětšuje vytěžení session – to běží vždycky celé –, ale rozšiřuje závěrečnou kontrolu čerstvýma očima z dnešní práce na celou dokumentaci.
 
 ### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 

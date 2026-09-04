@@ -25,7 +25,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to poslední krok uza
 
 Tohle **není** audit projektu ani technická brána. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 
-Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), uveď to ve verdiktu ve Fázi 5. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj.
+Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), vezmi to do Fáze 4b a nech uživatele rozhodnout, co s tím. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj, dokud si to uživatel nevyžádá.
 
 ## Rozsah fresh-reader kontroly
 
@@ -169,7 +169,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
                          README.md         – OK
    ```
 
-   Doplňoval-li jsi hodně, řekni to uživateli otevřeně jako selhání průběžné aktualizace, ne jako běžnou práci úklidu. Je to informace o tom, že mechanismus nefungoval.
+   Doplňoval-li jsi hodně, vypiš to stejně věcně jako zbytek – tenhle skill existuje právě proto, aby zanedbanou průběžnou aktualizaci našel a dorovnal. Nekomentuj to jako selhání a nestěžuj si; seznam doplněného mluví sám za sebe.
 
 ### Když soubory neexistují
 
@@ -246,8 +246,35 @@ Nezapisuj do žádného souboru.
 **Zpracování nálezů:**
 
 - Nálezy, které se týkají téhle session, vrať do Fáze 3 a oprav – mechanické sám, sporné s uživatelem.
-- Nálezy mimo rozsah session (starší dluh v dokumentaci) ve výchozím režimu **neopravuj** – vypiš je ve verdiktu jako doporučení pustit `/consistency full`. V režimu `full` je řeš stejně jako ostatní.
+- Nálezy mimo rozsah session (starší dluh v dokumentaci) ve výchozím režimu neopravuj rovnou – přenes je do Fáze 4b, která s nimi naloží podle rozhodnutí uživatele. V režimu `full` je řeš stejně jako ostatní.
 - Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanášejí nové viséce – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
+
+------
+
+## Fáze 4b – Naložení s tím, co by zůstalo mimo rozsah
+
+Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dluh z fresh-readera, rozbité věci známé ze session, odložené nálezy –, se tady musí rozhodnout. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
+
+1. **Nemáš-li nic**, fázi přeskoč a v přehledu uveď „žádné“.
+
+2. **Vypiš je všechny najednou** jako číslovaný seznam – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu:
+
+   ```
+   Mimo rozsah úklidu bych nechal:
+   1. [položka] – [proč je mimo rozsah]
+   2. …
+   ```
+
+3. **Zeptej se jedním voláním `AskUserQuestion`**, co s nimi. Volby:
+
+   | Volba | Co uděláš |
+   |---|---|
+   | **Vyřešit teď** | Vyřeš všechny rovnou tady, jako by byly součástí úklidu, a pak pokračuj Fází 5. |
+   | **Zapsat do todo** | Zapiš všechny do `docs/todo.md` (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) – ne jako holé odrážky, ale s kontextem a odůvodněním, aby se na ně dalo navázat bez téhle session. |
+   | **Projít po jedné** | Projdi je jednu po druhé a u každé se zeptej zvlášť (vyřešit / do todo / zahodit). Použij, když se položky liší povahou. |
+   | **Zahodit** | Nic s nimi nedělej. Volí se vědomě, ne mlčením. |
+
+4. Ať se rozhodne jakkoli, v přehledu ve Fázi 5 pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu.
 
 ------
 
@@ -281,7 +308,7 @@ Nezapisuj do žádného souboru.
 - [seznam, nebo „žádné“]
 
 **Mimo rozsah úklidu**
-- [rozbité věci známé ze session, nálezy na starší dluh – nebo „žádné“]
+- [seznam z Fáze 4b a u každé položky, jak se s ní naložilo – nebo „žádné“]
 
 **Další krok:** /attack a /release, nasazuje-li se – jinak je práce uzavřená
 ```
@@ -289,9 +316,9 @@ Nezapisuj do žádného souboru.
 Zakonči **jednoznačným verdiktem** – jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Ze session je všechno zapsané, můžeš pokračovat, zkompaktovat i odejít.`
-- **Stojíš-li ve worktree větve** (`~/Dev/context/worktree/worktree.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji dokončit.`
+- **Stojíš-li ve worktree větve** (`~/Dev/context/worktree/worktree.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji bez obav přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, tuhle větu nepoužij – použij poslední variantu a rovnou pojmenuj, co merge blokuje.
 - `Zapsané zatím není všechno – brání tomu: <konkrétní seznam>.`
 
 **Nenabízej „opustit session“ jako jedinou cestu.** Zápis je hotový, ale to neznamená, že je hotová práce: uživatel klidně pokračuje dál v téže session a `/cleanup` mu jen zajistil, že ho kompaktace nepřipraví o kontext. Ve worktree layoutu to platí dvojnásob – „můžeš odejít“ tam neodpovídá na otázku, kterou má uživatel v hlavě, totiž co s tou větví.
 
-**Tou větou to ale končí.** Merge nenabízej, nepřipravuj ani nevypisuj – větev je pracovní prostor, ne obálka na jeden příkaz, a merguje se **jen na výslovný pokyn** (`worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). Zmínka o tom, že jde větev dokončit, je informace o stavu; cokoliv dalšího už je pobízení k akci, o kterou nikdo nežádal.
+**Že je merge bez obav, musí zaznít explicitně** – vedle pokračování a kompaktace. Uživatel má v hlavě otázku „můžu to zavřít, nebo tam něco visí?“ a mlčení o mergi ji nezodpoví; „dokončit větev“ je vágní a nechává ho hádat, jestli něco nepřehlédl. Verdikt o stavu, ne pobídka: **merge sám neprovádíš, nepřipravuješ ani nevypisuješ příkazy** – větev je pracovní prostor a merguje se jen na výslovný pokyn (`worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). Řekneš, že to jde bez rizika; kdy se to stane, je na uživateli.
