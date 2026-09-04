@@ -117,9 +117,9 @@ Za každého klienta:
 3. Sestav mail podle `~/Dev/context/business/invoicing.md`, *Šablona mailu*. Adresáta a tón vezmi z dohody klienta a z jeho profilu v `~/Dev/context/organizations/`.
 4. **Založ draft a tím skonči.** Odeslání sám nenabízej a nedělej ho jako součást běhu.
 
-**Když odeslání vyžádáš**, skill neodmítne – ale nejdřív vypíše adresáta, předmět a názvy obou příloh a **počká na druhé potvrzení**. Teprve pak odešle.
+**Vyžádá-li si uživatel odeslání, neodmítej** – ale nejdřív vypiš adresáta, předmět a názvy obou příloh a **počkej na druhé potvrzení**. Teprve pak odešli.
 
-**Proč zrovna takhle.** Tvrdý zákaz „nikdy neodesílej" si odporoval s obecným pravidlem, že potvrzený požadavek uživatele je jeho rozhodnutí – a rozpor mezi dvěma pravidly se neřeší tím, které z nich model zrovna vybere. Druhé potvrzení dělá totéž, co dělal zákaz: brání odeslání *omylem* nebo *mimochodem*. Nebrání ti odeslat, když to chceš, a to je rozdíl mezi pojistkou a překážkou.
+**Proč zrovna takhle.** Tvrdý zákaz „nikdy neodesílej" si odporoval s obecným pravidlem, že potvrzený požadavek uživatele je jeho rozhodnutí – a rozpor mezi dvěma pravidly se neřeší tím, které z nich zrovna vyhraje. Druhé potvrzení dělá totéž, co dělal zákaz: brání odeslání *omylem* nebo *mimochodem*, ne odeslání záměrnému. To je rozdíl mezi pojistkou a překážkou.
 
 ## Fáze 6 – Závěr
 
