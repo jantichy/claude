@@ -70,7 +70,7 @@ Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu.
 
 ### [`/skill`](skills/skill/) – skilly, které se samy udržují
 
-Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop – README, osy, testů, odkazů z jiných skillů a sekcí v projektových `CLAUDE.md`. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale patnáct souborů zůstane stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?* – protože konfigurační vrstva roste pod nohama a starší skill o nových možnostech neví.
+Zakládá nové skilly proti normě (`create`), vytěží skill z rozdělané konverzace (`extract`), **prožene existující skilly revizí** (`revise`) a umí skill i zrušit (`delete`) včetně všech stop – README, osy, testů, odkazů z jiných skillů a sekcí v projektových `CLAUDE.md`. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale patnáct souborů zůstane stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?* – protože konfigurační vrstva roste pod nohama a starší skill o nových možnostech neví.
 
 Sám je ukázkou vlastního pravidla *skládej, nepiš znovu*: tvar a napojení na okolí jsou moje, ale měření spolehlivosti vyvolání deleguje na Anthropicův `skill-creator` a tlakové scénáře na `superpowers:writing-skills`. Obojí je přiznané jako vyměnitelný vnitřek, ne jako rozhraní.
 
