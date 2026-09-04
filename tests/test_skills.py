@@ -467,6 +467,61 @@ class SouladSNormou(unittest.TestCase):
             out.append("chybí dvě koncové věty")
         if self.CIZI_FAZE.search(text):
             out.append("odkazuje dovnitř fáze jiného skillu")
+        out += self.vady_poradi(skill)
+        return out
+
+    def vady_poradi(self, skill: Path) -> list:
+        """Pořadí sekcí podle normy, *Povinné sekce a jejich pořadí*.
+
+        Norma řadí hlavní průběh, za něj přílohové sekce (samostatné režimy,
+        katalogy) a `## Časté chyby` úplně naposled. Kontroluje se jen relativní
+        pořadí sekcí, které skill opravdu má – nepovinné se nedoplňují.
+
+        Proč zvlášť: bez téhle kontroly tvrdila norma víc, než uměla vynutit.
+        Doloženo – pravidlo o přílohových sekcích do ní přibylo 4. 9. 2026 z auditu
+        `/consistency`, a týž audit ho našel porušené v `/skill`, protože ho žádná
+        brána chytit nemohla.
+        """
+        nadpisy = [n for n in bez_bloku_kodu(skill) if not n.startswith("#")]
+        poradi = {n: i for i, n in enumerate(nadpisy)}
+
+        def kde(*zacatky):
+            for n, i in poradi.items():
+                if n.startswith(zacatky):
+                    return i
+            return None
+
+        dela, nedela = kde("Co skill dělá"), kde("Co skill nedělá")
+        uvnitr = kde("Jak je to postavené uvnitř")
+        prvni_faze = kde("Fáze 0", "Krok 0")
+        chyby = kde("Časté chyby")
+        # Závěr je poslední fáze či krok, ne první – proto se hledá odzadu.
+        zaver = max((i for n, i in poradi.items()
+                     if n.startswith(("Fáze", "Krok")) and "Závěr" in n), default=None)
+
+        out = []
+        for driv, pozdej, popis in (
+                (dela, nedela, "`Co skill nedělá` musí být za `Co skill dělá`"),
+                (nedela, uvnitr, "`Jak je to postavené uvnitř` patří za `Co skill nedělá`"),
+                (uvnitr, prvni_faze, "postup začíná až za `Jak je to postavené uvnitř`"),
+                (nedela, prvni_faze, "postup začíná až za `Co skill nedělá`"),
+        ):
+            if driv is not None and pozdej is not None and driv > pozdej:
+                out.append(f"pořadí sekcí: {popis}")
+
+        # `Časté chyby` mají v normě dvě legitimní místa podle toho, jestli skill
+        # má přílohy: u lineárního těsně před závěrem, u skillu s přílohovými
+        # sekcemi úplně naposled. Kontrolovat jen jedno z nich by shodilo polovinu
+        # skillů, které normu splňují.
+        if chyby is not None and zaver is not None:
+            prilohy = [n for n, i in poradi.items()
+                       if i > zaver and not n.startswith("Časté chyby")]
+            if prilohy and chyby != max(poradi.values()):
+                out.append("pořadí sekcí: skill má přílohové sekce, "
+                           "takže `Časté chyby` musí stát úplně naposled")
+            if not prilohy and chyby > zaver:
+                out.append("pořadí sekcí: skill nemá přílohy, "
+                           "takže `Časté chyby` patří před závěrečnou fázi")
         return out
 
     def test_norma_a_preflight_existuji(self):
