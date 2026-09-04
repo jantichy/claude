@@ -355,5 +355,87 @@ class Struktura(unittest.TestCase):
         self.assertFalse(navic, f"README má sekci pro skill, který neexistuje: {navic}")
 
 
+class SouladSNormou(unittest.TestCase):
+    """Skilly proti `skills/SKILLS.md`. Jediné místo, kde se norma vynucuje strojem.
+
+    Norma vznikla později než skilly, takže patnáct z nich ji zatím nesplňuje.
+    Převod je vědomý běh `/skill revize`, ne vedlejší efekt jiné práce – proto
+    seznam `MIGRACE` místo patnácti padajících testů.
+
+    Je to **ráčna, ne umlčení**: test porovnává množiny na rovnost. Skill, který
+    se opraví a nezmizí ze seznamu, test shodí stejně jako skill, který se
+    rozbije. Bez toho by seznam tiše zůstal i po dokončení migrace a přestal by
+    cokoliv měřit.
+    """
+
+    NORMA = ROOT / "skills" / "SKILLS.md"
+    PREFLIGHT = ROOT / "skills" / "PREFLIGHT.md"
+
+    #: Skilly, které ještě neprošly `/skill revize`. Zkracuje se, nikdy nedoplňuje.
+    MIGRACE = {
+        "attack", "autocommit", "breakdown", "cleanup", "compose", "consistency",
+        "implement", "oponent", "project", "release", "replace", "report",
+        "review", "specify", "transcript",
+    }
+
+    #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak
+    #: tiše ukazuje jinam – proto to má být v PREFLIGHT.md, ne v odkazu.
+    CIZI_FAZE = re.compile(
+        r"`/(?:[a-z-]+)`,\s*(?:Fáze|Krok)|skills/\w+/SKILL\.md`,\s*\*(?:Fáze|Krok)")
+
+    def vady(self, skill: Path) -> list:
+        text = body(skill)
+        out = []
+        if "\n## Co skill dělá" not in text:
+            out.append("chybí `## Co skill dělá`")
+        if "\n## Co skill nedělá" not in text:
+            out.append("chybí `## Co skill nedělá`")
+        radku = len(text.splitlines())
+        if radku > 500:
+            out.append(f"tělo má {radku} řádků, tvrdá mez je 500")
+        if "Pre-flight" in text and "PREFLIGHT.md" not in text:
+            out.append("pre-flight neodkazuje na `skills/PREFLIGHT.md`")
+        if "Zakonči jednou z těchto vět" not in text:
+            out.append("chybí dvě koncové věty")
+        if self.CIZI_FAZE.search(text):
+            out.append("odkazuje dovnitř fáze jiného skillu")
+        return out
+
+    def test_norma_a_preflight_existuji(self):
+        """Bez nich nemá `/skill` co číst a odkazy ze skillů míří nikam."""
+        for soubor in (self.NORMA, self.PREFLIGHT):
+            self.assertTrue(soubor.exists(), f"chybí {soubor}")
+        self.assertFalse((self.NORMA.parent / "SKILLS.md" / "SKILL.md").exists(),
+            "norma se nesmí tvářit jako skill")
+
+    def test_description_se_vejde_do_limitu(self):
+        """Delší popis se nemusí přenést celý – a pak se skill nevyvolá vůbec.
+
+        Bez výjimky pro migraci: limit platí pro všechny a dnes ho nikdo neporušuje.
+        """
+        for skill in SKILLS:
+            with self.subTest(skill=skill.parent.name):
+                popis = frontmatter(skill).get("description", "")
+                self.assertLessEqual(len(popis), 1024,
+                    f"{skill.parent.name}: description má {len(popis)} znaků")
+
+    def test_migrace_jmenuje_jen_existujici_skilly(self):
+        """Zmizelý skill v seznamu by tiše držel výjimku pro nikoho."""
+        navic = sorted(self.MIGRACE - {s.parent.name for s in SKILLS})
+        self.assertFalse(navic, f"MIGRACE jmenuje neexistující skilly: {navic}")
+
+    def test_skilly_odpovidaji_norme(self):
+        """Ráčna: množina nesouladných skillů se musí rovnat seznamu MIGRACE."""
+        nesoulad = {s.parent.name: self.vady(s) for s in SKILLS if self.vady(s)}
+
+        rozbite = sorted(set(nesoulad) - self.MIGRACE)
+        self.assertFalse(rozbite, "skilly mimo normu, které v MIGRACE nejsou: "
+            + "; ".join(f"{n}: {', '.join(nesoulad[n])}" for n in rozbite))
+
+        hotove = sorted(self.MIGRACE - set(nesoulad))
+        self.assertFalse(hotove,
+            f"tyhle skilly už normu splňují – vyškrtni je z MIGRACE: {hotove}")
+
+
 if __name__ == "__main__":
     unittest.main()

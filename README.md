@@ -14,6 +14,14 @@ Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Vě
 
 Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i celá osa životního cyklu práce – od `/project` až po `/release` – která říká, co je čí krok a co který krok naopak dělat nemá. A tabulka, podle které se vybírá model a effort pro každý typ úkolu: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**.
 
+### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
+
+Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jednou a pak ho patnáctkrát opsal, což z něj dělá zvyk, ne standard. Tohle je jeho sepsání a zároveň revize: co obstálo (vymezení proti **jmenovanému** sousedovi, ověřovatel, jehož úkolem je nález vyvrátit, dvě jednoznačné koncové věty), co byla jen setrvačnost (pre-flight opsaný v deseti skillech) a co chybělo (sekce s častými chybami, mez délky, progresivní odhalení do vedlejších souborů). Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát použil: **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
+
+### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
+
+Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, zelená linka a určení rozsahu z gitu. Deset skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth", jakého jsem se v téhle konfiguraci dopustil. Teď je to na jednom místě a skill si píše jen svoje odchylky.
+
 ## Skilly, jak jdou po sobě
 
 Následující skilly tvoří jednu osu od založení projektu po nasazení. Nemusí se projít celá – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
@@ -59,6 +67,12 @@ Nasadí do produkce přes **oddělenou nasazovací větev** `production`, takže
 ## Skilly mimo osu
 
 Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu.
+
+### [`/skill`](skills/skill/) – skilly, které se samy udržují
+
+Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop – README, osy, testů, odkazů z jiných skillů a sekcí v projektových `CLAUDE.md`. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale patnáct souborů zůstane stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?* – protože konfigurační vrstva roste pod nohama a starší skill o nových možnostech neví.
+
+Sám je ukázkou vlastního pravidla *skládej, nepiš znovu*: tvar a napojení na okolí jsou moje, ale měření spolehlivosti vyvolání deleguje na Anthropicův `skill-creator` a tlakové scénáře na `superpowers:writing-skills`. Obojí je přiznané jako vyměnitelný vnitřek, ne jako rozhraní.
 
 ### [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
 
