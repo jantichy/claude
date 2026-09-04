@@ -65,8 +65,8 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 | Režim | Kdy |
 |---|---|
 | `update` | **místo** průchodu otázkami – volby, které kdysi padly, se znovu nepokládají |
-| Existující projekt | **po** krocích 1–9, těsně před souhrnem – teprve tam je ustaveno, jak má projekt vypadat |
-| Nový projekt | vůbec; v adresáři, který právě vznikl, není co revidovat |
+| `adopt` | **po** krocích 1–9, těsně před souhrnem – teprve tam je ustaveno, jak má projekt vypadat |
+| `create` | vůbec; v adresáři, který právě vznikl, není co revidovat |
 
 **Proč i u existujícího projektu:** otisk `/project` (blok metadat) v něm chybí i tehdy, když ho nastavovala starší verze skillu, která blok ještě nezakládala. Takový projekt vypadá jako neošetřený, ale dokumentaci má z doby, kdy platil jiný standard – a to je zrovna ten případ, na který je tenhle krok.
 
@@ -78,7 +78,7 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 - `~/Dev/context/worktree/worktree.md` – jen u worktree layoutu;
 - výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
 
-Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zásad*: co je mechanické a jednoznačné, oprav rovnou a jen to vypiš; co přepisuje nebo maže existující obsah, předlož a nech potvrdit. **Vyžaduje-li nález volbu**, kterou umí jen některý z dalších kroků (typ projektu, doménové importy, kontrakt příkazů), udělej ten krok – v režimu *existující projekt* je to návrat, v *revizi* se otevírá jen kvůli tomu nálezu – tady je popsané, *co se kontroluje*, tam *jak se to nastavuje*.
+Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zásad*: co je mechanické a jednoznačné, oprav rovnou a jen to vypiš; co přepisuje nebo maže existující obsah, předlož a nech potvrdit. **Vyžaduje-li nález volbu**, kterou umí jen některý z dalších kroků (typ projektu, doménové importy, kontrakt příkazů), udělej ten krok – v režimu `adopt` je to návrat, v `update` se otevírá jen kvůli tomu nálezu – tady je popsané, *co se kontroluje*, tam *jak se to nastavuje*.
 
 | Oblast | Co ověřit | Kde je pravda |
 |---|---|---|
@@ -114,11 +114,11 @@ Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady 
 
 **Nenajdeš-li nic, řekni to a skonči** – běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
 
-**V režimu `update` tímhle běh končí – pokračuj rovnou krokem 10.** Kroky 1–9 se přeskakují celé; otevírá se z nich jen ten, který si vyžádal konkrétní nález. V režimu *existující projekt* se sem naopak přichází až od konce kroku 9 a souhrn následuje stejně.
+**V režimu `update` tímhle běh končí – pokračuj rovnou krokem 10.** Kroky 1–9 se přeskakují celé; otevírá se z nich jen ten, který si vyžádal konkrétní nález. V režimu `adopt` se sem naopak přichází až od konce kroku 9 a souhrn následuje stejně.
 
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
 
-Nabízí se do projektu zapsat otisk – datum revize nebo hash `~/Dev/context` – a příště projít jen to, co se od té doby změnilo. **Vědomě se to nedělá.** Revize je odvoditelná z toho, jak soubory vypadají teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje: rozejde se se skutečností a vypadá přitom pořád stejně. Hlavně by ale zúžil revizi na diff standardu, a tím minul přesně ten případ, kvůli kterému skill vznikl – drift, který se do projektu nikdy nepropsal, protože ho tehdy nikdo nezpropagoval. Ten v žádném diffu od poslední revize není.
+Nabízí se do projektu zapsat otisk – datum posledního běhu nebo hash `~/Dev/context` – a příště projít jen to, co se od té doby změnilo. **Vědomě se to nedělá.** Soulad se standardem je odvoditelný z toho, jak soubory vypadají teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje: rozejde se se skutečností a vypadá přitom pořád stejně. Hlavně by ale zúžil kontrolu na diff standardu, a tím minul přesně ten případ, kvůli kterému skill vznikl – drift, který se do projektu nikdy nepropsal, protože ho tehdy nikdo nezpropagoval. Ten v žádném diffu od posledního běhu není.
 
 ## Krok 1 – Metadata projektu
 
@@ -135,7 +135,7 @@ Web:      (žádný)
 
 Zeptej se v chatu (ne AskUserQuestion – jde o volný text) a počkej na odpověď. **Nic si nevymýšlej**: nevíš-li, jestli projekt má veřejnou URL, zeptej se místo hádání.
 
-*Existující projekt:* najdeš-li v `CLAUDE.md` nebo `README.md` popis, který už platí, nabídni ho beze změny. Rozcházejí-li se popisy v `CLAUDE.md` a `README.md`, ukaž oba a nech rozhodnout, který je pravda.
+*`adopt`:* najdeš-li v `CLAUDE.md` nebo `README.md` popis, který už platí, nabídni ho beze změny. Rozcházejí-li se popisy v `CLAUDE.md` a `README.md`, ukaž oba a nech rozhodnout, který je pravda.
 
 ## Krok 2 – Založení nebo doplnění CLAUDE.md
 
@@ -156,7 +156,7 @@ Rezervační systém pro školení, konference a webináře – správa událost
 
 Řádky `Web` a `Repozitář` vynech, pokud neexistují. `Repozitář` doplň v kroku 3, jakmile je remote známý.
 
-*Existující projekt:* nezakládej znovu, doplňuj do stávajícího. Má-li soubor generický nadpis (`# CLAUDE.md`) nebo popis rozsypaný v sekci `## Projekt`, **navrhni jeho nahrazení blokem metadat** – ukaž rozdíl a nech si to potvrdit. Sekce, které přidávají další kroky, vkládej za stávající obsah; existující sekce téhož jména neduplikuj, ale aktualizuj.
+*`adopt`:* nezakládej znovu, doplňuj do stávajícího. Má-li soubor generický nadpis (`# CLAUDE.md`) nebo popis rozsypaný v sekci `## Projekt`, **navrhni jeho nahrazení blokem metadat** – ukaž rozdíl a nech si to potvrdit. Sekce, které přidávají další kroky, vkládej za stávající obsah; existující sekce téhož jména neduplikuj, ale aktualizuj.
 
 ## Krok 3 – Git
 
@@ -167,7 +167,7 @@ Zeptej se (AskUserQuestion), 4 možnosti:
 - **Remote (napojit na existující)** – `git init`, pak se v chatu zeptej na URL a spusť `git remote add origin <url>`.
 - **Remote (založit nový)** – `git init`, pak AskUserQuestion na hostitele (GitHub / GitLab). U GitHubu s dostupným `gh` (`which gh`) se zeptej na viditelnost a spusť `gh repo create <název-adresáře> --private|--public --source=. --remote=origin`. Jinak vypiš instrukci „Založ prázdné repo na <platforma>, pak mi dej URL“ a počkej.
 
-*Existující projekt:* je-li git už inicializovaný, `git init` nespouštěj. **Ověř remote přes `git remote get-url origin`**, ne jen `git remote -v` – remote může existovat s prázdnou URL a `-v` to nepozná. Chybí-li nebo je-li rozbitý, nabídni doplnění.
+*`adopt`:* je-li git už inicializovaný, `git init` nespouštěj. **Ověř remote přes `git remote get-url origin`**, ne jen `git remote -v` – remote může existovat s prázdnou URL a `-v` to nepozná. Chybí-li nebo je-li rozbitý, nabídni doplnění.
 
 ### Propsání metadat do Repository details
 
@@ -232,7 +232,7 @@ Import `@main/CLAUDE.md` je nutný: `CLAUDE.md` z podadresáře se načte až on
 
 **Pravidla projektu do stubu nekopíruj.** Dvě kopie se rozejdou a načtou se pak obě.
 
-*Nový projekt:* krok 2 už `CLAUDE.md` založil v kořeni, protože tehdy ještě nebylo rozhodnuto o layoutu. **Přesuň ho teď do `main/`** (`mv <projekt>/CLAUDE.md <projekt>/main/CLAUDE.md`) a v kořeni na jeho místo napiš stub. Totéž udělej s čímkoli dalším, co v kořeni mezitím vzniklo a patří do projektu.
+*`create`:* krok 2 už `CLAUDE.md` založil v kořeni, protože tehdy ještě nebylo rozhodnuto o layoutu. **Přesuň ho teď do `main/`** (`mv <projekt>/CLAUDE.md <projekt>/main/CLAUDE.md`) a v kořeni na jeho místo napiš stub. Totéž udělej s čímkoli dalším, co v kořeni mezitím vzniklo a patří do projektu.
 
 *Konverze existujícího projektu:* původní `CLAUDE.md` se přesunul do `main/` spolu se zbytkem repozitáře a **je správně tam** – nech ho být, jen do něj dál doplňuj. V kořeni založ nový, prázdný stub.
 
@@ -242,7 +242,7 @@ Upozorni uživatele, že **při příštím spuštění dostane dialog na schvá
 
 ### Náprava špatně rozděleného kontejneru
 
-*Existující projekt, kde worktree layout už je.* Najdeš-li v kořeni kontejneru projektové soubory, které tam nepatří – plnohodnotný `CLAUDE.md` s pravidly místo stubu, `README.md`, `docs/` – nabídni nápravu: přesun do `main/` a nahrazení kořenového `CLAUDE.md` stubem. Ukaž konkrétní seznam souborů a nech si to potvrdit, protože jde o přesouvání obsahu.
+*`adopt`, kde worktree layout už je.* Najdeš-li v kořeni kontejneru projektové soubory, které tam nepatří – plnohodnotný `CLAUDE.md` s pravidly místo stubu, `README.md`, `docs/` – nabídni nápravu: přesun do `main/` a nahrazení kořenového `CLAUDE.md` stubem. Ukaž konkrétní seznam souborů a nech si to potvrdit, protože jde o přesouvání obsahu.
 
 Existují-li oba `CLAUDE.md` a mají překrývající se sekce, **obsah slouč do `main/CLAUDE.md`** a v kořeni nech jen stub; nikdy jeden z nich mlčky nepřepiš.
 
@@ -256,14 +256,14 @@ Přesun je `git mv` jen tehdy, je-li zdroj verzovaný – v kořeni kontejneru *
 
 Standardní soubory leží buď v `docs/`, nebo přímo v kořeni projektu. Obojí je rovnocenné.
 
-*Nový projekt:* zeptej se (AskUserQuestion, jedna otázka):
+*`create`:* zeptej se (AskUserQuestion, jedna otázka):
 
 | Volba | Popis pro uživatele |
 |---|---|
 | `docs/` (výchozí) | Meta-vrstva odděleně od vlastní práce. Sedí na projekt s kódem nebo obsahem. |
 | `root` | Soubory přímo v kořeni. Sedí na knowledge base a malé projekty, kde by `docs/` byl prázdný obal. |
 
-*Existující projekt:* režim **detekuj a rovnou zapiš**, neptej se. Leží-li `todo.md` nebo `decisions.md` v kořeni → `root`; leží-li v `docs/` → `docs/`; nenajdeš-li ani jedno → `docs/`. Co jsi zjistil a zapsal, **řekni nahlas** v závěrečném souhrnu. Najdeš-li soubory na obou místech, je to nepořádek, ne třetí režim – vypiš, co je kde, a nech si vybrat, na který režim to srovnat.
+*`adopt`:* režim **detekuj a rovnou zapiš**, neptej se. Leží-li `todo.md` nebo `decisions.md` v kořeni → `root`; leží-li v `docs/` → `docs/`; nenajdeš-li ani jedno → `docs/`. Co jsi zjistil a zapsal, **řekni nahlas** v závěrečném souhrnu. Najdeš-li soubory na obou místech, je to nepořádek, ne třetí režim – vypiš, co je kde, a nech si vybrat, na který režim to srovnat.
 
 **Ve worktree layoutu** je kořen projektu `main/`, ne kořen kontejneru (viz krok 3b).
 
@@ -288,7 +288,7 @@ Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUD
 
 `requirements.md`, `architecture.md` a `plan.md` **nezakládej**, vznikají prací přes `/specify` a `/breakdown`.
 
-*Existující projekt:* co už existuje, ber jako zvolené; ptej se jen na to, co chybí.
+*`adopt`:* co už existuje, ber jako zvolené; ptej se jen na to, co chybí.
 
 ### 4c – Obsah
 
@@ -298,7 +298,7 @@ Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUD
 
 ### Migrace staršího pojmenování
 
-*Existující projekt:* najdeš-li starší varianty, nabídni přejmenování přes AskUserQuestion (jedna otázka na všechny nálezy dohromady, protože jde o jedno rozhodnutí):
+*`adopt`:* najdeš-li starší varianty, nabídni přejmenování přes AskUserQuestion (jedna otázka na všechny nálezy dohromady, protože jde o jedno rozhodnutí):
 
 | Staré | Nové |
 |---|---|
@@ -360,7 +360,7 @@ Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a v
 
 Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď totéž co `/autocommit on` (viz `~/.claude/skills/autocommit/SKILL.md`).
 
-*Existující projekt:* nejdřív **zjisti aktuální stav** – hledej sekci `Autocommit` v projektovém `CLAUDE.md` **bez ohledu na úroveň nadpisu** (`##` i `###`). Aktuální stav uveď v otázce, ať uživatel ví, co mění.
+*`adopt`:* nejdřív **zjisti aktuální stav** – hledej sekci `Autocommit` v projektovém `CLAUDE.md` **bez ohledu na úroveň nadpisu** (`##` i `###`). Aktuální stav uveď v otázce, ať uživatel ví, co mění.
 
 ## Krok 7 – Paměťová politika
 
@@ -512,7 +512,7 @@ Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stoj�
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
-**Tímhle krok 9 končí. V režimu `adopt` teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu *revize* se sem nedojde – krok 0b tam proběhl místo průchodu otázkami.
+**Tímhle krok 9 končí. V režimu `adopt` teď jdi do kroku 0b** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu `update` se sem nedojde – krok 0b tam proběhl místo průchodu otázkami.
 
 ## Krok 10 – Závěrečný souhrn
 

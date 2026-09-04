@@ -20,7 +20,7 @@ Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jedno
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 
-Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, zelená linka a určení rozsahu z gitu. Deset skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth", jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky – **převedený je zatím jen `/skill` sám**, těch deset na převod čeká, až je proženu `/skill update`.
+Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, zelená linka a určení rozsahu z gitu. Dvanáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth", jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky – **převedený je zatím jen `/skill` sám**, zbytek na převod čeká, až ho proženu `/skill update`.
 
 ## Skilly, jak jdou po sobě
 
