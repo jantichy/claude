@@ -33,7 +33,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 | Odpracovaný čas za období | timetracking – MCP, když je připojený, jinak jeho API | data jsou tam, nemá cenu je někam kopírovat |
 | Vystavení dokladu a PDF | fakturační systém – MCP, když je připojený, jinak jeho API | doklad má vzniknout tam, kde ho vidí účetní |
 | Draft mailu s přílohami | Gmail MCP, `create_draft` | umí to, a odesílání se schválně nevolá |
-| Co se fakturuje a jak | **vlastní jádro** | výjimky u klientů, neúplný timesheet, podezřelé záznamy – tady se rozhoduje |
+| Co se fakturuje a jak | **vlastní jádro** | výjimky u klientů, neúplný výkaz, podezřelé záznamy – tady se rozhoduje |
 
 **Čím se do systémů sahá, je implementační detail a smí se vyměnit bez ohlášení.** Skill mluví o tom, co potřebuje („odpracovaný čas klienta za období“, „vystavený doklad s poznámkou o období“), ne o konkrétních voláních. Přechod na MCP nebo změna API pak není zásah do skillu, ale do `~/Dev/context/business/invoicing.md`, *Přístupy*.
 
@@ -47,7 +47,7 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Body 1 až 3 se tad
 
 1. **Načti `~/Dev/context/business/invoicing.md` celý.** Nespoléhej na paměť – sazby a dohody se mění. Chybí-li soubor, řekni to a **skonči**; skill bez něj nemá podle čeho fakturovat.
 2. **Zjisti dnešní datum** příkazem `date +%F` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
-3. **Ověř přístupy k oběma systémům** dřív, než začneš cokoli počítat. Zjisti, jestli jsou připojené MCP servery; když ne, ověř, že tokeny v Keychainu existují a odpovídají. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce.
+3. **Ověř přístupy k oběma systémům** dřív, než začneš cokoli počítat – způsobem, který popisuje `~/Dev/context/business/invoicing.md`, *Přístupy*. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce.
 4. **Zjisti, jestli není rozdělaný běh z minula** – klient s hotovou fakturou, ale bez draftu. Navaž na něj, nezakládej znovu.
 
 Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systémů se sáhne a v jakém režimu se jede.
