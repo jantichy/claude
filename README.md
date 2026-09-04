@@ -20,7 +20,7 @@ Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jedno
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 
-Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, zelená linka a určení rozsahu z gitu. Deset skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth", jakého jsem se v téhle konfiguraci dopustil. Teď je to na jednom místě a skill si píše jen svoje odchylky.
+Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, zelená linka a určení rozsahu z gitu. Deset skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth", jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky – **převedený je zatím jen `/skill` sám**, zbylých deset na to čeká, až je proženu `/skill update`.
 
 ## Skilly, jak jdou po sobě
 
@@ -112,7 +112,7 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
-Skilly a pravidla jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo na sekci, co mezitím zmizela, nebo skill, který v README chybí. Druhá sada testuje **zelenou linku** – jediné místo v celé konfiguraci, které něco doopravdy vynucuje, a tedy to, kde tichá regrese stojí nejvíc: osmnáct scénářů nad dočasným repozitářem, od souhlasu přes rozdíl mezi „test našel chybu“ a „test nejde spustit“ až po zámek proti souběhu dvou session. Obojí stojí nula tokenů a běží v zelené lince po každém tahu. Napsal jsem je až po roce používání a **první běh hned našel tři vady**, které mi při ručním čtení třikrát utekly; testy zelené linky pak hned napoprvé odhalily, že souhlas nesedí na cestu vedoucí přes symlink. Jen standardní knihovna Pythonu, žádná instalace.
+Skilly a pravidla jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo na sekci, co mezitím zmizela, nebo skill, který v README chybí. Druhá sada testuje **zelenou linku** – jediné místo v celé konfiguraci, které něco doopravdy vynucuje, a tedy to, kde tichá regrese stojí nejvíc: osmnáct scénářů nad dočasným repozitářem, od souhlasu přes rozdíl mezi „test našel chybu“ a „test nejde spustit“ až po zámek proti souběhu dvou session. Obojí stojí nula tokenů a běží v zelené lince po každém tahu. Od zavedení normy tvaru skillu k nim přibyla **ráčna**: množina skillů, které normu nesplňují, se musí *rovnat* seznamu výjimek, takže opravený skill, který se ze seznamu nevyškrtne, shodí testy stejně jako regrese – jinak by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit. Napsal jsem je až po roce používání a **první běh hned našel tři vady**, které mi při ručním čtení třikrát utekly; testy zelené linky pak hned napoprvé odhalily, že souhlas nesedí na cestu vedoucí přes symlink. Jen standardní knihovna Pythonu, žádná instalace.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 

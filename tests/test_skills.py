@@ -427,7 +427,7 @@ class SouladSNormou(unittest.TestCase):
     """Skilly proti `skills/SKILLS.md`. Jediné místo, kde se norma vynucuje strojem.
 
     Norma vznikla později než skilly, takže patnáct z nich ji zatím nesplňuje.
-    Převod je vědomý běh `/skill revize`, ne vedlejší efekt jiné práce – proto
+    Převod je vědomý běh `/skill update`, ne vedlejší efekt jiné práce – proto
     seznam `MIGRACE` místo patnácti padajících testů.
 
     Je to **ráčna, ne umlčení**: test porovnává množiny na rovnost. Skill, který
@@ -439,7 +439,7 @@ class SouladSNormou(unittest.TestCase):
     NORMA = ROOT / "skills" / "SKILLS.md"
     PREFLIGHT = ROOT / "skills" / "PREFLIGHT.md"
 
-    #: Skilly, které ještě neprošly `/skill revize`. Zkracuje se, nikdy nedoplňuje.
+    #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
     MIGRACE = {
         "attack", "autocommit", "breakdown", "cleanup", "compose", "consistency",
         "implement", "oponent", "project", "release", "replace", "report",
@@ -458,6 +458,15 @@ class SouladSNormou(unittest.TestCase):
             out.append("chybí `## Co skill dělá`")
         if "\n## Co skill nedělá" not in text:
             out.append("chybí `## Co skill nedělá`")
+        # Norma jmenuje pre-flight jako povinnou sekci; závěr se jménem
+        # NEkontroluje schválně – devět skillů ho má pod vlastním názvem
+        # (`Úklid a shrnutí`, `Uzavření`, `Předání`) a norma jméno nepředepisuje.
+        # Že závěr existuje a je jednoznačný, hlídá podmínka na koncové věty níž. Bez téhle kontroly
+        # se hlídala jen jejich vnitřní náplň (odkaz na PREFLIGHT.md, koncové věty),
+        # takže skill, který obě sekce nemá vůbec, prošel oběma podmínkami mlčky.
+        if not re.search(r"\n## (?:Fáze|Krok) 0\b", text):
+            out.append("chybí `## Fáze 0 – Pre-flight`")
+
         radku = len(text.splitlines())
         if radku > 500:
             out.append(f"tělo má {radku} řádků, tvrdá mez je 500")

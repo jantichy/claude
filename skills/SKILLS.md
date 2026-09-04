@@ -166,7 +166,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Jedna doporučená cesta, ne výčet možností.** „Použij X; u zvláštního případu Y" je návod. „Můžeš X, nebo Y, nebo Z" je odklad rozhodnutí na horší chvíli.
 
-**Ke každému pravidlu „proč".** Bez důvodu se pravidlo při prvním konfliktu obejde, protože nikdo neví, co se tím ztratí. `~/.claude/RULES.md`, *K pravidlům ukládej i* – totéž platí uvnitř skillu.
+**Ke každému pravidlu „proč".** Bez důvodu se pravidlo při prvním konfliktu obejde, protože nikdo neví, co se tím ztratí. `~/.claude/RULES.md`, *K pravidlům ukládej i „proč“* – totéž platí uvnitř skillu.
 
 **Konkrétní příklad místo abstraktního.** Ne „ověř formát", ale ukázka správného a špatného tvaru.
 

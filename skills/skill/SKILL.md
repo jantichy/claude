@@ -2,7 +2,7 @@
 name: skill
 description: Skill se použije, když uživatel zadá "/skill" (volitelně s režimem create, extract, update nebo delete), nebo chce založit nový vlastní skill, vytěžit rozdělanou konverzaci do skillu, prohnat existující skilly revizí proti dnešní podobě normy, anebo skill zrušit i se všemi jeho stopami. Norma tvaru je v ~/.claude/skills/SKILLS.md; tenhle skill je proti ní instalátor a revizor, měření a vytěžení deleguje na skill-creator a superpowers:writing-skills.
 argument-hint: [create|extract|update|delete] [jméno]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
 # Skill
@@ -146,7 +146,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 |---|---|
 | `~/.claude/README.md` | vlastní sekce ve stylu ostatních – osobní, věcná, s konkrétním přínosem; do části *Skilly, jak jdou po sobě*, nebo *Skilly mimo osu* |
 | `~/.claude/RULES.md` | zařazení do osy *Životního cyklu práce*, stojí-li v ní – a doplnění u sousedů, čí práci nepřebírá |
-| `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky |
+| `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRACE` se **nedoplňuje**, ten seznam se jen zkracuje |
 | `~/.claude/skills/<jméno>/` | vedlejší soubory, skripty, jejich sonda na závislosti |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
 | `docs/decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo |
@@ -218,6 +218,8 @@ Poslední řádek je druhý druh driftu vedle rozejití s normou a **neklade ho 
 
 **Nenajdeš-li nic, řekni to a skonči.** Běh bez zásahu je platný výsledek revize.
 
+**Vyškrtni opravený skill ze seznamu `MIGRACE`** v `~/.claude/tests/test_skills.py`. Ten seznam je **ráčna**: množina skillů mimo normu se musí *rovnat* jeho obsahu, takže opravený skill, který v něm zůstane, shodí testy stejně jako regrese. Je to schválně – bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit.
+
 Pak pokračuj *Fází 7* – i `update` sahá na `README.md` a testy.
 
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
@@ -237,7 +239,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 | `~/.claude/skills/<jméno>/` | celý adresář včetně vedlejších souborů a skriptů |
 | `~/.claude/README.md` | jeho sekce |
 | `~/.claude/RULES.md` | osa *Životního cyklu práce* a zmínky u sousedů |
-| `~/.claude/tests/` | testy, které se ho týkají |
+| `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`" |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
 | projektové `CLAUDE.md` v `~/Dev` | sekce, které skill zakládal |
