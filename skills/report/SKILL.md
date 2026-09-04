@@ -158,7 +158,7 @@ Nespoléhej na to, že to vypadá dobře ve zdrojáku.
    - V konzoli nejsou chyby.
    - Žádný požadavek do sítě – ověř v záložce Network, že po načtení nejde ven nic.
    - Grafy se vykreslily a mají data. Prázdný nebo `undefined` graf je nejčastější tichá chyba.
-   - Čísla v textu komentářů sedí s čísly v grafech a tabulkách.
+   - Čísla ve všech psaných částech (shrnutí, komentáře, metodika, limity) sedí s čísly v grafech a tabulkách.
    - Stránka se nerozpadne na úzkém okně a v tisku do PDF.
 3. **Přepočítej namátkou** dva tři údaje z reportu zpátky proti zdrojovým datům.
 4. **Projdi hotový soubor na úniky** podle *Co nesmí ven ze souboru* výš. Tohle je poslední krok před předáním, protože až teď je soubor v podobě, ve které odejde – a všechny předchozí opravy do něj mohly něco vnést zpátky.

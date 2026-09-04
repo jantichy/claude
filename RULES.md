@@ -306,6 +306,8 @@ Zvlášť pozor na **odvozené údaje**: souhrnné počty („katalog obsahuje 4
 
 **Za hranici projektu změna sama nejde.** Globální pravidlo nepropaguj na ostatní projekty bez pokynu – ale vždy **upozorni, které projekty jsou s ním v rozporu**.
 
+Uvnitř jednoho dokumentu má tohle pravidlo protějšek, viz *Rozsah pravidla se nešíří sám* níž.
+
 ### Rozsah pravidla se nešíří sám
 
 **Je to *Propagace změny* o úroveň níž** – tam napříč soubory, tady napříč sekcemi jednoho souboru. Vlastní sekci to má proto, že se hledá jinak: mezi soubory pomůže grep, mezi sourozeneckými sekcemi ne, protože pravidlo v té druhé nechybí jako řetězec, ale jako platnost.
@@ -376,7 +378,7 @@ Instalace je zásah do uživatelova počítače, ne do repozitáře: **než něc
 
 ### Commituj jmenované cesty, ne `-A`
 
-`git add -A`, `git add .` a `git commit -a` seberou **všechno, co je v pracovním stromu**, včetně toho, co tam dala jiná běžící session. Nad jedním repozitářem přitom může pracovat víc session zároveň – to je běžný stav, ne výjimka.
+`git add -A`, `git add .` a `git commit -a` seberou **všechno, co je v pracovním stromu**, včetně toho, co tam dala jiná běžící session. Souběžné session nad jedním repozitářem sice nejsou každodenní, ale **stávají se** – a stačí jednou.
 
 **Do commitu proto vyjmenuj cesty**, kterých se tvoje práce dotkla. Před commitem se podívej na `git status` a soubor, který jsi nezměnil ty, nech být.
 

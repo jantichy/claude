@@ -55,7 +55,7 @@ Datum `YYYYMMDD` vezmi z metadat. Obvykle je stejné napříč soubory; když ne
 <skill>/detect-lang.sh <audio>          # vypíše např.:  cs 0.993
 ```
 
-Whisper má jazyk zakódovaný v modelu a pozná ho ze zvuku dřív, než začne dekódovat slova. Vzorek se bere **zprostřed** nahrávky, protože začátky bývají pozdravy a šoupání židlí. Trvá to jednotky sekund, takže se to dělá vždycky.
+Whisper má jazyk zakódovaný v modelu a pozná ho ze zvuku dřív, než začne dekódovat slova. Vzorkuje se na **třech místech** (čtvrtina, půlka, tři čtvrtiny), protože začátky bývají pozdravy a šoupání židlí a jeden vzorek zprostředka nepozná nahrávku, která se v půlce přepne do jiného jazyka. U nahrávek **kratších než dvě minuty** stačí jeden vzorek zprostředka. Trvá to zhruba sedm sekund na vzorek, takže se to dělá vždycky.
 
 Podle jistoty se zachovej takhle:
 
@@ -65,6 +65,7 @@ Podle jistoty se zachovej takhle:
 | jistota ≥ 0,9, jiný jazyk | **neptej se, ale řekni to nahlas**: „Detekoval jsem angličtinu, přepisuji anglicky.“ Kdo nesouhlasí, ozve se |
 | jistota < 0,9 | **teprve tady se zeptej**, s detekovaným jazykem jako první možností |
 | skript selhal | vezmi výchozí `cs` a řekni, že detekce neproběhla |
+| výstup obsahuje `mixed:` | **přebíjí všechny řádky výš** – jdi na *Když je nahrávka dvojjazyčná* a zeptej se, i kdyby jistota byla vysoká |
 
 **U víc nahrávek pusť detekci na každou zvlášť.** Když vyjdou různé jazyky, nespojuj je do jednoho běhu – `transcribe.sh` bere jeden jazyk na celý běh, takže je pusť po skupinách podle jazyka a řekni to uživateli.
 
@@ -80,10 +81,10 @@ en 0.999 mixed:cs,en
 
 **Whisper bere jeden jazyk na běh**, takže tohle skill sám nespraví. Musí to ale říct nahlas a nabídnout, co s tím:
 
-1. **Přepsat po částech** – uživatel řekne, kolikátá minuta je zlom, ty nahrávku rozřízneš `ffmpeg -ss/-t` a pustíš dvakrát, každou část se svým jazykem. Přepisy pak spojíš do jednoho `<název>.md` s mezinadpisem u zlomu.
+1. **Přepsat po částech** – uživatel řekne, kolikátá minuta je zlom, ty nahrávku rozřízneš `ffmpeg -ss/-t` a pustíš dvakrát, každou část se svým jazykem. Přepisy spojíš do jednoho `<název>.md` s mezinadpisem u zlomu. **Pozor na dvě věci:** časy v SRT druhé části začínají od nuly, takže se nedají použít pro diarizaci ani pro `merge.py`, a části vyrobí soubory (`<název>-1.*`, `<název>-2.*`), které úklid v kroku 10 nezná – **ukliď je ručně**.
 2. **Přepsat celé v převažujícím jazyce** a **napsat do poznámky na konci přepisu**, která část je nespolehlivá.
 
-Nerozhoduj sám, zeptej se. Řádově se to liší: první varianta stojí dvojnásobek času, druhá kus obsahu.
+**Nerozhoduj sám, zeptej se.** Skript umí zjistit, *že* se jazyk mění, ale ne *kde* – hranici zná jedině uživatel. Časově se ty varianty skoro neliší (přepisuje se týž objem zvuku, jen se dvakrát načte model); liší se tím, kolik práce je kolem a jestli je přijatelné mít kus přepisu nespolehlivý.
 
 **Krátká vsuvka v jiném jazyce mixed nevyvolá** – tři vzorky ji minou. Když se to stane, projeví se to až při čištění jako pasáž, která nedává smysl.
 
@@ -135,9 +136,13 @@ Tyhle dvě věci se pletou, a je to rozdíl mezi dobrým a špatným výsledkem.
 
 **Do `WHISPER_PROMPT` vyber to, co v nahrávce opravdu zazní**, seřazené podle důležitosti. Vybírej podle dvou věcí naráz: **jak často to padne** a **jak snadno se to komolí**. Obecná slova, která model umí sám, do promptu nepatří – neuškodí, ale místo zabírají.
 
-**Počet položek pravidlem omezený není.** Dřív tu stálo „nejvýš deset“ s odůvodněním, že delší seznam ředí účinek, a **měření to vyvrátilo** (viz *Technické detaily*). Platí jedině **technický strop whisperu: `n_text_ctx/2`, tedy 224 tokenů** – u češtiny zhruba 100 až 150 slov. Delší prompt se ořízne, a to potichu.
+**Počet položek pravidlem omezený není.** Dřív tu stálo „nejvýš deset“ s odůvodněním, že delší seznam ředí účinek, a **měření to vyvrátilo** (viz *Technické detaily*). Platí jedině **technický strop whisperu: `n_text_ctx/2`, tedy 223 použitelných tokenů.** Změřeno na češtině: jednadvacet termínů (306 znaků) zabere 123 tokenů, takže se vejde **zhruba 38 termínů**.
 
-Prakticky se tedy vejde **kolem třiceti až padesáti termínů**. To je strop daný modelem, ne doporučení: **složení a pořadí celého seznamu rozhoduje víc než jeho délka a nedá se odhadnout dopředu.** Dva jednadvacetipoložkové slovníky nad touž nahrávkou daly 5/5 a 0/5.
+**Přeteče-li prompt, whisper zahodí jeho začátek**, ne konec – v kódu `prompt_past0.assign(… + (n - n_tokens), … + n)`, tedy „use only the last N tokens“. Řazení podle důležitosti od nejdůležitějšího tedy pomůže jen tehdy, když se slovník do stropu vejde; při přetečení by usekl přesně to, na čem záleží. **Drž se proto bezpečně pod hranicí** místo spoléhání na pořadí.
+
+Ořez je v našem řetězu **tichý**: whisper na něj varuje, ale `transcribe.sh` běží s `-np`, které výpis potlačí.
+
+To je strop daný modelem, ne doporučení: **složení celého seznamu rozhoduje víc než jeho délka a nedá se odhadnout dopředu.** Dva jednadvacetipoložkové slovníky nad touž nahrávkou daly 5/5 a 0/5.
 
 Vybrané položky slep čárkami do jednoho řetězce a předej jako `WHISPER_PROMPT`.
 
@@ -302,7 +307,7 @@ Jména ulož do `<workdir>/.speakers.json` a pusť `merge.py` znovu s `--names`,
 
 **Doslovný přepis.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
 
-**Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen těch deset položek z promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i **stručný brief pro shrnutí** – témata, závěry a kdo co slíbil. Shrnutí pak píšeš z briefů a slovníku, ne z celých přepisů znovu.
+**Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen ten výběr, který šel do promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i **stručný brief pro shrnutí** – témata, závěry a kdo co slíbil. Shrnutí pak píšeš z briefů a slovníku, ne z celých přepisů znovu.
 
 Fáze opravy přeslechů zůstává, i když se slovník použil. Slovník zmenší počet chyb, nevynuluje ho – v ostrém běhu prošlo sledované místní jméno zkomolené i s nasazeným promptem.
 
@@ -409,14 +414,14 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
   | B | 21 | 3. | 1/5 |
   | B | 21 | 5., jiné psaní | 0/5 |
 
-  **Délka vliv nemá** – tentýž počet položek dal 5/5 i 0/5. **Pozice ani velikost písmena to nevysvětlují** – obojí změněno jednotlivě, výsledek se nehnul. Efekt je reprodukovatelný (seznam B selže pokaždé), ale příčina **zůstává neizolovaná**: seznamy se liší celým složením i pořadím. Dřívější tvrzení o klesající účinnosti k pozdějším položkám bylo vyvozeno z porovnání, které míchalo délku s pozicí, a **neplatí**.
+  **Délka vliv nemá** – tentýž počet položek dal 5/5 i 0/5. **Pozice ani velikost písmena to nevysvětlují** – přesun jména z páté pozice na třetí zvedl výsledek z 0/5 na 1/5, jiné psaní nezměnilo nic. Seznam B tedy selhává soustavně, ale příčina **zůstává neizolovaná**: seznamy se liší celým složením i pořadím. Dřívější tvrzení o klesající účinnosti k pozdějším položkám bylo vyvozeno z porovnání, které míchalo délku s pozicí, a **neplatí**.
 
   Praktický dopad: **na slovník se nedá spolehnout naslepo.** Když na přesnosti jmen záleží, ověř výsledek v přepisu a případně slovník přeskládej – dokud nevíme proč, je to jediný spolehlivý postup.
 - **Kalibrace ETA:** `rate.py` drží `~/.whisper-models/rate.json` s naměřeným tempem pro každý model zvlášť. Po každém běhu se hodnota posune k realitě (EWMA, α = 0,35), takže odhady sedí na konkrétní stroj. Výchozí hodnoty jsou z M1. Do kalibrace jde **jen zvuk, který se opravdu přepsal** – soubor, který skončil `### FAILED`, se nezapočítá. Bez toho by selhaný běh (hodina zvuku, pár sekund práce) zapsal tempo v řádu stovek × realtime. **Běhy pod dvě minuty zvuku se do kalibrace nepočítají** – dominuje u nich načtení modelu a tempo vyjde nesmyslně nízké (25s vzorek srazil naměřených 5,96× na 4,75×).
 - **Jazyk** se detekuje v kroku 1 a předává jako `WHISPER_LANG`. Když detekce selže, `transcribe.sh` spadne na výchozí `cs`.
 - **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
 - **Potlačení neřečových tokenů:** `-sns`, zapnuto vždy. Druhá pojistka vedle VAD.
-- **`--carry-initial-prompt`** je zapnutý vždy, když je slovník neprázdný: bez něj by prompt platil jen pro první okno a u delší nahrávky by se vytratil. Na klesající účinnost uvnitř seznamu to nemá vliv – ta je daná pořadím položek, ne pořadím oken.
+- **`--carry-initial-prompt`** je zapnutý vždy, když je slovník neprázdný: bez něj by prompt platil jen pro první okno a u delší nahrávky by se vytratil. Má to i druhou stranu – prompt ukusuje z kontextu **každého** okna, takže dlouhý slovník není zadarmo ani tam, kde se do stropu vejde. Kolik to dělá, změřené není.
 - **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto. Naměřeno na Apple M1: **7,13× realtime**, tedy 31,4 minuty zvuku za 4:24. Je to o něco **rychlejší než přepis turbem**, takže zapnutá diarizace zhruba zdvojnásobí celkový čas. Aktuální kalibrovanou hodnotu si vyžádej přes `rate.py get`, neopisuj ji sem – mění se po každém běhu.
 - **Gated repozitáře jsou tři**, ne jeden: kromě `speaker-diarization-3.1` ještě `segmentation-3.0` a `speaker-diarization-community-1`. Seznam se mezi verzemi pyannote mění, proto `diarize.sh` při selhání vytáhne z chyby konkrétní repozitář (`### DIARIZE FAILED gated:<repo>`). Kontrola v `check-deps.sh` sahá na `config.yaml`, ne na `/api/models/` – **metadata gated repa jsou veřejná, takže endpoint vrací 200 i bez přístupu** a kontrola by byla falešně pozitivní.
 - **Bere se `exclusive_speaker_diarization`**, ne `speaker_diarization`. Je podle dokumentace pyannote určená právě pro navázání na přepis, protože neobsahuje překrývající se úseky.
@@ -432,7 +437,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 | `common.sh` | cesty k modelům a k VAD, konfigurace diarizace (venv, token, gated repozitáře, název modelu), počet vláken – sourcuje se |
 | `rate.py` | odhad a kalibrace tempa (`get`, `eta`, `update`) |
 | `progress.py` | progress bar nad logem běhu |
-| `detect-lang.sh` | detekce jazyka ze vzorku zprostřed nahrávky |
+| `detect-lang.sh` | detekce jazyka ze tří vzorků, hlásí i dvojjazyčnost |
 | `diarize.sh` | volitelný druhý průchod – kdo kdy mluví |
 | `diarize.py` | vlastní běh pyannote uvnitř venv |
 | `merge.py` | spojí časy z whisperu s mluvčími, vyrobí `.json` a `.vtt` |

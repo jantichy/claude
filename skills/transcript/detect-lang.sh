@@ -17,7 +17,8 @@
 # a jeden vzorek zprostředka zase nepozná schůzku, která se v půlce přepne do
 # jiného jazyka. Whisper bere jeden jazyk na běh, takže takovou nahrávku
 # nespraví – ale je rozdíl mezi špatným přepisem a špatným přepisem, o kterém
-# se ví. U nahrávek kratších než dva vzorky stačí jeden vzorek zprostředka.
+# se ví. U nahrávek kratších než čtyři délky vzorku (tj. pod dvě minuty) by se
+# tři vzorky překrývaly, takže stačí jeden zprostředka.
 
 set -uo pipefail
 export LC_ALL=C
@@ -49,6 +50,11 @@ tmp_base=$(mktemp -t translang)
 tmp="$tmp_base.wav"
 trap 'rm -f "$tmp_base" "$tmp"' EXIT
 
+# Vzorek s nízkou jistotou do rozhodování o dvojjazyčnosti nepouštíme: jeden
+# nejistý odhad uprostřed jednojazyčné schůzky by jinak vyrobil falešné "mixed"
+# a spustil celou nabídku sekání nahrávky.
+MIXED_MIN_P=0.5
+
 langs=""
 best_lang=""
 best_p=0
@@ -69,7 +75,9 @@ for pos in $POSITIONS; do
   [ -n "$lang" ] || continue
   [ -n "$p" ] || p=0
 
-  langs="$langs $lang"
+  if awk -v a="$p" -v b="$MIXED_MIN_P" 'BEGIN{ exit !(a >= b) }'; then
+    langs="$langs $lang"
+  fi
   if awk -v a="$p" -v b="$best_p" 'BEGIN{ exit !(a > b) }'; then
     best_lang="$lang"
     best_p="$p"
