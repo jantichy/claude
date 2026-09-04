@@ -26,14 +26,14 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to poslední krok uza
 
 Tohle **není** audit projektu ani technická brána. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 
-Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), vezmi to do Fáze 4b a nech uživatele rozhodnout, co s tím. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj, dokud si to uživatel nevyžádá.
+Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), vezmi to do Fáze 7 a nech uživatele rozhodnout, co s tím. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj, dokud si to uživatel nevyžádá.
 
 ## Rozsah fresh-reader kontroly
 
-- **`/cleanup`** (výchozí) – fresh-reader ve Fázi 4 se soustředí na to, čeho se dotkla tahle session. Nálezy mimo její rozsah jen vypíše jako doporučení, neopravuje je.
+- **`/cleanup`** (výchozí) – fresh-reader ve Fázi 6 se soustředí na to, čeho se dotkla tahle session. Nálezy mimo její rozsah jen vypíše jako doporučení, neopravuje je.
 - **`/cleanup full`** – fresh-reader projde celou dokumentaci projektu bez omezení na session a nálezy se řeší všechny. Použij, jen když uživatel napíše `full`.
 
-Rozsah ovlivňuje **výhradně Fázi 4**. Fáze 1–3 vytěžují session vždy celou – to je smysl skillu a nedá se zúžit ani rozšířit.
+Rozsah ovlivňuje **výhradně Fázi 6**. Fáze 1–5 vytěžují session vždy celou – to je smysl skillu a nedá se zúžit ani rozšířit.
 
 ## Zásady pro celý průběh
 
@@ -84,17 +84,17 @@ Tohle je jádro celého skillu. Všechno ostatní je servis kolem něj.
    4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“. Tohle je **vědomé** odložení: někdo ho vyslovil. Co propadlo, aniž si toho kdokoli všiml, je kategorie 7.
    5. **Postřehy mimo hlavní osu** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
    6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
-   7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 1b; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními, ať se transcript nečte dvakrát.
+   7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními, ať se transcript nečte dvakrát.
 
-4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej – kromě kategorie 7, kterou hned probereš ve Fázi 1b.
+4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej – kromě kategorie 7, kterou hned probereš ve Fázi 2.
 
 ------
 
-## Fáze 1b – Zamluvená a nevypořádaná témata
+## Fáze 2 – Zamluvená a nevypořádaná témata
 
 Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale **zamluvené téma**: napsal jsi dlouhou odpověď s několika body, návrhem nebo otázkou, uživatel měl v hlavě něco jiného, chytil se poloviny – a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil, jen se to nikdy nedořešilo. Tahle fáze je tu proto, aby se to našlo, dokud je ještě koho se zeptat.
 
-Proto stojí **hned po rekonstrukci session a před zápisem**: rozhodnutí, která tady padnou, mění, co se ve Fázi 2 a 3 zapisuje. Kdyby se ptala až v závěru, uživatel už je duchem pryč a odpoví „to je jedno“.
+Proto stojí **hned po rekonstrukci session a před zápisem**: rozhodnutí, která tady padnou, mění, co se ve Fázi 3 a 5 zapisuje. Kdyby se ptala až v závěru, uživatel už je duchem pryč a odpoví „to je jedno“.
 
 ### Co hledáš
 
@@ -143,14 +143,14 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 
 | Odpověď znamená | Co uděláš |
 |---|---|
-| rozhodnutí | přidej ho jako položku do Fáze 1 (kategorie 1) a normálně zapiš ve Fázi 3 – i se zdůvodněním, které tady padlo |
+| rozhodnutí | přidej ho jako položku do Fáze 1 (kategorie 1) a normálně zapiš ve Fázi 5 – i se zdůvodněním, které tady padlo |
 | „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka |
-| bezpředmětné | nic nezapisuj; v přehledu ve Fázi 5 to ale uveď, ať je vidět, že se to probralo |
+| bezpředmětné | nic nezapisuj; v přehledu ve Fázi 8 to ale uveď, ať je vidět, že se to probralo |
 | práce navíc (dodělat kód, přepsat návrh) | to je nad rámec úklidu. Udělej to **jen na výslovný pokyn** a pak pokračuj skillem dál; jinak do `docs/todo.md` |
 
 ------
 
-## Fáze 2 – Konfrontace se soubory
+## Fáze 3 – Konfrontace se soubory
 
 Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zapsaná a v jakém stavu:
 
@@ -176,13 +176,13 @@ Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zaps
 
 Zvlášť projdi hlavní soubory – `README.md`, `docs/todo.md`, `docs/done.md`, `docs/decisions.md`, `docs/rules.md` a `CLAUDE.md` (projektový i vnořené) – a ověř, jestli se do nich promítlo, co ze session vzešlo, a jestli v nich nezůstalo pravidlo, které v session přestalo platit. **Jen v rozsahu session**, ne jako obecná revize obsahu.
 
-Když u položky není jasné, kam patří, **zeptej se** – ale až ve Fázi 3, v jednom společném průchodu, ne rozsypaně.
+Když u položky není jasné, kam patří, **zeptej se** – ale až ve Fázi 5, v jednom společném průchodu, ne rozsypaně.
 
 ------
 
-## Fáze 2b – Ověř, že průběžná aktualizace opravdu proběhla
+## Fáze 4 – Ověř, že průběžná aktualizace opravdu proběhla
 
-`~/Dev/context/structure/structure.md` ukládá udržovat sadu souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 2**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
+`~/Dev/context/structure/structure.md` ukládá udržovat sadu souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 3**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
 
 Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomíná** – proto tenhle krok existuje a proto se nedá odbýt.
 
@@ -241,7 +241,7 @@ Nedává-li standardní struktura pro tenhle projekt smysl (jednorázový scratc
 
 ------
 
-## Fáze 3 – Zápis
+## Fáze 5 – Zápis
 
 1. **Mechanické zápisy proveď rovnou.** Po dokončení vypiš stručný seznam: co bylo dopsáno, kam, a jednou větou proč.
 
@@ -265,7 +265,7 @@ Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit d
 
 ------
 
-## Fáze 4 – Fresh-reader verifikace
+## Fáze 6 – Fresh-reader verifikace
 
 Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Ve výchozím rozsahu to není audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci. V režimu `full` naopak projdi dokumentaci celou (viz *Rozsah fresh-reader kontroly* výše) a v zadání pro subagenta vynech řádek se shrnutím session i větu o soustředění se na poslední session.
 
@@ -307,13 +307,13 @@ Nezapisuj do žádného souboru.
 
 **Zpracování nálezů:**
 
-- Nálezy, které se týkají téhle session, vrať do Fáze 3 a oprav – mechanické sám, sporné s uživatelem.
-- Nálezy mimo rozsah session (starší dluh v dokumentaci) ve výchozím režimu neopravuj rovnou – přenes je do Fáze 4b, která s nimi naloží podle rozhodnutí uživatele. V režimu `full` je řeš stejně jako ostatní.
+- Nálezy, které se týkají téhle session, vrať do Fáze 5 a oprav – mechanické sám, sporné s uživatelem.
+- Nálezy mimo rozsah session (starší dluh v dokumentaci) ve výchozím režimu neopravuj rovnou – přenes je do Fáze 7, která s nimi naloží podle rozhodnutí uživatele. V režimu `full` je řeš stejně jako ostatní.
 - Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanášejí nové viséce – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
 
 ------
 
-## Fáze 4b – Naložení s tím, co by zůstalo mimo rozsah
+## Fáze 7 – Naložení s tím, co by zůstalo mimo rozsah
 
 Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dluh z fresh-readera, rozbité věci známé ze session, odložené nálezy –, se tady musí rozhodnout. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
 
@@ -331,16 +331,16 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
    | Volba | Co uděláš |
    |---|---|
-   | **Vyřešit teď** | Vyřeš všechny rovnou tady, jako by byly součástí úklidu, a pak pokračuj Fází 5. |
+   | **Vyřešit teď** | Vyřeš všechny rovnou tady, jako by byly součástí úklidu, a pak pokračuj Fází 8. |
    | **Zapsat do todo** | Zapiš všechny do `docs/todo.md` (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) – ne jako holé odrážky, ale s kontextem a odůvodněním, aby se na ně dalo navázat bez téhle session. |
    | **Projít po jedné** | Projdi je jednu po druhé a u každé se zeptej zvlášť (vyřešit / do todo / zahodit). Použij, když se položky liší povahou. |
    | **Zahodit** | Nic s nimi nedělej. Volí se vědomě, ne mlčením. |
 
-4. Ať se rozhodne jakkoli, v přehledu ve Fázi 5 pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu.
+4. Ať se rozhodne jakkoli, v přehledu ve Fázi 8 pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu.
 
 ------
 
-## Fáze 5 – Git a závěr
+## Fáze 8 – Git a závěr
 
 **Git:**
 
@@ -373,7 +373,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 - [seznam, nebo „žádné“]
 
 **Mimo rozsah úklidu**
-- [seznam z Fáze 4b a u každé položky, jak se s ní naložilo – nebo „žádné“]
+- [seznam z Fáze 7 a u každé položky, jak se s ní naložilo – nebo „žádné“]
 
 **Další krok:** /attack a /release, nasazuje-li se – jinak je práce uzavřená
 ```
