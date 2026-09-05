@@ -62,7 +62,9 @@ Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systém
 
 1. Vytáhni ze systému **poslední fakturu tomu klientovi** a přečti z ní konec fakturovaného období. **Žádná tam není?** Pak se tomu klientovi ještě nikdy nefakturovalo a hranici drží **soubor klienta** – deník výjimek nebo dohoda. Přečti ho; není-li tam, zeptej se a odpověď do deníku zapiš. **Nepleť si to s prázdným obdobím** – to je stav, kdy fakturovat není co, ne kdy se ještě nezačalo.
 2. Začátek nového období je **následující den**, konec je konec posledního uzavřeného měsíce. **Zbývají-li nevyfakturované hodiny i v běžícím měsíci, zeptej se přes `AskUserQuestion`**, jestli období ukončit posledním uzavřeným měsícem, nebo dneškem – druhá možnost je právě skončená práce, která na konec měsíce nečeká. Volba určí obě data ve *Fázi 4*.
-3. **Chybí-li v poslední faktuře záznam o období** – vystavil ji někdo ručně – **zeptej se, od kdy počítat.** Neodvozuj to z data vystavení ani ze zaplacených hodin; obojí je jinde než skutečná hranice. **Odpověď rovnou zapiš do té staré faktury** ve strojově čitelném tvaru, ať se příští běh ptát nemusí – **v režimu `full`**. V `preview` se nezapisuje nic, takže si odpověď jen ponech pro tenhle běh a řekni, že se do faktury nedoplnila.
+3. **Chybí-li v poslední faktuře záznam o období, nejdřív hledej v souboru klienta** – v dohodě a v deníku výjimek. **Je-li tam, neptej se**; je to předem daná odpověď. Není-li, **zeptej se, od kdy počítat**, a odpověď zapiš **do deníku výjimek** (v režimu `full`; v `preview` se nezapisuje nic). Neodvozuj hranici z data vystavení ani ze zaplacených hodin – obojí je jinde než skutečná hranice.
+
+   **Do staré faktury nezapisuj nic.** Poznámka znamená období, které ten doklad pokrývá, a faktura bez ní bývá z jiné etapy spolupráce; zápis odvozený z dneška by o ní tvrdil nepravdu. Zdůvodnění drží `~/Dev/context/decisions.md`, *Do staré faktury bez poznámky se hranice nedopisuje*.
 
 Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
 
