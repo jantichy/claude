@@ -148,7 +148,7 @@ Za každého klienta:
 
 ## Fáze 5 – Přílohy a draft
 
-1. Stáhni **PDF faktury** ze systému a **PDF výkazu hodin** z timetrackingu za totéž období.
+1. Stáhni **PDF faktury** ze systému a **PDF výkazu hodin** z timetrackingu za totéž období. **Pokrývá-li období víc kalendářních měsíců, stáhni výkaz za každý měsíc zvlášť** – konkrétní požadavky i důvod drží `~/Dev/context/business/invoicing.md`, *Přístupy*.
 2. **Ověř oba soubory, než je přiložíš:** nejsou prázdné a období ve výkazu sedí se **skutečným fakturovaným obdobím** – tedy s tím, co je v interní poznámce dokladu, ne nutně s tím, co je vytištěné na položce. Prázdná nebo posunutá příloha je horší než žádná – klient ji vezme jako doklad.
 
    **U delšího období se výkaz s textem položky schválně rozchází.** Nese-li doklad podle volby z *Fáze 3* formálně jen poslední měsíc, výkaz pokrývá celý rozsah – a je to správně, ne chyba k opravě. Kontrolou tady prochází shoda se **skutečným** obdobím; kdyby se porovnávalo s dokladem, guard by u té největší faktury zastavil právě ten stav, který má být.
