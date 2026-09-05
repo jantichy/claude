@@ -34,7 +34,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 | Odpracovaný čas za období | timetracking – MCP, když je připojený, jinak jeho API | data jsou tam, nemá cenu je někam kopírovat |
 | Vystavení dokladu a PDF | fakturační systém – MCP, když je připojený, jinak jeho API | doklad má vzniknout tam, kde ho vidí účetní |
 | Draft mailu s přílohami | Gmail MCP, `create_draft` | umí to, a odesílací volání se nepoužije |
-| Stopy práce pro `recover` | mail, kalendář, chat, git, sessions Clauda, historie prohlížeče | jinde po zapomenutém čase stopa nezůstala |
+| Stopy práce pro `recover` | mail, kalendář, chat, hovory, git, sessions Clauda, historie prohlížeče | jinde po zapomenutém čase stopa nezůstala |
 | Co se fakturuje a jak | **vlastní jádro** | výjimky u klientů, neúplný výkaz, podezřelé záznamy – tady se rozhoduje |
 
 **Čím se do systémů sahá, je implementační detail a smí se vyměnit bez ohlášení.** Skill mluví o tom, co potřebuje („odpracovaný čas klienta za období“, „vystavený doklad s poznámkou o období“), ne o konkrétních voláních. Přechod na MCP nebo změna API pak není zásah do skillu, ale do `~/Dev/context/business/invoicing.md`, *Přístupy*.
