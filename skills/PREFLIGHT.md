@@ -6,7 +6,9 @@ Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo 
 
 **Body 1 až 3 platí pro každý skill, který pracuje nad projektem.** Body 4 a 5 jen tam, kde dávají smysl – u každého je napsané kde.
 
-**Skill, který nad projektem neběží** – pouští se odkudkoliv a nesahá na repozitář, jako `/invoicing` – **body 1 až 3 vynechá a nahradí je vlastními předpoklady**: co si musí načíst, aby měl podle čeho jednat, a co musí být dostupné, aby běh nespadl v půlce. Sem se ty předpoklady nepíšou, jsou pro každý takový skill jiné. Vynechání se v jeho `Fázi 0` **řekne nahlas**, ať je poznat, že se na to nezapomnělo.
+**Skill, který nad projektem neběží** – pouští se odkudkoliv a nepracuje nad kódem projektu, jako `/invoicing` – **body 1 až 3 vynechá a nahradí je vlastními předpoklady**: co si musí načíst, aby měl podle čeho jednat, a co musí být dostupné, aby běh nespadl v půlce. Sem se ty předpoklady nepíšou, jsou pro každý takový skill jiné. Vynechání se v jeho `Fázi 0` **řekne nahlas**, ať je poznat, že se na to nezapomnělo.
+
+**Pozor: „neběží nad projektem“ neznamená „nesahá na soubory“.** `/invoicing` zapisuje do deníku výjimek v `~/Dev/context/`, což je repozitář se zapnutým autocommitem. Skill, který takhle zapisuje, **musí sám říct, co se svým zápisem udělá** – jestli ho commituje, nebo nechá v pracovním stromu –, jinak ho posbírá autocommit cizí session spolu s něčím nesouvisejícím.
 
 **Nezávislé čtecí operace pouštěj paralelně.** Zjišťování kořene, čtení `CLAUDE.md` a stav gitu na sobě nezávisí.
 

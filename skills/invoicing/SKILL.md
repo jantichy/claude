@@ -46,8 +46,8 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Body 1 až 3 se tad
 
 1. **Načti `~/Dev/context/business/invoicing.md` celý** a k němu **`~/Dev/context/business/pricing.md`**. Nespoléhej na paměť – sazby a dohody se mění. Chybí-li `invoicing.md`, řekni to a **skonči**; skill bez něj nemá podle čeho fakturovat. `pricing.md` drží sazebník pro klienty, kteří vlastní sazbu zapsanou nemají.
 2. **Zjisti dnešní datum** příkazem `date +%F` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
-3. **Ověř přístupy k oběma systémům** dřív, než začneš cokoli počítat – způsobem, který popisuje `~/Dev/context/business/invoicing.md`, *Přístupy*. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce.
-4. **Zjisti, jestli není rozdělaný běh z minula** – klient s hotovou fakturou, ale bez draftu. Navaž na něj, nezakládej znovu.
+3. **Ověř přístupy k oběma systémům** dřív, než začneš cokoli počítat – způsobem, který popisuje `~/Dev/context/business/invoicing.md`, *Přístupy*. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce. **Projdi zároveň seznam `~/Dev/context/business/invoicing.md`, *Co ještě není vyplněné*** – je nadřazený a nese i blokátory, které se jinak projeví až po vystavení dokladu (stažení výkazu, pole pro interní poznámku). Nedořešená položka není důvod skončit, ale **musí zaznít předem**, ne ve chvíli, kdy už doklad existuje.
+4. **Zjisti, jestli není rozdělaný běh z minula** – klient s hotovou fakturou, ale bez draftu. Poznáš to tak, že poslední faktura klienta ve fakturačním systému **už nese poznámku s obdobím**, ale v mailu k ní není draft. Navaž na něj, nezakládej znovu.
 
 Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systémů se sáhne a v jakém režimu se jede.
 
@@ -57,9 +57,9 @@ Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systém
 
 **Období se každému klientovi počítá zvlášť** a nikdy se neodhaduje:
 
-1. Vytáhni ze systému **poslední fakturu tomu klientovi** a přečti z ní konec fakturovaného období.
+1. Vytáhni ze systému **poslední fakturu tomu klientovi** a přečti z ní konec fakturovaného období. **Žádná tam není?** Pak se tomu klientovi ještě nikdy nefakturovalo a hranici drží **soubor klienta** – deník výjimek nebo dohoda. Přečti ho; není-li tam, zeptej se a odpověď do deníku zapiš. **Nepleť si to s prázdným obdobím** – to je stav, kdy fakturovat není co, ne kdy se ještě nezačalo.
 2. Začátek nového období je **následující den**, konec je konec posledního uzavřeného měsíce. **Zbývají-li nevyfakturované hodiny i v běžícím měsíci, zeptej se přes `AskUserQuestion`**, jestli období ukončit posledním uzavřeným měsícem, nebo dneškem – druhá možnost je právě skončená práce, která na konec měsíce nečeká. Volba určí obě data ve *Fázi 4*.
-3. **Chybí-li v poslední faktuře záznam o období** – vystavil ji někdo ručně – **zeptej se, od kdy počítat.** Neodvozuj to z data vystavení ani ze zaplacených hodin; obojí je jinde než skutečná hranice. **Odpověď rovnou zapiš do té staré faktury** ve strojově čitelném tvaru, ať se příští běh ptát nemusí.
+3. **Chybí-li v poslední faktuře záznam o období** – vystavil ji někdo ručně – **zeptej se, od kdy počítat.** Neodvozuj to z data vystavení ani ze zaplacených hodin; obojí je jinde než skutečná hranice. **Odpověď rovnou zapiš do té staré faktury** ve strojově čitelném tvaru, ať se příští běh ptát nemusí – **v režimu `full`**. V `preview` se nezapisuje nic, takže si odpověď jen ponech pro tenhle běh a řekni, že se do faktury nedoplnila.
 
 Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
 
@@ -73,6 +73,8 @@ Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Dev/context/busin
 
 ## Fáze 2 – Podklad
 
+**Nejdřív si přečti model fakturace v souboru klienta** – hodinovka podle skutečných hodin, pevná částka, částky po fázích, měsíční fee (`~/Dev/context/business/invoicing.md`, *Jak se vyplňuje doklad*). **Neodvozuj ho z toho, že v timetrackingu jsou hodiny**; ty se logují i u paušálů. Není-li zapsaný, zeptej se a odpověď rovnou zapiš. Model určuje, co má vůbec smysl počítat – u paušálu se hodiny nesčítají do částky.
+
 Za každého klienta vytáhni odpracovaný čas za jeho období a **aplikuj pravidla v tomhle pořadí**: obecná z `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*, pak dohoda v souboru klienta, která je přebíjí.
 
 **Podezřelé záznamy nikdy neřeš potichu.** Odlož je do zvláštního seznamu a nechej rozhodnout ve *Fázi 3*:
@@ -83,7 +85,7 @@ Za každého klienta vytáhni odpracovaný čas za jeho období a **aplikuj prav
 - záznam mimo fakturované období
 - projekt, který nemá soubor klienta
 
-**Nezaokrouhluj jednotlivé záznamy.** Sečti je a zaokrouhli až součet – zaokrouhlené patnáctiminutovky nafouknou měsíc o hodiny a klient to pozná dřív než ty.
+**Nezaokrouhluj jednotlivé záznamy.** Sečti je a zaokrouhli až součet – zaokrouhlené patnáctiminutovky nafouknou měsíc o hodiny a klient to pozná dřív než ty. **Na jakou jednotku a kterým směrem, drží `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*** – neurčuj to sám.
 
 ## Fáze 3 – Kontrola s uživatelem
 
@@ -95,18 +97,20 @@ Za každého ukaž:
 <Klient>   <období>   <hodiny> h × <sazba> = <částka> <daňový režim>
 Doklad:    vystavení <datum>, DUZP <datum>, splatnost <datum>
 Na dokladu bude: <období, které ponese text položky – liší-li se od skutečného, řekni to>
-Položky:   <projekt> – <hodiny> h
+Položka:   <text, který se vytiskne na doklad> – <hodiny> h
 Vyřazeno:  <co a proč>
 K rozhodnutí: <podezřelé záznamy, jeden po druhém>
 ```
 
+**Řádek *Položka* ukazuje text, který se doopravdy vytiskne na doklad**, ne název projektu – slož ho už tady podle `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*. Je to jediné místo v celém běhu, kde se dělá **subjektivní úsudek** (zobecnění popisků z timetrackingu), takže se nesmí schovat až do *Fáze 4*.
+
 Data v řádku *Doklad* urči podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*. **Číselná řada se ověřuje až ve *Fázi 4***, takže v režimu `preview` je datum vystavení předběžné – řekni to.
 
-**Pokrývá-li období víc než jeden kalendářní měsíc, zeptej se, co má být na dokladu.** Varianty i výchozí volbu drží `~/Dev/context/business/invoicing.md`, *Období delší než jeden měsíc* – **nevybírej za uživatele a nepředpokládej výchozí variantu mlčky**. Odpověď určí text položky ve *Fázi 4* i znění mailu ve *Fázi 5*, a **zapíše se do deníku výjimek** jako každá jiná odchylka.
+**Pokrývá-li období víc než jeden kalendářní měsíc, zeptej se, co má být na dokladu.** Varianty i výchozí volbu drží `~/Dev/context/business/invoicing.md`, *Období delší než jeden měsíc* – **nevybírej za uživatele a nepředpokládej výchozí variantu mlčky**. **Je-li odpověď předem zapsaná v deníku výjimek klienta, neptej se znovu** – potvrzení k § 28 ve *Fázi 4* to ale neruší. Odpověď určí text položky ve *Fázi 4* i znění mailu ve *Fázi 5*, a **zapíše se do deníku výjimek** jako každá jiná odchylka.
 
 Ptej se přes `AskUserQuestion` a **postupně** (`~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*).
 
-**Co se dohodne odchylně, zapiš rovnou** do deníku výjimek v souboru klienta jako datovaný záznam ve tvaru `- **YYYY-MM-DD** – <co se dohodlo a proč>`, s datem z `date +%F`. Dohoda, která se nezapíše, za rok neexistuje – a spor o částku se pak vede proti paměti.
+**Co se dohodne odchylně, zapiš rovnou** do deníku výjimek v souboru klienta jako datovaný záznam ve tvaru `- **YYYY-MM-DD** – <co se dohodlo a proč>`, s datem z `date +%F`. **Zápis rovnou commitni** – `~/Dev/context/` má zapnutý autocommit a rozpracovaný soubor by jinak posbírala jiná session pod nesouvisející hlavičkou. Dohoda, která se nezapíše, za rok neexistuje – a spor o částku se pak vede proti paměti.
 
 **Tady končí režim `preview`.** Pokračuje se do *Fáze 4* jen v režimu `full`.
 
@@ -132,15 +136,13 @@ Za každého klienta:
 3. **Před zpětným datem ověř číselnou řadu:** v systému nesmí být žádná faktura s pozdějším datem vystavení, než jaké chceš nastavit – **napříč celým účtem, ne jen u toho klienta**. Není-li tam žádná, vystav se zpětným datem. **Je-li tam, nevystavuj a zeptej se přes `AskUserQuestion`**, jaké datum vystavení použít; jako první volbu nabídni dnešek. DUZP se tou otázkou nemění – zůstává posledním dnem fakturovaného období.
 
    **Posunulo-li se datum vystavení, přepočítej splatnost znovu** – od nového data a s novou prodlevou, tedy i s možná jiným pásmem žebříku. Splatnost z kroku 1 platí jen tehdy, když datum zůstalo.
-4. **Zjisti model fakturace ze souboru klienta** – hodinovka podle skutečných hodin, pevná částka, částky po fázích, měsíční fee. **Neodvozuj ho z toho, že v timetrackingu jsou hodiny**; ty se logují i u paušálů. Není-li zapsaný, zeptej se a odpověď rovnou zapiš.
-
-5. **Vystav doklad** podle odsouhlaseného podkladu:
+4. **Vystav doklad** podle odsouhlaseného podkladu:
 
    - **U hodinovky vyplň množství, měrnou jednotku a jednotkovou cenu zvlášť** a součin nech spočítat systém. Jen celková částka nestačí – `~/Dev/context/business/invoicing.md`, *Jak se vyplňuje doklad*.
    - **Text položky slož** podle *Z timetrackingu na fakturu* v témže souboru: typ práce **zobecni** z popisků v Clockify, neopisuj je. Pokrývá-li období víc měsíců, řiď se navíc volbou z *Fáze 3*.
    - **Daňový režim a povinné údaje** ber ze souboru klienta a z *Daně a náležitosti* – **nedomýšlej je**.
-6. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
-7. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **i obě data**. Nespoléhej na to, že zápis prošel.
+5. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
+6. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **i obě data**. Nespoléhej na to, že zápis prošel.
 
 **Selže-li vystavení uprostřed dávky, pokračuj dalším klientem.** Ostatní faktury nejsou čím vinné. Selhání si poznamenej a vypiš ho v závěru jmenovitě.
 
