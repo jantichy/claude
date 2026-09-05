@@ -40,7 +40,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 | **Slack** | čas zprávy, autor, **obsah** | silný – obsah často délku přímo říká, viz níž |
 | **Claude Code** | timestampy zpráv v `~/.claude/projects/<projekt>/*.jsonl` | silný – souvislá session je skutečný interval u klávesnice |
 | **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek |
-| **Prohlížeč** | navštívená URL, čas návštěvy, doba na stránce | střední – u výlučné URL použitelné, u sdílené ne |
+| **Prohlížeč** | navštívená URL a čas návštěvy; **doba na stránce zatím ověřená není** | slabý až střední – u výlučné URL použitelné, u sdílené ne |
 | **Mail** | čas odeslání, předmět, obsah | slabý – odeslání je špička ledovce, ne práce sama |
 
 **Kalendář se čte skriptem `~/.claude/skills/invoicing/calendar.swift`** a čtyři věci z něj vypadávají dřív, než se z nich stane stopa. Všechny čtyři vyrobily falešný nález při prvním ostrém běhu, takže to nejsou hypotézy:
