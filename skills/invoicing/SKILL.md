@@ -111,7 +111,7 @@ K rozhodnutí: <podezřelé záznamy, jeden po druhém>
 
 **Řádek *Položka* ukazuje text, který se doopravdy vytiskne na doklad**, ne název projektu – slož ho už tady podle `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*. Je to jediné místo v celém běhu, kde se dělá **subjektivní úsudek** (zobecnění popisků z timetrackingu), takže se nesmí schovat až do *Fáze 4*.
 
-Data v řádku *Doklad* urči podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*. **Číselná řada se ověřuje až ve *Fázi 4***, takže v režimu `preview` je datum vystavení předběžné – řekni to.
+Data v řádku *Doklad* urči podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*. **Číselná řada se ověřuje až ve *Fázi 4***, takže v režimu `preview` je datum vystavení předběžné – a s ním i **splatnost**, protože se z něj počítá. Řekni to.
 
 **Pokrývá-li období víc než jeden kalendářní měsíc, zeptej se, co má být na dokladu.** Varianty i výchozí volbu drží `~/Dev/context/business/invoicing.md`, *Období delší než jeden měsíc* – **nevybírej za uživatele a nepředpokládej výchozí variantu mlčky**. **Je-li odpověď předem zapsaná v deníku výjimek klienta, neptej se znovu** – potvrzení k § 28 ve *Fázi 4* to ale neruší. Odpověď určí text položky ve *Fázi 4* i znění mailu ve *Fázi 5*, a **zapíše se do deníku výjimek** jako každá jiná odchylka.
 
@@ -149,7 +149,7 @@ Za každého klienta:
    - **Text položky slož** podle *Z timetrackingu na fakturu* v témže souboru: typ práce **zobecni** z popisků v Clockify, neopisuj je. Pokrývá-li období víc měsíců, řiď se navíc volbou z *Fáze 3*.
    - **Daňový režim a povinné údaje** ber ze souboru klienta a z *Daně a náležitosti* – **nedomýšlej je**.
 5. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
-6. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **i obě data**. Nespoléhej na to, že zápis prošel.
+6. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **a všechna tři data – vystavení, DUZP i splatnost**. Splatnost se posílá v jiné jednotce, než v jaké se ukázala ve *Fázi 3* (dny místo data), takže je to jediné pole, kde se chyba o den jinak nemá jak projevit. Nespoléhej na to, že zápis prošel.
 
 **Selže-li vystavení uprostřed dávky, pokračuj dalším klientem.** Ostatní faktury nejsou čím vinné. Selhání si poznamenej a vypiš ho v závěru jmenovitě.
 
