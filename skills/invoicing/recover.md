@@ -35,13 +35,20 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 
 | Zdroj | Co dá | Signál |
 |---|---|---|
-| **Kalendář** | titulek, začátek, konec, účastníci | **nejlepší** – délka je v datech, neodhaduje se |
+| **Kalendář** | titulek, začátek, konec, účastníci, délka v minutách | **nejlepší** – délka je v datech, neodhaduje se |
 | **Hovory** (Zoom, Teams) | čas a délka hovoru, případně nahrávka | **nejlepší** – totéž, a navíc se to opravdu konalo |
 | **Slack** | čas zprávy, autor, **obsah** | silný – obsah často délku přímo říká, viz níž |
 | **Claude Code** | timestampy zpráv v `~/.claude/projects/<projekt>/*.jsonl` | silný – souvislá session je skutečný interval u klávesnice |
 | **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek |
 | **Prohlížeč** | navštívená URL, čas návštěvy, doba na stránce | střední – u výlučné URL použitelné, u sdílené ne |
 | **Mail** | čas odeslání, předmět, obsah | slabý – odeslání je špička ledovce, ne práce sama |
+
+**Kalendář se čte skriptem `~/.claude/skills/invoicing/calendar.swift`** a čtyři věci z něj vypadávají dřív, než se z nich stane stopa. Všechny čtyři vyrobily falešný nález při prvním ostrém běhu, takže to nejsou hypotézy:
+
+- **Celodenní události** – narozeniny, svozy odpadu, dovolené. Nesou délku 1439 minut a udělaly by z každého dne fakturovatelný den.
+- **Odmítnuté schůzky** – nekonaly se. Poznají se podle příznaku `odmitnuta`, ne podle toho, že v kalendáři jsou.
+- **Duplicitní pozvánky na týž čas** – táž schůzka přijatá z víc stran je v kalendáři několikrát. Slévají se podle času, ne podle názvu; názvy se u téhle schůzky liší.
+- **Zasedačky mezi účastníky** – adresy typu `…@resource.calendar.google.com` jsou místnosti, ne lidé. Podle protistrany se schůzka pozná jen z adres skutečných účastníků.
 
 **Obsah je nadřazený času.** Věta „koukal jsem na to, dělal jsem na tom asi tři hodiny“ je **doložená délka**, i když ji nese jednominutová zpráva na Slacku. Časy říkají *kdy*, obsah často *kolik* – a když se rozejdou, vyhrává obsah. Zdroj, ze kterého se čte jen razítko, je promarněný.
 
