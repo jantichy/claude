@@ -58,14 +58,14 @@ Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systém
 **Období se každému klientovi počítá zvlášť** a nikdy se neodhaduje:
 
 1. Vytáhni ze systému **poslední fakturu tomu klientovi** a přečti z ní konec fakturovaného období.
-2. Začátek nového období je **následující den**, konec je konec posledního uzavřeného měsíce.
+2. Začátek nového období je **následující den**, konec je konec posledního uzavřeného měsíce. **Zbývají-li nevyfakturované hodiny i v běžícím měsíci, zeptej se přes `AskUserQuestion`**, jestli období ukončit posledním uzavřeným měsícem, nebo dneškem – druhá možnost je právě skončená práce, která na konec měsíce nečeká. Volba určí obě data ve *Fázi 4*.
 3. **Chybí-li v poslední faktuře záznam o období** – vystavil ji někdo ručně – **zeptej se, od kdy počítat.** Neodvozuj to z data vystavení ani ze zaplacených hodin; obojí je jinde než skutečná hranice.
 
 Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
 
 **Vyjde-li období prázdné**, klienta vynech a řekni to. Faktura na nula hodin je chyba, ne prázdná faktura.
 
-**Je-li dnešek po 15. dni měsíce a fakturuje se předchozí měsíc, řekni to.** Termín pro vystavení a odeslání je 15. (`~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*). Stopka to není, ale ať to nezapadne.
+**Je-li dnešek po 15. dni měsíce následujícího po konci období, řekni to.** Termín pro vystavení a odeslání je 15. (`~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*). Počítej ho od konce fakturovaného období, ne od předchozího měsíce – jinak upozornění mlčí právě u největšího prodlení. Stopka to není, ale ať to nezapadne.
 
 ## Fáze 2 – Podklad
 
@@ -89,6 +89,7 @@ Za každého ukaž:
 
 ```
 <Klient>   <období>   <hodiny> h × <sazba> = <částka> <daňový režim>
+Doklad:    vystavení <datum>, DUZP <datum>, splatnost <datum>
 Položky:   <projekt> – <hodiny> h
 Vyřazeno:  <co a proč>
 K rozhodnutí: <podezřelé záznamy, jeden po druhém>
@@ -106,8 +107,8 @@ Ptej se přes `AskUserQuestion` a **postupně** (`~/.claude/RULES.md`, *Ptej se 
 
 Za každého klienta:
 
-1. **Urči datum vystavení a DUZP** podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*. Fakturuje-li se uzavřený měsíc, obojí je jeho poslední den; jde-li o právě skončenou práci, obojí je dnešek.
-2. **Před zpětným datem ověř číselnou řadu:** není-li v systému žádná faktura vystavená s pozdějším datem vystavení, než jaké chceš nastavit. **Je-li tam, nevystavuj a zeptej se přes `AskUserQuestion`**, jaké datum vystavení použít. DUZP se tou otázkou nemění – zůstává posledním dnem fakturovaného měsíce.
+1. **Urči datum vystavení a DUZP** podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*. Končí-li období posledním uzavřeným měsícem, obojí je poslední den toho období; končí-li dneškem podle volby ve *Fázi 1*, obojí je dnešek. Podle prodlevy od konce období nastav i splatnost (tamtéž, *Daně a náležitosti*).
+2. **Před zpětným datem ověř číselnou řadu:** v systému nesmí být žádná faktura s pozdějším datem vystavení, než jaké chceš nastavit – **napříč celým účtem, ne jen u toho klienta**. Není-li tam žádná, vystav se zpětným datem. **Je-li tam, nevystavuj a zeptej se přes `AskUserQuestion`**, jaké datum vystavení použít; jako první volbu nabídni dnešek. DUZP se tou otázkou nemění – zůstává posledním dnem fakturovaného období.
 3. Vystav doklad podle odsouhlaseného podkladu. Daňový režim, splatnost a povinné údaje ber ze souboru klienta a z `~/Dev/context/business/invoicing.md`, *Daně a náležitosti* – **nedomýšlej je**.
 4. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
 5. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **i obě data**. Nespoléhej na to, že zápis prošel.
@@ -130,9 +131,9 @@ Za každého klienta:
 ```
 ## Fakturace <období>
 
-| Klient | Období | Hodiny | Částka | Doklad | Draft |
-|---|---|---|---|---|---|
-| … | … | … | … | <číslo> | ano / ne |
+| Klient | Období | Hodiny | Částka | Vystaveno | Doklad | Draft |
+|---|---|---|---|---|---|---|
+| … | … | … | … | <datum> | <číslo> | ano / ne |
 
 **Zapsané dohody**
 - <klient>: <co přibylo do deníku výjimek>, nebo „nic“
@@ -143,6 +144,8 @@ Za každého klienta:
 **Nezkontrolováno**
 - <co se neověřilo a proč>, nebo „nic“
 ```
+
+Ve sloupci *Vystaveno* uveď datum vystavení; **liší-li se od DUZP** kvůli kolizi v číselné řadě, uveď obojí – jinak po běhu nezůstane stopa, že se datum posunulo jinam, než pravidlo předepisuje.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
