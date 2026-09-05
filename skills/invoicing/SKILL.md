@@ -65,6 +65,8 @@ Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Dev/context/busin
 
 **Vyjde-li období prázdné**, klienta vynech a řekni to. Faktura na nula hodin je chyba, ne prázdná faktura.
 
+**Je-li dnešek po 15. dni měsíce a fakturuje se předchozí měsíc, řekni to.** Termín pro vystavení a odeslání je 15. (`~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*). Stopka to není, ale ať to nezapadne.
+
 ## Fáze 2 – Podklad
 
 Za každého klienta vytáhni odpracovaný čas za jeho období a **aplikuj pravidla v tomhle pořadí**: obecná z `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*, pak dohoda v souboru klienta, která je přebíjí.
@@ -104,9 +106,11 @@ Ptej se přes `AskUserQuestion` a **postupně** (`~/.claude/RULES.md`, *Ptej se 
 
 Za každého klienta:
 
-1. Vystav doklad podle odsouhlaseného podkladu. Daňový režim, splatnost a povinné údaje ber ze souboru klienta a z `~/Dev/context/business/invoicing.md`, *Daně a náležitosti* – **nedomýšlej je**.
-2. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
-3. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele a období. Nespoléhej na to, že zápis prošel.
+1. **Urči datum vystavení a DUZP** podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*. Fakturuje-li se uzavřený měsíc, obojí je jeho poslední den; jde-li o právě skončenou práci, obojí je dnešek.
+2. **Před zpětným datem ověř číselnou řadu:** není-li v systému žádná faktura vystavená s pozdějším datem vystavení, než jaké chceš nastavit. **Je-li tam, nevystavuj a zeptej se přes `AskUserQuestion`**, jaké datum vystavení použít. DUZP se tou otázkou nemění – zůstává posledním dnem fakturovaného měsíce.
+3. Vystav doklad podle odsouhlaseného podkladu. Daňový režim, splatnost a povinné údaje ber ze souboru klienta a z `~/Dev/context/business/invoicing.md`, *Daně a náležitosti* – **nedomýšlej je**.
+4. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
+5. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **i obě data**. Nespoléhej na to, že zápis prošel.
 
 **Selže-li vystavení uprostřed dávky, pokračuj dalším klientem.** Ostatní faktury nejsou čím vinné. Selhání si poznamenej a vypiš ho v závěru jmenovitě.
 
