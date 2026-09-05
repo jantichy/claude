@@ -59,7 +59,7 @@ Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systém
 
 1. Vytáhni ze systému **poslední fakturu tomu klientovi** a přečti z ní konec fakturovaného období.
 2. Začátek nového období je **následující den**, konec je konec posledního uzavřeného měsíce. **Zbývají-li nevyfakturované hodiny i v běžícím měsíci, zeptej se přes `AskUserQuestion`**, jestli období ukončit posledním uzavřeným měsícem, nebo dneškem – druhá možnost je právě skončená práce, která na konec měsíce nečeká. Volba určí obě data ve *Fázi 4*.
-3. **Chybí-li v poslední faktuře záznam o období** – vystavil ji někdo ručně – **zeptej se, od kdy počítat.** Neodvozuj to z data vystavení ani ze zaplacených hodin; obojí je jinde než skutečná hranice.
+3. **Chybí-li v poslední faktuře záznam o období** – vystavil ji někdo ručně – **zeptej se, od kdy počítat.** Neodvozuj to z data vystavení ani ze zaplacených hodin; obojí je jinde než skutečná hranice. **Odpověď rovnou zapiš do té staré faktury** ve strojově čitelném tvaru, ať se příští běh ptát nemusí.
 
 Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
 
