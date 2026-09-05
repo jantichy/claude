@@ -47,7 +47,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 
 - **Celodenní události** – narozeniny, svozy odpadu, dovolené. Nesou délku 1439 minut a udělaly by z každého dne fakturovatelný den.
 - **Odmítnuté schůzky** – nekonaly se. Poznají se podle příznaku `odmitnuta`, ne podle toho, že v kalendáři jsou.
-- **Duplicitní pozvánky na týž čas** – táž schůzka přijatá z víc stran je v kalendáři několikrát. Slévají se podle času, ne podle názvu; názvy se u téhle schůzky liší.
+- **Duplicitní záznamy na týž čas** – táž schůzka bývá v kalendáři několikrát: přijatá z víc stran, nebo ležící ve dvou kalendářích téhož účtu. Slévají se **podle času, ne podle názvu** – tentýž hovor se v obou kopiích běžně jmenuje jinak.
 - **Zasedačky mezi účastníky** – adresy typu `…@resource.calendar.google.com` jsou místnosti, ne lidé. Podle protistrany se schůzka pozná jen z adres skutečných účastníků.
 
 **Obsah je nadřazený času.** Věta „koukal jsem na to, dělal jsem na tom asi tři hodiny“ je **doložená délka**, i když ji nese jednominutová zpráva na Slacku. Časy říkají *kdy*, obsah často *kolik* – a když se rozejdou, vyhrává obsah. Zdroj, ze kterého se čte jen razítko, je promarněný.
