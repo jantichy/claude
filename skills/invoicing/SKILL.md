@@ -122,13 +122,25 @@ Za každého klienta:
 
 1. **Urči datum vystavení, DUZP a splatnost** podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP* a *Daně a náležitosti*. Končí-li období posledním uzavřeným měsícem, obojí datum je poslední den toho období; končí-li dneškem podle volby ve *Fázi 1*, obojí je dnešek.
 
-   **Splatnost běží od data vystavení na dokladu**, ne od dneška. Jak je dlouhá, určuje **žebřík podle prodlevy** mezi tím datem a dnem, kdy doklad doopravdy vzniká. **Sjednaná splatnost v souboru klienta žebřík přebíjí** – je to dohoda s protistranou, ne odhad, a automatika ji přepsat nesmí. Hodnota `standardní` v souboru klienta znamená, že žádná dohoda není a jede se podle žebříku. Čísla drží `invoicing.md`, *Daně a náležitosti*; **nedomýšlej je a neopisuj sem**.
-2. **Vystavuješ-li víc než 14 dnů po DUZP, zastav se a vyžádej si potvrzení.** § 28 zákona o DPH ukládá vystavit doklad do 15 dnů od DUZP, takže se tou lhůtou právě prochází. Řekni to nahoře a zeptej se přes `AskUserQuestion` **explicitně na to, jestli je takový postup s klientem domluvený, jestli s ním počítá a jestli ho odsouhlasil.** Bez potvrzení nevystavuj – **ticho ani „jeď dál“ potvrzení není** a domýšlet si ho nesmíš. Je to jediné místo, kde se skill ptá na něco, co se nedá vyčíst z dat.
+   **Splatnost běží od data vystavení na dokladu**, ne od dneška. Jak je dlouhá, určuje **žebřík podle prodlevy** mezi tím datem a dnem, kdy doklad doopravdy vzniká. **Sjednaná splatnost v souboru klienta žebřík přebíjí** – je to dohoda s protistranou, ne odhad, a automatika ji přepsat nesmí. Hodnota `standardní` v souboru klienta znamená, že žádná dohoda není a jede se podle žebříku. **Pokrývá-li doklad víc než jeden kalendářní měsíc, je splatnost měsíc bez ohledu na prodlevu** – žebřík měří rozdíl dat, ne velikost faktury. Čísla drží `invoicing.md`, *Daně a náležitosti*; **nedomýšlej je a neopisuj sem**.
+
+   **Vyjde-li splatnost dřív než dnešek, nevystavuj a zeptej se** přes `AskUserQuestion`, jaké datum splatnosti nastavit. Náhradní datum si nedopočítávej – je to doklad, který by klient dostal už propadlý.
+2. **Vystavuješ-li víc než 14 dnů po DUZP – nebo pokrývá-li doklad víc než jeden kalendářní měsíc – zastav se a vyžádej si potvrzení.** § 28 zákona o DPH ukládá vystavit doklad do 15 dnů od DUZP, takže se tou lhůtou právě prochází. Řekni to nahoře a zeptej se přes `AskUserQuestion` **explicitně na to, jestli je takový postup s klientem domluvený, jestli s ním počítá a jestli ho odsouhlasil.** Bez potvrzení nevystavuj – **ticho ani „jeď dál“ potvrzení není** a domýšlet si ho nesmíš. Je to jediné místo, kde se skill ptá na něco, co se nedá vyčíst z dat.
+
+   **Delší období se ptá vždycky, i když výpočet vyjde v pořádku** – DUZP je konec období, takže u dohnané fakturace se prodleva spočítá z posledního měsíce a lhůta vypadá dodržená. Proč to tak je, vysvětluje `~/Dev/context/business/invoicing.md`, *Daně a náležitosti*.
 
 3. **Před zpětným datem ověř číselnou řadu:** v systému nesmí být žádná faktura s pozdějším datem vystavení, než jaké chceš nastavit – **napříč celým účtem, ne jen u toho klienta**. Není-li tam žádná, vystav se zpětným datem. **Je-li tam, nevystavuj a zeptej se přes `AskUserQuestion`**, jaké datum vystavení použít; jako první volbu nabídni dnešek. DUZP se tou otázkou nemění – zůstává posledním dnem fakturovaného období.
-4. Vystav doklad podle odsouhlaseného podkladu. **Text položky napiš podle volby z *Fáze 3***, pokrývá-li období víc měsíců. Daňový režim a povinné údaje ber ze souboru klienta a z `~/Dev/context/business/invoicing.md`, *Daně a náležitosti* – **nedomýšlej je**. Splatnost je už určená v kroku 1 a kolizí se nemění.
-5. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
-6. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **i obě data**. Nespoléhej na to, že zápis prošel.
+
+   **Posunulo-li se datum vystavení, přepočítej splatnost znovu** – od nového data a s novou prodlevou, tedy i s možná jiným pásmem žebříku. Splatnost z kroku 1 platí jen tehdy, když datum zůstalo.
+4. **Zjisti model fakturace ze souboru klienta** – hodinovka podle skutečných hodin, pevná částka, částky po fázích, měsíční fee. **Neodvozuj ho z toho, že v timetrackingu jsou hodiny**; ty se logují i u paušálů. Není-li zapsaný, zeptej se a odpověď rovnou zapiš.
+
+5. **Vystav doklad** podle odsouhlaseného podkladu:
+
+   - **U hodinovky vyplň množství, měrnou jednotku a jednotkovou cenu zvlášť** a součin nech spočítat systém. Jen celková částka nestačí – `~/Dev/context/business/invoicing.md`, *Jak se vyplňuje doklad*.
+   - **Text položky slož** podle *Z timetrackingu na fakturu* v témže souboru: typ práce **zobecni** z popisků v Clockify, neopisuj je. Pokrývá-li období víc měsíců, řiď se navíc volbou z *Fáze 3*.
+   - **Daňový režim a povinné údaje** ber ze souboru klienta a z *Daně a náležitosti* – **nedomýšlej je**.
+6. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
+7. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **i obě data**. Nespoléhej na to, že zápis prošel.
 
 **Selže-li vystavení uprostřed dávky, pokračuj dalším klientem.** Ostatní faktury nejsou čím vinné. Selhání si poznamenej a vypiš ho v závěru jmenovitě.
 
@@ -138,7 +150,7 @@ Za každého klienta:
 2. **Ověř oba soubory, než je přiložíš:** nejsou prázdné a období ve výkazu sedí se **skutečným fakturovaným obdobím** – tedy s tím, co je v interní poznámce dokladu, ne nutně s tím, co je vytištěné na položce. Prázdná nebo posunutá příloha je horší než žádná – klient ji vezme jako doklad.
 
    **U delšího období se výkaz s textem položky schválně rozchází.** Nese-li doklad podle volby z *Fáze 3* formálně jen poslední měsíc, výkaz pokrývá celý rozsah – a je to správně, ne chyba k opravě. Kontrolou tady prochází shoda se **skutečným** obdobím; kdyby se porovnávalo s dokladem, guard by u té největší faktury zastavil právě ten stav, který má být.
-3. Sestav mail podle `~/Dev/context/business/invoicing.md`, *Šablona mailu*. Adresáta a tón vezmi z dohody klienta a z jeho profilu v `~/Dev/context/organizations/`.
+3. Sestav mail podle `~/Dev/context/business/invoicing.md`, *Šablona mailu*. Adresáta i **oslovení a podpis** vezmi ze souboru klienta – je to tam povinné pole a **neodhaduje se z profilu ani z předchozí korespondence**. Rozhoduje vztah ke konkrétnímu adresátovi dokladu, ne k firmě.
 
    **Nese-li doklad u delšího období formálně jen poslední měsíc, musí skutečný rozsah zaznít v mailu** – je to jediné místo, kde se ho klient dozví. Vynechat ho tam znamená poslat doklad, ze kterého nejde poznat, za co se platí.
 4. **Založ draft a tím skonči.** Odeslání nenabízej a nikdy ho neprováděj – ani jako poslední krok, ani jako laskavost.
