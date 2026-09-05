@@ -1,7 +1,7 @@
 ---
 name: invoicing
-description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full nebo preview a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; neúčtuje, nehlídá úhrady ani daňové termíny.
-argument-hint: [full|preview] [klient]
+description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview nebo recover a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; neúčtuje, nehlídá úhrady ani daňové termíny.
+argument-hint: [full|preview|recover] [klient]
 ---
 
 # Invoicing
@@ -12,6 +12,7 @@ Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého
 
 - **`/invoicing full`** (výchozí) – celý průběh až po rozepsané drafty.
 - **`/invoicing preview`** – náhled toho, co by se vystavilo. Nic nevystaví, nic nezapíše, nikam nesáhne.
+- **`/invoicing recover`** – dohledá čas, který se zapomněl natrackovat, a ukáže tipy s doložením. Taky nic nevystaví a **nezapíše ani do timetrackingu**.
 
 Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají soubor v `~/Dev/context/business/invoicing/`.
 
@@ -23,6 +24,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 - **Nedělá analytické reporty.** Výkaz hodin je příloha dokladu, ne report. Na reporty z dat je `/report`.
 - **Neúčtuje.** Nehlídá úhrady, upomínky, DPH přiznání ani kontrolní hlášení. Vystaví doklad a tím jeho práce končí.
 - **Nedrží evidenci vystavených faktur.** Zdrojem pravdy je fakturační systém, ne soubor v repozitáři – viz `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
+- **Netrackuje čas.** Režim `recover` chybějící čas dohledá a ukáže, ale **do timetrackingu nikdy nezapíše** – odhad postavený na úsudku o cizích datech je návrh, ne zjištění. Doplnit ho je uživatelovo rozhodnutí.
 - **Nepíše profily protistran.** Kdo klient je a kdo v něm rozhoduje, patří do `~/Dev/context/organizations/`; sem jen fakturační dohoda.
 
 ## Jak je to postavené uvnitř
@@ -32,6 +34,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 | Odpracovaný čas za období | timetracking – MCP, když je připojený, jinak jeho API | data jsou tam, nemá cenu je někam kopírovat |
 | Vystavení dokladu a PDF | fakturační systém – MCP, když je připojený, jinak jeho API | doklad má vzniknout tam, kde ho vidí účetní |
 | Draft mailu s přílohami | Gmail MCP, `create_draft` | umí to, a odesílací volání se nepoužije |
+| Stopy práce pro `recover` | mail, kalendář, chat, git, sessions Clauda, historie prohlížeče | jinde po zapomenutém čase stopa nezůstala |
 | Co se fakturuje a jak | **vlastní jádro** | výjimky u klientů, neúplný výkaz, podezřelé záznamy – tady se rozhoduje |
 
 **Čím se do systémů sahá, je implementační detail a smí se vyměnit bez ohlášení.** Skill mluví o tom, co potřebuje („odpracovaný čas klienta za období“, „vystavený doklad s poznámkou o období“), ne o konkrétních voláních. Přechod na MCP nebo změna API pak není zásah do skillu, ale do `~/Dev/context/business/invoicing.md`, *Přístupy*.
@@ -203,3 +206,27 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Náhled je hotový a nic se nevystavilo – až to bude sedět, pusť /invoicing full.`
 - `Náhled hotový není – brání tomu: <konkrétní seznam>.`
+
+------
+
+## Režim `recover`
+
+Dohledá **čas, který se zapomněl natrackovat**, a ukáže tipy s doložením. Nevystavuje, nezakládá draft a **nezapisuje do timetrackingu ani do souboru klienta** – viz *Co skill nedělá*.
+
+Katalog zdrojů, heuristiky a tvar zadání pro sběrače drží `~/.claude/skills/invoicing/recover.md`. Přístupy a identifikátory drží `~/Dev/context/business/invoicing.md`, *Stopy práce*. **Tenhle režim si zdroje nevymýšlí** – sáhne jen na ty, které má klient vyjmenované; na ostatní se nedívá a vypíše je jako slepá místa.
+
+1. **Pre-flight.** Načti soubor klienta a z něj sekci *Stopy práce*. **Chybí-li, skonči a řekni to** – bez identifikátorů nemá režim kde hledat a plošné hledání jména klienta napříč schránkou vyrábí falešné tipy. Ověř dostupnost každého vyjmenovaného zdroje a **nedostupné si poznamenej jako slepé místo**, neignoruj je.
+2. **Rozsah.** Výchozí je **nevyfakturované období** – hranici zjisti stejně jako v *Fázi 1*, tedy z poslední faktury, a konec je dnešek. Stojí-li za režimem měsíc nebo datum (`/invoicing recover <klient> 2026-05`), platí ten; **řekni v takovém případě nahlas, že už vyfakturované období se dohnat nedá** a slouží jen k poznání, kolik času systematicky uniká.
+3. **Sběr.** Pusť sběrače paralelně, jeden na zdroj, se zadáním z `recover.md`, *Zadání pro sběrače*. Vracejí stopy, ne závěry.
+4. **Srovnání.** Slij stopy do shluků, porovnej je se záznamy v Clockify a odděl tři výsledky: **chybí** (v Clockify není nic), **natrackováno jinam** (čas je tam pod jiným projektem), **sedí** (nález nevzniká).
+5. **Ověření.** Každý kandidát projde ověřovatelem, jehož úkolem je ho **vyvrátit** – `recover.md`, *Ověření nálezů*. Co ověření nepřežije, se nezobrazí.
+6. **Výstup.** Tabulka podle `recover.md`, *Výstup*, a pod ní natrackováno jinam, slepá místa a součet.
+
+**Nefakturovatelný čas se dohledává taky.** Nemá cenu pro fakturu, ale má ji pro přehled o tom, kolik práce se do klienta doopravdy vlilo – označ ho a do součtu nepočítej.
+
+**Nespouštěj `recover` uprostřed `full`.** Je to samostatný běh: fakturace stojí na tom, co v timetrackingu je, kdežto recover na úsudku o tom, co v něm chybí. Smíchat obojí znamená vystavit doklad na odhad.
+
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `Dohledávání je hotové a nálezy ověřené – doplnit je do timetrackingu musíš ty.`
+- `Dohledání hotové není – brání tomu: <konkrétní seznam>.`
