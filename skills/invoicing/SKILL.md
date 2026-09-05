@@ -1,7 +1,7 @@
 ---
 name: invoicing
 description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview nebo recover a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; neúčtuje, nehlídá úhrady ani daňové termíny.
-argument-hint: [full|preview|recover] [klient]
+argument-hint: [full|preview|recover] [klient] [období]
 ---
 
 # Invoicing
@@ -14,7 +14,9 @@ Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého
 - **`/invoicing preview`** – náhled toho, co by se vystavilo. Nic nevystaví, nic nezapíše, nikam nesáhne.
 - **`/invoicing recover`** – dohledá čas, který se zapomněl natrackovat, a ukáže tipy s doložením. Taky nic nevystaví a **nezapíše ani do timetrackingu**.
 
-Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají soubor v `~/Dev/context/business/invoicing/`.
+Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají soubor v `~/Dev/context/business/invoicing/`. **Klienta bez vyplněné části *Dohoda* vynech a řekni to** – takový soubor existuje kvůli `recover`, který identifikátory potřebuje dřív, než se začne fakturovat, a fakturovat podle nevyplněné dohody nejde.
+
+**Jen u `recover` smí za jménem klienta stát ještě období** (`2026-05`), kterým se přebije výchozí rozsah.
 
 **Skill je rámec, ne pravidla.** Daňový režim, agregace, šablony a dohody s jednotlivými klienty žijí v `~/Dev/context/business/invoicing.md` a v souborech klientů vedle něj; **sazebník má vlastní soubor `~/Dev/context/business/pricing.md`**. Bez nich skill nemá podle čeho fakturovat a neběží.
 
@@ -216,6 +218,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 ## Režim `recover`
 
 Dohledá **čas, který se zapomněl natrackovat**, a ukáže tipy s doložením. Nevystavuje, nezakládá draft a **nezapisuje do timetrackingu ani do souboru klienta** – viz *Co skill nedělá*.
+
+**Jméno je `recover` a nepřejmenovává se.** Zvažovalo se `restore` a `rescue`; obojí zamítnuto, protože slibuje, že se něco opraví – a tenhle režim nic nezapisuje. `reconcile` je odborně přesnější, ale česky se o něm nedá mluvit, a `gaps` pojmenovává výstup místo akce.
 
 Katalog zdrojů, heuristiky a tvar zadání pro sběrače drží `~/.claude/skills/invoicing/recover.md`. Přístupy a identifikátory drží `~/Dev/context/business/invoicing.md`, *Stopy práce*. **Tenhle režim si zdroje nevymýšlí** – sáhne jen na ty, které má klient vyjmenované; na ostatní se nedívá a vypíše je jako slepá místa.
 
