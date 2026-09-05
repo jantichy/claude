@@ -50,6 +50,8 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 - **Duplicitní záznamy na týž čas** – táž schůzka bývá v kalendáři několikrát: přijatá z víc stran, nebo ležící ve dvou kalendářích téhož účtu. Slévají se **podle času, ne podle názvu** – tentýž hovor se v obou kopiích běžně jmenuje jinak.
 - **Zasedačky mezi účastníky** – adresy typu `…@resource.calendar.google.com` jsou místnosti, ne lidé. Podle protistrany se schůzka pozná jen z adres skutečných účastníků.
 
+**Než porovnáš čas z kalendáře s časem odjinud, ověř pásmo.** Skript vypisuje **místní** čas s offsetem; zpráva v chatu („dáme to ve 12:30“) je taky místní, ale záznam v jiném systému nemusí být. Posunutý čas nevypadá jako chyba, ale jako **jiná událost** – a tím se z potvrzené schůzky stane falešný nález chybějících hodin. Stalo se to při prvním ostrém běhu.
+
 **Obsah je nadřazený času.** Věta „koukal jsem na to, dělal jsem na tom asi tři hodiny“ je **doložená délka**, i když ji nese jednominutová zpráva na Slacku. Časy říkají *kdy*, obsah často *kolik* – a když se rozejdou, vyhrává obsah. Zdroj, ze kterého se čte jen razítko, je promarněný.
 
 **Odchozí, ne příchozí.** Mail od klienta a zpráva od klienta nejsou Honzova práce. Sbírá se **to, co odeslal on**; příchozí zpráva se hodí nanejvýš jako kontext, proč ta práce vznikla.

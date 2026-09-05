@@ -47,8 +47,13 @@ guard povoleno else {
     exit(1)
 }
 
+// Časy se vypisují v **místním pásmu**, ne v UTC. Výchozí `ISO8601DateFormatter`
+// jede na GMT, takže by se každý čas rozešel s tím, co má uživatel v kalendáři
+// před očima – a porovnání se zprávou z chatu („dáme to ve 12:30“) by tiše
+// nesedlo o dvě hodiny. Offset zůstává v řetězci, aby šlo poznat, čí je to čas.
 let iso = ISO8601DateFormatter()
 iso.formatOptions = [.withInternetDateTime]
+iso.timeZone = TimeZone.current
 
 // Mail účastníka bez `mailto:`; u zasedaček je to adresa zdroje, ne člověka.
 func mail(_ u: EKParticipant) -> String {
