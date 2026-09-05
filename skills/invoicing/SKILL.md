@@ -92,6 +92,8 @@ Za každého klienta vytáhni odpracovaný čas za jeho období a **aplikuj prav
 
 **Záznam, jehož popisek začíná `NF `, se vyřazuje bez ptaní** – je to jediný strojový signál, kterým se v timetrackingu značí nefakturovatelný čas (`~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*). Neoznačený záznam, který se podle popisku fakturovat nemá, ale **nevyřazuj sám** – patří mezi podezřelé výš.
 
+**Má-li klient v dohodě očekávaný měsíční rozsah, porovnej ho se součtem.** Liší-li se řádově, **řekni to ve *Fázi 3*** a nabídni pustit napřed `recover` – po vystavení faktury se nenatrackovaný čas doplnit nedá, protože hranice období se posune a starší záznamy spadnou pod ni (`~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*).
+
 **Nezaokrouhluj jednotlivé záznamy.** Sečti je a zaokrouhli až součet – zaokrouhlené patnáctiminutovky nafouknou měsíc o hodiny a klient to pozná dřív než ty. **Na jakou jednotku a kterým směrem, drží `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*** – neurčuj to sám.
 
 ## Fáze 3 – Kontrola s uživatelem
