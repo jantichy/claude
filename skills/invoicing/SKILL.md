@@ -46,7 +46,7 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Body 1 až 3 se tad
 
 1. **Načti `~/Dev/context/business/invoicing.md` celý** a k němu **`~/Dev/context/business/pricing.md`**. Nespoléhej na paměť – sazby a dohody se mění. Chybí-li `invoicing.md`, řekni to a **skonči**; skill bez něj nemá podle čeho fakturovat. `pricing.md` drží sazebník pro klienty, kteří vlastní sazbu zapsanou nemají.
 2. **Zjisti dnešní datum** příkazem `date +%F` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
-3. **Ověř přístupy k oběma systémům** dřív, než začneš cokoli počítat – způsobem, který popisuje `~/Dev/context/business/invoicing.md`, *Přístupy*. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce. **Projdi zároveň seznam `~/Dev/context/business/invoicing.md`, *Co ještě není vyplněné*** – je nadřazený a nese i blokátory, které se jinak projeví až po vystavení dokladu (stažení výkazu, pole pro interní poznámku). Nedořešená položka není důvod skončit, ale **musí zaznít předem**, ne ve chvíli, kdy už doklad existuje.
+3. **Ověř přístupy k oběma systémům** dřív, než začneš cokoli počítat – způsobem, který popisuje `~/Dev/context/business/invoicing.md`, *Přístupy*. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce. **Projdi zároveň seznam `~/Dev/context/business/invoicing.md`, *Co ještě není vyplněné*** – je nadřazený a nese i blokátory, které se jinak projeví až uprostřed běhu nebo po vystavení dokladu. Nedořešená položka není důvod skončit, ale **musí zaznít předem**, ne ve chvíli, kdy už doklad existuje.
 4. **Zjisti, jestli není rozdělaný běh z minula** – klient s hotovou fakturou, ale bez draftu. Poznáš to tak, že poslední faktura klienta ve fakturačním systému **už nese poznámku s obdobím**, ale v mailu k ní není draft. Navaž na něj, nezakládej znovu.
 
 Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systémů se sáhne a v jakém režimu se jede.
@@ -84,6 +84,8 @@ Za každého klienta vytáhni odpracovaný čas za jeho období a **aplikuj prav
 - položka delší než dvanáct hodin
 - záznam mimo fakturované období
 - projekt, který nemá soubor klienta
+
+**Záznam, jehož popisek začíná `NF `, se vyřazuje bez ptaní** – je to jediný strojový signál, kterým se v timetrackingu značí nefakturovatelný čas (`~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*). Neoznačený záznam, který se podle popisku fakturovat nemá, ale **nevyřazuj sám** – patří mezi podezřelé výš.
 
 **Nezaokrouhluj jednotlivé záznamy.** Sečti je a zaokrouhli až součet – zaokrouhlené patnáctiminutovky nafouknou měsíc o hodiny a klient to pozná dřív než ty. **Na jakou jednotku a kterým směrem, drží `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*** – neurčuj to sám.
 
@@ -138,7 +140,7 @@ Za každého klienta:
    **Posunulo-li se datum vystavení, přepočítej splatnost znovu** – od nového data a s novou prodlevou, tedy i s možná jiným pásmem žebříku. Splatnost z kroku 1 platí jen tehdy, když datum zůstalo. **Měsíční splatnost u delšího období přepočet neshodí** – je to strop nad žebříkem, ne jeho pásmo.
 4. **Vystav doklad** podle odsouhlaseného podkladu:
 
-   - **U hodinovky vyplň množství, měrnou jednotku a jednotkovou cenu zvlášť** a součin nech spočítat systém. Jen celková částka nestačí – `~/Dev/context/business/invoicing.md`, *Jak se vyplňuje doklad*.
+   - **U hodinovky vyplň množství, měrnou jednotku a jednotkovou cenu zvlášť** a součin nech spočítat systém. Jen celková částka nestačí – `~/Dev/context/business/invoicing.md`, *Jak se vyplňuje doklad*. **Sazbu ber ze souboru klienta; nemá-li ji, z `~/Dev/context/business/pricing.md`** – ceník je zdroj pravdy a klient ho smí přebít, ne naopak.
    - **Text položky slož** podle *Z timetrackingu na fakturu* v témže souboru: typ práce **zobecni** z popisků v Clockify, neopisuj je. Pokrývá-li období víc měsíců, řiď se navíc volbou z *Fáze 3*.
    - **Daňový režim a povinné údaje** ber ze souboru klienta a z *Daně a náležitosti* – **nedomýšlej je**.
 5. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
