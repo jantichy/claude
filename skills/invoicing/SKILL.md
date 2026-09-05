@@ -95,6 +95,8 @@ Vyřazeno:  <co a proč>
 K rozhodnutí: <podezřelé záznamy, jeden po druhém>
 ```
 
+Data v řádku *Doklad* urči podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*. **Číselná řada se ověřuje až ve *Fázi 4***, takže v režimu `preview` je datum vystavení předběžné – řekni to.
+
 Ptej se přes `AskUserQuestion` a **postupně** (`~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*).
 
 **Co se dohodne odchylně, zapiš rovnou** do deníku výjimek v souboru klienta jako datovaný záznam ve tvaru `- **YYYY-MM-DD** – <co se dohodlo a proč>`, s datem z `date +%F`. Dohoda, která se nezapíše, za rok neexistuje – a spor o částku se pak vede proti paměti.
@@ -105,11 +107,13 @@ Ptej se přes `AskUserQuestion` a **postupně** (`~/.claude/RULES.md`, *Ptej se 
 
 **Nejdřív ověř skutečný stav, pak vystav** (`~/.claude/RULES.md`, *Před nevratnou akcí ověř skutečný stav*): zkontroluj, že pro toho klienta a to období faktura ještě neexistuje. Doklad se špatně ruší a klient ho vidí.
 
+**Vystavuj klienty vzestupně podle konce jejich období.** Doklad vystavený dneškem posune hranici číselné řady, takže obrácené pořadí si kolize vyrábí samo. **Odpověď na kolizi platí pro zbytek dávky** – neptej se u každého dalšího klienta znovu na totéž.
+
 Za každého klienta:
 
-1. **Urči datum vystavení a DUZP** podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP*. Končí-li období posledním uzavřeným měsícem, obojí je poslední den toho období; končí-li dneškem podle volby ve *Fázi 1*, obojí je dnešek. Podle prodlevy od konce období nastav i splatnost (tamtéž, *Daně a náležitosti*).
+1. **Urči datum vystavení, DUZP a splatnost** podle `~/Dev/context/business/invoicing.md`, *Datum vystavení a DUZP* a *Daně a náležitosti*. Končí-li období posledním uzavřeným měsícem, obojí datum je poslední den toho období; končí-li dneškem podle volby ve *Fázi 1*, obojí je dnešek. **Splatnost se počítá z dnešního dne, ne z data na dokladu**, a odstupňování přebíjí i dohodu klienta.
 2. **Před zpětným datem ověř číselnou řadu:** v systému nesmí být žádná faktura s pozdějším datem vystavení, než jaké chceš nastavit – **napříč celým účtem, ne jen u toho klienta**. Není-li tam žádná, vystav se zpětným datem. **Je-li tam, nevystavuj a zeptej se přes `AskUserQuestion`**, jaké datum vystavení použít; jako první volbu nabídni dnešek. DUZP se tou otázkou nemění – zůstává posledním dnem fakturovaného období.
-3. Vystav doklad podle odsouhlaseného podkladu. Daňový režim, splatnost a povinné údaje ber ze souboru klienta a z `~/Dev/context/business/invoicing.md`, *Daně a náležitosti* – **nedomýšlej je**.
+3. Vystav doklad podle odsouhlaseného podkladu. Daňový režim a povinné údaje ber ze souboru klienta a z `~/Dev/context/business/invoicing.md`, *Daně a náležitosti* – **nedomýšlej je**. Splatnost je už určená v kroku 1 a kolizí se nemění.
 4. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
 5. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **i obě data**. Nespoléhej na to, že zápis prošel.
 
@@ -160,7 +164,7 @@ Doběhne *Fází 3* a tam skončí. **Nevystaví doklad, nezaloží draft a neza
 
 K čemu je: zjistit před koncem měsíce, kolik toho je, jestli sedí hodiny, a jestli v timetrackingu nechybí nebo nepřebývá něco, co se má srovnat dřív, než vznikne doklad.
 
-Vypiš tutéž tabulku jako v závěru, sloupce *Doklad* a *Draft* vynech, a přidej seznam toho, co by ještě chtělo rozhodnout.
+Vypiš tutéž tabulku jako v závěru, sloupce *Doklad* a *Draft* vynech, a přidej seznam toho, co by ještě chtělo rozhodnout. U sloupce *Vystaveno* připomeň, že **číselná řada se v náhledu neověřuje** – při ostrém běhu se datum může posunout.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
