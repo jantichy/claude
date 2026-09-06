@@ -374,6 +374,8 @@ KOSMETICKÉ nálezy se neověřují – ověření by stálo víc než jejich op
 
 U nálezů z deterministické vrstvy (Fáze 1) se ověření **nedělá**.
 
+**Výsledky ověření hlas obsahem, ne značkou.** Nálezy se z panelu i od ověřovatelů vracejí pod interními identifikátory, které uživatel nikdy neviděl – věta „B1 potvrzen“ je pro něj prázdná. Napiš, co se potvrdilo nebo vyvrátilo: *„Potvrdilo se, že se v `checkout.ts` nekontroluje vlastník objednávky.“* (`~/.claude/RULES.md`, *Interní značky ven nepatří*.)
+
 ### Ověřený seznam zapiš na disk, než půjdeš dál
 
 Hotovou frontu ulož do **`.claude/run/review.json`** (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "head": "<short HEAD>", "scope": "...", "roles": [...], "findings": [{...nález..., "status": "open"}]}`.

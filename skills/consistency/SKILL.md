@@ -171,6 +171,8 @@ Výstup strukturuj jako JSON pole objektů:
 
 ## Fáze 2 – Zpracování výsledků
 
+**O nálezech mluv obsahem, ne značkou z výstupu agenta.** Pořadová čísla a zkratky, pod kterými se nálezy vracejí, jsou interní – uživatel je nikdy neviděl, takže „N1 je širší, než agent hlásil“ mu neřekne nic. Napiš, čeho se to týká: *„Chybějící sekce Rizika není jen v `discovery.md` – chybí ve všech třech dokumentech.“* (`~/.claude/RULES.md`, *Interní značky ven nepatří*.)
+
 Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak KOSMETICKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
 
 ### Rozdělení na mechanické a sporné

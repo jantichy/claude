@@ -52,6 +52,17 @@ Zbude-li tu na cizí soubor odkaz, **odkazuj, nekopíruj** – viz *Single sourc
 
 Cizí slovo budící dojem zavedeného vzoru („resolver“, „fasáda“, „strategie“) tam, kde jde o obyčejnou volbu mezi dvěma větvemi, je horší než prosté pojmenování. Buď termín skutečně ustálený je, nebo hned řekni, co jím myslíš.
 
+### Interní značky ven nepatří
+
+Značka, kterou sis zavedl ty nebo ti ji vrátil agent – `B1`, `N3`, `nález 7`, číslo úkolu z vlastního seznamu –, se v odpovědi smí objevit **jen tehdy, když uživatel tutéž značku už viděl i s obsahem, který nese**. Jinde ji nahraď tím, co znamená:
+
+- Ne „B1 potvrzen“, ale „Potvrdilo se, že se sazba v `invoicing.md` rozchází se smlouvou“.
+- Ne „N1 je širší, než agent hlásil“, ale „Chybějící sekce *Rizika* není jen v `discovery.md` – chybí ve všech třech dokumentech kroku“.
+
+Chceš-li na nálezy odkazovat číslem, **nejdřív je vypiš očíslované** a pak drž tatáž čísla po celý běh; přečíslování v půlce je totéž jako značka bez obsahu.
+
+**Proč:** ty víš, co značka nese, uživatel ne – vidí jen kód a musí se doptat, nebo to přejde. Sdělení, ke kterému chybí klíč, je horší než žádné: tváří se jako hlášení výsledku, ale nedá se podle něj rozhodnout. Platí to i uvnitř jednoho běhu, protože mezivýstupy agentů uživatel nevidí.
+
 ### Při nejistotě se zeptej
 
 Nemáš jasný podklad, jednoznačný pokyn nebo deterministické kritérium → **zeptej se**. Netipuj, neodhaduj, nedomýšlej.

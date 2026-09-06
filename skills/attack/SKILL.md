@@ -218,6 +218,8 @@ Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 - **Nereprodukovalo se** → zahoď a spočítej do souhrnu. Neptej se agenta znovu.
 - **Reprodukovalo se jinak, než tvrdil** → platí, co jsi viděl ty.
 
+**O nálezech mluv obsahem, ne značkou od agenta.** Identifikátory, pod kterými se nálezy vracejí od útočníků, jsou interní – uživatel je nikdy neviděl. Místo „C2 se reprodukovalo“ napiš, co se reprodukovalo: *„Odeslání formuláře dvakrát rychle po sobě založí objednávku dvakrát.“* (`~/.claude/RULES.md`, *Interní značky ven nepatří*.)
+
 Deduplikuj: jedna příčina se projeví přes víc vektorů. Nech jeden nález a vypiš u něj všechny cesty, kterými se k ní dá dojít.
 
 ------

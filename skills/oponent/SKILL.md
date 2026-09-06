@@ -193,6 +193,8 @@ a u vyvráceného doklad – citaci z dokumentu nebo kontextu, která ho boří.
 Do žádného souboru nezapisuj.
 ```
 
+**Výsledky ověření hlas obsahem, ne značkou.** Identifikátory, pod kterými se nálezy vracejí od oponentů a ověřovatelů, jsou interní – uživatel je nikdy neviděl a „N1 je širší, než oponent hlásil“ mu neřekne nic. Pojmenuj, čeho se to týká (`~/.claude/RULES.md`, *Interní značky ven nepatří*). Čísla z přehledu v kroku 5 níž jsou naopak v pořádku – ta uživatel viděl i s obsahem.
+
 **KOSMETICKÉ nálezy se neověřují** – ne proto, že by ověření bylo drahé (stojí strojový čas), ale proto, že se ani nevypořádávají jednotlivě: jdou ve Fázi 5 jedním blokem, takže na nich nestojí žádné rozhodnutí, které by ověření chránilo. **Vyvrácené zahoď a spočítej je do souhrnu**; kolik jich bylo, se říká nahlas, ne potichu.
 
 ------
