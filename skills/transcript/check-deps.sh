@@ -10,7 +10,6 @@
 #
 # Exit 0 = vše připraveno, 1 = něco chybí.
 set -uo pipefail
-# Česká locale by do čísel dala desetinnou čárku a rozbila porovnávání.
 export LC_ALL=C
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source-path=SCRIPTDIR
