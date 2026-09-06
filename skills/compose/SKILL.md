@@ -1,7 +1,7 @@
 ---
 name: compose
-description: Skill se použije, když uživatel zadá "/compose" (volitelně s režimem collect nebo profile), nebo chce napsat či přepracovat článek, příspěvek na sociální sítě nebo vlákno vlastním hlasem a stylem – včetně zkrácení nebo překlopení vlastního staršího textu do jiného formátu. Výchozí režim píše text podle znalostní báze autorova psaní. Režim "collect" provede shromážděním všech jeho dosavadních textů do archivu – exporty ze sociálních sítí, články z webů, lokální zálohy. Režim "profile" nad tím archivem vydestiluje znalostní bázi, nebo ji aktualizuje o texty, které mezitím přibyly. Na rozdíl od /transcript, který přepisuje nahrávky, tenhle skill píše nový text; cizí text neredaguje ani nekorekturuje. Autorovy názory a pointy si nikdy nevymýšlí – bez nich se nerozjede.
-argument-hint: [collect|profile]
+description: Skill se použije, když uživatel zadá "/compose" (volitelně s režimem collect nebo profile), nebo zadá "/compose write", anebo chce napsat či přepracovat článek, příspěvek na sociální sítě nebo vlákno vlastním hlasem a stylem – včetně zkrácení nebo překlopení vlastního staršího textu do jiného formátu. Výchozí režim píše text podle znalostní báze autorova psaní. Režim "collect" provede shromážděním všech jeho dosavadních textů do archivu – exporty ze sociálních sítí, články z webů, lokální zálohy. Režim "profile" nad tím archivem vydestiluje znalostní bázi, nebo ji aktualizuje o texty, které mezitím přibyly. Na rozdíl od /transcript, který přepisuje nahrávky, tenhle skill píše nový text; cizí text neredaguje ani nekorekturuje. Autorovy názory a pointy si nikdy nevymýšlí – bez nich se nerozjede.
+argument-hint: [write|collect|profile]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, WebFetch, AskUserQuestion]
 ---
 
@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, WebFetch, AskUserQue
 
 Píše text hlasem konkrétního autora – ne obecnou češtinou, kterou dnes pozná každý. Opírá se o **znalostní bázi** (odvozená pravidla: styl, profily formátů, zlatý fond ukázek) a o **archiv** (korpus všeho, co autor kdy napsal). Tři režimy:
 
-- **`/compose`** – **psaní textu**. Článek, příspěvek na sociální sítě, vlákno.
+- **`/compose`** nebo **`/compose write`** (výchozí) – **psaní textu**. Článek, příspěvek na sociální sítě, vlákno.
 - **`/compose collect`** – **shromáždění archivu**. Provede vyžádáním exportů ze sítí, stažením článků z webů a převodem do jednotné podoby. Pouští se opakovaně, kdykoliv přibude nový zdroj nebo nový export.
 - **`/compose profile`** – **destilace báze** nad archivem. Neexistuje-li báze, postaví ji celou; existuje-li, zapracuje jen to, co v archivu přibylo od minule.
 

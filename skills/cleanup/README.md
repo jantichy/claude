@@ -10,14 +10,13 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 
 ## Co umí
 
-1. **`/cleanup`** (výchozí) – vytěží konverzaci celou a závěrečná kontrola se soustředí na to, čeho se dnešní práce dotkla.
-2. **`/cleanup full`** – vytěžení je stejné, ale závěrečná kontrola projde celou dokumentaci projektu.
-3. **Vytáhne ze záznamu sedm věcí** – dohody a rozhodnutí (vždy i s důvodem a zavrženými variantami), nová pravidla a konvence, odvedenou práci, vědomě odložené úkoly, postřehy mimo hlavní téma, korekce (platí poslední verze, ne první) a zamluvená témata.
-4. **Dohledá, co propadlo.** Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale zamluvené téma: přišla dlouhá odpověď s několika body, vy jste se chytili poloviny a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil – jen se to nikdy nedořešilo.
-5. **Ověří, že se soubory udržovaly průběžně.** Projde záznam znovu a u každého souboru se ptá, co do něj během práce mělo přibýt – a co chybí, doplní zpětně ve stejné kvalitě, jako by to bylo zapsané v okamžiku, kdy to padlo.
-6. **Pošle na projekt čerstvé oči** – někoho, kdo nemá žádný kontext a čte jenom repozitář, jako by se do projektu zaučoval. Ten řekne, jestli je jasné, co dělat dál, kde by musel hádat a co si protiřečí.
-7. **Uklidí Git** a ověří výsledek, ne že ho předpokládá.
-8. **Je opakovatelný.** Druhý průchod slouží jako ověření – co je zapsané a v pořádku, projde bez zásahu.
+1. **Vytěží konverzaci celou** – i tu část, kterou už kompaktace vyhodila z paměti. Závěrečná kontrola se pak soustředí na to, čeho se dnešní práce dotkla.
+2. **Vytáhne ze záznamu sedm věcí** – dohody a rozhodnutí (vždy i s důvodem a zavrženými variantami), nová pravidla a konvence, odvedenou práci, vědomě odložené úkoly, postřehy mimo hlavní téma, korekce (platí poslední verze, ne první) a zamluvená témata.
+3. **Dohledá, co propadlo.** Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale zamluvené téma: přišla dlouhá odpověď s několika body, vy jste se chytili poloviny a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil – jen se to nikdy nedořešilo.
+4. **Ověří, že se soubory udržovaly průběžně.** Projde záznam znovu a u každého souboru se ptá, co do něj během práce mělo přibýt – a co chybí, doplní zpětně ve stejné kvalitě, jako by to bylo zapsané v okamžiku, kdy to padlo.
+5. **Pošle na projekt čerstvé oči** – někoho, kdo nemá žádný kontext a čte jenom repozitář, jako by se do projektu zaučoval. Ten řekne, jestli je jasné, co dělat dál, kde by musel hádat a co si protiřečí.
+6. **Uklidí Git** a ověří výsledek, ne že ho předpokládá.
+7. **Je opakovatelný.** Druhý průchod slouží jako ověření – co je zapsané a v pořádku, projde bez zásahu.
 
 ## Proč zrovna tenhle
 
@@ -34,7 +33,6 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 
 ```
 /cleanup        # vytěží sezení, kontrola se drží dnešní práce
-/cleanup full   # závěrečná kontrola projde celou dokumentaci
 ```
 
 ## Ukázka výstupu

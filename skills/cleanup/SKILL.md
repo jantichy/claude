@@ -1,7 +1,6 @@
 ---
 name: cleanup
-description: Skill se použije, když uživatel zadá "/cleanup" nebo "/cleanup full", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je.
-argument-hint: [full]
+description: Skill se použije, když uživatel zadá "/cleanup", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
 
@@ -22,18 +21,17 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok uzaví
 
 ## Co skill nedělá
 
-**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel soubory dotčené větví (v režimu `full` celý projekt); fresh-reader tady se ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
+**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel soubory dotčené větví (v režimu `full` celý projekt) – jiná otázka, jiný skill; fresh-reader tady se ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
 
 Tohle **není** audit projektu ani technická brána. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 
 Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), vezmi to do Fáze 7 a nech uživatele rozhodnout, co s tím. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj, dokud si to uživatel nevyžádá.
 
-## Rozsah fresh-reader kontroly
+## Rozsah
 
-- **`/cleanup`** (výchozí) – fresh-reader ve Fázi 6 se soustředí na to, čeho se dotkla tahle session. Nálezy mimo její rozsah sám neopravuje – putují do Fáze 7, kde o nich rozhodne uživatel.
-- **`/cleanup full`** – fresh-reader projde celou dokumentaci projektu bez omezení na session a nálezy se řeší všechny. Použij, jen když uživatel napíše `full`.
+**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Fresh-reader ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sám neopravuje, putuje do Fáze 7, kde o něm rozhodne uživatel.
 
-Rozsah ovlivňuje **Fázi 6** a skrze ni i to, co se dostane do Fáze 7. Fáze 1–5 vytěžují session vždy celou – to je smysl skillu a nedá se zúžit ani rozšířit.
+**Audit celé dokumentace sem nepatří** – je to jiná otázka („sedí si projekt sám se sebou?“) a dělá ho `/consistency full` o krok dřív. Dřív tu byl režim `full`, který rozšiřoval fresh-readera na celou dokumentaci; zrušen 6. 9. 2026, protože jméno svádělo ke čtení „bez `full` se session neprojde celá“ – a to je přesně naopak.
 
 ## Zásady pro celý průběh
 
@@ -272,7 +270,7 @@ Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit d
 
 ## Fáze 6 – Fresh-reader verifikace
 
-Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Ve výchozím rozsahu to není audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci. V režimu `full` naopak projdi dokumentaci celou (viz *Rozsah fresh-reader kontroly* výše). **V šabloně níž vynech všechno, co je označené `[jen /cleanup]`** – včetně obou omezení uvnitř otázek C a E. Bez toho by zadání zakazovalo hlásit přesně ten starší dluh, kvůli kterému se `full` pouští; vypisovat ta místa slovy se ukázalo jako nespolehlivé, protože výčet se se šablonou rozešel hned první den.
+Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Není to audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci (viz *Rozsah* výš).
 
 **Fresh-reader je posouzení, ne sběr: výchozí model, `high`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Má odpovědět na otázku „dá se na tohle navázat?“, a to je úsudek – levný model přečte, co tam stojí, a přikývne, místo aby našel, co chybí.
 
@@ -290,7 +288,7 @@ Přečti si v tomhle pořadí (jako by ses do projektu zaučoval):
 
 Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, runtime adresáře>) nečti celé.
 
-[jen /cleanup] Soustřeď se na oblasti, kterých se dotýkala poslední session.
+Soustřeď se na oblasti, kterých se dotýkala poslední session.
 
 ODPOVĚZ NA TYTO OTÁZKY:
 
@@ -298,11 +296,11 @@ ODPOVĚZ NA TYTO OTÁZKY:
 
 **B. Rozumím tomu, co se nedávno rozhodlo?** Popiš vlastními slovy, co se v projektu naposledy změnilo a proč. Kde jsi musel hádat nebo dohledávat?
 
-**C. Rozpory a nepravdy.** [jen /cleanup: ale jen v tom, co přibylo dnes – audit konzistence dělá `/consistency`, který běží o krok dřív; neopakuj ho.] Zajímá tě, jestli si zápisy neodporují mezi sebou nebo s tím, co v souborech bylo: sedí počty v textu s obsahem tabulek? Odpovídají nové věty tomu, co tvrdí okolí?
+**C. Rozpory a nepravdy** – ale jen v tom, co přibylo dnes; audit konzistence dělá `/consistency`, který běží o krok dřív, a neopakuje se. Zajímá tě, jestli si zápisy neodporují mezi sebou nebo s tím, co v souborech bylo: sedí počty v textu s obsahem tabulek? Odpovídají nové věty tomu, co tvrdí okolí?
 
 **D. Chybějící kontext.** Předpokládá se něco jako známé, ale nikde to není vysvětlené? Odkazuje se na rozhodnutí, jehož zdůvodnění chybí?
 
-**E. Viséci po chirurgických zásazích.** Do dokumentace se zasahuje po větách, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. [jen /cleanup: hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.]
+**E. Viséci po chirurgických zásazích.** Do dokumentace se zasahuje po větách, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.
 
 **F. Co bych se musel zeptat?** Konkrétní otázky, na které bys nenašel odpověď.
 
@@ -314,7 +312,7 @@ Nezapisuj do žádného souboru.
 **Zpracování nálezů:**
 
 - Nálezy, které se týkají téhle session, vrať do Fáze 5 a oprav – mechanické sám, sporné s uživatelem.
-- Nálezy mimo rozsah session (starší dluh v dokumentaci) ve výchozím režimu neopravuj rovnou – přenes je do Fáze 7, která s nimi naloží podle rozhodnutí uživatele. V režimu `full` je řeš stejně jako ostatní.
+- Nálezy mimo rozsah session (starší dluh v dokumentaci) neopravuj rovnou – přenes je do Fáze 7, která s nimi naloží podle rozhodnutí uživatele.
 - Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanášejí nové viséce – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
 
 ------

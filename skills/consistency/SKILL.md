@@ -1,7 +1,7 @@
 ---
 name: consistency
-description: Skill se použije, když uživatel zadá "/consistency" nebo "/consistency full", nebo chce audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
-argument-hint: [full]
+description: Skill se použije, když uživatel zadá "/consistency", "/consistency branch" nebo "/consistency full", nebo chce audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+argument-hint: [branch|full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
 
@@ -15,7 +15,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírá
 
 ## Rozsah
 
-- **`/consistency`** (výchozí) – soubory dotčené prací na aktuální větvi **a soubory, které na ně odkazují**. Ten druhý půlkruh je podstatný: nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví.
+- **`/consistency`** nebo **`/consistency branch`** (výchozí) – soubory dotčené prací na aktuální větvi **a soubory, které na ně odkazují**. Ten druhý půlkruh je podstatný: nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví.
 - **`/consistency full`** – celý projekt bez ohledu na diff. Použij, když uživatel napíše `full`, jinak nikdy.
 
 **Proč výchozí rozsah není celý projekt.** Skill je krok uzavírání, tedy běží **po každé feature**, ale cena kompletního auditu je úměrná velikosti projektu, ne velikosti změny. Na projektu s dvěma sty soubory to znamená, že se při každém uzavření znovu najde tentýž starý dluh – a uživatel má dvě možnosti: znovu ho odklikat, nebo ho umlčet do `## Consistency`. Druhá je levnější, takže se stane výchozí, a tím z ní roste umlčovací seznam. Ze stejného důvodu se `/consistency` jako první vynechá, jakmile se spěchá.

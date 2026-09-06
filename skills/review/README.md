@@ -10,7 +10,7 @@ Prověří hotovou práci před uzavřením z několika nezávislých úhlů nar
 
 ## Co umí
 
-1. **`/review`** (výchozí) – prověří změny na aktuální větvi.
+1. **`/review`**, případně **`/review branch`** (výchozí) – prověří změny na aktuální větvi.
 2. **`/review full`** – celý projekt. U staršího projektu předem řekne, kolik souborů to bude, a při stovkách se zeptá, jestli pokračovat.
 3. **Deterministická vrstva** – typová kontrola, linter, testy, produkční build, audit závislostí, hledání tajemství v repozitáři, statická analýza, mutační testování, přístupnost, výkon a pokrytí. Vypisuje naměřenou hodnotu i práh, ne jen počet.
 4. **Panel rolí, který se skládá podle toho, čeho se změny týkají** – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, konfigurace agentní vrstvy. K tomu role měřící soulad s doménovými standardy: kód, web, administrace, analytika, texty, vizuál, prezentace, školení.
@@ -34,7 +34,7 @@ Prověří hotovou práci před uzavřením z několika nezávislých úhlů nar
 ## Jak se to používá
 
 ```
-/review        # změny na větvi
+/review        # změny na větvi (totéž co /review branch)
 /review full   # celý projekt
 ```
 

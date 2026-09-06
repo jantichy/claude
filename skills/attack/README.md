@@ -10,7 +10,7 @@ Zvedne aplikaci lokálně a pošle na ni útočníky, jejichž zadání zní jed
 
 ## Co umí
 
-1. **`/attack`** (výchozí) – útočí na to, čeho se dotkla práce na aktuální větvi: obrazovky, adresy a toky, které se změnily nebo na změněný kód navazují.
+1. **`/attack`**, případně **`/attack branch`** (výchozí) – útočí na to, čeho se dotkla práce na aktuální větvi: obrazovky, adresy a toky, které se změnily nebo na změněný kód navazují.
 2. **`/attack full`** – celá aplikace bez ohledu na to, co se měnilo. U větší aplikace se předem domluví, kolik času tomu dát.
 3. **Šest vektorů útoku**, z nichž vybírá podle povahy projektu: **vstupy** (prázdno, obří čísla, emodži, deset tisíc znaků, pokusy o vlezení do systému), **stavy a pořadí** (přeskočený krok, zopakovaný krok, dvě záložky nad týmž záznamem, odeslání dvakrát rychle po sobě), **oprávnění** (cizí identifikátor v adrese, přímé volání mimo rozhraní, akce po vypršení přihlášení), **prostředí** (výpadek sítě uprostřed odesílání, pomalá síť, úzké okno, ovládání bez myši), **data** (prázdný seznam, jediná položka, tisíc položek, smazaná vazba) a **vykreslení** (uložený škodlivý text a pak kontrola všech míst, kde se zobrazuje).
 4. **Každý útočník má svůj vektor a svoje účty**, takže si navzájem nepřepisují data a nepopisují stav, který nikdy nenastal.
@@ -32,7 +32,7 @@ Zvedne aplikaci lokálně a pošle na ni útočníky, jejichž zadání zní jed
 ## Jak se to používá
 
 ```
-/attack        # to, čeho se dotkla práce na větvi
+/attack        # to, čeho se dotkla práce na větvi (totéž co /attack branch)
 /attack full   # celá aplikace
 ```
 

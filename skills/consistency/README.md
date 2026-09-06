@@ -10,7 +10,7 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 
 ## Co umí
 
-1. **`/consistency`** (výchozí) – projde soubory dotčené prací na aktuální větvi **a soubory, které na ně odkazují**. Ten druhý půlkruh je podstatný: nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví.
+1. **`/consistency`**, případně **`/consistency branch`** (výchozí) – projde soubory dotčené prací na aktuální větvi **a soubory, které na ně odkazují**. Ten druhý půlkruh je podstatný: nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví.
 2. **`/consistency full`** – projde celý projekt bez ohledu na to, co se měnilo. Vyplatí se jednou za čas a před nasazením, ne po každé funkci. U velkého projektu se předem zeptá, jestli opravdu.
 3. **Hledá v pěti rovinách** – od kritických věcí, které můžou rozbít funkčnost (rozjeté typy, konfigurace s různými hodnotami, chybějící proměnné prostředí, rozhraní deklarované jinak, než se používá), přes technický dluh (duplicitní logika, různé postupy k témuž problému, mrtvý kód, dokumentace popisující něco, co neexistuje) až po kosmetiku (nejednotné pojmenování, jedna entita pod třemi jmény v různých vrstvách).
 4. **Zvlášť kontroluje skupiny souborů, které mají mít stejnou stavbu** – adresáře, kde každý soubor reprezentuje jednu instanci téhož konceptu. Chybějící sekce v jednom z nich se jinak nenajde.
@@ -31,7 +31,7 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 ## Jak se to používá
 
 ```
-/consistency          # co se dotklo aktuální větve a co na to odkazuje
+/consistency          # co se dotklo větve a co na to odkazuje (totéž co /consistency branch)
 /consistency full     # celý projekt
 ```
 

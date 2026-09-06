@@ -1,7 +1,7 @@
 ---
 name: review
-description: Skill se použije, když uživatel zadá "/review" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz, testy a soulad s doménovými standardy (coding, web, admin, analytics, text, design, slides, training). Pouští deterministické nástroje, pak paralelní panel rolí, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
-argument-hint: [full]
+description: Skill se použije, když uživatel zadá "/review", "/review branch" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz, testy a soulad s doménovými standardy (coding, web, admin, analytics, text, design, slides, training). Pouští deterministické nástroje, pak paralelní panel rolí, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
+argument-hint: [branch|full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
@@ -33,7 +33,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to první krok uzavírá
 
 ## Rozsah
 
-- **`/review`** (výchozí) – jen změny na aktuální větvi, tedy diff proti hlavní větvi plus necommitnuté změny.
+- **`/review`** nebo **`/review branch`** (výchozí) – jen změny na aktuální větvi, tedy diff proti hlavní větvi plus necommitnuté změny.
 - **`/review full`** – celý projekt. Použij, když uživatel napíše `full`, jinak nikdy.
 
 U `full` na starším projektu počítej s tím, že vyplave existující dluh. **Předem uživatele upozorni**, kolik souborů se bude procházet, a pokud jich je hodně (řádově stovky), zeptej se přes `AskUserQuestion`, jestli chce pokračovat, nebo omezit rozsah na konkrétní adresář.
