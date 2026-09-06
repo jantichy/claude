@@ -923,6 +923,35 @@ class ReadmeSkillu(unittest.TestCase):
                 navic.append(skill.parent.name)
         self.assertFalse(navic, f"skilly mimo životní cyklus s rámečkem osy: {navic}")
 
+    def test_readme_jmenuje_vsechny_rezimy(self):
+        """Režim, který README zamlčí, uživatel nikdy nepoužije.
+
+        Bere se první skupina `argument-hint` a jen tehdy, když je to výčet
+        jmen režimů (`[create|adopt|update]`), ne zástupný text (`[dokument]`,
+        `[větev|tag|hash]`). Výchozí režim se jmenuje taky – bez toho ho nejde
+        napsat explicitně.
+        """
+        for skill in SKILLS:
+            hint = frontmatter(skill).get("argument-hint", "")
+            skupina = re.match(r"\[([^\]]+)\]", hint)
+            if not skupina or "|" not in skupina.group(1):
+                continue
+            rezimy = skupina.group(1).split("|")
+            if not all(re.fullmatch(r"[a-z]+", r) for r in rezimy):
+                continue
+            readme = self._readme(skill)
+            if not readme.exists():
+                continue
+            text = readme.read_text(encoding="utf-8")
+            for rezim in rezimy:
+                with self.subTest(skill=skill.parent.name, rezim=rezim):
+                    # Stačí jméno režimu v kódové značce – ať už s lomítkem
+                    # (`/skill update`), nebo samo (`update`) tam, kde README
+                    # režimy vypisuje jako seznam.
+                    self.assertTrue(
+                        f"`{rezim}`" in text or f"/{skill.parent.name} {rezim}" in text,
+                        f"{readme}: režim `{rezim}` z argument-hint není v README")
+
     def test_readme_se_vejde_do_meze(self):
         """Vizitka, kterou nikdo nedočte, svůj účel neplní."""
         dlouhe = []

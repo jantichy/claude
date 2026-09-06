@@ -18,7 +18,9 @@
 #      opakující se text nemůže šířit dál,
 #   2) selhání uprostřed dlouhé nahrávky – spadne-li jeden úsek, přeskočí se
 #      a zbytek se přepíše (bez chunkingu se ztratí přepis celého souboru).
-# Cenou je řez uprostřed věty na každé hranici úseku, proto se to nezapíná samo.
+# Cena je dvojí a obojí je důvod, proč se to nezapíná samo: na každé hranici
+# úseku vzniká řez uprostřed věty a model se načítá znovu u každého úseku.
+# Kvůli tomu druhému se běh po úsecích nezapočítává do kalibrace tempa.
 #
 # Pro každý vstup vznikne <workdir>/<název>.txt a <workdir>/<název>.srt.
 # SRT vzniká vždy, protože se z něj počítá podíl řeči; když ho volající nechce,
@@ -32,10 +34,15 @@
 #   ### SPEECHSTAT N SPEECH_S TOTAL_S PERCENT   (podíl přepsaného zvuku,
 #                                                NE výstup VAD – vyjde stejně i bez něj)
 #   ### FAILED zaznam-N <důvod>   (běh pokračuje dalším souborem)
-#   ### CHUNKFAILED zaznam-N <i>/<z>  (jen s WHISPER_CHUNK_MIN: úsek se přeskočil,
-#                                      zbytek nahrávky se přepsal dál)
+#   ### CHUNKING zaznam-N <z>     (jen s WHISPER_CHUNK_MIN: začíná běh po úsecích)
+#   ### CHUNKFAILED zaznam-N <i>/<z>  (úsek se přeskočil, zbytek se přepsal dál)
+#   ### CHUNKSTAT zaznam-N <ok>/<z>   (kolik úseků se povedlo – ohlas ztrátu)
+#   ### NOCALIB <důvod>           (tempo tohoto běhu se do kalibrace nezapočítalo)
 #   ### ELAPSED AUDIO_S WALL_S   (AUDIO_S = jen úspěšně přepsané soubory)
 #   ### ALL DONE
+#
+# Do téhož logu píše i diarize.sh svoje ### DIARSTAT, ### DIARIZE ELAPSED
+# a ### DIARIZE FAILED.
 #
 # Průběžný stav kdykoli:  python3 progress.py <log_file>
 
@@ -53,6 +60,13 @@ PROMPT="${WHISPER_PROMPT:-}"
 USE_VAD="${WHISPER_VAD:-1}"
 KEEP_WAV="${WHISPER_KEEP_WAV:-0}"
 CHUNK_MIN="${WHISPER_CHUNK_MIN:-0}"
+# Překlep by jinak tiše spadl do normálního běhu – a to je u nápravy, kterou
+# volající sahá po nefunkčním přepisu, ta nejhorší možná porucha.
+case "$CHUNK_MIN" in
+  *[!0-9]*|'')
+    echo "WHISPER_CHUNK_MIN musí být celé číslo minut, dostal jsem '$CHUNK_MIN'." >&2
+    exit 2 ;;
+esac
 
 MODEL="$(model_file "$MODEL_KEY")"
 if [ -z "$MODEL" ] || [ ! -f "$MODEL" ]; then
@@ -101,12 +115,19 @@ shift_srt() {
 transcribe_chunked() {
   local wav="$1" outbase="$2" idx="$3" dur="$4"
   local len=$((CHUNK_MIN * 60))
-  local total start i=0 ok=0 counter=1 cdir
+  local total start i=0 ok=0 failed=0 counter=1 cdir
   total=$(awk -v d="$dur" -v l="$len" 'BEGIN{ printf "%d", (d + l - 1) / l }')
+  # Neznámá nebo nulová délka by dala nula úseků a tichý prázdný výstup.
+  [ "$total" -ge 1 ] 2>/dev/null || total=1
   cdir=$(mktemp -d "${TMPDIR:-/tmp}/transcript-chunks.XXXXXX") || return 1
 
-  : > "$outbase.txt"
-  : > "$outbase.srt"
+  # Sklápí se do dočasných souborů a na cílové se sahá až po úspěchu. Jinak by
+  # neúspěšný druhý běh smazal přepis, který vznikl při tom prvním – a právě
+  # jako druhý běh se tenhle režim používá.
+  local out_txt="$cdir/all.txt" out_srt="$cdir/all.srt"
+  : > "$out_txt"
+  : > "$out_srt"
+  echo "### CHUNKING zaznam-$idx $total" >> "$LOG"
 
   while [ "$i" -lt "$total" ]; do
     start=$((i * len))
@@ -114,21 +135,32 @@ transcribe_chunked() {
     # -ss před -i seekuje rychle; WAV je PCM, takže -c copy nic nepřekóduje.
     if ! ffmpeg -y -ss "$start" -t "$len" -i "$wav" -c copy "$cdir/c.wav" -loglevel error 2>>"$LOG"; then
       echo "### CHUNKFAILED zaznam-$idx $i/$total" >> "$LOG"
+      failed=$((failed + 1))
       continue
     fi
     if whisper-cli "${WOPTS[@]}" -f "$cdir/c.wav" -of "$cdir/c" >> "$LOG" 2>&1; then
-      [ -f "$cdir/c.txt" ] && cat "$cdir/c.txt" >> "$outbase.txt"
+      [ -f "$cdir/c.txt" ] && cat "$cdir/c.txt" >> "$out_txt"
       if [ -f "$cdir/c.srt" ]; then
-        shift_srt "$cdir/c.srt" "$start" "$counter" >> "$outbase.srt"
+        shift_srt "$cdir/c.srt" "$start" "$counter" >> "$out_srt"
         counter=$(( counter + $(grep -c -- '-->' "$cdir/c.srt") ))
       fi
       ok=1
     else
       echo "### CHUNKFAILED zaznam-$idx $i/$total" >> "$LOG"
+      failed=$((failed + 1))
     fi
     rm -f "$cdir/c.wav" "$cdir/c.txt" "$cdir/c.srt"
   done
 
+  # Kolik úseků se povedlo. Volající to hlásí uživateli – soubor s přeskočeným
+  # úsekem dostane `### DONE` jako každý jiný, takže bez tohohle by se ztráta
+  # poznala jedině z podílu přepsaného zvuku.
+  echo "### CHUNKSTAT zaznam-$idx $((total - failed))/$total" >> "$LOG"
+
+  if [ "$ok" = "1" ]; then
+    mv "$out_txt" "$outbase.txt"
+    mv "$out_srt" "$outbase.srt"
+  fi
   rm -rf "$cdir"
   [ "$ok" = "1" ]
 }
@@ -209,5 +241,12 @@ done
 wall=$(( $(date +%s) - wall_start ))
 
 echo "### ELAPSED $ok_audio $wall" >> "$LOG"
-python3 "$HERE/rate.py" update "$MODEL_KEY" "$ok_audio" "$wall" 2>/dev/null || true
+# Běh po úsecích se do kalibrace neposílá. Načítá model znovu u každého úseku,
+# takže jeho tempo je nafouklé o něco, co v normálním běhu není – EWMA by tím
+# stáhla odhad dolů i pro všechny běžné přepisy.
+if [ "$CHUNK_MIN" -gt 0 ]; then
+  echo "### NOCALIB beh-po-usecich" >> "$LOG"
+else
+  python3 "$HERE/rate.py" update "$MODEL_KEY" "$ok_audio" "$wall" 2>/dev/null || true
+fi
 echo "### ALL DONE" >> "$LOG"

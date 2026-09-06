@@ -4,7 +4,7 @@
 >
 > [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → **`/oponent`** → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/review`](../review/README.md) → [`/consistency`](../consistency/README.md) → [`/cleanup`](../cleanup/README.md) → [`/attack`](../attack/README.md) → [`/release`](../release/README.md)
 >
-> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
 Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, datový model nebo koncepci – dokument, na kterém jste s Claudem dlouho pracovali. **Právě proto na něj ani jeden z vás nemá nezávislý pohled:** spoluautor nevidí, co v dokumentu chybí, protože to má v hlavě, a nevidí, co je slabé, protože si to sám odsouhlasil. Tenhle skill pošle na dokument několik oponentů, kteří **nevědí nic z vaší konverzace** a čtou jenom soubory, každého z jiného úhlu. Jejich námitky pak projde s vámi jednu po druhé.
 

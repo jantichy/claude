@@ -4,7 +4,7 @@
 >
 > [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/oponent`](../oponent/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/review`](../review/README.md) → **`/consistency`** → [`/cleanup`](../cleanup/README.md) → [`/attack`](../attack/README.md) → [`/release`](../release/README.md)
 >
-> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
 Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je špatně zatříděné nebo zbylo po něčem, co se dávno smazalo. Neptá se „je ten kód správně?", ale **„sedí si projekt sám se sebou?"** – což je jiná otázka a nikdo jiný si ji neklade. Jednoznačné opravy udělá rovnou a jen je vypíše; o sporných se s vámi baví jednu po druhé.
 

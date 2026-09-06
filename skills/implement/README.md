@@ -4,7 +4,7 @@
 >
 > [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/oponent`](../oponent/README.md) → [`/breakdown`](../breakdown/README.md) → **`/implement`** → [`/review`](../review/README.md) → [`/consistency`](../consistency/README.md) → [`/cleanup`](../cleanup/README.md) → [`/attack`](../attack/README.md) → [`/release`](../release/README.md)
 >
-> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
 Vezme hotový implementační plán a projde ho od začátku do konce: u každého úkolu test, kód, ověření a commit. Nikdy nejde dál, dokud projektu neběží typová kontrola, linter a testy. Umí navázat na rozdělaný plán, a **nevěří přitom zaškrtávátkům** – ověří si v kódu, že odškrtnuté úkoly opravdu existují a procházejí, protože plán mohl zůstat odškrtnutý po přerušené práci.
 

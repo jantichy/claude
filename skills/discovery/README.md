@@ -4,7 +4,7 @@
 >
 > [`/project`](../project/README.md) → **`/discovery`** → [`/specify`](../specify/README.md) → [`/oponent`](../oponent/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/review`](../review/README.md) → [`/consistency`](../consistency/README.md) → [`/cleanup`](../cleanup/README.md) → [`/attack`](../attack/README.md) → [`/release`](../release/README.md)
 >
-> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
 Chystáte se postavit produkt a chcete vědět, do čeho vstupujete: kdo to už dělá, co to umí, kolik to stojí a proč by si někdo vybral zrovna vás. Skill to zjistí, vytřídí z toho, **co váš produkt musí umět, aby ho někdo vzal vážně**, a sepíše, co je na celé věci rizikové a co s tím udělat v návrhu. Pouští se dřív než psaní zadání schválně – aby to, co najde, mohlo zadání ještě změnit.
 
@@ -63,7 +63,7 @@ Zeptá se na čtyři věci o tom, co chcete stavět, pak pošle na rešerši ně
 
 ## Jak si ho nainstalovat
 
-Řekněte svému Claudovi:
+Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/discovery
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.

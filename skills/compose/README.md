@@ -4,7 +4,7 @@ Napíše článek, příspěvek na sociální sítě nebo vlákno vaším hlasem
 
 ## Co umí
 
-- **Napíše text ve třech formátech** – článek, příspěvek na sítě, vlákno. Každý má vlastní profil, protože se liší stavbou i tempem, ne jen délkou.
+- **Napíše text ve třech formátech** (`/compose`, případně `/compose write`) – článek, příspěvek na sítě, vlákno. Každý má vlastní profil, protože se liší stavbou i tempem, ne jen délkou.
 - **Posbírá archiv vašich textů** (`/compose collect`) – provede vás vyžádáním exportů z Facebooku, LinkedInu, X a Bluesky, stažením článků z webů, na které jste psali, i vytěžením záloh po webech, které už neexistují. Exporty převede do jednotné podoby sám.
 - **Vydestiluje z archivu popis vašeho hlasu** (`/compose profile`) – slovník, rytmus, myšlenkové postupy, rozdíly mezi tím, jak píšete odborně a jak osobně, a hlavně seznam obratů, které do vašich textů nepatří.
 - **Umí se doučit.** Když přibudou nové texty nebo nový postřeh, `/compose profile` je zapracuje do hotové báze, místo aby ji stavěl znovu.
@@ -28,7 +28,7 @@ Napíše článek, příspěvek na sociální sítě nebo vlákno vaším hlasem
 ```
 /compose collect     # jednou na začátku: posbírá všechny vaše dosavadní texty
 /compose profile     # vydestiluje z nich bázi – a později ji aktualizuje
-/compose             # píše text
+/compose             # píše text (totéž co /compose write)
 ```
 
 Napoprvé jděte po řadě. Sbírání archivu je běh na několik dní, protože exporty ze sociálních sítí se připravují klidně dva dny – skill si o ně řekne hned na začátku a mezitím stahuje zbytek.

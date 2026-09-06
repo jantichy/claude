@@ -4,7 +4,7 @@
 >
 > **`/project`** → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/oponent`](../oponent/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/review`](../review/README.md) → [`/consistency`](../consistency/README.md) → [`/cleanup`](../cleanup/README.md) → [`/attack`](../attack/README.md) → [`/release`](../release/README.md)
 >
-> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
 Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znovu – jak se jmenuje a čím je, Git a vzdálený repozitář, uspořádání na disku, dokumentační strukturu, automatické commity, typ projektu, spouštěcí příkazy, doménové checklisty – a rovnou to nastaví. Umí ale i projekty, které už existují: udělá inventuru a dorovná je, aniž by cokoliv přepsal bez zeptání. A **umí se vrátit ke stejnému projektu za rok**, kdy se standardy mezitím posunuly a projekt v nich zůstal stát.
 

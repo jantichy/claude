@@ -4,7 +4,7 @@
 >
 > [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/oponent`](../oponent/README.md) → **`/breakdown`** → [`/implement`](../implement/README.md) → [`/review`](../review/README.md) → [`/consistency`](../consistency/README.md) → [`/cleanup`](../cleanup/README.md) → [`/attack`](../attack/README.md) → [`/release`](../release/README.md)
 >
-> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
 Udělá ze zadání seřazený seznam úkolů velikosti pár minut. U každého konkrétní soubory, hotový kód testu, příkaz, kterým se ověří, že je úkol hotový, a commit. Plán je psaný pro někoho, kdo projekt vůbec nezná – a to je celý smysl: dokud práce nemá takhle nařezanou podobu, není nad čím se domluvit a chyba v rozvrhu se pozná až u posledního úkolu. Plán se předkládá ke schválení; je to poslední levné místo, kde se dá otočit.
 

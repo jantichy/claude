@@ -4,7 +4,7 @@
 >
 > [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → **`/specify`** → [`/oponent`](../oponent/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/review`](../review/README.md) → [`/consistency`](../consistency/README.md) → [`/cleanup`](../cleanup/README.md) → [`/attack`](../attack/README.md) → [`/release`](../release/README.md)
 >
-> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
 Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás provede vyptáváním otázku po otázce a udělá z toho **dvě zadání**: jedno odpovídá na otázku *co stavíme a proč*, druhé na otázku *jak*. Dokud nejsou hotová a schválená, nesmí vzniknout ani řádek kódu – a to je tvrdé pravidlo, ne doporučení.
 

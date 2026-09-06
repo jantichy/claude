@@ -4,7 +4,7 @@
 >
 > [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/oponent`](../oponent/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/review`](../review/README.md) → [`/consistency`](../consistency/README.md) → [`/cleanup`](../cleanup/README.md) → **`/attack`** → [`/release`](../release/README.md)
 >
-> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
 Zvedne aplikaci lokálně a pošle na ni útočníky, jejichž zadání zní jednoduše: **najdi, co spadne.** Žádný seznam, co hledat, žádná předem daná kritéria. Je to třetí druh záruky vedle automatických bran a čtení kódu, a ani jedna z nich ho nenahradí – rozdíl proti kontrole kódu je v jednom slově: ta kód **čte**, tenhle ho **spouští**. Přehlédnutá větev se v kódu hledá těžko a v běžící aplikaci se projeví bílou stránkou.
 
