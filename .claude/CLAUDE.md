@@ -59,5 +59,5 @@ Autocommit je zapnutý.
 Položky vyhodnocené při /consistency auditu jako „neopravovat". Při dalším auditu
 se neuvádějí, dokud se nezmění kód, kterého se týkají.
 
-- **2026-09-06** · `e44c47b` · *README slibuje u `/invoicing recover` čtení chatu, které dnes nefunguje*: README popisuje záměr skillu, ne dnešní stav přístupů. Ty se mění – Slack u FAVI čeká na schválení jejich správcem – a text by se přepisoval při každé změně. Že je nedostupný zdroj slepé místo, řeší skill sám za běhu.
-  - Lokace: README.md:95
+- **2026-09-06** · `bb76cec` · *README slibuje u `/invoicing recover` čtení chatu, které dnes nefunguje*: README popisuje záměr skillu, ne dnešní stav přístupů. Ty se mění – Slack u FAVI čeká na schválení jejich správcem – a text by se přepisoval při každé změně. Že je nedostupný zdroj slepé místo, řeší skill sám za běhu.
+  - Lokace: skills/invoicing/README.md:9

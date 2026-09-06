@@ -87,7 +87,13 @@ en 0.999 mixed:cs,en
 
 **Whisper bere jeden jazyk na běh**, takže tohle skill sám nespraví. Musí to ale říct nahlas a nabídnout, co s tím:
 
-1. **Přepsat po částech** – uživatel řekne, kolikátá minuta je zlom, ty nahrávku rozřízneš `ffmpeg -ss/-t` a pustíš dvakrát, každou část se svým jazykem. Přepisy spojíš do jednoho `<název>.md` s mezinadpisem u zlomu. **Pozor na dvě věci:** časy v SRT druhé části začínají od nuly, takže se nedají použít pro diarizaci ani pro `merge.py`, a části vyrobí soubory (`<název>-1.*`, `<název>-2.*`), které úklid v kroku 10 nezná – **ukliď je ručně**.
+1. **Přepsat po částech** – uživatel řekne, kolikátá minuta je zlom, ty nahrávku rozřízneš a pustíš dvakrát, každou část se svým jazykem:
+
+   ```bash
+   <skill>/split.sh <workdir> <audio> <zlom>     # zlom jako MM:SS nebo v sekundách
+   ```
+
+   Vypíše cesty obou částí (`<název>-1.*`, `<název>-2.*`), každou na jeden řádek; zlom mimo nahrávku odmítne. Přepisy pak spojíš do jednoho `<název>.md` s mezinadpisem u zlomu. **Pozor na dvě věci:** časy v SRT druhé části začínají od nuly, takže se nedají použít pro diarizaci ani pro `merge.py`, a části jsou soubory, které úklid v kroku 10 nezná – **ukliď je ručně**.
 2. **Přepsat celé v převažujícím jazyce** a **napsat do poznámky na konci přepisu**, která část je nespolehlivá.
 
 **Nerozhoduj sám, zeptej se.** Skript umí zjistit, *že* se jazyk mění, ale ne *kde* – hranici zná jedině uživatel. Časově se ty varianty skoro neliší (přepisuje se týž objem zvuku, jen se dvakrát načte model); liší se tím, kolik práce je kolem a jestli je přijatelné mít kus přepisu nespolehlivý.
@@ -407,7 +413,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 
 ## Technické detaily
 
-- **Modely:** `turbo` (`ggml-large-v3-turbo.bin`) a `large-v3` (`ggml-large-v3.bin`) v `~/.whisper-models/`. Naměřeno na Apple M1 nad 31 minutami české schůzky: turbo 5,4× realtime, `large-v3` 1,67× realtime, tedy 3,2× pomaleji. Rozdíl v textu byl 13 % slov, ale drtivou většinou šlo o vatu („jo“, „to“, „jako“); rozhodující rozdíl je ve vlastních jménech a řídkých slovech, kde `large-v3` vyhrává. **Slovník jmen ten rozdíl smaže spolehlivěji než volba modelu** – turbo se slovníkem porazilo `large-v3` bez slovníku a bylo přitom 3,6× rychlejší.
+- **Modely:** `turbo` (`ggml-large-v3-turbo.bin`) a `large-v3` (`ggml-large-v3.bin`) v `~/.whisper-models/`. Naměřeno na Apple M1 nad 31 minutami české schůzky: turbo 5,4× realtime, `large-v3` 1,67× realtime, tedy **zhruba třikrát pomaleji**. Přesnější číslo než řádové sem nepatří: časy běhu kolísají podle zahřátí stroje natolik, že dva bitově shodné běhy trvaly 291 s a 504 s (viz odrážka o determinismu níž). Rozdíl v textu byl 13 % slov, ale drtivou většinou šlo o vatu („jo“, „to“, „jako“); rozhodující rozdíl je ve vlastních jménech a řídkých slovech, kde `large-v3` vyhrává. **Slovník jmen ten rozdíl smaže spolehlivěji než volba modelu** – turbo se slovníkem porazilo `large-v3` bez slovníku, a to několikanásobně rychleji.
 - **Slovník rozhoduje, ale ne délkou.** Sedm běhů nad touž 31minutovou nahrávkou (turbo, sledované místní jméno, 5 výskytů):
 
   | Seznam | Položek | Pozice jména | Správně |
@@ -434,7 +440,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - **Kontext předchozího textu se nevypíná, i když se to nabízí.** Whisper si nese vlastní předchozí výstup do dalšího okna, a právě tudy se šíří halucinační smyčky; `-mc 0` to utne. **Jenže tudy jde i slovník, takže ho `-mc 0` nezeslabí – úplně ho vypne.** Doloženo tvrdě: dva **různé** slovníky daly s `-mc 0` **bit-identický výstup**, kdežto bez něj se tytéž dva slovníky liší. `--carry-initial-prompt` je s ním bezpředmětný, protože prompt nemá kudy dovnitř. Podíl přepsaného zvuku k tomu klesl z 96,9 % na 90,8 % a sledovaná zkratka vyšla správným tvarem 1 ze 7 zmínek místo 7 z 8 („zobu“, „zoptak“). **Smyčky u nás řeší VAD a `-sns`** – na téhle nahrávce nevznikla ani jedna, takže by se slovníkem platilo za problém, který tu není.
 - **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto. Naměřeno na Apple M1: **7,13× realtime**, tedy 31,4 minuty zvuku za 4:24. Je to o něco **rychlejší než přepis turbem**, takže zapnutá diarizace zhruba zdvojnásobí celkový čas. Aktuální kalibrovanou hodnotu si vyžádej přes `rate.py get`, neopisuj ji sem – mění se po každém běhu.
 - **Gated repozitáře jsou tři**, ne jeden: kromě `speaker-diarization-3.1` ještě `segmentation-3.0` a `speaker-diarization-community-1`. Seznam se mezi verzemi pyannote mění, proto `diarize.sh` při selhání vytáhne z chyby konkrétní repozitář (`### DIARIZE FAILED gated:<repo>`). Kontrola v `check-deps.sh` sahá na `config.yaml`, ne na `/api/models/` – **metadata gated repa jsou veřejná, takže endpoint vrací 200 i bez přístupu** a kontrola by byla falešně pozitivní.
-- **Bere se `exclusive_speaker_diarization`**, ne `speaker_diarization`. Je podle dokumentace pyannote určená právě pro navázání na přepis, protože neobsahuje překrývající se úseky.
+- **Přednostně se bere `exclusive_speaker_diarization`**, a teprve když ten atribut chybí, `speaker_diarization`. Ta první je podle dokumentace pyannote určená právě pro navázání na přepis, protože neobsahuje překrývající se úseky; záloha je tam kvůli starším verzím pyannote, které vracely rovnou `Annotation` bez rozlišení.
 - **Nepřiřazené repliky jsou v pořádku.** Na 31minutové schůzce dvou lidí zůstalo bez mluvčího 21 replik ze 426 (5 %) a byly to skoro výhradně krátké přitakávací vsuvky („jo, jo, jo“, „to asi ne“). Delší věcné repliky mluvčího dostaly všechny.
 - **Zarovnání po slovech (WhisperX) skill záměrně neřeší.** Táhlo by s sebou faster-whisper, který na Apple Silicon nemá Metal backend a běží jen na CPU, takže by se celý přepis řádově zpomalil. Cenou je, že na rychlých výměnách („jasně, jasně“) bude přiřazení mluvčích plavat. Bereme to vědomě: na dlouhých replikách, ze kterých se dělají úkoly ve shrnutí, se lidé nepřekřikují.
 
@@ -448,6 +454,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 | `rate.py` | odhad a kalibrace tempa (`get`, `eta`, `update`) |
 | `progress.py` | progress bar nad logem běhu |
 | `detect-lang.sh` | detekce jazyka ze tří vzorků, hlásí i dvojjazyčnost |
+| `split.sh` | rozřízne dvojjazyčnou nahrávku na dvě části v zadaném čase |
 | `diarize.sh` | volitelný druhý průchod – kdo kdy mluví |
 | `diarize.py` | vlastní běh pyannote uvnitř venv |
 | `merge.py` | spojí časy z whisperu s mluvčími, vyrobí `.json` a `.vtt` |
