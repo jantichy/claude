@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 
 Proveď audit vnitřní konzistence projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to druhý krok uzavírání: navazuje na `/review` a předává na `/cleanup`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírání: navazuje na `/review` a předává na `/cleanup`.
 
 ## Rozsah
 
@@ -31,7 +31,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to druhý krok uzaví
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
-- **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky osy nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
+- **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky životního cyklu nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
 
 ## Fáze 0 – Pre-flight: kontext a baseline
 
@@ -70,9 +70,9 @@ Z těchto souborů sestav **baseline konvencí** – co je v projektu explicitn�
 
 Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako „won't fix“.
 
-### 0.4 Spusť nástroje, které předchozí kroky osy nedělají
+### 0.4 Spusť nástroje, které předchozí kroky životního cyklu nedělají
 
-**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tuhle baseline: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/RULES.md`, *Životní cyklus práce*.
+**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tuhle baseline: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/RULES.md`, *Životní cyklus projektu*.
 
 Spusť jen to, co je vlastní téhle otázce – hledání mrtvého kódu a nepoužitých závislostí, tedy „sedí si projekt sám se sebou?“, na což se `/review` neptá:
 
@@ -82,7 +82,7 @@ Nemá-li je projekt (nebo nemá `package.json` vůbec, což je u obsahového či
 
 Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označí tagem `[toolchain]`.
 
-**Běží-li `/consistency` samostatně mimo osu** (tedy bez předchozího `/review`) a projekt má *Kontrakt příkazů*, řekni uživateli jednou větou, že zelená linka teď prověřená není a že `/review` se dělá dřív.
+**Běží-li `/consistency` samostatně mimo životní cyklus** (tedy bez předchozího `/review`) a projekt má *Kontrakt příkazů*, řekni uživateli jednou větou, že zelená linka teď prověřená není a že `/review` se dělá dřív.
 
 ## Fáze 1 – Průzkum projektu
 

@@ -29,7 +29,7 @@ Mají **jinou životnost**. Produktový záměr se mění zřídka; technické �
 
 Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → `architecture.md`. Ne → `requirements.md`.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to druhý krok zakládání: navazuje na `/project` a předává na `/oponent`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok zakládání: navazuje na `/project` a předává na `/oponent`.
 
 ## Co skill nedělá
 
@@ -306,7 +306,7 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 7. **Rozsah** – vejde se to do jednoho implementačního plánu? Pokud ne, dekomponuj.
 8. **Mimo rozsah není prázdné** (jen `requirements.md`) – prázdná sekce znamená, že se neřezalo.
 
-**Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. `/oponent` je **krok osy**, ne nabídka: pusť ho, nebo nahlas řekni, proč se u téhle změny přeskakuje. Nabízej ho pro každý dokument zvlášť (`/oponent docs/requirements.md`, `/oponent docs/architecture.md`), protože panel úhlů se pro požadavky a pro návrh řešení liší.
+**Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. `/oponent` je **krok životního cyklu**, ne nabídka: pusť ho, nebo nahlas řekni, proč se u téhle změny přeskakuje. Nabízej ho pro každý dokument zvlášť (`/oponent docs/requirements.md`, `/oponent docs/architecture.md`), protože panel úhlů se pro požadavky a pro návrh řešení liší.
 
 **Úhly nevypisuj** – sestaví si je sám podle sloupce *Spouštěč* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Fáze 1*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/RULES.md`, *Single source of truth*).
 
@@ -326,7 +326,7 @@ Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání
 
 **U projektu bez kódu** `/breakdown` nevyvolávej – rozepiš kroky do `docs/todo.md`.
 
-Celý řetěz i s tím, co následuje po realizaci, je v `~/.claude/RULES.md`, *Životní cyklus práce*.
+Celý řetěz i s tím, co následuje po realizaci, je v `~/.claude/RULES.md`, *Životní cyklus projektu*.
 
 ------
 

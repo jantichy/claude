@@ -12,7 +12,7 @@ Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Vě
 
 ### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
-Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i celá osa životního cyklu práce – od `/project` až po `/release` – která říká, co je čí krok a co který krok naopak dělat nemá. A tabulka, podle které se vybírá model a effort pro každý typ úkolu: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**.
+Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i celý životní cyklus projektu – od `/project` až po `/release` –, který říká, co je čí krok a co který krok naopak dělat nemá. A tabulka, podle které se vybírá model a effort pro každý typ úkolu: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**.
 
 ### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
 
@@ -22,81 +22,115 @@ Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jedno
 
 Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, zelená linka a určení rozsahu z gitu. Dvanáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth", jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky – **převedený je zatím jen `/skill` sám**, zbytek na převod čeká, až ho proženu `/skill update`.
 
-## Skilly, jak jdou po sobě
+## Skilly životního cyklu projektu
 
-Následující skilly tvoří jednu osu od založení projektu po nasazení. Nemusí se projít celá – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
+Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení a jdou tu v pořadí, ve kterém se pouštějí. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
-Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znovu – lidský název, git a remote, autocommit, typ projektu, kontrakt příkazů – a rovnou to nastaví včetně `README.md`, `.gitignore` a standardní struktury. Nový projekt zakládá režim **`create`**; umí ale i projekty, které už existují (**`adopt`**): udělá inventuru a dorovná je na moje dnešní preference, nikdy nepřepíše soubor bez zeptání. Zvládá i **worktree layout**, tedy kontejner s `.bare` a jedním podadresářem na větev.
+Zeptá se postupně na všechno, co se u nového projektu řeší pokaždé znovu – název, git a remote, uspořádání na disku, dokumentační strukturu, autocommit, typ projektu, spouštěcí příkazy, doménové checklisty – a rovnou to nastaví. Umí i projekty, které už existují, a hlavně se k nim po čase vrátit: pozná svůj vlastní otisk a místo otázek projde projekt proti tomu, jak standardy vypadají dnes. Tím řeší nepříjemnou vlastnost celé téhle vrstvy – konfigurace se vyvíjí dál, ale projekt založený loni zůstane stát a sám o tom neřekne.
 
-Nad projektem, ve kterém pozná svůj vlastní otisk – blok metadat v `CLAUDE.md` –, se chová jinak: přepne se do režimu **`update`** a místo otázek projde celý projekt proti tomu, jak standardy vypadají dnes – sekce v `CLAUDE.md`, deklarace a kontrakty, umístění a vnitřní tvar dokumentace, odkazy na skilly a doménové znalosti, které se mezitím mohly přejmenovat. Řeší to jinak nepříjemnou vlastnost celé téhle vrstvy: konfigurace se vyvíjí dál, ale projekty založené za starého nastavení v něm zůstanou stát a samy o tom neřeknou. Tohle je způsob, jak je dorovnat jedním zavoláním. Projekt bez otisku – ať v něm skill nikdy neběžel, nebo ho nastavovala starší verze – jde nejdřív průvodcem (režim **`adopt`**) a dorovnání na něj přijde na konci.
+**Podrobně:** [README skillu](skills/project/README.md)
 
 ### [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
 
 Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak. Hranici mezi nimi drží tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?* A dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold.
 
+**Podrobně:** [README skillu](skills/specify/README.md)
+
 ### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 
-**Krok osy mezi zadáním a plánem** – protože jinak návrh neměří nikdo: `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celou osou jako korektní. Pošle na dokument agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory; každý dostane jiný úhel z katalogu rozděleného na **metody** (jak se dívat) a **domény** (na co se dívat), protože metoda bez domény je slepá a doména bez metody sbírá povrch. Každý závažný nález pak dostane ověřovatele, jehož úkolem je nález **vyvrátit** – falešnou námitku tak zabije stroj, ne já. U drobné změny se přeskočí, u nového systému ne.
+Pošle na hotový dokument agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory, každého z jiného úhlu. Je to krok mezi zadáním a plánem, protože jinak návrh neměří nikdo: `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu. Každou závažnou námitku pak dostane ověřovatel s jediným úkolem – **vyvrátit ji**.
 
-### [`/breakdown`](skills/breakdown/) a [`/implement`](skills/implement/) – plán a jeho odpracování
+**Podrobně:** [README skillu](skills/oponent/README.md)
 
-`/breakdown` vyrobí ze zadání `docs/plan.md` – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu a ověřitelné kritérium – a `/implement` ho odpracuje úkol po úkolu, každý do zelené linky a do commitu. Na pozadí obojí řídí [superpowers](https://github.com/obra/superpowers); moje obálky navíc vynucují cesty v `docs/`, odmítnou se spustit bez schváleného zadání a u rozdělaného plánu nevěří zaškrtávátkům, ale ověří si v kódu, že odškrtnuté úkoly opravdu existují.
+### [`/breakdown`](skills/breakdown/) – ze zadání implementační plán
+
+Vyrobí ze schváleného zadání `docs/plan.md` – seřazený seznam úkolů velikosti pár minut, kde každý má konkrétní soubory, hotový kód testu a příkaz, kterým se ověří, že je hotový. Plán se předkládá ke schválení, protože je to poslední levné místo, kde se dá otočit.
+
+**Podrobně:** [README skillu](skills/breakdown/README.md)
+
+### [`/implement`](skills/implement/) – odpracování plánu úkol po úkolu
+
+Projde plán od začátku do konce, u každého úkolu test, kód, zelená linka a commit. Umí navázat na rozdělaný plán a nevěří přitom zaškrtávátkům – ověří si v kódu, že odškrtnuté úkoly opravdu existují a procházejí. Nabídne tři režimy podle toho, jak často se do toho chci dívat.
+
+**Podrobně:** [README skillu](skills/implement/README.md)
 
 ### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
-Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu (testy, lint, audit závislostí, scan tajemství, statická analýza), pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, agentní infrastruktura, moje doménové standardy – a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí. Výchozí rozsah jsou změny na větvi; **`/review full`** pustí týž panel nad celým projektem – hodí se u zděděného kódu nebo když se dlouho nedělalo, ale je to z celé soustavy nejdražší běh, takže se předem zeptá, kolik souborů projde.
+Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu, pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, agentní infrastruktura, moje doménové standardy –, a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
+
+**Podrobně:** [README skillu](skills/review/README.md)
 
 ### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
 
-Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Nálezy roztřídí od kritických po kosmetické, jednoznačné opravy udělá rovnou a o sporných se mnou mluví jednu po druhé. Výchozí rozsah jsou soubory dotčené prací na větvi **a ti, kdo na ně odkazují** – nekonzistence skoro nikdy nežije v jednom souboru; **`/consistency full`** projde celý projekt bez ohledu na diff, což se vyplatí jednou za čas a před nasazením, ne po každé feature.
+Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Jednoznačné opravy udělá rovnou, o sporných se mnou mluví jednu po druhé. A pamatuje si, co jsem rozhodl neopravovat – jen do chvíle, než se ten kód změní.
+
+**Podrobně:** [README skillu](skills/consistency/README.md)
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
-Před opuštěním nebo zkompaktováním session projde celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Hned po vytěžení konverzace hledá druhou věc: co v ní zůstalo viset. Napíše mi dlouhou odpověď s návrhy a otázkami, já se chytím poloviny a od zbytku uteču – a nikdo si toho nevšimne. Tyhle zamluvené kusy dohledá, ověří, že se to nevyřešilo někde dál jinudy, a probere je se mnou jeden po druhém, dokud je ještě koho se ptát – tedy dřív, než začne zapisovat. Pak pošle na projekt agenta bez kontextu, který ověří, jestli z dokumentace jde na dnešní práci navázat, commitne a dá jednoznačný verdikt: je zapsáno, nebo tohle ještě zbývá. Co by jinak zůstalo „mimo rozsah úklidu“, mi předtím vypíše najednou a zeptá se, jestli to máme vyřešit hned, nebo zapsat do todo – aby se to neztratilo se zavřenou session. Stojím-li ve worktree větve, řekne navíc rovnou, že větev jde bez obav přimergovat do main – ale nemerguje ani nic nepřipravuje. **`/cleanup full`** nezvětšuje vytěžení session – to běží vždycky celé –, ale rozšiřuje závěrečnou kontrolu čerstvýma očima z dnešní práce na celou dokumentaci.
+Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Na konec pošle na projekt agenta bez kontextu, který řekne, jestli z dokumentace jde na dnešní práci navázat.
+
+**Podrobně:** [README skillu](skills/cleanup/README.md)
 
 ### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 
-Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test. Pouštím ho před nasazením, ne po každé feature, a útočí se výhradně na lokální instanci nad testovacími daty. Výchozí rozsah je to, čeho se dotkla práce na větvi; **`/attack full`** jde po celé aplikaci – u větší je rozumné se předem dohodnout, kolik času tomu dát.
+Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test; útočí se výhradně na lokální instanci nad testovacími daty, a že tomu tak opravdu je, se dokládá příkazem, ne slibem.
+
+**Podrobně:** [README skillu](skills/attack/README.md)
 
 ### [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
 
-Nasadí do produkce přes **oddělenou nasazovací větev** `production`, takže `main` zůstane integrační a merge feature nic nenasazuje. Před nasazením hlídá čistý strom, zelenou linku, produkční build, audit závislostí a jestli proběhlo `/review` a `/attack`; zvlášť řeší **migrace** dopředu kompatibilně, aby rollback kódu neshodil aplikaci na datech nové verze. Nikdy se nespustí sám, nic neopravuje a po nasazení ověřuje na produkční URL. **A tím nekončí:** poslední fází je **sledovací okno** s konkrétním koncem, protože celá třída chyb se projeví až později – backfill migrace, cache, chyba, která nastane až na produkčním objemu dat. Dokud okno neuplyne a někdo ho výslovně neuzavře, nasazení není hotové.
+Nasadí do produkce přes **oddělenou nasazovací větev**, takže `main` zůstane integrační a merge feature nic nenasazuje. Před nasazením projde brány, zvlášť řeší migrace dopředu kompatibilně a nikdy se nespustí sám. A tím nekončí: poslední fází je **sledovací okno** s konkrétním koncem, protože celá třída chyb se projeví až později. Dokud okno neuplyne a někdo ho výslovně neuzavře, nasazení není hotové.
 
-## Skilly mimo osu
+**Podrobně:** [README skillu](skills/release/README.md)
 
-Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu.
+## Skilly mimo životní cyklus
 
-### [`/skill`](skills/skill/) – skilly, které se samy udržují
-
-Zakládá nové skilly proti normě (`create`), vytěží skill z rozdělané konverzace (`extract`), **prožene existující skilly revizí** (`update`) a umí skill i zrušit (`delete`) včetně všech stop – README, osy, testů, odkazů z jiných skillů a sekcí v projektových `CLAUDE.md`. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale patnáct souborů zůstane stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?* – protože konfigurační vrstva roste pod nohama a starší skill o nových možnostech neví.
-
-Sám je ukázkou vlastního pravidla *skládej, nepiš znovu*: tvar a napojení na okolí jsou moje, ale měření spolehlivosti vyvolání deleguje na Anthropicův `skill-creator` a tlakové scénáře na `superpowers:writing-skills`. Obojí je přiznané jako vyměnitelný vnitřek, ne jako rozhraní.
+Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu. Jsou seřazené abecedně.
 
 ### [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
 
 Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
 
-### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
-
-Přejmenuje pojem napříč projektem včetně **odvozených tvarů** a české skloňované varianty, kterou grep na základní tvar nenajde. Sahá i na názvy souborů a adresářů, přesouvá přes `git mv`, ať se neztratí historie, a hlídá pořadí – delší tvary před kratšími. Povinný poslední krok je kontrolní průchod na starý tvar, který musí vrátit nulu.
-
-### [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
-
-Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, `charset=utf-8` hned na začátku a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu proteču samy z výpočetního skriptu nebo ze screenshotu administrace.
+**Podrobně:** [README skillu](skills/autocommit/README.md)
 
 ### [`/compose`](skills/compose/) – texty, co znějí jako já
 
 Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní a k tématu si dohledá nejpodobnější texty z archivu jako živé vzory. Moje názory a pointy si ale nikdy nevymýšlí, ty musím dodat sám.
 
+**Podrobně:** [README skillu](skills/compose/README.md)
+
 ### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
 
-Konec měsíce znamenal pokaždé totéž: projít timetracking, sečíst hodiny po projektech, přepsat je do fakturačního systému, stáhnout dvě PDF a napsat ke každému mail. Tenhle skill to udělá za mě a u každého klienta se zastaví dřív, než něco vystaví – ukáže mi, co napočítal, co vyřadil a co je mu podezřelé. **Hranici „odkud počítat“ nikdy neodhaduje**: čte ji z poslední faktury, takže se to nerozejde ani při faktuře vystavené ručně. Končí rozepsaným draftem s fakturou a výkazem hodin v příloze a **odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: **dohledat čas, který jsem si zapomněl natrackovat** – projde mail, kalendář, chat, commity a historii prohlížeče, porovná to s timetrackingem a ukáže tipy s doložením, na základě čeho k nim došel. Sám do timetrackingu nezapíše nic, doplnit si to musím já. Sazby, daňový režim a dohody s klienty **v tomhle repozitáři nejsou**; skill je rámec a konkrétní čísla si tahá ze soukromé knowledge base.
+Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je mu podezřelé, vystaví faktury a nechá v mailu rozepsaný draft s fakturou a výkazem hodin v příloze. **Odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: dohledat čas, který jsem si zapomněl natrackovat. Sazby a dohody s klienty v tomhle repozitáři nejsou, skill je jen rámec.
+
+**Podrobně:** [README skillu](skills/invoicing/README.md)
+
+### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
+
+Přejmenuje pojem napříč projektem včetně **odvozených tvarů** a české skloňované varianty, kterou grep na základní tvar nenajde. Sahá i na názvy souborů a adresářů, přesouvá přes `git mv`, ať se neztratí historie, a hlídá pořadí – delší tvary před kratšími. Povinný poslední krok je kontrolní průchod na starý tvar, který musí vrátit nulu.
+
+**Podrobně:** [README skillu](skills/replace/README.md)
+
+### [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
+
+Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu proteču samy z výpočetního skriptu nebo ze screenshotu administrace.
+
+**Podrobně:** [README skillu](skills/report/README.md)
+
+### [`/skill`](skills/skill/) – skilly, které se samy udržují
+
+Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale patnáct souborů zůstane stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
+
+**Podrobně:** [README skillu](skills/skill/README.md)
 
 ### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
-Ze zvukových nahrávek udělá pořádek: každou přepíše do Markdownu, napíše jedno strukturované shrnutí se soupisem domluv a úkolů na konci, nebo obojí – podle toho, co si vyberu. Přepis běží **lokálně a offline** přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp), takže nahrávka neopustí můj počítač. Než začne, zeptá se na pár věcí a podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy. Text uhladí: vyhází „ehm“, odstraní halucinace rozpoznávače, opraví přeslechy a rozseká to do kapitol. Jazyk pozná sám a na vyžádání rozliší i mluvčí, takže úkoly ve shrnutí mají majitele.
+Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované shrnutí se soupisem domluv a úkolů na konci; na vyžádání rozliší i mluvčí, takže úkoly mají majitele. Přepis běží **lokálně a offline**, takže nahrávka neopustí můj počítač. Než začne, podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy.
+
+**Podrobně:** [README skillu](skills/transcript/README.md)
 
 ## Hooky, skripty a nastavení
 
@@ -116,7 +150,7 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
-Skilly a pravidla jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo na sekci, co mezitím zmizela, nebo skill, který v README chybí. Druhá sada testuje **zelenou linku** – jediné místo v celé konfiguraci, které něco doopravdy vynucuje, a tedy to, kde tichá regrese stojí nejvíc: osmnáct scénářů nad dočasným repozitářem, od souhlasu přes rozdíl mezi „test našel chybu“ a „test nejde spustit“ až po zámek proti souběhu dvou session. Obojí stojí nula tokenů a běží v zelené lince po každém tahu. Od zavedení normy tvaru skillu k nim přibyla **ráčna**: množina skillů, které normu nesplňují, se musí *rovnat* seznamu výjimek, takže opravený skill, který se ze seznamu nevyškrtne, shodí testy stejně jako regrese – jinak by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit. Napsal jsem je až po roce používání a **první běh hned našel tři vady**, které mi při ručním čtení třikrát utekly; testy zelené linky pak hned napoprvé odhalily, že souhlas nesedí na cestu vedoucí přes symlink. Jen standardní knihovna Pythonu, žádná instalace.
+Skilly a pravidla jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez vlastního README. Druhá sada testuje **zelenou linku** – jediné místo v celé konfiguraci, které něco doopravdy vynucuje, a tedy to, kde tichá regrese stojí nejvíc. Obojí stojí nula tokenů a běží v zelené lince po každém tahu. Jen standardní knihovna Pythonu, žádná instalace.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 

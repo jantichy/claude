@@ -19,7 +19,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 ## Co skill nedělá
 
-- **Nepíše zadání ani plán.** Je první článek osy *Životního cyklu práce* (`~/.claude/RULES.md`); co se staví, řeší `/specify`, rozpad na úkoly `/breakdown`. `docs/requirements.md`, `docs/architecture.md` ani `docs/plan.md` proto nezakládá.
+- **Nepíše zadání ani plán.** Je první článek *Životního cyklu projektu* (`~/.claude/RULES.md`); co se staví, řeší `/specify`, rozpad na úkoly `/breakdown`. `docs/requirements.md`, `docs/architecture.md` ani `docs/plan.md` proto nezakládá.
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
 - **Nepřepisuje nic naslepo.** U existujícího projektu se na každý rozpor ptá.
 - **Nenaplňuje soubory obsahem.** `docs/` zakládá prázdné, jen s nadpisem.
@@ -27,7 +27,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 ## Zásady pro celý průběh
 
-- **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu osy. Kritérium normy (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*) zní, čí odpovědi tvoří výsledek: tady je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek. Ostatní skilly něco samy najdou nebo vyrobí a ptají se až na nálezy – ty mají fáze, i když se ptají stejně často. Číslují se **plochou vzestupnou řadou bez písmen** (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*). Kroky 5–8 zakládají standardní strukturu a byly kdysi jedním krokem s podkroky `6a`–`6c`; kritériu normy pro písmennou podfázi ale nevyhověly – jsou to fáze jedné volby, ne samostatné výstupy –, tak se z nich staly samostatné kroky.
+- **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu životního cyklu. Kritérium normy (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*) zní, čí odpovědi tvoří výsledek: tady je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek. Ostatní skilly něco samy najdou nebo vyrobí a ptají se až na nálezy – ty mají fáze, i když se ptají stejně často. Číslují se **plochou vzestupnou řadou bez písmen** (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*). Kroky 5–8 zakládají standardní strukturu a byly kdysi jedním krokem s podkroky `6a`–`6c`; kritériu normy pro písmennou podfázi ale nevyhověly – jsou to fáze jedné volby, ne samostatné výstupy –, tak se z nich staly samostatné kroky.
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
@@ -333,7 +333,7 @@ Volbu „Ostatní“ mezi možnosti **nedávej** – AskUserQuestion ji nabízí
 
 Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
-- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu práce* v `~/.claude/RULES.md`: `/specify` → `/oponent` → `/breakdown` → `/implement`.“ Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first).“
+- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu projektu* v `~/.claude/RULES.md`: `/specify` → `/oponent` → `/breakdown` → `/implement`.“ Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first).“
 - **Web** – „Webové rozhraní – obsah, struktura, šablony, ne proces zadání a plánu.“
 - **Nasazení webové analytiky** – „Implementace měření na cizím webu – revize existujícího nastavení, měřicí plán, GTM, GA4, consent, reklamní systémy. Výstupem je funkční a doložitelné měření plus dokumentace, ne aplikační kód.“ Navíc přidej pravidlo: „Každá změna v měření musí být před publikováním ověřená v Preview/DebugView a po nasazení znovu na produkci; do `docs/decisions.md` patří i to, co se měřit záměrně nebude a proč.“
 - **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez procesu zadání a plánu.“
@@ -466,7 +466,7 @@ Upozorni uživatele, že při příštím spuštění dostane dialog na schvále
 **Standard si načti, neopisuj ho z hlavy.** Rozdíl mezi projektem a tvou pamětí není nález – tvoje paměť je zrovna to, co je zastaralé. Než začneš kontrolovat, přečti si:
 
 - `~/Dev/context/structure/structure.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
-- `~/.claude/RULES.md` – zejména *Životní cyklus práce* (jaké kroky osy dnes existují) a *Co do tohoto souboru nepatří* (kam co patří);
+- `~/.claude/RULES.md` – zejména *Životní cyklus projektu* (jaké kroky životního cyklu dnes existují) a *Co do tohoto souboru nepatří* (kam co patří);
 - `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality* – jen u projektu, ve kterém se něco spouští;
 - `~/Dev/context/worktree/worktree.md` – jen u worktree layoutu;
 - výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
@@ -493,8 +493,8 @@ Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím 
 - **Hotové položky v `todo.md`.** Odškrtnuté a zjevně dokončené věci patří do `done.md` s datem dokončení. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny* / *Projít po jedné* / *Nechat být*) – jestli je něco hotové, ví uživatel, ne ty. Odškrtnutý krok uvnitř nedokončené položky se nepřesouvá.
 - **Řazení.** Nejstarší nahoře, nové na konec – v `decisions.md` i `done.md`, i uvnitř kapitol. Obrácené pořadí **neotáčej sám**: je to přeskládání celého souboru. Ukaž, čeho se to týká, a zeptej se přes AskUserQuestion (*Srovnat podle standardu* / *Nechat, jak to je*).
 - **Zrcadlení sekcí.** Je-li `todo.md` členěné, `done.md` drží tytéž sekce.
-- **Tvar záznamů.** Datum u hotové položky jako `(2026-08-28)`, řádky v *Průchody osou* a *Co proklouzlo* podle šablony v `structure.md`.
-- **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu osou nesedí volně v `done.md` mimo *Průchody osou*.
+- **Tvar záznamů.** Datum u hotové položky jako `(2026-08-28)`, řádky v *Průchody životním cyklem* a *Co proklouzlo* podle šablony v `structure.md`.
+- **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu životním cyklem nesedí volně v `done.md` mimo *Průchody životním cyklem*.
 - **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš.
 - **Prázdná sekce `## Parkované v session`** se ruší.
 - **`README.md` je pro člověka, ne pro Clauda.** Zůstal-li v něm normativní pokyn – pravidlo práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit –, přesuň ho do `CLAUDE.md`, `rules.md` nebo `decisions.md` podle povahy. Postup i kritérium má krok 7 a `~/Dev/context/structure/structure.md`, sekce *`README.md`*. U staršího projektu je to častý nález: pravidla se tehdy psala do README, protože jiné místo nebylo.

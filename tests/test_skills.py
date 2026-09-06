@@ -176,8 +176,8 @@ class SkillOdkazy(unittest.TestCase):
                         okno = radek[max(0, m.start() - 60):m.start()]
                         if "SKILL.md" in okno or any(f"/{j}" in okno for j in cizi):
                             continue  # odkaz do cizího skillu
-                        # „krok 8 osy“ v RULES.md není vlastní fáze, ale krok
-                        # *Životního cyklu práce* – ty se číslují nezávisle
+                        # „krok 8 životního cyklu“ v RULES.md není vlastní fáze, ale krok
+                        # *Životního cyklu projektu* – ty se číslují nezávisle
                         if "RULES.md" in okno or "Životní cyklus" in okno:
                             continue
                         if re.match(r"\s*os[ay]\b", radek[m.end():m.end() + 8]):
@@ -335,15 +335,15 @@ def bez_bloku_kodu(path: Path):
             yield radek.lstrip("# ").strip()
 
 
-def osa_z_rules() -> set:
-    """Kroky osy se čtou z `RULES.md`, ne z konstanty v testu.
+def cyklus_z_rules() -> set:
+    """Kroky životního cyklu se čtou z `RULES.md`, ne z konstanty v testu.
 
     Ručně opsaný seznam je druhá kopie pravdy: přejmenovaný nebo přidaný krok by
     testem prošel, a naopak zmizelý krok by ho shodil z jiného důvodu, než je ten
     skutečný.
     """
     text = (ROOT / "RULES.md").read_text(encoding="utf-8")
-    i = text.index("### Životní cyklus práce")
+    i = text.index("### Životní cyklus projektu")
     blok = text[text.index("```", i) + 3:]
     blok = blok[:blok.index("```")]
     return set(re.findall(r"/([a-z][a-z-]*)", blok))
@@ -409,20 +409,20 @@ class KontraktPrikazu(unittest.TestCase):
 
 
 class Struktura(unittest.TestCase):
-    OSA = osa_z_rules()
+    CYKLUS = cyklus_z_rules()
 
-    def test_osa_se_precetla(self):
-        """Kdyby se blok v RULES.md přeformátoval, testy osy by tiše zmlkly."""
-        self.assertGreaterEqual(len(self.OSA), 8,
-            f"z RULES.md se přečetlo jen {len(self.OSA)} kroků osy: {sorted(self.OSA)}")
-        chybi = sorted(self.OSA - {s.parent.name for s in SKILLS})
-        self.assertFalse(chybi, f"osa jmenuje kroky, které nemají skill: {chybi}")
+    def test_cyklus_se_precetl(self):
+        """Kdyby se blok v RULES.md přeformátoval, testy životního cyklu by tiše zmlkly."""
+        self.assertGreaterEqual(len(self.CYKLUS), 8,
+            f"z RULES.md se přečetlo jen {len(self.CYKLUS)} kroků životního cyklu: {sorted(self.CYKLUS)}")
+        chybi = sorted(self.CYKLUS - {s.parent.name for s in SKILLS})
+        self.assertFalse(chybi, f"životní cyklus jmenuje kroky, které nemají skill: {chybi}")
 
-    def test_kroky_osy_maji_sekci_co_nedela(self):
+    def test_kroky_cyklu_maji_sekci_co_nedela(self):
         """Bez vymezení vůči sousedům se práce buď zdvojí, nebo neudělá vůbec."""
         chybi = [s.parent.name for s in SKILLS
-                 if s.parent.name in self.OSA and "Co skill nedělá" not in body(s)]
-        self.assertFalse(chybi, f"skilly osy bez sekce `Co skill nedělá`: {chybi}")
+                 if s.parent.name in self.CYKLUS and "Co skill nedělá" not in body(s)]
+        self.assertFalse(chybi, f"skilly životního cyklu bez sekce `Co skill nedělá`: {chybi}")
 
     def _skilly_v_readme(self) -> set:
         """Skilly jmenované v nadpisech README. Jeden nadpis jich může nést víc –
@@ -700,6 +700,105 @@ class KontrolyOpravduChytaji(unittest.TestCase):
                 SKILLS[:] = puvodni_seznam
         finally:
             shutil.rmtree(docasny)
+
+
+class ReadmeSkillu(unittest.TestCase):
+    """README skillu proti `skills/SKILLS.md`, *README skillu*.
+
+    Je to jediná část skillu psaná **pro člověka zvenčí** – vizitka, na kterou
+    se posílá odkaz. Právě proto se rozpadá tiše: chybějící sekce nikoho za
+    běhu neomezí a pozná se až ve chvíli, kdy si ji někdo cizí přečte.
+    """
+
+    #: Nadpisy, které norma žádá po každém README skillu.
+    POVINNE = ("## Co umí", "## Proč zrovna tenhle", "## Jak se to používá",
+               "## Co nedělá", "## Jak si ho nainstalovat", "### Požadavky a omezení")
+
+    #: Mez z normy. README delší než jeho `SKILL.md` přestalo být vizitkou.
+    MEZ_RADKU = 120
+
+    REPO = "https://github.com/jantichy/claude/tree/main/skills/"
+    CYKLUS = cyklus_z_rules()
+
+    def _readme(self, skill: Path) -> Path:
+        return skill.parent / "README.md"
+
+    def test_kazdy_skill_ma_readme(self):
+        """Skill bez README nejde nikomu doporučit odkazem."""
+        chybi = [s.parent.name for s in SKILLS if not self._readme(s).exists()]
+        self.assertFalse(chybi, f"skilly bez vlastního README: {chybi}")
+
+    def test_readme_ma_povinne_sekce(self):
+        for skill in SKILLS:
+            readme = self._readme(skill)
+            if not readme.exists():
+                continue
+            text = readme.read_text(encoding="utf-8")
+            for nadpis in self.POVINNE:
+                with self.subTest(skill=skill.parent.name, sekce=nadpis):
+                    self.assertIn(nadpis, text, f"{readme}: chybí sekce `{nadpis}`")
+
+    def test_readme_instaluje_odkazem_na_repozitar(self):
+        """Instalace se píše jako pokyn pro Clauda, ne jako ruční kopírování."""
+        for skill in SKILLS:
+            readme = self._readme(skill)
+            if not readme.exists():
+                continue
+            with self.subTest(skill=skill.parent.name):
+                text = readme.read_text(encoding="utf-8")
+                self.assertIn(self.REPO + skill.parent.name, text,
+                    f"{readme}: instalační sekce neodkazuje na {self.REPO}{skill.parent.name}")
+
+    def test_readme_skillu_z_cyklu_ma_ramecek_a_hromadnou_instalaci(self):
+        """Čtenář, kterému přišel odkaz na jeden skill, jinak neví o zbylých devíti."""
+        for skill in SKILLS:
+            if skill.parent.name not in self.CYKLUS:
+                continue
+            readme = self._readme(skill)
+            if not readme.exists():
+                continue
+            with self.subTest(skill=skill.parent.name):
+                text = readme.read_text(encoding="utf-8")
+                self.assertIn("**Součást životního cyklu projektu.**", text,
+                    f"{readme}: chybí rámeček s celým životním cyklem")
+                self.assertIn("Nebo celou sadu naráz.", text,
+                    f"{readme}: chybí hromadná instalace celého životního cyklu")
+                for krok in sorted(self.CYKLUS):
+                    if krok == skill.parent.name:
+                        continue
+                    self.assertIn(f"(../{krok}/README.md)", text,
+                        f"{readme}: rámeček neodkazuje na `/{krok}`")
+
+    def test_readme_skillu_mimo_cyklus_ramecek_nema(self):
+        """Předstírat sadu u skillu, který se pouští samostatně, by mátlo."""
+        navic = []
+        for skill in SKILLS:
+            if skill.parent.name in self.CYKLUS:
+                continue
+            readme = self._readme(skill)
+            if readme.exists() and "**Součást životního cyklu projektu.**" in readme.read_text(encoding="utf-8"):
+                navic.append(skill.parent.name)
+        self.assertFalse(navic, f"skilly mimo životní cyklus s rámečkem osy: {navic}")
+
+    def test_readme_se_vejde_do_meze(self):
+        """Vizitka, kterou nikdo nedočte, svůj účel neplní."""
+        dlouhe = []
+        for skill in SKILLS:
+            readme = self._readme(skill)
+            if not readme.exists():
+                continue
+            radku = len(readme.read_text(encoding="utf-8").splitlines())
+            if radku > self.MEZ_RADKU:
+                dlouhe.append(f"{skill.parent.name} ({radku})")
+        self.assertFalse(dlouhe, f"README nad mez {self.MEZ_RADKU} řádků: {dlouhe}")
+
+    def test_hlavni_readme_odkazuje_na_readme_skillu(self):
+        """Bez odkazu je podrobné README neviditelné."""
+        hlavni = (ROOT / "README.md").read_text(encoding="utf-8")
+        chybi = [s.parent.name for s in SKILLS
+                 if f"(skills/{s.parent.name}/README.md)" not in hlavni]
+        self.assertFalse(chybi, f"hlavní README neodkazuje na README skillu: {chybi}")
+
 
 
 if __name__ == "__main__":

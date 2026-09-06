@@ -32,7 +32,7 @@ Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Sk
 
 | Krok | Kdo | Proč zrovna on |
 |---|---|---|
-| Debrief zadání | **vlastní** | Ptá se na věci, které plynou z normy – kde to stojí v ose, proti kterému sousedovi se to vymezuje, má to režimy. Cizí nástroj se na to nezeptá. |
+| Debrief zadání | **vlastní** | Ptá se na věci, které plynou z normy – kde to stojí v životním cyklu, proti kterému sousedovi se to vymezuje, má to režimy. Cizí nástroj se na to nezeptá. |
 | Vytěžení z konverzace | `skill-creator` | Má na to hotový postup zachycení záměru. |
 | Baseline – jak agent selže bez skillu | `superpowers:writing-skills` | Je to jádro jeho metody. |
 | **Sepsání `SKILL.md`** | **vlastní** | Jádro normy. Jediné místo, kudy by prosákl cizí tvar. |
@@ -80,7 +80,7 @@ Nejdřív otázka, která rozhoduje, jestli se vůbec pokračuje:
 Pak zbytek:
 
 2. **Co skill dělá a kdy se má vyvolat.** Doslovné spouštěče i situace.
-3. **Stojí v ose *Životního cyklu práce*** (`~/.claude/RULES.md`)? Pokud ano, **proti kterým dvěma sousedům se vymezuje** – to je vstup pro *Co skill nedělá* a bez něj sekce vznikne jako prázdná negace.
+3. **Stojí v *Životním cyklu projektu*** (`~/.claude/RULES.md`)? Pokud ano, **proti kterým dvěma sousedům se vymezuje** – to je vstup pro *Co skill nedělá* a bez něj sekce vznikne jako prázdná negace.
 4. **Má režimy?** Určuje `argument-hint`.
 5. **Co je jeho výstup** a podle čeho se pozná, že je hotový. Vstup pro dvě koncové věty.
 6. **Které doménové znalosti** z `~/Dev/context/` se na něj vztahují.
@@ -148,8 +148,9 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 
 | Kam | Co |
 |---|---|
-| `~/.claude/README.md` | vlastní sekce ve stylu ostatních – osobní, věcná, s konkrétním přínosem; do části *Skilly, jak jdou po sobě*, nebo *Skilly mimo osu* |
-| `~/.claude/RULES.md` | zařazení do osy *Životního cyklu práce*, stojí-li v ní – a doplnění u sousedů, čí práci nepřebírá |
+| `skills/<jméno>/README.md` | **vizitka skillu pro člověka zvenčí** podle `SKILLS.md`, *README skillu* – sekce, hromadná instalace u skillu ze životního cyklu, odkaz do repozitáře |
+| `~/.claude/README.md` | jeden odstavec ve stylu ostatních – k čemu skill je, zakončený odkazem `**Podrobně:** [README skillu](skills/<jméno>/README.md)`; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
+| `~/.claude/RULES.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
 | `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRACE` se **nedoplňuje**, ten seznam se jen zkracuje |
 | `~/.claude/skills/<jméno>/` | vedlejší soubory, skripty, jejich sonda na závislosti |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
@@ -197,13 +198,14 @@ Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez j
 |---|---|
 | Hlavička | `name` sedí s adresářem; `description` má spouštěč i situaci a vejde se do 1024 znaků; `argument-hint` sedí s režimy v těle; `allowed-tools` nemá nástroje, které skill nepoužívá |
 | Povinné sekce | jsou tam všechny a v pořadí z normy; žádná zaniklá nepřebývá |
-| *Co skill nedělá* | jmenuje souseda, ne obecnou činnost; u kroku osy jsou to sousedé z obou stran |
+| *Co skill nedělá* | jmenuje souseda, ne obecnou činnost; u kroku životního cyklu jsou to sousedé z obou stran |
 | Pre-flight | odkazuje na `PREFLIGHT.md` a neopisuje jeho obsah |
 | Koncové věty | jsou tam obě a ve tvaru z normy |
 | Délka | proti mezím z normy; nad měkkou mez navrhni, co vytáhnout |
 | Odkazy | každá cesta a každý zmíněný skill existuje; **žádný odkaz nemíří dovnitř fáze jiného skillu** |
 | Názvosloví | „Fáze" vs. „Krok"; jeden termín pro jednu věc |
 | Delegace | volané nástroje existují; sekce *Jak je to postavené uvnitř* je tam, kde se deleguje, a označuje vnitřek za vyměnitelný |
+| README skillu | existuje, má povinné sekce v pořadí z normy, instalace je psaná jako pokyn pro Clauda a u skillu ze životního cyklu nechybí rámeček ani hromadná instalace |
 | **Nové možnosti v okolí** | *nevzniklo mezitím něco, co tenhle skill dělá ručně?* Přibyl vestavěný skill, plugin, MCP server nebo vlastní skill, který by nahradil kus jeho postupu? |
 
 Poslední řádek je druhý druh driftu vedle rozejití s normou a **neklade ho nikdo jiný**. Konfigurační vrstva roste pod nohama a starší skill o ní neví.
@@ -242,7 +244,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 |---|---|
 | `~/.claude/skills/<jméno>/` | celý adresář včetně vedlejších souborů a skriptů |
 | `~/.claude/README.md` | jeho sekce |
-| `~/.claude/RULES.md` | osa *Životního cyklu práce* a zmínky u sousedů |
+| `~/.claude/RULES.md` | *Životní cyklus projektu* a zmínky u sousedů |
 | `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, je-li tam; jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`" |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |

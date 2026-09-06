@@ -13,7 +13,7 @@ Uživatel má hotový nebo rozpracovaný dokument, na kterém jste spolu dlouho 
 
 Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každého z jiného úhlu, a jejich nálezy s uživatelem probere jeden po druhém.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to **třetí krok zakládání**: navazuje na `/specify` a předává na `/breakdown`. Do osy patří proto, že jinak návrh neměří nikdo – `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celou osou jako korektní. Přeskakuje se stejným pravidlem jako každý jiný krok: drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano – a přeskočení se řekne nahlas i s důvodem.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **třetí krok zakládání**: navazuje na `/specify` a předává na `/breakdown`. Do životního cyklu patří proto, že jinak návrh neměří nikdo – `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celým životním cyklem jako korektní. Přeskakuje se stejným pravidlem jako každý jiný krok: drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano – a přeskočení se řekne nahlas i s důvodem.
 
 ## Co skill nedělá
 
@@ -47,7 +47,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to **třetí krok zak
 
 **Nejdřív se podívej, jestli neexistuje `.claude/run/oponent.json`** – přerušený běh. Vzniká na konci Fáze 4; nabídni navázání dřív, než začneš cokoliv počítat znovu.
 
-**Pak zjisti, jestli nad tímhle předmětem oponentura už neběžela** – `docs/done.md`, sekce `## Průchody osou`. Najdeš-li záznam, přečti z něj panel úhlů a počty nálezů: Fáze 1 z toho vyjde při volbě úhlů a Fáze 6 podle toho pozná, jestli smí srovnávat počty. Porovnej i hash s aktuálním – `git log --oneline <zapsaný hash>..HEAD` ukáže, co se od té doby změnilo.
+**Pak zjisti, jestli nad tímhle předmětem oponentura už neběžela** – `docs/done.md`, sekce `## Průchody životním cyklem`. Najdeš-li záznam, přečti z něj panel úhlů a počty nálezů: Fáze 1 z toho vyjde při volbě úhlů a Fáze 6 podle toho pozná, jestli smí srovnávat počty. Porovnej i hash s aktuálním – `git log --oneline <zapsaný hash>..HEAD` ukáže, co se od té doby změnilo.
 
 **Zkontroluj, že to má smysl oponovat:**
 
@@ -57,7 +57,7 @@ V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to **třetí krok zak
 
 **Načti kontext, který posudek potřebuje:** projektový `CLAUDE.md`, `docs/rules.md` (principy, proti kterým se v projektu rozhoduje) a `docs/decisions.md` (co už bylo rozhodnuto a proč). Bez toho subagenti navrhnou znovu to, co už bylo vědomě zamítnuto – a to je nejotravnější druh oponentury.
 
-**Na soubory ale nespoléhej.** Oponentura se často pouští hned po `/specify`, tedy jako krok 3 osy – kdežto rozhodnutí z debriefu zapisuje `/cleanup` až v kroku 8. `decisions.md` je v tu chvíli skoro prázdný, ačkoliv se v téhle session vědomě zamítla spousta věcí. **Projdi proto session a to, co jste zavrhli, vypiš do zadání oponentů** jako samostatný blok *Vědomě zamítnuté* – i s důvodem, ne jen výčtem. Bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy, a druhý už nespustíš.
+**Na soubory ale nespoléhej.** Oponentura se často pouští hned po `/specify`, tedy jako krok 3 životního cyklu – kdežto rozhodnutí z debriefu zapisuje `/cleanup` až v kroku 8. `decisions.md` je v tu chvíli skoro prázdný, ačkoliv se v téhle session vědomě zamítla spousta věcí. **Projdi proto session a to, co jste zavrhli, vypiš do zadání oponentů** jako samostatný blok *Vědomě zamítnuté* – i s důvodem, ne jen výčtem. Bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy, a druhý už nespustíš.
 
 **Nemá-li projekt `docs/`** (konfigurační repozitář, samostatný dokument mimo projekt, text v knowledge base), řekni to nahlas a veď posudek bez nich: kontextem je pak projektový `CLAUDE.md` a příslušná doména v `~/Dev/context/`, a přijatá i zamítnutá rozhodnutí jdou tam, kam patří v tom projektu – ne do založeného `docs/`.
 
@@ -298,7 +298,7 @@ Ve verdiktu:
 - <jedna až tři věty – co to reálně změnilo>
 ```
 
-Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody osou`** (`~/Dev/context/structure/structure.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/Dev/context/structure/structure.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
 
 ```
 - **YYYY-MM-DD** · `/oponent` · `<short HEAD>` · <předmět> · úhly: <seznam> · N nálezů (X zapracováno, Y zamítnuto, Z odloženo)

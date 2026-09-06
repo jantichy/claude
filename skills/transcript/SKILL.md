@@ -1,13 +1,13 @@
 ---
 name: transcript
-description: Skill se použije, když uživatel zadá "/transcript", nebo když chce přepsat zvukové nahrávky (MP3, M4A, WAV, AAC…) do Markdownu – přepis a strukturované shrnutí schůzky/nahrávky. Přepis běží kompletně lokálně a offline (whisper.cpp).
+description: Skill se použije, když uživatel zadá "/transcript", nebo když chce přepsat zvukové i obrazové nahrávky (MP3, M4A, WAV, AAC, MP4, MOV…) do Markdownu – přepis a strukturované shrnutí schůzky/nahrávky. Přepis běží kompletně lokálně a offline (whisper.cpp).
 ---
 
 # Transcript
 
 ## Co skill dělá
 
-Lokální, offline přepis zvukových nahrávek do Markdownu. Nic neopouští počítač (rozpoznání řeči běží přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp)).
+Lokální, offline přepis nahrávek do Markdownu. Nic neopouští počítač (rozpoznání řeči běží přes [whisper.cpp](https://github.com/ggml-org/whisper.cpp)).
 
 Skill se **nespouští s přepínači**. Volá se cestou k souboru a volným popisem:
 
@@ -21,7 +21,13 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 
 ## Vstup a výstup
 
-- **Vstup:** soubory zadané v promptu. Když prompt žádný soubor neuvádí, vezmi všechny audio soubory v aktuálním adresáři. Podporované formáty: `mp3`, `m4a`, `wav`, `aac`, `flac`, `ogg`, `opus`, `m4b`. Když nenajdeš nic, oznam to a skonči.
+- **Vstup:** soubory zadané v promptu. Když prompt žádný soubor neuvádí, vezmi všechny nahrávky v aktuálním adresáři. Podporované formáty:
+  - **zvuk:** `mp3`, `m4a`, `wav`, `aac`, `flac`, `ogg`, `opus`, `m4b`,
+  - **video:** `mp4`, `mov`, `m4v`, `mkv`, `webm`, `avi`.
+
+  Video se nijak neliší – zvuková stopa se z něj vytáhne při převodu na WAV a dál se s ní pracuje stejně. **Je to běžný případ, ne výjimka:** záznam hovoru z Meetu nebo Teamsů se stahuje jako MP4. Obraz se nikam nepřenáší; z videa vzniká jen text.
+
+  Když soubor zvukovou stopu nemá, převod na WAV selže a `transcribe.sh` to zapíše jako `### FAILED zaznam-<n> prevod-na-wav` – ohlas to uživateli a pokračuj dalšími. Když nenajdeš nic, oznam to a skonči.
 - **Výstup – vše vzniká v adresáři vstupní nahrávky, nezakládá se žádný podadresář a nic se nikam nepřesouvá:**
   - `<název>.md` – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu)),
   - `<název>.srt` – tentýž obsah s časovými značkami, syrový z whisperu,
@@ -422,6 +428,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 - **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
 - **Potlačení neřečových tokenů:** `-sns`, zapnuto vždy. Druhá pojistka vedle VAD.
 - **`--carry-initial-prompt`** je zapnutý vždy, když je slovník neprázdný: bez něj by prompt platil jen pro první okno a u delší nahrávky by se vytratil. Má to i druhou stranu – prompt ukusuje z kontextu **každého** okna, takže dlouhý slovník není zadarmo ani tam, kde se do stropu vejde. Kolik to dělá, změřené není.
+- **Kontext předchozího textu se nevypíná, i když se to nabízí.** Whisper si nese vlastní předchozí výstup do dalšího okna, a právě tudy se šíří halucinační smyčky; `-mc 0` to utne. **Změřeno nad touž 31minutovou českou nahrávkou se stejným slovníkem – a vyšlo to jednoznačně špatně:** podíl přepsaného zvuku klesl z 96,9 % na 90,8 % a **slovník se rozpadl**. Sledovaná zkratka se přitom v obou bězích ozvala stejně často (8× a 7×) – lišil se **zápis**: bez `-mc 0` vyšla správným tvarem 7 z 8 zmínek, s ním 1 ze 7, zbytek komoleniny („zobu“, „zoptak“). **Smyčky u nás řeší VAD a `-sns`** – na téhle nahrávce nevznikla ani jedna, takže by se tím platilo za problém, který tu není.
 - **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto. Naměřeno na Apple M1: **7,13× realtime**, tedy 31,4 minuty zvuku za 4:24. Je to o něco **rychlejší než přepis turbem**, takže zapnutá diarizace zhruba zdvojnásobí celkový čas. Aktuální kalibrovanou hodnotu si vyžádej přes `rate.py get`, neopisuj ji sem – mění se po každém běhu.
 - **Gated repozitáře jsou tři**, ne jeden: kromě `speaker-diarization-3.1` ještě `segmentation-3.0` a `speaker-diarization-community-1`. Seznam se mezi verzemi pyannote mění, proto `diarize.sh` při selhání vytáhne z chyby konkrétní repozitář (`### DIARIZE FAILED gated:<repo>`). Kontrola v `check-deps.sh` sahá na `config.yaml`, ne na `/api/models/` – **metadata gated repa jsou veřejná, takže endpoint vrací 200 i bez přístupu** a kontrola by byla falešně pozitivní.
 - **Bere se `exclusive_speaker_diarization`**, ne `speaker_diarization`. Je podle dokumentace pyannote určená právě pro navázání na přepis, protože neobsahuje překrývající se úseky.

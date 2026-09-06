@@ -18,7 +18,7 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 
 Skill je **opakovatelný**. Když ho uživatel spustí podruhé, co je zapsané a v pořádku, projde bez zásahu – druhý průchod slouží jako verifikace.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to poslední krok uzavírání – navazuje na `/consistency`. Poslední je i proto, že jako jediný odolá kompaktaci: co zapíše, přežije ztrátu kontextu.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok uzavírání – navazuje na `/consistency`. Poslední je i proto, že jako jediný odolá kompaktaci: co zapíše, přežije ztrátu kontextu.
 
 ## Co skill nedělá
 
@@ -82,7 +82,7 @@ Tohle je jádro celého skillu: vychází z něj všechno ostatní včetně Fáz
    2. **Pravidla a konvence**, které v session vznikly nebo se změnily.
    3. **Odvedená práce** – co se reálně změnilo v souborech a kódu.
    4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“. Tohle je **vědomé** odložení: někdo ho vyslovil. Co propadlo, aniž si toho kdokoli všiml, je kategorie 7.
-   5. **Postřehy mimo hlavní osu** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
+   5. **Postřehy mimo hlavní téma** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
    6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
    7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními – ať kvůli ní nemusí číst zvlášť. **Opiš mu do zadání i síto z Fáze 2** (ověření proti zbytku transcriptu i práh důležitosti) a nech si u každého kandidáta vrátit, co prověřil. Bez toho vrátí hrubé kandidáty a ty bys je musel proklepávat vlastním čtením transcriptu – tedy udělat práci, kvůli které jsi ho poslal.
 

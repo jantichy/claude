@@ -111,7 +111,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Co skill dělá`** – co to je a jaké má režimy. Tři až deset řádků. Ne převyprávěný postup; ten je níž.
 
-**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód" je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`."* je vymezení. U skillu, který stojí v ose *Životního cyklu práce* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
+**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód" je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`."* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
 
 **`## Jak je to postavené uvnitř`** – jen deleguje-li skill na cizí nástroj. Řekne, co volá, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Viz *Skládej, nepiš znovu*.
 
@@ -156,7 +156,7 @@ Rozlišovat podle toho, „jestli se uživatel může kdykoliv zastavit", nesta�
 
 **Neodkazuj se dovnitř jiného skillu.** Potřebuješ-li tentýž postup jako soused, patří ten postup do `PREFLIGHT.md` nebo do doménové znalosti – ne do odkazu na jeho fázi. Cizí fáze se přečíslují a odkaz tiše ukáže jinam.
 
-**Jeden termín pro jednu věc** (`~/.claude/RULES.md`, *Jeden termín pro jednu věc*). Ve skillech to platí navíc **napříč nimi**, ne jen uvnitř jednoho: skilly se čtou jeden po druhém v jedné ose a rozdílné pojmenování téhož kroku vypadá jako rozdílný krok.
+**Jeden termín pro jednu věc** (`~/.claude/RULES.md`, *Jeden termín pro jednu věc*). Ve skillech to platí navíc **napříč nimi**, ne jen uvnitř jednoho: skilly se čtou jeden po druhém v jednom životním cyklu a rozdílné pojmenování téhož kroku vypadá jako rozdílný krok.
 
 ## 6. Délka a progresivní odhalení
 
@@ -207,6 +207,132 @@ Ověřovatel dostane jediný úkol: **nález vyvrátit**. Co ověření nepřež
 **Nálezy nesou `severity` a `basis`.** Bez závažnosti se nedají seřadit, bez doložení ověřit.
 
 **Skill, který něco tvrdí o výsledku, to tvrzení doloží.** Do souhrnu patří příkaz a jeho návratový kód, ne věta „testy procházejí". Co se nezkontrolovalo, se vypíše jako nezkontrolované.
+
+## 10. README skillu
+
+**Každý skill má vedle `SKILL.md` svůj `README.md`.** Má jediný účel, a ten je ostře vymezený: **člověk, kterému pošlu odkaz na GitHub, si přečte, co to je, proč je to dobré a jak si to nainstaluje k sobě.** Nic víc. Není to dokumentace skillu, není to shrnutí `SKILL.md` a nepíše se pro Clauda.
+
+| | `SKILL.md` | `README.md` |
+|---|---|---|
+| Čtenář | Claude | člověk, který skill nezná |
+| Povaha | normativní – *jak se to dělá* | popisný – *k čemu to je* |
+| Obsah | fáze, kritéria, odchylky | přínos, možnosti, instalace |
+
+### Co do README skillu nepatří
+
+Vyhrává první kritérium, které sedí – a všechna vedou ven:
+
+| Kdyby platilo | Kam to patří |
+|---|---|
+| Je to postup, kritérium nebo instrukce pro Clauda | **do `SKILL.md`.** |
+| Je to obhajoba návrhového rozhodnutí | **do `SKILL.md`** k místu, kde platí, nebo do `~/Dev/context/decisions.md`. |
+| Je to implementační detail – jméno přepínače, souboru, funkce, modelu, agenta | **nikam.** Čtenáře nezajímá a zestárne dřív než zbytek textu. |
+| Je to historka z provozu, číslo z jednoho běhu, „poprvé jsem ho pustil a…" | **nikam.** |
+
+**Poslední dva řádky jsou ty, na které se zapomíná.** Věta *„Když jsem ho poprvé pustil na vlastní práci, ze 43 nálezů tři nepřežily ověření"* není popis skillu, ale příběh o jednom běhu; *„Agent, který má hledat všechno, nenajde nic"* je obhajoba architektury. Ani jedno čtenáři neřekne, k čemu ten skill je.
+
+### Jak se to překládá do lidské řeči
+
+Odborný termín se nahrazuje tím, co znamená, a mechanika tím, co z ní čtenář má:
+
+| Ne | Ano |
+|---|---|
+| „předává slovník přes `--prompt`" | „připraví si seznam jmen a termínů z nahrávky a podstrčí ho rozpoznávači, takže je pak nekomolí" |
+| „diarizace" | „rozliší mluvčí" |
+| „paralelní fan-out agentů s ověřovací vrstvou" | „pošle na práci několik nezávislých pohledů a každou námitku pak nechá zkusit vyvrátit" |
+
+Pravidlo *Nepiš, co model už ví* z odstavce **Jak se píše text uvnitř** tady **neplatí** – čtenář README není model a ví míň, ne víc.
+
+### Struktura
+
+```
+# /jméno – <co to je, jednou větou>
+
+<jen u skillu ze životního cyklu: rámeček s celým životním cyklem – viz Skill ze životního cyklu níž>
+
+<úvodní odstavec: 3–5 vět, k čemu to je a komu se to hodí>
+
+## Co umí
+## Proč zrovna tenhle
+## Jak se to používá
+## Ukázka výstupu        ← jen má-li skill hmatatelný výstup
+## Co nedělá
+## Jak si ho nainstalovat
+
+---
+### Požadavky a omezení
+```
+
+**`## Co umí`** – odrážky nebo číslovaný seznam. **Všechny režimy a varianty**, každý jednou větou, plus podstatná omezení rozsahu (na co se skill pouští, kde běžet nemá). Ne převyprávěné fáze.
+
+**`## Proč zrovna tenhle`** – heslovité odrážky, čím se liší od zřejmé alternativy: od ručního postupu, od obecného promptu, od nástroje, který dělá totéž hůř. **Neuvádí se, s čím se to poměřovalo** – jen výsledek jako vlastnost. Je to nejdůležitější sekce README, protože kvůli ní si to čtenář vezme.
+
+**`## Jak se to používá`** – dva až čtyři řádky: skutečné zavolání a co se stane. Ne návod krok za krokem.
+
+**`## Ukázka výstupu`** – kus reálného výsledku. Zakládá se jen tam, kde skill něco vyrábí (přepis, report, faktura, plán); u skillu, jehož výstupem je konverzace, se vynechá. Nejpřesvědčivější sekce ze všech – z popisu si výsledek nikdo nepředstaví.
+
+**`## Co nedělá`** – dvě až čtyři odrážky, lidský překlad `## Co skill nedělá` ze `SKILL.md`. Šetří zklamání i dotazy.
+
+**`## Jak si ho nainstalovat`** – **napsané jako pokyn, který člověk předá svému Claudovi**, ne jako postup, který si odklikává sám. Nikdo si dnes skill neinstaluje ručním kopírováním adresáře; řekne si o to. Tvar je tedy citovaný prompt s odkazem do repozitáře:
+
+```
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/<jméno>
+> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+```
+
+Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se skill o něco, co v repozitáři není, řekne se to rovnou tady**, ne až v poznámce pod čarou – jinak si to člověk nainstaluje a ono to nefunguje.
+
+**`### Požadavky a omezení`** pod čarou – platforma, nástroje, účty, licence, cena, meze. Krátce a úplně.
+
+### Skill ze životního cyklu
+
+**Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/RULES.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je deset a že spolu drží.
+
+**Znění je doslova stejné ve všech deseti**, liší se jen tím, který krok je tučný:
+
+```
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady deseti skillů, které vedou práci
+> od založení projektu až po nasazení. Každý má svůj krok a žádný nedělá práci toho vedle:
+>
+> [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/release`](../release/README.md)
+>
+> Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+```
+
+Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README. Rozejde-li se pořadí se životním cyklem v `RULES.md`, platí `RULES.md` – rámeček je jeho zobrazení, ne druhý zdroj pravdy.
+
+**Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech deseti:
+
+```
+**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus:
+
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do
+> `~/.claude/skills/` celý životní cyklus: project, specify, oponent, breakdown, implement,
+> review, consistency, cleanup, attack a release. U každého si přečti README
+> a řekni mi, co k nim potřebuju doplnit.
+```
+
+**Skilly mimo životní cyklus rámeček ani hromadnou instalaci nemají.** Pouštějí se samostatně a předstírat u nich sadu by mátlo.
+
+### Meze
+
+**Do 120 řádků.** README skillu, které je delší než jeho `SKILL.md`, přestalo být vizitkou.
+
+**Česky**, podle `~/Dev/context/text/text.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
+
+**Neodkazuje dovnitř `SKILL.md`.** Odkaz na fázi je odkaz do vnitřku, který se přečísluje; odkaz na `SKILL.md` jako celek je v pořádku.
+
+### Sekce v hlavním README repozitáře
+
+Skill má navíc **jeden odstavec** v `README.md` v kořeni. Platí pro něj totéž co výš, jen ještě stručněji: **k čemu ten skill je, případně velice stručně, co dělá.** Ne dva odstavce, ne tři. Odstavec končí odkazem:
+
+```
+**Podrobně:** [README skillu](skills/jméno/README.md)
+```
+
+**Pořadí skillů v hlavním README je dané, ne libovolné.** Skilly ze životního cyklu stojí v pořadí, ve kterém se v životním cyklu pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Skilly mimo životní cyklus stojí **pod nimi a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
+
+**Obě README se aktualizují spolu se skillem**, ne na vyžádání. Změní-li se, co skill umí, je to součást té změny – stejně jako hlavička nebo test.
 
 ------
 

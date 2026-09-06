@@ -23,7 +23,7 @@ Rozdíl proti `/review` je v jednom slově: ten kód **čte**, tenhle ho **spou�
 
 **Nález odsud má jinou váhu než nález z panelu.** Panel tvrdí, že něco *nastane*; útok přiloží postup, kterým to nastalo. Proto se nálezy z `/attack` neověřují skeptikem – ověřuje se tvrzení, ne pozorování.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **před `/release`**, ne v uzavírání.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **před `/release`**, ne v uzavírání.
 
 **Proč tam a ne po každé feature:** `/review` je levný, čte diff a snese, aby běžel pokaždé, když se něco dodělá. Tenhle skill je drahý – zvedá prostředí, potřebuje celé toky a trvá desítky minut – a nad rozestavěnou aplikací hlásí hlavně nedodělanost, ne chyby. Dává smysl jednou za čas nad **hotovým celkem**, který se chystá ven.
 
@@ -109,7 +109,7 @@ Ven:      <co při útoku sáhne mimo – maily, platby, cizí API – nebo „n
 Rozsah:   <obrazovky, endpointy, vektory>
 ```
 
-Chybí-li kterýkoliv z těch dvou dokladů, **nepokračuj a řekni proč**. Je to jediné místo v celé ose s destruktivními vedlejšími účinky, takže „vypadá to lokálně“ tu není argument.
+Chybí-li kterýkoliv z těch dvou dokladů, **nepokračuj a řekni proč**. Je to jediné místo v celém životním cyklu s destruktivními vedlejšími účinky, takže „vypadá to lokálně“ tu není argument.
 
 ------
 
@@ -138,7 +138,7 @@ Nech si otevřený přístup ke **konzoli, síti a logu serveru** – většina 
 
 Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři až pět podle toho, čeho se rozsah týká. Každý má vlastní kontext a vlastní úhel; společné mají jen to, že hlásí jen doložené.
 
-**Útočníci potřebují nejvíc chytrosti z celé osy: nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Zadání zní „najdi, co nikoho nenapadlo“, a to je pravý opak mechanické práce – levný model odzkouší učebnicové payloady ze seznamu, silný vymyslí kombinaci, na kterou seznam nestačí. Je to zároveň **dlouhá agentní práce**, tedy přesně profil, na který je `xhigh` určený. Nedaří-li se ani tak, je to jeden z mála případů, kdy má smysl sáhnout po nejvyšším tieru (dnes Fable) – ale až potom, ne rovnou.
+**Útočníci potřebují nejvíc chytrosti z celého životního cyklu: nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Zadání zní „najdi, co nikoho nenapadlo“, a to je pravý opak mechanické práce – levný model odzkouší učebnicové payloady ze seznamu, silný vymyslí kombinaci, na kterou seznam nestačí. Je to zároveň **dlouhá agentní práce**, tedy přesně profil, na který je `xhigh` určený. Nedaří-li se ani tak, je to jeden z mála případů, kdy má smysl sáhnout po nejvyšším tieru (dnes Fable) – ale až potom, ne rovnou.
 
 **Rozděl jim data, ne jen vektory.** Agenti běží nad jednou instancí, takže se přepisují navzájem: jeden ti změní jméno na profilu, který druhý zrovna měří, a oba pak popisují stav, který nikdy nenastal. Každému v zadání urči **vlastní účty a vlastní záznamy** (typicky vlastní e-mailovou doménu) a ulož mu, ať cizí nechá být. Sdílený účet smí mít nanejvýš jeden z nich.
 
@@ -304,7 +304,7 @@ Cíl: <adresa> · Vektory: [které]
 **Další krok:** /release · po nasazení ještě `/cleanup` podruhé
 ```
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody osou`** (`~/Dev/context/structure/structure.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/Dev/context/structure/structure.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
 
 ```
 - **YYYY-MM-DD** · `/attack` · `<short HEAD>` · <rozsah a vektory> · N nálezů (X opraveno, Y odloženo, Z won't fix)

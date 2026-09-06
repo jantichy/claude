@@ -21,7 +21,7 @@ Stojí na třech vrstvách, které se liší cenou i spolehlivostí – a poušt
 
 **Bez třetí vrstvy je panel k ničemu** – zavalí tě pravděpodobně znějícími nálezy, po třetím falešném ho začneš ignorovat a čtvrtý, pravý, přehlédneš.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) je to první krok uzavírání: navazuje na `/implement` a předává na `/consistency`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to první krok uzavírání: navazuje na `/implement` a předává na `/consistency`.
 
 ## Co skill nedělá
 
@@ -184,7 +184,7 @@ Na **každou** vybranou roli pošli **samostatného subagenta** – všechny par
 
 **Dvě role nepiš sám – vyvolej vestavěné skilly Claude Code:**
 
-- **Korektnost** → **`/code-review high`**. Je na to postavený, běží v čerstvém kontextu a hledá přesně chyby v diffu. **Úroveň uveď vždy explicitně:** bez parametru se použije ta, kterou uživatel zadal naposledy – klidně v jiném projektu před dvěma dny – a hloubka nejdražšího posouzení v celé ose by závisela na náhodě. Před nasazením nebo u změny v citlivé oblasti použij `ultra`.
+- **Korektnost** → **`/code-review high`**. Je na to postavený, běží v čerstvém kontextu a hledá přesně chyby v diffu. **Úroveň uveď vždy explicitně:** bez parametru se použije ta, kterou uživatel zadal naposledy – klidně v jiném projektu před dvěma dny – a hloubka nejdražšího posouzení v celém životním cyklu by závisela na náhodě. Před nasazením nebo u změny v citlivé oblasti použij `ultra`.
 - **Bezpečnost** → `/security-review`. **Dotkne-li se ale rozsah citlivé oblasti** (viz 0.2), poběží k němu **navíc vlastní agent** s celým jmenným seznamem tříd zranitelností a se seznamem dotčených citlivých oblastí, na nejsilnějším modelu s `xhigh`. To je ta „přísnost“, kterou uživateli slibuje `/specify`; vestavěný skill si vlastní zadání ani volbu modelu předat nenechá, takže bez druhého agenta by se slib neplnil a blok se seznamem by byl mrtvý text. Mimo citlivou oblast druhý agent neběží – tam by to byla duplicita.
 
 Vlastní zadání piš jen pro role, které vestavěný protějšek nemají – **a pro Bezpečnost v citlivé oblasti**, kde běží obojí vedle sebe.
@@ -316,7 +316,7 @@ Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 
 **Tohle je krok, na kterém stojí použitelnost celého skillu.** Panel hlásí i to, co není – reviewer požádaný o hledání mezer nějaké najde vždycky, protože o to byl požádán.
 
-**Na verifikaci se nešetří.** Ověřovatele pouštěj na **nejsilnějším modelu**, i když nález hlásila levná role. (Effort mu předepsat neumíš: `Agent` bere parametr `model`, ale ne `effort` – ten se bere z definice agenta. Píše-li se v ose „na nejsilnějším modelu s `xhigh`“, splnitelná je dnes první polovina. Je to vědomá mezera, ne opomenutí; zavřela by ji až definice agenta ve `~/.claude/agents/`.) Slabý model nález nepotvrdí ani nevyvrátí – přizvukuje tomu, co má před sebou, a tím z ověření udělá razítko. Ověřovatelů je přitom míň než nálezů z panelu, protože běží jen na KRITICKÉ a STŘEDNÍ a až po deduplikaci.
+**Na verifikaci se nešetří.** Ověřovatele pouštěj na **nejsilnějším modelu**, i když nález hlásila levná role. (Effort mu předepsat neumíš: `Agent` bere parametr `model`, ale ne `effort` – ten se bere z definice agenta. Píše-li se v životním cyklu „na nejsilnějším modelu s `xhigh`“, splnitelná je dnes první polovina. Je to vědomá mezera, ne opomenutí; zavřela by ji až definice agenta ve `~/.claude/agents/`.) Slabý model nález nepotvrdí ani nevyvrátí – přizvukuje tomu, co má před sebou, a tím z ověření udělá razítko. Ověřovatelů je přitom míň než nálezů z panelu, protože běží jen na KRITICKÉ a STŘEDNÍ a až po deduplikaci.
 
 **Práh není u obou závažností stejný a je to vědomé.** Cena omylu je asymetrická: falešně pozitivní nález stojí jednu otázku ve Fázi 7 (kde je stejně všechno z pracovních rolí sporné), falešně negativní stojí díru v produkci – a je **navždy neviditelný**, protože se nezobrazuje ani titulkem. Symetrický práh proto obětuje pravé nálezy, aby ušetřil jednu otázku.
 
@@ -582,7 +582,7 @@ Rozsah: [změny na větvi / celý projekt] · Role: [které]
 **Další krok:** /consistency
 ```
 
-Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody osou`** (`~/Dev/context/structure/structure.md`, *`done.md`*) a **smaž `.claude/run/review.json`**:
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/Dev/context/structure/structure.md`, *`done.md`*) a **smaž `.claude/run/review.json`**:
 
 ```
 - **YYYY-MM-DD** · `/review` · `<short HEAD>` · <rozsah> · N nálezů (X opraveno, Y odloženo, Z won't fix)

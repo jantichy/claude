@@ -16,7 +16,7 @@ Tenhle soubor drží **obecná pravidla práce**. Než sem něco zapíšeš, pro
 
 1. Jmenuje pravidlo konkrétní soubor v `docs/`? → `structure.md`
 2. Platí obecně pro skilly – jak vypadají, co v nich musí být, jak se píšou? → `~/.claude/skills/SKILLS.md`
-3. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu. **Výjimka: rozhraní kroku osy sem patří** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí a kdy se smí přeskočit. To je pravidlo o *pořadí práce*, ne o vnitřku skillu, a ve skillu by ho nikdo nenašel celé, protože každý zná jen svoje sousedy. Vnitřek kroku (jeho fáze, šablony, zadání pro agenty) sem naopak nepatří ani zmínkou.
+3. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu. **Výjimka: rozhraní kroku životního cyklu sem patří** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí a kdy se smí přeskočit. To je pravidlo o *pořadí práce*, ne o vnitřku skillu, a ve skillu by ho nikdo nenašel celé, protože každý zná jen svoje sousedy. Vnitřek kroku (jeho fáze, šablony, zadání pro agenty) sem naopak nepatří ani zmínkou.
 4. Týká se psaní kódu, webu, textu, vizuálu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
 5. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, kapitola *Výjimky z obecných pravidel*
 6. Nic z toho → patří sem
@@ -112,7 +112,7 @@ Když se odložený bod mezitím stal bezpředmětným, řekni to a proč – ne
 
 Před dalším velkým tématem nebo na konci session projdi konverzaci a zkontroluj: (1) zbyly nedořešené otázky? (2) nevznikly novými rozhodnutími nekonzistence jinde? (3) je vše dohodnuté zapsané?
 
-Je to **kontrola, ne náhrada průběžného zápisu** – u bodu (3) má správná odpověď znít „ano, průběžně“. Čím se která otázka řeší a v jakém pořadí, viz *Životní cyklus práce*.
+Je to **kontrola, ne náhrada průběžného zápisu** – u bodu (3) má správná odpověď znít „ano, průběžně“. Čím se která otázka řeší a v jakém pořadí, viz *Životní cyklus projektu*.
 
 ### Velké průzkumné úkoly deleguj
 
@@ -166,7 +166,7 @@ Neplatí-li ani jedno, **udělej to v hlavní session**: delegace je pak dražš
 
 Cokoliv se dohodne (pravidlo, konvence, rozhodnutí, struktura, poznatek) → **zapiš okamžitě** do souborů projektu. Soubory jsou jediný autoritativní zdroj; historie konverzace ani memory ne. „Zapíšu to později“ znamená, že se to ztratí.
 
-**Nečekej na `/cleanup` ani na konec session.** Uzavírací kroky osy jsou záchranná síť pro případ, že tohle pravidlo selže – ne místo, kde zápis začíná.
+**Nečekej na `/cleanup` ani na konec session.** Uzavírací kroky životního cyklu jsou záchranná síť pro případ, že tohle pravidlo selže – ne místo, kde zápis začíná.
 
 **Pravidlo míří na trvanlivost, ne na mechaniku předávání.** Ptá se „přežije to konec session?“, ne „prošlo to souborem?“. Předat subagentovi kontext přímo v zadání – vypsat mu, co se v téhle práci vědomě zamítlo, co platí za pravidlo, co se má vzít v potaz – je běžná mechanika, ne obcházení; ten agent žádný soubor číst nemusí. Porušením je až to, když poznatek zůstane **jen** v konverzaci a nikdo ho nikam nezapíše.
 
@@ -343,7 +343,7 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 ### Odložené věci pojmenuj a zaparkuj
 
-Vše mimo aktuální osu – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
+Vše mimo aktuální rozsah – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
 
 Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vyhrazené sekci (definuje ji `structure.md`) a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
 
@@ -363,7 +363,7 @@ V projektech s vlastní živou dokumentací (typicky `docs/`):
 
 Změna teče **shora dolů, nikdy obráceně** – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód. Konkrétní posloupnost souborů definuje `structure.md`.
 
-Na ose *Životního cyklu práce* plní doc-first kroky 2 a 4. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
+V *Životním cyklu projektu* plní doc-first kroky 2 a 4. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
 
 ### Živá struktura
 
@@ -425,9 +425,9 @@ Definice zelené linky, prahy jednotlivých bran a to, proč jsou testy během p
 
 Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit, ověř, než ho napíšeš** – viz *Neopírej rozhodnutí o neověřené tvrzení*.
 
-### Životní cyklus práce
+### Životní cyklus projektu
 
-Od nápadu k nasazené feature vede jedna osa. Celá vypadá takhle:
+Od nápadu k nasazené feature vede jeden životní cyklus. Celý vypadá takhle:
 
 ```
 Zakládání   /project → /specify → /oponent → /breakdown → /implement
@@ -437,13 +437,13 @@ Nasazení    /attack → /release
 
 Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → zelená linka → commit. (Je to rozhraní kroku, ne jeho vnitřek: určuje, co po `/implement` platí o stavu repozitáře, a tím i s čím počítá `/review`.)
 
-V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v ose nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit, aniž se změní, jak se krok volá.
+V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v životním cyklu nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit, aniž se změní, jak se krok volá.
 
 **Zakládání (1–5)**
 
 1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. **Volá se znovu i nad dávno nastaveným projektem, kdykoliv se posunuly standardy nebo konfigurační vrstva** – pozná podle bloku metadat, že už jednou běžel, a místo ptání projde projekt proti dnešní podobě standardu. Projekt bez toho otisku projde nejdřív průvodcem a revizi dostane na jeho konci. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*. Ten sám o sobě zelenou linku **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/green-line.sh --allow`), protože kontrakt je kód z repozitáře a hooky se na povolení neptají.
 2. **`/specify`** – produktová specifikace (`docs/requirements.md`) a návrh řešení (`docs/architecture.md`). Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 3 a 4 odpadají, protože bez plánu není co odpracovat.
-3. **`/oponent`** – nezávislý posudek zadání čerstvýma očima, subagenty bez kontextu session. **Do osy patří proto, že jinak návrh neměří nikdo:** role *Korektnost* v `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu – vada v ní tedy projde celou osou jako korektní, protože kód poslušně dělá to, co je v ní napsané. Je to zároveň jediná vrstva, kde se chyba násobí do všeho pod ní: `coding.md` tvrdí, že *„bezpečnost se dělá strukturou, ne kontrolou na konci“*, a ta struktura vzniká právě tady. Přeskakuje se stejným pravidlem jako každý jiný krok – drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano.
+3. **`/oponent`** – nezávislý posudek zadání čerstvýma očima, subagenty bez kontextu session. **Do životního cyklu patří proto, že jinak návrh neměří nikdo:** role *Korektnost* v `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu – vada v ní tedy projde celým životním cyklem jako korektní, protože kód poslušně dělá to, co je v ní napsané. Je to zároveň jediná vrstva, kde se chyba násobí do všeho pod ní: `coding.md` tvrdí, že *„bezpečnost se dělá strukturou, ne kontrolou na konci“*, a ta struktura vzniká právě tady. Přeskakuje se stejným pravidlem jako každý jiný krok – drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano.
 4. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis prózou.
 5. **`/implement`** – odpracování plánu, úkol po úkolu, každý do zelené linky a do commitu.
 
@@ -451,20 +451,20 @@ V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u oboj
 
 6. **`/review`** – paralelní panel rolí nad změnami: korektnost, bezpečnost, data a stavy, provoz, testy a doménové standardy z `~/Dev/context/`. Role se vybírají podle toho, čeho se změny týkají, takže nad obsahovým projektem poběží jen textové. Vlastní skill; uvnitř si volá vestavěné `/code-review` a `/security-review` jako dvě z rolí.
 7. **`/consistency`** – audit vnitřní konzistence. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všechny role v `/review`, a uklidí i to, co nastřílel krok 6. Výchozí rozsah jsou soubory dotčené větví a ty, které na ně odkazují; `full` projede celý projekt a pouští se zřídka – kompletní audit po každé feature znovu předkládá tentýž starý dluh, a umlčet ho je pak levnější než odklikat.
-8. **`/cleanup`** – poslední krok **uzavírání**, ne osy. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč). Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání – otázku, na kterou se neodpovědělo, návrh, který nikdo nepřijal ani nezamítl –, a probere je s uživatelem, dokud je koho se ptát. Běží-li po něm ještě `/attack` nebo `/release`, ty si své zápisy dělají samy a na konci se `/cleanup` **pouští znovu** – je opakovatelný a druhý průchod slouží jako verifikace.
+8. **`/cleanup`** – poslední krok **uzavírání**, ne životního cyklu. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z uzavíracích kroků (co bylo odmítnuto a proč). Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání – otázku, na kterou se neodpovědělo, návrh, který nikdo nepřijal ani nezamítl –, a probere je s uživatelem, dokud je koho se ptát. Běží-li po něm ještě `/attack` nebo `/release`, ty si své zápisy dělají samy a na konci se `/cleanup` **pouští znovu** – je opakovatelný a druhý průchod slouží jako verifikace.
 
 **Nasazení (9–10)**
 
 9. **`/attack`** – explorativní útok: aplikace se **spustí** a zkouší se rozbít vstupy, pořadím kroků, cizími identitami a nesmyslnými daty. Je to třetí druh záruky vedle deterministických bran a posouzení modelem, a ani jedna ho nenahrazuje – `/review` kód čte, tenhle ho spouští. **Stojí až tady schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost, kdežto `/review` je levný a běží po každé feature. Projekt bez spustitelné aplikace ho nemá.
 10. **`/release`** – nasazení do produkce. **Stojí mimo uzavírání schválně:** uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť. **Končí až uzavřením sledovacího okna**, ne nasazením – viz níž.
 
-**Osa nekončí nasazením.** `/release` má poslední fází **sledovací okno**: nasazení se nepovažuje za hotové, dokud okno neuplyne a někdo ho výslovně neuzavře větou *„okno uzavřeno, N nových chyb“*. Bez toho se nasazení uzavře tichem a scénář „spadlo to o dvě hodiny později“ – migrace s backfillem, cache, chyba, která se projeví až na produkčním objemu – nemá vlastníka.
+**Životní cyklus nekončí nasazením.** `/release` má poslední fází **sledovací okno**: nasazení se nepovažuje za hotové, dokud okno neuplyne a někdo ho výslovně neuzavře větou *„okno uzavřeno, N nových chyb“*. Bez toho se nasazení uzavře tichem a scénář „spadlo to o dvě hodiny později“ – migrace s backfillem, cache, chyba, která se projeví až na produkčním objemu – nemá vlastníka.
 
-**Hotfix jde toutéž osou, jen zkráceně.** Není to jiný postup, ale tentýž s vědomě přeskočenými kroky: `/specify`, `/oponent` a `/breakdown` odpadají (opravuje se to, co je navržené, ne co se navrhuje), `/consistency` a `/attack` taky. **Nepřeskakuje se `/review` ani zelená linka** – oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější. Přeskočení se hlásí nahlas i s důvodem, jako u každého jiného kroku.
+**Hotfix jde týmž životním cyklem, jen zkráceně.** Není to jiný postup, ale tentýž s vědomě přeskočenými kroky: `/specify`, `/oponent` a `/breakdown` odpadají (opravuje se to, co je navržené, ne co se navrhuje), `/consistency` a `/attack` taky. **Nepřeskakuje se `/review` ani zelená linka** – oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější. Přeskočení se hlásí nahlas i s důvodem, jako u každého jiného kroku.
 
 **Žádný krok neopakuje, co udělal krok před ním.** Každý má v *Co skill nedělá* jmenovitě napsané, čí práci nepřebírá. Duplicita stojí čas i tokeny a hlavně rozmazává odpovědnost: u věci, kterou hlídají tři kroky, ji nakonec neudělá pořádně žádný.
 
-**Test zní: vrací ten krok nad TÝMŽ vstupem tutéž odpověď?** Když ano, je to duplicita. Opakovat se smí jen to, čemu se mezitím **mohl změnit vstup** – stav pracovního stromu, databáze zranitelností, obsah repozitáře. Starší formulace („kdyby ten krok neproběhl, zjistil by to někdo jiný?“) tenhle rozdíl nedělala a označila za duplicitu i případy, které osa sama obhajuje.
+**Test zní: vrací ten krok nad TÝMŽ vstupem tutéž odpověď?** Když ano, je to duplicita. Opakovat se smí jen to, čemu se mezitím **mohl změnit vstup** – stav pracovního stromu, databáze zranitelností, obsah repozitáře. Starší formulace („kdyby ten krok neproběhl, zjistil by to někdo jiný?“) tenhle rozdíl nedělala a označila za duplicitu i případy, které životní cyklus sám obhajuje.
 
 **Povolená opakování jsou čtyři a jmenují se**, aby se seznam nedal rozšiřovat mlčky:
 
@@ -477,7 +477,7 @@ V ose smí stát **vlastní skilly a vestavěné skilly Claude Code** – u oboj
 
 **Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 
-**Osa je nástroj pro jednu interaktivní session jednoho člověka.** Je to vědomé omezení, ne opomenutí: skoro celá stojí na `AskUserQuestion` a na souhlasu zelené linky vydaném lokálně pro jednoho uživatele. V CI ani u druhého člověka neplatí ani jedno – hook nespustí nic, protože souhlas je vázaný na `$HOME`, a interaktivní průchod nálezy nemá komu položit otázku.
+**Životní cyklus je nástroj pro jednu interaktivní session jednoho člověka.** Je to vědomé omezení, ne opomenutí: skoro celý stojí na `AskUserQuestion` a na souhlasu zelené linky vydaném lokálně pro jednoho uživatele. V CI ani u druhého člověka neplatí ani jedno – hook nespustí nic, protože souhlas je vázaný na `$HOME`, a interaktivní průchod nálezy nemá komu položit otázku.
 
 Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen deterministická vrstva** – typecheck, lint, test, audit, scan tajemství, statická analýza. Ty běží kdekoliv a nepotřebují nikoho, kdo by odpovídal. Panel rolí, průchod nálezy, útok ani nasazení se v neinteraktivním prostředí nepouštějí; kdo je chce, pustí je u sebe.
 

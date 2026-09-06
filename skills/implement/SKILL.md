@@ -8,13 +8,13 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 ## Co skill dělá
 
-Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, implementace, ověření a commit. V ose *Životního cyklu práce* (`~/.claude/RULES.md`) navazuje na `/breakdown` a předává na uzavírání.
+Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, implementace, ověření a commit. V *Životním cyklu projektu* (`~/.claude/RULES.md`) navazuje na `/breakdown` a předává na uzavírání.
 
 ## Co skill nedělá
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md`, ne do kódu.
-- **Neuzavírá feature.** Review, audit konzistence a úklid jsou samostatné kroky po tomhle – viz *Životní cyklus práce* v `~/.claude/RULES.md`, druhá půlka osy.
+- **Neuzavírá feature.** Review, audit konzistence a úklid jsou samostatné kroky po tomhle – viz *Životní cyklus projektu* v `~/.claude/RULES.md`, druhá půlka životního cyklu.
 
 ## Jak je to postavené uvnitř
 
@@ -37,7 +37,7 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
    | `docs/plan.md` neexistuje | **Zastav se.** Nabídni `/breakdown`, a pokud chybí i zadání, `/specify`. |
    | Existuje, nic není odškrtnuté | Normální běh od prvního úkolu. |
    | Existuje, část odškrtnutá | **Naváž na prvním neodškrtnutém úkolu.** Nejdřív ale ověř, že odškrtnuté opravdu hotové jsou – viz bod 5. |
-   | Vše odškrtnuté | Řekni to a nabídni uzavírání podle *Životního cyklu práce*. Nehledej si práci navíc. |
+   | Vše odškrtnuté | Řekni to a nabídni uzavírání podle *Životního cyklu projektu*. Nehledej si práci navíc. |
 
 4. **Zkontroluj git.** Rozpracované změny v pracovním stromu **před** startem jsou riziko: smíchají se s prací podle plánu a přestane být poznat, co je čí. Vypiš je a zeptej se, jestli je commitnout, odložit, nebo pokračovat i tak.
 5. **Ověř skutečný stav proti plánu.** U navazování nevěř zaškrtávátkům – podívej se, jestli soubory a testy z odškrtnutých úkolů opravdu existují a procházejí. Plán mohl zůstat odškrtnutý po přerušené session, kde se práce nedokončila. Nesedí-li to, ohlas to a zeptej se, než začneš.
@@ -140,7 +140,7 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 
 **Zelená linka:** <výstup posledního běhu – příkaz a návratový kód>
 
-**Další krok:** `/review`, pak `/consistency` a `/cleanup` (RULES.md, *Životní cyklus práce*)
+**Další krok:** `/review`, pak `/consistency` a `/cleanup` (RULES.md, *Životní cyklus projektu*)
 ```
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:

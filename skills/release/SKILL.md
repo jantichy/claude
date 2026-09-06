@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 Nasadí hotovou práci do produkce – s branami před, s plánem návratu a s ověřením po.
 
-V ose *Životního cyklu práce* (`~/.claude/RULES.md`) stojí **mimo uzavírání, až za ním**, a předchází mu `/attack`. To není kosmetika: uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **mimo uzavírání, až za ním**, a předchází mu `/attack`. To není kosmetika: uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
 
 ## Tvrdá pravidla
 
@@ -104,8 +104,8 @@ Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracovan
 
 1. **Pracovní strom je čistý** a větev je pushnutá. Necommitnutá změna při nasazení znamená, že v produkci bude něco jiného, než co je v gitu – a to se hledá měsíce.
 2. **Zelená linka a produkční build, obojí na čistém stromu.** Nikoliv „běželo to ráno“. `build` je tu navíc oproti zelené lince, do které schválně nepatří: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
-3. **Průchod aplikací** – `e2e` z kontraktu, má-li ho projekt. **Tohle je jeho jediné místo v ose**: do zelené linky je moc pomalý a v `/review` by běžel nad stavem, který se do nasazení ještě několikrát změní. Tady běží naposledy před tím, než se kód potká s uživateli. Chybí-li příkaz, napiš do přehledu, že průchod aplikací nikdo neověřil.
-4. **Proběhlo `/review`?** Odpověď **si přečti, neptej se na ni**: v `docs/done.md`, sekci `## Průchody osou` (`~/Dev/context/structure/structure.md`, *`done.md`*), je u každého běhu hash HEAD. Porovnej ho s tím, co nasazuješ – `git log --oneline <zapsaný hash>..HEAD` ukáže, co od té doby přibylo a co tedy nikdo neprověřil. U změny v citlivé oblasti je proběhlé `/review` **podmínka**, ne doporučení. Nemá-li projekt `done.md` nebo v něm ta sekce chybí, zeptej se – ale řekni nahlas, že se odpovídá z paměti, ne ze záznamu.
+3. **Průchod aplikací** – `e2e` z kontraktu, má-li ho projekt. **Tohle je jeho jediné místo v životním cyklu**: do zelené linky je moc pomalý a v `/review` by běžel nad stavem, který se do nasazení ještě několikrát změní. Tady běží naposledy před tím, než se kód potká s uživateli. Chybí-li příkaz, napiš do přehledu, že průchod aplikací nikdo neověřil.
+4. **Proběhlo `/review`?** Odpověď **si přečti, neptej se na ni**: v `docs/done.md`, sekci `## Průchody životním cyklem` (`~/Dev/context/structure/structure.md`, *`done.md`*), je u každého běhu hash HEAD. Porovnej ho s tím, co nasazuješ – `git log --oneline <zapsaný hash>..HEAD` ukáže, co od té doby přibylo a co tedy nikdo neprověřil. U změny v citlivé oblasti je proběhlé `/review` **podmínka**, ne doporučení. Nemá-li projekt `done.md` nebo v něm ta sekce chybí, zeptej se – ale řekni nahlas, že se odpovídá z paměti, ne ze záznamu.
 5. **Proběhl `/attack`?** Stejným způsobem jako bod 4, ze stejné sekce. U aplikace, kterou jde spustit, se ptej zvlášť: `/review` kód čte, `/attack` ho spouští, a poslední místo, kde má smysl zkusit věc rozbít nanečisto, je právě tady. Neproběhl-li nikdy, řekni to nahlas – nasadit se dá i tak, ale ať je to rozhodnutí, ne opomenutí.
 6. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují. **Pouštěl ho i `/review` a není to duplicita:** mezi ním a tímhle krokem proběhl `/consistency`, `/cleanup` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tam se ptáme „je čisté, co jsme napsali?“, tady „je čisté to, co právě posíláme ven?“.
 7. **Tajemství v repu** – `gitleaks detect`, je-li k dispozici. Nález blokuje vždy; a co bylo commitnuté, patří **rotovat**, ne jen smazat.
@@ -201,13 +201,13 @@ Zapiš do `docs/decisions.md` jen to, co má trvalou hodnotu (změna postupu nas
 **Zbývá dokončit:** [contract krok migrace v příštím vydání / nic]
 ```
 
-**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/RULES.md`, *Životní cyklus práce*, krok 8.
+**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/RULES.md`, *Životní cyklus projektu*, krok 8.
 
 ------
 
 ## Fáze 7 – Sledovací okno
 
-**Nasazení není hotové ve chvíli, kdy aplikace odpoví.** Fáze 5 ověřuje, že to běží *teď*; celá třída chyb se ale projeví později – migrace s backfillem, cache, která se plní hodiny, chyba, která nastane až na produkčním objemu dat, kvóta vyčerpaná do večera. Ty nemají v ose vlastníka, dokud tahle fáze neexistuje.
+**Nasazení není hotové ve chvíli, kdy aplikace odpoví.** Fáze 5 ověřuje, že to běží *teď*; celá třída chyb se ale projeví později – migrace s backfillem, cache, která se plní hodiny, chyba, která nastane až na produkčním objemu dat, kvóta vyčerpaná do večera. Ty nemají v životním cyklu vlastníka, dokud tahle fáze neexistuje.
 
 **Okno má konkrétní konec**, dohodnutý ve Fázi 3 (pole *Po nasazení sleduji*). Výchozí volba: **dvě hodiny** u běžného vydání, **do druhého dne** u migrace dat nebo změny v citlivé oblasti.
 
@@ -224,7 +224,7 @@ Co se v okně dělá:
    **Řešeno:** <co se s nimi udělalo, nebo „nic, nic se neobjevilo“>
    ```
 
-3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/RULES.md`, *Životní cyklus práce*: jde toutéž osou ve zkrácené podobě, `/review` a zelená linka se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
+3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/RULES.md`, *Životní cyklus projektu*: jde týmž životním cyklem ve zkrácené podobě, `/review` a zelená linka se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
 
 **Přeruší-li se session dřív, než okno uplyne**, řekni to a zapiš do `docs/todo.md`, do kdy okno běží a co se má sledovat. Okno, o kterém ví jen kontext session, žádné okno není.
 
@@ -257,4 +257,4 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - `Nasazeno a ověřeno. Sledovací okno běží do <čas>, sleduju: <co>.` – **tímhle končí běh skillu**, ne nasazení. Fáze 6 je zapsaná, ale okno je otevřené.
 - `Nasazeno a ověřeno, sledovací okno uzavřeno – <N nových chyb / žádné>.` – jen když okno mezitím opravdu uplynulo a uzavřel jsi ho podle Fáze 7.
 
-**Nikdy neříkej „nasazeno a ověřeno na produkci“ bez zmínky o okně.** Ta věta tvrdí, že je hotovo, kdežto podle *Životního cyklu práce* (`~/.claude/RULES.md`) nasazení končí až uzavřením okna – a právě ta chybějící zmínka je důvod, proč se scénář „spadlo to o dvě hodiny později“ dosud nikdy nedozvěděl vlastníka.
+**Nikdy neříkej „nasazeno a ověřeno na produkci“ bez zmínky o okně.** Ta věta tvrdí, že je hotovo, kdežto podle *Životního cyklu projektu* (`~/.claude/RULES.md`) nasazení končí až uzavřením okna – a právě ta chybějící zmínka je důvod, proč se scénář „spadlo to o dvě hodiny později“ dosud nikdy nedozvěděl vlastníka.
