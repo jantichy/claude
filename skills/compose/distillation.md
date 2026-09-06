@@ -116,7 +116,7 @@ Opakuj, dokud autor neschválí všechny tři formáty. Průběh zapiš – př�
 Druhý a další běh nestaví bázi znovu. Čte, co v archivu přibylo od poslední profilace, a ptá se u každého pozorování na jednu věc: **je to nové pravidlo, nebo protidoklad k tomu, které tam už je?**
 
 - **Nové pravidlo** se přidá – s dokladem jako každé jiné.
-- **Protidoklad** je cennější. Norma se opravuje, kdykoliv ji doklad vyvrátí; přepsané pravidlo ale **nemaž bez zeptání**, protože mohlo vzniknout z výhrady autora ve slepém testu, a ta v archivu nikde není.
+- **Protidoklad** je cennější. Norma se opravuje, kdykoliv ji doklad vyvrátí; přepsané pravidlo ale **nemaž bez zeptání**, protože mohlo vzniknout z výhrady autora ve slepém testu, a ta v archivu nikde není. **Platí v obou režimech profilace – přírůstkové i celé.**
 - **Jednorázová odchylka není pravidlo.** Jeden text napsaný jinak je doklad o jednom textu. Pravidlo se mění, až se odchylka opakuje.
 
 **Přírůstek se nebere jen z archivu.** Připomínky, které autor rozdal k jednotlivým textům od minula, jsou taky vstup – a bývají přesnější než cokoliv, co jde vyčíst z korpusu.

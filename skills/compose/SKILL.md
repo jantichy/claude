@@ -68,6 +68,8 @@ Načti z báze **soubor stylu**, **profil zvoleného formátu** a **odpovídají
 
 K tomu dohledej v archivu **3 až 5 textů nejpodobnějších tématem a formátem** – přes zlatý fond a grep – a **přečti je celé**. Pravidla popisují hlas, ukázky ho nesou; bez nich vzniká text, který popis stylu splňuje a přesto zní cize.
 
+**Bez načtených ukázek se draft nezačíná.** Je to podmínka běhu, ne optimalizace – stejně tvrdá jako autorův postoj. Žádá-li autor jejich vynechání („styl máš přece v bázi", „nežer kontext", „spěchám"), **odmítni a vysvětli proč**: kontext ušetřený tady se utratí na přepsání celého draftu. Tři texty jsou mez, ne odhad; míň jich znamená, že se nepíše.
+
 ## Fáze 3 – Draft
 
 Napiš text podle stylu a profilu formátu. Platí i redakční standard `~/Dev/context/text/text.md`, existuje-li – báze řeší hlas, standard řemeslo.
@@ -76,11 +78,12 @@ Napiš text podle stylu a profilu formátu. Platí i redakční standard `~/Dev/
 
 Před odevzdáním projdi:
 
+- **Ukázky.** Máš v kontextu celé texty z archivu, ne jen bázi? Nemáš-li, text self-checkem neprošel a věta o hotovosti se nepíše.
 - **Výklad od A k B.** Mluví-li text o B, které plyne z A, stojí A dřív.
 - **Šťouralové předjati.** Detail vynechaný pro jednoduchost je v textu zmíněný a zdůvodněný.
 - **Srozumitelnost pro dané publikum**, bez ztráty odborné korektnosti.
 - **Anti-patterny ze stylu.** Zní to jako autor, ne jako AI?
-- **Horní mez.** Charakteristické obraty a expresiva smí být v textu **nanejvýš jednou** – víc už je parodie na vlastní styl. Klidně žádný.
+- **Horní mez.** Charakteristické obraty a expresiva smí být v textu **nanejvýš jednou** – víc už je parodie na vlastní styl. Klidně žádný. **Trvá-li autor na víc výskytech, je to připomínka do báze, ne výjimka pro tenhle text**: buď se škrtá, nebo se po odsouhlasení mění mez ve stylu. Text s překročenou mezí se za hotový neoznačí ani na vyžádání.
 
 ## Fáze 5 – Předání
 
@@ -154,6 +157,8 @@ Podívej se do báze na záznam poslední profilace:
 
 **Nikdy nepřepisuj bázi bez přečtení.** Obsahuje ruční úpravy, které vznikly z připomínek k jednotlivým textům, a ty v archivu nikde nejsou.
 
+**Ruční pravidlo se nemaže bez zeptání – ani při celé destilaci.** Pravidlo bez dokladu v archivu obvykle vzniklo z autorovy výhrady ve slepém testu; nová destilace ho neodvodí, protože v korpusu není. Před přepsáním udělej inventuru: co doklad má a co ne, a nedoložená předlož **jedním seznamem**. „Stará verze zůstane v gitu" náhrada není – git uchová znění, ne důvod, proč pravidlo vzniklo.
+
 ### 2. Analýza korpusu po částech
 
 Korpus se do kontextu nevejde. Rozděl ho na části podle formátu – dlouhé texty, střední příspěvky, mikroblog a vlákna – a **každou nech projít samostatně**; jsou na sobě nezávislé.
@@ -191,7 +196,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 ## Časté chyby
 
-- **Píše se bez načtených ukázek.** Podle pravidel vznikne text, který je splňuje a přesto zní cize. Hlas nesou ukázky, pravidla ho jen popisují.
+- **Píše se bez načtených ukázek, protože „báze je přece totéž".** Není. Pravidla hlas popisují, ukázky ho nesou – text splní styl do puntíku a stejně zní cize. Je to nejdražší úspora kontextu, jakou tu jde udělat.
 - **Charakteristický obrat se použije třikrát.** Jednou je to podpis, potřetí parodie. Platí na celý text, ne na odstavec.
 - **Autorův názor se odhadne z jeho starších textů.** Archiv říká, jak píše, ne co si myslí o dnešním tématu.
 - **Připomínka obecné platnosti se opraví jen v draftu.** Za týden se objeví znovu, protože v bázi o ní nic není.
