@@ -40,6 +40,10 @@ def main():
     started, done, failed = [], set(), set()
     first_start_clock = None
     last_pos = 0
+    # Běh po úsecích (WHISPER_CHUNK_MIN) dává whisperovy časové značky uvnitř
+    # každého úseku znovu od nuly, takže by se ukazatel na každé hranici vracel
+    # zpátky a tempo i ETA by lhaly. Radši nic než špatné číslo.
+    chunked = any("### CHUNKING" in ln for ln in lines)
 
     for ln in lines:
         m = re.search(r"### START zaznam-(\d+) (\d\d):(\d\d):(\d\d)", ln)
@@ -63,7 +67,7 @@ def main():
             last_pos = 0
             continue
         m = re.match(r"\[(\d\d):(\d\d):(\d\d)", ln)
-        if m:
+        if m and not chunked:
             last_pos = hms_to_s(m.group(1), m.group(2), m.group(3))
 
     total = sum(v for k, v in dur.items() if k not in failed)

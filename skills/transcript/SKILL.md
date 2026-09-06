@@ -269,7 +269,7 @@ WHISPER_KEEP_WAV=<0|1> \
 
 **VAD je vždy zapnutý** a není na co se ptát. Vyřazuje ticho, čímž zabíjí celou třídu halucinací („Titulky vytvořil…“, dokola tatáž věta) a zároveň zrychluje běh. Práh je nastavený konzervativně (`-vt 0.35`, `-vp 200`), aby neuřízl tiché mluvčí. Vypnout ho jde přes `WHISPER_VAD=0`, ale sahej po tom jen jako po nápravě podle kroku 7.
 
-Chyba jednoho souboru neshodí zbytek běhu – zapíše se `### FAILED` a pokračuje se dalším. Po doběhnutí zkontroluj, jestli v logu nějaké `### FAILED` není, a **ohlas ho uživateli**.
+Chyba jednoho souboru neshodí zbytek běhu – zapíše se `### FAILED` a pokračuje se dalším. Po doběhnutí zkontroluj, jestli v logu nějaké `### FAILED` není, a **ohlas ho uživateli**. Po běhu po úsecích hledej navíc `### CHUNKSTAT zaznam-N <ok>/<z>`: **soubor s přeskočeným úsekem dostane `### DONE` jako každý jiný**, takže ztráta se jinak nepozná. Nesedí-li obě čísla, řekni uživateli, kolik úseků chybí.
 
 ### 7. Zkontroluj, kolik zvuku se přepsalo
 
@@ -290,6 +290,8 @@ Dokola tatáž věta, „Titulky vytvořil…“ a podobné nesmysly. VAD a `-sn
 ```bash
 WHISPER_CHUNK_MIN=5 <ostatní proměnné jako v kroku 6> <skill>/transcribe.sh …
 ```
+
+**Pět minut je rozumný začátek, ne doporučená hodnota.** Kratší úsek znamená víc řezů uprostřed vět a víc načtení modelu, delší zase větší ztrátu, když jeden úsek spadne. Pod dvě minuty nechoď – režie načítání modelu by převážila samotný přepis.
 
 Model začíná u každého úseku bez kontextu, takže se smyčka nemá jak šířit dál. **Ta samá volba je jediná záchrana i tehdy, když whisper spadne uprostřed dlouhé nahrávky:** bez ní se ztratí přepis celého souboru, s ní se přeskočí jen postižený úsek (`### CHUNKFAILED zaznam-N i/z` v logu) a zbytek se přepíše.
 
@@ -374,6 +376,8 @@ python3 <skill>/progress.py <workdir>/whisper-progress.log
 ```
 
 Ukáže procenta, zpracované a celkové minuty, kolik zbývá, tempo (× realtime) a ETA.
+
+**U běhu po úsecích ukazuje jen dokončené soubory, ne postup uvnitř nahrávky.** Whisper v každém úseku čísluje časy znovu od nuly, takže by se ukazatel na každé hranici vracel zpátky; `progress.py` proto postup uvnitř souboru raději nezapočítá, než aby hlásil nesmysl.
 
 ---
 
