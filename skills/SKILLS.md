@@ -45,7 +45,7 @@ Skill má tři vrstvy a jen jedna je závazná:
 |---|---|---|
 | **Rozhraní** | jak se skill volá, co musí být na výstupu, co po něm platí | nikdy tiše |
 | **Vlastní obsah** | norma, napojení na okolí, to, co neumí nikdo jiný | s rozvahou |
-| **Vnitřek** | delegace ven | kdykoliv, bez ohlášení |
+| **Vnitřek** | delegace ven, nebo vlastní skripty | kdykoliv, bez ohlášení |
 
 **Vnitřek se přiznává** v sekci *Jak je to postavené uvnitř* a výslovně se v ní označí za implementační detail. Bez toho si na něj někdo zvykne jako na rozhraní a příští výměna nástroje se stane rozbitím kontraktu.
 
@@ -113,7 +113,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód" je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`."* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
 
-**`## Jak je to postavené uvnitř`** – jen deleguje-li skill na cizí nástroj. Řekne, co volá, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Viz *Skládej, nepiš znovu*.
+**`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
 
 **`## Fáze 0 – Pre-flight`** – odkaz na `~/.claude/skills/PREFLIGHT.md` a **jen odchylky tohohle skillu**. Nikdy sem neopisuj obsah odtamtud.
 

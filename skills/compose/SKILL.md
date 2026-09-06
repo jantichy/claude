@@ -1,8 +1,8 @@
 ---
 name: compose
-description: Skill se použije, když uživatel zadá "/compose" (volitelně s režimem collect nebo profile), nebo chce napsat článek, příspěvek na sociální sítě či vlákno vlastním hlasem a stylem. Výchozí režim píše text podle znalostní báze autorova psaní. Režim "collect" provede shromážděním všech jeho dosavadních textů do archivu – exporty ze sociálních sítí, články z webů, lokální zálohy. Režim "profile" nad tím archivem vydestiluje znalostní bázi, nebo ji aktualizuje o texty, které mezitím přibyly. Na rozdíl od /transcript, který přepisuje cizí mluvené slovo, tenhle skill píše nový text. Autorovy názory a pointy si nikdy nevymýšlí – bez nich se nerozjede.
-argument-hint: [collect | profile]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, WebFetch, AskUserQuestion, Task]
+description: Skill se použije, když uživatel zadá "/compose" (volitelně s režimem collect nebo profile), nebo chce napsat článek, příspěvek na sociální sítě či vlákno vlastním hlasem a stylem. Výchozí režim píše text podle znalostní báze autorova psaní. Režim "collect" provede shromážděním všech jeho dosavadních textů do archivu – exporty ze sociálních sítí, články z webů, lokální zálohy. Režim "profile" nad tím archivem vydestiluje znalostní bázi, nebo ji aktualizuje o texty, které mezitím přibyly. Na rozdíl od /transcript, který přepisuje nahrávky, tenhle skill píše nový text. Autorovy názory a pointy si nikdy nevymýšlí – bez nich se nerozjede.
+argument-hint: [collect|profile]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, WebFetch, AskUserQuestion]
 ---
 
 # Compose
@@ -21,7 +21,7 @@ Píše text hlasem konkrétního autora – ne obecnou češtinou, kterou dnes p
 
 - **Nevymýšlí autorovy názory a pointy.** Zná jeho *jak*, ne jeho *co*. Když k tématu nezná postoj, doptá se – odhadnutý názor je horší než žádný text.
 - **Nespravuje archiv jako korpus.** Konvence pojmenování, metadata a tematické štítky jsou věc toho archivu, ne skillu. `collect` je do něj plní podle jeho pravidel; kde žádná nejsou, založí je.
-- **Nepřepisuje cizí mluvené slovo.** Na nahrávky, schůzky a přepisy je `/transcript`. Tenhle skill vyrábí nový text.
+- **Nepřepisuje mluvené slovo.** Na nahrávky, schůzky a jejich shrnutí je `/transcript`. Tenhle skill vyrábí nový text.
 - **Nedělá redakční korekturu cizího textu.** Kontrola proti redakčnímu standardu je `~/Dev/context/text/text.md`; tady se standard uplatňuje při psaní, ne jako samostatná služba.
 - **Nepublikuje.** Výstupem je text, ne příspěvek někde venku.
 
