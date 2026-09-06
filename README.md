@@ -76,7 +76,7 @@ Zapne pro daný projekt režim, kdy Claude po každém logickém celku automatic
 
 ### [`/compose`](skills/compose/) – texty, co znějí jako já
 
-Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní a k tématu si dohledá nejpodobnější texty z archivu jako živé vzory. Moje názory a pointy si ale nikdy nevymýšlí, ty musím dodat sám.
+Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní a k tématu si dohledá nejpodobnější texty z archivu jako živé vzory. Tu bázi umí i postavit: `collect` provede posbíráním všeho, co člověk kdy napsal – exporty ze sociálních sítí, články z webů, zálohy po webech, které už nestojí –, a `profile` z toho vydestiluje popis hlasu a později ho doplňuje o to, co přibylo. Moje názory a pointy si ale nikdy nevymýšlí, ty musím dodat sám.
 
 ### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
 

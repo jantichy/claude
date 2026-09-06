@@ -30,6 +30,8 @@ Pozor na zařazení `brand/`: sám o sobě je to **korpus** (fakt o tom, kdo Hon
 
 Zbytek korpusu se nenačítá paušálně: `archive/` (všechny Honzovy texty), `compose/` (jeho hlas, spouští se skillem `/compose`), `speaking/` (školení, přednášky, konzultační i školicí klienti, ohlasy) a `organizations/` (profily organizací, se kterými Honza pracuje – kdo tam sedí, kdo co schvaluje, na čem jedou). Sáhni po nich, když potřebuješ doklad nebo data, ne pravidlo. **U `organizations/` platí, že projekt pro konkrétní organizaci si její profil načítá sám** ve svém `CLAUDE.md`. Rozcestník je v `~/Dev/context/CLAUDE.md`.
 
+- **Znalostní báze psaní:** `~/Dev/context/compose/`, archiv textů `~/Dev/context/archive/`. Čte je skill `/compose` – tenhle řádek je jediné místo, kde ty cesty stojí, takže se po přesunu opravují tady, ne ve skillu.
+
 Když identifikuješ znovupoužitelnou doménovou znalost, která se může hodit ve více projektech, ale měla by zůstat soukromá, protože je citlivá nebo patří do osobního know-how, navrhni její extrakci do `~/Dev/context/`.
 
 ------

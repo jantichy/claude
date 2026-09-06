@@ -804,6 +804,38 @@ class ReadmeSkillu(unittest.TestCase):
         self.assertFalse(chybi, f"hlavní README neodkazuje na adresář skillu: {chybi}")
 
 
+class SkriptySkillu(unittest.TestCase):
+    """Skripty ve skillech nečte žádná jiná brána.
+
+    `typecheck` pouští `swiftc` a `lint` shellcheck; Python ve `skills/*/scripts/`
+    by tedy zůstal bez kontroly a překlep by se poznal až za ostrého běhu.
+    """
+
+    SKRIPTY = sorted((ROOT / "skills").glob("*/scripts/*.py"))
+
+    def test_skripty_se_prelozi(self):
+        """Syntaktická vada ve skriptu se jinak pozná až uprostřed sběru dat."""
+        import py_compile
+        import tempfile
+        for skript in self.SKRIPTY:
+            with self.subTest(skript=str(skript.relative_to(ROOT))):
+                with tempfile.TemporaryDirectory() as tmp:
+                    try:
+                        py_compile.compile(str(skript), cfile=f"{tmp}/out.pyc",
+                                           doraise=True)
+                    except py_compile.PyCompileError as chyba:
+                        self.fail(str(chyba))
+
+    def test_skripty_neodvozuji_cil_ze_sveho_umisteni(self):
+        """Cíl patří do argumentu, jinak skript nepřežije přesun.
+
+        Generátory archivu si výstup odvozovaly z `__file__` a při stěhování
+        do skillu by tiše zapisovaly vedle něj – ne do archivu.
+        """
+        vadne = [str(s.relative_to(ROOT)) for s in self.SKRIPTY
+                 if "__file__" in s.read_text(encoding="utf-8")]
+        self.assertFalse(vadne, f"skripty odvozují cestu z vlastního umístění: {vadne}")
+
 
 if __name__ == "__main__":
     unittest.main()
