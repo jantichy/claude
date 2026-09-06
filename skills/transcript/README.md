@@ -26,6 +26,7 @@ Ze zvukových i obrazových nahrávek udělá pořádek: přepíše je do čitel
 - **Nikdy nehádá, kdo mluvil.** Replika, kterou nelze spolehlivě přiřadit, zůstane bez jména – špatné přiřazení se totiž propíše až do úkolů, kde je z něj tvrzení, kdo co slíbil.
 - **Odhad času umí a učí se.** Řekne dopředu, jak dlouho to potrvá, a po každém běhu si tempo srovná podle vašeho počítače. Nezapočítává přitom běhy, které selhaly, ani krátké vzorky, které by odhad zkreslily.
 - **Zkontroluje, kolik zvuku se vlastně přepsalo**, a když vyjde podezřele málo, řekne to a nabídne, co s tím – nerozhoduje o tom sám.
+- **Umí nahrávku dopřepsat, i když se rozpoznávač uprostřed zakousne.** Na vyžádání ji zpracuje po úsecích: problémový kus přeskočí a o zbytek nepřijdete. Totéž je záchrana, kdyby se přece jen objevila smyčka opakujícího se nesmyslu.
 - **Pozná dvojjazyčnou nahrávku** a zeptá se, jak s ní naložit, místo aby polovinu tiše zkomolila.
 - **Doinstaluje si chybějící součásti** – ale rozlišení mluvčích nikdy samo od sebe, protože to po vás chce účet i souhlas s licencí, a to za vás nikdo neudělá.
 - **Uklidí po sobě** všechny mezivýsledky a nechá jen to, co jste si vybrali.

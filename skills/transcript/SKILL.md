@@ -93,7 +93,7 @@ en 0.999 mixed:cs,en
    <skill>/split.sh <workdir> <audio> <zlom>     # zlom jako MM:SS nebo v sekundách
    ```
 
-   Vypíše cesty obou částí (`<název>-1.*`, `<název>-2.*`), každou na jeden řádek; zlom mimo nahrávku odmítne. Přepisy pak spojíš do jednoho `<název>.md` s mezinadpisem u zlomu. **Pozor na dvě věci:** časy v SRT druhé části začínají od nuly, takže se nedají použít pro diarizaci ani pro `merge.py`, a části jsou soubory, které úklid v kroku 10 nezná – **ukliď je ručně**.
+   Vypíše cesty obou částí (`<název>-1.*`, `<název>-2.*`), každou na jeden řádek; zlom mimo nahrávku odmítne. **Řez má vlastní skript schválně**, i když je to jen dvojí volání ffmpegu: skripty skillu jsou v oprávněních pokryté jedním wildcardem, kdežto povolit `ffmpeg` napřímo znamená pustit nástroj, který umí přepisovat soubory (`-y`) – na rozdíl od čtecího `ffprobe`. Přepisy pak spojíš do jednoho `<název>.md` s mezinadpisem u zlomu. **Pozor na dvě věci:** časy v SRT druhé části začínají od nuly, takže se nedají použít pro diarizaci ani pro `merge.py`, a části jsou soubory, které úklid v kroku 10 nezná – **ukliď je ručně**.
 2. **Přepsat celé v převažujícím jazyce** a **napsat do poznámky na konci přepisu**, která část je nespolehlivá.
 
 **Nerozhoduj sám, zeptej se.** Skript umí zjistit, *že* se jazyk mění, ale ne *kde* – hranici zná jedině uživatel. Časově se ty varianty skoro neliší (přepisuje se týž objem zvuku, jen se dvakrát načte model); liší se tím, kolik práce je kolem a jestli je přijatelné mít kus přepisu nespolehlivý.
