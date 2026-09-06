@@ -293,6 +293,7 @@ Vybral-li uživatel v kroku 6 nějaké **produktové podklady**, připoj pod ten
 **Produktové podklady**, které tenhle projekt vede (zakládají se prací, ne dopředu):
 
 - `docs/competition.md` – kdo je konkurence, co umí a jaká je proti nim naše pozice (`/discovery`)
+- `docs/risks.md` – co je na produktu rizikové a co se kvůli tomu v návrhu změnilo (`/discovery`)
 - `docs/scenarios.md` – co s produktem uživatel dělá, krok za krokem (`/specify`)
 
 Platí pro ně táž povinnost průběžné aktualizace jako pro soubory výš.

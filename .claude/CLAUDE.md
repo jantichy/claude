@@ -34,10 +34,10 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 Kontrakt příkazů (`~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*). Zelená linka ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
 
 - typecheck: swiftc -typecheck skills/*/*.swift
-- lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh && ruff check --isolated --select F,E9 skills/*/scripts/*.py
+- lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh && ruff check --isolated --select F,E9 skills/*/scripts/*.py tests/*.py
 - test: python3 -m unittest discover -s tests
 
-`shellcheck` běží se `--severity=info`, ne se `--severity=style`: stylové nálezy jsou preference a brána, která padá na preferenci, se obchází. **Ze stejného důvodu má `ruff` jen `--select F,E9`** – nedefinovaná jména, nepoužité importy a syntaktické chyby, tedy vady, ne názory. Výchozí sada by tu hlásila pořadí importů a závorky navíc; `--isolated` navíc zajistí, že se nechytí cizí konfigurace odněkud z domovského adresáře. Python přibyl do repozitáře 6. 9. 2026 se skripty `/compose`.
+`shellcheck` běží se `--severity=info`, ne se `--severity=style`: stylové nálezy jsou preference a brána, která padá na preferenci, se obchází. **Ze stejného důvodu má `ruff` jen `--select F,E9`** – nedefinovaná jména, nepoužité importy a syntaktické chyby, tedy vady, ne názory. Výchozí sada by tu hlásila pořadí importů a závorky navíc; `--isolated` navíc zajistí, že se nechytí cizí konfigurace odněkud z domovského adresáře. Python přibyl do repozitáře 6. 9. 2026 se skripty `/compose`. **Od 7. 9. 2026 lint kryje i `tests/`** – je to největší Python v repozitáři a nekontroloval ho nikdo, přestože je to zároveň jediná vrstva, která tu něco doopravdy vynucuje. Běh testů sám chytí syntaktickou chybu, ale ne nepoužitý import ani překlep ve jménu uvnitř větve, která se zrovna nevykonala.
 
 `test` pokrývá dvě vrstvy:
 

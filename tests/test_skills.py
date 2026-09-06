@@ -471,9 +471,10 @@ class Struktura(unittest.TestCase):
         """Skill tvrdí, kolikátý je a na koho navazuje – nic to neměřilo.
 
         Vložení kroku doprostřed životního cyklu posune čísla všem za ním, jenže
-        ta čísla stojí prózou v `Co skill dělá` každého skillu. `test_prohledani_fazi`
-        je schválně vynechává (míří mimo vlastní číslování skillu), takže regrese
-        prošla tiše a našel ji až audit. Zdrojem pravdy je `RULES.md`.
+        ta čísla stojí prózou v `Co skill dělá` každého skillu.
+        `test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis` je schválně
+        vynechává (míří mimo vlastní číslování skillu), takže regrese prošla tiše
+        a našel ji až audit. Zdrojem pravdy je `RULES.md`.
         """
         cyklus = cyklus_s_poradim()
         self.assertEqual(set(cyklus), self.CYKLUS,

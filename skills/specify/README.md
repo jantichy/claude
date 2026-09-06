@@ -47,7 +47,7 @@ Skill se zeptá, co už máte, provede vás vyptáváním, sepíše požadavky, 
 
 **Dokumenty**
 - docs/requirements.md – 12 sekcí
-- docs/architecture.md – 14 sekcí
+- docs/architecture.md – 13 sekcí
 
 **Zapsáno mimo ně**
 - docs/decisions.md: 7 rozhodnutí
