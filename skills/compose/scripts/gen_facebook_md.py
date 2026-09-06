@@ -7,7 +7,6 @@ FB export neobsahuje URL jednotlivých příspěvků.
 """
 import sys
 import json
-import re
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
