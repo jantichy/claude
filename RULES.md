@@ -84,6 +84,10 @@ Vyrobíš-li soubor, který má mít strukturu – konfiguraci, data, diagram, t
 
 Stojí-li na faktu rozhodnutí, návrh nebo argument, **ověř ho, než ho zapíšeš jako danost**. Nepodložené tvrzení v dokumentaci se dál opakuje jako fakt a přežije i několik kol revize – pak padá celá argumentace nad ním.
 
+**Snímek souboru v kontextu není soubor.** Obsah, který se do konverzace dostal na jejím začátku – rozbalený `CLAUDE.md`, přiložený soubor, výpis z dřívějšího tahu –, platil ve chvíli, kdy tam byl vložen. Během session se soubor mohl změnit, a to i cizí rukou. **Údaj, ze kterého se počítá – hash, cesta, datum, číslo verze –, proto čti z disku znovu**, ne z toho, co máš před sebou.
+
+**Proč je to zrádnější než obyčejná nepodloženost:** tady si model myslí, že tvrzení ověřené *má* – vždyť obsah toho souboru vidí. Chybí mu ale informace, že vidí jeho starou verzi, a ta nikde nesvítí. Stalo se to 6. 9. 2026: umlčený nález se ověřoval proti hashi a cestě ze zastaralého snímku, ohlásila se expirace, která nenastala, a padlo na tom rozhodnutí.
+
 ### Ptej se postupně, ne všechno najednou
 
 1. Krátce vyjmenuj všechny body, které se budou řešit.
@@ -151,7 +155,7 @@ Vyjde-li kterákoliv odpověď špatně, **nešetři – zaplatíš dvakrát**: 
 **Delegace navíc se vyplatí i za vyšší cenu, když platí aspoň jedno ze tří:**
 
 - **Vynucený tvar výstupu.** Agent vrací strukturu, se kterou pak něco dál počítá – ne prózu, kterou musí někdo číst.
-- **Izolace kontextu.** Agent nemá jak sáhnout na to, co posuzuje. Read-only kontrolor se nemůže stát opravářem uprostřed kontroly, což je celá třída chyb, která jinak vzniká.
+- **Izolace kontextu.** Agent nemá jak sáhnout na to, co posuzuje. Read-only kontrolor se nemůže stát opravářem uprostřed kontroly, což je celá třída chyb, která jinak vzniká. **Platí to i o zkoušení vlastní brány:** kdo ji napsal, zkusí jí právě ta selhání, se kterými při psaní počítal – tedy tu představu o selhání, kterou už měl. Ověřit, jestli brána doopravdy chytá, umí jen někdo, kdo ji nepsal. Doloženo 6. 9. 2026: čerstvý test prošel oběma mutacemi autora a spadl na třech, které zkusil nezávislý agent.
 - **Práce, která se neamortizuje.** Jeden vstup, jeden výstup, konec – nemá z čeho těžit rozehraný kontext hlavní session. Opak je iterativní psaní kódu, kde je delegace čistá ztráta.
 
 Neplatí-li ani jedno, **udělej to v hlavní session**: delegace je pak dražší a jediné, co přinese, je ztráta kontextu.
