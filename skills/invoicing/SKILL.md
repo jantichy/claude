@@ -159,7 +159,7 @@ Za každého klienta:
 
 ## Fáze 5 – Přílohy a draft
 
-1. Stáhni **PDF faktury** ze systému a **PDF výkazu hodin** z timetrackingu za totéž období. **Pokrývá-li období víc kalendářních měsíců, stáhni výkaz za každý měsíc zvlášť** – konkrétní požadavky i důvod drží `~/Dev/context/business/invoicing.md`, *Přístupy*. **Má-li klient víc projektů, stáhni výkaz za každý projekt zvlášť**; kolik jich je, drží jeho soubor.
+1. Stáhni **PDF faktury** ze systému a **PDF výkazů hodin** z timetrackingu. **Výkaz je jeden na projekt a měsíc** – žádná podmínka podle počtu projektů se neposuzuje; u klienta s jedním projektem z toho vyjde jeden výkaz sám. Konkrétní požadavky i důvod, proč se delší období nedá stáhnout vcelku, drží `~/Dev/context/business/invoicing.md`, *Přístupy*.
 
    **Každou přílohu přejmenuj** podle `~/Dev/context/business/invoicing.md`, *Pojmenování příloh*. Strojový název z obou systémů se nepřikládá – klient si doklad zakládá do účetnictví a musí ho podle jména najít.
 2. **Ověř oba soubory, než je přiložíš:** nejsou prázdné a období ve výkazu sedí se **skutečným fakturovaným obdobím** – tedy s tím, co je v interní poznámce dokladu, ne nutně s tím, co je vytištěné na položce. Prázdná nebo posunutá příloha je horší než žádná – klient ji vezme jako doklad.
