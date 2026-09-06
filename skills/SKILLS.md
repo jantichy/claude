@@ -288,10 +288,10 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 **Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/RULES.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je jedenáct a že spolu drží.
 
-**Znění je doslova stejné ve všech jedenácti**, liší se jen tím, který krok je tučný:
+**Znění je doslova stejné ve všech**, liší se jen tím, který krok je tučný. **Počet kroků se v něm neuvádí číslovkou** – ta se při přidání dalšího kroku rozejde ve všech rámečcích naráz a nic ji nehlídá; čtenář si počet spočítá ze šipek pod tím:
 
 ```
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady jedenácti skillů, které vedou práci
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci
 > od založení projektu až po nasazení. Každý má svůj krok a žádný nedělá práci toho vedle:
 >
 > [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/release`](../release/README.md)
@@ -301,7 +301,7 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README. Rozejde-li se pořadí se životním cyklem v `RULES.md`, platí `RULES.md` – rámeček je jeho zobrazení, ne druhý zdroj pravdy.
 
-**Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech jedenácti:
+**Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech:
 
 ```
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus:

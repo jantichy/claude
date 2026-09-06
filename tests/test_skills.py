@@ -864,7 +864,7 @@ class ReadmeSkillu(unittest.TestCase):
                     f"{readme}: instalační sekce neodkazuje na {self.REPO}{skill.parent.name}")
 
     def test_readme_skillu_z_cyklu_ma_ramecek_a_hromadnou_instalaci(self):
-        """Čtenář, kterému přišel odkaz na jeden skill, jinak neví o zbylých deseti."""
+        """Čtenář, kterému přišel odkaz na jeden skill, jinak neví o těch ostatních."""
         for skill in SKILLS:
             if skill.parent.name not in self.CYKLUS:
                 continue
@@ -921,7 +921,7 @@ class ReadmeSkillu(unittest.TestCase):
             readme = self._readme(skill)
             if readme.exists() and "**Součást životního cyklu projektu.**" in readme.read_text(encoding="utf-8"):
                 navic.append(skill.parent.name)
-        self.assertFalse(navic, f"skilly mimo životní cyklus s rámečkem osy: {navic}")
+        self.assertFalse(navic, f"skilly mimo životní cyklus s rámečkem životního cyklu: {navic}")
 
     def test_readme_jmenuje_vsechny_rezimy(self):
         """Režim, který README zamlčí, uživatel nikdy nepoužije.

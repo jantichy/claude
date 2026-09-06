@@ -12,6 +12,7 @@ Ze zvukových i obrazových nahrávek udělá pořádek: přepíše je do čitel
 6. **Pozná jazyk sám** a všechno – přepis, opravy pravopisu i shrnutí – udělá v něm. Anglicky mluvená schůzka nemá české shrnutí.
 7. **Zvládne víc nahrávek naráz** a napíše k nim jedno společné shrnutí.
 8. **Vyberete si, co má vzniknout** – přepis, shrnutí, titulky, rozlišení mluvčích, nebo jen některé z toho.
+9. **A jak přesně to má rozpoznávat** – rychlejší varianta stačí na běžnou mluvu, přesnější se hodí na špatný zvuk a překřikování. U obou vám dopředu řekne, jak dlouho to potrvá, ať se rozhodujete podle čísla, ne podle pocitu.
 
 ## Proč zrovna tenhle
 
@@ -20,6 +21,7 @@ Ze zvukových i obrazových nahrávek udělá pořádek: přepíše je do čitel
 - **Rešerši dělá naplno, ale rozpoznávači předává výběr.** Ten má tvrdý strop na to, kolik toho unese, a při překročení tiše zahodí začátek – takže se zůstává bezpečně pod ním. Zbytek slovníku se použije při čištění, kde naopak platí, čím víc kontextu, tím líp.
 - **Ví, kde jsou meze slovníku, a přiznává je.** Že seznam jmen zabere, není samozřejmost – změřeno na sedmi bězích nad touž nahrávkou, a proto skill říká, že u důležitých jmen se výsledek má zkontrolovat.
 - **Odstraní halucinace rozpoznávače** – opakující se nesmyslné řádky i vsunuté věty typu „Titulky vytvořil…".
+- **Titulky se dají číst.** Nezalomí se uprostřed slova a nemají délku odstavce – nejdelší vyjde na necelou stovku znaků místo půltisíce. Text je přitom slovo za slovem tentýž, mění se jen zalomení; kratší úseky navíc zpřesňují, komu se replika přiřadí.
 - **Opraví přeslechy podle tématu**, ale **neopravuje to, čemu jen nerozumí**: co model dává opakovaně a konzistentně, je nejspíš váš interní žargon, ne chyba. Na konec pak vypíše seznam termínů, které nechal být, ať víte, co ověřit.
 - **Opraví pravopis, ale nechá vaši mluvu být.** Čárky, shodu a velká písmena spraví, protože to zapsal špatně stroj – ale „bysme" a „vokno" zůstanou, protože tak lidé mluví.
 - **České jméno v anglické nahrávce vrátí do českého tvaru** i s diakritikou, přestože přepsané slovo v angličtině zdánlivě dává smysl.
