@@ -569,7 +569,7 @@ class SouladSNormou(unittest.TestCase):
 
     Norma vznikla později než skilly, takže čtrnáct z nich ji zatím nesplňuje.
     Převod je vědomý běh `/skill update`, ne vedlejší efekt jiné práce – proto
-    seznam `MIGRACE` místo patnácti padajících testů.
+    seznam `MIGRACE` místo čtrnácti padajících testů.
 
     Je to **ráčna, ne umlčení**: test porovnává množiny na rovnost. Skill, který
     se opraví a nezmizí ze seznamu, test shodí stejně jako skill, který se
@@ -816,9 +816,29 @@ class KontrolyOpravduChytaji(unittest.TestCase):
             shutil.rmtree(docasny)
 
 
+def povinne_sekce_readme() -> tuple:
+    """Nadpisy, které norma žádá po každé vizitce – čtené ze `SKILLS.md`.
+
+    Schválně ne z konstanty v testu. Kontrola měřená vlastní konfigurací
+    nehlídá nic: dokud tenhle seznam stál natvrdo, dalo se ho zkrátit na
+    polovinu a mutační testy prošly, protože iterovaly přes tutéž zkrácenou
+    n-tici. Zdrojem pravdy je norma; test z ní jen čte.
+
+    Sekce označené šipkou (`← jen má-li skill…`) jsou podmíněné a vypadnou.
+    """
+    text = (ROOT / "skills/SKILLS.md").read_text(encoding="utf-8")
+    zacatek = text.index("### Struktura")
+    blok = text[text.index("```", zacatek) + 3:]
+    blok = blok[:blok.index("```")]
+    sekce = tuple(r.strip() for r in blok.splitlines()
+                  if r.startswith(("## ", "### ")) and "←" not in r)
+    if len(sekce) < 5:
+        raise AssertionError(f"ze `SKILLS.md` se přečetlo jen {len(sekce)} sekcí: {sekce}")
+    return sekce
+
+
 #: Nadpisy, které norma žádá po každém README skillu – v pořadí z normy.
-POVINNE_README = ("## Co umí", "## Proč zrovna tenhle", "## Jak se to používá",
-                  "## Co nedělá", "## Jak si ho nainstalovat", "### Požadavky a omezení")
+POVINNE_README = povinne_sekce_readme()
 
 #: Mez z normy: zhruba dvě obrazovky.
 MEZ_README = 120
@@ -932,8 +952,13 @@ class ReadmeSkillu(unittest.TestCase):
                 continue
             with self.subTest(skill=skill.parent.name):
                 text = readme.read_text(encoding="utf-8")
+                vlastni = skill.parent.name
+                self.assertTrue(f"**`/{vlastni}`**" in text,
+                    f"{readme}: vlastní krok není v rámečku tučně")
+                self.assertFalse(f"(../{vlastni}/README.md)" in text,
+                    f"{readme}: rámeček odkazuje sám na sebe – vlastní krok je bez odkazu")
                 for krok in sorted(self.CYKLUS):
-                    if krok == skill.parent.name:
+                    if krok == vlastni:
                         continue
                     self.assertTrue(f"(../{krok}/README.md)" in text,
                         f"{readme}: rámeček neodkazuje na `/{krok}`")
@@ -1002,7 +1027,7 @@ class ReadmeSkillu(unittest.TestCase):
         Kontrola `test_odkazy_na_soubory_existuji` na tohle nestačí – ta hledá
         cesty v obrácených apostrofech (`~/.claude/…`), kdežto README používají
         markdownové odkazy s relativní cestou. Rámečkové odkazy sice kryje
-        `test_readme_skillu_z_cyklu_ma_ramecek_a_hromadnou_instalaci`, ale jen
+        `test_readme_skillu_z_cyklu_odkazuje_na_ostatni_kroky`, ale jen
         ty – odkaz kamkoliv jinam procházel tiše.
         """
         odkaz = re.compile(r"\]\(([^)\s#]+\.(?:md|sh|py|png|json))\)")
@@ -1017,6 +1042,23 @@ class ReadmeSkillu(unittest.TestCase):
                     and not (readme.parent / cil).resolve().exists()
                 })
                 self.assertFalse(chybi, f"{readme}: odkaz na neexistující soubor: {chybi}")
+
+    def test_sablona_v_norme_jmenuje_vsechny_kroky(self):
+        """Vizitky hlídá test, normu samotnou dosud nic.
+
+        Šablona hromadné instalace v `SKILLS.md` vyjmenovává kroky cyklu
+        jménem – přidaný krok by ji tiše rozešel, tedy přesně to riziko,
+        kvůli kterému norma o kus výš zakazuje uvádět v rámečku počet.
+        """
+        norma = (ROOT / "skills/SKILLS.md").read_text(encoding="utf-8")
+        i = norma.find(HROMADNA)
+        self.assertGreater(i, 0, "v normě chybí šablona hromadné instalace")
+        konec = norma.find("```", norma.find("```", i) + 3)
+        sablona = norma[i:konec if konec > 0 else len(norma)]
+        for krok in sorted(self.CYKLUS):
+            with self.subTest(krok=krok):
+                self.assertRegex(sablona, rf"\b{krok}\b",
+                    f"šablona hromadné instalace v SKILLS.md nejmenuje `{krok}`")
 
     def test_hlavni_readme_odkazuje_na_adresar_skillu(self):
         """Bez odkazu je podrobné README neviditelné.
@@ -1092,8 +1134,18 @@ class KontrolyVizitekOpravduChytaji(unittest.TestCase):
         self.assertFalse(self.vady(self.MIMO, "report", False))
 
     def test_chybejici_sekce_se_nahlasi(self):
-        vady = self.vady(self.MIMO, "report", False, ("## Co nedělá", "## Co občas nedělá"))
-        self.assertTrue(any("Co nedělá" in v for v in vady), vady)
+        """Každá povinná sekce zvlášť – jinak jde tři z šesti přestat vynucovat.
+
+        Doloženo: dokud se mutovala jen `## Co nedělá`, prošlo zkrácení
+        `POVINNE_README` na polovinu bez jediného padlého testu.
+        """
+        for nadpis in POVINNE_README:
+            with self.subTest(sekce=nadpis):
+                # Nadpis musí zmizet, ne se prodloužit: `## Co umí jinak`
+                # pořád obsahuje `## Co umí` a kontrola by ho našla dál.
+                vady = self.vady(self.MIMO, "report", False,
+                                 ("\n" + nadpis, "\n" + nadpis.replace("#", "@", 1)))
+                self.assertTrue(any(f"chybí sekce `{nadpis}`" in v for v in vady), vady)
 
     def test_prohozene_poradi_sekci_se_nahlasi(self):
         text = self.MIMO.read_text(encoding="utf-8")
@@ -1114,7 +1166,18 @@ class KontrolyVizitekOpravduChytaji(unittest.TestCase):
         radky = text.split("\n")
         radky.insert(2, "> **Součást životního cyklu projektu.** …")
         vady = vady_readme("\n".join(radky), "report", False)
-        self.assertTrue(any("mimo životní cyklus" in v for v in vady), vady)
+        self.assertTrue(any("má rámeček" in v for v in vady), vady)
+
+    def test_chybejici_hromadna_instalace_se_nahlasi(self):
+        vady = self.vady(self.V_CYKLU, "attack", True, (HROMADNA, "Nebo taky ne."))
+        self.assertTrue(any("hromadná instalace" in v for v in vady), vady)
+
+    def test_hromadna_instalace_u_skillu_mimo_cyklus_se_nahlasi(self):
+        """Předstírat sadu u skillu, který se pouští samostatně, by mátlo."""
+        text = self.MIMO.read_text(encoding="utf-8").replace(
+            "## Jak si ho nainstalovat", "## Jak si ho nainstalovat\n\n" + HROMADNA, 1)
+        vady = vady_readme(text, "report", False)
+        self.assertTrue(any("hromadnou instalaci" in v for v in vady), vady)
 
     def test_instalace_mimo_citovany_pokyn_se_nahlasi(self):
         """URL kdekoliv v souboru nestačí – musí být v pokynu pro Clauda."""

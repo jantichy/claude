@@ -252,7 +252,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 | `~/.claude/RULES.md` | *Životní cyklus projektu* a zmínky u sousedů |
 | `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, je-li tam; jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`" |
-| `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních vizitek. Osiřelý odkaz na `../<jméno>/README.md` neshodí žádný test |
+| `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních vizitek. Osiřelý odkaz na `../<jméno>/README.md` testy shodí, ale samy ho nevyškrtnou |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
 | projektové `CLAUDE.md` v `~/Dev` | sekce, které skill zakládal |
 | Memory | záznamy, které ho vyžadují |

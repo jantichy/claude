@@ -40,7 +40,7 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 **Delegace:** whisper.cpp, dataviz
 
 **Ověřeno**
-- Tvar: python3 -m unittest discover -s tests → 41 testů, OK
+- Tvar: python3 -m unittest discover -s tests → OK
 - Vyvolání: 9/10 zásahů, 0 falešných
 - Tlakové scénáře: neměřeno – skill nic nezakazuje
 
