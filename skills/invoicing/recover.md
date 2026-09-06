@@ -40,7 +40,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 | **Slack** | čas zprávy, autor, **obsah** | silný – obsah často délku přímo říká, viz níž |
 | **Claude Code** | timestampy zpráv v `~/.claude/projects/<projekt>/*.jsonl` | silný – souvislá session je skutečný interval u klávesnice |
 | **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek |
-| **Prohlížeč** | navštívená URL a čas návštěvy; **doba na stránce zatím ověřená není** | slabý až střední – u výlučné URL použitelné, u sdílené ne |
+| **Prohlížeč** | navštívená URL, čas návštěvy **a doba na stránce** | střední – u výlučné URL použitelné, u sdílené ne |
 | **Mail** | čas odeslání, předmět, obsah | slabý – odeslání je špička ledovce, ne práce sama |
 
 **Kalendář se čte skriptem `~/.claude/skills/invoicing/calendar.swift`** a čtyři věci z něj vypadávají dřív, než se z nich stane stopa. Všechny čtyři vyrobily falešný nález při prvním ostrém běhu, takže to nejsou hypotézy:
@@ -49,6 +49,8 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 - **Odmítnuté schůzky** – nekonaly se. Poznají se podle příznaku `odmitnuta`, ne podle toho, že v kalendáři jsou.
 - **Duplicitní záznamy na týž čas** – táž schůzka bývá v kalendáři několikrát: přijatá z víc stran, nebo ležící ve dvou kalendářích téhož účtu. Slévají se **podle času, ne podle názvu** – tentýž hovor se v obou kopiích běžně jmenuje jinak.
 - **Zasedačky mezi účastníky** – adresy typu `…@resource.calendar.google.com` jsou místnosti, ne lidé. Podle protistrany se schůzka pozná jen z adres skutečných účastníků.
+
+**Dlouhá návštěva v prohlížeči není dlouhá práce.** Doba na stránce se dá číst, ale záložka nechaná otevřená přes noc vyrobí desítky hodin – v reálných datech se našla návštěva dlouhá 58 hodin. **Mez a způsob čtení drží `~/Dev/context/business/invoicing.md`, *Stopy práce***; nevymýšlej si vlastní.
 
 **Než porovnáš čas z kalendáře s časem odjinud, ověř pásmo.** Skript vypisuje **místní** čas s offsetem; zpráva v chatu („dáme to ve 12:30“) je taky místní, ale záznam v jiném systému nemusí být. Posunutý čas nevypadá jako chyba, ale jako **jiná událost** – a tím se z potvrzené schůzky stane falešný nález chybějících hodin. Stalo se to při prvním ostrém běhu.
 
