@@ -137,7 +137,11 @@ Projdi `SKILLS.md` sekci po sekci a splň každou. Zvlášť hlídej to, co se o
 Tři vrstvy, každá měří něco jiného. Chybí-li nástroj pro některou, vynech ji a **zapiš to do závěru jako nezkontrolované**.
 
 1. **Tvar** – pusť `python3 -m unittest discover -s tests` z `~/.claude`. Je to nejlevnější brána a stojí nula tokenů.
-2. **Vyvolání** – `skill-creator`, ladění `description`. Měří, jestli se skill chytí na situace, pro které vznikl, a nechytá se na cizí. **U skillu, jehož jméno se překrývá s cizím skillem, je tenhle krok povinný.**
+2. **Vyvolání** – ladění `description`. Měří, jestli se skill chytí na situace, pro které vznikl, a nechytá se na cizí. **U skillu, jehož jméno se překrývá s cizím skillem, je tenhle krok povinný.**
+
+   **Neměř to skriptem `run_eval.py` ze `skill-creatoru` u skillu, který je nainstalovaný.** Registruje popis jako dočasný slash command a hledá volání toho dočasného jména; model přitom zavolá skutečný nainstalovaný skill, takže se **správné vyvolání počítá jako propadlé**. Ověřeno 6. 9. 2026 na `/compose`: 8/16, všech osm propadů byly pozitivní případy, a kontrolní běh s maximálně dotěrným popisem dal 0/2 – měřil nástroj, ne popis.
+
+   **Měř na skutečném kanálu:** pusť každý testovací prompt přes `claude -p --output-format stream-json` v čistém adresáři a sleduj, jestli mezi voláními nástrojů padne `Skill` se jménem toho skillu. Ostatní skilly jsou přitom reálně v nabídce, takže se rovnou měří i překryv s nimi. Dva běhy na prompt, aspoň šest pozitivních a šest negativních – near-missy volit tak, aby braly jednotlivá slova z popisu („posbírej články konkurence" proti režimu `collect`).
 3. **Dodržení pod tlakem** – `superpowers:writing-skills`, tlakové scénáře. **Povinné u skillu, který něco zakazuje nebo vynucuje** (nesahat na testy, nepokračovat bez potvrzení, nespouštět proti produkci). U takového skillu je totiž funkce právě to omezení, a ta se tvarem ověřit nedá.
 
 Nálezy oprav a **projeď znovu** – ne že je jen ohlásíš.

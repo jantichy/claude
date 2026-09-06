@@ -1,6 +1,6 @@
 ---
 name: compose
-description: Skill se použije, když uživatel zadá "/compose" (volitelně s režimem collect nebo profile), nebo chce napsat článek, příspěvek na sociální sítě či vlákno vlastním hlasem a stylem. Výchozí režim píše text podle znalostní báze autorova psaní. Režim "collect" provede shromážděním všech jeho dosavadních textů do archivu – exporty ze sociálních sítí, články z webů, lokální zálohy. Režim "profile" nad tím archivem vydestiluje znalostní bázi, nebo ji aktualizuje o texty, které mezitím přibyly. Na rozdíl od /transcript, který přepisuje nahrávky, tenhle skill píše nový text. Autorovy názory a pointy si nikdy nevymýšlí – bez nich se nerozjede.
+description: Skill se použije, když uživatel zadá "/compose" (volitelně s režimem collect nebo profile), nebo chce napsat či přepracovat článek, příspěvek na sociální sítě nebo vlákno vlastním hlasem a stylem – včetně zkrácení nebo překlopení vlastního staršího textu do jiného formátu. Výchozí režim píše text podle znalostní báze autorova psaní. Režim "collect" provede shromážděním všech jeho dosavadních textů do archivu – exporty ze sociálních sítí, články z webů, lokální zálohy. Režim "profile" nad tím archivem vydestiluje znalostní bázi, nebo ji aktualizuje o texty, které mezitím přibyly. Na rozdíl od /transcript, který přepisuje nahrávky, tenhle skill píše nový text; cizí text neredaguje ani nekorekturuje. Autorovy názory a pointy si nikdy nevymýšlí – bez nich se nerozjede.
 argument-hint: [collect|profile]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, WebFetch, AskUserQuestion]
 ---
@@ -71,9 +71,10 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Body 1 až 3 z něj
 
 Je-li v argumentu režim, jeď podle něj a jen ho oznam. Jinak piš text a **ptej se postupně, jednu otázku za druhou** (`~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*):
 
-1. **Formát** – článek, příspěvek, vlákno. Určuje, který profil se načte.
-2. **Téma, publikum, kanál.**
-3. **Autorův postoj a pointa.** Tohle je jádro. Autor smí dodat cokoliv od holého tématu přes osnovu po hrubý draft – ale postoj musí přijít od něj. **Nezná-li ho ani on, ani ty, doptej se a bez odpovědi nepiš.**
+1. **Formát** – článek, příspěvek, vlákno. Určuje, který profil se načte. Formát, na který báze profil nemá, neslibuj: buď se text napíše podle nejbližšího a řekne se to, nebo profil vznikne v `profile`.
+2. **Vstup.** Nový text, nebo přepracování vlastního staršího – zkrácení, překlopení článku do vlákna, příspěvek postavený na starším článku. **U přepracování je zdrojem pravdy ten původní text**, ne archiv: pointa v něm už je a nevymýšlí se znovu.
+3. **Téma, publikum, kanál.**
+4. **Autorův postoj a pointa.** Tohle je jádro. Autor smí dodat cokoliv od holého tématu přes osnovu po hrubý draft – ale postoj musí přijít od něj. **Nezná-li ho ani on, ani ty, doptej se a bez odpovědi nepiš.**
 
    **Kandidátské pointy smíš nabídnout, ale jen jako výtah z archivu, ne jako vlastní návrh.** Nejmíň tři, každá s cestou a doslovným úryvkem, ze kterého plyne. Jedna nestačí – z jedné možnosti se nevybírá, ta se odkývá. Autor jednu zvolí, přepíše, nebo odmítne; teprve jeho volba je zadání. **Vlastní pointu nenavrhuj ani jako příklad**: co jednou zazní z tvé strany, autor pod tlakem času schválí a bude to vypadat jako jeho názor.
 
