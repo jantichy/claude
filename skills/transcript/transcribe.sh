@@ -10,6 +10,15 @@
 #   WHISPER_PROMPT  slovník jmen a termínů      (výchozí prázdný)
 #   WHISPER_VAD     1 | 0 – detekce řeči        (výchozí 1)
 #   WHISPER_KEEP_WAV 1 | 0 – nechat WAV vedle    (výchozí 0; diarizace ho potřebuje)
+#   WHISPER_CHUNK_MIN  minuty                   (výchozí 0 = vypnuto)
+#
+# WHISPER_CHUNK_MIN je ZÁCHRANNÁ BRZDA, ne výchozí režim. Rozřeže nahrávku na
+# úseky dané délky a každý přepíše zvlášť, čímž řeší dvě věci naráz:
+#   1) halucinační smyčku – model začíná u každého úseku bez kontextu, takže se
+#      opakující se text nemůže šířit dál,
+#   2) selhání uprostřed dlouhé nahrávky – spadne-li jeden úsek, přeskočí se
+#      a zbytek se přepíše (bez chunkingu se ztratí přepis celého souboru).
+# Cenou je řez uprostřed věty na každé hranici úseku, proto se to nezapíná samo.
 #
 # Pro každý vstup vznikne <workdir>/<název>.txt a <workdir>/<název>.srt.
 # SRT vzniká vždy, protože se z něj počítá podíl řeči; když ho volající nechce,
@@ -23,6 +32,8 @@
 #   ### SPEECHSTAT N SPEECH_S TOTAL_S PERCENT   (podíl přepsaného zvuku,
 #                                                NE výstup VAD – vyjde stejně i bez něj)
 #   ### FAILED zaznam-N <důvod>   (běh pokračuje dalším souborem)
+#   ### CHUNKFAILED zaznam-N <i>/<z>  (jen s WHISPER_CHUNK_MIN: úsek se přeskočil,
+#                                      zbytek nahrávky se přepsal dál)
 #   ### ELAPSED AUDIO_S WALL_S   (AUDIO_S = jen úspěšně přepsané soubory)
 #   ### ALL DONE
 #
@@ -41,6 +52,7 @@ LANG_CODE="${WHISPER_LANG:-cs}"
 PROMPT="${WHISPER_PROMPT:-}"
 USE_VAD="${WHISPER_VAD:-1}"
 KEEP_WAV="${WHISPER_KEEP_WAV:-0}"
+CHUNK_MIN="${WHISPER_CHUNK_MIN:-0}"
 
 MODEL="$(model_file "$MODEL_KEY")"
 if [ -z "$MODEL" ] || [ ! -f "$MODEL" ]; then
@@ -63,6 +75,63 @@ if [ "$USE_VAD" = "1" ] && [ -f "$VAD_MODEL" ]; then
   # Práh níž než výchozích 0.50 a delší doběh, ať VAD neuřízne tiché mluvčí.
   WOPTS+=(--vad -vm "$VAD_MODEL" -vt 0.35 -vp 200)
 fi
+
+# Posune časové značky v SRT o offset a přečísluje segmenty od zadaného čísla.
+# Číslo segmentu se pozná podle pozice (první řádek po prázdném), ne podle tvaru –
+# samostatné číslo může být i text repliky.
+shift_srt() {
+  awk -v off="$2" -v n="$3" '
+    BEGIN { expect_num = 1 }
+    /^\r?$/ { print; expect_num = 1; next }
+    expect_num && /^[0-9]+\r?$/ { print n++; expect_num = 0; next }
+    /-->/ {
+      split($1, a, /[:,]/); split($3, b, /[:,]/)
+      s = a[1]*3600 + a[2]*60 + a[3] + off
+      e = b[1]*3600 + b[2]*60 + b[3] + off
+      printf "%02d:%02d:%02d,%s --> %02d:%02d:%02d,%s\n",
+             s/3600, (s%3600)/60, s%60, a[4], e/3600, (e%3600)/60, e%60, b[4]
+      expect_num = 0; next
+    }
+    { print; expect_num = 0 }
+  ' "$1"
+}
+
+# Přepis po úsecích. Vrací 0, když se přepsal aspoň jeden úsek.
+# Selhaný úsek se přeskočí – právě kvůli tomu tenhle režim existuje.
+transcribe_chunked() {
+  local wav="$1" outbase="$2" idx="$3" dur="$4"
+  local len=$((CHUNK_MIN * 60))
+  local total start i=0 ok=0 counter=1 cdir
+  total=$(awk -v d="$dur" -v l="$len" 'BEGIN{ printf "%d", (d + l - 1) / l }')
+  cdir=$(mktemp -d "${TMPDIR:-/tmp}/transcript-chunks.XXXXXX") || return 1
+
+  : > "$outbase.txt"
+  : > "$outbase.srt"
+
+  while [ "$i" -lt "$total" ]; do
+    start=$((i * len))
+    i=$((i + 1))
+    # -ss před -i seekuje rychle; WAV je PCM, takže -c copy nic nepřekóduje.
+    if ! ffmpeg -y -ss "$start" -t "$len" -i "$wav" -c copy "$cdir/c.wav" -loglevel error 2>>"$LOG"; then
+      echo "### CHUNKFAILED zaznam-$idx $i/$total" >> "$LOG"
+      continue
+    fi
+    if whisper-cli "${WOPTS[@]}" -f "$cdir/c.wav" -of "$cdir/c" >> "$LOG" 2>&1; then
+      [ -f "$cdir/c.txt" ] && cat "$cdir/c.txt" >> "$outbase.txt"
+      if [ -f "$cdir/c.srt" ]; then
+        shift_srt "$cdir/c.srt" "$start" "$counter" >> "$outbase.srt"
+        counter=$(( counter + $(grep -c -- '-->' "$cdir/c.srt") ))
+      fi
+      ok=1
+    else
+      echo "### CHUNKFAILED zaznam-$idx $i/$total" >> "$LOG"
+    fi
+    rm -f "$cdir/c.wav" "$cdir/c.txt" "$cdir/c.srt"
+  done
+
+  rm -rf "$cdir"
+  [ "$ok" = "1" ]
+}
 
 # Součet délek řečových úseků v SRT – kolik zvuku se opravdu přepisovalo.
 speech_seconds() {
@@ -116,7 +185,14 @@ for f in "$@"; do
   fi
 
   echo "### START zaznam-$n $(date +%H:%M:%S)" >> "$LOG"
-  if whisper-cli "${WOPTS[@]}" -f "$wav" -of "$WORKDIR/$base" >> "$LOG" 2>&1; then
+  if [ "$CHUNK_MIN" -gt 0 ] 2>/dev/null; then
+    transcribe_chunked "$wav" "$WORKDIR/$base" "$n" "$file_dur"
+    rc=$?
+  else
+    whisper-cli "${WOPTS[@]}" -f "$wav" -of "$WORKDIR/$base" >> "$LOG" 2>&1
+    rc=$?
+  fi
+  if [ "$rc" -eq 0 ]; then
     echo "### DONE zaznam-$n $(date +%H:%M:%S)" >> "$LOG"
     ok_audio=$(awk -v a="$ok_audio" -v b="$file_dur" 'BEGIN{printf "%.3f", a+b}')
     srt="$WORKDIR/$base.srt"

@@ -265,6 +265,8 @@ WHISPER_KEEP_WAV=<0|1> \
 
 **`WHISPER_KEEP_WAV=1` nastav právě tehdy, když se bude rozlišovat mluvčí.** Diarizace jede nad tímtéž WAV a bez toho by se musel vyrábět znovu. Jinak nech `0`, ať se po sobě uklidí hned. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
 
+`WHISPER_CHUNK_MIN` nech nenastavené. Je to náprava podle kroku 7, ne volba pro běžný běh.
+
 **VAD je vždy zapnutý** a není na co se ptát. Vyřazuje ticho, čímž zabíjí celou třídu halucinací („Titulky vytvořil…“, dokola tatáž věta) a zároveň zrychluje běh. Práh je nastavený konzervativně (`-vt 0.35`, `-vp 200`), aby neuřízl tiché mluvčí. Vypnout ho jde přes `WHISPER_VAD=0`, ale sahej po tom jen jako po nápravě podle kroku 7.
 
 Chyba jednoho souboru neshodí zbytek běhu – zapíše se `### FAILED` a pokračuje se dalším. Po doběhnutí zkontroluj, jestli v logu nějaké `### FAILED` není, a **ohlas ho uživateli**.
@@ -280,6 +282,18 @@ V logu je pro každý úspěšně přepsaný soubor řádek:
 **Pozor, co to číslo je.** Je to součet délek titulků v SRT dělený délkou nahrávky, tedy **kolik zvuku whisper opravdu přepsal** – ne výstup VAD. Stejné číslo vznikne i s `WHISPER_VAD=0`. Nízký podíl proto neukazuje na VAD sám o sobě; může za ním být i tichý mluvčí, šum nebo dlouhé pauzy.
 
 Slouží jako **hrubá pojistka, ne diagnóza**. Když podíl vyjde nezvykle nízko, ohlas ho uživateli s konkrétním číslem a nabídni opakovaný běh s `WHISPER_VAD=0` jako první věc, kterou lze vyloučit. **Nerozhoduj o tom sám** – u nahrávky s dlouhými pauzami je nízký podíl v pořádku. Naměřeno zatím jen na dvou nahrávkách (94 % a 96 % u běžné schůzky dvou lidí), takže žádnou pevnou hranici tenhle skill nestanovuje.
+
+#### Když se v přepisu objeví halucinační smyčka
+
+Dokola tatáž věta, „Titulky vytvořil…“ a podobné nesmysly. VAD a `-sns` je vyřazují už při rozpoznávání a na měřených nahrávkách žádná nevznikla – když se přesto objeví, je **náprava druhý běh po úsecích**:
+
+```bash
+WHISPER_CHUNK_MIN=5 <ostatní proměnné jako v kroku 6> <skill>/transcribe.sh …
+```
+
+Model začíná u každého úseku bez kontextu, takže se smyčka nemá jak šířit dál. **Ta samá volba je jediná záchrana i tehdy, když whisper spadne uprostřed dlouhé nahrávky:** bez ní se ztratí přepis celého souboru, s ní se přeskočí jen postižený úsek (`### CHUNKFAILED zaznam-N i/z` v logu) a zbytek se přepíše.
+
+**Nezapínej to sám a nikdy jako výchozí.** Na každé hranici úseku vzniká řez uprostřed věty – v ostrém testu se okolo něj jedna replika zopakovala nadvakrát. Platí se tím za odstraněnou smyčku, ne za lepší přepis. Zároveň platí, že po takovém běhu **`SPEECHSTAT` klesne o zhruba tolik, kolik zabíraly přeskočené úseky** – nízké číslo je tady informace, ne poplach.
 
 ### 8. Rozliš mluvčí – jen když si to uživatel vybral
 
@@ -449,7 +463,7 @@ Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované sh
 | Soubor | K čemu |
 |---|---|
 | `check-deps.sh` | kontrola závislostí, volitelně pro konkrétní model |
-| `transcribe.sh` | vlastní přepis, řízený proměnnými prostředí |
+| `transcribe.sh` | vlastní přepis, řízený proměnnými prostředí; umí i běh po úsecích jako nápravu |
 | `common.sh` | cesty k modelům a k VAD, konfigurace diarizace (venv, token, gated repozitáře, název modelu), počet vláken – sourcuje se |
 | `rate.py` | odhad a kalibrace tempa (`get`, `eta`, `update`) |
 | `progress.py` | progress bar nad logem běhu |
