@@ -281,7 +281,7 @@ V logu je pro každý úspěšně přepsaný soubor řádek:
 
 **Pozor, co to číslo je.** Je to součet délek titulků v SRT dělený délkou nahrávky, tedy **kolik zvuku whisper opravdu přepsal** – ne výstup VAD. Stejné číslo vznikne i s `WHISPER_VAD=0`. Nízký podíl proto neukazuje na VAD sám o sobě; může za ním být i tichý mluvčí, šum nebo dlouhé pauzy.
 
-Slouží jako **hrubá pojistka, ne diagnóza**. Když podíl vyjde nezvykle nízko, ohlas ho uživateli s konkrétním číslem a nabídni opakovaný běh s `WHISPER_VAD=0` jako první věc, kterou lze vyloučit. **Nerozhoduj o tom sám** – u nahrávky s dlouhými pauzami je nízký podíl v pořádku. Naměřeno zatím jen na dvou nahrávkách (94 % a 96 % u běžné schůzky dvou lidí), takže žádnou pevnou hranici tenhle skill nestanovuje. **Nepleť si to s čísly u VAD modelu v *Technických detailech*** (94,4 % a 96,9 %) – ta jsou z jiného měření, ze dvou nastavení nad jednou a toutéž nahrávkou.
+Slouží jako **hrubá pojistka, ne diagnóza**. Když podíl vyjde nezvykle nízko, ohlas ho uživateli s konkrétním číslem a nabídni opakovaný běh s `WHISPER_VAD=0` jako první věc, kterou lze vyloučit. **Nerozhoduj o tom sám** – u nahrávky s dlouhými pauzami je nízký podíl v pořádku. Naměřeno zatím jen na dvou nahrávkách (94 % a 96 % u běžné schůzky dvou lidí), takže žádnou pevnou hranici tenhle skill nestanovuje. **Nepleť si to s čísly u VAD modelu v [`internals.md`](internals.md)** (94,4 % a 96,9 %) – ta jsou z jiného měření, ze dvou nastavení nad jednou a toutéž nahrávkou.
 
 #### Když se v přepisu objeví halucinační smyčka
 
@@ -453,3 +453,4 @@ nemusíš.
 | `diarize.py` | vlastní běh pyannote uvnitř venv |
 | `merge.py` | spojí časy z whisperu s mluvčími, vyrobí `.json` a `.vtt` |
 | `internals.md` | naměřené hodnoty a vnitřní rozhodnutí – při běhu se nečte |
+| `README.md` | vizitka skillu pro člověka, který ho nezná |

@@ -28,10 +28,10 @@ case "$CUT" in
   *)   CUT_S="$CUT" ;;
 esac
 
-# Bez téhle kontroly by nečíselný zlom propadl do porovnání níž a odmítl se
-# hláškou "je mimo nahrávku", což je matoucí – chyba je v zadání, ne v čase.
-case "$CUT_S" in
-  ''|*[!0-9]*) echo "Zlom '$CUT' není čas – zadej MM:SS nebo počet sekund." >&2; exit 1 ;;
+# Kontroluje se zadání, ne výsledek převodu: awk výš spolkne nečíselné části
+# mlčky ("aa:bb" dá 0, "12:xx" dá 720), takže po převodu už se nesmysl nepozná.
+case "$CUT" in
+  *[!0-9:]*|''|*::*|:*|*:) echo "Zlom '$CUT' není čas – zadej MM:SS nebo počet sekund." >&2; exit 1 ;;
 esac
 
 DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$AUDIO" 2>/dev/null)

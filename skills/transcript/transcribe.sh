@@ -152,19 +152,27 @@ transcribe_chunked() {
     rm -f "$cdir/c.wav" "$cdir/c.txt" "$cdir/c.srt"
   done
 
-  # VAD si k úseku přidává doběh (-vp 200), takže poslední segment může přetéct
-  # přes hranici a první segment dalšího úseku pak začíná o setiny dřív. Na
-  # 31minutové nahrávce to nastalo jednou ze 702 segmentů; přehrávači je to
-  # jedno, ale merge.py přiřazuje mluvčí podle překryvu, tak ať jsou časy
-  # neklesající.
+  # VAD si k úseku přidává doběh (-vp 200), takže poslední segment úseku může
+  # začít až za jeho hranicí – a první segment dalšího úseku pak začíná o setiny
+  # dřív než on. Na 31minutové nahrávce to nastalo jednou ze 702 segmentů.
+  # Přehrávači je to jedno, ale merge.py řadí a přiřazuje podle času, tak ať
+  # jsou značky neklesající. Vzor musí být ukotvený na tvar časovky: samotné
+  # „-->“ se vyskytne i v textu repliky a ten se nesmí přepsat.
   awk '
-    /-->/ {
-      split($1, a, /[:,]/)
+    function fmt(t,   h, m, sec, ms) {
+      h = int(t / 3600); m = int((t % 3600) / 60); sec = int(t % 60)
+      ms = int((t - int(t)) * 1000 + 0.5)
+      return sprintf("%02d:%02d:%02d,%03d", h, m, sec, ms)
+    }
+    /^[0-9][0-9]:[0-9][0-9]:[0-9][0-9],[0-9][0-9][0-9] --> [0-9][0-9]:[0-9][0-9]:[0-9][0-9],[0-9][0-9][0-9]/ {
+      split($1, a, /[:,]/); split($3, b, /[:,]/)
       s = a[1]*3600 + a[2]*60 + a[3] + a[4]/1000
-      if (s < prev) { $0 = prevline_fmt " --> " $3 }
-      else { prev = s }
-      prevline_fmt = $1
-      print; next
+      e = b[1]*3600 + b[2]*60 + b[3] + b[4]/1000
+      # Posunout začátek na konec předchozího titulku, ale jen když tím titulek
+      # nezmizí – drobný překryv je pořád lepší než nulová délka.
+      if (s < prev_end && prev_end < e) s = prev_end
+      prev_end = e
+      print fmt(s) " --> " fmt(e); next
     }
     { print }
   ' "$out_srt" > "$out_srt.fixed" && mv "$out_srt.fixed" "$out_srt"
