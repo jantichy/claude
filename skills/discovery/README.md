@@ -6,21 +6,23 @@
 >
 > Projít se nemusí celá – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
-Chystáte se postavit produkt a chcete vědět, do čeho vstupujete: kdo to už dělá, co to umí, kolik to stojí a proč by si někdo vybral zrovka vás. Skill to zjistí, vytřídí z toho, **co váš produkt musí umět, aby ho někdo vzal vážně**, a sepíše, co je na celé věci rizikové a co s tím udělat v návrhu. Pouští se dřív než psaní zadání schválně – aby to, co najde, mohlo zadání ještě změnit.
+Chystáte se postavit produkt a chcete vědět, do čeho vstupujete: kdo to už dělá, co to umí, kolik to stojí a proč by si někdo vybral zrovna vás. Skill to zjistí, vytřídí z toho, **co váš produkt musí umět, aby ho někdo vzal vážně**, a sepíše, co je na celé věci rizikové a co s tím udělat v návrhu. Pouští se dřív než psaní zadání schválně – aby to, co najde, mohlo zadání ještě změnit.
 
 ## Co umí
 
 1. **Nejdřív si vymezí pole.** Čtyřmi otázkami zjistí, jaký problém řešíte, komu, v jaké kategorii tedy soutěžíte a čím se to má lišit. Bez toho by hledal buď všechno, nebo nic.
-2. **Hledá pěti různými směry naráz** – přímé konkurenty, náhradní řešení (tabulka, papír, zvyk), sousední kategorie, které to můžou pohltit, stížnosti skutečných zákazníků a lokální český trh.
-3. **Nezapíše nic, co nemá zdroj.** Každá cena a každá funkce má odkaz a datum zjištění; co se nedá doložit, vypadne, nebo se označí za neznámé.
-4. **Vytřídí z toho tři seznamy** – co musíte mít, protože to má každý; čím se odlišíte a čím je to doložené; kde vědomě zaostanete a proč vám to nevadí.
-5. **Sepíše registr rizik** – u každého dopad, pravděpodobnost, čím tomu čelíte a hlavně **co se kvůli tomu v produktu změní**. Riziko, které nic nemění, je jen poznámka.
-6. **Dá se pustit znovu.** Za rok se konkurence pohne; druhý běh původní analýzu neprepíše, ověří ji a doplní.
-7. **Pozná, kdy nemá běžet** – u interního nástroje, přírůstku do hotového produktu nebo aplikace na zakázku řekne, že to nemá trh, a skončí. Rizika sepsat nabídne i tak.
+2. **Hledá několika směry naráz.** Vybírá z dvanácti cest ve třech skupinách: kdo to už dělá (přímí konkurenti, náhradní řešení, sousední kategorie, open source, **a produkty, které to zkusily a skončily**), co lidé chtějí (stížnosti zákazníků, přechod od stávajícího řešení, čekané integrace, terminologie oboru) a co se musí (regulace a povinnosti, český trh, jak se v oboru účtuje).
+3. **Hledání náhradních řešení nikdy nevynechá.** Je to cesta, na kterou se vždycky zapomene, a bývá za ní největší konkurent.
+4. **Nezapíše nic, co nemá zdroj.** Každá cena a každá funkce má odkaz a datum zjištění; co se nedá doložit, vypadne, nebo se označí za neznámé.
+5. **Vytřídí z toho tři seznamy** – co musíte mít, protože to má každý; čím se odlišíte a čím je to doložené; kde vědomě zaostanete a proč vám to nevadí.
+6. **Sepíše registr rizik** – u každého dopad, pravděpodobnost, čím tomu čelíte a hlavně **co se kvůli tomu v produktu změní**. Riziko, které nic nemění, je jen poznámka.
+7. **Dá se pustit znovu.** Za rok se konkurence pohne; druhý běh původní analýzu nepřepíše, ověří ji a doplní.
+8. **Pozná, kdy nemá běžet** – u interního nástroje, přírůstku do hotového produktu nebo aplikace na zakázku řekne, že to nemá trh, a skončí. Rizika sepsat nabídne i tak.
 
 ## Proč zrovna tenhle
 
 - **Hledá i to, co není software.** Nejsilnější konkurent bývá tabulka nebo zvyk, a ten se v seznamu konkurenčních produktů nikdy neobjeví.
+- **Dívá se i na to, co selhalo.** Produkty, které v kategorii skončily, jsou nejlevnější zdroj rizik – ta rizika už někdo zaplatil.
 - **Fakta bez zdroje zahazuje.** Vymyšlená cena o řád vedle je horší než prázdné místo – postaví se na ní rozhodnutí a nikdo ji nezpochybní, protože vypadá doloženě.
 - **Končí seznamem požadavků, ne prezentací.** Výstupem není přehled trhu k prolistování, ale konkrétní věty o tom, co váš produkt musí umět.
 - **Odlišení musí být ověřitelné.** „Jednodušší a rychlejší" neprojde; projde jen tvrzení, které jde ověřit u konkurence.

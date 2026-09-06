@@ -86,39 +86,7 @@ Zapiš do `docs/competition.md` jako úvodní sekci `## Co poměřujeme`. `/spec
 
 **Výchozí model, `low`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: údaj bez URL se ve Fázi 3 zahodí. Na `xhigh` běží až syntéza a rizika, kde se chyba násobí do zadání.
 
-Pusť **tři až pět** agentů, každý s jinou cestou:
-
-| Cesta | Co hledá |
-|---|---|
-| **Přímí konkurenti** | Produkty ve stejné kategorii, které řeší týž problém týmž způsobem. |
-| **Náhradní řešení** | Čím to lidé řeší, aniž by na to měli nástroj – tabulka, mail, papír, obecný nástroj ohnutý k tomuhle. Bývá to největší konkurent a nikdo ho nehledá. |
-| **Sousední kategorie** | Produkty, které dělají něco jiného, ale mohly by to pohltit jako funkci. |
-| **Hlas zákazníka** | Recenze, diskuse, fóra, issue trackery. Na co si lidé u stávajících řešení stěžují a co jim chybí. Nejcennější cesta ze všech – říká, kde je díra. |
-| **Lokální trh** | Je-li produkt vázaný na jazyk, legislativu nebo měnu, hledej zvlášť česká a evropská řešení. Globální hledání je přehluší. |
-
-Zadání pro každého (doplň pole hledání z Fáze 1 a jeho cestu):
-
-```
-Hledáš konkurenci pro produkt, který se teprve staví. Nemáš žádný kontext z předchozích
-rozhovorů – máš jen tohle zadání.
-
-CO SE STAVÍ: <shrnutí Fáze 1 – problém, pro koho, kategorie>
-TVOJE CESTA: <jedna z cest z tabulky, i s popisem>
-
-Prohledej web. U každého nálezu zjisti: jméno, URL, co to umí (konkrétně, ne marketingově),
-cenový model a konkrétní ceny, na koho to cílí, jak dlouho to existuje, čím je to omezené.
-
-TVAR VÝSTUPU – JSON, nic jiného:
-[{"jmeno": "...", "url": "...", "co_umi": ["..."], "cena": "...", "cili_na": "...",
-  "omezeni": ["..."], "basis": ["URL, ze které to je"], "jistota": "vysoká|střední|nízká"}]
-
-PRAVIDLA:
-- Údaj, který nemáš z konkrétní stránky, NEUVÁDĚJ. Prázdné pole je lepší než odhad.
-- Ceny opisuj doslova i s měnou a obdobím. Nepřepočítávej a nezaokrouhluj.
-- "jistota" dej nízkou všude, kde jsi údaj odvodil místo přečetl.
-- Nehodnoť a nedoporučuj. Sbíráš fakta, závěry dělá někdo jiný.
-- Vrať nejvýš 8 nálezů – ty nejrelevantnější. Ne seznam všeho, co existuje.
-```
+**Cesty, pravidla výběru i zadání pro agenty drží `~/.claude/skills/discovery/paths.md`.** Přečti si ho celý a řiď se jím: je v něm katalog dvanácti cest ve třech blocích, pravidla, kolik jich pustit a která je povinná, a dvě šablony zadání podle toho, jestli cesta vrací produkty, nebo zjištění.
 
 ### Ověření
 
