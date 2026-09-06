@@ -468,7 +468,7 @@ class SouladSNormou(unittest.TestCase):
 
     #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
     MIGRACE = {
-        "attack", "autocommit", "breakdown", "cleanup", "compose", "consistency",
+        "attack", "autocommit", "breakdown", "cleanup", "consistency",
         "implement", "oponent", "project", "release", "replace", "report",
         "review", "specify", "transcript",
     }
@@ -792,12 +792,16 @@ class ReadmeSkillu(unittest.TestCase):
                 dlouhe.append(f"{skill.parent.name} ({radku})")
         self.assertFalse(dlouhe, f"README nad mez {self.MEZ_RADKU} řádků: {dlouhe}")
 
-    def test_hlavni_readme_odkazuje_na_readme_skillu(self):
-        """Bez odkazu je podrobné README neviditelné."""
+    def test_hlavni_readme_odkazuje_na_adresar_skillu(self):
+        """Bez odkazu je podrobné README neviditelné.
+
+        Míří se na adresář, ne na soubor: GitHub v adresáři `README.md` rovnou
+        vypíše, takže druhý odkaz na totéž místo by byl navíc.
+        """
         hlavni = (ROOT / "README.md").read_text(encoding="utf-8")
         chybi = [s.parent.name for s in SKILLS
-                 if f"(skills/{s.parent.name}/README.md)" not in hlavni]
-        self.assertFalse(chybi, f"hlavní README neodkazuje na README skillu: {chybi}")
+                 if f"(skills/{s.parent.name}/)" not in hlavni]
+        self.assertFalse(chybi, f"hlavní README neodkazuje na adresář skillu: {chybi}")
 
 
 

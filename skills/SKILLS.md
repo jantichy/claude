@@ -324,11 +324,15 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 
 ### Sekce v hlavním README repozitáře
 
-Skill má navíc **jeden odstavec** v `README.md` v kořeni. Platí pro něj totéž co výš, jen ještě stručněji: **k čemu ten skill je, případně velice stručně, co dělá.** Ne dva odstavce, ne tři. Odstavec končí odkazem:
+Skill má navíc **jeden odstavec** v `README.md` v kořeni. Platí pro něj totéž co výš, jen ještě stručněji: **k čemu ten skill je, případně velice stručně, co dělá.** Ne dva odstavce, ne tři.
+
+**Na podrobné README se odkazuje nadpisem**, ne řádkem pod odstavcem:
 
 ```
-**Podrobně:** [README skillu](skills/jméno/README.md)
+### [`/jméno`](skills/jméno/) – <k čemu to je, půl věty>
 ```
+
+Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou vypíše. Zvláštní řádek „Podrobně: …" by tedy vedl na totéž místo dvakrát.
 
 **Pořadí skillů v hlavním README je dané, ne libovolné.** Skilly ze životního cyklu stojí v pořadí, ve kterém se v životním cyklu pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Skilly mimo životní cyklus stojí **pod nimi a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
 

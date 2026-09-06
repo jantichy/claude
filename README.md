@@ -30,61 +30,51 @@ Následující skilly tvoří jeden životní cyklus od založení projektu po n
 
 Zeptá se postupně na všechno, co se u nového projektu řeší pokaždé znovu – název, git a remote, uspořádání na disku, dokumentační strukturu, autocommit, typ projektu, spouštěcí příkazy, doménové checklisty – a rovnou to nastaví. Umí i projekty, které už existují, a hlavně se k nim po čase vrátit: pozná svůj vlastní otisk a místo otázek projde projekt proti tomu, jak standardy vypadají dnes. Tím řeší nepříjemnou vlastnost celé téhle vrstvy – konfigurace se vyvíjí dál, ale projekt založený loni zůstane stát a sám o tom neřekne.
 
-**Podrobně:** [README skillu](skills/project/README.md)
 
 ### [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
 
 Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak. Hranici mezi nimi drží tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?* A dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold.
 
-**Podrobně:** [README skillu](skills/specify/README.md)
 
 ### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 
 Pošle na hotový dokument agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory, každého z jiného úhlu. Je to krok mezi zadáním a plánem, protože jinak návrh neměří nikdo: `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu. Každou závažnou námitku pak dostane ověřovatel s jediným úkolem – **vyvrátit ji**.
 
-**Podrobně:** [README skillu](skills/oponent/README.md)
 
 ### [`/breakdown`](skills/breakdown/) – ze zadání implementační plán
 
 Vyrobí ze schváleného zadání `docs/plan.md` – seřazený seznam úkolů velikosti pár minut, kde každý má konkrétní soubory, hotový kód testu a příkaz, kterým se ověří, že je hotový. Plán se předkládá ke schválení, protože je to poslední levné místo, kde se dá otočit.
 
-**Podrobně:** [README skillu](skills/breakdown/README.md)
 
 ### [`/implement`](skills/implement/) – odpracování plánu úkol po úkolu
 
 Projde plán od začátku do konce, u každého úkolu test, kód, zelená linka a commit. Umí navázat na rozdělaný plán a nevěří přitom zaškrtávátkům – ověří si v kódu, že odškrtnuté úkoly opravdu existují a procházejí. Nabídne tři režimy podle toho, jak často se do toho chci dívat.
 
-**Podrobně:** [README skillu](skills/implement/README.md)
 
 ### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
 Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu, pak paralelní panel agentů, kde každý má jediný úhel pohledu – korektnost, bezpečnost, data a stavy, provoz, testy, agentní infrastruktura, moje doménové standardy –, a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
 
-**Podrobně:** [README skillu](skills/review/README.md)
 
 ### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
 
 Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Jednoznačné opravy udělá rovnou, o sporných se mnou mluví jednu po druhé. A pamatuje si, co jsem rozhodl neopravovat – jen do chvíle, než se ten kód změní.
 
-**Podrobně:** [README skillu](skills/consistency/README.md)
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
 Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Na konec pošle na projekt agenta bez kontextu, který řekne, jestli z dokumentace jde na dnešní práci navázat.
 
-**Podrobně:** [README skillu](skills/cleanup/README.md)
 
 ### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 
 Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test; útočí se výhradně na lokální instanci nad testovacími daty, a že tomu tak opravdu je, se dokládá příkazem, ne slibem.
 
-**Podrobně:** [README skillu](skills/attack/README.md)
 
 ### [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
 
 Nasadí do produkce přes **oddělenou nasazovací větev**, takže `main` zůstane integrační a merge feature nic nenasazuje. Před nasazením projde brány, zvlášť řeší migrace dopředu kompatibilně a nikdy se nespustí sám. A tím nekončí: poslední fází je **sledovací okno** s konkrétním koncem, protože celá třída chyb se projeví až později. Dokud okno neuplyne a někdo ho výslovně neuzavře, nasazení není hotové.
 
-**Podrobně:** [README skillu](skills/release/README.md)
 
 ## Skilly mimo životní cyklus
 
@@ -94,43 +84,36 @@ Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu. Jsou seřazen
 
 Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
 
-**Podrobně:** [README skillu](skills/autocommit/README.md)
 
 ### [`/compose`](skills/compose/) – texty, co znějí jako já
 
 Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní a k tématu si dohledá nejpodobnější texty z archivu jako živé vzory. Moje názory a pointy si ale nikdy nevymýšlí, ty musím dodat sám.
 
-**Podrobně:** [README skillu](skills/compose/README.md)
 
 ### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
 
 Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je mu podezřelé, vystaví faktury a nechá v mailu rozepsaný draft s fakturou a výkazem hodin v příloze. **Odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: dohledat čas, který jsem si zapomněl natrackovat. Sazby a dohody s klienty v tomhle repozitáři nejsou, skill je jen rámec.
 
-**Podrobně:** [README skillu](skills/invoicing/README.md)
 
 ### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
 
 Přejmenuje pojem napříč projektem včetně **odvozených tvarů** a české skloňované varianty, kterou grep na základní tvar nenajde. Sahá i na názvy souborů a adresářů, přesouvá přes `git mv`, ať se neztratí historie, a hlídá pořadí – delší tvary před kratšími. Povinný poslední krok je kontrolní průchod na starý tvar, který musí vrátit nulu.
 
-**Podrobně:** [README skillu](skills/replace/README.md)
 
 ### [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
 
 Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu proteču samy z výpočetního skriptu nebo ze screenshotu administrace.
 
-**Podrobně:** [README skillu](skills/report/README.md)
 
 ### [`/skill`](skills/skill/) – skilly, které se samy udržují
 
 Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale patnáct souborů zůstane stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
 
-**Podrobně:** [README skillu](skills/skill/README.md)
 
 ### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
 Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované shrnutí se soupisem domluv a úkolů na konci; na vyžádání rozliší i mluvčí, takže úkoly mají majitele. Přepis běží **lokálně a offline**, takže nahrávka neopustí můj počítač. Než začne, podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy.
 
-**Podrobně:** [README skillu](skills/transcript/README.md)
 
 ## Hooky, skripty a nastavení
 
