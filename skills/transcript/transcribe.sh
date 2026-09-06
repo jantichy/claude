@@ -54,7 +54,10 @@ WORKDIR="$1"; LOG="$2"; shift 2
 THREADS="$(n_threads)"
 
 # Přepínače whisperu společné pro všechny soubory
-declare -a WOPTS=(-m "$MODEL" -l "$LANG_CODE" -t "$THREADS" -otxt -osrt -sns -np)
+# -ml 80 -sow: strop délky titulku a dělení po slovech. Bez -sow řeže whisper
+# uprostřed slova („na přednáš“ / „ky, že jo“); s ním je text slovo za slovem
+# totožný s během bez -ml, mění se jedině zalomení.
+declare -a WOPTS=(-m "$MODEL" -l "$LANG_CODE" -t "$THREADS" -otxt -osrt -sns -np -ml 80 -sow)
 [ -n "$PROMPT" ] && WOPTS+=(--prompt "$PROMPT" --carry-initial-prompt)
 if [ "$USE_VAD" = "1" ] && [ -f "$VAD_MODEL" ]; then
   # Práh níž než výchozích 0.50 a delší doběh, ať VAD neuřízne tiché mluvčí.
