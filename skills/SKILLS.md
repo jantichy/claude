@@ -150,7 +150,9 @@ Ty dvě věty jsou celá bezpečnostní pojistka skillu: nutí odlišit „uděl
 
 Není to výjimka, ale splněné kritérium: co mu vyhoví, revize nesahá; co mu nevyhoví, je nedodělek a **opraví se**.
 
-**„Krok" jen u interaktivních průvodců**, kterými uživatel prochází jeden po druhém a může se kdykoliv zastavit. Dnes je to `/project`. Skill, který volí „krok", to musí ve svých zásadách zdůvodnit.
+**„Krok" jen u průvodce nastavením.** Rozhoduje, **čí odpovědi tvoří výsledek**: u `/project` je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek a jmenuje se „krok". Skilly, které něco samy najdou nebo vyrobí a ptají se až na nálezy – `/review`, `/consistency`, `/invoicing` –, mají „fázi", i když se ptají stejně často.
+
+Rozlišovat podle toho, „jestli se uživatel může kdykoliv zastavit", nestačí: to platí u všech. Skill, který volí „krok", to musí ve svých zásadách zdůvodnit tímhle kritériem.
 
 **Neodkazuj se dovnitř jiného skillu.** Potřebuješ-li tentýž postup jako soused, patří ten postup do `PREFLIGHT.md` nebo do doménové znalosti – ne do odkazu na jeho fázi. Cizí fáze se přečíslují a odkaz tiše ukáže jinam.
 
