@@ -12,7 +12,7 @@ Zapíná pro jeden konkrétní projekt režim, ve kterém Claude po každém dok
 ## Proč zrovna tenhle
 
 - **Přepínač je vidět přímo v projektu**, ne v nějaké skryté konfiguraci – kdokoli si otevře projekt, hned ví, jaký režim tam platí.
-- **Zapnutí je nevratně čitelné i pro Clauda:** stejným zápisem se stav ukládá i zjišťuje, takže se nemůže rozejít to, co je nastavené, s tím, co se opravdu děje.
+- **Stav se ukládá i zjišťuje týmž zápisem**, takže se nemůže rozejít to, co je nastavené, s tím, co se opravdu děje.
 - **Nezapne se omylem globálně.** Popis mechanismu a přepínač jsou schválně dvě různé věci, takže se nestane, že by se autocommit choval jako zapnutý všude.
 - **Když najde nastavení na nesprávném místě**, řekne to a nabídne srovnání – tiše to nepřepíše.
 
