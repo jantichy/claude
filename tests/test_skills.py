@@ -453,7 +453,7 @@ class Struktura(unittest.TestCase):
 class SouladSNormou(unittest.TestCase):
     """Skilly proti `skills/SKILLS.md`. Jediné místo, kde se norma vynucuje strojem.
 
-    Norma vznikla později než skilly, takže patnáct z nich ji zatím nesplňuje.
+    Norma vznikla později než skilly, takže čtrnáct z nich ji zatím nesplňuje.
     Převod je vědomý běh `/skill update`, ne vedlejší efekt jiné práce – proto
     seznam `MIGRACE` místo patnácti padajících testů.
 

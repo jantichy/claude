@@ -9,6 +9,8 @@ from pathlib import Path
 
 HEADER = 4377
 
+if len(sys.argv) < 3:
+    sys.exit("Použití: extract_wpress.py <archiv .wpress> <výstupní adresář> [filtr]")
 src = Path(sys.argv[1])
 out_dir = Path(sys.argv[2])
 want = sys.argv[3] if len(sys.argv) > 3 else None  # jen soubory obsahující tento řetězec

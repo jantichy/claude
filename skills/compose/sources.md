@@ -41,7 +41,11 @@ Exporty se připravují **hodiny až dva dny**. Vyžádej je na začátku, ne a�
 | LinkedIn | `https://www.linkedin.com/mypreferences/d/download-my-data` | `Shares_*.csv` a `Comments_*.csv` z **kompletního** archivu |
 | Bluesky | export repozitáře přes AT Protocol (`repo.car`) | všechny záznamy `app.bsky.feed.post` |
 
-Převod dělají skripty ze `scripts/`; volání jsou v `SKILL.md`, *Jak je to postavené uvnitř*. Berou cíl argumentem a **jsou idempotentní** – po novém exportu stačí pustit je znovu a rozdíl je vidět v gitu.
+Převod dělají skripty ze `scripts/`; jejich volání i argumenty jsou v `SKILL.md`, *Jak je to postavené uvnitř*.
+
+Berou cíl argumentem a **jsou idempotentní** – po novém exportu stačí pustit je znovu a rozdíl je vidět v gitu.
+
+**Závislosti ověř dřív, než začneš stahovat.** Jediná je `cbor2` pro Bluesky (`python3 -c "import cbor2"`); chybí-li, řekni to hned a nabídni doinstalování – jinak se to pozná až po hodinách čekání na export.
 
 **Co se vynechává:** reposty a sdílení bez vlastního komentáře, položky bez textu, lajky. Nejsou to autorovy texty.
 

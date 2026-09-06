@@ -47,7 +47,7 @@ archiv/                      korpus – co bylo napsáno
 báze/                        norma – jak se píše
   style.md                   slovník, rytmus, myšlenkové postupy, anti-patterny
   article.md  post.md  thread.md          profily formátů
-  article-examples.md  post-examples.md   zlatý fond ukázek
+  article-examples.md  post-examples.md  thread-examples.md   zlatý fond ukázek
   _analysis/                 podklady a záznam, kdy se profilovalo a z čeho
 ```
 

@@ -15,6 +15,8 @@ Píše text hlasem konkrétního autora – ne obecnou češtinou, kterou dnes p
 - **`/compose collect`** – **shromáždění archivu**. Provede vyžádáním exportů ze sítí, stažením článků z webů a převodem do jednotné podoby. Pouští se opakovaně, kdykoliv přibude nový zdroj nebo nový export.
 - **`/compose profile`** – **destilace báze** nad archivem. Neexistuje-li báze, postaví ji celou; existuje-li, zapracuje jen to, co v archivu přibylo od minule.
 
+**Proč `profile`, a ne `update`.** Ustálená sada režimů (`create`/`update`/`delete`) předpokládá, že se zakládání a aktualizace ovládají zvlášť. Tady je to jeden úkon, který si stav pozná sám – pojmenovat ho `update` by lhalo při prvním běhu a `create` při každém dalším. `profile` navíc funguje jako sloveso i jako jméno výstupu. Zamítnuto `learn` a `distill`: říkají činnost, ale nepojmenují, co po nich zbude.
+
 **Hlas ani cesty nejsou v tomhle souboru.** Skill neví, komu píše – čte to z báze, na kterou je nastavený. Bez ní neumí nic; první běh je proto vždycky `collect` a `profile`.
 
 ## Co skill nedělá
@@ -37,6 +39,17 @@ Převodníky exportů ze sociálních sítí leží ve `scripts/` vedle tohohle 
 | `scripts/parse_bluesky.py` | `repo.car` | posty z AT Protocol repozitáře do JSON (žádá `cbor2`) |
 | `scripts/gen_bluesky_md.py` | JSON z předchozího kroku | posty po letech |
 | `scripts/extract_wpress.py` | archiv `.wpress` | rozbalí zálohu All-in-One WP Migration |
+
+Volají se takhle – **cíl je vždycky druhý argument**, hranaté závorky jsou volitelné:
+
+```
+scripts/gen_twitter_md.py   <adresář data/ z rozbaleného exportu>     <cílový adresář>
+scripts/gen_facebook_md.py  <your_posts__…_1.json>                    <cílový adresář> [URL profilu]
+scripts/gen_linkedin_md.py  <adresář s Shares_*.csv a Comments_*.csv> <cílový adresář> [URL profilu]
+scripts/parse_bluesky.py    <repo.car>                                <výstupní JSON>  [handle]
+scripts/gen_bluesky_md.py   <JSON z předchozího kroku>                <cílový adresář>
+scripts/extract_wpress.py   <archiv .wpress>                          <cílový adresář> [filtr]
+```
 
 **Skripty jsou implementační detail, ne rozhraní.** Smí se přepsat i vyhodit. Závazné je, co po nich zbude: **jednotný Markdown v archivu**, ze kterého `profile` čte, a **idempotence** – druhý běh nad týmž exportem vyrobí týž soubor, takže rozdíl je vidět v gitu.
 
@@ -61,6 +74,8 @@ Je-li v argumentu režim, jeď podle něj a jen ho oznam. Jinak piš text a **pt
 1. **Formát** – článek, příspěvek, vlákno. Určuje, který profil se načte.
 2. **Téma, publikum, kanál.**
 3. **Autorův postoj a pointa.** Tohle je jádro. Autor smí dodat cokoliv od holého tématu přes osnovu po hrubý draft – ale postoj musí přijít od něj. **Nezná-li ho ani on, ani ty, doptej se a bez odpovědi nepiš.**
+
+   **Kandidátské pointy smíš nabídnout, ale jen jako výtah z archivu, ne jako vlastní návrh.** Nejmíň tři, každá s cestou a doslovným úryvkem, ze kterého plyne. Jedna nestačí – z jedné možnosti se nevybírá, ta se odkývá. Autor jednu zvolí, přepíše, nebo odmítne; teprve jeho volba je zadání. **Vlastní pointu nenavrhuj ani jako příklad**: co jednou zazní z tvé strany, autor pod tlakem času schválí a bude to vypadat jako jeho názor.
 
 ## Fáze 2 – Kontext
 
@@ -147,7 +162,7 @@ Vydestiluje z archivu znalostní bázi. **Postup destilace, struktura analýz a 
 
 ### 1. Zjisti, co se profiluje
 
-Podívej se do báze na záznam poslední profilace:
+Podívej se do báze na záznam poslední profilace (leží v `_analysis/`):
 
 | Stav | Co dělat |
 |---|---|
