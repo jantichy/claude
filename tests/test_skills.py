@@ -458,7 +458,7 @@ class Struktura(unittest.TestCase):
             f"z RULES.md se přečetlo jen {len(self.CYKLUS)} kroků životního cyklu: {sorted(self.CYKLUS)}")
         # Obě funkce čtou týž blok. Rozejdou-li se, jedna z nich přestala vidět
         # celý cyklus – a volný práh výš to sám neodhalí, protože výpadek dvou
-        # kroků z jedenácti nechá pořád devět.
+        # kroků z cyklu nechá pořád dost na to, aby práh nesplnil.
         self.assertEqual(self.CYKLUS, set(cyklus_s_poradim()),
             "cyklus_z_rules() a cyklus_s_poradim() čtou z RULES.md jinou množinu kroků")
         chybi = sorted(self.CYKLUS - {s.parent.name for s in SKILLS})
@@ -781,7 +781,11 @@ class KontrolyOpravduChytaji(unittest.TestCase):
         import shutil, tempfile
         text = self.VZOR.read_text(encoding="utf-8")
         i = text.index("\n## Časté chyby")
-        j = text.index("\n## Fáze 8 – Závěr")
+        # Poslední fáze se hledá jako poslední nadpis `## Fáze …`, ne jménem:
+        # závěr se podle normy jmenovat nemusí („Úklid a shrnutí“, „Předání“)
+        # a přečíslování by test shodilo hláškou o chybějícím podřetězci
+        # místo nálezem. Týmž kritériem pozná závěr i kontrola samotná.
+        j = max(m.start() for m in re.finditer(r"\n## Fáze [0-9]", text))
         prehozeny = text[:j] + text[i:].rstrip() + "\n" + text[j:i]
         docasny = Path(tempfile.mkdtemp())
         try:
@@ -1190,9 +1194,14 @@ class KontrolyVizitekOpravduChytaji(unittest.TestCase):
         self.assertTrue(any("neodkazuje" in v for v in vady), vady)
 
     def test_prekrocena_mez_delky_se_nahlasi(self):
-        text = self.MIMO.read_text(encoding="utf-8") + "\n" * (MEZ_README + 1)
-        vady = vady_readme(text, "report", False)
+        """Těsně o jeden řádek – jinak by mutace dokazovala jen řádovou nerovnost."""
+        text = self.MIMO.read_text(encoding="utf-8")
+        chybi = MEZ_README - len(text.splitlines()) + 1
+        self.assertGreater(chybi, 0, "vzor už mez přetahuje, mutace by nic nedokázala")
+        vady = vady_readme(text + "\n" * chybi, "report", False)
         self.assertTrue(any("mez je" in v for v in vady), vady)
+        self.assertFalse(vady_readme(text + "\n" * (chybi - 1), "report", False),
+                         "kontrola hlásí vadu ještě před překročením meze")
 
 
 if __name__ == "__main__":
