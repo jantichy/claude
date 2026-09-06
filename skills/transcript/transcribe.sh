@@ -152,6 +152,23 @@ transcribe_chunked() {
     rm -f "$cdir/c.wav" "$cdir/c.txt" "$cdir/c.srt"
   done
 
+  # VAD si k úseku přidává doběh (-vp 200), takže poslední segment může přetéct
+  # přes hranici a první segment dalšího úseku pak začíná o setiny dřív. Na
+  # 31minutové nahrávce to nastalo jednou ze 702 segmentů; přehrávači je to
+  # jedno, ale merge.py přiřazuje mluvčí podle překryvu, tak ať jsou časy
+  # neklesající.
+  awk '
+    /-->/ {
+      split($1, a, /[:,]/)
+      s = a[1]*3600 + a[2]*60 + a[3] + a[4]/1000
+      if (s < prev) { $0 = prevline_fmt " --> " $3 }
+      else { prev = s }
+      prevline_fmt = $1
+      print; next
+    }
+    { print }
+  ' "$out_srt" > "$out_srt.fixed" && mv "$out_srt.fixed" "$out_srt"
+
   # Kolik úseků se povedlo. Volající to hlásí uživateli – soubor s přeskočeným
   # úsekem dostane `### DONE` jako každý jiný, takže bez tohohle by se ztráta
   # poznala jedině z podílu přepsaného zvuku.

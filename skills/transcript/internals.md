@@ -1,0 +1,36 @@
+# Technické detaily /transcriptu
+
+Naměřené hodnoty a vnitřní rozhodnutí skillu. Do `SKILL.md` nepatří, protože se
+při běhu nečtou – sahá se sem, až když je potřeba vědět *proč* je něco nastavené
+tak, jak je, nebo se má nastavení měnit.
+
+- **Modely:** `turbo` (`ggml-large-v3-turbo.bin`) a `large-v3` (`ggml-large-v3.bin`) v `~/.whisper-models/`. Naměřeno na Apple M1 nad 31 minutami české schůzky: turbo 5,4× realtime, `large-v3` 1,67× realtime, tedy **zhruba třikrát pomaleji**. Přesnější číslo než řádové sem nepatří: časy běhu kolísají podle zahřátí stroje natolik, že dva bitově shodné běhy trvaly 291 s a 504 s (viz odrážka o determinismu níž). Rozdíl v textu byl 13 % slov, ale drtivou většinou šlo o vatu („jo“, „to“, „jako“); rozhodující rozdíl je ve vlastních jménech a řídkých slovech, kde `large-v3` vyhrává. **Slovník jmen ten rozdíl smaže spolehlivěji než volba modelu** – turbo se slovníkem porazilo `large-v3` bez slovníku, a to několikanásobně rychleji.
+- **Slovník rozhoduje, ale ne délkou.** Sedm běhů nad touž 31minutovou nahrávkou (turbo, sledované místní jméno, 5 výskytů):
+
+  | Seznam | Položek | Pozice jména | Správně |
+  |---|---|---|---|
+  | A | 8 | 3. | 5/5 |
+  | A | 12 | 3. | 4/5 |
+  | A | 16 | 3. | 4/5 |
+  | A | 21 | 3. | **5/5** |
+  | B | 21 | 5. | **0/5** |
+  | B | 21 | 3. | 1/5 |
+  | B | 21 | 5., jiné psaní | 0/5 |
+
+  **Délka vliv nemá** – tentýž počet položek dal 5/5 i 0/5. **Pozice ani velikost písmena to nevysvětlují** – přesun jména z páté pozice na třetí zvedl výsledek z 0/5 na 1/5, jiné psaní nezměnilo nic. Seznam B tedy selhává soustavně, ale příčina **zůstává neizolovaná**: seznamy se liší celým složením i pořadím. Dřívější tvrzení o klesající účinnosti k pozdějším položkám bylo vyvozeno z porovnání, které míchalo délku s pozicí, a **neplatí**.
+
+  Praktický dopad: **na slovník se nedá spolehnout naslepo.** Když na přesnosti jmen záleží, ověř výsledek v přepisu a případně slovník přeskládej – dokud nevíme proč, je to jediný spolehlivý postup.
+- **Účinnost slovníku převrátí i nastavení, které se slovníkem nesouvisí.** Prodloužení minimálního ticha ve VAD (`-vsd 500`) srazilo nad touž nahrávkou tutéž sledovanou zkratku ze 7 správných tvarů na 2, přestože na prompt nijak nesahá; posouvá jen hranice úseků, na které se zvuk před dekódováním rozřeže. **Proto se na parametry VAD nesahá kvůli drobnému zlepšení.** Měřeny byly i novější VAD model (pokrytí 94,4 % proti 96,9 %) a jeho kombinace s `-vsd 500` (97,5 %); zisk 0,6 bodu je menší než rozptyl, který nadělá pouhá záměna slovníku (1,5 bodu), a **cena je nepředvídatelný dopad na jména**. Dnešní nastavení proto zůstává.
+- **Titulky se dělí po slovech, ne po tokenech.** `-ml 80` drží titulek na osmdesáti znacích plus doběh posledního slova; bez `-sow` by ho whisper řezal **uprostřed slova** (naměřeno 60 řezů typu „na přednáš“ / „ky, že jo“). S obojím je text slovo za slovem totožný s během bez `-ml` – mění se jedině zalomení, takže SRT je čitelné (nejdelší titulek 87 znaků místo 490) a kratší úseky navíc zpřesňují přiřazení mluvčích v `merge.py`.
+- **Whisper je při stejném vstupu bit-identický**, což se hodí vědět při každém měření: dva běhy s týmž nastavením daly shodný otisk textu i SRT, takže **každý rozdíl ve výstupu je signál, ne šum** – a nemá cenu měřit tutéž konfiguraci dvakrát. **Neplatí to o čase:** dva bitově shodné běhy trvaly 291 s a 504 s podle toho, jak byl stroj zahřátý, takže na rychlost se z jednoho měření usuzovat nedá.
+- **Kalibrace ETA:** `rate.py` drží `~/.whisper-models/rate.json` s naměřeným tempem pro každý model zvlášť. Po každém běhu se hodnota posune k realitě (EWMA, α = 0,35), takže odhady sedí na konkrétní stroj. Výchozí hodnoty jsou z M1. Do kalibrace jde **jen zvuk, který se opravdu přepsal** – soubor, který skončil `### FAILED`, se nezapočítá. Bez toho by selhaný běh (hodina zvuku, pár sekund práce) zapsal tempo v řádu stovek × realtime. **Běhy pod dvě minuty zvuku se do kalibrace nepočítají** – dominuje u nich načtení modelu a tempo vyjde nesmyslně nízké (25s vzorek srazil naměřených 5,96× na 4,75×).
+- **Jazyk** se detekuje v kroku 1 a předává jako `WHISPER_LANG`. Když detekce selže, `transcribe.sh` spadne na výchozí `cs`.
+- **Vlákna:** `transcribe.sh` bere počet výkonných jader ze `sysctl`, ne whisperovské výchozí čtyři.
+- **Potlačení neřečových tokenů:** `-sns`, zapnuto vždy. Druhá pojistka vedle VAD.
+- **`--carry-initial-prompt`** je zapnutý vždy, když je slovník neprázdný: bez něj by prompt platil jen pro první okno a u delší nahrávky by se vytratil. Má to i druhou stranu – prompt ukusuje z kontextu **každého** okna, takže dlouhý slovník není zadarmo ani tam, kde se do stropu vejde. Kolik to dělá, změřené není.
+- **Kontext předchozího textu se nevypíná, i když se to nabízí.** Whisper si nese vlastní předchozí výstup do dalšího okna, a právě tudy se šíří halucinační smyčky; `-mc 0` to utne. **Jenže tudy jde i slovník, takže ho `-mc 0` nezeslabí – úplně ho vypne.** Doloženo tvrdě: dva **různé** slovníky daly s `-mc 0` **bit-identický výstup**, kdežto bez něj se tytéž dva slovníky liší. `--carry-initial-prompt` je s ním bezpředmětný, protože prompt nemá kudy dovnitř. Podíl přepsaného zvuku k tomu klesl z 96,9 % na 90,8 % a sledovaná zkratka vyšla správným tvarem 1 ze 7 zmínek místo 7 z 8 („zobu“, „zoptak“). **Smyčky u nás řeší VAD a `-sns`** – na téhle nahrávce nevznikla ani jedna, takže by se slovníkem platilo za problém, který tu není.
+- **Rozlišení mluvčích** je volitelný druhý průchod přes `pyannote/speaker-diarization-3.1` ve vlastním venv. Zapíná se v průvodci, výchozí stav je vypnuto. Naměřeno na Apple M1: **7,13× realtime**, tedy 31,4 minuty zvuku za 4:24. Je to o něco **rychlejší než přepis turbem**, takže zapnutá diarizace zhruba zdvojnásobí celkový čas. Aktuální kalibrovanou hodnotu si vyžádej přes `rate.py get`, neopisuj ji sem – mění se po každém běhu.
+- **Gated repozitáře jsou tři**, ne jeden: kromě `speaker-diarization-3.1` ještě `segmentation-3.0` a `speaker-diarization-community-1`. Seznam se mezi verzemi pyannote mění, proto `diarize.sh` při selhání vytáhne z chyby konkrétní repozitář (`### DIARIZE FAILED gated:<repo>`). Kontrola v `check-deps.sh` sahá na `config.yaml`, ne na `/api/models/` – **metadata gated repa jsou veřejná, takže endpoint vrací 200 i bez přístupu** a kontrola by byla falešně pozitivní.
+- **Přednostně se bere `exclusive_speaker_diarization`**, a teprve když ten atribut chybí, `speaker_diarization`. Ta první je podle dokumentace pyannote určená právě pro navázání na přepis, protože neobsahuje překrývající se úseky; záloha je tam kvůli starším verzím pyannote, které vracely rovnou `Annotation` bez rozlišení.
+- **Nepřiřazené repliky jsou v pořádku.** Na 31minutové schůzce dvou lidí zůstalo bez mluvčího 21 replik ze 426 (5 %) a byly to skoro výhradně krátké přitakávací vsuvky („jo, jo, jo“, „to asi ne“). Delší věcné repliky mluvčího dostaly všechny.
+- **Zarovnání po slovech (WhisperX) skill záměrně neřeší.** Táhlo by s sebou faster-whisper, který na Apple Silicon nemá Metal backend a běží jen na CPU, takže by se celý přepis řádově zpomalil. Cenou je, že na rychlých výměnách („jasně, jasně“) bude přiřazení mluvčích plavat. Bereme to vědomě: na dlouhých replikách, ze kterých se dělají úkoly ve shrnutí, se lidé nepřekřikují.

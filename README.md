@@ -100,7 +100,7 @@ Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, *
 
 ### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
-Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované shrnutí se soupisem domluv a úkolů na konci; na vyžádání rozliší i mluvčí, takže úkoly mají majitele. Přepis běží **lokálně a offline**, takže nahrávka neopustí můj počítač. Než začne, podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy.
+Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované shrnutí se soupisem domluv a úkolů na konci; na vyžádání rozliší i mluvčí, takže úkoly mají majitele. Přepis běží **lokálně a offline**, takže nahrávka neopustí můj počítač. Než začne, podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy. A když se rozpoznávač uprostřed dlouhé nahrávky zakousne, umí ji dopřepsat po úsecích: problémový kus přeskočí a o zbytek nepřijdu.
 
 ## Hooky, skripty a nastavení
 
