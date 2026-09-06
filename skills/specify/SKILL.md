@@ -29,7 +29,7 @@ Mají **jinou životnost**. Produktový záměr se mění zřídka; technické �
 
 Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → `architecture.md`. Ne → `requirements.md`.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok zakládání: navazuje na `/project` a předává na `/oponent`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zakládání: navazuje na `/discovery` a předává na `/oponent`.
 
 ## Co skill nedělá
 
@@ -85,7 +85,7 @@ Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnut
 1. **Kořen projektu.** Pracovní adresář, případně kořen repozitáře. Ve worktree layoutu (`~/Dev/context/worktree/worktree.md`) je projektem pracovní adresář větve – dokumenty patří do `main/docs/`, ne do kořene kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – metadata projektu, typ projektu, paměťová politika, `### Autocommit`, `## Výjimky z obecných pravidel`.
 3. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce.
-   **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést a ty je máš naplnit (viz Fáze 3a). Chybí-li `docs/competition.md` a `docs/risks.md`, přestože jsou zapsané, **nabídni `/discovery`**: bez konkurence a rizik se píše zadání naslepo.
+   **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést. **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md` (Fáze 3a); `competition.md` a `risks.md` patří `/discovery`. Chybí-li ty dva, přestože jsou zapsané, **nabídni `/discovery`**: bez konkurence a rizik se píše zadání naslepo.
 4. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
 5. **Urči vstupní bod.** Skill se dá spustit i uprostřed – neběží vždycky celý:
 
@@ -141,9 +141,9 @@ Nemá-li nic, přeskoč. Ale zeptej se – v praxi něco má skoro vždycky a ne
 Zapiš do **`docs/requirements.md`**. Šablona je v `~/.claude/skills/specify/documents.md`, `docs/requirements.md`; pravidla psaní tamtéž v sekci *Jak se píše*. **Přečti si ten soubor celý, než začneš psát** – platí pro oba dokumenty i pro produktové podklady.
 
 
-### Produktové podklady
+### Scénáře, glosář a ceník
 
-Vede-li projekt některý z nich (`## Struktura a dokumentace` v `CLAUDE.md`, viz Fáze 0), **sepiš ho v tomhle kroku spolu s požadavky** – všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`, *Produktové podklady*; definici toho, co který dokument je, `~/Dev/context/structure/structure.md`.
+Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz Fáze 0) – zbylé dva, `competition.md` a `risks.md`, píše `/discovery`. Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/Dev/context/structure/structure.md`, *Produktové podklady*.
 
 **Nevede-li projekt žádný z nich, nic nezakládej** a jdi rovnou na bránu. Zdá-li se ti přitom, že by se některý hodil, řekni to jednou větou a nech rozhodnout – závazek vede `CLAUDE.md`, ne tenhle běh.
 
@@ -197,7 +197,7 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 6. **Dvojznačnost** – dá se něco přečíst dvěma způsoby? Vyber jeden a napiš ho jednoznačně.
 7. **Rozsah** – vejde se to do jednoho implementačního plánu? Pokud ne, dekomponuj.
 8. **Mimo rozsah není prázdné** (jen `requirements.md`) – prázdná sekce znamená, že se neřezalo.
-9. **Produktové podklady** – vede-li je projekt: nezůstal v `requirements.md` druhý seznam scénářů vedle `scenarios.md`? Má každý scénář popsanou aspoň jednu cestu, kde může selhat? Rozlišuje glosář pojmy, které se pletou, nebo je to jen výčet? Je každý limit z `pricing.md` v *MVP*, nebo v *Mimo rozsah*?
+9. **Scénáře, glosář a ceník** – vede-li je projekt: nezůstal v `requirements.md` druhý seznam scénářů vedle `scenarios.md`? Má každý scénář popsanou aspoň jednu cestu, kde může selhat? Rozlišuje glosář pojmy, které se pletou, nebo je to jen výčet? Je každý limit z `pricing.md` v *MVP*, nebo v *Mimo rozsah*?
 
 **Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. `/oponent` je **krok životního cyklu**, ne nabídka: pusť ho, nebo nahlas řekni, proč se u téhle změny přeskakuje. Nabízej ho pro každý dokument zvlášť (`/oponent docs/requirements.md`, `/oponent docs/architecture.md`), protože panel úhlů se pro požadavky a pro návrh řešení liší.
 

@@ -12,12 +12,13 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 
 1. **Vytěží nejdřív to, co už máte.** Než se na cokoliv zeptá, vyzve vás, ať přiložíte poznámky, zápis ze schůzky, mail od klienta, starý dokument, screenshoty – i nestrukturovaně. Co si z toho odvodí, se pak už neptá; jen vám ukáže souhrn k potvrzení.
 2. **Ptá se postupně**, jednu otázku za druhou, ne dotazníkem na deset položek.
-3. **Produktová specifikace** – proč to děláme, pro koho, hlavní scénáře, varianty a rozhodovací větve, omezení, nefunkční požadavky, seznam toho, co musí umět první verze, co vědomě neděláme a podle čeho se za rok pozná, že to vyšlo.
+3. **Produktová specifikace** – proč to děláme, pro koho, varianty a rozhodovací větve, omezení, nefunkční požadavky, seznam toho, co musí umět první verze, co vědomě neděláme a podle čeho se za rok pozná, že to vyšlo.
 4. **Návrh řešení** – zvolený přístup i zamítnuté varianty, architektura, datový model, stavy a přechody, datové toky, rozhraní, cizí systémy, chybové stavy, bezpečnostní model, technologie, testovací strategie a rizika.
-5. **Pozná, kdy specifikace nedává smysl.** Je-li to změna v existujícím kódu nebo jednorázová otázka, řekne to a zastaví se – nenechá se zatlačit do psaní specifikace na jednosouborovou změnu.
-6. **Zvládne i projekt bez kódu** – kurz, pozicování, evidenci. Tam napíše produktovou část a místo návrhu řešení nabídne rozpis kroků.
-7. **Dá se spustit i uprostřed** – navázat návrhem na hotové požadavky, rozšířit stávající návrh o novou funkci, nebo zadání revidovat.
-8. **Vlastní kontrola po každém dokumentu** a pak nezávislá oponentura.
+5. **Sepíše i scénáře, glosář a ceník**, vede-li je projekt. Scénáře jsou taxativní seznam toho, co uživatel s produktem dělá, krok za krokem – slouží pak i testování, nápovědě a FAQ. Glosář drží pojmenování domény, ceník to, co z tarifů a limitů plyne pro produkt.
+6. **Pozná, kdy specifikace nedává smysl.** Je-li to změna v existujícím kódu nebo jednorázová otázka, řekne to a zastaví se – nenechá se zatlačit do psaní specifikace na jednosouborovou změnu.
+7. **Zvládne i projekt bez kódu** – kurz, pozicování, evidenci. Tam napíše produktovou část a místo návrhu řešení nabídne rozpis kroků.
+8. **Dá se spustit i uprostřed** – navázat návrhem na hotové požadavky, rozšířit stávající návrh o novou funkci, nebo zadání revidovat.
+9. **Vlastní kontrola po každém dokumentu** a pak nezávislá oponentura.
 
 ## Proč zrovna tenhle
 

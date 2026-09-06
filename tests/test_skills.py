@@ -349,6 +349,40 @@ def cyklus_z_rules() -> set:
     return set(re.findall(r"/([a-z][a-z-]*)", blok))
 
 
+def cyklus_s_poradim() -> dict:
+    """Kroky životního cyklu i s pořadím a fází, ne jen jako množina.
+
+    `cyklus_z_rules()` vrací set, takže na tvrzení „je to třetí krok zakládání“
+    nestačí. Zdrojem je týž blok v `RULES.md`, jen se z něj čte i pořadí řádků.
+
+    Vrací {skill: (fáze, index v rámci fáze od 1, předchůdce, následník)};
+    předchůdce a následník jdou napříč fázemi, protože `/review` navazuje na
+    `/implement` z předchozí fáze.
+    """
+    text = (ROOT / "RULES.md").read_text(encoding="utf-8")
+    i = text.index("### Životní cyklus projektu")
+    blok = text[text.index("```", i) + 3:]
+    blok = blok[:blok.index("```")]
+
+    poradi, faze_radku = [], []
+    for radek in blok.splitlines():
+        if "→" not in radek:
+            continue
+        faze = radek.split()[0].lower()
+        kroky = re.findall(r"/([a-z][a-z-]*)", radek)
+        faze_radku.append((faze, kroky))
+        poradi.extend(kroky)
+
+    out = {}
+    for faze, kroky in faze_radku:
+        for n, krok in enumerate(kroky, start=1):
+            g = poradi.index(krok)
+            out[krok] = (faze, n,
+                         poradi[g - 1] if g > 0 else None,
+                         poradi[g + 1] if g + 1 < len(poradi) else None)
+    return out
+
+
 class KontraktPrikazu(unittest.TestCase):
     """Formát kontraktu je závazný, protože ho čte skript – a to se neověřovalo.
 
@@ -417,6 +451,53 @@ class Struktura(unittest.TestCase):
             f"z RULES.md se přečetlo jen {len(self.CYKLUS)} kroků životního cyklu: {sorted(self.CYKLUS)}")
         chybi = sorted(self.CYKLUS - {s.parent.name for s in SKILLS})
         self.assertFalse(chybi, f"životní cyklus jmenuje kroky, které nemají skill: {chybi}")
+
+    CISLOVKY = {"první": 1, "druhý": 2, "třetí": 3, "čtvrtý": 4,
+                "pátý": 5, "šestý": 6, "sedmý": 7}
+
+    def test_veta_o_poradi_kroku_sedi_s_rules(self):
+        """Skill tvrdí, kolikátý je a na koho navazuje – nic to neměřilo.
+
+        Vložení kroku doprostřed životního cyklu posune čísla všem za ním, jenže
+        ta čísla stojí prózou v `Co skill dělá` každého skillu. `test_prohledani_fazi`
+        je schválně vynechává (míří mimo vlastní číslování skillu), takže regrese
+        prošla tiše a našel ji až audit. Zdrojem pravdy je `RULES.md`.
+        """
+        cyklus = cyklus_s_poradim()
+        self.assertGreaterEqual(len(cyklus), 8,
+            f"z RULES.md se přečetlo jen {len(cyklus)} kroků s pořadím: {sorted(cyklus)}")
+
+        vzor = re.compile(
+            r"je to \*{0,2}(\w+) krok (zakládání|uzavírání|nasazení)\*{0,2}"
+            r"(?:[:\s–-]+navazuje na `/([a-z-]+)`)?"
+            r"(?:\s+a předává na `/([a-z-]+)`)?")
+        chyby, nalezeno = [], 0
+        for skill in SKILLS:
+            jmeno = skill.parent.name
+            if jmeno not in cyklus:
+                continue
+            m = vzor.search(body(skill))
+            if not m:
+                continue
+            nalezeno += 1
+            cislovka, faze, predchudce, naslednik = m.groups()
+            ocek_faze, ocek_n, ocek_pred, ocek_nasl = cyklus[jmeno]
+
+            if faze != ocek_faze:
+                chyby.append(f"{jmeno}: tvrdí fázi `{faze}`, RULES.md má `{ocek_faze}`")
+            if cislovka == "poslední":
+                if naslednik or ocek_n != len([k for k, v in cyklus.items() if v[0] == ocek_faze]):
+                    chyby.append(f"{jmeno}: tvrdí, že je poslední ve fázi `{faze}`, ale není")
+            elif self.CISLOVKY.get(cislovka) != ocek_n:
+                chyby.append(f"{jmeno}: tvrdí `{cislovka} krok`, podle RULES.md je {ocek_n}.")
+            if predchudce and predchudce != ocek_pred:
+                chyby.append(f"{jmeno}: tvrdí, že navazuje na `/{predchudce}`, RULES.md má `/{ocek_pred}`")
+            if naslednik and naslednik != ocek_nasl:
+                chyby.append(f"{jmeno}: tvrdí, že předává na `/{naslednik}`, RULES.md má `/{ocek_nasl}`")
+
+        self.assertGreaterEqual(nalezeno, 4,
+            f"větu o pořadí kroku nese jen {nalezeno} skillů – změnil se její tvar?")
+        self.assertFalse(chyby, "věty o pořadí kroku nesedí s RULES.md:\n  " + "\n  ".join(chyby))
 
     def test_kroky_cyklu_maji_sekci_co_nedela(self):
         """Bez vymezení vůči sousedům se práce buď zdvojí, nebo neudělá vůbec."""

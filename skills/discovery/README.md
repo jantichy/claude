@@ -11,7 +11,7 @@ Chystáte se postavit produkt a chcete vědět, do čeho vstupujete: kdo to už 
 ## Co umí
 
 1. **Nejdřív si vymezí pole.** Čtyřmi otázkami zjistí, jaký problém řešíte, komu, v jaké kategorii tedy soutěžíte a čím se to má lišit. Bez toho by hledal buď všechno, nebo nic.
-2. **Hledá několika směry naráz.** Vybírá z dvanácti cest ve třech skupinách: kdo to už dělá (přímí konkurenti, náhradní řešení, sousední kategorie, open source, **a produkty, které to zkusily a skončily**), co lidé chtějí (stížnosti zákazníků, přechod od stávajícího řešení, čekané integrace, terminologie oboru) a co se musí (regulace a povinnosti, český trh, jak se v oboru účtuje).
+2. **Hledá několika směry naráz.** Vybírá z dvanácti cest ve třech skupinách: kdo to už dělá (přímí konkurenti, náhradní řešení, sousední kategorie, open source, český trh **a produkty, které to zkusily a skončily**), co lidé chtějí (stížnosti zákazníků, přechod od stávajícího řešení, čekané integrace, terminologie oboru) a co se musí (regulace a povinnosti, jak se v oboru účtuje).
 3. **Hledání náhradních řešení nikdy nevynechá.** Je to cesta, na kterou se vždycky zapomene, a bývá za ní největší konkurent.
 4. **Nezapíše nic, co nemá zdroj.** Každá cena a každá funkce má odkaz a datum zjištění; co se nedá doložit, vypadne, nebo se označí za neznámé.
 5. **Vytřídí z toho tři seznamy** – co musíte mít, protože to má každý; čím se odlišíte a čím je to doložené; kde vědomě zaostanete a proč vám to nevadí.

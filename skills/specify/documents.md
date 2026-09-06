@@ -5,7 +5,7 @@
 - [Jak se píše](#jak-se-píše) – platí pro všechny dokumenty
 - [`docs/requirements.md`](#docsrequirementsmd) – produktová specifikace
 - [`docs/architecture.md`](#docsarchitecturemd) – návrh řešení
-- [Produktové podklady](#produktové-podklady) – `scenarios.md`, `glossary.md`, `pricing.md`
+- [Scénáře, glosář a ceník](#scénáře-glosář-a-ceník) – tři z *Produktových podkladů*
 
 ------
 
@@ -147,11 +147,11 @@ Co je na tom nejistého a co by to znamenalo, kdyby se ukázalo jinak.
 
 ------
 
-## Produktové podklady
+## Scénáře, glosář a ceník
 
-Tři dokumenty, které projekt vede volitelně. Kdy se píšou a podle čeho se pozná, že je projekt vede, říká `SKILL.md`; definici, co který z nich je, drží `~/Dev/context/structure/structure.md`, *Produktové podklady*.
+Tři z pěti *Produktových podkladů*, které projekt vede volitelně – zbylé dva, `competition.md` a `risks.md`, píše `/discovery` a šablonu tady nemají. Kdy se píšou a podle čeho se pozná, že je projekt vede, říká `SKILL.md`; **co který dokument je a k čemu slouží, drží `~/Dev/context/structure/structure.md`, *Produktové podklady***. Tady je jen tvar a to, co platí při psaní.
 
-**`docs/scenarios.md`** – taxativní seznam toho, co uživatel s produktem dělá. Každý scénář krok za krokem od začátku do konce, včetně okrajových a chybových cest:
+**`docs/scenarios.md`** – jeden scénář na tenhle tvar, včetně okrajových a chybových cest:
 
 ```markdown
 ## <Číslo a jméno scénáře>
@@ -168,10 +168,8 @@ Tři dokumenty, které projekt vede volitelně. Kdy se píšou a podle čeho se 
 **Kde to může selhat:** <odbočky a chybové cesty, každá s tím, co se stane>
 ```
 
-**Píše se pro tři čtenáře, které `requirements.md` neobsluhuje:** toho, kdo ověřuje, že produkt umí, co má; toho, kdo z toho píše nápovědu a FAQ; a testování na skutečných lidech po dokončení. Proto je to postup, ne příběh – a proto se nešetří okrajovými cestami.
+**Píše se jako postup, ne jako příběh**, a nešetří se okrajovými cestami – čte to i ten, kdo podle toho testuje nebo píše nápovědu. **Zaniká tím sekce *Hlavní scénáře* v `requirements.md`** a nahradí ji odkaz; v požadavcích zůstává **proč a pro koho**, tady **jak to člověk provede**.
 
-**Zaniká tím sekce *Hlavní scénáře* v `requirements.md`** a nahradí ji odkaz. Dva seznamy scénářů se rozejdou při první změně rozsahu (`~/.claude/RULES.md`, *Single source of truth*). V požadavcích zůstává **proč a pro koho**, ve scénářích **jak to člověk provede**.
+**`docs/glossary.md`** – u každého pojmu český název, název v kódu, význam a **čím se liší od pojmu, se kterým se plete**. To poslední je hlavní obsah, ne doplněk. **Rozšiřuje se ještě při návrhu řešení** – entita, která v něm dostane jméno, ho má mít i tady.
 
-**`docs/glossary.md`** – u každého pojmu: jak se jmenuje česky, jak v kódu, co znamená a **čím se liší od pojmu, se kterým se plete**. To poslední je hlavní obsah; slovník bez rozlišení blízkých pojmů nic neřeší. **Rozšiřuje se ještě při návrhu řešení** – entita, která v něm dostane jméno, ho má mít i tady.
-
-**`docs/pricing.md`** – ne ceník pro web, ale **soupis toho, co z cenového modelu plyne pro produkt**: co který tarif smí, kde jsou limity a co se stane při jejich dosažení, jak vypadá trial a co po něm, jak se přechází nahoru a dolů, co se stane po expiraci a co s daty. Každá z těch vět je funkce, kterou pak někdo musí naprogramovat, takže **každá patří i do *MVP* nebo do *Mimo rozsah***.
+**`docs/pricing.md`** – každá věta v něm je funkce, kterou pak někdo musí naprogramovat, takže **každý tarif i limit patří zároveň do *MVP*, nebo do *Mimo rozsah***. Zůstane-li jen tady, nikdo ho nepostaví.

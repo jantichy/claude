@@ -13,7 +13,7 @@ Uživatel má hotový nebo rozpracovaný dokument, na kterém jste spolu dlouho 
 
 Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každého z jiného úhlu, a jejich nálezy s uživatelem probere jeden po druhém.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **třetí krok zakládání**: navazuje na `/specify` a předává na `/breakdown`. Do životního cyklu patří proto, že jinak návrh neměří nikdo – `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celým životním cyklem jako korektní. Přeskakuje se stejným pravidlem jako každý jiný krok: drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano – a přeskočení se řekne nahlas i s důvodem.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakládání**: navazuje na `/specify` a předává na `/breakdown`. Do životního cyklu patří proto, že jinak návrh neměří nikdo – `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celým životním cyklem jako korektní. Přeskakuje se stejným pravidlem jako každý jiný krok: drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano – a přeskočení se řekne nahlas i s důvodem.
 
 ## Co skill nedělá
 
