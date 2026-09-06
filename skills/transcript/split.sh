@@ -28,6 +28,12 @@ case "$CUT" in
   *)   CUT_S="$CUT" ;;
 esac
 
+# Bez téhle kontroly by nečíselný zlom propadl do porovnání níž a odmítl se
+# hláškou "je mimo nahrávku", což je matoucí – chyba je v zadání, ne v čase.
+case "$CUT_S" in
+  ''|*[!0-9]*) echo "Zlom '$CUT' není čas – zadej MM:SS nebo počet sekund." >&2; exit 1 ;;
+esac
+
 DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$AUDIO" 2>/dev/null)
 [ -n "$DUR" ] || { echo "Nešlo zjistit délku nahrávky." >&2; exit 1; }
 
@@ -41,6 +47,12 @@ fi
 BASE=$(basename "$AUDIO"); EXT="${BASE##*.}"; BASE="${BASE%.*}"
 OUT1="$WORKDIR/$BASE-1.$EXT"
 OUT2="$WORKDIR/$BASE-2.$EXT"
+
+# ffmpeg níž běží s -y, takže by dřívější části přepsal bez ptaní – a to jsou
+# přesně soubory, které si po sobě uklízí uživatel ručně.
+for f in "$OUT1" "$OUT2"; do
+  [ -e "$f" ] && { echo "Část '$f' už existuje – smaž ji, nebo přejmenuj." >&2; exit 1; }
+done
 
 ffmpeg -y -i "$AUDIO" -t "$CUT_S" -c copy "$OUT1" -loglevel error || exit 1
 ffmpeg -y -ss "$CUT_S" -i "$AUDIO" -c copy "$OUT2" -loglevel error || exit 1

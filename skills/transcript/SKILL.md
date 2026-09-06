@@ -281,7 +281,7 @@ V logu je pro každý úspěšně přepsaný soubor řádek:
 
 **Pozor, co to číslo je.** Je to součet délek titulků v SRT dělený délkou nahrávky, tedy **kolik zvuku whisper opravdu přepsal** – ne výstup VAD. Stejné číslo vznikne i s `WHISPER_VAD=0`. Nízký podíl proto neukazuje na VAD sám o sobě; může za ním být i tichý mluvčí, šum nebo dlouhé pauzy.
 
-Slouží jako **hrubá pojistka, ne diagnóza**. Když podíl vyjde nezvykle nízko, ohlas ho uživateli s konkrétním číslem a nabídni opakovaný běh s `WHISPER_VAD=0` jako první věc, kterou lze vyloučit. **Nerozhoduj o tom sám** – u nahrávky s dlouhými pauzami je nízký podíl v pořádku. Naměřeno zatím jen na dvou nahrávkách (94 % a 96 % u běžné schůzky dvou lidí), takže žádnou pevnou hranici tenhle skill nestanovuje.
+Slouží jako **hrubá pojistka, ne diagnóza**. Když podíl vyjde nezvykle nízko, ohlas ho uživateli s konkrétním číslem a nabídni opakovaný běh s `WHISPER_VAD=0` jako první věc, kterou lze vyloučit. **Nerozhoduj o tom sám** – u nahrávky s dlouhými pauzami je nízký podíl v pořádku. Naměřeno zatím jen na dvou nahrávkách (94 % a 96 % u běžné schůzky dvou lidí), takže žádnou pevnou hranici tenhle skill nestanovuje. **Nepleť si to s čísly u VAD modelu v *Technických detailech*** (94,4 % a 96,9 %) – ta jsou z jiného měření, ze dvou nastavení nad jednou a toutéž nahrávkou.
 
 #### Když se v přepisu objeví halucinační smyčka
 
@@ -362,6 +362,8 @@ Repliku bez přiřazeného mluvčího uveď bez jména, ne pod nejbližším mlu
 ### 10. Úklid
 
 Smaž mezivýstupy: všechny `<název>.txt`, `<název>.wav` (nebo `<název>.16k.wav`, když byl vstup sám WAV), `<název>.diarization.json` (nebo `<název>.16k.diarization.json`), `.speakers.json`, `whisper-progress.log` a `.transcript-glossary.md`. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<název>.srt` po sobě ukliď, i když mezitím vznikl.
+
+**Sáhl-li jsi po nápravě z kroku 7 nebo po řezu z kroku 1, ukliď i po nich:** části `<název>-1.*` a `<název>-2.*` ze `split.sh` a prázdné `<název>.txt` / `<název>.srt`, které zůstanou, když se běh po úsecích nepovede ani jednou. Úklid je jmenovitý, takže o souborech, které přibyly nápravou, sám od sebe neví.
 
 Než slovník smažeš, **vypiš uživateli termíny, které jsi nechal být** – ty, co modely dávaly konzistentně a vypadají jako interní žargon, a ty, kde je zvuk nesrozumitelný a tvar je tvůj odhad. Ať ví, co má ověřit. Zapiš je i **na konec doslovného přepisu** jako poznámku. Když si uživatel doslovný přepis nevybral, dej tu poznámku na konec shrnutí – nesmí zmizet jen proto, že vznikl jiný výstup.
 
