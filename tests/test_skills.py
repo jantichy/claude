@@ -601,5 +601,106 @@ class SouladSNormou(unittest.TestCase):
             f"tyhle skilly už normu splňují – vyškrtni je z MIGRACE: {hotove}")
 
 
+class KontrolyOpravduChytaji(unittest.TestCase):
+    """Mutační testy: poškoď vstup a ověř, že kontrola nález nahlásí.
+
+    Zápisy v `decisions.md` i docstringy výš se opakovaně odvolávají na to,
+    že kontrola byla „ověřena mutací“. Ta mutace se ale dělala ručně jako
+    jednorázový skript a nikde nezůstala – bylo to tvrzení o důkazu, ne důkaz.
+    A přesně takový doklad jednou selhal: ověřovací skript u přečíslování
+    `/project` měl tutéž slepou skvrnu jako kontrola, kterou zastupoval,
+    a prohlásil za v pořádku čtyři rozbité odkazy.
+
+    Kontrola, která nic nechytá, projde stejně tiše jako kontrola, která
+    funguje – rozdíl je vidět jedině tak, že se jí předloží rozbitý vstup.
+    """
+
+    #: Vzorový skill, na kterém se mutuje. `/skill` je jediný, který dnes
+    #: normu splňuje celou, takže každý nález nad ním pochází z mutace.
+    VZOR = ROOT / "skills/skill/SKILL.md"
+
+    def mutuj(self, nahrada: tuple) -> list:
+        """Vrátí vady, které kontroly najdou nad poškozenou kopií vzoru."""
+        import shutil, tempfile
+        puvodni = self.VZOR.read_text(encoding="utf-8")
+        stary, novy = nahrada
+        self.assertIn(stary, puvodni, f"mutace se nemá čeho chytit: {stary!r}")
+        # nahrazuje se KAŽDÝ výskyt: `PREFLIGHT.md` je ve vzoru čtyřikrát
+        # a koncové věty dvakrát, takže mutace jednoho výskytu nic nezmění
+        # a test by prošel, i kdyby kontrola nefungovala
+        poskozeny = puvodni.replace(stary, novy)
+        self.assertNotEqual(poskozeny, puvodni, "mutace nic nezměnila")
+        docasny = Path(tempfile.mkdtemp())
+        try:
+            (docasny / "skill").mkdir()
+            kopie = docasny / "skill" / "SKILL.md"
+            kopie.write_text(poskozeny, encoding="utf-8")
+            return SouladSNormou("test_skilly_odpovidaji_norme").vady(kopie)
+        finally:
+            shutil.rmtree(docasny)
+
+    def test_chybejici_sekce_se_nahlasi(self):
+        for nadpis, cekam in (
+                ("## Co skill dělá", "chybí `## Co skill dělá`"),
+                ("## Co skill nedělá", "chybí `## Co skill nedělá`"),
+                ("## Fáze 0 – Pre-flight", "chybí `## Fáze 0 – Pre-flight`"),
+        ):
+            with self.subTest(nadpis=nadpis):
+                vady = self.mutuj((nadpis, "## Něco jiného"))
+                self.assertIn(cekam, vady, f"kontrola nechytila smazané {nadpis!r}: {vady}")
+
+    def test_chybejici_odkaz_na_preflight_se_nahlasi(self):
+        vady = self.mutuj(("PREFLIGHT.md", "JINY.md"))
+        self.assertIn("pre-flight neodkazuje na `skills/PREFLIGHT.md`", vady, vady)
+
+    def test_chybejici_koncove_vety_se_nahlasi(self):
+        vady = self.mutuj(("Zakonči jednou z těchto vět", "Skonči nějak"))
+        self.assertIn("chybí dvě koncové věty", vady, vady)
+
+    def test_odkaz_dovnitr_ciziho_skillu_se_nahlasi(self):
+        vady = self.mutuj(("## Fáze 3 – Tabulka švů",
+                           "## Fáze 3 – Tabulka švů\n\nPostupem z `/review`, Fáze 0.1."))
+        self.assertIn("odkazuje dovnitř fáze jiného skillu", vady, vady)
+
+    def test_spatne_poradi_sekci_se_nahlasi(self):
+        """`Časté chyby` u skillu s přílohami musí stát naposled."""
+        import shutil, tempfile
+        text = self.VZOR.read_text(encoding="utf-8")
+        i = text.index("\n## Časté chyby")
+        j = text.index("\n## Fáze 8 – Závěr")
+        prehozeny = text[:j] + text[i:].rstrip() + "\n" + text[j:i]
+        docasny = Path(tempfile.mkdtemp())
+        try:
+            (docasny / "skill").mkdir()
+            kopie = docasny / "skill" / "SKILL.md"
+            kopie.write_text(prehozeny, encoding="utf-8")
+            vady = SouladSNormou("test_skilly_odpovidaji_norme").vady(kopie)
+        finally:
+            shutil.rmtree(docasny)
+        self.assertTrue(any("Časté chyby" in v for v in vady),
+                        f"kontrola nechytila přesunuté `Časté chyby`: {vady}")
+
+    def test_visici_odkaz_na_vlastni_fazi_se_nahlasi(self):
+        """Tohle je ta třída chyb, kterou ruční ověření jednou minulo."""
+        import shutil, tempfile
+        puvodni = self.VZOR.read_text(encoding="utf-8")
+        docasny = Path(tempfile.mkdtemp())
+        try:
+            (docasny / "skill").mkdir()
+            kopie = docasny / "skill" / "SKILL.md"
+            kopie.write_text(puvodni.replace("*Fázi 3*", "*Fázi 33*", 1), encoding="utf-8")
+            puvodni_seznam = SKILLS[:]
+            SKILLS[:] = [kopie]
+            try:
+                with self.assertRaises(AssertionError):
+                    SkillOdkazy(
+                        "test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis"
+                    ).test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis()
+            finally:
+                SKILLS[:] = puvodni_seznam
+        finally:
+            shutil.rmtree(docasny)
+
+
 if __name__ == "__main__":
     unittest.main()
