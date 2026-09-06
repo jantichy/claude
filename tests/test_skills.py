@@ -335,6 +335,20 @@ def bez_bloku_kodu(path: Path):
             yield radek.lstrip("# ").strip()
 
 
+def _blok_zivotniho_cyklu() -> str:
+    """Blok s životním cyklem z `RULES.md`.
+
+    Obě funkce níž ho potřebují a měly to zdvojené. Dvě kopie téhož parsování se
+    v hraničním případě rozejdou – a rozešly se: jedna četla kroky bez ohledu na
+    tvar šipky, druhá jen z řádků s doslovným „→“, takže po záměně za `->` viděla
+    každá jiný počet kroků a nic to nehlásilo.
+    """
+    text = (ROOT / "RULES.md").read_text(encoding="utf-8")
+    i = text.index("### Životní cyklus projektu")
+    blok = text[text.index("```", i) + 3:]
+    return blok[:blok.index("```")]
+
+
 def cyklus_z_rules() -> set:
     """Kroky životního cyklu se čtou z `RULES.md`, ne z konstanty v testu.
 
@@ -342,11 +356,7 @@ def cyklus_z_rules() -> set:
     testem prošel, a naopak zmizelý krok by ho shodil z jiného důvodu, než je ten
     skutečný.
     """
-    text = (ROOT / "RULES.md").read_text(encoding="utf-8")
-    i = text.index("### Životní cyklus projektu")
-    blok = text[text.index("```", i) + 3:]
-    blok = blok[:blok.index("```")]
-    return set(re.findall(r"/([a-z][a-z-]*)", blok))
+    return set(re.findall(r"/([a-z][a-z-]*)", _blok_zivotniho_cyklu()))
 
 
 def cyklus_s_poradim() -> dict:
@@ -359,17 +369,14 @@ def cyklus_s_poradim() -> dict:
     předchůdce a následník jdou napříč fázemi, protože `/review` navazuje na
     `/implement` z předchozí fáze.
     """
-    text = (ROOT / "RULES.md").read_text(encoding="utf-8")
-    i = text.index("### Životní cyklus projektu")
-    blok = text[text.index("```", i) + 3:]
-    blok = blok[:blok.index("```")]
-
     poradi, faze_radku = [], []
-    for radek in blok.splitlines():
-        if "→" not in radek:
+    for radek in _blok_zivotniho_cyklu().splitlines():
+        # Řádek fáze pozná podle toho, že na něm jsou kroky – ne podle šipky mezi
+        # nimi. Záměna „→“ za „->“ by jinak celou fázi tiše vyhodila.
+        kroky = re.findall(r"/([a-z][a-z-]*)", radek)
+        if not kroky:
             continue
         faze = radek.split()[0].lower()
-        kroky = re.findall(r"/([a-z][a-z-]*)", radek)
         faze_radku.append((faze, kroky))
         poradi.extend(kroky)
 
@@ -449,6 +456,11 @@ class Struktura(unittest.TestCase):
         """Kdyby se blok v RULES.md přeformátoval, testy životního cyklu by tiše zmlkly."""
         self.assertGreaterEqual(len(self.CYKLUS), 8,
             f"z RULES.md se přečetlo jen {len(self.CYKLUS)} kroků životního cyklu: {sorted(self.CYKLUS)}")
+        # Obě funkce čtou týž blok. Rozejdou-li se, jedna z nich přestala vidět
+        # celý cyklus – a volný práh výš to sám neodhalí, protože výpadek dvou
+        # kroků z jedenácti nechá pořád devět.
+        self.assertEqual(self.CYKLUS, set(cyklus_s_poradim()),
+            "cyklus_z_rules() a cyklus_s_poradim() čtou z RULES.md jinou množinu kroků")
         chybi = sorted(self.CYKLUS - {s.parent.name for s in SKILLS})
         self.assertFalse(chybi, f"životní cyklus jmenuje kroky, které nemají skill: {chybi}")
 
@@ -464,8 +476,8 @@ class Struktura(unittest.TestCase):
         prošla tiše a našel ji až audit. Zdrojem pravdy je `RULES.md`.
         """
         cyklus = cyklus_s_poradim()
-        self.assertGreaterEqual(len(cyklus), 8,
-            f"z RULES.md se přečetlo jen {len(cyklus)} kroků s pořadím: {sorted(cyklus)}")
+        self.assertEqual(set(cyklus), self.CYKLUS,
+            f"cyklus_s_poradim() vrátil jinou množinu kroků než cyklus_z_rules(): {sorted(cyklus)}")
 
         vzor = re.compile(
             r"je to \*{0,2}(\w+) krok (zakládání|uzavírání|nasazení)\*{0,2}"
@@ -476,8 +488,17 @@ class Struktura(unittest.TestCase):
             jmeno = skill.parent.name
             if jmeno not in cyklus:
                 continue
-            m = vzor.search(body(skill))
+            text = body(skill)
+            m = vzor.search(text)
             if not m:
+                # Skill, který o svém pořadí mluví, ale vzor na tvar té věty
+                # nesedne, se dřív tiše přeskočil – a jeho tvrzení pak neověřil
+                # nikdo. Přeformulovat větu se smí, ale ne potichu.
+                # Bez tečky ve vyloučení: tvar „3. krok“ ji obsahuje, a právě ten
+                # se dřív přeskočil, protože detekce sama na něj nesedla.
+                if re.search(r"je to [^\n]{0,25}krok (?:zakládání|uzavírání|nasazení)", text):
+                    chyby.append(f"{jmeno}: mluví o svém pořadí, ale vzor na tvar té věty nesedne "
+                                 f"– přeformuluj ji, nebo uprav vzor v testu")
                 continue
             nalezeno += 1
             cislovka, faze, predchudce, naslednik = m.groups()
@@ -486,8 +507,14 @@ class Struktura(unittest.TestCase):
             if faze != ocek_faze:
                 chyby.append(f"{jmeno}: tvrdí fázi `{faze}`, RULES.md má `{ocek_faze}`")
             if cislovka == "poslední":
-                if naslednik or ocek_n != len([k for k, v in cyklus.items() if v[0] == ocek_faze]):
-                    chyby.append(f"{jmeno}: tvrdí, že je poslední ve fázi `{faze}`, ale není")
+                # „Poslední“ se ověřuje jen proti počtu kroků ve fázi. Následník
+                # se posuzuje níž stejně jako u číslovaných kroků: poslední krok
+                # fáze ho legitimně má – `/cleanup` uzavírá uzavírání a přitom
+                # správně předává na `/attack` z nasazení.
+                kroku_ve_fazi = len([k for k, v in cyklus.items() if v[0] == ocek_faze])
+                if ocek_n != kroku_ve_fazi:
+                    chyby.append(f"{jmeno}: tvrdí, že je poslední ve fázi `{faze}`, "
+                                 f"ale je {ocek_n}. z {kroku_ve_fazi}")
             elif self.CISLOVKY.get(cislovka) != ocek_n:
                 chyby.append(f"{jmeno}: tvrdí `{cislovka} krok`, podle RULES.md je {ocek_n}.")
             if predchudce and predchudce != ocek_pred:
@@ -495,8 +522,13 @@ class Struktura(unittest.TestCase):
             if naslednik and naslednik != ocek_nasl:
                 chyby.append(f"{jmeno}: tvrdí, že předává na `/{naslednik}`, RULES.md má `/{ocek_nasl}`")
 
-        self.assertGreaterEqual(nalezeno, 4,
-            f"větu o pořadí kroku nese jen {nalezeno} skillů – změnil se její tvar?")
+        # Přesný počet, ne práh: při volném prahu propadne skill, jehož větu vzor
+        # přestal poznávat, protože ostatní ho vyváží. Zvedne-li se počet skillů,
+        # které tu větu nesou, číslo se tu vědomě upraví. Jde do téhož seznamu
+        # jako ostatní chyby, aby se konkrétní nález nezakryl souhrnným číslem.
+        if nalezeno != 6:
+            chyby.append(f"větu o pořadí kroku nese {nalezeno} skillů, čekalo se 6 "
+                         f"– změnil se její tvar, nebo ji získal či ztratil další skill?")
         self.assertFalse(chyby, "věty o pořadí kroku nesedí s RULES.md:\n  " + "\n  ".join(chyby))
 
     def test_kroky_cyklu_maji_sekci_co_nedela(self):
@@ -866,7 +898,14 @@ class ReadmeSkillu(unittest.TestCase):
             i = text.find("Nebo celou sadu naráz.")
             if i < 0:
                 continue
-            odstavec = text[i:i + 800]
+            # Do konce odstavce, ne pevným oknem: výčet kroků roste s cyklem
+            # a u `/attack` už dnes měří přesně 800 znaků. Uříznuté jméno by
+            # test nahlásil jako chybějící, přestože v README je.
+            # Konec sekce, ne konec odstavce: samotný prompt stojí v citaci pod
+            # úvodní větou, takže první prázdný řádek by usekl právě ten výčet.
+            konce = [text.find(z, i) for z in ("\n---", "\n## ")]
+            konce = [k for k in konce if k > 0]
+            odstavec = text[i:min(konce) if konce else len(text)]
             with self.subTest(skill=skill.parent.name):
                 for krok in sorted(self.CYKLUS):
                     self.assertRegex(odstavec, rf"\b{krok}\b",
