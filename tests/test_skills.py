@@ -750,7 +750,7 @@ class ReadmeSkillu(unittest.TestCase):
                     f"{readme}: instalační sekce neodkazuje na {self.REPO}{skill.parent.name}")
 
     def test_readme_skillu_z_cyklu_ma_ramecek_a_hromadnou_instalaci(self):
-        """Čtenář, kterému přišel odkaz na jeden skill, jinak neví o zbylých devíti."""
+        """Čtenář, kterému přišel odkaz na jeden skill, jinak neví o zbylých deseti."""
         for skill in SKILLS:
             if skill.parent.name not in self.CYKLUS:
                 continue
@@ -768,6 +768,28 @@ class ReadmeSkillu(unittest.TestCase):
                         continue
                     self.assertIn(f"(../{krok}/README.md)", text,
                         f"{readme}: rámeček neodkazuje na `/{krok}`")
+
+    def test_hromadna_instalace_jmenuje_vsechny_kroky(self):
+        """Přibude-li krok, musí ho vyjmenovat i pokyn na instalaci celé sady.
+
+        Rámeček výš hlídají odkazy, ale seznam jmen v instalačním promptu je
+        prostý text – ten by přidaný krok tiše minul a lidé by si nainstalovali
+        neúplnou sadu."""
+        for skill in SKILLS:
+            if skill.parent.name not in self.CYKLUS:
+                continue
+            readme = self._readme(skill)
+            if not readme.exists():
+                continue
+            text = readme.read_text(encoding="utf-8")
+            i = text.find("Nebo celou sadu naráz.")
+            if i < 0:
+                continue
+            odstavec = text[i:i + 800]
+            with self.subTest(skill=skill.parent.name):
+                for krok in sorted(self.CYKLUS):
+                    self.assertRegex(odstavec, rf"\b{krok}\b",
+                        f"{readme}: hromadná instalace nejmenuje `{krok}`")
 
     def test_readme_skillu_mimo_cyklus_ramecek_nema(self):
         """Předstírat sadu u skillu, který se pouští samostatně, by mátlo."""

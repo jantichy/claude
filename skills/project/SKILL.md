@@ -221,9 +221,27 @@ Povinný je jen `CLAUDE.md`. U zbytku se zeptej (AskUserQuestion, `multiSelect: 
 | `decisions.md` | Co jsme rozhodli a proč, včetně zamítnutých variant. |
 | `rules.md` | Principy, ve kterých se projekt pohybuje. |
 
-Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUDE.md` (krok 5, *Zápis*) vypiš jen ty, které vznikly.
+Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUDE.md` (krok 7, *Zápis*) vypiš jen ty, které vznikly.
 
 `requirements.md`, `architecture.md` a `plan.md` **nezakládej**, vznikají prací přes `/specify` a `/breakdown`.
+
+### Produktové podklady
+
+Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Definici všech pěti drží `~/Dev/context/structure/structure.md`, *Produktové podklady*; tady se jen vybírá.
+
+`AskUserQuestion`, `multiSelect: true`, **nic předvybrané** – opačně než u standardních souborů. Většina projektů nemá ani jeden a předvybraný seznam by je odklikl všechny:
+
+| Soubor | Popis pro uživatele |
+|---|---|
+| `competition.md` | Kdo je konkurence, co umí, za kolik – a čím se proti nim vymezíme. Nemá smysl u interního nástroje ani zakázky. |
+| `risks.md` | Co je na produktu rizikové a co se kvůli tomu v návrhu změní. |
+| `scenarios.md` | Co s produktem uživatel dělá, krok za krokem. Slouží i testování, nápovědě a FAQ. |
+| `glossary.md` | Jak se v téhle doméně čemu říká. Vyplatí se, plete-li se víc entit naráz. |
+| `pricing.md` | Tarify, limity, trial, co po expiraci – jen u produktu, který se prodává. |
+
+**Soubory nezakládej.** Prázdný `competition.md` předstírá úvahu, která se nestala. Vybrané jen **zapiš do `CLAUDE.md`** (krok 7, *Zápis*) jako závazek; vzniknou prací v `/discovery` a `/specify`, a `/cleanup` pak podle toho seznamu pozná chybějící dokument od nechtěného.
+
+*`adopt` a `update`:* co už existuje, ber jako zvolené. Existuje-li soubor, který v `CLAUDE.md` zapsaný není, doplň zápis; je-li zapsaný a nevznikl, zmiň to a nech rozhodnout, jestli se čeká, nebo se závazek ruší.
 
 *`adopt`:* co už existuje, ber jako zvolené; ptej se jen na to, co chybí.
 
@@ -268,6 +286,19 @@ Projekt drží standardní strukturu podle `~/Dev/context/structure/structure.md
 
 Všechny tyhle soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/cleanup`.
 ```
+
+Vybral-li uživatel v kroku 6 nějaké **produktové podklady**, připoj pod ten seznam druhý – i u těch, které ještě nevznikly. Je to závazek, ne inventura:
+
+```
+**Produktové podklady**, které tenhle projekt vede (zakládají se prací, ne dopředu):
+
+- `docs/competition.md` – kdo je konkurence, co umí a jaká je proti nim naše pozice (`/discovery`)
+- `docs/scenarios.md` – co s produktem uživatel dělá, krok za krokem (`/specify`)
+
+Platí pro ně táž povinnost průběžné aktualizace jako pro soubory výš.
+```
+
+Nevybral-li žádný, **sekci nezakládej** – prázdný nadpis tvrdí, že se na to zapomnělo.
 
 ## Krok 8 – .gitignore
 

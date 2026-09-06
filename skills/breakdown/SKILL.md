@@ -74,7 +74,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 **Vyvolej `superpowers:writing-plans`** a předej mu výslovně:
 
 - **zadání** = `docs/architecture.md` (nebo `docs/requirements.md`, byl-li návrh řešení přeskočen),
-- **kontext** = `docs/requirements.md` – ať v hlavičce plánu sedí pole `**Spec:**` a je vidět, proč se to staví,
+- **kontext** = `docs/requirements.md` – ať v hlavičce plánu sedí pole `**Spec:**` a je vidět, proč se to staví, a `docs/scenarios.md`, vede-li ho projekt,
 - **cíl** = `docs/plan.md`, **ne** `docs/superpowers/plans/…` – tohle mu musíš říct, jinak si založí vlastní adresářový strom vedle tvého (`~/Dev/context/structure/structure.md`: v `docs/` jednoslovné anglické názvy bez datumových prefixů),
 - **rozsah** = jen položky MVP odsouhlasené ve Fázi 1,
 - **doménové standardy** z Fáze 1,
@@ -93,7 +93,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 4. **Konzistence názvů.** Funkce, typy a parametry použité v pozdějších úkolech musí sedět s tím, co definují dřívější. `clearLayers()` v úkolu 3 a `clearFullLayers()` v úkolu 7 je chyba.
 5. **Zadání se nezměnilo pod rukama.** Sáhl-li někdo během psaní plánu do `requirements.md` nebo `architecture.md`, ohlas to.
 6. **Každý úkol má ověřitelné akceptační kritérium.** Ne prózu („funguje přihlášení“), ale zaškrtávací seznam, u kterého jde jednoznačně říct ano/ne – a u kódu **příkaz z kontraktu, který to ověří**. Kritérium, které neumí rozsoudit stroj ani jednoznačně člověk, je nedopsaný úkol.
-7. **Testy pokrývají scénáře, ne řádky.** Projdi *Hlavní scénáře* a *Varianty* z `docs/requirements.md` a ukaž, který úkol je pokrývá testem. Nepokrytý scénář je nález.
+7. **Testy pokrývají scénáře, ne řádky.** Projdi scénáře a *Varianty* a ukaž, který úkol je pokrývá testem. Nepokrytý scénář je nález. Scénáře ber ze `docs/scenarios.md`, vede-li ho projekt – je taxativní, takže pokrytí jde spočítat; jinak ze sekce *Hlavní scénáře* v `docs/requirements.md`.
 8. **Testy jsou psané tak, aby šly schválit teď.** Tenhle plán je jediné místo, kde si člověk testy přečte dřív, než existuje kód – potom už je nemůže nezaujatě posoudit, protože bude posuzovat, jestli procházejí. Piš je konkrétně, včetně vstupů a očekávaných hodnot.
 
 Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuestion`.
@@ -116,7 +116,7 @@ Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Úh
 **Soubor:** docs/plan.md – <N> úkolů
 **Spec:** <architecture.md / requirements.md>
 **Rozsah:** <které položky MVP>
-**Pokrytí scénářů:** <N z M scénářů z requirements.md má test>
+**Pokrytí scénářů:** <N z M scénářů ze scenarios.md, nebo z requirements.md, má test>
 **Generativní testy:** <kde plán zavádí fuzzing / property-based testy podle architecture.md, nebo „architektura je nepředepisuje">
 
 **Nepokryto vědomě**

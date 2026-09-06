@@ -74,7 +74,7 @@ Je-li výsledek nenulový, **řekni to a nabídni srovnání před review**. Dů
 - Projektový `CLAUDE.md` – zejména `## Příkazy` (*Kontrakt příkazů*), `### Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
 - **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Neuvádějí se – ale **jen dokud platí**: u každého záznamu ověř příkazem, jestli se dotčený kód od zápisu nezměnil. Mechanika i formát jsou v kapitole *Kapitola `## Review`* níž; bez toho ověření se z filtru stane ráčna.
 - **`## Výjimky z obecných pravidel`** – vědomé odchylky projektu. Co je tam popsané jako výjimka, není nález.
-- **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Role *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit.
+- **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Role *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit. **A `docs/scenarios.md`**, vede-li ho projekt – *Korektnost* měří scénář po scénáři, takže taxativní seznam je pro ni lepší podklad než próza v požadavcích.
 - **Jmenný seznam citlivých oblastí** na konci `docs/architecture.md` – přihlášení, oprávnění, platby, nahrávání souborů, osobní údaje, mazání dat, odesílání pošty ven. Zakládá ho `/specify` s příslibem, že *„`/review` na ně sahá přísněji“*, takže ten příslib je potřeba splnit: **dotkne-li se rozsah kterékoliv z nich, role Bezpečnost je povinná** (nevybírá se podle typu souborů) **a pouští se na nejsilnějším modelu s `xhigh`**. Do zadání té role seznam vlož a napiš, které položky se rozsahu týkají. Neexistuje-li `architecture.md`, řekni to a rozhodni podle obsahu rozsahu.
 
 ### 0.3 Vyber role panelu
@@ -201,7 +201,8 @@ Nic jiného nehlas. Jiné úhly pokrývají jiní agenti; když nahlásíš nál
 svou roli, jen zdvojíš práci a zašumíš výstup.
 
 PODKLAD:
-- docs/requirements.md – scénáře a varianty, proti kterým se měří
+- docs/requirements.md – požadavky a varianty, proti kterým se měří
+- docs/scenarios.md – scénáře, proti kterým se měří (vede-li je projekt)
 - docs/architecture.md – jak to má být postavené
 <u role Bezpečnost v citlivé oblasti: JMENNÝ SEZNAM tříd zranitelností, proti kterému se měří –
 vlož ho do zadání celý, ne jako odkaz na dokument, který si má agent vybavit z paměti:

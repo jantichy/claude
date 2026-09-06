@@ -30,6 +30,10 @@ Následující skilly tvoří jeden životní cyklus od založení projektu po n
 
 Zeptá se postupně na všechno, co se u nového projektu řeší pokaždé znovu – název, git a remote, uspořádání na disku, dokumentační strukturu, autocommit, typ projektu, spouštěcí příkazy, doménové checklisty – a rovnou to nastaví. Umí i projekty, které už existují, a hlavně se k nim po čase vrátit: pozná svůj vlastní otisk a místo otázek projde projekt proti tomu, jak standardy vypadají dnes. Tím řeší nepříjemnou vlastnost celé téhle vrstvy – konfigurace se vyvíjí dál, ale projekt založený loni zůstane stát a sám o tom neřekne.
 
+### [`/discovery`](skills/discovery/) – co je venku, než začnete stavět
+
+Zjistí, do jakého světa produkt vstupuje: kdo to už dělá, co to umí a za kolik, čím to lidé řeší dneska, když na to nemají nástroj, a na co si u stávajících řešení stěžují. Z toho vytřídí, co produkt musí umět, aby ho někdo vzal vážně, a čím se dá odlišit – ale jen tak, aby to šlo doložit. K tomu sepíše registr rizik, ve kterém má každá položka povinné pole *co se kvůli tomu v produktu změní*. Stojí před zadáním schválně: analýza, která dorazí až po schválené specifikaci, se buď ignoruje, nebo znamená přepis všeho.
+
 ### [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
 
 Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak. Hranici mezi nimi drží tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?* A dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold.

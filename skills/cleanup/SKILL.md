@@ -194,7 +194,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    CLAUDE.md  README.md  docs/todo.md  docs/done.md  docs/decisions.md  docs/rules.md
    ```
 
-   Má-li projekt zadání, přidej k nim `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`. Má-li projekt kód, ověř i **`## Příkazy`** v `CLAUDE.md` (*Kontrakt příkazů*) – přibyl-li během session příkaz, kterým se něco spouští, patří tam.
+   Má-li projekt zadání, přidej k nim `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`. **Vede-li projekt produktové podklady** – poznáš z `## Struktura a dokumentace` v `CLAUDE.md` –, přidej i je: `docs/competition.md`, `docs/risks.md`, `docs/scenarios.md`, `docs/glossary.md`, `docs/pricing.md`. Zapsaný podklad, který dosud nevznikl, **není nález** – je to závazek čekající na svůj krok; nález je zapsaný podklad, kterému se během session rozešel obsah se skutečností. Má-li projekt kód, ověř i **`## Příkazy`** v `CLAUDE.md` (*Kontrakt příkazů*) – přibyl-li během session příkaz, kterým se něco spouští, patří tam.
    Neexistují-li, přeskoč je – nezakládají se tady.
 
 2. **Projdi celou session znovu** – celý transcript z Fáze 1, ne jen vytěžený seznam – a u každého souboru se ptej, co do něj **mělo** během session přibýt. **Šel-li na transcript subagent ve Fázi 1, pošli ho i sem**, s tabulkou níž v zadání; hlavní session transcript v ruce nemá a nemá si ho brát, jinak je delegace k ničemu.
@@ -209,6 +209,11 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky“ |
    | `docs/requirements.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
    | `docs/architecture.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie, bezpečnostní model |
+| `docs/competition.md` | zjistilo se něco o konkurenci nebo se posunulo, čím se proti ní vymezujeme |
+| `docs/risks.md` | objevilo se riziko, nebo se změnilo, čím mu čelíme; **zvlášť ověř pole *Promítnutí do produktu*** – rozhodlo-li se v session něco kvůli riziku, patří to tam |
+| `docs/scenarios.md` | přibyla, změnila se nebo zanikla cesta, kterou uživatel produktem projde – včetně chybové |
+| `docs/glossary.md` | zavedl se, přejmenoval nebo upřesnil pojem; **pozor i na pojem, který se v session začal používat mimoděk** |
+| `docs/pricing.md` | změnil se tarif, limit, chování po expiraci nebo cokoliv, co z toho plyne pro produkt |
    | `CLAUDE.md` → `## Příkazy` | přibyl nebo se změnil příkaz na testy, lint, build nebo audit |
    | `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |
 

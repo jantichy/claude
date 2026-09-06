@@ -35,6 +35,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok zakládá
 
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá brána – viz *Zákaz implementace*.
 - **Nezakládá projekt.** Strukturu, git, autocommit a doménové importy dělá `/project`. Když chybí, skill na to upozorní a nabídne ho.
+- **Nezkoumá konkurenci ani trh.** Kdo to už dělá, za kolik a co je na tom rizikové, zjišťuje `/discovery` do `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekci *Co poměřujeme*, na kterou se tedy neptá podruhé.
 - **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill mu jen předá řízení, až je zadání schválené.
 - **Neduplikuje `superpowers:brainstorming`.** Dialog, klasifikaci rozsahu i návrh řešení řídí ten skill.
 
@@ -84,6 +85,7 @@ Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnut
 1. **Kořen projektu.** Pracovní adresář, případně kořen repozitáře. Ve worktree layoutu (`~/Dev/context/worktree/worktree.md`) je projektem pracovní adresář větve – dokumenty patří do `main/docs/`, ne do kořene kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – metadata projektu, typ projektu, paměťová politika, `### Autocommit`, `## Výjimky z obecných pravidel`.
 3. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce.
+   **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést a ty je máš naplnit (viz Fáze 3a). Chybí-li `docs/competition.md` a `docs/risks.md`, přestože jsou zapsané, **nabídni `/discovery`**: bez konkurence a rizik se píše zadání naslepo.
 4. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
 5. **Urči vstupní bod.** Skill se dá spustit i uprostřed – neběží vždycky celý:
 
@@ -102,6 +104,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 **Než se na cokoliv zeptáš**, vyzvi ho, ať přiloží nebo nakopíruje všechno, co k tomu má – i nestrukturovaně. Zápis ze schůzky, poznámky, starý dokument, screenshoty, konkurenční web, mail od klienta.
 
+0. **Nejdřív si přečti, co v projektu už je** – zejména `docs/competition.md` a `docs/risks.md` od `/discovery`. Sekce *Co poměřujeme* odpovídá na to, jaký problém řešíme a komu; *Naše pozice a odlišení* říká, co produkt musí umět a čím se liší; rizika říkají, co musí být postavené jinak. **Na nic z toho se neptej znovu** – shrň to a nech potvrdit.
 1. **Originály ulož** do projektu (`docs/research/`), ať se dají dohledat.
 2. **Sám si z nich zodpověz co nejvíc.** Cokoliv, co z podkladů plyne, se už neptej.
 3. **Vypiš souhrn, co sis z toho odvodil**, ať to uživatel jedním pohledem potvrdí nebo opraví.
@@ -155,6 +158,7 @@ Popis produktu ze strany uživatele.
 ## Hlavní scénáře
 Co člověk s produktem reálně dělá, od začátku do konce. Čitelně, jako příběh.
 Hlavní scénáře nahoře, okrajové pod čarou – ale popsané.
+**Vede-li projekt `scenarios.md`, tahle sekce zaniká** a nahradí ji odkaz na něj.
 
 ## User stories
 Jako <persona> chci <co>, abych <proč>. Seskupené podle oblastí.
@@ -187,6 +191,37 @@ Co ještě není rozhodnuté a co to blokuje.
 ```
 
 **Jak psát:** česky, věcně, bez omáčky, typografie podle `~/Dev/context/text/text.md`. Konkrétně – „rychlé načítání“ je nic, „LCP pod 2,5 s na 4G“ je požadavek. Bez placeholderů; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
+
+### Produktové podklady
+
+Vede-li projekt některý z nich (`## Struktura a dokumentace` v `CLAUDE.md`, viz Fáze 0), **sepiš ho v tomhle kroku spolu s požadavky** – všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Definici drží `~/Dev/context/structure/structure.md`, *Produktové podklady*.
+
+**`docs/scenarios.md`** – taxativní seznam toho, co uživatel s produktem dělá. Každý scénář krok za krokem od začátku do konce, včetně okrajových a chybových cest:
+
+```markdown
+## <Číslo a jméno scénáře>
+
+**Kdo:** <persona z requirements.md>
+**Kdy a proč:** <spouštěč – co se stalo, že to člověk dělá>
+**Předpoklady:** <co musí platit, aby mohl začít>
+
+1. <krok – co udělá uživatel>
+2. <krok – co na to systém>
+...
+
+**Konec:** <jak pozná, že je hotovo>
+**Kde to může selhat:** <odbočky a chybové cesty, každá s tím, co se stane>
+```
+
+**Píše se pro tři čtenáře, které `requirements.md` neobsluhuje:** toho, kdo ověřuje, že produkt umí, co má; toho, kdo z toho píše nápovědu a FAQ; a testování na skutečných lidech po dokončení. Proto je to postup, ne příběh – a proto se nešetří okrajovými cestami.
+
+**Zaniká tím sekce *Hlavní scénáře* v `requirements.md`** a nahradí ji odkaz. Dva seznamy scénářů se rozejdou při první změně rozsahu (`~/.claude/RULES.md`, *Single source of truth*). V požadavcích zůstává **proč a pro koho**, ve scénářích **jak to člověk provede**.
+
+**`docs/glossary.md`** – u každého pojmu: jak se jmenuje česky, jak v kódu, co znamená a **čím se liší od pojmu, se kterým se plete**. To poslední je hlavní obsah; slovník bez rozlišení blízkých pojmů nic neřeší. Zakládá se tady, ale **rozšiřuje se ve Fázi 3b** při datovém modelu – entita, která v návrhu dostane jméno, ho má mít i tady.
+
+**`docs/pricing.md`** – ne ceník pro web, ale **soupis toho, co z cenového modelu plyne pro produkt**: co který tarif smí, kde jsou limity a co se stane při jejich dosažení, jak vypadá trial a co po něm, jak se přechází nahoru a dolů, co se stane po expiraci a co s daty. Každá z těch vět je funkce, kterou pak někdo musí naprogramovat, takže **každá patří i do *MVP* nebo do *Mimo rozsah***.
+
+**Nevede-li projekt žádný z nich, nic nezakládej** a jdi rovnou na bránu. Zdá-li se ti přitom, že by se některý hodil, řekni to jednou větou a nech rozhodnout – závazek vede `CLAUDE.md`, ne tenhle běh.
 
 **Brána uživatele.** Po sebe-revizi (Fáze 4) napiš:
 
@@ -259,9 +294,10 @@ se nemerguje bez lidského pohledu na diff; `/review` na ně sahá přísněji.
 Konkrétní volba a proč – proti omezením z requirements.md.
 
 ## Testovací strategie
-Co se testuje a na jaké úrovni. U každého *Hlavního scénáře* a *Varianty*
-z requirements.md řekni, čím bude pokrytý – akceptačním testem, jednotkovým,
-nebo vědomě ničím a proč.
+Co se testuje a na jaké úrovni. U každého scénáře a *Varianty* řekni, čím bude
+pokrytý – akceptačním testem, jednotkovým, nebo vědomě ničím a proč.
+Scénáře ber z `scenarios.md`, vede-li ho projekt; jinak ze sekce *Hlavní
+scénáře* v requirements.md.
 Dál prahy, které bude projekt držet (pokrytí, mutation score) a čím se měří.
 Výchozí hodnoty a nástroje viz `~/Dev/context/coding/coding.md`,
 *Ověřování a brány kvality*.
@@ -283,7 +319,7 @@ první úkol plánu, který příkazy zavede, případně opakovaný běh `/proj
 Co je na tom nejistého a co by to znamenalo, kdyby se ukázalo jinak.
 ```
 
-**Kontrola proti požadavkům:** projdi *Hlavní scénáře*, *Varianty* a *Nefunkční požadavky* v `requirements.md` a u každého ukaž, co v návrhu ho pokrývá. Nepokryté je nález, ne detail.
+**Kontrola proti požadavkům:** projdi scénáře (ze `scenarios.md`, nebo ze sekce *Hlavní scénáře*), *Varianty* a *Nefunkční požadavky* a u každého ukaž, co v návrhu ho pokrývá. Nepokryté je nález, ne detail. Vede-li projekt `risks.md`, projdi i **mitigace**: riziko s vyplněným *Promítnutím do produktu* musí mít v návrhu protějšek, jinak se mitigace nestala.
 
 **Bezpečnost se navrhuje, neaudituje.** Zhruba polovina kódu psaného modely obsahuje bezpečnostní chybu a je to předvídatelná množina. Nejúčinnější obrana není kontrola na konci, ale struktura, ve které díra nejde udělat – jedna vrstva autorizace, kterou nelze obejít, výhradně parametrizované dotazy, validace na hranici, tajemství jen z prostředí. Proto má návrh sekci *Bezpečnostní model*, a proto v ní nesmí stát „ošetříme to při implementaci“.
 
@@ -305,6 +341,7 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 6. **Dvojznačnost** – dá se něco přečíst dvěma způsoby? Vyber jeden a napiš ho jednoznačně.
 7. **Rozsah** – vejde se to do jednoho implementačního plánu? Pokud ne, dekomponuj.
 8. **Mimo rozsah není prázdné** (jen `requirements.md`) – prázdná sekce znamená, že se neřezalo.
+9. **Produktové podklady** – vede-li je projekt: nezůstal v `requirements.md` druhý seznam scénářů vedle `scenarios.md`? Má každý scénář popsanou aspoň jednu cestu, kde může selhat? Rozlišuje glosář pojmy, které se pletou, nebo je to jen výčet? Je každý limit z `pricing.md` v *MVP*, nebo v *Mimo rozsah*?
 
 **Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. `/oponent` je **krok životního cyklu**, ne nabídka: pusť ho, nebo nahlas řekni, proč se u téhle změny přeskakuje. Nabízej ho pro každý dokument zvlášť (`/oponent docs/requirements.md`, `/oponent docs/architecture.md`), protože panel úhlů se pro požadavky a pro návrh řešení liší.
 
@@ -334,7 +371,7 @@ Celý řetěz i s tím, co následuje po realizaci, je v `~/.claude/RULES.md`, *
 
 Platí *Doc-first vývoj* z `~/.claude/RULES.md`; posloupnost souborů definuje `structure.md`:
 
-1. Změní se požadavek → uprav **`requirements.md`**.
+1. Změní se požadavek → uprav **`requirements.md`** a s ním **`scenarios.md`**, vede-li ho projekt. Změněný požadavek skoro vždycky mění nějaký scénář; scénář, který zůstal, ale už nejde provést, je horší než chybějící.
 2. Zkontroluj, jestli to mění návrh → uprav **`architecture.md`**.
 3. Zkontroluj, jestli to mění nehotové úkoly → uprav **`plan.md`**.
 4. Rozhodnutí a důvod změny zapiš do `docs/decisions.md`. Původní záznam nepřepisuj – přibude revize.
@@ -351,6 +388,9 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 **Dokumenty**
 - docs/requirements.md – <počet> sekcí
 - docs/architecture.md – <počet> sekcí   (nebo „přeskočeno: <důvod>“)
+- docs/scenarios.md – <počet> scénářů    (jen vede-li je projekt)
+- docs/glossary.md – <počet> pojmů       (jen vede-li je projekt)
+- docs/pricing.md – <počet> tarifů       (jen vede-li je projekt)
 
 **Zapsáno mimo ně**
 - docs/decisions.md: N rozhodnutí

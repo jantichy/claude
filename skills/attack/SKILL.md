@@ -40,7 +40,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **před `/release`**
 
 **Pouští se před nasazením**, ne po každé feature: nad stavem, který je hotový, prošel uzavíráním a měl by jít ven. U dlouhého projektu klidně vícekrát – ale vždycky nad celkem, který drží pohromadě, ne nad jednou dodělanou obrazovkou.
 
-**Přeskakuje se, když není co spustit**: projekt bez spustitelné aplikace – obsahový, dokumentační, knihovna bez příkladu, konfigurační repozitář. Řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten je krok 6 a proběhl dávno.)
+**Přeskakuje se, když není co spustit**: projekt bez spustitelné aplikace – obsahový, dokumentační, knihovna bez příkladu, konfigurační repozitář. Řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten je krok 7 a proběhl dávno.)
 
 Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna v autorizaci nebo ve stavovém automatu je přesně to, co útok chytá a čtení přehlédne.
 
@@ -90,7 +90,7 @@ Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
    **Bez tohohle kroku byl filtr jednosměrný:** `/attack` do kapitoly zapisoval, ale nikdy ji nečetl, takže nález, který jsi jednou vědomě umlčel, se při každém dalším útoku objevil znovu jako nový – a subagenti o něm nevědí ani z `CLAUDE.md`, protože ten mají v kontextu jen v hlavní session.
 
-4. **Co má dělat** – `docs/requirements.md`, existuje-li. Scénáře jsou vstup pro útok: útočí se na jejich okraje, ne doprostřed. Bez nich se útočí proti tomu, co je vidět v rozhraní.
+4. **Co má dělat** – `docs/scenarios.md`, vede-li ho projekt, jinak `docs/requirements.md`. Scénáře jsou vstup pro útok: útočí se na jejich okraje, ne doprostřed. Bez nich se útočí proti tomu, co je vidět v rozhraní. Ve `scenarios.md` je zvlášť cenná část *Kde to může selhat* – říká, kde se selhání čeká, takže útok patří o krok za ni.
 
 5. **Na čem to jede** – ověř, na jakou databázi a jaké externí služby je lokální instance napojená (`.env.example`, konfigurace, docker compose). Sáhne-li aplikace při útoku ven – odešle mail, zaplatí, zavolá cizí API – **řekni to uživateli předem** a domluvte se, jestli útok ty cesty vynechá, nebo se služba přepne na testovací režim.
 

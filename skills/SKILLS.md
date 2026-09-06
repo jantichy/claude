@@ -286,12 +286,12 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 ### Skill ze životního cyklu
 
-**Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/RULES.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je deset a že spolu drží.
+**Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/RULES.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je jedenáct a že spolu drží.
 
-**Znění je doslova stejné ve všech deseti**, liší se jen tím, který krok je tučný:
+**Znění je doslova stejné ve všech jedenácti**, liší se jen tím, který krok je tučný:
 
 ```
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady deseti skillů, které vedou práci
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady jedenácti skillů, které vedou práci
 > od založení projektu až po nasazení. Každý má svůj krok a žádný nedělá práci toho vedle:
 >
 > [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/release`](../release/README.md)
@@ -301,14 +301,14 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README. Rozejde-li se pořadí se životním cyklem v `RULES.md`, platí `RULES.md` – rámeček je jeho zobrazení, ne druhý zdroj pravdy.
 
-**Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech deseti:
+**Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech jedenácti:
 
 ```
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do
-> `~/.claude/skills/` celý životní cyklus: project, specify, oponent, breakdown, implement,
-> review, consistency, cleanup, attack a release. U každého si přečti README
+> `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown,
+> implement, review, consistency, cleanup, attack a release. U každého si přečti README
 > a řekni mi, co k nim potřebuju doplnit.
 ```
 
