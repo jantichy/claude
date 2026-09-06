@@ -816,6 +816,77 @@ class KontrolyOpravduChytaji(unittest.TestCase):
             shutil.rmtree(docasny)
 
 
+#: Nadpisy, které norma žádá po každém README skillu – v pořadí z normy.
+POVINNE_README = ("## Co umí", "## Proč zrovna tenhle", "## Jak se to používá",
+                  "## Co nedělá", "## Jak si ho nainstalovat", "### Požadavky a omezení")
+
+#: Mez z normy: zhruba dvě obrazovky.
+MEZ_README = 120
+
+REPO_URL = "https://github.com/jantichy/claude/tree/main/skills/"
+
+RAMECEK = "**Součást životního cyklu projektu.**"
+HROMADNA = "Nebo celou sadu naráz."
+
+
+def vady_readme(text: str, jmeno: str, v_cyklu: bool) -> list:
+    """Vrátí vady jedné vizitky proti normě *README skillu*.
+
+    Čistá funkce nad textem, ne nad diskem – jedině tak se dá předložit
+    poškozený vstup a ověřit, že kontrola nález opravdu nahlásí
+    (`KontrolyOpravduChytaji`). Kontroly, které potřebují hlavičku skillu
+    nebo souborový systém, mají vlastní testy.
+    """
+    vady = []
+
+    # Přítomnost i pořadí. Pořadí sem patří proto, že ho norma žádá a `/skill`
+    # při revizi kontroluje – bez brány je to pravidlo, které drží jen ten,
+    # kdo si na ně vzpomene.
+    pozice = []
+    for nadpis in POVINNE_README:
+        i = text.find(f"\n{nadpis}")
+        if i < 0:
+            vady.append(f"chybí sekce `{nadpis}`")
+        else:
+            pozice.append((i, nadpis))
+    poradi = [n for _, n in sorted(pozice)]
+    ocekavane = [n for n in POVINNE_README if n in poradi]
+    if poradi != ocekavane:
+        vady.append(f"sekce nejdou v pořadí z normy: {poradi} místo {ocekavane}")
+
+    # Instalace musí být pokyn pro Clauda uvnitř své sekce, ne URL kdekoliv.
+    zacatek = text.find("## Jak si ho nainstalovat")
+    if zacatek < 0:
+        pass                                  # hlásí kontrola sekcí výš
+    else:
+        konec = text.find("\n---", zacatek)
+        sekce = text[zacatek:konec if konec > 0 else len(text)]
+        url = REPO_URL + jmeno
+        citace = [r for r in sekce.splitlines() if r.lstrip().startswith(">")]
+        if url not in sekce:
+            vady.append(f"instalační sekce neodkazuje na {url}")
+        elif not any(url in r for r in citace):
+            vady.append("odkaz na repozitář není v citovaném pokynu pro Clauda")
+
+    # Rámeček a hromadná instalace: povinné v cyklu, zakázané mimo něj.
+    if v_cyklu:
+        if RAMECEK not in text:
+            vady.append("chybí rámeček s celým životním cyklem")
+        if HROMADNA not in text:
+            vady.append("chybí hromadná instalace celého životního cyklu")
+    else:
+        if RAMECEK in text:
+            vady.append("skill mimo životní cyklus má rámeček životního cyklu")
+        if HROMADNA in text:
+            vady.append("skill mimo životní cyklus nabízí hromadnou instalaci sady")
+
+    radku = len(text.splitlines())
+    if radku > MEZ_README:
+        vady.append(f"README má {radku} řádků, mez je {MEZ_README}")
+
+    return vady
+
+
 class ReadmeSkillu(unittest.TestCase):
     """README skillu proti `skills/SKILLS.md`, *README skillu*.
 
@@ -824,14 +895,6 @@ class ReadmeSkillu(unittest.TestCase):
     běhu neomezí a pozná se až ve chvíli, kdy si ji někdo cizí přečte.
     """
 
-    #: Nadpisy, které norma žádá po každém README skillu.
-    POVINNE = ("## Co umí", "## Proč zrovna tenhle", "## Jak se to používá",
-               "## Co nedělá", "## Jak si ho nainstalovat", "### Požadavky a omezení")
-
-    #: Mez z normy. README delší než jeho `SKILL.md` přestalo být vizitkou.
-    MEZ_RADKU = 120
-
-    REPO = "https://github.com/jantichy/claude/tree/main/skills/"
     CYKLUS = cyklus_z_rules()
 
     def _readme(self, skill: Path) -> Path:
@@ -842,28 +905,24 @@ class ReadmeSkillu(unittest.TestCase):
         chybi = [s.parent.name for s in SKILLS if not self._readme(s).exists()]
         self.assertFalse(chybi, f"skilly bez vlastního README: {chybi}")
 
-    def test_readme_ma_povinne_sekce(self):
-        for skill in SKILLS:
-            readme = self._readme(skill)
-            if not readme.exists():
-                continue
-            text = readme.read_text(encoding="utf-8")
-            for nadpis in self.POVINNE:
-                with self.subTest(skill=skill.parent.name, sekce=nadpis):
-                    self.assertTrue(nadpis in text, f"{readme}: chybí sekce `{nadpis}`")
+    def test_readme_odpovida_norme(self):
+        """Sekce a jejich pořadí, tvar instalace, rámeček a mez délky.
 
-    def test_readme_instaluje_odkazem_na_repozitar(self):
-        """Instalace se píše jako pokyn pro Clauda, ne jako ruční kopírování."""
+        Jedna kontrola místo pěti, protože všechny měří týž text proti téže
+        sekci normy – a hlavně proto, že se pak dá mutovat jako celek
+        (`KontrolyOpravduChytaji`).
+        """
         for skill in SKILLS:
             readme = self._readme(skill)
             if not readme.exists():
                 continue
             with self.subTest(skill=skill.parent.name):
-                text = readme.read_text(encoding="utf-8")
-                self.assertTrue(self.REPO + skill.parent.name in text,
-                    f"{readme}: instalační sekce neodkazuje na {self.REPO}{skill.parent.name}")
+                vady = vady_readme(readme.read_text(encoding="utf-8"),
+                                   skill.parent.name,
+                                   skill.parent.name in self.CYKLUS)
+                self.assertFalse(vady, f"{readme}: {vady}")
 
-    def test_readme_skillu_z_cyklu_ma_ramecek_a_hromadnou_instalaci(self):
+    def test_readme_skillu_z_cyklu_odkazuje_na_ostatni_kroky(self):
         """Čtenář, kterému přišel odkaz na jeden skill, jinak neví o těch ostatních."""
         for skill in SKILLS:
             if skill.parent.name not in self.CYKLUS:
@@ -873,10 +932,6 @@ class ReadmeSkillu(unittest.TestCase):
                 continue
             with self.subTest(skill=skill.parent.name):
                 text = readme.read_text(encoding="utf-8")
-                self.assertTrue("**Součást životního cyklu projektu.**" in text,
-                    f"{readme}: chybí rámeček s celým životním cyklem")
-                self.assertTrue("Nebo celou sadu naráz." in text,
-                    f"{readme}: chybí hromadná instalace celého životního cyklu")
                 for krok in sorted(self.CYKLUS):
                     if krok == skill.parent.name:
                         continue
@@ -911,17 +966,6 @@ class ReadmeSkillu(unittest.TestCase):
                 for krok in sorted(self.CYKLUS):
                     self.assertRegex(odstavec, rf"\b{krok}\b",
                         f"{readme}: hromadná instalace nejmenuje `{krok}`")
-
-    def test_readme_skillu_mimo_cyklus_ramecek_nema(self):
-        """Předstírat sadu u skillu, který se pouští samostatně, by mátlo."""
-        navic = []
-        for skill in SKILLS:
-            if skill.parent.name in self.CYKLUS:
-                continue
-            readme = self._readme(skill)
-            if readme.exists() and "**Součást životního cyklu projektu.**" in readme.read_text(encoding="utf-8"):
-                navic.append(skill.parent.name)
-        self.assertFalse(navic, f"skilly mimo životní cyklus s rámečkem životního cyklu: {navic}")
 
     def test_readme_jmenuje_vsechny_rezimy(self):
         """Režim, který README zamlčí, uživatel nikdy nepoužije.
@@ -974,18 +1018,6 @@ class ReadmeSkillu(unittest.TestCase):
                 })
                 self.assertFalse(chybi, f"{readme}: odkaz na neexistující soubor: {chybi}")
 
-    def test_readme_se_vejde_do_meze(self):
-        """Vizitka, kterou nikdo nedočte, svůj účel neplní."""
-        dlouhe = []
-        for skill in SKILLS:
-            readme = self._readme(skill)
-            if not readme.exists():
-                continue
-            radku = len(readme.read_text(encoding="utf-8").splitlines())
-            if radku > self.MEZ_RADKU:
-                dlouhe.append(f"{skill.parent.name} ({radku})")
-        self.assertFalse(dlouhe, f"README nad mez {self.MEZ_RADKU} řádků: {dlouhe}")
-
     def test_hlavni_readme_odkazuje_na_adresar_skillu(self):
         """Bez odkazu je podrobné README neviditelné.
 
@@ -1029,6 +1061,75 @@ class SkriptySkillu(unittest.TestCase):
         vadne = [str(s.relative_to(ROOT)) for s in self.SKRIPTY
                  if "__file__" in s.read_text(encoding="utf-8")]
         self.assertFalse(vadne, f"skripty odvozují cestu z vlastního umístění: {vadne}")
+
+
+class KontrolyVizitekOpravduChytaji(unittest.TestCase):
+    """Mutační testy nad `vady_readme()`.
+
+    Vrstva vizitek přibyla jako poslední a byla jediná bez důkazu, že něco
+    chytá – `.claude/CLAUDE.md` přitom o mutacích mluvil tak, že je zahrnoval.
+    Platí tu totéž co o mutacích nad `SKILL.md`: kontrola, která nic nechytá,
+    projde stejně tiše jako ta funkční.
+
+    Mutuje se nad skutečnými vizitkami: `/attack` je v životním cyklu,
+    `/report` mimo něj, takže pokrývají obě větve funkce.
+    """
+
+    V_CYKLU = ROOT / "skills/attack/README.md"
+    MIMO = ROOT / "skills/report/README.md"
+
+    def vady(self, vzor: Path, jmeno: str, v_cyklu: bool, nahrada=None) -> list:
+        text = vzor.read_text(encoding="utf-8")
+        if nahrada is not None:
+            stary, novy = nahrada
+            self.assertIn(stary, text, f"mutace se nemá čeho chytit: {stary!r}")
+            text = text.replace(stary, novy)
+        return vady_readme(text, jmeno, v_cyklu)
+
+    def test_vzory_jsou_ciste(self):
+        """Bez tohohle by mutace nedokazovaly nic – vady by mohly být původní."""
+        self.assertFalse(self.vady(self.V_CYKLU, "attack", True))
+        self.assertFalse(self.vady(self.MIMO, "report", False))
+
+    def test_chybejici_sekce_se_nahlasi(self):
+        vady = self.vady(self.MIMO, "report", False, ("## Co nedělá", "## Co občas nedělá"))
+        self.assertTrue(any("Co nedělá" in v for v in vady), vady)
+
+    def test_prohozene_poradi_sekci_se_nahlasi(self):
+        text = self.MIMO.read_text(encoding="utf-8")
+        i, j = text.index("\n## Co umí"), text.index("\n## Proč zrovna tenhle")
+        prohozeny = (text[:i] + text[j:j + len("\n## Proč zrovna tenhle")]
+                     + text[i + len("\n## Co umí"):j]
+                     + "\n## Co umí" + text[j + len("\n## Proč zrovna tenhle"):])
+        vady = vady_readme(prohozeny, "report", False)
+        self.assertTrue(any("pořadí" in v for v in vady), vady)
+
+    def test_chybejici_ramecek_u_skillu_z_cyklu_se_nahlasi(self):
+        vady = self.vady(self.V_CYKLU, "attack", True,
+                         ("**Součást životního cyklu projektu.**", "**Poznámka.**"))
+        self.assertTrue(any("rámeček" in v for v in vady), vady)
+
+    def test_ramecek_u_skillu_mimo_cyklus_se_nahlasi(self):
+        text = self.MIMO.read_text(encoding="utf-8")
+        radky = text.split("\n")
+        radky.insert(2, "> **Součást životního cyklu projektu.** …")
+        vady = vady_readme("\n".join(radky), "report", False)
+        self.assertTrue(any("mimo životní cyklus" in v for v in vady), vady)
+
+    def test_instalace_mimo_citovany_pokyn_se_nahlasi(self):
+        """URL kdekoliv v souboru nestačí – musí být v pokynu pro Clauda."""
+        vady = self.vady(self.MIMO, "report", False,
+                         ("> Jdi na " + REPO_URL + "report", "Jdi na " + REPO_URL + "report"))
+        self.assertTrue(any("citovaném pokynu" in v for v in vady), vady)
+
+    def test_chybejici_odkaz_na_repozitar_se_nahlasi(self):
+        vady = self.vady(self.MIMO, "report", False, (REPO_URL + "report", "https://example.com"))
+        self.assertTrue(any("neodkazuje" in v for v in vady), vady)
+
+    def test_prekrocena_mez_delky_se_nahlasi(self):
+        text = self.MIMO.read_text(encoding="utf-8") + "\n" * (MEZ_README + 1)
+        vady = vady_readme(text, "report", False)
+        self.assertTrue(any("mez je" in v for v in vady), vady)
 
 
 if __name__ == "__main__":
