@@ -16,7 +16,7 @@ Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje
 
 ### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
 
-Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jednou a pak ho patnáctkrát opsal, což z něj dělá zvyk, ne standard. Tohle je jeho sepsání a zároveň revize: co obstálo (vymezení proti **jmenovanému** sousedovi, ověřovatel, jehož úkolem je nález vyvrátit, dvě jednoznačné koncové věty), co byla jen setrvačnost (pre-flight opsaný v každém skillu zvlášť) a co chybělo (sekce s častými chybami, mez délky, progresivní odhalení do vedlejších souborů). Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát použil: **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
+Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jednou a pak ho u každého dalšího skillu opsal, což z něj dělá zvyk, ne standard. Tohle je jeho sepsání a zároveň revize: co obstálo (vymezení proti **jmenovanému** sousedovi, ověřovatel, jehož úkolem je nález vyvrátit, dvě jednoznačné koncové věty), co byla jen setrvačnost (pre-flight opsaný v každém skillu zvlášť) a co chybělo (sekce s častými chybami, mez délky, progresivní odhalení do vedlejších souborů). Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát použil: **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 
@@ -96,7 +96,7 @@ Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivn
 
 ### [`/skill`](skills/skill/) – skilly, které se samy udržují
 
-Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale patnáct souborů zůstane stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
+Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale hotové skilly zůstanou stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
 
 ### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 

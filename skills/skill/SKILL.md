@@ -16,7 +16,7 @@ Spravuje vlastní skilly v `~/.claude/skills/` proti normě v `~/.claude/skills/
 - **`/skill update [jméno]`** – **dorovnání na dnešní normu**. Jeden skill, nebo bez jména všechny. Hlavní důvod, proč je skill opakovatelný.
 - **`/skill delete <jméno>`** – **odstranění i se stopami**.
 
-Režim **`update` je to, co neumí nikdo jiný.** Norma se posouvá dál, patnáct souborů zůstává stát a samy o tom neřeknou – stejná vlastnost, kvůli které má `/project` svůj revizní krok.
+Režim **`update` je to, co neumí nikdo jiný.** Norma se posouvá dál, hotové skilly zůstávají stát a samy o tom neřeknou – stejná vlastnost, kvůli které má `/project` svůj revizní krok.
 
 ## Co skill nedělá
 
@@ -24,7 +24,7 @@ Režim **`update` je to, co neumí nikdo jiný.** Norma se posouvá dál, patná
 - **Neaudituje konfiguraci.** Rozpory mezi soubory, mrtvé zbytky a drift mezi vrstvami řeší `/consistency`; tenhle skill se dívá jen na skilly a jen proti normě.
 - **Neprověřuje kvalitu práce skillu za běhu.** Že skill dělá dobrou práci, ukáže jeho použití a `/review`. Tady se měří, jestli se **vyvolá** a jestli se pod tlakem **dodrží**.
 - **Nesahá na cizí skilly.** Pluginy a vestavěné skilly se používají, ne udržují.
-- **Nemigruje patnáct skillů mimochodem.** Převod na novou normu je vědomý běh režimu `update`, ne vedlejší efekt jiné práce.
+- **Nemigruje zbytek skillů mimochodem.** Převod na novou normu je vědomý běh režimu `update`, ne vedlejší efekt jiné práce.
 
 ## Jak je to postavené uvnitř
 
@@ -153,9 +153,10 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | Kam | Co |
 |---|---|
 | `skills/<jméno>/README.md` | **vizitka skillu pro člověka zvenčí** podle `SKILLS.md`, *README skillu* – sekce, hromadná instalace u skillu ze životního cyklu, odkaz do repozitáře |
-| `~/.claude/README.md` | jeden odstavec ve stylu ostatních – k čemu skill je, zakončený odkazem `**Podrobně:** [README skillu](skills/<jméno>/README.md)`; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
+| `~/.claude/README.md` | jeden odstavec ve stylu ostatních – k čemu skill je. **Odkaz na vizitku nese nadpis sekce** (`### [`/jméno`](skills/jméno/)`), ne zvláštní řádek pod odstavcem; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
 | `~/.claude/RULES.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
 | `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRACE` se **nedoplňuje**, ten seznam se jen zkracuje |
+| `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních vizitkách cyklu**. Testy to chytí, ale samy to nedopíšou |
 | `~/.claude/skills/<jméno>/` | vedlejší soubory, skripty, jejich sonda na závislosti |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
 | `decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo. **Pozor:** `~/.claude` nemá `docs/` – zapisuje se do `~/Dev/context/decisions.md`, viz `.claude/CLAUDE.md` |
@@ -251,6 +252,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 | `~/.claude/RULES.md` | *Životní cyklus projektu* a zmínky u sousedů |
 | `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, je-li tam; jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`" |
+| `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních vizitek. Osiřelý odkaz na `../<jméno>/README.md` neshodí žádný test |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
 | projektové `CLAUDE.md` v `~/Dev` | sekce, které skill zakládal |
 | Memory | záznamy, které ho vyžadují |
@@ -271,5 +273,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - **Norma se opíše do skillu.** Pak se rozejde a nikdo neví, která verze platí. Norma se **čte**, ne cituje.
 - **Cizímu nástroji se zapomene říct tvar.** Prosadí vlastní – `skill-creator` i `writing-skills` mají každý svou představu o sekcích. Vždycky mu ho předej výslovně.
 - **Revize se pustí bez načtení normy.** Pak měří proti paměti, tedy proti stavu, který je zrovna zastaralý.
-- **Přes patnáct skillů se nálezy předkládají po jednom.** Neodklikatelné; odsouhlasí se naslepo a revize ztratí smysl.
+- **Přes všechny skilly se nálezy předkládají po jednom.** Neodklikatelné; odsouhlasí se naslepo a revize ztratí smysl.
 - **Skill vznikne na věc, kterou chytne test nebo hook.** Mechanické omezení v próze se dodržuje hůř a stojí tokeny při každém běhu.

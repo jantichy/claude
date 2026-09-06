@@ -87,6 +87,8 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 
 ## 4. Povinné sekce a jejich pořadí
 
+**Tahle sekce mluví o `SKILL.md`.** Vedle něj má každý skill povinně ještě `README.md` – vizitku pro člověka zvenčí s vlastní strukturou; tu drží *README skillu* níž.
+
 ```
 # Název
 
@@ -286,7 +288,7 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 ### Skill ze životního cyklu
 
-**Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/RULES.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je jedenáct a že spolu drží.
+**Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/RULES.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je celá řada a že spolu drží.
 
 **Znění je doslova stejné ve všech**, liší se jen tím, který krok je tučný. **Počet kroků se v něm neuvádí číslovkou** – ta se při přidání dalšího kroku rozejde ve všech rámečcích naráz a nic ji nehlídá; čtenář si počet spočítá ze šipek pod tím:
 
@@ -304,7 +306,7 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 **Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech:
 
 ```
-**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus:
+**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do
 > `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown,
@@ -316,7 +318,7 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 
 ### Meze
 
-**Do 120 řádků.** README skillu, které je delší než jeho `SKILL.md`, přestalo být vizitkou.
+**Do 120 řádků.** Je to zhruba dvě obrazovky – tolik člověk přečte, než se rozhodne, jestli ho to zajímá. Co se tam nevejde, patří do `SKILL.md`, kde to čte Claude, a ne do vizitky. Mez je jediná a hlídá ji test; „nesmí být delší než `SKILL.md`" jako druhé kritérium neplatí – u krátkého skillu by povolilo README, které už nikdo nedočte.
 
 **Česky**, podle `~/Dev/context/text/text.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
 

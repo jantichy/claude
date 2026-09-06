@@ -189,7 +189,7 @@ class SkillOdkazy(unittest.TestCase):
                     f"{skill}: odkaz na vlastní fázi, která tam není: "
                     f"{sorted(set(spatne))} (má {sorted(vlastni)})")
 
-    def test_odkazuje_na_kroky_osy_ne_na_jejich_vnitrek(self):
+    def test_odkazuje_na_kroky_cyklu_ne_na_jejich_vnitrek(self):
         """`/code-review` je vnitřek `/review`; poslat tam uživatele ho připraví o panel.
 
         Vlastní vyvolání je v pořádku – tam ho skill volá jako nástroj a musí u něj
@@ -850,7 +850,7 @@ class ReadmeSkillu(unittest.TestCase):
             text = readme.read_text(encoding="utf-8")
             for nadpis in self.POVINNE:
                 with self.subTest(skill=skill.parent.name, sekce=nadpis):
-                    self.assertIn(nadpis, text, f"{readme}: chybí sekce `{nadpis}`")
+                    self.assertTrue(nadpis in text, f"{readme}: chybí sekce `{nadpis}`")
 
     def test_readme_instaluje_odkazem_na_repozitar(self):
         """Instalace se píše jako pokyn pro Clauda, ne jako ruční kopírování."""
@@ -860,7 +860,7 @@ class ReadmeSkillu(unittest.TestCase):
                 continue
             with self.subTest(skill=skill.parent.name):
                 text = readme.read_text(encoding="utf-8")
-                self.assertIn(self.REPO + skill.parent.name, text,
+                self.assertTrue(self.REPO + skill.parent.name in text,
                     f"{readme}: instalační sekce neodkazuje na {self.REPO}{skill.parent.name}")
 
     def test_readme_skillu_z_cyklu_ma_ramecek_a_hromadnou_instalaci(self):
@@ -873,14 +873,14 @@ class ReadmeSkillu(unittest.TestCase):
                 continue
             with self.subTest(skill=skill.parent.name):
                 text = readme.read_text(encoding="utf-8")
-                self.assertIn("**Součást životního cyklu projektu.**", text,
+                self.assertTrue("**Součást životního cyklu projektu.**" in text,
                     f"{readme}: chybí rámeček s celým životním cyklem")
-                self.assertIn("Nebo celou sadu naráz.", text,
+                self.assertTrue("Nebo celou sadu naráz." in text,
                     f"{readme}: chybí hromadná instalace celého životního cyklu")
                 for krok in sorted(self.CYKLUS):
                     if krok == skill.parent.name:
                         continue
-                    self.assertIn(f"(../{krok}/README.md)", text,
+                    self.assertTrue(f"(../{krok}/README.md)" in text,
                         f"{readme}: rámeček neodkazuje na `/{krok}`")
 
     def test_hromadna_instalace_jmenuje_vsechny_kroky(self):
@@ -951,6 +951,28 @@ class ReadmeSkillu(unittest.TestCase):
                     self.assertTrue(
                         f"`{rezim}`" in text or f"/{skill.parent.name} {rezim}" in text,
                         f"{readme}: režim `{rezim}` z argument-hint není v README")
+
+    def test_relativni_odkazy_v_readme_miri_na_existujici_soubor(self):
+        """Rozbitý odkaz mezi vizitkami uvidí ten, komu se skill doporučuje.
+
+        Kontrola `test_odkazy_na_soubory_existuji` na tohle nestačí – ta hledá
+        cesty v obrácených apostrofech (`~/.claude/…`), kdežto README používají
+        markdownové odkazy s relativní cestou. Rámečkové odkazy sice kryje
+        `test_readme_skillu_z_cyklu_ma_ramecek_a_hromadnou_instalaci`, ale jen
+        ty – odkaz kamkoliv jinam procházel tiše.
+        """
+        odkaz = re.compile(r"\]\(([^)\s#]+\.(?:md|sh|py|png|json))\)")
+        soubory = [s.parent / "README.md" for s in SKILLS] + [ROOT / "README.md"]
+        for readme in soubory:
+            if not readme.exists():
+                continue
+            with self.subTest(readme=readme.parent.name):
+                chybi = sorted({
+                    cil for cil in odkaz.findall(readme.read_text(encoding="utf-8"))
+                    if not cil.startswith(("http://", "https://", "~/"))
+                    and not (readme.parent / cil).resolve().exists()
+                })
+                self.assertFalse(chybi, f"{readme}: odkaz na neexistující soubor: {chybi}")
 
     def test_readme_se_vejde_do_meze(self):
         """Vizitka, kterou nikdo nedočte, svůj účel neplní."""

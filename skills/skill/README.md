@@ -1,6 +1,6 @@
 # /skill – skilly, které se samy udržují
 
-Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prožene ty existující revizí proti dnešní podobě normy a umí je i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale patnáct souborů zůstane stát a samy o tom neřeknou. Vedle toho klade otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
+Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prožene ty existující revizí proti dnešní podobě normy a umí je i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale hotové skilly zůstanou stát a samy o tom neřeknou. Vedle toho klade otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
 
 ## Co umí
 
@@ -19,7 +19,7 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 - **Změří, jak agent selže bez skillu**, a píše proti tomu, ne proti představě. Konkrétní výmluvy, kterými si agent zvolí jinou cestu, jsou pak přesně ta místa, kde má být pravidlo formulované tvrději.
 - **Cizí nástroje nerozhodují o tvaru.** Skill si od nich bere měření a vytěžení, ale podobu výsledku si drží sám – jinak by si každý nástroj prosadil svou vlastní.
 - **Revize nic nepřepíše bez zeptání.** Co je mechanické, opraví a vypíše; co maže nebo přepisuje obsah, předloží.
-- **Přes patnáct skillů nepředkládá nález po nálezu.** Padesát otázek se neodklikává, jen odsouhlasí naslepo – tak ukáže vzorec, počet a tři příklady.
+- **Přes všechny skilly nepředkládá nález po nálezu.** Padesát otázek se neodklikává, jen odsouhlasí naslepo – tak ukáže vzorec, počet a tři příklady.
 - **Zrušení je opravdu zrušení.** Skill se buď používá, nebo neexistuje; vypnutý skill dál nabízí funkci, kterou nikdo nemá zapnout. Po smazání běží kontrolní průchod na jeho jméno, který musí vrátit nulu.
 
 ## Jak se to používá
