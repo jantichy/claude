@@ -141,11 +141,11 @@ Vyber tedy ty specialisty, kteří mají v rozsahu nejvíc co prověřovat, a **
 
 Nesedí-li **žádný** specialista, řekni to explicitně a skonči – nevymýšlej si vlastní kritéria. Pozor, čistě dokumentační projekt bez pokrytí není: na české texty sedí `text/text.md` a `text/typography.md`.
 
-### 0.4 U velkého rozsahu napřed pošli explorera
+### 0.4 U velkého rozsahu napřed pošli průzkumníka
 
-Je-li v rozsahu **víc než zhruba patnáct souborů**, pusť před panelem jednoho agenta navíc: **explorera na výchozím modelu s `low`**. Jeho úkolem je **zmapovat, ne posoudit** – vrátí, čeho se změny dotýkají, kudy vede tok dat, které soubory na sebe navazují a kde jsou vstupní body. **Nehlásí žádné nálezy**; kdyby hlásil, dubloval by panel. Na nejlevnější model ho ale neposílej: jeho mapa jde do zadání **všech specialistů naráz**, takže se jeho chyba nenásobí jednou, ale tolikrát, kolik specialistů panel má – a oni si ji ověří jedině tím, že si tu orientaci udělají znovu samy.
+Je-li v rozsahu **víc než zhruba patnáct souborů**, pusť před panelem jednoho agenta navíc: **průzkumníka na výchozím modelu s `low`**. Jeho úkolem je **zmapovat, ne posoudit** – vrátí, čeho se změny dotýkají, kudy vede tok dat, které soubory na sebe navazují a kde jsou vstupní body. **Nehlásí žádné nálezy**; kdyby hlásil, dubloval by panel. Na nejlevnější model ho ale neposílej: jeho mapa jde do zadání **všech specialistů naráz**, takže se jeho chyba nenásobí jednou, ale tolikrát, kolik specialistů panel má – a oni si ji ověří jedině tím, že si tu orientaci udělají znovu samy.
 
-Mapu pak vlož do zadání každého specialisty. Bez ní si stejnou orientaci musí udělat **každý agent zvlášť ve svém kontextu** – tedy tolikrát, kolik je specialistů. U malého rozsahu se to nevyplatí a explorer se vynechává.
+Mapu pak vlož do zadání každého specialisty. Bez ní si stejnou orientaci musí udělat **každý agent zvlášť ve svém kontextu** – tedy tolikrát, kolik je specialistů. U malého rozsahu se to nevyplatí a průzkumník se vynechává.
 
 ------
 

@@ -1,6 +1,6 @@
 ---
 name: specify
-description: Skill se použije, když uživatel zadá "/specify", nebo chce z nápadu udělat zadání – produktovou specifikaci a návrh řešení nového projektu, aplikace, webu nebo větší feature, ještě než se začne programovat. Vede debrief otázku po otázce, sepíše docs/requirements.md a docs/architecture.md a předá to do implementačního plánu.
+description: Skill se použije, když uživatel zadá "/specify", nebo chce z nápadu udělat zadání – produktovou specifikaci a návrh řešení nového projektu, aplikace, webu nebo větší feature, ještě než se začne programovat. Vede řízený rozhovor otázku po otázce, sepíše docs/requirements.md a docs/architecture.md a předá to do implementačního plánu.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
@@ -8,7 +8,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 ## Co skill dělá
 
-Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skill ho provede debriefem a sepíše **dva dokumenty**:
+Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skill ho provede řízeným rozhovorem a sepíše **dva dokumenty**:
 
 | Dokument | Odpovídá na otázku | Pro koho |
 |---|---|---|

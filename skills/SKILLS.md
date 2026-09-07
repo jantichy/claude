@@ -206,7 +206,7 @@ Ve skillu se píše **jen delta** proti tabulce v `~/.claude/RULES.md`, *Model a
 
 Odchylku odůvodni **tím, čí vstup to je**: chyba v návrhu nebo v ověření nálezu se násobí do všeho, co po ní přijde, kdežto chyba v mechanickém sběru se pozná hned.
 
-**Deleguj kvůli kontextu, ne kvůli úspoře.** Fan-out šetří kontext hlavní session, celkové tokeny spíš zvýší.
+**Deleguj kvůli kontextu, ne kvůli úspoře.** Rozeslání práce agentům šetří kontext hlavní session, celkové tokeny spíš zvýší.
 
 ## 9. Ověřovací vrstva
 

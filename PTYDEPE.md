@@ -44,6 +44,24 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Ne „ukazatel“** – v IT je obsazený ukazatelem do paměti, takže by vyměnil jeden zavádějící pojem za druhý.
 
+### řízený rozhovor
+
+**Postup, kterým skill vytáhne z uživatele zadání otázku po otázce**, místo aby se ptal na všechno naráz. Používají ho `/specify` a `/skill`.
+
+**Nahrazuje dřívější „debrief"** (2026-09-07). Anglicismus skloňovaný po česku („rozhodnutí z debriefu“) – a navíc **použitý mimo svůj význam**: *debrief* je anglicky rozbor **po** akci, tohle je rozhovor **před** prací.
+
+### rozeslání práce agentům
+
+**Puštění několika agentů paralelně na jeden úkol.** Šetří kontext hlavní session, celkové tokeny spíš zvýší – proto se deleguje kvůli kontextu, ne kvůli úspoře.
+
+**Nahrazuje dřívější „fan-out"** (2026-09-07). Anglicismus bez opory v češtině – a `~/.claude/skills/SKILLS.md` si ho v tabulce lidské řeči **sama překládala**, takže norma dávno věděla, že mu člověk nerozumí. Ta ukázka tam zůstává jako **negativní příklad**.
+
+### tabulka delegací
+
+**Povinná inventura v `/skill`, *Fáze 3*:** u každého kroku navrženého postupu odpověď na otázku *„umí to už něco?"*. Výsledkem je tabulka `Krok | Kdo | Proč zrovna on`, která jde rovnou do sekce *Jak je to postavené uvnitř*.
+
+**Nahrazuje dřívější „tabulku švů"** (2026-09-07). *Seam* je anglicky zavedený pojem pro místo, kudy se dá do systému vstoupit a vyměnit chování; česky „šev“ neznamená nic. A ta tabulka švy stejně nepopisuje – vypisuje, **co se komu deleguje a proč**.
+
 ### rozejití
 
 **Tiché rozejití dvou míst, která spolu mají držet** – dokumentace proti kódu, skill proti normě, projekt proti standardu. Nikdo ho nezpůsobil jednou změnou: jedno místo se posunulo a druhé zůstalo stát. Hledá je `/consistency`, u skillů `/skill update`.
@@ -65,6 +83,12 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Text pro člověka zvenčí, na který se posílá odkaz, když se skill někomu doporučuje.** Tvar drží `~/.claude/skills/SKILLS.md`, *README skillu*.
 
 **Neříkej mu „vizitka"** (2026-09-07). „README“ je zavedené jméno přesně pro tenhle soubor a metafora nic nepřidávala – že je psaný pro člověka zvenčí, stojí v normě vedle. Česká „vizitka“ je navíc obsazená: znamená jednostránkový firemní web, a v tom významu v `~/Dev/context` dál zůstává.
+
+### průzkumník
+
+**Agent, který u velkého rozsahu zmapuje, co se kde mění, a mapu předá specialistům** – aby si stejnou orientaci nedělal každý z nich zvlášť ve svém kontextu. Nehlásí žádné nálezy. `/review`, *Fáze 0.4*.
+
+**Nahrazuje dřívější „explorer"** (2026-09-07). Poslední anglické jméno agenta v celé sadě; ověřeno, že **nejde o vestavěný nástroj** – `/review` mu píše vlastní zadání, takže pravidlo o identifikátorech neplatí.
 
 ### příprava
 

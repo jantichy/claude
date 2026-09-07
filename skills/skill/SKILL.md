@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Spravuje vlastní skilly v `~/.claude/skills/` proti normě v `~/.claude/skills/SKILLS.md`. Čtyři režimy:
 
-- **`/skill`** nebo **`/skill create`** – **založení**. Debrief, tabulka švů, srovnávací běh, sepsání, ověření, napojení na okolí.
+- **`/skill`** nebo **`/skill create`** – **založení**. Řízený rozhovor, tabulka delegací, srovnávací běh, sepsání, ověření, napojení na okolí.
 - **`/skill extract`** – **vytěžení konverzace**. Vstupem není zadání, ale to, co se v session vyladilo. Od sepsání dál je dráha stejná jako u založení.
 - **`/skill update [jméno]`** – **dorovnání na dnešní normu**. Jeden skill, nebo bez jména všechny. Hlavní důvod, proč je skill opakovatelný.
 - **`/skill delete <jméno>`** – **odstranění i se stopami**.
@@ -28,11 +28,11 @@ Režim **`update` je to, co neumí nikdo jiný.** Norma se posouvá dál, hotov�
 
 ## Jak je to postavené uvnitř
 
-Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Skládej, nepiš znovu* z normy. Švy:
+Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Skládej, nepiš znovu* z normy. Co se komu deleguje:
 
 | Krok | Kdo | Proč zrovna on |
 |---|---|---|
-| Debrief zadání | **vlastní** | Ptá se na věci, které plynou z normy – kde to stojí v životním cyklu, proti kterému sousedovi se to vymezuje, má to režimy. Cizí nástroj se na to nezeptá. |
+| Řízený rozhovor o zadání | **vlastní** | Ptá se na věci, které plynou z normy – kde to stojí v životním cyklu, proti kterému sousedovi se to vymezuje, má to režimy. Cizí nástroj se na to nezeptá. |
 | Vytěžení z konverzace | `skill-creator` | Má na to hotový postup zachycení záměru. |
 | Srovnávací běh – jak agent selže bez skillu | `superpowers:writing-skills` | Je to jádro jeho metody. |
 | **Sepsání `SKILL.md`** | **vlastní** | Jádro normy. Jediné místo, kudy by prosákl cizí tvar. |
@@ -93,7 +93,7 @@ Pak **vyvolej `skill-creator`** a nech ho vytěžit záměr: použité nástroje
 
 **Zadání nech odsouhlasit, než začneš psát.** Skill postavený na nedomluveném zadání se zahazuje celý.
 
-## Fáze 3 – Tabulka švů
+## Fáze 3 – Tabulka delegací
 
 **Povinná inventura.** Ke každému kroku navrženého postupu odpověz: *umí to už něco?* Prohledej vlastní skilly, pluginy, vestavěné skilly, hooky a deterministické nástroje z inventury ve *Fázi 0*.
 

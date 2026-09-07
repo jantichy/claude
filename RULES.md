@@ -137,7 +137,7 @@ Je to **kontrola, ne náhrada průběžného zápisu** – u bodu (3) má správ
 
 U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek exportu, hromadné hledání) nabídni delegaci na subagenty. Řídící úvahu a syntézu si nech, mechanický sběr ne.
 
-**Deleguj kvůli kontextu, ne kvůli úspoře.** Fan-out šetří hlavně kontext hlavní session – celkové tokeny spíš zvýší, protože každý agent si musí načíst svoje. Když se data do hlavní session vejdou a nepřekáží, je levnější je přečíst rovnou.
+**Deleguj kvůli kontextu, ne kvůli úspoře.** Rozeslání práce agentům šetří hlavně kontext hlavní session – celkové tokeny spíš zvýší, protože každý agent si musí načíst svoje. Když se data do hlavní session vejdou a nepřekáží, je levnější je přečíst rovnou.
 
 ### Model a effort podle úkolu
 

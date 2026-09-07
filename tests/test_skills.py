@@ -1063,8 +1063,8 @@ class KontrolyOpravduChytaji(unittest.TestCase):
         self.assertIn("chybí závěrečný verdikt", vady, vady)
 
     def test_odkaz_dovnitr_ciziho_skillu_se_nahlasi(self):
-        vady = self.mutuj(("## Fáze 3 – Tabulka švů",
-                           "## Fáze 3 – Tabulka švů\n\nPostupem z `/review`, Fáze 0.1."))
+        vady = self.mutuj(("## Fáze 3 – Tabulka delegací",
+                           "## Fáze 3 – Tabulka delegací\n\nPostupem z `/review`, Fáze 0.1."))
         self.assertIn("odkazuje dovnitř fáze jiného skillu", vady, vady)
 
     def test_spatne_poradi_sekci_se_nahlasi(self):
