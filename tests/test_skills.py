@@ -390,6 +390,26 @@ def cyklus_s_poradim() -> dict:
     return out
 
 
+#: Řetěz tří a víc kroků životního cyklu spojených šipkami. Dva sousedi jsou
+#: popis vazby („navazuje na `/specify`, předává `/breakdown`“), tři a víc už
+#: je opsané pořadí celého cyklu – tedy druhý zdroj pravdy vedle `RULES.md`.
+_SIPKA = re.compile(r"`?/([a-z][a-z-]*)`?\s*(?:→|->)\s*"
+                    r"`?/([a-z][a-z-]*)`?\s*(?:→|->)\s*`?/([a-z][a-z-]*)`?")
+
+
+def retezy_kroku_cyklu(text: str, cyklus: set) -> list:
+    """Vrátí opsané řetězy kroků životního cyklu nalezené v textu.
+
+    Vada, kterou to chytá, je tichá a drahá: `/project` psal do každého
+    vývojářského `CLAUDE.md` cestu `/specify → /oponent → /breakdown →
+    /implement`. Když do cyklu přibyl `/discovery`, řetěz zůstal formálně
+    správný – jen neúplný –, takže ho žádná kontrola na existenci ani na
+    pořadí neodhalila a projekty ho četly jako úplný seznam.
+    """
+    return ["/" + " → /".join(trojice) for trojice in _SIPKA.findall(text)
+            if all(krok in cyklus for krok in trojice)]
+
+
 class KontraktPrikazu(unittest.TestCase):
     """Formát kontraktu je závazný, protože ho čte skript – a to se neověřovalo.
 
@@ -463,6 +483,21 @@ class Struktura(unittest.TestCase):
             "cyklus_z_rules() a cyklus_s_poradim() čtou z RULES.md jinou množinu kroků")
         chybi = sorted(self.CYKLUS - {s.parent.name for s in SKILLS})
         self.assertFalse(chybi, f"životní cyklus jmenuje kroky, které nemají skill: {chybi}")
+
+
+    def test_skill_neopisuje_retez_kroku_cyklu(self):
+        """Pořadí kroků cyklu se odkazuje, neopisuje.
+
+        Opsaný řetěz se při přidání kroku rozejde se zdrojem a vypadá přitom
+        pořád platně – v `SKILL.md` i v každém `CLAUDE.md`, do kterého ho ten
+        skill jako šablonu zapsal. Zdrojem pravdy je blok v `RULES.md`.
+        """
+        for skill in SKILLS:
+            with self.subTest(skill=skill.parent.name):
+                nalezy = retezy_kroku_cyklu(body(skill), self.CYKLUS)
+                self.assertFalse(nalezy,
+                    f"{skill.parent.name} opisuje pořadí kroků cyklu: {nalezy}; "
+                    "odkaž se na *Životní cyklus projektu* v RULES.md")
 
     CISLOVKY = {"první": 1, "druhý": 2, "třetí": 3, "čtvrtý": 4,
                 "pátý": 5, "šestý": 6, "sedmý": 7}
@@ -762,6 +797,20 @@ class KontrolyOpravduChytaji(unittest.TestCase):
             with self.subTest(nadpis=nadpis):
                 vady = self.mutuj((nadpis, "## Něco jiného"))
                 self.assertIn(cekam, vady, f"kontrola nechytila smazané {nadpis!r}: {vady}")
+
+
+    def test_opsany_retez_kroku_cyklu_se_nahlasi(self):
+        """Kontrola opsaného cyklu bez mutace nedokazuje nic – žádný skill ho dnes nemá."""
+        cyklus = cyklus_z_rules()
+        cisty = self.VZOR.read_text(encoding="utf-8")
+        self.assertFalse(retezy_kroku_cyklu(cisty, cyklus), "vzor už řetěz obsahuje")
+        for text in ("postupuj takhle: `/specify` → `/oponent` → `/breakdown`",
+                     "cesta /specify -> /oponent -> /breakdown"):
+            with self.subTest(text=text):
+                self.assertTrue(retezy_kroku_cyklu(cisty + "\n" + text, cyklus),
+                                f"kontrola nechytila opsaný řetěz: {text!r}")
+        # Dva sousedi se hlásit nesmějí, jinak by pravidlo zakázalo popis vazby
+        self.assertFalse(retezy_kroku_cyklu("`/specify` → `/breakdown`", cyklus))
 
     def test_chybejici_odkaz_na_preflight_se_nahlasi(self):
         vady = self.mutuj(("PREFLIGHT.md", "JINY.md"))
