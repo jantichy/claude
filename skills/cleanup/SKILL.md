@@ -131,11 +131,11 @@ Nejdřív uživateli řekni, kolik toho viselo (nebo že nic – to je taky výs
 [N/celkem] O ČEM TO BYLO
 
 Kdy: [zhruba kde v konverzaci – čeho se to týkalo]
-Viselo: [citace nebo věrné shrnutí toho, co zůstalo bez odpovědi]
-Proč pořád visí: [co jsi prověřil a proč to nepovažuješ za vyřešené jinudy]
+Nevypořádáno: [citace nebo věrné shrnutí toho, co zůstalo bez odpovědi]
+Proč není vypořádané: [co jsi prověřil a proč to nepovažuješ za vyřešené jinudy]
 ```
 
-Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu položku, `header` `Viselo N/celkem`. Volby dej **věcné, tedy skutečné odpovědi na tu konkrétní otázku** (varianty, které tehdy byly ve hře), ne obecné „zapsat / odložit“. Ke každé položce vždy přidej volbu **„Bezpředmětné“** pro případ, že to uživatel mezitím vyřešil v hlavě nebo o to už nestojí.
+Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu položku, `header` `Téma N/celkem`. Volby dej **věcné, tedy skutečné odpovědi na tu konkrétní otázku** (varianty, které tehdy byly ve hře), ne obecné „zapsat / odložit“. Ke každé položce vždy přidej volbu **„Bezpředmětné“** pro případ, že to uživatel mezitím vyřešil v hlavě nebo o to už nestojí.
 
 ### Co s odpovědí
 
