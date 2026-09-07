@@ -102,7 +102,7 @@ Role se vybírají **podle toho, čeho se soubory v rozsahu týkají**, ne podle
 | `analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`) |
 | `text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web/web.md`) |
 | `text/typography.md` | česká sazba čehokoliv psaného česky – interpunkce, mezery, čísla, data, výčty (**navíc** k `text/text.md`, ale platí i tam, kde souvislý text nevzniká) |
-| `design/design.md` | vizuální výstupy – grafika, barevné systémy, typografie, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu |
+| `design/design.md` | vizuální výstupy – grafika, barevné systémy, práce s písmem, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu (sazbu znaků drží `text/typography.md`) |
 | `design/slides.md` | promítané prezentace (**navíc** k `design/design.md`) |
 | `training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) |
 

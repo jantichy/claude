@@ -35,6 +35,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **před `/release`**
 - **Neaudituje vnitřní konzistenci** (`/consistency`) ani **neposuzuje záměr** (`/oponent`).
 - **Neopakuje `/review`.** Ten proběhl dřív a nad čteným kódem; tady se hlásí jen to, co se povedlo doopravdy rozbít. Nález, který jde vidět z kódu a nepodařilo se ho vyvolat, sem nepatří.
 - **Nenasazuje.** To je `/release`, a ten se pouští vědomě a zvlášť.
+- **Neuklízí po session.** To udělal `/cleanup` před ním; vlastní nálezy si ale zapisuje sám.
 
 ## Kdy se pouští a kdy se přeskakuje
 

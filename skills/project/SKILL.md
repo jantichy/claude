@@ -19,7 +19,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 ## Co skill nedělá
 
-- **Nepíše zadání ani plán.** Je první článek *Životního cyklu projektu* (`~/.claude/RULES.md`); co se staví, řeší `/specify`, rozpad na úkoly `/breakdown`. `docs/requirements.md`, `docs/architecture.md` ani `docs/plan.md` proto nezakládá.
+- **Nepíše zadání ani plán.** Je první článek *Životního cyklu projektu* (`~/.claude/RULES.md`) a předává na `/discovery`, který zkoumá svět venku. Co se staví, řeší `/specify`, rozpad na úkoly `/breakdown`. `docs/requirements.md`, `docs/architecture.md` ani `docs/plan.md` proto nezakládá.
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
 - **Nepřepisuje nic naslepo.** U existujícího projektu se na každý rozpor ptá.
 - **Nenaplňuje soubory obsahem.** `docs/` zakládá prázdné, jen s nadpisem.
@@ -346,8 +346,7 @@ Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na č
 
 ## Krok 11 – Typ projektu
 
-**Kroky životního cyklu do popisu typu nevypisuj**, odkaz na *Životní cyklus projektu* v `~/.claude/RULES.md` stačí. Přesně tady vada vznikla: projekty založené před `/discovery` měly v `## Typ projektu` napsanou cestu bez něj a četly ji jako úplnou. Obecně to platí pro každý seznam s vlastním zdrojem pravdy – `~/.claude/skills/SKILLS.md`, *Jak se píše text uvnitř*.
-
+**Kroky životního cyklu do popisu typu nevypisuj**, odkaz na *Životní cyklus projektu* v `~/.claude/RULES.md` stačí. Je to zvláštní případ obecného pravidla *Neopisuj seznam, který má vlastní zdroj pravdy* (`~/.claude/skills/SKILLS.md`, *Jak se píše text uvnitř*), kde stojí i to, čím se vykoupilo.
 
 Typů je šest, ale AskUserQuestion bere najednou nejvýš čtyři volby. Ptej se proto ve dvou úrovních – nejdřív na oblast, pak na typ uvnitř ní. Uživatel klikne nejvýš dvakrát a žádný typ se neztratí.
 
@@ -424,15 +423,15 @@ Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ov
 
 ## Krok 13 – Doménové checklisty
 
-Checklistů je devět a `AskUserQuestion` bere najednou nejvýš čtyři volby (týž strop jako v kroku 11). Ptej se proto **ve třech kolech**, všechna s `multiSelect: true`. Volby předvyplň podle typu z kroku 11, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
+Checklistů je devět a `AskUserQuestion` bere najednou nejvýš čtyři volby (týž strop jako v kroku 11). Ptej se **ve třech kolech**, všechna s `multiSelect: true`. **Kola se dělí tematicky, ne aby byla plná** – uživatel odpovídá na otázku, ne na seznam, a otázka musí jít položit jednou větou. Volby předvyplň podle typu z kroku 11, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
 | Kolo | Otázka | Volby |
 |---|---|---|
 | 1 | „Co všechno se v projektu bude dělat s kódem a rozhraním? Když nic, nic nezaškrtávej.“ | Psaní kódu · Webové rozhraní · Administrace / backoffice · Webová analytika a měření |
-| 2 | „A co z tohohle? Když nic, nic nezaškrtávej.“ | Psaní českých textů · Česká typografie · Školení a kurzy |
-| 3 | „A ještě tohle. Když nic, nic nezaškrtávej.“ | Vizuální tvorba a grafika · Prezentace a slajdy |
+| 2 | „A co se v něm bude psát a učit? Když nic, nic nezaškrtávej.“ | Psaní českých textů · Česká typografie · Školení a kurzy |
+| 3 | „A bude se v něm něco kreslit nebo promítat? Když nic, nic nezaškrtávej.“ | Vizuální tvorba a grafika · Prezentace a slajdy |
 
-Volbu **Žádný** nikam nedávej – prázdný výběr v `multiSelect` ji nahrazuje. Přibude-li desátý checklist, přidej **další kolo**, nikdy pátou volbu do existujícího.
+Volbu **Žádný** nikam nedávej – prázdný výběr v `multiSelect` ji nahrazuje. **Nový checklist zařaď do kola, kam tematicky patří**; teprve nevejde-li se do žádného pod strop čtyř voleb, přidej další kolo. Pátá volba do existujícího kola nepatří nikdy.
 
 **Česká typografie je samostatná volba, ne přívažek k psaní textů.** Projekt s českým rozhraním nebo se slajdy sází česky, i když v něm žádný souvislý text nevzniká – a naopak by ho nemělo nic nutit brát si kvůli sazbě celý redakční standard.
 
@@ -534,7 +533,7 @@ Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím 
 
 - **Hotové položky v `todo.md`.** Odškrtnuté a zjevně dokončené věci patří do `done.md` s datem dokončení. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny* / *Projít po jedné* / *Nechat být*) – jestli je něco hotové, ví uživatel, ne ty. Odškrtnutý krok uvnitř nedokončené položky se nepřesouvá.
 - **Řazení.** Nejstarší nahoře, nové na konec – v `decisions.md` i `done.md`, i uvnitř kapitol. Obrácené pořadí **neotáčej sám**: je to přeskládání celého souboru. Ukaž, čeho se to týká, a zeptej se přes AskUserQuestion (*Srovnat podle standardu* / *Nechat, jak to je*).
-- **Nezávazné nápady v `todo.md`.** Projekt založený dřív, než standard zavedl `backlog.md`, je má promíchané s frontou. Vyber položky, u kterých není rozhodnuto, že se udělají – poznáš je podle formulace („někdy by šlo“, „stálo by za úvahu“, „nápad do budoucna“) a podle toho, že u nich není nic nalajnovaného. **Odložení po MVP mezi ně nepatří**, to je plán. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny do backlogu* / *Projít po jedné* / *Nechat být*) – co je závazek a co nápad, ví uživatel.
+- **Nezávazné nápady v `todo.md`.** Projekt založený dřív, než standard zavedl `backlog.md`, je má promíchané s frontou. Vyber položky, u kterých není rozhodnuto, že se udělají – poznáš je podle formulace („někdy by šlo“, „stálo by za úvahu“, „nápad do budoucna“). **Nerozhoduje, jestli je u položky termín nebo postup** – rozhoduje, jestli někdo řekl, že se to udělá. Odložení po MVP je plán a zůstává; otázka, kterou je potřeba zodpovědět, zůstává taky, protože zodpovědět ji někdo musí. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny do backlogu* / *Projít po jedné* / *Nechat být*) – co je závazek a co nápad, ví uživatel.
 - **Zrcadlení sekcí.** Je-li `todo.md` členěné, `done.md` drží tytéž sekce. `backlog.md` je nezrcadlí – nápady se člení podle sebe, ne podle fronty.
 - **Tvar záznamů.** Datum u hotové položky jako `(2026-08-28)`, řádky v *Průchody životním cyklem* a *Co proklouzlo* podle šablony v `structure.md`.
 - **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu životním cyklem nesedí volně v `done.md` mimo *Průchody životním cyklem*.
@@ -568,7 +567,7 @@ V režimu `adopt` vypiš i **co jsi záměrně nechal být a proč** – ať je 
 
 *Režim `update`:* souhrn je jiný – nevypisuje nastavení, ale **rozdíl proti standardu**. Tři skupiny: co bylo dorovnáno, co čeká na rozhodnutí uživatele a co jsi vědomě nechal být i s důvodem. Oblasti, které vyšly čistě, shrň jednou větou; jejich výčet nikoho nezajímá.
 
-**Další krok:** /specify, zakládá-li se něco nového – u dorovnaného projektu se rovnou pracuje
+**Další krok:** /discovery, staví-li se produkt pro trh, jinak rovnou /specify – u dorovnaného projektu se rovnou pracuje
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

@@ -424,8 +424,18 @@ def cyklus_s_poradim() -> dict:
 #: Řetěz tří a víc kroků životního cyklu spojených šipkami. Dva sousedi jsou
 #: popis vazby („navazuje na `/specify`, předává `/breakdown`“), tři a víc už
 #: je opsané pořadí celého cyklu – tedy druhý zdroj pravdy vedle `RULES.md`.
-_SIPKA = re.compile(r"`?/([a-z][a-z-]*)`?\s*(?:→|->)\s*"
-                    r"`?/([a-z][a-z-]*)`?\s*(?:→|->)\s*`?/([a-z][a-z-]*)`?")
+#: Řetěz kroků: šipka, nebo próza. **První spojka musí být silná** (šipka nebo
+#: „pak“) a teprve druhá smí být slabá („a“, čárka) – vzorec „A, pak B a C“.
+#: Samotné „a“ mezi dvěma skilly je totiž běžný výčet, ne posloupnost:
+#: „vzniknou prací v `/discovery` a `/specify`, a `/cleanup` pak…“ posloupnost
+#: netvrdí a hlásit ho jako opsaný cyklus by bránu shodilo na falešném nálezu.
+#: Mezera se schválně bere bez konce řádku (`[^\S\n]`): se `\s` by vzor spojil
+#: tři nesouvisející zmínky ob několik odstavců.
+_M = r"[^\S\n]*"
+_KROK = r"`?/([a-z][a-z-]*)`?"
+_SILNA = rf"{_M}(?:→|->|,?{_M}(?:pak|potom)){_M}"
+_SLABA = rf"{_M}(?:→|->|,|{_M}(?:pak|potom|a)){_M}"
+_SIPKA = re.compile(rf"{_KROK}{_SILNA}{_KROK}{_SLABA}{_KROK}")
 
 
 def retezy_kroku_cyklu(text: str, cyklus: set) -> list:
@@ -589,12 +599,32 @@ class Struktura(unittest.TestCase):
             if naslednik and naslednik != ocek_nasl:
                 chyby.append(f"{jmeno}: tvrdí, že předává na `/{naslednik}`, RULES.md má `/{ocek_nasl}`")
 
+        # Druhý tvar téhož tvrzení: `/project` píše „Je první článek Životního
+        # cyklu projektu“. Vzor výš ho nepoznal, takže se skill tiše přeskakoval
+        # – a právě on nesl vadu, kvůli které tenhle test vznikl (posílal na
+        # `/specify`, ačkoli jeho následník je `/discovery`).
+        poradi = [k for k, v in sorted(cyklus.items(), key=lambda x: (x[1][0], x[1][1]))]
+        for skill in SKILLS:
+            jmeno = skill.parent.name
+            if jmeno not in cyklus:
+                continue
+            m = re.search(r"Je (první|poslední) článek \*Životního cyklu projektu\*", body(skill))
+            if not m:
+                continue
+            nalezeno += 1
+            ma_byt = cyklus[jmeno][2] is None if m.group(1) == "první" else cyklus[jmeno][3] is None
+            if not ma_byt:
+                chyby.append(f"{jmeno}: tvrdí, že je {m.group(1)} článek cyklu, "
+                             f"ale RULES.md má na tom místě `/{poradi[0 if m.group(1) == 'první' else -1]}`")
+
         # Přesný počet, ne práh: při volném prahu propadne skill, jehož větu vzor
         # přestal poznávat, protože ostatní ho vyváží. Zvedne-li se počet skillů,
         # které tu větu nesou, číslo se tu vědomě upraví. Jde do téhož seznamu
         # jako ostatní chyby, aby se konkrétní nález nezakryl souhrnným číslem.
-        if nalezeno != 6:
-            chyby.append(f"větu o pořadí kroku nese {nalezeno} skillů, čekalo se 6 "
+        # Zbylé kroky své pořadí netvrdí vůbec, takže tady není co měřit –
+        # že jmenují oba sousedy, hlídá `test_co_skill_nedela_jmenuje_oba_sousedy`.
+        if nalezeno != 7:
+            chyby.append(f"větu o pořadí kroku nese {nalezeno} skillů, čekalo se 7 "
                          f"– změnil se její tvar, nebo ji získal či ztratil další skill?")
         self.assertFalse(chyby, "věty o pořadí kroku nesedí s RULES.md:\n  " + "\n  ".join(chyby))
 
@@ -603,6 +633,38 @@ class Struktura(unittest.TestCase):
         chybi = [s.parent.name for s in SKILLS
                  if s.parent.name in self.CYKLUS and "Co skill nedělá" not in body(s)]
         self.assertFalse(chybi, f"skilly životního cyklu bez sekce `Co skill nedělá`: {chybi}")
+
+    def test_co_skill_nedela_jmenuje_oba_sousedy(self):
+        """Norma žádá jmenované sousedy, měřila se ale jen existence nadpisu.
+
+        Vada, kterou to propustilo: `/project` roky posílal na `/specify`
+        a o svém skutečném následníkovi `/discovery` nevěděl, přestože
+        `SKILLS.md`, *Povinné sekce a jejich pořadí*, jmenované sousedy
+        z obou stran u kroků cyklu vyžaduje.
+
+        **Hledá se jen v úvodních sekcích**, ne v celém těle. Nad celým tělem
+        kontrola nic neměří: `/project` jmenuje `/discovery` i v tabulce
+        produktových podkladů, takže by prošel, i kdyby se o svém sousedovi
+        nezmínil ani slovem – doloženo mutací, která tu vadu vrátila a testem
+        prošla. Vymezení patří do `Co skill dělá` a `Co skill nedělá`, tedy do
+        textu před první fází.
+        """
+        cyklus = cyklus_s_poradim()
+        chybi = []
+        for skill in SKILLS:
+            jmeno = skill.parent.name
+            if jmeno not in cyklus:
+                continue
+            text = body(skill)
+            konec = text.find("\n## Fáze")
+            if konec == -1:
+                konec = text.find("\n## Krok")
+            text = text[:konec] if konec != -1 else text
+            _, _, pred, nasl = cyklus[jmeno]
+            for soused in (pred, nasl):
+                if soused and f"/{soused}" not in text:
+                    chybi.append(f"{jmeno} nejmenuje souseda /{soused}")
+        self.assertFalse(chybi, "kroky cyklu se nevymezují vůči sousedům:\n  " + "\n  ".join(chybi))
 
     def _skilly_v_readme(self) -> set:
         """Skilly jmenované v nadpisech README. Jeden nadpis jich může nést víc –
