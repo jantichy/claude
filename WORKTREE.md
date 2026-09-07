@@ -20,7 +20,9 @@ Uspořádání, ve kterém adresář projektu není pracovní adresář, ale **k
 
 Hlavní větev se jmenuje `main`. Narazíš-li na starší projekt, kde se jmenuje jinak, platí níže psané pro jeho hlavní větev bez ohledu na jméno.
 
-**Tenhle soubor drží provoz layoutu** – co kde leží a jak se v tom pracuje. Zřízení kontejneru i jeho zrušení vede `/worktree` (`~/.claude/skills/worktree/SKILL.md`); odsud se do toho nesahá.
+**Tenhle soubor drží provoz layoutu** – co kde leží a jak se v tom pracuje. Platí pro každou session nad projektem s tímhle uspořádáním a čte ho `~/.claude/skills/PREFLIGHT.md` i skilly, které nad projektem běží. **Zřízení kontejneru a jeho zrušení sem nepatří** – to vede `/worktree` (`~/.claude/skills/worktree/SKILL.md`), který si tenhle soubor zároveň importuje do stubu v kořeni kontejneru.
+
+Leží v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md`, ne uvnitř skillu, **protože ho čte dvanáct skillů a pre-flight** – tedy i ten, kdo `/worktree` nainstalovaný nemá.
 
 ## Obsah
 

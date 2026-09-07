@@ -83,7 +83,7 @@ Platí bez výjimky:
 Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
 1. **Rozsah změn** – **postupem z `/review`, Fáze 0.1**, včetně toho, co dělat, když se hlavní větev nenajde. Neopisuj ho sem: dřív tu stál zkrácený řetěz bez `master` a bez poslední větve, takže `/attack` selhal tam, kde `/review` prošel, přestože obojí tvrdí „stejně“.
-   *Worktree layout* (`~/.claude/skills/worktree/worktree.md`): pouštěj to ve worktree větve, ne v kořeni kontejneru.
+   *Worktree layout* (`~/.claude/WORKTREE.md`): pouštěj to ve worktree větve, ne v kořeni kontejneru.
 
 2. **Jak se to spouští** – z `## Příkazy` v projektovém `CLAUDE.md` (*Kontrakt příkazů*). Zajímá tě `dev`, případně `build` a `preview`. **Chybí-li, nevymýšlej příkaz** – zeptej se, čím se aplikace lokálně spouští, a nabídni, že to rovnou doplníš do kontraktu.
 

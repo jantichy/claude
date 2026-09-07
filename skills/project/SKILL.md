@@ -30,7 +30,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 ## Zásady pro celý průběh
 
 - **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu životního cyklu. Kritérium normy (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*) zní, čí odpovědi tvoří výsledek: tady je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek. Ostatní skilly něco samy najdou nebo vyrobí a ptají se až na nálezy – ty mají fáze, i když se ptají stejně často. Číslují se **plochou vzestupnou řadou bez písmen** (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*). Kroky 5–8 zakládají standardní strukturu a byly kdysi jedním krokem s podkroky `6a`–`6c`; kritériu normy pro písmennou podfázi ale nevyhověly – jsou to fáze jedné volby, ne samostatné výstupy –, tak se z nich staly samostatné kroky.
-- **Ve worktree layoutu nepracuj v `main/`.** Přijdeš-li do projektu, který ten layout **už má**, zapisuj do vlastní větve a jejího worktree – viz krok 0, *Nejdřív zjisti, kde stojíš*. Zakazuje to `~/.claude/skills/worktree/worktree.md`, *`main/` se nemaže a nepracuje se v něm*, a pro `/project` to platí dvojnásob: přepisuje `CLAUDE.md`, `README.md` a celé `docs/` – tedy soubory, které mají ostatní sessions rozečtené a rozepsané. (Zapíná-li layout teprve tenhle běh, výjimku a důvod má krok 0.)
+- **Ve worktree layoutu nepracuj v `main/`.** Přijdeš-li do projektu, který ten layout **už má**, zapisuj do vlastní větve a jejího worktree – viz krok 0, *Nejdřív zjisti, kde stojíš*. Zakazuje to `~/.claude/WORKTREE.md`, *`main/` se nemaže a nepracuje se v něm*, a pro `/project` to platí dvojnásob: přepisuje `CLAUDE.md`, `README.md` a celé `docs/` – tedy soubory, které mají ostatní sessions rozečtené a rozepsané. (Zapíná-li layout teprve tenhle běh, výjimku a důvod má krok 0.)
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
@@ -43,11 +43,11 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 ### Nejdřív zjisti, kde stojíš
 
-**Ve worktree layoutu** – kontejner s `.bare/` a jedním pracovním adresářem na větev (`~/.claude/skills/worktree/worktree.md`) – platí dvě věci, které mění zbytek běhu. Zjisti je **dřív než cokoliv jiného**: obojí rozhoduje o tom, kde budeš hledat i kam budeš psát.
+**Ve worktree layoutu** – kontejner s `.bare/` a jedním pracovním adresářem na větev (`~/.claude/WORKTREE.md`) – platí dvě věci, které mění zbytek běhu. Zjisti je **dřív než cokoliv jiného**: obojí rozhoduje o tom, kde budeš hledat i kam budeš psát.
 
-**1. Vylez ke kontejneru.** Session se sice pouští z jeho kořene, ale `/project` se často volá i z `main/` nebo z worktree rozdělané větve – tam vedle souboru `.git` **žádné `.bare/` není**, takže bys layout vyhodnotil jako obyčejný repozitář a psal rovnou do `main/`. Rozliš podle `~/.claude/skills/worktree/worktree.md`, *Jak si skill najde projektový adresář*, a jdeš-li nahoru, řekni to nahlas. Jmenuje-li se hlavní větev jinak než `main`, její pracovní adresář zjistíš z `git --git-dir=<projekt>/.bare worktree list` a všechna „`main/`“ níž čti jako ji.
+**1. Vylez ke kontejneru.** Session se sice pouští z jeho kořene, ale `/project` se často volá i z `main/` nebo z worktree rozdělané větve – tam vedle souboru `.git` **žádné `.bare/` není**, takže bys layout vyhodnotil jako obyčejný repozitář a psal rovnou do `main/`. Rozliš podle `~/.claude/WORKTREE.md`, *Jak si skill najde projektový adresář*, a jdeš-li nahoru, řekni to nahlas. Jmenuje-li se hlavní větev jinak než `main`, její pracovní adresář zjistíš z `git --git-dir=<projekt>/.bare worktree list` a všechna „`main/`“ níž čti jako ji.
 
-**2. Nepiš do `main/`, ale do vlastní větve.** `main/` je sdílený a slouží ke čtení – zakazuje to `~/.claude/skills/worktree/worktree.md`, *`main/` se nemaže a nepracuje se v něm*. Větev zakládej **líně, až u prvního zápisu**: inventura v tomhle kroku i revize v kroku 14 jsou čtení, takže běh, který nic nenajde, po sobě nenechá prázdnou větev ani naklonované `node_modules`. **Zápis je každá změna souboru v repozitáři** – nastavení mimo git (popisek v Repository details, souhlas se zelenou linkou) větev nevyžaduje. Jakmile se má poprvé něco změnit:
+**2. Nepiš do `main/`, ale do vlastní větve.** `main/` je sdílený a slouží ke čtení – zakazuje to `~/.claude/WORKTREE.md`, *`main/` se nemaže a nepracuje se v něm*. Větev zakládej **líně, až u prvního zápisu**: inventura v tomhle kroku i revize v kroku 14 jsou čtení, takže běh, který nic nenajde, po sobě nenechá prázdnou větev ani naklonované `node_modules`. **Zápis je každá změna souboru v repozitáři** – nastavení mimo git (popisek v Repository details, souhlas se zelenou linkou) větev nevyžaduje. Jakmile se má poprvé něco změnit:
 
 ```bash
 git -C <projekt> worktree add <projekt>/project-update -b docs/project-update
@@ -55,9 +55,9 @@ git -C <projekt> worktree add <projekt>/project-update -b docs/project-update
 
 - **Jméno podle režimu** – `docs/project-update`, `docs/project-adopt`. Prefix je vždycky `docs/`: skill nesahá na kód, jen na dokumentaci a konfiguraci.
 - **Existuje-li větev z minulého běhu**, pokračuj v ní: má-li worktree, přejdi do něj; nemá-li ho, `worktree add` **bez `-b`** (s ním by to spadlo na `branch already exists`).
-- Převezmi lokální stav z `main/` podle `~/.claude/skills/worktree/worktree.md`, *Lokální stav se bere z `main/`*, a přejdi do nového adresáře – **od téhle chvíle je projektovým adresářem on** (viz níž). Pozor na cesty, které máš přečtené z `main/`: číst se smí odtamtud, zapisovat se musí do větve.
-- **Na konci práci ve větvi commitni**, i když projekt autocommit nemá: nad necommitnutým stromem merge neprojde (`~/.claude/skills/worktree/worktree.md`, *Dokončení větve*).
-- **Nemerguj.** Větev zůstane otevřená a merge je na výslovný pokyn uživatele (`~/.claude/skills/worktree/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). V kroku 15 jen řekni, jak se jmenuje.
+- Převezmi lokální stav z `main/` podle `~/.claude/WORKTREE.md`, *Lokální stav se bere z `main/`*, a přejdi do nového adresáře – **od téhle chvíle je projektovým adresářem on** (viz níž). Pozor na cesty, které máš přečtené z `main/`: číst se smí odtamtud, zapisovat se musí do větve.
+- **Na konci práci ve větvi commitni**, i když projekt autocommit nemá: nad necommitnutým stromem merge neprojde (`~/.claude/WORKTREE.md`, *Dokončení větve*).
+- **Nemerguj.** Větev zůstane otevřená a merge je na výslovný pokyn uživatele (`~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak*). V kroku 15 jen řekni, jak se jmenuje.
 
 **Zakládá-li worktree layout teprve tenhle běh** (krok 4 v režimu `create` nebo při konverzi), pravidlo se neuplatní: kontejner právě vzniká, žádná jiná session v něm neběží, takže zbytek běhu píše rovnou do `main/`.
 
@@ -164,7 +164,7 @@ U GitLabu a jiných hostitelů tenhle krok přeskoč a řekni uživateli, že po
 Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 - **Jeden pracovní adresář (jednoduché)** – klasika: `.git` a rozbalený projekt přímo v adresáři. Vhodné, když nad projektem pracuješ vždy v jedné session.
-- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/.claude/skills/worktree/worktree.md`.
+- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/.claude/WORKTREE.md`.
 
 ### Když padne worktree layout
 
@@ -430,7 +430,7 @@ Importuj **jen to, co je pro projekt opravdu relevantní** – každý import st
 - `~/.claude/STRUCTURE.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
 - `~/.claude/RULES.md` – zejména *Životní cyklus projektu* (jaké kroky životního cyklu dnes existují) a *Co do tohoto souboru nepatří* (kam co patří);
 - `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality* – jen u projektu, ve kterém se něco spouští;
-- `~/.claude/skills/worktree/worktree.md` – jen u worktree layoutu;
+- `~/.claude/WORKTREE.md` – jen u worktree layoutu;
 - výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
 
 **Ve worktree layoutu** je tenhle krok do prvního dorovnání jen čtení – jakmile se má něco změnit, založ si větev podle kroku 0, *Nejdřív zjisti, kde stojíš*, a zapisuj do ní.

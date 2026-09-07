@@ -17,7 +17,7 @@ Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém ad
 | `enable` | zřídí kontejner – u nového projektu i konverzí existujícího repozitáře |
 | `disable` | převede projekt zpátky na obyčejný pracovní adresář |
 
-**Pravidla provozu layoutu drží `~/.claude/skills/worktree/worktree.md`** – kde co leží, jak se zakládá a dokončuje větev, proč se v `main/` nepracuje a proč v kořeni kontejneru nefunguje git. Skill ten soubor **importuje do projektu**, takže platí v každé session, aniž ho kdo vyvolá. Ta cesta je závazné rozhraní: importují ji stuby v kontejnerech a odkazuje na ni `~/.claude/skills/PREFLIGHT.md`, takže se nesmí měnit tiše.
+**Pravidla provozu layoutu drží `~/.claude/WORKTREE.md`** – kde co leží, jak se zakládá a dokončuje větev, proč se v `main/` nepracuje a proč v kořeni kontejneru nefunguje git. Skill je **nevlastní**, jen si je importuje do stubu v kořeni kontejneru, aby platila v každé session projektu. Stojí v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md` schválně: čte je dvanáct skillů a `PREFLIGHT.md`, tedy i ten, kdo tenhle skill nainstalovaný nemá. Ta cesta je závazné rozhraní a nesmí se měnit tiše.
 
 ## Co skill nedělá
 
@@ -46,7 +46,7 @@ Stav nese **tvar adresáře**, ne zápis v souboru – nemůže se tedy rozejít
 | `.git` adresář | layout není, je to obyčejný repozitář |
 | ani jedno | není to repozitář – pro `enable` je to větev *nový projekt*, jinak to řekni a skonči |
 
-**Stojíš-li v podadresáři**, jdi po `~/.claude/skills/worktree/worktree.md`, *Jak si skill najde projektový adresář*, nahoru ke kontejneru – jinak bys layout zapínal uvnitř layoutu.
+**Stojíš-li v podadresáři**, jdi po `~/.claude/WORKTREE.md`, *Jak si skill najde projektový adresář*, nahoru ke kontejneru – jinak bys layout zapínal uvnitř layoutu.
 
 ## Fáze 2 – Proveď režim
 
@@ -101,7 +101,7 @@ Netrackované a gitignorované soubory (`.env`, `node_modules`) přesuň do `mai
 
 Tenhle adresář není projekt, ale kontejner s worktree layoutem. Pravidla práce s ním:
 
-@~/.claude/skills/worktree/worktree.md
+@~/.claude/WORKTREE.md
 
 Vlastní pravidla projektu jsou v `main/CLAUDE.md` a importují se odsud:
 

@@ -33,7 +33,7 @@ Co je naopak **závazné a nesmí se změnit tiše**:
 
 ## Fáze 0 – Pre-flight
 
-1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/skills/worktree/worktree.md`) pracuj v adresáři větve, ne v kořeni kontejneru – tam by nešlo commitnout.
+1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři větve, ne v kořeni kontejneru – tam by nešlo commitnout.
 2. **Přečti projektový `CLAUDE.md`** – typ projektu, `## Příkazy` (*Kontrakt příkazů*), `## Autocommit`, `## Výjimky z obecných pravidel`, importované doménové standardy. Z kontraktu bere plán příkazy na ověření; chybí-li a projekt má kód, ohlas to – plán by pak u úkolů neměl co napsat do kroku ověření.
 3. **Najdi zadání.** V tomhle pořadí:
 

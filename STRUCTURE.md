@@ -57,7 +57,7 @@ Povinný je jediný soubor – **`CLAUDE.md`**, bez něj projekt není projekt. 
 
 Nezaložený soubor **není odchylka** – u projektu, kde se nic nerozhoduje, je prázdný `decisions.md` horší než žádný. Vznikne, až bude potřeba.
 
-**Ve worktree layoutu** (`~/.claude/skills/worktree/worktree.md`) je „projekt“ pracovní adresář větve, ne kontejner. Celá struktura tedy žije v `main/` a odtud se s větví kopíruje – **i v režimu `root`, kde „kořen projektu“ znamená `main/`, ne kořen kontejneru.** Ten není pracovní strom a nic z něj by nešlo commitnout; je v něm jen tenký `CLAUDE.md` s popisem layoutu a importem `@main/CLAUDE.md`.
+**Ve worktree layoutu** (`~/.claude/WORKTREE.md`) je „projekt“ pracovní adresář větve, ne kontejner. Celá struktura tedy žije v `main/` a odtud se s větví kopíruje – **i v režimu `root`, kde „kořen projektu“ znamená `main/`, ne kořen kontejneru.** Ten není pracovní strom a nic z něj by nešlo commitnout; je v něm jen tenký `CLAUDE.md` s popisem layoutu a importem `@main/CLAUDE.md`.
 
 ---
 
@@ -306,7 +306,7 @@ Rozdíl proti `docs/decisions.md`: tam je konkrétní rozhodnutí (občas i výj
 
 - Pravidla platná napříč všemi projekty → `~/.claude/RULES.md`
 - Doménové standardy a checklisty (kód, web, administrace, analytika, psaní textů, typografie) → do příslušného doménového standardu, který si projekt importuje ve svém `CLAUDE.md`, sekce *Doménové standardy*
-- Pravidla provozu worktree layoutu → `~/.claude/skills/worktree/worktree.md`, které si projekt s tímhle layoutem importuje do stubu v kořeni kontejneru
+- Pravidla provozu worktree layoutu → `~/.claude/WORKTREE.md`, které si projekt s tímhle layoutem importuje do stubu v kořeni kontejneru
 - Sem patří **jen to, co je specifické pro tenhle projekt.** Duplikovat sem obecné pravidlo je chyba.
 
 ---

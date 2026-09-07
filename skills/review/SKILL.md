@@ -64,7 +64,7 @@ Je-li výsledek nenulový, **řekni to a nabídni srovnání před review**. Dů
 
 **Neuspěje-li ani jeden `merge-base`, rozsah si nedomýšlej.** Nastává to ve třech běžných stavech: repozitář bez jediného commitu (`HEAD` neexistuje), hlavní větev pojmenovaná jinak než `main`/`master` bez nastaveného `origin/HEAD`, a čerstvý lokální repozitář bez remote. Ověř si to nejdřív `git rev-parse --verify HEAD` – selže-li, rozsah jsou prostě necommitnuté změny a žádný diff se nedělá. Jinak zkus `git symbolic-ref --short refs/remotes/origin/HEAD`, a když ani to nevyjde, **zeptej se přes `AskUserQuestion`**, proti které větvi diffovat, s nabídkou z `git branch`. Špatně určený rozsah tiše prověří něco jiného, než si myslíš, a to je horší než se zeptat.
 
-*Worktree layout* (`~/.claude/skills/worktree/worktree.md`): pouštěj to ve **worktree větve**. V kořeni kontejneru `git diff` spadne a `git status` taky – kořen není pracovní strom. Stojíš-li tam, přesuň se nejdřív do adresáře té větve, kterou máš prověřit, a rozsah `full` počítej rovněž jen nad ním, ne nad celým kontejnerem.
+*Worktree layout* (`~/.claude/WORKTREE.md`): pouštěj to ve **worktree větve**. V kořeni kontejneru `git diff` spadne a `git status` taky – kořen není pracovní strom. Stojíš-li tam, přesuň se nejdřív do adresáře té větve, kterou máš prověřit, a rozsah `full` počítej rovněž jen nad ním, ne nad celým kontejnerem.
 
 **Režim `full`:** všechny zdrojové soubory projektu. Vynech `node_modules/`, `dist/`, `build/`, `vendor/`, `generated/`, `*.gen.*` a cokoliv v `.gitignore`.
 

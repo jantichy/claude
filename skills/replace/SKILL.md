@@ -37,7 +37,7 @@ Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill v
 
 ## Fáze 0 – Pre-flight
 
-1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/skills/worktree/worktree.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
+1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – `## Autocommit`, konvence pojmenování, `## Výjimky z obecných pravidel`.
 3. **Git musí být čistý.** Rozpracované změny před startem se smíchají s přejmenováním a přestane být poznat, co je čí. Vypiš je a zeptej se, jestli je commitnout, odložit, nebo pokračovat i tak.
 4. **Zjisti zadání.** Uživatel ho obvykle dá jako argument (`/replace market → site`). Když ne, zeptej se na starý a nový tvar.
