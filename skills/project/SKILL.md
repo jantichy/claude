@@ -23,6 +23,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
 - **Nepřepisuje nic naslepo.** U existujícího projektu se na každý rozpor ptá.
 - **Nenaplňuje soubory obsahem.** `docs/` zakládá prázdné, jen s nadpisem.
+- **Nezapíná worktree layout sám.** Zvolí-li ho uživatel v kroku 4, provede se to, co `/worktree enable` – přeskládání adresáře a manipulace s `.git` jsou jeho věc, `/project` se jen ptá a zapisuje výsledek do `CLAUDE.md`.
 - **Nemerguje ani neuklízí větve.** Ve worktree layoutu si větev na svou práci založí (krok 0), ale merge i úklid jsou na uživateli – jsou to pravidla layoutu, ne tenhle skill, a instaluje je `/worktree`.
 - **Nerediguje obsah dokumentace.** `update` hlídá **tvar** – kde soubor leží, jak se jmenuje, jak je uvnitř seřazený, jestli položka sedí do souboru, ve kterém je. Jestli je zapsané rozhodnutí správné nebo úkol dobře napsaný, neřeší; od toho jsou `/consistency` a `/review`.
 
