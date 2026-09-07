@@ -881,6 +881,117 @@ class SouladSNormou(unittest.TestCase):
             f"tyhle skilly už normu splňují – vyškrtni je z MIGRACE: {hotove}")
 
 
+#: Blok kódu ve skillu, jehož obsah se vypisuje do konverzace. Pozná se podle
+#: prvního neprázdného řádku: nadpis, výpis položky `[N/celkem]`, tučný popisek
+#: nebo řádek tabulky. Zadání pro subagenta začíná oslovením („Jsi…“, „Prověř…“),
+#: příkaz shellu má u fence jazyk – ani jedno sem tedy nespadne.
+SABLONA_DO_KONVERZACE = re.compile(
+    r"^(?:## |\*\*\[N/celkem\]|- \*\*[^*]+:\*\*|\*\*[^*]+:\*\*|\*\*[A-ZČŘŽŠ][^*]*\*\*$|\| )")
+
+#: Věta, kterou musí šablona do konverzace nést pod sebou.
+POKYN_MARKDOWN = "ne jako blok kódu"
+
+
+def sablony(text: str):
+    """Vrátí (číslo řádku, první řádek, má pokyn) pro každý blok kódu bez jazyka.
+
+    Yielduje jen bloky, které vyhoví `SABLONA_DO_KONVERZACE`.
+    """
+    lines = text.split("\n")
+    inb = False
+    blok: list = []
+    st = 0
+    for i, l in enumerate(lines):
+        s = l.strip()
+        if s.startswith("```"):
+            if not inb:
+                inb, blok, st, lang = True, [], i + 1, s[3:].strip()
+            else:
+                inb = False
+                prvni = next((b.strip() for b in blok if b.strip()), "")
+                if not lang and SABLONA_DO_KONVERZACE.match(prvni):
+                    okoli = "\n".join(lines[i + 1:i + 3])
+                    yield st, prvni, POKYN_MARKDOWN in okoli
+        elif inb:
+            blok.append(l)
+
+
+class SablonyVypisujiMarkdown(unittest.TestCase):
+    """Šablona výstupu v bloku kódu se reprodukuje jako blok kódu.
+
+    Trojice zpětných apostrofů kolem šablony v `SKILL.md` má oddělit šablonu
+    od okolního textu, ale model ji čte jako pokyn k formátu: vypíše
+    předformátovaný text, zalomí si ho kolem šedesáti znaků a hodnoty zarovná
+    mezerami pod sebe. V širokém okně z toho je úzká nudle uprostřed obrazovky.
+    Proto `skills/SKILLS.md`, *Jak se píše text uvnitř*, žádá u každé takové
+    šablony výslovný pokyn – a proto ho hlídá test.
+
+    Bez něj to zelený běh nechytí: 7. 9. 2026 se šablony přepisovaly dvakrát
+    po sobě a pokaždé zůstalo osm respektive sedm míst neopravených, přičemž
+    testy prošly. Horší než chybějící pokyn je přitom to, že podle
+    `~/.claude/RULES.md`, *Přednost pravidel*, stojí výstupní šablona skillu
+    **nad** `RULES.md` – šablona bez pokynu tedy nové pravidlo přebíjí, ne
+    jen neopakuje.
+    """
+
+    #: Bloky, které kritériu vyhoví, ale do konverzace nejdou – jejich obsah
+    #: se **zapisuje do souboru** (sekce do `CLAUDE.md`, blok metadat projektu,
+    #: tabulka do `SKILL.md`). Markdownem už jsou; pokyn by tu lhal o tom,
+    #: kam text míří. Seznam musí přesně sedět: zmizelá výjimka shodí testy
+    #: stejně jako nová šablona bez pokynu.
+    ZAPISUJE_SE_DO_SOUBORU = {
+        ("autocommit/SKILL.md", "## Autocommit"),
+        ("consistency/SKILL.md", "## Consistency"),
+        ("project/SKILL.md", "- **Struktura:** docs/"),
+        ("project/SKILL.md", "## Struktura a dokumentace"),
+        ("project/SKILL.md", "## Paměť"),
+        ("project/checklists.md", "## Doménové standardy"),
+        ("review/SKILL.md", "## Review"),
+        ("skill/SKILL.md", "| Krok | Kdo | Proč zrovna on |"),
+    }
+
+    def nalezene(self):
+        """Vrátí (bez pokynu, výjimky nalezené ve skillech)."""
+        chybi, videne = [], set()
+        for p in sorted((ROOT / "skills").glob("*/*.md")):
+            if p.name == "README.md":
+                continue
+            klic_soubor = f"{p.parent.name}/{p.name}"
+            for radek, prvni, ma in sablony(p.read_text(encoding="utf-8")):
+                klic = (klic_soubor, prvni)
+                if klic in self.ZAPISUJE_SE_DO_SOUBORU:
+                    videne.add(klic)
+                elif not ma:
+                    chybi.append(f"{klic_soubor}:{radek} – {prvni[:60]}")
+        return chybi, videne
+
+    def test_sablony_nesou_pokyn(self):
+        chybi, _ = self.nalezene()
+        self.assertFalse(chybi, "šablony do konverzace bez pokynu na Markdown:\n"
+                         + "\n".join(chybi))
+
+    def test_vyjimky_sedi_se_skutecnosti(self):
+        """Výjimka pro blok, který zmizel nebo se přejmenoval, kryje nikoho."""
+        _, videne = self.nalezene()
+        zmizele = sorted(self.ZAPISUJE_SE_DO_SOUBORU - videne)
+        self.assertFalse(zmizele, f"výjimky, které nic nekryjí – vyškrtni je: {zmizele}")
+
+    def test_kontrola_chytne_sablonu_bez_pokynu(self):
+        """Mutace: šablona s pokynem, kterému se pokyn odebere, musí spadnout."""
+        vzor = "```\n## Hotovo\n\n- **Rozsah:** …\n```\n\n" + POKYN_MARKDOWN + "\n"
+        self.assertTrue(all(ma for _, _, ma in sablony(vzor)),
+                        "kontrola nevidí pokyn ani tam, kde stojí")
+        bez = vzor.replace(POKYN_MARKDOWN, "a je to")
+        self.assertTrue(any(not ma for _, _, ma in sablony(bez)),
+                        "kontrola neohlásí šablonu, které pokyn chybí")
+
+    def test_kontrola_nechytne_zadani_pro_subagenta(self):
+        """Prompt pro agenta pokyn nepotřebuje – nevypisuje se, předává se."""
+        prompt = "```\nJsi nezávislý oponent. DOKUMENT: <cesta>\n```\n\nSpusť agenta.\n"
+        self.assertEqual(list(sablony(prompt)), [],
+                         "kontrola bere zadání pro subagenta jako šablonu výstupu")
+
+
 class KontrolyOpravduChytaji(unittest.TestCase):
     """Mutační testy: poškoď vstup a ověř, že kontrola nález nahlásí.
 
