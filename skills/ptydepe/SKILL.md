@@ -1,6 +1,6 @@
 ---
 name: ptydepe
-description: Skill se použije, když uživatel zadá "/ptydepe", "/ptydepe suggest" nebo "/ptydepe add <termín>", anebo chce prověřit termíny, které Claude používá, přestože je v oboru nikdo nezná – slova převzatá z náhodné zmínky, z překlepu nebo z doslovného překladu, která se pak rozlezla napříč projekty a dokumentací. Výchozí režim "suggest" takové termíny vytipuje, režim "add" vypořádá jeden z nich. Postup, meze rozsahu a vyloučená místa má skill v těle a jsou závazné – bez jeho načtení se hledání ani náhrada nespouští, protože plošná náhrada umí nevratně přepsat soubory mimo verzování. Na rozdíl od /replace, který přejmenování jen provede, tenhle skill rozhoduje, jestli se má přejmenovat, a pak ho volá.
+description: Skill se použije, když uživatel zadá "/ptydepe", "/ptydepe suggest" nebo "/ptydepe add <termín>", anebo chce prověřit termíny, které Claude používá, přestože je v oboru nikdo nezná – slova převzatá z náhodné zmínky, z překlepu nebo z doslovného překladu, která se pak rozlezla napříč projekty a dokumentací. Výchozí režim "suggest" takové termíny vytipuje, režim "add" vypořádá jeden z nich. Postup, meze rozsahu a vyloučená místa má skill v těle a jsou závazné – bez jeho načtení se hledání ani náhrada nespouští, protože plošná náhrada umí nevratně přepsat soubory mimo verzování. Na rozdíl od /replace, který přejmenuje na zadání a v jednom projektu, tenhle skill rozhoduje, jestli se má přejmenovat, a jede přes všechny repozitáře naráz.
 argument-hint: [suggest | add <termín>]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion]
 ---
@@ -18,7 +18,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 ## Co skill nedělá
 
-- **Neprovádí přejmenování sám.** Mechanickou náhradu včetně odvozených a skloňovaných tvarů dělá `/replace`; tenhle skill rozhoduje, **jestli** se má přejmenovat, a pak ho volá.
+- **Nepřejmenovává na zadání.** `/replace` dostane starý a nový tvar a provede to; tenhle skill nejdřív **rozhoduje, jestli se má přejmenovat vůbec**, a teprve pak nahrazuje – a to napříč všemi repozitáři, ne v jednom projektu.
 - **Neaudituje projekt.** Rozpory mezi soubory řeší `/consistency`, srozumitelnost zápisu `/cleanup`. Tady jde výhradně o pojmenování.
 - **Neposuzuje obsah.** Jestli dokument dává smysl, řeší `/oponent`.
 - **Nesahá na cizí a publikované texty**, ani když jsou verzované – archiv článků, ohlasy, rozbory cizího stylu. Termín v nich není pravidlo, ale doklad, jak to tehdy bylo napsané.
@@ -26,16 +26,11 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 ## Jak je to postavené uvnitř
 
-| Krok | Kdo | Proč zrovna on |
-|---|---|---|
-| Vytipování kandidátů | **vlastní** | Kritérium *„normálně se tomu říká jinak“* neumí změřit žádný nástroj |
-| Inventura výskytů | `git ls-files` + `grep` | Deterministické a nula tokenů |
-| Rozhodnutí o náhradě | **vlastní, s uživatelem** | Jádro skillu |
-| Náhrada v souborech | **`/replace`**, jednou na každý repozitář | Umí odvozené tvary včetně české skloňované varianty a končí kontrolním průchodem |
-| Kontrola shody a repetic | **vlastní** | `/replace` řeší tvary, ne to, že se změnou termínu změnil rod |
-| Záznam a ověření | **vlastní** | |
+**Skill si dělá všechno sám**, delegace na `/replace` se neosvědčila a 7. 9. 2026 vypadla: umí odvozené tvary, ale ne to, co náhradu termínu doopravdy komplikuje – změnu rodu a s ní shodu přívlastků, homonyma, opačné významy a repetice, které náhrada vyrobí. Ve třiadvaceti termínech jednoho dne nebyl použitelný ani jednou.
 
-**Volání `/replace` je implementační detail, ne rozhraní** – dá se kdykoliv vyměnit za vlastní skript. Závazné je: rozhodnutí se nedělá bez uživatele, starý termín zůstane zapsaný v `PTYDEPE.md` a nikde jinde, a běh končí doloženým kontrolním průchodem.
+**Náhrada se proto píše jako mapa frází, ne jako záměna slova.** Ke každé vazbě se starým termínem se napíše její nová podoba i se shodou (*„vyber čtyři až pět úhlů"* → *„vyber čtyři až pět hledisek"*), a teprve ta mapa se pustí přes soubory z `git ls-files`. Je to pracnější než `sed` a je to schválně: plošná záměna slova rozbije každou větu, kde se změnil rod nebo kde slovo znamená něco jiného.
+
+**Závazné je** rozhodnutí, ne mechanika: náhrada se nedělá bez uživatele, starý termín zůstane zapsaný v `PTYDEPE.md` a nikde jinde, a běh končí doloženým kontrolním průchodem. Jak se ta náhrada technicky provede, je implementační detail.
 
 ------
 
@@ -99,9 +94,9 @@ Vypiš přehled ke schválení: počet výskytů, soubory, vyloučená místa a 
 
 ## Fáze 5 – Náhrada
 
-**Pusť `/replace` jednou na každý dotčený repozitář**, se starým a novým tvarem a se seznamem vyloučených míst. Odvozené a skloňované tvary jsou jeho práce, ne tvoje.
+**Sestav mapu frází, ne seznam slov.** Ke každé vazbě, ve které se starý termín vyskytuje, napiš její novou podobu i se shodou – vytáhni si je předem (`grep` na okolí termínu) a projdi je očima. Teprve pak mapu pusť přes soubory z `git ls-files`.
 
-Pak zkontroluj to, co `/replace` neumí, protože to není o tvarech:
+Pak zkontroluj to, co ani ta nejlepší mapa nezachytí, protože to není o tvarech:
 
 - **Shodu rodu.** Změní-li se rod, mění se přívlastky i vztažná zájmena: *„každý má jediný hledisko“* místo *„jediné“*. Projdi diff a hledej mužské koncovky před novým slovem středního rodu.
 - **Repetice.** Náhrada vyrobí věty typu *„vypnutá kontrola se hlásí: kontrola, o které nikdo neví… tváří se jako kontrola“*. Ty se přepisují celé, ne slovem.

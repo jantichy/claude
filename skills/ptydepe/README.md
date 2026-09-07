@@ -51,7 +51,7 @@ Ze `add`, po dokončení:
 
 ## Co nedělá
 
-- **Neprovádí přejmenování sám** – tu část dělá [`/replace`](../replace/README.md), který umí i skloňované tvary a názvy souborů.
+- **Nepřejmenovává na zadání** – to umí [`/replace`](../replace/README.md). Tenhle skill nejdřív rozhoduje, jestli se má přejmenovat vůbec.
 - **Neaudituje projekt ani nekontroluje, jestli dokumentace dává smysl.** Jde výhradně o pojmenování.
 - **Nesahá na publikované a cizí texty**, ani když jsou ve verzování. Termín v archivu článku je doklad, ne pravidlo.
 - **Nezakládá slovníček pojmů vaší domény.** To je jiná věc: ten vysvětluje pojmy oboru, tenhle skill ruší vymyšlené.
@@ -61,7 +61,7 @@ Ze `add`, po dokončení:
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/ptydepe
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill si vede slovník rozhodnutých termínů v `~/.claude/PTYDEPE.md`. Ten si vytvoří sám při prvním běhu, ale **musíte si ho naimportovat do svého `~/.claude/CLAUDE.md`**, jinak o dohodnutých termínech Claude v dalších sessions neví a začne je zavádět znovu. Náhradu deleguje na skill [`/replace`](../replace/README.md) – bez něj se zastaví u návrhu.
+Skill si vede slovník rozhodnutých termínů v `~/.claude/PTYDEPE.md`. Ten si vytvoří sám při prvním běhu, ale **musíte si ho naimportovat do svého `~/.claude/CLAUDE.md`**, jinak o dohodnutých termínech Claude v dalších sessions neví a začne je zavádět znovu.
 
 ---
 
