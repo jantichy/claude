@@ -13,21 +13,27 @@ Zapíná/vypíná autocommit pro aktuální projekt – Claude pak v průběhu p
 
 Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md`. Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. Nadpis `## Autocommit v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Hledá se tedy nadpis znějící přesně `## Autocommit`. Najdeš-li sekci `Autocommit` na jiné úrovni nebo zanořenou pod jiným nadpisem – typicky pod zaniklou sekcí `## Automatické akce`, která zastřešovala jediný podnadpis –, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar. **To platí pro projektový `CLAUDE.md`** – ten patří projektu a přepisovat v něm mimochodem cizí sekce skillu nepřísluší. **Globální `~/.claude/CLAUDE.md` je jiný případ:** definici mechanismu do něj zapisuje sám, takže starý tvar srovná rovnou a jen to oznámí (viz režim `on`).
 
-## Postup
+## Co skill nedělá
 
-### Zjisti projekt root
+- **Necommituje ani nepushuje.** Zapisuje přepínač; commituje pak Claude při běžné práci podle pravidla v `~/.claude/CLAUDE.md`, *Autocommit v projektech*.
+- **Nezakládá projekt ani nenastavuje git.** Celé nastavení projektu včetně autocommitu vede `/project`, který se na něj ptá jako na jeden ze svých kroků. Tenhle skill je přepínač pro projekt, který už existuje.
+- **Nedorovnává projekt na dnešní standardy.** Starý tvar sekce v projektovém `CLAUDE.md` ohlásí a srovnání nabídne, ale sám nic nemigruje – od toho je `/project` v režimu `adopt`.
 
-Najdi `.git` pomocí **Glob** (NIKDY nespouštěj `git` přes Bash – červená chyba při nenulovém exit kódu by uživatele zbytečně vyděsila). Zkus patterny `.git`, pak `../.git`, `../../.git`, `../../../.git` (max 3 úrovně výš). Projekt root = adresář obsahující `.git`.
+## Fáze 0 – Pre-flight
 
-**Pozor na worktree layout.** Najdeš-li vedle `.git` také `.bare/`, stojíš v kořeni kontejneru, který není pracovní strom – projektový `CLAUDE.md` je pak `<kontejner>/main/CLAUDE.md`, ne ten v kořeni. Ten v kořeni je jen stub s popisem layoutu a sekce `## Autocommit` do něj **nepatří**. Pravidlo i s tabulkou je v `~/Dev/context/worktree/worktree.md`, sekce *Jak si skill najde projektový adresář*.
+Společný začátek je v `~/.claude/skills/PREFLIGHT.md`; platí z něj **body 1 a 2** – kořen projektu (včetně worktree layoutu) a projektový `CLAUDE.md`. **Bod 3 a dál neplatí**: skill nic nespouští, necommituje a na kód nesahá, takže stav pracovního stromu ani kontrakt příkazů jeho běh neovlivní.
 
-Pokud `.git` nenajdeš, oznam „Aktuální adresář není git repozitář.“ a skonči **bez jakéhokoliv dalšího příkazu**.
+**Vlastní odchylka:** `.git` hledej **výhradně přes Glob**, nikdy `git` přes Bash – nenulový návratový kód by vyrobil červenou chybu a zbytečně vyděsil uživatele.
 
-### Zjisti stav
+## Fáze 1 – Zjisti stav
+
+**Ve worktree layoutu sekce do kořene kontejneru nepatří** – ten je jen stub s popisem layoutu, přepínač patří do `<kontejner>/main/CLAUDE.md`. Tabulka je v `~/Dev/context/worktree/worktree.md`, sekce *Jak si skill najde projektový adresář*.
 
 Stav zjisti podle definice v *Co skill dělá* výš – **obě možná umístění projektového `CLAUDE.md`**, kanonické místo nadpisu i to, že nadpis v globálním souboru se nepočítá. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
 
 **Přečti si i text pod nadpisem a ověř, že netvrdí opak.** Stav nese nadpis, ne ta věta – sekce s tělem „Autocommit je vypnutý.“ tedy znamená **zapnuto**, což je přesně to nedorozumění, které stojí za ověření. Najdeš-li rozpor, **nepokračuj mlčky**: ohlas ho, řekni, jak ho čteš, a nech uživatele rozhodnout, co má platit. Sekci sice píše skill, ale ruční zásah do `CLAUDE.md` je běžný a zrovna tenhle je tichý – autocommit by se choval opačně, než co si člověk v souboru přečte.
+
+## Fáze 2 – Proveď režim
 
 ### `status` (nebo žádný argument)
 
@@ -57,6 +63,11 @@ Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
 Pokud je už vypnutý → jen oznam, nic neměň. Jinak odstraň sekci `## Autocommit` z projektového `CLAUDE.md`.
 
-## Po dokončení
+## Fáze 3 – Závěr
 
-Oznam výsledný stav.
+Oznam výsledný stav a co jsi kvůli němu změnil – u `on` obě sekce, u `off` odstraněnou sekci, u `status` nic. Ohlásil-li jsi cestou starý tvar nebo rozpor mezi nadpisem a textem pod ním, zopakuj to i tady; jinak to zapadne mezi ostatní výpisy.
+
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `Autocommit je v projektu <jméno> <zapnutý|vypnutý> a zapsaný v <soubor>, můžeš pracovat dál.`
+- `Nastavení hotové není – brání tomu: <konkrétní seznam>.`

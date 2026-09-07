@@ -27,7 +27,7 @@ Claude si najde kořen projektu, zapíše přepínač do jeho instrukcí a od t�
 ## Co nedělá
 
 - **Necommituje sám o sobě** – jen zapíná režim, ve kterém to dělá Claude při běžné práci.
-- **Nenastavuje Git ani remote.** Není-li adresář repozitář, řekne to a skončí.
+- **Nenastavuje Git ani remote** a nezakládá projekt. Není-li adresář repozitář, řekne to a skončí; celé nastavení projektu vede `/project`, který se na autocommit ptá jako na jeden ze svých kroků.
 - **Nerozhoduje, kde se to hodí.** To je vaše volba; skill ji jen provede.
 
 ## Jak si ho nainstalovat

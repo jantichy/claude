@@ -710,7 +710,7 @@ class SouladSNormou(unittest.TestCase):
 
     #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
     MIGRACE = {
-        "attack", "autocommit", "breakdown", "cleanup", "consistency",
+        "attack", "breakdown", "cleanup", "consistency",
         "implement", "oponent", "project", "release", "replace", "report",
         "review", "specify", "transcript",
     }
