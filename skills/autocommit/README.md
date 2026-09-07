@@ -4,22 +4,23 @@ Zapíná pro jeden konkrétní projekt režim, ve kterém Claude po každém dok
 
 ## Co umí
 
-- **`/autocommit on`** – zapne autocommit pro projekt, ve kterém právě stojíte.
-- **`/autocommit off`** – vypne ho a přepínač z instrukcí projektu zase odstraní.
+- **`/autocommit enable`** – zapne autocommit pro projekt, ve kterém právě stojíte.
+- **`/autocommit disable`** – vypne ho a přepínač z instrukcí projektu zase odstraní.
 - **`/autocommit status`** (nebo `/autocommit` bez ničeho) – řekne, jak na tom projekt je.
+- Narazí-li na zápis ve starším tvaru, srovná ho na dnešní a řekne to.
 - Rozpozná i projekty, které mají instrukce ve složce `.claude/`, a nenechá se zmást uspořádáním s víc pracovními adresáři na větev.
 
 ## Proč zrovna tenhle
 
 - **Přepínač je vidět přímo v projektu**, ne v nějaké skryté konfiguraci – kdokoli si otevře projekt, hned ví, jaký režim tam platí.
 - **Stav se ukládá i zjišťuje týmž zápisem**, takže se nemůže rozejít to, co je nastavené, s tím, co se opravdu děje.
-- **Nezapne se omylem globálně.** Popis mechanismu a přepínač jsou schválně dvě různé věci, takže se nestane, že by se autocommit choval jako zapnutý všude.
-- **Když najde nastavení na nesprávném místě**, řekne to a nabídne srovnání – do instrukcí projektu tiše nesáhne. Vlastní sekci ve vašich globálních instrukcích si srovná sám a oznámí to.
+- **Nezapne se omylem globálně.** Pravidla se do projektu vkládají spolu s přepínačem, takže platí jen tam, kde jste je zapnuli – ne všude.
+- **Když najde nastavení na nesprávném místě**, srovná ho a řekne to – jinak by v projektu zůstal přepínač, který nic nespíná. Zbytku vašich instrukcí se nedotkne.
 
 ## Jak se to používá
 
 ```
-/autocommit on
+/autocommit enable
 ```
 
 Claude si najde kořen projektu, zapíše přepínač do jeho instrukcí a od té chvíle commituje po každém logickém celku.
@@ -36,7 +37,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/autocommit a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Nic dalšího potřeba není. Aby přepínač něco znamenal, musí být pravidlo autocommitu i ve vašich globálních instrukcích – **skill si ho při prvním zapnutí doplní sám**, takže stačí spustit `/autocommit on`.
+Nic dalšího potřeba není. Pravidla jsou součástí skillu a instalují se s ním; do projektu si je vloží sám při prvním zapnutí.
 
 ---
 

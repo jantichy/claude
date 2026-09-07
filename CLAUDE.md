@@ -34,9 +34,3 @@ Zbytek korpusu se nenačítá paušálně: `archive/` (všechny Honzovy texty), 
 
 Když identifikuješ znovupoužitelnou doménovou znalost, která se může hodit ve více projektech, ale měla by zůstat soukromá, protože je citlivá nebo patří do osobního know-how, navrhni její extrakci do `~/Dev/context/`.
 
-------
-
-## Autocommit v projektech
-
-Stav autocommitu pro projekt poznáš podle přítomnosti nadpisu `## Autocommit` v projektovém `CLAUDE.md`. Nadpis téhle sekce se od něj schválně liší, aby ji detekce nebrala jako přepínač – tenhle soubor mechanismus definuje, nezapíná ho. Kdykoli je v projektu zapnutý autocommit, commituj po každé zásadní ucelené změně (ne po každém dílčím kroku, ale po každém logickém celku). Pokud má repo nastavený nějaký git remote, po commitu hned pushuj.
-

@@ -330,7 +330,7 @@ Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a v
 
 ## Krok 9 – Autocommit
 
-Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď totéž co `/autocommit on` (viz `~/.claude/skills/autocommit/SKILL.md`).
+Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď totéž co `/autocommit enable` (viz `~/.claude/skills/autocommit/SKILL.md`).
 
 *`adopt`:* nejdřív **zjisti aktuální stav** – hledej sekci `Autocommit` v projektovém `CLAUDE.md` **bez ohledu na úroveň nadpisu** (`##` i `###`) a bez ohledu na to, pod čím je zanořená. Aktuální stav uveď v otázce, ať uživatel ví, co mění. Je-li zapnutý, ale zapsaný jinak než nadpisem `## Autocommit` v nejvyšší úrovni – typicky podnadpisem pod zaniklou sekcí `## Automatické akce` –, **srovnej ho na dnešní tvar** a řekni to; jinak ho `/autocommit` příště nenajde a bude ho hlásit jako vypnutý.
 

@@ -209,27 +209,6 @@ class SkillOdkazy(unittest.TestCase):
                     self.fail(f"{skill}: odkaz na vnitřek `/review` mimo kontext volání:\n  {line.strip()}")
 
 
-class SablonyProtiOriginalu(unittest.TestCase):
-    """Text, který skill zapisuje jinam, se nesmí rozejít se svým originálem.
-
-    `/autocommit` nese opsané znění sekce, kterou má zapsat do globálního
-    `CLAUDE.md`. Duplicitu nelze odstranit – skill ten text musí umět zapsat
-    i tam, kde ještě není –, takže ji aspoň hlídáme. Rozejít se umí tiše:
-    přeformuluje se originál a kopie ve skillu zůstane stará.
-    """
-
-    def _odstavec_pod_nadpisem(self, text, nadpis):
-        i = text.index(nadpis)
-        return text[i:].split("\n\n")[1].strip()
-
-    def test_sablona_autocommitu_sedi_s_claude_md(self):
-        claude_md = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-        original = self._odstavec_pod_nadpisem(claude_md, "## Autocommit v projektech")
-        skill = (ROOT / "skills/autocommit/SKILL.md").read_text(encoding="utf-8")
-        self.assertIn(original, "\n".join(l.strip() for l in skill.splitlines()),
-            "šablona v /autocommit se rozešla se zněním v CLAUDE.md, *Autocommit v projektech*")
-
-
 class KanonickyTvarAutocommitu(unittest.TestCase):
     """Přepínač autocommitu se pozná jen podle nadpisu, takže na jeho tvaru stojí funkce.
 
@@ -239,25 +218,34 @@ class KanonickyTvarAutocommitu(unittest.TestCase):
     venku žádná brána nečte, o ty se stará `/project` v režimu `adopt`.
     """
 
-    def test_projektovy_claude_md_ma_prepinac_na_kanonickem_miste(self):
+    def test_projektovy_claude_md_ma_prepinac_i_import(self):
+        """Nadpis bez importu je přepínač, který nic nespíná.
+
+        Pravidla autocommitu žijí ve skillu a do projektu se dostanou jedině
+        tím importem. Sekce bez něj tedy vypadá zapnutě, ale Claude v takovém
+        projektu nemá podle čeho commitovat – a pozná se to až tím, že se
+        nic neděje.
+        """
         projektovy = (ROOT / ".claude/CLAUDE.md").read_text(encoding="utf-8")
         self.assertIn("\n## Autocommit\n", projektovy,
             "projektový CLAUDE.md nemá přepínač na kanonickém místě")
+        self.assertIn("@~/.claude/skills/autocommit/autocommit.md", projektovy,
+            "sekce Autocommit neimportuje pravidla ze skillu")
         self.assertNotIn("## Automatické akce", projektovy,
             "zastřešující sekce nad jediným podnadpisem se vrátila")
 
-    def test_globalni_claude_md_ma_definici_na_kanonickem_miste(self):
-        """Druhá strana mechanismu: definice se nesmí stát přepínačem.
+    def test_globalni_claude_md_autocommit_nedefinuje(self):
+        """Druhá strana mechanismu: definice se do globálního souboru nesmí vrátit.
 
-        `/autocommit on` starý tvar umí srovnat, ale to je migrační tolerance
-        pro cizí instalace. Tenhle soubor má být kanonický sám od sebe – jinak
-        se na tolerantní větev spoléhá právě tam, kde se testuje.
+        Dokud tam sekce *Autocommit v projektech* stála, rozbalovala se do každé
+        session v každém projektu – tedy i tam, kde je autocommit vypnutý.
+        Pravidla dnes drží `skills/autocommit/autocommit.md` a importuje si je
+        projekt, který je zapnul. Kopie v globálním souboru by ten import
+        obcházela a platila všude.
         """
         globalni = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-        self.assertIn("\n## Autocommit v projektech\n", globalni,
-            "globální CLAUDE.md nemá definici mechanismu na kanonickém místě")
-        self.assertNotIn("## Automatické akce", globalni,
-            "zastřešující sekce nad jediným podnadpisem se vrátila")
+        self.assertNotIn("## Autocommit v projektech", globalni,
+            "definice autocommitu se vrátila do globálního CLAUDE.md")
 
 
 class NosneCasti(unittest.TestCase):
