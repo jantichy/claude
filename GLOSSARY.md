@@ -9,6 +9,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 - **Než sáhneš po termínu, který není v oboru zavedený, hledej ho tady.** Když tu není, řekni rovnou, co jím myslíš, a navrhni ho zapsat.
 - **Zapsaný termín se používá přesně v uvedeném rozsahu.** Rozšířit ho na příbuznou věc je táž vada jako zavést nový – čtenář bere jméno jako tvrzení o hranicích.
 - **Když se termín změní, mění se všude naráz** (`RULES.md`, *Propagace změny*; nástroj je `/replace`), a to i v `~/Dev`, nejen v konfiguraci.
+- **Starý termín tu zůstává zapsaný, a jenom tu.** Ve všech ostatních souborech se nahradí beze stopy; tady u nástupce stojí věta „nahrazuje …“ i s důvodem, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo.
 - **Neptej se na týž termín podruhé.** Co je tady, je rozhodnuté.
 
 ## Termíny
@@ -30,3 +31,9 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Nahrazuje dřívější „viséc" / „viséci" / „viséce"** (2026-09-07). To slovo v češtině neexistuje – vzniklo z „zůstalo to viset" a začalo se skloňovat. Sloveso je v pořádku, podstatné jméno byl výmysl.
 
 **Nejsou to nedodělané konce.** Ta práce je dodělaná, jen ji rozbil zásah jinde – proto „loose ends“ ani „nedotažené konce“ nesedí.
+
+### vata
+
+**Text, který nic nepřidává:** hodnotící adjektiva („úžasný“, „skvělý“), zdvořilostní obraty, motivační moudra, úvod o tom, že autor chce něco sdělit. Termín i katalog konkrétních případů drží `~/Dev/context/text/text.md`, *Vata a zakázané obraty*.
+
+**Neříkej tomu „voda"** (2026-09-07). V češtině to zavedené není – je to nejspíš kalk z ruského *вода*. „Vata“ je zavedená a stojí v redakčním standardu jako název sekce, takže druhé jméno pro tutéž věc jen tříští termín.
