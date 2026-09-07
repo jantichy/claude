@@ -157,7 +157,7 @@ U každého rizika:
 3. **Neprázdnost** – má *Kde vědomě zaostáváme* aspoň jednu položku? Má každé riziko vyplněné *Promítnutí do produktu*?
 4. **Vymyšlené věci** – je tam jméno, číslo nebo tvrzení, které jsi neměl od uživatele ani ze zdroje? To je nález.
 
-**Oponentura.** Nabídni `/oponent docs/competition.md` – rešerši psal ten, kdo si zároveň přeje, aby produkt vyšel, a to je přesně ta zaujatost, kterou má posudek chytat. Panel úhlů si sestaví sám.
+**Oponentura.** Nabídni `/oponent docs/competition.md` – rešerši psal ten, kdo si zároveň přeje, aby produkt vyšel, a to je přesně ta zaujatost, kterou má posudek chytat. Panel hledisek si sestaví sám.
 
 **Předání.** Po schválení nabídni `/specify`. Ten si dokumenty najde sám a **nebude se ptát na to, co je v nich** – zejména sekci *Co poměřujeme* bere jako hotový vstup.
 

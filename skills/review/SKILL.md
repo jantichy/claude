@@ -9,14 +9,14 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 ## Co skill dělá
 
-Prověří hotovou práci **z několika nezávislých úhlů naráz** a nálezy projde s uživatelem.
+Prověří hotovou práci **z několika nezávislých hledisek naráz** a nálezy projde s uživatelem.
 
 Stojí na třech vrstvách, které se liší cenou i spolehlivostí – a pouštějí se v tomhle pořadí, protože každá další je dražší a méně jistá než ta před ní:
 
 | Vrstva | Čím se dělá | Cena | Spolehlivost |
 |---|---|---|---|
 | **1. Deterministická** | nástroje projektu (typecheck, lint, audit závislostí, scan tajemství, statická analýza, mutation testing) | nula tokenů | absolutní, výsledek se nedá rozporovat |
-| **2. Panel rolí** | paralelní subagenti, každý s jedním úhlem pohledu | vysoká | dobrá, ale hlásí i to, co není |
+| **2. Panel rolí** | paralelní subagenti, každý s jedním hlediskem | vysoká | dobrá, ale hlásí i to, co není |
 | **3. Ověření nálezů** | nezávislý skeptik, který se nález snaží vyvrátit | střední | tohle je to, co dělá výstup použitelným |
 
 **Bez třetí vrstvy je panel k ničemu** – zavalí tě pravděpodobně znějícími nálezy, po třetím falešném ho začneš ignorovat a čtvrtý, pravý, přehlédneš.
@@ -196,10 +196,10 @@ Vlastní zadání piš jen pro role, které vestavěný protějšek nemají – 
 ### Zadání pro pracovní roli
 
 ```
-Prověř zadané soubory z jediného úhlu: <ROLE – např. „co se stane, když volání
+Prověř zadané soubory z jediného hlediska: <ROLE – např. „co se stane, když volání
 cizího systému selže nebo se zasekne">.
 
-Nic jiného nehlas. Jiné úhly pokrývají jiní agenti; když nahlásíš nález mimo
+Nic jiného nehlas. Jiná hlediska pokrývají jiní agenti; když nahlásíš nález mimo
 svou roli, jen zdvojíš práci a zašumíš výstup.
 
 PODKLAD:

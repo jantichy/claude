@@ -6,11 +6,11 @@
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
-Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, datový model nebo koncepci – dokument, na kterém jste s Claudem dlouho pracovali. **Právě proto na něj ani jeden z vás nemá nezávislý pohled:** spoluautor nevidí, co v dokumentu chybí, protože to má v hlavě, a nevidí, co je slabé, protože si to sám odsouhlasil. Tenhle skill pošle na dokument několik oponentů, kteří **nevědí nic z vaší konverzace** a čtou jenom soubory, každého z jiného úhlu. Jejich námitky pak projde s vámi jednu po druhé.
+Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, datový model nebo koncepci – dokument, na kterém jste s Claudem dlouho pracovali. **Právě proto na něj ani jeden z vás nemá nezávislý pohled:** spoluautor nevidí, co v dokumentu chybí, protože to má v hlavě, a nevidí, co je slabé, protože si to sám odsouhlasil. Tenhle skill pošle na dokument několik oponentů, kteří **nevědí nic z vaší konverzace** a čtou jenom soubory, každého z jiného hlediska. Jejich námitky pak projde s vámi jednu po druhé.
 
 ## Co umí
 
-1. **Vybere úhly pohledu z katalogu sedmnácti** – a vybírá je podle **vlastnosti dokumentu**, ne podle jeho typu: „slibuje výsledek", „sbírají se údaje o lidech", „stojí to na cizí službě". Výběr vám předloží ke schválení dřív, než kdokoliv začne pracovat.
+1. **Vybere hlediska z katalogu sedmnácti** – a vybírá je podle **vlastnosti dokumentu**, ne podle jeho typu: „slibuje výsledek", „sbírají se údaje o lidech", „stojí to na cizí službě". Výběr vám předloží ke schválení dřív, než kdokoliv začne pracovat.
 2. **Katalog má dvě poloviny.** *Metody* říkají, jak se dívat – vnitřní rozpor, co chybí, nevyslovené předpoklady, pohled zpětně z budoucího selhání, alternativy, měřitelnost cíle, zneužití, nevratnost, čtenář bez kontextu. *Domény* říkají, na co se dívat – ekonomika provozu, osobní údaje, závazky vůči druhé straně, data a proveditelnost, nepřítomní dotčení, závislosti, konkurence, cílová skupina.
 3. **Každou závažnou námitku pošle ověřit** někomu dalšímu, kdo má jediný úkol: **vyvrátit ji**. Co ověření nepřežije, se vám vůbec nezobrazí.
 4. **Projde s vámi nálezy jeden po druhém**, od nejzávažnějšího, a u každého nabídne konkrétní varianty řešení – ne jen „opravit".
@@ -22,11 +22,11 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 
 - **Oponenti nemají váš kontext.** To není omezení, ale celý smysl: nezávislost se nedá nasimulovat u někoho, kdo u vzniku dokumentu byl.
 - **Vždycky dostanou i seznam toho, co jste vědomě zamítli** – i s důvody. Bez toho by první běh přinesl námitky, které umíte vyvrátit z hlavy, a druhý byste už nepustili.
-- **Rozdílné úhly, ne víc stejných kritiků.** Redundantní oponenti najdou tolikrát totéž, kolik jich pustíte.
+- **Rozdílné hlediska, ne víc stejných kritiků.** Redundantní oponenti najdou tolikrát totéž, kolik jich pustíte.
 - **Metoda se nikdy nepouští bez domény.** „Podívej se na to kriticky" je slepé; „udělej pohled zpětně z budoucího selhání na ten cenový model" je zadání.
 - **Ověřovatel je záměrně v jiné situaci než oponent.** Oponent, který nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanismus.
 - **Filtrovat nálezy nesmí spoluautor.** Kdyby se falešné vyřazovaly až v diskuzi, dělal by to přesně ten člověk, jehož slepotu má skill obcházet.
-- **Řekne, který úhel vědomě nevzal a proč.** Nevybraný úhel totiž nevrátí nula nálezů, ale neexistenci – a ta by žádným počítadlem neprošla.
+- **Řekne, které hledisko vědomě nevzal a proč.** Nevybrané hledisko totiž nevrátí nula nálezů, ale neexistenci – a ta by žádným počítadlem neprošla.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují, a závěr nikdy nezní „dokument je v dobrém stavu" – to není verdikt oponenta, ale autora.
 
 ## Jak se to používá
@@ -78,4 +78,4 @@ Skill se odkazuje na strukturu projektové dokumentace, kterou používám já �
 
 ### Požadavky a omezení
 
-Běží nad textem, ne nad kódem. Rozumný rozsah předmětu je zhruba do pěti dokumentů; nad tím se posudek rozmělní a skill se zeptá, co je jádro. Panel i ověřování běží na nejsilnějším modelu – je to **z celé sady nejdražší běh**, a proto se u drobné změny přeskakuje. Část úhlů si podle potřeby dohledává informace na webu.
+Běží nad textem, ne nad kódem. Rozumný rozsah předmětu je zhruba do pěti dokumentů; nad tím se posudek rozmělní a skill se zeptá, co je jádro. Panel i ověřování běží na nejsilnějším modelu – je to **z celé sady nejdražší běh**, a proto se u drobné změny přeskakuje. Část hledisek si podle potřeby dohledává informace na webu.

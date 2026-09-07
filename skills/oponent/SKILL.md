@@ -1,6 +1,6 @@
 ---
 name: oponent
-description: Skill se použije, když uživatel zadá "/oponent", nebo chce nezávislý oponentský posudek na dokument, který spolu psali – strategii, pozicování, PRD, koncepci, cenotvorbu, datový model, analytickou dokumentaci. Pohled čerstvýma očima z několika úhlů: co nedává smysl, co si odporuje, co nebude fungovat, co chybí.
+description: Skill se použije, když uživatel zadá "/oponent", nebo chce nezávislý oponentský posudek na dokument, který spolu psali – strategii, pozicování, PRD, koncepci, cenotvorbu, datový model, analytickou dokumentaci. Pohled čerstvýma očima z několika hledisek: co nedává smysl, co si odporuje, co nebude fungovat, co chybí.
 argument-hint: [dokument]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, WebSearch, WebFetch]
 ---
@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Web
 
 Uživatel má hotový nebo rozpracovaný dokument, na kterém jste spolu dlouho pracovali. Právě proto na něj **nemáš nezávislý pohled** – spoluautor nevidí, co v dokumentu chybí, protože to má v hlavě, a nevidí, co je slabé, protože si to sám odsouhlasil.
 
-Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každého z jiného úhlu, a jejich nálezy s uživatelem probere jeden po druhém.
+Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každého z jiného hlediska, a jejich nálezy s uživatelem probere jeden po druhém.
 
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakládání**: navazuje na `/specify` a předává na `/breakdown`. Do životního cyklu patří proto, že jinak návrh neměří nikdo – `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celým životním cyklem jako korektní. Přeskakuje se stejným pravidlem jako každý jiný krok: drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano – a přeskočení se řekne nahlas i s důvodem.
 
@@ -25,9 +25,9 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakl�
 
 **Vědomé volby, ať je nikdo neřeší znovu** (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*):
 
-- **Úhel *Vnitřní rozpor* se s `/consistency` částečně překrývá a je to přijatá cena.** Ano, „sedí čísla a výčty“ najde i `/consistency`. Ale oponentura běží i nad dokumentem, který `/consistency` nevidí (cizí podklad, text mimo projekt), a rozpor mezi dvěma tvrzeními ve věci samé je jiná práce než rozpor mezi součtem a tabulkou. Nález se vrací při každé oponentuře skillu; není to omyl, je to volba.
-- **Katalog se jednou vědomě zmenšil z devatenácti na sedmnáct** a ty úhly nepatří zpátky: *Hraniční případy* splynuly s *Co chybí* (byl to týž generátor okrajů dvakrát), *Skeptik* s *Předpoklady* (tatáž otázka zprava a zleva) a *Technická proveditelnost* s *Daty* (měla nejchudší zadání a nad datovým modelem sahala po témže). Navrhne-li je někdo znovu jako „chybějící pokrytí“, tohle je odpověď. Naopak **Reverzibilita a závislosti se rozdělila na dva úhly**, protože držela dvě různé otázky najednou – proto devatenáct minus tři sloučení plus jedno rozdělení dá sedmnáct, ne šestnáct.
-- **Katalog nemá strop na počet úhlů.** Brzdou je jen kontrola překryvu při přidávání (viz Fáze 1). Tvrdý strop by nutil vyhodit úhel pokaždé, když nějaký skutečně chybí – a chybějící úhel nevrátí nula nálezů, ale neexistenci.
+- **Hledisko *Vnitřní rozpor* se s `/consistency` částečně překrývá a je to přijatá cena.** Ano, „sedí čísla a výčty“ najde i `/consistency`. Ale oponentura běží i nad dokumentem, který `/consistency` nevidí (cizí podklad, text mimo projekt), a rozpor mezi dvěma tvrzeními ve věci samé je jiná práce než rozpor mezi součtem a tabulkou. Nález se vrací při každé oponentuře skillu; není to omyl, je to volba.
+- **Katalog se jednou vědomě zmenšil z devatenácti na sedmnáct** a ta hlediska nepatří zpátky: *Hraniční případy* splynuly s *Co chybí* (byl to týž generátor okrajů dvakrát), *Skeptik* s *Předpoklady* (tatáž otázka zprava a zleva) a *Technická proveditelnost* s *Daty* (měla nejchudší zadání a nad datovým modelem sahala po témže). Navrhne-li je někdo znovu jako „chybějící pokrytí“, tohle je odpověď. Naopak **Reverzibilita a závislosti se rozdělila na dva hlediska**, protože držela dvě různé otázky najednou – proto devatenáct minus tři sloučení plus jedno rozdělení dá sedmnáct, ne šestnáct.
+- **Katalog nemá strop na počet hledisek.** Brzdou je jen kontrola překryvu při přidávání (viz Fáze 1). Tvrdý strop by nutil vyhodit hledisko pokaždé, když nějaký skutečně chybí – a chybějící hledisko nevrátí nula nálezů, ale neexistenci.
 
 ## Vztah k ostatním skillům
 
@@ -47,7 +47,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakl�
 
 **Nejdřív se podívej, jestli neexistuje `.claude/run/oponent.json`** – přerušený běh. Vzniká na konci Fáze 4; nabídni navázání dřív, než začneš cokoliv počítat znovu.
 
-**Pak zjisti, jestli nad tímhle předmětem oponentura už neběžela** – `docs/done.md`, sekce `## Průchody životním cyklem`. Najdeš-li záznam, přečti z něj panel úhlů a počty nálezů: Fáze 1 z toho vyjde při volbě úhlů a Fáze 6 podle toho pozná, jestli smí srovnávat počty. Porovnej i hash s aktuálním – `git log --oneline <zapsaný hash>..HEAD` ukáže, co se od té doby změnilo.
+**Pak zjisti, jestli nad tímhle předmětem oponentura už neběžela** – `docs/done.md`, sekce `## Průchody životním cyklem`. Najdeš-li záznam, přečti z něj panel hledisek a počty nálezů: Fáze 1 z toho vyjde při volbě hledisek a Fáze 6 podle toho pozná, jestli smí srovnávat počty. Porovnej i hash s aktuálním – `git log --oneline <zapsaný hash>..HEAD` ukáže, co se od té doby změnilo.
 
 **Zkontroluj, že to má smysl oponovat:**
 
@@ -63,24 +63,24 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakl�
 
 ------
 
-## Fáze 1 – Volba úhlů pohledu
+## Fáze 1 – Volba hledisek
 
-**Nepouštěj stejné kritiky.** Redundantní subagenti najdou tolikrát totéž, kolik jich pustíš. Diverzita úhlů chytá selhání, která opakování nechytí.
+**Nepouštěj stejné kritiky.** Redundantní subagenti najdou tolikrát totéž, kolik jich pustíš. Diverzita hledisek chytá selhání, která opakování nechytí.
 
-Vyber **čtyři až pět úhlů** z katalogu níž podle sloupce *Spouštěč*. Je to **vlastnost dokumentu, ne jeho typ** – „PRD“ nebo „cenotvorba“ by propustily skoro celý katalog a filtr by nefiltroval; „slibuje výsledek“ nebo „sbírají se údaje o lidech“ se dá ověřit v textu, který máš před sebou. Výběr **předlož uživateli přes `AskUserQuestion`** předtím, než kohokoliv pustíš – volby *Pustit tak, jak je* / *Vyměnit jeden úhel* / *Vybrat panel znovu*. **Na odpověď se čeká**; do té doby žádný subagent neběží. Prostý výpis nestačí: další odstavec velí pustit panel jedním voláním, takže by se uživatel k výměně dostal až ve chvíli, kdy čtyři agenti na `xhigh` už pracují (`~/.claude/RULES.md`, *Ptej se postupně*).
+Vyber **čtyři až pět hledisek** z katalogu níž podle sloupce *Spouštěč*. Je to **vlastnost dokumentu, ne jeho typ** – „PRD“ nebo „cenotvorba“ by propustily skoro celý katalog a filtr by nefiltroval; „slibuje výsledek“ nebo „sbírají se údaje o lidech“ se dá ověřit v textu, který máš před sebou. Výběr **předlož uživateli přes `AskUserQuestion`** předtím, než kohokoliv pustíš – volby *Pustit tak, jak je* / *Vyměnit jedno hledisko* / *Vybrat panel znovu*. **Na odpověď se čeká**; do té doby žádný subagent neběží. Prostý výpis nestačí: další odstavec velí pustit panel jedním voláním, takže by se uživatel k výměně dostal až ve chvíli, kdy čtyři agenti na `xhigh` už pracují (`~/.claude/RULES.md`, *Ptej se postupně*).
 
-**Vlastní úhel** si vymysli, jen když **žádný z katalogu nepokrývá** to, co je na dokumentu specifické. Pak ale: napiš, který katalogový úhel byl nejbližší a čím se od něj tvůj liší; napiš mu **otázky ve stejném tvaru jako v katalogu** (bez nich dorazí k subagentovi holý název a ten pak najde cokoliv); zařaď ho mezi metody, nebo domény. Osvědčí-li se, **navrhni ho doplnit do katalogu** – jinak se poznatek ztratí a příště se vymýšlí znovu a jinak. Před přidáním ale **porovnej jeho otázky se sloupcem *Ptá se* u všech stávajících úhlů**: sdílí-li s některým víc než jednu otázku, do katalogu nepatří jako nový řádek, ale jako zúžení nebo doplněk toho stávajícího (`~/.claude/RULES.md`, *Detekce konfliktů před přidáním*). Katalog roste snadno a nic ho samo nezmenšuje. Úhel, který jde formulovat jako zúžení existujícího na doménu (*Právo → GDPR a consent*), vlastní úhel není.
+**Vlastní hledisko** si vymysli, jen když **žádný z katalogu nepokrývá** to, co je na dokumentu specifické. Pak ale: napiš, které katalogové hledisko bylo nejbližší a čím se od něj tvoje liší; napiš mu **otázky ve stejném tvaru jako v katalogu** (bez nich dorazí k subagentovi holý název a ten pak najde cokoliv); zařaď ho mezi metody, nebo domény. Osvědčí-li se, **navrhni ho doplnit do katalogu** – jinak se poznatek ztratí a příště se vymýšlí znovu a jinak. Před přidáním ale **porovnej jeho otázky se sloupcem *Ptá se* u všech stávajících hledisek**: sdílí-li s některým víc než jednu otázku, do katalogu nepatří jako nový řádek, ale jako zúžení nebo doplněk toho stávajícího (`~/.claude/RULES.md`, *Detekce konfliktů před přidáním*). Katalog roste snadno a nic ho samo nezmenšuje. Hledisko, které jde formulovat jako zúžení existujícího na doménu (*Právo → GDPR a consent*), vlastní hledisko není.
 
-Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; ostatním se to zakazuje, ať neutíkají od dokumentu.
+Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku; ostatním se to zakazuje, ať neutíkají od dokumentu.
 
-**Metody – jak se dívat.** Dají se přiložit na jakýkoliv dokument; samy o sobě ale nemají věcnou oporu, proto se metodickému úhlu v zadání vždy určí doména, na kterou se má obořit (*Hraniční případy cenového modelu*, *Pre-mortem uvedení kurzu*).
+**Metody – jak se dívat.** Dají se přiložit na jakýkoliv dokument; samy o sobě ale nemají věcnou oporu, proto se metodickému hledisku v zadání vždy určí doména, na kterou se má obořit (*Hraniční případy cenového modelu*, *Pre-mortem uvedení kurzu*).
 
-| Úhel | Ptá se | Spouštěč | Web |
+| Hledisko | Ptá se | Spouštěč | Web |
 |---|---|---|---|
 | **Vnitřní rozpor** | Tvrdí dokument někde něco, co jinde popírá? Sedí čísla, výčty a souhrny s obsahem? Nezůstal tam zbytek po zrušeném konceptu? | dokument vznikal po částech nebo prošel revizemi – je kde nechat zbytek po zrušeném konceptu |  |
 | **Co chybí** | Ne co je špatně, ale co v dokumentu vůbec není a co na jeho okrajích nemá odpověď. **(1)** Vypiš hlavní entity, kroky a pravidla dokumentu a u každého se zeptej, co když nenastane vůbec, nastane víckrát, jen zčásti, spolu s něčím dalším, obráceně, nebo místo něj něco jiného – souběh dvou slev, přechod na vyšší tarif v půlce období, dvojí nárok téhož zákazníka, zrušení uprostřed. Platí to pro pravidlo obchodní a procesní stejně jako pro vstup programu. **(2)** Hlaš jen to, bez čeho podle dokumentu nejde jednat ani rozhodnout: nepojmenovaný vlastník, chybějící kritérium, scénář bez odpovědi. Neptej se na chování kódu, ale na to, jestli dokument na ten případ dává odpověď – a jestli dává jen jednu. Nevypisuj chybějící kapitoly a sekce. | vždy – povinný |  |
-| **Předpoklady a argumentace** | Plyne závěr z toho, co mu předchází? Vypiš předpoklady, na kterých dokument mlčky stojí a nikde je nepojmenovává – co musí platit, aby závěr platil? U každého: jak se pozná, že neplatí, a co z dokumentu padá s ním. Je tvrzení podané jako fakt doopravdy fakt? Nesahej na čísla, právo, data ani technologii – ty mají vlastní úhly. | dokument něco tvrdí o světě, o lidech nebo o budoucnosti a opírá o to závěr; a jako záložní volba, když nesedí žádná doména |  |
-| **Pre-mortem** | Je za osmnáct měsíců a tohle prokazatelně selhalo. Napiš, co se stalo – konkrétní sled událostí, ne obavu. Který předpoklad padl první? Jako jediný úhel smíš skládat příběh napříč doménami: nález, který leží na rozhraní dvou jiných úhlů, jinak nemá majitele. | z dokumentu se bude něco realizovat a stojí to na jednom hlavním scénáři |  |
+| **Předpoklady a argumentace** | Plyne závěr z toho, co mu předchází? Vypiš předpoklady, na kterých dokument mlčky stojí a nikde je nepojmenovává – co musí platit, aby závěr platil? U každého: jak se pozná, že neplatí, a co z dokumentu padá s ním. Je tvrzení podané jako fakt doopravdy fakt? Nesahej na čísla, právo, data ani technologii – ty mají vlastní hlediska. | dokument něco tvrdí o světě, o lidech nebo o budoucnosti a opírá o to závěr; a jako záložní volba, když nesedí žádná doména |  |
+| **Pre-mortem** | Je za osmnáct měsíců a tohle prokazatelně selhalo. Napiš, co se stalo – konkrétní sled událostí, ne obavu. Který předpoklad padl první? Jako jediné hledisko smíš skládat příběh napříč doménami: nález, který leží na rozhraní dvou jiných hledisek, jinak nemá majitele. | z dokumentu se bude něco realizovat a stojí to na jednom hlavním scénáři |  |
 | **Alternativy a řez** | Splnil by týž cíl jednodušší nebo úplně jiný postup? Které varianty autor zvažoval a proč je zamítl – je to zdůvodnění v dokumentu, nebo jen v jeho hlavě? Co se stane, když se nezmění nic? Která část jde vyškrtnout, aniž zbytek přestane dávat smysl? | dokument navrhuje řešení a nejmenuje varianty, které autor zvažoval a zavrhl |  |
 | **Cíl a měřitelnost** | Je napsané, čeho to má dosáhnout? Podle čeho se za rok pozná, že to vyšlo, a podle čeho, že ne? Má cíl číslo, práh a termín, nebo je to próza? Co je vědomě mimo rozsah – a je to napsané, nebo se to jen předpokládá? | dokument si klade cíl nebo slibuje výsledek |  |
 | **Zneužití** | Kdo má motiv to obejít – uživatel, konkurent, robot, insider? Co se dá vytěžit z mezery mezi tím, co dokument slibuje, a tím, co vymáhá? Co jde přečíst, změnit nebo získat zadarmo, aniž na to má někdo nárok? Kde dokument předpokládá, že se aktér chová slušně? | jsou ve hře peníze, osobní údaje, přihlašování nebo cizí vstup |  |
@@ -89,7 +89,7 @@ Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; o
 
 **Domény – na co se dívat.** Nesou znalost oboru, ale bez metody sbírají povrch.
 
-| Úhel | Ptá se | Spouštěč | Web |
+| Hledisko | Ptá se | Spouštěč | Web |
 |---|---|---|---|
 | **Ekonomika provozu** | Sedí čísla? Break-even, cena, marže, kapacita, náklady na provoz. Kdo to bude reálně dělat, jak často a co se stane, když to neudělá? Co vyžaduje ruční zásah? Co se rozbije při desetinásobku a co při desetině? | jsou v něm čísla, ceny, kapacity nebo opakovaná ruční práce | ✔ |
 | **Osobní údaje a souhlas** | Co se sbírá, na jakém právním základu a jak dlouho se to drží? Co dokument slibuje uživateli a co ve skutečnosti dělá? Jde výmaz provést, aniž se rozpadne zbytek? | sbírají se údaje o lidech | ✔ |
@@ -102,24 +102,24 @@ Sloupec *Web* říká, který úhel dostane ve Fázi 2 svolení hledat zvenku; o
 
 **Pravidla výběru:**
 
-- Úhel *Co chybí* ber jako **povinný**, ať je dokument jakýkoliv. Druhý povinný úhel schválně nemáme: dva pevné sloty ze čtyř by z volby podle povahy dokumentu udělaly ozdobu.
+- Hledisko *Co chybí* ber jako **povinný**, ať je dokument jakýkoliv. Druhé povinné hledisko schválně nemáme: dva pevné sloty ze čtyř by z volby podle povahy dokumentu udělaly ozdobu.
 - Vyber **aspoň jednu položku z každého bloku**. Samé domény dají audit a nula oponentur; samé metody obecné kritiky bez věcné opory.
-- **Úhly nerozšiřuj, aby jich stačilo pustit míň.** Vypadá to lákavě – širší úhel přece pokryje víc –, jenže kapacitu neurčuje šířka zadání, ale výstup agenta: ten vrátí pět až deset nálezů, ať má zadání úzké nebo široké. Rozšířením se počet nálezů nezvedne, jen se rozptýlí jejich původ, a přibude riziko úhlu, který „najde cokoliv“. Chybí-li ti pokrytí, přidej úhel, nebo rozšiř jeho *Spouštěč* – nerozmazávej úhel, který máš.
-- Metodický úhel pouštěj **vždy s určenou doménou** – vypiš ji do jeho zadání. Metoda bez domény je slepá.
-- **Kolik jich pustit podle rozsahu předmětu:** čtyři u jednoho dokumentu zhruba do 15 kB, pět nad tím nebo když je dokumentů víc. Je-li předmět velký (blíží se hranici z Fáze 0), dělí se **úhel × podmnožina dokumentů**, ne jen úhel – jinak čte každý agent celý objem a dělba škáluje jen jedním směrem.
-- **Běžela-li už oponentura nad tímhle předmětem** (Fáze 0 to zjistila z `docs/done.md`), **začni jejím panelem**. Nález, který se vrátí ve stejném úhlu, znamená, že se neopravil; nález, který zmizel s vyměněným úhlem, neznamená nic. Vyměnit úhel smíš, ale řekni, který a proč – Fáze 6 pak počty nesrovnává.
-- **Sedí-li spouštěč na víc úhlů, než máš slotů**, ber ty, kde by chyba stála nejvíc – ne ty, kde se nález hledá nejsnáz.
-- **Volbu dolož.** U každého zvoleného úhlu napiš jednou větou, co konkrétně v dokumentu tě k němu vedlo, a jmenuj **jeden úhel, který jsi vědomě nevzal, a proč**. Nevybraný úhel totiž nevrátí nula nálezů, ale neexistenci – a ta neprojde žádným počítadlem ve Fázi 4 ani ve verdiktu. Volbu přitom dělá ten, kdo dokument spoluautorsky psal, takže je to jediné místo, kde má jeho slepota volnou ruku (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
+- **Hlediska nerozšiřuj, aby jich stačilo pustit míň.** Vypadá to lákavě – širší hledisko přece pokryje víc –, jenže kapacitu neurčuje šířka zadání, ale výstup agenta: ten vrátí pět až deset nálezů, ať má zadání úzké nebo široké. Rozšířením se počet nálezů nezvedne, jen se rozptýlí jejich původ, a přibude riziko hlediska, které „najde cokoliv“. Chybí-li ti pokrytí, přidej hledisko, nebo rozšiř jeho *Spouštěč* – nerozmazávej hledisko, které máš.
+- Metodické hledisko pouštěj **vždy s určenou doménou** – vypiš ji do jeho zadání. Metoda bez domény je slepá.
+- **Kolik jich pustit podle rozsahu předmětu:** čtyři u jednoho dokumentu zhruba do 15 kB, pět nad tím nebo když je dokumentů víc. Je-li předmět velký (blíží se hranici z Fáze 0), dělí se **hledisko × podmnožina dokumentů**, ne jen hledisko – jinak čte každý agent celý objem a dělba škáluje jen jedním směrem.
+- **Běžela-li už oponentura nad tímhle předmětem** (Fáze 0 to zjistila z `docs/done.md`), **začni jejím panelem**. Nález, který se vrátí ve stejném hlediska, znamená, že se neopravil; nález, který zmizel s vyměněným hlediskem, neznamená nic. Vyměnit hledisko smíš, ale řekni, který a proč – Fáze 6 pak počty nesrovnává.
+- **Sedí-li spouštěč na víc hledisek, než máš slotů**, ber ty, kde by chyba stála nejvíc – ne ty, kde se nález hledá nejsnáz.
+- **Volbu dolož.** U každého zvoleného hlediska napiš jednou větou, co konkrétně v dokumentu tě k němu vedlo, a jmenuj **jedno hledisko, které jsi vědomě nevzal, a proč**. Nevybrané hledisko totiž nevrátí nula nálezů, ale neexistenci – a ta neprojde žádným počítadlem ve Fázi 4 ani ve verdiktu. Volbu přitom dělá ten, kdo dokument spoluautorsky psal, takže je to jediné místo, kde má jeho slepota volnou ruku (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
 
 ------
 
 ## Fáze 2 – Nezávislé posudky
 
-Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní úhel a **žádný kontext z téhle session** – to je celý smysl.
+Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
 
 **Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Oponentura je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
 
-Zadání pro každého (doplň úhel, cesty a projektový kontext):
+Zadání pro každého (doplň hledisko, cesty a projektový kontext):
 
 ```
 Jsi nezávislý oponent. Nemáš žádný kontext z předchozích rozhovorů – máš jen ty soubory,
@@ -129,9 +129,9 @@ DOKUMENT: <absolutní cesty>
 KONTEXT PROJEKTU (přečti, ale neoponuj to): <CLAUDE.md, docs/rules.md, docs/decisions.md>
 VĚDOMĚ ZAMÍTNUTÉ V TÉHLE PRÁCI (nenavrhuj znovu bez nového argumentu): <výčet i s důvody>
 
-TVŮJ ÚHEL POHLEDU: <úhel a jeho otázky ze sloupce *Ptá se*>
+TVOJE HLEDISKO: <hledisko a jeho otázky ze sloupce *Ptá se*>
 
-Přečti dokument celý a hledej výhradně ze svého úhlu. Ostatní úhly pokrývají jiní
+Přečti dokument celý a hledej výhradně ze svého hlediska. Ostatní hlediska pokrývají jiní
 oponenti – nepřebíhej k nim.
 
 U KAŽDÉHO NÁLEZU UVEĎ:
@@ -155,7 +155,7 @@ PRAVIDLA:
 Do žádného souboru nezapisuj.
 ```
 
-**Volitelně rešerše.** Úhlu, který má v katalogu ve sloupci *Web* ✔, dej výslovné svolení hledat na webu. U ostatních to zakaž, ať neutíkají od dokumentu.
+**Volitelně rešerše.** Hledisku, které má v katalogu ve sloupci *Web* ✔, dej výslovné svolení hledat na webu. U ostatních to zakaž, ať neutíkají od dokumentu.
 
 ------
 
@@ -163,13 +163,13 @@ Do žádného souboru nezapisuj.
 
 **Nálezy z panelu nejsou závěry, ale tvrzení.** Oponent bez kontextu vyrobí i nález, který stojí na tom, co nemohl vědět – a nález, který nevyrobí nic, vypadá jako selhání běhu, takže tlak na produkci je vestavěný. Kdyby se falešné vyřazovaly až v konsolidaci, dělal by to spoluautor, tedy ten jediný aktér, jehož slepotu má celý skill obcházet. To je přesně ten tichý filtr, který si Fáze 4 zakazuje – jenže bez téhle fáze nemá čím ho nahradit.
 
-**Deduplikuj ještě před ověřením**, ne až po něm: tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď. **Dva nálezy jsou tentýž**, když míří na totéž místo dokumentu a navrhují změnit touž věc – formulace i závažnost se lišit můžou. Sloučený nález si ponech v obou zněních a poznamenej, které úhly ho našly; Fáze 4 s tím dál pracuje jako se signálem závažnosti.
+**Deduplikuj ještě před ověřením**, ne až po něm: tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď. **Dva nálezy jsou tentýž**, když míří na totéž místo dokumentu a navrhují změnit touž věc – formulace i závažnost se lišit můžou. Sloučený nález si ponech v obou zněních a poznamenej, které hlediska ho našly; Fáze 4 s tím dál pracuje jako se signálem závažnosti.
 
-Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Nejsilnější model**, i u nálezu z levného úhlu: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko. (Effort mu předepsat nejde – `Agent` bere parametr `model`, ale ne `effort`. Proč a co by to zavřelo, stojí v `~/.claude/skills/review/SKILL.md`, *Fáze 3*; neopisuju to sem podruhé.)
+Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Nejsilnější model**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko. (Effort mu předepsat nejde – `Agent` bere parametr `model`, ale ne `effort`. Proč a co by to zavřelo, stojí v `~/.claude/skills/review/SKILL.md`, *Fáze 3*; neopisuju to sem podruhé.)
 
-**Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti úhlů vrátí klidně třicet nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat. (Strop je nižší než v `/review`, protože tam ho odlehčuje deterministická vrstva, která část nálezů odčerpá bez ověřování; tady žádná není.)
+**Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti hledisek vrátí klidně třicet nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat. (Strop je nižší než v `/review`, protože tam ho odlehčuje deterministická vrstva, která část nálezů odčerpá bez ověřování; tady žádná není.)
 
-**Ověřovatel má tentýž kontext jako oponenti** – to není jeho výhoda a nedělej z toho výhodu. Rozdíl je jinde: ověřovatel **nemá zadaný úhel**, a tím pádem ani tlak vrátit nález. Oponent, který ze svého úhlu nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanismus, ne přístup k souborům.
+**Ověřovatel má tentýž kontext jako oponenti** – to není jeho výhoda a nedělej z toho výhodu. Rozdíl je jinde: ověřovatel **nemá zadané hledisko**, a tím pádem ani tlak vrátit nález. Oponent, který ze svého hlediska nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanismus, ne přístup k souborům.
 
 ```
 Ověřuješ jedno tvrzení nezávislého oponenta. Nemáš kontext z předchozích rozhovorů.
@@ -203,7 +203,7 @@ Do žádného souboru nezapisuj.
 
 Než cokoliv předložíš, nálezy **zpracuj**:
 
-1. **Duplicity už jsou sloučené** – dedup proběhl před ověřením (Fáze 3). Zůstává jen poznamenat u nálezu, že ho našli dva oponenti z různých úhlů; je to signál závažnosti.
+1. **Duplicity už jsou sloučené** – dedup proběhl před ověřením (Fáze 3). Zůstává jen poznamenat u nálezu, že ho našli dva oponenti z různých hledisek; je to signál závažnosti.
 2. **Vyvrácené nálezy vyřadil ověřovatel**, ne ty. Sám nefiltruj: nález, u kterého máš pochybnost, ale ověřením prošel, předlož s poznámkou. Tichý filtr je přesně to, co má tenhle skill obcházet, a spoluautor je ten poslední, kdo ho má dělat.
 3. **Vyřaď už rozhodnuté.** Nález, který navrhuje zamítnutou variantu bez nového argumentu, zahoď a **řekni, kolik jsi jich zahodil a proč** – ne potichu.
 4. **Seřaď podle závažnosti**, ne podle pořadí v dokumentu.
@@ -219,7 +219,7 @@ Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/.claude/STRUCTURE.md`
 
 **Průběžně do něj zapisuj stav** každého nálezu (`prijato`, `zamitnuto`, `odlozeno`, `open`), jak jimi procházíš. Po dokončení Fáze 6 soubor smaž.
 
-Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který Fáze 6 zapisuje do `docs/done.md`** – z něj vychází příští oponentura při volbě úhlů.
+Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který Fáze 6 zapisuje do `docs/done.md`** – z něj vychází příští oponentura při volbě hledisek.
 
 ------
 
@@ -234,7 +234,7 @@ U každého nejdřív vypiš:
 ```
 ---
 [N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU
-Našel: <úhel, případně „2 oponenti nezávisle“>
+Našel: <hledisko, případně „2 oponenti nezávisle“>
 
 Kde: <soubor, sekce, citace>
 Co: <jednou větou>
@@ -277,7 +277,7 @@ Tool má strop čtyři volby, takže věcných variant nabízej **nejvýš dvě*
 **Opakované spuštění.** Skill je určený k opakování nad revidovanou verzí. Když ho uživatel spustí znovu:
 
 - **Nález, který se vrátil**, znamená, že se neopravil, jen přeformuloval. Řekni to výslovně.
-- **Míň nálezů** znamená, že se to lepší, a **víc**, že revize otevřela nové problémy – ale jen tehdy, **běžel-li stejný panel úhlů**. Zjistíš to ze záznamu předchozího běhu (viz níž); nenajdeš-li ho, počty nesrovnávej a řekni místo toho, které úhly běžely teď.
+- **Míň nálezů** znamená, že se to lepší, a **víc**, že revize otevřela nové problémy – ale jen tehdy, **běžel-li stejný panel hledisek**. Zjistíš to ze záznamu předchozího běhu (viz níž); nenajdeš-li ho, počty nesrovnávej a řekni místo toho, které hlediska běžely teď.
 
 Ve verdiktu:
 
@@ -285,7 +285,7 @@ Ve verdiktu:
 ## Oponentura hotová
 
 **Předmět:** <dokumenty>
-**Úhly:** <seznam>
+**Hlediska:** <seznam>
 **Panel:** A oponentů → B nálezů hrubě → C po dedupu → D ověřeno, E neověřeno
 
 **Nálezy:** N celkem – 🔴 X kritických, 🟡 Y středních, 🔵 Z kosmetických
@@ -303,10 +303,10 @@ Ve verdiktu:
 Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
 
 ```
-- **YYYY-MM-DD** · `/oponent` · `<short HEAD>` · <předmět> · úhly: <seznam> · N nálezů (X zapracováno, Y zamítnuto, Z odloženo)
+- **YYYY-MM-DD** · `/oponent` · `<short HEAD>` · <předmět> · hlediska: <seznam> · N nálezů (X zapracováno, Y zamítnuto, Z odloženo)
 ```
 
-Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*). **Ten řádek je jediné, co z běhu přežije**: bez seznamu úhlů neví příští oponentura, s čím se má srovnávat, a bez hashe nepozná, jestli se předmět od té doby vůbec změnil. Nemá-li projekt `done.md` (viz Fáze 0, režim bez `docs/`), řekni nahlas, že se záznam nezapsal a srovnání s příštím během nebude možné.
+Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*). **Ten řádek je jediné, co z běhu přežije**: bez seznamu hledisek neví příští oponentura, s čím se má srovnávat, a bez hashe nepozná, jestli se předmět od té doby vůbec změnil. Nemá-li projekt `done.md` (viz Fáze 0, režim bez `docs/`), řekni nahlas, že se záznam nezapsal a srovnání s příštím během nebude možné.
 
 Zakonči jednou z těchto vět:
 

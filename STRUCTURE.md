@@ -236,7 +236,7 @@ Existuje **jen spolu s `todo.md`**: jeden bez druhého nedává smysl, tak se ta
 
 Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem, ne z kontextu (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**Proč se zapisuje i `/oponent`:** je **opakovatelný nad týmž dokumentem** – a druhý běh potřebuje vědět, s jakým panelem úhlů běžel ten první, jinak počty nálezů mezi běhy nic neříkají. Řádek tedy neslouží `/release` jako u `/review` a `/attack`, ale příštímu běhu téhož skillu.
+**Proč se zapisuje i `/oponent`:** je **opakovatelný nad týmž dokumentem** – a druhý běh potřebuje vědět, s jakým panelem hledisek běžel ten první, jinak počty nálezů mezi běhy nic neříkají. Řádek tedy neslouží `/release` jako u `/review` a `/attack`, ale příštímu běhu téhož skillu.
 
 **Proč to tu je:** `/release` se před nasazením ptá, jestli nad tímhle rozsahem proběhl `/review` a `/attack`. Nasazuje se ale v jiné session a o dny později, takže odpověď z paměti je odhad – člověk si vzpomene, že *někdy* běžely, ne že běžely nad *tímhle*. Obě odpovědi jsou pak špatné: „ano“ pustí ven nezkontrolovanou práci, „radši znovu“ stojí desítky minut a plný běh agentů. S hashem se to porovnat dá.
 

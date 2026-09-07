@@ -137,7 +137,7 @@ Nech si otevřený přístup ke **konzoli, síti a logu serveru** – většina 
 
 ## Fáze 2 – Útok
 
-Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři až pět podle toho, čeho se rozsah týká. Každý má vlastní kontext a vlastní úhel; společné mají jen to, že hlásí jen doložené.
+Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři až pět podle toho, čeho se rozsah týká. Každý má vlastní kontext a vlastní hledisko; společné mají jen to, že hlásí jen doložené.
 
 **Útočníci potřebují nejvíc chytrosti z celého životního cyklu: nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Zadání zní „najdi, co nikoho nenapadlo“, a to je pravý opak mechanické práce – levný model odzkouší učebnicové payloady ze seznamu, silný vymyslí kombinaci, na kterou seznam nestačí. Je to zároveň **dlouhá agentní práce**, tedy přesně profil, na který je `xhigh` určený. Nedaří-li se ani tak, je to jeden z mála případů, kdy má smysl sáhnout po nejvyšším tieru (dnes Fable) – ale až potom, ne rovnou.
 
@@ -163,10 +163,10 @@ Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři a
 Zadání pro subagenta:
 
 ```
-Máš běžící aplikaci na <adresa>. Tvým úkolem je ROZBÍT ji z jediného úhlu:
+Máš běžící aplikaci na <adresa>. Tvým úkolem je ROZBÍT ji z jediného hlediska:
 <VEKTOR a jeho konkrétní obsah z tabulky>.
 
-Nic jiného nezkoušej – ostatní úhly mají jiní agenti.
+Nic jiného nezkoušej – ostatní hlediska mají jiní agenti.
 
 CÍL A HRANICE:
 - Útoč výhradně na <adresa>, což je lokální instance nad testovacími daty.

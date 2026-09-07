@@ -101,7 +101,7 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 ## Fáze N – Závěr
 ```
 
-**Tohle pořadí platí pro hlavní průběh.** Má-li skill **přílohové sekce** – samostatné režimy, katalog úhlů nebo vektorů –, stojí **za** závěrečnou fází: nejsou její součástí a čtenář se k nim dostane jen tehdy, když je potřebuje. `## Časté chyby` je pak úplně poslední, aby stála za vším, k čemu se vztahuje:
+**Tohle pořadí platí pro hlavní průběh.** Má-li skill **přílohové sekce** – samostatné režimy, katalog hledisek nebo vektorů –, stojí **za** závěrečnou fází: nejsou její součástí a čtenář se k nim dostane jen tehdy, když je potřebuje. `## Časté chyby` je pak úplně poslední, aby stála za vším, k čemu se vztahuje:
 
 ```
 ## Fáze N – Závěr        ← konec hlavního průběhu
@@ -170,7 +170,7 @@ Rozlišovat podle toho, „jestli se uživatel může kdykoliv zastavit", nesta�
 
 Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví, které v tom běhu neplatí. Kontext, který tím spotřebuješ, chybí na vlastní práci.
 
-**Co se vytahuje do vedlejších souborů:** zadání pro agenty, katalogy úhlů a vektorů, dlouhé referenční tabulky, šablony výstupů, skripty.
+**Co se vytahuje do vedlejších souborů:** zadání pro agenty, katalogy hledisek a vektorů, dlouhé referenční tabulky, šablony výstupů, skripty.
 
 **Vedlejší soubory leží jednu úroveň hluboko** od `SKILL.md`, v jeho adresáři, a odkazuje se na ně **přímo z něj**. Odkaz na odkaz se čte jen zčásti – model si soubor namátkou prohlédne místo aby ho přečetl celý, a vezme si z něj polovinu.
 

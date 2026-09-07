@@ -6,7 +6,7 @@
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
-Prověří hotovou práci před uzavřením z několika nezávislých úhlů naráz. Stojí to na třech vrstvách: nejdřív běží nástroje projektu, které nic nedomýšlejí a stojí nula tokenů, pak paralelní panel, kde každý má **jediný úhel pohledu**, a nakonec ověřovatel, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se vám vůbec nezobrazí – bez té třetí vrstvy vás panel zavalí pravděpodobně znějícími nálezy, po třetím falešném ho začnete ignorovat a čtvrtý, pravý, přehlédnete.
+Prověří hotovou práci před uzavřením z několika nezávislých hledisek naráz. Stojí to na třech vrstvách: nejdřív běží nástroje projektu, které nic nedomýšlejí a stojí nula tokenů, pak paralelní panel, kde každý má **jediné hledisko**, a nakonec ověřovatel, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se vám vůbec nezobrazí – bez té třetí vrstvy vás panel zavalí pravděpodobně znějícími nálezy, po třetím falešném ho začnete ignorovat a čtvrtý, pravý, přehlédnete.
 
 ## Co umí
 
