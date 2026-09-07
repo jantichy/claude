@@ -405,7 +405,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 Zakonči **jednoznačným verdiktem** – jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Ze session je všechno zapsané, můžeš pokračovat, zkompaktovat i odejít.`
-- **Stojíš-li ve worktree větve** (`~/Dev/context/worktree/worktree.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji bez obav přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, tuhle větu nepoužij – použij poslední variantu a rovnou pojmenuj, co merge blokuje.
+- **Stojíš-li ve worktree větve** (`~/.claude/skills/worktree/worktree.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji bez obav přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, tuhle větu nepoužij – použij poslední variantu a rovnou pojmenuj, co merge blokuje.
 - `Zapsané zatím není všechno – brání tomu: <konkrétní seznam>.`
 
 **Nenabízej „opustit session“ jako jedinou cestu.** Zápis je hotový, ale to neznamená, že je hotová práce: uživatel klidně pokračuje dál v téže session a `/cleanup` mu jen zajistil, že ho kompaktace nepřipraví o kontext. Ve worktree layoutu to platí dvojnásob – „můžeš odejít“ tam neodpovídá na otázku, kterou má uživatel v hlavě, totiž co s tou větví.

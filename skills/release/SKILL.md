@@ -81,7 +81,7 @@ Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` ne
 
 ## Fáze 0 – Pre-flight
 
-1. **Kořen projektu.** Ve worktree layoutu (`~/Dev/context/worktree/worktree.md`) pracuj v adresáři té větve, která se nasazuje.
+1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/skills/worktree/worktree.md`) pracuj v adresáři té větve, která se nasazuje.
 2. **Přečti projektový `CLAUDE.md`** – `## Příkazy` (*Kontrakt příkazů*), `## Nasazení`, pokud existuje, a `## Výjimky z obecných pravidel`.
 3. **Zjisti, jak se projekt nasazuje.** V tomhle pořadí:
 
