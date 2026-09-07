@@ -21,7 +21,7 @@ Režim **`update` je to, co neumí nikdo jiný.** Norma se posouvá dál, hotov�
 ## Co skill nedělá
 
 - **Nedefinuje tvar skillu.** Ten je v `~/.claude/skills/SKILLS.md`. Tenhle skill ho čte, neopisuje a nerozšiřuje. Ukáže-li se, že norma je špatně, opraví se norma – ne že se udělá výjimka tady.
-- **Neaudituje konfiguraci.** Rozpory mezi soubory, mrtvé zbytky a drift mezi vrstvami řeší `/consistency`; tenhle skill se dívá jen na skilly a jen proti normě.
+- **Neaudituje konfiguraci.** Rozpory mezi soubory, mrtvé zbytky a rozejití mezi vrstvami řeší `/consistency`; tenhle skill se dívá jen na skilly a jen proti normě.
 - **Neprověřuje kvalitu práce skillu za běhu.** Že skill dělá dobrou práci, ukáže jeho použití a `/review`. Tady se měří, jestli se **vyvolá** a jestli se pod tlakem **dodrží**.
 - **Nesahá na cizí skilly.** Pluginy a vestavěné skilly se používají, ne udržují.
 - **Nemigruje zbytek skillů mimochodem.** Převod na novou normu je vědomý běh režimu `update`, ne vedlejší efekt jiné práce.
@@ -220,7 +220,7 @@ Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez j
 | README skillu | existuje, má povinné sekce v pořadí z normy, instalace je psaná jako pokyn pro Clauda a u skillu ze životního cyklu nechybí rámeček ani hromadná instalace |
 | **Nové možnosti v okolí** | *nevzniklo mezitím něco, co tenhle skill dělá ručně?* Přibyl vestavěný skill, plugin, MCP server nebo vlastní skill, který by nahradil kus jeho postupu? |
 
-Poslední řádek je druhý druh driftu vedle rozejití s normou a **neklade ho nikdo jiný**. Konfigurační vrstva roste pod nohama a starší skill o ní neví.
+Poslední řádek je druhý druh rozejití vedle toho s normou a **neklade ho nikdo jiný**. Konfigurační vrstva roste pod nohama a starší skill o ní neví.
 
 ### Jak to proběhne
 
@@ -244,7 +244,7 @@ Pak pokračuj *Fází 7* – i `update` sahá na `README.md` a testy.
 
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
 
-Nabízí se zapsat datum poslední revize a příště projít jen to, co se od té doby v normě změnilo. **Vědomě se to nedělá.** Stav skillu je odvoditelný z toho, jak vypadá teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje. Hlavně by ale zúžil revizi na diff normy, a tím minul přesně ten případ, kvůli kterému vznikla – drift, který se nikdy nepropsal, protože ho tehdy nikdo nezpropagoval.
+Nabízí se zapsat datum poslední revize a příště projít jen to, co se od té doby v normě změnilo. **Vědomě se to nedělá.** Stav skillu je odvoditelný z toho, jak vypadá teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje. Hlavně by ale zúžil revizi na diff normy, a tím minul přesně ten případ, kvůli kterému vznikla – rozejití, které se nikdy nepropsalo, protože ho tehdy nikdo nezpropagoval.
 
 ------
 

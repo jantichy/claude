@@ -68,7 +68,7 @@ Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje 
 
 ### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
 
-Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, drift mezi vrstvami. Jednoznačné opravy udělá rovnou, o sporných se mnou mluví jednu po druhé. A pamatuje si, co jsem rozhodl neopravovat – jen do chvíle, než se ten kód změní.
+Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, rozejití mezi vrstvami. Jednoznačné opravy udělá rovnou, o sporných se mnou mluví jednu po druhé. A pamatuje si, co jsem rozhodl neopravovat – jen do chvíle, než se ten kód změní.
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 

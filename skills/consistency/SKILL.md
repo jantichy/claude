@@ -122,7 +122,7 @@ STŘEDNÍ (technický dluh):
 - Zapomenuté zbytky po odstranění: když se v minulosti odstraňoval kód, feature nebo komponenta, mohly na dalších místech zůstat pozapomenuté části – importy smazaného modulu, konfigurace pro zrušenou funkci, typy/interfacy pro odstraněnou entitu, registrace odebrané route nebo pluginu, zmínky v dokumentaci nebo komentářích, testy odstraněné funkcionality, env proměnné pro mrtvou feature, reference v package.json apod.
 - Závislosti v package.json které nejsou použity (nebo naopak)
 - i18n a UI texty: chybějící překladové klíče (použité v kódu, nejsou ve slovníku); nepoužité klíče (ve slovníku, nikde nereferencované); stejný UI koncept různě pojmenovaný napříč obrazovkami ("Smazat" vs "Odstranit" vs "Vymazat"); nesystematický mix jazyků v UI textech
-- Časový drift: TODO/FIXME starší než ~6 měsíců (zjistitelné `git blame`); komentáře s deadlinem v minulosti ("remove after 2025-01"); feature flagy s trvale stejnou hodnotou na všech check-pointech (ready to inline/remove); pozastavené migrace (částečná DB migrace bez follow-upu)
+- Zastarání: TODO/FIXME starší než ~6 měsíců (zjistitelné `git blame`); komentáře s deadlinem v minulosti ("remove after 2025-01"); feature flagy s trvale stejnou hodnotou na všech check-pointech (ready to inline/remove); pozastavené migrace (částečná DB migrace bez follow-upu)
 
 KOSMETICKÉ (konzistence stylu):
 - Mixing naming conventions ve stejném kontextu (camelCase vs snake_case u proměnných, kebab-case vs PascalCase u souborů)

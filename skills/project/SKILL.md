@@ -453,7 +453,7 @@ Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady 
 
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
 
-Nabízí se do projektu zapsat otisk – datum posledního běhu nebo hash `~/Dev/context` – a příště projít jen to, co se od té doby změnilo. **Vědomě se to nedělá.** Soulad se standardem je odvoditelný z toho, jak soubory vypadají teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje: rozejde se se skutečností a vypadá přitom pořád stejně. Hlavně by ale zúžil kontrolu na diff standardu, a tím minul přesně ten případ, kvůli kterému skill vznikl – drift, který se do projektu nikdy nepropsal, protože ho tehdy nikdo nezpropagoval. Ten v žádném diffu od posledního běhu není.
+Nabízí se do projektu zapsat otisk – datum posledního běhu nebo hash `~/Dev/context` – a příště projít jen to, co se od té doby změnilo. **Vědomě se to nedělá.** Soulad se standardem je odvoditelný z toho, jak soubory vypadají teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje: rozejde se se skutečností a vypadá přitom pořád stejně. Hlavně by ale zúžil kontrolu na diff standardu, a tím minul přesně ten případ, kvůli kterému skill vznikl – rozejití, které se do projektu nikdy nepropsalo, protože ho tehdy nikdo nezpropagoval. Ten v žádném diffu od posledního běhu není.
 
 ## Krok 15 – Závěrečný souhrn
 

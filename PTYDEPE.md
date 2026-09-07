@@ -44,6 +44,16 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Ne „ukazatel“** – v IT je obsazený ukazatelem do paměti, takže by vyměnil jeden zavádějící pojem za druhý.
 
+### rozejití
+
+**Tiché rozejití dvou míst, která spolu mají držet** – dokumentace proti kódu, skill proti normě, projekt proti standardu. Nikdo ho nezpůsobil jednou změnou: jedno místo se posunulo a druhé zůstalo stát. Hledá je `/consistency`, u skillů `/skill update`.
+
+**Nahrazuje dřívější „drift"** (2026-09-07). Anglicky je *configuration drift* zavedený pojem, česky ne – a skloňoval se po česku („druhý druh driftu“). Hlavně ale bylo „rozejití“ **už zavedené v týchž souborech**: `/skill` měl v jedné větě obojí („druhý druh **driftu** vedle **rozejití** s normou“).
+
+**Ne „odchylka“** – `/consistency` ji používá pro jednotlivý nález („kosmetická odchylka“). Rozejití je proces, odchylka jeho výsledek.
+
+**Anglicky zůstávají jména konkrétních vad** uvnitř anglických výčtů: *lockfile vs manifest drift*, *browserslist drift*. **A časový „drift“ byl něco jiného** – zastaralá poznámka `TODO`; přejmenováno na *zastarání*, aby jedno jméno nekrylo dvě vady.
+
 ### seznam, který musí přesně sedět
 
 **Výjimka zapsaná do seznamu, který test porovnává se skutečností v obou směrech.** V seznamu nesmí chybět nic, co pravidlo porušuje, ani zůstat nic, co se už opravilo – proto opravená a nevyškrtnutá položka shodí testy stejně jako nová regrese. Bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit. Používá to `MIGRACE` v `~/.claude/tests/test_skills.py`.
