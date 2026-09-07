@@ -51,7 +51,7 @@ Zjisti kontext, ve kterém pracuješ:
 
 1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
 2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `## Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
-3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`.
+3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`. **Remote zjišťuj `git remote get-url origin`, ne `git remote`** – to druhé vypíše `origin` i v repozitáři bez vzdáleného protějšku, má-li ho uživatel v globálním `~/.gitconfig` (typicky `[remote "origin"] push = HEAD`). Push se pak zkusí tam, kam nevede, a selže.
 4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` pětice `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
@@ -370,7 +370,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 - `git status` musí být **čistý** – žádné rozpracované ani neotrackované soubory. Co tam být nemá, patří do `.gitignore`; co tam patří, se commitne.
 - *Worktree layout:* `git status` pouštěj ve worktree větve, ne v kořeni kontejneru – tam by spadl na `must be run in a work tree`. Navíc zkontroluj `git -C <kontejner>/main status`: v `main/` nemá být nic rozpracovaného – když je, ohlas to.
 - Všechno **commitnuté** s výstižnými zprávami.
-- Když má repozitář remote, všechno **pushnuté**.
+- Když má repozitář remote (viz Fáze 0, bod 3), všechno **pushnuté**.
 - Ověř výsledek znovu (`git status`, `git log origin/<větev>..HEAD`) – ne že to jen předpokládej.
 
 **Přehled:**
