@@ -5,7 +5,7 @@
 Následující soubory obsahují **závazná pravidla**, kterými se řiď při každém úkolu. Dodržuj je vždy, stejně jako pravidla psaná přímo v tomhle souboru.
 
 - `@~/.claude/RULES.md` – obecná pravidla práce: komunikace s uživatelem, organizace souborů a obsahu, rozhodování a rozsah, práce se změnami
-- `@~/Dev/context/structure/structure.md` – standardní struktura projektu, co patří do kterého souboru a povinnost průběžně je aktualizovat
+- `@~/.claude/STRUCTURE.md` – standardní struktura projektu, co patří do kterého souboru a povinnost průběžně je aktualizovat
 
 Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nevadí, že bude veřejně vidět na githubu, navrhni jeho extrakci do `~/.claude/`.
 

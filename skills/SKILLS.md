@@ -1,6 +1,6 @@
 # Jak se píše skill
 
-Norma tvaru vlastních skillů v `~/.claude/skills/`. Definuje, **co je skill a jak vypadá**; postup, kterým se zakládá, reviduje a ruší, drží `/skill`. Je to týž vztah jako mezi `~/Dev/context/structure/structure.md` a `/project` – standard říká, jak to má vypadat, nástroj je jen instalátor.
+Norma tvaru vlastních skillů v `~/.claude/skills/`. Definuje, **co je skill a jak vypadá**; postup, kterým se zakládá, reviduje a ruší, drží `/skill`. Je to týž vztah jako mezi `~/.claude/STRUCTURE.md` a `/project` – standard říká, jak to má vypadat, nástroj je jen instalátor.
 
 Platí pro skilly v tomhle repozitáři. Cizí skilly z pluginů se podle ní neposuzují; ty se **používají**, ne udržují.
 

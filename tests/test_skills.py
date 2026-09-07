@@ -327,7 +327,7 @@ class NosneCasti(unittest.TestCase):
     def test_behovy_stav_je_gitignorovany(self):
         """Stav, který se mění po každém tahu, nesmí skončit v gitu.
 
-        `~/Dev/context/structure/structure.md`, *Běhový stav skillů*. Skill, který
+        `~/.claude/STRUCTURE.md`, *Běhový stav skillů*. Skill, který
         do `.claude/run/` zapisuje, spoléhá na to, že `/project` ten řádek do
         `.gitignore` doplní – jinak ho v projektu s autocommitem začne commitovat.
         """

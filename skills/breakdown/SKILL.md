@@ -75,7 +75,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 - **zadání** = `docs/architecture.md` (nebo `docs/requirements.md`, byl-li návrh řešení přeskočen),
 - **kontext** = `docs/requirements.md` – ať v hlavičce plánu sedí pole `**Spec:**` a je vidět, proč se to staví, a `docs/scenarios.md`, vede-li ho projekt,
-- **cíl** = `docs/plan.md`, **ne** `docs/superpowers/plans/…` – tohle mu musíš říct, jinak si založí vlastní adresářový strom vedle tvého (`~/Dev/context/structure/structure.md`: v `docs/` jednoslovné anglické názvy bez datumových prefixů),
+- **cíl** = `docs/plan.md`, **ne** `docs/superpowers/plans/…` – tohle mu musíš říct, jinak si založí vlastní adresářový strom vedle tvého (`~/.claude/STRUCTURE.md`: v `docs/` jednoslovné anglické názvy bez datumových prefixů),
 - **rozsah** = jen položky MVP odsouhlasené ve Fázi 1,
 - **doménové standardy** z Fáze 1,
 - že **volbu způsobu realizace na konci nenabízí** – tu řeší `/implement`,

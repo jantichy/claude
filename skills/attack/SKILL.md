@@ -116,7 +116,7 @@ Chybí-li kterýkoliv z těch dvou dokladů, **nepokračuj a řekni proč**. Je 
 
 ## Fáze 1 – Zvednout aplikaci
 
-**Nejdřív se podívej, jestli po tobě něco nezůstalo.** Existuje-li `.claude/run/attack.json` z předchozího běhu (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*), znamená to, že se minulý běh nedokončil – vypiš, co je v něm zapsané, a **nabídni úklid, než cokoliv zvedneš**. Zkontroluj taky, jestli na cílovém portu už něco neběží: pokud ano, zastav se a zeptej se. Útok proti serveru ze starého kódu měří něco jiného, než si myslíš, a jeho reprodukční postupy pak nikde neplatí.
+**Nejdřív se podívej, jestli po tobě něco nezůstalo.** Existuje-li `.claude/run/attack.json` z předchozího běhu (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*), znamená to, že se minulý běh nedokončil – vypiš, co je v něm zapsané, a **nabídni úklid, než cokoliv zvedneš**. Zkontroluj taky, jestli na cílovém portu už něco neběží: pokud ano, zastav se a zeptej se. Útok proti serveru ze starého kódu měří něco jiného, než si myslíš, a jeho reprodukční postupy pak nikde neplatí.
 
 Spusť `dev` na pozadí, počkej, až odpoví, a ověř, že běží. Port si zjisti z výstupu, ne z domněnky.
 
@@ -307,7 +307,7 @@ Cíl: <adresa> · Vektory: [které]
 **Další krok:** /release · po nasazení ještě `/cleanup` podruhé
 ```
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/Dev/context/structure/structure.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
 
 ```
 - **YYYY-MM-DD** · `/attack` · `<short HEAD>` · <rozsah a vektory> · N nálezů (X opraveno, Y odloženo, Z won't fix)

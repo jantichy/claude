@@ -7,14 +7,14 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
 ## Výjimky z obecných pravidel
 
-- **Blok metadat je tady, ne v kořenovém `CLAUDE.md`**, jak jinak velí `~/Dev/context/structure/structure.md`. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata tohohle repozitáře tam nepatří, mátla by v cizím projektu.
+- **Blok metadat je tady, ne v kořenovém `CLAUDE.md`**, jak jinak velí `~/.claude/STRUCTURE.md`. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata tohohle repozitáře tam nepatří, mátla by v cizím projektu.
 - **`/attack` ani `/release` se tu nikdy nepouštějí.** Repozitář je konfigurace, ne aplikace – není co spustit ani kam nasadit. Životní cyklus tady končí `/cleanupem`. Zapsáno schválně, ne odvozeno (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
 - **Tenhle repozitář má `todo.md`, `backlog.md`, `done.md` i `decisions.md` v `~/Dev/context/`**, ne u sebe. Platí to pro každý skill, který do nich zapisuje a zároveň se tu pouští – `/review`, `/oponent`, `/consistency`, `/cleanup`, `/implement` a `/skill`. (`/attack` a `/release` se tu nepouštějí vůbec, viz výš.) **U `/skill` to platí bezvýhradně**, protože jako jediný nikde jinde běžet nemůže – spravuje skilly, a ty jsou jen tady. A **neptej se na to pokaždé znovu**:
 
   | Co | Kam | Jak |
   |---|---|---|
   | odložený nález, zaparkovaný bod | `~/Dev/context/todo.md` | do sekce podle domény, které se týká |
-  | nezávazný nápad, o kterém se nerozhodlo | `~/Dev/context/backlog.md` | tamtéž podle domény; hranici proti todo drží `~/Dev/context/structure/structure.md`, *`backlog.md`* |
+  | nezávazný nápad, o kterém se nerozhodlo | `~/Dev/context/backlog.md` | tamtéž podle domény; hranici proti todo drží `~/.claude/STRUCTURE.md`, *`backlog.md`* |
   | rozhodnutí, zamítnutá varianta, vědomá mezera | `~/Dev/context/decisions.md` | tamtéž podle domény; týká-li se rozhodnutí **jednoho skillu**, patří rovnou do jeho `SKILL.md` k místu, kde platí – tam ho příště najde ten, kdo ho potřebuje |
   | záznam dokončeného průchodu (`## Průchody životním cyklem`) | `~/Dev/context/done.md` | u `/review` jen když má smysl ho pak číst – jeho čtenářem je `/release`, a ten se tu nepouští. **U `/oponent` vždy:** jeho čtenářem je příští `/oponent`, který podle svého SKILL.md bez seznamu úhlů neví, s čím se má srovnávat |
 

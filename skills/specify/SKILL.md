@@ -50,7 +50,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 | Implementační plán | `/breakdown` |
 | Realizace plánu | `/implement` |
 
-**Přepis výchozí cesty.** `brainstorming` ukládá design doc do `docs/superpowers/specs/YYYY-MM-DD-<téma>-design.md`. Explicitně přitom respektuje uživatelovu preferenci a ta zní jinak – podle `~/Dev/context/structure/structure.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů, takže cíl je **`docs/architecture.md`**.
+**Přepis výchozí cesty.** `brainstorming` ukládá design doc do `docs/superpowers/specs/YYYY-MM-DD-<téma>-design.md`. Explicitně přitom respektuje uživatelovu preferenci a ta zní jinak – podle `~/.claude/STRUCTURE.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů, takže cíl je **`docs/architecture.md`**.
 
 **Řekni mu to výslovně**, když ho vyvoláváš. Jinak si založí vlastní adresářový strom vedle toho tvého. Totéž platí pro plán, ale ten už si hlídá `/breakdown`.
 
@@ -109,7 +109,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 2. **Sám si z nich zodpověz co nejvíc.** Cokoliv, co z podkladů plyne, se už neptej.
 3. **Vypiš souhrn, co sis z toho odvodil**, ať to uživatel jedním pohledem potvrdí nebo opraví.
 4. **Doptávej se jen na zbytek** – a na věci, kde si nejsi jistý.
-5. **Projdi `docs/backlog.md` a vytěž z něj, co do tohohle zadání patří.** Je to zásobník nezávazných nápadů (`~/Dev/context/structure/structure.md`, *`backlog.md`*) a tohle je jediné místo, kde se čte – nápad, který nikdo neprojde teď, tam bude ležet dál a nikomu se nepřipomene.
+5. **Projdi `docs/backlog.md` a vytěž z něj, co do tohohle zadání patří.** Je to zásobník nezávazných nápadů (`~/.claude/STRUCTURE.md`, *`backlog.md`*) a tohle je jediné místo, kde se čte – nápad, který nikdo neprojde teď, tam bude ležet dál a nikomu se nepřipomene.
 
    Postup: vypiš položky, které se s tématem zadání překrývají nebo ho přirozeně rozšiřují, u každé jednou větou proč. Pak se **zeptej přes `AskUserQuestion`, jednu položku na volání** – *Zařadit do zadání* / *Nechat v backlogu* / *Zahodit*. Zařazenou položku **přesuň z backlogu do rozpracovaného zadání**, ať neleží na dvou místech; zahozenou smaž a měla-li odůvodnění, zapiš ho do `docs/decisions.md`.
 
@@ -148,7 +148,7 @@ Zapiš do **`docs/requirements.md`**. Šablona je v `~/.claude/skills/specify/do
 
 ### Scénáře, glosář a ceník
 
-Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz Fáze 0) – zbylé dva, `competition.md` a `risks.md`, píše `/discovery`. Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/Dev/context/structure/structure.md`, *Produktové podklady*.
+Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz Fáze 0) – zbylé dva, `competition.md` a `risks.md`, píše `/discovery`. Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/.claude/STRUCTURE.md`, *Produktové podklady*.
 
 **Nevede-li projekt žádný z nich, nic nezakládej** a jdi rovnou na bránu. Zdá-li se ti přitom, že by se některý hodil, řekni to jednou větou a nech rozhodnout – závazek vede `CLAUDE.md`, ne tenhle běh.
 

@@ -2,7 +2,7 @@
 
 Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém.
 
-Standardní strukturu projektu definuje `~/Dev/context/structure/structure.md`.
+Standardní strukturu projektu definuje `~/.claude/STRUCTURE.md`.
 
 Kde v projektu leží standardní soubory, je volba ze dvou režimů (`docs/`, nebo kořen projektu) – definuje ji `structure.md`. **Cesty jako `docs/todo.md` se tu píšou v podobě pro režim `docs/` a znamenají soubor na místě podle režimu daného projektu.**
 
@@ -360,7 +360,7 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 Vše mimo aktuální rozsah, u čeho je rozhodnuté, že se to udělá – úkol do další fáze, otázka, kterou je potřeba zodpovědět, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
 
-**Rozlišuj přitom odložené od nezávazného.** Do `todo.md` jde jen to, u čeho je rozhodnuto, že se to udělá – včetně věcí odsunutých až po spuštění. Nápad, který nikdo neschválil ani nezamítl („někdy by šlo…“, „za úvahu stojí…“), patří do `docs/backlog.md`; definici hranice drží `~/Dev/context/structure/structure.md`, *`backlog.md`*. **Nepromíchávej to:** fronta, ve které leží i nezávazné nápady, přestane být frontou a nikdo ji nedočte.
+**Rozlišuj přitom odložené od nezávazného.** Do `todo.md` jde jen to, u čeho je rozhodnuto, že se to udělá – včetně věcí odsunutých až po spuštění. Nápad, který nikdo neschválil ani nezamítl („někdy by šlo…“, „za úvahu stojí…“), patří do `docs/backlog.md`; definici hranice drží `~/.claude/STRUCTURE.md`, *`backlog.md`*. **Nepromíchávej to:** fronta, ve které leží i nezávazné nápady, přestane být frontou a nikdo ji nedočte.
 
 Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vyhrazené sekci (definuje ji `structure.md`) a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
 

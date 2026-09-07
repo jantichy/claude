@@ -211,7 +211,7 @@ Než cokoliv předložíš, nálezy **zpracuj**:
 
 ### Ověřený seznam zapiš na disk, než půjdeš dál
 
-Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "predmet": [...], "uhly": [...], "nalezy": [{...nález..., "overeno": true/false, "status": "open"}]}`.
+Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "predmet": [...], "uhly": [...], "nalezy": [{...nález..., "overeno": true/false, "status": "open"}]}`.
 
 **Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 5 s ním pak dlouze interaguje **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
 
@@ -300,7 +300,7 @@ Ve verdiktu:
 - <jedna až tři věty – co to reálně změnilo>
 ```
 
-Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/Dev/context/structure/structure.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
 
 ```
 - **YYYY-MM-DD** · `/oponent` · `<short HEAD>` · <předmět> · úhly: <seznam> · N nálezů (X zapracováno, Y zamítnuto, Z odloženo)

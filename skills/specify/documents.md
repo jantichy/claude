@@ -149,7 +149,7 @@ Co je na tom nejistého a co by to znamenalo, kdyby se ukázalo jinak.
 
 ## Scénáře, glosář a ceník
 
-Tři z pěti *Produktových podkladů*, které projekt vede volitelně – zbylé dva, `competition.md` a `risks.md`, píše `/discovery` a šablonu tady nemají. Kdy se píšou a podle čeho se pozná, že je projekt vede, říká `SKILL.md`; **co který dokument je a k čemu slouží, drží `~/Dev/context/structure/structure.md`, *Produktové podklady***. Tady je jen tvar a to, co platí při psaní.
+Tři z pěti *Produktových podkladů*, které projekt vede volitelně – zbylé dva, `competition.md` a `risks.md`, píše `/discovery` a šablonu tady nemají. Kdy se píšou a podle čeho se pozná, že je projekt vede, říká `SKILL.md`; **co který dokument je a k čemu slouží, drží `~/.claude/STRUCTURE.md`, *Produktové podklady***. Tady je jen tvar a to, co platí při psaní.
 
 **`docs/scenarios.md`** – jeden scénář na tenhle tvar, včetně okrajových a chybových cest:
 

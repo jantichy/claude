@@ -52,7 +52,7 @@ Zjisti kontext, ve kterém pracuješ:
 1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
 2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `## Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
 3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`. **Remote zjišťuj `git remote get-url origin`, ne `git remote`** – to druhé vypíše `origin` i v repozitáři bez vzdáleného protějšku, má-li ho uživatel v globálním `~/.gitconfig` (typicky `[remote "origin"] push = HEAD`). Push se pak zkusí tam, kam nevede, a selže.
-4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` pětice `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
+4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` pětice `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/.claude/STRUCTURE.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
 
@@ -143,7 +143,7 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 |---|---|
 | rozhodnutí | přidej ho jako položku do Fáze 1 (kategorie 1) a normálně zapiš ve Fázi 5 – i se zdůvodněním, které tady padlo |
 | „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) |
-| „někdy by šlo“, nezávazný nápad | do `docs/backlog.md` – **ne do todo**; hranici drží `~/Dev/context/structure/structure.md`, *`backlog.md`* |
+| „někdy by šlo“, nezávazný nápad | do `docs/backlog.md` – **ne do todo**; hranici drží `~/.claude/STRUCTURE.md`, *`backlog.md`* |
 | bezpředmětné | nic nezapisuj; v přehledu ve Fázi 8 to ale uveď, ať je vidět, že se to probralo |
 | práce navíc (dodělat kód, přepsat návrh) | to je nad rámec úklidu. Udělej to **jen na výslovný pokyn** a pak pokračuj skillem dál; jinak do `docs/todo.md` (tamtéž) |
 
@@ -159,7 +159,7 @@ Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zaps
 - **Špatné místo** – je zapsaná jinde, než kam podle struktury patří → přesuň
 - **Duplicitní** – je na víc místech → nech na jednom, ostatní ať jen odkazují
 
-**Kam co patří** (odvoď od skutečné struktury projektu, tohle je obecné vodítko). Obsah jednotlivých souborů definuje `~/Dev/context/structure/structure.md` – tahle tabulka je jen obrácený pohled od položky k souboru, ne druhá definice:
+**Kam co patří** (odvoď od skutečné struktury projektu, tohle je obecné vodítko). Obsah jednotlivých souborů definuje `~/.claude/STRUCTURE.md` – tahle tabulka je jen obrácený pohled od položky k souboru, ne druhá definice:
 
 | Typ položky | Cílové místo |
 |---|---|
@@ -182,7 +182,7 @@ Když u položky není jasné, kam patří, **zeptej se** – ale až ve Fázi 5
 
 ## Fáze 4 – Ověř, že průběžná aktualizace opravdu proběhla
 
-`~/Dev/context/structure/structure.md` ukládá udržovat sadu souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 3**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
+`~/.claude/STRUCTURE.md` ukládá udržovat sadu souborů **průběžně během celé session, bez vyžádání**. Tahle fáze ověřuje, jestli se to skutečně dělo. Je to **opačný pohled než Fáze 3**: tam ověřuješ, kam patří položky, které jsi vytěžil; tady ověřuješ, jestli nezůstala nesplněná povinnost.
 
 Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomíná** – proto tenhle krok existuje a proto se nedá odbýt.
 
@@ -202,7 +202,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    | Soubor | Co v session zakládá povinnost zápisu |
    |---|---|
    | `CLAUDE.md` | vzniklo nebo se změnilo pravidlo, konvence, způsob práce v projektu |
-   | `README.md` | změnilo se, co projekt je, umí nebo jak se spouští; zároveň ověř, že v něm nezůstal normativní pokyn pro Clauda – ten patří do `CLAUDE.md` nebo `docs/`, viz `~/Dev/context/structure/structure.md` |
+   | `README.md` | změnilo se, co projekt je, umí nebo jak se spouští; zároveň ověř, že v něm nezůstal normativní pokyn pro Clauda – ten patří do `CLAUDE.md` nebo `docs/`, viz `~/.claude/STRUCTURE.md` |
    | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později“ – a je rozhodnuto, že se to udělá |
    | `docs/backlog.md` | padl nápad, o kterém se nerozhodlo, že se udělá; **zvlášť ověř, že takový nápad neskončil v `todo.md`** |
    | `docs/done.md` | ověř, že v `todo.md` nezbylo nic hotového – přesouvá se průběžně, tohle je jen záchranná síť |
@@ -352,7 +352,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
    |---|---|
    | **Vyřešit teď** | Vyřeš položku **hned**, ještě než se zeptáš na další – ne až po posledním dotazu. Rozhodnutí odložené na konec ztratí kontext, ve kterém padlo. |
    | **Zapsat do todo** | Zapiš ji do `docs/todo.md` (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. Volí se u položky, o které je rozhodnuto, že se udělá. |
-   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` (v tomhle repozitáři do `~/Dev/context/backlog.md`) – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/Dev/context/structure/structure.md`, *`backlog.md`*; totéž říká *Když soubory neexistují* níž). |
+   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` (v tomhle repozitáři do `~/Dev/context/backlog.md`) – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/STRUCTURE.md`, *`backlog.md`*; totéž říká *Když soubory neexistují* níž). |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
 
    Když jsi vyřídil poslední položku, pokračuj Fází 8.

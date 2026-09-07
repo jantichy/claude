@@ -93,7 +93,7 @@ Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
 **Doménové standardy.** Kód se má psát podle nich rovnou, ne se k nim vracet až v `/review`. Neznamená to duplikovat kontrolu – znamená to je respektovat.
 
-**Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, zapiš s celou úvahou – do kódu ne. *Nerozhoduj potichu nad rámec zadání.* **Kam:** chybějící kus práce, který se udělat musí, do `docs/todo.md`; volný nápad, o kterém nikdo nerozhodl, do `docs/backlog.md` (`~/Dev/context/structure/structure.md`, *`backlog.md`*). Fronta úkolů zaplevelená nápady přestane být frontou. **Nemá-li projekt `backlog.md`, založ ho** a řekni to; do `todo.md` nápad nepatří, tím by se z fronty stal mišmaš (`~/.claude/RULES.md`, *Odložené věci pojmenuj a zaparkuj*).
+**Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, zapiš s celou úvahou – do kódu ne. *Nerozhoduj potichu nad rámec zadání.* **Kam:** chybějící kus práce, který se udělat musí, do `docs/todo.md`; volný nápad, o kterém nikdo nerozhodl, do `docs/backlog.md` (`~/.claude/STRUCTURE.md`, *`backlog.md`*). Fronta úkolů zaplevelená nápady přestane být frontou. **Nemá-li projekt `backlog.md`, založ ho** a řekni to; do `todo.md` nápad nepatří, tím by se z fronty stal mišmaš (`~/.claude/RULES.md`, *Odložené věci pojmenuj a zaparkuj*).
 
 **Průběžné zápisy.** Padne-li během práce rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. **Hotovou položku z `docs/todo.md` přesuň do `docs/done.md`** hned, jak je hotová – neodškrtává se na místě (`~/.claude/RULES.md`, *Odložené věci pojmenuj a zaparkuj*). Nečekej na `/cleanup`; ten je jen záchranná síť.
 

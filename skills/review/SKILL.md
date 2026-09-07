@@ -379,7 +379,7 @@ U nálezů z deterministické vrstvy (Fáze 1) se ověření **nedělá**.
 
 ### Ověřený seznam zapiš na disk, než půjdeš dál
 
-Hotovou frontu ulož do **`.claude/run/review.json`** (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "head": "<short HEAD>", "scope": "...", "roles": [...], "findings": [{...nález..., "status": "open"}]}`.
+Hotovou frontu ulož do **`.claude/run/review.json`** (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "head": "<short HEAD>", "scope": "...", "roles": [...], "findings": [{...nález..., "status": "open"}]}`.
 
 **Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 6 a 7 s ním pak dlouze interagují **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
 
@@ -586,7 +586,7 @@ Rozsah: [změny na větvi / celý projekt] · Role: [které]
 **Další krok:** /consistency
 ```
 
-Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/Dev/context/structure/structure.md`, *`done.md`*) a **smaž `.claude/run/review.json`**:
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*) a **smaž `.claude/run/review.json`**:
 
 ```
 - **YYYY-MM-DD** · `/review` · `<short HEAD>` · <rozsah> · N nálezů (X opraveno, Y odloženo, Z won't fix)
