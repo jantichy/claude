@@ -100,10 +100,13 @@ Pak **vyvolej `skill-creator`** a nech ho vytěžit záměr: použité nástroje
 Výstupem je tabulka, která jde rovnou do sekce *Jak je to postavené uvnitř*:
 
 ```
-Krok                        Kdo         Proč zrovna on
-<krok>                      vlastní     <co je na tom naše>
-<krok>                      <nástroj>   <co už umí>
+| Krok | Kdo | Proč zrovna on |
+|---|---|---|
+| <krok> | vlastní | <co je na tom naše> |
+| <krok> | <nástroj> | <co už umí> |
 ```
+
+Zapisuje se do `SKILL.md`, tedy **jako Markdownová tabulka**, ne jako mezerami zarovnaný text v bloku kódu.
 
 **Zbylo-li po odečtení delegací jádro, pokračuj.** Nezbylo-li, řekni to: je to alias, ne skill, a má se napsat jako alias.
 
@@ -170,9 +173,9 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 ```
 ## Skill hotový
 
-**Soubor:** skills/<jméno>/SKILL.md – <N> řádků
-**Režim:** <create / extract>
-**Delegace:** <na co, nebo „na nic">
+- **Soubor:** skills/<jméno>/SKILL.md – <N> řádků
+- **Režim:** <create / extract>
+- **Delegace:** <na co, nebo „na nic">
 
 **Ověřeno**
 - Tvar: <výstup testů a návratový kód>

@@ -129,9 +129,9 @@ Nejdřív uživateli řekni, kolik toho viselo (nebo že nic – to je taky výs
 ```
 **[N/celkem] O ČEM TO BYLO**
 
-**Kdy:** [zhruba kde v konverzaci – čeho se to týkalo]
-**Nevypořádáno:** [citace nebo věrné shrnutí toho, co zůstalo bez odpovědi]
-**Proč není vypořádané:** [co jsi prověřil a proč to nepovažuješ za vyřešené jinudy]
+- **Kdy:** [zhruba kde v konverzaci – čeho se to týkalo]
+- **Nevypořádáno:** [citace nebo věrné shrnutí toho, co zůstalo bez odpovědi]
+- **Proč není vypořádané:** [co jsi prověřil a proč to nepovažuješ za vyřešené jinudy]
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -231,13 +231,17 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
 5. **Nahlas výsledek** – i když je čistý:
 
    ```
-   Průběžná aktualizace: docs/decisions.md – 3 rozhodnutí doplněna zpětně
-                         docs/todo.md      – OK
-                         docs/backlog.md   – 2 nápady doplněny
-                         docs/rules.md     – 1 princip doplněn
-                         CLAUDE.md         – OK
-                         README.md         – OK
+   **Průběžná aktualizace**
+
+   - docs/decisions.md – 3 rozhodnutí doplněna zpětně
+   - docs/todo.md – OK
+   - docs/backlog.md – 2 nápady doplněny
+   - docs/rules.md – 1 princip doplněn
+   - CLAUDE.md – OK
+   - README.md – OK
    ```
+
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
    **Jen ten výpis, žádný komentář k němu** – ani když jsi doplňoval hodně. Nehodnoť, nekomentuj a nezdůvodňuj; co se doplnilo, je v seznamu.
 
@@ -258,9 +262,9 @@ Nedává-li standardní struktura pro tenhle projekt smysl (jednorázový scratc
 ```
 **[N/celkem] NÁZEV POLOŽKY**
 
-**Z session:** [co v session padlo, případně citace]
-**Stav:** [chybí / zastaralé / špatné místo / duplicita / nejasné zařazení]
-**Návrh:** [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit dokumentaci“]
+- **Z session:** [co v session padlo, případně citace]
+- **Stav:** [chybí / zastaralé / špatné místo / duplicita / nejasné zařazení]
+- **Návrh:** [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit dokumentaci“]
 ```
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -331,21 +335,25 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 2. **Vypiš je všechny najednou** jako číslovaný seznam **seřazený od nejdůležitější** – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Práh důležitosti tady neplatí**, na rozdíl od Fáze 2: tohle je poslední místo, kde se o starším dluhu a o rozbitých věcech ze session dá rozhodnout, a co se nezeptá, zmizí se session. Řadí se proto jen proto, aby uživatel narazil na podstatné dřív, ne aby se zbytek zahodil. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
 
    ```
-   Mimo rozsah úklidu zůstává:
+   **Mimo rozsah úklidu zůstává:**
+
    1. [položka] – [proč je mimo rozsah]
    2. …
    ```
 
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+
 3. **Projdi je jednu po druhé.** U každé ji nejdřív vypiš:
 
    ```
-   ---
-   [N/celkem] NÁZEV POLOŽKY
+   **[N/celkem] NÁZEV POLOŽKY**
 
-   Čeho se týká: [co to je, jednou dvěma větami]
-   Proč je mimo rozsah: [co ji drží mimo dnešní úklid]
-   Co se stane, když se to nevyřeší: [konkrétní důsledek, ne „bylo by to lepší“]
+   - **Čeho se týká:** [co to je, jednou dvěma větami]
+   - **Proč je mimo rozsah:** [co ji drží mimo dnešní úklid]
+   - **Co se stane, když se to nevyřeší:** [konkrétní důsledek, ne „bylo by to lepší“]
    ```
+
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
    Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Mimo rozsah N/celkem`. Volby:
 

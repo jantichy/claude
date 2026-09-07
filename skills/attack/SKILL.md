@@ -108,8 +108,8 @@ Zjištěné shrň a **zeptej se na potvrzení, než něco spustíš** (`AskUserQ
 **Databáze:** <připojení>
 - doklad: <výstup dotazu na rozložení domén / počet záznamů>
 
-**Ven:** <co při útoku sáhne mimo – maily, platby, cizí API – nebo „nic“>
-**Rozsah:** <obrazovky, endpointy, vektory>
+- **Ven:** <co při útoku sáhne mimo – maily, platby, cizí API – nebo „nic“>
+- **Rozsah:** <obrazovky, endpointy, vektory>
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -234,15 +234,16 @@ Deduplikuj: jedna příčina se projeví přes víc vektorů. Nech jeden nález 
 ```
 ## Výsledky útoku
 
-Cíl: <adresa> · Rozsah: [změny na větvi – N obrazovek/endpointů / celá aplikace]
-Vektory: [které běžely]
+- **Cíl:** <adresa> · **Rozsah:** [změny na větvi – N obrazovek/endpointů / celá aplikace]
+- **Vektory:** [které běžely]
 
-Nálezů: X, z toho Y se nepodařilo zopakovat, zbývá Z:
+**Nálezů: X, z toho Y se nepodařilo zopakovat, zbývá Z:**
+
 - 🔴 Kritické: N
 - 🟡 Střední: N
 - 🔵 Kosmetické: N
 
-Nezkoušelo se: [vektory vynechané kvůli hranicím – platby, odesílání mailů, …]
+**Nezkoušelo se:** [vektory vynechané kvůli hranicím – platby, odesílání mailů, …]
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -264,9 +265,9 @@ Pro každý, jeden po druhém, od nejzávažnějšího:
 1. …
 2. …
 
-**Pozorováno:** [co se stalo]
-**Mělo být:** [co se stát mělo]
-**Kde:** [soubor:řádek, když se dá dohledat]
+- **Pozorováno:** [co se stalo]
+- **Mělo být:** [co se stát mělo]
+- **Kde:** [soubor:řádek, když se dá dohledat]
 
 **Navrhované řešení:** [konkrétně co změnit]
 ```

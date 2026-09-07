@@ -136,6 +136,8 @@ Tabulka seřazená **od nejjistějšího**, protože podle ní se odshora doplň
 | 2026-08-22 | – | indicie | mail | odeslána nabídka; v Clockify ten den nic |
 ```
 
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+
 Pod tabulku patří tři věci, každá i když je prázdná:
 
 - **Natrackováno jinam** – nálezy z otázky 1 ověřovatele, tedy čas k přesunu, ne k doplnění.

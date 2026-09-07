@@ -186,7 +186,7 @@ Nespoléhej na to, že to vypadá dobře ve zdrojáku.
 - <skript a mezidata>
 
 **Data**
-- Zdroj: <…>   Období: <…>   Vygenerováno: <datum>
+- Zdroj: <…> · Období: <…> · Vygenerováno: <datum>
 
 **Ověřeno v prohlížeči**
 - [seznam kontrol, které prošly]

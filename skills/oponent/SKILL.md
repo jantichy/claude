@@ -234,9 +234,9 @@ U každého nejdřív vypiš:
 ```
 **[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU** · <hledisko, případně „2 oponenti nezávisle“>
 
-**Kde:** <soubor, sekce, citace>
-**Co:** <jednou větou>
-**Proč to vadí:** <konkrétní důsledek>
+- **Kde:** <soubor, sekce, citace>
+- **Co:** <jednou větou>
+- **Proč to vadí:** <konkrétní důsledek>
 
 **Varianty řešení**
 - **A)** <…> – důsledek
@@ -284,9 +284,9 @@ Ve verdiktu:
 ```
 ## Oponentura hotová
 
-**Předmět:** <dokumenty>
-**Hlediska:** <seznam>
-**Panel:** A oponentů → B nálezů hrubě → C po dedupu → D ověřeno, E neověřeno
+- **Předmět:** <dokumenty>
+- **Hlediska:** <seznam>
+- **Panel:** A oponentů → B nálezů hrubě → C po dedupu → D ověřeno, E neověřeno
 
 **Nálezy:** N celkem – 🔴 X kritických, 🟡 Y středních, 🔵 Z kosmetických
 - Zapracováno: N

@@ -124,9 +124,9 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 ```
 ## Realizace hotová
 
-**Plán:** docs/plan.md – <hotovo>/<celkem> úkolů
-**Režim:** <po úkolech / v jednom kuse / bez zastávek>
-**Commity:** <N>
+- **Plán:** docs/plan.md – <hotovo>/<celkem> úkolů
+- **Režim:** <po úkolech / v jednom kuse / bez zastávek>
+- **Commity:** <N>
 
 **Odchylky od plánu**
 - [co se muselo změnit a proč, nebo „žádné“]

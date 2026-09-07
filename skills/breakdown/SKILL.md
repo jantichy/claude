@@ -113,11 +113,11 @@ Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Hle
 ```
 ## Plán hotový
 
-**Soubor:** docs/plan.md – <N> úkolů
-**Spec:** <architecture.md / requirements.md>
-**Rozsah:** <které položky MVP>
-**Pokrytí scénářů:** <N z M scénářů ze scenarios.md, nebo z requirements.md, má test>
-**Generativní testy:** <kde plán zavádí fuzzing / property-based testy podle architecture.md, nebo „architektura je nepředepisuje">
+- **Soubor:** docs/plan.md – <N> úkolů
+- **Spec:** <architecture.md / requirements.md>
+- **Rozsah:** <které položky MVP>
+- **Pokrytí scénářů:** <N z M scénářů ze scenarios.md, nebo z requirements.md, má test>
+- **Generativní testy:** <kde plán zavádí fuzzing / property-based testy podle architecture.md, nebo „architektura je nepředepisuje">
 
 **Nepokryto vědomě**
 - [co zůstalo na další fázi, nebo „nic“]

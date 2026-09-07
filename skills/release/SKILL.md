@@ -141,14 +141,14 @@ Teprve teď se ptáš, a ptáš se **jednou otázkou přes `AskUserQuestion`** n
 ```
 ## Připraveno k nasazení
 
-**Co:** <N commitů> · <oblasti> · <verze/tag>
-**Nasazuje se:** <main / zadaná větev / hash> → <nasazovací větev>
-**Kam:** <prostředí a URL>
-**Kontroly:** průběžná kontrola ✅ · build ✅ · e2e ✅/– · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
-**Migrace:** <žádné / expand krok N, záloha z HH:MM>
-**Citlivé oblasti:** <které se mění, nebo „žádné“>
-**Návrat:** <konkrétně – revert commitu a redeploy / promote předchozí verze / obnovení ze zálohy>
-**Po nasazení sleduji:** <co konkrétně a jak dlouho>
+- **Co:** <N commitů> · <oblasti> · <verze/tag>
+- **Nasazuje se:** <main / zadaná větev / hash> → <nasazovací větev>
+- **Kam:** <prostředí a URL>
+- **Kontroly:** průběžná kontrola ✅ · build ✅ · e2e ✅/– · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
+- **Migrace:** <žádné / expand krok N, záloha z HH:MM>
+- **Citlivé oblasti:** <které se mění, nebo „žádné“>
+- **Návrat:** <konkrétně – revert commitu a redeploy / promote předchozí verze / obnovení ze zálohy>
+- **Po nasazení sleduji:** <co konkrétně a jak dlouho>
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -196,11 +196,11 @@ Zapiš do `docs/decisions.md` jen to, co má trvalou hodnotu (změna postupu nas
 ```
 ## Nasazeno
 
-**Verze:** <tag> · **Kdy:** <čas> · **Kam:** <prostředí>
-**Obsah:** <N commitů, oblasti>
-**Migrace:** <co proběhlo, nebo „žádné“>
-**Ověřeno:** <co konkrétně jsi prošel>
-**Návrat:** <jak se vrátit, dokud je to aktuální>
+- **Verze:** <tag> · **Kdy:** <čas> · **Kam:** <prostředí>
+- **Obsah:** <N commitů, oblasti>
+- **Migrace:** <co proběhlo, nebo „žádné“>
+- **Ověřeno:** <co konkrétně jsi prošel>
+- **Návrat:** <jak se vrátit, dokud je to aktuální>
 
 **Zbývá dokončit:** [contract krok migrace v příštím vydání / nic]
 ```

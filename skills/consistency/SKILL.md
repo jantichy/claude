@@ -190,17 +190,19 @@ Zobraz uživateli přehled před tím, než začneš procházet problémy:
 ```
 ## Výsledky konzistenčního auditu
 
-Nalezeno X problémů celkem:
+**Nalezeno X problémů celkem:**
+
 - 🔴 Kritické: N
 - 🟡 Střední: N
 - 🔵 Kosmetické: N
 
-Z toho:
+**Z toho:**
+
 - [toolchain] hlášeno již existujícím nástrojem: N
 - [batch] hromadné (>20 výskytů): N
 
-Mechanických (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
-Sporných: M – ty projdeme spolu od nejzávažnějších, u každého navrhnu řešení a zeptám se.
+- **Mechanických** (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
+- **Sporných:** M – ty projdeme spolu od nejzávažnějších, u každého navrhnu řešení a zeptám se.
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.

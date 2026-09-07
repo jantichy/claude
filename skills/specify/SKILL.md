@@ -248,10 +248,10 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 
 **Dokumenty**
 - docs/requirements.md – <počet> sekcí
-- docs/architecture.md – <počet> sekcí   (nebo „přeskočeno: <důvod>“)
-- docs/scenarios.md – <počet> scénářů    (jen vede-li je projekt)
-- docs/glossary.md – <počet> pojmů       (jen vede-li je projekt)
-- docs/pricing.md – <počet> tarifů       (jen vede-li je projekt)
+- docs/architecture.md – <počet> sekcí (nebo „přeskočeno: <důvod>“)
+- docs/scenarios.md – <počet> scénářů (jen vede-li je projekt)
+- docs/glossary.md – <počet> pojmů (jen vede-li je projekt)
+- docs/pricing.md – <počet> tarifů (jen vede-li je projekt)
 
 **Zapsáno mimo ně**
 - docs/decisions.md: N rozhodnutí

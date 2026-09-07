@@ -120,9 +120,9 @@ Ověř a **dolož příkazem**, ne dojmem: kontrolní průchod na starý tvar a 
 ```
 ## <starý> → <nový>
 
-**Rozsah:** <N> výskytů v <M> souborech, repozitáře: <seznam>
-**Vyloučeno:** <kde a proč, nebo „nic">
-**Ručně přepsané věty:** <kolik a proč – shoda, repetice>
+- **Rozsah:** <N> výskytů v <M> souborech, repozitáře: <seznam>
+- **Vyloučeno:** <kde a proč, nebo „nic">
+- **Ručně přepsané věty:** <kolik a proč – shoda, repetice>
 
 **Ověřeno**
 - Kontrolní průchod: <příkaz a co vrátil>
@@ -159,8 +159,10 @@ Vytipuje kandidáty. **Nic nemění a na nic se neptá** – výstupem je seznam
 Výstup seřaď podle četnosti a u každého uveď, **čemu se tak běžně říká**. Bez toho je to jen seznam podezření, ke kterému se nedá nic rozhodnout.
 
 ```
-<termín>   <N>× v <M> souborech   <kde vznikl>   běžně: <protějšek>
+- **<termín>** – <N>× v <M> souborech · <kde vznikl> · běžně: <protějšek>
 ```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Na konci nabídni **zapsání fronty do souboru**. Seznam v konverzaci nepřežije kompaktaci a práce by se rozjela znovu od nuly.
 

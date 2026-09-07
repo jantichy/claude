@@ -107,11 +107,11 @@ Za každého ukaž:
 ```
 **<Klient>** · <období> · <hodiny> h × <sazba> = <částka> <daňový režim>
 
-**Doklad:** vystavení <datum>, DUZP <datum>, splatnost <datum>
-**Na dokladu bude:** <období, které ponese text položky – liší-li se od skutečného, řekni to>
-**Položka:** <text, který se vytiskne na doklad> – <hodiny> h
-**Vyřazeno:** <co a proč>
-**K rozhodnutí:** <podezřelé záznamy, jeden po druhém>
+- **Doklad:** vystavení <datum>, DUZP <datum>, splatnost <datum>
+- **Na dokladu bude:** <období, které ponese text položky – liší-li se od skutečného, řekni to>
+- **Položka:** <text, který se vytiskne na doklad> – <hodiny> h
+- **Vyřazeno:** <co a proč>
+- **K rozhodnutí:** <podezřelé záznamy, jeden po druhém>
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.

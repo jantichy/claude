@@ -428,34 +428,36 @@ Při pochybnosti patří nález mezi sporné.
 ```
 ## Výsledky review
 
-Rozsah: [N z M souborů diffu – co a proč vynecháno]
-Role: [které běžely / které vybrané neběžely a proč] · [na čem: code-review high, bezpečnost opus, standardy výchozí]
+- **Rozsah:** [N z M souborů diffu – co a proč vynecháno]
+- **Role:** [které běžely / které vybrané neběžely a proč] · [na čem: code-review high, bezpečnost opus, standardy výchozí]
 
-Deterministická vrstva  [u každého kroku nástroj · návratový kód, ne holé číslo]:
+**Deterministická vrstva** [u každého kroku nástroj · návratový kód, ne holé číslo]:
 - průběžná kontrola: ✅ / ❌ [co padá]
 - produkční build: ✅ / ❌ / nespuštěno
 - audit závislostí: [nástroj] rc=N → N nálezů HIGH/CRITICAL
 - tajemství v repu: [gitleaks / grep-heuristika / nespuštěno] rc=N → N
 - statická analýza: [semgrep / nespuštěno] rc=N → N
-- mutation score: X %   [nebo „nespuštěno – projekt nemá příkaz“]
-- přístupnost: N nálezů serious/critical (práh 0)   [nebo „nespuštěno – projekt nemá příkaz“]
-- výkon: LCP X s / CLS X / INP X ms (prahy z web.md)   [nebo „nespuštěno – projekt nemá příkaz“]
-- pokrytí: X % (práh 80 %)   [nebo „nespuštěno – projekt nemá příkaz“]
+- mutation score: X % [nebo „nespuštěno – projekt nemá příkaz“]
+- přístupnost: N nálezů serious/critical (práh 0) [nebo „nespuštěno – projekt nemá příkaz“]
+- výkon: LCP X s / CLS X / INP X ms (prahy z web.md) [nebo „nespuštěno – projekt nemá příkaz“]
+- pokrytí: X % (práh 80 %) [nebo „nespuštěno – projekt nemá příkaz“]
 - nezkontrolováno: [co chybělo v kontraktu příkazů]
 - nespuštěno: [nástroje, které nejsou na stroji]
 
-Panel: X nálezů → Y po deduplikaci → Z ověřeno (W neověřeno kvůli stropu) → V přežilo:
+**Panel:** X nálezů → Y po deduplikaci → Z ověřeno (W neověřeno kvůli stropu) → V přežilo:
+
 - 🔴 Kritické: N
 - 🟡 Střední: N
 - 🔵 Kosmetické: N
 
-Z toho [batch] hromadných (>20 výskytů): N
+**Z toho [batch] hromadných** (>20 výskytů): N
 
-Vyvrácené KRITICKÉ (jeden řádek na nález – co bylo umlčeno a čím):
+**Vyvrácené KRITICKÉ** (jeden řádek na nález – co bylo umlčeno a čím):
+
 - [title] – vyvráceno: [reason] (ochrana: [guard])
 
-Mechanických (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
-Sporných: M – ty projdeme spolu od nejzávažnějších.
+- **Mechanických** (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
+- **Sporných:** M – ty projdeme spolu od nejzávažnějších.
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -493,10 +495,10 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 ```
 **[N/celkem] 🔴/🟡/🔵 [role] [tagy] NÁZEV NÁLEZU**
 
-**Podklad:** [scénář z requirements / bod ASVS / sekce standardu]
-**Problém:** [v čem konkrétně]
-**Selže takhle:** [vstupy nebo stav → co se stane špatně]
-**Kde:** [soubory:řádky, nebo „X výskytů, např. …“ u batch]
+- **Podklad:** [scénář z requirements / bod ASVS / sekce standardu]
+- **Problém:** [v čem konkrétně]
+- **Selže takhle:** [vstupy nebo stav → co se stane špatně]
+- **Kde:** [soubory:řádky, nebo „X výskytů, např. …“ u batch]
 
 **Navrhované řešení:** [konkrétně co změnit]
 ```
@@ -585,8 +587,8 @@ Rozsah: [změny na větvi / celý projekt] · Role: [které]
 
 [Pokud jsou odložené: seznam s popisy]
 
-**Nezkontrolováno:** [kroky přeskočené kvůli chybějícímu příkazu v kontraktu, nebo „nic“]
-**Nespuštěno:** [nástroje, které na stroji nejsou – gitleaks, semgrep, shellcheck –, nebo „nic“]
+- **Nezkontrolováno:** [kroky přeskočené kvůli chybějícímu příkazu v kontraktu, nebo „nic“]
+- **Nespuštěno:** [nástroje, které na stroji nejsou – gitleaks, semgrep, shellcheck –, nebo „nic“]
 
 **Další krok:** /consistency
 ```
