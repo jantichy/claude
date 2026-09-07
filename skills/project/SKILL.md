@@ -398,112 +398,17 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 **Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
 
-Zapiš do projektového `CLAUDE.md` sekci `## Příkazy`:
+Zapiš do projektového `CLAUDE.md` sekci `## Příkazy` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/green-line.sh --allow <kořen projektu>` a nech ho spustit **jeho** – souhlasem se zapíná brána, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu.
 
-```markdown
-## Příkazy
-
-- test:      npm test
-- typecheck: npm run typecheck
-- lint:      npm run lint
-- build:     npm run build
-- dev:       npm run dev
-- e2e:       npx playwright test
-- coverage:  npm run coverage
-- audit:     npm audit --omit=dev
-- mutation:  npx stryker run
-```
-
-Zapisuj **jen ty klíče, které projekt opravdu umí spustit** – vymyšlený příkaz je horší než chybějící. U klíče, který chybí, napiš pod seznam, co tím odpadne: bez `dev` nemá `/attack` co spustit, bez `e2e` neproběhne průchod aplikací před nasazením, bez `coverage` neporovná `/review` pokrytí s prahem.
-
-Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
-
-**Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json`, takže se nikde nic dalšího **neinstaluje** – ale spustit se v projektu ještě nesmí: chybí mu souhlas, viz níž. Vypnout se dá souborem `.claude/no-green-line` v projektu nebo proměnnou `CLAUDE_NO_GREEN_LINE=1`.
-
-**Uživatel musí vydat souhlas, jinak linka neběží.** Kontrakt je kód v repozitáři a hook běží mimo permission systém, takže se souhlas dává jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá brána ztratila smysl:
-
-```
-~/.claude/green-line.sh --allow <kořen projektu>
-```
-
-Řekni mu u toho pravdu o tom, co schvaluje: souhlas platí **pro repozitář, ne pro ty konkrétní řádky**. `npm test` spustí, co je v `package.json`, a to se neschvaluje. Do cizího naklonovaného repozitáře souhlas nepatří.
-
-Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*. Řekni uživateli jednou větou, co se právě zapnulo – ne aby ho to překvapilo, až mu hook poprvé zablokuje konec tahu.
-
-**Zapni i brány, které se nespouštějí příkazem, ale konfigurací.** Kontrakt říká, *čím* se kontroluje; tyhle určují, *jak přísně*. Bez nich zůstanou prahy z `coding.md` jen napsané a nikdo je neměří:
-
-1. **Přísnost překladače.** Ověř, že konfigurace projektu drží řádek *Přísnost překladače* z tabulky bran – u TypeScriptu je to `tsconfig.json`, u ostatních jazyků odpovídající přepínač (Python `mypy --strict`, Go `go vet`, PHP `declare(strict_types=1)` a maximální úroveň statické analýzy). Chybí-li, **navrhni změnu a nech ji potvrdit** – u staršího projektu může zapnutí `strict` vyrobit stovky chyb naráz, takže to nikdy neprováděj rovnou.
-2. **Metriky složitosti v lintru.** Prahy z řádku *Metriky složitosti* přenes do konfigurace lintru – v ESLintu jsou to pravidla `complexity`, `max-lines-per-function`, `max-depth`, `max-params`. **Hodnoty opisuj z tabulky, ne odsud:** kdyby stály na dvou místech, rozejdou se. U existujícího projektu jich naráz vyplavou stovky, takže se nabízí nastavit je jako varování – jenže **varování `lint` neshodí, a brána se tím vypne**. Je to změkčení prahu, které podle `coding.md` smí schválit **jen člověk a s důvodem zapsaným do `docs/decisions.md`**, a to i s termínem, kdy se přitvrdí. Zeptej se tedy a rozhodnutí nech zapsat; sám to nezměkčuj.
-3. **Vlastní pravidla statické analýzy.** Ptej se, jestli projekt má pravidlo, které by šlo zakódovat: do `.semgrep/` patří **projektová znalost, kterou model nemá** – „tenhle ORM pattern u nás nepoužíváme, dělá N+1“, „sem se nesmí volat přímo, jde se přes službu“. **Existuje-li takové pravidlo, adresář založ a rovnou ho tam zapiš** i s poznámkou, k čemu je. Neexistuje-li, nezakládej nic – prázdný adresář pro jistotu je jen další nepořádek.
-
-**Nasazuje se projekt někam?** Zjisti to (`vercel.json`, `netlify.toml`, `.github/workflows/`) a najdeš-li automatické nasazení z produkční větve, zapiš to do `## Nasazení` v `CLAUDE.md` i s upozorněním, že **merge do produkční větve je samotné nasazení** – detail řeší `/release`.
+**Šablonu sekce, význam klíčů, mechaniku zelené linky i brány, které se nenastavují příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/gates.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*.
 
 ## Krok 13 – Doménové checklisty
 
-Checklistů je devět a `AskUserQuestion` bere najednou nejvýš čtyři volby (týž strop jako v kroku 11). Ptej se **ve třech kolech**, všechna s `multiSelect: true`. **Kola se dělí tematicky, ne aby byla plná** – uživatel odpovídá na otázku, ne na seznam, a otázka musí jít položit jednou větou. Volby předvyplň podle typu z kroku 11, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
+Zeptej se **ve třech tematických kolech** (`multiSelect: true`, nejvýš čtyři volby na kolo), co všechno se v projektu bude dělat, a vybrané doménové znalosti zapiš do projektového `CLAUDE.md` jako **tvrdé `@import`y**, ne jako prozaické odkazy. Volby předvyplň podle typu z kroku 11, ale nech rozhodnout uživatele – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
-| Kolo | Otázka | Volby |
-|---|---|---|
-| 1 | „Co všechno se v projektu bude dělat s kódem a rozhraním? Když nic, nic nezaškrtávej.“ | Psaní kódu · Webové rozhraní · Administrace / backoffice · Webová analytika a měření |
-| 2 | „A co se v něm bude psát a učit? Když nic, nic nezaškrtávej.“ | Psaní českých textů · Česká typografie · Školení a kurzy |
-| 3 | „A bude se v něm něco kreslit nebo promítat? Když nic, nic nezaškrtávej.“ | Vizuální tvorba a grafika · Prezentace a slajdy |
+**Znění kol, všech devět checklistů i s cílem importu, předvyplnění podle typu projektu, profil organizace a důvod, proč se importuje a neodkazuje, drží `~/.claude/skills/project/checklists.md`.** Řiď se jím, neopisuj ho z hlavy.
 
-Volbu **Žádný** nikam nedávej – prázdný výběr v `multiSelect` ji nahrazuje. **Nový checklist zařaď do kola, kam tematicky patří**; teprve nevejde-li se do žádného pod strop čtyř voleb, přidej další kolo. Pátá volba do existujícího kola nepatří nikdy.
-
-**Česká typografie je samostatná volba, ne přívažek k psaní textů.** Projekt s českým rozhraním nebo se slajdy sází česky, i když v něm žádný souvislý text nevzniká – a naopak by ho nemělo nic nutit brát si kvůli sazbě celý redakční standard.
-
-Přehled všech devíti i s cílem importu:
-
-| Volba | Import |
-|---|---|
-| Psaní kódu | `@~/Dev/context/coding/coding.md` |
-| Webové rozhraní | `@~/Dev/context/web/web.md` |
-| Administrace / backoffice | `@~/Dev/context/web/admin.md` |
-| Webová analytika a měření | `@~/Dev/context/analytics/analytics.md` |
-| Psaní českých textů | `@~/Dev/context/text/text.md` |
-| Česká typografie | `@~/Dev/context/text/typography.md` |
-| Školení a kurzy | `@~/Dev/context/training/training.md` |
-| Vizuální tvorba a grafika | `@~/Dev/context/design/design.md` |
-| Prezentace a slajdy | `@~/Dev/context/design/slides.md` |
-
-U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md` a `web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text/text.md` i `text/typography.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
-
-U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvyplň `training/training.md` spolu s `text/text.md` a `text/typography.md` – materiály pro účastníky jsou text a řídí se vším trojím. Přihoď i `design/slides.md`, pokud k tomu vzniká promítaná prezentace.
-
-`design/slides.md` nabízej i mimo školení – všude, kde se dělá deck: konferenční přednáška, prodejní pitch, prezentace výsledků klientovi. Importuje se **navíc** k `design/design.md`, ne místo něj.
-
-`worktree.md` se tu nenabízí schválně – importuje se už v kroku 4, když si uživatel zvolí worktree layout.
-
-`brand/brand.md` se tu nenabízí taky schválně, ale z jiného důvodu: je to **korpus, ne checklist**. Neříká, jak se něco dělá, ale jak to je – a projekt, který píše ven, si ho načte podle potřeby přes `~/.claude/CLAUDE.md`, kde je vedený mezi podmíněnými doménovými znalostmi. Importovat ho natvrdo do každého takového projektu by znamenalo vozit korpus tam, kde stačí sáhnout.
-
-### Profil organizace
-
-Když projekt vzniká **pro konkrétní organizaci**, zeptej se, jestli má profil v `~/Dev/context/organizations/`, a když ano, přidej ho do importů:
-
-```
-@~/Dev/context/organizations/planetum.md
-```
-
-**Není to doménový standard, ale korpus** – kdo v organizaci sedí, kdo co schvaluje, jaké mají systémy. Profil zůstává v knowledge base a projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil. Když profil neexistuje a jde o **opakovaný vztah, u kterého je potřeba znát vnitřek organizace**, navrhni jeho založení – kritérium je v `~/Dev/context/organizations/organizations.md`, sekce *Kdo dostane profil*.
-
-Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako prozaické odkazy:
-
-```
-## Doménové standardy
-
-Závazné pro tenhle projekt:
-
-@~/Dev/context/coding/coding.md
-@~/Dev/context/web/web.md
-```
-
-**Proč `@import` a ne odkaz:** `@import` Claude Code při startu session textově rozbalí do kontextu, takže obsah platí vždy. Prozaický odkaz („řiď se souborem X“) je jen instrukce, kterou si model musí sám všimnout a sám se rozhodnout ji splnit – to se v praxi dodržuje nespolehlivě.
-
-Platí to **pro projekt**, kde je doména relevantní pořád. Globální `~/.claude/CLAUDE.md` naopak odkazuje prozaicky schválně – tam se domény střídají a import všech by stál kontext v každé session.
-
-Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `web/web.md` a `web/admin.md` mají dohromady skoro 500 řádků.
-
-Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
+Importuj **jen to, co je pro projekt opravdu relevantní** – každý import stojí kontext v každé session. Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
 **Tímhle krok 13 končí. V režimu `adopt` teď jdi do kroku 14** a projekt zreviduj proti aktuálnímu standardu; teprve po něm následuje souhrn. V režimu `update` se sem nedojde – krok 14 tam proběhl místo průchodu otázkami.
 
@@ -529,36 +434,9 @@ Upozorni uživatele, že při příštím spuštění dostane dialog na schvále
 
 **Ve worktree layoutu** je tenhle krok do prvního dorovnání jen čtení – jakmile se má něco změnit, založ si větev podle kroku 0, *Nejdřív zjisti, kde stojíš*, a zapisuj do ní.
 
-Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zásad*: co je mechanické a jednoznačné, oprav rovnou a jen to vypiš; co přepisuje nebo maže existující obsah, předlož a nech potvrdit. **Vyžaduje-li nález volbu**, kterou umí jen některý z dalších kroků (typ projektu, doménové importy, kontrakt příkazů), udělej ten krok – v režimu `adopt` je to návrat, v `update` se otevírá jen kvůli tomu nálezu – tady je popsané, *co se kontroluje*, tam *jak se to nastavuje*.
+Postupuj po oblastech z katalogu níž. U každé platí **dvourychlostní režim** ze *Zásad*: co je mechanické a jednoznačné, oprav rovnou a jen to vypiš; co přepisuje nebo maže existující obsah, předlož a nech potvrdit. **Vyžaduje-li nález volbu**, kterou umí jen některý z dalších kroků (typ projektu, doménové importy, kontrakt příkazů), udělej ten krok – v režimu `adopt` je to návrat, v `update` se otevírá jen kvůli tomu nálezu – tady je popsané, *co se kontroluje*, tam *jak se to nastavuje*.
 
-| Oblast | Co ověřit | Kde je pravda |
-|---|---|---|
-| Blok metadat | Je na začátku projektového `CLAUDE.md`, má dnešní tvar a pořadí řádků, slug sedí s adresářem, `Struktura` sedí se skutečným umístěním souborů, řádky `Web` a `Repozitář` jsou jen tam, kde mají hodnotu. | `structure.md`, *`CLAUDE.md`* (krok 1 a 3) |
-| Tři místa téhož údaje | Lidský název a popisek sedí v `CLAUDE.md`, v `README.md` a v Repository details na GitHubu (`gh repo view <owner>/<slug> --json description,homepageUrl`). Rozejít se smějí jen v tom, že README popisek rozvádí. | `structure.md`, *`CLAUDE.md`* (krok 3) |
-| Sekce v `CLAUDE.md` | Každá sekce, kterou projekt má mít, tam je (struktura a dokumentace, příkazy, nasazení, autocommit, paměť, typ projektu, doménové standardy) – a **žádná zaniklá nepřebývá**. Seznam ber z `structure.md` a z kroků 5–13, ne z paměti. | `structure.md` (kroky 5–7 a 9–13) |
-| Znění generovaných sekcí | **Nestačí, že sekce existuje – přečti, co v ní stojí, a porovnej s dnešní šablonou** v krocích 5–13. Sekce se zapsala jednou a od té doby zamrzla, kdežto šablona se vyvíjí. Zvlášť hlídej **citované seznamy, které mají vlastní zdroj pravdy**: kroky životního cyklu (`RULES.md`), jména skillů, prahy bran (`coding.md`), cesty do konfigurační vrstvy. Zastaralé znění **přepiš** a přepis vypiš – není to redakce obsahu, ale dorovnání šablony. Přibyl-li mezitím **typ projektu nebo doménový checklist**, který na projekt sedí líp než ten zapsaný, volbu za uživatele neměň – nabídni ji. | kroky 5–13 a jejich zdroje |
-| Deklarace struktury | Seznam souborů v sekci *Struktura a dokumentace* sedí **přesně** na to, co v projektu opravdu je: nic nechybí, nic nepřebývá, cesty odpovídají režimu umístění. | krok 5, *Zápis do CLAUDE.md* |
-| Soubory, které standard mezitím zavedl | **Projdi dnešní výčet standardních souborů ve `structure.md` proti tomu, co projekt má.** Chybí-li soubor, který projekt podle svých voleb mít má – typicky proto, že v době jeho založení ještě neexistoval –, **nabídni jeho doplnění** a zapiš ho do deklarace struktury. Neptej se, jestli o něm projekt „ví“; projekt neví nic, ví to jen standard. Volitelný soubor, který projekt vědomě nevede, se nezakládá – ale řekni, že se nabízel. | `structure.md`, *Které soubory vůbec vzniknou* |
-| Umístění a názvy souborů | Standardní soubory leží všechny v jednom režimu (ne půl v `docs/`, půl v kořeni), nikde nezůstalo starší pojmenování. | krok 5 a *Migrace staršího pojmenování* |
-| Vnitřní tvar dokumentace | Viz *Obsah dokumentačních souborů* níž – nejdražší část revize. | `structure.md`, sekce jednotlivých souborů |
-| Kontrakt příkazů a brány | Každý řádek `## Příkazy` jde opravdu spustit (ověř proti `package.json`, `Makefile`, `composer.json`), nechybí klíč, který projekt umí, vědomě neaplikovaný má pomlčku. Souhlas se zelenou linkou ověř `~/.claude/green-line.sh --list`. | krok 12, `coding.md` |
-| Odkazy ven z projektu | Každá cesta do `~/.claude/` nebo `~/Dev/context/` a každý zmíněný skill **existuje**. Vygrepuj je z `CLAUDE.md`, `README.md` i dokumentace a ověř proti inventáři výš. Tohle chytá přejmenované a zrušené věci v konfigurační vrstvě, aniž bys musel vědět, co se změnilo. | inventář z výpisů výš |
-| Doménové importy | Cíle `@import`ů existují. Nepřibyla doménová znalost, která na projekt sedí a chybí mu? Nezůstal import, který už neplatí, protože se povaha projektu posunula? Přidání ani odebrání **nedělej sám** – nabídni v kroku 13. | krok 13, `~/.claude/CLAUDE.md` |
-| Layout a `.gitignore` | Ve worktree layoutu leží projektové soubory v projektovém adresáři a v kořeni kontejneru je jen stub (a pracovní adresáře větví). `.gitignore` má řádky z jádra včetně `.claude/run/`. | kroky 4 a 7 |
-
-### Obsah dokumentačních souborů
-
-Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím posunul (rozdělení `todo.md` a `done.md`, oddělení `backlog.md`, nové sekce, pravidlo o řazení) a projekt v něm zůstal na starém. Projdi `todo.md`, `backlog.md`, `done.md`, `decisions.md` a `rules.md` **obsahem, ne jen existencí**, a ověř proti jejich sekcím v `structure.md`:
-
-- **Hotové položky v `todo.md`.** Odškrtnuté a zjevně dokončené věci patří do `done.md` s datem dokončení. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny* / *Projít po jedné* / *Nechat být*) – jestli je něco hotové, ví uživatel, ne ty. Odškrtnutý krok uvnitř nedokončené položky se nepřesouvá.
-- **Řazení.** Nejstarší nahoře, nové na konec – v `decisions.md` i `done.md`, i uvnitř kapitol. Obrácené pořadí **neotáčej sám**: je to přeskládání celého souboru. Ukaž, čeho se to týká, a zeptej se přes AskUserQuestion (*Srovnat podle standardu* / *Nechat, jak to je*).
-- **Nezávazné nápady v `todo.md`.** Projekt založený dřív, než standard zavedl `backlog.md`, je má promíchané s frontou. Vyber položky, u kterých není rozhodnuto, že se udělají – poznáš je podle formulace („někdy by šlo“, „stálo by za úvahu“, „nápad do budoucna“). **Nerozhoduje, jestli je u položky termín nebo postup** – rozhoduje, jestli někdo řekl, že se to udělá. Odložení po MVP je plán a zůstává; otázka, kterou je potřeba zodpovědět, zůstává taky, protože zodpovědět ji někdo musí. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny do backlogu* / *Projít po jedné* / *Nechat být*) – co je závazek a co nápad, ví uživatel.
-- **Zrcadlení sekcí.** Je-li `todo.md` členěné, `done.md` drží tytéž sekce. `backlog.md` je nezrcadlí – nápady se člení podle sebe, ne podle fronty.
-- **Tvar záznamů.** Datum u hotové položky jako `(2026-08-28)`, řádky v *Průchody životním cyklem* a *Co proklouzlo* podle šablony v `structure.md`.
-- **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu životním cyklem nesedí volně v `done.md` mimo *Průchody životním cyklem*.
-- **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md`, hotová věc v `backlog.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš. (Hotová položka z backlogu jde rovnou do `done.md`; je to úklid po chybném zařazení, ne druhá cesta – viz `structure.md`, *`backlog.md`*.)
-- **Prázdná sekce `## Parkované v session`** se ruší.
-- **`README.md` je pro člověka, ne pro Clauda.** Zůstal-li v něm normativní pokyn – pravidlo práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit –, přesuň ho do `CLAUDE.md`, `rules.md` nebo `decisions.md` podle povahy. Postup i kritérium má krok 7 a `~/.claude/STRUCTURE.md`, sekce *`README.md`*. U staršího projektu je to častý nález: pravidla se tehdy psala do README, protože jiné místo nebylo.
+**Oblasti revize – co v každé ověřit a kde je pravda – drží `~/.claude/skills/project/standard.md`.** Projdi je všechny; je tam i *Obsah dokumentačních souborů*, tedy vnitřní tvar `todo.md`, `backlog.md`, `done.md`, `decisions.md` a `README.md`, což je nejdražší část revize.
 
 ### Výstup
 
