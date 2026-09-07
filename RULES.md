@@ -358,7 +358,7 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 ### Odložené věci pojmenuj a zaparkuj
 
-Vše mimo aktuální rozsah – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
+Vše mimo aktuální rozsah, u čeho je rozhodnuté, že se to udělá – úkol do další fáze, otázka, kterou je potřeba zodpovědět, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
 
 **Rozlišuj přitom odložené od nezávazného.** Do `todo.md` jde jen to, u čeho je rozhodnuto, že se to udělá – včetně věcí odsunutých až po spuštění. Nápad, který nikdo neschválil ani nezamítl („někdy by šlo…“, „za úvahu stojí…“), patří do `docs/backlog.md`; definici hranice drží `~/Dev/context/structure/structure.md`, *`backlog.md`*. **Nepromíchávej to:** fronta, ve které leží i nezávazné nápady, přestane být frontou a nikdo ji nedočte.
 

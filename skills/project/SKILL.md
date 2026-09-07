@@ -346,7 +346,7 @@ Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na č
 
 ## Krok 11 – Typ projektu
 
-**Kroky životního cyklu do popisu typu nevypisuj.** Odkaz na *Životní cyklus projektu* v `~/.claude/RULES.md` stačí; vypsaný řetěz je druhý zdroj pravdy, který se při přidání kroku rozejde a nikdo si toho nevšimne, protože v `CLAUDE.md` vypadá pořád stejně platně. Přesně to se stalo s `/discovery`: projekty založené předtím měly v `## Typ projektu` napsanou cestu bez něj a četly ji jako úplnou. Platí to na každý seznam, který má vlastní zdroj pravdy – kroky cyklu, jména skillů, prahy bran.
+**Kroky životního cyklu do popisu typu nevypisuj**, odkaz na *Životní cyklus projektu* v `~/.claude/RULES.md` stačí. Přesně tady vada vznikla: projekty založené před `/discovery` měly v `## Typ projektu` napsanou cestu bez něj a četly ji jako úplnou. Obecně to platí pro každý seznam s vlastním zdrojem pravdy – `~/.claude/skills/SKILLS.md`, *Jak se píše text uvnitř*.
 
 
 Typů je šest, ale AskUserQuestion bere najednou nejvýš čtyři volby. Ptej se proto ve dvou úrovních – nejdřív na oblast, pak na typ uvnitř ní. Uživatel klikne nejvýš dvakrát a žádný typ se neztratí.
@@ -538,7 +538,7 @@ Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím 
 - **Zrcadlení sekcí.** Je-li `todo.md` členěné, `done.md` drží tytéž sekce. `backlog.md` je nezrcadlí – nápady se člení podle sebe, ne podle fronty.
 - **Tvar záznamů.** Datum u hotové položky jako `(2026-08-28)`, řádky v *Průchody životním cyklem* a *Co proklouzlo* podle šablony v `structure.md`.
 - **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu životním cyklem nesedí volně v `done.md` mimo *Průchody životním cyklem*.
-- **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md`, hotová věc v `backlog.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš.
+- **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md`, hotová věc v `backlog.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš. (Hotová položka z backlogu jde rovnou do `done.md`; je to úklid po chybném zařazení, ne druhá cesta – viz `structure.md`, *`backlog.md`*.)
 - **Prázdná sekce `## Parkované v session`** se ruší.
 - **`README.md` je pro člověka, ne pro Clauda.** Zůstal-li v něm normativní pokyn – pravidlo práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit –, přesuň ho do `CLAUDE.md`, `rules.md` nebo `decisions.md` podle povahy. Postup i kritérium má krok 7 a `~/Dev/context/structure/structure.md`, sekce *`README.md`*. U staršího projektu je to častý nález: pravidla se tehdy psala do README, protože jiné místo nebylo.
 

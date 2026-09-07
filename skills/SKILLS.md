@@ -186,7 +186,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Konkrétní příklad místo abstraktního.** Ne „ověř formát", ale ukázka správného a špatného tvaru.
 
-**Neopisuj seznam, který má vlastní zdroj pravdy.** Pořadí kroků životního cyklu, prahy bran, inventář domén – na ty se odkazuj, nevypisuj je. Opsaný seznam se při přidání položky rozejde a **vypadá přitom pořád platně**, takže si toho nikdo nevšimne. Platí to dvojnásob pro **šablony, které skill zapisuje jinam**: `/project` psal do každého vývojářského `CLAUDE.md` cestu bez `/discovery` a projekty ji četly jako úplnou. Řetěz tří a víc kroků cyklu v `SKILL.md` hlídají testy.
+**Neopisuj seznam, který má vlastní zdroj pravdy.** Pořadí kroků životního cyklu, prahy bran, inventář domén – na ty se odkazuj, nevypisuj je. Opsaný seznam se při přidání položky rozejde a **vypadá přitom pořád platně**, takže si toho nikdo nevšimne. Platí to dvojnásob pro **šablony, které skill zapisuje jinam**: `/project` psal do každého vývojářského `CLAUDE.md` cestu bez `/discovery` a projekty ji četly jako úplnou. Řetěz tří a víc kroků cyklu v `SKILL.md` hlídají testy. **Výjimka je rámeček v README skillu** (*README skillu*, níž): tam je výčet celého cyklu smysl té sekce – čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je řada. Proto ho hlídá vlastní test, který žádá, aby byl **úplný**; opsaný seznam je vada jen tam, kde ho nikdo neměří.
 
 **Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…" zestárnou tiše. Piš role, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
 
