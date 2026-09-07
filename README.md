@@ -18,7 +18,7 @@ Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje
 
 Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat; a hlavně vědí kam zapsat i skilly, kterých je na to půl tuctu. Zakládá ji `/project`, ale nepatří jemu – čte ji devět dalších skillů a každý si z ní bere něco jiného.
 
-### [`GLOSSARY.md`](GLOSSARY.md) – termíny, které znamenají to, co si myslíme
+### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
 Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: každý termín, na kterém jsme se dohodli, tu má zapsané, co znamená, v jakém rozsahu platí a co se jím naopak neoznačuje. Nejcennější je vždycky ta poslední část – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc.
 
@@ -97,6 +97,10 @@ Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem �
 ### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
 
 Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je mu podezřelé, vystaví faktury a nechá v mailu rozepsaný draft s fakturou a výkazem hodin v příloze. **Odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: dohledat čas, který jsem si zapomněl natrackovat. Sazby a dohody s klienty v tomhle repozitáři nejsou, skill je jen rámec.
+
+### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
+
+Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem, a začne ho používat jako zavedený pojem – napříč projekty, v dokumentaci, v názvech souborů. Tenhle skill takové termíny vyhledá, projedná se mnou jeden po druhém, a co odsouhlasím, nahradí ve všech repozitářích naráz. Rozhodnutí i s důvodem pak drží [`PTYDEPE.md`](PTYDEPE.md), takže se totéž slovo nezavádí za měsíc znovu.
 
 ### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
 

@@ -52,7 +52,7 @@ Zbude-li tu na cizí soubor odkaz, **odkazuj, nekopíruj** – viz *Single sourc
 
 Cizí slovo budící dojem zavedeného vzoru („resolver“, „fasáda“, „strategie“) tam, kde jde o obyčejnou volbu mezi dvěma větvemi, je horší než prosté pojmenování. Buď termín skutečně ustálený je, nebo hned řekni, co jím myslíš.
 
-**Pozor na termín převzatý z konverzace.** Slovo, které v ní jednou padlo – klidně jen překlepem nebo zkratkou –, ještě není termín; braní takového slova za ustálené je nejčastější cesta, jak se neustálený termín rozšíří do všech projektů. Rozhodnuté termíny drží `~/.claude/GLOSSARY.md`.
+**Pozor na termín převzatý z konverzace.** Slovo, které v ní jednou padlo – klidně jen překlepem nebo zkratkou –, ještě není termín; braní takového slova za ustálené je nejčastější cesta, jak se neustálený termín rozšíří do všech projektů. Rozhodnuté termíny drží `~/.claude/PTYDEPE.md`; vytipovat je a vypořádat umí `/ptydepe`.
 
 ### Interní značky ven nepatří
 
@@ -245,7 +245,7 @@ Jeden pojem má **jedno jméno** – v kódu, v dokumentaci, v UI i v řeči o n
 
 **Naopak jedno jméno pro dvě věci je táž vada z druhé strany** – rozliš je, i kdyby to stálo delší název.
 
-Ustálený termín se **nemění bez důvodu**; když se mění, mění se všude naráz (viz *Propagace změny*; nástroj na to je `/replace`). Co je rozhodnuté napříč projekty, stojí v `~/.claude/GLOSSARY.md`.
+Ustálený termín se **nemění bez důvodu**; když se mění, mění se všude naráz (viz *Propagace změny*; nástroj na to je `/replace`). Co je rozhodnuté napříč projekty, stojí v `~/.claude/PTYDEPE.md` a spravuje to `/ptydepe`.
 
 ### Generic-base + delta
 

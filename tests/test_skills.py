@@ -294,6 +294,30 @@ class NosneCasti(unittest.TestCase):
             self.assertIn(kus, faze,
                           f"/cleanup, Fáze 2 přišla o {kus!r} – zbyl jen nadpis")
 
+    def test_ptydepe_cte_jen_verzovane_soubory(self):
+        """Nejdražší chyba, jakou tenhle skill umí udělat, a stala se.
+
+        Náhrada termínu pouštěná rekurzivně přes adresář přepsala v `~/.claude`
+        1 120 souborů mimo verzování – transkripty starých session, `history.jsonl`,
+        cache i `file-history/`. V `.gitignore` jsou všechny, jenže rekurzivnímu
+        průchodu to nevadí, a protože je git nezná, nešlo to vrátit.
+
+        `git ls-files` ten problém neřeší náhodou, ale z definice: vrací výhradně
+        to, co je ve verzování, takže se skript k ignorovaným souborům nedostane
+        ani omylem. Zákaz `rglob`/`find` je tedy nosná část skillu, ne styl zápisu –
+        proto se hlídá jmenovitě a uvnitř té fáze, ne kdekoliv v souboru.
+        """
+        text = body(ROOT / "skills/ptydepe/SKILL.md")
+        nadpis = "## Fáze 4 – Inventura a vyloučení"
+        self.assertIn(nadpis, text, "/ptydepe přišel o fázi inventury a vyloučení")
+        faze = text[text.index(nadpis):]
+        faze = faze[:faze.index("\n## ")]
+        self.assertIn("git ls-files", faze,
+                      "/ptydepe, Fáze 4 už nepředepisuje git ls-files")
+        for zakazane in ("rglob", "find"):
+            self.assertIn(zakazane, faze,
+                          f"/ptydepe, Fáze 4 přestala jmenovat {zakazane!r} jako zakázaný průchod")
+
     def test_zadani_pro_agenty_maji_povinna_pole(self):
         """Nález bez `basis` a `severity` nejde ani ověřit, ani zařadit.
 
