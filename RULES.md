@@ -8,7 +8,7 @@ Kde v projektu leží standardní soubory, je volba ze dvou režimů (`docs/`, n
 
 Doménové znalosti z `~/Dev/context/` se do projektu načítají **tvrdým `@import`em** v jeho `CLAUDE.md` – jen ty, které jsou pro jeho charakter relevantní. Rozcestník po doménách je `~/Dev/context/CLAUDE.md`, importy zakládá `/project`.
 
-**Projekt dělaný pro konkrétní organizaci si navíc importuje její profil** z `~/Dev/context/organizations/` – například `@~/Dev/context/organizations/planetum.md`. Není to standard, ale korpus: kdo v organizaci sedí, kdo co schvaluje a na čem jedou. Profil drží knowledge base, projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil.
+**Projekt dělaný pro konkrétní organizaci si navíc importuje její profil** z `~/Dev/context/organizations/` – například `@~/Dev/context/organizations/planetum.md`. Není to standard, ale korpus: kdo v organizaci sedí, kdo co schvaluje a na čem jedou. Profil drží knowledge base, projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil. **Ten `@` je v ukázce schválně v apostrofech** – je to zápis syntaxe, ne import. Bez nich by se celý profil načetl do každé session, která tohle pravidlo čte, a totéž platí i v konverzaci: `@cesta` napsaná bez apostrofů soubor rovnou natáhne. Opačný případ – import, který se načíst **má** – naopak apostrofy nesnese; viz `~/.claude/STRUCTURE.md`, *`CLAUDE.md`*.
 
 ## Co do tohoto souboru nepatří
 
