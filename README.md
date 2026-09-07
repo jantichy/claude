@@ -18,6 +18,10 @@ Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje
 
 Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat; a hlavně vědí kam zapsat i skilly, kterých je na to půl tuctu. Zakládá ji `/project`, ale nepatří jemu – čte ji devět dalších skillů a každý si z ní bere něco jiného.
 
+### [`GLOSSARY.md`](GLOSSARY.md) – termíny, které znamenají to, co si myslíme
+
+Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: každý termín, na kterém jsme se dohodli, tu má zapsané, co znamená, v jakém rozsahu platí a co se jím naopak neoznačuje. Nejcennější je vždycky ta poslední část – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc.
+
 ### [`WORKTREE.md`](WORKTREE.md) – několik rozdělaných věcí vedle sebe
 
 Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik sessions naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá a dokončuje, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i pre-flight a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.
