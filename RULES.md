@@ -416,6 +416,8 @@ Instalace je zásah do uživatelova počítače, ne do repozitáře: **než něc
 
 Doloženo: 3. 9. 2026 session pracující na `/project` dvakrát smetla `git add -A` rozpracované změny druhé session v jiném skillu. Obsah se neztratil, ale zpráva u jednoho commitu popisuje diff, který v něm není, a `git blame` odkazuje na zdůvodnění týkající se něčeho jiného. **Pushnutá historie se pak už nedá opravit** bez přepsání větve, na které jiná session stojí.
 
+**Podruhé 7. 9. 2026**, a to na pravidlech samotných: dvě session upravovaly `~/.claude` naráz, cizí `-A` sebral rozepsané odrážky v `RULES.md` a `SKILLS.md` a odvezl je v commitu, jehož zpráva mluví o přejmenování popisku v `/oponent`. Není to tedy vzácná souhra – **stačí, aby si člověk otevřel druhé okno nad týmž repozitářem**, což u konfigurace dělá běžně.
+
 Nejde o hygienu, ale o dohledatelnost: commit message je jediné místo, kde je zapsané *proč*. Když sedí u cizí změny, je to zdůvodnění ztracené.
 
 ### Mazání ověř diffem, ne grepem
