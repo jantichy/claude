@@ -28,6 +28,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 ## Zásady pro celý průběh
 
 - **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu životního cyklu. Kritérium normy (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*) zní, čí odpovědi tvoří výsledek: tady je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek. Ostatní skilly něco samy najdou nebo vyrobí a ptají se až na nálezy – ty mají fáze, i když se ptají stejně často. Číslují se **plochou vzestupnou řadou bez písmen** (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*). Kroky 5–8 zakládají standardní strukturu a byly kdysi jedním krokem s podkroky `6a`–`6c`; kritériu normy pro písmennou podfázi ale nevyhověly – jsou to fáze jedné volby, ne samostatné výstupy –, tak se z nich staly samostatné kroky.
+- **Ve worktree layoutu nepracuj v `main/`.** Než v takovém projektu cokoliv změníš, založ si vlastní větev a její worktree a všechny další kroky dělej tam – viz krok 0, *Ve worktree layoutu si nejdřív založ větev*. Zakazuje to `~/Dev/context/worktree/worktree.md`, *`main/` se nemaže a nepracuje se v něm*, a platí to pro `/project` dvojnásob: přepisuje `CLAUDE.md`, `README.md` a celé `docs/` – tedy soubory, které mají ostatní sessions rozečtené a rozepsané.
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
@@ -58,6 +59,24 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
 
 *`adopt`:* pak řekni, že se teď budeš ptát postupně, a pokračuj krokem 1. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.** *`update`:* neptej se na nic a pokračuj krokem 14.
+
+### Ve worktree layoutu si nejdřív založ větev
+
+*Týká se režimů `adopt` a `update`.* U `create` se o layoutu rozhoduje až v kroku 4, takže tam není co zakládat.
+
+Poznáš to z inventury výš: `.bare/` vedle souboru `.git`. **Nikdy v takovém projektu neměň soubory v `main/`** – ani když tam zrovna stojíš, ani když je změna „jen malá“. Postup:
+
+```bash
+git -C <kontejner> branch -a                                            # není větev z dřívějška?
+git -C <kontejner> worktree add <kontejner>/project-update -b docs/project-update
+```
+
+- **Existuje-li větev z minulého běhu**, pokračuj v ní: má-li worktree, přejdi do něj; nemá-li ho, `worktree add` **bez `-b`** (s ním by to spadlo na `branch already exists`).
+- Převezmi lokální stav z `main/` podle `~/Dev/context/worktree/worktree.md`, *Lokální stav se bere z `main/`*, přejdi do nového adresáře a **od téhle chvíle je projektovým adresářem on**, ne `main/`. Týká se to všech dalších kroků včetně kroku 4 a jeho *Nápravy špatně rozděleného kontejneru* – soubory z kořene kontejneru se přesouvají do tvého worktree, ne do `main/`.
+- **Výjimka jsou soubory kontejneru** – stub `CLAUDE.md` v kořeni a `.claude/settings.local.json`. Nejsou ve gitu a k žádné větvi nepatří, takže se upravují na místě; větev na ně nemá vliv.
+- **Nemerguj.** Větev zůstane otevřená a merge je na výslovný pokyn uživatele (`~/Dev/context/worktree/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). V kroku 15 jen řekni, jak se jmenuje.
+
+Řekni jednou větou, jakou větev jsi založil a proč, ať uživatel ví, kde výsledek hledat.
 
 ## Krok 1 – Metadata projektu
 
@@ -562,6 +581,7 @@ Vypiš přehledně:
 - **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
 - Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka, konfigurační brány (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
+- *(worktree layout)* **Na jaké větvi výsledek leží** a že merge do `main` čeká na jeho pokyn.
 
 V režimu `adopt` vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí. A protože v tomhle režimu proběhl těsně předtím krok 14, **připoj za souhrn i jeho tři skupiny** (dorovnáno / čeká na rozhodnutí / vědomě nechal být) – jinak revize proběhne, ale její výsledek se nikde neukáže.
 
