@@ -2,7 +2,7 @@
 name: ptydepe
 description: Skill se použije, když uživatel zadá "/ptydepe", "/ptydepe suggest" nebo "/ptydepe add <termín>", anebo chce prověřit termíny, které Claude používá, přestože je v oboru nikdo nezná – slova převzatá z náhodné zmínky, z překlepu nebo z doslovného překladu, která se pak rozlezla napříč projekty a dokumentací. Výchozí režim "suggest" takové termíny vytipuje, režim "add" vypořádá jeden z nich. Postup, meze rozsahu a vyloučená místa má skill v těle a jsou závazné – bez jeho načtení se hledání ani náhrada nespouští, protože plošná náhrada umí nevratně přepsat soubory mimo verzování. Na rozdíl od /replace, který přejmenuje na zadání a v jednom projektu, tenhle skill rozhoduje, jestli se má přejmenovat, a jede přes všechny repozitáře naráz.
 argument-hint: [suggest | add <termín>]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
 # Ptydepe
@@ -73,6 +73,7 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 | Existuje běžný český protějšek | vezmi ho |
 | Termín je zavedený anglicky, ne česky | přelož podle zavedené vazby, ne doslova – *surgical strike* je česky „cílený úder“, ne „chirurgický“ |
 | Je to metafora, kterou věta vedle stejně vysvětluje | zruš termín a nech ten popis |
+| Jednoslovný protějšek nese jen půlku významu | **nahraď popisem, ne slovem** – heslo pak zní celou větou („seznam, který musí přesně sedět“). Je to legitimní výsledek, ne nouzové řešení |
 | Slovo je běžná čeština v tomhle významu | **ponech** a zapiš proč, ať se to neotevírá znovu |
 | Termín je zároveň **identifikátor v kódu** nebo klíčové slovo jazyka | **ponech.** Přeložit prózu, zatímco kód dál říká původní jméno, vyrobí dvě jména pro jednu věc – `guard` je klíčové slovo Swiftu i pole ve schématu nálezu |
 
@@ -104,6 +105,8 @@ Pak zkontroluj to, co ani ta nejlepší mapa nezachytí, protože to není o tva
 - **Popisky a názvy.** Opisuje-li se termín v próze slovesem (*„nic nezůstalo viset“*), je to v pořádku – ale tam, kde totéž slovo stojí jako **jméno věci**, ne. Projdi `header` u `AskUserQuestion`, popisky polí v šablonách výstupu a nadpisy kroků a ověř, že pojmenovávají podstatným jménem. *„Viselo 4/4“* jako název kroku ve formuláři nepojmenovává nic, ale gramaticky je věta okolo v pořádku, takže náhrada projde a vidí se to až v běžícím formuláři.
 
 ## Fáze 6 – Záznam
+
+**Neexistuje-li `~/.claude/PTYDEPE.md`, založ ho** – nadpis, odstavec o tom, jakou vadu řeší, sekci *Jak se používá* a prázdné *Termíny*. Bez toho by první běh neměl kam zapsat.
 
 **Do `~/.claude/PTYDEPE.md`** zapiš nový termín: co znamená, co jím naopak není, a větu **„nahrazuje dřívější …“ i s důvodem**. Starý termín zůstává zapsaný **tady a jenom tady** – jinde se nahradil beze stopy –, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo.
 

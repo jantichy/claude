@@ -10,8 +10,9 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 - **Než sáhneš po termínu, který není v oboru zavedený, hledej ho tady.** Když tu není, řekni rovnou, co jím myslíš, a navrhni ho zapsat.
 - **Zapsaný termín se používá přesně v uvedeném rozsahu.** Rozšířit ho na příbuznou věc je táž vada jako zavést nový – čtenář bere jméno jako tvrzení o hranicích.
-- **Když se termín změní, mění se všude naráz** (`RULES.md`, *Propagace změny*; nástroj je `/replace`), a to i v `~/Dev`, nejen v konfiguraci.
+- **Když se termín změní, mění se všude naráz** (`RULES.md`, *Propagace změny*), a to i v `~/Dev`, nejen v konfiguraci. Spravuje to `/ptydepe`.
 - **Starý termín tu zůstává zapsaný, a jenom tu.** Ve všech ostatních souborech se nahradí beze stopy; tady u nástupce stojí věta „nahrazuje …“ i s důvodem, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo.
+- **Ponechané termíny tu nejsou.** Rozhodnutí, že se termín **nemění**, patří do `~/Dev/context/decisions.md` – sem se zapisuje jen ten, který někoho nahradil. Hledáš-li, proč se něco *neměnilo*, hledej tam.
 - **Neptej se na týž termín podruhé.** Co je tady, je rozhodnuté.
 
 ## Termíny
@@ -142,7 +143,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Nahrazuje dřívější „úhel"** (2026-09-07). „Úhel pohledu“ je česky správně, ale samotný počitatelný „úhel“ („vyber pět úhlů“) nutí čtenáře doplnit si umazané slovo. „Hledisko“ znamená totéž jedním slovem a skloňuje se bez berličky. Pozor na rod: „úhel“ je mužský, „hledisko“ střední, takže se mění i shoda („nevybraný úhel“ → „nevybrané hledisko“).
 
-**`/attack` se s tím nesjednocuje:** má **vektory útoku**, protože vektor není pohled, ale způsob, jak něco rozbít – a je to navíc zavedený bezpečnostní termín. `/review` naopak od 7. 9. 2026 mluví o [specialistech](#specialista), ne o „rolích“; hledisko je to, co specialista dostane přidělené.
+**`/attack` se s tím nesjednocuje:** má **vektory útoku**, protože vektor není pohled, ale způsob, jak něco rozbít – a je to navíc zavedený bezpečnostní termín. `/review` naopak od 7. 9. 2026 mluví o [specialistech](#specialista-panel-specialistů), ne o „rolích“; hledisko je to, co specialista dostane přidělené.
 
 ### nevypořádané téma
 
@@ -164,7 +165,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Sjednoceno z dvojice „ověřovatel" a „skeptik"** (2026-09-07). Nešlo o cizí slovo, ale o dvě jména pro jednu věc: `/attack` je mělo dokonce v jedné větě (*„nahrazuje **ověřovatele** z `/review`: **skeptik** nad pozorováním jen stojí čas"*). Zvítězil „ověřovatel“, protože ho nese norma (*Ověřovací vrstva*), jméno fáze (*Ověření nálezů*) i většina užití; „skeptik“ popisoval postoj, a ten stejně stojí ve větě vedle.
 
-**Výjimka, na kterou se nesahá:** v `done.md` je *Skeptik* jméno zrušeného hlediska `/oponent`, ne označení ověřovatele.
+**Výjimka, na kterou se nesahá:** *Skeptik* je jméno zrušeného hlediska `/oponent` – v `~/Dev/context/done.md` i v `~/.claude/skills/oponent/SKILL.md`, kde se popisuje, s čím splynulo. Není to označení ověřovatele.
 
 ### ověřovací pokus
 
