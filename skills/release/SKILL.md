@@ -240,7 +240,7 @@ Co se v okně dělá:
 
 ## Když chyba projde vším
 
-Chyba, kterou nechytila deterministická kontrola, panel v `/review`, útok v `/attack` **ani sledovací okno**, a projevila se u uživatele, je nejcennější vstup, jaký soustava dostane – a dosud nevedla k ničemu, jen se opravila commitem.
+Chyba, kterou nechytila deterministická kontrola, panel v `/review`, útok v `/attack` **ani sledovací okno**, a projevila se u uživatele, je nejcennější vstup, jaký celá soustava záruk dostane – a dosud nevedla k ničemu, jen se opravila commitem.
 
 Ke každému takovému defektu proto zapiš **jeden řádek do `docs/decisions.md`, sekce `## Co proklouzlo`**:
 

@@ -94,7 +94,7 @@ class SkillOdkazy(unittest.TestCase):
     def test_odkazy_na_sekce_miri_na_existujici_nadpis(self):
         """Odkaz ve tvaru `soubor`, *Sekce* musí v tom souboru najít nadpis.
 
-        Tohle je vada, kterou soustava reálně dostává: přečíslovat fáze uvnitř
+        Tohle je vada, kterou tahle konfigurace reálně dostává: přečíslovat fáze uvnitř
         skillu je jednořádková změna, po které pět odkazů z jiného souboru tiše
         ukazuje jinam. Kontrola existence souboru to nechytí – ten pořád existuje.
 
@@ -123,7 +123,7 @@ class SkillOdkazy(unittest.TestCase):
     def test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis(self):
         """Odkaz „vezmi to do Fáze 7“ uvnitř skillu musí trefit jeho vlastní nadpis.
 
-        Tuhle vadu soustava reálně dostává: přečíslovat fáze je jedna dávka náhrad,
+        Tuhle vadu tahle konfigurace reálně dostává: přečíslovat fáze je jedna dávka náhrad,
         po které tři odkazy z téhož souboru ukazují jinam. Test na sekce ji nechytí –
         ten matchuje jen odkazy s uvedenou cestou k souboru, kdežto vnitroskillový
         odkaz cestu nemá. Doloženo mutací: `Fáze 7` přepsaná na `Fáze 77` prošla.
