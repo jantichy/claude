@@ -211,7 +211,7 @@ Zapisuj hned, jak rozhodnutí padne. Z odstupu se zdůvodnění rekonstruuje šp
 **Sekce `## Co proklouzlo`** drží jeden řádek na každý produkční defekt, který nechytila žádná vrstva – ani nástroj, ani panel v `/review`, ani útok, ani sledovací okno po nasazení:
 
 ```
-- **2026-09-02** – *dvojité odeslání objednávky při rychlém dvojkliku*: měl to chytit panel (role Data a stavy), nechytil, protože v rozsahu nebyl frontend → doplněn regresní test a položka do checklistu
+- **2026-09-02** – *dvojité odeslání objednávky při rychlém dvojkliku*: měl to chytit panel (specialista na data a stavy), nechytil, protože v rozsahu nebyl frontend → doplněn regresní test a položka do checklistu
 ```
 
 Zapisuje ji `/release` (viz jeho *Když chyba projde vším*). **Pole „doplněno“ nesmí být prázdné:** buď z defektu vzejde nová blokující kontrola, nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – tedy z té množiny, kterou už chytat umí.

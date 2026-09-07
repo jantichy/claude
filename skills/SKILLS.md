@@ -194,7 +194,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Neopisuj seznam, který má vlastní zdroj pravdy.** Pořadí kroků životního cyklu, prahy kontrol, inventář domén – na ty se odkazuj, nevypisuj je. Opsaný seznam se při přidání položky rozejde a **vypadá přitom pořád platně**, takže si toho nikdo nevšimne. Platí to dvojnásob pro **šablony, které skill zapisuje jinam**: `/project` psal do každého vývojářského `CLAUDE.md` cestu bez `/discovery` a projekty ji četly jako úplnou. Řetěz tří a víc kroků cyklu v `SKILL.md` hlídají testy. **Výjimku mají dvě místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který ukazuje krajní kroky a mezi nimi výpustku, a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `RULES.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
 
-**Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…" zestárnou tiše. Piš role, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
+**Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…" zestárnou tiše. Piš specialisty, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
 
 **Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen názvy souborů, příkazy a technické identifikátory.
 

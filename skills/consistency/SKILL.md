@@ -26,7 +26,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírá
 
 ## Co skill nedělá
 
-- **Nehledá chyby v kódu.** Na korektnost provedených změn je `/review` – ten uvnitř volá vestavěné `/code-review` jako jednu ze svých rolí, takže poslat uživatele rovnou na něj by ho připravilo o zbytek panelu i o ověření nálezů.
+- **Nehledá chyby v kódu.** Na korektnost provedených změn je `/review` – ten uvnitř volá vestavěné `/code-review` jako jednoho ze svých specialistů, takže poslat uživatele rovnou na něj by ho připravilo o zbytek panelu i o ověření nálezů.
 - **Nekontroluje soulad s doménovými standardy.** Na odchylky od předpisů v `~/Dev/context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat standard.
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
@@ -108,7 +108,7 @@ KRITICKÉ (mohou rozbít funkčnost):
 - Interface/schéma deklarované jinak než je skutečně používáno
 - Import cest, které nesedí se skutečnou strukturou souborů
 - Cross-layer kontrakty: rozdíly mezi DB schématem ↔ ORM modelem ↔ TypeScript typy ↔ validačním schématem (Zod/Yup); API endpoint ↔ klientský volání (request/response, query params); GraphQL/OpenAPI specifikace ↔ implementace; form schéma ↔ submit payload ↔ serverový endpoint
-- Bezpečnostní konzistence – **hlas rozdíl uvnitř skupiny, ne chybějící ochranu jako takovou**: stejný typ endpointu nebo tabulky chráněný nestejně (RLS, auth middleware, sanitizace vstupu, CORS, rate-limiting). Vyjmenuj skupinu, která si má být podobná, a v čem se liší. **Neposuzuj, jestli je ta ochrana dostatečná** – to dělá role Bezpečnost v `/review` na silném modelu; tady jde jen o to, že se dvě podobná místa chovají různě
+- Bezpečnostní konzistence – **hlas rozdíl uvnitř skupiny, ne chybějící ochranu jako takovou**: stejný typ endpointu nebo tabulky chráněný nestejně (RLS, auth middleware, sanitizace vstupu, CORS, rate-limiting). Vyjmenuj skupinu, která si má být podobná, a v čem se liší. **Neposuzuj, jestli je ta ochrana dostatečná** – to dělá specialista na bezpečnost v `/review` na silném modelu; tady jde jen o to, že se dvě podobná místa chovají různě
 - Verzování runtime: různé verze stejné lib v monorepo packages; rozjetá Node verze napříč `engines` / `.nvmrc` / `.tool-versions` / CI config / hosting config; TS `target` vs browserslist drift; lockfile vs manifest drift
 
 STŘEDNÍ (technický dluh):

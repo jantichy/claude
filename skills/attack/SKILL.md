@@ -16,7 +16,7 @@ Je to třetí druh záruky, rovnocenný vedle dvou ostatních, a ani jedna ho ne
 | Druh záruky | Kdo ji dává | Co najde |
 |---|---|---|
 | **Deterministická kontrola** | nástroj (typecheck, lint, test, audit) | to, na co je napsaná |
-| **Posouzení modelem** | `/review`, panel rolí nad **čteným** kódem | to, co se z kódu dá vyčíst |
+| **Posouzení modelem** | `/review`, panel specialistů nad **čteným** kódem | to, co se z kódu dá vyčíst |
 | **Explorativní útok** | tenhle skill, nad **běžící** aplikací | to, co nikoho nenapadlo |
 
 Rozdíl proti `/review` je v jednom slově: ten kód **čte**, tenhle ho **spouští**. Přehlédnutá `null` větev se v kódu hledá těžko a v běžící aplikaci se projeví bílou stránkou. Naopak spousta věcí, které útok najde, je z kódu zřejmá na první pohled – proto se pouští obojí.
@@ -211,7 +211,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
 Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 ```
 
-**Závažnost:** platí **táž škála jako v `/review`** (`~/.claude/skills/review/SKILL.md`, *Zadání pro pracovní roli*), protože nálezy odsud i odtamtud končí v jedné kapitole `## Review` a podle dvou různých škál pak zpětně nejde poznat, čím byl stupeň měřený. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **KOSMETICKÉ** – technická hláška bez dalšího dopadu.
+**Závažnost:** platí **táž škála jako v `/review`** (`~/.claude/skills/review/SKILL.md`, *Zadání pro pracovního specialistu*), protože nálezy odsud i odtamtud končí v jedné kapitole `## Review` a podle dvou různých škál pak zpětně nejde poznat, čím byl stupeň měřený. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **KOSMETICKÉ** – technická hláška bez dalšího dopadu.
 
 ------
 

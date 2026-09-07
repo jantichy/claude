@@ -195,7 +195,7 @@ class SkillOdkazy(unittest.TestCase):
         Vlastní vyvolání je v pořádku – tam ho skill volá jako nástroj a musí u něj
         uvést úroveň (`low`/`high`/`ultra`), protože bez ní se použije naposledy
         zadaná. Chyba je poslat *uživatele*, aby si `/code-review` pustil místo
-        `/review`: dostal by jednu roli z panelu bez ověření nálezů.
+        `/review`: dostal by jednoho specialistu z panelu bez ověření nálezů.
         """
         povoleno = ("vyvolej", "volá", "uvnitř", "vestavěn", "Korektnost", "Bezpečnost",
                     "/code-review low", "/code-review high", "/code-review ultra")
@@ -355,7 +355,7 @@ class NosneCasti(unittest.TestCase):
                 text = body(ROOT / f"skills/{jmeno}/SKILL.md")
                 self.assertIn('"severity"', text, f"/{jmeno}: zadání agentů nemá pole severity")
         self.assertIn('"basis"', body(ROOT / "skills/review/SKILL.md"),
-                      "/review: zadání rolí nemá pole basis")
+                      "/review: zadání specialistů nemá pole basis")
 
     def test_datum_se_vyrabi_prikazem(self):
         """Zapamatované datum se tiše rozejde se skutečností a vypadá správně.

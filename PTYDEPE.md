@@ -26,6 +26,16 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Mluvíš-li o jedné konkrétní kontrole, pojmenuj ji.** „Testy padají“ je přesnější než „kontrola je červená“ – ta věta nechává čtenáře hádat, která z nich spadla.
 
+### specialista, panel specialistů
+
+**Úzce nabriefovaný agent, který posuzuje jedinou věc a nic jiného nehlásí** – a *panel specialistů* je skupina takových agentů puštěná paralelně. Platí to **obecně, napříč skilly**; u konkrétního se přidává přívlastek: *specialista na bezpečnost*, *specialista na data a stavy*.
+
+**Úzkost je celý smysl toho jména.** Proto ne „expert“ – ten slibuje hloubku a autoritu, kterou subagent s promptem nemá, kdežto na panelu záleží právě to, že každý kouká jen na jedno.
+
+**Nahrazuje dřívější „role" a „panel rolí"** (2026-09-07). „Role“ je v konfiguraci obsazená autorizací – kdo co smí – v `~/Dev/context/coding/coding.md` i ve `web/admin.md`, takže si čtenář pod „panelem rolí“ představil oprávnění uživatelů.
+
+**Dva skilly mají vlastní jméno a nechávají si ho**, protože nese sloveso: `/oponent` má **oponenty** (kritizují) a `/attack` **útočníky** (rozbíjejí). Obecně se o obou dál mluvit jako o specialistech smí; `/review` vlastní jméno nemá a používá jen to obecné.
+
 ### seznam, který musí přesně sedět
 
 **Výjimka zapsaná do seznamu, který test porovnává se skutečností v obou směrech.** V seznamu nesmí chybět nic, co pravidlo porušuje, ani zůstat nic, co se už opravilo – proto opravená a nevyškrtnutá položka shodí testy stejně jako nová regrese. Bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit. Používá to `MIGRACE` v `~/.claude/tests/test_skills.py`.
@@ -80,7 +90,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Nahrazuje dřívější „úhel"** (2026-09-07). „Úhel pohledu“ je česky správně, ale samotný počitatelný „úhel“ („vyber pět úhlů“) nutí čtenáře doplnit si umazané slovo. „Hledisko“ znamená totéž jedním slovem a skloňuje se bez berličky. Pozor na rod: „úhel“ je mužský, „hledisko“ střední, takže se mění i shoda („nevybraný úhel“ → „nevybrané hledisko“).
 
-**Obdoba u sousedních skillů se ale nesjednocuje:** `/attack` má **vektory útoku** a `/review` **role**. Je to strukturně totéž – jedno zadání na jednoho agenta –, ale věcně tři různé věci, a *vektor útoku* je navíc zavedený bezpečnostní termín.
+**`/attack` se s tím nesjednocuje:** má **vektory útoku**, protože vektor není pohled, ale způsob, jak něco rozbít – a je to navíc zavedený bezpečnostní termín. `/review` naopak od 7. 9. 2026 mluví o [specialistech](#specialista), ne o „rolích“; hledisko je to, co specialista dostane přidělené.
 
 ### nevypořádané téma
 
