@@ -205,10 +205,16 @@ if [ -d "$git_root_candidate" ] \
   unstaged=$(git -C "$git_root_candidate" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
   staged=$(git -C "$git_root_candidate" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
   total=$(( unstaged + staged ))
+  # Jméno větve; u odpojené HEAD krátký hash, v prázdném repozitáři fallback "Git"
+  branch=$(git -C "$git_root_candidate" symbolic-ref --quiet --short HEAD 2>/dev/null)
+  if [ -z "$branch" ]; then
+    branch=$(git -C "$git_root_candidate" rev-parse --short HEAD 2>/dev/null)
+  fi
+  if [ -z "$branch" ]; then branch="Git"; fi
   if [ "$total" -gt 0 ]; then
-    git_part=$(printf "\033[33mGit: ~%d changes\033[0m" "$total")
+    git_part=$(printf "\033[33m%s: ~%d changes\033[0m" "$branch" "$total")
   else
-    git_part=$(printf "\033[2;32mGit: Clean\033[0m")
+    git_part=$(printf "\033[2;32m%s: Clean\033[0m" "$branch")
   fi
 fi
 
