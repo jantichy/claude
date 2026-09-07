@@ -12,7 +12,7 @@ Nasadí hotovou práci do produkce: projde kontroly předtím, ošetří migrace
 
 1. **Nasadí to, co řeknete** – výchozí je hlavní větev, ale zvládne i konkrétní větev, tag nebo jednotlivý commit. Nic se přitom nepřeskakuje.
 2. **Zjistí si sám, jak se projekt nasazuje** – z jeho instrukcí, z konfigurace nasazovací platformy, z nastavení kontejneru nebo skriptu. Když to nikde není, zeptá se a odpověď rovnou zapíše, aby se příště neptal.
-3. **Kontroly před nasazením:** čistý pracovní strom, zelená linka, produkční build, průchod aplikací, audit závislostí, hledání tajemství v repozitáři a kontrola, že nová proměnná prostředí je nastavená i v produkci.
+3. **Kontroly před nasazením:** čistý pracovní strom, průběžná kontrola, produkční build, průchod aplikací, audit závislostí, hledání tajemství v repozitáři a kontrola, že nová proměnná prostředí je nastavená i v produkci.
 4. **Ověří, jestli práce vůbec prošla revizí** – nehádá to a neptá se, čte to ze záznamu a ukáže, co od té doby přibylo a co tedy nikdo neprověřil.
 5. **Migrace databáze řeší dopředu kompatibilně** – po krocích, mezi kterými funguje stará i nová verze kódu.
 6. **Jedna potvrzovací otázka nad kompletním přehledem** – co, kam, jaké kontroly prošly, jaké migrace, jak se vrátit zpátky a co se bude sledovat.
@@ -47,7 +47,7 @@ Skill projde kontroly, ukáže přehled, počká na potvrzení, nasadí, ověř�
 **Co:** 7 commitů · objednávky, mailing · v1.4.0
 **Nasazuje se:** main → production
 **Kam:** produkce, https://example.cz
-**Kontroly:** zelená linka ✅ · build ✅ · e2e ✅ · review ✅ · attack ✅ · audit ✅ · tajemství ✅
+**Kontroly:** průběžná kontrola ✅ · build ✅ · e2e ✅ · review ✅ · attack ✅ · audit ✅ · tajemství ✅
 **Migrace:** expand krok 1, záloha z 14:32
 **Návrat:** revert commitu a nový build (~4 min)
 **Po nasazení sleduji:** chybovost a konverzní události, do druhého dne

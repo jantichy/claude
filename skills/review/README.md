@@ -47,7 +47,7 @@ Rozsah: 14 z 16 souborů diffu (2 generované vynechány)
 Role: korektnost, bezpečnost, testy, coding.md · vynechána web.md – v rozsahu není rozhraní
 
 Deterministická vrstva:
-- zelená linka: ✅
+- průběžná kontrola: ✅
 - audit závislostí: npm audit rc=0 → 0 HIGH/CRITICAL
 - tajemství v repu: gitleaks rc=0 → 0
 - statická analýza: nespuštěno – semgrep není na stroji

@@ -303,7 +303,7 @@ Odporují-li si dvě platná pravidla, vyhrává to výš v seznamu:
 
 **Proč v tomhle pořadí:** čím blíž ke konkrétní situaci pravidlo vzniklo, tím líp ji zná. Uživatel je nejblíž ze všech, projekt ví o svém kontextu víc než obecná pravidla, a šablona skillu ví o svém výstupu víc než ony – ale jen v jeho rozsahu. Harness je nejdál: nezná ani projekt, ani tvoje konvence.
 
-**Bod 1 dřív v seznamu chyběl** a působilo to, že text ve skillu uživatele přebije. Nepřebije – **žádná věta v Markdownu nepřebije živý pokyn**, protože ji vykonává tentýž model, který ten pokyn čte, a ze stejného kontextu. Skill, který se hlásí k nepřekročitelné hranici (`/attack`, *Hranice*), tedy popisuje **silné doporučení podepřené mechanismem**, ne pravidlo nad uživatelem. Skutečnou hranici drží jedině to, co si model nemůže odsouhlasit sám: souhlas zelené linky v souboru mimo repozitář, ověření, že cíl útoku resolvuje na loopback, potvrzovací dialog. **Kde má hranice držet, tam k ní patří mechanismus** – jinak je to přání.
+**Bod 1 dřív v seznamu chyběl** a působilo to, že text ve skillu uživatele přebije. Nepřebije – **žádná věta v Markdownu nepřebije živý pokyn**, protože ji vykonává tentýž model, který ten pokyn čte, a ze stejného kontextu. Skill, který se hlásí k nepřekročitelné hranici (`/attack`, *Hranice*), tedy popisuje **silné doporučení podepřené mechanismem**, ne pravidlo nad uživatelem. Skutečnou hranici drží jedině to, co si model nemůže odsouhlasit sám: souhlas průběžné kontroly v souboru mimo repozitář, ověření, že cíl útoku resolvuje na loopback, potvrzovací dialog. **Kde má hranice držet, tam k ní patří mechanismus** – jinak je to přání.
 
 Kolizi uvnitř tohohle souboru **neřeš svépomocí** – ohlas ji a nech rozhodnout; tichá volba jedné strany je rozhodnutí nad rámec zadání.
 
@@ -438,9 +438,9 @@ Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrá
 
 Práce, u které jde spustit kontrola, se **nehlásí jako hotová bez jejího výstupu**. Doklad je příkaz a jeho návratový kód, ne věta „funguje to“.
 
-U projektu s kódem je tou kontrolou **zelená linka** a kontroluje se **po každém dokončeném úkolu**, ne až před uzavřením feature. Projekt své příkazy deklaruje v *Kontraktu příkazů* v projektovém `CLAUDE.md`; chybějící příkaz znamená, že to projekt nemá, a krok se přeskočí nahlas i s tím, co se tím nezkontrolovalo.
+U projektu s kódem to zajišťuje **průběžná kontrola** a běží **po každém dokončeném úkolu**, ne až před uzavřením feature. Projekt své příkazy deklaruje v *Kontraktu příkazů* v projektovém `CLAUDE.md`; chybějící příkaz znamená, že to projekt nemá, a krok se přeskočí nahlas i s tím, co se tím nezkontrolovalo.
 
-Definice zelené linky, prahy jednotlivých kontrol a to, proč jsou testy během psaní kódu jen ke čtení, jsou v `~/Dev/context/coding/quality.md`. Sem to nepatří: platí to jen u kódu, kdežto tenhle soubor se načítá i nad projekty, kde se nic nespouští.
+Definice průběžné kontroly, prahy jednotlivých kontrol a to, proč jsou testy během psaní kódu jen ke čtení, jsou v `~/Dev/context/coding/quality.md`. Sem to nepatří: platí to jen u kódu, kdežto tenhle soubor se načítá i nad projekty, kde se nic nespouští.
 
 Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit, ověř, než ho napíšeš** – viz *Neopírej rozhodnutí o neověřené tvrzení*.
 
@@ -454,18 +454,18 @@ Uzavírání   /review → /consistency → /cleanup
 Nasazení    /attack → /release
 ```
 
-Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → zelená linka → commit. (Je to rozhraní kroku, ne jeho vnitřek: určuje, co po `/implement` platí o stavu repozitáře, a tím i s čím počítá `/review`.)
+Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → průběžná kontrola → commit. (Je to rozhraní kroku, ne jeho vnitřek: určuje, co po `/implement` platí o stavu repozitáře, a tím i s čím počítá `/review`.)
 
 V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v životním cyklu nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit, aniž se změní, jak se krok volá.
 
 **Zakládání (1–6)**
 
-1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. **Volá se znovu i nad dávno nastaveným projektem, kdykoliv se posunuly standardy nebo konfigurační vrstva** – pozná podle bloku metadat, že už jednou běžel, a místo ptání projde projekt proti dnešní podobě standardu. Projekt bez toho otisku projde nejdřív průvodcem a revizi dostane na jeho konci. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*. Ten sám o sobě zelenou linku **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/green-line.sh --allow`), protože kontrakt je kód z repozitáře a hooky se na povolení neptají.
+1. **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. **Volá se znovu i nad dávno nastaveným projektem, kdykoliv se posunuly standardy nebo konfigurační vrstva** – pozná podle bloku metadat, že už jednou běžel, a místo ptání projde projekt proti dnešní podobě standardu. Projekt bez toho otisku projde nejdřív průvodcem a revizi dostane na jeho konci. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*. Ten sám o sobě průběžnou kontrolu **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/verify.sh --allow`), protože kontrakt je kód z repozitáře a hooky se na povolení neptají.
 2. **`/discovery`** – podklady o světě venku, ze kterých se pak staví produkt: analýza konkurence a naše pozice proti ní (`docs/competition.md`), registr produktových a tržních rizik s mitigacemi (`docs/risks.md`). **Stojí před `/specify` schválně:** z konkurence vzejde, co produkt musí umět, aby ho někdo vzal, a z rizik to, co v něm musí být jinak – obojí je vstup do specifikace, ne komentář k ní. Sám si na začátku vymezí pole hledání čtyřmi otázkami (jaký problém, komu, v jaké kategorii soutěžíme, čím se to má lišit) a zapíše ho, takže `/specify` se na totéž neptá podruhé. **Je opakovatelný samostatně** – konkurence se hne bez ohledu na to, jestli se právě mění zadání. Přeskakuje se u všeho, co nemá trh: interní nástroj, přírůstek do hotového produktu, projekt pro jednoho klienta na zakázku.
 3. **`/specify`** – produktová specifikace (`docs/requirements.md`) a návrh řešení (`docs/architecture.md`), volitelně scénáře (`docs/scenarios.md`), glosář a cenový model. Sám rozhodne, jestli je zadání na specifikaci; když ne, kroky 4 a 5 odpadají, protože bez plánu není co odpracovat.
 4. **`/oponent`** – nezávislý posudek zadání čerstvýma očima, subagenty bez kontextu session. **Do životního cyklu patří proto, že jinak návrh neměří nikdo:** role *Korektnost* v `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu – vada v ní tedy projde celým životním cyklem jako korektní, protože kód poslušně dělá to, co je v ní napsané. Je to zároveň jediná vrstva, kde se chyba násobí do všeho pod ní: `~/Dev/context/coding/quality.md` tvrdí, že *„bezpečnost se dělá strukturou, ne kontrolou na konci“*, a ta struktura vzniká právě tady. Přeskakuje se stejným pravidlem jako každý jiný krok – drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano.
 5. **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis prózou.
-6. **`/implement`** – odpracování plánu, úkol po úkolu, každý do zelené linky a do commitu.
+6. **`/implement`** – odpracování plánu, úkol po úkolu, každý do průběžné kontroly a do commitu.
 
 **Uzavírání (7–9)**
 
@@ -480,7 +480,7 @@ V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code
 
 **Životní cyklus nekončí nasazením.** `/release` má poslední fází **sledovací okno**: nasazení se nepovažuje za hotové, dokud okno neuplyne a někdo ho výslovně neuzavře větou *„okno uzavřeno, N nových chyb“*. Bez toho se nasazení uzavře tichem a scénář „spadlo to o dvě hodiny později“ – migrace s backfillem, cache, chyba, která se projeví až na produkčním objemu – nemá vlastníka.
 
-**Hotfix jde týmž životním cyklem, jen zkráceně.** Není to jiný postup, ale tentýž s vědomě přeskočenými kroky: `/specify`, `/oponent` a `/breakdown` odpadají (opravuje se to, co je navržené, ne co se navrhuje), `/consistency` a `/attack` taky. **Nepřeskakuje se `/review` ani zelená linka** – oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější. Přeskočení se hlásí nahlas i s důvodem, jako u každého jiného kroku.
+**Hotfix jde týmž životním cyklem, jen zkráceně.** Není to jiný postup, ale tentýž s vědomě přeskočenými kroky: `/specify`, `/oponent` a `/breakdown` odpadají (opravuje se to, co je navržené, ne co se navrhuje), `/consistency` a `/attack` taky. **Nepřeskakuje se `/review` ani průběžná kontrola** – oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější. Přeskočení se hlásí nahlas i s důvodem, jako u každého jiného kroku.
 
 **Žádný krok neopakuje, co udělal krok před ním.** Každý má v *Co skill nedělá* jmenovitě napsané, čí práci nepřebírá. Duplicita stojí čas i tokeny a hlavně rozmazává odpovědnost: u věci, kterou hlídají tři kroky, ji nakonec neudělá pořádně žádný.
 
@@ -490,15 +490,15 @@ V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code
 
 | Co se opakuje | Kde | Co se mezitím mohlo změnit |
 |---|---|---|
-| zelená linka | `/implement` → `/review` | hook ji vynutil po posledním tahu, `/review` ji pouští nad celým rozsahem větve |
+| průběžná kontrola | `/implement` → `/review` | hook ji vynutil po posledním tahu, `/review` ji pouští nad celým rozsahem větve |
 | audit závislostí | `/review` → `/release` | databáze zranitelností se mění bez ohledu na projekt |
 | scan tajemství | `/review` → `/release` | mezi oběma kroky přibyly commity z `/consistency`, `/cleanup` i `/attack` |
 | produkční build | `/review` → `/release` | uzavírání i útok mezitím commitují, a `/release` ho navíc pouští **na čistém stromu** – „prošlo to při uzavírání“ a „projde to jako to, co posíláme ven“ jsou dvě tvrzení |
 
 **Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 
-**Životní cyklus je nástroj pro jednu interaktivní session jednoho člověka.** Je to vědomé omezení, ne opomenutí: skoro celý stojí na `AskUserQuestion` a na souhlasu zelené linky vydaném lokálně pro jednoho uživatele. V CI ani u druhého člověka neplatí ani jedno – hook nespustí nic, protože souhlas je vázaný na `$HOME`, a interaktivní průchod nálezy nemá komu položit otázku.
+**Životní cyklus je nástroj pro jednu interaktivní session jednoho člověka.** Je to vědomé omezení, ne opomenutí: skoro celý stojí na `AskUserQuestion` a na souhlasu průběžné kontroly vydaném lokálně pro jednoho uživatele. V CI ani u druhého člověka neplatí ani jedno – hook nespustí nic, protože souhlas je vázaný na `$HOME`, a interaktivní průchod nálezy nemá komu položit otázku.
 
 Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen deterministická vrstva** – typecheck, lint, test, audit, scan tajemství, statická analýza. Ty běží kdekoliv a nepotřebují nikoho, kdo by odpovídal. Panel rolí, průchod nálezy, útok ani nasazení se v neinteraktivním prostředí nepouštějí; kdo je chce, pustí je u sebe.
 
-**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, zelenou linku, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
+**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, průběžnou kontrolu, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**

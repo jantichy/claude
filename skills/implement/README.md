@@ -14,7 +14,7 @@ Vezme hotový implementační plán a projde ho od začátku do konce: u každé
    - **po úkolech se čtením mezi nimi** *(doporučený)* – na každý úkol jde čerstvý pracovník, který nevidí předchozí konverzaci, a mezi úkoly se výsledek zkontroluje;
    - **v jednom kuse s kontrolními body** – rychlejší a s menší režií, vhodné na krátký plán;
    - **bez zastávek až do splnění cíle** – nejsamostatnější, nabídne se **jen když je splněných pět podmínek** a nikdy se nezapne sám.
-2. **Zelená linka po každém úkolu.** Úkol není hotový napsaným kódem, ale tím, že projektu všechno běží.
+2. **Průběžná kontrola po každém úkolu.** Úkol není hotový napsaným kódem, ale tím, že projektu všechno běží.
 3. **Ověření skutečného stavu před navázáním** na rozdělaný plán.
 4. **Levné mezikontroly** po každé skupině souvisejících úkolů, v čerstvém pohledu.
 5. **Průběžný zápis mimo kód** – co se cestou rozhodlo, včetně zavržených variant; co se dodělalo, se přesune mezi hotové.
@@ -49,7 +49,7 @@ Skill si najde plán, ověří stav projektu, nechá vás vybrat režim a pak je
 **Odchylky od plánu**
 - úkol 6: název souboru v plánu neseděl, opraveno v plánu i v kódu
 
-**Zelená linka:** npm test → 0
+**Průběžná kontrola:** npm test → 0
 
 **Další krok:** /review
 ```
@@ -77,4 +77,4 @@ Skill je **obálka nad pluginem [superpowers](https://github.com/obra/superpower
 
 ### Požadavky a omezení
 
-Plugin superpowers. Projekt potřebuje mít v instrukcích zapsané, čím se pouštějí testy, typová kontrola a linter – bez toho by realizace běžela bez kontroly a skill se zastaví a nabídne to doplnit. Nejsamostatnější režim navíc předpokládá, že je zelená linka vynucená automaticky, ne jen doporučená.
+Plugin superpowers. Projekt potřebuje mít v instrukcích zapsané, čím se pouštějí testy, typová kontrola a linter – bez toho by realizace běžela bez kontroly a skill se zastaví a nabídne to doplnit. Nejsamostatnější režim navíc předpokládá, že je průběžná kontrola vynucená automaticky, ne jen doporučená.

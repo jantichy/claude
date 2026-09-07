@@ -1,4 +1,4 @@
-# Kontrakt příkazů, zelená linka a kontroly kvality
+# Kontrakt příkazů a průběžná kontrola
 
 Podrobnosti ke kroku 12 v `SKILL.md`: šablona sekce `## Příkazy`, co se zapnutím vzniká, jak se dává souhlas a které kontroly se nastavují konfigurací.
 
@@ -22,12 +22,12 @@ Zapisuj **jen ty klíče, které projekt opravdu umí spustit** – vymyšlený 
 
 Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
 
-**Co tím vzniká.** Globální `Stop` hook `~/.claude/green-line.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json`, takže se nikde nic dalšího **neinstaluje** – ale spustit se v projektu ještě nesmí: chybí mu souhlas, viz níž. Vypnout se dá souborem `.claude/no-green-line` v projektu nebo proměnnou `CLAUDE_NO_GREEN_LINE=1`.
+**Co tím vzniká.** Globální `Stop` hook `~/.claude/verify.sh` od téhle chvíle po každém tahu spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json`, takže se nikde nic dalšího **neinstaluje** – ale spustit se v projektu ještě nesmí: chybí mu souhlas, viz níž. Vypnout se dá souborem `.claude/no-verify` v projektu nebo proměnnou `CLAUDE_NO_VERIFY=1`.
 
 **Uživatel musí vydat souhlas, jinak linka neběží.** Kontrakt je kód v repozitáři a hook běží mimo permission systém, takže se souhlas dává jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá kontrola ztratila smysl:
 
 ```
-~/.claude/green-line.sh --allow <kořen projektu>
+~/.claude/verify.sh --allow <kořen projektu>
 ```
 
 Řekni mu u toho pravdu o tom, co schvaluje: souhlas platí **pro repozitář, ne pro ty konkrétní řádky**. `npm test` spustí, co je v `package.json`, a to se neschvaluje. Do cizího naklonovaného repozitáře souhlas nepatří.

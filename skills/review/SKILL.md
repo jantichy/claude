@@ -25,7 +25,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to první krok uzavírá
 
 ## Co skill nedělá
 
-- **Zelenou linku nenahrazuje, ale ověřuje ji jako vstupní podmínku.** Běží průběžně u každého úkolu (viz `~/Dev/context/coding/quality.md`), takže sem se přichází se stavem, který už zelený byl. Ověřuje se přesto znovu, a je pro to důvod: hook ji vynutil po **posledním tahu**, kdežto tady se pouští **na celém rozsahu větve** a proti aktuálnímu stromu – „prošlo to po posledním úkolu“ a „prochází to jako celek“ jsou dvě různá tvrzení. Není-li zelená, skill se zastaví a pošle tě to dodělat.
+- **Průběžnou kontrolu nenahrazuje, ale ověřuje ji jako vstupní podmínku.** Běží průběžně u každého úkolu (viz `~/Dev/context/coding/quality.md`), takže sem se přichází se stavem, který už zelený byl. Ověřuje se přesto znovu, a je pro to důvod: hook ji vynutil po **posledním tahu**, kdežto tady se pouští **na celém rozsahu větve** a proti aktuálnímu stromu – „prošlo to po posledním úkolu“ a „prochází to jako celek“ jsou dvě různá tvrzení. Není-li zelená, skill se zastaví a pošle tě to dodělat.
 - **Neaudituje vnitřní konzistenci projektu.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`, který běží až po tomhle.
 - **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/cleanup`. Vlastní nálezy si ale zapisuje sám: odložené do `docs/todo.md`, zamítnuté do `## Review` v `CLAUDE.md`.
@@ -117,7 +117,7 @@ běží mimo permission systém a co si to pouští?
 
 Hooky se totiž na povolení neptají – spustí se samy, s právy uživatele, a jejich
 obsah nikdo neschvaluje. Zatímco na příkazy projektu existuje souhlasový
-mechanismus (`~/.claude/green-line.sh --allow`), na tenhle adresář žádný není.
+mechanismus (`~/.claude/verify.sh --allow`), na tenhle adresář žádný není.
 
 U KAŽDÉ POLOŽKY ODPOVĚZ:
 - Hook: kdy se spouští, co spouští, odkud bere binárku (PATH? node_modules
@@ -155,8 +155,8 @@ Mapu pak vlož do zadání každé role. Bez ní si stejnou orientaci musí udě
 
 Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*). Chybí-li řádek, krok se přeskočí a **do výstupu se napíše, co se tím nezkontrolovalo**. Nevymýšlej příkazy, které jsi neověřil.
 
-1. **Zelená linka** – `typecheck`, `lint`, `test`. Není-li zelená, **zastav se**: review nad rozbitým stavem nemá smysl. Vypiš, co padá, a pošli to dodělat.
-2. **Build** – `build`. Do zelené linky nepatří, protože je na běh po každém tahu moc pomalý – ale před uzavřením feature se ověřit musí.
+1. **Průběžná kontrola** – `typecheck`, `lint`, `test`. Není-li zelená, **zastav se**: review nad rozbitým stavem nemá smysl. Vypiš, co padá, a pošli to dodělat.
+2. **Build** – `build`. Do průběžné kontroly nepatří, protože je na běh po každém tahu moc pomalý – ale před uzavřením feature se ověřit musí.
 3. **Audit závislostí** – `audit`. Nálezy `HIGH` a `CRITICAL` jsou automaticky kritické nálezy, nejdou přes panel.
 4. **Tajemství v repu** – `gitleaks detect --no-banner` nebo `git log -p | grep`-heuristika, není-li nástroj po ruce. Nález je vždy kritický a **nikdy se neopravuje jen smazáním**: co bylo commitnuté, je v historii a patří rotovat.
 5. **Statická analýza nad rámec lintu** – `semgrep --config p/owasp-top-ten`. **Vyplave-li tentýž nález podruhé, navrhni na něj vlastní pravidlo** do `.semgrep/` v projektu: od té chvíle ho chytá nástroj zadarmo místo agenta pokaždé znovu (`~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*). Jsou-li v rozsahu shellové skripty, k tomu `shellcheck --severity=info`; u shellu je to nejlevnější kontrola vůbec a chytá věci, které se jinak projeví až v provozu (neošetřené `cd`, nekvotované expanze, maskované návratové kódy).
@@ -432,7 +432,7 @@ Rozsah: [N z M souborů diffu – co a proč vynecháno]
 Role: [které běžely / které vybrané neběžely a proč] · [na čem: code-review high, bezpečnost opus, standardy výchozí]
 
 Deterministická vrstva  [u každého kroku nástroj · návratový kód, ne holé číslo]:
-- zelená linka: ✅ / ❌ [co padá]
+- průběžná kontrola: ✅ / ❌ [co padá]
 - produkční build: ✅ / ❌ / nespuštěno
 - audit závislostí: [nástroj] rc=N → N nálezů HIGH/CRITICAL
 - tajemství v repu: [gitleaks / grep-heuristika / nespuštěno] rc=N → N
@@ -466,7 +466,7 @@ Když nálezy nejsou, řekni to a skonči.
 
 Mechanické nálezy oprav **rovnou, bez ptaní**. Pak:
 
-1. **Ověř** – spusť zelenou linku podle kontraktu příkazů. Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
+1. **Ověř** – spusť průběžnou kontrolu podle kontraktu příkazů. Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N mechanických)
@@ -514,7 +514,7 @@ Navrhované řešení:
 
 3. Při volbě **Opravit**:
    a. Proveď změnu. U `batch` nálezu hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
-   b. **Ověř – vždy, ne občas.** Zelená linka podle kontraktu příkazů. U opravy, kterou hlásila pracovní role, **doplň test, který ten případ pokrývá** – jinak se chyba vrátí a nikdo se to nedozví.
+   b. **Ověř – vždy, ne občas.** Průběžná kontrola podle kontraktu příkazů. U opravy, kterou hlásila pracovní role, **doplň test, který ten případ pokrývá** – jinak se chyba vrátí a nikdo se to nedozví.
 
       **Dávkuj podle rizika, ne po jednom.** Opravy z **pracovních rolí** ověřuj každou zvlášť: mění chování a hledat mezi pěti změnami tu, která rozbila test, stojí víc než těch pár sekund. Sérii oprav ze **standardových rolí**, které sahají jen na text a značky, ověř **jednou na konci série**. A **nepouštěj linku ještě jednou před koncem tahu**: `Stop` hook ji spustí nad tímtéž stromem hned po něm, takže je to čekání navíc bez nové informace. U projektu, kde tři kroky trvají 40 s, byla dosavadní podoba při deseti opravách sedm minut čistého čekání – a to uprostřed nejdelšího interaktivního průchodu, kdy je vytrvalost nejtenčí.
    c. Když kontrola selže: **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat. Nepokračuj automaticky na další nález.

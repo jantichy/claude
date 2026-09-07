@@ -56,7 +56,7 @@ Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna
 
 ## Hranice
 
-**Čím to drží.** Tenhle odstavec sám o sobě nedrží nic: vykonává ho tentýž model, který čte i pokyny uživatele, a ze stejného kontextu (`~/.claude/RULES.md`, *Přednost pravidel*). Kdyby stačila věta, byl by souhlasový mechanismus zelené linky – soubor, hash, `--allow`, `--revoke` – zbytečný, přestože ten hlídá pouhé spuštění `npm test`, kdežto tady se **záměrně posílá `'; drop`, mažou záznamy a lámou stavy**.
+**Čím to drží.** Tenhle odstavec sám o sobě nedrží nic: vykonává ho tentýž model, který čte i pokyny uživatele, a ze stejného kontextu (`~/.claude/RULES.md`, *Přednost pravidel*). Kdyby stačila věta, byl by souhlasový mechanismus průběžné kontroly – soubor, hash, `--allow`, `--revoke` – zbytečný, přestože ten hlídá pouhé spuštění `npm test`, kdežto tady se **záměrně posílá `'; drop`, mažou záznamy a lámou stavy**.
 
 Hranice proto **stojí na dokladech, ne na slibu**. Body 1 a 2 mají každý svůj příkaz a **jeho výstup se doslova vlepí do přehledu ve Fázi 0**. Bez obou dokladů se Fáze 2 nespustí – a to i tehdy, když uživatel řekne, že je to v pořádku. Řekne-li to, není to důvod doklad vynechat, ale získat ho:
 
@@ -272,7 +272,7 @@ Při volbě **Opravit**:
 
 1. Proveď změnu.
 2. **Napiš regresní test, který ten postup pokrývá.** U nálezu z útoku to není volitelné: reprodukční postup je hotové zadání testu a bez něj se chyba vrátí a nikdo se to nedozví. Tímhle krokem se z jednorázového průzkumu stává trvalé pokrytí.
-3. **Ověř** – zelená linka podle kontraktu příkazů, a pak **přehraj reprodukční postup znovu** proti opravené instanci. Test může projít i nad chybou, kterou pokrývá špatně.
+3. **Ověř** – průběžná kontrola podle kontraktu příkazů, a pak **přehraj reprodukční postup znovu** proti opravené instanci. Test může projít i nad chybou, kterou pokrývá špatně.
 4. Když kontrola selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
 5. Commit dle autocommit nastavení projektu.
 

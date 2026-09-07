@@ -100,7 +100,7 @@ Tenhle blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj dvě d
 
 Zbytek `CLAUDE.md` – autocommit, paměťová politika, typ projektu, doménové importy – zakládá `/project`.
 
-**Kontrakt příkazů.** Projekt, ve kterém se něco spouští, má v `CLAUDE.md` sekci `## Příkazy` – překlad abstraktních kroků (`test`, `typecheck`, `lint`, `build`, `e2e`, `audit`, `mutation`) na to, čím se v tomhle projektu doopravdy spouštějí. Díky ní nemusí žádné pravidlo ani skill vědět, jestli je za projektem Node, PHP nebo Python. Zakládá ji `/project` a čtou ji kontroly kvality – zelená linka i skilly, které před svou prací pouštějí testy. **Projekt bez kódu ji nemá a nic tím neporušuje.**
+**Kontrakt příkazů.** Projekt, ve kterém se něco spouští, má v `CLAUDE.md` sekci `## Příkazy` – překlad abstraktních kroků (`test`, `typecheck`, `lint`, `build`, `e2e`, `audit`, `mutation`) na to, čím se v tomhle projektu doopravdy spouštějí. Díky ní nemusí žádné pravidlo ani skill vědět, jestli je za projektem Node, PHP nebo Python. Zakládá ji `/project` a čtou ji kontroly kvality – průběžná kontrola i skilly, které před svou prací pouštějí testy. **Projekt bez kódu ji nemá a nic tím neporušuje.**
 
 **Sekce `## Nasazení`** popisuje, jak se projekt dostane do produkce – u platformy s automatickým nasazením zejména to, která větev je nasazovací. Zakládá ji `/project` nebo první běh `/release`.
 
@@ -319,7 +319,7 @@ Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jedno
 
 **Proč vůbec existuje:** bez něj žije nejdražší část běhu jen v kontextu session. `/review` po panelu a ověřovatelích začne dlouze interagovat s uživatelem právě ve chvíli, kdy kontext dochází nejrychleji – a kompaktace uprostřed průchodu znamená zaplatit celý běh znovu. `/attack` zase přerušením ztratí seznam toho, co zvedl, a nechá na stroji běžet server a kontejnery, o kterých už nikdo neví.
 
-**Do `.claude/run/`, ne mimo repozitář:** je to per pracovní adresář, tedy ve worktree layoutu přirozeně per větev – a fronta nálezů k větvi patří. (Souhlas a běhový stav zelené linky naopak leží mimo repozitář a klíčují se sdíleným `.git`, protože odpovídají na otázku o repozitáři, ne o větvi.)
+**Do `.claude/run/`, ne mimo repozitář:** je to per pracovní adresář, tedy ve worktree layoutu přirozeně per větev – a fronta nálezů k větvi patří. (Souhlas a běhový stav průběžné kontroly naopak leží mimo repozitář a klíčují se sdíleným `.git`, protože odpovídají na otázku o repozitáři, ne o větvi.)
 
 **Nikdy se z něj nečte jako z pravdy o projektu.** Říká jen, kde skončil přerušený běh; co z toho má trvalou platnost, se zapíše do `todo.md`, `decisions.md` nebo `done.md` jako všechno ostatní.
 

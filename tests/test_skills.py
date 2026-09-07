@@ -3,7 +3,7 @@
 Skilly jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu
 a obvykle tiše: režim popsaný v těle, který chybí v `argument-hint`, nebo odkaz
 na soubor, který mezitím zmizel. Tohle je nejlevnější vrstva, která je chytí –
-stojí nula tokenů a běží v zelené lince.
+stojí nula tokenů a běží v průběžné kontrole.
 
 Spouští se: python3 -m unittest discover -s tests -q
 
@@ -253,7 +253,7 @@ class NosneCasti(unittest.TestCase):
 
     Dosavadní testy hlídají hlavičky, odkazy a nadpisy – tedy tvar. Z `/review` šlo
     smazat celou fázi ověřování nálezů, tu, o které skill sám píše, že na ní stojí
-    jeho použitelnost, a zelená linka zůstala zelená. Kontrola, která nemůže spadnout
+    jeho použitelnost, a průběžná kontrola zůstala zelená. Kontrola, která nemůže spadnout
     na věcné vadě, je horší než chybějící kontrola: uspokojuje pravidlo *Ověřitelná
     kontrola místo dojmu*, aniž cokoliv doloží.
 
@@ -444,7 +444,7 @@ class KontraktPrikazu(unittest.TestCase):
 
     `coding.md` říká „jeden řádek na klíč, `- klíč: příkaz`, a za příkazem už nic“.
     Změna formátu (komentář za příkazem, jiné odsazení, hodnota v bloku kódu)
-    vypne kontrolu **tiše**: `sed` v `green-line.sh` prostě nic nenajde a hook se
+    vypne kontrolu **tiše**: `sed` v `verify.sh` prostě nic nenajde a hook se
     zachová, jako by ten krok projekt neměl.
     """
 
@@ -452,7 +452,7 @@ class KontraktPrikazu(unittest.TestCase):
 
     def _sekce(self) -> str:
         """Sekce ## Příkazy z těla bez bloků kódu – stejně jako `md_body`
-        a `contract_section` v `green-line.sh`."""
+        a `contract_section` v `verify.sh`."""
         radky, ve_bloku, uvnitr, out = self.KONTRAKT.read_text(encoding="utf-8").splitlines(), False, False, []
         for r in radky:
             if r.lstrip().startswith(("```", "~~~")):
@@ -469,13 +469,13 @@ class KontraktPrikazu(unittest.TestCase):
         return "\n".join(out)
 
     def _hodnota(self, klic: str):
-        """Týž výraz jako `cmd_for` v green-line.sh."""
+        """Týž výraz jako `cmd_for` v verify.sh."""
         m = re.search(rf"^[ \t]*[-*][ \t]*{klic}:[ \t]+(.*?)[ \t]*$",
                       self._sekce(), re.M)
         return m.group(1) if m else None
 
     def test_kontrakt_se_da_precist(self):
-        """Kdyby se sekce rozešla s formátem, zelená linka by tu tiše neběžela."""
+        """Kdyby se sekce rozešla s formátem, průběžná kontrola by tu tiše neběžela."""
         self.assertTrue(self._sekce().strip(), "sekci ## Příkazy se nepodařilo přečíst")
         for klic in ("typecheck", "lint", "test"):
             with self.subTest(klic=klic):

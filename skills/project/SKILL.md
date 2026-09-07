@@ -47,7 +47,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 **1. Vylez ke kontejneru.** Session se sice pouští z jeho kořene, ale `/project` se často volá i z `main/` nebo z worktree rozdělané větve – tam vedle souboru `.git` **žádné `.bare/` není**, takže bys layout vyhodnotil jako obyčejný repozitář a psal rovnou do `main/`. Rozliš podle `~/.claude/WORKTREE.md`, *Jak si skill najde projektový adresář*, a jdeš-li nahoru, řekni to nahlas. Jmenuje-li se hlavní větev jinak než `main`, její pracovní adresář zjistíš z `git --git-dir=<projekt>/.bare worktree list` a všechna „`main/`“ níž čti jako ji.
 
-**2. Nepiš do `main/`, ale do vlastní větve.** `main/` je sdílený a slouží ke čtení – zakazuje to `~/.claude/WORKTREE.md`, *`main/` se nemaže a nepracuje se v něm*. Větev zakládej **líně, až u prvního zápisu**: inventura v tomhle kroku i revize v kroku 14 jsou čtení, takže běh, který nic nenajde, po sobě nenechá prázdnou větev ani naklonované `node_modules`. **Zápis je každá změna souboru v repozitáři** – nastavení mimo git (popisek v Repository details, souhlas se zelenou linkou) větev nevyžaduje. Jakmile se má poprvé něco změnit:
+**2. Nepiš do `main/`, ale do vlastní větve.** `main/` je sdílený a slouží ke čtení – zakazuje to `~/.claude/WORKTREE.md`, *`main/` se nemaže a nepracuje se v něm*. Větev zakládej **líně, až u prvního zápisu**: inventura v tomhle kroku i revize v kroku 14 jsou čtení, takže běh, který nic nenajde, po sobě nenechá prázdnou větev ani naklonované `node_modules`. **Zápis je každá změna souboru v repozitáři** – nastavení mimo git (popisek v Repository details, souhlas se průběžnou kontrolou) větev nevyžaduje. Jakmile se má poprvé něco změnit:
 
 ```bash
 git -C <projekt> worktree add <projekt>/project-update -b docs/project-update
@@ -393,15 +393,15 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 - **Data a výzkum** – „Jednorázová datová/výzkumná analýza – výstupem jsou zjištění a report, ne nasazovaný kód.“
 - **Ostatní** – „Projekt mimo výše uvedené kategorie.“
 
-## Krok 12 – Kontrakt příkazů a zelená linka
+## Krok 12 – Kontrakt příkazů a průběžná kontrola
 
 **Jen u projektu, ve kterém se něco spouští** – tedy typ *Vývoj*, *Web*, nebo kdekoliv, kde v repozitáři najdeš `package.json`, `composer.json`, `Makefile`, `pyproject.toml` a podobně. U obsahového, znalostního nebo výzkumného projektu **krok přeskoč a řekni to jednou větou**; kontrakt tam nemá co dělat.
 
 **Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
 
-Zapiš do projektového `CLAUDE.md` sekci `## Příkazy` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/green-line.sh --allow <projektový adresář>` a nech ho spustit **jeho** – souhlasem se zapíná kontrola, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu. Ve worktree layoutu vypiš `main/` nebo svou větev, **nikdy kořen kontejneru**: souhlas se počítá z `git rev-parse --git-common-dir`, takže z kteréhokoliv worktree platí pro celý repozitář, ale v kořeni kontejneru žádný kontrakt neleží.
+Zapiš do projektového `CLAUDE.md` sekci `## Příkazy` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/verify.sh --allow <projektový adresář>` a nech ho spustit **jeho** – souhlasem se zapíná kontrola, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu. Ve worktree layoutu vypiš `main/` nebo svou větev, **nikdy kořen kontejneru**: souhlas se počítá z `git rev-parse --git-common-dir`, takže z kteréhokoliv worktree platí pro celý repozitář, ale v kořeni kontejneru žádný kontrakt neleží.
 
-**Šablonu sekce, význam klíčů, mechaniku zelené linky i kontroly, které se nenastavují příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/quality.md`.
+**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/quality.md`.
 
 ## Krok 13 – Doménové checklisty
 
@@ -458,7 +458,7 @@ Nabízí se do projektu zapsat otisk – datum posledního běhu nebo hash `~/De
 Vypiš přehledně:
 
 - **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
-- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
+- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula průběžná kontrola, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 - *(worktree layout)* **Na jaké větvi výsledek leží**, že je ve větvi commitnutý a že merge do hlavní větve čeká na jeho pokyn. Neměnilo-li se nic, žádná větev nevznikla – řekni to místo toho.
 

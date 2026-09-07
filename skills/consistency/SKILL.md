@@ -84,7 +84,7 @@ Nemá-li je projekt (nebo nemá `package.json` vůbec, což je u obsahového či
 
 Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označí tagem `[toolchain]`.
 
-**Běží-li `/consistency` samostatně mimo životní cyklus** (tedy bez předchozího `/review`) a projekt má *Kontrakt příkazů*, řekni uživateli jednou větou, že zelená linka teď prověřená není a že `/review` se dělá dřív.
+**Běží-li `/consistency` samostatně mimo životní cyklus** (tedy bez předchozího `/review`) a projekt má *Kontrakt příkazů*, řekni uživateli jednou větou, že průběžná kontrola teď prověřená není a že `/review` se dělá dřív.
 
 ## Fáze 1 – Průzkum projektu
 
@@ -209,7 +209,7 @@ Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
 Mechanické nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
 
-1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/quality.md`): celou **zelenou linku** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj linku znovu těsně před koncem tahu – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
+1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/quality.md`): celou **průběžnou kontrolu** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj linku znovu těsně před koncem tahu – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N mechanických)

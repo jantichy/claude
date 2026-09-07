@@ -299,9 +299,9 @@
           },
           {
             "type": "command",
-            "command": "/Users/honza/.claude/green-line.sh",
+            "command": "/Users/honza/.claude/verify.sh",
             "timeout": 320,
-            "statusMessage": "Zelená linka…"
+            "statusMessage": "Průběžná kontrola…"
           }
         ]
       }

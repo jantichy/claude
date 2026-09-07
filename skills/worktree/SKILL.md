@@ -28,7 +28,7 @@ Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém ad
 
 ## Fáze 0 – Pre-flight
 
-Společný začátek je v `~/.claude/skills/PREFLIGHT.md`; platí z něj **bod 1** – kořen projektu. Body 3 až 5 neplatí: skill nesahá na kód a stav pracovního stromu ani zelená linka jeho běh neovlivní.
+Společný začátek je v `~/.claude/skills/PREFLIGHT.md`; platí z něj **bod 1** – kořen projektu. Body 3 až 5 neplatí: skill nesahá na kód a stav pracovního stromu ani průběžná kontrola jeho běh neovlivní.
 
 Tři vlastní odchylky:
 

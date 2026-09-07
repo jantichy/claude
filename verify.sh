@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Zelená linka – Stop hook, který nepustí Clauda ukončit tah nad rozbitým projektem.
+# Průběžná kontrola – Stop hook, který nepustí Clauda ukončit tah nad rozbitým projektem.
 #
 # Přečte "Kontrakt příkazů" (sekce "## Příkazy" v projektovém CLAUDE.md) a spustí
 # typecheck, lint a test. Když něco selže, vrátí exit 2 a výstup jde Claudovi jako
@@ -7,13 +7,13 @@
 #
 # BEZPEČNOST: kontrakt je kód ležící v repozitáři a hooky běží mimo permission
 # systém. Proto se v projektu nespustí nic, dokud pro něj člověk jednou nevydá
-# souhlas:  green-line.sh --allow <projekt>
+# souhlas:  verify.sh --allow <projekt>
 # Vydané souhlasy vypíše  --list , odebere  --revoke <projekt> .
 # Ten souhlas znamená "spouštěj v tomhle repozitáři jeho vlastní příkazy", ne
 # "ty konkrétní příkazy jsem přečetl a jsou neškodné" – `npm test` spustí, co je
 # v package.json, a to se neschvaluje. Do cizího repozitáře souhlas nedávej.
 #
-# Krok, který nejde spustit (chybí nástroj, exit 126/127), NENÍ červená linka:
+# Krok, který nejde spustit (chybí nástroj, exit 126/127), NENÍ padající kontrola:
 # hlásí se zvlášť a tah neblokuje – jinak by Claude opravoval kód kvůli rozbitému
 # prostředí. Je to jediná větev, která končí exit 1: u ní je mlčení k modelu
 # správně, protože opravovat není co.
@@ -22,7 +22,7 @@
 # stderr jen uživatel, kdežto shrnutí píše model – a ten by nad neprověřeným
 # stavem nechal stát svoje "hotovo".
 #
-# Vypnout: .claude/no-green-line v projektu, nebo CLAUDE_NO_GREEN_LINE=1.
+# Vypnout: .claude/no-verify v projektu, nebo CLAUDE_NO_VERIFY=1.
 
 set -uo pipefail
 
@@ -31,10 +31,10 @@ MAX_OUT=200000  # kolik bajtů výstupu si od kroku vezmeme
 
 # Souhlasy leží mimo dosah XDG_STATE_HOME schválně: je to bezpečnostní stav a
 # proměnná prostředí se dá nastavit z .envrc nebo z konfigurace editoru.
-ALLOW_DIR="$HOME/.local/state/claude-green-line/allowed"
-RUN_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/claude-green-line/runs"
+ALLOW_DIR="$HOME/.local/state/claude-verify/allowed"
+RUN_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/claude-verify/runs"
 
-die() { echo "Zelená linka: $1" >&2; exit 1; }
+die() { echo "Průběžná kontrola: $1" >&2; exit 1; }
 have() { command -v "$1" >/dev/null 2>&1; }
 sha()  { shasum | cut -d' ' -f1; }   # dostupnost se ověřuje v need_tools
 
@@ -159,7 +159,7 @@ fi
 
 if [ "${1:-}" = "--revoke" ]; then
   need_tools
-  [ -n "${2:-}" ] || die "použití: green-line.sh --revoke <projekt>"
+  [ -n "${2:-}" ] || die "použití: verify.sh --revoke <projekt>"
   P=$(norm_path "$2")
   N=0
   # Odvolat se musí dát i souhlas zadaný přes jinou větev téhož repozitáře, proto
@@ -193,7 +193,7 @@ if [ "${1:-}" = "--allow" ]; then
   printf '%s\n' "$P" > "$ALLOW_DIR/$RKEY" || die "nelze zapsat souhlas do $ALLOW_DIR"
   [ -s "$ALLOW_DIR/$RKEY" ] || die "souhlas se nezapsal."
   SEC=$(contract_section "$MD")
-  echo "Zelená linka poběží v $P, podle kontraktu v $MD."
+  echo "Průběžná kontrola poběží v $P, podle kontraktu v $MD."
   echo
   echo "Po každém tahu spustí:"
   FOUND=""
@@ -203,7 +203,7 @@ if [ "${1:-}" = "--allow" ]; then
     elif [ -n "$v" ]; then printf '  %-10s %s\n' "$k:" "$v"; FOUND="$v"; fi
   done
   [ -z "$FOUND" ] && echo "  (nic – kontrakt nemá typecheck, lint ani test, hook tu nic nespustí)"
-  # Ostatní klíče jsou dokumentace pro člověka; zelená linka je nepouští.
+  # Ostatní klíče jsou dokumentace pro člověka; průběžná kontrola je nepouští.
   OTHER=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]].*/\1/p' \
           | grep -vxE 'typecheck|lint|test' | paste -sd, - | sed 's/,/, /g')
   [ -n "$OTHER" ] && echo "  Nespouští: $OTHER (jen dokumentace v kontraktu)"
@@ -233,8 +233,8 @@ if [ -n "$CWD" ]; then cd "$CWD" 2>/dev/null || die "adresář $CWD neexistuje."
 
 # Vypnutá kontrola se hlásí, nemlčí: ta, o které nikdo neví, že neběží, je horší
 # než žádná – tváří se jako záruka, která neplatí.
-if [ "${CLAUDE_NO_GREEN_LINE:-0}" = "1" ]; then
-  echo "Zelená linka: vypnutá proměnnou CLAUDE_NO_GREEN_LINE, nespustil jsem nic." >&2
+if [ "${CLAUDE_NO_VERIFY:-0}" = "1" ]; then
+  echo "Průběžná kontrola: vypnutá proměnnou CLAUDE_NO_VERIFY, nespustil jsem nic." >&2
   exit 0
 fi
 
@@ -246,8 +246,8 @@ CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || ex
 PROJ=$(canon "$(proj_for_md "$CLAUDE_MD")")
 
 for d in "$PROJ" "$PWD"; do
-  if [ -f "$d/.claude/no-green-line" ]; then
-    echo "Zelená linka: vypnutá souborem $d/.claude/no-green-line, nespustil jsem nic." >&2
+  if [ -f "$d/.claude/no-verify" ]; then
+    echo "Průběžná kontrola: vypnutá souborem $d/.claude/no-verify, nespustil jsem nic." >&2
     exit 0
   fi
 done
@@ -258,9 +258,9 @@ need_tools
 KEY=$(proj_key "$(repo_id "$PROJ")")
 if ! allow_file "$PROJ" >/dev/null; then
   {
-    echo "Zelená linka: pro $PROJ není vydaný souhlas, nespustil jsem nic."
+    echo "Průběžná kontrola: pro $PROJ není vydaný souhlas, nespustil jsem nic."
     echo "Kontrakt je kód z repozitáře. Projdi si ho a jestli tomu repozitáři věříš:"
-    echo "  ~/.claude/green-line.sh --allow $PROJ"
+    echo "  ~/.claude/verify.sh --allow $PROJ"
     contract_section "$CLAUDE_MD" \
       | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}/  \1: /p' || true
   } >&2
@@ -343,7 +343,7 @@ STATE="$RUN_DIR/$KEY"
 LOCK="$RUN_DIR/$KEY.lock"
 find "$RUN_DIR" -maxdepth 1 -type d -name '*.lock' -mmin +10 -exec rm -rf {} + 2>/dev/null || true
 if ! mkdir "$LOCK" 2>/dev/null; then
-  echo "Zelená linka: kontrola tohohle projektu běží v jiné session, nespouštím ji podruhé." >&2
+  echo "Průběžná kontrola tohohle projektu běží v jiné session, nespouštím ji podruhé." >&2
   exit 0
 fi
 trap 'rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
@@ -362,7 +362,7 @@ OK_SIG=""; SKIP_SIG=""
 STOP_ACTIVE=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/null)
 
 # --- Spuštění kroků ------------------------------------------------------------
-TMP=$(mktemp "${TMPDIR:-/tmp}/green-line.XXXXXX") || die "nelze založit dočasný soubor."
+TMP=$(mktemp "${TMPDIR:-/tmp}/verify.XXXXXX") || die "nelze založit dočasný soubor."
 # Jeden trap na obojí: druhý `trap ... EXIT` by ten první tiše přepsal a zámek
 # by po doběhnutí zůstal ležet, takže by se kontrola v dalším tahu přeskočila.
 trap 'rm -f "$TMP"; rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
@@ -407,7 +407,7 @@ for step in typecheck lint test; do
 $BODY"
     [ ! -s "$TMP" ] && BODY="(příkaz skončil kódem $RC bez výstupu)"
     if [ "$RC" = "124" ] || [ "$RC" = "137" ]; then
-      BODY="(krok nedoběhl do ${LIMIT} s a byl ukončen – do zelené linky patří jen to, co je rychlé)
+      BODY="(krok nedoběhl do ${LIMIT} s a byl ukončen – do průběžné kontroly patří jen to, co je rychlé)
 $BODY"
     fi
     # "Test našel chybu" a "test nejde spustit" jsou různé stavy. První je
@@ -429,7 +429,7 @@ done
 note_skipped() { [ -n "$SKIPPED" ] && echo "Nekontrolovalo se: $SKIPPED (chybí v kontraktu příkazů)."; }
 note_broken() {
   [ -n "$BROKEN" ] && { echo "Tyhle kroky nejde spustit – chybí nástroj, nebo je špatně kontrakt v $CLAUDE_MD."
-                        echo "Není to červená linka: neopravuj kód, oprav prostředí nebo kontrakt."
+                        echo "Nejde o padající kontrolu: neopravuj kód, oprav prostředí nebo kontrakt."
                         echo "$BROKEN"; }
 }
 
@@ -440,12 +440,12 @@ if [ -n "$FAILED" ]; then
     # exit 2, ne 1: při exit 1 jde stderr jen uživateli a model o tom neví, takže
     # svoje "hotovo" nechá stát nad stavem, který branou neprošel. Zacyklit to
     # nemůže – SKIP_SIG je pro tenhle stav uložený a další volání skončí exit 0.
-    { echo "Zelená linka neprošla ani napodruhé – pouštím dál, ale NENÍ to zelené."
+    { echo "Průběžná kontrola neprošla ani napodruhé – pouštím dál, ale NENÍ to zelené."
       echo "Neopravuj to potřetí. Nehlas práci jako hotovou a napiš uživateli, co zbývá."
       note_skipped; note_broken; echo "$FAILED"; } >&2
     exit 2
   fi
-  { echo "Zelená linka není zelená – práci nelze uzavřít. Oprav to, nebo se zeptej uživatele."
+  { echo "Průběžná kontrola není zelená – práci nelze uzavřít. Oprav to, nebo se zeptej uživatele."
     echo "Netvrď, že něco prošlo, bez výstupu příkazu."
     note_skipped; note_broken; echo "$FAILED"; } >&2
   exit 2
@@ -462,7 +462,7 @@ fi
 if [ -n "$SKIPPED" ]; then
   # exit 2 ze stejného důvodu jako výš: díra v kontraktu musí do shrnutí, a to
   # píše model. Stav je uložený jako zelený, takže další volání skončí exit 0.
-  { echo "Zelená linka prošla, ale nekontrolovalo se: $SKIPPED (chybí v kontraktu v $CLAUDE_MD)."
+  { echo "Průběžná kontrola prošla, ale nekontrolovalo se: $SKIPPED (chybí v kontraktu v $CLAUDE_MD)."
     echo "Do shrnutí to napiš jako nezkontrolované. Netvrď, že prošlo všechno."; } >&2
   exit 2
 fi

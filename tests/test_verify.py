@@ -1,12 +1,12 @@
-"""Regresní testy zelené linky.
+"""Regresní testy průběžné kontroly.
 
-`green-line.sh` je jediné místo celé konfigurace, které něco doopravdy vynucuje –
+`verify.sh` je jediné místo celé konfigurace, které něco doopravdy vynucuje –
 všechno ostatní je text, který vykonává model. Zároveň je to ~400 řádků bashe
 s netriviální logikou: otisk stavu, souhlas podle repozitáře, rozlišení
 "test našel chybu" od "test nejde spustit", timeouty, pojistka proti smyčce.
 
 `decisions.md` dokládá, že v té logice už dvakrát byla kritická díra (otisk
-nezahrnoval obsah souborů; chybějící nástroj se hlásil jako červená linka).
+nezahrnoval obsah souborů; chybějící nástroj se hlásil jako padající kontrola).
 Selhání je přitom **tiché v nebezpečném směru**: `exit 0` tam, kde má být `exit 2`,
 znamená, že se práce uzavře nad červenými testy a nikdo se to nedozví.
 
@@ -25,7 +25,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-HOOK = ROOT / "green-line.sh"
+HOOK = ROOT / "verify.sh"
 
 # Návratové kódy Stop hooku. Rozdíl mezi 1 a 2 je celý smysl téhle vrstvy:
 # při 2 dostane výstup MODEL jako pokyn, při 1 jen člověk do transkriptu.
@@ -41,7 +41,7 @@ def git(cwd, *args):
 
 class ZelenaLinka(unittest.TestCase):
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix="green-line-test-"))
+        self.tmp = Path(tempfile.mkdtemp(prefix="verify-test-"))
         self.home = self.tmp / "home"
         self.home.mkdir()
         self.repo = self.tmp / "repo"
@@ -68,7 +68,7 @@ class ZelenaLinka(unittest.TestCase):
     def spust(self, argv=None, vstup="", cwd=None, stop_hook_active=False):
         env = dict(os.environ, HOME=str(self.home))
         env.pop("XDG_STATE_HOME", None)
-        env.pop("CLAUDE_NO_GREEN_LINE", None)
+        env.pop("CLAUDE_NO_VERIFY", None)
         if vstup is not None:
             vstup = json.dumps({"session_id": "s1",
                                 "cwd": str(cwd or self.repo),
@@ -187,7 +187,7 @@ class ZelenaLinka(unittest.TestCase):
         self.kontrakt(typecheck="-", lint="-", test="false")
         self.allow()
         (self.repo / ".claude").mkdir(exist_ok=True)
-        (self.repo / ".claude/no-green-line").touch()
+        (self.repo / ".claude/no-verify").touch()
         r = self.spust()
         self.assertEqual(r.returncode, PUSTI)
         self.assertIn("vypnutá souborem", r.stderr)
@@ -274,7 +274,7 @@ class ZelenaLinka(unittest.TestCase):
         """Dvě session nad jedním stromem jinak pustí testy současně."""
         self.kontrakt(typecheck="-", lint="-", test="false")
         self.allow()
-        stav = self.home / ".local/state/claude-green-line/runs"
+        stav = self.home / ".local/state/claude-verify/runs"
         stav.mkdir(parents=True, exist_ok=True)
         (stav / f"{self.klic()}.lock").mkdir()
         r = self.spust()

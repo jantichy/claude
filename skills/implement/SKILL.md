@@ -28,7 +28,7 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
 
 1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – `## Příkazy` (*Kontrakt příkazů*), `## Autocommit`, paměťovou politiku, importované doménové standardy, výjimky.
-   **Chybí-li `## Příkazy` a projekt má kód, zastav se a doplň je** – bez nich nemá zelená linka co spouštět a realizace by běžela bez kontroly. Zjisti je z `package.json`, `composer.json`, `Makefile` nebo obdoby, ukaž návrh a nech ho potvrdit.
+   **Chybí-li `## Příkazy` a projekt má kód, zastav se a doplň je** – bez nich nemá průběžná kontrola co spouštět a realizace by běžela nezkontrolovaná. Zjisti je z `package.json`, `composer.json`, `Makefile` nebo obdoby, ukaž návrh a nech ho potvrdit.
    **Ověř, že je linka zelená ještě před startem.** Dědíš-li červený stav z dřívějška, ohlas to a zeptej se – jinak nepůjde poznat, co jsi rozbil ty.
 3. **Najdi plán.**
 
@@ -66,14 +66,14 @@ Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vesta
 1. **Každý úkol v plánu má akceptační kritérium rozsouditelné strojem** – příkaz z kontraktu, ne věta.
 2. **Projekt má `test` v kontraktu a testy něco tvrdí** – ideálně doložené mutation score, ne jen pokrytím.
 3. **Zadání se během práce nemění** – refactoring, migrace, oprava reprodukovatelné chyby ano; rozdělaný nový produkt ne.
-4. **Zelená linka je vynucená hookem**, ne jen instrukcí.
+4. **Průběžná kontrola je vynucená hookem**, ne jen instrukcí.
 5. **Uživatel o tom režimu ví a vybral si ho** – nikdy ho nezapínej sám proto, že se ti zdá vhodný.
 
 **Když ho pustíš, drž tři pojistky:**
 
 - **Strop na iterace i na tokeny**, řečený dopředu. Smyčka bez stropu se nezastaví, jen dojde.
 - **Diff testovacích souborů hlídej zvlášť.** Jakákoliv změna v testech během běhu je **zásah, který se ohlásí** – ne tichá součást práce. Čím delší smyčka, tím větší pokušení ohnout to, co ji měří.
-- **Po doběhnutí povinné `/review`**, i když je všechno zelené. Zelená linka říká, že testy prošly, ne že kód dělá, co má.
+- **Po doběhnutí povinné `/review`**, i když je všechno zelené. Průběžná kontrola říká, že testy prošly, ne že kód dělá, co má.
 
 ------
 
@@ -83,7 +83,7 @@ Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vesta
 
 Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
-**Zelená linka po každém úkolu.** Úkol není hotový, když je napsaný kód – je hotový, když projde `typecheck`, `lint` a `test` podle *Kontraktu příkazů* v projektovém `CLAUDE.md`. Teprve pak commit a další úkol. Podrobně `~/Dev/context/coding/quality.md`.
+**Průběžná kontrola po každém úkolu.** Úkol není hotový, když je napsaný kód – je hotový, když projde `typecheck`, `lint` a `test` podle *Kontraktu příkazů* v projektovém `CLAUDE.md`. Teprve pak commit a další úkol. Podrobně `~/Dev/context/coding/quality.md`.
 
 **Netvrď, že to prošlo, bez výstupu.** Do shrnutí patří příkaz a jeho návratový kód, ne věta „testy procházejí“. Nemá-li projekt příkaz v kontraktu, řekni, co se tím nezkontrolovalo.
 
@@ -138,7 +138,7 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 - docs/decisions.md: N
 - docs/done.md: N   docs/todo.md: N   docs/backlog.md: N   docs/rules.md: N
 
-**Zelená linka:** <výstup posledního běhu – příkaz a návratový kód>
+**Průběžná kontrola:** <výstup posledního běhu – příkaz a návratový kód>
 
 **Další krok:** `/review` a za ním zbytek uzavírání (RULES.md, *Životní cyklus projektu*)
 ```

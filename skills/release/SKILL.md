@@ -75,7 +75,7 @@ Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` ne
 | Cíl není na `main` (feature větev) | Nasazuje se něco, co neprošlo integrací. Legitimní u hotfixu, jinak varovný signál – zeptej se, jestli to je záměr. |
 | Cíl je zadaný ručně (větev, tag, hash) | **Zeptej se, jestli uživatel ten konkrétní bod historie viděl na preview.** U výchozího `main` se neptej: preview vzniklo mergem a testování proběhlo průběžně, o to se `/release` nestará. |
 
-**Kontroly běží nad nasazovaným commitem, ne nad pracovním stromem.** Zadal-li uživatel jiný cíl než `main`, přepni se na něj (nejlépe do samostatného worktree) a zelenou linku, build i audit spusť tam. Kontrolovat něco jiného, než se nasazuje, je horší než nekontrolovat nic – dává to falešnou jistotu.
+**Kontroly běží nad nasazovaným commitem, ne nad pracovním stromem.** Zadal-li uživatel jiný cíl než `main`, přepni se na něj (nejlépe do samostatného worktree) a průběžnou kontrolu, build i audit spusť tam. Kontrolovat něco jiného, než se nasazuje, je horší než nekontrolovat nic – dává to falešnou jistotu.
 
 ------
 
@@ -103,8 +103,8 @@ Zjištěné shrň do tří až pěti řádků. **Ještě nenasazuj.**
 Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracované. Neprojde-li kterákoliv, **skonči** a řekni, co je potřeba dodělat.
 
 1. **Pracovní strom je čistý** a větev je pushnutá. Necommitnutá změna při nasazení znamená, že v produkci bude něco jiného, než co je v gitu – a to se hledá měsíce.
-2. **Zelená linka a produkční build, obojí na čistém stromu.** Nikoliv „běželo to ráno“. `build` je tu navíc oproti zelené lince, do které schválně nepatří: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
-3. **Průchod aplikací** – `e2e` z kontraktu, má-li ho projekt. **Tohle je jeho jediné místo v životním cyklu**: do zelené linky je moc pomalý a v `/review` by běžel nad stavem, který se do nasazení ještě několikrát změní. Tady běží naposledy před tím, než se kód potká s uživateli. Chybí-li příkaz, napiš do přehledu, že průchod aplikací nikdo neověřil.
+2. **Průběžná kontrola a produkční build, obojí na čistém stromu.** Nikoliv „běželo to ráno“. `build` je tu navíc oproti průběžné kontrole, do které schválně nepatří: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
+3. **Průchod aplikací** – `e2e` z kontraktu, má-li ho projekt. **Tohle je jeho jediné místo v životním cyklu**: do průběžné kontroly je moc pomalý a v `/review` by běžel nad stavem, který se do nasazení ještě několikrát změní. Tady běží naposledy před tím, než se kód potká s uživateli. Chybí-li příkaz, napiš do přehledu, že průchod aplikací nikdo neověřil.
 4. **Proběhlo `/review`?** Odpověď **si přečti, neptej se na ni**: v `docs/done.md`, sekci `## Průchody životním cyklem` (`~/.claude/STRUCTURE.md`, *`done.md`*), je u každého běhu hash HEAD. Porovnej ho s tím, co nasazuješ – `git log --oneline <zapsaný hash>..HEAD` ukáže, co od té doby přibylo a co tedy nikdo neprověřil. U změny v citlivé oblasti je proběhlé `/review` **podmínka**, ne doporučení. Nemá-li projekt `done.md` nebo v něm ta sekce chybí, zeptej se – ale řekni nahlas, že se odpovídá z paměti, ne ze záznamu.
 5. **Proběhl `/attack`?** Stejným způsobem jako bod 4, ze stejné sekce. U aplikace, kterou jde spustit, se ptej zvlášť: `/review` kód čte, `/attack` ho spouští, a poslední místo, kde má smysl zkusit věc rozbít nanečisto, je právě tady. Neproběhl-li nikdy, řekni to nahlas – nasadit se dá i tak, ale ať je to rozhodnutí, ne opomenutí.
 6. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují. **Pouštěl ho i `/review` a není to duplicita:** mezi ním a tímhle krokem proběhl `/consistency`, `/cleanup` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tam se ptáme „je čisté, co jsme napsali?“, tady „je čisté to, co právě posíláme ven?“.
@@ -142,7 +142,7 @@ Teprve teď se ptáš, a ptáš se **jednou otázkou přes `AskUserQuestion`** n
 **Co:** <N commitů> · <oblasti> · <verze/tag>
 **Nasazuje se:** <main / zadaná větev / hash> → <nasazovací větev>
 **Kam:** <prostředí a URL>
-**Kontroly:** zelená linka ✅ · build ✅ · e2e ✅/– · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
+**Kontroly:** průběžná kontrola ✅ · build ✅ · e2e ✅/– · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
 **Migrace:** <žádné / expand krok N, záloha z HH:MM>
 **Citlivé oblasti:** <které se mění, nebo „žádné“>
 **Návrat:** <konkrétně – revert commitu a redeploy / promote předchozí verze / obnovení ze zálohy>
@@ -224,7 +224,7 @@ Co se v okně dělá:
    **Řešeno:** <co se s nimi udělalo, nebo „nic, nic se neobjevilo“>
    ```
 
-3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/RULES.md`, *Životní cyklus projektu*: jde týmž životním cyklem ve zkrácené podobě, `/review` a zelená linka se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
+3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/RULES.md`, *Životní cyklus projektu*: jde týmž životním cyklem ve zkrácené podobě, `/review` a průběžná kontrola se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
 
 **Přeruší-li se session dřív, než okno uplyne**, řekni to a zapiš do `docs/todo.md`, do kdy okno běží a co se má sledovat. Okno, o kterém ví jen kontext session, žádné okno není.
 
