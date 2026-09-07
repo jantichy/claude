@@ -3,8 +3,7 @@
 #
 # Přečte "Kontrakt příkazů" (sekce "## Příkazy" v projektovém CLAUDE.md) a spustí
 # typecheck, lint a test. Když něco selže, vrátí exit 2 a výstup jde Claudovi jako
-# pokyn, co dodělat. Definice viz ~/Dev/context/coding/coding.md, "Ověřování a brány
-# kvality".
+# pokyn, co dodělat. Definice viz ~/Dev/context/coding/quality.md.
 #
 # BEZPEČNOST: kontrakt je kód ležící v repozitáři a hooky běží mimo permission
 # systém. Proto se v projektu nespustí nic, dokud pro něj člověk jednou nevydá
@@ -63,7 +62,7 @@ need_tools() {
 }
 
 # Markdown bez bloků kódu. Ukázka formátu kontraktu v dokumentaci se jinak čte
-# jako kontrakt – a coding.md takovou ukázku obsahuje, takže kdo si ji zkopíruje
+# jako kontrakt – a quality.md takovou ukázku obsahuje, takže kdo si ji zkopíruje
 # do svého CLAUDE.md, dostane po každém tahu běžící `npm test` a `npx stryker run`,
 # aniž by kontrakt vůbec zaváděl. Je to zároveň cesta, kudy jde do repozitáře
 # propašovat příkaz schovaný jako dokumentace.

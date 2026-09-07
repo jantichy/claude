@@ -401,7 +401,7 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 Zapiš do projektového `CLAUDE.md` sekci `## Příkazy` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/green-line.sh --allow <projektový adresář>` a nech ho spustit **jeho** – souhlasem se zapíná brána, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu. Ve worktree layoutu vypiš `main/` nebo svou větev, **nikdy kořen kontejneru**: souhlas se počítá z `git rev-parse --git-common-dir`, takže z kteréhokoliv worktree platí pro celý repozitář, ale v kořeni kontejneru žádný kontrakt neleží.
 
-**Šablonu sekce, význam klíčů, mechaniku zelené linky i brány, které se nenastavují příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/gates.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*.
+**Šablonu sekce, význam klíčů, mechaniku zelené linky i brány, které se nenastavují příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/gates.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/quality.md`.
 
 ## Krok 13 – Doménové checklisty
 
@@ -429,7 +429,7 @@ Importuj **jen to, co je pro projekt opravdu relevantní** – každý import st
 
 - `~/.claude/STRUCTURE.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
 - `~/.claude/RULES.md` – zejména *Životní cyklus projektu* (jaké kroky životního cyklu dnes existují) a *Co do tohoto souboru nepatří* (kam co patří);
-- `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality* – jen u projektu, ve kterém se něco spouští;
+- `~/Dev/context/coding/quality.md` – jen u projektu, ve kterém se něco spouští;
 - `~/.claude/WORKTREE.md` – jen u worktree layoutu;
 - výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
 

@@ -61,7 +61,7 @@ Podle volby vyvolej `superpowers:subagent-driven-development`, respektive `super
 
 Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vestavěný příkaz Claude Code, ne skill odsud), oddělený evaluátor ji přehodnocuje po každém tahu a práce běží, dokud se cíl nevyřeší. **Není to rychlejší varianta předchozích dvou, je to výměna** – míň přerušení za horší bezpečnostní profil, protože zranitelností v kódu přibývá s počtem iterací, které nad ním agent stráví bez nezávislé kontroly.
 
-**Nabídni ho, jen když platí všech pět** (`~/Dev/context/coding/coding.md`, *Autonomie se stupňuje, nezapíná*):
+**Nabídni ho, jen když platí všech pět** (`~/Dev/context/coding/quality.md`, *Autonomie se stupňuje, nezapíná*):
 
 1. **Každý úkol v plánu má akceptační kritérium rozsouditelné strojem** – příkaz z kontraktu, ne věta.
 2. **Projekt má `test` v kontraktu a testy něco tvrdí** – ideálně doložené mutation score, ne jen pokrytím.
@@ -83,7 +83,7 @@ Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vesta
 
 Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
-**Zelená linka po každém úkolu.** Úkol není hotový, když je napsaný kód – je hotový, když projde `typecheck`, `lint` a `test` podle *Kontraktu příkazů* v projektovém `CLAUDE.md`. Teprve pak commit a další úkol. Podrobně `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*.
+**Zelená linka po každém úkolu.** Úkol není hotový, když je napsaný kód – je hotový, když projde `typecheck`, `lint` a `test` podle *Kontraktu příkazů* v projektovém `CLAUDE.md`. Teprve pak commit a další úkol. Podrobně `~/Dev/context/coding/quality.md`.
 
 **Netvrď, že to prošlo, bez výstupu.** Do shrnutí patří příkaz a jeho návratový kód, ne věta „testy procházejí“. Nemá-li projekt příkaz v kontraktu, řekni, co se tím nezkontrolovalo.
 

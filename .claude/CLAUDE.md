@@ -32,7 +32,7 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 
 ## Příkazy
 
-Kontrakt příkazů (`~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*). Zelená linka ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
+Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Zelená linka ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
 
 - typecheck: swiftc -typecheck skills/*/*.swift
 - lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh && ruff check --isolated --select F,E9 skills/*/scripts/*.py tests/*.py
