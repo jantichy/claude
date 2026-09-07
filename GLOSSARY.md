@@ -22,3 +22,11 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Nahrazuje dřívější „bránu"** (2026-09-07). Anglicky *quality gate* zavedený termín je, ale česká „brána" ne – čtenář si pod ní představí vrata a potřebuje k ní slovník. Zbylá „brána" v souborech je proto vždycky **platební brána** a s tímhle pojmem nemá nic společného.
 
 **Mluvíš-li o jedné konkrétní kontrole, pojmenuj ji.** „Testy padají“ je přesnější než „kontrola je červená“ – ta věta nechává čtenáře hádat, která z nich spadla.
+
+### pozůstatek
+
+**Zbytek po zásahu do textu, který přestal platit.** Dvě situace: odkaz zůstal na sekci, která se mezitím přejmenovala, nebo věta tvrdí něco, co v cílovém souboru už není. Hledá je `/cleanup` po každé session, `/consistency` u staršího dluhu.
+
+**Nahrazuje dřívější „viséc" / „viséci" / „viséce"** (2026-09-07). To slovo v češtině neexistuje – vzniklo z „zůstalo to viset" a začalo se skloňovat. Sloveso je v pořádku, podstatné jméno byl výmysl.
+
+**Nejsou to nedodělané konce.** Ta práce je dodělaná, jen ji rozbil zásah jinde – proto „loose ends“ ani „nedotažené konce“ nesedí.

@@ -304,7 +304,7 @@ ODPOVĚZ NA TYTO OTÁZKY:
 
 **D. Chybějící kontext.** Předpokládá se něco jako známé, ale nikde to není vysvětlené? Odkazuje se na rozhodnutí, jehož zdůvodnění chybí?
 
-**E. Viséci po chirurgických zásazích.** Do dokumentace se zasahuje po větách, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.
+**E. Pozůstatky po chirurgických zásazích.** Do dokumentace se zasahuje po větách, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.
 
 **F. Co bych se musel zeptat?** Konkrétní otázky, na které bys nenašel odpověď.
 
@@ -317,7 +317,7 @@ Nezapisuj do žádného souboru.
 
 - Nálezy, které se týkají téhle session, vrať do Fáze 5 a oprav – mechanické sám, sporné s uživatelem.
 - Nálezy mimo rozsah session (starší dluh v dokumentaci) neopravuj rovnou – přenes je do Fáze 7, která s nimi naloží podle rozhodnutí uživatele.
-- Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanášejí nové viséce – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
+- Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanechávají nové pozůstatky – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
 
 ------
 
