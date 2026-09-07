@@ -294,6 +294,32 @@ class NosneCasti(unittest.TestCase):
             self.assertIn(kus, faze,
                           f"/cleanup, Fáze 2 přišla o {kus!r} – zbyl jen nadpis")
 
+    def test_importy_v_claude_md_nestoji_v_apostrofech(self):
+        """Import uvnitř code spanu se nerozbalí a selže to tiše.
+
+        Řádek `@~/cesta/soubor.md` Claude Code vyhodnotí jen tehdy, když `@`
+        nestojí uvnitř zpětných apostrofů; jinak je to ukázka cesty, ne import.
+        Soubor se pak nenačte, ale `CLAUDE.md` dál vypadá, jako by ta pravidla
+        platila – pozná se to jedině tak, že se modelu zeptáš, co má v kontextu.
+
+        Přesně takhle byl rozbitý uživatelský `~/.claude/CLAUDE.md`: RULES.md,
+        STRUCTURE.md i PTYDEPE.md v něm byly zapsané jako `` `@~/.claude/RULES.md` ``
+        a nenačetl je nikdy nikdo. Nejdražší tichá vada, jaká tu byla – tři
+        soubory označené za závazná pravidla, které do session nikdy nedošly.
+
+        `WORKTREE.md` se schválně **neimportuje** a v apostrofech stát smí; test
+        proto hlídá jen řádky, kde `@` opravdu je.
+        """
+        vzor = re.compile(r"`[^`]*@~?[/\w.-]+\.md[^`]*`")
+        for soubor in (ROOT / "CLAUDE.md", ROOT / ".claude/CLAUDE.md"):
+            if not soubor.exists():
+                continue
+            for cislo, radek in enumerate(soubor.read_text().splitlines(), 1):
+                self.assertFalse(
+                    vzor.search(radek),
+                    f"{soubor.name}:{cislo} má @import uvnitř apostrofů, "
+                    f"takže se tiše nenačte: {radek.strip()[:90]}")
+
     def test_ptydepe_cte_jen_verzovane_soubory(self):
         """Nejdražší chyba, jakou tenhle skill umí udělat, a stala se.
 

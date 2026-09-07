@@ -100,6 +100,10 @@ Tenhle blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj dvě d
 
 Zbytek `CLAUDE.md` – autocommit, paměťová politika, typ projektu, doménové importy – zakládá `/project`.
 
+**Import musí stát holý, ne v apostrofech.** Řádek `@~/cesta/soubor.md` se rozbalí jen tehdy, když `@` **není uvnitř code spanu**; zpětné apostrofy z něj udělají ukázku cesty a soubor se nenačte. Selhává to **tiše** – `CLAUDE.md` dál vypadá, jako by ta pravidla platila, a pozná se to jedině tím, že se model zeptáš, co má v kontextu.
+
+Bylo to takhle rozbité v uživatelském `~/.claude/CLAUDE.md` od jeho vzniku: `RULES.md`, `STRUCTURE.md` i `PTYDEPE.md` tam byly zapsané jako `` `@~/.claude/RULES.md` `` a **nenačetl je nikdy nikdo**. Chceš-li cestu přesto vysázet jako kód, napiš ji dvakrát – jednou holou jako import, jednou v apostrofech v popisu. A **odkaz, který se schválně importovat nemá** (`~/.claude/WORKTREE.md`), naopak v apostrofech nech: drží ho to spolehlivě jako odkaz.
+
 **Kontrakt příkazů.** Projekt, ve kterém se něco spouští, má v `CLAUDE.md` sekci `## Příkazy` – překlad abstraktních kroků (`test`, `typecheck`, `lint`, `build`, `e2e`, `audit`, `mutation`) na to, čím se v tomhle projektu doopravdy spouštějí. Díky ní nemusí žádné pravidlo ani skill vědět, jestli je za projektem Node, PHP nebo Python. Zakládá ji `/project` a čtou ji kontroly kvality – průběžná kontrola i skilly, které před svou prací pouštějí testy. **Projekt bez kódu ji nemá a nic tím neporušuje.**
 
 **Sekce `## Nasazení`** popisuje, jak se projekt dostane do produkce – u platformy s automatickým nasazením zejména to, která větev je nasazovací. Zakládá ji `/project` nebo první běh `/release`.
