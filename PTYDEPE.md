@@ -68,6 +68,12 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Ne „nezávislý čtenář“** – tak se popisuje `/oponent` a splynuly by dvě různé věci: oponent posuzuje obsah dokumentu, tenhle čtenář srozumitelnost zápisu. **Ne „nezaujatý čtenář“** – zaujatost s tím nemá co dělat, rozhoduje, že u toho nebyl.
 
+### hlavní scénář
+
+**Průchod aplikací, ve kterém uživatel dělá všechno správně a nic neselže.** `/attack` hledá právě mimo něj, `/release` ho po nasazení projde celý jako smoke test. Zdrojem je první scénář v `docs/requirements.md` nebo `docs/scenarios.md`.
+
+**Nahrazuje dřívější „šťastnou cestu"** (2026-09-07) v popisu `/attack`. Anglicky je *happy path* zavedený pojem, ale doslovný český překlad se nepoužívá – a hlavně **„hlavní scénář“ už byl zavedený na pěti jiných místech** (`STRUCTURE.md`, `/specify`, `/release`). Byla to tedy dvě jména pro jednu věc, jen každé v jiném skillu.
+
 ### hledisko
 
 **Jeden kritický pohled, se kterým `/oponent` pouští jednoho paralelního agenta** – *Co chybí*, *Předpoklady a argumentace*, *Pre-mortem* a dalších čtrnáct v katalogu skillu.
