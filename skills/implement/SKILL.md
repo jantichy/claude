@@ -111,7 +111,7 @@ Podle toho, jak hluboko problém sahá:
 |---|---|
 | Jen úkol – špatný název souboru, chybějící krok | Oprav plán i kód, řekni to v jedné větě a pokračuj. |
 | Návrh – takhle postavené to nefunguje | **Zastav se.** Vrať se do `docs/architecture.md`, uprav ho a nech přepsat dotčené nehotové úkoly. |
-| Zadání – ukázalo se, že chceme něco jiného | **Zastav se a zeptej se.** Změna produktového záměru není tvoje rozhodnutí; teče shora dolů, viz `structure.md`. |
+| Zadání – ukázalo se, že chceme něco jiného | **Zastav se a zeptej se.** Změna produktového záměru není tvoje rozhodnutí; teče shora dolů, viz `STRUCTURE.md`. |
 
 **Nikdy neškrtej úkol jako hotový, aby se dalo pokračovat.** Zablokovaný úkol nech neodškrtnutý, zapiš proč, a zeptej se.
 

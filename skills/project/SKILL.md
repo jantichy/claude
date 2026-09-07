@@ -115,7 +115,7 @@ Zeptej se v chatu (ne AskUserQuestion – jde o volný text) a počkej na odpov�
 
 **Existuje-li už worktree layout** (z inventury v kroku 0, nebo protože ho zvolíš v kroku 4), je „projektový `CLAUDE.md`“ ten v **projektovém adresáři** – viz krok 0, *Projektový adresář*, a krok 4. U nového projektu, kde se o layoutu rozhoduje až v kroku 4, zapiš zatím do kořene; krok 4 soubor přesune.
 
-Zapiš blok metadat na **začátek** `CLAUDE.md`, ve formátu podle `structure.md`:
+Zapiš blok metadat na **začátek** `CLAUDE.md`, ve formátu podle `STRUCTURE.md`:
 
 ```
 # Rezervační systém

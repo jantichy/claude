@@ -4,7 +4,7 @@ Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalos
 
 Standardní strukturu projektu definuje `~/.claude/STRUCTURE.md`.
 
-Kde v projektu leží standardní soubory, je volba ze dvou režimů (`docs/`, nebo kořen projektu) – definuje ji `structure.md`. **Cesty jako `docs/todo.md` se tu píšou v podobě pro režim `docs/` a znamenají soubor na místě podle režimu daného projektu.**
+Kde v projektu leží standardní soubory, je volba ze dvou režimů (`docs/`, nebo kořen projektu) – definuje ji `STRUCTURE.md`. **Cesty jako `docs/todo.md` se tu píšou v podobě pro režim `docs/` a znamenají soubor na místě podle režimu daného projektu.**
 
 Doménové znalosti z `~/Dev/context/` se do projektu načítají **tvrdým `@import`em** v jeho `CLAUDE.md` – jen ty, které jsou pro jeho charakter relevantní. Rozcestník po doménách je `~/Dev/context/CLAUDE.md`, importy zakládá `/project`.
 
@@ -14,7 +14,7 @@ Doménové znalosti z `~/Dev/context/` se do projektu načítají **tvrdým `@im
 
 Tenhle soubor drží **obecná pravidla práce**. Než sem něco zapíšeš, projdi test – vyhrává první kritérium, které sedí:
 
-1. Jmenuje pravidlo konkrétní soubor v `docs/`? → `structure.md`
+1. Jmenuje pravidlo konkrétní soubor v `docs/`? → `STRUCTURE.md`
 2. Platí obecně pro skilly – jak vypadají, co v nich musí být, jak se píšou? → `~/.claude/skills/SKILLS.md`
 3. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu. **Výjimka: rozhraní kroku životního cyklu sem patří** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí a kdy se smí přeskočit. To je pravidlo o *pořadí práce*, ne o vnitřku skillu, a ve skillu by ho nikdo nenašel celé, protože každý zná jen svoje sousedy. Vnitřek kroku (jeho fáze, šablony, zadání pro agenty) sem naopak nepatří ani zmínkou.
 4. Týká se psaní kódu, webu, textu, vizuálu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
@@ -189,7 +189,7 @@ Zakazuje-li projektový `CLAUDE.md` ukládání do trvalé Memory, platí to i p
 
 ### Rozhodnutí zapisuj i s cestou k nim
 
-Nezapisuj jen výsledek, ale **celou cestu k němu**. Obsah a umístění definuje `structure.md` (`docs/decisions.md`).
+Nezapisuj jen výsledek, ale **celou cestu k němu**. Obsah a umístění definuje `STRUCTURE.md` (`docs/decisions.md`).
 
 **Proč:** za měsíc nikdo nepozná, jestli je něco promyšlené, nebo náhoda – a netroufne si to změnit. Zapsaná motivace je to, co dovoluje rozhodnutí revidovat, protože je vidět, které předpoklady musely platit. Zapsané zavržené varianty brání procházení téže slepé uličky znovu.
 
@@ -263,7 +263,7 @@ Vyhýbej se kombinatorické explozi. Máš-li dimenze A, B, C, neudržuj `A×B×
 
 ### Stavěj doménové principy a rozhoduj proti nim
 
-Průběžně **formuluj silné principy domény** – věty, které rozhodují: „o penězích u brány rozhoduje jen brána“. Co principem je a co ne, definuje `structure.md` (`docs/rules.md`).
+Průběžně **formuluj silné principy domény** – věty, které rozhodují: „o penězích u brány rozhoduje jen brána“. Co principem je a co ne, definuje `STRUCTURE.md` (`docs/rules.md`).
 
 **Každou další otázku validuj proti nim, ne od nuly.** Ptej se, který princip na to sedí, a odpověď odvoď z něj. Nesedí-li žádný, je to nález: chybí princip, formuluj ho.
 
@@ -358,11 +358,11 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 ### Odložené věci pojmenuj a zaparkuj
 
-Vše mimo aktuální rozsah, u čeho je rozhodnuté, že se to udělá – úkol do další fáze, otázka, kterou je potřeba zodpovědět, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
+Vše mimo aktuální rozsah, u čeho je rozhodnuté, že se to udělá – úkol do další fáze, otázka, kterou je potřeba zodpovědět, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `STRUCTURE.md` (`docs/todo.md`).
 
 **Rozlišuj přitom odložené od nezávazného.** Do `todo.md` jde jen to, u čeho je rozhodnuto, že se to udělá – včetně věcí odsunutých až po spuštění. Nápad, který nikdo neschválil ani nezamítl („někdy by šlo…“, „za úvahu stojí…“), patří do `docs/backlog.md`; definici hranice drží `~/.claude/STRUCTURE.md`, *`backlog.md`*. **Nepromíchávej to:** fronta, ve které leží i nezávazné nápady, přestane být frontou a nikdo ji nedočte.
 
-Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vyhrazené sekci (definuje ji `structure.md`) a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
+Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vyhrazené sekci (definuje ji `STRUCTURE.md`) a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
 
 Skutečný úkol se po dokončení nemaže ani neodškrtává na místě – **přesune se do `done.md`**, hned jak je hotový.
 
@@ -378,7 +378,7 @@ V projektech s vlastní živou dokumentací (typicky `docs/`):
 - Změna požadavku: dokumentaci i kód **současně**.
 - Pokyn v rozporu s dokumentací: upozorni a zeptej se, co ustoupí.
 
-Změna teče **shora dolů, nikdy obráceně** – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód. Konkrétní posloupnost souborů definuje `structure.md`.
+Změna teče **shora dolů, nikdy obráceně** – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód. Konkrétní posloupnost souborů definuje `STRUCTURE.md`.
 
 V *Životním cyklu projektu* plní doc-first kroky 3 a 5. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
 
