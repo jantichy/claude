@@ -195,6 +195,8 @@ Nespoléhej na to, že to vypadá dobře ve zdrojáku.
 - [limity dat, osobní údaje, nedopočítané věci – nebo „nic“]
 ```
 
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+
 Zakonči jednou z těchto vět:
 
 - `Report je hotový a ověřený, můžeš ho poslat dál.`

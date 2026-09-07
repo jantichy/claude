@@ -458,6 +458,8 @@ Mechanických (jednoznačná bezriziková oprava): N – ty opravím rovnou a je
 Sporných: M – ty projdeme spolu od nejzávažnějších.
 ```
 
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+
 Když nálezy nejsou, řekni to a skonči.
 
 ------
@@ -487,17 +489,17 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 1. Zobraz ho:
 
 ```
----
-[N/celkem] 🔴/🟡/🔵 [role] [tagy] NÁZEV NÁLEZU
+**[N/celkem] 🔴/🟡/🔵 [role] [tagy] NÁZEV NÁLEZU**
 
-Podklad: [scénář z requirements / bod ASVS / sekce standardu]
-Problém: [v čem konkrétně]
-Selže takhle: [vstupy nebo stav → co se stane špatně]
-Kde: [soubory:řádky, nebo "X výskytů, např. ..." u batch]
+**Podklad:** [scénář z requirements / bod ASVS / sekce standardu]
+**Problém:** [v čem konkrétně]
+**Selže takhle:** [vstupy nebo stav → co se stane špatně]
+**Kde:** [soubory:řádky, nebo „X výskytů, např. …“ u batch]
 
-Navrhované řešení:
-[konkrétně co změnit]
+**Navrhované řešení:** [konkrétně co změnit]
 ```
+
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text. Jedno volání = jeden nález = jedna otázka (`multiSelect: false`):
    - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`

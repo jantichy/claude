@@ -266,6 +266,8 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 - [/breakdown / u projektu bez kódu rozpis kroků do docs/todo.md]
 ```
 
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Zadání je hotové a schválené, můžeme na implementační plán.`

@@ -132,6 +132,8 @@ Ověř a **dolož příkazem**, ne dojmem: kontrolní průchod na starý tvar a 
 - PTYDEPE.md · decisions.md · commity v <repozitářích>
 ```
 
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Termín je vypořádaný a ověřený, starý tvar se mimo PTYDEPE.md nevyskytuje.`

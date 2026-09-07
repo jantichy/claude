@@ -105,13 +105,16 @@ Nic se nevystavuje, dokud tohle neprojde. **Klientů bývá pár, tak jdi klient
 Za každého ukaž:
 
 ```
-<Klient>   <období>   <hodiny> h × <sazba> = <částka> <daňový režim>
-Doklad:    vystavení <datum>, DUZP <datum>, splatnost <datum>
-Na dokladu bude: <období, které ponese text položky – liší-li se od skutečného, řekni to>
-Položka:   <text, který se vytiskne na doklad> – <hodiny> h
-Vyřazeno:  <co a proč>
-K rozhodnutí: <podezřelé záznamy, jeden po druhém>
+**<Klient>** · <období> · <hodiny> h × <sazba> = <částka> <daňový režim>
+
+**Doklad:** vystavení <datum>, DUZP <datum>, splatnost <datum>
+**Na dokladu bude:** <období, které ponese text položky – liší-li se od skutečného, řekni to>
+**Položka:** <text, který se vytiskne na doklad> – <hodiny> h
+**Vyřazeno:** <co a proč>
+**K rozhodnutí:** <podezřelé záznamy, jeden po druhém>
 ```
+
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
 
 **Řádek *Položka* ukazuje text, který se doopravdy vytiskne na doklad**, ne název projektu – slož ho už tady podle `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*. Je to jediné místo v celém běhu, kde se dělá **subjektivní úsudek** (zobecnění popisků z timetrackingu), takže se nesmí schovat až do *Fáze 4*.
 
@@ -192,6 +195,8 @@ Za každého klienta:
 **Nezkontrolováno**
 - <co se neověřilo a proč>, nebo „nic“
 ```
+
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
 
 Ve sloupci *Vystaveno* uveď datum vystavení; **liší-li se od DUZP** kvůli kolizi v číselné řadě, uveď obojí – jinak po běhu nezůstane stopa, že se datum posunulo jinam, než pravidlo předepisuje.
 

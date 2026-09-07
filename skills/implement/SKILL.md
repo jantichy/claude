@@ -136,12 +136,14 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 
 **Zapsáno mimo kód**
 - docs/decisions.md: N
-- docs/done.md: N   docs/todo.md: N   docs/backlog.md: N   docs/rules.md: N
+- docs/done.md: N · docs/todo.md: N · docs/backlog.md: N · docs/rules.md: N
 
 **Průběžná kontrola:** <výstup posledního běhu – příkaz a návratový kód>
 
 **Další krok:** `/review` a za ním zbytek uzavírání (RULES.md, *Životní cyklus projektu*)
 ```
+
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

@@ -232,21 +232,21 @@ Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi n�
 U každého nejdřív vypiš:
 
 ```
----
-[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU
-Oponent: <hledisko, případně „2 oponenti nezávisle“>
+**[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU** · <hledisko, případně „2 oponenti nezávisle“>
 
-Kde: <soubor, sekce, citace>
-Co: <jednou větou>
-Proč to vadí: <konkrétní důsledek>
+**Kde:** <soubor, sekce, citace>
+**Co:** <jednou větou>
+**Proč to vadí:** <konkrétní důsledek>
 
-Varianty řešení:
-A) <…> – důsledek
-B) <…> – důsledek
-C) Nechat být – <proč to může být v pořádku>
+**Varianty řešení**
+- **A)** <…> – důsledek
+- **B)** <…> – důsledek
+- **C) Nechat být** – <proč to může být v pořádku>
 
-Doporučuji: <jedna z nich a proč>
+**Doporučuji:** <jedna z nich a proč>
 ```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“ – u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Vždy nech mezi volbami i **Nechat být** a **Vrátit se k tomu později**.
 
@@ -299,6 +299,8 @@ Ve verdiktu:
 **Nejzávažnější, co z toho vzešlo**
 - <jedna až tři věty – co to reálně změnilo>
 ```
+
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
 
 Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
 

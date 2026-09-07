@@ -153,6 +153,8 @@ Nesedí-li něco, **oprav a projdi znovu** – ne že to jen ohlásíš.
 - Odkazy: [ověřeno / co nesedělo a jak opraveno]
 ```
 
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Přejmenováno všude, starý tvar se v projektu nevyskytuje.`

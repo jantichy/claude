@@ -102,13 +102,16 @@ Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 Zjištěné shrň a **zeptej se na potvrzení, než něco spustíš** (`AskUserQuestion`). Přehled musí obsahovat **doslovné výstupy obou dokladů** z *Hranic*, ne jejich převyprávění:
 
 ```
-Cíl:      <adresa>
-          doklad: <výstup příkazu na resolv – musí obsahovat loopback>
-Databáze: <připojení>
-          doklad: <výstup dotazu na rozložení domén / počet záznamů>
+**Cíl:** <adresa>
+- doklad: <výstup příkazu na resolv – musí obsahovat loopback>
+
+**Databáze:** <připojení>
+- doklad: <výstup dotazu na rozložení domén / počet záznamů>
 Ven:      <co při útoku sáhne mimo – maily, platby, cizí API – nebo „nic“>
 Rozsah:   <obrazovky, endpointy, vektory>
 ```
+
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
 
 Chybí-li kterýkoliv z těch dvou dokladů, **nepokračuj a řekni proč**. Je to jediné místo v celém životním cyklu s destruktivními vedlejšími účinky, takže „vypadá to lokálně“ tu není argument.
 
@@ -241,6 +244,8 @@ Nálezů: X, z toho Y se nepodařilo zopakovat, zbývá Z:
 Nezkoušelo se: [vektory vynechané kvůli hranicím – platby, odesílání mailů, …]
 ```
 
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+
 Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup nebyl prázdný** – prázdný výsledek je taky výsledek a je to ten lepší.
 
 ------
@@ -252,19 +257,20 @@ Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup
 Pro každý, jeden po druhém, od nejzávažnějšího:
 
 ```
----
-[N/celkem] 🔴/🟡/🔵 [vektor] NÁZEV NÁLEZU
+**[N/celkem] 🔴/🟡/🔵 [vektor] NÁZEV NÁLEZU**
 
-Reprodukce:
-  1. …
-  2. …
-Pozorováno: [co se stalo]
-Mělo být:   [co se stát mělo]
-Kde: [soubor:řádek, když se dá dohledat]
+**Reprodukce**
+1. …
+2. …
 
-Navrhované řešení:
-[konkrétně co změnit]
+**Pozorováno:** [co se stalo]
+**Mělo být:** [co se stát mělo]
+**Kde:** [soubor:řádek, když se dá dohledat]
+
+**Navrhované řešení:** [konkrétně co změnit]
 ```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby **Opravit** / **Odložit** / **Přeskočit**. Chování volby *Other* viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 
@@ -306,6 +312,8 @@ Cíl: <adresa> · Vektory: [které]
 
 **Další krok:** /release · po nasazení ještě `/cleanup` podruhé
 ```
+
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
 
 **Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
 

@@ -127,13 +127,14 @@ Na hranici rozhoduj **ve prospěch předložení** – cena za zbytečnou otázk
 Nejdřív uživateli řekni, kolik toho viselo (nebo že nic – to je taky výsledek, nemlč o tom). Pak **jednu položku po druhé**, nikdy víc najednou:
 
 ```
----
-[N/celkem] O ČEM TO BYLO
+**[N/celkem] O ČEM TO BYLO**
 
-Kdy: [zhruba kde v konverzaci – čeho se to týkalo]
-Nevypořádáno: [citace nebo věrné shrnutí toho, co zůstalo bez odpovědi]
-Proč není vypořádané: [co jsi prověřil a proč to nepovažuješ za vyřešené jinudy]
+**Kdy:** [zhruba kde v konverzaci – čeho se to týkalo]
+**Nevypořádáno:** [citace nebo věrné shrnutí toho, co zůstalo bez odpovědi]
+**Proč není vypořádané:** [co jsi prověřil a proč to nepovažuješ za vyřešené jinudy]
 ```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu položku, `header` `Téma N/celkem`. Volby dej **věcné, tedy skutečné odpovědi na tu konkrétní otázku** (varianty, které tehdy byly ve hře), ne obecné „zapsat / odložit“. Ke každé položce vždy přidej volbu **„Bezpředmětné“** pro případ, že to uživatel mezitím vyřešil v hlavě nebo o to už nestojí.
 
@@ -255,14 +256,14 @@ Nedává-li standardní struktura pro tenhle projekt smysl (jednorázový scratc
 2. **Sporné položky předlož jednu po druhé.** Nejdřív položku vypiš:
 
 ```
----
-[N/celkem] NÁZEV POLOŽKY
+**[N/celkem] NÁZEV POLOŽKY**
 
-Z session: [co v session padlo, případně citace]
-Stav: [chybí / zastaralé / špatné místo / duplicita / nejasné zařazení]
-
-Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit dokumentaci“]
+**Z session:** [co v session padlo, případně citace]
+**Stav:** [chybí / zastaralé / špatné místo / duplicita / nejasné zařazení]
+**Návrh:** [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit dokumentaci“]
 ```
+
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
    Pak se zeptej **přes tool `AskUserQuestion`** (viz Zásady výše) – jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou, volby **Zapsat** / **Odložit** / **Přeskočit**. U položky s nejasným zařazením nabídni místo toho **konkrétní cílové soubory** jako volby (např. `CLAUDE.md` / `docs/decisions.md` / `docs/todo.md` / `docs/backlog.md`) – je to rychlejší než se ptát dvakrát.
 
@@ -401,6 +402,8 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
 **Další krok:** /attack a /release, nasazuje-li se – jinak je práce uzavřená
 ```
+
+Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
 
 Zakonči **jednoznačným verdiktem** – jednou z těchto vět, nikdy ničím vágním mezi tím:
 
