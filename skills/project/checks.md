@@ -1,11 +1,11 @@
 # Kontrakt příkazů a průběžná kontrola
 
-Podrobnosti ke kroku 12 v `SKILL.md`: šablona sekce `## Příkazy`, co se zapnutím vzniká, jak se dává souhlas a které kontroly se nastavují konfigurací.
+Podrobnosti ke kroku 12 v `SKILL.md`: šablona sekce `## Kontrakt příkazů`, co se zapnutím vzniká, jak se dává souhlas a které kontroly se nastavují konfigurací.
 
-Zapiš do projektového `CLAUDE.md` sekci `## Příkazy`:
+Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů`:
 
 ```markdown
-## Příkazy
+## Kontrakt příkazů
 
 - test:      npm test
 - typecheck: npm run typecheck

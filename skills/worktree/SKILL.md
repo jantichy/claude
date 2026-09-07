@@ -34,7 +34,7 @@ Tři vlastní odchylky:
 
 - **Detekci dělej výhradně přes Glob**, ne `git` přes Bash – nenulový návratový kód by vyrobil červenou chybu a zbytečně vyděsil uživatele. Vlastní přeskládání pak Bashem.
 - **Chybějící `.git` není důvod skončit.** Pre-flight u ostatních skillů říká „není-li to repozitář, skonči"; tady je prázdný adresář legitimní vstup režimu `enable`, který v něm založí nový projekt.
-- **Bod 2 – projektový `CLAUDE.md` – neplatí.** Skill do něj nezapisuje a nic z něj nepotřebuje; hlavně by ale jeho blokující pokyn *„chybí-li `## Příkazy` a projekt má kód, zastav se"* zastavil `enable` nad prázdným adresářem, kde žádný projektový soubor ještě není. Stub v kořeni kontejneru je jiný soubor a zapisuje se až v fázi 2.
+- **Bod 2 – projektový `CLAUDE.md` – neplatí.** Skill do něj nezapisuje a nic z něj nepotřebuje; hlavně by ale jeho blokující pokyn *„chybí-li `## Kontrakt příkazů` a projekt má kód, zastav se"* zastavil `enable` nad prázdným adresářem, kde žádný projektový soubor ještě není. Stub v kořeni kontejneru je jiný soubor a zapisuje se až v fázi 2.
 
 ## Fáze 1 – Zjisti stav
 

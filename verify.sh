@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Průběžná kontrola – Stop hook, který nepustí Clauda ukončit odpověď nad rozbitým projektem.
 #
-# Přečte "Kontrakt příkazů" (sekce "## Příkazy" v projektovém CLAUDE.md) a spustí
+# Přečte "Kontrakt příkazů" (sekce "## Kontrakt příkazů" v projektovém CLAUDE.md) a spustí
 # typecheck, lint a test. Když něco selže, vrátí exit 2 a výstup jde Claudovi jako
 # pokyn, co dodělat. Definice viz ~/Dev/context/coding/quality.md.
 #
@@ -116,13 +116,13 @@ proj_for_md() {
 # "bez kontraktu" právě o repozitářích, kvůli kterým ta cesta vznikla.
 find_contract() {
   for c in "$1/CLAUDE.md" "$1/.claude/CLAUDE.md" "$1/main/CLAUDE.md"; do
-    if [ -f "$c" ] && md_body "$c" | grep -q '^## Příkazy'; then printf '%s' "$c"; return 0; fi
+    if [ -f "$c" ] && md_body "$c" | grep -q '^## Kontrakt příkazů'; then printf '%s' "$c"; return 0; fi
   done
   return 1
 }
 
-# Sekce ## Příkazy, vždy z těla bez bloků kódu. Jedna definice pro --allow i běh.
-contract_section() { md_body "$1" | sed -n '/^## Příkazy/,/^## /p'; }
+# Sekce ## Kontrakt příkazů, vždy z těla bez bloků kódu. Jedna definice pro --allow i běh.
+contract_section() { md_body "$1" | sed -n '/^## Kontrakt příkazů/,/^## /p'; }
 
 # --- Výpis a odebrání souhlasu -------------------------------------------------
 # Souhlas musí jít i zjistit a odebrat, ne jen vydat: po naklonování cizího
@@ -185,7 +185,7 @@ fi
 if [ "${1:-}" = "--allow" ]; then
   need_tools
   P=$(canon "${2:-$PWD}") || die "neznámá cesta: ${2:-$PWD}"
-  MD=$(find_contract "$P") || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Příkazy."
+  MD=$(find_contract "$P") || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Kontrakt příkazů."
   P=$(proj_for_md "$MD")
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
   chmod 700 "$(dirname "$ALLOW_DIR")" "$ALLOW_DIR" 2>/dev/null || true
@@ -276,7 +276,7 @@ git -C "$PROJ" rev-parse --show-toplevel >/dev/null 2>&1 || exit 0   # není to 
 # Dřív se soubor četl znovu pro každý krok, takže mezi kontrolou a spuštěním bylo
 # okno, ve kterém šel obsah vyměnit.
 SECTION=$(contract_section "$CLAUDE_MD")
-[ -n "$SECTION" ] || die "sekci ## Příkazy se nepodařilo přečíst z $CLAUDE_MD."
+[ -n "$SECTION" ] || die "sekci ## Kontrakt příkazů se nepodařilo přečíst z $CLAUDE_MD."
 cmd_for() {
   printf '%s\n' "$SECTION" | sed -n "s/^[[:space:]]*[-*][[:space:]]*$1:[[:space:]]\{1,\}//p" \
     | head -1 | sed 's/[[:space:]]*$//'

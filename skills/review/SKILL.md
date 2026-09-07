@@ -71,7 +71,7 @@ Je-li výsledek nenulový, **řekni to a nabídni srovnání před review**. Dů
 ### 0.2 Načti kontext projektu
 
 - **`.claude/run/review.json`**, pokud existuje – přerušený běh. Viz *Fáze 3*, kde vzniká; nabídni navázání dřív, než začneš cokoliv počítat znovu.
-- Projektový `CLAUDE.md` – zejména `## Příkazy` (*Kontrakt příkazů*), `## Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
+- Projektový `CLAUDE.md` – zejména `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
 - **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Neuvádějí se – ale **jen dokud platí**: u každého záznamu ověř příkazem, jestli se dotčený kód od zápisu nezměnil. Mechanika i formát jsou v kapitole *Kapitola `## Review`* níž; bez toho ověření se z filtru stane odkladiště, které jen narůstá.
 - **`## Výjimky z obecných pravidel`** – vědomé odchylky projektu. Co je tam popsané jako výjimka, není nález.
 - **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Role *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit. **A `docs/scenarios.md`**, vede-li ho projekt – *Korektnost* měří scénář po scénáři, takže taxativní seznam je pro ni lepší podklad než próza v požadavcích.
@@ -153,7 +153,7 @@ Mapu pak vlož do zadání každé role. Bez ní si stejnou orientaci musí udě
 
 **Běží první a stojí nula tokenů.** Každý nález odsud je jistý a ušetří práci panelu.
 
-Spouštěj **jen příkazy z `## Příkazy` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*). Chybí-li řádek, krok se přeskočí a **do výstupu se napíše, co se tím nezkontrolovalo**. Nevymýšlej příkazy, které jsi neověřil.
+Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*). Chybí-li řádek, krok se přeskočí a **do výstupu se napíše, co se tím nezkontrolovalo**. Nevymýšlej příkazy, které jsi neověřil.
 
 1. **Průběžná kontrola** – `typecheck`, `lint`, `test`. Není-li zelená, **zastav se**: review nad rozbitým stavem nemá smysl. Vypiš, co padá, a pošli to dodělat.
 2. **Build** – `build`. Do průběžné kontroly nepatří, protože je na běh po každé odpovědi moc pomalý – ale před uzavřením feature se ověřit musí.

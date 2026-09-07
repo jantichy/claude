@@ -27,8 +27,8 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
 ## Fáze 0 – Pre-flight
 
 1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
-2. **Přečti projektový `CLAUDE.md`** – `## Příkazy` (*Kontrakt příkazů*), `## Autocommit`, paměťovou politiku, importované doménové standardy, výjimky.
-   **Chybí-li `## Příkazy` a projekt má kód, zastav se a doplň je** – bez nich nemá průběžná kontrola co spouštět a realizace by běžela nezkontrolovaná. Zjisti je z `package.json`, `composer.json`, `Makefile` nebo obdoby, ukaž návrh a nech ho potvrdit.
+2. **Přečti projektový `CLAUDE.md`** – `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Autocommit`, paměťovou politiku, importované doménové standardy, výjimky.
+   **Chybí-li `## Kontrakt příkazů` a projekt má kód, zastav se a doplň je** – bez nich nemá průběžná kontrola co spouštět a realizace by běžela nezkontrolovaná. Zjisti je z `package.json`, `composer.json`, `Makefile` nebo obdoby, ukaž návrh a nech ho potvrdit.
    **Ověř, že je linka zelená ještě před startem.** Dědíš-li červený stav z dřívějška, ohlas to a zeptej se – jinak nepůjde poznat, co jsi rozbil ty.
 3. **Najdi plán.**
 

@@ -501,7 +501,7 @@ class KontraktPrikazu(unittest.TestCase):
     KONTRAKT = ROOT / ".claude/CLAUDE.md"
 
     def _sekce(self) -> str:
-        """Sekce ## Příkazy z těla bez bloků kódu – stejně jako `md_body`
+        """Sekce ## Kontrakt příkazů z těla bez bloků kódu – stejně jako `md_body`
         a `contract_section` v `verify.sh`."""
         radky, ve_bloku, uvnitr, out = self.KONTRAKT.read_text(encoding="utf-8").splitlines(), False, False, []
         for r in radky:
@@ -510,7 +510,7 @@ class KontraktPrikazu(unittest.TestCase):
                 continue
             if ve_bloku:
                 continue
-            if r.startswith("## Příkazy"):
+            if r.startswith("## Kontrakt příkazů"):
                 uvnitr = True
             elif uvnitr and r.startswith("## "):
                 break
@@ -526,7 +526,7 @@ class KontraktPrikazu(unittest.TestCase):
 
     def test_kontrakt_se_da_precist(self):
         """Kdyby se sekce rozešla s formátem, průběžná kontrola by tu tiše neběžela."""
-        self.assertTrue(self._sekce().strip(), "sekci ## Příkazy se nepodařilo přečíst")
+        self.assertTrue(self._sekce().strip(), "sekci ## Kontrakt příkazů se nepodařilo přečíst")
         for klic in ("typecheck", "lint", "test"):
             with self.subTest(klic=klic):
                 self.assertIsNotNone(self._hodnota(klic),

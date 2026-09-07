@@ -56,9 +56,9 @@ class ZelenaLinka(unittest.TestCase):
     # --- pomocné -----------------------------------------------------------
 
     def kontrakt(self, **prikazy):
-        """Napíše CLAUDE.md se sekcí ## Příkazy a commitne ho."""
+        """Napíše CLAUDE.md se sekcí ## Kontrakt příkazů a commitne ho."""
         radky = "\n".join(f"- {k}: {v}" for k, v in prikazy.items())
-        (self.repo / "CLAUDE.md").write_text(f"# Test\n\n## Příkazy\n\n{radky}\n")
+        (self.repo / "CLAUDE.md").write_text(f"# Test\n\n## Kontrakt příkazů\n\n{radky}\n")
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "kontrakt")
 
@@ -232,7 +232,7 @@ class ZelenaLinka(unittest.TestCase):
         """
         (self.repo / "CLAUDE.md").write_text(
             "# Test\n\nKontrakt nemáme. Formát vypadá takhle:\n\n"
-            "```markdown\n## Příkazy\n\n- test: touch NESMI-VZNIKNOUT\n```\n")
+            "```markdown\n## Kontrakt příkazů\n\n- test: touch NESMI-VZNIKNOUT\n```\n")
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "dokumentace")
         r = self.allow()
@@ -245,7 +245,7 @@ class ZelenaLinka(unittest.TestCase):
         """Druhé z povolených umístění – kořenový CLAUDE.md bývá obsazený."""
         (self.repo / ".claude").mkdir()
         (self.repo / ".claude/CLAUDE.md").write_text(
-            "# Test\n\n## Příkazy\n\n- typecheck: -\n- lint: -\n- test: test -d .claude\n")
+            "# Test\n\n## Kontrakt příkazů\n\n- typecheck: -\n- lint: -\n- test: test -d .claude\n")
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "kontrakt")
         self.allow()

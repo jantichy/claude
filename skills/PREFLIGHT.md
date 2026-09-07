@@ -28,13 +28,13 @@ Leží buď v `<kořen>/CLAUDE.md`, nebo v `<kořen>/.claude/CLAUDE.md` – **zk
 
 | Co | Proč to potřebuješ |
 |---|---|
-| `## Příkazy` – *Kontrakt příkazů* | čím se ověřuje, čím se spouští, čím se staví |
+| `## Kontrakt příkazů` – *Kontrakt příkazů* | čím se ověřuje, čím se spouští, čím se staví |
 | `## Autocommit` | jestli po ucelené změně commitovat a pushovat |
 | `## Výjimky z obecných pravidel` | co je v tomhle projektu vědomá odchylka, a tedy **není nález** |
 | Paměťová politika | píše se do Memory, nebo výhradně do souborů? |
 | Doménové `@import`y | které standardy z `~/Dev/context/` v projektu platí |
 
-**Chybí-li `## Příkazy` a projekt má kód**, zastav se a nabídni doplnění. Bez kontraktu nemá průběžná kontrola co spouštět a práce by běžela nezkontrolovaná. Podklad zjistíš z `package.json`, `composer.json`, `Makefile` nebo obdoby; návrh ukaž a nech potvrdit.
+**Chybí-li `## Kontrakt příkazů` a projekt má kód**, zastav se a nabídni doplnění. Bez kontraktu nemá průběžná kontrola co spouštět a práce by běžela nezkontrolovaná. Podklad zjistíš z `package.json`, `composer.json`, `Makefile` nebo obdoby; návrh ukaž a nech potvrdit.
 
 ## 3. Stav pracovního stromu
 
