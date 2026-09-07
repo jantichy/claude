@@ -341,7 +341,7 @@ class NosneCasti(unittest.TestCase):
 def bez_bloku_kodu(path: Path):
     """Nadpisy souboru, ale jen skutečné – ne ty uvnitř bloků kódu.
 
-    `worktree.md` má v ukázce stubu `## Odchylky`; brát to jako nadpis dokumentu
+    `WORKTREE.md` má v ukázce stubu `## Odchylky`; brát to jako nadpis dokumentu
     znamená, že by odkaz na neexistující sekci prošel, kdyby se náhodou jmenovala
     stejně jako něco v příkladu.
     """

@@ -21,7 +21,7 @@ Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém ad
 
 ## Co skill nedělá
 
-- **Nezakládá větve a nemerguje.** Zakládání větve, převzetí lokálního stavu a dokončení větve jsou běžná práce podle pravidel v `worktree.md`, ne režim skillu. Skill, který bys musel volat pokaždé, když zakládáš větev, by byl horší než pravidlo, které prostě platí.
+- **Nezakládá větve a nemerguje.** Zakládání větve, převzetí lokálního stavu a dokončení větve jsou běžná práce podle pravidel v `~/.claude/WORKTREE.md`, ne režim skillu. Skill, který bys musel volat pokaždé, když zakládáš větev, by byl horší než pravidlo, které prostě platí.
 - **Nezakládá projekt.** Celé nastavení projektu včetně volby layoutu vede `/project`, který si tenhle skill volá jako jeden ze svých kroků. Tenhle skill je přepínač pro adresář, který už existuje.
 - **Nerozhoduje, jestli se layout hodí.** To je volba uživatele; `/project` se na ni ptá, skill ji jen provede.
 - **Necommituje.** Kontejner není pracovní strom a nic v něm ve gitu není. Změny v `main/` po konverzi zůstanou tak, jak byly.
@@ -124,7 +124,7 @@ Není-li layout zapnutý → jen to oznam, nic neměň. Jinak nejdřív dvě zas
 Pak si zapamatuj větev (`git -C <kontejner>/main rev-parse --abbrev-ref HEAD`), nech si přeskládání potvrdit a **pořiď zálohu, kterou už dál nerozebereš** – na rozdíl od `enable`, kde zálohou je přejmenovaný původní adresář, se tady hýbe vším naráz:
 
 ```bash
-cp -c -R <kontejner> <kontejner>.backup           # záloha; už se jí nedotkneš
+cp -c -R <kontejner> <kontejner>.backup           # na APFS instantní; jinde bez -c
 
 # 1) z main/ udělej samostatný repozitář
 rm -f <kontejner>/main/.git                       # soubor "gitdir: …", má absolutní cestu
@@ -135,7 +135,7 @@ git -C <kontejner>/main worktree prune            # zapomeň registraci zrušen�
 git -C <kontejner>/main reset                     # obnov index z HEAD, pracovní strom nech být
 
 # 2) přenes lokální stav kontejneru dovnitř
-mv <kontejner>/.claude <kontejner>/main/.claude   # jen existuje-li; jsou v něm hooky a povolení
+mv <kontejner>/.claude/* <kontejner>/main/.claude/   # cíl nejdřív vyrob: mkdir -p
 rm -f <kontejner>/CLAUDE.md <kontejner>/.git      # stub a ukazatel na .bare
 
 # 3) povyš main/ na projekt
@@ -146,12 +146,16 @@ mv <kontejner>.novy <kontejner>
 
 **`rmdir` je pojistka, ne úklid.** Projde jen nad prázdným adresářem, takže selže právě tehdy, když v kontejneru zbylo něco, o čem tenhle postup neví – nepoužívej místo něj `rm -rf` a **zastav se a ukaž uživateli, co tam leží**.
 
-`.git` v `main/` je **soubor s absolutní cestou** do `.bare/worktrees/main`, takže přesun ho rozbije – proto se maže a nahrazuje adresářem. `symbolic-ref` je nutný, protože HEAD bare repozitáře ukazuje jinam než HEAD zrušeného worktree. A `.claude/settings.local.json` se stěhuje **z kořene kontejneru**, kde dosud žil; kdyby zůstal, zmizel by s ním – jsou v něm hooky a povolení, tedy netrackovaný stav, který nikde jinde není.
+`.git` v `main/` je **soubor s absolutní cestou** do `.bare/worktrees/main`, takže přesun ho rozbije – proto se maže a nahrazuje adresářem. `symbolic-ref` je nutný, protože HEAD bare repozitáře ukazuje jinam než HEAD zrušeného worktree.
+
+`.claude/settings.local.json` se stěhuje **z kořene kontejneru**, kde dosud žil; kdyby zůstal, zmizel by s ním – jsou v něm hooky a povolení, tedy netrackovaný stav, který nikde jinde není. **Přesouvej obsah, ne adresář:** projekt může mít vlastní trackované `main/.claude/CLAUDE.md`, a `mv` celého adresáře by v tom případě tiše vyrobil `main/.claude/.claude/` a uspěl.
 
 **Ověř a teprve pak uklízej:**
 
 ```bash
-git -C <kontejner> status                         # čistý strom, správná větev
+git -C <kontejner> status                         # správná větev; jediný netrackovaný
+                                                  # přírůstek smí být .claude/, který
+                                                  # jsi tam právě přenesl
 diff -r <kontejner>.backup/main <kontejner> --exclude=.git --exclude=.claude
 rm -rf <kontejner>.backup
 ```
@@ -162,7 +166,7 @@ Záloha se během přeskládání nerozebírala, takže `diff -r` má proti čem
 
 - **Zapnout layout uvnitř layoutu.** Stojíš-li ve worktree větve, `.git` je soubor a `.bare` vedle něj není – vypadá to jako obyčejný repozitář. Proto se ve fázi 1 jde nahoru ke kontejneru, ne jen do prvního adresáře s `.git`.
 - **Nechat pravidla projektu v kořeni kontejneru.** Kontejner není pracovní strom: nic v něm není ve gitu, nikdy to nepůjde commitnout a zmizí to s adresářem.
-- **Smazat zálohu před `diff -r`.** Přeskládání `.git` je jediná operace tohohle skillu, která se nedá vzít zpátky jinak než ze zálohy.
+- **Smazat zálohu před `diff -r`.** U `disable` je záloha jediná cesta zpátky – hýbe se vším naráz. U `enable` je to jinak: git data leží v novém `.bare` a pracovní soubory v `.migrating`, takže se dá obnovit obojí i bez kopie navíc.
 
 ## Fáze 3 – Závěr
 

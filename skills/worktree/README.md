@@ -12,7 +12,7 @@ Přepne projekt do uspořádání, ve kterém má každá rozdělaná větev vla
 ## Proč zrovna tenhle
 
 - **Stav se nikam nezapisuje, pozná se z disku.** Nemůže se tedy stát, že by nastavení tvrdilo něco jiného, než jak to doopravdy je.
-- **Přeskládání je odzálohované a ověřené.** Sahá se na `.git`, což je ta nejcitlivější věc v repozitáři – proto se nejdřív pořídí kopie, na konci se obojí porovná a záloha zmizí, až když porovnání vyjde.
+- **Přeskládání je odzálohované a ověřené.** Sahá se na `.git`, což je ta nejcitlivější věc v repozitáři – proto se původní podoba nejdřív odloží stranou, na konci se obojí porovná a odložená kopie zmizí, až když porovnání vyjde.
 - **Návrat zpátky je plnohodnotná funkce**, ne jen poznámka v dokumentaci. Uspořádání se dá zkusit a zase opustit.
 - **Zná pasti, které si jinak najdete sami** – třeba že v hlavním adresáři projektu přestane fungovat `git status` i `git diff`, kdežto `git diff --cached` tam projde a vrátí smyšlený seznam změn.
 

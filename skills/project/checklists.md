@@ -36,7 +36,7 @@ U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvypl
 
 `design/slides.md` nabízej i mimo školení – všude, kde se dělá deck: konferenční přednáška, prodejní pitch, prezentace výsledků klientovi. Importuje se **navíc** k `design/design.md`, ne místo něj.
 
-`worktree.md` se tu nenabízí schválně – importuje se už v kroku 4, když si uživatel zvolí worktree layout.
+`WORKTREE.md` se tu nenabízí schválně – importuje se už v kroku 4, když si uživatel zvolí worktree layout.
 
 `brand/brand.md` se tu nenabízí taky schválně, ale z jiného důvodu: je to **korpus, ne checklist**. Neříká, jak se něco dělá, ale jak to je – a projekt, který píše ven, si ho načte podle potřeby přes `~/.claude/CLAUDE.md`, kde je vedený mezi podmíněnými doménovými znalostmi. Importovat ho natvrdo do každého takového projektu by znamenalo vozit korpus tam, kde stačí sáhnout.
 

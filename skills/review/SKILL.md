@@ -107,7 +107,7 @@ Role se vybírají **podle toho, čeho se soubory v rozsahu týkají**, ne podle
 | `design/slides.md` | promítané prezentace (**navíc** k `design/design.md`) |
 | `training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) |
 
-`worktree/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
+`~/.claude/WORKTREE.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
 
 **Role *Agentní infrastruktura* má vlastní zadání**, protože proti ní nestojí žádný standard v `~/Dev/context/`, a tedy ani nic, proti čemu by měřila standardová role:
 
