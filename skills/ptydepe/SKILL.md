@@ -105,6 +105,7 @@ Pak zkontroluj to, co `/replace` neumí, protože to není o tvarech:
 - **Shodu rodu.** Změní-li se rod, mění se přívlastky i vztažná zájmena: *„každý má jediný hledisko“* místo *„jediné“*. Projdi diff a hledej mužské koncovky před novým slovem středního rodu.
 - **Repetice.** Náhrada vyrobí věty typu *„vypnutá kontrola se hlásí: kontrola, o které nikdo neví… tváří se jako kontrola“*. Ty se přepisují celé, ne slovem.
 - **Vazby, které přestaly sedět.** *„opravy zanášejí nové pozůstatky“* – pozůstatky se nezanášejí, zůstávají.
+- **Popisky a názvy.** Opisuje-li se termín v próze slovesem (*„nic nezůstalo viset“*), je to v pořádku – ale tam, kde totéž slovo stojí jako **jméno věci**, ne. Projdi `header` u `AskUserQuestion`, popisky polí v šablonách výstupu a nadpisy kroků a ověř, že pojmenovávají podstatným jménem. *„Viselo 4/4“* jako název kroku ve formuláři nepojmenovává nic, ale gramaticky je věta okolo v pořádku, takže náhrada projde a vidí se to až v běžícím formuláři.
 
 ## Fáze 6 – Záznam
 
@@ -172,3 +173,4 @@ Všechny z ostrých běhů, každá se opravdu stala:
 - **Změna rodu rozbila shodu.** „Úhel“ je mužský, „hledisko“ střední, a jedenáct přívlastků zůstalo v původním tvaru.
 - **Termín se obhajoval z paměti místo ze souborů.** Vznikla tím tabulka tří vrstev, kterou zdrojový dokument nikdy neobsahoval.
 - **Náhrada se začala dělat před souhlasem.** Uživatel se rozhodl jinak a muselo se to vracet.
+- **Náhrada minula popisky ve formuláři.** Podstatné jméno se v `/cleanup` nahradilo všude, ale v `header`u a v šabloně zbyl tvar odvozený ze slovesa: krok se jmenoval „Viselo 4/4“. Prošlo to kontrolním průchodem i testy a všimlo si toho až oko nad běžícím formulářem.

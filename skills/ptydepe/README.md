@@ -14,7 +14,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 - **Rozhoduje, ne jen přejmenovává.** Nejtěžší část není náhrada, ale odpověď na otázku, jestli je termín zavedený – a odděleně anglicky a česky, protože se to běžně liší.
 - **Nechodí přes soubory, které nejsou ve verzování.** Čte výhradně to, co zná git, takže se nedotkne historie konverzací, cache ani paměti.
-- **Hlídá věci, na kterých plošná náhrada ztroskotá:** stejné slovo v jiném významu, změněný rod a s ním shoda přívlastků, věty, ve kterých náhrada vyrobí trojí opakování téhož slova.
+- **Hlídá věci, na kterých plošná náhrada ztroskotá:** stejné slovo v jiném významu, změněný rod a s ním shoda přívlastků, věty, ve kterých náhrada vyrobí trojí opakování téhož slova, a popisky ve formulářích, kde po náhradě zbude sloveso místo názvu.
 - **Nechá po sobě dohledatelnou stopu.** Starý termín zůstane zapsaný u svého nástupce i s důvodem, proč padl – na jediném místě, jinde zmizí beze zbytku.
 - **Nezačne opravovat, dokud nerozhodnete.** Návrh končí otázkou, ne prací.
 
