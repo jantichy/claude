@@ -327,7 +327,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
 1. **Nemáš-li nic**, fázi přeskoč a v přehledu uveď „žádné“.
 
-2. **Vypiš je všechny najednou** jako číslovaný seznam – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
+2. **Vypiš je všechny najednou** jako číslovaný seznam **seřazený od nejdůležitější** – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Práh důležitosti tady neplatí**, na rozdíl od Fáze 2: tohle je poslední místo, kde se o starším dluhu a o rozbitých věcech ze session dá rozhodnout, a co se nezeptá, zmizí se session. Řadí se proto jen proto, aby uživatel narazil na podstatné dřív, ne aby se zbytek zahodil. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
 
    ```
    Mimo rozsah úklidu zůstává:
@@ -335,7 +335,18 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
    2. …
    ```
 
-3. **Projdi je jednu po druhé** a u každé se zeptej samostatným voláním `AskUserQuestion`. Volby:
+3. **Projdi je jednu po druhé.** U každé ji nejdřív vypiš:
+
+   ```
+   ---
+   [N/celkem] NÁZEV POLOŽKY
+
+   Čeho se týká: [co to je, jednou dvěma větami]
+   Proč je mimo rozsah: [co ji drží mimo dnešní úklid]
+   Co se stane, když se to nevyřeší: [konkrétní důsledek, ne „bylo by to lepší“]
+   ```
+
+   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Mimo rozsah N/celkem`. Volby:
 
    | Volba | Co uděláš |
    |---|---|

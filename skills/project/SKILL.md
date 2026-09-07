@@ -346,6 +346,9 @@ Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na č
 
 ## Krok 11 – Typ projektu
 
+**Kroky životního cyklu do popisu typu nevypisuj.** Odkaz na *Životní cyklus projektu* v `~/.claude/RULES.md` stačí; vypsaný řetěz je druhý zdroj pravdy, který se při přidání kroku rozejde a nikdo si toho nevšimne, protože v `CLAUDE.md` vypadá pořád stejně platně. Přesně to se stalo s `/discovery`: projekty založené předtím měly v `## Typ projektu` napsanou cestu bez něj a četly ji jako úplnou. Platí to na každý seznam, který má vlastní zdroj pravdy – kroky cyklu, jména skillů, prahy bran.
+
+
 Typů je šest, ale AskUserQuestion bere najednou nejvýš čtyři volby. Ptej se proto ve dvou úrovních – nejdřív na oblast, pak na typ uvnitř ní. Uživatel klikne nejvýš dvakrát a žádný typ se neztratí.
 
 **První otázka** (AskUserQuestion): „Čeho se projekt hlavně týká?“ Tři volby:
@@ -366,7 +369,7 @@ Volbu „Ostatní“ mezi možnosti **nedávej** – AskUserQuestion ji nabízí
 
 Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
-- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu projektu* v `~/.claude/RULES.md`: `/specify` → `/oponent` → `/breakdown` → `/implement`.“ Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first).“
+- **Vývoj** – „Vývojářský projekt – postupuj podle *Životního cyklu projektu* v `~/.claude/RULES.md`, celého a v pořadí, které tam stojí.“ Navíc přidej pravidlo: „Před implementací nové funkce nejdřív aktualizuj příslušný dokument v `docs/` (doc-first).“
 - **Web** – „Webové rozhraní – obsah, struktura, šablony, ne proces zadání a plánu.“
 - **Nasazení webové analytiky** – „Implementace měření na cizím webu – revize existujícího nastavení, měřicí plán, GTM, GA4, consent, reklamní systémy. Výstupem je funkční a doložitelné měření plus dokumentace, ne aplikační kód.“ Navíc přidej pravidlo: „Každá změna v měření musí být před publikováním ověřená v Preview/DebugView a po nasazení znovu na produkci; do `docs/decisions.md` patří i to, co se měřit záměrně nebude a proč.“
 - **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez procesu zadání a plánu.“
@@ -511,6 +514,7 @@ Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zá
 | Blok metadat | Je na začátku projektového `CLAUDE.md`, má dnešní tvar a pořadí řádků, slug sedí s adresářem, `Struktura` sedí se skutečným umístěním souborů, řádky `Web` a `Repozitář` jsou jen tam, kde mají hodnotu. | `structure.md`, *`CLAUDE.md`* (krok 1 a 3) |
 | Tři místa téhož údaje | Lidský název a popisek sedí v `CLAUDE.md`, v `README.md` a v Repository details na GitHubu (`gh repo view <owner>/<slug> --json description,homepageUrl`). Rozejít se smějí jen v tom, že README popisek rozvádí. | `structure.md`, *`CLAUDE.md`* (krok 3) |
 | Sekce v `CLAUDE.md` | Každá sekce, kterou projekt má mít, tam je (struktura a dokumentace, příkazy, nasazení, autocommit, paměť, typ projektu, doménové standardy) – a **žádná zaniklá nepřebývá**. Seznam ber z `structure.md` a z kroků 5–13, ne z paměti. | `structure.md` (kroky 5–7 a 9–13) |
+| Znění generovaných sekcí | **Nestačí, že sekce existuje – přečti, co v ní stojí, a porovnej s dnešní šablonou** v krocích 5–13. Sekce se zapsala jednou a od té doby zamrzla, kdežto šablona se vyvíjí. Zvlášť hlídej **citované seznamy, které mají vlastní zdroj pravdy**: kroky životního cyklu (`RULES.md`), jména skillů, prahy bran (`coding.md`), cesty do konfigurační vrstvy. Zastaralé znění **přepiš** a přepis vypiš – není to redakce obsahu, ale dorovnání šablony. | kroky 5–13 a jejich zdroje |
 | Deklarace struktury | Seznam souborů v sekci *Struktura a dokumentace* sedí **přesně** na to, co v projektu opravdu je: nic nechybí, nic nepřebývá, cesty odpovídají režimu umístění. | krok 5, *Zápis do CLAUDE.md* |
 | Soubory, které standard mezitím zavedl | **Projdi dnešní výčet standardních souborů ve `structure.md` proti tomu, co projekt má.** Chybí-li soubor, který projekt podle svých voleb mít má – typicky proto, že v době jeho založení ještě neexistoval –, **nabídni jeho doplnění** a zapiš ho do deklarace struktury. Neptej se, jestli o něm projekt „ví“; projekt neví nic, ví to jen standard. Volitelný soubor, který projekt vědomě nevede, se nezakládá – ale řekni, že se nabízel. | `structure.md`, *Které soubory vůbec vzniknou* |
 | Umístění a názvy souborů | Standardní soubory leží všechny v jednom režimu (ne půl v `docs/`, půl v kořeni), nikde nezůstalo starší pojmenování. | krok 5 a *Migrace staršího pojmenování* |

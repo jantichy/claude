@@ -25,7 +25,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 - **Nenechá si utéct zprávy poslané uprostřed běhu.** Ty se ukládají jinak než ostatní a kdo je nezná, tiše o ně přijde – a přitom to bývají důležité dovětky.
 - **Zamluvená témata se probírají hned, ne v závěru.** Kdyby se ptal až nakonec, jste už duchem pryč a odpovíte „to je jedno". A u každého kandidáta si napřed ověří, jestli se to mezitím nevyřešilo jinudy, protože falešný nález nutí rozhodovat znovu něco, co už rozhodnuté je.
 - **Ptá se věcně.** U visící otázky nabídne skutečné odpovědi, které tehdy byly ve hře, ne obecné „zapsat / odložit".
-- **Nic nezůstane jen ve výpisu.** Co by jinak skončilo jako „mimo rozsah úklidu", se s vámi projde a rozhodne – vypsat to a nechat být je nepřijatelné, protože sezení vzápětí zavřete a položky zmizí s ním.
+- **Nic nezůstane jen ve výpisu.** Co by jinak skončilo jako „mimo rozsah úklidu", se s vámi projde položku po položce a u každé se rozhodne – vypsat to a nechat být je nepřijatelné, protože sezení vzápětí zavřete a položky zmizí s ním.
 - **Zapisuje i důvody.** Samotný závěr bez zdůvodnění je pro příští práci málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
 - **Hlásí i čistý výsledek.** Že se nic nedoplňovalo, se řekne nahlas – a bez komentáře k tomu.
 - **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Pracujete-li v odděleném adresáři větve, řekne navíc rovnou, že větev jde bez obav sloučit – ale sám nic neslučuje ani nepřipravuje.
