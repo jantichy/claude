@@ -28,7 +28,7 @@ Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adre
 
 ### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
 
-Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jednou a pak ho u každého dalšího skillu opsal, což z něj dělá zvyk, ne standard. Tohle je jeho sepsání a zároveň revize: co obstálo (vymezení proti **jmenovanému** sousedovi, ověřovatel, jehož úkolem je nález vyvrátit, dvě jednoznačné koncové věty), co byla jen setrvačnost (pre-flight opsaný v každém skillu zvlášť) a co chybělo (sekce s častými chybami, mez délky, progresivní odhalení do vedlejších souborů). Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát použil: **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
+Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jednou a pak ho u každého dalšího skillu opsal, což z něj dělá zvyk, ne standard. Tohle je jeho sepsání a zároveň revize: co obstálo (vymezení proti **jmenovanému** sousedovi, ověřovatel, jehož úkolem je nález vyvrátit, dvě jednoznačné závěrečné věty), co byla jen setrvačnost (pre-flight opsaný v každém skillu zvlášť) a co chybělo (sekce s častými chybami, mez délky, progresivní odhalení do vedlejších souborů). Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát použil: **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 

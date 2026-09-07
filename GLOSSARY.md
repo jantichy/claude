@@ -18,7 +18,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Automatická kontrola nástrojem, která práci zastaví, dokud neprojde:** `typecheck`, `lint`, `test`, audit závislostí, hledání tajemství, mutation testing. Nula tokenů, stejný výsledek dvakrát. Kde je z kontextu jasné, o co jde, zkracuje se na prosté **„kontrola"**; přívlastek se opakuje tam, kde by hrozila záměna s kontrolou, která jen hlásí.
 
-**Není to** posouzení modelem (`/review`) ani explorativní útok (`/attack`) – to jsou podle `~/Dev/context/coding/quality.md`, *Tři druhy záruk*, dva **jiné** druhy záruky. Není to ani ověřovatel nálezů uvnitř `/review` a nejsou to koncové věty skillu, i když obojí taky něco zastavuje.
+**Není to** posouzení modelem (`/review`) ani explorativní útok (`/attack`) – to jsou podle `~/Dev/context/coding/quality.md`, *Tři druhy záruk*, dva **jiné** druhy záruky. Není to ani ověřovatel nálezů uvnitř `/review` a nejsou to závěrečné věty skillu, i když obojí taky něco zastavuje.
 
 **Nahrazuje dřívější „bránu"** (2026-09-07). Anglicky *quality gate* zavedený termín je, ale česká „brána" ne – čtenář si pod ní představí vrata a potřebuje k ní slovník. Zbylá „brána" v souborech je proto vždycky **platební brána** a s tímhle pojmem nemá nic společného.
 
@@ -43,6 +43,14 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Nahrazuje dřívější „zelenou linku"** (2026-09-07). „Linka“ byl nejspíš překlad *pipeline*, ale v češtině je *zelená linka* pevně obsazená bezplatným telefonním číslem podpory – kdo repozitář vidí poprvé, přečte si to takhle, protože jiný význam v jazyce není. Starý termín navíc znamenal dvě věci naráz (stav i mechanismus) a `quality.md` to musel vyvracet větou „je to stav, ne krok“.
 
 **Anglicky je to `verify`** – `verify.sh`, `tests/test_verify.py`, vypínače `.claude/no-verify` a `CLAUDE_NO_VERIFY`. Zvoleno podle `git commit --no-verify`, kde to znamená totéž: přeskoč kontroly.
+
+### závěrečné věty
+
+**Dvě věty, kterými musí skill povinně skončit** – jedna říká, že věc je hotová a ověřená a čím se dá pokračovat, druhá že hotová není a co konkrétně tomu brání. Mezi nimi není nic; vzorec drží `~/.claude/skills/SKILLS.md`, *Povinné sekce a jejich pořadí*.
+
+**Nahrazuje dřívější „koncové věty"** (2026-09-07). „Koncový“ se česky pojí s uživatelem, stanicí nebo stavem – s něčím na konci řady. Věta na konci textu je závěrečná, a stojí navíc v sekci `Fáze N – Závěr`.
+
+**Neříkej tomu „verdikt“.** Vystihovalo by to účel, ale svádělo by k tomu, že si znění smí skill formulovat volně – a to je právě ta volnost, kterou pravidlo zakazuje.
 
 ### hledisko
 
