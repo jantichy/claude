@@ -79,6 +79,7 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 | Termín je zavedený anglicky, ne česky | přelož podle zavedené vazby, ne doslova – *surgical strike* je česky „cílený úder“, ne „chirurgický“ |
 | Je to metafora, kterou věta vedle stejně vysvětluje | zruš termín a nech ten popis |
 | Slovo je běžná čeština v tomhle významu | **ponech** a zapiš proč, ať se to neotevírá znovu |
+| Termín je zároveň **identifikátor v kódu** nebo klíčové slovo jazyka | **ponech.** Přeložit prózu, zatímco kód dál říká původní jméno, vyrobí dvě jména pro jednu věc – `guard` je klíčové slovo Swiftu i pole ve schématu nálezu |
 
 **Pak se zastav a počkej na souhlas.** Na soubory se v téže odpovědi nesahá – uživatel si často vybere jinou variantu, nebo ho návrh přivede na třetí, a práce udělaná mezitím se zahazuje. Odpoví-li jen na část návrhu, zbytek je pořád nezodpovězený, ne tiše schválený.
 
