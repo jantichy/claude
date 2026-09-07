@@ -50,6 +50,14 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Nahrazuje dřívější „koncové věty"** (2026-09-07). „Koncový“ se česky pojí s uživatelem, stanicí nebo stavem – s něčím na konci řady; věta na konci textu je závěrečná. A pojmenovat to „větami“ mířilo na formu místo na účel: skill nevydává dvě věty, ale jeden verdikt, pro který má dvě znění.
 
+### cílený zásah
+
+**Editace dokumentace po jednotlivých větách** místo přepsání celé sekce. Vada, kterou pojmenovává: **zásah je úzký, jeho následky nikoliv** – přejmenuje se sekce a zůstane odkaz na staré jméno, dopíše se věta o něčem, co v cílovém souboru mezitím není. Pozůstatky po nich hledá `/cleanup`, *Fáze 6*.
+
+**Nahrazuje dřívější „chirurgický zásah"** (2026-09-07). Anglicky je *surgical edit* běžný obrat, ale doslovný překlad mate – „chirurgický zásah“ je česky operace, tedy obraz o řezání, ne o přesnosti. Čeština má pro *surgical strike* ustálené „cílený úder“, takže „cílený“ nese v téhle vazbě přesně tu úzkost, o kterou jde.
+
+**Ne „zacílený“** – to je příčestí od „zacílit“ a v marketingu navíc obsazené významem targeting. **Ne „cílená změna“** – „změna“ je v `~/.claude/RULES.md` obsazená (*Rozlišuj typ změny*, *Propagace změny*), a právě to druhé pravidlo se cíleným zásahem porušuje.
+
 ### hledisko
 
 **Jeden kritický pohled, se kterým `/oponent` pouští jednoho paralelního agenta** – *Co chybí*, *Předpoklady a argumentace*, *Pre-mortem* a dalších čtrnáct v katalogu skillu.

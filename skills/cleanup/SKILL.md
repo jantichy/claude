@@ -304,7 +304,7 @@ ODPOVĚZ NA TYTO OTÁZKY:
 
 **D. Chybějící kontext.** Předpokládá se něco jako známé, ale nikde to není vysvětlené? Odkazuje se na rozhodnutí, jehož zdůvodnění chybí?
 
-**E. Pozůstatky po chirurgických zásazích.** Do dokumentace se zasahuje po větách, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.
+**E. Pozůstatky po cílených zásazích.** Do dokumentace se zasahuje po jednotlivých větách, takže hrozí, že zápis přejmenoval sekci a nechal na ni odkaz, nebo doplnil větu o něčem, co v cílovém souboru mezitím není. Hledej **zbytky po dnešní práci**, ne starší dluh – ten je věc `/consistency full`.
 
 **F. Co bych se musel zeptat?** Konkrétní otázky, na které bys nenašel odpověď.
 
