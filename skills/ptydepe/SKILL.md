@@ -39,7 +39,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Skill neběží nad jedním projektem**, ale nad všemi naráz, takže body 1 až 3 nahrazuje vlastními předpoklady:
 

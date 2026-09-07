@@ -78,7 +78,7 @@ Platí bez výjimky:
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 

@@ -35,7 +35,7 @@ Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill v
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – `## Autocommit`, konvence pojmenování, `## Výjimky z obecných pravidel`.

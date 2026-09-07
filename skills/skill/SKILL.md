@@ -49,7 +49,7 @@ Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Sk
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Kořenem projektu je tady vždycky `~/.claude`. Navíc:
 
@@ -211,7 +211,7 @@ Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez j
 | Hlavička | `name` sedí s adresářem; `description` má spouštěč i situaci a vejde se do 1024 znaků; `argument-hint` sedí s režimy v těle; `allowed-tools` nemá nástroje, které skill nepoužívá |
 | Povinné sekce | jsou tam všechny a v pořadí z normy; žádná zaniklá nepřebývá |
 | *Co skill nedělá* | jmenuje souseda, ne obecnou činnost; u kroku životního cyklu jsou to sousedé z obou stran |
-| Pre-flight | odkazuje na `PREFLIGHT.md` a neopisuje jeho obsah |
+| Příprava | odkazuje na `PREFLIGHT.md` a neopisuje jeho obsah |
 | Závěrečný verdikt | jsou tam obě znění a ve tvaru z normy |
 | Délka | proti mezím z normy; nad měkkou mez navrhni, co vytáhnout |
 | Odkazy | každá cesta a každý zmíněný skill existuje; **žádný odkaz nemíří dovnitř fáze jiného skillu** |

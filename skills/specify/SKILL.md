@@ -80,7 +80,7 @@ Výjimka je jediná: **ověřovací pokus**, když na odpovědi stojí rozhodnut
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 1. **Kořen projektu.** Pracovní adresář, případně kořen repozitáře. Ve worktree layoutu (`~/.claude/WORKTREE.md`) je projektem pracovní adresář větve – dokumenty patří do `main/docs/`, ne do kořene kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – metadata projektu, typ projektu, paměťová politika, `## Autocommit`, `## Výjimky z obecných pravidel`.

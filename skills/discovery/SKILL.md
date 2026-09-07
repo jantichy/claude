@@ -46,7 +46,7 @@ Přeskoč **u všeho, co nemá trh**: interní nástroj, přírůstek do hotové
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Postupuj podle `~/.claude/skills/PREFLIGHT.md`. Navíc:
 

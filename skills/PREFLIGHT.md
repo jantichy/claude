@@ -1,8 +1,8 @@
-# Pre-flight skillu
+# Příprava skillu
 
 Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo toho, aby ho měly každý svůj – změna se pak dělá na jednom místě, ne v deseti.
 
-**Jak se to používá.** Skill má fázi `## Fáze 0 – Pre-flight`, v ní odkaz sem a **jen to, co má vlastního**: co dalšího si musí načíst, co ověřit, na co se zeptat. Nekopíruj sem nic zpátky a neopisuj odsud do skillu.
+**Jak se to používá.** Skill má fázi `## Fáze 0 – Příprava`, v ní odkaz sem a **jen to, co má vlastního**: co dalšího si musí načíst, co ověřit, na co se zeptat. Nekopíruj sem nic zpátky a neopisuj odsud do skillu.
 
 **Body 1 až 3 platí pro každý skill, který pracuje nad projektem.** Body 4 a 5 jen tam, kde dávají smysl – u každého je napsané kde.
 
@@ -74,6 +74,6 @@ Je-li výsledek nenulový, **řekni to a nabídni srovnání**. Rozsah se počí
 
 ------
 
-## Na konci pre-flightu
+## Na konci přípravy
 
 **Shrň zjištěné do tří až pěti řádků** a pokračuj. Uživatel musí vidět, z čeho se vychází, dřív než se něco stane – ne až v závěrečném souhrnu, kdy už je pozdě to opravit.

@@ -48,6 +48,16 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Neříkej mu „vizitka"** (2026-09-07). „README“ je zavedené jméno přesně pro tenhle soubor a metafora nic nepřidávala – že je psaný pro člověka zvenčí, stojí v normě vedle. Česká „vizitka“ je navíc obsazená: znamená jednostránkový firemní web, a v tom významu v `~/Dev/context` dál zůstává.
 
+### příprava
+
+**Společný začátek běhu skillu:** najít kořen projektu, přečíst projektový `CLAUDE.md`, zkontrolovat stav pracovního stromu. Je to `Fáze 0` každého skillu; společný text drží `~/.claude/skills/PREFLIGHT.md` a skill si k němu píše **jen své odchylky**.
+
+**Nahrazuje dřívější „pre-flight"** (2026-09-07). Letecká metafora, anglicky zavedená (*preflight check*), česky ne – a hlavně skloňovaná po česku: *„v pre-flightu“*, *„opsaným pre-flightem“*. Ta fáze navíc nic neprověřuje, jen zjišťuje výchozí stav, takže „příprava“ sedí i významem.
+
+**Soubor se dál jmenuje `PREFLIGHT.md`** – názvy souborů zůstávají anglicky. Česky pojmenované testy a proměnné se přejmenovaly (`ma_pripravu`, `test_norma_a_priprava_existuji`).
+
+**Ne „kontrola před startem“** – ve skloňovaných vazbách je to nepoužitelně dlouhé a kolidovalo by s blokující i průběžnou kontrolou, které znamenají něco jiného.
+
 ### průběžná kontrola
 
 **Mechanismus, který po každé odpovědi pouští blokující kontroly z kontraktu příkazů a nepustí ji skončit, dokud padají.** Vynucuje ho `Stop` hook, ne dobrá vůle. Stav se popisuje barvou: kontrola je zelená, nebo padá.

@@ -24,7 +24,7 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
 2. **Přečti projektový `CLAUDE.md`** – `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Autocommit`, paměťovou politiku, importované doménové standardy, výjimky.

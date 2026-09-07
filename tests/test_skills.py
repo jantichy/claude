@@ -765,16 +765,16 @@ class SouladSNormou(unittest.TestCase):
             out.append("chybí `## Co skill dělá`")
         if "\n## Co skill nedělá" not in text:
             out.append("chybí `## Co skill nedělá`")
-        # Pre-flight je povinná sekce a pozná se podle **čísla**, ne podle názvu:
+        # Příprava je povinná sekce a pozná se podle **čísla**, ne podle názvu:
         # `/oponent` ho má jako „Fáze 0 – Co se oponuje“ a `/project` jako
         # „Krok 0 – Zjisti režim a stav“. Dřív se odkaz na PREFLIGHT.md hledal
-        # jen tehdy, když se v textu vyskytlo slovo „Pre-flight“ – oba tyhle
-        # skilly z kontroly tiše vypadávaly i se svým opsaným pre-flightem.
-        ma_preflight = re.search(r"\n## (?:Fáze|Krok) 0\b", text)
-        if not ma_preflight:
-            out.append("chybí `## Fáze 0 – Pre-flight`")
+        # jen tehdy, když se v textu vyskytlo slovo „Příprava“ – oba tyhle
+        # skilly z kontroly tiše vypadávaly i se svým opsanou přípravou.
+        ma_pripravu = re.search(r"\n## (?:Fáze|Krok) 0\b", text)
+        if not ma_pripravu:
+            out.append("chybí `## Fáze 0 – Příprava`")
         elif "PREFLIGHT.md" not in text:
-            out.append("pre-flight neodkazuje na `skills/PREFLIGHT.md`")
+            out.append("příprava neodkazuje na `skills/PREFLIGHT.md`")
 
         radku = len(text.splitlines())
         if radku > 500:
@@ -845,7 +845,7 @@ class SouladSNormou(unittest.TestCase):
                            "takže `Časté chyby` patří před závěrečnou fázi")
         return out
 
-    def test_norma_a_preflight_existuji(self):
+    def test_norma_a_priprava_existuji(self):
         """Bez nich nemá `/skill` co číst a odkazy ze skillů míří nikam."""
         for soubor in (self.NORMA, self.PREFLIGHT):
             self.assertTrue(soubor.exists(), f"chybí {soubor}")
@@ -1034,7 +1034,7 @@ class KontrolyOpravduChytaji(unittest.TestCase):
         for nadpis, cekam in (
                 ("## Co skill dělá", "chybí `## Co skill dělá`"),
                 ("## Co skill nedělá", "chybí `## Co skill nedělá`"),
-                ("## Fáze 0 – Pre-flight", "chybí `## Fáze 0 – Pre-flight`"),
+                ("## Fáze 0 – Příprava", "chybí `## Fáze 0 – Příprava`"),
         ):
             with self.subTest(nadpis=nadpis):
                 vady = self.mutuj((nadpis, "## Něco jiného"))
@@ -1054,9 +1054,9 @@ class KontrolyOpravduChytaji(unittest.TestCase):
         # Dva sousedi se hlásit nesmějí, jinak by pravidlo zakázalo popis vazby
         self.assertFalse(retezy_kroku_cyklu("`/specify` → `/breakdown`", cyklus))
 
-    def test_chybejici_odkaz_na_preflight_se_nahlasi(self):
+    def test_chybejici_odkaz_na_pripravu_se_nahlasi(self):
         vady = self.mutuj(("PREFLIGHT.md", "JINY.md"))
-        self.assertIn("pre-flight neodkazuje na `skills/PREFLIGHT.md`", vady, vady)
+        self.assertIn("příprava neodkazuje na `skills/PREFLIGHT.md`", vady, vady)
 
     def test_chybejici_zaverecny_verdikt_se_nahlasi(self):
         vady = self.mutuj(("Zakonči jednou z těchto vět", "Skonči nějak"))

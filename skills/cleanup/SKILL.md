@@ -45,7 +45,7 @@ Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padaj
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Zjisti kontext, ve kterém pracuješ:
 

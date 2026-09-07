@@ -95,7 +95,7 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 ## Co skill dělá
 ## Co skill nedělá
 ## Jak je to postavené uvnitř      ← jen deleguje-li ven
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 ## Fáze 1..N – …
 ## Časté chyby                     ← nepovinná
 ## Fáze N – Závěr
@@ -117,13 +117,13 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
 
-**`## Fáze 0 – Pre-flight`** – odkaz na `~/.claude/skills/PREFLIGHT.md` a **jen odchylky tohohle skillu**. Nikdy sem neopisuj obsah odtamtud.
+**`## Fáze 0 – Příprava`** – odkaz na `~/.claude/skills/PREFLIGHT.md` a **jen odchylky tohohle skillu**. Nikdy sem neopisuj obsah odtamtud.
 
 **`## Fáze 1..N`** – vlastní postup.
 
 **`## Časté chyby`** – nepovinná, ale zakládej ji, jakmile má skill za sebou první ostré běhy. Patří sem to, co se v praxi pokazilo, ne co by se pokazit mohlo. Zdroj je `docs/decisions.md` a poučení z běhů; bez téhle sekce se do skillu nikdy nevrátí.
 
-**`## Fáze N – Závěr`** – **poslední** fáze skillu; nese šablonu výstupu a **závěrečný verdikt**. Jméno po pomlčce **závazné není** – `Úklid a shrnutí`, `Uzavření` i `Předání` jsou v pořádku, závěr se pozná podle toho, že je poslední. Naopak **`Fáze 0` je závazná číslem**: pre-flight je vždycky nultý, ať se jmenuje jakkoliv (`/oponent` má „Fáze 0 – Co se oponuje“, `/project` „Krok 0 – Zjisti režim a stav“):
+**`## Fáze N – Závěr`** – **poslední** fáze skillu; nese šablonu výstupu a **závěrečný verdikt**. Jméno po pomlčce **závazné není** – `Úklid a shrnutí`, `Uzavření` i `Předání` jsou v pořádku, závěr se pozná podle toho, že je poslední. Naopak **`Fáze 0` je závazná číslem**: příprava je vždycky nultý, ať se jmenuje jakkoliv (`/oponent` má „Fáze 0 – Co se oponuje“, `/project` „Krok 0 – Zjisti režim a stav“):
 
 **Verdikt má dvě předepsaná znění a skill si mezi nimi jen vybírá; vlastní si neformuluje.** Jméno „verdikt“ svádí k tomu, že jde o volné shrnutí – nejde: skill je **uvádí doslovně**, aby se z nich za běhu nestala parafráze. Jejich znění si ale volí sám – **doslovná napříč skilly být nemůžou**, protože čeština žádá shodu s rodem toho, co je hotové (*„Plán hotový není"* × *„Hotové to není"*). Závazný je tedy vzorec:
 
@@ -144,7 +144,7 @@ Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal j
 
 ## 5. Číslování a názvosloví
 
-**„Fáze" je norma.** Číslují se od nuly (`Fáze 0 – Pre-flight`) a čísla se nemění bezdůvodně – odkazuje se na ně napříč skilly.
+**„Fáze" je norma.** Číslují se od nuly (`Fáze 0 – Příprava`) a čísla se nemění bezdůvodně – odkazuje se na ně napříč skilly.
 
 **Číslují se plochou vzestupnou řadou, bez písmen.** `0, 1, 2, 3…`, ne `1, 1b, 2`. Čtenář bere číslování jako tvrzení o vztazích, takže `1b`, které o vztahu k `1` nic neříká, lže.
 

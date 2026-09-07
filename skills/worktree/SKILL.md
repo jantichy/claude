@@ -26,14 +26,14 @@ Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém ad
 - **Nerozhoduje, jestli se layout hodí.** To je volba uživatele; `/project` se na ni ptá, skill ji jen provede.
 - **Necommituje.** Kontejner není pracovní strom a nic v něm ve gitu není. Změny v `main/` po konverzi zůstanou tak, jak byly.
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`; platí z něj **bod 1** – kořen projektu. Body 3 až 5 neplatí: skill nesahá na kód a stav pracovního stromu ani průběžná kontrola jeho běh neovlivní.
 
 Tři vlastní odchylky:
 
 - **Detekci dělej výhradně přes Glob**, ne `git` přes Bash – nenulový návratový kód by vyrobil červenou chybu a zbytečně vyděsil uživatele. Vlastní přeskládání pak Bashem.
-- **Chybějící `.git` není důvod skončit.** Pre-flight u ostatních skillů říká „není-li to repozitář, skonči"; tady je prázdný adresář legitimní vstup režimu `enable`, který v něm založí nový projekt.
+- **Chybějící `.git` není důvod skončit.** Příprava u ostatních skillů říká „není-li to repozitář, skonči"; tady je prázdný adresář legitimní vstup režimu `enable`, který v něm založí nový projekt.
 - **Bod 2 – projektový `CLAUDE.md` – neplatí.** Skill do něj nezapisuje a nic z něj nepotřebuje; hlavně by ale jeho blokující pokyn *„chybí-li `## Kontrakt příkazů` a projekt má kód, zastav se"* zastavil `enable` nad prázdným adresářem, kde žádný projektový soubor ještě není. Stub v kořeni kontejneru je jiný soubor a zapisuje se až v fázi 2.
 
 ## Fáze 1 – Zjisti stav

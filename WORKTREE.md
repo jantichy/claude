@@ -22,7 +22,7 @@ Hlavní větev se jmenuje `main`. Narazíš-li na starší projekt, kde se jmenu
 
 **Tenhle soubor drží provoz layoutu** – co kde leží a jak se v tom pracuje. Platí pro každou session nad projektem s tímhle uspořádáním a čte ho `~/.claude/skills/PREFLIGHT.md` i skilly, které nad projektem běží. **Zřízení kontejneru a jeho zrušení sem nepatří** – to vede `/worktree` (`~/.claude/skills/worktree/SKILL.md`), který si tenhle soubor zároveň importuje do stubu v kořeni kontejneru.
 
-Leží v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md`, ne uvnitř skillu, **protože ho čte dvanáct skillů a pre-flight** – tedy i ten, kdo `/worktree` nainstalovaný nemá.
+Leží v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md`, ne uvnitř skillu, **protože ho čte dvanáct skillů a příprava** – tedy i ten, kdo `/worktree` nainstalovaný nemá.
 
 ## Obsah
 

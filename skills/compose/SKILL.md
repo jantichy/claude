@@ -57,7 +57,7 @@ scripts/extract_wpress.py   <archiv .wpress>                          <cílový 
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Body 1 až 3 z něj neplatí** – skill neběží nad projektem, ale nad archivem a bází, které leží mimo něj. Nahrazuje je tohle:
 

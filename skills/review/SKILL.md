@@ -40,7 +40,7 @@ U `full` na starším projektu počítej s tím, že vyplave existující dluh. 
 
 ------
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 

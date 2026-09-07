@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob]
 
 Zapíná a vypíná autocommit pro aktuální projekt – Claude pak v průběhu práce automaticky commituje a pushuje změny. **Vlastní pravidla drží `~/.claude/skills/autocommit/autocommit.md`**: kdy commit, kdy push. Skill ten soubor **importuje do projektu**, takže platí v každé jeho session, aniž ho kdo vyvolá. Ta cesta je závazné rozhraní, importují ji projektové `CLAUDE.md` – nesmí se měnit tiše.
 
-Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md`. Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. **Globální `~/.claude/CLAUDE.md` se nepočítá nikdy**, a pozná se to **podle cesty, ne podle nadpisu**: hledá se výhradně v projektovém souboru, který sis našel v pre-flightu. Pracuješ-li přímo v repozitáři `~/.claude`, je projektovým souborem `~/.claude/.claude/CLAUDE.md` – ten kořenový je uživatelský a rozbaluje se do každé session v každém projektu, takže přepínač v něm by zapnul autocommit všude.
+Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md`. Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. **Globální `~/.claude/CLAUDE.md` se nepočítá nikdy**, a pozná se to **podle cesty, ne podle nadpisu**: hledá se výhradně v projektovém souboru, který sis našel v přípravě. Pracuješ-li přímo v repozitáři `~/.claude`, je projektovým souborem `~/.claude/.claude/CLAUDE.md` – ten kořenový je uživatelský a rozbaluje se do každé session v každém projektu, takže přepínač v něm by zapnul autocommit všude.
 
 **Stav nese nadpis, ne text pod ním.** Sekce s tělem „Autocommit je vypnutý.“ tedy znamená **zapnuto** – a je to přesně to nedorozumění, které stojí za ověření. Najdeš-li rozpor, **nepokračuj mlčky**: ohlas ho, řekni, jak ho čteš, a nech uživatele rozhodnout, co má platit. Sekci sice píše skill, ale ruční zásah do `CLAUDE.md` je běžný a zrovna tenhle je tichý.
 
@@ -21,7 +21,7 @@ Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md
 - **Nezakládá projekt ani nenastavuje git.** Celé nastavení projektu včetně autocommitu vede `/project`, který se na něj ptá jako na jeden ze svých kroků. Tenhle skill je přepínač pro projekt, který už existuje.
 - **Nedorovnává projekt na dnešní standardy.** Starý tvar sekce srovná (viz *Starý tvar zápisu* níž), ale nic dalšího nemigruje – od toho je `/project` v režimu `adopt`.
 
-## Fáze 0 – Pre-flight
+## Fáze 0 – Příprava
 
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`; platí z něj **body 1 a 2** – kořen projektu (včetně worktree layoutu) a projektový `CLAUDE.md`. **Bod 3 a dál neplatí**: skill nic nespouští, necommituje a na kód nesahá, takže stav pracovního stromu ani kontrakt příkazů jeho běh neovlivní.
 
