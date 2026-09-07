@@ -101,6 +101,7 @@ Role se vybírají **podle toho, čeho se soubory v rozsahu týkají**, ne podle
 | `web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) |
 | `analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`) |
 | `text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web/web.md`) |
+| `text/typography.md` | česká sazba čehokoliv psaného česky – interpunkce, mezery, čísla, data, výčty (**navíc** k `text/text.md`, ale platí i tam, kde souvislý text nevzniká) |
 | `design/design.md` | vizuální výstupy – grafika, barevné systémy, typografie, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu |
 | `design/slides.md` | promítané prezentace (**navíc** k `design/design.md`) |
 | `training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) |
@@ -137,7 +138,7 @@ package.json spustí libovolný kód“ nález je.
 
 Vyber tedy ty role, které mají v rozsahu nejvíc co prověřovat, a **vypiš uživateli, které jsi vybral, které jsi vynechal a proč**. Vynechaná role se jmenuje – tichý výběr vypadá jako úplný panel. Povinné jsou jen role vynucené citlivou oblastí (viz 0.2).
 
-Nesedí-li **žádná** role, řekni to explicitně a skonči – nevymýšlej si vlastní kritéria. Pozor, čistě dokumentační projekt bez pokrytí není: na české texty sedí `text/text.md`.
+Nesedí-li **žádná** role, řekni to explicitně a skonči – nevymýšlej si vlastní kritéria. Pozor, čistě dokumentační projekt bez pokrytí není: na české texty sedí `text/text.md` a `text/typography.md`.
 
 ### 0.4 U velkého rozsahu napřed pošli explorera
 
@@ -392,7 +393,7 @@ Hotovou frontu ulož do **`.claude/run/review.json`** (`~/Dev/context/structure/
 
 Slož nálezy z deterministické vrstvy a z panelu (ty, které přežily ověření) do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, KOSMETICKÉ; v rámci kategorie root položky před jejich následky.
 
-**Deduplikuj napříč rolemi.** Role se překrývají schválně – bezpečnost a `coding.md` najdou tutéž díru, `web/web.md` a `web/admin.md` totéž tlačítko, `web/web.md` a `text/text.md` tutéž typografii. Když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba podklady.
+**Deduplikuj napříč rolemi.** Role se překrývají schválně – bezpečnost a `coding.md` najdou tutéž díru, `web/web.md` a `web/admin.md` totéž tlačítko, `web/web.md` a `text/typography.md` tutéž typografii. Když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba podklady.
 
 Pak rozděl na dvě skupiny:
 

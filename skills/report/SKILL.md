@@ -36,7 +36,8 @@ Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni
 1. **Kořen projektu**, projektový `CLAUDE.md`, `### Autocommit`. Ve worktree layoutu pracuj ve větvi, ne v kořeni kontejneru.
 2. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury.
 3. **Načti doménové znalosti**, které se na výstup vztahují:
-   - `~/Dev/context/text/text.md` – česká typografie a stylistika komentářů. **Vždy.**
+   - `~/Dev/context/text/text.md` – stavba a stylistika komentářů. **Vždy.**
+   - `~/Dev/context/text/typography.md` – česká sazba čísel, procent, jednotek, dat a interpunkce. **Vždy** – report je plný čísel.
    - `~/Dev/context/web/web.md` – část pro **statickou stránku otevřenou z disku** (velikost písma, kontrast, šířka řádku, responzivita, meta tagy). Části pro stránku na serveru a pro dynamickou aplikaci se sem nevztahují.
    - `~/Dev/context/analytics/analytics.md` – jsou-li data z GA4, GTM nebo BigQuery. Ovlivňuje to interpretaci, ne vzhled.
 4. **Vyvolej skill `dataviz`** – dřív, než napíšeš první řádek kódu grafu. Řeší volbu typu grafu, palety, os a legend. Bez něj vzniknou grafy, které spolu nedrží.
@@ -86,7 +87,7 @@ Má-li report víc tematických celků, udělej záložky. Nesmí to ale rozbít
 
 ### Tonalita
 
-Tohle je místo, kde se reporty nejčastěji kazí. Platí `~/Dev/context/text/text.md` a k tomu pravidla níž – a to **pro každý psaný text v reportu**, ne jen pro komentáře u grafů. Tedy i pro *Shrnutí*, *Metodiku* a *Limity dat*. U shrnutí to platí nejvíc, protože se podle *Struktury* výš čte jako první a často jako jediné.
+Tohle je místo, kde se reporty nejčastěji kazí. Platí `~/Dev/context/text/text.md`, `~/Dev/context/text/typography.md` a k tomu pravidla níž – a to **pro každý psaný text v reportu**, ne jen pro komentáře u grafů. Tedy i pro *Shrnutí*, *Metodiku* a *Limity dat*. U shrnutí to platí nejvíc, protože se podle *Struktury* výš čte jako první a často jako jediné.
 
 - **Věcně a krátce.** Co se stalo, o kolik, oproti čemu.
 - **Žádné nadšení.** Ne „skvělý nárůst!“, ne „úžasný výsledek“, ne vykřičníky. Konstatuj číslo a jeho význam.

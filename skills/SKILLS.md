@@ -190,7 +190,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…" zestárnou tiše. Piš role, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
 
-**Česky**, podle `~/Dev/context/text/text.md`. Anglicky zůstávají jen názvy souborů, příkazy a technické identifikátory.
+**Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen názvy souborů, příkazy a technické identifikátory.
 
 **Nedeklaruj, co skill neumí.** Popsaný režim, který není implementovaný, je horší než chybějící funkce – uživatel se na něj spolehne. `~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*: vědomá mezera se přiznává, ne zamlčuje.
 
@@ -322,7 +322,7 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 
 **Do 120 řádků.** Je to zhruba dvě obrazovky – tolik člověk přečte, než se rozhodne, jestli ho to zajímá. Co se tam nevejde, patří do `SKILL.md`, kde to čte Claude, a ne do vizitky. Mez je jediná a hlídá ji test; „nesmí být delší než `SKILL.md`" jako druhé kritérium neplatí – u krátkého skillu by povolilo README, které už nikdo nedočte.
 
-**Česky**, podle `~/Dev/context/text/text.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
+**Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
 
 **Neodkazuje dovnitř `SKILL.md`.** Odkaz na fázi je odkaz do vnitřku, který se přečísluje; odkaz na `SKILL.md` jako celek je v pořádku.
 

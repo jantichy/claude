@@ -442,13 +442,14 @@ Přehled všech osmi i s cílem importu:
 | Administrace / backoffice | `@~/Dev/context/web/admin.md` |
 | Webová analytika a měření | `@~/Dev/context/analytics/analytics.md` |
 | Psaní českých textů | `@~/Dev/context/text/text.md` |
+| Česká typografie | `@~/Dev/context/text/typography.md` |
 | Školení a kurzy | `@~/Dev/context/training/training.md` |
 | Vizuální tvorba a grafika | `@~/Dev/context/design/design.md` |
 | Prezentace a slajdy | `@~/Dev/context/design/slides.md` |
 
-U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md` a `web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text/text.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
+U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md` a `web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text/text.md` i `text/typography.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
 
-U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvyplň `training/training.md` spolu s `text/text.md` – materiály pro účastníky jsou text a řídí se obojím. Přihoď i `design/slides.md`, pokud k tomu vzniká promítaná prezentace.
+U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvyplň `training/training.md` spolu s `text/text.md` a `text/typography.md` – materiály pro účastníky jsou text a řídí se vším trojím. Přihoď i `design/slides.md`, pokud k tomu vzniká promítaná prezentace.
 
 `design/slides.md` nabízej i mimo školení – všude, kde se dělá deck: konferenční přednáška, prodejní pitch, prezentace výsledků klientovi. Importuje se **navíc** k `design/design.md`, ne místo něj.
 
