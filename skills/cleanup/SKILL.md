@@ -331,14 +331,15 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
    2. …
    ```
 
-3. **Zeptej se jedním voláním `AskUserQuestion`**, co s nimi. Volby:
+3. **Projdi je jednu po druhé** a u každé se zeptej zvlášť samostatným voláním `AskUserQuestion`. Volby:
 
    | Volba | Co uděláš |
    |---|---|
-   | **Vyřešit teď** | Vyřeš všechny rovnou tady, jako by byly součástí úklidu, a pak pokračuj Fází 8. |
-   | **Zapsat do todo** | Zapiš všechny do `docs/todo.md` (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) – ne jako holé odrážky, ale s kontextem a odůvodněním, aby se na ně dalo navázat bez téhle session. |
-   | **Projít po jedné** | Projdi je jednu po druhé a u každé se zeptej zvlášť (vyřešit / do todo / zahodit). Použij, když se položky liší povahou. |
-   | **Zahodit** | Nic s nimi nedělej. Volí se vědomě, ne mlčením. |
+   | **Vyřešit teď** | Vyřeš položku rovnou tady, jako by byla součástí úklidu. |
+   | **Zapsat do todo** | Zapiš ji do `docs/todo.md` (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. |
+   | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
+
+   **Neptej se předtím hromadně**, co s celou skupinou. Dřív tady stála meziotázka, jestli položky vyřešit všechny naráz, zapsat všechny do todo, nebo je projít po jedné – a v provozu z ní vždycky vyšlo „po jedné“, protože položky se povahou liší skoro vždycky. Volba, která má jediný reálný výsledek, stojí jeden tah navíc a nic nerozhoduje.
 
 4. Ať se rozhodne jakkoli, v přehledu ve Fázi 8 pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu.
 
