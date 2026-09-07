@@ -30,9 +30,9 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 Z režimu `suggest`:
 
 ```
-brána           142× ve 29 souborech   coding/quality.md    běžně: quality gate, blokující kontrola
-zelená linka    150× ve 29 souborech   coding/quality.md    běžně: zelené CI, green build
-ráčna            16× v 8 souborech     tests/test_skills.py běžně: ratchet (česky nezavedené)
+- **brána** – 142× ve 29 souborech · coding/quality.md · běžně: quality gate, blokující kontrola
+- **zelená linka** – 150× ve 29 souborech · coding/quality.md · běžně: zelené CI, green build
+- **ráčna** – 16× v 8 souborech · tests/test_skills.py · běžně: ratchet (česky nezavedené)
 ```
 
 Ze `add`, po dokončení:
@@ -46,7 +46,7 @@ Ze `add`, po dokončení:
 
 **Ověřeno**
 - Kontrolní průchod: grep na starý tvar → 0 výskytů mimo PTYDEPE.md
-- Kontrakt: 72 testů OK, shellcheck 0
+- Kontrakt: testy repozitáře OK, shellcheck 0
 ```
 
 ## Co nedělá

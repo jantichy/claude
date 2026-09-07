@@ -232,7 +232,14 @@ Platí to i tam, kde položky nemají datum – pořadí je prostě pořadí vzn
 
 Existuje **jen spolu s `todo.md`**: jeden bez druhého nedává smysl, tak se taky zakládají a vybírají – jednou volbou pro celou trojici `todo.md`, `backlog.md`, `done.md`.
 
-**Sekce `## Průchody životním cyklem`** drží po jednom řádku za dokončený běh těch kroků *Životního cyklu projektu* (`~/.claude/RULES.md`), které mají svého čtenáře – dnes `/review` a `/attack` (čte je `/release`, aby se neptal z paměti) a `/oponent` (čte ho příští `/oponent`). Ostatní kroky sem nezapisují a nemají proč – včetně `/oponent`, který je od 2. 9. 2026 krokem životního cyklu. Zapisují si ho skilly samy, ne člověk:
+**Sekce `## Průchody životním cyklem`** drží po jednom řádku za dokončený běh těch kroků *Životního cyklu projektu* (`~/.claude/RULES.md`), **které mají svého čtenáře**. Zapisují si ho skilly samy, ne člověk:
+
+- **`/review` a `/attack`** – čte je `/release`, aby se před nasazením neptal z paměti, jestli nad tímhle rozsahem proběhly.
+- **`/oponent`** – čte ho příští `/oponent`, který bez seznamu hledisek nepozná, s čím srovnávat počty nálezů.
+- **`/consistency` a `/cleanup`** – čte je příští běh téhož skillu: `/consistency` pozná, co už bylo auditované a s jakým vědomě zúženým rozsahem, `/cleanup` co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
+
+**Kritérium je „má to svého čtenáře", ne „je to krok cyklu".** Krok, jehož záznam by nikdo nečetl, sem nezapisuje – jinak sekce zbytní a přestane se číst. **Rozšiřovat ten výčet mlčky se nesmí:** `/consistency` a `/cleanup` do sekce fakticky zapisovaly už delší dobu, zatímco norma je nejmenovala, a odhalilo to až ověření čtenářem bez kontextu 7. 9. 2026.
+
 
 ```
 - **2026-09-02** · `/review` · `ff0f765` · změny na větvi (14 souborů) · 12 nálezů (3 opraveno, 7 odloženo, 2 won't fix)
