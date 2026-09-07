@@ -234,7 +234,7 @@ U každého nejdřív vypiš:
 ```
 ---
 [N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU
-Našel: <hledisko, případně „2 oponenti nezávisle“>
+Oponent: <hledisko, případně „2 oponenti nezávisle“>
 
 Kde: <soubor, sekce, citace>
 Co: <jednou větou>
