@@ -114,7 +114,15 @@ Když dev server poběží ve víc větvích, poperou se o port. Řeš `.env.loc
 ## `main/` se nemaže a nepracuje se v něm
 
 1. **Nikdy nemaž `main/`** – žije v něm netrackovaný lokální stav, který v gitu není a nikde se nezálohuje.
-2. **Nedělej v `main/` změny** – slouží ke čtení, ke sdílení lokálního stavu a k mergování. Práce patří do vlastní větve, bez výjimky.
+2. **Nedělej v `main/` změny** – slouží ke čtení, ke sdílení lokálního stavu a k mergování. Práce patří do vlastní větve.
+
+**Jediná výjimka je hromadná migrace konfigurační vrstvy** – týž jednořádkový zápis do všech projektů naráz, typicky přepis odkazu po přesunu standardu nebo doplnění přepínače do `CLAUDE.md`. Zakládat kvůli jednomu řádku větev ve dvaceti projektech stojí víc, než kolik izolace přinese. Platí pro ni tři podmínky a všechny tři se ověřují, ne předpokládají:
+
+- pracovní strom je před zásahem **čistý** – jinak nevíš, co je čí,
+- commituje se **jmenovitě ten jeden soubor**, ne `git add -A`,
+- před commitem se **řádek po řádku ověří**, že v diffu není nic než ta migrace.
+
+**Nerozšiřuj to na běžnou práci.** Kritérium je, že tentýž zápis jde do všech projektů a nikdo nad ním nerozhoduje projekt po projektu; jakmile se u některého zastavíš a přemýšlíš, co tam napsat, je to práce a patří na větev.
 
 ## Větev žije, dokud uživatel neřekne jinak
 
