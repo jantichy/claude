@@ -730,7 +730,7 @@ class SouladSNormou(unittest.TestCase):
         if radku > 500:
             out.append(f"tělo má {radku} řádků, tvrdá mez je 500")
         if "Zakonči jednou z těchto vět" not in text:
-            out.append("chybí dvě závěrečné věty")
+            out.append("chybí závěrečný verdikt")
         if self.CIZI_FAZE.search(text):
             out.append("odkazuje dovnitř fáze jiného skillu")
         out += self.vady_poradi(skill)
@@ -856,7 +856,7 @@ class KontrolyOpravduChytaji(unittest.TestCase):
         stary, novy = nahrada
         self.assertIn(stary, puvodni, f"mutace se nemá čeho chytit: {stary!r}")
         # nahrazuje se KAŽDÝ výskyt: `PREFLIGHT.md` je ve vzoru čtyřikrát
-        # a závěrečné věty dvakrát, takže mutace jednoho výskytu nic nezmění
+        # a závěrečný verdikt dvakrát, takže mutace jednoho výskytu nic nezmění
         # a test by prošel, i kdyby kontrola nefungovala
         poskozeny = puvodni.replace(stary, novy)
         self.assertNotEqual(poskozeny, puvodni, "mutace nic nezměnila")
@@ -897,9 +897,9 @@ class KontrolyOpravduChytaji(unittest.TestCase):
         vady = self.mutuj(("PREFLIGHT.md", "JINY.md"))
         self.assertIn("pre-flight neodkazuje na `skills/PREFLIGHT.md`", vady, vady)
 
-    def test_chybejici_zaverecne_vety_se_nahlasi(self):
+    def test_chybejici_zaverecny_verdikt_se_nahlasi(self):
         vady = self.mutuj(("Zakonči jednou z těchto vět", "Skonči nějak"))
-        self.assertIn("chybí dvě závěrečné věty", vady, vady)
+        self.assertIn("chybí závěrečný verdikt", vady, vady)
 
     def test_odkaz_dovnitr_ciziho_skillu_se_nahlasi(self):
         vady = self.mutuj(("## Fáze 3 – Tabulka švů",

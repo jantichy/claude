@@ -123,9 +123,9 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Časté chyby`** – nepovinná, ale zakládej ji, jakmile má skill za sebou první ostré běhy. Patří sem to, co se v praxi pokazilo, ne co by se pokazit mohlo. Zdroj je `docs/decisions.md` a poučení z běhů; bez téhle sekce se do skillu nikdy nevrátí.
 
-**`## Fáze N – Závěr`** – **poslední** fáze skillu; nese šablonu výstupu a **dvě závěrečné věty**. Jméno po pomlčce **závazné není** – `Úklid a shrnutí`, `Uzavření` i `Předání` jsou v pořádku, závěr se pozná podle toho, že je poslední. Naopak **`Fáze 0` je závazná číslem**: pre-flight je vždycky nultý, ať se jmenuje jakkoliv (`/oponent` má „Fáze 0 – Co se oponuje“, `/project` „Krok 0 – Zjisti režim a stav“):
+**`## Fáze N – Závěr`** – **poslední** fáze skillu; nese šablonu výstupu a **závěrečný verdikt**. Jméno po pomlčce **závazné není** – `Úklid a shrnutí`, `Uzavření` i `Předání` jsou v pořádku, závěr se pozná podle toho, že je poslední. Naopak **`Fáze 0` je závazná číslem**: pre-flight je vždycky nultý, ať se jmenuje jakkoliv (`/oponent` má „Fáze 0 – Co se oponuje“, `/project` „Krok 0 – Zjisti režim a stav“):
 
-Skill je **uvádí doslovně**, aby se z nich za běhu nestala parafráze. Jejich znění si ale volí sám – **doslovná napříč skilly být nemůžou**, protože čeština žádá shodu s rodem toho, co je hotové (*„Plán hotový není"* × *„Hotové to není"*). Závazný je tedy vzorec:
+**Verdikt má dvě předepsaná znění a skill si mezi nimi jen vybírá; vlastní si neformuluje.** Jméno „verdikt“ svádí k tomu, že jde o volné shrnutí – nejde: skill je **uvádí doslovně**, aby se z nich za běhu nestala parafráze. Jejich znění si ale volí sám – **doslovná napříč skilly být nemůžou**, protože čeština žádá shodu s rodem toho, co je hotové (*„Plán hotový není"* × *„Hotové to není"*). Závazný je tedy vzorec:
 
 1. **První** říká, že věc je hotová a ověřená, a čím se dá pokračovat.
 2. **Druhá** říká, že hotová není, a **jmenuje konkrétně, co tomu brání** – ne „ještě zbývá pár věcí".
@@ -140,7 +140,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 Skill s vlastním koncem pro některý režim (rušení, zamítnutí) smí mít druhou dvojici, ale musí splňovat týž vzorec.
 
-Ty dvě věty jsou celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky" od „výsledek platí". Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
+Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky" od „výsledek platí". Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
 
 ## 5. Číslování a názvosloví
 

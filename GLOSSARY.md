@@ -44,13 +44,11 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Anglicky je to `verify`** – `verify.sh`, `tests/test_verify.py`, vypínače `.claude/no-verify` a `CLAUDE_NO_VERIFY`. Zvoleno podle `git commit --no-verify`, kde to znamená totéž: přeskoč kontroly.
 
-### závěrečné věty
+### závěrečný verdikt
 
-**Dvě věty, kterými musí skill povinně skončit** – jedna říká, že věc je hotová a ověřená a čím se dá pokračovat, druhá že hotová není a co konkrétně tomu brání. Mezi nimi není nic; vzorec drží `~/.claude/skills/SKILLS.md`, *Povinné sekce a jejich pořadí*.
+**Věta, kterou musí skill povinně skončit.** Má dvě předepsaná znění a skill si mezi nimi **jen vybírá, vlastní si neformuluje**: buď je věc hotová a ověřená a řekne se, čím se dá pokračovat, nebo hotová není a jmenuje se konkrétně, co tomu brání. Mezi nimi není nic. Vzorec drží `~/.claude/skills/SKILLS.md`, *Povinné sekce a jejich pořadí*.
 
-**Nahrazuje dřívější „koncové věty"** (2026-09-07). „Koncový“ se česky pojí s uživatelem, stanicí nebo stavem – s něčím na konci řady. Věta na konci textu je závěrečná, a stojí navíc v sekci `Fáze N – Závěr`.
-
-**Neříkej tomu „verdikt“.** Vystihovalo by to účel, ale svádělo by k tomu, že si znění smí skill formulovat volně – a to je právě ta volnost, kterou pravidlo zakazuje.
+**Nahrazuje dřívější „koncové věty"** (2026-09-07). „Koncový“ se česky pojí s uživatelem, stanicí nebo stavem – s něčím na konci řady; věta na konci textu je závěrečná. A pojmenovat to „větami“ mířilo na formu místo na účel: skill nevydává dvě věty, ale jeden verdikt, pro který má dvě znění.
 
 ### hledisko
 

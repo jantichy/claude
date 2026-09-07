@@ -82,7 +82,7 @@ Pak zbytek:
 2. **Co skill dělá a kdy se má vyvolat.** Doslovné spouštěče i situace.
 3. **Stojí v *Životním cyklu projektu*** (`~/.claude/RULES.md`)? Pokud ano, **proti kterým dvěma sousedům se vymezuje** – to je vstup pro *Co skill nedělá* a bez něj sekce vznikne jako prázdná negace.
 4. **Má režimy?** Určuje `argument-hint`.
-5. **Co je jeho výstup** a podle čeho se pozná, že je hotový. Vstup pro dvě závěrečné věty.
+5. **Co je jeho výstup** a podle čeho se pozná, že je hotový. Vstup pro závěrečný verdikt.
 6. **Které doménové znalosti** z `~/Dev/context/` se na něj vztahují.
 
 **V režimu `extract`** body 2 až 6 nevymýšlej – vytěž je z konverzace.
@@ -127,7 +127,7 @@ Projdi `SKILLS.md` sekci po sekci a splň každou. Zvlášť hlídej to, co se o
 
 - **`Co skill nedělá` jmenuje souseda**, ne obecnou činnost.
 - **`Fáze 0` odkazuje na `PREFLIGHT.md`** a obsahuje jen odchylky.
-- **Dvě závěrečné věty** splňují vzorec z normy a jsou v těle uvedené doslovně.
+- **Závěrečný verdikt** má obě znění, splňuje vzorec z normy a je v těle uvedený doslovně.
 - **Délka** pod měkkou mezí; co ji přetahuje, jde do vedlejšího souboru v adresáři skillu.
 - **`description`** má spouštěč i popis situace a vejde se do 1024 znaků.
 - **`argument-hint` sedí s režimy** popsanými v těle.
@@ -205,7 +205,7 @@ Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez j
 | Povinné sekce | jsou tam všechny a v pořadí z normy; žádná zaniklá nepřebývá |
 | *Co skill nedělá* | jmenuje souseda, ne obecnou činnost; u kroku životního cyklu jsou to sousedé z obou stran |
 | Pre-flight | odkazuje na `PREFLIGHT.md` a neopisuje jeho obsah |
-| Závěrečné věty | jsou tam obě a ve tvaru z normy |
+| Závěrečný verdikt | jsou tam obě znění a ve tvaru z normy |
 | Délka | proti mezím z normy; nad měkkou mez navrhni, co vytáhnout |
 | Odkazy | každá cesta a každý zmíněný skill existuje; **žádný odkaz nemíří dovnitř fáze jiného skillu** |
 | Názvosloví | „Fáze" vs. „Krok"; jeden termín pro jednu věc |
@@ -223,7 +223,7 @@ Poslední řádek je druhý druh driftu vedle rozejití s normou a **neklade ho 
 <skill>   <N> nálezů:  <závažnost> <jednou větou>   [opravím / potřebuju rozhodnout]
 ```
 
-**Dvourychlostní režim.** Mechanické a jednoznačné oprav rovnou a jen vypiš – chybějící odkaz na `PREFLIGHT.md`, chybějící závěrečná věta, `argument-hint` bez opory. Co **přepisuje nebo maže existující obsah** – rozdělení dlouhého skillu, přeformulování sekce, nahrazení kroku delegací – předlož a nech potvrdit, přes `AskUserQuestion` a **po jednom**.
+**Dvourychlostní režim.** Mechanické a jednoznačné oprav rovnou a jen vypiš – chybějící odkaz na `PREFLIGHT.md`, chybějící znění závěrečného verdiktu, `argument-hint` bez opory. Co **přepisuje nebo maže existující obsah** – rozdělení dlouhého skillu, přeformulování sekce, nahrazení kroku delegací – předlož a nech potvrdit, přes `AskUserQuestion` a **po jednom**.
 
 **Přes všechny skilly nepředkládej nález po nálezu.** Ukaž vzorec, počet a tři příklady, a proveď to hromadně. Padesát otázek se neodklikává, jen odsouhlasí naslepo.
 
