@@ -87,7 +87,7 @@ Pak zbytek:
 
 **V režimu `extract`** body 2 až 6 nevymýšlej – vytěž je z konverzace.
 
-**Prošla-li session kompaktací, nestačí to, co máš v kontextu** – první polovina konverzace je pryč a bývá v ní zrovna to, co se vyladilo. Načti nejdřív transcript ze souboru; postup i pasti (zprávy poslané uprostřed tahu se ukládají jako `queue-operation`, ne jako `user`) má hotové `/cleanup`, *Fáze 1 – Rekonstrukce session*. Neopisuj ho sem, řiď se jím.
+**Prošla-li session kompaktací, nestačí to, co máš v kontextu** – první polovina konverzace je pryč a bývá v ní zrovna to, co se vyladilo. Načti nejdřív transcript ze souboru; postup i pasti (zprávy poslané uprostřed odpovědi se ukládají jako `queue-operation`, ne jako `user`) má hotové `/cleanup`, *Fáze 1 – Rekonstrukce session*. Neopisuj ho sem, řiď se jím.
 
 Pak **vyvolej `skill-creator`** a nech ho vytěžit záměr: použité nástroje, sled kroků, opravy, kterými uživatel průběžně měnil směr. Výsledek předlož k potvrzení a doplň jen to, co v konverzaci nezaznělo.
 

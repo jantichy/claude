@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Průběžná kontrola – Stop hook, který nepustí Clauda ukončit tah nad rozbitým projektem.
+# Průběžná kontrola – Stop hook, který nepustí Clauda ukončit odpověď nad rozbitým projektem.
 #
 # Přečte "Kontrakt příkazů" (sekce "## Příkazy" v projektovém CLAUDE.md) a spustí
 # typecheck, lint a test. Když něco selže, vrátí exit 2 a výstup jde Claudovi jako
@@ -14,7 +14,7 @@
 # v package.json, a to se neschvaluje. Do cizího repozitáře souhlas nedávej.
 #
 # Krok, který nejde spustit (chybí nástroj, exit 126/127), NENÍ padající kontrola:
-# hlásí se zvlášť a tah neblokuje – jinak by Claude opravoval kód kvůli rozbitému
+# hlásí se zvlášť a odpověď neblokuje – jinak by Claude opravoval kód kvůli rozbitému
 # prostředí. Je to jediná větev, která končí exit 1: u ní je mlčení k modelu
 # správně, protože opravovat není co.
 #
@@ -45,7 +45,7 @@ sha()  { shasum | cut -d' ' -f1; }   # dostupnost se ověřuje v need_tools
 probe_jq() { [ "$(printf '{"a":1}' | jq -r '.a' 2>/dev/null)" = "1" ]; }
 
 # Na macOS je timeout z coreutils jako gtimeout, na Linuxu jako timeout. Bez
-# fallbacku by hook na Linuxu po každém tahu zemřel na "chybí gtimeout" a kontrola
+# fallbacku by hook na Linuxu po každé odpovědi zemřel na "chybí gtimeout" a kontrola
 # by neběžela vůbec – tedy nejhorší možný způsob, jak zjistit, že něco chybí.
 TIMEOUT_BIN=""
 pick_timeout() {
@@ -63,7 +63,7 @@ need_tools() {
 
 # Markdown bez bloků kódu. Ukázka formátu kontraktu v dokumentaci se jinak čte
 # jako kontrakt – a quality.md takovou ukázku obsahuje, takže kdo si ji zkopíruje
-# do svého CLAUDE.md, dostane po každém tahu běžící `npm test` a `npx stryker run`,
+# do svého CLAUDE.md, dostane po každé odpovědi běžící `npm test` a `npx stryker run`,
 # aniž by kontrakt vůbec zaváděl. Je to zároveň cesta, kudy jde do repozitáře
 # propašovat příkaz schovaný jako dokumentace.
 md_body() { awk '/^[[:space:]]*(```|~~~)/ { f = !f; next } !f' "$1"; }
@@ -195,7 +195,7 @@ if [ "${1:-}" = "--allow" ]; then
   SEC=$(contract_section "$MD")
   echo "Průběžná kontrola poběží v $P, podle kontraktu v $MD."
   echo
-  echo "Po každém tahu spustí:"
+  echo "Po každé odpovědi spustí:"
   FOUND=""
   for k in typecheck lint test; do
     v=$(printf '%s\n' "$SEC" | sed -n "s/^[[:space:]]*[-*][[:space:]]*$k:[[:space:]]\{1,\}//p" | head -1 | sed 's/[[:space:]]*$//')
@@ -284,7 +284,7 @@ cmd_for() {
 
 # --- Otisk stavu ---------------------------------------------------------------
 # HEAD i rozpracované změny: v projektu se zapnutým autocommitem je strom na konci
-# tahu čistý, takže "jsou tu rozpracované změny" by kontrolu tiše vypnulo.
+# odpovědi čistý, takže "jsou tu rozpracované změny" by kontrolu tiše vypnulo.
 #
 # Musí zahrnovat OBSAH, ne jen jména: `git status --porcelain` vypíše " M soubor"
 # stejně pro první i desátou úpravu téhož souboru. Se samotným porcelainem tedy
@@ -336,7 +336,7 @@ mkdir -p "$RUN_DIR" 2>/dev/null || die "nelze založit $RUN_DIR"
 # otisk stromu, a ten je pro obě session týž. Dřív si každá platila tutéž kontrolu
 # zvlášť.
 STATE="$RUN_DIR/$KEY"
-# Zámek proti souběhu. Dvě session, které skončí tah zároveň, jinak pustí testy
+# Zámek proti souběhu. Dvě session, které dokončí odpověď zároveň, jinak pustí testy
 # nad jedním stromem současně: kolize na portu, na testovací databázi, na dist/ –
 # a hlavně obojí přeteče LIMIT, oba kroky dostanou 124 a obě session dostanou
 # červenou nad kódem, který je v pořádku.
@@ -356,7 +356,7 @@ OK_SIG=""; SKIP_SIG=""
 [ "${OK_SIG:-}" = "$SIG" ] && exit 0     # tenhle stav už prošel
 [ "${SKIP_SIG:-}" = "$SIG" ] && exit 0   # nad tímhle stavem jsme se už vzdali
 
-# Pojistka proti smyčce: Claude Code posílá stop_hook_active, když tah pokračuje
+# Pojistka proti smyčce: Claude Code posílá stop_hook_active, když odpověď pokračuje
 # kvůli předchozímu zablokování. Vlastní počítadlo tohle nikdy netrefilo, protože
 # otisk stavu se mění každou editací.
 STOP_ACTIVE=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/null)
@@ -364,12 +364,12 @@ STOP_ACTIVE=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/n
 # --- Spuštění kroků ------------------------------------------------------------
 TMP=$(mktemp "${TMPDIR:-/tmp}/verify.XXXXXX") || die "nelze založit dočasný soubor."
 # Jeden trap na obojí: druhý `trap ... EXIT` by ten první tiše přepsal a zámek
-# by po doběhnutí zůstal ležet, takže by se kontrola v dalším tahu přeskočila.
+# by po doběhnutí zůstal ležet, takže by se kontrola v další odpovědi přeskočila.
 trap 'rm -f "$TMP"; rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
 
 # Adresář, ve kterém se kroky spustí. Monorepo a projekt, kde příkazy nejsou
 # v kořeni, se jinak nemají jak deklarovat: buď se do kořene napíše příkaz, který
-# pustí všechno (a přeteče LIMIT po každém tahu), nebo se kontrakt nenapíše vůbec.
+# pustí všechno (a přeteče LIMIT po každé odpovědi), nebo se kontrakt nenapíše vůbec.
 WORKDIR="$PROJ"
 CWD_KEY=$(cmd_for cwd)
 if [ -n "$CWD_KEY" ] && [ "$CWD_KEY" != "-" ]; then
@@ -412,7 +412,7 @@ $BODY"
     fi
     # "Test našel chybu" a "test nejde spustit" jsou různé stavy. První je
     # informace pro Clauda – má co opravovat. Druhý je rozbité prostředí:
-    # blokovat tah by ho hnalo opravovat kód, který za to nemůže.
+    # blokovat odpověď by ho hnalo opravovat kód, který za to nemůže.
     # 127 = příkaz neexistuje, 126 = existuje, ale nejde spustit.
     if [ "$RC" = "127" ] || [ "$RC" = "126" ]; then
       BROKEN="${BROKEN}

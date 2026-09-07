@@ -375,7 +375,7 @@ class NosneCasti(unittest.TestCase):
                     f"{skill.parent.name}: zapisuje datovaný záznam, ale nejmenuje `date +%F`")
 
     def test_behovy_stav_je_gitignorovany(self):
-        """Stav, který se mění po každém tahu, nesmí skončit v gitu.
+        """Stav, který se mění po každé odpovědi, nesmí skončit v gitu.
 
         `~/.claude/STRUCTURE.md`, *Běhový stav skillů*. Skill, který
         do `.claude/run/` zapisuje, spoléhá na to, že `/project` ten řádek do
@@ -535,7 +535,7 @@ class KontraktPrikazu(unittest.TestCase):
     def test_prikazy_z_kontraktu_jsou_spustitelne(self):
         """Pomlčka je vědomé rozhodnutí, ale příkaz musí existovat.
 
-        Jinak hook po každém tahu hlásí nespustitelný krok – a to je šum, ne nález.
+        Jinak hook po každé odpovědi hlásí nespustitelný krok – a to je šum, ne nález.
         """
         import shutil
         for klic in ("typecheck", "lint", "test"):

@@ -49,7 +49,7 @@ Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola h
 
 `typecheck` tu **dlouho stála pomlčka** s odůvodněním, že repozitář je konfigurace, ne program. To přestalo platit ve chvíli, kdy k `/invoicing` přibyl `calendar.swift` – od té chvíle tu ležel program, který nečetla žádná kontrola, a překlep v něm by se poznal až uprostřed ostré fakturace. Dnes proto `typecheck` pouští `swiftc -typecheck` nad všemi swiftovými skripty ve skillech (na Python ve `skills/*/scripts/` je test v `tests/`, ne tahle kontrola); běží kolem dvou vteřin a nic neinstaluje, protože Swift je na macOS součástí vývojářských nástrojů.
 
-**Kdyby Swift z repozitáře jednou zmizel, vrať pomlčku**, ne prázdný řádek: chybějící klíč hook po každém tahu hlásí jako nezkontrolovaný krok, a to je trvalý šum místo informace.
+**Kdyby Swift z repozitáře jednou zmizel, vrať pomlčku**, ne prázdný řádek: chybějící klíč hook po každé odpovědi hlásí jako nezkontrolovaný krok, a to je trvalý šum místo informace.
 
 ## Autocommit
 

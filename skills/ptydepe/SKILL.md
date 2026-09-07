@@ -80,7 +80,7 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 | Je to metafora, kterou věta vedle stejně vysvětluje | zruš termín a nech ten popis |
 | Slovo je běžná čeština v tomhle významu | **ponech** a zapiš proč, ať se to neotevírá znovu |
 
-**Pak se zastav a počkej na souhlas.** Na soubory se v tomtéž tahu nesahá – uživatel si často vybere jinou variantu, nebo ho návrh přivede na třetí, a práce udělaná mezitím se zahazuje. Odpoví-li jen na část návrhu, zbytek je pořád nezodpovězený, ne tiše schválený.
+**Pak se zastav a počkej na souhlas.** Na soubory se v téže odpovědi nesahá – uživatel si často vybere jinou variantu, nebo ho návrh přivede na třetí, a práce udělaná mezitím se zahazuje. Odpoví-li jen na část návrhu, zbytek je pořád nezodpovězený, ne tiše schválený.
 
 **Technické identifikátory se schvalují zvlášť** – jméno souboru, proměnné prostředí, klíče. Jejich přejmenování je změna chování, ne terminologie: komu běží vypnutá kontrola přes starou proměnnou, tomu se tiše zapne. Schválí-li se, **přestěhuj i stav**, který na starém jméně visí.
 

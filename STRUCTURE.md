@@ -319,7 +319,7 @@ Rozdíl proti `docs/decisions.md`: tam je konkrétní rozhodnutí (občas i výj
 
 Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jednoho běhu** – rozpracovanou frontu nálezů `/review` a `/oponent`, seznam portů a kontejnerů, které zvedl `/attack`. Ten stav žije v **`.claude/run/`** v projektu a **patří do `.gitignore`** (řádek zakládá `/project`).
 
-**Není to standardní soubor a do výčtu výš nepatří.** Všechno ostatní v tomhle dokumentu je znalost, kterou čte člověk a verzuje git; běhový stav není ani jedno – je strojový, platí jeden běh a za týden je to škodlivý odpad. Do gitu nesmí ze zcela provozního důvodu: mění se po každém tahu, takže v projektu se zapnutým autocommitem by se donekonečna commitoval.
+**Není to standardní soubor a do výčtu výš nepatří.** Všechno ostatní v tomhle dokumentu je znalost, kterou čte člověk a verzuje git; běhový stav není ani jedno – je strojový, platí jeden běh a za týden je to škodlivý odpad. Do gitu nesmí ze zcela provozního důvodu: mění se po každé odpovědi, takže v projektu se zapnutým autocommitem by se donekonečna commitoval.
 
 **Proč vůbec existuje:** bez něj žije nejdražší část běhu jen v kontextu session. `/review` po panelu a ověřovatelích začne dlouze interagovat s uživatelem právě ve chvíli, kdy kontext dochází nejrychleji – a kompaktace uprostřed průchodu znamená zaplatit celý běh znovu. `/attack` zase přerušením ztratí seznam toho, co zvedl, a nechá na stroji běžet server a kontejnery, o kterých už nikdo neví.
 

@@ -40,7 +40,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### průběžná kontrola
 
-**Mechanismus, který po každém tahu pouští blokující kontroly z kontraktu příkazů a nepustí tah skončit, dokud padají.** Vynucuje ho `Stop` hook, ne dobrá vůle. Stav se popisuje barvou: kontrola je zelená, nebo padá.
+**Mechanismus, který po každé odpovědi pouští blokující kontroly z kontraktu příkazů a nepustí ji skončit, dokud padají.** Vynucuje ho `Stop` hook, ne dobrá vůle. Stav se popisuje barvou: kontrola je zelená, nebo padá.
 
 **Nahrazuje dřívější „zelenou linku"** (2026-09-07). „Linka“ byl nejspíš překlad *pipeline*, ale v češtině je *zelená linka* pevně obsazená bezplatným telefonním číslem podpory – kdo repozitář vidí poprvé, přečte si to takhle, protože jiný význam v jazyce není. Starý termín navíc znamenal dvě věci naráz (stav i mechanismus) a `quality.md` to musel vyvracet větou „je to stav, ne krok“.
 
@@ -81,6 +81,14 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Co v konverzaci padlo a nikdy se nedořešilo** – otázka bez odpovědi, návrh, který nikdo nepřijal ani nezamítl, nebo vícebodová odpověď vyřízená jen zčásti. Nikdo to nezavrhl ani neschválil. Hledá je `/cleanup`, *Fáze 2*.
 
 **Nahrazuje dřívější „zamluvené téma"** (2026-09-07). „Zamluvit“ znamená česky vědomě odvést řeč jinam, takže termín podsouval úmysl, který tam není – téma jen propadlo. A „zamluvit si“ navíc znamená rezervovat, takže se to při rychlém čtení dá číst jako téma, které si někdo zabral. „Vypořádat“ je přitom zavedené sloveso téhle konfigurace (vypořádané nálezy).
+
+### odpověď
+
+**Jedna výměna od uživatelovy zprávy po poslední řádek, který Claude napíše** – včetně všech nástrojů, které mezitím zavolá. Je to jednotka, na jejímž konci se spouští `Stop` hook, tedy [průběžná kontrola](#průběžná-kontrola).
+
+**Nahrazuje dřívější „tah"** (2026-09-07). Anglicky je *turn* zavedený pojem, česky „tah“ ne – znamená šachový tah, marketingový tah nebo tah štětcem. Bylo to zákeřnější než ostatní vymyšlené termíny: čtenář slovu rozuměl, jen si pod ním představil něco jiného.
+
+**Ne „krok“** – ten je obsazený kroky životního cyklu a kroky `/project`. **Ne „kolo“** – vystihuje střídání, ale česky znamená hlavně kolo soutěže a věta „hook nepustí ukončit kolo“ nic neřekne.
 
 ### pozůstatek
 

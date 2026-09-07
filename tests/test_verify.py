@@ -227,7 +227,7 @@ class ZelenaLinka(unittest.TestCase):
         """Ukázka formátu v dokumentaci se nesmí stát kontraktem.
 
         coding.md takovou ukázku obsahuje; kdo si ji zkopíruje do CLAUDE.md, dostal
-        by po každém tahu běžící npm test. Je to zároveň cesta, kudy jde do
+        by po každé odpovědi běžící npm test. Je to zároveň cesta, kudy jde do
         repozitáře propašovat příkaz schovaný jako dokumentace.
         """
         (self.repo / "CLAUDE.md").write_text(

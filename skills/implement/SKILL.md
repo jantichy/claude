@@ -59,7 +59,7 @@ Podle volby vyvolej `superpowers:subagent-driven-development`, respektive `super
 
 ### Bez zastávek do splnění cíle
 
-Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vestavěný příkaz Claude Code, ne skill odsud), oddělený evaluátor ji přehodnocuje po každém tahu a práce běží, dokud se cíl nevyřeší. **Není to rychlejší varianta předchozích dvou, je to výměna** – míň přerušení za horší bezpečnostní profil, protože zranitelností v kódu přibývá s počtem iterací, které nad ním agent stráví bez nezávislé kontroly.
+Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vestavěný příkaz Claude Code, ne skill odsud), oddělený evaluátor ji přehodnocuje po každé odpovědi a práce běží, dokud se cíl nevyřeší. **Není to rychlejší varianta předchozích dvou, je to výměna** – míň přerušení za horší bezpečnostní profil, protože zranitelností v kódu přibývá s počtem iterací, které nad ním agent stráví bez nezávislé kontroly.
 
 **Nabídni ho, jen když platí všech pět** (`~/Dev/context/coding/quality.md`, *Autonomie se stupňuje, nezapíná*):
 
