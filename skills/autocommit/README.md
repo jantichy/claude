@@ -8,7 +8,7 @@ Zapíná pro jeden konkrétní projekt režim, ve kterém Claude po každém dok
 - **`/autocommit disable`** – vypne ho a přepínač z instrukcí projektu zase odstraní.
 - **`/autocommit status`** (nebo `/autocommit` bez ničeho) – řekne, jak na tom projekt je.
 - Narazí-li na zápis ve starším tvaru, srovná ho na dnešní a řekne to.
-- Rozpozná i projekty, které mají instrukce ve složce `.claude/`, a nenechá se zmást uspořádáním s víc pracovními adresáři na větev.
+- Rozpozná i projekty, které mají instrukce ve složce `.claude/`, a nenechá se zmást uspořádáním, kde má každá větev vlastní pracovní adresář.
 
 ## Proč zrovna tenhle
 

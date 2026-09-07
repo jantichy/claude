@@ -28,12 +28,13 @@ Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém ad
 
 ## Fáze 0 – Pre-flight
 
-Společný začátek je v `~/.claude/skills/PREFLIGHT.md`; platí z něj **body 1 a 2**. Body 3 až 5 neplatí: skill nesahá na kód a kontrakt příkazů jeho běh neovlivní.
+Společný začátek je v `~/.claude/skills/PREFLIGHT.md`; platí z něj **bod 1** – kořen projektu. Body 3 až 5 neplatí: skill nesahá na kód a stav pracovního stromu ani zelená linka jeho běh neovlivní.
 
-Dvě vlastní odchylky:
+Tři vlastní odchylky:
 
 - **Detekci dělej výhradně přes Glob**, ne `git` přes Bash – nenulový návratový kód by vyrobil červenou chybu a zbytečně vyděsil uživatele. Vlastní přeskládání pak Bashem.
 - **Chybějící `.git` není důvod skončit.** Pre-flight u ostatních skillů říká „není-li to repozitář, skonči"; tady je prázdný adresář legitimní vstup režimu `enable`, který v něm založí nový projekt.
+- **Bod 2 – projektový `CLAUDE.md` – neplatí.** Skill do něj nezapisuje a nic z něj nepotřebuje; hlavně by ale jeho blokující pokyn *„chybí-li `## Příkazy` a projekt má kód, zastav se"* zastavil `enable` nad prázdným adresářem, kde žádný projektový soubor ještě není. Stub v kořeni kontejneru je jiný soubor a zapisuje se až v fázi 2.
 
 ## Fáze 1 – Zjisti stav
 
@@ -65,11 +66,12 @@ printf 'gitdir: ./.bare\n' > .git
 git worktree add main -b main
 ```
 
-**Konverze existujícího repozitáře.** Přeskládává se `.git`, takže tři kroky před tím jsou povinné a žádný se nevynechává:
+**Konverze existujícího repozitáře.** Přeskládává se `.git`, takže dva kroky před tím jsou povinné a žádný se nevynechává:
 
 1. Ověř `git status` – necommitnuté nebo nepushnuté změny **nejdřív vyřeš**.
-2. Zálohuj celý adresář. Na macOS je `cp -c -R` (APFS clone) instantní a nezabírá místo navíc.
-3. **Řekni nahlas, že jde o přeskládání adresáře, a nech si to potvrdit** (AskUserQuestion).
+2. **Řekni nahlas, že jde o přeskládání adresáře, a nech si to potvrdit** (AskUserQuestion).
+
+Zálohou je tu **přejmenovaný původní adresář** – `mv` na `.migrating` nechá všechny pracovní soubory na místě a bere si z něj jen `.git`, takže se nekopíruje nic navíc:
 
 ```bash
 mv <projekt> <projekt>.migrating
@@ -119,33 +121,42 @@ Není-li layout zapnutý → jen to oznam, nic neměň. Jinak nejdřív dvě zas
 1. **`git -C <kontejner>/main worktree list` musí hlásit jen `main`.** Zbyla-li rozdělaná větev, **skonči a řekni to** – slití nebo zahození větve je rozhodnutí uživatele, ne skillu.
 2. **`git -C <kontejner>/main status --porcelain` musí být prázdný.**
 
-Pak si zapamatuj větev (`git -C <kontejner>/main rev-parse --abbrev-ref HEAD`), nech si přeskládání potvrdit a proveď ho tak, že se z `main/` stane projekt:
+Pak si zapamatuj větev (`git -C <kontejner>/main rev-parse --abbrev-ref HEAD`), nech si přeskládání potvrdit a **pořiď zálohu, kterou už dál nerozebereš** – na rozdíl od `enable`, kde zálohou je přejmenovaný původní adresář, se tady hýbe vším naráz:
 
 ```bash
-mv <kontejner> <kontejner>.migrating
-mv <kontejner>.migrating/main <kontejner>
-rm -f <kontejner>/.git                                  # soubor "gitdir: …", má absolutní cestu
-mv <kontejner>.migrating/.bare <kontejner>/.git
-git -C <kontejner> config core.bare false
-git -C <kontejner> symbolic-ref HEAD refs/heads/<vetev>
-git -C <kontejner> worktree prune                       # zapomeň registraci zrušeného worktree
-git -C <kontejner> reset                                # obnov index z HEAD, pracovní strom nech být
+cp -c -R <kontejner> <kontejner>.backup           # záloha; už se jí nedotkneš
+
+# 1) z main/ udělej samostatný repozitář
+rm -f <kontejner>/main/.git                       # soubor "gitdir: …", má absolutní cestu
+mv <kontejner>/.bare <kontejner>/main/.git
+git -C <kontejner>/main config core.bare false
+git -C <kontejner>/main symbolic-ref HEAD refs/heads/<vetev>
+git -C <kontejner>/main worktree prune            # zapomeň registraci zrušeného worktree
+git -C <kontejner>/main reset                     # obnov index z HEAD, pracovní strom nech být
+
+# 2) přenes lokální stav kontejneru dovnitř
+mv <kontejner>/.claude <kontejner>/main/.claude   # jen existuje-li; jsou v něm hooky a povolení
+rm -f <kontejner>/CLAUDE.md <kontejner>/.git      # stub a ukazatel na .bare
+
+# 3) povyš main/ na projekt
+mv <kontejner>/main <kontejner>.novy
+rmdir <kontejner>                                 # musí projít – zbylo-li něco, zastav se
+mv <kontejner>.novy <kontejner>
 ```
 
-`.git` v `main/` je **soubor s absolutní cestou** do `.bare/worktrees/main`, takže přesun ho rozbije – proto se maže a nahrazuje adresářem. `symbolic-ref` je nutný, protože HEAD bare repozitáře ukazuje jinam než HEAD zrušeného worktree.
+**`rmdir` je pojistka, ne úklid.** Projde jen nad prázdným adresářem, takže selže právě tehdy, když v kontejneru zbylo něco, o čem tenhle postup neví – nepoužívej místo něj `rm -rf` a **zastav se a ukaž uživateli, co tam leží**.
 
-Zbývá lokální stav z kořene kontejneru, který ve gitu nikdy nebyl:
-
-- `.claude/settings.local.json` přesuň do `<kontejner>/.claude/` – nově je kořen pracovní adresář, takže tam sedí,
-- stub `CLAUDE.md` **zahoď**; pravidla projektu přišla s `main/` a jsou na místě.
+`.git` v `main/` je **soubor s absolutní cestou** do `.bare/worktrees/main`, takže přesun ho rozbije – proto se maže a nahrazuje adresářem. `symbolic-ref` je nutný, protože HEAD bare repozitáře ukazuje jinam než HEAD zrušeného worktree. A `.claude/settings.local.json` se stěhuje **z kořene kontejneru**, kde dosud žil; kdyby zůstal, zmizel by s ním – jsou v něm hooky a povolení, tedy netrackovaný stav, který nikde jinde není.
 
 **Ověř a teprve pak uklízej:**
 
 ```bash
-git -C <kontejner> status                                    # čistý strom, správná větev
-diff -r <kontejner>.migrating/main <kontejner> --exclude=.git # musí být prázdné
-rm -rf <kontejner>.migrating
+git -C <kontejner> status                         # čistý strom, správná větev
+diff -r <kontejner>.backup/main <kontejner> --exclude=.git --exclude=.claude
+rm -rf <kontejner>.backup
 ```
+
+Záloha se během přeskládání nerozebírala, takže `diff -r` má proti čemu běžet. `.claude` se z porovnání vynechává schválně – v záloze leží v kořeni, v novém projektu uvnitř.
 
 ## Časté chyby
 
