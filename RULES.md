@@ -299,7 +299,7 @@ Odporují-li si dvě platná pravidla, vyhrává to výš v seznamu:
 
 1. **Pokyn uživatele v konverzaci** – je to jeho práce a jeho projekt; rozhoduje o ní on
 2. **Projektový `CLAUDE.md`**, kapitola *Výjimky z obecných pravidel* – projekt zná svůj kontext
-3. **Výstupní šablona skillu** – jen v rozsahu jeho výstupu
+3. **Výstupní šablona skillu** – jen v rozsahu jeho výstupu, a to jeho **obsahu**: co se vypíše, v jakém pořadí a jakými slovy. **Formátování odpovědi tím dotčené není** – zalomení, blok kódu a zarovnání mezerami se řídí *Stylem odpovědí* výš, ať šablona vypadá jakkoliv
 4. **Tenhle soubor**
 5. **Pobídka harnessu**
 
