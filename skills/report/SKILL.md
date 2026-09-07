@@ -33,7 +33,7 @@ Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni
 
 ## Fáze 0 – Pre-flight
 
-1. **Kořen projektu**, projektový `CLAUDE.md`, `### Autocommit`. Ve worktree layoutu pracuj ve větvi, ne v kořeni kontejneru.
+1. **Kořen projektu**, projektový `CLAUDE.md`, `## Autocommit`. Ve worktree layoutu pracuj ve větvi, ne v kořeni kontejneru.
 2. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury.
 3. **Načti doménové znalosti**, které se na výstup vztahují:
    - `~/Dev/context/text/text.md` – stavba a stylistika komentářů. **Vždy.**

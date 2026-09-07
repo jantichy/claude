@@ -49,8 +49,6 @@ Kontrakt příkazů (`~/Dev/context/coding/coding.md`, *Ověřování a brány k
 
 **Kdyby Swift z repozitáře jednou zmizel, vrať pomlčku**, ne prázdný řádek: chybějící klíč hook po každém tahu hlásí jako nezkontrolovaný krok, a to je trvalý šum místo informace.
 
-## Automatické akce
-
-### Autocommit
+## Autocommit
 
 Autocommit je zapnutý.

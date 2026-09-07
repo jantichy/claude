@@ -29,7 +29,7 @@ Leží buď v `<kořen>/CLAUDE.md`, nebo v `<kořen>/.claude/CLAUDE.md` – **zk
 | Co | Proč to potřebuješ |
 |---|---|
 | `## Příkazy` – *Kontrakt příkazů* | čím se ověřuje, čím se spouští, čím se staví |
-| `### Autocommit` | jestli po ucelené změně commitovat a pushovat |
+| `## Autocommit` | jestli po ucelené změně commitovat a pushovat |
 | `## Výjimky z obecných pravidel` | co je v tomhle projektu vědomá odchylka, a tedy **není nález** |
 | Paměťová politika | píše se do Memory, nebo výhradně do souborů? |
 | Doménové `@import`y | které standardy z `~/Dev/context/` v projektu platí |

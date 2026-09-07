@@ -224,10 +224,24 @@ class SablonyProtiOriginalu(unittest.TestCase):
 
     def test_sablona_autocommitu_sedi_s_claude_md(self):
         claude_md = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-        original = self._odstavec_pod_nadpisem(claude_md, "### Autocommit v projektech")
+        original = self._odstavec_pod_nadpisem(claude_md, "## Autocommit v projektech")
         skill = (ROOT / "skills/autocommit/SKILL.md").read_text(encoding="utf-8")
         self.assertIn(original, "\n".join(l.strip() for l in skill.splitlines()),
             "šablona v /autocommit se rozešla se zněním v CLAUDE.md, *Autocommit v projektech*")
+
+    def test_projektovy_claude_md_ma_kanonicky_autocommit(self):
+        """Přepínač autocommitu se pozná jen na kanonickém místě.
+
+        `/autocommit` hledá nadpis znějící přesně `## Autocommit`. Zanoří-li ho
+        někdo zpátky pod zaniklou zastřešující sekci, skill ho přestane vidět
+        a bude projekt hlásit jako vypnutý, přestože zapnutý je.
+        """
+        projektovy = (ROOT / ".claude/CLAUDE.md").read_text(encoding="utf-8")
+        self.assertIn("\n## Autocommit\n", projektovy,
+            "projektový CLAUDE.md nemá přepínač na kanonickém místě")
+        self.assertNotIn("## Automatické akce", projektovy,
+            "zastřešující sekce nad jediným podnadpisem se vrátila")
+
 
 class NosneCasti(unittest.TestCase):
     """Ne že skill má správný tvar, ale že v něm je to, co nese jeho funkci.

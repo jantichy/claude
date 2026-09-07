@@ -5,7 +5,7 @@ Zapíná pro jeden konkrétní projekt režim, ve kterém Claude po každém dok
 ## Co umí
 
 - **`/autocommit on`** – zapne autocommit pro projekt, ve kterém právě stojíte.
-- **`/autocommit off`** – vypne ho a uklidí po sobě, aby v projektu nezůstala prázdná sekce.
+- **`/autocommit off`** – vypne ho a přepínač z instrukcí projektu zase odstraní.
 - **`/autocommit status`** (nebo `/autocommit` bez ničeho) – řekne, jak na tom projekt je.
 - Rozpozná i projekty, které mají instrukce ve složce `.claude/`, a nenechá se zmást uspořádáním s víc pracovními adresáři na větev.
 
