@@ -11,7 +11,7 @@
 
 ## Jak se píše
 
-Česky, věcně, bez omáčky, typografie podle `~/Dev/context/text/typography.md`. Konkrétně – „rychlé načítání“ je nic, „LCP pod 2,5 s na 4G“ je požadavek. **Bez placeholderů**; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
+Česky, věcně, bez omáčky, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Konkrétně – „rychlé načítání“ je nic, „LCP pod 2,5 s na 4G“ je požadavek. **Bez placeholderů**; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
 
 Platí to pro všechny dokumenty na téhle stránce stejně.
 

@@ -424,16 +424,19 @@ Definice a prahy jednotlivých bran jsou v `~/Dev/context/coding/coding.md`, *Ov
 
 ## Krok 13 – Doménové checklisty
 
-Checklistů je osm a `AskUserQuestion` bere najednou nejvýš čtyři volby (týž strop jako v kroku 11). Ptej se proto **ve dvou kolech po čtyřech**, obě s `multiSelect: true`. Volby předvyplň podle typu z kroku 11, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
+Checklistů je devět a `AskUserQuestion` bere najednou nejvýš čtyři volby (týž strop jako v kroku 11). Ptej se proto **ve třech kolech**, všechna s `multiSelect: true`. Volby předvyplň podle typu z kroku 11, ale nech uživatele rozhodnout – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
 | Kolo | Otázka | Volby |
 |---|---|---|
 | 1 | „Co všechno se v projektu bude dělat s kódem a rozhraním? Když nic, nic nezaškrtávej.“ | Psaní kódu · Webové rozhraní · Administrace / backoffice · Webová analytika a měření |
-| 2 | „A co z tohohle? Když nic, nic nezaškrtávej.“ | Psaní českých textů · Školení a kurzy · Vizuální tvorba a grafika · Prezentace a slajdy |
+| 2 | „A co z tohohle? Když nic, nic nezaškrtávej.“ | Psaní českých textů · Česká typografie · Školení a kurzy |
+| 3 | „A ještě tohle. Když nic, nic nezaškrtávej.“ | Vizuální tvorba a grafika · Prezentace a slajdy |
 
-Volbu **Žádný** nikam nedávej – prázdný výběr v `multiSelect` ji nahrazuje. Přibude-li devátý checklist, přidej **třetí kolo**, nikdy pátou volbu do existujícího.
+Volbu **Žádný** nikam nedávej – prázdný výběr v `multiSelect` ji nahrazuje. Přibude-li desátý checklist, přidej **další kolo**, nikdy pátou volbu do existujícího.
 
-Přehled všech osmi i s cílem importu:
+**Česká typografie je samostatná volba, ne přívažek k psaní textů.** Projekt s českým rozhraním nebo se slajdy sází česky, i když v něm žádný souvislý text nevzniká – a naopak by ho nemělo nic nutit brát si kvůli sazbě celý redakční standard.
+
+Přehled všech devíti i s cílem importu:
 
 | Volba | Import |
 |---|---|

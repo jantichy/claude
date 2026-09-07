@@ -56,7 +56,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/report a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill si načítá **moje soukromé standardy** pro českou typografii, pro webové rozhraní a pro analytiku – ty v tomhle repozitáři nejsou. Bez nich funguje, jen si nepohlídá tonalitu a typografii; **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**.
+Skill si načítá **moje soukromé standardy** pro psaní česky a českou typografii, pro webové rozhraní a pro analytiku – ty v tomhle repozitáři nejsou. Bez nich funguje, jen si nepohlídá tonalitu a typografii; **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**.
 
 ---
 
