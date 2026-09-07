@@ -7,7 +7,7 @@ stojí nula tokenů a běží v zelené lince.
 
 Spouští se: python3 -m unittest discover -s tests -q
 
-Schválně jen stdlib: brána, která si nejdřív žádá instalaci balíčku, se v cizím
+Schválně jen stdlib: kontrola, která si nejdřív žádá instalaci balíčku, se v cizím
 prostředí neprojeví jako nález, ale jako rozbitý nástroj – a ten se obchází.
 """
 import re
@@ -140,7 +140,7 @@ class SkillOdkazy(unittest.TestCase):
 
         **Hlídá se „Fáze“ i „Krok“.** `/project` se člení na kroky, ne na fáze, takže
         ho původní vzor míjel celý – jeho přečíslování na plochou řadu 0–13 prošlo
-        bez brány a muselo se ověřovat jednorázovým skriptem. Součástí jsou i rozsahy
+        bez kontroly a muselo se ověřovat jednorázovým skriptem. Součástí jsou i rozsahy
         („v krocích 2–12“), protože ty se při přečíslování posouvají zvlášť a první
         dávka náhrad je nechala být.
         """
@@ -215,7 +215,7 @@ class KanonickyTvarAutocommitu(unittest.TestCase):
     `/autocommit` hledá nadpis znějící přesně `## Autocommit`; zanořený nebo
     o úroveň nižší nenajde a projekt pak hlásí jako vypnutý, přestože zapnutý je.
     Hlídají se obě strany mechanismu, ale jen v tomhle repozitáři – projekty
-    venku žádná brána nečte, o ty se stará `/project` v režimu `adopt`.
+    venku žádná kontrola nečte, o ty se stará `/project` v režimu `adopt`.
     """
 
     def test_projektovy_claude_md_ma_prepinac_i_import(self):
@@ -253,9 +253,9 @@ class NosneCasti(unittest.TestCase):
 
     Dosavadní testy hlídají hlavičky, odkazy a nadpisy – tedy tvar. Z `/review` šlo
     smazat celou fázi ověřování nálezů, tu, o které skill sám píše, že na ní stojí
-    jeho použitelnost, a zelená linka zůstala zelená. Brána, která nemůže spadnout
-    na věcné vadě, je horší než chybějící brána: uspokojuje pravidlo *Ověřitelná
-    brána místo dojmu*, aniž cokoliv doloží.
+    jeho použitelnost, a zelená linka zůstala zelená. Kontrola, která nemůže spadnout
+    na věcné vadě, je horší než chybějící kontrola: uspokojuje pravidlo *Ověřitelná
+    kontrola místo dojmu*, aniž cokoliv doloží.
 
     Pořád je to jen tvar – text se nespouští a nic tu neověřuje, že instrukce
     fungují. Je to ale tvar toho, co funkci nese, a to je rozdíl, na kterém záleží.
@@ -416,7 +416,7 @@ def cyklus_s_poradim() -> dict:
 #: „pak“) a teprve druhá smí být slabá („a“, čárka) – vzorec „A, pak B a C“.
 #: Samotné „a“ mezi dvěma skilly je totiž běžný výčet, ne posloupnost:
 #: „vzniknou prací v `/discovery` a `/specify`, a `/cleanup` pak…“ posloupnost
-#: netvrdí a hlásit ho jako opsaný cyklus by bránu shodilo na falešném nálezu.
+#: netvrdí a hlásit ho jako opsaný cyklus by kontrolu shodilo na falešném nálezu.
 #: Mezera se schválně bere bez konce řádku (`[^\S\n]`): se `\s` by vzor spojil
 #: tři nesouvisející zmínky ob několik odstavců.
 _M = r"[^\S\n]*"
@@ -444,7 +444,7 @@ class KontraktPrikazu(unittest.TestCase):
 
     `coding.md` říká „jeden řádek na klíč, `- klíč: příkaz`, a za příkazem už nic“.
     Změna formátu (komentář za příkazem, jiné odsazení, hodnota v bloku kódu)
-    vypne bránu **tiše**: `sed` v `green-line.sh` prostě nic nenajde a hook se
+    vypne kontrolu **tiše**: `sed` v `green-line.sh` prostě nic nenajde a hook se
     zachová, jako by ten krok projekt neměl.
     """
 
@@ -746,7 +746,7 @@ class SouladSNormou(unittest.TestCase):
         Proč zvlášť: bez téhle kontroly tvrdila norma víc, než uměla vynutit.
         Doloženo – pravidlo o přílohových sekcích do ní přibylo 4. 9. 2026 z auditu
         `/consistency`, a týž audit ho našel porušené v `/skill`, protože ho žádná
-        brána chytit nemohla.
+        kontrola chytit nemohla.
         """
         nadpisy = [n for n in bez_bloku_kodu(skill) if not n.startswith("#")]
         poradi = {n: i for i, n in enumerate(nadpisy)}
@@ -994,7 +994,7 @@ def vady_readme(text: str, jmeno: str, v_cyklu: bool) -> list:
     vady = []
 
     # Přítomnost i pořadí. Pořadí sem patří proto, že ho norma žádá a `/skill`
-    # při revizi kontroluje – bez brány je to pravidlo, které drží jen ten,
+    # při revizi kontroluje – bez kontroly je to pravidlo, které drží jen ten,
     # kdo si na ně vzpomene.
     pozice = []
     for nadpis in POVINNE_README:
@@ -1207,7 +1207,7 @@ class ReadmeSkillu(unittest.TestCase):
 
 
 class SkriptySkillu(unittest.TestCase):
-    """Skripty ve skillech nečte žádná jiná brána.
+    """Skripty ve skillech nečte žádná jiná kontrola.
 
     `typecheck` pouští `swiftc` a `lint` shellcheck; Python ve `skills/*/scripts/`
     by tedy zůstal bez kontroly a překlep by se poznal až za ostrého běhu.

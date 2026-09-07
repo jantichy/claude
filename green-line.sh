@@ -40,12 +40,12 @@ sha()  { shasum | cut -d' ' -f1; }   # dostupnost se ověřuje v need_tools
 
 # Přítomnost != funkčnost. Nástroj může být na PATH a přitom nic neumět – typicky
 # zástupný stub, který skončí nenulově a nevypíše nic. `command -v` takový stub
-# najde, hook by ho použil, `jq` by vracelo prázdno a brána by se tiše vypnula.
+# najde, hook by ho použil, `jq` by vracelo prázdno a kontrola by se tiše vypnula.
 # Proto se u parseru neověřuje existence, ale výsledek na známém vstupu.
 probe_jq() { [ "$(printf '{"a":1}' | jq -r '.a' 2>/dev/null)" = "1" ]; }
 
 # Na macOS je timeout z coreutils jako gtimeout, na Linuxu jako timeout. Bez
-# fallbacku by hook na Linuxu po každém tahu zemřel na "chybí gtimeout" a brána
+# fallbacku by hook na Linuxu po každém tahu zemřel na "chybí gtimeout" a kontrola
 # by neběžela vůbec – tedy nejhorší možný způsob, jak zjistit, že něco chybí.
 TIMEOUT_BIN=""
 pick_timeout() {
@@ -70,7 +70,7 @@ md_body() { awk '/^[[:space:]]*(```|~~~)/ { f = !f; next } !f' "$1"; }
 
 # Kanonická (fyzická) podoba cesty. Bez ní se souhlas vydaný pro cestu přes
 # symlink nepotká s během hooku, který ji má rozřešenou – na macOS je takový
-# /var -> /private/var, ale stačí i symlinkovaný adresář s projekty. Brána by pak
+# /var -> /private/var, ale stačí i symlinkovaný adresář s projekty. Kontrola by pak
 # mlčky neběžela a jediné, co by uživatel dostal, je hláška "není vydaný souhlas".
 canon() { (cd "$1" 2>/dev/null && pwd -P) || printf '%s' "$1"; }
 
@@ -80,7 +80,7 @@ proj_key() { printf '%s' "$1" | sha; }
 
 # Identita REPOZITÁŘE, ne pracovního adresáře. Ve worktree layoutu má každá větev
 # vlastní adresář, takže klíč z cesty znamenal nový souhlas na každé nové větvi –
-# tedy vypnutou bránu právě tam, kde se pracuje, a funkční na main, kde se
+# tedy vypnutou kontrolu právě tam, kde se pracuje, a funkční na main, kde se
 # nepracuje. Sdílený .git je pro všechny worktree téhož repozitáře týž, takže
 # souhlas konečně platí pro repozitář, jak celou dobu slibuje.
 # Mimo git repozitář se vrací zadaná cesta, aby se chování nezměnilo.
@@ -92,7 +92,7 @@ repo_id() {
 
 # Soubor se souhlasem pro daný pracovní adresář, existuje-li. Souhlasy vydané
 # před přechodem na klíč podle repozitáře se při prvním použití přeznačí – bez
-# migrace by se změnou klíče brána ze dne na den vypnula ve všech projektech.
+# migrace by se změnou klíče kontrola ze dne na den vypnula ve všech projektech.
 allow_file() {
   k=$(proj_key "$(repo_id "$1")")
   if [ -f "$ALLOW_DIR/$k" ]; then printf '%s' "$ALLOW_DIR/$k"; return 0; fi
@@ -231,8 +231,8 @@ SESSION=$(printf '%s' "$INPUT" | jq -r '.session_id // "nosession"' 2>/dev/null 
 # Když cwd neexistuje, nepokračovat "někde jinde" – našel by se cizí projekt.
 if [ -n "$CWD" ]; then cd "$CWD" 2>/dev/null || die "adresář $CWD neexistuje."; fi
 
-# Vypnutá brána se hlásí, nemlčí: brána, o které nikdo neví, že neběží, je horší
-# než chybějící brána – tváří se jako kontrola, která neprobíhá.
+# Vypnutá kontrola se hlásí, nemlčí: ta, o které nikdo neví, že neběží, je horší
+# než žádná – tváří se jako záruka, která neplatí.
 if [ "${CLAUDE_NO_GREEN_LINE:-0}" = "1" ]; then
   echo "Zelená linka: vypnutá proměnnou CLAUDE_NO_GREEN_LINE, nespustil jsem nic." >&2
   exit 0
@@ -268,7 +268,7 @@ if ! allow_file "$PROJ" >/dev/null; then
 fi
 
 # Rozlišit "není to repozitář" (v pořádku, mlčky ven) od "git nefunguje" (nahlas):
-# rozbitý git by jinak bránu tiše vypnul a nikdo by se to nedozvěděl.
+# rozbitý git by jinak kontrolu tiše vypnul a nikdo by se to nedozvěděl.
 git --version >/dev/null 2>&1 || die "git nefunguje, hook neběží."
 git -C "$PROJ" rev-parse --show-toplevel >/dev/null 2>&1 || exit 0   # není to repozitář
 
@@ -284,7 +284,7 @@ cmd_for() {
 
 # --- Otisk stavu ---------------------------------------------------------------
 # HEAD i rozpracované změny: v projektu se zapnutým autocommitem je strom na konci
-# tahu čistý, takže "jsou tu rozpracované změny" by bránu tiše vypnulo.
+# tahu čistý, takže "jsou tu rozpracované změny" by kontrolu tiše vypnulo.
 #
 # Musí zahrnovat OBSAH, ne jen jména: `git status --porcelain` vypíše " M soubor"
 # stejně pro první i desátou úpravu téhož souboru. Se samotným porcelainem tedy
@@ -294,7 +294,7 @@ cmd_for() {
 # adresář jedinou položkou "?? dir/", test [ -f ] na ní neprojde a obsah se do
 # otisku vůbec nedostane – takže po první zelené kontrole šlo do něj psát cokoliv
 # a hook to prohlásil za "tenhle stav už prošel". Nová feature přitom skoro vždycky
-# začíná novým adresářem, tedy brána byla mrtvá právě tam, kde se pracuje.
+# začíná novým adresářem, tedy kontrola byla mrtvá právě tam, kde se pracuje.
 # -z navíc vypíná kvotování cest, čímž odpadá ruční ořezávání uvozovek, po kterém
 # soubor s escapovaným znakem ve jméně z otisku vypadl.
 STATUS=""; NCHANGED=0; CONTENT=""
@@ -364,7 +364,7 @@ STOP_ACTIVE=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/n
 # --- Spuštění kroků ------------------------------------------------------------
 TMP=$(mktemp "${TMPDIR:-/tmp}/green-line.XXXXXX") || die "nelze založit dočasný soubor."
 # Jeden trap na obojí: druhý `trap ... EXIT` by ten první tiše přepsal a zámek
-# by po doběhnutí zůstal ležet, takže by se brána v dalším tahu přeskočila.
+# by po doběhnutí zůstal ležet, takže by se kontrola v dalším tahu přeskočila.
 trap 'rm -f "$TMP"; rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
 
 # Adresář, ve kterém se kroky spustí. Monorepo a projekt, kde příkazy nejsou
@@ -454,7 +454,7 @@ fi
 printf '%s %s\n' "$SIG" "-" > "$STATE" 2>/dev/null || true
 if [ -n "$BROKEN" ]; then
   # Nespuštěný krok se nezapočítá jako "prošlo": stav se neuloží jako zelený,
-  # jinak by po opravě prostředí brána mlčela, protože otisk už zná.
+  # jinak by po opravě prostředí kontrola mlčela, protože otisk už zná.
   printf '%s %s\n' "-" "-" > "$STATE" 2>/dev/null || true
   { note_broken; note_skipped; } >&2
   exit 1

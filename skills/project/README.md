@@ -19,7 +19,7 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 7. **Založí dokumentační strukturu** – co je odložené, co je jen nezávazný nápad, co hotové, co se rozhodlo a proč, jaké principy platí – a nechá vás vybrat, jestli má ležet ve vlastní složce, nebo v kořeni.
 8. **Nabídne produktové podklady** – analýzu konkurence, registr rizik, scénáře, glosář, ceník. Nezakládá je prázdné; jen si zapíše, které z nich projekt vede, aby se pak poznal chybějící dokument od nechtěného.
 9. **Zmigruje starší pojmenování souborů** a projde celý repozitář, aby nezůstal rozbitý odkaz.
-10. **Zapne brány kvality** – zapíše, čím se v projektu pouštějí testy, typová kontrola, linter a build, a řekne, co se tím nebude kontrolovat, když projekt některý z nich nemá.
+10. **Zapne kontroly kvality** – zapíše, čím se v projektu pouštějí testy, typová kontrola, linter a build, a řekne, co se tím nebude kontrolovat, když projekt některý z nich nemá.
 11. **Napojí doménové checklisty** podle povahy projektu.
 
 ## Proč zrovna tenhle
@@ -27,8 +27,8 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 - **Revize je hlavní důvod, proč existuje.** Standardy se vyvíjejí dál, kdežto projekt založený loni zůstane stát – a rozdíl se z něj sám nepozná. Tohle je způsob, jak ho dorovnat jedním zavoláním.
 - **Nepřepisuje nic naslepo.** Chybějící soubor založí; u rozporu ukáže rozdíl a zeptá se.
 - **Nevymýšlí příkazy, které projekt neumí.** Řádek, který nikam nevede, je horší než chybějící řádek – a co chybí, se výslovně vypíše i s tím, co se tím nebude kontrolovat.
-- **Brány kvality nezměkčuje sám.** Zapnutí přísného režimu u staršího projektu vyplaví stovky chyb naráz; snížit laťku smí jen člověk a s důvodem zapsaným do projektu, včetně termínu, kdy se přitvrdí.
-- **Nespouští za vás souhlas s automatickou kontrolou.** Vypíše příkaz, který si spustíte sami – jinak by celá brána ztratila smysl – a řekne pravdu o tom, co tím schvalujete.
+- **Kontroly kvality nezměkčuje sám.** Zapnutí přísného režimu u staršího projektu vyplaví stovky chyb naráz; snížit laťku smí jen člověk a s důvodem zapsaným do projektu, včetně termínu, kdy se přitvrdí.
+- **Nespouští za vás souhlas s automatickou kontrolou.** Vypíše příkaz, který si spustíte sami – jinak by celá kontrola ztratila smysl – a řekne pravdu o tom, co tím schvalujete.
 - **Ptá se postupně**, jednu otázku za druhou, a to, co jde odvodit, navrhne rovnou k odsouhlasení.
 - **Nezakládá soubory do zásoby.** U projektu, kde se nic nerozhoduje, je prázdný soubor pro rozhodnutí horší než žádný.
 - **Hlídá, aby popis projektu nestál na třech místech různě** – v instrukcích, v přehledu pro lidi a v nastavení repozitáře.

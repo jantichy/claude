@@ -1,6 +1,6 @@
 ---
 name: release
-description: Skill se použije, když uživatel zadá "/release" (volitelně s větví, tagem nebo hashem commitu; výchozí je main), nebo chce nasadit hotovou práci do produkce – projít brány před nasazením, ošetřit migrace databáze, nasadit, ověřit smoke testem a vědět, jak se vrátit zpátky. Nikdy se nespouští sám ani jako pokračování jiného skillu.
+description: Skill se použije, když uživatel zadá "/release" (volitelně s větví, tagem nebo hashem commitu; výchozí je main), nebo chce nasadit hotovou práci do produkce – projít kontroly před nasazením, ošetřit migrace databáze, nasadit, ověřit smoke testem a vědět, jak se vrátit zpátky. Nikdy se nespouští sám ani jako pokračování jiného skillu.
 argument-hint: [větev|tag|hash]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
@@ -21,7 +21,7 @@ Tahle pětice platí bez výjimky a bez ohledu na to, jak triviální změna to 
 2. **Nasazuje se jen zelený, prověřený stav.** Neproběhlo `/review`? Řekni to a zeptej se, jestli opravdu chce nasadit neprověřenou práci.
 3. **Návrat musí existovat dřív, než se nasadí.** Když neumíš odpovědět na otázku „jak se vrátíme za deset minut zpátky“, nenasazuj a vyřeš nejdřív ji.
 4. **Migrace dat se nikdy nemíchá s nasazením kódu do jednoho nevratného kroku.** Viz *Migrace*.
-5. **Do nasazovací větve se nemerguje mimo tenhle skill.** U platformy s automatickým nasazením je ten merge **samotné nasazení** – kdo ho udělá jinudy, nasadil bez jediné brány a nevěděl o tom. Která větev to je, řeší *Nasazovací větev není integrační větev*.
+5. **Do nasazovací větve se nemerguje mimo tenhle skill.** U platformy s automatickým nasazením je ten merge **samotné nasazení** – kdo ho udělá jinudy, nasadil bez jediné kontroly a nevěděl o tom. Která větev to je, řeší *Nasazovací větev není integrační větev*.
 
 ## Nasazovací větev není integrační větev
 
@@ -55,7 +55,7 @@ Ostatní větve včetně `main` se pak nasazují jako **preview**, což je čist
 
 ## Co skill nedělá
 
-- **Neopravuje.** Najde-li brána problém, skill **skončí** a pošle to zpátky do `/implement` nebo `/review`. Neopravuj v předvečer nasazení – změna, která neprošla review, je přesně ta, která spadne.
+- **Neopravuje.** Najde-li kontrola problém, skill **skončí** a pošle to zpátky do `/implement` nebo `/review`. Neopravuj v předvečer nasazení – změna, která neprošla review, je přesně ta, která spadne.
 - **Nerozhoduje o obsahu vydání.** Co se nasazuje, je to, co je na větvi. Vybírat commity na poslední chvíli je cesta k tomu nasadit půlku feature.
 - **Nezakládá infrastrukturu.** Nastavení prostředí, domén a proměnných je jednorázová práce, ne součást každého vydání.
 
@@ -63,7 +63,7 @@ Ostatní větve včetně `main` se pak nasazují jako **preview**, což je čist
 
 **Výchozí je `main`** – tedy hlavní integrační větev, na které je hotová a zmergovaná práce.
 
-Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` nebo `/release <hash commitu>`. Pak se nasazuje ten zadaný bod historie a nasazovací větev se přesune na něj. Všechno ostatní probíhá úplně stejně – brány, migrace, potvrzení, ověření. Nic se nepřeskakuje proto, že si uživatel vybral konkrétní commit.
+Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` nebo `/release <hash commitu>`. Pak se nasazuje ten zadaný bod historie a nasazovací větev se přesune na něj. Všechno ostatní probíhá úplně stejně – kontroly, migrace, potvrzení, ověření. Nic se nepřeskakuje proto, že si uživatel vybral konkrétní commit.
 
 **Co u zadaného cíle ověřit navíc** (a co nahlásit, než se cokoliv stane):
 
@@ -75,7 +75,7 @@ Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` ne
 | Cíl není na `main` (feature větev) | Nasazuje se něco, co neprošlo integrací. Legitimní u hotfixu, jinak varovný signál – zeptej se, jestli to je záměr. |
 | Cíl je zadaný ručně (větev, tag, hash) | **Zeptej se, jestli uživatel ten konkrétní bod historie viděl na preview.** U výchozího `main` se neptej: preview vzniklo mergem a testování proběhlo průběžně, o to se `/release` nestará. |
 
-**Brány běží nad nasazovaným commitem, ne nad pracovním stromem.** Zadal-li uživatel jiný cíl než `main`, přepni se na něj (nejlépe do samostatného worktree) a zelenou linku, build i audit spusť tam. Kontrolovat něco jiného, než se nasazuje, je horší než nekontrolovat nic – dává to falešnou jistotu.
+**Kontroly běží nad nasazovaným commitem, ne nad pracovním stromem.** Zadal-li uživatel jiný cíl než `main`, přepni se na něj (nejlépe do samostatného worktree) a zelenou linku, build i audit spusť tam. Kontrolovat něco jiného, než se nasazuje, je horší než nekontrolovat nic – dává to falešnou jistotu.
 
 ------
 
@@ -98,7 +98,7 @@ Zjištěné shrň do tří až pěti řádků. **Ještě nenasazuj.**
 
 ------
 
-## Fáze 1 – Brány před nasazením
+## Fáze 1 – Kontroly před nasazením
 
 Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracované. Neprojde-li kterákoliv, **skonči** a řekni, co je potřeba dodělat.
 
@@ -142,7 +142,7 @@ Teprve teď se ptáš, a ptáš se **jednou otázkou přes `AskUserQuestion`** n
 **Co:** <N commitů> · <oblasti> · <verze/tag>
 **Nasazuje se:** <main / zadaná větev / hash> → <nasazovací větev>
 **Kam:** <prostředí a URL>
-**Brány:** zelená linka ✅ · build ✅ · e2e ✅/– · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
+**Kontroly:** zelená linka ✅ · build ✅ · e2e ✅/– · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
 **Migrace:** <žádné / expand krok N, záloha z HH:MM>
 **Citlivé oblasti:** <které se mění, nebo „žádné“>
 **Návrat:** <konkrétně – revert commitu a redeploy / promote předchozí verze / obnovení ze zálohy>
@@ -232,7 +232,7 @@ Co se v okně dělá:
 
 ## Když chyba projde vším
 
-Chyba, kterou nechytila deterministická brána, panel v `/review`, útok v `/attack` **ani sledovací okno**, a projevila se u uživatele, je nejcennější vstup, jaký soustava dostane – a dosud nevedla k ničemu, jen se opravila commitem.
+Chyba, kterou nechytila deterministická kontrola, panel v `/review`, útok v `/attack` **ani sledovací okno**, a projevila se u uživatele, je nejcennější vstup, jaký soustava dostane – a dosud nevedla k ničemu, jen se opravila commitem.
 
 Ke každému takovému defektu proto zapiš **jeden řádek do `docs/decisions.md`, sekce `## Co proklouzlo`**:
 
@@ -242,7 +242,7 @@ Ke každému takovému defektu proto zapiš **jeden řádek do `docs/decisions.m
 
 Datum vyrob `date +%F` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**„Doplněno“ nesmí být prázdné.** Buď z toho vzejde nová brána (test, semgrep pravidlo, řádek v kontraktu, položka checklistu), nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – a to je přesně ta množina, kterou už chytat umí.
+**„Doplněno“ nesmí být prázdné.** Buď z toho vzejde nová kontrola (test, semgrep pravidlo, řádek v kontraktu, položka checklistu), nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – a to je přesně ta množina, kterou už chytat umí.
 
 **A vždy regresní test.** Stejným pravidlem jako u nálezu z `/attack`: reprodukce produkčního defektu je hotové zadání testu a bez něj se chyba vrátí.
 

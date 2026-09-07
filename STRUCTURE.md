@@ -100,7 +100,7 @@ Tenhle blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj dvě d
 
 Zbytek `CLAUDE.md` – autocommit, paměťová politika, typ projektu, doménové importy – zakládá `/project`.
 
-**Kontrakt příkazů.** Projekt, ve kterém se něco spouští, má v `CLAUDE.md` sekci `## Příkazy` – překlad abstraktních kroků (`test`, `typecheck`, `lint`, `build`, `e2e`, `audit`, `mutation`) na to, čím se v tomhle projektu doopravdy spouštějí. Díky ní nemusí žádné pravidlo ani skill vědět, jestli je za projektem Node, PHP nebo Python. Zakládá ji `/project` a čtou ji brány kvality – zelená linka i skilly, které před svou prací pouštějí testy. **Projekt bez kódu ji nemá a nic tím neporušuje.**
+**Kontrakt příkazů.** Projekt, ve kterém se něco spouští, má v `CLAUDE.md` sekci `## Příkazy` – překlad abstraktních kroků (`test`, `typecheck`, `lint`, `build`, `e2e`, `audit`, `mutation`) na to, čím se v tomhle projektu doopravdy spouštějí. Díky ní nemusí žádné pravidlo ani skill vědět, jestli je za projektem Node, PHP nebo Python. Zakládá ji `/project` a čtou ji kontroly kvality – zelená linka i skilly, které před svou prací pouštějí testy. **Projekt bez kódu ji nemá a nic tím neporušuje.**
 
 **Sekce `## Nasazení`** popisuje, jak se projekt dostane do produkce – u platformy s automatickým nasazením zejména to, která větev je nasazovací. Zakládá ji `/project` nebo první běh `/release`.
 
@@ -210,7 +210,7 @@ Zapisuj hned, jak rozhodnutí padne. Z odstupu se zdůvodnění rekonstruuje šp
 - **2026-09-02** – *dvojité odeslání objednávky při rychlém dvojkliku*: měl to chytit panel (role Data a stavy), nechytil, protože v rozsahu nebyl frontend → doplněn regresní test a položka do checklistu
 ```
 
-Zapisuje ji `/release` (viz jeho *Když chyba projde vším*). **Pole „doplněno“ nesmí být prázdné:** buď z defektu vzejde nová brána, nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – tedy z té množiny, kterou už chytat umí.
+Zapisuje ji `/release` (viz jeho *Když chyba projde vším*). **Pole „doplněno“ nesmí být prázdné:** buď z defektu vzejde nová blokující kontrola, nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – tedy z té množiny, kterou už chytat umí.
 
 **Nejstarší nahoře. Nový zápis se připojuje na konec** – své sekce, je-li soubor členěný. Důvod je provozní: připsat na konec je jediný způsob zápisu, který nejde udělat špatně, protože nevyžaduje hledat správné místo. Opačné pravidlo se v praxi nedodrží. Navíc se soubor čte jako vývoj uvažování a revize stojí **za** původním rozhodnutím, ne před ním.
 

@@ -151,7 +151,7 @@ Volba není „vždycky to nejchytřejší“ ani „vždycky to nejlevnější�
 
 Jména modelů zastarají, role ne – rozhoduje sloupec *Práce*. Aktuální rozdělení drží [přehled modelů](https://platform.claude.com/docs/en/about-claude/models/overview) a [dokumentace k effortu](https://platform.claude.com/docs/en/build-with-claude/effort).
 
-**Pravidlo nula: nejlevnější práce je ta, kterou neudělá model.** Co chytne typecheck, linter nebo test, se nemá hledat čtením kódu. Každá brána posunutá do vrstvy, která nestojí tokeny, je úspora, kterou žádná volba modelu nedožene.
+**Pravidlo nula: nejlevnější práce je ta, kterou neudělá model.** Co chytne typecheck, linter nebo test, se nemá hledat čtením kódu. Každá kontrola posunutá do vrstvy, která nestojí tokeny, je úspora, kterou žádná volba modelu nedožene.
 
 **Levný model se vyplatí jen tam, kde se jeho chyba pozná levně.** Než někam pošleš nejlevnější model, polož si tři otázky:
 
@@ -168,7 +168,7 @@ Vyjde-li kterákoliv odpověď špatně, **nešetři – zaplatíš dvakrát**: 
 **Delegace navíc se vyplatí i za vyšší cenu, když platí aspoň jedno ze tří:**
 
 - **Vynucený tvar výstupu.** Agent vrací strukturu, se kterou pak něco dál počítá – ne prózu, kterou musí někdo číst.
-- **Izolace kontextu.** Agent nemá jak sáhnout na to, co posuzuje. Read-only kontrolor se nemůže stát opravářem uprostřed kontroly, což je celá třída chyb, která jinak vzniká. **Platí to i o zkoušení vlastní brány:** kdo ji napsal, zkusí jí právě ta selhání, se kterými při psaní počítal – tedy tu představu o selhání, kterou už měl. Ověřit, jestli brána doopravdy chytá, umí jen někdo, kdo ji nepsal. Doloženo 6. 9. 2026: čerstvý test prošel oběma mutacemi autora a spadl na třech, které zkusil nezávislý agent.
+- **Izolace kontextu.** Agent nemá jak sáhnout na to, co posuzuje. Read-only kontrolor se nemůže stát opravářem uprostřed kontroly, což je celá třída chyb, která jinak vzniká. **Platí to i o zkoušení vlastní kontroly:** kdo ji napsal, zkusí jí právě ta selhání, se kterými při psaní počítal – tedy tu představu o selhání, kterou už měl. Ověřit, jestli kontrola doopravdy chytá, umí jen někdo, kdo ji nepsal. Doloženo 6. 9. 2026: čerstvý test prošel oběma mutacemi autora a spadl na třech, které zkusil nezávislý agent.
 - **Práce, která se neamortizuje.** Jeden vstup, jeden výstup, konec – nemá z čeho těžit rozehraný kontext hlavní session. Opak je iterativní psaní kódu, kde je delegace čistá ztráta.
 
 Neplatí-li ani jedno, **udělej to v hlavní session**: delegace je pak dražší a jediné, co přinese, je ztráta kontextu.
@@ -265,7 +265,7 @@ Vyhýbej se kombinatorické explozi. Máš-li dimenze A, B, C, neudržuj `A×B×
 
 ### Stavěj doménové principy a rozhoduj proti nim
 
-Průběžně **formuluj silné principy domény** – věty, které rozhodují: „o penězích u brány rozhoduje jen brána“. Co principem je a co ne, definuje `STRUCTURE.md` (`docs/rules.md`).
+Průběžně **formuluj silné principy domény** – věty, které rozhodují: „o penězích u platební brány rozhoduje jen platební brána“. Co principem je a co ne, definuje `STRUCTURE.md` (`docs/rules.md`).
 
 **Každou další otázku validuj proti nim, ne od nuly.** Ptej se, který princip na to sedí, a odpověď odvoď z něj. Nesedí-li žádný, je to nález: chybí princip, formuluj ho.
 
@@ -434,13 +434,13 @@ Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrá
 
 **Kam:** do `docs/decisions.md` nebo CHANGELOGu, podle toho, co projekt má. Nezakládej kvůli stopě zvláštní soubor.
 
-### Ověřitelná brána místo dojmu
+### Ověřitelná kontrola místo dojmu
 
 Práce, u které jde spustit kontrola, se **nehlásí jako hotová bez jejího výstupu**. Doklad je příkaz a jeho návratový kód, ne věta „funguje to“.
 
 U projektu s kódem je tou kontrolou **zelená linka** a kontroluje se **po každém dokončeném úkolu**, ne až před uzavřením feature. Projekt své příkazy deklaruje v *Kontraktu příkazů* v projektovém `CLAUDE.md`; chybějící příkaz znamená, že to projekt nemá, a krok se přeskočí nahlas i s tím, co se tím nezkontrolovalo.
 
-Definice zelené linky, prahy jednotlivých bran a to, proč jsou testy během psaní kódu jen ke čtení, jsou v `~/Dev/context/coding/quality.md`. Sem to nepatří: platí to jen u kódu, kdežto tenhle soubor se načítá i nad projekty, kde se nic nespouští.
+Definice zelené linky, prahy jednotlivých kontrol a to, proč jsou testy během psaní kódu jen ke čtení, jsou v `~/Dev/context/coding/quality.md`. Sem to nepatří: platí to jen u kódu, kdežto tenhle soubor se načítá i nad projekty, kde se nic nespouští.
 
 Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit, ověř, než ho napíšeš** – viz *Neopírej rozhodnutí o neověřené tvrzení*.
 
@@ -475,7 +475,7 @@ V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code
 
 **Nasazení (10–11)**
 
-10. **`/attack`** – explorativní útok: aplikace se **spustí** a zkouší se rozbít vstupy, pořadím kroků, cizími identitami a nesmyslnými daty. Je to třetí druh záruky vedle deterministických bran a posouzení modelem, a ani jedna ho nenahrazuje – `/review` kód čte, tenhle ho spouští. **Stojí až tady schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost, kdežto `/review` je levný a běží po každé feature. Projekt bez spustitelné aplikace ho nemá.
+10. **`/attack`** – explorativní útok: aplikace se **spustí** a zkouší se rozbít vstupy, pořadím kroků, cizími identitami a nesmyslnými daty. Je to třetí druh záruky vedle deterministických kontrol a posouzení modelem, a ani jedna ho nenahrazuje – `/review` kód čte, tenhle ho spouští. **Stojí až tady schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost, kdežto `/review` je levný a běží po každé feature. Projekt bez spustitelné aplikace ho nemá.
 11. **`/release`** – nasazení do produkce. **Stojí mimo uzavírání schválně:** uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť. **Končí až uzavřením sledovacího okna**, ne nasazením – viz níž.
 
 **Životní cyklus nekončí nasazením.** `/release` má poslední fází **sledovací okno**: nasazení se nepovažuje za hotové, dokud okno neuplyne a někdo ho výslovně neuzavře větou *„okno uzavřeno, N nových chyb“*. Bez toho se nasazení uzavře tichem a scénář „spadlo to o dvě hodiny později“ – migrace s backfillem, cache, chyba, která se projeví až na produkčním objemu – nemá vlastníka.

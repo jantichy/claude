@@ -99,7 +99,7 @@ class ZelenaLinka(unittest.TestCase):
     def test_souhlas_plati_pro_repozitar_vcetne_worktree(self):
         """Ve worktree layoutu má každá větev vlastní adresář.
 
-        Klíč podle cesty by znamenal nový souhlas na každé nové větvi – tedy bránu
+        Klíč podle cesty by znamenal nový souhlas na každé nové větvi – tedy kontrolu
         vypnutou právě tam, kde se pracuje, a funkční na main, kde se nepracuje.
         """
         self.kontrakt(typecheck="-", lint="-", test="true")
@@ -108,14 +108,14 @@ class ZelenaLinka(unittest.TestCase):
         git(self.repo, "worktree", "add", "-q", str(vetev), "-b", "feat")
         r = self.spust(cwd=vetev)
         self.assertEqual(r.returncode, PUSTI,
-                         f"na nové větvi brána neběžela: {r.stderr}")
+                         f"na nové větvi kontrola neběžela: {r.stderr}")
 
     def test_souhlas_prezije_symlink_v_ceste(self):
         """Souhlas vydaný přes symlink se musí potkat s během, který ho má rozřešený.
 
         Na macOS je /var symlink na /private/var, takže stačí projekt v dočasném
         adresáři – ale platí to pro každý symlinkovaný adresář s projekty. Bez
-        kanonizace obou stran brána mlčky neběží a jediné, co uživatel dostane,
+        kanonizace obou stran kontrola mlčky neběží a jediné, co uživatel dostane,
         je hláška "není vydaný souhlas".
         """
         self.kontrakt(typecheck="-", lint="-", test="true")
@@ -136,7 +136,7 @@ class ZelenaLinka(unittest.TestCase):
         self.assertIn("není zelená", r.stderr)
 
     def test_druhy_pokus_pusti_dal_ale_neztichne(self):
-        """Brána zastaví jednou, ne napořád – ale model se to musí dozvědět.
+        """Kontrola zastaví jednou, ne napořád – ale model se to musí dozvědět.
 
         Při exit 1 by svoje "hotovo" nechal stát nad stavem, který zelený není.
         """
@@ -183,7 +183,7 @@ class ZelenaLinka(unittest.TestCase):
     # --- vypnutí -----------------------------------------------------------
 
     def test_vypnuta_brana_se_hlasi(self):
-        """Vypnutá brána, o které se mlčí, je horší než chybějící brána."""
+        """Vypnutá kontrola, o které se mlčí, je horší než chybějící kontrola."""
         self.kontrakt(typecheck="-", lint="-", test="false")
         self.allow()
         (self.repo / ".claude").mkdir(exist_ok=True)
@@ -198,7 +198,7 @@ class ZelenaLinka(unittest.TestCase):
         """Bez -uall je celý nový adresář jedinou položkou "?? dir/".
 
         Test [ -f ] na ní neprojde, obsah se do otisku nedostane – a protože nová
-        feature skoro vždycky začíná novým adresářem, byla by brána mrtvá právě
+        feature skoro vždycky začíná novým adresářem, byla by kontrola mrtvá právě
         tam, kde se pracuje.
         """
         self.kontrakt(typecheck="-", lint="-", test="test ! -f nove/spatne.txt")

@@ -33,7 +33,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 
 ## Co skill nedělá
 
-- **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá brána – viz *Zákaz implementace*.
+- **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá kontrola – viz *Zákaz implementace*.
 - **Nezakládá projekt.** Strukturu, git, autocommit a doménové importy dělá `/project`. Když chybí, skill na to upozorní a nabídne ho.
 - **Nezkoumá konkurenci ani trh.** Kdo to už dělá, za kolik a co je na tom rizikové, zjišťuje `/discovery` do `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekci *Co poměřujeme*, na kterou se tedy neptá podruhé.
 - **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill mu jen předá řízení, až je zadání schválené.
@@ -44,7 +44,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 | Krok | Kdo ho dělá |
 |---|---|
 | Klasifikace rozsahu (spike / bounded / architectural) | `superpowers:brainstorming` |
-| Doptávání, varianty řešení, návrh, schvalovací brány | `superpowers:brainstorming` |
+| Doptávání, varianty řešení, návrh, schvalovací kontroly | `superpowers:brainstorming` |
 | **Produktový rámec a sepsání požadavků** | **tenhle skill** |
 | Sepsání návrhu řešení | `brainstorming` ho vytvoří, tenhle skill mu určí cíl a tvar |
 | Implementační plán | `/breakdown` |
@@ -150,9 +150,9 @@ Zapiš do **`docs/requirements.md`**. Šablona je v `~/.claude/skills/specify/do
 
 Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz Fáze 0) – zbylé dva, `competition.md` a `risks.md`, píše `/discovery`. Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/.claude/STRUCTURE.md`, *Produktové podklady*.
 
-**Nevede-li projekt žádný z nich, nic nezakládej** a jdi rovnou na bránu. Zdá-li se ti přitom, že by se některý hodil, řekni to jednou větou a nech rozhodnout – závazek vede `CLAUDE.md`, ne tenhle běh.
+**Nevede-li projekt žádný z nich, nic nezakládej** a jdi rovnou na kontrolu. Zdá-li se ti přitom, že by se některý hodil, řekni to jednou větou a nech rozhodnout – závazek vede `CLAUDE.md`, ne tenhle běh.
 
-**Brána uživatele.** Po sebe-revizi (Fáze 4) napiš:
+**Kontrola uživatele.** Po sebe-revizi (Fáze 4) napiš:
 
 > Požadavky jsou sepsané a commitnuté v `docs/requirements.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než se pustíme do návrhu řešení.
 
@@ -170,7 +170,7 @@ Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura 
 - je to nový projekt nebo nový podsystém,
 - zavádí nebo mění datový model či perzistentní stav,
 - zavádí rozhraní, na kterém stojí něco dalšího (API, formát, kontrakt),
-- napojuje se na cizí systém (platební brána, fakturace, externí API),
+- napojuje se na cizí systém (platební kontrola, fakturace, externí API),
 - má stavový prostor s přechody,
 - existuje víc než jedna rozumná cesta, jak to postavit.
 
@@ -208,7 +208,7 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 
 **Úhly nevypisuj** – sestaví si je sám podle sloupce *Spouštěč* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Fáze 1*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/RULES.md`, *Single source of truth*).
 
-**Brána uživatele** – po požadavcích (viz 3a) i po návrhu řešení:
+**Kontrola uživatele** – po požadavcích (viz 3a) i po návrhu řešení:
 
 > Návrh řešení je sepsaný a commitnutý v `docs/architecture.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než z něj uděláme implementační plán.
 
@@ -220,7 +220,7 @@ Počkej na odpověď. Chce-li změny, proveď je a projdi sebe-revizi znovu.
 
 Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání udělá `docs/plan.md`. Ten si sám najde zadání i kontext a ohlídá rozsah – nemusíš mu nic předávat ručně, jen ho vyvolej.
 
-**Sám plán nepiš.** Ani „ať se to nemusí volat zvlášť“. Rozpad na úkoly má vlastní pravidla, vlastní kontrolu pokrytí MVP a vlastní schvalovací bránu.
+**Sám plán nepiš.** Ani „ať se to nemusí volat zvlášť“. Rozpad na úkoly má vlastní pravidla, vlastní kontrolu pokrytí MVP a vlastní schvalovací kontrolu.
 
 **U projektu bez kódu** `/breakdown` nevyvolávej – rozepiš kroky do `docs/todo.md`.
 

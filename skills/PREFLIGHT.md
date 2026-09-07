@@ -34,7 +34,7 @@ Leží buď v `<kořen>/CLAUDE.md`, nebo v `<kořen>/.claude/CLAUDE.md` – **zk
 | Paměťová politika | píše se do Memory, nebo výhradně do souborů? |
 | Doménové `@import`y | které standardy z `~/Dev/context/` v projektu platí |
 
-**Chybí-li `## Příkazy` a projekt má kód**, zastav se a nabídni doplnění. Bez kontraktu nemá zelená linka co spouštět a práce by běžela bez brány. Podklad zjistíš z `package.json`, `composer.json`, `Makefile` nebo obdoby; návrh ukaž a nech potvrdit.
+**Chybí-li `## Příkazy` a projekt má kód**, zastav se a nabídni doplnění. Bez kontraktu nemá zelená linka co spouštět a práce by běžela bez kontroly. Podklad zjistíš z `package.json`, `composer.json`, `Makefile` nebo obdoby; návrh ukaž a nech potvrdit.
 
 ## 3. Stav pracovního stromu
 

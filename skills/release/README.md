@@ -6,16 +6,16 @@
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
-Nasadí hotovou práci do produkce: projde brány předtím, ošetří migrace databáze, nechá si nasazení výslovně potvrdit, ověří výsledek na produkční adrese a **ví, jak se vrátit zpátky**. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají – proto je nasazení samostatný krok se svými pravidly, ne poslední bod nějakého jiného postupu.
+Nasadí hotovou práci do produkce: projde kontroly předtím, ošetří migrace databáze, nechá si nasazení výslovně potvrdit, ověří výsledek na produkční adrese a **ví, jak se vrátit zpátky**. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají – proto je nasazení samostatný krok se svými pravidly, ne poslední bod nějakého jiného postupu.
 
 ## Co umí
 
 1. **Nasadí to, co řeknete** – výchozí je hlavní větev, ale zvládne i konkrétní větev, tag nebo jednotlivý commit. Nic se přitom nepřeskakuje.
 2. **Zjistí si sám, jak se projekt nasazuje** – z jeho instrukcí, z konfigurace nasazovací platformy, z nastavení kontejneru nebo skriptu. Když to nikde není, zeptá se a odpověď rovnou zapíše, aby se příště neptal.
-3. **Brány před nasazením:** čistý pracovní strom, zelená linka, produkční build, průchod aplikací, audit závislostí, hledání tajemství v repozitáři a kontrola, že nová proměnná prostředí je nastavená i v produkci.
+3. **Kontroly před nasazením:** čistý pracovní strom, zelená linka, produkční build, průchod aplikací, audit závislostí, hledání tajemství v repozitáři a kontrola, že nová proměnná prostředí je nastavená i v produkci.
 4. **Ověří, jestli práce vůbec prošla revizí** – nehádá to a neptá se, čte to ze záznamu a ukáže, co od té doby přibylo a co tedy nikdo neprověřil.
 5. **Migrace databáze řeší dopředu kompatibilně** – po krocích, mezi kterými funguje stará i nová verze kódu.
-6. **Jedna potvrzovací otázka nad kompletním přehledem** – co, kam, jaké brány prošly, jaké migrace, jak se vrátit zpátky a co se bude sledovat.
+6. **Jedna potvrzovací otázka nad kompletním přehledem** – co, kam, jaké kontroly prošly, jaké migrace, jak se vrátit zpátky a co se bude sledovat.
 7. **Ověření po nasazení na produkční adrese** – načtení, hlavní scénář celý včetně odeslání formuláře, data, chybové logy a u webu i to, jestli měření skutečně odesílá očekávané události.
 8. **Sledovací okno s konkrétním koncem.** Nasazení nekončí ve chvíli, kdy aplikace odpoví.
 
@@ -26,9 +26,9 @@ Nasadí hotovou práci do produkce: projde brány předtím, ošetří migrace d
 - **Návrat musí existovat dřív, než se nasadí.** Neumíte-li odpovědět na otázku „jak se za deset minut vrátíme", nenasazuje se.
 - **Ví, že kód se vrátí, ale data ne.** Nasazujete-li starší stav, než je v produkci, řekne to nahlas a data vyřeší zvlášť.
 - **Během okna se nic nemaže ani nepřejmenovává.** Odebraný sloupec znamená, že návrat kódu shodí aplikaci na datech, která nová verze zapsala – a máte rozbito na obou stranách.
-- **Neopravuje.** Najde-li brána problém, skončí a pošle to zpátky. Oprava dělaná v předvečer nasazení je přesně ta, která spadne.
+- **Neopravuje.** Najde-li kontrola problém, skončí a pošle to zpátky. Oprava dělaná v předvečer nasazení je přesně ta, která spadne.
 - **Sledovací okno má vlastníka.** Celá třída chyb se projeví až později – doplňování dat, cache, chyba, která nastane až na produkčním objemu. Okno se zavírá výslovnou větou, ne tichem, a nasazení do té doby není hotové.
-- **Chyba, která projde vším, se zapisuje.** U každého takového případu musí vzniknout nová brána, nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude. Jinak se soustava učí jen z chyb, které už chytat umí.
+- **Chyba, která projde vším, se zapisuje.** U každého takového případu musí vzniknout nová blokující kontrola, nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude. Jinak se soustava učí jen z chyb, které už chytat umí.
 
 ## Jak se to používá
 
@@ -37,7 +37,7 @@ Nasadí hotovou práci do produkce: projde brány předtím, ošetří migrace d
 /release v1.4.0       # nasadí konkrétní tag
 ```
 
-Skill projde brány, ukáže přehled, počká na potvrzení, nasadí, ověří a otevře sledovací okno.
+Skill projde kontroly, ukáže přehled, počká na potvrzení, nasadí, ověří a otevře sledovací okno.
 
 ## Ukázka výstupu
 
@@ -47,7 +47,7 @@ Skill projde brány, ukáže přehled, počká na potvrzení, nasadí, ověří 
 **Co:** 7 commitů · objednávky, mailing · v1.4.0
 **Nasazuje se:** main → production
 **Kam:** produkce, https://example.cz
-**Brány:** zelená linka ✅ · build ✅ · e2e ✅ · review ✅ · attack ✅ · audit ✅ · tajemství ✅
+**Kontroly:** zelená linka ✅ · build ✅ · e2e ✅ · review ✅ · attack ✅ · audit ✅ · tajemství ✅
 **Migrace:** expand krok 1, záloha z 14:32
 **Návrat:** revert commitu a nový build (~4 min)
 **Po nasazení sleduji:** chybovost a konverzní události, do druhého dne
@@ -66,7 +66,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/release a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill se odkazuje na **moje soukromé standardy** pro kód a analytiku a na strukturu projektové dokumentace – **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**. Aby brány měly co spouštět, potřebuje projekt mít v instrukcích zapsané, čím se u něj pouštějí testy, build, průchod aplikací a audit závislostí – i s tím vám Claude pomůže.
+Skill se odkazuje na **moje soukromé standardy** pro kód a analytiku a na strukturu projektové dokumentace – **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**. Aby kontroly měly co spouštět, potřebuje projekt mít v instrukcích zapsané, čím se u něj pouštějí testy, build, průchod aplikací a audit závislostí – i s tím vám Claude pomůže.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:

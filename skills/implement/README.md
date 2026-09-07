@@ -77,4 +77,4 @@ Skill je **obálka nad pluginem [superpowers](https://github.com/obra/superpower
 
 ### Požadavky a omezení
 
-Plugin superpowers. Projekt potřebuje mít v instrukcích zapsané, čím se pouštějí testy, typová kontrola a linter – bez toho by realizace běžela bez brány a skill se zastaví a nabídne to doplnit. Nejsamostatnější režim navíc předpokládá, že je zelená linka vynucená automaticky, ne jen doporučená.
+Plugin superpowers. Projekt potřebuje mít v instrukcích zapsané, čím se pouštějí testy, typová kontrola a linter – bez toho by realizace běžela bez kontroly a skill se zastaví a nabídne to doplnit. Nejsamostatnější režim navíc předpokládá, že je zelená linka vynucená automaticky, ne jen doporučená.

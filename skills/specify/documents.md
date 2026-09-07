@@ -1,6 +1,6 @@
 # Dokumenty zadání
 
-Šablony a pravidla psaní pro dokumenty, které vyrábí `/specify`. Průběh – kdy se který píše, co ho spouští, kde jsou schvalovací brány – drží `SKILL.md`; tady je jen to, co má vzniknout.
+Šablony a pravidla psaní pro dokumenty, které vyrábí `/specify`. Průběh – kdy se který píše, co ho spouští, kde jsou schvalovací kontroly – drží `SKILL.md`; tady je jen to, co má vzniknout.
 
 - [Jak se píše](#jak-se-píše) – platí pro všechny dokumenty
 - [`docs/requirements.md`](#docsrequirementsmd) – produktová specifikace
@@ -126,14 +126,14 @@ Scénáře ber z `scenarios.md`, vede-li ho projekt; jinak ze sekce *Hlavní
 scénáře* v requirements.md.
 Dál prahy, které bude projekt držet (pokrytí, mutation score) a čím se měří.
 Výchozí hodnoty a nástroje viz `~/Dev/context/coding/coding.md`,
-*Ověřování a brány kvality*.
+*Ověřování a kontroly kvality*.
 Zvlášť rozhodni o **generativních testech** – fuzzingu a property-based testech.
 Vyplatí se u parserů, validace vstupu, převodů formátů, výpočtů nad rozsahy
 a stavových automatů: najdou vstup, na který nikdo nepomyslel, a stojí tokeny
 jen jednou. Napiš, kde je projekt bude mít, nebo že je mít nebude a proč –
 prázdné místo tady znamená, že se nenapíšou nikdy.
 
-## Ověřování a brány
+## Ověřování a kontroly
 Konkrétní příkazy, které projekt bude mít – `test`, `typecheck`, `lint`,
 `build`, `audit`, případně `e2e` a `mutation`.
 Je to **záměr, ne kontrakt**: *Kontrakt příkazů* v `CLAUDE.md` musí odpovídat

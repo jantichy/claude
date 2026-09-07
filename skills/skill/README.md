@@ -8,7 +8,7 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 2. **`/skill extract`** – **vytěžení konverzace.** Vstupem není zadání, ale to, co se v sezení vyladilo. Umí si přitom načíst i tu část rozhovoru, kterou už z paměti vytlačila kompaktace.
 3. **`/skill update [jméno]`** – **dorovnání na dnešní normu.** Jeden skill, nebo bez jména všechny.
 4. **`/skill delete <jméno>`** – **odstranění i se stopami** ze všech míst, kde skill zanechal zmínku: z přehledu, z životního cyklu, z testů, z odkazů jiných skillů, z nastavení i z instrukcí jednotlivých projektů.
-5. **Zastaví se, když by skill vůbec neměl vzniknout.** Co chytne test, linter nebo automatická brána, se má řešit tam. Co platí pro každou práci, patří mezi obecná pravidla. Co je znalost oboru, patří do doménového souboru.
+5. **Zastaví se, když by skill vůbec neměl vzniknout.** Co chytne test, linter nebo automatická kontrola, se má řešit tam. Co platí pro každou práci, patří mezi obecná pravidla. Co je znalost oboru, patří do doménového souboru.
 6. **Tři vrstvy ověření** – tvar, spolehlivost vyvolání a dodržení pravidla pod tlakem. Co ověřit nešlo, se vypíše jako nezkontrolované.
 
 ## Proč zrovna tenhle

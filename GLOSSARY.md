@@ -13,12 +13,12 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ## Termíny
 
-### brána
+### blokující kontrola
 
-**Používej – ale jen v tomhle rozsahu.** Deterministická kontrola nástrojem, která práci zastaví, dokud neprojde: `typecheck`, `lint`, `test`, audit, gitleaks, mutation testing. Nula tokenů, stejný výsledek dvakrát.
+**Automatická kontrola nástrojem, která práci zastaví, dokud neprojde:** `typecheck`, `lint`, `test`, audit závislostí, hledání tajemství, mutation testing. Nula tokenů, stejný výsledek dvakrát. Kde je z kontextu jasné, o co jde, zkracuje se na prosté **„kontrola"**; přívlastek se opakuje tam, kde by hrozila záměna s kontrolou, která jen hlásí.
 
-**Není to** posouzení modelem (`/review`) ani explorativní útok (`/attack`) – to jsou podle `~/Dev/context/coding/quality.md`, *Tři druhy záruk*, dva **jiné** druhy záruky, ne brány. Není to ani ověřovatel nálezů uvnitř `/review` a nejsou to koncové věty skillu, i když obojí taky něco zastavuje.
+**Není to** posouzení modelem (`/review`) ani explorativní útok (`/attack`) – to jsou podle `~/Dev/context/coding/quality.md`, *Tři druhy záruk*, dva **jiné** druhy záruky. Není to ani ověřovatel nálezů uvnitř `/review` a nejsou to koncové věty skillu, i když obojí taky něco zastavuje.
 
-**Původ:** termín je Honzův, z `~/Dev/context/coding/quality.md` (*Ověřování a brány kvality*). Sporné nebylo slovo, ale to, že jsem ho rozšiřoval na cokoliv, co brzdí.
+**Nahrazuje dřívější „bránu"** (2026-09-07). Anglicky *quality gate* zavedený termín je, ale česká „brána" ne – čtenář si pod ní představí vrata a potřebuje k ní slovník. Zbylá „brána" v souborech je proto vždycky **platební brána** a s tímhle pojmem nemá nic společného.
 
-**Mluvíš-li o jedné konkrétní bráně, pojmenuj ji.** „Testy padají“ je přesnější než „brána je červená“ – ta věta nechává čtenáře hádat, která ze tří vrstev spadla.
+**Mluvíš-li o jedné konkrétní kontrole, pojmenuj ji.** „Testy padají“ je přesnější než „kontrola je červená“ – ta věta nechává čtenáře hádat, která z nich spadla.

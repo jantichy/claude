@@ -15,7 +15,7 @@ Je to třetí druh záruky, rovnocenný vedle dvou ostatních, a ani jedna ho ne
 
 | Druh záruky | Kdo ji dává | Co najde |
 |---|---|---|
-| **Deterministická brána** | nástroj (typecheck, lint, test, audit) | to, na co je napsaná |
+| **Deterministická kontrola** | nástroj (typecheck, lint, test, audit) | to, na co je napsaná |
 | **Posouzení modelem** | `/review`, panel rolí nad **čteným** kódem | to, co se z kódu dá vyčíst |
 | **Explorativní útok** | tenhle skill, nad **běžící** aplikací | to, co nikoho nenapadlo |
 

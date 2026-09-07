@@ -24,7 +24,7 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 
 - **Dva dokumenty, protože mají jinou životnost.** Produktový záměr se mění zřídka, technické řešení s každým rozhodnutím o technologii. V jednom souboru by se při výměně databáze editoval tentýž text, ve kterém stojí popis cílové skupiny, a produktová část by se tím postupně obrušovala.
 - **Hranice mezi nimi je ostrá a má test.** *Změní se ta věta, když vyměním databázi?* Ano → návrh. Ne → požadavky. „Musí to běžet na běžném hostingu" je omezení a patří do požadavků; „použijeme SQLite, protože…" je volba a patří do návrhu.
-- **Zákaz implementace je brána, ne rada.** Žádný scaffold, žádné „jen si ověřím, že to jde" – scaffold zamkne technologie dřív, než se o nich rozhodlo. Jediná výjimka je krátká ověřovací sonda, jejíž kód se pak zahodí.
+- **Zákaz implementace je kontrola, ne rada.** Žádný scaffold, žádné „jen si ověřím, že to jde" – scaffold zamkne technologie dřív, než se o nich rozhodlo. Jediná výjimka je krátká ověřovací sonda, jejíž kód se pak zahodí.
 - **Nic si nevymýšlí.** Technický název, identifikátor, parametr, cizí rozhraní ani cena se nedomýšlejí – co není známé, jde do otevřených otázek i s tím, kdo to má rozhodnout.
 - **Žádné placeholdery.** „Rychlé načítání" je nic; požadavek má číslo, práh a podmínku.
 - **Sekce „co vědomě neděláme" nesmí být prázdná.** Prázdná znamená, že se nic neřezalo – a co se vyhodí, se tam zapíše, aby to nikdo nevymyslel znovu.
@@ -64,7 +64,7 @@ Skill se zeptá, co už máte, provede vás vyptáváním, sepíše požadavky, 
 
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt".
 - **Nezakládá projekt.** Strukturu, git a nastavení dělá `/project`; když chybí, skill na to upozorní.
-- **Nepíše implementační plán.** Ten dělá `/breakdown` a má vlastní pravidla i vlastní schvalovací bránu.
+- **Nepíše implementační plán.** Ten dělá `/breakdown` a má vlastní pravidla i vlastní schvalovací kontrolu.
 
 ## Jak si ho nainstalovat
 
