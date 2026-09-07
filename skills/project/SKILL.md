@@ -178,7 +178,7 @@ Ve worktree layoutu jsou `CLAUDE.md` **dva** a mají různý účel. Zaměnit je
 | Soubor | Co v něm je | Píší do něj kroky |
 |---|---|---|
 | `<projekt>/CLAUDE.md` (kontejner) | jen popis layoutu, odchylky a import toho druhého | pouze tenhle krok 4 |
-| projektový `CLAUDE.md` (v `main/`, nebo ve tvé větvi) | všechno ostatní – metadata, struktura, autocommit, paměť, typ, doménové importy | kroky 2, 4, 6, 8, 9, 10, 11, 12 |
+| projektový `CLAUDE.md` (v `main/`, nebo ve tvé větvi) | všechno ostatní – metadata, struktura, autocommit, paměť, typ, příkazy, doménové importy | každý krok, který něco zapisuje: 2 a 3 (metadata), 5 a 7 (struktura), 9–13, a dorovnání ve 14 |
 
 **Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se ten v projektovém adresáři** (krok 0, *Projektový adresář*) – tedy v `main/`, nebo ve tvé větvi, zapisuješ-li. Totéž platí pro `README.md`, `docs/*` a `.gitignore`; do kořene kontejneru nepatří ani jeden z nich. Jedinou výjimkou je `.claude/settings.local.json`: ten patří do **kořene kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte. Tenhle skill ho **nezakládá** – vznikal v kroku, který zmizel se zrušeným autopromptem –, ale existuje-li, patří tam.
 
@@ -398,7 +398,7 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 **Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
 
-Zapiš do projektového `CLAUDE.md` sekci `## Příkazy` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/green-line.sh --allow <kořen projektu>` a nech ho spustit **jeho** – souhlasem se zapíná brána, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu.
+Zapiš do projektového `CLAUDE.md` sekci `## Příkazy` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/green-line.sh --allow <projektový adresář>` a nech ho spustit **jeho** – souhlasem se zapíná brána, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu. Ve worktree layoutu vypiš `main/` nebo svou větev, **nikdy kořen kontejneru**: souhlas se počítá z `git rev-parse --git-common-dir`, takže z kteréhokoliv worktree platí pro celý repozitář, ale v kořeni kontejneru žádný kontrakt neleží.
 
 **Šablonu sekce, význam klíčů, mechaniku zelené linky i brány, které se nenastavují příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/gates.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality*.
 
