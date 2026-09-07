@@ -229,7 +229,7 @@ Poslední řádek je druhý druh driftu vedle rozejití s normou a **neklade ho 
 
 **Nenajdeš-li nic, řekni to a skonči.** Běh bez zásahu je platný výsledek revize.
 
-**Vyškrtni ze seznamu `MIGRACE`** skill, u kterého jsi vypořádal **všechny** jeho nálezy – ráčna je per skill, ne per nález, takže skill s jedním zbylým nálezem v seznamu zůstává v `~/.claude/tests/test_skills.py`. Ten seznam je **ráčna**: množina skillů mimo normu se musí *rovnat* jeho obsahu, takže opravený skill, který v něm zůstane, shodí testy stejně jako regrese. Je to schválně – bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit.
+**Vyškrtni ze seznamu `MIGRACE`** skill, u kterého jsi vypořádal **všechny** jeho nálezy – vyškrtává se po celých skillech, ne po jednotlivých nálezech, takže skill s jedním zbylým nálezem v seznamu zůstává v `~/.claude/tests/test_skills.py`. Ten seznam **musí přesně sedět se skutečností**: nesmí v něm chybět skill mimo normu ani zůstat skill, který se opravil. Opravený a nevyškrtnutý skill proto shodí testy stejně jako regrese. Je to schválně – bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit.
 
 Pak pokračuj *Fází 7* – i `update` sahá na `README.md` a testy.
 

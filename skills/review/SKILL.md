@@ -72,7 +72,7 @@ Je-li výsledek nenulový, **řekni to a nabídni srovnání před review**. Dů
 
 - **`.claude/run/review.json`**, pokud existuje – přerušený běh. Viz *Fáze 3*, kde vzniká; nabídni navázání dřív, než začneš cokoliv počítat znovu.
 - Projektový `CLAUDE.md` – zejména `## Příkazy` (*Kontrakt příkazů*), `## Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
-- **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Neuvádějí se – ale **jen dokud platí**: u každého záznamu ověř příkazem, jestli se dotčený kód od zápisu nezměnil. Mechanika i formát jsou v kapitole *Kapitola `## Review`* níž; bez toho ověření se z filtru stane ráčna.
+- **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Neuvádějí se – ale **jen dokud platí**: u každého záznamu ověř příkazem, jestli se dotčený kód od zápisu nezměnil. Mechanika i formát jsou v kapitole *Kapitola `## Review`* níž; bez toho ověření se z filtru stane odkladiště, které jen narůstá.
 - **`## Výjimky z obecných pravidel`** – vědomé odchylky projektu. Co je tam popsané jako výjimka, není nález.
 - **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Role *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit. **A `docs/scenarios.md`**, vede-li ho projekt – *Korektnost* měří scénář po scénáři, takže taxativní seznam je pro ni lepší podklad než próza v požadavcích.
 - **Jmenný seznam citlivých oblastí** na konci `docs/architecture.md` – přihlášení, oprávnění, platby, nahrávání souborů, osobní údaje, mazání dat, odesílání pošty ven. Zakládá ho `/specify` s příslibem, že *„`/review` na ně sahá přísněji“*, takže ten příslib je potřeba splnit: **dotkne-li se rozsah kterékoliv z nich, role Bezpečnost je povinná** (nevybírá se podle typu souborů) **a pouští se na nejsilnějším modelu s `xhigh`**. Do zadání té role seznam vlož a napiš, které položky se rozsahu týkají. Neexistuje-li `architecture.md`, řekni to a rozhodni podle obsahu rozsahu.
@@ -556,7 +556,7 @@ git log --oneline <zapsaný hash>..HEAD -- <lokace ze záznamu>
 - **Prázdný výstup** → kód se nezměnil, záznam platí, nález se neuvádí.
 - **Neprázdný výstup** → záznam **se do zadání rolí nevkládá**. Najde-li se nález znovu, předlož ho ve Fázi 7 s poznámkou *„zamítnuto YYYY-MM-DD s odůvodněním …, kód se od té doby změnil“*. Uživateli pak stačí potvrdit, že to platí dál – a záznam se přepíše s novým hashem.
 
-**Proč:** důvod zamítnutí je skoro vždy vázaný na stav kódu v ten den – „na tenhle endpoint se nedá dostat zvenčí“, „ten vstup je validovaný o vrstvu výš“. Po refaktoru přestane platit, ale filtr se aplikuje **před** hledáním, takže se to nemá jak dozvědět nikdo: role o umlčeném nálezu nevědí, a proto ho ani nenajdou. Bez expirace je ta kapitola ráčna, která jede jen jedním směrem, a projekt jí za rok používání oslepne.
+**Proč:** důvod zamítnutí je skoro vždy vázaný na stav kódu v ten den – „na tenhle endpoint se nedá dostat zvenčí“, „ten vstup je validovaný o vrstvu výš“. Po refaktoru přestane platit, ale filtr se aplikuje **před** hledáním, takže se to nemá jak dozvědět nikdo: role o umlčeném nálezu nevědí, a proto ho ani nenajdou. Bez expirace ta kapitola jen narůstá a nikdy se nezmenší, a projekt jí za rok používání oslepne.
 
 **Při `/review full` se revaliduje celý seznam** bez ohledu na hashe: vypiš záznamy i s jejich stářím a nech potvrdit, co má platit dál. `full` se pouští zřídka a je to jediné místo, kde má revize seznamu proporční cenu.
 

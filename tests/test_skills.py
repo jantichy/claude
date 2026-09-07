@@ -687,9 +687,9 @@ class SouladSNormou(unittest.TestCase):
     Převod je vědomý běh `/skill update`, ne vedlejší efekt jiné práce – proto
     seznam `MIGRACE` místo třinácti padajících testů.
 
-    Je to **ráčna, ne umlčení**: test porovnává množiny na rovnost. Skill, který
-    se opraví a nezmizí ze seznamu, test shodí stejně jako skill, který se
-    rozbije. Bez toho by seznam tiše zůstal i po dokončení migrace a přestal by
+    Seznam ale neumlčuje – **musí přesně sedět se skutečností** a test to hlídá
+    v obou směrech. Skill, který se opraví a nezmizí ze seznamu, test shodí
+    stejně jako skill, který se rozbije. Bez toho by seznam tiše zůstal i po dokončení migrace a přestal by
     cokoliv měřit.
     """
 
@@ -819,7 +819,7 @@ class SouladSNormou(unittest.TestCase):
         self.assertFalse(navic, f"MIGRACE jmenuje neexistující skilly: {navic}")
 
     def test_skilly_odpovidaji_norme(self):
-        """Ráčna: množina nesouladných skillů se musí rovnat seznamu MIGRACE."""
+        """Seznam MIGRACE musí přesně sedět: skill mimo normu nechybí ani nepřebývá."""
         nesoulad = {s.parent.name: self.vady(s) for s in SKILLS if self.vady(s)}
 
         rozbite = sorted(set(nesoulad) - self.MIGRACE)
