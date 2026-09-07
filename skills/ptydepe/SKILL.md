@@ -1,6 +1,6 @@
 ---
 name: ptydepe
-description: Skill se použije, když uživatel zadá "/ptydepe" (volitelně s režimem suggest nebo add a s termínem), nebo chce prověřit termíny, které Claude používá, přestože je v oboru nikdo nezná – typicky slova převzatá z náhodné zmínky, překlepu nebo doslovného překladu, která se pak rozlezla napříč projekty. Výchozí režim "suggest" takové termíny vytipuje a seřadí; režim "add" projedná jeden z nich, dohodne náhradu nebo ponechání, provede ji ve všech repozitářích a zapíše rozhodnutí do ~/.claude/PTYDEPE.md. Na rozdíl od /replace, který přejmenování jen provede, tenhle skill rozhoduje, jestli se má přejmenovat, a pak ho volá.
+description: Skill se použije, když uživatel zadá "/ptydepe", "/ptydepe suggest" nebo "/ptydepe add <termín>", anebo chce prověřit termíny, které Claude používá, přestože je v oboru nikdo nezná – slova převzatá z náhodné zmínky, z překlepu nebo z doslovného překladu, která se pak rozlezla napříč projekty a dokumentací. Výchozí režim "suggest" takové termíny vytipuje, režim "add" vypořádá jeden z nich. Postup, meze rozsahu a vyloučená místa má skill v těle a jsou závazné – bez jeho načtení se hledání ani náhrada nespouští, protože plošná náhrada umí nevratně přepsat soubory mimo verzování. Na rozdíl od /replace, který přejmenování jen provede, tenhle skill rozhoduje, jestli se má přejmenovat, a pak ho volá.
 argument-hint: [suggest | add <termín>]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Skill, AskUserQuestion]
 ---
