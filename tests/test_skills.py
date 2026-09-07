@@ -229,17 +229,34 @@ class SablonyProtiOriginalu(unittest.TestCase):
         self.assertIn(original, "\n".join(l.strip() for l in skill.splitlines()),
             "šablona v /autocommit se rozešla se zněním v CLAUDE.md, *Autocommit v projektech*")
 
-    def test_projektovy_claude_md_ma_kanonicky_autocommit(self):
-        """Přepínač autocommitu se pozná jen na kanonickém místě.
 
-        `/autocommit` hledá nadpis znějící přesně `## Autocommit`. Zanoří-li ho
-        někdo zpátky pod zaniklou zastřešující sekci, skill ho přestane vidět
-        a bude projekt hlásit jako vypnutý, přestože zapnutý je.
-        """
+class KanonickyTvarAutocommitu(unittest.TestCase):
+    """Přepínač autocommitu se pozná jen podle nadpisu, takže na jeho tvaru stojí funkce.
+
+    `/autocommit` hledá nadpis znějící přesně `## Autocommit`; zanořený nebo
+    o úroveň nižší nenajde a projekt pak hlásí jako vypnutý, přestože zapnutý je.
+    Hlídají se obě strany mechanismu, ale jen v tomhle repozitáři – projekty
+    venku žádná brána nečte, o ty se stará `/project` v režimu `adopt`.
+    """
+
+    def test_projektovy_claude_md_ma_prepinac_na_kanonickem_miste(self):
         projektovy = (ROOT / ".claude/CLAUDE.md").read_text(encoding="utf-8")
         self.assertIn("\n## Autocommit\n", projektovy,
             "projektový CLAUDE.md nemá přepínač na kanonickém místě")
         self.assertNotIn("## Automatické akce", projektovy,
+            "zastřešující sekce nad jediným podnadpisem se vrátila")
+
+    def test_globalni_claude_md_ma_definici_na_kanonickem_miste(self):
+        """Druhá strana mechanismu: definice se nesmí stát přepínačem.
+
+        `/autocommit on` starý tvar umí srovnat, ale to je migrační tolerance
+        pro cizí instalace. Tenhle soubor má být kanonický sám od sebe – jinak
+        se na tolerantní větev spoléhá právě tam, kde se testuje.
+        """
+        globalni = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        self.assertIn("\n## Autocommit v projektech\n", globalni,
+            "globální CLAUDE.md nemá definici mechanismu na kanonickém místě")
+        self.assertNotIn("## Automatické akce", globalni,
             "zastřešující sekce nad jediným podnadpisem se vrátila")
 
 

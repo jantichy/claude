@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob]
 
 Zapíná/vypíná autocommit pro aktuální projekt – Claude pak v průběhu práce automaticky commituje a pushuje změny. Pravidla autocommitu (kdy commit, kdy push) jsou v `~/.claude/CLAUDE.md`, sekce *Autocommit v projektech*.
 
-Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md`. Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. Nadpis `## Autocommit v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Hledá se tedy nadpis znějící přesně `## Autocommit`. Najdeš-li sekci `Autocommit` na jiné úrovni nebo zanořenou pod jiným nadpisem – typicky pod zaniklou sekcí `## Automatické akce` –, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar.
+Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md`. Projektový `CLAUDE.md` může být `<PROJECT_ROOT>/CLAUDE.md` **nebo** `<PROJECT_ROOT>/.claude/CLAUDE.md` – zkontroluj obě místa. Nadpis `## Autocommit v projektech` v globálním `~/.claude/CLAUDE.md` je definice mechanismu, **ne** přepínač – ten se nikdy nepočítá, ani když pracuješ přímo v repozitáři `~/.claude`. Hledá se tedy nadpis znějící přesně `## Autocommit`. Najdeš-li sekci `Autocommit` na jiné úrovni nebo zanořenou pod jiným nadpisem – typicky pod zaniklou sekcí `## Automatické akce`, která zastřešovala jediný podnadpis –, je to chyba v tom souboru: ohlas ji a nabídni srovnání na kanonický tvar. **To platí pro projektový `CLAUDE.md`** – ten patří projektu a přepisovat v něm mimochodem cizí sekce skillu nepřísluší. **Globální `~/.claude/CLAUDE.md` je jiný případ:** definici mechanismu do něj zapisuje sám, takže starý tvar srovná rovnou a jen to oznámí (viz režim `on`).
 
 ## Postup
 
@@ -27,6 +27,8 @@ Pokud `.git` nenajdeš, oznam „Aktuální adresář není git repozitář.“ 
 
 Stav zjisti podle definice v *Co skill dělá* výš – **obě možná umístění projektového `CLAUDE.md`**, kanonické místo nadpisu i to, že nadpis v globálním souboru se nepočítá. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
 
+**Přečti si i text pod nadpisem a ověř, že netvrdí opak.** Stav nese nadpis, ne ta věta – sekce s tělem „Autocommit je vypnutý.“ tedy znamená **zapnuto**, což je přesně to nedorozumění, které stojí za ověření. Najdeš-li rozpor, **nepokračuj mlčky**: ohlas ho, řekni, jak ho čteš, a nech uživatele rozhodnout, co má platit. Sekci sice píše skill, ale ruční zásah do `CLAUDE.md` je běžný a zrovna tenhle je tichý – autocommit by se choval opačně, než co si člověk v souboru přečte.
+
 ### `status` (nebo žádný argument)
 
 Vypiš stav (zapnutý/vypnutý).
@@ -35,7 +37,7 @@ Vypiš stav (zapnutý/vypnutý).
 
 Pokud je už zapnutý → jen oznam, nic neměň. Jinak:
 
-1. **Zkontroluj globální `~/.claude/CLAUDE.md`** – pokud neobsahuje nadpis `## Autocommit v projektech`, doplň ho s tímto textem:
+1. **Zkontroluj globální `~/.claude/CLAUDE.md`** – pokud neobsahuje nadpis `## Autocommit v projektech`, doplň ho s tímto textem. **Stojí-li tam starý tvar** – `### Autocommit v projektech`, typicky pod zastřešující sekcí `## Automatické akce` –, druhou sekci nepřidávej: povyš nadpis na druhou úroveň, text srovnej podle šablony níž a **oznam to**. Zastřešující sekci pak zruš, ale jen **nezbyl-li pod ní jiný podnadpis** – v cizí instalaci tam může viset něco dalšího. Ptát se tu na svolení netřeba: je to sekce, kterou skill sám zapisuje, a dvě definice téhož mechanismu vedle sebe si dřív nebo později začnou odporovat.
 
    ```
    ## Autocommit v projektech
