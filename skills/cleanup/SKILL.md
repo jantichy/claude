@@ -52,7 +52,7 @@ Zjisti kontext, ve kterém pracuješ:
 1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
 2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `### Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
 3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`.
-4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` čtveřice `todo.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
+4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` pětice `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/Dev/context/structure/structure.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
 
@@ -143,6 +143,7 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 |---|---|
 | rozhodnutí | přidej ho jako položku do Fáze 1 (kategorie 1) a normálně zapiš ve Fázi 5 – i se zdůvodněním, které tady padlo |
 | „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) |
+| „někdy by šlo“, nezávazný nápad | do `docs/backlog.md` – **ne do todo**; hranici drží `~/Dev/context/structure/structure.md`, *`backlog.md`* |
 | bezpředmětné | nic nezapisuj; v přehledu ve Fázi 8 to ale uveď, ať je vidět, že se to probralo |
 | práce navíc (dodělat kód, přepsat návrh) | to je nad rámec úklidu. Udělej to **jen na výslovný pokyn** a pak pokračuj skillem dál; jinak do `docs/todo.md` (tamtéž) |
 
@@ -165,14 +166,15 @@ Pro **každou** položku z Fáze 1 ověři čtením souborů, jestli už je zaps
 | Pravidla, konvence, jak se v projektu pracuje | projektový `CLAUDE.md` |
 | Rozhodnutí a jejich zdůvodnění, zavržené varianty | `docs/decisions.md` |
 | Obecné principy a hranice, ve kterých se projekt pohybuje | `docs/rules.md` |
-| Úkoly a odložené věci | `docs/todo.md` |
+| Úkoly a odložené věci, u kterých je rozhodnuto, že se udělají | `docs/todo.md` |
+| Nezávazný nápad, o kterém se nerozhodlo | `docs/backlog.md` |
 | Hotové úkoly | `docs/done.md` |
 | Otevřené otázky čekající na rozhodnutí uživatele | `docs/todo.md` jako běžná položka |
 | Změny dotýkající se toho, co projekt je, umí a jak se používá – **popis pro člověka**, nikdy pokyn pro Clauda | `README.md` |
 | Doménová specifika (model, procesy, katalogy) | příslušný soubor v `docs/` |
 | Cokoliv v Memory | **přesuň do projektového `CLAUDE.md`**, pokud projekt nemá explicitně povolenou Memory |
 
-Zvlášť projdi hlavní soubory – `README.md`, `docs/todo.md`, `docs/done.md`, `docs/decisions.md`, `docs/rules.md` a `CLAUDE.md` (projektový i vnořené) – a ověř, jestli se do nich promítlo, co ze session vzešlo, a jestli v nich nezůstalo pravidlo, které v session přestalo platit. **Jen v rozsahu session**, ne jako obecná revize obsahu.
+Zvlášť projdi hlavní soubory – `README.md`, `docs/todo.md`, `docs/backlog.md`, `docs/done.md`, `docs/decisions.md`, `docs/rules.md` a `CLAUDE.md` (projektový i vnořené) – a ověř, jestli se do nich promítlo, co ze session vzešlo, a jestli v nich nezůstalo pravidlo, které v session přestalo platit. **Jen v rozsahu session**, ne jako obecná revize obsahu.
 
 Když u položky není jasné, kam patří, **zeptej se** – ale až ve Fázi 5, v jednom společném průchodu, ne rozsypaně.
 
@@ -189,7 +191,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
 1. **Zjisti, kdy se každý ze souborů naposledy měnil.** U projektu s gitem `git log --oneline -3 -- <soubor>` a `git status`; jinak čas modifikace. Zajímá tě, jestli se soubor během téhle session vůbec dotkl.
 
    ```
-   CLAUDE.md  README.md  docs/todo.md  docs/done.md  docs/decisions.md  docs/rules.md
+   CLAUDE.md  README.md  docs/todo.md  docs/backlog.md  docs/done.md  docs/decisions.md  docs/rules.md
    ```
 
    Má-li projekt zadání, přidej k nim `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`. **Vede-li projekt produktové podklady** – poznáš z `## Struktura a dokumentace` v `CLAUDE.md` –, přidej i je: `docs/competition.md`, `docs/risks.md`, `docs/scenarios.md`, `docs/glossary.md`, `docs/pricing.md`. Zapsaný podklad, který dosud nevznikl, **není nález** – je to závazek čekající na svůj krok; nález je zapsaný podklad, kterému se během session rozešel obsah se skutečností. Má-li projekt kód, ověř i **`## Příkazy`** v `CLAUDE.md` (*Kontrakt příkazů*) – přibyl-li během session příkaz, kterým se něco spouští, patří tam.
@@ -201,7 +203,8 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    |---|---|
    | `CLAUDE.md` | vzniklo nebo se změnilo pravidlo, konvence, způsob práce v projektu |
    | `README.md` | změnilo se, co projekt je, umí nebo jak se spouští; zároveň ověř, že v něm nezůstal normativní pokyn pro Clauda – ten patří do `CLAUDE.md` nebo `docs/`, viz `~/Dev/context/structure/structure.md` |
-   | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později“ |
+   | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později“ – a je rozhodnuto, že se to udělá |
+   | `docs/backlog.md` | padl nápad, o kterém se nerozhodlo, že se udělá; **zvlášť ověř, že takový nápad neskončil v `todo.md`** |
    | `docs/done.md` | ověř, že v `todo.md` nezbylo nic hotového – přesouvá se průběžně, tohle je jen záchranná síť |
    | `docs/decisions.md` | padlo rozhodnutí, zvolila se varianta, něco se zamítlo, změnil se názor |
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky“ |
@@ -229,6 +232,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    ```
    Průběžná aktualizace: docs/decisions.md – 3 rozhodnutí doplněna zpětně
                          docs/todo.md      – OK
+                         docs/backlog.md   – 2 nápady doplněny
                          docs/rules.md     – 1 princip doplněn
                          CLAUDE.md         – OK
                          README.md         – OK
@@ -323,23 +327,26 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
 1. **Nemáš-li nic**, fázi přeskoč a v přehledu uveď „žádné“.
 
-2. **Vypiš je všechny najednou** jako číslovaný seznam – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu:
+2. **Vypiš je všechny najednou** jako číslovaný seznam – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
 
    ```
-   Mimo rozsah úklidu bych nechal:
+   Mimo rozsah úklidu zůstává:
    1. [položka] – [proč je mimo rozsah]
    2. …
    ```
 
-3. **Projdi je jednu po druhé** a u každé se zeptej zvlášť samostatným voláním `AskUserQuestion`. Volby:
+3. **Projdi je jednu po druhé** a u každé se zeptej samostatným voláním `AskUserQuestion`. Volby:
 
    | Volba | Co uděláš |
    |---|---|
-   | **Vyřešit teď** | Vyřeš položku rovnou tady, jako by byla součástí úklidu. |
-   | **Zapsat do todo** | Zapiš ji do `docs/todo.md` (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. |
+   | **Vyřešit teď** | Vyřeš položku **hned**, ještě než se zeptáš na další – ne až po posledním dotazu. Rozhodnutí odložené na konec ztratí kontext, ve kterém padlo. |
+   | **Zapsat do todo** | Zapiš ji do `docs/todo.md` (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. Volí se u položky, o které je rozhodnuto, že se udělá. |
+   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` (v tomhle repozitáři do `~/Dev/context/backlog.md`) – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
 
-   **Neptej se předtím hromadně**, co s celou skupinou. Dřív tady stála meziotázka, jestli položky vyřešit všechny naráz, zapsat všechny do todo, nebo je projít po jedné – a v provozu z ní vždycky vyšlo „po jedné“, protože položky se povahou liší skoro vždycky. Volba, která má jediný reálný výsledek, stojí jeden tah navíc a nic nerozhoduje.
+   Když jsi vyřídil poslední položku, pokračuj Fází 8.
+
+   **Neptej se předtím hromadně**, co s celou skupinou. Dřív tady stála meziotázka, jestli položky vyřešit všechny naráz, zapsat všechny do todo, nebo je projít po jedné – a v provozu z ní vždycky vyšlo „po jedné“, protože položky se povahou liší skoro vždycky; zrušena 7. 9. 2026. Volba, která má jediný reálný výsledek, stojí jeden tah navíc a nic nerozhoduje. **Platí to na tuhle skupinu, ne obecně:** kde jsou položky stejnorodé, je hromadná volba na místě a jinde ve skillech se schválně používá.
 
 4. Ať se rozhodne jakkoli, v přehledu ve Fázi 8 pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu.
 
@@ -375,10 +382,11 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 - Commity: N, push: [ano / repozitář nemá remote]
 
 **Odložené položky**
-- [seznam, nebo „žádné“]
+- [co se odložilo z vlastního úklidu – Fáze 2 a 5 –, nebo „žádné“]
 
 **Mimo rozsah úklidu**
 - [seznam z Fáze 7 a u každé položky, jak se s ní naložilo – nebo „žádné“]
+- Položka z Fáze 7 patří sem, i když skončila v `todo.md`; do *Odložených položek* se nekopíruje.
 
 **Další krok:** /attack a /release, nasazuje-li se – jinak je práce uzavřená
 ```

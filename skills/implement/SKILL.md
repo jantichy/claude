@@ -13,7 +13,7 @@ Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, im
 ## Co skill nedělá
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*.
-- **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md`, ne do kódu.
+- **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md` nebo `docs/backlog.md`, ne do kódu.
 - **Neuzavírá feature.** Review, audit konzistence a úklid jsou samostatné kroky po tomhle – viz *Životní cyklus projektu* v `~/.claude/RULES.md`, druhá půlka životního cyklu.
 
 ## Jak je to postavené uvnitř
@@ -93,7 +93,7 @@ Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
 **Doménové standardy.** Kód se má psát podle nich rovnou, ne se k nim vracet až v `/review`. Neznamená to duplikovat kontrolu – znamená to je respektovat.
 
-**Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, jde do `docs/todo.md` s celou úvahou. Do kódu ne. *Nerozhoduj potichu nad rámec zadání.*
+**Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, zapiš s celou úvahou – do kódu ne. *Nerozhoduj potichu nad rámec zadání.* **Kam:** chybějící kus práce, který se udělat musí, do `docs/todo.md`; volný nápad, o kterém nikdo nerozhodl, do `docs/backlog.md` (`~/Dev/context/structure/structure.md`, *`backlog.md`*). Fronta úkolů zaplevelená nápady přestane být frontou.
 
 **Průběžné zápisy.** Padne-li během práce rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. **Hotovou položku z `docs/todo.md` přesuň do `docs/done.md`** hned, jak je hotová – neodškrtává se na místě (`~/.claude/RULES.md`, *Odložené věci pojmenuj a zaparkuj*). Nečekej na `/cleanup`; ten je jen záchranná síť.
 
@@ -136,7 +136,7 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 
 **Zapsáno mimo kód**
 - docs/decisions.md: N
-- docs/done.md: N   docs/todo.md: N   docs/rules.md: N
+- docs/done.md: N   docs/todo.md: N   docs/backlog.md: N   docs/rules.md: N
 
 **Zelená linka:** <výstup posledního běhu – příkaz a návratový kód>
 

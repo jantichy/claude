@@ -16,7 +16,7 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 4. **Režim pozná sám** podle otisku, který si v projektu nechává – nemusíte ho zadávat.
 5. **Nastaví Git** včetně založení vzdáleného repozitáře a propíše do jeho popisku a odkazu totéž, co je v projektu, aby na obou místech nestálo něco jiného.
 6. **Zvládne i uspořádání s jedním pracovním adresářem na větev**, takže nad projektem může běžet víc sezení naráz, aniž si přepisují soubory.
-7. **Založí dokumentační strukturu** – co je odložené, co hotové, co se rozhodlo a proč, jaké principy platí – a nechá vás vybrat, jestli má ležet ve vlastní složce, nebo v kořeni.
+7. **Založí dokumentační strukturu** – co je odložené, co je jen nezávazný nápad, co hotové, co se rozhodlo a proč, jaké principy platí – a nechá vás vybrat, jestli má ležet ve vlastní složce, nebo v kořeni.
 8. **Nabídne produktové podklady** – analýzu konkurence, registr rizik, scénáře, glosář, ceník. Nezakládá je prázdné; jen si zapíše, které z nich projekt vede, aby se pak poznal chybějící dokument od nechtěného.
 9. **Zmigruje starší pojmenování souborů** a projde celý repozitář, aby nezůstal rozbitý odkaz.
 10. **Zapne brány kvality** – zapíše, čím se v projektu pouštějí testy, typová kontrola, linter a build, a řekne, co se tím nebude kontrolovat, když projekt některý z nich nemá.
@@ -50,6 +50,7 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 Dorovnáno rovnou (6)
 - blok metadat doplněn o řádek Repozitář
 - docs/done.md: 3 hotové položky přesunuty z todo.md
+- docs/backlog.md: založen, 2 nezávazné nápady vytaženy z todo.md
 - .gitignore: doplněn .claude/run/
 
 Čeká na rozhodnutí (2)

@@ -38,7 +38,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 ## Krok 0 – Zjisti režim a stav
 
-Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen stub bez bloku metadat, takže otisk hledej v `main/` – viz krok 4), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 5 pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
+Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen stub bez bloku metadat, takže otisk hledej v `main/` – viz krok 4), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `backlog.md`, `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 5 pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim `create`.
 - **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 14.
@@ -52,7 +52,7 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 |---|---|
 | Git a jeho podoba | je `.git` adresář (běžný), nebo `.bare` + `.git` soubor (worktree layout)? má remote? |
 | Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, paměť, typ, importy)? |
-| Standardní struktura | existuje `README.md`, `todo.md`, `done.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 5) |
+| Standardní struktura | existuje `README.md`, `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 5) |
 | *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni stub s `@main/CLAUDE.md`? |
 | Starší pojmenování | existuje `TODO.md` v rootu, `rozhodnuti.md`, `zasady.md` (na místě podle režimu z kroku 5)? (viz krok 5) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
@@ -217,7 +217,7 @@ Povinný je jen `CLAUDE.md`. U zbytku se zeptej (AskUserQuestion, `multiSelect: 
 | Soubor | Popis pro uživatele |
 |---|---|
 | `README.md` | Co projekt je, pro člověka. U privátního projektu bez publika nemusí být. |
-| `todo.md` + `done.md` | Co je odložené na později, a záznam hotového. **Jedna volba pro obojí** – samostatně nedávají smysl. |
+| `todo.md` + `backlog.md` + `done.md` | Fronta rozhodnutých úkolů, zásobník nezávazných nápadů a záznam hotového. **Jedna volba pro všechny tři** – samostatně nedávají smysl. |
 | `decisions.md` | Co jsme rozhodli a proč, včetně zamítnutých variant. |
 | `rules.md` | Principy, ve kterých se projekt pohybuje. |
 
@@ -279,7 +279,8 @@ Vypiš **jen soubory, které v projektu opravdu jsou**, s cestou podle zvolenéh
 Projekt drží standardní strukturu podle `~/Dev/context/structure/structure.md`:
 
 - `README.md` – co projekt je, pro člověka (ne instrukce pro Clauda)
-- `docs/todo.md` – co je odložené na později
+- `docs/todo.md` – co je odložené na později, ale rozhodnuté, že se to udělá
+- `docs/backlog.md` – nezávazné nápady, o kterých se nerozhodlo; vybírá se z nich, když se řeší, co dál
 - `docs/done.md` – co je hotové
 - `docs/decisions.md` – co jsme rozhodli a proč, včetně zamítnutých variant
 - `docs/rules.md` – principy, ve kterých se projekt pohybuje
@@ -511,6 +512,7 @@ Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zá
 | Tři místa téhož údaje | Lidský název a popisek sedí v `CLAUDE.md`, v `README.md` a v Repository details na GitHubu (`gh repo view <owner>/<slug> --json description,homepageUrl`). Rozejít se smějí jen v tom, že README popisek rozvádí. | `structure.md`, *`CLAUDE.md`* (krok 3) |
 | Sekce v `CLAUDE.md` | Každá sekce, kterou projekt má mít, tam je (struktura a dokumentace, příkazy, nasazení, autocommit, paměť, typ projektu, doménové standardy) – a **žádná zaniklá nepřebývá**. Seznam ber z `structure.md` a z kroků 5–13, ne z paměti. | `structure.md` (kroky 5–7 a 9–13) |
 | Deklarace struktury | Seznam souborů v sekci *Struktura a dokumentace* sedí **přesně** na to, co v projektu opravdu je: nic nechybí, nic nepřebývá, cesty odpovídají režimu umístění. | krok 5, *Zápis do CLAUDE.md* |
+| Soubory, které standard mezitím zavedl | **Projdi dnešní výčet standardních souborů ve `structure.md` proti tomu, co projekt má.** Chybí-li soubor, který projekt podle svých voleb mít má – typicky proto, že v době jeho založení ještě neexistoval –, **nabídni jeho doplnění** a zapiš ho do deklarace struktury. Neptej se, jestli o něm projekt „ví“; projekt neví nic, ví to jen standard. Volitelný soubor, který projekt vědomě nevede, se nezakládá – ale řekni, že se nabízel. | `structure.md`, *Které soubory vůbec vzniknou* |
 | Umístění a názvy souborů | Standardní soubory leží všechny v jednom režimu (ne půl v `docs/`, půl v kořeni), nikde nezůstalo starší pojmenování. | krok 5 a *Migrace staršího pojmenování* |
 | Vnitřní tvar dokumentace | Viz *Obsah dokumentačních souborů* níž – nejdražší část revize. | `structure.md`, sekce jednotlivých souborů |
 | Kontrakt příkazů a brány | Každý řádek `## Příkazy` jde opravdu spustit (ověř proti `package.json`, `Makefile`, `composer.json`), nechybí klíč, který projekt umí, vědomě neaplikovaný má pomlčku. Souhlas se zelenou linkou ověř `~/.claude/green-line.sh --list`. | krok 12, `coding.md` |
@@ -520,14 +522,15 @@ Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zá
 
 ### Obsah dokumentačních souborů
 
-Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím posunul (rozdělení `todo.md` a `done.md`, nové sekce, pravidlo o řazení) a projekt v něm zůstal na starém. Projdi `todo.md`, `done.md`, `decisions.md` a `rules.md` **obsahem, ne jen existencí**, a ověř proti jejich sekcím v `structure.md`:
+Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím posunul (rozdělení `todo.md` a `done.md`, oddělení `backlog.md`, nové sekce, pravidlo o řazení) a projekt v něm zůstal na starém. Projdi `todo.md`, `backlog.md`, `done.md`, `decisions.md` a `rules.md` **obsahem, ne jen existencí**, a ověř proti jejich sekcím v `structure.md`:
 
 - **Hotové položky v `todo.md`.** Odškrtnuté a zjevně dokončené věci patří do `done.md` s datem dokončení. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny* / *Projít po jedné* / *Nechat být*) – jestli je něco hotové, ví uživatel, ne ty. Odškrtnutý krok uvnitř nedokončené položky se nepřesouvá.
 - **Řazení.** Nejstarší nahoře, nové na konec – v `decisions.md` i `done.md`, i uvnitř kapitol. Obrácené pořadí **neotáčej sám**: je to přeskládání celého souboru. Ukaž, čeho se to týká, a zeptej se přes AskUserQuestion (*Srovnat podle standardu* / *Nechat, jak to je*).
-- **Zrcadlení sekcí.** Je-li `todo.md` členěné, `done.md` drží tytéž sekce.
+- **Nezávazné nápady v `todo.md`.** Projekt založený dřív, než standard zavedl `backlog.md`, je má promíchané s frontou. Vyber položky, u kterých není rozhodnuto, že se udělají – poznáš je podle formulace („někdy by šlo“, „stálo by za úvahu“, „nápad do budoucna“) a podle toho, že u nich není nic nalajnovaného. **Odložení po MVP mezi ně nepatří**, to je plán. Seznam vypiš a **zeptej se přes AskUserQuestion** (*Přesunout všechny do backlogu* / *Projít po jedné* / *Nechat být*) – co je závazek a co nápad, ví uživatel.
+- **Zrcadlení sekcí.** Je-li `todo.md` členěné, `done.md` drží tytéž sekce. `backlog.md` je nezrcadlí – nápady se člení podle sebe, ne podle fronty.
 - **Tvar záznamů.** Datum u hotové položky jako `(2026-08-28)`, řádky v *Průchody životním cyklem* a *Co proklouzlo* podle šablony v `structure.md`.
 - **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu životním cyklem nesedí volně v `done.md` mimo *Průchody životním cyklem*.
-- **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš.
+- **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md`, hotová věc v `backlog.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš.
 - **Prázdná sekce `## Parkované v session`** se ruší.
 - **`README.md` je pro člověka, ne pro Clauda.** Zůstal-li v něm normativní pokyn – pravidlo práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit –, přesuň ho do `CLAUDE.md`, `rules.md` nebo `decisions.md` podle povahy. Postup i kritérium má krok 7 a `~/Dev/context/structure/structure.md`, sekce *`README.md`*. U staršího projektu je to častý nález: pravidla se tehdy psala do README, protože jiné místo nebylo.
 

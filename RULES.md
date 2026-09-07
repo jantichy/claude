@@ -77,7 +77,7 @@ Chybějící věc se z projektu nepozná od zapomenuté. Rozhodl-li ses něco **
 
 Zvlášť to platí pro věci, které **vypadají jako opomenutí**: chybějící staging, chybějící vrstva cache, chybějící validace tam, kde ji čtenář čeká. U nich napiš i **čím se to nahrazuje**, ne jen že to není.
 
-Rozdíl proti `todo.md`: tam patří to, co **chceš a zatím nemáš**. Sem to, co **mít nechceš**.
+Rozdíl proti `todo.md`: tam patří to, co **chceš a zatím nemáš**. Sem to, co **mít nechceš**. A do `docs/backlog.md` to, o čem se **nikdo nerozhodl ani tak, ani tak**.
 
 ### Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem
 
@@ -193,7 +193,7 @@ Nezapisuj jen výsledek, ale **celou cestu k němu**. Obsah a umístění definu
 
 **Proč:** za měsíc nikdo nepozná, jestli je něco promyšlené, nebo náhoda – a netroufne si to změnit. Zapsaná motivace je to, co dovoluje rozhodnutí revidovat, protože je vidět, které předpoklady musely platit. Zapsané zavržené varianty brání procházení téže slepé uličky znovu.
 
-**Zavržená varianta jde tam, kde žije její vítězný protějšek:** u rozhodnutí do `decisions.md`, u pravidla k tomu pravidlu (viz *K pravidlům ukládej i „proč“*). Nikdy do `todo.md` – **todo drží, co zbývá, ne proč se něco rozhodlo.** Zamítnuto natrvalo → `decisions.md`; odloženo s otevřeným koncem → `todo.md`.
+**Zavržená varianta jde tam, kde žije její vítězný protějšek:** u rozhodnutí do `decisions.md`, u pravidla k tomu pravidlu (viz *K pravidlům ukládej i „proč“*). Nikdy do `todo.md` – **todo drží, co zbývá, ne proč se něco rozhodlo.** Zamítnuto natrvalo → `decisions.md`; odloženo s otevřeným koncem → `todo.md`; nezávazný nápad, o kterém se nerozhodovalo → `backlog.md`.
 
 **Výjimka – zamítnutý nález prověřovacího kroku.** Nález, který `/review`, `/attack` nebo `/consistency` označí jako „won't fix“, jde do **projektového `CLAUDE.md`** (kapitoly `## Review`, respektive `## Consistency`), ne do `decisions.md`. Není to nekonzistence, ale funkční důvod: `CLAUDE.md` se rozbaluje do každé session, takže filtr platí automaticky a příští běh nález znovu nenahlásí – **dokud se nezmění kód, kterého se nález týká**; pak umlčení padá a nález se předloží znovu i s původním odůvodněním. Bez té expirace by seznam byl ráčna: důvod zamítnutí je vázaný na stav kódu v ten den, ale filtr se aplikuje před hledáním, takže by se jeho zneplatnění nemělo jak dozvědět nikdo. Mechaniku drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*. `decisions.md` by se musel přečíst, což udělá člověk, ale ne skill uprostřed panelu. Rozhodnutí *o projektu* dál patří do `decisions.md`; tohle je seznam umlčených nálezů, ne rozhodnutí.
 
@@ -359,6 +359,8 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 ### Odložené věci pojmenuj a zaparkuj
 
 Vše mimo aktuální rozsah – nápad do další fáze, otevřená otázka, věc k pozdějšímu rozhodnutí, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `structure.md` (`docs/todo.md`).
+
+**Rozlišuj přitom odložené od nezávazného.** Do `todo.md` jde jen to, u čeho je rozhodnuto, že se to udělá – včetně věcí odsunutých až po spuštění. Nápad, který nikdo neschválil ani nezamítl („někdy by šlo…“, „za úvahu stojí…“), patří do `docs/backlog.md`; definici hranice drží `~/Dev/context/structure/structure.md`, *`backlog.md`*. **Nepromíchávej to:** fronta, ve které leží i nezávazné nápady, přestane být frontou a nikdo ji nedočte.
 
 Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vyhrazené sekci (definuje ji `structure.md`) a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
 
