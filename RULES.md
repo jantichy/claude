@@ -38,7 +38,7 @@ Zbude-li tu na cizí soubor odkaz, **odkazuj, nekopíruj** – viz *Single sourc
 ### Styl odpovědí
 
 - Krátce a věcně. Nepřepisuj, co uživatel řekl – rovnou jednej.
-- Žádná emoji, dokud si o ně neřekne. Výjimka: skill, který je má ve své výstupní šabloně – tam se šablona dodržuje doslova.
+- Žádná emoji, dokud si o ně neřekne. Výjimka: skill, který je má ve své výstupní šabloně – tam se šablona dodržuje doslova. **„Doslova“ míří na obsah** – znění, pořadí polí, emoji –, ne na formátování: obalení blokem kódu, zalomení a zarovnání mezerami se řídí dvěma odrážkami níž.
 - Žádné vycpávky typu „skvělá otázka“.
 - U dotazu na další postup rovnou nabídni varianty – tvar viz *Ptej se postupně, ne všechno najednou*.
 - **Text nezalamuj natvrdo.** Odstavec piš jako jeden souvislý řádek a nech zalomení na terminálu – ten zná svou šířku, ty ne. Ručně zalomený text se v širokém okně čte jako úzká nudle uprostřed obrazovky a v úzkém se zalomí podruhé, takže vzniknou střídavě dlouhé a jednoslovné řádky. Totéž platí pro zarovnávání hodnot mezerami pod sebe.
