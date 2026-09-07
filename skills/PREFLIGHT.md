@@ -18,7 +18,7 @@ Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo 
 
 Kořen projektu je adresář s `.git`. Hledej ho **přes Glob, ne přes `git` v Bashi** – nenulový návratový kód by vyrobil červenou chybu, která uživatele zbytečně vyděsí. Zkus `.git`, pak `../.git`, `../../.git`, `../../../.git`.
 
-**Najdeš-li vedle `.git` také `.bare/`, stojíš v kořeni kontejneru worktree layoutu** (`~/.claude/WORKTREE.md`). Ten není pracovní strom: `git diff` ani `git status` v něm neprojdou a commitovat se tam nedá. Přesuň se do adresáře té větve, na které se má pracovat. Projektový `CLAUDE.md` je pak ten ve worktree, ne stub v kořeni kontejneru.
+**Najdeš-li vedle `.git` také `.bare/`, stojíš v kořeni kontejneru worktree layoutu** (`~/.claude/WORKTREE.md`). Ten není pracovní strom: `git diff` ani `git status` v něm neprojdou a commitovat se tam nedá. Přesuň se do adresáře té větve, na které se má pracovat. Projektový `CLAUDE.md` je pak ten ve worktree, ne rozcestník v kořeni kontejneru.
 
 Není-li to git repozitář vůbec, řekni to a **skonči bez dalšího příkazu**.
 

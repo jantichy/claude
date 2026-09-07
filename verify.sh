@@ -39,7 +39,7 @@ have() { command -v "$1" >/dev/null 2>&1; }
 sha()  { shasum | cut -d' ' -f1; }   # dostupnost se ověřuje v need_tools
 
 # Přítomnost != funkčnost. Nástroj může být na PATH a přitom nic neumět – typicky
-# zástupný stub, který skončí nenulově a nevypíše nic. `command -v` takový stub
+# zástupný rozcestník, který skončí nenulově a nevypíše nic. `command -v` takový rozcestník
 # najde, hook by ho použil, `jq` by vracelo prázdno a kontrola by se tiše vypnula.
 # Proto se u parseru neověřuje existence, ale výsledek na známém vstupu.
 probe_jq() { [ "$(printf '{"a":1}' | jq -r '.a' 2>/dev/null)" = "1" ]; }

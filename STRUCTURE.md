@@ -310,7 +310,7 @@ Rozdíl proti `docs/decisions.md`: tam je konkrétní rozhodnutí (občas i výj
 
 - Pravidla platná napříč všemi projekty → `~/.claude/RULES.md`
 - Doménové standardy a checklisty (kód, web, administrace, analytika, psaní textů, typografie) → do příslušného doménového standardu, který si projekt importuje ve svém `CLAUDE.md`, sekce *Doménové standardy*
-- Pravidla provozu worktree layoutu → `~/.claude/WORKTREE.md`, které si projekt s tímhle layoutem importuje do stubu v kořeni kontejneru
+- Pravidla provozu worktree layoutu → `~/.claude/WORKTREE.md`, které si projekt s tímhle layoutem importuje do rozcestníku v kořeni kontejneru
 - Sem patří **jen to, co je specifické pro tenhle projekt.** Duplikovat sem obecné pravidlo je chyba.
 
 ---

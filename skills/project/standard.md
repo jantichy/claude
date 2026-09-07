@@ -15,7 +15,7 @@ Katalog ke kroku 14 v `SKILL.md`: oblasti revize s tím, co v každé ověřit a
 | Kontrakt příkazů a kontroly | Každý řádek `## Kontrakt příkazů` jde opravdu spustit (ověř proti `package.json`, `Makefile`, `composer.json`), nechybí klíč, který projekt umí, vědomě neaplikovaný má pomlčku. Souhlas se průběžnou kontrolou ověř `~/.claude/verify.sh --list`. | krok 12, `~/Dev/context/coding/quality.md` |
 | Odkazy ven z projektu | Každá cesta do `~/.claude/` nebo `~/Dev/context/` a každý zmíněný skill **existuje**. Vygrepuj je z `CLAUDE.md`, `README.md` i dokumentace a ověř proti inventáři výš. Tohle chytá přejmenované a zrušené věci v konfigurační vrstvě, aniž bys musel vědět, co se změnilo. | inventář z výpisů výš |
 | Doménové importy | Cíle `@import`ů existují. Nepřibyla doménová znalost, která na projekt sedí a chybí mu? Nezůstal import, který už neplatí, protože se povaha projektu posunula? Přidání ani odebrání **nedělej sám** – nabídni v kroku 13. | krok 13, `~/.claude/CLAUDE.md` |
-| Layout a `.gitignore` | Ve worktree layoutu leží projektové soubory v projektovém adresáři a v kořeni kontejneru je jen stub (a pracovní adresáře větví). `.gitignore` má řádky z jádra včetně `.claude/run/`. | kroky 4 a 7 |
+| Layout a `.gitignore` | Ve worktree layoutu leží projektové soubory v projektovém adresáři a v kořeni kontejneru je jen rozcestník (a pracovní adresáře větví). `.gitignore` má řádky z jádra včetně `.claude/run/`. | kroky 4 a 7 |
 
 ### Obsah dokumentačních souborů
 

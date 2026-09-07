@@ -36,6 +36,14 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Dva skilly mají vlastní jméno a nechávají si ho**, protože nese sloveso: `/oponent` má **oponenty** (kritizují) a `/attack` **útočníky** (rozbíjejí). Obecně se o obou dál mluvit jako o specialistech smí; `/review` vlastní jméno nemá a používá jen to obecné.
 
+### rozcestník
+
+**Tenký `CLAUDE.md` v kořeni worktree kontejneru**, který sám žádný obsah nenese – popíše layout a importem ukáže na `main/CLAUDE.md`. Vzniká proto, že kořen kontejneru není pracovní strom, ale session v něm často stojí.
+
+**Nahrazuje dřívější „stub"** (2026-09-07). Nešlo jen o anglicismus skloňovaný po česku, ale o **anglicismus použitý mimo svůj význam**: *stub* je v oboru náhrada, která funkci **předstírá** (test stub). Tenhle soubor nic nepředstírá, jen **ukazuje jinam** – a kdo ten pojem zná, sáhl po špatné představě.
+
+**Ne „ukazatel“** – v IT je obsazený ukazatelem do paměti, takže by vyměnil jeden zavádějící pojem za druhý.
+
 ### seznam, který musí přesně sedět
 
 **Výjimka zapsaná do seznamu, který test porovnává se skutečností v obou směrech.** V seznamu nesmí chybět nic, co pravidlo porušuje, ani zůstat nic, co se už opravilo – proto opravená a nevyškrtnutá položka shodí testy stejně jako nová regrese. Bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit. Používá to `MIGRACE` v `~/.claude/tests/test_skills.py`.

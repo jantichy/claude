@@ -6,7 +6,7 @@ Uspořádání, ve kterém adresář projektu není pracovní adresář, ale **k
 <projekt>/                    KONTEJNER – není ve gitu, nic se odsud neverzuje
 ├── .bare/                    holý git repozitář – jediné místo s daty; nikdy do něj nesahej
 ├── .git                      soubor "gitdir: ./.bare"
-├── CLAUDE.md                 tenký stub: popis layoutu + @main/CLAUDE.md
+├── CLAUDE.md                 tenký rozcestník: popis layoutu + @main/CLAUDE.md
 ├── .claude/
 │   └── settings.local.json   hooky a povolení – čte se odsud, protože session startuje tady
 ├── main/                     trvalý pracovní adresář hlavní větve
@@ -20,7 +20,7 @@ Uspořádání, ve kterém adresář projektu není pracovní adresář, ale **k
 
 Hlavní větev se jmenuje `main`. Narazíš-li na starší projekt, kde se jmenuje jinak, platí níže psané pro jeho hlavní větev bez ohledu na jméno.
 
-**Tenhle soubor drží provoz layoutu** – co kde leží a jak se v tom pracuje. Platí pro každou session nad projektem s tímhle uspořádáním a čte ho `~/.claude/skills/PREFLIGHT.md` i skilly, které nad projektem běží. **Zřízení kontejneru a jeho zrušení sem nepatří** – to vede `/worktree` (`~/.claude/skills/worktree/SKILL.md`), který si tenhle soubor zároveň importuje do stubu v kořeni kontejneru.
+**Tenhle soubor drží provoz layoutu** – co kde leží a jak se v tom pracuje. Platí pro každou session nad projektem s tímhle uspořádáním a čte ho `~/.claude/skills/PREFLIGHT.md` i skilly, které nad projektem běží. **Zřízení kontejneru a jeho zrušení sem nepatří** – to vede `/worktree` (`~/.claude/skills/worktree/SKILL.md`), který si tenhle soubor zároveň importuje do rozcestníku v kořeni kontejneru.
 
 Leží v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md`, ne uvnitř skillu, **protože ho čte dvanáct skillů a příprava** – tedy i ten, kdo `/worktree` nainstalovaný nemá.
 
@@ -62,20 +62,20 @@ Z těch dvou faktů plyne rozdělení, které se **nesmí prohodit**:
 | Soubor | Kde | Proč |
 |---|---|---|
 | `CLAUDE.md` s pravidly projektu | `main/` (a tím ve všech worktree) | je to projektový soubor – patří do gitu a má se s větví vyvíjet |
-| `CLAUDE.md` kontejneru | kořen kontejneru | jen tenký stub, viz níže – existuje čistě proto, aby se ten projektový načetl při startu |
+| `CLAUDE.md` kontejneru | kořen kontejneru | jen tenký rozcestník, viz níže – existuje čistě proto, aby se ten projektový načetl při startu |
 | `README.md`, `docs/*` | `main/` | projektové soubory, patří do gitu |
 | `.claude/settings.local.json` | kořen kontejneru | hooky a povolení čte Claude Code z adresáře, ze kterého session startuje |
 | `.env`, `node_modules/` | `main/`, odtud se přebírá | netrackovaný lokální stav, viz níže |
 
-### Stub v kořeni kontejneru
+### Rozcestník v kořeni kontejneru
 
 `<projekt>/CLAUDE.md` neobsahuje žádná pravidla projektu. Obsahuje popis layoutu, odchylky, **import tohohle souboru** a **import projektového `CLAUDE.md`** (`@main/CLAUDE.md`). Zakládá ho `/worktree` a jeho doslovné znění drží `~/.claude/skills/worktree/SKILL.md`, režim `enable`.
 
 Relativní cesta v importu se resolvuje vůči souboru, který import obsahuje – `@main/CLAUDE.md` tedy míří na `<projekt>/main/CLAUDE.md`. Řetěz importů smí být hluboký nejvýš **čtyři hopy**, takže kontejner → `main` → doménový standard se pohodlně vejde.
 
-Když pracuješ ve worktree `<vetev>/`, načte se `<vetev>/CLAUDE.md` on-demand, jakmile v té větvi něco čteš. Pravidla té větve tedy platí, i když stub v kořeni importuje verzi z `main`.
+Když pracuješ ve worktree `<vetev>/`, načte se `<vetev>/CLAUDE.md` on-demand, jakmile v té větvi něco čteš. Pravidla té větve tedy platí, i když rozcestník v kořeni importuje verzi z `main`.
 
-**Nikdy nekopíruj pravidla projektu do stubu.** Dvě kopie se rozejdou a Claude pak dostane do kontextu obě, protože se načítají obě.
+**Nikdy nekopíruj pravidla projektu do rozcestníku.** Dvě kopie se rozejdou a Claude pak dostane do kontextu obě, protože se načítají obě.
 
 ## Založení větve
 
@@ -192,6 +192,6 @@ Skilly hledají projekt tak, že jdou nahoru od `cwd`, dokud nenajdou `.git`. V 
 | `.git` soubor **a** vedle něj `.bare/` | kořen kontejneru | `<kontejner>/main` |
 | `.git` soubor **bez** `.bare/` vedle | worktree větve | ten adresář |
 
-Projektové soubory – `CLAUDE.md`, `README.md`, `docs/` – čti a zapisuj vždy v **projektovém adresáři**, nikdy v kořeni kontejneru. Výjimkou je `.claude/settings.local.json` a stub `CLAUDE.md`, které patří do kořene.
+Projektové soubory – `CLAUDE.md`, `README.md`, `docs/` – čti a zapisuj vždy v **projektovém adresáři**, nikdy v kořeni kontejneru. Výjimkou je `.claude/settings.local.json` a rozcestník `CLAUDE.md`, které patří do kořene.
 
 Jmenuje-li se hlavní větev jinak než `main`, zjisti její worktree z `git --git-dir=<kontejner>/.bare worktree list`.

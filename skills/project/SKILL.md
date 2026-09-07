@@ -71,9 +71,9 @@ Pojem, na který se odkazuje zbytek skillu: **adresář, ve kterém leží `CLAU
 | worktree layout, čteš | `main/` |
 | worktree layout, zapisuješ | pracovní adresář větve z bodu 2 výš |
 
-Kořen kontejneru to **není nikdy** – nic v něm není ve gitu. Patří do něj jen stub `CLAUDE.md` a `.claude/settings.local.json` (viz krok 4).
+Kořen kontejneru to **není nikdy** – nic v něm není ve gitu. Patří do něj jen rozcestník `CLAUDE.md` a `.claude/settings.local.json` (viz krok 4).
 
-Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen stub bez bloku metadat, takže otisk hledej v `main/` – viz *Projektový adresář* výš), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `backlog.md`, `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 5 pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
+Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen rozcestník bez bloku metadat, takže otisk hledej v `main/` – viz *Projektový adresář* výš), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `backlog.md`, `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 5 pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim `create`.
 - **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 14.
@@ -88,7 +88,7 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 | Git a jeho podoba | je `.git` adresář (běžný), nebo `.bare` + `.git` soubor (worktree layout)? má remote – ověř `git remote get-url origin`, ne `git remote`, který hlásí `origin` i tam, kde žádný není, kvůli globálnímu `~/.gitconfig`? |
 | Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, paměť, typ, importy)? |
 | Standardní struktura | existuje `README.md`, `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 5) |
-| *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni stub s `@main/CLAUDE.md`? |
+| *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni rozcestník s `@main/CLAUDE.md`? |
 | Starší pojmenování | existuje `TODO.md` v rootu, `rozhodnuti.md`, `zasady.md` (na místě podle režimu z kroku 5)? (viz krok 5) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
 
@@ -170,7 +170,7 @@ Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 ### Když padne worktree layout
 
-**Postup zřízení kontejneru neopisuj z hlavy** – proveď totéž co `/worktree enable` (viz `~/.claude/skills/worktree/SKILL.md`). Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`, a sám zapíše stub do kořene kontejneru.
+**Postup zřízení kontejneru neopisuj z hlavy** – proveď totéž co `/worktree enable` (viz `~/.claude/skills/worktree/SKILL.md`). Má variantu pro nový projekt i pro konverzi existujícího repozitáře, včetně povinné zálohy, ověření diffem a úklidu zamrzlého `.bare/index`, a sám zapíše rozcestník do kořene kontejneru.
 
 U existujícího projektu jde o **přeskládání adresáře** – řekni to nahlas a nech si ho potvrdit, než začneš.
 
@@ -185,25 +185,25 @@ Ve worktree layoutu jsou `CLAUDE.md` **dva** a mají různý účel. Zaměnit je
 
 **Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se ten v projektovém adresáři** (krok 0, *Projektový adresář*) – tedy v `main/`, nebo ve tvé větvi, zapisuješ-li. Totéž platí pro `README.md`, `docs/*` a `.gitignore`; do kořene kontejneru nepatří ani jeden z nich. Jedinou výjimkou je `.claude/settings.local.json`: ten patří do **kořene kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte. Tenhle skill ho **nezakládá** – vznikal v kroku, který zmizel se zrušeným autopromptem –, ale existuje-li, patří tam.
 
-Do `<projekt>/CLAUDE.md` (do **kontejneru**) patří **jen stub** a nic víc. Zapsal ho už `/worktree enable` a jeho znění drží `~/.claude/skills/worktree/SKILL.md` – neopisuj ho odsud znovu. Doplň do jeho sekce *Odchylky* to, co víš o tomhle projektu: jestli se hlavní větev jmenuje jinak než `main` (u staršího projektu) a co konkrétně se přebírá z `main/`, nebo že zatím není co.
+Do `<projekt>/CLAUDE.md` (do **kontejneru**) patří **jen rozcestník** a nic víc. Zapsal ho už `/worktree enable` a jeho znění drží `~/.claude/skills/worktree/SKILL.md` – neopisuj ho odsud znovu. Doplň do jeho sekce *Odchylky* to, co víš o tomhle projektu: jestli se hlavní větev jmenuje jinak než `main` (u staršího projektu) a co konkrétně se přebírá z `main/`, nebo že zatím není co.
 
-Import `@main/CLAUDE.md` ve stubu je nutný: `CLAUDE.md` z podadresáře se načte až on-demand, když z něj něco čteš, kdežto session startuje v kontejneru. Bez importu by pravidla projektu na začátku session vůbec nebyla v kontextu. Relativní cesta se resolvuje vůči souboru, který import obsahuje.
+Import `@main/CLAUDE.md` ve rozcestníku je nutný: `CLAUDE.md` z podadresáře se načte až on-demand, když z něj něco čteš, kdežto session startuje v kontejneru. Bez importu by pravidla projektu na začátku session vůbec nebyla v kontextu. Relativní cesta se resolvuje vůči souboru, který import obsahuje.
 
-**Pravidla projektu do stubu nekopíruj.** Dvě kopie se rozejdou a načtou se pak obě.
+**Pravidla projektu do rozcestníku nekopíruj.** Dvě kopie se rozejdou a načtou se pak obě.
 
-*`create`:* krok 2 už `CLAUDE.md` založil v kořeni, protože tehdy ještě nebylo rozhodnuto o layoutu. **Přesuň ho teď do `main/`** (`mv <projekt>/CLAUDE.md <projekt>/main/CLAUDE.md`) a v kořeni na jeho místo napiš stub. Totéž udělej s čímkoli dalším, co v kořeni mezitím vzniklo a patří do projektu.
+*`create`:* krok 2 už `CLAUDE.md` založil v kořeni, protože tehdy ještě nebylo rozhodnuto o layoutu. **Přesuň ho teď do `main/`** (`mv <projekt>/CLAUDE.md <projekt>/main/CLAUDE.md`) a v kořeni na jeho místo napiš rozcestník. Totéž udělej s čímkoli dalším, co v kořeni mezitím vzniklo a patří do projektu.
 
-*Konverze existujícího projektu:* původní `CLAUDE.md` se přesunul do `main/` spolu se zbytkem repozitáře a **je správně tam** – nech ho být, jen do něj dál doplňuj. V kořeni založ nový, prázdný stub.
+*Konverze existujícího projektu:* původní `CLAUDE.md` se přesunul do `main/` spolu se zbytkem repozitáře a **je správně tam** – nech ho být, jen do něj dál doplňuj. V kořeni založ nový, prázdný rozcestník.
 
-Po tomhle kroku si **ověř výsledek** a vypiš ho uživateli: v kořeni smí být jen `.bare/`, `.git`, `CLAUDE.md` (stub), `.claude/` a pracovní adresáře větví; `README.md`, `docs/` a projektový `CLAUDE.md` musí být v projektovém adresáři (u nově zakládaného layoutu `main/`).
+Po tomhle kroku si **ověř výsledek** a vypiš ho uživateli: v kořeni smí být jen `.bare/`, `.git`, `CLAUDE.md` (rozcestník), `.claude/` a pracovní adresáře větví; `README.md`, `docs/` a projektový `CLAUDE.md` musí být v projektovém adresáři (u nově zakládaného layoutu `main/`).
 
 Upozorni uživatele, že **při příštím spuštění dostane dialog na schválení externího importu a musí ho odsouhlasit** – při odmítnutí se importy pro ten projekt trvale vypnou a dialog se už neukáže.
 
 ### Náprava špatně rozděleného kontejneru
 
-*`adopt`, kde worktree layout už je.* Najdeš-li v kořeni kontejneru projektové soubory, které tam nepatří – plnohodnotný `CLAUDE.md` s pravidly místo stubu, `README.md`, `docs/` – nabídni nápravu: přesun do projektového adresáře a nahrazení kořenového `CLAUDE.md` stubem. Je to zápis, takže tady vzniká větev podle kroku 0, *Nejdřív zjisti, kde stojíš*, běžíš-li ještě nad `main/`. Ukaž konkrétní seznam souborů a nech si to potvrdit, protože jde o přesouvání obsahu.
+*`adopt`, kde worktree layout už je.* Najdeš-li v kořeni kontejneru projektové soubory, které tam nepatří – plnohodnotný `CLAUDE.md` s pravidly místo rozcestníku, `README.md`, `docs/` – nabídni nápravu: přesun do projektového adresáře a nahrazení kořenového `CLAUDE.md` rozcestníkem. Je to zápis, takže tady vzniká větev podle kroku 0, *Nejdřív zjisti, kde stojíš*, běžíš-li ještě nad `main/`. Ukaž konkrétní seznam souborů a nech si to potvrdit, protože jde o přesouvání obsahu.
 
-Existují-li oba `CLAUDE.md` a mají překrývající se sekce, **obsah slouč do projektového `CLAUDE.md`** a v kořeni nech jen stub; nikdy jeden z nich mlčky nepřepiš.
+Existují-li oba `CLAUDE.md` a mají překrývající se sekce, **obsah slouč do projektového `CLAUDE.md`** a v kořeni nech jen rozcestník; nikdy jeden z nich mlčky nepřepiš.
 
 Přesun je `git mv` jen tehdy, je-li zdroj verzovaný – v kořeni kontejneru **nikdy není**, takže tam jde o obyčejný `mv`. Po přesunu je v projektovém adresáři commitni.
 
