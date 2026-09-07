@@ -11,8 +11,8 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 ## Co umí
 
 1. **Vytěží konverzaci celou** – i tu část, kterou už kompaktace vyhodila z paměti. Závěrečná kontrola se pak soustředí na to, čeho se dnešní práce dotkla.
-2. **Vytáhne ze záznamu sedm věcí** – dohody a rozhodnutí (vždy i s důvodem a zavrženými variantami), nová pravidla a konvence, odvedenou práci, vědomě odložené úkoly, postřehy mimo hlavní téma, korekce (platí poslední verze, ne první) a zamluvená témata.
-3. **Dohledá, co propadlo.** Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale zamluvené téma: přišla dlouhá odpověď s několika body, vy jste se chytili poloviny a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil – jen se to nikdy nedořešilo.
+2. **Vytáhne ze záznamu sedm věcí** – dohody a rozhodnutí (vždy i s důvodem a zavrženými variantami), nová pravidla a konvence, odvedenou práci, vědomě odložené úkoly, postřehy mimo hlavní téma, korekce (platí poslední verze, ne první) a nevypořádaná témata.
+3. **Dohledá, co propadlo.** Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale nevypořádané téma: přišla dlouhá odpověď s několika body, vy jste se chytili poloviny a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil – jen se to nikdy nedořešilo.
 4. **Ověří, že se soubory udržovaly průběžně.** Projde záznam znovu a u každého souboru se ptá, co do něj během práce mělo přibýt – a co chybí, doplní zpětně ve stejné kvalitě, jako by to bylo zapsané v okamžiku, kdy to padlo.
 5. **Ptá se i na produktové podklady**, vede-li je projekt – jestli se změnilo, co víme o konkurenci, jestli přibylo riziko, jestli se posunul některý scénář nebo pojem. Jsou to soubory, na které se při běžné práci nesahá, takže tiše zastarávají jako první.
 6. **Pošle na projekt čerstvé oči** – někoho, kdo nemá žádný kontext a čte jenom repozitář, jako by se do projektu zaučoval. Ten řekne, jestli je jasné, co dělat dál, kde by musel hádat a co si protiřečí.
@@ -23,7 +23,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 
 - **Čte surový záznam, ne paměť.** Právě v té části, kterou kompaktace vyhodila, bývají uzavřené dohody, o které jde.
 - **Nenechá si utéct zprávy poslané uprostřed běhu.** Ty se ukládají jinak než ostatní a kdo je nezná, tiše o ně přijde – a přitom to bývají důležité dovětky.
-- **Zamluvená témata se probírají hned, ne v závěru.** Kdyby se ptal až nakonec, jste už duchem pryč a odpovíte „to je jedno". A u každého kandidáta si napřed ověří, jestli se to mezitím nevyřešilo jinudy, protože falešný nález nutí rozhodovat znovu něco, co už rozhodnuté je.
+- **Nevypořádaná témata se probírají hned, ne v závěru.** Kdyby se ptal až nakonec, jste už duchem pryč a odpovíte „to je jedno". A u každého kandidáta si napřed ověří, jestli se to mezitím nevyřešilo jinudy, protože falešný nález nutí rozhodovat znovu něco, co už rozhodnuté je.
 - **Ptá se věcně.** U visící otázky nabídne skutečné odpovědi, které tehdy byly ve hře, ne obecné „zapsat / odložit".
 - **Nic nezůstane jen ve výpisu.** Co by jinak skončilo jako „mimo rozsah úklidu", se s vámi projde položku po položce a u každé se rozhodne – vypsat to a nechat být je nepřijatelné, protože sezení vzápětí zavřete a položky zmizí s ním.
 - **Zapisuje i důvody.** Samotný závěr bez zdůvodnění je pro příští práci málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
@@ -44,7 +44,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 **Zapsáno ze session**
 - 9 položek doplněno / 2 přepsány / 1 přesunuta
 
-**Zamluvená témata**
+**Nevypořádaná témata**
 - 3 probrána: 1 rozhodnuto, 1 do todo, 1 bezpředmětné
 
 **Fresh-reader**

@@ -271,7 +271,7 @@ class NosneCasti(unittest.TestCase):
         for kus in ("Ověření nálezů", "refuted", "Tenhle nález se snaž VYVRÁTIT"):
             self.assertIn(kus, text, f"/review přišel o ověřování nálezů: chybí {kus!r}")
 
-    def test_cleanup_hleda_zamluvena_temata(self):
+    def test_cleanup_hleda_nevyporadana_temata(self):
         """Skill sám tvrdí, že tohle je nejčastější ztráta v dlouhé konverzaci.
 
         Je to druhá ze čtyř záruk v *Co skill dělá*, a jako jediná z nich nestojí
@@ -285,8 +285,8 @@ class NosneCasti(unittest.TestCase):
         vypsaly do závěru, uživatel session zavře a zmizí s ní.
         """
         text = body(ROOT / "skills/cleanup/SKILL.md")
-        nadpis = "## Fáze 2 – Zamluvená a nevypořádaná témata"
-        self.assertIn(nadpis, text, "/cleanup přišel o fázi na zamluvená témata")
+        nadpis = "## Fáze 2 – Nevypořádaná témata"
+        self.assertIn(nadpis, text, "/cleanup přišel o fázi na nevypořádaná témata")
         faze = text[text.index(nadpis):]
         faze = faze[:faze.index("\n## ")]
         for kus in ("Jak ověřit, že to opravdu visí", "Práh důležitosti",

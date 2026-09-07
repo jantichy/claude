@@ -82,15 +82,15 @@ Tohle je jádro celého skillu: vychází z něj všechno ostatní včetně Fáz
    4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“. Tohle je **vědomé** odložení: někdo ho vyslovil. Co propadlo, aniž si toho kdokoli všiml, je kategorie 7.
    5. **Postřehy mimo hlavní téma** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
    6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
-   7. **Zamluvená témata** – co v konverzaci padlo a nikdy se nevypořádalo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními – ať kvůli ní nemusí číst zvlášť. **Opiš mu do zadání i síto z Fáze 2** (ověření proti zbytku transcriptu i práh důležitosti) a nech si u každého kandidáta vrátit, co prověřil. Bez toho vrátí hrubé kandidáty a ty bys je musel proklepávat vlastním čtením transcriptu – tedy udělat práci, kvůli které jsi ho poslal.
+   7. **Nevypořádaná témata** – co v konverzaci padlo a nikdy se nedořešilo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními – ať kvůli ní nemusí číst zvlášť. **Opiš mu do zadání i síto z Fáze 2** (ověření proti zbytku transcriptu i práh důležitosti) a nech si u každého kandidáta vrátit, co prověřil. Bez toho vrátí hrubé kandidáty a ty bys je musel proklepávat vlastním čtením transcriptu – tedy udělat práci, kvůli které jsi ho poslal.
 
 4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej – kromě kategorie 7, kterou hned probereš ve Fázi 2.
 
 ------
 
-## Fáze 2 – Zamluvená a nevypořádaná témata
+## Fáze 2 – Nevypořádaná témata
 
-Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale **zamluvené téma**: napsal jsi dlouhou odpověď s několika body, návrhem nebo otázkou, uživatel měl v hlavě něco jiného, chytil se poloviny – a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil, jen se to nikdy nedořešilo. Tahle fáze je tu proto, aby se to našlo, dokud je ještě koho se zeptat.
+Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale **nevypořádané téma**: napsal jsi dlouhou odpověď s několika body, návrhem nebo otázkou, uživatel měl v hlavě něco jiného, chytil se poloviny – a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil, jen se to nikdy nedořešilo. Tahle fáze je tu proto, aby se to našlo, dokud je ještě koho se zeptat.
 
 Proto stojí **hned po rekonstrukci session a před zápisem**: rozhodnutí, která tady padnou, mění, co se ve Fázi 3 a 5 zapisuje. Kdyby se ptala až v závěru, uživatel už je duchem pryč a odpoví „to je jedno“.
 
@@ -382,7 +382,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 - N položek doplněno / M přepsáno / K přesunuto
 - [stručný seznam: co, kam]
 
-**Zamluvená témata**
+**Nevypořádaná témata**
 - [N probráno, s jakým výsledkem – nebo „žádná“]
 
 **Fresh-reader**

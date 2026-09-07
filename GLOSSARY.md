@@ -58,6 +58,12 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Obdoba u sousedních skillů se ale nesjednocuje:** `/attack` má **vektory útoku** a `/review` **role**. Je to strukturně totéž – jedno zadání na jednoho agenta –, ale věcně tři různé věci, a *vektor útoku* je navíc zavedený bezpečnostní termín.
 
+### nevypořádané téma
+
+**Co v konverzaci padlo a nikdy se nedořešilo** – otázka bez odpovědi, návrh, který nikdo nepřijal ani nezamítl, nebo vícebodová odpověď vyřízená jen zčásti. Nikdo to nezavrhl ani neschválil. Hledá je `/cleanup`, *Fáze 2*.
+
+**Nahrazuje dřívější „zamluvené téma"** (2026-09-07). „Zamluvit“ znamená česky vědomě odvést řeč jinam, takže termín podsouval úmysl, který tam není – téma jen propadlo. A „zamluvit si“ navíc znamená rezervovat, takže se to při rychlém čtení dá číst jako téma, které si někdo zabral. „Vypořádat“ je přitom zavedené sloveso téhle konfigurace (vypořádané nálezy).
+
 ### pozůstatek
 
 **Zbytek po zásahu do textu, který přestal platit.** Dvě situace: odkaz zůstal na sekci, která se mezitím přejmenovala, nebo věta tvrdí něco, co v cílovém souboru už není. Hledá je `/cleanup` po každé session, `/consistency` u staršího dluhu.
