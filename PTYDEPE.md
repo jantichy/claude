@@ -90,6 +90,20 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Ne „krok“** – ten je obsazený kroky životního cyklu a kroky `/project`. **Ne „kolo“** – vystihuje střídání, ale česky znamená hlavně kolo soutěže a věta „hook nepustí ukončit kolo“ nic neřekne.
 
+### ověřovací pokus
+
+**Krátký kód napsaný jen proto, aby zodpověděl otázku v návrhu** („zvládne to hosting?“, „má to API tenhle endpoint?“) – a pak se **zahodí**. Jediná výjimka ze zákazu implementace v `/specify`.
+
+**Nahrazuje dřívější „sondu"** (2026-09-07). Anglicky je *spike* zavedený agilní termín, česky „sonda“ ne – znamená kosmickou sondu nebo lékařský nástroj. **Ne „spike“ v próze**: jako jméno cizí kategorie v tabulce `/specify` zůstává, ale skloňovat „nabídni spike“ nebo „ze spiku vyšlo“ česky nejde.
+
+**Nesmí se plést s [kontrolou závislostí](#kontrola-závislostí)** – donedávna se obojí jmenovalo „sonda“. Tohle je experiment, který se vyhodí; ta druhá je ověření prostředí, které běží pokaždé.
+
+### kontrola závislostí
+
+**Ověření na začátku běhu, že nástroj, na který se bude delegovat, opravdu existuje a dá se zavolat.** Chybí-li, skill neselže: řekne nahlas, co tím odpadá, a pokračuje bez toho. `/skill`, *Fáze 0*.
+
+**Nahrazuje dřívější „sondu na závislosti"** (2026-09-07) – viz [ověřovací pokus](#ověřovací-pokus), pod nímž se to jméno pletlo s něčím úplně jiným.
+
 ### pozůstatek
 
 **Zbytek po zásahu do textu, který přestal platit.** Dvě situace: odkaz zůstal na sekci, která se mezitím přejmenovala, nebo věta tvrdí něco, co v cílovém souboru už není. Hledá je `/cleanup` po každé session, `/consistency` u staršího dluhu.

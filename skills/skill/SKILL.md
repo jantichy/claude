@@ -55,7 +55,7 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Kořenem projektu je 
 
 1. **Přečti `~/.claude/skills/SKILLS.md` celou.** Neopírej se o paměť – tvoje představa o tvaru je zrovna to, co může být zastaralé.
 2. **Udělej inventuru toho, co je k dispozici.** `ls ~/.claude/skills/`, seznam nainstalovaných pluginů a jejich skillů, vestavěné skilly. Je to vstup pro *Fázi 3* a zároveň se tím ověří, že cizí nástroje, na které skill deleguje, opravdu existují.
-3. **Sonda na závislosti měřicí části.** Ověř **dřív, než na ně pošleš práci**, dvě věci: že je `skill-creator` opravdu **nainstalovaný** (`plugins/installed_plugins.json`, ne jen přítomný v cache marketplace – ta obsahuje i to, co nainstalované není), a že jeho skripty mají Python a svoje okolí. **Chybí-li, neselhávej** – řekni nahlas, co odpadá (`extract`, evaluace výstupu, ladění `description`), pokračuj bez měřicí části a zapiš do závěru, co se tím neověřilo.
+3. **Kontrola závislostí měřicí části.** Ověř **dřív, než na ně pošleš práci**, dvě věci: že je `skill-creator` opravdu **nainstalovaný** (`plugins/installed_plugins.json`, ne jen přítomný v cache marketplace – ta obsahuje i to, co nainstalované není), a že jeho skripty mají Python a svoje okolí. **Chybí-li, neselhávej** – řekni nahlas, co odpadá (`extract`, evaluace výstupu, ladění `description`), pokračuj bez měřicí části a zapiš do závěru, co se tím neověřilo.
 4. **Zjisti, na kterém skillu se pracuje**, je-li v argumentu. Neexistuje-li a jde o jiný režim než `create`, nabídni nejbližší jména z inventury místo hlášky o chybě.
 
 ## Fáze 1 – Volba režimu
@@ -162,7 +162,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | `~/.claude/RULES.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
 | `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRACE` se **nedoplňuje**, ten seznam se jen zkracuje |
 | `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních README cyklu**. Testy to chytí, ale samy to nedopíšou |
-| `~/.claude/skills/<jméno>/` | vedlejší soubory, skripty, jejich sonda na závislosti |
+| `~/.claude/skills/<jméno>/` | vedlejší soubory, skripty, jejich kontrola závislostí |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
 | `decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo. **Pozor:** `~/.claude` nemá `docs/` – zapisuje se do `~/Dev/context/decisions.md`, viz `.claude/CLAUDE.md` |
 

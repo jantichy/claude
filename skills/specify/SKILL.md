@@ -70,7 +70,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 
 **Dokud není návrh hotový a schválený, nesmí vzniknout ani řádek produkčního kódu.** Žádný scaffold, žádné `npm create`, žádná databáze, žádné „jen si ověřím, že to jde“.
 
-Výjimka je jediná: **ověřovací sonda**, když na odpovědi stojí rozhodnutí v návrhu („zvládne to hosting?“, „má to API tenhle endpoint?“). Pak řekni dopředu, co zkoušíš a proč, výsledek použij jako podklad a **kód zahoď** – označ ho jako jednorázový a nenechávej ho v projektu.
+Výjimka je jediná: **ověřovací pokus**, když na odpovědi stojí rozhodnutí v návrhu („zvládne to hosting?“, „má to API tenhle endpoint?“). Pak řekni dopředu, co zkoušíš a proč, výsledek použij jako podklad a **kód zahoď** – označ ho jako jednorázový a nenechávej ho v projektu.
 
 | Myšlenka | Realita |
 |---|---|
@@ -133,7 +133,7 @@ Nemá-li nic, přeskoč. Ale zeptej se – v praxi něco má skoro vždycky a ne
 |---|---|
 | **Architectural** | Normální běh skillu. Tohle je jeho případ. |
 | **Bounded** | Specifikace nedává smysl – je to změna v existujícím kódu. **Řekni to a zastav se.** Nabídni pokračovat rovnou přes `brainstorming` (krátký návrh v chatu → schválení → implementace). Nenech se zatlačit do psaní specifikace na jednosouborovou změnu. |
-| **Spike** | Totéž – výstupem je odpověď, ne dokument. Zastav se a nabídni sondu. |
+| **Spike** | Totéž – výstupem je odpověď, ne dokument. Zastav se a nabídni ověřovací pokus. |
 
 **Rozsah.** Popisuje-li zadání víc nezávislých podsystémů, řekni to hned a rozlož to na dílčí projekty dřív, než se začnou ladit detaily. Každý dílčí projekt pak dostane vlastní dokumenty i vlastní plán.
 
