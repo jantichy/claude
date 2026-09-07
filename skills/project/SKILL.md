@@ -13,7 +13,7 @@ Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do proje
 
 - **`create`** *(nový projekt)* – čistý adresář, všechno se zakládá od nuly.
 - **`adopt`** *(existující projekt)* – adresář, ve kterém už něco je, ale chybí v něm otisk `/project` (blok metadat v `CLAUDE.md`) – ať proto, že skill v něm nikdy neběžel, nebo proto, že ho nastavovala starší verze. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i krok 14. Nic se nepřepisuje naslepo.
-- **`update`** *(revize)* – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/Dev/context/structure/structure.md`, `~/.claude/RULES.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 14.
+- **`update`** *(revize)* – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/.claude/STRUCTURE.md`, `~/.claude/RULES.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 14.
 
 Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a skilly se vyvíjejí dál, kdežto projekty založené za starého nastavení zůstávají stát – a rozdíl se z projektu sám nepozná. Druhý běh je tedy plnohodnotná kontrola, ne jen verifikace, že se nic nezměnilo.
 
@@ -23,23 +23,56 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
 - **Nepřepisuje nic naslepo.** U existujícího projektu se na každý rozpor ptá.
 - **Nenaplňuje soubory obsahem.** `docs/` zakládá prázdné, jen s nadpisem.
+- **Nemerguje ani neuklízí větve.** Ve worktree layoutu si větev na svou práci založí (krok 0), ale merge i úklid jsou na uživateli – jsou to pravidla layoutu, ne tenhle skill, a instaluje je `/worktree`.
 - **Nerediguje obsah dokumentace.** `update` hlídá **tvar** – kde soubor leží, jak se jmenuje, jak je uvnitř seřazený, jestli položka sedí do souboru, ve kterém je. Jestli je zapsané rozhodnutí správné nebo úkol dobře napsaný, neřeší; od toho jsou `/consistency` a `/review`.
 
 ## Zásady pro celý průběh
 
 - **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu životního cyklu. Kritérium normy (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*) zní, čí odpovědi tvoří výsledek: tady je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek. Ostatní skilly něco samy najdou nebo vyrobí a ptají se až na nálezy – ty mají fáze, i když se ptají stejně často. Číslují se **plochou vzestupnou řadou bez písmen** (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*). Kroky 5–8 zakládají standardní strukturu a byly kdysi jedním krokem s podkroky `6a`–`6c`; kritériu normy pro písmennou podfázi ale nevyhověly – jsou to fáze jedné volby, ne samostatné výstupy –, tak se z nich staly samostatné kroky.
-- **Ve worktree layoutu nepracuj v `main/`.** Než v takovém projektu cokoliv změníš, založ si vlastní větev a její worktree a všechny další kroky dělej tam – viz krok 0, *Ve worktree layoutu si nejdřív založ větev*. Zakazuje to `~/.claude/skills/worktree/worktree.md`, *`main/` se nemaže a nepracuje se v něm*, a platí to pro `/project` dvojnásob: přepisuje `CLAUDE.md`, `README.md` a celé `docs/` – tedy soubory, které mají ostatní sessions rozečtené a rozepsané.
+- **Ve worktree layoutu nepracuj v `main/`.** Přijdeš-li do projektu, který ten layout **už má**, zapisuj do vlastní větve a jejího worktree – viz krok 0, *Nejdřív zjisti, kde stojíš*. Zakazuje to `~/.claude/skills/worktree/worktree.md`, *`main/` se nemaže a nepracuje se v něm*, a pro `/project` to platí dvojnásob: přepisuje `CLAUDE.md`, `README.md` a celé `docs/` – tedy soubory, které mají ostatní sessions rozečtené a rozepsané. (Zapíná-li layout teprve tenhle běh, výjimku a důvod má krok 0.)
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
 - **V režimu `update` se na hotové volby neptej znovu.** Co je v `CLAUDE.md` zapsané a dává smysl, platí. Otázka se pokládá jen tam, kde `update` našel rozpor nebo mezeru – a klade se o tom rozporu, ne o celém kroku.
-- Konvenci standardní struktury **neopisuj z hlavy** – řiď se `~/Dev/context/structure/structure.md`, který ji definuje. Tenhle skill je jen instalátor.
+- Konvenci standardní struktury **neopisuj z hlavy** – řiď se `~/.claude/STRUCTURE.md`, který ji definuje. Tenhle skill je jen instalátor.
 
 ------
 
 ## Krok 0 – Zjisti režim a stav
 
-Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen stub bez bloku metadat, takže otisk hledej v `main/` – viz krok 4), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `backlog.md`, `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 5 pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
+### Nejdřív zjisti, kde stojíš
+
+**Ve worktree layoutu** – kontejner s `.bare/` a jedním pracovním adresářem na větev (`~/.claude/skills/worktree/worktree.md`) – platí dvě věci, které mění zbytek běhu. Zjisti je **dřív než cokoliv jiného**: obojí rozhoduje o tom, kde budeš hledat i kam budeš psát.
+
+**1. Vylez ke kontejneru.** Session se sice pouští z jeho kořene, ale `/project` se často volá i z `main/` nebo z worktree rozdělané větve – tam vedle souboru `.git` **žádné `.bare/` není**, takže bys layout vyhodnotil jako obyčejný repozitář a psal rovnou do `main/`. Rozliš podle `~/.claude/skills/worktree/worktree.md`, *Jak si skill najde projektový adresář*, a jdeš-li nahoru, řekni to nahlas. Jmenuje-li se hlavní větev jinak než `main`, její pracovní adresář zjistíš z `git --git-dir=<projekt>/.bare worktree list` a všechna „`main/`“ níž čti jako ji.
+
+**2. Nepiš do `main/`, ale do vlastní větve.** `main/` je sdílený a slouží ke čtení – zakazuje to `~/.claude/skills/worktree/worktree.md`, *`main/` se nemaže a nepracuje se v něm*. Větev zakládej **líně, až u prvního zápisu**: inventura v tomhle kroku i revize v kroku 14 jsou čtení, takže běh, který nic nenajde, po sobě nenechá prázdnou větev ani naklonované `node_modules`. **Zápis je každá změna souboru v repozitáři** – nastavení mimo git (popisek v Repository details, souhlas se zelenou linkou) větev nevyžaduje. Jakmile se má poprvé něco změnit:
+
+```bash
+git -C <projekt> worktree add <projekt>/project-update -b docs/project-update
+```
+
+- **Jméno podle režimu** – `docs/project-update`, `docs/project-adopt`. Prefix je vždycky `docs/`: skill nesahá na kód, jen na dokumentaci a konfiguraci.
+- **Existuje-li větev z minulého běhu**, pokračuj v ní: má-li worktree, přejdi do něj; nemá-li ho, `worktree add` **bez `-b`** (s ním by to spadlo na `branch already exists`).
+- Převezmi lokální stav z `main/` podle `~/.claude/skills/worktree/worktree.md`, *Lokální stav se bere z `main/`*, a přejdi do nového adresáře – **od téhle chvíle je projektovým adresářem on** (viz níž). Pozor na cesty, které máš přečtené z `main/`: číst se smí odtamtud, zapisovat se musí do větve.
+- **Na konci práci ve větvi commitni**, i když projekt autocommit nemá: nad necommitnutým stromem merge neprojde (`~/.claude/skills/worktree/worktree.md`, *Dokončení větve*).
+- **Nemerguj.** Větev zůstane otevřená a merge je na výslovný pokyn uživatele (`~/.claude/skills/worktree/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). V kroku 15 jen řekni, jak se jmenuje.
+
+**Zakládá-li worktree layout teprve tenhle běh** (krok 4 v režimu `create` nebo při konverzi), pravidlo se neuplatní: kontejner právě vzniká, žádná jiná session v něm neběží, takže zbytek běhu píše rovnou do `main/`.
+
+### Projektový adresář
+
+Pojem, na který se odkazuje zbytek skillu: **adresář, ve kterém leží `CLAUDE.md`, `README.md`, `docs/` a `.gitignore` tohohle projektu.**
+
+| Kde běžíš | Projektový adresář |
+|---|---|
+| běžný repozitář | jeho kořen |
+| worktree layout, čteš | `main/` |
+| worktree layout, zapisuješ | pracovní adresář větve z bodu 2 výš |
+
+Kořen kontejneru to **není nikdy** – nic v něm není ve gitu. Patří do něj jen stub `CLAUDE.md` a `.claude/settings.local.json` (viz krok 4).
+
+Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen stub bez bloku metadat, takže otisk hledej v `main/` – viz *Projektový adresář* výš), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `backlog.md`, `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 5 pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim `create`.
 - **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 14.
@@ -60,27 +93,9 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 
 *`adopt`:* pak řekni, že se teď budeš ptát postupně, a pokračuj krokem 1. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.** *`update`:* neptej se na nic a pokračuj krokem 14.
 
-### Ve worktree layoutu si nejdřív založ větev
-
-*Týká se režimů `adopt` a `update`.* U `create` se o layoutu rozhoduje až v kroku 4, takže tam není co zakládat.
-
-Poznáš to z inventury výš: `.bare/` vedle souboru `.git`. **Nikdy v takovém projektu neměň soubory v `main/`** – ani když tam zrovna stojíš, ani když je změna „jen malá“. Postup:
-
-```bash
-git -C <kontejner> branch -a                                            # není větev z dřívějška?
-git -C <kontejner> worktree add <kontejner>/project-update -b docs/project-update
-```
-
-- **Existuje-li větev z minulého běhu**, pokračuj v ní: má-li worktree, přejdi do něj; nemá-li ho, `worktree add` **bez `-b`** (s ním by to spadlo na `branch already exists`).
-- Převezmi lokální stav z `main/` podle `~/.claude/skills/worktree/worktree.md`, *Lokální stav se bere z `main/`*, přejdi do nového adresáře a **od téhle chvíle je projektovým adresářem on**, ne `main/`. Týká se to všech dalších kroků včetně kroku 4 a jeho *Nápravy špatně rozděleného kontejneru* – soubory z kořene kontejneru se přesouvají do tvého worktree, ne do `main/`.
-- **Výjimka jsou soubory kontejneru** – stub `CLAUDE.md` v kořeni a `.claude/settings.local.json`. Nejsou ve gitu a k žádné větvi nepatří, takže se upravují na místě; větev na ně nemá vliv.
-- **Nemerguj.** Větev zůstane otevřená a merge je na výslovný pokyn uživatele (`~/.claude/skills/worktree/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). V kroku 15 jen řekni, jak se jmenuje.
-
-Řekni jednou větou, jakou větev jsi založil a proč, ať uživatel ví, kde výsledek hledat.
-
 ## Krok 1 – Metadata projektu
 
-Formát bloku metadat definuje `~/Dev/context/structure/structure.md`, sekce *`CLAUDE.md`* – **neopisuj ho z hlavy, přečti si ho.** Řeší se čtyři údaje: **slug**, **lidský název**, **popisek** a **URL projektu**.
+Formát bloku metadat definuje `~/.claude/STRUCTURE.md`, sekce *`CLAUDE.md`* – **neopisuj ho z hlavy, přečti si ho.** Řeší se čtyři údaje: **slug**, **lidský název**, **popisek** a **URL projektu**.
 
 Slug je daný adresářem. Zbylé tři **navrhni sám** – u nového projektu z toho, co ti uživatel řekl, u existujícího z toho, co v repozitáři najdeš (`CLAUDE.md`, `README.md`, `package.json`, obsah). Předlož návrh k odsouhlasení, ať ho uživatel může jen potvrdit, nebo přepsat:
 
@@ -97,7 +112,7 @@ Zeptej se v chatu (ne AskUserQuestion – jde o volný text) a počkej na odpov�
 
 ## Krok 2 – Založení nebo doplnění CLAUDE.md
 
-**Existuje-li už worktree layout** (z inventury v kroku 0, nebo protože ho zvolíš v kroku 4), je „projektový `CLAUDE.md`“ vždy `main/CLAUDE.md` – viz krok 4. U nového projektu, kde se o layoutu rozhoduje až v kroku 4, zapiš zatím do kořene; krok 4 soubor přesune.
+**Existuje-li už worktree layout** (z inventury v kroku 0, nebo protože ho zvolíš v kroku 4), je „projektový `CLAUDE.md`“ ten v **projektovém adresáři** – viz krok 0, *Projektový adresář*, a krok 4. U nového projektu, kde se o layoutu rozhoduje až v kroku 4, zapiš zatím do kořene; krok 4 soubor přesune.
 
 Zapiš blok metadat na **začátek** `CLAUDE.md`, ve formátu podle `structure.md`:
 
@@ -163,9 +178,9 @@ Ve worktree layoutu jsou `CLAUDE.md` **dva** a mají různý účel. Zaměnit je
 | Soubor | Co v něm je | Píší do něj kroky |
 |---|---|---|
 | `<projekt>/CLAUDE.md` (kontejner) | jen popis layoutu, odchylky a import toho druhého | pouze tenhle krok 4 |
-| `<projekt>/main/CLAUDE.md` (**projektový**) | všechno ostatní – metadata, struktura, autocommit, paměť, typ, doménové importy | kroky 2, 4, 6, 8, 9, 10, 11, 12 |
+| projektový `CLAUDE.md` (v `main/`, nebo ve tvé větvi) | všechno ostatní – metadata, struktura, autocommit, paměť, typ, doménové importy | kroky 2, 4, 6, 8, 9, 10, 11, 12 |
 
-**Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se `main/CLAUDE.md`.** Totéž platí pro `README.md`, `docs/*` a `.gitignore` – všechny patří do `main/`. Jedinou výjimkou je `.claude/settings.local.json`: ten patří do **kořene kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte. Tenhle skill ho **nezakládá** – vznikal v kroku, který zmizel se zrušeným autopromptem –, ale existuje-li, patří tam.
+**Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se ten v projektovém adresáři** (krok 0, *Projektový adresář*) – tedy v `main/`, nebo ve tvé větvi, zapisuješ-li. Totéž platí pro `README.md`, `docs/*` a `.gitignore`; do kořene kontejneru nepatří ani jeden z nich. Jedinou výjimkou je `.claude/settings.local.json`: ten patří do **kořene kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte. Tenhle skill ho **nezakládá** – vznikal v kroku, který zmizel se zrušeným autopromptem –, ale existuje-li, patří tam.
 
 Do `<projekt>/CLAUDE.md` (do **kontejneru**) patří **jen stub** a nic víc. Zapsal ho už `/worktree enable` a jeho znění drží `~/.claude/skills/worktree/SKILL.md` – neopisuj ho odsud znovu. Doplň do jeho sekce *Odchylky* to, co víš o tomhle projektu: jestli se hlavní větev jmenuje jinak než `main` (u staršího projektu) a co konkrétně se přebírá z `main/`, nebo že zatím není co.
 
@@ -177,21 +192,21 @@ Import `@main/CLAUDE.md` ve stubu je nutný: `CLAUDE.md` z podadresáře se nač
 
 *Konverze existujícího projektu:* původní `CLAUDE.md` se přesunul do `main/` spolu se zbytkem repozitáře a **je správně tam** – nech ho být, jen do něj dál doplňuj. V kořeni založ nový, prázdný stub.
 
-Po tomhle kroku si **ověř výsledek** a vypiš ho uživateli: v kořeni smí být jen `.bare/`, `.git`, `CLAUDE.md` (stub) a `.claude/`; `README.md`, `docs/` a projektový `CLAUDE.md` musí být v `main/`.
+Po tomhle kroku si **ověř výsledek** a vypiš ho uživateli: v kořeni smí být jen `.bare/`, `.git`, `CLAUDE.md` (stub), `.claude/` a pracovní adresáře větví; `README.md`, `docs/` a projektový `CLAUDE.md` musí být v projektovém adresáři (u nově zakládaného layoutu `main/`).
 
 Upozorni uživatele, že **při příštím spuštění dostane dialog na schválení externího importu a musí ho odsouhlasit** – při odmítnutí se importy pro ten projekt trvale vypnou a dialog se už neukáže.
 
 ### Náprava špatně rozděleného kontejneru
 
-*`adopt`, kde worktree layout už je.* Najdeš-li v kořeni kontejneru projektové soubory, které tam nepatří – plnohodnotný `CLAUDE.md` s pravidly místo stubu, `README.md`, `docs/` – nabídni nápravu: přesun do `main/` a nahrazení kořenového `CLAUDE.md` stubem. Ukaž konkrétní seznam souborů a nech si to potvrdit, protože jde o přesouvání obsahu.
+*`adopt`, kde worktree layout už je.* Najdeš-li v kořeni kontejneru projektové soubory, které tam nepatří – plnohodnotný `CLAUDE.md` s pravidly místo stubu, `README.md`, `docs/` – nabídni nápravu: přesun do projektového adresáře a nahrazení kořenového `CLAUDE.md` stubem. Je to zápis, takže tady vzniká větev podle kroku 0, *Nejdřív zjisti, kde stojíš*, běžíš-li ještě nad `main/`. Ukaž konkrétní seznam souborů a nech si to potvrdit, protože jde o přesouvání obsahu.
 
-Existují-li oba `CLAUDE.md` a mají překrývající se sekce, **obsah slouč do `main/CLAUDE.md`** a v kořeni nech jen stub; nikdy jeden z nich mlčky nepřepiš.
+Existují-li oba `CLAUDE.md` a mají překrývající se sekce, **obsah slouč do projektového `CLAUDE.md`** a v kořeni nech jen stub; nikdy jeden z nich mlčky nepřepiš.
 
-Přesun je `git mv` jen tehdy, je-li zdroj verzovaný – v kořeni kontejneru **nikdy není**, takže tam jde o obyčejný `mv`. Po přesunu soubory v `main/` commitni.
+Přesun je `git mv` jen tehdy, je-li zdroj verzovaný – v kořeni kontejneru **nikdy není**, takže tam jde o obyčejný `mv`. Po přesunu je v projektovém adresáři commitni.
 
 ## Krok 5 – Standardní struktura: režim umístění
 
-Kroky 5 až 8 zakládají standardní strukturu. **Řiď se `~/Dev/context/structure/structure.md`** – ten je autoritativní, tyhle tři kroky jsou jen provedení.
+Kroky 5 až 8 zakládají standardní strukturu. **Řiď se `~/.claude/STRUCTURE.md`** – ten je autoritativní, tyhle tři kroky jsou jen provedení.
 
 Standardní soubory leží buď v `docs/`, nebo přímo v kořeni projektu. Obojí je rovnocenné.
 
@@ -204,7 +219,7 @@ Standardní soubory leží buď v `docs/`, nebo přímo v kořeni projektu. Oboj
 
 *`adopt`:* režim **detekuj a rovnou zapiš**, neptej se. Leží-li `todo.md` nebo `decisions.md` v kořeni → `root`; leží-li v `docs/` → `docs/`; nenajdeš-li ani jedno → `docs/`. Co jsi zjistil a zapsal, **řekni nahlas** v závěrečném souhrnu. Najdeš-li soubory na obou místech, je to nepořádek, ne třetí režim – vypiš, co je kde, a nech si vybrat, na který režim to srovnat.
 
-**Ve worktree layoutu** je kořen projektu `main/`, ne kořen kontejneru (viz krok 4).
+**Ve worktree layoutu** se tím vším myslí projektový adresář – `main/`, nebo tvá větev –, ne kořen kontejneru (krok 0, *Projektový adresář*).
 
 Zapiš do bloku metadat v `CLAUDE.md`, za řádek `Slug`:
 
@@ -229,7 +244,7 @@ Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUD
 
 ### Produktové podklady
 
-Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Definici všech pěti drží `~/Dev/context/structure/structure.md`, *Produktové podklady*; tady se jen vybírá.
+Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Definici všech pěti drží `~/.claude/STRUCTURE.md`, *Produktové podklady*; tady se jen vybírá.
 
 `AskUserQuestion`, `multiSelect: true`, **nic předvybrané** – opačně než u standardních souborů. Většina projektů nemá ani jeden a předvybraný seznam by je odklikl všechny:
 
@@ -251,7 +266,7 @@ Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračn�
 
 `README.md` u nového projektu: nadpis s **lidským názvem** a popiskem z kroku 1 jako prvním odstavcem – tam se popisek smí rozvést do víc vět. U existujícího projektu zkontroluj, že nadpis a první odstavec sedí s blokem metadat v `CLAUDE.md`; rozcházejí-li se, srovnej je. Soubory v `docs/` zakládej **prázdné, jen s nadpisem** – obsah nevymýšlej dopředu.
 
-**README je pro člověka, ne pro Clauda.** Definici, co do něj patří a co ne, má `~/Dev/context/structure/structure.md`, sekce `README.md`; drž se jí doslova. U existujícího projektu README **projdi celé** a co je normativní pokyn pro Clauda – pravidla práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit – přesuň do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md` podle povahy. Nekopíruj, přesouvej: informace má žít na jednom místě.
+**README je pro člověka, ne pro Clauda.** Definici, co do něj patří a co ne, má `~/.claude/STRUCTURE.md`, sekce `README.md`; drž se jí doslova. U existujícího projektu README **projdi celé** a co je normativní pokyn pro Clauda – pravidla práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit – přesuň do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md` podle povahy. Nekopíruj, přesouvej: informace má žít na jednom místě.
 
 ### Migrace staršího pojmenování
 
@@ -278,7 +293,7 @@ Vypiš **jen soubory, které v projektu opravdu jsou**, s cestou podle zvolenéh
 ```
 ## Struktura a dokumentace
 
-Projekt drží standardní strukturu podle `~/Dev/context/structure/structure.md`:
+Projekt drží standardní strukturu podle `~/.claude/STRUCTURE.md`:
 
 - `README.md` – co projekt je, pro člověka (ne instrukce pro Clauda)
 - `docs/todo.md` – co je odložené na později, ale rozhodnuté, že se to udělá
@@ -324,7 +339,7 @@ out/
 .claude/run/
 ```
 
-`.claude/run/` je běhový stav přerušitelných skillů (`~/Dev/context/structure/structure.md`, *Běhový stav skillů*). **Řádek doplň i do existujícího `.gitignore`**, který ho ještě nemá – mění se po každém tahu, takže v projektu se zapnutým autocommitem by se donekonečna commitoval. Zbytek existujícího souboru nech být.
+`.claude/run/` je běhový stav přerušitelných skillů (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*). **Řádek doplň i do existujícího `.gitignore`**, který ho ještě nemá – mění se po každém tahu, takže v projektu se zapnutým autocommitem by se donekonečna commitoval. Zbytek existujícího souboru nech být.
 
 Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a vypiš, co jsi přidal.
 
@@ -343,7 +358,7 @@ Při první volbě přidej do `CLAUDE.md`:
 ```
 ## Paměť
 
-Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/Dev/context/structure/structure.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
+Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/.claude/STRUCTURE.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
 ```
 
 ## Krok 11 – Typ projektu
@@ -506,11 +521,13 @@ Upozorni uživatele, že při příštím spuštění dostane dialog na schvále
 
 **Standard si načti, neopisuj ho z hlavy.** Rozdíl mezi projektem a tvou pamětí není nález – tvoje paměť je zrovna to, co je zastaralé. Než začneš kontrolovat, přečti si:
 
-- `~/Dev/context/structure/structure.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
+- `~/.claude/STRUCTURE.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
 - `~/.claude/RULES.md` – zejména *Životní cyklus projektu* (jaké kroky životního cyklu dnes existují) a *Co do tohoto souboru nepatří* (kam co patří);
 - `~/Dev/context/coding/coding.md`, *Ověřování a brány kvality* – jen u projektu, ve kterém se něco spouští;
 - `~/.claude/skills/worktree/worktree.md` – jen u worktree layoutu;
 - výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
+
+**Ve worktree layoutu** je tenhle krok do prvního dorovnání jen čtení – jakmile se má něco změnit, založ si větev podle kroku 0, *Nejdřív zjisti, kde stojíš*, a zapisuj do ní.
 
 Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zásad*: co je mechanické a jednoznačné, oprav rovnou a jen to vypiš; co přepisuje nebo maže existující obsah, předlož a nech potvrdit. **Vyžaduje-li nález volbu**, kterou umí jen některý z dalších kroků (typ projektu, doménové importy, kontrakt příkazů), udělej ten krok – v režimu `adopt` je to návrat, v `update` se otevírá jen kvůli tomu nálezu – tady je popsané, *co se kontroluje*, tam *jak se to nastavuje*.
 
@@ -527,7 +544,7 @@ Postupuj po oblastech níž. U každé platí **dvourychlostní režim** ze *Zá
 | Kontrakt příkazů a brány | Každý řádek `## Příkazy` jde opravdu spustit (ověř proti `package.json`, `Makefile`, `composer.json`), nechybí klíč, který projekt umí, vědomě neaplikovaný má pomlčku. Souhlas se zelenou linkou ověř `~/.claude/green-line.sh --list`. | krok 12, `coding.md` |
 | Odkazy ven z projektu | Každá cesta do `~/.claude/` nebo `~/Dev/context/` a každý zmíněný skill **existuje**. Vygrepuj je z `CLAUDE.md`, `README.md` i dokumentace a ověř proti inventáři výš. Tohle chytá přejmenované a zrušené věci v konfigurační vrstvě, aniž bys musel vědět, co se změnilo. | inventář z výpisů výš |
 | Doménové importy | Cíle `@import`ů existují. Nepřibyla doménová znalost, která na projekt sedí a chybí mu? Nezůstal import, který už neplatí, protože se povaha projektu posunula? Přidání ani odebrání **nedělej sám** – nabídni v kroku 13. | krok 13, `~/.claude/CLAUDE.md` |
-| Layout a `.gitignore` | Ve worktree layoutu leží projektové soubory v `main/` a v kořeni je jen stub. `.gitignore` má řádky z jádra včetně `.claude/run/`. | kroky 4 a 7 |
+| Layout a `.gitignore` | Ve worktree layoutu leží projektové soubory v projektovém adresáři a v kořeni kontejneru je jen stub (a pracovní adresáře větví). `.gitignore` má řádky z jádra včetně `.claude/run/`. | kroky 4 a 7 |
 
 ### Obsah dokumentačních souborů
 
@@ -541,7 +558,7 @@ Tohle je ta část, kterou žádný jiný skill neudělá: standard se mezitím 
 - **Sekce, které standard mezitím zavedl.** Prázdné je nezakládej. Ověř jen, že záznamy, které v souboru jsou, leží ve správné sekci – typicky že záznam o průchodu životním cyklem nesedí volně v `done.md` mimo *Průchody životním cyklem*.
 - **Položka v nesprávném souboru.** Rozhodnutí zapsané v `todo.md`, princip v `decisions.md`, běhový stav skillu v `done.md`, hotová věc v `backlog.md` – přesuň tam, kam podle `structure.md` patří, a přesun vypiš. (Hotová položka z backlogu jde rovnou do `done.md`; je to úklid po chybném zařazení, ne druhá cesta – viz `structure.md`, *`backlog.md`*.)
 - **Prázdná sekce `## Parkované v session`** se ruší.
-- **`README.md` je pro člověka, ne pro Clauda.** Zůstal-li v něm normativní pokyn – pravidlo práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit –, přesuň ho do `CLAUDE.md`, `rules.md` nebo `decisions.md` podle povahy. Postup i kritérium má krok 7 a `~/Dev/context/structure/structure.md`, sekce *`README.md`*. U staršího projektu je to častý nález: pravidla se tehdy psala do README, protože jiné místo nebylo.
+- **`README.md` je pro člověka, ne pro Clauda.** Zůstal-li v něm normativní pokyn – pravidlo práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit –, přesuň ho do `CLAUDE.md`, `rules.md` nebo `decisions.md` podle povahy. Postup i kritérium má krok 7 a `~/.claude/STRUCTURE.md`, sekce *`README.md`*. U staršího projektu je to častý nález: pravidla se tehdy psala do README, protože jiné místo nebylo.
 
 ### Výstup
 
@@ -564,7 +581,7 @@ Vypiš přehledně:
 - **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
 - Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula zelená linka, konfigurační brány (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
-- *(worktree layout)* **Na jaké větvi výsledek leží** a že merge do `main` čeká na jeho pokyn.
+- *(worktree layout)* **Na jaké větvi výsledek leží**, že je ve větvi commitnutý a že merge do hlavní větve čeká na jeho pokyn. Neměnilo-li se nic, žádná větev nevznikla – řekni to místo toho.
 
 V režimu `adopt` vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí. A protože v tomhle režimu proběhl těsně předtím krok 14, **připoj za souhrn i jeho tři skupiny** (dorovnáno / čeká na rozhodnutí / vědomě nechal být) – jinak revize proběhne, ale její výsledek se nikde neukáže.
 
