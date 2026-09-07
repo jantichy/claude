@@ -21,7 +21,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok uzaví
 
 ## Co skill nedělá
 
-**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel soubory dotčené větví (v režimu `full` celý projekt) – jiná otázka, jiný skill; fresh-reader tady se ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
+**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel soubory dotčené větví (v režimu `full` celý projekt) – jiná otázka, jiný skill; čtenář bez kontextu se tady ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
 
 Tohle **není** audit projektu ani technická kontrola. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 
@@ -29,9 +29,9 @@ Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padaj
 
 ## Rozsah
 
-**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Fresh-reader ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sám neopravuje, putuje do Fáze 7, kde o něm rozhodne uživatel.
+**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Čtenář bez kontextu ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sám neopravuje, putuje do Fáze 7, kde o něm rozhodne uživatel.
 
-**Audit celé dokumentace sem nepatří** – je to jiná otázka („sedí si projekt sám se sebou?“) a dělá ho `/consistency full` o krok dřív. Dřív tu byl režim `full`, který rozšiřoval fresh-readera na celou dokumentaci; zrušen 6. 9. 2026, protože jméno svádělo ke čtení „bez `full` se session neprojde celá“ – a to je přesně naopak.
+**Audit celé dokumentace sem nepatří** – je to jiná otázka („sedí si projekt sám se sebou?“) a dělá ho `/consistency full` o krok dřív. Dřív tu byl režim `full`, který rozšiřoval čtenáře bez kontextu na celou dokumentaci; zrušen 6. 9. 2026, protože jméno svádělo ke čtení „bez `full` se session neprojde celá“ – a to je přesně naopak.
 
 ## Zásady pro celý průběh
 
@@ -272,11 +272,11 @@ Návrh: [konkrétně co kam zapsat nebo jak přepsat – ne vágně „doplnit d
 
 ------
 
-## Fáze 6 – Fresh-reader verifikace
+## Fáze 6 – Ověření čtenářem bez kontextu
 
 Ověř, že to, co jsi právě zapsal, **dává smysl někomu bez kontextu téhle session**. Není to audit celé dokumentace – zajímá tě, jestli nová session naváže na dnešní práci (viz *Rozsah* výš).
 
-**Fresh-reader je posouzení, ne sběr: výchozí model, `high`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Má odpovědět na otázku „dá se na tohle navázat?“, a to je úsudek – levný model přečte, co tam stojí, a přikývne, místo aby našel, co chybí.
+**Čtenář bez kontextu je posouzení, ne sběr: výchozí model, `high`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Má odpovědět na otázku „dá se na tohle navázat?“, a to je úsudek – levný model přečte, co tam stojí, a přikývne, místo aby našel, co chybí.
 
 Spusť subagenta s tímto zadáním (doplň absolutní cestu k repozitáři, pořadí souborů ke čtení podle dokumentační mapy z Fáze 0 a **stručné shrnutí toho, co se v session řešilo a kam se to zapsalo**):
 
@@ -317,13 +317,13 @@ Nezapisuj do žádného souboru.
 
 - Nálezy, které se týkají téhle session, vrať do Fáze 5 a oprav – mechanické sám, sporné s uživatelem.
 - Nálezy mimo rozsah session (starší dluh v dokumentaci) neopravuj rovnou – přenes je do Fáze 7, která s nimi naloží podle rozhodnutí uživatele.
-- Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého fresh-readera** nad opraveným stavem. Důvod: opravy samy zanechávají nové pozůstatky – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
+- Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého čtenáře bez kontextu** nad opraveným stavem. Důvod: opravy samy zanechávají nové pozůstatky – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
 
 ------
 
 ## Fáze 7 – Naložení s tím, co by zůstalo mimo rozsah
 
-Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dluh z fresh-readera, rozbité věci známé ze session, odložené nálezy –, se tady musí rozhodnout. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
+Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dluh od čtenáře bez kontextu, rozbité věci známé ze session, odložené nálezy –, se tady musí rozhodnout. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
 
 1. **Nemáš-li nic**, fázi přeskoč a v přehledu uveď „žádné“.
 
@@ -385,7 +385,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 **Nevypořádaná témata**
 - [N probráno, s jakým výsledkem – nebo „žádná“]
 
-**Fresh-reader**
+**Čtenář bez kontextu**
 - [verdikt a co z něj vzešlo]
 
 **Git**

@@ -47,7 +47,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 **Nevypořádaná témata**
 - 3 probrána: 1 rozhodnuto, 1 do todo, 1 bezpředmětné
 
-**Fresh-reader**
+**Čtenář bez kontextu**
 - z dokumentace jde navázat; 2 nálezy opraveny (rozbitý odkaz, počet v tabulce)
 
 **Git**
