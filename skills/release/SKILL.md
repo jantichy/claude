@@ -102,6 +102,8 @@ Zjištěné shrň do tří až pěti řádků. **Ještě nenasazuj.**
 
 Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracované. Neprojde-li kterákoliv, **skonči** a řekni, co je potřeba dodělat.
 
+Definice průběžné kontroly, kontraktu příkazů, prahů jednotlivých kontrol i auditu závislostí drží `~/Dev/context/coding/quality.md` – **prahy a příkazy opisuj odtamtud, ne odsud**, aby se dvě místa nerozešla.
+
 1. **Pracovní strom je čistý** a větev je pushnutá. Necommitnutá změna při nasazení znamená, že v produkci bude něco jiného, než co je v gitu – a to se hledá měsíce.
 2. **Průběžná kontrola a produkční build, obojí na čistém stromu.** Nikoliv „běželo to ráno“. `build` je tu navíc oproti průběžné kontrole, do které schválně nepatří: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
 3. **Průchod aplikací** – `e2e` z kontraktu, má-li ho projekt. **Tohle je jeho jediné místo v životním cyklu**: do průběžné kontroly je moc pomalý a v `/review` by běžel nad stavem, který se do nasazení ještě několikrát změní. Tady běží naposledy před tím, než se kód potká s uživateli. Chybí-li příkaz, napiš do přehledu, že průchod aplikací nikdo neověřil.
