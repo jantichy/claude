@@ -106,6 +106,14 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Ne „krok“** – ten je obsazený kroky životního cyklu a kroky `/project`. **Ne „kolo“** – vystihuje střídání, ale česky znamená hlavně kolo soutěže a věta „hook nepustí ukončit kolo“ nic neřekne.
 
+### ověřovatel
+
+**Agent, který dostane jediný úkol: nález vyvrátit.** Co ověření nepřežije, se uživateli vůbec nezobrazí. Běží v čerstvém kontextu, který nevidí ani panel, ani konverzaci. Povinný u každého skillu, který pouští specialisty hledající problémy – `~/.claude/skills/SKILLS.md`, *Ověřovací vrstva*.
+
+**Sjednoceno z dvojice „ověřovatel" a „skeptik"** (2026-09-07). Nešlo o cizí slovo, ale o dvě jména pro jednu věc: `/attack` je mělo dokonce v jedné větě (*„nahrazuje **ověřovatele** z `/review`: **skeptik** nad pozorováním jen stojí čas"*). Zvítězil „ověřovatel“, protože ho nese norma (*Ověřovací vrstva*), jméno fáze (*Ověření nálezů*) i většina užití; „skeptik“ popisoval postoj, a ten stejně stojí ve větě vedle.
+
+**Výjimka, na kterou se nesahá:** v `done.md` je *Skeptik* jméno zrušeného hlediska `/oponent`, ne označení ověřovatele.
+
 ### ověřovací pokus
 
 **Krátký kód napsaný jen proto, aby zodpověděl otázku v návrhu** („zvládne to hosting?“, „má to API tenhle endpoint?“) – a pak se **zahodí**. Jediná výjimka ze zákazu implementace v `/specify`.

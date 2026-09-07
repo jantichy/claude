@@ -262,7 +262,7 @@ class NosneCasti(unittest.TestCase):
     """
 
     def test_review_ma_overeni_nalezu(self):
-        """Panel bez skeptika je generátor pravděpodobně znějících nálezů.
+        """Panel bez ověřovatele je generátor pravděpodobně znějících nálezů.
 
         Skill to o sobě píše sám: „bez třetí vrstvy je panel k ničemu“. Kdyby ta
         fáze vypadla, výstup by se navenek nezměnil – jen by přestal být pravdivý.

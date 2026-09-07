@@ -17,7 +17,7 @@ Stojí na třech vrstvách, které se liší cenou i spolehlivostí – a poušt
 |---|---|---|---|
 | **1. Deterministická** | nástroje projektu (typecheck, lint, audit závislostí, scan tajemství, statická analýza, mutation testing) | nula tokenů | absolutní, výsledek se nedá rozporovat |
 | **2. Panel specialistů** | paralelní subagenti, každý s jedním hlediskem | vysoká | dobrá, ale hlásí i to, co není |
-| **3. Ověření nálezů** | nezávislý skeptik, který se nález snaží vyvrátit | střední | tohle je to, co dělá výstup použitelným |
+| **3. Ověření nálezů** | nezávislý ověřovatel, který se nález snaží vyvrátit | střední | tohle je to, co dělá výstup použitelným |
 
 **Bez třetí vrstvy je panel k ničemu** – zavalí tě pravděpodobně znějícími nálezy, po třetím falešném ho začneš ignorovat a čtvrtý, pravý, přehlédneš.
 
@@ -362,7 +362,7 @@ VÝSTUP: JSON, nic jiného.
 
 **Nález s vyplněným `evidence` jde ověřovateli taky, ale s jiným zadáním:** *„Spusť `cmd` a porovnej návratový kód a výstup s tím, co nález tvrdí. Nesedí-li to, `refuted: true`.“* Nediskutuje se, přehrává se.
 
-Dřív takový nález ověření **vynechával** a přehrával si ho orchestrátor sám. Byla to díra dvěma způsoby. Za prvé se tím z volnotextového pole stal vypínač skeptika – a agent, který ví, že vyplněné pole ušetří přezkoumání, ho vyplní i tehdy, když nic nespustil. Za druhé je „přehraj si to sám“ krok bez artefaktu: nikdo nepozná, jestli proběhl. Delegovaný krok je aspoň vidět v seznamu volání a stojí zhruba totéž.
+Dřív takový nález ověření **vynechával** a přehrával si ho orchestrátor sám. Byla to díra dvěma způsoby. Za prvé se tím z volnotextového pole stal vypínač ověřování – a agent, který ví, že vyplněné pole ušetří přezkoumání, ho vyplní i tehdy, když nic nespustil. Za druhé je „přehraj si to sám“ krok bez artefaktu: nikdo nepozná, jestli proběhl. Delegovaný krok je aspoň vidět v seznamu volání a stojí zhruba totéž.
 
 **Deduplikuj ještě před ověřením**, ne až po něm. Role se překrývají schválně, takže tentýž problém přijde třikrát jinými slovy – posílat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď.
 

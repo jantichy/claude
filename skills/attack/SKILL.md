@@ -21,7 +21,7 @@ Je to třetí druh záruky, rovnocenný vedle dvou ostatních, a ani jedna ho ne
 
 Rozdíl proti `/review` je v jednom slově: ten kód **čte**, tenhle ho **spouští**. Přehlédnutá `null` větev se v kódu hledá těžko a v běžící aplikaci se projeví bílou stránkou. Naopak spousta věcí, které útok najde, je z kódu zřejmá na první pohled – proto se pouští obojí.
 
-**Nález odsud má jinou váhu než nález z panelu.** Panel tvrdí, že něco *nastane*; útok přiloží postup, kterým to nastalo. Proto se nálezy z `/attack` neověřují skeptikem – ověřuje se tvrzení, ne pozorování.
+**Nález odsud má jinou váhu než nález z panelu.** Panel tvrdí, že něco *nastane*; útok přiloží postup, kterým to nastalo. Proto se nálezy z `/attack` nedávají ověřovateli – ověřuje se tvrzení, ne pozorování.
 
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **před `/release`**, ne v uzavírání.
 
@@ -217,7 +217,7 @@ Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 
 ## Fáze 3 – Přehrát nálezy
 
-**Každý nález si přehraj sám**, podle jeho reprodukčního postupu. Tohle nahrazuje ověřovatele z `/review`: skeptik nad pozorováním jen stojí čas, ale postup, který nejde zopakovat, nález není.
+**Každý nález si přehraj sám**, podle jeho reprodukčního postupu. Tohle nahrazuje ověřovatele z `/review`: ten nad pozorováním jen stojí čas, ale postup, který nejde zopakovat, nález není.
 
 - **Reprodukovalo se** → jde dál.
 - **Nereprodukovalo se** → zahoď a spočítej do souhrnu. Neptej se agenta znovu.
