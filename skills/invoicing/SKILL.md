@@ -114,7 +114,7 @@ Za každého ukaž:
 **K rozhodnutí:** <podezřelé záznamy, jeden po druhém>
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 **Řádek *Položka* ukazuje text, který se doopravdy vytiskne na doklad**, ne název projektu – slož ho už tady podle `~/Dev/context/business/invoicing.md`, *Z timetrackingu na fakturu*. Je to jediné místo v celém běhu, kde se dělá **subjektivní úsudek** (zobecnění popisků z timetrackingu), takže se nesmí schovat až do *Fáze 4*.
 
@@ -196,7 +196,7 @@ Za každého klienta:
 - <co se neověřilo a proč>, nebo „nic“
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Ve sloupci *Vystaveno* uveď datum vystavení; **liší-li se od DUZP** kvůli kolizi v číselné řadě, uveď obojí – jinak po běhu nezůstane stopa, že se datum posunulo jinam, než pravidlo předepisuje.
 

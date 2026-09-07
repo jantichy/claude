@@ -125,6 +125,8 @@ Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Hle
 **Další krok:** /implement
 ```
 
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Plán je hotový, můžeš ho projít a pak spustit /implement.`

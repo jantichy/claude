@@ -195,7 +195,7 @@ Nespoléhej na to, že to vypadá dobře ve zdrojáku.
 - [limity dat, osobní údaje, nedopočítané věci – nebo „nic“]
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět:
 

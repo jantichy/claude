@@ -289,7 +289,7 @@ class NosneCasti(unittest.TestCase):
         self.assertIn(nadpis, text, "/cleanup přišel o fázi na nevypořádaná témata")
         faze = text[text.index(nadpis):]
         faze = faze[:faze.index("\n## ")]
-        for kus in ("Jak ověřit, že to opravdu visí", "Práh důležitosti",
+        for kus in ("Jak ověřit, že to opravdu není vypořádané", "Práh důležitosti",
                     "AskUserQuestion", "Bezpředmětné"):
             self.assertIn(kus, faze,
                           f"/cleanup, Fáze 2 přišla o {kus!r} – zbyl jen nadpis")

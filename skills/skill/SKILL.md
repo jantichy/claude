@@ -186,7 +186,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 - [co a proč, nebo „nic"]
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
@@ -227,7 +227,7 @@ Poslední řádek je druhý druh driftu vedle rozejití s normou a **neklade ho 
 - **<skill>** – <N> nálezů: <závažnost> <jednou větou> · [opravím / potřebuju rozhodnout]
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 **Dvourychlostní režim.** Mechanické a jednoznačné oprav rovnou a jen vypiš – chybějící odkaz na `PREFLIGHT.md`, chybějící znění závěrečného verdiktu, `argument-hint` bez opory. Co **přepisuje nebo maže existující obsah** – rozdělení dlouhého skillu, přeformulování sekce, nahrazení kroku delegací – předlož a nech potvrdit, přes `AskUserQuestion` a **po jednom**.
 

@@ -143,7 +143,7 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 **Další krok:** `/review` a za ním zbytek uzavírání (RULES.md, *Životní cyklus projektu*)
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

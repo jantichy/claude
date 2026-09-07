@@ -107,11 +107,12 @@ Zjištěné shrň a **zeptej se na potvrzení, než něco spustíš** (`AskUserQ
 
 **Databáze:** <připojení>
 - doklad: <výstup dotazu na rozložení domén / počet záznamů>
-Ven:      <co při útoku sáhne mimo – maily, platby, cizí API – nebo „nic“>
-Rozsah:   <obrazovky, endpointy, vektory>
+
+**Ven:** <co při útoku sáhne mimo – maily, platby, cizí API – nebo „nic“>
+**Rozsah:** <obrazovky, endpointy, vektory>
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Chybí-li kterýkoliv z těch dvou dokladů, **nepokračuj a řekni proč**. Je to jediné místo v celém životním cyklu s destruktivními vedlejšími účinky, takže „vypadá to lokálně“ tu není argument.
 
@@ -244,7 +245,7 @@ Nálezů: X, z toho Y se nepodařilo zopakovat, zbývá Z:
 Nezkoušelo se: [vektory vynechané kvůli hranicím – platby, odesílání mailů, …]
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup nebyl prázdný** – prázdný výsledek je taky výsledek a je to ten lepší.
 
@@ -313,7 +314,7 @@ Cíl: <adresa> · Vektory: [které]
 **Další krok:** /release · po nasazení ještě `/cleanup` podruhé
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 **Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
 

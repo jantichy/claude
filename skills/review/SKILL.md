@@ -458,7 +458,7 @@ Mechanických (jednoznačná bezriziková oprava): N – ty opravím rovnou a je
 Sporných: M – ty projdeme spolu od nejzávažnějších.
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Když nálezy nejsou, řekni to a skonči.
 
@@ -474,6 +474,8 @@ Mechanické nálezy oprav **rovnou, bez ptaní**. Pak:
    ## Opraveno rovnou (N mechanických)
    - 🔵 [název] – soubor:řádek – [co konkrétně změněno] (podklad: [basis])
    ```
+
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 3. Commit dle autocommit nastavení projektu – mechanické opravy **jedním commitem** dohromady.
 
 Když uživatel na některou opravu zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
@@ -588,6 +590,8 @@ Rozsah: [změny na větvi / celý projekt] · Role: [které]
 
 **Další krok:** /consistency
 ```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*) a **smaž `.claude/run/review.json`**:
 

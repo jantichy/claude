@@ -151,6 +151,8 @@ Teprve teď se ptáš, a ptáš se **jednou otázkou přes `AskUserQuestion`** n
 **Po nasazení sleduji:** <co konkrétně a jak dlouho>
 ```
 
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+
 Volby: **Nasadit** / **Zrušit**.
 
 Bez výslovné odpovědi se nenasazuje. Ticho není souhlas.
@@ -203,6 +205,8 @@ Zapiš do `docs/decisions.md` jen to, co má trvalou hodnotu (změna postupu nas
 **Zbývá dokončit:** [contract krok migrace v příštím vydání / nic]
 ```
 
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+
 **Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/RULES.md`, *Životní cyklus projektu*, krok 9.
 
 ------
@@ -225,6 +229,8 @@ Co se v okně dělá:
    **Nové chyby:** <N, nebo „žádné“>
    **Řešeno:** <co se s nimi udělalo, nebo „nic, nic se neobjevilo“>
    ```
+
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/RULES.md`, *Životní cyklus projektu*: jde týmž životním cyklem ve zkrácené podobě, `/review` a průběžná kontrola se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
 

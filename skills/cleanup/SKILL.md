@@ -106,7 +106,7 @@ Asymetrii mezi tím, co v konverzaci zaznělo, a tím, na co se reagovalo:
 
 Rozdíl proti kategorii 4 z Fáze 1: tam jde o **vědomé** odložení, které někdo vyslovil („to necháme na potom“). Tady jde o to, co propadlo, **aniž si toho kdokoli všiml** – a právě proto to nikdo nehledá.
 
-### Jak ověřit, že to opravdu visí
+### Jak ověřit, že to opravdu není vypořádané
 
 U každého kandidáta projdi **zbytek transcriptu až do konce** a hledej, jestli se to mezitím nevyřešilo jinudy (**delegoval-li jsi Fázi 1, dělá tohle síto subagent** a ty přebíráš jeho zdůvodnění – nečteš transcript podruhé):
 
@@ -403,7 +403,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 **Další krok:** /attack a /release, nasazuje-li se – jinak je práce uzavřená
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Zakonči **jednoznačným verdiktem** – jednou z těchto vět, nikdy ničím vágním mezi tím:
 

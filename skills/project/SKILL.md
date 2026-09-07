@@ -101,11 +101,13 @@ Formát bloku metadat definuje `~/.claude/STRUCTURE.md`, sekce *`CLAUDE.md`* –
 Slug je daný adresářem. Zbylé tři **navrhni sám** – u nového projektu z toho, co ti uživatel řekl, u existujícího z toho, co v repozitáři najdeš (`CLAUDE.md`, `README.md`, `package.json`, obsah). Předlož návrh k odsouhlasení, ať ho uživatel může jen potvrdit, nebo přepsat:
 
 ```
-Slug:     rezervace
-Název:    Rezervační systém
-Popisek:  Rezervační systém pro školení, konference a webináře – správa událostí, účastníků, objednávek a faktur.
-Web:      (žádný)
+**Slug:** rezervace
+**Název:** Rezervační systém
+**Popisek:** Rezervační systém pro školení, konference a webináře – správa událostí, účastníků, objednávek a faktur.
+**Web:** (žádný)
 ```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Zeptej se v chatu (ne AskUserQuestion – jde o volný text) a počkej na odpověď. **Nic si nevymýšlej**: nevíš-li, jestli projekt má veřejnou URL, zeptej se místo hádání.
 

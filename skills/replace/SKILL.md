@@ -80,18 +80,21 @@ Zeptej se přes `AskUserQuestion`, které tvary zahrnout, jsou-li sporné. Rozho
 ```
 ## Nalezeno
 
-Tvar              Výskytů   Souborů
-market              47        12
-markets              8         4
-marketId            23         6
-„trh“ (skloňované)  15         3
-market.md            1         –  (název souboru)
-markets/             1         –  (název adresáře)
+| Tvar | Výskytů | Souborů |
+|---|---|---|
+| market | 47 | 12 |
+| markets | 8 | 4 |
+| marketId | 23 | 6 |
+| „trh“ (skloňované) | 15 | 3 |
+| market.md | 1 | – (název souboru) |
+| markets/ | 1 | – (název adresáře) |
 
 Celkem: 95 výskytů ve 18 souborech + 2 přejmenování
 
 Nesahám na: docs/research/ (12 výskytů), CHANGELOG.md (31 výskytů)
 ```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 **Projdi podezřelé výskyty ručně.** Grep najde i to, co se přejmenovat nemá – cizí termín, který se náhodou jmenuje stejně, citaci, historický záznam. Vypiš je zvlášť a zeptej se.
 
@@ -153,7 +156,7 @@ Nesedí-li něco, **oprav a projdi znovu** – ne že to jen ohlásíš.
 - Odkazy: [ověřeno / co nesedělo a jak opraveno]
 ```
 
-Vypiš to jako **Markdown, ne jako blok kódu** (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
