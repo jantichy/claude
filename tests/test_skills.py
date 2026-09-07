@@ -126,12 +126,12 @@ class SkillOdkazy(unittest.TestCase):
         Tuhle vadu tahle konfigurace reálně dostává: přečíslovat fáze je jedna dávka náhrad,
         po které tři odkazy z téhož souboru ukazují jinam. Test na sekce ji nechytí –
         ten matchuje jen odkazy s uvedenou cestou k souboru, kdežto vnitroskillový
-        odkaz cestu nemá. Doloženo mutací: `Fáze 7` přepsaná na `Fáze 77` prošla.
+        odkaz cestu nemá. Doloženo mutačním testem: `Fáze 7` přepsaná na `Fáze 77` prošla.
 
         **Cizí odkaz se pozná z okna před samotným odkazem**, ne z celého řádku.
         První verze přeskakovala řádek, kdykoliv se na něm kdekoliv objevilo jméno
         jiného skillu – a protože se skilly zmiňují průběžně, vypadlo z kontroly
-        dvanáct odkazů v pěti nejrozsáhlejších skillech. Doloženo mutací: `Fáze 4`
+        dvanáct odkazů v pěti nejrozsáhlejších skillech. Doloženo mutačním testem: `Fáze 4`
         v `/consistency` šla přepsat na `Fáze 44`, protože se o dvě věty dál mluvilo
         o `/review`.
 
@@ -683,7 +683,7 @@ class Struktura(unittest.TestCase):
         **Hledá se jen v úvodních sekcích**, ne v celém těle. Nad celým tělem
         kontrola nic neměří: `/project` jmenuje `/discovery` i v tabulce
         produktových podkladů, takže by prošel, i kdyby se o svém sousedovi
-        nezmínil ani slovem – doloženo mutací, která tu vadu vrátila a testem
+        nezmínil ani slovem – doloženo mutačním testem, která tu vadu vrátila a testem
         prošla. Vymezení patří do `Co skill dělá` a `Co skill nedělá`, tedy do
         textu před první fází.
         """
@@ -815,7 +815,7 @@ class SouladSNormou(unittest.TestCase):
         # skillů ji má pod vlastním názvem (`Úklid a shrnutí`, `Uzavření`,
         # `Předání`) a norma jméno nepředepisuje – vázat kontrolu na slovo
         # „Závěr“ znamenalo, že přejmenování závěru celou kontrolu pořadí tiše
-        # vypnulo. Doloženo mutací: `Fáze 8 – Závěr` → `Fáze 8 – Uzavření`
+        # vypnulo. Doloženo mutačním testem: `Fáze 8 – Závěr` → `Fáze 8 – Uzavření`
         # zneškodnilo jedinou vadu, kterou uměla najít.
         zaver = max((i for n, i in poradi.items()
                      if n.startswith(("Fáze", "Krok"))), default=None)
