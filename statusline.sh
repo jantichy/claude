@@ -139,7 +139,7 @@ if [ -n "$effort_level" ]; then
   model_short="$model_short $effort_level"
 fi
 
-# Barva modelu: Opus = cyan (svítivější baseline), ostatní = modrá.
+# Barva modelu: Opus = cyan (svítivější základ), ostatní = modrá.
 # Intenzita roste s effort levelem; Opus má gradient posunutý výš,
 # takže Opus medium vizuálně koresponduje se Sonnet xhigh.
 case "$model_short" in

@@ -33,9 +33,9 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírá
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
 - **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky životního cyklu nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
 
-## Fáze 0 – Příprava: kontext a baseline
+## Fáze 0 – Příprava: kontext a konvence
 
-Před spuštěním Explore agenta nasbírej baseline. Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
+Před spuštěním Explore agenta nasbírej konvence projektu. Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
 ### 0.1 Urči rozsah
 
@@ -64,9 +64,9 @@ Pokud existují, přečti:
 - `.editorconfig`
 - `package.json` (engines, scripts, workspaces)
 
-**Vede-li projekt `docs/glossary.md`** (poznáš z `## Struktura a dokumentace` v `CLAUDE.md`), přečti ho jako **závaznou baseline pojmenování**. Je to jediné místo, kde stojí, jak se čemu v téhle doméně říká, takže odchylka od něj není kosmetika, ale rozpor s dohodou – hlas ji důsledněji než odchylku, kterou jsi odvodil z kódu. Platí to obousměrně: **pojem, který v kódu žije a v glosáři chybí, je taky nález**, protože slovník, který se přestal doplňovat, začne lhát.
+**Vede-li projekt `docs/glossary.md`** (poznáš z `## Struktura a dokumentace` v `CLAUDE.md`), přečti ho jako **závaznou konvenci pojmenování**. Je to jediné místo, kde stojí, jak se čemu v téhle doméně říká, takže odchylka od něj není kosmetika, ale rozpor s dohodou – hlas ji důsledněji než odchylku, kterou jsi odvodil z kódu. Platí to obousměrně: **pojem, který v kódu žije a v glosáři chybí, je taky nález**, protože slovník, který se přestal doplňovat, začne lhát.
 
-Z těchto souborů sestav **baseline konvencí** – co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako kosmetickou odchylku; naopak rozpor s baseline hlas důsledněji.
+Z těchto souborů sestav **soupis konvencí** – co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako kosmetickou odchylku; naopak rozpor s dohodnutými konvencemi hlas důsledněji.
 
 ### 0.3 Načti seznam ignorovaných položek
 
@@ -74,7 +74,7 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 ### 0.4 Spusť nástroje, které předchozí kroky životního cyklu nedělají
 
-**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tuhle baseline: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/RULES.md`, *Životní cyklus projektu*.
+**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/RULES.md`, *Životní cyklus projektu*.
 
 Spusť jen to, co je vlastní téhle otázce – hledání mrtvého kódu a nepoužitých závislostí, tedy „sedí si projekt sám se sebou?“, na což se `/review` neptá:
 
@@ -90,7 +90,7 @@ Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označ
 
 **Explore agent je sběr, ne posouzení: výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
 
-Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, baseline z 0.1, seznam ignorovaných z 0.2 a výstupy nástrojů z 0.3):
+Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, konvence z 0.1, seznam ignorovaných z 0.2 a výstupy nástrojů z 0.3):
 
 ```
 Prohledej zadaný rozsah (viz *Rozsah* výš) a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
@@ -99,7 +99,7 @@ PŘED HLÁŠENÍM PROBLÉMU vždy zkontroluj, že:
 - Není uveden v kapitole `## Consistency` projektového `CLAUDE.md` (předané v zadání) – pokud ano, neuváděj ho
 - Není přímo nad řádkem komentář `consistency-ignore: <důvod>` – pokud ano, respektuj ho
 - Soubor není v cestě označené jako legacy/vendored/generated (`*.gen.*`, `vendor/`, `legacy/`, `generated/`, `node_modules/`, `dist/`, `build/`) – pokud ano, neuváděj ho
-- Pokud baseline projektu (předaný v zadání) explicitně dovoluje to, co bys hlásil jako odchylku, neuváděj to
+- Pokud konvence projektu (předané v zadání) explicitně dovolují to, co bys hlásil jako odchylku, neuváděj to
 
 KRITICKÉ (mohou rozbít funkčnost):
 - Typové nesrovnalosti: stejný koncept/entita definovaná různými typy v různých souborech

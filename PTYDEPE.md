@@ -140,6 +140,18 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Nesmí se plést s [kontrolou závislostí](#kontrola-závislostí)** – donedávna se obojí jmenovalo „sonda“. Tohle je experiment, který se vyhodí; ta druhá je ověření prostředí, které běží pokaždé.
 
+### konvence projektu
+
+**Soupis toho, co je v projektu dohodnuto** – pojmenování z `docs/rules.md`, glosář, sekce v `CLAUDE.md`. `/consistency` je čte před auditem a poměřuje proti nim odchylky; co projekt sám aktivně dodržuje, se jako odchylka nehlásí.
+
+**Nahrazuje polovinu dřívějšího „baseline"** (2026-09-07). Anglicismus používaný nesklonně, a navíc **na dvě různé věci** – tahle je stav, se kterým se srovnává, ta druhá je [srovnávací běh](#srovnávací-běh). Slovo „konvence“ přitom `/consistency` už používal, jen k němu měl nalepený anglicismus navíc.
+
+### srovnávací běh
+
+**Spuštění agenta na úkol bez skillu, dřív než se skill napíše** – aby bylo vidět, jak selže a jakými racionalizacemi si zvolí jinou cestu. Ty jsou pak vstupem pro *Časté chyby*. `/skill`, *Fáze 4*.
+
+**Nahrazuje druhou polovinu „baseline"** (2026-09-07). **Ne „referenční hodnota“ ani „výchozí hodnota“** – žádná hodnota tam nevzniká, výstupem je popis chování a citované racionalizace. Kdyby ta fáze jednou měřila i čísla, jméno s „hodnotou“ by bylo na místě; dnes by slibovalo metriku, kterou nikdo nenaměří.
+
 ### kontrola závislostí
 
 **Ověření na začátku běhu, že nástroj, na který se bude delegovat, opravdu existuje a dá se zavolat.** Chybí-li, skill neselže: řekne nahlas, co tím odpadá, a pokračuje bez toho. `/skill`, *Fáze 0*.

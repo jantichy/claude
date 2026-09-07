@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Spravuje vlastní skilly v `~/.claude/skills/` proti normě v `~/.claude/skills/SKILLS.md`. Čtyři režimy:
 
-- **`/skill`** nebo **`/skill create`** – **založení**. Debrief, tabulka švů, baseline, sepsání, ověření, napojení na okolí.
+- **`/skill`** nebo **`/skill create`** – **založení**. Debrief, tabulka švů, srovnávací běh, sepsání, ověření, napojení na okolí.
 - **`/skill extract`** – **vytěžení konverzace**. Vstupem není zadání, ale to, co se v session vyladilo. Od sepsání dál je dráha stejná jako u založení.
 - **`/skill update [jméno]`** – **dorovnání na dnešní normu**. Jeden skill, nebo bez jména všechny. Hlavní důvod, proč je skill opakovatelný.
 - **`/skill delete <jméno>`** – **odstranění i se stopami**.
@@ -34,7 +34,7 @@ Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Sk
 |---|---|---|
 | Debrief zadání | **vlastní** | Ptá se na věci, které plynou z normy – kde to stojí v životním cyklu, proti kterému sousedovi se to vymezuje, má to režimy. Cizí nástroj se na to nezeptá. |
 | Vytěžení z konverzace | `skill-creator` | Má na to hotový postup zachycení záměru. |
-| Baseline – jak agent selže bez skillu | `superpowers:writing-skills` | Je to jádro jeho metody. |
+| Srovnávací běh – jak agent selže bez skillu | `superpowers:writing-skills` | Je to jádro jeho metody. |
 | **Sepsání `SKILL.md`** | **vlastní** | Jádro normy. Jediné místo, kudy by prosákl cizí tvar. |
 | Evaluace výstupu | `skill-creator` | Má na to skripty, ne prózu. |
 | Tlakové scénáře | `superpowers:writing-skills` | Měří dodržení pravidla pod tlakem, ne kvalitu výstupu. |
@@ -110,7 +110,7 @@ Zapisuje se do `SKILL.md`, tedy **jako Markdownová tabulka**, ne jako mezerami 
 
 **Zbylo-li po odečtení delegací jádro, pokračuj.** Nezbylo-li, řekni to: je to alias, ne skill, a má se napsat jako alias.
 
-## Fáze 4 – Baseline
+## Fáze 4 – Srovnávací běh
 
 **Změř, jak agent selže bez skillu.** Bez toho se skill píše proti představě, ne proti skutečnosti – a naučí něco jiného, než je potřeba.
 
@@ -118,7 +118,7 @@ Zapisuje se do `SKILL.md`, tedy **jako Markdownová tabulka**, ne jako mezerami 
 
 **Tvar mu nezadávej** a jeho doporučení k tvaru ignoruj – ten je z normy.
 
-Nejde-li baseline udělat (skill je čistě mechanický, nebo prostředí není k dispozici), **řekni to a pokračuj** – vědomá mezera se přiznává, ne obchází.
+Nejde-li srovnávací běh udělat (skill je čistě mechanický, nebo prostředí není k dispozici), **řekni to a pokračuj** – vědomá mezera se přiznává, ne obchází.
 
 ## Fáze 5 – Sepsání
 
