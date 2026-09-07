@@ -30,6 +30,12 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Nahrazuje dřívější „ráčnu"** (2026-09-07). Anglicky *ratchet* zavedené je, ale česká „ráčna“ ne – a metafora nesla jen půlku významu: ráčna brání couvnutí, ale nevynutí, aby se seznam škrtal. **Neříkej tomu ani „porovnání na rovnost“ nebo „zamčené na rovnost“** – to je programátorský žargon pro shodu dvou množin a čtenář z něj nepozná, co se s čím porovnává.
 
+### README skillu
+
+**Text pro člověka zvenčí, na který se posílá odkaz, když se skill někomu doporučuje.** Tvar drží `~/.claude/skills/SKILLS.md`, *README skillu*.
+
+**Neříkej mu „vizitka"** (2026-09-07). „README“ je zavedené jméno přesně pro tenhle soubor a metafora nic nepřidávala – že je psaný pro člověka zvenčí, stojí v normě vedle. Česká „vizitka“ je navíc obsazená: znamená jednostránkový firemní web, a v tom významu v `~/Dev/context` dál zůstává.
+
 ### průběžná kontrola
 
 **Mechanismus, který po každém tahu pouští blokující kontroly z kontraktu příkazů a nepustí tah skončit, dokud padají.** Vynucuje ho `Stop` hook, ne dobrá vůle. Stav se popisuje barvou: kontrola je zelená, nebo padá.

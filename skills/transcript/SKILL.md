@@ -453,4 +453,4 @@ nemusíš.
 | `diarize.py` | vlastní běh pyannote uvnitř venv |
 | `merge.py` | spojí časy z whisperu s mluvčími, vyrobí `.json` a `.vtt` |
 | `internals.md` | naměřené hodnoty a vnitřní rozhodnutí – při běhu se nečte |
-| `README.md` | vizitka skillu pro člověka, který ho nezná |
+| `README.md` | popis skillu pro člověka, který ho nezná |

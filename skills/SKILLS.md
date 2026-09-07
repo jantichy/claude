@@ -87,7 +87,7 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 
 ## 4. Povinné sekce a jejich pořadí
 
-**Tahle sekce mluví o `SKILL.md`.** Vedle něj má každý skill povinně ještě `README.md` – vizitku pro člověka zvenčí s vlastní strukturou; tu drží *README skillu* níž.
+**Tahle sekce mluví o `SKILL.md`.** Vedle něj má každý skill povinně ještě `README.md` – text pro člověka zvenčí s vlastní strukturou; tu drží *README skillu* níž.
 
 ```
 # Název
@@ -320,7 +320,7 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 
 ### Meze
 
-**Do 120 řádků.** Je to zhruba dvě obrazovky – tolik člověk přečte, než se rozhodne, jestli ho to zajímá. Co se tam nevejde, patří do `SKILL.md`, kde to čte Claude, a ne do vizitky. Mez je jediná a hlídá ji test; „nesmí být delší než `SKILL.md`" jako druhé kritérium neplatí – u krátkého skillu by povolilo README, které už nikdo nedočte.
+**Do 120 řádků.** Je to zhruba dvě obrazovky – tolik člověk přečte, než se rozhodne, jestli ho to zajímá. Co se tam nevejde, patří do `SKILL.md`, kde to čte Claude, a ne do README. Mez je jediná a hlídá ji test; „nesmí být delší než `SKILL.md`" jako druhé kritérium neplatí – u krátkého skillu by povolilo README, které už nikdo nedočte.
 
 **Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
 

@@ -984,7 +984,7 @@ HROMADNA = "Nebo celou sadu naráz."
 
 
 def vady_readme(text: str, jmeno: str, v_cyklu: bool) -> list:
-    """Vrátí vady jedné vizitky proti normě *README skillu*.
+    """Vrátí vady jednoho README proti normě *README skillu*.
 
     Čistá funkce nad textem, ne nad diskem – jedině tak se dá předložit
     poškozený vstup a ověřit, že kontrola nález opravdu nahlásí
@@ -1044,7 +1044,7 @@ def vady_readme(text: str, jmeno: str, v_cyklu: bool) -> list:
 class ReadmeSkillu(unittest.TestCase):
     """README skillu proti `skills/SKILLS.md`, *README skillu*.
 
-    Je to jediná část skillu psaná **pro člověka zvenčí** – vizitka, na kterou
+    Je to jediná část skillu psaná **pro člověka zvenčí** – text, na který
     se posílá odkaz. Právě proto se rozpadá tiše: chybějící sekce nikoho za
     běhu neomezí a pozná se až ve chvíli, kdy si ji někdo cizí přečte.
     """
@@ -1156,7 +1156,7 @@ class ReadmeSkillu(unittest.TestCase):
                         f"{readme}: režim `{rezim}` z argument-hint není v README")
 
     def test_relativni_odkazy_v_readme_miri_na_existujici_soubor(self):
-        """Rozbitý odkaz mezi vizitkami uvidí ten, komu se skill doporučuje.
+        """Rozbitý odkaz mezi README uvidí ten, komu se skill doporučuje.
 
         Kontrola `test_odkazy_na_soubory_existuji` na tohle nestačí – ta hledá
         cesty v obrácených apostrofech (`~/.claude/…`), kdežto README používají
@@ -1178,7 +1178,7 @@ class ReadmeSkillu(unittest.TestCase):
                 self.assertFalse(chybi, f"{readme}: odkaz na neexistující soubor: {chybi}")
 
     def test_sablona_v_norme_jmenuje_vsechny_kroky(self):
-        """Vizitky hlídá test, normu samotnou dosud nic.
+        """README hlídá test, normu samotnou dosud nic.
 
         Šablona hromadné instalace v `SKILLS.md` vyjmenovává kroky cyklu
         jménem – přidaný krok by ji tiše rozešel, tedy přesně to riziko,
@@ -1247,7 +1247,7 @@ class KontrolyVizitekOpravduChytaji(unittest.TestCase):
     Platí tu totéž co o mutacích nad `SKILL.md`: kontrola, která nic nechytá,
     projde stejně tiše jako ta funkční.
 
-    Mutuje se nad skutečnými vizitkami: `/attack` je v životním cyklu,
+    Mutuje se nad skutečnými README: `/attack` je v životním cyklu,
     `/report` mimo něj, takže pokrývají obě větve funkce.
     """
 
