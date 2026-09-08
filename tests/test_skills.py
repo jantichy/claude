@@ -124,6 +124,43 @@ class SkillFrontmatter(unittest.TestCase):
                     f"{skill}: argument-hint slibuje režimy {chybi}, ale tělo je nepopisuje")
 
 
+def _vlastni_faze(skill) -> set:
+    """Čísla fází a kroků, které skill doopravdy má."""
+    vlastni = {re.match(r"(?:Fáze|Krok) (\S+)", n).group(1)
+               for n in bez_bloku_kodu(skill)
+               if n.startswith(("Fáze ", "Krok "))}
+    # písmenné podkroky mají vlastní nadpis úrovně ###, např. „6a – Režim“
+    vlastni |= {m.group(1) for m in
+                (re.match(r"(\d+[a-c]) – ", n) for n in bez_bloku_kodu(skill)) if m}
+    return vlastni
+
+
+def _spatne_odkazy(skill, vzor, vlastni: set, cizi: set) -> list:
+    """Odkazy na vlastní fázi, která ve skillu není."""
+    spatne = []
+    ve_bloku = False
+    for radek in body(skill).splitlines():
+        if radek.lstrip().startswith(("```", "~~~")):
+            ve_bloku = not ve_bloku
+            continue
+        if ve_bloku:
+            continue                  # šablona pro subagenta není odkaz
+        for m in vzor.finditer(radek):
+            okno = radek[max(0, m.start() - 60):m.start()]
+            if "SKILL.md" in okno or any(f"/{j}" in okno for j in cizi):
+                continue              # odkaz do cizího skillu
+            # „krok 8 životního cyklu“ v RULES.md není vlastní fáze, ale krok
+            # *Životního cyklu projektu* – ty se číslují nezávisle
+            if "RULES.md" in okno or "Životní cyklus" in okno:
+                continue
+            if re.match(r"\s*os[ay]\b", radek[m.end():m.end() + 8]):
+                continue
+            for cislo in re.findall(r"\d+(?:\.\d+)?[a-c]?", m.group(2)):
+                if cislo not in vlastni:
+                    spatne.append(f"{m.group(1)} {cislo}")
+    return spatne
+
+
 class SkillOdkazy(unittest.TestCase):
     # Kontroluje se i to, co skilly samy odkazují – RULES.md a CLAUDE.md nesou
     # nejvíc odkazů ze všech a netestovaly se vůbec. Projektový .claude/CLAUDE.md
@@ -209,36 +246,11 @@ class SkillOdkazy(unittest.TestCase):
         jmena = {s.parent.name for s in SKILLS}
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
-                cizi = jmena - {skill.parent.name}
-                vlastni = {re.match(r"(?:Fáze|Krok) (\S+)", n).group(1)
-                           for n in bez_bloku_kodu(skill)
-                           if n.startswith(("Fáze ", "Krok "))}
-                # písmenné podkroky mají vlastní nadpis úrovně ###, např. „6a – Režim“
-                vlastni |= {m.group(1) for m in
-                            (re.match(r"(\d+[a-c]) – ", n) for n in bez_bloku_kodu(skill)) if m}
+                vlastni = _vlastni_faze(skill)
                 if not vlastni:
                     continue          # skill fáze ani kroky nepoužívá
-                spatne = []
-                ve_bloku = False
-                for radek in body(skill).splitlines():
-                    if radek.lstrip().startswith(("```", "~~~")):
-                        ve_bloku = not ve_bloku
-                        continue
-                    if ve_bloku:
-                        continue      # šablona pro subagenta není odkaz
-                    for m in vzor.finditer(radek):
-                        okno = radek[max(0, m.start() - 60):m.start()]
-                        if "SKILL.md" in okno or any(f"/{j}" in okno for j in cizi):
-                            continue  # odkaz do cizího skillu
-                        # „krok 8 životního cyklu“ v RULES.md není vlastní fáze, ale krok
-                        # *Životního cyklu projektu* – ty se číslují nezávisle
-                        if "RULES.md" in okno or "Životní cyklus" in okno:
-                            continue
-                        if re.match(r"\s*os[ay]\b", radek[m.end():m.end() + 8]):
-                            continue
-                        for cislo in re.findall(r"\d+(?:\.\d+)?[a-c]?", m.group(2)):
-                            if cislo not in vlastni:
-                                spatne.append(f"{m.group(1)} {cislo}")
+                spatne = _spatne_odkazy(skill, vzor, vlastni,
+                                        jmena - {skill.parent.name})
                 self.assertFalse(sorted(set(spatne)),
                     f"{skill}: odkaz na vlastní fázi, která tam není: "
                     f"{sorted(set(spatne))} (má {sorted(vlastni)})")
@@ -688,6 +700,31 @@ class Struktura(unittest.TestCase):
     CISLOVKY = {"první": 1, "druhý": 2, "třetí": 3, "čtvrtý": 4,
                 "pátý": 5, "šestý": 6, "sedmý": 7}
 
+    def _porovnej_vetu(self, jmeno, skupiny, cyklus) -> list:
+        """Jedna věta o pořadí proti RULES.md."""
+        cislovka, faze, predchudce, naslednik = skupiny
+        ocek_faze, ocek_n, ocek_pred, ocek_nasl = cyklus[jmeno]
+        chyby = []
+
+        if faze != ocek_faze:
+            chyby.append(f"{jmeno}: tvrdí fázi `{faze}`, RULES.md má `{ocek_faze}`")
+        if cislovka == "poslední":
+            # „Poslední“ se ověřuje jen proti počtu kroků ve fázi. Následník
+            # se posuzuje níž stejně jako u číslovaných kroků: poslední krok
+            # fáze ho legitimně má – `/cleanup` uzavírá uzavírání a přitom
+            # správně předává na `/attack` z nasazení.
+            kroku_ve_fazi = len([k for k, v in cyklus.items() if v[0] == ocek_faze])
+            if ocek_n != kroku_ve_fazi:
+                chyby.append(f"{jmeno}: tvrdí, že je poslední ve fázi `{faze}`, "
+                             f"ale je {ocek_n}. z {kroku_ve_fazi}")
+        elif self.CISLOVKY.get(cislovka) != ocek_n:
+            chyby.append(f"{jmeno}: tvrdí `{cislovka} krok`, podle RULES.md je {ocek_n}.")
+        if predchudce and predchudce != ocek_pred:
+            chyby.append(f"{jmeno}: tvrdí, že navazuje na `/{predchudce}`, RULES.md má `/{ocek_pred}`")
+        if naslednik and naslednik != ocek_nasl:
+            chyby.append(f"{jmeno}: tvrdí, že předává na `/{naslednik}`, RULES.md má `/{ocek_nasl}`")
+        return chyby
+
     def test_veta_o_poradi_kroku_sedi_s_rules(self):
         """Skill tvrdí, kolikátý je a na koho navazuje – nic to neměřilo.
 
@@ -723,26 +760,7 @@ class Struktura(unittest.TestCase):
                                  f"– přeformuluj ji, nebo uprav vzor v testu")
                 continue
             nalezeno += 1
-            cislovka, faze, predchudce, naslednik = m.groups()
-            ocek_faze, ocek_n, ocek_pred, ocek_nasl = cyklus[jmeno]
-
-            if faze != ocek_faze:
-                chyby.append(f"{jmeno}: tvrdí fázi `{faze}`, RULES.md má `{ocek_faze}`")
-            if cislovka == "poslední":
-                # „Poslední“ se ověřuje jen proti počtu kroků ve fázi. Následník
-                # se posuzuje níž stejně jako u číslovaných kroků: poslední krok
-                # fáze ho legitimně má – `/cleanup` uzavírá uzavírání a přitom
-                # správně předává na `/attack` z nasazení.
-                kroku_ve_fazi = len([k for k, v in cyklus.items() if v[0] == ocek_faze])
-                if ocek_n != kroku_ve_fazi:
-                    chyby.append(f"{jmeno}: tvrdí, že je poslední ve fázi `{faze}`, "
-                                 f"ale je {ocek_n}. z {kroku_ve_fazi}")
-            elif self.CISLOVKY.get(cislovka) != ocek_n:
-                chyby.append(f"{jmeno}: tvrdí `{cislovka} krok`, podle RULES.md je {ocek_n}.")
-            if predchudce and predchudce != ocek_pred:
-                chyby.append(f"{jmeno}: tvrdí, že navazuje na `/{predchudce}`, RULES.md má `/{ocek_pred}`")
-            if naslednik and naslednik != ocek_nasl:
-                chyby.append(f"{jmeno}: tvrdí, že předává na `/{naslednik}`, RULES.md má `/{ocek_nasl}`")
+            chyby += self._porovnej_vetu(jmeno, m.groups(), cyklus)
 
         # Druhý tvar téhož tvrzení: `/project` píše „Je první článek Životního
         # cyklu projektu“. Vzor výš ho nepoznal, takže se skill tiše přeskakoval
@@ -1259,12 +1277,24 @@ def vady_readme(text: str, jmeno: str, v_cyklu: bool) -> list:
     (`KontrolyOpravduChytaji`). Kontroly, které potřebují hlavičku skillu
     nebo souborový systém, mají vlastní testy.
     """
-    vady = []
+    vady = _vady_sekci(text)
+    vady += _vady_instalace(text, jmeno)
+    vady += _vady_ramecku(text, v_cyklu)
 
-    # Přítomnost i pořadí. Pořadí sem patří proto, že ho norma žádá a `/skill`
-    # při revizi kontroluje – bez kontroly je to pravidlo, které drží jen ten,
-    # kdo si na ně vzpomene.
-    pozice = []
+    radku = len(text.splitlines())
+    if radku > MEZ_README:
+        vady.append(f"README má {radku} řádků, mez je {MEZ_README}")
+
+    return vady
+
+
+def _vady_sekci(text: str) -> list:
+    """Přítomnost i pořadí povinných sekcí.
+
+    Pořadí se hlídá proto, že ho norma žádá a `/skill` při revizi kontroluje –
+    bez kontroly je to pravidlo, které drží jen ten, kdo si na ně vzpomene.
+    """
+    vady, pozice = [], []
     for nadpis in POVINNE_README:
         i = text.find(f"\n{nadpis}")
         if i < 0:
@@ -1275,38 +1305,32 @@ def vady_readme(text: str, jmeno: str, v_cyklu: bool) -> list:
     ocekavane = [n for n in POVINNE_README if n in poradi]
     if poradi != ocekavane:
         vady.append(f"sekce nejdou v pořadí z normy: {poradi} místo {ocekavane}")
+    return vady
 
-    # Instalace musí být pokyn pro Clauda uvnitř své sekce, ne URL kdekoliv.
+
+def _vady_instalace(text: str, jmeno: str) -> list:
+    """Instalace musí být pokyn pro Clauda uvnitř své sekce, ne URL kdekoliv."""
     zacatek = text.find("## Jak si ho nainstalovat")
     if zacatek < 0:
-        pass                                  # hlásí kontrola sekcí výš
-    else:
-        konec = text.find("\n---", zacatek)
-        sekce = text[zacatek:konec if konec > 0 else len(text)]
-        url = REPO_URL + jmeno
-        citace = [r for r in sekce.splitlines() if r.lstrip().startswith(">")]
-        if url not in sekce:
-            vady.append(f"instalační sekce neodkazuje na {url}")
-        elif not any(url in r for r in citace):
-            vady.append("odkaz na repozitář není v citovaném pokynu pro Clauda")
+        return []                             # hlásí kontrola sekcí
+    konec = text.find("\n---", zacatek)
+    sekce = text[zacatek:konec if konec > 0 else len(text)]
+    url = REPO_URL + jmeno
+    citace = [r for r in sekce.splitlines() if r.lstrip().startswith(">")]
+    if url not in sekce:
+        return [f"instalační sekce neodkazuje na {url}"]
+    if not any(url in r for r in citace):
+        return ["odkaz na repozitář není v citovaném pokynu pro Clauda"]
+    return []
 
-    # Rámeček a hromadná instalace: povinné v cyklu, zakázané mimo něj.
+
+def _vady_ramecku(text: str, v_cyklu: bool) -> list:
+    """Rámeček a hromadná instalace: povinné v cyklu, zakázané mimo něj."""
     if v_cyklu:
-        if RAMECEK not in text:
-            vady.append("chybí rámeček s celým životním cyklem")
-        if HROMADNA not in text:
-            vady.append("chybí hromadná instalace celého životního cyklu")
-    else:
-        if RAMECEK in text:
-            vady.append("skill mimo životní cyklus má rámeček životního cyklu")
-        if HROMADNA in text:
-            vady.append("skill mimo životní cyklus nabízí hromadnou instalaci sady")
-
-    radku = len(text.splitlines())
-    if radku > MEZ_README:
-        vady.append(f"README má {radku} řádků, mez je {MEZ_README}")
-
-    return vady
+        return ([] if RAMECEK in text else ["chybí rámeček s celým životním cyklem"]) + \
+               ([] if HROMADNA in text else ["chybí hromadná instalace celého životního cyklu"])
+    return ([] if RAMECEK not in text else ["skill mimo životní cyklus má rámeček životního cyklu"]) + \
+           ([] if HROMADNA not in text else ["skill mimo životní cyklus nabízí hromadnou instalaci sady"])
 
 
 class ReadmeSkillu(unittest.TestCase):

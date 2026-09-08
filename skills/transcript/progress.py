@@ -18,25 +18,30 @@ def hms_to_s(h, m, s):
     return int(h) * 3600 + int(m) * 60 + int(s)
 
 
-def main():
-    if len(sys.argv) < 2:
-        print("usage: progress.py <logfile> [N=SECONDS ...]")
-        return
-    logfile = sys.argv[1]
+def delky_z_argv(argv):
+    """Délky předané ručně jako N=SECONDS."""
     dur = {}
-    for pair in sys.argv[2:]:
+    for pair in argv:
         n, sec = pair.split("=")
         dur[n] = float(sec)
+    return dur
 
-    with open(logfile, encoding="utf-8", errors="replace") as fh:
-        lines = fh.readlines()
 
-    if not dur:  # délky z logu
-        for ln in lines:
-            m = re.search(r"### DURATION (\d+) ([\d.]+)", ln)
-            if m:
-                dur[m.group(1)] = float(m.group(2))
+def delky_z_logu(lines):
+    """Délky, které do logu zapsal transcribe.sh."""
+    dur = {}
+    for ln in lines:
+        m = re.search(r"### DURATION (\d+) ([\d.]+)", ln)
+        if m:
+            dur[m.group(1)] = float(m.group(2))
+    return dur
 
+
+def projdi_log(lines):
+    """Stav běhu z logu: kdo začal, kdo skončil, kde je ukazatel.
+
+    Vrací (started, done, failed, first_start_clock, last_pos).
+    """
     started, done, failed = [], set(), set()
     first_start_clock = None
     last_pos = 0
@@ -70,6 +75,39 @@ def main():
         if m and not chunked:
             last_pos = hms_to_s(m.group(1), m.group(2), m.group(3))
 
+    return started, done, failed, first_start_clock, last_pos
+
+
+def tempo_a_eta(first_start_clock, processed, remaining):
+    """Naměřené tempo a odhad zbytku. Bez měřitelného základu vrací pomlčky."""
+    if first_start_clock is None or processed <= 0:
+        return "–", "–"
+    now = datetime.now()
+    now_clk = now.hour * 3600 + now.minute * 60 + now.second
+    elapsed = now_clk - first_start_clock
+    if elapsed < 0:
+        elapsed += 24 * 3600
+    if elapsed <= 0:
+        return "–", "–"
+    rate = processed / elapsed
+    if remaining <= 0:
+        return "hotovo", f"{rate:.1f}× realtime"
+    eta = remaining / rate
+    return f"~{int(eta // 60)} min {int(eta % 60)} s", f"{rate:.1f}× realtime"
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("usage: progress.py <logfile> [N=SECONDS ...]")
+        return
+    logfile = sys.argv[1]
+
+    with open(logfile, encoding="utf-8", errors="replace") as fh:
+        lines = fh.readlines()
+
+    dur = delky_z_argv(sys.argv[2:]) or delky_z_logu(lines)
+    started, done, failed, first_start_clock, last_pos = projdi_log(lines)
+
     total = sum(v for k, v in dur.items() if k not in failed)
     done_audio = sum(dur.get(n, 0) for n in done)
     running = next((n for n in reversed(started) if n not in done and n not in failed), None)
@@ -78,21 +116,7 @@ def main():
     remaining = max(0.0, total - processed)
     pct = processed / total if total else 0
 
-    now = datetime.now()
-    now_clk = now.hour * 3600 + now.minute * 60 + now.second
-    eta_txt, rate_txt = "–", "–"
-    if first_start_clock is not None:
-        elapsed = now_clk - first_start_clock
-        if elapsed < 0:
-            elapsed += 24 * 3600
-        if elapsed > 0 and processed > 0:
-            rate = processed / elapsed
-            rate_txt = f"{rate:.1f}× realtime"
-            if remaining > 0:
-                eta = remaining / rate
-                eta_txt = f"~{int(eta // 60)} min {int(eta % 60)} s"
-            else:
-                eta_txt = "hotovo"
+    eta_txt, rate_txt = tempo_a_eta(first_start_clock, processed, remaining)
 
     width = 30
     fill = int(round(pct * width))

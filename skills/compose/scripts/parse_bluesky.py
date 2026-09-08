@@ -57,8 +57,8 @@ def tag_to_cid_bytes(tag):
     return tag.value[1:] if tag is not None else None
 
 
-def load_repo(path=SRC):
-    """Vrací (did, {klíč 'kolekce/rkey': záznam})."""
+def _nacti_bloky(path):
+    """Rozparsované CBOR bloky z CAR souboru a commit, pokud se našel."""
     blocks = {}
     commit = None
     for cid, codec, data in iter_blocks(path):
@@ -71,7 +71,12 @@ def load_repo(path=SRC):
         blocks[cid] = obj
         if isinstance(obj, dict) and "did" in obj and "sig" in obj and "data" in obj:
             commit = obj
+    return blocks, commit
 
+
+def load_repo(path=SRC):
+    """Vrací (did, {klíč 'kolekce/rkey': záznam})."""
+    blocks, commit = _nacti_bloky(path)
     assert commit, "commit blok nenalezen"
     records = {}
 
