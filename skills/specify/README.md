@@ -10,7 +10,7 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 
 ## Co umí
 
-1. **Vytěží nejdřív to, co už máte** – včetně zásobníku nápadů, který si projekt vede. Nabídne z něj, co se do právě psaného zadání hodí vzít rovnou s sebou. Než se na cokoliv zeptá, vyzve vás, ať přiložíte poznámky, zápis ze schůzky, mail od klienta, starý dokument, screenshoty – i nestrukturovaně. Co si z toho odvodí, se pak už neptá; jen vám ukáže souhrn k potvrzení.
+1. **Vytěží nejdřív to, co už máte** – včetně zásobníku nápadů, který si projekt vede. Nabídne z něj, co se do právě psaného zadání hodí vzít rovnou s sebou. Než se na cokoliv zeptá, vyzve vás, ať přiložíte poznámky, zápis ze schůzky, e-mail od klienta, starý dokument, screenshoty – i nestrukturovaně. Co si z toho odvodí, se pak už neptá; jen vám ukáže souhrn k potvrzení.
 2. **Ptá se postupně**, jednu otázku za druhou, ne dotazníkem na deset položek.
 3. **Produktová specifikace** – proč to děláme, pro koho, varianty a rozhodovací větve, omezení, nefunkční požadavky, seznam toho, co musí umět první verze, co vědomě neděláme a podle čeho se za rok pozná, že to vyšlo.
 4. **Návrh řešení** – zvolený přístup i zamítnuté varianty, architektura, datový model, stavy a přechody, datové toky, rozhraní, cizí systémy, chybové stavy, bezpečnostní model, technologie, testovací strategie a rizika.
@@ -23,12 +23,12 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 ## Proč zrovna tenhle
 
 - **Dva dokumenty, protože mají jinou životnost.** Produktový záměr se mění zřídka, technické řešení s každým rozhodnutím o technologii. V jednom souboru by se při výměně databáze editoval tentýž text, ve kterém stojí popis cílové skupiny, a produktová část by se tím postupně obrušovala.
-- **Hranice mezi nimi je ostrá a má test.** *Změní se ta věta, když vyměním databázi?* Ano → návrh. Ne → požadavky. „Musí to běžet na běžném hostingu" je omezení a patří do požadavků; „použijeme SQLite, protože…" je volba a patří do návrhu.
-- **Zákaz implementace je kontrola, ne rada.** Žádný scaffold, žádné „jen si ověřím, že to jde" – scaffold zamkne technologie dřív, než se o nich rozhodlo. Jediná výjimka je krátký ověřovací pokus, jehož kód se pak zahodí.
+- **Hranice mezi nimi je ostrá a má test.** *Změní se ta věta, když vyměním databázi?* Ano → návrh. Ne → požadavky. „Musí to běžet na běžném hostingu“ je omezení a patří do požadavků; „použijeme SQLite, protože…“ je volba a patří do návrhu.
+- **Zákaz implementace je kontrola, ne rada.** Žádný scaffold, žádné „jen si ověřím, že to jde“ – scaffold zamkne technologie dřív, než se o nich rozhodlo. Jediná výjimka je krátký ověřovací pokus, jehož kód se pak zahodí.
 - **Nic si nevymýšlí.** Technický název, identifikátor, parametr, cizí rozhraní ani cena se nedomýšlejí – co není známé, jde do otevřených otázek i s tím, kdo to má rozhodnout.
-- **Žádné placeholdery.** „Rychlé načítání" je nic; požadavek má číslo, práh a podmínku.
-- **Sekce „co vědomě neděláme" nesmí být prázdná.** Prázdná znamená, že se nic neřezalo – a co se vyhodí, se tam zapíše, aby to nikdo nevymyslel znovu.
-- **Bezpečnost se navrhuje, neaudituje.** Návrh má vlastní sekci s modelem oprávnění a jmenným seznamem citlivých míst; „ošetříme to při implementaci" v ní stát nesmí.
+- **Žádné placeholdery.** „Rychlé načítání“ je nic; požadavek má číslo, práh a podmínku.
+- **Sekce „co vědomě neděláme“ nesmí být prázdná.** Prázdná znamená, že se nic neřezalo – a co se vyhodí, se tam zapíše, aby to nikdo nevymyslel znovu.
+- **Bezpečnost se navrhuje, neaudituje.** Návrh má vlastní sekci s modelem oprávnění a jmenným seznamem citlivých míst; „ošetříme to při implementaci“ v ní stát nesmí.
 - **Návrh se čte proti požadavkům položku po položce.** Nepokrytý scénář je nález, ne detail.
 - **Na návrhu se nešetří.** Špatný návrh se dobrou implementací nezachrání – špatná věc se jen udělá pořádně.
 
@@ -62,7 +62,7 @@ Skill se zeptá, co už máte, provede vás vyptáváním, sepíše požadavky, 
 
 ## Co nedělá
 
-- **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt".
+- **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“.
 - **Nezakládá projekt.** Strukturu, git a nastavení dělá `/project`; když chybí, skill na to upozorní.
 - **Nepíše implementační plán.** Ten dělá `/breakdown` a má vlastní pravidla i vlastní schvalovací kontrolu.
 

@@ -20,11 +20,11 @@ Udělá ze zadání seřazený seznam úkolů velikosti pár minut. U každého 
 
 ## Proč zrovna tenhle
 
-- **Kritérium hotovosti musí být rozsouditelné.** Ne „funguje přihlášení", ale zaškrtávací seznam a u kódu příkaz, který dá jednoznačnou odpověď. Kritérium, které neumí rozsoudit stroj ani jednoznačně člověk, je nedopsaný úkol.
+- **Kritérium hotovosti musí být rozsouditelné.** Ne „funguje přihlášení“, ale zaškrtávací seznam a u kódu příkaz, který dá jednoznačnou odpověď. Kritérium, které neumí rozsoudit stroj ani jednoznačně člověk, je nedopsaný úkol.
 - **Testy se píší dřív, než existuje kód** – plán je jediné místo, kde si je člověk přečte nezaujatě. Potom už bude posuzovat, jestli procházejí, ne jestli měří správnou věc.
 - **Na plánování se nešetří.** Špatně nařezaný úkol rozsévá chyby do všeho, co po něm přijde, takže sem jde nejsilnější nastavení, i když samo sepsání vypadá mechanicky.
-- **Nedovolí „doplnit později".** Plán s nedořečeným místem se do realizace nepustí.
-- **Nepokračuje do realizace sám.** Konec je předání ke schválení, ne rozjetá práce.
+- **Nedovolí „doplnit později“.** Plán s nedořečeným místem se do implementace nepustí.
+- **Nepokračuje do implementace sám.** Konec je předání ke schválení, ne rozjetá práce.
 
 ## Jak se to používá
 

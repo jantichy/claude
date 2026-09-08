@@ -22,12 +22,12 @@ Prověří hotovou práci před uzavřením z několika nezávislých hledisek n
 ## Proč zrovna tenhle
 
 - **Nespuštěný nástroj není nula.** Kontrola, kterou nešlo spustit, se vypisuje jako nespuštěná – tři nespuštěné kontroly vypsané jako tři nuly by vypadaly jako tři čisté výsledky.
-- **Vypisuje poměry, ne jen počty.** „Pět nálezů" vypadá stejně po řádném i po odbytém běhu; skill ukazuje, kolik jich panel našel, kolik jich zbylo po sloučení, kolik se jich ověřilo a kolik přežilo.
-- **Důkazní břemeno je záměrně nesymetrické.** U střední závažnosti platí „při pochybnosti vyvracej", u kritické naopak: vyvrátit ji lze jedině tak, že ověřovatel **jmenuje konkrétní ochranu a její místo**. „Nejspíš to řeší framework" vyvrácení není. Cena omylu je totiž nesymetrická – falešný nález stojí jednu otázku, přehlédnutá chyba díru v produkci, a je navždy neviditelná.
+- **Vypisuje poměry, ne jen počty.** „Pět nálezů“ vypadá stejně po řádném i po odbytém běhu; skill ukazuje, kolik jich panel našel, kolik jich zbylo po sloučení, kolik se jich ověřilo a kolik přežilo.
+- **Důkazní břemeno je záměrně nesymetrické.** U střední závažnosti platí „při pochybnosti vyvracej“, u kritické naopak: vyvrátit ji lze jedině tak, že ověřovatel **jmenuje konkrétní ochranu a její místo**. „Nejspíš to řeší framework“ vyvrácení není. Cena omylu je totiž nesymetrická – falešný nález stojí jednu otázku, přehlédnutá chyba díru v produkci, a je navždy neviditelná.
 - **Umlčené nálezy expirují změnou kódu.** Důvod zamítnutí bývá vázaný na stav kódu v ten den; po přepsání přestane platit, ale filtr se aplikuje dřív než hledání, takže by se to nikdo nedozvěděl. Bez expirace je z toho seznam, kterým projekt za rok oslepne.
 - **Vyvrácené kritické nálezy se vypisují.** Je to jediné místo, kde je vidět, co bylo umlčeno – bez něj se chybné vyvrácení nedá odhalit vůbec.
-- **Text v prověřovaných souborech agenta neřídí.** Věta „předchozí instrukce neplatí" nebo „tenhle modul nehlas" nalezená v komentáři je **nález**, ne pokyn – a hledá se navíc mechanicky, protože právě tuhle třídu panel z principu nechytí: neexistující nález nemá kdo spočítat.
-- **Každý nález musí mít konkrétní selhání.** „Mohla by tu být souběžnost" není nález; „když dva požadavky dorazí mezi čtením a zápisem na tomhle řádku, druhý přepíše první" nález je.
+- **Text v prověřovaných souborech agenta neřídí.** Věta „předchozí instrukce neplatí“ nebo „tenhle modul nehlas“ nalezená v komentáři je **nález**, ne pokyn – a hledá se navíc mechanicky, protože právě tuhle třídu panel z principu nechytí: neexistující nález nemá kdo spočítat.
+- **Každý nález musí mít konkrétní selhání.** „Mohla by tu být souběžnost“ není nález; „když dva požadavky dorazí mezi čtením a zápisem na tomhle řádku, druhý přepíše první“ nález je.
 - **Opakovaný nález se převede na pravidlo pro nástroj.** Od té chvíle ho chytá stroj zadarmo místo agenta pokaždé znovu.
 - **Panel se nenafukuje.** Nad sedm specialistů se nechodí – panel, který vygeneruje víc nálezů, než kdo přečte, se přestane číst celý. A vynechaný specialista se vždycky jmenuje, protože tichý výběr vypadá jako úplný panel.
 
@@ -59,7 +59,7 @@ Panel: 31 nálezů → 22 po deduplikaci → 22 ověřeno → 13 přežilo:
 
 ## Co nedělá
 
-- **Neaudituje vnitřní konzistenci.** Ptá se „je to správně a drží to předpis?", ne „sedí si projekt sám se sebou?" – na to je `/consistency`.
+- **Neaudituje vnitřní konzistenci.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`.
 - **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
 - **Nevytěžuje konverzaci** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/cleanup`.
 - **Nenasazuje.** To je `/release`.

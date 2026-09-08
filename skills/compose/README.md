@@ -8,7 +8,7 @@ Napíše článek, příspěvek na sociální sítě nebo vlákno vaším hlasem
 - **Posbírá archiv vašich textů** (`/compose collect`) – provede vás vyžádáním exportů z Facebooku, LinkedInu, X a Bluesky, stažením článků z webů, na které jste psali, i vytěžením záloh po webech, které už neexistují. Exporty převede do jednotné podoby sám.
 - **Vydestiluje z archivu popis vašeho hlasu** (`/compose profile`) – slovník, rytmus, myšlenkové postupy, rozdíly mezi tím, jak píšete odborně a jak osobně, a hlavně seznam obratů, které do vašich textů nepatří.
 - **Umí se doučit.** Když přibudou nové texty nebo nový postřeh, `/compose profile` je zapracuje do hotové báze, místo aby ji stavěl znovu.
-- **Ověří sám sebe slepým testem.** Napíše tři zkušební texty a ptá se u každého „zní, nebo nezní jako vy" – a z každé výhrady udělá opravu v bázi.
+- **Ověří sám sebe slepým testem.** Napíše tři zkušební texty a ptá se u každého „zní, nebo nezní jako vy“ – a z každé výhrady udělá opravu v bázi.
 - **Doptá se na to, co si nemá vymýšlet** – téma, publikum, kanál a hlavně váš postoj a pointu.
 - **Vezme si za vzor konkrétní starší texty**, ne jen abstraktní popis stylu.
 - **Zvládne vstup v jakékoli fázi** – od holého tématu přes osnovu až po hrubý draft k přepsání.
@@ -17,7 +17,7 @@ Napíše článek, příspěvek na sociální sítě nebo vlákno vaším hlasem
 ## Proč zrovna tenhle
 
 - **Styl je popsaný i doložený.** Vedle pravidel dostane model skutečné texty, takže nenapodobuje popis stylu, ale styl sám.
-- **Každé tvrzení o vašem psaní má doklad** – konkrétní text a doslovný úryvek. Bez toho vzniká věrohodně znějící popis „dobrého psaní", který ale není váš.
+- **Každé tvrzení o vašem psaní má doklad** – konkrétní text a doslovný úryvek. Bez toho vzniká věrohodně znějící popis „dobrého psaní“, který ale není váš.
 - **Zákaz vymýšlení názorů je tvrdý.** Text může znít jako vy jen tehdy, když v něm nestojí nic, co jste si nemysleli.
 - **Ví, čemu se vyhnout.** Báze drží i seznam obratů, které text okamžitě prozradí jako strojový.
 - **Počítá s tím, že se hlas vyvíjí.** Normou jsou poslední roky, starší vrstvy slouží jako doklad vývoje – ne jako průměr dvaceti let, kterým jste nikdy nepsali.

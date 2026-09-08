@@ -10,10 +10,10 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 
 ## Co umí
 
-1. **Vybere hlediska z katalogu sedmnácti** – a vybírá je podle **vlastnosti dokumentu**, ne podle jeho typu: „slibuje výsledek", „sbírají se údaje o lidech", „stojí to na cizí službě". Výběr vám předloží ke schválení dřív, než kdokoliv začne pracovat.
+1. **Vybere hlediska z katalogu sedmnácti** – a vybírá je podle **vlastnosti dokumentu**, ne podle jeho typu: „slibuje výsledek“, „sbírají se údaje o lidech“, „stojí to na cizí službě“. Výběr vám předloží ke schválení dřív, než kdokoliv začne pracovat.
 2. **Katalog má dvě poloviny.** *Metody* říkají, jak se dívat – vnitřní rozpor, co chybí, nevyslovené předpoklady, pohled zpětně z budoucího selhání, alternativy, měřitelnost cíle, zneužití, nevratnost, čtenář bez kontextu. *Domény* říkají, na co se dívat – ekonomika provozu, osobní údaje, závazky vůči druhé straně, data a proveditelnost, nepřítomní dotčení, závislosti, konkurence, cílová skupina.
 3. **Každou závažnou námitku pošle ověřit** někomu dalšímu, kdo má jediný úkol: **vyvrátit ji**. Co ověření nepřežije, se vám vůbec nezobrazí.
-4. **Projde s vámi nálezy jeden po druhém**, od nejzávažnějšího, a u každého nabídne konkrétní varianty řešení – ne jen „opravit".
+4. **Projde s vámi nálezy jeden po druhém**, od nejzávažnějšího, a u každého nabídne konkrétní varianty řešení – ne jen „opravit“.
 5. **Zapíše i to, co jste zamítli**, i s důvodem, aby to příští oponentura nenašla znovu jako nový nález.
 6. **Umí navázat na přerušený běh.** Ověřený seznam nálezů se ukládá na disk, takže se nejdražší část práce neplatí dvakrát.
 7. **Je určený k opakování.** Nález, který se vrátí, znamená, že se neopravil, jen přeformuloval – a skill to řekne výslovně.
@@ -23,11 +23,11 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 - **Oponenti nemají váš kontext.** To není omezení, ale celý smysl: nezávislost se nedá nasimulovat u někoho, kdo u vzniku dokumentu byl.
 - **Vždycky dostanou i seznam toho, co jste vědomě zamítli** – i s důvody. Bez toho by první běh přinesl námitky, které umíte vyvrátit z hlavy, a druhý byste už nepustili.
 - **Rozdílná hlediska, ne víc stejných kritiků.** Redundantní oponenti najdou tolikrát totéž, kolik jich pustíte.
-- **Metoda se nikdy nepouští bez domény.** „Podívej se na to kriticky" je slepé; „udělej pohled zpětně z budoucího selhání na ten cenový model" je zadání.
-- **Ověřovatel je záměrně v jiné situaci než oponent.** Oponent, který nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanismus.
+- **Metoda se nikdy nepouští bez domény.** „Podívej se na to kriticky“ je slepé; „udělej pohled zpětně z budoucího selhání na ten cenový model“ je zadání.
+- **Ověřovatel je záměrně v jiné situaci než oponent.** Oponent, který nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanizmus.
 - **Filtrovat nálezy nesmí spoluautor.** Kdyby se falešné vyřazovaly až v diskuzi, dělal by to přesně ten člověk, jehož slepotu má skill obcházet.
 - **Řekne, které hledisko vědomě nevzal a proč.** Nevybrané hledisko totiž nevrátí nula nálezů, ale neexistenci – a ta by žádným počítadlem neprošla.
-- **Nechválí.** Věci, které jsou v pořádku, se nevypisují, a závěr nikdy nezní „dokument je v dobrém stavu" – to není verdikt oponenta, ale autora.
+- **Nechválí.** Věci, které jsou v pořádku, se nevypisují, a závěr nikdy nezní „dokument je v dobrém stavu“ – to není verdikt oponenta, ale autora.
 
 ## Jak se to používá
 
@@ -57,9 +57,9 @@ C) Nechat být – u tří slev je to okrajové
 ## Co nedělá
 
 - **Není to kontrola kódu** ani kontrola proti standardům. Na to je `/review`.
-- **Není to audit vnitřní konzistence.** Ptá se „je to dobře vymyšlené?", ne „sedí to na sebe?" – na druhou otázku je `/consistency`.
+- **Není to audit vnitřní konzistence.** Ptá se „je to dobře vymyšlené?“, ne „sedí to na sebe?“ – na druhou otázku je `/consistency`.
 - **Nic sám nemění.** Změny až po schválení jednotlivých námitek.
-- **Nemá cenu nad torzem.** Posudek na kostru vygeneruje hlavně nálezy „chybí obsah", což víte i bez něj – skill se na to zeptá předem.
+- **Nemá cenu nad torzem.** Posudek na kostru vygeneruje hlavně nálezy „chybí obsah“, což víte i bez něj – skill se na to zeptá předem.
 
 ## Jak si ho nainstalovat
 

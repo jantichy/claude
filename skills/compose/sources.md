@@ -37,7 +37,7 @@ Exporty se připravují **hodiny až dva dny**. Vyžádej je na začátku, ne a�
 | Síť | Kde se vyžádá | Co z toho zpracovat |
 |---|---|---|
 | X / Twitter | `https://x.com/settings/download_your_data` | `data/tweets.js`, dlouhé texty z `data/note-tweet.js`, identita z `data/account.js` |
-| Facebook | `https://accountscenter.facebook.com/info_and_permissions/dyi` (formát **JSON**, rozsah „od začátku") | `your_facebook_activity/posts/your_posts__…_1.json` |
+| Facebook | `https://accountscenter.facebook.com/info_and_permissions/dyi` (formát **JSON**, rozsah „od začátku“) | `your_facebook_activity/posts/your_posts__…_1.json` |
 | LinkedIn | `https://www.linkedin.com/mypreferences/d/download-my-data` | `Shares_*.csv` a `Comments_*.csv` z **kompletního** archivu |
 | Bluesky | export repozitáře přes AT Protocol (`repo.car`) | všechny záznamy `app.bsky.feed.post` |
 
@@ -49,7 +49,7 @@ Berou cíl argumentem a **jsou idempotentní** – po novém exportu stačí pus
 
 **Co se vynechává:** reposty a sdílení bez vlastního komentáře, položky bez textu, lajky. Nejsou to autorovy texty.
 
-**Co se naopak vyplatí vzít:** odpovědi v diskusích. Bývá jich násobně víc než vlastních příspěvků a nesou hlas v nejsyrovější podobě – jak autor reaguje, když nepíše „text".
+**Co se naopak vyplatí vzít:** odpovědi v diskusích. Bývá jich násobně víc než vlastních příspěvků a nesou hlas v nejsyrovější podobě – jak autor reaguje, když nepíše „text“.
 
 **Jiné sítě než tyhle čtyři** (Mastodon, Threads, Instagram) skript nemají. Postup je pořád stejný: vyžádat oficiální export, najít v něm soubor s vlastními příspěvky, převést do téhož tvaru ročníkových souborů. Vzniklý převodník patří do `scripts/`.
 
@@ -89,7 +89,7 @@ Každá z nich už jednou vyrobila tichou chybu, která se poznala až o kus dá
 
 - **Facebook kóduje UTF-8 jako latin-1 escapy.** Bez opravy (`s.encode("latin-1").decode("utf-8")`) je celý export rozsypaný na mojibake. Rozpozná se to na první diakritice.
 - **LinkedIn escapuje uvozovky zpětným lomítkem** (`escapechar="\\"`) a víceřádková pole balí do uvozovek řádek po řádku. Bez očištění zůstanou uvozovky uprostřed textu.
-- **První stažení z LinkedInu bývá prázdné.** „Basic" archiv příspěvky neobsahuje – čeká se na druhý, kompletní, a na mail o jeho připravení.
+- **První stažení z LinkedInu bývá prázdné.** „Basic“ archiv příspěvky neobsahuje – čeká se na druhý, kompletní, a na e-mail o jeho připravení.
 - **Vlastníka účtu nikdy nečti z prvního výskytu.** Exporty jsou plné cizích identifikátorů z odpovědí a sledovaných účtů. Ber ho z místa, které ho autoritativně definuje – `account.js` u X, commit blok u AT Protocol, `wp_users` u WordPressu – a ověř druhým signálem.
 - **Názvy souborů na macOS jsou v NFD.** Před porovnáváním normalizuj na NFC, jinak se dva shodné názvy neshodnou.
 - **Export WordPressu nerozhoduje o místě první publikace.** Import zachovává datum postu i komentářů, takže přenesený text vypadá jako původní. Datum ověřuj podle komentářů: přijdou-li první v řádu hodin, sedí; přijdou-li o měsíce později, je to přetisk.

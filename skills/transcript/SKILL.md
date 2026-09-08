@@ -278,7 +278,7 @@ Polož **jednu otázku přes `AskUserQuestion`** se dvěma volbami:
 - **Přidat rozlišení** – `WHISPER_ON_EXISTING=suffix`. Nové výstupy dostanou `-2`, `-3` podle prvního volného jména a staré zůstanou ležet.
 - **Zastavit** – uživatel si soubory ukliď sám a spustí to znovu. Vypiš, které to jsou.
 
-**Ani tady nevybírej za něj.** Rozdíl mezi „přepsat" a „nechat vedle" je rozdíl mezi ztrátou předchozí práce a nepořádkem v adresáři, a co je v tu chvíli menší zlo, ví jen on.
+**Ani tady nevybírej za něj.** Rozdíl mezi „přepsat“ a „nechat vedle“ je rozdíl mezi ztrátou předchozí práce a nepořádkem v adresáři, a co je v tu chvíli menší zlo, ví jen on.
 
 **`WHISPER_KEEP_WAV=1` nastav právě tehdy, když se bude rozlišovat mluvčí.** Diarizace jede nad tímtéž WAV a bez toho by se musel vyrábět znovu. Jinak nech `0`, ať se po sobě uklidí hned. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
 

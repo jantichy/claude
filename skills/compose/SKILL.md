@@ -84,7 +84,7 @@ Načti z báze **soubor stylu**, **profil zvoleného formátu** a **odpovídají
 
 K tomu dohledej v archivu **3 až 5 textů nejpodobnějších tématem a formátem** – přes zlatý fond a grep – a **přečti je celé**. Pravidla popisují hlas, ukázky ho nesou; bez nich vzniká text, který popis stylu splňuje a přesto zní cize.
 
-**Bez načtených ukázek se draft nezačíná.** Je to podmínka běhu, ne optimalizace – stejně tvrdá jako autorův postoj. Žádá-li autor jejich vynechání („styl máš přece v bázi", „nežer kontext", „spěchám"), **odmítni a vysvětli proč**: kontext ušetřený tady se utratí na přepsání celého draftu. Tři texty jsou mez, ne odhad; míň jich znamená, že se nepíše.
+**Bez načtených ukázek se draft nezačíná.** Je to podmínka běhu, ne optimalizace – stejně tvrdá jako autorův postoj. Žádá-li autor jejich vynechání („styl máš přece v bázi“, „nežer kontext“, „spěchám“), **odmítni a vysvětli proč**: kontext ušetřený tady se utratí na přepsání celého draftu. Tři texty jsou mez, ne odhad; míň jich znamená, že se nepíše.
 
 ## Fáze 3 – Draft
 
@@ -122,11 +122,11 @@ Shromáždí texty do archivu. **Katalog zdrojů, postupy stahování a pasti je
 
 Zeptej se, kde všude autor kdy psal: vlastní blogy, cizí weby a magazíny, tištěná média, sociální sítě, zaniklé weby, lokální zálohy. **Ptej se postupně** a u každého zdroje zjisti, jestli je ještě online.
 
-**Odhad počtu od autora není zdroj pravdy.** „Bude jich přes sto" opakovaně neodpovídalo ničemu. Úplnost se ověřuje proti datům – `X-WP-Total`, sitemapa, databáze exportu – a platí ta.
+**Odhad počtu od autora není zdroj pravdy.** „Bude jich přes sto“ opakovaně neodpovídalo ničemu. Úplnost se ověřuje proti datům – `X-WP-Total`, sitemapa, databáze exportu – a platí ta.
 
 ### 2. Vyžádání exportů
 
-Exporty ze sítí se připravují **hodiny až dva dny**. Vyžádej je jako první věc, ať čekání běží na pozadí, a řekni autorovi, že mu přijde mail. Odkazy jsou v `sources.md`.
+Exporty ze sítí se připravují **hodiny až dva dny**. Vyžádej je jako první věc, ať čekání běží na pozadí, a řekni autorovi, že mu přijde e-mail. Odkazy jsou v `sources.md`.
 
 ### 3. Rozhodnutí o rozsahu
 
@@ -173,7 +173,7 @@ Podívej se do báze na záznam poslední profilace (leží v `_analysis/`):
 
 **Nikdy nepřepisuj bázi bez přečtení.** Obsahuje ruční úpravy, které vznikly z připomínek k jednotlivým textům, a ty v archivu nikde nejsou.
 
-**Ruční pravidlo se nemaže bez zeptání – ani při celé destilaci.** Pravidlo bez dokladu v archivu obvykle vzniklo z autorovy výhrady ve slepém testu; nová destilace ho neodvodí, protože v korpusu není. Před přepsáním udělej inventuru: co doklad má a co ne, a nedoložená předlož **jedním seznamem**. „Stará verze zůstane v gitu" náhrada není – git uchová znění, ne důvod, proč pravidlo vzniklo.
+**Ruční pravidlo se nemaže bez zeptání – ani při celé destilaci.** Pravidlo bez dokladu v archivu obvykle vzniklo z autorovy výhrady ve slepém testu; nová destilace ho neodvodí, protože v korpusu není. Před přepsáním udělej inventuru: co doklad má a co ne, a nedoložená předlož **jedním seznamem**. „Stará verze zůstane v gitu“ náhrada není – git uchová znění, ne důvod, proč pravidlo vzniklo.
 
 ### 2. Analýza korpusu po částech
 
@@ -189,11 +189,11 @@ Z analýz sestav bázi: **styl** (co platí napříč formáty), **profil každ�
 
 **Profil neopisuje styl, odkazuje na něj.** Dvě verze téhož pravidla se rozejdou a nikdo nepozná, která platí.
 
-**Anti-patterny piš kontrolovatelně.** „Nezačíná text řečnickou otázkou" jde ověřit; „píše autenticky" ne.
+**Anti-patterny piš kontrolovatelně.** „Nezačíná text řečnickou otázkou“ jde ověřit; „píše autenticky“ ne.
 
 ### 4. Slepý test
 
-Napiš podle nové báze tři texty – po jednom v každém formátu – a nech autora říct **„zní / nezní jako já"** s konkrétní výhradou. Bez toho se neví, jestli báze zachytila hlas, nebo jen popis hlasu.
+Napiš podle nové báze tři texty – po jednom v každém formátu – a nech autora říct **„zní / nezní jako já“** s konkrétní výhradou. Bez toho se neví, jestli báze zachytila hlas, nebo jen popis hlasu.
 
 **Zadání musí přijít od autora**, včetně jeho pointy. Text s vymyšleným názorem test znehodnotí – autor bude odmítat obsah a bude to vypadat jako vada stylu.
 
@@ -212,7 +212,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 ## Časté chyby
 
-- **Píše se bez načtených ukázek, protože „báze je přece totéž".** Není. Pravidla hlas popisují, ukázky ho nesou – text splní styl do puntíku a stejně zní cize. Je to nejdražší úspora kontextu, jakou tu jde udělat.
+- **Píše se bez načtených ukázek, protože „báze je přece totéž“.** Není. Pravidla hlas popisují, ukázky ho nesou – text splní styl do puntíku a stejně zní cize. Je to nejdražší úspora kontextu, jakou tu jde udělat.
 - **Charakteristický obrat se použije třikrát.** Jednou je to podpis, potřetí parodie. Platí na celý text, ne na odstavec.
 - **Autorův názor se odhadne z jeho starších textů.** Archiv říká, jak píše, ne co si myslí o dnešním tématu.
 - **Připomínka obecné platnosti se opraví jen v draftu.** Za týden se objeví znovu, protože v bázi o ní nic není.

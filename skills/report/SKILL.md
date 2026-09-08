@@ -1,6 +1,6 @@
 ---
 name: report
-description: Skill se použije, když uživatel zadá "/report", nebo chce z dat (CSV, JSON, export z GA4 nebo BigQuery, tabulka) udělat přehledný interaktivní report v jednom jediném HTML souboru – s grafy, komentářem a metodikou, aby se dal poslat mailem nebo nahrát na web.
+description: Skill se použije, když uživatel zadá "/report", nebo chce z dat (CSV, JSON, export z GA4 nebo BigQuery, tabulka) udělat přehledný interaktivní report v jednom jediném HTML souboru – s grafy, komentářem a metodikou, aby se dal poslat e-mailem nebo nahrát na web.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
@@ -8,7 +8,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 ## Co skill dělá
 
-Ze zdrojových dat udělá **jeden samostatný HTML soubor**, který jde vzít, poslat mailem nebo nahrát na web, a kdekoliv se otevře a funguje – bez serveru, bez internetu, bez závislostí.
+Ze zdrojových dat udělá **jeden samostatný HTML soubor**, který jde vzít, poslat e-mailem nebo nahrát na web, a kdekoliv se otevře a funguje – bez serveru, bez internetu, bez závislostí.
 
 ## Co skill nedělá
 

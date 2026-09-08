@@ -17,7 +17,7 @@ Přejmenování napříč projektem vypadá jako práce pro hledání a nahrazen
 - **Česká skloňovaná varianta.** Zrádnost, kterou anglicky psané nástroje neřeší vůbec – a v dokumentaci jí bývá nejvíc.
 - **Pořadí náhrad je promyšlené.** Delší tvary jdou první, takže z přejmenování nevznikne komolenina.
 - **Soubory se přesouvají tak, aby nezmizela historie.**
-- **Kontrolní průchod je povinný, ne volitelný.** Skill neskončí větou „mělo by to být hotové" – buď starý tvar nikde není, nebo řekne, kde zůstal.
+- **Kontrolní průchod je povinný, ne volitelný.** Skill neskončí větou „mělo by to být hotové“ – buď starý tvar nikde není, nebo řekne, kde zůstal.
 - **Vypíše, na co vědomě nesáhl** – archivy, cizí podklady, historické záznamy. Takže víte, co je záměr a co opomenutí.
 - **Nezačne nad rozdělanou prací.** Neuložené změny by se s přejmenováním smíchaly a přestalo by být poznat, co je čí.
 

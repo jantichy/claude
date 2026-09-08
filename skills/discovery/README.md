@@ -25,7 +25,7 @@ Chystáte se postavit produkt a chcete vědět, do čeho vstupujete: kdo to už 
 - **Dívá se i na to, co selhalo.** Produkty, které v kategorii skončily, jsou nejlevnější zdroj rizik – ta rizika už někdo zaplatil.
 - **Fakta bez zdroje zahazuje.** Vymyšlená cena o řád vedle je horší než prázdné místo – postaví se na ní rozhodnutí a nikdo ji nezpochybní, protože vypadá doloženě.
 - **Končí seznamem požadavků, ne prezentací.** Výstupem není přehled trhu k prolistování, ale konkrétní věty o tom, co váš produkt musí umět.
-- **Odlišení musí být ověřitelné.** „Jednodušší a rychlejší" neprojde; projde jen tvrzení, které jde ověřit u konkurence.
+- **Odlišení musí být ověřitelné.** „Jednodušší a rychlejší“ neprojde; projde jen tvrzení, které jde ověřit u konkurence.
 - **Stojí před zadáním, ne za ním.** Analýza, která dorazí po schválené specifikaci, se buď ignoruje, nebo znamená přepis všeho.
 
 ## Jak se to používá

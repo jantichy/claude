@@ -21,9 +21,9 @@ Nasadí hotovou práci do produkce: projde kontroly předtím, ošetří migrace
 
 ## Proč zrovna tenhle
 
-- **Nikdy se nespustí sám.** Ani jako pokračování jiné práce, ani proto, že jste na začátku dlouhého sezení řekli „a nasaď to" – to byl záměr, ne potvrzení.
+- **Nikdy se nespustí sám.** Ani jako pokračování jiné práce, ani proto, že jste na začátku dlouhého sezení řekli „a nasaď to“ – to byl záměr, ne potvrzení.
 - **Odděluje integrační a nasazovací větev.** Nasazovací platformy si po založení projektu nastaví jako produkční hlavní větev, takže každý přimergovaný kus jde rovnou ven. Skill to řeší povýšením do samostatné větve – hlavní větev pak zůstává místem, kde se integruje, a každý merge do ní dostane vlastní adresu na proklikání.
-- **Návrat musí existovat dřív, než se nasadí.** Neumíte-li odpovědět na otázku „jak se za deset minut vrátíme", nenasazuje se.
+- **Návrat musí existovat dřív, než se nasadí.** Neumíte-li odpovědět na otázku „jak se za deset minut vrátíme“, nenasazuje se.
 - **Ví, že kód se vrátí, ale data ne.** Nasazujete-li starší stav, než je v produkci, řekne to nahlas a data vyřeší zvlášť.
 - **Během okna se nic nemaže ani nepřejmenovává.** Odebraný sloupec znamená, že návrat kódu shodí aplikaci na datech, která nová verze zapsala – a máte rozbito na obou stranách.
 - **Neopravuje.** Najde-li kontrola problém, skončí a pošle to zpátky. Oprava dělaná v předvečer nasazení je přesně ta, která spadne.

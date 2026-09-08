@@ -49,7 +49,7 @@ Skill má tři vrstvy a jen jedna je závazná:
 
 **Vnitřek se přiznává** v sekci *Jak je to postavené uvnitř* a výslovně se v ní označí za implementační detail. Bez toho si na něj někdo zvykne jako na rozhraní a příští výměna nástroje se stane rozbitím kontraktu.
 
-**Delegace se zadává kontraktem výstupu, ne seznamem kroků.** „Potřebuju `docs/plan.md`, kde má každý úkol ověřitelné kritérium" přežije upgrade cizího nástroje; „udělej svůj krok 3 a pak krok 5" ne.
+**Delegace se zadává kontraktem výstupu, ne seznamem kroků.** „Potřebuju `docs/plan.md`, kde má každý úkol ověřitelné kritérium“ přežije upgrade cizího nástroje; „udělej svůj krok 3 a pak krok 5“ ne.
 
 **Co patří normě, se cizímu nástroji nesvěřuje.** Tvar, umístění výstupu, jazyk a pojmenování mu předej výslovně – každý nástroj má vlastní výchozí volbu a prosadí ji, když mlčíš.
 
@@ -71,13 +71,13 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 **`description` rozhoduje, jestli se skill vůbec vyvolá.** Je to jediná část, kterou má model v kontextu pořád – tělo se načte až potom. Píše se tedy pro rozhodování, ne pro popis.
 
 - Začni tvarem `Skill se použije, když uživatel zadá "/jméno", nebo chce …`. Doslovný spouštěč i popis situace: uživatel skill vyvolá obojím způsobem.
-- **Třetí osoba.** Ne „umím ti…", ne „můžeš tímhle…".
-- **Řekni i to, co skill nedělá**, liší-li se od podobného skillu. `/attack` to má takhle: *„Na rozdíl od `/review`, který kód čte, tenhle skill ho spouští."* Bez toho si model vybere špatný ze dvou blízkých.
+- **Třetí osoba.** Ne „umím ti…“, ne „můžeš tímhle…“.
+- **Řekni i to, co skill nedělá**, liší-li se od podobného skillu. `/attack` to má takhle: *„Na rozdíl od `/review`, který kód čte, tenhle skill ho spouští.“* Bez toho si model vybere špatný ze dvou blízkých.
 - **Vejdi se do 1024 znaků.** Delší popis se nemusí přenést celý.
 
 **Režimy se jmenují anglicky, jedním slovem, malými písmeny** – a **lícují napříč skilly**: co dělá totéž, jmenuje se stejně. Ustálená sada je `create`, `update`, `delete`; k ní podle potřeby další jednoslovné (`extract`, `full`). **Má-li skill jediné chování, žádný režim nemá a nepojmenovává se** – vymýšlet jméno pro to, co se stane vždycky, je zbytečné. **Jakmile má režimy dva a víc, musí být pojmenované všechny včetně výchozího** a u výchozího se to řekne. Hint, ve kterém stojí jen ten nevýchozí (`[full]`), tvrdí, že skill umí jednu věc – a to, co dělá bez argumentu, pak nejde napsat explicitně.
 
-**Proč anglicky:** je to jméno akce, ne řeč o ní. České „revize" se skloňuje, píše se s diakritikou a v `argument-hint` vypadá jako věta; `update` je token. Česká podstatná jména v próze („výsledek revize") zůstávají česky – rozdíl je mezi **jménem režimu** a mluvením o něm.
+**Proč anglicky:** je to jméno akce, ne řeč o ní. České „revize“ se skloňuje, píše se s diakritikou a v `argument-hint` vypadá jako věta; `update` je token. Česká podstatná jména v próze („výsledek revize“) zůstávají česky – rozdíl je mezi **jménem režimu** a mluvením o něm.
 
 **Proč lícovat:** dva skilly, které dělají tutéž věc pod jiným jménem, nutí uživatele pamatovat si, který má který. Platí to i pro režimy, které se **rozpoznávají samy** a nepředávají se argumentem – uživatel je vidí ve výpisu a pojmenovává je v řeči stejně.
 
@@ -113,7 +113,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Co skill dělá`** – co to je a jaké má režimy. Tři až deset řádků. Ne převyprávěný postup; ten je níž.
 
-**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód" je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`."* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
+**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
 
 **`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
 
@@ -125,11 +125,11 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Fáze N – Závěr`** – **poslední** fáze skillu; nese šablonu výstupu a **závěrečný verdikt**. Jméno po pomlčce **závazné není** – `Úklid a shrnutí`, `Uzavření` i `Předání` jsou v pořádku, závěr se pozná podle toho, že je poslední. Naopak **`Fáze 0` je závazná číslem**: příprava je vždycky nultý, ať se jmenuje jakkoliv (`/oponent` má „Fáze 0 – Co se oponuje“, `/project` „Krok 0 – Zjisti režim a stav“):
 
-**Verdikt má dvě předepsaná znění a skill si mezi nimi jen vybírá; vlastní si neformuluje.** Jméno „verdikt“ svádí k tomu, že jde o volné shrnutí – nejde: skill je **uvádí doslovně**, aby se z nich za běhu nestala parafráze. Jejich znění si ale volí sám – **doslovná napříč skilly být nemůžou**, protože čeština žádá shodu s rodem toho, co je hotové (*„Plán hotový není"* × *„Hotové to není"*). Závazný je tedy vzorec:
+**Verdikt má dvě předepsaná znění a skill si mezi nimi jen vybírá; vlastní si neformuluje.** Jméno „verdikt“ svádí k tomu, že jde o volné shrnutí – nejde: skill je **uvádí doslovně**, aby se z nich za běhu nestala parafráze. Jejich znění si ale volí sám – **doslovná napříč skilly být nemůžou**, protože čeština žádá shodu s rodem toho, co je hotové (*„Plán hotový není“* × *„Hotové to není“*). Závazný je tedy vzorec:
 
 1. **První** říká, že věc je hotová a ověřená, a čím se dá pokračovat.
-2. **Druhá** říká, že hotová není, a **jmenuje konkrétně, co tomu brání** – ne „ještě zbývá pár věcí".
-3. **Mezi nimi nic není.** Žádná třetí varianta, žádné smířlivé „v zásadě hotovo".
+2. **Druhá** říká, že hotová není, a **jmenuje konkrétně, co tomu brání** – ne „ještě zbývá pár věcí“.
+3. **Mezi nimi nic není.** Žádná třetí varianta, žádné smířlivé „v zásadě hotovo“.
 
 ```
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
@@ -140,11 +140,11 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 Skill s vlastním koncem pro některý režim (rušení, zamítnutí) smí mít druhou dvojici, ale musí splňovat týž vzorec.
 
-Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky" od „výsledek platí". Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
+Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky“ od „výsledek platí“. Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
 
 ## 5. Číslování a názvosloví
 
-**„Fáze" je norma.** Číslují se od nuly (`Fáze 0 – Příprava`) a čísla se nemění bezdůvodně – odkazuje se na ně napříč skilly.
+**„Fáze“ je norma.** Číslují se od nuly (`Fáze 0 – Příprava`) a čísla se nemění bezdůvodně – odkazuje se na ně napříč skilly.
 
 **Číslují se plochou vzestupnou řadou, bez písmen.** `0, 1, 2, 3…`, ne `1, 1b, 2`. Čtenář bere číslování jako tvrzení o vztazích, takže `1b`, které o vztahu k `1` nic neříká, lže.
 
@@ -152,9 +152,9 @@ Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal j
 
 Není to výjimka, ale splněné kritérium: co mu vyhoví, revize nesahá; co mu nevyhoví, je nedodělek a **opraví se**.
 
-**„Krok" jen u průvodce nastavením.** Rozhoduje, **čí odpovědi tvoří výsledek**: u `/project` je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek a jmenuje se „krok". Skilly, které něco samy najdou nebo vyrobí a ptají se až na nálezy – `/review`, `/consistency`, `/invoicing` –, mají „fázi", i když se ptají stejně často.
+**„Krok“ jen u průvodce nastavením.** Rozhoduje, **čí odpovědi tvoří výsledek**: u `/project` je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek a jmenuje se „krok“. Skilly, které něco samy najdou nebo vyrobí a ptají se až na nálezy – `/review`, `/consistency`, `/invoicing` –, mají „fázi“, i když se ptají stejně často.
 
-Rozlišovat podle toho, „jestli se uživatel může kdykoliv zastavit", nestačí: to platí u všech. Skill, který volí „krok", to musí ve svých zásadách zdůvodnit tímhle kritériem.
+Rozlišovat podle toho, „jestli se uživatel může kdykoliv zastavit“, nestačí: to platí u všech. Skill, který volí „krok“, to musí ve svých zásadách zdůvodnit tímhle kritériem.
 
 **Neodkazuj se dovnitř jiného skillu.** Potřebuješ-li tentýž postup jako soused, patří ten postup do `PREFLIGHT.md` nebo do doménové znalosti – ne do odkazu na jeho fázi. Cizí fáze se přečíslují a odkaz tiše ukáže jinam.
 
@@ -180,11 +180,11 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Nepiš, co model už ví.** Vysvětlovat, co je PDF, git nebo HTTP, je zbytečné. Ptej se u každého odstavce: *nese to informaci, kterou nemá?*
 
-**Jedna doporučená cesta, ne výčet možností.** „Použij X; u zvláštního případu Y" je návod. „Můžeš X, nebo Y, nebo Z" je odklad rozhodnutí na horší chvíli.
+**Jedna doporučená cesta, ne výčet možností.** „Použij X; u zvláštního případu Y“ je návod. „Můžeš X, nebo Y, nebo Z“ je odklad rozhodnutí na horší chvíli.
 
-**Ke každému pravidlu „proč".** Bez důvodu se pravidlo při prvním konfliktu obejde, protože nikdo neví, co se tím ztratí. `~/.claude/RULES.md`, *K pravidlům ukládej i „proč“* – totéž platí uvnitř skillu.
+**Ke každému pravidlu „proč“.** Bez důvodu se pravidlo při prvním konfliktu obejde, protože nikdo neví, co se tím ztratí. `~/.claude/RULES.md`, *K pravidlům ukládej i „proč“* – totéž platí uvnitř skillu.
 
-**Konkrétní příklad místo abstraktního.** Ne „ověř formát", ale ukázka správného a špatného tvaru.
+**Konkrétní příklad místo abstraktního.** Ne „ověř formát“, ale ukázka správného a špatného tvaru.
 
 **Šablona výstupu je zápis, ne pokyn k formátu.** Zpětné apostrofy okolo ní v `SKILL.md` jen oddělují šablonu od okolního textu – neříkají, že se má výstup vypsat jako blok kódu. Do konverzace jde běžný Markdown: tučné popisky místo dvojteček zarovnaných mezerami, řádky nezalomené natvrdo (`~/.claude/RULES.md`, *Styl odpovědí*). Šablona to musí uvádět výslovně, jinak model reprodukuje, co vidí, a vznikne z toho předformátovaná nudle zalomená kolem šedesáti znaků. Hlídá to test.
 
@@ -194,7 +194,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Neopisuj seznam, který má vlastní zdroj pravdy.** Pořadí kroků životního cyklu, prahy kontrol, inventář domén – na ty se odkazuj, nevypisuj je. Opsaný seznam se při přidání položky rozejde a **vypadá přitom pořád platně**, takže si toho nikdo nevšimne. Platí to dvojnásob pro **šablony, které skill zapisuje jinam**: `/project` psal do každého vývojářského `CLAUDE.md` cestu bez `/discovery` a projekty ji četly jako úplnou. Řetěz tří a víc kroků cyklu v `SKILL.md` hlídají testy. **Výjimku mají dvě místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který ukazuje krajní kroky a mezi nimi výpustku, a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `RULES.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
 
-**Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…" zestárnou tiše. Piš specialisty, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
+**Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…“ zestárnou tiše. Piš specialisty, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
 
 **Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen názvy souborů, příkazy a technické identifikátory.
 
@@ -216,7 +216,7 @@ Ověřovatel dostane jediný úkol: **nález vyvrátit**. Co ověření nepřež
 
 **Nálezy nesou `severity` a `basis`.** Bez závažnosti se nedají seřadit, bez doložení ověřit.
 
-**Skill, který něco tvrdí o výsledku, to tvrzení doloží.** Do souhrnu patří příkaz a jeho návratový kód, ne věta „testy procházejí". Co se nezkontrolovalo, se vypíše jako nezkontrolované.
+**Skill, který něco tvrdí o výsledku, to tvrzení doloží.** Do souhrnu patří příkaz a jeho návratový kód, ne věta „testy procházejí“. Co se nezkontrolovalo, se vypíše jako nezkontrolované.
 
 ## 10. README skillu
 
@@ -237,9 +237,9 @@ Vyhrává první kritérium, které sedí – a všechna vedou ven:
 | Je to postup, kritérium nebo instrukce pro Clauda | **do `SKILL.md`.** |
 | Je to obhajoba návrhového rozhodnutí | **do `SKILL.md`** k místu, kde platí, nebo do `~/Dev/context/decisions.md`. |
 | Je to implementační detail – jméno přepínače, souboru, funkce, modelu, agenta | **nikam.** Čtenáře nezajímá a zestárne dřív než zbytek textu. |
-| Je to historka z provozu, číslo z jednoho běhu, „poprvé jsem ho pustil a…" | **nikam.** |
+| Je to historka z provozu, číslo z jednoho běhu, „poprvé jsem ho pustil a…“ | **nikam.** |
 
-**Poslední dva řádky jsou ty, na které se zapomíná.** Věta *„Když jsem ho poprvé pustil na vlastní práci, ze 43 nálezů tři nepřežily ověření"* není popis skillu, ale příběh o jednom běhu; *„Agent, který má hledat všechno, nenajde nic"* je obhajoba architektury. Ani jedno čtenáři neřekne, k čemu ten skill je.
+**Poslední dva řádky jsou ty, na které se zapomíná.** Věta *„Když jsem ho poprvé pustil na vlastní práci, ze 43 nálezů tři nepřežily ověření“* není popis skillu, ale příběh o jednom běhu; *„Agent, který má hledat všechno, nenajde nic“* je obhajoba architektury. Ani jedno čtenáři neřekne, k čemu ten skill je.
 
 ### Jak se to překládá do lidské řeči
 
@@ -247,9 +247,9 @@ Odborný termín se nahrazuje tím, co znamená, a mechanika tím, co z ní čte
 
 | Ne | Ano |
 |---|---|
-| „předává slovník přes `--prompt`" | „připraví si seznam jmen a termínů z nahrávky a podstrčí ho rozpoznávači, takže je pak nekomolí" |
-| „diarizace" | „rozliší mluvčí" |
-| „paralelní fan-out agentů s ověřovací vrstvou" | „pošle na práci několik nezávislých pohledů a každou námitku pak nechá zkusit vyvrátit" |
+| „předává slovník přes `--prompt`“ | „připraví si seznam jmen a termínů z nahrávky a podstrčí ho rozpoznávači, takže je pak nekomolí“ |
+| „diarizace“ | „rozliší mluvčí“ |
+| „paralelní fan-out agentů s ověřovací vrstvou“ | „pošle na práci několik nezávislých pohledů a každou námitku pak nechá zkusit vyvrátit“ |
 
 Pravidlo *Nepiš, co model už ví* z odstavce **Jak se píše text uvnitř** tady **neplatí** – čtenář README není model a ví míň, ne víc.
 
@@ -326,7 +326,7 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 
 ### Meze
 
-**Do 120 řádků.** Je to zhruba dvě obrazovky – tolik člověk přečte, než se rozhodne, jestli ho to zajímá. Co se tam nevejde, patří do `SKILL.md`, kde to čte Claude, a ne do README. Mez je jediná a hlídá ji test; „nesmí být delší než `SKILL.md`" jako druhé kritérium neplatí – u krátkého skillu by povolilo README, které už nikdo nedočte.
+**Do 120 řádků.** Je to zhruba dvě obrazovky – tolik člověk přečte, než se rozhodne, jestli ho to zajímá. Co se tam nevejde, patří do `SKILL.md`, kde to čte Claude, a ne do README. Mez je jediná a hlídá ji test; „nesmí být delší než `SKILL.md`“ jako druhé kritérium neplatí – u krátkého skillu by povolilo README, které už nikdo nedočte.
 
 **Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
 
@@ -342,7 +342,7 @@ Skill má navíc **jeden odstavec** v `README.md` v kořeni. Platí pro něj tot
 ### [`/jméno`](skills/jméno/) – <k čemu to je, půl věty>
 ```
 
-Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou vypíše. Zvláštní řádek „Podrobně: …" by tedy vedl na totéž místo dvakrát.
+Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou vypíše. Zvláštní řádek „Podrobně: …“ by tedy vedl na totéž místo dvakrát.
 
 **Pořadí skillů v hlavním README je dané, ne libovolné.** Skilly ze životního cyklu stojí v pořadí, ve kterém se v životním cyklu pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Skilly mimo životní cyklus stojí **pod nimi a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
 

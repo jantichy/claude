@@ -61,7 +61,7 @@ Je-li už vypnutý → jen oznam, nic neměň. Jinak odstraň celou sekci `## Au
 
 ### Starý tvar zápisu
 
-Dva pozůstatky staršího mechanismu, oba se srovnávají bez ptaní na svolení: je to zápis, který skill sám vyrábí, a nechat ho ležet znamená nechat projekt s přepínačem, který nic nespíná.
+Dva pozůstatky staršího mechanizmu, oba se srovnávají bez ptaní na svolení: je to zápis, který skill sám vyrábí, a nechat ho ležet znamená nechat projekt s přepínačem, který nic nespíná.
 
 | Co najdeš | Co udělej |
 |---|---|

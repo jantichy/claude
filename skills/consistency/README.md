@@ -6,7 +6,7 @@
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
-Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je špatně zatříděné nebo zbylo po něčem, co se dávno smazalo. Neptá se „je ten kód správně?", ale **„sedí si projekt sám se sebou?"** – což je jiná otázka a nikdo jiný si ji neklade. Jednoznačné opravy udělá rovnou a jen je vypíše; o sporných se s vámi baví jednu po druhé.
+Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je špatně zatříděné nebo zbylo po něčem, co se dávno smazalo. Neptá se „je ten kód správně?“, ale **„sedí si projekt sám se sebou?“** – což je jiná otázka a nikdo jiný si ji neklade. Jednoznačné opravy udělá rovnou a jen je vypíše; o sporných se s vámi baví jednu po druhé.
 
 ## Co umí
 
@@ -14,13 +14,13 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 2. **`/consistency full`** – projde celý projekt bez ohledu na to, co se měnilo. Vyplatí se jednou za čas a před nasazením, ne po každé funkci. U velkého projektu se předem zeptá, jestli opravdu.
 3. **Hledá v pěti rovinách** – od kritických věcí, které můžou rozbít funkčnost (rozjeté typy, konfigurace s různými hodnotami, chybějící proměnné prostředí, rozhraní deklarované jinak, než se používá), přes technický dluh (duplicitní logika, různé postupy k témuž problému, mrtvý kód, dokumentace popisující něco, co neexistuje) až po kosmetiku (nejednotné pojmenování, jedna entita pod třemi jmény v různých vrstvách).
 4. **Zvlášť kontroluje skupiny souborů, které mají mít stejnou stavbu** – adresáře, kde každý soubor reprezentuje jednu instanci téhož konceptu. Chybějící sekce v jednom z nich se jinak nenajde.
-5. **Hlídá i to, co stárne** – poznámky „doplnit později" starší než půl roku, komentáře s termínem v minulosti, přepínače funkcí, které mají všude stejnou hodnotu, nedokončené migrace.
+5. **Hlídá i to, co stárne** – poznámky „doplnit později“ starší než půl roku, komentáře s termínem v minulosti, přepínače funkcí, které mají všude stejnou hodnotu, nedokončené migrace.
 6. **Seskupuje nálezy podle příčiny.** Jedno přejmenování, které zasáhlo padesát souborů, je jedna položka, ne padesát.
 7. **Pamatuje si, co jste rozhodli neopravovat** – a příště se na to už neptá, dokud se ten kód nezmění.
 
 ## Proč zrovna tenhle
 
-- **Umlčení má datum spotřeby.** Rozhodnutí „tohle neopravovat" se zapíše i se stavem repozitáře; jakmile se dotčený kód změní, nález se předloží znovu i s původním odůvodněním. Bez toho by z výjimek postupně vznikl seznam, kterým se dá umlčet cokoliv.
+- **Umlčení má datum spotřeby.** Rozhodnutí „tohle neopravovat“ se zapíše i se stavem repozitáře; jakmile se dotčený kód změní, nález se předloží znovu i s původním odůvodněním. Bez toho by z výjimek postupně vznikl seznam, kterým se dá umlčet cokoliv.
 - **Neptá se na každou drobnost.** Bezriziková oprava se udělá rovnou a jen se vypíše; ptá se jen na to, kde se dá rozhodnout jinak.
 - **Nesmaže kód jen proto, že vypadá mrtvý.** Může se volat dynamicky, z konfigurace nebo z jiného repozitáře – proto je to vždycky sporné.
 - **U hromadných nálezů neodklikáváte padesát otázek.** Ukáže vzorec, počet a tři příklady a nabídne to udělat najednou.

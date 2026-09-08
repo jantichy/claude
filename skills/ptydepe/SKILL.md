@@ -28,7 +28,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 **Skill si dělá všechno sám**, delegace na `/replace` se neosvědčila a 7. 9. 2026 vypadla: umí odvozené tvary, ale ne to, co náhradu termínu doopravdy komplikuje – změnu rodu a s ní shodu přívlastků, homonyma, opačné významy a repetice, které náhrada vyrobí. Ve třiadvaceti termínech jednoho dne nebyl použitelný ani jednou.
 
-**Náhrada se proto píše jako mapa frází, ne jako záměna slova.** Ke každé vazbě se starým termínem se napíše její nová podoba i se shodou (*„vyber čtyři až pět úhlů"* → *„vyber čtyři až pět hledisek"*), a teprve ta mapa se pustí přes soubory z `git ls-files`. Je to pracnější než `sed` a je to schválně: plošná záměna slova rozbije každou větu, kde se změnil rod nebo kde slovo znamená něco jiného.
+**Náhrada se proto píše jako mapa frází, ne jako záměna slova.** Ke každé vazbě se starým termínem se napíše její nová podoba i se shodou (*„vyber čtyři až pět úhlů“* → *„vyber čtyři až pět hledisek“*), a teprve ta mapa se pustí přes soubory z `git ls-files`. Je to pracnější než `sed` a je to schválně: plošná záměna slova rozbije každou větu, kde se změnil rod nebo kde slovo znamená něco jiného.
 
 **Závazné je** rozhodnutí, ne mechanika: náhrada se nedělá bez uživatele, starý termín zůstane zapsaný v `PTYDEPE.md` a nikde jinde, a běh končí doloženým kontrolním průchodem. Jak se ta náhrada technicky provede, je implementační detail.
 

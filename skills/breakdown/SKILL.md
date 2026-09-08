@@ -1,6 +1,6 @@
 ---
 name: breakdown
-description: Skill se použije, když uživatel zadá "/breakdown", nebo chce ze schváleného zadání udělat implementační plán – rozpad na úkoly velikosti pár minut, u každého konkrétní soubory, kód testu, příkaz na ověření a commit. Vyrábí docs/plan.md a předává do realizace.
+description: Skill se použije, když uživatel zadá "/breakdown", nebo chce ze schváleného zadání udělat implementační plán – rozpad na úkoly velikosti pár minut, u každého konkrétní soubory, kód testu, příkaz na ověření a commit. Vyrábí docs/plan.md a předává do implementace.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
@@ -14,7 +14,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) navazuje na `/oponent` a p�
 
 ## Co skill nedělá
 
-- **Neimplementuje.** Ani první úkol „na ukázku“. Realizaci dělá `/implement`.
+- **Neimplementuje.** Ani první úkol „na ukázku“. Implementaci dělá `/implement`.
 - **Nepíše zadání.** Když chybí, pošle tě na `/specify`.
 - **Neřeže rozsah sám.** Co je v MVP, rozhodl `/specify`. Tady se to jen respektuje.
 
@@ -27,7 +27,7 @@ Co je naopak **závazné a nesmí se změnit tiše**:
 - vstup je schválené zadání v `docs/`,
 - výstup je `docs/plan.md`,
 - plán pokrývá jen MVP,
-- po dokončení se nepokračuje do realizace automaticky.
+- po dokončení se nepokračuje do implementace automaticky.
 
 ------
 
@@ -58,9 +58,9 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 ## Fáze 1 – Rozsah plánu
 
-**Jen MVP.** Zadání popisuje celou věc, plán jen první verzi – viz `~/.claude/RULES.md`, *Navrhuj kompletně, realizuj postupně*. Vypiš, které položky z MVP checklistu plán pokryje, a nech to potvrdit.
+**Jen MVP.** Zadání popisuje celou věc, plán jen první verzi – viz `~/.claude/RULES.md`, *Navrhuj kompletně, implementuj postupně*. Vypiš, které položky z MVP checklistu plán pokryje, a nech to potvrdit.
 
-**Když je toho moc.** Pokrývá-li zadání víc nezávislých podsystémů, řekni to a rozděl to na víc plánů – každý musí sám o sobě dát funkční, otestovatelný software. Neposílej do realizace plán, který nejde dokončit v rozumném celku.
+**Když je toho moc.** Pokrývá-li zadání víc nezávislých podsystémů, řekni to a rozděl to na víc plánů – každý musí sám o sobě dát funkční, otestovatelný software. Neposílej do implementace plán, který nejde dokončit v rozumném celku.
 
 **Doménové standardy.** Předej dál, co si projekt importuje v `CLAUDE.md` – `~/Dev/context/coding/coding.md` vždy, dál podle povahy `web/web.md`, `web/admin.md`, `analytics/analytics.md`. Plán je má respektovat, ne je objevovat až při `/review`.
 
@@ -78,7 +78,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 - **cíl** = `docs/plan.md`, **ne** `docs/superpowers/plans/…` – tohle mu musíš říct, jinak si založí vlastní adresářový strom vedle tvého (`~/.claude/STRUCTURE.md`: v `docs/` jednoslovné anglické názvy bez datumových prefixů),
 - **rozsah** = jen položky MVP odsouhlasené ve Fázi 1,
 - **doménové standardy** z Fáze 1,
-- že **volbu způsobu realizace na konci nenabízí** – tu řeší `/implement`,
+- že **volbu způsobu implementace na konci nenabízí** – tu řeší `/implement`,
 - že každý úkol musí mít **ověřitelné akceptační kritérium** – viz Fáze 3.
 
 ------
@@ -104,9 +104,9 @@ Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuest
 
 ## Fáze 4 – Předání
 
-**Nepokračuj do realizace sám.** Plán se schvaluje, než se podle něj začne psát kód – to je poslední levné místo, kde se dá otočit.
+**Nepokračuj do implementace sám.** Plán se schvaluje, než se podle něj začne psát kód – to je poslední levné místo, kde se dá otočit.
 
-> Plán je hotový a commitnutý v `docs/plan.md` – <N> úkolů. Přečti si ho prosím; až ho odsouhlasíš, pustíme realizaci přes `/implement`.
+> Plán je hotový a commitnutý v `docs/plan.md` – <N> úkolů. Přečti si ho prosím; až ho odsouhlasíš, pustíme implementaci přes `/implement`.
 
 Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Hlediska nevypisuj – sestaví si je sám podle svého katalogu (`~/.claude/RULES.md`, *Single source of truth*).
 

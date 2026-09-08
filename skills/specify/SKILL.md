@@ -48,7 +48,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 | **Produktový rámec a sepsání požadavků** | **tenhle skill** |
 | Sepsání návrhu řešení | `brainstorming` ho vytvoří, tenhle skill mu určí cíl a tvar |
 | Implementační plán | `/breakdown` |
-| Realizace plánu | `/implement` |
+| Implementace plánu | `/implement` |
 
 **Přepis výchozí cesty.** `brainstorming` ukládá design doc do `docs/superpowers/specs/YYYY-MM-DD-<téma>-design.md`. Explicitně přitom respektuje uživatelovu preferenci a ta zní jinak – podle `~/.claude/STRUCTURE.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů, takže cíl je **`docs/architecture.md`**.
 
@@ -61,7 +61,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 - **Ptej se postupně a přes tool `AskUserQuestion`** – postup, tvar otázky i mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 - **Nic si nevymýšlej** – technický název, ID, parametr, cizí API, cena. Viz `~/.claude/RULES.md`, *Při nejistotě se zeptej*.
 - **Zapisuj průběžně** – ve chvíli, kdy rozhodnutí padne, ne až na konci. Viz `~/.claude/RULES.md`, *Pravda v souborech, ne v konverzaci*; kam co patří, definuje `STRUCTURE.md`.
-- **Navrhuj kompletně, realizuj postupně** – viz `~/.claude/RULES.md`. Tady to znamená: požadavky i návrh řešení popisují celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
+- **Navrhuj kompletně, implementuj postupně** – viz `~/.claude/RULES.md`. Tady to znamená: požadavky i návrh řešení popisují celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
 - **YAGNI.** Z každého návrhu vyhoď, co není potřeba – ale zapiš to do *Mimo rozsah*, ať je vidět, že to bylo zvážené a zamítnuté, ne opomenuté.
 
 ------
@@ -102,7 +102,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 ## Fáze 1 – Nultý krok: vytěž, co už uživatel má
 
-**Než se na cokoliv zeptáš**, vyzvi ho, ať přiloží nebo nakopíruje všechno, co k tomu má – i nestrukturovaně. Zápis ze schůzky, poznámky, starý dokument, screenshoty, konkurenční web, mail od klienta.
+**Než se na cokoliv zeptáš**, vyzvi ho, ať přiloží nebo nakopíruje všechno, co k tomu má – i nestrukturovaně. Zápis ze schůzky, poznámky, starý dokument, screenshoty, konkurenční web, e-mail od klienta.
 
 0. **Nejdřív si přečti, co v projektu už je** – zejména `docs/competition.md` a `docs/risks.md` od `/discovery`, a `docs/backlog.md` a `docs/todo.md` (viz bod 5). Sekce *Co poměřujeme* odpovídá na to, jaký problém řešíme a komu; *Naše pozice a odlišení* říká, co produkt musí umět a čím se liší; rizika říkají, co musí být postavené jinak. **Na nic z toho se neptej znovu** – shrň to a nech potvrdit.
 1. **Originály ulož** do projektu (`docs/research/`), ať se dají dohledat.
@@ -224,7 +224,7 @@ Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání
 
 **U projektu bez kódu** `/breakdown` nevyvolávej – rozepiš kroky do `docs/todo.md`.
 
-Celý řetěz i s tím, co následuje po realizaci, je v `~/.claude/RULES.md`, *Životní cyklus projektu*.
+Celý řetěz i s tím, co následuje po implementaci, je v `~/.claude/RULES.md`, *Životní cyklus projektu*.
 
 ------
 

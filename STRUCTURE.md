@@ -238,7 +238,7 @@ Existuje **jen spolu s `todo.md`**: jeden bez druhého nedává smysl, tak se ta
 - **`/oponent`** – čte ho příští `/oponent`, který bez seznamu hledisek nepozná, s čím srovnávat počty nálezů.
 - **`/consistency` a `/cleanup`** – čte je příští běh téhož skillu: `/consistency` pozná, co už bylo auditované a s jakým vědomě zúženým rozsahem, `/cleanup` co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
 
-**Kritérium je „má to svého čtenáře", ne „je to krok cyklu".** Krok, jehož záznam by nikdo nečetl, sem nezapisuje – jinak sekce zbytní a přestane se číst. **Rozšiřovat ten výčet mlčky se nesmí:** `/consistency` a `/cleanup` do sekce fakticky zapisovaly už delší dobu, zatímco norma je nejmenovala, a odhalilo to až ověření čtenářem bez kontextu 7. 9. 2026.
+**Kritérium je „má to svého čtenáře“, ne „je to krok cyklu“.** Krok, jehož záznam by nikdo nečetl, sem nezapisuje – jinak sekce zbytní a přestane se číst. **Rozšiřovat ten výčet mlčky se nesmí:** `/consistency` a `/cleanup` do sekce fakticky zapisovaly už delší dobu, zatímco norma je nejmenovala, a odhalilo to až ověření čtenářem bez kontextu 7. 9. 2026.
 
 
 ```

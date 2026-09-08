@@ -43,7 +43,7 @@ Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Sk
 
 **Volání cizích nástrojů je implementační detail, ne rozhraní.** Vyměnit se smí kdykoliv. Závazné je: tvar výstupu podle `SKILLS.md`, že se skill nezaloží bez odsouhlaseného zadání, že revize nic nepřepíše bez zeptání a že se po dokončení dorovná okolí.
 
-**Zadávej vnitřku kontrakt výstupu, ne kroky.** „Potřebuju tři testovací prompty a vyhodnocení, jestli se skill vyvolal" přežije upgrade pluginu; „udělej svůj krok 3" ne.
+**Zadávej vnitřku kontrakt výstupu, ne kroky.** „Potřebuju tři testovací prompty a vyhodnocení, jestli se skill vyvolal“ přežije upgrade pluginu; „udělej svůj krok 3“ ne.
 
 **Cizí nástroj nesmí rozhodovat o tvaru.** Předej mu výslovně: sekce a jejich pořadí podle `SKILLS.md`, čeština, cíl `skills/<jméno>/SKILL.md` v tomhle repozitáři. Bez toho si prosadí vlastní výchozí volbu – `skill-creator` i `writing-skills` mají každý svou a obě se od téhle normy liší.
 
@@ -146,7 +146,7 @@ Tři vrstvy, každá měří něco jiného. Chybí-li nástroj pro některou, vy
 
    **Měř na skutečném kanálu:** pusť každý testovací prompt přes `claude -p --output-format stream-json` v čistém adresáři a sleduj, jestli mezi voláními nástrojů padne `Skill` se jménem toho skillu.
 
-   **Pozor: doslovný `/jméno` se takhle změřit nedá.** Napíše-li uživatel jméno skillu s lomítkem, harness mu **vloží tělo `SKILL.md` rovnou do zadání** a model žádný nástroj `Skill` nevolá – není proč. Detektor postavený na volání nástroje pak hlásí propad tam, kde skill zabral **spolehlivěji** než jindy, protože o jeho načtení nerozhodoval model. Je to táž vada jako u `run_eval.py` o odstavec výš: měřidlo, které neodliší vlastní selhání od nálezu. **Doslovné slash prompty proto měř znalostí obsahu těla** – zeptej se na něco, co je jen v `SKILL.md` a není v `description` (třeba na názvy fází), a ověř, že to model zná. Ověřeno 7. 9. 2026 na `/ptydepe`: detektor podle volání nástroje dal 20/24, skutečnost byla 24/24. Ostatní skilly jsou přitom reálně v nabídce, takže se rovnou měří i překryv s nimi. Dva běhy na prompt, aspoň šest pozitivních a šest negativních – near-missy volit tak, aby braly jednotlivá slova z popisu („posbírej články konkurence" proti režimu `collect`).
+   **Pozor: doslovný `/jméno` se takhle změřit nedá.** Napíše-li uživatel jméno skillu s lomítkem, harness mu **vloží tělo `SKILL.md` rovnou do zadání** a model žádný nástroj `Skill` nevolá – není proč. Detektor postavený na volání nástroje pak hlásí propad tam, kde skill zabral **spolehlivěji** než jindy, protože o jeho načtení nerozhodoval model. Je to táž vada jako u `run_eval.py` o odstavec výš: měřidlo, které neodliší vlastní selhání od nálezu. **Doslovné slash prompty proto měř znalostí obsahu těla** – zeptej se na něco, co je jen v `SKILL.md` a není v `description` (třeba na názvy fází), a ověř, že to model zná. Ověřeno 7. 9. 2026 na `/ptydepe`: detektor podle volání nástroje dal 20/24, skutečnost byla 24/24. Ostatní skilly jsou přitom reálně v nabídce, takže se rovnou měří i překryv s nimi. Dva běhy na prompt, aspoň šest pozitivních a šest negativních – near-missy volit tak, aby braly jednotlivá slova z popisu („posbírej články konkurence“ proti režimu `collect`).
 3. **Dodržení pod tlakem** – `superpowers:writing-skills`, tlakové scénáře. **Povinné u skillu, který něco zakazuje nebo vynucuje** (nesahat na testy, nepokračovat bez potvrzení, nespouštět proti produkci). U takového skillu je totiž funkce právě to omezení, a ta se tvarem ověřit nedá.
 
 Nálezy oprav a **projeď znovu** – ne že je jen ohlásíš.
@@ -215,7 +215,7 @@ Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez j
 | Závěrečný verdikt | jsou tam obě znění a ve tvaru z normy |
 | Délka | proti mezím z normy; nad měkkou mez navrhni, co vytáhnout |
 | Odkazy | každá cesta a každý zmíněný skill existuje; **žádný odkaz nemíří dovnitř fáze jiného skillu** |
-| Názvosloví | „Fáze" vs. „Krok"; jeden termín pro jednu věc |
+| Názvosloví | „Fáze“ vs. „Krok“; jeden termín pro jednu věc |
 | Delegace | volané nástroje existují; sekce *Jak je to postavené uvnitř* je tam, kde se deleguje, a označuje vnitřek za vyměnitelný |
 | README skillu | existuje, má povinné sekce v pořadí z normy, instalace je psaná jako pokyn pro Clauda a u skillu ze životního cyklu nechybí rámeček ani hromadná instalace |
 | **Nové možnosti v okolí** | *nevzniklo mezitím něco, co tenhle skill dělá ručně?* Přibyl vestavěný skill, plugin, MCP server nebo vlastní skill, který by nahradil kus jeho postupu? |
@@ -260,7 +260,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 | `~/.claude/README.md` | jeho sekce |
 | `~/.claude/RULES.md` | *Životní cyklus projektu* a zmínky u sousedů |
 | `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, je-li tam; jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
-| ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`" |
+| ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`“ |
 | `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních vizitek. Osiřelý odkaz na `../<jméno>/README.md` testy shodí, ale samy ho nevyškrtnou |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
 | projektové `CLAUDE.md` v `~/Dev` | sekce, které skill zakládal |
@@ -268,7 +268,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 
 Hledej **grepem přes všechny ty kořeny**, ne z paměti. Po smazání **projeď kontrolní průchod na jméno skillu** – musí vrátit nulu mimo místa vědomě ponechaná.
 
-**Nech stopu.** Do `~/Dev/context/decisions.md` zapiš, co bylo zrušeno a proč, i co se tím vědomě ztratilo. Bez toho se zrušený mechanismus vrátí za půl roku jako „to by šlo udělat".
+**Nech stopu.** Do `~/Dev/context/decisions.md` zapiš, co bylo zrušeno a proč, i co se tím vědomě ztratilo. Bez toho se zrušený mechanizmus vrátí za půl roku jako „to by šlo udělat“.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

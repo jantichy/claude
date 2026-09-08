@@ -36,7 +36,7 @@ báze/
 
 **Každé stylistické tvrzení nese cestu k souboru a doslovný úryvek.** Tvrzení bez dokladu je dojem a do báze nesmí.
 
-Je to jediná pojistka proti tomu, aby destilace popsala obecnou představu o „dobrém psaní" místo tohohle autora. Model umí napsat věrohodný odstavec o něčím stylu, aniž by ten styl četl – a pozná se to až na hotovém textu, který zní jako každý jiný.
+Je to jediná pojistka proti tomu, aby destilace popsala obecnou představu o „dobrém psaní“ místo tohohle autora. Model umí napsat věrohodný odstavec o něčím stylu, aniž by ten styl četl – a pozná se to až na hotovém textu, který zní jako každý jiný.
 
 **Doklad musí být z archivu**, ne z paměti a ne z toho, co autor o sobě řekl v zadání.
 
@@ -82,13 +82,13 @@ Z analýz vzniká styl a profily formátů. Dělicí čára je ostrá:
 
 **Časové vážení promítni do normy, ne do průměru.** Normou je hlas posledních let; starší vrstvy slouží k doložení vývoje a jejich odložené polohy patří mezi anti-patterny. Bez toho vznikne průměr dvaceti let, kterým autor nikdy nepsal.
 
-**Anti-patterny piš kontrolovatelně.** „Nezačíná text řečnickou otázkou" jde při self-checku ověřit; „píše autenticky" ne.
+**Anti-patterny piš kontrolovatelně.** „Nezačíná text řečnickou otázkou“ jde při self-checku ověřit; „píše autenticky“ ne.
 
 **Zapiš i horní mez.** Ustálené obraty a expresiva jsou to první, co se při napodobování přežene: v hotovém textu smí být každý nanejvýš jednou. Bez zapsané meze vznikne parodie – text hustší na charakteristické obraty, než jakýkoliv skutečný.
 
 ## Zlatý fond
 
-Kurátorovaný výběr textů, které se při psaní čtou jako živý vzor. Ne „nejlepší texty", ale **nejvzorovější pro daný formát a téma**.
+Kurátorovaný výběr textů, které se při psaní čtou jako živý vzor. Ne „nejlepší texty“, ale **nejvzorovější pro daný formát a téma**.
 
 - **Dlouhé texty odkazem**, ne celé – cesta do archivu, datum, téma a věta, čím je text vzorový. Do kontextu se natáhne až ten, který se hodí k zadání.
 - **Krátké texty a vlákna celé** přímo v souboru, včetně všech dílů vlákna. Načítat je jednotlivě z archivu se nevyplatí.
@@ -97,7 +97,7 @@ Kurátorovaný výběr textů, které se při psaní čtou jako živý vzor. Ne 
 
 ## Slepý test
 
-Báze bez slepého testu je hypotéza. Napiš podle ní tři texty – po jednom v každém formátu, různá témata – a nech autora u každého říct **„zní / nezní jako já"** s konkrétní výhradou: co přesně nesedí, jestli slovo, rytmus, stavba, nebo tón.
+Báze bez slepého testu je hypotéza. Napiš podle ní tři texty – po jednom v každém formátu, různá témata – a nech autora u každého říct **„zní / nezní jako já“** s konkrétní výhradou: co přesně nesedí, jestli slovo, rytmus, stavba, nebo tón.
 
 **Zadání i pointy musí přijít od autora.** Text s vymyšleným názorem test znehodnotí – autor bude odmítat obsah a bude to vypadat jako vada stylu.
 

@@ -4,9 +4,9 @@ Ze zvukových i obrazových nahrávek udělá pořádek: přepíše je do čitel
 
 ## Co umí
 
-1. **Přepis do čitelného textu** – ne syrový výstup rozpoznávače, ale vyčištěný text: bez „ehm", bez zamotaných formulací, rozdělený do kapitol s nadpisy a odstavců, s vyznačenými pojmy.
+1. **Přepis do čitelného textu** – ne syrový výstup rozpoznávače, ale vyčištěný text: bez „ehm“, bez zamotaných formulací, rozdělený do kapitol s nadpisy a odstavců, s vyznačenými pojmy.
 2. **Strukturované shrnutí** celé nahrávky – uspořádané logicky, ne chronologicky, a **na konci soupis domluv, úkolů a dalších kroků**.
-3. **Rozlišení mluvčích** – kdo kdy mluví. Skill se pak zeptá, kdo je kdo, a jména propíše i do úkolů ve shrnutí, takže místo „dodat seznam" stojí „**Tomáš** dodá seznam".
+3. **Rozlišení mluvčích** – kdo kdy mluví. Skill se pak zeptá, kdo je kdo, a jména propíše i do úkolů ve shrnutí, takže místo „dodat seznam“ stojí „**Tomáš** dodá seznam“.
 4. **Titulky s časovými značkami**, na dohledání místa v nahrávce – volitelně i ve variantě, která nese jméno mluvčího.
 5. **Zvládne zvuk i video.** Záznam hovoru se dnes stahuje jako video, tak se z něj prostě vytáhne zvuk – není to výjimka, ale běžný případ.
 6. **Pozná jazyk sám** a všechno – přepis, opravy pravopisu i shrnutí – udělá v něm. Anglicky mluvená schůzka nemá české shrnutí.
@@ -20,10 +20,10 @@ Ze zvukových i obrazových nahrávek udělá pořádek: přepíše je do čitel
 - **Připraví si seznam relevantních jmen, značek a odborných termínů a předá ho rozpoznávači předem** – ten je pak zapíše správně už při poslechu. Opravovat je dodatečně je principiálně slabší: vymyšlená oprava vypadá stejně věrohodně jako správná. Návrhy si přitom vytáhne z toho, co jste napsali, z projektu, ve kterém stojíte, i z předchozí konverzace, a nechá si je odsouhlasit.
 - **Rešerši dělá naplno, ale rozpoznávači předává výběr.** Ten má tvrdý strop na to, kolik toho unese, a při překročení tiše zahodí začátek – takže se zůstává bezpečně pod ním. Zbytek slovníku se použije při čištění, kde naopak platí, čím víc kontextu, tím líp.
 - **Ví, kde jsou meze slovníku, a přiznává je.** Že seznam jmen zabere, není samozřejmost – změřeno na sedmi bězích nad touž nahrávkou, a proto skill říká, že u důležitých jmen se výsledek má zkontrolovat.
-- **Odstraní halucinace rozpoznávače** – opakující se nesmyslné řádky i vsunuté věty typu „Titulky vytvořil…".
+- **Odstraní halucinace rozpoznávače** – opakující se nesmyslné řádky i vsunuté věty typu „Titulky vytvořil…“.
 - **Titulky se dají číst.** Nezalomí se uprostřed slova a nemají délku odstavce – nejdelší vyjde na necelou stovku znaků místo půltisíce. Text je přitom slovo za slovem tentýž, mění se jen zalomení; kratší úseky navíc zpřesňují, komu se replika přiřadí.
 - **Opraví přeslechy podle tématu**, ale **neopravuje to, čemu jen nerozumí**: co model dává opakovaně a konzistentně, je nejspíš váš interní žargon, ne chyba. Na konec pak vypíše seznam termínů, které nechal být, ať víte, co ověřit.
-- **Opraví pravopis, ale nechá vaši mluvu být.** Čárky, shodu a velká písmena spraví, protože to zapsal špatně stroj – ale „bysme" a „vokno" zůstanou, protože tak lidé mluví.
+- **Opraví pravopis, ale nechá vaši mluvu být.** Čárky, shodu a velká písmena spraví, protože to zapsal špatně stroj – ale „bysme“ a „vokno“ zůstanou, protože tak lidé mluví.
 - **České jméno v anglické nahrávce vrátí do českého tvaru** i s diakritikou, přestože přepsané slovo v angličtině zdánlivě dává smysl.
 - **Nikdy nehádá, kdo mluvil.** Replika, kterou nelze spolehlivě přiřadit, zůstane bez jména – špatné přiřazení se totiž propíše až do úkolů, kde je z něj tvrzení, kdo co slíbil.
 - **Odhad času umí a učí se.** Řekne dopředu, jak dlouho to potrvá, a po každém běhu si tempo srovná podle vašeho počítače. Nezapočítává přitom běhy, které selhaly, ani krátké vzorky, které by odhad zkreslily.

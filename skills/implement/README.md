@@ -23,7 +23,7 @@ Vezme hotový implementační plán a projde ho od začátku do konce: u každé
 ## Proč zrovna tenhle
 
 - **Testy jsou jen ke čtení.** Nesedí-li test s implementací, první hypotéza je, že je špatně kód. Změna testu je samostatný zásah, který se ohlásí a schválí – nikdy tichá součást úkolu. Vypnutí testu nebo zeslabení kontroly je chyba, i když je pak zeleno.
-- **Netvrdí, že to prošlo, bez doložení.** Do souhrnu patří příkaz a jeho výsledek, ne věta „testy procházejí". Co se zkontrolovat nedalo, se vypíše jako nezkontrolované.
+- **Netvrdí, že to prošlo, bez doložení.** Do souhrnu patří příkaz a jeho výsledek, ne věta „testy procházejí“. Co se zkontrolovat nedalo, se vypíše jako nezkontrolované.
 - **Nedodělává, co v plánu není.** Nápad, který cestou vznikne, jde mezi odložené věci i s celou úvahou, ne rovnou do kódu.
 - **Nikdy neodškrtne úkol, aby se dalo pokračovat.** Zablokovaný úkol zůstane neodškrtnutý i s důvodem.
 - **Samostatnost se stupňuje, nezapíná.** Nejvolnější režim je přiznaná výměna – míň přerušení za horší bezpečnostní profil – a má povinné pojistky: strop na iterace, zvlášť hlídané změny v testech a povinnou revizi po doběhnutí.
@@ -40,7 +40,7 @@ Skill si najde plán, ověří stav projektu, nechá vás vybrat režim a pak je
 ## Ukázka výstupu
 
 ```
-## Realizace hotová
+## Implementace hotová
 
 **Plán:** docs/plan.md – 14/14 úkolů
 **Režim:** po úkolech
@@ -77,4 +77,4 @@ Skill je **obálka nad pluginem [superpowers](https://github.com/obra/superpower
 
 ### Požadavky a omezení
 
-Plugin superpowers. Projekt potřebuje mít v instrukcích zapsané, čím se pouštějí testy, typová kontrola a linter – bez toho by realizace běžela bez kontroly a skill se zastaví a nabídne to doplnit. Nejsamostatnější režim navíc předpokládá, že je průběžná kontrola vynucená automaticky, ne jen doporučená.
+Plugin superpowers. Projekt potřebuje mít v instrukcích zapsané, čím se pouštějí testy, typová kontrola a linter – bez toho by implementace běžela bez kontroly a skill se zastaví a nabídne to doplnit. Nejsamostatnější režim navíc předpokládá, že je průběžná kontrola vynucená automaticky, ne jen doporučená.

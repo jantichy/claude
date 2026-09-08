@@ -1,6 +1,6 @@
 # /report – data do jednoho souboru, který jde poslat komukoliv
 
-Z exportu z Google Analytics, CSV, JSON nebo výsledku databázového dotazu udělá **jeden jediný soubor HTML** – s grafy, komentářem a metodikou. Otevře se dvojklikem z disku, funguje bez internetu a bez serveru, jde ho poslat mailem, nahrát na web nebo vytisknout do PDF. A hlavně odpovídá na otázku, kvůli které vznikl; není to přehlídka grafů, ze které si nikdo nic neodnese.
+Z exportu z Google Analytics, CSV, JSON nebo výsledku databázového dotazu udělá **jeden jediný soubor HTML** – s grafy, komentářem a metodikou. Otevře se dvojklikem z disku, funguje bez internetu a bez serveru, jde ho poslat e-mailem, nahrát na web nebo vytisknout do PDF. A hlavně odpovídá na otázku, kvůli které vznikl; není to přehlídka grafů, ze které si nikdo nic neodnese.
 
 ## Co umí
 
@@ -8,7 +8,7 @@ Z exportu z Google Analytics, CSV, JSON nebo výsledku databázového dotazu ud�
 2. **Nechá si odsouhlasit osnovu**, než začne stavět. Přestavovat hotový report je dražší než přepsat osnovu.
 3. **Počítá skriptem, který zůstane v projektu.** Report se skoro vždycky přegeneruje – s novými daty, opravenou metodikou, dalším obdobím.
 4. **Zkontroluje si čísla** – sedí součty, sedí poměry, odpovídá celek zdroji. Když ne, hledá příčinu; nezaokrouhlí to potichu.
-5. **Napíše komentář, který interpretuje.** „Návštěvnost vzrostla pětkrát" je popisek grafu; „nárůst je organický z vyhledávání značky, ne z odkazů v médiích" je komentář.
+5. **Napíše komentář, který interpretuje.** „Návštěvnost vzrostla pětkrát“ je popisek grafu; „nárůst je organický z vyhledávání značky, ne z odkazů v médiích“ je komentář.
 6. **Metodika a limity dat jsou součástí reportu**, ne dodatek. Čemu se nedá věřit a proč, se přiznává.
 7. **Na požádání dvě verze** – podrobnou a stručnou, přičemž stručná je samostatně napsaný text, ne zkrácená kopie.
 8. **Ověří hotový soubor v prohlížeči** – diakritiku, grafy, konzoli, tisk, chování na úzkém okně – a namátkou přepočítá pár čísel zpátky proti zdroji.
@@ -21,7 +21,7 @@ Z exportu z Google Analytics, CSV, JSON nebo výsledku databázového dotazu ud�
 - **Ven jdou jen souhrny, nikdy původní řádky.** Osobní údaje v reportu nemají co dělat, a segment o třech lidech je taky osobní údaj.
 - **Před předáním projde hotový soubor kontrolou na úniky.** Nejen na osobní údaje, ale i na přístupové – ty se do reportu nedostanou vědomě, ale protečou samy z výpočetního skriptu, z konfigurace nebo ze screenshotu administrace. Když se něco najde, skill se zastaví a řekne i to, že údaj je nejspíš i ve zdrojích a je potřeba ho vyměnit.
 - **Počítá s tiskem.** Co je jen v bublině nad grafem, v PDF neexistuje – tak to tam podstatné není.
-- **Nezakrývá nejistotu.** Radši „na tohle jsou data příliš malá" než opatrná formulace, která vypadá jako závěr.
+- **Nezakrývá nejistotu.** Radši „na tohle jsou data příliš malá“ než opatrná formulace, která vypadá jako závěr.
 
 ## Jak se to používá
 
