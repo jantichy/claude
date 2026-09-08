@@ -11,7 +11,7 @@ Sloupec *Živí* říká, do kterého dokumentu ta cesta ústí – cesta, její
 | Cesta | Co hledá | Živí | Vrací |
 |---|---|---|---|
 | **Přímí konkurenti** | Produkty ve stejné kategorii, které řeší týž problém týmž způsobem. | competition | produkty |
-| **Náhradní řešení** | Čím to lidé řeší, aniž by na to měli nástroj – tabulka, e-mail, papír, obecný nástroj ohnutý k tomuhle. **Povinná cesta**, viz pravidla níž. | competition | produkty |
+| **Náhradní řešení** | Čím to lidé řeší, aniž by na to měli nástroj – tabulka, mail, papír, obecný nástroj ohnutý k tomuhle. **Povinná cesta**, viz pravidla níž. | competition | produkty |
 | **Sousední kategorie** | Produkty, které dělají něco jiného, ale mohly by to pohltit jako funkci. Odpovídá na otázku, co se stane, když se o kategorii začne zajímat někdo velký. | competition, risks | produkty |
 | **Otevřený a self-hosted software** | Bezplatné a provozovatelné u sebe. Nekonkuruje cenou, ale existencí, a u technického publika rozhoduje víc než placené produkty. | competition | produkty |
 | **Kdo to zkusil a skončil** | Zaniklé produkty a zrušené služby v kategorii – a **proč skončily**. Cizí post-mortem je nejlevnější zdroj rizik, jaký existuje: ta rizika už někdo zaplatil. | risks | produkty |

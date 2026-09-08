@@ -10,7 +10,7 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 
 ## Co umí
 
-1. **Vytěží nejdřív to, co už máte** – včetně zásobníku nápadů, který si projekt vede. Nabídne z něj, co se do právě psaného zadání hodí vzít rovnou s sebou. Než se na cokoliv zeptá, vyzve vás, ať přiložíte poznámky, zápis ze schůzky, e-mail od klienta, starý dokument, screenshoty – i nestrukturovaně. Co si z toho odvodí, se pak už neptá; jen vám ukáže souhrn k potvrzení.
+1. **Vytěží nejdřív to, co už máte** – včetně zásobníku nápadů, který si projekt vede. Nabídne z něj, co se do právě psaného zadání hodí vzít rovnou s sebou. Než se na cokoliv zeptá, vyzve vás, ať přiložíte poznámky, zápis ze schůzky, mail od klienta, starý dokument, screenshoty – i nestrukturovaně. Co si z toho odvodí, se pak už neptá; jen vám ukáže souhrn k potvrzení.
 2. **Ptá se postupně**, jednu otázku za druhou, ne dotazníkem na deset položek.
 3. **Produktová specifikace** – proč to děláme, pro koho, varianty a rozhodovací větve, omezení, nefunkční požadavky, seznam toho, co musí umět první verze, co vědomě neděláme a podle čeho se za rok pozná, že to vyšlo.
 4. **Návrh řešení** – zvolený přístup i zamítnuté varianty, architektura, datový model, stavy a přechody, datové toky, rozhraní, cizí systémy, chybové stavy, bezpečnostní model, technologie, testovací strategie a rizika.

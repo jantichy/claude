@@ -126,7 +126,7 @@ Zeptej se, kde všude autor kdy psal: vlastní blogy, cizí weby a magazíny, ti
 
 ### 2. Vyžádání exportů
 
-Exporty ze sítí se připravují **hodiny až dva dny**. Vyžádej je jako první věc, ať čekání běží na pozadí, a řekni autorovi, že mu přijde e-mail. Odkazy jsou v `sources.md`.
+Exporty ze sítí se připravují **hodiny až dva dny**. Vyžádej je jako první věc, ať čekání běží na pozadí, a řekni autorovi, že mu přijde mail. Odkazy jsou v `sources.md`.
 
 ### 3. Rozhodnutí o rozsahu
 

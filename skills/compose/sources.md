@@ -89,7 +89,7 @@ Každá z nich už jednou vyrobila tichou chybu, která se poznala až o kus dá
 
 - **Facebook kóduje UTF-8 jako latin-1 escapy.** Bez opravy (`s.encode("latin-1").decode("utf-8")`) je celý export rozsypaný na mojibake. Rozpozná se to na první diakritice.
 - **LinkedIn escapuje uvozovky zpětným lomítkem** (`escapechar="\\"`) a víceřádková pole balí do uvozovek řádek po řádku. Bez očištění zůstanou uvozovky uprostřed textu.
-- **První stažení z LinkedInu bývá prázdné.** „Basic“ archiv příspěvky neobsahuje – čeká se na druhý, kompletní, a na e-mail o jeho připravení.
+- **První stažení z LinkedInu bývá prázdné.** „Basic“ archiv příspěvky neobsahuje – čeká se na druhý, kompletní, a na mail o jeho připravení.
 - **Vlastníka účtu nikdy nečti z prvního výskytu.** Exporty jsou plné cizích identifikátorů z odpovědí a sledovaných účtů. Ber ho z místa, které ho autoritativně definuje – `account.js` u X, commit blok u AT Protocol, `wp_users` u WordPressu – a ověř druhým signálem.
 - **Názvy souborů na macOS jsou v NFD.** Před porovnáváním normalizuj na NFC, jinak se dva shodné názvy neshodnou.
 - **Export WordPressu nerozhoduje o místě první publikace.** Import zachovává datum postu i komentářů, takže přenesený text vypadá jako původní. Datum ověřuj podle komentářů: přijdou-li první v řádu hodin, sedí; přijdou-li o měsíce později, je to přetisk.

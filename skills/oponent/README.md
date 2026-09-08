@@ -24,7 +24,7 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 - **Vždycky dostanou i seznam toho, co jste vědomě zamítli** – i s důvody. Bez toho by první běh přinesl námitky, které umíte vyvrátit z hlavy, a druhý byste už nepustili.
 - **Rozdílná hlediska, ne víc stejných kritiků.** Redundantní oponenti najdou tolikrát totéž, kolik jich pustíte.
 - **Metoda se nikdy nepouští bez domény.** „Podívej se na to kriticky“ je slepé; „udělej pohled zpětně z budoucího selhání na ten cenový model“ je zadání.
-- **Ověřovatel je záměrně v jiné situaci než oponent.** Oponent, který nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanizmus.
+- **Ověřovatel je záměrně v jiné situaci než oponent.** Oponent, který nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanismus.
 - **Filtrovat nálezy nesmí spoluautor.** Kdyby se falešné vyřazovaly až v diskuzi, dělal by to přesně ten člověk, jehož slepotu má skill obcházet.
 - **Řekne, které hledisko vědomě nevzal a proč.** Nevybrané hledisko totiž nevrátí nula nálezů, ale neexistenci – a ta by žádným počítadlem neprošla.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují, a závěr nikdy nezní „dokument je v dobrém stavu“ – to není verdikt oponenta, ale autora.

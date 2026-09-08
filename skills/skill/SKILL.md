@@ -268,7 +268,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 
 Hledej **grepem přes všechny ty kořeny**, ne z paměti. Po smazání **projeď kontrolní průchod na jméno skillu** – musí vrátit nulu mimo místa vědomě ponechaná.
 
-**Nech stopu.** Do `~/Dev/context/decisions.md` zapiš, co bylo zrušeno a proč, i co se tím vědomě ztratilo. Bez toho se zrušený mechanizmus vrátí za půl roku jako „to by šlo udělat“.
+**Nech stopu.** Do `~/Dev/context/decisions.md` zapiš, co bylo zrušeno a proč, i co se tím vědomě ztratilo. Bez toho se zrušený mechanismus vrátí za půl roku jako „to by šlo udělat“.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

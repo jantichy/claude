@@ -56,7 +56,7 @@ Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna
 
 ## Hranice
 
-**Čím to drží.** Tenhle odstavec sám o sobě nedrží nic: vykonává ho tentýž model, který čte i pokyny uživatele, a ze stejného kontextu (`~/.claude/RULES.md`, *Přednost pravidel*). Kdyby stačila věta, byl by souhlasový mechanizmus průběžné kontroly – soubor, hash, `--allow`, `--revoke` – zbytečný, přestože ten hlídá pouhé spuštění `npm test`, kdežto tady se **záměrně posílá `'; drop`, mažou záznamy a lámou stavy**.
+**Čím to drží.** Tenhle odstavec sám o sobě nedrží nic: vykonává ho tentýž model, který čte i pokyny uživatele, a ze stejného kontextu (`~/.claude/RULES.md`, *Přednost pravidel*). Kdyby stačila věta, byl by souhlasový mechanismus průběžné kontroly – soubor, hash, `--allow`, `--revoke` – zbytečný, přestože ten hlídá pouhé spuštění `npm test`, kdežto tady se **záměrně posílá `'; drop`, mažou záznamy a lámou stavy**.
 
 Hranice proto **stojí na dokladech, ne na slibu**. Body 1 a 2 mají každý svůj příkaz a **jeho výstup se doslova vlepí do přehledu ve Fázi 0**. Bez obou dokladů se Fáze 2 nespustí – a to i tehdy, když uživatel řekne, že je to v pořádku. Řekne-li to, není to důvod doklad vynechat, ale získat ho:
 
@@ -93,7 +93,7 @@ Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
 4. **Co má dělat** – `docs/scenarios.md`, vede-li ho projekt, jinak `docs/requirements.md`. Scénáře jsou vstup pro útok: útočí se na jejich okraje, ne doprostřed. Bez nich se útočí proti tomu, co je vidět v rozhraní. Ve `scenarios.md` je zvlášť cenná část *Kde to může selhat* – říká, kde se selhání čeká, takže útok patří o krok za ni.
 
-5. **Na čem to jede** – ověř, na jakou databázi a jaké externí služby je lokální instance napojená (`.env.example`, konfigurace, docker compose). Sáhne-li aplikace při útoku ven – odešle e-mail, zaplatí, zavolá cizí API – **řekni to uživateli předem** a domluvte se, jestli útok ty cesty vynechá, nebo se služba přepne na testovací režim.
+5. **Na čem to jede** – ověř, na jakou databázi a jaké externí služby je lokální instance napojená (`.env.example`, konfigurace, docker compose). Sáhne-li aplikace při útoku ven – odešle mail, zaplatí, zavolá cizí API – **řekni to uživateli předem** a domluvte se, jestli útok ty cesty vynechá, nebo se služba přepne na testovací režim.
 
    **Pozor na projekt, který už běží v produkci.** Tam bývá jediná konfigurace (`.env.local`) a míří na ostrou databázi, takže `dev` na localhostu píše reálným uživatelům. Do souborů s tajemstvími nekoukej – místo toho zjisti, jestli projekt umí zvednout **vlastní lokální stack** (`supabase/config.toml`, `docker compose`, testcontainers). Když neumí a izolaci nejde vyrobit, útok se nekoná; viz *Hranice*, bod 2.
 

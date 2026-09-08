@@ -1,6 +1,6 @@
 # /report – data do jednoho souboru, který jde poslat komukoliv
 
-Z exportu z Google Analytics, CSV, JSON nebo výsledku databázového dotazu udělá **jeden jediný soubor HTML** – s grafy, komentářem a metodikou. Otevře se dvojklikem z disku, funguje bez internetu a bez serveru, jde ho poslat e-mailem, nahrát na web nebo vytisknout do PDF. A hlavně odpovídá na otázku, kvůli které vznikl; není to přehlídka grafů, ze které si nikdo nic neodnese.
+Z exportu z Google Analytics, CSV, JSON nebo výsledku databázového dotazu udělá **jeden jediný soubor HTML** – s grafy, komentářem a metodikou. Otevře se dvojklikem z disku, funguje bez internetu a bez serveru, jde ho poslat mailem, nahrát na web nebo vytisknout do PDF. A hlavně odpovídá na otázku, kvůli které vznikl; není to přehlídka grafů, ze které si nikdo nic neodnese.
 
 ## Co umí
 

@@ -21,9 +21,9 @@ Referenční soubor k režimu `recover` skillu `/invoicing`. Drží **katalog zd
 
 | Pole | Co v něm je |
 |---|---|
-| `zdroj` | e-mail, kalendář, Slack, git, Claude Code, prohlížeč |
+| `zdroj` | mail, kalendář, Slack, git, Claude Code, prohlížeč |
 | `od`, `do` | čas; u bodové stopy je `do` prázdné |
-| `basis` | **doslovný** úryvek nebo název – předmět e-mailu, titulek schůzky, první řádek commitu |
+| `basis` | **doslovný** úryvek nebo název – předmět mailu, titulek schůzky, první řádek commitu |
 | `odkaz` | kam se dá kliknout a ověřit to |
 | `vylucnost` | `vylucna` / `sdilena` podle *Výlučné a sdílené zdroje* |
 
@@ -41,7 +41,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 | **Claude Code** | timestampy zpráv v `~/.claude/projects/<projekt>/*.jsonl` | silný – souvislá session je skutečný interval u klávesnice |
 | **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek |
 | **Prohlížeč** | navštívená URL, čas návštěvy **a doba na stránce** | střední – u výlučné URL použitelné, u sdílené ne |
-| **E-mail** | čas odeslání, předmět, obsah | slabý – odeslání je špička ledovce, ne práce sama |
+| **Mail** | čas odeslání, předmět, obsah | slabý – odeslání je špička ledovce, ne práce sama |
 
 **Kalendář se čte skriptem `~/.claude/skills/invoicing/calendar.swift`** a čtyři věci z něj vypadávají dřív, než se z nich stane stopa. Všechny čtyři vyrobily falešný nález při prvním ostrém běhu, takže to nejsou hypotézy:
 
@@ -56,7 +56,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 
 **Obsah je nadřazený času.** Věta „koukal jsem na to, dělal jsem na tom asi tři hodiny“ je **doložená délka**, i když ji nese jednominutová zpráva na Slacku. Časy říkají *kdy*, obsah často *kolik* – a když se rozejdou, vyhrává obsah. Zdroj, ze kterého se čte jen razítko, je promarněný.
 
-**Odchozí, ne příchozí.** E-mail od klienta a zpráva od klienta nejsou Honzova práce. Sbírá se **to, co odeslal on**; příchozí zpráva se hodí nanejvýš jako kontext, proč ta práce vznikla.
+**Odchozí, ne příchozí.** Mail od klienta a zpráva od klienta nejsou Honzova práce. Sbírá se **to, co odeslal on**; příchozí zpráva se hodí nanejvýš jako kontext, proč ta práce vznikla.
 
 **Claude Code nese i obsah.** Když v `~/Dev` není adresář pojmenovaný po klientovi, neznamená to, že se pro něj nepracovalo – práce mohla proběhnout v session jiného projektu. Hledej i **jméno klienta a jeho identifikátory v obsahu sessions**, ne jen v názvu adresáře.
 
@@ -81,13 +81,13 @@ Každý nález patří do jedné z nich a **třída se vypisuje**, protože rozh
 | **odvozený** | souvislý shluk stop – série commitů, session, řada zpráv | od první do poslední stopy; **řekni, jak to vyšlo** |
 | **indicie** | jedna osamělá stopa, nebo jen sdílené zdroje | **žádný** – řekne se, že se toho dne něco dělo a v timetrackingu je prázdno |
 
-**U indicie se počet hodin nedomýšlí.** Jeden e-mail může být pět minut i osm hodin práce a odhad je v tu chvíli výmysl s číslem. Číslo se pamatuje líp než výhrada, se kterou přišlo.
+**U indicie se počet hodin nedomýšlí.** Jeden mail může být pět minut i osm hodin práce a odhad je v tu chvíli výmysl s číslem. Číslo se pamatuje líp než výhrada, se kterou přišlo.
 
 **Souvislý shluk** je řada stop, mezi kterými není mezera delší než hodina. Delší mezera dělá dva shluky, ne jeden dlouhý interval – jinak by oběd uprostřed dne vyrobil fakturovatelnou hodinu.
 
 ## Deduplikace
 
-**Stopy se nesčítají.** E-mail o schůzce, ta schůzka v kalendáři a zpráva na Slacku hodinu po ní jsou **jedna práce**, ne tři. Bez tohohle pravidla režim spolehlivě nadhodnocuje – a jednou nafouknutý odhad zabije důvěru ve všechny ostatní.
+**Stopy se nesčítají.** Mail o schůzce, ta schůzka v kalendáři a zpráva na Slacku hodinu po ní jsou **jedna práce**, ne tři. Bez tohohle pravidla režim spolehlivě nadhodnocuje – a jednou nafouknutý odhad zabije důvěru ve všechny ostatní.
 
 Postup: stopy se seřadí podle času, slijí do shluků podle pravidla o hodinové mezeře, a **teprve shluk je kandidát na nález**. Ve výstupu se u něj vyjmenují všechny zdroje, ze kterých vznikl – čtenář tak vidí, že tři zdroje mluví o jedné věci, a ne že jsou to tři věci.
 
@@ -117,7 +117,7 @@ Každý agent dostane: **klienta, období, své identifikátory ze souboru klien
 Ověřovatel dostane jediný úkol: **nález vyvrátit**. Projde tyhle otázky a stačí jedno „ano“:
 
 1. **Není ten čas v Clockify pod jiným projektem?** Pak nechybí, jen je špatně zařazený – a to je jiná diagnóza s jiným řešením.
-2. **Je stopa opravdu o tomhle klientovi?** Přeposlaný e-mail, zmínka v cizí konverzaci, sdílená URL bez opory.
+2. **Je stopa opravdu o tomhle klientovi?** Přeposlaný mail, zmínka v cizí konverzaci, sdílená URL bez opory.
 3. **Není to už vyfakturované?** Období mimo rozsah.
 4. **Nese ta stopa vůbec práci?** Automatický commit, kalendářní událost, která se nekonala, otevřená záložka na pozadí.
 5. **Není to soukromý čas?** Víkend a večer nálezem samy o sobě nejsou, ale vyžadují silnější doložení než pracovní dopoledne.

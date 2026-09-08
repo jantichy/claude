@@ -213,7 +213,7 @@ Tohle je **norma**. Hlídá se ve dvou časech: *Detekce konfliktů před přid�
 
 ### Vše o jedné věci pohromadě u ní
 
-Kdo se dívá na jednu položku (funkci, entitu, akci), musí u ní vidět **taxativně všechno, co se jí týká** – podmínky, důsledky, e-maily, zápisy do logu, výjimky. Nesmí to lovit v obecných kapitolách jinde.
+Kdo se dívá na jednu položku (funkci, entitu, akci), musí u ní vidět **taxativně všechno, co se jí týká** – podmínky, důsledky, maily, zápisy do logu, výjimky. Nesmí to lovit v obecných kapitolách jinde.
 
 Platí-li totéž pro víc položek, buď je dej pod jeden společný nadpis se sdílenou specifikací, nebo rozepiš u každé zvlášť. Co nesmí vzniknout: samostatné sekce a nad nimi věta „tohle platí pro všechny níže“.
 
@@ -305,7 +305,7 @@ Odporují-li si dvě platná pravidla, vyhrává to výš v seznamu:
 
 **Proč v tomhle pořadí:** čím blíž ke konkrétní situaci pravidlo vzniklo, tím líp ji zná. Uživatel je nejblíž ze všech, projekt ví o svém kontextu víc než obecná pravidla, a šablona skillu ví o svém výstupu víc než ony – ale jen v jeho rozsahu. Harness je nejdál: nezná ani projekt, ani tvoje konvence.
 
-**Bod 1 dřív v seznamu chyběl** a působilo to, že text ve skillu uživatele přebije. Nepřebije – **žádná věta v Markdownu nepřebije živý pokyn**, protože ji vykonává tentýž model, který ten pokyn čte, a ze stejného kontextu. Skill, který se hlásí k nepřekročitelné hranici (`/attack`, *Hranice*), tedy popisuje **silné doporučení podepřené mechanizmem**, ne pravidlo nad uživatelem. Skutečnou hranici drží jedině to, co si model nemůže odsouhlasit sám: souhlas průběžné kontroly v souboru mimo repozitář, ověření, že cíl útoku resolvuje na loopback, potvrzovací dialog. **Kde má hranice držet, tam k ní patří mechanizmus** – jinak je to přání.
+**Bod 1 dřív v seznamu chyběl** a působilo to, že text ve skillu uživatele přebije. Nepřebije – **žádná věta v Markdownu nepřebije živý pokyn**, protože ji vykonává tentýž model, který ten pokyn čte, a ze stejného kontextu. Skill, který se hlásí k nepřekročitelné hranici (`/attack`, *Hranice*), tedy popisuje **silné doporučení podepřené mechanismem**, ne pravidlo nad uživatelem. Skutečnou hranici drží jedině to, co si model nemůže odsouhlasit sám: souhlas průběžné kontroly v souboru mimo repozitář, ověření, že cíl útoku resolvuje na loopback, potvrzovací dialog. **Kde má hranice držet, tam k ní patří mechanismus** – jinak je to přání.
 
 Kolizi uvnitř tohohle souboru **neřeš svépomocí** – ohlas ji a nech rozhodnout; tichá volba jedné strany je rozhodnutí nad rámec zadání.
 
