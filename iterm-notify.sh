@@ -2,8 +2,17 @@
 # Barvení záložky iTerm2 podle stavu Claude Code.
 # Volá se s argumentem: working | waiting | done
 
+# Bez identifikátoru session nemá skript co dělat: SESSION_KEY by byl prázdný,
+# takže by všechny sessions sdílely jeden PIDFILE a navzájem si zabíjely
+# watchery – a `is_this_tab_active` by s prázdným UUID vracelo vždycky false,
+# takže by se záložka obarvila a už nikdy neodbarvila.
+[[ -n "$ITERM_SESSION_ID" ]] || exit 0
+
 SESSION_KEY=$(printf '%s' "$ITERM_SESSION_ID" | tr -c 'a-zA-Z0-9' '_')
-PIDFILE="/tmp/claude-tab-watcher-${SESSION_KEY}.pid"
+# Do $TMPDIR, ne do /tmp: na macOS je $TMPDIR per uživatel s právy 700, kdežto
+# /tmp je zapisovatelné pro všechny a macOS nemá obdobu fs.protected_symlinks.
+# V /tmp šlo cestu předem podstrčit jako symlink a zápis PID by přepsal cíl.
+PIDFILE="${TMPDIR:-/tmp}/claude-tab-watcher-${SESSION_KEY}.pid"
 CLAUDE_PID=$PPID
 
 # Najdi TTY iTerm session – hook subprocess nemá vlastní controlling TTY.
@@ -66,7 +75,12 @@ spawn_focus_watcher() {
   if [[ -f "$PIDFILE" ]]; then
     local old_pid
     old_pid=$(cat "$PIDFILE" 2>/dev/null)
-    [[ -n "$old_pid" ]] && kill "$old_pid" 2>/dev/null
+    # Ověřit, že PID pořád patří watcheru. PIDFILE přežije pád i restart, čísla
+    # se recyklují (kern.maxproc jsou tisíce), takže bez téhle kontroly může
+    # `kill` trefit libovolný jiný proces uživatele – a to i bez cizí ruky.
+    if [[ "$old_pid" =~ ^[0-9]+$ ]] && ps -p "$old_pid" -o command= 2>/dev/null | grep -q 'iterm-notify'; then
+      kill "$old_pid" 2>/dev/null
+    fi
     rm -f "$PIDFILE"
   fi
 
