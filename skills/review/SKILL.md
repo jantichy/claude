@@ -530,51 +530,12 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
    a. Proveď změnu. U `batch` nálezu hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
    b. **Ověř – vždy, ne občas.** Průběžná kontrola podle kontraktu příkazů. U opravy, kterou hlásil pracovní specialista, **doplň test, který ten případ pokrývá** – jinak se chyba vrátí a nikdo se to nedozví.
 
-      **Dávkuj podle rizika, ne po jednom.** Opravy od **pracovních specialistů** ověřuj každou zvlášť: mění chování a hledat mezi pěti změnami tu, která rozbila test, stojí víc než těch pár sekund. Sérii oprav od **standardových specialistů**, kteří sahají jen na text a značky, ověř **jednou na konci série**. A **nepouštěj linku ještě jednou před koncem odpovědi**: `Stop` hook ji spustí nad tímtéž stromem hned po něm, takže je to čekání navíc bez nové informace. U projektu, kde tři kroky trvají 40 s, byla dosavadní podoba při deseti opravách sedm minut čistého čekání – a to uprostřed nejdelšího interaktivního průchodu, kdy je vytrvalost nejtenčí.
+      **Dávkuj podle rizika, ne po jednom.** Opravy od **pracovních specialistů** ověřuj každou zvlášť: mění chování a hledat mezi pěti změnami tu, která rozbila test, stojí víc než těch pár sekund. Sérii oprav od **standardových specialistů**, kteří sahají jen na text a značky, ověř **jednou na konci série**. A **nepouštěj kontrolu ještě jednou před koncem odpovědi**: `Stop` hook ji spustí nad tímtéž stromem hned po něm, takže je to čekání navíc bez nové informace. U projektu, kde tři kroky trvají 40 s, byla dosavadní podoba při deseti opravách sedm minut čistého čekání – a to uprostřed nejdelšího interaktivního průchodu, kdy je vytrvalost nejtenčí.
    c. Když kontrola selže: **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat. Nepokračuj automaticky na další nález.
    d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky“.
    e. Commit dle autocommit nastavení projektu.
 
 4. Zápis do `## Review` v projektovém `CLAUDE.md` (volba Přeskočit) – **formát a mechanika jsou popsané níž v kapitole *Kapitola `## Review`*.** Píše do ní i `/attack`, takže formát je společný a definuje se na jednom místě.
-
-------
-
-## Kapitola `## Review`
-
-Seznam nálezů, které se vyhodnotily jako „neopravovat“. Píše do něj **`/review` i `/attack`** – jsou to odpovědi na tutéž otázku a hledat je na dvou místech nemá smysl. (`/consistency` má vlastní kapitolu `## Consistency`, protože se ptá na jinou otázku.) Definice je tady; ostatní skilly sem odkazují.
-
-**Kde:** projektový `CLAUDE.md`. Když neexistuje, vytvoř ho s hlavičkou a kapitolou; když chybí kapitola, doplň ji na konec souboru. U staršího projektu může mít ještě starý název `## Standards` – přečti obojí a při prvním zápisu ji přejmenuj. **Zápisy se přidávají na konec kapitoly.**
-
-**Formát:**
-
-```
-## Review
-
-Nálezy vyhodnocené jako „neopravovat“. Při dalším běhu se neuvádějí, dokud se
-nezmění kód, kterého se týkají.
-
-- **YYYY-MM-DD** · `<short HEAD>` · *<title>* (zdroj: review|útok, podklad: <basis>): <důvod>
-  - Lokace: <soubor:řádek, ...>
-```
-
-`zdroj` říká, odkud nález přišel, a nahrazuje dřívější pole `role`, které nález z útoku neměl čím vyplnit; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo standardu, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
-
-### Umlčení expiruje změnou kódu
-
-**Záznam neplatí navždy, ale do první změny souborů, kterých se týká.** Ve Fázi 0 u každého záznamu spusť:
-
-```
-git log --oneline <zapsaný hash>..HEAD -- <lokace ze záznamu>
-```
-
-- **Prázdný výstup** → kód se nezměnil, záznam platí, nález se neuvádí.
-- **Neprázdný výstup** → záznam **se do zadání specialistů nevkládá**. Najde-li se nález znovu, předlož ho ve Fázi 7 s poznámkou *„zamítnuto YYYY-MM-DD s odůvodněním …, kód se od té doby změnil“*. Uživateli pak stačí potvrdit, že to platí dál – a záznam se přepíše s novým hashem.
-
-**Proč:** důvod zamítnutí je skoro vždy vázaný na stav kódu v ten den – „na tenhle endpoint se nedá dostat zvenčí“, „ten vstup je validovaný o vrstvu výš“. Po refaktoru přestane platit, ale filtr se aplikuje **před** hledáním, takže se to nemá jak dozvědět nikdo: specialisté o umlčeném nálezu nevědí, a proto ho ani nenajdou. Bez expirace ta kapitola jen narůstá a nikdy se nezmenší, a projekt jí za rok používání oslepne.
-
-**Při `/review full` se revaliduje celý seznam** bez ohledu na hashe: vypiš záznamy i s jejich stářím a nech potvrdit, co má platit dál. `full` se pouští zřídka a je to jediné místo, kde má revize seznamu proporční cenu.
-
-**Bezpečnostní nález se sem nezapisuje bez výslovného potvrzení** a bez důvodu, který obstojí i za rok. „Zatím to nikdo nezneužil“ důvod není.
 
 ------
 
@@ -615,3 +576,43 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `V prověřeném rozsahu je práce v pořádku.`
 - `V pořádku není – zbývá: <konkrétní seznam>.`
+
+------
+
+
+## Kapitola `## Review`
+
+Seznam nálezů, které se vyhodnotily jako „neopravovat“. Píše do něj **`/review` i `/attack`** – jsou to odpovědi na tutéž otázku a hledat je na dvou místech nemá smysl. (`/consistency` má vlastní kapitolu `## Consistency`, protože se ptá na jinou otázku.) Definice je tady; ostatní skilly sem odkazují.
+
+**Kde:** projektový `CLAUDE.md`. Když neexistuje, vytvoř ho s hlavičkou a kapitolou; když chybí kapitola, doplň ji na konec souboru. U staršího projektu může mít ještě starý název `## Standards` – přečti obojí a při prvním zápisu ji přejmenuj. **Zápisy se přidávají na konec kapitoly.**
+
+**Formát:**
+
+```
+## Review
+
+Nálezy vyhodnocené jako „neopravovat“. Při dalším běhu se neuvádějí, dokud se
+nezmění kód, kterého se týkají.
+
+- **YYYY-MM-DD** · `<short HEAD>` · *<title>* (zdroj: review|útok, podklad: <basis>): <důvod>
+  - Lokace: <soubor:řádek, ...>
+```
+
+`zdroj` říká, odkud nález přišel, a nahrazuje dřívější pole `role`, které nález z útoku neměl čím vyplnit; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo standardu, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+
+### Umlčení expiruje změnou kódu
+
+**Záznam neplatí navždy, ale do první změny souborů, kterých se týká.** Ve Fázi 0 u každého záznamu spusť:
+
+```
+git log --oneline <zapsaný hash>..HEAD -- <lokace ze záznamu>
+```
+
+- **Prázdný výstup** → kód se nezměnil, záznam platí, nález se neuvádí.
+- **Neprázdný výstup** → záznam **se do zadání specialistů nevkládá**. Najde-li se nález znovu, předlož ho ve Fázi 7 s poznámkou *„zamítnuto YYYY-MM-DD s odůvodněním …, kód se od té doby změnil“*. Uživateli pak stačí potvrdit, že to platí dál – a záznam se přepíše s novým hashem.
+
+**Proč:** důvod zamítnutí je skoro vždy vázaný na stav kódu v ten den – „na tenhle endpoint se nedá dostat zvenčí“, „ten vstup je validovaný o vrstvu výš“. Po refaktoru přestane platit, ale filtr se aplikuje **před** hledáním, takže se to nemá jak dozvědět nikdo: specialisté o umlčeném nálezu nevědí, a proto ho ani nenajdou. Bez expirace ta kapitola jen narůstá a nikdy se nezmenší, a projekt jí za rok používání oslepne.
+
+**Při `/review full` se revaliduje celý seznam** bez ohledu na hashe: vypiš záznamy i s jejich stářím a nech potvrdit, co má platit dál. `full` se pouští zřídka a je to jediné místo, kde má revize seznamu proporční cenu.
+
+**Bezpečnostní nález se sem nezapisuje bez výslovného potvrzení** a bez důvodu, který obstojí i za rok. „Zatím to nikdo nezneužil“ důvod není.

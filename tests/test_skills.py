@@ -855,6 +855,25 @@ class Struktura(unittest.TestCase):
         self.assertFalse(navic, f"README má sekci pro skill, který neexistuje: {navic}")
 
 
+def _vady_priloh(poradi: dict, prvni_faze, zaver) -> list:
+    """Přílohová sekce patří ZA závěrečnou fázi.
+
+    Norma to žádá, ale nikdo to neměřil, takže v `/review` stála
+    *Kapitola `## Review`* mezi Fází 7 a Fází 8 a testy mlčely.
+
+    Hlídají se jen sekce, které norma jako přílohy jmenuje. Širší kontrola
+    („cokoliv nefázového mezi fázemi“) by hlásila `Časté chyby` u skillu bez
+    příloh, kam je norma výslovně staví, a odbočky průběhu typu
+    `Když plán neplatí` v `/implement`.
+    """
+    if prvni_faze is None or zaver is None:
+        return []
+    return [f"pořadí sekcí: přílohová sekce `{n}` stojí mezi fázemi, "
+            "patří za závěrečnou fázi"
+            for n, i in poradi.items()
+            if n.startswith(("Režim ", "Katalog", "Kapitola")) and prvni_faze < i < zaver]
+
+
 class SouladSNormou(unittest.TestCase):
     """Skilly proti `skills/SKILLS.md`. Jediné místo, kde se norma vynucuje strojem.
 
@@ -959,6 +978,8 @@ class SouladSNormou(unittest.TestCase):
         # má přílohy: u lineárního těsně před závěrem, u skillu s přílohovými
         # sekcemi úplně naposled. Kontrolovat jen jedno z nich by shodilo polovinu
         # skillů, které normu splňují.
+        out += _vady_priloh(poradi, prvni_faze, zaver)
+
         if chyby is not None and zaver is not None:
             prilohy = [n for n, i in poradi.items()
                        if i > zaver and not n.startswith("Časté chyby")]
