@@ -13,12 +13,14 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
   | Co | Kam | Jak |
   |---|---|---|
-  | odložený nález, zaparkovaný bod | `~/Dev/context/todo.md` | do sekce podle domény, které se týká |
-  | nezávazný nápad, o kterém se nerozhodlo | `~/Dev/context/backlog.md` | tamtéž podle domény; hranici proti todo drží `~/.claude/STRUCTURE.md`, *`backlog.md`* |
-  | rozhodnutí, zamítnutá varianta, vědomá mezera | `~/Dev/context/decisions.md` | tamtéž podle domény; týká-li se rozhodnutí **jednoho skillu**, patří rovnou do jeho `SKILL.md` k místu, kde platí – tam ho příště najde ten, kdo ho potřebuje |
+  | odložený nález, zaparkovaný bod | `~/Dev/context/todo.md` | **do sekce `## Claude`** – ta je tam právě pro tenhle repozitář |
+  | nezávazný nápad, o kterém se nerozhodlo | `~/Dev/context/backlog.md` | tamtéž do `## Claude`; hranici proti todo drží `~/.claude/STRUCTURE.md`, *`backlog.md`* |
+  | rozhodnutí, zamítnutá varianta, vědomá mezera | `~/Dev/context/decisions.md` | tamtéž do `## Claude`; týká-li se rozhodnutí **jednoho skillu**, patří rovnou do jeho `SKILL.md` k místu, kde platí – tam ho příště najde ten, kdo ho potřebuje |
   | záznam dokončeného průchodu (`## Průchody životním cyklem`) | `~/Dev/context/done.md` | u `/review` jen když má smysl ho pak číst – jeho čtenářem je `/release`, a ten se tu nepouští. **U `/oponent` vždy:** jeho čtenářem je příští `/oponent`, který podle svého SKILL.md bez seznamu hledisek neví, s čím se má srovnávat |
 
-  Je to jediné místo, kde struktura tohohle repozitáře sahá ven; důvod je, že konfigurační vrstva je téma, které ta znalostní báze už drží. **Pozor: platí to jen pro tenhle repozitář** – proto to stojí tady v projektovém souboru, a ne v kořenovém `CLAUDE.md`, který se rozbaluje do každé session v každém projektu.
+  **Všechno jde do sekce `## Claude`**, ne do doménových sekcí – ty patří tématům knowledge base (analytics, text, brand…), kdežto tohle je práce na konfigurační vrstvě. Sekce má v záhlaví napsáno, že hashe commitů v ní pocházejí odsud, takže se u jednotlivých položek neopakuje.
+
+  Je to jediné místo, kde struktura tohohle repozitáře sahá ven; důvod je, že fronta rozdělané práce a deník rozhodnutí do **veřejného** repozitáře nepatří, a konfigurační vrstva je zároveň téma, které ta znalostní báze už drží. **Pozor: platí to jen pro tenhle repozitář** – proto to stojí tady v projektovém souboru, a ne v kořenovém `CLAUDE.md`, který se rozbaluje do každé session v každém projektu.
 - **`docs/` neexistuje.** Repozitář není vyvíjený projekt, ale konfigurace; `todo.md`, `backlog.md`, `done.md`, `decisions.md` ani `rules.md` nemá a nezakládají se.
 
 ## Instrukce pro tenhle repozitář
