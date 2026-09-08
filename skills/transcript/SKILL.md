@@ -263,6 +263,15 @@ WHISPER_KEEP_WAV=<0|1> \
 
 `<workdir>` = adresář vstupní nahrávky. Vzniknou v něm `<název>.txt`, `<název>.srt` a `whisper-progress.log`.
 
+**Skončí-li skript kódem 2 s hláškou o kolizi jmen, ptej se – nerozhoduj sám.** Nastane to, když dvě nahrávky v jednom běhu sdílejí základ jména (`porada.m4a` a `porada.mp4`): výstupy se jmenují podle basename bez přípony, takže by si `.txt` i `.srt` navzájem přepsaly a obě by se přitom ohlásily jako hotové. Skript proto nic nespustí a v logu nechá `### COLLISION <základ>`.
+
+Polož **jednu otázku přes `AskUserQuestion`** se dvěma volbami:
+
+- **Zahrnout příponu** – pustíš totéž znovu s `WHISPER_KEEP_EXT=1` a výstupy ponesou i příponu (`porada.m4a.txt`, `porada.mp4.txt`). Zbytek běhu je stejný.
+- **Zastavit** – uživatel si nahrávky přejmenuje sám a spustí to znovu. Skonči a řekni, které soubory kolidují.
+
+**Nevybírej za něj ani jedno.** Delší jméno nese celý řetěz až do finálního `<název>.md`, takže je to volba o tom, jak se budou jmenovat výsledné dokumenty – a to ví jen on.
+
 **`WHISPER_KEEP_WAV=1` nastav právě tehdy, když se bude rozlišovat mluvčí.** Diarizace jede nad tímtéž WAV a bez toho by se musel vyrábět znovu. Jinak nech `0`, ať se po sobě uklidí hned. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
 
 `WHISPER_CHUNK_MIN` nech nenastavené. Je to náprava podle kroku 7, ne volba pro běžný běh.

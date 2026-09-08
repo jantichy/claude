@@ -11,6 +11,8 @@
 #   WHISPER_VAD     1 | 0 – detekce řeči        (výchozí 1)
 #   WHISPER_KEEP_WAV 1 | 0 – nechat WAV vedle    (výchozí 0; diarizace ho potřebuje)
 #   WHISPER_CHUNK_MIN  minuty                   (výchozí 0 = vypnuto)
+#   WHISPER_KEEP_EXT 1 | 0 – nechat příponu ve jménech výstupů
+#                            (výchozí 0; k rozřešení kolize dvou vstupů)
 #
 # WHISPER_CHUNK_MIN je ZÁCHRANNÁ BRZDA, ne výchozí režim. Rozřeže nahrávku na
 # úseky dané délky a každý přepíše zvlášť, čímž řeší dvě věci naráz:
@@ -59,6 +61,7 @@ LANG_CODE="${WHISPER_LANG:-cs}"
 PROMPT="${WHISPER_PROMPT:-}"
 USE_VAD="${WHISPER_VAD:-1}"
 KEEP_WAV="${WHISPER_KEEP_WAV:-0}"
+KEEP_EXT="${WHISPER_KEEP_EXT:-0}"
 CHUNK_MIN="${WHISPER_CHUNK_MIN:-0}"
 # Překlep by jinak tiše spadl do normálního běhu – a to je u nápravy, kterou
 # volající sahá po nefunkčním přepisu, ta nejhorší možná porucha.
@@ -220,9 +223,29 @@ n=0
 # Do kalibrace jde jen zvuk, který se opravdu přepsal. Bez toho by selhaný běh
 # (hodina zvuku, pár sekund běhu) zapsal tempo v řádu stovek × realtime.
 ok_audio=0
+
+# Výstupy se jmenují podle basename bez přípony, takže `porada.m4a` a `porada.mp4`
+# v jednom běhu sdílejí .txt i .srt a druhý přepis by ten první tiše přepsal –
+# oba přitom ohlásí DONE. Řešit to za běhu nejde: skript neví, jestli je milejší
+# delší jméno, nebo si soubory přejmenovat ručně. Proto se zastaví a nechá se
+# zeptat volajícího (SKILL.md, krok „Přepiš nahrávky").
+if [ "$KEEP_EXT" != "1" ]; then
+  kolize=$(for f in "$@"; do b=$(basename "$f"); printf '%s\n' "${b%.*}"; done | sort | uniq -d)
+  if [ -n "$kolize" ]; then
+    echo "### COLLISION $(printf '%s' "$kolize" | tr '\n' ' ')" >> "$LOG"
+    { echo "Dva nebo víc vstupů mají stejný základ jména, takže by si přepsaly výstupy:"
+      printf '%s\n' "$kolize" | sed 's/^/  /'
+      echo "Buď to pusť znovu s WHISPER_KEEP_EXT=1 (výstupy ponesou i příponu,"
+      echo "tedy porada.m4a.txt), nebo si nahrávky napřed přejmenuj."
+    } >&2
+    exit 2
+  fi
+fi
+
 for f in "$@"; do
   n=$((n+1))
-  base=$(basename "$f"); base="${base%.*}"
+  base=$(basename "$f")
+  [ "$KEEP_EXT" = "1" ] || base="${base%.*}"
   # Skrytý název jen u dočasného WAV; ten, který má přežít pro diarizaci, je vidět.
   if [ "$KEEP_WAV" = "1" ]; then
     wav="$WORKDIR/$base.wav"
