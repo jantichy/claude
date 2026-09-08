@@ -34,7 +34,18 @@ MAX_OUT=200000  # kolik bajtů výstupu si od kroku vezmeme
 ALLOW_DIR="$HOME/.local/state/claude-verify/allowed"
 RUN_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/claude-verify/runs"
 
-die() { echo "Průběžná kontrola: $1" >&2; exit 1; }
+# MODE rozlišuje CLI (--allow, --list, --revoke) od běhu hooku a rozhoduje o
+# návratovém kódu chyby. V hooku musí být 2: při exit 1 jde stderr jen uživateli
+# a model o ničem neví, takže nechá svoje „hotovo" stát nad stavem, který
+# kontrolou vůbec neprošel. Napodruhé (STOP_ACTIVE) se vrací 1, ať se to
+# nezacyklí – chyby, které sem vedou (rozbitý git, nečitelný kontrakt), model
+# stejně sám neopraví a opakovat mu je je jen otravné.
+MODE=cli
+die() {
+  echo "Průběžná kontrola: $1" >&2
+  if [ "$MODE" = hook ] && [ "${STOP_ACTIVE:-false}" != true ]; then exit 2; fi
+  exit 1
+}
 have() { command -v "$1" >/dev/null 2>&1; }
 sha()  { shasum | cut -d' ' -f1; }   # dostupnost se ověřuje v need_tools
 
@@ -236,7 +247,10 @@ case "${1:-}" in
 esac
 
 # --- Vstup ---------------------------------------------------------------------
+MODE=hook
 INPUT=$(cat)
+# Čte se hned, protože na něm závisí návratový kód die() – viz jeho komentář.
+STOP_ACTIVE=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/null)
 have jq || die "chybí jq, hook neběží."
 CWD=$(printf '%s' "$INPUT" | jq -r '.cwd // empty' 2>/dev/null)
 SESSION=$(printf '%s' "$INPUT" | jq -r '.session_id // "nosession"' 2>/dev/null | tr -cd 'A-Za-z0-9._-')
@@ -255,7 +269,21 @@ fi
 # Ve worktree layoutu stojí session často v kořeni kontejneru, který sám pracovní
 # strom není – proto se hledá i v main/ a příkazy pak běží tam, ne v cwd.
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
-CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || exit 0
+CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || {
+  # "Projekt kontrakt nemá" je v pořádku a mlčí se. "Kontrakt tam je, ale nejde
+  # přečíst" je ale něco úplně jiného a mlčet se u toho nesmí: stačí jeden
+  # nedovřený plot ``` nad sekcí a md_body považuje zbytek souboru za blok kódu,
+  # takže se kontrakt nenajde a kontrola se vypne beze slova. Rozdíl se pozná
+  # tím, že sekce je v SYROVÉM souboru, ale v těle bez bloků kódu už ne.
+  for c in "$PWD/CLAUDE.md" "$PWD/.claude/CLAUDE.md" "$PWD/main/CLAUDE.md" \
+           "${ROOT:-/nonexistent}/CLAUDE.md" "${ROOT:-/nonexistent}/.claude/CLAUDE.md" \
+           "${ROOT:-/nonexistent}/main/CLAUDE.md"; do
+    [ -f "$c" ] || continue
+    grep -q '^## Kontrakt příkazů' "$c" || continue
+    die "v $c je sekce ## Kontrakt příkazů, ale nejde přečíst – nejspíš je nad ní nedovřený blok kódu (\`\`\`). Nespustil jsem nic."
+  done
+  exit 0
+}
 PROJ=$(canon "$(proj_for_md "$CLAUDE_MD")")
 
 for d in "$PROJ" "$PWD"; do
@@ -375,10 +403,9 @@ OK_SIG=""; SKIP_SIG=""
 [ "${OK_SIG:-}" = "$SIG" ] && exit 0     # tenhle stav už prošel
 [ "${SKIP_SIG:-}" = "$SIG" ] && exit 0   # nad tímhle stavem jsme se už vzdali
 
-# Pojistka proti smyčce: Claude Code posílá stop_hook_active, když odpověď pokračuje
-# kvůli předchozímu zablokování. Vlastní počítadlo tohle nikdy netrefilo, protože
-# otisk stavu se mění každou editací.
-STOP_ACTIVE=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/null)
+# Pojistka proti smyčce je STOP_ACTIVE, čtený nahoře u INPUT: Claude Code ho
+# posílá, když odpověď pokračuje kvůli předchozímu zablokování. Vlastní počítadlo
+# tohle nikdy netrefilo, protože otisk stavu se mění každou editací.
 
 # --- Spuštění kroků ------------------------------------------------------------
 TMP=$(mktemp "${TMPDIR:-/tmp}/verify.XXXXXX") || die "nelze založit dočasný soubor."

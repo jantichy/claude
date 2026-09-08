@@ -264,6 +264,38 @@ class ZelenaLinka(unittest.TestCase):
         self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
                          "hook spustil příkaz schovaný v HTML komentáři")
 
+    def test_nedovreny_plot_nevypne_kontrolu_mlcky(self):
+        """Vypnutá kontrola, o které nikdo neví, je horší než žádná.
+
+        md_body přepíná stav na každém ``` – lichý počet plotů nad sekcí tedy
+        udělá z celého zbytku souboru blok kódu, kontrakt se nenajde a hook
+        skončí nula. To je nerozlišitelné od „projekt kontrakt nemá", takže
+        kontrola, která předtím blokovala padající testy, od té chvíle mlčky
+        nespouští nic. Rozdíl se pozná tím, že sekce v syrovém souboru je.
+        """
+        (self.repo / "CLAUDE.md").write_text(
+            "# Test\n\n```bash\nnedovreny plot\n\n## Kontrakt příkazů\n\n"
+            "- typecheck: -\n- lint: -\n- test: false\n")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "nedovreny plot")
+        self.allow()
+        r = self.spust()
+        self.assertEqual(r.returncode, BLOKUJE, "nečitelný kontrakt kontrolu vypnul mlčky")
+        self.assertIn("nejde přečíst", r.stderr)
+
+    def test_projekt_bez_kontraktu_dal_mlci(self):
+        """Protějšek testu výš: chybějící kontrakt není chyba a nesmí se hlásit.
+
+        Bez něj by oprava nedovřeného plotu mohla začít otravovat v každém
+        repozitáři, který kontrakt prostě nemá.
+        """
+        (self.repo / "CLAUDE.md").write_text("# Test\n\nŽádný kontrakt tu není.\n")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "bez kontraktu")
+        r = self.spust()
+        self.assertEqual(r.returncode, 0)
+        self.assertEqual(r.stderr.strip(), "", "projekt bez kontraktu nesmí nic hlásit")
+
     def test_dva_kontrakty_se_odmitnou(self):
         """Dvě sekce téhož jména jsou signál, ne konfigurace.
 
@@ -303,11 +335,20 @@ class ZelenaLinka(unittest.TestCase):
                          "příkaz neběžel v adresáři z klíče cwd")
 
     def test_cwd_mimo_projekt_se_odmitne(self):
+        """Cesta ven z projektu se odmítne a model se to musí dozvědět.
+
+        BLOKUJE, ne MLCI: kontrola kvůli tomu vůbec neproběhla, a při exit 1 by
+        stderr viděl jen člověk. Model by pak nechal svoje „hotovo" stát nad
+        stavem, který branou neprošel. Napodruhé (stop_hook_active) se vrací
+        MLCI, ať se to nezacyklí – tohle si model sám neopraví.
+        """
         self.kontrakt(typecheck="-", lint="-", test="true", cwd="../jinam")
         self.allow()
         r = self.spust()
-        self.assertEqual(r.returncode, MLCI)
+        self.assertEqual(r.returncode, BLOKUJE)
         self.assertIn("cwd", r.stderr)
+        r2 = self.spust(stop_hook_active=True)
+        self.assertEqual(r2.returncode, MLCI, "druhý pokus se musí vzdát, ne zacyklit")
 
     # --- souběh ------------------------------------------------------------
 
