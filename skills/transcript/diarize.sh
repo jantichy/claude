@@ -13,7 +13,8 @@
 # Do <log_file> se připisuje:
 #   ### DIARIZE START HH:MM:SS
 #   ### DIARIZE DONE HH:MM:SS
-#   ### DIARSTAT <mluvčích> <úseků>
+#   ### DIARSTAT <mluvčích> <úseků>   (při nečitelné statistice '?' místo čísel)
+#   ### DIARSTAT-FAILED <chyba>     (diarizace proběhla, statistika se nepřečetla)
 #   ### DIARIZE FAILED <důvod>      (přepis tím nepřichází vniveč)
 #   ### DIARIZE ELAPSED <audio_s> <wall_s>
 #
@@ -62,11 +63,20 @@ fi
 wall=$(( $(date +%s) - wall_start ))
 [ -f "$OUT" ] || fail "bez-vystupu"
 
-read -r spk turns < <(python3 -c "
-import json
-d = json.load(open('$OUT'))
-print(d.get('num_speakers', 0), len(d.get('turns', [])))
-" 2>/dev/null || echo "0 0")
+# Cesta jde do Pythonu prostředím, ne interpolací do zdrojáku: apostrof v názvu
+# nahrávky by jinak uzavřel literál a zbytek jména by se vykonal jako kód.
+# Stejně to o pár řádků výš dělá volání diarize.py a ze stejného důvodu.
+if stat_out=$(DIAR_OUT="$OUT" python3 -c '
+import json, os
+d = json.load(open(os.environ["DIAR_OUT"]))
+print(d.get("num_speakers", 0), len(d.get("turns", [])))
+' 2>&1); then
+  read -r spk turns <<< "$stat_out"
+else
+  # Diarizace proběhla, jen statistika se nepřečetla – neohlašuj to jako nulu.
+  echo "### DIARSTAT-FAILED $stat_out" >> "$LOG"
+  spk="?"; turns="?"
+fi
 
 {
   echo "### DIARIZE DONE $(date +%H:%M:%S)"

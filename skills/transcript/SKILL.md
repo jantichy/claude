@@ -307,7 +307,7 @@ Druhý, **samostatný průchod** nad WAV z kroku 6. Když spadne, přepis tím n
 
 **Jméno WAV ověř, nepredikuj.** Když byl vstupem sám WAV v pracovním adresáři, dal mu `transcribe.sh` příponu `.16k`; pak se jmenuje `<název>.16k.wav` a `diarize.sh` z něj odvodí `<název>.16k.diarization.json`. **Týká se to jen těch dvou souborů** – SRT i výstupní základ pro `merge.py` si drží jméno odvozené ze vstupní nahrávky, takže z příkazu níž se mění jedině cesta k diarizačnímu JSONu.
 
-Do logu přibude `### DIARSTAT <mluvčích> <úseků>` a `### DIARIZE ELAPSED`, ze kterého se kalibruje tempo. Při chybě `### DIARIZE FAILED <důvod>`.
+Do logu přibude `### DIARSTAT <mluvčích> <úseků>` a `### DIARIZE ELAPSED`, ze kterého se kalibruje tempo. Při chybě `### DIARIZE FAILED <důvod>`. Když diarizace proběhla, ale statistika se z JSONu nepřečetla, stojí v logu `### DIARSTAT-FAILED <chyba>` a v `DIARSTAT` je `?` místo čísel – **neuváděj pak počet mluvčích jako nulu**, ta hodnota není známá.
 
 #### Spoj mluvčí s textem
 
