@@ -60,15 +60,68 @@ class SkillFrontmatter(unittest.TestCase):
                 self.assertIn("použije", desc, f"{skill}: `description` neříká, kdy se použije")
 
     def test_flagy_z_tela_jsou_v_argument_hint(self):
-        """Režim popsaný v těle, ale chybějící v hintu, uživatel nikdy neuvidí."""
+        """Režim popsaný v těle, ale chybějící v hintu, uživatel nikdy neuvidí.
+
+        Hledá se ve všech tvarech, kterými skilly režimy dokumentují: tučný
+        code span s lomítkem, nadpis `## Režim x`, `### x` i samotný tučný span.
+        Dřív se hledal jen ten první, takže u /project, /autocommit a /worktree
+        vracel vzor prázdnou množinu a assert nad ní procházel vždycky.
+        """
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
                 hint = frontmatter(skill).get("argument-hint", "")
-                documented = set(re.findall(
-                    r"\*\*`/" + skill.parent.name + r" ([a-z-]+)`\*\*", body(skill)))
+                jmeno = skill.parent.name
+                telo = body(skill)
+                documented = set()
+                for vzor in (rf"\*\*`/{jmeno} ([a-z-]+)`\*\*",
+                             r"^#{2,4} Režim\s+`?([a-z-]+)`?",
+                             r"^#{3,4} `([a-z-]+)`",
+                             # Odrážka `- **`x`** *(popisek)*` – tvar /project.
+                             # Vzor NESMÍ vycházet z hintu: pak by nemohl najít
+                             # právě ten režim, který v hintu chybí, a test by
+                             # měřil kruhem. Ověřeno mutací.
+                             r"^- \*\*`([a-z-]+)`\*\*\s*\*\("):
+                    documented |= set(re.findall(vzor, telo, re.M))
                 missing = sorted(f for f in documented if f not in hint)
                 self.assertFalse(missing,
                     f"{skill}: režimy {missing} jsou v těle, ale ne v argument-hint {hint!r}")
+
+    def test_rezimy_z_hintu_jsou_popsane_v_tele(self):
+        """Opačný směr, a ten slepou skvrnu nemá.
+
+        Předchozí test hledá režimy v těle a porovnává je s hintem – když je
+        nenajde, projde nad prázdnou množinou, ať je hint jakýkoliv. Tenhle
+        vychází z hintu, který je strojově čitelný vždycky, takže hint
+        slibující nezdokumentovaný režim se pozná i u skillu, jehož konvenci
+        zápisu vzory výš neznají.
+
+        Norma (SKILLS.md, *Hlavička*): má-li skill režimy dva a víc, musí být
+        pojmenované všechny včetně výchozího.
+        """
+        for skill in SKILLS:
+            hint = frontmatter(skill).get("argument-hint", "")
+            # Jen první hranatá skupina a jen tokeny oddělené |: `[a-z]+` by
+            # rozsekalo české placeholdery (<větev> → "tev") a hlásilo nesmysly.
+            prvni = re.match(r"\s*\[([^\]]+)\]", hint)
+            if not prvni:
+                continue
+            rezimy = [r.strip() for r in prvni.group(1).split("|")]
+            rezimy = [r for r in rezimy if re.fullmatch(r"[a-z][a-z-]*", r)]
+            if len(rezimy) < 2:
+                continue
+            telo = body(skill)
+            jmeno = skill.parent.name
+            with self.subTest(skill=jmeno):
+                # Režim se smí zmínit i jako `/skill mode`, ne jen samostatně.
+                # Uznává se i `/skill mode` a `<mode>`: hint některých skillů
+                # nejmenuje režimy, ale typy argumentu (/release [větev|tag|hash]),
+                # a ty se v těle píšou v ostrých závorkách.
+                chybi = [r for r in rezimy
+                         if f"`{r}`" not in telo
+                         and f"/{jmeno} {r}`" not in telo
+                         and f"<{r}" not in telo]
+                self.assertFalse(chybi,
+                    f"{skill}: argument-hint slibuje režimy {chybi}, ale tělo je nepopisuje")
 
 
 class SkillOdkazy(unittest.TestCase):
@@ -589,10 +642,17 @@ class KontraktPrikazu(unittest.TestCase):
             hodnota = self._hodnota(klic)
             if hodnota in (None, "-"):
                 continue
-            with self.subTest(klic=klic):
-                binarka = hodnota.split()[0]
-                self.assertTrue(shutil.which(binarka),
-                    f"kontrakt má {klic}: {hodnota}, ale {binarka} není na PATH")
+            # Rozložit na dílčí příkazy: `lint` je dnes `shellcheck ... && ruff ...`
+            # a kontrola jen prvního tokenu by chybějící ruff nenahlásila,
+            # přestože hook by po každé odpovědi hlásil nespustitelný krok.
+            for cast in re.split(r"&&|\|\||;|\|", hodnota):
+                tokeny = cast.split()
+                if not tokeny:
+                    continue
+                binarka = tokeny[0]
+                with self.subTest(klic=klic, binarka=binarka):
+                    self.assertTrue(shutil.which(binarka),
+                        f"kontrakt má {klic}: {hodnota}, ale {binarka} není na PATH")
 
 
 class Struktura(unittest.TestCase):
@@ -1425,6 +1485,17 @@ class SkriptySkillu(unittest.TestCase):
     # je má tam a dřívější glob je míjel, takže je nečetla žádná kontrola.
     SKRIPTY = sorted(set((ROOT / "skills").glob("*/scripts/*.py"))
                      | set((ROOT / "skills").glob("*/*.py")))
+
+    def test_skripty_se_nasly(self):
+        """Prázdný glob projde oběma testy níž a nikdo se nedozví, že se nic neměří.
+
+        Přejmenuje-li se adresář nebo se skripty přesunou (u /transcript se to
+        fakticky stalo), glob přestane vracet cokoliv a assert nad prázdným
+        seznamem uspěje vždycky. Ověřeno mutací: rozbití globu SKILLS shodí pět
+        testů, rozbití SKRIPTY dřív neshodilo ani jeden.
+        """
+        self.assertGreaterEqual(len(self.SKRIPTY), 10,
+            f"glob našel jen {len(self.SKRIPTY)} skriptů – přesunuly se, nebo se rozbil vzor?")
 
     def test_skripty_se_prelozi(self):
         """Syntaktická vada ve skriptu se jinak pozná až uprostřed sběru dat."""
