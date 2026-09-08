@@ -10,6 +10,16 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
+
+def plural(n, one, few, many):
+    """České skloňování podle počtu: 1 / 2–4 / 0 a 5 a víc."""
+    if n == 1:
+        return f"{n} {one}"
+    if 2 <= n <= 4:
+        return f"{n} {few}"
+    return f"{n} {many}"
+
+
 if len(sys.argv) < 3:
     sys.exit("Použití: gen_twitter_md.py <adresář data/ z rozbaleného exportu> <výstupní adresář>")
 BASE = Path(sys.argv[1])
@@ -164,7 +174,8 @@ for year, ilist in sorted(by_year.items()):
         f"# Twitter – tweety {year}\n\n"
         f"- **Médium:** Twitter/X (https://x.com/{ME}, účet @{ME})\n"
         f"- **Období:** rok {year}\n"
-        f"- **Počet tweetů:** {n_posts} (z toho {replies} odpovědí; {n_threads} sloučených vláken)\n"
+        f"- **Počet tweetů:** {n_posts} (z toho {plural(replies, 'odpověď', 'odpovědi', 'odpovědí')}; "
+        f"{plural(n_threads, 'sloučené vlákno', 'sloučená vlákna', 'sloučených vláken')})\n"
         f"- **Zdroj:** oficiální export `{BASE}`\n"
         f"- **Poznámka:** časy jsou v UTC; čisté retweety bez komentáře nejsou zahrnuty; zkrácené t.co odkazy jsou nahrazeny plnými URL\n\n"
         f"---\n\n"

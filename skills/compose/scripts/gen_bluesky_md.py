@@ -12,6 +12,16 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
+
+def plural(n, one, few, many):
+    """České skloňování podle počtu: 1 / 2–4 / 0 a 5 a víc."""
+    if n == 1:
+        return f"{n} {one}"
+    if 2 <= n <= 4:
+        return f"{n} {few}"
+    return f"{n} {many}"
+
+
 if len(sys.argv) < 3:
     sys.exit("Použití: gen_bluesky_md.py <bluesky_posts.json z parse_bluesky.py> <výstupní adresář>")
 SRC = Path(sys.argv[1])
@@ -133,7 +143,8 @@ for year, ilist in sorted(by_year.items()):
         f"# Bluesky – posty {year}\n\n"
         f"- **Médium:** Bluesky ({PROFIL})\n"
         f"- **Období:** rok {year}\n"
-        f"- **Počet postů:** {n_posts} (z toho {replies} odpovědí; {n_threads} sloučených vláken)\n"
+        f"- **Počet postů:** {n_posts} (z toho {plural(replies, 'odpověď', 'odpovědi', 'odpovědí')}; "
+        f"{plural(n_threads, 'sloučené vlákno', 'sloučená vlákna', 'sloučených vláken')})\n"
         f"- **Zdroj:** export repozitáře `{SRC}` (AT Protocol)\n"
         f"- **Poznámka:** časy jsou v UTC; reposty bez komentáře nejsou zahrnuty\n\n"
         f"---\n\n"

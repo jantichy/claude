@@ -12,6 +12,16 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import unquote
 
+
+def plural(n, one, few, many):
+    """České skloňování podle počtu: 1 / 2–4 / 0 a 5 a víc."""
+    if n == 1:
+        return f"{n} {one}"
+    if 2 <= n <= 4:
+        return f"{n} {few}"
+    return f"{n} {many}"
+
+
 if len(sys.argv) < 3:
     sys.exit("Použití: gen_linkedin_md.py <adresář s Shares_*.csv a Comments_*.csv> <výstupní adresář> [URL profilu]")
 BASE = Path(sys.argv[1])
@@ -80,7 +90,8 @@ for year, ilist in sorted(by_year.items()):
         f"# LinkedIn – posty a komentáře {year}\n\n"
         f"- **Médium:** LinkedIn{PROFIL}\n"
         f"- **Období:** rok {year}\n"
-        f"- **Počet položek:** {len(ilist)} (z toho {n_comments} komentářů u cizích postů)\n"
+        f"- **Počet položek:** {len(ilist)} (z toho "
+        f"{plural(n_comments, 'komentář', 'komentáře', 'komentářů')} u cizích postů)\n"
         f"- **Zdroj:** oficiální export `{BASE}`\n"
         f"- **Poznámka:** časy jsou v UTC; reposty bez komentáře nejsou zahrnuty; komentáře nemají v exportu vlastní URL – odkaz vede na komentovaný post\n\n"
         f"---\n\n"
