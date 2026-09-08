@@ -108,7 +108,7 @@ Bylo to takhle rozbité v uživatelském `~/.claude/CLAUDE.md` od jeho vzniku: `
 
 **Sekce `## Nasazení`** popisuje, jak se projekt dostane do produkce – u platformy s automatickým nasazením zejména to, která větev je nasazovací. Zakládá ji `/project` nebo první běh `/release`.
 
-**Sekce `## Review` a `## Consistency`** sbírají nálezy vyhodnocené jako „neopravovat“, aby je příště nehlásily znovu. Do `## Review` píší **`/review` i `/attack`** (u nálezu z útoku se řádek doplní o `(útok)`), do `## Consistency` píše `/consistency`. Píší je skilly, ne člověk; kapitoly jsou dvě, protože se ptají na jinou otázku – ne tři, protože `/review` a `/attack` se ptají na tutéž.
+**Sekce `## Review` a `## Consistency`** sbírají nálezy vyhodnocené jako „neopravovat“, aby je příště nehlásily znovu. Do `## Review` píší **`/review` i `/attack`** (u nálezu z útoku nese pole `zdroj` hodnotu `útok`; formát řádku definuje `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*), do `## Consistency` píše `/consistency`. Píší je skilly, ne člověk; kapitoly jsou dvě, protože se ptají na jinou otázku – ne tři, protože `/review` a `/attack` se ptají na tutéž.
 
 ### `README.md`
 
