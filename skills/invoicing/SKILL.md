@@ -177,6 +177,10 @@ Za každého klienta:
 
 **Proč to přebíjí i výslovný pokyn.** Vypadá to jako rozpor s pravidlem, že potvrzený požadavek uživatele je jeho rozhodnutí (`~/.claude/RULES.md`, *Přednost pravidel*, bod 1). Není: tenhle zákaz **je** uživatelovo rozhodnutí, jen učiněné předem a s chladnou hlavou. Proto „pošli to, spěchám" uprostřed běhu neruší předchozí volbu – je to přesně ta situace, kvůli které si ji nastavil. Zrušit ji jde jedině změnou tohohle skillu, ne pobídkou za běhu.
 
+**Drží to mechanismus, ne jen tenhle text.** Odesílací nástroje Gmailu (`send_message`, `reply`, `forward`, obojí `trash_*`) jsou od 8. 9. 2026 v `deny` v `~/.claude/settings.json`, takže je nelze zavolat ani omylem, ani po pobídce. `create_draft` zakázaný není – ten skill potřebuje.
+
+**Nezkoušej to řešit přes `allowed-tools` v hlavičce.** Podle dokumentace Claude Code to pole nástroje **neomezuje**, jen předschvaluje: *„It does not restrict which tools are available: every tool remains callable."* Skill hlavičku kdysi měl, zrušil ji commit 622fa4f s odůvodněním, že „zakazoval Gmail MCP" – jenže nic nezakazoval, jen se pak na `create_draft` doptával. Vrátit ji tedy zákaz nezajistí; jedinou hranicí je `deny` (`~/.claude/RULES.md`, *Přednost pravidel*: kde má hranice držet, tam k ní patří mechanismus).
+
 ## Fáze 6 – Závěr
 
 ```
