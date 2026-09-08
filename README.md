@@ -140,7 +140,7 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
-Skilly a pravidla jsou z velké části text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez vlastního README. Kde skill vlastní skripty má – `/compose` je má –, testy hlídají aspoň to, že se přeloží a že si cíl neodvozují ze svého umístění. Druhá sada testuje **průběžnou kontrolu** – jediné místo v celé konfiguraci, které něco doopravdy vynucuje, a tedy to, kde tichá regrese stojí nejvíc. Obojí stojí nula tokenů a běží v průběžné kontrole po každé odpovědi. Jen standardní knihovna Pythonu, žádná instalace.
+Skilly a pravidla jsou z velké části text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez vlastního README. Kde skill vlastní skripty má – `/compose` a `/transcript` je mají –, testy hlídají aspoň to, že se přeloží a že si cíl neodvozují ze svého umístění. Druhá sada testuje **průběžnou kontrolu** – jediné místo v celé konfiguraci, které něco doopravdy vynucuje, a tedy to, kde tichá regrese stojí nejvíc. Obojí stojí nula tokenů a běží v průběžné kontrole po každé odpovědi. Jen standardní knihovna Pythonu, žádná instalace.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 

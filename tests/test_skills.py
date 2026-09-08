@@ -10,6 +10,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 Schválně jen stdlib: kontrola, která si nejdřív žádá instalaci balíčku, se v cizím
 prostředí neprojeví jako nález, ale jako rozbitý nástroj – a ten se obchází.
 """
+import os
 import re
 import unittest
 from pathlib import Path
@@ -531,6 +532,52 @@ class KontraktPrikazu(unittest.TestCase):
             with self.subTest(klic=klic):
                 self.assertIsNotNone(self._hodnota(klic),
                     f"klíč {klic} se z kontraktu nepřečetl – změnil se formát?")
+
+    def test_vzory_kontraktu_pokryvaji_repozitar(self):
+        """Soubor, na který nesedí žádný vzor, nečte žádná kontrola – a nikdo se to nedozví.
+
+        Přesně tak vypadly čtyři Python skripty /transcript: lint měl glob
+        `skills/*/scripts/*.py`, jenže ony leží přímo v adresáři skillu. Mutace
+        s nedefinovaným jménem prošla celým kontraktem zeleně. Hook přitom mlčí
+        správně – klíč v kontraktu je a příkaz vrací nulu –, takže tuhle třídu
+        nemá kdo chytit než test, který obě množiny porovná.
+
+        Kontroluje se jen to, co některý vzor zachytit MÁ: přípony, které se
+        v kontraktu vyskytují. Nový jazyk bez řádku v kontraktu je jiný nález.
+        """
+        import fnmatch
+        import subprocess
+        verzovane = subprocess.run(["git", "ls-files"], cwd=ROOT,
+                                   capture_output=True, text=True).stdout.split()
+        self.assertTrue(verzovane, "git ls-files nic nevrátil – měří se vůbec něco?")
+
+        vzory = []
+        for klic in ("typecheck", "lint", "test"):
+            hodnota = self._hodnota(klic)
+            if hodnota in (None, "-"):
+                continue
+            # ./*.sh a *.sh jsou týž vzor: shell si `./` rozbalí, ale fnmatch ne.
+            vzory += [t[2:] if t.startswith("./") else t
+                      for t in hodnota.split()
+                      if "*" in t or t.endswith((".py", ".sh", ".swift"))]
+
+        # Přípony, pro které kontrola existovat MÁ. Odvozovat je jen z kontraktu
+        # nestačí: vypadl-li by odtud celý shellcheck, zmizela by s ním i přípona
+        # .sh a test by mlčel právě o té kontrole, která se ztratila. Ověřeno
+        # mutací – proto stojí seznam tady a rozšiřuje se vědomě.
+        HLIDANE = {".py", ".sh", ".swift"}
+        pripony = {os.path.splitext(v)[1] for v in vzory if os.path.splitext(v)[1]}
+        v_repu = {os.path.splitext(c)[1] for c in verzovane} & HLIDANE
+        self.assertFalse(v_repu - pripony,
+            "v repozitáři jsou soubory s příponou, kterou kontrakt vůbec neřeší: "
+            f"{sorted(v_repu - pripony)}")
+
+        nepokryte = [c for c in verzovane
+                     if os.path.splitext(c)[1] in pripony
+                     and not any(fnmatch.fnmatch(c, v) for v in vzory)]
+        self.assertFalse(nepokryte,
+            "tyhle soubory nezachytí žádný vzor z kontraktu, takže je nečte "
+            f"žádná kontrola: {nepokryte}")
 
     def test_prikazy_z_kontraktu_jsou_spustitelne(self):
         """Pomlčka je vědomé rozhodnutí, ale příkaz musí existovat.
@@ -1374,7 +1421,10 @@ class SkriptySkillu(unittest.TestCase):
     by tedy zůstal bez kontroly a překlep by se poznal až za ostrého běhu.
     """
 
-    SKRIPTY = sorted((ROOT / "skills").glob("*/scripts/*.py"))
+    # Bere i skripty ležící přímo v adresáři skillu, ne jen ve scripts/: /transcript
+    # je má tam a dřívější glob je míjel, takže je nečetla žádná kontrola.
+    SKRIPTY = sorted(set((ROOT / "skills").glob("*/scripts/*.py"))
+                     | set((ROOT / "skills").glob("*/*.py")))
 
     def test_skripty_se_prelozi(self):
         """Syntaktická vada ve skriptu se jinak pozná až uprostřed sběru dat."""
