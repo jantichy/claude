@@ -234,7 +234,7 @@ Existuje **jen spolu s `todo.md`**: jeden bez druhého nedává smysl, tak se ta
 
 **Sekce `## Průchody životním cyklem`** drží po jednom řádku za dokončený běh těch kroků *Životního cyklu projektu* (`~/.claude/RULES.md`), **které mají svého čtenáře**. Zapisují si ho skilly samy, ne člověk:
 
-- **`/review` a `/attack`** – čte je `/release`, aby se před nasazením neptal z paměti, jestli nad tímhle rozsahem proběhly.
+- **`/review` a `/attack`** – čtenáři jsou tři. `/release`, aby se před nasazením neptal z paměti, jestli nad tímhle rozsahem proběhly; **příští běh téhož skillu**, který jinak nepozná rozsah toho předchozího ani co z nálezů zbylo; a **člověk**, který z repozitáře jinak nezjistí, že běh vůbec proběhl. Proto se zapisuje i v projektu, kam se nenasazuje – odhalil to čtenář bez kontextu 8. 9. 2026, když po `/review full` s 33 nálezy nenašel v repozitáři jedinou stopu krom tvaru commitů.
 - **`/oponent`** – čte ho příští `/oponent`, který bez seznamu hledisek nepozná, s čím srovnávat počty nálezů.
 - **`/consistency` a `/cleanup`** – čte je příští běh téhož skillu: `/consistency` pozná, co už bylo auditované a s jakým vědomě zúženým rozsahem, `/cleanup` co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
 
