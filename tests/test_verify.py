@@ -128,7 +128,7 @@ class PrubeznaKontrola(unittest.TestCase):
 
     # --- exit kódy ---------------------------------------------------------
 
-    def test_cervena_linka_blokuje_a_mluvi_k_modelu(self):
+    def test_padajici_kontrola_blokuje_a_mluvi_k_modelu(self):
         self.kontrakt(typecheck="-", lint="-", test="false")
         self.allow()
         r = self.spust()
@@ -156,7 +156,7 @@ class PrubeznaKontrola(unittest.TestCase):
         r = self.spust(stop_hook_active=True)
         self.assertEqual(r.returncode, PUSTI)
 
-    def test_chybejici_nastroj_neni_cervena_linka(self):
+    def test_chybejici_nastroj_neni_padajici_kontrola(self):
         """Blokovat by znamenalo hnát model opravovat kód, který za to nemůže."""
         self.kontrakt(typecheck="-", lint="-", test="prikaz-ktery-neexistuje-xyz")
         self.allow()

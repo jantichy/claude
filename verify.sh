@@ -16,9 +16,10 @@
 # Krok, který nejde spustit (chybí nástroj, exit 126/127), NENÍ padající kontrola:
 # hlásí se zvlášť a odpověď neblokuje – jinak by Claude opravoval kód kvůli rozbitému
 # prostředí. Končí exit 1: u ní je mlčení k modelu správně, protože opravovat
-# není co. Totéž platí pro chybějící souhlas – tam taky není co opravovat na
-# kódu. Naopak `die()` vrací v hooku 2 (a 1 až napodruhé), protože chyba, kvůli
-# které kontrola vůbec neproběhla, se model dozvědět musí.
+# není co. Do téže větve padá krok, jehož výstup přetekl a byl uříznut – ten
+# nedoběhl, takže o jeho výsledku se netvrdí nic. A totéž platí pro chybějící
+# souhlas. Naopak `die()` vrací v hooku 2 (a 1 až napodruhé), protože chyba,
+# kvůli které kontrola vůbec neproběhla, se model dozvědět musí.
 #
 # Všechno ostatní, co se nepovedlo zkontrolovat, končí exit 2. Při exit 1 vidí
 # stderr jen uživatel, kdežto shrnutí píše model – a ten by nad neprověřeným
