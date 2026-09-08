@@ -264,6 +264,39 @@ class ZelenaLinka(unittest.TestCase):
         self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
                          "hook spustil příkaz schovaný v HTML komentáři")
 
+    def test_upovidany_uspesny_krok_neni_padajici_kontrola(self):
+        """Uříznutý výstup neznamená, že kód je špatně.
+
+        Kroky běží rourou do `head -c`, které drží výstup v mezích, aby
+        smyčkující příkaz nezaplnil disk. Jenže tím zavře rouru, krok dostane
+        SIGPIPE a nedoběhne – takže jeho návratový kód o výsledku nevypovídá.
+        Dřív se to počítalo jako padající kontrola a hook blokoval odpověď kvůli
+        příkazu, který sám o sobě končí nulou.
+
+        Pozná se to velikostí souboru, ne kódem: `cat` vrátí 141, ale Python
+        zachytí BrokenPipeError a končí 120. První verze opravy hlídala 141 a
+        kvůli tomu nefungovala.
+        """
+        self.kontrakt(typecheck="-", lint="-",
+                      test="python3 -c \"print('x'*300000)\"")
+        self.allow()
+        r = self.spust()
+        self.assertNotEqual(r.returncode, BLOKUJE,
+                            "upovídaný úspěšný krok se hlásí jako padající kontrola")
+        self.assertIn("není známo", r.stderr)
+        self.assertIn("Není to nález v kódu", r.stderr)
+
+    def test_padajici_krok_blokuje_i_po_oprave_upovidanosti(self):
+        """Protějšek testu výš: ať se z opravy nestane díra.
+
+        Kdyby se podmínka na uříznutý výstup napsala moc široce, spolkla by
+        i skutečné selhání a hook by přestal blokovat cokoliv.
+        """
+        self.kontrakt(typecheck="-", lint="-", test="false")
+        self.allow()
+        self.assertEqual(self.spust().returncode, BLOKUJE,
+                         "padající test přestal blokovat")
+
     def test_nedovreny_plot_nevypne_kontrolu_mlcky(self):
         """Vypnutá kontrola, o které nikdo neví, je horší než žádná.
 

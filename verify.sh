@@ -444,6 +444,20 @@ for step in typecheck lint test; do
   [ "$CMD" = "-" ] && continue
   [ -z "$CMD" ] && { SKIPPED="${SKIPPED:+$SKIPPED, }$step"; continue; }
   run "$CMD"; RC=$?
+  # Uříznutý výstup: `head -c` zavřelo rouru, takže krok NEDOBĚHL a jeho
+  # návratový kód o výsledku nevypovídá – ani když je nula. Nesmí se tedy
+  # hlásit zelená ani „oprav kód"; je to rozbité prostředí, jako 126/127.
+  #
+  # Pozná se to velikostí souboru, ne kódem: ten se podle programu liší.
+  # `cat` vrátí 141 (128+SIGPIPE), ale Python zachytí BrokenPipeError a končí
+  # 120 – první verze téhle opravy hlídala 141 a kvůli tomu nefungovala.
+  if [ "$(wc -c < "$TMP" | tr -d ' ')" = "$MAX_OUT" ]; then
+    BROKEN="${BROKEN}
+--- ${step}: ${CMD} ---
+(krok vypsal přes ${MAX_OUT} B, výstup byl uříznut a krok nedoběhl – jak by dopadl,
+není známo. Zkrať jeho výstup, nebo ho z průběžné kontroly vyřaď. Není to nález v kódu.)"
+    continue
+  fi
   if [ "$RC" -ne 0 ]; then
     # RC se bere hned po volání: uvnitř `if ! run …` by $? byl vždycky 0
     # a diagnostika timeoutu by se nikdy nezobrazila.
