@@ -74,7 +74,7 @@ Je-li výsledek nenulový, **řekni to a nabídni srovnání před review**. Dů
 - Projektový `CLAUDE.md` – zejména `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
 - **Kapitola `## Review`** obsahuje dříve zamítnuté nálezy (won't fix). Neuvádějí se – ale **jen dokud platí**: u každého záznamu ověř příkazem, jestli se dotčený kód od zápisu nezměnil. Mechanika i formát jsou v kapitole *Kapitola `## Review`* níž; bez toho ověření se z filtru stane odkladiště, které jen narůstá.
 - **`## Výjimky z obecných pravidel`** – vědomé odchylky projektu. Co je tam popsané jako výjimka, není nález.
-- **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Role *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit. **A `docs/scenarios.md`**, vede-li ho projekt – *Korektnost* měří scénář po scénáři, takže taxativní seznam je pro ni lepší podklad než próza v požadavcích.
+- **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Specialisté *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit. **A `docs/scenarios.md`**, vede-li ho projekt – *Korektnost* měří scénář po scénáři, takže taxativní seznam je pro ni lepší podklad než próza v požadavcích.
 - **Jmenný seznam citlivých oblastí** na konci `docs/architecture.md` – přihlášení, oprávnění, platby, nahrávání souborů, osobní údaje, mazání dat, odesílání pošty ven. Zakládá ho `/specify` s příslibem, že *„`/review` na ně sahá přísněji“*, takže ten příslib je potřeba splnit: **dotkne-li se rozsah kterékoliv z nich, specialista na bezpečnost je povinný** (nevybírá se podle typu souborů) **a pouští se na nejsilnějším modelu s `xhigh`**. Do zadání toho specialisty seznam vlož a napiš, které položky se rozsahu týkají. Neexistuje-li `architecture.md`, řekni to a rozhodni podle obsahu rozsahu.
 
 ### 0.3 Sestav panel specialistů
@@ -83,7 +83,7 @@ Specialisté se vybírají **podle toho, čeho se soubory v rozsahu týkají**, 
 
 **Pracovní specialisté** – ptají se, jestli je to správně:
 
-| Role | Ptá se | Zapíná se, když v rozsahu je |
+| Specialista | Ptá se | Zapíná se, když v rozsahu je |
 |---|---|---|
 | **Korektnost** | dělá to, co má, scénář po scénáři? | jakýkoliv kód |
 | **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven, **a vždy změna manifestu nebo lockfile závislostí** |
@@ -109,7 +109,7 @@ Specialisté se vybírají **podle toho, čeho se soubory v rozsahu týkají**, 
 
 `~/.claude/WORKTREE.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
 
-**Role *Agentní infrastruktura* má vlastní zadání**, protože proti ní nestojí žádný standard v `~/Dev/context/`, a tedy ani nic, proti čemu by měřil standardový specialista:
+**Specialista *Agentní infrastruktura* má vlastní zadání**, protože proti ní nestojí žádný standard v `~/Dev/context/`, a tedy ani nic, proti čemu by měřil standardový specialista:
 
 ```
 Prověř konfiguraci agentní vrstvy projektu. Ptáš se na jedinou věc: co z tohohle
@@ -372,7 +372,7 @@ VÝSTUP: JSON, nic jiného.
 
 Dřív takový nález ověření **vynechával** a přehrával si ho orchestrátor sám. Byla to díra dvěma způsoby. Za prvé se tím z volnotextového pole stal vypínač ověřování – a agent, který ví, že vyplněné pole ušetří přezkoumání, ho vyplní i tehdy, když nic nespustil. Za druhé je „přehraj si to sám“ krok bez artefaktu: nikdo nepozná, jestli proběhl. Delegovaný krok je aspoň vidět v seznamu volání a stojí zhruba totéž.
 
-**Deduplikuj ještě před ověřením**, ne až po něm. Role se překrývají schválně, takže tentýž problém přijde třikrát jinými slovy – posílat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď.
+**Deduplikuj ještě před ověřením**, ne až po něm. Specialisté se překrývají schválně, takže tentýž problém přijde třikrát jinými slovy – posílat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď.
 
 **Strop na počet ověřovatelů: nejvýš 20 v jedné dávce a nejvýš 40 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů – `/review full` na starším projektu vrátí klidně dvě stě nálezů a to je dvě stě agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 7 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat.
 
@@ -388,7 +388,7 @@ U nálezů z deterministické vrstvy (Fáze 1) se ověření **nedělá**.
 
 ### Ověřený seznam zapiš na disk, než půjdeš dál
 
-Hotovou frontu ulož do **`.claude/run/review.json`** (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "head": "<short HEAD>", "scope": "...", "roles": [...], "findings": [{...nález..., "status": "open"}]}`.
+Hotovou frontu ulož do **`.claude/run/review.json`** (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "head": "<short HEAD>", "scope": "...", "specialists": [...], "findings": [{...nález..., "status": "open"}]}`.
 
 **Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 6 a 7 s ním pak dlouze interagují **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
 
@@ -402,7 +402,7 @@ Hotovou frontu ulož do **`.claude/run/review.json`** (`~/.claude/STRUCTURE.md`,
 
 Slož nálezy z deterministické vrstvy a z panelu (ty, které přežily ověření) do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, KOSMETICKÉ; v rámci kategorie root položky před jejich následky.
 
-**Deduplikuj napříč specialisty.** Role se překrývají schválně – bezpečnost a `coding.md` najdou tutéž díru, `web/web.md` a `web/admin.md` totéž tlačítko, `web/web.md` a `text/typography.md` tutéž typografii. Když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba podklady.
+**Deduplikuj napříč specialisty.** Překrývají se schválně – bezpečnost a `coding.md` najdou tutéž díru, `web/web.md` a `web/admin.md` totéž tlačítko, `web/web.md` a `text/typography.md` tutéž typografii. Když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba podklady.
 
 Pak rozděl na dvě skupiny:
 
@@ -437,7 +437,7 @@ Při pochybnosti patří nález mezi sporné.
 ## Výsledky review
 
 - **Rozsah:** [N z M souborů diffu – co a proč vynecháno]
-- **Role:** [které běžely / které vybrané neběžely a proč] · [na čem: code-review high, bezpečnost opus, standardy výchozí]
+- **Specialisté:** [kteří běželi / kteří vybraní neběželi a proč] · [na čem: code-review high, bezpečnost opus, standardy výchozí]
 
 **Deterministická vrstva** [u každého kroku nástroj · návratový kód, ne holé číslo]:
 - průběžná kontrola: ✅ / ❌ [co padá]
@@ -583,7 +583,7 @@ git log --oneline <zapsaný hash>..HEAD -- <lokace ze záznamu>
 ```
 ## Hotovo
 
-Rozsah: [změny na větvi / celý projekt] · Role: [které]
+Rozsah: [změny na větvi / celý projekt] · Specialisté: [kteří]
 
 - ⚡ Opraveno rovnou (mechanické): N
 - ✅ Opraveno po odsouhlasení: N

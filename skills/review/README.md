@@ -44,7 +44,7 @@ Prověří hotovou práci před uzavřením z několika nezávislých hledisek n
 ## Výsledky review
 
 Rozsah: 14 z 16 souborů diffu (2 generované vynechány)
-Role: korektnost, bezpečnost, testy, coding.md · vynechána web.md – v rozsahu není rozhraní
+Specialisté: korektnost, bezpečnost, testy, coding.md · vynechána web.md – v rozsahu není rozhraní
 
 Deterministická vrstva:
 - průběžná kontrola: ✅
