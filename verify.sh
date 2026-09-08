@@ -15,8 +15,10 @@
 #
 # Krok, který nejde spustit (chybí nástroj, exit 126/127), NENÍ padající kontrola:
 # hlásí se zvlášť a odpověď neblokuje – jinak by Claude opravoval kód kvůli rozbitému
-# prostředí. Je to jediná větev, která končí exit 1: u ní je mlčení k modelu
-# správně, protože opravovat není co.
+# prostředí. Končí exit 1: u ní je mlčení k modelu správně, protože opravovat
+# není co. Totéž platí pro chybějící souhlas – tam taky není co opravovat na
+# kódu. Naopak `die()` vrací v hooku 2 (a 1 až napodruhé), protože chyba, kvůli
+# které kontrola vůbec neproběhla, se model dozvědět musí.
 #
 # Všechno ostatní, co se nepovedlo zkontrolovat, končí exit 2. Při exit 1 vidí
 # stderr jen uživatel, kdežto shrnutí píše model – a ten by nad neprověřeným
@@ -498,7 +500,7 @@ if [ -n "$FAILED" ]; then
     # Druhý pokus v řadě nad týmž problémem: dál už jen otravujeme.
     printf '%s %s\n' "${OK_SIG:--}" "$SIG" > "$STATE" 2>/dev/null || true
     # exit 2, ne 1: při exit 1 jde stderr jen uživateli a model o tom neví, takže
-    # svoje "hotovo" nechá stát nad stavem, který branou neprošel. Zacyklit to
+    # svoje "hotovo" nechá stát nad stavem, který kontrolou neprošel. Zacyklit to
     # nemůže – SKIP_SIG je pro tenhle stav uložený a další volání skončí exit 0.
     { echo "Průběžná kontrola neprošla ani napodruhé – pouštím dál, ale NENÍ to zelené."
       echo "Neopravuj to potřetí. Nehlas práci jako hotovou a napiš uživateli, co zbývá."

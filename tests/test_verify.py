@@ -1,7 +1,7 @@
 """Regresní testy průběžné kontroly.
 
 `verify.sh` je jediné místo celé konfigurace, které něco doopravdy vynucuje –
-všechno ostatní je text, který vykonává model. Zároveň je to ~400 řádků bashe
+všechno ostatní je text, který vykonává model. Zároveň je to přes 500 řádků bashe
 s netriviální logikou: otisk stavu, souhlas podle repozitáře, rozlišení
 "test našel chybu" od "test nejde spustit", timeouty, pojistka proti smyčce.
 
@@ -39,7 +39,7 @@ def git(cwd, *args):
                           capture_output=True, text=True, check=False)
 
 
-class ZelenaLinka(unittest.TestCase):
+class PrubeznaKontrola(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="verify-test-"))
         self.home = self.tmp / "home"
@@ -182,7 +182,7 @@ class ZelenaLinka(unittest.TestCase):
 
     # --- vypnutí -----------------------------------------------------------
 
-    def test_vypnuta_brana_se_hlasi(self):
+    def test_vypnuta_kontrola_se_hlasi(self):
         """Vypnutá kontrola, o které se mlčí, je horší než chybějící kontrola."""
         self.kontrakt(typecheck="-", lint="-", test="false")
         self.allow()
