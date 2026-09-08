@@ -1510,6 +1510,49 @@ class SkriptySkillu(unittest.TestCase):
                     except py_compile.PyCompileError as chyba:
                         self.fail(str(chyba))
 
+    def test_extract_wpress_nezapisuje_mimo_cil(self):
+        """Cesta v .wpress hlavičce jsou data z archivu, ne argument skriptu.
+
+        Bez kontroly si archiv určí, kam se zapisuje: `../..` vyleze z cílového
+        adresáře a absolutní cesta ho zahodí úplně, protože `Path("/a") / "/b"`
+        je `/b`. Cílem bývá vlastní záloha, jenže ta se často tahá ze starého
+        hostingu, kde ji roky nikdo nehlídal.
+        """
+        import subprocess
+        import tempfile
+        skript = ROOT / "skills/compose/scripts/extract_wpress.py"
+        if not skript.exists():
+            self.skipTest("extract_wpress.py v repozitáři není")
+
+        def archiv(cesta: str, jmeno: str, obsah: bytes = b"x") -> bytes:
+            h = jmeno.encode().ljust(255, b"\x00")
+            h += str(len(obsah)).encode().ljust(14, b"\x00")
+            h += b"0".ljust(12, b"\x00")
+            h += cesta.encode().ljust(4096, b"\x00")
+            return h + obsah + b"\x00" * 4377
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            cil = tmp / "out"
+            for popis, cesta in (("relativní", "../../UNIK"), ("absolutní", str(tmp / "ABS"))):
+                with self.subTest(cesta=popis):
+                    arch = tmp / "a.wpress"
+                    arch.write_bytes(archiv(cesta, "evil.txt"))
+                    r = subprocess.run(["python3", str(skript), str(arch), str(cil)],
+                                       capture_output=True, text=True)
+                    self.assertNotEqual(r.returncode, 0,
+                        f"archiv s {popis} cestou ven se rozbalil bez odmítnutí")
+                    self.assertFalse((tmp / "UNIK").exists() or (tmp / "ABS").exists(),
+                        "soubor z archivu se zapsal mimo výstupní adresář")
+
+            # Poctivý archiv se musí rozbalit dál – ať oprava nezakáže i běžný běh.
+            arch = tmp / "ok.wpress"
+            arch.write_bytes(archiv("wp-content/posts", "clanek.txt"))
+            r = subprocess.run(["python3", str(skript), str(arch), str(cil)],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, f"poctivý archiv se nerozbalil: {r.stderr}")
+            self.assertTrue((cil / "wp-content/posts/clanek.txt").exists())
+
     def test_skripty_neodvozuji_cil_ze_sveho_umisteni(self):
         """Cíl patří do argumentu, jinak skript nepřežije přesun.
 

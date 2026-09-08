@@ -27,7 +27,14 @@ with src.open("rb") as f:
         if want and want not in full:
             f.seek(size, 1)
             continue
-        target = out_dir / full
+        # Cesta pochází z archivu, tedy z dat – ne z argumentu. Bez téhle
+        # kontroly si archiv určí, kam se zapisuje: `../../..` vyleze
+        # z výstupního adresáře a absolutní cesta ho zahodí úplně, protože
+        # `Path("/a") / "/etc/x"` je `/etc/x`. Cílem bývá vlastní záloha, ale
+        # ta se často tahá ze starého hostingu, kde ji nikdo nehlídal.
+        target = (out_dir / full).resolve()
+        if not target.is_relative_to(out_dir.resolve()):
+            sys.exit(f"archiv chce zapsat mimo výstupní adresář: {full!r}")
         target.parent.mkdir(parents=True, exist_ok=True)
         remaining = size
         with target.open("wb") as o:
