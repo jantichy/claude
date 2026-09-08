@@ -217,7 +217,11 @@
       "Edit(**/*secrets*)",
       "Bash(git checkout --:*)",
       "Bash(git worktree remove --force:*)",
-      "Bash(git config --global:*)"
+      "Bash(git config --global:*)",
+      "Bash(*/verify.sh --allow:*)",
+      "Bash(*/verify.sh --revoke:*)",
+      "Bash(~/.claude/verify.sh:*)",
+      "Bash(/Users/honza/.claude/verify.sh:*)"
     ],
     "ask": [
       "Bash(go install:*)",
