@@ -241,6 +241,47 @@ class ZelenaLinka(unittest.TestCase):
         self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
                          "hook spustil příkaz z bloku kódu v dokumentaci")
 
+    def test_kontrakt_v_html_komentari_neni_kontrakt(self):
+        """HTML komentář nevidí žádný vykreslený Markdown – ale skript ho četl.
+
+        Sekce se bere od prvního výskytu, takže schovaná kopie nad tou skutečnou
+        ji celou zastínila a spustil se cizí příkaz. Lidská revize to nemá jak
+        zachytit: v GitHubu, v náhledu ani v diffu PR ten řádek není vidět.
+
+        V souboru je schválně JEN ta schovaná sekce. S druhou, skutečnou, by test
+        prošel i s původním md_body – zachytila by ho kontrola na dvě sekce, a
+        tenhle test by pak neměřil nic. Ověřeno mutací.
+        """
+        (self.repo / "CLAUDE.md").write_text(
+            "# Test\n\nKontrakt nemáme.\n\n"
+            "<!--\n## Kontrakt příkazů\n\n- test: touch NESMI-VZNIKNOUT\n-->\n")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "skryty kontrakt")
+        r = self.allow()
+        self.assertNotEqual(r.returncode, 0,
+                            "--allow přijal sekci schovanou v HTML komentáři jako kontrakt")
+        self.spust()
+        self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
+                         "hook spustil příkaz schovaný v HTML komentáři")
+
+    def test_dva_kontrakty_se_odmitnou(self):
+        """Dvě sekce téhož jména jsou signál, ne konfigurace.
+
+        Bere se první, takže druhá je tiše mrtvá – a kdo přidal svou nad tu
+        původní, vyměnil spouštěné příkazy, aniž to bylo na první pohled poznat.
+        Zastínit jde i bez komentáře, proto to nestačí řešit v md_body.
+        """
+        (self.repo / "CLAUDE.md").write_text(
+            "# Test\n\n## Kontrakt příkazů\n\n- test: touch NESMI-VZNIKNOUT\n\n"
+            "## Jiná sekce\n\ntext\n\n"
+            "## Kontrakt příkazů\n\n- typecheck: -\n- lint: -\n- test: true\n")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "dva kontrakty")
+        self.allow()
+        self.spust()
+        self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
+                         "hook spustil příkaz z první ze dvou sekcí místo odmítnutí")
+
     def test_kontrakt_v_claude_podadresari(self):
         """Druhé z povolených umístění – kořenový CLAUDE.md bývá obsazený."""
         (self.repo / ".claude").mkdir()

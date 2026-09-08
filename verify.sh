@@ -66,7 +66,20 @@ need_tools() {
 # do svého CLAUDE.md, dostane po každé odpovědi běžící `npm test` a `npx stryker run`,
 # aniž by kontrakt vůbec zaváděl. Je to zároveň cesta, kudy jde do repozitáře
 # propašovat příkaz schovaný jako dokumentace.
-md_body() { awk '/^[[:space:]]*(```|~~~)/ { f = !f; next } !f' "$1"; }
+# Odstraňuje se i HTML komentář: `<!-- ## Kontrakt příkazů ... -->` se v žádném
+# vykresleném Markdownu nezobrazí (GitHub, náhled v editoru, diff v PR), ale pro
+# tenhle skript to donedávna byl plnohodnotný kontrakt – a protože se sekce bere
+# od PRVNÍHO výskytu, schovaná kopie nad tou skutečnou ji celou zastínila.
+# Lidská revize takový řádek nemá jak zachytit, protože ho nevidí.
+md_body() { awk '
+  /^[[:space:]]*(```|~~~)/ { f = !f; next }
+  f { next }
+  { gsub(/<!--[^-]*(-[^-]+)*-->/, "") }
+  c && /-->/ { sub(/^.*-->/, ""); c = 0 }
+  c { next }
+  /<!--/ { sub(/<!--.*$/, ""); c = 1 }
+  { print }
+' "$1"; }
 
 # Kanonická (fyzická) podoba cesty. Bez ní se souhlas vydaný pro cestu přes
 # symlink nepotká s během hooku, který ji má rozřešenou – na macOS je takový
@@ -277,6 +290,12 @@ git -C "$PROJ" rev-parse --show-toplevel >/dev/null 2>&1 || exit 0   # není to 
 # okno, ve kterém šel obsah vyměnit.
 SECTION=$(contract_section "$CLAUDE_MD")
 [ -n "$SECTION" ] || die "sekci ## Kontrakt příkazů se nepodařilo přečíst z $CLAUDE_MD."
+
+# Dvě sekce téhož jména jsou signál, ne konfigurace: sekce se bere od prvního
+# výskytu, takže druhá je tiše mrtvá – a kdo ji tam přidal nad tu původní, právě
+# vyměnil spouštěné příkazy, aniž by to bylo na první pohled poznat.
+SECTIONS=$(md_body "$CLAUDE_MD" | grep -c '^## Kontrakt příkazů')
+[ "$SECTIONS" -eq 1 ] || die "v $CLAUDE_MD je sekce ## Kontrakt příkazů ${SECTIONS}×; nechávám být, ať se nespustí nesprávná. Ponech jednu."
 cmd_for() {
   printf '%s\n' "$SECTION" | sed -n "s/^[[:space:]]*[-*][[:space:]]*$1:[[:space:]]\{1,\}//p" \
     | head -1 | sed 's/[[:space:]]*$//'
