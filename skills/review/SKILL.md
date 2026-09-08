@@ -343,6 +343,14 @@ popsané selhání doopravdy?** Ověř zejména, jestli problém neošetřuje n�
 guard o vrstvu výš, validace na vstupu, typový systém, omezení v databázi,
 konfigurace.
 
+OVĚŘUJEŠ ČTENÍM A ROZBOREM, NE PROVEDENÍM ÚTOKU. Dokladem je místo v kódu, ne
+spuštěný exploit: nespouštěj příkazy, které obcházejí bezpečnostní pravidla
+uživatelova prostředí, nečti tajemství, která má chráněná, a nic neposílej ven
+ze stroje. Potřebuješ-li si mechaniku vyzkoušet, postav si vlastní izolovaný
+případ v `/tmp` s neškodnou značkou (`touch /tmp/marker`) – ne nad tím, co
+prověřovaný projekt doopravdy chrání. Nejde-li nález ověřit jinak než jeho
+provedením, odpověz `refuted: false` a do `reason` napiš, co k ověření chybělo.
+
 DŮKAZNÍ BŘEMENO PODLE ZÁVAŽNOSTI:
 - STŘEDNÍ: při pochybnosti odpovídej `refuted: true`. Nález, který neumíš doložit,
   škodí víc, než užije.
