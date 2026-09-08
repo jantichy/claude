@@ -77,7 +77,7 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 
 **Režimy se jmenují anglicky, jedním slovem, malými písmeny** – a **lícují napříč skilly**: co dělá totéž, jmenuje se stejně. Ustálená sada je `create`, `update`, `delete`; k ní podle potřeby další jednoslovné (`extract`, `full`). **Má-li skill jediné chování, žádný režim nemá a nepojmenovává se** – vymýšlet jméno pro to, co se stane vždycky, je zbytečné. **Jakmile má režimy dva a víc, musí být pojmenované všechny včetně výchozího** a u výchozího se to řekne. Hint, ve kterém stojí jen ten nevýchozí (`[full]`), tvrdí, že skill umí jednu věc – a to, co dělá bez argumentu, pak nejde napsat explicitně.
 
-**Proč anglicky:** je to jméno akce, ne řeč o ní. České „revize“ se skloňuje, píše se s diakritikou a v `argument-hint` vypadá jako věta; `update` je token. Česká podstatná jména v próze („výsledek revize“) zůstávají česky – rozdíl je mezi **jménem režimu** a mluvením o něm.
+**Proč anglicky:** je to jméno akce, ne řeč o ní. České „revize“ se skloňuje, píše se s diakritikou a v `argument-hint` vypadá jako věta; `update` je token. Česká podstatná jména v běžném textu („výsledek revize“) zůstávají česky – rozdíl je mezi **jménem režimu** a mluvením o něm.
 
 **Proč lícovat:** dva skilly, které dělají tutéž věc pod jiným jménem, nutí uživatele pamatovat si, který má který. Platí to i pro režimy, které se **rozpoznávají samy** a nepředávají se argumentem – uživatel je vidí ve výpisu a pojmenovává je v řeči stejně.
 

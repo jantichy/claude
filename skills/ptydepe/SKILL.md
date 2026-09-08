@@ -75,7 +75,7 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 | Je to metafora, kterou věta vedle stejně vysvětluje | zruš termín a nech ten popis |
 | Jednoslovný protějšek nese jen půlku významu | **nahraď popisem, ne slovem** – heslo pak zní celou větou („seznam, který musí přesně sedět“). Je to legitimní výsledek, ne nouzové řešení |
 | Slovo je běžná čeština v tomhle významu | **ponech** a zapiš proč, ať se to neotevírá znovu |
-| Termín je zároveň **identifikátor v kódu** nebo klíčové slovo jazyka | **ponech.** Přeložit prózu, zatímco kód dál říká původní jméno, vyrobí dvě jména pro jednu věc – `guard` je klíčové slovo Swiftu i pole ve schématu nálezu |
+| Termín je zároveň **identifikátor v kódu** nebo klíčové slovo jazyka | **ponech.** Přeložit běžný text, zatímco kód dál říká původní jméno, vyrobí dvě jména pro jednu věc – `guard` je klíčové slovo Swiftu i pole ve schématu nálezu |
 
 **Pak se zastav a počkej na souhlas.** Na soubory se v téže odpovědi nesahá – uživatel si často vybere jinou variantu, nebo ho návrh přivede na třetí, a práce udělaná mezitím se zahazuje. Odpoví-li jen na část návrhu, zbytek je pořád nezodpovězený, ne tiše schválený.
 
@@ -102,7 +102,7 @@ Pak zkontroluj to, co ani ta nejlepší mapa nezachytí, protože to není o tva
 - **Shodu rodu.** Změní-li se rod, mění se přívlastky i vztažná zájmena: *„každý má jediný hledisko“* místo *„jediné“*. Projdi diff a hledej mužské koncovky před novým slovem středního rodu.
 - **Repetice.** Náhrada vyrobí věty typu *„vypnutá kontrola se hlásí: kontrola, o které nikdo neví… tváří se jako kontrola“*. Ty se přepisují celé, ne slovem.
 - **Vazby, které přestaly sedět.** *„opravy zanášejí nové pozůstatky“* – pozůstatky se nezanášejí, zůstávají.
-- **Popisky a názvy.** Opisuje-li se termín v próze slovesem (*„nic nezůstalo viset“*), je to v pořádku – ale tam, kde totéž slovo stojí jako **jméno věci**, ne. Projdi `header` u `AskUserQuestion`, popisky polí v šablonách výstupu a nadpisy kroků a ověř, že pojmenovávají podstatným jménem. *„Viselo 4/4“* jako název kroku ve formuláři nepojmenovává nic, ale gramaticky je věta okolo v pořádku, takže náhrada projde a vidí se to až v běžícím formuláři.
+- **Popisky a názvy.** Opisuje-li se termín v běžném textu slovesem (*„nic nezůstalo viset“*), je to v pořádku – ale tam, kde totéž slovo stojí jako **jméno věci**, ne. Projdi `header` u `AskUserQuestion`, popisky polí v šablonách výstupu a nadpisy kroků a ověř, že pojmenovávají podstatným jménem. *„Viselo 4/4“* jako název kroku ve formuláři nepojmenovává nic, ale gramaticky je věta okolo v pořádku, takže náhrada projde a vidí se to až v běžícím formuláři.
 
 ## Fáze 6 – Záznam
 

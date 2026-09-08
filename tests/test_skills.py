@@ -414,7 +414,7 @@ class NosneCasti(unittest.TestCase):
         """Nález bez `basis` a `severity` nejde ani ověřit, ani zařadit.
 
         `severity` rozhoduje, jestli nález půjde na ověření; `basis` je to, o co se
-        opírá. Bez nich je výstup panelu próza, ne data.
+        opírá. Bez nich je výstup panelu souvislý text, ne data.
         """
         for jmeno in ("review", "attack"):
             with self.subTest(skill=jmeno):
@@ -528,7 +528,7 @@ def cyklus_s_poradim() -> dict:
 #: Řetěz tří a víc kroků životního cyklu spojených šipkami. Dva sousedi jsou
 #: popis vazby („navazuje na `/specify`, předává `/breakdown`“), tři a víc už
 #: je opsané pořadí celého cyklu – tedy druhý zdroj pravdy vedle `RULES.md`.
-#: Řetěz kroků: šipka, nebo próza. **První spojka musí být silná** (šipka nebo
+#: Řetěz kroků: šipka, nebo souvislý text. **První spojka musí být silná** (šipka nebo
 #: „pak“) a teprve druhá smí být slabá („a“, čárka) – vzorec „A, pak B a C“.
 #: Samotné „a“ mezi dvěma skilly je totiž běžný výčet, ne posloupnost:
 #: „vzniknou prací v `/discovery` a `/specify`, a `/cleanup` pak…“ posloupnost
@@ -729,7 +729,7 @@ class Struktura(unittest.TestCase):
         """Skill tvrdí, kolikátý je a na koho navazuje – nic to neměřilo.
 
         Vložení kroku doprostřed životního cyklu posune čísla všem za ním, jenže
-        ta čísla stojí prózou v `Co skill dělá` každého skillu.
+        ta čísla stojí běžným textem v `Co skill dělá` každého skillu.
         `test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis` je schválně
         vynechává (míří mimo vlastní číslování skillu), takže regrese prošla tiše
         a našel ji až audit. Zdrojem pravdy je `RULES.md`.

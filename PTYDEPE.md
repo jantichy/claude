@@ -171,7 +171,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Krátký kód napsaný jen proto, aby zodpověděl otázku v návrhu** („zvládne to hosting?“, „má to API tenhle endpoint?“) – a pak se **zahodí**. Jediná výjimka ze zákazu implementace v `/specify`.
 
-**Nahrazuje dřívější „sondu“** (2026-09-07). Anglicky je *spike* zavedený agilní termín, česky „sonda“ ne – znamená kosmickou sondu nebo lékařský nástroj. **Ne „spike“ v próze**: jako jméno cizí kategorie v tabulce `/specify` zůstává, ale skloňovat „nabídni spike“ nebo „ze spiku vyšlo“ česky nejde.
+**Nahrazuje dřívější „sondu“** (2026-09-07). Anglicky je *spike* zavedený agilní termín, česky „sonda“ ne – znamená kosmickou sondu nebo lékařský nástroj. **Ne „spike“ v běžném textu**: jako jméno cizí kategorie v tabulce `/specify` zůstává, ale skloňovat „nabídni spike“ nebo „ze spiku vyšlo“ česky nejde.
 
 **Nesmí se plést s [kontrolou závislostí](#kontrola-závislostí)** – donedávna se obojí jmenovalo „sonda“. Tohle je experiment, který se vyhodí; ta druhá je ověření prostředí, které běží pokaždé.
 
@@ -206,3 +206,15 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Text, který nic nepřidává:** hodnotící adjektiva („úžasný“, „skvělý“), zdvořilostní obraty, motivační moudra, úvod o tom, že autor chce něco sdělit. Termín i katalog konkrétních případů drží `~/Dev/context/text/text.md`, *Vata a zakázané obraty*.
 
 **Neříkej tomu „voda“** (2026-09-07). V češtině to zavedené není – je to nejspíš kalk z ruského *вода*. „Vata“ je zavedená a stojí v redakčním standardu jako název sekce, takže druhé jméno pro tutéž věc jen tříští termín.
+
+### souvislý text, běžný text
+
+**Dva termíny, protože to jsou dvě věci.** *Souvislý text* je nestrukturovaný zápis tam, kde se čeká **struktura** – data, tabulka, zaškrtávací seznam, akceptační kritérium, příkaz („agent vrací strukturu, ne souvislý text“). *Běžný text* je česká věta tam, kde stojí proti **identifikátoru** – jménu režimu, klíči, poli ve schématu („česká podstatná jména v běžném textu zůstávají česky“).
+
+**Nahrazuje dřívější „prózu“** (2026-09-08). Anglicky je *prose* v obou významech zavedený obrat (*write in prose, not bullets*), česky ne: „próza“ je literární pojem, opak poezie, a technický význam je kalk. Ověřeno, že v uživatelových vlastních textech se v tomhle významu nevyskytuje ani jednou – dva výskyty v archivu z roku 2010 znamenají prózu literární.
+
+**Rozhodující byl ale ten dvojí význam.** Jedno slovo krylo dvě různé opozice a rozdíl mezi nimi nebyl z textu poznat; že náhrada potřebuje dvě hesla, je doklad, že šlo o *jedno jméno pro dvě věci* (`~/.claude/RULES.md`, *Jeden termín pro jednu věc*).
+
+**Ne „volný text“** – v IT obsazený vstupním polem formuláře a fulltextem. **Ne samotný „text“** – nerozlišuje: zaškrtávací seznam je taky text, takže věta „ne text, ale seznam“ netvrdí nic.
+
+**Tři vazby náhradu neunesly a přepsaly se celé:** *„Ne prózu (‚funguje přihlášení‘)“* → *„Ne holou větu“* (jedna věta souvislý text není), *„nebo je to próza?“* v `/oponent` → *„nebo je to jen obecné tvrzení?“*, a *„Má na to skripty, ne prózu“* v `/skill` → *„ne popis v textu“*.

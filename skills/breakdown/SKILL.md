@@ -92,7 +92,7 @@ Zjištěné shrň do tří až pěti řádků a pokračuj.
 3. **Nic navíc.** Obráceně: je v plánu úkol, který v MVP není? Buď patří do další fáze, nebo se zapomnělo aktualizovat zadání. Zeptej se, neřeš to sám.
 4. **Konzistence názvů.** Funkce, typy a parametry použité v pozdějších úkolech musí sedět s tím, co definují dřívější. `clearLayers()` v úkolu 3 a `clearFullLayers()` v úkolu 7 je chyba.
 5. **Zadání se nezměnilo pod rukama.** Sáhl-li někdo během psaní plánu do `requirements.md` nebo `architecture.md`, ohlas to.
-6. **Každý úkol má ověřitelné akceptační kritérium.** Ne prózu („funguje přihlášení“), ale zaškrtávací seznam, u kterého jde jednoznačně říct ano/ne – a u kódu **příkaz z kontraktu, který to ověří**. Kritérium, které neumí rozsoudit stroj ani jednoznačně člověk, je nedopsaný úkol.
+6. **Každý úkol má ověřitelné akceptační kritérium.** Ne holou větu („funguje přihlášení“), ale zaškrtávací seznam, u kterého jde jednoznačně říct ano/ne – a u kódu **příkaz z kontraktu, který to ověří**. Kritérium, které neumí rozsoudit stroj ani jednoznačně člověk, je nedopsaný úkol.
 7. **Testy pokrývají scénáře, ne řádky.** Projdi scénáře a *Varianty* a ukaž, který úkol je pokrývá testem. Nepokrytý scénář je nález. Scénáře ber ze `docs/scenarios.md`, vede-li ho projekt – je taxativní, takže pokrytí jde spočítat; jinak ze sekce *Hlavní scénáře* v `docs/requirements.md`.
 8. **Testy jsou psané tak, aby šly schválit teď.** Tenhle plán je jediné místo, kde si člověk testy přečte dřív, než existuje kód – potom už je nemůže nezaujatě posoudit, protože bude posuzovat, jestli procházejí. Piš je konkrétně, včetně vstupů a očekávaných hodnot.
 

@@ -36,7 +36,7 @@ Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Sk
 | Vytěžení z konverzace | `skill-creator` | Má na to hotový postup zachycení záměru. |
 | Srovnávací běh – jak agent selže bez skillu | `superpowers:writing-skills` | Je to jádro jeho metody. |
 | **Sepsání `SKILL.md`** | **vlastní** | Jádro normy. Jediné místo, kudy by prosákl cizí tvar. |
-| Evaluace výstupu | `skill-creator` | Má na to skripty, ne prózu. |
+| Evaluace výstupu | `skill-creator` | Má na to skripty, ne popis v textu. |
 | Tlakové scénáře | `superpowers:writing-skills` | Měří dodržení pravidla pod tlakem, ne kvalitu výstupu. |
 | Ladění `description` | `skill-creator` | Umí spolehlivost vyvolání proměřit, ne odhadnout. |
 | Okolí, revize, rušení | **vlastní** | Neumí to nikdo. |
@@ -283,4 +283,4 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - **Cizímu nástroji se zapomene říct tvar.** Prosadí vlastní – `skill-creator` i `writing-skills` mají každý svou představu o sekcích. Vždycky mu ho předej výslovně.
 - **Revize se pustí bez načtení normy.** Pak měří proti paměti, tedy proti stavu, který je zrovna zastaralý.
 - **Přes všechny skilly se nálezy předkládají po jednom.** Neodklikatelné; odsouhlasí se naslepo a revize ztratí smysl.
-- **Skill vznikne na věc, kterou chytne test nebo hook.** Mechanické omezení v próze se dodržuje hůř a stojí tokeny při každém běhu.
+- **Skill vznikne na věc, kterou chytne test nebo hook.** Mechanické omezení psané textem se dodržuje hůř a stojí tokeny při každém běhu.
