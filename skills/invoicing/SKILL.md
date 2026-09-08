@@ -179,6 +179,8 @@ Za každého klienta:
 
 **Drží to mechanismus, ne jen tenhle text.** Odesílací nástroje Gmailu (`send_message`, `reply`, `forward`, obojí `trash_*`) jsou od 8. 9. 2026 v `deny` v `~/.claude/settings.json`, takže je nelze zavolat ani omylem, ani po pobídce. `create_draft` zakázaný není – ten skill potřebuje.
 
+**Hranice vede u odeslání a nevratného zásahu, ne u konceptu.** Povolené zůstávají nástroje pracující s koncepty a štítky (`create_draft`, `update_draft`, `list_drafts`, značkování): skill je potřebuje a jejich následek jde vzít zpět. Zakázané je to, co pošle poštu ven nebo nevratně sáhne na cizí zprávu. Je to vědomá čára, ne výčet toho, co padlo do oka.
+
 **Nezkoušej to řešit přes `allowed-tools` v hlavičce.** Podle dokumentace Claude Code to pole nástroje **neomezuje**, jen předschvaluje: *„It does not restrict which tools are available: every tool remains callable.“* Skill hlavičku kdysi měl, zrušil ji commit 622fa4f s odůvodněním, že „zakazoval Gmail MCP“ – jenže nic nezakazoval, jen se pak na `create_draft` doptával. Vrátit ji tedy zákaz nezajistí; jedinou hranicí je `deny` (`~/.claude/RULES.md`, *Přednost pravidel*: kde má hranice držet, tam k ní patří mechanismus).
 
 ## Fáze 6 – Závěr
