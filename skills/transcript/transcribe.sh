@@ -13,6 +13,9 @@
 #   WHISPER_CHUNK_MIN  minuty                   (výchozí 0 = vypnuto)
 #   WHISPER_KEEP_EXT 1 | 0 – nechat příponu ve jménech výstupů
 #                            (výchozí 0; k rozřešení kolize dvou vstupů)
+#   WHISPER_ON_EXISTING  stop | overwrite | suffix
+#                          co s výstupy, které v adresáři už leží
+#                          (výchozí stop; suffix přidá -2, -3, …)
 #
 # WHISPER_CHUNK_MIN je ZÁCHRANNÁ BRZDA, ne výchozí režim. Rozřeže nahrávku na
 # úseky dané délky a každý přepíše zvlášť, čímž řeší dvě věci naráz:
@@ -62,6 +65,7 @@ PROMPT="${WHISPER_PROMPT:-}"
 USE_VAD="${WHISPER_VAD:-1}"
 KEEP_WAV="${WHISPER_KEEP_WAV:-0}"
 KEEP_EXT="${WHISPER_KEEP_EXT:-0}"
+ON_EXISTING="${WHISPER_ON_EXISTING:-stop}"
 CHUNK_MIN="${WHISPER_CHUNK_MIN:-0}"
 # Překlep by jinak tiše spadl do normálního běhu – a to je u nápravy, kterou
 # volající sahá po nefunkčním přepisu, ta nejhorší možná porucha.
@@ -242,10 +246,51 @@ if [ "$KEEP_EXT" != "1" ]; then
   fi
 fi
 
+# Druhá kontrola: výstupy, které v adresáři už leží z dřívějšího běhu. Přepsat
+# je smí být správně (opakovaný běh po opravě), ale taky to může být hodina
+# práce pryč – a whisper-cli i ffmpeg přepisují bez ptaní. Rozhodnout to za
+# uživatele nejde, tak se to nechá na něm (SKILL.md, krok „Přepiš nahrávky").
+if [ "$ON_EXISTING" != "overwrite" ]; then
+  hrozi=""
+  for f in "$@"; do
+    b=$(basename "$f"); [ "$KEEP_EXT" = "1" ] || b="${b%.*}"
+    for ext in txt srt md vtt json; do
+      [ -e "$WORKDIR/$b.$ext" ] && hrozi="${hrozi}  $b.$ext
+"
+    done
+  done
+  if [ -n "$hrozi" ]; then
+    if [ "$ON_EXISTING" = "suffix" ]; then
+      SUFFIX_MODE=1
+    else
+      echo "### EXISTING $(printf '%s' "$hrozi" | tr -d ' ' | tr '\n' ' ')" >> "$LOG"
+      { echo "V pracovním adresáři už leží soubory, které by tenhle běh přepsal:"
+        printf '%s' "$hrozi"
+        echo "Pusť to znovu s WHISPER_ON_EXISTING=overwrite (přepsat),"
+        echo "nebo =suffix (nové výstupy dostanou -2, -3, …), nebo si je ukliď sám."
+      } >&2
+      exit 3
+    fi
+  fi
+fi
+
 for f in "$@"; do
   n=$((n+1))
   base=$(basename "$f")
   [ "$KEEP_EXT" = "1" ] || base="${base%.*}"
+  # Volné jméno: první, pod kterým ještě žádný výstup neleží.
+  if [ "${SUFFIX_MODE:-0}" = "1" ]; then
+    i=1
+    while :; do
+      kandidat="$base"; [ "$i" -gt 1 ] && kandidat="$base-$i"
+      obsazeno=0
+      for ext in txt srt md vtt json; do
+        [ -e "$WORKDIR/$kandidat.$ext" ] && { obsazeno=1; break; }
+      done
+      [ "$obsazeno" = "0" ] && { base="$kandidat"; break; }
+      i=$((i+1))
+    done
+  fi
   # Skrytý název jen u dočasného WAV; ten, který má přežít pro diarizaci, je vidět.
   if [ "$KEEP_WAV" = "1" ]; then
     wav="$WORKDIR/$base.wav"

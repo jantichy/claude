@@ -272,6 +272,14 @@ Polož **jednu otázku přes `AskUserQuestion`** se dvěma volbami:
 
 **Nevybírej za něj ani jedno.** Delší jméno nese celý řetěz až do finálního `<název>.md`, takže je to volba o tom, jak se budou jmenovat výsledné dokumenty – a to ví jen on.
 
+**Skončí-li skript kódem 3, v adresáři už leží výstupy z dřívějška** – `<název>.txt`, `.srt`, `.md`, `.vtt` nebo `.json`. Whisper i ffmpeg přepisují bez ptaní, takže by hodinový přepis zmizel beze stopy; skript proto zase nic nespustí a do logu zapíše `### EXISTING <soubory>`. Znovu polož **jednu otázku přes `AskUserQuestion`**, tentokrát se třemi volbami:
+
+- **Přepsat** – `WHISPER_ON_EXISTING=overwrite`. Správná volba, když se tatáž nahrávka přepisuje znovu po opravě.
+- **Přidat rozlišení** – `WHISPER_ON_EXISTING=suffix`. Nové výstupy dostanou `-2`, `-3` podle prvního volného jména a staré zůstanou ležet.
+- **Zastavit** – uživatel si soubory ukliď sám a spustí to znovu. Vypiš, které to jsou.
+
+**Ani tady nevybírej za něj.** Rozdíl mezi „přepsat" a „nechat vedle" je rozdíl mezi ztrátou předchozí práce a nepořádkem v adresáři, a co je v tu chvíli menší zlo, ví jen on.
+
 **`WHISPER_KEEP_WAV=1` nastav právě tehdy, když se bude rozlišovat mluvčí.** Diarizace jede nad tímtéž WAV a bez toho by se musel vyrábět znovu. Jinak nech `0`, ať se po sobě uklidí hned. Běh na pozadí upozorní na dokončení (marker `### ALL DONE` v logu).
 
 `WHISPER_CHUNK_MIN` nech nenastavené. Je to náprava podle kroku 7, ne volba pro běžný běh.
