@@ -8,7 +8,7 @@ Co bych z celého repozitáře vypíchl, aby to neuteklo vaší pozornosti?
 
 ### [`CLAUDE.md`](CLAUDE.md) – hlavní soubor s instrukcemi
 
-Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Většina instrukcí je dekomponovaná do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou jen když je to podle situace potřeba. Brutálně se tím šetří kontextové okno.
+Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Většina instrukcí je dekomponovaná do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou jen, když je to podle situace potřeba. Brutálně se tím šetří kontextové okno.
 
 ### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
@@ -16,7 +16,7 @@ Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje
 
 ### [`STRUCTURE.md`](STRUCTURE.md) – každý projekt vypadá uvnitř stejně
 
-Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat; a hlavně vědí kam zapsat i skilly, kterých je na to půl tuctu. Zakládá ji `/project`, ale nepatří jemu – čte ji devět dalších skillů a každý si z ní bere něco jiného.
+Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat; a hlavně vědí, kam zapsat i skilly, kterých je na to půl tuctu. Zakládá ji `/project`, ale nepatří jemu – čte ji devět dalších skillů a každý si z ní bere něco jiného.
 
 ### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
@@ -108,7 +108,7 @@ Přejmenuje pojem napříč projektem včetně **odvozených tvarů** a české 
 
 ### [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
 
-Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu proteču samy z výpočetního skriptu nebo ze screenshotu administrace.
+Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu protečou samy z výpočetního skriptu nebo ze screenshotu administrace.
 
 ### [`/skill`](skills/skill/) – skilly, které se samy udržují
 

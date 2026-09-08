@@ -76,7 +76,7 @@ Výjimka je jediná: **ověřovací pokus**, když na odpovědi stojí rozhodnut
 |---|---|
 | „Zadání je jasné, začnu rovnou“ | Když je jasné, sepsání trvá deset minut. Když ne, právě proto se píše. |
 | „Udělám scaffold, ať máme na čem stavět“ | Scaffold zamkne tech stack dřív, než se rozhodl. |
-| „Uživatel mi řekl ‚udělej to'“ | Řekl `/specify`. Kdyby chtěl kód, řekl by to. |
+| „Uživatel mi řekl ‚udělej to‘“ | Řekl `/specify`. Kdyby chtěl kód, řekl by to. |
 
 ------
 

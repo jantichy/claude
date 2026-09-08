@@ -128,7 +128,7 @@ KOSMETICKÉ (konzistence stylu):
 - Mixing naming conventions ve stejném kontextu (camelCase vs snake_case u proměnných, kebab-case vs PascalCase u souborů)
 - Inconsistent export styly (named vs default export bez zjevného důvodu)
 - Komentáře které nepopisují kód pod nimi (zastaralé, mylné)
-- Inconsistentní formátování nebo struktura podobných souborů (např. různá struktura API route handlerů)
+- Nekonzistentní formátování nebo struktura podobných souborů (např. různá struktura API route handlerů)
 - Naming napříč boundaries: stejná entita s různými názvy v různých vrstvách (`User` v DB / `UserAccount` v API / `userObj` v UI); inkonzistentní pluralizace v adresářích a routes (`users/user`, `items/item`); stejný koncept různými slovy v komentářích / UI / kódu (mix čeština/angličtina bez systému)
 
 SKUPINY SOUBORŮ SE SDÍLENOU STRUKTUROU (kontroluj vždy samostatně):

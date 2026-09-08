@@ -22,7 +22,7 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 
 - **Oponenti nemají váš kontext.** To není omezení, ale celý smysl: nezávislost se nedá nasimulovat u někoho, kdo u vzniku dokumentu byl.
 - **Vždycky dostanou i seznam toho, co jste vědomě zamítli** – i s důvody. Bez toho by první běh přinesl námitky, které umíte vyvrátit z hlavy, a druhý byste už nepustili.
-- **Rozdílné hlediska, ne víc stejných kritiků.** Redundantní oponenti najdou tolikrát totéž, kolik jich pustíte.
+- **Rozdílná hlediska, ne víc stejných kritiků.** Redundantní oponenti najdou tolikrát totéž, kolik jich pustíte.
 - **Metoda se nikdy nepouští bez domény.** „Podívej se na to kriticky" je slepé; „udělej pohled zpětně z budoucího selhání na ten cenový model" je zadání.
 - **Ověřovatel je záměrně v jiné situaci než oponent.** Oponent, který nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanismus.
 - **Filtrovat nálezy nesmí spoluautor.** Kdyby se falešné vyřazovaly až v diskuzi, dělal by to přesně ten člověk, jehož slepotu má skill obcházet.
