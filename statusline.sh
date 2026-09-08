@@ -199,16 +199,24 @@ cwd_real="${cwd/#\~/$HOME}"
 git_root_candidate="$cwd_real"
 [ -d "$git_root_candidate" ] || git_root_candidate="$project_dir_real"
 
+# Git nesmí spustit nic, co si nastaví adresář, ve kterém zrovna stojíme:
+# core.fsmonitor v .git/config je cesta k programu a git ho zavolá při refreshi
+# indexu, tedy i při `git diff`. Stačí tedy rozbalit cizí archiv a stát v něm –
+# status line se překreslí a program běží s právy uživatele, bez jakéhokoli souhlasu.
+# safe.directory nechrání: uplatní se jen u repozitáře patřícího jinému uživateli,
+# a rozbalený archiv patří tomu, kdo ho rozbalil.
+git_ro() { git -c core.fsmonitor= -c core.hooksPath=/dev/null "$@"; }
+
 if [ -d "$git_root_candidate" ] \
-   && git -C "$git_root_candidate" rev-parse --git-dir >/dev/null 2>&1 \
-   && [ "$(git -C "$git_root_candidate" rev-parse --is-bare-repository 2>/dev/null)" = "false" ]; then
-  unstaged=$(git -C "$git_root_candidate" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
-  staged=$(git -C "$git_root_candidate" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
+   && git_ro -C "$git_root_candidate" rev-parse --git-dir >/dev/null 2>&1 \
+   && [ "$(git_ro -C "$git_root_candidate" rev-parse --is-bare-repository 2>/dev/null)" = "false" ]; then
+  unstaged=$(git_ro -C "$git_root_candidate" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
+  staged=$(git_ro -C "$git_root_candidate" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
   total=$(( unstaged + staged ))
   # Jméno větve; u odpojené HEAD krátký hash, v prázdném repozitáři fallback "Git"
-  branch=$(git -C "$git_root_candidate" symbolic-ref --quiet --short HEAD 2>/dev/null)
+  branch=$(git_ro -C "$git_root_candidate" symbolic-ref --quiet --short HEAD 2>/dev/null)
   if [ -z "$branch" ]; then
-    branch=$(git -C "$git_root_candidate" rev-parse --short HEAD 2>/dev/null)
+    branch=$(git_ro -C "$git_root_candidate" rev-parse --short HEAD 2>/dev/null)
   fi
   if [ -z "$branch" ]; then branch="Git"; fi
   if [ "$total" -gt 0 ]; then
@@ -241,4 +249,7 @@ append "$(printf "${model_color}%s\033[0m" "$model_short")"
 append "$usage_part"
 [ -n "$git_part" ] && append "$git_part"
 
-printf "%b\n" "$line"
+# %s, ne %b: jednotlivé části si svoje \033 rozvinuly samy ve formátu vlastního
+# printf, takže druhé rozvinutí nic nepřidá – jen by vyhodnotilo zpětná lomítka,
+# která přišla z názvu adresáře nebo větve, tedy z prověřovaného repozitáře.
+printf '%s\n' "$line"
