@@ -51,6 +51,14 @@ Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola h
 
 **Kdyby Swift z repozitáře jednou zmizel, vrať pomlčku**, ne prázdný řádek: chybějící klíč hook po každé odpovědi hlásí jako nezkontrolovaný krok, a to je trvalý šum místo informace.
 
+## Review
+
+Nálezy vyhodnocené jako „neopravovat“. Při dalším běhu se neuvádějí, dokud se
+nezmění kód, kterého se týkají.
+
+- **2026-09-08** · `eccc756` · *Plugin gitkraken-hooks vidí provoz session a smí rozhodovat o oprávněních* (zdroj: review, podklad: OWASP – integrita a data v pohybu): Vědomě nainstalovaný nástroj od známého dodavatele, ne podvržený kód. Egress mimo stroj se **neprokázal**: běžící hook procesy nemají podle `lsof` jediný TCP socket, broadcast míří na lokálně registrovaného agenta (`gk agents register --address http://127.0.0.1:1234`) a v logu je 104× „no decision“, protože žádný registrovaný není. Zbývá tedy „lokální proces téhož uživatele vidí obsah session“, což je popis toho, co plugin dělá, ne vada konfigurace. Zůstává vědomě přijaté riziko: binárka má `AUTO_UPDATE=true`, takže se ta důvěra obnovuje s každou verzí bez revize, a `PermissionRequest` hook by povolení udělit uměl, kdyby agent registrovaný byl. Zruší se vypnutím pluginu v `settings.json`.
+  - Lokace: settings.json (`enabledPlugins`), plugins/marketplaces/gitkraken/plugins/gitkraken-hooks/hooks/hooks.json
+
 ## Autocommit
 
 Autocommit je zapnutý.
