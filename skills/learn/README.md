@@ -4,7 +4,7 @@ Máte vlastní knihovnu know-how – metodiky, standardy, postupy – a pořád 
 
 ## Co umí
 
-- **Vytěží zdroj do posledního detailu.** Nejen hlavní myšlenky, ale i prahy, čísla, výjimky, pořadí kroků a hlavně **důvody** – ty se ztrácejí první. Hotový seznam pak nechá zkontrolovat druhým, nezávislým průchodem, který hledá jen to, co v něm chybí. Počítá se s tím, že zdroj potom zmizí.
+- **Vytěží zdroj do posledního detailu.** Nejen hlavní myšlenky, ale i prahy, čísla, výjimky, pořadí kroků a hlavně **důvody** – ty se ztrácejí první. Hotový seznam pak nechá zkontrolovat druhým, nezávislým průchodem, který hledá jen to, co v něm chybí. Počítá se s tím, že zdroj už příště nemusí být po ruce – co se nevytěží, se nedohledá.
 - **Pozná, co je skutečný rozpor.** Školení říká věci hruběji než metodika a rozebírá jen jednu variantu – to není chyba, to je jiná hloubka. Skill rozliší zjednodušení, zúžení, prohloubení a zastarání od případu, kdy dvě tvrzení opravdu nemohou platit obě.
 - **Rozpory předloží po jednom.** Vysvětlí, v čem je spor, ocituje obě verze a nabídne hotová řešení včetně toho nejčastějšího: obojí platí, jen za jiných podmínek – tak se to zapíše.
 - **Nesahá na to, na co se sahat nemá.** Návod a metodiku přepisuje volně. Profily, ceníky a texty psané ručně jen doplňuje. Doslovné přetisky, citace a datované záznamy nepřepisuje vůbec – pozná je podle toho, na co odpovídají, ne podle jména složky.
@@ -33,11 +33,11 @@ Když cíl neurčíte přesně, skill si ho vybere sám a nechá si ho potvrdit.
 ```
 ## Plán zapracování – skoleni.md → analytics
 
-Poznatků: 47 · nové 12 · doplnění 21 · prohloubení 8 · zastarání 2 · rozpory 3 · nezapracováno 1
+Poznatků: 47 · nové 12 · doplnění 18 · prohloubení 8 · zúžení 3 · překonání 2 · zjednodušení 0 · rozpory 3 · mimo doménu 0 · nezapracováno 1
 
 Zásahy do obsahu
-- consent.md › Souhlas před načtením – přestavba sekce, poznatky 3, 7–11
-- events.md › Pojmenování – doplnění, poznatky 22, 24
+- souhlas.md › Sběr před načtením – přestavba sekce, poznatky 3, 7–11
+- udalosti.md › Pojmenování – doplnění, poznatky 22, 24
 
 K rozhodnutí
 - 3 rozpory – proberu je po jednom v další fázi
@@ -48,11 +48,13 @@ Nezapracuje se
 
 ## Co nedělá
 
+- **Nepřepisuje doslovné přetisky, citace ani datované záznamy.** Znalost z nich vytěží a zapíše jinam; samotný doklad nechá být.
 - Nepřepisuje nahrávky – to je práce pro přepisovací skill, jehož výstup je sem typický vstup.
 - Nepíše nové texty vaším hlasem; formuluje stylem cílové knihovny.
 - Nedělá audit celé knihovny, dívá se jen na místa, kterých se zdroj dotkl.
 - Nepřejmenovává termíny napříč knihovnou – jen na to upozorní.
-- Nesahá na zdrojový soubor, zůstane, kde je.
+- Nesahá na zdrojový soubor – nemaže ho ani nepřesouvá, zůstane, kde je.
+- Nezakládá knihovnu ani její strukturu; přijde do hotové.
 
 ## Jak si ho nainstalovat
 
@@ -61,7 +63,7 @@ Nezapracuje se
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/learn
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Nic dalšího doplňovat nemusíte – skill nemá žádné závislosti a nepotřebuje vědět, kde vaše knihovna leží. Řeknete mu to při každém zavolání.
+Kde vaše knihovna leží, mu říkat dopředu nemusíte – řeknete mu to při každém zavolání. **Skill se ale odkazuje na dva soubory z téhož repozitáře**, které kopie samotného adresáře nepřinese: `skills/PREFLIGHT.md` (společný začátek běhu) a `RULES.md` (obecná pravidla práce). Bez nich doběhne, jen přijde o kus opatrnosti na začátku – vezměte si je s sebou, nebo si o ně řekněte rovnou v tom pokynu.
 
 ---
 

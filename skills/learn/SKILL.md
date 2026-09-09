@@ -10,7 +10,7 @@ argument-hint: [source] [target]
 
 Vezme jeden zdroj poznání a **zapracuje ho do existující znalostní báze** tak, aby se stal její součástí – ne přílohou. Vstupem je typicky přepis vlastního školení nebo konzultace, ale stejně dobře článek, cizí dokumentace nebo poznámky.
 
-Skill se **nespouští s přepínači**, ale s volným popisem, ze kterého vyčte zdroj i cíl:
+Skill se **nespouští s přepínači**, ale s volným popisem, ze kterého vyčte zdroj i cíl. `argument-hint` proto jmenuje `[source] [target]` jako **dvě věci, které v tom popisu mají zaznít**, ne jako dvě poziční hodnoty:
 
 ```
 /learn vezmi ~/Desktop/skoleni.md a zakomponuj to do znalostí v analytics
@@ -49,7 +49,7 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Odchylky:
 
 1. **Kořenem projektu je cílová znalostní báze, ne adresář se zdrojem.** Stojíš-li ve zdrojovém adresáři, kořen podle přípravy nic neurčuje – cíl se bere ze zadání (*Fáze 1*).
 2. **Kontrakt příkazů se nevyžaduje.** Znalostní báze nemá kód a `Fáze 4` přípravy odpadá; řekni to nahlas.
-3. **Stav pracovního stromu ověř důkladně.** Skill přepisuje existující soubory, takže rozpracovaná změna v cíli se s jeho zásahem smíchá k nerozeznání. Je-li strom špinavý, nabídni commit **dřív, než se cokoliv začne**.
+3. **Stav pracovního stromu ověř důkladně.** Skill přepisuje existující soubory, takže rozpracovaná změna v cíli se s jeho zásahem smíchá k nerozeznání. Je-li strom špinavý, nabídni commit **dřív, než se cokoliv začne**. Ten čistý strom je jediná cesta zpátky: ukáže-li se výsledek jako špatný, zahazuje se `git checkout`, ne ručním opravováním.
 4. **Zjisti, jestli má cíl zapnutý autocommit.** Má-li ho, tvůj zápis se commitne – řekni dopředu, že se tak stane, a v závěru uveď, co jsi commitnul.
 
 ## Fáze 1 – Zdroj a cíl
@@ -84,7 +84,7 @@ Vytěžuj **taxativně, ne výběrově**. Patří sem i to, co ti připadá samo
 
 **Nekopíruj formulace.** Poznatek zapiš jako tvrzení, ne jako citát – citát se pak nedá zapracovat do cizí věty.
 
-Pak **kontrola úplnosti**: pošli izolovanému agentovi zdroj a hotový seznam s jediným úkolem – *co ve zdroji je a v seznamu chybí?* Nesmí vidět, jak seznam vznikal, jinak hledá právě to, co už v něm je. Co najde, doplň a **kontrolu opakuj**, dokud se nevrátí prázdná.
+Pak **kontrola úplnosti**: pošli izolovanému agentovi – **výchozí model session, `high`**, protože hledat, co v seznamu chybí, je úsudek, ne výpis – zdroj a hotový seznam s jediným úkolem – *co ve zdroji je a v seznamu chybí?* Nesmí vidět, jak seznam vznikal, jinak hledá právě to, co už v něm je. Co najde, doplň a **kontrolu opakuj**, dokud se nevrátí prázdná. **Vrátí-li nálezy i potřetí, přestaň a řekni to** i s tím, co poslední kolo našlo – v tu chvíli je chyba ve způsobu, jakým poznatky formuluješ, a další kolo ji neopraví.
 
 ## Fáze 3 – Zmapování cíle
 
@@ -99,6 +99,8 @@ Nastuduj cílovou doménu: strukturu souborů, jak se v ní člení obsah, jaký
 | **Doklad** – doslovný přetisk, citace, datovaný záznam události, evidence, log | *co se stalo, co kdo řekl* | **Nic.** Znalost se z něj jen odvozuje a zapisuje jinam |
 
 **Kritérium je povaha textu, ne jméno adresáře** – doklad může ležet uvnitř metodické domény a naopak.
+
+**Říká-li ale cílová báze sama, kam se nesahá, platí to nad tvým úsudkem.** Znalostní báze mívá ve svém `CLAUDE.md` jmenovaná místa, která jsou doslovné přetisky nebo historické artefakty a nemění se ani kvůli typografii. **Přečti si ho a ber ten výčet jako závazný**; není to konfigurace, kterou by si skill zaváděl, ale zapsané rozhodnutí, které tam bylo dřív než on.
 
 **Nejasnou povahu neodhaduj** – zeptej se, a to dřív než v plánu. Je to jediné místo, kde špatný odhad znamená nevratnou škodu.
 
@@ -115,7 +117,7 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 | **Prohloubení** | Báze to má nastřelené jednou větou, zdroj to rozebírá | Rozšiř – zdroj je tu ten přesnější |
 | **Zjednodušení** | Zdroj říká hrubší verzi toho, co báze má přesněji | **Není rozpor.** Bázi nech být; zvaž jen, jestli se zjednodušená formulace nehodí jako úvodní věta pro pochopení |
 | **Zúžení** | Zdroj mluví jen o jedné variantě z několika | **Není rozpor.** Zařaď jako konkrétní případ pod obecnější pravidlo |
-| **Zastarání** | Rozdíl plyne prokazatelně z toho, že se svět venku pohnul – nová verze nástroje, změněné API, zrušená funkce | Aktualizuj a **nech stopu**, co platilo dřív. Není-li ta prokazatelnost, je to rozpor |
+| **Překonání** | Rozdíl plyne prokazatelně z toho, že se svět venku pohnul – nová verze nástroje, změněné API, zrušená funkce | Aktualizuj a **nech stopu**, co platilo dřív. Není-li ta prokazatelnost, je to rozpor |
 | **Rozpor** | Obě tvrzení míří na tutéž věc za týchž podmínek a nemohou platit obě | **Do *Fáze 6*.** Neřeš sám |
 
 **Test na rozpor je jediný: jednal by čtenář ve stejné situaci podle každé verze jinak?** Když ne – protože jedno je obecnější, hrubší, novější nebo platí jinde – rozpor to není a **nehlas ho**. Falešný rozpor stojí uživatele rozhodnutí, které nemá co rozhodovat, a po třetím takovém přestane odpovědi číst.
@@ -133,7 +135,9 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 ```
 ## Plán zapracování – <zdroj> → <cíl>
 
-**Poznatků:** <N> · nové <n> · doplnění <n> · prohloubení <n> · zastarání <n> · rozpory <n> · mimo doménu <n> · nezapracováno <n>
+**Poznatků:** <N> · nové <n> · doplnění <n> · prohloubení <n> · zúžení <n> · překonání <n> · zjednodušení <n> · rozpory <n> · mimo doménu <n> · nezapracováno <n>
+
+Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky mířící mimo doménu a nepřenositelné. Zjednodušení se nezapracovává a přesto není „nezapracováno“: báze už tu znalost má lépe.
 
 **Zásahy do obsahu**
 - `<soubor>` › *<sekce>* – <typ zásahu>, poznatky <čísla>
@@ -181,7 +185,6 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 - **Ukliď po sobě.** Přejmenuješ-li sekci nebo přesuneš obsah, projdi odkazy na ně, souhrnné počty a přehledové tabulky – `~/.claude/RULES.md`, *Propagace změny*.
 - **Zdroje se nedotýkej.** Je to cizí podklad a zůstává, kde je.
 
-
 ## Časté chyby
 
 - **Zdroj skončí jako nový soubor.** Je to nejsnazší cesta a vypadá jako práce, ale znalost tím do báze nevstoupí – zůstane vedle ní a nikdo ji nenajde. Zapracovat znamená rozpustit.
@@ -189,7 +192,6 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 - **Lidsky psaný text se přeorá celý.** Profil, ceník nebo medailonek někdo psal ručně a pozná to na první pohled. Doplňuje se, nepřestavuje.
 - **Vytěží se jen to hlavní.** Detaily, prahy a hlavně důvody vypadají jako vata, dokud zdroj existuje. Pak zmizí a nikdo neví, že chyběly.
 - **Formulace se opíší ze zdroje.** Citát z hovoru se do metodiky nevejde a rozbije jí styl.
-
 
 ## Fáze 8 – Inventura a závěr
 
@@ -224,6 +226,6 @@ Došlo-li na přestavbu struktury, doporuč v závěru `/consistency` – přesk
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Znalost je zapracovaná a ověřená, zdroj už není potřeba.`
+- `Znalost je zapracovaná a ověřená, můžeš pokračovat dalším zdrojem.`
 - `Zapracovaná není – brání tomu: <konkrétní seznam>.`
 
