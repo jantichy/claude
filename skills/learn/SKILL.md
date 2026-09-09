@@ -183,6 +183,8 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 - **Poznatek jde na jedno místo.** Patří-li zdánlivě na dvě, jedno z nich je to pravé a druhé na ně odkazuje – `~/.claude/RULES.md`, *Single source of truth*.
 - **Zdůvodnění zapisuj spolu s pravidlem.** Bez „proč“ se pravidlo při první kolizi obejde.
 - **Ukliď po sobě.** Přejmenuješ-li sekci nebo přesuneš obsah, projdi odkazy na ně, souhrnné počty a přehledové tabulky – `~/.claude/RULES.md`, *Propagace změny*.
+- **Odliš jisté od tipnutého.** Co ve zdroji zaznělo s „tuším“ nebo „myslím“, **nezapisuj do báze jako fakt** – patří to do fronty úkolů jako věc k ověření. Mluvené slovo nejistotu nese často a v zápisu po ní nezůstane stopa.
+- **Vypusť identifikaci konkrétního případu.** Jména klientů a osob, měřicí identifikátory, URL a čísla z jedné zakázky do znalosti nepatří – zůstává **vzorec, který se opakuje**. Bez toho se z báze stane archiv zakázek.
 - **Zdroje se nedotýkej.** Je to cizí podklad a zůstává, kde je.
 
 ## Časté chyby
@@ -201,6 +203,10 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 2. **Nic se neztratilo z toho, co v bázi bylo.** Projdi `git diff` a u každého smazaného kusu textu si odpověz, kam se jeho obsah přesunul. Grep nestačí – `~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*.
 3. **Soubory se dají přečíst** – odkazy vedou někam, nadpisy navazují.
 
+**Pak zapiš řádek do evidence zdrojů.** Vede-li cílová doména soupis záznamů, ze kterých se vytěžovalo, **doplň ho**: odkud zdroj je (cesta do archivu, URL), co se z něj vzalo a do kterých souborů, a co v něm zůstalo otevřené k ověření. Nevede-li ho, **nabídni ho založit** – jako každou jinou změnu struktury (*Fáze 5*).
+
+**Proč, když se zdroj sám nikam nekopíruje:** bez toho řádku nejde u sporného tvrzení dohledat, odkud pochází, a hlavně nejde záznam projít **podruhé**, až doména vyroste a najde v něm víc, než co se z něj vzalo napoprvé. Commit message ani jedno nezastane – nikdo v ní ty dvě věci nehledá.
+
 ```
 ## Zapracováno
 
@@ -215,6 +221,9 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 
 **Nezapracováno**
 - <co a proč – patří jinam, není to přenositelná znalost, zamítnuto v rozporu>
+
+**Evidence zdroje**
+- <kam se zapsal řádek, nebo „doména evidenci nevede">
 
 **Změny**
 - <výstup `git diff --stat`> · <commitnuto / v pracovním stromu>
