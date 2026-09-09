@@ -68,6 +68,10 @@ A na konci shrnutí:
 - **Nedoplňuje mluvčí odhadem** a nedopisuje majitele k úkolům, u kterých si není jistý.
 - **Nepřekládá.** Výstup je v jazyce nahrávky.
 
+## Co s přepisem dál
+
+Když nahrávka nese znalost, která má přežít i to, že na samotný přepis za rok nikdo nesáhne – výklad na školení, konzultace, cizí přednáška –, hodí se na ni [`/learn`](../learn/README.md). Ten přepis vytěží a rozpustí do vaší knihovny know-how, takže znalost skončí tam, kde ji příště budete hledat.
+
 ## Jak si ho nainstalovat
 
 Nechte to na Claudovi. Otevřete si Claude Code a napište mu:

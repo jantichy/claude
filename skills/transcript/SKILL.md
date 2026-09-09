@@ -19,6 +19,8 @@ Ten volný popis není dekorace. Vytáhneš z něj jména a názvy do slovníku 
 
 Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve pak se přepisuje.
 
+**Přepisem to nemusí končit.** Nese-li nahrávka znalost, která má přežít i po tom, co se přepis zapomene – výklad na školení, konzultace, cizí prezentace –, nabídni v závěru `/learn`: zapracuje ji do znalostní báze místo toho, aby zůstala v samostatném souboru na disku.
+
 ## Vstup a výstup
 
 - **Vstup:** soubory zadané v promptu. Když prompt žádný soubor neuvádí, vezmi všechny nahrávky v aktuálním adresáři. Podporované formáty:
