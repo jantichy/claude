@@ -9,10 +9,10 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 ## Co skill dělá
 
-Hledá a ruší **neustálené termíny** – slova, která používám, jako by byla zavedená, přestože je nikdo jiný nezná. Vznikají tím, že v konverzaci padne slovo, klidně jen překlepem nebo doslovným překladem, a já ho příště beru jako termín. Rozhodnutí drží `~/.claude/PTYDEPE.md`, který se importuje do každé session.
+Hledá a ruší **neustálené termíny** – slova, která používám, jako by byla zavedená, přestože je nikdo jiný nezná. Vznikají tím, že v konverzaci padne slovo, klidně jen překlepem nebo doslovným překladem, a já ho příště beru jako termín. Dohodnuté náhrady drží tabulka v `~/.claude/PTYDEPE.md`, která se importuje do každé session; rozvahu, proč který termín padl, drží `terms.md` v adresáři skillu.
 
 - **`/ptydepe`** nebo **`/ptydepe suggest`** – **vytipování**. Projede konfiguraci i znalostní bázi a vrátí seřazené kandidáty s četností a běžným protějškem. Nic nemění.
-- **`/ptydepe add <termín>`** – **projednání jednoho termínu**. Co znamená, odkud se vzal, čím ho nahradit – nebo že se ponechá. Po schválení náhrada napříč všemi repozitáři, zápis do `PTYDEPE.md`, commit.
+- **`/ptydepe add <termín>`** – **projednání jednoho termínu**. Co znamená, odkud se vzal, čím ho nahradit – nebo že se ponechá. Po schválení náhrada napříč všemi repozitáři, zápis do `PTYDEPE.md` i do `terms.md`, commit.
 
 Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo nerozumí, ale všichni předstírají, že ano.
 
@@ -30,7 +30,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 **Náhrada se proto píše jako mapa frází, ne jako záměna slova.** Ke každé vazbě se starým termínem se napíše její nová podoba i se shodou (*„vyber čtyři až pět úhlů“* → *„vyber čtyři až pět hledisek“*), a teprve ta mapa se pustí přes soubory z `git ls-files`. Je to pracnější než `sed` a je to schválně: plošná záměna slova rozbije každou větu, kde se změnil rod nebo kde slovo znamená něco jiného.
 
-**Závazné je** rozhodnutí, ne mechanika: náhrada se nedělá bez uživatele, starý termín zůstane zapsaný v `PTYDEPE.md` a nikde jinde, a běh končí doloženým kontrolním průchodem. Jak se ta náhrada technicky provede, je implementační detail.
+**Závazné je** rozhodnutí, ne mechanika: náhrada se nedělá bez uživatele, starý termín zůstane zapsaný v `terms.md` a nikde jinde, a běh končí doloženým kontrolním průchodem. Jak se ta náhrada technicky provede, je implementační detail.
 
 ------
 
@@ -39,7 +39,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Skill neběží nad jedním projektem**, ale nad všemi naráz, takže body 1 až 3 nahrazuje vlastními předpoklady:
 
 1. **Kořeny.** `~/.claude`, `~/Dev/context` a **každý další git repozitář v `~/Dev`**. Posledně jmenované se do rozsahu berou, jen když se v nich termín vyskytuje – zjistí to inventura, ne domněnka.
-2. **Přečti `~/.claude/PTYDEPE.md` celý.** Je to zdroj pravdy; termín, který v něm už je, se znovu neprojednává.
+2. **Přečti `~/.claude/PTYDEPE.md` i `terms.md` v adresáři skillu celé.** Dohromady jsou to zdroj pravdy; termín, který v nich už je – ať nahrazený, nebo vědomě ponechaný –, se znovu neprojednává.
 3. **Pracovní strom každého dotčeného repozitáře musí být čistý.** Rozpracované změny se s náhradou smíchají a přestane být poznat, co je čí. Vypiš je a zeptej se.
 4. **Zjisti režim a termín** z argumentu. Bez argumentu jede `suggest`.
 
@@ -89,7 +89,8 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 2. **Najdi legitimní významy téhož slova** a soubory, kde stojí, vyluč jmenovitě. Stává se to skoro pokaždé: „brána“ byla i platební, „vizitka“ i firemní web, „osa“ i časová.
 3. **Vyluč publikované a cizí texty** – `~/Dev/context/archive/`, `compose/_analysis/`, ohlasy ve `speaking/`.
 4. **Vyluč vlastní frontu kandidátů.** Seznam termínů k projednání obsahuje ten termín jako položku a náhrada by si přepsala vlastní zadání.
-5. **Ověř, že slovo nemá v některém souboru opačný význam.** Stalo se: týž termín označoval jinde vadu, ne přednost, a plošná náhrada by z toho udělala nesmysl.
+5. **Vyluč `~/.claude/PTYDEPE.md` a `skills/ptydepe/terms.md`.** Starý tvar v nich stojí schválně – v levém sloupci tabulky a ve větě „nahrazuje dřívější …“. Náhrada by z rozhodnutí udělala tautologii a nikdo by pak nezjistil, co se čím nahradilo.
+6. **Ověř, že slovo nemá v některém souboru opačný význam.** Stalo se: týž termín označoval jinde vadu, ne přednost, a plošná náhrada by z toho udělala nesmysl.
 
 Vypiš přehled ke schválení: počet výskytů, soubory, vyloučená místa a proč.
 
@@ -106,11 +107,14 @@ Pak zkontroluj to, co ani ta nejlepší mapa nezachytí, protože to není o tva
 
 ## Fáze 6 – Záznam
 
-**Neexistuje-li `~/.claude/PTYDEPE.md`, založ ho** – nadpis, odstavec o tom, jakou vadu řeší, sekci *Jak se používá* a prázdné *Termíny*. Bez toho by první běh neměl kam zapsat.
+**Zapisuje se na dvě místa a obojí je povinné.** Rozdělené jsou proto, že `PTYDEPE.md` jde do každé session a rostl by s každým termínem, kdežto důvody potřebuje jen ten, kdo rozhoduje:
 
-**Do `~/.claude/PTYDEPE.md`** zapiš nový termín: co znamená, co jím naopak není, a větu **„nahrazuje dřívější …“ i s důvodem**. Starý termín zůstává zapsaný **tady a jenom tady** – jinde se nahradil beze stopy –, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo.
+- **`~/.claude/PTYDEPE.md`** – jeden řádek tabulky: starý tvar, nový tvar, rozsah a meze. Nic víc; odůvodnění sem nepatří.
+- **`~/.claude/skills/ptydepe/terms.md`** – heslo s celou rozvahou (a řádek do jeho *Obsahu*): co termín znamená, co jím naopak není, a věta **„nahrazuje dřívější …“ i s důvodem**. Starý termín zůstává zapsaný **tady a jenom tady** – jinde se nahradil beze stopy –, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo.
 
-**Skončilo-li to ponecháním**, do `PTYDEPE.md` nepatří nic. Zapiš rozhodnutí i se zamítnutými variantami do `decisions.md` podle `~/.claude/STRUCTURE.md` – jinak se termín otevře znovu při příští revizi.
+**Neexistuje-li některý z nich, založ ho:** `PTYDEPE.md` s nadpisem, sekcí *Jak se používá* a prázdnou tabulkou, `terms.md` s nadpisem a prázdnými sekcemi *Termíny* a *Ponechané termíny*. Bez toho by první běh neměl kam zapsat.
+
+**Skončilo-li to ponecháním**, do `PTYDEPE.md` nepatří nic – tabulka říká, co se čím nahrazuje. Zapiš rozhodnutí i se zamítnutými variantami do sekce *Ponechané termíny* v `terms.md`, jinak se termín otevře znovu při příští revizi.
 
 ## Fáze 7 – Závěr
 
@@ -128,14 +132,14 @@ Ověř a **dolož příkazem**, ne dojmem: kontrolní průchod na starý tvar a 
 - Kontrakt: <příkazy a návratové kódy, nebo „repozitář nemá">
 
 **Zapsáno**
-- PTYDEPE.md · decisions.md · commity v <repozitářích>
+- PTYDEPE.md · terms.md · commity v <repozitářích>
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Termín je vypořádaný a ověřený, starý tvar se mimo PTYDEPE.md nevyskytuje.`
+- `Termín je vypořádaný a ověřený, starý tvar se mimo PTYDEPE.md a terms.md nevyskytuje.`
 - `Termín vypořádaný není – brání tomu: <konkrétní seznam>.`
 
 ------

@@ -45,7 +45,7 @@ Ze `add`, po dokončení:
 **Ručně přepsané věty:** 8 – repetice po náhradě
 
 **Ověřeno**
-- Kontrolní průchod: grep na starý tvar → 0 výskytů mimo PTYDEPE.md
+- Kontrolní průchod: grep na starý tvar → 0 výskytů mimo slovník termínů
 - Kontrakt: testy repozitáře OK, shellcheck 0
 ```
 
@@ -61,7 +61,7 @@ Ze `add`, po dokončení:
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/ptydepe
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill si vede slovník rozhodnutých termínů v `~/.claude/PTYDEPE.md`. Ten si vytvoří sám při prvním běhu, ale **musíte si ho naimportovat do svého `~/.claude/CLAUDE.md`**, jinak o dohodnutých termínech Claude v dalších sessions neví a začne je zavádět znovu.
+Skill si vede slovník rozhodnutých termínů na dvou místech: tabulku náhrad v `~/.claude/PTYDEPE.md` a rozvahu k nim v `terms.md` u sebe. Obojí si vytvoří sám při prvním běhu, ale **tabulku si musíte naimportovat do svého `~/.claude/CLAUDE.md`**, jinak o dohodnutých termínech Claude v dalších sessions neví a začne je zavádět znovu. Rozvaha se schválně neimportuje – do každé session by rostla s každým dalším termínem.
 
 ---
 

@@ -6,7 +6,7 @@ Následující soubory obsahují **závazná pravidla**, kterými se řiď při 
 
 - @~/.claude/RULES.md – obecná pravidla práce: komunikace s uživatelem, organizace souborů a obsahu, rozhodování a rozsah, práce se změnami
 - @~/.claude/STRUCTURE.md – standardní struktura projektu, co patří do kterého souboru a povinnost průběžně je aktualizovat
-- @~/.claude/PTYDEPE.md – termíny, na kterých jsme se výslovně dohodli: co znamenají, v jakém rozsahu platí a co se jimi naopak neoznačuje
+- @~/.claude/PTYDEPE.md – tabulka termínů, na kterých jsme se výslovně dohodli: co se místo čeho používá a v jakém rozsahu. Úvahy, zamítnuté varianty a historii náhrad drží `~/.claude/skills/ptydepe/terms.md`, který se schválně neimportuje – za běhu stačí tabulka
 - `~/.claude/WORKTREE.md` – worktree layout projektu: kontejner s `.bare`, jeden pracovní adresář na větev, zakládání a dokončení větve. **Odkaz, ne import** – platí jen v projektu s tímhle uspořádáním, kde si ho natáhne rozcestník v kořeni kontejneru; zapíná a ruší ho `/worktree`
 
 Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nevadí, že bude veřejně vidět na githubu, navrhni jeho extrakci do `~/.claude/`.

@@ -20,7 +20,7 @@ Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.
 
 ### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
-Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: každý termín, na kterém jsme se dohodli, tu má zapsané, co znamená, v jakém rozsahu platí a co se jím naopak neoznačuje. Nejcennější je vždycky ta poslední část – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc.
+Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: tabulka, co se místo čeho používá a v jakém rozsahu. Nejcennější je vždycky ten rozsah – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc. Je to schválně jen tabulka: soubor se načítá do každé session, takže důvody a historie náhrad leží stranou, u skillu `/ptydepe`.
 
 ### [`WORKTREE.md`](WORKTREE.md) – několik rozdělaných věcí vedle sebe
 
@@ -108,7 +108,7 @@ Vezme přepis školení, článek, poznámky, ale i rovnou nahrávku, obrázek n
 
 ### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
 
-Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem, a začne ho používat jako zavedený pojem – napříč projekty, v dokumentaci, v názvech souborů. Tenhle skill takové termíny vyhledá, projedná se mnou jeden po druhém, a co odsouhlasím, nahradí ve všech repozitářích naráz. Rozhodnutí i s důvodem pak drží [`PTYDEPE.md`](PTYDEPE.md), takže se totéž slovo nezavádí za měsíc znovu.
+Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem, a začne ho používat jako zavedený pojem – napříč projekty, v dokumentaci, v názvech souborů. Tenhle skill takové termíny vyhledá, projedná se mnou jeden po druhém, a co odsouhlasím, nahradí ve všech repozitářích naráz. Dohodnuté náhrady pak drží [`PTYDEPE.md`](PTYDEPE.md), takže se totéž slovo nezavádí za měsíc znovu.
 
 ### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
 
