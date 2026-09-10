@@ -1,6 +1,6 @@
 # /learn – nová znalost se vpraví do té staré, ne vedle ní
 
-Máte vlastní knihovnu know-how – metodiky, standardy, postupy – a pořád do ní něco přibývá: přepis školení, na kterém jste hodinu něco vysvětlovali, článek, cizí dokumentace, poznámky z hovoru. Problém není ten materiál získat, ale dostat ho **dovnitř**. Založit vedle další soubor umí každý; tenhle skill zdroj rozebere na jednotlivé poznatky a zapracuje je na místa, kam věcně patří – doplní, prohloubí, opraví a když je potřeba, přestaví i strukturu textu kolem.
+Máte vlastní knihovnu know-how – metodiky, standardy, postupy – a pořád do ní něco přibývá: nahrávka školení, na kterém jste hodinu něco vysvětlovali, článek, cizí dokumentace, poznámky z hovoru, nafocený flipchart, deck v PDF. Problém není ten materiál získat, ale dostat ho **dovnitř**. Založit vedle další soubor umí každý; tenhle skill zdroj rozebere na jednotlivé poznatky a zapracuje je na místa, kam věcně patří – doplní, prohloubí, opraví a když je potřeba, přestaví i strukturu textu kolem.
 
 ## Co umí
 
@@ -64,13 +64,13 @@ Nezapracuje se
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/learn
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Kde vaše knihovna leží, mu říkat dopředu nemusíte – řeknete mu to při každém zavolání. **Skill se ale odkazuje na dva soubory z téhož repozitáře**, které kopie samotného adresáře nepřinese: `skills/PREFLIGHT.md` (společný začátek běhu) a `RULES.md` (obecná pravidla práce). Bez nich doběhne, jen přijde o kus opatrnosti na začátku – vezměte si je s sebou, nebo si o ně řekněte rovnou v tom pokynu.
+Chcete-li mu předhazovat i nahrávky, **vezměte si s sebou rovnou `skills/transcript`** – bez něj skill zvládne text, obrázky a PDF, ale zvukový záznam přepsat nemá čím. Kde vaše knihovna leží, mu říkat dopředu nemusíte – řeknete mu to při každém zavolání. **Skill se ale odkazuje na dva soubory z téhož repozitáře**, které kopie samotného adresáře nepřinese: `skills/PREFLIGHT.md` (společný začátek běhu) a `RULES.md` (obecná pravidla práce). Bez nich doběhne, jen přijde o kus opatrnosti na začátku – vezměte si je s sebou, nebo si o ně řekněte rovnou v tom pokynu.
 
 ---
 
 ### Požadavky a omezení
 
 - Cílová knihovna by měla být **verzovaná v gitu**. Skill přepisuje existující texty a bez historie není kam se vrátit; před prací proto kontroluje, že v ní nemáte rozpracované změny.
-- Má-li být zdrojem **nahrávka**, potřebujete k tomu i přepisovací skill z téhož repozitáře (`skills/transcript`) a jeho výbavu – přepis běží lokálně na vašem počítači. Bez něj skill zvládne text, obrázky i PDF.
+- Má-li být zdrojem **nahrávka**, potřebujete k tomu i přepisovací skill z téhož repozitáře (`skills/transcript`) a jeho výbavu – přepis běží lokálně na vašem počítači, což znamená ffmpeg, whisper.cpp a stažený model o velikosti jednotek gigabajtů. Bez něj skill zvládne text, obrázky i PDF.
 - Počítá s tím, že knihovna už nějakou strukturu má. Do prázdného adresáře nemá co zapracovávat.
 - U velmi rozsáhlého zdroje běh trvá – vytěžení jde do detailu a úplnost se ověřuje opakovaně, dokud kontrola nevrátí prázdno.
