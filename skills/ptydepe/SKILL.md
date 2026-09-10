@@ -39,7 +39,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Skill neběží nad jedním projektem**, ale nad všemi naráz, takže body 1 až 3 nahrazuje vlastními předpoklady:
 
 1. **Kořeny.** `~/.claude`, `~/Dev/context` a **každý další git repozitář v `~/Dev`**. Posledně jmenované se do rozsahu berou, jen když se v nich termín vyskytuje – zjistí to inventura, ne domněnka.
-2. **Přečti `~/.claude/PTYDEPE.md` i `terms.md` v adresáři skillu celé.** Dohromady jsou to zdroj pravdy; termín, který v nich už je – ať nahrazený, nebo vědomě ponechaný –, se znovu neprojednává.
+2. **Zjisti, co je už rozhodnuté** – termín, který v tom seznamu je, ať nahrazený, nebo vědomě ponechaný, se znovu neprojednává. Kolik k tomu potřebuješ přečíst, se liší podle režimu: `suggest` si vystačí s `~/.claude/PTYDEPE.md` a **s *Obsahem*** `terms.md` v adresáři skillu, protože k vytipování kandidátů stačí jména; `add` čte **oba soubory celé**, protože rozhoduje o termínu a potřebuje k tomu úvahy i zamítnuté varianty. Rozvaha roste s každým vypořádaným termínem, takže tahat ji do běhu, který ji nepoužije, je táž vada, kvůli které se 10. 9. 2026 dělila sama tabulka.
 3. **Pracovní strom každého dotčeného repozitáře musí být čistý.** Rozpracované změny se s náhradou smíchají a přestane být poznat, co je čí. Vypiš je a zeptej se.
 4. **Zjisti režim a termín** z argumentu. Bez argumentu jede `suggest`.
 
@@ -112,9 +112,9 @@ Pak zkontroluj to, co ani ta nejlepší mapa nezachytí, protože to není o tva
 - **`~/.claude/PTYDEPE.md`** – jeden řádek tabulky: starý tvar, nový tvar, rozsah a meze. Nic víc; odůvodnění sem nepatří.
 - **`~/.claude/skills/ptydepe/terms.md`** – heslo s celou rozvahou (a řádek do jeho *Obsahu*): co termín znamená, co jím naopak není, a věta **„nahrazuje dřívější …“ i s důvodem**. Starý termín zůstává zapsaný **tady a jenom tady** – jinde se nahradil beze stopy –, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo.
 
-**Neexistuje-li některý z nich, založ ho:** `PTYDEPE.md` s nadpisem, sekcí *Jak se používá* a prázdnou tabulkou, `terms.md` s nadpisem a prázdnými sekcemi *Termíny* a *Ponechané termíny*. Bez toho by první běh neměl kam zapsat.
+**Neexistuje-li některý z nich, založ ho:** `PTYDEPE.md` s nadpisem, sekcí *Jak se používá* a prázdnou tabulkou, `terms.md` s nadpisem, sekcí *Jak se to zapisuje*, sekcí *Obsah* a prázdnými sekcemi *Termíny* a *Ponechané termíny*. Bez toho by první běh neměl kam zapsat.
 
-**Skončilo-li to ponecháním**, do `PTYDEPE.md` nepatří nic – tabulka říká, co se čím nahrazuje. Zapiš rozhodnutí i se zamítnutými variantami do sekce *Ponechané termíny* v `terms.md`, jinak se termín otevře znovu při příští revizi.
+**Skončilo-li to ponecháním**, do `PTYDEPE.md` nepatří nic – tabulka říká, co se čím nahrazuje. Zapiš rozhodnutí i se zamítnutými variantami do sekce *Ponechané termíny* v `terms.md` **a přidej ho do jeho *Obsahu***, jinak se termín otevře znovu při příští revizi.
 
 ## Fáze 7 – Závěr
 
