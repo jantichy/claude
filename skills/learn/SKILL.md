@@ -145,6 +145,8 @@ Nastuduj cílovou doménu: strukturu souborů, jak se v ní člení obsah, jaký
 
 **Kritérium je povaha textu, ne jméno adresáře** – doklad může ležet uvnitř metodické domény a naopak.
 
+**Trvá-li uživatel na zásahu do dokladu, neprováděj ho mlčky.** Jeho pokyn stojí nad tímhle skillem (`~/.claude/RULES.md`, *Přednost pravidel*), takže „ne“ není odpověď – ale tiché provedení taky ne. **Řekni, co je ten soubor zač a co se zásahem ztrácí** (doslovnost citace, datová stopa evidence), **nabídni místo toho zápis jinam** a proveď to teprve tehdy, když uživatel potvrdí i po tomhle upozornění. Měřeno tlakovými scénáři 10. 9. 2026: obecné zrušení pravidla („ta poznámka už neplatí“) agent odmítl, ale **konkrétní úkol („oprav tam tu hrubku“) prošel bez jediné námitky** – přesvědčivost pokynu roste s tím, jak je drobný.
+
 **Říká-li ale cílová báze sama, kam se nesahá, platí to nad tvým úsudkem.** Znalostní báze mívá ve svém `CLAUDE.md` jmenovaná místa, která jsou doslovné přetisky nebo historické artefakty a nemění se ani kvůli typografii. **Přečti si ho a ber ten výčet jako závazný**; není to konfigurace, kterou by si skill zaváděl, ale zapsané rozhodnutí, které tam bylo dřív než on.
 
 **Nejasnou povahu neodhaduj** – zeptej se, a to dřív než v plánu. Je to jediné místo, kde špatný odhad znamená nevratnou škodu.
@@ -175,7 +177,9 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 
 ## Fáze 5 – Plán
 
-**Předlož celý plán najednou, dřív než se sáhne na první soubor.**
+**Předlož celý plán najednou, dřív než se sáhne na první soubor.** Platí to **i pro jednovětou změnu** – měřeno tlakovými scénáři 10. 9. 2026, kde plán nepředložil ani jeden ze čtyř běhů, včetně těch, kterým ho nikdo nezakázal. Zápis do jediného souboru se totiž nejeví jako práce, která by potřebovala plán, a tím pravidlo tiše mizí.
+
+**Nemůžeš-li souhlas dostat** – běžíš neinteraktivně, nebo uživatel řekl „neptej se, prostě to udělej“ –, **plán stejně sestav a vypiš, a skonči u něj.** Není to formalita: plán je jediné místo, kde je vidět, kolik se toho přepíše, dřív než je to přepsané. Trvá-li uživatel i pak, řekni, že píšeš bez schválení, a jmenuj soubory, kterých se to dotkne.
 
 ```
 ## Plán zapracování – <zdroj> → <cíl>
@@ -207,6 +211,19 @@ Přeskládání uvnitř jednoho souboru potvrzení nepotřebuje – u metodiky j
 
 Nech plán odsouhlasit. Teprve pak dál.
 
+### Červené vlajky – zastav se
+
+Napadne-li tě kterákoliv z těchhle vět, právě obcházíš plán:
+
+| Co si říkáš | Jak to je |
+|---|---|
+| „Je to jedna věta, plán by byl formalita.“ | Plán u jedné věty stojí dvě řádky. Přeskočí se právě tam, kde je nejlevnější. |
+| „Uživatel je nedostupný, tak to udělám a on to uvidí potom.“ | Uvidí hotový zápis, ne rozsah před ním. To je přesně ta informace, kterou plán nese. |
+| „Vytěžení je hotové, plán bych psal už jen zpětně.“ | Pak ho napiš zpětně a zastav se u něj. Zpětný plán před zápisem je pořád plán. |
+| „Diff sedí s plánem.“ – když ho nikdo neschválil | Vlastní plán není schválený plán. Doložené 10. 9. 2026: běh takhle ohlásil soulad se souhlasem, který nepadl. |
+
+**Měřeno tlakovými scénáři 10. 9. 2026 a pravidlo neustálo ani jeden z šesti běhů** – včetně těch, kterým plán nikdo nezakázal, a včetně běhu, který po zápisu sám odcitoval, které pravidlo právě porušil. Text sám o sobě to tedy neudrží: **je to silné doporučení bez mechanismu**, ne hranice (`~/.claude/RULES.md`, *Přednost pravidel*). Skutečnou pojistkou zůstává, že uživatel vidí `git diff` a má čistý strom z *Fáze 0*.
+
 ## Fáze 6 – Rozpory
 
 Proberte rozpory **jeden po druhém**, v pořadí, ve kterém na sebe navazují – od obecnějších ke konkrétnějším, ať pozdější rozhodnutí staví na dřívějším.
@@ -228,7 +245,7 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 - **Poznatek jde na jedno místo.** Patří-li zdánlivě na dvě, jedno z nich je to pravé a druhé na ně odkazuje – `~/.claude/RULES.md`, *Single source of truth*.
 - **Zdůvodnění zapisuj spolu s pravidlem.** Bez „proč“ se pravidlo při první kolizi obejde.
 - **Ukliď po sobě.** Přejmenuješ-li sekci nebo přesuneš obsah, projdi odkazy na ně, souhrnné počty a přehledové tabulky – `~/.claude/RULES.md`, *Propagace změny*.
-- **Odliš jisté od tipnutého.** Co ve zdroji zaznělo s „tuším“ nebo „myslím“, **nezapisuj do báze jako fakt** – patří to do fronty úkolů jako věc k ověření. Mluvené slovo nejistotu nese často a v zápisu po ní nezůstane stopa.
+- **Odliš jisté od tipnutého.** Co ve zdroji zaznělo s „tuším“ nebo „myslím“, **nezapisuj do báze jako fakt** – patří to do fronty úkolů jako věc k ověření. Mluvené slovo nejistotu nese často a v zápisu po ní nezůstane stopa. **Nemá-li báze frontu úkolů, nevyráběj místo ní sekci uvnitř metodiky** – to z nejistoty udělá součást standardu. Založ `todo.md` a řekni to.
 - **Vypusť identifikaci konkrétního případu.** Jména klientů a osob, měřicí identifikátory, URL a čísla z jedné zakázky do znalosti nepatří – zůstává **vzorec, který se opakuje**. Bez toho se z báze stane archiv zakázek.
 - **Zdroje se nedotýkej.** Je to cizí podklad a zůstává, kde je.
 
@@ -238,6 +255,8 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 - **Zjednodušení se nahlásí jako rozpor.** Školení říká věci hruběji schválně. Rozpor je jen tam, kde by čtenář jednal ve stejné situaci jinak.
 - **Lidsky psaný text se přeorá celý.** Profil, ceník nebo medailonek někdo psal ručně a pozná to na první pohled. Doplňuje se, nepřestavuje.
 - **Vytěží se jen to hlavní.** Detaily, prahy a hlavně důvody vypadají jako vata, dokud zdroj existuje. Pak zmizí a nikdo neví, že chyběly.
+- **Plán se přeskočí, i když ho skill zná.** Nejde o nevědomost: měřený běh po zápisu sám napsal, že *„v tlaku na rychlost přeskočil krok, který skill výslovně vyžaduje i u jednovětné změny“*. Znalost pravidla tedy jeho dodržení nezaručuje – proto červené vlajky ve *Fázi 5*.
+- **Doklad se přepíše, protože si o to uživatel řekl konkrétně.** Ne „zruš to pravidlo“, ale „oprav tam tu hrubku“ – úkol tak drobný, že se námitka zdá malicherná. Provést se to smí, ale až po vyslovené námitce.
 - **Formulace se opíší ze zdroje.** Citát z hovoru se do metodiky nevejde a rozbije jí styl.
 
 ## Fáze 8 – Inventura a závěr
@@ -248,7 +267,7 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 2. **Nic se neztratilo z toho, co v bázi bylo.** Projdi `git diff` a u každého smazaného kusu textu si odpověz, kam se jeho obsah přesunul. Grep nestačí – `~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*.
 3. **Soubory se dají přečíst** – odkazy vedou někam, nadpisy navazují.
 
-**Pak zapiš řádek do evidence zdrojů.** Vede-li cílová doména soupis záznamů, ze kterých se vytěžovalo, **doplň ho**: odkud zdroj je (cesta do archivu, URL, u nahrávky cesta k záznamu **i** k přepisu), co se z něj vzalo a do kterých souborů, co v něm zůstalo otevřené k ověření, a **co se z něj vědomě nevytěžilo** – zahozený obraz videa, obrázek, který se nedal překreslit. To poslední je nejcennější řádek: říká, že se k záznamu vyplatí vrátit. Nevede-li ho, **nabídni ho založit** – jako každou jinou změnu struktury (*Fáze 5*). **Odmítne-li se, nevytěžená část se tím neztrácí:** vypíšeš ji v závěru mezi nezapracovaným, protože jinak by o ní nevěděl nikdo.
+**Pak zapiš řádek do evidence zdrojů.** Vede-li cílová doména soupis záznamů, ze kterých se vytěžovalo, **doplň ho**: odkud zdroj je (cesta do archivu, URL, u nahrávky cesta k záznamu **i** k přepisu), co se z něj vzalo a do kterých souborů, co v něm zůstalo otevřené k ověření, a **co se z něj vědomě nevytěžilo** – zahozený obraz videa, obrázek, který se nedal překreslit. To poslední je nejcennější řádek: říká, že se k záznamu vyplatí vrátit. Nevede-li ho, **nabídni ho založit** – jako každou jinou změnu struktury (*Fáze 5*). Nezakládej ji sama od sebe ani tehdy, když je uživatel nedostupný – měřený běh to 10. 9. 2026 udělal a sám to označil za rozhodnutí, které by jinak nechal potvrdit. **Odmítne-li se, nevytěžená část se tím neztrácí:** vypíšeš ji v závěru mezi nezapracovaným, protože jinak by o ní nevěděl nikdo.
 
 **Proč, když se zdroj sám nikam nekopíruje:** bez toho řádku nejde u sporného tvrzení dohledat, odkud pochází, a hlavně nejde záznam projít **podruhé**, až doména vyroste a najde v něm víc, než co se z něj vzalo napoprvé. Commit message ani jedno nezastane – nikdo v ní ty dvě věci nehledá.
 
