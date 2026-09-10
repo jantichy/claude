@@ -2,9 +2,9 @@
 
 ## Závazná pravidla
 
-Následující soubory obsahují **závazná pravidla**, kterými se řiď při každém úkolu – stejně jako pravidly psanými přímo v tomhle souboru.
+Následující soubory obsahují **závazná pravidla** – platí stejně jako pravidla psaná přímo v tomhle souboru.
 
-**Načítají se dvojím způsobem.** Co je uvedené `@`, se rozbalí do každé session automaticky a platí bez výjimky. Zbytek je **odkaz**, který si musíš načíst sám, jakmile na jeho téma přijde řeč – u každého je napsáno kdy. Je to táž vědomá volba jako u doménových znalostí níž: odkaz se dodržuje hůř než import, ale těch pár desítek kilobajtů by jinak stálo kontext v každé session, i tam, kde se jich nic netýká.
+**Načítají se dvojím způsobem.** Co je uvedené `@`, se rozbalí do každé session automaticky a platí bez výjimky. Zbytek je **odkaz**: nenačte se sám a u každého je napsáno, kdo a kdy ho má načíst – u dvou z nich ty, u `WORKTREE.md` rozcestník v kořeni kontejneru. Je to táž vědomá volba jako u doménových znalostí níž: odkaz se dodržuje hůř než import, ale těch pár desítek kilobajtů by jinak stálo kontext v každé session, i tam, kde se jich nic netýká.
 
 - @~/.claude/RULES.md – obecná pravidla práce: komunikace s uživatelem, organizace souborů a obsahu, rozhodování a rozsah, práce se změnami
 - @~/.claude/PTYDEPE.md – tabulka termínů, na kterých jsme se výslovně dohodli: co se místo čeho používá a v jakém rozsahu. Úvahy, zamítnuté varianty a historii náhrad drží `~/.claude/skills/ptydepe/terms.md`, který se schválně neimportuje – za běhu stačí tabulka

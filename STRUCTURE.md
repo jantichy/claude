@@ -240,7 +240,6 @@ Existuje **jen spolu s `todo.md`**: jeden bez druhého nedává smysl, tak se ta
 
 **Kritérium je „má to svého čtenáře“, ne „je to krok cyklu“.** Krok, jehož záznam by nikdo nečetl, sem nezapisuje – jinak sekce zbytní a přestane se číst. **Rozšiřovat ten výčet mlčky se nesmí:** `/consistency` a `/cleanup` do sekce fakticky zapisovaly už delší dobu, zatímco norma je nejmenovala, a odhalilo to až ověření čtenářem bez kontextu 7. 9. 2026.
 
-
 ```
 - **2026-09-02** · `/review` · `ff0f765` · změny na větvi (14 souborů) · 12 nálezů (3 opraveno, 7 odloženo, 2 won't fix)
 ```

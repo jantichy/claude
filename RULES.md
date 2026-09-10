@@ -12,7 +12,7 @@ Tenhle soubor drží **obecná pravidla práce**. Než sem něco zapíšeš, pro
 
 1. Říká pravidlo, **co smí stát** v konkrétním souboru v `docs/`? → `STRUCTURE.md`. Sem patří jen rozcestník *Kam co zapsat* – tedy která otázka míří do kterého souboru, ne co v něm pak smí být.
 2. Platí obecně pro skilly – jak vypadají, co v nich musí být, jak se píšou? → `~/.claude/skills/SKILLS.md`
-3. Popisuje pravidlo **rozhraní kroku životního cyklu** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí, co u něj rozhoduje o přeskočení? → `~/.claude/skills/LIFECYCLE.md`. **Obecné pravidlo o přeskakování zůstává tady**, protože platí i mimo krok cyklu; tam patří jen kritérium konkrétního kroku. Do jednotlivého skillu to nepatří, protože každý zná jen svoje sousedy a celé pořadí by v nich nikdo nenašel.
+3. Popisuje pravidlo **rozhraní kroku životního cyklu** – co krok dělá, co po něm platí, proč zrovna v tom pořadí, co u něj rozhoduje o přeskočení? → `~/.claude/skills/LIFECYCLE.md`. **Obecné pravidlo o přeskakování zůstává tady**, protože platí i mimo krok cyklu; tam patří jen kritérium konkrétního kroku. Do jednotlivého skillu to nepatří, protože každý zná jen svoje sousedy a celé pořadí by v nich nikdo nenašel.
 4. Jmenuje konkrétní skill nebo popisuje jeho vnitřek – fáze, šablony, zadání pro agenty? → do toho skillu.
 5. Týká se psaní kódu, webu, textu, vizuálu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
 6. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, kapitola *Výjimky z obecných pravidel*
@@ -472,6 +472,6 @@ Nasazení    /attack → /release
 
 **Rozhraní jeho kroků drží `~/.claude/skills/LIFECYCLE.md`** – co který krok dělá, co po něm platí, proč stojí v tom pořadí, co se smí opakovat a proč cyklus nekončí nasazením. **Načti si ho, jakmile v některém kroku stojíš** nebo rozhoduješ, který přijde na řadu; paušálně se neimportuje, protože v projektu, kde se žádný krok nepouští, je to jen zabraný kontext.
 
-**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, průběžnou kontrolu, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
+**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce – typicky u drobné změny nebo u projektu, který nemá kód. **Přeskočení řekni nahlas i s důvodem.** Čím je který krok zbytečný, stojí u něj v `LIFECYCLE.md`; taxativní výčet sem nepatří a neúplný by lhal.
 
 **Žádný krok neopakuje, co udělal krok před ním.** Povolená opakování jmenuje `LIFECYCLE.md` a rozšiřovat ten výčet mlčky se nesmí.

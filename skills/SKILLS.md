@@ -8,7 +8,7 @@ Platí pro skilly v tomhle repozitáři. Cizí skilly z pluginů se podle ní ne
 
 Vyhrává první kritérium, které sedí:
 
-1. Je to rozhraní kroku životního cyklu – co krok dělá, co po něm platí, proč stojí v tom pořadí? → `~/.claude/skills/LIFECYCLE.md`
+1. Je to rozhraní kroku životního cyklu – co krok dělá, co po něm platí, proč stojí v tom pořadí, co u něj rozhoduje o přeskočení? → `~/.claude/skills/LIFECYCLE.md`. **Obecné pravidlo o přeskakování tam nepatří**, to drží `~/.claude/RULES.md`, protože platí i mimo cyklus
 2. Platí to pro práci obecně, ne jen pro skilly? → `~/.claude/RULES.md`
 3. Je to postup zakládání, revize nebo rušení skillu? → `/skill`
 4. Je to začátek běhu, který sdílí víc skillů? → `~/.claude/skills/PREFLIGHT.md`

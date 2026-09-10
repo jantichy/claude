@@ -24,7 +24,7 @@ Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a z
 
 ### [`skills/LIFECYCLE.md`](skills/LIFECYCLE.md) – co je čí krok
 
-Životní cyklus projektu podrobně: co který krok dělá, co po něm platí a proč stojí zrovna v tom pořadí. Hlídá hlavně to, aby si dva kroky nedělaly tutéž práci – u věci, kterou kontrolují tři, ji nakonec neudělá pořádně žádný. Načítá se, až když se v některém kroku opravdu stojí; v `RULES.md` je z něj jen rámeček s pořadím.
+Životní cyklus projektu podrobně: co který krok dělá, co po něm platí a proč stojí zrovna v tom pořadí. Hlídá hlavně to, aby si dva kroky nedělaly tutéž práci – u věci, kterou kontrolují tři, ji nakonec neudělá pořádně žádný. Načítá se, až když se v některém kroku opravdu stojí; v `RULES.md` zůstal rámeček s pořadím a pravidla, která platí i mimo cyklus.
 
 ### [`WORKTREE.md`](WORKTREE.md) – několik rozdělaných věcí vedle sebe
 
