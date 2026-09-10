@@ -19,7 +19,7 @@ Ten volný popis není dekorace. Vytáhneš z něj jména a názvy do slovníku 
 
 Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve pak se přepisuje.
 
-**Nahrávku, ze které se má stát znalost, umí `/learn` vzít i rovnou** – přepis si od tebe vyžádá sám a průvodce si zodpoví za uživatele. Přijde-li tedy zadání tudy, neptej se znovu.
+**Nahrávku, ze které se má stát znalost, umí `/learn` vzít i rovnou** – přepis si od tebe vyžádá sám a **tři otázky průvodce** (co má vzniknout, model, mluvčí) si zodpoví za uživatele, takže je neopakuj. **Všechno ostatní se ptej dál**, i když zadání přišlo odtamtud: jazyk, hranici u dvojjazyčné nahrávky, kolizi jmen i existující výstupy v adresáři. Ty odpovědi `/learn` nemá odkud vzít a tichá volba za uživatele by u existujícího přepisu znamenala přepsat starší práci.
 
 **Přepisem to nemusí končit.** Nese-li nahrávka znalost, která má přežít i po tom, co se přepis zapomene – výklad na školení, konzultace, cizí prezentace –, nabídni v závěru `/learn`: zapracuje ji do znalostní báze místo toho, aby zůstala v samostatném souboru na disku.
 

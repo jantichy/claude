@@ -8,7 +8,7 @@ argument-hint: [source] [target]
 
 ## Co skill dělá
 
-Vezme jeden zdroj poznání a **zapracuje ho do existující znalostní báze** tak, aby se stal její součástí – ne přílohou. Vstupem je typicky přepis vlastního školení nebo konzultace, ale stejně dobře článek, cizí dokumentace, poznámky – a taky rovnou nahrávka, obrázek nebo PDF (*Fáze 1*).
+Vezme zdroj poznání a **zapracuje ho do existující znalostní báze** tak, aby se stal její součástí – ne přílohou. Vstupem je typicky přepis vlastního školení nebo konzultace, ale stejně dobře článek, cizí dokumentace, poznámky – a taky rovnou nahrávka, obrázek nebo PDF (*Fáze 1*).
 
 Skill se **nespouští s přepínači**, ale s volným popisem, ze kterého vyčte zdroj i cíl. `argument-hint` proto jmenuje `[source] [target]` jako **dvě věci, které v tom popisu mají zaznít**, ne jako dvě poziční hodnoty:
 
@@ -33,6 +33,7 @@ Práce má tři těžiště: **vyčerpávající vytěžení** zdroje, **rozliš
 |---|---|---|
 | Přepis nahrávky na text | `/transcript` | Umí lokální přepis i slovník jmen; sem pak přichází text jako každý jiný |
 | Čtení obrázků a PDF | vlastní | Vytěžuje se rovnou při čtení, mezikrok navíc by jen ubral kontext |
+| Vyříznutí snímků z videa | `ffmpeg` | Jediný krok s vlastním příkazem; volba filtru je detail, závazné je jen to, že se snímky po vytěžení mažou |
 | Vytěžení poznatků ze zdroje | vlastní | Rozhoduje o všem dalším a musí být úplné – první průchod se nedeleguje |
 | Kontrola úplnosti vytěžení | vlastní, izolovaný agent | Kdo seznam psal, hledá v něm právě to, co už tam dal |
 | Zmapování cílové báze | vestavěný `Explore` | Umí projet mnoho souborů a vrátit závěr, ne výpisy |
@@ -74,27 +75,29 @@ Volný popis za `/learn` nese obojí. Co v něm chybí, doplň z adresáře, ve 
 
 Zvukový i obrazový záznam je **platný vstup, ne důvod k odmítnutí** – všechny formáty, které bere `/transcript`. Nech si ho přepsat a dál pracuj s přepisem jako s kterýmkoliv jiným textem.
 
-**Cíl urči dřív, než nahrávku pošleš na přepis.** Z cílové domény vytáhni jména, značky, nástroje a odborné termíny, které v záznamu nejspíš zazní, a předej je jako popis nahrávky – rozpoznávání pak nekomolí právě to, co báze už zná. **Vybírej, nesypej všechno:** slovník má technický strop kolem čtyř desítek termínů a při přetečení se uříznou ty na začátku, a to tiše. Ber tedy to, co v nahrávce opravdu zazní a co se snadno komolí.
+**Cíl urči dřív, než nahrávku pošleš na přepis.** Z cílové domény vytáhni jména, značky, nástroje a odborné termíny, které v záznamu nejspíš zazní, a předej je jako popis nahrávky – rozpoznávání pak nekomolí právě to, co báze už zná. **Vybírej, nesypej všechno:** slovník má technický strop daný modelem – jeho výši drží `/transcript`, který ho měřil – a při přetečení se uříznou termíny na začátku, a to tiše. Ber tedy to, co v nahrávce opravdu zazní a co se snadno komolí.
 
-**Otázky, které `/transcript` klade, si zodpověz sám a nahlas to oznam.** Je to jediné místo, kde tenhle skill mluví za uživatele, a smí to proto, že odpovědi plynou ze zadání, se kterým `/learn` běží – uživatel by na nich neměl co rozhodovat:
+**Tři otázky průvodce `/transcriptu` si zodpověz sám a nahlas to oznam.** Je to jediné místo, kde tenhle skill mluví za uživatele, a smí to proto, že odpovědi plynou ze zadání, se kterým `/learn` běží – uživatel by na nich neměl co rozhodovat:
 
-- **vyčištěný doslovný přepis a nic dalšího.** Není to jen úspora času: shrnutí je tu škodlivé, protože co z hovoru vypustí, je přesně to, co má *Fáze 2* najít. **Řekni si o to výslovně** – bez volby vznikne shrnutí taky.
-- **rychlejší model rozpoznávání**, tedy výchozí volbu `/transcriptu`. Slovník z domény řeší právě to, kvůli čemu se sahá po tom pomalejším – komolená vlastní jména –, takže trojnásobný čas nemá co vyvážit.
+- **vyčištěný doslovný přepis a nic dalšího.** Není to jen úspora času: shrnutí je tu škodlivé, protože co z hovoru vypustí, je přesně to, co má *Fáze 2* najít. **Řekni si o to výslovně** – bez volby vzniknou i shrnutí a časované titulky.
+- **rychlejší model rozpoznávání**, tedy výchozí volbu `/transcriptu`. Slovník z domény řeší právě to, kvůli čemu se po pomalejším sahá – komolená vlastní jména –, takže výrazně delší běh nemá co vyvážit.
 - **bez rozlišení mluvčích.** Samo se nezapne, ale ani o něj nežádej: vytěžuje se tvrzení, ne kdo je řekl, a do báze se poznatek stejně zapisuje bez identifikace osob (*Fáze 7*). Ušetří to minuty výpočtu i doinstalování závislostí.
 
-**Je-li zdrojem video, zeptej se na obraz.** `/transcript` z něj bere jen zvukovou stopu, takže obsah, který zazněl jenom na slajdech, by propadl tiše. Polož jednu otázku přes `AskUserQuestion` se třemi volbami:
+**Je-li zdrojem video, zeptej se na obraz dřív, než pošleš zvuk na přepis.** `/transcript` bere jen zvukovou stopu, takže obsah, který zazněl jenom na slajdech, by propadl tiše. Jedna otázka přes `AskUserQuestion`, tři volby:
 
-- **Přiložím slajdy** – uživatel je má po ruce jako PDF nebo obrázky; vezmi je jako druhý zdroj a vytěž je spolu s přepisem v jednom běhu.
-- **Vytáhni je z videa** – vyřízni snímky při změně obrazu do dočasného adresáře a přečti je jako obrázky:
+- **Přiložím slajdy** – vyžádej si cestu. Jsou to obrázky nebo PDF a vytěží se spolu s přepisem v jednom běhu; nedodá-li je hned, nech přepis běžet a počkej na ně před *Fází 2*.
+- **Vytáhni je z videa** – vyřízni snímky při změně obrazu do dočasného adresáře **mimo cílovou bázi** a přečti je jako obrázky:
 
   ```bash
   ffmpeg -i <video> -vf "select='gt(scene,0.3)'" -vsync vfr <tmp>/snimek-%03d.jpg
   ```
 
-  Sesype-li se to do stovek snímků nebo nevrátí skoro nic, přepni na pevný interval (`fps=1/30`). Snímky jsou mezikrok: po vytěžení je **smaž**, na rozdíl od přepisu se k nim nikdo nevrací.
-- **Stačí zvuk** – vědomé rozhodnutí, že se obraz zahodí. Zapiš to do evidence zdroje (*Fáze 8*), ať je za rok vidět, že záznam nebyl vytěžený celý.
+  Nevrátí-li to skoro nic, přepni na pevný interval (`fps=1/30`). **Vyjde-li snímků víc než pár desítek, nejdřív je prolistuj a zahoď opakované** – prezentace se vrací na tentýž slajd a číst ho popáté nepřidá nic, jen sní kontext. Po vytěžení snímky **smaž**; na rozdíl od přepisu se k nim nikdo nevrací.
+- **Stačí zvuk** – vědomé rozhodnutí obraz zahodit. Zapiš ho do evidence zdroje (*Fáze 8*) jako nevytěženou část, ať je za rok vidět, že záznam nebyl vytěžený celý.
 
-**Selže-li přepis** – chybí nástroje, soubor nemá zvukovou stopu –, řekni to a skonči. Nevytěžuj z toho, co se přepsat podařilo: neúplný zdroj vypadá jako úplný a *Fáze 2* nemá jak poznat, že jí kus chybí.
+**Na cokoliv dalšího ať se `/transcript` ptá uživatele** – na jazyk, na hranici u dvojjazyčné nahrávky, na kolizi jmen i na existující přepis v adresáři. Ty odpovědi ze zadání `/learn` neplynou a tichá volba by u existujícího přepisu přepsala starší práci.
+
+**Chybí-li nástroje, není to konec** – `/transcript` umí říct, co doinstalovat. **Přepis, který se nezdaří, ale konec je:** nevytěžuj z toho, co se přepsat podařilo, protože neúplný zdroj vypadá jako úplný a *Fáze 2* nemá jak poznat, že jí kus chybí. Je-li nahrávek víc a selže jen jedna, pokračuj ostatními a **řekni jmenovitě, která vypadla**.
 
 **Přepis zůstane ležet vedle nahrávky** pod jejím jménem; mazat ho není co. **Leží-li nahrávka uvnitř cílové báze, platí to beze změny** – jen to řekni nahlas a **přepis commitni samostatně, ještě než sáhneš na obsah báze**. Tím zůstane v platnosti záruka z *Fáze 0*: cesta zpátky přes `git checkout` musí vést k stavu před zásahem do znalostí, ne před přepisem. Druhé vytěžení téhož záznamu, až doména vyroste, je nad textem zadarmo a nad audiem stojí celý přepis znovu – a sporné tvrzení se dohledává v textu, ne přehráváním. V evidenci zdroje (*Fáze 8*) uveď obojí: přepis, ze kterého se vytěžovalo, i cestu k původní nahrávce.
 
@@ -126,7 +129,7 @@ Vytěžuj **taxativně, ne výběrově**. Patří sem i to, co ti připadá samo
 
 **Nekopíruj formulace.** Poznatek zapiš jako tvrzení, ne jako citát – citát se pak nedá zapracovat do cizí věty.
 
-Pak **kontrola úplnosti**: pošli izolovanému agentovi – **výchozí model session, `high`**, protože hledat, co v seznamu chybí, je úsudek, ne výpis – zdroj v úplném rozsahu (u nahrávky přepis, u PDF všechny strany) a hotový seznam s jediným úkolem – *co ve zdroji je a v seznamu chybí?* Nesmí vidět, jak seznam vznikal, jinak hledá právě to, co už v něm je. Co najde, doplň a **kontrolu opakuj**, dokud se nevrátí prázdná. **Vrátí-li nálezy i potřetí, přestaň a řekni to** i s tím, co poslední kolo našlo – v tu chvíli je chyba ve způsobu, jakým poznatky formuluješ, a další kolo ji neopraví.
+Pak **kontrola úplnosti**: pošli izolovanému agentovi – **výchozí model session, `high`**, protože hledat, co v seznamu chybí, je úsudek, ne výpis – zdroj v úplném rozsahu – u nahrávky přepis, u PDF všechny strany, u videa se slajdy obojí – a hotový seznam s jediným úkolem – *co ve zdroji je a v seznamu chybí?* Nesmí vidět, jak seznam vznikal, jinak hledá právě to, co už v něm je. Co najde, doplň a **kontrolu opakuj**, dokud se nevrátí prázdná. **Vrátí-li nálezy i potřetí, přestaň a řekni to** i s tím, co poslední kolo našlo – v tu chvíli je chyba ve způsobu, jakým poznatky formuluješ, a další kolo ji neopraví.
 
 ## Fáze 3 – Zmapování cíle
 
@@ -245,7 +248,7 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 2. **Nic se neztratilo z toho, co v bázi bylo.** Projdi `git diff` a u každého smazaného kusu textu si odpověz, kam se jeho obsah přesunul. Grep nestačí – `~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*.
 3. **Soubory se dají přečíst** – odkazy vedou někam, nadpisy navazují.
 
-**Pak zapiš řádek do evidence zdrojů.** Vede-li cílová doména soupis záznamů, ze kterých se vytěžovalo, **doplň ho**: odkud zdroj je (cesta do archivu, URL, u nahrávky cesta k záznamu **i** k přepisu), co se z něj vzalo a do kterých souborů, a co v něm zůstalo otevřené k ověření. Nevede-li ho, **nabídni ho založit** – jako každou jinou změnu struktury (*Fáze 5*).
+**Pak zapiš řádek do evidence zdrojů.** Vede-li cílová doména soupis záznamů, ze kterých se vytěžovalo, **doplň ho**: odkud zdroj je (cesta do archivu, URL, u nahrávky cesta k záznamu **i** k přepisu), co se z něj vzalo a do kterých souborů, co v něm zůstalo otevřené k ověření, a **co se z něj vědomě nevytěžilo** – zahozený obraz videa, obrázek, který se nedal překreslit. To poslední je nejcennější řádek: říká, že se k záznamu vyplatí vrátit. Nevede-li ho, **nabídni ho založit** – jako každou jinou změnu struktury (*Fáze 5*). **Odmítne-li se, nevytěžená část se tím neztrácí:** vypíšeš ji v závěru mezi nezapracovaným, protože jinak by o ní nevěděl nikdo.
 
 **Proč, když se zdroj sám nikam nekopíruje:** bez toho řádku nejde u sporného tvrzení dohledat, odkud pochází, a hlavně nejde záznam projít **podruhé**, až doména vyroste a najde v něm víc, než co se z něj vzalo napoprvé. Commit message ani jedno nezastane – nikdo v ní ty dvě věci nehledá.
 
@@ -266,6 +269,7 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 
 **Evidence zdroje**
 - <kam se zapsal řádek, nebo „doména evidenci nevede">
+- <co se ze zdroje vědomě nevytěžilo – zahozený obraz videa, nepřekreslitelný obrázek – nebo „celý zdroj vytěžen">
 
 **Změny**
 - <výstup `git diff --stat`> · <commitnuto / v pracovním stromu>
