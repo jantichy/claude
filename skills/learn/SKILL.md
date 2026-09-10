@@ -1,6 +1,6 @@
 ---
 name: learn
-description: Skill se použije, když uživatel zadá "/learn", nebo chce zapracovat, zakomponovat či začlenit nový zdroj poznání – přepis schůzky, školení nebo konzultace, článek, cizí dokumentaci, vlastní poznámky – do existující znalostní báze: doplnit z něj znalosti, obohatit je, rozšířit metodiku nebo se z něj naučit. Zdroj vytěží do posledního detailu a rozpustí ho do stávajících textů na místa, kam věcně patří: doplní, prohloubí, opraví, přestaví jejich strukturu, a chybí-li pro znalost místo úplně, navrhne založit novou doménu. Na rozdíl od /transcript, který nahrávku přepisuje, tenhle skill přepis vytěžuje; nepřidává ho jako další samostatný soubor a nekopíruje z něj celé pasáže. Rozpory se stávající znalostí předkládá jeden po druhém k rozhodnutí. Doslovné přetisky, citace a datované doklady nepřepisuje nikdy.
+description: Skill se použije, když uživatel zadá "/learn", nebo chce zapracovat, zakomponovat či začlenit nový zdroj poznání – přepis schůzky, školení nebo konzultace, článek, cizí dokumentaci, vlastní poznámky – do existující znalostní báze: doplnit z něj znalosti, obohatit je, rozšířit metodiku nebo se z něj naučit. Zdroj vytěží do posledního detailu a rozpustí ho do stávajících textů na místa, kam věcně patří: doplní, prohloubí, opraví, přestaví jejich strukturu, a chybí-li pro znalost místo úplně, navrhne založit novou doménu. Zdrojem smí být i zvukový či obrazový záznam – ten si nechá přepsat /transcriptem – a obrázky, které vytěží do textu. Na rozdíl od /transcript, který nahrávku přepisuje, tenhle skill přepis vytěžuje; nepřidává ho jako další samostatný soubor a nekopíruje z něj celé pasáže. Rozpory se stávající znalostí předkládá jeden po druhém k rozhodnutí. Doslovné přetisky, citace a datované doklady nepřepisuje nikdy.
 argument-hint: [source] [target]
 ---
 
@@ -20,7 +20,7 @@ Práce má tři těžiště: **vyčerpávající vytěžení** zdroje, **rozliš
 
 ## Co skill nedělá
 
-- **Nepřepisuje nahrávky.** Na to je `/transcript`; jeho výstup je typický vstup sem.
+- **Nepřepisuje nahrávky sám.** Vlastní rozpoznávání řeči v sobě nemá – je-li zdrojem záznam, nechá ho přepsat `/transcript`em a pracuje s výsledkem (*Fáze 1*).
 - **Nepíše nový text autorovým hlasem.** To je `/compose`. Tenhle skill formuluje stylem cílové báze, ne stylem autora.
 - **Neaudituje bázi.** Vnitřní konzistenci celku řeší `/consistency` – tenhle skill se dívá jen na místa, kterých se zdroj dotkl. Po velké přestavbě ho v závěru doporučí.
 - **Nepřejmenovává termín napříč bází.** Vyjde-li z nové znalosti, že se něco jmenuje špatně, je to práce pro `/replace`, a jde-li o termín platný napříč projekty, pro `/ptydepe`.
@@ -31,6 +31,7 @@ Práce má tři těžiště: **vyčerpávající vytěžení** zdroje, **rozliš
 
 | Krok | Kdo | Proč zrovna on |
 |---|---|---|
+| Přepis nahrávky na text | `/transcript` | Umí lokální přepis i slovník jmen; sem pak přichází text jako každý jiný |
 | Vytěžení poznatků ze zdroje | vlastní | Rozhoduje o všem dalším a musí být úplné – první průchod se nedeleguje |
 | Kontrola úplnosti vytěžení | vlastní, izolovaný agent | Kdo seznam psal, hledá v něm právě to, co už tam dal |
 | Zmapování cílové báze | vestavěný `Explore` | Umí projet mnoho souborů a vrátit závěr, ne výpisy |
@@ -68,6 +69,27 @@ Volný popis za `/learn` nese obojí. Co v něm chybí, doplň z adresáře, ve 
 
 **Uvnitř zadané domény si vybíráš soubory a sekce sám** – to je celá práce skillu, ne rozhodnutí uživatele.
 
+### Když je zdrojem nahrávka
+
+Zvukový i obrazový záznam je **platný vstup, ne důvod k odmítnutí** – všechny formáty, které bere `/transcript`. Nech si ho přepsat a dál pracuj s přepisem jako s kterýmkoliv jiným textem.
+
+**Cíl urči dřív, než nahrávku pošleš na přepis.** Z cílové domény vytáhni jména, značky, nástroje a odborné termíny, které v záznamu nejspíš zazní, a předej je jako popis nahrávky – rozpoznávání pak nekomolí právě to, co báze už zná. Je to jediná věc, kterou o té nahrávce víš předem, a nikdo jiný ji nemá.
+
+Zadání je **kontrakt výstupu, ne seznam cizích kroků**:
+
+- **vyčištěný doslovný přepis** do Markdownu a nic jiného. Shrnutí ani časované titulky vytěžení nepřispějí – shrnutí je navíc škodlivé, protože to, co z hovoru vypustí, je přesně to, co má *Fáze 2* najít.
+- **bez rozlišení mluvčích.** Vytěžuje se tvrzení, ne kdo je řekl, a do báze se poznatek stejně zapisuje bez identifikace osob (*Fáze 7*). Diarizace by přidala minuty výpočtu i závislosti kvůli údaji, který se zahodí.
+
+**Přepis zůstane ležet vedle nahrávky** pod jejím jménem; mazat ho není co. Druhé vytěžení téhož záznamu, až doména vyroste, je nad textem zadarmo a nad audiem stojí celý přepis znovu – a sporné tvrzení se dohledává v textu, ne přehráváním. V evidenci zdroje (*Fáze 8*) uveď obojí: přepis, ze kterého se vytěžovalo, i cestu k původní nahrávce.
+
+### Když jsou ve zdroji obrázky
+
+Slajdy, screenshoty, foto flipchartu, schéma v článku. **Přečti je a vytěž z nich poznatky stejně jako z textu** – přeskočit je znamená ztratit to, co je jenom v nich.
+
+**Do báze se ale nekopírují.** Znalostní báze je text: grepuje se, vytěžuje dalším během a přestavuje se v ní struktura – příloha, na kterou vede cesta, se při první přestavbě rozejde a její obsah nenajde nikdo. Nese-li obrázek vztah, který věta nezastane – schéma, tok, matice –, **překresli ho do Markdownu**: tabulkou, odrážkovou hierarchií nebo diagramem v `mermaid`. Do báze pak vstoupí obsah obrázku, ne odkaz na něj.
+
+Je to totéž rozhodnutí, jaké dělá `/transcript` u videa: obraz se nikam nepřenáší, vzniká z něj text.
+
 ## Fáze 2 – Vytěžení zdroje
 
 **Nejsilnější model, `xhigh`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Poznatek, který tady propadne, se už nikdy nenajde: zdroj příště nemusí existovat a nikdo nebude vědět, že chybí.
@@ -81,6 +103,8 @@ Vytěžuj **taxativně, ne výběrově**. Patří sem i to, co ti připadá samo
 - výjimky, okrajové případy a to, co nefunguje,
 - pořadí kroků a co na čem závisí,
 - rozhodnutí, která v hovoru padla, i zavržené varianty.
+
+**Z hovoru ber jen tvrzení, které v něm obstálo.** Co někdo nadhodil a druhá strana to vzápětí opravila nebo odmítla, poznatek není – v přepisu to poznáš z průběhu hovoru, ne z nálepky u repliky. Zapsat omyl, který na místě padl, je horší než ho vynechat: v bázi po něm nezůstane stopa, že to byl omyl.
 
 **Nekopíruj formulace.** Poznatek zapiš jako tvrzení, ne jako citát – citát se pak nedá zapracovat do cizí věty.
 
@@ -203,7 +227,7 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 2. **Nic se neztratilo z toho, co v bázi bylo.** Projdi `git diff` a u každého smazaného kusu textu si odpověz, kam se jeho obsah přesunul. Grep nestačí – `~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*.
 3. **Soubory se dají přečíst** – odkazy vedou někam, nadpisy navazují.
 
-**Pak zapiš řádek do evidence zdrojů.** Vede-li cílová doména soupis záznamů, ze kterých se vytěžovalo, **doplň ho**: odkud zdroj je (cesta do archivu, URL), co se z něj vzalo a do kterých souborů, a co v něm zůstalo otevřené k ověření. Nevede-li ho, **nabídni ho založit** – jako každou jinou změnu struktury (*Fáze 5*).
+**Pak zapiš řádek do evidence zdrojů.** Vede-li cílová doména soupis záznamů, ze kterých se vytěžovalo, **doplň ho**: odkud zdroj je (cesta do archivu, URL, u nahrávky cesta k záznamu **i** k přepisu), co se z něj vzalo a do kterých souborů, a co v něm zůstalo otevřené k ověření. Nevede-li ho, **nabídni ho založit** – jako každou jinou změnu struktury (*Fáze 5*).
 
 **Proč, když se zdroj sám nikam nekopíruje:** bez toho řádku nejde u sporného tvrzení dohledat, odkud pochází, a hlavně nejde záznam projít **podruhé**, až doména vyroste a najde v něm víc, než co se z něj vzalo napoprvé. Commit message ani jedno nezastane – nikdo v ní ty dvě věci nehledá.
 

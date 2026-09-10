@@ -100,7 +100,7 @@ Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je m
 
 ### [`/learn`](skills/learn/) – nová znalost dovnitř té staré, ne vedle ní
 
-Vezme přepis školení, článek nebo poznámky a zapracuje je do mojí knihovny know-how – rozebere zdroj na jednotlivé poznatky a rozpustí je na místa, kam patří, klidně i s přestavbou textu kolem. Rozliší přitom skutečný rozpor od toho, že jsem na školení něco jen řekl jednodušeji, a ptá se opravdu jen tam, kde neví. Metodiku přepisuje volně, ručně psané texty jen doplňuje a doslovných přetisků se nedotkne.
+Vezme přepis školení, článek, poznámky, ale i rovnou nahrávku nebo slajdy a zapracuje je do mojí knihovny know-how – rozebere zdroj na jednotlivé poznatky a rozpustí je na místa, kam patří, klidně i s přestavbou textu kolem. Rozliší přitom skutečný rozpor od toho, že jsem na školení něco jen řekl jednodušeji, a ptá se opravdu jen tam, kde neví. Metodiku přepisuje volně, ručně psané texty jen doplňuje a doslovných přetisků se nedotkne.
 
 ### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
 

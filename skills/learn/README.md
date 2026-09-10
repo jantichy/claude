@@ -8,6 +8,7 @@ Máte vlastní knihovnu know-how – metodiky, standardy, postupy – a pořád 
 - **Pozná, co je skutečný rozpor.** Školení říká věci hruběji než metodika a rozebírá jen jednu variantu – to není chyba, to je jiná hloubka. Skill rozliší zjednodušení, zúžení, prohloubení a zastarání od případu, kdy dvě tvrzení opravdu nemohou platit obě.
 - **Rozpory předloží po jednom.** Vysvětlí, v čem je spor, ocituje obě verze a nabídne hotová řešení včetně toho nejčastějšího: obojí platí, jen za jiných podmínek – tak se to zapíše.
 - **Nesahá na to, na co se sahat nemá.** Návod a metodiku přepisuje volně. Profily, ceníky a texty psané ručně jen doplňuje. Doslovné přetisky, citace a datované záznamy nepřepisuje vůbec – pozná je podle toho, na co odpovídají, ne podle jména složky.
+- **Vezme i nahrávku a obrázky.** Zvukový nebo obrazový záznam nechá nejdřív přepsat přepisovacím skillem – a protože už ví, do které oblasti to půjde, připraví si z ní seznam jmen a termínů, aby je rozpoznávání nekomolilo, a nezdržuje se rozlišováním mluvčích, které by stejně zahodil. Slajdy, screenshoty a schémata přečte a vytěží; do knihovny je nekopíruje, ale co je na nich, překreslí do textu.
 - **Celý plán ukáže předem.** Kolik poznatků, kam půjdou, co se přepíše, o čem se bude rozhodovat a co se nezapracuje. Teprve po odsouhlasení píše.
 - **Přestavbu struktury si vyžádá zvlášť.** Zakládat, přesouvat nebo rušit soubory smí až poté, co vysvětlí, jak to má vypadat a proč se nová znalost do stávající struktury nevejde. Platí to i pro krajní případ: když pro znalost není v knihovně místo vůbec, navrhne založit celou novou tematickou oblast – necpe ji tam, kam nepatří.
 
@@ -49,7 +50,7 @@ Nezapracuje se
 ## Co nedělá
 
 - **Nepřepisuje doslovné přetisky, citace ani datované záznamy.** Znalost z nich vytěží a zapíše jinam; samotný doklad nechá být.
-- Nepřepisuje nahrávky – to je práce pro přepisovací skill, jehož výstup je sem typický vstup.
+- Nepřepisuje nahrávky sám – zavolá si na to přepisovací skill a pracuje s výsledkem.
 - Nepíše nové texty vaším hlasem; formuluje stylem cílové knihovny.
 - Nedělá audit celé knihovny, dívá se jen na místa, kterých se zdroj dotkl.
 - Nepřejmenovává termíny napříč knihovnou – jen na to upozorní.
@@ -70,6 +71,6 @@ Kde vaše knihovna leží, mu říkat dopředu nemusíte – řeknete mu to při
 ### Požadavky a omezení
 
 - Cílová knihovna by měla být **verzovaná v gitu**. Skill přepisuje existující texty a bez historie není kam se vrátit; před prací proto kontroluje, že v ní nemáte rozpracované změny.
-- Zdroj musí být **text** – přepis, článek, poznámky. Nahrávku je potřeba nejdřív přepsat.
+- Má-li být zdrojem **nahrávka**, potřebujete k tomu i přepisovací skill z téhož repozitáře (`skills/transcript`) a jeho výbavu – přepis běží lokálně na vašem počítači. Bez něj skill zvládne text a obrázky.
 - Počítá s tím, že knihovna už nějakou strukturu má. Do prázdného adresáře nemá co zapracovávat.
 - U velmi rozsáhlého zdroje běh trvá – vytěžení jde do detailu a úplnost se ověřuje opakovaně, dokud kontrola nevrátí prázdno.
