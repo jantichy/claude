@@ -113,6 +113,7 @@ Zapisuje se **datum běhu vyrobené příkazem `date +%F`**, kolik hodin se pře
 - **Do Clockify se nezapisuje nikdy.** Zdroj pravdy se neupravuje podle kopie, ani „ať to sedí“.
 - **Nemaže se nic, co nepatří Honzovi**, a nic mimo cílová místa ze souboru klienta. Než se smaže cokoliv, musí sedět obojí.
 - **Mazání se ukazuje předem.** Založení a úprava proběhnou samy, ale **smazání je zásah do systému klienta** – vypíše se, co a proč, a čeká se na potvrzení. U prvního ostrého běhu na klientovi se potvrzuje celá dávka, ne jen mazání.
+- **Přenáší čas, ne peníze.** Do vzdáleného systému jde délka, popis a příznak – **nikdy sazba ani částka**. Kolik ta práce stojí, patří na fakturu; klient má u sebe vidět objem, ne ceník.
 - **Nefakturuje ani nepočítá.** Vrací, co udělal; hodiny sečte fakturace.
 - **Do souboru klienta zapisuje jedinou věc** – deník přelitého a propadlého času. Dohodu, cílová místa ani uzávěrku si sám nepřepisuje; rozejde-li se s nimi skutečnost, je to nález k rozhodnutí.
 - **Cizí čas v cílovém místě se nechává být.** Cílový task bývá sdílený s lidmi u klienta, takže cizí záznamy jsou běžný stav, ne nález; rozhoduje jedině `userId`. **Ohlas ho jen jednou, jako informaci** – a jako podezření na špatné ID cílového místa ho ber teprve tehdy, když tam **není ani jeden** Honzův záznam a přitom tam nějaký být má.
