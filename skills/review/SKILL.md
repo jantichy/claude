@@ -29,6 +29,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to první krok uzavírá
 - **Neaudituje vnitřní konzistenci projektu.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`, který běží až po tomhle.
 - **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/cleanup`. Vlastní nálezy si ale zapisuje sám: odložené do `docs/todo.md`, zamítnuté do `## Review` v `CLAUDE.md`.
+- **Neaudituje cizí web zvenčí.** Čte repozitář a měří proti specifikaci; na cizí běžící web, ke kterému není zdroják ani zadání, je `/audit` – ten ho spustí, projde jako návštěvník a měří proti auditnímu postupu domény.
 - **Nenasazuje.** To je `/release`, a ten se pouští vědomě a zvlášť.
 
 ## Rozsah

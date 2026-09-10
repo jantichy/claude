@@ -86,6 +86,10 @@ Nasadí do produkce přes **oddělenou nasazovací větev**, takže `main` zůst
 
 Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu. Jsou seřazené abecedně.
 
+### [`/audit`](skills/audit/) – audit cizího webu proti mojí vlastní metodice
+
+Zaudituje cizí web v zadané oblasti – analytiku, SEO, použitelnost – proti postupu a katalogu typických nálezů, které mám sepsané ve své znalostní bázi. Web opravdu spustí a projde, práci rozdělí několika nezávislým pohledům a každý nález pak nechá někoho jiného zkusit vyvrátit opakovaným průchodem, takže ven jde jen to, co obstálo. Sám žádnou odbornou znalost nenese.
+
 ### [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
 
 Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
