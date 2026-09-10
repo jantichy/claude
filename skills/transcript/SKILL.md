@@ -1,6 +1,6 @@
 ---
 name: transcript
-description: Skill se použije, když uživatel zadá "/transcript", nebo když chce přepsat zvukové i obrazové nahrávky (MP3, M4A, WAV, AAC, MP4, MOV…) do Markdownu – přepis a strukturované shrnutí schůzky/nahrávky. Přepis běží kompletně lokálně a offline (whisper.cpp).
+description: Skill se použije, když uživatel zadá "/transcript", nebo když chce přepsat zvukové i obrazové nahrávky (MP3, M4A, WAV, AAC, MP4, MOV…) do Markdownu – přepis a strukturované shrnutí schůzky/nahrávky. Přepis běží kompletně lokálně a offline (whisper.cpp). Výsledkem je přepis; má-li se z nahrávky stát trvalá znalost v knowledge base, je na to /learn, který si přepis vyžádá sám.
 ---
 
 # Transcript

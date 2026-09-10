@@ -1,6 +1,6 @@
 # /learn – nová znalost se vpraví do té staré, ne vedle ní
 
-Máte vlastní knihovnu know-how – metodiky, standardy, postupy – a pořád do ní něco přibývá: nahrávka školení, na kterém jste hodinu něco vysvětlovali, článek, cizí dokumentace, poznámky z hovoru, nafocený flipchart, deck v PDF. Problém není ten materiál získat, ale dostat ho **dovnitř**. Založit vedle další soubor umí každý; tenhle skill zdroj rozebere na jednotlivé poznatky a zapracuje je na místa, kam věcně patří – doplní, prohloubí, opraví a když je potřeba, přestaví i strukturu textu kolem.
+Máte vlastní knihovnu know-how – metodiky, standardy, postupy – a pořád do ní něco přibývá: nahrávka školení, na kterém jste hodinu něco vysvětlovali, článek, cizí dokumentace, poznámky z hovoru, nafocený flipchart, slajdy v PDF. Problém není ten materiál získat, ale dostat ho **dovnitř**. Založit vedle další soubor umí každý; tenhle skill zdroj rozebere na jednotlivé poznatky a zapracuje je na místa, kam věcně patří – doplní, prohloubí, opraví, a když je potřeba, přestaví i strukturu textu kolem.
 
 ## Co umí
 
@@ -8,7 +8,8 @@ Máte vlastní knihovnu know-how – metodiky, standardy, postupy – a pořád 
 - **Pozná, co je skutečný rozpor.** Školení říká věci hruběji než metodika a rozebírá jen jednu variantu – to není chyba, to je jiná hloubka. Skill rozliší zjednodušení, zúžení, prohloubení a zastarání od případu, kdy dvě tvrzení opravdu nemohou platit obě.
 - **Rozpory předloží po jednom.** Vysvětlí, v čem je spor, ocituje obě verze a nabídne hotová řešení včetně toho nejčastějšího: obojí platí, jen za jiných podmínek – tak se to zapíše.
 - **Nesahá na to, na co se sahat nemá.** Návod a metodiku přepisuje volně. Profily, ceníky a texty psané ručně jen doplňuje. Doslovné přetisky, citace a datované záznamy nepřepisuje vůbec – pozná je podle toho, na co odpovídají, ne podle jména složky.
-- **Vezme i nahrávku, obrázky a PDF.** Zvukový nebo obrazový záznam nechá nejdřív přepsat přepisovacím skillem – a protože už ví, do které oblasti to půjde, připraví si z ní seznam jmen a termínů, aby je rozpoznávání nekomolilo, a nezdržuje se rozlišováním mluvčích, které by stejně zahodil. **U videa se navíc zeptá na obraz**: půlka obsahu bývá na slajdech, tak si je buď vyžádá, nebo je z videa sám vyřízne – a když ani jedno, poznamená, že se obraz zahodil. Obrázek i PDF bere jako plnohodnotný zdroj – nafocený flipchart, screenshot, oskenovaný leták, slajdy k tomu školení. Přečte je a vytěží; do knihovny je nekopíruje, ale co je na nich, překreslí do textu.
+- **Vezme i nahrávku.** Zvukový nebo obrazový záznam nechá nejdřív přepsat přepisovacím skillem a připraví si k tomu seznam jmen a termínů z cílové oblasti, aby je rozpoznávání nekomolilo. U videa se navíc zeptá, co s obrazem – půlka obsahu bývá na slajdech.
+- **Vezme i obrázky a PDF.** Nafocený flipchart, screenshot, oskenovaný leták, slajdy ke školení. Přečte je a vytěží; do knihovny je nekopíruje, ale co je na nich, překreslí do textu.
 - **Celý plán ukáže předem.** Kolik poznatků, kam půjdou, co se přepíše, o čem se bude rozhodovat a co se nezapracuje. Teprve po odsouhlasení píše.
 - **Přestavbu struktury si vyžádá zvlášť.** Zakládat, přesouvat nebo rušit soubory smí až poté, co vysvětlí, jak to má vypadat a proč se nová znalost do stávající struktury nevejde. Platí to i pro krajní případ: když pro znalost není v knihovně místo vůbec, navrhne založit celou novou tematickou oblast – necpe ji tam, kam nepatří.
 
