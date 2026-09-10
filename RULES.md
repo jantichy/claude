@@ -10,7 +10,7 @@ Doménové znalosti z `~/Dev/context/` se do projektu načítají **tvrdým `@im
 
 Tenhle soubor drží **obecná pravidla práce**. Než sem něco zapíšeš, projdi test – vyhrává první kritérium, které sedí:
 
-1. Jmenuje pravidlo konkrétní soubor v `docs/`? → `STRUCTURE.md`
+1. Říká pravidlo, **co smí stát** v konkrétním souboru v `docs/`? → `STRUCTURE.md`. Sem patří jen rozcestník *Kam co zapsat* – tedy která otázka míří do kterého souboru, ne co v něm pak smí být.
 2. Platí obecně pro skilly – jak vypadají, co v nich musí být, jak se píšou? → `~/.claude/skills/SKILLS.md`
 3. Popisuje pravidlo **rozhraní kroku životního cyklu** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí a kdy se smí přeskočit? → `~/.claude/skills/LIFECYCLE.md`. Do jednotlivého skillu to nepatří, protože každý zná jen svoje sousedy a celé pořadí by v nich nikdo nenašel.
 4. Jmenuje konkrétní skill nebo popisuje jeho vnitřek – fáze, šablony, zadání pro agenty? → do toho skillu.
@@ -400,7 +400,7 @@ V projektech s vlastní živou dokumentací (typicky `docs/`):
 
 Změna teče **shora dolů, nikdy obráceně** – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód. Konkrétní posloupnost souborů definuje `STRUCTURE.md`.
 
-V *Životním cyklu projektu* plní doc-first kroky 3 a 5. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
+V životním cyklu plní doc-first `/specify` a `/breakdown`. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
 
 ### Živá struktura
 
@@ -472,6 +472,6 @@ Nasazení    /attack → /release
 
 **Rozhraní jeho kroků drží `~/.claude/skills/LIFECYCLE.md`** – co který krok dělá, co po něm platí, proč stojí v tom pořadí, co se smí opakovat a proč cyklus nekončí nasazením. **Načti si ho, jakmile v některém kroku stojíš** nebo rozhoduješ, který přijde na řadu; paušálně se neimportuje, protože v projektu, kde se žádný krok nepouští, je to jen zabraný kontext.
 
-**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, průběžnou kontrolu, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
+**Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, průběžnou kontrolu, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
 
 **Žádný krok neopakuje, co udělal krok před ním.** Povolená opakování jsou čtyři a jmenuje je `LIFECYCLE.md`; rozšiřovat ten výčet mlčky se nesmí.

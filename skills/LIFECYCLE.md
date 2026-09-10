@@ -69,4 +69,4 @@ Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen d
 
 ## Kdy se krok přeskakuje
 
-**Jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením a založenými soubory pro zápis rozhodnutí nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, průběžnou kontrolu, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
+Pravidlo drží `~/.claude/RULES.md`, *Životní cyklus projektu* – platí v každé session, i mimo krok cyklu, takže musí stát v paušálním kontextu. Tady se neopisuje.

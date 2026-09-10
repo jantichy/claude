@@ -9,10 +9,11 @@ Platí pro skilly v tomhle repozitáři. Cizí skilly z pluginů se podle ní ne
 Vyhrává první kritérium, které sedí:
 
 1. Platí to pro práci obecně, ne jen pro skilly? → `~/.claude/RULES.md`
-2. Je to postup zakládání, revize nebo rušení skillu? → `/skill`
-3. Je to začátek běhu, který sdílí víc skillů? → `~/.claude/skills/PREFLIGHT.md`
-4. Týká se to jednoho konkrétního skillu? → do jeho `SKILL.md`
-5. Nic z toho → sem
+2. Je to rozhraní kroku životního cyklu – co krok dělá, co po něm platí, proč stojí v tom pořadí? → `~/.claude/skills/LIFECYCLE.md`
+3. Je to postup zakládání, revize nebo rušení skillu? → `/skill`
+4. Je to začátek běhu, který sdílí víc skillů? → `~/.claude/skills/PREFLIGHT.md`
+5. Týká se to jednoho konkrétního skillu? → do jeho `SKILL.md`
+6. Nic z toho → sem
 
 ------
 

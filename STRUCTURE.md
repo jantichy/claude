@@ -342,20 +342,7 @@ Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jedno
 
 Tyhle soubory jsou **živé**, ne zakládací formalita. Doplňuj je **sám, průběžně, bez vyžádání** – ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na `/cleanup` ani na konec session.
 
-Uživatel na to nesmí muset upozorňovat. Když si nejsi jistý, do kterého souboru zápis patří, rozhodni podle otázky, na kterou odpovídá:
-
-| Otázka | Soubor |
-|---|---|
-| Co ten projekt je a jak se používá? | `README.md` |
-| Co ještě není hotové? | `todo.md` |
-| Co bychom někdy možná mohli, ale nikdo to nerozhodl? | `backlog.md` |
-| Co je hotové? | `done.md` |
-| Proč jsme to udělali takhle? | `decisions.md` |
-| Jak se v tomhle projektu rozhoduje? | `rules.md` |
-| Co stavíme a proč? | `requirements.md` |
-| Jak to postavíme? | `architecture.md` |
-| Kdo co udělá v jakém pořadí? | `plan.md` |
-| Odkud to máme? | `research/` |
+Uživatel na to nesmí muset upozorňovat. Nevíš-li, do kterého souboru zápis patří, rozhodni podle otázky, na kterou odpovídá – **rozcestník *otázka → soubor* drží `~/.claude/RULES.md`, *Kam co zapsat***. Stojí tam, a ne tady, protože se načítá do každé session, kdežto tenhle soubor je katalog k nahlédnutí; co v jednotlivých souborech smí stát, říkají kapitoly výš.
 
 Když se ukáže, že zápis patří jinam, přesuň ho – princip *Živá struktura* z `~/.claude/RULES.md` platí i tady.
 
