@@ -1,6 +1,6 @@
 ---
 name: learn
-description: Skill se použije, když uživatel zadá "/learn", nebo chce zapracovat, zakomponovat či začlenit nový zdroj poznání – přepis schůzky, školení nebo konzultace, článek, cizí dokumentaci, vlastní poznámky – do existující znalostní báze: doplnit z něj znalosti, obohatit je, rozšířit metodiku nebo se z něj naučit. Zdroj vytěží do posledního detailu a rozpustí ho do stávajících textů na místa, kam věcně patří: doplní, prohloubí, opraví, přestaví jejich strukturu, a chybí-li pro znalost místo úplně, navrhne založit novou doménu. Zdrojem smí být i zvukový či obrazový záznam – ten si nechá přepsat /transcriptem – a obrázky, které vytěží do textu. Na rozdíl od /transcript, který nahrávku přepisuje, tenhle skill přepis vytěžuje; nepřidává ho jako další samostatný soubor a nekopíruje z něj celé pasáže. Rozpory se stávající znalostí předkládá jeden po druhém k rozhodnutí. Doslovné přetisky, citace a datované doklady nepřepisuje nikdy.
+description: Skill se použije, když uživatel zadá "/learn", nebo chce zapracovat, zakomponovat či začlenit nový zdroj poznání – přepis schůzky, školení nebo konzultace, článek, cizí dokumentaci, vlastní poznámky – do existující znalostní báze: doplnit z něj znalosti, obohatit je, rozšířit metodiku nebo se z něj naučit. Zdroj vytěží do posledního detailu a rozpustí ho do stávajících textů na místa, kam věcně patří: doplní, prohloubí, opraví, přestaví jejich strukturu, a chybí-li pro znalost místo úplně, navrhne založit novou doménu. Zdrojem smí být i zvukový či obrazový záznam – ten si nechá přepsat /transcriptem – a obrázek či PDF, které vytěží do textu. Na rozdíl od /transcript, který nahrávku přepisuje, tenhle skill přepis vytěžuje; nepřidává ho jako další samostatný soubor a nekopíruje z něj celé pasáže. Rozpory se stávající znalostí předkládá jeden po druhém k rozhodnutí. Doslovné přetisky, citace a datované doklady nepřepisuje nikdy.
 argument-hint: [source] [target]
 ---
 
@@ -82,11 +82,13 @@ Zadání je **kontrakt výstupu, ne seznam cizích kroků**:
 
 **Přepis zůstane ležet vedle nahrávky** pod jejím jménem; mazat ho není co. Druhé vytěžení téhož záznamu, až doména vyroste, je nad textem zadarmo a nad audiem stojí celý přepis znovu – a sporné tvrzení se dohledává v textu, ne přehráváním. V evidenci zdroje (*Fáze 8*) uveď obojí: přepis, ze kterého se vytěžovalo, i cestu k původní nahrávce.
 
-### Když jsou ve zdroji obrázky
+### Když je zdrojem obrázek nebo PDF
 
-Slajdy, screenshoty, foto flipchartu, schéma v článku. **Přečti je a vytěž z nich poznatky stejně jako z textu** – přeskočit je znamená ztratit to, co je jenom v nich.
+**Obrázek i PDF jsou plnohodnotný zdroj** – ať přijdou samy (nafocený flipchart, screenshot, oskenovaný leták, deck ve formátu PDF), nebo jako příloha textového zdroje (slajdy ke školení, schéma v článku). **Přečti je a vytěž z nich poznatky stejně jako z textu** – přeskočit je znamená ztratit to, co je jenom v nich.
 
-**Do báze se ale nekopírují.** Znalostní báze je text: grepuje se, vytěžuje dalším během a přestavuje se v ní struktura – příloha, na kterou vede cesta, se při první přestavbě rozejde a její obsah nenajde nikdo. Nese-li obrázek vztah, který věta nezastane – schéma, tok, matice –, **překresli ho do Markdownu**: tabulkou, odrážkovou hierarchií nebo diagramem v `mermaid`. Do báze pak vstoupí obsah obrázku, ne odkaz na něj.
+**Dlouhé PDF ber po částech, ne namátkou.** Čtou se nejvýš dvě desítky stran naráz a u delšího dokumentu se rozsah stran musí uvést – projdi ho tedy celý po blocích a v seznamu poznatků měj po ruce, ze které strany který je. Vzít z osmdesátistránkového dokumentu prvních dvacet stran a tvářit se, že je vytěžený, je ta nejhorší varianta: chybějící znalost nemá kdo poznat, protože zdroj tvrdí, že zpracovaný je.
+
+**Do báze se ale nekopírují.** Znalostní báze je text: grepuje se, vytěžuje dalším během a přestavuje se v ní struktura – příloha, na kterou vede cesta, se při první přestavbě rozejde a její obsah nenajde nikdo. Nese-li obrázek nebo stránka vztah, který věta nezastane – schéma, tok, matice –, **překresli ho do Markdownu**: tabulkou, odrážkovou hierarchií nebo diagramem v `mermaid`. Do báze pak vstoupí obsah obrázku, ne odkaz na něj.
 
 Je to totéž rozhodnutí, jaké dělá `/transcript` u videa: obraz se nikam nepřenáší, vzniká z něj text.
 
