@@ -12,7 +12,7 @@ Tenhle soubor drží **obecná pravidla práce**. Než sem něco zapíšeš, pro
 
 1. Říká pravidlo, **co smí stát** v konkrétním souboru v `docs/`? → `STRUCTURE.md`. Sem patří jen rozcestník *Kam co zapsat* – tedy která otázka míří do kterého souboru, ne co v něm pak smí být.
 2. Platí obecně pro skilly – jak vypadají, co v nich musí být, jak se píšou? → `~/.claude/skills/SKILLS.md`
-3. Popisuje pravidlo **rozhraní kroku životního cyklu** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí a kdy se smí přeskočit? → `~/.claude/skills/LIFECYCLE.md`. Do jednotlivého skillu to nepatří, protože každý zná jen svoje sousedy a celé pořadí by v nich nikdo nenašel.
+3. Popisuje pravidlo **rozhraní kroku životního cyklu** – co krok dělá, co po něm následuje, proč zrovna v tom pořadí, co u něj rozhoduje o přeskočení? → `~/.claude/skills/LIFECYCLE.md`. **Obecné pravidlo o přeskakování zůstává tady**, protože platí i mimo krok cyklu; tam patří jen kritérium konkrétního kroku. Do jednotlivého skillu to nepatří, protože každý zná jen svoje sousedy a celé pořadí by v nich nikdo nenašel.
 4. Jmenuje konkrétní skill nebo popisuje jeho vnitřek – fáze, šablony, zadání pro agenty? → do toho skillu.
 5. Týká se psaní kódu, webu, textu, vizuálu nebo měření? → příslušná doménová znalost v `~/Dev/context/`
 6. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, kapitola *Výjimky z obecných pravidel*
@@ -193,9 +193,9 @@ Standardní strukturu projektu definuje `~/.claude/STRUCTURE.md`: které soubory
 | Kdo co udělá v jakém pořadí? | `plan.md` |
 | Odkud to máme? | `research/` |
 
-**Než do některého z nich zapíšeš, načti si `STRUCTURE.md`.** Tabulka výš říká, kam zápis míří, ne co v tom souboru smí stát – a hranice jsou tam tvrdší, než vypadají: `todo.md` proti `backlog.md` se dělí podle *rozhodnutosti*, ne podle termínu, `done.md` se nikdy nemaže a `decisions.md` se připisuje na konec. Paušálně se `STRUCTURE.md` neimportuje, protože je to katalog k nahlédnutí, ne pravidlo pro každou odpověď.
+**Než do některého z nich zapíšeš, načti si `STRUCTURE.md`.** Tabulka výš říká, kam zápis míří, ne co v tom souboru smí stát – a hranice jsou tam tvrdší, než vypadají. Paušálně se `STRUCTURE.md` neimportuje, protože je to katalog k nahlédnutí, ne pravidlo pro každou odpověď.
 
-**Kde ty soubory leží, je volba ze dvou režimů** (`docs/`, nebo kořen projektu) a deklaruje ji blok metadat v projektovém `CLAUDE.md`. **Cesty jako `docs/todo.md` se tu píšou v podobě pro režim `docs/` a znamenají soubor na místě podle režimu daného projektu.**
+**Cesty jako `docs/todo.md` se tu píšou v podobě pro režim `docs/` a znamenají soubor na místě podle režimu daného projektu.** Že jsou režimy dva a čím se projekt ke svému hlásí, drží `STRUCTURE.md`, *Dva režimy umístění*.
 
 ### Pravda v souborech, ne v konverzaci
 
@@ -474,4 +474,4 @@ Nasazení    /attack → /release
 
 **Krok se přeskakuje jen tam, kde pro něj není důvod**, ne když se nechce: projekt s dorovnaným nastavením nepotřebuje `/project`, drobná změna nepotřebuje specifikaci ani plán, projekt bez kódu nepotřebuje `/breakdown`, průběžnou kontrolu, `/attack` ani `/release`. **Přeskočení řekni nahlas i s důvodem.**
 
-**Žádný krok neopakuje, co udělal krok před ním.** Povolená opakování jsou čtyři a jmenuje je `LIFECYCLE.md`; rozšiřovat ten výčet mlčky se nesmí.
+**Žádný krok neopakuje, co udělal krok před ním.** Povolená opakování jmenuje `LIFECYCLE.md` a rozšiřovat ten výčet mlčky se nesmí.

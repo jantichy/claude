@@ -1,6 +1,6 @@
 # Životní cyklus projektu
 
-Od nápadu k nasazené feature vede jeden životní cyklus. Tenhle soubor drží **rozhraní jeho kroků**: co který krok dělá, co po něm platí, proč stojí zrovna v tom pořadí a kdy se smí přeskočit. Vnitřek kroku – jeho fáze, šablony, zadání pro agenty – sem nepatří ani zmínkou; ten drží příslušný skill.
+Od nápadu k nasazené feature vede jeden životní cyklus. Tenhle soubor drží **rozhraní jeho kroků**: co který krok dělá, co po něm platí, proč stojí zrovna v tom pořadí a co u něj rozhoduje o přeskočení. Obecné pravidlo *kdy se krok přeskakuje* drží `~/.claude/RULES.md` – platí i mimo cyklus, takže musí stát v paušálním kontextu. Vnitřek kroku – jeho fáze, šablony, zadání pro agenty – sem nepatří ani zmínkou; ten drží příslušný skill.
 
 **Neimportuje se paušálně.** Načti si ho, když stojíš v některém kroku cyklu nebo když rozhoduješ, který krok přijde na řadu. Rámeček s pořadím a pravidlo o přeskakování jsou v `~/.claude/RULES.md`, *Životní cyklus projektu* – tolik stačí každé session, zbytek potřebuje jen ten, kdo cyklus zrovna vede.
 
@@ -11,6 +11,8 @@ Od nápadu k nasazené feature vede jeden životní cyklus. Tenhle soubor drží
 ## Kroky a jejich pořadí
 
 Rámeček s celým pořadím drží `~/.claude/RULES.md`, *Životní cyklus projektu*, a je zdrojem pravdy – tady stojí, **co ty kroky dělají**. Rozejde-li se jedno s druhým, platí `RULES.md`.
+
+**Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
 
 Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → průběžná kontrola → commit. (Je to rozhraní kroku, ne jeho vnitřek: určuje, co po `/implement` platí o stavu repozitáře, a tím i s čím počítá `/review`.)
 
@@ -59,14 +61,8 @@ V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code
 | scan tajemství | `/review` → `/release` | mezi oběma kroky přibyly commity z `/consistency`, `/cleanup` i `/attack` |
 | produkční build | `/review` → `/release` | uzavírání i útok mezitím commitují, a `/release` ho navíc pouští **na čistém stromu** – „prošlo to při uzavírání“ a „projde to jako to, co posíláme ven“ jsou dvě tvrzení |
 
-**Proč v tomhle pořadí:** každý krok vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo. A `/cleanup` je poslední i proto, že jako jediný odolá kompaktaci.
-
 ## Jeden člověk, jedna interaktivní session
 
-Je to vědomé omezení, ne opomenutí: skoro celý stojí na `AskUserQuestion` a na souhlasu průběžné kontroly vydaném lokálně pro jednoho uživatele. V CI ani u druhého člověka neplatí ani jedno – hook nespustí nic, protože souhlas je vázaný na `$HOME`, a interaktivní průchod nálezy nemá komu položit otázku.
+Celý životní cyklus je nástroj pro **jednu interaktivní session jednoho člověka**. Je to vědomé omezení, ne opomenutí: skoro celý stojí na `AskUserQuestion` a na souhlasu průběžné kontroly vydaném lokálně pro jednoho uživatele. V CI ani u druhého člověka neplatí ani jedno – hook nespustí nic, protože souhlas je vázaný na `$HOME`, a interaktivní průchod nálezy nemá komu položit otázku.
 
 Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen deterministická vrstva** – typecheck, lint, test, audit, scan tajemství, statická analýza. Ty běží kdekoliv a nepotřebují nikoho, kdo by odpovídal. Panel specialistů, průchod nálezy, útok ani nasazení se v neinteraktivním prostředí nepouštějí; kdo je chce, pustí je u sebe.
-
-## Kdy se krok přeskakuje
-
-Pravidlo drží `~/.claude/RULES.md`, *Životní cyklus projektu* – platí v každé session, i mimo krok cyklu, takže musí stát v paušálním kontextu. Tady se neopisuje.
