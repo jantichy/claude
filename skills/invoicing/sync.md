@@ -86,8 +86,12 @@ Režim si **nedrží žádný stav** – žádnou mapovací tabulku, žádné ID
 2. **Načti vzdálený systém** za totéž okno **rozšířené o den na obou stranách**, **jen z cílových míst** vyjmenovaných v souboru klienta, a **z výsledku ponech jen záznamy pod Honzovým účtem**. Ověř to z dat, ne z filtru dotazu – filtr, který se tiše ignoruje, vrací cizí práci a ta by se pak mazala.
 
    **Den navíc na každé straně je proti časovým pásmům.** Vzdálený systém běžně filtruje podle UTC a ukládá lokální čas, takže záznam z půlnoci padne do předchozího dne a přesně ohraničený dotaz ho minie. **Nenajde-li zrcadlení existující záznam, založí ho podruhé** – a duplikát v cizím systému je horší než chybějící kopie, protože se fakturuje.
-3. **Spočítej klíč** u každého záznamu na obou stranách: **datum a čas začátku, délka v minutách**. U záznamu s prefixem se bere datum z prefixu, ne datum, na kterém leží.
-4. **Srovnej jako množiny** – klíč se může opakovat, takže se porovnávají počty, ne existence.
+3. **Vrátilo-li čtení vzdáleného systému nulu, zopakuj dotaz.** Shodnou-li se obě odpovědi na nule, je prázdno skutečné a pokračuje se; **liší-li se, zastav se a řekni to** – jedna z odpovědí je nespolehlivá a neví se která.
+
+   **Proč zrovna tady:** zrcadlení čte prázdnou odpověď jako „v cizím systému nic není“ a **založí všechno znovu**. U klienta, který se fakturuje ze svého systému, se takový duplikát rovnou vyfakturuje. Jedno volání navíc za běh je proti tomu levné. Doloženo 10. 9. 2026: při prvním ostrém běhu vrátil dotaz na rozsah, ve kterém záznam prokazatelně ležel, prázdné tělo – a při opakování s odstupem prošel, aniž by šlo o vyčerpaný limit.
+
+4. **Spočítej klíč** u každého záznamu na obou stranách: **datum a čas začátku, délka v minutách**. U záznamu s prefixem se bere datum z prefixu, ne datum, na kterém leží.
+5. **Srovnej jako množiny** – klíč se může opakovat, takže se porovnávají počty, ne existence.
 
 | Stav | Akce |
 |---|---|
