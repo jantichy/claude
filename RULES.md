@@ -98,7 +98,7 @@ Stojí-li na faktu rozhodnutí, návrh nebo argument, **ověř ho, než ho zapí
 
 **Snímek souboru v kontextu není soubor.** Obsah, který se do konverzace dostal na jejím začátku – rozbalený `CLAUDE.md`, přiložený soubor, výpis z dřívější odpovědi –, platil ve chvíli, kdy tam byl vložen. Během session se soubor mohl změnit, a to i cizí rukou. **Údaj, ze kterého se počítá – hash, cesta, datum, číslo verze –, proto čti z disku znovu**, ne z toho, co máš před sebou.
 
-**Proč je to zrádnější než obyčejná nepodloženost:** tady si model myslí, že tvrzení ověřené *má* – vždyť obsah toho souboru vidí. Chybí mu ale informace, že vidí jeho starou verzi, a ta nikde nesvítí. Stalo se to 6. 9. 2026: umlčený nález se ověřoval proti hashi a cestě ze zastaralého snímku, ohlásila se expirace, která nenastala, a padlo na tom rozhodnutí.
+**Proč je to zrádnější než obyčejná nepodloženost:** tady si model myslí, že tvrzení ověřené *má* – vždyť obsah toho souboru vidí. Chybí mu informace, že vidí jeho starou verzi, a ta nikde nesvítí. Doloženo 6. 9. 2026.
 
 ### Ptej se postupně, ne všechno najednou
 
@@ -152,27 +152,25 @@ Jména modelů zastarají, specialisté ne – rozhoduje sloupec *Práce*. Aktu�
 
 **Pravidlo nula: nejlevnější práce je ta, kterou neudělá model.** Co chytne typecheck, linter nebo test, se nemá hledat čtením kódu. Každá kontrola posunutá do vrstvy, která nestojí tokeny, je úspora, kterou žádná volba modelu nedožene.
 
-**Levný model se vyplatí jen tam, kde se jeho chyba pozná levně.** Než někam pošleš nejlevnější model, polož si tři otázky:
+**Levný model se vyplatí jen tam, kde se jeho chyba pozná levně.** Než někam pošleš nejlevnější model, polož si tři otázky – vyjde-li kterákoliv špatně, **nešetři, zaplatíš dvakrát**:
 
-- **Poznám špatný výstup, aniž bych šel ke zdroji?** Chybu ve výtahu z dlouhé konverzace nepoznáš jinak než tím, že si tu konverzaci přečteš sám – tedy uděláš práci, kvůli které jsi agenta poslal. Chybu ve výpisu sloupců z CSV poznáš na první pohled.
-- **Násobí se jeho výstup do další práce?** Podklad, ze kterého pak vychází pět dalších agentů, nese pětinásobek své chyby.
+- **Poznám špatný výstup, aniž bych šel ke zdroji?** Chybu ve výtahu z dlouhé konverzace nepoznáš jinak než tím, že si tu konverzaci přečteš sám – tedy uděláš práci, kvůli které jsi agenta poslal.
+- **Násobí se jeho výstup do další práce?** Podklad, ze kterého vychází pět dalších agentů, nese pětinásobek své chyby.
 - **Co se stane, když to udělá špatně a nikdo si nevšimne?** Ztracená dohoda, kterou nikdo nehledá, je dražší než celý ušetřený běh.
 
-Vyjde-li kterákoliv odpověď špatně, **nešetři – zaplatíš dvakrát**: jednou za špatný výstup a podruhé za práci, kterou musíš udělat znovu. Mechanická práce ve smyslu tohohle pravidla není „nudná práce“, ale práce, u které je **zjevné, že je hotová špatně**.
+Mechanická práce ve smyslu tohohle pravidla není „nudná práce“, ale práce, u které je **zjevné, že je hotová špatně**.
 
-**Effort lad dřív než model.** Je to plynulá páka na tomtéž modelu, kdežto výměna modelu je skok. Silný model na nízkém effortu zůstává silný – u agentů s úzkým zadáním je `low` doporučená volba, ne nouzová. Eskaluj po krocích: `high` → `xhigh` → `max` → teprve pak silnější model.
+**Effort lad dřív než model.** Je to plynulá páka na tomtéž modelu, kdežto výměna modelu je skok. Silný model na nízkém effortu zůstává silný – u agentů s úzkým zadáním je `low` doporučená volba, ne nouzová. Eskaluj po krocích: `high` → `xhigh` → `max` → teprve pak silnější model. A **nejsilnější neznamená nejdražší dostupný**: nejvyšší tier (dnes Fable) je dvojnásobně drahý a pomalejší, takže se po něm sahá teprve tehdy, když silný model na vyšším effortu prokazatelně nestačil.
 
-**Na návrhu a na ověřování se nešetří.** Slabý plánovač rozseje chyby do všech úkolů pod sebou a slabý ověřovatel nález nepotvrdí ani nevyvrátí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko. Obojí je přesně ten případ, kdy se vyplatí `xhigh`.
+**Na návrhu a na ověřování se nešetří.** Slabý plánovač rozseje chyby do všech úkolů pod sebou a slabý ověřovatel nález nepotvrdí ani nevyvrátí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko.
 
 **Delegace navíc se vyplatí i za vyšší cenu, když platí aspoň jedno ze tří:**
 
 - **Vynucený tvar výstupu.** Agent vrací strukturu, se kterou pak něco dál počítá – ne souvislý text, který musí někdo číst.
-- **Izolace kontextu.** Agent nemá jak sáhnout na to, co posuzuje. Read-only kontrolor se nemůže stát opravářem uprostřed kontroly, což je celá třída chyb, která jinak vzniká. **Platí to i o zkoušení vlastní kontroly:** kdo ji napsal, zkusí jí právě ta selhání, se kterými při psaní počítal – tedy tu představu o selhání, kterou už měl. Ověřit, jestli kontrola doopravdy chytá, umí jen někdo, kdo ji nepsal. Doloženo 6. 9. 2026: čerstvý test prošel oběma mutacemi autora a spadl na třech, které zkusil nezávislý agent.
+- **Izolace kontextu.** Agent nemá jak sáhnout na to, co posuzuje: read-only kontrolor se nemůže stát opravářem uprostřed kontroly. **Platí to i o zkoušení vlastní kontroly** – kdo ji napsal, zkusí jí právě ta selhání, se kterými při psaní počítal. Doloženo 6. 9. 2026.
 - **Práce, která se neamortizuje.** Jeden vstup, jeden výstup, konec – nemá z čeho těžit rozehraný kontext hlavní session. Opak je iterativní psaní kódu, kde je delegace čistá ztráta.
 
 Neplatí-li ani jedno, **udělej to v hlavní session**: delegace je pak dražší a jediné, co přinese, je ztráta kontextu.
-
-**Nejsilnější neznamená nejdražší dostupný.** Nejvyšší tier (dnes Fable) je dvojnásobně drahý a pomalejší; sahá se po něm teprve tehdy, když silný model na vyšším effortu prokazatelně nestačil, ne preventivně.
 
 ------
 
@@ -217,7 +215,7 @@ Nezapisuj jen výsledek, ale **celou cestu k němu**. Obsah a umístění definu
 
 **Zavržená varianta jde tam, kde žije její vítězný protějšek:** u rozhodnutí do `decisions.md`, u pravidla k tomu pravidlu (viz *K pravidlům ukládej i „proč“*). Nikdy do `todo.md` – **todo drží, co zbývá, ne proč se něco rozhodlo.** Zamítnuto natrvalo → `decisions.md`; odloženo s otevřeným koncem → `todo.md`; nezávazný nápad, o kterém se nerozhodovalo → `backlog.md`.
 
-**Výjimka – zamítnutý nález prověřovacího kroku.** Nález, který `/review`, `/attack` nebo `/consistency` označí jako „won't fix“, jde do **projektového `CLAUDE.md`** (kapitoly `## Review`, respektive `## Consistency`), ne do `decisions.md`. Není to nekonzistence, ale funkční důvod: `CLAUDE.md` se rozbaluje do každé session, takže filtr platí automaticky a příští běh nález znovu nenahlásí – **dokud se nezmění kód, kterého se nález týká**; pak umlčení padá a nález se předloží znovu i s původním odůvodněním. Bez té expirace by seznam jen narůstal: důvod zamítnutí je vázaný na stav kódu v ten den, ale filtr se aplikuje před hledáním, takže by se jeho zneplatnění nemělo jak dozvědět nikdo. Mechaniku drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*. `decisions.md` by se musel přečíst, což udělá člověk, ale ne skill uprostřed panelu. Rozhodnutí *o projektu* dál patří do `decisions.md`; tohle je seznam umlčených nálezů, ne rozhodnutí.
+**Výjimka – zamítnutý nález prověřovacího kroku.** Nález, který `/review`, `/attack` nebo `/consistency` označí jako „won't fix“, jde do **projektového `CLAUDE.md`** (kapitoly `## Review`, respektive `## Consistency`), ne do `decisions.md`. Důvod je funkční: `CLAUDE.md` se rozbaluje do každé session, takže filtr platí automaticky – kdežto `decisions.md` by musel někdo přečíst, což udělá člověk, ale ne skill uprostřed panelu. Umlčení **vyprší, jakmile se změní kód, kterého se nález týká**; bez té expirace by seznam jen narůstal. Mechaniku drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*. Rozhodnutí *o projektu* dál patří do `decisions.md`; tohle je seznam umlčených nálezů, ne rozhodnutí.
 
 Dokumentace návrhu říká **jak to je**, záznam rozhodnutí **proč to tak je**. Nesměšuj je.
 
@@ -364,7 +362,7 @@ Píšeš-li pravidlo do dokumentu, jehož sekce mají **vymezený rozsah** („P
 
 Vymezené rozsahy jsou správně – bez nich se pravidla rozlévají tam, kam nepatří. Cenou za ně je, že pravidlo přidané do jedné sekce druhou nepokryje, a autor si toho nevšimne, protože **mu ta platnost připadá samozřejmá**.
 
-Doloženo dvakrát v jednom dni na `/transcript`: pravidlo o opravě pravopisu se zapsalo do *Pravidel doslovného přepisu*, jejichž rozsah je přepis. Shrnutí se řídí *Pravidly shrnutí*, kde o jazyce nebylo nic – a gramatická chyba opravená v přepisu prošla do souhrnného dokumentu, protože se píše z téhož podkladu. Totéž se opakovalo u majitelů úkolů.
+Doloženo dvakrát v jednom dni na `/transcript` (6. 9. 2026).
 
 Kontrolní otázka po každém novém pravidle: **který další výstup vzniká ve stejném kroku a spadá pod jiný rozsah?**
 
@@ -382,7 +380,7 @@ Při řezání platí dvě podmínky: **nezabít si cestu zpátky** (nechat v n�
 
 Vše mimo aktuální rozsah, u čeho je rozhodnuté, že se to udělá – úkol do další fáze, otázka, kterou je potřeba zodpovědět, **i bod odložený jen o pár minut** – zapiš **okamžitě**, ne až se k tomu vrátíš. Obsah a umístění definuje `STRUCTURE.md` (`docs/todo.md`).
 
-**Rozlišuj přitom odložené od nezávazného.** Do `todo.md` jde jen to, u čeho je rozhodnuto, že se to udělá – včetně věcí odsunutých až po spuštění. Nápad, který nikdo neschválil ani nezamítl („někdy by šlo…“, „za úvahu stojí…“), patří do `docs/backlog.md`; definici hranice drží `~/.claude/STRUCTURE.md`, *`backlog.md`*. **Nepromíchávej to:** fronta, ve které leží i nezávazné nápady, přestane být frontou a nikdo ji nedočte.
+**Rozlišuj přitom odložené od nezávazného.** Dělí se to podle **rozhodnutosti, ne podle termínu**: „až po spuštění“ je nalajnovaný plán a patří do `todo.md`, kdežto nápad, který nikdo neschválil ani nezamítl, patří do `docs/backlog.md` (hranici drží `STRUCTURE.md`, *`backlog.md`*). **Nepromíchávej to:** fronta, ve které leží i nezávazné nápady, přestane být frontou a nikdo ji nedočte.
 
 Aby se seznam nezaplevelil, drž body odložené **v rámci session** ve vyhrazené sekci (definuje ji `STRUCTURE.md`) a po vyřešení je **smaž** – nejsou to odvedené úkoly, do `done.md` nepatří (viz *Parkované body zapiš a sám je otevři*).
 
@@ -432,11 +430,7 @@ Instalace je zásah do uživatelova počítače, ne do repozitáře: **než něc
 
 **Do commitu proto vyjmenuj cesty**, kterých se tvoje práce dotkla. Před commitem se podívej na `git status` a soubor, který jsi nezměnil ty, nech být.
 
-Doloženo: 3. 9. 2026 session pracující na `/project` dvakrát smetla `git add -A` rozpracované změny druhé session v jiném skillu. Obsah se neztratil, ale zpráva u jednoho commitu popisuje diff, který v něm není, a `git blame` odkazuje na zdůvodnění týkající se něčeho jiného. **Pushnutá historie se pak už nedá opravit** bez přepsání větve, na které jiná session stojí.
-
-**Podruhé 7. 9. 2026**, a to na pravidlech samotných: dvě session upravovaly `~/.claude` naráz, cizí `-A` sebral rozepsané odrážky v `RULES.md` a `SKILLS.md` a odvezl je v commitu, jehož zpráva mluví o přejmenování popisku v `/oponent`. Není to tedy vzácná souhra – **stačí, aby si člověk otevřel druhé okno nad týmž repozitářem**, což u konfigurace dělá běžně.
-
-Nejde o hygienu, ale o dohledatelnost: commit message je jediné místo, kde je zapsané *proč*. Když sedí u cizí změny, je to zdůvodnění ztracené.
+Obsah se přitom neztratí – rozejde se **zdůvodnění**: commit popisuje diff, který v něm není, a `git blame` ukáže na cizí důvod. **Pushnutá historie se pak už nedá opravit** bez přepsání větve, na které jiná session stojí. Doloženo 3. a 7. 9. 2026, podruhé na pravidlech samotných; **stačí, aby si člověk otevřel druhé okno nad týmž repozitářem**.
 
 ### Mazání ověř diffem, ne grepem
 
@@ -444,7 +438,7 @@ Mažeš-li **podle značek** – od nadpisu k nadpisu, od markeru k markeru, od 
 
 Grep odpovídá na otázku *„zůstal tam zbytek?“*. Nebezpečnější je ale druhá otázka, *„nezmizelo něco navíc?“*, a na tu grep neodpoví z principu: hledá řetězec, který jsi právě odstranil, takže čím důkladněji jsi mazal, tím čistší výsledek dostaneš – i když jsi vzal půl souboru.
 
-**Konkrétně:** řez „od téhle sekce k nejbližšímu nadpisu“ selže, kdykoliv je nejbližší nadpis o úroveň výš nebo o několik sekcí dál. Ověření grepem to nechytí, protože smazané kapitoly to slovo neobsahovaly. Doloženo: úklid jedné sekce v doménové znalosti smazal šest sousedních kapitol a závěrečná kontrola prohlásila výsledek za čistý.
+**Konkrétně:** řez „od téhle sekce k nejbližšímu nadpisu“ selže, kdykoliv je nejbližší nadpis o úroveň výš nebo o několik sekcí dál. Ověření grepem to nechytí, protože smazané kapitoly to slovo neobsahovaly. Doloženo: úklid jedné sekce smazal šest sousedních kapitol a kontrola prohlásila výsledek za čistý.
 
 **Platí i pro nástroje**, které mažou za tebe – hromadná náhrada, codemod, `sed -i`. Diff je jediné místo, kde je vidět rozsah zásahu, ne jeho záměr.
 
