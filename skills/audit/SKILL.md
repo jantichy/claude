@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Skill se použije, když uživatel zadá "/audit" (volitelně s režimem full, brief, audit, report nebo update), nebo chce zauditovat cizí web v nějaké oblasti – analytiku, měření, SEO, použitelnost, přístupnost, obsah –, prověřit ho proti oborovým standardům, nebo zjistit, co je na něm špatně a co s tím. Řídí celý audit proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně v ~/Dev/context; sám žádnou doménovou znalost nenese a nálezy nechává ověřit reprodukcí, než je ukáže. Na rozdíl od /review, který čte vlastní hotovou práci v repozitáři, tenhle skill ohledává cizí běžící web zvenčí. Nic v něm nemění, neopravuje, co našel, a není penetrační test.
+description: Skill se použije, když uživatel zadá "/audit" (volitelně s režimem full, brief, audit, report nebo update), nebo chce zauditovat cizí web v nějaké oblasti – analytiku, SEO, použitelnost, přístupnost –, prověřit ho proti oborovým standardům, nebo zjistit, co je na něm špatně a co s tím. Řídí celý audit proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně v ~/Dev/context; sám žádnou doménovou znalost nenese a nálezy nechává ověřit reprodukcí, než je ukáže. Na rozdíl od /review, který čte vlastní hotovou práci v repozitáři, tenhle skill ohledává cizí běžící web zvenčí. Nic v něm nemění, neopravuje, co našel, a není penetrační test.
 argument-hint: [full|brief|audit|report|update]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill, WebFetch, WebSearch, mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages, mcp__plugin_chrome-devtools-mcp_chrome-devtools__select_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot, mcp__plugin_chrome-devtools-mcp_chrome-devtools__click, mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill, mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill_form, mcp__plugin_chrome-devtools-mcp_chrome-devtools__press_key, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_console_messages, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_network_requests, mcp__plugin_chrome-devtools-mcp_chrome-devtools__get_network_request, mcp__plugin_chrome-devtools-mcp_chrome-devtools__evaluate_script, mcp__plugin_chrome-devtools-mcp_chrome-devtools__emulate, mcp__plugin_chrome-devtools-mcp_chrome-devtools__resize_page]
 ---
@@ -17,20 +17,25 @@ Zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a 
 |---|---|
 | **`/audit full`** (výchozí) | celý audit od převzetí podkladů po výstupy |
 | **`/audit brief`** | převezme podklady a udělá inventuru vstupů, dál nejde |
-| **`/audit audit`** | ohledá web, pustí panel, ověří nálezy |
+| **`/audit audit`** | ohledá web, pustí panel, ověří nálezy a sestaví registr |
 | **`/audit report`** | sepíše vybrané výstupy z hotového registru nálezů |
 | **`/audit update`** | přeběhne dřív auditovaný web znovu a řekne, co se změnilo |
 
-Běh `full` je **kdykoliv přerušitelný**: stav se odkládá do `.claude/run/audit.json` a při dalším vyvolání skill nabídne navázání. Dílčí režimy jsou tytéž fáze puštěné samostatně, když je potřeba jen jedna.
+**Jak se pozná režim od popisu zakázky:** jednoslovný argument ze seznamu výš je **režim**; cokoliv jiného – včetně jednoho slova, které v seznamu není (`/audit analytiky`) – je popis zakázky a běží `full`. `/audit report` je tedy sepsání výstupů, kdežto `/audit reportů na www.example.com` je audit reportů. Je-li to i tak dvojznačné, **zeptej se** – rozjet celý audit místo přepsání výstupu stojí desítky minut.
+
+**Jméno `full` znamená jinde rozsah, tady úplnost** (`/review full` je celý projekt místo větve). Je to vědomé: v obou případech čte člověk „nezaříznutý běh“ a jiné jméno by tu podobnost jen zakrylo.
+
+Běh `full` je **kdykoliv přerušitelný**: stav se odkládá do `.claude/run/audit.json` a při dalším vyvolání skill nabídne navázání. Dílčí režimy jsou tytéž fáze puštěné samostatně, když je potřeba jen jedna. **Fáze 0 a 1 běží vždycky**, ať jde o kterýkoliv režim – bez přípravy a bez auditní dráhy domény nemá žádný z nich podle čeho jednat.
 
 ## Co skill nedělá
 
 - **Neprověřuje vlastní hotovou práci.** Na to je `/review`: čte repozitář, měří proti specifikaci a proti týmž doménovým standardům. Tenhle skill nemá repozitář ani specifikaci – má cizí web zvenčí a katalog toho, co se na cizích webech nachází.
 - **Nerozbíjí a nezkouší zranitelnosti.** To je `/attack`, a ten běží výhradně proti lokální instanci. Audit se cizího webu dotýká jako běžný návštěvník.
 - **Neopravuje, co našel.** Nesahá na klientovu konfiguraci, kód ani účty. Oprava je jiná zakázka a jiný běh.
+- **Nedělá revizi, jen audit.** Audit projde stav, pojmenuje chyby a navrhne směr oprav; revize je zakázka, do které audit vstupuje jako podklad a jejíž podstatou jsou navazující opravy – často až přestavba celé struktury a scénářů. Výstupem auditu je dokument, výstupem revize naimplementovaný web – a ten tenhle skill nestaví.
 - **Nedělá obchodní ani marketingový rozbor.** Konkurenci a rizika produktu řeší `/discovery`.
 - **Nevytěžuje nalezené do knowledge base sám.** Nabídne to a předá `/learn`, protože rozpouštění nové znalosti do existujících textů je jeho práce.
-- **Nesestavuje report z dat.** Má-li být výstupem interaktivní HTML nad čísly, je na to `/report`.
+- **Nevyrábí interaktivní HTML sám.** Výstupy sestavuje jako dokumenty; je-li potřeba jeden HTML soubor s grafy k odeslání mailem, deleguje to na `/report` – viz *Fáze 7*.
 
 ## Jak je to postavené uvnitř
 
@@ -41,6 +46,7 @@ Běh `full` je **kdykoliv přerušitelný**: stav se odkládá do `.claude/run/a
 | Veřejné zdroje – robots, sitemap, dokumentace platforem | `WebFetch`, `WebSearch` | Vestavěné |
 | Přepis nahrané schůzky s klientem | `/transcript` | Má hotový lokální přepis i strukturované shrnutí |
 | Panel specialistů a ověřovatelé | vlastní | Zadání se odvozuje z katalogu nálezů domény |
+| Interaktivní HTML report nad nálezy | `/report` | Umí z dat jeden samostatný HTML soubor s grafy |
 | Vytěžení nalezeného zpátky do domény | `/learn` | Rozpouštění nové znalosti do existujících textů je jeho práce |
 
 **Volání cizích nástrojů je implementační detail, ne rozhraní** – vyměnit se smí kdykoliv. Závazné je: hranice ve třech pásmech níž, ověření nálezu reprodukcí, tvar výstupu čtený z domény a to, že se skill bez auditní dráhy domény nerozjede naplno.
@@ -52,16 +58,22 @@ Auditovaný web je **cizí produkční systém s živými zákazníky**. Rozhodu
 | Pásmo | Co tam patří | Jak se s tím zachází |
 |---|---|---|
 | **Volné** | co žije jen v relaci prohlížeče a zmizí s ní – procházení, interní vyhledávání, filtry, varianty, konfigurátor, vložení do košíku, oblíbené, přepnutí měny a jazyka | dělá se bez ptaní a je to **chtěné**; bez toho se měření neodchytí |
-| **Jen po svolení, pokaždé zvlášť** | co splní aspoň jedno ze tří: vznikne trvalý záznam, který někdo v klientově systému uvidí a musí ho ručně smazat · odejde zpráva člověku · sáhne to na cizí peníze, sklad nebo kapacitu. Tedy objednávka, registrace, poptávka, rezervace, recenze, newsletter. Sem patří i zátěžové procházení a obejití přihlášení, rate limitu, WAF či captchy | **nikdy bez svolení v tomhle běhu**, viz níž |
-| **Nikdy uvnitř auditu** | zásah do klientovy konfigurace, kódu nebo účtů · zkoušení zranitelností · cokoliv, co může web shodit nebo poškodit data | **sám to nenavrhuj a nedělej**, ani když se svolení nabízí; viz níž |
+| **Jen po svolení, pokaždé zvlášť** | co splní aspoň jedno ze tří: vznikne trvalý záznam, který někdo v klientově systému uvidí a musí ho ručně smazat · odejde zpráva člověku · sáhne to na cizí peníze, sklad nebo kapacitu. Tedy objednávka, registrace, poptávka, rezervace, recenze, newsletter. Sem patří i zátěžové procházení a obejití přihlášení, rate limitu, WAF či captchy | **nikdy bez svolení v tomhle běhu** – co to znamená, viz *Zeptat se na svolení* níž |
+| **Nikdy uvnitř auditu** | zásah do klientovy konfigurace, kódu nebo účtů · zkoušení zranitelností · cokoliv, co může web shodit nebo poškodit data | **sám to nenavrhuj a nedělej**, ani když se svolení nabízí – viz *Třetí pásmo* níž |
 
 **Průchod webem sám o sobě zanechá stopu a to se přiznává dopředu.** Každý průchod odešle do klientových měřicích a reklamních systémů skutečné zásahy a každý klik na lištu souhlasu přibude do její statistiky – tedy následek, který zavření prohlížeče přežije. **Zakázat to nejde**, protože bez toho se měření neodchytí, takže to zůstává ve volném pásmu. Neznamená to ale, že se to udělá potichu: **před prvním průchodem řekni, co tím v klientových datech vznikne, a domluv, jak se testovací provoz pozná** – vlastní kampaňové značky, vyloučení IP, testovací prostředí. Bez toho se audit projeví jako nevysvětlitelný šum v reportech, který někdo za měsíc bude hledat.
 
-**Třetí pásmo drží pořadí prací, ne zákaz nad uživatelem.** Pokyn uživatele stojí nad skillem (`~/.claude/RULES.md`, *Přednost pravidel*), takže tuhle hranici nedrží věta, ale důvod: **auditor, který si vlastní nález rovnou opraví, ho už nemá jak vyvrátit** – a opravou v produkci navíc změní data, proti kterým měří zbytek auditu. Trvá-li uživatel na opravě uprostřed běhu, řekni mu to, a když na tom stojí, je to jeho rozhodnutí: proveď ji, ale **u dotčených nálezů zapiš do registru, že se ověřovaly až po zásahu**. Nabízej místo toho samostatný běh po skončení auditu, po jednom nálezu a s náhledem změny.
+### Třetí pásmo
+
+Drží pořadí prací, ne zákaz nad uživatelem. Pokyn uživatele stojí nad skillem (`~/.claude/RULES.md`, *Přednost pravidel*), takže tuhle hranici nedrží věta, ale důvod: **auditor, který si vlastní nález rovnou opraví, ho už nemá jak vyvrátit** – a opravou v produkci navíc změní data, proti kterým měří zbytek auditu. Trvá-li uživatel na opravě uprostřed běhu, řekni mu to, a když na tom stojí, je to jeho rozhodnutí: proveď ji, ale **u dotčených nálezů zapiš do registru, že se ověřovaly až po zásahu**. Nabízej místo toho samostatný běh po skončení auditu, po jednom nálezu a s náhledem změny.
 
 **Přístupy do účtů se používají výhradně ke čtení.** Přihlásit se do GA4 nebo do GTM a dívat se je v pořádku; uložit tam cokoliv je třetí pásmo.
 
-**Zeptat se na svolení znamená:** řekni **co** se stane, **proč** to potřebuješ a **jak** to provedeš; je-li víc cest, rozliš jejich plusy a minusy a nabídni k výběru. U formuláře vyjmenuj **konkrétní hodnoty, které se odešlou** – zboží, dopravu, platbu, kontaktní údaje – ještě před odesláním, a domluv, jak se záznam potom zruší.
+### Zeptat se na svolení
+
+Znamená to: řekni **co** se stane, **proč** to potřebuješ a **jak** to provedeš; je-li víc cest, rozliš jejich plusy a minusy a nabídni k výběru. U formuláře vyjmenuj **konkrétní hodnoty, které se odešlou** – zboží, dopravu, platbu, kontaktní údaje – ještě před odesláním, a domluv, jak se záznam potom zruší.
+
+**Souhlas uživatele nenahrazuje souhlas klienta.** Uživatel rozhoduje o tom, co smíš udělat ty; jestli se v cizím systému smí založit objednávka, rozhoduje ten, komu ten systém patří. Předepisuje-li doména vlastní postup pro testovací objednávky – domluvené údaje, storno, vyloučení z dat, evidenci odeslaných –, řiď se jím; skill ho nenahrazuje.
 
 **Specialista svolení neuděluje ani si o ně neříká.** Subagent nemá komu položit otázku, takže akci z druhého pásma **neprovede** a vrátí ji jako požadavek; o svolení žádá hlavní session.
 
@@ -88,6 +100,9 @@ Doména je zdroj pravdy o tom, co se hledá. Najdi ji přes rozcestník `~/Dev/c
 | **katalog nálezů** – co se typicky najde, jak to poznat, co to způsobuje | *Fáze 4*, skladba panelu |
 | **norma výstupu** – jaké dokumenty jdou ven, v jakém tónu a terminologii | *Fáze 7* |
 | **předepsaný panel**, je-li | *Fáze 4* – má přednost před vlastní skladbou |
+| **layout pracovních souborů**, má-li ho doména předepsaný | *Fáze 2* – má přednost před vlastním |
+
+**Nehledej ta jména, hledej ty věci.** Doména si své soubory nepojmenovává podle téhle tabulky a nemusí je mít označené vůbec – postup auditu se může jmenovat „revize existujícího měření“ a norma výstupu „výstupní dokumentace a předání“. Rozhoduje obsah, ne nadpis. **Předepsaný panel dnes nemá žádná doména**; je to místo, které se otevírá pro případ, že si ho někdo zavede, ne něco, co se má hledat marně.
 
 **Podle toho, co doména má, se rozhoduje o režimu běhu, a řekne se to nahlas:**
 
@@ -104,7 +119,9 @@ Tady končí režim **`brief`**.
 
 **Co si vyžádat, říká postup domény** – nemá-li seznam, ptej se aspoň na přístupy do dotčených systémů, exporty konfigurace, průvodní mail a cizí analýzy, seznam domén a subdomén v záběru, kdo co spravuje a **co už klient sám opravil**.
 
-**Pracovní adresář.** Jsi-li v projektu se standardní strukturou (`~/.claude/STRUCTURE.md`), podklady patří do `research/` a výstupy tam, kam je řadí norma výstupu domény. Nejsi-li, založ `podklady/`, `nalezy.md` a `vystupy/` a **nabídni pozdější `/project`** – nezakládej ho potichu.
+**Pracovní adresář.** **Předepisuje-li doména layout pracovních souborů, řiď se jím** – je zdrojem pravdy i tady, ne jen u toho, co se hledá. Bývá to layout **celé zakázky**, ze kterého audit naplní jen část; co nenaplníš, nezakládej prázdné. Nemá-li ho, jsi-li v projektu se standardní strukturou (`~/.claude/STRUCTURE.md`), patří podklady do `research/`; jinak založ `sources/`, `registry.md` a `output/`. **Nabídni pozdější `/project`** – nezakládej ho potichu.
+
+**Nezaložil-li se projekt, řekni, co to znamená pro běhový stav.** `.claude/run/` patří do `.gitignore` a ten řádek zakládá `/project`; bez něj se v repozitáři se zapnutým autocommitem začne stav commitovat po každé odpovědi (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*).
 
 **Originály se archivují v původní podobě a dál se nemění** (`~/.claude/RULES.md`, *Cizí podklady jsou read-only*). Co se z nich vytěží, žije v registru nálezů.
 
@@ -125,9 +142,11 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Chybějící vstup **není důvod nezačít** – je to důvod vědět a napsat, co zůstane neověřené. **O chybějící vstupy se ale nejdřív požádá**, a to teď, ne až se ukáže, že chybí.
 
-**Pozor na racionalizaci „mezeru vypíšu na konci".** Zní rozumně a je to past: seznam neověřeného na konci dokumentu nikdo nečte jako zadání pro klienta, a přístup, o který se nepožádalo na začátku, se v půlce zakázky shání hůř. Ptej se přes `AskUserQuestion`, jestli o chybějící vstupy požádat, nebo vědomě jet bez nich – ta odpověď je uživatelova, ne tvoje.
+**Pozor na racionalizaci „mezeru vypíšu na konci“.** Zní rozumně a je to past: seznam neověřeného na konci dokumentu nikdo nečte jako zadání pro klienta, a přístup, o který se nepožádalo na začátku, se v půlce zakázky shání hůř. Ptej se přes `AskUserQuestion`, jestli o chybějící vstupy požádat, nebo vědomě jet bez nich – ta odpověď je uživatelova, ne tvoje.
 
 ## Fáze 3 – Společný průchod webem
+
+Tady začíná režim **`audit`**.
 
 **Sběr dělá hlavní session jednou pro všechny.** Pět agentů, kteří si totéž stahují každý zvlášť, je pětkrát dražší a pětkrát rozdílné.
 
@@ -137,6 +156,8 @@ Postupuj podle metodiky domény; nemá-li ji, projdi **reprezentativní vzorek �
 - chování před udělením souhlasu, po přijetí a po odmítnutí,
 - screenshoty tam, kde je nález vizuální,
 - URL a čas u každého pozorování – bez nich se nález nedá reprodukovat.
+
+**Po dokončení fáze zapiš běhový stav** do `.claude/run/audit.json`: doména a její dráha, adresa, hotové fáze, cesta ke sběru, cesta k registru nálezů a seznam toho, na co se čeká. Bez toho je přerušitelnost slíbená, ne postavená – a nejdražší část běhu (sběr a panel) by se po přerušení platila znovu.
 
 **Čistý profil.** Zakládej záložky s vlastním `isolatedContext`, ať se stav souhlasu a přihlášení nemíchá mezi průchody. Prohlížeč je jeden, ale záložek může být víc a každá se adresuje svým `pageId`.
 
@@ -150,23 +171,27 @@ Platí *Hranice na cizím webu* výš. Narazíš-li na něco z druhého pásma, 
 
 Zadání specialistů, jejich povinná pole a text o cizím obsahu drží `~/.claude/skills/audit/agents.md`. Každý dostane sběr z *Fáze 3*, svůj výřez katalogu a povolení **dozískat si vlastní záložkou**, co ho napadne až při práci.
 
-**Model a effort** (`~/.claude/RULES.md`, *Model a effort podle úkolu*): specialisté na výchozím modelu s `high`; ověřovatelé v *Fázi 5* na nejsilnějším s `xhigh`, protože slabý ověřovatel nález nevyvrátí ani nepotvrdí – jen přizvukuje.
+**Model a effort** (`~/.claude/RULES.md`, *Model a effort podle úkolu*): specialisté na výchozím modelu s `high`.
 
 ## Fáze 5 – Ověření reprodukcí
 
 **Nález, který nepřežije ověření, se nezobrazí.** Není to formalita: nález poslaný klientovi omylem stojí důvěru celé zakázky.
 
+**Ověřovatel běží na nejsilnějším modelu s `xhigh`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*): slabý ověřovatel nález nevyvrátí ani nepotvrdí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko.
+
 Na každý nález pusť ověřovatele s jediným úkolem: **vyvrátit ho** – projít tutéž cestu ve vlastní záložce a podívat se, jestli to tak opravdu je. Běží v čerstvém kontextu, který nevidí ani panel, ani tuhle konverzaci.
 
 Výsledek je čtverý: **potvrzeno průchodem** (jde dál), **vyvráceno** (zahodí se), **doloženo jen konfigurací** (v exportu to tak stojí, ale nikdo to neviděl v provozu), **nedá se ověřit** (chybí vstup z *Fáze 2* nebo by to žádalo akci z druhého pásma).
 
-**Rozdíl mezi prvním a třetím stavem je celý rozdíl mezi „viděl jsem to" a „mělo by to tak být".** Nález odvozený z konfigurace bývá správně, ale ne vždycky: podmínka spouštěče se dá číst jinak, než se chová, a element, na který míří, tam nemusí být. Kdo to zamlčí, tvrdí klientovi před jeho vývojářem víc, než ověřil.
+**Rozdíl mezi prvním a třetím stavem je celý rozdíl mezi „viděl jsem to“ a „mělo by to tak být“.** Nález odvozený z konfigurace bývá správně, ale ne vždycky: podmínka spouštěče se dá číst jinak, než se chová, a element, na který míří, tam nemusí být. Kdo to zamlčí, tvrdí klientovi před jeho vývojářem víc, než ověřil.
 
 Vypiš, kolik nálezů panel vyrobil a kolik jich ověření nepřežilo. Je to jediná míra, podle které se pozná, jestli panel pracuje.
 
 ## Fáze 6 – Registr nálezů
 
-Sestav `nalezy.md` – jeden soubor, **nález = sekce**, řazeno podle dopadu. Pole u každého:
+Tady končí režim **`audit`** – jeho výstupem je hotový registr, ze kterého pak čerpá `report`.
+
+Sestav `registry.md` – jeden soubor, **nález = sekce**, řazeno podle dopadu. Pole u každého:
 
 ```
 ### <název nálezu>
@@ -190,7 +215,12 @@ Pak **projdi s uživatelem sporné** – co je na hraně závažnosti, co je ná
 
 Tady začíná režim **`report`**, spouští-li se samostatně nad hotovým registrem.
 
-**Zeptej se zaškrtávacím výběrem, které výstupy vyrobit** – `AskUserQuestion` s `multiSelect`, pokaždé znovu, i v opakovaném běhu. Nezakládej je paušálně.
+**Zeptej se zaškrtávacím výběrem, které výstupy vyrobit** – `AskUserQuestion` s `multiSelect`, pokaždé znovu, i v opakovaném běhu. Nezakládej je paušálně. Na výběr jsou čtyři:
+
+- **interní registr nálezů** – pracovní, zůstává u tebe,
+- **dokument pro klienta** – ve tvaru, který drží norma výstupu domény,
+- **rozpad na úkoly** – členěný podle toho, kdo je provádí,
+- **interaktivní report** – jeden HTML soubor přes `/report`, kde je hodně čísel a srovnání; u textového auditu je to vrstva navíc.
 
 **Tvar klientských výstupů si nevymýšlej – přečti ho v normě výstupu domény** a naplň ho. Nemá-li ho doména, použij minimální tvar (co je špatně → co to působí → jak opravit, seřazeno podle dopadu) a **řekni nahlas, že sis ho zvolil sám**.
 
@@ -218,12 +248,18 @@ Tady začíná režim **`report`**, spouští-li se samostatně nad hotovým reg
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-Zapiš datovaný záznam běhu do `done.md` projektu, má-li ho; datum vyrob `date +%F`.
+**Po dílčím režimu vypiš jen to, co v něm vzniklo**, a ostatní pole vynech – po `brief` je to tabulka vstupů, po `audit` počty nálezů. Nadpis pojmenuj podle režimu (`## Podklady převzaty`, `## Nálezy ověřeny`); prázdná pole plného běhu tvrdí, že se něco nepovedlo, místo aby řekla, že na to nedošlo.
+
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Audit je hotový a nálezy ověřené, můžeš je poslat klientovi.`
 - `Audit hotový není – brání tomu: <konkrétní seznam>.`
+
+**Dílčí režim končí vlastní dvojicí.** Po `brief` ani `audit` není co poslat klientovi, takže obě věty výš by lhaly; po `report` a `update` naopak výstupy existují a platí dvojice první:
+
+- `Režim <jméno> je hotový, můžeš pokračovat režimem <další>.`
+- `Režim <jméno> hotový není – brání tomu: <konkrétní seznam>.`
 
 ------
 
@@ -251,5 +287,5 @@ Vypozorované ze srovnávacího běhu, ve kterém tentýž audit dělal agent be
 - **Výjimka z metodiky domény se vyargumentuje potichu.** Doména před něčím varuje, situace vypadá jinak, tak se to udělá jinak a nikde to není. **Odchylku od postupu domény hlas nahlas** i s důvodem – buď je to správná výjimka, nebo je metodika špatně, a obojí se má vědět.
 - **Sbírá se v každém agentovi zvlášť.** Pětkrát dražší, pětkrát jiný výsledek a pětinásobná zátěž cizího webu.
 - **Ověření se vynechá, protože nález zní přesvědčivě.** Přesně ty zní nejlíp. Ve srovnávacím běhu se takhle jeden nález sám vyvrátil až při dohledávání, co znamená jedna proměnná – a s ním padl i navazující nález postavený na téže domněnce.
-- **Testovací objednávka se odešle „jen jedna, na zkoušku".** Je to trvalý záznam v cizím systému a mail zákazníkovi – druhé pásmo, vždycky se svolením.
+- **Testovací objednávka se odešle „jen jedna, na zkoušku“.** Je to trvalý záznam v cizím systému a mail zákazníkovi – druhé pásmo, vždycky se svolením.
 - **Konstatuje se, co funguje.** Klientský výstup má říkat, co je špatně; přehled toho, co je v pořádku, patří do jedné krátké vyhrazené sekce, aby bylo vidět, že se to prošlo.
