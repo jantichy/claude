@@ -8,6 +8,7 @@ Referenční soubor k režimu `recover` skillu `/invoicing`. Drží **katalog zd
 - *Katalog zdrojů* – co z kterého jde vyčíst a jak silný to je signál
 - *Výlučné a sdílené zdroje* – proč se seznam URL dělí na dva
 - *Tři třídy jistoty* – jak se z stop dělá odhad hodin
+- *Odevzdaný výstup jako stopa* – jak se z hotového výsledku usuzuje na práci, která mu předcházela
 - *Deduplikace* – proč se stopy nesčítají
 - *Zadání pro sběrače* – co dostane agent a co musí vrátit
 - *Ověření nálezů* – povinná vrstva, která tip vyvrací
@@ -41,6 +42,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 | **Claude Code** | timestampy zpráv v `~/.claude/projects/<projekt>/*.jsonl` | silný – souvislá session je skutečný interval u klávesnice |
 | **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek |
 | **Prohlížeč** | navštívená URL, čas návštěvy **a doba na stránce** | střední – u výlučné URL použitelné, u sdílené ne |
+| **Sdílené dokumenty** | zápisy ze schůzek, **odevzdané výstupy**, zmínky o tom, co bylo dodáno | silný – nese obsah i hotové výsledky, viz *Odevzdaný výstup jako stopa* |
 | **Mail** | čas odeslání, předmět, obsah | slabý – odeslání je špička ledovce, ne práce sama |
 
 **Kalendář se čte skriptem `~/.claude/skills/invoicing/calendar.swift`** a čtyři věci z něj vypadávají dřív, než se z nich stane stopa. Všechny čtyři vyrobily falešný nález při prvním ostrém běhu, takže to nejsou hypotézy:
@@ -85,6 +87,44 @@ Každý nález patří do jedné z nich a **třída se vypisuje**, protože rozh
 
 **Souvislý shluk** je řada stop, mezi kterými není mezera delší než hodina. Delší mezera dělá dva shluky, ne jeden dlouhý interval – jinak by oběd uprostřed dne vyrobil fakturovatelnou hodinu.
 
+## Odevzdaný výstup jako stopa
+
+**Práce se nepozná jen z evidence, ale i z toho, co po ní zbylo.** Věta „ten den jste podle kalendáře měli schůzku a v Clockify nemáš nic“ je nejsnazší nález, ne jediný. Stejně dobře doloženým dokladem o odvedené práci je **hotový výstup** – sepsaný dokument, analýza, rozpad metodiky, revize, návrh –, protože ten sám o sobě nemohl vzniknout bez času.
+
+Jsou dvě podoby a obě se hledají v obsahu, ne v razítkách:
+
+- **Vidíš výstup samotný** – karta ve sdíleném dokumentu, příloha mailu, odkaz na soubor.
+- **Vidíš zmínku, že byl odevzdán** – zápis ze schůzky říká „Honza poslal rozpad pixelu“, mail klienta děkuje za dodaný dokument. Výstup nevidíš, ale **jeho existence je doložená**.
+
+### Čím se liší od ostatních stop
+
+**Je retrospektivní.** Ostatní stopa říká *tehdy se pracovalo*; výstup říká *někdy předtím se pracovalo* a neříká kdy. Datum odevzdání je tedy **konec intervalu, ne interval sám** – a proto z něj nikdy nevzniká řádek v tabulce s hodinami.
+
+Postup je vždycky tenhle:
+
+1. **Urči okno,** ve kterém výstup musel vzniknout: od poslední doložené stopy k témuž tématu (schůzka, kde se zadal, předchozí verze, zpráva „pustím se do toho“) do data odevzdání. Není-li žádná, ber **14 dní zpět** a řekni to.
+2. **Sečti, co je v tom okně v Clockify** – na projektu klienta i jinde.
+3. **Odhadni dolní mez práce,** kterou ten výstup musel stát: **kolik nejméně**, ne kolik typicky. Rozhoduje rozsah a povaha – několik normostran vlastního textu k cizí metodice není půlhodina, ale ani se z toho nedá dělat den.
+4. **Porovnej.** Sedí-li to, mlč – výstup je pokrytý. Je-li v okně **prázdno nebo řádově méně**, vzniká **otázka na Honzu**, ne nález.
+
+### Ptej se, nepočítej
+
+Výsledkem je otázka v tomhle tvaru: **co to je, kdy to bylo odevzdáno, kolik je na to v okně natrackováno, kolik to podle tebe nejméně muselo stát a proč si to myslíš.** Nikdy ne samotné číslo.
+
+> Karta *FAVI pixel změny* (~540 řádků, stávající funkčnost i návrh změn) je v dokumentu k 17. 6. V Clockify je mezi 6. a 17. 6. na FAVI 2,5 h a z toho většina padne na schůzku. Sepsat tohle stálo řádově hodiny. Nezapomněl sis natrackovat práci na tom dokumentu?
+
+**Číslo se do součtu nikdy nepočítá** a do tabulky nálezů takový případ nepatří – patří pod ni, do *Otázek k rozsahu*. Důvod je týž jako u indicie: odhad práce z výsledku je úsudek o tom, jak dlouho někomu jinému trvalo psaní, a **číslo se pamatuje líp než výhrada, se kterou přišlo**. Rozdíl je, že u indicie se neptáš na nic, tady se ptáš na konkrétní věc – a odpovědět umí jen ten, kdo ji psal.
+
+### Kdy to nález není
+
+Pět případů, které vypadají stejně a prací nejsou. Projdi je dřív, než se zeptáš:
+
+- **Výstup není Honzův.** Export textu autorství neukazuje. U zápisu ze schůzky to nevadí, u dokumentu ano – doloží se mailem, kterým ho poslal, nebo zmínkou v zápisu.
+- **Práce je natrackovaná dřív, než sahá okno.** Dokument psaný na etapy před měsícem. Než se zeptáš, **rozšiř okno** a podívej se, jestli se tam ta práce neschovala.
+- **Vznikl na schůzce.** Zápis ze schůzky sepsaný během ní není práce navíc; je to ta schůzka.
+- **Je převzatý.** Šablona, cizí podklad, výstup nástroje. Vlastní práce je pak jen to, co k němu přibylo.
+- **Rozsah klame.** Dlouhý dokument slepený z citací a odkazů stál míň než stránka vlastní úvahy. Posuzuje se **vlastní text**, ne délka souboru.
+
 ## Deduplikace
 
 **Stopy se nesčítají.** Mail o schůzce, ta schůzka v kalendáři a zpráva na Slacku hodinu po ní jsou **jedna práce**, ne tři. Bez tohohle pravidla režim spolehlivě nadhodnocuje – a jednou nafouknutý odhad zabije důvěru ve všechny ostatní.
@@ -108,6 +148,8 @@ Každý agent dostane: **klienta, období, své identifikátory ze souboru klien
 }
 ```
 
+**Sběrač, který vidí obsah** – dokument, chat, mail –, vrací i **odevzdané výstupy a zmínky o nich**: název, datum, rozsah vlastního textu a to, komu se odevzdal. Bez rozsahu se dolní mez práce odhadnout nedá a hlavní session by se pro něj musela vracet ke zdroji.
+
 **Agent, který nemá přístup, to řekne** a vrátí prázdné pole s důvodem. Nedostupný zdroj se ve výstupu vypíše jako slepé místo – bez toho by věta „nic dalšího jsem nenašel“ znamenala pokaždé něco jiného.
 
 ## Ověření nálezů
@@ -121,6 +163,8 @@ Ověřovatel dostane jediný úkol: **nález vyvrátit**. Projde tyhle otázky a
 3. **Není to už vyfakturované?** Období mimo rozsah.
 4. **Nese ta stopa vůbec práci?** Automatický commit, kalendářní událost, která se nekonala, otevřená záložka na pozadí.
 5. **Není to soukromý čas?** Víkend a večer nálezem samy o sobě nejsou, ale vyžadují silnější doložení než pracovní dopoledne.
+
+**Otázka k rozsahu se ověřuje taky**, jen se jinak vyvrací: neptá se „stalo se to?“, ale „není ta práce vidět jinde nebo jindy?“. Ověřovatel projde pět případů z *Kdy to nález není*; **stačí jeden a otázka se nepokládá**.
 
 **Co ověření nepřežije, se neukáže.** Vyvrácené nálezy se vypíšou jen v souhrnném počtu, ne jednotlivě – jinak si je uživatel přečte a rozhodnutí se tím vrátí zpátky k němu.
 
@@ -138,10 +182,11 @@ Tabulka seřazená **od nejjistějšího**, protože podle ní se odshora doplň
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-Pod tabulku patří tři věci, každá i když je prázdná:
+Pod tabulku patří čtyři věci, každá i když je prázdná:
 
 - **Natrackováno jinam** – nálezy z otázky 1 ověřovatele, tedy čas k přesunu, ne k doplnění.
 - **Slepá místa** – zdroje, na které se nesáhlo, a proč.
+- **Otázky k rozsahu** – odevzdané výstupy, ke kterým v okně před nimi natrackovaná práce chybí. Každá jako otázka podle *Odevzdaný výstup jako stopa*, ne jako číslo.
 - **Součet** – zvlášť za doložené a odvozené; **indicie se do součtu nepočítají**, protože nemají číslo.
 
 **Nic se nikam nezapisuje.** Ani do Clockify, ani do souboru klienta. Odhad postavený na úsudku o cizích datech je návrh, ne zjištění, a rozhodnutí patří tomu, kdo tu práci odvedl.
