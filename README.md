@@ -12,15 +12,19 @@ Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Vě
 
 ### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
-Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i celý životní cyklus projektu – od `/project` až po `/release` –, který říká, co je čí krok a co který krok naopak dělat nemá. A tabulka, podle které se vybírá model a effort pro každý typ úkolu: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**.
+Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i rámeček s životním cyklem projektu – od `/project` až po `/release` –, jehož podrobnosti drží [`skills/LIFECYCLE.md`](skills/LIFECYCLE.md). A tabulka, podle které se vybírá model a effort pro každý typ úkolu: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**.
 
 ### [`STRUCTURE.md`](STRUCTURE.md) – každý projekt vypadá uvnitř stejně
 
-Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat; a hlavně vědí, kam zapsat i skilly, kterých je na to půl tuctu. Zakládá ji `/project`, ale nepatří jemu – čte ji většina ostatních skillů a každý si z ní bere něco jiného.
+Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat; a hlavně vědí, kam zapsat i skilly, kterých je na to půl tuctu. Zakládá ji `/project`, ale nepatří jemu – čte ji většina ostatních skillů a každý si z ní bere něco jiného. Do každé session se nenačítá: je to katalog k nahlédnutí ve chvíli, kdy se do některého z těch souborů zapisuje.
 
 ### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
 Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: tabulka, co se místo čeho používá a v jakém rozsahu. Nejcennější je vždycky ten rozsah – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc. Je to schválně jen tabulka: soubor se načítá do každé session, takže důvody a historie náhrad leží stranou, u skillu `/ptydepe`.
+
+### [`skills/LIFECYCLE.md`](skills/LIFECYCLE.md) – co je čí krok
+
+Životní cyklus projektu podrobně: co který krok dělá, co po něm platí, proč stojí zrovna v tom pořadí a kdy se smí přeskočit. Hlídá hlavně to, aby si dva kroky nedělaly tutéž práci – u věci, kterou kontrolují tři, ji nakonec neudělá pořádně žádný. Načítá se, až když se v některém kroku opravdu stojí; v `RULES.md` je z něj jen rámeček s pořadím.
 
 ### [`WORKTREE.md`](WORKTREE.md) – několik rozdělaných věcí vedle sebe
 

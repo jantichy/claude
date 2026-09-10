@@ -207,7 +207,7 @@ Zapiš do `docs/decisions.md` jen to, co má trvalou hodnotu (změna postupu nas
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/RULES.md`, *Životní cyklus projektu*, krok 9.
+**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/skills/LIFECYCLE.md`, krok 9.
 
 ------
 
@@ -232,7 +232,7 @@ Co se v okně dělá:
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/RULES.md`, *Životní cyklus projektu*: jde týmž životním cyklem ve zkrácené podobě, `/review` a průběžná kontrola se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
+3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/skills/LIFECYCLE.md`, *Hotfix*: jde týmž životním cyklem ve zkrácené podobě, `/review` a průběžná kontrola se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
 
 **Přeruší-li se session dřív, než okno uplyne**, řekni to a zapiš do `docs/todo.md`, do kdy okno běží a co se má sledovat. Okno, o kterém ví jen kontext session, žádné okno není.
 

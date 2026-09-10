@@ -683,6 +683,55 @@ class Struktura(unittest.TestCase):
         self.assertFalse(chybi, f"životní cyklus jmenuje kroky, které nemají skill: {chybi}")
 
 
+    def test_lifecycle_popisuje_tytez_kroky_jako_rules(self):
+        """Rozhraní kroků se odstěhovalo z `RULES.md` do `skills/LIFECYCLE.md`.
+
+        Rámeček s pořadím zůstal v `RULES.md` a je zdrojem pravdy; výklad kroků
+        stojí v `LIFECYCLE.md`. Jsou to dva soubory o téže věci, takže se rozejdou
+        přesně tím způsobem, který nikdo nezpozoruje: přibude krok do rámečku a
+        nikdo mu nedopíše, co dělá – nebo naopak zmizí ze seznamu a rámeček ho
+        dál slibuje. Ani jedno není z jednoho souboru vidět.
+        """
+        lifecycle = ROOT / "skills" / "LIFECYCLE.md"
+        self.assertTrue(lifecycle.exists(), "chybí skills/LIFECYCLE.md")
+        text = lifecycle.read_text(encoding="utf-8")
+        # Krok je vyložený tehdy, když ho jmenuje číslovaná odrážka: `1. **`/project`**`.
+        vylozene = set(re.findall(r"^\d+\. \*\*`/([a-z][a-z-]*)`\*\*", text, re.M))
+        self.assertEqual(vylozene, self.CYKLUS,
+            "LIFECYCLE.md a rámeček v RULES.md jmenují jiné kroky; "
+            f"jen v LIFECYCLE: {sorted(vylozene - self.CYKLUS)}, "
+            f"jen v RULES: {sorted(self.CYKLUS - vylozene)}")
+
+    def test_neimportovane_soubory_nejsou_v_importech(self):
+        """`STRUCTURE.md` a `LIFECYCLE.md` se schválně neimportují.
+
+        Držet je mimo paušální kontext je celý smysl toho, že jsou zvlášť: dohromady
+        je to přes 40 kB, které by jinak šly do každé session v každém projektu.
+        Vrátit `@` před cestu je jednoznaková změna, kterou nic jiného nehlásí –
+        a projeví se jen tím, že je kontext o něco plnější, čehož si nikdo nevšimne.
+        """
+        text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        for cesta in ("~/.claude/STRUCTURE.md", "~/.claude/skills/LIFECYCLE.md"):
+            with self.subTest(cesta=cesta):
+                self.assertNotIn(f"@{cesta}", text,
+                    f"{cesta} se importuje, přestože má být jen odkaz")
+                self.assertIn(f"`{cesta}`", text,
+                    f"{cesta} není v CLAUDE.md ani zmíněný jako odkaz")
+
+    def test_priprava_zada_nacteni_neimportovanych_souboru(self):
+        """Odkaz bez mechanismu je přání.
+
+        `STRUCTURE.md` a `LIFECYCLE.md` se přestaly importovat výměnou za to, že
+        si je skill načte, když je potřebuje. Jediné místo, kde se ta povinnost
+        dá vynutit napříč skilly, je společná příprava – zmizí-li odsud, zbude
+        z celé úspory jen chybějící znalost.
+        """
+        text = (ROOT / "skills" / "PREFLIGHT.md").read_text(encoding="utf-8")
+        for cesta in ("~/.claude/STRUCTURE.md", "~/.claude/skills/LIFECYCLE.md"):
+            with self.subTest(cesta=cesta):
+                self.assertIn(cesta, text,
+                    f"příprava neříká, kdy si načíst {cesta}")
+
     def test_skill_neopisuje_retez_kroku_cyklu(self):
         """Pořadí kroků cyklu se odkazuje, neopisuje.
 

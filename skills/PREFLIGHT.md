@@ -10,6 +10,10 @@ Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo 
 
 **Pozor: „neběží nad projektem“ neznamená „nesahá na soubory“.** `/invoicing` zapisuje do deníku výjimek v `~/Dev/context/`, což je repozitář se zapnutým autocommitem. Skill, který takhle zapisuje, **musí sám říct, co se svým zápisem udělá** – jestli ho commituje, nebo nechá v pracovním stromu –, jinak ho posbírá autocommit cizí session spolu s něčím nesouvisejícím.
 
+**Stojíš-li v kroku životního cyklu, načti si `~/.claude/skills/LIFECYCLE.md`.** Neimportuje se paušálně – v `RULES.md` je z něj jen rámeček s pořadím kroků. Bez něj nevíš, co po tvém kroku platí, čí práci nemáš přebírat a co se smí opakovat.
+
+**Chystáš-li se zapsat do standardního souboru projektu** – `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, `requirements.md`, `architecture.md`, `plan.md` – **načti si `~/.claude/STRUCTURE.md`.** Také se neimportuje; `RULES.md`, *Kam co zapsat*, říká jen kam zápis míří, ne co v tom souboru smí stát.
+
 **Nezávislé čtecí operace pouštěj paralelně.** Zjišťování kořene, čtení `CLAUDE.md` a stav gitu na sobě nezávisí.
 
 ------

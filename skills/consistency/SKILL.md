@@ -74,7 +74,7 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 ### 0.4 Spusť nástroje, které předchozí kroky životního cyklu nedělají
 
-**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/RULES.md`, *Životní cyklus projektu*.
+**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/skills/LIFECYCLE.md`, *Povolená opakování*.
 
 Spusť jen to, co je vlastní téhle otázce – hledání mrtvého kódu a nepoužitých závislostí, tedy „sedí si projekt sám se sebou?“, na což se `/review` neptá:
 

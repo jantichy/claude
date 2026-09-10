@@ -14,7 +14,7 @@ Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, im
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md` nebo `docs/backlog.md`, ne do kódu.
-- **Neuzavírá feature.** Review, audit konzistence a úklid jsou samostatné kroky po tomhle – viz *Životní cyklus projektu* v `~/.claude/RULES.md`, druhá půlka životního cyklu.
+- **Neuzavírá feature.** Review, audit konzistence a úklid jsou samostatné kroky po tomhle – viz `~/.claude/skills/LIFECYCLE.md`, druhá půlka životního cyklu.
 
 ## Jak je to postavené uvnitř
 

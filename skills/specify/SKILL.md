@@ -224,7 +224,7 @@ Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání
 
 **U projektu bez kódu** `/breakdown` nevyvolávej – rozepiš kroky do `docs/todo.md`.
 
-Celý řetěz i s tím, co následuje po implementaci, je v `~/.claude/RULES.md`, *Životní cyklus projektu*.
+Celý řetěz i s tím, co následuje po implementaci, je v `~/.claude/skills/LIFECYCLE.md`.
 
 ------
 

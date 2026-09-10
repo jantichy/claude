@@ -260,7 +260,8 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 |---|---|
 | `~/.claude/skills/<jméno>/` | celý adresář včetně vedlejších souborů a skriptů |
 | `~/.claude/README.md` | jeho sekce |
-| `~/.claude/RULES.md` | *Životní cyklus projektu* a zmínky u sousedů |
+| `~/.claude/RULES.md` | rámeček v *Životním cyklu projektu* a zmínky u sousedů |
+| `~/.claude/skills/LIFECYCLE.md` | **byl-li to krok cyklu**, jeho číslovaná odrážka; bez ní se rozejde s rámečkem a testy to shodí |
 | `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, je-li tam; jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`“ |
 | `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních vizitek. Osiřelý odkaz na `../<jméno>/README.md` testy shodí, ale samy ho nevyškrtnou |
