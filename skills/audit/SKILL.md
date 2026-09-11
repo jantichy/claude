@@ -154,10 +154,12 @@ Tady začíná režim **`audit`**.
 
 Postupuj podle metodiky domény; nemá-li ji, projdi **reprezentativní vzorek šablon stránek** a hlavní scénář od začátku do konce. Zaznamenávej průběžně do souboru, ne do kontextu:
 
-- síťové požadavky a jejich obsah, konzoli, stav datové vrstvy v čase,
+- síťové požadavky a jejich obsah, konzoli, stav datové vrstvy v čase – **hlavičky `Cookie`, `Authorization` a `Set-Cookie` a hodnoty, které vypadají jako tajemství, ale jen zkrácené** (`api_secret=…4f2a`),
 - chování před udělením souhlasu, po přijetí a po odmítnutí,
 - screenshoty tam, kde je nález vizuální,
 - URL a čas u každého pozorování – bez nich se nález nedá reprodukovat.
+
+**Sběr patří do adresáře, který je v `.gitignore`, a ten řádek si skill přidá sám.** Jde o relace auditora i klientových systémů, do kterých se podle *Hranic* smí přihlásit – v repozitáři se zapnutým autocommitem se to jinak commitne po první odpovědi a pushne ven, odkud se to z historie nedá odstranit bez přepsání větve. Platí to vedle pravidla o `.claude/run/` ve *Fázi 2*, ne místo něj: **tohle je ten citlivější ze dvou souborů.** Že se tajemství nepíše v plném znění do dokumentu pro klienta (*Fáze 7*), je jiná věc a sběr nekryje.
 
 **Po dokončení fáze zapiš běhový stav** do `.claude/run/audit.json`: doména a její dráha, adresa, hotové fáze, cesta ke sběru, cesta k registru nálezů a seznam toho, na co se čeká. Bez toho je přerušitelnost slíbená, ne postavená – a nejdražší část běhu (sběr a panel) by se po přerušení platila znovu.
 
