@@ -180,7 +180,7 @@ Zadání specialistů, jejich povinná pole a text o cizím obsahu drží `~/.cl
 
 **Nález, který nepřežije ověření, se nezobrazí.** Není to formalita: nález poslaný klientovi omylem stojí důvěru celé zakázky.
 
-**Ověřovatel běží na nejsilnějším modelu s `xhigh`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*): slabý ověřovatel nález nevyvrátí ani nepotvrdí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko.
+**Ověřovatel běží na nejsilnějším modelu s `xhigh`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*, řádek pro ověřování nálezů). **Effort se ale subagentovi předepsat neumí:** tool `Agent` bere `model`, ne `effort` – ten se bere z definice agenta. Splnitelná je tedy jen první polovina; je to vědomá mezera, ne opomenutí, a zavřela by ji až definice agenta ve `~/.claude/agents/`. Totéž platí o `high` u specialistů ve *Fázi 4*.
 
 **Nejdřív deduplikuj, pak filtruj, teprve pak pouštěj.** Specialisté se překrývají schválně – sousední kapitoly katalogu (souhlas × měření, měření × SEO) najdou tentýž problém jinými slovy –, takže poslat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď. Sluč nálezy na stejném místě do jednoho a uveď u něj oba podklady.
 
