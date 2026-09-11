@@ -8,9 +8,9 @@ Referenční soubor k režimu `sync` skillu `/invoicing`. Drží **mechaniku zrc
 - *Jednosměrnost* – co je zdroj pravdy a co kopie
 - *Otevřené okno* – kdy se do vzdáleného systému smí sahat
 - *Uzávěrka dřív než faktura* – klient s vlastní lhůtou
-- *Zpětný čas po uzávěrce* – co se přesouvá a co propadá
+- *Zpětný čas po uzávěrce* – co se přesouvá, co propadá, tvar prefixu a skládání za sebe
 - *Co se přenáší* – které záznamy jdou ven a s jakým příznakem
-- *Zrcadlení* – jak se pozná, co přidat, upravit a smazat
+- *Zrcadlení* – čtení obou stran, párovací klíč, co se s čím dělá, co ověřit před zápisem
 - *Zápis do deníku* – jediné, co režim ukládá k sobě
 - *Hranice* – co režim nesmí
 
@@ -36,6 +36,8 @@ Plyne z toho všechno ostatní: co v Clockify není, nemá ve vzdáleném systé
 
 Je to obecné pravidlo pro každý vzdálený timetracking, ne vlastnost jednoho klienta. Důvod je účetní: doklad tvrdí o období konkrétní počet hodin a zpětná změna podkladu z něj dělá tvrzení, které se nedá doložit.
 
+**Jsou to dvě okna a pletou se snadno.** *Okno zápisu* je tohle – kam se smí sáhnout. *Okno čtení* sahá o tři měsíce dál do minulosti a slouží jen k tomu, aby se našel zpětný a propadlý čas (*Zpětný čas po uzávěrce*). Čtení nikdy neopravňuje k zápisu.
+
 **Hranice se čte odtud, odkud ji čte fakturace** – `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*. Vlastní hranici si režim neurčuje.
 
 ## Uzávěrka dřív než faktura
@@ -45,6 +47,8 @@ Klient může mít lhůtu **kratší**, než je vystavení faktury: „měsíc s
 **Uzávěrka klienta je v jeho souboru v `invoicing/`.** Není-li tam žádná, okno zavírá až faktura.
 
 **Přelitý čas není rozdíl mezi stranami.** Porovnává-li se Clockify se vzdáleným systémem – ať už v zrcadlení, nebo při kontrole před fakturací –, **počítá se přelitý záznam k datu ze svého prefixu**, ne ke dni, na kterém leží. Bez toho by u každého klienta po přelití vycházel rozdíl, který rozdíl není, a fakturace by se zastavovala pokaždé.
+
+**Pro podklad faktury platí pravý opak a je to schválně.** Datum z prefixu je **výhradně párovací pomůcka**; při sestavování dokladu se přelitý záznam počítá **ke dni, na kterém leží**, tedy do měsíce, do kterého se přelil. Jinak by vypadl ze svého nového měsíce, do starého by ho nepustila uzávěrka a nespadl by na žádnou fakturu.
 
 **Má-li klient uzávěrku, mění se i to, z čeho se počítá doklad:** fakturuje se **to, co je ve vzdáleném systému**, ne co je v Clockify. Je to výjimka z obecného pravidla o zdroji pravdy a **musí být napsaná v dohodě klienta**, jinak neplatí.
 
@@ -60,15 +64,27 @@ Praktický důsledek, který se musí říct nahlas: **selže-li sync, vyjde fak
 | **měsíce ještě staršího** | **propadá** – do vzdáleného systému nejde a nefakturuje se |
 | období otevřeného okna | zapíše se normálně na svoje datum |
 
-**Prefix je povinný a má pevný tvar:**
+**Propadlý čas se hledá pod dolní hranou okna, jinak ho není odkud vzít.** Okno zápisu začíná na hranici poslední faktury, ale čas, který má propadnout, je z definice starší – **čtení Clockify proto sahá o tři měsíce dál do minulosti než okno zápisu**. Jsou to dvě různá okna a nesmí se splést: **okno zápisu** říká, kam se smí sáhnout, **okno čtení** jen to, co se vezme v úvahu. Bez toho rozlišení zůstane deník propadlého času navždy prázdný, i když se propadá.
+
+### Tvar prefixu
+
+Pevný, protože se z něj zpětně čte datum:
 
 ```
 Zpětně vytrackovaný čas za 12. července 2026: <původní popis z Clockify>
 ```
 
-Datum v prefixu je **skutečné datum práce** z Clockify, česky vypsané. Nese dvě funkce naráz: klient vidí, že se nesnažíš propašovat starý čas do nového měsíce, a **režim podle něj ten záznam příště pozná** – bez prefixu by ho zrcadlení bralo jako přebytek a smazalo by ho.
+- **Bez vodicí nuly** ve dni, měsíc **slovem ve druhém pádě**, rok čtyřmístně, pak **dvojtečka a jedna mezera**.
+- **Prefix se nikdy nevnořuje.** Přelévá-li se záznam, který prefix už má, původní se **nahradí**, ne obalí.
+- **Má-li popis prefix sazby** (`NF `, `SDÍLENÉ ` a další podle klienta), **stojí vpředu a prefix přelití jde až za něj**: `NF Zpětně vytrackovaný čas za 12. července 2026: …`. Klasifikace sazeb se dělá podle toho, čím popis začíná – kdyby ho přelití zakrylo, nefakturovatelný čas by se vyfakturoval a sdílená práce odešla plnou sazbou.
 
-**Přelité záznamy se v cílovém místě skládají od půlnoci za sebou.** První začíná v 00:00, druhý hned po jeho konci, třetí po něm – v pořadí, v jakém práce **původně proběhla**, a **v každém cílovém místě zvlášť**. Vzdálený systém obvykle nechce jen počet hodin, ale interval od–do; kdyby přelité záznamy začínaly všechny ve stejnou chvíli, klient uvidí překrývající se čas a přestane výkazu věřit.
+Datum v prefixu je **skutečné datum práce** z Clockify, česky vypsané. Nese dvě funkce naráz: klient vidí, že se nesnažíš propašovat starý čas do nového měsíce, a **režim podle něj ten záznam příště pozná**.
+
+### Skládání za sebe
+
+**Přelité záznamy se v cílovém místě skládají od půlnoci za sebou** – první v 00:00, druhý hned po jeho konci, v pořadí, v jakém práce původně proběhla, a **v každém cílovém místě zvlášť**. Vzdálený systém obvykle nechce jen počet hodin, ale interval od–do; kdyby přelité záznamy začínaly ve stejnou chvíli, klient uvidí překrývající se čas a přestane výkazu věřit.
+
+**Druhá dávka téhož měsíce nezačíná znovu od půlnoci**, ale **navazuje za poslední přelitý záznam, který v tom cílovém místě na tom dni už leží**. Zapomenutý čas se doplňuje průběžně, takže přelití proběhne za měsíc klidně třikrát – a bez tohohle pravidla by se dávky navzájem překryly.
 
 **Propadlý čas se nemaže z Clockify** a ve výpisu se vypíše jmenovitě i se součtem. Je to nefakturovaná práce, ne omyl, a Honza má právo vidět, kolik ho ta prodleva stála.
 
@@ -84,33 +100,56 @@ Datum v prefixu je **skutečné datum práce** z Clockify, česky vypsané. Nese
 
 Režim si **nedrží žádný stav** – žádnou mapovací tabulku, žádné ID v poznámce. Pokaždé si přečte obě strany a srovná je. Stav, který se rozejde, je horší než jeho absence, a u kopie se rozejde vždycky.
 
-1. **Načti Clockify** za otevřené okno, jen projekty toho klienta.
-2. **Načti vzdálený systém** za totéž okno **rozšířené o den na obou stranách**, **jen z cílových míst** vyjmenovaných v souboru klienta, a **z výsledku ponech jen záznamy pod Honzovým účtem**. Ověř to z dat, ne z filtru dotazu – filtr, který se tiše ignoruje, vrací cizí práci a ta by se pak mazala.
+**Zrcadlí se každá dvojice projekt → cílové místo zvlášť**, ne všechna cílová místa jako jedna hromada. Bez toho by záznam ležící v nesprávném tasku vyšel jako shoda – počty by seděly – a zůstal tam napořád, s cizím příznakem fakturovatelnosti a v nesprávné položce na dokladu.
 
-   **Den navíc na každé straně je proti časovým pásmům.** Vzdálený systém běžně filtruje podle UTC a ukládá lokální čas, takže záznam z půlnoci padne do předchozího dne a přesně ohraničený dotaz ho minie. **Nenajde-li zrcadlení existující záznam, založí ho podruhé** – a duplikát v cizím systému je horší než chybějící kopie, protože se fakturuje.
-3. **Vrátilo-li čtení vzdáleného systému nulu, zopakuj dotaz.** Shodnou-li se obě odpovědi na nule, je prázdno skutečné a pokračuje se; **liší-li se, zastav se a řekni to** – jedna z odpovědí je nespolehlivá a neví se která.
+### Čtení obou stran
 
-   **Proč zrovna tady:** zrcadlení čte prázdnou odpověď jako „v cizím systému nic není“ a **založí všechno znovu**. U klienta, který se fakturuje ze svého systému, se takový duplikát rovnou vyfakturuje. Jedno volání navíc za běh je proti tomu levné. Doloženo 10. 9. 2026: při prvním ostrém běhu vrátil dotaz na rozsah, ve kterém záznam prokazatelně ležel, prázdné tělo – a při opakování s odstupem prošel, aniž by šlo o vyčerpaný limit.
+1. **Načti Clockify** za okno čtení, jen projekty toho klienta.
+2. **Načti vzdálený systém** za totéž okno, jen z cílových míst ze souboru klienta, a **z výsledku ponech jen Honzovy záznamy, ověřené z dat** – filtr v dotazu se může tiše ignorovat a pak by se mazala cizí práce.
+3. **Obě čtení rozšiř o den na obou stranách okna a ořízni až lokálně.** Obě API filtrují podle UTC a obojí ukládá lokální čas, takže záznam z časů kolem půlnoci padne v dotazu do jiného dne. **Na každé straně má to opomenutí jiný a stejně drahý následek:** ve vzdáleném systému se existující záznam nenajde a založí se podruhé, v Clockify se protějšek nenajde a kopie se smaže.
 
-4. **Spočítej klíč** u každého záznamu na obou stranách: **datum a čas začátku, délka v minutách**.
+   **Rozšíření slouží výhradně k párování, nikdy jako rozsah pro zápis a mazání.** Záznam, který leží mimo okno zápisu, se jen započítá do porovnání; sahat se na něj nesmí.
 
-   **Záznam s prefixem má klíč jiný – jen datum z prefixu a délku, bez času začátku.** Přelití mu čas začátku schválně přepisuje (skládá se od půlnoci), takže by se s protějškem v Clockify nikdy neshodl a zrcadlení by ho vyhodnotilo jako přebytek ke smazání. Datum se bere **z prefixu**, ne z toho, na kterém záznam leží.
-5. **Srovnej jako množiny** – klíč se může opakovat, takže se porovnávají počty, ne existence.
+4. **Převáděj časy podle pásma `Europe/Prague` a posun počítej k okamžiku každého záznamu**, nikdy jako konstantu. Doložený posun `+2 h` platí pro letní čas; po přechodu na zimní je to `+1 h` a pevně zadaná konstanta by rozhodila každý záznam po 25. říjnu o hodinu – tedy i jeho zařazení do dne.
+
+5. **Ověř, že jsi obě strany dočetl celé.** Clockify stránkuje parametrem `page`, vzdálený systém podle `meta.page.hasMore`; **nedočtená stránka se neprojeví jako chyba, ale jako chybějící záznamy**. A **kontroluj návratový kód i HTTP status** – `curl` bez `--fail` vrací nulu i na `401`, takže vypršelý token vypadá jako prázdná strana.
+
+   **Prázdná strana se přijme jen proti odpovědi `200` s vlastním údajem o nule** (`count == 0`), ne proti prázdnému poli. Pro jistotu zopakuj dotaz – ale ber to jako doplněk, ne jako hlavní obranu: trvalá chyba (zneplatněný token, špatné ID tasku, odebraná práva) vrátí dvakrát totéž a shoda dvou chyb není doklad.
+
+   **Nedá-li se dočtení doložit, nemaž nic.** Zakládat se smí, mazat ne – chybějící protějšek může být jen nenačtená stránka.
+
+### Párovací klíč
+
+Klíč je **cílové místo, datum, čas začátku a délka v minutách**.
+
+- **Délka i čas se zaokrouhlují na celé minuty aritmeticky**, na obou stranách stejně. Clockify měří na vteřiny, vzdálený systém je neumí – bez společného pravidla by se klíč rozcházel pořád dokola a záznamy by se mazaly a zakládaly při každém běhu.
+- **U přelité dvojice se klíč krátí na obou stranách** na **datum práce a délku**, bez času začátku a bez cílového místa dne. Datum se bere z prefixu kopie a ze skutečného data zdroje. Krátit jen jednu stranu nestačí: zdroj prefix nemá, takže by se plný klíč se zkráceným nikdy nepotkal a přelití by se opakovalo při každém běhu.
+- **Opakuje-li se klíč**, obě strany se uvnitř skupiny seřadí podle času začátku a **páruje se po pořadí**. Nejdřív se dorovnají počty, teprve pak se porovnávají popisy a příznaky.
+
+### Co se s čím dělá
 
 | Stav | Akce |
 |---|---|
 | klíč jen v Clockify | **založ** ve vzdáleném systému |
 | klíč na obou stranách, liší se popis | **uprav popis** |
-| klíč na obou stranách, popis sedí | nedělej nic |
-| klíč jen ve vzdáleném systému | **smaž** |
+| klíč na obou stranách, liší se příznak fakturovatelnosti | **oprav příznak** – `PATCH`em, klíč se tím nemění |
+| klíč na obou stranách, popis i příznak sedí | nedělej nic |
+| klíč jen ve vzdáleném systému, **uvnitř okna zápisu** | **smaž** |
+| klíč jen ve vzdáleném systému, **mimo okno zápisu** | **ohlas, nesahej** |
 
-**Změna času nebo délky není úprava, ale smazání a nový záznam** – klíč se rozpadl. Vypadá to hrubě, ale je to jediné chování, které nepotřebuje pamatovat, co bylo dřív.
+**U přelitého záznamu se porovnává a zapisuje `prefix + popis z Clockify`, nikdy holý popis.** Popisy se totiž liší vždycky – kopie prefix má, zdroj ne –, takže naivní porovnání spustí úpravu při každém běhu a zápisem holého popisu by prefix zmizel. S ním by zmizel zkrácený klíč i ochrana před smazáním a záznam by se při dalším běhu smazal jako přebytek. **Prefix je při úpravě nedotknutelný**, a **chybí-li prefix u záznamu ležícího na prvním dni měsíce, je to nález, ne data.**
 
-**Záznam s prefixem se nemaže nikdy**, ani když se mu protějšek nenajde. Leží sice v otevřeném okně, ale jeho práce pochází z **uzavřeného** měsíce – a ten se z Clockify nemusí vůbec číst, takže chybějící protějšek neznamená, že v Clockify není. Popis se u něj opravit smí, smazat ne.
+**Změna času nebo délky není úprava, ale smazání a nový záznam** – klíč se rozpadl. **Zakládej dřív, než mažeš:** duplikát po přerušeném běhu srovná příští běh, kdežto smazaný záznam už nemá odkud vzít, a padne-li mezitím uzávěrka, propadne.
 
-**Chybějící protějšek se ale ohlásí** – jednou větou, co ve vzdáleném systému leží a v Clockify k tomu nic není. Buď se ten čas ve zdroji smazal a kopie ho přeúčtuje navíc, nebo se Clockify nedočetlo celé; **rozhodnout to umí jen člověk** a tiché mlčení by z obojího udělalo nulu.
+**Smazat přelitý záznam smíš jedině tehdy, když se jeho zdroj v Clockify našel a liší se mu délka** – pak jde o pár smazání a založení. **Nenašel-li se zdroj vůbec, nemaž.** Jeho práce pochází z uzavřeného měsíce, který se nemusí číst celý, takže chybějící protějšek neznamená, že v Clockify není; **ohlas to jednou větou** a nech rozhodnout.
 
-**Mimo otevřené okno se nemaže ani neupravuje nic**, i kdyby se strany rozcházely. Rozdíl v uzavřeném období se **ohlásí** a nechá být.
+### Než zapíšeš
+
+**Porovnej počty se zdrojem.** Má-li se založit víc záznamů nebo víc hodin, než kolik jich za okno vyšlo z Clockify, **zastav se a zeptej** – takový rozdíl nevzniká prací, ale chybou ve čtení.
+
+**Znovu načti vzdálený systém těsně před zápisem** a dávku zahoď, liší-li se od snímku, ze kterého ses rozhodoval. Mezitím mohlo běžet druhé sezení.
+
+**Souběžný běh nad týmž klientem se nepouští.** Na začátku běhu založ značku běhu (klient, PID, čas) v `.claude/run/`, na konci ji zruš; najdeš-li čerstvou cizí značku, **skonči a řekni to**. Dvě sezení si navzájem nevidí rozdělanou práci a obě čtou stav před ní – výsledkem jsou duplikáty, nebo hůř dávka mazání odklepnutá jedním stiskem.
 
 ## Zápis do deníku
 
@@ -124,12 +163,15 @@ Zapisuje se **datum běhu vyrobené příkazem `date +%F`**, kolik hodin se pře
 
 **Nedělej nic zvláštního – pusť ho znovu.** Zrcadlení nemá stav, takže druhý běh vidí, co první stihl zapsat, a dorovná zbytek; opakované spuštění nad týmiž daty nic nezdvojí.
 
+**Zakládá se dřív, než se maže**, právě kvůli tomu (*Zrcadlení*, *Co se s čím dělá*). Přerušení mezi obojím tak zanechá duplikát, ne díru – a duplikát se dá srovnat, kdežto smazaný čas po uzávěrce propadne. **Přerušený běh proto zopakuj ještě před uzávěrkou klienta**, ne „někdy“.
+
 **Výjimka je částečně přelitá dávka.** Přelité záznamy se skládají od půlnoci za sebou, takže po přerušení uprostřed navazuje druhý běh na jiný čas, než by vyšel napoprvé. Na párování to nemá vliv – to jde přes datum v prefixu a délku –, ale **pořadí v cílovém místě už nemusí odpovídat pořadí práce**. Je to kosmetika, ne chyba k opravě; přerovnávat to znamená mazat a zakládat znovu.
 
 ## Hranice
 
 - **Do Clockify se nezapisuje nikdy.** Zdroj pravdy se neupravuje podle kopie, ani „ať to sedí“.
 - **Nemaže se nic, co nepatří Honzovi**, a nic mimo cílová místa ze souboru klienta. Než se smaže cokoliv, musí sedět obojí.
+- **U klienta, který se fakturuje ze svého systému, se potvrzuje celá dávka pokaždé**, ne jen při prvním běhu. Co se tam založí, to se vyfakturuje – zápis je tedy zásah do podkladu faktury, ne jen do cizí evidence.
 - **Mazání se ukazuje předem.** Založení a úprava proběhnou samy, ale **smazání je zásah do systému klienta** – vypíše se, co a proč, a čeká se na potvrzení. U prvního ostrého běhu na klientovi se potvrzuje celá dávka, ne jen mazání.
 - **Přenáší čas, ne peníze.** Do vzdáleného systému jde délka, popis a příznak – **nikdy sazba ani částka**. Kolik ta práce stojí, patří na fakturu; klient má u sebe vidět objem, ne ceník.
 - **Nefakturuje ani nepočítá.** Vrací, co udělal; hodiny sečte fakturace.

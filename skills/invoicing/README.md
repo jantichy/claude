@@ -7,10 +7,11 @@ Konec měsíce znamenal pokaždé totéž: projít timetracking, sečíst hodiny
 1. **`/invoicing full`** (výchozí) – celý průběh: součet hodin, kontrola s vámi, vystavení dokladů, přílohy a rozepsané drafty.
 2. **`/invoicing preview`** – náhled toho, co by se vystavilo. Nic nevystaví, nic nezapíše, nikam nesáhne. Hodí se před koncem měsíce zjistit, jestli hodiny sedí.
 3. **`/invoicing recover`** – **dohledá čas, který jste si zapomněli natrackovat.** Projde mail, kalendář, chat, hovory, commity, historii prohlížeče, porovná to s timetrackingem a ukáže tipy i s doložením, na základě čeho k nim došel.
-4. **Omezení na jednoho klienta** – za režimem smí stát jeho jméno; bez něj jede přes všechny.
-5. **U dohledávání i volba období**, takže jde zpětně zjistit, kolik času systematicky uniká.
-6. **Umí navázat na přerušený běh** – klienta s hotovou fakturou, ale bez draftu, dokončí, nezaloží znovu.
-7. **Vede deník dohod.** Co se u klienta dohodne odchylně, zapíše se datovaně, aby se za rok nevedl spor proti paměti.
+4. **`/invoicing sync`** – **přepíše odpracovaný čas do timetrackingu klienta**, vede-li si ho klient u sebe. Nic nevystavuje a jako jediný režim zapisuje do cizího systému.
+5. **Omezení na jednoho klienta** – za režimem smí stát jeho jméno; bez něj jede přes všechny.
+6. **U dohledávání i volba období**, takže jde zpětně zjistit, kolik času systematicky uniká.
+7. **Umí navázat na přerušený běh** – klienta s hotovou fakturou, ale bez draftu, dokončí, nezaloží znovu.
+8. **Vede deník dohod.** Co se u klienta dohodne odchylně, zapíše se datovaně, aby se za rok nevedl spor proti paměti.
 
 ## Proč zrovna tenhle
 
@@ -30,7 +31,8 @@ Konec měsíce znamenal pokaždé totéž: projít timetracking, sečíst hodiny
 ```
 /invoicing preview          # co by se vystavilo
 /invoicing full             # ostrý běh přes všechny klienty
-/invoicing recover FAVI     # dohledání zapomenutého času u jednoho klienta
+/invoicing recover <klient>  # dohledání zapomenutého času u jednoho klienta
+/invoicing sync <klient>     # přepsání času do timetrackingu klienta
 ```
 
 ## Ukázka výstupu
@@ -38,9 +40,9 @@ Konec měsíce znamenal pokaždé totéž: projít timetracking, sečíst hodiny
 Kontrola před vystavením, klient po klientovi:
 
 ```
-FAVI   2026-08-01 – 2026-08-31   18,5 h × <sazba> = <částka>
+<klient>  2026-08-01 – 2026-08-31   <hodiny> × <sazba> = <částka>
 Doklad:    vystavení 2026-08-31, DUZP 2026-08-31, splatnost 2026-09-14
-Položka:   Konzultace a implementace webové analytiky – 18,5 h
+Položka:   Konzultace a implementace webové analytiky – <hodiny>
 Vyřazeno:  2 záznamy označené jako nefakturovatelné (1,25 h)
 K rozhodnutí: záznam 12. 8. bez popisu (2 h)
 ```
@@ -49,6 +51,7 @@ K rozhodnutí: záznam 12. 8. bez popisu (2 h)
 
 - **Neodesílá maily. Nikdy.** Končí draftem.
 - **Neúčtuje.** Nehlídá úhrady, upomínky ani daňové termíny. Vystaví doklad a tím jeho práce končí.
+- **Nesynchronizuje obousměrně.** Režim `sync` píše jen do systému klienta, zpátky nikdy – zdroj pravdy se podle kopie neupravuje.
 - **Netrackuje čas.** Dohledá ho a ukáže, zapsat si ho musíte sami.
 - **Nedrží evidenci faktur** – zdrojem pravdy je fakturační systém, ne soubor v repozitáři.
 
