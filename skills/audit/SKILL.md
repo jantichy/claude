@@ -58,7 +58,7 @@ Auditovaný web je **cizí produkční systém s živými zákazníky**. Rozhodu
 | Pásmo | Co tam patří | Jak se s tím zachází |
 |---|---|---|
 | **Volné** | co žije jen v relaci prohlížeče a zmizí s ní – procházení, interní vyhledávání, filtry, varianty, konfigurátor, vložení do košíku, oblíbené, přepnutí měny a jazyka | dělá se bez ptaní a je to **chtěné**; bez toho se měření neodchytí |
-| **Jen po svolení, pokaždé zvlášť** | co splní aspoň jedno ze tří: vznikne trvalý záznam, který někdo v klientově systému uvidí a musí ho ručně smazat · odejde zpráva člověku · sáhne to na cizí peníze, sklad nebo kapacitu. Tedy objednávka, registrace, poptávka, rezervace, recenze, newsletter. Sem patří i zátěžové procházení a obejití přihlášení, rate limitu, WAF či captchy | **nikdy bez svolení v tomhle běhu** – co to znamená, viz *Zeptat se na svolení* níž |
+| **Jen po svolení, pokaždé zvlášť** | co splní aspoň jedno ze tří: vznikne trvalý záznam, který někdo v klientově systému uvidí a musí ho ručně smazat · odejde zpráva člověku · sáhne to na cizí peníze, sklad nebo kapacitu. Tedy objednávka, registrace, poptávka, rezervace, recenze, newsletter. Sem patří i zátěžové procházení a obejití přihlášení, rate limitu, ochranné brány WAF či captchy | **nikdy bez svolení v tomhle běhu** – co to znamená, viz *Zeptat se na svolení* níž |
 | **Nikdy uvnitř auditu** | zásah do klientovy konfigurace, kódu nebo účtů · zkoušení zranitelností · cokoliv, co může web shodit nebo poškodit data | **sám to nenavrhuj a nedělej**, ani když se svolení nabízí – viz *Třetí pásmo* níž |
 
 **Průchod webem sám o sobě zanechá stopu a to se přiznává dopředu.** Každý průchod odešle do klientových měřicích a reklamních systémů skutečné zásahy a každý klik na lištu souhlasu přibude do její statistiky – tedy následek, který zavření prohlížeče přežije. **Zakázat to nejde**, protože bez toho se měření neodchytí, takže to zůstává ve volném pásmu. Neznamená to ale, že se to udělá potichu: **před prvním průchodem řekni, co tím v klientových datech vznikne, a domluv, jak se testovací provoz pozná** – vlastní kampaňové značky, vyloučení IP, testovací prostředí. Bez toho se audit projeví jako nevysvětlitelný šum v reportech, který někdo za měsíc bude hledat.
@@ -107,7 +107,7 @@ Doména je zdroj pravdy o tom, co se hledá. Najdi ji přes rozcestník `~/Dev/c
 **Podle toho, co doména má, se rozhoduje o režimu běhu, a řekne se to nahlas:**
 
 - **Plný běh** – doména má postup i katalog.
-- **Omezený běh** – doména má jen checklist nebo standard. Auditovat se dá, ale chybí metodika sběru a katalog nálezů, takže **hloubka je jiná** a nálezy se opírají o obecný standard, ne o vzorce z praxe. Řekni to na začátku, ne až ve výstupu.
+- **Omezený běh** – doména má jen kontrolní seznam nebo standard. Auditovat se dá, ale chybí metodika sběru a katalog nálezů, takže **hloubka je jiná** a nálezy se opírají o obecný standard, ne o vzorce z praxe. Řekni to na začátku, ne až ve výstupu.
 
 **Nesedí-li žádná doména, skonči.** Vlastní kritéria si nevymýšlej – audit bez normy, proti které měří, je sbírka dojmů.
 
@@ -271,9 +271,9 @@ Vyžaduje registr nálezů z předchozího běhu – bez něj to není `update`,
 
 Projdi znovu **jen to, co je potřeba k rozhodnutí o zapsaných nálezech**, ne celý web. Každý nález skončí v jedné ze tří kategorií:
 
-- **opraveno** – ověř reprodukcí jako v *Fázi 5*; „klient říká, že to opravil“ není doklad,
-- **trvá** – zůstává v registru, doplní se datum posledního ověření,
-- **odpadlo** – funkce nebo stránka už neexistuje.
+- **Opraveno** – ověř reprodukcí jako v *Fázi 5*. „Klient říká, že to opravil“ není doklad.
+- **Trvá** – zůstává v registru a doplní se datum posledního ověření.
+- **Odpadlo** – funkce nebo stránka už neexistuje.
 
 **Nové nálezy se hledají taky**, ale panelem zúženým na to, čeho se změny týkají. Do registru se dopisují, nepřepisuje se.
 
@@ -281,8 +281,8 @@ Projdi znovu **jen to, co je potřeba k rozhodnutí o zapsaných nálezech**, ne
 
 Vypozorované ze srovnávacího běhu, ve kterém tentýž audit dělal agent bez skillu. Metodiku domény našel sám, ale vypadl z ní na těchhle místech – a **každou z těch odchylek si zdůvodnil větou, která zní rozumně**. Proto tu stojí i s tím zdůvodněním.
 
-- **Nepožádá se o podklady a přístupy.** Zdůvodnění, které padne: *„jde o cizí web, doptávání by zastavilo běh a mezeru vypíšu na konci dokumentu."* Výsledkem je audit, který neodpovídá na půlku kontrolního seznamu, a seznam neověřeného, který si nikdo nepřečte jako zadání. Postup domény má „co si vyžádat" jako první kapitolu schválně.
-- **Nikdo nezváží, co po průchodu zůstane v klientových datech.** Provoz do měřicích systémů a záznam v CMP statistice zavření prohlížeče přežije. Řekni to dopředu a domluv označení testovacího provozu; zpětně už se ta data neoddělí.
+- **Nepožádá se o podklady a přístupy.** Zdůvodnění, které padne: *„jde o cizí web, doptávání by zastavilo běh a mezeru vypíšu na konci dokumentu.“* Výsledkem je audit, který neodpovídá na půlku kontrolního seznamu, a seznam neověřeného, který si nikdo nepřečte jako zadání. Postup domény má „co si vyžádat“ jako první kapitolu schválně.
+- **Nikdo nezváží, co po průchodu zůstane v klientových datech.** Provoz do měřicích systémů a záznam ve statistice lišty souhlasu zavření prohlížeče přežije. Řekni to dopředu a domluv označení testovacího provozu; zpětně už se ta data neoddělí.
 - **Nález se doloží konfigurací a tváří se jako pozorovaný.** V exportu podmínka sedí, tak se to napíše jako fakt – ale nikdo to neproklikal. Patří to do stavu *doloženo jen konfigurací*, ne mezi potvrzené.
 - **Výjimka z metodiky domény se vyargumentuje potichu.** Doména před něčím varuje, situace vypadá jinak, tak se to udělá jinak a nikde to není. **Odchylku od postupu domény hlas nahlas** i s důvodem – buď je to správná výjimka, nebo je metodika špatně, a obojí se má vědět.
 - **Sbírá se v každém agentovi zvlášť.** Pětkrát dražší, pětkrát jiný výsledek a pětinásobná zátěž cizího webu.

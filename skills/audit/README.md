@@ -1,6 +1,8 @@
 # /audit – audit cizího webu proti vaší vlastní metodice
 
-Zaudituje cizí web v oblasti, kterou zadáte – analytiku, SEO, použitelnost, přístupnost –, a napíše nálezy i podklady pro klienta. Neměří to proti obecným „best practices“ z internetu, ale proti **vaší vlastní znalostní bázi**: postupu auditu a katalogu typických nálezů, které máte sepsané. Sám žádnou odbornou znalost nenese, jen celý audit řídí. Hodí se každému, kdo audity dělá opakovaně a nechce pokaždé znovu vymýšlet, na co se podívat a v jakém pořadí.
+Zaudituje cizí web v oblasti, kterou zadáte – analytiku, SEO, použitelnost, přístupnost –, a napíše nálezy i podklady pro klienta. Neměří to proti obecným „best practices“ z internetu, ale proti **vaší vlastní znalostní bázi**: postupu auditu a katalogu typických nálezů, které máte sepsané.
+
+Sám žádnou odbornou znalost nenese, jen celý audit řídí. Hodí se každému, kdo audity dělá opakovaně a nechce pokaždé znovu vymýšlet, na co se podívat a v jakém pořadí.
 
 ## Co umí
 
@@ -48,14 +50,16 @@ Skill se doptá na podklady a přístupy, projde web, ukáže nálezy a zeptá s
 - **Neopravuje, co našel.** Nesahá na klientovo nastavení, kód ani účty – jen čte.
 - **Není bezpečnostní test.** Nezkouší zranitelnosti a nedělá nic, co by web mohlo shodit.
 - **Neprověřuje vaši vlastní práci** v repozitáři; na to jsou jiné nástroje.
-- **Nedělá odbornou znalost za vás.** Nad oblastí, ke které nemáte nic sepsaného, se nerozjede vůbec; nad pouhým checklistem pojede mělčeji a řekne vám to.
+- **Nedělá odbornou znalost za vás.** Nad oblastí, ke které nemáte nic sepsaného, se nerozjede vůbec; nad pouhým kontrolním seznamem pojede mělčeji a řekne vám to.
 
 ## Jak si ho nainstalovat
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/audit
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-**Sám o sobě nestačí.** Skill je jen dirigent – odbornou část si musíte přinést: pro každou oblast, kterou chcete auditovat, potřebujete vlastní sepsaný postup auditu a katalog typických nálezů. Skill je hledá v `~/Dev/context/<oblast>/`. **Nenajde-li pro zadanou oblast vůbec nic, skončí a řekne to** – vlastní kritéria si nevymýšlí, protože audit bez normy, proti které měří, je sbírka dojmů. Máte-li pro tu oblast aspoň checklist, pojede proti němu, ale mělčeji a nahlas na to upozorní.
+**Sám o sobě nestačí.** Skill je jen dirigent – odbornou část si musíte přinést: pro každou oblast, kterou chcete auditovat, potřebujete vlastní sepsaný postup auditu a katalog typických nálezů. Skill je hledá v `~/Dev/context/<oblast>/`. **Nenajde-li pro zadanou oblast vůbec nic, skončí a řekne to** – vlastní kritéria si nevymýšlí, protože audit bez normy, proti které měří, je sbírka dojmů.
+
+Máte-li pro tu oblast aspoň kontrolní seznam, pojede proti němu, ale mělčeji a nahlas na to upozorní.
 
 ---
 
