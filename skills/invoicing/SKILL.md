@@ -12,7 +12,7 @@ Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého
 
 - **`/invoicing full`** (výchozí) – celý průběh až po rozepsané drafty.
 - **`/invoicing preview`** – náhled toho, co by se vystavilo. Nic nevystaví, nic nezapíše, nikam nesáhne.
-- **`/invoicing recover`** – dohledá čas, který se zapomněl natrackovat, a ukáže tipy s doložením. Taky nic nevystaví a **nezapíše ani do timetrackingu**.
+- **`/invoicing recover`** – dohledá čas, který se zapomněl natrackovat, a ukáže tipy s doložením. Taky nic nevystaví a **sám od sebe nezapíše ani do timetrackingu, ani do souboru klienta**.
 - **`/invoicing sync`** – přepíše odpracovaný čas do timetrackingu klienta, má-li ho klient vyplněný. Nic nevystavuje; **jako jediný režim zapisuje do cizího systému**.
 
 Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají soubor v `~/Dev/context/business/invoicing/`. **Klienta bez vyplněné části *Dohoda* vynech a řekni to** – takový soubor existuje kvůli `recover`, který identifikátory potřebuje dřív, než se začne fakturovat, a fakturovat podle nevyplněné dohody nejde.

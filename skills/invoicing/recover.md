@@ -22,7 +22,7 @@ Referenční soubor k režimu `recover` skillu `/invoicing`. Drží **katalog zd
 
 | Pole | Co v něm je |
 |---|---|
-| `zdroj` | mail, kalendář, Slack, git, Claude Code, prohlížeč |
+| `zdroj` | mail, kalendář, Slack, git, Claude Code, prohlížeč, sdílené dokumenty, pracovní poznámky, notifikace. **Nástroj se smí jmenovat** (`clickup`, `superhuman`), je-li to pro dohledání podstatné |
 | `od`, `do` | čas; u bodové stopy je `do` prázdné |
 | `basis` | **doslovný** úryvek nebo název – předmět mailu, titulek schůzky, první řádek commitu |
 | `odkaz` | kam se dá kliknout a ověřit to |
@@ -43,7 +43,18 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 | **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek |
 | **Prohlížeč** | navštívená URL, čas návštěvy **a doba na stránce** | střední – u výlučné URL použitelné, u sdílené ne |
 | **Sdílené dokumenty** | zápisy ze schůzek, **odevzdané výstupy**, zmínky o tom, co bylo dodáno | silný – nese obsah i hotové výsledky, viz *Odevzdaný výstup jako stopa* |
+| **Pracovní poznámky v cizím nástroji** | názvy stránek a časy návštěv z historie prohlížeče | **silný** – hustý shluk návštěv jedné stránky je práce na ní, viz níž |
 | **Mail** | čas odeslání, předmět, obsah | slabý – odeslání je špička ledovce, ne práce sama |
+| **Notifikace z nástroje bez přístupu** | mailová oznámení o úkolech a zprávách | slabý sám o sobě, **silný jako potvrzení** – doloží, že se něco dělo v ten čas |
+
+**Nástroj, ve kterém si klient nebo Honza vede poznámky, bývá to nejcennější, co se v historii prohlížeče najde** – a přehlédne se, protože host je obecný a neupozorní na sebe jménem klienta. Poznáš ho podle toho, že se na jedné stránce nastřádají stovky návštěv za hodinu: prohlížeč loguje každé uložení nebo přepnutí karty, takže **počet návštěv je hrubá míra intenzity práce**, ne počet otevření. Obsah z něj ale nepřečteš, jen názvy a časy; zapiš ho proto klientovi mezi *výlučné vzory URL* i s tím, že je to uvnitř slepé místo.
+
+**Session logy Clauda se prohledávají obsahem, ne jménem adresáře.** Projekt pojmenovaný po klientovi je vodítko, ne podmínka – práce pro něj běží i v jinak pojmenovaném adresáři. Vyhazují se z nich dvě věci:
+
+- **Vlastní administrativa.** Session o fakturaci, o vlastních skillech a o vlastní knowledge base není práce pro klienta, i když v ní jméno klienta padne.
+- **Falešná shoda v řetězci.** U krátkého jména klienta se do shody trefí i náhodný text – doloženo 11. 9. 2026 na slově `favicon` a na OAuth kódu v URL, kde se jméno klienta objevilo uvnitř náhodného řetězce. **Ověř shodu v kontextu věty**, ne jako podřetězec.
+
+**Do nástroje, kam se nedostaneš, se nemusí chodit, aby z něj byla stopa.** Mailové notifikace o úkolech a zprávách leží ve schránce a jsou plnohodnotný doklad, že se v ten čas něco dělo – doložilo to 11. 9. 2026 ověření schůzky, ke které jinak žádný záznam nebyl. **„Nemáme tam přístup“ proto neznamená „nedá se odtud dohledat nic“** a v souboru klienta se to musí rozlišit, jinak se ten zdroj přeskočí.
 
 **Kalendář se čte skriptem `~/.claude/skills/invoicing/calendar.swift`** a čtyři věci z něj vypadávají dřív, než se z nich stane stopa. Všechny čtyři vyrobily falešný nález při prvním ostrém běhu, takže to nejsou hypotézy:
 
@@ -170,9 +181,9 @@ Ověřovatel dostane jediný úkol: **nález vyvrátit**. Projde tyhle otázky a
 
 **Co ověření nepřežije, se neukáže.** Vyvrácené nálezy se vypíšou jen v souhrnném počtu, ne jednotlivě – jinak si je uživatel přečte a rozhodnutí se tím vrátí zpátky k němu.
 
-**Jedna výjimka: nález, který vykázal některý z předchozích běhů jako platný.** Ten se vypíše **jmenovitě i s tím, čím byl vyvrácen** – rozhodnutí se tím zpátky nevrací, protože se o něm už jednou rozhodlo na základě něčeho, co dnes neplatí. Je to oprava dřívějšího tvrzení, ne nabídka k posouzení. Doloženo 11. 9. 2026 na FAVI: dva nálezy z běhu o pět dnů dřív stály jen na vlastním bloku v kalendáři a oba padly, což bylo užitečnější než celý zbytek běhu.
+**Jedna výjimka: nález, který vykázal některý z předchozích běhů jako platný.** Ten se vypíše **jmenovitě i s tím, čím byl vyvrácen** – rozhodnutí se tím zpátky nevrací, protože se o něm už jednou rozhodlo na základě něčeho, co dnes neplatí. Je to oprava dřívějšího tvrzení, ne nabídka k posouzení. Doloženo 11. 9. 2026: u klienta, nad kterým `recover` běžel podruhé, stály dva nálezy z běhu o pět dnů dřív jen na vlastním bloku v kalendáři a oba padly – a bylo to užitečnější než celý zbytek běhu.
 
-**Vlastní blok v kalendáři bez účastníků není sám o sobě doklad práce.** Říká, co si Honza naplánoval, ne co udělal – a plán se nesplní docela běžně. Takový blok proto vždycky potřebuje **druhou stopu ve svém čase** (prohlížeč, mail, commit, session). Nemá-li ji, je to nanejvýš indicie; a najdeš-li v jeho čase stopu **soukromé** aktivity, nález padá. Obojí se 11. 9. 2026 stalo na FAVI, každé jednou.
+**Vlastní blok v kalendáři bez účastníků není sám o sobě doklad práce.** Říká, co si Honza naplánoval, ne co udělal – a plán se nesplní docela běžně. Takový blok proto vždycky potřebuje **druhou stopu ve svém čase** (prohlížeč, mail, commit, session). Nemá-li ji, je to nanejvýš indicie; a najdeš-li v jeho čase stopu **soukromé** aktivity, nález padá. Obojí se 11. 9. 2026 stalo u jednoho klienta, každé jednou.
 
 ## Výstup
 
@@ -197,4 +208,15 @@ Pod tabulku patří čtyři věci, každá i když je prázdná:
 
 **Režim sám nikam nezapisuje.** Ani do Clockify, ani do souboru klienta. Odhad postavený na úsudku o cizích datech je návrh, ne zjištění, a rozhodnutí patří tomu, kdo tu práci odvedl.
 
-**Uloží-li si uživatel výstup jako dočasný blok do souboru klienta**, platí pro ten blok dvě věci navíc oproti tvaru výš: nese **rozpad podle dokladu**, na který který nález půjde (rozsah běhu bývá širší než fakturované období), a sekci **o tom, co se oproti minulému běhu změnilo**. Zbytek tvaru se nemění a pořadí sekcí drží tenhle soubor.
+**Uloží-li si uživatel výstup jako dočasný blok do souboru klienta, je to jiný artefakt než výpis do konverzace** a má vlastní tvar. Výpis se čte jednou a zahodí; blok leží v repozitáři, dokud se hodiny nedoplní, a čte ho někdo, kdo u běhu nebyl. Proto nese navíc kontext, který by ve výpisu byl balast, a pořadí drží tohle:
+
+1. **Hlavička** – rozsah běhu, stav zdrojů, a **čím se fakturované období liší od rozsahu běhu**, je-li užší.
+2. **Tabulka nálezů** – oproti tvaru výš má sloupec **Doklad** navíc, protože ne všechny nálezy jdou na tutéž fakturu. Sloupec *Zdroje* jmenuje **konkrétní** zdroj, ne jeho třídu: ne „prohlížeč“, ale nástroj, ve kterém se to našlo.
+3. **Součet** s rozpadem podle dokladu a s částkou.
+4. **Otázky k rozsahu**, každá i s tím, jak se vypořádala, padla-li odpověď.
+5. **Natrackováno jinam.**
+6. **Indicie** – v bloku jako samostatná sekce, ne jako řádek tabulky s pomlčkou: tabulka má sloupec s částkou a indicie do něj nepatří.
+7. **Slepá místa.**
+8. **Vyvrácené nálezy.** Nálezy **předchozího** běhu jmenovitě, viz *Ověření nálezů*; vyvrácené nálezy **tohohle** běhu jen počtem a jednou větou, čím padly jako třída – ne jeden po druhém.
+9. **Co se oproti minulému běhu změnilo** – výkladová tabulka od starého součtu k novému, aby šel rozdíl ověřit řádek po řádku.
+10. **Stav timetrackingu, proti kterému se porovnávalo.**
