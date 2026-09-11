@@ -108,6 +108,8 @@ Režim si **nedrží žádný stav** – žádnou mapovací tabulku, žádné ID
 
 **Záznam s prefixem se nemaže nikdy**, ani když se mu protějšek nenajde. Leží sice v otevřeném okně, ale jeho práce pochází z **uzavřeného** měsíce – a ten se z Clockify nemusí vůbec číst, takže chybějící protějšek neznamená, že v Clockify není. Popis se u něj opravit smí, smazat ne.
 
+**Chybějící protějšek se ale ohlásí** – jednou větou, co ve vzdáleném systému leží a v Clockify k tomu nic není. Buď se ten čas ve zdroji smazal a kopie ho přeúčtuje navíc, nebo se Clockify nedočetlo celé; **rozhodnout to umí jen člověk** a tiché mlčení by z obojího udělalo nulu.
+
 **Mimo otevřené okno se nemaže ani neupravuje nic**, i kdyby se strany rozcházely. Rozdíl v uzavřeném období se **ohlásí** a nechá být.
 
 ## Zápis do deníku
