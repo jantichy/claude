@@ -15,7 +15,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ## Obsah
 
-**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text)
+**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička)
 
 **[Ponechané termíny](#ponechané-termíny)** – heuristika, osa, vektor útoku · „mutace“ · „session“ · „soustava“ · „kontrakt příkazů“ · „sledovací okno“
 
@@ -222,6 +222,18 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Ne „volný text“** – v IT obsazený vstupním polem formuláře a fulltextem. **Ne samotný „text“** – nerozlišuje: zaškrtávací seznam je taky text, takže věta „ne text, ale seznam“ netvrdí nic.
 
 **Tři vazby náhradu neunesly a přepsaly se celé:** *„Ne prózu (‚funguje přihlášení‘)“* → *„Ne holou větu“* (jedna věta souvislý text není), *„nebo je to próza?“* v `/oponent` → *„nebo je to jen obecné tvrzení?“*, a *„Má na to skripty, ne prózu“* v `/skill` → *„ne popis v textu“*.
+
+### hlavička
+
+**Blok metadat ve formátu YAML mezi dvěma `---` na začátku `SKILL.md`**, který nese `name`, `description`, `argument-hint` a `allowed-tools`. Tvar drží `~/.claude/skills/SKILLS.md`, *Hlavička*. Kde hrozí záměna, přidává se přívlastek – *hlavička skillu*.
+
+**Neříkej tomu „frontmatter“** (2026-09-11). Anglicky je *front matter* zavedený pojem z generátorů statických webů a používá ho i dokumentace Claude Code; česky zavedený není a do věty se dostane jedině skloňovaný („ve frontmatteru“, „z frontmatteru“). Rozhodlo ale něco jiného: **„hlavička“ už zavedená byla.** V běžném textu konfigurace nestál „frontmatter“ ani jednou, kdežto o hlavičce mluví norma sekcí `## 3. Hlavička`, `/skill`, `/autocommit` i docstringy testů. Zápis tedy nic nepřepisoval – brání tomu, aby se anglické slovo do těch vět začalo cpát.
+
+**Identifikátory v kódu zůstávají anglicky** – funkce `frontmatter()` a třída `SkillFrontmatter` v `~/.claude/tests/test_skills.py`. Kód se podle `~/.claude/RULES.md` píše anglicky, takže je to táž situace jako `PREFLIGHT.md` u [přípravy](#příprava).
+
+**Homonymum se nechává vědomě:** HTTP hlavička, hlavička tabulky (`~/Dev/context/web/admin.md`) i hlavička souboru jako úvodní odstavec pro čtenáře (`~/Dev/context/decisions.md`, 8. 9. 2026) znamenají něco jiného. Rozlišuje je přívlastek a doména – táž obrana jako u „platební brány“ proti [blokující kontrole](#blokující-kontrola).
+
+**Zamítnuto – „YAML hlavička“:** přesnější, ale ve skloňovaných vazbách zbytečně dlouhé a formát je z kontextu zřejmý. Zůstává použitelné tam, kde by jinak nebylo poznat, o kterou hlavičku jde; tak to má docstring funkce `frontmatter()`. **Zamítnuto – „záhlaví“:** česky obsazené záhlavím stránky a tabulky, vyměnilo by jednu záměnu za druhou.
 
 ## Ponechané termíny
 
