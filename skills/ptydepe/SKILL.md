@@ -40,7 +40,9 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Skill neběží nad
 
 1. **Kořeny.** `~/.claude`, `~/Dev/context` a **každý další git repozitář v `~/Dev`**. Posledně jmenované se do rozsahu berou, jen když se v nich termín vyskytuje – zjistí to inventura, ne domněnka.
 2. **Zjisti, co je už rozhodnuté** – termín, který v tom seznamu je, ať nahrazený, nebo vědomě ponechaný, se znovu neprojednává. Kolik k tomu potřebuješ přečíst, se liší podle režimu: `suggest` si vystačí s `~/.claude/PTYDEPE.md` a **s *Obsahem*** `terms.md` v adresáři skillu, protože k vytipování kandidátů stačí jména; `add` čte **oba soubory celé**, protože rozhoduje o termínu a potřebuje k tomu úvahy i zamítnuté varianty. Rozvaha roste s každým vypořádaným termínem, takže tahat ji do běhu, který ji nepoužije, je táž vada, kvůli které se 10. 9. 2026 dělila sama tabulka.
-3. **Pracovní strom každého dotčeného repozitáře musí být čistý.** Rozpracované změny se s náhradou smíchají a přestane být poznat, co je čí. Vypiš je a zeptej se.
+3. **Rozpracovaný nesmí být žádný soubor, na který náhrada sáhne.** Smíchaly by se s ní a přestalo by být poznat, co je čí. **Na zbytek stromu se nečeká:** nad `~/.claude` běží souběžné session skoro pořád, takže požadavek na čistý strom by buď zablokoval každý běh, nebo se začal mlčky obcházet – a to druhé je horší, protože se pak přestane obcházet vědomě. Cizí rozpracovanou práci tedy **vypiš a pokračuj**; víc než výpis to nepotřebuje, protože se do commitu stejně nedostane (viz *Co se svými zápisy udělá* níž). Rozpracovaný soubor **uvnitř** rozsahu je jiná věc – tam se zastav a zeptej se.
+
+   Rozsah přitom v tuhle chvíli ještě neznáš, zjistí ho až *Fáze 4*. **Ověř to proto znovu, až ho budeš mít**, a porovnej ho s výpisem odsud.
 4. **Zjisti režim a termín** z argumentu. Bez argumentu jede `suggest`.
 
 **Co se svými zápisy udělá:** commituje je, v každém dotčeném repozitáři zvlášť a s vlastní zprávou. Bez toho by je posbíral autocommit cizí session spolu s něčím nesouvisejícím.
@@ -62,6 +64,8 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Skill neběží nad
 
 **„Je to uživatelovo slovo“ není argument pro ponechání.** Do souborů se dostane i to, co uživatel jednou napsal a sám tak nemluví.
 
+**Nula výskytů není důvod skončit.** Zadá-li uživatel termín, který v souborech není – a `suggest` ho nabídnout nemůže, protože řadí podle četnosti –, míří to na [preventivní zápis](#fáze-6--záznam): slovo se do české věty teprve tlačí a má se zakázat dřív, než se uchytí. **Řekni nahlas, že výskyty nejsou**, odpověz na otázky 2 a 3 z vlastní znalosti a k první doplň, **čím se to dnes v souborech říká místo toho** – ten doklad nahrazuje kontext, který by jinak dal výpis výskytů. *Fáze 4* i *Fáze 5* pak odpadají a řekne se to.
+
 ## Fáze 3 – Návrh a rozhodnutí
 
 **Vyber jednu náhradu a obhaj ji.** Ne výčet možností – to je odklad rozhodnutí na horší chvíli. K ní přidej **jednu až dvě zvážené a zamítnuté** i s důvodem; příště se pak nezkoumají znovu.
@@ -75,6 +79,7 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 | Je to metafora, kterou věta vedle stejně vysvětluje | zruš termín a nech ten popis |
 | Jednoslovný protějšek nese jen půlku významu | **nahraď popisem, ne slovem** – heslo pak zní celou větou („seznam, který musí přesně sedět“). Je to legitimní výsledek, ne nouzové řešení |
 | Slovo je běžná čeština v tomhle významu | **ponech** a zapiš proč, ať se to neotevírá znovu |
+| Český protějšek je v souborech zavedený a cizí slovo v nich není | **zakaž ho preventivně.** Náhrada se neprovádí, protože není co přepsat; zapisuje se ale stejně jako náhrada – viz *Fáze 6* |
 | Termín je zároveň **identifikátor v kódu** nebo klíčové slovo jazyka | **ponech.** Přeložit běžný text, zatímco kód dál říká původní jméno, vyrobí dvě jména pro jednu věc – `guard` je klíčové slovo Swiftu i pole ve schématu nálezu |
 
 **Pak se zastav a počkej na souhlas.** Na soubory se v téže odpovědi nesahá – uživatel si často vybere jinou variantu, nebo ho návrh přivede na třetí, a práce udělaná mezitím se zahazuje. Odpoví-li jen na část návrhu, zbytek je pořád nezodpovězený, ne tiše schválený.
@@ -85,12 +90,16 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 
 **Inventuru nikdy nezkracuj.** `cut`, `head` ani `-m` na výstupu grepu znamenají, že výskyt dál na řádku neuvidíš – a pak se objeví až po commitu.
 
+**Tahle fáze i *Fáze 5* odpadají u [preventivního zápisu](#fáze-6--záznam)** – u nuly výskytů není co vyloučit ani co přepsat. **Průchod přesto pusť** a jeho výstup vypiš: je to jediný doklad, že ta nula je změřená, a ne domnělá. Vyjde-li nenulový, preventivní zápis to není a pokračuj normálně.
+
 1. **Jede se výhradně přes `git ls-files`.** Nikdy `rglob` ani `find` přes adresář: `~/.claude` obsahuje transkripty session, cache a paměť, které v `.gitignore` sice jsou, ale rekurzivnímu skriptu to nevadí a přepíše je.
 2. **Najdi legitimní významy téhož slova** a soubory, kde stojí, vyluč jmenovitě. Stává se to skoro pokaždé: „brána“ byla i platební, „vizitka“ i firemní web, „osa“ i časová.
 3. **Vyluč publikované a cizí texty** – `~/Dev/context/archive/`, `compose/_analysis/`, ohlasy ve `speaking/`.
 4. **Vyluč vlastní frontu kandidátů.** Seznam termínů k projednání obsahuje ten termín jako položku a náhrada by si přepsala vlastní zadání.
 5. **Vyluč `~/.claude/PTYDEPE.md` a `skills/ptydepe/terms.md`.** Starý tvar v nich stojí schválně – v levém sloupci tabulky a ve větě „nahrazuje dřívější …“. Náhrada by z rozhodnutí udělala tautologii a nikdo by pak nezjistil, co se čím nahradilo.
 6. **Ověř, že slovo nemá v některém souboru opačný význam.** Stalo se: týž termín označoval jinde vadu, ne přednost, a plošná náhrada by z toho udělala nesmysl.
+
+**Teď porovnej rozsah s rozpracovanými soubory z *Fáze 0*.** Je-li mezi nimi průnik, zastav se a zeptej se – tohle je první okamžik, kdy se to dá zjistit.
 
 Vypiš přehled ke schválení: počet výskytů, soubory, vyloučená místa a proč.
 
@@ -150,6 +159,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 Vytipuje kandidáty. **Nic nemění a na nic se neptá** – výstupem je seznam k projednání.
 
+**Termín s nulou výskytů odsud vypadnout nemůže**, protože se řadí podle četnosti. Kandidát na [preventivní zápis](#fáze-6--záznam) proto přichází vždycky od uživatele, `add` s termínem, který v souborech není – a není to chyba zadání.
+
 **Kritérium je jediné a zní: normálně se tomu říká jinak.** Hledej tedy termín, který:
 
 - **nemá oporu v oboru** – v angličtině ano, v češtině ne (*ratchet* → „ráčna“), nebo nikde,
@@ -180,6 +191,6 @@ Všechny z ostrých běhů, každá se opravdu stala:
 - **Fronta kandidátů si přepsala vlastní položku**, protože nebyla vyloučená z náhrady. Dvakrát po sobě.
 - **Náhrada zasáhla homonymum** – „platební brána“ se změnila na „platební kontrolu“ ve větě o penězích.
 - **Změna rodu rozbila shodu.** „Úhel“ je mužský, „hledisko“ střední, a jedenáct přívlastků zůstalo v původním tvaru.
-- **Termín se obhajoval z paměti místo ze souborů.** Vznikla tím tabulka tří vrstev, kterou zdrojový dokument nikdy neobsahoval.
+- **Termín se obhajoval z paměti místo ze souborů.** Vznikla tím tabulka tří vrstev, kterou zdrojový dokument nikdy neobsahoval. **U preventivního zápisu je to naopak jediný možný postup** – výskyty nejsou –, ale i tam se z paměti neberou fakta o **cizích souborech**: doklad, že je protějšek zavedený, se cituje z grepu, ne z dojmu. Právě takový doklad se 11. 9. 2026 ukázal jako vymyšlený: heslo *hlavička* dokládalo zavedenost `/autocommitem`, který mluví o něčem jiném.
 - **Náhrada se začala dělat před souhlasem.** Uživatel se rozhodl jinak a muselo se to vracet.
 - **Náhrada minula popisky ve formuláři.** Podstatné jméno se v `/cleanup` nahradilo všude, ale v `header`u a v šabloně zbyl tvar odvozený ze slovesa: krok se jmenoval „Viselo 4/4“. Prošlo to kontrolním průchodem i testy a všimlo si toho až oko nad běžícím formulářem.
