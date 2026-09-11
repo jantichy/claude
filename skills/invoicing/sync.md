@@ -118,6 +118,12 @@ Je to jediné, co režim ukládá mimo vzdálený systém, a má to jediný dův
 
 Zapisuje se **datum běhu vyrobené příkazem `date +%F`**, kolik hodin se přelilo a odkud, kolik propadlo a za které dny, a **částka, o kterou propadnutím přišel**. Bez částky je to poznámka; s částkou je to důvod příště nečekat.
 
+## Když běh selže uprostřed
+
+**Nedělej nic zvláštního – pusť ho znovu.** Zrcadlení nemá stav, takže druhý běh vidí, co první stihl zapsat, a dorovná zbytek; opakované spuštění nad týmiž daty nic nezdvojí.
+
+**Výjimka je částečně přelitá dávka.** Přelité záznamy se skládají od půlnoci za sebou, takže po přerušení uprostřed navazuje druhý běh na jiný čas, než by vyšel napoprvé. Na párování to nemá vliv – to jde přes datum v prefixu a délku –, ale **pořadí v cílovém místě už nemusí odpovídat pořadí práce**. Je to kosmetika, ne chyba k opravě; přerovnávat to znamená mazat a zakládat znovu.
+
 ## Hranice
 
 - **Do Clockify se nezapisuje nikdy.** Zdroj pravdy se neupravuje podle kopie, ani „ať to sedí“.
