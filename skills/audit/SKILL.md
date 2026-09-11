@@ -21,11 +21,7 @@ Zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a 
 | **`/audit report`** | sepíše vybrané výstupy z hotového registru nálezů |
 | **`/audit update`** | přeběhne dřív auditovaný web znovu a řekne, co se změnilo |
 
-**Jak se pozná režim od popisu zakázky:** jednoslovný argument ze seznamu výš je **režim**; cokoliv jiného – včetně jednoho slova, které v seznamu není (`/audit analytiky`) – je popis zakázky a běží `full`. `/audit report` je tedy sepsání výstupů, kdežto `/audit reportů na www.example.com` je audit reportů. Je-li to i tak dvojznačné, **zeptej se** – rozjet celý audit místo přepsání výstupu stojí desítky minut.
-
-**Jméno `full` znamená jinde rozsah, tady úplnost** (`/review full` je celý projekt místo větve). Je to vědomé: v obou případech čte člověk „nezaříznutý běh“ a jiné jméno by tu podobnost jen zakrylo.
-
-Běh `full` je **kdykoliv přerušitelný**: stav se odkládá do `.claude/run/audit.json` a při dalším vyvolání skill nabídne navázání. Dílčí režimy jsou tytéž fáze puštěné samostatně, když je potřeba jen jedna. **Fáze 0 a 1 běží vždycky**, ať jde o kterýkoliv režim – bez přípravy a bez auditní dráhy domény nemá žádný z nich podle čeho jednat.
+Dílčí režimy jsou tytéž fáze puštěné samostatně, když je potřeba jen jedna. **Fáze 0 a 1 běží vždycky**, ať jde o kterýkoliv režim – bez přípravy a bez auditní dráhy domény nemá žádný z nich podle čeho jednat. Běh je přitom kdykoliv přerušitelný (*Fáze 3*).
 
 ## Co skill nedělá
 
@@ -91,6 +87,7 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Odchylky:
 2. **Načti běhový stav** `.claude/run/audit.json`, existuje-li. Nabídni navázání dřív, než začneš cokoliv počítat znovu.
 3. **Kontrola závislostí.** Ověř, že je dostupný `chrome-devtools` MCP. Chybí-li, **neselhávej**: řekni, že odpadá všechno, co se ověřuje průchodem, a nabídni běh jen nad dodanými podklady – nebo instalaci.
 4. **Zjisti doménu a cíl** z argumentu (`/audit analytiky na www.example.com`). Chybí-li jedno z toho, doptej se; **adresu si nikdy nedomýšlej.**
+5. **Rozliš režim od popisu zakázky.** Jednoslovný argument ze seznamu v *Co skill dělá* je **režim**; cokoliv jiného – včetně jednoho slova, které v seznamu není (`/audit analytiky`) – je popis zakázky a běží `full`. `/audit report` je tedy sepsání výstupů, kdežto `/audit reportů na www.example.com` je audit reportů. Je-li to i tak dvojznačné, **zeptej se**: rozjet celý audit místo přepsání výstupu stojí desítky minut. **Jméno `full` přitom znamená jinde rozsah, tady úplnost** (`/review full` je celý projekt místo větve) – je to vědomé, protože v obou případech čte člověk „nezaříznutý běh“.
 
 ## Fáze 1 – Auditní dráha domény
 
