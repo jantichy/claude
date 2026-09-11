@@ -171,7 +171,7 @@ Platí *Hranice na cizím webu* výš. Narazíš-li na něco z druhého pásma, 
 
 **Nad sedm specialistů nechoď.** Panel, který vyrobí víc nálezů, než kdo přečte, se přestane číst celý. **Vypiš, koho jsi vybral, koho vynechal a proč** – tichý výběr vypadá jako úplný panel.
 
-Zadání specialistů, jejich povinná pole a text o cizím obsahu drží `~/.claude/skills/audit/agents.md`. Každý dostane sběr z *Fáze 3*, svůj výřez katalogu a povolení **dozískat si vlastní záložkou**, co ho napadne až při práci.
+Zadání specialistů, jejich povinná pole a text o cizím obsahu drží `~/.claude/skills/audit/agents.md`. Každý dostane sběr z *Fáze 3*, svůj výřez katalogu a povolení **dozískat si vlastní záložkou**, co ho napadne až při práci – ale **jen se čtecími nástroji prohlížeče a bez práva zápisu do souborů** (`agents.md`, *Co dostane každý agent*). Totéž platí pro ověřovatele ve *Fázi 5*.
 
 **Model a effort** (`~/.claude/RULES.md`, *Model a effort podle úkolu*): specialisté na výchozím modelu s `high`.
 
