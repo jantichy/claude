@@ -249,7 +249,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ## Ponechané termíny
 
-Rozhodnutí, že se termín **nemění**. Do tabulky v `~/.claude/PTYDEPE.md` nepatří – ta říká, co se čím nahrazuje –, ale hledají se tady, spolu se zbytkem rozvahy o termínech. Přestěhováno 10. 9. 2026 z `~/Dev/context/decisions.md`, kde do té doby leželo odděleně od nahrazených termínů.
+Rozhodnutí, že se termín **nemění**. Do tabulky v `~/.claude/PTYDEPE.md` nepatří – ta říká, co se čím nahrazuje –, ale hledají se tady, spolu se zbytkem rozvahy o termínech. Přestěhováno z `~/Dev/context/decisions.md`, kde do té doby leželo odděleně od nahrazených termínů: osm položek 10. 9. 2026 ze sekce `## Claude`, `guard` a `stopa práce` až 11. 9., protože leží v doménových sekcích a první průchod je minul.
 
 ### 2026-09-07 – Ponechané termíny z revize: heuristika, osa, vektor útoku
 

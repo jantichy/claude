@@ -12,7 +12,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 Hledá a ruší **neustálené termíny** – slova, která používám, jako by byla zavedená, přestože je nikdo jiný nezná. Vznikají tím, že v konverzaci padne slovo, klidně jen překlepem nebo doslovným překladem, a já ho příště beru jako termín. Dohodnuté náhrady drží tabulka v `~/.claude/PTYDEPE.md`, která se importuje do každé session; rozvahu, proč který termín padl, drží `terms.md` v adresáři skillu.
 
 - **`/ptydepe`** nebo **`/ptydepe suggest`** – **vytipování**. Projede konfiguraci i znalostní bázi a vrátí seřazené kandidáty s četností a běžným protějškem. Nic nemění.
-- **`/ptydepe add <termín>`** – **projednání jednoho termínu**. Co znamená, odkud se vzal, čím ho nahradit – nebo že se ponechá. Po schválení náhrada napříč všemi repozitáři, zápis do `PTYDEPE.md` i do `terms.md`, commit.
+- **`/ptydepe add <termín>`** – **projednání jednoho termínu**. Co znamená, odkud se vzal a čím ho nahradit. Konce jsou tři: **nahradit**, **ponechat** (je to běžná čeština), nebo **zakázat preventivně** – protějšek je zavedený dávno a cizí slovo se teprve tlačí do vět. Po schválení náhrada napříč všemi repozitáři, zápis do `PTYDEPE.md` i do `terms.md`, commit.
 
 Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo nerozumí, ale všichni předstírají, že ano.
 
@@ -40,9 +40,11 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Skill neběží nad
 
 1. **Kořeny.** `~/.claude`, `~/Dev/context` a **každý další git repozitář v `~/Dev`**. Posledně jmenované se do rozsahu berou, jen když se v nich termín vyskytuje – zjistí to inventura, ne domněnka.
 2. **Zjisti, co je už rozhodnuté** – termín, který v tom seznamu je, ať nahrazený, nebo vědomě ponechaný, se znovu neprojednává. Kolik k tomu potřebuješ přečíst, se liší podle režimu: `suggest` si vystačí s `~/.claude/PTYDEPE.md` a **s *Obsahem*** `terms.md` v adresáři skillu, protože k vytipování kandidátů stačí jména; `add` čte **oba soubory celé**, protože rozhoduje o termínu a potřebuje k tomu úvahy i zamítnuté varianty. Rozvaha roste s každým vypořádaným termínem, takže tahat ji do běhu, který ji nepoužije, je táž vada, kvůli které se 10. 9. 2026 dělila sama tabulka.
-3. **Rozpracovaný nesmí být žádný soubor, na který náhrada sáhne.** Smíchaly by se s ní a přestalo by být poznat, co je čí. **Na zbytek stromu se nečeká:** nad `~/.claude` běží souběžné session skoro pořád, takže požadavek na čistý strom by buď zablokoval každý běh, nebo se začal mlčky obcházet – a to druhé je horší, protože se pak přestane obcházet vědomě. Cizí rozpracovanou práci tedy **vypiš a pokračuj**; víc než výpis to nepotřebuje, protože se do commitu stejně nedostane (viz *Co se svými zápisy udělá* níž). Rozpracovaný soubor **uvnitř** rozsahu je jiná věc – tam se zastav a zeptej se.
+3. **Vypiš rozpracované změny v každém známém kořeni a pokračuj.** Blokuje jedině soubor, na který pak náhrada sáhne – ten by se s ní smíchal a přestalo by být poznat, co je čí. **Rozhodnout se to tady ale nedá**, protože rozsah zjistí až *Fáze 4*; výpis odsud je jen podklad pro ni. Na cizí rozpracovanou práci **se neptej**: do commitu se nedostane, protože se commitují jmenované cesty (`~/.claude/RULES.md`, *Commituj jmenované cesty, ne `-A`*), a dotaz, který nic nerozhoduje, se naučí odklikávat bez čtení.
 
-   Rozsah přitom v tuhle chvíli ještě neznáš, zjistí ho až *Fáze 4*. **Ověř to proto znovu, až ho budeš mít**, a porovnej ho s výpisem odsud. **Zamítnuto – nechat tvrdý požadavek na čistý strom a ptát se pokaždé** (2026-09-11): dotaz na cizí rozpracovanou práci, která se do commitu stejně nedostane, nic nerozhoduje a naučí uživatele odklikávat ho bez čtení.
+   **Proč se nečeká na čistý strom:** nad `~/.claude` běží souběžné session skoro pořád, takže tvrdý požadavek by buď zablokoval každý běh, nebo se začal mlčky obcházet – a to druhé je horší, protože se pak přestane obcházet vědomě. **Jinde ten důvod neplatí**, ale pravidlo se kvůli tomu neštěpí: blokující je i tam jen průnik s rozsahem, a ten se posuzuje stejně. **Zamítnuto – nechat tvrdý požadavek a ptát se pokaždé** (2026-09-11).
+
+   **Výpis odsud zestárne** – souběžná session mezitím commituje i rozpracovává. *Fáze 4* ho proto nepoužívá jako pravdu, ale jen jako upozornění, a kolizi měří čerstvým `git status`.
 4. **Zjisti režim a termín** z argumentu. Bez argumentu jede `suggest`.
 
 **Co se svými zápisy udělá:** commituje je, v každém dotčeném repozitáři zvlášť a s vlastní zprávou. Bez toho by je posbíral autocommit cizí session spolu s něčím nesouvisejícím.
@@ -99,7 +101,9 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 5. **Vyluč `~/.claude/PTYDEPE.md` a `skills/ptydepe/terms.md`.** Starý tvar v nich stojí schválně – v levém sloupci tabulky a ve větě „nahrazuje dřívější …“. Náhrada by z rozhodnutí udělala tautologii a nikdo by pak nezjistil, co se čím nahradilo.
 6. **Ověř, že slovo nemá v některém souboru opačný význam.** Stalo se: týž termín označoval jinde vadu, ne přednost, a plošná náhrada by z toho udělala nesmysl.
 
-**Teď porovnej rozsah s rozpracovanými soubory z *Fáze 0*.** Je-li mezi nimi průnik, zastav se a zeptej se – tohle je první okamžik, kdy se to dá zjistit.
+**Teď změř kolizi s rozpracovanou prací** – tohle je první okamžik, kdy se to dá udělat, protože teprve tady znáš rozsah. Pusť **čerstvý `git status`** v každém dotčeném repozitáři, ne výpis z *Fáze 0*: ten je mezitím starý o celou fázi a souběžná session do stromu zapisuje dál. Je-li v průniku s rozsahem byť jediný soubor, zastav se a zeptej se.
+
+**Zopakuj to těsně před zápisem v *Fázi 5***. Mezi tímhle místem a zápisem leží čekání na tvůj souhlas, tedy minuty až hodiny – a přesně v nich soubor přibude.
 
 Vypiš přehled ke schválení: počet výskytů, soubory, vyloučená místa a proč.
 
@@ -119,7 +123,7 @@ Pak zkontroluj to, co ani ta nejlepší mapa nezachytí, protože to není o tva
 **Zapisuje se na dvě místa a obojí je povinné.** Rozdělené jsou proto, že `PTYDEPE.md` jde do každé session a rostl by s každým termínem, kdežto důvody potřebuje jen ten, kdo rozhoduje:
 
 - **`~/.claude/PTYDEPE.md`** – jeden řádek tabulky: starý tvar, nový tvar, rozsah a meze. Nic víc; odůvodnění sem nepatří.
-- **`~/.claude/skills/ptydepe/terms.md`** – heslo s celou rozvahou (a řádek do jeho *Obsahu*): co termín znamená, co jím naopak není, a věta **„nahrazuje dřívější …“ i s důvodem**. Starý termín zůstává zapsaný **tady** – jinde se nahradil beze stopy –, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo. **Čtyři druhy míst, kde vědomě zůstává i jinde**, vypisuje `terms.md`, *Jak se to zapisuje*; heslo je u sebe vždycky jmenuje.
+- **`~/.claude/skills/ptydepe/terms.md`** – heslo s celou rozvahou (a řádek do jeho *Obsahu*): co termín znamená, co jím naopak není, a věta **„nahrazuje dřívější …“ i s důvodem** – u preventivního zápisu místo ní **„neříkej tomu …“**, protože se nic nenahrazuje. Starý termín zůstává zapsaný **tady** – jinde se nahradil beze stopy –, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo. **Čtyři druhy míst, kde vědomě zůstává i jinde**, vypisuje `terms.md`, *Jak se to zapisuje*; heslo je u sebe vždycky jmenuje.
 
 **Neexistuje-li některý z nich, založ ho:** `PTYDEPE.md` s nadpisem, sekcí *Jak se používá* a prázdnou tabulkou, `terms.md` s nadpisem, sekcí *Jak se to zapisuje*, sekcí *Obsah* a prázdnými sekcemi *Termíny* a *Ponechané termíny*. Bez toho by první běh neměl kam zapsat.
 

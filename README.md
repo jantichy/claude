@@ -112,7 +112,7 @@ Vezme přepis školení, článek, poznámky, ale i rovnou nahrávku, obrázek n
 
 ### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
 
-Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem, a začne ho používat jako zavedený pojem – napříč projekty, v dokumentaci, v názvech souborů. Tenhle skill takové termíny vyhledá, projedná se mnou jeden po druhém, a co odsouhlasím, nahradí ve všech repozitářích naráz. Dohodnuté náhrady pak drží [`PTYDEPE.md`](PTYDEPE.md), takže se totéž slovo nezavádí za měsíc znovu.
+Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem, a začne ho používat jako zavedený pojem – napříč projekty, v dokumentaci, v názvech souborů. Tenhle skill takové termíny vyhledá, projedná se mnou jeden po druhém, a co odsouhlasím, nahradí ve všech repozitářích naráz. Skončit umí i tím, že se v textech nic nepřepíše – slovo je běžná čeština a **ponechá se**, nebo se používá český protějšek a to cizí se **zakáže preventivně**, ať se nezačne zavádět. Dohodnuté náhrady pak drží [`PTYDEPE.md`](PTYDEPE.md), takže se totéž slovo neotevírá za měsíc znovu.
 
 ### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
 
