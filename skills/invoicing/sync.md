@@ -44,6 +44,8 @@ Klient může mít lhůtu **kratší**, než je vystavení faktury: „měsíc s
 
 **Uzávěrka klienta je v jeho souboru v `invoicing/`.** Není-li tam žádná, okno zavírá až faktura.
 
+**Přelitý čas není rozdíl mezi stranami.** Porovnává-li se Clockify se vzdáleným systémem – ať už v zrcadlení, nebo při kontrole před fakturací –, **počítá se přelitý záznam k datu ze svého prefixu**, ne ke dni, na kterém leží. Bez toho by u každého klienta po přelití vycházel rozdíl, který rozdíl není, a fakturace by se zastavovala pokaždé.
+
 **Má-li klient uzávěrku, mění se i to, z čeho se počítá doklad:** fakturuje se **to, co je ve vzdáleném systému**, ne co je v Clockify. Je to výjimka z obecného pravidla o zdroji pravdy a **musí být napsaná v dohodě klienta**, jinak neplatí.
 
 Praktický důsledek, který se musí říct nahlas: **selže-li sync, vyjde faktura nižší.** Proto fakturace u takového klienta začíná kontrolou synchronizace – viz `SKILL.md`, *Fáze 1*.
@@ -90,7 +92,9 @@ Režim si **nedrží žádný stav** – žádnou mapovací tabulku, žádné ID
 
    **Proč zrovna tady:** zrcadlení čte prázdnou odpověď jako „v cizím systému nic není“ a **založí všechno znovu**. U klienta, který se fakturuje ze svého systému, se takový duplikát rovnou vyfakturuje. Jedno volání navíc za běh je proti tomu levné. Doloženo 10. 9. 2026: při prvním ostrém běhu vrátil dotaz na rozsah, ve kterém záznam prokazatelně ležel, prázdné tělo – a při opakování s odstupem prošel, aniž by šlo o vyčerpaný limit.
 
-4. **Spočítej klíč** u každého záznamu na obou stranách: **datum a čas začátku, délka v minutách**. U záznamu s prefixem se bere datum z prefixu, ne datum, na kterém leží.
+4. **Spočítej klíč** u každého záznamu na obou stranách: **datum a čas začátku, délka v minutách**.
+
+   **Záznam s prefixem má klíč jiný – jen datum z prefixu a délku, bez času začátku.** Přelití mu čas začátku schválně přepisuje (skládá se od půlnoci), takže by se s protějškem v Clockify nikdy neshodl a zrcadlení by ho vyhodnotilo jako přebytek ke smazání. Datum se bere **z prefixu**, ne z toho, na kterém záznam leží.
 5. **Srovnej jako množiny** – klíč se může opakovat, takže se porovnávají počty, ne existence.
 
 | Stav | Akce |
@@ -101,6 +105,8 @@ Režim si **nedrží žádný stav** – žádnou mapovací tabulku, žádné ID
 | klíč jen ve vzdáleném systému | **smaž** |
 
 **Změna času nebo délky není úprava, ale smazání a nový záznam** – klíč se rozpadl. Vypadá to hrubě, ale je to jediné chování, které nepotřebuje pamatovat, co bylo dřív.
+
+**Záznam s prefixem se nemaže nikdy**, ani když se mu protějšek nenajde. Leží sice v otevřeném okně, ale jeho práce pochází z **uzavřeného** měsíce – a ten se z Clockify nemusí vůbec číst, takže chybějící protějšek neznamená, že v Clockify není. Popis se u něj opravit smí, smazat ne.
 
 **Mimo otevřené okno se nemaže ani neupravuje nic**, i kdyby se strany rozcházely. Rozdíl v uzavřeném období se **ohlásí** a nechá být.
 

@@ -111,7 +111,9 @@ Postup je vždycky tenhle:
 
 Výsledkem je otázka v tomhle tvaru: **co to je, kdy to bylo odevzdáno, kolik je na to v okně natrackováno, kolik to podle tebe nejméně muselo stát a proč si to myslíš.** Nikdy ne samotné číslo.
 
-> Karta *FAVI pixel změny* (~540 řádků, stávající funkčnost i návrh změn) je v dokumentu k 17. 6. V Clockify je mezi 6. a 17. 6. na FAVI 2,5 h a z toho většina padne na schůzku. Sepsat tohle stálo řádově hodiny. Nezapomněl sis natrackovat práci na tom dokumentu?
+> Ve sdíleném dokumentu je k 17. 6. karta s rozpadem cizí metodiky – několik set řádků vlastního textu, stávající stav i návrh změn. V timetrackingu je za deset dnů před tím datem na tomhle klientovi 2,5 h a většina z toho padne na schůzku. Sepsat to stálo řádově hodiny. Nezapomněl sis natrackovat práci na tom dokumentu?
+
+**Příklad je schválně bez jména klienta a bez čísel z jeho projektu.** Tenhle soubor je veřejný (viz hlavička) a konkrétní hodiny na konkrétní zakázce do něj nepatří ani jako ilustrace.
 
 **Číslo se do součtu nikdy nepočítá** a do tabulky nálezů takový případ nepatří – patří pod ni, do *Otázek k rozsahu*. Důvod je týž jako u indicie: odhad práce z výsledku je úsudek o tom, jak dlouho někomu jinému trvalo psaní, a **číslo se pamatuje líp než výhrada, se kterou přišlo**. Rozdíl je, že u indicie se neptáš na nic, tady se ptáš na konkrétní věc – a odpovědět umí jen ten, kdo ji psal.
 

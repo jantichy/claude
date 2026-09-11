@@ -54,7 +54,7 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. **Body 1 až 3 se tad
 
 1. **Načti `~/Dev/context/business/invoicing.md` celý** a k němu **`~/Dev/context/business/pricing.md`**. Nespoléhej na paměť – sazby a dohody se mění. Chybí-li `invoicing.md`, řekni to a **skonči**; skill bez něj nemá podle čeho fakturovat. `pricing.md` drží sazebník pro klienty, kteří vlastní sazbu zapsanou nemají.
 2. **Zjisti dnešní datum** příkazem `date +%F` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
-3. **Ověř přístupy k oběma systémům** dřív, než začneš cokoli počítat – způsobem, který popisuje `~/Dev/context/business/invoicing.md`, *Přístupy*. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce. **Projdi zároveň seznam `~/Dev/context/business/invoicing.md`, *Co ještě není vyplněné*** – je nadřazený a nese i blokátory, které se jinak projeví až uprostřed běhu nebo po vystavení dokladu. Nedořešená položka není důvod skončit, ale **musí zaznít předem**, ne ve chvíli, kdy už doklad existuje.
+3. **Ověř přístupy k timetrackingu i fakturačnímu systému** dřív, než začneš cokoli počítat – způsobem, který popisuje `~/Dev/context/business/invoicing.md`, *Přístupy*. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce. **Projdi zároveň seznam `~/Dev/context/business/invoicing.md`, *Co ještě není vyplněné*** – je nadřazený a nese i blokátory, které se jinak projeví až uprostřed běhu nebo po vystavení dokladu. Nedořešená položka není důvod skončit, ale **musí zaznít předem**, ne ve chvíli, kdy už doklad existuje.
 4. **Zjisti, jestli není rozdělaný běh z minula** – klient s hotovou fakturou, ale bez draftu. Poznáš to tak, že poslední faktura klienta ve fakturačním systému **už nese poznámku s obdobím**, ale v mailu k ní není draft. Navaž na něj, nezakládej znovu.
 
 Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systémů se sáhne a v jakém režimu se jede.
@@ -83,7 +83,7 @@ Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Dev/context/busin
 
 **Má-li klient vlastní timetracking, zkontroluj tady synchronizaci** – v `full` i v `preview`. Porovnej odpracovaný čas v Clockify za období s tím, co je v cílových místech u klienta (`~/.claude/skills/invoicing/sync.md`, *Zrcadlení*), a **sečti rozdíl**.
 
-- **Sedí to** → pokračuj a napiš jednou větou, že sedí.
+- **Sedí to** → pokračuj a napiš jednou větou, že sedí. **Přelitý čas přitom není rozdíl** – počítá se k datu ze svého prefixu (`sync.md`, *Uzávěrka dřív než faktura*).
 - **Rozchází se to** → **zastav se a zeptej se**, jestli má napřed proběhnout `sync`. Sám ho nespouštěj: je to zápis do systému klienta a mění částku na faktuře.
 - **Fakturuje-li se tomu klientovi z jeho systému** (dohoda to musí říkat výslovně), je rozdíl **blokující** – čas, který se tam nedostal, se nevyfakturuje. Řekni částku, o kterou jde, ne jen počet hodin.
 - **Je-li okno u klienta už zavřené** (uplynula jeho uzávěrka), sync rozdíl nesrovná a **řekni to rovnou** – zbývá jen přesunout čas do dalšího měsíce podle `sync.md`, *Zpětný čas po uzávěrce*.
@@ -255,7 +255,7 @@ Katalog zdrojů, heuristiky a tvar zadání pro sběrače drží `~/.claude/skil
 
    **Odevzdané výstupy se srovnávají obráceně** – ne proti dni, kdy stopa leží, ale proti oknu **před** ním: hotový dokument dokládá práci, která mu předcházela. Postup a to, proč z toho nevzniká číslo, ale otázka, drží `recover.md`, *Odevzdaný výstup jako stopa*.
 5. **Ověření.** Každý kandidát projde ověřovatelem, jehož úkolem je ho **vyvrátit** – `recover.md`, *Ověření nálezů*. Co ověření nepřežije, se nezobrazí.
-6. **Výstup.** Tabulka podle `recover.md`, *Výstup*, a pod ní otázky k rozsahu, natrackováno jinam, slepá místa a součet.
+6. **Výstup.** Tabulka podle `recover.md`, *Výstup*, a pod ní natrackováno jinam, slepá místa, otázky k rozsahu a součet – **v tomhle pořadí**, které závazně drží `recover.md`.
 
 **Nefakturovatelný čas se dohledává taky.** Nemá cenu pro fakturu, ale má ji pro přehled o tom, kolik práce se do klienta doopravdy vlilo – označ ho a do součtu nepočítej.
 
@@ -274,9 +274,9 @@ Přepíše odpracovaný čas z Clockify do timetrackingu klienta. **Jediný rež
 
 Mechaniku, pravidla oken a tvar prefixu drží `~/.claude/skills/invoicing/sync.md`. Přístupy, tokeny a konkrétní volání drží `~/Dev/context/business/invoicing.md`, *Vzdálený timetracking klienta*.
 
-1. **Příprava.** Načti soubor klienta: cílová místa, uzávěrku a to, jestli se z jeho systému fakturuje. **Chybí-li cílové místo, skonči** – bez něj není kam psát a hádat se nesmí.
+1. **Příprava.** Načti soubor klienta: cílová místa, uzávěrku a to, jestli se z jeho systému fakturuje. **Chybí-li cílové místo, skonči** – bez něj není kam psát a hádat se nesmí. **Ověř přístup do vzdáleného systému** podle `~/Dev/context/business/invoicing.md`, *Vzdálený timetracking klienta* – tenhle režim do něj jako jediný zapisuje, a *Fáze 0* ho neověřuje.
 2. **Okno.** Urči otevřené okno stejně jako *Fáze 1*, tedy od konce posledního vyfakturovaného období. **Má-li klient uzávěrku, zkrať okno podle ní** a řekni, který měsíc se tím zavřel.
-3. **Načtení obou stran.** Clockify za okno, vzdálený systém za okno a **jen z cílových míst**. Z výsledku ponech **jen Honzovy záznamy, ověřené z dat** – filtr v dotazu se může tiše ignorovat a pak by se mazala cizí práce.
+3. **Načtení obou stran.** Clockify za okno; vzdálený systém za okno **rozšířené o den na obou stranách** (proti posunu časových pásem) a **jen z cílových míst**. Z výsledku ponech **jen Honzovy záznamy, ověřené z dat** – filtr v dotazu se může tiše ignorovat a pak by se mazala cizí práce. **Vrátí-li vzdálený systém nulu, zopakuj dotaz** a pokračuj, jen když se obě odpovědi shodnou. Všechny tři pojistky drží `sync.md`, *Zrcadlení*, a žádná se nevynechává.
 4. **Srovnání.** Spočítej, co založit, co upravit a co smazat (`sync.md`, *Zrcadlení*). Zvlášť odděl **zpětný čas po uzávěrce**: co patří do právě uzavřeného měsíce, přesuň na první den aktuálního s povinným prefixem; co je starší, **propadá** a jen se vypíše.
 5. **Potvrzení.** Ukaž souhrn – kolik založit, kolik upravit, **co smazat jmenovitě** – a teprve pak zapisuj. **Mazání bez potvrzení neproběhne nikdy**; u prvního běhu na klientovi se potvrzuje celá dávka.
 6. **Zápis a kontrola.** Proveď to, znovu načti vzdálený systém a **ověř, že strany sedí**. Neohlašuj hotovo z návratových kódů zápisu.
