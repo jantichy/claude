@@ -8,7 +8,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 1. **`/ptydepe`** nebo **`/ptydepe suggest`** (výchozí) – **vytipuje kandidáty.** Projede vaše soubory a vrátí seřazený seznam: kolikrát se termín vyskytuje, kde vznikl a **čemu se tak běžně říká**. Nic nemění.
 2. **`/ptydepe add <termín>`** – **projedná jeden termín.** Řekne, co jím myslí a odkud ho má, navrhne jednu náhradu i se zamítnutými variantami, počká na vaše rozhodnutí – a teprve pak ji provede ve všech repozitářích naráz, zapíše do slovníku a commitne.
-3. **Umí skončit i tím, že se nic nemění.** Je-li slovo běžná čeština, zapíše se rozhodnutí *ponechat* i s důvodem, aby se to samé neotvíralo za měsíc znovu.
+3. **Umí skončit i tím, že se v textech nic nepřepíše** – a jsou to dva různé konce. Je-li slovo běžná čeština, zapíše se rozhodnutí *ponechat* i s důvodem, aby se to samé neotvíralo za měsíc znovu. Používáte-li naopak český protějšek už dávno a cizí slovo se jen nabízí do budoucna, zapíše se **preventivně** jako zákaz, ať ho tam nikdo nezavede.
 
 ## Proč zrovna tenhle
 

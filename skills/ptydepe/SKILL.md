@@ -110,9 +110,11 @@ Pak zkontroluj to, co ani ta nejlepší mapa nezachytí, protože to není o tva
 **Zapisuje se na dvě místa a obojí je povinné.** Rozdělené jsou proto, že `PTYDEPE.md` jde do každé session a rostl by s každým termínem, kdežto důvody potřebuje jen ten, kdo rozhoduje:
 
 - **`~/.claude/PTYDEPE.md`** – jeden řádek tabulky: starý tvar, nový tvar, rozsah a meze. Nic víc; odůvodnění sem nepatří.
-- **`~/.claude/skills/ptydepe/terms.md`** – heslo s celou rozvahou (a řádek do jeho *Obsahu*): co termín znamená, co jím naopak není, a věta **„nahrazuje dřívější …“ i s důvodem**. Starý termín zůstává zapsaný **tady a jenom tady** – jinde se nahradil beze stopy –, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo.
+- **`~/.claude/skills/ptydepe/terms.md`** – heslo s celou rozvahou (a řádek do jeho *Obsahu*): co termín znamená, co jím naopak není, a věta **„nahrazuje dřívější …“ i s důvodem**. Starý termín zůstává zapsaný **tady** – jinde se nahradil beze stopy –, aby se dalo rozhodnutí vrátit nebo aspoň dohledat, proč padlo. **Čtyři druhy míst, kde vědomě zůstává i jinde**, vypisuje `terms.md`, *Jak se to zapisuje*; heslo je u sebe vždycky jmenuje.
 
 **Neexistuje-li některý z nich, založ ho:** `PTYDEPE.md` s nadpisem, sekcí *Jak se používá* a prázdnou tabulkou, `terms.md` s nadpisem, sekcí *Jak se to zapisuje*, sekcí *Obsah* a prázdnými sekcemi *Termíny* a *Ponechané termíny*. Bez toho by první běh neměl kam zapsat.
+
+**Nebylo-li co nahradit, zapiš to stejně** – je to **preventivní zápis** a pravidlo pro něj drží `terms.md`, *Jak se to zapisuje*. Pro běh z toho plyne jediné: *Fáze 7* vypíše u rozsahu i u ručně přepsaných vět nulu a je to platný výsledek, ne prázdný běh.
 
 **Skončilo-li to ponecháním**, do `PTYDEPE.md` nepatří nic – tabulka říká, co se čím nahrazuje. Zapiš rozhodnutí i se zamítnutými variantami do sekce *Ponechané termíny* v `terms.md` **a přidej ho do jeho *Obsahu***, jinak se termín otevře znovu při příští revizi.
 
@@ -139,7 +141,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Termín je vypořádaný a ověřený, starý tvar se mimo PTYDEPE.md a terms.md nevyskytuje.`
+- `Termín je vypořádaný a ověřený, starý tvar se mimo PTYDEPE.md, terms.md a vědomě vyloučená místa nevyskytuje.`
 - `Termín vypořádaný není – brání tomu: <konkrétní seznam>.`
 
 ------

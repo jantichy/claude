@@ -25,7 +25,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | explorer | průzkumník | agent, který u velkého rozsahu zmapuje, co se kde mění, a předá mapu specialistům |
 | fan-out | rozeslání práce agentům | puštění několika agentů paralelně na jeden úkol; deleguje se kvůli kontextu, ne kvůli úspoře |
 | fresh-reader | čtenář bez kontextu | subagent, který nezná session a čte jen soubory. **Ne** „nezávislý čtenář“ (tak se popisuje `/oponent`) ani „nezaujatý“ |
-| frontmatter | hlavička | blok YAML metadat mezi `---` na začátku `SKILL.md`; kde hrozí záměna, *hlavička skillu*. Identifikátory v kódu (`frontmatter()`) zůstávají anglicky |
+| frontmatter | hlavička | blok YAML metadat mezi `---` na začátku `SKILL.md`; kde hrozí záměna, *hlavička skillu*. **Hlavička souboru** jako úvodní odstavec pro čtenáře je něco jiného. V anglickém textu `frontmatter` zůstává |
 | chirurgický zásah | cílený zásah | editace dokumentace po jednotlivých větách. **Ne** „zacílený“, **ne** „cílená změna“ |
 | koncové věty | závěrečný verdikt | povinná závěrečná věta skillu – hotovo a čím pokračovat, nebo co tomu brání |
 | pre-flight | příprava | `Fáze 0` každého skillu. Soubor se dál jmenuje `PREFLIGHT.md` |
