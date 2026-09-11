@@ -183,13 +183,19 @@ Zadání specialistů, jejich povinná pole a text o cizím obsahu drží `~/.cl
 
 **Ověřovatel běží na nejsilnějším modelu s `xhigh`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*): slabý ověřovatel nález nevyvrátí ani nepotvrdí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko.
 
-Na každý nález pusť ověřovatele s jediným úkolem: **vyvrátit ho** – projít tutéž cestu ve vlastní záložce a podívat se, jestli to tak opravdu je. Běží v čerstvém kontextu, který nevidí ani panel, ani tuhle konverzaci.
+**Nejdřív deduplikuj, pak filtruj, teprve pak pouštěj.** Specialisté se překrývají schválně – sousední kapitoly katalogu (souhlas × měření, měření × SEO) najdou tentýž problém jinými slovy –, takže poslat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď. Sluč nálezy na stejném místě do jednoho a uveď u něj oba podklady.
+
+**Ověřuj jen nálezy, které půjdou klientovi.** Drobnost, jejíž ověření stojí víc než její oprava, se neověřuje – označí se jako neověřená.
+
+**Strop: nejvýš 20 ověřovatelů v jedné dávce a 40 na běh**, stejně jako u `/review`. Důvod je tu ale navíc jiný: tam jde o cenu, tady i o cizí web – každý ověřovatel projde hlavní scénář znovu a odešle do klientových měřicích systémů další sadu zásahů. Desítky souběžných průchodů navíc vypadají z druhé strany jako zátěž, a ta patří do druhého pásma. Přes strop se ověřují **nejdřív ty nejzávažnější**; co se nevejde, jde do registru se stavem **neověřeno** a spočítá se v závěru. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat.
+
+Na každý zbylý nález pusť ověřovatele s jediným úkolem: **vyvrátit ho** – projít tutéž cestu ve vlastní záložce a podívat se, jestli to tak opravdu je. Běží v čerstvém kontextu, který nevidí ani panel, ani tuhle konverzaci.
 
 Výsledek je čtverý: **potvrzeno průchodem** (jde dál), **vyvráceno** (zahodí se), **doloženo jen konfigurací** (v exportu to tak stojí, ale nikdo to neviděl v provozu), **nedá se ověřit** (chybí vstup z *Fáze 2* nebo by to žádalo akci z druhého pásma).
 
 **Rozdíl mezi prvním a třetím stavem je celý rozdíl mezi „viděl jsem to“ a „mělo by to tak být“.** Nález odvozený z konfigurace bývá správně, ale ne vždycky: podmínka spouštěče se dá číst jinak, než se chová, a element, na který míří, tam nemusí být. Kdo to zamlčí, tvrdí klientovi před jeho vývojářem víc, než ověřil.
 
-Vypiš, kolik nálezů panel vyrobil a kolik jich ověření nepřežilo. Je to jediná míra, podle které se pozná, jestli panel pracuje.
+Vypiš, kolik nálezů panel vyrobil, kolik jich zbylo po sloučení, kolik se jich ověřilo a kolik jich ověření nepřežilo. Je to jediná míra, podle které se pozná, jestli panel pracuje – a **podíl vyvrácených bývá vysoký**, což je v pořádku: přesně proto tahle fáze existuje.
 
 ## Fáze 6 – Registr nálezů
 
