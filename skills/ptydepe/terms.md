@@ -23,7 +23,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička)
 
-**[Ponechané termíny](#ponechané-termíny)** – heuristika, osa, vektor útoku · „mutace“ · „session“ · „soustava“ · „kontrakt příkazů“ · „sledovací okno“
+**[Ponechané termíny](#ponechané-termíny)** – heuristika, osa, vektor útoku · „stopa práce“ · „guard“ · „mutace“ · „session“ · „soustava“ · „kontrakt příkazů“ · „sledovací okno“
 
 ## Termíny
 
@@ -221,7 +221,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Dva termíny, protože to jsou dvě věci.** *Souvislý text* je nestrukturovaný zápis tam, kde se čeká **struktura** – data, tabulka, zaškrtávací seznam, akceptační kritérium, příkaz („agent vrací strukturu, ne souvislý text“). *Běžný text* je česká věta tam, kde stojí proti **identifikátoru** – jménu režimu, klíči, poli ve schématu („česká podstatná jména v běžném textu zůstávají česky“).
 
-**Nahrazuje dřívější „prózu“** (2026-09-08). Anglicky je *prose* v obou významech zavedený obrat (*write in prose, not bullets*), česky ne: „próza“ je literární pojem, opak poezie, a technický význam je kalk. Ověřeno, že v uživatelových vlastních textech se v tomhle významu nevyskytuje ani jednou – dva výskyty v archivu z roku 2010 znamenají prózu literární.
+**Nahrazuje dřívější „prózu“** (2026-09-08). Anglicky je *prose* v obou významech zavedený obrat (*write in prose, not bullets*), česky ne: „próza“ je literární pojem, opak poezie, a technický význam je kalk. Zavedl si ho Claude sám 2. 9. 2026 v `RULES.md` a `/breakdown`. Ověřeno, že v uživatelových vlastních textech se v tomhle významu nevyskytuje ani jednou – dva výskyty v archivu z roku 2010 znamenají prózu literární a jako publikované texty byly z náhrady vyloučené.
 
 **Rozhodující byl ale ten dvojí význam.** Jedno slovo krylo dvě různé opozice a rozdíl mezi nimi nebyl z textu poznat; že náhrada potřebuje dvě hesla, je doklad, že šlo o *jedno jméno pro dvě věci* (`~/.claude/RULES.md`, *Jeden termín pro jednu věc*).
 
@@ -260,6 +260,30 @@ Doplněno zpětně; ostatní ponechané termíny mají vlastní zápis níž.
 **`osa`** – ponecháno jako **bezpředmětné**. Jako jméno životního cyklu zmizela už 6. 9. 2026; zbylé významy jsou *časová osa* a *osa jako rozměr, ve kterém se něco liší*, obojí běžná čeština.
 
 **`vektor útoku`** – ponecháno. Zavedený bezpečnostní termín (*attack vector*), česky se používá stejně; v rámci `/attack` je zkrácení na „vektor“ v pořádku. **Nesjednocuje se s hlediskem** – vektor není pohled, ale způsob, jak něco rozbít.
+
+### 2026-09-07 – Termín „stopa práce“ se ponechává, i když má „stopa“ pět významů
+
+Revize neustálených termínů se zastavila u „stopy práce“ v `/invoicing recover` – jednoho doloženého okamžiku nebo intervalu, kdy se něco dělo.
+
+**Rozhodnutí:** ponechat. Není to převzatý ústřel, ale běžný forenzní význam slova: stopa je to, co po sobě činnost zanechá, přesně jako v „digitální stopa“.
+
+**Zamítnuto – „doklad o práci“:** delší a navíc nepravdivé. Stopa doklad být nemusí, kategorie *indicie* je výslovně nedoložená.
+
+**Zamítnuto – „záznam o práci“:** koliduje se záznamem v Clockify, proti kterému se stopy porovnávají. Věta „záznam se nepotkal se záznamem“ nedává smysl.
+
+**Vědomě přijatá cena:** slovo „stopa“ nese napříč repozitářem **pět různých významů** – auditní stopa (`web/admin.md`), doložená stopa (`brand/`), zvuková stopa (`/transcript`), „při odstranění nechej stopu“ (`RULES.md`) a tahle stopa práce. Všechny jsou samostatně zavedené a rozlišuje je přívlastek, takže se nesjednocují. Zapsáno proto, aby se to při příští revizi termínů neotvíralo znovu.
+
+### 2026-09-07 – Termín „guard“ se ponechává, a plyne z toho obecné pravidlo
+
+Kandidát z `/ptydepe suggest`: 25 výskytů v 10 souborech, skloňovaný po česku („guardy“, „jednoduchému guardu“). Znamená funkci, která rozhoduje, jestli je operace přípustná, a vrací důvod – `coding.md`, *Rozhraní, guardy a autorizace*.
+
+**Rozhodnutí:** ponechat. Na rozdíl od „stubu“, který se použil **mimo** svůj oborový význam, je „guard“ použitý přesně tak, jak ho obor používá: `guard` je klíčové slovo Swiftu, `Guard` třída v NestJS, *route guard* v Angularu, *guard clause* zavedený vzor.
+
+**Zamítnuto – „stráž“:** výmysl. **Zamítnuto – „vstupní podmínka“:** zahazuje to, že guard **vrací důvod**. **Zamítnuto – „kontrola oprávnění“:** užší, guard hlídá i vnitřní konzistenci. **Zamítnuto – „ochrana“:** příliš obecné, `/review` má „guard“ i „ochranu“ na jednom řádku v různém významu.
+
+**Rozhodující byl ale třetí argument, a ten platí obecně:** `guard` je zároveň **identifikátor v kódu tohohle repozitáře** – `calendar.swift` má `guard let od = vstup`, `/review` má `"guard"` jako pole ve schématu nálezu. Přeložit běžný text, zatímco kód dál říká `guard`, znamená vyrobit dvě jména pro jednu věc.
+
+**Zapsáno proto jako pravidlo do `/ptydepe`, Fáze 3:** termín, který je zároveň identifikátorem v kódu nebo klíčovým slovem jazyka, se nepřekládá.
 
 ### 2026-09-07 – Termín „mutace“ se ponechává
 
