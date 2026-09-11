@@ -224,6 +224,8 @@ Pak **projdi s uživatelem sporné** – co je na hraně závažnosti, co je ná
 
 Tady začíná režim **`report`**, spouští-li se samostatně nad hotovým registrem.
 
+**Režim `report` a skill `/report` jsou dvě různé věci a v téhle fázi stojí vedle sebe.** Režim říká, že se z registru sepíšou výstupy; `/report` je samostatný skill, kterým se z nich vyrobí jeden z nabízených tvarů – a vybírá ho uživatel, takže se volat nemusí vůbec.
+
 **Zeptej se zaškrtávacím výběrem, které výstupy vyrobit** – `AskUserQuestion` s `multiSelect`, pokaždé znovu, i v opakovaném běhu. Nezakládej je paušálně. Na výběr jsou čtyři:
 
 - **interní registr nálezů** – pracovní, zůstává u tebe,
