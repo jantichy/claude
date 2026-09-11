@@ -28,6 +28,8 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 - **Neúčtuje.** Nehlídá úhrady, upomínky, DPH přiznání ani kontrolní hlášení. Vystaví doklad a tím jeho práce končí.
 - **Nedrží evidenci vystavených faktur.** Zdrojem pravdy je fakturační systém, ne soubor v repozitáři – viz `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
 - **Netrackuje čas.** Režim `recover` chybějící čas dohledá a ukáže, ale **do timetrackingu nikdy nezapíše** – odhad postavený na úsudku o cizích datech je návrh, ne zjištění. Doplnit ho je uživatelovo rozhodnutí.
+
+  **Zákaz platí na skill, ne na uživatele.** Rozhodne-li se uživatel nechat si výstup uložit do souboru klienta jako dočasný blok k odpracování, je to jeho volba a provede ji jiný krok – `/cleanup` nebo výslovný pokyn –, ne `recover` sám od sebe. Jak se takový blok chová při dalším běhu, drží `~/Dev/context/decisions.md`, *Blok nálezů `recover` se při dalším běhu nahrazuje, ne kupí*.
 - **Nesynchronizuje obousměrně.** Režim `sync` píše **jen** do systému klienta a **do Clockify nezapíše nikdy** – zdroj pravdy se neupravuje podle kopie.
 - **Nepíše profily protistran.** Kdo klient je a kdo v něm rozhoduje, patří do `~/Dev/context/organizations/`; sem jen fakturační dohoda.
 
@@ -242,7 +244,9 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 ## Režim `recover`
 
-Dohledá **čas, který se zapomněl natrackovat**, a ukáže tipy s doložením. Nevystavuje, nezakládá draft a **nezapisuje do timetrackingu ani do souboru klienta** – viz *Co skill nedělá*.
+Dohledá **čas, který se zapomněl natrackovat**, a ukáže tipy s doložením. Nevystavuje, nezakládá draft a **sám od sebe nezapisuje do timetrackingu ani do souboru klienta** – viz *Co skill nedělá*, kde je i to, čím se od toho liší blok uložený na uživatelův pokyn.
+
+**Proběhl-li nad klientem `recover` už dřív**, přečti si jeho blok dřív, než začneš – ne abys z něj opisoval, ale abys na konci uměl říct, co z něj po dnešním ověření padlo. **Vyvrácený nález z minula je nejcennější výstup, jaký druhý běh má**: ukazuje, která třída doložení neobstojí, a proto se vypisuje jmenovitě (výjimka ze zákazu v `recover.md`, *Ověření nálezů*).
 
 **Jméno je `recover` a nepřejmenovává se.** Zvažovalo se `restore` a `rescue`; obojí zamítnuto, protože slibuje, že se něco opraví – a tenhle režim nic nezapisuje. `reconcile` je odborně přesnější, ale česky se o něm nedá mluvit, a `gaps` pojmenovává výstup místo akce.
 

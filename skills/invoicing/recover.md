@@ -170,6 +170,10 @@ Ověřovatel dostane jediný úkol: **nález vyvrátit**. Projde tyhle otázky a
 
 **Co ověření nepřežije, se neukáže.** Vyvrácené nálezy se vypíšou jen v souhrnném počtu, ne jednotlivě – jinak si je uživatel přečte a rozhodnutí se tím vrátí zpátky k němu.
 
+**Jedna výjimka: nález, který vykázal některý z předchozích běhů jako platný.** Ten se vypíše **jmenovitě i s tím, čím byl vyvrácen** – rozhodnutí se tím zpátky nevrací, protože se o něm už jednou rozhodlo na základě něčeho, co dnes neplatí. Je to oprava dřívějšího tvrzení, ne nabídka k posouzení. Doloženo 11. 9. 2026 na FAVI: dva nálezy z běhu o pět dnů dřív stály jen na vlastním bloku v kalendáři a oba padly, což bylo užitečnější než celý zbytek běhu.
+
+**Vlastní blok v kalendáři bez účastníků není sám o sobě doklad práce.** Říká, co si Honza naplánoval, ne co udělal – a plán se nesplní docela běžně. Takový blok proto vždycky potřebuje **druhou stopu ve svém čase** (prohlížeč, mail, commit, session). Nemá-li ji, je to nanejvýš indicie; a najdeš-li v jeho čase stopu **soukromé** aktivity, nález padá. Obojí se 11. 9. 2026 stalo na FAVI, každé jednou.
+
 ## Výstup
 
 Tabulka seřazená **od nejjistějšího**, protože podle ní se odshora doplňuje do timetrackingu:
@@ -191,4 +195,6 @@ Pod tabulku patří čtyři věci, každá i když je prázdná:
 - **Otázky k rozsahu** – odevzdané výstupy, ke kterým v okně před nimi natrackovaná práce chybí. Každá jako otázka podle *Odevzdaný výstup jako stopa*, ne jako číslo.
 - **Součet** – zvlášť za doložené a odvozené; **indicie se do součtu nepočítají**, protože nemají číslo.
 
-**Nic se nikam nezapisuje.** Ani do Clockify, ani do souboru klienta. Odhad postavený na úsudku o cizích datech je návrh, ne zjištění, a rozhodnutí patří tomu, kdo tu práci odvedl.
+**Režim sám nikam nezapisuje.** Ani do Clockify, ani do souboru klienta. Odhad postavený na úsudku o cizích datech je návrh, ne zjištění, a rozhodnutí patří tomu, kdo tu práci odvedl.
+
+**Uloží-li si uživatel výstup jako dočasný blok do souboru klienta**, platí pro ten blok dvě věci navíc oproti tvaru výš: nese **rozpad podle dokladu**, na který který nález půjde (rozsah běhu bývá širší než fakturované období), a sekci **o tom, co se oproti minulému běhu změnilo**. Zbytek tvaru se nemění a pořadí sekcí drží tenhle soubor.
