@@ -94,7 +94,7 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 
 1. **Jede se výhradně přes `git ls-files`.** Nikdy `rglob` ani `find` přes adresář: `~/.claude` obsahuje transkripty session, cache a paměť, které v `.gitignore` sice jsou, ale rekurzivnímu skriptu to nevadí a přepíše je.
 2. **Najdi legitimní významy téhož slova** a soubory, kde stojí, vyluč jmenovitě. Stává se to skoro pokaždé: „brána“ byla i platební, „vizitka“ i firemní web, „osa“ i časová.
-3. **Vyluč publikované a cizí texty** – `~/Dev/context/archive/`, `compose/_analysis/`, ohlasy ve `speaking/`.
+3. **Vyluč publikované texty, cizí texty a datované doklady stavu.** Kritérium zní: **tvrdí ten soubor, jak to má být, nebo jak to tehdy bylo?** Druhé se nepřepisuje, protože náhrada v něm nesjednocuje termín, ale falšuje záznam. Dnes to jsou `~/Dev/context/archive/`, `compose/_analysis/`, ohlasy ve `speaking/`, datované plány v `compose/_superpowers/plans/` a cizí vendor kód v repozitářích `~/Dev` – **výčet ale není uzavřený**, rozhoduje to kritérium.
 4. **Vyluč vlastní frontu kandidátů.** Seznam termínů k projednání obsahuje ten termín jako položku a náhrada by si přepsala vlastní zadání.
 5. **Vyluč `~/.claude/PTYDEPE.md` a `skills/ptydepe/terms.md`.** Starý tvar v nich stojí schválně – v levém sloupci tabulky a ve větě „nahrazuje dřívější …“. Náhrada by z rozhodnutí udělala tautologii a nikdo by pak nezjistil, co se čím nahradilo.
 6. **Ověř, že slovo nemá v některém souboru opačný význam.** Stalo se: týž termín označoval jinde vadu, ne přednost, a plošná náhrada by z toho udělala nesmysl.
