@@ -105,7 +105,7 @@ Kritérium je jediné: **rozumí tomu člověk, který k tomu přijde bez slovn�
 
 **Zopakuj to těsně před zápisem v *Fázi 5***. Mezi tímhle místem a zápisem leží čekání na tvůj souhlas, tedy minuty až hodiny – a přesně v nich soubor přibude.
 
-Vypiš přehled ke schválení: počet výskytů, soubory, vyloučená místa a proč.
+Vypiš přehled ke schválení: počet výskytů, soubory, vědomě ponechaná místa a proč.
 
 ## Fáze 5 – Náhrada
 
@@ -139,7 +139,7 @@ Ověř a **dolož příkazem**, ne dojmem: kontrolní průchod na starý tvar a 
 ## <starý> → <nový>
 
 - **Rozsah:** <N> výskytů v <M> souborech, repozitáře: <seznam>
-- **Vyloučeno:** <kde a proč, nebo „nic">
+- **Vědomě ponecháno:** <kde a proč, nebo „nic"> – vyloučené soubory i starý tvar ponechaný uvnitř verzovaného souboru (identifikátor v kódu, jméno cizí kategorie, jméno zrušené věci). Čtyři druhy vypisuje `terms.md`, *Jak se to zapisuje*
 - **Ručně přepsané věty:** <kolik a proč – shoda, repetice>
 
 **Ověřeno**
@@ -154,7 +154,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Termín je vypořádaný a ověřený, starý tvar se mimo PTYDEPE.md, terms.md a vědomě vyloučená místa nevyskytuje.`
+- `Termín je vypořádaný a ověřený, starý tvar se mimo PTYDEPE.md, terms.md a vědomě ponechaná místa nevyskytuje.`
 - `Termín vypořádaný není – brání tomu: <konkrétní seznam>.`
 
 ------
