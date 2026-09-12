@@ -426,11 +426,11 @@ Instalace je zásah do uživatelova počítače, ne do repozitáře: **než něc
 
 ### Commituj jmenované cesty, ne `-A`
 
-`git add -A`, `git add .` a `git commit -a` seberou **všechno, co je v pracovním stromu**, včetně toho, co tam dala jiná běžící session. Souběžné session nad jedním repozitářem sice nejsou každodenní, ale **stávají se** – a stačí jednou.
+`git add -A`, `git add .`, `git add <adresář>` a `git commit -a` seberou **všechno, co je v pracovním stromu**, včetně toho, co tam dala jiná běžící session. Souběžné session nad jedním repozitářem sice nejsou každodenní, ale **stávají se** – a stačí jednou. **Adresář vypadá jako jmenovaná cesta, a není** – nese totéž riziko jako `-A`, jen v užším rozsahu.
 
 **Do commitu proto vyjmenuj cesty**, kterých se tvoje práce dotkla. Před commitem se podívej na `git status` a soubor, který jsi nezměnil ty, nech být.
 
-Obsah se přitom neztratí – rozejde se **zdůvodnění**: commit popisuje diff, který v něm není, a `git blame` ukáže na cizí důvod. **Pushnutá historie se pak už nedá opravit** bez přepsání větve, na které jiná session stojí. Doloženo 3. a 7. 9. 2026, podruhé na pravidlech samotných; **stačí, aby si člověk otevřel druhé okno nad týmž repozitářem**.
+Obsah se přitom neztratí – rozejde se **zdůvodnění**: commit popisuje diff, který v něm není, a `git blame` ukáže na cizí důvod. **Pushnutá historie se pak už nedá opravit** bez přepsání větve, na které jiná session stojí. Doloženo 3., 7. a 11. 9. 2026, podruhé na pravidlech samotných; **stačí, aby si člověk otevřel druhé okno nad týmž repozitářem**. **Nejhorší podoba té chyby není špatná atribuce, ale rozhodování podle nepřečteného vlastního commitu** – 11. 9. session zatáhla přes `git add <adresář>` cizí pravidlo a o deset minut později proti němu argumentovala, protože ho nikdy nečetla.
 
 ### Mazání ověř diffem, ne grepem
 
