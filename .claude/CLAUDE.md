@@ -41,6 +41,13 @@ Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola h
 - typecheck: swiftc -typecheck skills/*/*.swift
 - lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' skills/*/*.py skills/*/scripts/*.py tests/*.py
 - test: python3 -m unittest discover -s tests
+- build: -
+- e2e: -
+- audit: -
+- coverage: -
+- mutation: -
+
+**Pomlčky jsou rozhodnutí, ne díra.** Repozitář nemá manifest závislostí, nic se z něj nebuildí ani nenasazuje a není tu aplikace, kterou by šlo projít; `coverage` a `mutation` nad sadou, která z devadesáti procent testuje Markdown, měří délku textu, ne sílu testů. Bez pomlčky by je `/review` i CI hlásily jako nezkontrolované kroky – tedy jako trvalý šum místo informace (`~/Dev/context/coding/quality.md`, *Kontrakt příkazů*).
 
 `shellcheck` běží se `--severity=info`, ne se `--severity=style`: stylové nálezy jsou preference a kontrola, která padá na preferenci, se obchází. **Ze stejného důvodu má `ruff` jen `--select F,E9,C901`** – nedefinovaná jména, nepoužité importy, syntaktické chyby a cyklomatická složitost, tedy vady a jeden měřitelný práh, ne názory. `C901` je tu od 8. 9. 2026 s prahem 10 podle `~/Dev/context/coding/quality.md`; do té doby se neměřila vůbec a pět funkcí ho překračovalo (nejvíc `progress.py` s 19). Práh se **nesnižuje kvůli tomu, že překáží** – to smí jen člověk a se zápisem do rozhodnutí. Výchozí sada by tu hlásila pořadí importů a závorky navíc; `--isolated` navíc zajistí, že se nechytí cizí konfigurace odněkud z domovského adresáře. Python přibyl do repozitáře 6. 9. 2026 se skripty `/compose`. **Od 7. 9. 2026 lint kryje i `tests/`** – je to největší Python v repozitáři a nekontroloval ho nikdo, přestože je to zároveň jediná vrstva, která tu něco doopravdy vynucuje. Běh testů sám chytí syntaktickou chybu, ale ne nepoužitý import ani překlep ve jménu uvnitř větve, která se zrovna nevykonala.
 

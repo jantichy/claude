@@ -86,6 +86,8 @@ Spusť jen to, co je vlastní téhle otázce – „sedí si projekt sám se seb
 | shoda verze runtime napříč `engines`, `.nvmrc`, `.tool-versions`, CI a hostingem | porovnání hodnot | projekt některé z nich má |
 | `TODO`/`FIXME` starší než půl roku a prošlé deadliny v komentářích | `git blame` nad nalezenými řádky | vždy, kde je git |
 
+**Běžela-li nad týmž stromem CI, přečti její výsledek** místo opakovaného spouštění – podmínky jsou tytéž jako v `/review`, *Deterministická vrstva*: `headSha` sedí s `HEAD` **a** `git status --porcelain` je prázdné. Nesedí-li obojí, pusť nástroje lokálně a řekni, že se CI nepoužila.
+
 **Nemá-li projekt, čím to spustit, krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo, položku po položce. Nespuštěná kontrola se nikdy nevypisuje jako nula nálezů: tři přeskočené kroky vypsané jako tři nuly čte uživatel jako tři čisté výsledky. U obsahového či znalostního projektu je normální, že se přeskočí skoro všechno; audit v dalších fázích běží stejně, jen bez téhle vrstvy.
 
 Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označí tagem `[toolchain]` a **neprocházejí posouzením** – nástroj nehalucinuje.
@@ -96,7 +98,7 @@ Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označ
 
 **Explore agent je sběr, ne posouzení: výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
 
-Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, konvence z 0.1, seznam ignorovaných z 0.2 a výstupy nástrojů z 0.3):
+Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
 
 ```
 Prohledej zadaný rozsah (viz *Rozsah* výš) a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
