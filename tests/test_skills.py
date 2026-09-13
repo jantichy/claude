@@ -161,6 +161,31 @@ def _spatne_odkazy(skill, vzor, vlastni: set, cizi: set) -> list:
     return spatne
 
 
+#: Odkazy se píšou domovskou cestou (`~/.claude/RULES.md`), ale míří na dvě různá
+#: místa: do **tohohle repozitáře**, nebo do privátní knowledge base mimo něj.
+VZOR_ODKAZU = r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`"
+KNOWLEDGE_BASE = Path.home() / "Dev" / "context"
+
+
+def cil_odkazu(ref: str):
+    """Soubor, na který odkaz míří, nebo None, když se to tady nedá ověřit.
+
+    `~/.claude/…` se resolvuje proti **kořeni repozitáře**, ne proti `$HOME`.
+    Na autorově stroji je to totéž, jinde ne – a testovat se má soubor, který
+    je právě v pracovním stromu, ne kopie náhodou nainstalovaná v domovském
+    adresáři. Původní verze resolvovala přes `$HOME` a v CI i po cizím klonu
+    hlásila všech 27 souborů jako plných rozbitých odkazů.
+
+    `~/Dev/…` je knowledge base mimo repozitář. Kde není, není co ověřovat –
+    kolik odkazů tím zůstalo nezkontrolovaných, hlásí vlastní test.
+    """
+    if ref.startswith("~/.claude/"):
+        return ROOT / ref[len("~/.claude/"):]
+    if not KNOWLEDGE_BASE.exists():
+        return None
+    return Path(ref.replace("~", str(Path.home()), 1))
+
+
 class SkillOdkazy(unittest.TestCase):
     # Kontroluje se i to, co skilly samy odkazují – RULES.md a CLAUDE.md nesou
     # nejvíc odkazů ze všech a netestovaly se vůbec. Projektový .claude/CLAUDE.md
@@ -176,11 +201,27 @@ class SkillOdkazy(unittest.TestCase):
         for soubor in self.ODKAZUJICI:
             with self.subTest(soubor=soubor.name if soubor.parent == ROOT else soubor.parent.name):
                 broken = []
-                for ref in set(re.findall(
-                        r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`", body(soubor))):
-                    if not Path(ref.replace("~", str(Path.home()), 1)).exists():
+                for ref in set(re.findall(VZOR_ODKAZU, body(soubor))):
+                    cil = cil_odkazu(ref)
+                    if cil is not None and not cil.exists():
                         broken.append(ref)
                 self.assertFalse(sorted(broken), f"{soubor}: neexistující odkazy: {sorted(broken)}")
+
+    def test_odkazy_do_knowledge_base_jdou_overit(self):
+        """Kolik odkazů ven z repozitáře zůstalo nezkontrolovaných, se řekne nahlas.
+
+        Bez tohohle testu by se přeskočení tvářilo jako pokrytí: kontrola by mlčela
+        stejně, ať knowledge base existuje, nebo ne (`~/.claude/skills/SKILLS.md`,
+        *Jak se píše text uvnitř* – žádné tiché ořezání rozsahu).
+        """
+        venku = {ref for soubor in self.ODKAZUJICI
+                 for ref in re.findall(VZOR_ODKAZU, body(soubor))
+                 if not ref.startswith("~/.claude/")}
+        if not KNOWLEDGE_BASE.exists():
+            self.skipTest(f"{KNOWLEDGE_BASE} tu není, "
+                          f"{len(venku)} odkazů do knowledge base zůstalo neověřeno")
+        chybi = sorted(ref for ref in venku if not cil_odkazu(ref).exists())
+        self.assertFalse(chybi, f"neexistující odkazy do knowledge base: {chybi}")
 
     def test_odkazy_na_sekce_miri_na_existujici_nadpis(self):
         """Odkaz ve tvaru `soubor`, *Sekce* musí v tom souboru najít nadpis.
@@ -201,8 +242,8 @@ class SkillOdkazy(unittest.TestCase):
             with self.subTest(soubor=soubor.name if soubor.parent == ROOT else soubor.parent.name):
                 spatne = []
                 for cesta, sekce in set(vzor.findall(body(soubor))):
-                    cil = Path(cesta.replace("~", str(Path.home()), 1))
-                    if not cil.exists():
+                    cil = cil_odkazu(cesta)
+                    if cil is None or not cil.exists():
                         continue          # hlásí předchozí test
                     nadpisy = "\n".join(bez_bloku_kodu(cil))
                     kotva = sekce.strip().strip("`*")
