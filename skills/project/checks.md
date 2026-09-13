@@ -58,6 +58,8 @@ Hotovou a ověřenou podobu má `~/.claude/.github/workflows/verify.yml`; **vezm
 2. **Nástroje.** Doinstaluj, co kontrakt opravdu volá; na runneru není nic z Homebrew. Nedeklarovaná lokální závislost je tu nejčastější příčina prvního červeného běhu.
 3. **Klíče.** Výčet ve workflow je **jmenovaný seznam kroků, které do CI patří** – vedle `typecheck`, `lint` a `test` i `build`, `audit`, `coverage`, `a11y`, `perf` a `mutation`. Průběžná kontrola je nepouští, CI ano. **Nedělej z něj rovnost s kontraktem:** ten smí nést i klíče, které se nespouštějí (`dev` je watch server, který nikdy neskončí, `cwd` není příkaz), a kontrola, která na nich zčervená, je falešný poplach – tedy ten horší směr selhání.
 
+4. **Kroky mimo kontrakt.** `gitleaks` a `semgrep` nejsou příkazy projektu, takže v kontraktu nestojí a smyčka přes něj je nepustí – do CI ale patří, protože jsou deterministické, rychlé a jejich nález je vždy kritický. Zapiš je do workflow jako samostatné kroky a doinstaluj je v něm; bez toho tvrdí katalog kontrol něco, co žádná cesta nezařídí.
+
 **Napiš k tomu test, který ověří, že se workflow s kontraktem nerozešlo** – že pouští právě jeho klíče a žádný příkaz si neopisuje. Je to vynucovací vrstva jako každá jiná (`~/Dev/context/coding/quality.md`, *Vynucovací vrstva se testuje jako kód, obousměrně*); předloha je v `~/.claude/tests/test_hooks.py`.
 
 **Badge do `README.md`** – u veřejného repozitáře je to jediné místo, kde je stav vidět zvenčí.

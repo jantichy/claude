@@ -31,6 +31,21 @@ jobs:
           command -v gtimeout >/dev/null || brew install coreutils
           python3 -m pip install --quiet ruff
 
+      # Obecné nástroje, které nejsou příkazem projektu, takže v kontraktu nestojí
+      # a smyčka výš je nepustí. Do CI patří přesto: jsou deterministické, rychlé
+      # a jejich nález je vždy kritický. Bez nich by scan tajemství běžel jen tehdy,
+      # když někdo pustí `/review` na stroji, kde má gitleaks nainstalovaný.
+      - name: Tajemství v repu
+        run: |
+          command -v gitleaks >/dev/null || brew install gitleaks
+          gitleaks detect --no-banner --redact
+
+      - name: Statická analýza
+        run: |
+          python3 -m pip install --quiet semgrep
+          # Jen vlastní kód: `plugins/` je cizí a jeho nálezy nemá kdo opravit.
+          semgrep --config p/owasp-top-ten --quiet --error githooks tests skills
+
       - name: Spusť kontrakt příkazů
         run: |
           set -e
