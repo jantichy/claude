@@ -1,0 +1,50 @@
+#!/bin/sh
+# Odmítne merge commit s defaultní zprávou typu "Merge branch 'feat/x'".
+#
+# Historie main se čte přes `git log --first-parent`, kde je merge commit jediný
+# řádek za celou větev – jméno větve tam neřekne nic o tom, co se v ní udělalo.
+# Pravidlo drží ~/.claude/WORKTREE.md, sekce "Dokončení větve".
+#
+# Hlídá jen commity na hlavní větvi: merge main do rozdělané větve je běžná
+# aktualizace a jeho defaultní zpráva je v pořádku.
+
+msg_file="$1"
+
+# Delegace na lokální hook repozitáře – globální core.hooksPath ho jinak vypne.
+# Cesta se skládá z --git-dir, ne z --git-path, který by vrátil zase tenhle soubor.
+local_hook="$(git rev-parse --git-dir 2>/dev/null)/hooks/commit-msg"
+if [ -x "$local_hook" ] && [ "$local_hook" != "$0" ]; then
+	"$local_hook" "$@" || exit $?
+fi
+
+branch="$(git symbolic-ref --short HEAD 2>/dev/null)"
+case "$branch" in
+	main | master) ;;
+	*) exit 0 ;;
+esac
+
+first_line="$(grep -v '^#' "$msg_file" | grep -v '^[[:space:]]*$' | head -1)"
+
+# "Merge branch 'main' of https://…" je výsledek `git pull`, ne dokončení větve.
+case "$first_line" in
+	*' of '*) exit 0 ;;
+esac
+
+case "$first_line" in
+	'Merge branch '* | 'Merge větve '*)
+		cat >&2 <<'MSG'
+
+Merge commit má defaultní zprávu s jménem větve.
+
+Historie hlavní větve se čte přes `git log --first-parent`, kde je tenhle
+commit jediný řádek za celou větev. Napiš do něj, co se v té větvi udělalo:
+
+    git merge --no-ff <vetev> -m "Shrnutí toho, co větev přinesla"
+
+Pravidlo drží ~/.claude/WORKTREE.md, sekce "Dokončení větve".
+MSG
+		exit 1
+		;;
+esac
+
+exit 0

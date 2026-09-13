@@ -142,7 +142,7 @@ Chce-li uživatel začít **jinou** věc, nemerguj tu rozdělanou – založ ved
 
 ```bash
 cd <projekt>/main
-git merge --no-ff <vetev>
+git merge --no-ff <vetev> -m "<shrnutí toho, co větev přinesla>"
 git push
 git worktree remove <projekt>/<adresar>
 git branch -d <vetev>
@@ -150,6 +150,14 @@ git push origin --delete <vetev>   # jen pokud byla pushnutá
 ```
 
 Před mergem musí být `main/` čistý – `git merge` nad rozpracovaným stromem neprojde.
+
+### Zpráva merge commitu shrnuje práci, ne jméno větve
+
+Historie hlavní větve se čte přes `git log --first-parent`, který do větví nevstupuje – merge commit je tam **jediný řádek za celou odvedenou práci**. Dílčí commity se tím nikam neztrácejí a jsou pořád k dispozici (`git log <merge>^2`, `git show <merge>`), jen nepřeplácají hlavní linku. Cenou za to je, že defaultní zpráva `Merge větve docs/znamky` je o té větvi jediné, co bude vidět, a přitom neříká nic než jméno adresáře.
+
+**Zprávu proto předej `-m` a napiš ji jako běžný commit:** co větev přinesla, ne jak se jmenovala. Ne `Merge branch 'feat/platby'`, ale `Zaveď platby kartou přes platební bránu`. Nese-li větev víc věcí, patří výčet do druhého odstavce zprávy, ne do prvního řádku.
+
+**Vynucuje to git hook `~/.claude/githooks/commit-msg`**, nasazený globálně přes `core.hooksPath`. Odmítne commit, jehož zpráva začíná `Merge branch` nebo `Merge větve` – ale jen na hlavní větvi, takže aktualizace rozdělané větve z `main` i merge po `git pull` projdou beze změny. Hook volá lokální `.git/hooks/commit-msg` repozitáře, existuje-li, protože globální `core.hooksPath` by ho jinak vypnul; **ostatní typy lokálních hooků tím ale nasazené nejsou** – potřebuje-li je nějaký projekt, nastaví si vlastní `core.hooksPath` a globální nastavení přebije.
 
 Celou sekvenci proveď najednou a **průběžně hlas, co se povedlo** – merge nemá proběhnout mlčky. Před mergem ověř, že ve worktree nejsou necommitnuté změny. Když `worktree remove` odmítne kvůli neuloženému obsahu, **nepoužívej `--force`, dokud se nezeptáš**.
 
