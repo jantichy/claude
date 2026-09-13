@@ -1,4 +1,4 @@
-"""Regresní testy git hooku, který hlídá zprávu merge commitu.
+"""Regresní testy vrstev, které něco vynucují mimo model – git hooku a CI.
 
 `githooks/commit-msg` je vedle `verify.sh` druhé místo konfigurace, které něco
 doopravdy vynucuje – zbytek je text, který vykonává model. Je přitom nasazený
@@ -20,6 +20,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 Schválně jen stdlib – stejný důvod jako u `test_verify.py`.
 """
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -151,6 +152,90 @@ class NasazeniHooku(unittest.TestCase):
         text = (ROOT / "WORKTREE.md").read_text()
         self.assertIn("--no-ff", text)
         self.assertIn("githooks/commit-msg", text)
+
+
+class NasazeniGlobalnihoHooku(unittest.TestCase):
+    """Že hook funguje, když ho zavoláš, neznamená, že ho někdo volá.
+
+    `core.hooksPath` je stav stroje, ne repozitáře: nová instalace systému, jiný
+    počítač nebo přepsaný `~/.gitconfig` hook odpojí, a nic o tom nedá vědět –
+    merge prostě zase začne procházet s defaultní zprávou. Je to přesně ten tichý
+    směr selhání, kvůli kterému `~/.claude/RULES.md`, *Ověřitelná kontrola místo
+    dojmu*, žádá test k vynucovací vrstvě hned.
+
+    Selhání tu není falešný poplach ani po čerstvém klonu: hook v tu chvíli
+    opravdu nasazený není a zpráva říká, čím to napravit.
+    """
+
+    def test_hooksPath_miri_na_githooks(self):
+        if os.environ.get("CI"):
+            self.skipTest("v CI se necommituje, hook tam nemá co dělat")
+        v = subprocess.run(["git", "-C", str(ROOT), "config", "--get", "core.hooksPath"],
+                           capture_output=True, text=True, check=False)
+        cesta = Path(v.stdout.strip()).expanduser() if v.stdout.strip() else None
+        self.assertEqual(
+            cesta, HOOK.parent,
+            "git hook není nasazený – `git log --first-parent` se zaplní zprávami "
+            "'Merge branch ...'. Naprav příkazem:\n"
+            f"    git config --global core.hooksPath {HOOK.parent}")
+
+
+class PrubeznaKontrolaVCI(unittest.TestCase):
+    """CI je jediná kontrola, která běží mimo tenhle stroj.
+
+    Lokální `verify.sh` obejde commit z jiného počítače, z GUI, s `--no-verify`
+    i cizí fork – repozitář je veřejný. CI proto pouští týž *Kontrakt příkazů*,
+    a právě proto si ho nesmí opsat: opsaný seznam se po první změně kontraktu
+    rozejde a vypadá přitom pořád platně (`~/.claude/RULES.md`, *Neopisuj seznam,
+    který má vlastní zdroj pravdy*).
+    """
+
+    WORKFLOW = ROOT / ".github" / "workflows" / "verify.yml"
+    KONTRAKT = ROOT / ".claude" / "CLAUDE.md"
+
+    def sekce_kontraktu(self):
+        """Tělo bez bloků kódu – stejně jako `contract_section` ve `verify.sh`."""
+        ve_bloku = uvnitr = False
+        out = []
+        for r in self.KONTRAKT.read_text(encoding="utf-8").splitlines():
+            if r.lstrip().startswith(("```", "~~~")):
+                ve_bloku = not ve_bloku
+                continue
+            if ve_bloku:
+                continue
+            if r.startswith("## Kontrakt příkazů"):
+                uvnitr = True
+            elif uvnitr and r.startswith("## "):
+                break
+            if uvnitr:
+                out.append(r)
+        return "\n".join(out)
+
+    def klice_kontraktu(self):
+        return set(re.findall(r"^[ \t]*[-*][ \t]*(\w+):[ \t]+\S", self.sekce_kontraktu(), re.M))
+
+    def test_workflow_existuje(self):
+        self.assertTrue(self.WORKFLOW.exists(), f"chybí {self.WORKFLOW}")
+
+    def test_workflow_pousti_vsechny_klice_kontraktu(self):
+        """Čtvrtý klíč dopsaný do kontraktu by se v CI tiše nespouštěl."""
+        text = self.WORKFLOW.read_text(encoding="utf-8")
+        m = re.search(r'for klic in \(([^)]*)\)', text)
+        self.assertIsNotNone(m, "ve workflow se nenašel výčet klíčů – změnil se tvar?")
+        ve_workflow = set(re.findall(r'"(\w+)"', m.group(1)))
+        self.assertEqual(ve_workflow, self.klice_kontraktu(),
+                         "CI pouští jiné klíče, než jaké stojí v Kontraktu příkazů")
+
+    def test_workflow_neopisuje_prikazy(self):
+        """Kdyby se příkaz do workflow opsal, změna kontraktu by ho minula."""
+        text = self.WORKFLOW.read_text(encoding="utf-8")
+        for radek in self.sekce_kontraktu().splitlines():
+            m = re.match(r"^[ \t]*[-*][ \t]*\w+:[ \t]+(.*?)[ \t]*$", radek)
+            if m is None or m.group(1).strip() == "-":
+                continue
+            with self.subTest(prikaz=m.group(1)[:40]):
+                self.assertNotIn(m.group(1), text,
+                                 "workflow má příkaz opsaný, místo aby ho četl z kontraktu")
 
 
 if __name__ == "__main__":

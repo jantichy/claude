@@ -1,5 +1,7 @@
 # Konfigurace Claude Code
 
+[![Kontroly](https://github.com/jantichy/claude/actions/workflows/verify.yml/badge.svg)](https://github.com/jantichy/claude/actions/workflows/verify.yml)
+
 Tohle je moje osobní konfigurace [Claude Code](https://docs.claude.com/en/docs/claude-code), kterou tu sdílím pro inspiraci. Třeba tu najdete něco užitečného i pro vaši práci. Budu rád i za jakékoliv vaše nápady a připomínky, napište mi na e-mail [jantichy@jantichy.cz](mailto:jantichy@jantichy.cz)!
 
 Co bych z celého repozitáře vypíchl, aby to neuteklo vaší pozornosti?
@@ -156,7 +158,7 @@ Když se do hlavní větve přimerguje větev o třiceti commitech, rozteče se 
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
-Skilly a pravidla jsou z velké části text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez vlastního README. Kde skill vlastní skripty má, čte je kontrola: Python `/compose` a `/transcript` hlídají testy (že se přeloží a že si cíl neodvozuje ze svého umístění), swiftový skript `/invoicing` čte `typecheck` v kontraktu. Další dvě sady testují to, co v téhle konfiguraci něco doopravdy **vynucuje** – průběžnou kontrolu a git hook nad zprávou merge commitu –, protože právě tam stojí tichá regrese nejvíc. Obojí stojí nula tokenů a běží v průběžné kontrole po každé odpovědi. Jen standardní knihovna Pythonu, žádná instalace.
+Skilly a pravidla jsou z velké části text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez vlastního README. Kde skill vlastní skripty má, čte je kontrola: Python `/compose` a `/transcript` hlídají testy (že se přeloží a že si cíl neodvozuje ze svého umístění), swiftový skript `/invoicing` čte `typecheck` v kontraktu. Další dvě sady testují to, co v téhle konfiguraci něco doopravdy **vynucuje** – průběžnou kontrolu a git hook nad zprávou merge commitu –, protože právě tam stojí tichá regrese nejvíc. Obojí stojí nula tokenů a běží v průběžné kontrole po každé odpovědi. Jen standardní knihovna Pythonu, žádná instalace. Tytéž tři příkazy pouští i [GitHub Actions](.github/workflows/verify.yml) – lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork, kdežto CI ne. Příkazy si přitom neopisuje, čte je ze stejného *Kontraktu příkazů*.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 

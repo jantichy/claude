@@ -1,0 +1,68 @@
+# Tytéž kontroly, jaké lokálně pouští `verify.sh` po každé odpovědi – jenže na
+# cizím stroji a bez souhlasu, který jde odvolat. Lokální vrstvu obejde commit
+# z jiného počítače, z GUI, s `--no-verify` i cizí fork; tahle ne.
+#
+# Příkazy se odsud neopisují. Čtou se ze sekce `## Kontrakt příkazů`
+# v `.claude/CLAUDE.md`, tedy z téhož místa, ze kterého je bere `verify.sh` –
+# opsaný seznam by se po první změně kontraktu rozešel a vypadal přitom platně.
+
+name: Kontroly
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  kontrakt:
+    # macOS kvůli `swiftc` – na Linuxu není a typecheck by se musel vynechat.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Doinstaluj nástroje
+        run: |
+          command -v shellcheck >/dev/null || brew install shellcheck
+          python3 -m pip install --quiet ruff
+
+      - name: Spusť kontrakt příkazů
+        run: |
+          python3 - <<'PY' > /tmp/kontrakt.sh
+          # Parser sekce je týž jako `contract_section` a `cmd_for` ve verify.sh:
+          # tělo bez bloků kódu, pak `- klíč: příkaz` na jednom řádku.
+          import re, pathlib, sys
+          radky = pathlib.Path(".claude/CLAUDE.md").read_text(encoding="utf-8").splitlines()
+          ve_bloku = uvnitr = False
+          sekce = []
+          for r in radky:
+              if r.lstrip().startswith(("```", "~~~")):
+                  ve_bloku = not ve_bloku
+                  continue
+              if ve_bloku:
+                  continue
+              if r.startswith("## Kontrakt příkazů"):
+                  uvnitr = True
+              elif uvnitr and r.startswith("## "):
+                  break
+              if uvnitr:
+                  sekce.append(r)
+          sekce = "\n".join(sekce)
+          print("set -e")
+          for klic in ("typecheck", "lint", "test"):
+              m = re.search(rf"^[ \t]*[-*][ \t]*{klic}:[ \t]+(.*?)[ \t]*$", sekce, re.M)
+              if m is None:
+                  sys.exit(f"klíč {klic} se z kontraktu nepřečetl – změnil se formát?")
+              prikaz = m.group(1)
+              if prikaz.strip() == "-":
+                  print(f'echo "::notice::{klic} – projekt ho nemá, nekontroluje se"')
+                  continue
+              print(f'echo "::group::{klic}"')
+              print(prikaz)
+              print('echo "::endgroup::"')
+          PY
+          cat /tmp/kontrakt.sh
+          bash /tmp/kontrakt.sh
