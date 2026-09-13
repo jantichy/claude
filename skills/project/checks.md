@@ -1,6 +1,8 @@
-# Kontrakt příkazů a průběžná kontrola
+# Kontrakt příkazů a kontrolní vrstvy
 
-Podrobnosti ke kroku 12 v `SKILL.md`: šablona sekce `## Kontrakt příkazů`, co se zapnutím vzniká, jak se dává souhlas a které kontroly se nastavují konfigurací.
+Podrobnosti ke kroku 12 v `SKILL.md`: šablona sekce `## Kontrakt příkazů`, co se zapnutím vzniká, jak se dává souhlas, které kontroly se nastavují konfigurací a jak se zakládá CI.
+
+**Které vrstvy projekt vůbec má a co do které patří, drží `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*.** Přečti si ji dřív, než začneš – rozhoduje se podle ní, ne podle typu projektu z kroku 11.
 
 Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů`:
 
@@ -39,5 +41,21 @@ Definice a prahy jednotlivých kontrol jsou v `~/Dev/context/coding/quality.md`.
 1. **Přísnost překladače.** Ověř, že konfigurace projektu drží řádek *Přísnost překladače* z tabulky kontrol – u TypeScriptu je to `tsconfig.json`, u ostatních jazyků odpovídající přepínač (Python `mypy --strict`, Go `go vet`, PHP `declare(strict_types=1)` a maximální úroveň statické analýzy). Chybí-li, **navrhni změnu a nech ji potvrdit** – u staršího projektu může zapnutí `strict` vyrobit stovky chyb naráz, takže to nikdy neprováděj rovnou.
 2. **Metriky složitosti v lintru.** Prahy z řádku *Metriky složitosti* přenes do konfigurace lintru – v ESLintu jsou to pravidla `complexity`, `max-lines-per-function`, `max-depth`, `max-params`. **Hodnoty opisuj z tabulky, ne odsud:** kdyby stály na dvou místech, rozejdou se. U existujícího projektu jich naráz vyplavou stovky, takže se nabízí nastavit je jako varování – jenže **varování `lint` neshodí, a kontrola se tím vypne**. Je to změkčení prahu, které podle `quality.md` smí schválit **jen člověk a s důvodem zapsaným do `docs/decisions.md`**, a to i s termínem, kdy se přitvrdí. Zeptej se tedy a rozhodnutí nech zapsat; sám to nezměkčuj.
 3. **Vlastní pravidla statické analýzy.** Ptej se, jestli projekt má pravidlo, které by šlo zakódovat: do `.semgrep/` patří **projektová znalost, kterou model nemá** – „tenhle ORM pattern u nás nepoužíváme, dělá N+1“, „sem se nesmí volat přímo, jde se přes službu“. **Existuje-li takové pravidlo, adresář založ a rovnou ho tam zapiš** i s poznámkou, k čemu je. Neexistuje-li, nezakládej nic – prázdný adresář pro jistotu je jen další nepořádek.
+
+## CI: co je na průběžnou kontrolu moc pomalé
+
+Průběžná kontrola má strop 60 sekund na příkaz a běží **jen na tomhle stroji a jen se souhlasem**. Obejde ji commit odjinud, z GUI, s `--no-verify` i cizí fork. CI je proto druhá vrstva, ne zdvojení té první: běží po každém pushi bez ohledu na to, kdo commituje, a je v ní místo pro `build`, `audit`, `gitleaks`, `coverage`, `a11y`, `perf` a mutation testing – tedy pro to, co se do vteřinového okna nevejde.
+
+**Zakládá se, když je projekt na hostingu, který CI umí** (typicky GitHub). Nemá-li remote nebo běží-li jen lokálně, krok přeskoč a řekni to.
+
+Workflow **nesmí opisovat příkazy z kontraktu** – opsaný seznam se po první změně rozejde a vypadá přitom platně (`~/.claude/RULES.md`, *Neopisuj seznam, který má vlastní zdroj pravdy*). Čte je z téhož místa jako `verify.sh`. Hotovou a ověřenou podobu má `~/.claude/.github/workflows/verify.yml`; **vezmi ji jako předlohu a uprav tři věci**:
+
+1. **Runner.** `ubuntu-latest`, pokud projekt nepotřebuje macOS (Swift, Xcode) – je rychlejší a u privátního repozitáře levnější.
+2. **Nástroje.** Doinstaluj, co kontrakt opravdu volá; na runneru není nic z Homebrew. Nedeklarovaná lokální závislost je tu nejčastější příčina prvního červeného běhu.
+3. **Klíče.** Do výčtu dej ty, které v kontraktu jsou – tedy vedle `typecheck`, `lint` a `test` i `build`, `audit` a `coverage`, jsou-li tam. Průběžná kontrola je nepouští, CI ano.
+
+**Napiš k tomu test, který ověří, že se workflow s kontraktem nerozešlo** – že pouští právě jeho klíče a žádný příkaz si neopisuje. Je to vynucovací vrstva jako každá jiná (`~/Dev/context/coding/quality.md`, *Vynucovací vrstva se testuje jako kód, obousměrně*); předloha je v `~/.claude/tests/test_hooks.py`.
+
+**Badge do `README.md`** – u veřejného repozitáře je to jediné místo, kde je stav vidět zvenčí.
 
 **Nasazuje se projekt někam?** Zjisti to (`vercel.json`, `netlify.toml`, `.github/workflows/`) a najdeš-li automatické nasazení z produkční větve, zapiš to do `## Nasazení` v `CLAUDE.md` i s upozorněním, že **merge do produkční větve je samotné nasazení** – detail řeší `/release`.

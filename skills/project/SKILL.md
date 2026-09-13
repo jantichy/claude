@@ -395,15 +395,19 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 - **Data a výzkum** – „Jednorázová datová/výzkumná analýza – výstupem jsou zjištění a report, ne nasazovaný kód.“
 - **Ostatní** – „Projekt mimo výše uvedené kategorie.“
 
-## Krok 12 – Kontrakt příkazů a průběžná kontrola
+## Krok 12 – Kontrakt příkazů a kontrolní vrstvy
 
-**Jen u projektu, ve kterém se něco spouští** – tedy typ *Vývoj*, *Web*, nebo kdekoliv, kde v repozitáři najdeš `package.json`, `composer.json`, `Makefile`, `pyproject.toml` a podobně. U obsahového, znalostního nebo výzkumného projektu **krok přeskoč a řekni to jednou větou**; kontrakt tam nemá co dělat.
+**Tenhle krok se nepřeskakuje podle typu projektu.** Dřív se u obsahového a znalostního projektu vynechával celý, protože „kontrakt tam nemá co dělat“ – to bylo špatně. Testovat jde i projekt bez aplikace: netestuje se chování, ale **tvar** – mrtvé odkazy, existence sekcí, povinná struktura záznamu, schéma dat a soulad seznamu v dokumentaci s tím, co je na disku. Doklad je `~/.claude`, konfigurace bez jediné aplikace a s nejsilnější kontrolní vrstvou ze všech projektů.
+
+Liší se tedy **co se vybere**, ne jestli se krok udělá. Rozhoduj podle `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*: u vývojářského projektu bývá celý kontrakt a CI, u znalostního typicky jen `test` a `lint` nad vlastní strukturou. **Nemá-li projekt opravdu co spustit ani čím, řekni to i s tím, co tím odpadá** – to je legitimní výsledek, ale musí být výsledkem rozhodnutí, ne přeskočení.
+
+**Kam patří soubory s testy**, říká `~/.claude/STRUCTURE.md`, *Testy*; řídí se runnerem projektu, ne preferencí.
 
 **Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
 
 Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/verify.sh --allow <projektový adresář>` a nech ho spustit **jeho** – souhlasem se zapíná kontrola, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu. Ve worktree layoutu vypiš `main/` nebo svou větev, **nikdy kořen kontejneru**: souhlas se počítá z `git rev-parse --git-common-dir`, takže z kteréhokoliv worktree platí pro celý repozitář, ale v kořeni kontejneru žádný kontrakt neleží.
 
-**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/quality.md`.
+**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly, založení CI i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/quality.md`.
 
 ## Krok 13 – Doménové checklisty
 

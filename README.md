@@ -46,7 +46,7 @@ Následující skilly tvoří jeden životní cyklus od založení projektu po n
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
-Zeptá se postupně na všechno, co se u nového projektu řeší pokaždé znovu – název, git a remote, uspořádání na disku, dokumentační strukturu, autocommit, typ projektu, spouštěcí příkazy, doménové checklisty – a rovnou to nastaví. Umí i projekty, které už existují, a hlavně se k nim po čase vrátit: pozná svůj vlastní otisk a místo otázek projde projekt proti tomu, jak standardy vypadají dnes. Tím řeší nepříjemnou vlastnost celé téhle vrstvy – konfigurace se vyvíjí dál, ale projekt založený loni zůstane stát a sám o tom neřekne.
+Zeptá se postupně na všechno, co se u nového projektu řeší pokaždé znovu – název, git a remote, uspořádání na disku, dokumentační strukturu, autocommit, typ projektu, spouštěcí příkazy, kontrolní vrstvy včetně CI, doménové checklisty – a rovnou to nastaví. Umí i projekty, které už existují, a hlavně se k nim po čase vrátit: pozná svůj vlastní otisk a místo otázek projde projekt proti tomu, jak standardy vypadají dnes. Tím řeší nepříjemnou vlastnost celé téhle vrstvy – konfigurace se vyvíjí dál, ale projekt založený loni zůstane stát a sám o tom neřekne.
 
 ### [`/discovery`](skills/discovery/) – co je venku, než začnete stavět
 

@@ -76,13 +76,19 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 **Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/skills/LIFECYCLE.md`, *Povolená opakování*.
 
-Spusť jen to, co je vlastní téhle otázce – hledání mrtvého kódu a nepoužitých závislostí, tedy „sedí si projekt sám se sebou?“, na což se `/review` neptá:
+Spusť jen to, co je vlastní téhle otázce – „sedí si projekt sám se sebou?“, na což se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula); prahy a majitele drží `~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
 
-- `knip` nebo `depcheck`, jsou-li v projektu nainstalované (zjisti z `package.json`)
+| Co | Čím | Kdy má smysl |
+|---|---|---|
+| mrtvý kód, nepoužité exporty, soubory a závislosti | `knip`, jinak `ts-prune` + `depcheck` | projekt má `package.json` |
+| env proměnné proti `.env.example`, oběma směry | grep na `process.env` / `getenv` proti ukázce | projekt má `.env.example` |
+| překladové klíče proti slovníku, oběma směry | `i18next-parser`, jinak grep | projekt má překlady |
+| shoda verze runtime napříč `engines`, `.nvmrc`, `.tool-versions`, CI a hostingem | porovnání hodnot | projekt některé z nich má |
+| `TODO`/`FIXME` starší než půl roku a prošlé deadliny v komentářích | `git blame` nad nalezenými řádky | vždy, kde je git |
 
-Nemá-li je projekt (nebo nemá `package.json` vůbec, což je u obsahového či znalostního projektu normální), **krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo. Audit v dalších fázích běží stejně, jen bez téhle vrstvy.
+**Nemá-li projekt, čím to spustit, krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo, položku po položce. Nespuštěná kontrola se nikdy nevypisuje jako nula nálezů: tři přeskočené kroky vypsané jako tři nuly čte uživatel jako tři čisté výsledky. U obsahového či znalostního projektu je normální, že se přeskočí skoro všechno; audit v dalších fázích běží stejně, jen bez téhle vrstvy.
 
-Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označí tagem `[toolchain]`.
+Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označí tagem `[toolchain]` a **neprocházejí posouzením** – nástroj nehalucinuje.
 
 **Běží-li `/consistency` samostatně mimo životní cyklus** (tedy bez předchozího `/review`) a projekt má *Kontrakt příkazů*, řekni uživateli jednou větou, že průběžná kontrola teď prověřená není a že `/review` se dělá dřív.
 
@@ -95,6 +101,8 @@ Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k proje
 ```
 Prohledej zadaný rozsah (viz *Rozsah* výš) a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
 
+Část nekonzistencí už našly nástroje před tebou (mrtvý kód a nepoužité závislosti, env proti `.env.example`, překladové klíče, shoda verzí runtime, zastaralé TODO) a jejich nálezy dostáváš v zadání. **Nehledej je znovu** – hledej to, co nástroj změřit neumí.
+
 PŘED HLÁŠENÍM PROBLÉMU vždy zkontroluj, že:
 - Není uveden v kapitole `## Consistency` projektového `CLAUDE.md` (předané v zadání) – pokud ano, neuváděj ho
 - Není přímo nad řádkem komentář `consistency-ignore: <důvod>` – pokud ano, respektuj ho
@@ -104,12 +112,11 @@ PŘED HLÁŠENÍM PROBLÉMU vždy zkontroluj, že:
 KRITICKÉ (mohou rozbít funkčnost):
 - Typové nesrovnalosti: stejný koncept/entita definovaná různými typy v různých souborech
 - Duplicitní konfigurace s různými hodnotami (tsconfig, package.json, env soubory)
-- Env proměnné použité v kódu ale chybějící v .env.example / dokumentaci
 - Interface/schéma deklarované jinak než je skutečně používáno
 - Import cest, které nesedí se skutečnou strukturou souborů
 - Cross-layer kontrakty: rozdíly mezi DB schématem ↔ ORM modelem ↔ TypeScript typy ↔ validačním schématem (Zod/Yup); API endpoint ↔ klientský volání (request/response, query params); GraphQL/OpenAPI specifikace ↔ implementace; form schéma ↔ submit payload ↔ serverový endpoint
 - Bezpečnostní konzistence – **hlas rozdíl uvnitř skupiny, ne chybějící ochranu jako takovou**: stejný typ endpointu nebo tabulky chráněný nestejně (RLS, auth middleware, sanitizace vstupu, CORS, rate-limiting). Vyjmenuj skupinu, která si má být podobná, a v čem se liší. **Neposuzuj, jestli je ta ochrana dostatečná** – to dělá specialista na bezpečnost v `/review` na silném modelu; tady jde jen o to, že se dvě podobná místa chovají různě
-- Verzování runtime: různé verze stejné lib v monorepo packages; rozjetá Node verze napříč `engines` / `.nvmrc` / `.tool-versions` / CI config / hosting config; TS `target` vs browserslist drift; lockfile vs manifest drift
+- Verzování runtime: různé verze stejné lib v monorepo packages; TS `target` vs browserslist drift
 
 STŘEDNÍ (technický dluh):
 - Duplicitní logika na více místech (stejná funkce implementovaná vícekrát)
@@ -118,11 +125,9 @@ STŘEDNÍ (technický dluh):
 - Špatně zatříděné soubory (utilita v komponentách, komponenta v utils/)
 - README nebo dokumentace popisující funkce, které neexistují nebo fungují jinak
 - Obsah ve špatném souboru podle cílového čtenáře (tohle je zatřídění, ne soulad s předpisem – proto to sem patří, i když se opírá o `STRUCTURE.md`): `README.md` je popis projektu **pro člověka**, takže normativní pokyny pro Clauda (pravidla práce v repozitáři, konvence, povinnost něco udržovat) v něm nemají co dělat ani odkazem – patří do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md`. Definice je v `~/.claude/STRUCTURE.md`
-- Nepoužívané exporty, funkce, proměnné (dead code)
 - Zapomenuté zbytky po odstranění: když se v minulosti odstraňoval kód, feature nebo komponenta, mohly na dalších místech zůstat pozapomenuté části – importy smazaného modulu, konfigurace pro zrušenou funkci, typy/interfacy pro odstraněnou entitu, registrace odebrané route nebo pluginu, zmínky v dokumentaci nebo komentářích, testy odstraněné funkcionality, env proměnné pro mrtvou feature, reference v package.json apod.
-- Závislosti v package.json které nejsou použity (nebo naopak)
-- i18n a UI texty: chybějící překladové klíče (použité v kódu, nejsou ve slovníku); nepoužité klíče (ve slovníku, nikde nereferencované); stejný UI koncept různě pojmenovaný napříč obrazovkami ("Smazat" vs "Odstranit" vs "Vymazat"); nesystematický mix jazyků v UI textech
-- Zastarání: TODO/FIXME starší než ~6 měsíců (zjistitelné `git blame`); komentáře s deadlinem v minulosti ("remove after 2025-01"); feature flagy s trvale stejnou hodnotou na všech check-pointech (ready to inline/remove); pozastavené migrace (částečná DB migrace bez follow-upu)
+- i18n a UI texty: stejný UI koncept různě pojmenovaný napříč obrazovkami ("Smazat" vs "Odstranit" vs "Vymazat"); nesystematický mix jazyků v UI textech
+- Zastarání: feature flagy s trvale stejnou hodnotou na všech check-pointech (ready to inline/remove); pozastavené migrace (částečná DB migrace bez follow-upu)
 
 KOSMETICKÉ (konzistence stylu):
 - Mixing naming conventions ve stejném kontextu (camelCase vs snake_case u proměnných, kebab-case vs PascalCase u souborů)

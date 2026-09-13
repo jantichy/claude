@@ -54,6 +54,7 @@ Povinný je jediný soubor – **`CLAUDE.md`**, bez něj projekt není projekt. 
 | `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md` | **vybírá se** při `/project` (výchozí ne), zakládá se až prací – viz *Produktové podklady* |
 | `research/` | až je co uložit |
 | `.claude/run/` | samo, přerušitelným během skillu – není to standardní soubor, viz *Běhový stav skillů* |
+| testy | s první kontrolou, kterou projekt dostane – umístění se řídí jeho runnerem, viz *Testy* |
 
 Nezaložený soubor **není odchylka** – u projektu, kde se nic nerozhoduje, je prázdný `decisions.md` horší než žádný. Vznikne, až bude potřeba.
 
@@ -334,6 +335,23 @@ Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jedno
 **Do `.claude/run/`, ne mimo repozitář:** je to per pracovní adresář, tedy ve worktree layoutu přirozeně per větev – a fronta nálezů k větvi patří. (Souhlas a běhový stav průběžné kontroly naopak leží mimo repozitář a klíčují se sdíleným `.git`, protože odpovídají na otázku o repozitáři, ne o větvi.)
 
 **Nikdy se z něj nečte jako z pravdy o projektu.** Říká jen, kde skončil přerušený běh; co z toho má trvalou platnost, se zapíše do `todo.md`, `decisions.md` nebo `done.md` jako všechno ostatní.
+
+---
+
+## Testy
+
+**Testy nejsou dokumentace a do `docs/` nepatří** – ani v režimu `docs/`. Je to spustitelný kód, i když testuje Markdown.
+
+**Leží tam, kam je hledá runner projektu**, a to i za cenu, že každý jazyk je má jinde:
+
+| Kde | Kdy |
+|---|---|
+| `tests/` v kořeni | Python (pytest), PHP (PHPUnit), Rust integrační testy – a každý projekt, jehož runner výchozí místo nemá |
+| vedle zdroje (`*.test.ts`, `_test.go`) | JavaScript a TypeScript, Go (tam to vynucuje jazyk) |
+
+**Jednotné to schválně není.** Standard, který by nutil `tests/` i v Go, by projekt hnal do boje s vlastními nástroji – a kontrola, která se pere s nástrojem, se dřív nebo později obejde. Rozhoduje tedy konvence jazyka, ne preference; kde žádná není, platí `tests/` v kořeni.
+
+**Znalostní, konfigurační a datový projekt testy má taky** a patří do `tests/` v kořeni. Netestuje se v nich chování, ale **tvar**: mrtvé odkazy, existence sekcí, povinná struktura záznamu, schéma dat a soulad seznamu v dokumentaci s tím, co je na disku. Co do které kontrolní vrstvy patří, drží `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*; příkaz, kterým se testy pouštějí, deklaruje *Kontrakt příkazů* v projektovém `CLAUDE.md`.
 
 ---
 
