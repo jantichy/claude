@@ -154,7 +154,18 @@ Mapu pak vlož do zadání každého specialisty. Bez ní si stejnou orientaci m
 
 **Běží první a stojí nula tokenů.** Každý nález odsud je jistý a ušetří práci panelu.
 
-**Běžela-li nad týmž commitem CI, přečti její výsledek místo opakovaného spouštění.** Zjisti to (`gh run list --limit 1 --json headSha,conclusion`); sedí-li `headSha` s `HEAD` a běh skončil, vezmi jeho závěr jako výsledek těch kroků, které v ní jsou, a pusť jen zbytek. Je to tentýž nástroj nad týmž stromem – spustit `build`, `audit` a `coverage` podruhé znamená zaplatit minuty za odpověď, kterou už někdo má. **Nesedí-li commit nebo běh neexistuje, spusť všechno** a řekni, že CI se nepoužila; výsledek z jiného commitu není výsledek.
+**Běžela-li nad týmž stromem CI, přečti její výsledek místo opakovaného spouštění.** Platí to jen při splnění **obou** podmínek naráz:
+
+```
+gh run list --limit 1 --json headSha,conclusion,status   # headSha == HEAD, status completed
+git status --porcelain                                   # musí být prázdné
+```
+
+Pak vezmi závěr běhu jako výsledek těch kroků, které v něm jsou, a pusť jen zbytek – je to tentýž nástroj nad týmž stromem a spustit `build`, `audit` a `coverage` podruhé znamená zaplatit minuty za odpověď, kterou už někdo má.
+
+**Čistý strom je v té podmínce nutný, ne opatrnický.** Rozsah review zahrnuje i necommitnuté změny (Fáze 0, *Urči rozsah souborů*), kdežto CI běžela nad tím, co je v commitu. S rozdělanou prací tedy `headSha` sedí, ale strom je jiný, a review by si vypůjčilo zelenou z běhu, který jeho rozsah neprověřoval – v kroku, který má při červeném stavu zastavit.
+
+**Nesedí-li kterákoliv podmínka, spusť všechno** a napiš do výstupu, proč se CI nepoužila. Výsledek z jiného stromu není výsledek.
 
 
 Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*). Chybí-li řádek, krok se přeskočí a **do výstupu se napíše, co se tím nezkontrolovalo**. Nevymýšlej příkazy, které jsi neověřil.
