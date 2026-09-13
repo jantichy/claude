@@ -27,6 +27,8 @@ jobs:
       - name: Doinstaluj nástroje
         run: |
           command -v shellcheck >/dev/null || brew install shellcheck
+          # `verify.sh` si hlídá timeout přes gtimeout; na čistém macOS není.
+          command -v gtimeout >/dev/null || brew install coreutils
           python3 -m pip install --quiet ruff
 
       - name: Spusť kontrakt příkazů
