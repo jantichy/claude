@@ -164,6 +164,12 @@ def _spatne_odkazy(skill, vzor, vlastni: set, cizi: set) -> list:
 #: Odkazy se píšou domovskou cestou (`~/.claude/RULES.md`), ale míří na dvě různá
 #: místa: do **tohohle repozitáře**, nebo do privátní knowledge base mimo něj.
 VZOR_ODKAZU = r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`"
+
+#: Kotva na sekci: `soubor`, *Sekce*. Stojí tady, a ne jen u testu, který ji hlídá,
+#: protože z ní počítá i ohlašovací test – jinak by hlásil menší rozsah přeskočené
+#: kontroly, než jaký doopravdy je.
+VZOR_KOTVY = (r"`(~/(?:\.claude|Dev)/[^`\s]+\.md)`,\s*(?:kapitola\s+|sekce\s+)?"
+              r"\*([^*\n]{3,80})\*")
 KNOWLEDGE_BASE = Path.home() / "Dev" / "context"
 
 
@@ -213,13 +219,22 @@ class SkillOdkazy(unittest.TestCase):
         Bez tohohle testu by se přeskočení tvářilo jako pokrytí: kontrola by mlčela
         stejně, ať knowledge base existuje, nebo ne (`~/.claude/skills/SKILLS.md`,
         *Jak se píše text uvnitř* – žádné tiché ořezání rozsahu).
+
+        **Počítá se obojí – odkazy na soubory i kotvy na sekce.** Kotvy přeskakuje
+        `test_odkazy_na_sekce_miri_na_existujici_nadpis` mlčky (`continue` nad
+        neexistujícím cílem), takže dokud se nezapočítaly sem, hlásilo se menší
+        číslo než skutečný rozsah přeskočené kontroly – a to je táž vada, jaké má
+        tenhle test bránit.
         """
-        venku = {ref for soubor in self.ODKAZUJICI
-                 for ref in re.findall(VZOR_ODKAZU, body(soubor))
-                 if not ref.startswith("~/.claude/")}
+        venku, kotvy = set(), set()
+        for soubor in self.ODKAZUJICI:
+            telo = body(soubor)
+            venku |= {r for r in re.findall(VZOR_ODKAZU, telo) if not r.startswith("~/.claude/")}
+            kotvy |= {(c, s) for c, s in re.findall(VZOR_KOTVY, telo)
+                      if not c.startswith("~/.claude/")}
         if not KNOWLEDGE_BASE.exists():
-            self.skipTest(f"{KNOWLEDGE_BASE} tu není, "
-                          f"{len(venku)} odkazů do knowledge base zůstalo neověřeno")
+            self.skipTest(f"{KNOWLEDGE_BASE} tu není, takže zůstalo neověřeno "
+                          f"{len(venku)} odkazů na soubory a {len(kotvy)} kotev na sekce")
         chybi = sorted(ref for ref in venku if not cil_odkazu(ref).exists())
         self.assertFalse(chybi, f"neexistující odkazy do knowledge base: {chybi}")
 
@@ -236,8 +251,7 @@ class SkillOdkazy(unittest.TestCase):
         # Kotva se pozná podle tvaru `soubor`, *Sekce* – tedy čárka hned za
         # zpětným apostrofem. Volnější vzor bral i běžné zvýraznění v okolní
         # větě ("`RULES.md`) stojí **před `/release`**") a hlásil samé nesmysly.
-        vzor = re.compile(
-            r"`(~/(?:\.claude|Dev)/[^`\s]+\.md)`,\s*(?:kapitola\s+|sekce\s+)?\*([^*\n]{3,80})\*")
+        vzor = re.compile(VZOR_KOTVY)
         for soubor in self.ODKAZUJICI:
             with self.subTest(soubor=soubor.name if soubor.parent == ROOT else soubor.parent.name):
                 spatne = []

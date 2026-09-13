@@ -243,7 +243,10 @@ class NasazeniGlobalnihoHooku(unittest.TestCase):
     def test_hooksPath_miri_na_githooks(self):
         if os.environ.get("CI"):
             self.skipTest("v CI se necommituje, hook tam nemá co dělat")
-        v = subprocess.run(["git", "-C", str(ROOT), "config", "--get", "core.hooksPath"],
+        # `--global`, ne efektivní hodnota: tu uspokojí i `core.hooksPath` nastavený
+        # jen v tomhle repozitáři – a hook by pak neběžel nikde jinde, přestože
+        # pravidlo o zprávě merge commitu platí pro všechny projekty.
+        v = subprocess.run(["git", "config", "--global", "--get", "core.hooksPath"],
                            capture_output=True, text=True, check=False)
         cesta = Path(v.stdout.strip()).expanduser() if v.stdout.strip() else None
         self.assertEqual(
@@ -291,6 +294,25 @@ class PrubeznaKontrolaVCI(unittest.TestCase):
     def test_workflow_existuje(self):
         self.assertTrue(self.WORKFLOW.exists(), f"chybí {self.WORKFLOW}")
 
+    def test_workflow_ma_spoustece(self):
+        """Existence souboru neznamená, že CI běží.
+
+        Osekané `on:` na samotný `workflow_dispatch` nebo `if: false` na jobu jsou
+        jednořádkové změny, po kterých se kontroly přestanou spouštět – a `verify.yml`
+        v repozitáři dál vypadá platně. Je to tentýž tichý směr selhání, jaký u git
+        hooku hlídá `core.hooksPath` (`~/Dev/context/coding/quality.md`, *Vynucovací
+        vrstva se testuje jako kód, obousměrně*, třetí odrážka).
+        """
+        telo = self.telo()
+        m = re.search(r"^on:\n((?:[ \t]+\S.*\n)+)", telo, re.M)
+        self.assertIsNotNone(m, "ve workflow chybí blok `on:` – CI se nespouští")
+        for spoustec in ("push", "pull_request"):
+            with self.subTest(spoustec=spoustec):
+                self.assertIn(spoustec, m.group(1), f"workflow se nespouští na {spoustec}")
+        # (?m) je nutné: bez něj `^` matchuje jen začátek celého řetězce, takže
+        # by kontrola `if:` uvnitř souboru nikdy nenašla a byla by zelená vždy.
+        self.assertNotRegex(telo, r"(?m)^\s+if:\s", "job je podmíněný `if:` – může se tiše přeskočit")
+
     def test_kontrakt_cte_pres_verify_sh(self):
         """Jediná implementace parseru. Vlastní by se rozešla, jako se to už stalo."""
         self.assertRegex(self.telo(), r"verify\.sh --contract",
@@ -333,6 +355,75 @@ class PrubeznaKontrolaVCI(unittest.TestCase):
             with self.subTest(prikaz=prikaz[:40]):
                 self.assertNotIn(prikaz, self.telo(),
                                  "workflow má příkaz opsaný, místo aby ho četl z kontraktu")
+
+
+
+class MutaceKontrolVCI(unittest.TestCase):
+    """Ověřuje, že kontroly workflow opravdu nahlásí poškozený vzor.
+
+    Kontrola, kterou nikdo neviděl selhat, je nedoložené tvrzení a mlčí úplně
+    stejně jako ta rozbitá (`~/Dev/context/coding/quality.md`, *Vynucovací vrstva
+    se testuje jako kód, obousměrně*). Není to teoretická obava: při zavádění téhle
+    sady byly dvě kontroly falešně zelené, protože měřily celý soubor a uspokojil
+    je komentář nad kódem, který mutace nechala být.
+
+    Mutuje se kopie v tempu, ne soubor v repozitáři – poškozený workflow, který by
+    tam zůstal po spadlém testu, je horší než chybějící test.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="mutace-ci-"))
+        self.puvodni = PrubeznaKontrolaVCI.WORKFLOW.read_text(encoding="utf-8")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def nahlasi(self, mutace, metoda):
+        """Spustí jednu kontrolu nad poškozeným workflow a vrátí, jestli selhala."""
+        podvrh = self.tmp / "verify.yml"
+        text = mutace(self.puvodni)
+        self.assertNotEqual(text, self.puvodni, "mutace se neaplikovala – změnil se tvar workflow?")
+        podvrh.write_text(text, encoding="utf-8")
+        trida = type("SPodvrhem", (PrubeznaKontrolaVCI,), {"WORKFLOW": podvrh})
+        vysledek = unittest.TestResult()
+        trida(metoda).run(vysledek)
+        return bool(vysledek.failures or vysledek.errors)
+
+    def test_vlastni_parser_kontrakt_shodi(self):
+        self.assertTrue(self.nahlasi(
+            lambda s: s.replace("./verify.sh --contract .", "grep -A20 Kontrakt .claude/CLAUDE.md"),
+            "test_kontrakt_cte_pres_verify_sh"))
+
+    def test_vypadly_krok_kontrola_nahlasi(self):
+        self.assertTrue(self.nahlasi(
+            lambda s: s.replace("for klic in typecheck lint test", "for klic in typecheck lint"),
+            "test_workflow_pousti_kroky_patrici_do_CI"))
+
+    def test_opsany_prikaz_kontrola_nahlasi(self):
+        self.assertTrue(self.nahlasi(
+            lambda s: s.replace("          set -e\n", "          set -e\n          python3 -m unittest discover -s tests\n"),
+            "test_workflow_neopisuje_prikazy"))
+
+    def test_osekane_spoustece_kontrola_nahlasi(self):
+        self.assertTrue(self.nahlasi(
+            lambda s: s.replace("on:\n  push:\n  pull_request:\n", "on:\n"),
+            "test_workflow_ma_spoustece"))
+
+    def test_podmineny_job_kontrola_nahlasi(self):
+        self.assertTrue(self.nahlasi(
+            lambda s: s.replace("  kontrakt:\n", "  kontrakt:\n    if: false\n"),
+            "test_workflow_ma_spoustece"))
+
+    def test_ignorovany_cwd_kontrola_nahlasi(self):
+        self.assertTrue(self.nahlasi(
+            lambda s: re.sub(r'\n\s+cwd=\$\([^\n]+\n\s+\[ -n "\$cwd" \] && cd "\$cwd"\n', "\n", s),
+            "test_workflow_respektuje_cwd"))
+
+    def test_neposkozeny_workflow_projde(self):
+        """Pojistka proti obrácené chybě: kdyby kontroly hlásily i nad zdravým
+        souborem, byly by ty mutační testy zelené omylem."""
+        self.assertFalse(self.nahlasi(lambda s: s + "\n# neškodný komentář\n",
+                                      "test_kontrakt_cte_pres_verify_sh"))
 
 
 if __name__ == "__main__":
