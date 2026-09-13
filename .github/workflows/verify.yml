@@ -2,9 +2,9 @@
 # cizím stroji a bez souhlasu, který jde odvolat. Lokální vrstvu obejde commit
 # z jiného počítače, z GUI, s `--no-verify` i cizí fork; tahle ne.
 #
-# Příkazy se odsud neopisují. Čtou se ze sekce `## Kontrakt příkazů`
-# v `.claude/CLAUDE.md`, tedy z téhož místa, ze kterého je bere `verify.sh` –
-# opsaný seznam by se po první změně kontraktu rozešel a vypadal přitom platně.
+# Příkazy se odsud neopisují ani neparsují podruhé: vypíše je `verify.sh
+# --contract`, tedy tentýž kód, který je spouští lokálně. Vlastní parser tu byl
+# do 13. 9. 2026 a rozešel se s ním ve třech vlastnostech naráz.
 
 name: Kontroly
 
@@ -33,38 +33,41 @@ jobs:
 
       - name: Spusť kontrakt příkazů
         run: |
-          python3 - <<'PY' > /tmp/kontrakt.sh
-          # Parser sekce je týž jako `contract_section` a `cmd_for` ve verify.sh:
-          # tělo bez bloků kódu, pak `- klíč: příkaz` na jednom řádku.
-          import re, pathlib, sys
-          radky = pathlib.Path(".claude/CLAUDE.md").read_text(encoding="utf-8").splitlines()
-          ve_bloku = uvnitr = False
-          sekce = []
-          for r in radky:
-              if r.lstrip().startswith(("```", "~~~")):
-                  ve_bloku = not ve_bloku
-                  continue
-              if ve_bloku:
-                  continue
-              if r.startswith("## Kontrakt příkazů"):
-                  uvnitr = True
-              elif uvnitr and r.startswith("## "):
-                  break
-              if uvnitr:
-                  sekce.append(r)
-          sekce = "\n".join(sekce)
-          print("set -e")
-          for klic in ("typecheck", "lint", "test"):
-              m = re.search(rf"^[ \t]*[-*][ \t]*{klic}:[ \t]+(.*?)[ \t]*$", sekce, re.M)
-              if m is None:
-                  sys.exit(f"klíč {klic} se z kontraktu nepřečetl – změnil se formát?")
-              prikaz = m.group(1)
-              if prikaz.strip() == "-":
-                  print(f'echo "::notice::{klic} – projekt ho nemá, nekontroluje se"')
-                  continue
-              print(f'echo "::group::{klic}"')
-              print(prikaz)
-              print('echo "::endgroup::"')
-          PY
-          cat /tmp/kontrakt.sh
-          bash /tmp/kontrakt.sh
+          set -e
+          # Kontrakt čte `verify.sh --contract`, ne vlastní parser. Dřív si ho
+          # workflow parsovalo samo a ta druhá implementace se s první rozešla
+          # hned ve třech vlastnostech: nefiltrovala HTML komentáře (zakomentovaná
+          # sekce nad tou pravou tu vyhrála), neměla pojistku proti dvěma sekcím
+          # téhož jména a neznala klíč cwd.
+          ./verify.sh --contract . > "$RUNNER_TEMP/kontrakt.tsv"
+          cat "$RUNNER_TEMP/kontrakt.tsv"
+
+          # cwd posouvá, kde se příkazy spouštějí – průběžná kontrola ho respektuje,
+          # takže CI musí taky, jinak by každá pouštěla něco jiného.
+          cwd=$(awk -F'\t' '$1 == "cwd" { print $2 }' "$RUNNER_TEMP/kontrakt.tsv")
+          [ -n "$cwd" ] && cd "$cwd"
+
+          # Jmenovaný seznam kroků, které do CI patří. Ne všechny klíče kontraktu:
+          # `dev` je watch server, který nikdy neskončí, `cwd` není příkaz. Klíč,
+          # který projekt nemá, se přeskočí nahlas.
+          status=0
+          for klic in typecheck lint test build audit coverage a11y perf mutation; do
+            prikaz=$(awk -F'\t' -v k="$klic" '$1 == k { print $2 }' "$RUNNER_TEMP/kontrakt.tsv")
+            if [ -z "$prikaz" ]; then
+              echo "::notice::$klic – není v kontraktu, nekontroluje se"
+              continue
+            fi
+            if [ "$prikaz" = "-" ]; then
+              echo "::notice::$klic – projekt ho vědomě nemá"
+              continue
+            fi
+            echo "::group::$klic"
+            if sh -c "$prikaz"; then
+              echo "::endgroup::"
+            else
+              echo "::endgroup::"
+              echo "::error::$klic selhal"
+              status=1
+            fi
+          done
+          exit $status

@@ -411,5 +411,82 @@ class PrubeznaKontrola(unittest.TestCase):
                 self.assertEqual(r.returncode, 0, f"--revoke {argument} neuspěl: {r.stderr}")
 
 
+class VypisKontraktu(unittest.TestCase):
+    """`--contract` vypisuje kontrakt pro CI, která pouští tytéž kroky jinde.
+
+    Existuje proto, aby nemusela vzniknout druhá implementace parseru. Ta tu do
+    13. 9. 2026 byla (v `.github/workflows/verify.yml`) a rozešla se s touhle ve
+    třech vlastnostech naráz: nefiltrovala HTML komentáře, neměla pojistku proti
+    dvěma sekcím téhož jména a neznala klíč `cwd`. Testy tu proto hlídají právě
+    ty tři vlastnosti – jsou to místa, kde se dvě implementace rozešly doopravdy,
+    ne kde by se rozejít mohly.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="contract-test-"))
+        self.repo = self.tmp / "repo"
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", ".")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def contract(self, obsah):
+        (self.repo / "CLAUDE.md").write_text(obsah, encoding="utf-8")
+        return subprocess.run([str(HOOK), "--contract", str(self.repo)],
+                              capture_output=True, text=True, check=False,
+                              stdin=subprocess.DEVNULL)
+
+    def test_vypise_klic_a_prikaz_oddelene_tabulatorem(self):
+        v = self.contract("# T\n\n## Kontrakt příkazů\n\n- test: echo ahoj\n")
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertEqual(v.stdout.strip(), "test\techo ahoj")
+
+    def test_zakomentovana_sekce_se_nepocita(self):
+        """HTML komentář ve vykresleném Markdownu ani v náhledu PR není vidět,
+        takže sekce schovaná nad tou pravou je cesta, jak vyměnit spouštěné
+        příkazy a nechat diff vypadat jako dokumentaci."""
+        v = self.contract("# T\n\n<!--\n## Kontrakt příkazů\n\n- test: echo PODVRZENY\n-->\n"
+                          "\n## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertIn("echo PRAVY", v.stdout)
+        self.assertNotIn("PODVRZENY", v.stdout)
+
+    def test_dve_sekce_tehoz_jmena_vypis_odmitnou(self):
+        """Stejná pojistka jako u běhu hooku: druhá sekce je tiše mrtvá."""
+        v = self.contract("# T\n\n## Kontrakt příkazů\n\n- test: echo PRVNI\n"
+                          "\n## Jiné\n\n## Kontrakt příkazů\n\n- test: echo DRUHY\n")
+        self.assertNotEqual(v.returncode, 0)
+        self.assertNotIn("echo PRVNI", v.stdout)
+
+    def test_ukazka_v_bloku_kodu_neni_kontrakt(self):
+        v = self.contract("# T\n\nFormát vypadá takhle:\n\n```markdown\n"
+                          "## Kontrakt příkazů\n\n- test: echo UKAZKA\n```\n")
+        self.assertNotIn("UKAZKA", v.stdout)
+
+    def test_klic_cwd_se_vypise(self):
+        """CI podle něj mění adresář; bez něj by pouštěla příkazy jinde
+        než průběžná kontrola."""
+        v = self.contract("# T\n\n## Kontrakt příkazů\n\n- cwd: main\n- test: echo ahoj\n")
+        self.assertIn("cwd\tmain", v.stdout)
+
+    def test_pomlcka_se_vypise_jak_je(self):
+        """Rozhodnutí „vědomě se neaplikuje“ musí dojít až k tomu, kdo spouští –
+        jinak by ho CI hlásila jako chybějící klíč, tedy jako díru."""
+        v = self.contract("# T\n\n## Kontrakt příkazů\n\n- build: -\n- test: echo ahoj\n")
+        self.assertIn("build\t-", v.stdout)
+
+    def test_projekt_bez_kontraktu_skonci_chybou(self):
+        v = self.contract("# T\n\nŽádný kontrakt tu není.\n")
+        self.assertNotEqual(v.returncode, 0)
+
+    def test_nic_nespousti(self):
+        """--contract jen čte. Kdyby spouštěl, obešel by souhlas, který je
+        u příkazů z repozitáře celá pojistka."""
+        stopa = self.tmp / "NESMI-VZNIKNOUT"
+        self.contract(f"# T\n\n## Kontrakt příkazů\n\n- test: touch {stopa}\n")
+        self.assertFalse(stopa.exists(), "--contract spustil příkaz z kontraktu")
+
+
 if __name__ == "__main__":
     unittest.main()

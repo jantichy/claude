@@ -48,11 +48,15 @@ Průběžná kontrola má strop 60 sekund na příkaz a běží **jen na tomhle 
 
 **Zakládá se, když je projekt na hostingu, který CI umí** (typicky GitHub). Nemá-li remote nebo běží-li jen lokálně, krok přeskoč a řekni to.
 
-Workflow **nesmí opisovat příkazy z kontraktu** – opsaný seznam se po první změně rozejde a vypadá přitom platně (`~/.claude/RULES.md`, *Neopisuj seznam, který má vlastní zdroj pravdy*). Čte je z téhož místa jako `verify.sh`. Hotovou a ověřenou podobu má `~/.claude/.github/workflows/verify.yml`; **vezmi ji jako předlohu a uprav tři věci**:
+Workflow **nesmí opisovat příkazy z kontraktu ani si ho parsovat samo**. Opsaný seznam se po první změně rozejde a vypadá přitom platně (`~/.claude/RULES.md`, *Neopisuj seznam, který má vlastní zdroj pravdy*); druhý parser je horší ještě o stupeň, protože se rozejde v detailech, které nikdo neporovnává. Vypíše ho **`~/.claude/verify.sh --contract <projekt>`** ve tvaru `klíč<tab>příkaz` – tentýž kód, který příkazy spouští lokálně, včetně filtrace HTML komentářů, pojistky proti dvěma sekcím téhož jména a klíče `cwd`.
+
+**Na runneru `verify.sh` není**, takže ho tam workflow musí dostat: buď ho projekt stáhne (`curl -fsSL https://raw.githubusercontent.com/jantichy/claude/main/verify.sh`), nebo si ho nese ve vlastním repozitáři. Stažení připni na konkrétní commit, ne na `main` – jinak si do CI pouštíš cizí skript, který se může kdykoliv změnit.
+
+Hotovou a ověřenou podobu má `~/.claude/.github/workflows/verify.yml`; **vezmi ji jako předlohu a uprav tři věci**:
 
 1. **Runner.** `ubuntu-latest`, pokud projekt nepotřebuje macOS (Swift, Xcode) – je rychlejší a u privátního repozitáře levnější.
 2. **Nástroje.** Doinstaluj, co kontrakt opravdu volá; na runneru není nic z Homebrew. Nedeklarovaná lokální závislost je tu nejčastější příčina prvního červeného běhu.
-3. **Klíče.** Do výčtu dej ty, které v kontraktu jsou – tedy vedle `typecheck`, `lint` a `test` i `build`, `audit` a `coverage`, jsou-li tam. Průběžná kontrola je nepouští, CI ano.
+3. **Klíče.** Výčet ve workflow je **jmenovaný seznam kroků, které do CI patří** – vedle `typecheck`, `lint` a `test` i `build`, `audit`, `coverage`, `a11y`, `perf` a `mutation`. Průběžná kontrola je nepouští, CI ano. **Nedělej z něj rovnost s kontraktem:** ten smí nést i klíče, které se nespouštějí (`dev` je watch server, který nikdy neskončí, `cwd` není příkaz), a kontrola, která na nich zčervená, je falešný poplach – tedy ten horší směr selhání.
 
 **Napiš k tomu test, který ověří, že se workflow s kontraktem nerozešlo** – že pouští právě jeho klíče a žádný příkaz si neopisuje. Je to vynucovací vrstva jako každá jiná (`~/Dev/context/coding/quality.md`, *Vynucovací vrstva se testuje jako kód, obousměrně*); předloha je v `~/.claude/tests/test_hooks.py`.
 

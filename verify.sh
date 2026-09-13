@@ -9,6 +9,7 @@
 # systém. Proto se v projektu nespustí nic, dokud pro něj člověk jednou nevydá
 # souhlas:  verify.sh --allow <projekt>
 # Vydané souhlasy vypíše  --list , odebere  --revoke <projekt> .
+# Kontrakt projektu vypíše  --contract <projekt>  (pro CI; nic nespouští).
 # Ten souhlas znamená "spouštěj v tomhle repozitáři jeho vlastní příkazy", ne
 # "ty konkrétní příkazy jsem přečetl a jsou neškodné" – `npm test` spustí, co je
 # v package.json, a to se neschvaluje. Do cizího repozitáře souhlas nedávej.
@@ -243,10 +244,31 @@ if [ "${1:-}" = "--allow" ]; then
   exit 0
 fi
 
+# --contract vypíše kontrakt projektu ve strojovém tvaru `klíč<TAB>příkaz`.
+#
+# Existuje kvůli CI, která pouští tytéž kroky na cizím stroji. Bez něj si musela
+# psát vlastní parser sekce – a ten se s tímhle rozešel hned ve třech vlastnostech:
+# nefiltroval HTML komentáře (zakomentovaná sekce nad tou pravou v CI vyhrála),
+# neměl pojistku proti dvěma sekcím téhož jména a neznal klíč cwd. Jedna
+# implementace, jeden výsledek; druhá se vždycky rozejde a nikdo si toho nevšimne.
+#
+# Nic nespouští, jen čte, takže souhlas nepotřebuje. Klíč cwd se vypisuje taky –
+# kdo příkazy spouští, má je pustit ve stejném adresáři jako průběžná kontrola.
+if [ "${1:-}" = "--contract" ]; then
+  P=$(canon "${2:-$PWD}") || die "neznámá cesta: ${2:-$PWD}"
+  MD=$(find_contract "$P") || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Kontrakt příkazů."
+  N=$(md_body "$MD" | grep -c '^## Kontrakt příkazů')
+  [ "$N" -eq 1 ] || die "v $MD je sekce ## Kontrakt příkazů ${N}×; nechávám být, ať se nevypíše nesprávná. Ponech jednu."
+  contract_section "$MD" \
+    | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9_-]*\):[[:space:]]\{1,\}\(.*\)$/\1\t\2/p' \
+    | sed 's/[[:space:]]*$//'
+  exit 0
+fi
+
 # Neznámý přepínač: bez tohohle by hook čekal na stdin a vypadal by jako zaseknutý.
 case "${1:-}" in
   "") ;;
-  *) die "neznámý přepínač ${1}. Použití: --allow <projekt> | --list | --revoke <projekt>" ;;
+  *) die "neznámý přepínač ${1}. Použití: --allow <projekt> | --list | --revoke <projekt> | --contract <projekt>" ;;
 esac
 
 # --- Vstup ---------------------------------------------------------------------

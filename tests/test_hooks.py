@@ -257,57 +257,81 @@ class PrubeznaKontrolaVCI(unittest.TestCase):
     """CI je jediná kontrola, která běží mimo tenhle stroj.
 
     Lokální `verify.sh` obejde commit z jiného počítače, z GUI, s `--no-verify`
-    i cizí fork – repozitář je veřejný. CI proto pouští týž *Kontrakt příkazů*,
-    a právě proto si ho nesmí opsat: opsaný seznam se po první změně kontraktu
-    rozejde a vypadá přitom pořád platně (`~/.claude/RULES.md`, *Neopisuj seznam,
-    který má vlastní zdroj pravdy*).
+    i cizí fork – repozitář je veřejný. CI proto pouští týž *Kontrakt příkazů*.
+
+    Do 13. 9. 2026 si ho parsovala sama a ta druhá implementace se s `verify.sh`
+    rozešla ve třech vlastnostech naráz (HTML komentáře, dvě sekce téhož jména,
+    klíč `cwd`). Testy tu proto hlídají jednu věc: že druhý parser nevznikl znovu.
     """
 
     WORKFLOW = ROOT / ".github" / "workflows" / "verify.yml"
     KONTRAKT = ROOT / ".claude" / "CLAUDE.md"
 
-    def sekce_kontraktu(self):
-        """Tělo bez bloků kódu – stejně jako `contract_section` ve `verify.sh`."""
-        ve_bloku = uvnitr = False
-        out = []
-        for r in self.KONTRAKT.read_text(encoding="utf-8").splitlines():
-            if r.lstrip().startswith(("```", "~~~")):
-                ve_bloku = not ve_bloku
-                continue
-            if ve_bloku:
-                continue
-            if r.startswith("## Kontrakt příkazů"):
-                uvnitr = True
-            elif uvnitr and r.startswith("## "):
-                break
-            if uvnitr:
-                out.append(r)
-        return "\n".join(out)
+    #: Kroky, které do CI patří. Ne všechny klíče kontraktu: `dev` je watch server,
+    #: který nikdy neskončí, `cwd` není příkaz. Množinová rovnost s kontraktem by
+    #: v prvním projektu s `dev` vyrobila falešný poplach – a falešný poplach je
+    #: u vynucovací vrstvy horší směr selhání než propuštěná chyba.
+    CI_KROKY = {"typecheck", "lint", "test", "build", "audit", "coverage",
+                "a11y", "perf", "mutation"}
 
-    def klice_kontraktu(self):
-        return set(re.findall(r"^[ \t]*[-*][ \t]*(\w+):[ \t]+\S", self.sekce_kontraktu(), re.M))
+    def text(self):
+        return self.WORKFLOW.read_text(encoding="utf-8")
+
+    def telo(self):
+        """Workflow bez komentářových řádků.
+
+        Testy nad celým souborem si uspokojí vlastní komentář: „volá
+        `verify.sh --contract`“ napsané v hlavičce vypadá při hledání řetězce
+        stejně jako to volání. Doloženo mutačním ověřením – dvě poškození kódu
+        prošla, protože o nich mluvil komentář nad nimi.
+        """
+        return "\n".join(r for r in self.text().splitlines()
+                          if not r.lstrip().startswith("#"))
 
     def test_workflow_existuje(self):
         self.assertTrue(self.WORKFLOW.exists(), f"chybí {self.WORKFLOW}")
 
-    def test_workflow_pousti_vsechny_klice_kontraktu(self):
-        """Čtvrtý klíč dopsaný do kontraktu by se v CI tiše nespouštěl."""
-        text = self.WORKFLOW.read_text(encoding="utf-8")
-        m = re.search(r'for klic in \(([^)]*)\)', text)
-        self.assertIsNotNone(m, "ve workflow se nenašel výčet klíčů – změnil se tvar?")
-        ve_workflow = set(re.findall(r'"(\w+)"', m.group(1)))
-        self.assertEqual(ve_workflow, self.klice_kontraktu(),
-                         "CI pouští jiné klíče, než jaké stojí v Kontraktu příkazů")
+    def test_kontrakt_cte_pres_verify_sh(self):
+        """Jediná implementace parseru. Vlastní by se rozešla, jako se to už stalo."""
+        self.assertRegex(self.telo(), r"verify\.sh --contract",
+                         "workflow nevolá `verify.sh --contract` – nevznikl tu druhý parser?")
+
+    def test_workflow_si_kontrakt_neparsuje_sam(self):
+        """Mutační pojistka k testu výš: parser se pozná podle toho, že si sám
+        hledá nadpis sekce nebo řádky `- klíč:` v Markdownu."""
+        for vzor in ("## Kontrakt příkazů", "startswith", "re.findall", "python3 - <<"):
+            with self.subTest(vzor=vzor):
+                self.assertNotIn(vzor, self.telo(),
+                                 f"workflow si kontrakt parsuje samo ({vzor})")
+
+    def test_workflow_respektuje_cwd(self):
+        """`verify.sh` klíčem cwd mění adresář, kde příkazy běží – typicky ve
+        worktree layoutu. CI, která ho ignoruje, pouští něco jiného než lokální
+        kontrola a obě si přitom myslí, že měřily totéž."""
+        self.assertRegex(self.telo(), r'cwd=\$\(.*kontrakt',
+                         "workflow klíč cwd nečte z kontraktu")
+        self.assertRegex(self.telo(), r'cd "\$cwd"', "workflow podle cwd nemění adresář")
+
+    def test_workflow_pousti_kroky_patrici_do_CI(self):
+        """Klíč, který do CI patří a projekt ho má, se nesmí tiše vynechat."""
+        m = re.search(r"for klic in ([a-z0-9 ]+); do", self.telo())
+        self.assertIsNotNone(m, "ve workflow se nenašel výčet kroků – změnil se tvar?")
+        self.assertEqual(set(m.group(1).split()), self.CI_KROKY,
+                         "výčet kroků v CI se rozešel se seznamem v testu")
 
     def test_workflow_neopisuje_prikazy(self):
         """Kdyby se příkaz do workflow opsal, změna kontraktu by ho minula."""
-        text = self.WORKFLOW.read_text(encoding="utf-8")
-        for radek in self.sekce_kontraktu().splitlines():
-            m = re.match(r"^[ \t]*[-*][ \t]*\w+:[ \t]+(.*?)[ \t]*$", radek)
-            if m is None or m.group(1).strip() == "-":
+        v = subprocess.run([str(ROOT / "verify.sh"), "--contract", str(ROOT)],
+                           capture_output=True, text=True, check=False,
+                           stdin=subprocess.DEVNULL)
+        self.assertEqual(v.returncode, 0, v.stderr)
+        prikazy = [r.split("\t", 1)[1] for r in v.stdout.splitlines() if "\t" in r]
+        self.assertTrue(prikazy, "z kontraktu se nepřečetl jediný příkaz")
+        for prikaz in prikazy:
+            if prikaz.strip() == "-":
                 continue
-            with self.subTest(prikaz=m.group(1)[:40]):
-                self.assertNotIn(m.group(1), text,
+            with self.subTest(prikaz=prikaz[:40]):
+                self.assertNotIn(prikaz, self.telo(),
                                  "workflow má příkaz opsaný, místo aby ho četl z kontraktu")
 
 
