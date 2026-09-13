@@ -64,6 +64,9 @@ nezmění kód, kterého se týkají.
 - **2026-09-08** · `eccc756` · *Plugin gitkraken-hooks vidí provoz session a smí rozhodovat o oprávněních* (zdroj: review, podklad: OWASP – integrita a data v pohybu): Vědomě nainstalovaný nástroj od známého dodavatele, ne podvržený kód. Egress mimo stroj se **neprokázal**: běžící hook procesy nemají podle `lsof` jediný TCP socket, broadcast míří na lokálně registrovaného agenta (`gk agents register --address http://127.0.0.1:1234`) a v logu je 104× „no decision“, protože žádný registrovaný není. Zbývá tedy „lokální proces téhož uživatele vidí obsah session“, což je popis toho, co plugin dělá, ne vada konfigurace. Zůstává vědomě přijaté riziko: binárka má `AUTO_UPDATE=true`, takže se ta důvěra obnovuje s každou verzí bez revize, a `PermissionRequest` hook by povolení udělit uměl, kdyby agent registrovaný byl. Zruší se vypnutím pluginu v `settings.json`.
   - Lokace: settings.json (`enabledPlugins`), plugins/marketplaces/gitkraken/plugins/gitkraken-hooks/hooks/hooks.json
 
+- **2026-09-14** · `a0b6fd3` · *Akce a doinstalované nástroje v CI nejsou připnuté na verzi* (zdroj: review, podklad: OWASP – zranitelné závislosti, integrita dat): Nepoměr ceny a přínosu. Repozitář nemá jediný secret (`gh secret list` prázdný), `GITHUB_TOKEN` má `default_workflow_permissions: read` a runner je efemérní – cizí kód by tedy neměl co ukrást a mohl by leda podvrhnout výsledek kontroly. Proti tomu připnutí na SHA bez Dependabota znamená akce, které za půl roku zastarají a nikdo si toho nevšimne, a `ruff==X.Y.Z` znamená zmrazený lint, protože nové verze hlásí nové nálezy. Zruší se, jakmile repozitář dostane secret nebo začne přijímat příspěvky od cizích lidí.
+  - Lokace: .github/workflows/verify.yml (kroky `actions/checkout`, `actions/setup-python`, `Doinstaluj nástroje`)
+
 ## Autocommit
 
 Autocommit je zapnutý.

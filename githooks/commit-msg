@@ -11,6 +11,10 @@
 msg_file="$1"
 
 # Delegace na lokální hook repozitáře – globální core.hooksPath ho jinak vypne.
+# Je to vědomý návrat k výchozímu chování gitu, ne rozšíření práv: bez nastaveného
+# core.hooksPath git `.git/hooks/commit-msg` spouští sám, ověřeno spuštěním nad
+# repozitářem s čistou globální konfigurací. Zrušit delegaci by znamenalo tiše
+# odstřihnout hooky všech projektů, které si nějaké nesou.
 # Cesta se skládá z --git-common-dir, ne z --git-dir: ve worktree vrací --git-dir
 # privátní adresář větve (.git/worktrees/<jméno>), kde žádné hooks/ nejsou, takže
 # by se delegace tiše přeskočila právě v layoutu, který projekty používají jako
