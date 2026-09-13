@@ -108,7 +108,8 @@ class ZpravaMergeCommitu(unittest.TestCase):
                        "Merge branches 'feat/a' and 'feat/b'",
                        "Merge tag 'v1.2.0'",
                        "Merge commit '9fceb02'",
-                       "Merge branch 'feat/platby' into main"):
+                       "Merge branch 'feat/platby' into main",
+                       "Squashed commit of the following:"):
             with self.subTest(zprava=zprava):
                 self.assertEqual(self.spust(zprava + "\n").returncode, ODMITA)
 

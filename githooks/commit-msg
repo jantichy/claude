@@ -48,11 +48,13 @@ esac
 
 # Git generuje víc defaultních zpráv než jednu a všechny nesou jen jméno
 # reference: `git merge origin/vetev` dá "Merge remote-tracking branch",
-# octopus "Merge branches", merge tagu "Merge tag". Vzor jen na "Merge branch "
+# octopus "Merge branches", merge tagu "Merge tag" a squash merge dokonce zprávu,
+# která na "Merge" ani nezačíná. Vzor jen na "Merge branch "
 # propouštěl celou běžnou cestu "fetchni a zamerguj pushnutou větev".
 case "$first_line" in
 	'Merge branch '* | 'Merge branches '* | 'Merge remote-tracking branch '* \
-		| 'Merge tag '* | 'Merge commit '* | 'Merge větve '*)
+		| 'Merge tag '* | 'Merge commit '* | 'Merge větve '* \
+		| 'Squashed commit of the following:'*)
 		cat >&2 <<'MSG'
 
 Merge commit má defaultní zprávu s jménem větve.
