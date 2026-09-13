@@ -460,6 +460,12 @@ Definice průběžné kontroly, prahy jednotlivých kontrol a to, proč jsou tes
 
 Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit, ověř, než ho napíšeš** – viz *Neopírej rozhodnutí o neověřené tvrzení*.
 
+**Vrstva, která něco vynucuje, se zakládá spolu s testem, který ji zkusí obejít.** Zavádíš-li mechanismus, jehož smysl je hlídat pravidlo za tebe – git hook, kontrolu v CI, pravidlo lintru, guard v kódu –, patří k němu regresní test hned, ne až se ukáže, že nefunguje. A testují se **oba směry jeho selhání**: že propustí, co propustit nemá, i že zastaví, co zastavit nemá.
+
+**Proč hned:** vynucovací vrstva selhává tiše a ve svůj prospěch. Dokud se ji nikdo nepokusí obejít, vypadá ta rozbitá úplně stejně jako ta funkční – obě mlčí. Ověření, které se odloží na „až to bude potřeba“, se nekoná nikdy, protože potřeba se nepozná.
+
+**Proč oba směry:** falešný poplach je ta horší polovina. Neprojeví se jako díra, ale jako překážka v běžné práci – a překážku si člověk při první kolizi vypne. Vrstva, kterou někdo vypnul, pak nehlídá vůbec nic, a nikde to nesvítí. Kdo ji má psát, řeší *Model a effort podle úkolu*, odrážka o izolaci kontextu: autor kontroly jí zkusí právě ta selhání, se kterými při psaní počítal.
+
 ### Životní cyklus projektu
 
 Od nápadu k nasazené feature vede jeden životní cyklus:
