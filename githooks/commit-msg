@@ -11,8 +11,15 @@
 msg_file="$1"
 
 # Delegace na lokální hook repozitáře – globální core.hooksPath ho jinak vypne.
-# Cesta se skládá z --git-dir, ne z --git-path, který by vrátil zase tenhle soubor.
-local_hook="$(git rev-parse --git-dir 2>/dev/null)/hooks/commit-msg"
+# Cesta se skládá z --git-common-dir, ne z --git-dir: ve worktree vrací --git-dir
+# privátní adresář větve (.git/worktrees/<jméno>), kde žádné hooks/ nejsou, takže
+# by se delegace tiše přeskočila právě v layoutu, který projekty používají jako
+# standard. Absolutní tvar proto, že --git-common-dir vrací jinak relativní cestu.
+# --git-path se nepoužívá schválně: respektuje core.hooksPath, takže by vrátil
+# zase tenhle soubor.
+git_dir="$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null \
+	|| git rev-parse --git-dir 2>/dev/null)"
+local_hook="$git_dir/hooks/commit-msg"
 if [ -x "$local_hook" ] && [ "$local_hook" != "$0" ]; then
 	"$local_hook" "$@" || exit $?
 fi
@@ -23,15 +30,21 @@ case "$branch" in
 	*) exit 0 ;;
 esac
 
-first_line="$(grep -v '^#' "$msg_file" | grep -v '^[[:space:]]*$' | head -1)"
+# Odsazený první řádek by jinak vzor minul, proto se zleva ořezává.
+first_line="$(grep -v '^#' "$msg_file" | grep -v '^[[:space:]]*$' | head -1 | sed 's/^[[:space:]]*//')"
 
 # "Merge branch 'main' of https://…" je výsledek `git pull`, ne dokončení větve.
 case "$first_line" in
 	*' of '*) exit 0 ;;
 esac
 
+# Git generuje víc defaultních zpráv než jednu a všechny nesou jen jméno
+# reference: `git merge origin/vetev` dá "Merge remote-tracking branch",
+# octopus "Merge branches", merge tagu "Merge tag". Vzor jen na "Merge branch "
+# propouštěl celou běžnou cestu "fetchni a zamerguj pushnutou větev".
 case "$first_line" in
-	'Merge branch '* | 'Merge větve '*)
+	'Merge branch '* | 'Merge branches '* | 'Merge remote-tracking branch '* \
+		| 'Merge tag '* | 'Merge commit '* | 'Merge větve '*)
 		cat >&2 <<'MSG'
 
 Merge commit má defaultní zprávu s jménem větve.

@@ -95,6 +95,44 @@ class ZpravaMergeCommitu(unittest.TestCase):
         self.assertNotEqual(v.returncode, 0)
         self.assertEqual(git(self.repo, "log", "--oneline").stdout.count("\n"), 1)
 
+    def test_vsechny_defaultni_tvary_gitu_neprojdou(self):
+        """Git negeneruje jen "Merge branch ".
+
+        `git merge origin/vetev` dá "Merge remote-tracking branch" – tedy běžná
+        cesta, jak se dokončuje větev pushnutá odjinud. Octopus merge dá "Merge
+        branches", merge tagu "Merge tag". Všechny nesou jen jméno reference,
+        takže v `git log --first-parent` neřeknou nic; vzor jen na první z nich
+        propouštěl celou tuhle třídu a žádný test o ní nevěděl.
+        """
+        for zprava in ("Merge remote-tracking branch 'origin/feat/x'",
+                       "Merge branches 'feat/a' and 'feat/b'",
+                       "Merge tag 'v1.2.0'",
+                       "Merge commit '9fceb02'",
+                       "Merge branch 'feat/platby' into main"):
+            with self.subTest(zprava=zprava):
+                self.assertEqual(self.spust(zprava + "\n").returncode, ODMITA)
+
+    def test_odsazeny_prvni_radek_vzor_neobejde(self):
+        """`case` je kotvený na začátek řetězce, takže mezera před zprávou
+        by stačila k obejití celé kontroly."""
+        self.assertEqual(self.spust("   Merge branch 'feat/x'\n").returncode, ODMITA)
+
+    def test_realny_merge_remote_tracking_se_zastavi(self):
+        """Integračně tou cestou, kterou to potká uživatel: větev existuje jen
+        jako remote-tracking reference a merguje se přes ni."""
+        git(self.repo, "checkout", "-q", "-b", "feat/x")
+        (self.repo / "b.txt").write_text("b\n")
+        git(self.repo, "add", "b.txt")
+        git(self.repo, "commit", "-qm", "prace")
+        git(self.repo, "checkout", "-q", "main")
+        # Remote-tracking referenci lze vyrobit i bez remote serveru.
+        git(self.repo, "update-ref", "refs/remotes/origin/feat/x", "feat/x")
+        git(self.repo, "branch", "-D", "feat/x")
+        git(self.repo, "config", "core.hooksPath", str(HOOK.parent))
+        v = git(self.repo, "merge", "--no-ff", "origin/feat/x")
+        self.assertNotEqual(v.returncode, 0, "merge přes origin/… prošel bez zastavení")
+        self.assertEqual(git(self.repo, "log", "--oneline").stdout.count("\n"), 1)
+
     # --- co musí projít ----------------------------------------------------
 
     def test_vlastni_zprava_projde(self):
@@ -135,6 +173,27 @@ class ZpravaMergeCommitu(unittest.TestCase):
         v = self.spust("Zaveď platby kartou\n")
         self.assertEqual(v.returncode, 3)
         self.assertIn("lokalni namitka", v.stderr)
+
+    def test_delegace_funguje_i_ve_worktree(self):
+        """Ve worktree vrací `git rev-parse --git-dir` privátní adresář větve
+        (`.git/worktrees/<jméno>`), kde hooky nejsou – cesta se proto musí
+        skládat z `--git-common-dir`.
+
+        Bez toho by delegace tiše selhala právě v layoutu, který `WORKTREE.md`
+        předepisuje jako standard: lokální `commit-msg` projektu (gitleaks,
+        commitlint, kontrola podpisu) by se přestal spouštět a nic by to neřeklo.
+        """
+        stopa = self.tmp / "stopa-worktree"
+        self.lokalni_hook(f"#!/bin/sh\ntouch {stopa}\nexit 0\n")
+        wt = self.tmp / "wt"
+        v = git(self.repo, "worktree", "add", "-q", str(wt), "-b", "feat/wt")
+        self.assertEqual(v.returncode, 0, v.stderr)
+        soubor = wt / "MSG"
+        soubor.write_text("Zaveď platby kartou\n")
+        subprocess.run([str(HOOK), str(soubor)], cwd=wt,
+                       capture_output=True, text=True, check=False)
+        self.assertTrue(stopa.exists(),
+                        "ve worktree se lokální hook repozitáře nezavolal")
 
     def test_lokalni_hook_neprebiji_kontrolu_zpravy(self):
         """Lokální hook smí přidat vlastní pravidlo, ne zrušit tohle."""
