@@ -33,9 +33,13 @@ esac
 # Odsazený první řádek by jinak vzor minul, proto se zleva ořezává.
 first_line="$(grep -v '^#' "$msg_file" | grep -v '^[[:space:]]*$' | head -1 | sed 's/^[[:space:]]*//')"
 
-# "Merge branch 'main' of https://…" je výsledek `git pull`, ne dokončení větve.
+# "Merge branch 'main' of https://…" je výsledek `git pull` nad TOUTÉŽ větví, tedy
+# synchronizace, ne dokončení práce. Jméno mergované větve proto musí sedět
+# s aktuální: pouhý výskyt " of " kdekoliv v řádku propouštěl i `git pull origin
+# feat/z` na main, tedy běžný způsob, jak se dokončuje větev pushnutá odjinud –
+# a stačilo i dopsat dvě slova ("Merge branch 'feat/x' of course").
 case "$first_line" in
-	*' of '*) exit 0 ;;
+	"Merge branch '$branch' of "*) exit 0 ;;
 esac
 
 # Git generuje víc defaultních zpráv než jednu a všechny nesou jen jméno

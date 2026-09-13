@@ -144,11 +144,25 @@ class ZpravaMergeCommitu(unittest.TestCase):
         self.vetev("feat/platby")
         self.assertEqual(self.spust("Merge branch 'main' into feat/platby\n").returncode, PUSTI)
 
-    def test_merge_po_pullu_projde(self):
-        """`git pull` vyrobí zprávu s ' of <url>'. Je to synchronizace téže
-        větve, ne dokončení práce, a blokovat ji by znamenalo blokovat pull."""
+    def test_merge_po_pullu_tehoz_branche_projde(self):
+        """`git pull` nad toutéž větví je synchronizace, ne dokončení práce,
+        a blokovat ji by znamenalo blokovat pull."""
         v = self.spust("Merge branch 'main' of https://github.com/x/y\n")
         self.assertEqual(v.returncode, PUSTI)
+
+    def test_pull_ciziho_branche_na_main_neprojde(self):
+        """`git pull origin feat/z` na main je dokončení větve, ne synchronizace.
+
+        Výjimka pro pull stála jen na výskytu ` of ` kdekoliv v prvním řádku, takže
+        tuhle cestu propouštěla – a je to běžný způsob, jak se dokončuje větev
+        pushnutá odjinud nebo z pull requestu. Dvě slova navíc stačila i k obejití
+        (`Merge branch 'feat/x' of course`).
+        """
+        for zprava in ("Merge branch 'feat/z' of https://github.com/x/y",
+                       "Merge branch 'feat/x' of course",
+                       "Merge branch 'feat/z' of /tmp/remote"):
+            with self.subTest(zprava=zprava):
+                self.assertEqual(self.spust(zprava + "\n").returncode, ODMITA)
 
     def test_zprava_zminujici_merge_uvnitr_projde(self):
         self.assertEqual(self.spust("Oprav merge větve v dokumentaci\n").returncode, PUSTI)
