@@ -161,11 +161,11 @@ gh run list --limit 1 --json headSha,conclusion,status   # headSha == HEAD, stat
 git status --porcelain                                   # musí být prázdné
 ```
 
-Pak vezmi závěr běhu jako výsledek těch kroků, které v něm jsou, a pusť jen zbytek – je to tentýž nástroj nad týmž stromem a spustit `build`, `audit` a `coverage` podruhé znamená zaplatit minuty za odpověď, kterou už někdo má.
+Pak vezmi závěr běhu jako výsledek těch kroků, které v něm jsou, a pusť jen zbytek. Je to tentýž nástroj nad týmž stromem; spustit `build`, `audit` a `coverage` podruhé znamená zaplatit minuty za odpověď, kterou už někdo má.
 
 **Čistý strom je v té podmínce nutný, ne opatrnický.** Rozsah review zahrnuje i necommitnuté změny (Fáze 0, *Urči rozsah souborů*), kdežto CI běžela nad tím, co je v commitu. S rozdělanou prací tedy `headSha` sedí, ale strom je jiný, a review by si vypůjčilo zelenou z běhu, který jeho rozsah neprověřoval – v kroku, který má při červeném stavu zastavit.
 
-**Nesedí-li kterákoliv podmínka, spusť všechno** a napiš do výstupu, proč se CI nepoužila. Výsledek z jiného stromu není výsledek.
+**Nesedí-li kterákoliv podmínka, spusť všechno** a napiš do výstupu, proč se CI nepoužila. Měření nad jiným stromem neplatí pro tenhle.
 
 
 Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*). Chybí-li řádek, krok se přeskočí a **do výstupu se napíše, co se tím nezkontrolovalo**. Nevymýšlej příkazy, které jsi neověřil.

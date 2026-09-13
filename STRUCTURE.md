@@ -351,7 +351,7 @@ Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jedno
 
 **Jednotné to schválně není.** Standard, který by nutil `tests/` i v Go, by projekt hnal do boje s vlastními nástroji – a kontrola, která se pere s nástrojem, se dřív nebo později obejde. Rozhoduje tedy konvence jazyka, ne preference; kde žádná není, platí `tests/` v kořeni.
 
-**Znalostní, konfigurační a datový projekt testy má taky** a patří do `tests/` v kořeni. Netestuje se v nich chování, ale **tvar**: mrtvé odkazy, existence sekcí, povinná struktura záznamu, schéma dat a soulad seznamu v dokumentaci s tím, co je na disku. Co do které kontrolní vrstvy patří, drží `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*; příkaz, kterým se testy pouštějí, deklaruje *Kontrakt příkazů* v projektovém `CLAUDE.md`.
+**Znalostní, konfigurační a datový projekt testy má taky** a patří do `tests/` v kořeni. Netestuje se v nich chování, ale **tvar**: mrtvé odkazy, existence sekcí, povinná struktura záznamu, schéma dat a soulad seznamu v dokumentaci s tím, co je na disku. Co do které kontrolní vrstvy patří, drží `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*. Příkaz, kterým se testy pouštějí, deklaruje *Kontrakt příkazů* v projektovém `CLAUDE.md`.
 
 ---
 

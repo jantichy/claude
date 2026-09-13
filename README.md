@@ -154,7 +154,11 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 
 ### [`githooks/`](githooks/) – historie main jako jeden řádek na větev
 
-Když se do hlavní větve přimerguje větev o třiceti commitech, rozteče se těch třicet commitů po historii `main` a přehled o tom, co se kdy dělo, je pryč. Nemergovat je přitom škoda a squashovat taky – rozpad na dílčí kroky je užitečný, jen ho nechci mít pořád před očima. Řeší to `git log --first-parent`, který do zamergovaných větví nevstupuje a ukáže jednu větev jako jeden řádek; dílčí commity zůstanou dostupné pod ním. Jediná cena je, že ten řádek pak musí něco říkat – a defaultní „Merge branch 'feat/platby'“ neříká nic. Proto tu leží `commit-msg` hook, který takovou zprávu odmítne a vyžádá si shrnutí odvedené práce. Hlídá jen hlavní větev, takže aktualizace rozdělané větve ani merge po `git pull` mu nepřekážejí, a je nasazený globálně přes `core.hooksPath`, takže platí ve všech repozitářích na stroji.
+Když se do hlavní větve přimerguje větev o 30 commitech, rozteče se těch 30 commitů po historii `main`. Přehled o tom, co se kdy dělo, je pryč. Nemergovat je přitom škoda a squashovat taky: rozpad na dílčí kroky je užitečný, jen ho nechci mít pořád před očima.
+
+Řeší to `git log --first-parent`. Do zamergovaných větví nevstupuje a ukáže jednu větev jako jeden řádek, dílčí commity zůstanou dostupné pod ním. Jediná cena je, že ten řádek pak musí něco říkat – a výchozí `Merge branch 'feat/platby'` neříká nic.
+
+Proto tu leží `commit-msg` hook. Takovou zprávu odmítne a vyžádá si shrnutí odvedené práce. Hlídá jen hlavní větev, takže aktualizace rozdělané větve ani merge po `git pull` mu nepřekážejí. Nasazený je globálně přes `core.hooksPath` a platí ve všech repozitářích na stroji.
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 

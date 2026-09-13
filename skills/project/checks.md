@@ -44,11 +44,15 @@ Definice a prahy jednotlivých kontrol jsou v `~/Dev/context/coding/quality.md`.
 
 ## CI: co je na průběžnou kontrolu moc pomalé
 
-Průběžná kontrola má strop 60 sekund na příkaz a běží **jen na tomhle stroji a jen se souhlasem**. Obejde ji commit odjinud, z GUI, s `--no-verify` i cizí fork. CI je proto druhá vrstva, ne zdvojení té první: běží po každém pushi bez ohledu na to, kdo commituje, a je v ní místo pro `build`, `audit`, `gitleaks`, `coverage`, `a11y`, `perf` a mutation testing – tedy pro to, co se do vteřinového okna nevejde.
+Průběžná kontrola má strop 60 sekund na příkaz a běží **jen na tomhle stroji a jen se souhlasem**. Obejde ji commit odjinud, z GUI, s `--no-verify` i cizí fork.
+
+CI je proto druhá vrstva, ne zdvojení té první. Běží po každém pushi bez ohledu na to, kdo commituje, a je v ní místo pro to, co se do vteřinového okna nevejde: `build`, `e2e`, `audit`, `gitleaks`, `coverage`, `a11y`, `perf` a mutation testing.
 
 **Zakládá se, když je projekt na hostingu, který CI umí** (typicky GitHub). Nemá-li remote nebo běží-li jen lokálně, krok přeskoč a řekni to.
 
-Workflow **nesmí opisovat příkazy z kontraktu ani si ho parsovat samo**. Opsaný seznam se po první změně rozejde a vypadá přitom platně (`~/.claude/RULES.md`, *Neopisuj seznam, který má vlastní zdroj pravdy*); druhý parser je horší ještě o stupeň, protože se rozejde v detailech, které nikdo neporovnává. Vypíše ho **`~/.claude/verify.sh --contract <projekt>`** ve tvaru `klíč<tab>příkaz` – tentýž kód, který příkazy spouští lokálně, včetně filtrace HTML komentářů, pojistky proti dvěma sekcím téhož jména a klíče `cwd`.
+Workflow **nesmí opisovat příkazy z kontraktu ani si ho parsovat samo**. Opsaný seznam se po první změně rozejde a vypadá přitom platně (`~/.claude/RULES.md`, *Neopisuj seznam, který má vlastní zdroj pravdy*). Druhý parser je horší ještě o stupeň, protože se rozejde v detailech, které nikdo neporovnává.
+
+Kontrakt vypíše **`~/.claude/verify.sh --contract <projekt>`** ve tvaru `klíč<tab>příkaz`. Je to tentýž kód, který příkazy spouští lokálně, takže umí i filtraci HTML komentářů, pojistku proti dvěma sekcím téhož jména a klíč `cwd`.
 
 **Na runneru `verify.sh` není**, takže ho tam workflow musí dostat: buď ho projekt stáhne (`curl -fsSL https://raw.githubusercontent.com/jantichy/claude/main/verify.sh`), nebo si ho nese ve vlastním repozitáři. Stažení připni na konkrétní commit, ne na `main` – jinak si do CI pouštíš cizí skript, který se může kdykoliv změnit.
 

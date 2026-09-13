@@ -76,7 +76,7 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 **Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/skills/LIFECYCLE.md`, *Povolená opakování*.
 
-Spusť jen to, co je vlastní téhle otázce – „sedí si projekt sám se sebou?“, na což se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula); prahy a majitele drží `~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
+Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
 
 | Co | Čím | Kdy má smysl |
 |---|---|---|

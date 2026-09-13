@@ -153,11 +153,17 @@ Před mergem musí být `main/` čistý – `git merge` nad rozpracovaným strom
 
 ### Zpráva merge commitu shrnuje práci, ne jméno větve
 
-Historie hlavní větve se čte přes `git log --first-parent`, který do větví nevstupuje – merge commit je tam **jediný řádek za celou odvedenou práci**. Dílčí commity se tím nikam neztrácejí a jsou pořád k dispozici (`git log <merge>^2`, `git show <merge>`), jen nepřeplácají hlavní linku. Cenou za to je, že defaultní zpráva `Merge větve docs/znamky` je o té větvi jediné, co bude vidět, a přitom neříká nic než jméno adresáře.
+Historie hlavní větve se čte přes `git log --first-parent`, který do větví nevstupuje. Merge commit je tam **jediný řádek za celou odvedenou práci**. Dílčí commity se tím nikam neztrácejí a jsou pořád k dispozici (`git log <merge>^2`, `git show <merge>`), jen nepřeplácají hlavní linku.
+
+Cenou za to je, že výchozí zpráva `Merge větve docs/znamky` je o té větvi jediné, co bude vidět. A neříká nic než jméno adresáře.
 
 **Zprávu proto předej `-m` a napiš ji jako běžný commit:** co větev přinesla, ne jak se jmenovala. Ne `Merge branch 'feat/platby'`, ale `Zaveď platby kartou přes platební bránu`. Nese-li větev víc věcí, patří výčet do druhého odstavce zprávy, ne do prvního řádku.
 
-**Vynucuje to git hook `~/.claude/githooks/commit-msg`**, nasazený globálně přes `core.hooksPath`. Odmítne commit, jehož zpráva začíná `Merge branch` nebo `Merge větve` – ale jen na hlavní větvi, takže aktualizace rozdělané větve z `main` i merge po `git pull` projdou beze změny. Hook volá lokální `.git/hooks/commit-msg` repozitáře, existuje-li, protože globální `core.hooksPath` by ho jinak vypnul; **ostatní typy lokálních hooků tím ale nasazené nejsou** – potřebuje-li je nějaký projekt, nastaví si vlastní `core.hooksPath` a globální nastavení přebije.
+**Vynucuje to git hook `~/.claude/githooks/commit-msg`**, nasazený globálně přes `core.hooksPath`. Odmítne commit, jehož zpráva je některá z těch, které git generuje sám: `Merge branch`, `Merge branches`, `Merge remote-tracking branch`, `Merge tag`, `Merge commit`, `Merge větve` a `Squashed commit of the following:`.
+
+Platí to **jen na hlavní větvi**, takže aktualizace rozdělané větve z `main` projde beze změny. Projde i merge po `git pull` nad toutéž větví, tedy synchronizace; `git pull origin <cizí větev>` na `main` je naopak dokončení práce a hook ho zastaví.
+
+Hook volá lokální `.git/hooks/commit-msg` repozitáře, existuje-li, protože globální `core.hooksPath` by ho jinak vypnul. **Ostatní typy lokálních hooků tím ale nasazené nejsou.** Potřebuje-li je nějaký projekt, nastaví si vlastní `core.hooksPath`, který globální nastavení přebije.
 
 Celou sekvenci proveď najednou a **průběžně hlas, co se povedlo** – merge nemá proběhnout mlčky. Před mergem ověř, že ve worktree nejsou necommitnuté změny. Když `worktree remove` odmítne kvůli neuloženému obsahu, **nepoužívej `--force`, dokud se nezeptáš**.
 
