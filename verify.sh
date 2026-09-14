@@ -396,7 +396,24 @@ CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || {
            "${ROOT:-/nonexistent}/main/CLAUDE.md"; do
     [ -f "$c" ] || continue
     grep -q '^## Kontrakt příkazů' "$c" || continue
-    die "v $c je sekce ## Kontrakt příkazů, ale nejde přečíst – nejspíš je nad ní nedovřený blok kódu (\`\`\`). Nespustil jsem nic."
+    # Sekce v souboru je, ale hledání ji nenašlo. Příčiny jsou dvě a míří na
+    # opačné strany: buď ji schoval blok kódu či HTML komentář (pak ji nevidí ani
+    # md_body, a chyba je v tom souboru), nebo ji md_body vidí (a chyba je pak
+    # tady ve verify.sh). Hláška proto musí říct, kterou z nich vidí.
+    #
+    # Dokud jmenovala jen nedovřený plot, poslala hledání do souboru i tehdy, když
+    # v něm žádný plot nebyl. Doloženo 14. 9. 2026: SIGPIPE ve find_contract se
+    # diagnostikoval jako nedovřený plot a chyba se hledala na špatném místě.
+    TELO=$(md_body "$c"); RC_TELO=$?
+    if [ "$RC_TELO" -ne 0 ]; then
+      die "v $c je sekce ## Kontrakt příkazů, ale čtení těla souboru skončilo chybou (návratový kód $RC_TELO). Je to chyba ve verify.sh, ne v tom souboru. Nespustil jsem nic."
+    fi
+    # grep -c, ne -q: `-q` by tu nastražil tutéž past se SIGPIPE a pipefail,
+    # kvůli které tahle diagnostika vznikla. Tělo bývá velké.
+    if [ "$(printf '%s\n' "$TELO" | grep -c '^## Kontrakt příkazů')" -gt 0 ]; then
+      die "v $c je sekce ## Kontrakt příkazů a jde přečíst, ale hledání kontraktu ji nenašlo. Je to chyba ve verify.sh, ne v tom souboru. Nespustil jsem nic."
+    fi
+    die "v $c je sekce ## Kontrakt příkazů, ale v těle bez bloků kódu a komentářů nejde přečíst – nejspíš je nad ní nedovřený blok kódu (\`\`\`) nebo ji obklopuje HTML komentář. Nespustil jsem nic."
   done
   exit 0
 }

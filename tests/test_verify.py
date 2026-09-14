@@ -340,6 +340,40 @@ class PrubeznaKontrola(unittest.TestCase):
         r = self.spust()
         self.assertEqual(r.returncode, BLOKUJE, "nečitelný kontrakt kontrolu vypnul mlčky")
         self.assertIn("nejde přečíst", r.stderr)
+        self.assertIn("blok kódu", r.stderr,
+                      "hláška neříká, kterou z možných příčin hook vidí")
+
+    def test_hlaska_nesvali_na_soubor_chybu_hooku(self):
+        """Sekce je čitelná, hledání ji přesto nenašlo – hláška musí ukázat na hook.
+
+        Dřív jmenovala jedinou příčinu, která byla známá v době jejího vzniku
+        (nedovřený plot), takže poslala hledání do souboru i tam, kde žádný plot
+        není. Doloženo 14. 9. 2026: SIGPIPE ve `find_contract` se takhle
+        diagnostikoval jako vada Markdownu a hledal se v něm.
+
+        Scénář se vyrábí mutací hooku, protože jinak nejde nastat – a právě proto
+        by bez tohohle testu diagnostika mohla tiše zůstat zavádějící."""
+        (self.repo / "CLAUDE.md").write_text(
+            "# Test\n\n## Kontrakt příkazů\n\n- test: false\n")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "kontrakt")
+
+        rozbity = self.tmp / "verify-rozbity.sh"
+        text = Path(HOOK).read_text(encoding="utf-8")
+        mutace = text.replace("find_contract() {", "find_contract() { return 1;", 1)
+        self.assertNotEqual(text, mutace, "find_contract se přejmenovala")
+        rozbity.write_text(mutace, encoding="utf-8")
+        rozbity.chmod(0o755)
+
+        env = dict(os.environ, HOME=str(self.home))
+        env.pop("XDG_STATE_HOME", None)
+        env.pop("CLAUDE_NO_VERIFY", None)
+        vstup = json.dumps({"session_id": "s1", "cwd": str(self.repo),
+                            "stop_hook_active": False})
+        r = subprocess.run(["bash", str(rozbity)], input=vstup,
+                           capture_output=True, text=True, env=env)
+        self.assertIn("chyba ve verify.sh", r.stderr,
+                      "hláška svaluje chybu hooku na prověřovaný soubor")
 
     def test_projekt_bez_kontraktu_dal_mlci(self):
         """Protějšek testu výš: chybějící kontrakt není chyba a nesmí se hlásit.
