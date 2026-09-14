@@ -173,7 +173,13 @@ proj_for_md() {
 # "bez kontraktu" právě o repozitářích, kvůli kterým ta cesta vznikla.
 find_contract() {
   for c in "$1/CLAUDE.md" "$1/.claude/CLAUDE.md" "$1/main/CLAUDE.md"; do
-    if [ -f "$c" ] && md_body "$c" | grep -q '^## Kontrakt příkazů'; then printf '%s' "$c"; return 0; fi
+    # grep -c, ne grep -q: `-q` skončí hned po prvním zásahu, awk uvnitř md_body
+    # pak dostane SIGPIPE (141) a se `set -o pipefail` propadne celý pipeline jako
+    # neúspěch. Projeví se to tím podivněji, že to závisí na DÉLCE textu za sekcí:
+    # dokud se zbytek souboru vejde do bufferu roury, awk stihne dopsat a skončí
+    # nulou. Doloženo 14. 9. 2026 – přidaný odstavec pod kontraktem shodil hledání
+    # kontraktu v tomhle repozitáři a kontrola se odmítla spustit.
+    if [ -f "$c" ] && [ "$(md_body "$c" | grep -c '^## Kontrakt příkazů')" -gt 0 ]; then printf '%s' "$c"; return 0; fi
   done
   return 1
 }

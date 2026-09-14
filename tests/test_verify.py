@@ -780,6 +780,25 @@ class VypisKontraktu(unittest.TestCase):
         v = self.contract("# T\n\nŽádný kontrakt tu není.\n")
         self.assertNotEqual(v.returncode, 0)
 
+    def test_dlouhy_text_pod_kontraktem_hledani_neshodi(self):
+        """Sekce se musí najít i tehdy, když je za ní dlouhý text.
+
+        `find_contract` hledala sekci přes `md_body ... | grep -q`, jenže `-q`
+        skončí po prvním zásahu a awk uvnitř `md_body` pak dostane SIGPIPE. Se
+        `set -o pipefail` propadl celý pipeline jako neúspěch, takže se kontrakt
+        „nenašel“ a kontrola se odmítla spustit. Rozhodovala přitom **délka textu
+        za sekcí**: dokud se zbytek souboru vešel do bufferu roury, awk stihl
+        dopsat a všechno fungovalo. Doloženo 14. 9. 2026 v tomhle repozitáři –
+        shodil to jeden přidaný odstavec pod kontraktem.
+
+        Sto tisíc znaků je nad běžný buffer roury (64 KB), takže scénář nastane
+        spolehlivě i tam, kde má systém buffer větší než macOS."""
+        vata = "Vysvětlující odstavec pod kontraktem.\n\n" * 3000
+        self.assertGreater(len(vata), 100_000)
+        v = self.contract("# T\n\n## Kontrakt příkazů\n\n- test: echo ahoj\n\n" + vata)
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertIn("test\techo ahoj", v.stdout)
+
     def test_nic_nespousti(self):
         """--contract jen čte. Kdyby spouštěl, obešel by souhlas, který je
         u příkazů z repozitáře celá pojistka."""
