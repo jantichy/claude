@@ -411,6 +411,104 @@ class PrubeznaKontrola(unittest.TestCase):
                 self.assertEqual(r.returncode, 0, f"--revoke {argument} neuspěl: {r.stderr}")
 
 
+class SouhlasPlatiProKontrakt(unittest.TestCase):
+    """Souhlas pokrývá repozitář, ale ne cokoliv, co se v něm najde.
+
+    Klíč souhlasu je odvozený ze sdíleného `.git`, aby platil i pro worktree
+    ostatních větví. Bez dalších pojistek to ale znamenalo, že si **jakýkoliv
+    podadresář** mohl přinést vlastní `CLAUDE.md` a jeho příkazy se spustily bez
+    dotazu – rozbalený cizí projekt ve `vendor/`, stažený tarball, obnovená
+    záloha. Ověřeno v `/review full` (14. 9. 2026): neverzovaný soubor stačil.
+
+    Druhá cesta k témuž: `rm -rf projekt && git clone cizi projekt` zdědil celý
+    souhlas, protože klíč se počítá z cesty ke `.git`.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="souhlas-test-"))
+        self.home = self.tmp / "home"
+        self.home.mkdir()
+        self.repo = self.tmp / "repo"
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", ".")
+        git(self.repo, "config", "user.email", "t@t")
+        git(self.repo, "config", "user.name", "t")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def kontrakt(self, kam, prikaz):
+        kam.mkdir(parents=True, exist_ok=True)
+        (kam / "CLAUDE.md").write_text(
+            f"# T\n\n## Kontrakt příkazů\n\n- test: {prikaz}\n", encoding="utf-8")
+
+    def bezi(self, cwd):
+        env = dict(os.environ, HOME=str(self.home))
+        env.pop("XDG_STATE_HOME", None)
+        env.pop("CLAUDE_NO_VERIFY", None)
+        vstup = json.dumps({"session_id": "s1", "cwd": str(cwd),
+                            "transcript_path": "", "stop_hook_active": False})
+        return subprocess.run([str(HOOK)], input=vstup, capture_output=True,
+                              text=True, env=env, check=False)
+
+    def allow(self, kde):
+        env = dict(os.environ, HOME=str(self.home))
+        env.pop("XDG_STATE_HOME", None)
+        return subprocess.run([str(HOOK), "--allow", str(kde)], capture_output=True,
+                              text=True, env=env, check=False, stdin=subprocess.DEVNULL)
+
+    def test_podadresar_s_vlastnim_kontraktem_se_nespusti(self):
+        stopa = self.tmp / "NESMI-VZNIKNOUT"
+        self.kontrakt(self.repo, "true")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        self.kontrakt(self.repo / "vendor" / "cizi", f"touch {stopa}")
+        v = self.bezi(self.repo / "vendor" / "cizi")
+        self.assertFalse(stopa.exists(), "příkaz z podadresáře se spustil pod souhlasem pro repozitář")
+        self.assertIn("podadresáři", v.stderr)
+
+    def test_zmeneny_kontrakt_se_nespusti(self):
+        """Souhlas se vydává na konkrétní kontrakt, ne na repozitář navždy."""
+        stopa = self.tmp / "NESMI-VZNIKNOUT"
+        self.kontrakt(self.repo, "true")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        self.kontrakt(self.repo, f"touch {stopa}")
+        v = self.bezi(self.repo)
+        self.assertFalse(stopa.exists(), "spustil se příkaz, který nikdo neodsouhlasil")
+        self.assertIn("změnil", v.stderr)
+
+    def test_souhlas_ve_starem_formatu_neplati(self):
+        """Souhlas bez otisku se nedá ověřit, takže se nepoužije – a řekne se to.
+
+        Tichý degradovaný režim by z téhle opravy udělal dekoraci: běželo by se
+        dál pod souhlasem, o kterém není jisté, na co byl vydaný.
+        """
+        self.kontrakt(self.repo, "true")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        soubor = next((self.home / ".local/state/claude-verify/allowed").glob("*"))
+        soubor.write_text(f"{self.repo}\n")          # starý jednořádkový formát
+        v = self.bezi(self.repo)
+        self.assertIn("starém formátu", v.stderr)
+        self.assertEqual(v.returncode, 2)
+
+    def test_worktree_jine_vetve_souhlas_dedi(self):
+        """Pojistka nesmí rozbít to, kvůli čemu se klíčuje sdíleným `.git`."""
+        self.kontrakt(self.repo, "true")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        wt = self.tmp / "wt"
+        self.assertEqual(git(self.repo, "worktree", "add", "-q", str(wt), "-b", "feat").returncode, 0)
+        v = self.bezi(wt)
+        self.assertNotIn("není vydaný souhlas", v.stderr)
+        self.assertNotIn("podadresáři", v.stderr)
+
+
 class ParserTelaMarkdownu(unittest.TestCase):
     """`md_body()` musí číst Markdown tak, jak ho čte člověk v náhledu.
 

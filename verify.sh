@@ -247,9 +247,16 @@ if [ "${1:-}" = "--allow" ]; then
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
   chmod 700 "$(dirname "$ALLOW_DIR")" "$ALLOW_DIR" 2>/dev/null || true
   RKEY=$(proj_key "$(repo_id "$P")")
-  printf '%s\n' "$P" > "$ALLOW_DIR/$RKEY" || die "nelze zapsat souhlas do $ALLOW_DIR"
-  [ -s "$ALLOW_DIR/$RKEY" ] || die "souhlas se nezapsal."
   SEC=$(contract_section "$MD")
+  # Souhlas se váže na KONTRAKT, ne jen na repozitář. Samotný klíč z `.git` platí
+  # pro celý strom, takže si jakýkoliv podadresář mohl přinést vlastní CLAUDE.md
+  # a jeho příkazy se spustily bez dotazu – rozbalený cizí projekt ve `vendor/`
+  # stačil. A po `rm -rf` a klonu cizího repozitáře na tutéž cestu se souhlas
+  # zdědil celý. Uloží se proto i cesta ke kontraktu a otisk jeho sekce; běh
+  # obojí porovná a při neshodě si vyžádá nový souhlas.
+  printf '%s\n%s\n%s\n' "$(canon "$P")" "$MD" "$(printf '%s' "$SEC" | sha)" \
+    > "$ALLOW_DIR/$RKEY" || die "nelze zapsat souhlas do $ALLOW_DIR"
+  [ -s "$ALLOW_DIR/$RKEY" ] || die "souhlas se nezapsal."
   echo "Průběžná kontrola poběží v $P, podle kontraktu v $MD."
   echo
   echo "Po každé odpovědi spustí:"
@@ -360,6 +367,34 @@ if ! allow_file "$PROJ" >/dev/null; then
       | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}/  \1: /p' || true
   } >&2
   exit 1
+fi
+
+# Souhlas platí pro TENHLE kontrakt, ne pro cokoliv, co se v repozitáři najde.
+# Bez téhle kontroly stačilo do odsouhlaseného repozitáře rozbalit cizí projekt
+# s vlastním CLAUDE.md a jeho příkazy se spustily; a po klonu jiného repozitáře
+# na tutéž cestu se zdědil celý souhlas i s ním.
+#
+# Souhlas vydaný před zavedením téhle kontroly má jen jeden řádek. Neplatí – ale
+# řekne se to nahlas i s tím, čím se obnoví; tichý degradovaný režim by z opravy
+# udělal dekoraci.
+AF=$(allow_file "$PROJ")
+ULOZENY_OTISK=$(sed -n 3p "$AF")
+if [ -z "$ULOZENY_OTISK" ]; then
+  die "souhlas pro $PROJ je ve starém formátu bez otisku kontraktu, nespustil jsem nic. Obnov ho: ~/.claude/verify.sh --allow $PROJ"
+fi
+
+# Kontrakt musí ležet v KOŘENI pracovního stromu, ne v podadresáři pod ním.
+# Klíč souhlasu je odvozený ze sdíleného `.git`, takže platí pro celý strom
+# repozitáře – a bez téhle kontroly si jakýkoliv podadresář mohl přinést vlastní
+# CLAUDE.md, který se spustil bez dotazu (rozbalený cizí projekt ve `vendor/`,
+# stažený tarball, node_modules). Worktree jiné větve to nezasahuje: ten je sám
+# kořenem pracovního stromu, takže dál platí, že souhlas pokrývá celý repozitář.
+TOPLEVEL=$(git -C "$PROJ" rev-parse --show-toplevel 2>/dev/null || true)
+if [ -n "$TOPLEVEL" ] && [ "$(canon "$TOPLEVEL")" != "$PROJ" ]; then
+  die "kontrakt $CLAUDE_MD leží v podadresáři, ne v kořeni pracovního stromu ($TOPLEVEL). Souhlas pro repozitář na něj neplatí, nespustil jsem nic."
+fi
+if [ "$(printf '%s' "$(contract_section "$CLAUDE_MD")" | sha)" != "$ULOZENY_OTISK" ]; then
+  die "kontrakt v $CLAUDE_MD se od vydání souhlasu změnil, nespustil jsem nic. Projdi si ho a potvrď: ~/.claude/verify.sh --allow $PROJ"
 fi
 
 # Rozlišit "není to repozitář" (v pořádku, mlčky ven) od "git nefunguje" (nahlas):
