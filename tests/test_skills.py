@@ -73,6 +73,46 @@ class SkillFrontmatter(unittest.TestCase):
                 vady.append(f"{soubor.relative_to(ROOT)}: {m.group(0)!r}")
         self.assertFalse(vady, "odkazy dovnitř fáze cizího skillu:\n  " + "\n  ".join(vady))
 
+    def test_vyctene_mcp_nastroje_existuji(self):
+        """Ruční výčet MCP nástrojů v `allowed-tools` musí sedět se skutečností.
+
+        Výčet je tu schválně, ne z lenosti: oficiální plugin `plugin-dev`
+        označuje `mcp__…__*` za anti-pattern a žádá vyjmenovat jen potřebné
+        nástroje. Cenou za minimální oprávnění je ale křehkost – překlep nebo
+        přejmenovaný nástroj se neprojeví při načtení skillu, ale až uprostřed
+        běhu, kdy si `/attack` nebo `/audit` sáhne po něčem, co nedostal.
+
+        Jména se čtou z telemetrie pluginu na disku, protože definice nástrojů
+        ve zdrojácích chodí přes konstanty (`LIST_CONSOLE_MESSAGES_TOOL_NAME`)
+        a hledání `name: '…'` je mine – doloženo pokusem, který nahlásil dva
+        falešné nálezy. Zdroje mimo běžící server jsou tři a liší se: `cli-options`
+        nezná `fill_form`, telemetrie je nadmnožina včetně historických jmen.
+        Bere se telemetrie ze **všech** nainstalovaných verzí, takže test chytí
+        překlep a jméno, které nikdy neexistovalo; nástroj odstraněný v nové
+        verzi nechytí, dokud stará leží na disku. To je vědomá mez, ne opomenutí:
+        falešný poplach z nesouladu verzí by vedl k vypnutí testu.
+
+        Chybí-li plugin na disku, test se přeskočí – nad cizím strojem nebo v CI
+        není proti čemu měřit.
+        """
+        import json as _json
+        cache = ROOT / "plugins" / "cache"
+        dostupne = set()
+        for f in cache.glob("*/chrome-devtools-mcp/*/src/telemetry/tool_call_metrics.json"):
+            dostupne |= {t["name"] for t in _json.loads(f.read_text(encoding="utf-8"))}
+        if not dostupne:
+            self.skipTest("plugin chrome-devtools-mcp není na disku, není proti čemu měřit")
+
+        vzor = re.compile(r"mcp__plugin_chrome-devtools-mcp_chrome-devtools__([a-z_0-9]+)")
+        for skill in SKILLS:
+            uvedene = set(vzor.findall(skill.read_text(encoding="utf-8")))
+            if not uvedene:
+                continue
+            with self.subTest(skill=skill.parent.name):
+                chybi = sorted(uvedene - dostupne)
+                self.assertFalse(chybi,
+                    f"{skill.parent.name} jmenuje MCP nástroje, které plugin nenabízí: {chybi}")
+
     def test_allowed_tools_je_vyplnene(self):
         """Skill bez `allowed-tools` běží s celou sadou nástrojů session.
 

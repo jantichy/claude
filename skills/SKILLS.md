@@ -84,7 +84,9 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 
 **`argument-hint` musí sedět s tělem.** Režim popsaný v těle a chybějící v hintu uživatel nikdy neuvidí; hint bez opory v těle slibuje funkci, která neexistuje.
 
-**`allowed-tools` drž na minimu.** Dlouhé ruční výčty nástrojů MCP jsou křehké – při přejmenování serveru se rozejdou tiše a skill pak selže až za běhu.
+**`allowed-tools` drž na minimu** a u MCP **vyjmenuj konkrétní nástroje, ne `mcp__server__*`**. Zástupný znak funguje, ale oficiální plugin `plugin-dev` ho označuje za anti-pattern: skill pak dostane celý server včetně nástrojů, které přibudou později a nikdo je neposuzoval.
+
+Cenou za to je křehkost – překlep nebo přejmenovaný nástroj se neprojeví při načtení skillu, ale až uprostřed běhu, kdy si skill sáhne po něčem, co nedostal. **Proto k výčtu patří test**, který jména porovná s tím, co plugin na disku opravdu nabízí; bez něj je to výčet, který nikdo neměří. Hlídá to `tests/test_skills.py`.
 
 ## 4. Povinné sekce a jejich pořadí
 
