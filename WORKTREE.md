@@ -87,6 +87,10 @@ git -C <projekt> worktree add <projekt>/<adresar> -b <vetev>
 - **Adresář pojmenuj plochým jménem bez lomítka** – větev `feat/platby` patří do `platby/`, ne `feat/platby/`.
 - Převezmi lokální stav z `main/` (viz níže) a řekni uživateli jednou větou, co jsi založil.
 
+**Nejdřív si natáhni aktuální `main`.** Kontejner existuje právě proto, že nad projektem běží víc sessions naráz – takže `main` se mohl posunout od chvíle, kdy tahle session začala, a to i o práci, na kterou tvoje větev staví. Před založením proto `git fetch` a hned po založení `git merge --ff-only main`; teprve pak začni pracovat.
+
+**Nestačí to udělat jednou na začátku session.** Zakládáš-li větev po delší práci, zopakuj to – jinak stavíš na stavu, který byl aktuální před hodinou. Pozná se to pozdě: konflikt nevznikne, jen se tiše rozhodne podruhé něco, co už rozhodla vedlejší session.
+
 **Návrat do větve, která už existuje** (její worktree byl mezitím smazán) – bez `-b`:
 
 ```bash
