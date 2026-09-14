@@ -31,6 +31,16 @@ OUT.mkdir(parents=True, exist_ok=True)
 THREAD_MARK = re.compile(r"🧵|\b\d+\s*/\s*\d+\s*:")
 
 posts = json.loads(SRC.read_text(encoding="utf-8"))
+
+# Záznam bez času nebo bez URI je poškozený a nedá se zařadit ani seřadit.
+# Dřív takový jediný post shodil generování VŠECH ročníků na KeyError –
+# tedy chyba v jednom záznamu zlikvidovala celý archiv. Vynechat a nahlásit.
+vadne = [p for p in posts if not p.get("createdAt") or not p.get("uri")]
+if vadne:
+    print(f"poznámka: vynechávám {len(vadne)} postů bez createdAt nebo uri",
+          file=sys.stderr)
+    posts = [p for p in posts if p.get("createdAt") and p.get("uri")]
+
 by_uri = {p["uri"]: p for p in posts}
 
 # Profil vlastníka se odvozuje z URL prvního postu, které vyrobil parse_bluesky.py.

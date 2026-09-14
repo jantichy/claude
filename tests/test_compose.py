@@ -173,6 +173,76 @@ class TweetySeNeztratiAniNepromichaji(unittest.TestCase):
         self.assertIn("druhý zkrácený…", text,
                       "novější tweet sebral tolerancí text, který přesně patří staršímu")
 
+    def test_export_bez_note_tweet_projde(self):
+        """Účet, který nikdy nenapsal dlouhý tweet, `note-tweet.js` v exportu nemá.
+
+        Dřív na něm generátor spadl na FileNotFoundError, takže se nevygeneroval
+        ani jediný ročník – tedy chybějící nepovinný soubor zlikvidoval celý
+        archiv včetně let, která s dlouhými tweety nemají nic společného.
+        """
+        self.zapis("tweets.js", [
+            self.tweet("1", "Wed Oct 10 20:19:24 +0000 2018", "krátká myšlenka"),
+        ])
+        out = self.tmp / "out"
+        out.mkdir(exist_ok=True)
+        hotovo = subprocess.run(
+            [sys.executable, str(SCRIPTS / "gen_twitter_md.py"), str(self.data), str(out)],
+            capture_output=True, text=True)
+        self.assertEqual(hotovo.returncode, 0, hotovo.stderr)
+        self.assertIn("krátká myšlenka",
+                      "\n".join(f.read_text(encoding="utf-8") for f in out.glob("*.md")))
+
+
+class BluskyPoskozenyZaznam(unittest.TestCase):
+    """Jeden vadný post nesmí shodit generování všech ročníků.
+
+    `parse_bluesky.py` čte repozitář stažený z PDS a záznam bez `createdAt`
+    nebo `uri` z něj vyjít může – poškozeným blokem, nedostaženou částí,
+    změnou schématu. Dřív na takovém postu generátor spadl na KeyError ještě
+    před zápisem prvního souboru, takže se ztratil celý archiv kvůli jednomu
+    záznamu. Správné chování je vadné vynechat, nahlásit a zbytek dopsat.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="compose-bs-"))
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def post(self, ident, kdy, text):
+        uri = f"at://did:plc:honza/app.bsky.feed.post/{ident}"
+        return {"uri": uri, "createdAt": kdy, "text": text,
+                "url": f"https://bsky.app/profile/honza.cz/post/{ident}"}
+
+    def spust(self, posty):
+        src = self.tmp / "posts.json"
+        src.write_text(json.dumps(posty, ensure_ascii=False), encoding="utf-8")
+        out = self.tmp / "out"
+        hotovo = subprocess.run(
+            [sys.executable, str(SCRIPTS / "gen_bluesky_md.py"), str(src), str(out)],
+            capture_output=True, text=True)
+        self.assertEqual(hotovo.returncode, 0, hotovo.stderr)
+        return "\n".join(f.read_text(encoding="utf-8") for f in sorted(out.glob("*.md")))
+
+    def test_post_bez_createdat_nezabije_zbytek(self):
+        vadny = self.post("x", "2024-05-01T10:00:00Z", "vadný")
+        del vadny["createdAt"]
+        text = self.spust([
+            self.post("a", "2024-05-01T09:00:00Z", "první dobrý"),
+            vadny,
+            self.post("b", "2024-05-01T11:00:00Z", "druhý dobrý"),
+        ])
+        self.assertIn("první dobrý", text)
+        self.assertIn("druhý dobrý", text)
+        self.assertNotIn("vadný", text)
+
+    def test_post_bez_uri_nezabije_zbytek(self):
+        vadny = self.post("y", "2024-05-01T10:00:00Z", "vadný")
+        del vadny["uri"]
+        text = self.spust([self.post("a", "2024-05-01T09:00:00Z", "dobrý"), vadny])
+        self.assertIn("dobrý", text)
+        self.assertNotIn("vadný", text)
+
 
 if __name__ == "__main__":
     unittest.main()

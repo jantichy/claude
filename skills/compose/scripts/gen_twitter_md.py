@@ -35,6 +35,20 @@ def load(name):
     return json.loads(raw[raw.index("["):])
 
 
+def load_optional(name):
+    """Načte soubor, který v exportu být nemusí, a jinak vrátí prázdno.
+
+    `note-tweet.js` chybí každému účtu, který nikdy nenapsal dlouhý tweet,
+    i starším podobám exportu. Bez téhle větve spadl generátor na
+    FileNotFoundError a nevygeneroval ani ročníky, které s dlouhými tweety
+    nemají nic společného.
+    """
+    if not (BASE / name).exists():
+        print(f"poznámka: {name} v exportu není, pokračuju bez něj", file=sys.stderr)
+        return []
+    return load(name)
+
+
 # Vlastníka účtu čti z account.js, ne z prvního výskytu v datech — export je plný
 # cizích identifikátorů (zmínky, odpovědi) a hádaný vlastník rozbije detekci vláken.
 _account = load("account.js")[0]["account"]
@@ -43,7 +57,7 @@ MY_ID = _account["accountId"]
 
 
 tweets_raw = [t["tweet"] for t in load("tweets.js")]
-notes = [n["noteTweet"] for n in load("note-tweet.js")]
+notes = [n["noteTweet"] for n in load_optional("note-tweet.js")]
 
 # plné texty dlouhých tweetů — párování podle času (±2 s)
 notes_by_ts = {}
