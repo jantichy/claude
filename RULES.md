@@ -368,6 +368,16 @@ Doloženo dvakrát v jednom dni na `/transcript` (6. 9. 2026).
 
 Kontrolní otázka po každém novém pravidle: **který další výstup vzniká ve stejném kroku a spadá pod jiný rozsah?**
 
+**Co s nálezem, rozhodni podle toho, jestli pravidlo platí pro obě sekce stejně** – vyhrává první, které sedí:
+
+1. **Platí beze změny a sekce se dají sloučit** → **zobecni nadpis** tak, aby kryl obě, a pravidlo napiš jednou nad ně. Dvě sekce s vymezeným rozsahem tam pak nemají co dělat; nepotřebují je.
+2. **Platí beze změny, ale sekce musí zůstat oddělené** (mají i vlastní obsah) → **odkaz** z druhé na první. Ne převyprávění, ne shrnutí – odkaz.
+3. **Platí v každé jinak** → nejsou to dvě kopie téhož, ale **dvě různá pravidla**. Napiš obě celá a u druhého řekni, čím se od prvního liší.
+
+**Opsat pravidlo podruhé je vždycky špatně**, i „jen z poloviny“. Hybrid – odkaz plus opsaná půlka – je z těch možností nejhorší: rozejde se přesně ta opsaná část, a protože vedle ní stojí odkaz, čtenář nabyde dojmu, že je to hlídané.
+
+Doloženo na čtyřech případech, kde se použily tři různé postupy a žádný se nezdůvodnil.
+
 ### Nerozhoduj potichu nad rámec zadání
 
 Máš nápad na vylepšení nad rámec zadání → zeptej se, neschvaluj si to sám. Nevyžádaná změna je zásah do uživatelovy domény bez jeho vědomí.
