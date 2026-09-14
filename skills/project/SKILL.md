@@ -285,7 +285,7 @@ Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračn�
 
 Cílové umístění se řídí režimem z kroku 5. `TODO.md` velkými písmeny v kořeni **není** režim `root` – je to staré pojmenování, které se migruje tak jako tak.
 
-Přejmenovávej přes `git mv`, ať se zachová historie. Po přejmenování **projdi celý repozitář a aktualizuj všechny odkazy** na staré názvy – v `CLAUDE.md`, `README.md`, dokumentaci i komentářích. Existuje-li cílový soubor už také, obsah **slouč** a na sloučení upozorni; nikdy nepřepisuj.
+Přejmenovávej přes `git mv`, ať se zachová historie. Po přejmenování **projdi celý repozitář a aktualizuj všechny odkazy** na staré názvy – v `CLAUDE.md`, `README.md`, dokumentaci i komentářích. Existuje-li cílový soubor už taky, obsah **slouč** a na sloučení upozorni; nikdy nepřepisuj.
 
 ### Zápis do CLAUDE.md
 
@@ -350,7 +350,9 @@ Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a v
 
 Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď totéž co `/autocommit enable` (viz `~/.claude/skills/autocommit/SKILL.md`).
 
-*`adopt`:* nejdřív **zjisti aktuální stav** – hledej sekci `Autocommit` v projektovém `CLAUDE.md` **bez ohledu na úroveň nadpisu** (`##` i `###`) a bez ohledu na to, pod čím je zanořená. Aktuální stav uveď v otázce, ať uživatel ví, co mění. Je-li zapnutý, ale zapsaný jinak než nadpisem `## Autocommit` v nejvyšší úrovni – typicky podnadpisem pod zaniklou sekcí `## Automatické akce` –, **srovnej ho na dnešní tvar** a řekni to; jinak ho `/autocommit` příště nenajde a bude ho hlásit jako vypnutý. **Totéž udělej, chybí-li v sekci řádek `@~/.claude/skills/autocommit/autocommit.md`** – bez něj je to přepínač, který nic nespíná, protože pravidla commitování se do projektu dostanou jedině tím importem.
+*`adopt`:* nejdřív **zjisti aktuální stav** – hledej sekci `Autocommit` v projektovém `CLAUDE.md` **bez ohledu na úroveň nadpisu** (`##` i `###`) a bez ohledu na to, pod čím je zanořená. Aktuální stav uveď v otázce, ať uživatel ví, co mění. Je-li zapnutý, ale zapsaný jinak než nadpisem `## Autocommit` v nejvyšší úrovni – typicky podnadpisem pod zaniklou sekcí `## Automatické akce` –, **srovnej ho na dnešní tvar** a řekni to. Jinak ho `/autocommit` příště nenajde a bude ho hlásit jako vypnutý.
+
+    **Totéž udělej, chybí-li v sekci řádek `@~/.claude/skills/autocommit/autocommit.md`** – bez něj je to přepínač, který nic nespíná, protože pravidla commitování se do projektu dostanou jedině tím importem.
 
 ## Krok 10 – Paměťová politika
 
@@ -393,7 +395,7 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 - **Nasazení webové analytiky** – „Implementace měření na cizím webu – revize existujícího nastavení, měřicí plán, GTM, GA4, consent, reklamní systémy. Výstupem je funkční a doložitelné měření plus dokumentace, ne aplikační kód.“ Navíc přidej pravidlo: „Každá změna v měření musí být před publikováním ověřená v Preview/DebugView a po nasazení znovu na produkci; do `docs/decisions.md` patří i to, co se měřit záměrně nebude a proč.“
 - **Psaní a obsah** – „Projekt zaměřený na psaní a obsah, ne na vývoj software – bez procesu zadání a plánu.“
 - **Data a výzkum** – „Jednorázová datová/výzkumná analýza – výstupem jsou zjištění a report, ne nasazovaný kód.“
-- **Ostatní** – „Projekt mimo výše uvedené kategorie.“
+- **Ostatní** – „Projekt mimo výš uvedené kategorie.“
 
 ## Krok 12 – Kontrakt příkazů a kontrolní vrstvy
 

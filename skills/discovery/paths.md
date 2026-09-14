@@ -35,7 +35,7 @@ Sloupec *Živí* říká, do kterého dokumentu ta cesta ústí – cesta, její
 
 ## Pravidla výběru
 
-- **Vyber čtyři až šest cest.** Pod čtyři se nepokryjí bloky, nad šest se nálezy začnou opakovat.
+- **Vyber 4 až 6 cest.** Pod čtyři se nepokryjí bloky, nad šest se nálezy začnou opakovat.
 - **Výběr předlož uživateli přes `AskUserQuestion`** dřív, než kohokoliv pustíš. Agenti na `low` jsou levní, ale čas na jejich doběhnutí ne.
 - **Náhradní řešení je povinná cesta**, ať je produkt jakýkoliv. Je to ta, na kterou se vždycky zapomene, a bývá za ní největší konkurent. Druhá povinná schválně není – dva pevné sloty ze čtyř by z volby udělaly ozdobu.
 - **Vyber aspoň jednu cestu z každého bloku.** Samé produkty dají přehled trhu a nula požadavků; samá zjištění dají seznam přání bez opory v tom, co existuje.

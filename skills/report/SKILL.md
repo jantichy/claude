@@ -139,7 +139,7 @@ Hledej dvě skupiny.
 - **`data:` URI obrázků** – screenshot z administrace může mít token přímo na obrazovce; když do reportu vkládáš obrázek, který jsi sám nevyrobil z dat, podívej se na něj
 - atributy odkazů a `<iframe src>`
 
-**Jak.** Nejdřív mechanicky – grep přes celý soubor na výše uvedené řetězce a na typické tvary (`sk-`, `ghp_`, `AIza`, `eyJ` na začátku JWT, `-----BEGIN`, dlouhé náhodné řetězce v query stringu). Pak si soubor přečti; grep nechytí to, co se jmenuje jinak.
+**Jak.** Nejdřív mechanicky – grep přes celý soubor na výš uvedené řetězce a na typické tvary (`sk-`, `ghp_`, `AIza`, `eyJ` na začátku JWT, `-----BEGIN`, dlouhé náhodné řetězce v query stringu). Pak si soubor přečti; grep nechytí to, co se jmenuje jinak.
 
 **Když něco najdeš, zastav se.** Neodmazávej to potichu a nepokračuj – nález u druhé skupiny znamená dvě věci, ne jednu:
 

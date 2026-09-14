@@ -112,7 +112,7 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 
 U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstávají před závěrem.
 
-**`## Co skill dělá`** – co to je a jaké má režimy. Tři až deset řádků. Ne převyprávěný postup; ten je níž.
+**`## Co skill dělá`** – co to je a jaké má režimy. 3 až 10 řádků. Ne převyprávěný postup; ten je níž.
 
 **`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
 
@@ -193,7 +193,9 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Který blok kódu je šablona do konverzace** rozhoduje jeho první neprázdný řádek: nadpis, `[N/celkem]`, tučný popisek nebo řádek tabulky. Zadání pro subagenta začíná oslovením a příkaz shellu má u sebe jazyk, takže ani jedno sem nespadá. **Blok, jehož obsah se zapisuje do souboru** – sekce do `CLAUDE.md`, blok metadat, tabulka do `SKILL.md` – pokyn nemá; Markdown už je a pokyn by lhal o tom, kam text míří. Ty výjimky jmenovitě drží test.
 
-**Neopisuj seznam, který má vlastní zdroj pravdy.** Pořadí kroků životního cyklu, prahy kontrol, inventář domén – na ty se odkazuj, nevypisuj je. Opsaný seznam se při přidání položky rozejde a **vypadá přitom pořád platně**, takže si toho nikdo nevšimne. Platí to dvojnásob pro **šablony, které skill zapisuje jinam**: `/project` psal do každého vývojářského `CLAUDE.md` cestu bez `/discovery` a projekty ji četly jako úplnou. Řetěz tří a víc kroků cyklu v `SKILL.md` hlídají testy. **Výjimku mají dvě místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který ukazuje krajní kroky a mezi nimi výpustku, a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `RULES.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
+**Neopisuj seznam, který má vlastní zdroj pravdy.** Pořadí kroků životního cyklu, prahy kontrol, inventář domén – na ty se odkazuj, nevypisuj je. Opsaný seznam se při přidání položky rozejde a **vypadá přitom pořád platně**, takže si toho nikdo nevšimne. Platí to dvojnásob pro **šablony, které skill zapisuje jinam**: `/project` psal do každého vývojářského `CLAUDE.md` cestu bez `/discovery` a projekty ji četly jako úplnou. Řetěz 3 a víc kroků cyklu v `SKILL.md` hlídají testy.
+
+**Výjimku mají 2 místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který ukazuje krajní kroky a mezi nimi výpustku, a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `RULES.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
 
 **Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…“ zestárnou tiše. Piš specialisty, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
 
@@ -240,7 +242,7 @@ Vyhrává první kritérium, které sedí – a všechna vedou ven:
 | Je to implementační detail – jméno přepínače, souboru, funkce, modelu, agenta | **nikam.** Čtenáře nezajímá a zestárne dřív než zbytek textu. |
 | Je to historka z provozu, číslo z jednoho běhu, „poprvé jsem ho pustil a…“ | **nikam.** |
 
-**Poslední dva řádky jsou ty, na které se zapomíná.** Věta *„Když jsem ho poprvé pustil na vlastní práci, ze 43 nálezů tři nepřežily ověření“* není popis skillu, ale příběh o jednom běhu; *„Agent, který má hledat všechno, nenajde nic“* je obhajoba architektury. Ani jedno čtenáři neřekne, k čemu ten skill je.
+**Poslední dva řádky jsou ty, na které se zapomíná.** Věta *„Když jsem ho poprvé pustil na vlastní práci, ze 43 nálezů 3 nepřežily ověření“* není popis skillu, ale příběh o jednom běhu; *„Agent, který má hledat všechno, nenajde nic“* je obhajoba architektury. Ani jedno čtenáři neřekne, k čemu ten skill je.
 
 ### Jak se to překládá do lidské řeči
 
@@ -278,11 +280,11 @@ Pravidlo *Nepiš, co model už ví* z odstavce **Jak se píše text uvnitř** ta
 
 **`## Proč zrovna tenhle`** – heslovité odrážky, čím se liší od zřejmé alternativy: od ručního postupu, od obecného promptu, od nástroje, který dělá totéž hůř. **Neuvádí se, s čím se to poměřovalo** – jen výsledek jako vlastnost. Je to nejdůležitější sekce README, protože kvůli ní si to čtenář vezme.
 
-**`## Jak se to používá`** – dva až čtyři řádky: skutečné zavolání a co se stane. Ne návod krok za krokem.
+**`## Jak se to používá`** – 2 až 4 řádky: skutečné zavolání a co se stane. Ne návod krok za krokem.
 
 **`## Ukázka výstupu`** – kus reálného výsledku. Zakládá se jen tam, kde skill něco vyrábí (přepis, report, faktura, plán); u skillu, jehož výstupem je konverzace, se vynechá. Nejpřesvědčivější sekce ze všech – z popisu si výsledek nikdo nepředstaví.
 
-**`## Co nedělá`** – dvě až čtyři odrážky, lidský překlad `## Co skill nedělá` ze `SKILL.md`. Šetří zklamání i dotazy.
+**`## Co nedělá`** – 2 až 4 odrážky, lidský překlad `## Co skill nedělá` ze `SKILL.md`. Šetří zklamání i dotazy.
 
 **`## Jak si ho nainstalovat`** – **napsané jako pokyn, který člověk předá svému Claudovi**, ne jako postup, který si odklikává sám. Nikdo si dnes skill neinstaluje ručním kopírováním adresáře; řekne si o to. Tvar je tedy citovaný prompt s odkazem do repozitáře:
 

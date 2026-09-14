@@ -18,11 +18,11 @@ Uspořádání, ve kterém adresář projektu není pracovní adresář, ale **k
 
 **Proč:** nad projektem běží typicky několik Claude sessions najednou, každá na jiné featuře. Ve sdíleném pracovním adresáři by si přepisovaly soubory a commitovaly si navzájem rozdělanou práci. Oddělený worktree na větev je jediná skutečná izolace; sdílejí přitom jeden `.bare`, takže to nestojí ani místo, ani čas.
 
-Hlavní větev se jmenuje `main`. Narazíš-li na starší projekt, kde se jmenuje jinak, platí níže psané pro jeho hlavní větev bez ohledu na jméno.
+Hlavní větev se jmenuje `main`. Narazíš-li na starší projekt, kde se jmenuje jinak, platí níž psané pro jeho hlavní větev bez ohledu na jméno.
 
 **Tenhle soubor drží provoz layoutu** – co kde leží a jak se v tom pracuje. Platí pro každou session nad projektem s tímhle uspořádáním a čte ho `~/.claude/skills/PREFLIGHT.md` i skilly, které nad projektem běží. **Zřízení kontejneru a jeho zrušení sem nepatří** – to vede `/worktree` (`~/.claude/skills/worktree/SKILL.md`), který si tenhle soubor zároveň importuje do rozcestníku v kořeni kontejneru.
 
-Leží v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md`, ne uvnitř skillu, **protože ho čte dvanáct skillů a příprava** – tedy i ten, kdo `/worktree` nainstalovaný nemá.
+Leží v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md`, ne uvnitř skillu, **protože ho čte většina skillů i příprava** – tedy i ten, kdo `/worktree` nainstalovaný nemá.
 
 ## Obsah
 
@@ -62,16 +62,16 @@ Z těch dvou faktů plyne rozdělení, které se **nesmí prohodit**:
 | Soubor | Kde | Proč |
 |---|---|---|
 | `CLAUDE.md` s pravidly projektu | `main/` (a tím ve všech worktree) | je to projektový soubor – patří do gitu a má se s větví vyvíjet |
-| `CLAUDE.md` kontejneru | kořen kontejneru | jen tenký rozcestník, viz níže – existuje čistě proto, aby se ten projektový načetl při startu |
+| `CLAUDE.md` kontejneru | kořen kontejneru | jen tenký rozcestník, viz níž – existuje čistě proto, aby se ten projektový načetl při startu |
 | `README.md`, `docs/*` | `main/` | projektové soubory, patří do gitu |
 | `.claude/settings.local.json` | kořen kontejneru | hooky a povolení čte Claude Code z adresáře, ze kterého session startuje |
-| `.env`, `node_modules/` | `main/`, odtud se přebírá | netrackovaný lokální stav, viz níže |
+| `.env`, `node_modules/` | `main/`, odtud se přebírá | netrackovaný lokální stav, viz níž |
 
 ### Rozcestník v kořeni kontejneru
 
 `<projekt>/CLAUDE.md` neobsahuje žádná pravidla projektu. Obsahuje popis layoutu, odchylky, **import tohohle souboru** a **import projektového `CLAUDE.md`** (`@main/CLAUDE.md`). Zakládá ho `/worktree` a jeho doslovné znění drží `~/.claude/skills/worktree/SKILL.md`, režim `enable`.
 
-Relativní cesta v importu se resolvuje vůči souboru, který import obsahuje – `@main/CLAUDE.md` tedy míří na `<projekt>/main/CLAUDE.md`. Řetěz importů smí být hluboký nejvýš **čtyři hopy**, takže kontejner → `main` → doménový standard se pohodlně vejde.
+Relativní cesta v importu se resolvuje vůči souboru, který import obsahuje – `@main/CLAUDE.md` tedy míří na `<projekt>/main/CLAUDE.md`. Řetěz importů smí být hluboký nejvýš **4 hopy**, takže kontejner → `main` → doménový standard se pohodlně vejde.
 
 Když pracuješ ve worktree `<vetev>/`, načte se `<vetev>/CLAUDE.md` on-demand, jakmile v té větvi něco čteš. Pravidla té větve tedy platí, i když rozcestník v kořeni importuje verzi z `main`.
 
@@ -85,7 +85,7 @@ git -C <projekt> worktree add <projekt>/<adresar> -b <vetev>
 
 - Větev pojmenuj `feat/`, `fix/` nebo `docs/` podle povahy práce; zbytek názvu česky nebo anglicky podle toho, co je v projektu zvykem.
 - **Adresář pojmenuj plochým jménem bez lomítka** – větev `feat/platby` patří do `platby/`, ne `feat/platby/`.
-- Převezmi lokální stav z `main/` (viz níže) a řekni uživateli jednou větou, co jsi založil.
+- Převezmi lokální stav z `main/` (viz níž) a řekni uživateli jednou větou, co jsi založil.
 
 **Nejdřív si natáhni aktuální `main`.** Kontejner existuje právě proto, že nad projektem běží víc sessions naráz – takže `main` se mohl posunout od chvíle, kdy tahle session začala, a to i o práci, na kterou tvoje větev staví. Před založením proto `git fetch` a hned po založení `git merge --ff-only origin/main`; teprve pak začni pracovat. **Musí to být `origin/main`, ne `main`:** `git fetch` posune remote-tracking referenci, kdežto lokální `main` zůstane tam, kde byl – merge lokální větve by tedy nepřinesl nic a celý ten krok by tiše nedělal nic.
 

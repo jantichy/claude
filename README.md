@@ -10,7 +10,7 @@ Co bych z celého repozitáře vypíchl, aby to neuteklo vaší pozornosti?
 
 ### [`CLAUDE.md`](CLAUDE.md) – hlavní soubor s instrukcemi
 
-Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Většina instrukcí je dekomponovaná do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou, jen když je to podle situace potřeba. Brutálně se tím šetří kontextové okno.
+Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Většina instrukcí je dekomponovaná do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou, jen když je to podle situace potřeba. Šetří to kontextové okno.
 
 ### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
@@ -18,7 +18,9 @@ Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje
 
 ### [`STRUCTURE.md`](STRUCTURE.md) – každý projekt vypadá uvnitř stejně
 
-Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat; a hlavně vědí, kam zapsat i skilly, kterých je na to půl tuctu. Zakládá ji `/project`, ale nepatří jemu – čte ji většina ostatních skillů a každý si z ní bere něco jiného. Do každé session se nenačítá: je to katalog k nahlédnutí ve chvíli, kdy se do některého z těch souborů zapisuje.
+Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat. A hlavně vědí, kam zapsat i skilly, kterých je na to půl tuctu.
+
+Zakládá ji `/project`, ale nepatří jemu – čte ji většina ostatních skillů a každý si z ní bere něco jiného. Do každé session se nenačítá: je to katalog k nahlédnutí ve chvíli, kdy se do některého z těch souborů zapisuje.
 
 ### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
@@ -34,7 +36,9 @@ Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adre
 
 ### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
 
-Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jednou a pak ho u každého dalšího skillu opsal, což z něj dělá zvyk, ne standard. Tohle je jeho sepsání a zároveň revize: co obstálo (vymezení proti **jmenovanému** sousedovi, ověřovatel, jehož úkolem je nález vyvrátit, jednoznačný závěrečný verdikt), co byla jen setrvačnost (příprava opsaná v každém skillu zvlášť) a co chybělo (sekce s častými chybami, mez délky, progresivní odhalení do vedlejších souborů). Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát použil: **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
+Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jednou a pak ho u každého dalšího skillu opsal, což z něj dělá zvyk, ne standard. Tohle je jeho sepsání a zároveň revize. Co obstálo: vymezení proti **jmenovanému** sousedovi, ověřovatel, jehož úkolem je nález vyvrátit, jednoznačný závěrečný verdikt. Co byla jen setrvačnost: příprava opsaná v každém skillu zvlášť. A co chybělo: sekce s častými chybami, mez délky, progresivní odhalení do vedlejších souborů.
+
+Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát použil: **skládej, nepiš znovu**. Než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook – a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 
@@ -72,7 +76,7 @@ Projde plán od začátku do konce, u každého úkolu test, kód, průběžná 
 
 Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu, pak paralelní panel agentů, kde každý má jediné hledisko – korektnost, bezpečnost, data a stavy, provoz, testy, agentní infrastruktura, moje doménové standardy –, a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
 
-### [`/consistency`](skills/consistency/) – ultimátní skill proti bordelu
+### [`/consistency`](skills/consistency/) – skill proti bordelu v projektu
 
 Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, rozejití mezi vrstvami. Jednoznačné opravy udělá rovnou, o sporných se mnou mluví jednu po druhé. A pamatuje si, co jsem rozhodl neopravovat – jen do chvíle, než se ten kód změní.
 
@@ -138,7 +142,7 @@ Přepne projekt do uspořádání, kde má každá rozdělaná větev vlastní a
 
 ## Hooky, skripty a nastavení
 
-### [`statusline.sh`](statusline.sh) – krásná a užitečná status line
+### [`statusline.sh`](statusline.sh) – všechno podstatné na jednom řádku
 
 Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání 5hodinového i týdenního limitu, aktuální adresář i stav Gitu. Čerpání vizualizuje teploměrem, procenty i zbývajícím časem a mění barvy podle toho, jak je na tom blízko limitu.
 
@@ -150,7 +154,16 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 
 ### [`verify.sh`](verify.sh) – nad rozbitým projektem se práce neuzavře
 
-`Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí, takže je registrovaný jednou globálně a v projektu bez kontraktu neudělá nic. A protože je ten kontrakt kód ležící v repozitáři, nespustí v něm nic, dokud pro něj nevydám souhlas (`--allow`). Ten platí pro **celý repozitář včetně jeho worktree**, takže nová větev si o něj neříká znovu – ale jen pro ten kontrakt, který jsem viděl: podadresář s vlastním `CLAUDE.md` si souhlas nepůjčí a jeho změna si vyžádá nové odsouhlasení. **Vydat ho jde jen z terminálu**, protože zákaz v permission systému se dá obejít voláním přes interpret a hranice bez mechanismu je jen přání. Rozlišuje přitom čtyři různé věci: **test, který našel chybu**, odpověď zablokuje; **krok, který vůbec nejde spustit** nebo jehož výstup přeteče a nedoběhne, se ohlásí zvlášť – tam není co opravovat na kódu, ale na prostředí; **kontrakt, který se nepodaří přečíst** (třeba kvůli nedovřenému bloku kódu nad ním) se řekne nahlas, místo aby kontrola tiše nespustila nic; a **chybějící klíč v kontraktu** projde, ale nahlásí se jako nezkontrolovaný krok, ať se to nedá vydávat za „prošlo všechno“.
+`Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy. Když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu sám nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí. Registruje se tedy jednou globálně a v projektu bez kontraktu neudělá nic.
+
+Ten kontrakt je ale kód ležící v repozitáři, takže hook v něm nespustí nic, dokud pro něj nevydám souhlas (`--allow`). Souhlas platí pro **celý repozitář včetně jeho worktree**, takže nová větev si o něj neříká znovu. Platí ale jen pro ten kontrakt, který jsem viděl: podadresář s vlastním `CLAUDE.md` si ho nepůjčí a jeho změna si vyžádá nové odsouhlasení. **Vydat ho jde jen z terminálu** – zákaz v permission systému se dá obejít voláním přes interpret a hranice bez mechanismu je jen přání.
+
+Rozlišuje přitom 4 různé věci:
+
+- **test, který našel chybu** – odpověď se zablokuje,
+- **krok, který vůbec nejde spustit** nebo jehož výstup přeteče a nedoběhne – ohlásí se zvlášť, protože tam není co opravovat na kódu, ale na prostředí,
+- **kontrakt, který se nepodaří přečíst** (třeba kvůli nedovřenému bloku kódu nad ním) – řekne se to nahlas, místo aby kontrola tiše nespustila nic,
+- **chybějící klíč v kontraktu** – projde, ale nahlásí se jako nezkontrolovaný krok, ať se to nedá vydávat za „prošlo všechno“.
 
 ### [`githooks/`](githooks/) – historie main jako jeden řádek na větev
 
@@ -162,7 +175,11 @@ Proto tu leží `commit-msg` hook. Takovou zprávu odmítne a vyžádá si shrnu
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
-Skilly a pravidla jsou z velké části text, který nikdo nespouští, takže se jejich vady projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez vlastního README. Kde skill vlastní skripty má, čte je kontrola: Python `/compose` a `/transcript` hlídají testy (že se přeloží a že si cíl neodvozuje ze svého umístění), swiftový skript `/invoicing` čte `typecheck` v kontraktu. Další sady testují to, co v téhle konfiguraci něco doopravdy **vynucuje** – průběžnou kontrolu, git hook nad zprávou merge commitu a CI –, protože právě tam stojí tichá regrese nejvíc. A jedna hlídá skripty `/transcript` tam, kde hrozí ztráta dat: vstupem jsou nahrávky, které většinou nejde pořídit znovu, takže chyba v převodu neznamená vadu nástroje, ale ztracený podklad. Obojí stojí nula tokenů a běží v průběžné kontrole po každé odpovědi. Jen standardní knihovna Pythonu, žádná instalace. Tytéž tři příkazy pouští i [GitHub Actions](.github/workflows/verify.yml) – lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork, kdežto CI ne. Příkazy si přitom neopisuje, čte je ze stejného *Kontraktu příkazů*.
+Skilly a pravidla jsou z velké části text, který nikdo nespouští. Jejich vady se proto projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce; odkaz na soubor nebo sekci, co mezitím zmizela; skill bez vlastního README.
+
+Kde skill vlastní skripty má, čte je kontrola: Python `/compose` a `/transcript` hlídají testy, swiftový skript `/invoicing` čte `typecheck` v kontraktu. Další sady testují to, co v téhle konfiguraci něco doopravdy **vynucuje** – průběžnou kontrolu, git hook nad zprávou merge commitu a CI. Právě tam stojí tichá regrese nejvíc. A jedna sada hlídá skripty `/transcript` tam, kde hrozí ztráta dat: vstupem jsou nahrávky, které většinou nejde pořídit znovu, takže chyba v převodu neznamená vadu nástroje, ale ztracený podklad.
+
+Všechno to stojí nula tokenů a běží v průběžné kontrole po každé odpovědi. Jen standardní knihovna Pythonu, žádná instalace. Tytéž 3 příkazy pouští i [GitHub Actions](.github/workflows/verify.yml) – lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork, kdežto CI ne. Příkazy si přitom neopisuje, čte je ze stejného *Kontraktu příkazů*.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 

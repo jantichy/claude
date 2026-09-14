@@ -70,7 +70,7 @@ Z těchto souborů sestav **soupis konvencí** – co je v projektu explicitně 
 
 ### 0.3 Načti seznam ignorovaných položek
 
-Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dříve označil jako „won't fix“.
+Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dřív označil jako „won't fix“.
 
 ### 0.4 Spusť nástroje, které předchozí kroky životního cyklu nedělají
 

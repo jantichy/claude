@@ -13,7 +13,7 @@ Vezme hotový implementační plán a projde ho od začátku do konce: u každé
 1. **Tři režimy práce**, mezi kterými se na začátku vybírá:
    - **po úkolech se čtením mezi nimi** *(doporučený)* – na každý úkol jde čerstvý pracovník, který nevidí předchozí konverzaci, a mezi úkoly se výsledek zkontroluje;
    - **v jednom kuse s kontrolními body** – rychlejší a s menší režií, vhodné na krátký plán;
-   - **bez zastávek až do splnění cíle** – nejsamostatnější, nabídne se **jen když je splněných pět podmínek** a nikdy se nezapne sám.
+   - **bez zastávek až do splnění cíle** – nejsamostatnější, nabídne se **jen když je splněných 5 podmínek** a nikdy se nezapne sám.
 2. **Průběžná kontrola po každém úkolu.** Úkol není hotový napsaným kódem, ale tím, že projektu všechno běží.
 3. **Ověření skutečného stavu před navázáním** na rozdělaný plán.
 4. **Levné mezikontroly** po každé skupině souvisejících úkolů, v čerstvém pohledu.

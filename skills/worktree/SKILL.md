@@ -17,7 +17,7 @@ Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém ad
 | `enable` | zřídí kontejner – u nového projektu i konverzí existujícího repozitáře |
 | `disable` | převede projekt zpátky na obyčejný pracovní adresář |
 
-**Pravidla provozu layoutu drží `~/.claude/WORKTREE.md`** – kde co leží, jak se zakládá a dokončuje větev, proč se v `main/` nepracuje a proč v kořeni kontejneru nefunguje git. Skill je **nevlastní**, jen si je importuje do rozcestníku v kořeni kontejneru, aby platila v každé session projektu. Stojí v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md` schválně: čte je dvanáct skillů a `PREFLIGHT.md`, tedy i ten, kdo tenhle skill nainstalovaný nemá. Ta cesta je závazné rozhraní a nesmí se měnit tiše.
+**Pravidla provozu layoutu drží `~/.claude/WORKTREE.md`** – kde co leží, jak se zakládá a dokončuje větev, proč se v `main/` nepracuje a proč v kořeni kontejneru nefunguje git. Skill je **nevlastní**, jen si je importuje do rozcestníku v kořeni kontejneru, aby platila v každé session projektu. Stojí v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md` schválně: čte je většina skillů i `PREFLIGHT.md`, tedy i ten, kdo tenhle skill nainstalovaný nemá. Ta cesta je závazné rozhraní a nesmí se měnit tiše.
 
 ## Co skill nedělá
 
@@ -109,7 +109,7 @@ Vlastní pravidla projektu jsou v `main/CLAUDE.md` a importují se odsud:
 
 ## Odchylky
 
-- <odchylky konkrétního projektu od postupu výše, nebo že žádné nejsou>
+- <odchylky konkrétního projektu od postupu výš, nebo že žádné nejsou>
 ```
 
 U konverze je typický omyl nechat v kořeni původní `CLAUDE.md` – ten se přesunul do `main/` spolu se zbytkem repozitáře a **je správně tam**; v kořeni vzniká nový, netrackovaný rozcestník. Pravidla projektu do rozcestníku **nikdy nekopíruj**: dvě kopie se rozejdou a načtou se obě.

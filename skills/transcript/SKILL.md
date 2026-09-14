@@ -62,7 +62,7 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 
 ### 1. Zjisti si fakta o vstupu
 
-Ještě než se na cokoli zeptáš, potřebuješ délku a datum – bez délky neumíš nabídnout odhady časů v prvním kroku průvodce.
+Ještě než se na cokoliv zeptáš, potřebuješ délku a datum – bez délky neumíš nabídnout odhady časů v prvním kroku průvodce.
 
 ```bash
 ffprobe -v error -show_entries format=duration -of csv=p=0 <audio>
@@ -214,7 +214,7 @@ Tenhle soubor je vstup pro čištění v kroku 9. **Whisperu dáváš výběr, t
 | 1. | `Doslovný přepis (MD)` | Vyčištěný, bez „ehm“, s kapitolami a opravenými názvy. |
 | 2. | `Strukturované shrnutí (MD)` | Témata, závěry, na konci domluvy a úkoly. |
 | 3. | `Časovaný přepis (SRT)` | Syrový z whisperu, s časy. Na dohledání místa v nahrávce. |
-| 4. | `Rozlišit mluvčí (VTT, JSON)` | Viz níže – jen odhad času, nic víc. |
+| 4. | `Rozlišit mluvčí (VTT, JSON)` | Viz níž – jen odhad času, nic víc. |
 
 Když uživatel nevybere nic, ber to jako **první tři**. Rozlišení mluvčích je vždycky vědomá volba, nikdy výchozí stav.
 
@@ -260,7 +260,7 @@ Když skončí nenulově, vypiš uživateli, co chybí, nabídni instalaci (skri
 - **python3** – kalibrace tempa i statistika diarizace stojí na něm,
 - **whisper.cpp** – `brew install whisper-cpp` (poskytuje `whisper-cli`),
 - **model** – `turbo` (~1,5 GB) nebo `large-v3` (~2,9 GB) v `~/.whisper-models/`,
-- **VAD model Silero** (~865 kB) – detekce řeči, viz níže,
+- **VAD model Silero** (~865 kB) – detekce řeči, viz níž,
 - **jen pro rozlišení mluvčích:** `pyannote.audio` ve vlastním venv (**1,2 GB**, změřeno po instalaci) a token na HuggingFace v `~/.whisper-models/hf-token` (nebo v proměnné `HF_TOKEN`).
 
 **Diarizaci nikdy nedoinstaluj sám bez řečí.** Kromě velikosti stažení po uživateli chce dvě věci, které za něj nikdo neudělá: založit token a **odsouhlasit licenci gated modelu v prohlížeči**. Vypiš mu obojí a počkej. Když to odmítne, pokračuj bez rozlišení mluvčích – zbytek skillu funguje beze změny.

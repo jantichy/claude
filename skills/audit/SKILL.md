@@ -57,7 +57,9 @@ Auditovaný web je **cizí produkční systém s živými zákazníky**. Rozhodu
 | **Jen po svolení, pokaždé zvlášť** | co splní aspoň jedno ze tří: vznikne trvalý záznam, který někdo v klientově systému uvidí a musí ho ručně smazat · odejde zpráva člověku · sáhne to na cizí peníze, sklad nebo kapacitu. Tedy objednávka, registrace, poptávka, rezervace, recenze, newsletter. Sem patří i zátěžové procházení a obejití přihlášení, rate limitu, ochranné brány WAF či captchy | **nikdy bez svolení v tomhle běhu** – co to znamená, viz *Zeptat se na svolení* níž |
 | **Nikdy uvnitř auditu** | zásah do klientovy konfigurace, kódu nebo účtů · zkoušení zranitelností · cokoliv, co může web shodit nebo poškodit data | **sám to nenavrhuj a nedělej**, ani když se svolení nabízí – viz *Třetí pásmo* níž |
 
-**Průchod webem sám o sobě zanechá stopu a to se přiznává dopředu.** Každý průchod odešle do klientových měřicích a reklamních systémů skutečné zásahy a každý klik na lištu souhlasu přibude do její statistiky – tedy následek, který zavření prohlížeče přežije. **Zakázat to nejde**, protože bez toho se měření neodchytí, takže to zůstává ve volném pásmu. Neznamená to ale, že se to udělá potichu: **před prvním průchodem řekni, co tím v klientových datech vznikne, a domluv, jak se testovací provoz pozná** – vlastní kampaňové značky, vyloučení IP, testovací prostředí. Bez toho se audit projeví jako nevysvětlitelný šum v reportech, který někdo za měsíc bude hledat.
+**Průchod webem sám o sobě zanechá stopu a to se přiznává dopředu.** Každý průchod odešle do klientových měřicích a reklamních systémů skutečné zásahy a každý klik na lištu souhlasu přibude do její statistiky – tedy následek, který zavření prohlížeče přežije. **Zakázat to nejde**, protože bez toho se měření neodchytí, takže to zůstává ve volném pásmu.
+
+Neznamená to ale, že se to udělá potichu: **před prvním průchodem řekni, co tím v klientových datech vznikne, a domluv, jak se testovací provoz pozná** – vlastní kampaňové značky, vyloučení IP, testovací prostředí. Bez toho se audit projeví jako nevysvětlitelný šum v reportech, který někdo za měsíc bude hledat.
 
 ### Třetí pásmo
 
@@ -172,7 +174,7 @@ Platí *Hranice na cizím webu* výš. Narazíš-li na něco z druhého pásma, 
 
 **Skladbu panelu určuje doména**, předepisuje-li ji. Nepředepisuje-li, sestav ho **podle členění katalogu nálezů** – z každé jeho kapitoly jeden specialista.
 
-**Nad sedm specialistů nechoď.** Panel, který vyrobí víc nálezů, než kdo přečte, se přestane číst celý. **Vypiš, koho jsi vybral, koho vynechal a proč** – tichý výběr vypadá jako úplný panel.
+**Nad 7 specialistů nechoď.** Panel, který vyrobí víc nálezů, než kdo přečte, se přestane číst celý. **Vypiš, koho jsi vybral, koho vynechal a proč** – tichý výběr vypadá jako úplný panel.
 
 Zadání specialistů, jejich povinná pole a text o cizím obsahu drží `~/.claude/skills/audit/agents.md`. Každý dostane sběr z *Fáze 3*, svůj výřez katalogu a povolení **dozískat si vlastní záložkou**, co ho napadne až při práci – ale **jen se čtecími nástroji prohlížeče a bez práva zápisu do souborů** (`agents.md`, *Co dostane každý agent*). Totéž platí pro ověřovatele ve *Fázi 5*.
 

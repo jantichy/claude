@@ -155,7 +155,7 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 
 **Poznatků:** <N> · nové <n> · doplnění <n> · prohloubení <n> · zúžení <n> · překonání <n> · zjednodušení <n> · rozpory <n> · mimo doménu <n> · nezapracováno <n>
 
-Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky mířící mimo doménu a nepřenositelné. Zjednodušení se nezapracovává a přesto není „nezapracováno“: báze už tu znalost má lépe.
+Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky mířící mimo doménu a nepřenositelné. Zjednodušení se nezapracovává a přesto není „nezapracováno“: báze už tu znalost má líp.
 
 **Zásahy do obsahu**
 - `<soubor>` › *<sekce>* – <typ zásahu>, poznatky <čísla>

@@ -4,7 +4,9 @@ Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalos
 
 Doménové znalosti z `~/Dev/context/` se do projektu načítají **tvrdým `@import`em** v jeho `CLAUDE.md` – jen ty, které jsou pro jeho charakter relevantní. Rozcestník po doménách je `~/Dev/context/CLAUDE.md`, importy zakládá `/project`.
 
-**Projekt dělaný pro konkrétní organizaci si navíc importuje její profil** z `~/Dev/context/organizations/` – například `@~/Dev/context/organizations/planetum.md`. Není to standard, ale korpus: kdo v organizaci sedí, kdo co schvaluje a na čem jedou. Profil drží knowledge base, projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil. **Ten `@` je v ukázce schválně v apostrofech** – je to zápis syntaxe, ne import. Bez nich by se celý profil načetl do každé session, která tohle pravidlo čte, a totéž platí i v konverzaci: `@cesta` napsaná bez apostrofů soubor rovnou natáhne. Opačný případ – import, který se načíst **má** – naopak apostrofy nesnese; viz `~/.claude/STRUCTURE.md`, *`CLAUDE.md`*.
+**Projekt dělaný pro konkrétní organizaci si navíc importuje její profil** z `~/Dev/context/organizations/` – například `@~/Dev/context/organizations/planetum.md`. Není to standard, ale korpus: kdo v organizaci sedí, kdo co schvaluje a na čem jedou. Profil drží knowledge base, projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil.
+
+**Ten `@` je v ukázce schválně v apostrofech** – je to zápis syntaxe, ne import. Bez nich by se celý profil načetl do každé session, která tohle pravidlo čte, a totéž platí i v konverzaci: `@cesta` napsaná bez apostrofů soubor rovnou natáhne. Opačný případ – import, který se načíst **má** – naopak apostrofy nesnese; viz `~/.claude/STRUCTURE.md`, *`CLAUDE.md`*.
 
 ## Co do tohoto souboru nepatří
 
@@ -231,7 +233,7 @@ Tohle je **norma**. Hlídá se ve dvou časech: *Detekce konfliktů před přid�
 
 Kdo se dívá na jednu položku (funkci, entitu, akci), musí u ní vidět **taxativně všechno, co se jí týká** – podmínky, důsledky, maily, zápisy do logu, výjimky. Nesmí to lovit v obecných kapitolách jinde.
 
-Platí-li totéž pro víc položek, buď je dej pod jeden společný nadpis se sdílenou specifikací, nebo rozepiš u každé zvlášť. Co nesmí vzniknout: samostatné sekce a nad nimi věta „tohle platí pro všechny níže“.
+Platí-li totéž pro víc položek, buď je dej pod jeden společný nadpis se sdílenou specifikací, nebo rozepiš u každé zvlášť. Co nesmí vzniknout: samostatné sekce a nad nimi věta „tohle platí pro všechny níž“.
 
 **Rozsah:** platí pro **referenční katalogy k bodovému nahlédnutí**, kde čtenář otevře jednu položku a okolí nečte. Znalost, která se čte souvisle, se naopak neopakuje – viz *Generic-base + delta*.
 
@@ -295,7 +297,7 @@ Průběžně **formuluj silné principy domény** – věty, které rozhodují: 
 
 Pro opakované rozhodování („kam tenhle soubor patří“) formuluj **explicitní pravidlo s deterministickými kritérii** a hned ho ulož – do `docs/rules.md`, stejně jako principy. Obojí je rámec, proti kterému se rozhoduje; pravidlo je jen konkrétnější než princip.
 
-Musí-li se **mechanické pravidlo** porušit, je to **nejdřív signál, že je špatně formulované** – zkus ho přeformulovat tak, aby případ pokrylo. Teprve když by ho přeformulování rozmělnilo, vzniká výjimka podle *Výjimka platí jen tam, kde platí její důvod*. U **principu** (viz výše) se místo toho vymezuje rozsah.
+Musí-li se **mechanické pravidlo** porušit, je to **nejdřív signál, že je špatně formulované** – zkus ho přeformulovat tak, aby případ pokrylo. Teprve když by ho přeformulování rozmělnilo, vzniká výjimka podle *Výjimka platí jen tam, kde platí její důvod*. U **principu** (viz výš) se místo toho vymezuje rozsah.
 
 ### Výjimka platí jen tam, kde platí její důvod
 
