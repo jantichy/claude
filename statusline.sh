@@ -205,24 +205,48 @@ git_root_candidate="$cwd_real"
 # status line se překreslí a program běží s právy uživatele, bez jakéhokoli souhlasu.
 # safe.directory nechrání: uplatní se jen u repozitáře patřícího jinému uživateli,
 # a rozbalený archiv patří tomu, kdo ho rozbalil.
-git_ro() { git -c core.fsmonitor= -c core.hooksPath=/dev/null "$@"; }
+git_ro() { git -c core.fsmonitor= -c core.hooksPath=/dev/null -c core.pager=cat "$@"; }
+
+# Vypnout dva klíče v `git_ro` nestačí: konfigurace repozitáře umí gitu předepsat
+# program ke spuštění i pod jménem, které nejde předem uhodnout. `filter.<jméno>.clean`
+# se volá pokaždé, když git potřebuje obsah pracovního souboru – tedy i při
+# `git diff --name-only` –, a `<jméno>` si volí ten, kdo config napsal, takže ho
+# nejde přebít `-c` přepínačem. Totéž platí pro `diff.<jméno>.textconv`.
+# Jediná spolehlivá obrana je na takový repozitář nesahat. Čtení samotné
+# konfigurace nic nespouští, takže se smí udělat napřed.
+#
+# Vzniká tím falešný poplach nad repozitářem, který si lokálně nastavil git-lfs:
+# jeho `filter.lfs.clean` je legitimní. Přijímá se vědomě – rozlišovat podle
+# hodnoty by znamenalo, že útočníkovi stačí pojmenovat svůj filtr `lfs`. Cena je
+# nízká, protože varování nahrazuje jen počet změn; jméno větve se zjišťuje
+# ze `symbolic-ref`, který obsah souborů nečte, a zobrazuje se dál.
+config_spousti_program() {
+  { git_ro -C "$1" config --local --list 2>/dev/null
+    git_ro -C "$1" config --worktree --list 2>/dev/null; } \
+    | cut -d= -f1 \
+    | grep -qiE '^(core\.(fsmonitor|hookspath|alternaterefscommand)|filter\..*\.(clean|smudge|process)|diff\.external|diff\..*\.(command|textconv))$'
+}
 
 if [ -d "$git_root_candidate" ] \
    && git_ro -C "$git_root_candidate" rev-parse --git-dir >/dev/null 2>&1 \
    && [ "$(git_ro -C "$git_root_candidate" rev-parse --is-bare-repository 2>/dev/null)" = "false" ]; then
-  unstaged=$(git_ro -C "$git_root_candidate" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
-  staged=$(git_ro -C "$git_root_candidate" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
-  total=$(( unstaged + staged ))
   # Jméno větve; u odpojené HEAD krátký hash, v prázdném repozitáři fallback "Git"
   branch=$(git_ro -C "$git_root_candidate" symbolic-ref --quiet --short HEAD 2>/dev/null)
   if [ -z "$branch" ]; then
     branch=$(git_ro -C "$git_root_candidate" rev-parse --short HEAD 2>/dev/null)
   fi
   if [ -z "$branch" ]; then branch="Git"; fi
-  if [ "$total" -gt 0 ]; then
-    git_part=$(printf "\033[33m%s: ~%d changes\033[0m" "$branch" "$total")
+  if config_spousti_program "$git_root_candidate"; then
+    git_part=$(printf "\033[31m%s: ⚠ config spouští program\033[0m" "$branch")
   else
-    git_part=$(printf "\033[2;32m%s: Clean\033[0m" "$branch")
+    unstaged=$(git_ro -C "$git_root_candidate" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
+    staged=$(git_ro -C "$git_root_candidate" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
+    total=$(( unstaged + staged ))
+    if [ "$total" -gt 0 ]; then
+      git_part=$(printf "\033[33m%s: ~%d changes\033[0m" "$branch" "$total")
+    else
+      git_part=$(printf "\033[2;32m%s: Clean\033[0m" "$branch")
+    fi
   fi
 fi
 
