@@ -6,6 +6,8 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 
 **Jak se to čte.** `accepted` neznamená „nevadí“, ale „víme o tom a rozhodli jsme se to nehlídat“. U každého takového řádku je důvod. Objeví-li se cesta, která tu není, patří sem **dřív**, než se zavře – jinak katalog zestárne tím nejhorším způsobem: bude vypadat úplně.
 
+**Kdo ho udržuje.** Nepatří žádnému skillu a nikdo si ho nenačítá při běhu – je to referenční soupis k nahlédnutí ve chvíli, kdy se o nějaké kontrole rozhoduje. **Zapisuje do něj ten, kdo vrstvu zakládá nebo mění**, ve stejném commitu; objeví-li se nová cesta, jak něco obejít, patří sem dřív, než se zavře. Že tu každá vrstva má řádek, hlídá test v `tests/test_hooks.py`, a ten čte seznam vrstev z disku – **pravdivost řádku ale změřit neumí**, ta drží na tom, kdo ho psal.
+
 **Rozsah je tenhle repozitář.** Obecné pravidlo, že takový registr má vzniknout, drží `~/Dev/context/coding/quality.md`.
 
 ## Průběžná kontrola (`verify.sh` jako `Stop` hook)
