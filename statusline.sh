@@ -40,18 +40,30 @@ fmt_tokens() {
   }'
 }
 
+# Číslo z JSONu, nebo náhrada. Hodnota ze vstupu se NIKDY nesmí dostat rovnou do
+# `$(( ))`: bash tam obsah proměnné vyhodnocuje jako výraz rekurzivně, takže
+# `a[$(příkaz)]` v číselném poli spustí ten příkaz. Ověřeno – status line běží
+# po každé odpovědi, permission systém na ni nesahá a jediné, co ji dělí od
+# spuštění cizího kódu, je důvěra ve tvar vstupu. Ta stačit nemá.
+num() {
+  case "$1" in
+    ''|*[!0-9]*) printf '%s' "${2:-0}" ;;
+    *)           printf '%s' "$1" ;;
+  esac
+}
+
 # Context window (tokeny)
 ctx_used=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // empty')
-ctx_in=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')
-ctx_cc=$(echo "$input" | jq -r '.context_window.current_usage.cache_creation_input_tokens // 0')
-ctx_cr=$(echo "$input" | jq -r '.context_window.current_usage.cache_read_input_tokens // 0')
+ctx_in=$(num "$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')")
+ctx_cc=$(num "$(echo "$input" | jq -r '.context_window.current_usage.cache_creation_input_tokens // 0')")
+ctx_cr=$(num "$(echo "$input" | jq -r '.context_window.current_usage.cache_read_input_tokens // 0')")
 ctx_used_tokens=$(( ctx_in + ctx_cc + ctx_cr ))
 # Rate limits – 5h session a 7day týdenní
 five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
-five_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
+five_reset=$(num "$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')" "")
 week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
-week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
+week_reset=$(num "$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')" "")
 
 usage_part=""
 

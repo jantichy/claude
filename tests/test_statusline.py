@@ -169,5 +169,62 @@ class PruhVyuziti(unittest.TestCase):
         self.assertNotIn("\u2591", self.bar(100))
 
 
+class CislaZeVstupuNespustiPrikaz(unittest.TestCase):
+    """Hodnota z JSONu se nesmí dostat rovnou do `$(( ))`.
+
+    Bash uvnitř aritmetické expanze vyhodnocuje obsah proměnné jako výraz
+    rekurzivně, takže `a[$(příkaz)]` v číselném poli ten příkaz spustí.
+    Status line se přitom překresluje po každé odpovědi a permission systém
+    na ni nesahá – je to druhá cesta ke spuštění cizího kódu v tomtéž souboru,
+    nezávislá na té přes git konfiguraci.
+
+    Že vstup posílá Claude Code, není obrana, ale důvěra ve tvar dat. Mutační
+    test níž ověřuje, že test měří sanitizaci, a ne že se příkaz nespustil
+    z nějakého jiného důvodu.
+    """
+
+    ZAKERNY_JSON = json.dumps({
+        "context_window": {
+            "current_usage": {"input_tokens": "a[$(touch {marker})]",
+                              "cache_creation_input_tokens": 0,
+                              "cache_read_input_tokens": 0},
+            "used_percentage": 10, "context_window_size": 200000},
+        "rate_limits": {"five_hour": {"used_percentage": 5,
+                                      "resets_at": "a[$(touch {marker})]"}},
+        "workspace": {"current_dir": "/tmp"},
+        "model": {"display_name": "T"},
+    })
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="sl-arith-"))
+        self.marker = self.tmp / "SPUSTILO-SE"
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def spust(self, skript):
+        subprocess.run(["bash", str(skript)],
+                       input=self.ZAKERNY_JSON.replace("{marker}", str(self.marker)),
+                       capture_output=True, text=True, check=False, timeout=30)
+
+    def test_zakerne_cislo_nespusti_prikaz(self):
+        self.spust(STATUSLINE)
+        self.assertFalse(self.marker.exists(),
+                         "hodnota z JSONu se dostala do aritmetické expanze a spustila příkaz")
+
+    def test_bez_sanitizace_by_se_prikaz_spustil(self):
+        """Mutace: bez `num()` musí marker vzniknout – jinak test neměří sanitizaci."""
+        poskozeny = self.tmp / "statusline.sh"
+        text = STATUSLINE.read_text()
+        mutace = text.replace(
+            """ctx_in=$(num "$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')")""",
+            """ctx_in=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')""")
+        self.assertNotEqual(text, mutace, "sanitizace v statusline.sh se přejmenovala")
+        poskozeny.write_text(mutace)
+        self.spust(poskozeny)
+        self.assertTrue(self.marker.exists(),
+                        "poškozená verze příkaz nespustila – test tedy neměří sanitizaci")
+
+
 if __name__ == "__main__":
     unittest.main()
