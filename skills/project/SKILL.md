@@ -30,7 +30,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 ## Zásady pro celý průběh
 
 - **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu životního cyklu. Kritérium normy (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*) zní, čí odpovědi tvoří výsledek: tady je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek. Ostatní skilly něco samy najdou nebo vyrobí a ptají se až na nálezy – ty mají fáze, i když se ptají stejně často. Číslují se **plochou vzestupnou řadou bez písmen** (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*). Kroky 5–8 zakládají standardní strukturu a byly kdysi jedním krokem s podkroky `6a`–`6c`; kritériu normy pro písmennou podfázi ale nevyhověly – jsou to fáze jedné volby, ne samostatné výstupy –, tak se z nich staly samostatné kroky.
-- **Ve worktree layoutu nepracuj v `main/`.** Přijdeš-li do projektu, který ten layout **už má**, zapisuj do vlastní větve a jejího worktree – viz krok 0, *Nejdřív zjisti, kde stojíš*. Zakazuje to `~/.claude/WORKTREE.md`, *`main/` se nemaže a nepracuje se v něm*, a pro `/project` to platí dvojnásob: přepisuje `CLAUDE.md`, `README.md` a celé `docs/` – tedy soubory, které mají ostatní sessions rozečtené a rozepsané. (Zapíná-li layout teprve tenhle běh, výjimku a důvod má krok 0.)
+- **Ve worktree layoutu nepracuj v `main/`.** Přijdeš-li do projektu, který ten layout **už má**, zapisuj do vlastní větve a jejího worktree – viz krok 0, *Nejdřív zjisti, kde stojíš*. Zakazuje to `~/.claude/WORKTREE.md`, *`main/` se nemaže a nepracuje se v něm*, a pro `/project` to platí dvojnásob: přepisuje `CLAUDE.md`, `README.md` a celé `docs/` – tedy soubory, které mají ostatní session rozečtené a rozepsané. (Zapíná-li layout teprve tenhle běh, výjimku a důvod má krok 0.)
 - **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
@@ -172,7 +172,7 @@ U GitLabu a jiných hostitelů tenhle krok přeskoč a řekni uživateli, že po
 Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
 
 - **Jeden pracovní adresář (jednoduché)** – klasika: `.git` a rozbalený projekt přímo v adresáři. Vhodné, když nad projektem pracuješ vždy v jedné session.
-- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude sessions naráz, aniž si přepisují soubory. Popis viz `~/.claude/WORKTREE.md`.
+- **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude session naráz, aniž si přepisují soubory. Popis viz `~/.claude/WORKTREE.md`.
 
 ### Když padne worktree layout
 

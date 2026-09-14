@@ -333,7 +333,7 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 
 **Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
 
-**Neodkazuje dovnitř `SKILL.md`.** Odkaz na fázi je odkaz do vnitřku, který se přečísluje; odkaz na `SKILL.md` jako celek je v pořádku.
+**Neodkazuje dovnitř `SKILL.md`.** Míří-li odkaz na konkrétní fázi, ukazuje do vnitřku, který se přečísluje. Na `SKILL.md` jako celek odkazovat lze.
 
 ### Sekce v hlavním README repozitáře
 

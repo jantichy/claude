@@ -75,7 +75,7 @@ Tady to není teoretické – rozhoduje se tu o částkách na faktuře a text d
 
 **Odchozí, ne příchozí.** Mail od klienta a zpráva od klienta nejsou Honzova práce. Sbírá se **to, co odeslal on**; příchozí zpráva se hodí nanejvýš jako kontext, proč ta práce vznikla.
 
-**Claude Code nese i obsah.** Když v `~/Dev` není adresář pojmenovaný po klientovi, neznamená to, že se pro něj nepracovalo – práce mohla proběhnout v session jiného projektu. Hledej i **jméno klienta a jeho identifikátory v obsahu sessions**, ne jen v názvu adresáře.
+**Claude Code nese i obsah.** Když v `~/Dev` není adresář pojmenovaný po klientovi, neznamená to, že se pro něj nepracovalo – práce mohla proběhnout v session jiného projektu. Hledej i **jméno klienta a jeho identifikátory v obsahu session**, ne jen v názvu adresáře.
 
 ## Výlučné a sdílené zdroje
 

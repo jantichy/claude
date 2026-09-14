@@ -156,7 +156,7 @@ Všechno, co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to uděl
 
 **Otevřená otázka sem patří tehdy, když se zodpovědět musí** – pak je jejím úkolem to rozhodnutí. Nepatří sem otázka typu „nemělo by se někdy…“, u které nikdo neřekl, že se jí budeme zabývat; ta je nápad a patří do `backlog.md`.
 
-**Odložení po termín ani po MVP z položky nedělá nápad.** „Až po spuštění“, „ve druhé fázi“, „až budou data“ je nalajnovaný plán a patří sem; nezávazný nápad, o kterém se nikdo nerozhodl, patří do `backlog.md` – viz níž.
+**Odložení po termín ani po první použitelné verzi (MVP) z položky nedělá nápad.** „Až po spuštění“, „ve druhé fázi“, „až budou data“ je nalajnovaný plán a patří sem; nezávazný nápad, o kterém se nikdo nerozhodl, patří do `backlog.md` – viz níž.
 
 **Drží jen nehotové položky.** Jakmile je něco hotové, **přesuň to hned do `done.md`** – ne až při úklidu na konci session. `todo.md` tak na první pohled ukazuje, co zbývá.
 
@@ -289,13 +289,13 @@ Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requir
 
 **`competition.md`** drží data o trhu i jejich závěr. Začíná sekcí `## Co poměřujeme` – jaký problém řešíme, komu, v jaké kategorii produktu tedy soutěžíme a čím se to má hrubě lišit. **Je to vymezení pole hledání, ne specifikace**: bez něj by se nedalo rozhodnout, kdo vůbec je konkurence, a `/specify` ho pak čte jako hotový vstup, místo aby se na totéž ptal podruhé. Pak následuje analýza sama (kdo, co, za kolik, co umí) a závěrečná sekce `## Naše pozice a odlišení`: co musíme mít, protože to má každý, co děláme jinak a kde vědomě zaostáváme.
 
-**Závěr žije tady, ne zvlášť** – analýza bez závěru se nečte a závěr bez analýzy se nedá ověřit (*Vše o jedné věci pohromadě u ní*). Samostatný soubor na USP se nezakládá. Byl by třetím místem, kde se tvrdí, co produkt musí umět, vedle *MVP* v `requirements.md` a `scenarios.md`.
+**Závěr žije tady, ne zvlášť** – analýza bez závěru se nečte a závěr bez analýzy se nedá ověřit (*Vše o jedné věci pohromadě u ní*). Samostatný soubor na odlišení od konkurence (USP) se nezakládá. Byl by třetím místem, kde se tvrdí, co produkt musí umět, vedle *MVP* v `requirements.md` a `scenarios.md`.
 
-**`risks.md`** je **registr, ne SWOT.** U každého rizika: čeho se týká, jaký by mělo dopad, jak je pravděpodobné, čím ho mitigujeme a **co se kvůli němu v produktu změnilo nebo přibylo**. To poslední pole je smysl celého souboru – bez něj je to seznam obav, který nikoho nezavazuje. SWOT se nedělá: silné stránky a příležitosti už drží *Naše pozice a odlišení* v `competition.md`, slabiny a hrozby jsou právě tenhle registr.
+**`risks.md`** je **registr rizik, ne SWOT analýza silných a slabých stránek.** U každého rizika: čeho se týká, jaký by mělo dopad, jak je pravděpodobné, čím ho mitigujeme a **co se kvůli němu v produktu změnilo nebo přibylo**. To poslední pole je smysl celého souboru – bez něj je to seznam obav, který nikoho nezavazuje. SWOT se nedělá: silné stránky a příležitosti už drží *Naše pozice a odlišení* v `competition.md`, slabiny a hrozby jsou právě tenhle registr.
 
 Hranice proti sekci *Rizika* v `architecture.md` je tvrdá a jde po téže čáře jako hranice požadavků a návrhu: sem patří **rizika produktu a trhu** (nikdo to nebude používat, konkurence to udělá dřív, data se nedají získat, legislativa se změní), do návrhu **technická rizika zvoleného řešení** (nezvládne to zátěž, ta knihovna může skončit).
 
-**`scenarios.md`** je **taxativní seznam toho, co uživatel s produktem dělá**, každý scénář krok za krokem od začátku do konce, včetně okrajových a chybových cest. Má tři čtenáře, které `requirements.md` neobsluhuje: toho, kdo ověřuje, že produkt umí, co má; toho, kdo z toho píše nápovědu a FAQ; a testování na skutečných lidech po dokončení.
+**`scenarios.md`** je **taxativní seznam toho, co uživatel s produktem dělá**, každý scénář krok za krokem od začátku do konce, včetně okrajových a chybových cest. Má tři čtenáře, které `requirements.md` neobsluhuje: toho, kdo ověřuje, že produkt umí, co má; toho, kdo z toho píše nápovědu a odpovědi na časté dotazy; a testování na skutečných lidech po dokončení.
 
 **Má-li projekt `scenarios.md`, sekce *Hlavní scénáře* v `requirements.md` zaniká** a nahradí ji odkaz. Dva seznamy scénářů se rozejdou při první změně rozsahu (*Single source of truth*). V požadavcích zůstává **proč a pro koho** – persony, user stories, varianty jako produktová rozhodnutí; ve scénářích **jak to člověk provede**. Odkazuje se sem odjinud: *Testovací strategie* v `architecture.md` měří pokrytí proti tomuhle seznamu, stejně jako `plan.md` a `/attack`.
 

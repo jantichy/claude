@@ -16,7 +16,7 @@ Uspořádání, ve kterém adresář projektu není pracovní adresář, ale **k
 └── <vetev>/                  dočasné pracovní adresáře rozdělaných větví
 ```
 
-**Proč:** nad projektem běží typicky několik Claude sessions najednou, každá na jiné featuře. Ve sdíleném pracovním adresáři by si přepisovaly soubory a commitovaly si navzájem rozdělanou práci. Oddělený worktree na větev je jediná skutečná izolace; sdílejí přitom jeden `.bare`, takže to nestojí ani místo, ani čas.
+**Proč:** nad projektem běží typicky několik Claude session najednou, každá na jiné featuře. Ve sdíleném pracovním adresáři by si přepisovaly soubory a commitovaly si navzájem rozdělanou práci. Oddělený worktree na větev je jediná skutečná izolace; sdílejí přitom jeden `.bare`, takže to nestojí ani místo, ani čas.
 
 Hlavní větev se jmenuje `main`. Narazíš-li na starší projekt, kde se jmenuje jinak, platí níž psané pro jeho hlavní větev bez ohledu na jméno.
 
@@ -41,7 +41,7 @@ Leží v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md`, ne uvnitř skill
 
 ## Na začátku session
 
-Session se pouští z **kořene kontejneru**, ne z podadresáře – sessions se ukládají podle adresáře spuštění, takže `/resume` díky tomu nabídne sessions ze všech větví na jednom místě.
+Session se pouští z **kořene kontejneru**, ne z podadresáře – session se ukládají podle adresáře spuštění, takže `/resume` díky tomu nabídne session ze všech větví na jednom místě.
 
 Stojíš tedy v kontejneru, ne v projektu. Prvním úkolem je přesunout se podle toho, co uživatel chce:
 
@@ -71,7 +71,7 @@ Z těch dvou faktů plyne rozdělení, které se **nesmí prohodit**:
 
 `<projekt>/CLAUDE.md` neobsahuje žádná pravidla projektu. Obsahuje popis layoutu, odchylky, **import tohohle souboru** a **import projektového `CLAUDE.md`** (`@main/CLAUDE.md`). Zakládá ho `/worktree` a jeho doslovné znění drží `~/.claude/skills/worktree/SKILL.md`, režim `enable`.
 
-Relativní cesta v importu se resolvuje vůči souboru, který import obsahuje – `@main/CLAUDE.md` tedy míří na `<projekt>/main/CLAUDE.md`. Řetěz importů smí být hluboký nejvýš **4 hopy**, takže kontejner → `main` → doménový standard se pohodlně vejde.
+Relativní cesta v importu se resolvuje vůči souboru, který import obsahuje – `@main/CLAUDE.md` tedy míří na `<projekt>/main/CLAUDE.md`. Řetěz importů smí být hluboký nejvýš **4 úrovně**, takže kontejner → `main` → doménový standard se pohodlně vejde.
 
 Když pracuješ ve worktree `<vetev>/`, načte se `<vetev>/CLAUDE.md` on-demand, jakmile v té větvi něco čteš. Pravidla té větve tedy platí, i když rozcestník v kořeni importuje verzi z `main`.
 
@@ -87,7 +87,7 @@ git -C <projekt> worktree add <projekt>/<adresar> -b <vetev>
 - **Adresář pojmenuj plochým jménem bez lomítka** – větev `feat/platby` patří do `platby/`, ne `feat/platby/`.
 - Převezmi lokální stav z `main/` (viz níž) a řekni uživateli jednou větou, co jsi založil.
 
-**Nejdřív si natáhni aktuální `main`.** Kontejner existuje právě proto, že nad projektem běží víc sessions naráz – takže `main` se mohl posunout od chvíle, kdy tahle session začala, a to i o práci, na kterou tvoje větev staví. Před založením proto `git fetch` a hned po založení `git merge --ff-only origin/main`; teprve pak začni pracovat. **Musí to být `origin/main`, ne `main`:** `git fetch` posune remote-tracking referenci, kdežto lokální `main` zůstane tam, kde byl – merge lokální větve by tedy nepřinesl nic a celý ten krok by tiše nedělal nic.
+**Nejdřív si natáhni aktuální `main`.** Kontejner existuje právě proto, že nad projektem běží víc session naráz – takže `main` se mohl posunout od chvíle, kdy tahle session začala, a to i o práci, na kterou tvoje větev staví. Před založením proto `git fetch` a hned po založení `git merge --ff-only origin/main`; teprve pak začni pracovat. **Musí to být `origin/main`, ne `main`:** `git fetch` posune remote-tracking referenci, kdežto lokální `main` zůstane tam, kde byl – merge lokální větve by tedy nepřinesl nic a celý ten krok by tiše nedělal nic.
 
 **Nestačí to udělat jednou na začátku session.** Zakládáš-li větev po delší práci, zopakuj to – jinak stavíš na stavu, který byl aktuální před hodinou. Pozná se to pozdě: konflikt nevznikne, jen se tiše rozhodne podruhé něco, co už rozhodla vedlejší session.
 
@@ -134,7 +134,7 @@ Když dev server poběží ve víc větvích, poperou se o port. Řeš `.env.loc
 
 **Nikdy nemerguj sám od sebe.** Založit větev, udělat práci a hned ji mergnout zpátky je chyba – větev je pracovní prostor, ne obálka na jeden příkaz.
 
-Po dokončení zadání tedy: commitni (má-li projekt autocommit), řekni, co je hotové, a **zůstaň ve worktree**. Větev zůstává otevřená napříč prompty i napříč sessions, klidně týden. Na další zadání ve stejném tématu prostě pokračuj ve stejné větvi.
+Po dokončení zadání tedy: commitni (má-li projekt autocommit), řekni, co je hotové, a **zůstaň ve worktree**. Větev zůstává otevřená napříč prompty i napříč session, klidně týden. Na další zadání ve stejném tématu prostě pokračuj ve stejné větvi.
 
 Merguje se **jen na výslovný pokyn** – „tohle je hotové“, „přimerguj to“, „ukliď tu větev“. Není-li pokyn jednoznačný, zeptej se; předčasný merge se odestává hůř než pozdní.
 

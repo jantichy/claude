@@ -1,6 +1,6 @@
 ---
 name: worktree
-description: Skill se použije, když uživatel zadá "/worktree", "/worktree enable", "/worktree disable", "/worktree status", nebo chce v projektu zapnout či zrušit worktree layout – uspořádání, kde adresář projektu není pracovní adresář, ale kontejner s holým repozitářem a jedním pracovním adresářem na každou rozdělanou větev, aby nad projektem šlo běžet ve víc sessions naráz. Na rozdíl od /autocommit, který přepíná řádek v instrukcích projektu, tenhle skill přeskládá adresář a hýbe s .git. Větve nezakládá ani nemerguje – to je běžná práce podle pravidel, která skill do projektu nainstaluje.
+description: Skill se použije, když uživatel zadá "/worktree", "/worktree enable", "/worktree disable", "/worktree status", nebo chce v projektu zapnout či zrušit worktree layout – uspořádání, kde adresář projektu není pracovní adresář, ale kontejner s holým repozitářem a jedním pracovním adresářem na každou rozdělanou větev, aby nad projektem šlo běžet ve víc session naráz. Na rozdíl od /autocommit, který přepíná řádek v instrukcích projektu, tenhle skill přeskládá adresář a hýbe s .git. Větve nezakládá ani nemerguje – to je běžná práce podle pravidel, která skill do projektu nainstaluje.
 argument-hint: [enable|disable|status]
 allowed-tools: [Read, Write, Edit, Glob, Bash, AskUserQuestion]
 ---
@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob, Bash, AskUserQuestion]
 
 ## Co skill dělá
 
-Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém adresář projektu není pracovní adresář, ale kontejner s jedním holým repozitářem (`.bare`) a několika pracovními adresáři, jeden na každou rozdělanou větev. Díky tomu může nad projektem běžet víc Claude sessions naráz, aniž si přepisují soubory.
+Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém adresář projektu není pracovní adresář, ale kontejner s jedním holým repozitářem (`.bare`) a několika pracovními adresáři, jeden na každou rozdělanou větev. Díky tomu může nad projektem běžet víc Claude session naráz, aniž si přepisují soubory.
 
 | Režim | Co udělá |
 |---|---|

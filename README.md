@@ -10,7 +10,7 @@ Co bych z celého repozitáře vypíchl, aby to neuteklo vaší pozornosti?
 
 ### [`CLAUDE.md`](CLAUDE.md) – hlavní soubor s instrukcemi
 
-Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Většina instrukcí je dekomponovaná do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou, jen když je to podle situace potřeba. Šetří to kontextové okno.
+Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není. Většina instrukcí je rozdělená do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou, jen když je to podle situace potřeba. Šetří to kontextové okno.
 
 ### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
@@ -32,7 +32,7 @@ Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a z
 
 ### [`WORKTREE.md`](WORKTREE.md) – několik rozdělaných věcí vedle sebe
 
-Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik sessions naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá a dokončuje, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i příprava a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.
+Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik session naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá a dokončuje, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i příprava a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.
 
 ### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
 
@@ -138,7 +138,7 @@ Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované
 
 ### [`/worktree`](skills/worktree/) – každá rozdělaná větev ve vlastním adresáři
 
-Přepne projekt do uspořádání, kde má každá rozdělaná větev vlastní adresář, takže nad ním může běžet několik sessions naráz, aniž si přepisují soubory. Umí to i zpátky. Přeskládává `.git`, tedy to nejcitlivější v repozitáři – proto nejdřív zálohuje, na konci porovná a smaže zálohu, teprve když porovnání vyjde. Pravidla, jak se v takovém projektu pracuje, si nainstaluje rovnou do něj, takže platí od začátku každé session, aniž ho člověk volá.
+Přepne projekt do uspořádání, kde má každá rozdělaná větev vlastní adresář, takže nad ním může běžet několik session naráz, aniž si přepisují soubory. Umí to i zpátky. Přeskládává `.git`, tedy to nejcitlivější v repozitáři – proto nejdřív zálohuje, na konci porovná a smaže zálohu, teprve když porovnání vyjde. Pravidla, jak se v takovém projektu pracuje, si nainstaluje rovnou do něj, takže platí od začátku každé session, aniž ho člověk volá.
 
 ## Hooky, skripty a nastavení
 
@@ -183,7 +183,7 @@ Všechno to stojí nula tokenů a běží v průběžné kontrole po každé odp
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 
-Allowlist/denylist/asklist se snažím držet ve vyváženém poměru „bezpečnost vs. flow“. Cíl je nemuset odklikávat každou trivialitu, ale zároveň nenechat bez kontroly moc bezpečnostních děr. Tohle je vždycky lavírování na hraně a občas tu jdu vědomě lehce za hranu – ve prospěch svého pohodlí a na úkor středně rizikových operací. Takže si to k sobě rozhodně nekopírujte bezhlavě, ale můžete to vzít čistě inspiračně pro porovnání s vlastním nastavením.
+Allowlist/denylist/asklist se snažím držet ve vyváženém poměru mezi bezpečností a plynulostí práce. Cíl je nemuset odklikávat každou trivialitu, ale zároveň nenechat bez kontroly moc bezpečnostních děr. Tohle je vždycky lavírování na hraně a občas tu jdu vědomě lehce za hranu – ve prospěch svého pohodlí a na úkor středně rizikových operací. Takže si to k sobě rozhodně nekopírujte bezhlavě, ale můžete to vzít čistě inspiračně pro porovnání s vlastním nastavením.
 
 ## Než si odsud něco vezmete
 

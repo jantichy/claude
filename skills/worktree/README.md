@@ -1,6 +1,6 @@
 # /worktree – několik rozdělaných větví vedle sebe, každá ve svém adresáři
 
-Přepne projekt do uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku. Můžete pak nad jedním projektem pustit několik Claude sessions naráz – každou na jiné věci – a nestane se, že by si navzájem přepisovaly soubory nebo commitovaly rozdělanou práci té druhé. Přepnutí i návrat zpátky jsou jeden příkaz, včetně zálohy a kontroly, že se cestou nic neztratilo. Hodí se všude, kde běžně přepínáte mezi dvěma třemi rozdělanými věcmi a `git stash` vás už unavuje.
+Přepne projekt do uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku. Můžete pak nad jedním projektem pustit několik Claude session naráz – každou na jiné věci – a nestane se, že by si navzájem přepisovaly soubory nebo commitovaly rozdělanou práci té druhé. Přepnutí i návrat zpátky jsou jeden příkaz, včetně zálohy a kontroly, že se cestou nic neztratilo. Hodí se všude, kde běžně přepínáte mezi dvěma třemi rozdělanými věcmi a `git stash` vás už unavuje.
 
 ## Co umí
 
