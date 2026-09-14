@@ -247,6 +247,12 @@ if [ "$KEEP_EXT" != "1" ]; then
 fi
 
 # Druhá kontrola: výstupy, které v adresáři už leží z dřívějšího běhu. Přepsat
+# Přípony výstupů, které se nesmí tiše přepsat. `wav` mezi nimi patří: při
+# WHISPER_KEEP_WAV=1 ho skript vyrábí sám a je to jediný vstup pro diarizaci,
+# takže jeho ztráta stojí tentýž čas jako ztráta přepisu. Jeden seznam pro obě
+# místa, která ho čtou – dřív byl opsaný dvakrát a `wav` chyběl v obou.
+VYSTUPNI_PRIPONY="txt srt md vtt json wav"
+
 # je smí být správně (opakovaný běh po opravě), ale taky to může být hodina
 # práce pryč – a whisper-cli i ffmpeg přepisují bez ptaní. Rozhodnout to za
 # uživatele nejde, tak se to nechá na něm (SKILL.md, krok „Přepiš nahrávky").
@@ -254,7 +260,7 @@ if [ "$ON_EXISTING" != "overwrite" ]; then
   hrozi=""
   for f in "$@"; do
     b=$(basename "$f"); [ "$KEEP_EXT" = "1" ] || b="${b%.*}"
-    for ext in txt srt md vtt json; do
+    for ext in $VYSTUPNI_PRIPONY; do
       [ -e "$WORKDIR/$b.$ext" ] && hrozi="${hrozi}  $b.$ext
 "
     done
@@ -284,7 +290,7 @@ for f in "$@"; do
     while :; do
       kandidat="$base"; [ "$i" -gt 1 ] && kandidat="$base-$i"
       obsazeno=0
-      for ext in txt srt md vtt json; do
+      for ext in $VYSTUPNI_PRIPONY; do
         [ -e "$WORKDIR/$kandidat.$ext" ] && { obsazeno=1; break; }
       done
       [ "$obsazeno" = "0" ] && { base="$kandidat"; break; }
@@ -294,11 +300,19 @@ for f in "$@"; do
   # Skrytý název jen u dočasného WAV; ten, který má přežít pro diarizaci, je vidět.
   if [ "$KEEP_WAV" = "1" ]; then
     wav="$WORKDIR/$base.wav"
-    # Vstup už může BÝT tenhle soubor (nahrávka je WAV a leží v pracovním adresáři).
-    # Bez téhle pojistky by ffmpeg přepisoval vlastní vstup a nevznikl by přepis.
-    [ "$wav" = "$f" ] && wav="$WORKDIR/$base.16k.wav"
   else
     wav="$WORKDIR/.${base}.tmp.wav"
+  fi
+  # Vstup už může BÝT tenhle soubor (nahrávka je WAV a leží v pracovním adresáři).
+  # Bez téhle pojistky ffmpeg přepíše vlastní vstup: otevře ho pro zápis, ořízne
+  # a nahrávka je nenávratně pryč – s návratovým kódem 0 a beze slova.
+  #
+  # Porovnávají se SOUBORY (-ef), ne řetězce cest. `./rec.wav` a `rec.wav` jsou
+  # různé řetězce, ale týž soubor; porovnání řetězců pojistku minulo, kdykoliv
+  # byl vstup nebo WORKDIR zadaný relativně. Doloženo: z 30sekundové nahrávky
+  # zbylo 4,6 s a 1/36 velikosti.
+  if [ -e "$wav" ] && [ "$wav" -ef "$f" ]; then
+    wav="$WORKDIR/$base.16k.wav"
   fi
 
   file_dur="${DURATIONS[$((n-1))]}"
