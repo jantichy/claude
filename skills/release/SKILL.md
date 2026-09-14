@@ -81,9 +81,11 @@ Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` ne
 
 ## Fáze 0 – Příprava
 
-1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři té větve, která se nasazuje.
-2. **Přečti projektový `CLAUDE.md`** – `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Nasazení`, pokud existuje, a `## Výjimky z obecných pravidel`.
-3. **Zjisti, jak se projekt nasazuje.** V tomhle pořadí:
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím; ve worktree layoutu pracuj v adresáři té větve, která se nasazuje. Body 4 a 5 odpadají: kontroly před nasazením má tenhle skill jako vlastní fázi a nasazuje se celý stav, ne diff větve. Z projektového `CLAUDE.md` si přečti navíc sekci `## Nasazení`, existuje-li.
+
+Navíc si zjisti tohle:
+
+1. **Zjisti, jak se projekt nasazuje.** V tomhle pořadí:
 
    | Kde hledat | Co z toho plyne |
    |---|---|
@@ -92,9 +94,9 @@ Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` ne
    | `Dockerfile`, `compose.yml`, deploy skript | nasazuje se příkazem |
    | nic z toho | **Zeptej se** přes `AskUserQuestion` a odpověď rovnou zapiš do `## Nasazení` v `CLAUDE.md`, ať se příště neptáš |
 
-4. **Zjisti, co se vlastně nasazuje.** Diff proti tomu, co je v produkci – nejlépe proti tagu posledního vydání. Vypiš: kolik commitů, které oblasti, jestli jsou mezi nimi **migrace**, změny **konfigurace nebo proměnných prostředí** a změny v **citlivých oblastech** ze seznamu v `docs/architecture.md`.
+2. **Zjisti, co se vlastně nasazuje.** Diff proti tomu, co je v produkci – nejlépe proti tagu posledního vydání. Vypiš: kolik commitů, které oblasti, jestli jsou mezi nimi **migrace**, změny **konfigurace nebo proměnných prostředí** a změny v **citlivých oblastech** ze seznamu v `docs/architecture.md`.
 
-Zjištěné shrň do tří až pěti řádků. **Ještě nenasazuj.**
+**Ještě nenasazuj.**
 
 ------
 

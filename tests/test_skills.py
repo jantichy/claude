@@ -1070,9 +1070,8 @@ class SouladSNormou(unittest.TestCase):
 
     #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
     MIGRACE = {
-        "attack", "breakdown", "cleanup", "consistency",
-        "implement", "oponent", "project", "release", "replace", "report",
-        "review", "specify", "transcript",
+        "attack", "cleanup", "consistency",
+        "oponent", "project", "review", "specify", "transcript",
     }
 
     #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak

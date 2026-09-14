@@ -35,14 +35,17 @@ Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni
 
 ## Fáze 0 – Příprava
 
-1. **Kořen projektu**, projektový `CLAUDE.md`, `## Autocommit`. Ve worktree layoutu pracuj ve větvi, ne v kořeni kontejneru.
-2. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury.
-3. **Načti doménové znalosti**, které se na výstup vztahují:
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: report je samostatný výstup, nesahá na kód projektu ani na diff větve.
+
+Navíc si zjisti tohle:
+
+1. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury.
+2. **Načti doménové znalosti**, které se na výstup vztahují:
    - `~/Dev/context/text/text.md` – stavba a stylistika komentářů. **Vždy.**
    - `~/Dev/context/text/typography.md` – česká sazba čísel, procent, jednotek, dat a interpunkce. **Vždy** – report je plný čísel.
    - `~/Dev/context/web/web.md` – část pro **statickou stránku otevřenou z disku** (velikost písma, kontrast, šířka řádku, responzivita, meta tagy). Části pro stránku na serveru a pro dynamickou aplikaci se sem nevztahují.
    - `~/Dev/context/analytics/analytics.md` – jsou-li data z GA4, GTM nebo BigQuery. Ovlivňuje to interpretaci, ne vzhled.
-4. **Vyvolej skill `dataviz`** – dřív, než napíšeš první řádek kódu grafu. Řeší volbu typu grafu, palety, os a legend. Bez něj vzniknou grafy, které spolu nedrží.
+3. **Vyvolej skill `dataviz`** – dřív, než napíšeš první řádek kódu grafu. Řeší volbu typu grafu, palety, os a legend. Bez něj vzniknou grafy, které spolu nedrží.
 
 ------
 

@@ -33,9 +33,12 @@ Co je naopak **závazné a nesmí se změnit tiše**:
 
 ## Fáze 0 – Příprava
 
-1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři větve, ne v kořeni kontejneru – tam by nešlo commitnout.
-2. **Přečti projektový `CLAUDE.md`** – typ projektu, `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Autocommit`, `## Výjimky z obecných pravidel`, importované doménové standardy. Z kontraktu bere plán příkazy na ověření; chybí-li a projekt má kód, ohlas to – plán by pak u úkolů neměl co napsat do kroku ověření.
-3. **Najdi zadání.** V tomhle pořadí:
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: tenhle skill nesahá na kód, takže nemá co ověřovat před startem, a pracuje nad zadáním, ne nad diffem větve.
+
+Navíc si ověř tohle:
+
+1. **Co je v kontraktu příkazů.** Plán z něj bere příkazy na ověření; chybí-li a projekt má kód, ohlas to – úkoly by pak neměly co napsat do kroku ověření.
+2. **Najdi zadání.** V tomhle pořadí:
 
    | Co existuje | Co je zadání pro plán |
    |---|---|
@@ -43,16 +46,14 @@ Co je naopak **závazné a nesmí se změnit tiše**:
    | jen `docs/requirements.md` | **requirements.md** – návrh řešení byl vědomě přeskočen, což je legitimní |
    | ani jedno | **Zastav se.** Nabídni `/specify` a skonči. Plán bez zadání je jen seznam dohadů. |
 
-4. **Ověř, že je zadání schválené.** Není-li jasné, že jím uživatel prošel, zeptej se. Plán postavený na neschváleném zadání se zahazuje celý.
-5. **Existuje už `docs/plan.md`?** Nepřepisuj ho:
+3. **Ověř, že je zadání schválené.** Není-li jasné, že jím uživatel prošel, zeptej se. Plán postavený na neschváleném zadání se zahazuje celý.
+4. **Existuje už `docs/plan.md`?** Nepřepisuj ho:
 
    | Stav | Co dělat |
    |---|---|
    | Plán je hotový a všechny úkoly odškrtnuté | Jde o další fázi. **Přidej úkoly**, hotové nech být jako historii. |
    | Plán je rozpracovaný | Zeptej se: dopsat chybějící část, nebo přepracovat? Rozpracovaný plán obsahuje odškrtnuté úkoly, které **už jsou v kódu** – přepsat je znamená rozejít plán se skutečností. |
    | Plán je zastaralý oproti zadání | Vypiš, co se v zadání změnilo, a uprav **jen dotčené nehotové úkoly**. |
-
-Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 ------
 

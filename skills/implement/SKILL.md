@@ -26,11 +26,11 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
 
 ## Fáze 0 – Příprava
 
-1. **Kořen projektu.** Ve worktree layoutu (`~/.claude/WORKTREE.md`) pracuj v adresáři větve, ne v kořeni kontejneru.
-2. **Přečti projektový `CLAUDE.md`** – `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Autocommit`, paměťovou politiku, importované doménové standardy, výjimky.
-   **Chybí-li `## Kontrakt příkazů` a projekt má kód, zastav se a doplň je** – bez nich nemá průběžná kontrola co spouštět a implementace by běžela nezkontrolovaná. Zjisti je z `package.json`, `composer.json`, `Makefile` nebo obdoby, ukaž návrh a nech ho potvrdit.
-   **Ověř, že je průběžná kontrola zelená ještě před startem.** Dědíš-li červený stav z dřívějška, ohlas to a zeptej se – jinak nepůjde poznat, co jsi rozbil ty.
-3. **Najdi plán.**
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím **včetně bodu 4**: průběžná kontrola musí být zelená dřív, než se dotkneš prvního souboru, jinak nepůjde poznat, co jsi rozbil ty. Bod 5 odpadá, tenhle skill pracuje nad plánem, ne nad diffem větve.
+
+Navíc si ověř tohle:
+
+1. **Najdi plán.**
 
    | Stav | Co dělat |
    |---|---|
@@ -39,11 +39,9 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
    | Existuje, část odškrtnutá | **Naváž na prvním neodškrtnutém úkolu.** Nejdřív ale ověř, že odškrtnuté opravdu hotové jsou – viz bod 5. |
    | Vše odškrtnuté | Řekni to a nabídni uzavírání podle *Životního cyklu projektu*. Nehledej si práci navíc. |
 
-4. **Zkontroluj git.** Rozpracované změny v pracovním stromu **před** startem jsou riziko: smíchají se s prací podle plánu a přestane být poznat, co je čí. Vypiš je a zeptej se, jestli je commitnout, odložit, nebo pokračovat i tak.
-5. **Ověř skutečný stav proti plánu.** U navazování nevěř zaškrtávátkům – podívej se, jestli soubory a testy z odškrtnutých úkolů opravdu existují a procházejí. Plán mohl zůstat odškrtnutý po přerušené session, kde se práce nedokončila. Nesedí-li to, ohlas to a zeptej se, než začneš.
-6. **Izolace větve.** Má-li projekt worktree layout, pracuje se v už existující větvi – **nezakládej další worktree**. Nemá-li ho a jde o větší práci, nabídni izolaci; pokud ji uživatel chce, použij `superpowers:using-git-worktrees`.
-
-Zjištěné shrň do tří až pěti řádků.
+2. **Rozpracované změny jsou tu riziko navíc.** Smíchají se s prací podle plánu a přestane být poznat, co je čí. Vypiš je a zeptej se, jestli je commitnout, odložit, nebo pokračovat i tak.
+3. **Ověř skutečný stav proti plánu.** U navazování nevěř zaškrtávátkům – podívej se, jestli soubory a testy z odškrtnutých úkolů opravdu existují a procházejí. Plán mohl zůstat odškrtnutý po přerušené session, kde se práce nedokončila. Nesedí-li to, ohlas to a zeptej se, než začneš.
+4. **Izolace větve.** Má-li projekt worktree layout, pracuje se v už existující větvi – **nezakládej další worktree**. Nemá-li ho a jde o větší práci, nabídni izolaci; pokud ji uživatel chce, použij `superpowers:using-git-worktrees`.
 
 ------
 
