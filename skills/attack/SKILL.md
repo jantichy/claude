@@ -41,7 +41,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **před `/release`**
 
 **Pouští se před nasazením**, ne po každé feature: nad stavem, který je hotový, prošel uzavíráním a měl by jít ven. U dlouhého projektu klidně vícekrát – ale vždycky nad celkem, který drží pohromadě, ne nad jednou dodělanou obrazovkou.
 
-**Přeskakuje se, když není co spustit**: projekt bez spustitelné aplikace – obsahový, dokumentační, knihovna bez příkladu, konfigurační repozitář. Řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten je krok 7 a proběhl dávno.)
+**Kdy se přeskakuje, drží `~/.claude/skills/LIFECYCLE.md`** u popisu tohohle kroku – neopisuj ho sem. Platí-li to, řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten patří do uzavírání a proběhl dávno.)
 
 Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna v autorizaci nebo ve stavovém automatu je přesně to, co útok chytá a čtení přehlédne.
 

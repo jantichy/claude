@@ -30,7 +30,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok zakládá
 
 ## Kdy se přeskakuje
 
-Přeskoč **u všeho, co nemá trh**: interní nástroj, přírůstek do hotového produktu, aplikace na zakázku pro jednoho klienta, konfigurační repozitář, znalostní báze pro sebe. Řekni to nahlas i s důvodem.
+**Základní kritérium drží `~/.claude/skills/LIFECYCLE.md`** – tam, kde stojí popis tohohle kroku. Neopisuj ho sem: rozhodnutí o přeskakování se ladí napříč celým cyklem a opsaná kopie se s ním tiše rozejde. Níž je jen to, co z obecného kritéria neplyne.
 
 **Hraniční případ je zakázka pro klienta**, která bude mít vlastní uživatele. Konkurence tam nerozhoduje o tom, jestli se to postaví – to už je rozhodnuté –, ale pořád rozhoduje o tom, co lidé od takového produktu čekají. Zeptej se, jestli má smysl; nerozhoduj to za uživatele.
 

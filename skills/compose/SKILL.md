@@ -90,7 +90,7 @@ K tomu dohledej v archivu **3 až 5 textů nejpodobnějších tématem a formát
 
 Napiš text podle stylu a profilu formátu. Platí i redakční standard `~/Dev/context/text/text.md` a česká typografie `~/Dev/context/text/typography.md`, existují-li – báze řeší hlas, standard řemeslo a typografie sazbu.
 
-## Fáze 4 – Self-check
+## Fáze 4 – Sebe-revize
 
 Před odevzdáním projdi:
 

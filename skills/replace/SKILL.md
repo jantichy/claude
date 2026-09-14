@@ -32,6 +32,7 @@ Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill v
 - **Nesahá mimo projekt.** Cizí podklady a read-only adresáře se nepřepisují.
 - **Nemění chování.** Ukáže-li se, že přejmenování vyžaduje i změnu logiky (migrace dat, přesměrování URL), zastaví se a řekne to.
 - **Neaudituje projekt.** Na vnitřní konzistenci je `/consistency`.
+- **Nerozhoduje o termínech napříč projekty.** Který termín se používá místo kterého, drží `/ptydepe`; tenhle skill jeho rozhodnutí jen provede v konkrétním repozitáři.
 
 ------
 

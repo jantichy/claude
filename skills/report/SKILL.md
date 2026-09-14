@@ -16,6 +16,8 @@ Ze zdrojových dat udělá **jeden samostatný HTML soubor**, který jde vzít, 
 - **Nezakrývá nejistotu.** Malá čísla, krátké období a chybějící segmenty se přiznávají, ne obcházejí formulací.
 - **Nepočítá od oka.** Výpočet je vždycky skript, který zůstane v projektu, protože report se přegeneruje.
 - **Neinterpretuje za hranicí dat.** Co z čísel neplyne, do komentáře nepatří.
+- **Nezkoumá svět venku.** Konkurenci a tržní rizika sbírá `/discovery`; tady se počítá z vlastního měření, ne z cizích produktů.
+- **Nereviduje měření.** Jestli se měří správně a co v datové vrstvě chybí, řeší revize měření podle `~/Dev/context/analytics/`; tenhle skill bere data taková, jaká jsou, a jen přizná, kde jsou slabá.
 
 ## Nepřekročitelné požadavky na výstup
 
