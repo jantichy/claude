@@ -77,6 +77,8 @@ Co ještě není rozhodnuté a co to blokuje.
 
 Vzniká v dialogu s uživatelem, po sekcích a se schválením po každé. Sekci, která pro projekt nedává smysl, vynech a řekni proč – stejně jako u požadavků.
 
+**Je-li projekt *aplikace*** (rozlišení drží `~/Dev/context/coding/architecture.md` a zapisuje ho `/project` do sekce *Typ projektu*), **načti si ten standard dřív, než začneš psát.** Nese kontrolní seznam *Minimum hotové aplikace*, proti kterému se návrh posuzuje – a řadu sekcí téhle šablony přímo předepisuje: vrstvy, bránu k datům, hranici transakce kolem cizího systému, souběh, běhy na pozadí. **Na konci projdi ten seznam položku po položce** a u každé řekni, kde je v návrhu vyřešená, nebo že se vědomě nedělá a proč; nevyřešená položka bez zápisu je nedodělek, ne zjednodušení. U *nástroje* se tohle přeskakuje a řekne se to nahlas.
+
 ```markdown
 # <Lidský název> – návrh řešení
 
@@ -89,6 +91,17 @@ Jaké varianty byly ve hře, která vyhrála a proč. Zamítnuté i s důvodem.
 ## Architektura
 Komponenty, jejich odpovědnosti a hranice. U každé: co dělá, jak se
 používá, na čem závisí.
+U aplikace (viz níž) k tomu **vrstvy a směr závislostí** a **jediná brána
+k datům** – kdo skládá objekt „kdo přišel“, kde se otevírá transakce a kde
+se nastavuje kontext, kterým se filtrují data. A čím se to vynucuje:
+typem, pravidlem lintru, testem, který to zkusí obejít.
+
+## Transakce, souběh a běhy na pozadí
+Kde jsou hranice transakcí vůči cizím systémům a co se stane, když volání
+uspěje a zápis pak selže. Která místa mají souběh a čím je ošetřený –
+v místě zápisu, ne kontrolou před ním. Které běhy jdou na pozadí a jak
+jsou přerušitelné.
+Vynech u projektu bez trvalých dat a bez cizích systémů.
 
 ## Datový model
 Entity, vztahy, klíčová pole. U netriviálních i důvod, proč zrovna takhle.
@@ -120,7 +133,9 @@ se nemerguje bez lidského pohledu na diff; `/review` na ně sahá přísněji.
 Konkrétní volba a proč – proti omezením z requirements.md.
 
 ## Testovací strategie
-Co se testuje a na jaké úrovni. U každého scénáře a *Varianty* řekni, čím bude
+Co se testuje a na jaké úrovni. Co se mockuje – u aplikace s vlastní
+databází platí, že se mockuje ven, ne dovnitř (`~/Dev/context/coding/quality.md`),
+takže sem patří i to, čím se skutečná databáze v testech poskytne. U každého scénáře a *Varianty* řekni, čím bude
 pokrytý – akceptačním testem, jednotkovým, nebo vědomě ničím a proč.
 Scénáře ber z `scenarios.md`, vede-li ho projekt; jinak ze sekce *Hlavní
 scénáře* v requirements.md.
