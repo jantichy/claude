@@ -20,6 +20,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | baseline (stav, se kterým se srovnává) | konvence projektu | co je v projektu dohodnuto – `rules.md`, glosář, sekce `CLAUDE.md`; čte to `/consistency` |
 | baseline (běh bez skillu) | srovnávací běh | spuštění agenta na úkol dřív, než se skill napíše, aby bylo vidět, jak selže |
 | brána | blokující kontrola | automatická kontrola nástrojem, která práci zastaví; kde je to jasné, stačí „kontrola“. **Platební brána** tím dotčená není |
+| brána k datům | cesta k datům | jediná funkce, přes kterou aplikace sahá na vlastní databázi – otevře transakci a nastaví kontext izolace. Nepřidávej „bránu“ třetí význam |
 | debrief | řízený rozhovor | vytažení zadání z uživatele otázku po otázce (`/specify`, `/skill`) |
 | drift | rozejití | dvě místa, která spolu mají držet, se tiše rozešla. Jednotlivý nález je **odchylka**. Anglická jména konkrétních vad (*lockfile drift*) zůstávají |
 | explorer | průzkumník | agent, který u velkého rozsahu zmapuje, co se kde mění, a předá mapu specialistům |

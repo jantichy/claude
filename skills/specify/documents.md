@@ -77,7 +77,7 @@ Co ještě není rozhodnuté a co to blokuje.
 
 Vzniká v dialogu s uživatelem, po sekcích a se schválením po každé. Sekci, která pro projekt nedává smysl, vynech a řekni proč – stejně jako u požadavků.
 
-**Je-li projekt *aplikace*** (rozlišení drží `~/Dev/context/coding/architecture.md` a zapisuje ho `/project` do sekce *Typ projektu*), **načti si ten standard dřív, než začneš psát.** Nese kontrolní seznam *Minimum hotové aplikace*, proti kterému se návrh posuzuje – a řadu sekcí téhle šablony přímo předepisuje: vrstvy, bránu k datům, hranici transakce kolem cizího systému, souběh, běhy na pozadí. **Na konci projdi ten seznam položku po položce** a u každé řekni, kde je v návrhu vyřešená, nebo že se vědomě nedělá a proč; nevyřešená položka bez zápisu je nedodělek, ne zjednodušení. U *nástroje* se tohle přeskakuje a řekne se to nahlas.
+**Je-li projekt *aplikace*** (rozlišení drží `~/Dev/context/coding/architecture.md` a zapisuje ho `/project` do sekce *Typ projektu*), **načti si ten standard dřív, než začneš psát.** Nese kontrolní seznam *Minimum hotové aplikace*, proti kterému se návrh posuzuje – a řadu sekcí téhle šablony přímo předepisuje: vrstvy, cestu k datům, hranici transakce kolem cizího systému, souběh, běhy na pozadí. **Na konci projdi ten seznam položku po položce** a u každé řekni, kde je v návrhu vyřešená, nebo že se vědomě nedělá a proč; nevyřešená položka bez zápisu je nedodělek, ne zjednodušení. U *nástroje* se tohle přeskakuje a řekne se to nahlas.
 
 ```markdown
 # <Lidský název> – návrh řešení
@@ -91,7 +91,7 @@ Jaké varianty byly ve hře, která vyhrála a proč. Zamítnuté i s důvodem.
 ## Architektura
 Komponenty, jejich odpovědnosti a hranice. U každé: co dělá, jak se
 používá, na čem závisí.
-U aplikace (viz níž) k tomu **vrstvy a směr závislostí** a **jediná brána
+U aplikace (viz níž) k tomu **vrstvy a směr závislostí** a **jediná cesta
 k datům** – kdo skládá objekt „kdo přišel“, kde se otevírá transakce a kde
 se nastavuje kontext, kterým se filtrují data. A čím se to vynucuje:
 typem, pravidlem lintru, testem, který to zkusí obejít.
@@ -140,8 +140,8 @@ pokrytý – akceptačním testem, jednotkovým, nebo vědomě ničím a proč.
 Scénáře ber z `scenarios.md`, vede-li ho projekt; jinak ze sekce *Hlavní
 scénáře* v requirements.md.
 Dál prahy, které bude projekt držet (pokrytí, mutation score) a čím se měří.
-Výchozí hodnoty a nástroje viz `~/Dev/context/coding/coding.md`,
-*Ověřování a kontroly kvality*.
+Výchozí hodnoty a nástroje viz `~/Dev/context/coding/quality.md`,
+*Kontroly, které nestojí tokeny*.
 Zvlášť rozhodni o **generativních testech** – fuzzingu a property-based testech.
 Vyplatí se u parserů, validace vstupu, převodů formátů, výpočtů nad rozsahy
 a stavových automatů: najdou vstup, na který nikdo nepomyslel, a stojí tokeny

@@ -21,7 +21,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ## Obsah
 
-**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička) · [ohraničení bloku kódu](#ohraničení-bloku-kódu)
+**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [cesta k datům](#cesta-k-datům) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička) · [ohraničení bloku kódu](#ohraničení-bloku-kódu)
 
 **[Ponechané termíny](#ponechané-termíny)** – [heuristika, osa, vektor útoku](#2026-09-07--ponechané-termíny-z-revize-heuristika-osa-vektor-útoku) · [„stopa práce“](#2026-09-07--termín-stopa-práce-se-ponechává-i-když-má-stopa-pět-významů) · [„guard“](#2026-09-07--termín-guard-se-ponechává-a-plyne-z-toho-obecné-pravidlo) · [„mutace“](#2026-09-07--termín-mutace-se-ponechává) · [„session“](#2026-09-07--termín-session-se-ponechává) · [„soustava“](#2026-09-07--termín-soustava-se-ponechává) · [„kontrakt příkazů“](#2026-09-07--termín-kontrakt-příkazů-se-ponechává) · [„sledovací okno“](#2026-09-07--termín-sledovací-okno-se-ponechává)
 
@@ -36,6 +36,16 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Nahrazuje dřívější „bránu“** (2026-09-07). Anglicky *quality gate* zavedený termín je, ale česká „brána“ ne – čtenář si pod ní představí vrata a potřebuje k ní slovník. Zbylá „brána“ v souborech je proto vždycky **platební brána** a s tímhle pojmem nemá nic společného.
 
 **Mluvíš-li o jedné konkrétní kontrole, pojmenuj ji.** „Testy padají“ je přesnější než „kontrola je červená“ – ta věta nechává čtenáře hádat, která z nich spadla.
+
+### cesta k datům
+
+**Jediná funkce, přes kterou aplikace sahá na databázi** – otevře transakci, nastaví v ní kontext, na kterém stojí izolace dat, a předá handle; doména připojení nedostane. Popsaná je v `~/Dev/context/coding/architecture.md`, *Jediná cesta k datům*.
+
+**Nahrazuje „bránu k datům“** (2026-09-14). Ta vznikla o den dřív při psaní standardu architektury a byla to **třetí** obsazení slova „brána“ vedle [blokující kontroly](#blokující-kontrola) a platební brány – přesně ta kolize, kterou heslo o blokující kontrole zakazuje větou, že zbylá „brána“ je vždycky platební. Rozhodnuto přejmenovat, ne přidávat druhou výjimku: slovo se třemi významy přestává rozřešovat význam samo a u čtvrtého užití by se výjimka dopisovala zase.
+
+**Vyhrálo nad „vstupním bodem k datům“ a „datovou bránou“**, protože formulace „jedinou cestou k datům“ už ve dvou textech stála, takže náhrada zároveň sjednotila, co se rozcházelo. V projektu, kde se zároveň mluví o platební bráně (rezervační systém má na ni celý dokument), byla kolize dvojnásobná.
+
+**Nezaměňuj s portem.** Port je rozhraní k **cizímu** systému za hranicí aplikace; cesta k datům vede k **vlastní** databázi.
 
 ### specialista, panel specialistů
 
