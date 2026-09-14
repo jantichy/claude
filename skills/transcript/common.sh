@@ -5,7 +5,11 @@ MODELS_DIR="$HOME/.whisper-models"
 # shellcheck disable=SC2034  # čtou je skripty, které tenhle soubor sourcují
 VAD_MODEL="$MODELS_DIR/ggml-silero-v5.1.2.bin"
 # shellcheck disable=SC2034  # dtto
-VAD_MODEL_URL="https://huggingface.co/ggml-org/whisper-vad/resolve/main/ggml-silero-v5.1.2.bin"
+# Modely se tahají z připnuté revize, ne z `main`. `resolve/main/` je pohyblivý:
+# majitel repozitáře smí soubor kdykoliv přepsat a stažení by to nijak nehlásilo.
+# Revize se aktualizuje ručně, a je to záměr – nová verze modelu je rozhodnutí,
+# ne něco, co se má stát samo uprostřed přepisu.
+VAD_MODEL_URL="https://huggingface.co/ggml-org/whisper-vad/resolve/9ffd54a1e1ee413ddf265af9913beaf518d1639b/ggml-silero-v5.1.2.bin"
 
 # Diarizace (volitelná, druhý průchod). Instaluje se zvlášť, viz check-deps.sh --diarize.
 # shellcheck disable=SC2034  # čtou je skripty, které tenhle soubor sourcují
@@ -32,8 +36,8 @@ model_file() {
 
 model_url() {
   case "$1" in
-    turbo)    echo "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin" ;;
-    large-v3) echo "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin" ;;
+    turbo)    echo "https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-large-v3-turbo.bin" ;;
+    large-v3) echo "https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-large-v3.bin" ;;
     *)        echo "" ;;
   esac
 }

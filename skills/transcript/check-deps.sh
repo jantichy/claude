@@ -102,9 +102,12 @@ if [ "$WANT_DIARIZE" -eq 1 ]; then
     # Metadata gated repa jsou veřejná, takže /api/models vrátí 200 i bez přístupu.
     # Jediná spolehlivá zkouška je sáhnout na soubor. Pipeline potřebuje oba modely.
     for repo in $DIARIZE_REPOS; do
-      code=$(curl -s -o /dev/null -w "%{http_code}" -m 15 \
-        -H "Authorization: Bearer $tok" \
-        "https://huggingface.co/$repo/resolve/main/config.yaml" 2>/dev/null)
+      # Token jde do curlu rourou, ne jako argument. Argumenty procesu vidí
+      # `ps` každý uživatel na stroji po celou dobu běhu, takže `-H "…Bearer $tok"`
+      # znamená vypsat cizí token komukoliv, kdo se v tu vteřinu podívá.
+      code=$(printf 'header = "Authorization: Bearer %s"\n' "$tok" \
+        | curl -s -o /dev/null -w "%{http_code}" -m 15 --config - \
+          "https://huggingface.co/$repo/resolve/main/config.yaml" 2>/dev/null)
       case "$code" in
         200|302) echo "  ✓ přístup k $repo" ;;
         403)     echo "  ✗ $repo – licence neodsouhlasená"
