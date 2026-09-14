@@ -302,11 +302,27 @@ class PrubeznaKontrolaJeZaregistrovana(unittest.TestCase):
             f"neběží vůbec. Nalezené Stop hooky: {prikazy}")
 
     def test_cesta_stop_hooku_existuje(self):
-        """Registrace na neexistující soubor je totéž jako žádná registrace."""
+        """Registrace na neexistující soubor je totéž jako žádná registrace.
+
+        Cesty v `settings.json` jsou absolutní, protože je tak zapisuje Claude
+        Code. Míří ale do adresáře, který je zároveň tímhle repozitářem, a ten
+        v CI leží jinde než v `$HOME` – doslovné porovnání by tam hlásilo
+        chybějící soubor, který je vedle verzovaný. Falešný poplach na každém
+        pushi je přitom nejjistější cesta k tomu, že si kontrolu někdo vypne.
+        Část cesty za posledním `.claude` se proto vztáhne ke kořenu repozitáře.
+        """
         for h in self.zaznamy():
-            cesta = Path(h.get("command", "").split()[0]).expanduser()
+            cesta = self.v_repozitari(Path(h.get("command", "").split()[0]).expanduser())
             with self.subTest(hook=str(cesta)):
                 self.assertTrue(cesta.is_file(), f"Stop hook {cesta} neexistuje")
+
+    @staticmethod
+    def v_repozitari(cesta):
+        casti = cesta.parts
+        if ".claude" not in casti:
+            return cesta
+        i = len(casti) - 1 - casti[::-1].index(".claude")
+        return ROOT.joinpath(*casti[i + 1:])
 
     def test_timeout_staci_na_tri_kroky(self):
         """`LIMIT` ve verify.sh se čte ze skriptu, ne opisuje – jinak se rozejdou."""
