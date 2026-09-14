@@ -220,7 +220,7 @@ git_ro() { git -c core.fsmonitor= -c core.hooksPath=/dev/null -c core.pager=cat 
 # hodnoty by znamenalo, že útočníkovi stačí pojmenovat svůj filtr `lfs`. Cena je
 # nízká, protože varování nahrazuje jen počet změn; jméno větve se zjišťuje
 # ze `symbolic-ref`, který obsah souborů nečte, a zobrazuje se dál.
-config_spousti_program() {
+config_runs_program() {
   { git_ro -C "$1" config --local --list 2>/dev/null
     git_ro -C "$1" config --worktree --list 2>/dev/null; } \
     | cut -d= -f1 \
@@ -236,7 +236,7 @@ if [ -d "$git_root_candidate" ] \
     branch=$(git_ro -C "$git_root_candidate" rev-parse --short HEAD 2>/dev/null)
   fi
   if [ -z "$branch" ]; then branch="Git"; fi
-  if config_spousti_program "$git_root_candidate"; then
+  if config_runs_program "$git_root_candidate"; then
     git_part=$(printf "\033[31m%s: ⚠ config spouští program\033[0m" "$branch")
   else
     unstaged=$(git_ro -C "$git_root_candidate" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
