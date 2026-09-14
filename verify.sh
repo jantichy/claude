@@ -33,10 +33,17 @@ set -uo pipefail
 LIMIT=60      # strop na krok; tři kroky se vejdou do timeoutu hooku v settings.json
 MAX_OUT=200000  # kolik bajtů výstupu si od kroku vezmeme
 
-# Souhlasy leží mimo dosah XDG_STATE_HOME schválně: je to bezpečnostní stav a
+# Obojí leží mimo dosah XDG_STATE_HOME schválně: je to bezpečnostní stav a
 # proměnná prostředí se dá nastavit z .envrc nebo z konfigurace editoru.
+#
+# U `RUN_DIR` to platí stejně jako u souhlasů, i když to tak na první pohled
+# nevypadá – je to „jen cache běhů“. Jenže v `$STATE` leží otisk stavu, který
+# už prošel, a shoda s ním kontrolu **přeskočí** (`exit 0` níž). Kdo přesměruje
+# `RUN_DIR`, může tam takový soubor podstrčit a vypnout kontrolu bez jediné
+# stopy v repozitáři. Do 14. 9. 2026 tu úvaha stála jen u `ALLOW_DIR` – sousední
+# řádek pod ni nespadal, protože se rozsah pravidla sám nešíří.
 ALLOW_DIR="$HOME/.local/state/claude-verify/allowed"
-RUN_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/claude-verify/runs"
+RUN_DIR="$HOME/.local/state/claude-verify/runs"
 
 # MODE rozlišuje CLI (--allow, --list, --revoke) od běhu hooku a rozhoduje o
 # návratovém kódu chyby. V hooku musí být 2: při exit 1 jde stderr jen uživateli
@@ -276,6 +283,16 @@ if [ "${1:-}" = "--allow" ]; then
   # Tady proti tomu nepomáhá žádný seznam vzorů. Pomáhá jen to, co proces nemá:
   # terminál. Interaktivní běh čte ze stdin, neinteraktivní z /dev/tty (a ta
   # v procesu bez řídicího terminálu neexistuje, takže skončí chybou).
+  # Bez gitu se hook níž ukončí `exit 0` a neudělá nic. Samo o sobě je to
+  # správně – nad rozbaleným tarballem se nemá nic spouštět –, jenže člověk,
+  # který si tady vydal souhlas na konkrétní příkazy, čeká pravý opak. Tichý
+  # rozdíl mezi „běží a je zeleno“ a „neběží vůbec“ je ta nejhorší podoba
+  # selhání vynucovací vrstvy, a poznat se dá jedině tady, u terminálu.
+  if ! git -C "$P" rev-parse --show-toplevel >/dev/null 2>&1; then
+    printf 'Pozor: %s není gitový repozitář, takže průběžná kontrola nepoběží,\n' "$P" >&2
+    printf 'i když souhlas vydáš. Spusť v něm git init, nebo souhlas nevydávej.\n' >&2
+  fi
+
   ODPOVED=""
   printf 'Vydat souhlas pro %s?\n' "$P"
   printf 'Kontrakt: %s\n' "$MD"

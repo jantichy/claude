@@ -110,6 +110,36 @@ class PrubeznaKontrola(unittest.TestCase):
         return subprocess.run(["shasum"], input=str(cesta.resolve()),
                               capture_output=True, text=True).stdout.split()[0]
 
+    def test_stav_behu_ignoruje_xdg_state_home(self):
+        """Stav běhu nesmí jít přesměrovat proměnnou prostředí.
+
+        Vypadá to jako cache, ale není: v `$STATE` leží otisk stavu, který už
+        prošel, a shoda s ním kontrolu přeskočí rovnou na `exit 0`. Kdo umí
+        přesměrovat `RUN_DIR`, podstrčí si tam takový soubor a vypne kontrolu
+        bez jediné stopy v repozitáři – a `XDG_STATE_HOME` se nastaví z `.envrc`
+        nebo z konfigurace editoru, tedy odkudkoliv.
+
+        U souhlasů to bylo ošetřené od začátku, u sousedního řádku se stavem
+        běhu ne. Rozsah té úvahy se sám nerozšířil.
+        """
+        # Plný kontrakt s pomlčkami: nejde o to, co se spustí, ale kam se zapíše
+        # stav. Chybějící klíče by daly `exit 2` a test by měřil něco jiného.
+        self.kontrakt(typecheck="-", lint="-", test="true", build="-",
+                      e2e="-", audit="-", coverage="-", mutation="-")
+        self.allow()
+        xdg = self.tmp / "xdg"
+        env = dict(os.environ, HOME=str(self.home), XDG_STATE_HOME=str(xdg))
+        env.pop("CLAUDE_NO_VERIFY", None)
+        vstup = json.dumps({"session_id": "s1", "cwd": str(self.repo),
+                            "stop_hook_active": False})
+        r = subprocess.run(["bash", str(HOOK)], input=vstup,
+                           capture_output=True, text=True, env=env)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertFalse((xdg / "claude-verify" / "runs").exists(),
+                         "stav běhu šel do XDG_STATE_HOME – dá se přesměrovat zvenčí")
+        self.assertTrue((self.home / ".local/state/claude-verify/runs").is_dir(),
+                        "stav běhu nevznikl na pevné cestě pod HOME")
+
     # --- souhlas -----------------------------------------------------------
 
     def test_bez_souhlasu_nespusti_nic(self):

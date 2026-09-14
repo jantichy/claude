@@ -19,6 +19,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 
 Schválně jen stdlib – stejný důvod jako u `test_verify.py`.
 """
+import json
 import os
 import re
 import shutil
@@ -255,6 +256,59 @@ class NasazeniGlobalnihoHooku(unittest.TestCase):
             "git hook není nasazený – `git log --first-parent` se zaplní zprávami "
             "'Merge branch ...'. Naprav příkazem:\n"
             f"    git config --global core.hooksPath {HOOK.parent}")
+
+
+class PrubeznaKontrolaJeZaregistrovana(unittest.TestCase):
+    """`verify.sh` musí být v `settings.json` jako Stop hook, jinak neběží vůbec.
+
+    Skript je otestovaný do detailu – souhlasy, otisky, parser Markdownu, zámek –
+    jenže to všechno měří, jak se chová, **když ho někdo zavolá**. Že ho volá
+    Claude Code po každé odpovědi, nedrží nic než jeden záznam v `settings.json`,
+    a ten je ručně editovaný soubor.
+
+    Ztráta té registrace je nejtišší možné selhání celé vrstvy: nic nespadne,
+    nic nezčervená, jen se od té chvíle nekontroluje nic a každé „hotovo“ stojí
+    nad neověřeným stavem. Přesně ten směr selhání, kvůli kterému
+    `~/.claude/RULES.md`, *Ověřitelná kontrola místo dojmu*, žádá test
+    k vynucovací vrstvě hned, ne až se ukáže, že nefunguje.
+
+    Hlídá se i timeout: `verify.sh` si sám dává `LIMIT=60` na krok a počítá
+    s tím, že se tři kroky do timeoutu hooku vejdou. Timeout kratší než to by
+    kontrolu utínal uprostřed a hlásil chybu tam, kde žádná není – tedy falešný
+    poplach, který vede k vypnutí.
+    """
+
+    SETTINGS = ROOT / "settings.json"
+
+    def zaznamy(self):
+        d = json.loads(self.SETTINGS.read_text(encoding="utf-8"))
+        return [h for skupina in d.get("hooks", {}).get("Stop", [])
+                for h in skupina.get("hooks", [])]
+
+    def test_verify_je_stop_hook(self):
+        prikazy = [h.get("command", "") for h in self.zaznamy()]
+        self.assertTrue(
+            any(p.endswith("verify.sh") for p in prikazy),
+            "verify.sh není v settings.json jako Stop hook – průběžná kontrola "
+            f"neběží vůbec. Nalezené Stop hooky: {prikazy}")
+
+    def test_cesta_stop_hooku_existuje(self):
+        """Registrace na neexistující soubor je totéž jako žádná registrace."""
+        for h in self.zaznamy():
+            cesta = Path(h.get("command", "").split()[0]).expanduser()
+            with self.subTest(hook=str(cesta)):
+                self.assertTrue(cesta.is_file(), f"Stop hook {cesta} neexistuje")
+
+    def test_timeout_staci_na_tri_kroky(self):
+        """`LIMIT` ve verify.sh se čte ze skriptu, ne opisuje – jinak se rozejdou."""
+        limit = int(re.search(r"^LIMIT=(\d+)", (ROOT / "verify.sh").read_text(encoding="utf-8"),
+                              re.M).group(1))
+        verify = next(h for h in self.zaznamy()
+                      if h.get("command", "").endswith("verify.sh"))
+        self.assertGreaterEqual(
+            verify.get("timeout", 0), 3 * limit,
+            f"timeout Stop hooku nepokryje ani tři kroky po {limit} s – kontrola "
+            "se utne uprostřed a nahlásí chybu tam, kde žádná není")
 
 
 class PrubeznaKontrolaVCI(unittest.TestCase):
