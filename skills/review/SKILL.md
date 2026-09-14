@@ -479,6 +479,10 @@ nezmění kód, kterého se týkají.
 
 `zdroj` říká, odkud nález přišel, a nahrazuje dřívější pole `role`, které nález z útoku neměl čím vyplnit; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo standardu, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
+**Umlčení commituj samostatně, až po opravách.** Hash se vyrábí z `HEAD` **před** commitem, takže musí ukazovat na stav, ve kterém se nález posuzoval – tedy na commit s opravami. Kdyby šel zápis do téhož commitu jako ony, ten commit by se dotkl i souborů z pole *Lokace*, expirační kontrola níž by hlásila změnu a **umlčení by vypršelo dřív, než ho kdo přečte**. Pořadí je proto: commitni opravy → zjisti `HEAD` → zapiš záznam → commitni sám zápis. Druhý commit mění jen `CLAUDE.md`, takže se lokací netýká a filtr drží.
+
+Doloženo 15. 9. 2026: záznam zapsaný v jednom commitu s opravami expiroval okamžitě a hned další běh ho předložil znovu.
+
 ### Umlčení expiruje změnou kódu
 
 **Záznam neplatí navždy, ale do první změny souborů, kterých se týká.** Ve Fázi 0 u každého záznamu spusť:
