@@ -563,6 +563,25 @@ class SouhlasPlatiProKontrakt(unittest.TestCase):
         self.assertFalse(stopa.exists(), "příkaz z podadresáře se spustil pod souhlasem pro repozitář")
         self.assertIn("podadresáři", v.stderr)
 
+    def test_zmena_textu_pod_kontraktem_souhlas_neruzi(self):
+        """Souhlas se vydává na příkazy, ne na odstavce kolem nich.
+
+        Otisk se původně počítal z celé sekce, takže přepsaný komentář pod
+        seznamem zablokoval kontrolu, přestože se žádný příkaz nezměnil –
+        doloženo hodinu po zavedení té pojistky. Falešný poplach je u vynucovací
+        vrstvy horší směr selhání než propuštěná chyba: vede k jejímu vypnutí.
+        """
+        (self.repo / "CLAUDE.md").write_text(
+            "# T\n\n## Kontrakt příkazů\n\n- test: true\n\nPůvodní vysvětlení.\n", encoding="utf-8")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        (self.repo / "CLAUDE.md").write_text(
+            "# T\n\n## Kontrakt příkazů\n\n- test: true\n\nPřepsané vysvětlení, delší a jiné.\n",
+            encoding="utf-8")
+        v = self.bezi(self.repo)
+        self.assertNotIn("změnil", v.stderr, "změna textu pod kontraktem si vyžádala nový souhlas")
+
     def test_zmeneny_kontrakt_se_nespusti(self):
         """Souhlas se vydává na konkrétní kontrakt, ne na repozitář navždy."""
         stopa = self.tmp / "NESMI-VZNIKNOUT"

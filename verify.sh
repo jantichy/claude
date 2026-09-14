@@ -181,6 +181,18 @@ find_contract() {
 # Sekce ## Kontrakt příkazů, vždy z těla bez bloků kódu. Jedna definice pro --allow i běh.
 contract_section() { md_body "$1" | sed -n '/^## Kontrakt příkazů/,/^## /p'; }
 
+# Otisk kontraktu pro souhlas: JEN spouštěné řádky `- klíč: příkaz`, ne celá sekce.
+# Souhlas se vydává na to, co se bude spouštět – kdežto sekce nese i vysvětlující
+# text pod seznamem, takže otisk z celé sekce si vyžádal nové odsouhlasení po každé
+# editaci komentáře. Doloženo 14. 9. 2026 hodinu po zavedení: přepsaný odstavec
+# o testech zablokoval kontrolu, přestože se žádný příkaz nezměnil. Falešný poplach
+# je u vynucovací vrstvy horší směr selhání než propuštěná chyba – vede k vypnutí.
+contract_fingerprint() {
+  contract_section "$1" \
+    | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9_-]*\):[[:space:]]\{1,\}\(.*\)$/\1=\2/p' \
+    | sed 's/[[:space:]]*$//' | sha
+}
+
 # --- Výpis a odebrání souhlasu -------------------------------------------------
 # Souhlas musí jít i zjistit a odebrat, ne jen vydat: po naklonování cizího
 # repozitáře, kterému jsem ho omylem dal, by jinak nebyla cesta zpět.
@@ -279,7 +291,7 @@ if [ "${1:-}" = "--allow" ]; then
   # stačil. A po `rm -rf` a klonu cizího repozitáře na tutéž cestu se souhlas
   # zdědil celý. Uloží se proto i cesta ke kontraktu a otisk jeho sekce; běh
   # obojí porovná a při neshodě si vyžádá nový souhlas.
-  printf '%s\n%s\n%s\n' "$(canon "$P")" "$MD" "$(printf '%s' "$SEC" | sha)" \
+  printf '%s\n%s\n%s\n' "$(canon "$P")" "$MD" "$(contract_fingerprint "$MD")" \
     > "$ALLOW_DIR/$RKEY" || die "nelze zapsat souhlas do $ALLOW_DIR"
   [ -s "$ALLOW_DIR/$RKEY" ] || die "souhlas se nezapsal."
   echo "Průběžná kontrola poběží v $P, podle kontraktu v $MD."
@@ -424,7 +436,7 @@ TOPLEVEL=$(git -C "$PROJ" rev-parse --show-toplevel 2>/dev/null || true)
 if [ -n "$TOPLEVEL" ] && [ "$(canon "$TOPLEVEL")" != "$PROJ" ]; then
   die "kontrakt $CLAUDE_MD leží v podadresáři, ne v kořeni pracovního stromu ($TOPLEVEL). Souhlas pro repozitář na něj neplatí, nespustil jsem nic."
 fi
-if [ "$(printf '%s' "$(contract_section "$CLAUDE_MD")" | sha)" != "$ULOZENY_OTISK" ]; then
+if [ "$(contract_fingerprint "$CLAUDE_MD")" != "$ULOZENY_OTISK" ]; then
   die "kontrakt v $CLAUDE_MD se od vydání souhlasu změnil, nespustil jsem nic. Projdi si ho a potvrď: ~/.claude/verify.sh --allow $PROJ"
 fi
 
