@@ -45,6 +45,7 @@ Navíc si zjisti tohle:
    - `~/Dev/context/text/typography.md` – česká sazba čísel, procent, jednotek, dat a interpunkce. **Vždy** – report je plný čísel.
    - `~/Dev/context/web/web.md` – část pro **statickou stránku otevřenou z disku** (velikost písma, kontrast, šířka řádku, responzivita, meta tagy). Části pro stránku na serveru a pro dynamickou aplikaci se sem nevztahují.
    - `~/Dev/context/analytics/analytics.md` – jsou-li data z GA4, GTM nebo BigQuery. Ovlivňuje to interpretaci, ne vzhled.
+   - `~/Dev/context/advertising/advertising.md` – jsou-li data z reklamních systémů (Google Ads, Meta, Sklik, LinkedIn). Rozhoduje o tom, co v číslech vůbec hledat: pokles konverzí po změně konverzní akce znamená něco jiného než pokles z poklesu poptávky.
 3. **Vyvolej skill `dataviz`** – dřív, než napíšeš první řádek kódu grafu. Řeší volbu typu grafu, palety, os a legend. Bez něj vzniknou grafy, které spolu nedrží.
 
 ------

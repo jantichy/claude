@@ -361,6 +361,14 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
 ## Fáze 8 – Git a závěr
 
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*). Čtenářem je **příští `/cleanup`**, který jinak nepozná, co zůstalo mimo rozsah úklidu a jak se s tím naložilo – a bude se na totéž ptát znovu.
+
+```
+- **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · N nevypořádaných témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak se s tím naložilo>
+```
+
+Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.
+
 **Git:**
 
 - `git status` musí být **čistý** – žádné rozpracované ani neotrackované soubory. Co tam být nemá, patří do `.gitignore`; co tam patří, se commitne.

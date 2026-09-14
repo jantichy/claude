@@ -260,6 +260,15 @@ Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/RULES.md`, *
 
 ## Fáze 6 – Závěrečné shrnutí
 
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*). Čtenářem je **příští `/consistency`**, který jinak nepozná, co už bylo auditované a s jakým vědomě zúženým rozsahem – a projede totéž znovu.
+
+```
+- **YYYY-MM-DD** · `/consistency` · `<short HEAD>` · <rozsah> · N nálezů (X opraveno mechanicky, Y po odsouhlasení, Z won't fix)
+```
+
+Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `done.md`, krok přeskoč nahlas.**
+
+
 Po projití všech problémů zobraz:
 
 ```
