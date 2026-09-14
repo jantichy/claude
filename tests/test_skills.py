@@ -544,12 +544,18 @@ class NosneCasti(unittest.TestCase):
 
         `severity` rozhoduje, jestli nález půjde na ověření; `basis` je to, o co se
         opírá. Bez nich je výstup panelu souvislý text, ne data.
+
+        Hledá se v celém adresáři skillu, ne jen v `SKILL.md`: norma velí vytáhnout
+        dlouhá zadání pro agenty do vedlejšího souboru, takže kontrola vázaná na
+        tělo by po takovém přesunu hlásila ztrátu pole, které se jen přestěhovalo.
         """
+        def vse(jmeno):
+            return "\n".join(body(f) for f in sorted((ROOT / "skills" / jmeno).glob("*.md")))
+
         for jmeno in ("review", "attack"):
             with self.subTest(skill=jmeno):
-                text = body(ROOT / f"skills/{jmeno}/SKILL.md")
-                self.assertIn('"severity"', text, f"/{jmeno}: zadání agentů nemá pole severity")
-        self.assertIn('"basis"', body(ROOT / "skills/review/SKILL.md"),
+                self.assertIn('"severity"', vse(jmeno), f"/{jmeno}: zadání agentů nemá pole severity")
+        self.assertIn('"basis"', vse("review"),
                       "/review: zadání specialistů nemá pole basis")
 
     def test_datum_se_vyrabi_prikazem(self):
@@ -1069,7 +1075,7 @@ class SouladSNormou(unittest.TestCase):
     PREFLIGHT = ROOT / "skills" / "PREFLIGHT.md"
 
     #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
-    MIGRACE = {"review", "transcript"}
+    MIGRACE = {"transcript"}
 
     #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak
     #: tiše ukazuje jinam – proto to má být v PREFLIGHT.md, ne v odkazu.
