@@ -273,10 +273,16 @@ if [ "${1:-}" = "--allow" ]; then
   [ -n "$OTHER" ] && echo "  Nespouští: $OTHER (jen dokumentace v kontraktu)"
   echo
   echo "Platí pro celý repozitář včetně jeho worktree – nová větev si o souhlas znovu neříká."
+  echo "Neplatí ale pro podadresáře s vlastním CLAUDE.md: rozbalený cizí projekt"
+  echo "ve vendor/ nebo stažený tarball si souhlas nepůjčí."
   echo
-  echo "Souhlas platí pro REPOZITÁŘ, ne pro ty konkrétní řádky:"
-  echo "co ty příkazy udělají, určuje package.json, Makefile nebo konfigurace v tomhle repu"
-  echo "a to se neschvaluje. Do cizího naklonovaného repozitáře souhlas nedávej."
+  echo "Souhlas je vydaný na TENHLE kontrakt. Jakmile se sekce ## Kontrakt příkazů"
+  echo "změní, hook se zastaví a vyžádá si nové odsouhlasení – ať se spouštěné"
+  echo "příkazy nedají vyměnit commitem, který si nikdo nepřečte."
+  echo
+  echo "Co ty příkazy udělají, ale určuje package.json, Makefile nebo konfigurace"
+  echo "v tomhle repu, a to se neschvaluje. Do cizího naklonovaného repozitáře"
+  echo "souhlas nedávej."
   exit 0
 fi
 
