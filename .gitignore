@@ -49,3 +49,8 @@ __pycache__/
 
 # Běhový stav skillů (fronta nálezů z /review, /oponent – může obsahovat citlivý obsah)
 .claude/run/
+
+# Tajemství – návnady i skutečné soubory; deny pravidla je blokují modelu,
+# .gitignore je drží mimo veřejný repozitář
+.env
+.env.*
