@@ -69,7 +69,8 @@ PRAVIDLA HLÁŠENÍ:
 - Když má víc nálezů společnou příčinu, seskup je: root nález + u následků vyplň
   `related_root` s titulkem rootu.
 
-ZÁVAŽNOST:
+ZÁVAŽNOST (škálu drží `~/.claude/skills/SEVERITY.md`, tady je opsaná schválně –
+agent ten soubor nemá načtený):
 - KRITICKÉ – bezpečnost, ztráta dat, nepřístupnost pro část uživatelů, nevratná akce bez pojistky
 - STŘEDNÍ – reálný dopad na správnost, použitelnost nebo udržovatelnost
 - KOSMETICKÉ – bez praktického dopadu

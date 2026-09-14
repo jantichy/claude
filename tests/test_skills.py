@@ -1112,6 +1112,16 @@ class SouladSNormou(unittest.TestCase):
         # a dřív ho vzor kvůli hvězdičce minul. Právě v té podobě byl v repozitáři
         # skutečný odkaz dovnitř cizí fáze, který kontrola neviděla.
         r"(?:`/[a-z-]+`|skills/\w+/SKILL\.md`),\s*\*{0,2}(?:Fáze|Krok)")
+    #
+    # Zkoušelo se to rozšířit i na odkaz do **vedlejšího souboru** cizího skillu
+    # (`/attack` → `skills/review/agents.md`), ale širší vzor hlásil falešné
+    # poplachy na šesti skillech naráz: chytal odkazy na **jména sekcí**, které
+    # jsou legitimní a dnes se právě zaváděly jako náprava odkazů na čísla fází.
+    #
+    # Rozhoduje totiž křehkost, ne cizost: **číslo fáze se přečísluje**, jméno
+    # sekce ne. Odkaz na jméno je proto v pořádku, ať míří kamkoliv. Duplicitu
+    # sdíleného obsahu řeší jiné pravidlo (*Single source of truth*) a jinými
+    # prostředky – sdíleným souborem v `skills/`, jako je `SEVERITY.md`.
 
     #: Přípony, které v adresáři skillu znamenají spustitelný vnitřek.
     SKRIPTY = ("*.sh", "*.py", "*.swift")
