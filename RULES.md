@@ -138,6 +138,12 @@ U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek expor
 
 **Deleguj kvůli kontextu, ne kvůli úspoře.** Rozeslání práce agentům šetří hlavně kontext hlavní session – celkové tokeny spíš zvýší, protože každý agent si musí načíst svoje. Když se data do hlavní session vejdou a nepřekáží, je levnější je přečíst rovnou.
 
+**Hloubka delegace je jedna.** Agent, kterého jsi poslal, už dalšího neposílá. Zisk z rozeslání práce plyne z toho, že si každý agent nese vlastní kontext místo tvého – jenže ten zisk se ve druhé úrovni nekoná: vnuk načítá totéž co jeho rodič, a navíc se jeho výstup vrací přes prostředníka, který ho převypráví. Násobí se tím tokeny i čekání a přibývá místo, kde se nález ztratí.
+
+**Dnes to drží jen tohle pravidlo, mechanismus k němu chybí** – a je to vědomá mezera, ne opomenutí. Skilly typ subagenta neurčují, takže dostane výchozí typ s plnou sadou nástrojů včetně toho na spouštění dalších agentů. Vynutit hloubku by šlo jedině typem agenta, který ten nástroj nemá; ty dostupné jsou ale řezané na čtení, ne na posuzování, takže by se tím rozbil panel specialistů. Kdo to bude řešit, začne tím, že takový typ agenta založí – ne přeformulováním věty v zadání.
+
+**Potřebuje-li skill sám víc úrovní, je to signál, že se špatně dělí práce.** Rozešli všechny agenty z hlavní session naráz a syntézu si nech.
+
 ### Model a effort podle úkolu
 
 Volba není „vždycky to nejchytřejší“ ani „vždycky to nejlevnější“. Rozhoduje, **čí výstup je vstupem pro koho**: chyba v návrhu nebo v ověření nálezu se násobí do všeho, co po ní přijde, kdežto chyba v mechanickém sběru se pozná hned.
