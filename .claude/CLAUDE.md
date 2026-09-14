@@ -114,6 +114,9 @@ nezmění kód, kterého se týkají.
 - **2026-09-14** · `2ca14c5` · *CI spouští kontrakt příkazů z cizího pull requestu* (zdroj: review, podklad: OWASP – integrita dat): Přesně to CI dělá a jinak by nekontrolovalo nic. Dopad je přitom omezený týmiž fakty jako u nálezu o nepřipnutých akcích: repozitář nemá jediný secret, `default_workflow_permissions` je `read`, `can_approve_pull_request_reviews` je `false` a runner je efemérní – cizí kód nemá co ukrást a může leda podvrhnout výsledek vlastní kontroly. Čím se to nahrazuje: `fork-pr-contributor-approval` je nastavené na `first_time_contributors`, takže první PR od cizího člověka nespustí nic bez ručního schválení. Zbývá vědomě přijaté riziko, že přispěvatel, který už jednou prošel, pustí workflow bez schválení. Zruší se zpřísněním na `all_external_contributors`, jakmile do repozitáře přijde první cizí PR – do té doby je to nastavení proti nikomu.
   - Lokace: .github/workflows/verify.yml (`on: pull_request`, krok „Spusť kontrakt příkazů“)
 
+- **2026-09-14** · `fd75365` · *Parsery cizích exportů nemají limit na délku ani hloubku* (zdroj: review, podklad: OWASP – neošetřený vstup): Vstupem nejsou cizí data, ale **vlastní** exporty z účtů autora, které si sám stáhl. Nejhorší dopad je `RecursionError` nebo vyčerpaná paměť, tedy pád skriptu nad souborem, který si člověk právě vyexportoval – ne spuštění kódu ani únik dat. Čím se to nahrazuje: skripty se pouštějí ručně a jejich výstup se porovnává s archivem, takže se pád pozná okamžitě. Zruší se, jakmile by parser měl číst export od někoho jiného.
+  - Lokace: skills/compose/scripts/gen_twitter_md.py, skills/compose/scripts/gen_bluesky_md.py (`json.loads`)
+
 ## Autocommit
 
 Autocommit je zapnutý.
