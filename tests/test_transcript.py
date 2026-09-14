@@ -24,6 +24,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 
 Jen stdlib. `ffmpeg` se nevyžaduje – kde není, testy se přeskočí nahlas.
 """
+import json
 import os
 import shutil
 import subprocess
@@ -231,3 +232,151 @@ class SeznamVystupnichPripon(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PrirazeniMluvcich(unittest.TestCase):
+    """`merge.py` přiřazuje repliky mluvčím podle překryvu – a smí to odmítnout.
+
+    Je to nejtišší vada v celém `/transcriptu`: špatně přiřazená replika vypadá
+    v přepisu stejně věrohodně jako správná, takže ji pozná jen ten, kdo na té
+    schůzce byl. Skript to řeší dvěma prahy (`MIN_RATIO`, `MIN_MARGIN`) a raději
+    nechá mluvčího prázdného, než aby hádal. Bez testu jsou ty prahy jen dvě
+    konstanty, které někdo při první nepřiřazené replice zvedne.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import importlib.util
+        cesta = ROOT / "skills" / "transcript" / "merge.py"
+        spec = importlib.util.spec_from_file_location("merge_pod_testem", cesta)
+        cls.merge = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.merge)
+
+    def replika(self, start, end, text="text"):
+        return {"start": start, "end": end, "text": text}
+
+    def usek(self, start, end, speaker):
+        return {"start": start, "end": end, "speaker": speaker}
+
+    def test_jasny_prekryv_se_priradi(self):
+        cue = self.replika(0, 10)
+        turns = [self.usek(0, 10, "SPEAKER_00")]
+        self.assertEqual(self.merge.assign(cue, turns), "SPEAKER_00")
+
+    def test_tesny_naskok_zustane_neprirazeny(self):
+        """Vítěz pokrývá 70 % repliky, ale druhý 60 % – náskok je desetina.
+
+        Tohle je scénář, na kterém stojí `MIN_MARGIN`: `MIN_RATIO` je splněný,
+        takže kdyby druhý práh zmizel, replika by nálepku dostala, přestože je
+        rozdíl mezi mluvčími v šumu. Úseky se překrývají schválně – pyannote je
+        tak vrací, když dva lidé mluví přes sebe, a to je právě ta chvíle, kdy
+        je přiřazení nejméně jisté a zároveň nejvíc svádí.
+        """
+        cue = self.replika(0, 10)
+        turns = [self.usek(0, 7, "SPEAKER_00"), self.usek(3, 9, "SPEAKER_01")]
+        self.assertIsNone(self.merge.assign(cue, turns))
+
+    def test_slaby_podil_zustane_neprirazeny(self):
+        """Vítěz sice není zpochybněný, ale pokrývá jen polovinu repliky –
+        zbytek je ticho nebo nikým nepřiznaný hlas."""
+        cue = self.replika(0, 10)
+        turns = [self.usek(0, 5, "SPEAKER_00")]
+        self.assertIsNone(self.merge.assign(cue, turns))
+
+    def test_zadny_prekryv_zustane_neprirazeny(self):
+        cue = self.replika(0, 10)
+        turns = [self.usek(20, 30, "SPEAKER_00")]
+        self.assertIsNone(self.merge.assign(cue, turns))
+
+    def test_rozdelene_useky_tehoz_mluvciho_se_scitaji(self):
+        """Pyannote vrací víc úseků na mluvčího; bez sečtení by dlouhá replika
+        přerušená nádechem spadla pod práh a zůstala bez jména."""
+        cue = self.replika(0, 10)
+        turns = [self.usek(0, 4, "SPEAKER_00"), self.usek(4.5, 10, "SPEAKER_00")]
+        self.assertEqual(self.merge.assign(cue, turns), "SPEAKER_00")
+
+    def test_mutace_prahu_nalepku_vyrobi(self):
+        """Ověří, že testy výš měří prahy, a ne jen shodu s návratovou hodnotou.
+
+        Každý práh se vypíná ZVLÁŠŤ, a to je tady to podstatné. První verze
+        těchhle testů shazovala oba naráz a odmítnutí přičítala `MIN_MARGIN`,
+        jenže scénář 55:45 padá na `MIN_RATIO` – druhý práh tak nehlídal nikdo
+        a mutace `MIN_MARGIN = 0` neshodila jediný test. Doloženo 14. 9. 2026."""
+        puvodni = (self.merge.MIN_RATIO, self.merge.MIN_MARGIN)
+        try:
+            # Slabý podíl: vypnout MIN_RATIO stačí, aby nálepku dostal.
+            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = 0.0, puvodni[1]
+            self.assertEqual(
+                self.merge.assign(self.replika(0, 10), [self.usek(0, 5, "SPEAKER_00")]),
+                "SPEAKER_00", "test slabého podílu neměří MIN_RATIO")
+
+            # Těsný náskok: vypnout MIN_MARGIN stačí, aby nálepku dostal.
+            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = puvodni[0], 0.0
+            self.assertEqual(
+                self.merge.assign(self.replika(0, 10),
+                                  [self.usek(0, 7, "SPEAKER_00"), self.usek(3, 9, "SPEAKER_01")]),
+                "SPEAKER_00", "test těsného náskoku neměří MIN_MARGIN")
+        finally:
+            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = puvodni
+
+
+class MergeEndToEnd(unittest.TestCase):
+    """Spojení přepisu s mluvčími nad skutečnými vstupy, přes spuštěný skript."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="merge-test-"))
+        self.merge_py = ROOT / "skills" / "transcript" / "merge.py"
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_vyrobi_json_i_vtt_se_jmeny(self):
+        srt = self.tmp / "a.srt"
+        srt.write_text(
+            "1\n00:00:00,000 --> 00:00:10,000\nDobrý den.\n\n"
+            "2\n00:00:10,000 --> 00:00:20,000\nNazdar.\n\n", encoding="utf-8")
+        diar = self.tmp / "d.json"
+        diar.write_text(json.dumps({
+            "speakers": ["SPEAKER_00", "SPEAKER_01"], "num_speakers": 2,
+            "turns": [{"start": 0, "end": 10, "speaker": "SPEAKER_00"},
+                      {"start": 10, "end": 20, "speaker": "SPEAKER_01"}],
+        }), encoding="utf-8")
+        names = self.tmp / "n.json"
+        names.write_text(json.dumps({"SPEAKER_00": "Honza"}), encoding="utf-8")
+
+        hotovo = subprocess.run(
+            ["python3", str(self.merge_py), str(srt), str(diar),
+             str(self.tmp / "out"), "--names", str(names)],
+            capture_output=True, text=True)
+        self.assertEqual(hotovo.returncode, 0, hotovo.stderr)
+
+        data = json.loads((self.tmp / "out.json").read_text(encoding="utf-8"))
+        self.assertEqual([s["speaker"] for s in data["segments"]],
+                         ["SPEAKER_00", "SPEAKER_01"])
+        self.assertEqual(data["unassigned_segments"], 0)
+        vtt = (self.tmp / "out.vtt").read_text(encoding="utf-8")
+        self.assertIn("<v Honza>Dobrý den.", vtt)
+        self.assertIn("<v SPEAKER_01>Nazdar.", vtt,
+                      "nepojmenovaný mluvčí musí zůstat pod svým kódem, ne zmizet")
+
+    def test_neprirazena_replika_zustane_bez_znacky(self):
+        """Ve VTT nesmí u nepřiřazené repliky vzniknout prázdné `<v >`."""
+        srt = self.tmp / "a.srt"
+        srt.write_text("1\n00:00:00,000 --> 00:00:10,000\nKdo to řekl?\n\n", encoding="utf-8")
+        diar = self.tmp / "d.json"
+        diar.write_text(json.dumps({
+            "speakers": ["SPEAKER_00", "SPEAKER_01"], "num_speakers": 2,
+            "turns": [{"start": 0, "end": 5.5, "speaker": "SPEAKER_00"},
+                      {"start": 5.5, "end": 10, "speaker": "SPEAKER_01"}],
+        }), encoding="utf-8")
+
+        hotovo = subprocess.run(
+            ["python3", str(self.merge_py), str(srt), str(diar), str(self.tmp / "out")],
+            capture_output=True, text=True)
+        self.assertEqual(hotovo.returncode, 0, hotovo.stderr)
+        data = json.loads((self.tmp / "out.json").read_text(encoding="utf-8"))
+        self.assertIsNone(data["segments"][0]["speaker"])
+        self.assertEqual(data["unassigned_segments"], 1)
+        vtt = (self.tmp / "out.vtt").read_text(encoding="utf-8")
+        self.assertNotIn("<v ", vtt)
+        self.assertIn("Kdo to řekl?", vtt)
