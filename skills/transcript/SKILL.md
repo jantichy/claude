@@ -23,6 +23,17 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 
 **Přepisem to nemusí končit.** Nese-li nahrávka znalost, která má přežít i po tom, co se přepis zapomene – výklad na školení, konzultace, cizí prezentace –, nabídni v závěru `/learn`: zapracuje ji do znalostní báze místo toho, aby zůstala v samostatném souboru na disku.
 
+## Jak je to postavené uvnitř
+
+**Rozpoznávání řeči dělá whisper.cpp, rozlišování mluvčích pyannote a řezání ffmpeg – a všechno tohle je implementační detail, ne rozhraní.** Totéž platí pro rozdělení práce mezi skripty v adresáři skillu (jejich soupis drží *Soubory skillu* níž), pro jména proměnných prostředí, kterými se řídí, i pro naměřená nastavení v [`internals.md`](internals.md). Kdyby whisper nahradil jiný rozpoznávač, skripty se slily do jednoho nebo se přepínač přejmenoval, nikdo mimo tenhle adresář to nemá poznat.
+
+**Závazné je naopak tohle a nesmí se změnit tiše:**
+
+- **Nic neopouští počítač.** Celý přepis běží lokálně a offline; je to důvod, proč skill existuje.
+- **Tvar výstupu** – přepis a shrnutí v Markdownu podle *Formát souhrnného MD* a *Pravidla shrnutí* níž.
+- **Zdrojová nahrávka zůstává nedotčená.** Skill k ní smí jen číst; mezivýstupy se po dokončení uklidí.
+- **Průvodce se ptá, místo aby volil za uživatele** – zvlášť tam, kde by tichá volba přepsala existující přepis.
+
 ## Vstup a výstup
 
 - **Vstup:** soubory zadané v promptu. Když prompt žádný soubor neuvádí, vezmi všechny nahrávky v aktuálním adresáři. Podporované formáty:

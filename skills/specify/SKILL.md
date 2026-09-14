@@ -39,7 +39,9 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 - **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill mu jen předá řízení, až je zadání schválené.
 - **Neduplikuje `superpowers:brainstorming`.** Dialog, klasifikaci rozsahu i návrh řešení řídí ten skill.
 
-## Vztah k superpowers
+## Jak je to postavené uvnitř
+
+**Dialog a návrh řešení dělá `superpowers:brainstorming`, a to je implementační detail, ne rozhraní.** Kdyby ho nahradil jiný nástroj nebo vlastní postup, nikdo se to nemusí dozvědět. **Závazné je to, co po skillu zbude:** dva dokumenty na místech podle `~/.claude/STRUCTURE.md` – produktové požadavky a návrh řešení –, oba česky a bez datumových prefixů. Cizímu nástroji se to musí říct výslovně, protože má vlastní výchozí volbu (viz *Přepis výchozí cesty* níž).
 
 | Krok | Kdo ho dělá |
 |---|---|
