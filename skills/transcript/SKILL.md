@@ -24,6 +24,13 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 
 **Přepisem to nemusí končit.** Nese-li nahrávka znalost, která má přežít i po tom, co se přepis zapomene – výklad na školení, konzultace, cizí prezentace –, nabídni v závěru `/learn`: zapracuje ji do znalostní báze místo toho, aby zůstala v samostatném souboru na disku.
 
+## Co skill nedělá
+
+- **Nevytěžuje znalost, jen přepisuje.** Má-li se z nahrávky stát trvalá znalost v knowledge base, je na to `/learn` – ten si přepis vyžádá sám a pak ho rozpustí do existujících textů. Tenhle skill končí souborem na disku.
+- **Nepíše text autorovým hlasem.** Shrnutí je věcný výtah z toho, co zaznělo; na psaní textu je `/compose`.
+- **Neposílá nic ven.** Rozpoznávání i rozlišení mluvčích běží lokálně. Jediná výjimka je stažení modelu, a to jen jednou.
+- **Nepřekládá.** Výstup je v jazyce nahrávky; u dvojjazyčné nahrávky se řeže, ne převádí.
+
 ## Jak je to postavené uvnitř
 
 **Rozpoznávání řeči dělá whisper.cpp, rozlišování mluvčích pyannote a řezání ffmpeg – a všechno tohle je implementační detail, ne rozhraní.** Totéž platí pro rozdělení práce mezi skripty v adresáři skillu (jejich soupis drží *Soubory skillu* níž), pro jména proměnných prostředí, kterými se řídí, i pro naměřená nastavení v [`internals.md`](internals.md). Kdyby whisper nahradil jiný rozpoznávač, skripty se slily do jednoho nebo se přepínač přejmenoval, nikdo mimo tenhle adresář to nemá poznat.
@@ -45,11 +52,11 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 
   Když soubor zvukovou stopu nemá, převod na WAV selže a `transcribe.sh` to zapíše jako `### FAILED zaznam-<n> prevod-na-wav` – ohlas to uživateli a pokračuj dalšími. Když nenajdeš nic, oznam to a skonči.
 - **Výstup – vše vzniká v adresáři vstupní nahrávky, nezakládá se žádný podadresář a nic se nikam nepřesouvá:**
-  - `<název>.md` – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu)),
+  - `<název>.md` – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](output.md#pravidla-doslovného-přepisu)),
   - `<název>.srt` – tentýž obsah s časovými značkami, syrový z whisperu,
   - `<název>.vtt` – titulky se značkou `<v Jméno>`, protože SRT pole pro mluvčího nemá. Vzniká **vedle** SRT, jen s rozlišením mluvčích,
   - `<název>.json` – strojově čitelné úseky s časem, mluvčím a textem. Taky jen s rozlišením mluvčích,
-  - `YYYYMMDD - Výstižný název.md` – jedno společné shrnutí napříč všemi nahrávkami (viz [Formát souhrnného MD](#formát-souhrnného-md)).
+  - `YYYYMMDD - Výstižný název.md` – jedno společné shrnutí napříč všemi nahrávkami (viz [Formát souhrnného MD](output.md#formát-souhrnného-md)).
 
   Které z nich vzniknou, vybere uživatel v průvodci.
 
@@ -60,9 +67,13 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 
 ---
 
-## Postup
+## Krok 0 – Příprava
 
-### 1. Zjisti si fakta o vstupu
+**Tenhle skill neběží nad kódem projektu, takže body 1 až 3 z `~/.claude/skills/PREFLIGHT.md` nahrazuje vlastními předpoklady** – pouští se nad nahrávkou, která leží kdekoliv, často mimo repozitář. Body 4 a 5 odpadají ze stejného důvodu: nic nespouští nad kódem a nesahá na diff větve. Načti si ho přesto; platí z něj závěr o shrnutí zjištěného, než se cokoliv stane. Co je potřeba zjistit místo toho, stojí v kroku 1 níž.
+
+**Kroky místo fází jsou tu schválně.** Výsledkem téhle práce je to, co uživatel naodpovídá v průvodci – model, slovník jmen, co má vzniknout –, takže postup je sled otázek (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*).
+
+## Krok 1 – Zjisti si fakta o vstupu
 
 Ještě než se na cokoliv zeptáš, potřebuješ délku a datum – bez délky neumíš nabídnout odhady časů v prvním kroku průvodce.
 
@@ -181,7 +192,7 @@ en 0.999 mixed:cs,en
 
 **Krátká vsuvka v jiném jazyce mixed nevyvolá** – tři vzorky ji minou. Když se to stane, projeví se to až při čištění jako pasáž, která nedává smysl.
 
-### 2. Průvodce, krok první: model
+## Krok 2 – Průvodce, krok první: model
 
 Spočítej odhad běhu pro obě varianty. Tempo drží `rate.py`, který se sám kalibruje podle skutečnosti:
 
@@ -199,79 +210,11 @@ Zeptej se přes `AskUserQuestion`. **První možnost je vždy ta nejpravděpodob
 
 Odhady dosaď skutečné, ne zástupné. Když samostatných nahrávek zpracováváš víc, počítej ze součtu délek; u spojené schůzky je to prostě délka spojeného souboru.
 
-### 3. Průvodce, krok druhý: slovník jmen
+## Krok 3 – Průvodce, krok druhý: slovník jmen
 
-**Tohle je nejcennější krok celého skillu.** Whisper dostane seznam vlastních jmen a termínů předem (`--prompt`) a přestane je komolit už při rozpoznávání. Oprava dodatečně je principiálně slabší, protože vymyšlená oprava vypadá stejně věrohodně jako správná.
+**Postup i šablonu `.transcript-glossary.md` drží [`glossary.md`](glossary.md).** Načti si ho a řiď se jím; do těla skillu nepatří, protože se čte jen tady.
 
-Návrhy sestav ze čtyř zdrojů:
-
-1. **volný popis v promptu** – jména, firmy a produkty, které uživatel sám napsal,
-2. **kontext projektu**, ve kterém běžíš – `CLAUDE.md`, `docs/`, `README.md`, názvy v `content/`,
-3. **předchozí komunikace v téhle session**,
-4. **[`mishearings.md`](mishearings.md)** – zkomoleniny, které whisper dělá soustavně u každého, kdo mluví o daném oboru. Vezmi jen oddíl odpovídající oboru a jazyku nahrávky. **Do promptu jde správný tvar, nikdy zkomolenina** – tu by se model naučil.
-
-Rozděl je do **tří domén** a nabídni je jako jednu otázku s `multiSelect: true`. Konkrétní termíny vypiš v `description` každé možnosti, ať uživatel vidí, co odsouhlasuje:
-
-| Pořadí | Label | Co do ní patří |
-|---|---|---|
-| 1. | `Jména lidí` | účastníci, kolegové, zmínění lidé |
-| 2. | `Značky, produkty, weby` | firmy, nástroje, domény, názvy prostorů |
-| 3. | `Odborné termíny` | žargon oboru, interní pojmy, zkratky |
-
-Volbu „Other“ doplní `AskUserQuestion` samo – tudy uživatel dopíše, co jsi netrefil.
-
-Prázdnou skupinu vůbec nenabízej. Když nemáš návrh ani do jedné, otázku přeskoč a zeptej se rovnou na vlastní termíny.
-
-#### Rešerši dělej naplno, do promptu vybírej
-
-Tyhle dvě věci se pletou, a je to rozdíl mezi dobrým a špatným výsledkem.
-
-**Rešerši dělej naplno.** Vytěž ze zdrojů úplně všechno – klidně stovky jmen, názvů, zkratek a interních pojmů. Nic nezahazuj.
-
-**Do `WHISPER_PROMPT` vyber to, co v nahrávce opravdu zazní**, seřazené podle důležitosti. Vybírej podle dvou věcí naráz: **jak často to padne** a **jak snadno se to komolí**. Obecná slova, která model umí sám, do promptu nepatří – neuškodí, ale místo zabírají.
-
-**Počet položek pravidlem omezený není.** Dřív tu stálo „nejvýš deset“ s odůvodněním, že delší seznam ředí účinek, a **měření to vyvrátilo** (tabulka sedmi běhů je v [`internals.md`](internals.md)). Platí jedině **technický strop whisperu: `n_text_ctx/2`, tedy 224 tokenů.** `n_text_ctx` je 448 u turba i u `large-v3` – ověřeno výpisem whisperu při načtení obou modelů, takže strop je pro obě volby stejný. Změřeno na češtině: jednadvacet termínů (306 znaků) zabere 123 tokenů, takže se vejde **zhruba 38 termínů**.
-
-**Přeteče-li prompt, whisper zahodí jeho začátek**, ne konec – v kódu `prompt_past0.assign(… + (n - n_tokens), … + n)`, tedy „use only the last N tokens“. Řazení podle důležitosti od nejdůležitějšího tedy pomůže jen tehdy, když se slovník do stropu vejde; při přetečení by usekl přesně to, na čem záleží. **Drž se proto bezpečně pod hranicí** místo spoléhání na pořadí.
-
-Ořez je v našem řetězu **tichý**: whisper na něj varuje, ale `transcribe.sh` běží s `-np`, které výpis potlačí.
-
-To je strop daný modelem, ne doporučení: **složení celého seznamu rozhoduje víc než jeho délka a nedá se odhadnout dopředu.** Dva jednadvacetipoložkové slovníky nad touž nahrávkou daly 5/5 a 0/5.
-
-Vybrané položky slep čárkami do jednoho řetězce a předej jako `WHISPER_PROMPT`.
-
-#### Zbytek rešerše si ulož
-
-Všechno ostatní, co jsi našel, zapiš do `<workdir>/.transcript-glossary.md`:
-
-```markdown
-# Kontextový slovník – <název nahrávky>
-
-## Jazyk
-cs (detekováno v kroku 1, jistota 0,99)
-
-## Mluvčí
-(doplní krok 8, když se rozlišují)
-
-## V promptu whisperu
-Nazev.cz, Značka, interní pojem, místní jméno, …
-
-## Jména lidí
-Jana Nováková, Petr Svoboda, …
-
-## Značky, produkty, weby, místa
-Nazev.cz, Značka, s. r. o., …
-
-## Odborné a interní termíny
-zkratky oboru, interní pojmy, názvy rolí a útvarů, …
-
-## Zdroje
-prompt / docs/structure.md / session
-```
-
-Tenhle soubor je vstup pro čištění v kroku 9. **Whisperu dáváš výběr, tobě při čištění to nestačí** – tam potřebuješ úplný kontext, abys poznal, co je zkomolenina a co interní žargon. Bez něj hádáš.
-
-### 4. Průvodce, krok třetí: co má vzniknout
+## Krok 4 – Průvodce, krok třetí: co má vzniknout
 
 `AskUserQuestion` s `multiSelect: true`, v tomhle pořadí:
 
@@ -313,7 +256,7 @@ Druhá otázka v témže kroku. Pevný počet dělá výrazně míň chyb než a
 
 U „tří až čtyř“ a „pěti a víc“ se doptej na přesné číslo, nebo předej `auto` – rozsah pyannote nebere.
 
-### 5. Ověř závislosti
+## Krok 5 – Ověř závislosti
 
 Teď naplno, se všemi volbami z průvodce:
 
@@ -335,7 +278,7 @@ Když skončí nenulově, vypiš uživateli, co chybí, nabídni instalaci (skri
 
 Instalace předpokládá [Homebrew](https://brew.sh). Vyvinuto a testováno na macOS.
 
-### 6. Spusť přepis na pozadí
+## Krok 6 – Spusť přepis na pozadí
 
 ```bash
 WHISPER_MODEL=<turbo|large-v3> \
@@ -372,7 +315,7 @@ Polož **jednu otázku přes `AskUserQuestion`** se dvěma volbami:
 
 Chyba jednoho souboru neshodí zbytek běhu – zapíše se `### FAILED` a pokračuje se dalším. Po doběhnutí zkontroluj, jestli v logu nějaké `### FAILED` není, a **ohlas ho uživateli**. Po běhu po úsecích hledej navíc `### CHUNKSTAT zaznam-N <ok>/<z>`: **soubor s přeskočeným úsekem dostane `### DONE` jako každý jiný**, takže ztráta se jinak nepozná. Nesedí-li obě čísla, řekni uživateli, kolik úseků chybí.
 
-### 7. Zkontroluj, kolik zvuku se přepsalo
+## Krok 7 – Zkontroluj, kolik zvuku se přepsalo
 
 V logu je pro každý úspěšně přepsaný soubor řádek:
 
@@ -398,7 +341,7 @@ Model začíná u každého úseku bez kontextu, takže se smyčka nemá jak š�
 
 **Nezapínej to sám a nikdy jako výchozí.** Na každé hranici úseku vzniká řez uprostřed věty – v ostrém testu se okolo něj jedna replika zopakovala nadvakrát. Platí se tím za odstraněnou smyčku, ne za lepší přepis. Zároveň platí, že po takovém běhu **`SPEECHSTAT` klesne o zhruba tolik, kolik zabíraly přeskočené úseky** – nízké číslo je tady informace, ne poplach.
 
-### 8. Rozliš mluvčí – jen když si to uživatel vybral
+## Krok 8 – Rozliš mluvčí – jen když si to uživatel vybral
 
 Druhý, **samostatný průchod** nad WAV z kroku 6. Když spadne, přepis tím nepřichází vniveč – ohlas selhání a pokračuj krokem 9 bez mluvčích.
 
@@ -432,9 +375,9 @@ Vždycky nabídni i možnost nechat mluvčí anonymní. Anonymní mluvčí je le
 
 Jména ulož do `<workdir>/.speakers.json` a pusť `merge.py` znovu s `--names`, ať se propíšou do obou výstupů. Zapiš je i do `.transcript-glossary.md`, aby s nimi počítalo čištění i shrnutí.
 
-### 9. Vyrob výstupy, které si uživatel vybral
+## Krok 9 – Vyrob výstupy, které si uživatel vybral
 
-**Doslovný přepis.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor; u spojené schůzky, kde je soubor jediný, rozděl vstup na zhruba stejně velké souvislé části a dej každému agentovi jednu, s překryvem pár vět, ať se na švu neztratí replika. **Rozlišovali-li se mluvčí, dělej řez mezi replikami v `<název>.json`** – ten je nese i se jmény, takže agent dostane rovnou dialog. Jinak děl `<název>.txt` po řádcích. **Nedělej řez podle kapitol:** ty ve vstupu nejsou, mezinadpisy vznikají teprve tím čištěním, které má agent udělat) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
+**Doslovný přepis.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](output.md#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor; u spojené schůzky, kde je soubor jediný, rozděl vstup na zhruba stejně velké souvislé části a dej každému agentovi jednu, s překryvem pár vět, ať se na švu neztratí replika. **Rozlišovali-li se mluvčí, dělej řez mezi replikami v `<název>.json`** – ten je nese i se jmény, takže agent dostane rovnou dialog. Jinak děl `<název>.txt` po řádcích. **Nedělej řez podle kapitol:** ty ve vstupu nejsou, mezinadpisy vznikají teprve tím čištěním, které má agent udělat) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
 
 **Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen ten výběr, který šel do promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i **stručný brief pro shrnutí** – témata, závěry a kdo co slíbil. Shrnutí pak píšeš z briefů a slovníku, ne z celých přepisů znovu.
 
@@ -462,9 +405,9 @@ SRT se vyrábí vždycky, protože z něj `transcribe.sh` počítá podíl přep
 
 Repliku bez přiřazeného mluvčího uveď bez jména, ne pod nejbližším mluvčím.
 
-**Shrnutí.** Navrhni uživateli „Výstižný název“ celé nahrávky a **nech si ho odsouhlasit** (ať nemusí nic vymýšlet ani psát), pak zapiš `YYYYMMDD - Výstižný název.md` dle [Formátu souhrnného MD](#formát-souhrnného-md).
+**Shrnutí.** Navrhni uživateli „Výstižný název“ celé nahrávky a **nech si ho odsouhlasit** (ať nemusí nic vymýšlet ani psát), pak zapiš `YYYYMMDD - Výstižný název.md` dle [Formátu souhrnného MD](output.md#formát-souhrnného-md).
 
-### 10. Úklid
+## Krok 10 – Úklid
 
 Smaž mezivýstupy: všechny `<název>.txt`, `<název>.wav`, `<název>.16k.wav`, `<název>.diarization.json`, `<název>.16k.diarization.json`, `.speakers.json`, `whisper-progress.log` a `.transcript-glossary.md`. **U spojené schůzky s diarizací leží v adresáři `<název>.wav` i `<název>.16k.wav` zároveň** – první vyrobil `join.sh`, druhý `transcribe.sh`; smaž oba. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<název>.srt` po sobě ukliď, i když mezitím vznikl.
 
@@ -480,6 +423,17 @@ Než slovník smažeš, **vypiš uživateli i termíny, které jsi nechal být**
 
 ---
 
+## Krok 11 – Závěr
+
+Vypiš, co vzniklo: u každé nahrávky jméno souboru, délku zdroje a to, které výstupy si uživatel vybral. **Uveď i to, co se nepovedlo nebo přeskočilo** – nízký podíl přepsaného zvuku, nerozlišení mluvčích kvůli chybějícím závislostem, část, která se musela řezat.
+
+**Nese-li nahrávka znalost, která má přežít i po tom, co se přepis zapomene** – výklad na školení, konzultace, cizí prezentace –, nabídni `/learn`.
+
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `Přepis je hotový a uklizený, můžeš …`
+- `Hotový není – brání tomu: <konkrétní seznam>.`
+
 ## Průběžný stav – NEspouštěj automaticky
 
 Opakované časovače zbytečně plýtvají kapacitou. Progress bar vypiš **jen když se uživatel zeptá**, jak to jde:
@@ -494,54 +448,9 @@ Ukáže procenta, zpracované a celkové minuty, kolik zbývá, tempo (× realti
 
 ---
 
-## Pravidla doslovného přepisu
+## Formát výstupů
 
-Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v souhrnu. Připrav doslovný přepis v jazyce nahrávky:
-
-- Uprav jen **stylistiku a slovosled** tam, kde je to potřeba, aby se text dal plynule a smysluplně číst.
-- **Oprav pravopis a gramatiku** podle pravidel jazyka nahrávky. Rozpoznávač neumí i/y ve shodě přísudku s podmětem, plete si tvary, které znějí stejně, a sází interpunkci od oka. Mluvčí to neřekl špatně – špatně to zapsal model, takže to není zásah do jeho projevu, ale oprava chyby přepisu. Typicky: „mrtvoli“ místo **mrtvoly**, čárky ve vedlejších větách, velká písmena u vlastních jmen. **Které pravidlo použít, řekne jazyk zjištěný v kroku 1**, ne domněnka, že jde o češtinu. U češtiny platí `~/Dev/context/text/text.md`, sekce *Gramatika a pravopis*, a celý `~/Dev/context/text/typography.md`; u jiného jazyka jeho vlastní konvence – anglický text má anglické uvozovky a anglickou interpunkci, ne české.
-- **Nespisovné tvary a hovorovou mluvu ale nech být.** „Bysme“, „vokno“, „dycky“ nebo „démoni“ místo demonstrátorů jsou to, jak lidé mluví, a do doslovného přepisu patří. Opravuje se chyba zápisu, ne mluvčí.
-- Odstraň **výplňová slova** (hesitační výplně) a **opakovaná slova** / místa, kde se řečník zamotal při hledání formulace.
-- **Odstraň halucinace ASR** – i s VAD se občas objeví nesmyslné opakující se řádky (dokola tatáž věta, „Titulky vytvořil …“). Takové smyčky celé smaž.
-- Rozděl text do **ucelených kapitol** s výstižnými mezinadpisy (`##`).
-- Každou kapitolu rozděl do **kratších odstavců** – žádné dlouhé bloky.
-- Nosné pojmy a důležitá sdělení vyznač **tučně**.
-- Výčty uveď jako **odrážkový/číslovaný seznam**, kde to dává smysl.
-- **Oprava přeslechů:** podle tématu a kontextu najdi a oprav slova, kterým rozpoznávač rozuměl špatně – tak, jak jsou, nedávají smysl, ale pravděpodobně jde o zkomoleninu jiného slova, které by v daném kontextu smysl dávalo.
-- **Vlastní jména a názvy:** stejně oprav jména a názvy zkomolené špatnou výslovností nebo cizím přízvukem. Slovník z kroku 3 je pro tuhle opravu závazný zdroj správných tvarů.
-- **České jméno v cizojazyčné nahrávce piš česky.** Když v anglicky mluveném záznamu zazní české jméno, firma nebo místo, rozpoznávač ho přepíše foneticky tak, jak to vyslovil cizinec – „Novak“, „Yarda“, „Brno“ jako „Burno“, „Škoda“ jako „Skoda“. Vrať mu **původní český tvar i s diakritikou**, i když je zbytek věty anglicky. Platí to oběma směry a je to jediná oprava, kterou děláš i tam, kde přepsané slovo dává v cizím jazyce zdánlivě smysl.
-- **Neopravuj to, čemu jen nerozumíš.** Když stejné podivné slovo dává model opakovaně a konzistentně, je to nejspíš interní žargon, ne přeslech. Nech ho být, případně se zeptej.
-- U dialogu **nepřehazuj pořadí** myšlenek; kde je zřejmé, kdo mluví, můžeš mluvčí odlišit, ale nevymýšlej jména.
-- **Mluvčího nehádej.** S diarizací ber nálepky z `<název>.json` a repliku, která tam mluvčího nemá, nech bez jména. Bez diarizace mluvčí rozlišuj jen tam, kde to plyne přímo z textu. Špatné přiřazení je horší než chyba ve slově – překlep čtenář pozná, „Tomáš slíbil, že to dodá“ ne.
-
-## Formát souhrnného MD
-
-**Celý souhrnný dokument piš v jazyce nahrávky**, který jsi zjistil v kroku 1 – včetně nadpisu, anotace a názvů sekcí. Anglicky mluvená schůzka nemá mít české shrnutí.
-
-Soubor `YYYYMMDD - Výstižný název.md` má tuto strukturu:
-
-1. **Hlavní nadpis (H1):** `Výstižný název`.
-2. **Úvodní odstavec (anotace):** do jednoho odstavce základní charakteristika celé nahrávky – o co jde, jednotlivé strany a účastníci.
-3. **`## Shrnutí`:** stručné, logické, strukturované shrnutí dle [Pravidel shrnutí](#pravidla-shrnutí).
-4. **`## Doslovný přepis`:** doslovné přepisy všech nahrávek dle [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu), za sebou; u každého je zřejmé, ze které nahrávky pochází. U schůzky spojené v kroku 1 je přepis **jeden souvislý** a nedělí se zpátky podle původních částí – ty už nejsou předěl v obsahu, ale jen stopa po tom, kde se zastavil diktafon. Tuhle sekci vynech, když si uživatel doslovný přepis nevybral.
-
-**Body 1 až 3 jsou tvůj vlastní text**, ne přepis. Platí pro ně [Pravidla shrnutí](#pravidla-shrnutí), ne [Pravidla doslovného přepisu](#pravidla-doslovného-přepisu) – ta se vztahují jen na bod 4.
-
-## Pravidla shrnutí
-
-Platí pro sekci „Shrnutí“. Připrav stručné, logické, strukturované shrnutí celé nahrávky – důležitých témat, poznatků a klíčových informací:
-
-- Využij **přehledné formátování** – mezinadpisy, odstavce, odrážky, **tučný** text pro důležité pojmy.
-- **Nedodržuj chronologické pořadí**, ve kterém informace zazněly. Uspořádej vše do logických sekcí a skupin tak, aby to dávalo při čtení smysl.
-- Pokud to není nezbytné pro kontext nebo pochopení, **neopakuj** jednu informaci na více místech.
-- Na **úplném konci** přehledně shrň vzájemné **domluvy, vyplývající úkoly a další kroky**.
-- **Relativní časové údaje převeď na konkrétní data podle data nahrávky.** „Do konce týdne“, „příští čtvrtek“ nebo „za čtrnáct dní“ se v seznamu úkolů čtou špatně, protože čtenář neví, odkdy se počítají. **Konkrétní datum, které v hovoru zaznělo, ale platí tak, jak zaznělo** – i když s tvým přepočtem nesedí. Rozpor mezi obojím je signál, že je špatně datum nahrávky, ne hovor; vrať se ke kroku 1 a ověř ho. **Datum, které nezaznělo a nedá se odvodit, nedoplňuj** – termín u úkolu vypadá stejně věrohodně, ať je spočítaný, nebo vymyšlený.
-- **Když běžela diarizace, piš ke každému úkolu majitele.** Je to hlavní důvod, proč se rozlišení mluvčích vůbec zapíná: bez něj se dá napsat „dodat seznam“, s ním „**Tomáš** dodá seznam“. U rozhodnutí stejně tak uveď, kdo co navrhl a kdo souhlasil, když to z přepisu plyne. Kde mluvčí chybí nebo je nejistý, majitele **nedoplňuj odhadem** – radši úkol bez majitele než přisouzený špatnému člověku.
-- **Jazykový standard platí i tady, a v plném rozsahu.** Shrnutí není doslovný přepis, ale tvůj vlastní souvislý text, takže se na něj pravidla z [Pravidel doslovného přepisu](#pravidla-doslovného-přepisu) nevztahují sama od sebe – drž je vědomě. U češtiny navíc platí **celý** `~/Dev/context/text/text.md`, ne jen *Gramatika a pravopis* jako u přepisu: i stavba textu, zakázané obraty a stylistika. `~/Dev/context/text/typography.md` platí v obou případech stejně. U jiného jazyka jeho vlastní konvence, protože souhrn se píše v jazyce nahrávky. Pozor hlavně na termíny přebrané z přepisu: chybu opravenou v přepisu snadno zopakuješ ve shrnutí, protože ho píšeš z téhož podkladu. Přesně takhle v ostrém běhu prošly „mrtvoli“ do souhrnného dokumentu, zatímco v přepisu už byly opravené.
-
-(Základní charakteristika a účastníci jsou už v úvodním odstavci – viz [Formát souhrnného MD](#formát-souhrnného-md).)
-
----
+**Pravidla doslovného přepisu, formát souhrnného MD i pravidla shrnutí drží [`output.md`](output.md).** Načti si ho, až budeš psát výstup; do těla skillu nepatří, protože během průvodce ani přepisu se nečtou.
 
 ## Technické detaily
 

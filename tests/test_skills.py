@@ -1103,7 +1103,11 @@ class SouladSNormou(unittest.TestCase):
     PREFLIGHT = ROOT / "skills" / "PREFLIGHT.md"
 
     #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
-    MIGRACE = {"transcript"}
+    #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
+    #: Prázdný od 15. 9. 2026 – celá sada je na normě. Zůstává schválně:
+    #: až norma přituhne znovu, je kam zapsat, co ještě nedorovnalo, a test
+    #: pořád hlídá oba směry (skill mimo normu i skill, který ji už splňuje).
+    MIGRACE = set()
 
     #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak
     #: tiše ukazuje jinam – proto to má být v PREFLIGHT.md, ne v odkazu.

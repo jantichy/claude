@@ -42,7 +42,7 @@ Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát pou�
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 
-Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. Převod je hotový až na jeden skill, který čeká, až ho proženu `/skill update`; nové vznikají rovnou podle normy. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
+Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. Převod je od 15. 9. 2026 hotový u celé sady a nové skilly vznikají rovnou podle normy. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
 
 ### [`skills/SESSION.md`](skills/SESSION.md) – jak se čte nahraná konverzace
 
