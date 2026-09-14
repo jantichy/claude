@@ -32,7 +32,7 @@ Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **ř
 ~/.claude/verify.sh --allow <kořen projektu>
 ```
 
-Řekni mu u toho pravdu o tom, co schvaluje: souhlas platí **pro repozitář, ne pro ty konkrétní řádky**. `npm test` spustí, co je v `package.json`, a to se neschvaluje. Do cizího naklonovaného repozitáře souhlas nepatří.
+Řekni mu u toho pravdu o tom, co schvaluje. Souhlas platí **pro repozitář včetně jeho worktree, ale jen pro ten kontrakt, který právě viděl**: podadresář s vlastním `CLAUDE.md` si ho nepůjčí a změna některého příkazu si vyžádá nové odsouhlasení. Co ty příkazy udělají, ale schválené není – `npm test` spustí, co je v `package.json`. **Vydat souhlas jde jen z terminálu**, takže ho za uživatele nespustí žádný nástroj ani skript. Do cizího naklonovaného repozitáře souhlas nepatří.
 
 Definice a prahy jednotlivých kontrol jsou v `~/Dev/context/coding/quality.md`. Řekni uživateli jednou větou, co se právě zapnulo – ne aby ho to překvapilo, až mu hook poprvé zablokuje konec odpovědi.
 
@@ -56,7 +56,7 @@ Kontrakt vypíše **`~/.claude/verify.sh --contract <projekt>`** ve tvaru `klí�
 
 **Na runneru `verify.sh` není**, takže ho tam workflow musí dostat: buď ho projekt stáhne (`curl -fsSL https://raw.githubusercontent.com/jantichy/claude/main/verify.sh`), nebo si ho nese ve vlastním repozitáři. Stažení připni na konkrétní commit, ne na `main` – jinak si do CI pouštíš cizí skript, který se může kdykoliv změnit.
 
-Hotovou a ověřenou podobu má `~/.claude/.github/workflows/verify.yml`; **vezmi ji jako předlohu a uprav tři věci**:
+Hotovou a ověřenou podobu má `~/.claude/.github/workflows/verify.yml`; **vezmi ji jako předlohu a uprav čtyři věci**:
 
 1. **Runner.** `ubuntu-latest`, pokud projekt nepotřebuje macOS (Swift, Xcode) – je rychlejší a u privátního repozitáře levnější.
 2. **Nástroje.** Doinstaluj, co kontrakt opravdu volá; na runneru není nic z Homebrew. Nedeklarovaná lokální závislost je tu nejčastější příčina prvního červeného běhu.
