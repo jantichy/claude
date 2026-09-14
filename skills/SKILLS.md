@@ -173,7 +173,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Co se vytahuje do vedlejších souborů:** zadání pro agenty, katalogy hledisek a vektorů, dlouhé referenční tabulky, šablony výstupů, skripty.
 
-**Vedlejší soubory leží jednu úroveň hluboko** od `SKILL.md`, v jeho adresáři, a odkazuje se na ně **přímo z něj**. Odkaz na odkaz se čte jen zčásti – model si soubor namátkou prohlédne místo aby ho přečetl celý, a vezme si z něj polovinu.
+**Vedlejší soubory leží jednu úroveň hluboko** od `SKILL.md`, v jeho adresáři, a odkazuje se na ně **přímo z něj**. Odkaz na odkaz se čte jen zčásti – model si soubor namátkou prohlédne, místo aby ho přečetl celý, a vezme si z něj polovinu.
 
 **Soubor nad 100 řádků začíná obsahem**, ať je z náhledu vidět celý rozsah.
 

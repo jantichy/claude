@@ -12,7 +12,7 @@ Následující soubory obsahují **závazná pravidla** – platí stejně jako 
 - `~/.claude/skills/LIFECYCLE.md` – rozhraní kroků životního cyklu: co který dělá, co po něm platí, proč stojí v tom pořadí. **Odkaz, ne import** – načti si ho, jakmile v některém kroku stojíš; rámeček s pořadím drží `RULES.md`, *Životní cyklus projektu*
 - `~/.claude/WORKTREE.md` – worktree layout projektu: kontejner s `.bare`, jeden pracovní adresář na větev, zakládání a dokončení větve. **Odkaz, ne import** – platí jen v projektu s tímhle uspořádáním, kde si ho natáhne rozcestník v kořeni kontejneru; zapíná a ruší ho `/worktree`
 
-Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nevadí, že bude veřejně vidět na githubu, navrhni jeho extrakci do `~/.claude/`.
+Když identifikuješ obecné pravidlo platné napříč projekty, u kterého nevadí, že bude veřejně vidět na GitHubu, navrhni jeho extrakci do `~/.claude/`.
 
 ## Doménové znalosti
 

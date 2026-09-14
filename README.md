@@ -10,7 +10,7 @@ Co bych z celého repozitáře vypíchl, aby to neuteklo vaší pozornosti?
 
 ### [`CLAUDE.md`](CLAUDE.md) – hlavní soubor s instrukcemi
 
-Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Většina instrukcí je dekomponovaná do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou jen, když je to podle situace potřeba. Brutálně se tím šetří kontextové okno.
+Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není 😉. Většina instrukcí je dekomponovaná do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou, jen když je to podle situace potřeba. Brutálně se tím šetří kontextové okno.
 
 ### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
