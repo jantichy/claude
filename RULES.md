@@ -432,6 +432,8 @@ Instalace je zásah do uživatelova počítače, ne do repozitáře: **než něc
 
 Obsah se přitom neztratí – rozejde se **zdůvodnění**: commit popisuje diff, který v něm není, a `git blame` ukáže na cizí důvod. **Pushnutá historie se pak už nedá opravit** bez přepsání větve, na které jiná session stojí. Doloženo 3., 7. a 11. 9. 2026, podruhé na pravidlech samotných; **stačí, aby si člověk otevřel druhé okno nad týmž repozitářem**. **Nejhorší podoba té chyby není špatná atribuce, ale rozhodování podle nepřečteného vlastního commitu** – 11. 9. session zatáhla přes `git add <adresář>` cizí pravidlo a o deset minut později proti němu argumentovala, protože ho nikdy nečetla.
 
+**Nepoužívej git aliasy.** Píš rozbalený příkaz, i když je delší. Aliasy z `~/.gitconfig` jsou psané pro ruční práci člověka a bývají v nich zabalené právě ty věci, které tohle pravidlo zakazuje – `git a` je `add -A`, `git cc` je `add -A && commit --amend && push --force`. **Deny seznam je navíc textový, takže alias ho obejde**: `git cc` v něm nevidí ani `add -A`, ani `--force`. Ty delší tam doplněné jsou, ale jednopísmenné pokrýt nejdou – vzor `git c:*` by zablokoval i `git commit`. U nich tedy nic nedrží kromě tohohle pravidla, což je vědomá mezera, ne opomenutí.
+
 ### Mazání ověř diffem, ne grepem
 
 Mažeš-li **podle značek** – od nadpisu k nadpisu, od markeru k markeru, od řádku po řádek –, ověř výsledek **diffem toho, co zmizelo**, ne hledáním toho, co zbylo.
