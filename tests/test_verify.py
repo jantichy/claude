@@ -472,6 +472,20 @@ class SouhlasVydavaClovek(unittest.TestCase):
         d = self.home / ".local/state/claude-verify/allowed"
         return list(d.glob("*")) if d.exists() else []
 
+    def test_vypis_rozlisuje_pomlcku_od_dokumentace(self):
+        """Klíč s pomlčkou je rozhodnutí „neaplikuje se“, klíč s příkazem mimo
+        typecheck/lint/test je příkaz pro jiný krok cyklu. Výpis je sléval do
+        jedné věty „jen dokumentace v kontraktu“, takže vědomé rozhodnutí
+        vypadalo jako poznámka – a to je text, kterým člověk schvaluje spouštění
+        kódu z repozitáře."""
+        (self.repo / "CLAUDE.md").write_text(
+            "# T\n\n## Kontrakt příkazů\n\n- test: true\n- dev: npm run dev\n- build: -\n",
+            encoding="utf-8")
+        v = vydej_souhlas(self.repo, self.home)
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertRegex(v.stdout, r"Nespouští: dev")
+        self.assertRegex(v.stdout, r"Neaplikuje se: build")
+
     def test_bez_terminalu_souhlas_nevznikne(self):
         v = self.bez_terminalu()
         self.assertNotEqual(v.returncode, 0)

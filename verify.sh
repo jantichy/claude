@@ -305,9 +305,15 @@ if [ "${1:-}" = "--allow" ]; then
   done
   [ -z "$FOUND" ] && echo "  (nic – kontrakt nemá typecheck, lint ani test, hook tu nic nespustí)"
   # Ostatní klíče jsou dokumentace pro člověka; průběžná kontrola je nepouští.
-  OTHER=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]].*/\1/p' \
+  # Dvě různé věci, které se nesmí slít: klíč s pomlčkou je ROZHODNUTÍ, že se krok
+  # neaplikuje, kdežto klíč s příkazem mimo typecheck/lint/test je příkaz, který
+  # průběžná kontrola schválně nepouští (`dev`, `e2e`) a spustí ho jiný krok cyklu.
+  POMLCKY=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}-[[:space:]]*$/\1/p' \
+          | paste -sd, - | sed 's/,/, /g')
+  OTHER=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}[^-[:space:]].*/\1/p' \
           | grep -vxE 'typecheck|lint|test' | paste -sd, - | sed 's/,/, /g')
-  [ -n "$OTHER" ] && echo "  Nespouští: $OTHER (jen dokumentace v kontraktu)"
+  [ -n "$OTHER" ] && echo "  Nespouští: $OTHER (příkazy pro jiné kroky cyklu, ne pro průběžnou kontrolu)"
+  [ -n "$POMLCKY" ] && echo "  Neaplikuje se: $POMLCKY (pomlčka v kontraktu, tedy vědomé rozhodnutí)"
   echo
   echo "Platí pro celý repozitář včetně jeho worktree – nová větev si o souhlas znovu neříká."
   echo "Neplatí ale pro podadresáře s vlastním CLAUDE.md: rozbalený cizí projekt"
