@@ -156,7 +156,7 @@ Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modr
 
 `Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy. Když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu sám nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí. Registruje se tedy jednou globálně a v projektu bez kontraktu neudělá nic.
 
-Ten kontrakt je ale kód ležící v repozitáři, takže hook v něm nespustí nic, dokud pro něj nevydám souhlas (`--allow`). Souhlas platí pro **celý repozitář včetně jeho worktree**, takže nová větev si o něj neříká znovu. Platí ale jen pro ten kontrakt, který jsem viděl: podadresář s vlastním `CLAUDE.md` si ho nepůjčí a jeho změna si vyžádá nové odsouhlasení. **Vydat ho jde jen z terminálu** – zákaz v permission systému se dá obejít voláním přes interpret a hranice bez mechanismu je jen přání.
+Ten kontrakt je ale kód ležící v repozitáři, takže hook v něm nespustí nic, dokud pro něj nevydám souhlas (`--allow`). Souhlas platí pro **celý repozitář včetně jeho worktree**, takže nová větev si o něj neříká znovu. Platí ale jen pro ten kontrakt, který jsem viděl: podadresář s vlastním `CLAUDE.md` si ho nepůjčí a jeho změna si vyžádá nové odsouhlasení. **Vydat ho jde jen ze samostatného okna terminálu** – zákaz v permission systému se dá obejít voláním přes interpret a hranice bez mechanismu je jen přání. Nestačí přitom ani `!` prefix v Claude Code: ten běží jako nástroj, nemá řídicí terminál, a pojistka ho odmítne stejně jako skript.
 
 Rozlišuje přitom 4 různé věci:
 

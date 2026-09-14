@@ -300,7 +300,7 @@ if [ "${1:-}" = "--allow" ]; then
   if [ -t 0 ]; then
     read -r ODPOVED
   else
-    read -r ODPOVED < /dev/tty 2>/dev/null || die "souhlas se vydává jen z terminálu. Spusť to sám v shellu, ne přes nástroj nebo skript."
+    read -r ODPOVED < /dev/tty 2>/dev/null || die "souhlas se vydává jen z terminálu. Spusť to v samostatném okně shellu – ani \`!\` prefix v Claude Code nestačí, ten běží jako nástroj a nemá řídicí terminál."
   fi
   [ "$ODPOVED" = "ano" ] || die "nepotvrzeno, souhlas jsem nevydal."
 
