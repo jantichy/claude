@@ -22,6 +22,7 @@ Přehled všech devíti i s cílem importu:
 | Webové rozhraní | `@~/Dev/context/web/web.md` |
 | Administrace / backoffice | `@~/Dev/context/web/admin.md` |
 | Webová analytika a měření | `@~/Dev/context/analytics/analytics.md` |
+| Výkonnostní reklama a správa kampaní | `@~/Dev/context/advertising/advertising.md` |
 | Psaní českých textů | `@~/Dev/context/text/text.md` |
 | Česká typografie | `@~/Dev/context/text/typography.md` |
 | Školení a kurzy | `@~/Dev/context/training/training.md` |
