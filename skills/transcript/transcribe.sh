@@ -240,7 +240,7 @@ ok_audio=0
 # v jednom běhu sdílejí .txt i .srt a druhý přepis by ten první tiše přepsal –
 # oba přitom ohlásí DONE. Řešit to za běhu nejde: skript neví, jestli je milejší
 # delší jméno, nebo si soubory přejmenovat ručně. Proto se zastaví a nechá se
-# zeptat volajícího (SKILL.md, krok „Přepiš nahrávky").
+# zeptat volajícího (SKILL.md, krok 6).
 if [ "$KEEP_EXT" != "1" ]; then
   kolize=$(for f in "$@"; do b=$(basename "$f"); printf '%s\n' "${b%.*}"; done | sort | uniq -d)
   if [ -n "$kolize" ]; then
@@ -254,22 +254,30 @@ if [ "$KEEP_EXT" != "1" ]; then
   fi
 fi
 
-# Druhá kontrola: výstupy, které v adresáři už leží z dřívějšího běhu. Přepsat
 # Přípony výstupů, které se nesmí tiše přepsat. `wav` mezi nimi patří: při
 # WHISPER_KEEP_WAV=1 ho skript vyrábí sám a je to jediný vstup pro diarizaci,
 # takže jeho ztráta stojí tentýž čas jako ztráta přepisu. Jeden seznam pro obě
 # místa, která ho čtou – dřív byl opsaný dvakrát a `wav` chyběl v obou.
 VYSTUPNI_PRIPONY="txt srt md vtt json wav"
 
+# Druhá kontrola: výstupy, které v adresáři už leží z dřívějšího běhu. Přepsat
 # je smí být správně (opakovaný běh po opravě), ale taky to může být hodina
 # práce pryč – a whisper-cli i ffmpeg přepisují bez ptaní. Rozhodnout to za
-# uživatele nejde, tak se to nechá na něm (SKILL.md, krok „Přepiš nahrávky").
+# uživatele nejde, tak se to nechá na něm (SKILL.md, krok 6).
 if [ "$ON_EXISTING" != "overwrite" ]; then
   hrozi=""
   for f in "$@"; do
     b=$(basename "$f"); [ "$KEEP_EXT" = "1" ] || b="${b%.*}"
     for ext in $VYSTUPNI_PRIPONY; do
-      [ -e "$WORKDIR/$b.$ext" ] && hrozi="${hrozi}  $b.$ext
+      kand="$WORKDIR/$b.$ext"
+      [ -e "$kand" ] || continue
+      # Vstupní nahrávka neblokuje sama sebe. U WAV vstupu – typicky schůzky
+      # spojené přes join.sh – ukazuje kandidát na týž soubor, který se má
+      # přepisovat, takže hlásit "hrozí přepsání" by znamenalo odmítnout běh
+      # kvůli jeho vlastnímu vstupu. Převod si pro ten případ vyrobí
+      # <název>.16k.wav a originálu se nedotkne (viz smyčka níž).
+      [ "$kand" -ef "$f" ] && continue
+      hrozi="${hrozi}  $b.$ext
 "
     done
   done

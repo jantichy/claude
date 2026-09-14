@@ -134,7 +134,7 @@ Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, *
 
 ### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
-Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované shrnutí se soupisem domluv a úkolů na konci; na vyžádání rozliší i mluvčí, takže úkoly mají majitele. Přepis běží **lokálně a offline**, takže nahrávka neopustí můj počítač. Než začne, podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy. A když se rozpoznávač uprostřed dlouhé nahrávky zakousne, umí ji dopřepsat po úsecích: problémový kus přeskočí a o zbytek nepřijdu.
+Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované shrnutí se soupisem domluv a úkolů na konci; na vyžádání rozliší i mluvčí, takže úkoly mají majitele. Přepis běží **lokálně a offline**, takže nahrávka neopustí můj počítač. Než začne, podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy. Leží-li v adresáři víc souborů, zeptá se, jestli to není **jedna schůzka rozřezaná na části** – diktafon se zastavil, spadl hovor –, a spojí ji ještě před přepisem: vznikne jeden souvislý přepis a jedno rozlišení mluvčích místo několika oddělených, mezi kterými by se stejní lidé nedali spárovat. A když se rozpoznávač uprostřed dlouhé nahrávky zakousne, umí ji dopřepsat po úsecích: problémový kus přeskočí a o zbytek nepřijdu.
 
 ### [`/worktree`](skills/worktree/) – každá rozdělaná větev ve vlastním adresáři
 

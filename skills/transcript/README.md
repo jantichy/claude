@@ -10,7 +10,7 @@ Ze zvukových i obrazových nahrávek udělá pořádek: přepíše je do čitel
 4. **Titulky s časovými značkami**, na dohledání místa v nahrávce – volitelně i ve variantě, která nese jméno mluvčího.
 5. **Zvládne zvuk i video.** Záznam hovoru se dnes stahuje jako video, tak se z něj prostě vytáhne zvuk – není to výjimka, ale běžný případ.
 6. **Pozná jazyk sám** a všechno – přepis, opravy pravopisu i shrnutí – udělá v něm. Anglicky mluvená schůzka nemá české shrnutí.
-7. **Zvládne víc nahrávek naráz** a napíše k nim jedno společné shrnutí.
+7. **Zvládne víc nahrávek naráz** a napíše k nim jedno společné shrnutí. Když je to ve skutečnosti **jedna schůzka rozřezaná na víc souborů** – zastavil se diktafon, spadl hovor –, zeptá se a spojí ji, takže dostanete jeden souvislý přepis a jedno rozlišení mluvčích místo několika oddělených.
 8. **Vyberete si, co má vzniknout** – přepis, shrnutí, titulky, rozlišení mluvčích, nebo jen některé z toho.
 9. **A jak přesně to má rozpoznávat** – rychlejší varianta stačí na běžnou mluvu, přesnější se hodí na špatný zvuk a překřikování. U obou vám dopředu řekne, jak dlouho to potrvá, ať se rozhodujete podle čísla, ne podle pocitu.
 
@@ -30,6 +30,8 @@ Ze zvukových i obrazových nahrávek udělá pořádek: přepíše je do čitel
 - **Zkontroluje, kolik zvuku se vlastně přepsalo**, a když vyjde podezřele málo, řekne to a nabídne, co s tím – nerozhoduje o tom sám.
 - **Umí nahrávku dopřepsat, i když se rozpoznávač uprostřed zakousne.** Na vyžádání ji zpracuje po úsecích: problémový kus přeskočí a o zbytek nepřijdete. Totéž je záchrana, kdyby se přece jen objevila smyčka opakujícího se nesmyslu.
 - **Pozná dvojjazyčnou nahrávku** a zeptá se, jak s ní naložit, místo aby polovinu tiše zkomolila.
+- **Nevěří datu v metadatech.** U nahrávky vyexportované z diktafonu bývá zapsaný čas exportu, ne čas nahrávání – a na datu visí přepočet všech relativních termínů v úkolech („do konce týdne“). U schůzky rozřezané na části to umí vyloučit porovnáním s délkou zvuku a zeptá se; u jediné nahrávky aspoň řekne, jaké datum použil a odkud.
+- **Pamatuje si, co rozpoznávač komolí soustavně.** Přeslechy, které whisper dělá u každého, kdo mluví o daném oboru, si po odsouhlasení odkládá do vlastního seznamu a příště s nimi počítá předem. Je to jediná věc, kterou si odnáší mimo pracovní adresář.
 - **Doinstaluje si chybějící součásti** – ale rozlišení mluvčích nikdy samo od sebe, protože to po vás chce účet i souhlas s licencí, a to za vás nikdo neudělá.
 - **Uklidí po sobě** všechny mezivýsledky a nechá jen to, co jste si vybrali.
 
