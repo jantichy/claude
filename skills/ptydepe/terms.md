@@ -23,7 +23,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [cesta k datům](#cesta-k-datům) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička) · [ohraničení bloku kódu](#ohraničení-bloku-kódu)
 
-**[Ponechané termíny](#ponechané-termíny)** – [heuristika, osa, vektor útoku](#2026-09-07--ponechané-termíny-z-revize-heuristika-osa-vektor-útoku) · [„stopa práce“](#2026-09-07--termín-stopa-práce-se-ponechává-i-když-má-stopa-pět-významů) · [„guard“](#2026-09-07--termín-guard-se-ponechává-a-plyne-z-toho-obecné-pravidlo) · [„mutace“](#2026-09-07--termín-mutace-se-ponechává) · [„session“](#2026-09-07--termín-session-se-ponechává) · [„soustava“](#2026-09-07--termín-soustava-se-ponechává) · [„kontrakt příkazů“](#2026-09-07--termín-kontrakt-příkazů-se-ponechává) · [„sledovací okno“](#2026-09-07--termín-sledovací-okno-se-ponechává)
+**[Ponechané termíny](#ponechané-termíny)** – [heuristika, osa, vektor útoku](#2026-09-07--ponechané-termíny-z-revize-heuristika-osa-vektor-útoku) · [„stopa práce“](#2026-09-07--termín-stopa-práce-se-ponechává-i-když-má-stopa-pět-významů) · [„guard“](#2026-09-07--termín-guard-se-ponechává-a-plyne-z-toho-obecné-pravidlo) · [„mutace“](#2026-09-07--termín-mutace-se-ponechává) · [„session“](#2026-09-07--termín-session-se-ponechává) · [„soustava“](#2026-09-07--termín-soustava-se-ponechává) · [„kontrakt příkazů“](#2026-09-07--termín-kontrakt-příkazů-se-ponechává) · [„sledovací okno“](#2026-09-07--termín-sledovací-okno-se-ponechává) · [„invariant“](#2026-09-14--termín-invariant-se-ponechává)
 
 ## Termíny
 
@@ -373,3 +373,19 @@ Revize neustálených termínů se zastavila u „sledovacího okna“ v `/relea
 **Zamítnuto – „bake time“:** zavedené anglicky, ale česky se neskloňuje a v běžném textu by trčelo. **Zamítnuto – „monitorovací okno“:** anglicismus navíc, aniž by cokoliv zpřesnil. **Zamítnuto – „období sledování po nasazení“:** přesné, ale ve větách „dokud okno neuplyne“ nebo „během okna se nic nemaže“ nepoužitelně dlouhé.
 
 **Rozdíl proti termínům, které téhož dne padly:** „sondu“ i „tah“ by si čtenář vyložil jinak, než se myslí. „Sledovací okno“ znamená přesně to, co říká.
+
+### 2026-09-14 – Termín „invariant“ se ponechává
+
+Revize neustálených termínů se zastavila u „invariantu“ – podmínky o datech, která musí platit v každém okamžiku a kterou vynucuje databáze (`CHECK` omezení, unikátní index, cizí klíč). Není to validace vstupu ani kontrola za běhu: ty se dají obejít, invariant ne.
+
+Stojí jako standard v `~/Dev/context/coding/coding.md`, *Pojmenuj, co nesmí nastat, a braň tomu*, a odtud se na tu sekci odkazuje `coding/architecture.md` (dvakrát, mimo jiné v seznamu toho, co platí i pro nástroj) a `coding/quality.md` v argumentu proti zamockované databázi. V `kdojekde` je ve dvou komentářích u testů (`src/lib/__tests__/migrations.test.ts`, `supabase/tests/rls-hardening.test.ts`).
+
+**Rozhodnutí:** ponechat. Je to zavedený odborný termín, a to v angličtině (*class invariant*, *loop invariant*, Design by Contract) i v češtině – v matematice, ve fyzice i v programování. Skloňuje se jako běžné české podstatné jméno mužského rodu, takže to není anglicismus ohnutý po česku. Padá tím jediné kritérium skillu: **neříká se tomu normálně jinak.**
+
+**Doklad zavedenosti mimo doménu kódu je ve vlastních souborech:** `~/Dev/olympiada/zadani/ao-2022-23-ab-3-kolo-zadani-teor.md:53` má kapitolu *Tisserandův invariant* a `reseni/ao-2024-25-ab-3-kolo-reseni-teor.md:541` mluví o *škálově invariantním spektru*. Jsou to zadání a řešení astronomické olympiády, tedy cizí text psaný bez mého přispění – právě proto je to doklad, a ne kruhový argument.
+
+**Zamítnuto – „podmínka, která musí platit vždy“:** opis je delší a zároveň méně přesný. Neříká to, co je na invariantu podstatné – že ho vynucuje databáze, ne kázeň volajícího –, a splývá s validací vstupu, proti které se ta sekce vymezuje.
+
+**Zamítnuto – „omezení“ (constraint):** omezení je **mechanismus, kterým se invariant vynutí**, ne invariant sám. Jeden invariant se dá vynutit `CHECK` omezením, parciálním indexem i cizím klíčem. Sloučit ta dvě slova by vyrobilo jedno jméno pro dvě věci – přesně to, co zakazuje *Jeden termín pro jednu věc* v `~/.claude/RULES.md`.
+
+**Vědomě ponecháno v cizích souborech:** `~/Dev/mediowiki/w/extensions/SyntaxHighlight_GeSHi/` má `invariant` jako klíčové slovo jazyků D, Eiffel a GLSL ve vendor kódu, `~/Dev/olympiada/` v zadáních a řešeních olympiády. Ani na jedno se nesahá – vendor kód a cizí text (`SKILL.md`, *Fáze 4*).
