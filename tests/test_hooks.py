@@ -348,6 +348,14 @@ class RegistrObchazeni(unittest.TestCase):
                     jmeno = Path(h.get("command", "").split()[0]).name
                     if jmeno and jmeno not in self.NEVYNUCUJE:
                         out.add(jmeno)
+        # Status line běží po každé odpovědi stejně jako Stop hook, ale
+        # v settings.json sedí pod vlastním klíčem `statusLine`, ne mezi `hooks`.
+        # Dokud se nečetl, držel její řádek v registru jen něčí ruka – a přitom
+        # to je vrstva, která běží nad cizím repozitářem bez souhlasu a měla
+        # 14. 9. 2026 dvě skutečné díry.
+        sl = nastaveni.get("statusLine", {}).get("command", "")
+        if sl:
+            out.add(Path(sl.split()[0]).name)
         out |= {f.name for f in (ROOT / "githooks").glob("*") if f.is_file()}
         out |= {f.name for f in (ROOT / ".github" / "workflows").glob("*.yml")}
         if (ROOT / "settings.json").exists():

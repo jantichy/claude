@@ -49,7 +49,7 @@ Ve **worktree layoutu** (`~/.claude/WORKTREE.md`) to pouštěj ve worktree větv
 
 Navíc si načti tohle:
 
-### 0.2 Načti kontext projektu
+### 0.1 Načti kontext projektu
 
 - **`.claude/run/review.json`**, pokud existuje – přerušený běh. Viz *Fáze 3*, kde vzniká; nabídni navázání dřív, než začneš cokoliv počítat znovu.
 - Projektový `CLAUDE.md` – zejména `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
@@ -58,7 +58,7 @@ Navíc si načti tohle:
 - **`docs/requirements.md` a `docs/architecture.md`**, existují-li. Specialisté *Korektnost* a *Data a stavy* bez nich nemají proti čemu měřit. **A `docs/scenarios.md`**, vede-li ho projekt – *Korektnost* měří scénář po scénáři, takže taxativní seznam je pro ni lepší podklad než souvislý text v požadavcích.
 - **Jmenný seznam citlivých oblastí** na konci `docs/architecture.md` – přihlášení, oprávnění, platby, nahrávání souborů, osobní údaje, mazání dat, odesílání pošty ven. Zakládá ho `/specify` s příslibem, že *„`/review` na ně sahá přísněji“*, takže ten příslib je potřeba splnit: **dotkne-li se rozsah kterékoliv z nich, specialista na bezpečnost je povinný** (nevybírá se podle typu souborů) **a pouští se na nejsilnějším modelu s `xhigh`**. Do zadání toho specialisty seznam vlož a napiš, které položky se rozsahu týkají. Neexistuje-li `architecture.md`, řekni to a rozhodni podle obsahu rozsahu.
 
-### 0.3 Sestav panel specialistů
+### 0.2 Sestav panel specialistů
 
 Specialisté se vybírají **podle toho, čeho se soubory v rozsahu týkají**, ne podle typu projektu. Obsahový projekt tedy nedostane specialisty na kód, web dostane obojí. Neposílej agenta na hledisko, ke kterému v rozsahu není co prověřovat.
 
@@ -123,7 +123,7 @@ Vyber tedy ty specialisty, kteří mají v rozsahu nejvíc co prověřovat, a **
 
 Nesedí-li **žádný** specialista, řekni to explicitně a skonči – nevymýšlej si vlastní kritéria. Pozor, čistě dokumentační projekt bez pokrytí není: na české texty sedí `text/text.md` a `text/typography.md`.
 
-### 0.4 U velkého rozsahu napřed pošli průzkumníka
+### 0.3 U velkého rozsahu napřed pošli průzkumníka
 
 Je-li v rozsahu **víc než zhruba patnáct souborů**, pusť před panelem jednoho agenta navíc: **průzkumníka na výchozím modelu s `low`**. Jeho úkolem je **zmapovat, ne posoudit** – vrátí, čeho se změny dotýkají, kudy vede tok dat, které soubory na sebe navazují a kde jsou vstupní body. **Nehlásí žádné nálezy**; kdyby hlásil, dubloval by panel. Na nejlevnější model ho ale neposílej: jeho mapa jde do zadání **všech specialistů naráz**, takže se jeho chyba nenásobí jednou, ale tolikrát, kolik specialistů panel má – a oni si ji ověří jedině tím, že si tu orientaci udělají znovu sami.
 
@@ -183,7 +183,7 @@ Na **každého** vybraného specialistu pošli **samostatného subagenta** – v
 **Dva specialisty nepiš sám – vyvolej vestavěné skilly Claude Code:**
 
 - **Korektnost** → **`/code-review high`**. Je na to postavený, běží v čerstvém kontextu a hledá přesně chyby v diffu. **Úroveň uveď vždy explicitně:** bez parametru se použije ta, kterou uživatel zadal naposledy – klidně v jiném projektu před dvěma dny – a hloubka nejdražšího posouzení v celém životním cyklu by závisela na náhodě. Před nasazením nebo u změny v citlivé oblasti použij `ultra`.
-- **Bezpečnost** → `/security-review`. **Dotkne-li se ale rozsah citlivé oblasti** (viz 0.2), poběží k němu **navíc vlastní agent** s celým jmenným seznamem tříd zranitelností a se seznamem dotčených citlivých oblastí, na nejsilnějším modelu s `xhigh`. To je ta „přísnost“, kterou uživateli slibuje `/specify`; vestavěný skill si vlastní zadání ani volbu modelu předat nenechá, takže bez druhého agenta by se slib neplnil a blok se seznamem by byl mrtvý text. Mimo citlivou oblast druhý agent neběží – tam by to byla duplicita.
+- **Bezpečnost** → `/security-review`. **Dotkne-li se ale rozsah citlivé oblasti** (viz 0.1), poběží k němu **navíc vlastní agent** s celým jmenným seznamem tříd zranitelností a se seznamem dotčených citlivých oblastí, na nejsilnějším modelu s `xhigh`. To je ta „přísnost“, kterou uživateli slibuje `/specify`; vestavěný skill si vlastní zadání ani volbu modelu předat nenechá, takže bez druhého agenta by se slib neplnil a blok se seznamem by byl mrtvý text. Mimo citlivou oblast druhý agent neběží – tam by to byla duplicita.
 
 Vlastní zadání piš jen pro specialisty, kteří vestavěný protějšek nemají – **a pro Bezpečnost v citlivé oblasti**, kde běží obojí vedle sebe.
 

@@ -1061,9 +1061,11 @@ def _vady_priloh(poradi: dict, prvni_faze, zaver) -> list:
 class SouladSNormou(unittest.TestCase):
     """Skilly proti `skills/SKILLS.md`. Jediné místo, kde se norma vynucuje strojem.
 
-    Norma vznikla později než skilly, takže třináct z nich ji zatím nesplňuje.
+    Norma vznikla později než skilly, takže je bylo potřeba na ni převést.
     Převod je vědomý běh `/skill update`, ne vedlejší efekt jiné práce – proto
-    seznam `MIGRACE` místo třinácti padajících testů.
+    seznam `MIGRACE` místo hromady padajících testů. **Kolik skillů ještě čeká,
+    se tu schválně nepíše** – zmizelo by to s prvním převedeným a docstring by
+    lhal o tom, co sám hlídá; aktuální stav drží `MIGRACE` níž.
 
     Seznam ale neumlčuje – **musí přesně sedět se skutečností** a test to hlídá
     v obou směrech. Skill, který se opraví a nezmizí ze seznamu, test shodí
@@ -1158,7 +1160,7 @@ class SouladSNormou(unittest.TestCase):
         uvnitr = kde("Jak je to postavené uvnitř")
         prvni_faze = kde("Fáze 0", "Krok 0")
         chyby = kde("Časté chyby")
-        # Závěr = **poslední** fáze či krok, ne fáze pojmenovaná „Závěr“. Devět
+        # Závěr = **poslední** fáze či krok, ne fáze pojmenovaná „Závěr“. Většina
         # skillů ji má pod vlastním názvem (`Úklid a shrnutí`, `Uzavření`,
         # `Předání`) a norma jméno nepředepisuje – vázat kontrolu na slovo
         # „Závěr“ znamenalo, že přejmenování závěru celou kontrolu pořadí tiše

@@ -42,7 +42,11 @@ Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát pou�
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 
-Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. **Převádějí se postupně** – nové skilly už vznikají rovnou podle něj, zbytek čeká, až ho proženu `/skill update`. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
+Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. Převod je hotový až na jeden skill, který čeká, až ho proženu `/skill update`; nové vznikají rovnou podle normy. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
+
+### [`skills/SESSION.md`](skills/SESSION.md) – jak se čte nahraná konverzace
+
+Claude Code ukládá každou session do souboru a dvěma skillům se z něj vytěžuje: `/cleanup` z něj bere dohody, `/skill` to, co se při ladění vyladilo. Drží pasti, které stojí celý výtěžek – že se nesmí sáhnout po naposledy změněném souboru (nad projektem běžívají dvě session naráz) a že zpráva poslaná uprostřed rozepsané odpovědi se neukládá jako uživatelská, takže ji běžný filtr přeskočí.
 
 ### [`BYPASS.md`](BYPASS.md) – čím se dají obejít vlastní kontroly
 
