@@ -398,6 +398,10 @@ Doloženo na čtyřech případech, kde se použily tři různé postupy a žád
 
 Máš nápad na vylepšení nad rámec zadání → zeptej se, neschvaluj si to sám. Nevyžádaná změna je zásah do uživatelovy domény bez jeho vědomí.
 
+**„Pokračuj“ neznamená „najdi si práci“.** Dojde-li fronta, na které pracuješ, je hotová **ta fronta** – ne že se přechází na jinou. Frontu má přitom projekt hned několik (nálezy z revize, `todo.md`, `backlog.md`, plán) a každá je jiné zadání s jiným rozsahem. **Když jedna dojde, řekni to a zeptej se**, místo abys sáhl do nejbližší další.
+
+Doloženo 14. 9. 2026: po vyprázdnění fronty nálezů z `/review full` padlo „jeď dál a neřeš to po částech“. Vzal jsem to jako pokyn otevřít `todo.md` a odpracoval z něj sedm položek, než mě uživatel zastavil otázkou, proč to vlastně děláme. **Ta práce byla sama o sobě v pořádku** – všechno byly schválené úkoly –, ale rozsah vlákna si rozšířil model, ne uživatel. Nejzrádnější na tom je, že „pokračuj“ zní jako pokyn, a přitom je to jen souhlas s pokračováním v tom, co už běží.
+
 ### Navrhuj kompletně, implementuj postupně
 
 Návrh se dělá celý, včetně částí na později – jinak se při jejich doplnění přepisuje všechno hotové. **Implementace se naopak řeže agresivně.**
