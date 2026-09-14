@@ -44,6 +44,10 @@ Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát pou�
 
 Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. **Převádějí se postupně** – nové skilly už vznikají rovnou podle něj, zbytek čeká, až ho proženu `/skill update`. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
 
+### [`BYPASS.md`](BYPASS.md) – čím se dají obejít vlastní kontroly
+
+Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběžná kontrola, git hook, CI, permission systém, status line –, stojí čím se dá obejít, co to chytí a co je vědomě přijaté riziko. Většina řádků je „accepted“ a u každého je důvod. Zákaz se totiž dá obejít i dodržet a nikde po tom nezůstane stopa, kdežto katalog se dá přečíst a rozporovat. Kompletnost hlídá test, který seznam vrstev čte z disku, takže nová vrstva bez řádku shodí testy.
+
 ## Skilly životního cyklu projektu
 
 Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení a jdou tu v pořadí, ve kterém se pouštějí. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
