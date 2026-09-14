@@ -275,7 +275,7 @@ class PrubeznaKontrolaVCI(unittest.TestCase):
     #: který nikdy neskončí, `cwd` není příkaz. Množinová rovnost s kontraktem by
     #: v prvním projektu s `dev` vyrobila falešný poplach – a falešný poplach je
     #: u vynucovací vrstvy horší směr selhání než propuštěná chyba.
-    CI_KROKY = {"typecheck", "lint", "test", "build", "audit", "coverage",
+    CI_KROKY = {"typecheck", "lint", "test", "build", "e2e", "audit", "coverage",
                 "a11y", "perf", "mutation"}
 
     def text(self):

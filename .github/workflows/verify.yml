@@ -66,7 +66,7 @@ jobs:
           # `dev` je watch server, který nikdy neskončí, `cwd` není příkaz. Klíč,
           # který projekt nemá, se přeskočí nahlas.
           status=0
-          for klic in typecheck lint test build audit coverage a11y perf mutation; do
+          for klic in typecheck lint test build e2e audit coverage a11y perf mutation; do
             prikaz=$(awk -F'\t' -v k="$klic" '$1 == k { print $2 }' "$RUNNER_TEMP/kontrakt.tsv")
             if [ -z "$prikaz" ]; then
               echo "::notice::$klic – není v kontraktu, nekontroluje se"
