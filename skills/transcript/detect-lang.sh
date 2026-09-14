@@ -44,11 +44,13 @@ else
   POSITIONS="0.25 0.5 0.75"
 fi
 
-# mktemp vyrobí soubor bez přípony; ffmpeg chce .wav, tak k němu vyrobíme
-# druhé jméno a mažeme obě, ať po sobě nic nezůstane.
-tmp_base=$(mktemp -t translang)
-tmp="$tmp_base.wav"
-trap 'rm -f "$tmp_base" "$tmp"' EXIT
+# ffmpeg chce příponu `.wav`, jenže `mktemp` vyrobí jméno bez ní. Odvodit druhé
+# jméno připojením přípony nejde: unikátnost garantuje mktemp jen pro to jméno,
+# které vrátil, takže `$tmp_base.wav` může někdo mezitím podstrčit. Adresář
+# z `mktemp -d` má práva 700, takže uvnitř něj je pevné jméno bezpečné.
+tmp_dir=$(mktemp -d -t translang)
+tmp="$tmp_dir/sample.wav"
+trap 'rm -rf "$tmp_dir"' EXIT
 
 # Vzorek s nízkou jistotou do rozhodování o dvojjazyčnosti nepouštíme: jeden
 # nejistý odhad uprostřed jednojazyčné schůzky by jinak vyrobil falešné "mixed"

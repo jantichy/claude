@@ -69,7 +69,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### tabulka delegací
 
-**Povinná inventura v `/skill`, *Fáze 3*:** u každého kroku navrženého postupu odpověď na otázku *„umí to už něco?“*. Výsledkem je tabulka `Krok | Kdo | Proč zrovna on`, která jde rovnou do sekce *Jak je to postavené uvnitř*.
+**Povinná inventura v `/skill`, *Tabulka delegací*:** u každého kroku navrženého postupu odpověď na otázku *„umí to už něco?“*. Výsledkem je tabulka `Krok | Kdo | Proč zrovna on`, která jde rovnou do sekce *Jak je to postavené uvnitř*.
 
 **Nahrazuje dřívější „tabulku švů“** (2026-09-07). *Seam* je anglicky zavedený pojem pro místo, kudy se dá do systému vstoupit a vyměnit chování; česky „šev“ neznamená nic. A ta tabulka švy stejně nepopisuje – vypisuje, **co se komu deleguje a proč**.
 
@@ -97,7 +97,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### průzkumník
 
-**Agent, který u velkého rozsahu zmapuje, co se kde mění, a mapu předá specialistům** – aby si stejnou orientaci nedělal každý z nich zvlášť ve svém kontextu. Nehlásí žádné nálezy. `/review`, *Fáze 0.4*.
+**Agent, který u velkého rozsahu zmapuje, co se kde mění, a mapu předá specialistům** – aby si stejnou orientaci nedělal každý z nich zvlášť ve svém kontextu. Nehlásí žádné nálezy. `/review`, *U velkého rozsahu napřed pošli průzkumníka*.
 
 **Nahrazuje dřívější „explorer“** (2026-09-07). Poslední anglické jméno agenta v celé sadě; ověřeno, že **nejde o vestavěný nástroj** – `/review` mu píše vlastní zadání, takže pravidlo o identifikátorech neplatí.
 
@@ -127,7 +127,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### cílený zásah
 
-**Editace dokumentace po jednotlivých větách** místo přepsání celé sekce. Vada, kterou pojmenovává: **zásah je úzký, jeho následky nikoliv** – přejmenuje se sekce a zůstane odkaz na staré jméno, dopíše se věta o něčem, co v cílovém souboru mezitím není. Pozůstatky po nich hledá `/cleanup`, *Fáze 6*.
+**Editace dokumentace po jednotlivých větách** místo přepsání celé sekce. Vada, kterou pojmenovává: **zásah je úzký, jeho následky nikoliv** – přejmenuje se sekce a zůstane odkaz na staré jméno, dopíše se věta o něčem, co v cílovém souboru mezitím není. Pozůstatky po nich hledá `/cleanup`, *Ověření čtenářem bez kontextu*.
 
 **Nahrazuje dřívější „chirurgický zásah“** (2026-09-07). Anglicky je *surgical edit* běžný obrat, ale doslovný překlad mate – „chirurgický zásah“ je česky operace, tedy obraz o řezání, ne o přesnosti. Čeština má pro *surgical strike* ustálené „cílený úder“, takže „cílený“ nese v téhle vazbě přesně tu úzkost, o kterou jde.
 
@@ -135,7 +135,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### čtenář bez kontextu
 
-**Subagent, který nemá žádný kontext z běžící session a čte výhradně soubory.** Ptá se, jestli se z toho, co je zapsané, dá pochopit, co se rozhodlo a proč – nebo jestli to dává smysl jen tomu, kdo u toho byl. Pouští ho `/cleanup`, *Fáze 6*, až po zápisu.
+**Subagent, který nemá žádný kontext z běžící session a čte výhradně soubory.** Ptá se, jestli se z toho, co je zapsané, dá pochopit, co se rozhodlo a proč – nebo jestli to dává smysl jen tomu, kdo u toho byl. Pouští ho `/cleanup`, *Ověření čtenářem bez kontextu*, až po zápisu.
 
 **Nahrazuje dřívější „fresh-reader“** (2026-09-07). Anglicismus uprostřed české věty, který se navíc skloňoval po česku („fresh-readera“, „2 fresh-readeři“), a prolézal i do `done.md`, tedy do textu pro člověka.
 
@@ -157,7 +157,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### nevypořádané téma
 
-**Co v konverzaci padlo a nikdy se nedořešilo** – otázka bez odpovědi, návrh, který nikdo nepřijal ani nezamítl, nebo vícebodová odpověď vyřízená jen zčásti. Nikdo to nezavrhl ani neschválil. Hledá je `/cleanup`, *Fáze 2*.
+**Co v konverzaci padlo a nikdy se nedořešilo** – otázka bez odpovědi, návrh, který nikdo nepřijal ani nezamítl, nebo vícebodová odpověď vyřízená jen zčásti. Nikdo to nezavrhl ani neschválil. Hledá je `/cleanup`, *Nevypořádaná témata*.
 
 **Nahrazuje dřívější „zamluvené téma“** (2026-09-07). „Zamluvit“ znamená česky vědomě odvést řeč jinam, takže termín podsouval úmysl, který tam není – téma jen propadlo. A „zamluvit si“ navíc znamená rezervovat, takže se to při rychlém čtení dá číst jako téma, které si někdo zabral. „Vypořádat“ je přitom zavedené sloveso téhle konfigurace (vypořádané nálezy).
 
@@ -193,13 +193,13 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### srovnávací běh
 
-**Spuštění agenta na úkol bez skillu, dřív než se skill napíše** – aby bylo vidět, jak selže a jakými racionalizacemi si zvolí jinou cestu. Ty jsou pak vstupem pro *Časté chyby*. `/skill`, *Fáze 4*.
+**Spuštění agenta na úkol bez skillu, dřív než se skill napíše** – aby bylo vidět, jak selže a jakými racionalizacemi si zvolí jinou cestu. Ty jsou pak vstupem pro *Časté chyby*. `/skill`, *Srovnávací běh*.
 
 **Nahrazuje druhou polovinu „baseline“** (2026-09-07). **Ne „referenční hodnota“ ani „výchozí hodnota“** – žádná hodnota tam nevzniká, výstupem je popis chování a citované racionalizace. Kdyby ta fáze jednou měřila i čísla, jméno s „hodnotou“ by bylo na místě; dnes by slibovalo metriku, kterou nikdo nenaměří.
 
 ### kontrola závislostí
 
-**Ověření na začátku běhu, že nástroj, na který se bude delegovat, opravdu existuje a dá se zavolat.** Chybí-li, skill neselže: řekne nahlas, co tím odpadá, a pokračuje bez toho. `/skill`, *Fáze 0*.
+**Ověření na začátku běhu, že nástroj, na který se bude delegovat, opravdu existuje a dá se zavolat.** Chybí-li, skill neselže: řekne nahlas, co tím odpadá, a pokračuje bez toho. `/skill`, *Příprava*.
 
 **Nahrazuje dřívější „sondu na závislosti“** (2026-09-07) – viz [ověřovací pokus](#ověřovací-pokus), pod nímž se to jméno pletlo s něčím úplně jiným.
 
@@ -306,7 +306,7 @@ Kandidát z `/ptydepe suggest`: 25 výskytů v 10 souborech, skloňovaný po če
 
 **Rozhodující byl ale třetí argument, a ten platí obecně:** `guard` je zároveň **identifikátor v kódu tohohle repozitáře** – `calendar.swift` má `guard let od = vstup`, `/review` má `"guard"` jako pole ve schématu nálezu. Přeložit běžný text, zatímco kód dál říká `guard`, znamená vyrobit dvě jména pro jednu věc.
 
-**Zapsáno proto jako pravidlo do `/ptydepe`, Fáze 3:** termín, který je zároveň identifikátorem v kódu nebo klíčovým slovem jazyka, se nepřekládá.
+**Zapsáno proto jako pravidlo do `/ptydepe`, *Návrh a rozhodnutí*:** termín, který je zároveň identifikátorem v kódu nebo klíčovým slovem jazyka, se nepřekládá.
 
 ### 2026-09-07 – Termín „mutace“ se ponechává
 

@@ -238,6 +238,19 @@ Co se v okně dělá:
 
 ------
 
+## Verdikt
+
+**Jsou to dvě dvojice, ne čtyři volné možnosti** – nasazení má na rozdíl od ostatních kroků dva různé konce. První dvojice uzavírá **běh skillu** (nasazeno / nenasazeno), druhá **sledovací okno** (vráceno zpátky / okno uzavřeno). Každá dvojice splňuje týž vzorec jako verdikt kteréhokoliv jiného skillu: hotovo a čím pokračovat, nebo co tomu brání. Mezistav mezi nimi žádný není.
+
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `Nasazeno není – brání tomu: <konkrétní seznam>.`
+- `Nasazeno bylo, ale ověření selhalo – vrátil jsem to zpátky, protože: <důvod>.`
+- `Nasazeno a ověřeno. Sledovací okno běží do <čas>, sleduju: <co>.` – **tímhle končí běh skillu**, ne nasazení. Fáze 6 je zapsaná, ale okno je otevřené.
+- `Nasazeno a ověřeno, sledovací okno uzavřeno – <N nových chyb / žádné>.` – jen když okno mezitím opravdu uplynulo a uzavřel jsi ho podle Fáze 7.
+
+**Nikdy neříkej „nasazeno a ověřeno na produkci“ bez zmínky o okně.** Ta věta tvrdí, že je hotovo, kdežto podle *Životního cyklu projektu* (`~/.claude/RULES.md`) nasazení končí až uzavřením okna – a právě ta chybějící zmínka je důvod, proč se scénář „spadlo to o dvě hodiny později“ dosud nikdy nedozvěděl vlastníka.
+
 ## Když chyba projde vším
 
 Chyba, kterou nechytila deterministická kontrola, panel v `/review`, útok v `/attack` **ani sledovací okno**, a projevila se u uživatele, je nejcennější vstup, jaký celá soustava záruk dostane – a dosud nevedla k ničemu, jen se opravila commitem.
@@ -255,14 +268,3 @@ Datum vyrob `date +%F` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepi�
 **A vždy regresní test.** Stejným pravidlem jako u nálezu z `/attack`: reprodukce produkčního defektu je hotové zadání testu a bez něj se chyba vrátí.
 
 ------
-
-## Verdikt
-
-Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
-
-- `Nasazeno není – brání tomu: <konkrétní seznam>.`
-- `Nasazeno bylo, ale ověření selhalo – vrátil jsem to zpátky, protože: <důvod>.`
-- `Nasazeno a ověřeno. Sledovací okno běží do <čas>, sleduju: <co>.` – **tímhle končí běh skillu**, ne nasazení. Fáze 6 je zapsaná, ale okno je otevřené.
-- `Nasazeno a ověřeno, sledovací okno uzavřeno – <N nových chyb / žádné>.` – jen když okno mezitím opravdu uplynulo a uzavřel jsi ho podle Fáze 7.
-
-**Nikdy neříkej „nasazeno a ověřeno na produkci“ bez zmínky o okně.** Ta věta tvrdí, že je hotovo, kdežto podle *Životního cyklu projektu* (`~/.claude/RULES.md`) nasazení končí až uzavřením okna – a právě ta chybějící zmínka je důvod, proč se scénář „spadlo to o dvě hodiny později“ dosud nikdy nedozvěděl vlastníka.

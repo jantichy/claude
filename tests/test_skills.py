@@ -52,6 +52,27 @@ class SkillFrontmatter(unittest.TestCase):
                 self.assertEqual(fm["name"], skill.parent.name,
                     f"{skill}: `name: {fm.get('name')}` nesedí s adresářem")
 
+    def test_vedlejsi_soubory_neodkazuji_dovnitr_ciziho_skillu(self):
+        """Zákaz odkazu dovnitř cizí fáze platí i mimo `SKILL.md`.
+
+        Kontrolovala se jen těla skillů, takže vedlejší soubory z něj tiše
+        vypadávaly – `skills/ptydepe/terms.md` jich nasbíral 8. Přečíslovaná
+        fáze souseda pak ukazuje jinam a nic to nehlásí.
+
+        Odkaz na **vlastní** fázi je v pořádku a pozná se podle jména adresáře;
+        bez téhle výjimky by kontrola hlásila i legitimní vnitroskillové odkazy.
+        """
+        vady = []
+        for soubor in sorted((ROOT / "skills").glob("*/*.md")):
+            if soubor.name in ("SKILL.md", "README.md"):
+                continue
+            vlastni = soubor.parent.name
+            for m in SouladSNormou.CIZI_FAZE.finditer(body(soubor)):
+                if f"`/{vlastni}`" in m.group(0):
+                    continue
+                vady.append(f"{soubor.relative_to(ROOT)}: {m.group(0)!r}")
+        self.assertFalse(vady, "odkazy dovnitř fáze cizího skillu:\n  " + "\n  ".join(vady))
+
     def test_allowed_tools_je_vyplnene(self):
         """Skill bez `allowed-tools` běží s celou sadou nástrojů session.
 

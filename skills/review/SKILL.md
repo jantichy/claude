@@ -454,7 +454,7 @@ Při pochybnosti patří nález mezi sporné.
 ## Výsledky review
 
 - **Rozsah:** [N z M souborů diffu – co a proč vynecháno]
-- **Specialisté:** [kteří běželi / kteří vybraní neběželi a proč] · [na čem: code-review high, bezpečnost opus, standardy výchozí]
+- **Specialisté:** [kteří běželi / kteří vybraní neběželi a proč] · [na čem: code-review high, bezpečnost nejsilnější model, standardy výchozí]
 
 **Deterministická vrstva** [u každého kroku nástroj · návratový kód, ne holé číslo]:
 - průběžná kontrola: ✅ / ❌ [co padá]

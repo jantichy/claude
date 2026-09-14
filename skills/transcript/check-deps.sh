@@ -110,9 +110,19 @@ if [ "$WANT_DIARIZE" -eq 1 ]; then
           "https://huggingface.co/$repo/resolve/main/config.yaml" 2>/dev/null)
       case "$code" in
         200|302) echo "  ✓ přístup k $repo" ;;
-        403)     echo "  ✗ $repo – licence neodsouhlasená"
-                 fixes+=("otevři https://huggingface.co/$repo a odsouhlas podmínky (bez toho se model nestáhne)")
-                 missing=1 ;;
+        403)     # Blokuje jen model, který se opravdu použije. Seznam vedlejších
+                 # repozitářů se mezi verzemi pyannote mění, takže odsouhlasení
+                 # vynucené u toho, který daná verze netahá, je falešný poplach –
+                 # a ten u kontroly závislostí znamená, že se přestane pouštět.
+                 # Definitivní verdikt dá až běh.
+                 if [ "$repo" = "$DIARIZE_MODEL" ]; then
+                   echo "  ✗ $repo – licence neodsouhlasená"
+                   fixes+=("otevři https://huggingface.co/$repo a odsouhlas podmínky (bez toho se model nestáhne)")
+                   missing=1
+                 else
+                   echo "  ! $repo – licence neodsouhlasená; tahle verze pyannote ho nemusí potřebovat"
+                   echo "    (kdyby běh selhal, odsouhlas ji na https://huggingface.co/$repo)"
+                 fi ;;
         *)       echo "  ? $repo – nešlo ověřit (HTTP $code), zkusí se až za běhu" ;;
       esac
     done

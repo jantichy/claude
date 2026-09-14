@@ -38,7 +38,7 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 
 Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
 
-- typecheck: swiftc -typecheck skills/*/*.swift
+- typecheck: swiftc -typecheck -warnings-as-errors skills/*/*.swift
 - lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' skills/*/*.py skills/*/scripts/*.py tests/*.py
 - test: python3 -m unittest discover -s tests
 - build: -
@@ -46,8 +46,9 @@ Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola h
 - audit: -
 - coverage: -
 - mutation: -
+- dev: -
 
-**Pomlčky jsou rozhodnutí, ne díra.** Repozitář nemá manifest závislostí, nic se z něj nebuildí ani nenasazuje a není tu aplikace, kterou by šlo projít; `coverage` a `mutation` nad sadou, která z devadesáti procent testuje Markdown, měří délku textu, ne sílu testů. Bez pomlčky by je `/review` i CI hlásily jako nezkontrolované kroky – tedy jako trvalý šum místo informace (`~/Dev/context/coding/quality.md`, *Kontrakt příkazů*).
+**Pomlčky jsou rozhodnutí, ne díra.** `dev` mezi nimi stojí schválně: `/attack` se tu nikdy nepouští (viz *Výjimky z obecných pravidel* výš), takže není co zvedat – a chybějící klíč se od vědomé pomlčky nepozná. Repozitář nemá manifest závislostí, nic se z něj nebuildí ani nenasazuje a není tu aplikace, kterou by šlo projít; `coverage` a `mutation` nad sadou, která z devadesáti procent testuje Markdown, měří délku textu, ne sílu testů. Bez pomlčky by je `/review` i CI hlásily jako nezkontrolované kroky – tedy jako trvalý šum místo informace (`~/Dev/context/coding/quality.md`, *Kontrakt příkazů*).
 
 `shellcheck` běží se `--severity=info`, ne se `--severity=style`: stylové nálezy jsou preference a kontrola, která padá na preferenci, se obchází. **Ze stejného důvodu má `ruff` jen `--select F,E9,C901`** – nedefinovaná jména, nepoužité importy, syntaktické chyby a cyklomatická složitost, tedy vady a jeden měřitelný práh, ne názory. `C901` je tu od 8. 9. 2026 s prahem 10 podle `~/Dev/context/coding/quality.md`. Do té doby se neměřila vůbec a 5 funkcí ho překračovalo, nejvíc `progress.py` s 19. Práh se **nesnižuje kvůli tomu, že překáží** – to smí jen člověk a se zápisem do rozhodnutí.
 
@@ -55,7 +56,7 @@ Výchozí sada by tu hlásila pořadí importů a závorky navíc. `--isolated` 
 
 **Od 7. 9. 2026 lint kryje i `tests/`** – je to největší Python v repozitáři a nekontroloval ho nikdo, přestože je to zároveň jediná vrstva, která tu něco doopravdy vynucuje. Běh testů sám chytí syntaktickou chybu, ale ne nepoužitý import ani překlep ve jménu uvnitř větve, která se zrovna nevykonala.
 
-`test` pokrývá šest vrstev. **Počty testů se tu schválně neuvádějí** – rozejdou se s prvním doplněným scénářem a nikdo je nepřepočítává; kolik jich je, řekne `python3 -m unittest discover -s tests`:
+`test` pokrývá tyhle vrstvy. **Počty se tu schválně neuvádějí** – ani vrstev, ani testů: rozejdou se s prvním doplněným scénářem a nikdo je nepřepočítává. Kolik jich je, řekne `python3 -m unittest discover -s tests`:
 
 - **`tests/test_skills.py` – meta-testy nad konfigurací.** Hlídají osm skupin:
 
@@ -92,7 +93,7 @@ Výchozí sada by tu hlásila pořadí importů a závorky navíc. `--isolated` 
 
   **Od 14. 9. 2026 k tomu přibylo přiřazování mluvčích v `merge.py`** – nejtišší vada celého skillu, protože špatně přiřazená replika vypadá v přepisu stejně věrohodně jako správná. Skript ji řeší dvěma prahy a raději nechá mluvčího prázdného, než aby hádal; testy hlídají oba **zvlášť**. To rozlišení tam nebylo od začátku: první verze shazovala oba prahy naráz a scénář „55:45“ přičítala `MIN_MARGIN`, jenže ten padá na `MIN_RATIO` – druhý práh tak nehlídal nikdo a jeho vypnutí neshodilo jediný test.
 
-`typecheck` tu **dlouho stála pomlčka** s odůvodněním, že repozitář je konfigurace, ne program. To přestalo platit ve chvíli, kdy k `/invoicing` přibyl `calendar.swift` – od té chvíle tu ležel program, který nečetla žádná kontrola, a překlep v něm by se poznal až uprostřed ostré fakturace. Dnes proto `typecheck` pouští `swiftc -typecheck` nad všemi swiftovými skripty ve skillech (na Python ve `skills/` je test v `tests/`, ne tahle kontrola); běží kolem dvou vteřin a nic neinstaluje, protože Swift je na macOS součástí vývojářských nástrojů.
+`typecheck` tu **dlouho stála pomlčka** s odůvodněním, že repozitář je konfigurace, ne program. To přestalo platit ve chvíli, kdy k `/invoicing` přibyl `calendar.swift` – od té chvíle tu ležel program, který nečetla žádná kontrola, a překlep v něm by se poznal až uprostřed ostré fakturace. Dnes proto `typecheck` pouští `swiftc -typecheck -warnings-as-errors` nad všemi swiftovými skripty ve skillech – **`-warnings-as-errors` schválně**, protože `~/Dev/context/coding/quality.md` má u přísnosti překladače práh „žádné varování“ a bez toho přepínače ho nevynucoval nikdo: varování by prošlo a kontrola by zůstala zelená (na Python ve `skills/` je test v `tests/`, ne tahle kontrola); běží kolem dvou vteřin a nic neinstaluje, protože Swift je na macOS součástí vývojářských nástrojů.
 
 **Kdyby Swift z repozitáře jednou zmizel, vrať pomlčku**, ne prázdný řádek: chybějící klíč hook po každé odpovědi hlásí jako nezkontrolovaný krok, a to je trvalý šum místo informace.
 

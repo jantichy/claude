@@ -17,6 +17,11 @@ guard args.count == 3 else {
 
 let vstup = DateFormatter()
 vstup.dateFormat = "yyyy-MM-dd"
+// `en_US_POSIX` schválně, i když jde o česká data: bez pevného locale čte
+// DateFormatter pevný formát kalendářem uživatele, takže v locale s jiným než
+// gregoriánským kalendářem (thajský buddhistický, japonský) vyjde jiný rok.
+// Je to doporučený postup Applu pro formát, který se nemá řídit uživatelem.
+vstup.locale = Locale(identifier: "en_US_POSIX")
 vstup.timeZone = TimeZone.current
 guard let od = vstup.date(from: args[1]), let doDne = vstup.date(from: args[2]) else {
     FileHandle.standardError.write("data musí být ve tvaru YYYY-MM-DD\n".data(using: .utf8)!)

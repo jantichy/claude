@@ -211,6 +211,14 @@ speech_seconds() {
 }
 
 # 1) délky do logu
+# Vstup musí být existující soubor. Bez téhle kontroly převezme ffmpeg cokoliv,
+# co umí otevřít jako vstupní URL – `http://`, `rtmp://`, `concat:` –, takže
+# překlep v cestě neskončí chybou, ale síťovým požadavkem ven ze stroje. U skillu,
+# jehož celý smysl je „nic neopustí počítač“, je to tichý rozpor s vlastním slibem.
+for f in "$@"; do
+  [ -f "$f" ] || { echo "chyba: '$f' není soubor" >&2; exit 1; }
+done
+
 n=0
 declare -a DURATIONS=()
 for f in "$@"; do
