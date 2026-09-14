@@ -320,6 +320,66 @@ class PrubeznaKontrolaJeZaregistrovana(unittest.TestCase):
             "se utne uprostřed a nahlásí chybu tam, kde žádná není")
 
 
+class RegistrObchazeni(unittest.TestCase):
+    """`BYPASS.md` musí jmenovat každou vrstvu, která něco vynucuje.
+
+    Registr, který zestárne, je horší než žádný: tváří se jako úplná mapa
+    známého povrchu, ale nová vrstva v něm chybí a nikdo si toho nevšimne.
+    Seznam vrstev se proto čte z disku – z hooků v `settings.json`, z
+    `githooks/` a z workflow v `.github/` –, ne z výčtu v testu.
+
+    Kontroluje se jen **přítomnost**, ne obsah: jestli je řádek u konkrétní
+    cesty pravdivý, žádný test nezjistí. Smysl je vynutit, aby se nad ní někdo
+    zamyslel, ne předstírat, že se to dá změřit.
+    """
+
+    REGISTR = ROOT / "BYPASS.md"
+
+    #: Vrstvy, které se v registru záměrně neuvádějí – nic nevynucují.
+    NEVYNUCUJE = {"iterm-notify.sh"}
+
+    def vrstvy(self):
+        """Soubory, které běží automaticky a něco vynucují."""
+        out = set()
+        nastaveni = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        for skupiny in nastaveni.get("hooks", {}).values():
+            for g in skupiny:
+                for h in g.get("hooks", []):
+                    jmeno = Path(h.get("command", "").split()[0]).name
+                    if jmeno and jmeno not in self.NEVYNUCUJE:
+                        out.add(jmeno)
+        out |= {f.name for f in (ROOT / "githooks").glob("*") if f.is_file()}
+        out |= {f.name for f in (ROOT / ".github" / "workflows").glob("*.yml")}
+        if (ROOT / "settings.json").exists():
+            out.add("settings.json")
+        return out
+
+    def test_registr_existuje(self):
+        self.assertTrue(self.REGISTR.is_file(), "chybí BYPASS.md – registr obcházení kontrol")
+
+    def test_kazda_vynucovaci_vrstva_ma_v_registru_radek(self):
+        text = self.REGISTR.read_text(encoding="utf-8")
+        chybi = sorted(v for v in self.vrstvy() if v not in text)
+        self.assertFalse(chybi,
+            "tyhle vynucovací vrstvy nejsou v BYPASS.md, takže u nich nikdo nesepsal, "
+            f"čím se dají obejít: {chybi}")
+
+    def test_prijata_rizika_maji_duvod(self):
+        """`accepted` bez důvodu je jen zamlčený problém."""
+        vady = []
+        for i, r in enumerate(self.REGISTR.read_text(encoding="utf-8").splitlines(), 1):
+            if "accepted" in r and not r.strip().startswith("|"):
+                continue
+            if "accepted" in r:
+                # Měří se celý řádek, ne jen text za slovem „accepted“: zdůvodnění
+                # bývá i ve sloupci „Co to chytí“ a vázat kontrolu na jeden sloupec
+                # by hlásilo řádky, které důvod nesou jinde.
+                text = r.replace("accepted", "").strip(" *|")
+                if len(text) < 90:
+                    vady.append(f"{self.REGISTR.name}:{i}")
+        self.assertFalse(vady, f"„accepted“ bez zdůvodnění na řádcích: {vady}")
+
+
 class PrubeznaKontrolaVCI(unittest.TestCase):
     """CI je jediná kontrola, která běží mimo tenhle stroj.
 
