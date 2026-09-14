@@ -458,6 +458,8 @@ Obsah se přitom neztratí – rozejde se **zdůvodnění**: commit popisuje dif
 
 **Nepoužívej git aliasy.** Píš rozbalený příkaz, i když je delší. Aliasy z `~/.gitconfig` jsou psané pro ruční práci člověka a bývají v nich zabalené právě ty věci, které tohle pravidlo zakazuje – `git a` je `add -A`, `git cc` je `add -A && commit --amend && push --force`. **Deny seznam je navíc textový, takže alias ho obejde**: `git cc` v něm nevidí ani `add -A`, ani `--force`. Ty delší tam doplněné jsou, ale jednopísmenné pokrýt nejdou – vzor `git c:*` by zablokoval i `git commit`. U nich tedy nic nedrží kromě tohohle pravidla, což je vědomá mezera, ne opomenutí.
 
+**Zprávu commitu předávej heredocem a nic za něj neřetěz.** Spojíš-li `git commit -F - <<'MSG' … MSG` s dalším příkazem přes `&&`, shell rozdělí vstup jinak, než čekáš, a do zprávy se dostane kus následujícího příkazu. Poznáš to až v `git log`, kdy je commit pushnutý a opravit ho znamená přepsat historii, na které může stát jiná session. Doloženo 14. 9. 2026: commit `62a1bcb` má v první řádce zprávy kus Pythonu. **Jeden heredoc, jeden příkaz, žádné `&&` za ním.**
+
 ### Mazání ověř diffem, ne grepem
 
 Mažeš-li **podle značek** – od nadpisu k nadpisu, od markeru k markeru, od řádku po řádek –, ověř výsledek **diffem toho, co zmizelo**, ne hledáním toho, co zbylo.
