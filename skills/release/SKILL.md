@@ -102,7 +102,13 @@ Navíc si zjisti tohle:
 
 ## Fáze 1 – Kontroly před nasazením
 
-Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracované. Neprojde-li kterákoliv, **skonči** a řekni, co je potřeba dodělat.
+Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracované.
+
+**Pusť je všechny a teprve pak rozhodni – neskonči na první, která padne.** Je to jiná otázka než u průběžné kontroly: ta je binární a běží po každé odpovědi, kdežto tady se ptáš „kolik věcí je rozbitých, než to pustím ven?“. Skončit na první znamená opravit ji, spustit znovu, narazit na druhou – a každé kolo stojí celý běh kontrol včetně `build` a `e2e`, tedy to nejpomalejší, co projekt má.
+
+**Výjimka je bod 1:** není-li strom čistý, nemá smysl pouštět nic, protože by se měřilo něco jiného, než co se nasadí. Tam se skončí hned.
+
+Na konci fáze vypiš **souhrn všeho, co padlo** – kolik kontrol, které to byly a kde je výstup –, a teprve pak skonči. Prošlo-li všechno, řekni to jednou větou a pokračuj.
 
 Definice průběžné kontroly, kontraktu příkazů, prahů jednotlivých kontrol i auditu závislostí drží `~/Dev/context/coding/quality.md` – **prahy a příkazy opisuj odtamtud, ne odsud**, aby se dvě místa nerozešla.
 
