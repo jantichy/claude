@@ -87,13 +87,13 @@ need_tools() {
 # od PRVNÍHO výskytu, schovaná kopie nad tou skutečnou ji celou zastínila.
 # Lidská revize takový řádek nemá jak zachytit, protože ho nevidí.
 #
-# Plot bloku kódu se drží pravidel CommonMarku: pamatuje si ZNAK a DÉLKU
-# otevíracího plotu a zavře ho jen týž znak o délce alespoň takové. Dřív se stav
+# Ohraničení bloku kódu se drží pravidel CommonMarku: pamatuje si ZNAK a DÉLKU
+# otevíracího ohraničení a zavře ho jen týž znak o délce alespoň takové. Dřív se stav
 # překlápěl na každém ``` nebo ~~~, takže ukázka zabalená do ````markdown …
 # ``` … ```` obrátila polaritu: podvržená sekce uvnitř ukázky se stala tělem
 # a skutečný kontrakt pod ní zmizel jako „blok kódu“. Ve vykresleném Markdownu
 # i v diffu přitom bylo obojí vidět správně. Pojistky na dvě sekce a na
-# nedovřený plot to nezachytily, protože obě počítají z výstupu téhle funkce.
+# neuzavřené ohraničení to nezachytily, protože obě počítají z výstupu téhle funkce.
 #
 # HTML komentáře řeší stavový automat bez ohledu na jejich obsah. Dřívější výraz
 # nesedl na komentář obsahující `--`, tedy na běžnou českou pomlčku v poznámce;
@@ -388,7 +388,7 @@ ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
 CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || {
   # "Projekt kontrakt nemá" je v pořádku a mlčí se. "Kontrakt tam je, ale nejde
   # přečíst" je ale něco úplně jiného a mlčet se u toho nesmí: stačí jeden
-  # nedovřený plot ``` nad sekcí a md_body považuje zbytek souboru za blok kódu,
+  # neuzavřené ohraničení ``` nad sekcí a md_body považuje zbytek souboru za blok kódu,
   # takže se kontrakt nenajde a kontrola se vypne beze slova. Rozdíl se pozná
   # tím, že sekce je v SYROVÉM souboru, ale v těle bez bloků kódu už ne.
   for c in "$PWD/CLAUDE.md" "$PWD/.claude/CLAUDE.md" "$PWD/main/CLAUDE.md" \
@@ -401,9 +401,9 @@ CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || {
     # md_body, a chyba je v tom souboru), nebo ji md_body vidí (a chyba je pak
     # tady ve verify.sh). Hláška proto musí říct, kterou z nich vidí.
     #
-    # Dokud jmenovala jen nedovřený plot, poslala hledání do souboru i tehdy, když
-    # v něm žádný plot nebyl. Doloženo 14. 9. 2026: SIGPIPE ve find_contract se
-    # diagnostikoval jako nedovřený plot a chyba se hledala na špatném místě.
+    # Dokud jmenovala jen neuzavřené ohraničení, poslala hledání do souboru i tehdy, když
+    # v něm žádné ohraničení nebylo. Doloženo 14. 9. 2026: SIGPIPE ve find_contract se
+    # diagnostikoval jako neuzavřené ohraničení a chyba se hledala na špatném místě.
     TELO=$(md_body "$c"); RC_TELO=$?
     if [ "$RC_TELO" -ne 0 ]; then
       die "v $c je sekce ## Kontrakt příkazů, ale čtení těla souboru skončilo chybou (návratový kód $RC_TELO). Je to chyba ve verify.sh, ne v tom souboru. Nespustil jsem nic."

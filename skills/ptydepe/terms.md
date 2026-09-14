@@ -21,7 +21,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ## Obsah
 
-**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička)
+**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička) · [ohraničení bloku kódu](#ohraničení-bloku-kódu)
 
 **[Ponechané termíny](#ponechané-termíny)** – [heuristika, osa, vektor útoku](#2026-09-07--ponechané-termíny-z-revize-heuristika-osa-vektor-útoku) · [„stopa práce“](#2026-09-07--termín-stopa-práce-se-ponechává-i-když-má-stopa-pět-významů) · [„guard“](#2026-09-07--termín-guard-se-ponechává-a-plyne-z-toho-obecné-pravidlo) · [„mutace“](#2026-09-07--termín-mutace-se-ponechává) · [„session“](#2026-09-07--termín-session-se-ponechává) · [„soustava“](#2026-09-07--termín-soustava-se-ponechává) · [„kontrakt příkazů“](#2026-09-07--termín-kontrakt-příkazů-se-ponechává) · [„sledovací okno“](#2026-09-07--termín-sledovací-okno-se-ponechává)
 
@@ -246,6 +246,24 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 **Dva výskyty starého tvaru se vědomě nepřepsaly.** `~/Dev/context/compose/_superpowers/plans/2026-08-12-compose.md` je datovaný plán z 12. 8. 2026, tedy doklad stavu, ne pravidlo – přepsat ho by falšovalo záznam. A `~/Dev/mediowiki/…/geshi/latex.php` je cizí vendor kód, kde `frontmatter` znamená klíčové slovo LaTeXu.
 
 **Zamítnuto – „YAML hlavička“:** přesnější, ale ve skloňovaných vazbách zbytečně dlouhé a formát je z kontextu zřejmý. Zůstává použitelné tam, kde by jinak nebylo poznat, o kterou hlavičku jde; tak to má docstring funkce `frontmatter()`. **Zamítnuto – „záhlaví“:** česky obsazené záhlavím stránky a tabulky, vyměnilo by jednu záměnu za druhou.
+
+### ohraničení bloku kódu
+
+Řádek tří a víc zpětných apostrofů nebo vlnovek, kterým se v Markdownu otevírá a zavírá blok kódu. V CommonMarku na něm záleží **znakem i délkou** – zavřít ho může jen týž znak o délce alespoň takové jako u otevíracího –, takže se o něm mluví jako o věci, ne jako o „třech apostrofech“.
+
+**Nahrazuje dřívější „plot“**, doslovný překlad anglického `fence` (*fenced code block*). Vzniklo to 8. 9. 2026 v jednom commitu `verify.sh` a do 14. 9. se rozšířilo na 17 výskytů ve třech souborech, aniž o tom kdo rozhodl – učebnicový případ toho, co tenhle skill řeší. Česky termín zavedený není. Navíc `plot` v technické angličtině znamená **graf** a přesně v tom významu stojí ve třech dalších repozitářích v `~/Dev` (plotly, gnuplot, SVG), takže v českém technickém textu byl dvojznačný i uvnitř vlastních souborů.
+
+**V kódu se píše anglicky `fence`** – je to termín specifikace CommonMarku, takže se nepřekládá.
+
+**Vědomě ponecháno:** sedm výskytů ve `verify.sh` a `tests/test_verify.py` – proměnná `je_plot` v awk a tři názvy testovacích metod (`test_nedovreny_plot_nevypne_kontrolu_mlcky` a spol.). Jsou to identifikátory v kódu, ale **české**, takže na ně výjimka *Identifikátor v kódu a název souboru* nesedí doslova: spadají pod úkol přepsat identifikátory do angličtiny (`~/Dev/context/todo.md`, sekce *Celý repozitář*) a při něm se z nich stane `fence`. Přepisovat je teď na jiný český tvar by znamenalo práci, která se za chvíli zahodí.
+
+**Zamítnuto – ponechat „plot“:** nemá oporu v češtině a koliduje s významem „graf“.
+
+**Zamítnuto – „značka“:** krátké a srozumitelné, ale slovo je obsazené – `~/.claude/RULES.md` má sekci *Interní značky ven nepatří*, kde značka znamená `B1` nebo `N3`. Jedno jméno pro dvě věci je táž vada jako dvě jména pro jednu.
+
+**Zamítnuto – „trojice apostrofů“:** lže. CommonMark povoluje tři a víc a zavírací musí být aspoň tak dlouhé jako otevírací – celá ta pasáž ve `verify.sh` je právě o délce.
+
+**Zamítnuto – „oplocení“:** výmysl, táž vada jako „plot“, jen delší.
 
 ## Ponechané termíny
 

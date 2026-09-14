@@ -28,6 +28,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | frontmatter | hlavička | blok YAML metadat mezi `---` na začátku `SKILL.md`; kde hrozí záměna, *hlavička skillu*. **Hlavička souboru** jako úvodní odstavec pro čtenáře je něco jiného. V anglickém textu `frontmatter` zůstává |
 | chirurgický zásah | cílený zásah | editace dokumentace po jednotlivých větách. **Ne** „zacílený“, **ne** „cílená změna“ |
 | koncové věty | závěrečný verdikt | povinná závěrečná věta skillu – hotovo a čím pokračovat, nebo co tomu brání |
+| plot | ohraničení bloku kódu | řádek tří a víc zpětných apostrofů nebo vlnovek, kterým se v Markdownu otevírá a zavírá blok kódu; v kódu anglicky `fence`. **Plot u domu** tím dotčený není |
 | pre-flight | příprava | `Fáze 0` každého skillu. Soubor se dál jmenuje `PREFLIGHT.md` |
 | próza (proti struktuře) | souvislý text | nestrukturovaný zápis tam, kde se čeká tabulka, seznam, kritérium |
 | próza (proti identifikátoru) | běžný text | česká věta tam, kde stojí proti jménu režimu, klíči, poli. **Ne** „volný text“ |

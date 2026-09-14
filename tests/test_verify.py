@@ -325,17 +325,17 @@ class PrubeznaKontrola(unittest.TestCase):
     def test_nedovreny_plot_nevypne_kontrolu_mlcky(self):
         """Vypnutá kontrola, o které nikdo neví, je horší než žádná.
 
-        md_body přepíná stav na každém ``` – lichý počet plotů nad sekcí tedy
+        md_body přepíná stav na každém ``` – lichý počet ohraničení nad sekcí tedy
         udělá z celého zbytku souboru blok kódu, kontrakt se nenajde a hook
         skončí nula. To je nerozlišitelné od „projekt kontrakt nemá", takže
         kontrola, která předtím blokovala padající testy, od té chvíle mlčky
         nespouští nic. Rozdíl se pozná tím, že sekce v syrovém souboru je.
         """
         (self.repo / "CLAUDE.md").write_text(
-            "# Test\n\n```bash\nnedovreny plot\n\n## Kontrakt příkazů\n\n"
+            "# Test\n\n```bash\nneuzavrene ohraniceni\n\n## Kontrakt příkazů\n\n"
             "- typecheck: -\n- lint: -\n- test: false\n")
         git(self.repo, "add", "-A")
-        git(self.repo, "commit", "-qm", "nedovreny plot")
+        git(self.repo, "commit", "-qm", "neuzavrene ohraniceni")
         self.allow()
         r = self.spust()
         self.assertEqual(r.returncode, BLOKUJE, "nečitelný kontrakt kontrolu vypnul mlčky")
@@ -347,7 +347,7 @@ class PrubeznaKontrola(unittest.TestCase):
         """Sekce je čitelná, hledání ji přesto nenašlo – hláška musí ukázat na hook.
 
         Dřív jmenovala jedinou příčinu, která byla známá v době jejího vzniku
-        (nedovřený plot), takže poslala hledání do souboru i tam, kde žádný plot
+        (neuzavřené ohraničení), takže poslala hledání do souboru i tam, kde žádné ohraničení
         není. Doloženo 14. 9. 2026: SIGPIPE ve `find_contract` se takhle
         diagnostikoval jako vada Markdownu a hledal se v něm.
 
@@ -378,7 +378,7 @@ class PrubeznaKontrola(unittest.TestCase):
     def test_projekt_bez_kontraktu_dal_mlci(self):
         """Protějšek testu výš: chybějící kontrakt není chyba a nesmí se hlásit.
 
-        Bez něj by oprava nedovřeného plotu mohla začít otravovat v každém
+        Bez něj by oprava neuzavřeného ohraničení mohla začít otravovat v každém
         repozitáři, který kontrakt prostě nemá.
         """
         (self.repo / "CLAUDE.md").write_text("# Test\n\nŽádný kontrakt tu není.\n")
@@ -680,7 +680,7 @@ class ParserTelaMarkdownu(unittest.TestCase):
     a hook v obou případech spustil podvržený příkaz a napsal „průběžná kontrola
     prošla“.
 
-    Pojistky na dvě sekce a na nedovřený plot tuhle třídu nezachytí z principu –
+    Pojistky na dvě sekce a na neuzavřené ohraničení tuhle třídu nezachytí z principu –
     obě počítají z výstupu téhle funkce, takže vidí totéž, co ona.
     """
 
@@ -702,7 +702,7 @@ class ParserTelaMarkdownu(unittest.TestCase):
     def test_ctyrznakovy_plot_neobrati_polaritu(self):
         """Ukázka kontraktu se sází do ````markdown, aby šel uvnitř ukázat ```.
 
-        Překlápění na každém plotu bez ohledu na délku tu obrátilo polaritu:
+        Překlápění na každém ohraničení bez ohledu na délku tu obrátilo polaritu:
         podvržená sekce uvnitř ukázky se stala tělem a skutečný kontrakt pod ní
         zmizel jako blok kódu.
         """
@@ -714,7 +714,7 @@ class ParserTelaMarkdownu(unittest.TestCase):
         self.assertNotIn("PODVRZENY", v.stdout)
 
     def test_tildovy_plot_uvnitr_backtickoveho_neni_plot(self):
-        """Uvnitř ```-bloku je ~~~ obyčejný text, ne zavírací plot."""
+        """Uvnitř ```-bloku je ~~~ obyčejný text, ne zavírací ohraničení."""
         v = self.contract("# T\n\n```\n~~~\n## Kontrakt příkazů\n- test: echo PODVRZENY\n"
                           "~~~\n```\n\n## Kontrakt příkazů\n\n- test: echo PRAVY\n")
         self.assertIn("echo PRAVY", v.stdout)
