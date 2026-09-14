@@ -233,9 +233,21 @@ norm_path() {
 if [ "${1:-}" = "--list" ]; then
   need_tools
   N=0
+  MRTVYCH=0
   for f in "$ALLOW_DIR"/*; do
     [ -f "$f" ] || continue
     P=$(head -1 "$f")
+    # Souhlas bez uloženého otisku kontraktu je z doby před vazbou na kontrakt.
+    # Neplatí (hook ho odmítne), ale ve výpisu vypadal jako rovnocenný – a protože
+    # se vedle něj mezitím vydal nový, tvářil se výpis, že je projekt povolený
+    # dvakrát. Mrtvý záznam, který vypadá živě, je horší než žádný.
+    if [ "$(wc -l < "$f" | tr -d ' ')" -lt 3 ]; then
+      printf '%s\n    NEPLATNÝ – souhlas ve starém formátu bez otisku kontraktu.\n' "$P"
+      printf '    Ukliď ho: rm %s\n' "$f"
+      MRTVYCH=$((MRTVYCH+1))
+      N=$((N+1))
+      continue
+    fi
     if [ ! -d "$P" ]; then STATE_TXT="adresář neexistuje"
     elif MD=$(find_contract "$P"); then STATE_TXT="kontrakt v ${MD#"$P"/}"
     else STATE_TXT="bez kontraktu – hook tu nic nespustí"
@@ -244,6 +256,7 @@ if [ "${1:-}" = "--list" ]; then
     N=$((N+1))
   done
   [ "$N" = 0 ] && echo "Souhlas není vydaný pro žádný projekt."
+  [ "$MRTVYCH" -gt 0 ] && printf '\nNeplatných záznamů: %s. Hook je odmítá, jen zabírají místo ve výpisu.\n' "$MRTVYCH"
   exit 0
 fi
 

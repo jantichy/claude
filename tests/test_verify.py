@@ -140,6 +140,27 @@ class PrubeznaKontrola(unittest.TestCase):
         self.assertTrue((self.home / ".local/state/claude-verify/runs").is_dir(),
                         "stav běhu nevznikl na pevné cestě pod HOME")
 
+    def test_list_oznaci_souhlas_ve_starem_formatu(self):
+        """Mrtvý záznam nesmí ve výpisu vypadat jako živý.
+
+        Souhlas bez uloženého otisku je z doby před vazbou na kontrakt. Hook ho
+        odmítá, ale `--list` ho vypisoval stejně jako platný – a protože se vedle
+        něj mezitím vydal nový, tvářil se výpis, že je projekt povolený dvakrát.
+        Ve skutečném stavu na tomhle stroji tak ležely 4 takové dvojice.
+        """
+        self.kontrakt(test="true")
+        self.allow()
+        soubor = next((self.home / ".local/state/claude-verify/allowed").glob("*"))
+        soubor.write_text(f"{self.repo}\n")          # starý jednořádkový formát
+
+        env = dict(os.environ, HOME=str(self.home))
+        env.pop("XDG_STATE_HOME", None)
+        r = subprocess.run(["bash", str(HOOK), "--list"], capture_output=True,
+                           text=True, env=env, stdin=subprocess.DEVNULL, check=False)
+        self.assertIn("NEPLATNÝ", r.stdout, "výpis neoznačil mrtvý souhlas")
+        self.assertIn("Neplatných záznamů: 1", r.stdout)
+        self.assertIn(str(soubor), r.stdout, "výpis neřekl, který soubor uklidit")
+
     # --- souhlas -----------------------------------------------------------
 
     def test_bez_souhlasu_nespusti_nic(self):
