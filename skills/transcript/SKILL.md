@@ -440,6 +440,8 @@ Jména ulož do `<workdir>/.speakers.json` a pusť `merge.py` znovu s `--names`,
 
 Fáze opravy přeslechů zůstává, i když se slovník použil. Slovník zmenší počet chyb, nevynuluje ho – v ostrém běhu prošlo sledované místní jméno zkomolené i s nasazeným promptem.
 
+**Na slovník se proto nedá spolehnout naslepo: jména, na kterých záleží, si v hotovém přepisu ověř.** Projdi je a podívej se, jestli v textu opravdu stojí ve správném tvaru – nestačí, že byla v promptu. Sedí-li špatně soustavně, je na místě slovník přeskládat a nahrávku přepsat znovu; kolik toho složení slovníku rozhodne, drží [`internals.md`](internals.md).
+
 **Doplň slovník o to, co jsi našel při čištění.** Když v přepisu narazíš na termín, který v `.transcript-glossary.md` chybí, dopiš ho tam dřív, než budeš psát shrnutí. Shrnutí pak stojí na stejném slovníku jako přepis.
 
 **[`mishearings.md`](mishearings.md) je při čištění seznam míst, kde se vyplatí dívat pozorně** – ne seznam náhrad ke spuštění. Rozhoduje vždycky věta, ve které slovo stojí; u zkratek se správný tvar liší podle oboru.
