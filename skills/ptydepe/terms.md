@@ -41,9 +41,9 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Jediná funkce, přes kterou aplikace sahá na databázi** – otevře transakci, nastaví v ní kontext, na kterém stojí izolace dat, a předá handle; doména připojení nedostane. Popsaná je v `~/Dev/context/coding/architecture.md`, *Jediná cesta k datům*.
 
-**Nahrazuje „bránu k datům“** (2026-09-14). Ta vznikla o den dřív při psaní standardu architektury a byla to **třetí** obsazení slova „brána“ vedle [blokující kontroly](#blokující-kontrola) a platební brány – přesně ta kolize, kterou heslo o blokující kontrole zakazuje větou, že zbylá „brána“ je vždycky platební. Rozhodnuto přejmenovat, ne přidávat druhou výjimku: slovo se třemi významy přestává rozřešovat význam samo a u čtvrtého užití by se výjimka dopisovala zase.
+**Nahrazuje „bránu k datům“** (2026-09-14). Ta vznikla téhož dne o pět hodin dřív při psaní standardu architektury a byla to **třetí** obsazení slova „brána“ vedle [blokující kontroly](#blokující-kontrola) a platební brány – přesně ta kolize, kterou heslo o blokující kontrole zakazuje větou, že zbylá „brána“ je vždycky platební. Rozhodnuto přejmenovat, ne přidávat druhou výjimku: slovo se třemi významy přestává rozřešovat význam samo a u čtvrtého užití by se výjimka dopisovala zase.
 
-**Vyhrálo nad „vstupním bodem k datům“ a „datovou bránou“**, protože formulace „jedinou cestou k datům“ už ve dvou textech stála, takže náhrada zároveň sjednotila, co se rozcházelo. V projektu, kde se zároveň mluví o platební bráně (rezervační systém má na ni celý dokument), byla kolize dvojnásobná.
+**Vyhrálo nad „vstupním bodem k datům“ a „datovou bránou“**, protože formulace „cesta k datům“ ve chvíli rozhodnutí už stála ve čtyřech textech – ve třech dokumentech rezervačního systému a v rozcestníku domén –, kdežto „brána“ v standardu samotném. Náhrada tedy zároveň sjednotila, co se rozcházelo. V projektu, kde se zároveň mluví o platební bráně (rezervační systém má na ni celý dokument), byla kolize dvojnásobná.
 
 **Nezaměňuj s portem.** Port je rozhraní k **cizímu** systému za hranicí aplikace; cesta k datům vede k **vlastní** databázi.
 
