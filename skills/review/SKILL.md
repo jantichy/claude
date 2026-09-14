@@ -100,6 +100,7 @@ Specialisté se vybírají **podle toho, čeho se soubory v rozsahu týkají**, 
 | Sada | Kdy se aplikuje |
 |---|---|
 | `coding/coding.md` | jakýkoliv kód, datový model, migrace, konfigurace, CI |
+| `coding/architecture.md` | vrstvy a jejich hranice, přístup k datům, transakce kolem cizích volání, souběh, běhy na pozadí – a u projektu, který je v `CLAUDE.md` vedený jako **aplikace**, i kontrolní seznam *Minimum hotové aplikace* (**navíc** k `coding/coding.md`) |
 | `coding/quality.md` | kontroly kvality, kontrakt příkazů, CI, testovací infrastruktura, závislosti (**navíc** k `coding/coding.md`) |
 | `web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky |
 | `web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) |
