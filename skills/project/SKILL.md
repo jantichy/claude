@@ -73,7 +73,13 @@ Pojem, na který se odkazuje zbytek skillu: **adresář, ve kterém leží `CLAU
 
 Kořen kontejneru to **není nikdy** – nic v něm není ve gitu. Patří do něj jen rozcestník `CLAUDE.md` a `.claude/settings.local.json` (viz krok 4).
 
-Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je: `.git`, `.bare`, `CLAUDE.md` **i `main/CLAUDE.md`** (ve worktree layoutu je v kořeni jen rozcestník bez bloku metadat, takže otisk hledej v `main/` – viz *Projektový adresář* výš), `README.md`, `.gitignore`; standardní soubory **na obou možných místech** – `docs/todo.md` i kořenový `todo.md`, totéž pro `backlog.md`, `decisions.md`, `done.md` a `rules.md` (podle toho se v kroku 5 pozná režim); starší pojmenování `TODO.md` v kořeni; zdrojové soubory.
+Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) zjisti, co v adresáři je:
+
+- `.git`, `.bare`, `README.md`, `.gitignore`,
+- `CLAUDE.md` **i `main/CLAUDE.md`** – ve worktree layoutu je v kořeni jen rozcestník bez bloku metadat, takže otisk hledej v `main/` (viz *Projektový adresář* výš),
+- standardní soubory **na obou možných místech**: `docs/todo.md` i kořenový `todo.md`, totéž pro `backlog.md`, `decisions.md`, `done.md` a `rules.md` – podle toho se v kroku 5 pozná režim,
+- starší pojmenování `TODO.md` v kořeni,
+- zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim `create`.
 - **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 14.
