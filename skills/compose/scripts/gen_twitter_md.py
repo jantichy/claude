@@ -56,6 +56,38 @@ def parse_dt(s):
     return datetime.strptime(s, "%a %b %d %H:%M:%S %z %Y")
 
 
+def vezmi_plny_text(ts):
+    """Plný text dlouhého tweetu podle času – každý nejvýš jednou.
+
+    Tolerance +-2 s tu je kvůli zaokrouhlení mezi tweets.js a note-tweet.js,
+    jenže sama o sobě umí přiřadit cizí text: tweet, který svůj plný text nemá,
+    si vezme text souseda napsaného o vteřinu dřív. Doloženo 14. 9. 2026 – ve
+    vygenerovaném archivu pak stál text prvního tweetu dvakrát a text druhého
+    nikde. Je to nejtišší možná vada: tweet má správné datum i odkaz a nese
+    cizí obsah.
+
+    Brání se tomu dvakrát. Přesná shoda se zkouší u VŠECH tweetů dřív než
+    tolerance, takže o svůj text nepřijde ani ten, kdo má souseda ve stejné
+    vteřině; a použitý text se spotřebuje, takže ho druhý tweet nedostane.
+    Zbude-li tweet bez plného textu, ponechá si svůj zkrácený – to je vidět,
+    kdežto cizí text ne.
+    """
+    for delta in (0, 1, -1, 2, -2):
+        if ts + delta in notes_by_ts:
+            return notes_by_ts.pop(ts + delta)
+    return None
+
+
+# Nejdřív přesná shoda přes všechny tweety, teprve pak tolerance. Bez toho
+# pořadí by tweet zpracovaný dřív mohl tolerancí sebrat text, který přesně
+# patří jinému – a Twitter export je řazený od nejnovějšího, takže tohle
+# pořadí nikdo nekontroluje.
+plny_text = {}
+for t in tweets_raw:
+    ts = parse_dt(t["created_at"]).timestamp()
+    if ts in notes_by_ts:
+        plny_text[t["id_str"]] = notes_by_ts.pop(ts)
+
 posts = []
 n_rt = 0
 for t in tweets_raw:
@@ -66,10 +98,7 @@ for t in tweets_raw:
     dt = parse_dt(t["created_at"])
 
     # dlouhé tweety: nahradit zkrácený text plným z note-tweet
-    for delta in (0, 1, -1, 2, -2):
-        if dt.timestamp() + delta in notes_by_ts:
-            text = notes_by_ts[dt.timestamp() + delta]
-            break
+    text = plny_text.get(t["id_str"]) or vezmi_plny_text(dt.timestamp()) or text
 
     quotes = []
     for u in t.get("entities", {}).get("urls", []):
