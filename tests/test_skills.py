@@ -1069,10 +1069,7 @@ class SouladSNormou(unittest.TestCase):
     PREFLIGHT = ROOT / "skills" / "PREFLIGHT.md"
 
     #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
-    MIGRACE = {
-        "attack", "cleanup", "consistency",
-        "oponent", "project", "review", "specify", "transcript",
-    }
+    MIGRACE = {"project", "review", "transcript"}
 
     #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak
     #: tiše ukazuje jinam – proto to má být v PREFLIGHT.md, ne v odkazu.

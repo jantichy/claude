@@ -47,14 +47,11 @@ Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padaj
 
 ## Fáze 0 – Příprava
 
-Zjisti kontext, ve kterém pracuješ:
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: tenhle skill nesahá na kód a vytěžuje celou session, ne diff větve. U gitu tě navíc zajímá remote, a ten zjišťuj `git remote get-url origin`, ne `git remote` – to druhé vypíše jméno, ne adresu.
 
-1. **Kořen projektu** – pracovní adresář, případně kořen gitového repozitáře.
-2. **Projektový `CLAUDE.md`** – přečti celý. Zajímá tě zejména `## Autocommit`, `## Výjimky z obecných pravidel` a paměťová politika (píše se do Memory, nebo výhradně do `CLAUDE.md`?).
-3. **Git** – je to repozitář? Má remote? Aktuální větev, `git status`. **Remote zjišťuj `git remote get-url origin`, ne `git remote`** – to druhé vypíše `origin` i v repozitáři bez vzdáleného protějšku, má-li ho uživatel v globálním `~/.gitconfig` (typicky `[remote "origin"] push = HEAD`). Push se pak zkusí tam, kam nevede, a selže.
-4. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` pětice `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/.claude/STRUCTURE.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
+Navíc si zjisti tohle:
 
-Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracuješ, a pokračuj.
+1. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` pětice `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/.claude/STRUCTURE.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 ------
 
@@ -403,7 +400,7 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-Zakonči **jednoznačným verdiktem** – jednou z těchto vět, nikdy ničím vágním mezi tím:
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Ze session je všechno zapsané, můžeš pokračovat, zkompaktovat i odejít.`
 - **Stojíš-li ve worktree větve** (`~/.claude/WORKTREE.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji bez obav přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, tuhle větu nepoužij – použij poslední variantu a rovnou pojmenuj, co merge blokuje.

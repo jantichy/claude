@@ -35,11 +35,13 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírá
 
 ## Fáze 0 – Příprava: kontext a konvence
 
-Před spuštěním Explore agenta nasbírej konvence projektu. Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím; krok *Urči rozsah* níž rozvíjí jeho bod 5 o druhý půlkruh. Bod 4 odpadá, průběžnou kontrolu pustil `/review` o krok dřív a tenhle skill na kód nesahá, dokud neprojde nález s uživatelem.
+
+Nad rámec toho nasbírej konvence projektu, ať má Explore agent proti čemu měřit.
 
 ### 0.1 Urči rozsah
 
-**Postupem z `/review`, Fáze 0.1** (`~/.claude/skills/review/SKILL.md`) – včetně toho, co dělat, když se hlavní větev nenajde nebo je diff prázdný. Neopisuj ho sem; jeden postup, jedno místo.
+**Postupem z `~/.claude/skills/PREFLIGHT.md`, bod 5** – včetně toho, co dělat, když se hlavní větev nenajde nebo je diff prázdný. Neopisuj ho sem; jeden postup, jedno místo.
 
 K souborům z diffu přidej **druhý půlkruh: soubory, které na ně odkazují.** Bez něj rozsah nedává smysl, protože nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví. Hledej je takhle:
 
@@ -53,8 +55,6 @@ U přejmenované sekce, funkce nebo klíče grepuj **starý i nový název** –
 **V režimu `full`** tenhle krok přeskoč: rozsahem jsou všechny zdrojové soubory projektu. Vynech `node_modules/`, `dist/`, `build/`, `vendor/`, `generated/`, `*.gen.*` a cokoliv v `.gitignore`.
 
 ### 0.2 Načti dokumentaci konvencí
-
-*Worktree layout* (`~/.claude/WORKTREE.md`): auditovaný projekt je **pracovní adresář jedné větve**, ne kontejner. Stojíš-li v kořeni kontejneru, přesuň se nejdřív do adresáře té větve – jinak bys projel všechny větve naráz a hlásil rozdíly mezi nimi jako nekonzistence. „Projektový `CLAUDE.md`“ je pak ten ve worktree, ne rozcestník v kořeni.
 
 Pokud existují, přečti:
 - Projektový `CLAUDE.md`
@@ -184,7 +184,7 @@ Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITI
 
 ### Rozdělení na mechanické a sporné
 
-**Kritérium je společné s `/review`** – plná definice obou skupin i s výčtem typických případů je v `~/.claude/skills/review/SKILL.md`, *Fáze 4 – Zpracování výsledků*. Neopisuj ji sem; drž se jí a přidej jen to, co platí navíc tady:
+**Kritérium je společné s `/review`** – plná definice obou skupin i s výčtem typických případů je v `~/.claude/skills/review/SKILL.md`, *Zpracování výsledků*. Neopisuj ji sem; drž se jí a přidej jen to, co platí navíc tady:
 
 - Nálezy s tagem **`toolchain`** (z `knip`/`depcheck`) posuzuj stejně jako ostatní – nástroj ukazuje, že se něco nepoužívá, ne že se to má smazat.
 - **Mazání kódu, který vypadá mrtvý, je vždy sporné.** Může být volaný dynamicky, z konfigurace nebo z jiného repozitáře.
@@ -236,7 +236,7 @@ Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné
 
 ## Fáze 5 – Interaktivní průchod
 
-**Postup je společný s `/review`** – tvar výpisu nálezu, volání `AskUserQuestion` (jeden nález = jedna otázka, volby *Opravit / Odložit / Přeskočit*, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Fáze 7 – Interaktivní průchod*. Řiď se jím a lišíš se jen v těchhle bodech:
+**Postup je společný s `/review`** – tvar výpisu nálezu, volání `AskUserQuestion` (jeden nález = jedna otázka, volby *Opravit / Odložit / Přeskočit*, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Interaktivní průchod*. Řiď se jím a lišíš se jen v těchhle bodech:
 
 **Kam se zapisuje „won't fix“.** Do kapitoly `## Consistency` v projektovém `CLAUDE.md`, ne `## Review` – jsou to odpovědi na jinou otázku a nemají se míchat. Kapitolu založ, když chybí, a zapisuj na její konec:
 

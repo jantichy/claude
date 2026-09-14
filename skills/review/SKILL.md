@@ -194,7 +194,7 @@ Kroky 4 a 5 jsou přitom **výjimka z pravidla „jen příkazy z kontraktu“**
 
 Výsledky si odlož – ve Fázi 4 se slijí s nálezy panelu, ale **neprocházejí ověřením ve Fázi 3**. Nástroj nehalucinuje.
 
-**Audit závislostí a scan tajemství pouští znovu i `/release`** – proč to není duplicita, stojí v `~/.claude/skills/release/SKILL.md`, *Fáze 1*, body 6 a 7.
+**Audit závislostí a scan tajemství pouští znovu i `/release`** – proč to není duplicita, stojí v `~/.claude/skills/release/SKILL.md`, *Kontroly před nasazením*.
 
 ------
 

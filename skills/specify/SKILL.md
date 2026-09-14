@@ -84,12 +84,14 @@ Výjimka je jediná: **ověřovací pokus**, když na odpovědi stojí rozhodnut
 
 ## Fáze 0 – Příprava
 
-1. **Kořen projektu.** Pracovní adresář, případně kořen repozitáře. Ve worktree layoutu (`~/.claude/WORKTREE.md`) je projektem pracovní adresář větve – dokumenty patří do `main/docs/`, ne do kořene kontejneru.
-2. **Přečti projektový `CLAUDE.md`** – metadata projektu, typ projektu, paměťová politika, `## Autocommit`, `## Výjimky z obecných pravidel`.
-3. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce. **Chybějící `backlog.md` sám o sobě neblokuje** – není kam zapisovat, ale je co psát; zmiň ho ve výpisu a pokračuj (Fáze 1, bod 5 s tím počítá).
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: tenhle skill nesahá na kód a pracuje nad nápadem, ne nad diffem větve.
+
+Navíc si zjisti tohle:
+
+1. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce. **Chybějící `backlog.md` sám o sobě neblokuje** – není kam zapisovat, ale je co psát; zmiň ho ve výpisu a pokračuj (Fáze 1, bod 5 s tím počítá).
    **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést. **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md` (Fáze 3a); `competition.md` a `risks.md` patří `/discovery`. Chybí-li ty dva, přestože jsou zapsané, **nabídni `/discovery`**: bez konkurence a rizik se píše zadání naslepo.
-4. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
-5. **Urči vstupní bod.** Skill se dá spustit i uprostřed – neběží vždycky celý:
+2. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
+3. **Urči vstupní bod.** Skill se dá spustit i uprostřed – neběží vždycky celý:
 
    | Stav | Kde začít |
    |---|---|
@@ -97,8 +99,6 @@ Výjimka je jediná: **ověřovací pokus**, když na odpovědi stojí rozhodnut
    | `requirements.md` existuje, `architecture.md` ne | Zeptej se: **navázat návrhem řešení**, nebo revidovat požadavky? Tohle je běžný případ – produkt se schválí dnes, návrh se dělá jindy. Při navázání **projdi Fázi 2 i tak** – `brainstorming` musíš vyvolat, jinak nemá kdo návrh vytvořit; jen mu místo produktových otázek předej hotové `docs/requirements.md` jako zadání a rovnou jdi na varianty řešení. |
    | Existují oba | Jde o revizi, nebo o novou část projektu? Při revizi **nepřepisuj** – rozšiř a přeformuluj stávající. |
    | `architecture.md` existuje a přidává se feature | Rozšiř ho. **Nezakládej druhý návrhový dokument** – jeden systém, jeden návrh. |
-
-Zjištěné shrň do tří až pěti řádků a pokračuj.
 
 ------
 
@@ -208,7 +208,7 @@ Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
 
 **Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. `/oponent` je **krok životního cyklu**, ne nabídka: pusť ho, nebo nahlas řekni, proč se u téhle změny přeskakuje. Nabízej ho pro každý dokument zvlášť (`/oponent docs/requirements.md`, `/oponent docs/architecture.md`), protože panel hledisek se pro požadavky a pro návrh řešení liší.
 
-**Hlediska nevypisuj** – sestaví si je sám podle sloupce *Spouštěč* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Fáze 1*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/RULES.md`, *Single source of truth*).
+**Hlediska nevypisuj** – sestaví si je sám podle sloupce *Spouštěč* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Volba hledisek*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/RULES.md`, *Single source of truth*).
 
 **Kontrola uživatele** – po požadavcích (viz 3a) i po návrhu řešení:
 

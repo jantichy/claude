@@ -43,6 +43,8 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakl�
 
 ## Fáze 0 – Co se oponuje
 
+**Tenhle skill neběží nad kódem projektu, takže body 1 až 3 z `~/.claude/skills/PREFLIGHT.md` nahrazuje vlastními předpoklady níž** – posuzuje dokument, který může ležet i mimo projekt. Body 4 a 5 odpadají ze stejného důvodu: nic nespouští a nesahá na diff větve. Načti si ho přesto; platí z něj závěr o shrnutí zjištěného, než se cokoliv stane.
+
 **Předmět posudku.** Uživatel ho může zadat jako argument (`/oponent docs/requirements.md`, `/oponent 01 až 04`, `/oponent pozicování`). Když ho nezadá, **nabídni mu, co jsi našel** – projdi projekt, vypiš kandidáty (dokumenty, na kterých se v poslední době pracovalo) a nech ho vybrat přes `AskUserQuestion`.
 
 **Nejdřív se podívej, jestli neexistuje `.claude/run/oponent.json`** – přerušený běh. Vzniká na konci Fáze 4; nabídni navázání dřív, než začneš cokoliv počítat znovu.
@@ -169,7 +171,7 @@ Do žádného souboru nezapisuj.
 
 **Deduplikuj ještě před ověřením**, ne až po něm: tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď. **Dva nálezy jsou tentýž**, když míří na totéž místo dokumentu a navrhují změnit touž věc – formulace i závažnost se lišit můžou. Sloučený nález si ponech v obou zněních a poznamenej, které hlediska ho našly; Fáze 4 s tím dál pracuje jako se signálem závažnosti.
 
-Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Nejsilnější model**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko. (Effort mu předepsat nejde – `Agent` bere parametr `model`, ale ne `effort`. Proč a co by to zavřelo, stojí v `~/.claude/skills/review/SKILL.md`, *Fáze 3*; neopisuju to sem podruhé.)
+Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Nejsilnější model**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko. (Effort mu předepsat nejde – `Agent` bere parametr `model`, ale ne `effort`. Proč a co by to zavřelo, stojí v `~/.claude/skills/review/SKILL.md`, *Ověření nálezů*; neopisuju to sem podruhé.)
 
 **Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti hledisek vrátí klidně 30 nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat. (Strop je nižší než v `/review`, protože tam ho odlehčuje deterministická vrstva, která část nálezů odčerpá bez ověřování; tady žádná není.)
 

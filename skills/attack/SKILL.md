@@ -80,9 +80,11 @@ Platí bez výjimky:
 
 ## Fáze 0 – Příprava
 
-Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím; bod 5 je rovnou první položkou níž. Bod 4 odpadá: kontroly nad kódem pustil `/review` dávno a tenhle skill kód nečte, ale spouští.
 
-1. **Rozsah změn** – **postupem z `/review`, Fáze 0.1**, včetně toho, co dělat, když se hlavní větev nenajde. Neopisuj ho sem: dřív tu stál zkrácený řetěz bez `master` a bez poslední větve, takže `/attack` selhal tam, kde `/review` prošel, přestože obojí tvrdí „stejně“.
+Navíc si zjisti tohle – a teprve pak se ptej na potvrzení:
+
+1. **Rozsah změn** – **postupem z `~/.claude/skills/PREFLIGHT.md`, bod 5**, včetně toho, co dělat, když se hlavní větev nenajde. Neopisuj ho sem: dřív tu stál zkrácený řetěz bez `master` a bez poslední větve, takže `/attack` selhal tam, kde `/review` prošel, přestože obojí tvrdí „stejně“.
    *Worktree layout* (`~/.claude/WORKTREE.md`): pouštěj to ve worktree větve, ne v kořeni kontejneru.
 
 2. **Jak se to spouští** – z `## Kontrakt příkazů` v projektovém `CLAUDE.md` (*Kontrakt příkazů*). Zajímá tě `dev`, případně `build` a `preview`. **Chybí-li, nevymýšlej příkaz** – zeptej se, čím se aplikace lokálně spouští, a nabídni, že to rovnou doplníš do kontraktu.
