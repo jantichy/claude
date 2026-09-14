@@ -15,8 +15,12 @@ make_bar() {
   filled=$(echo "$pct $BAR_WIDTH" | awk '{printf "%d", int($1 / 100 * $2 + 0.5)}')
   local empty=$(( BAR_WIDTH - filled ))
   local bar=""
-  for _ in $(seq 1 "$filled"); do bar="${bar}█"; done
-  for _ in $(seq 1 "$empty");  do bar="${bar}░"; done
+  # Vlastní smyčka, ne `seq`: BSD seq při `seq 1 0` počítá dolů a vypíše "1 0",
+  # takže prázdný pruh měl dva vyplněné bloky a plný byl o dva znaky delší.
+  local i=0
+  while [ "$i" -lt "$filled" ]; do bar="${bar}█"; i=$((i + 1)); done
+  i=0
+  while [ "$i" -lt "$empty" ];  do bar="${bar}░"; i=$((i + 1)); done
   echo "$bar"
 }
 

@@ -139,5 +139,35 @@ class StatusLineNadCizimRepozitarem(unittest.TestCase):
                         "poškozená verze filtr nespustila – test tedy neměří kontrolu")
 
 
+class PruhVyuziti(unittest.TestCase):
+    """Pruh musí mít vždycky přesně `BAR_WIDTH` znaků, i v krajních hodnotách.
+
+    Původní verze skládala pruh přes `seq 1 "$filled"`. BSD seq ale při
+    `seq 1 0` počítá dolů a vypíše „1 0“, takže se nula bloků nakreslila jako
+    dva. Prázdný pruh tím ukazoval využití a plný byl o dva znaky delší než
+    ostatní, takže se řádek při každém překreslení posouval.
+
+    Krajní hodnoty se testují obě: 0 % kreslí `filled=0` a 100 % `empty=0`.
+    """
+
+    def bar(self, pct):
+        r = subprocess.run(
+            ["bash", "-c", f'source "{STATUSLINE}" >/dev/null 2>&1; make_bar {pct}'],
+            capture_output=True, text=True, check=False,
+            stdin=subprocess.DEVNULL)
+        return r.stdout.strip().splitlines()[-1]
+
+    def test_sirka_je_konstantni(self):
+        for pct in (0, 1, 7, 14, 50, 86, 99, 100):
+            with self.subTest(pct=pct):
+                self.assertEqual(len(self.bar(pct)), 7)
+
+    def test_nula_procent_nema_vyplneny_blok(self):
+        self.assertNotIn("\u2588", self.bar(0))
+
+    def test_sto_procent_nema_prazdny_blok(self):
+        self.assertNotIn("\u2591", self.bar(100))
+
+
 if __name__ == "__main__":
     unittest.main()
