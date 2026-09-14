@@ -243,7 +243,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 
 ------
 
-## Závěr
+## Fáze 6 – Závěr
 
 ```
 ## Zadání hotové

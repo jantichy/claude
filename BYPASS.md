@@ -43,7 +43,7 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
 | Zavolat zakázaný příkaz přes interpret (`python3 -c`, `osascript`) | Nic – deny porovnává text příkazu | **accepted**, je to vlastnost mechanismu. Proto se na deny nespoléhá tam, kde má držet skutečná hranice (souhlas průběžné kontroly čte `/dev/tty`). |
-| Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `RULES.md`, *Commituj jmenované cesty*. |
+| Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `RULES.md`, *Commituj jmenované cesty, ne `-A`*. |
 | Nový destruktivní příkaz, na který vzor nemyslel | Nic | **accepted**: seznam je výčet, ne princip. Roste, když se něco objeví. |
 
 ## Status line (`statusline.sh`)

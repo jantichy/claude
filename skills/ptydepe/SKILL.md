@@ -1,7 +1,7 @@
 ---
 name: ptydepe
 description: Skill se použije, když uživatel zadá "/ptydepe", "/ptydepe suggest" nebo "/ptydepe add <termín>", anebo chce prověřit termíny, které Claude používá, přestože je v oboru nikdo nezná – slova převzatá z náhodné zmínky, z překlepu nebo z doslovného překladu, která se pak rozlezla napříč projekty a dokumentací. Výchozí režim "suggest" takové termíny vytipuje, režim "add" vypořádá jeden z nich. Postup, meze rozsahu a vyloučená místa má skill v těle a jsou závazné – bez jeho načtení se hledání ani náhrada nespouští, protože plošná náhrada umí nevratně přepsat soubory mimo verzování. Na rozdíl od /replace, který přejmenuje na zadání a v jednom projektu, tenhle skill rozhoduje, jestli se má přejmenovat, a jede přes všechny repozitáře naráz.
-argument-hint: [suggest | add <termín>]
+argument-hint: [suggest|add] [termín]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 

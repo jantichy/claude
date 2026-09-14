@@ -246,7 +246,7 @@ Co se v okně dělá:
 
 ------
 
-## Verdikt
+## Fáze 8 – Verdikt
 
 **Jsou to dvě dvojice, ne čtyři volné možnosti** – nasazení má na rozdíl od ostatních kroků dva různé konce. První dvojice uzavírá **běh skillu** (nasazeno / nenasazeno), druhá **sledovací okno** (vráceno zpátky / okno uzavřeno). Každá dvojice splňuje týž vzorec jako verdikt kteréhokoliv jiného skillu: hotovo a čím pokračovat, nebo co tomu brání. Mezistav mezi nimi žádný není.
 
