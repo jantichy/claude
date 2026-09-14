@@ -43,8 +43,22 @@ jobs:
       - name: Statická analýza
         run: |
           python3 -m pip install --quiet semgrep
-          # Jen vlastní kód: `plugins/` je cizí a jeho nálezy nemá kdo opravit.
-          semgrep --config p/owasp-top-ten --quiet --error githooks tests skills
+          # Celý strom, ne jmenovaný výčet adresářů. Ten dřív vynechával kořen,
+          # tedy `verify.sh` a `statusline.sh` – zrovna ten kód, který něco
+          # vynucuje a běží nad cizím repozitářem bez souhlasu. Výčet se navíc
+          # rozejde s prvním novým adresářem a nic to nehlásí.
+          #
+          # `plugins/` je cizí a jeho nálezy nemá kdo opravit; ve verzi sice není,
+          # takže v CI nevznikne, ale vyloučení drží i pro lokální spuštění téhož
+          # příkazu. `projects/` a `todos/` jsou runtime data Claude Code.
+          #
+          # Vyloučené pravidlo je nález vědomě odmítnutý v `.claude/CLAUDE.md`,
+          # kapitola `## Review` (nepřipnuté akce). Bez toho by CI padalo na něčem,
+          # o čem je rozhodnuto, že se to neopraví – a padající kontrola se obchází.
+          semgrep --config p/owasp-top-ten --quiet --error \
+            --exclude=plugins --exclude=projects --exclude=todos \
+            --exclude-rule=yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag \
+            .
 
       - name: Spusť kontrakt příkazů
         run: |

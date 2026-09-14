@@ -2,6 +2,7 @@
 name: invoicing
 description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; neúčtuje, nehlídá úhrady ani daňové termíny.
 argument-hint: [full|preview|recover|sync] [klient] [období]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
 # Invoicing

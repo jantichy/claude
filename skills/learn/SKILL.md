@@ -2,6 +2,7 @@
 name: learn
 description: Skill se použije, když uživatel zadá "/learn", nebo chce zapracovat, zakomponovat či začlenit nový zdroj poznání – přepis schůzky, školení nebo konzultace, článek, cizí dokumentaci, vlastní poznámky – do existující znalostní báze: doplnit z něj znalosti, obohatit je, rozšířit metodiku nebo se z něj naučit. Zdroj vytěží do posledního detailu a rozpustí ho do stávajících textů na místa, kam věcně patří: doplní, prohloubí, opraví, přestaví jejich strukturu, a chybí-li pro znalost místo úplně, navrhne založit novou doménu. Zdrojem smí být i zvukový či obrazový záznam, obrázek nebo PDF. Na rozdíl od /transcript, jehož výsledkem je přepis, jde tomuhle skillu o znalost v něm – nahrávku si proto jen nechá přepsat a přepis pak vytěžuje; nepřidává ho jako další samostatný soubor a nekopíruje z něj celé pasáže. Rozpory se stávající znalostí předkládá jeden po druhém k rozhodnutí. Doslovné přetisky, citace a datované doklady nepřepisuje nikdy.
 argument-hint: [source] [target]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
 # Learn

@@ -52,6 +52,19 @@ class SkillFrontmatter(unittest.TestCase):
                 self.assertEqual(fm["name"], skill.parent.name,
                     f"{skill}: `name: {fm.get('name')}` nesedí s adresářem")
 
+    def test_allowed_tools_je_vyplnene(self):
+        """Skill bez `allowed-tools` běží s celou sadou nástrojů session.
+
+        To znamená i připojené MCP servery – u tří skillů to byl Gmail, Kalendář
+        a Drive, tedy dosah na cizí poštu a soubory ze skillu, který přepisuje
+        nahrávky. Norma (`skills/SKILLS.md`, *Hlavička*) žádá minimální sadu;
+        chybějící pole je nejširší možná, ne „neurčeno“.
+        """
+        for skill in SKILLS:
+            with self.subTest(skill=skill.parent.name):
+                self.assertTrue(frontmatter(skill).get("allowed-tools"),
+                    f"{skill}: chybí `allowed-tools` – skill běží s celou sadou včetně MCP")
+
     def test_description_rika_kdy_se_pouzije(self):
         """Popis rozhoduje, jestli se skill vyvolá – musí říct, kdy se použije."""
         for skill in SKILLS:
