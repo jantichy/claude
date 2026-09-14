@@ -30,7 +30,15 @@
 
 set -uo pipefail
 
-LIMIT=60      # strop na krok; tři kroky se vejdou do timeoutu hooku v settings.json
+# Strop na krok. Tři kroky dají 270 s a vejdou se do timeoutu hooku v
+# settings.json (320 s) – měníš-li LIMIT, zkontroluj i ten; hlídá to test.
+#
+# Bylo 60 s, dokud se neukázalo, že to nestačí na stroji, kde běží víc session
+# naráz. Sada testů tohohle repozitáře trvá 18 s nezatíženě a 79 s při load 37,
+# a několik session nad jedním projektem je podle ~/.claude/WORKTREE.md normální
+# provoz, ne výjimka. Kontrola, která padá na zatížení místo na chybě, se začne
+# obcházet – a to je horší směr selhání než pomalý krok.
+LIMIT=90
 MAX_OUT=200000  # kolik bajtů výstupu si od kroku vezmeme
 
 # Obojí leží mimo dosah XDG_STATE_HOME schválně: je to bezpečnostní stav a
