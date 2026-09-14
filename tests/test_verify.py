@@ -18,6 +18,7 @@ ani na skutečný běhový stav.
 """
 import json
 import os
+import pty
 import shutil
 import subprocess
 import tempfile
@@ -32,6 +33,30 @@ HOOK = ROOT / "verify.sh"
 BLOKUJE = 2   # model to uvidí a má na to reagovat
 MLCI = 1      # jen pro člověka; model o tom neví
 PUSTI = 0     # v pořádku, nebo se vědomě nic nespouští
+
+
+def vydej_souhlas(cesta, home):
+    """Spustí `--allow` přes pseudoterminál a odpoví „ano“.
+
+    Skript souhlas úmyslně nevydá procesu bez terminálu: deny pravidla na něj
+    porovnávají text příkazu, takže je obejde volání přes interpret i složený
+    příkaz s přesměrováním. Terminál je to jediné, co běžící nástroj nemá.
+
+    Test tu podmínku proto nesmí obcházet proměnnou prostředí – tím by z ní
+    udělal vypínač. Místo toho si terminál opatří: `pty.openpty()` dá pár, jehož
+    slave konec je skutečné tty, takže `[ -t 0 ]` ve skriptu platí.
+    """
+    master, slave = pty.openpty()
+    try:
+        os.write(master, b"ano\n")
+        env = dict(os.environ, HOME=str(home))
+        env.pop("XDG_STATE_HOME", None)
+        env.pop("CLAUDE_NO_VERIFY", None)
+        return subprocess.run([str(HOOK), "--allow", str(cesta)], stdin=slave,
+                              capture_output=True, text=True, env=env, check=False)
+    finally:
+        os.close(master)
+        os.close(slave)
 
 
 def git(cwd, *args):
@@ -63,7 +88,7 @@ class PrubeznaKontrola(unittest.TestCase):
         git(self.repo, "commit", "-qm", "kontrakt")
 
     def allow(self, cesta=None):
-        return self.spust(["--allow", str(cesta or self.repo)], vstup=None)
+        return vydej_souhlas(cesta or self.repo, self.home)
 
     def spust(self, argv=None, vstup="", cwd=None, stop_hook_active=False):
         env = dict(os.environ, HOME=str(self.home))
@@ -411,6 +436,79 @@ class PrubeznaKontrola(unittest.TestCase):
                 self.assertEqual(r.returncode, 0, f"--revoke {argument} neuspěl: {r.stderr}")
 
 
+class SouhlasVydavaClovek(unittest.TestCase):
+    """`--allow` nesmí projít procesu, který nemá terminál.
+
+    Souhlas je jediná věc mezi cizím repozitářem a spuštěním jeho příkazů. Deny
+    pravidla v `settings.json` ho chránit neumějí: porovnávají text příkazu,
+    takže volání přes `python3 -c` nebo `node -e` jméno skriptu do příkazové řádky
+    vůbec nedostane. 14. 9. 2026 se navíc ukázalo, že neplatí ani v přímém tvaru,
+    je-li volání součástí složeného příkazu – doloženo tím, že si agent souhlas
+    omylem vydal sám uprostřed revize.
+
+    Terminál je to, co proces nemá a nemůže si opatřit obejitím vzoru.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="tty-test-"))
+        self.home = self.tmp / "home"
+        self.home.mkdir()
+        self.repo = self.tmp / "repo"
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", ".")
+        (self.repo / "CLAUDE.md").write_text(
+            "# T\n\n## Kontrakt příkazů\n\n- test: true\n", encoding="utf-8")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def bez_terminalu(self, vstup=subprocess.DEVNULL):
+        env = dict(os.environ, HOME=str(self.home))
+        env.pop("XDG_STATE_HOME", None)
+        return subprocess.run([str(HOOK), "--allow", str(self.repo)], stdin=vstup,
+                              capture_output=True, text=True, env=env, check=False)
+
+    def souhlasy(self):
+        d = self.home / ".local/state/claude-verify/allowed"
+        return list(d.glob("*")) if d.exists() else []
+
+    def test_bez_terminalu_souhlas_nevznikne(self):
+        v = self.bez_terminalu()
+        self.assertNotEqual(v.returncode, 0)
+        self.assertEqual(self.souhlasy(), [], "souhlas vznikl procesu bez terminálu")
+
+    def test_ano_na_stdin_z_roury_nestaci(self):
+        """Roura není terminál, i když v ní stojí správná odpověď.
+
+        Jinak by stačilo `echo ano | verify.sh --allow .` a pojistka by byla
+        k ničemu – přesně tímhle tvarem ji nástroj obejde nejsnáz.
+        """
+        p = subprocess.Popen(["echo", "ano"], stdout=subprocess.PIPE)
+        v = self.bez_terminalu(vstup=p.stdout)
+        p.wait()
+        self.assertNotEqual(v.returncode, 0)
+        self.assertEqual(self.souhlasy(), [], "souhlas vznikl z roury")
+
+    def test_s_terminalem_a_potvrzenim_souhlas_vznikne(self):
+        """Propustit, co propustit má: člověk u terminálu, který napíše „ano“."""
+        v = vydej_souhlas(self.repo, self.home)
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertEqual(len(self.souhlasy()), 1)
+
+    def test_jina_odpoved_souhlas_nevyda(self):
+        master, slave = pty.openpty()
+        try:
+            os.write(master, b"jo\n")
+            env = dict(os.environ, HOME=str(self.home))
+            env.pop("XDG_STATE_HOME", None)
+            v = subprocess.run([str(HOOK), "--allow", str(self.repo)], stdin=slave,
+                               capture_output=True, text=True, env=env, check=False)
+        finally:
+            os.close(master); os.close(slave)
+        self.assertNotEqual(v.returncode, 0)
+        self.assertEqual(self.souhlasy(), [], "souhlas vznikl bez slova „ano“")
+
+
 class SouhlasPlatiProKontrakt(unittest.TestCase):
     """Souhlas pokrývá repozitář, ale ne cokoliv, co se v něm najde.
 
@@ -452,10 +550,7 @@ class SouhlasPlatiProKontrakt(unittest.TestCase):
                               text=True, env=env, check=False)
 
     def allow(self, kde):
-        env = dict(os.environ, HOME=str(self.home))
-        env.pop("XDG_STATE_HOME", None)
-        return subprocess.run([str(HOOK), "--allow", str(kde)], capture_output=True,
-                              text=True, env=env, check=False, stdin=subprocess.DEVNULL)
+        return vydej_souhlas(kde, self.home)
 
     def test_podadresar_s_vlastnim_kontraktem_se_nespusti(self):
         stopa = self.tmp / "NESMI-VZNIKNOUT"

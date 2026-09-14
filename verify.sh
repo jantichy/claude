@@ -244,6 +244,31 @@ if [ "${1:-}" = "--allow" ]; then
   P=$(canon "${2:-$PWD}") || die "neznámá cesta: ${2:-$PWD}"
   MD=$(find_contract "$P") || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Kontrakt příkazů."
   P=$(proj_for_md "$MD")
+
+  # Souhlas musí vydat ČLOVĚK U TERMINÁLU, ne proces.
+  #
+  # Je to jediná věc, která stojí mezi cizím repozitářem a spuštěním jeho příkazů
+  # s právy uživatele. Chránila ho šest deny pravidel v settings.json, jenže ta
+  # porovnávají text příkazu: volání přes `python3 -c`, `node -e` nebo `osascript`
+  # jméno skriptu do příkazové řádky vůbec nedostane, takže pravidla nemají na čem
+  # zabrat. A 14. 9. 2026 se ukázalo, že neplatí ani v přímém tvaru, je-li volání
+  # součástí složeného příkazu s přesměrováním – doloženo tím, že jsem si ten
+  # souhlas omylem vydal sám.
+  #
+  # Tady proti tomu nepomáhá žádný seznam vzorů. Pomáhá jen to, co proces nemá:
+  # terminál. Interaktivní běh čte ze stdin, neinteraktivní z /dev/tty (a ta
+  # v procesu bez řídicího terminálu neexistuje, takže skončí chybou).
+  ODPOVED=""
+  printf 'Vydat souhlas pro %s?\n' "$P"
+  printf 'Kontrakt: %s\n' "$MD"
+  printf 'Napiš "ano" (cokoliv jiného souhlas nevydá): '
+  if [ -t 0 ]; then
+    read -r ODPOVED
+  else
+    read -r ODPOVED < /dev/tty 2>/dev/null || die "souhlas se vydává jen z terminálu. Spusť to sám v shellu, ne přes nástroj nebo skript."
+  fi
+  [ "$ODPOVED" = "ano" ] || die "nepotvrzeno, souhlas jsem nevydal."
+
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
   chmod 700 "$(dirname "$ALLOW_DIR")" "$ALLOW_DIR" 2>/dev/null || true
   RKEY=$(proj_key "$(repo_id "$P")")
