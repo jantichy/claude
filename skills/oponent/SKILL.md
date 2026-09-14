@@ -293,6 +293,7 @@ Ve verdiktu:
 - **Předmět:** <dokumenty>
 - **Hlediska:** <seznam>
 - **Panel:** A oponentů → B nálezů hrubě → C po dedupu → D ověřeno, E neověřeno
+- **Spotřeba:** [N agentů: X oponentů, Y ověřovatelů · na jakém modelu a effortu]
 
 **Nálezy:** N celkem – 🔴 X kritických, 🟡 Y středních, 🔵 Z kosmetických
 - Zapracováno: N

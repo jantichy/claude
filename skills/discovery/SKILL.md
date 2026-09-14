@@ -185,6 +185,8 @@ U každého rizika:
 - docs/competition.md – <počet> konkurentů, <počet> ověřených údajů
 - docs/risks.md – <počet> rizik (<počet> promítnutých do produktu, <počet> přijatých)
 
+- **Spotřeba:** [N agentů: X průzkumníků · na jakém modelu a effortu]
+
 **Co z toho plyne pro produkt**
 - Musíme mít: <počet> položek
 - Odlišujeme se: <počet> položek

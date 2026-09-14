@@ -178,7 +178,9 @@ Mechanická práce ve smyslu tohohle pravidla není „nudná práce“, ale pr�
 
 **Řekni, co běh stál – jinak se dávkuje odhadem.** Všechny páky téhle kapitoly míří nahoru: ověřovatel na nejsilnějším modelu ke každému nálezu, útočníci na `xhigh`, panel o několika specialistech, průzkumník navíc. Stropy jsou proti tomu dva a zbytek se rozhoduje citem, protože po běhu nezůstane žádné číslo.
 
-**Skill, který pouští agenty, proto vypíše do souhrnu jejich počet a konfiguraci** – kolik jich bylo, na jakém modelu a effortu, a kolik z nich byli ověřovatelé. Přesné tokeny skill nezná a **nemá je předstírat**; počet agentů a jejich tier je proxy, která stačí na to, aby šlo příště dávkovat podle čísla místo podle dojmu. Bez toho se ekonomika téhle kapitoly nedá vyhodnotit ani po deseti bězích.
+**Skill, který pouští panel agentů, proto vypíše do souhrnu jejich počet a konfiguraci** – kolik jich bylo, na jakém modelu a effortu, a kolik z nich byli ověřovatelé. Přesné tokeny skill nezná a **nemá je předstírat**; počet agentů a jejich tier je proxy, která stačí na to, aby šlo příště dávkovat podle čísla místo podle dojmu. Bez toho se ekonomika téhle kapitoly nedá vyhodnotit ani po deseti bězích.
+
+**U jednoho agenta to smysl nemá** – tam se nic nedávkuje a „1 agent“ je řádek navíc bez informace. Platí to tedy pro panel, ne pro každou delegaci.
 
 **Na návrhu a na ověřování se nešetří.** Slabý plánovač rozseje chyby do všech úkolů pod sebou a slabý ověřovatel nález nepotvrdí ani nevyvrátí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko.
 

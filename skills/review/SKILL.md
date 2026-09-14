@@ -83,6 +83,7 @@ Specialisté se vybírají **podle toho, čeho se soubory v rozsahu týkají**, 
 | `web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky |
 | `web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) |
 | `analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`) |
+| `advertising/` | vedení placených kampaní – struktura účtu, biddovací strategie, konverzní akce jako vstup pro bidding, kreativy a cesta po prokliku (měřicí stranu téhož drží `analytics/`) |
 | `text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web/web.md`) |
 | `text/typography.md` | česká sazba čehokoliv psaného česky – interpunkce, mezery, čísla, data, výčty (**navíc** k `text/text.md`, ale platí i tam, kde souvislý text nevzniká) |
 | `design/design.md` | vizuální výstupy – grafika, barevné systémy, práce s písmem, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu (sazbu znaků drží `text/typography.md`) |
@@ -314,7 +315,7 @@ Při pochybnosti patří nález mezi sporné.
 
 - **Rozsah:** [N z M souborů diffu – co a proč vynecháno]
 - **Specialisté:** [kteří běželi / kteří vybraní neběželi a proč] · [na čem: code-review high, bezpečnost nejsilnější model, standardy výchozí]
-- **Spotřeba:** [celkem N agentů: X specialistů, Y ověřovatelů, průzkumník ano/ne]
+- **Spotřeba:** [N agentů: X specialistů, Y ověřovatelů, průzkumník ano/ne · na jakém modelu a effortu]
 
 **Deterministická vrstva** [u každého kroku nástroj · návratový kód, ne holé číslo]:
 - průběžná kontrola: ✅ / ❌ [co padá]

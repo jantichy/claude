@@ -253,6 +253,7 @@ Tady začíná režim **`report`**, spouští-li se samostatně nad hotovým reg
 - **Doména:** <jméno> – <plný / omezený běh, a proč>
 - **Web:** <adresa>, prošlo <N> stránek
 - **Nálezy:** <N> potvrzených (<N> kritických, <N> vážných, <N> drobných), <N> nepřežilo ověření
+- **Spotřeba:** [N agentů: X specialistů, Y ověřovatelů · na jakém modelu a effortu]
 
 **Výstupy**
 - <soubor> – <pro koho>

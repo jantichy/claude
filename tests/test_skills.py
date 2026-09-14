@@ -73,6 +73,32 @@ class SkillFrontmatter(unittest.TestCase):
                 vady.append(f"{soubor.relative_to(ROOT)}: {m.group(0)!r}")
         self.assertFalse(vady, "odkazy dovnitř fáze cizího skillu:\n  " + "\n  ".join(vady))
 
+    def test_radek_spotreby_ma_jednotny_tvar(self):
+        """Kde se spotřeba agentů vypisuje, musí mít všude týž tvar.
+
+        `~/.claude/RULES.md`, *Model a effort podle úkolu*, žádá „kolik jich
+        bylo, na jakém modelu a effortu“ jako jednu trojici. Pravidlo vzniklo
+        14. 9. 2026 a zapsalo se nejdřív do dvou skillů, které byly po ruce –
+        navíc každý jinak: jeden uváděl model a effort, druhý ne. Je to
+        učebnicový případ pravidla *Rozsah pravidla se nešíří sám*.
+
+        **Kdo ten řádek má mít, se schválně netestuje.** Panel se od jednoho
+        agenta strojově nepozná – zkoušené heuristiky (slovo „panel“, „paralelně“
+        poblíž „agenta“) hlásily `/transcript` s jedním subagentem a míjely
+        `/audit`, který panel má. Falešný poplach je u kontroly horší směr
+        selhání než mezera, takže se měří jen to, co změřit jde: tvar.
+        """
+        vady = []
+        for skill in SKILLS:
+            for radek in body(skill).splitlines():
+                if "**Spotřeba:**" not in radek:
+                    continue
+                if "na jakém modelu a effortu" not in radek:
+                    vady.append(f"{skill.parent.name}: chybí model a effort")
+                if "agentů:" not in radek:
+                    vady.append(f"{skill.parent.name}: nezačíná počtem agentů")
+        self.assertFalse(vady, "řádek spotřeby se rozešel v tvaru:\n  " + "\n  ".join(vady))
+
     def test_vyctene_mcp_nastroje_existuji(self):
         """Ruční výčet MCP nástrojů v `allowed-tools` musí sedět se skutečností.
 

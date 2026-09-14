@@ -240,7 +240,7 @@ Deduplikuj: jedna příčina se projeví přes víc vektorů. Nech jeden nález 
 
 - **Cíl:** <adresa> · **Rozsah:** [změny na větvi – N obrazovek/endpointů / celá aplikace]
 - **Vektory:** [které běžely]
-- **Spotřeba:** [N útočníků + M ověřovatelů, na jakém modelu a effortu]
+- **Spotřeba:** [N agentů: X útočníků, Y ověřovatelů · na jakém modelu a effortu]
 
 **Nálezů: X, z toho Y se nepodařilo zopakovat, zbývá Z:**
 
