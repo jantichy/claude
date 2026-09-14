@@ -176,6 +176,10 @@ Mechanická práce ve smyslu tohohle pravidla není „nudná práce“, ale pr�
 
 **Effort lad dřív než model.** Je to plynulá páka na tomtéž modelu, kdežto výměna modelu je skok. Silný model na nízkém effortu zůstává silný – u agentů s úzkým zadáním je `low` doporučená volba, ne nouzová. Eskaluj po krocích: `high` → `xhigh` → `max` → teprve pak silnější model. A **nejsilnější neznamená nejdražší dostupný**: nejvyšší tier (dnes Fable) je dvojnásobně drahý a pomalejší, takže se po něm sahá teprve tehdy, když silný model na vyšším effortu prokazatelně nestačil.
 
+**Řekni, co běh stál – jinak se dávkuje odhadem.** Všechny páky téhle kapitoly míří nahoru: ověřovatel na nejsilnějším modelu ke každému nálezu, útočníci na `xhigh`, panel o několika specialistech, průzkumník navíc. Stropy jsou proti tomu dva a zbytek se rozhoduje citem, protože po běhu nezůstane žádné číslo.
+
+**Skill, který pouští agenty, proto vypíše do souhrnu jejich počet a konfiguraci** – kolik jich bylo, na jakém modelu a effortu, a kolik z nich byli ověřovatelé. Přesné tokeny skill nezná a **nemá je předstírat**; počet agentů a jejich tier je proxy, která stačí na to, aby šlo příště dávkovat podle čísla místo podle dojmu. Bez toho se ekonomika téhle kapitoly nedá vyhodnotit ani po deseti bězích.
+
 **Na návrhu a na ověřování se nešetří.** Slabý plánovač rozseje chyby do všech úkolů pod sebou a slabý ověřovatel nález nepotvrdí ani nevyvrátí – jen přizvukuje tomu, co má před sebou, a udělá z ověření razítko.
 
 **Delegace navíc se vyplatí i za vyšší cenu, když platí aspoň jedno ze tří:**
