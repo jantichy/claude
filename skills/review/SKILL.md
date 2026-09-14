@@ -314,6 +314,7 @@ Při pochybnosti patří nález mezi sporné.
 
 - **Rozsah:** [N z M souborů diffu – co a proč vynecháno]
 - **Specialisté:** [kteří běželi / kteří vybraní neběželi a proč] · [na čem: code-review high, bezpečnost nejsilnější model, standardy výchozí]
+- **Spotřeba:** [celkem N agentů: X specialistů, Y ověřovatelů, průzkumník ano/ne]
 
 **Deterministická vrstva** [u každého kroku nástroj · návratový kód, ne holé číslo]:
 - průběžná kontrola: ✅ / ❌ [co padá]
@@ -421,7 +422,7 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 ```
 ## Hotovo
 
-Rozsah: [změny na větvi / celý projekt] · Specialisté: [kteří]
+Rozsah: [změny na větvi / celý projekt] · Specialisté: [kteří] · Agentů celkem: [N]
 
 - ⚡ Opraveno rovnou (mechanické): N
 - ✅ Opraveno po odsouhlasení: N
