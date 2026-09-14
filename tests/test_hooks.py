@@ -223,10 +223,19 @@ class NasazeniHooku(unittest.TestCase):
 
     def test_pravidlo_je_zapsane_ve_worktree_md(self):
         """Hook je mechanismus, ne zdroj pravdy. Zmizí-li pravidlo z WORKTREE.md,
-        nikdo se z odmítnutí nedozví, jakou zprávu má napsat místo toho."""
+        nikdo se z odmítnutí nedozví, jakou zprávu má napsat místo toho.
+
+        Hledá se **příkaz i jeho odůvodnění**, ne dva řetězce kdekoliv v souboru.
+        Ta volnější podoba by prošla i tehdy, kdyby pravidlo zmizelo a zbyly po
+        něm zmínky jinde – tedy přesně v případě, kvůli kterému test vznikl.
+        """
         text = (ROOT / "WORKTREE.md").read_text()
-        self.assertIn("--no-ff", text)
-        self.assertIn("githooks/commit-msg", text)
+        self.assertIn('git merge --no-ff', text,
+                      "WORKTREE.md neuvádí příkaz, kterým se větev dokončuje")
+        self.assertRegex(
+            text, r"githooks/commit-msg[^\n]*core\.hooksPath",
+            "WORKTREE.md neříká, že to vynucuje globálně nasazený hook – "
+            "bez toho se z odmítnutého commitu nedá poznat, kdo ho odmítl a proč")
 
 
 class NasazeniGlobalnihoHooku(unittest.TestCase):
