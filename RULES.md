@@ -144,6 +144,12 @@ U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek expor
 
 **Potřebuje-li skill sám víc úrovní, je to signál, že se špatně dělí práce.** Rozešli všechny agenty z hlavní session naráz a syntézu si nech.
 
+**Co už víš, agentovi předej – ať to nezjišťuje znovu.** Kořen projektu, platforma, obsah kontraktu, rozsah souborů, konvence z `CLAUDE.md`: tohle všechno jsi zjistil v přípravě a agent to udělá znovu, pokud mu to nedáš. Při pěti paralelních specialistech je to pětinásobek téže práce a pětinásobek kontextu, který jim pak chybí na vlastní úkol. Platí to i o tom, co se **vědomě zamítlo** – bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy.
+
+**Strukturovaný výstup agenta předávej dál doslova, neparafrázuj.** Parafráze je přesně to místo, kde se ztrácí detail, kvůli kterému se agent posílal – a ztratí se tiše, protože shrnutí vypadá úplně. Vrátí-li agent nález s doložením a závažností, jde ta trojice dál celá.
+
+**To není spor s *Interní značky ven nepatří*.** Doslovně se předává **mezi kroky** – z agenta do ověření, do souhrnu, do souboru. Uživateli se hlásí **obsahem**: značka `N3` v odpovědi mu neřekne nic, protože ji nikdy neviděl. Doslovnost tedy míří na to, co nese nález, ne na to, jak se pojmenuje.
+
 ### Model a effort podle úkolu
 
 Volba není „vždycky to nejchytřejší“ ani „vždycky to nejlevnější“. Rozhoduje, **čí výstup je vstupem pro koho**: chyba v návrhu nebo v ověření nálezu se násobí do všeho, co po ní přijde, kdežto chyba v mechanickém sběru se pozná hned.
