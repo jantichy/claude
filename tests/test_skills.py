@@ -1004,7 +1004,23 @@ class SouladSNormou(unittest.TestCase):
     #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak
     #: tiše ukazuje jinam – proto to má být v PREFLIGHT.md, ne v odkazu.
     CIZI_FAZE = re.compile(
-        r"`/(?:[a-z-]+)`,\s*(?:Fáze|Krok)|skills/\w+/SKILL\.md`,\s*\*(?:Fáze|Krok)")
+        # `\*{0,2}` schválně: odkaz se běžně píše kurzívou (`/cleanup`, *Fáze 1 – …*)
+        # a dřív ho vzor kvůli hvězdičce minul. Právě v té podobě byl v repozitáři
+        # skutečný odkaz dovnitř cizí fáze, který kontrola neviděla.
+        r"(?:`/[a-z-]+`|skills/\w+/SKILL\.md`),\s*\*{0,2}(?:Fáze|Krok)")
+
+    #: Přípony, které v adresáři skillu znamenají spustitelný vnitřek.
+    SKRIPTY = ("*.sh", "*.py", "*.swift")
+
+    def ma_skripty(self, skill: Path) -> bool:
+        """Má skill v adresáři vlastní skripty? Hledá i jednu úroveň hlouběji.
+
+        Norma dovoluje `scripts/`, takže `/compose` má skripty tam a `/transcript`
+        rovnou vedle `SKILL.md`; kontrola musí vidět obojí.
+        """
+        adr = skill.parent
+        return any(p.is_file() for vzor in self.SKRIPTY
+                   for p in list(adr.glob(vzor)) + list(adr.glob(f"*/{vzor}")))
 
     def vady(self, skill: Path) -> list:
         text = body(skill)
@@ -1031,6 +1047,13 @@ class SouladSNormou(unittest.TestCase):
             out.append("chybí závěrečný verdikt")
         if self.CIZI_FAZE.search(text):
             out.append("odkazuje dovnitř fáze jiného skillu")
+        # Skill s vlastním spustitelným vnitřkem musí přiznat, co je detail a co
+        # rozhraní. Bez toho si někdo zvykne na jméno skriptu nebo proměnné jako
+        # na kontrakt a příští výměna nástroje se stane rozbitím. Kritérium je
+        # schválně jen na skripty: delegaci na cizí skill strojově nepoznám
+        # spolehlivě, a kontrola, která hádá, hlásí falešné poplachy.
+        if self.ma_skripty(skill) and "\n## Jak je to postavené uvnitř" not in text:
+            out.append("má vlastní skripty a chybí `## Jak je to postavené uvnitř`")
         out += self.vady_poradi(skill)
         return out
 

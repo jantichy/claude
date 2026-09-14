@@ -62,31 +62,19 @@ Zjištěné shrň uživateli do tří až pěti řádků, ať ví, s čím pracu
 
 Tohle je jádro celého skillu: vychází z něj všechno ostatní včetně Fáze 2.
 
-**Kritické:** nepracuj jen s tím, co máš právě v kontextu. Pokud už session prošla kompaktací, první polovina konverzace je z kontextu pryč – a přesně tam bývají uzavřené dohody, o které tu jde.
+**Jak transcript najít a přečíst, drží `~/.claude/skills/SESSION.md`** – včetně toho, proč se nesmí sáhnout po naposledy modifikovaném souboru a které zprávy se neukládají jako `type: "user"`. Načti si ho a řiď se jím; neopisuj ho sem, potřebuje ho i `/skill` a dvě kopie se rozejdou.
 
-1. **Najdi transcript aktuální session.** Leží v `~/.claude/projects/<slug-pracovního-adresáře>/<session-id>.jsonl`, kde slug vznikne z absolutní cesty nahrazením `/` a `.` pomlčkami (`/Users/honza/Dev/score` → `-Users-honza-Dev-score`). **`<session-id>` si vezmi z cesty ke scratchpadu**, kterou máš v systémovém promptu – je v ní jako poslední adresář. To je jediný spolehlivý klíč.
+Pak z něj vytěž **sedm kategorií**:
 
-   **Nesahej po naposledy modifikovaném `.jsonl` v tom adresáři.** Nad jedním projektem běžívají dvě session naráz a ta druhá do svého souboru zapisuje taky – heuristika pak ukáže na cizí konverzaci, kterou vytěžíš místo své vlastní. Doloženo 10. 9. 2026: nad `~/.claude` běžela souběžná session a „nejnovější soubor“ byl její. Zbude-li ti opravdu jen tahle cesta, **ověř obsah** proti tomu, co si z konverzace pamatuješ, dřív než z něj cokoliv vytěžíš.
+1. **Dohody a rozhodnutí** – na čem jste se shodli. Vždy včetně **„proč“** a **zavržených variant** (viz `~/.claude/RULES.md`, *Rozhodnutí zapisuj i s cestou k nim*): „nejdřív jsme chtěli X, ale kvůli Y jsme zvolili Z“. Samotný závěr bez zdůvodnění je pro příští session málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
+2. **Pravidla a konvence**, které v session vznikly nebo se změnily.
+3. **Odvedená práce** – co se reálně změnilo v souborech a kódu.
+4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“. Tohle je **vědomé** odložení: někdo ho vyslovil. Co propadlo, aniž si toho kdokoli všiml, je kategorie 7.
+5. **Postřehy mimo hlavní téma** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
+6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
+7. **Nevypořádaná témata** – co v konverzaci padlo a nikdy se nedořešilo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními – ať kvůli ní nemusí číst zvlášť. **Opiš mu do zadání i síto z Fáze 2** (ověření proti zbytku transcriptu i práh důležitosti) a nech si u každého kandidáta vrátit, co prověřil. Bez toho vrátí hrubé kandidáty a ty bys je musel proklepávat vlastním čtením transcriptu – tedy udělat práci, kvůli které jsi ho poslal.
 
-2. **Projdi ho od úplného začátku.** Zajímají tě uživatelovy prompty i tvoje odpovědi. U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti kontext nesnědla surová data – předej mu cestu k souboru a seznam kategorií níže a nech si vrátit strukturovaný výtah. Pošli ho na **výchozím modelu session s `medium`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.), **ne na nejlevnějším**. Vypadá to jako výtah podle seznamu, ale není: agent musí poznat, která dohoda později přestala platit, odlišit rozhodnutí od nápadu a korekci od zaváhání. Levný model tohle splete a **jeho chybu nepoznáš, aniž bys přečetl celý transcript sám** – tedy přesně tu práci, kvůli které jsi ho poslal. Zahozený výtah znamená, že jsi zaplatil dvakrát; ten nezahozený je horší, protože nová session pak staví na dohodě, která neplatí.
-
-   **Pozor na zprávy poslané uprostřed rozepsané odpovědi.** Ty **nejsou** uložené jako `type: "user"`, ale jako `type: "queue-operation"` s `operation: "enqueue"` a textem v poli `content`. Kdo filtruje jen `type=="user"`, tiše o ně přijde – a přitom to bývají důležité dovětky („ještě ať to udělá i…“). Vytáhni je vždy taky:
-   ```
-   jq -r 'select(.type=="queue-operation" and .operation=="enqueue") | .content' <transcript>
-   ```
-   Stejná past hrozí u `type: "attachment"`. Když si nejsi jistý, že máš všechno, projdi si rozložení `.type` v souboru (`grep -o '"type":"[a-z_-]*"' <transcript> | sort | uniq -c`) a ověř, že jsi nic nevynechal.
-
-3. **Vytěž sedm kategorií:**
-
-   1. **Dohody a rozhodnutí** – na čem jste se shodli. Vždy včetně **„proč“** a **zavržených variant** (viz `~/.claude/RULES.md`, *Rozhodnutí zapisuj i s cestou k nim*): „nejdřív jsme chtěli X, ale kvůli Y jsme zvolili Z“. Samotný závěr bez zdůvodnění je pro příští session málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
-   2. **Pravidla a konvence**, které v session vznikly nebo se změnily.
-   3. **Odvedená práce** – co se reálně změnilo v souborech a kódu.
-   4. **Nedořešené** – odložené úkoly, věci označené „na to se ještě podíváme“, „to necháme na potom“. Tohle je **vědomé** odložení: někdo ho vyslovil. Co propadlo, aniž si toho kdokoli všiml, je kategorie 7.
-   5. **Postřehy mimo hlavní téma** – všechno, u čeho padlo „ať se to neztratí“, „poznamenej si to“, „to je důležité do budoucna“. Bývá to mimo téma session, a proto to nejčastěji zapadne.
-   6. **Korekce** – místa, kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze**, ne ta první. Pozor na dohody, které v půlce session přestaly platit – ty se nesmí zapsat jako platné.
-   7. **Nevypořádaná témata** – co v konverzaci padlo a nikdy se nedořešilo. Podrobně viz Fáze 2; posíláš-li na transcript subagenta, dej mu tuhle kategorii do zadání spolu s ostatními – ať kvůli ní nemusí číst zvlášť. **Opiš mu do zadání i síto z Fáze 2** (ověření proti zbytku transcriptu i práh důležitosti) a nech si u každého kandidáta vrátit, co prověřil. Bez toho vrátí hrubé kandidáty a ty bys je musel proklepávat vlastním čtením transcriptu – tedy udělat práci, kvůli které jsi ho poslal.
-
-4. Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej – kromě kategorie 7, kterou hned probereš ve Fázi 2.
+Výsledkem je interní seznam položek. Uživateli zatím nic nepředkládej – kromě kategorie 7, kterou hned probereš ve Fázi 2.
 
 ------
 
