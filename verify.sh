@@ -86,14 +86,43 @@ need_tools() {
 # tenhle skript to donedávna byl plnohodnotný kontrakt – a protože se sekce bere
 # od PRVNÍHO výskytu, schovaná kopie nad tou skutečnou ji celou zastínila.
 # Lidská revize takový řádek nemá jak zachytit, protože ho nevidí.
+#
+# Plot bloku kódu se drží pravidel CommonMarku: pamatuje si ZNAK a DÉLKU
+# otevíracího plotu a zavře ho jen týž znak o délce alespoň takové. Dřív se stav
+# překlápěl na každém ``` nebo ~~~, takže ukázka zabalená do ````markdown …
+# ``` … ```` obrátila polaritu: podvržená sekce uvnitř ukázky se stala tělem
+# a skutečný kontrakt pod ní zmizel jako „blok kódu“. Ve vykresleném Markdownu
+# i v diffu přitom bylo obojí vidět správně. Pojistky na dvě sekce a na
+# nedovřený plot to nezachytily, protože obě počítají z výstupu téhle funkce.
+#
+# HTML komentáře řeší stavový automat bez ohledu na jejich obsah. Dřívější výraz
+# nesedl na komentář obsahující `--`, tedy na běžnou českou pomlčku v poznámce;
+# takový řádek spadl do víceřádkové větve a spolkl zbytek souboru.
 md_body() { awk '
-  /^[[:space:]]*(```|~~~)/ { f = !f; next }
+  {
+    line = $0
+    sub(/^[[:space:]]*/, "", line)
+    je_plot = (line ~ /^(```+|~~~+)/)
+    if (je_plot) { match(line, /^(`+|~+)/); znak = substr(line, 1, 1); delka = RLENGTH }
+  }
+  je_plot && !f { f = 1; f_znak = znak; f_delka = delka; next }
+  je_plot && f  { if (znak == f_znak && delka >= f_delka) f = 0; next }
   f { next }
-  { gsub(/<!--[^-]*(-[^-]+)*-->/, "") }
-  c && /-->/ { sub(/^.*-->/, ""); c = 0 }
-  c { next }
-  /<!--/ { sub(/<!--.*$/, ""); c = 1 }
-  { print }
+  {
+    out = ""; rest = $0
+    while (length(rest) > 0) {
+      if (c) {
+        i = index(rest, "-->")
+        if (i == 0) { rest = ""; break }
+        rest = substr(rest, i + 3); c = 0
+      } else {
+        i = index(rest, "<!--")
+        if (i == 0) { out = out rest; rest = "" }
+        else { out = out substr(rest, 1, i - 1); rest = substr(rest, i + 4); c = 1 }
+      }
+    }
+    print out
+  }
 ' "$1"; }
 
 # Kanonická (fyzická) podoba cesty. Bez ní se souhlas vydaný pro cestu přes

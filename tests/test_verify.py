@@ -411,6 +411,80 @@ class PrubeznaKontrola(unittest.TestCase):
                 self.assertEqual(r.returncode, 0, f"--revoke {argument} neuspěl: {r.stderr}")
 
 
+class ParserTelaMarkdownu(unittest.TestCase):
+    """`md_body()` musí číst Markdown tak, jak ho čte člověk v náhledu.
+
+    Rozejde-li se s ním, vznikne nejhorší možná třída vady: soubor se vykreslí
+    jedním způsobem a skript ho přečte jiným, takže rozdíl nejde vidět ani
+    v diffu pull requestu. Obojí níž nastalo doopravdy (`/review full`, 14. 9. 2026)
+    a hook v obou případech spustil podvržený příkaz a napsal „průběžná kontrola
+    prošla“.
+
+    Pojistky na dvě sekce a na nedovřený plot tuhle třídu nezachytí z principu –
+    obě počítají z výstupu téhle funkce, takže vidí totéž, co ona.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="parser-test-"))
+        self.repo = self.tmp / "repo"
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", ".")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def contract(self, obsah):
+        (self.repo / "CLAUDE.md").write_text(obsah, encoding="utf-8")
+        return subprocess.run([str(HOOK), "--contract", str(self.repo)],
+                              capture_output=True, text=True, check=False,
+                              stdin=subprocess.DEVNULL)
+
+    def test_ctyrznakovy_plot_neobrati_polaritu(self):
+        """Ukázka kontraktu se sází do ````markdown, aby šel uvnitř ukázat ```.
+
+        Překlápění na každém plotu bez ohledu na délku tu obrátilo polaritu:
+        podvržená sekce uvnitř ukázky se stala tělem a skutečný kontrakt pod ní
+        zmizel jako blok kódu.
+        """
+        v = self.contract("# T\n\nUkázka:\n\n````markdown\n```\n## Kontrakt příkazů\n\n"
+                          "- test: echo PODVRZENY\n```\n````\n\n"
+                          "## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertIn("echo PRAVY", v.stdout)
+        self.assertNotIn("PODVRZENY", v.stdout)
+
+    def test_tildovy_plot_uvnitr_backtickoveho_neni_plot(self):
+        """Uvnitř ```-bloku je ~~~ obyčejný text, ne zavírací plot."""
+        v = self.contract("# T\n\n```\n~~~\n## Kontrakt příkazů\n- test: echo PODVRZENY\n"
+                          "~~~\n```\n\n## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        self.assertIn("echo PRAVY", v.stdout)
+        self.assertNotIn("PODVRZENY", v.stdout)
+
+    def test_ceska_pomlcka_v_komentari_nespolkne_zbytek_souboru(self):
+        """Komentář s `--` uvnitř je běžná česká poznámka, ne konec komentáře.
+
+        Výraz, který ho nechytil, posílal takový řádek do víceřádkové větve, a ta
+        zahodila všechno až po další `-->` – tedy i skutečný kontrakt.
+        """
+        v = self.contract("# T\n\n<!-- pozn. -- viz níž -->\n\n"
+                          "## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertIn("echo PRAVY", v.stdout)
+
+    def test_komentar_pres_vic_radku_konci_na_prvnim_zavreni(self):
+        v = self.contract("# T\n\n<!--\n## Kontrakt příkazů\n- test: echo PODVRZENY\n-->\n\n"
+                          "## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        self.assertIn("echo PRAVY", v.stdout)
+        self.assertNotIn("PODVRZENY", v.stdout)
+
+    def test_dva_komentare_na_jednom_radku(self):
+        """Stavový automat musí zvládnout víc komentářů v jednom řádku,
+        jinak by druhý otevřel stav, který nikdo nezavře."""
+        v = self.contract("# T\n\n<!-- a --> text <!-- b -->\n\n"
+                          "## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        self.assertIn("echo PRAVY", v.stdout)
+
+
 class VypisKontraktu(unittest.TestCase):
     """`--contract` vypisuje kontrakt pro CI, která pouští tytéž kroky jinde.
 
