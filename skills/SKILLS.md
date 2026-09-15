@@ -222,6 +222,14 @@ Odchylku odůvodni **tím, čí vstup to je**: chyba v návrhu nebo v ověření
 
 **Deleguj kvůli kontextu, ne kvůli úspoře.** Rozeslání práce agentům šetří kontext hlavní session, celkové tokeny spíš zvýší.
 
+**Agent, který nemá co spouštět, se volá typem bez `Bash`.** Je na to `reader` (`~/.claude/agents/reader.md`) – typ se sadou `Read, Grep, Glob`, tedy bez shellu. Platí to všude, kde je úkolem **úsudek nad hotovým textem**: čtenář bez kontextu, nezávislý posudek, kontrola tvaru. Věta „nezapisuj do žádného souboru“ v zadání totiž nic nedrží – je to text pro model, ne mechanismus (`~/.claude/RULES.md`, *Přednost pravidel*), a `Explore` sice nemá `Edit` ani `Write`, ale **`Bash` má**, takže jím zapsat i commitnout lze. V projektu se zapnutým autocommitem to znamená pushnutou změnu, kterou nikdo neschválil.
+
+**Omezit `Bash` na čtecí příkazy nejde a nesmí se to předstírat.** Změřeno 15. 9. 2026 ve všech čtyřech zápisech: `tools: …, Bash(git log:*)` dá agentovi **plný** shell (allowlist se ignoruje), `disallowedTools: Bash(date:*)` mu ho naopak **sebere celý**. Buď `Bash` má, nebo nemá – nic mezi tím. Typ agenta, jehož popis slibuje „čtecí shell“, je proto vrstva, která vypadá nakonfigurovaně a nevynucuje nic; **nezakládej ho**. Potřebuje-li agent počty, historii gitu nebo spuštěnou kontrolu, dostane `Explore` s plným shellem a **hranice se nepředstírá** – v zadání se pak nepíše, že nesmí zapisovat, protože by to byl slib bez krytí.
+
+**Vlastní výpověď agenta o jeho nástrojích není doklad.** Při témž měření jeden běh hlásil sadu, která neodpovídala definici. Spolehlivé je jen to, co mu volání nástroje projde – testuje se tedy pokusem, ne dotazem.
+
+**Nový typ je vidět až v nové session.** Registr se načítá při startu, takže skill, který si typ právě založil, ho v témž běhu nezavolá. Překlep v názvu naopak **selže hlučně** (`Agent type '…' not found` i s výčtem dostupných), takže tiše na plnohodnotného agenta nespadne.
+
 ## 9. Ověřovací vrstva
 
 **Pouští-li skill panel agentů, kteří hledají problémy, musí mít ověřovatele.** Není to volba. Agent požádaný o hledání mezer nějakou najde vždycky, a po třetím falešném nálezu se skill přestane pouštět – což je horší, než ho nemít.

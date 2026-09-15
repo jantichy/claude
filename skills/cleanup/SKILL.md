@@ -305,7 +305,11 @@ VÝSTUP: Strukturovaná odpověď na A–F. U každého nálezu uveď soubor a s
 Nezapisuj do žádného souboru.
 ```
 
-**Věta „nezapisuj do žádného souboru“ v zadání nic nedrží** – je to text pro model, ne mechanismus (`~/.claude/RULES.md`, *Přednost pravidel*). Pustíš-li čtenáře jako samostatný proces, **odeber mu nástroje, kterými by zapsal**, ne aby to měl slíbené:
+**Pouštěj ho jako podagenta typu `reader`**, tedy `subagent_type: "reader"`. Ten typ má sadu `Read, Grep, Glob` a **žádný `Bash`**, takže hranice drží mechanismem, ne slibem. Věta „nezapisuj do žádného souboru“ v zadání sama nedrží nic – je to text pro model (`~/.claude/RULES.md`, *Přednost pravidel*) –, a `Explore` sice nemá `Edit` ani `Write`, ale `Bash` má, takže jím zapsat i commitnout lze; v projektu se zapnutým autocommitem by z toho byla pushnutá změna, kterou nikdo neschválil.
+
+Věta v zadání přesto zůstává – **není to pojistka, ale pokyn**, aby čtenář nehledal obchvat a chybějící nástroj nahlásil jako mez posudku místo odhadu.
+
+**Nefunguje-li typ** (`Agent type 'reader' not found`), znamená to, že v téhle instalaci není – registr se načítá při startu session. Řekni to nahlas a pusť čtenáře jako samostatný proces s odebranými nástroji:
 
 ```sh
 claude -p --allowedTools "Read,Grep,Glob" --disallowedTools "Bash,Edit,Write" < prompt.txt
@@ -313,7 +317,7 @@ claude -p --allowedTools "Read,Grep,Glob" --disallowedTools "Bash,Edit,Write" < 
 
 - **Prompt předávej přes stdin**, ne jako argument – oba přepínače berou víc hodnot, takže by spolkly zbytek příkazové řádky a běh spadne na chybějícím promptu.
 - **Seznam nástrojů je jedna hodnota oddělená čárkami**, ne několik slov za sebou.
-- **Proč to nestačí ošetřit plánovacím režimem:** ten zakáže editaci, ale `Bash` propustí, a tím se dá zapsat i commitnout. V repozitáři se zapnutým autocommitem to znamená pushnutou změnu, kterou nikdo neschválil. Doloženo 15. 9. 2026.
+- **Cenou je slepota:** samostatný proces neukazuje průběh, neobjeví se v seznamu agentů a výstup přijde až na konci. Proto je to náhradní cesta, ne výchozí. Doloženo 15. 9. 2026.
 
 
 **Zpracování nálezů:**
