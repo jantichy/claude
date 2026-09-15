@@ -18,6 +18,6 @@ Z toho plyne pravidlo, které platí všude: **u nízkého nálezu musí `basis`
 
 ## Kdo ji používá
 
-`/review`, `/attack`, `/consistency`, `/oponent` a `/audit`. První dva zapisují do téže kapitoly `## Review`, `/consistency` do `## Consistency` a `/oponent` do dokumentu, který oponuje a `/audit` do registru nálezů pro klienta – **sdílená kapitola tedy není podmínkou**, sdílené měřítko ano. Každý z nich si nad obecnými stupni podává vlastní doménové čtení (útok jinak než oponentura), ale **stavět vlastní taxonomii vedle téhle se nesmí**. Přibude-li další skill, který hlásí nálezy, odkáže sem taky; **neopisuje si ji** (`~/.claude/RULES.md`, *Single source of truth*).
+`/review`, `/attack`, `/consistency`, `/oponent` a `/audit`. První dva zapisují do téže kapitoly `## Review`, `/consistency` do `## Consistency` a `/oponent` do dokumentu, který oponuje, a `/audit` do registru nálezů pro klienta – **sdílená kapitola tedy není podmínkou**, sdílené měřítko ano. Každý z nich si nad obecnými stupni podává vlastní doménové čtení (útok jinak než oponentura), ale **stavět vlastní taxonomii vedle téhle se nesmí**. Přibude-li další skill, který hlásí nálezy, odkáže sem taky; **neopisuje si ji** (`~/.claude/RULES.md`, *Single source of truth*).
 
 **Výjimka pro zadání subagentů:** text, který jde agentovi bez kontextu session, si stupně **opisuje celé**, protože odkaz do souboru, který nemá načtený, je mrtvý. Platí to jen na zadání, ne na tělo skillu.
