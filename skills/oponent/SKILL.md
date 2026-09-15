@@ -87,7 +87,7 @@ Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku
 
 | Hledisko | Ptá se | Spouštěč | Web | Typ |
 |---|---|---|---|---|
-| **Ekonomika provozu** | Sedí čísla? Break-even, cena, marže, kapacita, náklady na provoz. Kdo to bude reálně dělat, jak často a co se stane, když to neudělá? Co vyžaduje ruční zásah? Co se rozbije při desetinásobku a co při desetině? | jsou v něm čísla, ceny, kapacity nebo opakovaná ruční práce | ✔ | `researcher` |
+| **Ekonomika provozu** | Sedí čísla? Break-even, cena, marže, kapacita, náklady na provoz. Kdo to bude reálně dělat, jak často a co se stane, když to neudělá? Co vyžaduje ruční zásah? Co se rozbije při desetinásobku a co při desetině? | jsou v něm čísla, ceny, kapacity nebo opakovaná ruční práce | ✔ | `Explore` |
 | **Osobní údaje a souhlas** | Co se sbírá, na jakém právním základu a jak dlouho se to drží? Co dokument slibuje uživateli a co ve skutečnosti dělá? Jde výmaz provést, aniž se rozpadne zbytek? | sbírají se údaje o lidech | ✔ | `researcher` |
 | **Závazky vůči druhé straně** | Spotřebitelské právo, smluvní závazky, daně, autorská práva. Co je napsané tak, že to nejde dodržet? Co slibuje víc, než na co má autor nárok nebo kapacitu? | dokument něco slibuje protistraně – zákazníkovi, klientovi, dodavateli | ✔ | `researcher` |
 | **Data a proveditelnost** | Dá se to postavit tak, jak je to popsané? Co je klíč záznamu a co se stane, když se změní? Kde je pro každý údaj zdroj pravdy a kdo ho smí přepsat? Co se děje s duplicitou, s historií a se smazáním? Jak se do nového modelu dostanou stará data a jak se z něj dá vycouvat? Kde je v tom skryté technické riziko – co dokument popisuje jako samozřejmé, a přitom to nikdo nepostavil? | popisuje záznamy a jejich klíče, nebo něco, co se má postavit | ✔ | `researcher` |
@@ -154,6 +154,8 @@ Do žádného souboru nezapisuj.
 ```
 
 **Volitelně rešerše.** Hledisku, které má v katalogu ve sloupci *Web* ✔, dej výslovné svolení hledat na webu. U ostatních to zakaž, ať neutíkají od dokumentu.
+
+**Sloupec *Typ* nekopíruje sloupec *Web*.** *Ekonomika provozu* má web i `Explore`, protože po ní zadání chce **přepočítat** break-even, marži a kapacitu – a agent, který má počítat a nemá čím, si číslo domyslí (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*, pravidlo o hraničním případu). U zbylých hledisek s ✔ je web zdroj faktu, ne kalkulačka, takže jim stačí `researcher`.
 
 ------
 

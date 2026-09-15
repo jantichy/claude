@@ -30,7 +30,7 @@ Zvukový i obrazový záznam je **platný vstup, ne důvod k odmítnutí** – v
 
   **Cesta ke zdroji je cizí vstup a uvozovkuje se vždy.** Jméno souboru pochází od toho, kdo ti nahrávku poslal – neuvozovkovaná cesta se zpětnými apostrofy nebo `$(…)` se v shellu rozvine dřív, než ffmpeg vůbec nastartuje. Ze stejného důvodu adresář **vyrob**, ne zvol: do cizího by ffmpeg přepsal stejnojmenné soubory a úklid by je pak vzal s sebou.
 
-  Nevrátí-li to skoro nic, přepni na pevný interval (`fps=1/30`). **Vyjde-li snímků víc než pár desítek, nejdřív je prolistuj a zahoď opakované** – prezentace se vrací na tentýž slajd a číst ho popáté nepřidá nic, jen sní kontext. Po vytěžení smaž **celý ten adresář** (`rm -rf "$tmp"`), nikdy obsah adresáře, který jsi nevytvořil; na rozdíl od přepisu se ke snímkům nikdo nevrací.
+  Nevrátí-li to skoro nic, přepni na pevný interval (`fps=1/30`). **Vyjde-li snímků víc než pár desítek, nejdřív je prolistuj a zahoď opakované** – prezentace se vrací na tentýž slajd a číst ho popáté nepřidá nic, jen sní kontext. Smaž **celý ten adresář** (`rm -rf "$tmp"`), nikdy obsah adresáře, který jsi nevytvořil – ale až **po kontrole úplnosti** ve *Fázi 2*, ne hned po vytěžení. Ta kontrola snímky dostává do zadání a jede na typu bez shellu, takže si je sama vyříznout nemůže; smazat je dřív znamená pustit ji nad polovinou zdroje.
 - **Stačí zvuk** – vědomé rozhodnutí obraz zahodit. Zapiš ho do evidence zdroje (*Fáze 8*) jako nevytěženou část, ať je za rok vidět, že záznam nebyl vytěžený celý.
 
 **Na cokoliv dalšího ať se `/transcript` ptá uživatele** – na jazyk, na hranici u dvojjazyčné nahrávky, na kolizi jmen i na existující přepis v adresáři. Ty odpovědi ze zadání `/learn` neplynou a tichá volba by u existujícího přepisu přepsala starší práci.

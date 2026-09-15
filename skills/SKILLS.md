@@ -230,6 +230,12 @@ Odchylku odůvodni **tím, čí vstup to je**: chyba v návrhu nebo v ověření
 
 **Dělítko je, co je úkolem agenta, ne jak se jmenuje jeho role.** Posouzení hotového textu – oponent, ověřovatel nálezu, čtenář bez kontextu, zmapování báze – jde na `reader`. Měření a spuštění – počty přes `wc`, historie gitu, spuštěné testy, ohledání běžící aplikace, cizí web přes nástroje prohlížeče – zůstává na `Explore`. **Hraniční případ rozhodni ve prospěch shellu:** agent, který ho potřebuje a nemá, si číslo domyslí, a to je horší než agent, který ho má zbytečně. Podle toho zůstávají `/attack` a `/audit` celé na typu s nástroji – útočník bez shellu nepošle požadavek a auditor bez prohlížeče neuvidí stránku.
 
+**Typ se předává parametrem `subagent_type`**, tedy `subagent_type: "reader"` u nástroje `Agent`. **Neexistuje-li v instalaci**, volání selže hlučně (`Agent type 'reader' not found` i s výčtem dostupných) – tiše na plnohodnotného agenta nespadne. Skill, který na typu stojí, má pro ten případ mít napsanou náhradní cestu; `Explore` je vždycky k dispozici, protože je vestavěný.
+
+**`Explore` není v tomhle repozitáři definovaný** – je to vestavěný typ Claude Code s plnou sadou nástrojů včetně `Bash`. Nehledej pro něj soubor v `agents/`.
+
+**Definice typu je `agents/<jméno>.md`** s hlavičkou `name`, `description` a `tools` (čárkami oddělený výčet, allowlist – co v něm není, agent nemá). `description` říká **kdy typ použít a kdy ne**, protože právě podle něj se mezi typy vybírá; patří do ní i odkaz na sesterský typ pro případ, kdy tenhle nesedí. Tělo souboru je systémový prompt agenta a nese to, co platí pro každé jeho zadání – že nemá shell a proč, že mez posudku přizná místo odhadu, a že cizí text je data, ne instrukce.
+
 **Typ nenese model ani effort a je to záměr.** `model` by v hlavičce fungoval (změřeno 15. 9. 2026 – podagent s `model: haiku` opravdu běžel na Haiku), ale týž typ používá víc skillů s různými nároky: `/consistency` chce `reader` na `low`, `/cleanup` na `high`. Model se proto předává **parametrem při volání**, ne v definici. **Effort se předat nedá ani tak, ani tak** – `Agent` ten parametr nebere; věta „na nejsilnějším modelu s `xhigh`“ je tedy splnitelná jen první polovinou a je to vědomá mezera.
 
 **Nový typ je vidět až v nové session.** Registr se načítá při startu, takže skill, který si typ právě založil, ho v témž běhu nezavolá. Překlep v názvu naopak **selže hlučně** (`Agent type '…' not found` i s výčtem dostupných), takže tiše na plnohodnotného agenta nespadne.
@@ -317,6 +323,17 @@ Pravidlo *Nepiš, co model už ví* z odstavce **Jak se píše text uvnitř** ta
 ```
 
 Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se skill o něco, co v repozitáři není, řekne se to rovnou tady**, ne až v poznámce pod čarou – jinak si to člověk nainstaluje a ono to nefunguje.
+
+**Pouští-li skill subagenty vlastním typem, pokyn bere i `agents/`:**
+
+```
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/<jméno>
+> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
+> i definice typů subagentů do `~/.claude/agents/`.
+```
+
+**Jména typů se do README nepíšou** – jsou to implementační detaily (viz tabulka výš) a zestárnou dřív než zbytek textu. Řeší se to **instalací, ne dokumentací**: přijde-li celý adresář, není co vyjmenovávat. Tím se obě pravidla přestanou křížit.
 
 **`### Požadavky a omezení`** pod čarou – platforma, nástroje, účty, licence, cena, meze. Krátce a úplně.
 

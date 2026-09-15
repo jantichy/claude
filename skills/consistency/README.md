@@ -59,13 +59,15 @@ Sporných: 14 – ty projdeme spolu od nejzávažnějších.
 Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/consistency a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
+> i definice typů subagentů do `~/.claude/agents/`.
 
 Skill sdílí část postupu se `/review` (určení rozsahu, tvar interaktivního průchodu), takže si **nechte nainstalovat rovnou oba**. Odkazuje se i na moje soukromé standardy pro strukturu projektu – ty odkazy ať Claude nahradí vašimi, nebo je smaže.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown, implement, review, consistency, cleanup, attack a release. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown, implement, review, consistency, cleanup, attack a release. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
 
 ---
 

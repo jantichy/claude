@@ -98,7 +98,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
   }
 ]
 
-Nezapisuj do žádného souboru.
+Pracuj výhradně v `/tmp` a s absolutními cestami; do auditovaného projektu nezapisuj a nic v něm neměň. **Není to pojistka, ale pokyn** – shell máš a zapsat bys jím mohl; hranici tu drží zadání, ne nástroj.
 ```
 
 ## Zadání pro standardového specialistu

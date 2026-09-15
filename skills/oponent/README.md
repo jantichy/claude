@@ -66,13 +66,15 @@ C) Nechat být – u tří slev je to okrajové
 Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/oponent a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
+> i definice typů subagentů do `~/.claude/agents/`.
 
 Skill se odkazuje na strukturu projektové dokumentace, kterou používám já – kam se zapisují rozhodnutí, odložené věci a záznamy o průchodech. **Řekněte Claudovi, ať to přizpůsobí tomu, jak máte dokumentaci uspořádanou vy**, nebo ty odkazy smaže; jádro na nich nestojí.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown, implement, review, consistency, cleanup, attack a release. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown, implement, review, consistency, cleanup, attack a release. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
 
 ---
 

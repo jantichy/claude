@@ -70,13 +70,15 @@ Panel: 31 nálezů → 22 po deduplikaci → 22 ověřeno → 13 přežilo:
 Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/review a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
+> i definice typů subagentů do `~/.claude/agents/`.
 
 Standardoví specialisté měří soulad s **mými soukromými doménovými standardy**, které v tomhle repozitáři nejsou – **řekněte Claudovi, ať tu část napojí na vaše vlastní standardy, nebo ji vynechá**; pracovní specialisté fungují bez nich. Aby měla deterministická vrstva co spouštět, potřebuje projekt mít v instrukcích zapsané své příkazy; co chybí, skill vypíše jako nezkontrolované.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown, implement, review, consistency, cleanup, attack a release. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown, implement, review, consistency, cleanup, attack a release. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
 
 ---
 

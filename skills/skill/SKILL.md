@@ -108,6 +108,8 @@ Výstupem je tabulka, která jde rovnou do sekce *Jak je to postavené uvnitř*:
 
 Zapisuje se do `SKILL.md`, tedy **jako Markdownová tabulka**, ne jako mezerami zarovnaný text v bloku kódu.
 
+**Deleguje-li krok na subagenta, rozhodni rovnou jeho typ** a zapiš ho do sloupce *Kdo*. Dělítko drží `~/.claude/skills/SKILLS.md`, *Model, effort a delegace*: posouzení hotového textu jde na `reader`, s potřebou rešerše na `researcher`, měření a spouštění zůstává na `Explore`. **Neodkládej to na později** – typ bez shellu si vynutí, aby zadání po agentovi nechtělo nic spouštět, a to se píše hned, ne dodatečně.
+
 **Zbylo-li po odečtení delegací jádro, pokračuj.** Nezbylo-li, řekni to: je to alias, ne skill, a má se napsat jako alias.
 
 ## Fáze 4 – Srovnávací běh
