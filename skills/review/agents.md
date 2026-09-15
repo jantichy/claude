@@ -8,7 +8,7 @@ Texty, se kterými `/review` pouští subagenty – panel specialistů ve *Fázi
 - [Zadání pro standardového specialistu](#zadání-pro-standardového-specialistu)
 - [Zadání pro ověřovatele](#zadání-pro-ověřovatele)
 
-### Zadání pro pracovního specialistu
+## Zadání pro pracovního specialistu
 
 ```
 Prověř zadané soubory z jediného hlediska: <ROLE – např. „co se stane, když volání
@@ -101,7 +101,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
 Nezapisuj do žádného souboru.
 ```
 
-### Zadání pro standardového specialistu
+## Zadání pro standardového specialistu
 
 Stejné, s jediným rozdílem – měřítkem není úsudek, ale text:
 
@@ -129,7 +129,7 @@ Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 <zbytek – soubory, výjimky, pravidla hlášení, závažnost, formát – shodný s pracovním specialistou>
 ```
 
-### Zadání pro ověřovatele
+## Zadání pro ověřovatele
 
 Pouští se ve *Fázi 3* na každý nález se závažností KRITICKÉ a STŘEDNÍ, paralelně a v čerstvém kontextu, který nevidí ani panel, ani konverzaci.
 

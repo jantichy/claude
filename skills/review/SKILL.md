@@ -1,6 +1,6 @@
 ---
 name: review
-description: Skill se použije, když uživatel zadá "/review", "/review branch" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz, testy, agentní infrastrukturu a soulad s doménovými standardy (coding, web, admin, analytics, text, design, slides, training). Pouští deterministické nástroje, pak paralelní panel specialistů, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
+description: Skill se použije, když uživatel zadá "/review", "/review branch" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastrukturu a soulad s doménovými standardy (coding, web, admin, analytics, text, design, slides, training). Pouští deterministické nástroje, pak paralelní panel specialistů, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
 argument-hint: [branch|full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
@@ -139,6 +139,8 @@ Vlastní zadání piš jen pro specialisty, kteří vestavěný protějšek nema
 
 **Texty zadání pro obě skupiny drží [`agents.md`](agents.md).** Načti si ho ve chvíli, kdy agenty pouštíš; do těla skillu nepatří, protože se čtou jen tehdy a jinak by zabíraly kontext každého běhu.
 
+------
+
 ## Fáze 3 – Ověření nálezů
 
 **Tohle je krok, na kterém stojí použitelnost celého skillu.** Panel hlásí i to, co není – reviewer požádaný o hledání mezer nějaké najde vždycky, protože o to byl požádán.
@@ -199,7 +201,7 @@ Pak rozděl na dvě skupiny:
 - formulační a formátovací drobnosti podle standardu
 
 **Sporné** – všechno ostatní, tedy vždy když existuje víc rozumných řešení nebo oprava zasahuje dál než na jedno místo:
-- **cokoliv od pracovních specialistů** – korektnost, bezpečnost, data, provoz a testy jsou vždy sporné, i když se oprava zdá triviální
+- **cokoliv od pracovních specialistů** – korektnost, bezpečnost, data a stavy, provoz a chyby a testy jsou vždy sporné, i když se oprava zdá triviální
 - **přidání závislosti** – vždy, i když ji přidal někdo jiný a ty jen prošel diff (`~/Dev/context/coding/quality.md`, *Nová závislost je rozhodnutí, ne detail*)
 - změny struktury, layoutu, informační architektury
 - změny datového modelu, typů, API kontraktů, autorizace
@@ -388,7 +390,7 @@ nezmění kód, kterého se týkají.
 
 **Umlčení commituj samostatně, až po opravách.** Hash se vyrábí z `HEAD` **před** commitem, takže musí ukazovat na stav, ve kterém se nález posuzoval – tedy na commit s opravami. Kdyby šel zápis do téhož commitu jako ony, ten commit by se dotkl i souborů z pole *Lokace*, expirační kontrola níž by hlásila změnu a **umlčení by vypršelo dřív, než ho kdo přečte**. Pořadí je proto: commitni opravy → zjisti `HEAD` → zapiš záznam → commitni sám zápis. Druhý commit mění jen `CLAUDE.md`, takže se lokací netýká a filtr drží.
 
-Doloženo 15. 9. 2026: záznam zapsaný v jednom commitu s opravami expiroval okamžitě a hned další běh ho předložil znovu.
+Doloženo v provozu: záznam zapsaný v jednom commitu s opravami expiroval okamžitě a hned další běh ho předložil znovu.
 
 ### Umlčení expiruje změnou kódu
 

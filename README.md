@@ -42,11 +42,15 @@ Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát pou�
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 
-Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. Převod je od 15. 9. 2026 hotový u celé sady a nové skilly vznikají rovnou podle normy. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
+Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. Převedená je celá sada a nové skilly vznikají rovnou podle normy. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
 
 ### [`skills/SESSION.md`](skills/SESSION.md) – jak se čte nahraná konverzace
 
 Claude Code ukládá každou session do souboru a dvěma skillům se z něj vytěžuje: `/cleanup` z něj bere dohody, `/skill` to, co se při ladění vyladilo. Drží pasti, které stojí celý výtěžek – že se nesmí sáhnout po naposledy změněném souboru (nad projektem běžívají dvě session naráz) a že zpráva poslaná uprostřed rozepsané odpovědi se neukládá jako uživatelská, takže ji běžný filtr přeskočí.
+
+### [`skills/SEVERITY.md`](skills/SEVERITY.md) – jak vážné to je, měří všichni stejně
+
+Pět skillů hlásí nálezy a každý z jiného světa: chyba v kódu, rozbitá aplikace, rozejitá dokumentace, námitka k návrhu, vada na cizím webu. Stupeň u nich musí znamenat totéž, jinak se nálezy z různých běhů nedají porovnat ani seřadit. Původní trojice to nezvládla, protože míchala dvě osy – nejvyšší stupeň mluvil o naléhavosti, nejnižší o povaze nálezu –, takže jí audit cizího webu utekl a zavedl si vlastní. Dnes stojí celá na jedné ose a každý skill si nad ní podává vlastní čtení.
 
 ### [`BYPASS.md`](BYPASS.md) – čím se dají obejít vlastní kontroly
 
@@ -82,7 +86,7 @@ Projde plán od začátku do konce, u každého úkolu test, kód, průběžná 
 
 ### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
-Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu, pak paralelní panel agentů, kde každý má jediné hledisko – korektnost, bezpečnost, data a stavy, provoz, testy, agentní infrastruktura, moje doménové standardy –, a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
+Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu, pak paralelní panel agentů, kde každý má jediné hledisko – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura, moje doménové standardy –, a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
 
 ### [`/consistency`](skills/consistency/) – skill proti bordelu v projektu
 

@@ -97,7 +97,7 @@ Cenou za to je křehkost – překlep nebo přejmenovaný nástroj se neprojeví
 
 ## Co skill dělá
 ## Co skill nedělá
-## Jak je to postavené uvnitř      ← jen deleguje-li ven
+## Jak je to postavené uvnitř      ← deleguje-li ven nebo má vlastní skripty
 ## <předběžné podmínky>            ← nepovinné, viz níž
 ## Fáze 0 – Příprava
 ## Fáze 1..N – …
