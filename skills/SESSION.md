@@ -18,6 +18,10 @@ Zajímají tě uživatelovy prompty i tvoje odpovědi.
 
 U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti kontext nesnědla surová data – předej mu cestu k souboru a to, co hledáš, a nech si vrátit strukturovaný výtah. Pošli ho na **výchozím modelu session s `medium`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*), **ne na nejlevnějším**. Vypadá to jako výtah podle seznamu, ale není: agent musí poznat, která dohoda později přestala platit, odlišit rozhodnutí od nápadu a korekci od zaváhání. Levný model tohle splete a **jeho chybu nepoznáš, aniž bys přečetl celý transcript sám** – tedy přesně tu práci, kvůli které jsi ho poslal.
 
+**Rozděl práci tak, aby se chyba agenta poznala levně: agent dělá úplnost, ty děláš ověření.** Nech si od něj vrátit **každou** položku, kterou najde, a k ní doslovnou citaci s číslem řádku – a filtrování, zařazení i ověření proti dokumentaci si nech v hlavní session. Agent totiž spolehlivě pozná, že se o něčem mluvilo; nepozná ale, jestli je to skutečně ta věc, kterou hledáš, a jestli to pořád platí. S doložením se obojí ověří grepem; bez něj jen tím, že si ten transcript přečteš.
+
+**Do zadání patří pokyn hlásit, co se v session rozhodlo dvakrát.** Dlouhá session totéž často rozhodne podruhé jinak a agent vytáhne to první. Nech si u položky vracet **poslední platný stav** v rámci té session a k tomu značku, že k obratu došlo, i s tím, co platilo dřív – a nejde-li to rozhodnout, ať to napíše, místo aby jednu verzi vybral. Doloženo 15. 9. 2026: agent vrátil rozhodnutí „do země bez vyplněné sazby DPH se neprodá“, které bylo **ještě týž den** přebito na opak. Zapsalo se do dokumentace jako platné a odhalilo to až ověření proti zdrojovým souborům. V téže dávce jiný agent naopak označil dvakrát rozhodnutou věc sám a ušetřil tím zastaralý zápis.
+
 ## 3. Pasti ve formátu
 
 **Zprávy poslané uprostřed rozepsané odpovědi nejsou uložené jako `type: "user"`**, ale jako `type: "queue-operation"` s `operation: "enqueue"` a textem v poli `content`. Kdo filtruje jen `type=="user"`, tiše o ně přijde – a přitom to bývají důležité dovětky („ještě ať to udělá i…“). Vytáhni je vždy taky:
