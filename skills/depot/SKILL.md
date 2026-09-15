@@ -1,7 +1,7 @@
 ---
 name: depot
 description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty nebo adresář, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Dev/context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, nemaže a v ~/Depot nepřejmenovává.
-argument-hint: [store|workflow] <cesty…>
+argument-hint: [full|store] <cesty…> | workflow
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
@@ -25,7 +25,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 - **Nepřepisuje nahrávky.** To je `/transcript`. Skill mu předá uložený adresář a dál se do přepisu neplete.
 - **Neuklízí `~/Downloads` ani nic jiného plošně.** Rozsahem je vždycky jen to, co stojí v argumentu – viz *Rozsah*.
 - **Nesahá na to, co už je uložené.** Nepřejmenovává, nepřesouvá podruhé, nemaže a **neposuzuje obsah `~/Depot`** (`~/Depot/CLAUDE.md`, *Obsah Depotu neposuzuj*). Jeho práce končí u příchozího souboru.
-- **Nezakládá projekty ani domény.** Má-li podklad jít do projektu, který neexistuje, řekne to a skončí; projekt zakládá `/project`, novou doménu otevírá `/learn`.
+- **Nezakládá projekty ani domény.** Má-li podklad jít do projektu, který neexistuje, řekne to a skončí; projekt zakládá `/project`, novou doménu **navrhne** `/learn` a zakládá ji uživatel.
 
 ## Jak je to postavené uvnitř
 
@@ -147,7 +147,7 @@ Pro každý uložený podklad spusť to, co má jeho workflow ve sloupci *Zpraco
 
 - **Před každým krokem řekni, co se spustí a nad čím.** Přepis i vytěžení běží desítky minut.
 - **Selhalo-li zpracování, uložení tím není zrušené.** Soubor zůstává na cílovém místě; do závěru jde, co se nepovedlo a čím se to dá dohnat.
-- **Evidenci nepiš.** Řádek v `sources.md` zakládá `/learn` jako součást vytěžení; druhý zápis odjinud by se s ním rozešel.
+- **Evidenci nepiš.** Řádek v `sources.md` zapisuje `/learn` jako součást vytěžení; druhý zápis odjinud by se s ním rozešel. **Vede-li ji doména** – jinak `/learn` založení evidence nabídne a bez souhlasu ji nezapíše vůbec, takže se tenhle podklad v evidenci neobjeví; do závěru to patří zmínit.
 
 ## Fáze 6 – Závěr
 
