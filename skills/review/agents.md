@@ -126,7 +126,9 @@ práce v pořádku.
 
 Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 
-<zbytek – soubory, výjimky, pravidla hlášení, závažnost, formát – shodný s pracovním specialistou>
+<zbytek – soubory, výjimky, pravidla hlášení, závažnost, formát – shodný s pracovním specialistou,
+ s jedinou výjimkou: odrážka o `evidence` pro tebe neplatí, protože nic nespouštíš.
+ Tvým dokladem je citace z auditovaného souboru a věta ze standardu, kterou porušuje.>
 ```
 
 ## Zadání pro ověřovatele
