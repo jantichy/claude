@@ -79,7 +79,11 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
 ```
+
+**`cooldown` není volitelný.** Bez něj Dependabot navrhne aktualizaci na balíček zveřejněný před hodinou – a čerstvě publikovaná verze je typická cesta útoku na dodavatelský řetěz, protože škodlivý balíček bývá stažen dřív, než si toho někdo všimne. Týden odstupu aktualizace nezastaví, jen je posune za okno, ve kterém se to stihne odhalit. Semgrep to hlídá pravidlem `dependabot-missing-cooldown`, takže konfigurace bez něj shodí CI – doloženo 15. 9. 2026.
 
 **Ekosystémů přidej tolik, kolik jich projekt má** – `npm`, `composer`, `gomod`, `pip` podle manifestu. `github-actions` patří ke každému projektu s workflow.
 

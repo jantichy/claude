@@ -11,6 +11,11 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    # Čerstvě zveřejněná verze je typická cesta útoku na dodavatelský řetěz –
+    # škodlivý balíček bývá stažen dřív, než si toho někdo všimne. Týden odstupu
+    # je kompromis: aktualizace pořád chodí, ale ne tu hodinu, kdy vyjde.
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: "Aktualizuj"
     labels:
