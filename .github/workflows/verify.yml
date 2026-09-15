@@ -18,9 +18,14 @@ jobs:
     # macOS kvůli `swiftc` – na Linuxu není a typecheck by se musel vynechat.
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v5
+      # Připnuté na SHA, ne na značku: `v5` může majitel akce kdykoliv
+      # přesměrovat jinam a je to doložená cesta útoku na dodavatelský řetěz
+      # (trivy-action, kics-github-action). Aktualizaci hlídá Dependabot
+      # (`.github/dependabot.yml`), takže připnutí nezmrazí chyby natrvalo –
+      # což byl jediný důvod, proč se sem připnutí do 15. 9. 2026 nedávalo.
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
 
@@ -52,12 +57,8 @@ jobs:
           # takže v CI nevznikne, ale vyloučení drží i pro lokální spuštění téhož
           # příkazu. `projects/` a `todos/` jsou runtime data Claude Code.
           #
-          # Vyloučené pravidlo je nález vědomě odmítnutý v `.claude/CLAUDE.md`,
-          # kapitola `## Review` (nepřipnuté akce). Bez toho by CI padalo na něčem,
-          # o čem je rozhodnuto, že se to neopraví – a padající kontrola se obchází.
           semgrep --config p/owasp-top-ten --quiet --error \
             --exclude=plugins --exclude=projects --exclude=todos \
-            --exclude-rule=yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag \
             .
 
       - name: Spusť kontrakt příkazů

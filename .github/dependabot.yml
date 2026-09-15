@@ -1,0 +1,17 @@
+# Hlídá, co je v CI připnuté na konkrétní verzi, a sám otevře pull request,
+# jakmile vyjde novější. Je to podmínka toho, aby připínání dávalo smysl:
+# bez něj chrání připnutý commit před přesměrovanou značkou, ale zmrazí i chyby,
+# které v něm jsou – a přesně proto se tu do 15. 9. 2026 nepřipínalo.
+#
+# Nevidí do shellu, takže nástroje instalované přes `brew` v kroku
+# `Doinstaluj nástroje` sem nespadají – ty se aktualizují samy s Homebrew.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "Aktualizuj"
+    labels:
+      - závislosti
