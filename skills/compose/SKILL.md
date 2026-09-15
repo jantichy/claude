@@ -51,6 +51,8 @@ scripts/gen_bluesky_md.py   <JSON z předchozího kroku>                <cílov�
 scripts/extract_wpress.py   <archiv .wpress>                          <cílový adresář> [filtr]
 ```
 
+Vedle nich leží `scripts/common.py` s funkcemi, které si generátory sdílejí; sám se nespouští.
+
 **Skripty jsou implementační detail, ne rozhraní.** Smí se přepsat i vyhodit. Závazné je, co po nich zbude: **jednotný Markdown v archivu**, ze kterého `profile` čte, a **idempotence** – druhý běh nad týmž exportem vyrobí týž soubor, takže rozdíl je vidět v gitu.
 
 **Všechny berou cíl argumentem**, nikdy si ho neodvozují ze svého umístění. Skill se instaluje jinam, než leží archiv.

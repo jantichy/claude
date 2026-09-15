@@ -69,10 +69,8 @@ A na konci shrnutí:
 - **Neopravuje časované titulky ručně.** Ty nesou syrový text navázaný na čas; vyčištěná verze žije zvlášť.
 - **Nedoplňuje mluvčí odhadem** a nedopisuje majitele k úkolům, u kterých si není jistý.
 - **Nepřekládá.** Výstup je v jazyce nahrávky.
-
-## Co s přepisem dál
-
-Když nahrávka nese znalost, která má přežít i to, že na samotný přepis za rok nikdo nesáhne – výklad na školení, konzultace, cizí přednáška –, hodí se na ni [`/learn`](../learn/README.md). Ten přepis vytěží a rozpustí do vaší knihovny know-how, takže znalost skončí tam, kde ji příště budete hledat.
+- **Nedělá z přepisu znalost.** Nese-li nahrávka něco, co má přežít i to, že na samotný přepis za rok nikdo nesáhne – výklad na školení, konzultace, cizí přednáška –, vezme si ten přepis [`/learn`](../learn/README.md) a rozpustí ho do vaší knihovny know-how.
+- **Nepíše text vaším hlasem.** Shrnutí je věcný výtah z toho, co zaznělo; na psaní článku nebo příspěvku je [`/compose`](../compose/README.md).
 
 ## Jak si ho nainstalovat
 

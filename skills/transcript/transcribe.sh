@@ -81,7 +81,9 @@ if [ -z "$MODEL" ] || [ ! -f "$MODEL" ]; then
   exit 2
 fi
 
-WORKDIR="$1"; LOG="$2"; shift 2
+WORKDIR="${1:?použití: transcribe.sh <workdir> <log> <audio1> [audio2 ...]}"
+LOG="${2:?použití: transcribe.sh <workdir> <log> <audio1> [audio2 ...]}"
+shift 2
 : > "$LOG"
 
 THREADS="$(n_threads)"

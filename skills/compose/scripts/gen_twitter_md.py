@@ -10,14 +10,7 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
-
-def plural(n, one, few, many):
-    """České skloňování podle počtu: 1 / 2–4 / 0 a 5 a víc."""
-    if n == 1:
-        return f"{n} {one}"
-    if 2 <= n <= 4:
-        return f"{n} {few}"
-    return f"{n} {many}"
+from common import plural
 
 
 if len(sys.argv) < 3:

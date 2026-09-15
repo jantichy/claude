@@ -28,7 +28,10 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source=common.sh
 . "$HERE/common.sh"
 
-WORKDIR="$1"; LOG="$2"; WAV="$3"; NSPK="${4:-auto}"
+WORKDIR="${1:?použití: diarize.sh <workdir> <log> <wav> [počet mluvčích]}"
+LOG="${2:?použití: diarize.sh <workdir> <log> <wav> [počet mluvčích]}"
+WAV="${3:?použití: diarize.sh <workdir> <log> <wav> [počet mluvčích]}"
+NSPK="${4:-auto}"
 
 fail() {
   echo "### DIARIZE FAILED $1" >> "$LOG"
