@@ -36,7 +36,7 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 |---|---|---|
 | Přepsat workflow v témže PR | Nic | **accepted**: repozitář nemá secrets, `GITHUB_TOKEN` je read-only a runner je efemérní, takže cizí kód nemá co ukrást. Podrobně v `.claude/CLAUDE.md`, `## Review`. |
 | PR z forku spustí kontrakt z cizí větve | `fork-pr-contributor-approval` je na `first_time_contributors` | **accepted** pro přispěvatele, který už jednou prošel |
-| Akce nejsou připnuté na SHA | Nic | **accepted**: repozitář nemá secret, který by šlo ukrást, a připnutí bez Dependabota znamená akce, které za půl roku zastarají. Plné zdůvodnění v `.claude/CLAUDE.md`, `## Review`. |
+| Doinstalované nástroje nejsou připnuté na verzi (`brew`, `pip install ruff`) | Nic | **accepted**: repozitář nemá secret, který by šlo ukrást, `GITHUB_TOKEN` je read-only a runner je efemérní. Připnutý `ruff` by navíc znamenal zmrazený lint, protože nové verze hlásí nové nálezy. **Akce samotné připnuté na SHA jsou** od 15. 9. 2026 a hlídá je Dependabot (`.github/dependabot.yml`). |
 
 ## Permission systém (`settings.json`)
 
