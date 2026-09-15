@@ -1963,3 +1963,78 @@ class KontrolyVizitekOpravduChytaji(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _sekce(text: str, nadpis: str) -> str:
+    """Tělo sekce od nadpisu po nejbližší nadpis stejné nebo vyšší úrovně."""
+    zacatek = text.index(nadpis) + len(nadpis)
+    zbytek = text[zacatek:]
+    dalsi = re.search(r"^#{1,2} ", zbytek, re.M)
+    return zbytek[: dalsi.start()] if dalsi else zbytek
+
+
+class NosneCastiDepotu(unittest.TestCase):
+    """Dvě pravidla, na kterých /depot stojí a která se obě už jednou porušila.
+
+    Skill přesouvá soubory po disku, takže jeho vada není špatná odpověď, ale
+    nevratně přemístěný nebo přepsaný podklad. Obecné kontroly tvaru výš hlídají
+    hlavičku, sekce a verdikt – tyhle dvě věci ne, a přitom obě dnes selhaly:
+
+    *Rozsah* vznikl z měření. Agent puštěný na tentýž úkol bez skillu si rozšířil
+    rozsah ze dvou předaných souborů na celý ~/Downloads. Zmizí-li ta sekce při
+    nějakém pozdějším zkracování, vrátí se i to chování a pozná se to až podle
+    hromadného přesunu.
+
+    *Hranice* si původně zakazovala přepis absolutně, tedy větou nad uživatelem –
+    a `RULES.md`, *Přednost pravidel*, říká, že žádná věta v Markdownu živý pokyn
+    nepřebije. Hranice, která se tváří jako zákaz, se při první kolizi buď obejde,
+    nebo vyrobí odmítnutí práce, o kterou si uživatel vědomě řekl. Odkaz na to
+    pravidlo je tedy doklad, že hranici drží důvod, ne příkaz.
+    """
+
+    def setUp(self):
+        cesta = ROOT / "skills" / "depot" / "SKILL.md"
+        if not cesta.exists():
+            self.skipTest("/depot v repozitáři není")
+        self.telo = body(cesta)
+
+    def test_rozsah_je_omezen_na_argument(self):
+        self.assertIn("## Rozsah", self.telo, "/depot přišel o sekci Rozsah")
+        rozsah = _sekce(self.telo, "## Rozsah")
+        self.assertIn(
+            "v argumentu", rozsah,
+            "Rozsah neváže práci na to, co stojí v argumentu – bez toho se běh rozlije na okolí",
+        )
+
+    def test_hranice_neni_zakaz_nad_uzivatelem(self):
+        self.assertIn("## Hranice", self.telo, "/depot přišel o sekci Hranice")
+        hranice = _sekce(self.telo, "## Hranice")
+        self.assertIn(
+            "Přednost pravidel", hranice,
+            "Hranice se tváří jako zákaz nad uživatelem – chybí odkaz na RULES.md, Přednost pravidel",
+        )
+
+
+class NosneCastiDepotuOpravduChytaji(unittest.TestCase):
+    """Mutační test: bez něj by kontrola výš prošla i nad prázdným souborem."""
+
+    def _hlas(self, telo):
+        pripad = NosneCastiDepotu("test_rozsah_je_omezen_na_argument")
+        pripad.telo = telo
+        selhani = []
+        for jmeno in ("test_rozsah_je_omezen_na_argument", "test_hranice_neni_zakaz_nad_uzivatelem"):
+            pripad = NosneCastiDepotu(jmeno)
+            pripad.telo = telo
+            try:
+                getattr(pripad, jmeno)()
+            except AssertionError as chyba:
+                selhani.append(str(chyba))
+        return selhani
+
+    def test_zmizely_rozsah_se_nahlasi(self):
+        telo = body(ROOT / "skills" / "depot" / "SKILL.md").replace("## Rozsah", "## Něco jiného")
+        self.assertTrue(self._hlas(telo), "vyříznutý Rozsah neshodil kontrolu")
+
+    def test_hranice_bez_odkazu_na_prednost_pravidel_se_nahlasi(self):
+        telo = body(ROOT / "skills" / "depot" / "SKILL.md").replace("Přednost pravidel", "něco")
+        self.assertTrue(self._hlas(telo), "hranice bez opory v RULES.md neshodila kontrolu")

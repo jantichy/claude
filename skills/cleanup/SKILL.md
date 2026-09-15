@@ -305,6 +305,17 @@ VÝSTUP: Strukturovaná odpověď na A–F. U každého nálezu uveď soubor a s
 Nezapisuj do žádného souboru.
 ```
 
+**Věta „nezapisuj do žádného souboru“ v zadání nic nedrží** – je to text pro model, ne mechanismus (`~/.claude/RULES.md`, *Přednost pravidel*). Pustíš-li čtenáře jako samostatný proces, **odeber mu nástroje, kterými by zapsal**, ne aby to měl slíbené:
+
+```sh
+claude -p --allowedTools "Read,Grep,Glob" --disallowedTools "Bash,Edit,Write" < prompt.txt
+```
+
+- **Prompt předávej přes stdin**, ne jako argument – oba přepínače berou víc hodnot, takže by spolkly zbytek příkazové řádky a běh spadne na chybějícím promptu.
+- **Seznam nástrojů je jedna hodnota oddělená čárkami**, ne několik slov za sebou.
+- **Proč to nestačí ošetřit plánovacím režimem:** ten zakáže editaci, ale `Bash` propustí, a tím se dá zapsat i commitnout. V repozitáři se zapnutým autocommitem to znamená pushnutou změnu, kterou nikdo neschválil. Doloženo 15. 9. 2026.
+
+
 **Zpracování nálezů:**
 
 - Nálezy, které se týkají téhle session, vrať do Fáze 5 a oprav – mechanické sám, sporné s uživatelem.
