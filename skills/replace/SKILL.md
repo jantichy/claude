@@ -21,8 +21,6 @@ Nejde jen o přejmenování. Stejný postup platí pro jakoukoliv změnu, která
 - **Neaudituje projekt.** Na vnitřní konzistenci je `/consistency`.
 - **Nerozhoduje o termínech napříč projekty.** Který termín se používá místo kterého, drží `/ptydepe`; tenhle skill jeho rozhodnutí jen provede v konkrétním repozitáři.
 
-------
-
 ## Proč to není obyčejný find-replace
 
 Protože se to pokaždé někde zapomene. Typicky:
@@ -35,6 +33,8 @@ Protože se to pokaždé někde zapomene. Typicky:
 - v **git remote a názvu repozitáře**, když se přejmenovává projekt.
 
 Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill vždycky končí **kontrolním průchodem na starý tvar**.
+
+------
 
 ## Fáze 0 – Příprava
 

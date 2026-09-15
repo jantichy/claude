@@ -36,7 +36,7 @@ Skill se doptá na podklady a přístupy, projde web, ukáže nálezy a zeptá s
 ```
 ### Konverze se hlásí ve špatný okamžik
 
-- **závažnost:** kritická (škodí to teď)
+- **závažnost:** KRITICKÉ (škodí to teď)
 - **dopad:** fiktivní tržby v analytice a falešné konverze v reklamě; systém
   se učí na signálu, který nemá vztah ke skutečným objednávkám
 - **doložení:** /kosik, 14:03, purchase se odesílá při zobrazení stránky

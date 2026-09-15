@@ -129,8 +129,6 @@ Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 <zbytek – soubory, výjimky, pravidla hlášení, závažnost, formát – shodný s pracovním specialistou>
 ```
 
-------
-
 ### Zadání pro ověřovatele
 
 Pouští se ve *Fázi 3* na každý nález se závažností KRITICKÉ a STŘEDNÍ, paralelně a v čerstvém kontextu, který nevidí ani panel, ani konverzaci.

@@ -17,6 +17,8 @@ Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skil
 
 Pak je předá do implementačního plánu.
 
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zakládání: navazuje na `/discovery` a předává na `/oponent`.
+
 ## Co skill nedělá
 
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá kontrola – viz *Zákaz implementace*.
@@ -55,8 +57,6 @@ Mají **jinou životnost**. Produktový záměr se mění zřídka; technické �
 - **`architecture.md` nesmí obsahovat zdůvodnění produktu.** Argumentuje z požadavků odkazem, neopisuje je.
 
 Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → `architecture.md`. Ne → `requirements.md`.
-
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zakládání: navazuje na `/discovery` a předává na `/oponent`.
 
 ## Zásady pro celý průběh
 
