@@ -85,4 +85,4 @@ Skill je **instalátor cizího standardu, ne jeho definice** – strukturu proje
 
 ### Požadavky a omezení
 
-Git, a chcete-li zakládat repozitáře rovnou z terminálu, i příkazová řádka GitHubu (u jiných hostitelů si popisek repozitáře nastavíte ručně – skill to řekne). Automatická kontrola po každé odpovědi se opírá o skript `verify.sh` z tohohle repozitáře; bez něj se jen zapíše, čím se co spouští.
+Git, a chcete-li zakládat repozitáře rovnou z terminálu, i příkazová řádka GitHubu (u jiných hostitelů si popisek repozitáře nastavíte ručně – skill to řekne). Automatická kontrola po každé odpovědi potřebuje ještě kontrolní skript z tohohle repozitáře – řekněte si o něj Claudovi spolu se skillem; bez něj se jen zapíše, čím se co spouští.
