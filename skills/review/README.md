@@ -82,4 +82,4 @@ Standardoví specialisté měří soulad s **mými soukromými doménovými stan
 
 ### Požadavky a omezení
 
-Git kvůli určení rozsahu. Volitelně `gitleaks` (hledání tajemství), `semgrep` (statická analýza) a `shellcheck` (skripty) – bez nich příslušná kontrola odpadne a skill to napíše do výpisu. Uvnitř si volá vestavěné kontroly Claude Code na korektnost a bezpečnost. Panel i ověřování běží zčásti na nejsilnějším modelu, takže `full` na velkém projektu je drahý běh.
+Git kvůli určení rozsahu. Volitelně `gitleaks` (hledání tajemství), `semgrep` (statická analýza) a `shellcheck` (skripty) – bez nich příslušná kontrola odpadne a skill to napíše do výpisu. Panel i ověřování běží zčásti na nejsilnějším modelu, takže `full` na velkém projektu je drahý běh.

@@ -21,6 +21,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakl�
 - **Není to kontrola proti standardům.** Na soulad s `~/Dev/context/*` je `/review`.
 - **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
+- **Nevytěžuje session.** Že je všechno dohodnuté zapsané v souborech, hlídá `/cleanup`.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují.
 
 **Vědomé volby, ať je nikdo neřeší znovu** (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*):
@@ -28,18 +29,6 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakl�
 - **Hledisko *Vnitřní rozpor* se s `/consistency` částečně překrývá a je to přijatá cena.** Ano, „sedí čísla a výčty“ najde i `/consistency`. Ale oponentura běží i nad dokumentem, který `/consistency` nevidí (cizí podklad, text mimo projekt), a rozpor mezi dvěma tvrzeními ve věci samé je jiná práce než rozpor mezi součtem a tabulkou. Nález se vrací při každé oponentuře skillu; není to omyl, je to volba.
 - **Katalog se jednou vědomě zmenšil z devatenácti na sedmnáct** a ta hlediska nepatří zpátky: *Hraniční případy* splynuly s *Co chybí* (byl to týž generátor okrajů dvakrát), *Skeptik* s *Předpoklady* (tatáž otázka zprava a zleva) a *Technická proveditelnost* s *Daty* (měla nejchudší zadání a nad datovým modelem sahala po témže). Navrhne-li je někdo znovu jako „chybějící pokrytí“, tohle je odpověď. Naopak **Reverzibilita a závislosti se rozdělila na dva hlediska**, protože držela dvě různé otázky najednou – proto devatenáct minus tři sloučení plus jedno rozdělení dá sedmnáct, ne šestnáct.
 - **Katalog nemá strop na počet hledisek.** Brzdou je jen kontrola překryvu při přidávání (viz Fáze 1). Tvrdý strop by nutil vyhodit hledisko pokaždé, když nějaký skutečně chybí – a chybějící hledisko nevrátí nula nálezů, ale neexistenci.
-
-## Vztah k ostatním skillům
-
-| Otázka | Skill |
-|---|---|
-| Je ten kód správně? | `/review` |
-| Odpovídá to mým doménovým standardům? | `/review` |
-| Nesedí si něco v projektu navzájem? | `/consistency` |
-| **Je to vůbec dobře vymyšlené a bude to fungovat?** | **`/oponent`** |
-| Je všechno ze session zapsané? | `/cleanup` |
-
-------
 
 ## Fáze 0 – Co se oponuje
 
