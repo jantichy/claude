@@ -478,6 +478,12 @@ Grep odpovídá na otázku *„zůstal tam zbytek?“*. Nebezpečnější je ale
 
 **Konkrétně:** řez „od téhle sekce k nejbližšímu nadpisu“ selže, kdykoliv je nejbližší nadpis o úroveň výš nebo o několik sekcí dál. Ověření grepem to nechytí, protože smazané kapitoly to slovo neobsahovaly. Doloženo: úklid jedné sekce smazal šest sousedních kapitol a kontrola prohlásila výsledek za čistý.
 
+**Hranici řezu hledej jako kterýkoli nadpis nebo oddělovač, ne jako nadpis určité úrovně.** Ohraničení „od tohohle nadpisu k nejbližšímu `####`“ vypadá bezpečně a propustí všechno, co mezi nimi stojí o úroveň výš – nadpis kapitoly, nadpis podsekce, vodorovnou linku. Smazané pak není to, co jsi chtěl, ale všechno až k dalšímu nadpisu **téže** úrovně, což bývá o několik sekcí dál.
+
+**Doloženo dvakrát v jednom dni, 15. 9. 2026**, v témže souboru. Poprvé řez „od nadpisu scénáře k nejbližšímu dalšímu nadpisu scénáře“ sahal o pět kapitol dál a **smazal 98 scénářů z 264**; podruhé, po obnovení z gitu, týž vzor odnesl **nadpis celé tematické části**, takže jedenáct scénářů tiše spadlo pod cizí podsekci. Ani jednou to nechytil grep a **ani jednou to nechytily testy** – kontrolovaly odkazy a kotvy, ne objem. Poznal to až čtenář bez kontextu, tedy vrstva o tři kroky dál.
+
+**Z toho plyne i kontrola, která je levnější než diff:** u souboru se známou strukturou si po zásahu **spočítej položky** (`grep -c '^#### '`) a porovnej s číslem před ním. Řez, který snědl víc, než měl, se pozná jedním číslem, kdežto v diffu o tisíci řádcích se to hledá dlouho.
+
 **Platí i pro nástroje**, které mažou za tebe – hromadná náhrada, codemod, `sed -i`. Diff je jediné místo, kde je vidět rozsah zásahu, ne jeho záměr.
 
 ### Při odstranění nechej stopu
