@@ -55,6 +55,8 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 
 - **Nic se nepřepisuje.** Existuje-li cílová cesta, běh se u toho souboru zastaví a zeptá se. Sám od sebe nepřipojuj pořadové číslo ani jinak neuhýbej – v Depotu je název identifikátor, na který odkazuje `sources.md`, a `~/Depot` není verzovaný, takže po přepisu není odkud obnovit.
 
+  **Číslo, které do názvu dal operační systém při stahování, se naopak odstraňuje** – viz *Fáze 3*. Není to uhnutí před kolizí, ale opak: stopa po kolizi v `~/Downloads`, která do Depotu nepatří.
+
   **Není to zákaz nad uživatelem** (`~/.claude/RULES.md`, *Přednost pravidel*), ale pořadí prací opřené o důvod. Dovolení dané dopředu („kdyby tam něco bylo, přepiš to“) je ale vydané naslepo, protože v tu chvíli ještě nikdo neví, co tam leží – **ukaž tedy nejdřív oba soubory** a nech rozhodnout o téhle konkrétní dvojici. Rozhodne-li se uživatel i pak pro přepis, je to jeho volba: proveď ji a **zapiš do závěru, co bylo přepsáno**.
 - **Nerozpoznaný soubor se nepřesouvá nikam**, dokud se o něm nerozhodne. Ani „zatím do Depotu“.
 - **Originál se přesouvá, ne kopíruje.** Dvě kopie téhož podkladu znamenají, že se příště nepozná, která je ta zaevidovaná.
@@ -129,6 +131,12 @@ Vypiš plán celé dávky a **nech ho potvrdit**. Nic se do téhle chvíle nepř
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 **Cílovou cestu ukaž celou**, včetně názvu adresáře, který by v Depotu vznikl. Je to poslední chvíle, kdy se dá opravit popis, který se pak už nepřejmenovává.
+
+**Pořadové číslo od operačního systému z názvu odeber.** Stáhne-li se soubor podruhé, macOS ho pojmenuje `soubor (1).pdf` – to číslo není součást názvu, ale stopa po kolizi v `~/Downloads`. Do Depotu jde `soubor.pdf` a **přejmenování ukaž v plánu**, ať je vidět, že se název mění.
+
+- **Výjimka: jde-li v jedné dávce do téhož cíle víc souborů téhož jména** (`soubor.pdf`, `soubor (1).pdf`, `soubor (2).pdf`), čísla **zůstávají všem**. Bez nich by se přepsaly navzájem a jinak se od sebe nerozliší; odebrat číslo jen některým by navíc tvrdilo, že je mezi nimi rozdíl, který není. Řekni to v plánu.
+- **Vznikne-li odebráním čísla kolize s existující cílovou cestou**, platí *Hranice* – nepřilepuj číslo zpátky, ale zastav se u toho souboru a nech rozhodnout nad oběma.
+- **Nesahej na číslo, které je součástí názvu** – `smlouva (2026).pdf`, `IMG (1) final.jpg`, díl seriálu. Odebírá se jen tvar `název (N).přípona` na samém konci názvu, kde `N` je celé číslo.
 
 ## Fáze 4 – Uložení
 

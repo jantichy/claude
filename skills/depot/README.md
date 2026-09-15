@@ -18,6 +18,7 @@ Podstatné je, že **sám nerozhoduje podle ničeho vlastního.** Všechna pravi
 - **Zařazení a zpracování je jeden úkon, ne dva.** Rozdělené na dvě chvíle se ta druhá nekoná.
 - **Rozsah je přesně to, co zadáte.** Nesáhne na okolní soubory, nezačne uklízet celou složku a nerozbalí podadresáře bez zeptání – tohle je přesně to, na čem obecný asistent selže a proslulé „když už jsem tady“ skončí nevratným hromadným přesunem.
 - **Nic nepřepíše bez vašeho rozhodnutí a nesmaže nikdy nic.** Při kolizi se zastaví, ukáže oba soubory a zeptá se – místo aby přilepil `(1)` a vyrobil duplikát, o kterém pak nikdo neví.
+- **Uloží to pod čistým názvem.** Číslo, které souboru přilepil operační systém při druhém stažení (`smlouva (1).pdf`), do Depotu nepatří a při přesunu zmizí – leda že byste stejným tahem ukládali celou tu kolizní řadu naráz, kde ta čísla jediná odlišují jeden soubor od druhého.
 - **Neptá se v půlce práce.** Všechna rozhodnutí padnou nad plánem, než se hne první soubor.
 - **Citlivé věci nesměruje sám.** Přístupové kódy, smlouvy a osobní doklady vypíše a nechá rozhodnout vás – a kvůli rozpoznání je ani neotevře.
 - **Roste používáním.** Každý neznámý podklad je příležitost doplnit pravidlo, ne otrava navíc.
