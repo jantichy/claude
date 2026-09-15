@@ -58,7 +58,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
   **Není to zákaz nad uživatelem** (`~/.claude/RULES.md`, *Přednost pravidel*), ale pořadí prací opřené o důvod. Dovolení dané dopředu („kdyby tam něco bylo, přepiš to“) je ale vydané naslepo, protože v tu chvíli ještě nikdo neví, co tam leží – **ukaž tedy nejdřív oba soubory** a nech rozhodnout o téhle konkrétní dvojici. Rozhodne-li se uživatel i pak pro přepis, je to jeho volba: proveď ji a **zapiš do závěru, co bylo přepsáno**.
 - **Nerozpoznaný soubor se nepřesouvá nikam**, dokud se o něm nerozhodne. Ani „zatím do Depotu“.
 - **Originál se přesouvá, ne kopíruje.** Dvě kopie téhož podkladu znamenají, že se příště nepozná, která je ta zaevidovaná.
-- **Citlivý obsah se nesměruje automaticky.** Co domény označuje za obsah, o kterém rozhoduje člověk, se vypíše a nechá rozhodnout. Skill takový soubor **neotevírá**, aby zjistil víc.
+- **Citlivý obsah se nesměruje automaticky.** Co doména označuje za obsah, o kterém rozhoduje člověk, se vypíše a nechá rozhodnout. Skill takový soubor **neotevírá**, aby zjistil víc.
 - **Mažeš-li něco, nemažeš.** Skill nemá jediný důvod volat `rm`. Selhal-li přesun, zůstává zdroj na místě a řekne se to.
 
 ------
@@ -68,13 +68,14 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Odchylky:
 
 1. **Skill neběží nad projektem.** Body 1 až 3 vynech a **řekni to nahlas** – pouští se odkudkoliv, typicky nad staženým souborem. Pracovní adresář nehraje roli a stav gitu taky ne.
-2. **Kontrola závislostí.** Ověř, že existuje doména `depot` (přes rozcestník `~/Dev/context/CLAUDE.md`). **Chybí-li, skonči** a řekni, že bez ní není podle čeho směrovat – viz *Fáze 1*. **V režimu `workflow` je to naopak:** chybějící doména je tam běžný výchozí stav, protože právě tím se zakládá. Nabídni její založení a pokračuj; končit by znamenalo, že si první pravidlo nemá kdo napsat.
-3. **Zapisuješ do repozitáře se zapnutým autocommitem.** Doplní-li běh workflow do domény, je to změna v `~/Dev/context/`. Commitni ji **sám a samostatně**, ať ji neposbírá jiná session spolu s něčím nesouvisejícím.
+2. **Kontrola závislostí.** Ověř, že existuje doména `depot` – hledej ji přes rozcestník knowledge base (u autora `~/Dev/context/CLAUDE.md`). **Chybí-li, skonči** a řekni, že bez ní není podle čeho směrovat – viz *Fáze 1*. **V režimu `workflow` je to naopak:** chybějící doména je tam běžný výchozí stav, protože právě tím se zakládá. Nabídni její založení a pokračuj; končit by znamenalo, že si první pravidlo nemá kdo napsat.
+   **Ověř i nástroje, na které se deleguje** – `/transcript` a `/learn`. Chybí-li některý, **neselhávej, ale řekni to před přesunem**: po něm už je soubor jinde a zbude z toho jen hlášení o nespuštěném zpracování.
+3. **Leží-li doména v repozitáři se zapnutým autocommitem**, je doplnění workflow změna v něm. Commitni ji **sám a samostatně**, ať ji neposbírá jiná session spolu s něčím nesouvisejícím. Není-li doména ve verzování, tenhle bod odpadá.
 4. **Rozliš režim od cesty.** První argument je režim jen tehdy, když je to `store` nebo `workflow` **a zároveň neexistuje jako cesta**. Existuje-li soubor toho jména, je to cesta a běží `full`.
 
 ## Fáze 1 – Pravidla domény
 
-Doména je zdroj pravdy. Najdi ji přes rozcestník `~/Dev/context/CLAUDE.md` a přečti si z ní:
+Doména je zdroj pravdy. Najdi ji přes rozcestník knowledge base (u autora `~/Dev/context/CLAUDE.md`) a přečti si z ní:
 
 | Co hledáš | K čemu to je |
 |---|---|
@@ -82,6 +83,7 @@ Doména je zdroj pravdy. Najdi ji přes rozcestník `~/Dev/context/CLAUDE.md` a 
 | **tabulku workflow** – jak se pozná, kam jde, co se pak stane | *Fáze 2* a *Fáze 5* |
 | **pravidla pojmenování cílového místa** | *Fáze 3* |
 | **obsah, o kterém rozhoduje člověk** | *Fáze 2*, vyřazení ze směrování |
+| **vědomé mezery** – co doména schválně nemá a proč | *Fáze 2*, ať nenabízíš zapsat pravidlo tam, kde už jednou padlo rozhodnutí ho nemít |
 | **pravidla zápisu nového workflow** | *Režim `workflow`* |
 
 **Hledej ty věci, ne ta jména.** Doména si soubory pojmenovává po svém a může být rozdělená do víc souborů; rozhoduje obsah, ne nadpis.
@@ -147,7 +149,7 @@ Pro každý uložený podklad spusť to, co má jeho workflow ve sloupci *Zpraco
 
 - **Před každým krokem řekni, co se spustí a nad čím.** Přepis i vytěžení běží desítky minut.
 - **Selhalo-li zpracování, uložení tím není zrušené.** Soubor zůstává na cílovém místě; do závěru jde, co se nepovedlo a čím se to dá dohnat.
-- **Evidenci nepiš.** Řádek v `sources.md` zapisuje `/learn` jako součást vytěžení; druhý zápis odjinud by se s ním rozešel. **Vede-li ji doména** – jinak `/learn` založení evidence nabídne a bez souhlasu ji nezapíše vůbec, takže se tenhle podklad v evidenci neobjeví; do závěru to patří zmínit.
+- **Evidenci nepiš.** Řádek v `sources.md` zapisuje `/learn` jako součást vytěžení, a jen tehdy, **vede-li doména evidenci už teď**; jinak její založení nabídne a bez souhlasu nezapíše nic. Nevznikla-li, patří to do závěru mezi *Nedokončené zpracování* – podklad se v evidenci neobjeví a příště ho nikdo nedohledá.
 
 ## Fáze 6 – Závěr
 
@@ -160,13 +162,13 @@ Pro každý uložený podklad spusť to, co má jeho workflow ve sloupci *Zpraco
 - <soubor> – <důvod: kolize, rozhoduje člověk, nerozpoznáno>
 
 **Přepsáno na pokyn**
-- <cesta> – <čím, a co tam bylo předtím; jinak „nic">
+- <cesta> – <čím, a co tam bylo předtím; jinak „nic“>
 
 **Doména**
-- <nové workflow, nebo „beze změny">
+- <nové workflow, nebo „beze změny“>
 
 **Nedokončené zpracování**
-- <co selhalo a čím se to dá dohnat, nebo „nic">
+- <co selhalo a čím se to dá dohnat, nebo „nic“>
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo.

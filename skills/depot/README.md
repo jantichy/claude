@@ -11,13 +11,13 @@ Podstatné je, že **sám nerozhoduje podle ničeho vlastního.** Všechna pravi
 - **`/depot workflow`** – otázku po otázce s vámi založí nové pravidlo, nebo upraví stávající.
 - Zvládne jeden soubor, víc souborů, masku i adresář. Soubory z jedné události uloží do jednoho místa pohromadě.
 - Nepozná-li, o co jde, nebo sedí-li pravidel víc, **nabídne varianty k výběru** – a u každé rovnou říká, kam by soubor šel a co by se spustilo.
-- Novým pravidlem si rozšíří vlastní tabulku rovnou za běhu, takže se totéž příště neptá.
+- Nové pravidlo vám nabídne zapsat rovnou za běhu, takže se totéž příště neptá.
 
 ## Proč zrovna tenhle
 
 - **Zařazení a zpracování je jeden úkon, ne dva.** Rozdělené na dvě chvíle se ta druhá nekoná.
 - **Rozsah je přesně to, co zadáte.** Nesáhne na okolní soubory, nezačne uklízet celou složku a nerozbalí podadresáře bez zeptání – tohle je přesně to, na čem obecný asistent selže a proslulé „když už jsem tady“ skončí nevratným hromadným přesunem.
-- **Nic nepřepíše a nic nesmaže.** Při kolizi se zastaví a zeptá, místo aby přilepil `(1)` a vyrobil duplikát, o kterém pak nikdo neví.
+- **Nic nepřepíše bez vašeho rozhodnutí a nesmaže nikdy nic.** Při kolizi se zastaví, ukáže oba soubory a zeptá se – místo aby přilepil `(1)` a vyrobil duplikát, o kterém pak nikdo neví.
 - **Neptá se v půlce práce.** Všechna rozhodnutí padnou nad plánem, než se hne první soubor.
 - **Citlivé věci nesměruje sám.** Přístupové kódy, smlouvy a osobní doklady vypíše a nechá rozhodnout vás – a kvůli rozpoznání je ani neotevře.
 - **Roste používáním.** Každý neznámý podklad je příležitost doplnit pravidlo, ne otrava navíc.
@@ -41,7 +41,7 @@ Plán – 3 soubory
 |---|---|---|---|
 | prednaska.m4a | Přepsat nahrávku a vytěžit ji | ~/Depot/20260912 - MeasureCamp - Konverzační analytika/ | /transcript, pak /learn |
 | slajdy.pdf | Vytěžit cizí materiál z akce | tamtéž – jedna událost, jeden adresář | /learn |
-| export-ga4.csv | Uložit ke klientovi | ~/Dev/favi/research/ | nespouští se nic |
+| export-ga4.csv | Uložit ke klientovi | ~/Dev/favi/research/ | nic plošně, /learn jen na zobecnitelné |
 
 Mimo směrování: recovery-codes.txt – přístupové údaje, rozhoduje člověk
 ```
