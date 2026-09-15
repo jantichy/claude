@@ -37,7 +37,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírá
 
 **Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím; krok *Urči rozsah* níž rozvíjí jeho bod 5 o druhý půlkruh. Bod 4 odpadá, průběžnou kontrolu pustil `/review` o krok dřív a tenhle skill na kód nesahá, dokud neprojde nález s uživatelem.
 
-Nad rámec toho nasbírej konvence projektu, ať má Explore agent proti čemu měřit.
+Nad rámec toho nasbírej konvence projektu, ať má agent proti čemu měřit.
 
 ### 0.1 Urči rozsah
 
@@ -90,17 +90,17 @@ Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se s
 
 **Nemá-li projekt, čím to spustit, krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo, položku po položce. Nespuštěná kontrola se nikdy nevypisuje jako nula nálezů: tři přeskočené kroky vypsané jako tři nuly čte uživatel jako tři čisté výsledky. U obsahového či znalostního projektu je normální, že se přeskočí skoro všechno; audit v dalších fázích běží stejně, jen bez téhle vrstvy.
 
-Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označí tagem `[toolchain]` a **neprocházejí posouzením** – nástroj nehalucinuje.
+Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí tagem `[toolchain]` a **neprocházejí posouzením** – nástroj nehalucinuje.
 
 **Běží-li `/consistency` samostatně mimo životní cyklus** (tedy bez předchozího `/review`) a projekt má *Kontrakt příkazů*, řekni uživateli jednou větou, že průběžná kontrola teď prověřená není a že `/review` se dělá dřív.
 
 ## Fáze 1 – Průzkum projektu
 
-**Explore agent je sběr, ne posouzení: výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
+**Agent je sběr, ne posouzení: typ `reader`, výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
 
 **Škálu závažnosti drží `~/.claude/skills/SEVERITY.md`** a je společná se všemi skilly, které hlásí nálezy. Zadání níž si stupně opisuje schválně – je to text pro agenta bez kontextu session, kde je odkaz do nenačteného souboru mrtvý (`SEVERITY.md`, *Kdo ji používá*, výjimka pro zadání subagentů). Doménové čtení stupňů v zadání obecnou definici **zpřesňuje, nenahrazuje**.
 
-Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
+Spusť subagenta typu `reader` s tímto zadáním (předej mu absolutní cestu k projektu, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
 
 ```
 Prohledej zadaný rozsah (viz *Rozsah* výš) a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
@@ -182,7 +182,7 @@ Výstup strukturuj jako JSON pole objektů:
 
 **O nálezech mluv obsahem, ne značkou z výstupu agenta.** Pořadová čísla a zkratky, pod kterými se nálezy vracejí, jsou interní – uživatel je nikdy neviděl, takže „N1 je širší, než agent hlásil“ mu neřekne nic. Napiš, čeho se to týká: *„Chybějící sekce Rizika není jen v `discovery.md` – chybí ve všech třech dokumentech.“* (`~/.claude/RULES.md`, *Interní značky ven nepatří*.)
 
-Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak NÍZKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
+Z JSON výstupu agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak NÍZKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
 
 ### Rozdělení na mechanické a sporné
 

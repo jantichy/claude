@@ -1,6 +1,6 @@
 ---
 name: reader
-description: Posuzuje text, do kterého nesmí sáhnout – čtenář bez kontextu v /cleanup, nezávislý posudek v /oponent. Použij ho všude, kde je úkolem úsudek nad hotovým textem a kde by zápis agenta zkazil právě to, co má posoudit. Nemá shell, takže nemůže nic spustit, změřit ani commitnout – a je to jediný typ agenta, u kterého ta hranice doopravdy drží. Potřebuje-li úkol počty, historii gitu nebo spuštěnou kontrolu, tenhle typ na něj nesedí a použij `Explore`.
+description: Posuzuje text, do kterého nesmí sáhnout – čtenář bez kontextu v /cleanup, nezávislý posudek v /oponent. Použij ho všude, kde je úkolem úsudek nad hotovým textem a kde by zápis agenta zkazil právě to, co má posoudit. Nemá shell, takže nemůže nic spustit, změřit ani commitnout – a je to jediný typ agenta, u kterého ta hranice doopravdy drží. Potřebuje-li úkol dohledat něco na webu, patří na `researcher`; potřebuje-li počty, historii gitu nebo spuštěnou kontrolu, na `Explore`.
 tools: Read, Grep, Glob
 ---
 

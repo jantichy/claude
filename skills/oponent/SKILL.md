@@ -113,6 +113,8 @@ Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku
 
 Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
 
+**Typ agenta podle sloupce *Web*:** hledisko bez ✔ jede na `reader`, hledisko s ✔ na `researcher`. Oba posuzují hotový text a **nemají shell**, takže do dokumentu nemůžou zapsat; `researcher` má navíc `WebSearch` a `WebFetch`. Viz `~/.claude/skills/SKILLS.md`, *Model, effort a delegace*.
+
 **Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Oponentura je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
 
 Zadání pro každého (doplň hledisko, cesty a projektový kontext):
@@ -161,7 +163,7 @@ Do žádného souboru nezapisuj.
 
 **Deduplikuj ještě před ověřením**, ne až po něm: tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď. **Dva nálezy jsou tentýž**, když míří na totéž místo dokumentu a navrhují změnit touž věc – formulace i závažnost se lišit můžou. Sloučený nález si ponech v obou zněních a poznamenej, které hlediska ho našly; Fáze 4 s tím dál pracuje jako se signálem závažnosti.
 
-Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Nejsilnější model**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko. (Effort mu předepsat nejde – `Agent` bere parametr `model`, ale ne `effort`. Proč a co by to zavřelo, stojí v `~/.claude/skills/review/SKILL.md`, *Ověření nálezů*; neopisuju to sem podruhé.)
+Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** typu `reader` – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. Jeho doklad je citace z dokumentu, ne výstup příkazu, takže shell nepotřebuje a nemá ho mít. **Nejsilnější model**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko. (Effort mu předepsat nejde – `Agent` bere parametr `model`, ale ne `effort`. Proč a co by to zavřelo, stojí v `~/.claude/skills/review/SKILL.md`, *Ověření nálezů*; neopisuju to sem podruhé.)
 
 **Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti hledisek vrátí klidně 30 nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat. (Strop je nižší než v `/review`, protože tam ho odlehčuje deterministická vrstva, která část nálezů odčerpá bez ověřování; tady žádná není.)
 

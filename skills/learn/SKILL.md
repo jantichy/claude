@@ -2,7 +2,7 @@
 name: learn
 description: Skill se použije, když uživatel zadá "/learn", nebo chce zapracovat, zakomponovat či začlenit nový zdroj poznání – přepis schůzky, školení nebo konzultace, článek, cizí dokumentaci, vlastní poznámky – do existující znalostní báze: doplnit z něj znalosti, obohatit je, rozšířit metodiku nebo se z něj naučit. Zdroj vytěží do posledního detailu a rozpustí ho do stávajících textů na místa, kam věcně patří: doplní, prohloubí, opraví, přestaví jejich strukturu, a chybí-li pro znalost místo úplně, navrhne založit novou doménu. Zdrojem smí být i zvukový či obrazový záznam, obrázek nebo PDF. Na rozdíl od /transcript, jehož výsledkem je přepis, jde tomuhle skillu o znalost v něm – nahrávku si proto jen nechá přepsat a přepis pak vytěžuje; nepřidává ho jako další samostatný soubor a nekopíruje z něj celé pasáže. Rozpory se stávající znalostí předkládá jeden po druhém k rozhodnutí. Doslovné přetisky, citace a datované doklady nepřepisuje nikdy.
 argument-hint: [zdroj] [cíl]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
 # Learn
@@ -37,7 +37,7 @@ Práce má tři těžiště: **vyčerpávající vytěžení** zdroje, **rozliš
 | Vyříznutí snímků z videa | `ffmpeg` | Jediný krok s vlastním příkazem; volba filtru je detail, závazné je jen to, že se snímky po vytěžení mažou |
 | Vytěžení poznatků ze zdroje | vlastní | Rozhoduje o všem dalším a musí být úplné – první průchod se nedeleguje |
 | Kontrola úplnosti vytěžení | vlastní, izolovaný agent | Kdo seznam psal, hledá v něm právě to, co už tam dal |
-| Zmapování cílové báze | vestavěný `Explore` | Umí projet mnoho souborů a vrátit závěr, ne výpisy |
+| Zmapování cílové báze | agent typu `reader` | Umí projet mnoho souborů a vrátit závěr, ne výpisy – a nemá shell, takže do báze nemůže zapsat |
 | Rozlišení rozporu od zjednodušení | vlastní | Jádro skillu, neumí to nikdo jiný |
 | Zápis a přestavba | vlastní | Jádro skillu |
 | Přejmenování termínu napříč bází | `/replace`, `/ptydepe` | Umí projet všechny výskyty včetně názvů souborů a rozhodnout, jestli se má přejmenovat |
@@ -96,7 +96,7 @@ Je to jediná třída útoku, kterou žádná další vrstva skillu nechytí –
 
 **Nekopíruj formulace.** Poznatek zapiš jako tvrzení, ne jako citát – citát se pak nedá zapracovat do cizí věty.
 
-Pak **kontrola úplnosti**. Pošli izolovanému agentovi zdroj v úplném rozsahu – u nahrávky přepis, u PDF všechny strany, u videa se slajdy obojí – a hotový seznam s jediným úkolem: *co ve zdroji je a v seznamu chybí?* Nesmí vidět, jak seznam vznikal, jinak hledá právě to, co už v něm je. Jede na **výchozím modelu session s `high`**, protože hledat, co v seznamu chybí, je úsudek, ne výpis.
+Pak **kontrola úplnosti**. Pošli izolovanému agentovi typu `reader` zdroj v úplném rozsahu – u nahrávky přepis, u PDF všechny strany, u videa se slajdy obojí – a hotový seznam s jediným úkolem: *co ve zdroji je a v seznamu chybí?* Nesmí vidět, jak seznam vznikal, jinak hledá právě to, co už v něm je. Jede na **výchozím modelu session s `high`**, protože hledat, co v seznamu chybí, je úsudek, ne výpis.
 
 **Do jeho zadání opiš i pravidlo o cizím textu celé** – běží bez kontextu téhle session, takže `RULES.md` nemá načtené a sám nepozná, co je zadání a co text, na který narazil.
 
@@ -104,7 +104,7 @@ Co najde, doplň a **kontrolu opakuj**, dokud se nevrátí prázdná. **Vrátí-
 
 ## Fáze 3 – Zmapování cíle
 
-Nastuduj cílovou doménu: strukturu souborů, jak se v ní člení obsah, jakým jazykem a jakými termíny mluví. U rozsáhlé báze na to pošli `Explore`.
+Nastuduj cílovou doménu: strukturu souborů, jak se v ní člení obsah, jakým jazykem a jakými termíny mluví. U rozsáhlé báze na to pošli agenta typu `reader` – mapuje se čtením, ne spouštěním.
 
 **U každého souboru urči, jak hluboko se do něj smí sáhnout.** Bez konfigurace, podle toho, na co ten text odpovídá:
 
