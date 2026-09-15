@@ -19,6 +19,12 @@ Ze zdrojových dat udělá **jeden samostatný HTML soubor**, který jde vzít, 
 - **Nezkoumá svět venku.** Konkurenci a tržní rizika sbírá `/discovery`; tady se počítá z vlastního měření, ne z cizích produktů.
 - **Nereviduje měření.** Jestli se měří správně a co v datové vrstvě chybí, řeší revize měření podle `~/Dev/context/analytics/`; tenhle skill bere data taková, jaká jsou, a jen přizná, kde jsou slabá.
 
+## Jak je to postavené uvnitř
+
+**Volbu typu grafu, palety, os a legend skill neřeší sám – vyvolává na ni skill `dataviz`** (Fáze 0). Nad velkými daty si k tomu pouští subagenta, aby mu obsah souboru nesnědl kontext. **Obojí je implementační detail, ne rozhraní:** kdyby `dataviz` zmizel nebo se změnil, nahradí ho vlastní pravidla a na tom, co `/report` vyrábí, se nezmění nic.
+
+**Závazné je proti tomu to, co stojí v *Nepřekročitelných požadavcích na výstup* níž** – jeden samostatný HTML soubor bez závislostí, jen agregovaná data a přiznaná nejistota. To se nesmí změnit tiše ani výměnou nástroje.
+
 ## Nepřekročitelné požadavky na výstup
 
 Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni to**, místo abys ho potichu obešel.
