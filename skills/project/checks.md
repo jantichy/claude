@@ -66,6 +66,29 @@ Hotovou a ověřenou podobu má `~/.claude/.github/workflows/verify.yml`; **vezm
 
 **Napiš k tomu test, který ověří, že se workflow s kontraktem nerozešlo** – že pouští právě jeho klíče a žádný příkaz si neopisuje. Je to vynucovací vrstva jako každá jiná (`~/Dev/context/coding/quality.md`, *Vynucovací vrstva se testuje jako kód, obousměrně*); předloha je v `~/.claude/tests/test_hooks.py`.
 
+## Dependabot: podmínka toho, aby připínání dávalo smysl
+
+**Co je v CI staženo za běhu, patří připnout na konkrétní commit** – `uses: actions/checkout@v5` je pohyblivá značka, kterou může majitel akce kdykoliv přesměrovat jinam, a doložené útoky na dodavatelský řetěz (trivy-action, kics-github-action) šly přesně touhle cestou.
+
+**Připnutí samo o sobě je ale jednosměrná sázka:** commit se nezmění pod rukama, jenže zmrazí i chyby, které v něm jsou. Proto se **zakládá spolu s `.github/dependabot.yml`** – ten sleduje, co je připnuté, a sám otevře pull request, jakmile vyjde novější verze. Bez něj je poctivější značka než SHA, které za půl roku nikdo neaktualizuje.
+
+```yaml
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+```
+
+**Ekosystémů přidej tolik, kolik jich projekt má** – `npm`, `composer`, `gomod`, `pip` podle manifestu. `github-actions` patří ke každému projektu s workflow.
+
+**Co pod něj nespadá:** nástroje instalované v shellu (`brew install`, `curl | tar`) a skripty stažené za běhu. Dependabot do shellu nevidí, takže ty zůstávají ruční – a nástroje ze správce balíčků se nepřipínají vůbec, protože připnutý linter znamená zmrazené kontroly.
+
+**Bez remote to nemá smysl** – je to služba GitHubu. U projektu bez remote krok přeskoč a řekni to.
+
+**Neplatí to jen na nové projekty.** Najdeš-li v existujícím workflow nepřipnuté akce, je to nález: buď se připnou a přibude Dependabot, nebo se zapíše, proč ne. Vědomé zamítnutí, které stojí na argumentu „bez Dependabota to zastará“, padá ve chvíli, kdy se Dependabot zavede – **projdi tedy i `## Review` v `CLAUDE.md` a registr obcházení**, jestli tam takový záznam neleží; doloženo 15. 9. 2026, kdy zamítnutí z 13. 9. přežilo v obou.
+
 **Badge do `README.md`** – u veřejného repozitáře je to jediné místo, kde je stav vidět zvenčí.
 
 **Nasazuje se projekt někam?** Zjisti to (`vercel.json`, `netlify.toml`, `.github/workflows/`) a najdeš-li automatické nasazení z produkční větve, zapiš to do `## Nasazení` v `CLAUDE.md` i s upozorněním, že **merge do produkční větve je samotné nasazení** – detail řeší `/release`.
