@@ -68,7 +68,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Odchylky:
 
 1. **Skill neběží nad projektem.** Body 1 až 3 vynech a **řekni to nahlas** – pouští se odkudkoliv, typicky nad staženým souborem. Pracovní adresář nehraje roli a stav gitu taky ne.
-2. **Kontrola závislostí.** Ověř, že existuje doména `depot` (přes rozcestník `~/Dev/context/CLAUDE.md`). **Chybí-li, skonči** a řekni, že bez ní není podle čeho směrovat – viz *Fáze 1*.
+2. **Kontrola závislostí.** Ověř, že existuje doména `depot` (přes rozcestník `~/Dev/context/CLAUDE.md`). **Chybí-li, skonči** a řekni, že bez ní není podle čeho směrovat – viz *Fáze 1*. **V režimu `workflow` je to naopak:** chybějící doména je tam běžný výchozí stav, protože právě tím se zakládá. Nabídni její založení a pokračuj; končit by znamenalo, že si první pravidlo nemá kdo napsat.
 3. **Zapisuješ do repozitáře se zapnutým autocommitem.** Doplní-li běh workflow do domény, je to změna v `~/Dev/context/`. Commitni ji **sám a samostatně**, ať ji neposbírá jiná session spolu s něčím nesouvisejícím.
 4. **Rozliš režim od cesty.** První argument je režim jen tehdy, když je to `store` nebo `workflow` **a zároveň neexistuje jako cesta**. Existuje-li soubor toho jména, je to cesta a běží `full`.
 
@@ -86,7 +86,7 @@ Doména je zdroj pravdy. Najdi ji přes rozcestník `~/Dev/context/CLAUDE.md` a 
 
 **Hledej ty věci, ne ta jména.** Doména si soubory pojmenovává po svém a může být rozdělená do víc souborů; rozhoduje obsah, ne nadpis.
 
-**Nemá-li doména tabulku workflow, skonči.** Vymýšlet si, kam cizí soubor patří, je horší než neudělat nic: přesun je vidět až zpětně a odkazy se utrhnou tiše.
+**Nemá-li doména tabulku workflow, skonči.** Vymýšlet si, kam cizí soubor patří, je horší než neudělat nic: přesun je vidět až zpětně a odkazy se utrhnou tiše. **Netýká se to režimu `workflow`** (*Fáze 0*, bod 2) – ten tabulku teprve zakládá.
 
 ## Fáze 2 – Rozpoznání
 
@@ -182,7 +182,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 Založí nový řádek tabulky, nebo upraví stávající – bez konkrétního souboru. Pouští se, když se pravidlo ujasňuje mimo běžný provoz; za běhu totéž dělá *Fáze 2*, stav *Nesedí žádné*.
 
-1. **Vypiš stávající tabulku** a zeptej se, jestli se zakládá nový řádek, nebo upravuje některý ze stávajících.
+1. **Vypiš stávající tabulku** a zeptej se, jestli se zakládá nový řádek, nebo upravuje některý ze stávajících. **Neexistuje-li doména vůbec**, je to první spuštění: založ ji i s cíli a pořadím rozhodování mezi nimi, než se dostaneš k prvnímu řádku – bez cílů nemá sloupec *Kam* z čeho vybírat.
 2. **Vytěž čtyři sloupce řízeným rozhovorem**, jeden po druhém: jak se to pozná · kam to jde · co se s tím pak stane · jak se pojmenuje cílové místo. **Nedoplňuj chybějící sloupec odhadem** – workflow bez rozpoznávacího znaku se nikdy nevyvolá.
 3. **Ověř to proti pravidlům zápisu z domény** (*Fáze 1*). Zvlášť: rozpoznávací znak nesmí být jen přípona a nový řádek se nesmí překrývat se stávajícím – překrývá-li se, zúži oba, nebo je slučte.
 4. **Ukaž hotový řádek a nech potvrdit**, teprve pak zapiš.
