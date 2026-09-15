@@ -54,7 +54,7 @@ Deterministická vrstva:
 - pokrytí: 84 % (práh 80 %)
 
 Panel: 31 nálezů → 22 po deduplikaci → 22 ověřeno → 13 přežilo:
-- 🔴 Kritické: 1    🟡 Střední: 8    🔵 Kosmetické: 4
+- 🔴 Kritické: 1    🟡 Střední: 8    🔵 Nízké: 4
 ```
 
 ## Co nedělá

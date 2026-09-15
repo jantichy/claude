@@ -55,7 +55,7 @@ Vrať JSON, ne souvislý text:
 {"nalezy": [{
   "nazev": "…",
   "oblast": "<oblast>",
-  "severity": "kritická|vážná|drobná",
+  "severity": "KRITICKÉ|STŘEDNÍ|NÍZKÉ",
   "dopad": "co to působí, ne co to je",
   "basis": "URL + čas + konkrétní požadavek nebo pozorování, podle kterého to jde reprodukovat",
   "reprodukce": "kroky, kterými se to ukáže znovu",

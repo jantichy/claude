@@ -147,7 +147,7 @@ U KAŽDÉHO NÁLEZU UVEĎ:
   „při 20 000 účastnících vyjde ruční párování na 300 hodin práce“ je nález.
 - **Návrh** – dvě až tři konkrétní varianty řešení, ne jedna. Nemáš-li řešení, řekni to
   a označ nález jako otázku k rozhodnutí.
-- **Závažnost** – škálu drží `~/.claude/skills/SEVERITY.md` a je společná se všemi skilly, které hlásí nálezy, ať jdou porovnat napříč běhy. U oponentury se čte jako síla námitky: **KRITICKÉ** boří předpoklad, na kterém dokument stojí; **STŘEDNÍ** mění závěr nebo rozsah; **KOSMETICKÉ** zpřesňuje.
+- **Závažnost** – škálu drží `~/.claude/skills/SEVERITY.md` a je společná se všemi skilly, které hlásí nálezy, ať jdou porovnat napříč běhy. U oponentury se čte jako síla námitky: **KRITICKÉ** boří předpoklad, na kterém dokument stojí; **STŘEDNÍ** mění závěr nebo rozsah; **NÍZKÉ** zpřesňuje.
 
 PRAVIDLA:
 - Co je v pořádku, nepiš. Žádné shrnutí kladů, žádné „jinak je to dobře promyšlené“.
@@ -201,7 +201,7 @@ Do žádného souboru nezapisuj.
 
 **Výsledky ověření hlas obsahem, ne značkou.** Identifikátory, pod kterými se nálezy vracejí od oponentů a ověřovatelů, jsou interní – uživatel je nikdy neviděl a „N1 je širší, než oponent hlásil“ mu neřekne nic. Pojmenuj, čeho se to týká (`~/.claude/RULES.md`, *Interní značky ven nepatří*). Čísla z přehledu v kroku 5 níž jsou naopak v pořádku – ta uživatel viděl i s obsahem.
 
-**KOSMETICKÉ nálezy se neověřují** – ne proto, že by ověření bylo drahé (stojí strojový čas), ale proto, že se ani nevypořádávají jednotlivě: jdou ve Fázi 5 jedním blokem, takže na nich nestojí žádné rozhodnutí, které by ověření chránilo. **Vyvrácené zahoď a spočítej je do souhrnu**; kolik jich bylo, se říká nahlas, ne potichu.
+**NÍZKÉ nálezy se neověřují** – ne proto, že by ověření bylo drahé (stojí strojový čas), ale proto, že se ani nevypořádávají jednotlivě: jdou ve Fázi 5 jedním blokem, takže na nich nestojí žádné rozhodnutí, které by ověření chránilo. **Vyvrácené zahoď a spočítej je do souhrnu**; kolik jich bylo, se říká nahlas, ne potichu.
 
 ------
 
@@ -231,9 +231,9 @@ Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který F
 
 ## Fáze 5 – Průchod nálezy
 
-Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – kosmetické jdou nakonec jedním blokem (viz níž).
+Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – nízké jdou nakonec jedním blokem (viz níž).
 
-**KOSMETICKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Zahodit všechny* / *Vrátit se k tomu později*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Neprošly navíc ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany. (Bez ověření jdou dál i nálezy nad stropem – ty se ale procházejí jednotlivě, protože jsou závažné; jen se u nich řekne, že ověřené nejsou.)
+**NÍZKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Zahodit všechny* / *Vrátit se k tomu později*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Neprošly navíc ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany. (Bez ověření jdou dál i nálezy nad stropem – ty se ale procházejí jednotlivě, protože jsou závažné; jen se u nich řekne, že ověřené nejsou.)
 
 U každého nejdřív vypiš:
 
@@ -295,7 +295,7 @@ Ve verdiktu:
 - **Panel:** A oponentů → B nálezů hrubě → C po dedupu → D ověřeno, E neověřeno
 - **Spotřeba:** [N agentů: X oponentů, Y ověřovatelů · na jakém modelu a effortu]
 
-**Nálezy:** N celkem – 🔴 X kritických, 🟡 Y středních, 🔵 Z kosmetických
+**Nálezy:** N celkem – 🔴 X kritických, 🟡 Y středních, 🔵 Z nízkých
 - Zapracováno: N
 - Zamítnuto: N (zapsáno do decisions.md i s důvodem)
 - Odloženo: N (todo.md)

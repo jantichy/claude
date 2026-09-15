@@ -74,17 +74,17 @@ ZÁVAŽNOST (škálu drží `~/.claude/skills/SEVERITY.md`, tady je opsaná schv
 agent ten soubor nemá načtený):
 - KRITICKÉ – bezpečnost, ztráta dat, nepřístupnost pro část uživatelů, nevratná akce bez pojistky
 - STŘEDNÍ – reálný dopad na správnost, použitelnost nebo udržovatelnost
-- KOSMETICKÉ – bez praktického dopadu
+- NÍZKÉ – bez praktického dopadu
 
 Závažnost si přiděluješ sám, ale rozhoduje o tom, kolik kontroly nález dostane:
-KOSMETICKÝ se neověřuje a část z nich se opraví bez ptaní. Proto u KOSMETICKÉHO
+NÍZKÝ se neověřuje a část z nich se opraví bez ptaní. Proto u NÍZKÉHO
 napiš do `basis` konkrétní pravidlo nebo bod standardu, o který se opíráš – ne
 dojem. Nemáš-li ho čím podložit, je to STŘEDNÍ, nebo to nehlas.
 
 VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
 [
   {
-    "severity": "KRITICKÉ" | "STŘEDNÍ" | "KOSMETICKÉ",
+    "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
     "specialist": "<jméno specialisty>",
     "basis": "o co se nález opírá – scénář z requirements, bod ASVS, pravidlo standardu",
     "title": "krátký název nálezu",

@@ -47,7 +47,7 @@ Cíl: http://localhost:3000 · Rozsah: změny na větvi – 6 obrazovek
 Vektory: vstupy, stavy a pořadí, oprávnění, vykreslení
 
 Nálezů: 11, z toho 3 se nepodařilo zopakovat, zbývá 8:
-- 🔴 Kritické: 1    🟡 Střední: 5    🔵 Kosmetické: 2
+- 🔴 Kritické: 1    🟡 Střední: 5    🔵 Nízké: 2
 
 Nezkoušelo se: platby (míří na cizí platební bránu)
 ```

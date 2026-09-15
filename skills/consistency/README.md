@@ -41,7 +41,7 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 ## Výsledky konzistenčního auditu
 
 Nalezeno 23 problémů celkem:
-- 🔴 Kritické: 2    🟡 Střední: 14    🔵 Kosmetické: 7
+- 🔴 Kritické: 2    🟡 Střední: 14    🔵 Nízké: 7
 
 Mechanických (jednoznačná bezriziková oprava): 9 – ty opravím rovnou a jen je vypíšu.
 Sporných: 14 – ty projdeme spolu od nejzávažnějších.

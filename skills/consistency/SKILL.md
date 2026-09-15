@@ -66,7 +66,7 @@ Pokud existují, přečti:
 
 **Vede-li projekt `docs/glossary.md`** (poznáš z `## Struktura a dokumentace` v `CLAUDE.md`), přečti ho jako **závaznou konvenci pojmenování**. Je to jediné místo, kde stojí, jak se čemu v téhle doméně říká, takže odchylka od něj není kosmetika, ale rozpor s dohodou – hlas ji důsledněji než odchylku, kterou jsi odvodil z kódu. Platí to obousměrně: **pojem, který v kódu žije a v glosáři chybí, je taky nález**, protože slovník, který se přestal doplňovat, začne lhát.
 
-Z těchto souborů sestav **soupis konvencí** – co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako kosmetickou odchylku; naopak rozpor s dohodnutými konvencemi hlas důsledněji.
+Z těchto souborů sestav **soupis konvencí** – co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako nízkou odchylku; naopak rozpor s dohodnutými konvencemi hlas důsledněji.
 
 ### 0.3 Načti seznam ignorovaných položek
 
@@ -133,7 +133,7 @@ STŘEDNÍ (technický dluh):
 - i18n a UI texty: stejný UI koncept různě pojmenovaný napříč obrazovkami ("Smazat" vs "Odstranit" vs "Vymazat"); nesystematický mix jazyků v UI textech
 - Zastarání: feature flagy s trvale stejnou hodnotou na všech check-pointech (ready to inline/remove); pozastavené migrace (částečná DB migrace bez follow-upu)
 
-KOSMETICKÉ (konzistence stylu):
+NÍZKÉ (konzistence stylu):
 - Mixing naming conventions ve stejném kontextu (camelCase vs snake_case u proměnných, kebab-case vs PascalCase u souborů)
 - Inconsistent export styly (named vs default export bez zjevného důvodu)
 - Komentáře které nepopisují kód pod nimi (zastaralé, mylné)
@@ -157,7 +157,7 @@ GROUPING (povinné):
 - Nálezy, které pocházejí z toolchain výstupů předaných v zadání (tsc/lint/knip), uveď, ale označ tagem `toolchain` – uživatel může chtít řešit přes nástroj, ne ručně.
 
 Pro každý nalezený problém uveď:
-- Kategorie (KRITICKÉ / STŘEDNÍ / KOSMETICKÉ)
+- Kategorie (KRITICKÉ / STŘEDNÍ / NÍZKÉ)
 - Stručný popis problému (1-2 věty)
 - Konkrétní soubory a řádky (file:line); u batch uveď root + počet + 3 příklady
 - Navrhované nejlepší řešení (konkrétní akce, ne vágní "refaktoruj to")
@@ -167,7 +167,7 @@ Pro každý nalezený problém uveď:
 Výstup strukturuj jako JSON pole objektů:
 [
   {
-    "severity": "KRITICKÉ" | "STŘEDNÍ" | "KOSMETICKÉ",
+    "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
     "title": "krátký název problému",
     "description": "popis problému",
     "locations": ["soubor:řádek", ...],
@@ -182,7 +182,7 @@ Výstup strukturuj jako JSON pole objektů:
 
 **O nálezech mluv obsahem, ne značkou z výstupu agenta.** Pořadová čísla a zkratky, pod kterými se nálezy vracejí, jsou interní – uživatel je nikdy neviděl, takže „N1 je širší, než agent hlásil“ mu neřekne nic. Napiš, čeho se to týká: *„Chybějící sekce Rizika není jen v `discovery.md` – chybí ve všech třech dokumentech.“* (`~/.claude/RULES.md`, *Interní značky ven nepatří*.)
 
-Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak KOSMETICKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
+Z JSON výstupu Explore agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak NÍZKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
 
 ### Rozdělení na mechanické a sporné
 
@@ -203,7 +203,7 @@ Zobraz uživateli přehled před tím, než začneš procházet problémy:
 
 - 🔴 Kritické: N
 - 🟡 Střední: N
-- 🔵 Kosmetické: N
+- 🔵 Nízké: N
 
 **Z toho:**
 

@@ -116,6 +116,10 @@ Zapne pro daný projekt režim, kdy Claude po každém logickém celku automatic
 
 Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní a k tématu si dohledá nejpodobnější texty z archivu jako živé vzory. Tu bázi umí i postavit: `collect` provede posbíráním všeho, co člověk kdy napsal – exporty ze sociálních sítí, články z webů, zálohy po webech, které už nestojí –, a `profile` z toho vydestiluje popis hlasu a později ho doplňuje o to, co přibylo. Moje názory a pointy si ale nikdy nevymýšlí, ty musím dodat sám.
 
+### [`/depot`](skills/depot/) – stažený soubor doputuje tam, kam patří, a rovnou se zpracuje
+
+Řeknu mu soubor nebo celou dávku z Downloads a on pozná, o jaký podklad jde, uloží ho na správné místo pod správným názvem a hned spustí, co po tom má následovat – přepis nahrávky, vytěžení do knowledge base, zápis do evidence. Rozsah je přesně to, co zadám: neuklízí okolí, nic nepřepíše a při kolizi se zeptá místo toho, aby přilepil `(1)`. Konkrétní pravidla, co kam patří, v tomhle repozitáři nejsou – skill je jen rámec a tabulku si čte z mojí privátní knowledge base.
+
 ### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
 
 Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je mu podezřelé, vystaví faktury a nechá v mailu rozepsaný draft s fakturou a výkazem hodin v příloze. **Odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: dohledat čas, který jsem si zapomněl natrackovat. Sazby a dohody s klienty v tomhle repozitáři nejsou, skill je jen rámec.

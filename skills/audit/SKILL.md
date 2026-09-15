@@ -211,7 +211,7 @@ Sestav `registry.md` – jeden soubor, **nález = sekce**, řazeno podle dopadu.
 
 - **id:** stabilní, cituje se mezi běhy
 - **oblast:** kapitola katalogu
-- **závažnost:** kritická (škodí to teď) / vážná (nejbližší etapa) / drobná (při příležitosti)
+- **závažnost:** KRITICKÉ / STŘEDNÍ / NÍZKÉ – škálu drží `~/.claude/skills/SEVERITY.md` a je společná se všemi skilly, které hlásí nálezy. Pro audit cizího webu se čte takhle: **KRITICKÉ** škodí to teď, **STŘEDNÍ** patří do nejbližší etapy, **NÍZKÉ** se opraví při příležitosti.
 - **dopad:** co to působí, ne co to je
 - **doložení:** URL, čas, konkrétní požadavek nebo screenshot
 - **stav ověření:** potvrzeno průchodem / doloženo jen konfigurací / nedá se ověřit
@@ -252,7 +252,7 @@ Tady začíná režim **`report`**, spouští-li se samostatně nad hotovým reg
 
 - **Doména:** <jméno> – <plný / omezený běh, a proč>
 - **Web:** <adresa>, prošlo <N> stránek
-- **Nálezy:** <N> potvrzených (<N> kritických, <N> vážných, <N> drobných), <N> nepřežilo ověření
+- **Nálezy:** <N> potvrzených (<N> kritických, <N> středních, <N> nízkých), <N> nepřežilo ověření
 - **Spotřeba:** [N agentů: X specialistů, Y ověřovatelů · na jakém modelu a effortu]
 
 **Výstupy**

@@ -202,7 +202,7 @@ a domněnky vyrábí panel v /review, ne ty.
 VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
 [
   {
-    "severity": "KRITICKÉ" | "STŘEDNÍ" | "KOSMETICKÉ",
+    "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
     "vector": "<vektor>",
     "title": "krátký název",
     "repro": ["krok 1", "krok 2", "..."],
@@ -215,7 +215,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
 Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 ```
 
-**Závažnost:** škálu drží `~/.claude/skills/SEVERITY.md` a je **společná** se všemi skilly, které hlásí nálezy – stupeň musí napříč nimi měřit totéž, jinak zpětně nejde poznat, čím byl odůvodněný. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **KOSMETICKÉ** – technická hláška bez dalšího dopadu.
+**Závažnost:** škálu drží `~/.claude/skills/SEVERITY.md` a je **společná** se všemi skilly, které hlásí nálezy – stupeň musí napříč nimi měřit totéž, jinak zpětně nejde poznat, čím byl odůvodněný. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **NÍZKÉ** – technická hláška bez dalšího dopadu.
 
 ------
 
@@ -246,7 +246,7 @@ Deduplikuj: jedna příčina se projeví přes víc vektorů. Nech jeden nález 
 
 - 🔴 Kritické: N
 - 🟡 Střední: N
-- 🔵 Kosmetické: N
+- 🔵 Nízké: N
 
 **Nezkoušelo se:** [vektory vynechané kvůli hranicím – platby, odesílání mailů, …]
 ```

@@ -89,7 +89,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Nahrazuje dřívější „drift“** (2026-09-07). Anglicky je *configuration drift* zavedený pojem, česky ne – a skloňoval se po česku („druhý druh driftu“). Hlavně ale bylo „rozejití“ **už zavedené v týchž souborech**: `/skill` měl v jedné větě obojí („druhý druh **driftu** vedle **rozejití** s normou“).
 
-**Ne „odchylka“** – `/consistency` ji používá pro jednotlivý nález („kosmetická odchylka“). Rozejití je proces, odchylka jeho výsledek.
+**Ne „odchylka“** – `/consistency` ji používá pro jednotlivý nález („nízká odchylka“). Rozejití je proces, odchylka jeho výsledek.
 
 **Anglicky zůstávají jména konkrétních vad** uvnitř anglických výčtů: *lockfile vs manifest drift*, *browserslist drift*. **A časový „drift“ byl něco jiného** – zastaralá poznámka `TODO`; přejmenováno na *zastarání*, aby jedno jméno nekrylo dvě vady.
 

@@ -165,7 +165,7 @@ Dřív takový nález ověření **vynechával** a přehrával si ho orchestrát
 
 **Vyvrácené nálezy zahoď a jen je spočítej do souhrnu – kromě KRITICKÝCH.** Ty vypiš ve Fázi 5 jedním řádkem na nález i s důvodem vyvrácení a s `guard`, o který se opírá. Je to pět řádků a je to jediné místo, kde je vidět, co bylo umlčeno; bez něj se falešně negativní ověření nedá odhalit vůbec.
 
-KOSMETICKÉ nálezy se neověřují – ověření by stálo víc než jejich oprava.
+NÍZKÉ nálezy se neověřují – ověření by stálo víc než jejich oprava.
 
 U nálezů z deterministické vrstvy (Fáze 1) se ověření **nedělá**.
 
@@ -185,7 +185,7 @@ Hotovou frontu ulož do **`.claude/run/review.json`** (`~/.claude/STRUCTURE.md`,
 
 ## Fáze 4 – Zpracování výsledků
 
-Slož nálezy z deterministické vrstvy a z panelu (ty, které přežily ověření) do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, KOSMETICKÉ; v rámci kategorie root položky před jejich následky.
+Slož nálezy z deterministické vrstvy a z panelu (ty, které přežily ověření) do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, NÍZKÉ; v rámci kategorie root položky před jejich následky.
 
 **Deduplikuj napříč specialisty.** Překrývají se schválně – bezpečnost a `coding.md` najdou tutéž díru, `web/web.md` a `web/admin.md` totéž tlačítko, `web/web.md` a `text/typography.md` tutéž typografii. Když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba podklady.
 
@@ -242,7 +242,7 @@ Při pochybnosti patří nález mezi sporné.
 
 - 🔴 Kritické: N
 - 🟡 Střední: N
-- 🔵 Kosmetické: N
+- 🔵 Nízké: N
 
 **Z toho [batch] hromadných** (>20 výskytů): N
 
