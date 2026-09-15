@@ -60,7 +60,7 @@ Nezapracuje se
 
 ## Jak si ho nainstalovat
 
-Řekněte svému Claudovi:
+Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/learn
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.

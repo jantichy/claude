@@ -215,7 +215,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
 Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 ```
 
-**Závažnost:** škálu drží `~/.claude/skills/SEVERITY.md` a je **společná** s `/review`, protože nálezy odsud i odtamtud končí v jedné kapitole `## Review` a podle dvou různých škál pak zpětně nejde poznat, čím byl stupeň měřený. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **KOSMETICKÉ** – technická hláška bez dalšího dopadu.
+**Závažnost:** škálu drží `~/.claude/skills/SEVERITY.md` a je **společná** se všemi skilly, které hlásí nálezy – stupeň musí napříč nimi měřit totéž, jinak zpětně nejde poznat, čím byl odůvodněný. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **KOSMETICKÉ** – technická hláška bez dalšího dopadu.
 
 ------
 

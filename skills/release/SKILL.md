@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 ## Co skill dělá
 
-Nasadí hotovou práci do produkce – s branami před, s plánem návratu a s ověřením po.
+Nasadí hotovou práci do produkce – s blokujícími kontrolami před, s plánem návratu a s ověřením po.
 
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **mimo uzavírání, až za ním**, a předchází mu `/attack`. To není kosmetika: uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
 

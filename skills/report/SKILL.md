@@ -21,7 +21,7 @@ Ze zdrojových dat udělá **jeden samostatný HTML soubor**, který jde vzít, 
 
 ## Jak je to postavené uvnitř
 
-**Volbu typu grafu, palety, os a legend skill neřeší sám – vyvolává na ni skill `dataviz`** (Fáze 0). Nad velkými daty si k tomu pouští subagenta, aby mu obsah souboru nesnědl kontext. **Obojí je implementační detail, ne rozhraní:** kdyby `dataviz` zmizel nebo se změnil, nahradí ho vlastní pravidla a na tom, co `/report` vyrábí, se nezmění nic.
+**Volbu typu grafu, palety, os a legend skill neřeší sám – vyvolává na ni skill `dataviz`** (Fáze 0, bod 3). Nad velkými zdrojovými daty si navíc čtení nedělá sám, ale posílá na ně subagenta, aby mu obsah souboru nesnědl kontext (Fáze 0, bod 1) – s `dataviz` to nesouvisí. **Obojí je implementační detail, ne rozhraní:** kdyby `dataviz` zmizel nebo se změnil, nahradí ho vlastní pravidla a na tom, co `/report` vyrábí, se nezmění nic.
 
 **Závazné je proti tomu to, co stojí v *Nepřekročitelných požadavcích na výstup* níž** – jeden samostatný HTML soubor bez závislostí, jen agregovaná data a přiznaná nejistota. To se nesmí změnit tiše ani výměnou nástroje.
 
