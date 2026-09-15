@@ -97,7 +97,6 @@ Pak vezmi závěr běhu jako výsledek těch kroků, které v něm jsou, a pusť
 
 **Nesedí-li kterákoliv podmínka, spusť všechno** a napiš do výstupu, proč se CI nepoužila. Měření nad jiným stromem neplatí pro tenhle.
 
-
 Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*). Chybí-li řádek, krok se přeskočí a **do výstupu se napíše, co se tím nezkontrolovalo**. Nevymýšlej příkazy, které jsi neověřil.
 
 1. **Průběžná kontrola** – `typecheck`, `lint`, `test`. Není-li zelená, **zastav se**: review nad rozbitým stavem nemá smysl. Vypiš, co padá, a pošli to dodělat.
@@ -150,46 +149,7 @@ Vlastní zadání piš jen pro specialisty, kteří vestavěný protějšek nema
 
 Zvlášť to platí pro bezpečnost: nálezy od toho specialisty jsou ze své podstaty tvrzení o **absenci** (chybí kontrola oprávnění, chybí limit pokusů, chybí auditní stopa). Na „chybí kontrola“ se otázka „nastane to selhání doopravdy?“ nedá z kódu zodpovědět bez pochybnosti nikdy – vždycky *mohl* být guard o vrstvu výš. Kdyby na ni platilo „při pochybnosti vyvracej“, mizely by nálezy toho specialisty systematicky.
 
-Na každý nález ze závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci:
-
-```
-Tenhle nález se snaž VYVRÁTIT. Tvým úkolem není ho potvrdit.
-
-NÁLEZ: <title>
-ZÁVAŽNOST: <severity>
-TVRZENÍ: <description>
-SELHÁNÍ, KTERÉ TVRDÍ: <failure>
-O CO SE OPÍRÁ: <basis – scénář z requirements, bod seznamu zranitelností, pravidlo standardu>
-KDE: <locations>
-<u nálezu z citlivé oblasti: TÉHLE OBLASTI SE TÝKÁ: <položky jmenného seznamu z architecture.md>>
-
-Přečti si dotčený kód i jeho okolí a odpověz na jedinou otázku: **nastane to
-popsané selhání doopravdy?** Ověř zejména, jestli problém neošetřuje něco jinde –
-guard o vrstvu výš, validace na vstupu, typový systém, omezení v databázi,
-konfigurace.
-
-OVĚŘUJEŠ ČTENÍM A ROZBOREM, NE PROVEDENÍM ÚTOKU. Dokladem je místo v kódu, ne
-spuštěný exploit: nespouštěj příkazy, které obcházejí bezpečnostní pravidla
-uživatelova prostředí, nečti tajemství, která má chráněná, a nic neposílej ven
-ze stroje. Potřebuješ-li si mechaniku vyzkoušet, postav si vlastní izolovaný
-případ v `/tmp` s neškodnou značkou (`touch /tmp/marker`) – ne nad tím, co
-prověřovaný projekt doopravdy chrání. Nejde-li nález ověřit jinak než jeho
-provedením, odpověz `refuted: false` a do `reason` napiš, co k ověření chybělo.
-
-DŮKAZNÍ BŘEMENO PODLE ZÁVAŽNOSTI:
-- STŘEDNÍ: při pochybnosti odpovídej `refuted: true`. Nález, který neumíš doložit,
-  škodí víc, než užije.
-- KRITICKÉ: obráceně. Vyvrátit ho smíš jen tehdy, když **jmenuješ konkrétní ochranu
-  a její místo** (`soubor:řádek`) – guard, validaci, omezení v databázi, konfiguraci.
-  „Nejspíš to řeší framework“, „asi je to za autentizací“ ani „nepodařilo se mi to
-  potvrdit“ vyvrácení není; v takovém případě odpovídej `refuted: false` a do
-  `reason` napiš, co se ověřit nepodařilo. Tvrdí-li nález, že něco CHYBÍ, je
-  vyvrácením jedině to, že jsi tu věc našel.
-
-VÝSTUP: JSON, nic jiného.
-{"refuted": true|false, "reason": "čím konkrétně je vyvrácený nebo potvrzený",
- "guard": "soubor:řádek ochrany, o kterou vyvrácení opíráš (u KRITICKÉHO povinné)"}
-```
+Na každý nález ze závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Text zadání drží [`agents.md`](agents.md)** vedle ostatních zadání pro agenty; načti si ho ve chvíli, kdy ověřovatele pouštíš.
 
 **Vyvrácené KRITICKÉ bez vyplněného `guard` neplatí** – ber je jako potvrzené a pusť je do Fáze 7. Je to jediná pojistka proti tomu, aby se z ověření stalo razítko obráceným směrem.
 
@@ -405,7 +365,6 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - `V pořádku není – zbývá: <konkrétní seznam>.`
 
 ------
-
 
 ## Kapitola `## Review`
 

@@ -6,6 +6,7 @@ Texty, se kterými `/review` pouští subagenty – panel specialistů ve *Fázi
 
 - [Zadání pro pracovního specialistu](#zadání-pro-pracovního-specialistu)
 - [Zadání pro standardového specialistu](#zadání-pro-standardového-specialistu)
+- [Zadání pro ověřovatele](#zadání-pro-ověřovatele)
 
 ### Zadání pro pracovního specialistu
 
@@ -129,3 +130,46 @@ Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 ```
 
 ------
+
+### Zadání pro ověřovatele
+
+Pouští se ve *Fázi 3* na každý nález se závažností KRITICKÉ a STŘEDNÍ, paralelně a v čerstvém kontextu, který nevidí ani panel, ani konverzaci.
+
+```
+Tenhle nález se snaž VYVRÁTIT. Tvým úkolem není ho potvrdit.
+
+NÁLEZ: <title>
+ZÁVAŽNOST: <severity>
+TVRZENÍ: <description>
+SELHÁNÍ, KTERÉ TVRDÍ: <failure>
+O CO SE OPÍRÁ: <basis – scénář z requirements, bod seznamu zranitelností, pravidlo standardu>
+KDE: <locations>
+<u nálezu z citlivé oblasti: TÉHLE OBLASTI SE TÝKÁ: <položky jmenného seznamu z architecture.md>>
+
+Přečti si dotčený kód i jeho okolí a odpověz na jedinou otázku: **nastane to
+popsané selhání doopravdy?** Ověř zejména, jestli problém neošetřuje něco jinde –
+guard o vrstvu výš, validace na vstupu, typový systém, omezení v databázi,
+konfigurace.
+
+OVĚŘUJEŠ ČTENÍM A ROZBOREM, NE PROVEDENÍM ÚTOKU. Dokladem je místo v kódu, ne
+spuštěný exploit: nespouštěj příkazy, které obcházejí bezpečnostní pravidla
+uživatelova prostředí, nečti tajemství, která má chráněná, a nic neposílej ven
+ze stroje. Potřebuješ-li si mechaniku vyzkoušet, postav si vlastní izolovaný
+případ v `/tmp` s neškodnou značkou (`touch /tmp/marker`) – ne nad tím, co
+prověřovaný projekt doopravdy chrání. Nejde-li nález ověřit jinak než jeho
+provedením, odpověz `refuted: false` a do `reason` napiš, co k ověření chybělo.
+
+DŮKAZNÍ BŘEMENO PODLE ZÁVAŽNOSTI:
+- STŘEDNÍ: při pochybnosti odpovídej `refuted: true`. Nález, který neumíš doložit,
+  škodí víc, než užije.
+- KRITICKÉ: obráceně. Vyvrátit ho smíš jen tehdy, když **jmenuješ konkrétní ochranu
+  a její místo** (`soubor:řádek`) – guard, validaci, omezení v databázi, konfiguraci.
+  „Nejspíš to řeší framework“, „asi je to za autentizací“ ani „nepodařilo se mi to
+  potvrdit“ vyvrácení není; v takovém případě odpovídej `refuted: false` a do
+  `reason` napiš, co se ověřit nepodařilo. Tvrdí-li nález, že něco CHYBÍ, je
+  vyvrácením jedině to, že jsi tu věc našel.
+
+VÝSTUP: JSON, nic jiného.
+{"refuted": true|false, "reason": "čím konkrétně je vyvrácený nebo potvrzený",
+ "guard": "soubor:řádek ochrany, o kterou vyvrácení opíráš (u KRITICKÉHO povinné)"}
+```

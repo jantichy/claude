@@ -487,10 +487,22 @@ class NosneCasti(unittest.TestCase):
 
         Skill to o sobě píše sám: „bez třetí vrstvy je panel k ničemu“. Kdyby ta
         fáze vypadla, výstup by se navenek nezměnil – jen by přestal být pravdivý.
+
+        **Měří se dvě věci zvlášť a to rozdělení je nosné.** Fáze musí stát
+        ve `SKILL.md`, protože ta nese průběh skillu; text zadání pro agenta smí
+        žít i ve vedlejším souboru, kam ho posílá `SKILLS.md`, *Délka a progresivní
+        odhalení*. Sloučit obojí do jednoho hledání nad všemi soubory skillu nejde:
+        řetězce z fáze se vyskytují i v zadání, takže smazání celé `Fáze 3` ze
+        `SKILL.md` by prošlo. Doloženo mutačně 15. 9. 2026 – právě tahle díra
+        vznikla při přesunu zadání do `agents.md` a test ji nechytil.
         """
-        text = body(ROOT / "skills/review/SKILL.md")
-        for kus in ("Ověření nálezů", "refuted", "Tenhle nález se snaž VYVRÁTIT"):
-            self.assertIn(kus, text, f"/review přišel o ověřování nálezů: chybí {kus!r}")
+        skill = body(ROOT / "skills/review/SKILL.md")
+        for kus in ("Fáze 3 – Ověření nálezů", "refuted"):
+            self.assertIn(kus, skill, f"/review přišel o fázi ověřování: chybí {kus!r}")
+
+        vedlejsi = "\n".join(body(p) for p in sorted((ROOT / "skills/review").glob("*.md")))
+        self.assertIn("Tenhle nález se snaž VYVRÁTIT", vedlejsi,
+                      "/review přišel o zadání pro ověřovatele")
 
     def test_cleanup_hleda_nevyporadana_temata(self):
         """Skill sám tvrdí, že tohle je nejčastější ztráta v dlouhé konverzaci.
