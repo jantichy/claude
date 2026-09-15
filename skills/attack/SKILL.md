@@ -87,7 +87,7 @@ Navíc si zjisti tohle – a teprve pak se ptej na potvrzení:
 1. **Rozsah změn** – **postupem z `~/.claude/skills/PREFLIGHT.md`, bod 5**, včetně toho, co dělat, když se hlavní větev nenajde. Neopisuj ho sem: dřív tu stál zkrácený řetěz bez `master` a bez poslední větve, takže `/attack` selhal tam, kde `/review` prošel, přestože obojí tvrdí „stejně“.
    *Worktree layout* (`~/.claude/WORKTREE.md`): pouštěj to ve worktree větve, ne v kořeni kontejneru.
 
-2. **Jak se to spouští** – z `## Kontrakt příkazů` v projektovém `CLAUDE.md` (*Kontrakt příkazů*). Zajímá tě `dev`, případně `build` a `preview`. **Chybí-li, nevymýšlej příkaz** – zeptej se, čím se aplikace lokálně spouští, a nabídni, že to rovnou doplníš do kontraktu.
+2. **Jak se to spouští** – z `## Kontrakt příkazů` v projektovém `CLAUDE.md` (*Kontrakt příkazů*). Zajímá tě `dev`, případně `build`. **Chybí-li, nevymýšlej příkaz** – zeptej se, čím se aplikace lokálně spouští, a nabídni, že to rovnou doplníš do kontraktu.
 
 3. **Dřív zamítnuté nálezy** – kapitola `## Review` v projektovém `CLAUDE.md`. Formát, mechaniku i **ověření, jestli umlčení ještě platí**, definuje `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*; řiď se jí, včetně toho, že záznam nad změněným kódem se do filtru nedává. Co projde filtrem, vlož do zadání útočníků jako *VĚDOMÉ VÝJIMKY (nehlásit)*.
 
