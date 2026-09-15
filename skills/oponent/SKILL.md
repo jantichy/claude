@@ -147,7 +147,7 @@ U KAŽDÉHO NÁLEZU UVEĎ:
   „při 20 000 účastnících vyjde ruční párování na 300 hodin práce“ je nález.
 - **Návrh** – dvě až tři konkrétní varianty řešení, ne jedna. Nemáš-li řešení, řekni to
   a označ nález jako otázku k rozhodnutí.
-- **Závažnost** – KRITICKÉ / STŘEDNÍ / KOSMETICKÉ, stejná škála jako v `/review` a `/consistency`, ať jdou nálezy z různých skillů porovnat. U oponentury se čte jako síla námitky: **KRITICKÉ** boří předpoklad, na kterém dokument stojí; **STŘEDNÍ** mění závěr nebo rozsah; **KOSMETICKÉ** zpřesňuje.
+- **Závažnost** – škálu drží `~/.claude/skills/SEVERITY.md` a je společná se všemi skilly, které hlásí nálezy, ať jdou porovnat napříč běhy. U oponentury se čte jako síla námitky: **KRITICKÉ** boří předpoklad, na kterém dokument stojí; **STŘEDNÍ** mění závěr nebo rozsah; **KOSMETICKÉ** zpřesňuje.
 
 PRAVIDLA:
 - Co je v pořádku, nepiš. Žádné shrnutí kladů, žádné „jinak je to dobře promyšlené“.

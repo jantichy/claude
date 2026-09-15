@@ -17,20 +17,6 @@ Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skil
 
 Pak je předá do implementačního plánu.
 
-## Proč dva dokumenty a ne jeden
-
-Mají **jinou životnost**. Produktový záměr se mění zřídka; technické řešení s každým rozhodnutím o technologii. V jednom souboru se při výměně databáze edituje tentýž dokument, ve kterém stojí popis cílové skupiny – a produktová část se tím postupně obrušuje. Platí tu *Cílová skupina určuje umístění* z `~/.claude/RULES.md`.
-
-**Nerozejdou se, protože se nepřekrývají.** Hranice je tvrdá:
-
-- **Do požadavků patří omezení**, do návrhu řešení **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je produktové omezení a patří do `requirements.md`. „Použijeme SQLite, protože…“ je volba a patří do `architecture.md`.
-- **`requirements.md` nesmí obsahovat architekturu.** Ani „nejspíš to bude na Vercelu“. Jakmile to tam napíšeš, začne se to rozcházet s `architecture.md`.
-- **`architecture.md` nesmí obsahovat zdůvodnění produktu.** Argumentuje z požadavků odkazem, neopisuje je.
-
-Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → `architecture.md`. Ne → `requirements.md`.
-
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zakládání: navazuje na `/discovery` a předává na `/oponent`.
-
 ## Co skill nedělá
 
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá kontrola – viz *Zákaz implementace*.
@@ -57,6 +43,20 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 **Řekni mu to výslovně**, když ho vyvoláváš. Jinak si založí vlastní adresářový strom vedle toho tvého. Totéž platí pro plán, ale ten už si hlídá `/breakdown`.
 
 **Zadání pro plán je `docs/architecture.md`**, ne `requirements.md`. Plán argumentuje z návrhu řešení; požadavky jdou jako doplňkový kontext, aby bylo vidět, proč se to staví. O předání se stará `/breakdown`.
+
+## Proč dva dokumenty a ne jeden
+
+Mají **jinou životnost**. Produktový záměr se mění zřídka; technické řešení s každým rozhodnutím o technologii. V jednom souboru se při výměně databáze edituje tentýž dokument, ve kterém stojí popis cílové skupiny – a produktová část se tím postupně obrušuje. Platí tu *Cílová skupina určuje umístění* z `~/.claude/RULES.md`.
+
+**Nerozejdou se, protože se nepřekrývají.** Hranice je tvrdá:
+
+- **Do požadavků patří omezení**, do návrhu řešení **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je produktové omezení a patří do `requirements.md`. „Použijeme SQLite, protože…“ je volba a patří do `architecture.md`.
+- **`requirements.md` nesmí obsahovat architekturu.** Ani „nejspíš to bude na Vercelu“. Jakmile to tam napíšeš, začne se to rozcházet s `architecture.md`.
+- **`architecture.md` nesmí obsahovat zdůvodnění produktu.** Argumentuje z požadavků odkazem, neopisuje je.
+
+Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → `architecture.md`. Ne → `requirements.md`.
+
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zakládání: navazuje na `/discovery` a předává na `/oponent`.
 
 ## Zásady pro celý průběh
 

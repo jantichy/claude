@@ -13,6 +13,15 @@ Proveď audit vnitřní konzistence projektu. Cíl: najít vše, co si v projekt
 
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírání: navazuje na `/review` a předává na `/cleanup`.
 
+## Co skill nedělá
+
+- **Nehledá chyby v kódu.** Na korektnost provedených změn je `/review` – ten uvnitř volá vestavěné `/code-review` jako jednoho ze svých specialistů, takže poslat uživatele rovnou na něj by ho připravilo o zbytek panelu i o ověření nálezů.
+- **Nekontroluje soulad s doménovými standardy.** Na odchylky od předpisů v `~/Dev/context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat standard.
+- **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
+- **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
+- **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
+- **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky životního cyklu nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
+
 ## Rozsah
 
 - **`/consistency`** nebo **`/consistency branch`** (výchozí) – soubory dotčené prací na aktuální větvi **a soubory, které na ně odkazují**. Ten druhý půlkruh je podstatný: nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví.
@@ -23,15 +32,6 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírá
 **`full` se vyplatí jednou za čas a před `/release`**, ne po každé feature. U staršího projektu předem upozorni, kolik souborů se bude procházet, a při řádově stovkách se zeptej přes `AskUserQuestion`, jestli pokračovat, nebo omezit rozsah na konkrétní adresář – stejně jako to dělá `/review full`.
 
 ------
-
-## Co skill nedělá
-
-- **Nehledá chyby v kódu.** Na korektnost provedených změn je `/review` – ten uvnitř volá vestavěné `/code-review` jako jednoho ze svých specialistů, takže poslat uživatele rovnou na něj by ho připravilo o zbytek panelu i o ověření nálezů.
-- **Nekontroluje soulad s doménovými standardy.** Na odchylky od předpisů v `~/Dev/context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat standard.
-- **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
-- **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
-- **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
-- **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky životního cyklu nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
 
 ## Fáze 0 – Příprava: kontext a konvence
 
@@ -97,6 +97,8 @@ Výstupy si zapamatuj a předej Explore agentovi. Nálezy z toolchainu se označ
 ## Fáze 1 – Průzkum projektu
 
 **Explore agent je sběr, ne posouzení: výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
+
+**Škálu závažnosti drží `~/.claude/skills/SEVERITY.md`** a je společná se všemi skilly, které hlásí nálezy. Zadání níž si stupně opisuje schválně – je to text pro agenta bez kontextu session, kde je odkaz do nenačteného souboru mrtvý (`SEVERITY.md`, *Kdo ji používá*, výjimka pro zadání subagentů). Doménové čtení stupňů v zadání obecnou definici **zpřesňuje, nenahrazuje**.
 
 Spusť Explore subagenta s tímto zadáním (předej mu absolutní cestu k projektu, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
 

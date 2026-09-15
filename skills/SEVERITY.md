@@ -1,6 +1,6 @@
 # Škála závažnosti nálezu
 
-Jedna škála pro všechny skilly, které hlásí nálezy. Stojí mimo ně, protože ji sdílí víc než jeden a nálezy z nich končí ve **společné** kapitole `## Review` v projektovém `CLAUDE.md` – podle dvou různých škál by pak zpětně nešlo poznat, čím byl stupeň odůvodněný.
+Jedna škála pro všechny skilly, které hlásí nálezy. Stojí mimo ně, protože **stupeň musí napříč skilly měřit totéž** – jinak zpětně nejde poznat, čím byl odůvodněný, a nálezy z různých běhů se nedají porovnat ani seřadit. U `/review` a `/attack` to platí dvojnásob, protože jejich nálezy končí v jedné a téže kapitole `## Review` v projektovém `CLAUDE.md`.
 
 ## Stupně
 
@@ -18,6 +18,6 @@ Z toho plyne pravidlo, které platí všude: **u kosmetického nálezu musí `ba
 
 ## Kdo ji používá
 
-`/review` a `/attack` – oba zapisují do téže kapitoly `## Review`. Přibude-li další skill, který hlásí nálezy, odkáže sem taky; **neopisuje si ji** (`~/.claude/RULES.md`, *Single source of truth*).
+`/review`, `/attack`, `/consistency` a `/oponent`. První dva zapisují do téže kapitoly `## Review`, `/consistency` do `## Consistency` a `/oponent` do dokumentu, který oponuje – **sdílená kapitola tedy není podmínkou**, sdílené měřítko ano. Každý z nich si nad obecnými stupni podává vlastní doménové čtení (útok jinak než oponentura), ale **stavět vlastní taxonomii vedle téhle se nesmí**. Přibude-li další skill, který hlásí nálezy, odkáže sem taky; **neopisuje si ji** (`~/.claude/RULES.md`, *Single source of truth*).
 
 **Výjimka pro zadání subagentů:** text, který jde agentovi bez kontextu session, si stupně **opisuje celé**, protože odkaz do souboru, který nemá načtený, je mrtvý. Platí to jen na zadání, ne na tělo skillu.

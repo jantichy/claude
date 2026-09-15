@@ -13,6 +13,12 @@ Nasadí hotovou práci do produkce – s branami před, s plánem návratu a s o
 
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **mimo uzavírání, až za ním**, a předchází mu `/attack`. To není kosmetika: uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
 
+## Co skill nedělá
+
+- **Neopravuje.** Najde-li kontrola problém, skill **skončí** a pošle to zpátky do `/implement` nebo `/review`. Neopravuj v předvečer nasazení – změna, která neprošla review, je přesně ta, která spadne.
+- **Nerozhoduje o obsahu vydání.** Co se nasazuje, je to, co je na větvi. Vybírat commity na poslední chvíli je cesta k tomu nasadit půlku feature.
+- **Nezakládá infrastrukturu.** Nastavení prostředí, domén a proměnných je jednorázová práce, ne součást každého vydání.
+
 ## Tvrdá pravidla
 
 Tahle pětice platí bez výjimky a bez ohledu na to, jak triviální změna to je:
@@ -52,12 +58,6 @@ Ostatní větve včetně `main` se pak nasazují jako **preview**, což je čist
 - **Vypnutí automatického nasazování**: `"git": {"deploymentEnabled": false}` ve `vercel.json` a deploy výhradně příkazem. Nejtvrdší varianta, ale přijdeš i o preview.
 
 **Co dělat, když projekt nasazuje z `main`.** Nepřenastavuj to sám uprostřed vydání – změna produkční větve je zásah do infrastruktury. Řekni to nahlas, nabídni nastavení jako samostatný krok, a **do té doby ber merge do `main` jako nasazení** se vším, co z toho v tomhle skillu plyne.
-
-## Co skill nedělá
-
-- **Neopravuje.** Najde-li kontrola problém, skill **skončí** a pošle to zpátky do `/implement` nebo `/review`. Neopravuj v předvečer nasazení – změna, která neprošla review, je přesně ta, která spadne.
-- **Nerozhoduje o obsahu vydání.** Co se nasazuje, je to, co je na větvi. Vybírat commity na poslední chvíli je cesta k tomu nasadit půlku feature.
-- **Nezakládá infrastrukturu.** Nastavení prostředí, domén a proměnných je jednorázová práce, ne součást každého vydání.
 
 ## Co se nasazuje
 

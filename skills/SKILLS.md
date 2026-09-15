@@ -98,6 +98,7 @@ Cenou za to je křehkost – překlep nebo přejmenovaný nástroj se neprojeví
 ## Co skill dělá
 ## Co skill nedělá
 ## Jak je to postavené uvnitř      ← jen deleguje-li ven
+## <předběžné podmínky>            ← nepovinné, viz níž
 ## Fáze 0 – Příprava
 ## Fáze 1..N – …
 ## Časté chyby                     ← nepovinná
@@ -119,6 +120,12 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 **`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
 
 **`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
+
+**`## <předběžné podmínky>`** – nepovinný blok jedné nebo víc sekcí mezi *Jak je to postavené uvnitř* a *Fází 0*. Patří sem **to, co platí pro celý běh a musí být přečtené dřív, než první fáze začne**: rozsah, na kterém skill pracuje (`## Rozsah`), hranice, které nesmí překročit (`## Hranice`), zásady platné napříč fázemi (`## Zásady pro celý průběh`), podmínky spuštění (`## Kdy se pouští a kdy se přeskakuje`). Jméno sekce je na skillu; závazné je jen umístění.
+
+**Kritérium, kdy sem sekce smí:** vztahuje se k **víc než jedné fázi**. Co platí pro jedinou fázi, patří do ní – sekce před fázemi ji jinak odtrhne od místa, kde se používá, a čtenář ji tam nenajde. Nespleť si to s **přílohou**: ta stojí za závěrem, protože se čte jen někdy; tenhle blok se čte vždycky a proto stojí před fázemi.
+
+**Proč to norma uznává, místo aby to zakázala:** používá to většina skillů a zákaz by znamenal buď nacpat rozsah a hranice do `Co skill nedělá`, kam nepatří, nebo je odsunout za závěr, kde by je nikdo nepřečetl včas. Sekce, kterou norma nezná a všichni ji mají, není odchylka – je to mezera v normě.
 
 **`## Fáze 0 – Příprava`** – odkaz na `~/.claude/skills/PREFLIGHT.md` a **jen odchylky tohohle skillu**. Nikdy sem neopisuj obsah odtamtud.
 

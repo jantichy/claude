@@ -13,6 +13,16 @@ Uživatel chce něco přejmenovat nebo změnit **všude**. Skill najde úplně v
 
 Nejde jen o přejmenování. Stejný postup platí pro jakoukoliv změnu, která se má promítnout napříč projektem: jiná hodnota, jiná konvence, jiná struktura zápisu.
 
+## Co skill nedělá
+
+- **Nerozhoduje, jestli se má přejmenovat.** To je rozhodnutí uživatele; skill ho provede.
+- **Nesahá mimo projekt.** Cizí podklady a read-only adresáře se nepřepisují.
+- **Nemění chování.** Ukáže-li se, že přejmenování vyžaduje i změnu logiky (migrace dat, přesměrování URL), zastaví se a řekne to.
+- **Neaudituje projekt.** Na vnitřní konzistenci je `/consistency`.
+- **Nerozhoduje o termínech napříč projekty.** Který termín se používá místo kterého, drží `/ptydepe`; tenhle skill jeho rozhodnutí jen provede v konkrétním repozitáři.
+
+------
+
 ## Proč to není obyčejný find-replace
 
 Protože se to pokaždé někde zapomene. Typicky:
@@ -25,16 +35,6 @@ Protože se to pokaždé někde zapomene. Typicky:
 - v **git remote a názvu repozitáře**, když se přejmenovává projekt.
 
 Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill vždycky končí **kontrolním průchodem na starý tvar**.
-
-## Co skill nedělá
-
-- **Nerozhoduje, jestli se má přejmenovat.** To je rozhodnutí uživatele; skill ho provede.
-- **Nesahá mimo projekt.** Cizí podklady a read-only adresáře se nepřepisují.
-- **Nemění chování.** Ukáže-li se, že přejmenování vyžaduje i změnu logiky (migrace dat, přesměrování URL), zastaví se a řekne to.
-- **Neaudituje projekt.** Na vnitřní konzistenci je `/consistency`.
-- **Nerozhoduje o termínech napříč projekty.** Který termín se používá místo kterého, drží `/ptydepe`; tenhle skill jeho rozhodnutí jen provede v konkrétním repozitáři.
-
-------
 
 ## Fáze 0 – Příprava
 
