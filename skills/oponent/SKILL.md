@@ -21,7 +21,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **čtvrtý krok zakl�
 - **Není to kontrola proti standardům.** Na soulad s `~/Dev/context/*` je `/review`.
 - **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
-- **Nepíše zadání ani plán.** Produktovou specifikaci a návrh řešení dělá `/specify` před ním, rozpad na úkoly `/breakdown` po něm; tenhle skill jen posoudí, co `/specify` napsal.
+- **Nepíše zadání ani plán.** Sám nenavrhuje – jen posuzuje, co napsal `/specify`, a rozpad na úkoly nechává `/breakdown`.
 - **Nevytěžuje session.** Že je všechno dohodnuté zapsané v souborech, hlídá `/cleanup`.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují.
 

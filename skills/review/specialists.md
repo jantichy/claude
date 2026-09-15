@@ -1,6 +1,6 @@
 # Katalog specialistů
 
-Kdo se v panelu `/review` zapíná a kdy. Vytažené ze `SKILL.md`, protože je to referenční katalog k nahlédnutí při sestavování panelu, ne text, který se čte v každém běhu. Texty zadání pro agenty drží [`agents.md`](agents.md) – s jedinou výjimkou: zadání pro *Agentní infrastrukturu* stojí tady, protože proti tomu specialistovi nestojí žádný standard a bez tabulek výš by se nedalo použít.
+Kdo se v panelu `/review` zapíná a kdy. Vytažené ze `SKILL.md`, protože je to referenční katalog k nahlédnutí při sestavování panelu, ne text, který se čte v každém běhu. Texty zadání pro agenty drží [`agents.md`](agents.md) – s jedinou výjimkou, zadáním pro *Agentní infrastrukturu*, které stojí tady; proč, je napsané u něj.
 
 - [Pracovní specialisté](#pracovní-specialisté)
 - [Standardoví specialisté](#standardoví-specialisté)

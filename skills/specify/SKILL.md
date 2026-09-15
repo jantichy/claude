@@ -15,8 +15,6 @@ Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skil
 | **`docs/requirements.md`** | Co stavíme a proč | Zadavatel, produkt, obchod – a ty za půl roku |
 | **`docs/architecture.md`** | Jak to postavíme | Ten, kdo to bude implementovat |
 
-Pak je předá do implementačního plánu.
-
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zakládání: navazuje na `/discovery` a předává na `/oponent`.
 
 ## Co skill nedělá
