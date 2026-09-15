@@ -117,6 +117,8 @@ Když dev server poběží ve víc větvích, poperou se o port. Řeš `.env.loc
 
 `.claude/settings.local.json` se **z `main/` nepřebírá** – žije v kořeni kontejneru, protože odtud se pouští session a odtud si ho Claude Code čte. Do `main/` ani do větví nepatří vůbec.
 
+**Je nepovinný a vzniká sám**, až když se v projektu udělí první povolení; v tabulce výš stojí kvůli umístění, ne proto, že by tam musel být. **Jeho absence tedy není vada** – znamená, že se nic projektového neudělilo a platí globální nastavení z `~/.claude/settings.json`. Nezakládej ho ručně jen proto, že chybí.
+
 ## `main/` se nemaže a nepracuje se v něm
 
 1. **Nikdy nemaž `main/`** – žije v něm netrackovaný lokální stav, který v gitu není a nikde se nezálohuje.
