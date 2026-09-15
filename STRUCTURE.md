@@ -209,6 +209,10 @@ Existuje **jen spolu s `todo.md`** – bez fronty, proti které se vymezuje, by 
 
 Zapisuj hned, jak rozhodnutí padne. Z odstupu se zdůvodnění rekonstruuje špatně nebo vůbec.
 
+**Datum rozhodnutí patří do prvního odstavce, ne do nadpisu.** Je-li soubor členěný na kapitoly, píše se `**Rozhodnuto 15. 9. 2026.**` na začátek těla, kdežto nadpis nese jen to, o čem kapitola je. **Důvod je mechanický: nadpis je kotva, a kotva je veřejná adresa.** Datum v něm z ní dělá adresu, která se rozbije při každé opravě data – a rozbije se tiše, protože odkazující soubor o té změně neví. Datum navíc v textu stejně stojí, takže v nadpisu je redundantní.
+
+**Netýká se to počtu v nadpisu** u katalogu členěného na sekce („Akce nad objednávkou (9)“). Ten čtenáři pomáhá při skenování a je to vědomá výměna: platí se za něj tatáž křehkost kotvy, ale něco se za ni dostane. U data se nedostane nic.
+
 **Sekce `## Co proklouzlo`** drží jeden řádek na každý produkční defekt, který nechytila žádná vrstva – ani nástroj, ani panel v `/review`, ani útok, ani sledovací okno po nasazení:
 
 ```
