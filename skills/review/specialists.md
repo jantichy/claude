@@ -14,8 +14,8 @@ Ptají se, jestli je to správně:
 
 | Specialista | Ptá se | Zapíná se, když v rozsahu je | Typ |
 |---|---|---|---|
-| **Korektnost** | dělá to, co má, scénář po scénáři? | jakýkoliv kód | `Explore` |
-| **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven, **a vždy změna manifestu nebo lockfile závislostí** | `Explore` |
+| **Korektnost** | dělá to, co má, scénář po scénáři? | jakýkoliv kód | – (vestavěné `/code-review`) |
+| **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven, **a vždy změna manifestu nebo lockfile závislostí** | – (vestavěné `/security-review`); vlastní agent navíc `Explore` |
 | **Data a stavy** | migrace, konzistence, souběh, idempotence | datový model, migrace, stavový automat, fronta, plánované úlohy | `Explore` |
 | **Provoz a chyby** | co se stane, když to spadne? | volání cizích systémů, I/O, dlouhé operace, cokoliv s timeoutem | `Explore` |
 | **Testy** | co není pokryté a které testy jsou falešně zelené? | jakýkoliv kód, u kterého projekt má `test` v kontraktu příkazů | `Explore` |

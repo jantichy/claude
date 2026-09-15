@@ -36,7 +36,7 @@ Práce má tři těžiště: **vyčerpávající vytěžení** zdroje, **rozliš
 | Čtení obrázků a PDF | vlastní | Vytěžuje se rovnou při čtení, mezikrok navíc by jen ubral kontext |
 | Vyříznutí snímků z videa | `ffmpeg` | Jediný krok s vlastním příkazem; volba filtru je detail, závazné je jen to, že se snímky po vytěžení mažou |
 | Vytěžení poznatků ze zdroje | vlastní | Rozhoduje o všem dalším a musí být úplné – první průchod se nedeleguje |
-| Kontrola úplnosti vytěžení | vlastní, izolovaný agent | Kdo seznam psal, hledá v něm právě to, co už tam dal |
+| Kontrola úplnosti vytěžení | agent typu `reader` | Kdo seznam psal, hledá v něm právě to, co už tam dal |
 | Zmapování cílové báze | agent typu `reader` | Umí projet mnoho souborů a vrátit závěr, ne výpisy – a nemá shell, takže do báze nemůže zapsat |
 | Rozlišení rozporu od zjednodušení | vlastní | Jádro skillu, neumí to nikdo jiný |
 | Zápis a přestavba | vlastní | Jádro skillu |
