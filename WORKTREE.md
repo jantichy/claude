@@ -144,7 +144,24 @@ Chce-li uživatel začít **jinou** věc, nemerguj tu rozdělanou – založ ved
 
 ## Dokončení větve
 
-*Až na výslovný pokyn uživatele.*
+*Až na výslovný pokyn uživatele.* **Jak se merguje, rozhoduješ sám a neptáš se** – pokyn „přimerguj“ míří na výsledek, ne na postup.
+
+**Nejdřív zjisti, jestli merge narazí na konflikt:**
+
+```bash
+git -C <projekt>/main pull --ff-only                              # main/ na úroveň remote
+git -C <projekt> merge-tree --write-tree --quiet main <vetev>     # 0 = bez konfliktu, 1 = konflikt
+```
+
+**Bez konfliktu** mergni rovnou do `main` sekvencí níž.
+
+**S konfliktem nejdřív přihraj `main` do větve** a konflikty vyřeš tam: ve worktree větve `git merge main`, vyřeš, commitni, pusť průběžnou kontrolu projektu a pushni. Teprve pak merge do `main`, který už konflikt nemá. Konflikty jsou tytéž, liší se místo, kde se řeší:
+
+- **`main` není ani chvíli napůl mergnutý.** Stojí na něm ostatní session; rozdělané řešení konfliktů v `main/` by viděly, a zaseklé by ho tam nechalo.
+- **Spojený stav projde kontrolou dřív, než dorazí do `main`.** Při přímém merge vznikne neověřený rovnou na hlavní větvi.
+- **Řešení konfliktů zůstane dohledatelné** jako vlastní commit větve, ne schované v merge commitu.
+
+Zpráva merge commitu do větve není omezená – hook hlídá jen hlavní větev. **Ptej se jen tehdy, když konflikt nejde vyřešit mechanicky**, protože obě strany rozhodly tutéž věc jinak – to je rozhodnutí uživatele, ne postup mergování.
 
 ```bash
 cd <projekt>/main
