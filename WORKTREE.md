@@ -157,7 +157,7 @@ git push origin --delete <vetev>   # jen pokud byla pushnutá
 
 Před mergem musí být `main/` čistý – `git merge` nad rozpracovaným stromem neprojde.
 
-**Větev kola návrhu** (`/specify`) se neslučuje, dokud v ní neproběhl zápis před sloučením – přidělí kapitole číslo, zapíše kolo do `done.md` a smaže jeho blok z `todo.md`. Neproběhl-li, pusť v ní nejdřív `/specify`.
+**Větev kola návrhu** (`/specify`) se neslučuje, dokud v ní neproběhl zápis před sloučením (`~/.claude/skills/specify/SKILL.md`, *Zápis před sloučením*). Pozná se podle toho, že v jejím `docs/done.md` stojí záznam kola s touhle větví a v `docs/todo.md` už jeho blok není. Neproběhl-li, pusť v ní nejdřív `/specify`.
 
 ### Zpráva merge commitu shrnuje práci, ne jméno větve
 

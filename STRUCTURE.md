@@ -168,7 +168,8 @@ Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Pa
 ```markdown
 ### Kolo o <tématu>
 
-- **Větev:** `docs/<slug>`
+- **Stav:** čeká | rozhoduje se | rozhodnuto
+- **Větev:** `<větev podle zvyku projektu>`
 - **Dokument:** `docs/<téma>.md`
 - **Čeká na:** <kola, bez jejichž výsledku nejde začít, nebo „nic“>
 - **Sahá na:** <sdílené dokumenty, do kterých kolo nejspíš zapíše>
@@ -290,7 +291,7 @@ Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem,
 **Sekce `## Kola návrhu`** zrcadlí stejnojmennou sekci `todo.md` a drží jeden záznam za každé dokončené kolo návrhu:
 
 ```markdown
-- **Kolo o <tématu> (2026-09-14)** · `docs/<téma>.md` · [rozhodnutí](decisions.md#<kotva>)
+- **Kolo o <tématu> (2026-09-14)** · větev `<větev>` · `docs/<téma>.md` · [rozhodnutí](decisions.md#<kotva>)
   - **Rozhodlo:** <co padlo, věcně, včetně zamítnutého hlavního směru>
   - **Uzavřelo:** <odložené otázky, které kolo vyřešilo, nebo „nic“>
   - **Neotevřelo:** <odložené otázky, které kolo nechalo být, a kam se přesunuly, nebo „nic“>

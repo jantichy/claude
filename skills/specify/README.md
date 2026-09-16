@@ -17,7 +17,7 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 5. **Sepíše i scénáře, glosář a ceník**, vede-li je projekt. Scénáře jsou taxativní seznam toho, co uživatel s produktem dělá, krok za krokem – slouží pak i testování, nápovědě a FAQ. Glosář drží pojmenování domény, ceník to, co z tarifů a limitů plyne pro produkt.
 6. **Pozná, kdy specifikace nedává smysl.** Je-li to změna v existujícím kódu nebo jednorázová otázka, řekne to a zastaví se – nenechá se zatlačit do psaní specifikace na jednosouborovou změnu.
 7. **Zvládne i projekt bez kódu** – kurz, pozicování, evidenci. Tam napíše produktovou část a místo návrhu řešení nabídne rozpis kroků.
-8. **Větší záměr rozdělí na tematická kola.** Nejdřív zmapuje celý záměr a rozdělí ho na okruhy – třeba daně, upomínání, administraci, platební bránu – a každý zapíše jako samostatný úkol se vším, co k němu patří. Kola pak můžete řešit jedno po druhém, nebo klidně v pěti souběžných sessions a větvích. Každé kolo se rozhodne do posledního detailu a zanechá po sobě záznam, co rozhodlo a na co nesáhlo. Nakonec skill kola sešije a teprve nad celkem navrhne řešení.
+8. **Větší záměr rozdělí na tematická kola.** Nejdřív zmapuje celý záměr a rozdělí ho na okruhy – třeba daně, upomínání, administraci, platební bránu – a každý zapíše jako samostatný úkol se vším, co k němu patří. Kola pak můžete řešit jedno po druhém, nebo – má-li projekt pracovní adresář pro každou větev zvlášť – klidně v pěti souběžných sessions a větvích. Každé kolo se rozhodne do posledního detailu a zanechá po sobě záznam, co rozhodlo a na co nesáhlo. Nakonec skill kola sešije a teprve nad celkem navrhne řešení.
 9. **Dá se spustit i uprostřed** – navázat návrhem na hotové požadavky, rozšířit stávající návrh o novou funkci, nebo zadání revidovat.
 10. **Vlastní kontrola po každém dokumentu.** Nezávislou oponenturu a další kroky nespouští sám, jen v závěru řekne, co pustit a v jakém pořadí.
 
@@ -92,4 +92,4 @@ Skill je z části **obálka nad pluginem [superpowers](https://github.com/obra/
 
 ### Požadavky a omezení
 
-Plugin superpowers. Skill předpokládá, že má projekt kam zapisovat rozhodnutí a odložené věci – chybí-li ta místa, nezaloží je potichu, ale upozorní. Návrhová část běží na nejsilnějším modelu, takže není z nejlevnějších.
+Plugin superpowers. Souběžná kola potřebují projekt rozložený na pracovní adresáře po větvích (git worktree); bez toho se kola řeší postupně. Skill předpokládá, že má projekt kam zapisovat rozhodnutí a odložené věci – chybí-li ta místa, nezaloží je potichu, ale upozorní. Návrhová část běží na nejsilnějším modelu, takže není z nejlevnějších.
