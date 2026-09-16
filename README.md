@@ -134,7 +134,7 @@ Vezme přepis školení, článek, poznámky, ale i rovnou nahrávku, obrázek n
 
 ### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
 
-Na začátku session posbírá všechno, co v projektu čeká – seznam úkolů, zbytek plánu, kola rozpracovaného návrhu, rozdělané větve a necommitnuté změny –, vypíše zvlášť, na čem se už pracuje v jiných větvích, zbytek seřadí podle závislostí, u každého úkolu řekne, v čem spočívá a jak je velký, a nejaktuálnější mi nabídne k výběru. Po výběru se do toho rovnou pustí. Nahrazuje dlouhý prompt, který jsem psal do každé nové session.
+Na začátku session posbírá všechno, co v projektu čeká – seznam úkolů, zbytek plánu, kola rozpracovaného návrhu, rozdělané větve a necommitnuté změny –, vypíše zvlášť, na čem se právě pracuje v jiné session, nabídne pokračování v zapomenutých větvích, zbytek seřadí podle závislostí, u každého úkolu řekne, v čem spočívá a jak je velký, a nejaktuálnější mi nabídne k výběru. Po výběru se do toho rovnou pustí. Nahrazuje dlouhý prompt, který jsem psal do každé nové session.
 
 ### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
 

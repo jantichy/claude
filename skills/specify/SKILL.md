@@ -36,7 +36,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 - **Nezkoumá konkurenci ani trh.** Kdo to už dělá, za kolik a co je na tom rizikové, zjišťuje `/discovery` do `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekci *Co poměřujeme*, na kterou se tedy neptá podruhé.
 - **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill ho jen doporučí jako další krok, až je zadání schválené.
 - **Neduplikuje `superpowers:brainstorming`.** Dialog, klasifikaci rozsahu i návrh řešení řídí ten skill.
-- **Nevolá další kroky, jen je doporučuje.** `/oponent`, `/review`, `/consistency`, `/cleanup` i `/breakdown` jsou samostatné kroky; kdyby je skill pouštěl sám, staly by se jeho součástí. V závěru každého běhu řekne, co a v jakém pořadí pustit. **Jediné volání ven je `/next`** u `round` bez jména kola – není to krok cyklu, ale nabídka, ze které si uživatel kolo teprve vybere.
+- **Nevolá další kroky, jen je doporučuje.** `/oponent`, `/review`, `/consistency`, `/cleanup` i `/breakdown` jsou samostatné kroky; kdyby je skill pouštěl sám, staly by se jeho součástí. V závěru každého běhu řekne, co a v jakém pořadí pustit. **Kromě vnitřku (`brainstorming`) volá jediný další skill, `/next`**, a to u `round` bez jména kola – není to krok cyklu, ale nabídka, ze které si uživatel kolo teprve vybere.
 - **Neslučuje větve sám.** Kdy a jak se větev kola slučuje, drží `~/.claude/WORKTREE.md` – merguje se jen na výslovný pokyn.
 
 ## Jak je to postavené uvnitř

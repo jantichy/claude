@@ -4,9 +4,9 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 
 ## Co umí
 
-1. **Hned nahoře ukáže, na čem se už pracuje jinde** – projde rozdělané větve a pracovní adresáře, pozná, kterého úkolu se týkají, a vypíše je i s větví. Takové úkoly už nenabízí, aby se nerozjely podruhé.
-2. **Posbírá celou frontu práce** – úkoly a odložené body ze seznamu úkolů, zbytek implementačního plánu, tematická kola rozpracovaného návrhu, necommitnuté změny, nesloučené větve a krok životního cyklu, který po poslední práci chybí.
-3. **Seřadí ji podle závislostí**: nejdřív rozdělané věci, pak to, na co nic nečeká, a mezi tím hlavně úkoly, které odblokují nejvíc dalších. Co na něco čeká, vypíše zvlášť i s tím, na co.
+1. **Hned nahoře ukáže, na čem se už pracuje jinde** – projde rozdělané větve, pozná, kterého úkolu se týkají, a podívá se, jestli nad nimi zrovna běží Claude v jiném okně terminálu. Takové úkoly nenabízí, aby se nerozjely podruhé. **Větev, ve které se začalo a pak se na ni zapomnělo, naopak nabídne jako první** – a když k ní najde i starou konverzaci, řekne vám přesný příkaz, kterým ji obnovíte i s celým kontextem. Konverzaci, kterou máte otevřenou v jiném okně, nenabídne nikdy.
+2. **Posbírá celou frontu práce** – úkoly a odložené body ze seznamu úkolů, zbytek implementačního plánu, tematická kola rozpracovaného návrhu, necommitnuté změny a krok životního cyklu, který po poslední práci chybí.
+3. **Seřadí ji podle závislostí**: nejdřív zapomenuté a rozdělané věci, pak to, na co nic nečeká, a mezi tím hlavně úkoly, které odblokují nejvíc dalších. Co na něco čeká, vypíše zvlášť i s tím, na co.
 4. **U každého úkolu řekne, v čem spočívá**, jestli je to drobnost, práce na jednu session, nebo velký úkol, a čím se začíná.
 5. **Tři až čtyři nejaktuálnější nabídne k výběru** – a pořád můžete napsat, že chcete jít úplně jinudy.
 6. **Po výběru se do toho rovnou pustí** – má-li úkol vlastní skill, zavolá ho, jinak načte podklady a začne.
@@ -31,17 +31,20 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 ## Ukázka výstupu
 
 **Už se na tom pracuje jinde**
-- **Kolo o upomínkách** – větev `specify-upominky`, rozhodnuto, čeká zápis před sloučením
+- **Kolo o upomínkách** – větev `specify-upominky`, běží v ní session ve vedlejším okně; rozhodnuto, čeká zápis před sloučením
+
+**Opuštěné**
+1. **Export faktur do účetnictví** · střední – větev `export-faktur`, nikdo na ní nepracuje; zbývá napojit formát a testy, naposledy předevčírem. · začíná se: `/resume` té konverzace
 
 **Rozdělané tady**
-1. **Validace formuláře objednávky** · střední – dopsat kontroly vstupu a testy, ve větvi zbývají tři úkoly z plánu. · začíná se: `/implement`
+2. **Validace formuláře objednávky** · střední – dopsat kontroly vstupu a testy, ve větvi zbývají tři úkoly z plánu. · začíná se: `/implement`
 
 **Připravené**
-2. **Kolo o DPH** · střední – rozhodnout sazby, zaokrouhlení a doklady pro zahraniční zákazníky. Odblokuje: kolo o fakturaci. · začíná se: `/specify round DPH`
-3. **Přejmenovat „rezervace“ na „objednávka“ v administraci** · drobnost – sjednotit termín v rozhraní a dokumentaci. · začíná se: `/replace`
+3. **Kolo o DPH** · střední – rozhodnout sazby, zaokrouhlení a doklady pro zahraniční zákazníky. Odblokuje: kolo o fakturaci. · začíná se: `/specify round DPH`
+4. **Přejmenovat „rezervace“ na „objednávka“ v administraci** · drobnost – sjednotit termín v rozhraní a dokumentaci. · začíná se: `/replace`
 
 **Čekají na něco**
-4. **Kolo o fakturaci** – čeká na: kolo o DPH
+5. **Kolo o fakturaci** – čeká na: kolo o DPH
 
 ## Co nedělá
 
@@ -62,4 +65,4 @@ Skill počítá s mojí strukturou projektu – seznam úkolů, nápadů a hotov
 
 ### Požadavky a omezení
 
-Projekt v gitu. Bez seznamu úkolů nebo plánu skill najde jen rozdělanou práci v gitu; nemá-li ani tu, řekne, že vybírat není z čeho.
+Projekt v gitu a macOS nebo Linux (zjišťování běžících session čte procesy a vnitřní záznamy Claude Code; kde to nejde, skill rozdělané větve bere jako obsazené a řekne to). Bez seznamu úkolů nebo plánu skill najde jen rozdělanou práci v gitu; nemá-li ani tu, řekne, že vybírat není z čeho.
