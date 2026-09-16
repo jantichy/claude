@@ -35,7 +35,7 @@ from pathlib import Path
 # `sessions.py` leží vedle; Python adresář spuštěného skriptu do cest přidává sám.
 import sessions
 
-TEXT_LIMIT = 220
+TEXT_LIMIT = 300
 DIFF_LINES = 12
 RULES = Path.home() / ".claude" / "RULES.md"
 
@@ -46,10 +46,13 @@ class Repo:
     def __init__(self, start: Path):
         start = start.resolve()
         self.worktree = None
-        if (start / ".bare").is_dir():
-            self.root, self.layout = start, "worktree"
-        elif (start.parent / ".bare").is_dir():
-            self.root, self.layout, self.worktree = start.parent, "worktree", start
+        # Kontejner se hledá mezi všemi předky, ne jen o úroveň výš: session stojí
+        # klidně v `main/docs/` a jako běžný repozitář by pak minula ostatní worktree.
+        container = next((p for p in [start, *start.parents] if (p / ".bare").is_dir()), None)
+        if container is not None:
+            self.root, self.layout = container, "worktree"
+            if start != container:
+                self.worktree = container / start.relative_to(container).parts[0]
         else:
             top = run(["git", "-C", str(start), "rev-parse", "--show-toplevel"])
             if top is None:
@@ -128,8 +131,18 @@ def parse_items(lines):
     out = []
     for i in items:
         title, rest = item_title(i["first"])
-        out.append({"title": title, "text": short(" ".join([rest] + i["rest"])), "done": i["done"]})
+        full = " ".join([rest] + i["rest"])
+        entry = {"title": title, "text": short(full), "done": i["done"]}
+        # Závislost bývá na konci dlouhého popisu, který `short` ořízne – vytáhne se zvlášť.
+        waits = WAITS.search(full)
+        if waits:
+            entry["waits"] = short(waits.group(1))
+        out.append(entry)
     return out
+
+
+WAITS = re.compile(r"\b[Čč]ek(?:á|ají)\s+na\b[:\s]*\**\s*([^.;\n]{3,160})")
+CHECKBOX = re.compile(r"\s*[-*] \[( |x|X)\]")
 
 
 def sections(text, level="## "):
@@ -193,11 +206,29 @@ def parse_done(text):
 
 
 def parse_plan(text):
+    """Úkoly plánu: nadpis se zaškrtávacími kroky pod sebou, jinak samotná zaškrtávátka.
+
+    Obyčejné odrážky (kritéria, poznámky) se nepočítají – plán s jedinou takovou
+    by jinak nebyl nikdy hotový a skill by nikdy nedošel k `/review`.
+    """
     if text is None:
         return None
-    items = parse_items(text.splitlines())
-    open_ = [i["title"] for i in items if not i["done"]]
-    return {"open": len(open_), "done": len(items) - len(open_), "next": open_[:3]}
+    tasks, title, boxes = [], None, []
+    for line in text.splitlines() + ["## "]:
+        heading = re.match(r"#{2,4} (.*)", line)
+        if heading:
+            if title and boxes:
+                tasks.append((title, all(boxes)))
+            title, boxes = heading.group(1).strip(), []
+        else:
+            m = CHECKBOX.match(line)
+            if m:
+                boxes.append(m.group(1).lower() == "x")
+    if not tasks:
+        tasks = [(line.strip(), m.group(1).lower() == "x")
+                 for line in text.splitlines() if (m := CHECKBOX.match(line))]
+    open_ = [short(name)[:120] for name, done in tasks if not done]
+    return {"open": len(open_), "done": len(tasks) - len(open_), "next": open_[:3]}
 
 
 def lifecycle():
@@ -232,21 +263,26 @@ def live_state(project: Path):
             return [], [], "registr session neexistuje"
         home = Path.home() / ".claude"
         live = sessions.live_sessions(home)
-    except sessions.Unreadable as err:
+        for s in live:
+            s["in_project"] = sessions.inside(s["start_cwd"], project) or sessions.inside(s["cwd"], project)
+        idle = sessions.idle_sessions(home, project, {s["session_id"] for s in live if s["session_id"]})
+    except (sessions.Unreadable, OSError) as err:
+        # Transcript, který zmizel mezi výpisem a čtením, nesmí shodit celý běh –
+        # platí totéž co pro nečitelný registr: nejisté, tedy obsazené.
         return [], [], str(err)
-    for s in live:
-        s["in_project"] = sessions.inside(s["start_cwd"], project) or sessions.inside(s["cwd"], project)
-    idle = sessions.idle_sessions(home, project, {s["session_id"] for s in live if s["session_id"]})
     return live, idle, None
 
 
-def branch_state(branch, others, idle, error):
+def branch_state(branch, others, idle, error, work):
     busy = [s for s in others if s["branch"] == branch]
     if busy:
         return {"state": "occupied", "session": busy[0]["name"]}
     if error or any(s["branch"] is None for s in others):
         why = error or "živá session nad projektem nemá zjistitelnou větev (čerstvě otevřené okno?)"
         return {"state": "uncertain", "why": why}
+    if not work:
+        # Sloučená nebo nezačatá větev bez neuložených změn není zapomenutá práce.
+        return {"state": "empty"}
     match = next((s for s in idle if s["branch"] == branch), None)
     return {"state": "abandoned", "resume": match and {k: match[k] for k in ("session_id", "start_cwd", "updated")}}
 
@@ -258,20 +294,34 @@ def collect_branches(repo, ref, prefix, rounds, current_branch, project):
     trees = worktrees(repo)
     names = set((repo.git("branch", "--no-merged", ref, "--format=%(refname:short)") or "").split())
     names |= set(trees) | {s["branch"] for s in others if s["branch"]}
-    names -= {local, "main", "master", "HEAD"}
+    if current_branch:
+        names.add(current_branch)
+    names -= {"HEAD"}
     out = []
     for b in sorted(names):
         if repo.git("rev-parse", "--verify", "--quiet", b) is None:
             continue
-        info = {"branch": b, "current": b == current_branch, "worktree": trees.get(b),
-                "ahead": int(repo.git("rev-list", "--count", f"{ref}..{b}") or 0),
-                "commits": (repo.git("log", "--format=%s", "-3", f"{ref}..{b}") or "").splitlines(),
-                "last": repo.git("log", "-1", "--format=%cr", b),
-                "rounds": [r["title"] for r in rounds if r.get("Větev") == b]}
-        info.update(branch_diff(repo, ref, b, prefix))
-        info.update(branch_state(b, others, idle, error))
+        info = branch_info(repo, ref, b, trees.get(b), prefix)
+        info.update(current=b == current_branch, main=b in (local, "main", "master"),
+                    rounds=[r["title"] for r in rounds if r.get("Větev") == b])
+        work = info["ahead"] or info["uncommitted"]
+        info.update(branch_state(b, others, idle, error, work))
+        # Hlavní větev se vypisuje jen tehdy, když v ní někdo pracuje nebo něco leží.
+        if info["main"] and info["state"] in ("empty", "abandoned") and not info["uncommitted"]:
+            continue
         out.append(info)
     return out, error
+
+
+def branch_info(repo, ref, b, tree, prefix):
+    status = (run(["git", "-C", tree, "status", "--porcelain"]) or "").splitlines() if tree else []
+    info = {"branch": b, "worktree": tree, "uncommitted": len(status),
+            "ahead": int(repo.git("rev-list", "--count", f"{ref}..{b}") or 0),
+            "commits": (repo.git("log", "--format=%s", "-3", f"{ref}..{b}") or "").splitlines(),
+            "last": repo.git("log", "-1", "--format=%cr", b),
+            "last_ts": int(repo.git("log", "-1", "--format=%ct", b) or 0)}
+    info.update(branch_diff(repo, ref, b, prefix))
+    return info
 
 
 def round_states(repo, rounds, prefix):
@@ -316,7 +366,7 @@ def main() -> int:
     queue_empty = not any(p["items"] for s in todo for p in s["parts"]) and not rounds \
         and not (plan and plan["open"])
     result = {
-        "layout": repo.layout, "main": ref, "fetch": fetch,
+        "root": str(repo.root), "layout": repo.layout, "main": ref, "fetch": fetch,
         "docs": None if prefix is None else (prefix or "root"),
         "current": current, "todo": todo, "rounds": rounds,
         "stitch_pending": (rounds_open or stitched) and not rounds,

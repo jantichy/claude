@@ -58,7 +58,7 @@ Co z výstupu je položka fronty:
 | `branches` | práce ve větvi – viz *Práce ve větvích* |
 | `backlog` | skript ho vrací jen při prázdné frontě – viz *Fáze 2* |
 
-**Závislosti ber jen ze zápisu**, ne z odhadu: řádek *Čeká na*, pořadí v plánu, výslovná zmínka v položce. Tuší-li se závislost, která zapsaná není, řekni ji u položky jako domněnku.
+**Závislosti ber jen ze zápisu**, ne z odhadu: řádek *Čeká na*, pole `waits` u položky (skript ho vytáhne i z konce dlouhého popisu, který `text` ořízne), pořadí v plánu, výslovná zmínka v položce. Tuší-li se závislost, která zapsaná není, řekni ji u položky jako domněnku.
 
 ### Práce ve větvích
 
@@ -70,15 +70,16 @@ Obsazenost už rozhodl skript, pole `state`:
 |---|---|
 | `occupied` | do *Pracuje se jinde* i se jménem session (`session`); nenabízí se |
 | `uncertain` | do *Pracuje se jinde* s důvodem z `why`; nenabízí se. Je-li důvodem čerstvě otevřené okno, řekni to – uživatel ho může zavřít nebo v něm začít a pustit `/next` znovu |
-| `abandoned` | do *Opuštěné*; spouštěč je obnovení session z `resume`, a není-li, pokračování ve větvi |
+| `abandoned` | větev s prací (`ahead` commitů nebo `uncommitted` neuložených souborů) a bez živé session; do nabídky se závorkou *opuštěná větev*, spouštěč je obnovení session z `resume`, a není-li, pokračování ve větvi |
+| `empty` | větev nebo worktree bez práce – typicky zůstatek po sloučení; nenabízí se, stačí zmínka v poznámkách |
 
 **Na položku z fronty větev přiřaď** podle pole `rounds` (kola s řádkem *Větev*), podle `changes` (které položky větev v `todo.md` a `plan.md` mění nebo odškrtává; `adds_stitch` znamená sešití návrhu) a nakonec podle jména větve a `commits` – shoda jen podle jména je **domněnka** a řekni to. Položka přiřazená obsazené nebo nejisté větvi se **z fronty vyřadí**; větev bez přiřazené položky se vypíše sama, s tím, co v ní podle commitů je.
 
-**Větev s `current: true`** je ta, ve které session stojí: je-li `abandoned`, je to rozdělaná práce tady; je-li `occupied`, pracuje nad ní ještě jiné okno a platí totéž co pro jiné obsazené větve.
+**Větev s `current: true`** je ta, ve které session stojí: je-li `abandoned`, je to rozdělaná práce tady; je-li `occupied`, pracuje nad ní ještě jiné okno a platí totéž co pro jiné obsazené větve – **i když je to hlavní větev** (`main: true`). Hlavní větev skript vypíše jen tehdy, když na ní někdo pracuje nebo v jejím worktree leží neuložené změny.
 
 ### Kola návrhu
 
-- **Kolo s `branch_state`** má větev a je práce ve větvi – řídí se *Prací ve větvích*, **nikdy se nenabízí jako nové kolo**. `branch_state` říká, co ve větvi čeká: rozhodování, zápis před sloučením, nebo sloučení.
+- **Kolo s `branch_state`, jehož větev je v `branches` jako `occupied`, `uncertain` nebo `abandoned`,** je práce ve větvi – řídí se *Prací ve větvích*, **nikdy se nenabízí jako nové kolo**. Chybí-li jeho větev v `branches` nebo je `empty`, nic v ní není a kolo se nabízí jako každé jiné. `branch_state` říká, co ve větvi čeká: rozhodování, zápis před sloučením, nebo sloučení.
 - **Kolo bez větve** se nabízí se spouštěčem `/specify round <kolo>`; u něj řekni, do kterých dokumentů sahá (*Sahá na*) a jestli se to kříží s rozběhnutým kolem. **Souběh neblokuj, jen na něj upozorni.**
 - **Bez worktree layoutu** větve kol nevznikají; kolo ve stavu `rozhoduje se` nebo `rozhodnuto` ber jako rozdělanou práci tady.
 
@@ -90,7 +91,7 @@ Chybějící krok odvoď z `artifacts` a `passes` proti pořadí v `lifecycle` �
 
 Obsazené a nejisté větve do řazení nevstupují. Zbytek seřaď:
 
-1. **Opuštěné větve** – od nejčerstvější.
+1. **Opuštěné větve** – od nejčerstvější (`last_ts`). Větev bez session k obnovení, na kterou nikdo nesáhl déle než měsíc, nedávej na první místo – je to spíš zapomenutý pokus než rozdělaná práce; nabídni ji mezi ostatními a řekni její stáří.
 2. **Rozdělaná práce tady** – necommitnuté změny, rozpracovaný plán.
 3. **Položky bez nesplněné závislosti** před těmi, které na něco čekají.
 4. Mezi nimi ty, **na které čeká nejvíc dalších**.
@@ -139,7 +140,7 @@ Pak přes `AskUserQuestion` nabídni **tři až čtyři** položky v pořadí z 
 
 ## Fáze 4 – Předání
 
-**Před předáním opuštěné větve – se session i bez ní – pusť `python3 ~/.claude/skills/next/sessions.py --project <kořen projektu>`** a ověř obojí: že vybraná session není mezi živými **a** že nad větví nezačala pracovat jiná session nad projektem. Mezi výpisem a výběrem uběhla chvíle. Je-li obsazená, řekni to a nabídni zbytek fronty znovu.
+**Před předáním opuštěné větve – se session i bez ní – pusť `python3 ~/.claude/skills/next/sessions.py --project <root>`** (`root` z výstupu `collect.py`) a ověř obojí: že vybraná session není mezi živými **a** že nad větví nezačala pracovat jiná session nad projektem. Mezi výpisem a výběrem uběhla chvíle. Je-li obsazená, řekni to a nabídni zbytek fronty znovu.
 
 **Opuštěná větev se session k obnovení.** Obnovit session neumíš – `/resume` píše uživatel. Dej mu oba tvary a skonči:
 

@@ -144,6 +144,34 @@ class ZiveSessionAJejichVetve(unittest.TestCase):
         self.assertEqual(run.stdout, "")
 
 
+
+class CteniPlanuAFronty(unittest.TestCase):
+    """Parsery `collect.py`: úkoly plánu a závislost schovaná na konci popisu."""
+
+    def setUp(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("collect", COLLECT)
+        self.c = importlib.util.module_from_spec(spec)
+        import sys as _sys
+        _sys.path.insert(0, str(COLLECT.parent))
+        spec.loader.exec_module(self.c)
+
+    def test_plan_pocita_ukoly_podle_nadpisu(self):
+        plan = self.c.parse_plan(
+            "## Úkol 1\n- [x] krok\n- [x] krok\nKritérium:\n- vrací 200\n"
+            "## Úkol 2\n- [x] krok\n- [ ] krok\n")
+        self.assertEqual((plan["open"], plan["done"], plan["next"]), (1, 1, ["Úkol 2"]))
+
+    def test_obycejna_odrazka_plan_nedrzi_otevreny(self):
+        plan = self.c.parse_plan("## Úkol\n- [x] krok\n- poznámka\n")
+        self.assertEqual(plan["open"], 0)
+
+    def test_zavislost_na_konci_dlouheho_popisu(self):
+        dlouhy = "- [ ] **Úkol.** " + "vata " * 100 + "Čeká na odpověď podpory. Konec."
+        [item] = self.c.parse_items([dlouhy])
+        self.assertEqual(item["waits"], "odpověď podpory")
+
+
 TODO = """# TODO
 
 ## Probíhá
@@ -255,6 +283,26 @@ class SberFronty(unittest.TestCase):
         self.session(self.sleeper.pid, "ziva", str(self.box / "faktury"), "specify-faktury")
         b = self.branches()["specify-faktury"]
         self.assertEqual((b["state"], b["session"]), ("occupied", "ziva"))
+
+    def test_spusteni_z_podadresare_worktree_najde_kontejner(self):
+        run = subprocess.run([sys.executable, str(COLLECT), str(self.box / "dph" / "docs")],
+                             capture_output=True, text=True, env=self.env)
+        data = json.loads(run.stdout)
+        self.assertEqual((data["layout"], Path(data["root"]).resolve(), data["current"]["branch"]),
+                         ("worktree", self.box.resolve(), "specify-dph"))
+
+    def test_vetev_bez_prace_neni_opustena(self):
+        # Větev bez commitu a bez neuložených změn není zapomenutá práce – buď se
+        # nevypíše vůbec, nebo jako prázdná; opuštěná být nesmí.
+        # Worktree bez práce je přesně ten případ, kdy se větev vypíše – po sloučení zůstal stát.
+        self.git(*self.bare, "worktree", "add", "-q", str(self.box / "faktury"), "specify-faktury")
+        self.assertEqual(self.branches()["specify-faktury"]["state"], "empty")
+
+    def test_neulozene_zmeny_v_jinem_worktree_jsou_prace(self):
+        self.git(*self.bare, "worktree", "add", "-q", "-b", "export", str(self.box / "export"), "main")
+        (self.box / "export" / "novy.txt").write_text("rozdělané")
+        b = self.branches()["export"]
+        self.assertEqual((b["state"], b["uncommitted"], b["ahead"]), ("abandoned", 1, 0))
 
     def test_session_bez_vetve_zneisti_vsechny_vetve(self):
         (self.home / ".claude" / "sessions" / f"{self.sleeper.pid}.json").write_text(json.dumps(

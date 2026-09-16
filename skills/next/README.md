@@ -7,7 +7,7 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 1. **Hned nahoře ukáže, na čem se už pracuje jinde** – projde rozdělané větve, pozná, kterého úkolu se týkají, a podívá se, jestli nad nimi zrovna běží Claude v jiném okně terminálu. Takové úkoly nenabízí, aby se nerozjely podruhé. **Větev, ve které se začalo a pak se na ni zapomnělo, naopak nabídne jako první** – a když k ní najde i starou konverzaci, řekne vám přesný příkaz, kterým ji obnovíte i s celým kontextem. Konverzaci, kterou máte otevřenou v jiném okně, nenabídne nikdy.
 2. **Posbírá celou frontu práce** – úkoly a odložené body ze seznamu úkolů, zbytek implementačního plánu, tematická kola rozpracovaného návrhu, necommitnuté změny a krok životního cyklu, který po poslední práci chybí.
 3. **Seřadí ji podle závislostí**: nejdřív zapomenuté a rozdělané věci, pak to, na co nic nečeká, a mezi tím hlavně úkoly, které odblokují nejvíc dalších. Co na něco čeká, vypíše zvlášť i s tím, na co.
-4. **U každého úkolu řekne, v čem spočívá**, jestli je to drobnost, práce na jednu session, nebo velký úkol, a čím se začíná.
+4. **U každého úkolu ukáže, jak je velký** – drobnost, práce na jednu session, nebo velký úkol –, a u těch nabízených řekne i to, v čem spočívá a čím se začíná.
 5. **Tři až čtyři nejaktuálnější nabídne k výběru** – a pořád můžete napsat, že chcete jít úplně jinudy.
 6. **Po výběru se do toho rovnou pustí** – má-li úkol vlastní skill, zavolá ho, jinak načte podklady a začne.
 7. **Zúžení** – `/next review` nebo `/next DPH` ukáže jen to, co se tématu týká. Tímhle způsobem si nabídku zbývajících kol návrhu bere i skill `/specify`.
