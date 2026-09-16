@@ -15,6 +15,7 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 ## Proč zrovna tenhle
 
 - **Místo dlouhého promptu jedno slovo** – a pokaždé stejně důkladně, ne podle toho, jak moc se vám zrovna chtělo psát.
+- **Rychlý.** Všechno, co jde zjistit mechanicky – seznam úkolů, větve, běžící konverzace –, posbírá jeden skript zhruba za vteřinu. Claude pak jen posoudí a nabídne, místo aby se sám proklikával desítkami souborů a příkazů, a výpis drží na jednom řádku na úkol.
 - **Dívá se i do gitu.** Neuložené změny a rozdělaná práce v seznamu úkolů nejsou, a přitom jsou to první věci, ke kterým je potřeba se vrátit. A když souběžně běží víc sessions v různých větvích, nenabídne vám úkol, na kterém už dělá jiná.
 - **Pořadí podle závislostí, ne podle toho, co je v seznamu nahoře.** Závislosti bere jen ze zápisu; tušenou závislost řekne jako domněnku.
 - **U každého úkolu velikost.** Když máte hodinu, vidíte hned, co se do ní vejde.

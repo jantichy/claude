@@ -124,9 +124,11 @@ def live_sessions(home: Path) -> list:
 
 
 def inside(path, project: Path) -> bool:
+    # Obě strany přes resolve(): projekt otevřený přes symlink (na macOS třeba
+    # /var → /private/var) by se jinak s cestou z transcriptu nepotkal nikdy.
     if not path:
         return False
-    p = Path(path)
+    p, project = Path(path).resolve(), Path(project).resolve()
     return p == project or project in p.parents
 
 
