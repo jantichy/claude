@@ -402,6 +402,10 @@ Máš nápad na vylepšení nad rámec zadání → zeptej se, neschvaluj si to 
 
 **„Pokračuj“ neznamená „najdi si práci“.** Dojde-li fronta, na které pracuješ, je hotová **ta fronta** – ne že se přechází na jinou. Frontu má přitom projekt hned několik (nálezy z revize, `todo.md`, `backlog.md`, plán) a každá je jiné zadání s jiným rozsahem. **Když jedna dojde, řekni to a zeptej se**, místo abys sáhl do nejbližší další.
 
+**Plynulost a samostatnost jsou dvě různé osy a pokyn k jedné neplatí pro druhou.** „Pokračuj a nepřerušuj se“ ruší **čekání na pobídku** – tedy to, že se po každém hotovém bloku zastavíš a čekáš, až uživatel napíše „pokračuj“. **Neruší povinnost ptát se na zásadní volby.** Jedno je o tempu, druhé o tom, čí je rozhodnutí; splynou-li, model si pokynem ke svižnější práci odsouhlasí právo rozhodovat za uživatele.
+
+Doloženo 16. 9. 2026 při návrhu administrace: po větě „ber to rovnou jedno po druhém, nepřerušuj se takhle“ jsem ohlásil, že tedy „jedu obrazovku po obrazovce a rozhoduju sám“. Uživatel to přerušil a upřesnil: *„To jsem nemyslel, abys rozhodoval sám. Co nevíš nebo je fakt zásadní diskuze, dej mi rozhodnout. Myslel jsem, abys po každém bloku neukončil zpracování a nečekal, až ti napíšu ‚pokračuj‘.“* **Správná reakce na pobídku k plynulosti je tedy pokračovat dál a ptát se dál** – jen bez mezizastávek, ve kterých se nic nerozhoduje.
+
 Doloženo 14. 9. 2026: po vyprázdnění fronty nálezů z `/review full` padlo „jeď dál a neřeš to po částech“. Vzal jsem to jako pokyn otevřít `todo.md` a odpracoval z něj sedm položek, než mě uživatel zastavil otázkou, proč to vlastně děláme. **Ta práce byla sama o sobě v pořádku** – všechno byly schválené úkoly –, ale rozsah vlákna si rozšířil model, ne uživatel. Nejzrádnější na tom je, že „pokračuj“ zní jako pokyn, a přitom je to jen souhlas s pokračováním v tom, co už běží.
 
 ### Navrhuj kompletně, implementuj postupně
