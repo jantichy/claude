@@ -185,7 +185,7 @@ Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Pa
 - **Otázka odložená na kolo se zapisuje do jeho bloku**, ne jako samostatná položka s poznámkou „patří ke kolu o …“. Jinak se ztratí, jakmile kolo proběhne bez ní: položka dál čeká na něco, co už se nestane, a nerozezná se od fronty.
 - **O pořadí rozhoduje řádek *Čeká na*, ne pořadí bloků.** Kola bez nesplněné závislosti smí běžet souběžně; řádek *Sahá na* říká, kde se jejich větve můžou srazit.
 - **Hotové kolo se přesune do stejnojmenné sekce `done.md`**, v tvaru popsaném tam. Blok se maže až tímhle přesunem, a ten proběhne ve větvi kola těsně před sloučením.
-- Sekce žije jen po dobu návrhu po kolech; `/specify close` ji po posledním kole zruší. Chybějící sekce znamená totéž co prázdná.
+- Sekce žije jen po dobu návrhu po kolech; po posledním kole do ní `/specify close` zapíše řádek *Návrh sešitý* a při dočištění ji zruší. Chybějící sekce znamená totéž co sekce bez bloků.
 
 ### `backlog.md`
 
