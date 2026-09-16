@@ -163,7 +163,7 @@ Všechno, co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to uděl
 
 Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Parkované v session`** a po vyřešení se **smaže** – do `done.md` nepatří, není to odvedená práce projektu. Sekce je dočasná: prázdná se ruší.
 
-**Sekce `## Kola návrhu`** je mapa kol, na která `/specify` rozdělil větší návrh. Co je kolo a kdy vzniká, drží `~/.claude/skills/specify/SKILL.md`, *Mapa okruhů: kola, nebo jeden zátah*; jak kolo běží, tamtéž *Režim `round`*. Na každé kolo připadá jeden blok v tomhle tvaru:
+**Sekce `## Kola návrhu`** je mapa kol, na která `/specify` rozdělil větší návrh. Co je kolo a kdy vzniká, drží `~/.claude/skills/specify/SKILL.md`, *Mapa okruhů: kola, nebo jeden zátah*; jak kolo běží, tamtéž *Režim `round`*; jak se kola čtou a nabízejí, `~/.claude/skills/next/SKILL.md`, *Kola návrhu*. Na každé kolo připadá jeden blok v tomhle tvaru:
 
 ```markdown
 ### Kolo o <tématu>
@@ -212,7 +212,7 @@ Jediná výjimka je **dorovnání staršího projektu**, kde se hotová věc do 
 - **Parkovaný bod session** („teď přeskoč“) – ten patří do `## Parkované v session` v `todo.md` a po vyřešení se maže.
 - **Rozhodnutí o dnešním návrhu a jeho zdůvodnění** → `decisions.md`. Netýká se to úvahy uvnitř nápadu – viz *Nápad smí být rozepsaný do detailu* níž.
 
-**Vybírá z něj jediný skill – `/specify`**: než se začne psát nové zadání, projde ho a nabídne, co se hodí vytáhnout rovnou do něj. Bez toho by se nápady zapisovaly navěky a nikdy nečetly.
+**Vybírá z něj jediný skill – `/specify`**: než se začne psát nové zadání, projde ho a nabídne, co se hodí vytáhnout rovnou do něj. `/next` ho při prázdné frontě jen vypíše a výběr nenabízí. Bez toho by se nápady zapisovaly navěky a nikdy nečetly.
 
 **Zapisují do něj `/implement` a `/cleanup`**, každý jinak. `/implement` sám a bez ptaní – nápad nad rámec plánu je jeho vlastní a zapsat ho je levnější než se na to ptát uprostřed práce. `/cleanup` se ptá vždycky, protože třídí, co v konverzaci padlo, a jestli za tím uživatel stojí jako za nápadem, ví jen on. **Přesouvá-li se položka z jednoho seznamu do druhého** (`/project` nad starým `todo.md`, `/specify` při výběru do zadání), rozhoduje uživatel o každé zvlášť.
 

@@ -40,11 +40,11 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 /specify
 ```
 
-Skill se sám zorientuje, kde návrh je (režim `auto`). Na začátku (`create`) se zeptá, co už máte, provede vás vyptáváním a sepíše požadavky. Malý záměr dotáhne rovnou i s návrhem řešení, větší rozdělí na kola. Uprostřed nabídne kola, která jsou na řadě. Když jsou všechna kola hotová, sešije je (`close`).
+Skill se sám zorientuje, kde návrh je (režim `auto`). Na začátku (`create`) se zeptá, co už máte, provede vás vyptáváním a sepíše požadavky. Malý záměr dotáhne rovnou i s návrhem řešení, větší rozdělí na kola. Uprostřed nabídne kola, která jsou na řadě – nabídku za něj sestaví skill [`/next`](../next/README.md). Když jsou všechna kola hotová, sešije je (`close`).
 
 ```
 /specify round DPH     # odjede kolo o DPH – totéž udělá i /specify DPH
-/specify round         # vypíše zbývající kola a nabídne, čím pokračovat
+/specify round         # přes /next vypíše zbývající kola a nabídne, čím pokračovat
 /specify close         # po sloučení všech kol navrhne řešení nad celkem
 ```
 
@@ -73,7 +73,7 @@ Skill se sám zorientuje, kde návrh je (režim `auto`). Na začátku (`create`)
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“.
 - **Nezakládá projekt.** Strukturu, git a nastavení dělá `/project`; když chybí, skill na to upozorní.
 - **Nepíše implementační plán.** Ten dělá `/breakdown` a má vlastní pravidla i vlastní schvalovací kontrolu.
-- **Nepouští další kroky a neslučuje větve.** Posudek, úklid, plán ani sloučení kola nespustí sám – jen v závěru řekne, co pustit a v jakém pořadí.
+- **Nepouští další kroky a neslučuje větve.** Posudek, úklid, plán ani sloučení kola nespustí sám (jedinou výjimkou je nabídka kol přes `/next`) – jen v závěru řekne, co pustit a v jakém pořadí.
 
 ## Jak si ho nainstalovat
 

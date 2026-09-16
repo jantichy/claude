@@ -24,7 +24,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 |---|---|
 | **`auto`** (výchozí) | pozná, kde návrh je, a zavolá jeden z režimů níž – viz *Fáze 0* |
 | **`create`** | zmapuje záměr a buď ho odjede jedním zátahem, nebo ho rozdělí na kola (*Fáze 1–6*) |
-| **`round [kolo]`** | odjede jedno kolo; bez jména vypíše zbývající kola a nabídne, čím pokračovat |
+| **`round [kolo]`** | odjede jedno kolo; bez jména předá nabídku zbývajících kol `/next` |
 | **`close`** | po sloučení všech kol je sešije, vyrobí `architecture.md` a dočistí návrh |
 
 **Kola jsou uvnitř skillu, ne samostatný krok cyklu** – oddělená fáze před `/specify` by do cyklu přidala krok, jehož výstup by `/specify` jen přepisoval. **Režimy `round` a `close` jsou záměrně v tomhle souboru**, přestože ho protáhly přes 300 řádků (rozhodnuto 16. 9. 2026): s `create` a `auto` sdílejí zásady i fáze a vytažené do vedlejšího souboru by se četly jen zčásti.
@@ -36,7 +36,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 - **Nezkoumá konkurenci ani trh.** Kdo to už dělá, za kolik a co je na tom rizikové, zjišťuje `/discovery` do `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekci *Co poměřujeme*, na kterou se tedy neptá podruhé.
 - **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill ho jen doporučí jako další krok, až je zadání schválené.
 - **Neduplikuje `superpowers:brainstorming`.** Dialog, klasifikaci rozsahu i návrh řešení řídí ten skill.
-- **Nevolá další kroky, jen je doporučuje.** `/oponent`, `/review`, `/consistency`, `/cleanup` i `/breakdown` jsou samostatné kroky; kdyby je skill pouštěl sám, staly by se jeho součástí. V závěru každého běhu řekne, co a v jakém pořadí pustit.
+- **Nevolá další kroky, jen je doporučuje.** `/oponent`, `/review`, `/consistency`, `/cleanup` i `/breakdown` jsou samostatné kroky; kdyby je skill pouštěl sám, staly by se jeho součástí. V závěru každého běhu řekne, co a v jakém pořadí pustit. **Jediné volání ven je `/next`** u `round` bez jména kola – není to krok cyklu, ale nabídka, ze které si uživatel kolo teprve vybere.
 - **Neslučuje větve sám.** Kdy a jak se větev kola slučuje, drží `~/.claude/WORKTREE.md` – merguje se jen na výslovný pokyn.
 
 ## Jak je to postavené uvnitř
@@ -49,6 +49,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 | Doptávání, varianty řešení, návrh, schvalovací kontroly | `superpowers:brainstorming` |
 | **Produktový rámec a sepsání požadavků** | **tenhle skill** |
 | **Mapa kol, vedení kola, sešití kol** | **tenhle skill** – kolo `brainstorming` nevolá, rozhovor vede samo podle *Zásad pro celý průběh* |
+| Nabídka zbývajících kol (`round` bez jména) | `/next` se zúžením na *Kola návrhu* – na rozdíl od `brainstorming` se nevyměňuje potichu: `/next` na tohle volání spoléhá ve své sekci *Kola návrhu* |
 | Sepsání návrhu řešení | `brainstorming` ho vytvoří, tenhle skill mu určí cíl a tvar |
 | Implementační plán | `/breakdown` |
 | Implementace plánu | `/implement` |
@@ -130,7 +131,7 @@ Navíc si zjisti tohle:
    | Existují oba | Jde o revizi, nebo o novou část projektu? Při revizi **nepřepisuj** – rozšiř a přeformuluj stávající. |
    | `architecture.md` existuje a přidává se feature | Rozšiř ho. **Nezakládej druhý návrhový dokument** – jeden systém, jeden návrh. |
 
-5. **Větev.** Běží-li projekt ve worktree layoutu a session stojí v `main/` nebo ve větvi, která s režimem nesouvisí, nabídni založení větve podle `~/.claude/WORKTREE.md`, *Založení větve*, **dřív, než cokoliv zapíšeš**: `create` do `docs/specify`, kolo do větve z řádku *Větev*, `close` do `docs/close`. Existuje-li větev toho jména z dřívější várky, přidej příponu `-2` a **u kola ji přepiš i na řádek *Větev* v bloku** – podle něj větev poznává `auto` i pojistka v `~/.claude/WORKTREE.md`. U `create` zakládej větev až po bodu 4, ať nevznikne zbytečně.
+5. **Větev.** U `round` bez jména kola se nezakládá – kolo ještě není vybrané a nabídka jde rovnou `/next`. Běží-li projekt ve worktree layoutu a session stojí v `main/` nebo ve větvi, která s režimem nesouvisí, nabídni založení větve podle `~/.claude/WORKTREE.md`, *Založení větve*, **dřív, než cokoliv zapíšeš**: `create` do `docs/specify`, kolo do větve z řádku *Větev*, `close` do `docs/close`. Existuje-li větev toho jména z dřívější várky, přidej příponu `-2` a **u kola ji přepiš i na řádek *Větev* v bloku** – podle něj větev poznává `auto` i pojistka v `~/.claude/WORKTREE.md`. U `create` zakládej větev až po bodu 4, ať nevznikne zbytečně.
 
 ------
 
@@ -345,7 +346,7 @@ Kolo má **dva běhy ve své větvi**: rozhodování (kroky 1–4) a zápis pře
 
 ### Bez jména kola: nabídka
 
-**Vyvolej `/next` se zúžením na kola** (`/next kola`) přes nástroj `Skill`. Jak se kola čtou, řadí a nabízejí – mapa z `origin/main`, stav rozběhnutého kola z jeho větve, upozornění na souběh –, drží `~/.claude/skills/next/SKILL.md`, *Kola návrhu*; nabídka kol je jen zúžená podoba obecné fronty práce, a dvě kopie téhož postupu by se rozešly. Vybrané kolo pak `/next` sám předá zpátky jako `/specify round <kolo>`.
+**Vyvolej `/next` se zúžením na kola** (`/next Kola návrhu`) přes nástroj `Skill` hned po zvolení režimu – zbytek *Fáze 0* ani vlastní závěr se neprovádí, běh končí závěrečným verdiktem `/next`. Jak se kola čtou, řadí a nabízejí – mapa z hlavní větve, stav rozběhnutého kola z jeho větve, upozornění na souběh –, drží `~/.claude/skills/next/SKILL.md`, *Kola návrhu*; nabídka kol je jen zúžená podoba obecné fronty práce, a dvě kopie téhož postupu by se rozešly. Vybrané kolo pak `/next` sám předá zpátky jako `/specify round <kolo>`.
 
 ### 1. Příprava kola
 
