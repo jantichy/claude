@@ -125,7 +125,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Tučný je jen nadpis a popisky částí, položky ne.** Položka je kolečko velikosti a název, nic víc – **stav „připravené“ ani velikost slovem se nepíšou**. Do závorky za název patří jen to, co mění rozhodnutí: nesplněná závislost, opuštěná větev, rozdělaná práce tady. Připravená položka bez závislosti závorku nemá. Tvar si výslovně vyžádal uživatel (16. 9. 2026): výpis se čte očima, ne jako tabulka, a slova navíc na každém řádku ho zahlcovala.
 
-**Velikost** je kolečko hned za číslem – obyčejný textový znak, ne barevné emoji: přebírá barvu textu terminálu, takže nesvítí, a napůl plné kolečko se čte jako napůl velký úkol. Barevné kuličky uživatel odmítl jako moc křiklavé, odhadnutá podle toho, co práce obnáší, ne podle délky zápisu:
+**Velikost** je kolečko hned za číslem – obyčejný textový znak, ne barevné emoji: přebírá barvu textu terminálu, takže nesvítí, a napůl plné kolečko se čte jako napůl velký úkol. Barevné kuličky uživatel odmítl jako moc křiklavé. Velikost odhaduj podle toho, co práce obnáší, ne podle délky zápisu:
 
 | Kolečko | Velikost |
 |---|---|
