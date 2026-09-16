@@ -31,21 +31,20 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 
 ## Ukázka výstupu
 
-**Už se na tom pracuje jinde**
-- **Kolo o upomínkách** – větev `specify-upominky`, běží v ní session ve vedlejším okně; rozhodnuto, čeká zápis před sloučením
+**S čím můžeme pokračovat**
 
-**Opuštěné**
-1. **Export faktur do účetnictví** · střední – větev `export-faktur`, nikdo na ní nepracuje; zbývá napojit formát a testy, naposledy předevčírem. · začíná se: `/resume` té konverzace
+**Pracuje se jinde:** Kolo o upomínkách (`specify-upominky`, běží v jiném okně)
 
-**Rozdělané tady**
-2. **Validace formuláře objednávky** · střední – dopsat kontroly vstupu a testy, ve větvi zbývají tři úkoly z plánu. · začíná se: `/implement`
+1. 🟡 Export faktur do účetnictví (opuštěná větev `export-faktur`)
+2. 🟡 Validace formuláře objednávky (rozdělané tady)
+3. 🟡 Kolo o DPH
+4. 🟢 Přejmenovat „rezervace“ na „objednávka“ v administraci
 
-**Připravené**
-3. **Kolo o DPH** · střední – rozhodnout sazby, zaokrouhlení a doklady pro zahraniční zákazníky. Odblokuje: kolo o fakturaci. · začíná se: `/specify round DPH`
-4. **Přejmenovat „rezervace“ na „objednávka“ v administraci** · drobnost – sjednotit termín v rozhraní a dokumentaci. · začíná se: `/replace`
+**Čeká na něco:** Kolo o fakturaci (na kolo o DPH)
 
-**Čekají na něco**
-5. **Kolo o fakturaci** – čeká na: kolo o DPH
+🟢 drobnost · 🟡 střední · 🔴 velký
+
+Pod tím hned nabídka prvních položek k výběru, u každé jednou větou, co se bude dělat a čím se začne.
 
 ## Co nedělá
 
