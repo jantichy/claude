@@ -6,7 +6,7 @@
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
-Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás provede vyptáváním otázku po otázce a udělá z toho **dvě zadání**: jedno odpovídá na otázku *co stavíme a proč*, druhé na otázku *jak*. Dokud nejsou hotová a schválená, nesmí vzniknout ani řádek kódu – a to je tvrdé pravidlo, ne doporučení.
+Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás provede vyptáváním otázku po otázce a udělá z toho **dvě zadání**: jedno odpovídá na otázku *co stavíme a proč*, druhé na otázku *jak*. Větší záměr přitom nejdřív rozdělí na tematická kola a druhé zadání napíše až nad jejich výsledkem. Dokud nejsou hotová a schválená, nesmí vzniknout ani řádek kódu – a to je tvrdé pravidlo, ne doporučení.
 
 ## Co umí
 
@@ -73,6 +73,7 @@ Skill se sám zorientuje, kde návrh je (režim `auto`). Na začátku (`create`)
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“.
 - **Nezakládá projekt.** Strukturu, git a nastavení dělá `/project`; když chybí, skill na to upozorní.
 - **Nepíše implementační plán.** Ten dělá `/breakdown` a má vlastní pravidla i vlastní schvalovací kontrolu.
+- **Nepouští další kroky a neslučuje větve.** Posudek, úklid, plán ani sloučení kola nespustí sám – jen v závěru řekne, co pustit a v jakém pořadí.
 
 ## Jak si ho nainstalovat
 

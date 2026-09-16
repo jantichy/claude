@@ -46,6 +46,8 @@ Navíc si ověř tohle:
    | jen `docs/requirements.md` | **requirements.md** – návrh řešení byl vědomě přeskočen, což je legitimní |
    | ani jedno | **Zastav se.** Nabídni `/specify` a skonči. Plán bez zadání je jen seznam dohadů. |
 
+   **Má-li `docs/todo.md` neprázdnou sekci `## Kola návrhu`, nebo chybí-li v `docs/done.md` za posledními záznamy kol řádek *Návrh uzavřen*, zastav se bez ohledu na tabulku:** návrh běží po kolech a zadání je zatím poloviční. Nabídni `/specify` a skonči.
+
 3. **Ověř, že je zadání schválené.** Není-li jasné, že jím uživatel prošel, zeptej se. Plán postavený na neschváleném zadání se zahazuje celý.
 4. **Existuje už `docs/plan.md`?** Nepřepisuj ho:
 

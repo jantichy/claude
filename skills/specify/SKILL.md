@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 ## Co skill dělá
 
-Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skill ho provede řízeným rozhovorem a sepíše **dva dokumenty**:
+Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skill ho provede řízeným rozhovorem a sepíše **dva dokumenty** – u návrhu po kolech k nim navíc jeden tematický dokument na kolo (`docs/<téma>.md`):
 
 | Dokument | Odpovídá na otázku | Pro koho |
 |---|---|---|
@@ -34,21 +34,21 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zaklád�
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá kontrola – viz *Zákaz implementace*.
 - **Nezakládá projekt.** Strukturu, git, autocommit a doménové importy dělá `/project`. Když chybí, skill na to upozorní a nabídne ho.
 - **Nezkoumá konkurenci ani trh.** Kdo to už dělá, za kolik a co je na tom rizikové, zjišťuje `/discovery` do `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekci *Co poměřujeme*, na kterou se tedy neptá podruhé.
-- **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill mu jen předá řízení, až je zadání schválené.
+- **Nepíše implementační plán.** Ten dělá `/breakdown`. Skill ho jen doporučí jako další krok, až je zadání schválené.
 - **Neduplikuje `superpowers:brainstorming`.** Dialog, klasifikaci rozsahu i návrh řešení řídí ten skill.
 - **Nevolá další kroky, jen je doporučuje.** `/oponent`, `/review`, `/consistency`, `/cleanup` i `/breakdown` jsou samostatné kroky; kdyby je skill pouštěl sám, staly by se jeho součástí. V závěru každého běhu řekne, co a v jakém pořadí pustit.
 - **Neslučuje větve sám.** Kdy a jak se větev kola slučuje, drží `~/.claude/WORKTREE.md` – merguje se jen na výslovný pokyn.
 
 ## Jak je to postavené uvnitř
 
-**Dialog a návrh řešení dělá `superpowers:brainstorming`, a to je implementační detail, ne rozhraní.** Kdyby ho nahradil jiný nástroj nebo vlastní postup, nikdo se to nemusí dozvědět. **Závazné je to, co po skillu zbude:** dva dokumenty na místech podle `~/.claude/STRUCTURE.md` – produktové požadavky a návrh řešení –, oba česky a bez datumových prefixů. Cizímu nástroji se to musí říct výslovně, protože má vlastní výchozí volbu (viz *Přepis výchozí cesty* níž).
+**Dialog a návrh řešení dělá `superpowers:brainstorming`, a to je implementační detail, ne rozhraní.** Kdyby ho nahradil jiný nástroj nebo vlastní postup, nikdo se to nemusí dozvědět. **Závazné je to, co po skillu zbude:** dva dokumenty na místech podle `~/.claude/STRUCTURE.md` – produktové požadavky a návrh řešení –, u návrhu po kolech k tomu tematické dokumenty, mapa kol a záznamy kol, vše česky a bez datumových prefixů. Cizímu nástroji se to musí říct výslovně, protože má vlastní výchozí volbu (viz *Přepis výchozí cesty* níž).
 
 | Krok | Kdo ho dělá |
 |---|---|
 | Klasifikace rozsahu (spike / bounded / architectural) | `superpowers:brainstorming` |
 | Doptávání, varianty řešení, návrh, schvalovací kontroly | `superpowers:brainstorming` |
 | **Produktový rámec a sepsání požadavků** | **tenhle skill** |
-| **Mapa kol, vedení kola, sešití kol** | **tenhle skill** |
+| **Mapa kol, vedení kola, sešití kol** | **tenhle skill** – kolo `brainstorming` nevolá, rozhovor vede samo podle *Zásad pro celý průběh* |
 | Sepsání návrhu řešení | `brainstorming` ho vytvoří, tenhle skill mu určí cíl a tvar |
 | Implementační plán | `/breakdown` |
 | Implementace plánu | `/implement` |
@@ -104,7 +104,21 @@ Navíc si zjisti tohle:
 1. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce. **Chybějící `backlog.md` sám o sobě neblokuje** – není kam zapisovat, ale je co psát; zmiň ho ve výpisu a pokračuj (Fáze 1, bod 5 s tím počítá).
    **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést. **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md` (Fáze 3a); `competition.md` a `risks.md` patří `/discovery`. Chybí-li ty dva, přestože jsou zapsané, **nabídni `/discovery`**: bez konkurence a rizik se píše zadání naslepo.
 2. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
-3. **Urči vstupní bod** – jen pro režim `create`, ostatní režimy mají vlastní přípravu. Skill se dá spustit i uprostřed – neběží vždycky celý:
+3. **Režim `auto` rozhodne, kam jít.** Vyhrává první řádek, který sedí:
+
+   | Stav | Režim |
+   |---|---|
+   | argument je jméno kola ze sekce *Kola návrhu* v `docs/todo.md` | `round` s tím kolem – `/specify DPH` je totéž co `/specify round DPH` |
+   | session stojí ve větvi, kterou uvádí blok kola na řádku *Větev* | `round` s tím kolem – rozpozná, jestli se rozhoduje, nebo zapisuje před sloučením |
+   | sekce *Kola návrhu* má aspoň jeden blok | `round` bez jména – nabídka zbývajících kol |
+   | `docs/done.md` má v sekci *Kola návrhu* aspoň jeden záznam kola a za posledním z nich nestojí řádek *Návrh uzavřen* | `close` |
+   | jinak | `create` – vstupní bod podle bodu 4 |
+
+   **Neexistující sekce se počítá jako prázdná**, o `close` proto rozhoduje `done.md`, ne `todo.md`: projekt, který kola nikdy neměl, žádný záznam kola nemá, a druhá várka kol se od první odliší řádkem *Návrh uzavřen*.
+
+   **Jméno kola** se porovnává bez ohledu na velikost písmen s nadpisem bloku bez „Kolo o“, se slugem větve i se jménem tematického dokumentu. Víc shod → zeptej se. Jméno režimu má přednost před jménem kola, proto se kolo nesmí jmenovat `auto`, `create`, `round` ani `close`. Argument, který není jménem kola ani režimu, ber jako téma pro `create` a řekni to. Zvolený režim oznam jednou větou, ať se dá opravit.
+
+4. **Urči vstupní bod** – jen pro režim `create`, ostatní režimy mají vlastní přípravu. **Má-li sekce *Kola návrhu* bloky, `create` nepokračuj:** návrh běží po kolech a nabídka tabulky níž by vedla k psaní `architecture.md` uprostřed kol – řekni to a nabídni `round`. Skill se dá spustit i uprostřed – neběží vždycky celý:
 
    | Stav | Kde začít |
    |---|---|
@@ -112,17 +126,6 @@ Navíc si zjisti tohle:
    | `requirements.md` existuje, `architecture.md` ne | Zeptej se: **navázat návrhem řešení**, nebo revidovat požadavky? Tohle je běžný případ – produkt se schválí dnes, návrh se dělá jindy. Při navázání **projdi Fázi 2 i tak** – `brainstorming` musíš vyvolat, jinak nemá kdo návrh vytvořit; jen mu místo produktových otázek předej hotové `docs/requirements.md` jako zadání a rovnou jdi na varianty řešení. |
    | Existují oba | Jde o revizi, nebo o novou část projektu? Při revizi **nepřepisuj** – rozšiř a přeformuluj stávající. |
    | `architecture.md` existuje a přidává se feature | Rozšiř ho. **Nezakládej druhý návrhový dokument** – jeden systém, jeden návrh. |
-
-4. **Režim `auto` rozhodne, kam jít.** Vyhrává první řádek, který sedí:
-
-   | Stav | Režim |
-   |---|---|
-   | argument je jméno kola ze sekce *Kola návrhu* v `docs/todo.md` | `round` s tím kolem – `/specify DPH` je totéž co `/specify round DPH` |
-   | sekce *Kola návrhu* má aspoň jeden blok | `round` bez jména – nabídka zbývajících kol |
-   | sekce *Kola návrhu* je prázdná a v `docs/done.md` chybí řádek *Návrh uzavřen* | `close` |
-   | jinak | `create` – vstupní bod podle tabulky v bodě 3 |
-
-   Argument, který není jménem kola ani režimu, ber jako téma pro `create` a řekni to. Zvolený režim oznam jednou větou, ať se dá opravit.
 
 ------
 
@@ -151,7 +154,7 @@ Nemá-li nic, přeskoč. Ale zeptej se – v praxi něco má skoro vždycky a ne
 
 - co ses dozvěděl z podkladů ve Fázi 1,
 - že se má ptát přes `AskUserQuestion`, jednu otázku na volání,
-- že **návrhovou část zapíše do `docs/architecture.md`**, ne do `docs/superpowers/specs/`, a až ve Fázi 3b – tedy po schválení produktové části.
+- že **návrhovou část zapíše do `docs/architecture.md`**, ne do `docs/superpowers/specs/`, a až ve Fázi 3b – tedy po schválení produktové části. Rozhodne-li mapa okruhů níž o kolech, návrhovou část v tomhle běhu **nepíše vůbec**; řekni mu to, jakmile to padne.
 
 **Co udělat s klasifikací:**
 
@@ -174,6 +177,8 @@ Nemá-li nic, přeskoč. Ale zeptej se – v praxi něco má skoro vždycky a ne
 3. **Fáze 3b se přeskakuje.** `architecture.md` vznikne až v režimu `close` nad výsledky všech kol; souběžná kola by se v něm srážela a návrh řešení stojí na schválených požadavcích celku, ne na polovině kol.
 4. **Závěr** vypíše mapu a doporučí, čím začít – viz *Fáze 6*.
 
+**Ve worktree layoutu běží `create` ve vlastní větvi** a mapa s `requirements.md` se musí sloučit do `main` dřív, než se otevře první kolo – větev kola vzniká z `origin/main` a bez toho by mapu neměla.
+
 **Rozsah.** Popisuje-li zadání víc nezávislých podsystémů, řekni to hned a rozlož to na dílčí projekty dřív, než se začnou ladit detaily. Každý dílčí projekt pak dostane vlastní dokumenty i vlastní plán. **Kola nejsou dílčí projekty:** kola jsou okruhy jednoho systému, které se prolínají, dílčí projekty jsou systémy, které se neprolínají.
 
 **Projekt bez kódu.** Je-li to znalostní, obsahový nebo obchodní projekt (kurz, brand, pozicování, evidence), `requirements.md` dává smysl, ale **návrh řešení ani `writing-plans` ne** – ty předpokládají kód, testy a commity. Skonči po Fázi 3a a místo plánu nabídni postupný rozpis kroků do `docs/todo.md`.
@@ -195,6 +200,8 @@ Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura 
 
 > Požadavky jsou sepsané a commitnuté v `docs/requirements.md`. Přečti si ho prosím a řekni, jestli chceš něco změnit, než se pustíme do návrhu řešení.
 
+U návrhu po kolech končí věta „…, než rozdělíme návrh na kola.“
+
 **Počkej na odpověď.** Bez výslovného souhlasu nepokračuj na 3b – návrh postavený na neschváleném zadání se zahazuje celý.
 
 ------
@@ -213,11 +220,11 @@ Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura 
 - má stavový prostor s přechody,
 - existuje víc než jedna rozumná cesta, jak to postavit.
 
-**Nepíše se tady u návrhu po kolech** – vzniká v režimu `close`.
-
 **Nepíše se, když** je to přírůstek uvnitř už navrženého systému – pak rozšiř stávající `architecture.md`. A **nikdy** u projektu bez kódu.
 
 Přeskočíš-li ho, **řekni to i s důvodem** a jako zadání pro plán použij `requirements.md`.
+
+**U návrhu po kolech se tady nepíše ani nepřeskakuje** – vzniká v režimu `close`, a do té doby není zadání pro plán vůbec.
 
 Návrh vytvoří `brainstorming` v dialogu s uživatelem – po sekcích, se schválením po každé. Zapiš do **`docs/architecture.md`**; šablona i pravidla psaní jsou v `~/.claude/skills/specify/documents.md`.
 
@@ -231,7 +238,7 @@ Návrh vytvoří `brainstorming` v dialogu s uživatelem – po sekcích, se sch
 
 ## Fáze 4 – Sebe-revize a oponentura
 
-Běží **po každém z obou dokumentů zvlášť**, ne až na konci.
+Běží **po každém dokumentu zvlášť** – požadavcích, návrhu řešení i tematickém dokumentu kola –, ne až na konci.
 
 **Sebe-revize** (rozšíření *Spec Self-Review* z brainstormingu):
 
@@ -259,11 +266,11 @@ Počkej na odpověď. Chce-li změny, proveď je a projdi sebe-revizi znovu.
 
 ## Fáze 5 – Předání do plánu
 
-Po schválení návrhu předej řízení na **`/breakdown`**, který ze zadání udělá `docs/plan.md`. Ten si sám najde zadání i kontext a ohlídá rozsah – nemusíš mu nic předávat ručně, jen ho vyvolej.
+Po schválení návrhu **doporuč `/breakdown`**, který ze zadání udělá `docs/plan.md` – sám ho nevolej (*Co skill nedělá*). Ten si sám najde zadání i kontext a ohlídá rozsah, takže mu nic předávat nemusíš. **U návrhu po kolech** se doporučuje až v závěru `close`.
 
 **Sám plán nepiš.** Ani „ať se to nemusí volat zvlášť“. Rozpad na úkoly má vlastní pravidla, vlastní kontrolu pokrytí MVP a vlastní schvalovací kontrolu.
 
-**U projektu bez kódu** `/breakdown` nevyvolávej – rozepiš kroky do `docs/todo.md`.
+**U projektu bez kódu** `/breakdown` nedoporučuj – rozepiš kroky do `docs/todo.md`.
 
 Celý řetěz i s tím, co následuje po implementaci, je v `~/.claude/skills/LIFECYCLE.md`.
 
@@ -273,7 +280,7 @@ Celý řetěz i s tím, co následuje po implementaci, je v `~/.claude/skills/LI
 
 Platí *Doc-first vývoj* z `~/.claude/RULES.md`; posloupnost souborů definuje `STRUCTURE.md`:
 
-1. Změní se požadavek → uprav **`requirements.md`** a s ním **`scenarios.md`**, vede-li ho projekt. Změněný požadavek skoro vždycky mění nějaký scénář; scénář, který zůstal, ale už nejde provést, je horší než chybějící.
+1. Změní se požadavek → uprav **`requirements.md`**, u návrhu po kolech i **tematický dokument** dotčeného okruhu, a s tím **`scenarios.md`**, vede-li ho projekt. Změněný požadavek skoro vždycky mění nějaký scénář; scénář, který zůstal, ale už nejde provést, je horší než chybějící.
 2. Zkontroluj, jestli to mění návrh → uprav **`architecture.md`**.
 3. Zkontroluj, jestli to mění nehotové úkoly → uprav **`plan.md`**.
 4. Rozhodnutí a důvod změny zapiš do `docs/decisions.md`. Původní záznam nepřepisuj – přibude revize.
@@ -309,7 +316,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-**U návrhu po kolech** vypadá závěr jinak: místo `architecture.md` vypiš mapu kol – u každého jméno, větev a na co čeká – a doporuč, **která kola pustit hned a souběžně**: ta bez nesplněné závislosti, a přednostně ta, jejichž řádky *Sahá na* se nepřekrývají. Pod to doporuč `/oponent docs/requirements.md` a `/cleanup`; `/breakdown` ne, ten přijde až po `close`.
+**U návrhu po kolech** vypadá závěr jinak: místo `architecture.md` vypiš mapu kol – u každého jméno, větev a na co čeká – a doporuč, **která kola pustit hned a souběžně**: ta bez nesplněné závislosti, a přednostně ta, jejichž řádky *Sahá na* se nepřekrývají. Pod to doporuč `/oponent docs/requirements.md`, `/cleanup` a ve worktree layoutu sloučení větve – teprve pak se otevírají kola; `/breakdown` ne, ten přijde až po `close`.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
@@ -325,15 +332,17 @@ U návrhu po kolech místo nich:
 
 ## Režim `round`
 
-Odjede **jedno kolo** návrhu: vezme blok ze sekce *Kola návrhu* v `docs/todo.md`, rozhodne jeho téma do posledního detailu a zapíše výsledek. Zásady pro celý průběh a *Zákaz implementace* platí beze změny. Na rozhodování v kole se nešetří stejně jako na návrhu řešení (*Fáze 3b*).
+Odjede **jedno kolo** návrhu: vezme blok ze sekce *Kola návrhu* v `docs/todo.md`, rozhodne jeho téma do posledního detailu a zapíše výsledek. Zásady pro celý průběh a *Zákaz implementace* platí beze změny. Na rozhodování v kole se nešetří stejně jako na návrhu řešení (*Fáze 3b*); kolo ale běží v hlavní session, kde model ani effort skill nastavit neumí – **doporuč proto kolo pustit v session na nejsilnějším modelu**.
+
+Kolo má **dva běhy ve své větvi**: rozhodování (kroky 1–4) a zápis před sloučením (krok 5), mezi nimi doporučené kroky. `auto` je rozliší podle toho, jestli je kolo schválené a jestli doporučené kroky proběhly – nevíš-li, zeptej se.
 
 ### Bez jména kola: nabídka
 
-Vypiš všechna zbývající kola – jméno, na co čeká a jestli už má větev (`git branch -a`; existující větev `docs/<slug>` znamená kolo rozběhnuté jinde). Pak přes `AskUserQuestion` nabídni **několik nejbližších**: nejdřív kola bez nesplněné závislosti, mezi nimi ta, na která čeká nejvíc dalších kol nebo nejvíc odložených otázek. U každé volby řekni, do kterých sdílených dokumentů kolo sahá a jestli se to kříží s rozběhnutým kolem – **souběh tím neblokuj, jen na něj upozorni**.
+Vypiš všechna zbývající kola – jméno, na co čeká a jestli už má větev (`git branch -a`; existující větev z řádku *Větev* znamená kolo rozběhnuté jinde, případně hotové a čekající na sloučení). **Bez worktree layoutu** rozběhnuté kolo poznat nejde – řekni to. Pak přes `AskUserQuestion` nabídni **několik nejbližších**: nejdřív kola bez nesplněné závislosti, mezi nimi ta, na která čeká nejvíc dalších kol nebo nejvíc odložených otázek. U každé volby řekni, do kterých sdílených dokumentů kolo sahá a jestli se to kříží s rozběhnutým kolem – **souběh tím neblokuj, jen na něj upozorni**.
 
 ### 1. Příprava kola
 
-1. **Větev.** Běží-li projekt ve worktree layoutu, kolo patří do vlastní větve `docs/<slug>`. Stojí-li session jinde, nabídni její založení podle `~/.claude/WORKTREE.md`, *Založení větve* – včetně natažení `origin/main`.
+1. **Větev.** Běží-li projekt ve worktree layoutu, kolo patří do vlastní větve z řádku *Větev*. Slug i jméno tematického dokumentu jsou jednoslovné a anglicky (`~/.claude/RULES.md`, *Naming*), nadpis bloku česky. Stojí-li session jinde, nabídni její založení podle `~/.claude/WORKTREE.md`, *Založení větve* – včetně natažení `origin/main`.
 2. **Načti blok kola**, `requirements.md`, dokumenty z řádků *Dokument* a *Sahá na*, `decisions.md` a `rules.md`. Kolo, na které tohle čeká, musí mít záznam v `docs/done.md`; nemá-li ho, řekni to a zeptej se, jestli pokračovat.
 3. **Zadání kola ověř, ne převezmi.** Blok je zadání, ne odpověď. Ukáže-li se při prvním pohledu do podkladů, že otázky v něm jsou neúplné nebo špatně položené, řekni to a nech nové zadání potvrdit – kolo smí své zadání přepsat.
 
@@ -343,42 +352,60 @@ Veď rozhovor otázku po otázce, dokud v tématu nezbývá otevřená otázka. 
 
 - **Tematický dokument** `docs/<téma>.md` drží celý okruh; produktovou a technickou část odděluj stejnou hranicí jako `requirements.md` a `architecture.md` (*Proč dva dokumenty a ne jeden*).
 - **Do sdílených dokumentů** – `requirements.md`, glosář, scénáře, model – zapiš jen to, co z tématu plyne pro celek, a odkaž se na tematický dokument. Psaní celého tématu rovnou do nich je zamítnuté, protože souběžné větve by se srazily v týchž kapitolách. **`architecture.md` nepiš**, vzniká v `close`.
-- **Kapitola v `decisions.md` se píše bez čísla**, i když ho kapitoly v projektu mají. Číslo dostane až při sloučení (viz níž) – souběžná kola by si jinak vzala totéž.
+- **Kapitola v `decisions.md` se píše bez čísla**, i když ho kapitoly v projektu mají, a odkazy na ni se píšou jménem. Číslo dostane až v kroku 5 – souběžná kola by si jinak vzala totéž.
 - **Nová otevřená otázka mimo téma** se odkládá na **jmenované kolo**, ne na „později“: zapiš ji do jeho bloku. Nemá-li kam, vzniká nové kolo – dopiš jeho blok do mapy a řekni to.
 
-### 3. Uzavření kola
+### 3. Uzavření rozhodování
 
 1. **Sebe-revize** tematického dokumentu a toho, co kolo zapsalo jinam – body 1–6 a 9 z *Fáze 4*.
 2. **Schválení uživatelem**, stejně jako u požadavků ve *Fázi 3a*.
-3. **Záznam do `docs/done.md`**, sekce `## Kola návrhu`, v tvaru podle `~/.claude/STRUCTURE.md`, *`done.md`*, a smazání bloku z `docs/todo.md`.
-4. **Odložené otázky, které kolo neotevřelo, přepiš.** Přestávají být frontou a stávají se dodělkem: přesuň je do bloku jiného kola, nebo z nich udělej samostatnou položku `todo.md` s tím, na co čekají. Položka čekající na kolo, které už proběhlo, se nedá rozeznat od fronty.
 
-### 4. Závěr kola
+Blok v `todo.md` **zatím zůstává** a do `done.md` se nic nezapisuje: nálezy z doporučených kroků se musí mít kam vrátit a záznam kola má odkazovat na kapitolu, která už číslo má.
 
-Vypiš, co kolo rozhodlo, co zapsalo kam, které otázky přesunulo a jaká nová kola vznikla. Pak **doporuč navazující kroky v tomhle pořadí** – každý jen tehdy, když se vyplatí, a u přeskočeného řekni proč:
+### 4. Závěr rozhodování
 
-1. **`/oponent docs/<téma>.md`**, zavedlo-li kolo nový podsystém, změnilo model nebo se napojilo na cizí systém; **`/review`**, vznikl-li v kole kód nebo kontrola; **ani jedno**, bylo-li kolo drobné a posudek by jen zdržel.
+Vypiš, co kolo rozhodlo, co zapsalo kam, které otázky zůstaly a jaká nová kola vznikla. Pak **doporuč navazující kroky v tomhle pořadí** – každý jen tehdy, když se vyplatí, a u přeskočeného řekni proč:
+
+1. **`/oponent docs/<téma>.md`**, zavedlo-li kolo nový podsystém, změnilo model nebo se napojilo na cizí systém; **`/review`**, sáhlo-li kolo na testy nebo kontroly, které projekt nad dokumentací vede (kód kolo nepíše, *Zákaz implementace*); **ani jedno**, bylo-li kolo drobné a posudek by jen zdržel.
 2. **`/consistency`**, jen sáhlo-li kolo do hodně sdílených dokumentů. Většinou se vyplatí až nad celkem po `close`.
 3. **`/cleanup`** – vždycky.
-4. **Sloučení větve**, běží-li projekt ve worktree layoutu. Před ním si natáhni `origin/main` do větve, **přiděl kapitole v `decisions.md` další volné číslo** a oprav odkazy na ni v souborech, na které kolo sáhlo. Sloučení samo podle `~/.claude/WORKTREE.md`, *Dokončení větve*, a jen na pokyn.
+4. **`/specify` znovu v téhle větvi** – zapíše kolo jako hotové (krok 5); ve worktree layoutu pak sloučení.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Kolo je hotové a schválené, můžeš ho uzavřít doporučenými kroky.`
-- `Kolo hotové není – brání tomu: <konkrétní seznam>.`
+- `Kolo je rozhodnuté a schválené, můžeš pustit doporučené kroky a pak /specify k zápisu před sloučením.`
+- `Kolo rozhodnuté není – brání tomu: <konkrétní seznam>.`
+
+### 5. Zápis před sloučením
+
+Pouští se ve větvi kola po doporučených krocích. **Bez něj se větev kola neslučuje** – `~/.claude/WORKTREE.md`, *Dokončení větve*, na to odkazuje.
+
+1. **Natáhni `origin/main` do větve.** Konflikt na konci `done.md` nebo `decisions.md` od souběžného kola vyřeš ponecháním obou zápisů za sebou.
+2. **Přiděl kapitole v `decisions.md` další volné číslo** podle stavu po natažení a přepiš odkazy na ni ve všech souborech, na které kolo sáhlo.
+3. **Záznam do `docs/done.md`**, sekce `## Kola návrhu`, v tvaru podle `~/.claude/STRUCTURE.md`, *`done.md`*, a smazání bloku z `docs/todo.md`.
+4. **Odložené otázky, které kolo neotevřelo, přepiš**, a vypiš je v poli *Neotevřelo*. Přesuň je do bloku jiného kola; když na žádné kolo nečekají, ale na něco jiného (rozhodnutí, podklad, odpověď zvenčí), udělej z nich samostatnou položku `todo.md` a napiš, na co čekají. Položka s poznámkou, že čeká na kolo, které už proběhlo, se nesmí zachovat – nerozezná se od fronty.
+5. **Commit** a doporuč sloučení větve – samo podle `~/.claude/WORKTREE.md`, *Dokončení větve*, a jen na pokyn.
+
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `Kolo je zapsané a připravené ke sloučení, můžeš větev přimergovat.`
+- `Kolo zapsané není – brání tomu: <konkrétní seznam>.`
 
 ------
 
 ## Režim `close`
 
-Pouští se, **až jsou všechna kola sloučená** – sekce *Kola návrhu* je prázdná. Ve worktree layoutu běží ve vlastní větvi `docs/close`. Jeho hlavní práce je **návrh řešení nad celkem**; kola ho záměrně nepsala.
+Pouští se, **až jsou všechna kola sloučená** – sekce *Kola návrhu* v `todo.md` je prázdná nebo neexistuje. Ve worktree layoutu běží ve vlastní větvi `docs/close`. Jeho hlavní práce je **návrh řešení nad celkem**; kola ho záměrně nepsala.
 
-1. **Ověř, že kola opravdu doběhla.** Sekce *Kola návrhu* je prázdná, `git branch -a` neukazuje nesloučenou větev kola a každé kolo z mapy má záznam v `docs/done.md`. Chybí-li něco, řekni co a zastav se.
+1. **Ověř, že kola opravdu doběhla.** Sekce *Kola návrhu* je prázdná, `git branch -a` neukazuje nesloučenou větev kola a každé kolo z nejnovější várky má záznam v `docs/done.md` za posledním řádkem *Návrh uzavřen*. Chybí-li něco, řekni co a zastav se.
 2. **Sešij požadavky.** Projdi `requirements.md` proti tematickým dokumentům: odkazuje na každý, nepřekrývá se s nimi, *MVP* a *Mimo rozsah* pokrývají, co kola rozhodla. Kontroly z *Fáze 4* platí nad celkem.
-3. **Vyrob `architecture.md`** podle *Fáze 3b* – z požadavků a technických částí tematických dokumentů. Volbu, kterou už rozhodlo kolo, **neopisuj, odkaž na ni**; na co návrh potřebuje odpověď a žádné kolo ji nedalo, se doptej. Kontrola uživatele jako ve *Fázi 4*.
-4. **Dočisti.** Otázky přesunuté mezi koly musí být vypořádané nebo vedené jako dodělek s tím, na co čekají. Zruš prázdnou sekci *Kola návrhu* v `todo.md` a do `done.md` připiš řádek *Návrh uzavřen* podle `~/.claude/STRUCTURE.md`, *`done.md`*.
+3. **Vyrob `architecture.md`** podle *Fáze 3b* – existuje-li z dřívější várky, **rozšiř ho**, druhý návrh nezakládej – – z požadavků a technických částí tematických dokumentů. Volbu, kterou už rozhodlo kolo, **neopisuj, odkaž na ni**; na co návrh potřebuje odpověď a žádné kolo ji nedalo, se doptej. Kontrola uživatele jako ve *Fázi 4*.
+4. **Dočisti.** Otázky přesunuté mezi koly musí být vypořádané, nebo vedené jako samostatná položka `todo.md` s tím, na co čekají. Zruš prázdnou sekci *Kola návrhu* v `todo.md` a do `done.md` připiš řádek *Návrh uzavřen* podle `~/.claude/STRUCTURE.md`, *`done.md`*.
 5. **Závěr** vypíše dokumenty jako *Fáze 6* a doporučí v tomhle pořadí: `/oponent docs/architecture.md`, `/consistency` nad celým projektem, `/cleanup`, sloučení větve podle `~/.claude/WORKTREE.md` – **a teprve po nich `/breakdown`** jako další krok životního cyklu.
 
 **Proč až tady a ne v kolech:** souběžná kola by se v jednom návrhu srážela a návrh řešení stojí na schválených požadavcích celku. **Zamítnuto** i uzavření složené do posledního kola – běželo by ve větvi dřív, než jsou ostatní větve sloučené.
 
-Zakonči jednou z vět *Fáze 6* pro jeden zátah.
+Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
+
+- `Návrh je sešitý a schválený, můžeš ho uzavřít doporučenými kroky a pak pokračovat na /breakdown.`
+- `Návrh sešitý není – brání tomu: <konkrétní seznam>.`

@@ -157,6 +157,8 @@ git push origin --delete <vetev>   # jen pokud byla pushnutá
 
 Před mergem musí být `main/` čistý – `git merge` nad rozpracovaným stromem neprojde.
 
+**Větev kola návrhu** (`/specify`) se neslučuje, dokud v ní neproběhl zápis před sloučením – přidělí kapitole číslo, zapíše kolo do `done.md` a smaže jeho blok z `todo.md`. Neproběhl-li, pusť v ní nejdřív `/specify`.
+
 ### Zpráva merge commitu shrnuje práci, ne jméno větve
 
 Historie hlavní větve se čte přes `git log --first-parent`, který do větví nevstupuje. Merge commit je tam **jediný řádek za celou odvedenou práci**. Dílčí commity se tím nikam neztrácejí a jsou pořád k dispozici (`git log <merge>^2`, `git show <merge>`), jen nepřeplácají hlavní linku.

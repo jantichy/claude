@@ -163,7 +163,7 @@ Všechno, co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to uděl
 
 Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Parkované v session`** a po vyřešení se **smaže** – do `done.md` nepatří, není to odvedená práce projektu. Sekce je dočasná: prázdná se ruší.
 
-**Sekce `## Kola návrhu`** je mapa kol, na která `/specify` rozdělil větší návrh. Co je kolo a kdy vzniká, drží `~/.claude/skills/specify/SKILL.md`, *Režim `round`*. Na každé kolo připadá jeden blok v tomhle tvaru:
+**Sekce `## Kola návrhu`** je mapa kol, na která `/specify` rozdělil větší návrh. Co je kolo a kdy vzniká, drží `~/.claude/skills/specify/SKILL.md`, *Mapa okruhů: kola, nebo jeden zátah*; jak kolo běží, tamtéž *Režim `round`*. Na každé kolo připadá jeden blok v tomhle tvaru:
 
 ```markdown
 ### Kolo o <tématu>
@@ -183,8 +183,8 @@ Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Pa
 - **Blok musí stačit čisté session.** Kolo se typicky otevírá v jiné session a jiné větvi, takže blok nese celé zadání a neodkazuje na konverzaci, ve které vznikl.
 - **Otázka odložená na kolo se zapisuje do jeho bloku**, ne jako samostatná položka s poznámkou „patří ke kolu o …“. Jinak se ztratí, jakmile kolo proběhne bez ní: položka dál čeká na něco, co už se nestane, a nerozezná se od fronty.
 - **O pořadí rozhoduje řádek *Čeká na*, ne pořadí bloků.** Kola bez nesplněné závislosti smí běžet souběžně; řádek *Sahá na* říká, kde se jejich větve můžou srazit.
-- **Hotové kolo se přesune do stejnojmenné sekce `done.md`**, v tvaru popsaném tam. Blok se maže až tímhle přesunem.
-- Sekce žije jen po dobu návrhu po kolech; `/specify close` ji po posledním kole zruší.
+- **Hotové kolo se přesune do stejnojmenné sekce `done.md`**, v tvaru popsaném tam. Blok se maže až tímhle přesunem, a ten proběhne ve větvi kola těsně před sloučením.
+- Sekce žije jen po dobu návrhu po kolech; `/specify close` ji po posledním kole zruší. Chybějící sekce znamená totéž co prázdná.
 
 ### `backlog.md`
 
@@ -244,6 +244,8 @@ Zapisuj hned, jak rozhodnutí padne. Z odstupu se zdůvodnění rekonstruuje šp
 ```
 
 Zapisuje ji `/release` (viz jeho *Když chyba projde vším*). **Pole „doplněno“ nesmí být prázdné:** buď z defektu vzejde nová blokující kontrola, nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – tedy z té množiny, kterou už chytat umí.
+
+**Kapitola kola návrhu se píše bez čísla**, i když ho ostatní kapitoly mají; číslo dostane těsně před sloučením větve kola (`~/.claude/skills/specify/SKILL.md`, *Zápis před sloučením*), protože souběžná kola by si jinak vzala totéž.
 
 **Nejstarší nahoře. Nový zápis se připojuje na konec** – své sekce, je-li soubor členěný. Důvod je provozní: připsat na konec je jediný způsob zápisu, který nejde udělat špatně, protože nevyžaduje hledat správné místo. Opačné pravidlo se v praxi nedodrží. Navíc se soubor čte jako vývoj uvažování a revize stojí **za** původním rozhodnutím, ne před ním.
 
