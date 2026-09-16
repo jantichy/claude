@@ -105,21 +105,23 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 **Výpis je kompaktní: jeden řádek na položku.** Podrobnosti – co se bude dělat a čím se začne – nese až `description` u nabízených položek v `AskUserQuestion`. Generování textu je nejpomalejší část běhu a totéž dvakrát je čekání navíc.
 
 ```
-**S čím můžeme pokračovat**
+**Poznámky:** <zastaralá položka, kříž kol, domnělá závislost, selhaný fetch – nebo že nic rozdělaného ani běžícího jinde není>
 
 **Pracuje se jinde:** <název> (`<větev>`, <session / nejisté: proč>) · …
+
+**Čeká na něco:** <název> (na <co>) · …
+
+**S čím můžeme pokračovat**
 
 1. <kulička> <název> <(jen je-li co: čeká na …, opuštěná větev `<větev>`, rozdělané tady)>
 2. …
 
-**Čeká na něco:** <název> (na <co>) · …
-
-**Poznámky:** <zastaralá položka, kříž kol, domnělá závislost, selhaný fetch>
-
 🟢 drobnost · 🟡 střední · 🔴 velký
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*. Prázdnou část vynech. *Pracuje se jinde* stojí vždy první.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*. Prázdnou část vynech.
+
+**Pořadí je schválně od kontextu k výběru** (vyžádal si ho uživatel 16. 9. 2026): poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky, práce jinde a čekající položky jsou každá jeden odstavec**, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
 
 **Tučný je jen nadpis a popisky částí, položky ne.** Položka je kulička velikosti a název, nic víc – **stav „připravené“ ani velikost slovem se nepíšou**. Do závorky za název patří jen to, co mění rozhodnutí: nesplněná závislost, opuštěná větev, rozdělaná práce tady. Připravená položka bez závislosti závorku nemá. Tvar si výslovně vyžádal uživatel (16. 9. 2026): výpis se čte očima, ne jako tabulka, a slova navíc na každém řádku ho zahlcovala.
 
