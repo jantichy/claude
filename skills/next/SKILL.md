@@ -70,14 +70,16 @@ Nezávislá čtení pusť paralelně.
 - **Řádek *Větev*** v blocích kol – kolo patří té větvi, **jakmile větev existuje**, i když v ní *Stav* ještě zůstal `čeká`.
 - **Jméno větve a zprávy commitů** (`git log --oneline <hlavní>..<větev>`) proti názvům položek. Shoda jen tady je **domněnka** – řekni u položky, že je odvozená ze jména.
 
-Větev, u které se žádnou položku přiřadit nepodařilo, vypiš taky, s tím, co v ní podle commitů je. **Větev, ve které session stojí, je rozdělaná práce tady** a nabízí se jako pokračování; další kroky se na ni nevztahují.
+**Ber i větve, které `--no-merged` nevypíše:** čerstvě založená větev bez commitu ukazuje na commit hlavní větve, a přitom nad ní už může pracovat session z bodu 2 – přidej proto každou větev živé session nad projektem (kromě hlavní).
 
-**2. Zjisti, nad kterými větvemi běží session a kde je opuštěná.** Pusť `python3 ~/.claude/skills/next/sessions.py --project <kořen projektu>` – ve worktree layoutu kořen kontejneru. Session s `self: true` je tahle a nepočítá se.
+Větev, u které se žádnou položku přiřadit nepodařilo, vypiš taky, s tím, co v ní podle commitů je. **Větev, ve které session stojí, je rozdělaná práce tady** – ale i na ni se vztahuje bod 2: běží-li nad ní jiná session než tahle, je obsazená.
+
+**2. Zjisti, nad kterými větvemi běží session a kde je opuštěná.** Pusť `python3 ~/.claude/skills/next/sessions.py --project <kořen projektu>` – ve worktree layoutu kořen kontejneru. Session s `self: true` je tahle a nepočítá se; počítají se jen session s `in_project: true` – stejně pojmenovaná větev v cizím repozitáři obsazenost nezakládá.
 
 | Výsledek | Větev je | S položkou |
 |---|---|---|
-| v `sessions` je živá session s touhle `branch` | **obsazená** | do *Už se na tom pracuje jinde* i se jménem session (`name`); nenabízí se |
-| skript skončil kódem 2, nebo má živá session nad projektem `branch: null` | **nejistá** | do *Už se na tom pracuje jinde* s poznámkou, že se to zjistit nepodařilo a proč; nenabízí se |
+| v `sessions` je živá session nad projektem s touhle `branch` | **obsazená** | do *Už se na tom pracuje jinde* i se jménem session (`name`); nenabízí se |
+| skript skončil kódem 2 (chybí registr nebo nejde přečíst některý jeho záznam), nebo má živá session nad projektem `branch: null` | **nejistá – všechny větve projektu** | do *Už se na tom pracuje jinde* s poznámkou, že se to zjistit nepodařilo a proč; nenabízí se. `branch: null` mívá čerstvě otevřené okno, ve kterém ještě nic nepadlo – řekni to, ať ho uživatel může zavřít nebo v něm začít, a pusť `/next` znovu |
 | nic z toho | **opuštěná** | do *Opuštěné*; má-li v `idle` session, spouštěč je obnovení té session, jinak pokračování ve větvi |
 
 **Proč nejistá větev padá na stranu obsazené:** nenabídnutá opuštěná větev stojí jeden řádek, který uživatel přečte a sám se rozhodne; nabídnutá obsazená větev stojí dvě session, které si přepisují tutéž práci, a pozná se to až při slučování.
@@ -154,10 +156,12 @@ Pak přes `AskUserQuestion` nabídni **tři až čtyři** položky v pořadí z 
 
 ## Fáze 4 – Předání
 
-**Opuštěná větev se session k obnovení.** Obnovit session neumíš – `/resume` je příkaz, který píše uživatel. **Těsně před předáním pusť `sessions.py` znovu** a ověř, že ta session pořád není mezi živými; mezitím ji mohl otevřít v jiném okně. Je-li živá, řekni to a nabídni zbytek fronty znovu. Jinak dej uživateli oba tvary a skonči:
+**Před předáním opuštěné větve – se session i bez ní – pusť `sessions.py` znovu** a ověř obojí: že vybraná session není mezi živými **a** že nad větví nezačala pracovat jiná, i nová session. Mezi výpisem a výběrem uběhla chvíle a uživatel mohl větev otevřít v jiném okně. Je-li obsazená, řekni to a nabídni zbytek fronty znovu.
+
+**Opuštěná větev se session k obnovení.** Obnovit session neumíš – `/resume` je příkaz, který píše uživatel. Dej mu oba tvary a skonči:
 
 - v téhle session: `/resume <session_id>`,
-- v novém okně terminálu, v adresáři, kde session startovala: `claude --resume <session_id>`.
+- v novém okně terminálu: `cd <start_cwd> && claude --resume <session_id>` – `start_cwd` z `idle`, ne `cwd`: session se obnovuje z adresáře, kde startovala, a ve worktree layoutu to je kořen kontejneru, ne worktree větve.
 
 Obnovená session má celý kontext rozdělané práce, a proto má přednost před pokračováním tady.
 

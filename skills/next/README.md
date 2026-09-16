@@ -65,4 +65,4 @@ Skill počítá s mojí strukturou projektu – seznam úkolů, nápadů a hotov
 
 ### Požadavky a omezení
 
-Projekt v gitu a macOS nebo Linux (zjišťování běžících session čte procesy a vnitřní záznamy Claude Code; kde to nejde, skill rozdělané větve bere jako obsazené a řekne to). Bez seznamu úkolů nebo plánu skill najde jen rozdělanou práci v gitu; nemá-li ani tu, řekne, že vybírat není z čeho.
+Projekt v gitu a macOS nebo Linux (zjišťování běžících session čte procesy a vnitřní záznamy Claude Code; kde to nejde nebo je výsledek nejistý, skill rozdělané větve bere jako obsazené a řekne to). Bez seznamu úkolů nebo plánu skill najde jen rozdělanou práci v gitu; nemá-li ani tu, řekne, že vybírat není z čeho.

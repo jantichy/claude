@@ -112,6 +112,30 @@ class ZiveSessionAJejichVetve(unittest.TestCase):
         self.registruj(self.mrtvy_pid(), "cizi", [{"cwd": "/jiny/dph", "gitBranch": "specify-dph"}])
         self.assertEqual(self.idle(), {})
 
+    def test_necitelny_zaznam_registru_neni_prazdny_seznam(self):
+        # Nečitelný záznam může patřit běžící session – kdyby se přeskočil,
+        # nabídla by se její konverzace k obnovení podruhé.
+        self.registruj(self.mrtvy_pid(), "stara", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
+        (self.claude / "sessions" / "rozbity.json").write_text("{nedopsano")
+        run = self.spust("--project", "/projekt")
+        self.assertEqual(run.returncode, 2)
+        self.assertEqual(run.stdout, "")
+
+    def test_cizi_projekt_neni_in_project(self):
+        (self.claude / "sessions" / f"{self.sleeper.pid}.json").write_text(json.dumps(
+            {"pid": self.sleeper.pid, "sessionId": "cizi", "cwd": "/jiny"}))
+        [s] = json.loads(self.spust("--project", "/projekt").stdout)["sessions"]
+        self.assertFalse(s["in_project"])
+
+    def test_opustena_session_nese_adresar_startu(self):
+        self.registruj(self.mrtvy_pid(), "stara", [
+            {"cwd": "/projekt", "gitBranch": "main"},
+            {"cwd": "/projekt/dph", "gitBranch": "specify-dph"},
+        ])
+        run = self.spust("--project", "/projekt")
+        [s] = json.loads(run.stdout)["idle"]
+        self.assertEqual((s["start_cwd"], s["cwd"]), ("/projekt", "/projekt/dph"))
+
     def test_chybejici_registr_neni_prazdny_seznam(self):
         (self.claude / "sessions").rmdir()
         run = self.spust()

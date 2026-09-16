@@ -20,15 +20,18 @@ Použití: `sessions.py [--project <kořen projektu nebo kontejneru>]`
 
 Výstup: JSON na stdout.
 - `sessions` – živé session: `pid`, `session_id`, `name`, `status`, `start_cwd`,
-  `cwd`, `branch` (null, když se nedala zjistit) a `self` (session, ze které se
-  skript spustil).
+  `cwd`, `branch` (null, když se nedala zjistit), `self` (session, ze které se
+  skript spustil) a s `--project` i `in_project` (start nebo poslední zpráva
+  leží v projektu – stejně pojmenovaná větev cizího repozitáře se nepočítá).
 - `idle` – jen s `--project`: pro každou větev poslední session, jejíž poslední
-  zpráva leží v projektu a **která neběží** (`session_id`, `cwd`, `branch`,
-  `updated` jako Unix čas). Session, která je živá – i obnovená přes `/resume`
-  v jiném okně –, sem nepatří nikdy.
+  zpráva leží v projektu a **která neběží** (`session_id`, `start_cwd` – adresář
+  první zprávy, odkud se session obnovuje –, `cwd`, `branch`, `updated` jako Unix
+  čas). Session, která je živá – i obnovená přes `/resume` v jiném okně –, sem
+  nepatří nikdy.
 
-Návratový kód 2, když registr neexistuje – pak se o otevřených session neví nic
-a `/next` musí brát všechny větve jako obsazené a říct to nahlas.
+Návratový kód 2, když registr neexistuje **nebo se některý jeho záznam nedá
+přečíst** – nečitelný záznam může patřit běžící session, takže by se jinak mohla
+nabídnout k obnovení. `/next` pak bere všechny větve jako obsazené a řekne to.
 """
 import argparse
 import json
@@ -83,6 +86,23 @@ def last_location(transcript: Path):
     return None, None
 
 
+class Unreadable(Exception):
+    pass
+
+
+def first_cwd(transcript: Path):
+    """Adresář první zprávy, která ho nese – tam session startovala."""
+    with transcript.open("r", encoding="utf-8", errors="replace") as f:
+        for line in f:
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(entry, dict) and entry.get("cwd"):
+                return entry["cwd"]
+    return None
+
+
 def live_sessions(home: Path) -> list:
     mine = ancestors()
     out = []
@@ -90,8 +110,8 @@ def live_sessions(home: Path) -> list:
         try:
             record = json.loads(path.read_text())
             pid = int(record["pid"])
-        except (json.JSONDecodeError, KeyError, ValueError, OSError):
-            continue
+        except (json.JSONDecodeError, KeyError, ValueError, TypeError, OSError) as err:
+            raise Unreadable(f"záznam {path} nejde přečíst: {err}")
         if not alive(pid):
             continue
         sid = record.get("sessionId")
@@ -122,8 +142,8 @@ def idle_sessions(home: Path, project: Path, live_ids: set) -> list:
             continue
         updated = transcript.stat().st_mtime
         if branch not in latest or updated > latest[branch]["updated"]:
-            latest[branch] = {"session_id": sid, "cwd": cwd, "branch": branch,
-                              "updated": int(updated)}
+            latest[branch] = {"session_id": sid, "start_cwd": first_cwd(transcript),
+                              "cwd": cwd, "branch": branch, "updated": int(updated)}
     return sorted(latest.values(), key=lambda s: s["branch"])
 
 
@@ -135,10 +155,17 @@ def main() -> int:
     if not (home / "sessions").is_dir():
         print(f"registr session {home / 'sessions'} neexistuje", file=sys.stderr)
         return 2
-    result = {"sessions": live_sessions(home)}
+    try:
+        result = {"sessions": live_sessions(home)}
+    except Unreadable as err:
+        print(err, file=sys.stderr)
+        return 2
     if args.project:
+        project = Path(args.project).resolve()
+        for s in result["sessions"]:
+            s["in_project"] = inside(s["start_cwd"], project) or inside(s["cwd"], project)
         live_ids = {s["session_id"] for s in result["sessions"] if s["session_id"]}
-        result["idle"] = idle_sessions(home, Path(args.project).resolve(), live_ids)
+        result["idle"] = idle_sessions(home, project, live_ids)
     json.dump(result, sys.stdout, ensure_ascii=False, indent=2)
     print()
     return 0
