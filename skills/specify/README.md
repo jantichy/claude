@@ -17,8 +17,9 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 5. **Sepíše i scénáře, glosář a ceník**, vede-li je projekt. Scénáře jsou taxativní seznam toho, co uživatel s produktem dělá, krok za krokem – slouží pak i testování, nápovědě a FAQ. Glosář drží pojmenování domény, ceník to, co z tarifů a limitů plyne pro produkt.
 6. **Pozná, kdy specifikace nedává smysl.** Je-li to změna v existujícím kódu nebo jednorázová otázka, řekne to a zastaví se – nenechá se zatlačit do psaní specifikace na jednosouborovou změnu.
 7. **Zvládne i projekt bez kódu** – kurz, pozicování, evidenci. Tam napíše produktovou část a místo návrhu řešení nabídne rozpis kroků.
-8. **Dá se spustit i uprostřed** – navázat návrhem na hotové požadavky, rozšířit stávající návrh o novou funkci, nebo zadání revidovat.
-9. **Vlastní kontrola po každém dokumentu** a pak nezávislá oponentura.
+8. **Větší záměr rozdělí na tematická kola.** Nejdřív zmapuje celý záměr a rozdělí ho na okruhy – třeba daně, upomínání, administraci, platební bránu – a každý zapíše jako samostatný úkol se vším, co k němu patří. Kola pak můžete řešit jedno po druhém, nebo klidně v pěti souběžných sessions a větvích. Každé kolo se rozhodne do posledního detailu a zanechá po sobě záznam, co rozhodlo a na co nesáhlo. Nakonec skill kola sešije a teprve nad celkem navrhne řešení.
+9. **Dá se spustit i uprostřed** – navázat návrhem na hotové požadavky, rozšířit stávající návrh o novou funkci, nebo zadání revidovat.
+10. **Vlastní kontrola po každém dokumentu.** Nezávislou oponenturu a další kroky nespouští sám, jen v závěru řekne, co pustit a v jakém pořadí.
 
 ## Proč zrovna tenhle
 
@@ -30,6 +31,7 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 - **Sekce „co vědomě neděláme“ nesmí být prázdná.** Prázdná znamená, že se nic neřezalo – a co se vyhodí, se tam zapíše, aby to nikdo nevymyslel znovu.
 - **Bezpečnost se navrhuje, neaudituje.** Návrh má vlastní sekci s modelem oprávnění a jmenným seznamem citlivých míst; „ošetříme to při implementaci“ v ní stát nesmí.
 - **Návrh se čte proti požadavkům položku po položce.** Nepokrytý scénář je nález, ne detail.
+- **Kola nesplývají s hotovým návrhem.** Otevřená otázka se neodkládá na „později“, ale na jmenované kolo, a záznam kola říká i to, co nechalo být. Za půl roku se tak pozná, jestli je věc nerozhodnutá, nebo rozhodnutá jinak.
 - **Na návrhu se nešetří.** Špatný návrh se dobrou implementací nezachrání – špatná věc se jen udělá pořádně.
 
 ## Jak se to používá
@@ -38,7 +40,13 @@ Máte nápad a chcete z něj něco, podle čeho se dá stavět. Skill vás prove
 /specify
 ```
 
-Skill se zeptá, co už máte, provede vás vyptáváním, sepíše požadavky, nechá si je schválit, pak sepíše návrh, nechá si schválit i ten a předá to do implementačního plánu.
+Skill se sám zorientuje, kde návrh je (režim `auto`). Na začátku (`create`) se zeptá, co už máte, provede vás vyptáváním a sepíše požadavky. Malý záměr dotáhne rovnou i s návrhem řešení, větší rozdělí na kola. Uprostřed nabídne kola, která jsou na řadě. Když jsou všechna kola hotová, sešije je (`close`).
+
+```
+/specify round DPH     # odjede kolo o DPH – totéž udělá i /specify DPH
+/specify round         # vypíše zbývající kola a nabídne, čím pokračovat
+/specify close         # po sloučení všech kol navrhne řešení nad celkem
+```
 
 ## Ukázka výstupu
 

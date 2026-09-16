@@ -70,7 +70,7 @@ Zjistí, do jakého světa produkt vstupuje: kdo to už dělá, co to umí a za 
 
 ### [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
 
-Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak. Hranici mezi nimi drží tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?* A dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold.
+Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak. Hranici mezi nimi drží tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?* A dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold. Větší záměr nejdřív rozdělí na tematická kola, která jdou řešit i souběžně v samostatných větvích, a návrh řešení udělá až nad jejich výsledkem.
 
 ### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 

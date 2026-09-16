@@ -51,6 +51,7 @@ Povinný je jediný soubor – **`CLAUDE.md`**, bez něj projekt není projekt. 
 | `README.md`, `decisions.md`, `rules.md` | volitelně, výběrem při `/project` (výchozí ano) |
 | `todo.md` + `backlog.md` + `done.md` | volitelně, ale **jen jako trojice** – jedna volba pro všechny tři |
 | `requirements.md`, `architecture.md`, `plan.md` | až prací, přes `/specify` a `/breakdown` |
+| `<téma>.md` – tematický dokument kola | až prací, kolem návrhu přes `/specify` – viz *`requirements.md`, `architecture.md`, `plan.md`* |
 | `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md` | **vybírá se** při `/project` (výchozí ne), zakládá se až prací – viz *Produktové podklady* |
 | `research/` | až je co uložit |
 | `.claude/run/` | samo, přerušitelným během skillu – není to standardní soubor, viz *Běhový stav skillů* |
@@ -162,6 +163,29 @@ Všechno, co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to uděl
 
 Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Parkované v session`** a po vyřešení se **smaže** – do `done.md` nepatří, není to odvedená práce projektu. Sekce je dočasná: prázdná se ruší.
 
+**Sekce `## Kola návrhu`** je mapa kol, na která `/specify` rozdělil větší návrh. Co je kolo a kdy vzniká, drží `~/.claude/skills/specify/SKILL.md`, *Režim `round`*. Na každé kolo připadá jeden blok v tomhle tvaru:
+
+```markdown
+### Kolo o <tématu>
+
+- **Větev:** `docs/<slug>`
+- **Dokument:** `docs/<téma>.md`
+- **Čeká na:** <kola, bez jejichž výsledku nejde začít, nebo „nic“>
+- **Sahá na:** <sdílené dokumenty, do kterých kolo nejspíš zapíše>
+
+**Co rozhodnout.** <otázky, na které má kolo odpovědět – zadání, ne odpověď>
+
+**Podklady.** <co si před kolem přečíst>
+
+**Odložené otázky.** <otázky odložené na tohle kolo odjinud, každá s tím, kde vznikla>
+```
+
+- **Blok musí stačit čisté session.** Kolo se typicky otevírá v jiné session a jiné větvi, takže blok nese celé zadání a neodkazuje na konverzaci, ve které vznikl.
+- **Otázka odložená na kolo se zapisuje do jeho bloku**, ne jako samostatná položka s poznámkou „patří ke kolu o …“. Jinak se ztratí, jakmile kolo proběhne bez ní: položka dál čeká na něco, co už se nestane, a nerozezná se od fronty.
+- **O pořadí rozhoduje řádek *Čeká na*, ne pořadí bloků.** Kola bez nesplněné závislosti smí běžet souběžně; řádek *Sahá na* říká, kde se jejich větve můžou srazit.
+- **Hotové kolo se přesune do stejnojmenné sekce `done.md`**, v tvaru popsaném tam. Blok se maže až tímhle přesunem.
+- Sekce žije jen po dobu návrhu po kolech; `/specify close` ji po posledním kole zruší.
+
 ### `backlog.md`
 
 **Zásobník nezávazných nápadů** – co by s produktem někdy šlo udělat, kdyby se chtěl rozšiřovat a nevědělo se kam. Nic z toho není odsouhlasené, rozpracované ani naplánované; je to materiál k výběru, ne fronta.
@@ -261,6 +285,20 @@ Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem,
 
 **Běhový stav kroku sem nepatří** – rozpracovaná fronta nálezů `/review` ani seznam toho, co zvedl `/attack`, viz *Běhový stav* níž.
 
+**Sekce `## Kola návrhu`** zrcadlí stejnojmennou sekci `todo.md` a drží jeden záznam za každé dokončené kolo návrhu:
+
+```markdown
+- **Kolo o <tématu> (2026-09-14)** · `docs/<téma>.md` · [rozhodnutí](decisions.md#<kotva>)
+  - **Rozhodlo:** <co padlo, věcně, včetně zamítnutého hlavního směru>
+  - **Uzavřelo:** <odložené otázky, které kolo vyřešilo, nebo „nic“>
+  - **Neotevřelo:** <odložené otázky, které kolo nechalo být, a kam se přesunuly, nebo „nic“>
+  - **Nová kola:** <kola, která z tohohle vzešla, nebo „žádná“>
+```
+
+Datum vyrob `date +%F`. Po posledním kole připíše `/specify close` řádek `- **Návrh uzavřen (<datum>)** – <počet> kol` – podle něj se pozná, že návrh po kolech doběhl celý.
+
+**Nejcennější je pole *Neotevřelo*.** Díky němu jde o půl roku později odlišit **nerozhodnuté** od **rozhodnutého jinak** – „kolo o administraci proběhlo a tuhle otázku neotevřelo“ –, což se z dokumentace samotné vyčíst nedá. Proto je povinné i tehdy, když zní „nic“. Pevný tvar má ze stejného důvodu jako *Průchody životním cyklem*: čte ho stroj, konkrétně `/specify` při rozhodování, co je na řadě.
+
 ### `requirements.md`, `architecture.md`, `plan.md`
 
 **Zadání a plán.** Nevznikají u každého projektu a nezakládá je `/project` – přibudou, až se v projektu něco staví:
@@ -276,6 +314,8 @@ Hranice mezi `requirements.md` a `architecture.md` je tvrdá: do požadavků pat
 Změna teče **shora dolů**: `requirements.md` → `architecture.md` → `plan.md` → kód. Nikdy obráceně – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód.
 
 Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requirements.md`; místo plánu se kroky rozepíšou do `todo.md`.
+
+**Návrh po kolech přidává tematické dokumenty** `docs/<téma>.md` (například `gateway.md`, `emails.md`, `admin.md`), jeden na kolo. Tematický dokument drží celý okruh do detailu. Do `requirements.md` a dalších sdílených dokumentů (glosář, scénáře, model) zapisuje kolo jen to, co z tématu plyne pro celek, a odkazuje se na něj. **`architecture.md` kola nepíšou** – vzniká až v `/specify close` nad výsledky všech kol. Technickou volbu, kterou téma rozhodnout musí (třeba dodavatele), zapíše kolo do technické části svého dokumentu a `architecture.md` na ni pak odkáže. Hranice požadavků a návrhu tedy platí i uvnitř tematického dokumentu: omezení a volba se nemíchají, jen stojí u sebe. **Proč samostatný soubor:** kola běží souběžně v různých větvích a psaní do týchž kapitol sdílených dokumentů by je srazilo.
 
 ### Produktové podklady
 
