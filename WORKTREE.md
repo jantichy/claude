@@ -138,7 +138,7 @@ Když dev server poběží ve víc větvích, poperou se o port. Řeš `.env.loc
 
 Po dokončení zadání tedy: commitni (má-li projekt autocommit), řekni, co je hotové, a **zůstaň ve worktree**. Větev zůstává otevřená napříč prompty i napříč session, klidně týden. Na další zadání ve stejném tématu prostě pokračuj ve stejné větvi.
 
-Merguje se **jen na výslovný pokyn** – „tohle je hotové“, „přimerguj to“, „ukliď tu větev“. Není-li pokyn jednoznačný, zeptej se; předčasný merge se odestává hůř než pozdní.
+Merguje se **jen na výslovný pokyn** – „tohle je hotové“, „přimerguj to“, „ukliď tu větev“, nebo volba *Přimergovat do main* v závěrečné otázce `/cleanup`. Není-li pokyn jednoznačný, zeptej se; předčasný merge se odestává hůř než pozdní.
 
 Chce-li uživatel začít **jinou** věc, nemerguj tu rozdělanou – založ vedle ní další worktree. Právě proto to takhle je.
 

@@ -28,7 +28,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 - **Nic nezůstane jen ve výpisu.** Co by jinak skončilo jako „mimo rozsah úklidu“, se s vámi projde položku po položce a u každé se rozhodne – vypsat to a nechat být je nepřijatelné, protože sezení vzápětí zavřete a položky zmizí s ním.
 - **Zapisuje i důvody.** Samotný závěr bez zdůvodnění je pro příští práci málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
 - **Hlásí i čistý výsledek.** Že se nic nedoplňovalo, se řekne nahlas – a bez komentáře k tomu.
-- **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Pracujete-li v odděleném adresáři větve, řekne navíc rovnou, že větev jde bez obav sloučit – ale sám nic neslučuje ani nepřipravuje.
+- **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Hned potom se zeptá, co dál: pokračovat v práci, projít úklid znovu, a pracujete-li v odděleném adresáři větve, i sloučit ji do hlavní větve. Sloučí jen tehdy, když to vyberete, a nikdy za stavu, kdy něco zůstalo nezapsané.
 
 ## Jak se to používá
 

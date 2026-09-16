@@ -1,7 +1,7 @@
 ---
 name: cleanup
 description: Skill se použije, když uživatel zadá "/cleanup", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je.
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
 # Cleanup
@@ -431,4 +431,20 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Nenabízej „opustit session“ jako jedinou cestu.** Zápis je hotový, ale to neznamená, že je hotová práce: uživatel klidně pokračuje dál v téže session a `/cleanup` mu jen zajistil, že ho kompaktace nepřipraví o kontext. Ve worktree layoutu to platí dvojnásob – „můžeš odejít“ tam neodpovídá na otázku, kterou má uživatel v hlavě, totiž co s tou větví.
 
-**Že je merge bez obav, musí zaznít explicitně** – vedle pokračování a kompaktace. Uživatel má v hlavě otázku „můžu to zavřít, nebo tam něco visí?“ a mlčení o mergi ji nezodpoví; „dokončit větev“ je vágní a nechává ho hádat, jestli něco nepřehlédl. Verdikt o stavu, ne pobídka: **merge sám neprovádíš, nepřipravuješ ani nevypisuješ příkazy** – větev je pracovní prostor a merguje se jen na výslovný pokyn (`~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak*). Řekneš, že to jde bez rizika; kdy se to stane, je na uživateli.
+**Že je merge bez obav, musí zaznít explicitně** – vedle pokračování a kompaktace. Uživatel má v hlavě otázku „můžu to zavřít, nebo tam něco visí?“ a mlčení o mergi ji nezodpoví; „dokončit větev“ je vágní a nechává ho hádat, jestli něco nepřehlédl.
+
+### Co dál
+
+**Skončil-li běh jednou z prvních dvou vět, polož hned za ni otázku `AskUserQuestion`** s textem `Co dál? (/compact, /clear a /exit zadej sám)` a těmito volbami v tomhle pořadí – merge první, protože po úklidu ve větvi je nejčastější:
+
+| Volba | Kdy se nabízí | Co se po ní stane |
+|---|---|---|
+| **Přimergovat do main** | jen ve worktree větve, tedy v kontejneru s `.bare` a mimo `main/` | provedeš *Dokončení větve* z `~/.claude/WORKTREE.md` celé, včetně kontroly větve kola návrhu a zprávy merge commitu, která shrnuje práci |
+| **Pokračovat v práci** | vždy | nic – čekáš na další zadání |
+| **Další kolo úklidu** | vždy | pustíš `/cleanup` znovu nástrojem `Skill` |
+
+**Proč otázka, a ne rovnou merge:** `/cleanup` se pouští i před kompaktací uprostřed rozdělané větve, takže automatický merge by jednou poslal do `main` nedodělanou práci. Uživatel přitom po úklidu mergoval skoro vždycky, a ruční příkaz navíc byl jen tření. **Vybraná volba je výslovný pokyn** ve smyslu `~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak* – bez ní merge neprovádíš, nepřipravuješ ani nevypisuješ příkazy.
+
+**Proč `/compact`, `/clear` a `/exit` nejsou volby:** jsou to vestavěné příkazy Claude Code a skill je spustit neumí. Volba, po které by následovalo jen „teď to napiš sám“, je krok navíc; stačí je jmenovat v textu otázky. Ukončit session natvrdo přes shell se nesmí – utrhla by se rozepsaná historie.
+
+**Skončil-li běh třetí větou** (zapsané není všechno), otázku nepokládej: další krok je odstranit to, co zápisu brání, a merge by šel přes nevypořádanou práci.
