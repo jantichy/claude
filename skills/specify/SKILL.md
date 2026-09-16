@@ -400,7 +400,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 ## Režim `close`
 
-Pouští se, **až jsou všechna kola sloučená** – sekce *Kola návrhu* v `todo.md` je prázdná nebo neexistuje. Větev podle *Fáze 0*, bod 5. Jeho hlavní práce je **návrh řešení nad celkem**; kola ho záměrně nepsala. **Má dva běhy jako kolo:** sešití (kroky 1–3 a závěr), pak doporučené kroky, a nakonec dočištění (krok 4) – řádek *Návrh uzavřen* nesmí vzniknout dřív, než se nálezy z posudku mají kam vrátit. Druhý běh `auto` pozná podle toho, že větev už mění `architecture.md` proti `origin/main`; potvrď s uživatelem, že doporučené kroky proběhly.
+Pouští se, **až jsou všechna kola sloučená** – sekce *Kola návrhu* v `todo.md` je prázdná nebo neexistuje. Větev podle *Fáze 0*, bod 5. Jeho hlavní práce je **návrh řešení nad celkem**; kola ho záměrně nepsala. **Má dva běhy jako kolo:** sešití a závěr (body 1–3 a 5), pak doporučené kroky, a nakonec dočištění (bod 4) – řádek *Návrh uzavřen* nesmí vzniknout dřív, než se nálezy z posudku mají kam vrátit. Druhý běh `auto` pozná podle toho, že větev už mění `architecture.md` proti `origin/main`; potvrď s uživatelem, že doporučené kroky proběhly.
 
 1. **Ověř, že kola opravdu doběhla.** Sekce *Kola návrhu* je prázdná, žádná větev z řádků *Větev* v záznamech nejnovější várky není mimo `origin/main` (`git branch -a --no-merged origin/main`) a každé kolo z nejnovější várky má záznam v `docs/done.md` za posledním řádkem *Návrh uzavřen*. Chybí-li něco, řekni co a zastav se.
 2. **Sešij požadavky.** Projdi `requirements.md` proti tematickým dokumentům: odkazuje na každý, nepřekrývá se s nimi, *MVP* a *Mimo rozsah* pokrývají, co kola rozhodla. Kontroly z *Fáze 4* platí nad celkem.
