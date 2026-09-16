@@ -132,6 +132,10 @@ Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je m
 
 Vezme přepis školení, článek, poznámky, ale i rovnou nahrávku, obrázek nebo PDF a zapracuje je do mojí knihovny know-how – rozebere zdroj na jednotlivé poznatky a rozpustí je na místa, kam patří, klidně i s přestavbou textu kolem. Rozliší přitom skutečný rozpor od toho, že jsem na školení něco jen řekl jednodušeji, a ptá se opravdu jen tam, kde neví. Metodiku přepisuje volně, ručně psané texty jen doplňuje a doslovných přetisků se nedotkne.
 
+### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
+
+Na začátku session posbírá všechno, co v projektu čeká – seznam úkolů, zbytek plánu, kola rozpracovaného návrhu, rozdělané větve a necommitnuté změny –, seřadí to podle závislostí, u každého úkolu řekne, v čem spočívá a jak je velký, a nejaktuálnější mi nabídne k výběru. Po výběru se do toho rovnou pustí. Nahrazuje dlouhý prompt, který jsem psal do každé nové session.
+
 ### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
 
 Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem, a začne ho používat jako zavedený pojem – napříč projekty, v dokumentaci, v názvech souborů. Tenhle skill takové termíny vyhledá, projedná se mnou jeden po druhém, a co odsouhlasím, nahradí ve všech repozitářích naráz. Skončit umí i tím, že se v textech nic nepřepíše – slovo je běžná čeština a **ponechá se**, nebo se používá český protějšek a to cizí se **zakáže preventivně**, ať se nezačne zavádět. Dohodnuté náhrady pak drží [`PTYDEPE.md`](PTYDEPE.md), takže se totéž slovo neotevírá za měsíc znovu.

@@ -345,7 +345,7 @@ Kolo má **dva běhy ve své větvi**: rozhodování (kroky 1–4) a zápis pře
 
 ### Bez jména kola: nabídka
 
-**Mapa se čte z `origin/main`** (`git show origin/main:docs/todo.md`) – blok v aktuální větvi může být neaktuální nebo nesloučený; není-li tam mapa, řekni, že je potřeba nejdřív sloučit `create`. Vypiš všechna zbývající kola – jméno, na co čeká a v jakém je stavu. **Stav rozběhnutého kola leží v jeho větvi**, ne na `main`: existuje-li větev z řádku *Větev*, přečti řádek *Stav* odtud (`git show <větev>:docs/todo.md`), ať se kolo, které se právě rozhoduje, nenabídne podruhé. **Bez worktree layoutu** čti *Stav* rovnou z pracovního stromu; kolo se `rozhoduje se` nebo `rozhodnuto` nenabízej. Pak přes `AskUserQuestion` nabídni **několik nejbližších**: nejdřív kola bez nesplněné závislosti, mezi nimi ta, na která čeká nejvíc dalších kol nebo nejvíc odložených otázek. U každé volby řekni, do kterých sdílených dokumentů kolo sahá a jestli se to kříží s rozběhnutým kolem – **souběh tím neblokuj, jen na něj upozorni**.
+**Vyvolej `/next` se zúžením na kola** (`/next kola`) přes nástroj `Skill`. Jak se kola čtou, řadí a nabízejí – mapa z `origin/main`, stav rozběhnutého kola z jeho větve, upozornění na souběh –, drží `~/.claude/skills/next/SKILL.md`, *Kola návrhu*; nabídka kol je jen zúžená podoba obecné fronty práce, a dvě kopie téhož postupu by se rozešly. Vybrané kolo pak `/next` sám předá zpátky jako `/specify round <kolo>`.
 
 ### 1. Příprava kola
 
