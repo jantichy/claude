@@ -329,6 +329,8 @@ Základní otázka u každé nové položky: **není to jen existující položk
 
 Je to *Single source of truth* uplatněný **před** vznikem – proto se konflikt řeší hned, ne až se zabydlí.
 
+**Týká se to i struktury, která vzniká jako oprava nálezu.** Než přidáš pole, mechanismus nebo krok, projdi, **čím podobné případy řeší zbytek návrhu**, a ověř, že je problém vymezený podle správné osy – ne podle toho, kde se na něj zrovna narazilo. Oprava uprostřed auditu nebo revize je nejzrádnější místo: spěchá se, nikdo nečeká návrh, a nová struktura proto projde bez otázky, jestli nejde o existující věc v jiném kontextu. Doloženo 16. 9. 2026 v rezervačním systému: nález „dva souběžné crony vystaví dva doklady“ dostal výpůjčku jen pro jeden přechod, přestože riziko patřilo souběhu **všech** přechodů volajících ven (admin s automatem, webhook s cronem) a návrh už měl mechanismy, na které šlo navázat. Řešení bylo nesymetrické a totéž mylné tvrzení se zaneslo do sousedního běhu; napravilo se až obecnou výpůjčkou v kostře přechodu.
+
 ### Přednost pravidel
 
 Odporují-li si dvě platná pravidla, vyhrává to výš v seznamu:
