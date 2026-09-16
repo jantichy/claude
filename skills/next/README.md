@@ -31,7 +31,7 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 
 ## Ukázka výstupu
 
-**Poznámky:** Že kolo o fakturaci navazuje na export faktur, je domněnka z textu úkolu, výslovně zapsané to není.
+Že kolo o fakturaci navazuje na export faktur, je domněnka z textu úkolu, výslovně zapsané to není.
 
 **Pracuje se jinde:** Kolo o upomínkách (`specify-upominky`, běží v jiném okně)
 
@@ -39,12 +39,12 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 
 **S čím můžeme pokračovat**
 
-1. 🟡 Export faktur do účetnictví (opuštěná větev `export-faktur`)
-2. 🟡 Validace formuláře objednávky (rozdělané tady)
-3. 🟡 Kolo o DPH
-4. 🟢 Přejmenovat „rezervace“ na „objednávka“ v administraci
+1. ◐ Export faktur do účetnictví (opuštěná větev `export-faktur`)
+2. ◐ Validace formuláře objednávky (rozdělané tady)
+3. ◐ Kolo o DPH
+4. ○ Přejmenovat „rezervace“ na „objednávka“ v administraci
 
-🟢 drobnost · 🟡 střední · 🔴 velký
+○ drobnost · ◐ střední · ● velký
 
 Pod tím hned nabídka prvních položek k výběru, u každé jednou větou, co se bude dělat a čím se začne.
 

@@ -105,7 +105,7 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 **Výpis je kompaktní: jeden řádek na položku.** Podrobnosti – co se bude dělat a čím se začne – nese až `description` u nabízených položek v `AskUserQuestion`. Generování textu je nejpomalejší část běhu a totéž dvakrát je čekání navíc.
 
 ```
-**Poznámky:** <zastaralá položka, kříž kol, domnělá závislost, selhaný fetch – nebo že nic rozdělaného ani běžícího jinde není>
+<zastaralá položka, kříž kol, domnělá závislost, selhaný fetch – nebo že nic rozdělaného ani běžícího jinde není>
 
 **Pracuje se jinde:** <název> (`<větev>`, <session / nejisté: proč>) · …
 
@@ -113,29 +113,29 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 
 **S čím můžeme pokračovat**
 
-1. <kulička> <název> <(jen je-li co: čeká na …, opuštěná větev `<větev>`, rozdělané tady)>
+1. <kolečko> <název> <(jen je-li co: čeká na …, opuštěná větev `<větev>`, rozdělané tady)>
 2. …
 
-🟢 drobnost · 🟡 střední · 🔴 velký
+○ drobnost · ◐ střední · ● velký
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*. Prázdnou část vynech.
 
-**Pořadí je schválně od kontextu k výběru** (vyžádal si ho uživatel 16. 9. 2026): poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky, práce jinde a čekající položky jsou každá jeden odstavec**, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
+**Pořadí je schválně od kontextu k výběru** (vyžádal si ho uživatel 16. 9. 2026): poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky jsou holý odstavec bez popisku** a stojí úplně nahoře; **práce jinde a čekající položky jsou každá jeden odstavec** s tučným popiskem, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
 
-**Tučný je jen nadpis a popisky částí, položky ne.** Položka je kulička velikosti a název, nic víc – **stav „připravené“ ani velikost slovem se nepíšou**. Do závorky za název patří jen to, co mění rozhodnutí: nesplněná závislost, opuštěná větev, rozdělaná práce tady. Připravená položka bez závislosti závorku nemá. Tvar si výslovně vyžádal uživatel (16. 9. 2026): výpis se čte očima, ne jako tabulka, a slova navíc na každém řádku ho zahlcovala.
+**Tučný je jen nadpis a popisky částí, položky ne.** Položka je kolečko velikosti a název, nic víc – **stav „připravené“ ani velikost slovem se nepíšou**. Do závorky za název patří jen to, co mění rozhodnutí: nesplněná závislost, opuštěná větev, rozdělaná práce tady. Připravená položka bez závislosti závorku nemá. Tvar si výslovně vyžádal uživatel (16. 9. 2026): výpis se čte očima, ne jako tabulka, a slova navíc na každém řádku ho zahlcovala.
 
-**Velikost** je kulička hned za číslem, odhadnutá podle toho, co práce obnáší, ne podle délky zápisu:
+**Velikost** je kolečko hned za číslem – obyčejný textový znak, ne barevné emoji: přebírá barvu textu terminálu, takže nesvítí, a napůl plné kolečko se čte jako napůl velký úkol. Barevné kuličky uživatel odmítl jako moc křiklavé, odhadnutá podle toho, co práce obnáší, ne podle délky zápisu:
 
-| Kulička | Velikost |
+| Kolečko | Velikost |
 |---|---|
-| 🟢 | drobnost – jedna, dvě odpovědi |
-| 🟡 | střední – session, jedno kolo, pár úkolů z plánu |
-| 🔴 | velký – víc sessions nebo celý krok cyklu |
+| ○ | drobnost – jedna, dvě odpovědi |
+| ◐ | střední – session, jedno kolo, pár úkolů z plánu |
+| ● | velký – víc sessions nebo celý krok cyklu |
 
 **Spouštěč** je skill, když ho položka jmenuje nebo když jde o krok cyklu, kolo či plán; u opuštěné větve obnovení session nebo pokračování ve větvi; jinak první konkrétní krok. Skill si nevymýšlej k položce, se kterou nemá nic společného.
 
-Pak přes `AskUserQuestion` nabídni **tři až čtyři** položky v pořadí z *Fáze 2*; první označ jako doporučenou. `description` začíná **kuličkou velikosti** a nese, **co se bude dělat a čím se začne** – jednou, dvěma větami. Volbu *Other* doplňuje nástroj sám – vybere-li ji uživatel, jde o jiný směr, ne o odmítnutí. **Nabízet není co** – všechno běží jinde nebo na něco čeká –, výběr nepokládej a skonči druhou závěrečnou větou.
+Pak přes `AskUserQuestion` nabídni **tři až čtyři** položky v pořadí z *Fáze 2*; první označ jako doporučenou. `description` začíná **kolečkem velikosti** a nese, **co se bude dělat a čím se začne** – jednou, dvěma větami. Volbu *Other* doplňuje nástroj sám – vybere-li ji uživatel, jde o jiný směr, ne o odmítnutí. **Nabízet není co** – všechno běží jinde nebo na něco čeká –, výběr nepokládej a skonči druhou závěrečnou větou.
 
 ## Fáze 4 – Předání
 
