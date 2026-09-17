@@ -152,6 +152,10 @@ Přejmenuje pojem napříč projektem včetně **odvozených tvarů** a české 
 
 Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu protečou samy z výpočetního skriptu nebo ze screenshotu administrace.
 
+### [`/scenarios`](skills/scenarios/) – situace, na které se v návrhu zapomnělo
+
+Projde konverzace nad projektem, které se od minule nevytěžily, a doplní z nich chybějící uživatelské scénáře. Řeší tichou vadu, která vzniká při každém kole návrhu: rozhodne se, jak se má systém v nějaké situaci chovat, zapíše se to do modelu – a scénář k té situaci nikdo nedopíše. Seznam situací pak vypadá úplně a není, takže se proti němu nedá ověřit, co nový návrh rozbil.
+
 ### [`/skill`](skills/skill/) – skilly, které se samy udržují
 
 Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale hotové skilly zůstanou stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
