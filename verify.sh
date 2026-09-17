@@ -53,6 +53,12 @@ MAX_OUT=200000  # kolik bajtů výstupu si od kroku vezmeme
 ALLOW_DIR="$HOME/.local/state/claude-verify/allowed"
 RUN_DIR="$HOME/.local/state/claude-verify/runs"
 
+# Jméno klíče v kontraktu. Jeden vzor pro všechna místa, která kontrakt čtou –
+# výpis ke schválení, otisk souhlasu, --contract i spouštění. Dřív výpisy
+# propouštěly i dvojtečku (`test:unit`), kterou nic dalšího neznalo, takže se
+# člověku ukázal ke schválení krok, který by se nikdy nespustil.
+KEY_RE='[a-zA-Z][a-zA-Z0-9_-]*'
+
 # MODE rozlišuje CLI (--allow, --list, --revoke) od běhu hooku a rozhoduje o
 # návratovém kódu chyby. V hooku musí být 2: při exit 1 jde stderr jen uživateli
 # a model o ničem neví, takže nechá svoje „hotovo" stát nad stavem, který
@@ -60,6 +66,7 @@ RUN_DIR="$HOME/.local/state/claude-verify/runs"
 # nezacyklí – chyby, které sem vedou (rozbitý git, nečitelný kontrakt), model
 # stejně sám neopraví a opakovat mu je je jen otravné.
 MODE=cli
+
 die() {
   echo "Průběžná kontrola: $1" >&2
   if [ "$MODE" = hook ] && [ "${STOP_ACTIVE:-false}" != true ]; then exit 2; fi
@@ -210,7 +217,7 @@ contract_section() { md_body "$1" | sed -n '/^## Kontrakt příkazů/,/^## /p'; 
 # je u vynucovací vrstvy horší směr selhání než propuštěná chyba – vede k vypnutí.
 contract_fingerprint() {
   contract_section "$1" \
-    | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9_-]*\):[[:space:]]\{1,\}\(.*\)$/\1=\2/p' \
+    | sed -n 's/^[[:space:]]*[-*][[:space:]]*\('"$KEY_RE"'\):[[:space:]]\{1,\}\(.*\)$/\1=\2/p' \
     | sed 's/[[:space:]]*$//' | sha
 }
 
@@ -352,9 +359,9 @@ if [ "${1:-}" = "--allow" ]; then
   # Dvě různé věci, které se nesmí slít: klíč s pomlčkou je ROZHODNUTÍ, že se krok
   # neaplikuje, kdežto klíč s příkazem mimo typecheck/lint/test je příkaz, který
   # průběžná kontrola schválně nepouští (`dev`, `e2e`) a spustí ho jiný krok cyklu.
-  DASHES=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}-[[:space:]]*$/\1/p' \
+  DASHES=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\('"$KEY_RE"'\):[[:space:]]\{1,\}-[[:space:]]*$/\1/p' \
           | paste -sd, - | sed 's/,/, /g')
-  OTHER=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}[^-[:space:]].*/\1/p' \
+  OTHER=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\('"$KEY_RE"'\):[[:space:]]\{1,\}[^-[:space:]].*/\1/p' \
           | grep -vxE 'typecheck|lint|test' | paste -sd, - | sed 's/,/, /g')
   [ -n "$OTHER" ] && echo "  Nespouští: $OTHER (příkazy pro jiné kroky cyklu, ne pro průběžnou kontrolu)"
   [ -n "$DASHES" ] && echo "  Neaplikuje se: $DASHES (pomlčka v kontraktu, tedy vědomé rozhodnutí)"
@@ -389,7 +396,7 @@ if [ "${1:-}" = "--contract" ]; then
   N=$(md_body "$MD" | grep -c '^## Kontrakt příkazů')
   [ "$N" -eq 1 ] || die "v $MD je sekce ## Kontrakt příkazů ${N}×; nechávám být, ať se nevypíše nesprávná. Ponech jednu."
   OUT=$(contract_section "$MD" \
-    | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9_-]*\):[[:space:]]\{1,\}\(.*\)$/\1\t\2/p' \
+    | sed -n 's/^[[:space:]]*[-*][[:space:]]*\('"$KEY_RE"'\):[[:space:]]\{1,\}\(.*\)$/\1\t\2/p' \
     | sed 's/[[:space:]]*$//')
   # cwd se validuje tady, stejně jako při běhu hooku níž, ať CI nemusí mít
   # vlastní kopii té logiky: pomlčka znamená „není“ a nevypíše se, cesta ven
@@ -485,7 +492,7 @@ if ! allow_file "$PROJ" >/dev/null; then
     echo "Kontrakt je kód z repozitáře. Projdi si ho a jestli tomu repozitáři věříš:"
     echo "  ~/.claude/verify.sh --allow $PROJ"
     contract_section "$CLAUDE_MD" \
-      | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}/  \1: /p' || true
+      | sed -n 's/^[[:space:]]*[-*][[:space:]]*\('"$KEY_RE"'\):[[:space:]]\{1,\}/  \1: /p' || true
   } >&2
   exit 1
 fi

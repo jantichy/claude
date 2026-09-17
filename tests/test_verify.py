@@ -571,6 +571,17 @@ class ConsentGrantedByHuman(unittest.TestCase):
         self.assertRegex(v.stdout, r"Nespouští: dev")
         self.assertRegex(v.stdout, r"Neaplikuje se: build")
 
+    def test_allow_output_does_not_show_key_that_never_runs(self):
+        """Výpis ke schválení a spouštění čtou jméno klíče týmž vzorem. Výpis
+        dřív propouštěl dvojtečku (`test:unit`), kterou otisk ani spouštění
+        neznaly – člověk tak schvaloval krok, který se nikdy nespustí."""
+        (self.repo / "CLAUDE.md").write_text(
+            "# T\n\n## Kontrakt příkazů\n\n- test: true\n- test:unit: echo NIKDY\n",
+            encoding="utf-8")
+        v = grant_consent(self.repo, self.home)
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertNotIn("test:unit", v.stdout)
+
     def test_without_terminal_no_consent(self):
         v = self.without_terminal()
         self.assertNotEqual(v.returncode, 0)
