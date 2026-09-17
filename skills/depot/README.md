@@ -6,8 +6,8 @@ Podstatné je, že **sám nerozhoduje podle ničeho vlastního.** Všechna pravi
 
 ## Co umí
 
-- **`/depot <files>`** (výchozí, jmenuje se `full`) – rozpozná, ukáže plán celé dávky, po odsouhlasení přesune a spustí navazující zpracování.
-- **`/depot store <files>`** – jen zařadí a skončí. Na vyklizení Downloads, když na zpracování není čas.
+- **`/depot <cesty…>`** (výchozí, jmenuje se `full`) – rozpozná, ukáže plán celé dávky, po odsouhlasení přesune a spustí navazující zpracování.
+- **`/depot store <cesty…>`** – jen zařadí a skončí. Na vyklizení Downloads, když na zpracování není čas.
 - **`/depot workflow`** – otázku po otázce s vámi založí nové pravidlo, nebo upraví stávající.
 - Zvládne jeden soubor, víc souborů, masku i adresář. Soubory z jedné události uloží do jednoho místa pohromadě.
 - Nepozná-li, o co jde, nebo sedí-li pravidel víc, **nabídne varianty k výběru** – a u každé rovnou říká, kam by soubor šel a co by se spustilo.

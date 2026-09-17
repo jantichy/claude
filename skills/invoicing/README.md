@@ -31,8 +31,8 @@ Konec měsíce znamenal pokaždé totéž: projít timetracking, sečíst hodiny
 ```
 /invoicing preview          # co by se vystavilo
 /invoicing full             # ostrý běh přes všechny klienty
-/invoicing recover <client>  # dohledání zapomenutého času u jednoho klienta
-/invoicing sync <client>     # přepsání času do timetrackingu klienta
+/invoicing recover <klient>  # dohledání zapomenutého času u jednoho klienta
+/invoicing sync <klient>     # přepsání času do timetrackingu klienta
 ```
 
 ## Ukázka výstupu

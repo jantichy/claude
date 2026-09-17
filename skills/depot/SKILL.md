@@ -1,7 +1,7 @@
 ---
 name: depot
 description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty nebo adresář, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Dev/context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, nemaže a v ~/Depot nepřejmenovává.
-argument-hint: [full|store] <paths…> | workflow
+argument-hint: [full|store] <cesty…> | workflow
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
