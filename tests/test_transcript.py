@@ -5,7 +5,7 @@ konzultace, přednáška. Chyba, která přepíše zdroj, se proto neprojeví ja
 nástroje, ale jako nenávratně ztracený podklad – a `ffmpeg -y` to udělá mlčky
 s návratovým kódem 0.
 
-Oba scénáře tady nastaly doopravdy (`/review full`, 14. 9. 2026):
+Všechny tři scénáře tady nastaly doopravdy (`/review full`, 14. 9. 2026):
 
 1. Pojistka proti přepsání vlastního vstupu porovnávala **řetězce cest**, takže
    `./rec.wav` a `rec.wav` prošly jako různé soubory. Z 30sekundové nahrávky
@@ -64,7 +64,7 @@ class SourceOverwriteGuard(unittest.TestCase):
 
         Vytažený ze skriptu proto, že samotný `transcribe.sh` chce whisper-cli
         a model o velikosti gigabajtu; testovat se má ta podmínka, ne whisper.
-        Že se s originálem nerozešla, hlídá `test_script_compares_files`.
+        Že se s originálem nerozešla, hlídá `RealScriptProtectsSource` – spouští skutečný skript, ne tuhle kopii.
         """
         script = f'''
         WORKDIR={workdir}; base={base}; f={input_path}; KEEP_WAV=1
@@ -192,7 +192,7 @@ class RealScriptProtectsSource(unittest.TestCase):
         condition = '  if [ -e "$wav" ] && [ "$wav" -ef "$f" ]; then'
         self.assertEqual(text.count(condition), 1, "pojistka ve skriptu změnila tvar")
         broken.write_text(text.replace(condition, condition[:-6] + " && false; then"),
-                             encoding="utf-8")
+                          encoding="utf-8")
 
         source = self.tmp / "rec.wav"
         subprocess.run([FFMPEG, "-f", "lavfi", "-i", "sine=frequency=440:duration=10",
@@ -232,10 +232,6 @@ class OutputExtensionsList(unittest.TestCase):
         self.assertIn('[ "$wav" -ef "$f" ]', text)
         self.assertNotIn('[ "$wav" = "$f" ]', text,
                          "porovnání řetězců je zpátky – relativní cesta pojistku mine")
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 class SpeakerAssignment(unittest.TestCase):
@@ -593,3 +589,7 @@ class MeetingPartsJoin(unittest.TestCase):
         a = self._part("a.wav", 1)
         self.assertNotEqual(self._join("spojeno", a).returncode, 0)
         self.assertFalse((self.tmp / "spojeno.wav").exists())
+
+
+if __name__ == "__main__":
+    unittest.main()

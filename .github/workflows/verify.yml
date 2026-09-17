@@ -37,7 +37,7 @@ jobs:
           python3 -m pip install --quiet ruff
 
       # Obecné nástroje, které nejsou příkazem projektu, takže v kontraktu nestojí
-      # a smyčka výš je nepustí. Do CI patří přesto: jsou deterministické, rychlé
+      # a smyčka v kroku „Spusť kontrakt příkazů“ je nepustí. Do CI patří přesto: jsou deterministické, rychlé
       # a jejich nález je vždy kritický. Bez nich by scan tajemství běžel jen tehdy,
       # když někdo pustí `/review` na stroji, kde má gitleaks nainstalovaný.
       - name: Tajemství v repu

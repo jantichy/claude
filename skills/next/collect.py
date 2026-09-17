@@ -20,7 +20,7 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 - `plan` – počet otevřených a hotových úkolů a první otevřené; `artifacts` – které návrhové dokumenty existují
 - `passes` – posledních pět záznamů `## Průchody životním cyklem`; `lifecycle` – rámeček cyklu z `RULES.md`
 - `branches` – nesloučené větve a větve živých session: `state` (`occupied`, `abandoned`,
-  `uncertain`), session, commity, změny `todo.md`/`plan.md`/`done.md` a přiřazená kola
+  `uncertain`, `empty`), session, commity, změny `todo.md`/`plan.md`/`done.md` a přiřazená kola
 - `sessions_error` – proč se živé session nedaly zjistit (pak jsou všechny větve `uncertain`)
 - `backlog` – názvy nápadů, jen když je fronta prázdná
 

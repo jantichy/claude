@@ -274,7 +274,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 | `~/.claude/skills/LIFECYCLE.md` | **byl-li to krok cyklu**, jeho číslovaná odrážka; bez ní se rozejde s rámečkem a testy to shodí |
 | `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRATION`**, je-li tam; jinak `test_migration_names_only_existing_skills` spadne na výjimku pro nikoho |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<name>`“ |
-| `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních vizitek. Osiřelý odkaz na `../<name>/README.md` testy shodí, ale samy ho nevyškrtnou |
+| `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních README skillů. Osiřelý odkaz na `../<name>/README.md` testy shodí, ale samy ho nevyškrtnou |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
 | projektové `CLAUDE.md` v `~/Dev` | sekce, které skill zakládal |
 | Memory | záznamy, které ho vyžadují |

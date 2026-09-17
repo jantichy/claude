@@ -337,7 +337,7 @@ WHISPER_CHUNK_MIN=5 <ostatní proměnné jako v kroku 6> <skill>/transcribe.sh �
 
 **Pět minut je rozumný začátek, ne doporučená hodnota.** Kratší úsek znamená víc řezů uprostřed vět a víc načtení modelu, delší zase větší ztrátu, když jeden úsek spadne. Pod dvě minuty nechoď – režie načítání modelu by převážila samotný přepis.
 
-Model začíná u každého úseku bez kontextu, takže se smyčka nemá jak šířit dál. **Ta samá volba je jediná záchrana i tehdy, když whisper spadne uprostřed dlouhé nahrávky:** bez ní se ztratí přepis celého souboru, s ní se přeskočí jen postižený úsek (`### CHUNKFAILED file-N i/z` v logu) a zbytek se přepíše.
+Model začíná u každého úseku bez kontextu, takže se smyčka nemá jak šířit dál. **Ta samá volba je jediná záchrana i tehdy, když whisper spadne uprostřed dlouhé nahrávky:** bez ní se ztratí přepis celého souboru, s ní se přeskočí jen postižený úsek (`### CHUNKFAILED file-N <i>/<total>` v logu) a zbytek se přepíše.
 
 **Nezapínej to sám a nikdy jako výchozí.** Na každé hranici úseku vzniká řez uprostřed věty – v ostrém testu se okolo něj jedna replika zopakovala nadvakrát. Platí se tím za odstraněnou smyčku, ne za lepší přepis. Zároveň platí, že po takovém běhu **`SPEECHSTAT` klesne o zhruba tolik, kolik zabíraly přeskočené úseky** – nízké číslo je tady informace, ne poplach.
 

@@ -6,7 +6,7 @@ který si nevybral – stačí rozbalit archiv nesoucí `.git/` a status line na
 běží při prvním překreslení.
 
 Git přitom umí spustit program podle konfigurace toho repozitáře:
-`filter.<jméno>.clean` se volá, kdykoliv potřebuje obsah pracovního souboru,
+`filter.<name>.clean` se volá, kdykoliv potřebuje obsah pracovního souboru,
 tedy i při `git diff --name-only`, kterým se počítají změny. Jméno filtru si
 volí ten, kdo config napsal, takže ho nejde přebít `-c` přepínačem – obrana je
 na takový repozitář nesahat.
@@ -72,8 +72,8 @@ class StatusLineOverForeignRepo(unittest.TestCase):
             "context_window": {},
         })
         proc = subprocess.run(["bash", str(script or STATUSLINE)],
-                                input=stdin_json, capture_output=True, text=True,
-                                cwd=str(self.repo), check=False)
+                              input=stdin_json, capture_output=True, text=True,
+                              cwd=str(self.repo), check=False)
         self.assertEqual(proc.returncode, 0, proc.stderr)
         return proc.stdout
 

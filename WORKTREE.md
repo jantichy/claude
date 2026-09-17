@@ -3,7 +3,7 @@
 Uspořádání, ve kterém adresář projektu není pracovní adresář, ale **kontejner** s jedním git repozitářem a několika jeho pracovními adresáři – jeden na každou rozdělanou větev.
 
 ```
-<project>/                    KONTEJNER – není ve gitu, nic se odsud neverzuje
+<container>/                    KONTEJNER – není ve gitu, nic se odsud neverzuje
 ├── .bare/                    holý git repozitář – jediné místo s daty; nikdy do něj nesahej
 ├── .git                      soubor "gitdir: ./.bare"
 ├── CLAUDE.md                 tenký rozcestník: popis layoutu + @main/CLAUDE.md
@@ -69,9 +69,9 @@ Z těch dvou faktů plyne rozdělení, které se **nesmí prohodit**:
 
 ### Rozcestník v kořeni kontejneru
 
-`<project>/CLAUDE.md` neobsahuje žádná pravidla projektu. Obsahuje popis layoutu, odchylky, **import tohohle souboru** a **import projektového `CLAUDE.md`** (`@main/CLAUDE.md`). Zakládá ho `/worktree` a jeho doslovné znění drží `~/.claude/skills/worktree/SKILL.md`, režim `enable`.
+`<container>/CLAUDE.md` neobsahuje žádná pravidla projektu. Obsahuje popis layoutu, odchylky, **import tohohle souboru** a **import projektového `CLAUDE.md`** (`@main/CLAUDE.md`). Zakládá ho `/worktree` a jeho doslovné znění drží `~/.claude/skills/worktree/SKILL.md`, režim `enable`.
 
-Relativní cesta v importu se resolvuje vůči souboru, který import obsahuje – `@main/CLAUDE.md` tedy míří na `<project>/main/CLAUDE.md`. Řetěz importů smí být hluboký nejvýš **4 úrovně**, takže kontejner → `main` → doménový standard se pohodlně vejde.
+Relativní cesta v importu se resolvuje vůči souboru, který import obsahuje – `@main/CLAUDE.md` tedy míří na `<container>/main/CLAUDE.md`. Řetěz importů smí být hluboký nejvýš **4 úrovně**, takže kontejner → `main` → doménový standard se pohodlně vejde.
 
 Když pracuješ ve worktree `<branch>/`, načte se `<branch>/CLAUDE.md` on-demand, jakmile v té větvi něco čteš. Pravidla té větve tedy platí, i když rozcestník v kořeni importuje verzi z `main`.
 
@@ -80,7 +80,7 @@ Když pracuješ ve worktree `<branch>/`, načte se `<branch>/CLAUDE.md` on-deman
 ## Založení větve
 
 ```bash
-git -C <project> worktree add <project>/<directory> -b <branch>
+git -C <container> worktree add <container>/<directory> -b <branch>
 ```
 
 - Větev pojmenuj `feat/`, `fix/` nebo `docs/` podle povahy práce; zbytek názvu česky nebo anglicky podle toho, co je v projektu zvykem.
@@ -94,7 +94,7 @@ git -C <project> worktree add <project>/<directory> -b <branch>
 **Návrat do větve, která už existuje** (její worktree byl mezitím smazán) – bez `-b`:
 
 ```bash
-git -C <project> worktree add <project>/<directory> <branch>
+git -C <container> worktree add <container>/<directory> <branch>
 ```
 
 S `-b` by to spadlo na `branch already exists`. Nejdřív se proto podívej do `git branch -a`, jestli větev není.
@@ -146,7 +146,7 @@ Chce-li uživatel začít **jinou** věc, nemerguj tu rozdělanou – založ ved
 
 *Až na výslovný pokyn uživatele.* **Jak se merguje, rozhoduješ sám a neptáš se** – pokyn „přimerguj“ míří na výsledek, ne na postup. Ptáš se jen tam, kde to níž výslovně stojí.
 
-**Hlavní větev** se tu píše `main`; jmenuje-li se v projektu jinak, platí to pro ni (viz úvod). **Příkazy nad `main/` pouštěj z `<project>/main`, ne z worktree větve:** krok 4 ten worktree maže, a session, která v něm stojí, by přišla o pracovní adresář.
+**Hlavní větev** se tu píše `main`; jmenuje-li se v projektu jinak, platí to pro ni (viz úvod). **Příkazy nad `main/` pouštěj z `<container>/main`, ne z worktree větve:** krok 4 ten worktree maže, a session, která v něm stojí, by přišla o pracovní adresář.
 
 Celý postup proveď najednou a **průběžně hlas, co se povedlo** – merge nemá proběhnout mlčky. Vrátí-li příkaz jiný návratový kód, než s jakým krok počítá, nebo selže-li `pull`/`push`, zastav a ohlas to – nic neobcházej `--force` a větev nemaž.
 
@@ -160,8 +160,8 @@ Celý postup proveď najednou a **průběžně hlas, co se povedlo** – merge n
 ### 2. Posunul se `main` od odbočení větve?
 
 ```bash
-git -C <project>/main pull --ff-only                        # jen má-li repozitář remote
-git -C <project> merge-base --is-ancestor main <branch>      # 0 = neposunul, 1 = posunul
+git -C <container>/main pull --ff-only                        # jen má-li repozitář remote
+git -C <container> merge-base --is-ancestor main <branch>      # 0 = neposunul, 1 = posunul
 ```
 
 **Neposunul** → krok 4. Obsah `main` po merge bude přesně ten, který už ve větvi prošel průběžnou kontrolou.
@@ -187,10 +187,10 @@ Konflikty jsou tytéž, jako by se řešily přímo v `main/`; liší se místo:
 ### 4. Merge do `main` a úklid větve
 
 ```bash
-cd <project>/main                    # adresář, který po úklidu zůstane
+cd <container>/main                    # adresář, který po úklidu zůstane
 git merge --no-ff <branch> -m "<shrnutí toho, co větev přinesla>"
 git push                             # jen má-li repozitář remote
-git worktree remove <project>/<directory>
+git worktree remove <container>/<directory>
 git branch -d <branch>
 git push origin --delete <branch>     # jen pokud byla pushnutá
 ```
@@ -216,8 +216,8 @@ Hook volá lokální `.git/hooks/commit-msg` repozitáře, existuje-li, protože
 ## Kontrola stavu
 
 ```bash
-git -C <project> worktree list    # co je rozdělané
-git -C <project> branch -a        # jaké větve existují
+git -C <container> worktree list    # co je rozdělané
+git -C <container> branch -a        # jaké větve existují
 ```
 
 Worktree, o kterém uživatel neví nebo který zůstal po nedokončené session, ohlas – ale nemaž bez ptaní.

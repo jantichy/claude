@@ -2,7 +2,7 @@
 # Diarizace – druhý, volitelný průchod nad WAV z transcribe.sh. Zjistí, kdo kdy mluví.
 #
 # Použití:
-#   diarize.sh <workdir> <log_file> <wav> [počet_mluvčích]
+#   diarize.sh <workdir> <log_file> <wav> [count|auto]
 #
 # Počet mluvčích: číslo, nebo "auto". Pevné číslo dělá výrazně míň chyb.
 #
@@ -13,9 +13,9 @@
 # Do <log_file> se připisuje:
 #   ### DIARIZE START HH:MM:SS
 #   ### DIARIZE DONE HH:MM:SS
-#   ### DIARSTAT <mluvčích> <úseků>   (při nečitelné statistice '?' místo čísel)
-#   ### DIARSTAT-FAILED <chyba>     (diarizace proběhla, statistika se nepřečetla)
-#   ### DIARIZE FAILED <důvod>      (přepis tím nepřichází vniveč)
+#   ### DIARSTAT <speakers> <segments>   (při nečitelné statistice '?' místo čísel)
+#   ### DIARSTAT-FAILED <error>     (diarizace proběhla, statistika se nepřečetla)
+#   ### DIARIZE FAILED <reason>      (přepis tím nepřichází vniveč)
 #   ### DIARIZE ELAPSED <audio_s> <wall_s>
 #
 # Selhání tohohle skriptu NESMÍ shodit už hotový přepis – volající pokračuje dál
@@ -28,9 +28,9 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source=common.sh
 . "$HERE/common.sh"
 
-WORKDIR="${1:?použití: diarize.sh <workdir> <log> <wav> [počet mluvčích]}"
-LOG="${2:?použití: diarize.sh <workdir> <log> <wav> [počet mluvčích]}"
-WAV="${3:?použití: diarize.sh <workdir> <log> <wav> [počet mluvčích]}"
+WORKDIR="${1:?použití: diarize.sh <workdir> <log> <wav> [count|auto]}"
+LOG="${2:?použití: diarize.sh <workdir> <log> <wav> [count|auto]}"
+WAV="${3:?použití: diarize.sh <workdir> <log> <wav> [count|auto]}"
 NSPK="${4:-auto}"
 
 fail() {

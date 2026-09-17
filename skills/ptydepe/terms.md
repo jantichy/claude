@@ -117,7 +117,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Nahrazuje dřívější „pre-flight“** (2026-09-07). Letecká metafora, anglicky zavedená (*preflight check*), česky ne – a hlavně skloňovaná po česku: *„v pre-flightu“*, *„opsaným pre-flightem“*. Ta fáze navíc nic neprověřuje, jen zjišťuje výchozí stav, takže „příprava“ sedí i významem.
 
-**Soubor se dál jmenuje `PREFLIGHT.md`** – názvy souborů zůstávají anglicky. Česky pojmenované testy a proměnné se přejmenovaly (`ma_pripravu`, `test_norma_a_priprava_existuji`).
+**Soubor se dál jmenuje `PREFLIGHT.md`** – názvy souborů zůstávají anglicky. Česky pojmenované testy a proměnné se přejmenovaly (`ma_pripravu` → `has_preflight`, `test_norma_a_priprava_existuji` → `test_standard_and_preflight_exist`).
 
 **Ne „kontrola před startem“** – ve skloňovaných vazbách je to nepoužitelně dlouhé a kolidovalo by s blokující i průběžnou kontrolou, které znamenají něco jiného.
 

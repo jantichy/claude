@@ -170,7 +170,7 @@ Výstup strukturuj jako JSON pole objektů:
     "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
     "title": "krátký název problému",
     "description": "popis problému",
-    "locations": ["soubor:řádek", ...],
+    "locations": ["file:line", ...],
     "suggested_fix": "konkrétní navrhované řešení",
     "tags": ["toolchain"?, "batch"?],
     "related_root": "title jiného problému, jehož je tento následkem (volitelné)"

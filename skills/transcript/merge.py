@@ -9,7 +9,7 @@ v přepisu stejně věrohodně jako správné.
 Usage:
     merge.py <srt> <diarization.json> <output_base> [--names <names.json>]
 
-Vznikne <základ>.json (úseky s mluvčím a textem) a <základ>.vtt (titulky se
+Vznikne <output_base>.json (úseky s mluvčím a textem) a <output_base>.vtt (titulky se
 značkou <v Jméno>). Pojmenování mluvčích je volitelné; bez něj zůstanou
 SPEAKER_00 a spol.
 """

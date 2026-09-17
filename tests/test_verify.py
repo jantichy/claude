@@ -5,7 +5,7 @@ všechno ostatní je text, který vykonává model. Zároveň je to přes 500 ř
 s netriviální logikou: otisk stavu, souhlas podle repozitáře, rozlišení
 "test našel chybu" od "test nejde spustit", timeouty, pojistka proti smyčce.
 
-`decisions.md` dokládá, že v té logice už dvakrát byla kritická díra (otisk
+`~/Dev/context/decisions.md` (sekce `## Claude`) dokládá, že v té logice už dvakrát byla kritická díra (otisk
 nezahrnoval obsah souborů; chybějící nástroj se hlásil jako padající kontrola).
 Selhání je přitom **tiché v nebezpečném směru**: `exit 0` tam, kde má být `exit 2`,
 znamená, že se práce uzavře nad červenými testy a nikdo se to nedozví.
@@ -30,9 +30,9 @@ HOOK = ROOT / "verify.sh"
 
 # Návratové kódy Stop hooku. Rozdíl mezi 1 a 2 je celý smysl téhle vrstvy:
 # při 2 dostane výstup MODEL jako pokyn, při 1 jen člověk do transkriptu.
-BLOCKS = 2   # model to uvidí a má na to reagovat
-SILENT = 1      # jen pro člověka; model o tom neví
-PASSES = 0     # v pořádku, nebo se vědomě nic nespouští
+BLOCKS = 2  # model to uvidí a má na to reagovat
+SILENT = 1  # jen pro člověka; model o tom neví
+PASSES = 0  # v pořádku, nebo se vědomě nic nespouští
 
 
 def grant_consent(path, home):
@@ -96,8 +96,8 @@ class ContinuousCheck(unittest.TestCase):
         env.pop("CLAUDE_NO_VERIFY", None)
         if stdin_data is not None:
             stdin_data = json.dumps({"session_id": "s1",
-                                "cwd": str(cwd or self.repo),
-                                "stop_hook_active": stop_hook_active})
+                                     "cwd": str(cwd or self.repo),
+                                     "stop_hook_active": stop_hook_active})
         return subprocess.run(["bash", str(HOOK), *(argv or [])],
                               input=stdin_data, capture_output=True, text=True, env=env)
 
@@ -644,7 +644,7 @@ class ConsentBoundToContract(unittest.TestCase):
         env.pop("XDG_STATE_HOME", None)
         env.pop("CLAUDE_NO_VERIFY", None)
         stdin_data = json.dumps({"session_id": "s1", "cwd": str(cwd),
-                            "transcript_path": "", "stop_hook_active": False})
+                                 "transcript_path": "", "stop_hook_active": False})
         return subprocess.run([str(HOOK)], input=stdin_data, capture_output=True,
                               text=True, env=env, check=False)
 

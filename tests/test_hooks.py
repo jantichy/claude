@@ -192,7 +192,7 @@ class MergeCommitMessage(unittest.TestCase):
 
     def test_delegation_works_in_worktree(self):
         """Ve worktree vrací `git rev-parse --git-dir` privátní adresář větve
-        (`.git/worktrees/<jméno>`), kde hooky nejsou – cesta se proto musí
+        (`.git/worktrees/<name>`), kde hooky nejsou – cesta se proto musí
         skládat z `--git-common-dir`.
 
         Bez toho by delegace tiše selhala právě v layoutu, který `WORKTREE.md`
@@ -281,7 +281,7 @@ class VerifyHookIsRegistered(unittest.TestCase):
     `~/.claude/RULES.md`, *Ověřitelná kontrola místo dojmu*, žádá test
     k vynucovací vrstvě hned, ne až se ukáže, že nefunguje.
 
-    Hlídá se i timeout: `verify.sh` si sám dává `LIMIT=60` na krok a počítá
+    Hlídá se i timeout: `verify.sh` si sám dává `LIMIT` na krok a počítá
     s tím, že se tři kroky do timeoutu hooku vejdou. Timeout kratší než to by
     kontrolu utínal uprostřed a hlásil chybu tam, kde žádná není – tedy falešný
     poplach, který vede k vypnutí.

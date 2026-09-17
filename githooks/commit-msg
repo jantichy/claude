@@ -16,7 +16,7 @@ msg_file="$1"
 # repozitářem s čistou globální konfigurací. Zrušit delegaci by znamenalo tiše
 # odstřihnout hooky všech projektů, které si nějaké nesou.
 # Cesta se skládá z --git-common-dir, ne z --git-dir: ve worktree vrací --git-dir
-# privátní adresář větve (.git/worktrees/<jméno>), kde žádné hooks/ nejsou, takže
+# privátní adresář větve (.git/worktrees/<name>), kde žádné hooks/ nejsou, takže
 # by se delegace tiše přeskočila právě v layoutu, který projekty používají jako
 # standard. Absolutní tvar proto, že --git-common-dir vrací jinak relativní cestu.
 # --git-path se nepoužívá schválně: respektuje core.hooksPath, takže by vrátil
@@ -62,7 +62,7 @@ Merge commit má defaultní zprávu s jménem větve.
 Historie hlavní větve se čte přes `git log --first-parent`, kde je tenhle
 commit jediný řádek za celou větev. Napiš do něj, co se v té větvi udělalo:
 
-    git merge --no-ff <vetev> -m "Shrnutí toho, co větev přinesla"
+    git merge --no-ff <branch> -m "Shrnutí toho, co větev přinesla"
 
 Pravidlo drží ~/.claude/WORKTREE.md, sekce "Dokončení větve".
 MSG

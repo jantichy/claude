@@ -24,7 +24,7 @@ Do každého zadání vlož:
 ## Specialista
 
 ```
-Jsi specialista na jednu jedinou oblast: <oblast>. Auditujeme cizí běžící web
+Jsi specialista na jednu jedinou oblast: <area>. Auditujeme cizí běžící web
 <adresa>. Nehlásíš nic mimo svou oblast – od ostatních oblastí jsou tu jiní.
 
 PODKLAD

@@ -46,7 +46,7 @@ Sloupec *Živí* říká, do kterého dokumentu ta cesta ústí – cesta, její
 
 ## Zadání pro agenta
 
-Doplň pole hledání z Fáze 1 a cestu. **Tvar výstupu se řídí sloupcem *Vrací*** – cesta, která hledá povinnosti nebo pojmy, nemá co dát do pole „cena“, a kdyby ho měla vyplnit, vymyslí si ho.
+Doplň pole hledání z Fáze 1 a cestu. **Tvar výstupu se řídí sloupcem *Vrací*** – cesta, která hledá povinnosti nebo pojmy, nemá co dát do pole `pricing`, a kdyby ho měla vyplnit, vymyslí si ho.
 
 Společná hlavička:
 

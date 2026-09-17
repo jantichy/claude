@@ -38,16 +38,17 @@
 #   ### DONE file-N HH:MM:SS
 #   ### SPEECHSTAT N SPEECH_S TOTAL_S PERCENT   (podíl přepsaného zvuku,
 #                                                NE výstup VAD – vyjde stejně i bez něj)
-#   ### FAILED file-N <důvod>   (běh pokračuje dalším souborem)
-#   ### CHUNKING file-N <z>     (jen s WHISPER_CHUNK_MIN: začíná běh po úsecích)
-#   ### CHUNKFAILED file-N <i>/<z>  (úsek se přeskočil, zbytek se přepsal dál)
-#   ### CHUNKSTAT file-N <ok>/<z>   (kolik úseků se povedlo – ohlas ztrátu)
-#   ### NOCALIB <důvod>           (tempo tohoto běhu se do kalibrace nezapočítalo)
+#   ### FAILED file-N <reason>   (běh pokračuje dalším souborem)
+#   ### CHUNKING file-N <total>     (jen s WHISPER_CHUNK_MIN: začíná běh po úsecích)
+#   ### CHUNKFAILED file-N <i>/<total>  (úsek se přeskočil, zbytek se přepsal dál)
+#   ### CHUNKSTAT file-N <ok>/<total>   (kolik úseků se povedlo – ohlas ztrátu)
+#   ### NOCALIB <reason>           (tempo tohoto běhu se do kalibrace nezapočítalo)
 #   ### ELAPSED AUDIO_S WALL_S   (AUDIO_S = jen úspěšně přepsané soubory)
+#   ### COLLISION <basename> …  (dva vstupy se stejným základem jména; skript skončí kódem 2)
+#   ### EXISTING <files> …      (výstupy už leží v adresáři; skript skončí kódem 3)
 #   ### ALL DONE
 #
-# Do téhož logu píše i diarize.sh svoje ### DIARSTAT, ### DIARIZE ELAPSED
-# a ### DIARIZE FAILED.
+# Do téhož logu píše i diarize.sh; své značky vyjmenovává ve vlastní hlavičce.
 #
 # Průběžný stav kdykoli:  python3 progress.py <log_file>
 

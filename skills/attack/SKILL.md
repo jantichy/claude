@@ -151,7 +151,7 @@ Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři a
 
 **Prohlížeč je jeden a subagentům ho nedávej.** `chrome-devtools` řídí jednu instanci Chrome; dva agenti v ní přepisují jeden druhému stránku a výsledek je nepoužitelný. Vektory, které potřebují reálné rozhraní – *prostředí*, *vykreslení*, *stavy a pořadí* a proklikání toků – si **nech v hlavní session** a subagentům dej to, co jde přes `curl` a databázi. Vyjde to i časově: hlavní session tak není jen dispečer a útočí spolu s nimi.
 
-**Po sobě uklízí každý agent sám, ale ne to, co je v reprodukci.** Co zapsal, na konci vrátí do výchozího stavu – **s výjimkou účtů a záznamů, které jmenuje v nějakém `repro`**. Ty nechává být. Bez té výjimky si úklid a Fáze 3 protiřečí: postup zní „přihlas se jako `attacker3@vektor-c.test` a otevři objednávku #4171“, jenže obojí agent podle instrukce smazal. Hlavní session první krok neprovede, nález se „nereprodukuje“ a podle pravidla se **zahodí bez dotazu** – tedy doložený a pravý nález zmizí a v souhrnu z něj zbude číslo.
+**Po sobě uklízí každý agent sám, ale ne to, co je v reprodukci.** Co zapsal, na konci vrátí do výchozího stavu – **s výjimkou účtů a záznamů, které jmenuje v nějakém `reproduction`**. Ty nechává být. Bez té výjimky si úklid a Fáze 3 protiřečí: postup zní „přihlas se jako `attacker3@vektor-c.test` a otevři objednávku #4171“, jenže obojí agent podle instrukce smazal. Hlavní session první krok neprovede, nález se „nereprodukuje“ a podle pravidla se **zahodí bez dotazu** – tedy doložený a pravý nález zmizí a v souhrnu z něj zbude číslo.
 
 Ulož mu to v zadání a v Fázi 6 to po nich zkontroluj. Agent, který nález doloží a **ostatní** stav nechá ležet, ti rozbije reprodukci těm druhým.
 
@@ -205,10 +205,10 @@ VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
     "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
     "vector": "<vector>",
     "title": "krátký název",
-    "repro": ["krok 1", "krok 2", "..."],
+    "reproduction": ["krok 1", "krok 2", "..."],
     "observed": "co se stalo – hláška, stav, výstup z konzole nebo logu",
     "expected": "co se stát mělo",
-    "locations": ["soubor:řádek, pokud se dá dohledat"]
+    "locations": ["file:line, pokud se dá dohledat"]
   }
 ]
 

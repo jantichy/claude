@@ -4,7 +4,7 @@
 # jazyk na běh).
 #
 # Použití:
-#   split.sh <workdir> <audio> <zlom>       # zlom ve tvaru MM:SS nebo v sekundách
+#   split.sh <workdir> <audio> <cut>       # zlom ve tvaru MM:SS nebo v sekundách
 #
 # Vyrobí <workdir>/<name>-1.<ext> a <name>-2.<ext> a vypíše jejich
 # cesty, každou na jeden řádek. Kóduje se beze ztráty (-c copy), takže je to
@@ -15,9 +15,9 @@
 set -uo pipefail
 export LC_ALL=C
 
-WORKDIR="${1:?použití: split.sh <workdir> <audio> <zlom>}"
-AUDIO="${2:?použití: split.sh <workdir> <audio> <zlom>}"
-CUT="${3:?použití: split.sh <workdir> <audio> <zlom>}"
+WORKDIR="${1:?použití: split.sh <workdir> <audio> <cut>}"
+AUDIO="${2:?použití: split.sh <workdir> <audio> <cut>}"
+CUT="${3:?použití: split.sh <workdir> <audio> <cut>}"
 
 [ -f "$AUDIO" ] || { echo "Nahrávka '$AUDIO' neexistuje." >&2; exit 1; }
 [ -d "$WORKDIR" ] || { echo "Adresář '$WORKDIR' neexistuje." >&2; exit 1; }

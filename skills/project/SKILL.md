@@ -47,12 +47,12 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 **Ve worktree layoutu** – kontejner s `.bare/` a jedním pracovním adresářem na větev (`~/.claude/WORKTREE.md`) – platí dvě věci, které mění zbytek běhu. Zjisti je **dřív než cokoliv jiného**: obojí rozhoduje o tom, kde budeš hledat i kam budeš psát.
 
-**1. Vylez ke kontejneru.** Session se sice pouští z jeho kořene, ale `/project` se často volá i z `main/` nebo z worktree rozdělané větve – tam vedle souboru `.git` **žádné `.bare/` není**, takže bys layout vyhodnotil jako obyčejný repozitář a psal rovnou do `main/`. Rozliš podle `~/.claude/WORKTREE.md`, *Jak si skill najde projektový adresář*, a jdeš-li nahoru, řekni to nahlas. Jmenuje-li se hlavní větev jinak než `main`, její pracovní adresář zjistíš z `git --git-dir=<project>/.bare worktree list` a všechna „`main/`“ níž čti jako ji.
+**1. Vylez ke kontejneru.** Session se sice pouští z jeho kořene, ale `/project` se často volá i z `main/` nebo z worktree rozdělané větve – tam vedle souboru `.git` **žádné `.bare/` není**, takže bys layout vyhodnotil jako obyčejný repozitář a psal rovnou do `main/`. Rozliš podle `~/.claude/WORKTREE.md`, *Jak si skill najde projektový adresář*, a jdeš-li nahoru, řekni to nahlas. Jmenuje-li se hlavní větev jinak než `main`, její pracovní adresář zjistíš z `git --git-dir=<container>/.bare worktree list` a všechna „`main/`“ níž čti jako ji.
 
 **2. Nepiš do `main/`, ale do vlastní větve.** `main/` je sdílený a slouží ke čtení – zakazuje to `~/.claude/WORKTREE.md`, *`main/` se nemaže a nepracuje se v něm*. Větev zakládej **líně, až u prvního zápisu**: inventura v tomhle kroku i revize v kroku 14 jsou čtení, takže běh, který nic nenajde, po sobě nenechá prázdnou větev ani naklonované `node_modules`. **Zápis je každá změna souboru v repozitáři** – nastavení mimo git (popisek v Repository details, souhlas se průběžnou kontrolou) větev nevyžaduje. Jakmile se má poprvé něco změnit:
 
 ```bash
-git -C <project> worktree add <project>/project-update -b docs/project-update
+git -C <container> worktree add <container>/project-update -b docs/project-update
 ```
 
 - **Jméno podle režimu** – `docs/project-update`, `docs/project-adopt`. Prefix je vždycky `docs/`: skill nesahá na kód, jen na dokumentaci a konfiguraci.
@@ -188,18 +188,18 @@ Ve worktree layoutu jsou `CLAUDE.md` **dva** a mají různý účel. Zaměnit je
 
 | Soubor | Co v něm je | Píší do něj kroky |
 |---|---|---|
-| `<project>/CLAUDE.md` (kontejner) | jen popis layoutu, odchylky a import toho druhého | pouze tenhle krok 4 |
+| `<container>/CLAUDE.md` (kontejner) | jen popis layoutu, odchylky a import toho druhého | pouze tenhle krok 4 |
 | projektový `CLAUDE.md` (v `main/`, nebo ve tvé větvi) | všechno ostatní – metadata, struktura, autocommit, paměť, typ, příkazy, doménové importy | každý krok, který něco zapisuje: 2 a 3 (metadata), 5 a 7 (struktura), 9–13, a dorovnání ve 14 |
 
 **Kdykoli dál v tomhle skillu čteš „projektový `CLAUDE.md`“, myslí se ten v projektovém adresáři** (krok 0, *Projektový adresář*) – tedy v `main/`, nebo ve tvé větvi, zapisuješ-li. Totéž platí pro `README.md`, `docs/*` a `.gitignore`; do kořene kontejneru nepatří ani jeden z nich. Jedinou výjimkou je `.claude/settings.local.json`: ten patří do **kořene kontejneru**, protože odtud se pouští session a odtud si ho Claude Code čte. Tenhle skill ho **nezakládá** – vznikal v kroku, který zmizel se zrušeným autopromptem –, ale existuje-li, patří tam.
 
-Do `<project>/CLAUDE.md` (do **kontejneru**) patří **jen rozcestník** a nic víc. Zapsal ho už `/worktree enable` a jeho znění drží `~/.claude/skills/worktree/SKILL.md` – neopisuj ho odsud znovu. Doplň do jeho sekce *Odchylky* to, co víš o tomhle projektu: jestli se hlavní větev jmenuje jinak než `main` (u staršího projektu) a co konkrétně se přebírá z `main/`, nebo že zatím není co.
+Do `<container>/CLAUDE.md` (do **kontejneru**) patří **jen rozcestník** a nic víc. Zapsal ho už `/worktree enable` a jeho znění drží `~/.claude/skills/worktree/SKILL.md` – neopisuj ho odsud znovu. Doplň do jeho sekce *Odchylky* to, co víš o tomhle projektu: jestli se hlavní větev jmenuje jinak než `main` (u staršího projektu) a co konkrétně se přebírá z `main/`, nebo že zatím není co.
 
 Import `@main/CLAUDE.md` ve rozcestníku je nutný: `CLAUDE.md` z podadresáře se načte až on-demand, když z něj něco čteš, kdežto session startuje v kontejneru. Bez importu by pravidla projektu na začátku session vůbec nebyla v kontextu. Relativní cesta se resolvuje vůči souboru, který import obsahuje.
 
 **Pravidla projektu do rozcestníku nekopíruj.** Dvě kopie se rozejdou a načtou se pak obě.
 
-*`create`:* krok 2 už `CLAUDE.md` založil v kořeni, protože tehdy ještě nebylo rozhodnuto o layoutu. **Přesuň ho teď do `main/`** (`mv <project>/CLAUDE.md <project>/main/CLAUDE.md`) a v kořeni na jeho místo napiš rozcestník. Totéž udělej s čímkoli dalším, co v kořeni mezitím vzniklo a patří do projektu.
+*`create`:* krok 2 už `CLAUDE.md` založil v kořeni, protože tehdy ještě nebylo rozhodnuto o layoutu. **Přesuň ho teď do `main/`** (`mv <container>/CLAUDE.md <container>/main/CLAUDE.md`) a v kořeni na jeho místo napiš rozcestník. Totéž udělej s čímkoli dalším, co v kořeni mezitím vzniklo a patří do projektu.
 
 *Konverze existujícího projektu:* původní `CLAUDE.md` se přesunul do `main/` spolu se zbytkem repozitáře a **je správně tam** – nech ho být, jen do něj dál doplňuj. V kořeni založ nový, prázdný rozcestník.
 
