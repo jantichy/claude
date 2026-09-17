@@ -21,7 +21,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ## Obsah
 
-**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [cesta k datům](#cesta-k-datům) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička) · [ohraničení bloku kódu](#ohraničení-bloku-kódu)
+**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [cesta k datům](#cesta-k-datům) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička) · [ohraničení bloku kódu](#ohraničení-bloku-kódu) · [nápověda](#nápověda)
 
 **[Ponechané termíny](#ponechané-termíny)** – [heuristika, osa, vektor útoku](#2026-09-07--ponechané-termíny-z-revize-heuristika-osa-vektor-útoku) · [„stopa práce“](#2026-09-07--termín-stopa-práce-se-ponechává-i-když-má-stopa-pět-významů) · [„guard“](#2026-09-07--termín-guard-se-ponechává-a-plyne-z-toho-obecné-pravidlo) · [„mutace“](#2026-09-07--termín-mutace-se-ponechává) · [„session“](#2026-09-07--termín-session-se-ponechává) · [„soustava“](#2026-09-07--termín-soustava-se-ponechává) · [„kontrakt příkazů“](#2026-09-07--termín-kontrakt-příkazů-se-ponechává) · [„sledovací okno“](#2026-09-07--termín-sledovací-okno-se-ponechává) · [„invariant“](#2026-09-14--termín-invariant-se-ponechává)
 
@@ -279,6 +279,16 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 **Zamítnuto – „trojice apostrofů“:** lže. CommonMark povoluje tři a víc a zavírací musí být aspoň tak dlouhé jako otevírací – celá ta pasáž ve `verify.sh` je právě o délce.
 
 **Zamítnuto – „oplocení“:** výmysl, táž vada jako „plot“, jen delší.
+
+### nápověda
+
+**Text u editovaného objektu v rozhraní, který vysvětluje, k čemu objekt je, kdy se uplatní a co v něm nesmí chybět.** V rezervačním systému stojí u editoru šablon jako *nápověda k mailingu*: k čemu mailing je, v jaké situaci a v jakém kroku životního cyklu partie odchází, co v textu nesmí chybět a jaké placeholdery a podmínky jsou v jeho kontextu. Váže se k mailingu, ne k šabloně, protože je stejná pro všechny šablony téhož mailingu na všech úrovních dědění.
+
+**Nahrazuje dřívější „rodný list“** (2026-09-17). Metafora z návrhu mailingů v rezervačním systému, jinde se nevyskytovala; kdy a kdo ji poprvé napsal, se nedohledalo. Anglicky by to bylo *help text* nebo *usage notes*, česky je „rodný list“ matriční doklad a v rozhraní mu bez vysvětlení nikdo nerozumí. Protějšek je zavedený ve standardu administrace: `~/Dev/context/web/admin.md`, *Efektivita pro experty*, **„Nápověda v kontextu**, ne příručka bokem“.
+
+**Zamítnuto:** *popis mailingu* – zní jako datové pole a plete se s katalogem mailingů, který mailingy popisuje pro vývojáře, ne pro pořadatele; *průvodní text* – zní jako text, který odchází se mailem k zákazníkovi; *doložení* – znamená důkaz nebo podklad k tvrzení a v pravidlech se tak používá („doloženo“, „dolož příkazem“), kdežto nápověda nic nedokazuje.
+
+**Kde starý tvar vědomě zůstává:** `~/Dev/context/archive/twitter/Twitter 2017.md` – matriční rodný list, jiný význam a publikovaný text. V rezervacích zůstal na `main` a ve větvi `docs/stranky`, dokud do nich nedorazí větev `docs/podminky`, kde se nahradil.
 
 ## Ponechané termíny
 

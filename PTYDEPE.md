@@ -34,6 +34,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | próza (proti struktuře) | souvislý text | nestrukturovaný zápis tam, kde se čeká tabulka, seznam, kritérium |
 | próza (proti identifikátoru) | běžný text | česká věta tam, kde stojí proti jménu režimu, klíči, poli. **Ne** „volný text“ |
 | ráčna | seznam, který musí přesně sedět | výjimka v seznamu, který test porovnává se skutečností v obou směrech |
+| rodný list | nápověda | text u editovaného objektu v rozhraní, který vysvětluje, k čemu objekt je, kdy se uplatní a co v něm nesmí chybět; u mailingů *nápověda k mailingu*. Matriční rodný list tím dotčený není |
 | role, panel rolí | specialista, panel specialistů | úzce nabriefovaný agent posuzující jedinou věc. `/oponent` má **oponenty**, `/attack` **útočníky** – ta jména si nechávají |
 | skeptik | ověřovatel | agent, jehož jediný úkol je nález vyvrátit. **Výjimka:** *Skeptik* je jméno zrušeného hlediska `/oponent` |
 | sonda (experiment) | ověřovací pokus | kód napsaný jen kvůli zodpovězení otázky v návrhu, pak se zahodí |
