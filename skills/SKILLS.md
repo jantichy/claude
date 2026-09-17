@@ -82,6 +82,8 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 
 **Proč lícovat:** dva skilly, které dělají tutéž věc pod jiným jménem, nutí uživatele pamatovat si, který má který. Platí to i pro režimy, které se **rozpoznávají samy** a nepředávají se argumentem – uživatel je vidí ve výpisu a pojmenovává je v řeči stejně.
 
+**Argumenty za režimem jsou naopak česky** (`[klient] [období]`) – píše je uživatel a čte je jako popis; pravidlo drží `~/.claude/RULES.md`, *Jazyk*.
+
 **`argument-hint` musí sedět s tělem.** Režim popsaný v těle a chybějící v hintu uživatel nikdy neuvidí; hint bez opory v těle slibuje funkci, která neexistuje.
 
 **`allowed-tools` drž na minimu** a u MCP **vyjmenuj konkrétní nástroje, ne `mcp__server__*`**. Zástupný znak funguje, ale oficiální plugin `plugin-dev` ho označuje za anti-pattern: skill pak dostane celý server včetně nástrojů, které přibudou později a nikdo je neposuzoval.

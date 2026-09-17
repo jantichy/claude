@@ -400,13 +400,15 @@ if [ "${1:-}" = "--contract" ]; then
     | sed 's/[[:space:]]*$//')
   # cwd se validuje tady, stejně jako při běhu hooku níž, ať CI nemusí mít
   # vlastní kopii té logiky: pomlčka znamená „není“ a nevypíše se, cesta ven
-  # z projektu nebo do neexistujícího adresáře skončí chybou.
+  # z projektu nebo do neexistujícího adresáře skončí chybou. Kořen, vůči kterému
+  # se cesta ověřuje, se počítá stejně jako v hooku (proj_for_md), ne ze zadané
+  # cesty – ve worktree layoutu leží kontrakt v main/ a zadaný je kontejner.
   CWD_VAL=$(printf '%s\n' "$OUT" | awk -F'\t' '$1 == "cwd" { print $2; exit }')
   if [ -n "$CWD_VAL" ] && [ "$CWD_VAL" != "-" ]; then
     case "$CWD_VAL" in
       /*|*..*) die "kontrakt v $MD má cwd mimo projekt: $CWD_VAL" ;;
     esac
-    [ -d "$P/$CWD_VAL" ] || die "kontrakt v $MD ukazuje cwd na $CWD_VAL, ten adresář neexistuje."
+    [ -d "$(canon "$(proj_for_md "$MD")")/$CWD_VAL" ] || die "kontrakt v $MD ukazuje cwd na $CWD_VAL, ten adresář neexistuje."
   fi
   printf '%s\n' "$OUT" | awk -F'\t' '!($1 == "cwd" && $2 == "-")'
   exit 0

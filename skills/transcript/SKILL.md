@@ -446,6 +446,8 @@ Ukáže procenta, zpracované a celkové minuty, kolik zbývá, tempo (× realti
 
 **U běhu po úsecích ukazuje jen dokončené soubory, ne postup uvnitř nahrávky.** Whisper v každém úseku čísluje časy znovu od nuly, takže by se ukazatel na každé hranici vracel zpátky; `progress.py` proto postup uvnitř souboru raději nezapočítá, než aby hlásil nesmysl.
 
+**Log z běhu puštěného před 17. 9. 2026 nepřečte** – značky se tehdy přejmenovaly (`zaznam-N` → `file-N`) a starý log ukáže 0 hotových souborů, i když doběhl. Zpětná kompatibilita vědomě není: týká se jen přepisu rozběhnutého přes okamžik upgradu a hotové přepisy log nepotřebují.
+
 ---
 
 ## Formát výstupů

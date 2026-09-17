@@ -813,8 +813,9 @@ class ContractListing(unittest.TestCase):
     13. 9. 2026 byla (v `.github/workflows/verify.yml`) a rozešla se s touhle ve
     třech vlastnostech naráz: nefiltrovala HTML komentáře, neměla pojistku proti
     dvěma sekcím téhož jména a neznala klíč `cwd`. Testy tu proto hlídají právě
-    ty tři vlastnosti – jsou to místa, kde se dvě implementace rozešly doopravdy,
-    ne kde by se rozejít mohly.
+    ty vlastnosti – jsou to místa, kde se dvě implementace rozešly doopravdy,
+    ne kde by se rozejít mohly. Od 17. 9. 2026 k nim patří i validace `cwd`,
+    která se s hookem rozcházela tímtéž způsobem.
     """
 
     def setUp(self):
@@ -873,6 +874,22 @@ class ContractListing(unittest.TestCase):
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertNotIn("cwd\t", v.stdout)
         self.assertIn("test\techo ahoj", v.stdout)
+
+    def test_cwd_missing_dir_fails_listing(self):
+        """Neexistující adresář v cwd odmítá hook, takže ho odmítne i výpis.
+        Ověřuje se vůči kořeni projektu jako v hooku, ne vůči zadané cestě: ve
+        worktree layoutu leží kontrakt v `main/CLAUDE.md`, zadaný je kontejner
+        a cwd míří z `main/`."""
+        (self.repo / "main" / "api").mkdir(parents=True)
+        (self.repo / "main" / "CLAUDE.md").write_text(
+            "# T\n\n## Kontrakt příkazů\n\n- cwd: api\n- test: echo ahoj\n", encoding="utf-8")
+        ok = subprocess.run([str(VERIFY), "--contract", str(self.repo)], capture_output=True,
+                            text=True, check=False, stdin=subprocess.DEVNULL)
+        self.assertEqual(ok.returncode, 0, ok.stderr)
+        self.assertIn("cwd\tapi", ok.stdout)
+        v = self.list_contract("# T\n\n## Kontrakt příkazů\n\n- cwd: nikde\n- test: echo ahoj\n")
+        self.assertNotEqual(v.returncode, 0)
+        self.assertIn("nikde", v.stderr)
 
     def test_cwd_outside_project_fails_listing(self):
         """Cestu ven z projektu odmítá hook, takže ji nesmí propustit ani výpis
