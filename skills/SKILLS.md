@@ -62,9 +62,9 @@ Skill má tři vrstvy a jen jedna je závazná:
 
 ```yaml
 ---
-name: jméno            # shodné s názvem adresáře, malá písmena a pomlčky
+name: <name>           # shodné s názvem adresáře, malá písmena a pomlčky
 description: …         # kdy se použije i co dělá, třetí osoba, do 1024 znaků
-argument-hint: [režim] # jen má-li skill režimy
+argument-hint: [<mode>] # jen má-li skill režimy
 allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 ---
 ```

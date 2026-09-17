@@ -898,7 +898,8 @@ class ContractListing(unittest.TestCase):
             with self.subTest(cwd=bad):
                 v = self.list_contract(f"# T\n\n## Kontrakt příkazů\n\n- cwd: {bad}\n- test: echo ahoj\n")
                 self.assertNotEqual(v.returncode, 0)
-                self.assertIn("cwd", v.stderr)
+                self.assertIn("mimo projekt", v.stderr,
+                              "odmítla to až kontrola existence adresáře, ne pojistka proti cestě ven")
 
     def test_dash_is_printed_as_is(self):
         """Rozhodnutí „vědomě se neaplikuje“ musí dojít až k tomu, kdo spouští –
