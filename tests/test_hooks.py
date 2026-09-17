@@ -29,7 +29,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-HOOK = ROOT / "githooks" / "commit-msg"
+COMMIT_MSG_HOOK = ROOT / "githooks" / "commit-msg"
 
 REJECT = 1
 ALLOW = 0
@@ -57,11 +57,11 @@ class MergeCommitMessage(unittest.TestCase):
 
     # --- pomocné -----------------------------------------------------------
 
-    def run_hook(self, message):
+    def run_commit_msg_hook(self, message):
         """Zavolá hook nad souborem se zprávou, jak to dělá git."""
         msg_file = self.repo / ".git" / "COMMIT_EDITMSG"
         msg_file.write_text(message)
-        return subprocess.run([str(HOOK), str(msg_file)], cwd=self.repo,
+        return subprocess.run([str(COMMIT_MSG_HOOK), str(msg_file)], cwd=self.repo,
                               capture_output=True, text=True, check=False)
 
     def checkout_branch(self, name):
@@ -70,17 +70,17 @@ class MergeCommitMessage(unittest.TestCase):
     # --- co se má odmítnout ------------------------------------------------
 
     def test_default_english_message_on_main_rejected(self):
-        v = self.run_hook("Merge branch 'feat/platby'\n")
+        v = self.run_commit_msg_hook("Merge branch 'feat/platby'\n")
         self.assertEqual(v.returncode, REJECT)
         self.assertIn("WORKTREE.md", v.stderr)
 
     def test_default_czech_message_on_main_rejected(self):
-        self.assertEqual(self.run_hook("Merge větve docs/znamky\n").returncode, REJECT)
+        self.assertEqual(self.run_commit_msg_hook("Merge větve docs/znamky\n").returncode, REJECT)
 
     def test_comments_above_message_do_not_confuse_hook(self):
         """Git dává do COMMIT_EDITMSG vysvětlující komentáře; první *neprázdný
         nekomentářový* řádek je ta zpráva, a hook musí hledat ten."""
-        v = self.run_hook("\n# Please enter a commit message\n\nMerge branch 'feat/x'\n")
+        v = self.run_commit_msg_hook("\n# Please enter a commit message\n\nMerge branch 'feat/x'\n")
         self.assertEqual(v.returncode, REJECT)
 
     def test_real_merge_on_main_is_stopped(self):
@@ -91,7 +91,7 @@ class MergeCommitMessage(unittest.TestCase):
         git(self.repo, "add", "b.txt")
         git(self.repo, "commit", "-qm", "prace")
         git(self.repo, "checkout", "-q", "main")
-        git(self.repo, "config", "core.hooksPath", str(HOOK.parent))
+        git(self.repo, "config", "core.hooksPath", str(COMMIT_MSG_HOOK.parent))
         v = git(self.repo, "merge", "--no-ff", "feat/x")
         self.assertNotEqual(v.returncode, 0)
         self.assertEqual(git(self.repo, "log", "--oneline").stdout.count("\n"), 1)
@@ -112,12 +112,12 @@ class MergeCommitMessage(unittest.TestCase):
                        "Merge branch 'feat/platby' into main",
                        "Squashed commit of the following:"):
             with self.subTest(message=message):
-                self.assertEqual(self.run_hook(message + "\n").returncode, REJECT)
+                self.assertEqual(self.run_commit_msg_hook(message + "\n").returncode, REJECT)
 
     def test_indented_first_line_does_not_bypass_pattern(self):
         """`case` je kotvený na začátek řetězce, takže mezera před zprávou
         by stačila k obejití celé kontroly."""
-        self.assertEqual(self.run_hook("   Merge branch 'feat/x'\n").returncode, REJECT)
+        self.assertEqual(self.run_commit_msg_hook("   Merge branch 'feat/x'\n").returncode, REJECT)
 
     def test_real_remote_tracking_merge_is_stopped(self):
         """Integračně tou cestou, kterou to potká uživatel: větev existuje jen
@@ -130,7 +130,7 @@ class MergeCommitMessage(unittest.TestCase):
         # Remote-tracking referenci lze vyrobit i bez remote serveru.
         git(self.repo, "update-ref", "refs/remotes/origin/feat/x", "feat/x")
         git(self.repo, "branch", "-D", "feat/x")
-        git(self.repo, "config", "core.hooksPath", str(HOOK.parent))
+        git(self.repo, "config", "core.hooksPath", str(COMMIT_MSG_HOOK.parent))
         v = git(self.repo, "merge", "--no-ff", "origin/feat/x")
         self.assertNotEqual(v.returncode, 0, "merge přes origin/… prošel bez zastavení")
         self.assertEqual(git(self.repo, "log", "--oneline").stdout.count("\n"), 1)
@@ -138,18 +138,18 @@ class MergeCommitMessage(unittest.TestCase):
     # --- co musí projít ----------------------------------------------------
 
     def test_custom_message_passes(self):
-        self.assertEqual(self.run_hook("Zaveď platby kartou\n").returncode, ALLOW)
+        self.assertEqual(self.run_commit_msg_hook("Zaveď platby kartou\n").returncode, ALLOW)
 
     def test_merge_into_feature_branch_passes(self):
         """Aktualizace větve z main je běžný provoz a její defaultní zpráva
         do historie main nikdy nedoteče – hlídá se jen hlavní větev."""
         self.checkout_branch("feat/platby")
-        self.assertEqual(self.run_hook("Merge branch 'main' into feat/platby\n").returncode, ALLOW)
+        self.assertEqual(self.run_commit_msg_hook("Merge branch 'main' into feat/platby\n").returncode, ALLOW)
 
     def test_merge_after_pull_of_same_branch_passes(self):
         """`git pull` nad toutéž větví je synchronizace, ne dokončení práce,
         a blokovat ji by znamenalo blokovat pull."""
-        v = self.run_hook("Merge branch 'main' of https://github.com/x/y\n")
+        v = self.run_commit_msg_hook("Merge branch 'main' of https://github.com/x/y\n")
         self.assertEqual(v.returncode, ALLOW)
 
     def test_pull_of_other_branch_on_main_rejected(self):
@@ -164,10 +164,10 @@ class MergeCommitMessage(unittest.TestCase):
                        "Merge branch 'feat/x' of course",
                        "Merge branch 'feat/z' of /tmp/remote"):
             with self.subTest(message=message):
-                self.assertEqual(self.run_hook(message + "\n").returncode, REJECT)
+                self.assertEqual(self.run_commit_msg_hook(message + "\n").returncode, REJECT)
 
     def test_message_mentioning_merge_passes(self):
-        self.assertEqual(self.run_hook("Oprav merge větve v dokumentaci\n").returncode, ALLOW)
+        self.assertEqual(self.run_commit_msg_hook("Oprav merge větve v dokumentaci\n").returncode, ALLOW)
 
     # --- delegace na lokální hook -----------------------------------------
 
@@ -181,12 +181,12 @@ class MergeCommitMessage(unittest.TestCase):
     def test_local_hook_is_called(self):
         trace = self.repo / "trace"
         self.local_hook(f"#!/bin/sh\ntouch {trace}\nexit 0\n")
-        self.assertEqual(self.run_hook("Zaveď platby kartou\n").returncode, ALLOW)
+        self.assertEqual(self.run_commit_msg_hook("Zaveď platby kartou\n").returncode, ALLOW)
         self.assertTrue(trace.exists(), "lokální hook repozitáře se nespustil")
 
     def test_local_hook_rejection_stops(self):
         self.local_hook("#!/bin/sh\necho lokalni namitka >&2\nexit 3\n")
-        v = self.run_hook("Zaveď platby kartou\n")
+        v = self.run_commit_msg_hook("Zaveď platby kartou\n")
         self.assertEqual(v.returncode, 3)
         self.assertIn("lokalni namitka", v.stderr)
 
@@ -206,7 +206,7 @@ class MergeCommitMessage(unittest.TestCase):
         self.assertEqual(v.returncode, 0, v.stderr)
         msg_file = wt / "MSG"
         msg_file.write_text("Zaveď platby kartou\n")
-        subprocess.run([str(HOOK), str(msg_file)], cwd=wt,
+        subprocess.run([str(COMMIT_MSG_HOOK), str(msg_file)], cwd=wt,
                        capture_output=True, text=True, check=False)
         self.assertTrue(trace.exists(),
                         "ve worktree se lokální hook repozitáře nezavolal")
@@ -214,12 +214,12 @@ class MergeCommitMessage(unittest.TestCase):
     def test_local_hook_does_not_override_message_check(self):
         """Lokální hook smí přidat vlastní pravidlo, ne zrušit tohle."""
         self.local_hook("#!/bin/sh\nexit 0\n")
-        self.assertEqual(self.run_hook("Merge branch 'feat/x'\n").returncode, REJECT)
+        self.assertEqual(self.run_commit_msg_hook("Merge branch 'feat/x'\n").returncode, REJECT)
 
 
 class HookDeployment(unittest.TestCase):
     def test_hook_is_executable(self):
-        self.assertTrue(os.access(HOOK, os.X_OK), f"{HOOK} není spustitelný")
+        self.assertTrue(os.access(COMMIT_MSG_HOOK, os.X_OK), f"{COMMIT_MSG_HOOK} není spustitelný")
 
     def test_rule_is_written_in_worktree_md(self):
         """Hook je mechanismus, ne zdroj pravdy. Zmizí-li pravidlo z WORKTREE.md,
@@ -261,10 +261,10 @@ class GlobalHookDeployment(unittest.TestCase):
                            capture_output=True, text=True, check=False)
         path = Path(v.stdout.strip()).expanduser() if v.stdout.strip() else None
         self.assertEqual(
-            path, HOOK.parent,
+            path, COMMIT_MSG_HOOK.parent,
             "git hook není nasazený – `git log --first-parent` se zaplní zprávami "
             "'Merge branch ...'. Naprav příkazem:\n"
-            f"    git config --global core.hooksPath {HOOK.parent}")
+            f"    git config --global core.hooksPath {COMMIT_MSG_HOOK.parent}")
 
 
 class VerifyHookIsRegistered(unittest.TestCase):
