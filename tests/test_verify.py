@@ -852,8 +852,26 @@ class ContractListing(unittest.TestCase):
     def test_cwd_key_is_printed(self):
         """CI podle něj mění adresář; bez něj by pouštěla příkazy jinde
         než průběžná kontrola."""
+        (self.repo / "main").mkdir()
         v = self.contract("# T\n\n## Kontrakt příkazů\n\n- cwd: main\n- test: echo ahoj\n")
         self.assertIn("cwd\tmain", v.stdout)
+
+    def test_cwd_dash_is_not_printed(self):
+        """Pomlčka u cwd znamená „není“. Vypsaná by v CI skončila jako `cd -`,
+        které v čerstvém shellu selže – průběžná kontrola ji přitom přeskočí."""
+        v = self.contract("# T\n\n## Kontrakt příkazů\n\n- cwd: -\n- test: echo ahoj\n")
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertNotIn("cwd\t", v.stdout)
+        self.assertIn("test\techo ahoj", v.stdout)
+
+    def test_cwd_outside_project_fails_listing(self):
+        """Cestu ven z projektu odmítá hook, takže ji nesmí propustit ani výpis
+        pro CI – jinak by CI pouštěla příkazy tam, kam průběžná kontrola nesmí."""
+        for bad in ("../jinam", "/tmp"):
+            with self.subTest(cwd=bad):
+                v = self.contract(f"# T\n\n## Kontrakt příkazů\n\n- cwd: {bad}\n- test: echo ahoj\n")
+                self.assertNotEqual(v.returncode, 0)
+                self.assertIn("cwd", v.stderr)
 
     def test_dash_is_printed_as_is(self):
         """Rozhodnutí „vědomě se neaplikuje“ musí dojít až k tomu, kdo spouští –

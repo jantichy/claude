@@ -388,9 +388,20 @@ if [ "${1:-}" = "--contract" ]; then
   MD=$(find_contract "$P") || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Kontrakt příkazů."
   N=$(md_body "$MD" | grep -c '^## Kontrakt příkazů')
   [ "$N" -eq 1 ] || die "v $MD je sekce ## Kontrakt příkazů ${N}×; nechávám být, ať se nevypíše nesprávná. Ponech jednu."
-  contract_section "$MD" \
+  OUT=$(contract_section "$MD" \
     | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9_-]*\):[[:space:]]\{1,\}\(.*\)$/\1\t\2/p' \
-    | sed 's/[[:space:]]*$//'
+    | sed 's/[[:space:]]*$//')
+  # cwd se validuje tady, stejně jako při běhu hooku níž, ať CI nemusí mít
+  # vlastní kopii té logiky: pomlčka znamená „není“ a nevypíše se, cesta ven
+  # z projektu nebo do neexistujícího adresáře skončí chybou.
+  CWD_VAL=$(printf '%s\n' "$OUT" | awk -F'\t' '$1 == "cwd" { print $2; exit }')
+  if [ -n "$CWD_VAL" ] && [ "$CWD_VAL" != "-" ]; then
+    case "$CWD_VAL" in
+      /*|*..*) die "kontrakt v $MD má cwd mimo projekt: $CWD_VAL" ;;
+    esac
+    [ -d "$P/$CWD_VAL" ] || die "kontrakt v $MD ukazuje cwd na $CWD_VAL, ten adresář neexistuje."
+  fi
+  printf '%s\n' "$OUT" | awk -F'\t' '!($1 == "cwd" && $2 == "-")'
   exit 0
 fi
 
