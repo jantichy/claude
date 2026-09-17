@@ -158,6 +158,10 @@ U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek expor
 
 **Strukturovaný výstup agenta předávej dál doslova, neparafrázuj.** Parafráze je přesně to místo, kde se ztrácí detail, kvůli kterému se agent posílal – a ztratí se tiše, protože shrnutí vypadá úplně. Vrátí-li agent nález s doložením a závažností, jde ta trojice dál celá.
 
+**Souběžní agenti sdílejí scratchpad, takže každý potřebuje vlastní jmenný prostor.** Pomocné soubory si agenti pojmenovávají stejně – `conv.txt`, `out.md` – a navzájem si je přepíšou. Do zadání proto patří **prefix odvozený z toho, co ten agent zpracovává**, a pokyn ověřit, že v pomocném souboru je opravdu jeho vstup. Doloženo 17. 9. 2026 při vytěžování konverzací: čtyři agenti z třiceti šesti to nahlásili nezávisle a jeden chvíli četl cizí transcript, než si toho všiml. **Je to zrádné tím, že se to neprojeví jako chyba, ale jako správně vypadající výstup o něčem jiném** – agent, který si toho nevšimne, odevzdá analýzu cizího podkladu a nikdo to nepozná.
+
+**Souběh má strop, takže velkou dávku drž ve frontě.** Rozešleš-li víc agentů, než kolik jich smí běžet naráz, přebytek se **nezařadí do fronty, ale odmítne** – a bez vlastní evidence o té práci nikdo neví. Rozesílej proto tolik, kolik projde, a doplňuj do uvolněných míst podle seznamu, který si vedeš.
+
 **To není spor s *Interní značky ven nepatří*.** Doslovně se předává **mezi kroky** – z agenta do ověření, do souhrnu, do souboru. Uživateli se hlásí **obsahem**: značka `N3` v odpovědi mu neřekne nic, protože ji nikdy neviděl. Doslovnost tedy míří na to, co nese nález, ne na to, jak se pojmenuje.
 
 ### Model a effort podle úkolu
