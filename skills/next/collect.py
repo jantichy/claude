@@ -275,7 +275,7 @@ def live_state(project: Path):
     return live, idle, None
 
 
-def branch_state(branch, others, idle, error, work):
+def classify_branch(branch, others, idle, error, work):
     busy = [s for s in others if s["branch"] == branch]
     if busy:
         return {"state": "occupied", "session": busy[0]["name"]}
@@ -307,7 +307,7 @@ def collect_branches(repo, ref, prefix, rounds, current_branch, project):
         info.update(current=b == current_branch, main=b in (local, "main", "master"),
                     rounds=[r["title"] for r in rounds if r.get("branch") == b])
         work = info["ahead"] or info["uncommitted"]
-        info.update(branch_state(b, others, idle, error, work))
+        info.update(classify_branch(b, others, idle, error, work))
         # Hlavní větev se vypisuje jen tehdy, když v ní někdo pracuje nebo něco leží.
         if info["main"] and info["state"] in ("empty", "abandoned") and not info["uncommitted"]:
             continue
