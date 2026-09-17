@@ -215,6 +215,8 @@ VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
 Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 ```
 
+**Pole `basis` schéma nemá schválně** – doložením nálezu je `reproduction` s `observed`, a právě podle nich si ho hlavní session přehraje (`~/.claude/skills/SKILLS.md`, *Ověřovací vrstva*).
+
 **Závažnost:** škálu drží `~/.claude/skills/SEVERITY.md` a je **společná** se všemi skilly, které hlásí nálezy – stupeň musí napříč nimi měřit totéž, jinak zpětně nejde poznat, čím byl odůvodněný. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **NÍZKÉ** – technická hláška bez dalšího dopadu.
 
 ------

@@ -248,7 +248,7 @@ Odchylku odůvodni **tím, čí vstup to je**: chyba v návrhu nebo v ověření
 
 Ověřovatel dostane jediný úkol: **nález vyvrátit**. Co ověření nepřežije, se uživateli vůbec nezobrazí.
 
-**Nálezy nesou `severity` a `basis`.** Bez závažnosti se nedají seřadit, bez doložení ověřit.
+**Nálezy nesou `severity` a `basis`.** Bez závažnosti se nedají seřadit, bez doložení ověřit. **Doložení smí místo `basis` nést jiné pole**, když ho schéma pro daný druh nálezu nese přirozeněji – reprodukční postup u nálezu, který se spouští, lokace u nesouladu mezi místy. Skill to pak u schématu řekne jednou větou, ať pole navíc agent nevyplňuje výplní a čtenář nehledá chybějící `basis`.
 
 **Skill, který něco tvrdí o výsledku, to tvrzení doloží.** Do souhrnu patří příkaz a jeho návratový kód, ne věta „testy procházejí“. Co se nezkontrolovalo, se vypíše jako nezkontrolované.
 

@@ -178,6 +178,8 @@ Výstup strukturuj jako JSON pole objektů:
 ]
 ```
 
+**Pole `basis` schéma nemá schválně** – nález je nesoulad mezi místy a doložením jsou `locations`, podle kterých se dá rozpor ověřit přečtením (`~/.claude/skills/SKILLS.md`, *Ověřovací vrstva*).
+
 ## Fáze 2 – Zpracování výsledků
 
 **O nálezech mluv obsahem, ne značkou z výstupu agenta.** Pořadová čísla a zkratky, pod kterými se nálezy vracejí, jsou interní – uživatel je nikdy neviděl, takže „N1 je širší, než agent hlásil“ mu neřekne nic. Napiš, čeho se to týká: *„Chybějící sekce Rizika není jen v `discovery.md` – chybí ve všech třech dokumentech.“* (`~/.claude/RULES.md`, *Interní značky ven nepatří*.)
