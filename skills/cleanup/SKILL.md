@@ -25,7 +25,9 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok uzaví
 
 Tohle **není** audit projektu ani technická kontrola. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo.
 
-Jediná výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), vezmi to do Fáze 7 a nech uživatele rozhodnout, co s tím. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj, dokud si to uživatel nevyžádá.
+**Výjimka pro dokončení větve:** vybere-li uživatel v závěru *Přimergovat do main*, provedeš postup z `~/.claude/WORKTREE.md`, *Dokončení větve*, celý, i s kontrolami, které předepisuje. Merge sám od sebe neprovádíš.
+
+Druhá výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), vezmi to do Fáze 7 a nech uživatele rozhodnout, co s tím. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj, dokud si to uživatel nevyžádá.
 
 ## Rozsah
 
@@ -418,7 +420,7 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `
 - [seznam z Fáze 7 a u každé položky, jak se s ní naložilo – nebo „žádné“]
 - Položka z Fáze 7 patří sem, i když skončila v `todo.md`; do *Odložených položek* se nekopíruje.
 
-**Další krok:** /attack a /release, nasazuje-li se – jinak je práce uzavřená
+**Další krok:** /attack a /release, nasazuje-li se – co dál s větví a session, rozhodne otázka za verdiktem
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -426,25 +428,29 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Ze session je všechno zapsané, můžeš pokračovat, zkompaktovat i odejít.`
-- **Stojíš-li ve worktree větve** (`~/.claude/WORKTREE.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji bez obav přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, tuhle větu nepoužij – použij poslední variantu a rovnou pojmenuj, co merge blokuje.
+- **Stojíš-li ve worktree větve** (`~/.claude/WORKTREE.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, použij místo ní `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – merge zatím brání: <konkrétní seznam>.` a merge v otázce níž nenabízej. Totéž platí, zjistil-li Git výš rozpracovaný `main/`, nebo stojí-li v `## Nasazení` projektového `CLAUDE.md`, že se z `main` automaticky nasazuje – merge by tam byl nasazení a patří `/release`.
 - `Zapsané zatím není všechno – brání tomu: <konkrétní seznam>.`
 
 **Nenabízej „opustit session“ jako jedinou cestu.** Zápis je hotový, ale to neznamená, že je hotová práce: uživatel klidně pokračuje dál v téže session a `/cleanup` mu jen zajistil, že ho kompaktace nepřipraví o kontext. Ve worktree layoutu to platí dvojnásob – „můžeš odejít“ tam neodpovídá na otázku, kterou má uživatel v hlavě, totiž co s tou větví.
 
-**Že je merge bez obav, musí zaznít explicitně** – vedle pokračování a kompaktace. Uživatel má v hlavě otázku „můžu to zavřít, nebo tam něco visí?“ a mlčení o mergi ji nezodpoví; „dokončit větev“ je vágní a nechává ho hádat, jestli něco nepřehlédl.
+**Že merge přichází v úvahu, musí zaznít explicitně** – vedle pokračování a kompaktace. Věta ručí jen za zápis ze session; jestli merge smí projít (větev kola návrhu, rozpracovaný `main/`, konflikt), ověří až postup v `~/.claude/WORKTREE.md`, *Dokončení větve*, a proto v ní nestojí „bez obav“. Uživatel má v hlavě otázku „můžu to zavřít, nebo tam něco visí?“ a mlčení o mergi ji nezodpoví; „dokončit větev“ je vágní a nechává ho hádat, jestli něco nepřehlédl.
 
 ### Co dál
 
-**Skončil-li běh jednou z prvních dvou vět, polož hned za ni otázku `AskUserQuestion`** s textem `Co dál? (/compact, /clear a /exit zadej sám)` a těmito volbami v tomhle pořadí – merge první, protože po úklidu ve větvi je nejčastější:
+**Verdikt je poslední věta textu; hned za ním, skončil-li běh jednou z prvních dvou vět, polož otázku `AskUserQuestion`** s textem `Co dál? (/compact, /clear a /exit zadej sám)` a těmito volbami v tomhle pořadí – merge první, protože po úklidu ve větvi je nejčastější:
 
 | Volba | Kdy se nabízí | Co se po ní stane |
 |---|---|---|
-| **Přimergovat do main** | jen ve worktree větve, tedy v kontejneru s `.bare` a mimo `main/` | provedeš *Dokončení větve* z `~/.claude/WORKTREE.md` celé, včetně kontroly větve kola návrhu a zprávy merge commitu, která shrnuje práci |
+| **Přimergovat do main** | jen ve worktree větve, tedy v kontejneru s `.bare` a mimo `main/`, a jen když verdikt nepojmenoval nic, co merge brání | provedeš *Dokončení větve* z `~/.claude/WORKTREE.md` |
 | **Pokračovat v práci** | vždy | nic – čekáš na další zadání |
 | **Další kolo úklidu** | vždy | pustíš `/cleanup` znovu nástrojem `Skill` |
 
-**Proč otázka, a ne rovnou merge:** `/cleanup` se pouští i před kompaktací uprostřed rozdělané větve, takže automatický merge by jednou poslal do `main` nedodělanou práci. Uživatel přitom po úklidu mergoval skoro vždycky, a ruční příkaz navíc byl jen tření. **Vybraná volba je výslovný pokyn** ve smyslu `~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak* – bez ní merge neprovádíš, nepřipravuješ ani nevypisuješ příkazy.
+**Proč otázka, a ne rovnou merge:** `/cleanup` se pouští i před kompaktací uprostřed rozdělané větve, takže automatický merge by jednou poslal do `main` nedodělanou práci. Uživatel přitom po úklidu podle vlastních slov (16. 9. 2026) mergoval skoro vždycky, a ruční příkaz navíc byl jen tření. Zavržené varianty (16. 9. 2026): **režim `/cleanup merge`** – záměr by se řekl předem, ale uživatel by si režim musel pamatovat, kdežto otázka stojí jeden stisk; **samostatný krok životního cyklu pro dokončení větve** – merge navazuje právě na úklid a vlastní krok by jen přidal příkaz, který se pouští pokaždé hned po něm. **Vybraná volba je výslovný pokyn** ve smyslu `~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak* – bez ní merge neprovádíš, nepřipravuješ ani nevypisuješ příkazy.
 
 **Proč `/compact`, `/clear` a `/exit` nejsou volby:** jsou to vestavěné příkazy Claude Code a skill je spustit neumí. Volba, po které by následovalo jen „teď to napiš sám“, je krok navíc; stačí je jmenovat v textu otázky. Ukončit session natvrdo přes shell se nesmí – utrhla by se rozepsaná historie.
+
+**Proč jen ve worktree layoutu:** jen tam je dokončení větve popsané postupem a `main/` má vlastní pracovní adresář. V běžném repozitáři by merge znamenal přepnout pracovní strom, ve kterém může pracovat jiná session.
+
+**Merge se nikam dál nezapisuje.** Záznam průchodu v `done.md` vznikl před otázkou a nese hash úklidu; merge commit se zprávou shrnující práci je záznam sám o sobě a do `main/` se kvůli němu nic dalšího necommituje.
 
 **Skončil-li běh třetí větou** (zapsané není všechno), otázku nepokládej: další krok je odstranit to, co zápisu brání, a merge by šel přes nevypořádanou práci.

@@ -28,7 +28,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 - **Nic nezůstane jen ve výpisu.** Co by jinak skončilo jako „mimo rozsah úklidu“, se s vámi projde položku po položce a u každé se rozhodne – vypsat to a nechat být je nepřijatelné, protože sezení vzápětí zavřete a položky zmizí s ním.
 - **Zapisuje i důvody.** Samotný závěr bez zdůvodnění je pro příští práci málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
 - **Hlásí i čistý výsledek.** Že se nic nedoplňovalo, se řekne nahlas – a bez komentáře k tomu.
-- **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Hned potom se zeptá, co dál: pokračovat v práci, projít úklid znovu, a pracujete-li v odděleném adresáři větve, i sloučit ji do hlavní větve. Sloučí jen tehdy, když to vyberete, a nikdy za stavu, kdy něco zůstalo nezapsané.
+- **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Hned potom se zeptá, co dál: pokračovat v práci, projít úklid znovu, a pracujete-li v odděleném adresáři větve, i přimergovat ji do hlavní větve. Merge udělá jen tehdy, když ho vyberete, a nenabídne ho, když něco zůstalo nezapsané nebo když by merge do hlavní větve znamenal nasazení do produkce.
 
 ## Jak se to používá
 
@@ -59,7 +59,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 - **Neopakuje audit konzistence.** Ptá se na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
 - **Nespouští testy, linter ani build** a nedělá obecnou revizi souborů nad rámec toho, co z konverzace vzešlo.
 - **Nezakládá potichu chybějící soubory.** Vypíše, které chybí, a nabídne `/project`.
-- **Nesloučí větev.** Řekne, že to jde bez rizika; kdy se to stane, je na vás.
+- **Nemerguje větev sám od sebe.** Nabídne to a udělá, jen když to vyberete.
 
 ## Jak si ho nainstalovat
 
@@ -69,8 +69,9 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
 
-Skill předpokládá, že má projekt ustálenou dokumentační strukturu – ví, co patří do instrukcí, co mezi rozhodnutí, co mezi odložené věci. **Řekněte Claudovi, ať to přizpůsobí tomu, jak máte soubory uspořádané vy**; sada, kterou používám já, je v tomhle repozitáři popsaná jen odkazem do soukromých standardů.
+**Nabídka merge stojí na pravidlech pro uspořádání s adresářem na každou větev** – vezměte k tomu i [`WORKTREE.md`](../../WORKTREE.md) do `~/.claude/`; bez něj skill merge nenabízí a zbytek funguje beze změny.
 
+Skill předpokládá, že má projekt ustálenou dokumentační strukturu – ví, co patří do instrukcí, co mezi rozhodnutí, co mezi odložené věci. **Řekněte Claudovi, ať to přizpůsobí tomu, jak máte soubory uspořádané vy**; sada, kterou používám já, je v tomhle repozitáři popsaná jen odkazem do soukromých standardů.
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 

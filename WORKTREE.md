@@ -144,37 +144,60 @@ Chce-li uživatel začít **jinou** věc, nemerguj tu rozdělanou – založ ved
 
 ## Dokončení větve
 
-*Až na výslovný pokyn uživatele.* **Jak se merguje, rozhoduješ sám a neptáš se** – pokyn „přimerguj“ míří na výsledek, ne na postup.
+*Až na výslovný pokyn uživatele.* **Jak se merguje, rozhoduješ sám a neptáš se** – pokyn „přimerguj“ míří na výsledek, ne na postup. Ptáš se jen tam, kde to níž výslovně stojí.
 
-**Nejdřív zjisti, jestli merge narazí na konflikt:**
+**Hlavní větev** se tu píše `main`; jmenuje-li se v projektu jinak, platí to pro ni (viz úvod). **Příkazy nad `main/` pouštěj z `<projekt>/main`, ne z worktree větve:** krok 4 ten worktree maže, a session, která v něm stojí, by přišla o pracovní adresář.
+
+Celý postup proveď najednou a **průběžně hlas, co se povedlo** – merge nemá proběhnout mlčky. Vrátí-li příkaz jiný návratový kód, než s jakým krok počítá, nebo selže-li `pull`/`push`, zastav a ohlas to – nic neobcházej `--force` a větev nemaž.
+
+### 1. Co merge zastaví
+
+- **Necommitnuté změny ve worktree větve** – commitni je, patří-li k práci větve; soubor, který jsi nezměnil ty, nech být a ohlas ho (`~/.claude/RULES.md`, *Commituj jmenované cesty, ne `-A`*).
+- **Rozpracovaný `main/`** – je to cizí práce a merge by se s ní promíchal; ohlas to a zastav.
+- **`main` je nasazovací větev.** Stojí-li v `## Nasazení` projektového `CLAUDE.md`, že se z `main` automaticky nasazuje, je merge samotné nasazení a patří `/release` (`~/.claude/skills/release/SKILL.md`, *Nasazovací větev není integrační větev*). Zastav a řekni to.
+- **Větev kola návrhu** (`/specify`) – pozná se podle toho, že ji jmenuje blok kola v `docs/todo.md` nebo záznam v `docs/done.md`, sekce `## Kola návrhu`. Neproběhl-li v ní zápis před sloučením (blok v `todo.md` ještě je), pusť v ní nejdřív `/specify`. Proběhl-li, pokračuj – ale krok 3 dělej podle *Zápisu před sloučením*, bod 6, ve `~/.claude/skills/specify/SKILL.md`, protože po natažení se kolu přiděluje číslo znovu.
+
+### 2. Posunul se `main` od odbočení větve?
 
 ```bash
-git -C <projekt>/main pull --ff-only                              # main/ na úroveň remote
-git -C <projekt> merge-tree --write-tree --quiet main <vetev>     # 0 = bez konfliktu, 1 = konflikt
+git -C <projekt>/main pull --ff-only                        # jen má-li repozitář remote
+git -C <projekt> merge-base --is-ancestor main <vetev>      # 0 = neposunul, 1 = posunul
 ```
 
-**Bez konfliktu** mergni rovnou do `main` sekvencí níž.
+**Neposunul** → krok 4. Obsah `main` po merge bude přesně ten, který už ve větvi prošel průběžnou kontrolou.
 
-**S konfliktem nejdřív přihraj `main` do větve** a konflikty vyřeš tam: ve worktree větve `git merge main`, vyřeš, commitni, pusť průběžnou kontrolu projektu a pushni. Teprve pak merge do `main`, který už konflikt nemá. Konflikty jsou tytéž, liší se místo, kde se řeší:
+**Posunul** → krok 3, **i když merge konflikt nemá**. Textově čistý merge ještě neznamená funkční kód: dvě větve se můžou rozejít obsahově (jedna přejmenuje funkci, druhá ji nově volá) a ten stav by jinak poprvé vznikl až na hlavní větvi.
 
-- **`main` není ani chvíli napůl mergnutý.** Stojí na něm ostatní session; rozdělané řešení konfliktů v `main/` by viděly, a zaseklé by ho tam nechalo.
-- **Spojený stav projde kontrolou dřív, než dorazí do `main`.** Při přímém merge vznikne neověřený rovnou na hlavní větvi.
-- **Řešení konfliktů zůstane dohledatelné** jako vlastní commit větve, ne schované v merge commitu.
+### 3. Přihraj `main` do větve a ověř tam
 
-Zpráva merge commitu do větve není omezená – hook hlídá jen hlavní větev. **Ptej se jen tehdy, když konflikt nejde vyřešit mechanicky**, protože obě strany rozhodly tutéž věc jinak – to je rozhodnutí uživatele, ne postup mergování.
+Ve worktree větve:
+
+1. `git merge --no-commit main` – bez `--no-commit` by git čistý merge commitnul hned a kontrola by přišla až po něm.
+2. **Vyřeš konflikty.** Mechanické jsou ty, kde obě strany jen přidaly – typicky nové záznamy na konci `done.md`, `decisions.md` nebo `todo.md`: ponech oba za sebou. **Ptej se jen na konflikt, kde obě strany rozhodly tutéž věc jinak** – to je rozhodnutí o obsahu, ne postup mergování.
+3. **Pusť příkazy z *Kontraktu příkazů* projektu** (`~/Dev/context/coding/quality.md`). Nemá-li projekt kontrakt, řekni nahlas, že spojený stav nic neověřilo. Padne-li kontrola, oprav to v rozpracovaném merge a pusť znovu; do `main` nejde nic, co neprošlo.
+4. Commitni (zpráva merge commitu do větve není omezená – hook hlídá jen hlavní větev) a pushni, má-li repozitář remote.
+5. **Vrať se na krok 2.** Během řešení se `main` mohl posunout znovu – nad projektem běží souběžné session. **Po třetím kole zastav a ohlas to**: `main` se hýbe rychleji, než se dá dohnat, a o dalším postupu rozhodne uživatel.
+
+Konflikty jsou tytéž, jako by se řešily přímo v `main/`; liší se místo:
+
+- **`main` není ani chvíli napůl mergnutý.** Stojí na něm ostatní session; rozdělané řešení konfliktů v `main/` by viděly a zaseklé by ho tam nechalo.
+- **Spojený stav projde kontrolou dřív, než dorazí do `main`.**
+- **Řešení konfliktů zůstane dohledatelné** v merge commitu na větvi, ne rozpuštěné v merge commitu do `main`, který nese shrnutí celé práce.
+
+### 4. Merge do `main` a úklid větve
 
 ```bash
-cd <projekt>/main
+cd <projekt>/main                    # adresář, který po úklidu zůstane
 git merge --no-ff <vetev> -m "<shrnutí toho, co větev přinesla>"
-git push
+git push                             # jen má-li repozitář remote
 git worktree remove <projekt>/<adresar>
 git branch -d <vetev>
-git push origin --delete <vetev>   # jen pokud byla pushnutá
+git push origin --delete <vetev>     # jen pokud byla pushnutá
 ```
 
-Před mergem musí být `main/` čistý – `git merge` nad rozpracovaným stromem neprojde.
-
-**Větev kola návrhu** (`/specify`) se neslučuje, dokud v ní neproběhl zápis před sloučením (`~/.claude/skills/specify/SKILL.md`, *Zápis před sloučením*). Pozná se podle toho, že v jejím `docs/done.md` stojí záznam kola s touhle větví a v `docs/todo.md` už jeho blok není. Neproběhl-li, pusť v ní nejdřív `/specify`.
+- **Merge v `main/` narazí na konflikt** (`main` se posunul mezi krokem 2 a 4) → `git merge --abort` a zpátky na krok 2. Konflikt se v `main/` neřeší.
+- **Push odmítne remote** → zastav před úklidem větve a ohlas to; merge commit zůstává lokálně a větev se nemaže, dokud není `main` venku.
+- **`worktree remove` odmítne kvůli neuloženému obsahu** → nepoužívej `--force`, dokud se nezeptáš.
 
 ### Zpráva merge commitu shrnuje práci, ne jméno větve
 
@@ -189,8 +212,6 @@ Cenou za to je, že výchozí zpráva `Merge větve docs/znamky` je o té větvi
 Platí to **jen na hlavní větvi**, takže aktualizace rozdělané větve z `main` projde beze změny. Projde i merge po `git pull` nad toutéž větví, tedy synchronizace; `git pull origin <cizí větev>` na `main` je naopak dokončení práce a hook ho zastaví.
 
 Hook volá lokální `.git/hooks/commit-msg` repozitáře, existuje-li, protože globální `core.hooksPath` by ho jinak vypnul. **Ostatní typy lokálních hooků tím ale nasazené nejsou.** Potřebuje-li je nějaký projekt, nastaví si vlastní `core.hooksPath`, který globální nastavení přebije.
-
-Celou sekvenci proveď najednou a **průběžně hlas, co se povedlo** – merge nemá proběhnout mlčky. Před mergem ověř, že ve worktree nejsou necommitnuté změny. Když `worktree remove` odmítne kvůli neuloženému obsahu, **nepoužívej `--force`, dokud se nezeptáš**.
 
 ## Kontrola stavu
 

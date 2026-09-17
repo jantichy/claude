@@ -150,6 +150,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 Skill s vlastním koncem pro některý režim (rušení, zamítnutí) smí mít druhou dvojici, ale musí splňovat týž vzorec.
 
+**Hotové znění smí mít obměny podle místa, kde skill běží** – `/cleanup` má jiné ve worktree větvi a jiné, když merge něco brání. Podmínka je, že všechny obměny tvrdí totéž (věc je hotová a ověřená) a liší se jen tím, co z toho plyne a čím pokračovat; o tom, která platí, rozhoduje ověřitelný stav, ne dojem. **Obměna, která hotovost zpochybňuje, není obměna, ale zakázaná třetí varianta** – „zapsané, ale něco je rozbité“ tedy patří do nehotového znění, pokud to rozbité brání tomu, co věc slibuje. Zpřesněno 17. 9. 2026, když se u `/cleanup` ukázalo, že doslovné čtení „dvou vět“ by vynutilo buď mlčet o mergi, nebo tvrdit nehotovost u zapsané session.
+
 Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky“ od „výsledek platí“. Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
 
 ## 5. Číslování a názvosloví
