@@ -5,10 +5,10 @@ Z dokumentace navrženého datového modelu nakreslí interaktivní stránku: ER
 ## Co umí
 
 - **Celé schéma** – po kliknutí na tabulku popis lidskými slovy, k čemu je, vazby oběma směry, všechny sloupce, constrainty, invarianty a indexy.
-- **Jádro modelu** – malý diagram hlavních entit, ze kterého je vidět, kde se nabídka potkává s prodejem nebo co drží co.
+- **Jádro modelu** – malý diagram hlavních entit, ze kterého je vidět, jak spolu hlavní části modelu souvisí.
 - **Stavový prostor** – po kliknutí na stav ukáže, kam a jakou funkcí se z něj dá odejít, kdo ten přechod spouští a co stav nemění.
 - **Aktualizace** – najde svou dřívější stránku, zjistí, co se v modelu od té doby změnilo, a promítne to včetně přejmenování.
-- **Jinou větev** – ve worktree layoutu se zeptá, ze které rozdělané větve kreslit.
+- **Jinou větev** – kreslí z pracovního adresáře, ve kterém stojíte; zavoláte-li ho z kořene projektu s víc rozdělanými větvemi vedle sebe, zeptá se, ze které.
 
 ## Proč zrovna tenhle
 
@@ -24,9 +24,11 @@ Z dokumentace navrženého datového modelu nakreslí interaktivní stránku: ER
 /diagram
 ```
 
-V projektu s popsaným modelem stačí zavolat. Poprvé vznikne nová stránka, příště se aktualizuje ta stávající.
+V projektu s popsaným modelem stačí zavolat. Najde-li svou dřívější stránku, aktualizuje ji; nenajde-li ji, zeptá se, jestli založit novou.
 
 ## Ukázka výstupu
+
+Co je na výsledné stránce (zkráceně):
 
 ```
 Mapa modelu rezervací · větev main · commit 94027a3
@@ -59,4 +61,4 @@ Skill si načítá **moji soukromou českou typografii**, která v tomhle repozi
 
 ### Požadavky a omezení
 
-Claude Code s nástrojem pro artefakty, Git a Node pro kontrolu skriptů stránky. Model musí být v projektu popsaný v dokumentaci (bloky schématu, katalog přechodů) – z migrací ani ORM zatím nekreslí. Stránka je soukromá, dokud ji nesdílíte.
+Claude Code s nástrojem pro artefakty a s vestavěnými skilly na návrh a kreslení artefaktů, Git a Node pro kontrolu skriptů stránky. Model musí být v projektu popsaný v dokumentaci (bloky schématu, katalog přechodů) – z migrací ani ORM zatím nekreslí. Stránka je soukromá, dokud ji nesdílíte.

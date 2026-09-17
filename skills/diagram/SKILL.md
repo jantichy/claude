@@ -15,7 +15,7 @@ Z dokumentace datového modelu projektu postaví **interaktivní stránku jako a
 - **stavový prostor** – klikací diagram stavů, kde přechody nesou jméno funkce a rozlišení spouštěče,
 - **ortogonální osy a vedlejší automaty**, pokud je model má.
 
-Skill nemá režimy. Jestli vzniká nový artefakt, nebo se aktualizuje existující, pozná sám.
+Skill nemá režimy. Existující artefakt najde a aktualizuje sám; nový založí až po zeptání.
 
 ## Co skill nedělá
 
@@ -56,12 +56,11 @@ Najdi dokumentaci modelu: podle `CLAUDE.md` projektu (seznam dokumentů návrhu)
 
 ## Fáze 2 – Existující artefakt
 
-Název stránky je **stálý a odvozený od projektu**: `Mapa modelu <projekt>` s projektem v 2. pádě podle jeho názvu nebo slugu v `CLAUDE.md` (`Mapa modelu rezervací`). Podle něj se artefakt hledá.
+Název stránky je **stálý a odvozený od projektu**: `Mapa modelu <projekt>` s projektem v 2. pádě podle jeho českého názvu v `CLAUDE.md` (`Mapa modelu rezervací`); nemá-li projekt český název, stojí tam slug beze změny (`Mapa modelu apikey`). Podle něj se artefakt hledá.
 
 1. `Artifact` s `action: "list"` a hledej ten název.
 2. **Jeden** → přečti ho (`action: "read"`) a z hlavičky stránky zjisti, z jaké větve a commitu vznikl. Porovnej s dneškem: `git diff --stat <starý>..HEAD -- docs/` a u změněných dokumentů přečti diff. **Přejmenování entit a přesuny polí promítni do celé stránky** – do popisků, titulků, popisů, nápověd, ne jen do dat.
-3. **Žádný** → vznikne nový.
-4. **Víc než jeden** nebo si nejsi jistý → zeptej se přes `AskUserQuestion`, který aktualizovat, a nabídni i založení nového.
+3. **Žádný, víc než jeden, nebo si nejsi jistý** → zeptej se přes `AskUserQuestion`: nabídni nalezené artefakty, založení nového a možnost vložit odkaz na existující. **Nový nezakládej bez zeptání** – artefakt mohl být přejmenovaný a vznikl by tiše duplikát.
 
 Starý commit už v historii být nemusí (větev sloučená přes squash, smazaná). Pak diff nedělej, řekni to a stránku postav celou znovu.
 
@@ -84,6 +83,7 @@ Co vytáhnout, má-li to dokumentace:
 **Ověř výstup skriptu proti zdroji dřív, než ho použiješ:**
 
 - počet tabulek proti výpisu entit v dokumentaci,
+- počet cizích klíčů zvlášť výslovných a odvozených z názvu – oba jdou do závěru,
 - počet constraintů proti grepu řádků začínajících `CHECK`, `UNIQUE`, `CREATE`, `EXCLUDE`,
 - počet přechodů proti číslu v nadpisu katalogu, má-li ho („Přechody partie (44)“),
 - u 3 tabulek s nejvíc sloupci počet sloupců ručně proti bloku.
@@ -100,13 +100,13 @@ Ke každé tabulce napiš **jeden až dva odstavce pro člověka**: co to je, k 
 
 ## Fáze 5 – Stavba stránky
 
-Stránku stav podle `artifact-design` a `artifact-diagramming`. Obsah:
+Stránku stav podle `artifact-design` a `artifact-diagramming`. **Každá sekce jen tehdy, má-li v dokumentaci podklad** (*Fáze 1*); bez katalogu přechodů není stavový prostor, bez tenanta není přepínač vazeb na tenanta. Obsah:
 
 | Sekce | Co na ní je |
 |---|---|
 | Hlavička | název projektu, větev, commit, datum – z *Fáze 0* |
 | Jádro modelu | malý statický ER diagram hlavních entit; tvrzení v nadpisu, co z něj plyne |
-| Celé schéma | všechny tabulky ve skupinách podle oblastí; vazby na tenanta skryté přepínačem, značka u tabulek, které tenanta nesou přímo; po kliknutí popis, vazby, sloupce, constrainty, invarianty, indexy |
+| Celé schéma | všechny tabulky ve skupinách podle oblastí; je-li model multi-tenant, vazby na tenanta skryté přepínačem a značka u tabulek, které tenanta nesou přímo; po kliknutí popis, vazby, sloupce, constrainty, invarianty, indexy |
 | Stavový prostor | klikací mřížka stavů; po kliknutí přechody ven s názvem funkce, slabě přechody dovnitř, panel se vším, co stav nemění |
 | Osy a vedlejší automaty | jen má-li je dokumentace |
 
@@ -126,7 +126,7 @@ Stránku stav podle `artifact-design` a `artifact-diagramming`. Obsah:
 - **Kreslí se z jiného místa, než o jakém uživatel mluvil.** Větev byla sloučená a worktree zmizel; agent vezme hlavní větev a řekne to až na konci. Zeptej se na začátku.
 - **Obecný zápis přechodu se rozepíše odhadem.** `restore*` „do všech stavů, ze kterých mohla být smazána“ nebo `unpayCard` do všech `*_PAID` – na stránce pak jsou hrany, které katalog netvrdí.
 - **Smazání jako uzel mezi stavy.** Diagram tím tvrdí, že je to stav, a model říká opak.
-- **Počet napsaný z hlavy.** „46 cizích klíčů“ bylo 46 bez vazeb na tenanta a 59 s nimi. Čísla se na stránce počítají, v závěru opisují z výstupu.
+- **Počet napsaný z hlavy.** V jednom stavu modelu se „46 cizích klíčů“ ukázalo jako počet bez vazeb na tenanta – se všemi jich bylo 59. Čísla se na stránce počítají, v závěru opisují z výstupu.
 - **Parser přiřadí SQL blok předchozí tabulce.** Constrainty placeholderu skončily u hodnot placeholderu, protože blok „Nad `Placeholder`:“ stál až za oběma schématy.
 - **Useknutý víceřádkový `CHECK`** se přilepí jako komentář k poslednímu sloupci.
 - **Přejmenování se promítne jen do dat.** Nadpisy a popisky dál mluví o košíku, když model už zná objednávku.
@@ -138,7 +138,7 @@ Stránku stav podle `artifact-design` a `artifact-diagramming`. Obsah:
 
 - **Artefakt:** <odkaz> – <nový / aktualizovaný>
 - **Zdroj:** <větev> @ <commit>, <datum>
-- **Obsah:** <tabulek>, <vazeb> (z toho <na tenanta>), <sloupců>, <constraintů>, <stavů>, <přechodů> – čísla z výstupu skriptu
+- **Obsah:** <tabulek>, <vazeb> (z toho <výslovných> / <odvozených>, <na tenanta>, je-li), <sloupců>, <constraintů>, <stavů>, <přechodů> – čísla z výstupu skriptu
 
 **Změny oproti minulé verzi**
 - <co se v modelu změnilo a jak se to promítlo, nebo „nová stránka“>
