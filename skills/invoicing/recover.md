@@ -22,11 +22,11 @@ Referenční soubor k režimu `recover` skillu `/invoicing`. Drží **katalog zd
 
 | Pole | Co v něm je |
 |---|---|
-| `zdroj` | mail, kalendář, Slack, git, Claude Code, prohlížeč, sdílené dokumenty, pracovní poznámky, notifikace. **Nástroj se smí jmenovat** (`clickup`, `superhuman`), je-li to pro dohledání podstatné |
-| `od`, `do` | čas; u bodové stopy je `do` prázdné |
+| `source` | mail, kalendář, Slack, git, Claude Code, prohlížeč, sdílené dokumenty, pracovní poznámky, notifikace. **Nástroj se smí jmenovat** (`clickup`, `superhuman`), je-li to pro dohledání podstatné |
+| `start`, `end` | čas; u bodové stopy je `end` prázdné |
 | `basis` | **doslovný** úryvek nebo název – předmět mailu, titulek schůzky, první řádek commitu |
-| `odkaz` | kam se dá kliknout a ověřit to |
-| `vylucnost` | `vylucna` / `sdilena` podle *Výlučné a sdílené zdroje* |
+| `link` | kam se dá kliknout a ověřit to |
+| `exclusivity` | `exclusive` / `shared` podle *Výlučné a sdílené zdroje* |
 
 **Stopa není nález.** Nález vzniká až tím, že se stopa nepotká se záznamem v Clockify a přežije ověření. Míchat obojí znamená ukázat uživateli výpis logu a nechat práci na něm.
 
@@ -39,7 +39,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 | **Kalendář** | titulek, začátek, konec, účastníci, délka v minutách | **nejlepší** – délka je v datech, neodhaduje se |
 | **Hovory** (Zoom, Teams) | čas a délka hovoru, případně nahrávka | **nejlepší** – totéž, a navíc se to opravdu konalo |
 | **Slack** | čas zprávy, autor, **obsah** | silný – obsah často délku přímo říká, viz níž |
-| **Claude Code** | timestampy zpráv v `~/.claude/projects/<projekt>/*.jsonl` | silný – souvislá session je skutečný interval u klávesnice |
+| **Claude Code** | timestampy zpráv v `~/.claude/projects/<project>/*.jsonl` | silný – souvislá session je skutečný interval u klávesnice |
 | **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek |
 | **Prohlížeč** | navštívená URL, čas návštěvy **a doba na stránce** | střední – u výlučné URL použitelné, u sdílené ne |
 | **Sdílené dokumenty** | zápisy ze schůzek, **odevzdané výstupy**, zmínky o tom, co bylo dodáno | silný – nese obsah i hotové výsledky, viz *Odevzdaný výstup jako stopa* |
@@ -63,7 +63,7 @@ Tady to není teoretické – rozhoduje se tu o částkách na faktuře a text d
 **Kalendář se čte skriptem `~/.claude/skills/invoicing/calendar.swift`** a čtyři věci z něj vypadávají dřív, než se z nich stane stopa. Všechny čtyři vyrobily falešný nález při prvním ostrém běhu, takže to nejsou hypotézy:
 
 - **Celodenní události** – narozeniny, svozy odpadu, dovolené. Nesou délku 1439 minut a udělaly by z každého dne fakturovatelný den.
-- **Odmítnuté schůzky** – nekonaly se. Poznají se podle příznaku `odmitnuta`, ne podle toho, že v kalendáři jsou.
+- **Odmítnuté schůzky** – nekonaly se. Poznají se podle příznaku `declined`, ne podle toho, že v kalendáři jsou.
 - **Duplicitní záznamy na týž čas** – táž schůzka bývá v kalendáři několikrát: přijatá z víc stran, nebo ležící ve dvou kalendářích téhož účtu. Slévají se **podle času, ne podle názvu** – tentýž hovor se v obou kopiích běžně jmenuje jinak.
 - **Zasedačky mezi účastníky** – adresy typu `…@resource.calendar.google.com` jsou místnosti, ne lidé. Podle protistrany se schůzka pozná jen z adres skutečných účastníků.
 
@@ -156,12 +156,12 @@ Každý agent dostane: **klienta, období, své identifikátory ze souboru klien
 
 ```json
 {
-  "zdroj": "slack",
-  "od": "2026-08-14T09:12:00+02:00",
-  "do": null,
+  "source": "slack",
+  "start": "2026-08-14T09:12:00+02:00",
+  "end": null,
   "basis": "\"tak jsem se v tom hrabal celý dopoledne, ten feed je fakt rozbitej\"",
-  "odkaz": "https://…",
-  "vylucnost": "vylucna"
+  "link": "https://…",
+  "exclusivity": "exclusive"
 }
 ```
 

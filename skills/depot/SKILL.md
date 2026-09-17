@@ -1,7 +1,7 @@
 ---
 name: depot
 description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty nebo adresář, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Dev/context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, nemaže a v ~/Depot nepřejmenovává.
-argument-hint: [full|store] <cesty…> | workflow
+argument-hint: [full|store] <paths…> | workflow
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
@@ -132,11 +132,11 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Cílovou cestu ukaž celou**, včetně názvu adresáře, který by v Depotu vznikl. Je to poslední chvíle, kdy se dá opravit popis, který se pak už nepřejmenovává.
 
-**Pořadové číslo od operačního systému z názvu odeber.** Stáhne-li se soubor podruhé, macOS ho pojmenuje `soubor (1).pdf` – to číslo není součást názvu, ale stopa po kolizi v `~/Downloads`. Do Depotu jde `soubor.pdf` a **přejmenování ukaž v plánu**, ať je vidět, že se název mění.
+**Pořadové číslo od operačního systému z názvu odeber.** Stáhne-li se soubor podruhé, macOS ho pojmenuje `file (1).pdf` – to číslo není součást názvu, ale stopa po kolizi v `~/Downloads`. Do Depotu jde `file.pdf` a **přejmenování ukaž v plánu**, ať je vidět, že se název mění.
 
-- **Výjimka: jde-li v jedné dávce do téhož cíle víc souborů téhož jména** (`soubor.pdf`, `soubor (1).pdf`, `soubor (2).pdf`), čísla **zůstávají všem**. Bez nich by se přepsaly navzájem a jinak se od sebe nerozliší; odebrat číslo jen některým by navíc tvrdilo, že je mezi nimi rozdíl, který není. Řekni to v plánu.
+- **Výjimka: jde-li v jedné dávce do téhož cíle víc souborů téhož jména** (`file.pdf`, `file (1).pdf`, `file (2).pdf`), čísla **zůstávají všem**. Bez nich by se přepsaly navzájem a jinak se od sebe nerozliší; odebrat číslo jen některým by navíc tvrdilo, že je mezi nimi rozdíl, který není. Řekni to v plánu.
 - **Vznikne-li odebráním čísla kolize s existující cílovou cestou**, platí *Hranice* – nepřilepuj číslo zpátky, ale zastav se u toho souboru a nech rozhodnout nad oběma.
-- **Nesahej na číslo, které je součástí názvu** – `smlouva (2026).pdf`, `IMG (1) final.jpg`, díl seriálu. Odebírá se jen tvar `název (N).přípona` na samém konci názvu, kde `N` je celé číslo.
+- **Nesahej na číslo, které je součástí názvu** – `smlouva (2026).pdf`, `IMG (1) final.jpg`, díl seriálu. Odebírá se jen tvar `name (N).ext` na samém konci názvu, kde `N` je celé číslo.
 
 ## Fáze 4 – Uložení
 

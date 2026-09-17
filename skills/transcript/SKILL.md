@@ -50,20 +50,20 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 
   Video se nijak neliší – zvuková stopa se z něj vytáhne při převodu na WAV a dál se s ní pracuje stejně. **Je to běžný případ, ne výjimka:** záznam hovoru z Meetu nebo Teamsů se stahuje jako MP4. Obraz se nikam nepřenáší; z videa vzniká jen text.
 
-  Když soubor zvukovou stopu nemá, převod na WAV selže a `transcribe.sh` to zapíše jako `### FAILED zaznam-<n> prevod-na-wav` – ohlas to uživateli a pokračuj dalšími. Když nenajdeš nic, oznam to a skonči.
+  Když soubor zvukovou stopu nemá, převod na WAV selže a `transcribe.sh` to zapíše jako `### FAILED file-<n> wav-conversion` – ohlas to uživateli a pokračuj dalšími. Když nenajdeš nic, oznam to a skonči.
 - **Výstup – vše vzniká v adresáři vstupní nahrávky, nezakládá se žádný podadresář a nic se nikam nepřesouvá:**
-  - `<název>.md` – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](output.md#pravidla-doslovného-přepisu)),
-  - `<název>.srt` – tentýž obsah s časovými značkami, syrový z whisperu,
-  - `<název>.vtt` – titulky se značkou `<v Jméno>`, protože SRT pole pro mluvčího nemá. Vzniká **vedle** SRT, jen s rozlišením mluvčích,
-  - `<název>.json` – strojově čitelné úseky s časem, mluvčím a textem. Taky jen s rozlišením mluvčích,
+  - `<name>.md` – vyčištěný doslovný přepis (viz [Pravidla doslovného přepisu](output.md#pravidla-doslovného-přepisu)),
+  - `<name>.srt` – tentýž obsah s časovými značkami, syrový z whisperu,
+  - `<name>.vtt` – titulky se značkou `<v Jméno>`, protože SRT pole pro mluvčího nemá. Vzniká **vedle** SRT, jen s rozlišením mluvčích,
+  - `<name>.json` – strojově čitelné úseky s časem, mluvčím a textem. Taky jen s rozlišením mluvčích,
   - `YYYYMMDD - Výstižný název.md` – jedno společné shrnutí napříč všemi nahrávkami (viz [Formát souhrnného MD](output.md#formát-souhrnného-md)).
 
   Které z nich vzniknou, vybere uživatel v průvodci.
 
-  **`<název>` je jméno vstupní nahrávky bez přípony.** U schůzky spojené z několika částí je to jméno, které uživatel zvolil v kroku 1 – sada výstupů je pak jedna jediná, ne jedna na každou původní část.
-- **Mezivýstupy** vznikají viditelně v adresáři a **po dokončení se uklidí** (viz krok 10): `<název>.txt` od whisperu, skrytý `.transcript-glossary.md`, `whisper-progress.log`, u spojené schůzky `<název>.wav` z `join.sh` a při rozlišování mluvčích navíc `<název>.wav` (u spojené schůzky k němu ještě `<název>.16k.wav`), `<název>.diarization.json` nebo `<název>.16k.diarization.json` a `.speakers.json`. Zdrojové audio zůstává.
+  **`<name>` je jméno vstupní nahrávky bez přípony.** U schůzky spojené z několika částí je to jméno, které uživatel zvolil v kroku 1 – sada výstupů je pak jedna jediná, ne jedna na každou původní část.
+- **Mezivýstupy** vznikají viditelně v adresáři a **po dokončení se uklidí** (viz krok 10): `<name>.txt` od whisperu, skrytý `.transcript-glossary.md`, `whisper-progress.log`, u spojené schůzky `<name>.wav` z `join.sh` a při rozlišování mluvčích navíc `<name>.wav` (u spojené schůzky k němu ještě `<name>.16k.wav`), `<name>.diarization.json` nebo `<name>.16k.diarization.json` a `.speakers.json`. Zdrojové audio zůstává.
 
-  **Bez rozlišování mluvčích žádný viditelný WAV nevzniká.** `transcribe.sh` si ho v tom případě pojmenuje skrytě (`.<název>.tmp.wav`) a smaže ho hned po zpracování každé nahrávky, ne až v úklidu. **U spojené schůzky to neplatí** – ta je WAV od začátku, protože ho vyrobil `join.sh`, a leží v adresáři až do úklidu bez ohledu na to, jestli se mluvčí rozlišují.
+  **Bez rozlišování mluvčích žádný viditelný WAV nevzniká.** `transcribe.sh` si ho v tom případě pojmenuje skrytě (`.<name>.tmp.wav`) a smaže ho hned po zpracování každé nahrávky, ne až v úklidu. **U spojené schůzky to neplatí** – ta je WAV od začátku, protože ho vyrobil `join.sh`, a leží v adresáři až do úklidu bez ohledu na to, jestli se mluvčí rozlišují.
 
 ---
 
@@ -128,12 +128,12 @@ Spojit se to musí **před přepisem, ne po něm**. Diarizace nad částmi zvlá
 **Čísla porovnávej jako čísla, ne jako text.** Lexikograficky se `záznam 10` dostane před `záznam 2` – tohle je jediné řazení podle jména, které je zakázané.
 
 ```bash
-<skill>/join.sh <workdir> <název> <audio1> <audio2> ...
+<skill>/join.sh <workdir> <name> <audio1> <audio2> ...
 ```
 
 Vypíše cestu ke spojenému souboru a jeho délku. Sám si ověří, že výsledek délkou sedí na součet částí – když ne, nevrátí nic a soubor smaže, protože spojení, které tiše přijde o část, by se jinak poznalo až jako záhadně chybějící kus přepisu. Existující soubor nepřepíše.
 
-**Na `<název>` se zeptej**, protože ho ponesou všechny výstupy až po `<název>.md`. Navrhni jméno adresáře – ten bývá pojmenovaný po schůzce – a nech uživatele potvrdit, nebo napsat vlastní.
+**Na `<name>` se zeptej**, protože ho ponesou všechny výstupy až po `<name>.md`. Navrhni jméno adresáře – ten bývá pojmenovaný po schůzce – a nech uživatele potvrdit, nebo napsat vlastní.
 
 **Skončí-li `join.sh` nenulově, nespojuj nic ručně a rozhodni podle důvodu:**
 
@@ -182,10 +182,10 @@ en 0.999 mixed:cs,en
 1. **Přepsat po částech** – uživatel řekne, kolikátá minuta je zlom, ty nahrávku rozřízneš a pustíš dvakrát, každou část se svým jazykem:
 
    ```bash
-   <skill>/split.sh <workdir> <audio> <zlom>     # zlom jako MM:SS nebo v sekundách
+   <skill>/split.sh <workdir> <audio> <cut>     # bod řezu jako MM:SS nebo v sekundách
    ```
 
-   Vypíše cesty obou částí (`<název>-1.*`, `<název>-2.*`), každou na jeden řádek; zlom mimo nahrávku odmítne. **Řez má vlastní skript schválně**, i když je to jen dvojí volání ffmpegu: skripty skillu jsou v oprávněních pokryté jedním wildcardem, kdežto povolit `ffmpeg` napřímo znamená pustit nástroj, který umí přepisovat soubory (`-y`) – na rozdíl od čtecího `ffprobe`. Přepisy pak spojíš do jednoho `<název>.md` s mezinadpisem u zlomu. **Pozor na dvě věci:** časy v SRT druhé části začínají od nuly, takže se nedají použít pro diarizaci ani pro `merge.py`, a části `<název>-1.*` a `<název>-2.*` maže úklid v kroku 10 jmenovitě, takže na ně nezapomeň v jeho seznamu.
+   Vypíše cesty obou částí (`<name>-1.*`, `<name>-2.*`), každou na jeden řádek; zlom mimo nahrávku odmítne. **Řez má vlastní skript schválně**, i když je to jen dvojí volání ffmpegu: skripty skillu jsou v oprávněních pokryté jedním wildcardem, kdežto povolit `ffmpeg` napřímo znamená pustit nástroj, který umí přepisovat soubory (`-y`) – na rozdíl od čtecího `ffprobe`. Přepisy pak spojíš do jednoho `<name>.md` s mezinadpisem u zlomu. **Pozor na dvě věci:** časy v SRT druhé části začínají od nuly, takže se nedají použít pro diarizaci ani pro `merge.py`, a části `<name>-1.*` a `<name>-2.*` maže úklid v kroku 10 jmenovitě, takže na ně nezapomeň v jeho seznamu.
 2. **Přepsat celé v převažujícím jazyce** a **napsat do poznámky na konci přepisu**, která část je nespolehlivá.
 
 **Nerozhoduj sám, zeptej se.** Skript umí zjistit, *že* se jazyk mění, ale ne *kde* – hranici zná jedině uživatel. Časově se ty varianty skoro neliší (přepisuje se týž objem zvuku, jen se dvakrát načte model); liší se tím, kolik práce je kolem a jestli je přijatelné mít kus přepisu nespolehlivý.
@@ -197,8 +197,8 @@ en 0.999 mixed:cs,en
 Spočítej odhad běhu pro obě varianty. Tempo drží `rate.py`, který se sám kalibruje podle skutečnosti:
 
 ```bash
-python3 <skill>/rate.py eta turbo    <délka_v_sekundách>
-python3 <skill>/rate.py eta large-v3 <délka_v_sekundách>
+python3 <skill>/rate.py eta turbo    <duration_seconds>
+python3 <skill>/rate.py eta large-v3 <duration_seconds>
 ```
 
 Zeptej se přes `AskUserQuestion`. **První možnost je vždy ta nejpravděpodobnější**, aby stačil Enter:
@@ -235,7 +235,7 @@ Drž ho holý. Spočítej odhad a napiš jen ten:
 Přidá ~M:SS.
 ```
 
-Odhad vezmi z `python3 <skill>/rate.py eta diarize <délka_v_sekundách>`.
+Odhad vezmi z `python3 <skill>/rate.py eta diarize <duration_seconds>`.
 
 **U delší nahrávky připiš, že je to spodní hranice** – tempo diarizace s délkou klesá, takže odhad zkalibrovaný na kratším běhu ten delší podstřelí. Proč a o kolik, drží [`internals.md`](internals.md); hranice „delší“ tam zatím opřená o měření není, naměřené jsou jen dva body.
 
@@ -288,18 +288,18 @@ WHISPER_KEEP_WAV=<0|1> \
 <skill>/transcribe.sh <workdir> <workdir>/whisper-progress.log <audio1> <audio2> ...
 ```
 
-`<workdir>` = adresář vstupní nahrávky. Vzniknou v něm `<název>.txt`, `<název>.srt` a `whisper-progress.log`.
+`<workdir>` = adresář vstupní nahrávky. Vzniknou v něm `<name>.txt`, `<name>.srt` a `whisper-progress.log`.
 
-**Skončí-li skript kódem 2 s hláškou o kolizi jmen, ptej se – nerozhoduj sám.** Nastane to, když dvě nahrávky v jednom běhu sdílejí základ jména (`porada.m4a` a `porada.mp4`): výstupy se jmenují podle basename bez přípony, takže by si `.txt` i `.srt` navzájem přepsaly a obě by se přitom ohlásily jako hotové. Skript proto nic nespustí a v logu nechá `### COLLISION <základ>`. (U schůzky spojené v kroku 1 tohle nastat nemůže – do běhu jde jediný soubor.)
+**Skončí-li skript kódem 2 s hláškou o kolizi jmen, ptej se – nerozhoduj sám.** Nastane to, když dvě nahrávky v jednom běhu sdílejí základ jména (`porada.m4a` a `porada.mp4`): výstupy se jmenují podle basename bez přípony, takže by si `.txt` i `.srt` navzájem přepsaly a obě by se přitom ohlásily jako hotové. Skript proto nic nespustí a v logu nechá `### COLLISION <basename>`. (U schůzky spojené v kroku 1 tohle nastat nemůže – do běhu jde jediný soubor.)
 
 Polož **jednu otázku přes `AskUserQuestion`** se dvěma volbami:
 
 - **Zahrnout příponu** – pustíš totéž znovu s `WHISPER_KEEP_EXT=1` a výstupy ponesou i příponu (`porada.m4a.txt`, `porada.mp4.txt`). Zbytek běhu je stejný.
 - **Zastavit** – uživatel si nahrávky přejmenuje sám a spustí to znovu. Skonči a řekni, které soubory kolidují.
 
-**Nevybírej za něj ani jedno.** Delší jméno nese celý řetěz až do finálního `<název>.md`, takže je to volba o tom, jak se budou jmenovat výsledné dokumenty – a to ví jen on.
+**Nevybírej za něj ani jedno.** Delší jméno nese celý řetěz až do finálního `<name>.md`, takže je to volba o tom, jak se budou jmenovat výsledné dokumenty – a to ví jen on.
 
-**Skončí-li skript kódem 3, v adresáři už leží výstupy z dřívějška** – `<název>.txt`, `.srt`, `.md`, `.vtt`, `.json` nebo `.wav`. Whisper i ffmpeg přepisují bez ptaní, takže by hodinový přepis zmizel beze stopy; skript proto zase nic nespustí a do logu zapíše `### EXISTING <soubory>`. Znovu polož **jednu otázku přes `AskUserQuestion`**, tentokrát se třemi volbami:
+**Skončí-li skript kódem 3, v adresáři už leží výstupy z dřívějška** – `<name>.txt`, `.srt`, `.md`, `.vtt`, `.json` nebo `.wav`. Whisper i ffmpeg přepisují bez ptaní, takže by hodinový přepis zmizel beze stopy; skript proto zase nic nespustí a do logu zapíše `### EXISTING <files>`. Znovu polož **jednu otázku přes `AskUserQuestion`**, tentokrát se třemi volbami:
 
 - **Přepsat** – `WHISPER_ON_EXISTING=overwrite`. Správná volba, když se tatáž nahrávka přepisuje znovu po opravě.
 - **Přidat rozlišení** – `WHISPER_ON_EXISTING=suffix`. Nové výstupy dostanou `-2`, `-3` podle prvního volného jména a staré zůstanou ležet.
@@ -313,14 +313,14 @@ Polož **jednu otázku přes `AskUserQuestion`** se dvěma volbami:
 
 **VAD je vždy zapnutý** a není na co se ptát. Vyřazuje ticho, čímž zabíjí celou třídu halucinací („Titulky vytvořil…“, dokola tatáž věta) a zároveň zrychluje běh. Práh je nastavený konzervativně (`-vt 0.35`, `-vp 200`), aby neuřízl tiché mluvčí. Vypnout ho jde přes `WHISPER_VAD=0`, ale sahej po tom jen jako po nápravě podle kroku 7.
 
-Chyba jednoho souboru neshodí zbytek běhu – zapíše se `### FAILED` a pokračuje se dalším. Po doběhnutí zkontroluj, jestli v logu nějaké `### FAILED` není, a **ohlas ho uživateli**. Po běhu po úsecích hledej navíc `### CHUNKSTAT zaznam-N <ok>/<z>`: **soubor s přeskočeným úsekem dostane `### DONE` jako každý jiný**, takže ztráta se jinak nepozná. Nesedí-li obě čísla, řekni uživateli, kolik úseků chybí.
+Chyba jednoho souboru neshodí zbytek běhu – zapíše se `### FAILED` a pokračuje se dalším. Po doběhnutí zkontroluj, jestli v logu nějaké `### FAILED` není, a **ohlas ho uživateli**. Po běhu po úsecích hledej navíc `### CHUNKSTAT file-N <ok>/<total>`: **soubor s přeskočeným úsekem dostane `### DONE` jako každý jiný**, takže ztráta se jinak nepozná. Nesedí-li obě čísla, řekni uživateli, kolik úseků chybí.
 
 ## Krok 7 – Zkontroluj, kolik zvuku se přepsalo
 
 V logu je pro každý úspěšně přepsaný soubor řádek:
 
 ```
-### SPEECHSTAT <n> <sekund_řeči> <celkem_sekund> <procent>
+### SPEECHSTAT <n> <speech_seconds> <total_seconds> <percent>
 ```
 
 **Pozor, co to číslo je.** Je to součet délek titulků v SRT dělený délkou nahrávky, tedy **kolik zvuku whisper opravdu přepsal** – ne výstup VAD. Stejné číslo vznikne i s `WHISPER_VAD=0`. Nízký podíl proto neukazuje na VAD sám o sobě; může za ním být i tichý mluvčí, šum nebo dlouhé pauzy.
@@ -337,7 +337,7 @@ WHISPER_CHUNK_MIN=5 <ostatní proměnné jako v kroku 6> <skill>/transcribe.sh �
 
 **Pět minut je rozumný začátek, ne doporučená hodnota.** Kratší úsek znamená víc řezů uprostřed vět a víc načtení modelu, delší zase větší ztrátu, když jeden úsek spadne. Pod dvě minuty nechoď – režie načítání modelu by převážila samotný přepis.
 
-Model začíná u každého úseku bez kontextu, takže se smyčka nemá jak šířit dál. **Ta samá volba je jediná záchrana i tehdy, když whisper spadne uprostřed dlouhé nahrávky:** bez ní se ztratí přepis celého souboru, s ní se přeskočí jen postižený úsek (`### CHUNKFAILED zaznam-N i/z` v logu) a zbytek se přepíše.
+Model začíná u každého úseku bez kontextu, takže se smyčka nemá jak šířit dál. **Ta samá volba je jediná záchrana i tehdy, když whisper spadne uprostřed dlouhé nahrávky:** bez ní se ztratí přepis celého souboru, s ní se přeskočí jen postižený úsek (`### CHUNKFAILED file-N i/z` v logu) a zbytek se přepíše.
 
 **Nezapínej to sám a nikdy jako výchozí.** Na každé hranici úseku vzniká řez uprostřed věty – v ostrém testu se okolo něj jedna replika zopakovala nadvakrát. Platí se tím za odstraněnou smyčku, ne za lepší přepis. Zároveň platí, že po takovém běhu **`SPEECHSTAT` klesne o zhruba tolik, kolik zabíraly přeskočené úseky** – nízké číslo je tady informace, ne poplach.
 
@@ -346,22 +346,22 @@ Model začíná u každého úseku bez kontextu, takže se smyčka nemá jak š�
 Druhý, **samostatný průchod** nad WAV z kroku 6. Když spadne, přepis tím nepřichází vniveč – ohlas selhání a pokračuj krokem 9 bez mluvčích.
 
 ```bash
-<skill>/diarize.sh <workdir> <workdir>/whisper-progress.log <workdir>/<název>.wav <počet|auto>
+<skill>/diarize.sh <workdir> <workdir>/whisper-progress.log <workdir>/<name>.wav <count|auto>
 ```
 
-**Jméno WAV ověř, nepredikuj.** Když byl vstupem sám WAV v pracovním adresáři – což u schůzky spojené v kroku 1 platí vždycky, protože `join.sh` vyrábí právě WAV –, dal mu `transcribe.sh` příponu `.16k`; pak se jmenuje `<název>.16k.wav` a `diarize.sh` z něj odvodí `<název>.16k.diarization.json`. **Mění se tím dva soubory z příkazu výš:** cesta k WAV, kterou předáváš `diarize.sh`, i diarizační JSON, který z ní odvodí. **SRT a výstupní základ pro `merge.py` zůstávají** odvozené ze jména vstupní nahrávky.
+**Jméno WAV ověř, nepredikuj.** Když byl vstupem sám WAV v pracovním adresáři – což u schůzky spojené v kroku 1 platí vždycky, protože `join.sh` vyrábí právě WAV –, dal mu `transcribe.sh` příponu `.16k`; pak se jmenuje `<name>.16k.wav` a `diarize.sh` z něj odvodí `<name>.16k.diarization.json`. **Mění se tím dva soubory z příkazu výš:** cesta k WAV, kterou předáváš `diarize.sh`, i diarizační JSON, který z ní odvodí. **SRT a výstupní základ pro `merge.py` zůstávají** odvozené ze jména vstupní nahrávky.
 
-Do logu přibude `### DIARSTAT <mluvčích> <úseků>` a `### DIARIZE ELAPSED`, ze kterého se kalibruje tempo. Při chybě `### DIARIZE FAILED <důvod>`. Když diarizace proběhla, ale statistika se z JSONu nepřečetla, stojí v logu `### DIARSTAT-FAILED <chyba>` a v `DIARSTAT` je `?` místo čísel – **neuváděj pak počet mluvčích jako nulu**, ta hodnota není známá.
+Do logu přibude `### DIARSTAT <speakers> <segments>` a `### DIARIZE ELAPSED`, ze kterého se kalibruje tempo. Při chybě `### DIARIZE FAILED <reason>`. Když diarizace proběhla, ale statistika se z JSONu nepřečetla, stojí v logu `### DIARSTAT-FAILED <error>` a v `DIARSTAT` je `?` místo čísel – **neuváděj pak počet mluvčích jako nulu**, ta hodnota není známá.
 
 #### Spoj mluvčí s textem
 
 ```bash
-python3 <skill>/merge.py <workdir>/<název>.srt <workdir>/<název>.diarization.json <workdir>/<název>
+python3 <skill>/merge.py <workdir>/<name>.srt <workdir>/<name>.diarization.json <workdir>/<name>
 ```
 
-Vznikne `<název>.json` a `<název>.vtt`. **Oba nesou syrový text z whisperu, ne vyčištěný** – jsou navázané na časové značky, takže přepsat v nich text by je rozešlo s nahrávkou. Vyčištěný text žije jen v `<název>.md`. Neopravuj je ručně.
+Vznikne `<name>.json` a `<name>.vtt`. **Oba nesou syrový text z whisperu, ne vyčištěný** – jsou navázané na časové značky, takže přepsat v nich text by je rozešlo s nahrávkou. Vyčištěný text žije jen v `<name>.md`. Neopravuj je ručně.
 
-Přiřazuje se podle **největšího časového překryvu**, protože whisperovy segmenty nekopírují střídání mluvčích. Když je překryv slabý nebo těsný, replika zůstane bez mluvčího – `merge.py` vypíše kolik takových je (`### MERGESTAT <celkem> <nepřiřazeno> <mluvčích>`).
+Přiřazuje se podle **největšího časového překryvu**, protože whisperovy segmenty nekopírují střídání mluvčích. Když je překryv slabý nebo těsný, replika zůstane bez mluvčího – `merge.py` vypíše kolik takových je (`### MERGESTAT <total> <unassigned> <speakers>`).
 
 **Nepřiřazené repliky nedoplňuj odhadem.** Chybné přiřazení vypadá stejně věrohodně jako správné a propíše se až do úkolů ve shrnutí, kde je z něj tvrzení, kdo co slíbil.
 
@@ -377,7 +377,7 @@ Jména ulož do `<workdir>/.speakers.json` a pusť `merge.py` znovu s `--names`,
 
 ## Krok 9 – Vyrob výstupy, které si uživatel vybral
 
-**Doslovný přepis.** Pro každou nahrávku zpracuj její `<název>.txt` do `<název>.md` dle [Pravidel doslovného přepisu](output.md#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor; u spojené schůzky, kde je soubor jediný, rozděl vstup na zhruba stejně velké souvislé části a dej každému agentovi jednu, s překryvem pár vět, ať se na švu neztratí replika. **Rozlišovali-li se mluvčí, dělej řez mezi replikami v `<název>.json`** – ten je nese i se jmény, takže agent dostane rovnou dialog. Jinak děl `<název>.txt` po řádcích. **Nedělej řez podle kapitol:** ty ve vstupu nejsou, mezinadpisy vznikají teprve tím čištěním, které má agent udělat) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
+**Doslovný přepis.** Pro každou nahrávku zpracuj její `<name>.txt` do `<name>.md` dle [Pravidel doslovného přepisu](output.md#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor; u spojené schůzky, kde je soubor jediný, rozděl vstup na zhruba stejně velké souvislé části a dej každému agentovi jednu, s překryvem pár vět, ať se na švu neztratí replika. **Rozlišovali-li se mluvčí, dělej řez mezi replikami v `<name>.json`** – ten je nese i se jmény, takže agent dostane rovnou dialog. Jinak děl `<name>.txt` po řádcích. **Nedělej řez podle kapitol:** ty ve vstupu nejsou, mezinadpisy vznikají teprve tím čištěním, které má agent udělat) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
 
 **Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen ten výběr, který šel do promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i **stručný brief pro shrnutí** – témata, závěry a kdo co slíbil. Shrnutí pak píšeš z briefů a slovníku, ne z celých přepisů znovu.
 
@@ -389,7 +389,7 @@ Fáze opravy přeslechů zůstává, i když se slovník použil. Slovník zmen�
 
 **[`mishearings.md`](mishearings.md) je při čištění seznam míst, kde se vyplatí dívat pozorně** – ne seznam náhrad ke spuštění. Rozhoduje vždycky věta, ve které slovo stojí; u zkratek se správný tvar liší podle oboru.
 
-**Časovaný přepis.** `<název>.srt` už existuje, vznikl při přepisu. Nech ho ležet vedle `<název>.md`, stejné jméno, jiná přípona. Rozlišení mluvčích ho **nenahrazuje** – `<název>.vtt` a `<název>.json` přibydou vedle něj.
+**Časovaný přepis.** `<name>.srt` už existuje, vznikl při přepisu. Nech ho ležet vedle `<name>.md`, stejné jméno, jiná přípona. Rozlišení mluvčích ho **nenahrazuje** – `<name>.vtt` a `<name>.json` přibydou vedle něj.
 
 SRT se vyrábí vždycky, protože z něj `transcribe.sh` počítá podíl přepsaného zvuku a `merge.py` bere text pro diarizaci. Když si ho uživatel nevybral, je to mezivýstup a smaže se v úklidu.
 
@@ -409,11 +409,11 @@ Repliku bez přiřazeného mluvčího uveď bez jména, ne pod nejbližším mlu
 
 ## Krok 10 – Úklid
 
-Smaž mezivýstupy: všechny `<název>.txt`, `<název>.wav`, `<název>.16k.wav`, `<název>.diarization.json`, `<název>.16k.diarization.json`, `.speakers.json`, `whisper-progress.log` a `.transcript-glossary.md`. **U spojené schůzky s diarizací leží v adresáři `<název>.wav` i `<název>.16k.wav` zároveň** – první vyrobil `join.sh`, druhý `transcribe.sh`; smaž oba. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<název>.srt` po sobě ukliď, i když mezitím vznikl.
+Smaž mezivýstupy: všechny `<name>.txt`, `<name>.wav`, `<name>.16k.wav`, `<name>.diarization.json`, `<name>.16k.diarization.json`, `.speakers.json`, `whisper-progress.log` a `.transcript-glossary.md`. **U spojené schůzky s diarizací leží v adresáři `<name>.wav` i `<name>.16k.wav` zároveň** – první vyrobil `join.sh`, druhý `transcribe.sh`; smaž oba. Ponech zdrojové audio a to, co si uživatel vybral v kroku 4. **Nevybrané výstupy smaž** – když uživatel nechtěl SRT, `<name>.srt` po sobě ukliď, i když mezitím vznikl.
 
 **Zdrojové části spojené schůzky zůstávají** – maže se jen to, co z nich vzniklo.
 
-**Sáhl-li jsi po nápravě z kroku 7 nebo po řezu z kroku 1, ukliď i po nich:** části `<název>-1.*` a `<název>-2.*` ze `split.sh` a prázdné `<název>.txt` / `<název>.srt`, které zůstanou, když se běh po úsecích nepovede ani jednou. Úklid je jmenovitý, takže o souborech, které přibyly nápravou, sám od sebe neví.
+**Sáhl-li jsi po nápravě z kroku 7 nebo po řezu z kroku 1, ukliď i po nich:** části `<name>-1.*` a `<name>-2.*` ze `split.sh` a prázdné `<name>.txt` / `<name>.srt`, které zůstanou, když se běh po úsecích nepovede ani jednou. Úklid je jmenovitý, takže o souborech, které přibyly nápravou, sám od sebe neví.
 
 **Než slovník smažeš, nabídni přenesení soustavných zkomolenin do [`mishearings.md`](mishearings.md)** – tedy těch, které rozpoznávač dělá u každého, kdo mluví o tomhle oboru, ne jednorázového přeslechu ani jména konkrétní firmy. Kritéria, co tam patří a co ne, drží ten soubor sám.
 

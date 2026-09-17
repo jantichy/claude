@@ -211,13 +211,13 @@ Než cokoliv předložíš, nálezy **zpracuj**:
 
 ### Ověřený seznam zapiš na disk, než půjdeš dál
 
-Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "predmet": [...], "uhly": [...], "nalezy": [{...nález..., "overeno": true/false, "status": "open"}]}`.
+Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "subject": [...], "perspectives": [...], "findings": [{...nález..., "verified": true/false, "status": "open"}]}`.
 
 **Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 5 s ním pak dlouze interaguje **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
 
 **Na startu skillu** (Fáze 0) se proto podívej, jestli `.claude/run/oponent.json` už neexistuje. Existuje-li, **nabídni navázání** místo nového běhu – a řekni, kolik nálezů v něm zbývá nevypořádaných. Změnil-li se od té doby oponovaný dokument, řekni to a zeptej se: část nálezů může být neaktuální.
 
-**Průběžně do něj zapisuj stav** každého nálezu (`prijato`, `zamitnuto`, `odlozeno`, `open`), jak jimi procházíš. Po dokončení Fáze 6 soubor smaž.
+**Průběžně do něj zapisuj stav** každého nálezu (`accepted`, `rejected`, `deferred`, `open`), jak jimi procházíš. Po dokončení Fáze 6 soubor smaž.
 
 Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který Fáze 6 zapisuje do `docs/done.md`** – z něj vychází příští oponentura při volbě hledisek.
 

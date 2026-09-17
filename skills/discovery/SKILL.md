@@ -93,7 +93,7 @@ Zapiš do `docs/competition.md` jako úvodní sekci `## Co poměřujeme`. `/spec
 **Nálezy se nezapisují rovnou.** Projdi je a zahoď:
 
 - co nemá `basis` s funkční URL,
-- co má `jistota: nízká` u ceny nebo klíčové funkce – buď údaj ověř sám přes `WebFetch`, nebo ho zapiš jako neznámý,
+- co má `confidence: nízká` u ceny nebo klíčové funkce – buď údaj ověř sám přes `WebFetch`, nebo ho zapiš jako neznámý,
 - duplicity mezi agenty – týž produkt našlo víc cest, sloučí se do jednoho záznamu.
 
 **Co ověření nepřežije, se do dokumentu nedostane.** Vymyšlený konkurent nebo cena o řád vedle je horší než prázdné místo: postaví se na tom rozhodnutí o produktu a nikdo ho nezpochybní, protože vypadá doloženě.

@@ -95,7 +95,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### seznam, který musí přesně sedět
 
-**Výjimka zapsaná do seznamu, který test porovnává se skutečností v obou směrech.** V seznamu nesmí chybět nic, co pravidlo porušuje, ani zůstat nic, co se už opravilo – proto opravená a nevyškrtnutá položka shodí testy stejně jako nová regrese. Bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit. Používá to `MIGRACE` v `~/.claude/tests/test_skills.py`.
+**Výjimka zapsaná do seznamu, který test porovnává se skutečností v obou směrech.** V seznamu nesmí chybět nic, co pravidlo porušuje, ani zůstat nic, co se už opravilo – proto opravená a nevyškrtnutá položka shodí testy stejně jako nová regrese. Bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit. Používá to `MIGRATION` v `~/.claude/tests/test_skills.py`.
 
 **Nahrazuje dřívější „ráčnu“** (2026-09-07). Anglicky *ratchet* zavedené je, ale česká „ráčna“ ne – a metafora nesla jen půlku významu: ráčna brání couvnutí, ale nevynutí, aby se seznam škrtal. **Neříkej tomu ani „porovnání na rovnost“ nebo „zamčené na rovnost“** – to je programátorský žargon pro shodu dvou množin a čtenář z něj nepozná, co se s čím porovnává.
 
@@ -270,7 +270,7 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 **V kódu se píše anglicky `fence`** – je to termín specifikace CommonMarku, takže se nepřekládá.
 
-**Vědomě ponecháno:** sedm výskytů ve `verify.sh` a `tests/test_verify.py` – proměnná `je_plot` v awk a tři názvy testovacích metod (`test_nedovreny_plot_nevypne_kontrolu_mlcky` a spol.). Jsou to identifikátory v kódu, ale **české**, takže na ně výjimka *Identifikátor v kódu a název souboru* nesedí doslova: spadají pod úkol přepsat identifikátory do angličtiny (`~/Dev/context/todo.md`, sekce *Celý repozitář*) a při něm se z nich stane `fence`. Přepisovat je teď na jiný český tvar by znamenalo práci, která se za chvíli zahodí.
+**Dořešeno 17. 9. 2026:** ve `verify.sh` a `tests/test_verify.py` zbývalo sedm výskytů – proměnná `je_plot` v awk a tři názvy testovacích metod. Nesedělo na ně *Identifikátor v kódu a název souboru*, protože byly české; při převodu identifikátorů do angličtiny se z nich stal `is_fence` a `…_fence_…` v názvech testů.
 
 **Zamítnuto – ponechat „plot“:** nemá oporu v češtině a koliduje s významem „graf“.
 

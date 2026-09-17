@@ -47,7 +47,7 @@ K souborům z diffu přidej **druhý půlkruh: soubory, které na ně odkazují.
 
 ```
 git diff --name-only <merge-base>...HEAD          # co se změnilo
-grep -rl "<jméno souboru bez přípony>" . --exclude-dir=.git   # kdo o tom mluví
+grep -rl "<basename>" . --exclude-dir=.git        # kdo o tom mluví
 ```
 
 U přejmenované sekce, funkce nebo klíče grepuj **starý i nový název** – zbytek po přejmenování je nejčastější nález celého skillu a najde se právě v tom druhém půlkruhu.
@@ -252,7 +252,7 @@ se neuvádějí, dokud se nezmění kód, kterého se týkají.
   - Lokace: <soubor:řádek, ...>
 ```
 
-**Umlčení expiruje změnou kódu, stejně jako u `## Review`** – mechaniku i důvod drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*, a platí tu beze změny. Před aplikací filtru tedy u každého záznamu ověř `git log --oneline <zapsaný hash>..HEAD -- <lokace>`; neprázdný výstup znamená, že se položka předloží znovu i s původním odůvodněním. Hash vyrob `git rev-parse --short HEAD`.
+**Umlčení expiruje změnou kódu, stejně jako u `## Review`** – mechaniku i důvod drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*, a platí tu beze změny. Před aplikací filtru tedy u každého záznamu ověř `git log --oneline <recorded_hash>..HEAD -- <location>`; neprázdný výstup znamená, že se položka předloží znovu i s původním odůvodněním. Hash vyrob `git rev-parse --short HEAD`.
 
 Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 

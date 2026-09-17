@@ -16,7 +16,7 @@ from common import plural
 
 
 if len(sys.argv) < 3:
-    sys.exit("Použití: gen_bluesky_md.py <bluesky_posts.json z parse_bluesky.py> <výstupní adresář>")
+    sys.exit("Použití: gen_bluesky_md.py <posts_json> <target_dir>")
 SRC = Path(sys.argv[1])
 OUT = Path(sys.argv[2])
 OUT.mkdir(parents=True, exist_ok=True)
@@ -28,16 +28,16 @@ posts = json.loads(SRC.read_text(encoding="utf-8"))
 # Záznam bez času nebo bez URI je poškozený a nedá se zařadit ani seřadit.
 # Dřív takový jediný post shodil generování VŠECH ročníků na KeyError –
 # tedy chyba v jednom záznamu zlikvidovala celý archiv. Vynechat a nahlásit.
-vadne = [p for p in posts if not p.get("createdAt") or not p.get("uri")]
-if vadne:
-    print(f"poznámka: vynechávám {len(vadne)} postů bez createdAt nebo uri",
+broken = [p for p in posts if not p.get("createdAt") or not p.get("uri")]
+if broken:
+    print(f"poznámka: vynechávám {len(broken)} postů bez createdAt nebo uri",
           file=sys.stderr)
     posts = [p for p in posts if p.get("createdAt") and p.get("uri")]
 
 by_uri = {p["uri"]: p for p in posts}
 
 # Profil vlastníka se odvozuje z URL prvního postu, které vyrobil parse_bluesky.py.
-PROFIL = posts[0]["url"].rsplit("/post/", 1)[0] if posts else ""
+PROFILE = posts[0]["url"].rsplit("/post/", 1)[0] if posts else ""
 
 
 def at_url(uri):
@@ -144,7 +144,7 @@ for year, ilist in sorted(by_year.items()):
     body = "\n\n".join(i[1] for i in ilist)
     content = (
         f"# Bluesky – posty {year}\n\n"
-        f"- **Médium:** Bluesky ({PROFIL})\n"
+        f"- **Médium:** Bluesky ({PROFILE})\n"
         f"- **Období:** rok {year}\n"
         f"- **Počet postů:** {n_posts} (z toho {plural(replies, 'odpověď', 'odpovědi', 'odpovědí')}; "
         f"{plural(n_threads, 'sloučené vlákno', 'sloučená vlákna', 'sloučených vláken')})\n"

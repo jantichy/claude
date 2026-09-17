@@ -31,8 +31,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HOOK = ROOT / "githooks" / "commit-msg"
 
-ODMITA = 1
-PUSTI = 0
+REJECT = 1
+ALLOW = 0
 
 
 def git(cwd, *args):
@@ -40,7 +40,7 @@ def git(cwd, *args):
                           capture_output=True, text=True, check=False)
 
 
-class ZpravaMergeCommitu(unittest.TestCase):
+class MergeCommitMessage(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="hooks-test-"))
         self.repo = self.tmp / "repo"
@@ -57,36 +57,36 @@ class ZpravaMergeCommitu(unittest.TestCase):
 
     # --- pomocné -----------------------------------------------------------
 
-    def spust(self, zprava):
+    def run_hook(self, message):
         """Zavolá hook nad souborem se zprávou, jak to dělá git."""
-        soubor = self.repo / ".git" / "COMMIT_EDITMSG"
-        soubor.write_text(zprava)
-        return subprocess.run([str(HOOK), str(soubor)], cwd=self.repo,
+        msg_file = self.repo / ".git" / "COMMIT_EDITMSG"
+        msg_file.write_text(message)
+        return subprocess.run([str(HOOK), str(msg_file)], cwd=self.repo,
                               capture_output=True, text=True, check=False)
 
-    def vetev(self, jmeno):
-        git(self.repo, "checkout", "-q", "-b", jmeno)
+    def checkout_branch(self, name):
+        git(self.repo, "checkout", "-q", "-b", name)
 
     # --- co se má odmítnout ------------------------------------------------
 
-    def test_defaultni_anglicka_zprava_na_main_neprojde(self):
-        v = self.spust("Merge branch 'feat/platby'\n")
-        self.assertEqual(v.returncode, ODMITA)
+    def test_default_english_message_on_main_rejected(self):
+        v = self.run_hook("Merge branch 'feat/platby'\n")
+        self.assertEqual(v.returncode, REJECT)
         self.assertIn("WORKTREE.md", v.stderr)
 
-    def test_defaultni_ceska_zprava_na_main_neprojde(self):
-        self.assertEqual(self.spust("Merge větve docs/znamky\n").returncode, ODMITA)
+    def test_default_czech_message_on_main_rejected(self):
+        self.assertEqual(self.run_hook("Merge větve docs/znamky\n").returncode, REJECT)
 
-    def test_komentare_nad_zpravou_hook_nezmatou(self):
+    def test_comments_above_message_do_not_confuse_hook(self):
         """Git dává do COMMIT_EDITMSG vysvětlující komentáře; první *neprázdný
         nekomentářový* řádek je ta zpráva, a hook musí hledat ten."""
-        v = self.spust("\n# Please enter a commit message\n\nMerge branch 'feat/x'\n")
-        self.assertEqual(v.returncode, ODMITA)
+        v = self.run_hook("\n# Please enter a commit message\n\nMerge branch 'feat/x'\n")
+        self.assertEqual(v.returncode, REJECT)
 
-    def test_realny_merge_na_main_se_zastavi(self):
+    def test_real_merge_on_main_is_stopped(self):
         """Integračně: hook musí sedět i skutečnému `git merge`, ne jen přímému
         volání – merge commit vzniká jinou cestou než `git commit`."""
-        self.vetev("feat/x")
+        self.checkout_branch("feat/x")
         (self.repo / "b.txt").write_text("b\n")
         git(self.repo, "add", "b.txt")
         git(self.repo, "commit", "-qm", "prace")
@@ -96,7 +96,7 @@ class ZpravaMergeCommitu(unittest.TestCase):
         self.assertNotEqual(v.returncode, 0)
         self.assertEqual(git(self.repo, "log", "--oneline").stdout.count("\n"), 1)
 
-    def test_vsechny_defaultni_tvary_gitu_neprojdou(self):
+    def test_all_default_git_forms_rejected(self):
         """Git negeneruje jen "Merge branch ".
 
         `git merge origin/vetev` dá "Merge remote-tracking branch" – tedy běžná
@@ -105,21 +105,21 @@ class ZpravaMergeCommitu(unittest.TestCase):
         takže v `git log --first-parent` neřeknou nic; vzor jen na první z nich
         propouštěl celou tuhle třídu a žádný test o ní nevěděl.
         """
-        for zprava in ("Merge remote-tracking branch 'origin/feat/x'",
+        for message in ("Merge remote-tracking branch 'origin/feat/x'",
                        "Merge branches 'feat/a' and 'feat/b'",
                        "Merge tag 'v1.2.0'",
                        "Merge commit '9fceb02'",
                        "Merge branch 'feat/platby' into main",
                        "Squashed commit of the following:"):
-            with self.subTest(zprava=zprava):
-                self.assertEqual(self.spust(zprava + "\n").returncode, ODMITA)
+            with self.subTest(message=message):
+                self.assertEqual(self.run_hook(message + "\n").returncode, REJECT)
 
-    def test_odsazeny_prvni_radek_vzor_neobejde(self):
+    def test_indented_first_line_does_not_bypass_pattern(self):
         """`case` je kotvený na začátek řetězce, takže mezera před zprávou
         by stačila k obejití celé kontroly."""
-        self.assertEqual(self.spust("   Merge branch 'feat/x'\n").returncode, ODMITA)
+        self.assertEqual(self.run_hook("   Merge branch 'feat/x'\n").returncode, REJECT)
 
-    def test_realny_merge_remote_tracking_se_zastavi(self):
+    def test_real_remote_tracking_merge_is_stopped(self):
         """Integračně tou cestou, kterou to potká uživatel: větev existuje jen
         jako remote-tracking reference a merguje se přes ni."""
         git(self.repo, "checkout", "-q", "-b", "feat/x")
@@ -137,22 +137,22 @@ class ZpravaMergeCommitu(unittest.TestCase):
 
     # --- co musí projít ----------------------------------------------------
 
-    def test_vlastni_zprava_projde(self):
-        self.assertEqual(self.spust("Zaveď platby kartou\n").returncode, PUSTI)
+    def test_custom_message_passes(self):
+        self.assertEqual(self.run_hook("Zaveď platby kartou\n").returncode, ALLOW)
 
-    def test_merge_do_rozdelane_vetve_projde(self):
+    def test_merge_into_feature_branch_passes(self):
         """Aktualizace větve z main je běžný provoz a její defaultní zpráva
         do historie main nikdy nedoteče – hlídá se jen hlavní větev."""
-        self.vetev("feat/platby")
-        self.assertEqual(self.spust("Merge branch 'main' into feat/platby\n").returncode, PUSTI)
+        self.checkout_branch("feat/platby")
+        self.assertEqual(self.run_hook("Merge branch 'main' into feat/platby\n").returncode, ALLOW)
 
-    def test_merge_po_pullu_tehoz_branche_projde(self):
+    def test_merge_after_pull_of_same_branch_passes(self):
         """`git pull` nad toutéž větví je synchronizace, ne dokončení práce,
         a blokovat ji by znamenalo blokovat pull."""
-        v = self.spust("Merge branch 'main' of https://github.com/x/y\n")
-        self.assertEqual(v.returncode, PUSTI)
+        v = self.run_hook("Merge branch 'main' of https://github.com/x/y\n")
+        self.assertEqual(v.returncode, ALLOW)
 
-    def test_pull_ciziho_branche_na_main_neprojde(self):
+    def test_pull_of_other_branch_on_main_rejected(self):
         """`git pull origin feat/z` na main je dokončení větve, ne synchronizace.
 
         Výjimka pro pull stála jen na výskytu ` of ` kdekoliv v prvním řádku, takže
@@ -160,37 +160,37 @@ class ZpravaMergeCommitu(unittest.TestCase):
         pushnutá odjinud nebo z pull requestu. Dvě slova navíc stačila i k obejití
         (`Merge branch 'feat/x' of course`).
         """
-        for zprava in ("Merge branch 'feat/z' of https://github.com/x/y",
+        for message in ("Merge branch 'feat/z' of https://github.com/x/y",
                        "Merge branch 'feat/x' of course",
                        "Merge branch 'feat/z' of /tmp/remote"):
-            with self.subTest(zprava=zprava):
-                self.assertEqual(self.spust(zprava + "\n").returncode, ODMITA)
+            with self.subTest(message=message):
+                self.assertEqual(self.run_hook(message + "\n").returncode, REJECT)
 
-    def test_zprava_zminujici_merge_uvnitr_projde(self):
-        self.assertEqual(self.spust("Oprav merge větve v dokumentaci\n").returncode, PUSTI)
+    def test_message_mentioning_merge_passes(self):
+        self.assertEqual(self.run_hook("Oprav merge větve v dokumentaci\n").returncode, ALLOW)
 
     # --- delegace na lokální hook -----------------------------------------
 
-    def lokalni_hook(self, telo):
-        cesta = self.repo / ".git" / "hooks" / "commit-msg"
-        cesta.parent.mkdir(exist_ok=True)
-        cesta.write_text(telo)
-        cesta.chmod(0o755)
-        return cesta
+    def local_hook(self, body):
+        path = self.repo / ".git" / "hooks" / "commit-msg"
+        path.parent.mkdir(exist_ok=True)
+        path.write_text(body)
+        path.chmod(0o755)
+        return path
 
-    def test_lokalni_hook_se_zavola(self):
-        stopa = self.repo / "stopa"
-        self.lokalni_hook(f"#!/bin/sh\ntouch {stopa}\nexit 0\n")
-        self.assertEqual(self.spust("Zaveď platby kartou\n").returncode, PUSTI)
-        self.assertTrue(stopa.exists(), "lokální hook repozitáře se nespustil")
+    def test_local_hook_is_called(self):
+        trace = self.repo / "trace"
+        self.local_hook(f"#!/bin/sh\ntouch {trace}\nexit 0\n")
+        self.assertEqual(self.run_hook("Zaveď platby kartou\n").returncode, ALLOW)
+        self.assertTrue(trace.exists(), "lokální hook repozitáře se nespustil")
 
-    def test_nesouhlas_lokalniho_hooku_zastavi(self):
-        self.lokalni_hook("#!/bin/sh\necho lokalni namitka >&2\nexit 3\n")
-        v = self.spust("Zaveď platby kartou\n")
+    def test_local_hook_rejection_stops(self):
+        self.local_hook("#!/bin/sh\necho lokalni namitka >&2\nexit 3\n")
+        v = self.run_hook("Zaveď platby kartou\n")
         self.assertEqual(v.returncode, 3)
         self.assertIn("lokalni namitka", v.stderr)
 
-    def test_delegace_funguje_i_ve_worktree(self):
+    def test_delegation_works_in_worktree(self):
         """Ve worktree vrací `git rev-parse --git-dir` privátní adresář větve
         (`.git/worktrees/<jméno>`), kde hooky nejsou – cesta se proto musí
         skládat z `--git-common-dir`.
@@ -199,29 +199,29 @@ class ZpravaMergeCommitu(unittest.TestCase):
         předepisuje jako standard: lokální `commit-msg` projektu (gitleaks,
         commitlint, kontrola podpisu) by se přestal spouštět a nic by to neřeklo.
         """
-        stopa = self.tmp / "stopa-worktree"
-        self.lokalni_hook(f"#!/bin/sh\ntouch {stopa}\nexit 0\n")
+        trace = self.tmp / "trace-worktree"
+        self.local_hook(f"#!/bin/sh\ntouch {trace}\nexit 0\n")
         wt = self.tmp / "wt"
         v = git(self.repo, "worktree", "add", "-q", str(wt), "-b", "feat/wt")
         self.assertEqual(v.returncode, 0, v.stderr)
-        soubor = wt / "MSG"
-        soubor.write_text("Zaveď platby kartou\n")
-        subprocess.run([str(HOOK), str(soubor)], cwd=wt,
+        msg_file = wt / "MSG"
+        msg_file.write_text("Zaveď platby kartou\n")
+        subprocess.run([str(HOOK), str(msg_file)], cwd=wt,
                        capture_output=True, text=True, check=False)
-        self.assertTrue(stopa.exists(),
+        self.assertTrue(trace.exists(),
                         "ve worktree se lokální hook repozitáře nezavolal")
 
-    def test_lokalni_hook_neprebiji_kontrolu_zpravy(self):
+    def test_local_hook_does_not_override_message_check(self):
         """Lokální hook smí přidat vlastní pravidlo, ne zrušit tohle."""
-        self.lokalni_hook("#!/bin/sh\nexit 0\n")
-        self.assertEqual(self.spust("Merge branch 'feat/x'\n").returncode, ODMITA)
+        self.local_hook("#!/bin/sh\nexit 0\n")
+        self.assertEqual(self.run_hook("Merge branch 'feat/x'\n").returncode, REJECT)
 
 
-class NasazeniHooku(unittest.TestCase):
-    def test_hook_je_spustitelny(self):
+class HookDeployment(unittest.TestCase):
+    def test_hook_is_executable(self):
         self.assertTrue(os.access(HOOK, os.X_OK), f"{HOOK} není spustitelný")
 
-    def test_pravidlo_je_zapsane_ve_worktree_md(self):
+    def test_rule_is_written_in_worktree_md(self):
         """Hook je mechanismus, ne zdroj pravdy. Zmizí-li pravidlo z WORKTREE.md,
         nikdo se z odmítnutí nedozví, jakou zprávu má napsat místo toho.
 
@@ -238,7 +238,7 @@ class NasazeniHooku(unittest.TestCase):
             "bez toho se z odmítnutého commitu nedá poznat, kdo ho odmítl a proč")
 
 
-class NasazeniGlobalnihoHooku(unittest.TestCase):
+class GlobalHookDeployment(unittest.TestCase):
     """Že hook funguje, když ho zavoláš, neznamená, že ho někdo volá.
 
     `core.hooksPath` je stav stroje, ne repozitáře: nová instalace systému, jiný
@@ -251,7 +251,7 @@ class NasazeniGlobalnihoHooku(unittest.TestCase):
     opravdu nasazený není a zpráva říká, čím to napravit.
     """
 
-    def test_hooksPath_miri_na_githooks(self):
+    def test_hooksPath_points_to_githooks(self):
         if os.environ.get("CI"):
             self.skipTest("v CI se necommituje, hook tam nemá co dělat")
         # `--global`, ne efektivní hodnota: tu uspokojí i `core.hooksPath` nastavený
@@ -259,15 +259,15 @@ class NasazeniGlobalnihoHooku(unittest.TestCase):
         # pravidlo o zprávě merge commitu platí pro všechny projekty.
         v = subprocess.run(["git", "config", "--global", "--get", "core.hooksPath"],
                            capture_output=True, text=True, check=False)
-        cesta = Path(v.stdout.strip()).expanduser() if v.stdout.strip() else None
+        path = Path(v.stdout.strip()).expanduser() if v.stdout.strip() else None
         self.assertEqual(
-            cesta, HOOK.parent,
+            path, HOOK.parent,
             "git hook není nasazený – `git log --first-parent` se zaplní zprávami "
             "'Merge branch ...'. Naprav příkazem:\n"
             f"    git config --global core.hooksPath {HOOK.parent}")
 
 
-class PrubeznaKontrolaJeZaregistrovana(unittest.TestCase):
+class VerifyHookIsRegistered(unittest.TestCase):
     """`verify.sh` musí být v `settings.json` jako Stop hook, jinak neběží vůbec.
 
     Skript je otestovaný do detailu – souhlasy, otisky, parser Markdownu, zámek –
@@ -289,19 +289,19 @@ class PrubeznaKontrolaJeZaregistrovana(unittest.TestCase):
 
     SETTINGS = ROOT / "settings.json"
 
-    def zaznamy(self):
+    def entries(self):
         d = json.loads(self.SETTINGS.read_text(encoding="utf-8"))
-        return [h for skupina in d.get("hooks", {}).get("Stop", [])
-                for h in skupina.get("hooks", [])]
+        return [h for group in d.get("hooks", {}).get("Stop", [])
+                for h in group.get("hooks", [])]
 
-    def test_verify_je_stop_hook(self):
-        prikazy = [h.get("command", "") for h in self.zaznamy()]
+    def test_verify_is_stop_hook(self):
+        commands = [h.get("command", "") for h in self.entries()]
         self.assertTrue(
-            any(p.endswith("verify.sh") for p in prikazy),
+            any(p.endswith("verify.sh") for p in commands),
             "verify.sh není v settings.json jako Stop hook – průběžná kontrola "
-            f"neběží vůbec. Nalezené Stop hooky: {prikazy}")
+            f"neběží vůbec. Nalezené Stop hooky: {commands}")
 
-    def test_cesta_stop_hooku_existuje(self):
+    def test_stop_hook_path_exists(self):
         """Registrace na neexistující soubor je totéž jako žádná registrace.
 
         Cesty v `settings.json` jsou absolutní, protože je tak zapisuje Claude
@@ -311,24 +311,24 @@ class PrubeznaKontrolaJeZaregistrovana(unittest.TestCase):
         pushi je přitom nejjistější cesta k tomu, že si kontrolu někdo vypne.
         Část cesty za posledním `.claude` se proto vztáhne ke kořenu repozitáře.
         """
-        for h in self.zaznamy():
-            cesta = self.v_repozitari(Path(h.get("command", "").split()[0]).expanduser())
-            with self.subTest(hook=str(cesta)):
-                self.assertTrue(cesta.is_file(), f"Stop hook {cesta} neexistuje")
+        for h in self.entries():
+            path = self.in_repo(Path(h.get("command", "").split()[0]).expanduser())
+            with self.subTest(hook=str(path)):
+                self.assertTrue(path.is_file(), f"Stop hook {path} neexistuje")
 
     @staticmethod
-    def v_repozitari(cesta):
-        casti = cesta.parts
-        if ".claude" not in casti:
-            return cesta
-        i = len(casti) - 1 - casti[::-1].index(".claude")
-        return ROOT.joinpath(*casti[i + 1:])
+    def in_repo(path):
+        parts = path.parts
+        if ".claude" not in parts:
+            return path
+        i = len(parts) - 1 - parts[::-1].index(".claude")
+        return ROOT.joinpath(*parts[i + 1:])
 
-    def test_timeout_staci_na_tri_kroky(self):
+    def test_timeout_covers_three_steps(self):
         """`LIMIT` ve verify.sh se čte ze skriptu, ne opisuje – jinak se rozejdou."""
         limit = int(re.search(r"^LIMIT=(\d+)", (ROOT / "verify.sh").read_text(encoding="utf-8"),
                               re.M).group(1))
-        verify = next(h for h in self.zaznamy()
+        verify = next(h for h in self.entries()
                       if h.get("command", "").endswith("verify.sh"))
         self.assertGreaterEqual(
             verify.get("timeout", 0), 3 * limit,
@@ -336,7 +336,7 @@ class PrubeznaKontrolaJeZaregistrovana(unittest.TestCase):
             "se utne uprostřed a nahlásí chybu tam, kde žádná není")
 
 
-class RegistrObchazeni(unittest.TestCase):
+class BypassRegistry(unittest.TestCase):
     """`BYPASS.md` musí jmenovat každou vrstvu, která něco vynucuje.
 
     Registr, který zestárne, je horší než žádný: tváří se jako úplná mapa
@@ -349,27 +349,27 @@ class RegistrObchazeni(unittest.TestCase):
     zamyslel, ne předstírat, že se to dá změřit.
     """
 
-    REGISTR = ROOT / "BYPASS.md"
+    REGISTRY = ROOT / "BYPASS.md"
 
     #: Vrstvy, které se v registru záměrně neuvádějí – nic nevynucují.
-    NEVYNUCUJE = {"iterm-notify.sh"}
+    NON_ENFORCING = {"iterm-notify.sh"}
 
-    def vrstvy(self):
+    def layers(self):
         """Soubory, které běží automaticky a něco vynucují."""
         out = set()
-        nastaveni = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
-        for skupiny in nastaveni.get("hooks", {}).values():
-            for g in skupiny:
+        settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        for groups in settings.get("hooks", {}).values():
+            for g in groups:
                 for h in g.get("hooks", []):
-                    jmeno = Path(h.get("command", "").split()[0]).name
-                    if jmeno and jmeno not in self.NEVYNUCUJE:
-                        out.add(jmeno)
+                    name = Path(h.get("command", "").split()[0]).name
+                    if name and name not in self.NON_ENFORCING:
+                        out.add(name)
         # Status line běží po každé odpovědi stejně jako Stop hook, ale
         # v settings.json sedí pod vlastním klíčem `statusLine`, ne mezi `hooks`.
         # Dokud se nečetl, držel její řádek v registru jen něčí ruka – a přitom
         # to je vrstva, která běží nad cizím repozitářem bez souhlasu a měla
         # 14. 9. 2026 dvě skutečné díry.
-        sl = nastaveni.get("statusLine", {}).get("command", "")
+        sl = settings.get("statusLine", {}).get("command", "")
         if sl:
             out.add(Path(sl.split()[0]).name)
         out |= {f.name for f in (ROOT / "githooks").glob("*") if f.is_file()}
@@ -378,20 +378,20 @@ class RegistrObchazeni(unittest.TestCase):
             out.add("settings.json")
         return out
 
-    def test_registr_existuje(self):
-        self.assertTrue(self.REGISTR.is_file(), "chybí BYPASS.md – registr obcházení kontrol")
+    def test_registry_exists(self):
+        self.assertTrue(self.REGISTRY.is_file(), "chybí BYPASS.md – registr obcházení kontrol")
 
-    def test_kazda_vynucovaci_vrstva_ma_v_registru_radek(self):
-        text = self.REGISTR.read_text(encoding="utf-8")
-        chybi = sorted(v for v in self.vrstvy() if v not in text)
-        self.assertFalse(chybi,
+    def test_every_enforcing_layer_has_registry_row(self):
+        text = self.REGISTRY.read_text(encoding="utf-8")
+        missing = sorted(v for v in self.layers() if v not in text)
+        self.assertFalse(missing,
             "tyhle vynucovací vrstvy nejsou v BYPASS.md, takže u nich nikdo nesepsal, "
-            f"čím se dají obejít: {chybi}")
+            f"čím se dají obejít: {missing}")
 
-    def test_prijata_rizika_maji_duvod(self):
+    def test_accepted_risks_have_reason(self):
         """`accepted` bez důvodu je jen zamlčený problém."""
-        vady = []
-        for i, r in enumerate(self.REGISTR.read_text(encoding="utf-8").splitlines(), 1):
+        defects = []
+        for i, r in enumerate(self.REGISTRY.read_text(encoding="utf-8").splitlines(), 1):
             if "accepted" in r and not r.strip().startswith("|"):
                 continue
             if "accepted" in r:
@@ -400,11 +400,11 @@ class RegistrObchazeni(unittest.TestCase):
                 # by hlásilo řádky, které důvod nesou jinde.
                 text = r.replace("accepted", "").strip(" *|")
                 if len(text) < 90:
-                    vady.append(f"{self.REGISTR.name}:{i}")
-        self.assertFalse(vady, f"„accepted“ bez zdůvodnění na řádcích: {vady}")
+                    defects.append(f"{self.REGISTRY.name}:{i}")
+        self.assertFalse(defects, f"„accepted“ bez zdůvodnění na řádcích: {defects}")
 
 
-class PrubeznaKontrolaVCI(unittest.TestCase):
+class VerifyInCI(unittest.TestCase):
     """CI je jediná kontrola, která běží mimo tenhle stroj.
 
     Lokální `verify.sh` obejde commit z jiného počítače, z GUI, s `--no-verify`
@@ -416,19 +416,19 @@ class PrubeznaKontrolaVCI(unittest.TestCase):
     """
 
     WORKFLOW = ROOT / ".github" / "workflows" / "verify.yml"
-    KONTRAKT = ROOT / ".claude" / "CLAUDE.md"
+    CONTRACT = ROOT / ".claude" / "CLAUDE.md"
 
     #: Kroky, které do CI patří. Ne všechny klíče kontraktu: `dev` je watch server,
     #: který nikdy neskončí, `cwd` není příkaz. Množinová rovnost s kontraktem by
     #: v prvním projektu s `dev` vyrobila falešný poplach – a falešný poplach je
     #: u vynucovací vrstvy horší směr selhání než propuštěná chyba.
-    CI_KROKY = {"typecheck", "lint", "test", "build", "e2e", "audit", "coverage",
+    CI_STEPS = {"typecheck", "lint", "test", "build", "e2e", "audit", "coverage",
                 "a11y", "perf", "mutation"}
 
     def text(self):
         return self.WORKFLOW.read_text(encoding="utf-8")
 
-    def telo(self):
+    def body(self):
         """Workflow bez komentářových řádků.
 
         Testy nad celým souborem si uspokojí vlastní komentář: „volá
@@ -439,10 +439,10 @@ class PrubeznaKontrolaVCI(unittest.TestCase):
         return "\n".join(r for r in self.text().splitlines()
                           if not r.lstrip().startswith("#"))
 
-    def test_workflow_existuje(self):
+    def test_workflow_exists(self):
         self.assertTrue(self.WORKFLOW.exists(), f"chybí {self.WORKFLOW}")
 
-    def test_workflow_ma_spoustece(self):
+    def test_workflow_has_triggers(self):
         """Existence souboru neznamená, že CI běží.
 
         Osekané `on:` na samotný `workflow_dispatch` nebo `if: false` na jobu jsou
@@ -451,62 +451,62 @@ class PrubeznaKontrolaVCI(unittest.TestCase):
         hooku hlídá `core.hooksPath` (`~/Dev/context/coding/quality.md`, *Vynucovací
         vrstva se testuje jako kód, obousměrně*, třetí odrážka).
         """
-        telo = self.telo()
-        m = re.search(r"^on:\n((?:[ \t]+\S.*\n)+)", telo, re.M)
+        body = self.body()
+        m = re.search(r"^on:\n((?:[ \t]+\S.*\n)+)", body, re.M)
         self.assertIsNotNone(m, "ve workflow chybí blok `on:` – CI se nespouští")
-        for spoustec in ("push", "pull_request"):
-            with self.subTest(spoustec=spoustec):
-                self.assertIn(spoustec, m.group(1), f"workflow se nespouští na {spoustec}")
+        for trigger in ("push", "pull_request"):
+            with self.subTest(trigger=trigger):
+                self.assertIn(trigger, m.group(1), f"workflow se nespouští na {trigger}")
         # (?m) je nutné: bez něj `^` matchuje jen začátek celého řetězce, takže
         # by kontrola `if:` uvnitř souboru nikdy nenašla a byla by zelená vždy.
-        self.assertNotRegex(telo, r"(?m)^\s+if:\s", "job je podmíněný `if:` – může se tiše přeskočit")
+        self.assertNotRegex(body, r"(?m)^\s+if:\s", "job je podmíněný `if:` – může se tiše přeskočit")
 
-    def test_kontrakt_cte_pres_verify_sh(self):
+    def test_contract_read_via_verify_sh(self):
         """Jediná implementace parseru. Vlastní by se rozešla, jako se to už stalo."""
-        self.assertRegex(self.telo(), r"verify\.sh --contract",
+        self.assertRegex(self.body(), r"verify\.sh --contract",
                          "workflow nevolá `verify.sh --contract` – nevznikl tu druhý parser?")
 
-    def test_workflow_si_kontrakt_neparsuje_sam(self):
+    def test_workflow_does_not_parse_contract_itself(self):
         """Mutační pojistka k testu výš: parser se pozná podle toho, že si sám
         hledá nadpis sekce nebo řádky `- klíč:` v Markdownu."""
-        for vzor in ("## Kontrakt příkazů", "startswith", "re.findall", "python3 - <<"):
-            with self.subTest(vzor=vzor):
-                self.assertNotIn(vzor, self.telo(),
-                                 f"workflow si kontrakt parsuje samo ({vzor})")
+        for pattern in ("## Kontrakt příkazů", "startswith", "re.findall", "python3 - <<"):
+            with self.subTest(pattern=pattern):
+                self.assertNotIn(pattern, self.body(),
+                                 f"workflow si kontrakt parsuje samo ({pattern})")
 
-    def test_workflow_respektuje_cwd(self):
+    def test_workflow_respects_cwd(self):
         """`verify.sh` klíčem cwd mění adresář, kde příkazy běží – typicky ve
         worktree layoutu. CI, která ho ignoruje, pouští něco jiného než lokální
         kontrola a obě si přitom myslí, že měřily totéž."""
-        self.assertRegex(self.telo(), r'cwd=\$\(.*kontrakt',
+        self.assertRegex(self.body(), r'cwd=\$\(.*contract',
                          "workflow klíč cwd nečte z kontraktu")
-        self.assertRegex(self.telo(), r'cd "\$cwd"', "workflow podle cwd nemění adresář")
+        self.assertRegex(self.body(), r'cd "\$cwd"', "workflow podle cwd nemění adresář")
 
-    def test_workflow_pousti_kroky_patrici_do_CI(self):
+    def test_workflow_runs_ci_steps(self):
         """Klíč, který do CI patří a projekt ho má, se nesmí tiše vynechat."""
-        m = re.search(r"for klic in ([a-z0-9 ]+); do", self.telo())
+        m = re.search(r"for key in ([a-z0-9 ]+); do", self.body())
         self.assertIsNotNone(m, "ve workflow se nenašel výčet kroků – změnil se tvar?")
-        self.assertEqual(set(m.group(1).split()), self.CI_KROKY,
+        self.assertEqual(set(m.group(1).split()), self.CI_STEPS,
                          "výčet kroků v CI se rozešel se seznamem v testu")
 
-    def test_workflow_neopisuje_prikazy(self):
+    def test_workflow_does_not_copy_commands(self):
         """Kdyby se příkaz do workflow opsal, změna kontraktu by ho minula."""
         v = subprocess.run([str(ROOT / "verify.sh"), "--contract", str(ROOT)],
                            capture_output=True, text=True, check=False,
                            stdin=subprocess.DEVNULL)
         self.assertEqual(v.returncode, 0, v.stderr)
-        prikazy = [r.split("\t", 1)[1] for r in v.stdout.splitlines() if "\t" in r]
-        self.assertTrue(prikazy, "z kontraktu se nepřečetl jediný příkaz")
-        for prikaz in prikazy:
-            if prikaz.strip() == "-":
+        commands = [r.split("\t", 1)[1] for r in v.stdout.splitlines() if "\t" in r]
+        self.assertTrue(commands, "z kontraktu se nepřečetl jediný příkaz")
+        for command in commands:
+            if command.strip() == "-":
                 continue
-            with self.subTest(prikaz=prikaz[:40]):
-                self.assertNotIn(prikaz, self.telo(),
+            with self.subTest(command=command[:40]):
+                self.assertNotIn(command, self.body(),
                                  "workflow má příkaz opsaný, místo aby ho četl z kontraktu")
 
 
 
-class MutaceKontrolVCI(unittest.TestCase):
+class CIChecksMutation(unittest.TestCase):
     """Ověřuje, že kontroly workflow opravdu nahlásí poškozený vzor.
 
     Kontrola, kterou nikdo neviděl selhat, je nedoložené tvrzení a mlčí úplně
@@ -520,58 +520,58 @@ class MutaceKontrolVCI(unittest.TestCase):
     """
 
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix="mutace-ci-"))
-        self.puvodni = PrubeznaKontrolaVCI.WORKFLOW.read_text(encoding="utf-8")
+        self.tmp = Path(tempfile.mkdtemp(prefix="mutation-ci-"))
+        self.original = VerifyInCI.WORKFLOW.read_text(encoding="utf-8")
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def nahlasi(self, mutace, metoda):
+    def reports(self, mutation, method):
         """Spustí jednu kontrolu nad poškozeným workflow a vrátí, jestli selhala."""
-        podvrh = self.tmp / "verify.yml"
-        text = mutace(self.puvodni)
-        self.assertNotEqual(text, self.puvodni, "mutace se neaplikovala – změnil se tvar workflow?")
-        podvrh.write_text(text, encoding="utf-8")
-        trida = type("SPodvrhem", (PrubeznaKontrolaVCI,), {"WORKFLOW": podvrh})
-        vysledek = unittest.TestResult()
-        trida(metoda).run(vysledek)
-        return bool(vysledek.failures or vysledek.errors)
+        fake = self.tmp / "verify.yml"
+        text = mutation(self.original)
+        self.assertNotEqual(text, self.original, "mutace se neaplikovala – změnil se tvar workflow?")
+        fake.write_text(text, encoding="utf-8")
+        cls = type("WithFake", (VerifyInCI,), {"WORKFLOW": fake})
+        result = unittest.TestResult()
+        cls(method).run(result)
+        return bool(result.failures or result.errors)
 
-    def test_vlastni_parser_kontrakt_shodi(self):
-        self.assertTrue(self.nahlasi(
+    def test_own_contract_parser_is_reported(self):
+        self.assertTrue(self.reports(
             lambda s: s.replace("./verify.sh --contract .", "grep -A20 Kontrakt .claude/CLAUDE.md"),
-            "test_kontrakt_cte_pres_verify_sh"))
+            "test_contract_read_via_verify_sh"))
 
-    def test_vypadly_krok_kontrola_nahlasi(self):
-        self.assertTrue(self.nahlasi(
-            lambda s: s.replace("for klic in typecheck lint test", "for klic in typecheck lint"),
-            "test_workflow_pousti_kroky_patrici_do_CI"))
+    def test_missing_step_is_reported(self):
+        self.assertTrue(self.reports(
+            lambda s: s.replace("for key in typecheck lint test", "for key in typecheck lint"),
+            "test_workflow_runs_ci_steps"))
 
-    def test_opsany_prikaz_kontrola_nahlasi(self):
-        self.assertTrue(self.nahlasi(
+    def test_copied_command_is_reported(self):
+        self.assertTrue(self.reports(
             lambda s: s.replace("          set -e\n", "          set -e\n          python3 -m unittest discover -s tests\n"),
-            "test_workflow_neopisuje_prikazy"))
+            "test_workflow_does_not_copy_commands"))
 
-    def test_osekane_spoustece_kontrola_nahlasi(self):
-        self.assertTrue(self.nahlasi(
+    def test_trimmed_triggers_are_reported(self):
+        self.assertTrue(self.reports(
             lambda s: s.replace("on:\n  push:\n  pull_request:\n", "on:\n"),
-            "test_workflow_ma_spoustece"))
+            "test_workflow_has_triggers"))
 
-    def test_podmineny_job_kontrola_nahlasi(self):
-        self.assertTrue(self.nahlasi(
-            lambda s: s.replace("  kontrakt:\n", "  kontrakt:\n    if: false\n"),
-            "test_workflow_ma_spoustece"))
+    def test_conditional_job_is_reported(self):
+        self.assertTrue(self.reports(
+            lambda s: s.replace("  contract:\n", "  contract:\n    if: false\n"),
+            "test_workflow_has_triggers"))
 
-    def test_ignorovany_cwd_kontrola_nahlasi(self):
-        self.assertTrue(self.nahlasi(
+    def test_ignored_cwd_is_reported(self):
+        self.assertTrue(self.reports(
             lambda s: re.sub(r'\n\s+cwd=\$\([^\n]+\n\s+\[ -n "\$cwd" \] && cd "\$cwd"\n', "\n", s),
-            "test_workflow_respektuje_cwd"))
+            "test_workflow_respects_cwd"))
 
-    def test_neposkozeny_workflow_projde(self):
+    def test_intact_workflow_passes(self):
         """Pojistka proti obrácené chybě: kdyby kontroly hlásily i nad zdravým
         souborem, byly by ty mutační testy zelené omylem."""
-        self.assertFalse(self.nahlasi(lambda s: s + "\n# neškodný komentář\n",
-                                      "test_kontrakt_cte_pres_verify_sh"))
+        self.assertFalse(self.reports(lambda s: s + "\n# neškodný komentář\n",
+                                      "test_contract_read_via_verify_sh"))
 
 
 if __name__ == "__main__":

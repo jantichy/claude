@@ -33,13 +33,13 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 
 Že kolo o fakturaci navazuje na export faktur, je domněnka z textu úkolu, výslovně zapsané to není.
 
-**Pracuje se jinde:** Kolo o upomínkách (`specify-upominky`, běží v jiném okně)
+**Pracuje se jinde:** Kolo o upomínkách (`specify-reminders`, běží v jiném okně)
 
 **Čeká na něco:** Kolo o fakturaci (na kolo o DPH) · Napojení na účetní systém (na odpověď podpory)
 
 **S čím můžeme pokračovat**
 
-1. ◐ Export faktur do účetnictví (opuštěná větev `export-faktur`)
+1. ◐ Export faktur do účetnictví (opuštěná větev `invoice-export`)
 2. ◐ Validace formuláře objednávky (rozdělané tady)
 3. ◐ Kolo o DPH
 4. ○ Přejmenovat „rezervace“ na „objednávka“ v administraci

@@ -158,6 +158,8 @@ def sections(text, level="## "):
     return [(t, b) for t, b in out if t is not None]
 
 
+# Pole bloku kola: popisek v Markdownu je česky, klíč ve výstupu anglicky.
+FIELD_KEYS = {"Stav": "status", "Větev": "branch", "Dokument": "document", "Čeká na": "waits", "Sahá na": "touches"}
 FIELD = re.compile(r"- \*\*(Stav|Větev|Dokument|Čeká na|Sahá na):\*\*\s*(.*)")
 
 
@@ -168,7 +170,7 @@ def parse_rounds(lines):
         for line in body:
             m = FIELD.match(line)
             if m:
-                fields[m.group(1)] = m.group(2).strip().strip("`")
+                fields[FIELD_KEYS[m.group(1)]] = m.group(2).strip().strip("`")
         rounds.append({"title": title, **fields})
     return rounds
 
@@ -303,7 +305,7 @@ def collect_branches(repo, ref, prefix, rounds, current_branch, project):
             continue
         info = branch_info(repo, ref, b, trees.get(b), prefix)
         info.update(current=b == current_branch, main=b in (local, "main", "master"),
-                    rounds=[r["title"] for r in rounds if r.get("Větev") == b])
+                    rounds=[r["title"] for r in rounds if r.get("branch") == b])
         work = info["ahead"] or info["uncommitted"]
         info.update(branch_state(b, others, idle, error, work))
         # Hlavní větev se vypisuje jen tehdy, když v ní někdo pracuje nebo něco leží.
@@ -326,7 +328,7 @@ def branch_info(repo, ref, b, tree, prefix):
 
 def round_states(repo, rounds, prefix):
     for r in rounds:
-        b = r.get("Větev")
+        b = r.get("branch")
         if not b or repo.git("rev-parse", "--verify", "--quiet", b) is None:
             continue
         text = repo.git("show", f"{b}:{prefix}todo.md") or ""
@@ -350,7 +352,7 @@ def main() -> int:
     repo = Repo(Path(sys.argv[1] if len(sys.argv) > 1 else "."))
     fetch = None
     if repo.git("remote", "get-url", "origin") is not None:
-        fetch = "ok" if run(repo.base + ["fetch", "--quiet"], timeout=15) is not None else "selhal"
+        fetch = "ok" if run(repo.base + ["fetch", "--quiet"], timeout=15) is not None else "failed"
     ref, _ = main_branch(repo)
     if ref is None:
         raise SystemExit("hlavní větev se nepodařilo určit")

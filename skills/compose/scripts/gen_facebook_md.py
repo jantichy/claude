@@ -12,10 +12,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 if len(sys.argv) < 3:
-    sys.exit("Použití: gen_facebook_md.py <your_posts__…_1.json> <výstupní adresář> [URL profilu]")
+    sys.exit("Použití: gen_facebook_md.py <your_posts__…_1.json> <target_dir> [profile_url]")
 SRC = Path(sys.argv[1])
 OUT = Path(sys.argv[2])
-PROFIL = f" ({sys.argv[3]})" if len(sys.argv) > 3 else ""
+PROFILE = f" ({sys.argv[3]})" if len(sys.argv) > 3 else ""
 
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -70,7 +70,7 @@ for year, ilist in sorted(by_year.items()):
         blocks.append("\n".join(head) + "\n\n" + text)
     content = (
         f"# Facebook – příspěvky {year}\n\n"
-        f"- **Médium:** Facebook{PROFIL}\n"
+        f"- **Médium:** Facebook{PROFILE}\n"
         f"- **Období:** rok {year}\n"
         f"- **Počet příspěvků:** {len(ilist)}\n"
         f"- **Zdroj:** oficiální export `{SRC}`\n"

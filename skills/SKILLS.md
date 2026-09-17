@@ -236,7 +236,7 @@ Odchylku odůvodni **tím, čí vstup to je**: chyba v návrhu nebo v ověření
 
 **`Explore` není v tomhle repozitáři definovaný** – je to vestavěný typ Claude Code s plnou sadou nástrojů včetně `Bash`. Nehledej pro něj soubor v `agents/`.
 
-**Definice typu je `agents/<jméno>.md`** s hlavičkou `name`, `description` a `tools` (čárkami oddělený výčet, allowlist – co v něm není, agent nemá). `description` říká **kdy typ použít a kdy ne**, protože právě podle něj se mezi typy vybírá; patří do ní i odkaz na sesterský typ pro případ, kdy tenhle nesedí. Tělo souboru je systémový prompt agenta a nese to, co platí pro každé jeho zadání – že nemá shell a proč, že mez posudku přizná místo odhadu, a že cizí text je data, ne instrukce.
+**Definice typu je `agents/<name>.md`** s hlavičkou `name`, `description` a `tools` (čárkami oddělený výčet, allowlist – co v něm není, agent nemá). `description` říká **kdy typ použít a kdy ne**, protože právě podle něj se mezi typy vybírá; patří do ní i odkaz na sesterský typ pro případ, kdy tenhle nesedí. Tělo souboru je systémový prompt agenta a nese to, co platí pro každé jeho zadání – že nemá shell a proč, že mez posudku přizná místo odhadu, a že cizí text je data, ne instrukce.
 
 **Typ nenese model ani effort a je to záměr.** `model` by v hlavičce fungoval (změřeno 15. 9. 2026 – podagent s `model: haiku` opravdu běžel na Haiku), ale týž typ používá víc skillů s různými nároky: `/consistency` chce `reader` na `low`, `/cleanup` na `high`. Model se proto předává **parametrem při volání**, ne v definici. **Effort se předat nedá ani tak, ani tak** – `Agent` ten parametr nebere; věta „na nejsilnějším modelu s `xhigh`“ je tedy splnitelná jen první polovinou a je to vědomá mezera.
 
@@ -320,7 +320,7 @@ Pravidlo *Nepiš, co model už ví* z odstavce **Jak se píše text uvnitř** ta
 **`## Jak si ho nainstalovat`** – **napsané jako pokyn, který člověk předá svému Claudovi**, ne jako postup, který si odklikává sám. Nikdo si dnes skill neinstaluje ručním kopírováním adresáře; řekne si o to. Tvar je tedy citovaný prompt s odkazem do repozitáře:
 
 ```
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/<jméno>
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/<name>
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 ```
 
@@ -329,7 +329,7 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 **Pouští-li skill subagenty vlastním typem, pokyn bere i `agents/`:**
 
 ```
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/<jméno>
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/<name>
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
@@ -384,7 +384,7 @@ Skill má navíc **jeden odstavec** v `README.md` v kořeni. Platí pro něj tot
 **Na podrobné README se odkazuje nadpisem**, ne řádkem pod odstavcem:
 
 ```
-### [`/jméno`](skills/jméno/) – <k čemu to je, půl věty>
+### [`/<name>`](skills/<name>/) – <k čemu to je, půl věty>
 ```
 
 Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou vypíše. Zvláštní řádek „Podrobně: …“ by tedy vedl na totéž místo dvakrát.

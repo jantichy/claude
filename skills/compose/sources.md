@@ -16,9 +16,9 @@ Katalog pro režim `collect`: odkud se dají dostat autorovy texty, jak je přev
 Není to jedna hromada textů. Archiv se člení **podle média**, protože kontext vydání je součástí dokladu – týž autor píše na svůj blog jinak než do odborného magazínu.
 
 ```
-archiv/
-  <doména nebo médium>/     YYYYMMDD - Titulek.md   (jeden text = jeden soubor)
-  <síť>/                    Síť YYYY.md             (příspěvky po letech)
+archive/
+  <domain-or-medium>/       YYYYMMDD - Title.md     (jeden text = jeden soubor)
+  <network>/                Network YYYY.md         (příspěvky po letech)
 ```
 
 **Každý článek nese v hlavičce** datum publikace, médium, 1–3 tematické štítky a URL, je-li text online. **Ročníkové soubory sítí** nesou médium, období, počet příspěvků a cestu ke zdrojovému exportu.
@@ -57,7 +57,7 @@ Berou cíl argumentem a **jsou idempotentní** – po novém exportu stačí pus
 
 **Napřed zjisti, jestli web běží na WordPressu** – většina blogů a magazínů ano a pak je to otázka jednoho volání.
 
-1. **WordPress REST API:** `https://<doména>/wp-json/wp/v2/posts?per_page=100&status=publish`. Vrací titulek, datum, URL i celý HTML obsah. Cizí web se filtruje autorem: `&author=<ID>`.
+1. **WordPress REST API:** `https://<domain>/wp-json/wp/v2/posts?per_page=100&status=publish`. Vrací titulek, datum, URL i celý HTML obsah. Cizí web se filtruje autorem: `&author=<ID>`.
 2. **ID autora**, když je endpoint `users` zablokovaný: oklikou přes známý článek – `posts?slug=<slug>` vrátí v odpovědi `author`.
 3. **HTML na Markdown** přes `markdownify`. Relativní odkazy převeď na absolutní, jinak po přesunu ukazují nikam.
 4. **Je-li API zablokované** (bezpečnostní plugin vrací 401), zbývá scraping: obsah bývá v `.entry-content`, datum v meta `article:published_time`, titulek v `<h1>`.

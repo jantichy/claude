@@ -41,7 +41,7 @@ JOIN = ROOT / "skills" / "transcript" / "join.sh"
 FFMPEG = shutil.which("ffmpeg")
 
 
-class PojistkaProtiPrepsaniZdroje(unittest.TestCase):
+class SourceOverwriteGuard(unittest.TestCase):
     """Převod nesmí zapisovat do souboru, ze kterého čte."""
 
     def setUp(self):
@@ -52,62 +52,62 @@ class PojistkaProtiPrepsaniZdroje(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def nahravka(self, jmeno, sekund=1):
-        cil = self.tmp / jmeno
-        subprocess.run([FFMPEG, "-f", "lavfi", "-i", f"sine=frequency=440:duration={sekund}",
-                        "-ar", "44100", "-ac", "2", str(cil), "-y"],
+    def recording(self, name, seconds=1):
+        target = self.tmp / name
+        subprocess.run([FFMPEG, "-f", "lavfi", "-i", f"sine=frequency=440:duration={seconds}",
+                        "-ar", "44100", "-ac", "2", str(target), "-y"],
                        capture_output=True, check=True)
-        return cil
+        return target
 
-    def logika_vyberu(self, workdir, base, vstup):
+    def select_target_wav(self, workdir, base, input_path):
         """Tentýž výběr cílového WAV, jaký dělá transcribe.sh při KEEP_WAV=1.
 
         Vytažený ze skriptu proto, že samotný `transcribe.sh` chce whisper-cli
         a model o velikosti gigabajtu; testovat se má ta podmínka, ne whisper.
-        Že se s originálem nerozešla, hlídá `test_skript_porovnava_soubory`.
+        Že se s originálem nerozešla, hlídá `test_script_compares_files`.
         """
-        skript = f'''
-        WORKDIR={workdir}; base={base}; f={vstup}; KEEP_WAV=1
+        script = f'''
+        WORKDIR={workdir}; base={base}; f={input_path}; KEEP_WAV=1
         if [ "$KEEP_WAV" = "1" ]; then wav="$WORKDIR/$base.wav"; else wav="$WORKDIR/.${{base}}.tmp.wav"; fi
         if [ -e "$wav" ] && [ "$wav" -ef "$f" ]; then wav="$WORKDIR/$base.16k.wav"; fi
         printf %s "$wav"
         '''
-        return subprocess.run(["bash", "-c", skript], capture_output=True,
+        return subprocess.run(["bash", "-c", script], capture_output=True,
                               text=True, check=True, cwd=self.tmp).stdout
 
-    def test_relativni_cesta_zdroj_neznici(self):
+    def test_relative_path_keeps_source(self):
         """`./rec.wav` a `rec.wav` je týž soubor, ale jiný řetězec.
 
         Tohle je ten případ, který pojistku obcházel: porovnání `=` neplatilo,
         cílem převodu se stal vstup a ffmpeg ho ořízl během čtení.
         """
-        zdroj = self.nahravka("rec.wav", sekund=30)
-        pred = zdroj.stat().st_size
-        cil = self.logika_vyberu(".", "rec", "rec.wav")
-        self.assertNotEqual(cil, "./rec.wav", "cílem převodu se stal vlastní vstup")
+        source = self.recording("rec.wav", seconds=30)
+        size_before = source.stat().st_size
+        target = self.select_target_wav(".", "rec", "rec.wav")
+        self.assertNotEqual(target, "./rec.wav", "cílem převodu se stal vlastní vstup")
         subprocess.run([FFMPEG, "-y", "-i", "rec.wav", "-ar", "16000", "-ac", "1",
-                        "-c:a", "pcm_s16le", cil], capture_output=True, cwd=self.tmp, check=True)
-        self.assertEqual(zdroj.stat().st_size, pred,
+                        "-c:a", "pcm_s16le", target], capture_output=True, cwd=self.tmp, check=True)
+        self.assertEqual(source.stat().st_size, size_before,
                          "zdrojová nahrávka se převodem změnila – přišla by o obsah")
 
-    def test_absolutni_cesta_zdroj_neznici(self):
+    def test_absolute_path_keeps_source(self):
         """Táž situace zapsaná absolutně; tu porovnání řetězců zvládalo,
         takže je to pojistka proti obrácené regresi."""
-        zdroj = self.nahravka("rec.wav")
-        cil = self.logika_vyberu(str(self.tmp), "rec", str(zdroj))
-        self.assertNotEqual(cil, str(zdroj))
+        source = self.recording("rec.wav")
+        target = self.select_target_wav(str(self.tmp), "rec", str(source))
+        self.assertNotEqual(target, str(source))
 
-    def test_jiny_soubor_se_neprejmenuje(self):
+    def test_other_file_keeps_target(self):
         """Propustit, co propustit má: jde-li o jiný soubor, cíl zůstává `<base>.wav`
         – jinak by každý běh vyráběl zbytečný `.16k.wav` a diarizace by ho nenašla."""
-        self.nahravka("rec.m4a")
-        self.assertEqual(self.logika_vyberu(".", "rec", "rec.m4a"), "./rec.wav")
+        self.recording("rec.m4a")
+        self.assertEqual(self.select_target_wav(".", "rec", "rec.m4a"), "./rec.wav")
 
 
-class SkutecnySkriptChraniZdroj(unittest.TestCase):
+class RealScriptProtectsSource(unittest.TestCase):
     """Pojistka se ověřuje na SPUŠTĚNÉM `transcribe.sh`, ne na opisu jeho podmínky.
 
-    Třída `PojistkaProtiPrepsaniZdroje` výš pouští kopii té podmínky, protože
+    Třída `SourceOverwriteGuard` výš pouští kopii té podmínky, protože
     skutečný běh chce whisper-cli a model o velikosti gigabajtu. Jenže kopie
     nehlídá skript: 14. 9. 2026 se ukázalo, že stačí vyřadit podmínku ve skriptu
     (`&& false`) a všech šest testů zůstane zelených, protože jediná vazba na
@@ -145,7 +145,7 @@ class SkutecnySkriptChraniZdroj(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def test_wav_vstup_v_pracovnim_adresari_prezije(self):
+    def test_wav_input_in_workdir_survives(self):
         """Nahrávka je WAV a leží tam, kam se převádí – přesně ten případ,
         kdy ffmpeg bez pojistky otevře vlastní vstup pro zápis a ořízne ho.
 
@@ -153,11 +153,11 @@ class SkutecnySkriptChraniZdroj(unittest.TestCase):
         o krok dřív na kontrole „výstupy už existují“ a k pojistce vůbec nedojde.
         Právě proto je pojistka poslední obrana: uživatel v tomhle režimu řekl
         „přepiš výstupy“, ne „znič mi zdroj“."""
-        zdroj = self.tmp / "rec.wav"
+        source = self.tmp / "rec.wav"
         subprocess.run([FFMPEG, "-f", "lavfi", "-i", "sine=frequency=440:duration=10",
-                        "-ar", "44100", "-ac", "2", str(zdroj), "-y"],
+                        "-ar", "44100", "-ac", "2", str(source), "-y"],
                        capture_output=True, check=True)
-        pred = zdroj.stat().st_size
+        size_before = source.stat().st_size
 
         env = dict(os.environ,
                    HOME=str(self.home),
@@ -166,15 +166,15 @@ class SkutecnySkriptChraniZdroj(unittest.TestCase):
                    WHISPER_ON_EXISTING="overwrite")
         # Relativní zápis vstupu i pracovního adresáře: právě ten obcházel
         # porovnání řetězců, protože `./rec.wav` a `rec.wav` je týž soubor.
-        hotovo = subprocess.run(["bash", str(TRANSCRIBE), ".", "log.txt", "rec.wav"],
+        result = subprocess.run(["bash", str(TRANSCRIBE), ".", "log.txt", "rec.wav"],
                                 cwd=str(self.tmp), env=env, capture_output=True, text=True)
 
-        self.assertEqual(zdroj.stat().st_size, pred,
+        self.assertEqual(source.stat().st_size, size_before,
                          f"zdrojová nahrávka se během běhu změnila – "
-                         f"{pred} B → {zdroj.stat().st_size} B; stderr: {hotovo.stderr[-500:]}")
+                         f"{size_before} B → {source.stat().st_size} B; stderr: {result.stderr[-500:]}")
 
 
-    def test_mutace_pojistky_zdroj_znici(self):
+    def test_guard_mutation_destroys_source(self):
         """Vyřadí pojistku ve skriptu a ověří, že se zdroj OPRAVDU zničí.
 
         Bez tohohle testu by scénář výš mohl být zelený z docela jiného důvodu –
@@ -185,48 +185,48 @@ class SkutecnySkriptChraniZdroj(unittest.TestCase):
         # ze svého vlastního adresáře, takže osamocená kopie by spadla na chybějící
         # závislost a test by „prošel“ ze špatného důvodu. Do repozitáře se přitom
         # nezapisuje nic.
-        kopie = self.tmp / "skill"
-        shutil.copytree(TRANSCRIBE.parent, kopie)
-        poskozeny = kopie / TRANSCRIBE.name
+        copy_dir = self.tmp / "skill"
+        shutil.copytree(TRANSCRIBE.parent, copy_dir)
+        broken = copy_dir / TRANSCRIBE.name
         text = TRANSCRIBE.read_text(encoding="utf-8")
-        podminka = '  if [ -e "$wav" ] && [ "$wav" -ef "$f" ]; then'
-        self.assertEqual(text.count(podminka), 1, "pojistka ve skriptu změnila tvar")
-        poskozeny.write_text(text.replace(podminka, podminka[:-6] + " && false; then"),
+        condition = '  if [ -e "$wav" ] && [ "$wav" -ef "$f" ]; then'
+        self.assertEqual(text.count(condition), 1, "pojistka ve skriptu změnila tvar")
+        broken.write_text(text.replace(condition, condition[:-6] + " && false; then"),
                              encoding="utf-8")
 
-        zdroj = self.tmp / "rec.wav"
+        source = self.tmp / "rec.wav"
         subprocess.run([FFMPEG, "-f", "lavfi", "-i", "sine=frequency=440:duration=10",
-                        "-ar", "44100", "-ac", "2", str(zdroj), "-y"],
+                        "-ar", "44100", "-ac", "2", str(source), "-y"],
                        capture_output=True, check=True)
-        pred = zdroj.stat().st_size
+        size_before = source.stat().st_size
 
         env = dict(os.environ, HOME=str(self.home),
                    PATH=f"{self.bin}:{os.environ['PATH']}",
                    WHISPER_VAD="0", WHISPER_KEEP_WAV="1",
                    WHISPER_ON_EXISTING="overwrite")
-        subprocess.run(["bash", str(poskozeny), ".", "log.txt", "rec.wav"],
+        subprocess.run(["bash", str(broken), ".", "log.txt", "rec.wav"],
                        cwd=str(self.tmp), env=env, capture_output=True, text=True)
 
-        self.assertLess(zdroj.stat().st_size, pred,
+        self.assertLess(source.stat().st_size, size_before,
                         "poškozená verze zdroj nezničila – scénář výš tedy neměří pojistku")
 
 
-class SeznamVystupnichPripon(unittest.TestCase):
+class OutputExtensionsList(unittest.TestCase):
     """`wav` musí být mezi příponami, které se nesmí tiše přepsat."""
 
-    def test_skript_zna_priponu_wav(self):
+    def test_script_knows_wav_extension(self):
         text = TRANSCRIBE.read_text(encoding="utf-8")
-        self.assertRegex(text, r'VYSTUPNI_PRIPONY="[^"]*\bwav\b',
+        self.assertRegex(text, r'OUTPUT_EXTENSIONS="[^"]*\bwav\b',
                          "seznam výstupních přípon nezná wav – existující nahrávka se přepíše")
 
-    def test_seznam_stoji_na_jednom_miste(self):
+    def test_list_defined_once(self):
         """Dřív byl opsaný dvakrát a `wav` chyběl v obou kopiích."""
         text = TRANSCRIBE.read_text(encoding="utf-8")
         self.assertNotIn("for ext in txt srt md vtt json", text,
                          "seznam přípon je zase opsaný do smyčky místo odkazu na konstantu")
-        self.assertEqual(text.count("for ext in $VYSTUPNI_PRIPONY"), 2)
+        self.assertEqual(text.count("for ext in $OUTPUT_EXTENSIONS"), 2)
 
-    def test_skript_porovnava_soubory(self):
+    def test_script_compares_files(self):
         """Pojistka musí porovnávat soubory (`-ef`), ne řetězce cest."""
         text = TRANSCRIBE.read_text(encoding="utf-8")
         self.assertIn('[ "$wav" -ef "$f" ]', text)
@@ -238,7 +238,7 @@ if __name__ == "__main__":
     unittest.main()
 
 
-class PrirazeniMluvcich(unittest.TestCase):
+class SpeakerAssignment(unittest.TestCase):
     """`merge.py` přiřazuje repliky mluvčím podle překryvu – a smí to odmítnout.
 
     Je to nejtišší vada v celém `/transcriptu`: špatně přiřazená replika vypadá
@@ -251,23 +251,23 @@ class PrirazeniMluvcich(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         import importlib.util
-        cesta = ROOT / "skills" / "transcript" / "merge.py"
-        spec = importlib.util.spec_from_file_location("merge_pod_testem", cesta)
+        path = ROOT / "skills" / "transcript" / "merge.py"
+        spec = importlib.util.spec_from_file_location("merge_under_test", path)
         cls.merge = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cls.merge)
 
-    def replika(self, start, end, text="text"):
+    def cue(self, start, end, text="text"):
         return {"start": start, "end": end, "text": text}
 
-    def usek(self, start, end, speaker):
+    def turn(self, start, end, speaker):
         return {"start": start, "end": end, "speaker": speaker}
 
-    def test_jasny_prekryv_se_priradi(self):
-        cue = self.replika(0, 10)
-        turns = [self.usek(0, 10, "SPEAKER_00")]
+    def test_clear_overlap_is_assigned(self):
+        cue = self.cue(0, 10)
+        turns = [self.turn(0, 10, "SPEAKER_00")]
         self.assertEqual(self.merge.assign(cue, turns), "SPEAKER_00")
 
-    def test_tesny_naskok_zustane_neprirazeny(self):
+    def test_narrow_margin_stays_unassigned(self):
         """Vítěz pokrývá 70 % repliky, ale druhý 60 % – náskok je desetina.
 
         Tohle je scénář, na kterém stojí `MIN_MARGIN`: `MIN_RATIO` je splněný,
@@ -276,52 +276,52 @@ class PrirazeniMluvcich(unittest.TestCase):
         tak vrací, když dva lidé mluví přes sebe, a to je právě ta chvíle, kdy
         je přiřazení nejméně jisté a zároveň nejvíc svádí.
         """
-        cue = self.replika(0, 10)
-        turns = [self.usek(0, 7, "SPEAKER_00"), self.usek(3, 9, "SPEAKER_01")]
+        cue = self.cue(0, 10)
+        turns = [self.turn(0, 7, "SPEAKER_00"), self.turn(3, 9, "SPEAKER_01")]
         self.assertIsNone(self.merge.assign(cue, turns))
 
-    def test_slaby_podil_zustane_neprirazeny(self):
+    def test_weak_share_stays_unassigned(self):
         """Vítěz sice není zpochybněný, ale pokrývá jen polovinu repliky –
         zbytek je ticho nebo nikým nepřiznaný hlas."""
-        cue = self.replika(0, 10)
-        turns = [self.usek(0, 5, "SPEAKER_00")]
+        cue = self.cue(0, 10)
+        turns = [self.turn(0, 5, "SPEAKER_00")]
         self.assertIsNone(self.merge.assign(cue, turns))
 
-    def test_zadny_prekryv_zustane_neprirazeny(self):
-        cue = self.replika(0, 10)
-        turns = [self.usek(20, 30, "SPEAKER_00")]
+    def test_no_overlap_stays_unassigned(self):
+        cue = self.cue(0, 10)
+        turns = [self.turn(20, 30, "SPEAKER_00")]
         self.assertIsNone(self.merge.assign(cue, turns))
 
-    def test_rozdelene_useky_tehoz_mluvciho_se_scitaji(self):
+    def test_split_turns_of_same_speaker_add_up(self):
         """Pyannote vrací víc úseků na mluvčího; bez sečtení by dlouhá replika
         přerušená nádechem spadla pod práh a zůstala bez jména."""
-        cue = self.replika(0, 10)
-        turns = [self.usek(0, 4, "SPEAKER_00"), self.usek(4.5, 10, "SPEAKER_00")]
+        cue = self.cue(0, 10)
+        turns = [self.turn(0, 4, "SPEAKER_00"), self.turn(4.5, 10, "SPEAKER_00")]
         self.assertEqual(self.merge.assign(cue, turns), "SPEAKER_00")
 
-    def test_mutace_prahu_nalepku_vyrobi(self):
+    def test_threshold_mutation_assigns_label(self):
         """Ověří, že testy výš měří prahy, a ne jen shodu s návratovou hodnotou.
 
         Každý práh se vypíná ZVLÁŠŤ, a to je tady to podstatné. První verze
         těchhle testů shazovala oba naráz a odmítnutí přičítala `MIN_MARGIN`,
         jenže scénář 55:45 padá na `MIN_RATIO` – druhý práh tak nehlídal nikdo
         a mutace `MIN_MARGIN = 0` neshodila jediný test. Doloženo 14. 9. 2026."""
-        puvodni = (self.merge.MIN_RATIO, self.merge.MIN_MARGIN)
+        original = (self.merge.MIN_RATIO, self.merge.MIN_MARGIN)
         try:
             # Slabý podíl: vypnout MIN_RATIO stačí, aby nálepku dostal.
-            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = 0.0, puvodni[1]
+            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = 0.0, original[1]
             self.assertEqual(
-                self.merge.assign(self.replika(0, 10), [self.usek(0, 5, "SPEAKER_00")]),
+                self.merge.assign(self.cue(0, 10), [self.turn(0, 5, "SPEAKER_00")]),
                 "SPEAKER_00", "test slabého podílu neměří MIN_RATIO")
 
             # Těsný náskok: vypnout MIN_MARGIN stačí, aby nálepku dostal.
-            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = puvodni[0], 0.0
+            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = original[0], 0.0
             self.assertEqual(
-                self.merge.assign(self.replika(0, 10),
-                                  [self.usek(0, 7, "SPEAKER_00"), self.usek(3, 9, "SPEAKER_01")]),
+                self.merge.assign(self.cue(0, 10),
+                                  [self.turn(0, 7, "SPEAKER_00"), self.turn(3, 9, "SPEAKER_01")]),
                 "SPEAKER_00", "test těsného náskoku neměří MIN_MARGIN")
         finally:
-            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = puvodni
+            self.merge.MIN_RATIO, self.merge.MIN_MARGIN = original
 
 
 class MergeEndToEnd(unittest.TestCase):
@@ -334,7 +334,7 @@ class MergeEndToEnd(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def test_vyrobi_json_i_vtt_se_jmeny(self):
+    def test_writes_json_and_vtt_with_names(self):
         srt = self.tmp / "a.srt"
         srt.write_text(
             "1\n00:00:00,000 --> 00:00:10,000\nDobrý den.\n\n"
@@ -348,11 +348,11 @@ class MergeEndToEnd(unittest.TestCase):
         names = self.tmp / "n.json"
         names.write_text(json.dumps({"SPEAKER_00": "Honza"}), encoding="utf-8")
 
-        hotovo = subprocess.run(
+        result = subprocess.run(
             ["python3", str(self.merge_py), str(srt), str(diar),
              str(self.tmp / "out"), "--names", str(names)],
             capture_output=True, text=True)
-        self.assertEqual(hotovo.returncode, 0, hotovo.stderr)
+        self.assertEqual(result.returncode, 0, result.stderr)
 
         data = json.loads((self.tmp / "out.json").read_text(encoding="utf-8"))
         self.assertEqual([s["speaker"] for s in data["segments"]],
@@ -363,7 +363,7 @@ class MergeEndToEnd(unittest.TestCase):
         self.assertIn("<v SPEAKER_01>Nazdar.", vtt,
                       "nepojmenovaný mluvčí musí zůstat pod svým kódem, ne zmizet")
 
-    def test_neprirazena_replika_zustane_bez_znacky(self):
+    def test_unassigned_cue_has_no_voice_tag(self):
         """Ve VTT nesmí u nepřiřazené repliky vzniknout prázdné `<v >`."""
         srt = self.tmp / "a.srt"
         srt.write_text("1\n00:00:00,000 --> 00:00:10,000\nKdo to řekl?\n\n", encoding="utf-8")
@@ -374,10 +374,10 @@ class MergeEndToEnd(unittest.TestCase):
                       {"start": 5.5, "end": 10, "speaker": "SPEAKER_01"}],
         }), encoding="utf-8")
 
-        hotovo = subprocess.run(
+        result = subprocess.run(
             ["python3", str(self.merge_py), str(srt), str(diar), str(self.tmp / "out")],
             capture_output=True, text=True)
-        self.assertEqual(hotovo.returncode, 0, hotovo.stderr)
+        self.assertEqual(result.returncode, 0, result.stderr)
         data = json.loads((self.tmp / "out.json").read_text(encoding="utf-8"))
         self.assertIsNone(data["segments"][0]["speaker"])
         self.assertEqual(data["unassigned_segments"], 1)
@@ -386,10 +386,10 @@ class MergeEndToEnd(unittest.TestCase):
         self.assertIn("Kdo to řekl?", vtt)
 
 
-class VstupNeblokujeSamSebe(unittest.TestCase):
+class InputDoesNotBlockItself(unittest.TestCase):
     """Kontrola existujících výstupů nesmí zastavit běh kvůli vlastnímu vstupu.
 
-    `VYSTUPNI_PRIPONY` obsahuje `wav`, takže u WAV na vstupu ukazuje kandidát na
+    `OUTPUT_EXTENSIONS` obsahuje `wav`, takže u WAV na vstupu ukazuje kandidát na
     výstup na tentýž soubor, který se má přepisovat. Bez výjimky přes `-ef` každý
     takový běh skončil kódem 3 – a od zavedení `join.sh`, který spojenou schůzku
     vyrábí právě jako WAV, by to byla cesta, kudy se k přepisu vůbec nedá dojít.
@@ -426,63 +426,63 @@ class VstupNeblokujeSamSebe(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def _wav(self, jmeno, sekund=2):
-        cil = self.tmp / jmeno
-        subprocess.run([FFMPEG, "-f", "lavfi", "-i", f"sine=frequency=440:duration={sekund}",
-                        "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", str(cil), "-y"],
+    def _wav(self, name, seconds=2):
+        target = self.tmp / name
+        subprocess.run([FFMPEG, "-f", "lavfi", "-i", f"sine=frequency=440:duration={seconds}",
+                        "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", str(target), "-y"],
                        capture_output=True, check=True)
-        return cil
+        return target
 
-    def _beh(self, skript=None):
+    def _run(self, script=None):
         return subprocess.run(
-            ["bash", str(skript or TRANSCRIBE), ".", "log.txt", "rec.wav"],
+            ["bash", str(script or TRANSCRIBE), ".", "log.txt", "rec.wav"],
             cwd=str(self.tmp), env=self.env, capture_output=True, text=True)
 
-    def test_wav_vstup_projde(self):
+    def test_wav_input_passes(self):
         """Propustit, co propustit má: jediný kolidující kandidát je vstup sám."""
-        zdroj = self._wav("rec.wav")
-        pred = zdroj.stat().st_size
-        hotovo = self._beh()
-        self.assertEqual(hotovo.returncode, 0,
-                         f"WAV vstup neprošel kontrolou výstupů: {hotovo.stderr[-400:]}")
+        source = self._wav("rec.wav")
+        size_before = source.stat().st_size
+        result = self._run()
+        self.assertEqual(result.returncode, 0,
+                         f"WAV vstup neprošel kontrolou výstupů: {result.stderr[-400:]}")
         self.assertNotIn("### EXISTING", (self.tmp / "log.txt").read_text(encoding="utf-8"))
         self.assertTrue((self.tmp / "rec.srt").exists(), "přepis nevznikl")
-        self.assertEqual(zdroj.stat().st_size, pred, "vstupní WAV se během běhu změnil")
+        self.assertEqual(source.stat().st_size, size_before, "vstupní WAV se během běhu změnil")
 
-    def test_starsi_vystup_porad_zastavi(self):
+    def test_older_output_still_stops(self):
         """Zastavit, co zastavit má: `.srt` z dřívějška je cizí soubor, ne vstup."""
         self._wav("rec.wav")
         (self.tmp / "rec.srt").write_text("starý přepis", encoding="utf-8")
-        hotovo = self._beh()
-        self.assertEqual(hotovo.returncode, 3,
+        result = self._run()
+        self.assertEqual(result.returncode, 3,
                          "existující .srt měl běh zastavit kódem 3")
         self.assertIn("### EXISTING", (self.tmp / "log.txt").read_text(encoding="utf-8"))
         self.assertEqual((self.tmp / "rec.srt").read_text(encoding="utf-8"), "starý přepis",
                          "starší přepis se přepsal, přestože měl běh skončit")
 
-    def test_mutace_vyjimky_zastavi_vlastni_vstup(self):
+    def test_exception_mutation_stops_own_input(self):
         """Vyřadí výjimku ve skriptu a ověří, že se běh OPRAVDU zastaví.
 
         Bez tohohle by první test mohl být zelený z jiného důvodu – třeba proto,
         že kontrola na `wav` vůbec nesáhla. Mutace to rozhodne: s vyřazenou
         výjimkou musí WAV vstup spadnout na kódu 3.
         """
-        kopie = self.tmp / "skill"
-        shutil.copytree(TRANSCRIBE.parent, kopie)
+        copy_dir = self.tmp / "skill"
+        shutil.copytree(TRANSCRIBE.parent, copy_dir)
         text = TRANSCRIBE.read_text(encoding="utf-8")
-        podminka = '      [ "$kand" -ef "$f" ] && continue'
-        self.assertEqual(text.count(podminka), 1, "výjimka ve skriptu změnila tvar")
-        (kopie / TRANSCRIBE.name).write_text(
-            text.replace(podminka, '      [ "$kand" -ef "$f" ] && false && continue'),
+        condition = '      [ "$out_path" -ef "$f" ] && continue'
+        self.assertEqual(text.count(condition), 1, "výjimka ve skriptu změnila tvar")
+        (copy_dir / TRANSCRIBE.name).write_text(
+            text.replace(condition, '      [ "$out_path" -ef "$f" ] && false && continue'),
             encoding="utf-8")
         self._wav("rec.wav")
-        hotovo = self._beh(kopie / TRANSCRIBE.name)
-        self.assertEqual(hotovo.returncode, 3,
+        result = self._run(copy_dir / TRANSCRIBE.name)
+        self.assertEqual(result.returncode, 3,
                          "s vyřazenou výjimkou měl WAV vstup zastavit běh – "
                          "test výš tedy neověřuje to, co si myslí")
 
 
-class SpojovaniCastiSchuzky(unittest.TestCase):
+class MeetingPartsJoin(unittest.TestCase):
     """`join.sh` spojuje části jedné schůzky do jedné nahrávky.
 
     Vstupem jsou nahrávky, které většinou nejde pořídit znovu, takže se hlídají
@@ -502,54 +502,54 @@ class SpojovaniCastiSchuzky(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def _cast(self, jmeno, sekund, hz=440, kanaly=2, rate=44100):
-        cil = self.tmp / jmeno
-        subprocess.run([FFMPEG, "-f", "lavfi", "-i", f"sine=frequency={hz}:duration={sekund}",
-                        "-ar", str(rate), "-ac", str(kanaly), str(cil), "-y"],
+    def _part(self, name, seconds, hz=440, channels=2, rate=44100):
+        target = self.tmp / name
+        subprocess.run([FFMPEG, "-f", "lavfi", "-i", f"sine=frequency={hz}:duration={seconds}",
+                        "-ar", str(rate), "-ac", str(channels), str(target), "-y"],
                        capture_output=True, check=True)
-        return cil
+        return target
 
-    def _delka(self, path):
+    def _duration(self, path):
         out = subprocess.run([self.ffprobe, "-v", "error", "-show_entries",
                               "format=duration", "-of", "csv=p=0", str(path)],
                              capture_output=True, text=True, check=True)
         return float(out.stdout.strip())
 
-    def _join(self, nazev, *casti, env=None):
+    def _join(self, name, *parts, env=None):
         return subprocess.run(
-            ["bash", str(JOIN), str(self.tmp), nazev, *[str(c) for c in casti]],
+            ["bash", str(JOIN), str(self.tmp), name, *[str(c) for c in parts]],
             cwd=str(self.tmp), capture_output=True, text=True,
             env=env or dict(os.environ))
 
-    def test_ruzne_formaty_se_spoji_a_zdroje_zustanou(self):
+    def test_mixed_formats_join_and_sources_stay(self):
         """Části bývají každá odjinud – m4a z diktafonu vedle wav z jiného zdroje.
 
         Kdyby se spojovalo beze ztráty (`-c copy`), tenhle případ by spadl nebo
         vyrobil vadné časy; proto se překódovává na 16 kHz mono.
         """
-        a = self._cast("a.m4a", 3)
-        b = self._cast("b.wav", 5, hz=880, kanaly=1, rate=16000)
-        velikosti = (a.stat().st_size, b.stat().st_size)
+        a = self._part("a.m4a", 3)
+        b = self._part("b.wav", 5, hz=880, channels=1, rate=16000)
+        sizes = (a.stat().st_size, b.stat().st_size)
 
-        hotovo = self._join("spojeno", a, b)
-        self.assertEqual(hotovo.returncode, 0, hotovo.stderr)
+        result = self._join("spojeno", a, b)
+        self.assertEqual(result.returncode, 0, result.stderr)
         out = self.tmp / "spojeno.wav"
         self.assertTrue(out.exists(), "spojený soubor nevznikl")
-        self.assertAlmostEqual(self._delka(out), 8.0, delta=1.0,
+        self.assertAlmostEqual(self._duration(out), 8.0, delta=1.0,
                                msg="spojený soubor nemá délku součtu částí")
-        self.assertEqual((a.stat().st_size, b.stat().st_size), velikosti,
+        self.assertEqual((a.stat().st_size, b.stat().st_size), sizes,
                          "zdrojové části se spojováním změnily")
 
-    def test_existujici_soubor_se_neprepise(self):
+    def test_existing_file_not_overwritten(self):
         """`ffmpeg -y` přepisuje mlčky, takže to musí odchytit skript."""
-        a, b = self._cast("a.wav", 1), self._cast("b.wav", 1, hz=880)
+        a, b = self._part("a.wav", 1), self._part("b.wav", 1, hz=880)
         (self.tmp / "spojeno.wav").write_text("dřívější práce", encoding="utf-8")
-        hotovo = self._join("spojeno", a, b)
-        self.assertNotEqual(hotovo.returncode, 0, "existující soubor se měl bránit")
+        result = self._join("spojeno", a, b)
+        self.assertNotEqual(result.returncode, 0, "existující soubor se měl bránit")
         self.assertEqual((self.tmp / "spojeno.wav").read_text(encoding="utf-8"),
                          "dřívější práce", "existující soubor se přepsal")
 
-    def test_ztracena_cast_se_nevyda_za_hotovou(self):
+    def test_lost_part_not_reported_done(self):
         """Podstrčí `ffprobe`, který u výsledku hlásí nesmyslnou délku.
 
         Simuluje spojení, které přišlo o část. Skript to musí poznat, skončit
@@ -557,10 +557,10 @@ class SpojovaniCastiSchuzky(unittest.TestCase):
         s úplným. Mutace míří na skutečné porovnání, ne na přítomnost řetězce
         v kódu: kdyby kontrola chyběla, tenhle test zezelená jen zdánlivě.
         """
-        a, b = self._cast("a.wav", 3), self._cast("b.wav", 5, hz=880)
-        falesny_bin = self.tmp / "fakebin"
-        falesny_bin.mkdir()
-        stub = falesny_bin / "ffprobe"
+        a, b = self._part("a.wav", 3), self._part("b.wav", 5, hz=880)
+        fake_bin = self.tmp / "fakebin"
+        fake_bin.mkdir()
+        stub = fake_bin / "ffprobe"
         stub.write_text(
             "#!/bin/sh\n"
             "for arg in \"$@\"; do\n"
@@ -569,27 +569,27 @@ class SpojovaniCastiSchuzky(unittest.TestCase):
             f"exec {self.ffprobe} \"$@\"\n"
         )
         stub.chmod(0o755)
-        env = dict(os.environ, PATH=f"{falesny_bin}:{os.environ['PATH']}")
+        env = dict(os.environ, PATH=f"{fake_bin}:{os.environ['PATH']}")
 
-        hotovo = self._join("spojeno", a, b, env=env)
-        self.assertNotEqual(hotovo.returncode, 0,
+        result = self._join("spojeno", a, b, env=env)
+        self.assertNotEqual(result.returncode, 0,
                             "nesouhlasící délka měla běh shodit")
         self.assertFalse((self.tmp / "spojeno.wav").exists(),
                          "neúplný spojený soubor zůstal ležet a tváří se jako hotový")
 
-    def test_cast_bez_zvukove_stopy(self):
+    def test_part_without_audio_track(self):
         """Video bez zvuku je reálný vstup – převod musí selhat nahlas."""
-        a = self._cast("a.wav", 1)
-        nemy = self.tmp / "nemy.mp4"
+        a = self._part("a.wav", 1)
+        silent = self.tmp / "nemy.mp4"
         subprocess.run([FFMPEG, "-f", "lavfi", "-i", "testsrc=duration=1:size=64x64:rate=10",
-                        "-an", str(nemy), "-y"], capture_output=True, check=True)
-        hotovo = self._join("spojeno", a, nemy)
-        self.assertNotEqual(hotovo.returncode, 0, "část bez zvuku měla běh shodit")
+                        "-an", str(silent), "-y"], capture_output=True, check=True)
+        result = self._join("spojeno", a, silent)
+        self.assertNotEqual(result.returncode, 0, "část bez zvuku měla běh shodit")
         self.assertFalse((self.tmp / "spojeno.wav").exists(),
                          "vznikl spojený soubor, přestože jedna část chybí")
 
-    def test_mene_nez_dve_casti(self):
+    def test_fewer_than_two_parts(self):
         """Spojovat jeden soubor nedává smysl a bývá to chyba volajícího."""
-        a = self._cast("a.wav", 1)
+        a = self._part("a.wav", 1)
         self.assertNotEqual(self._join("spojeno", a).returncode, 0)
         self.assertFalse((self.tmp / "spojeno.wav").exists())

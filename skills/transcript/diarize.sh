@@ -6,7 +6,7 @@
 #
 # Počet mluvčích: číslo, nebo "auto". Pevné číslo dělá výrazně míň chyb.
 #
-# Vznikne <workdir>/<název>.diarization.json – syrové úseky bez textu:
+# Vznikne <workdir>/<name>.diarization.json – syrové úseky bez textu:
 #   {"num_speakers": 2, "turns": [{"start": 0.0, "end": 4.2, "speaker": "SPEAKER_00"}, …]}
 # Text se k nim přiřadí až v merge.py.
 #
@@ -38,12 +38,12 @@ fail() {
   exit 3
 }
 
-[ -x "$DIARIZE_PY" ] || fail "chybi-venv"
-[ -f "$WAV" ]        || fail "chybi-wav"
+[ -x "$DIARIZE_PY" ] || fail "missing-venv"
+[ -f "$WAV" ]        || fail "missing-wav"
 
 TOKEN="${HF_TOKEN:-}"
 [ -n "$TOKEN" ] || { [ -f "$HF_TOKEN_FILE" ] && TOKEN="$(tr -d '[:space:]' < "$HF_TOKEN_FILE")"; }
-[ -n "$TOKEN" ] || fail "chybi-hf-token"
+[ -n "$TOKEN" ] || fail "missing-hf-token"
 
 base=$(basename "$WAV"); base="${base%.*}"
 OUT="$WORKDIR/$base.diarization.json"
@@ -64,7 +64,7 @@ if ! HF_TOKEN="$TOKEN" DIAR_WAV="$WAV" DIAR_OUT="$OUT" DIAR_NSPK="$NSPK" DIAR_MO
 fi
 
 wall=$(( $(date +%s) - wall_start ))
-[ -f "$OUT" ] || fail "bez-vystupu"
+[ -f "$OUT" ] || fail "no-output"
 
 # Cesta jde do Pythonu prostředím, ne interpolací do zdrojáku: apostrof v názvu
 # nahrávky by jinak uzavřel literál a zbytek jména by se vykonal jako kód.

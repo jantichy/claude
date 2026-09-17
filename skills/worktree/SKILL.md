@@ -52,7 +52,7 @@ Stav nese **tvar adresáře**, ne zápis v souboru – nemůže se tedy rozejít
 
 ### `status` (nebo žádný argument)
 
-Vypiš, jestli je layout zapnutý. Je-li, vypiš i `git -C <kontejner> worktree list` a `git -C <kontejner> branch -a` – tedy co je rozdělané a jaké větve existují. Worktree, o kterém uživatel nejspíš neví, zmiň zvlášť; nemaž ho.
+Vypiš, jestli je layout zapnutý. Je-li, vypiš i `git -C <container> worktree list` a `git -C <container> branch -a` – tedy co je rozdělané a jaké větve existují. Worktree, o kterém uživatel nejspíš neví, zmiň zvlášť; nemaž ho.
 
 ### `enable`
 
@@ -74,13 +74,13 @@ git worktree add main -b main
 Zálohou je tu **přejmenovaný původní adresář** – `mv` na `.migrating` nechá všechny pracovní soubory na místě a bere si z něj jen `.git`, takže se nekopíruje nic navíc:
 
 ```bash
-mv <projekt> <projekt>.migrating
-mkdir <projekt>
-mv <projekt>.migrating/.git <projekt>/.bare
-git --git-dir=<projekt>/.bare config core.bare true
-printf 'gitdir: ./.bare\n' > <projekt>/.git
-git -C <projekt> worktree add main main
-rm -f <projekt>/.bare/index <projekt>/.bare/COMMIT_EDITMSG
+mv <project> <project>.migrating
+mkdir <project>
+mv <project>.migrating/.git <project>/.bare
+git --git-dir=<project>/.bare config core.bare true
+printf 'gitdir: ./.bare\n' > <project>/.git
+git -C <project> worktree add main main
+rm -f <project>/.bare/index <project>/.bare/COMMIT_EDITMSG
 ```
 
 Ten `rm -f` není kosmetika: bare repo svůj `index` nikdy nepoužívá, ale po původním pracovním adresáři tam zůstane zamrzlý na posledním commitu před konverzí a `git diff --cached` z něj pak trvale hlásí smyšlené změny.
@@ -88,8 +88,8 @@ Ten `rm -f` není kosmetika: bare repo svůj `index` nikdy nepoužívá, ale po 
 **Ověř, že se nic neztratilo**, a teprve pak smaž zálohu:
 
 ```bash
-diff -r <projekt>.migrating <projekt>/main --exclude=.git   # musí být prázdné
-rm -rf <projekt>.migrating
+diff -r <project>.migrating <project>/main --exclude=.git   # musí být prázdné
+rm -rf <project>.migrating
 ```
 
 Netrackované a gitignorované soubory (`.env`, `node_modules`) přesuň do `main/` – je to jejich kanonické místo. `CLAUDE.md`, `README.md` a `docs/` v konverzi zůstávají v `main/`, kde jsou po `worktree add` už samy od sebe.
@@ -118,30 +118,30 @@ U konverze je typický omyl nechat v kořeni původní `CLAUDE.md` – ten se p�
 
 Není-li layout zapnutý → jen to oznam, nic neměň. Jinak nejdřív dvě zastávky, obě blokující:
 
-1. **`git -C <kontejner>/main worktree list` musí hlásit jen `main`.** Zbyla-li rozdělaná větev, **skonči a řekni to** – slití nebo zahození větve je rozhodnutí uživatele, ne skillu.
-2. **`git -C <kontejner>/main status --porcelain` musí být prázdný.**
+1. **`git -C <container>/main worktree list` musí hlásit jen `main`.** Zbyla-li rozdělaná větev, **skonči a řekni to** – slití nebo zahození větve je rozhodnutí uživatele, ne skillu.
+2. **`git -C <container>/main status --porcelain` musí být prázdný.**
 
-Pak si zapamatuj větev (`git -C <kontejner>/main rev-parse --abbrev-ref HEAD`), nech si přeskládání potvrdit a **pořiď zálohu, kterou už dál nerozebereš** – na rozdíl od `enable`, kde zálohou je přejmenovaný původní adresář, se tady hýbe vším naráz:
+Pak si zapamatuj větev (`git -C <container>/main rev-parse --abbrev-ref HEAD`), nech si přeskládání potvrdit a **pořiď zálohu, kterou už dál nerozebereš** – na rozdíl od `enable`, kde zálohou je přejmenovaný původní adresář, se tady hýbe vším naráz:
 
 ```bash
-cp -c -R <kontejner> <kontejner>.backup           # na APFS instantní; jinde bez -c
+cp -c -R <container> <container>.backup           # na APFS instantní; jinde bez -c
 
 # 1) z main/ udělej samostatný repozitář
-rm -f <kontejner>/main/.git                       # soubor "gitdir: …", má absolutní cestu
-mv <kontejner>/.bare <kontejner>/main/.git
-git -C <kontejner>/main config core.bare false
-git -C <kontejner>/main symbolic-ref HEAD refs/heads/<vetev>
-git -C <kontejner>/main worktree prune            # zapomeň registraci zrušeného worktree
-git -C <kontejner>/main reset                     # obnov index z HEAD, pracovní strom nech být
+rm -f <container>/main/.git                       # soubor "gitdir: …", má absolutní cestu
+mv <container>/.bare <container>/main/.git
+git -C <container>/main config core.bare false
+git -C <container>/main symbolic-ref HEAD refs/heads/<branch>
+git -C <container>/main worktree prune            # zapomeň registraci zrušeného worktree
+git -C <container>/main reset                     # obnov index z HEAD, pracovní strom nech být
 
 # 2) přenes lokální stav kontejneru dovnitř
-mv <kontejner>/.claude/* <kontejner>/main/.claude/   # cíl nejdřív vyrob: mkdir -p
-rm -f <kontejner>/CLAUDE.md <kontejner>/.git      # rozcestník a ukazatel na .bare
+mv <container>/.claude/* <container>/main/.claude/   # cíl nejdřív vyrob: mkdir -p
+rm -f <container>/CLAUDE.md <container>/.git      # rozcestník a ukazatel na .bare
 
 # 3) povyš main/ na projekt
-mv <kontejner>/main <kontejner>.novy
-rmdir <kontejner>                                 # musí projít – zbylo-li něco, zastav se
-mv <kontejner>.novy <kontejner>
+mv <container>/main <container>.new
+rmdir <container>                                 # musí projít – zbylo-li něco, zastav se
+mv <container>.new <container>
 ```
 
 **`rmdir` je pojistka, ne úklid.** Projde jen nad prázdným adresářem, takže selže právě tehdy, když v kontejneru zbylo něco, o čem tenhle postup neví – nepoužívej místo něj `rm -rf` a **zastav se a ukaž uživateli, co tam leží**.
@@ -153,11 +153,11 @@ mv <kontejner>.novy <kontejner>
 **Ověř a teprve pak uklízej:**
 
 ```bash
-git -C <kontejner> status                         # správná větev; jediný netrackovaný
+git -C <container> status                         # správná větev; jediný netrackovaný
                                                   # přírůstek smí být .claude/, který
                                                   # jsi tam právě přenesl
-diff -r <kontejner>.backup/main <kontejner> --exclude=.git --exclude=.claude
-rm -rf <kontejner>.backup
+diff -r <container>.backup/main <container> --exclude=.git --exclude=.claude
+rm -rf <container>.backup
 ```
 
 Záloha se během přeskládání nerozebírala, takže `diff -r` má proti čemu běžet. `.claude` se z porovnání vynechává schválně – v záloze leží v kořeni, v novém projektu uvnitř.

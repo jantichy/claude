@@ -28,7 +28,7 @@ Není-li to git repozitář vůbec, řekni to a **skonči bez dalšího příkaz
 
 ## 2. Projektový `CLAUDE.md`
 
-Leží buď v `<kořen>/CLAUDE.md`, nebo v `<kořen>/.claude/CLAUDE.md` – **zkontroluj obě místa**. Přečti si z něj:
+Leží buď v `<root>/CLAUDE.md`, nebo v `<root>/.claude/CLAUDE.md` – **zkontroluj obě místa**. Přečti si z něj:
 
 | Co | Proč to potřebuješ |
 |---|---|

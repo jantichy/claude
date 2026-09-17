@@ -383,7 +383,7 @@ Nálezy vyhodnocené jako „neopravovat“. Při dalším běhu se neuvádějí
 nezmění kód, kterého se týkají.
 
 - **YYYY-MM-DD** · `<short HEAD>` · *<title>* (zdroj: review|útok, podklad: <basis>): <důvod>
-  - Lokace: <soubor:řádek, ...>
+  - Lokace: <file:line, ...>
 ```
 
 `zdroj` říká, odkud nález přišel, a nahrazuje dřívější pole `role`, které nález z útoku neměl čím vyplnit; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo standardu, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).

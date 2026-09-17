@@ -29,7 +29,7 @@ Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **ř
 **Uživatel musí vydat souhlas, jinak průběžná kontrola neběží.** Kontrakt je kód v repozitáři a hook běží mimo permission systém, takže se souhlas dává jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá kontrola ztratila smysl:
 
 ```
-~/.claude/verify.sh --allow <kořen projektu>
+~/.claude/verify.sh --allow <project-root>
 ```
 
 Řekni mu u toho pravdu o tom, co schvaluje. Souhlas platí **pro repozitář včetně jeho worktree, ale jen pro ten kontrakt, který právě viděl**: podadresář s vlastním `CLAUDE.md` si ho nepůjčí a změna některého příkazu si vyžádá nové odsouhlasení. Co ty příkazy udělají, ale schválené není – `npm test` spustí, co je v `package.json`. **Vydat souhlas jde jen z terminálu**, takže ho za uživatele nespustí žádný nástroj ani skript. Do cizího naklonovaného repozitáře souhlas nepatří.
@@ -52,7 +52,7 @@ CI je proto druhá vrstva, ne zdvojení té první. Běží po každém pushi be
 
 Workflow **nesmí opisovat příkazy z kontraktu ani si ho parsovat samo**. Opsaný seznam se po první změně rozejde a vypadá přitom platně (`~/.claude/RULES.md`, *Neopisuj seznam, který má vlastní zdroj pravdy*). Druhý parser je horší ještě o stupeň, protože se rozejde v detailech, které nikdo neporovnává.
 
-Kontrakt vypíše **`~/.claude/verify.sh --contract <projekt>`** ve tvaru `klíč<tab>příkaz`. Je to tentýž kód, který příkazy spouští lokálně, takže umí i filtraci HTML komentářů, pojistku proti dvěma sekcím téhož jména a klíč `cwd`.
+Kontrakt vypíše **`~/.claude/verify.sh --contract <project>`** ve tvaru `key<tab>command`. Je to tentýž kód, který příkazy spouští lokálně, takže umí i filtraci HTML komentářů, pojistku proti dvěma sekcím téhož jména a klíč `cwd`.
 
 **Na runneru `verify.sh` není**, takže ho tam workflow musí dostat: buď ho projekt stáhne (`curl -fsSL https://raw.githubusercontent.com/jantichy/claude/main/verify.sh`), nebo si ho nese ve vlastním repozitáři. Stažení připni na konkrétní commit, ne na `main` – jinak si do CI pouštíš cizí skript, který se může kdykoliv změnit.
 

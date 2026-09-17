@@ -90,7 +90,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
     "title": "krátký název nálezu",
     "description": "v čem konkrétně je problém",
     "failure": "konkrétní vstupy nebo stav → co se stane špatně",
-    "locations": ["soubor:řádek", ...],
+    "locations": ["file:line", ...],
     "suggested_fix": "konkrétní akce, ne vágní doporučení",
     "evidence": {"cmd": "...", "exit_code": 1, "stdout_tail": "..."},   // jen když jsi to opravdu spustil, jinak vynech
     "tags": ["batch"?],
@@ -163,7 +163,7 @@ DŮKAZNÍ BŘEMENO PODLE ZÁVAŽNOSTI:
 - STŘEDNÍ: při pochybnosti odpovídej `refuted: true`. Nález, který neumíš doložit,
   škodí víc, než užije.
 - KRITICKÉ: obráceně. Vyvrátit ho smíš jen tehdy, když **jmenuješ konkrétní ochranu
-  a její místo** (`soubor:řádek`) – guard, validaci, omezení v databázi, konfiguraci.
+  a její místo** (`file:line`) – guard, validaci, omezení v databázi, konfiguraci.
   „Nejspíš to řeší framework“, „asi je to za autentizací“ ani „nepodařilo se mi to
   potvrdit“ vyvrácení není; v takovém případě odpovídej `refuted: false` a do
   `reason` napiš, co se ověřit nepodařilo. Tvrdí-li nález, že něco CHYBÍ, je
@@ -171,5 +171,5 @@ DŮKAZNÍ BŘEMENO PODLE ZÁVAŽNOSTI:
 
 VÝSTUP: JSON, nic jiného.
 {"refuted": true|false, "reason": "čím konkrétně je vyvrácený nebo potvrzený",
- "guard": "soubor:řádek ochrany, o kterou vyvrácení opíráš (u KRITICKÉHO povinné)"}
+ "guard": "file:line ochrany, o kterou vyvrácení opíráš (u KRITICKÉHO povinné)"}
 ```

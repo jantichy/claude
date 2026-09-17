@@ -43,12 +43,12 @@ Převodníky exportů ze sociálních sítí leží ve `scripts/` vedle tohohle 
 Volají se takhle – **cíl je vždycky druhý argument**, hranaté závorky jsou volitelné:
 
 ```
-scripts/gen_twitter_md.py   <adresář data/ z rozbaleného exportu>     <cílový adresář>
-scripts/gen_facebook_md.py  <your_posts__…_1.json>                    <cílový adresář> [URL profilu]
-scripts/gen_linkedin_md.py  <adresář s Shares_*.csv a Comments_*.csv> <cílový adresář> [URL profilu]
-scripts/parse_bluesky.py    <repo.car>                                <výstupní JSON>  [handle]
-scripts/gen_bluesky_md.py   <JSON z předchozího kroku>                <cílový adresář>
-scripts/extract_wpress.py   <archiv .wpress>                          <cílový adresář> [filtr]
+scripts/gen_twitter_md.py   <export_data_dir>                         <target_dir>
+scripts/gen_facebook_md.py  <your_posts__…_1.json>                    <target_dir> [profile_url]
+scripts/gen_linkedin_md.py  <dir_with_shares_and_comments_csv>        <target_dir> [profile_url]
+scripts/parse_bluesky.py    <repo.car>                                <output_json> [handle]
+scripts/gen_bluesky_md.py   <posts_json>                              <target_dir>
+scripts/extract_wpress.py   <archive.wpress>                          <target_dir> [filter]
 ```
 
 Vedle nich leží `scripts/common.py` s funkcemi, které si generátory sdílejí; sám se nespouští.

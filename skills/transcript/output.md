@@ -8,7 +8,7 @@ Pravidla pro to, jak má vypadat hotový přepis a shrnutí. Vytažené ze `SKIL
 
 ## Pravidla doslovného přepisu
 
-Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v souhrnu. Připrav doslovný přepis v jazyce nahrávky:
+Platí pro `<name>.md` každé nahrávky i pro sekci „Doslovný přepis“ v souhrnu. Připrav doslovný přepis v jazyce nahrávky:
 
 - Uprav jen **stylistiku a slovosled** tam, kde je to potřeba, aby se text dal plynule a smysluplně číst.
 - **Oprav pravopis a gramatiku** podle pravidel jazyka nahrávky. Rozpoznávač neumí i/y ve shodě přísudku s podmětem, plete si tvary, které znějí stejně, a sází interpunkci od oka. Mluvčí to neřekl špatně – špatně to zapsal model, takže to není zásah do jeho projevu, ale oprava chyby přepisu. Typicky: „mrtvoli“ místo **mrtvoly**, čárky ve vedlejších větách, velká písmena u vlastních jmen. **Které pravidlo použít, řekne jazyk zjištěný v kroku 1**, ne domněnka, že jde o češtinu. U češtiny platí `~/Dev/context/text/text.md`, sekce *Gramatika a pravopis*, a celý `~/Dev/context/text/typography.md`; u jiného jazyka jeho vlastní konvence – anglický text má anglické uvozovky a anglickou interpunkci, ne české.
@@ -24,7 +24,7 @@ Platí pro `<název>.md` každé nahrávky i pro sekci „Doslovný přepis“ v
 - **České jméno v cizojazyčné nahrávce piš česky.** Když v anglicky mluveném záznamu zazní české jméno, firma nebo místo, rozpoznávač ho přepíše foneticky tak, jak to vyslovil cizinec – „Novak“, „Yarda“, „Brno“ jako „Burno“, „Škoda“ jako „Skoda“. Vrať mu **původní český tvar i s diakritikou**, i když je zbytek věty anglicky. Platí to oběma směry a je to jediná oprava, kterou děláš i tam, kde přepsané slovo dává v cizím jazyce zdánlivě smysl.
 - **Neopravuj to, čemu jen nerozumíš.** Když stejné podivné slovo dává model opakovaně a konzistentně, je to nejspíš interní žargon, ne přeslech. Nech ho být, případně se zeptej.
 - U dialogu **nepřehazuj pořadí** myšlenek; kde je zřejmé, kdo mluví, můžeš mluvčí odlišit, ale nevymýšlej jména.
-- **Mluvčího nehádej.** S diarizací ber nálepky z `<název>.json` a repliku, která tam mluvčího nemá, nech bez jména. Bez diarizace mluvčí rozlišuj jen tam, kde to plyne přímo z textu. Špatné přiřazení je horší než chyba ve slově – překlep čtenář pozná, „Tomáš slíbil, že to dodá“ ne.
+- **Mluvčího nehádej.** S diarizací ber nálepky z `<name>.json` a repliku, která tam mluvčího nemá, nech bez jména. Bez diarizace mluvčí rozlišuj jen tam, kde to plyne přímo z textu. Špatné přiřazení je horší než chyba ve slově – překlep čtenář pozná, „Tomáš slíbil, že to dodá“ ne.
 
 ## Formát souhrnného MD
 

@@ -43,7 +43,7 @@ Pusť `python3 ~/.claude/skills/next/collect.py` z adresáře session. Nic dalš
 
 - **Skript skončil chybou** (není to git repozitář, nejde určit hlavní větev) → řekni to a skonči závěrečným verdiktem.
 - **`docs` je null a nic dalšího nenašel** → projekt frontu nevede; řekni to a skonči.
-- **`fetch` je `selhal`** → pokračuj, ale v poznámkách řekni, že hlavní větev může být stará.
+- **`fetch` je `failed`** → pokračuj, ale v poznámkách řekni, že hlavní větev může být stará.
 
 Co z výstupu je položka fronty:
 
@@ -108,13 +108,13 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 ```
 <zastaralá položka, kříž kol, domnělá závislost, selhaný fetch – nebo že nic rozdělaného ani běžícího jinde není>
 
-**Pracuje se jinde:** <název> (`<větev>`, <session / nejisté: proč>) · …
+**Pracuje se jinde:** <název> (`<branch>`, <session / nejisté: proč>) · …
 
 **Čeká na něco:** <název> (na <co>) · …
 
 **S čím můžeme pokračovat**
 
-1. <kolečko> <název> <(jen je-li co: čeká na …, opuštěná větev `<větev>`, rozdělané tady)>
+1. <kolečko> <název> <(jen je-li co: čeká na …, opuštěná větev `<branch>`, rozdělané tady)>
 2. …
 
 ○ drobnost · ◐ střední · ● velký
@@ -158,4 +158,4 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím. U vybrané pol
 - `Vybráno: <položka>, pokračuju <skillem / prací na ní / obnovením session – napiš /resume <session_id>>.`
 - `Vybrat není z čeho – brání tomu: <konkrétní seznam>.`
 
-Prázdná fronta i fronta, kde všechno běží jinde nebo na něco čeká, patří do druhé věty i s tím, co se prošlo: *„v `todo.md` ani v plánu nic nečeká, v gitu není nic rozdělaného, backlog je prázdný“*, nebo *„kolo o DPH běží ve větvi `specify-dph`, kolo o fakturaci čeká na něj“*.
+Prázdná fronta i fronta, kde všechno běží jinde nebo na něco čeká, patří do druhé věty i s tím, co se prošlo: *„v `todo.md` ani v plánu nic nečeká, v gitu není nic rozdělaného, backlog je prázdný“*, nebo *„kolo o DPH běží ve větvi `specify-vat`, kolo o fakturaci čeká na něj“*.

@@ -7,9 +7,9 @@
 #
 # BEZPEČNOST: kontrakt je kód ležící v repozitáři a hooky běží mimo permission
 # systém. Proto se v projektu nespustí nic, dokud pro něj člověk jednou nevydá
-# souhlas:  verify.sh --allow <projekt>
-# Vydané souhlasy vypíše  --list , odebere  --revoke <projekt> .
-# Kontrakt projektu vypíše  --contract <projekt>  (pro CI; nic nespouští).
+# souhlas:  verify.sh --allow <project>
+# Vydané souhlasy vypíše  --list , odebere  --revoke <project> .
+# Kontrakt projektu vypíše  --contract <project>  (pro CI; nic nespouští).
 # Ten souhlas znamená "spouštěj v tomhle repozitáři jeho vlastní příkazy", ne
 # "ty konkrétní příkazy jsem přečetl a jsou neškodné" – `npm test` spustí, co je
 # v package.json, a to se neschvaluje. Do cizího repozitáře souhlas nedávej.
@@ -117,11 +117,11 @@ md_body() { awk '
   {
     line = $0
     sub(/^[[:space:]]*/, "", line)
-    je_plot = (line ~ /^(```+|~~~+)/)
-    if (je_plot) { match(line, /^(`+|~+)/); znak = substr(line, 1, 1); delka = RLENGTH }
+    is_fence = (line ~ /^(```+|~~~+)/)
+    if (is_fence) { match(line, /^(`+|~+)/); char = substr(line, 1, 1); len = RLENGTH }
   }
-  je_plot && !f { f = 1; f_znak = znak; f_delka = delka; next }
-  je_plot && f  { if (znak == f_znak && delka >= f_delka) f = 0; next }
+  is_fence && !f { f = 1; fence_char = char; fence_len = len; next }
+  is_fence && f  { if (char == fence_char && len >= fence_len) f = 0; next }
   f { next }
   {
     out = ""; rest = $0
@@ -233,7 +233,7 @@ norm_path() {
 if [ "${1:-}" = "--list" ]; then
   need_tools
   N=0
-  MRTVYCH=0
+  INVALID=0
   for f in "$ALLOW_DIR"/*; do
     [ -f "$f" ] || continue
     P=$(head -1 "$f")
@@ -244,7 +244,7 @@ if [ "${1:-}" = "--list" ]; then
     if [ "$(wc -l < "$f" | tr -d ' ')" -lt 3 ]; then
       printf '%s\n    NEPLATNÝ – souhlas ve starém formátu bez otisku kontraktu.\n' "$P"
       printf '    Ukliď ho: rm %s\n' "$f"
-      MRTVYCH=$((MRTVYCH+1))
+      INVALID=$((INVALID+1))
       N=$((N+1))
       continue
     fi
@@ -256,13 +256,13 @@ if [ "${1:-}" = "--list" ]; then
     N=$((N+1))
   done
   [ "$N" = 0 ] && echo "Souhlas není vydaný pro žádný projekt."
-  [ "$MRTVYCH" -gt 0 ] && printf '\nNeplatných záznamů: %s. Hook je odmítá, jen zabírají místo ve výpisu.\n' "$MRTVYCH"
+  [ "$INVALID" -gt 0 ] && printf '\nNeplatných záznamů: %s. Hook je odmítá, jen zabírají místo ve výpisu.\n' "$INVALID"
   exit 0
 fi
 
 if [ "${1:-}" = "--revoke" ]; then
   need_tools
-  [ -n "${2:-}" ] || die "použití: verify.sh --revoke <projekt>"
+  [ -n "${2:-}" ] || die "použití: verify.sh --revoke <project>"
   P=$(norm_path "$2")
   N=0
   # Odvolat se musí dát i souhlas zadaný přes jinou větev téhož repozitáře, proto
@@ -314,16 +314,16 @@ if [ "${1:-}" = "--allow" ]; then
     printf 'i když souhlas vydáš. Spusť v něm git init, nebo souhlas nevydávej.\n' >&2
   fi
 
-  ODPOVED=""
+  ANSWER=""
   printf 'Vydat souhlas pro %s?\n' "$P"
   printf 'Kontrakt: %s\n' "$MD"
   printf 'Napiš "ano" (cokoliv jiného souhlas nevydá): '
   if [ -t 0 ]; then
-    read -r ODPOVED
+    read -r ANSWER
   else
-    read -r ODPOVED < /dev/tty 2>/dev/null || die "souhlas se vydává jen z terminálu. Spusť to v samostatném okně shellu – ani \`!\` prefix v Claude Code nestačí, ten běží jako nástroj a nemá řídicí terminál."
+    read -r ANSWER < /dev/tty 2>/dev/null || die "souhlas se vydává jen z terminálu. Spusť to v samostatném okně shellu – ani \`!\` prefix v Claude Code nestačí, ten běží jako nástroj a nemá řídicí terminál."
   fi
-  [ "$ODPOVED" = "ano" ] || die "nepotvrzeno, souhlas jsem nevydal."
+  [ "$ANSWER" = "ano" ] || die "nepotvrzeno, souhlas jsem nevydal."
 
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
   chmod 700 "$(dirname "$ALLOW_DIR")" "$ALLOW_DIR" 2>/dev/null || true
@@ -352,12 +352,12 @@ if [ "${1:-}" = "--allow" ]; then
   # Dvě různé věci, které se nesmí slít: klíč s pomlčkou je ROZHODNUTÍ, že se krok
   # neaplikuje, kdežto klíč s příkazem mimo typecheck/lint/test je příkaz, který
   # průběžná kontrola schválně nepouští (`dev`, `e2e`) a spustí ho jiný krok cyklu.
-  POMLCKY=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}-[[:space:]]*$/\1/p' \
+  DASHES=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}-[[:space:]]*$/\1/p' \
           | paste -sd, - | sed 's/,/, /g')
   OTHER=$(printf '%s\n' "$SEC" | sed -n 's/^[[:space:]]*[-*][[:space:]]*\([a-zA-Z][a-zA-Z0-9:_-]*\):[[:space:]]\{1,\}[^-[:space:]].*/\1/p' \
           | grep -vxE 'typecheck|lint|test' | paste -sd, - | sed 's/,/, /g')
   [ -n "$OTHER" ] && echo "  Nespouští: $OTHER (příkazy pro jiné kroky cyklu, ne pro průběžnou kontrolu)"
-  [ -n "$POMLCKY" ] && echo "  Neaplikuje se: $POMLCKY (pomlčka v kontraktu, tedy vědomé rozhodnutí)"
+  [ -n "$DASHES" ] && echo "  Neaplikuje se: $DASHES (pomlčka v kontraktu, tedy vědomé rozhodnutí)"
   echo
   echo "Platí pro celý repozitář včetně jeho worktree – nová větev si o souhlas znovu neříká."
   echo "Neplatí ale pro podadresáře s vlastním CLAUDE.md: rozbalený cizí projekt"
@@ -397,7 +397,7 @@ fi
 # Neznámý přepínač: bez tohohle by hook čekal na stdin a vypadal by jako zaseknutý.
 case "${1:-}" in
   "") ;;
-  *) die "neznámý přepínač ${1}. Použití: --allow <projekt> | --list | --revoke <projekt> | --contract <projekt>" ;;
+  *) die "neznámý přepínač ${1}. Použití: --allow <project> | --list | --revoke <project> | --contract <project>" ;;
 esac
 
 # --- Vstup ---------------------------------------------------------------------
@@ -442,13 +442,13 @@ CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || {
     # Dokud jmenovala jen neuzavřené ohraničení, poslala hledání do souboru i tehdy, když
     # v něm žádné ohraničení nebylo. Doloženo 14. 9. 2026: SIGPIPE ve find_contract se
     # diagnostikoval jako neuzavřené ohraničení a chyba se hledala na špatném místě.
-    TELO=$(md_body "$c"); RC_TELO=$?
-    if [ "$RC_TELO" -ne 0 ]; then
-      die "v $c je sekce ## Kontrakt příkazů, ale čtení těla souboru skončilo chybou (návratový kód $RC_TELO). Je to chyba ve verify.sh, ne v tom souboru. Nespustil jsem nic."
+    MD_BODY=$(md_body "$c"); RC_MD_BODY=$?
+    if [ "$RC_MD_BODY" -ne 0 ]; then
+      die "v $c je sekce ## Kontrakt příkazů, ale čtení těla souboru skončilo chybou (návratový kód $RC_MD_BODY). Je to chyba ve verify.sh, ne v tom souboru. Nespustil jsem nic."
     fi
     # grep -c, ne -q: `-q` by tu nastražil tutéž past se SIGPIPE a pipefail,
     # kvůli které tahle diagnostika vznikla. Tělo bývá velké.
-    if [ "$(printf '%s\n' "$TELO" | grep -c '^## Kontrakt příkazů')" -gt 0 ]; then
+    if [ "$(printf '%s\n' "$MD_BODY" | grep -c '^## Kontrakt příkazů')" -gt 0 ]; then
       die "v $c je sekce ## Kontrakt příkazů a jde přečíst, ale hledání kontraktu ji nenašlo. Je to chyba ve verify.sh, ne v tom souboru. Nespustil jsem nic."
     fi
     die "v $c je sekce ## Kontrakt příkazů, ale v těle bez bloků kódu a komentářů nejde přečíst – nejspíš je nad ní nedovřený blok kódu (\`\`\`) nebo ji obklopuje HTML komentář. Nespustil jsem nic."
@@ -488,8 +488,8 @@ fi
 # řekne se to nahlas i s tím, čím se obnoví; tichý degradovaný režim by z opravy
 # udělal dekoraci.
 AF=$(allow_file "$PROJ")
-ULOZENY_OTISK=$(sed -n 3p "$AF")
-if [ -z "$ULOZENY_OTISK" ]; then
+STORED_FINGERPRINT=$(sed -n 3p "$AF")
+if [ -z "$STORED_FINGERPRINT" ]; then
   die "souhlas pro $PROJ je ve starém formátu bez otisku kontraktu, nespustil jsem nic. Obnov ho: ~/.claude/verify.sh --allow $PROJ"
 fi
 
@@ -503,7 +503,7 @@ TOPLEVEL=$(git -C "$PROJ" rev-parse --show-toplevel 2>/dev/null || true)
 if [ -n "$TOPLEVEL" ] && [ "$(canon "$TOPLEVEL")" != "$PROJ" ]; then
   die "kontrakt $CLAUDE_MD leží v podadresáři, ne v kořeni pracovního stromu ($TOPLEVEL). Souhlas pro repozitář na něj neplatí, nespustil jsem nic."
 fi
-if [ "$(contract_fingerprint "$CLAUDE_MD")" != "$ULOZENY_OTISK" ]; then
+if [ "$(contract_fingerprint "$CLAUDE_MD")" != "$STORED_FINGERPRINT" ]; then
   die "kontrakt v $CLAUDE_MD se od vydání souhlasu změnil, nespustil jsem nic. Projdi si ho a potvrď: ~/.claude/verify.sh --allow $PROJ"
 fi
 

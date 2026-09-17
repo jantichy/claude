@@ -16,10 +16,10 @@ from common import plural
 
 
 if len(sys.argv) < 3:
-    sys.exit("Použití: gen_linkedin_md.py <adresář s Shares_*.csv a Comments_*.csv> <výstupní adresář> [URL profilu]")
+    sys.exit("Použití: gen_linkedin_md.py <dir_with_shares_and_comments_csv> <target_dir> [profile_url]")
 BASE = Path(sys.argv[1])
 OUT = Path(sys.argv[2])
-PROFIL = f" ({sys.argv[3]})" if len(sys.argv) > 3 else ""
+PROFILE = f" ({sys.argv[3]})" if len(sys.argv) > 3 else ""
 
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -81,7 +81,7 @@ for year, ilist in sorted(by_year.items()):
         blocks.append("\n".join([f"### {stamp}"] + bullets) + "\n\n" + text)
     content = (
         f"# LinkedIn – posty a komentáře {year}\n\n"
-        f"- **Médium:** LinkedIn{PROFIL}\n"
+        f"- **Médium:** LinkedIn{PROFILE}\n"
         f"- **Období:** rok {year}\n"
         f"- **Počet položek:** {len(ilist)} (z toho "
         f"{plural(n_comments, 'komentář', 'komentáře', 'komentářů')} u cizích postů)\n"

@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  kontrakt:
+  contract:
     # macOS kvůli `swiftc` – na Linuxu není a typecheck by se musel vynechat.
     runs-on: macos-latest
     steps:
@@ -69,34 +69,34 @@ jobs:
           # hned ve třech vlastnostech: nefiltrovala HTML komentáře (zakomentovaná
           # sekce nad tou pravou tu vyhrála), neměla pojistku proti dvěma sekcím
           # téhož jména a neznala klíč cwd.
-          ./verify.sh --contract . > "$RUNNER_TEMP/kontrakt.tsv"
-          cat "$RUNNER_TEMP/kontrakt.tsv"
+          ./verify.sh --contract . > "$RUNNER_TEMP/contract.tsv"
+          cat "$RUNNER_TEMP/contract.tsv"
 
           # cwd posouvá, kde se příkazy spouštějí – průběžná kontrola ho respektuje,
           # takže CI musí taky, jinak by každá pouštěla něco jiného.
-          cwd=$(awk -F'\t' '$1 == "cwd" { print $2 }' "$RUNNER_TEMP/kontrakt.tsv")
+          cwd=$(awk -F'\t' '$1 == "cwd" { print $2 }' "$RUNNER_TEMP/contract.tsv")
           [ -n "$cwd" ] && cd "$cwd"
 
           # Jmenovaný seznam kroků, které do CI patří. Ne všechny klíče kontraktu:
           # `dev` je watch server, který nikdy neskončí, `cwd` není příkaz. Klíč,
           # který projekt nemá, se přeskočí nahlas.
           status=0
-          for klic in typecheck lint test build e2e audit coverage a11y perf mutation; do
-            prikaz=$(awk -F'\t' -v k="$klic" '$1 == k { print $2 }' "$RUNNER_TEMP/kontrakt.tsv")
-            if [ -z "$prikaz" ]; then
-              echo "::notice::$klic – není v kontraktu, nekontroluje se"
+          for key in typecheck lint test build e2e audit coverage a11y perf mutation; do
+            cmd=$(awk -F'\t' -v k="$key" '$1 == k { print $2 }' "$RUNNER_TEMP/contract.tsv")
+            if [ -z "$cmd" ]; then
+              echo "::notice::$key – není v kontraktu, nekontroluje se"
               continue
             fi
-            if [ "$prikaz" = "-" ]; then
-              echo "::notice::$klic – projekt ho vědomě nemá"
+            if [ "$cmd" = "-" ]; then
+              echo "::notice::$key – projekt ho vědomě nemá"
               continue
             fi
-            echo "::group::$klic"
-            if sh -c "$prikaz"; then
+            echo "::group::$key"
+            if sh -c "$cmd"; then
               echo "::endgroup::"
             else
               echo "::endgroup::"
-              echo "::error::$klic selhal"
+              echo "::error::$key selhal"
               status=1
             fi
           done

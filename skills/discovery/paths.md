@@ -62,7 +62,7 @@ Prohledej web. Vrať JSON, nic jiného.
 PRAVIDLA:
 - Údaj, který nemáš z konkrétní stránky, NEUVÁDĚJ. Prázdné pole je lepší než odhad.
 - Ceny a znění předpisů opisuj doslova. Nepřepočítávej, nezaokrouhluj, neparafrázuj.
-- "jistota" dej nízkou všude, kde jsi údaj odvodil místo přečetl.
+- "confidence" dej nízkou všude, kde jsi údaj odvodil místo přečetl.
 - Nehodnoť a nedoporučuj. Sbíráš fakta, závěry dělá někdo jiný.
 - Vrať nejvýš 8 nálezů – ty nejrelevantnější. Ne seznam všeho, co existuje.
 ```
@@ -73,11 +73,11 @@ PRAVIDLA:
 U každého nálezu zjisti: jméno, URL, co to umí (konkrétně, ne marketingově), cenový model
 a konkrétní ceny, na koho to cílí, v jakém je stavu, čím je to omezené.
 
-[{"jmeno": "...", "url": "...", "co_umi": ["..."], "cena": "...", "cili_na": "...",
-  "stav": "aktivní | zaniklý <kdy a proč>", "omezeni": ["..."],
-  "basis": ["URL, ze které to je"], "jistota": "vysoká|střední|nízká"}]
+[{"name": "...", "url": "...", "features": ["..."], "pricing": "...", "target_audience": "...",
+  "status": "aktivní | zaniklý <kdy a proč>", "limitations": ["..."],
+  "basis": ["URL, ze které to je"], "confidence": "vysoká|střední|nízká"}]
 
-U zaniklého produktu je pole "stav" to nejdůležitější, co vracíš – uveď doložený důvod
+U zaniklého produktu je pole "status" to nejdůležitější, co vracíš – uveď doložený důvod
 konce, ne domněnku. Nenajdeš-li ho, napiš "zaniklý, důvod neznámý".
 ```
 
@@ -87,10 +87,10 @@ konce, ne domněnku. Nenajdeš-li ho, napiš "zaniklý, důvod neznámý".
 U každého nálezu zjisti: co jsi zjistil, jakého je to druhu a co z toho plyne pro produkt,
 který se staví.
 
-[{"zjisteni": "...", "typ": "stížnost | očekávaná funkce | povinnost | pojem | cenový model",
-  "co_z_toho_plyne": "jednou větou, co by produkt měl umět nebo splnit",
-  "basis": ["URL, ze které to je"], "jistota": "vysoká|střední|nízká"}]
+[{"finding": "...", "type": "stížnost | očekávaná funkce | povinnost | pojem | cenový model",
+  "implication": "jednou větou, co by produkt měl umět nebo splnit",
+  "basis": ["URL, ze které to je"], "confidence": "vysoká|střední|nízká"}]
 
-Pole "co_z_toho_plyne" musí být konkrétní a ověřitelné. "Musí to být jednoduché" není
+Pole "implication" musí být konkrétní a ověřitelné. "Musí to být jednoduché" není
 zjištění; "uživatelé si stěžují, že export nejde spustit bez administrátora" je.
 ```

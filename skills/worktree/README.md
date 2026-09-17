@@ -32,11 +32,11 @@ Z obyčejného adresáře projektu se stane tohle:
 rezervace/
 ├── .bare/          samotný repozitář – jedna kopie dat pro všechny větve
 ├── main/           hlavní větev, tady se čte a merguje
-├── platby/         rozdělaná větev, vlastní adresář
+├── payments/         rozdělaná větev, vlastní adresář
 └── export/         další rozdělaná větev, vedle ní
 ```
 
-Sessions v `platby/` a `export/` na sebe nevidí a nešlapou si po souborech.
+Sessions v `payments/` a `export/` na sebe nevidí a nešlapou si po souborech.
 
 ## Co nedělá
 

@@ -14,7 +14,7 @@ from common import plural
 
 
 if len(sys.argv) < 3:
-    sys.exit("Použití: gen_twitter_md.py <adresář data/ z rozbaleného exportu> <výstupní adresář>")
+    sys.exit("Použití: gen_twitter_md.py <export_data_dir> <target_dir>")
 BASE = Path(sys.argv[1])
 OUT = Path(sys.argv[2])
 OUT.mkdir(parents=True, exist_ok=True)
@@ -63,7 +63,7 @@ def parse_dt(s):
     return datetime.strptime(s, "%a %b %d %H:%M:%S %z %Y")
 
 
-def vezmi_plny_text(ts):
+def take_full_text(ts):
     """Plný text dlouhého tweetu podle času – každý nejvýš jednou.
 
     Tolerance +-2 s tu je kvůli zaokrouhlení mezi tweets.js a note-tweet.js,
@@ -89,11 +89,11 @@ def vezmi_plny_text(ts):
 # pořadí by tweet zpracovaný dřív mohl tolerancí sebrat text, který přesně
 # patří jinému – a Twitter export je řazený od nejnovějšího, takže tohle
 # pořadí nikdo nekontroluje.
-plny_text = {}
+full_texts = {}
 for t in tweets_raw:
     ts = parse_dt(t["created_at"]).timestamp()
     if ts in notes_by_ts:
-        plny_text[t["id_str"]] = notes_by_ts.pop(ts)
+        full_texts[t["id_str"]] = notes_by_ts.pop(ts)
 
 posts = []
 n_rt = 0
@@ -105,7 +105,7 @@ for t in tweets_raw:
     dt = parse_dt(t["created_at"])
 
     # dlouhé tweety: nahradit zkrácený text plným z note-tweet
-    text = plny_text.get(t["id_str"]) or vezmi_plny_text(dt.timestamp()) or text
+    text = full_texts.get(t["id_str"]) or take_full_text(dt.timestamp()) or text
 
     quotes = []
     for u in t.get("entities", {}).get("urls", []):

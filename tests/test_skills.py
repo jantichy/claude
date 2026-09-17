@@ -42,7 +42,7 @@ def body(path: Path) -> str:
 
 
 class SkillFrontmatter(unittest.TestCase):
-    def test_povinna_pole(self):
+    def test_required_fields(self):
         """Bez `name` a `description` se skill nenabídne k vyvolání."""
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
@@ -52,7 +52,7 @@ class SkillFrontmatter(unittest.TestCase):
                 self.assertEqual(fm["name"], skill.parent.name,
                     f"{skill}: `name: {fm.get('name')}` nesedí s adresářem")
 
-    def test_vedlejsi_soubory_neodkazuji_dovnitr_ciziho_skillu(self):
+    def test_auxiliary_files_do_not_link_into_foreign_skill(self):
         """Zákaz odkazu dovnitř cizí fáze platí i mimo `SKILL.md`.
 
         Kontrolovala se jen těla skillů, takže vedlejší soubory z něj tiše
@@ -62,18 +62,18 @@ class SkillFrontmatter(unittest.TestCase):
         Odkaz na **vlastní** fázi je v pořádku a pozná se podle jména adresáře;
         bez téhle výjimky by kontrola hlásila i legitimní vnitroskillové odkazy.
         """
-        vady = []
-        for soubor in sorted((ROOT / "skills").glob("*/*.md")):
-            if soubor.name in ("SKILL.md", "README.md"):
+        defects = []
+        for file in sorted((ROOT / "skills").glob("*/*.md")):
+            if file.name in ("SKILL.md", "README.md"):
                 continue
-            vlastni = soubor.parent.name
-            for m in SouladSNormou.CIZI_FAZE.finditer(body(soubor)):
-                if f"`/{vlastni}`" in m.group(0):
+            own = file.parent.name
+            for m in StandardCompliance.FOREIGN_PHASE.finditer(body(file)):
+                if f"`/{own}`" in m.group(0):
                     continue
-                vady.append(f"{soubor.relative_to(ROOT)}: {m.group(0)!r}")
-        self.assertFalse(vady, "odkazy dovnitř fáze cizího skillu:\n  " + "\n  ".join(vady))
+                defects.append(f"{file.relative_to(ROOT)}: {m.group(0)!r}")
+        self.assertFalse(defects, "odkazy dovnitř fáze cizího skillu:\n  " + "\n  ".join(defects))
 
-    def test_radek_spotreby_ma_jednotny_tvar(self):
+    def test_usage_line_has_uniform_form(self):
         """Kde se spotřeba agentů vypisuje, musí mít všude týž tvar.
 
         `~/.claude/RULES.md`, *Model a effort podle úkolu*, žádá „kolik jich
@@ -88,18 +88,18 @@ class SkillFrontmatter(unittest.TestCase):
         `/audit`, který panel má. Falešný poplach je u kontroly horší směr
         selhání než mezera, takže se měří jen to, co změřit jde: tvar.
         """
-        vady = []
+        defects = []
         for skill in SKILLS:
-            for radek in body(skill).splitlines():
-                if "**Spotřeba:**" not in radek:
+            for row in body(skill).splitlines():
+                if "**Spotřeba:**" not in row:
                     continue
-                if "na jakém modelu a effortu" not in radek:
-                    vady.append(f"{skill.parent.name}: chybí model a effort")
-                if "agentů:" not in radek:
-                    vady.append(f"{skill.parent.name}: nezačíná počtem agentů")
-        self.assertFalse(vady, "řádek spotřeby se rozešel v tvaru:\n  " + "\n  ".join(vady))
+                if "na jakém modelu a effortu" not in row:
+                    defects.append(f"{skill.parent.name}: chybí model a effort")
+                if "agentů:" not in row:
+                    defects.append(f"{skill.parent.name}: nezačíná počtem agentů")
+        self.assertFalse(defects, "řádek spotřeby se rozešel v tvaru:\n  " + "\n  ".join(defects))
 
-    def test_vyctene_mcp_nastroje_existuji(self):
+    def test_listed_mcp_tools_exist(self):
         """Ruční výčet MCP nástrojů v `allowed-tools` musí sedět se skutečností.
 
         Výčet je tu schválně, ne z lenosti: oficiální plugin `plugin-dev`
@@ -123,23 +123,23 @@ class SkillFrontmatter(unittest.TestCase):
         """
         import json as _json
         cache = ROOT / "plugins" / "cache"
-        dostupne = set()
+        available = set()
         for f in cache.glob("*/chrome-devtools-mcp/*/src/telemetry/tool_call_metrics.json"):
-            dostupne |= {t["name"] for t in _json.loads(f.read_text(encoding="utf-8"))}
-        if not dostupne:
+            available |= {t["name"] for t in _json.loads(f.read_text(encoding="utf-8"))}
+        if not available:
             self.skipTest("plugin chrome-devtools-mcp není na disku, není proti čemu měřit")
 
-        vzor = re.compile(r"mcp__plugin_chrome-devtools-mcp_chrome-devtools__([a-z_0-9]+)")
+        pattern = re.compile(r"mcp__plugin_chrome-devtools-mcp_chrome-devtools__([a-z_0-9]+)")
         for skill in SKILLS:
-            uvedene = set(vzor.findall(skill.read_text(encoding="utf-8")))
-            if not uvedene:
+            listed = set(pattern.findall(skill.read_text(encoding="utf-8")))
+            if not listed:
                 continue
             with self.subTest(skill=skill.parent.name):
-                chybi = sorted(uvedene - dostupne)
-                self.assertFalse(chybi,
-                    f"{skill.parent.name} jmenuje MCP nástroje, které plugin nenabízí: {chybi}")
+                absent = sorted(listed - available)
+                self.assertFalse(absent,
+                    f"{skill.parent.name} jmenuje MCP nástroje, které plugin nenabízí: {absent}")
 
-    def test_allowed_tools_je_vyplnene(self):
+    def test_allowed_tools_is_filled(self):
         """Skill bez `allowed-tools` běží s celou sadou nástrojů session.
 
         To znamená i připojené MCP servery – u tří skillů to byl Gmail, Kalendář
@@ -152,14 +152,14 @@ class SkillFrontmatter(unittest.TestCase):
                 self.assertTrue(frontmatter(skill).get("allowed-tools"),
                     f"{skill}: chybí `allowed-tools` – skill běží s celou sadou včetně MCP")
 
-    def test_description_rika_kdy_se_pouzije(self):
+    def test_description_says_when_to_use(self):
         """Popis rozhoduje, jestli se skill vyvolá – musí říct, kdy se použije."""
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
                 desc = frontmatter(skill).get("description", "")
                 self.assertIn("použije", desc, f"{skill}: `description` neříká, kdy se použije")
 
-    def test_flagy_z_tela_jsou_v_argument_hint(self):
+    def test_flags_from_body_are_in_argument_hint(self):
         """Režim popsaný v těle, ale chybějící v hintu, uživatel nikdy neuvidí.
 
         Hledá se ve všech tvarech, kterými skilly režimy dokumentují: tučný
@@ -170,10 +170,10 @@ class SkillFrontmatter(unittest.TestCase):
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
                 hint = frontmatter(skill).get("argument-hint", "")
-                jmeno = skill.parent.name
-                telo = body(skill)
+                name = skill.parent.name
+                skill_body = body(skill)
                 documented = set()
-                for vzor in (rf"\*\*`/{jmeno} ([a-z-]+)`\*\*",
+                for pattern in (rf"\*\*`/{name} ([a-z-]+)`\*\*",
                              r"^#{2,4} Režim\s+`?([a-z-]+)`?",
                              r"^#{3,4} `([a-z-]+)`",
                              # Odrážka `- **`x`** *(popisek)*` – tvar /project.
@@ -181,12 +181,12 @@ class SkillFrontmatter(unittest.TestCase):
                              # právě ten režim, který v hintu chybí, a test by
                              # měřil kruhem. Ověřeno mutací.
                              r"^- \*\*`([a-z-]+)`\*\*\s*\*\("):
-                    documented |= set(re.findall(vzor, telo, re.M))
+                    documented |= set(re.findall(pattern, skill_body, re.M))
                 missing = sorted(f for f in documented if f not in hint)
                 self.assertFalse(missing,
                     f"{skill}: režimy {missing} jsou v těle, ale ne v argument-hint {hint!r}")
 
-    def test_rezimy_z_hintu_jsou_popsane_v_tele(self):
+    def test_hint_modes_are_described_in_body(self):
         """Opačný směr, a ten slepou skvrnu nemá.
 
         Předchozí test hledá režimy v těle a porovnává je s hintem – když je
@@ -202,78 +202,78 @@ class SkillFrontmatter(unittest.TestCase):
             hint = frontmatter(skill).get("argument-hint", "")
             # Jen první hranatá skupina a jen tokeny oddělené |: `[a-z]+` by
             # rozsekalo české placeholdery (<větev> → "tev") a hlásilo nesmysly.
-            prvni = re.match(r"\s*\[([^\]]+)\]", hint)
-            if not prvni:
+            first = re.match(r"\s*\[([^\]]+)\]", hint)
+            if not first:
                 continue
-            rezimy = [r.strip() for r in prvni.group(1).split("|")]
-            rezimy = [r for r in rezimy if re.fullmatch(r"[a-z][a-z-]*", r)]
-            if len(rezimy) < 2:
+            modes = [r.strip() for r in first.group(1).split("|")]
+            modes = [r for r in modes if re.fullmatch(r"[a-z][a-z-]*", r)]
+            if len(modes) < 2:
                 continue
-            telo = body(skill)
-            jmeno = skill.parent.name
-            with self.subTest(skill=jmeno):
+            skill_body = body(skill)
+            name = skill.parent.name
+            with self.subTest(skill=name):
                 # Režim se smí zmínit i jako `/skill mode`, ne jen samostatně.
                 # Uznává se i `/skill mode` a `<mode>`: hint některých skillů
                 # nejmenuje režimy, ale typy argumentu (/release [větev|tag|hash]),
                 # a ty se v těle píšou v ostrých závorkách.
-                chybi = [r for r in rezimy
-                         if f"`{r}`" not in telo
-                         and f"/{jmeno} {r}`" not in telo
-                         and f"<{r}" not in telo]
-                self.assertFalse(chybi,
-                    f"{skill}: argument-hint slibuje režimy {chybi}, ale tělo je nepopisuje")
+                absent = [r for r in modes
+                         if f"`{r}`" not in skill_body
+                         and f"/{name} {r}`" not in skill_body
+                         and f"<{r}" not in skill_body]
+                self.assertFalse(absent,
+                    f"{skill}: argument-hint slibuje režimy {absent}, ale tělo je nepopisuje")
 
 
-def _vlastni_faze(skill) -> set:
+def _own_phases(skill) -> set:
     """Čísla fází a kroků, které skill doopravdy má."""
-    vlastni = {re.match(r"(?:Fáze|Krok) (\S+)", n).group(1)
-               for n in bez_bloku_kodu(skill)
+    own = {re.match(r"(?:Fáze|Krok) (\S+)", n).group(1)
+               for n in without_code_blocks(skill)
                if n.startswith(("Fáze ", "Krok "))}
     # písmenné podkroky mají vlastní nadpis úrovně ###, např. „6a – Režim“
-    vlastni |= {m.group(1) for m in
-                (re.match(r"(\d+[a-c]) – ", n) for n in bez_bloku_kodu(skill)) if m}
-    return vlastni
+    own |= {m.group(1) for m in
+                (re.match(r"(\d+[a-c]) – ", n) for n in without_code_blocks(skill)) if m}
+    return own
 
 
-def _spatne_odkazy(skill, vzor, vlastni: set, cizi: set) -> list:
+def _bad_links(skill, pattern, own: set, foreign: set) -> list:
     """Odkazy na vlastní fázi, která ve skillu není."""
-    spatne = []
-    ve_bloku = False
-    for radek in body(skill).splitlines():
-        if radek.lstrip().startswith(("```", "~~~")):
-            ve_bloku = not ve_bloku
+    bad = []
+    in_fence = False
+    for row in body(skill).splitlines():
+        if row.lstrip().startswith(("```", "~~~")):
+            in_fence = not in_fence
             continue
-        if ve_bloku:
+        if in_fence:
             continue                  # šablona pro subagenta není odkaz
-        for m in vzor.finditer(radek):
-            okno = radek[max(0, m.start() - 60):m.start()]
-            if "SKILL.md" in okno or any(f"/{j}" in okno for j in cizi):
+        for m in pattern.finditer(row):
+            window = row[max(0, m.start() - 60):m.start()]
+            if "SKILL.md" in window or any(f"/{j}" in window for j in foreign):
                 continue              # odkaz do cizího skillu
             # „krok 8 životního cyklu“ v RULES.md není vlastní fáze, ale krok
             # *Životního cyklu projektu* – ty se číslují nezávisle
-            if "RULES.md" in okno or "Životní cyklus" in okno:
+            if "RULES.md" in window or "Životní cyklus" in window:
                 continue
-            if re.match(r"\s*os[ay]\b", radek[m.end():m.end() + 8]):
+            if re.match(r"\s*os[ay]\b", row[m.end():m.end() + 8]):
                 continue
-            for cislo in re.findall(r"\d+(?:\.\d+)?[a-c]?", m.group(2)):
-                if cislo not in vlastni:
-                    spatne.append(f"{m.group(1)} {cislo}")
-    return spatne
+            for number in re.findall(r"\d+(?:\.\d+)?[a-c]?", m.group(2)):
+                if number not in own:
+                    bad.append(f"{m.group(1)} {number}")
+    return bad
 
 
 #: Odkazy se píšou domovskou cestou (`~/.claude/RULES.md`), ale míří na dvě různá
 #: místa: do **tohohle repozitáře**, nebo do privátní knowledge base mimo něj.
-VZOR_ODKAZU = r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`"
+LINK_PATTERN = r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`"
 
 #: Kotva na sekci: `soubor`, *Sekce*. Stojí tady, a ne jen u testu, který ji hlídá,
 #: protože z ní počítá i ohlašovací test – jinak by hlásil menší rozsah přeskočené
 #: kontroly, než jaký doopravdy je.
-VZOR_KOTVY = (r"`(~/(?:\.claude|Dev)/[^`\s]+\.md)`,\s*(?:kapitola\s+|sekce\s+)?"
+ANCHOR_PATTERN = (r"`(~/(?:\.claude|Dev)/[^`\s]+\.md)`,\s*(?:kapitola\s+|sekce\s+)?"
               r"\*([^*\n]{3,80})\*")
 KNOWLEDGE_BASE = Path.home() / "Dev" / "context"
 
 
-def cil_odkazu(ref: str):
+def link_target(ref: str):
     """Soubor, na který odkaz míří, nebo None, když se to tady nedá ověřit.
 
     `~/.claude/…` se resolvuje proti **kořeni repozitáře**, ne proti `$HOME`.
@@ -292,28 +292,28 @@ def cil_odkazu(ref: str):
     return Path(ref.replace("~", str(Path.home()), 1))
 
 
-class SkillOdkazy(unittest.TestCase):
+class SkillLinks(unittest.TestCase):
     # Kontroluje se i to, co skilly samy odkazují – RULES.md a CLAUDE.md nesou
     # nejvíc odkazů ze všech a netestovaly se vůbec. Projektový .claude/CLAUDE.md
     # nese kontrakt příkazů a odkazy na sekce v jiném repozitáři, takže patří sem taky.
     # `SKILLS.md` nese po zavedení normy nejvíc odkazů na sekce ze všech souborů
     # a byl jediný mimo kontrolu – uříznutá kotva v něm prošla všemi testy.
-    ODKAZUJICI = SKILLS + [ROOT / "RULES.md", ROOT / "CLAUDE.md", ROOT / "README.md",
+    REFERRING = SKILLS + [ROOT / "RULES.md", ROOT / "CLAUDE.md", ROOT / "README.md",
                            ROOT / ".claude/CLAUDE.md",
                            ROOT / "skills/SKILLS.md", ROOT / "skills/PREFLIGHT.md"]
 
-    def test_odkazy_na_soubory_existuji(self):
+    def test_file_links_exist(self):
         """Odkaz na neexistující soubor pošle Clauda hledat něco, co tam není."""
-        for soubor in self.ODKAZUJICI:
-            with self.subTest(soubor=soubor.name if soubor.parent == ROOT else soubor.parent.name):
+        for file in self.REFERRING:
+            with self.subTest(file=file.name if file.parent == ROOT else file.parent.name):
                 broken = []
-                for ref in set(re.findall(VZOR_ODKAZU, body(soubor))):
-                    cil = cil_odkazu(ref)
-                    if cil is not None and not cil.exists():
+                for ref in set(re.findall(LINK_PATTERN, body(file))):
+                    target = link_target(ref)
+                    if target is not None and not target.exists():
                         broken.append(ref)
-                self.assertFalse(sorted(broken), f"{soubor}: neexistující odkazy: {sorted(broken)}")
+                self.assertFalse(sorted(broken), f"{file}: neexistující odkazy: {sorted(broken)}")
 
-    def test_odkazy_do_knowledge_base_jdou_overit(self):
+    def test_knowledge_base_links_are_verifiable(self):
         """Kolik odkazů ven z repozitáře zůstalo nezkontrolovaných, se řekne nahlas.
 
         Bez tohohle testu by se přeskočení tvářilo jako pokrytí: kontrola by mlčela
@@ -321,24 +321,24 @@ class SkillOdkazy(unittest.TestCase):
         *Jak se píše text uvnitř* – žádné tiché ořezání rozsahu).
 
         **Počítá se obojí – odkazy na soubory i kotvy na sekce.** Kotvy přeskakuje
-        `test_odkazy_na_sekce_miri_na_existujici_nadpis` mlčky (`continue` nad
+        `test_section_links_point_to_existing_heading` mlčky (`continue` nad
         neexistujícím cílem), takže dokud se nezapočítaly sem, hlásilo se menší
         číslo než skutečný rozsah přeskočené kontroly – a to je táž vada, jaké má
         tenhle test bránit.
         """
-        venku, kotvy = set(), set()
-        for soubor in self.ODKAZUJICI:
-            telo = body(soubor)
-            venku |= {r for r in re.findall(VZOR_ODKAZU, telo) if not r.startswith("~/.claude/")}
-            kotvy |= {(c, s) for c, s in re.findall(VZOR_KOTVY, telo)
+        external, anchors = set(), set()
+        for file in self.REFERRING:
+            skill_body = body(file)
+            external |= {r for r in re.findall(LINK_PATTERN, skill_body) if not r.startswith("~/.claude/")}
+            anchors |= {(c, s) for c, s in re.findall(ANCHOR_PATTERN, skill_body)
                       if not c.startswith("~/.claude/")}
         if not KNOWLEDGE_BASE.exists():
             self.skipTest(f"{KNOWLEDGE_BASE} tu není, takže zůstalo neověřeno "
-                          f"{len(venku)} odkazů na soubory a {len(kotvy)} kotev na sekce")
-        chybi = sorted(ref for ref in venku if not cil_odkazu(ref).exists())
-        self.assertFalse(chybi, f"neexistující odkazy do knowledge base: {chybi}")
+                          f"{len(external)} odkazů na soubory a {len(anchors)} kotev na sekce")
+        absent = sorted(ref for ref in external if not link_target(ref).exists())
+        self.assertFalse(absent, f"neexistující odkazy do knowledge base: {absent}")
 
-    def test_odkazy_na_sekce_miri_na_existujici_nadpis(self):
+    def test_section_links_point_to_existing_heading(self):
         """Odkaz ve tvaru `soubor`, *Sekce* musí v tom souboru najít nadpis.
 
         Tohle je vada, kterou tahle konfigurace reálně dostává: přečíslovat fáze uvnitř
@@ -351,22 +351,22 @@ class SkillOdkazy(unittest.TestCase):
         # Kotva se pozná podle tvaru `soubor`, *Sekce* – tedy čárka hned za
         # zpětným apostrofem. Volnější vzor bral i běžné zvýraznění v okolní
         # větě ("`RULES.md`) stojí **před `/release`**") a hlásil samé nesmysly.
-        vzor = re.compile(VZOR_KOTVY)
-        for soubor in self.ODKAZUJICI:
-            with self.subTest(soubor=soubor.name if soubor.parent == ROOT else soubor.parent.name):
-                spatne = []
-                for cesta, sekce in set(vzor.findall(body(soubor))):
-                    cil = cil_odkazu(cesta)
-                    if cil is None or not cil.exists():
+        pattern = re.compile(ANCHOR_PATTERN)
+        for file in self.REFERRING:
+            with self.subTest(file=file.name if file.parent == ROOT else file.parent.name):
+                bad = []
+                for file_path, section in set(pattern.findall(body(file))):
+                    target = link_target(file_path)
+                    if target is None or not target.exists():
                         continue          # hlásí předchozí test
-                    nadpisy = "\n".join(bez_bloku_kodu(cil))
-                    kotva = sekce.strip().strip("`*")
-                    if kotva not in nadpisy:
-                        spatne.append(f"{cesta} -> *{kotva}*")
-                self.assertFalse(sorted(spatne),
-                    f"{soubor}: odkaz na sekci, která tam není: {sorted(spatne)}")
+                    headings = "\n".join(without_code_blocks(target))
+                    anchor = section.strip().strip("`*")
+                    if anchor not in headings:
+                        bad.append(f"{file_path} -> *{anchor}*")
+                self.assertFalse(sorted(bad),
+                    f"{file}: odkaz na sekci, která tam není: {sorted(bad)}")
 
-    def test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis(self):
+    def test_intra_skill_phase_links_point_to_existing_heading(self):
         """Odkaz „vezmi to do Fáze 7“ uvnitř skillu musí trefit jeho vlastní nadpis.
 
         Tuhle vadu tahle konfigurace reálně dostává: přečíslovat fáze je jedna dávka náhrad,
@@ -396,21 +396,21 @@ class SkillOdkazy(unittest.TestCase):
         # přepsala jen první číslo řádku a zbytek nechala ve starém číslování –
         # včetně kroku `8b`, který týž commit rušil. Ověřovací skript měl tutéž
         # slepou skvrnu jako test, takže to prohlásil za v pořádku.
-        vzor = re.compile(r"(Fáz[eií]|[Kk]roc?[íkyů]?\w*)\s+"
+        pattern = re.compile(r"(Fáz[eií]|[Kk]roc?[íkyů]?\w*)\s+"
                           r"((?:\d+(?:\.\d+)?[a-c]?)(?:\s*(?:,|a|–|až)\s*\d+(?:\.\d+)?[a-c]?)*)")
-        jmena = {s.parent.name for s in SKILLS}
+        names = {s.parent.name for s in SKILLS}
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
-                vlastni = _vlastni_faze(skill)
-                if not vlastni:
+                own = _own_phases(skill)
+                if not own:
                     continue          # skill fáze ani kroky nepoužívá
-                spatne = _spatne_odkazy(skill, vzor, vlastni,
-                                        jmena - {skill.parent.name})
-                self.assertFalse(sorted(set(spatne)),
+                bad = _bad_links(skill, pattern, own,
+                                        names - {skill.parent.name})
+                self.assertFalse(sorted(set(bad)),
                     f"{skill}: odkaz na vlastní fázi, která tam není: "
-                    f"{sorted(set(spatne))} (má {sorted(vlastni)})")
+                    f"{sorted(set(bad))} (má {sorted(own)})")
 
-    def test_odkazuje_na_kroky_cyklu_ne_na_jejich_vnitrek(self):
+    def test_links_to_cycle_steps_not_their_internals(self):
         """`/code-review` je vnitřek `/review`; poslat tam uživatele ho připraví o panel.
 
         Vlastní vyvolání je v pořádku – tam ho skill volá jako nástroj a musí u něj
@@ -418,19 +418,19 @@ class SkillOdkazy(unittest.TestCase):
         zadaná. Chyba je poslat *uživatele*, aby si `/code-review` pustil místo
         `/review`: dostal by jednoho specialistu z panelu bez ověření nálezů.
         """
-        povoleno = ("vyvolej", "volá", "uvnitř", "vestavěn", "Korektnost", "Bezpečnost",
+        allowed = ("vyvolej", "volá", "uvnitř", "vestavěn", "Korektnost", "Bezpečnost",
                     "/code-review low", "/code-review high", "/code-review ultra")
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
                 for line in body(skill).splitlines():
                     if "/code-review" not in line and "/security-review" not in line:
                         continue
-                    if any(w in line for w in povoleno):
+                    if any(w in line for w in allowed):
                         continue
                     self.fail(f"{skill}: odkaz na vnitřek `/review` mimo kontext volání:\n  {line.strip()}")
 
 
-class KanonickyTvarAutocommitu(unittest.TestCase):
+class CanonicalAutocommitForm(unittest.TestCase):
     """Přepínač autocommitu se pozná jen podle nadpisu, takže na jeho tvaru stojí funkce.
 
     `/autocommit` hledá nadpis znějící přesně `## Autocommit`; zanořený nebo
@@ -439,7 +439,7 @@ class KanonickyTvarAutocommitu(unittest.TestCase):
     venku žádná kontrola nečte, o ty se stará `/project` v režimu `adopt`.
     """
 
-    def test_projektovy_claude_md_ma_prepinac_i_import(self):
+    def test_project_claude_md_has_switch_and_import(self):
         """Nadpis bez importu je přepínač, který nic nespíná.
 
         Pravidla autocommitu žijí ve skillu a do projektu se dostanou jedině
@@ -447,15 +447,15 @@ class KanonickyTvarAutocommitu(unittest.TestCase):
         projektu nemá podle čeho commitovat – a pozná se to až tím, že se
         nic neděje.
         """
-        projektovy = (ROOT / ".claude/CLAUDE.md").read_text(encoding="utf-8")
-        self.assertIn("\n## Autocommit\n", projektovy,
+        project_md = (ROOT / ".claude/CLAUDE.md").read_text(encoding="utf-8")
+        self.assertIn("\n## Autocommit\n", project_md,
             "projektový CLAUDE.md nemá přepínač na kanonickém místě")
-        self.assertIn("@~/.claude/skills/autocommit/autocommit.md", projektovy,
+        self.assertIn("@~/.claude/skills/autocommit/autocommit.md", project_md,
             "sekce Autocommit neimportuje pravidla ze skillu")
-        self.assertNotIn("## Automatické akce", projektovy,
+        self.assertNotIn("## Automatické akce", project_md,
             "zastřešující sekce nad jediným podnadpisem se vrátila")
 
-    def test_globalni_claude_md_autocommit_nedefinuje(self):
+    def test_global_claude_md_does_not_define_autocommit(self):
         """Druhá strana mechanismu: definice se do globálního souboru nesmí vrátit.
 
         Dokud tam sekce *Autocommit v projektech* stála, rozbalovala se do každé
@@ -464,12 +464,12 @@ class KanonickyTvarAutocommitu(unittest.TestCase):
         projekt, který je zapnul. Kopie v globálním souboru by ten import
         obcházela a platila všude.
         """
-        globalni = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-        self.assertNotIn("## Autocommit v projektech", globalni,
+        global_md = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
+        self.assertNotIn("## Autocommit v projektech", global_md,
             "definice autocommitu se vrátila do globálního CLAUDE.md")
 
 
-class NosneCasti(unittest.TestCase):
+class CoreParts(unittest.TestCase):
     """Ne že skill má správný tvar, ale že v něm je to, co nese jeho funkci.
 
     Dosavadní testy hlídají hlavičky, odkazy a nadpisy – tedy tvar. Z `/review` šlo
@@ -482,7 +482,7 @@ class NosneCasti(unittest.TestCase):
     fungují. Je to ale tvar toho, co funkci nese, a to je rozdíl, na kterém záleží.
     """
 
-    def test_review_ma_overeni_nalezu(self):
+    def test_review_has_finding_verification(self):
         """Panel bez ověřovatele je generátor pravděpodobně znějících nálezů.
 
         Skill to o sobě píše sám: „bez třetí vrstvy je panel k ničemu“. Kdyby ta
@@ -497,14 +497,14 @@ class NosneCasti(unittest.TestCase):
         vznikla při přesunu zadání do `agents.md` a test ji nechytil.
         """
         skill = body(ROOT / "skills/review/SKILL.md")
-        for kus in ("Fáze 3 – Ověření nálezů", "refuted"):
-            self.assertIn(kus, skill, f"/review přišel o fázi ověřování: chybí {kus!r}")
+        for fragment in ("Fáze 3 – Ověření nálezů", "refuted"):
+            self.assertIn(fragment, skill, f"/review přišel o fázi ověřování: chybí {fragment!r}")
 
-        vedlejsi = "\n".join(body(p) for p in sorted((ROOT / "skills/review").glob("*.md")))
-        self.assertIn("Tenhle nález se snaž VYVRÁTIT", vedlejsi,
+        auxiliary = "\n".join(body(p) for p in sorted((ROOT / "skills/review").glob("*.md")))
+        self.assertIn("Tenhle nález se snaž VYVRÁTIT", auxiliary,
                       "/review přišel o zadání pro ověřovatele")
 
-    def test_cleanup_hleda_nevyporadana_temata(self):
+    def test_cleanup_looks_for_unresolved_topics(self):
         """Skill sám tvrdí, že tohle je nejčastější ztráta v dlouhé konverzaci.
 
         Je to druhá ze čtyř záruk v *Co skill dělá*, a jako jediná z nich nestojí
@@ -518,16 +518,16 @@ class NosneCasti(unittest.TestCase):
         vypsaly do závěru, uživatel session zavře a zmizí s ní.
         """
         text = body(ROOT / "skills/cleanup/SKILL.md")
-        nadpis = "## Fáze 2 – Nevypořádaná témata"
-        self.assertIn(nadpis, text, "/cleanup přišel o fázi na nevypořádaná témata")
-        faze = text[text.index(nadpis):]
-        faze = faze[:faze.index("\n## ")]
-        for kus in ("Jak ověřit, že to opravdu není vypořádané", "Práh důležitosti",
+        heading = "## Fáze 2 – Nevypořádaná témata"
+        self.assertIn(heading, text, "/cleanup přišel o fázi na nevypořádaná témata")
+        phase = text[text.index(heading):]
+        phase = phase[:phase.index("\n## ")]
+        for fragment in ("Jak ověřit, že to opravdu není vypořádané", "Práh důležitosti",
                     "AskUserQuestion", "Bezpředmětné"):
-            self.assertIn(kus, faze,
-                          f"/cleanup, Fáze 2 přišla o {kus!r} – zbyl jen nadpis")
+            self.assertIn(fragment, phase,
+                          f"/cleanup, Fáze 2 přišla o {fragment!r} – zbyl jen nadpis")
 
-    def test_importy_v_claude_md_nestoji_v_apostrofech(self):
+    def test_claude_md_imports_are_not_in_backticks(self):
         """Import uvnitř code spanu se nerozbalí a selže to tiše.
 
         Řádek `@~/cesta/soubor.md` Claude Code vyhodnotí jen tehdy, když `@`
@@ -543,17 +543,17 @@ class NosneCasti(unittest.TestCase):
         `WORKTREE.md` se schválně **neimportuje** a v apostrofech stát smí; test
         proto hlídá jen řádky, kde `@` opravdu je.
         """
-        vzor = re.compile(r"`[^`]*@~?[/\w.-]+\.md[^`]*`")
-        for soubor in (ROOT / "CLAUDE.md", ROOT / ".claude/CLAUDE.md"):
-            if not soubor.exists():
+        pattern = re.compile(r"`[^`]*@~?[/\w.-]+\.md[^`]*`")
+        for file in (ROOT / "CLAUDE.md", ROOT / ".claude/CLAUDE.md"):
+            if not file.exists():
                 continue
-            for cislo, radek in enumerate(soubor.read_text().splitlines(), 1):
+            for number, row in enumerate(file.read_text().splitlines(), 1):
                 self.assertFalse(
-                    vzor.search(radek),
-                    f"{soubor.name}:{cislo} má @import uvnitř apostrofů, "
-                    f"takže se tiše nenačte: {radek.strip()[:90]}")
+                    pattern.search(row),
+                    f"{file.name}:{number} má @import uvnitř apostrofů, "
+                    f"takže se tiše nenačte: {row.strip()[:90]}")
 
-    def test_ptydepe_cte_jen_verzovane_soubory(self):
+    def test_ptydepe_reads_only_tracked_files(self):
         """Nejdražší chyba, jakou tenhle skill umí udělat, a stala se.
 
         Náhrada termínu pouštěná rekurzivně přes adresář přepsala v `~/.claude`
@@ -567,17 +567,17 @@ class NosneCasti(unittest.TestCase):
         proto se hlídá jmenovitě a uvnitř té fáze, ne kdekoliv v souboru.
         """
         text = body(ROOT / "skills/ptydepe/SKILL.md")
-        nadpis = "## Fáze 4 – Inventura a vyloučení"
-        self.assertIn(nadpis, text, "/ptydepe přišel o fázi inventury a vyloučení")
-        faze = text[text.index(nadpis):]
-        faze = faze[:faze.index("\n## ")]
-        self.assertIn("git ls-files", faze,
+        heading = "## Fáze 4 – Inventura a vyloučení"
+        self.assertIn(heading, text, "/ptydepe přišel o fázi inventury a vyloučení")
+        phase = text[text.index(heading):]
+        phase = phase[:phase.index("\n## ")]
+        self.assertIn("git ls-files", phase,
                       "/ptydepe, Fáze 4 už nepředepisuje git ls-files")
-        for zakazane in ("rglob", "find"):
-            self.assertIn(zakazane, faze,
-                          f"/ptydepe, Fáze 4 přestala jmenovat {zakazane!r} jako zakázaný průchod")
+        for forbidden in ("rglob", "find"):
+            self.assertIn(forbidden, phase,
+                          f"/ptydepe, Fáze 4 přestala jmenovat {forbidden!r} jako zakázaný průchod")
 
-    def test_zadani_pro_agenty_maji_povinna_pole(self):
+    def test_agent_prompts_have_required_fields(self):
         """Nález bez `basis` a `severity` nejde ani ověřit, ani zařadit.
 
         `severity` rozhoduje, jestli nález půjde na ověření; `basis` je to, o co se
@@ -587,16 +587,16 @@ class NosneCasti(unittest.TestCase):
         dlouhá zadání pro agenty do vedlejšího souboru, takže kontrola vázaná na
         tělo by po takovém přesunu hlásila ztrátu pole, které se jen přestěhovalo.
         """
-        def vse(jmeno):
-            return "\n".join(body(f) for f in sorted((ROOT / "skills" / jmeno).glob("*.md")))
+        def all_text(name):
+            return "\n".join(body(f) for f in sorted((ROOT / "skills" / name).glob("*.md")))
 
-        for jmeno in ("review", "attack"):
-            with self.subTest(skill=jmeno):
-                self.assertIn('"severity"', vse(jmeno), f"/{jmeno}: zadání agentů nemá pole severity")
-        self.assertIn('"basis"', vse("review"),
+        for name in ("review", "attack"):
+            with self.subTest(skill=name):
+                self.assertIn('"severity"', all_text(name), f"/{name}: zadání agentů nemá pole severity")
+        self.assertIn('"basis"', all_text("review"),
                       "/review: zadání specialistů nemá pole basis")
 
-    def test_datum_se_vyrabi_prikazem(self):
+    def test_date_is_produced_by_command(self):
         """Zapamatované datum se tiše rozejde se skutečností a vypadá správně.
 
         `~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit
@@ -613,37 +613,37 @@ class NosneCasti(unittest.TestCase):
                 self.assertIn("date +%F", text,
                     f"{skill.parent.name}: zapisuje datovaný záznam, ale nejmenuje `date +%F`")
 
-    def test_behovy_stav_je_gitignorovany(self):
+    def test_runtime_state_is_gitignored(self):
         """Stav, který se mění po každé odpovědi, nesmí skončit v gitu.
 
         `~/.claude/STRUCTURE.md`, *Běhový stav skillů*. Skill, který
         do `.claude/run/` zapisuje, spoléhá na to, že `/project` ten řádek do
         `.gitignore` doplní – jinak ho v projektu s autocommitem začne commitovat.
         """
-        pisou = [s.parent.name for s in SKILLS if ".claude/run/" in body(s)]
-        if not pisou:
+        writers = [s.parent.name for s in SKILLS if ".claude/run/" in body(s)]
+        if not writers:
             self.skipTest("do .claude/run/ zatím nikdo nezapisuje")
         self.assertIn(".claude/run/", body(ROOT / "skills/project/SKILL.md"),
-            f"skilly {pisou} zapisují do .claude/run/, ale /project ho nedává do .gitignore")
+            f"skilly {writers} zapisují do .claude/run/, ale /project ho nedává do .gitignore")
 
 
-def bez_bloku_kodu(path: Path):
+def without_code_blocks(path: Path):
     """Nadpisy souboru, ale jen skutečné – ne ty uvnitř bloků kódu.
 
     `WORKTREE.md` má v ukázce rozcestníku `## Odchylky`; brát to jako nadpis dokumentu
     znamená, že by odkaz na neexistující sekci prošel, kdyby se náhodou jmenovala
     stejně jako něco v příkladu.
     """
-    ve_bloku = False
-    for radek in path.read_text(encoding="utf-8").splitlines():
-        if radek.lstrip().startswith(("```", "~~~")):
-            ve_bloku = not ve_bloku
+    in_fence = False
+    for row in path.read_text(encoding="utf-8").splitlines():
+        if row.lstrip().startswith(("```", "~~~")):
+            in_fence = not in_fence
             continue
-        if not ve_bloku and radek.startswith("#"):
-            yield radek.lstrip("# ").strip()
+        if not in_fence and row.startswith("#"):
+            yield row.lstrip("# ").strip()
 
 
-def _blok_zivotniho_cyklu() -> str:
+def _lifecycle_block() -> str:
     """Blok s životním cyklem z `RULES.md`.
 
     Obě funkce níž ho potřebují a měly to zdvojené. Dvě kopie téhož parsování se
@@ -653,48 +653,48 @@ def _blok_zivotniho_cyklu() -> str:
     """
     text = (ROOT / "RULES.md").read_text(encoding="utf-8")
     i = text.index("### Životní cyklus projektu")
-    blok = text[text.index("```", i) + 3:]
-    return blok[:blok.index("```")]
+    block = text[text.index("```", i) + 3:]
+    return block[:block.index("```")]
 
 
-def cyklus_z_rules() -> set:
+def cycle_from_rules() -> set:
     """Kroky životního cyklu se čtou z `RULES.md`, ne z konstanty v testu.
 
     Ručně opsaný seznam je druhá kopie pravdy: přejmenovaný nebo přidaný krok by
     testem prošel, a naopak zmizelý krok by ho shodil z jiného důvodu, než je ten
     skutečný.
     """
-    return set(re.findall(r"/([a-z][a-z-]*)", _blok_zivotniho_cyklu()))
+    return set(re.findall(r"/([a-z][a-z-]*)", _lifecycle_block()))
 
 
-def cyklus_s_poradim() -> dict:
+def cycle_with_order() -> dict:
     """Kroky životního cyklu i s pořadím a fází, ne jen jako množina.
 
-    `cyklus_z_rules()` vrací set, takže na tvrzení „je to třetí krok zakládání“
+    `cycle_from_rules()` vrací set, takže na tvrzení „je to třetí krok zakládání“
     nestačí. Zdrojem je týž blok v `RULES.md`, jen se z něj čte i pořadí řádků.
 
     Vrací {skill: (fáze, index v rámci fáze od 1, předchůdce, následník)};
     předchůdce a následník jdou napříč fázemi, protože `/review` navazuje na
     `/implement` z předchozí fáze.
     """
-    poradi, faze_radku = [], []
-    for radek in _blok_zivotniho_cyklu().splitlines():
+    order, line_phases = [], []
+    for row in _lifecycle_block().splitlines():
         # Řádek fáze pozná podle toho, že na něm jsou kroky – ne podle šipky mezi
         # nimi. Záměna „→“ za „->“ by jinak celou fázi tiše vyhodila.
-        kroky = re.findall(r"/([a-z][a-z-]*)", radek)
-        if not kroky:
+        steps = re.findall(r"/([a-z][a-z-]*)", row)
+        if not steps:
             continue
-        faze = radek.split()[0].lower()
-        faze_radku.append((faze, kroky))
-        poradi.extend(kroky)
+        phase = row.split()[0].lower()
+        line_phases.append((phase, steps))
+        order.extend(steps)
 
     out = {}
-    for faze, kroky in faze_radku:
-        for n, krok in enumerate(kroky, start=1):
-            g = poradi.index(krok)
-            out[krok] = (faze, n,
-                         poradi[g - 1] if g > 0 else None,
-                         poradi[g + 1] if g + 1 < len(poradi) else None)
+    for phase, steps in line_phases:
+        for n, step in enumerate(steps, start=1):
+            g = order.index(step)
+            out[step] = (phase, n,
+                         order[g - 1] if g > 0 else None,
+                         order[g + 1] if g + 1 < len(order) else None)
     return out
 
 
@@ -708,14 +708,14 @@ def cyklus_s_poradim() -> dict:
 #: netvrdí a hlásit ho jako opsaný cyklus by kontrolu shodilo na falešném nálezu.
 #: Mezera se schválně bere bez konce řádku (`[^\S\n]`): se `\s` by vzor spojil
 #: tři nesouvisející zmínky ob několik odstavců.
-_M = r"[^\S\n]*"
-_KROK = r"`?/([a-z][a-z-]*)`?"
-_SILNA = rf"{_M}(?:→|->|,?{_M}(?:pak|potom)){_M}"
-_SLABA = rf"{_M}(?:→|->|,|{_M}(?:pak|potom|a)){_M}"
-_SIPKA = re.compile(rf"{_KROK}{_SILNA}{_KROK}{_SLABA}{_KROK}")
+_SPACE = r"[^\S\n]*"
+_STEP = r"`?/([a-z][a-z-]*)`?"
+_STRONG = rf"{_SPACE}(?:→|->|,?{_SPACE}(?:pak|potom)){_SPACE}"
+_WEAK = rf"{_SPACE}(?:→|->|,|{_SPACE}(?:pak|potom|a)){_SPACE}"
+_ARROW = re.compile(rf"{_STEP}{_STRONG}{_STEP}{_WEAK}{_STEP}")
 
 
-def retezy_kroku_cyklu(text: str, cyklus: set) -> list:
+def cycle_step_chains(text: str, cycle: set) -> list:
     """Vrátí opsané řetězy kroků životního cyklu nalezené v textu.
 
     Vada, kterou to chytá, je tichá a drahá: `/project` psal do každého
@@ -724,11 +724,11 @@ def retezy_kroku_cyklu(text: str, cyklus: set) -> list:
     správný – jen neúplný –, takže ho žádná kontrola na existenci ani na
     pořadí neodhalila a projekty ho četly jako úplný seznam.
     """
-    return ["/" + " → /".join(trojice) for trojice in _SIPKA.findall(text)
-            if all(krok in cyklus for krok in trojice)]
+    return ["/" + " → /".join(triple) for triple in _ARROW.findall(text)
+            if all(step in cycle for step in triple)]
 
 
-class KontraktPrikazu(unittest.TestCase):
+class CommandContract(unittest.TestCase):
     """Formát kontraktu je závazný, protože ho čte skript – a to se neověřovalo.
 
     `coding.md` říká „jeden řádek na klíč, `- klíč: příkaz`, a za příkazem už nic“.
@@ -737,41 +737,41 @@ class KontraktPrikazu(unittest.TestCase):
     zachová, jako by ten krok projekt neměl.
     """
 
-    KONTRAKT = ROOT / ".claude/CLAUDE.md"
+    CONTRACT = ROOT / ".claude/CLAUDE.md"
 
-    def _sekce(self) -> str:
+    def _section(self) -> str:
         """Sekce ## Kontrakt příkazů z těla bez bloků kódu – stejně jako `md_body`
         a `contract_section` v `verify.sh`."""
-        radky, ve_bloku, uvnitr, out = self.KONTRAKT.read_text(encoding="utf-8").splitlines(), False, False, []
-        for r in radky:
+        rows, in_fence, inside, out = self.CONTRACT.read_text(encoding="utf-8").splitlines(), False, False, []
+        for r in rows:
             if r.lstrip().startswith(("```", "~~~")):
-                ve_bloku = not ve_bloku
+                in_fence = not in_fence
                 continue
-            if ve_bloku:
+            if in_fence:
                 continue
             if r.startswith("## Kontrakt příkazů"):
-                uvnitr = True
-            elif uvnitr and r.startswith("## "):
+                inside = True
+            elif inside and r.startswith("## "):
                 break
-            if uvnitr:
+            if inside:
                 out.append(r)
         return "\n".join(out)
 
-    def _hodnota(self, klic: str):
+    def _value(self, key: str):
         """Týž výraz jako `cmd_for` v verify.sh."""
-        m = re.search(rf"^[ \t]*[-*][ \t]*{klic}:[ \t]+(.*?)[ \t]*$",
-                      self._sekce(), re.M)
+        m = re.search(rf"^[ \t]*[-*][ \t]*{key}:[ \t]+(.*?)[ \t]*$",
+                      self._section(), re.M)
         return m.group(1) if m else None
 
-    def test_kontrakt_se_da_precist(self):
+    def test_contract_is_readable(self):
         """Kdyby se sekce rozešla s formátem, průběžná kontrola by tu tiše neběžela."""
-        self.assertTrue(self._sekce().strip(), "sekci ## Kontrakt příkazů se nepodařilo přečíst")
-        for klic in ("typecheck", "lint", "test"):
-            with self.subTest(klic=klic):
-                self.assertIsNotNone(self._hodnota(klic),
-                    f"klíč {klic} se z kontraktu nepřečetl – změnil se formát?")
+        self.assertTrue(self._section().strip(), "sekci ## Kontrakt příkazů se nepodařilo přečíst")
+        for key in ("typecheck", "lint", "test"):
+            with self.subTest(key=key):
+                self.assertIsNotNone(self._value(key),
+                    f"klíč {key} se z kontraktu nepřečetl – změnil se formát?")
 
-    def test_vzory_kontraktu_pokryvaji_repozitar(self):
+    def test_contract_patterns_cover_repo(self):
         """Soubor, na který nesedí žádný vzor, nečte žádná kontrola – a nikdo se to nedozví.
 
         Přesně tak vypadly čtyři Python skripty /transcript: lint měl glob
@@ -785,78 +785,78 @@ class KontraktPrikazu(unittest.TestCase):
         """
         import fnmatch
         import subprocess
-        verzovane = subprocess.run(["git", "ls-files"], cwd=ROOT,
+        tracked = subprocess.run(["git", "ls-files"], cwd=ROOT,
                                    capture_output=True, text=True).stdout.split()
-        self.assertTrue(verzovane, "git ls-files nic nevrátil – měří se vůbec něco?")
+        self.assertTrue(tracked, "git ls-files nic nevrátil – měří se vůbec něco?")
 
-        vzory = []
-        for klic in ("typecheck", "lint", "test"):
-            hodnota = self._hodnota(klic)
-            if hodnota in (None, "-"):
+        patterns = []
+        for key in ("typecheck", "lint", "test"):
+            value = self._value(key)
+            if value in (None, "-"):
                 continue
             # ./*.sh a *.sh jsou týž vzor: shell si `./` rozbalí, ale fnmatch ne.
-            vzory += [t[2:] if t.startswith("./") else t
-                      for t in hodnota.split()
+            patterns += [t[2:] if t.startswith("./") else t
+                      for t in value.split()
                       if "*" in t or t.endswith((".py", ".sh", ".swift"))]
 
         # Přípony, pro které kontrola existovat MÁ. Odvozovat je jen z kontraktu
         # nestačí: vypadl-li by odtud celý shellcheck, zmizela by s ním i přípona
         # .sh a test by mlčel právě o té kontrole, která se ztratila. Ověřeno
         # mutací – proto stojí seznam tady a rozšiřuje se vědomě.
-        HLIDANE = {".py", ".sh", ".swift"}
-        pripony = {os.path.splitext(v)[1] for v in vzory if os.path.splitext(v)[1]}
-        v_repu = {os.path.splitext(c)[1] for c in verzovane} & HLIDANE
-        self.assertFalse(v_repu - pripony,
+        WATCHED = {".py", ".sh", ".swift"}
+        extensions = {os.path.splitext(v)[1] for v in patterns if os.path.splitext(v)[1]}
+        in_repo = {os.path.splitext(c)[1] for c in tracked} & WATCHED
+        self.assertFalse(in_repo - extensions,
             "v repozitáři jsou soubory s příponou, kterou kontrakt vůbec neřeší: "
-            f"{sorted(v_repu - pripony)}")
+            f"{sorted(in_repo - extensions)}")
 
-        nepokryte = [c for c in verzovane
-                     if os.path.splitext(c)[1] in pripony
-                     and not any(fnmatch.fnmatch(c, v) for v in vzory)]
-        self.assertFalse(nepokryte,
+        uncovered = [c for c in tracked
+                     if os.path.splitext(c)[1] in extensions
+                     and not any(fnmatch.fnmatch(c, v) for v in patterns)]
+        self.assertFalse(uncovered,
             "tyhle soubory nezachytí žádný vzor z kontraktu, takže je nečte "
-            f"žádná kontrola: {nepokryte}")
+            f"žádná kontrola: {uncovered}")
 
-    def test_prikazy_z_kontraktu_jsou_spustitelne(self):
+    def test_contract_commands_are_runnable(self):
         """Pomlčka je vědomé rozhodnutí, ale příkaz musí existovat.
 
         Jinak hook po každé odpovědi hlásí nespustitelný krok – a to je šum, ne nález.
         """
         import shutil
-        for klic in ("typecheck", "lint", "test"):
-            hodnota = self._hodnota(klic)
-            if hodnota in (None, "-"):
+        for key in ("typecheck", "lint", "test"):
+            value = self._value(key)
+            if value in (None, "-"):
                 continue
             # Rozložit na dílčí příkazy: `lint` je dnes `shellcheck ... && ruff ...`
             # a kontrola jen prvního tokenu by chybějící ruff nenahlásila,
             # přestože hook by po každé odpovědi hlásil nespustitelný krok.
-            for cast in re.split(r"&&|\|\||;|\|", hodnota):
-                tokeny = cast.split()
-                if not tokeny:
+            for part in re.split(r"&&|\|\||;|\|", value):
+                tokens = part.split()
+                if not tokens:
                     continue
-                binarka = tokeny[0]
-                with self.subTest(klic=klic, binarka=binarka):
-                    self.assertTrue(shutil.which(binarka),
-                        f"kontrakt má {klic}: {hodnota}, ale {binarka} není na PATH")
+                binary = tokens[0]
+                with self.subTest(key=key, binary=binary):
+                    self.assertTrue(shutil.which(binary),
+                        f"kontrakt má {key}: {value}, ale {binary} není na PATH")
 
 
-class Struktura(unittest.TestCase):
-    CYKLUS = cyklus_z_rules()
+class Structure(unittest.TestCase):
+    CYCLE = cycle_from_rules()
 
-    def test_cyklus_se_precetl(self):
+    def test_cycle_was_read(self):
         """Kdyby se blok v RULES.md přeformátoval, testy životního cyklu by tiše zmlkly."""
-        self.assertGreaterEqual(len(self.CYKLUS), 8,
-            f"z RULES.md se přečetlo jen {len(self.CYKLUS)} kroků životního cyklu: {sorted(self.CYKLUS)}")
+        self.assertGreaterEqual(len(self.CYCLE), 8,
+            f"z RULES.md se přečetlo jen {len(self.CYCLE)} kroků životního cyklu: {sorted(self.CYCLE)}")
         # Obě funkce čtou týž blok. Rozejdou-li se, jedna z nich přestala vidět
         # celý cyklus – a volný práh výš to sám neodhalí, protože výpadek dvou
         # kroků z cyklu nechá pořád dost na to, aby práh nesplnil.
-        self.assertEqual(self.CYKLUS, set(cyklus_s_poradim()),
+        self.assertEqual(self.CYCLE, set(cycle_with_order()),
             "cyklus_z_rules() a cyklus_s_poradim() čtou z RULES.md jinou množinu kroků")
-        chybi = sorted(self.CYKLUS - {s.parent.name for s in SKILLS})
-        self.assertFalse(chybi, f"životní cyklus jmenuje kroky, které nemají skill: {chybi}")
+        absent = sorted(self.CYCLE - {s.parent.name for s in SKILLS})
+        self.assertFalse(absent, f"životní cyklus jmenuje kroky, které nemají skill: {absent}")
 
 
-    def test_lifecycle_popisuje_tytez_kroky_jako_rules(self):
+    def test_lifecycle_describes_same_steps_as_rules(self):
         """Rozhraní kroků se odstěhovalo z `RULES.md` do `skills/LIFECYCLE.md`.
 
         Rámeček s pořadím zůstal v `RULES.md` a je zdrojem pravdy; výklad kroků
@@ -869,13 +869,13 @@ class Struktura(unittest.TestCase):
         self.assertTrue(lifecycle.exists(), "chybí skills/LIFECYCLE.md")
         text = lifecycle.read_text(encoding="utf-8")
         # Krok je vyložený tehdy, když ho jmenuje číslovaná odrážka: `1. **`/project`**`.
-        vylozene = set(re.findall(r"^\d+\. \*\*`/([a-z][a-z-]*)`\*\*", text, re.M))
-        self.assertEqual(vylozene, self.CYKLUS,
+        explained = set(re.findall(r"^\d+\. \*\*`/([a-z][a-z-]*)`\*\*", text, re.M))
+        self.assertEqual(explained, self.CYCLE,
             "LIFECYCLE.md a rámeček v RULES.md jmenují jiné kroky; "
-            f"jen v LIFECYCLE: {sorted(vylozene - self.CYKLUS)}, "
-            f"jen v RULES: {sorted(self.CYKLUS - vylozene)}")
+            f"jen v LIFECYCLE: {sorted(explained - self.CYCLE)}, "
+            f"jen v RULES: {sorted(self.CYCLE - explained)}")
 
-    def test_neimportovane_soubory_nejsou_v_importech(self):
+    def test_unimported_files_are_not_imported(self):
         """`STRUCTURE.md` a `LIFECYCLE.md` se schválně neimportují.
 
         Držet je mimo paušální kontext je celý smysl toho, že jsou zvlášť: dohromady
@@ -884,14 +884,14 @@ class Struktura(unittest.TestCase):
         a projeví se jen tím, že je kontext o něco plnější, čehož si nikdo nevšimne.
         """
         text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-        for cesta in ("~/.claude/STRUCTURE.md", "~/.claude/skills/LIFECYCLE.md"):
-            with self.subTest(cesta=cesta):
-                self.assertNotIn(f"@{cesta}", text,
-                    f"{cesta} se importuje, přestože má být jen odkaz")
-                self.assertIn(f"`{cesta}`", text,
-                    f"{cesta} není v CLAUDE.md ani zmíněný jako odkaz")
+        for file_path in ("~/.claude/STRUCTURE.md", "~/.claude/skills/LIFECYCLE.md"):
+            with self.subTest(file_path=file_path):
+                self.assertNotIn(f"@{file_path}", text,
+                    f"{file_path} se importuje, přestože má být jen odkaz")
+                self.assertIn(f"`{file_path}`", text,
+                    f"{file_path} není v CLAUDE.md ani zmíněný jako odkaz")
 
-    def test_priprava_zada_nacteni_neimportovanych_souboru(self):
+    def test_preflight_requires_loading_unimported_files(self):
         """Odkaz bez mechanismu je přání.
 
         `STRUCTURE.md` a `LIFECYCLE.md` se přestaly importovat výměnou za to, že
@@ -900,12 +900,12 @@ class Struktura(unittest.TestCase):
         z celé úspory jen chybějící znalost.
         """
         text = (ROOT / "skills" / "PREFLIGHT.md").read_text(encoding="utf-8")
-        for cesta in ("~/.claude/STRUCTURE.md", "~/.claude/skills/LIFECYCLE.md"):
-            with self.subTest(cesta=cesta):
-                self.assertIn(cesta, text,
-                    f"příprava neříká, kdy si načíst {cesta}")
+        for file_path in ("~/.claude/STRUCTURE.md", "~/.claude/skills/LIFECYCLE.md"):
+            with self.subTest(file_path=file_path):
+                self.assertIn(file_path, text,
+                    f"příprava neříká, kdy si načíst {file_path}")
 
-    def test_skill_neopisuje_retez_kroku_cyklu(self):
+    def test_skill_does_not_copy_cycle_step_chain(self):
         """Pořadí kroků cyklu se odkazuje, neopisuje.
 
         Opsaný řetěz se při přidání kroku rozejde se zdrojem a vypadá přitom
@@ -914,63 +914,63 @@ class Struktura(unittest.TestCase):
         """
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
-                nalezy = retezy_kroku_cyklu(body(skill), self.CYKLUS)
-                self.assertFalse(nalezy,
-                    f"{skill.parent.name} opisuje pořadí kroků cyklu: {nalezy}; "
+                findings = cycle_step_chains(body(skill), self.CYCLE)
+                self.assertFalse(findings,
+                    f"{skill.parent.name} opisuje pořadí kroků cyklu: {findings}; "
                     "odkaž se na *Životní cyklus projektu* v RULES.md")
 
-    CISLOVKY = {"první": 1, "druhý": 2, "třetí": 3, "čtvrtý": 4,
+    ORDINALS = {"první": 1, "druhý": 2, "třetí": 3, "čtvrtý": 4,
                 "pátý": 5, "šestý": 6, "sedmý": 7}
 
-    def _porovnej_vetu(self, jmeno, skupiny, cyklus) -> list:
+    def _compare_sentence(self, name, sentence_groups, cycle) -> list:
         """Jedna věta o pořadí proti RULES.md."""
-        cislovka, faze, predchudce, naslednik = skupiny
-        ocek_faze, ocek_n, ocek_pred, ocek_nasl = cyklus[jmeno]
-        chyby = []
+        ordinal, phase, predecessor, successor = sentence_groups
+        exp_phase, exp_n, exp_pred, exp_succ = cycle[name]
+        errors = []
 
-        if faze != ocek_faze:
-            chyby.append(f"{jmeno}: tvrdí fázi `{faze}`, RULES.md má `{ocek_faze}`")
-        if cislovka == "poslední":
+        if phase != exp_phase:
+            errors.append(f"{name}: tvrdí fázi `{phase}`, RULES.md má `{exp_phase}`")
+        if ordinal == "poslední":
             # „Poslední“ se ověřuje jen proti počtu kroků ve fázi. Následník
             # se posuzuje níž stejně jako u číslovaných kroků: poslední krok
             # fáze ho legitimně má – `/cleanup` uzavírá uzavírání a přitom
             # správně předává na `/attack` z nasazení.
-            kroku_ve_fazi = len([k for k, v in cyklus.items() if v[0] == ocek_faze])
-            if ocek_n != kroku_ve_fazi:
-                chyby.append(f"{jmeno}: tvrdí, že je poslední ve fázi `{faze}`, "
-                             f"ale je {ocek_n}. z {kroku_ve_fazi}")
-        elif self.CISLOVKY.get(cislovka) != ocek_n:
-            chyby.append(f"{jmeno}: tvrdí `{cislovka} krok`, podle RULES.md je {ocek_n}.")
-        if predchudce and predchudce != ocek_pred:
-            chyby.append(f"{jmeno}: tvrdí, že navazuje na `/{predchudce}`, RULES.md má `/{ocek_pred}`")
-        if naslednik and naslednik != ocek_nasl:
-            chyby.append(f"{jmeno}: tvrdí, že předává na `/{naslednik}`, RULES.md má `/{ocek_nasl}`")
-        return chyby
+            steps_in_phase = len([k for k, v in cycle.items() if v[0] == exp_phase])
+            if exp_n != steps_in_phase:
+                errors.append(f"{name}: tvrdí, že je poslední ve fázi `{phase}`, "
+                             f"ale je {exp_n}. z {steps_in_phase}")
+        elif self.ORDINALS.get(ordinal) != exp_n:
+            errors.append(f"{name}: tvrdí `{ordinal} krok`, podle RULES.md je {exp_n}.")
+        if predecessor and predecessor != exp_pred:
+            errors.append(f"{name}: tvrdí, že navazuje na `/{predecessor}`, RULES.md má `/{exp_pred}`")
+        if successor and successor != exp_succ:
+            errors.append(f"{name}: tvrdí, že předává na `/{successor}`, RULES.md má `/{exp_succ}`")
+        return errors
 
-    def test_veta_o_poradi_kroku_sedi_s_rules(self):
+    def test_step_order_sentence_matches_rules(self):
         """Skill tvrdí, kolikátý je a na koho navazuje – nic to neměřilo.
 
         Vložení kroku doprostřed životního cyklu posune čísla všem za ním, jenže
         ta čísla stojí běžným textem v `Co skill dělá` každého skillu.
-        `test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis` je schválně
+        `test_intra_skill_phase_links_point_to_existing_heading` je schválně
         vynechává (míří mimo vlastní číslování skillu), takže regrese prošla tiše
         a našel ji až audit. Zdrojem pravdy je `RULES.md`.
         """
-        cyklus = cyklus_s_poradim()
-        self.assertEqual(set(cyklus), self.CYKLUS,
-            f"cyklus_s_poradim() vrátil jinou množinu kroků než cyklus_z_rules(): {sorted(cyklus)}")
+        cycle = cycle_with_order()
+        self.assertEqual(set(cycle), self.CYCLE,
+            f"cyklus_s_poradim() vrátil jinou množinu kroků než cyklus_z_rules(): {sorted(cycle)}")
 
-        vzor = re.compile(
+        pattern = re.compile(
             r"je to \*{0,2}(\w+) krok (zakládání|uzavírání|nasazení)\*{0,2}"
             r"(?:[:\s–-]+navazuje na `/([a-z-]+)`)?"
             r"(?:\s+a předává na `/([a-z-]+)`)?")
-        chyby, nalezeno = [], 0
+        errors, matched = [], 0
         for skill in SKILLS:
-            jmeno = skill.parent.name
-            if jmeno not in cyklus:
+            name = skill.parent.name
+            if name not in cycle:
                 continue
             text = body(skill)
-            m = vzor.search(text)
+            m = pattern.search(text)
             if not m:
                 # Skill, který o svém pořadí mluví, ale vzor na tvar té věty
                 # nesedne, se dřív tiše přeskočil – a jeho tvrzení pak neověřil
@@ -978,48 +978,48 @@ class Struktura(unittest.TestCase):
                 # Bez tečky ve vyloučení: tvar „3. krok“ ji obsahuje, a právě ten
                 # se dřív přeskočil, protože detekce sama na něj nesedla.
                 if re.search(r"je to [^\n]{0,25}krok (?:zakládání|uzavírání|nasazení)", text):
-                    chyby.append(f"{jmeno}: mluví o svém pořadí, ale vzor na tvar té věty nesedne "
+                    errors.append(f"{name}: mluví o svém pořadí, ale vzor na tvar té věty nesedne "
                                  f"– přeformuluj ji, nebo uprav vzor v testu")
                 continue
-            nalezeno += 1
-            chyby += self._porovnej_vetu(jmeno, m.groups(), cyklus)
+            matched += 1
+            errors += self._compare_sentence(name, m.groups(), cycle)
 
         # Druhý tvar téhož tvrzení: `/project` píše „Je první článek Životního
         # cyklu projektu“. Vzor výš ho nepoznal, takže se skill tiše přeskakoval
         # – a právě on nesl vadu, kvůli které tenhle test vznikl (posílal na
         # `/specify`, ačkoli jeho následník je `/discovery`).
-        poradi = [k for k, v in sorted(cyklus.items(), key=lambda x: (x[1][0], x[1][1]))]
+        order = [k for k, v in sorted(cycle.items(), key=lambda x: (x[1][0], x[1][1]))]
         for skill in SKILLS:
-            jmeno = skill.parent.name
-            if jmeno not in cyklus:
+            name = skill.parent.name
+            if name not in cycle:
                 continue
             m = re.search(r"Je (první|poslední) článek \*Životního cyklu projektu\*", body(skill))
             if not m:
                 continue
-            nalezeno += 1
-            ma_byt = cyklus[jmeno][2] is None if m.group(1) == "první" else cyklus[jmeno][3] is None
-            if not ma_byt:
-                chyby.append(f"{jmeno}: tvrdí, že je {m.group(1)} článek cyklu, "
-                             f"ale RULES.md má na tom místě `/{poradi[0 if m.group(1) == 'první' else -1]}`")
+            matched += 1
+            should_be = cycle[name][2] is None if m.group(1) == "první" else cycle[name][3] is None
+            if not should_be:
+                errors.append(f"{name}: tvrdí, že je {m.group(1)} článek cyklu, "
+                             f"ale RULES.md má na tom místě `/{order[0 if m.group(1) == 'první' else -1]}`")
 
         # Přesný počet, ne práh: při volném prahu propadne skill, jehož větu vzor
         # přestal poznávat, protože ostatní ho vyváží. Zvedne-li se počet skillů,
         # které tu větu nesou, číslo se tu vědomě upraví. Jde do téhož seznamu
         # jako ostatní chyby, aby se konkrétní nález nezakryl souhrnným číslem.
         # Zbylé kroky své pořadí netvrdí vůbec, takže tady není co měřit –
-        # že jmenují oba sousedy, hlídá `test_co_skill_nedela_jmenuje_oba_sousedy`.
-        if nalezeno != 7:
-            chyby.append(f"větu o pořadí kroku nese {nalezeno} skillů, čekalo se 7 "
+        # že jmenují oba sousedy, hlídá `test_what_skill_does_not_names_both_neighbours`.
+        if matched != 7:
+            errors.append(f"větu o pořadí kroku nese {matched} skillů, čekalo se 7 "
                          f"– změnil se její tvar, nebo ji získal či ztratil další skill?")
-        self.assertFalse(chyby, "věty o pořadí kroku nesedí s RULES.md:\n  " + "\n  ".join(chyby))
+        self.assertFalse(errors, "věty o pořadí kroku nesedí s RULES.md:\n  " + "\n  ".join(errors))
 
-    def test_kroky_cyklu_maji_sekci_co_nedela(self):
+    def test_cycle_steps_have_does_not_section(self):
         """Bez vymezení vůči sousedům se práce buď zdvojí, nebo neudělá vůbec."""
-        chybi = [s.parent.name for s in SKILLS
-                 if s.parent.name in self.CYKLUS and "Co skill nedělá" not in body(s)]
-        self.assertFalse(chybi, f"skilly životního cyklu bez sekce `Co skill nedělá`: {chybi}")
+        absent = [s.parent.name for s in SKILLS
+                 if s.parent.name in self.CYCLE and "Co skill nedělá" not in body(s)]
+        self.assertFalse(absent, f"skilly životního cyklu bez sekce `Co skill nedělá`: {absent}")
 
-    def test_co_skill_nedela_jmenuje_oba_sousedy(self):
+    def test_what_skill_does_not_names_both_neighbours(self):
         """Norma žádá jmenované sousedy, měřila se ale jen existence nadpisu.
 
         Vada, kterou to propustilo: `/project` roky posílal na `/specify`
@@ -1034,50 +1034,50 @@ class Struktura(unittest.TestCase):
         prošla. Vymezení patří do `Co skill dělá` a `Co skill nedělá`, tedy do
         textu před první fází.
         """
-        cyklus = cyklus_s_poradim()
-        chybi = []
+        cycle = cycle_with_order()
+        absent = []
         for skill in SKILLS:
-            jmeno = skill.parent.name
-            if jmeno not in cyklus:
+            name = skill.parent.name
+            if name not in cycle:
                 continue
             text = body(skill)
-            konec = text.find("\n## Fáze")
-            if konec == -1:
-                konec = text.find("\n## Krok")
-            text = text[:konec] if konec != -1 else text
-            _, _, pred, nasl = cyklus[jmeno]
-            for soused in (pred, nasl):
-                if soused and f"/{soused}" not in text:
-                    chybi.append(f"{jmeno} nejmenuje souseda /{soused}")
-        self.assertFalse(chybi, "kroky cyklu se nevymezují vůči sousedům:\n  " + "\n  ".join(chybi))
+            stop = text.find("\n## Fáze")
+            if stop == -1:
+                stop = text.find("\n## Krok")
+            text = text[:stop] if stop != -1 else text
+            _, _, pred, succ = cycle[name]
+            for neighbour in (pred, succ):
+                if neighbour and f"/{neighbour}" not in text:
+                    absent.append(f"{name} nejmenuje souseda /{neighbour}")
+        self.assertFalse(absent, "kroky cyklu se nevymezují vůči sousedům:\n  " + "\n  ".join(absent))
 
-    def _skilly_v_readme(self) -> set:
+    def _skills_in_readme(self) -> set:
         """Skilly jmenované v nadpisech README. Jeden nadpis jich může nést víc –
         `/breakdown` a `/implement` mají společný, protože jeden předává druhému."""
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         out = set()
-        for radek in readme.splitlines():
-            if radek.startswith("#"):
-                out |= set(re.findall(r"\[`/([a-z-]+)`\]", radek))
+        for row in readme.splitlines():
+            if row.startswith("#"):
+                out |= set(re.findall(r"\[`/([a-z-]+)`\]", row))
         return out
 
-    def test_readme_zna_kazdy_skill(self):
+    def test_readme_knows_every_skill(self):
         """README je rozcestník; skill, který v něm není, nikdo nenajde.
 
         Kontroluje se nadpis, ne výskyt řetězce: `skills/foo/` se v README může
         objevit i v ukázce adresářové struktury, a test by pak byl spokojený
         i bez sekce o skillu.
         """
-        chybi = sorted({s.parent.name for s in SKILLS} - self._skilly_v_readme())
-        self.assertFalse(chybi, f"skilly bez vlastní sekce v README: {chybi}")
+        absent = sorted({s.parent.name for s in SKILLS} - self._skills_in_readme())
+        self.assertFalse(absent, f"skilly bez vlastní sekce v README: {absent}")
 
-    def test_readme_neodkazuje_na_zmizely_skill(self):
+    def test_readme_does_not_link_vanished_skill(self):
         """Opačný směr: po smazání skillu zůstane v README mrtvá sekce."""
-        navic = sorted(self._skilly_v_readme() - {s.parent.name for s in SKILLS})
-        self.assertFalse(navic, f"README má sekci pro skill, který neexistuje: {navic}")
+        extra = sorted(self._skills_in_readme() - {s.parent.name for s in SKILLS})
+        self.assertFalse(extra, f"README má sekci pro skill, který neexistuje: {extra}")
 
 
-def _vady_priloh(poradi: dict, prvni_faze, zaver) -> list:
+def _appendix_defects(order: dict, first_phase, conclusion) -> list:
     """Přílohová sekce patří ZA závěrečnou fázi.
 
     Norma to žádá, ale nikdo to neměřil, takže v `/review` stála
@@ -1088,22 +1088,22 @@ def _vady_priloh(poradi: dict, prvni_faze, zaver) -> list:
     příloh, kam je norma výslovně staví, a odbočky průběhu typu
     `Když plán neplatí` v `/implement`.
     """
-    if prvni_faze is None or zaver is None:
+    if first_phase is None or conclusion is None:
         return []
     return [f"pořadí sekcí: přílohová sekce `{n}` stojí mezi fázemi, "
             "patří za závěrečnou fázi"
-            for n, i in poradi.items()
-            if n.startswith(("Režim ", "Katalog", "Kapitola")) and prvni_faze < i < zaver]
+            for n, i in order.items()
+            if n.startswith(("Režim ", "Katalog", "Kapitola")) and first_phase < i < conclusion]
 
 
-class SouladSNormou(unittest.TestCase):
+class StandardCompliance(unittest.TestCase):
     """Skilly proti `skills/SKILLS.md`. Jediné místo, kde se norma vynucuje strojem.
 
     Norma vznikla později než skilly, takže je bylo potřeba na ni převést.
     Převod je vědomý běh `/skill update`, ne vedlejší efekt jiné práce – proto
-    seznam `MIGRACE` místo hromady padajících testů. **Kolik skillů ještě čeká,
+    seznam `MIGRATION` místo hromady padajících testů. **Kolik skillů ještě čeká,
     se tu schválně nepíše** – zmizelo by to s prvním převedeným a docstring by
-    lhal o tom, co sám hlídá; aktuální stav drží `MIGRACE` níž.
+    lhal o tom, co sám hlídá; aktuální stav drží `MIGRATION` níž.
 
     Seznam ale neumlčuje – **musí přesně sedět se skutečností** a test to hlídá
     v obou směrech. Skill, který se opraví a nezmizí ze seznamu, test shodí
@@ -1111,7 +1111,7 @@ class SouladSNormou(unittest.TestCase):
     cokoliv měřit.
     """
 
-    NORMA = ROOT / "skills" / "SKILLS.md"
+    STANDARD = ROOT / "skills" / "SKILLS.md"
     PREFLIGHT = ROOT / "skills" / "PREFLIGHT.md"
 
     #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
@@ -1119,11 +1119,11 @@ class SouladSNormou(unittest.TestCase):
     #: Prázdný od 15. 9. 2026 – celá sada je na normě. Zůstává schválně:
     #: až norma přituhne znovu, je kam zapsat, co ještě nedorovnalo, a test
     #: pořád hlídá oba směry (skill mimo normu i skill, který ji už splňuje).
-    MIGRACE = set()
+    MIGRATION = set()
 
     #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak
     #: tiše ukazuje jinam – proto to má být v PREFLIGHT.md, ne v odkazu.
-    CIZI_FAZE = re.compile(
+    FOREIGN_PHASE = re.compile(
         # `\*{0,2}` schválně: odkaz se běžně píše kurzívou (`/cleanup`, *Fáze 1 – …*)
         # a dřív ho vzor kvůli hvězdičce minul. Právě v té podobě byl v repozitáři
         # skutečný odkaz dovnitř cizí fáze, který kontrola neviděla.
@@ -1140,19 +1140,19 @@ class SouladSNormou(unittest.TestCase):
     # prostředky – sdíleným souborem v `skills/`, jako je `SEVERITY.md`.
 
     #: Přípony, které v adresáři skillu znamenají spustitelný vnitřek.
-    SKRIPTY = ("*.sh", "*.py", "*.swift")
+    SCRIPTS = ("*.sh", "*.py", "*.swift")
 
-    def ma_skripty(self, skill: Path) -> bool:
+    def has_scripts(self, skill: Path) -> bool:
         """Má skill v adresáři vlastní skripty? Hledá i jednu úroveň hlouběji.
 
         Norma dovoluje `scripts/`, takže `/compose` má skripty tam a `/transcript`
         rovnou vedle `SKILL.md`; kontrola musí vidět obojí.
         """
-        adr = skill.parent
-        return any(p.is_file() for vzor in self.SKRIPTY
-                   for p in list(adr.glob(vzor)) + list(adr.glob(f"*/{vzor}")))
+        skill_dir = skill.parent
+        return any(p.is_file() for pattern in self.SCRIPTS
+                   for p in list(skill_dir.glob(pattern)) + list(skill_dir.glob(f"*/{pattern}")))
 
-    def vady(self, skill: Path) -> list:
+    def defects(self, skill: Path) -> list:
         text = body(skill)
         out = []
         if "\n## Co skill dělá" not in text:
@@ -1164,30 +1164,30 @@ class SouladSNormou(unittest.TestCase):
         # „Krok 0 – Zjisti režim a stav“. Dřív se odkaz na PREFLIGHT.md hledal
         # jen tehdy, když se v textu vyskytlo slovo „Příprava“ – oba tyhle
         # skilly z kontroly tiše vypadávaly i se svým opsanou přípravou.
-        ma_pripravu = re.search(r"\n## (?:Fáze|Krok) 0\b", text)
-        if not ma_pripravu:
+        has_preflight = re.search(r"\n## (?:Fáze|Krok) 0\b", text)
+        if not has_preflight:
             out.append("chybí `## Fáze 0 – Příprava`")
         elif "PREFLIGHT.md" not in text:
             out.append("příprava neodkazuje na `skills/PREFLIGHT.md`")
 
-        radku = len(text.splitlines())
-        if radku > 500:
-            out.append(f"tělo má {radku} řádků, tvrdá mez je 500")
+        row_count = len(text.splitlines())
+        if row_count > 500:
+            out.append(f"tělo má {row_count} řádků, tvrdá mez je 500")
         if "Zakonči jednou z těchto vět" not in text:
             out.append("chybí závěrečný verdikt")
-        if self.CIZI_FAZE.search(text):
+        if self.FOREIGN_PHASE.search(text):
             out.append("odkazuje dovnitř fáze jiného skillu")
         # Skill s vlastním spustitelným vnitřkem musí přiznat, co je detail a co
         # rozhraní. Bez toho si někdo zvykne na jméno skriptu nebo proměnné jako
         # na kontrakt a příští výměna nástroje se stane rozbitím. Kritérium je
         # schválně jen na skripty: delegaci na cizí skill strojově nepoznám
         # spolehlivě, a kontrola, která hádá, hlásí falešné poplachy.
-        if self.ma_skripty(skill) and "\n## Jak je to postavené uvnitř" not in text:
+        if self.has_scripts(skill) and "\n## Jak je to postavené uvnitř" not in text:
             out.append("má vlastní skripty a chybí `## Jak je to postavené uvnitř`")
-        out += self.vady_poradi(skill)
+        out += self.order_defects(skill)
         return out
 
-    def vady_poradi(self, skill: Path) -> list:
+    def order_defects(self, skill: Path) -> list:
         """Pořadí sekcí podle normy, *Povinné sekce a jejich pořadí*.
 
         Norma řadí hlavní průběh, za něj přílohové sekce (samostatné režimy,
@@ -1199,127 +1199,127 @@ class SouladSNormou(unittest.TestCase):
         `/consistency`, a týž audit ho našel porušené v `/skill`, protože ho žádná
         kontrola chytit nemohla.
         """
-        nadpisy = [n for n in bez_bloku_kodu(skill) if not n.startswith("#")]
-        poradi = {n: i for i, n in enumerate(nadpisy)}
+        headings = [n for n in without_code_blocks(skill) if not n.startswith("#")]
+        order = {n: i for i, n in enumerate(headings)}
 
-        def kde(*zacatky):
-            for n, i in poradi.items():
-                if n.startswith(zacatky):
+        def position(*prefixes):
+            for n, i in order.items():
+                if n.startswith(prefixes):
                     return i
             return None
 
-        dela, nedela = kde("Co skill dělá"), kde("Co skill nedělá")
-        uvnitr = kde("Jak je to postavené uvnitř")
-        prvni_faze = kde("Fáze 0", "Krok 0")
-        chyby = kde("Časté chyby")
+        does, does_not = position("Co skill dělá"), position("Co skill nedělá")
+        inside = position("Jak je to postavené uvnitř")
+        first_phase = position("Fáze 0", "Krok 0")
+        errors = position("Časté chyby")
         # Závěr = **poslední** fáze či krok, ne fáze pojmenovaná „Závěr“. Většina
         # skillů ji má pod vlastním názvem (`Úklid a shrnutí`, `Uzavření`,
         # `Předání`) a norma jméno nepředepisuje – vázat kontrolu na slovo
         # „Závěr“ znamenalo, že přejmenování závěru celou kontrolu pořadí tiše
         # vypnulo. Doloženo mutačním testem: `Fáze 8 – Závěr` → `Fáze 8 – Uzavření`
         # zneškodnilo jedinou vadu, kterou uměla najít.
-        zaver = max((i for n, i in poradi.items()
+        conclusion = max((i for n, i in order.items()
                      if n.startswith(("Fáze", "Krok"))), default=None)
 
         out = []
-        for driv, pozdej, popis in (
-                (dela, nedela, "`Co skill nedělá` musí být za `Co skill dělá`"),
-                (nedela, uvnitr, "`Jak je to postavené uvnitř` patří za `Co skill nedělá`"),
-                (uvnitr, prvni_faze, "postup začíná až za `Jak je to postavené uvnitř`"),
-                (nedela, prvni_faze, "postup začíná až za `Co skill nedělá`"),
+        for earlier, later, description in (
+                (does, does_not, "`Co skill nedělá` musí být za `Co skill dělá`"),
+                (does_not, inside, "`Jak je to postavené uvnitř` patří za `Co skill nedělá`"),
+                (inside, first_phase, "postup začíná až za `Jak je to postavené uvnitř`"),
+                (does_not, first_phase, "postup začíná až za `Co skill nedělá`"),
         ):
-            if driv is not None and pozdej is not None and driv > pozdej:
-                out.append(f"pořadí sekcí: {popis}")
+            if earlier is not None and later is not None and earlier > later:
+                out.append(f"pořadí sekcí: {description}")
 
         # `Časté chyby` mají v normě dvě legitimní místa podle toho, jestli skill
         # má přílohy: u lineárního těsně před závěrem, u skillu s přílohovými
         # sekcemi úplně naposled. Kontrolovat jen jedno z nich by shodilo polovinu
         # skillů, které normu splňují.
-        out += _vady_priloh(poradi, prvni_faze, zaver)
+        out += _appendix_defects(order, first_phase, conclusion)
 
-        if chyby is not None and zaver is not None:
-            prilohy = [n for n, i in poradi.items()
-                       if i > zaver and not n.startswith("Časté chyby")]
-            if prilohy and chyby != max(poradi.values()):
+        if errors is not None and conclusion is not None:
+            appendices = [n for n, i in order.items()
+                       if i > conclusion and not n.startswith("Časté chyby")]
+            if appendices and errors != max(order.values()):
                 out.append("pořadí sekcí: skill má přílohové sekce, "
                            "takže `Časté chyby` musí stát úplně naposled")
-            if not prilohy and chyby > zaver:
+            if not appendices and errors > conclusion:
                 out.append("pořadí sekcí: skill nemá přílohy, "
                            "takže `Časté chyby` patří před závěrečnou fázi")
         return out
 
-    def test_norma_a_priprava_existuji(self):
+    def test_standard_and_preflight_exist(self):
         """Bez nich nemá `/skill` co číst a odkazy ze skillů míří nikam."""
-        for soubor in (self.NORMA, self.PREFLIGHT):
-            self.assertTrue(soubor.exists(), f"chybí {soubor}")
-        self.assertFalse((self.NORMA.parent / "SKILLS.md" / "SKILL.md").exists(),
+        for file in (self.STANDARD, self.PREFLIGHT):
+            self.assertTrue(file.exists(), f"chybí {file}")
+        self.assertFalse((self.STANDARD.parent / "SKILLS.md" / "SKILL.md").exists(),
             "norma se nesmí tvářit jako skill")
 
-    def test_description_se_vejde_do_limitu(self):
+    def test_description_fits_limit(self):
         """Delší popis se nemusí přenést celý – a pak se skill nevyvolá vůbec.
 
         Bez výjimky pro migraci: limit platí pro všechny a dnes ho nikdo neporušuje.
         """
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
-                popis = frontmatter(skill).get("description", "")
-                self.assertLessEqual(len(popis), 1024,
-                    f"{skill.parent.name}: description má {len(popis)} znaků")
+                description = frontmatter(skill).get("description", "")
+                self.assertLessEqual(len(description), 1024,
+                    f"{skill.parent.name}: description má {len(description)} znaků")
 
-    def test_migrace_jmenuje_jen_existujici_skilly(self):
+    def test_migration_names_only_existing_skills(self):
         """Zmizelý skill v seznamu by tiše držel výjimku pro nikoho."""
-        navic = sorted(self.MIGRACE - {s.parent.name for s in SKILLS})
-        self.assertFalse(navic, f"MIGRACE jmenuje neexistující skilly: {navic}")
+        extra = sorted(self.MIGRATION - {s.parent.name for s in SKILLS})
+        self.assertFalse(extra, f"MIGRATION jmenuje neexistující skilly: {extra}")
 
-    def test_skilly_odpovidaji_norme(self):
-        """Seznam MIGRACE musí přesně sedět: skill mimo normu nechybí ani nepřebývá."""
-        nesoulad = {s.parent.name: self.vady(s) for s in SKILLS if self.vady(s)}
+    def test_skills_match_standard(self):
+        """Seznam MIGRATION musí přesně sedět: skill mimo normu nechybí ani nepřebývá."""
+        noncompliant = {s.parent.name: self.defects(s) for s in SKILLS if self.defects(s)}
 
-        rozbite = sorted(set(nesoulad) - self.MIGRACE)
-        self.assertFalse(rozbite, "skilly mimo normu, které v MIGRACE nejsou: "
-            + "; ".join(f"{n}: {', '.join(nesoulad[n])}" for n in rozbite))
+        regressed = sorted(set(noncompliant) - self.MIGRATION)
+        self.assertFalse(regressed, "skilly mimo normu, které v MIGRATION nejsou: "
+            + "; ".join(f"{n}: {', '.join(noncompliant[n])}" for n in regressed))
 
-        hotove = sorted(self.MIGRACE - set(nesoulad))
-        self.assertFalse(hotove,
-            f"tyhle skilly už normu splňují – vyškrtni je z MIGRACE: {hotove}")
+        fixed = sorted(self.MIGRATION - set(noncompliant))
+        self.assertFalse(fixed,
+            f"tyhle skilly už normu splňují – vyškrtni je z MIGRATION: {fixed}")
 
 
 #: Blok kódu ve skillu, jehož obsah se vypisuje do konverzace. Pozná se podle
 #: prvního neprázdného řádku: nadpis, výpis položky `[N/celkem]`, tučný popisek
 #: nebo řádek tabulky. Zadání pro subagenta začíná oslovením („Jsi…“, „Prověř…“),
 #: příkaz shellu má u fence jazyk – ani jedno sem tedy nespadne.
-SABLONA_DO_KONVERZACE = re.compile(
+CONVERSATION_TEMPLATE = re.compile(
     r"^(?:## |\*\*\[N/celkem\]|- \*\*[^*]+:\*\*|\*\*[^*]+:\*\*|\*\*[A-ZČŘŽŠ][^*]*\*\*$|\| )")
 
 #: Věta, kterou musí šablona do konverzace nést pod sebou.
-POKYN_MARKDOWN = "ne jako blok kódu"
+MARKDOWN_INSTRUCTION = "ne jako blok kódu"
 
 
-def sablony(text: str):
+def templates(text: str):
     """Vrátí (číslo řádku, první řádek, má pokyn) pro každý blok kódu bez jazyka.
 
-    Yielduje jen bloky, které vyhoví `SABLONA_DO_KONVERZACE`.
+    Yielduje jen bloky, které vyhoví `CONVERSATION_TEMPLATE`.
     """
     lines = text.split("\n")
-    inb = False
-    blok: list = []
-    st = 0
+    in_block = False
+    block: list = []
+    block_start = 0
     for i, l in enumerate(lines):
         s = l.strip()
         if s.startswith("```"):
-            if not inb:
-                inb, blok, st, lang = True, [], i + 1, s[3:].strip()
+            if not in_block:
+                in_block, block, block_start, lang = True, [], i + 1, s[3:].strip()
             else:
-                inb = False
-                prvni = next((b.strip() for b in blok if b.strip()), "")
-                if not lang and SABLONA_DO_KONVERZACE.match(prvni):
-                    okoli = "\n".join(lines[i + 1:i + 3])
-                    yield st, prvni, POKYN_MARKDOWN in okoli
-        elif inb:
-            blok.append(l)
+                in_block = False
+                first = next((b.strip() for b in block if b.strip()), "")
+                if not lang and CONVERSATION_TEMPLATE.match(first):
+                    surroundings = "\n".join(lines[i + 1:i + 3])
+                    yield block_start, first, MARKDOWN_INSTRUCTION in surroundings
+        elif in_block:
+            block.append(l)
 
 
-class SablonyVypisujiMarkdown(unittest.TestCase):
+class TemplatesPrintMarkdown(unittest.TestCase):
     """Šablona výstupu v bloku kódu se reprodukuje jako blok kódu.
 
     Trojice zpětných apostrofů kolem šablony v `SKILL.md` má oddělit šablonu
@@ -1342,7 +1342,7 @@ class SablonyVypisujiMarkdown(unittest.TestCase):
     #: tabulka do `SKILL.md`). Markdownem už jsou; pokyn by tu lhal o tom,
     #: kam text míří. Seznam musí přesně sedět: zmizelá výjimka shodí testy
     #: stejně jako nová šablona bez pokynu.
-    ZAPISUJE_SE_DO_SOUBORU = {
+    WRITTEN_TO_FILE = {
         ("autocommit/SKILL.md", "## Autocommit"),
         ("consistency/SKILL.md", "## Consistency"),
         ("project/SKILL.md", "- **Struktura:** docs/"),
@@ -1353,49 +1353,49 @@ class SablonyVypisujiMarkdown(unittest.TestCase):
         ("skill/SKILL.md", "| Krok | Kdo | Proč zrovna on |"),
     }
 
-    def nalezene(self):
+    def found_blocks(self):
         """Vrátí (bez pokynu, výjimky nalezené ve skillech)."""
-        chybi, videne = [], set()
+        absent, seen = [], set()
         for p in sorted((ROOT / "skills").glob("*/*.md")):
             if p.name == "README.md":
                 continue
-            klic_soubor = f"{p.parent.name}/{p.name}"
-            for radek, prvni, ma in sablony(p.read_text(encoding="utf-8")):
-                klic = (klic_soubor, prvni)
-                if klic in self.ZAPISUJE_SE_DO_SOUBORU:
-                    videne.add(klic)
-                elif not ma:
-                    chybi.append(f"{klic_soubor}:{radek} – {prvni[:60]}")
-        return chybi, videne
+            file_key = f"{p.parent.name}/{p.name}"
+            for row, first, has_instruction in templates(p.read_text(encoding="utf-8")):
+                key = (file_key, first)
+                if key in self.WRITTEN_TO_FILE:
+                    seen.add(key)
+                elif not has_instruction:
+                    absent.append(f"{file_key}:{row} – {first[:60]}")
+        return absent, seen
 
-    def test_sablony_nesou_pokyn(self):
-        chybi, _ = self.nalezene()
-        self.assertFalse(chybi, "šablony do konverzace bez pokynu na Markdown:\n"
-                         + "\n".join(chybi))
+    def test_templates_carry_instruction(self):
+        absent, _ = self.found_blocks()
+        self.assertFalse(absent, "šablony do konverzace bez pokynu na Markdown:\n"
+                         + "\n".join(absent))
 
-    def test_vyjimky_sedi_se_skutecnosti(self):
+    def test_exceptions_match_reality(self):
         """Výjimka pro blok, který zmizel nebo se přejmenoval, kryje nikoho."""
-        _, videne = self.nalezene()
-        zmizele = sorted(self.ZAPISUJE_SE_DO_SOUBORU - videne)
-        self.assertFalse(zmizele, f"výjimky, které nic nekryjí – vyškrtni je: {zmizele}")
+        _, seen = self.found_blocks()
+        vanished = sorted(self.WRITTEN_TO_FILE - seen)
+        self.assertFalse(vanished, f"výjimky, které nic nekryjí – vyškrtni je: {vanished}")
 
-    def test_kontrola_chytne_sablonu_bez_pokynu(self):
+    def test_check_catches_template_without_instruction(self):
         """Mutace: šablona s pokynem, kterému se pokyn odebere, musí spadnout."""
-        vzor = "```\n## Hotovo\n\n- **Rozsah:** …\n```\n\n" + POKYN_MARKDOWN + "\n"
-        self.assertTrue(all(ma for _, _, ma in sablony(vzor)),
+        pattern = "```\n## Hotovo\n\n- **Rozsah:** …\n```\n\n" + MARKDOWN_INSTRUCTION + "\n"
+        self.assertTrue(all(has_instruction for _, _, has_instruction in templates(pattern)),
                         "kontrola nevidí pokyn ani tam, kde stojí")
-        bez = vzor.replace(POKYN_MARKDOWN, "a je to")
-        self.assertTrue(any(not ma for _, _, ma in sablony(bez)),
+        without = pattern.replace(MARKDOWN_INSTRUCTION, "a je to")
+        self.assertTrue(any(not has_instruction for _, _, has_instruction in templates(without)),
                         "kontrola neohlásí šablonu, které pokyn chybí")
 
-    def test_kontrola_nechytne_zadani_pro_subagenta(self):
+    def test_check_ignores_subagent_prompt(self):
         """Prompt pro agenta pokyn nepotřebuje – nevypisuje se, předává se."""
         prompt = "```\nJsi nezávislý oponent. DOKUMENT: <cesta>\n```\n\nSpusť agenta.\n"
-        self.assertEqual(list(sablony(prompt)), [],
+        self.assertEqual(list(templates(prompt)), [],
                          "kontrola bere zadání pro subagenta jako šablonu výstupu")
 
 
-class KontrolyOpravduChytaji(unittest.TestCase):
+class ChecksActuallyCatch(unittest.TestCase):
     """Mutační testy: poškoď vstup a ověř, že kontrola nález nahlásí.
 
     Zápisy v `decisions.md` i docstringy výš se opakovaně odvolávají na to,
@@ -1411,110 +1411,110 @@ class KontrolyOpravduChytaji(unittest.TestCase):
 
     #: Vzorový skill, na kterém se mutuje. `/skill` je jediný, který dnes
     #: normu splňuje celou, takže každý nález nad ním pochází z mutace.
-    VZOR = ROOT / "skills/skill/SKILL.md"
+    SAMPLE = ROOT / "skills/skill/SKILL.md"
 
-    def mutuj(self, nahrada: tuple) -> list:
+    def mutate(self, replacement: tuple) -> list:
         """Vrátí vady, které kontroly najdou nad poškozenou kopií vzoru."""
         import shutil, tempfile
-        puvodni = self.VZOR.read_text(encoding="utf-8")
-        stary, novy = nahrada
-        self.assertIn(stary, puvodni, f"mutace se nemá čeho chytit: {stary!r}")
+        original = self.SAMPLE.read_text(encoding="utf-8")
+        old, new = replacement
+        self.assertIn(old, original, f"mutace se nemá čeho chytit: {old!r}")
         # nahrazuje se KAŽDÝ výskyt: `PREFLIGHT.md` je ve vzoru čtyřikrát
         # a závěrečný verdikt dvakrát, takže mutace jednoho výskytu nic nezmění
         # a test by prošel, i kdyby kontrola nefungovala
-        poskozeny = puvodni.replace(stary, novy)
-        self.assertNotEqual(poskozeny, puvodni, "mutace nic nezměnila")
-        docasny = Path(tempfile.mkdtemp())
+        damaged = original.replace(old, new)
+        self.assertNotEqual(damaged, original, "mutace nic nezměnila")
+        temp_dir = Path(tempfile.mkdtemp())
         try:
-            (docasny / "skill").mkdir()
-            kopie = docasny / "skill" / "SKILL.md"
-            kopie.write_text(poskozeny, encoding="utf-8")
-            return SouladSNormou("test_skilly_odpovidaji_norme").vady(kopie)
+            (temp_dir / "skill").mkdir()
+            copy = temp_dir / "skill" / "SKILL.md"
+            copy.write_text(damaged, encoding="utf-8")
+            return StandardCompliance("test_skills_match_standard").defects(copy)
         finally:
-            shutil.rmtree(docasny)
+            shutil.rmtree(temp_dir)
 
-    def test_chybejici_sekce_se_nahlasi(self):
-        for nadpis, cekam in (
+    def test_missing_section_is_reported(self):
+        for heading, expected_defect in (
                 ("## Co skill dělá", "chybí `## Co skill dělá`"),
                 ("## Co skill nedělá", "chybí `## Co skill nedělá`"),
                 ("## Fáze 0 – Příprava", "chybí `## Fáze 0 – Příprava`"),
         ):
-            with self.subTest(nadpis=nadpis):
-                vady = self.mutuj((nadpis, "## Něco jiného"))
-                self.assertIn(cekam, vady, f"kontrola nechytila smazané {nadpis!r}: {vady}")
+            with self.subTest(heading=heading):
+                defects = self.mutate((heading, "## Něco jiného"))
+                self.assertIn(expected_defect, defects, f"kontrola nechytila smazané {heading!r}: {defects}")
 
 
-    def test_opsany_retez_kroku_cyklu_se_nahlasi(self):
+    def test_copied_cycle_step_chain_is_reported(self):
         """Kontrola opsaného cyklu bez mutace nedokazuje nic – žádný skill ho dnes nemá."""
-        cyklus = cyklus_z_rules()
-        cisty = self.VZOR.read_text(encoding="utf-8")
-        self.assertFalse(retezy_kroku_cyklu(cisty, cyklus), "vzor už řetěz obsahuje")
+        cycle = cycle_from_rules()
+        clean = self.SAMPLE.read_text(encoding="utf-8")
+        self.assertFalse(cycle_step_chains(clean, cycle), "vzor už řetěz obsahuje")
         for text in ("postupuj takhle: `/specify` → `/oponent` → `/breakdown`",
                      "cesta /specify -> /oponent -> /breakdown"):
             with self.subTest(text=text):
-                self.assertTrue(retezy_kroku_cyklu(cisty + "\n" + text, cyklus),
+                self.assertTrue(cycle_step_chains(clean + "\n" + text, cycle),
                                 f"kontrola nechytila opsaný řetěz: {text!r}")
         # Dva sousedi se hlásit nesmějí, jinak by pravidlo zakázalo popis vazby
-        self.assertFalse(retezy_kroku_cyklu("`/specify` → `/breakdown`", cyklus))
+        self.assertFalse(cycle_step_chains("`/specify` → `/breakdown`", cycle))
 
-    def test_chybejici_odkaz_na_pripravu_se_nahlasi(self):
-        vady = self.mutuj(("PREFLIGHT.md", "JINY.md"))
-        self.assertIn("příprava neodkazuje na `skills/PREFLIGHT.md`", vady, vady)
+    def test_missing_preflight_link_is_reported(self):
+        defects = self.mutate(("PREFLIGHT.md", "JINY.md"))
+        self.assertIn("příprava neodkazuje na `skills/PREFLIGHT.md`", defects, defects)
 
-    def test_chybejici_zaverecny_verdikt_se_nahlasi(self):
-        vady = self.mutuj(("Zakonči jednou z těchto vět", "Skonči nějak"))
-        self.assertIn("chybí závěrečný verdikt", vady, vady)
+    def test_missing_final_verdict_is_reported(self):
+        defects = self.mutate(("Zakonči jednou z těchto vět", "Skonči nějak"))
+        self.assertIn("chybí závěrečný verdikt", defects, defects)
 
-    def test_odkaz_dovnitr_ciziho_skillu_se_nahlasi(self):
-        vady = self.mutuj(("## Fáze 3 – Tabulka delegací",
+    def test_link_into_foreign_skill_is_reported(self):
+        defects = self.mutate(("## Fáze 3 – Tabulka delegací",
                            "## Fáze 3 – Tabulka delegací\n\nPostupem z `/review`, Fáze 0.1."))
-        self.assertIn("odkazuje dovnitř fáze jiného skillu", vady, vady)
+        self.assertIn("odkazuje dovnitř fáze jiného skillu", defects, defects)
 
-    def test_spatne_poradi_sekci_se_nahlasi(self):
+    def test_wrong_section_order_is_reported(self):
         """`Časté chyby` u skillu s přílohami musí stát naposled."""
         import shutil, tempfile
-        text = self.VZOR.read_text(encoding="utf-8")
+        text = self.SAMPLE.read_text(encoding="utf-8")
         i = text.index("\n## Časté chyby")
         # Poslední fáze se hledá jako poslední nadpis `## Fáze …`, ne jménem:
         # závěr se podle normy jmenovat nemusí („Úklid a shrnutí“, „Předání“)
         # a přečíslování by test shodilo hláškou o chybějícím podřetězci
         # místo nálezem. Týmž kritériem pozná závěr i kontrola samotná.
         j = max(m.start() for m in re.finditer(r"\n## Fáze [0-9]", text))
-        prehozeny = text[:j] + text[i:].rstrip() + "\n" + text[j:i]
-        docasny = Path(tempfile.mkdtemp())
+        moved = text[:j] + text[i:].rstrip() + "\n" + text[j:i]
+        temp_dir = Path(tempfile.mkdtemp())
         try:
-            (docasny / "skill").mkdir()
-            kopie = docasny / "skill" / "SKILL.md"
-            kopie.write_text(prehozeny, encoding="utf-8")
-            vady = SouladSNormou("test_skilly_odpovidaji_norme").vady(kopie)
+            (temp_dir / "skill").mkdir()
+            copy = temp_dir / "skill" / "SKILL.md"
+            copy.write_text(moved, encoding="utf-8")
+            defects = StandardCompliance("test_skills_match_standard").defects(copy)
         finally:
-            shutil.rmtree(docasny)
-        self.assertTrue(any("Časté chyby" in v for v in vady),
-                        f"kontrola nechytila přesunuté `Časté chyby`: {vady}")
+            shutil.rmtree(temp_dir)
+        self.assertTrue(any("Časté chyby" in v for v in defects),
+                        f"kontrola nechytila přesunuté `Časté chyby`: {defects}")
 
-    def test_visici_odkaz_na_vlastni_fazi_se_nahlasi(self):
+    def test_dangling_link_to_own_phase_is_reported(self):
         """Tohle je ta třída chyb, kterou ruční ověření jednou minulo."""
         import shutil, tempfile
-        puvodni = self.VZOR.read_text(encoding="utf-8")
-        docasny = Path(tempfile.mkdtemp())
+        original = self.SAMPLE.read_text(encoding="utf-8")
+        temp_dir = Path(tempfile.mkdtemp())
         try:
-            (docasny / "skill").mkdir()
-            kopie = docasny / "skill" / "SKILL.md"
-            kopie.write_text(puvodni.replace("*Fázi 3*", "*Fázi 33*", 1), encoding="utf-8")
-            puvodni_seznam = SKILLS[:]
-            SKILLS[:] = [kopie]
+            (temp_dir / "skill").mkdir()
+            copy = temp_dir / "skill" / "SKILL.md"
+            copy.write_text(original.replace("*Fázi 3*", "*Fázi 33*", 1), encoding="utf-8")
+            original_list = SKILLS[:]
+            SKILLS[:] = [copy]
             try:
                 with self.assertRaises(AssertionError):
-                    SkillOdkazy(
-                        "test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis"
-                    ).test_vnitroskillove_odkazy_na_faze_miri_na_existujici_nadpis()
+                    SkillLinks(
+                        "test_intra_skill_phase_links_point_to_existing_heading"
+                    ).test_intra_skill_phase_links_point_to_existing_heading()
             finally:
-                SKILLS[:] = puvodni_seznam
+                SKILLS[:] = original_list
         finally:
-            shutil.rmtree(docasny)
+            shutil.rmtree(temp_dir)
 
 
-def povinne_sekce_readme() -> tuple:
+def required_readme_sections() -> tuple:
     """Nadpisy, které norma žádá po každé vizitce – čtené ze `SKILLS.md`.
 
     Schválně ne z konstanty v testu. Kontrola měřená vlastní konfigurací
@@ -1525,93 +1525,93 @@ def povinne_sekce_readme() -> tuple:
     Sekce označené šipkou (`← jen má-li skill…`) jsou podmíněné a vypadnou.
     """
     text = (ROOT / "skills/SKILLS.md").read_text(encoding="utf-8")
-    zacatek = text.index("### Struktura")
-    blok = text[text.index("```", zacatek) + 3:]
-    blok = blok[:blok.index("```")]
-    sekce = tuple(r.strip() for r in blok.splitlines()
+    begin = text.index("### Struktura")
+    block = text[text.index("```", begin) + 3:]
+    block = block[:block.index("```")]
+    section = tuple(r.strip() for r in block.splitlines()
                   if r.startswith(("## ", "### ")) and "←" not in r)
-    if len(sekce) < 5:
-        raise AssertionError(f"ze `SKILLS.md` se přečetlo jen {len(sekce)} sekcí: {sekce}")
-    return sekce
+    if len(section) < 5:
+        raise AssertionError(f"ze `SKILLS.md` se přečetlo jen {len(section)} sekcí: {section}")
+    return section
 
 
 #: Nadpisy, které norma žádá po každém README skillu – v pořadí z normy.
-POVINNE_README = povinne_sekce_readme()
+REQUIRED_README = required_readme_sections()
 
 #: Mez z normy: zhruba dvě obrazovky.
-MEZ_README = 120
+README_LIMIT = 120
 
 REPO_URL = "https://github.com/jantichy/claude/tree/main/skills/"
 
-RAMECEK = "**Součást životního cyklu projektu.**"
-HROMADNA = "Nebo celou sadu naráz."
+FRAME = "**Součást životního cyklu projektu.**"
+BULK_INSTALL = "Nebo celou sadu naráz."
 
 
-def vady_readme(text: str, jmeno: str, v_cyklu: bool) -> list:
+def readme_defects(text: str, name: str, in_cycle: bool) -> list:
     """Vrátí vady jednoho README proti normě *README skillu*.
 
     Čistá funkce nad textem, ne nad diskem – jedině tak se dá předložit
     poškozený vstup a ověřit, že kontrola nález opravdu nahlásí
-    (`KontrolyOpravduChytaji`). Kontroly, které potřebují hlavičku skillu
+    (`ChecksActuallyCatch`). Kontroly, které potřebují hlavičku skillu
     nebo souborový systém, mají vlastní testy.
     """
-    vady = _vady_sekci(text)
-    vady += _vady_instalace(text, jmeno)
-    vady += _vady_ramecku(text, v_cyklu)
+    defects = _section_defects(text)
+    defects += _install_defects(text, name)
+    defects += _frame_defects(text, in_cycle)
 
-    radku = len(text.splitlines())
-    if radku > MEZ_README:
-        vady.append(f"README má {radku} řádků, mez je {MEZ_README}")
+    row_count = len(text.splitlines())
+    if row_count > README_LIMIT:
+        defects.append(f"README má {row_count} řádků, mez je {README_LIMIT}")
 
-    return vady
+    return defects
 
 
-def _vady_sekci(text: str) -> list:
+def _section_defects(text: str) -> list:
     """Přítomnost i pořadí povinných sekcí.
 
     Pořadí se hlídá proto, že ho norma žádá a `/skill` při revizi kontroluje –
     bez kontroly je to pravidlo, které drží jen ten, kdo si na ně vzpomene.
     """
-    vady, pozice = [], []
-    for nadpis in POVINNE_README:
-        i = text.find(f"\n{nadpis}")
+    defects, positions = [], []
+    for heading in REQUIRED_README:
+        i = text.find(f"\n{heading}")
         if i < 0:
-            vady.append(f"chybí sekce `{nadpis}`")
+            defects.append(f"chybí sekce `{heading}`")
         else:
-            pozice.append((i, nadpis))
-    poradi = [n for _, n in sorted(pozice)]
-    ocekavane = [n for n in POVINNE_README if n in poradi]
-    if poradi != ocekavane:
-        vady.append(f"sekce nejdou v pořadí z normy: {poradi} místo {ocekavane}")
-    return vady
+            positions.append((i, heading))
+    order = [n for _, n in sorted(positions)]
+    expected = [n for n in REQUIRED_README if n in order]
+    if order != expected:
+        defects.append(f"sekce nejdou v pořadí z normy: {order} místo {expected}")
+    return defects
 
 
-def _vady_instalace(text: str, jmeno: str) -> list:
+def _install_defects(text: str, name: str) -> list:
     """Instalace musí být pokyn pro Clauda uvnitř své sekce, ne URL kdekoliv."""
-    zacatek = text.find("## Jak si ho nainstalovat")
-    if zacatek < 0:
+    begin = text.find("## Jak si ho nainstalovat")
+    if begin < 0:
         return []                             # hlásí kontrola sekcí
-    konec = text.find("\n---", zacatek)
-    sekce = text[zacatek:konec if konec > 0 else len(text)]
-    url = REPO_URL + jmeno
-    citace = [r for r in sekce.splitlines() if r.lstrip().startswith(">")]
-    if url not in sekce:
+    stop = text.find("\n---", begin)
+    section = text[begin:stop if stop > 0 else len(text)]
+    url = REPO_URL + name
+    quotes = [r for r in section.splitlines() if r.lstrip().startswith(">")]
+    if url not in section:
         return [f"instalační sekce neodkazuje na {url}"]
-    if not any(url in r for r in citace):
+    if not any(url in r for r in quotes):
         return ["odkaz na repozitář není v citovaném pokynu pro Clauda"]
     return []
 
 
-def _vady_ramecku(text: str, v_cyklu: bool) -> list:
+def _frame_defects(text: str, in_cycle: bool) -> list:
     """Rámeček a hromadná instalace: povinné v cyklu, zakázané mimo něj."""
-    if v_cyklu:
-        return ([] if RAMECEK in text else ["chybí rámeček s celým životním cyklem"]) + \
-               ([] if HROMADNA in text else ["chybí hromadná instalace celého životního cyklu"])
-    return ([] if RAMECEK not in text else ["skill mimo životní cyklus má rámeček životního cyklu"]) + \
-           ([] if HROMADNA not in text else ["skill mimo životní cyklus nabízí hromadnou instalaci sady"])
+    if in_cycle:
+        return ([] if FRAME in text else ["chybí rámeček s celým životním cyklem"]) + \
+               ([] if BULK_INSTALL in text else ["chybí hromadná instalace celého životního cyklu"])
+    return ([] if FRAME not in text else ["skill mimo životní cyklus má rámeček životního cyklu"]) + \
+           ([] if BULK_INSTALL not in text else ["skill mimo životní cyklus nabízí hromadnou instalaci sady"])
 
 
-class ReadmeSkillu(unittest.TestCase):
+class SkillReadme(unittest.TestCase):
     """README skillu proti `skills/SKILLS.md`, *README skillu*.
 
     Je to jediná část skillu psaná **pro člověka zvenčí** – text, na který
@@ -1619,62 +1619,62 @@ class ReadmeSkillu(unittest.TestCase):
     běhu neomezí a pozná se až ve chvíli, kdy si ji někdo cizí přečte.
     """
 
-    CYKLUS = cyklus_z_rules()
+    CYCLE = cycle_from_rules()
 
     def _readme(self, skill: Path) -> Path:
         return skill.parent / "README.md"
 
-    def test_kazdy_skill_ma_readme(self):
+    def test_every_skill_has_readme(self):
         """Skill bez README nejde nikomu doporučit odkazem."""
-        chybi = [s.parent.name for s in SKILLS if not self._readme(s).exists()]
-        self.assertFalse(chybi, f"skilly bez vlastního README: {chybi}")
+        absent = [s.parent.name for s in SKILLS if not self._readme(s).exists()]
+        self.assertFalse(absent, f"skilly bez vlastního README: {absent}")
 
-    def test_readme_odpovida_norme(self):
+    def test_readme_matches_standard(self):
         """Sekce a jejich pořadí, tvar instalace, rámeček a mez délky.
 
         Jedna kontrola místo pěti, protože všechny měří týž text proti téže
         sekci normy – a hlavně proto, že se pak dá mutovat jako celek
-        (`KontrolyOpravduChytaji`).
+        (`ChecksActuallyCatch`).
         """
         for skill in SKILLS:
             readme = self._readme(skill)
             if not readme.exists():
                 continue
             with self.subTest(skill=skill.parent.name):
-                vady = vady_readme(readme.read_text(encoding="utf-8"),
+                defects = readme_defects(readme.read_text(encoding="utf-8"),
                                    skill.parent.name,
-                                   skill.parent.name in self.CYKLUS)
-                self.assertFalse(vady, f"{readme}: {vady}")
+                                   skill.parent.name in self.CYCLE)
+                self.assertFalse(defects, f"{readme}: {defects}")
 
-    def test_readme_skillu_z_cyklu_odkazuje_na_ostatni_kroky(self):
+    def test_cycle_skill_readme_links_other_steps(self):
         """Čtenář, kterému přišel odkaz na jeden skill, jinak neví o těch ostatních."""
         for skill in SKILLS:
-            if skill.parent.name not in self.CYKLUS:
+            if skill.parent.name not in self.CYCLE:
                 continue
             readme = self._readme(skill)
             if not readme.exists():
                 continue
             with self.subTest(skill=skill.parent.name):
                 text = readme.read_text(encoding="utf-8")
-                vlastni = skill.parent.name
-                self.assertTrue(f"**`/{vlastni}`**" in text,
+                own = skill.parent.name
+                self.assertTrue(f"**`/{own}`**" in text,
                     f"{readme}: vlastní krok není v rámečku tučně")
-                self.assertFalse(f"(../{vlastni}/README.md)" in text,
+                self.assertFalse(f"(../{own}/README.md)" in text,
                     f"{readme}: rámeček odkazuje sám na sebe – vlastní krok je bez odkazu")
-                for krok in sorted(self.CYKLUS):
-                    if krok == vlastni:
+                for step in sorted(self.CYCLE):
+                    if step == own:
                         continue
-                    self.assertTrue(f"(../{krok}/README.md)" in text,
-                        f"{readme}: rámeček neodkazuje na `/{krok}`")
+                    self.assertTrue(f"(../{step}/README.md)" in text,
+                        f"{readme}: rámeček neodkazuje na `/{step}`")
 
-    def test_hromadna_instalace_jmenuje_vsechny_kroky(self):
+    def test_bulk_install_names_all_steps(self):
         """Přibude-li krok, musí ho vyjmenovat i pokyn na instalaci celé sady.
 
         Rámeček výš hlídají odkazy, ale seznam jmen v instalačním promptu je
         prostý text – ten by přidaný krok tiše minul a lidé by si nainstalovali
         neúplnou sadu."""
         for skill in SKILLS:
-            if skill.parent.name not in self.CYKLUS:
+            if skill.parent.name not in self.CYCLE:
                 continue
             readme = self._readme(skill)
             if not readme.exists():
@@ -1688,15 +1688,15 @@ class ReadmeSkillu(unittest.TestCase):
             # test nahlásil jako chybějící, přestože v README je.
             # Konec sekce, ne konec odstavce: samotný prompt stojí v citaci pod
             # úvodní větou, takže první prázdný řádek by usekl právě ten výčet.
-            konce = [text.find(z, i) for z in ("\n---", "\n## ")]
-            konce = [k for k in konce if k > 0]
-            odstavec = text[i:min(konce) if konce else len(text)]
+            ends = [text.find(delimiter, i) for delimiter in ("\n---", "\n## ")]
+            ends = [k for k in ends if k > 0]
+            paragraph = text[i:min(ends) if ends else len(text)]
             with self.subTest(skill=skill.parent.name):
-                for krok in sorted(self.CYKLUS):
-                    self.assertRegex(odstavec, rf"\b{krok}\b",
-                        f"{readme}: hromadná instalace nejmenuje `{krok}`")
+                for step in sorted(self.CYCLE):
+                    self.assertRegex(paragraph, rf"\b{step}\b",
+                        f"{readme}: hromadná instalace nejmenuje `{step}`")
 
-    def test_readme_jmenuje_vsechny_rezimy(self):
+    def test_readme_names_all_modes(self):
         """Režim, který README zamlčí, uživatel nikdy nepoužije.
 
         Bere se první skupina `argument-hint` a jen tehdy, když je to výčet
@@ -1706,77 +1706,77 @@ class ReadmeSkillu(unittest.TestCase):
         """
         for skill in SKILLS:
             hint = frontmatter(skill).get("argument-hint", "")
-            skupina = re.match(r"\[([^\]]+)\]", hint)
-            if not skupina or "|" not in skupina.group(1):
+            group_match = re.match(r"\[([^\]]+)\]", hint)
+            if not group_match or "|" not in group_match.group(1):
                 continue
-            rezimy = skupina.group(1).split("|")
-            if not all(re.fullmatch(r"[a-z]+", r) for r in rezimy):
+            modes = group_match.group(1).split("|")
+            if not all(re.fullmatch(r"[a-z]+", r) for r in modes):
                 continue
             readme = self._readme(skill)
             if not readme.exists():
                 continue
             text = readme.read_text(encoding="utf-8")
-            for rezim in rezimy:
-                with self.subTest(skill=skill.parent.name, rezim=rezim):
+            for mode in modes:
+                with self.subTest(skill=skill.parent.name, mode=mode):
                     # Stačí jméno režimu v kódové značce – ať už s lomítkem
                     # (`/skill update`), nebo samo (`update`) tam, kde README
                     # režimy vypisuje jako seznam.
                     self.assertTrue(
-                        f"`{rezim}`" in text or f"/{skill.parent.name} {rezim}" in text,
-                        f"{readme}: režim `{rezim}` z argument-hint není v README")
+                        f"`{mode}`" in text or f"/{skill.parent.name} {mode}" in text,
+                        f"{readme}: režim `{mode}` z argument-hint není v README")
 
-    def test_relativni_odkazy_v_readme_miri_na_existujici_soubor(self):
+    def test_relative_readme_links_point_to_existing_file(self):
         """Rozbitý odkaz mezi README uvidí ten, komu se skill doporučuje.
 
-        Kontrola `test_odkazy_na_soubory_existuji` na tohle nestačí – ta hledá
+        Kontrola `test_file_links_exist` na tohle nestačí – ta hledá
         cesty v obrácených apostrofech (`~/.claude/…`), kdežto README používají
         markdownové odkazy s relativní cestou. Rámečkové odkazy sice kryje
-        `test_readme_skillu_z_cyklu_odkazuje_na_ostatni_kroky`, ale jen
+        `test_cycle_skill_readme_links_other_steps`, ale jen
         ty – odkaz kamkoliv jinam procházel tiše.
         """
-        odkaz = re.compile(r"\]\(([^)\s#]+\.(?:md|sh|py|png|json))\)")
-        soubory = [s.parent / "README.md" for s in SKILLS] + [ROOT / "README.md"]
-        for readme in soubory:
+        link = re.compile(r"\]\(([^)\s#]+\.(?:md|sh|py|png|json))\)")
+        files = [s.parent / "README.md" for s in SKILLS] + [ROOT / "README.md"]
+        for readme in files:
             if not readme.exists():
                 continue
             with self.subTest(readme=readme.parent.name):
-                chybi = sorted({
-                    cil for cil in odkaz.findall(readme.read_text(encoding="utf-8"))
-                    if not cil.startswith(("http://", "https://", "~/"))
-                    and not (readme.parent / cil).resolve().exists()
+                absent = sorted({
+                    target for target in link.findall(readme.read_text(encoding="utf-8"))
+                    if not target.startswith(("http://", "https://", "~/"))
+                    and not (readme.parent / target).resolve().exists()
                 })
-                self.assertFalse(chybi, f"{readme}: odkaz na neexistující soubor: {chybi}")
+                self.assertFalse(absent, f"{readme}: odkaz na neexistující soubor: {absent}")
 
-    def test_sablona_v_norme_jmenuje_vsechny_kroky(self):
+    def test_standard_template_names_all_steps(self):
         """README hlídá test, normu samotnou dosud nic.
 
         Šablona hromadné instalace v `SKILLS.md` vyjmenovává kroky cyklu
         jménem – přidaný krok by ji tiše rozešel, tedy přesně to riziko,
         kvůli kterému norma o kus výš zakazuje uvádět v rámečku počet.
         """
-        norma = (ROOT / "skills/SKILLS.md").read_text(encoding="utf-8")
-        i = norma.find(HROMADNA)
+        standard = (ROOT / "skills/SKILLS.md").read_text(encoding="utf-8")
+        i = standard.find(BULK_INSTALL)
         self.assertGreater(i, 0, "v normě chybí šablona hromadné instalace")
-        konec = norma.find("```", norma.find("```", i) + 3)
-        sablona = norma[i:konec if konec > 0 else len(norma)]
-        for krok in sorted(self.CYKLUS):
-            with self.subTest(krok=krok):
-                self.assertRegex(sablona, rf"\b{krok}\b",
-                    f"šablona hromadné instalace v SKILLS.md nejmenuje `{krok}`")
+        stop = standard.find("```", standard.find("```", i) + 3)
+        template = standard[i:stop if stop > 0 else len(standard)]
+        for step in sorted(self.CYCLE):
+            with self.subTest(step=step):
+                self.assertRegex(template, rf"\b{step}\b",
+                    f"šablona hromadné instalace v SKILLS.md nejmenuje `{step}`")
 
-    def test_hlavni_readme_odkazuje_na_adresar_skillu(self):
+    def test_main_readme_links_to_skill_dir(self):
         """Bez odkazu je podrobné README neviditelné.
 
         Míří se na adresář, ne na soubor: GitHub v adresáři `README.md` rovnou
         vypíše, takže druhý odkaz na totéž místo by byl navíc.
         """
-        hlavni = (ROOT / "README.md").read_text(encoding="utf-8")
-        chybi = [s.parent.name for s in SKILLS
-                 if f"(skills/{s.parent.name}/)" not in hlavni]
-        self.assertFalse(chybi, f"hlavní README neodkazuje na adresář skillu: {chybi}")
+        main_readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        absent = [s.parent.name for s in SKILLS
+                 if f"(skills/{s.parent.name}/)" not in main_readme]
+        self.assertFalse(absent, f"hlavní README neodkazuje na adresář skillu: {absent}")
 
 
-class SkriptySkillu(unittest.TestCase):
+class SkillScripts(unittest.TestCase):
     """Skripty ve skillech nečte žádná jiná kontrola.
 
     `typecheck` pouští `swiftc` a `lint` shellcheck; Python ve `skills/*/scripts/`
@@ -1785,10 +1785,10 @@ class SkriptySkillu(unittest.TestCase):
 
     # Bere i skripty ležící přímo v adresáři skillu, ne jen ve scripts/: /transcript
     # je má tam a dřívější glob je míjel, takže je nečetla žádná kontrola.
-    SKRIPTY = sorted(set((ROOT / "skills").glob("*/scripts/*.py"))
+    SCRIPTS = sorted(set((ROOT / "skills").glob("*/scripts/*.py"))
                      | set((ROOT / "skills").glob("*/*.py")))
 
-    def test_skripty_se_nasly(self):
+    def test_scripts_were_found(self):
         """Prázdný glob projde oběma testy níž a nikdo se nedozví, že se nic neměří.
 
         Přejmenuje-li se adresář nebo se skripty přesunou (u /transcript se to
@@ -1796,23 +1796,23 @@ class SkriptySkillu(unittest.TestCase):
         seznamem uspěje vždycky. Ověřeno mutací: rozbití globu SKILLS shodí pět
         testů, rozbití SKRIPTY dřív neshodilo ani jeden.
         """
-        self.assertGreaterEqual(len(self.SKRIPTY), 10,
-            f"glob našel jen {len(self.SKRIPTY)} skriptů – přesunuly se, nebo se rozbil vzor?")
+        self.assertGreaterEqual(len(self.SCRIPTS), 10,
+            f"glob našel jen {len(self.SCRIPTS)} skriptů – přesunuly se, nebo se rozbil vzor?")
 
-    def test_skripty_se_prelozi(self):
+    def test_scripts_compile(self):
         """Syntaktická vada ve skriptu se jinak pozná až uprostřed sběru dat."""
         import py_compile
         import tempfile
-        for skript in self.SKRIPTY:
-            with self.subTest(skript=str(skript.relative_to(ROOT))):
+        for script in self.SCRIPTS:
+            with self.subTest(script=str(script.relative_to(ROOT))):
                 with tempfile.TemporaryDirectory() as tmp:
                     try:
-                        py_compile.compile(str(skript), cfile=f"{tmp}/out.pyc",
+                        py_compile.compile(str(script), cfile=f"{tmp}/out.pyc",
                                            doraise=True)
-                    except py_compile.PyCompileError as chyba:
-                        self.fail(str(chyba))
+                    except py_compile.PyCompileError as error:
+                        self.fail(str(error))
 
-    def test_extract_wpress_nezapisuje_mimo_cil(self):
+    def test_extract_wpress_does_not_write_outside_target(self):
         """Cesta v .wpress hlavičce jsou data z archivu, ne argument skriptu.
 
         Bez kontroly si archiv určí, kam se zapisuje: `../..` vyleze z cílového
@@ -1822,52 +1822,52 @@ class SkriptySkillu(unittest.TestCase):
         """
         import subprocess
         import tempfile
-        skript = ROOT / "skills/compose/scripts/extract_wpress.py"
-        if not skript.exists():
+        script = ROOT / "skills/compose/scripts/extract_wpress.py"
+        if not script.exists():
             self.skipTest("extract_wpress.py v repozitáři není")
 
-        def archiv(cesta: str, jmeno: str, obsah: bytes = b"x") -> bytes:
-            h = jmeno.encode().ljust(255, b"\x00")
-            h += str(len(obsah)).encode().ljust(14, b"\x00")
+        def archive(file_path: str, name: str, content: bytes = b"x") -> bytes:
+            h = name.encode().ljust(255, b"\x00")
+            h += str(len(content)).encode().ljust(14, b"\x00")
             h += b"0".ljust(12, b"\x00")
-            h += cesta.encode().ljust(4096, b"\x00")
-            return h + obsah + b"\x00" * 4377
+            h += file_path.encode().ljust(4096, b"\x00")
+            return h + content + b"\x00" * 4377
 
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
-            cil = tmp / "out"
-            for popis, cesta in (("relativní", "../../UNIK"), ("absolutní", str(tmp / "ABS"))):
-                with self.subTest(cesta=popis):
-                    arch = tmp / "a.wpress"
-                    arch.write_bytes(archiv(cesta, "evil.txt"))
-                    r = subprocess.run(["python3", str(skript), str(arch), str(cil)],
+            target = tmp / "out"
+            for description, file_path in (("relativní", "../../UNIK"), ("absolutní", str(tmp / "ABS"))):
+                with self.subTest(file_path=description):
+                    archive_path = tmp / "a.wpress"
+                    archive_path.write_bytes(archive(file_path, "evil.txt"))
+                    r = subprocess.run(["python3", str(script), str(archive_path), str(target)],
                                        capture_output=True, text=True)
                     self.assertNotEqual(r.returncode, 0,
-                        f"archiv s {popis} cestou ven se rozbalil bez odmítnutí")
+                        f"archiv s {description} cestou ven se rozbalil bez odmítnutí")
                     self.assertFalse((tmp / "UNIK").exists() or (tmp / "ABS").exists(),
                         "soubor z archivu se zapsal mimo výstupní adresář")
 
             # Poctivý archiv se musí rozbalit dál – ať oprava nezakáže i běžný běh.
-            arch = tmp / "ok.wpress"
-            arch.write_bytes(archiv("wp-content/posts", "clanek.txt"))
-            r = subprocess.run(["python3", str(skript), str(arch), str(cil)],
+            archive_path = tmp / "ok.wpress"
+            archive_path.write_bytes(archive("wp-content/posts", "clanek.txt"))
+            r = subprocess.run(["python3", str(script), str(archive_path), str(target)],
                                capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, f"poctivý archiv se nerozbalil: {r.stderr}")
-            self.assertTrue((cil / "wp-content/posts/clanek.txt").exists())
+            self.assertTrue((target / "wp-content/posts/clanek.txt").exists())
 
-    def test_skripty_neodvozuji_cil_ze_sveho_umisteni(self):
+    def test_scripts_do_not_derive_target_from_location(self):
         """Cíl patří do argumentu, jinak skript nepřežije přesun.
 
         Generátory archivu si výstup odvozovaly z `__file__` a při stěhování
         do skillu by tiše zapisovaly vedle něj – ne do archivu.
         """
-        vadne = [str(s.relative_to(ROOT)) for s in self.SKRIPTY
+        failing = [str(s.relative_to(ROOT)) for s in self.SCRIPTS
                  if "__file__" in s.read_text(encoding="utf-8")]
-        self.assertFalse(vadne, f"skripty odvozují cestu z vlastního umístění: {vadne}")
+        self.assertFalse(failing, f"skripty odvozují cestu z vlastního umístění: {failing}")
 
 
-class KontrolyVizitekOpravduChytaji(unittest.TestCase):
-    """Mutační testy nad `vady_readme()`.
+class ReadmeChecksActuallyCatch(unittest.TestCase):
+    """Mutační testy nad `readme_defects()`.
 
     Vrstva vizitek přibyla jako poslední a byla jediná bez důkazu, že něco
     chytá – `.claude/CLAUDE.md` přitom o mutacích mluvil tak, že je zahrnoval.
@@ -1878,86 +1878,86 @@ class KontrolyVizitekOpravduChytaji(unittest.TestCase):
     `/report` mimo něj, takže pokrývají obě větve funkce.
     """
 
-    V_CYKLU = ROOT / "skills/attack/README.md"
-    MIMO = ROOT / "skills/report/README.md"
+    IN_CYCLE = ROOT / "skills/attack/README.md"
+    OUTSIDE = ROOT / "skills/report/README.md"
 
-    def vady(self, vzor: Path, jmeno: str, v_cyklu: bool, nahrada=None) -> list:
-        text = vzor.read_text(encoding="utf-8")
-        if nahrada is not None:
-            stary, novy = nahrada
-            self.assertIn(stary, text, f"mutace se nemá čeho chytit: {stary!r}")
-            text = text.replace(stary, novy)
-        return vady_readme(text, jmeno, v_cyklu)
+    def defects(self, sample: Path, name: str, in_cycle: bool, replacement=None) -> list:
+        text = sample.read_text(encoding="utf-8")
+        if replacement is not None:
+            old, new = replacement
+            self.assertIn(old, text, f"mutace se nemá čeho chytit: {old!r}")
+            text = text.replace(old, new)
+        return readme_defects(text, name, in_cycle)
 
-    def test_vzory_jsou_ciste(self):
+    def test_samples_are_clean(self):
         """Bez tohohle by mutace nedokazovaly nic – vady by mohly být původní."""
-        self.assertFalse(self.vady(self.V_CYKLU, "attack", True))
-        self.assertFalse(self.vady(self.MIMO, "report", False))
+        self.assertFalse(self.defects(self.IN_CYCLE, "attack", True))
+        self.assertFalse(self.defects(self.OUTSIDE, "report", False))
 
-    def test_chybejici_sekce_se_nahlasi(self):
+    def test_missing_section_is_reported(self):
         """Každá povinná sekce zvlášť – jinak jde tři z šesti přestat vynucovat.
 
         Doloženo: dokud se mutovala jen `## Co nedělá`, prošlo zkrácení
-        `POVINNE_README` na polovinu bez jediného padlého testu.
+        `REQUIRED_README` na polovinu bez jediného padlého testu.
         """
-        for nadpis in POVINNE_README:
-            with self.subTest(sekce=nadpis):
+        for heading in REQUIRED_README:
+            with self.subTest(section=heading):
                 # Nadpis musí zmizet, ne se prodloužit: `## Co umí jinak`
                 # pořád obsahuje `## Co umí` a kontrola by ho našla dál.
-                vady = self.vady(self.MIMO, "report", False,
-                                 ("\n" + nadpis, "\n" + nadpis.replace("#", "@", 1)))
-                self.assertTrue(any(f"chybí sekce `{nadpis}`" in v for v in vady), vady)
+                defects = self.defects(self.OUTSIDE, "report", False,
+                                 ("\n" + heading, "\n" + heading.replace("#", "@", 1)))
+                self.assertTrue(any(f"chybí sekce `{heading}`" in v for v in defects), defects)
 
-    def test_prohozene_poradi_sekci_se_nahlasi(self):
-        text = self.MIMO.read_text(encoding="utf-8")
+    def test_swapped_section_order_is_reported(self):
+        text = self.OUTSIDE.read_text(encoding="utf-8")
         i, j = text.index("\n## Co umí"), text.index("\n## Proč zrovna tenhle")
-        prohozeny = (text[:i] + text[j:j + len("\n## Proč zrovna tenhle")]
+        swapped = (text[:i] + text[j:j + len("\n## Proč zrovna tenhle")]
                      + text[i + len("\n## Co umí"):j]
                      + "\n## Co umí" + text[j + len("\n## Proč zrovna tenhle"):])
-        vady = vady_readme(prohozeny, "report", False)
-        self.assertTrue(any("pořadí" in v for v in vady), vady)
+        defects = readme_defects(swapped, "report", False)
+        self.assertTrue(any("pořadí" in v for v in defects), defects)
 
-    def test_chybejici_ramecek_u_skillu_z_cyklu_se_nahlasi(self):
-        vady = self.vady(self.V_CYKLU, "attack", True,
+    def test_missing_frame_in_cycle_skill_is_reported(self):
+        defects = self.defects(self.IN_CYCLE, "attack", True,
                          ("**Součást životního cyklu projektu.**", "**Poznámka.**"))
-        self.assertTrue(any("rámeček" in v for v in vady), vady)
+        self.assertTrue(any("rámeček" in v for v in defects), defects)
 
-    def test_ramecek_u_skillu_mimo_cyklus_se_nahlasi(self):
-        text = self.MIMO.read_text(encoding="utf-8")
-        radky = text.split("\n")
-        radky.insert(2, "> **Součást životního cyklu projektu.** …")
-        vady = vady_readme("\n".join(radky), "report", False)
-        self.assertTrue(any("má rámeček" in v for v in vady), vady)
+    def test_frame_outside_cycle_is_reported(self):
+        text = self.OUTSIDE.read_text(encoding="utf-8")
+        rows = text.split("\n")
+        rows.insert(2, "> **Součást životního cyklu projektu.** …")
+        defects = readme_defects("\n".join(rows), "report", False)
+        self.assertTrue(any("má rámeček" in v for v in defects), defects)
 
-    def test_chybejici_hromadna_instalace_se_nahlasi(self):
-        vady = self.vady(self.V_CYKLU, "attack", True, (HROMADNA, "Nebo taky ne."))
-        self.assertTrue(any("hromadná instalace" in v for v in vady), vady)
+    def test_missing_bulk_install_is_reported(self):
+        defects = self.defects(self.IN_CYCLE, "attack", True, (BULK_INSTALL, "Nebo taky ne."))
+        self.assertTrue(any("hromadná instalace" in v for v in defects), defects)
 
-    def test_hromadna_instalace_u_skillu_mimo_cyklus_se_nahlasi(self):
+    def test_bulk_install_outside_cycle_is_reported(self):
         """Předstírat sadu u skillu, který se pouští samostatně, by mátlo."""
-        text = self.MIMO.read_text(encoding="utf-8").replace(
-            "## Jak si ho nainstalovat", "## Jak si ho nainstalovat\n\n" + HROMADNA, 1)
-        vady = vady_readme(text, "report", False)
-        self.assertTrue(any("hromadnou instalaci" in v for v in vady), vady)
+        text = self.OUTSIDE.read_text(encoding="utf-8").replace(
+            "## Jak si ho nainstalovat", "## Jak si ho nainstalovat\n\n" + BULK_INSTALL, 1)
+        defects = readme_defects(text, "report", False)
+        self.assertTrue(any("hromadnou instalaci" in v for v in defects), defects)
 
-    def test_instalace_mimo_citovany_pokyn_se_nahlasi(self):
+    def test_install_outside_quoted_instruction_is_reported(self):
         """URL kdekoliv v souboru nestačí – musí být v pokynu pro Clauda."""
-        vady = self.vady(self.MIMO, "report", False,
+        defects = self.defects(self.OUTSIDE, "report", False,
                          ("> Jdi na " + REPO_URL + "report", "Jdi na " + REPO_URL + "report"))
-        self.assertTrue(any("citovaném pokynu" in v for v in vady), vady)
+        self.assertTrue(any("citovaném pokynu" in v for v in defects), defects)
 
-    def test_chybejici_odkaz_na_repozitar_se_nahlasi(self):
-        vady = self.vady(self.MIMO, "report", False, (REPO_URL + "report", "https://example.com"))
-        self.assertTrue(any("neodkazuje" in v for v in vady), vady)
+    def test_missing_repo_link_is_reported(self):
+        defects = self.defects(self.OUTSIDE, "report", False, (REPO_URL + "report", "https://example.com"))
+        self.assertTrue(any("neodkazuje" in v for v in defects), defects)
 
-    def test_prekrocena_mez_delky_se_nahlasi(self):
+    def test_exceeded_length_limit_is_reported(self):
         """Těsně o jeden řádek – jinak by mutace dokazovala jen řádovou nerovnost."""
-        text = self.MIMO.read_text(encoding="utf-8")
-        chybi = MEZ_README - len(text.splitlines()) + 1
-        self.assertGreater(chybi, 0, "vzor už mez přetahuje, mutace by nic nedokázala")
-        vady = vady_readme(text + "\n" * chybi, "report", False)
-        self.assertTrue(any("mez je" in v for v in vady), vady)
-        self.assertFalse(vady_readme(text + "\n" * (chybi - 1), "report", False),
+        text = self.OUTSIDE.read_text(encoding="utf-8")
+        absent = README_LIMIT - len(text.splitlines()) + 1
+        self.assertGreater(absent, 0, "vzor už mez přetahuje, mutace by nic nedokázala")
+        defects = readme_defects(text + "\n" * absent, "report", False)
+        self.assertTrue(any("mez je" in v for v in defects), defects)
+        self.assertFalse(readme_defects(text + "\n" * (absent - 1), "report", False),
                          "kontrola hlásí vadu ještě před překročením meze")
 
 
@@ -1965,15 +1965,15 @@ if __name__ == "__main__":
     unittest.main()
 
 
-def _sekce(text: str, nadpis: str) -> str:
+def _section(text: str, heading: str) -> str:
     """Tělo sekce od nadpisu po nejbližší nadpis stejné nebo vyšší úrovně."""
-    zacatek = text.index(nadpis) + len(nadpis)
-    zbytek = text[zacatek:]
-    dalsi = re.search(r"^#{1,2} ", zbytek, re.M)
-    return zbytek[: dalsi.start()] if dalsi else zbytek
+    begin = text.index(heading) + len(heading)
+    rest = text[begin:]
+    following = re.search(r"^#{1,2} ", rest, re.M)
+    return rest[: following.start()] if following else rest
 
 
-class NosneCastiDepotu(unittest.TestCase):
+class DepotCoreParts(unittest.TestCase):
     """Dvě pravidla, na kterých /depot stojí a která se obě už jednou porušila.
 
     Skill přesouvá soubory po disku, takže jeho vada není špatná odpověď, ale
@@ -1993,48 +1993,48 @@ class NosneCastiDepotu(unittest.TestCase):
     """
 
     def setUp(self):
-        cesta = ROOT / "skills" / "depot" / "SKILL.md"
-        if not cesta.exists():
+        file_path = ROOT / "skills" / "depot" / "SKILL.md"
+        if not file_path.exists():
             self.skipTest("/depot v repozitáři není")
-        self.telo = body(cesta)
+        self.skill_body = body(file_path)
 
-    def test_rozsah_je_omezen_na_argument(self):
-        self.assertIn("## Rozsah", self.telo, "/depot přišel o sekci Rozsah")
-        rozsah = _sekce(self.telo, "## Rozsah")
+    def test_scope_is_limited_to_argument(self):
+        self.assertIn("## Rozsah", self.skill_body, "/depot přišel o sekci Rozsah")
+        scope = _section(self.skill_body, "## Rozsah")
         self.assertIn(
-            "v argumentu", rozsah,
+            "v argumentu", scope,
             "Rozsah neváže práci na to, co stojí v argumentu – bez toho se běh rozlije na okolí",
         )
 
-    def test_hranice_neni_zakaz_nad_uzivatelem(self):
-        self.assertIn("## Hranice", self.telo, "/depot přišel o sekci Hranice")
-        hranice = _sekce(self.telo, "## Hranice")
+    def test_boundaries_are_not_ban_over_user(self):
+        self.assertIn("## Hranice", self.skill_body, "/depot přišel o sekci Hranice")
+        boundaries = _section(self.skill_body, "## Hranice")
         self.assertIn(
-            "Přednost pravidel", hranice,
+            "Přednost pravidel", boundaries,
             "Hranice se tváří jako zákaz nad uživatelem – chybí odkaz na RULES.md, Přednost pravidel",
         )
 
 
-class NosneCastiDepotuOpravduChytaji(unittest.TestCase):
+class DepotCorePartsActuallyCatch(unittest.TestCase):
     """Mutační test: bez něj by kontrola výš prošla i nad prázdným souborem."""
 
-    def _hlas(self, telo):
-        pripad = NosneCastiDepotu("test_rozsah_je_omezen_na_argument")
-        pripad.telo = telo
-        selhani = []
-        for jmeno in ("test_rozsah_je_omezen_na_argument", "test_hranice_neni_zakaz_nad_uzivatelem"):
-            pripad = NosneCastiDepotu(jmeno)
-            pripad.telo = telo
+    def _reports(self, skill_body):
+        case = DepotCoreParts("test_scope_is_limited_to_argument")
+        case.skill_body = skill_body
+        failures = []
+        for name in ("test_scope_is_limited_to_argument", "test_boundaries_are_not_ban_over_user"):
+            case = DepotCoreParts(name)
+            case.skill_body = skill_body
             try:
-                getattr(pripad, jmeno)()
-            except AssertionError as chyba:
-                selhani.append(str(chyba))
-        return selhani
+                getattr(case, name)()
+            except AssertionError as error:
+                failures.append(str(error))
+        return failures
 
-    def test_zmizely_rozsah_se_nahlasi(self):
-        telo = body(ROOT / "skills" / "depot" / "SKILL.md").replace("## Rozsah", "## Něco jiného")
-        self.assertTrue(self._hlas(telo), "vyříznutý Rozsah neshodil kontrolu")
+    def test_vanished_scope_is_reported(self):
+        skill_body = body(ROOT / "skills" / "depot" / "SKILL.md").replace("## Rozsah", "## Něco jiného")
+        self.assertTrue(self._reports(skill_body), "vyříznutý Rozsah neshodil kontrolu")
 
-    def test_hranice_bez_odkazu_na_prednost_pravidel_se_nahlasi(self):
-        telo = body(ROOT / "skills" / "depot" / "SKILL.md").replace("Přednost pravidel", "něco")
-        self.assertTrue(self._hlas(telo), "hranice bez opory v RULES.md neshodila kontrolu")
+    def test_boundaries_without_rule_precedence_link_are_reported(self):
+        skill_body = body(ROOT / "skills" / "depot" / "SKILL.md").replace("Přednost pravidel", "něco")
+        self.assertTrue(self._reports(skill_body), "hranice bez opory v RULES.md neshodila kontrolu")

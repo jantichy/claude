@@ -59,7 +59,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/audit
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-**Sám o sobě nestačí.** Skill je jen dirigent – odbornou část si musíte přinést: pro každou oblast, kterou chcete auditovat, potřebujete vlastní sepsaný postup auditu a katalog typických nálezů. Skill je hledá v `~/Dev/context/<oblast>/`. **Nenajde-li pro zadanou oblast vůbec nic, skončí a řekne to** – vlastní kritéria si nevymýšlí, protože audit bez normy, proti které měří, je sbírka dojmů.
+**Sám o sobě nestačí.** Skill je jen dirigent – odbornou část si musíte přinést: pro každou oblast, kterou chcete auditovat, potřebujete vlastní sepsaný postup auditu a katalog typických nálezů. Skill je hledá v `~/Dev/context/<area>/`. **Nenajde-li pro zadanou oblast vůbec nic, skončí a řekne to** – vlastní kritéria si nevymýšlí, protože audit bez normy, proti které měří, je sbírka dojmů.
 
 Máte-li pro tu oblast aspoň kontrolní seznam, pojede proti němu, ale mělčeji a nahlas na to upozorní.
 

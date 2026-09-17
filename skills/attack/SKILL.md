@@ -65,7 +65,7 @@ Hranice proto **stojí na dokladech, ne na slibu**. Body 1 a 2 mají každý sv�
 getent hosts <host> 2>/dev/null || dscacheutil -q host -a name <host> | grep ip_address
 
 # Bod 2 – databáze je testovací. Ukáže rozložení domén; reálné domény = konec.
-<dotaz z bodu 6 Fáze 0>
+<db_query>   # dotaz z bodu 6 Fáze 0
 ```
 
 Platí bez výjimky:
@@ -203,7 +203,7 @@ VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
 [
   {
     "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
-    "vector": "<vektor>",
+    "vector": "<vector>",
     "title": "krátký název",
     "repro": ["krok 1", "krok 2", "..."],
     "observed": "co se stalo – hláška, stav, výstup z konzole nebo logu",

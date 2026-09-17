@@ -13,7 +13,7 @@ from pathlib import Path
 import cbor2
 
 if len(sys.argv) < 3:
-    sys.exit("Použití: parse_bluesky.py <repo.car> <výstupní bluesky_posts.json> [handle]")
+    sys.exit("Použití: parse_bluesky.py <repo.car> <output_json> [handle]")
 SRC = Path(sys.argv[1])
 HANDLE = sys.argv[3] if len(sys.argv) > 3 else None
 
@@ -57,7 +57,7 @@ def tag_to_cid_bytes(tag):
     return tag.value[1:] if tag is not None else None
 
 
-def _nacti_bloky(path):
+def _read_blocks(path):
     """Rozparsované CBOR bloky z CAR souboru a commit, pokud se našel."""
     blocks = {}
     commit = None
@@ -76,7 +76,7 @@ def _nacti_bloky(path):
 
 def load_repo(path=SRC):
     """Vrací (did, {klíč 'kolekce/rkey': záznam})."""
-    blocks, commit = _nacti_bloky(path)
+    blocks, commit = _read_blocks(path)
     assert commit, "commit blok nenalezen"
     records = {}
 

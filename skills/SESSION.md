@@ -6,7 +6,7 @@ Mechanika hledání a čtení nahrané konverzace. Stojí mimo jednotlivé skill
 
 ## 1. Najdi soubor
 
-Leží v `~/.claude/projects/<slug-pracovního-adresáře>/<session-id>.jsonl`, kde slug vznikne z absolutní cesty nahrazením `/` a `.` pomlčkami (`/Users/honza/Dev/score` → `-Users-honza-Dev-score`).
+Leží v `~/.claude/projects/<working-directory-slug>/<session-id>.jsonl`, kde slug vznikne z absolutní cesty nahrazením `/` a `.` pomlčkami (`/Users/honza/Dev/score` → `-Users-honza-Dev-score`).
 
 **`<session-id>` si vezmi z cesty ke scratchpadu**, kterou máš v systémovém promptu – je v ní jako poslední adresář. To je jediný spolehlivý klíč.
 

@@ -10,7 +10,7 @@ Standardní soubory jsou vždycky tytéž. **Kde leží, je volba ze dvou rovnoc
 
 ```
 režim  docs/                       režim  root
-<projekt>/                         <projekt>/
+<project>/                         <project>/
 ├── CLAUDE.md                      ├── CLAUDE.md
 ├── README.md                      ├── README.md
 └── docs/                          ├── todo.md
@@ -51,7 +51,7 @@ Povinný je jediný soubor – **`CLAUDE.md`**, bez něj projekt není projekt. 
 | `README.md`, `decisions.md`, `rules.md` | volitelně, výběrem při `/project` (výchozí ano) |
 | `todo.md` + `backlog.md` + `done.md` | volitelně, ale **jen jako trojice** – jedna volba pro všechny tři |
 | `requirements.md`, `architecture.md`, `plan.md` | až prací, přes `/specify` a `/breakdown` |
-| `<téma>.md` – tematický dokument kola | až prací, kolem návrhu přes `/specify` – viz *`requirements.md`, `architecture.md`, `plan.md`* |
+| `<topic>.md` – tematický dokument kola | až prací, kolem návrhu přes `/specify` – viz *`requirements.md`, `architecture.md`, `plan.md`* |
 | `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md` | **vybírá se** při `/project` (výchozí ne), zakládá se až prací – viz *Produktové podklady* |
 | `research/` | až je co uložit |
 | `.claude/run/` | samo, přerušitelným během skillu – není to standardní soubor, viz *Běhový stav skillů* |
@@ -95,7 +95,7 @@ Tenhle blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj dvě d
 - **Repository details na GitHubu** – description a website. Nastavují se z terminálu, ne v UI:
 
   ```bash
-  gh repo edit <owner>/<slug> -d "<popisek>" -h "<web>"
+  gh repo edit <owner>/<slug> -d "<description>" -h "<web>"
   ```
 
 **Změní-li se název, popisek nebo URL, propiš to hned na všechna tři místa** – jinak zůstane na GitHubu viset popisek, který už neplatí, a nikdo si toho nevšimne, protože ho v repozitáři není vidět.
@@ -170,7 +170,7 @@ Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Pa
 
 - **Stav:** čeká | rozhoduje se | rozhodnuto
 - **Větev:** `<větev podle zvyku projektu>`
-- **Dokument:** `docs/<téma>.md`
+- **Dokument:** `docs/<topic>.md`
 - **Čeká na:** <kola, bez jejichž výsledku nejde začít, nebo „nic“>
 - **Sahá na:** <sdílené dokumenty, do kterých kolo nejspíš zapíše>
 
@@ -291,7 +291,7 @@ Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem,
 **Sekce `## Kola návrhu`** zrcadlí stejnojmennou sekci `todo.md` a drží jeden záznam za každé dokončené kolo návrhu:
 
 ```markdown
-- **Kolo o <tématu> (2026-09-14)** · větev `<větev>` · `docs/<téma>.md` · [rozhodnutí](decisions.md#<kotva>)
+- **Kolo o <tématu> (2026-09-14)** · větev `<branch>` · `docs/<topic>.md` · [rozhodnutí](decisions.md#<anchor>)
   - **Rozhodlo:** <co padlo, věcně, včetně zamítnutého hlavního směru>
   - **Uzavřelo:** <odložené otázky, které kolo vyřešilo, nebo „nic“>
   - **Neotevřelo:** <odložené otázky, které kolo nechalo být, a kam se přesunuly, nebo „nic“>
@@ -318,7 +318,7 @@ Změna teče **shora dolů**: `requirements.md` → `architecture.md` → `plan.
 
 Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requirements.md`; místo plánu se kroky rozepíšou do `todo.md`.
 
-**Návrh po kolech přidává tematické dokumenty** `docs/<téma>.md` (například `gateway.md`, `emails.md`, `admin.md`), jeden na kolo. Tematický dokument drží celý okruh do detailu. Do `requirements.md` a dalších sdílených dokumentů (glosář, scénáře, model) zapisuje kolo jen to, co z tématu plyne pro celek, a odkazuje se na něj. **`architecture.md` kola nepíšou** – vzniká až v `/specify close` nad výsledky všech kol. Technickou volbu, kterou téma rozhodnout musí (třeba dodavatele), zapíše kolo do technické části svého dokumentu a `architecture.md` na ni pak odkáže. Hranice požadavků a návrhu tedy platí i uvnitř tematického dokumentu: omezení a volba se nemíchají, jen stojí u sebe. **Proč samostatný soubor:** kola běží souběžně v různých větvích a psaní do týchž kapitol sdílených dokumentů by je srazilo.
+**Návrh po kolech přidává tematické dokumenty** `docs/<topic>.md` (například `gateway.md`, `emails.md`, `admin.md`), jeden na kolo. Tematický dokument drží celý okruh do detailu. Do `requirements.md` a dalších sdílených dokumentů (glosář, scénáře, model) zapisuje kolo jen to, co z tématu plyne pro celek, a odkazuje se na něj. **`architecture.md` kola nepíšou** – vzniká až v `/specify close` nad výsledky všech kol. Technickou volbu, kterou téma rozhodnout musí (třeba dodavatele), zapíše kolo do technické části svého dokumentu a `architecture.md` na ni pak odkáže. Hranice požadavků a návrhu tedy platí i uvnitř tematického dokumentu: omezení a volba se nemíchají, jen stojí u sebe. **Proč samostatný soubor:** kola běží souběžně v různých větvích a psaní do týchž kapitol sdílených dokumentů by je srazilo.
 
 ### Produktové podklady
 

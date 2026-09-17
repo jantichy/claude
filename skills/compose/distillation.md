@@ -17,7 +17,7 @@ Postup pro režim `profile`: jak se z archivu textů udělá popis hlasu, který
 Tři vrstvy. **Archiv je korpus – co bylo napsáno. Báze je norma – jak se píše.** Norma se opravuje, kdykoliv ji doklad vyvrátí; korpus se neopravuje nikdy.
 
 ```
-báze/
+compose/
   style.md              jádro: co platí napříč formáty
   article.md            profil formátu: dlouhý text
   post.md               profil formátu: příspěvek na sítě

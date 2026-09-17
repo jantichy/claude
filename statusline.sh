@@ -224,10 +224,10 @@ git_root_candidate="$cwd_real"
 git_ro() { git -c core.fsmonitor= -c core.hooksPath=/dev/null -c core.pager=cat "$@"; }
 
 # Vypnout dva klíče v `git_ro` nestačí: konfigurace repozitáře umí gitu předepsat
-# program ke spuštění i pod jménem, které nejde předem uhodnout. `filter.<jméno>.clean`
+# program ke spuštění i pod jménem, které nejde předem uhodnout. `filter.<name>.clean`
 # se volá pokaždé, když git potřebuje obsah pracovního souboru – tedy i při
-# `git diff --name-only` –, a `<jméno>` si volí ten, kdo config napsal, takže ho
-# nejde přebít `-c` přepínačem. Totéž platí pro `diff.<jméno>.textconv`.
+# `git diff --name-only` –, a `<name>` si volí ten, kdo config napsal, takže ho
+# nejde přebít `-c` přepínačem. Totéž platí pro `diff.<name>.textconv`.
 # Jediná spolehlivá obrana je na takový repozitář nesahat. Čtení samotné
 # konfigurace nic nespouští, takže se smí udělat napřed.
 #

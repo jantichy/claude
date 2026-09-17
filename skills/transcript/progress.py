@@ -2,7 +2,7 @@
 """Progress bar + ETA pro běžící whisper přepis (skill /transcript).
 
 Čte log, do kterého transcribe.sh píše délky souborů (`### DURATION N SECONDS`),
-značky `### START zaznam-N HH:MM:SS` / `### DONE zaznam-N HH:MM:SS` a whisper píše
+značky `### START file-N HH:MM:SS` / `### DONE file-N HH:MM:SS` a whisper píše
 časové značky segmentů (`[HH:MM:SS ...]`).
 
 Usage:
@@ -18,7 +18,7 @@ def hms_to_s(h, m, s):
     return int(h) * 3600 + int(m) * 60 + int(s)
 
 
-def delky_z_argv(argv):
+def durations_from_argv(argv):
     """Délky předané ručně jako N=SECONDS."""
     dur = {}
     for pair in argv:
@@ -27,7 +27,7 @@ def delky_z_argv(argv):
     return dur
 
 
-def delky_z_logu(lines):
+def durations_from_log(lines):
     """Délky, které do logu zapsal transcribe.sh."""
     dur = {}
     for ln in lines:
@@ -37,7 +37,7 @@ def delky_z_logu(lines):
     return dur
 
 
-def projdi_log(lines):
+def scan_log(lines):
     """Stav běhu z logu: kdo začal, kdo skončil, kde je ukazatel.
 
     Vrací (started, done, failed, first_start_clock, last_pos).
@@ -51,7 +51,7 @@ def projdi_log(lines):
     chunked = any("### CHUNKING" in ln for ln in lines)
 
     for ln in lines:
-        m = re.search(r"### START zaznam-(\d+) (\d\d):(\d\d):(\d\d)", ln)
+        m = re.search(r"### START file-(\d+) (\d\d):(\d\d):(\d\d)", ln)
         if m:
             started.append(m.group(1))
             clk = hms_to_s(m.group(2), m.group(3), m.group(4))
@@ -59,14 +59,14 @@ def projdi_log(lines):
                 first_start_clock = clk
             last_pos = 0
             continue
-        m = re.search(r"### DONE zaznam-(\d+)", ln)
+        m = re.search(r"### DONE file-(\d+)", ln)
         if m:
             done.add(m.group(1))
             last_pos = 0
             continue
         # Selhaný soubor se nikdy nezpracuje. Bez tohohle by jeho délka zůstala
         # v celku a progress by navždy hlásil, že něco běží.
-        m = re.search(r"### FAILED zaznam-(\d+)", ln)
+        m = re.search(r"### FAILED file-(\d+)", ln)
         if m:
             failed.add(m.group(1))
             last_pos = 0
@@ -78,7 +78,7 @@ def projdi_log(lines):
     return started, done, failed, first_start_clock, last_pos
 
 
-def tempo_a_eta(first_start_clock, processed, remaining):
+def rate_and_eta(first_start_clock, processed, remaining):
     """Naměřené tempo a odhad zbytku. Bez měřitelného základu vrací pomlčky."""
     if first_start_clock is None or processed <= 0:
         return "–", "–"
@@ -105,8 +105,8 @@ def main():
     with open(logfile, encoding="utf-8", errors="replace") as fh:
         lines = fh.readlines()
 
-    dur = delky_z_argv(sys.argv[2:]) or delky_z_logu(lines)
-    started, done, failed, first_start_clock, last_pos = projdi_log(lines)
+    dur = durations_from_argv(sys.argv[2:]) or durations_from_log(lines)
+    started, done, failed, first_start_clock, last_pos = scan_log(lines)
 
     total = sum(v for k, v in dur.items() if k not in failed)
     done_audio = sum(dur.get(n, 0) for n in done)
@@ -116,7 +116,7 @@ def main():
     remaining = max(0.0, total - processed)
     pct = processed / total if total else 0
 
-    eta_txt, rate_txt = tempo_a_eta(first_start_clock, processed, remaining)
+    eta_txt, rate_txt = rate_and_eta(first_start_clock, processed, remaining)
 
     width = 30
     fill = int(round(pct * width))

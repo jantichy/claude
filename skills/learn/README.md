@@ -38,8 +38,8 @@ Když cíl neurčíte přesně, skill si ho vybere sám a nechá si ho potvrdit.
 Poznatků: 47 · nové 12 · doplnění 18 · prohloubení 8 · zúžení 3 · překonání 2 · zjednodušení 0 · rozpory 3 · mimo doménu 0 · nezapracováno 1
 
 Zásahy do obsahu
-- souhlas.md › Sběr před načtením – přestavba sekce, poznatky 3, 7–11
-- udalosti.md › Pojmenování – doplnění, poznatky 22, 24
+- consent.md › Sběr před načtením – přestavba sekce, poznatky 3, 7–11
+- events.md › Pojmenování – doplnění, poznatky 22, 24
 
 K rozhodnutí
 - 3 rozpory – proberu je po jednom v další fázi

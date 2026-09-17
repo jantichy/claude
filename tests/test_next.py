@@ -32,7 +32,7 @@ SCRIPT = ROOT / "skills" / "next" / "sessions.py"
 COLLECT = ROOT / "skills" / "next" / "collect.py"
 
 
-class ZiveSessionAJejichVetve(unittest.TestCase):
+class LiveSessionsAndBranches(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.home = Path(self.tmp.name)
@@ -46,106 +46,106 @@ class ZiveSessionAJejichVetve(unittest.TestCase):
         self.sleeper.wait()
         self.tmp.cleanup()
 
-    def registruj(self, pid, sid, transcript_lines=None):
+    def register(self, pid, sid, transcript_lines=None):
         (self.claude / "sessions" / f"{pid}.json").write_text(json.dumps(
             {"pid": pid, "sessionId": sid, "cwd": "/projekt", "name": sid, "status": "waiting"}))
         if transcript_lines is not None:
-            adr = self.claude / "projects" / "-projekt"
-            adr.mkdir(parents=True, exist_ok=True)
-            (adr / f"{sid}.jsonl").write_text(
+            project_dir = self.claude / "projects" / "-projekt"
+            project_dir.mkdir(parents=True, exist_ok=True)
+            (project_dir / f"{sid}.jsonl").write_text(
                 "\n".join(json.dumps(r) for r in transcript_lines) + "\n")
 
-    def spust(self, *args):
+    def run_script(self, *args):
         env = dict(os.environ, HOME=str(self.home))
         return subprocess.run([sys.executable, str(SCRIPT), *args], capture_output=True,
                               text=True, env=env)
 
     def idle(self):
-        run = self.spust("--project", "/projekt")
+        run = self.run_script("--project", "/projekt")
         self.assertEqual(run.returncode, 0, run.stderr)
         return {s["branch"]: s["session_id"] for s in json.loads(run.stdout)["idle"]}
 
-    def mrtvy_pid(self):
+    def dead_pid(self):
         p = subprocess.Popen(["true"])
         p.wait()
         return p.pid
 
-    def test_vetev_se_bere_z_posledniho_zaznamu(self):
-        self.registruj(self.sleeper.pid, "ziva", [
+    def test_branch_taken_from_last_entry(self):
+        self.register(self.sleeper.pid, "ziva", [
             {"type": "user", "cwd": "/projekt/main", "gitBranch": "main"},
             {"type": "assistant", "cwd": "/projekt/dph", "gitBranch": "specify-dph"},
             {"type": "attachment"},
         ])
-        run = self.spust()
+        run = self.run_script()
         self.assertEqual(run.returncode, 0, run.stderr)
         [s] = json.loads(run.stdout)["sessions"]
         self.assertEqual((s["cwd"], s["branch"], s["self"]),
                          ("/projekt/dph", "specify-dph", False))
 
-    def test_zaznam_po_spadlem_procesu_se_nepocita(self):
-        self.registruj(self.mrtvy_pid(), "mrtva", [{"cwd": "/projekt/x", "gitBranch": "x"}])
-        run = self.spust()
+    def test_entry_of_crashed_process_ignored(self):
+        self.register(self.dead_pid(), "mrtva", [{"cwd": "/projekt/x", "gitBranch": "x"}])
+        run = self.run_script()
         self.assertEqual(json.loads(run.stdout)["sessions"], [])
 
-    def test_ziva_session_bez_transcriptu_ma_neznamou_vetev(self):
-        self.registruj(self.sleeper.pid, "bez-transcriptu")
-        [s] = json.loads(self.spust().stdout)["sessions"]
+    def test_live_session_without_transcript_has_unknown_branch(self):
+        self.register(self.sleeper.pid, "bez-transcriptu")
+        [s] = json.loads(self.run_script().stdout)["sessions"]
         self.assertIsNone(s["branch"])
 
-    def test_vlastni_session_je_oznacena(self):
+    def test_own_session_is_marked(self):
         # Předek skriptu je i tenhle testovací proces.
-        self.registruj(os.getpid(), "ja", [{"cwd": "/projekt", "gitBranch": "main"}])
-        [s] = json.loads(self.spust().stdout)["sessions"]
+        self.register(os.getpid(), "ja", [{"cwd": "/projekt", "gitBranch": "main"}])
+        [s] = json.loads(self.run_script().stdout)["sessions"]
         self.assertTrue(s["self"])
 
-    def test_opustena_session_se_nabidne_k_obnoveni(self):
-        self.registruj(self.mrtvy_pid(), "stara", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
+    def test_abandoned_session_offered_for_resume(self):
+        self.register(self.dead_pid(), "stara", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
         self.assertEqual(self.idle(), {"specify-dph": "stara"})
 
-    def test_ziva_session_neni_nikdy_opustena(self):
+    def test_live_session_never_abandoned(self):
         # Táž session je i živá (obnovená v jiném okně) – mezi opuštěné nepatří,
         # ani když má v registru i starý záznam po spadlém procesu.
-        self.registruj(self.mrtvy_pid(), "obnovena", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
-        self.registruj(self.sleeper.pid, "obnovena")
+        self.register(self.dead_pid(), "obnovena", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
+        self.register(self.sleeper.pid, "obnovena")
         self.assertEqual(self.idle(), {})
 
-    def test_session_z_jineho_projektu_se_nepocita(self):
-        self.registruj(self.mrtvy_pid(), "cizi", [{"cwd": "/jiny/dph", "gitBranch": "specify-dph"}])
+    def test_session_from_other_project_ignored(self):
+        self.register(self.dead_pid(), "cizi", [{"cwd": "/jiny/dph", "gitBranch": "specify-dph"}])
         self.assertEqual(self.idle(), {})
 
-    def test_necitelny_zaznam_registru_neni_prazdny_seznam(self):
+    def test_unreadable_registry_entry_is_not_empty_list(self):
         # Nečitelný záznam může patřit běžící session – kdyby se přeskočil,
         # nabídla by se její konverzace k obnovení podruhé.
-        self.registruj(self.mrtvy_pid(), "stara", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
+        self.register(self.dead_pid(), "stara", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
         (self.claude / "sessions" / "rozbity.json").write_text("{nedopsano")
-        run = self.spust("--project", "/projekt")
+        run = self.run_script("--project", "/projekt")
         self.assertEqual(run.returncode, 2)
         self.assertEqual(run.stdout, "")
 
-    def test_cizi_projekt_neni_in_project(self):
+    def test_foreign_project_not_in_project(self):
         (self.claude / "sessions" / f"{self.sleeper.pid}.json").write_text(json.dumps(
             {"pid": self.sleeper.pid, "sessionId": "cizi", "cwd": "/jiny"}))
-        [s] = json.loads(self.spust("--project", "/projekt").stdout)["sessions"]
+        [s] = json.loads(self.run_script("--project", "/projekt").stdout)["sessions"]
         self.assertFalse(s["in_project"])
 
-    def test_opustena_session_nese_adresar_startu(self):
-        self.registruj(self.mrtvy_pid(), "stara", [
+    def test_abandoned_session_carries_start_dir(self):
+        self.register(self.dead_pid(), "stara", [
             {"cwd": "/projekt", "gitBranch": "main"},
             {"cwd": "/projekt/dph", "gitBranch": "specify-dph"},
         ])
-        run = self.spust("--project", "/projekt")
+        run = self.run_script("--project", "/projekt")
         [s] = json.loads(run.stdout)["idle"]
         self.assertEqual((s["start_cwd"], s["cwd"]), ("/projekt", "/projekt/dph"))
 
-    def test_chybejici_registr_neni_prazdny_seznam(self):
+    def test_missing_registry_is_not_empty_list(self):
         (self.claude / "sessions").rmdir()
-        run = self.spust()
+        run = self.run_script()
         self.assertEqual(run.returncode, 2)
         self.assertEqual(run.stdout, "")
 
 
 
-class CteniPlanuAFronty(unittest.TestCase):
+class PlanAndQueueParsing(unittest.TestCase):
     """Parsery `collect.py`: úkoly plánu a závislost schovaná na konci popisu."""
 
     def setUp(self):
@@ -156,19 +156,19 @@ class CteniPlanuAFronty(unittest.TestCase):
         _sys.path.insert(0, str(COLLECT.parent))
         spec.loader.exec_module(self.c)
 
-    def test_plan_pocita_ukoly_podle_nadpisu(self):
+    def test_plan_counts_tasks_by_heading(self):
         plan = self.c.parse_plan(
             "## Úkol 1\n- [x] krok\n- [x] krok\nKritérium:\n- vrací 200\n"
             "## Úkol 2\n- [x] krok\n- [ ] krok\n")
         self.assertEqual((plan["open"], plan["done"], plan["next"]), (1, 1, ["Úkol 2"]))
 
-    def test_obycejna_odrazka_plan_nedrzi_otevreny(self):
+    def test_plain_bullet_does_not_keep_plan_open(self):
         plan = self.c.parse_plan("## Úkol\n- [x] krok\n- poznámka\n")
         self.assertEqual(plan["open"], 0)
 
-    def test_zavislost_na_konci_dlouheho_popisu(self):
-        dlouhy = "- [ ] **Úkol.** " + "vata " * 100 + "Čeká na odpověď podpory. Konec."
-        [item] = self.c.parse_items([dlouhy])
+    def test_dependency_at_end_of_long_description(self):
+        long_item = "- [ ] **Úkol.** " + "vata " * 100 + "Čeká na odpověď podpory. Konec."
+        [item] = self.c.parse_items([long_item])
         self.assertEqual(item["waits"], "odpověď podpory")
 
 
@@ -195,7 +195,7 @@ TODO = """# TODO
 """
 
 
-class SberFronty(unittest.TestCase):
+class QueueCollection(unittest.TestCase):
     """`collect.py` nad skutečným gitem: worktree kontejner, větve a živé session.
 
     Hlídá to, kvůli čemu sběr vznikl: obsazená větev se musí poznat i tehdy, když
@@ -223,8 +223,8 @@ class SberFronty(unittest.TestCase):
         self.git(*self.bare, "worktree", "add", "-q", str(self.box / "main"), "main")
         # Kolo o DPH se rozhoduje ve větvi s worktree, fakturace má větev bez commitu.
         self.git(*self.bare, "worktree", "add", "-q", "-b", "specify-dph", str(self.box / "dph"), "main")
-        dph = self.box / "dph" / "docs" / "todo.md"
-        dph.write_text(TODO.replace("- **Stav:** čeká\n- **Větev:** `specify-dph`",
+        vat_todo = self.box / "dph" / "docs" / "todo.md"
+        vat_todo.write_text(TODO.replace("- **Stav:** čeká\n- **Větev:** `specify-dph`",
                                     "- **Stav:** rozhoduje se\n- **Větev:** `specify-dph`"))
         self.git("-C", str(self.box / "dph"), "commit", "-qam", "DPH rozhoduje se")
         self.git(*self.bare, "branch", "specify-faktury", "main")
@@ -242,9 +242,9 @@ class SberFronty(unittest.TestCase):
         claude = self.home / ".claude"
         (claude / "sessions" / f"{pid}.json").write_text(json.dumps(
             {"pid": pid, "sessionId": sid, "cwd": str(self.box), "name": sid}))
-        adr = claude / "projects" / "-projekt"
-        adr.mkdir(parents=True, exist_ok=True)
-        (adr / f"{sid}.jsonl").write_text(
+        project_dir = claude / "projects" / "-projekt"
+        project_dir.mkdir(parents=True, exist_ok=True)
+        (project_dir / f"{sid}.jsonl").write_text(
             json.dumps({"cwd": str(self.box)}) + "\n" + json.dumps({"cwd": cwd, "gitBranch": branch}) + "\n")
 
     def collect(self):
@@ -256,55 +256,55 @@ class SberFronty(unittest.TestCase):
     def branches(self):
         return {b["branch"]: b for b in self.collect()["branches"]}
 
-    def mrtvy_pid(self):
+    def dead_pid(self):
         p = subprocess.Popen(["true"])
         p.wait()
         return p.pid
 
-    def test_fronta_se_cte_z_hlavni_vetve_bez_hotovych(self):
+    def test_queue_read_from_main_branch_without_done(self):
         data = self.collect()
         [part] = data["todo"][0]["parts"]
         self.assertEqual([i["title"] for i in part["items"]], ["Export faktur"])
-        self.assertEqual([r["Stav"] for r in data["rounds"]], ["čeká", "čeká"])
+        self.assertEqual([r["status"] for r in data["rounds"]], ["čeká", "čeká"])
 
-    def test_kolo_nese_stav_ze_sve_vetve(self):
-        dph = self.collect()["rounds"][0]
-        self.assertEqual(dph["branch_state"], "rozhoduje se")
+    def test_round_carries_state_from_its_branch(self):
+        vat_round = self.collect()["rounds"][0]
+        self.assertEqual(vat_round["branch_state"], "rozhoduje se")
 
-    def test_opustena_vetev_se_session_k_obnoveni(self):
-        self.session(self.mrtvy_pid(), "stara", str(self.box / "dph"), "specify-dph")
+    def test_abandoned_branch_with_session_to_resume(self):
+        self.session(self.dead_pid(), "stara", str(self.box / "dph"), "specify-dph")
         b = self.branches()["specify-dph"]
         self.assertEqual((b["state"], b["resume"]["session_id"], b["resume"]["start_cwd"]),
                          ("abandoned", "stara", str(self.box)))
         self.assertEqual(b["rounds"], ["Kolo o DPH"])
 
-    def test_obsazena_vetev_bez_commitu(self):
+    def test_occupied_branch_without_commit(self):
         # `--no-merged` větev bez commitu nevypíše; živá session nad ní ji musí přidat.
         self.session(self.sleeper.pid, "ziva", str(self.box / "faktury"), "specify-faktury")
         b = self.branches()["specify-faktury"]
         self.assertEqual((b["state"], b["session"]), ("occupied", "ziva"))
 
-    def test_spusteni_z_podadresare_worktree_najde_kontejner(self):
+    def test_run_from_worktree_subdir_finds_container(self):
         run = subprocess.run([sys.executable, str(COLLECT), str(self.box / "dph" / "docs")],
                              capture_output=True, text=True, env=self.env)
         data = json.loads(run.stdout)
         self.assertEqual((data["layout"], Path(data["root"]).resolve(), data["current"]["branch"]),
                          ("worktree", self.box.resolve(), "specify-dph"))
 
-    def test_vetev_bez_prace_neni_opustena(self):
+    def test_branch_without_work_not_abandoned(self):
         # Větev bez commitu a bez neuložených změn není zapomenutá práce – buď se
         # nevypíše vůbec, nebo jako prázdná; opuštěná být nesmí.
         # Worktree bez práce je přesně ten případ, kdy se větev vypíše – po sloučení zůstal stát.
         self.git(*self.bare, "worktree", "add", "-q", str(self.box / "faktury"), "specify-faktury")
         self.assertEqual(self.branches()["specify-faktury"]["state"], "empty")
 
-    def test_neulozene_zmeny_v_jinem_worktree_jsou_prace(self):
+    def test_uncommitted_changes_in_other_worktree_are_work(self):
         self.git(*self.bare, "worktree", "add", "-q", "-b", "export", str(self.box / "export"), "main")
         (self.box / "export" / "novy.txt").write_text("rozdělané")
         b = self.branches()["export"]
         self.assertEqual((b["state"], b["uncommitted"], b["ahead"]), ("abandoned", 1, 0))
 
-    def test_session_bez_vetve_zneisti_vsechny_vetve(self):
+    def test_session_without_branch_makes_all_uncertain(self):
         (self.home / ".claude" / "sessions" / f"{self.sleeper.pid}.json").write_text(json.dumps(
             {"pid": self.sleeper.pid, "sessionId": "nova", "cwd": str(self.box)}))
         self.assertEqual({b["state"] for b in self.branches().values()}, {"uncertain"})

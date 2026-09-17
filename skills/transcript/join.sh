@@ -4,9 +4,9 @@
 # přepisovat jako jedna dlouhá nahrávka, ne jako několik různých.
 #
 # Použití:
-#   join.sh <workdir> <název> <audio1> <audio2> ...
+#   join.sh <workdir> <name> <audio1> <audio2> ...
 #
-# Vyrobí <workdir>/<název>.wav (16 kHz mono PCM) a vypíše jeho cestu a délku.
+# Vyrobí <workdir>/<name>.wav (16 kHz mono PCM) a vypíše jeho cestu a délku.
 #
 # POŘADÍ SOUBORŮ DRŽÍ VOLAJÍCÍ. Skript je spojí přesně v tom pořadí, v jakém
 # je dostane, a nijak je nepřerovnává – špatné pořadí se totiž nepozná jinak
@@ -21,8 +21,8 @@
 set -uo pipefail
 export LC_ALL=C
 
-WORKDIR="${1:?použití: join.sh <workdir> <název> <audio1> <audio2> ...}"
-NAME="${2:?použití: join.sh <workdir> <název> <audio1> <audio2> ...}"
+WORKDIR="${1:?použití: join.sh <workdir> <name> <audio1> <audio2> ...}"
+NAME="${2:?použití: join.sh <workdir> <name> <audio1> <audio2> ...}"
 shift 2
 
 [ -d "$WORKDIR" ] || { echo "Adresář '$WORKDIR' neexistuje." >&2; exit 1; }

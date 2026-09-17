@@ -160,7 +160,7 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky mířící mimo doménu a nepřenositelné. Zjednodušení se nezapracovává a přesto není „nezapracováno“: báze už tu znalost má líp.
 
 **Zásahy do obsahu**
-- `<soubor>` › *<sekce>* – <typ zásahu>, poznatky <čísla>
+- `<file>` › *<sekce>* – <typ zásahu>, poznatky <čísla>
 - …
 
 **Přestavba struktury** *(je-li potřeba)*
@@ -168,7 +168,7 @@ Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky 
 
 **K rozhodnutí**
 - <N> rozporů – proberu je po jednom v další fázi
-- <N> poznatků míří mimo zadanou doménu, do `<doména>`
+- <N> poznatků míří mimo zadanou doménu, do `<domain>`
 
 **Nezapracuje se**
 - <co a proč>
@@ -256,7 +256,7 @@ Nevede-li doména evidenci, **nabídni ji založit** – jako každou jinou změ
 - **Poznatků:** <N>, z toho zapracováno <n>
 
 **Kam to šlo**
-- `<soubor>` › *<sekce>* – poznatky <čísla>, <typ zásahu>
+- `<file>` › *<sekce>* – poznatky <čísla>, <typ zásahu>
 
 **Rozhodnuté rozpory**
 - <o co šlo> → <jak jsi rozhodl>

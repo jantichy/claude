@@ -6,7 +6,7 @@
 # Použití:
 #   split.sh <workdir> <audio> <zlom>       # zlom ve tvaru MM:SS nebo v sekundách
 #
-# Vyrobí <workdir>/<název>-1.<přípona> a <název>-2.<přípona> a vypíše jejich
+# Vyrobí <workdir>/<name>-1.<ext> a <name>-2.<ext> a vypíše jejich
 # cesty, každou na jeden řádek. Kóduje se beze ztráty (-c copy), takže je to
 # rychlé a nezhoršuje to zvuk před přepisem.
 #

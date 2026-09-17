@@ -178,7 +178,7 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
 
 ### Postup
 
-1. **Zjisti, kdy se každý ze souborů naposledy měnil.** U projektu s gitem `git log --oneline -3 -- <soubor>` a `git status`; jinak čas modifikace. Zajímá tě, jestli se soubor během téhle session vůbec dotkl.
+1. **Zjisti, kdy se každý ze souborů naposledy měnil.** U projektu s gitem `git log --oneline -3 -- <file>` a `git status`; jinak čas modifikace. Zajímá tě, jestli se soubor během téhle session vůbec dotkl.
 
    ```
    CLAUDE.md  README.md  docs/todo.md  docs/backlog.md  docs/done.md  docs/decisions.md  docs/rules.md
@@ -389,10 +389,10 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `
 **Git:**
 
 - `git status` musí být **čistý** – žádné rozpracované ani neotrackované soubory. Co tam být nemá, patří do `.gitignore`; co tam patří, se commitne.
-- *Worktree layout:* `git status` pouštěj ve worktree větve, ne v kořeni kontejneru – tam by spadl na `must be run in a work tree`. Navíc zkontroluj `git -C <kontejner>/main status`: v `main/` nemá být nic rozpracovaného – když je, ohlas to.
+- *Worktree layout:* `git status` pouštěj ve worktree větve, ne v kořeni kontejneru – tam by spadl na `must be run in a work tree`. Navíc zkontroluj `git -C <container>/main status`: v `main/` nemá být nic rozpracovaného – když je, ohlas to.
 - Všechno **commitnuté** s výstižnými zprávami.
 - Když má repozitář remote (viz Fáze 0, bod 3), všechno **pushnuté**.
-- Ověř výsledek znovu (`git status`, `git log origin/<větev>..HEAD`) – ne že to jen předpokládej.
+- Ověř výsledek znovu (`git status`, `git log origin/<branch>..HEAD`) – ne že to jen předpokládej.
 
 **Přehled:**
 

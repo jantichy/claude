@@ -29,7 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 STATUSLINE = ROOT / "statusline.sh"
 
-VAROVANI = "config spouští program"
+WARNING = "config spouští program"
 
 
 def git(cwd, *args):
@@ -37,7 +37,7 @@ def git(cwd, *args):
                           capture_output=True, text=True, check=False)
 
 
-class StatusLineNadCizimRepozitarem(unittest.TestCase):
+class StatusLineOverForeignRepo(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="statusline-test-"))
         self.repo = self.tmp / "repo"
@@ -58,88 +58,88 @@ class StatusLineNadCizimRepozitarem(unittest.TestCase):
 
     # --- pomocné -----------------------------------------------------------
 
-    def nastraz_filtr(self):
+    def plant_filter(self):
         """Nastaví clean filtr, který při zavolání vytvoří marker."""
-        (self.repo / ".gitattributes").write_text("* filter=zlo\n")
-        git(self.repo, "config", "filter.zlo.clean",
+        (self.repo / ".gitattributes").write_text("* filter=evil\n")
+        git(self.repo, "config", "filter.evil.clean",
             f"sh -c 'touch {self.marker}; cat'")
 
-    def spust(self, skript=None):
-        vstup = json.dumps({
+    def run_statusline(self, script=None):
+        stdin_json = json.dumps({
             "workspace": {"current_dir": str(self.repo),
                           "project_dir": str(self.repo)},
             "model": {"display_name": "Opus"},
             "context_window": {},
         })
-        hotovo = subprocess.run(["bash", str(skript or STATUSLINE)],
-                                input=vstup, capture_output=True, text=True,
+        proc = subprocess.run(["bash", str(script or STATUSLINE)],
+                                input=stdin_json, capture_output=True, text=True,
                                 cwd=str(self.repo), check=False)
-        self.assertEqual(hotovo.returncode, 0, hotovo.stderr)
-        return hotovo.stdout
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        return proc.stdout
 
     # --- nebezpečný směr: spuštěný program ---------------------------------
 
-    def test_clean_filtr_se_nespusti(self):
-        self.nastraz_filtr()
-        vystup = self.spust()
+    def test_clean_filter_is_not_run(self):
+        self.plant_filter()
+        output = self.run_statusline()
         self.assertFalse(self.marker.exists(),
                          "status line spustila program z .git/config")
-        self.assertIn(VAROVANI, vystup)
+        self.assertIn(WARNING, output)
 
-    def test_fsmonitor_je_nalez(self):
+    def test_fsmonitor_is_finding(self):
         git(self.repo, "config", "core.fsmonitor", "/bin/echo")
-        self.assertIn(VAROVANI, self.spust())
+        self.assertIn(WARNING, self.run_statusline())
 
-    def test_textconv_je_nalez(self):
-        git(self.repo, "config", "diff.zlo.textconv", "/bin/echo")
-        self.assertIn(VAROVANI, self.spust())
+    def test_textconv_is_finding(self):
+        git(self.repo, "config", "diff.evil.textconv", "/bin/echo")
+        self.assertIn(WARNING, self.run_statusline())
 
-    def test_vetev_se_zobrazi_i_pri_nalezu(self):
+    def test_branch_shown_even_with_finding(self):
         """Varování nahrazuje počet změn, ne celý git blok – jinak by se
         falešný poplach projevil jako zmizelá informace bez vysvětlení."""
-        self.nastraz_filtr()
-        self.assertIn("main", self.spust())
+        self.plant_filter()
+        self.assertIn("main", self.run_statusline())
 
     # --- nebezpečný směr: falešný poplach ----------------------------------
 
-    def test_bezny_repozitar_hlasi_zmeny(self):
-        vystup = self.spust()
-        self.assertIn("~1 changes", vystup)
-        self.assertNotIn(VAROVANI, vystup)
+    def test_plain_repo_reports_changes(self):
+        output = self.run_statusline()
+        self.assertIn("~1 changes", output)
+        self.assertNotIn(WARNING, output)
 
-    def test_bezna_lokalni_konfigurace_neni_nalez(self):
+    def test_plain_local_config_is_not_finding(self):
         git(self.repo, "remote", "add", "origin", "https://example.invalid/r.git")
         git(self.repo, "config", "branch.main.rebase", "true")
         git(self.repo, "config", "core.ignorecase", "true")
-        self.assertNotIn(VAROVANI, self.spust())
+        self.assertNotIn(WARNING, self.run_statusline())
 
-    def test_cisty_strom_hlasi_clean(self):
+    def test_clean_tree_reports_clean(self):
         git(self.repo, "checkout", "-q", "--", "a.txt")
-        vystup = self.spust()
-        self.assertIn("Clean", vystup)
-        self.assertNotIn(VAROVANI, vystup)
+        output = self.run_statusline()
+        self.assertIn("Clean", output)
+        self.assertNotIn(WARNING, output)
 
     # --- mutace: ověř, že to výš měří kontrolu, a ne shodu náhodou ---------
 
-    def test_mutace_vzoru_filtr_pusti(self):
+    def test_pattern_mutation_runs_filter(self):
         """Vyřízne filtry z blacklistu a ověří, že se pak marker opravdu vytvoří.
 
-        Bez tohohle testu by `test_clean_filtr_se_nespusti` zůstal zelený i tehdy,
+        Bez tohohle testu by `test_clean_filter_is_not_run` zůstal zelený i tehdy,
         kdyby marker nevznikal z úplně jiného důvodu – třeba proto, že git obsah
         souboru vůbec nečte."""
-        poskozeny = self.tmp / "poskozena-statusline.sh"
+        broken = self.tmp / "broken-statusline.sh"
         text = STATUSLINE.read_text()
-        mutace = text.replace(r"|filter\..*\.(clean|smudge|process)", "")
-        self.assertNotEqual(text, mutace, "vzor v statusline.sh se přejmenoval")
-        poskozeny.write_text(mutace)
+        mutation = text.replace(r"|filter\..*\.(clean|smudge|process)", "")
+        self.assertNotEqual(text, mutation, "vzor v statusline.sh se přejmenoval")
+        broken.write_text(mutation)
 
-        self.nastraz_filtr()
-        self.spust(poskozeny)
+        self.plant_filter()
+        self.run_statusline(broken)
         self.assertTrue(self.marker.exists(),
                         "poškozená verze filtr nespustila – test tedy neměří kontrolu")
 
 
-class PruhVyuziti(unittest.TestCase):
+class UsageBar(unittest.TestCase):
     """Pruh musí mít vždycky přesně `BAR_WIDTH` znaků, i v krajních hodnotách.
 
     Původní verze skládala pruh přes `seq 1 "$filled"`. BSD seq ale při
@@ -157,19 +157,19 @@ class PruhVyuziti(unittest.TestCase):
             stdin=subprocess.DEVNULL)
         return r.stdout.strip().splitlines()[-1]
 
-    def test_sirka_je_konstantni(self):
+    def test_width_is_constant(self):
         for pct in (0, 1, 7, 14, 50, 86, 99, 100):
             with self.subTest(pct=pct):
                 self.assertEqual(len(self.bar(pct)), 7)
 
-    def test_nula_procent_nema_vyplneny_blok(self):
+    def test_zero_percent_has_no_filled_block(self):
         self.assertNotIn("\u2588", self.bar(0))
 
-    def test_sto_procent_nema_prazdny_blok(self):
+    def test_hundred_percent_has_no_empty_block(self):
         self.assertNotIn("\u2591", self.bar(100))
 
 
-class CislaZeVstupuNespustiPrikaz(unittest.TestCase):
+class InputNumbersDoNotRunCommand(unittest.TestCase):
     """Hodnota z JSONu se nesmí dostat rovnou do `$(( ))`.
 
     Bash uvnitř aritmetické expanze vyhodnocuje obsah proměnné jako výraz
@@ -183,7 +183,7 @@ class CislaZeVstupuNespustiPrikaz(unittest.TestCase):
     z nějakého jiného důvodu.
     """
 
-    ZAKERNY_JSON = json.dumps({
+    MALICIOUS_JSON = json.dumps({
         "context_window": {
             "current_usage": {"input_tokens": "a[$(touch {marker})]",
                               "cache_creation_input_tokens": 0,
@@ -197,31 +197,31 @@ class CislaZeVstupuNespustiPrikaz(unittest.TestCase):
 
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="sl-arith-"))
-        self.marker = self.tmp / "SPUSTILO-SE"
+        self.marker = self.tmp / "EXECUTED"
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def spust(self, skript):
-        subprocess.run(["bash", str(skript)],
-                       input=self.ZAKERNY_JSON.replace("{marker}", str(self.marker)),
+    def run_statusline(self, script):
+        subprocess.run(["bash", str(script)],
+                       input=self.MALICIOUS_JSON.replace("{marker}", str(self.marker)),
                        capture_output=True, text=True, check=False, timeout=30)
 
-    def test_zakerne_cislo_nespusti_prikaz(self):
-        self.spust(STATUSLINE)
+    def test_malicious_number_does_not_run_command(self):
+        self.run_statusline(STATUSLINE)
         self.assertFalse(self.marker.exists(),
                          "hodnota z JSONu se dostala do aritmetické expanze a spustila příkaz")
 
-    def test_bez_sanitizace_by_se_prikaz_spustil(self):
+    def test_without_sanitization_command_runs(self):
         """Mutace: bez `num()` musí marker vzniknout – jinak test neměří sanitizaci."""
-        poskozeny = self.tmp / "statusline.sh"
+        broken = self.tmp / "statusline.sh"
         text = STATUSLINE.read_text()
-        mutace = text.replace(
+        mutation = text.replace(
             """ctx_in=$(num "$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')")""",
             """ctx_in=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')""")
-        self.assertNotEqual(text, mutace, "sanitizace v statusline.sh se přejmenovala")
-        poskozeny.write_text(mutace)
-        self.spust(poskozeny)
+        self.assertNotEqual(text, mutation, "sanitizace v statusline.sh se přejmenovala")
+        broken.write_text(mutation)
+        self.run_statusline(broken)
         self.assertTrue(self.marker.exists(),
                         "poškozená verze příkaz nespustila – test tedy neměří sanitizaci")
 

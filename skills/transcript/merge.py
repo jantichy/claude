@@ -7,7 +7,7 @@ odhad mluvčího je horší než přiznaná neznalost, protože chybné přiřaz
 v přepisu stejně věrohodně jako správné.
 
 Usage:
-    merge.py <srt> <diarization.json> <výstupní_základ> [--names <names.json>]
+    merge.py <srt> <diarization.json> <output_base> [--names <names.json>]
 
 Vznikne <základ>.json (úseky s mluvčím a textem) a <základ>.vtt (titulky se
 značkou <v Jméno>). Pojmenování mluvčích je volitelné; bez něj zůstanou

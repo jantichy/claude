@@ -1,7 +1,7 @@
 ---
 name: invoicing
 description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; neúčtuje, nehlídá úhrady ani daňové termíny.
-argument-hint: [full|preview|recover|sync] [klient] [období]
+argument-hint: [full|preview|recover|sync] [client] [period]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
@@ -254,7 +254,7 @@ Dohledá **čas, který se zapomněl natrackovat**, a ukáže tipy s doložením
 Katalog zdrojů, heuristiky a tvar zadání pro sběrače drží `~/.claude/skills/invoicing/recover.md`. Přístupy a identifikátory drží `~/Dev/context/business/invoicing.md`, *Stopy práce*. **Tenhle režim si zdroje nevymýšlí** – sáhne jen na ty, které má klient vyjmenované; na ostatní se nedívá a vypíše je jako slepá místa.
 
 1. **Příprava.** Načti soubor klienta a z něj sekci *Stopy práce*. **Chybí-li, skonči a řekni to** – bez identifikátorů nemá režim kde hledat a plošné hledání jména klienta napříč schránkou vyrábí falešné tipy. Ověř dostupnost každého vyjmenovaného zdroje a **nedostupné si poznamenej jako slepé místo**, neignoruj je.
-2. **Rozsah.** Výchozí je **nevyfakturované období** – hranici zjisti stejně jako v *Fázi 1*, tedy z poslední faktury, a konec je dnešek. Stojí-li za režimem měsíc nebo datum (`/invoicing recover <klient> 2026-05`), platí ten; **řekni v takovém případě nahlas, že už vyfakturované období se dohnat nedá** a slouží jen k poznání, kolik času systematicky uniká.
+2. **Rozsah.** Výchozí je **nevyfakturované období** – hranici zjisti stejně jako v *Fázi 1*, tedy z poslední faktury, a konec je dnešek. Stojí-li za režimem měsíc nebo datum (`/invoicing recover <client> 2026-05`), platí ten; **řekni v takovém případě nahlas, že už vyfakturované období se dohnat nedá** a slouží jen k poznání, kolik času systematicky uniká.
 3. **Sběr.** Pusť sběrače paralelně, jeden na zdroj, se zadáním z `recover.md`, *Zadání pro sběrače*. Vracejí stopy, ne závěry.
 4. **Srovnání.** Slij stopy do shluků, porovnej je se záznamy v Clockify a odděl tři výsledky: **chybí** (v Clockify není nic), **natrackováno jinam** (čas je tam pod jiným projektem), **sedí** (nález nevzniká).
 

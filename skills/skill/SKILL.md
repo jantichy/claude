@@ -45,7 +45,7 @@ Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Sk
 
 **Zadávej vnitřku kontrakt výstupu, ne kroky.** „Potřebuju tři testovací prompty a vyhodnocení, jestli se skill vyvolal“ přežije upgrade pluginu; „udělej svůj krok 3“ ne.
 
-**Cizí nástroj nesmí rozhodovat o tvaru.** Předej mu výslovně: sekce a jejich pořadí podle `SKILLS.md`, čeština, cíl `skills/<jméno>/SKILL.md` v tomhle repozitáři. Bez toho si prosadí vlastní výchozí volbu – `skill-creator` i `writing-skills` mají každý svou a obě se od téhle normy liší.
+**Cizí nástroj nesmí rozhodovat o tvaru.** Předej mu výslovně: sekce a jejich pořadí podle `SKILLS.md`, čeština, cíl `skills/<name>/SKILL.md` v tomhle repozitáři. Bez toho si prosadí vlastní výchozí volbu – `skill-creator` i `writing-skills` mají každý svou a obě se od téhle normy liší.
 
 ------
 
@@ -169,12 +169,12 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 
 | Kam | Co |
 |---|---|
-| `skills/<jméno>/README.md` | **README skillu pro člověka zvenčí** podle `SKILLS.md`, *README skillu* – sekce, hromadná instalace u skillu ze životního cyklu, odkaz do repozitáře |
+| `skills/<name>/README.md` | **README skillu pro člověka zvenčí** podle `SKILLS.md`, *README skillu* – sekce, hromadná instalace u skillu ze životního cyklu, odkaz do repozitáře |
 | `~/.claude/README.md` | jeden odstavec ve stylu ostatních – k čemu skill je. **Odkaz na README skillu nese nadpis sekce** (`### [`/jméno`](skills/jméno/)`), ne zvláštní řádek pod odstavcem; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
 | `~/.claude/RULES.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
-| `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRACE` se **nedoplňuje**, ten seznam se jen zkracuje |
+| `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRATION` se **nedoplňuje**, ten seznam se jen zkracuje |
 | `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních README cyklu**. Testy to chytí, ale samy to nedopíšou |
-| `~/.claude/skills/<jméno>/` | vedlejší soubory, skripty, jejich kontrola závislostí |
+| `~/.claude/skills/<name>/` | vedlejší soubory, skripty, jejich kontrola závislostí |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
 | `decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo. **Pozor:** `~/.claude` nemá `docs/` – zapisuje se do `~/Dev/context/decisions.md`, viz `.claude/CLAUDE.md` |
 
@@ -185,7 +185,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 ```
 ## Skill hotový
 
-- **Soubor:** skills/<jméno>/SKILL.md – <N> řádků
+- **Soubor:** skills/<name>/SKILL.md – <N> řádků
 - **Režim:** <create / extract>
 - **Delegace:** <na co, nebo „na nic">
 
@@ -250,7 +250,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Nenajdeš-li nic, řekni to a skonči.** Běh bez zásahu je platný výsledek revize.
 
-**Vyškrtni ze seznamu `MIGRACE`** skill, u kterého jsi vypořádal **všechny** jeho nálezy – vyškrtává se po celých skillech, ne po jednotlivých nálezech, takže skill s jedním zbylým nálezem v seznamu zůstává v `~/.claude/tests/test_skills.py`. Ten seznam **musí přesně sedět se skutečností**: nesmí v něm chybět skill mimo normu ani zůstat skill, který se opravil. Opravený a nevyškrtnutý skill proto shodí testy stejně jako regrese. Je to schválně – bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit.
+**Vyškrtni ze seznamu `MIGRATION`** skill, u kterého jsi vypořádal **všechny** jeho nálezy – vyškrtává se po celých skillech, ne po jednotlivých nálezech, takže skill s jedním zbylým nálezem v seznamu zůstává v `~/.claude/tests/test_skills.py`. Ten seznam **musí přesně sedět se skutečností**: nesmí v něm chybět skill mimo normu ani zůstat skill, který se opravil. Opravený a nevyškrtnutý skill proto shodí testy stejně jako regrese. Je to schválně – bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit.
 
 Pak pokračuj *Fází 7* – i `update` sahá na `README.md` a testy.
 
@@ -268,13 +268,13 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 
 | Kde hledat | Co |
 |---|---|
-| `~/.claude/skills/<jméno>/` | celý adresář včetně vedlejších souborů a skriptů |
+| `~/.claude/skills/<name>/` | celý adresář včetně vedlejších souborů a skriptů |
 | `~/.claude/README.md` | jeho sekce |
 | `~/.claude/RULES.md` | rámeček v *Životním cyklu projektu* a zmínky u sousedů |
 | `~/.claude/skills/LIFECYCLE.md` | **byl-li to krok cyklu**, jeho číslovaná odrážka; bez ní se rozejde s rámečkem a testy to shodí |
-| `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRACE`**, je-li tam; jinak `test_migrace_jmenuje_jen_existujici_skilly` spadne na výjimku pro nikoho |
-| ostatní skilly | odkazy a předávání práce – „další krok: `/<jméno>`“ |
-| `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních vizitek. Osiřelý odkaz na `../<jméno>/README.md` testy shodí, ale samy ho nevyškrtnou |
+| `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRATION`**, je-li tam; jinak `test_migration_names_only_existing_skills` spadne na výjimku pro nikoho |
+| ostatní skilly | odkazy a předávání práce – „další krok: `/<name>`“ |
+| `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních vizitek. Osiřelý odkaz na `../<name>/README.md` testy shodí, ale samy ho nevyškrtnou |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
 | projektové `CLAUDE.md` v `~/Dev` | sekce, které skill zakládal |
 | Memory | záznamy, které ho vyžadují |

@@ -27,21 +27,21 @@
 # úseku vzniká řez uprostřed věty a model se načítá znovu u každého úseku.
 # Kvůli tomu druhému se běh po úsecích nezapočítává do kalibrace tempa.
 #
-# Pro každý vstup vznikne <workdir>/<název>.txt a <workdir>/<název>.srt.
+# Pro každý vstup vznikne <workdir>/<name>.txt a <workdir>/<name>.srt.
 # SRT vzniká vždy, protože se z něj počítá podíl řeči; když ho volající nechce,
 # smaže ho v úklidu.
 #
 # Do <log_file> se píše průběh, ze kterého čte progress.py:
 #   ### DURATION N SECONDS       (délky souborů – pro odhad postupu)
-#   ### START zaznam-N HH:MM:SS
+#   ### START file-N HH:MM:SS
 #   [HH:MM:SS ...] segmenty       (píše whisper)
-#   ### DONE zaznam-N HH:MM:SS
+#   ### DONE file-N HH:MM:SS
 #   ### SPEECHSTAT N SPEECH_S TOTAL_S PERCENT   (podíl přepsaného zvuku,
 #                                                NE výstup VAD – vyjde stejně i bez něj)
-#   ### FAILED zaznam-N <důvod>   (běh pokračuje dalším souborem)
-#   ### CHUNKING zaznam-N <z>     (jen s WHISPER_CHUNK_MIN: začíná běh po úsecích)
-#   ### CHUNKFAILED zaznam-N <i>/<z>  (úsek se přeskočil, zbytek se přepsal dál)
-#   ### CHUNKSTAT zaznam-N <ok>/<z>   (kolik úseků se povedlo – ohlas ztrátu)
+#   ### FAILED file-N <důvod>   (běh pokračuje dalším souborem)
+#   ### CHUNKING file-N <z>     (jen s WHISPER_CHUNK_MIN: začíná běh po úsecích)
+#   ### CHUNKFAILED file-N <i>/<z>  (úsek se přeskočil, zbytek se přepsal dál)
+#   ### CHUNKSTAT file-N <ok>/<z>   (kolik úseků se povedlo – ohlas ztrátu)
 #   ### NOCALIB <důvod>           (tempo tohoto běhu se do kalibrace nezapočítalo)
 #   ### ELAPSED AUDIO_S WALL_S   (AUDIO_S = jen úspěšně přepsané soubory)
 #   ### ALL DONE
@@ -136,14 +136,14 @@ transcribe_chunked() {
   local out_txt="$cdir/all.txt" out_srt="$cdir/all.srt"
   : > "$out_txt"
   : > "$out_srt"
-  echo "### CHUNKING zaznam-$idx $total" >> "$LOG"
+  echo "### CHUNKING file-$idx $total" >> "$LOG"
 
   while [ "$i" -lt "$total" ]; do
     start=$((i * len))
     i=$((i + 1))
     # -ss před -i seekuje rychle; WAV je PCM, takže -c copy nic nepřekóduje.
     if ! ffmpeg -y -ss "$start" -t "$len" -i "$wav" -c copy "$cdir/c.wav" -loglevel error 2>>"$LOG"; then
-      echo "### CHUNKFAILED zaznam-$idx $i/$total" >> "$LOG"
+      echo "### CHUNKFAILED file-$idx $i/$total" >> "$LOG"
       failed=$((failed + 1))
       continue
     fi
@@ -155,7 +155,7 @@ transcribe_chunked() {
       fi
       ok=1
     else
-      echo "### CHUNKFAILED zaznam-$idx $i/$total" >> "$LOG"
+      echo "### CHUNKFAILED file-$idx $i/$total" >> "$LOG"
       failed=$((failed + 1))
     fi
     rm -f "$cdir/c.wav" "$cdir/c.txt" "$cdir/c.srt"
@@ -189,7 +189,7 @@ transcribe_chunked() {
   # Kolik úseků se povedlo. Volající to hlásí uživateli – soubor s přeskočeným
   # úsekem dostane `### DONE` jako každý jiný, takže bez tohohle by se ztráta
   # poznala jedině z podílu přepsaného zvuku.
-  echo "### CHUNKSTAT zaznam-$idx $((total - failed))/$total" >> "$LOG"
+  echo "### CHUNKSTAT file-$idx $((total - failed))/$total" >> "$LOG"
 
   if [ "$ok" = "1" ]; then
     mv "$out_txt" "$outbase.txt"
@@ -244,11 +244,11 @@ ok_audio=0
 # delší jméno, nebo si soubory přejmenovat ručně. Proto se zastaví a nechá se
 # zeptat volajícího (SKILL.md, krok 6).
 if [ "$KEEP_EXT" != "1" ]; then
-  kolize=$(for f in "$@"; do b=$(basename "$f"); printf '%s\n' "${b%.*}"; done | sort | uniq -d)
-  if [ -n "$kolize" ]; then
-    echo "### COLLISION $(printf '%s' "$kolize" | tr '\n' ' ')" >> "$LOG"
+  collisions=$(for f in "$@"; do b=$(basename "$f"); printf '%s\n' "${b%.*}"; done | sort | uniq -d)
+  if [ -n "$collisions" ]; then
+    echo "### COLLISION $(printf '%s' "$collisions" | tr '\n' ' ')" >> "$LOG"
     { echo "Dva nebo víc vstupů mají stejný základ jména, takže by si přepsaly výstupy:"
-      printf '%s\n' "$kolize" | sed 's/^/  /'
+      printf '%s\n' "$collisions" | sed 's/^/  /'
       echo "Buď to pusť znovu s WHISPER_KEEP_EXT=1 (výstupy ponesou i příponu,"
       echo "tedy porada.m4a.txt), nebo si nahrávky napřed přejmenuj."
     } >&2
@@ -260,36 +260,36 @@ fi
 # WHISPER_KEEP_WAV=1 ho skript vyrábí sám a je to jediný vstup pro diarizaci,
 # takže jeho ztráta stojí tentýž čas jako ztráta přepisu. Jeden seznam pro obě
 # místa, která ho čtou – dřív byl opsaný dvakrát a `wav` chyběl v obou.
-VYSTUPNI_PRIPONY="txt srt md vtt json wav"
+OUTPUT_EXTENSIONS="txt srt md vtt json wav"
 
 # Druhá kontrola: výstupy, které v adresáři už leží z dřívějšího běhu. Přepsat
 # je smí být správně (opakovaný běh po opravě), ale taky to může být hodina
 # práce pryč – a whisper-cli i ffmpeg přepisují bez ptaní. Rozhodnout to za
 # uživatele nejde, tak se to nechá na něm (SKILL.md, krok 6).
 if [ "$ON_EXISTING" != "overwrite" ]; then
-  hrozi=""
+  at_risk=""
   for f in "$@"; do
     b=$(basename "$f"); [ "$KEEP_EXT" = "1" ] || b="${b%.*}"
-    for ext in $VYSTUPNI_PRIPONY; do
-      kand="$WORKDIR/$b.$ext"
-      [ -e "$kand" ] || continue
+    for ext in $OUTPUT_EXTENSIONS; do
+      out_path="$WORKDIR/$b.$ext"
+      [ -e "$out_path" ] || continue
       # Vstupní nahrávka neblokuje sama sebe. U WAV vstupu – typicky schůzky
       # spojené přes join.sh – ukazuje kandidát na týž soubor, který se má
       # přepisovat, takže hlásit "hrozí přepsání" by znamenalo odmítnout běh
       # kvůli jeho vlastnímu vstupu. Převod si pro ten případ vyrobí
-      # <název>.16k.wav a originálu se nedotkne (viz smyčka níž).
-      [ "$kand" -ef "$f" ] && continue
-      hrozi="${hrozi}  $b.$ext
+      # <name>.16k.wav a originálu se nedotkne (viz smyčka níž).
+      [ "$out_path" -ef "$f" ] && continue
+      at_risk="${at_risk}  $b.$ext
 "
     done
   done
-  if [ -n "$hrozi" ]; then
+  if [ -n "$at_risk" ]; then
     if [ "$ON_EXISTING" = "suffix" ]; then
       SUFFIX_MODE=1
     else
-      echo "### EXISTING $(printf '%s' "$hrozi" | tr -d ' ' | tr '\n' ' ')" >> "$LOG"
+      echo "### EXISTING $(printf '%s' "$at_risk" | tr -d ' ' | tr '\n' ' ')" >> "$LOG"
       { echo "V pracovním adresáři už leží soubory, které by tenhle běh přepsal:"
-        printf '%s' "$hrozi"
+        printf '%s' "$at_risk"
         echo "Pusť to znovu s WHISPER_ON_EXISTING=overwrite (přepsat),"
         echo "nebo =suffix (nové výstupy dostanou -2, -3, …), nebo si je ukliď sám."
       } >&2
@@ -306,12 +306,12 @@ for f in "$@"; do
   if [ "${SUFFIX_MODE:-0}" = "1" ]; then
     i=1
     while :; do
-      kandidat="$base"; [ "$i" -gt 1 ] && kandidat="$base-$i"
-      obsazeno=0
-      for ext in $VYSTUPNI_PRIPONY; do
-        [ -e "$WORKDIR/$kandidat.$ext" ] && { obsazeno=1; break; }
+      candidate="$base"; [ "$i" -gt 1 ] && candidate="$base-$i"
+      taken=0
+      for ext in $OUTPUT_EXTENSIONS; do
+        [ -e "$WORKDIR/$candidate.$ext" ] && { taken=1; break; }
       done
-      [ "$obsazeno" = "0" ] && { base="$kandidat"; break; }
+      [ "$taken" = "0" ] && { base="$candidate"; break; }
       i=$((i+1))
     done
   fi
@@ -336,12 +336,12 @@ for f in "$@"; do
   file_dur="${DURATIONS[$((n-1))]}"
 
   if ! ffmpeg -y -i "$f" -ar 16000 -ac 1 -c:a pcm_s16le "$wav" >>"$LOG" 2>&1; then
-    echo "### FAILED zaznam-$n prevod-na-wav" >> "$LOG"
+    echo "### FAILED file-$n wav-conversion" >> "$LOG"
     rm -f "$wav"
     continue
   fi
 
-  echo "### START zaznam-$n $(date +%H:%M:%S)" >> "$LOG"
+  echo "### START file-$n $(date +%H:%M:%S)" >> "$LOG"
   if [ "$CHUNK_MIN" -gt 0 ] 2>/dev/null; then
     transcribe_chunked "$wav" "$WORKDIR/$base" "$n" "$file_dur"
     rc=$?
@@ -350,7 +350,7 @@ for f in "$@"; do
     rc=$?
   fi
   if [ "$rc" -eq 0 ]; then
-    echo "### DONE zaznam-$n $(date +%H:%M:%S)" >> "$LOG"
+    echo "### DONE file-$n $(date +%H:%M:%S)" >> "$LOG"
     ok_audio=$(awk -v a="$ok_audio" -v b="$file_dur" 'BEGIN{printf "%.3f", a+b}')
     srt="$WORKDIR/$base.srt"
     if [ -f "$srt" ]; then
@@ -359,7 +359,7 @@ for f in "$@"; do
       echo "### SPEECHSTAT $n $sp $file_dur $pct" >> "$LOG"
     fi
   else
-    echo "### FAILED zaznam-$n whisper" >> "$LOG"
+    echo "### FAILED file-$n whisper" >> "$LOG"
   fi
   [ "$KEEP_WAV" = "1" ] || rm -f "$wav"
 done
@@ -370,7 +370,7 @@ echo "### ELAPSED $ok_audio $wall" >> "$LOG"
 # takže jeho tempo je nafouklé o něco, co v normálním běhu není – EWMA by tím
 # stáhla odhad dolů i pro všechny běžné přepisy.
 if [ "$CHUNK_MIN" -gt 0 ]; then
-  echo "### NOCALIB beh-po-usecich" >> "$LOG"
+  echo "### NOCALIB chunked-run" >> "$LOG"
 else
   python3 "$HERE/rate.py" update "$MODEL_KEY" "$ok_audio" "$wall" 2>/dev/null || true
 fi

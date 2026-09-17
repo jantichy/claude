@@ -25,7 +25,7 @@ Zvukový i obrazový záznam je **platný vstup, ne důvod k odmítnutí** – v
 - **Vytáhni je z videa** – vyřízni snímky při změně obrazu do **vlastního čerstvého adresáře** a přečti je jako obrázky:
 
   ```bash
-  tmp=$(mktemp -d) && ffmpeg -i "<video>" -vf "select='gt(scene,0.3)'" -vsync vfr "$tmp/snimek-%03d.jpg"
+  tmp=$(mktemp -d) && ffmpeg -i "<video>" -vf "select='gt(scene,0.3)'" -vsync vfr "$tmp/frame-%03d.jpg"
   ```
 
   **Cesta ke zdroji je cizí vstup a uvozovkuje se vždy.** Jméno souboru pochází od toho, kdo ti nahrávku poslal – neuvozovkovaná cesta se zpětnými apostrofy nebo `$(…)` se v shellu rozvine dřív, než ffmpeg vůbec nastartuje. Ze stejného důvodu adresář **vyrob**, ne zvol: do cizího by ffmpeg přepsal stejnojmenné soubory a úklid by je pak vzal s sebou.
