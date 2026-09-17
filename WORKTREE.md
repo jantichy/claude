@@ -195,6 +195,7 @@ git branch -d <branch>
 git push origin --delete <branch>     # jen pokud byla pushnutá
 ```
 
+- **Úklid větve až po ověřeném merge, nikdy souběžně s ním.** `worktree remove`, `branch -d` a `push --delete` se pouštějí teprve tehdy, když merge skončil nulou a `git log --oneline -1` v `main/` ukazuje merge commit. **Nespouštěj je jako paralelní volání nástroje ani za `;`** – selže-li merge, úklid proběhne stejně a smaže nepřimergovanou větev lokálně i na remote. `git branch -d` to nezastaví, pokud je větev pushnutá: za přimergovanou ji považuje podle `origin/<branch>`, ne podle `main`, a skončí jen varováním. Doloženo 17. 9. 2026 v rezervačním systému: `git merge -F -` spadl (merge zprávu ze stdin nebere, zprávu předej `-m`) a souběžně puštěný úklid smazal worktree i větev. Obnovilo se to z hashe commitu, který byl ještě v repozitáři.
 - **Merge v `main/` narazí na konflikt** (`main` se posunul mezi krokem 2 a 4) → `git merge --abort` a zpátky na krok 2. Konflikt se v `main/` neřeší.
 - **Push odmítne remote** → zastav před úklidem větve a ohlas to; merge commit zůstává lokálně a větev se nemaže, dokud není `main` venku.
 - **`worktree remove` odmítne kvůli neuloženému obsahu** → nepoužívej `--force`, dokud se nezeptáš.
