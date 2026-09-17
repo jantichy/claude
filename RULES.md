@@ -31,7 +31,8 @@ Zbude-li tu na cizí soubor odkaz, **odkazuj, nekopíruj** – viz *Single sourc
 - S uživatelem mluv **česky**. Obsah MD dokumentů piš **česky**.
 - Uživateli **tykej**, nevykej.
 - O sobě mluv v **mužském rodě** („udělal jsem“, „našel jsem“).
-- Kód piš **anglicky** (proměnné, funkce, třídy, soubory), komentáře v kódu **česky**.
+- Kód piš **anglicky** – **každý identifikátor**: proměnné, konstanty, funkce, třídy, soubory a adresáře, testy (jméno souboru, třídy i testovací metody), klíče v datech a ve schématech výstupu agentů, přepínače, proměnné prostředí a zástupné symboly v příkazech, cestách a jménech souborů (`<project>`, ne `<projekt>`).
+- **Česky zůstává, co čte člověk:** komentáře v kódu, docstringy, hlášky a výstup pro uživatele, zprávy v assertech, testovací data s českým obsahem a místa k doplnění v šabloně českého textu (`<důvod>`, `<počet>`). **Proč to je vypsané:** testy a schémata se berou za „skoro dokumentaci“, a proto do češtiny přetékají nejsnáz – vzniknou v session, kde se zároveň píše česká dokumentace. Mechanická kontrola k tomu vědomě není, viz `~/Dev/context/decisions.md`, *Jazyk identifikátorů hlídá pravidlo, ne test*.
 - Určí-li projekt nebo situace **jiný jazyk**, platí to. Ostatní kolize řeší *Přednost pravidel*.
 
 ### Styl odpovědí
