@@ -114,6 +114,14 @@ Stojí-li na faktu rozhodnutí, návrh nebo argument, **ověř ho, než ho zapí
 
 **Proč:** víc otázek naráz nutí uživatele v odpovědi sám rozlišovat, na co odpovídá.
 
+**Před otázkou musí stát kontext, ze kterého se dá rozhodnout.** Ne odstavec o tom, že se budeš ptát, ale tři věci: **čeho se otázka týká, jak to je dnes, a proč to nestačí**. Teprve pak varianty. Bez toho jsou volby řetězce bez významu – uživatel vidí „vyznačit oba“ a nemá odkud vědět, které dva.
+
+**Zrádné je, že tobě ten kontext nechybí.** Máš před sebou soubor, který jsi zrovna přečetl, takže otázka vypadá úplná – a tím líp, čím hlubšího detailu se týká. Uživatel má v hlavě celý projekt, ne řádek, na kterém stojíš ty. **Kontrolní otázka:** dal by se na otázku odpovědět, kdyby ji člověk viděl bez předchozí odpovědi? Když ne, chybí kontext, ne volby.
+
+**Kontext patří do textu odpovědi před volání toolu, ne do `question` a `description`.** Tam se nevejde a zkratkou v popisku volby se nenahradí.
+
+Doloženo 17. 9. 2026 v rezervačním systému: uprostřed osmibodového řízeného rozhovoru přišla otázka „vyznačí náhled obě vady, nebo jen neznámý kód“ bez věty o tom, že vady jsou dvě a které to jsou. Uživatel: *„Necybí ti tu zase úvodní kontextový text před otázkou? Vůbec netuším, na co se ptáš. jaký oba? co oba?“* – slovo **zase** je na tom to podstatné: v téže session to byl druhý případ, protože předchozí otázka na omezení rychlosti taky neřekla, kdo a kdy to volání vůbec vyvolá.
+
 **Jak se ptát:** přes tool `AskUserQuestion`, ne vypsáním voleb jako textu – uživatel pak vybírá šipkami, místo aby psal písmena. Jedno volání = **jedna otázka** (`multiSelect: false`), `header` max 12 znaků, `description` u každé volby konkrétně říká, co se stane.
 
 Volbu **Other** doplňuje tool sám. Ber ji jako **doplňující instrukci, ne odmítnutí** – vyřeš, co uživatel napsal, a pak se na tutéž věc zeptej znovu. Nikdy ji nezapisuj jako „přeskočeno“.
