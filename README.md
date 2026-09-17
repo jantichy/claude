@@ -124,6 +124,10 @@ Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem �
 
 Řeknu mu soubor nebo celou dávku z Downloads a on pozná, o jaký podklad jde, uloží ho na správné místo pod správným názvem a hned spustí, co po tom má následovat – přepis nahrávky, vytěžení do knowledge base, zápis do evidence. Rozsah je přesně to, co zadám: neuklízí okolí, nic nepřepíše a při kolizi se zeptá místo toho, aby přilepil `(1)`. Konkrétní pravidla, co kam patří, v tomhle repozitáři nejsou – skill je jen rámec a tabulku si čte z mojí privátní knowledge base.
 
+### [`/diagram`](skills/diagram/) – datový model jako mapa, na kterou se dá kliknout
+
+Z dokumentace navrženého modelu nakreslí interaktivní stránku: ER diagram všech tabulek, ve kterém po kliknutí vidím popis entity, vazby, sloupce a constrainty, a stavový prostor s přechody mezi stavy. Žije jako soukromý artefakt a při dalším zavolání se překreslí na stejném odkazu, klidně z jiné rozdělané větve. Nekreslí nic, co v dokumentaci není, a do projektu nezapisuje.
+
 ### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
 
 Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je mu podezřelé, vystaví faktury a nechá v mailu rozepsaný draft s fakturou a výkazem hodin v příloze. **Odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: dohledat čas, který jsem si zapomněl natrackovat. Sazby a dohody s klienty v tomhle repozitáři nejsou, skill je jen rámec.
