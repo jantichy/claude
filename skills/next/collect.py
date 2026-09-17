@@ -334,7 +334,10 @@ def round_states(repo, rounds, prefix):
         text = repo.git("show", f"{b}:{prefix}todo.md") or ""
         block = next((body for t, body in sections(text, "### ") if t == r["title"]), None)
         if block is None:
-            r["branch_state"] = "zapsáno ve větvi, čeká na sloučení"
+            # Blok kola ve větvi chybí: rozhodnutí je zapsané v dokumentech a kolo
+            # z todo.md zmizelo – zbývá sloučit. Token, ne věta, ať se podle něj dá
+            # rozhodovat; ostatní hodnoty jsou řádek *Stav* z todo.md, jak ho kdo napsal.
+            r["branch_state"] = "merge_pending"
         else:
             m = next((FIELD.match(x) for x in block if FIELD.match(x) and "Stav" in x), None)
             r["branch_state"] = m.group(2).strip() if m else None

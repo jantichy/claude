@@ -271,6 +271,16 @@ class QueueCollection(unittest.TestCase):
         vat_round = self.collect()["rounds"][0]
         self.assertEqual(vat_round["branch_state"], "rozhoduje se")
 
+    def test_round_removed_in_branch_is_merge_pending(self):
+        """Blok kola ve větvi zmizel, tedy je zapsané a čeká jen sloučení. Hodnota
+        musí být token, podle kterého se rozhoduje, ne věta pro člověka."""
+        vat_todo = self.box / "dph" / "docs" / "todo.md"
+        text = vat_todo.read_text()
+        start = text.index("### Kolo o DPH")
+        vat_todo.write_text(text[:start] + text[text.index("### Kolo o fakturaci"):])
+        self.git("-C", str(self.box / "dph"), "commit", "-qam", "DPH zapsáno")
+        self.assertEqual(self.collect()["rounds"][0]["branch_state"], "merge_pending")
+
     def test_abandoned_branch_with_session_to_resume(self):
         self.session(self.dead_pid(), "stara", str(self.box / "dph"), "specify-dph")
         b = self.branches()["specify-dph"]
