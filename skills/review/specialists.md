@@ -36,7 +36,8 @@ Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
 | `web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) | `reader` |
 | `analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`) | `Explore` |
 | `advertising/` | vedení placených kampaní – struktura účtu, biddovací strategie, konverzní akce jako vstup pro bidding, kreativy a cesta po prokliku (měřicí stranu téhož drží `analytics/`) | `Explore` |
-| `text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `web/web.md`) | `reader` |
+| `text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `text/copy.md`). **Tři pravidla jeho sekce *Stylistika* mají užší rozsah** – vyhýbání se pomlčkám, závorkám a středníkům, neopakování slova blízko sebe a vyhýbání se opisnému pasivu neplatí na interní pracovní text, na autorský hlas ani na mikrocopy, takže se v `docs/` projektu nehlásí; rozsah čti v té sekci, ne z tohohle řádku | `reader` |
+| `text/copy.md` | texty v rozhraní – popisky tlačítek a polí, stavy, chybové hlášky, potvrzování, prázdné stavy, texty u částek a dokladů (**navíc** k `web/web.md`, který řeší stránku jako celek) | `reader` |
 | `text/typography.md` | česká sazba čehokoliv psaného česky – interpunkce, mezery, čísla, data, výčty (**navíc** k `text/text.md`, ale platí i tam, kde souvislý text nevzniká) | `reader` |
 | `design/design.md` | vizuální výstupy – grafika, barevné systémy, práce s písmem, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu (sazbu znaků drží `text/typography.md`) | `reader` |
 | `design/slides.md` | promítané prezentace (**navíc** k `design/design.md`) | `reader` |
