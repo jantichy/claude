@@ -139,6 +139,29 @@ class ContinuousCheck(unittest.TestCase):
         self.assertTrue((self.home / ".local/state/claude-verify/runs").is_dir(),
                         "stav běhu nevznikl na pevné cestě pod HOME")
 
+    def test_allow_says_repository_content_can_change_later(self):
+        """Dialog musí říct, co člověk u terminálu schvaluje.
+
+        Souhlas se vydává jednou, ale soubory, které schválené příkazy vykonají –
+        `tests/`, skripty, konfigurace –, se mění dál a nový souhlas si nevyžádají.
+        Otisk pokrývá jen řádky kontraktu, a to je vědomá volba: otisk z celé
+        sekce se 14. 9. 2026 vyzkoušel a zrušil, protože si říkal o odsouhlasení
+        po každé editaci komentáře, a hashovat spouštěný strom by bylo totéž,
+        jen častěji. Uzavřít tu mez tedy nejde bez falešných poplachů; jediné,
+        co jde, je **nenechat ji skrytou** v okamžiku, kdy se rozhoduje.
+
+        Doloženo 18. 9. 2026 nálezem `/review full` nad rezervačním systémem:
+        kdo dostane commit do `tests/`, dostane spuštění svého kódu po první
+        další odpovědi – a z dialogu to nešlo poznat, protože mluvil jen
+        o **cizím naklonovaném** repozitáři, ne o vlastním po cizím commitu.
+        """
+        self.commit_contract(test="true")
+        out = self.allow().stdout
+        self.assertIn("mění dál a nový", out,
+                      "dialog neříká, že se spouštěné soubory mění bez nového souhlasu")
+        self.assertIn("cizí commity", out,
+                      "dialog neříká, čeho se to týká – repozitáře s cizími commity")
+
     def test_list_flags_legacy_format_consent(self):
         """Mrtvý záznam nesmí ve výpisu vypadat jako živý.
 

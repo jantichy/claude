@@ -377,6 +377,12 @@ if [ "${1:-}" = "--allow" ]; then
   echo "Co ty příkazy udělají, ale určuje package.json, Makefile nebo konfigurace"
   echo "v tomhle repu, a to se neschvaluje. Do cizího naklonovaného repozitáře"
   echo "souhlas nedávej."
+  echo
+  echo "A platí to i do budoucna: souhlas se vydává jednou, kdežto soubory, které"
+  echo "ty příkazy vykonají – testy, skripty, konfigurace – se mění dál a nový"
+  echo "souhlas si nevyžádají. Kdo dostane commit do tohohle repozitáře, dostane"
+  echo "tím i spuštění svého kódu po první další odpovědi. U repozitáře, kam"
+  echo "chodí cizí commity nebo přebíráš cizí větve, to je ta hlavní otázka."
   exit 0
 fi
 
