@@ -15,7 +15,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 3. **Dohledá, co propadlo.** Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale nevypořádané téma: přišla dlouhá odpověď s několika body, vy jste se chytili poloviny a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil – jen se to nikdy nedořešilo.
 4. **Ověří, že se soubory udržovaly průběžně.** Projde záznam znovu a u každého souboru se ptá, co do něj během práce mělo přibýt – a co chybí, doplní zpětně ve stejné kvalitě, jako by to bylo zapsané v okamžiku, kdy to padlo.
 5. **Ptá se i na produktové podklady**, vede-li je projekt – jestli se změnilo, co víme o konkurenci, jestli přibylo riziko, jestli se posunul některý scénář nebo pojem. Jsou to soubory, na které se při běžné práci nesahá, takže tiše zastarávají jako první.
-6. **Pošle na projekt čerstvé oči** – někoho, kdo nemá žádný kontext a čte jenom repozitář, jako by se do projektu zaučoval. Ten řekne, jestli je jasné, co dělat dál, kde by musel hádat a co si protiřečí.
+6. **Pošle na projekt čerstvé oči** – dva pomocníky, kteří nemají žádný kontext a čtou jen repozitář. Jeden se do projektu zaučuje a řekne, jestli je jasné, co dělat dál a kde by musel hádat; druhý dostane jen dnešní změny a hledá v nich rozpory a zbytky po přepisování. Rozbité odkazy najde ještě před nimi skript.
 7. **Uklidí Git** a ověří výsledek, ne že ho předpokládá.
 8. **Je opakovatelný.** Druhý průchod slouží jako ověření – co je zapsané a v pořádku, projde bez zásahu.
 
@@ -26,6 +26,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 - **Nevypořádaná témata se probírají hned, ne v závěru.** Kdyby se ptal až nakonec, jste už duchem pryč a odpovíte „to je jedno“. A u každého kandidáta si napřed ověří, jestli se to mezitím nevyřešilo jinudy, protože falešný nález nutí rozhodovat znovu něco, co už rozhodnuté je.
 - **Ptá se věcně.** U nevypořádané otázky nabídne skutečné odpovědi, které tehdy byly ve hře, ne obecné „zapsat / odložit“.
 - **Nic nezůstane jen ve výpisu.** Co by jinak skončilo jako „mimo rozsah úklidu“, se vyřídí – vypsat to a nechat být je nepřijatelné, protože sezení vzápětí zavřete a položky zmizí s ním.
+- **Nečeká se naprázdno.** Čerstvé oči čtou projekt na pozadí, zatímco spolu probíráte zbytek úklidu – a mechanické vady, na které by jinak padl jejich čas, najde předtím skript za zlomek vteřiny.
 - **Co je zjevné, opraví rovnou a bez ptaní.** Všiml si toho jen proto, že byl zrovna u toho, takže hotový úkol visící mezi nedodělanými nebo přejmenování, které minulo dvě místa, prostě opraví a vypíše jednou řádkou. Rozhodovat nechává vás jen tam, kde je z čeho vybírat.
 - **Zapisuje i důvody.** Samotný závěr bez zdůvodnění je pro příští práci málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
 - **Hlásí i čistý výsledek.** Že se nic nedoplňovalo, se řekne nahlas – a bez komentáře k tomu.

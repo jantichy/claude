@@ -94,7 +94,7 @@ Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zby
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
-Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Na konec pošle na projekt agenta bez kontextu, který řekne, jestli z dokumentace jde na dnešní práci navázat, a nabídne, co dál – ve větvi i rovnou merge.
+Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Na konec pošle na projekt dva agenty bez kontextu – jeden řekne, jestli z dokumentace jde na dnešní práci navázat, druhý hledá rozpory a zbytky po přepisování v tom, co dnes přibylo –, a nabídne, co dál: ve větvi i rovnou merge. Čtou na pozadí, takže se na ně nečeká.
 
 ### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 
