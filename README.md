@@ -156,6 +156,10 @@ Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivn
 
 Projde konverzace nad projektem, které se od minule nevytěžily, a doplní z nich chybějící uživatelské scénáře. Řeší tichou vadu, která vzniká při každém kole návrhu: rozhodne se, jak se má systém v nějaké situaci chovat, zapíše se to do modelu – a scénář k té situaci nikdo nedopíše. Seznam situací pak vypadá úplně a není, takže se proti němu nedá ověřit, co nový návrh rozbil.
 
+### [`/serviceaccount`](skills/serviceaccount/) – strojový přístup ke klientským systémům
+
+Připraví service account pro přístup do klientské analytiky nebo Tag Manageru: odvodí z rozpracovaného projektu, o koho jde, poskládá jméno podle konvence tak, aby z něj byl vidět rozsah přístupu, a sepíše žádost o oprávnění pro klienta. Řeší past, kterou je snadné přehlédnout – jméno účtu je neměnné, takže oprava znamená znovu obtěžovat klienta.
+
 ### [`/skill`](skills/skill/) – skilly, které se samy udržují
 
 Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale hotové skilly zůstanou stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
