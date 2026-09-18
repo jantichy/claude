@@ -31,7 +31,7 @@ Druhá výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padaj�
 
 ## Rozsah
 
-**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Čtenář bez kontextu ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sám neopravuje, putuje do Fáze 7, kde o něm rozhodne uživatel.
+**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Čtenář bez kontextu ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sám neopravuje, putuje do Fáze 7, kde se buď rovnou vyřeší, nebo o něm rozhodne uživatel.
 
 **Audit celé dokumentace sem nepatří** – je to jiná otázka („sedí si projekt sám se sebou?“) a dělá ho `/consistency full` o krok dřív. Dřív tu byl režim `full`, který rozšiřoval čtenáře bez kontextu na celou dokumentaci; zrušen 6. 9. 2026, protože jméno svádělo ke čtení „bez `full` se session neprojde celá“ – a to je přesně naopak.
 
@@ -39,7 +39,8 @@ Druhá výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padaj�
 
 - **Dvourychlostní režim.** Jednoznačné a mechanické věci dělej rovnou sám a jen je vypiš. Sporné věci předkládej uživateli jeden po druhém, nikdy víc najednou.
   - **Dělej sám:** zápis jednoznačné dohody na zjevně správné místo, oprava rozbitého odkazu, který tvým zápisem vznikl, dorovnání README / TODO / CLAUDE.md v rozsahu session, commit a push.
-  - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky; cokoliv, co jde nad rámec toho, co v session padlo.
+  - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky.
+  - **Co jde nad rámec session, se neřeší tady**, ale ve Fázi 7 – a rozhoduje o tom její kritérium, ne tenhle režim. Jednoznačnou opravu mimo rozsah tedy neodkládej jako „sporné“, jen ji neprováděj uprostřed jiné fáze.
 - **Ptej se vždy přes tool `AskUserQuestion`** – mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 - Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč“*, *Živá struktura*, *Naming – jedno výstižné slovo*).
 - **Nezakládej nové soubory, když to jde bez nich.** Struktura projektu je daná; hledej v ní správné místo. Když žádné neexistuje, zeptej se, než nějaké vytvoříš.
@@ -325,18 +326,52 @@ claude -p --allowedTools "Read,Grep,Glob" --disallowedTools "Bash,Edit,Write" < 
 **Zpracování nálezů:**
 
 - Nálezy, které se týkají téhle session, vrať do Fáze 5 a oprav – mechanické sám, sporné s uživatelem.
-- Nálezy mimo rozsah session (starší dluh v dokumentaci) neopravuj rovnou – přenes je do Fáze 7, která s nimi naloží podle rozhodnutí uživatele.
+- Nálezy mimo rozsah session (starší dluh v dokumentaci) neopravuj tady – přenes je do Fáze 7, která je podle svého kritéria buď vyřeší rovnou, nebo o nich nechá rozhodnout uživatele.
 - Pokud byly opravy netriviální (přepisovala se struktura, měnil se obsah více souborů), **pusť druhého čtenáře bez kontextu** nad opraveným stavem. Důvod: opravy samy zanechávají nové pozůstatky – přejmenuješ sekci a zapomeneš odkaz, doplníš větu o něčem, co v cílovém souboru mezitím není.
 
 ------
 
 ## Fáze 7 – Naložení s tím, co by zůstalo mimo rozsah
 
-Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dluh od čtenáře bez kontextu, rozbité věci známé ze session, odložené nálezy –, se tady musí rozhodnout. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
+Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dluh od čtenáře bez kontextu, rozbité věci známé ze session, odložené nálezy –, se tady musí vyřídit. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
+
+**Vyřídit ale neznamená zeptat se.** Položka mimo rozsah je nález zadarmo – všiml sis jí jen proto, že jsi u toho zrovna byl, a příště u toho nebude nikdo. Co umíš opravit jednoznačně, **oprav proto rovnou a bez ptaní, i když je to mimo rozsah úklidu**. Otázka, u které je předem jasné, jak zní jediná rozumná odpověď, nic nerozhoduje a stojí uživatele pozornost, kterou pak nemá na otázky, kde na jeho odpovědi opravdu záleží. Ptej se jen na to, co rozhodnout neumíš.
 
 1. **Nemáš-li nic**, fázi přeskoč a v přehledu uveď „žádné“.
 
-2. **Vypiš je všechny najednou** jako číslovaný seznam **seřazený od nejdůležitější** – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Práh důležitosti tady neplatí**, na rozdíl od Fáze 2: tohle je poslední místo, kde se o starším dluhu a o rozbitých věcech ze session dá rozhodnout, a co se nezeptá, zmizí se session. Řadí se proto jen proto, aby uživatel narazil na podstatné dřív, ne aby se zbytek zahodil. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
+2. **Rozděl položky na ty, které vyřešíš sám, a ty, na které se zeptáš.**
+
+   | | Podmínka |
+   |---|---|
+   | **Vyřeš sám** – musí platit všechno | řešení má právě jednu zjevně správnou podobu, ne volbu mezi variantami; je to oprava nebo dorovnání toho, co už je rozhodnuté, ne nová práce ani nové rozhodnutí; zásah celý vidíš a umíš ho po sobě ověřit; je vratný – mění verzované soubory, nic nemaže nenávratně a nesahá mimo repozitář |
+   | **Zeptej se** – stačí jedna | řešení má víc obhajitelných podob a volba mezi nimi je uživatelova; je to nová práce, změna pravidla, rozhodnutí nebo struktury; chybí ti údaj, který ví jen uživatel; zásah je nevratný, sahá mimo repozitář nebo do cizího systému; **netroufáš si** |
+
+   **Takhle vypadají položky, u kterých se nemá co ptát** – všechny tři jsou z jednoho běhu (18. 9. 2026) a u všech uživatel odpověděl „vyřešit teď“:
+
+   - Úkol je v `done.md` jako hotový a v `todo.md` pořád visí. Dva soubory tvrdí opak, jeden z nich se dá ověřit – a pak se ta odrážka smaže.
+   - Záznam v `done.md` cituje čísla rozhodnutí posunutá o deset. Správná čísla jsou v `decisions.md`, oprava je přepsat je.
+   - Přejmenování minulo dvě místa. Nové jméno je rozhodnuté, zbytek je grep a náhrada.
+
+   Společné mají to, že se nerozhoduje **jestli**, ani **jak** – jen to někdo musí udělat. Otázka nad takovou položkou není opatrnost, ale přehazování práce zpátky na uživatele.
+
+   **Váhání je odpověď.** Nepřemlouvej se, že položka do první skupiny „nejspíš patří“ – patří tam jen to, u čeho je to zřejmé na první pohled. Toho, co uživatel nezadal a tys to přesto změnil, se nesmí nakupit tolik, aby to nešlo přečíst.
+
+   **Objem důvod k dotazu není.** Zdlouhavá, ale jednoznačná oprava se dělá, ne předkládá; naopak jednořádková změna pravidla se předkládá, i když trvá vteřinu. Rozhoduje, čí je to rozhodnutí, ne kolik je s ním práce.
+
+3. **Vyřeš první skupinu rovnou**, celou, ještě než se začneš ptát na druhou – a vypiš, cos udělal:
+
+   ```
+   **Mimo rozsah, vyřešeno rovnou:**
+
+   1. [položka] – [co jsi změnil a ve kterém souboru]
+   2. …
+   ```
+
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+
+   **Nic z toho nezamlč, ale ani to nedramatizuj.** Uživatel tu práci nezadal, takže musí vidět, co se v jeho projektu změnilo, a mít možnost to vrátit – tichá oprava mimo rozsah je zásah do jeho domény bez jeho vědomí (`~/.claude/RULES.md`, *Nerozhoduj potichu nad rámec zadání*). Řádka na položku ale stačí: **žádné rozepisování, čeho se týkala, proč byla mimo rozsah a co by se stalo, kdyby se neopravila.** Ten rozbor patří jen k položkám, o kterých se uživatel rozhoduje; u opravené věci je to hlášení nálezu, který už neexistuje.
+
+4. **Zbytek vypiš najednou** jako číslovaný seznam **seřazený od nejdůležitější** – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Práh důležitosti tady neplatí**, na rozdíl od Fáze 2: tohle je poslední místo, kde se o starším dluhu a o rozbitých věcech ze session dá rozhodnout, a co se nezeptá, zmizí se session. Řadí se proto jen proto, aby uživatel narazil na podstatné dřív, ne aby se zbytek zahodil. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
 
    ```
    **Mimo rozsah úklidu zůstává:**
@@ -347,13 +382,14 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-3. **Projdi je jednu po druhé.** U každé ji nejdřív vypiš:
+5. **Projdi je jednu po druhé.** U každé ji nejdřív vypiš:
 
    ```
    **[N/celkem] NÁZEV POLOŽKY**
 
    - **Čeho se týká:** [co to je, jednou dvěma větami]
    - **Proč je mimo rozsah:** [co ji drží mimo dnešní úklid]
+   - **Proč se ptám:** [která podmínka z bodu 2 na ni sedí]
    - **Co se stane, když se to nevyřeší:** [konkrétní důsledek, ne „bylo by to lepší“]
    ```
 
@@ -372,7 +408,9 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
    **Neptej se předtím hromadně**, co s celou skupinou. Dřív tady stála meziotázka, jestli položky vyřešit všechny naráz, zapsat všechny do todo, nebo je projít po jedné – a v provozu z ní vždycky vyšlo „po jedné“, protože položky se povahou liší skoro vždycky; zrušena 7. 9. 2026. Volba, která má jediný reálný výsledek, stojí jednu odpověď navíc a nic nerozhoduje. **Platí to na tuhle skupinu, ne obecně:** kde jsou položky stejnorodé, je hromadná volba na místě a jinde ve skillech se schválně používá.
 
-4. Ať se rozhodne jakkoli, v přehledu ve Fázi 8 pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu.
+6. Ať se rozhodne jakkoli, v přehledu ve Fázi 8 pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu. **Vyřešené z bodu 3 patří do téhož seznamu**, ne stranou: uživatel má na jednom místě vidět všechno, co bylo mimo rozsah, a u každé položky, kdo o ní rozhodl.
+
+**Proč se dnes část řeší bez ptaní:** dřív se tady vypisovalo všechno a nedělalo nic, pak se skill začal ptát na každou položku zvlášť. Druhá podoba vyřešila mizení položek se session, ale u jednoznačných oprav se ptala zbytečně – uživatel měl odklikávat, že se má opravit rozbitý odkaz, kterého si model všiml jen náhodou. Rozhodnuto 18. 9. 2026.
 
 ------
 
@@ -417,7 +455,7 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `
 - [co se odložilo z vlastního úklidu – Fáze 2 a 5 –, nebo „žádné“]
 
 **Mimo rozsah úklidu**
-- [seznam z Fáze 7 a u každé položky, jak se s ní naložilo – nebo „žádné“]
+- [seznam z Fáze 7 a u každé položky, jak se s ní naložilo: vyřešeno rovnou / vyřešeno na přání / todo / backlog / zahozeno – nebo „žádné“]
 - Položka z Fáze 7 patří sem, i když skončila v `todo.md`; do *Odložených položek* se nekopíruje.
 
 **Další krok:** /attack a /release, nasazuje-li se – co dál s větví a session, rozhodne otázka za verdiktem
