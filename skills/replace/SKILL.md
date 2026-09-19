@@ -21,6 +21,12 @@ Nejde jen o přejmenování. Stejný postup platí pro jakoukoliv změnu, která
 - **Neaudituje projekt.** Na vnitřní konzistenci je `/consistency`.
 - **Nerozhoduje o termínech napříč projekty.** Který termín se používá místo kterého, drží `/ptydepe`; tenhle skill jeho rozhodnutí jen provede v konkrétním repozitáři.
 
+## Jak je to postavené uvnitř
+
+Samotný postup skillu žádný skript nepouští – hledá, ukazuje a mění běžnými nástroji. V adresáři `deklinace/` ale leží **skripty na převod pádů**, které vznikly při jednom velkém českém přejmenování a na které se odkazuje Fáze 1.
+
+**Ty skripty jsou implementační detail, ne rozhraní.** Jejich jména, rozdělení do souborů i slovní zásoba jsou psané na jednu dvojici slov a pro jinou dvojici se přepisují; kdo si na ně zvykne jako na nástroj, narazí. Závazné a neměnitelné potichu je naopak tohle: inventura se předkládá ke schválení, než se sáhne na první soubor; skloňované české podstatné jméno se hromadně nepřepisuje bez metody, která umí určit pád; a běh končí kontrolním průchodem na starý tvar.
+
 ## Proč to není obyčejný find-replace
 
 Protože se to pokaždé někde zapomene. Typicky:
