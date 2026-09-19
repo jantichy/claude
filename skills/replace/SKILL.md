@@ -63,7 +63,7 @@ Navíc si zjisti tohle:
 | Názvy souborů a adresářů | `market.md`, `markets/` → `site.md`, `sites/` |
 | Hodnoty v datech | `"type": "market"` v JSONu |
 
-**Česká skloňovaná varianta je nejzrádnější** – grep na základní tvar ji nenajde a v dokumentaci jí bývá nejvíc.
+**Česká skloňovaná varianta je nejzrádnější** – grep na základní tvar ji nenajde a v dokumentaci jí bývá nejvíc. **Jde-li o skloňované podstatné jméno ve velkém rozsahu**, je hromadná náhrada vyloučená: tvary odpovídají víc pádům naráz a druhé slovo je skloňuje jinak. Metodu převodu, který pád určuje z okolí věty, i s doloženou mezí drží [`deklinace/README.md`](deklinace/README.md) a skripty vedle něj – jsou psané na jednu dvojici slov, takže slouží jako východisko, ne jako hotový nástroj.
 
 Zeptej se přes `AskUserQuestion`, které tvary zahrnout, jsou-li sporné. Rozhodni sám tam, kde je to jednoznačné.
 
