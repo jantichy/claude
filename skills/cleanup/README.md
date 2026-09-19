@@ -6,7 +6,7 @@
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
-Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat, tíží vás pokaždé totéž: neztratí se něco? Tenhle skill to vyřeší. Přečte si **celý surový záznam konverzace** – tedy včetně části, kterou už kompaktace z paměti vyhodila –, vytáhne z něj všechno, co se domluvilo, a zapíše to tam, kam to patří. Pak si otočí pohled a hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání. Na konec pošle na projekt někoho, kdo o něm nic neví, a nechá si od něj říct, jestli se na dnešní práci dá navázat.
+Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat, tíží vás pokaždé totéž: neztratí se něco? Tenhle skill to vyřeší. Přečte si **celý surový záznam konverzace** – tedy včetně části, kterou už kompaktace z paměti vyhodila –, vytáhne z něj všechno, co se domluvilo, a zapíše to tam, kam to patří. Pak si otočí pohled a hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání. Ještě předtím pošle na projekt dva pomocníky, kteří o něm nic nevědí: jeden řekne, jestli se na dnešní práci dá navázat, druhý hledá rozpory a zbytky po přepisování. Čtou na pozadí, takže se na ně nečeká.
 
 ## Co umí
 
@@ -49,8 +49,8 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 **Nevypořádaná témata**
 - 3 probrána: 1 rozhodnuto, 1 do todo, 1 bezpředmětné
 
-**Čtenář bez kontextu**
-- z dokumentace jde navázat; 2 nálezy opraveny (rozbitý odkaz, počet v tabulce)
+**Kontrola odkazů a čtenáři bez kontextu**
+- odkazy v pořádku; z dokumentace jde navázat; 2 nálezy opraveny (počet v tabulce, věta o zrušeném postupu)
 
 **Git**
 - Pracovní strom: čistý · Commity: 4, push: ano
@@ -83,4 +83,4 @@ Skill předpokládá, že má projekt ustálenou dokumentační strukturu – v�
 
 ### Požadavky a omezení
 
-Git (bez něj funguje, jen odpadne závěrečný úklid repozitáře). Vytěžení dlouhé konverzace se deleguje na pomocníka, takže u opravdu dlouhého sezení to není nejlevnější běh – zato je to jediný krok, který odolá kompaktaci: co zapíše, přežije ztrátu kontextu.
+Git (bez něj funguje, jen odpadne závěrečný úklid repozitáře) a **Python 3** na kontrolu odkazů – bez něj se přeskočí a hledání rozbitých odkazů zůstane na čtenářích. Vytěžení dlouhé konverzace se deleguje na pomocníka, takže u opravdu dlouhého sezení to není nejlevnější běh – zato je to jediný krok, který odolá kompaktaci: co zapíše, přežije ztrátu kontextu.

@@ -21,7 +21,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok uzaví
 
 ## Co skill nedělá
 
-**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel soubory dotčené větví (v režimu `full` celý projekt) – jiná otázka, jiný skill; čtenář bez kontextu se tady ptá na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
+**Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel soubory dotčené větví (v režimu `full` celý projekt) – jiná otázka, jiný skill; čtenáři bez kontextu se tady ptají na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledají jen v tom, co dnes přibylo.
 
 Tohle **není** audit projektu ani technická kontrola. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo. **Vlastní kontrola odkazů ve Fázi 6 výjimkou není** – neposuzuje projekt, ale to, co jsi právě zapsal, a běží zlomek vteřiny.
 
@@ -31,7 +31,7 @@ Druhá výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padaj�
 
 ## Jak je to postavené uvnitř
 
-Skill nese jeden vlastní skript: `scripts/links.py` ve Fázi 6 ověří, že relativní odkazy v změněných Markdownech vedou na existující soubor a kotvy na existující nadpis. Je to **implementační detail, ne rozhraní** – jeho přepínače, výstup i samotná existence se smí změnit bez ohlášení; klidně ho nahradí jiný nástroj nebo git hook. Co se změnit nesmí tiše, je **pravidlo za ním**: mechanické vady hledá deterministický nástroj, ne model (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula), a jeho nálezy se opravují **před** spuštěním čtenářů, ne po něm.
+Skill nese jeden vlastní skript: `scripts/links.py` ve Fázi 6 ověří, že relativní odkazy ve změněných Markdownech vedou na existující soubor a kotvy na existující nadpis. Je to **implementační detail, ne rozhraní** – jeho přepínače, výstup i samotná existence se smí změnit bez ohlášení; klidně ho nahradí jiný nástroj nebo git hook. Co se změnit nesmí tiše, je **pravidlo za ním**: mechanické vady hledá deterministický nástroj, ne model (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula), a jeho nálezy se opravují **před** spuštěním čtenářů, ne po něm.
 
 Vynucovací vrstvu k němu drží `tests/test_cleanup.py` – testuje oba směry selhání včetně mutačního testu, který vyřadí vynechávání bloků kódu a ověří, že falešný poplach opravdu vznikne.
 
@@ -39,7 +39,7 @@ Zadání obou čtenářů bez kontextu leží v [`readers.md`](readers.md); **z�
 
 ## Rozsah
 
-**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Čtenář bez kontextu ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sám neopravuje, putuje do Fáze 7, kde se buď rovnou vyřeší, nebo o něm rozhodne uživatel.
+**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Čtenáři bez kontextu ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sami neopravují – putuje do Fáze 8, kde se podle kritéria Fáze 7 buď rovnou vyřeší, nebo o něm rozhodne uživatel.
 
 **Audit celé dokumentace sem nepatří** – je to jiná otázka („sedí si projekt sám se sebou?“) a dělá ho `/consistency full` o krok dřív. Dřív tu byl režim `full`, který rozšiřoval čtenáře bez kontextu na celou dokumentaci; zrušen 6. 9. 2026, protože jméno svádělo ke čtení „bez `full` se session neprojde celá“ – a to je přesně naopak.
 
@@ -48,7 +48,7 @@ Zadání obou čtenářů bez kontextu leží v [`readers.md`](readers.md); **z�
 - **Dvourychlostní režim.** Jednoznačné a mechanické věci dělej rovnou sám a jen je vypiš. Sporné věci předkládej uživateli jeden po druhém, nikdy víc najednou.
   - **Dělej sám:** zápis jednoznačné dohody na zjevně správné místo, oprava rozbitého odkazu, který tvým zápisem vznikl, dorovnání README / TODO / CLAUDE.md v rozsahu session, commit a push.
   - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky.
-  - **Co jde nad rámec session, se neřeší tady**, ale ve Fázi 7 – a rozhoduje o tom její kritérium, ne tenhle režim. Jednoznačnou opravu mimo rozsah tedy neodkládej jako „sporné“, jen ji neprováděj uprostřed jiné fáze.
+  - **Co jde nad rámec session, se neřeší tady**, ale ve Fázi 7 – a u toho, co najdou čtenáři, ve Fázi 8. Rozhoduje o tom kritérium Fáze 7, ne tenhle režim. Jednoznačnou opravu mimo rozsah tedy neodkládej jako „sporné“, jen ji neprováděj uprostřed jiné fáze.
 - **Ptej se vždy přes tool `AskUserQuestion`** – mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 - Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč“*, *Živá struktura*, *Naming – jedno výstižné slovo*).
 - **Nezakládej nové soubory, když to jde bez nich.** Struktura projektu je daná; hledej v ní správné místo. Když žádné neexistuje, zeptej se, než nějaké vytvoříš.
@@ -62,7 +62,8 @@ Zadání obou čtenářů bez kontextu leží v [`readers.md`](readers.md); **z�
 
 Navíc si zjisti tohle:
 
-1. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` pětice `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/.claude/STRUCTURE.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
+1. **Základ session** – `git rev-parse HEAD`. Je to commit, na kterém session stála, než cokoliv zapsala; Fáze 6 podle něj skládá seznam změněných souborů a diff pro čtenáře. Zapamatuj si ho hned, protože po prvním commitu autocommitu už ho nezjistíš.
+2. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy. Standardní struktura je `CLAUDE.md`, `README.md` a v `docs/` pětice `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`, podle potřeby doplněná o `requirements.md`, `architecture.md` a `plan.md`; k tomu specializované soubory projektu. **Autoritativní je `~/.claude/STRUCTURE.md`** – rozejde-li se s tímhle výčtem, platí on. Zapamatuj si, co je čí doména, a zaznamenej, které ze standardních souborů v projektu chybí.
 
 ------
 
@@ -289,11 +290,15 @@ Pusť ji nad Markdowny, kterých se session dotkla:
 python3 ~/.claude/skills/cleanup/scripts/links.py <změněné .md soubory>
 ```
 
-Seznam vezmi z gitu (`git diff --name-only` nad rozpracovanými změnami i nad commity session, filtr `'*.md'`). Rozbitý odkaz a kotva bez nadpisu jsou mechanické vady – hledat je čtením přes model je ta nejdražší možná cesta (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula).
+Seznam vezmi z gitu, a to ze **tří** míst, ať ti nic neuteče: `git diff --name-only HEAD` (pracovní strom **i index** – samotné `git diff` to, co je ve stage, neukáže), `git diff --name-only <základ session>..HEAD` (commity, které mezitím udělal autocommit) a `git status --porcelain --untracked-files=all` (nové soubory). Filtruj na `*.md` a seznam sjednoť. **Základ session** je commit, na kterém stála `HEAD`, než session poprvé zapsala – zapamatuj si ho ve Fázi 0. Rozbitý odkaz a kotva bez nadpisu jsou mechanické vady – hledat je čtením přes model je ta nejdražší možná cesta (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula).
 
 **Nálezy oprav rovnou**, ještě před spuštěním čtenářů: jsou jednoznačné a spadají pod *Dělej sám* ze zásad. Zároveň tím čtenářům ušetříš úsudek nad tím, co je už vyřízené – proto o tom mají obě zadání větu.
 
-Skript **neumí posoudit smysl** a vědomě nekontroluje externí odkazy ani absolutní cesty; co přesně vynechává a proč, stojí v jeho docstringu. Návratový kód `2` znamená chybu volání, ne čistý výsledek – tomu odpovídá jen `0`.
+Skript **neumí posoudit smysl** a vědomě nekontroluje externí odkazy ani absolutní cesty; co přesně vynechává a proč, stojí v jeho docstringu.
+
+**Čistý výsledek je jedině `0`.** `1` znamená nálezy, `2` chybu volání – tu neber jako čisto: oprav volání a pusť skript znovu. **Nezměnil-li se žádný Markdown, krok přeskoč nahlas** a do přehledu napiš, že kontrola odkazů neběžela, protože nebylo co kontrolovat; skript bez argumentů vrátí právě `2` a tenhle případ je z nich nejčastější.
+
+**Skript vidí jen změněné soubory.** Odkaz, který na dnes přejmenovanou sekci míří z jiného souboru, proto neprověří – proto je v zadání čtenářů věta, že takový odkaz hledat mají.
 
 ### 2. Dva čtenáři, oba paralelně a na pozadí
 
@@ -307,7 +312,11 @@ git diff <základ session>..HEAD -- '*.md' > <scratchpad>/cleanup-diff.txt
 
 Nejsou-li změny session commitnuté, vezmi `git diff` bez rozsahu; je-li základ nejistý, radši přibal víc – čtenáři vadí chybějící kontext víc než nadbytečný.
 
-**Spusť oba jedním blokem** jako podagenty typu `reader`, tedy `subagent_type: "reader"`, a **nečekej na ně**. Řízení se vrátí okamžitě a výsledek přijde notifikací; ověřeno 18. 9. 2026. Pokračuj rovnou Fází 7.
+**Spusť oba jedním blokem** jako podagenty typu `reader`, tedy `subagent_type: "reader"`, a **nečekej na ně**. Nenastavuje se pro to nic zvláštního: `Agent` vrací řízení sám od sebe, jakmile agenta předá, a výsledek dorazí později jako notifikace o dokončení úlohy. Stačí tedy po zavolání pokračovat další prací – rovnou Fází 7. Ověřeno 19. 9. 2026.
+
+**Jedeš-li náhradní cestou** ze [`readers.md`](readers.md) (samostatný proces `claude -p`), tenhle krok neplatí – ta blokuje, takže by se čekalo tady i ve Fázi 8. Pusť čtenáře až na začátku Fáze 8 a Fázi 7 odbav bez nich.
+
+**Dva čtenáři nejsou panel agentů ve smyslu `~/.claude/skills/SKILLS.md`, *Ověřovací vrstva*, a ověřovatele proto nemají.** Norma míří na panel specialistů, kde ověřit nález znamená zopakovat jeho práci – tam je ověřovatel jediná obrana proti tomu, aby agent našel problém za každou cenu. Zdejší nálezy mají tvar „na tomhle místě stojí X, na tamtom Y“, takže je hlavní session ověří u zdroje jedním čtením, a to i musí (Fáze 8). Ověřovatel navíc by přidal třetí běh agenta na konec úklidu, kde už ho nejde schovat za nic interaktivního – zpomalil by tedy právě to, kvůli čemu tahle fáze vznikla. **Přibude-li sem třetí agent, je potřeba tohle posoudit znovu**; rozhodnuto 19. 9. 2026.
 
 **Fáze 7 jim mění stav pod rukama** – opravuje věci mimo rozsah, takže nález, který dorazí, může být mezitím vyřízený. Než ho ve Fázi 8 předložíš, ověř, že pořád platí; neplatné zahoď mlčky a nepiš o nich.
 
@@ -317,7 +326,7 @@ Nejsou-li změny session commitnuté, vezmi `git diff` bez rozsahu; je-li zákla
 
 ## Fáze 7 – Naložení s tím, co by zůstalo mimo rozsah
 
-Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dluh od čtenáře bez kontextu, rozbité věci známé ze session, odložené nálezy –, se tady musí vyřídit. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
+Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – rozbité věci známé ze session, starší dluh, na který jsi narazil při zápisu, odložené nálezy –, se tady musí vyřídit. **Nálezy čtenářů sem nepatří**: ti v tuhle chvíli teprve běží a jejich nálezy se vypořádají ve Fázi 8 podle téhož kritéria. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
 
 **Vyřídit ale neznamená zeptat se.** Položka mimo rozsah je nález zadarmo – všiml sis jí jen proto, že jsi u toho zrovna byl, a příště u toho nebude nikdo. Co umíš opravit jednoznačně, **oprav proto rovnou a bez ptaní, i když je to mimo rozsah úklidu**. Otázka, u které je předem jasné, jak zní jediná rozumná odpověď, nic nerozhoduje a stojí uživatele pozornost, kterou pak nemá na otázky, kde na jeho odpovědi opravdu záleží. Ptej se jen na to, co rozhodnout neumíš.
 
@@ -400,11 +409,13 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – starší dl
 
 ## Fáze 8 – Vypořádání nálezů čtenářů
 
-Sem dorazí, co našli čtenáři z Fáze 6. **Než s nálezem cokoliv uděláš, ověř, že pořád platí** – Fáze 7 mezitím sahala na soubory a část nálezů mohla vyřešit. Neplatné zahoď mlčky; hlásit nález, který už neexistuje, je totéž jako hlásit falešný poplach.
+Sem dorazí, co našli čtenáři z Fáze 6. **Nedorazili-li ještě, počkej na ně** – bez nich nemá fáze co vypořádat a přeskočit ji znamená zahodit celý smysl Fáze 6. **Vrátil-li některý chybu nebo nic**, pusť ho jednou znovu; selže-li podruhé, napiš do přehledu, že jeho část zůstala nezkontrolovaná, a pokračuj – netvrď, že kontrola proběhla.
+
+**Než s nálezem cokoliv uděláš, ověř, že pořád platí** – Fáze 7 mezitím sahala na soubory a část nálezů mohla vyřešit. Neplatné zahoď mlčky; hlásit nález, který už neexistuje, je totéž jako hlásit falešný poplach.
 
 - **Nálezy, které se týkají téhle session**, oprav – mechanické sám, sporné předlož uživateli po jednom jako ve Fázi 7.
-- **Nálezy mimo rozsah session** (starší dluh v dokumentaci) projdi kritériem z Fáze 7, bodu 2: co má jednu zjevně správnou podobu, oprav rovnou a vypiš; o zbytku nech rozhodnout uživatele. Fáze 7 už proběhla, takže se rozhoduje tady a stejným způsobem.
-- **Byly-li opravy netriviální** (přepisovala se struktura, měnil se obsah více souborů), pusť **znovu čtenáře pozůstatků** – jen jeho, ne oba. Opravy samy zanechávají nové pozůstatky, ale navazitelnost se jimi nemění, takže druhý průchod celou dokumentací by byl čekání bez zisku. Tenhle běh už na pozadí schovat nejde, protože po něm nic dalšího nezbývá; proto se pouští jen tehdy, když opravy opravdu byly netriviální.
+- **Nálezy mimo rozsah session** (starší dluh v dokumentaci) projdi kritériem z Fáze 7, bodu 2: co má jednu zjevně správnou podobu, oprav rovnou a vypiš; o zbytku nech rozhodnout uživatele. Fáze 7 už proběhla, takže se rozhoduje tady a stejným způsobem – a **do přehledu jdou tyhle položky do téhož seznamu** *Mimo rozsah úklidu* jako ty z Fáze 7, ne stranou.
+- **Byly-li opravy netriviální** (přepisovala se struktura, měnil se obsah více souborů), pusť **znovu čtenáře pozůstatků** – jen jeho, ne oba, a **vyrob mu nový diff**: ten z Fáze 6 opravy z Fází 7 a 8 neobsahuje, takže by hledal v zastaralém podkladu. Opravy samy zanechávají nové pozůstatky, ale navazitelnost se jimi nemění, takže druhý průchod celou dokumentací by byl čekání bez zisku. Tenhle běh už na pozadí schovat nejde, protože po něm nic dalšího nezbývá; proto se pouští jen tehdy, když opravy opravdu byly netriviální.
 
 ------
 
@@ -416,14 +427,14 @@ Sem dorazí, co našli čtenáři z Fáze 6. **Než s nálezem cokoliv uděláš
 - **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · N nevypořádaných témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak se s tím naložilo>
 ```
 
-Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.
+Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku. V tomhle repozitáři se zapisuje do `~/Dev/context/done.md` a **bez odchylky**, i když tu `docs/` neexistuje (viz `.claude/CLAUDE.md`); hash se tam kvalifikuje jako `` `~/.claude@<short HEAD>` ``.
 
 **Git:**
 
 - `git status` musí být **čistý** – žádné rozpracované ani neotrackované soubory. Co tam být nemá, patří do `.gitignore`; co tam patří, se commitne.
 - *Worktree layout:* `git status` pouštěj ve worktree větve, ne v kořeni kontejneru – tam by spadl na `must be run in a work tree`. Navíc zkontroluj `git -C <container>/main status`: v `main/` nemá být nic rozpracovaného – když je, ohlas to.
 - Všechno **commitnuté** s výstižnými zprávami.
-- Když má repozitář remote (viz Fáze 0, bod 3), všechno **pushnuté**.
+- Když má repozitář remote (zjistil jsi ho ve Fázi 0), všechno **pushnuté**.
 - Ověř výsledek znovu (`git status`, `git log origin/<branch>..HEAD`) – ne že to jen předpokládej.
 
 **Přehled:**
@@ -440,6 +451,7 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `
 
 **Kontrola odkazů a čtenáři bez kontextu**
 - [nálezy skriptu, verdikt obou čtenářů a co z nich vzešlo]
+- Čtenáři: 2 (`reader`, [model]), ověřeni čtením zdroje v hlavní session – [N nálezů, M vyvráceno]
 
 **Git**
 - Pracovní strom: [čistý / co zbývá]
@@ -449,8 +461,8 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `
 - [co se odložilo z vlastního úklidu – Fáze 2 a 5 –, nebo „žádné“]
 
 **Mimo rozsah úklidu**
-- [seznam z Fáze 7 a u každé položky, jak se s ní naložilo: vyřešeno rovnou / vyřešeno na přání / todo / backlog / zahozeno – nebo „žádné“]
-- Položka z Fáze 7 patří sem, i když skončila v `todo.md`; do *Odložených položek* se nekopíruje.
+- [seznam z Fází 7 a 8 a u každé položky, jak se s ní naložilo: vyřešeno rovnou / vyřešeno na přání / todo / backlog / zahozeno – nebo „žádné“]
+- Položka z Fáze 7 nebo 8 patří sem, i když skončila v `todo.md`; do *Odložených položek* se nekopíruje.
 
 **Další krok:** /attack a /release, nasazuje-li se – co dál s větví a session, rozhodne otázka za verdiktem
 ```

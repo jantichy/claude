@@ -209,7 +209,7 @@ Proto tu leží `commit-msg` hook. Takovou zprávu odmítne a vyžádá si shrnu
 
 Skilly a pravidla jsou z velké části text, který nikdo nespouští. Jejich vady se proto projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce; odkaz na soubor nebo sekci, co mezitím zmizela; skill bez vlastního README.
 
-Kde skill vlastní skripty má, čte je kontrola: Python `/compose` a `/transcript` hlídají testy, swiftový skript `/invoicing` čte `typecheck` v kontraktu. Další sady testují to, co v téhle konfiguraci něco doopravdy **vynucuje** – průběžnou kontrolu, git hook nad zprávou merge commitu a CI. Právě tam stojí tichá regrese nejvíc. A jedna sada hlídá skripty `/transcript` tam, kde hrozí ztráta dat: vstupem jsou nahrávky, které většinou nejde pořídit znovu, takže chyba v převodu neznamená vadu nástroje, ale ztracený podklad.
+Kde skill vlastní skripty má, čte je kontrola: Python `/compose`, `/transcript` a `/cleanup` hlídají testy, swiftový skript `/invoicing` čte `typecheck` v kontraktu. Další sady testují to, co v téhle konfiguraci něco doopravdy **vynucuje** – průběžnou kontrolu, git hook nad zprávou merge commitu a CI. Právě tam stojí tichá regrese nejvíc. A jedna sada hlídá skripty `/transcript` tam, kde hrozí ztráta dat: vstupem jsou nahrávky, které většinou nejde pořídit znovu, takže chyba v převodu neznamená vadu nástroje, ale ztracený podklad.
 
 Všechno to stojí nula tokenů a běží v průběžné kontrole po každé odpovědi. Jen standardní knihovna Pythonu, žádná instalace. Tytéž 3 příkazy pouští i [GitHub Actions](.github/workflows/verify.yml) – lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork, kdežto CI ne. Příkazy si přitom neopisuje, čte je ze stejného *Kontraktu příkazů*.
 

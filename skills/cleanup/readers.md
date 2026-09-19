@@ -9,11 +9,11 @@ Dvě zadání pro Fázi 6 `/cleanup`. Pouštějí se **naráz a paralelně**, ob
 
 ## Proč dva
 
-Dřív to byl jeden agent: přečetl celou dokumentační mapu od obecného ke konkrétnímu a odpověděl na šest otázek. Jenže **polovina těch otázek zaučení do projektu vůbec nepotřebuje**. Rozpory a pozůstatky po cílených zásazích se hledají v tom, co dnes přibylo, ne v celém projektu – a kvůli nim četl celý projekt agent, který se má zaučovat. Rozdělení tedy nezkracuje jen čekání tím, že oba běží naráz; druhý je navíc hotový dřív, protože má řádově menší vstup.
+Dřív to byl jeden agent: přečetl celou dokumentační mapu od obecného ke konkrétnímu a odpověděl na šest otázek. Jenže **dvě z těch šesti otázek zaučení do projektu vůbec nepotřebují**. Rozpory a pozůstatky po cílených zásazích se hledají v tom, co dnes přibylo, ne v celém projektu – a kvůli nim četl celý projekt agent, který se má zaučovat. Rozdělení tedy nezkracuje jen čekání tím, že oba běží naráz; druhý je navíc hotový dřív, protože má řádově menší vstup.
 
 **Dělící čára je, jestli nález potřebuje znát celek.** „Nevím, co mám dělat dál“ pozná jen ten, kdo četl dokumentaci jako celek. „Tady se citují čísla, která v cíli nejsou“ pozná ten, kdo vidí diff – a znalost celku by mu naopak škodila, protože by začal soudit starší dluh.
 
-**Model a effort:** oba jsou posouzení, ne sběr – **výchozí model, `high`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Levný čtenář přečte, co tam stojí, a přikývne, místo aby našel, co chybí. Platí to i pro čtenáře pozůstatků: rozejitý počet v tabulce je úsudek nad dvěma místy, ne nalezení řetězce.
+**Model:** oba jsou posouzení, ne sběr, takže patří na **výchozí model session** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Effortem by jim náležel `high`, ale **předat se nedá** – `Agent` ten parametr nebere (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*), takže je to přiznaná mezera, ne pokyn. Levný čtenář přečte, co tam stojí, a přikývne, místo aby našel, co chybí. Platí to i pro čtenáře pozůstatků: rozejitý počet v tabulce je úsudek nad dvěma místy, ne nalezení řetězce.
 
 **Mechanické vady už řeší skript** v kroku 1 Fáze 6, takže obě zadání nesou větu, že rozbité odkazy a mrtvé kotvy jsou vyřízené. Bez ní je oba hledají znovu a ručně.
 
@@ -35,7 +35,7 @@ Referenční archivy a generovaný obsah (<vyjmenuj, typicky docs/research/, run
 
 Soustřeď se na oblasti, kterých se dotýkala poslední session.
 
-Rozbité odkazy a kotvy bez nadpisu už prověřil skript a jsou opravené – ty nehledej.
+Rozbité odkazy a kotvy bez nadpisu **v souborech, kterých se dnešní práce dotkla**, už prověřil skript a jsou opravené – ty nehledej. Odkaz mířící na dnes přejmenovanou sekci **z jiného souboru** ale skript nevidí, takže ten hledat máš.
 
 ODPOVĚZ NA TYTO OTÁZKY:
 
@@ -67,7 +67,7 @@ DOTČENÉ SOUBORY: <seznam>
 
 Přečti diff a k němu ty pasáže dotčených souborů, do kterých změny padly – celý projekt číst nemusíš.
 
-Rozbité odkazy a kotvy bez nadpisu už prověřil skript a jsou opravené – ty nehledej.
+Rozbité odkazy a kotvy bez nadpisu **v souborech, kterých se dnešní práce dotkla**, už prověřil skript a jsou opravené – ty nehledej. Odkaz mířící na dnes přejmenovanou sekci **z jiného souboru** ale skript nevidí, takže ten hledat máš.
 
 HLEDÁŠ DVĚ VĚCI:
 
