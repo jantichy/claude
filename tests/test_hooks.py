@@ -352,7 +352,10 @@ class BypassRegistry(unittest.TestCase):
     REGISTRY = ROOT / "BYPASS.md"
 
     #: Vrstvy, které se v registru záměrně neuvádějí – nic nevynucují.
-    NON_ENFORCING = {"iterm-notify.sh"}
+    #: Prázdné od chvíle, kdy `iterm-notify.sh` nahradila vestavěná integrace
+    #: iTerm2: její `cc-status` nevynucuje taky nic, ale řádek v registru má,
+    #: protože je to cizí binárka běžící nad každým repozitářem.
+    NON_ENFORCING: set[str] = set()
 
     def layers(self):
         """Soubory, které běží automaticky a něco vynucují."""

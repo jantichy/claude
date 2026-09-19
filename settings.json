@@ -276,24 +276,62 @@
   },
   "model": "opus[1m]",
   "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/honza/.claude/iterm-notify.sh working",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
     "Notification": [
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "/Users/honza/.claude/iterm-notify.sh waiting",
-            "timeout": 5
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
           }
         ]
       }
@@ -302,15 +340,48 @@
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "/Users/honza/.claude/iterm-notify.sh done",
-            "timeout": 5
-          },
-          {
-            "type": "command",
             "command": "/Users/honza/.claude/verify.sh",
+            "statusMessage": "Průběžná kontrola…",
             "timeout": 320,
-            "statusMessage": "Průběžná kontrola…"
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/honza/.config/iterm2/cc-status",
+            "type": "command"
           }
         ]
       }

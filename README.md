@@ -180,10 +180,6 @@ Jednořádková status line, která mi ukazuje všechno, co potřebuju průběž
 
 ![Status line](statusline.png)
 
-### [`iterm-notify.sh`](iterm-notify.sh) – záložka, která si řekne o pozornost
-
-Když Claude doběhne nebo se na něco ptá, obarví se záložka iTermu do modra, a jakmile na ni přepnu, barva sama zmizí. Je-li záložka aktivní už ve chvíli, kdy Claude doskončí, neobarví se vůbec. Napojené na tři hooky: `UserPromptSubmit` barvu maže, `Notification` a `Stop` ji rozsvítí. Funguje jen v iTerm2.
-
 ### [`verify.sh`](verify.sh) – nad rozbitým projektem se práce neuzavře
 
 `Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy. Když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu sám nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí. Registruje se tedy jednou globálně a v projektu bez kontraktu neudělá nic.
@@ -225,7 +221,7 @@ Tohle je obsah mého `~/.claude`, ne balíček k instalaci. Když si budete něc
 - **Předpoklady.** Rozpadají se na tři skupiny:
 
   - **Povinné pro průběžnou kontrolu.** `shellcheck` a `ruff` tvoří dohromady `lint` v kontraktu tohohle repozitáře, takže bez nich hlásí kontrola po každé odpovědi nespustitelný krok. Totéž platí pro `swiftc` z vývojářských nástrojů Xcode, na kterém stojí `typecheck` – na macOS bývá po ruce, ale bez něj se hlásí stejně. `ruff` běží jen na chybová pravidla, ne na styl.
-  - **Obecné.** macOS s [Homebrew](https://brew.sh), `jq`, `coreutils` kvůli `gtimeout` a iTerm2 kvůli barvení záložky. Plugin [superpowers](https://github.com/obra/superpowers), na kterém stojí `/specify`, `/breakdown` a `/implement`.
+  - **Obecné.** macOS s [Homebrew](https://brew.sh), `jq` a `coreutils` kvůli `gtimeout`. Plugin [superpowers](https://github.com/obra/superpowers), na kterém stojí `/specify`, `/breakdown` a `/implement`.
   - **Pro jednotlivé skilly.** `/skill` potřebuje `skill-creator`; bez něj mu odpadne režim `extract` a celá měřicí část. `/audit` stojí na pluginu [chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) a na Chromu. `/compose` potřebuje Python 3 a u Bluesky balíček `cbor2`. `/transcript` má vlastní sadu navíc: `ffmpeg`, `whisper-cpp` a stažené modely, u rozlišení mluvčích k tomu `pyannote.audio` ve vlastním venv, účet a token na HuggingFace a **ruční odsouhlasení licencí tří gated repozitářů v prohlížeči** – to je jediný předpoklad v celém repozitáři, který nejde zautomatizovat. Velikosti a přesné příkazy drží [jeho `SKILL.md`](skills/transcript/SKILL.md).
 
   `gitleaks` a `semgrep` jsou volitelné jen lokálně: bez prvního sáhne `/review` po slabší grep-heuristice, bez druhého příslušná kontrola odpadne. **V CI volitelné nejsou**, workflow si je doinstaluje a jejich nález shodí běh. Každý skill si na chybějící kusy posvítí sám a napíše je do výpisu *Nezkontrolováno*.

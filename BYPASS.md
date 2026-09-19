@@ -53,3 +53,13 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 | Cizí `.git/config` s `filter.*.clean` spustí program při čtení souborů | Konfigurace se před čtením prohledá a při nálezu se počet změn nevypíše | hlídáno, `tests/test_statusline.py` |
 | Hodnota z JSONu vyhodnocená jako aritmetický výraz | Číselné vstupy projdou přes `num()` | hlídáno, od 14. 9. 2026 |
 | Jiný git mechanismus spouštějící program, na který blacklist nemyslí | Nic | **accepted**: blacklist je výčet. Proti tomu stojí, že status line nespouští nic jiného než čtecí `git` příkazy. |
+
+## Hlášení stavu do iTerm2 (`cc-status`)
+
+Nainstalovala ji 2026-09-19 sama iTerm2 volbou *Install Claude Code Integration*: `cc-status` visí na deseti událostech hooků, takže běží nad **každým** repozitářem, kde běží Claude Code. Nic nevynucuje – hlásí jen, jestli Claude pracuje, čeká, nebo skončil. V registru je proto, že běží automaticky a dostává obsah hooku.
+
+| Čím se obejde | Co to chytí | Stav |
+|---|---|---|
+| Je to kompilovaná binárka uvnitř `iTerm.app`, takže se nedá přečíst, co dělá | Nic | **accepted**: je to cizí kód dodávaný s aplikací, ve které ta session stejně běží. Zvenčí je zjistitelné jen tolik, že čte JSON ze stdin a volá `it2 --status`. |
+| Payload hooku, který dostane na stdin, nese cestu k projektu i text promptu (`UserPromptSubmit`) | Nic | **accepted**: příjemcem je lokální terminál, ve kterém se ten prompt právě napsal. Ven z počítače nejde nic. |
+| Odinstalace z menu iTerm2 vyndá hooky, ale symlink `~/.config/iterm2/cc-status` a zapnuté Python API nechá | Nic | **accepted**: symlink sám nespouští nic, spouštěčem jsou hooky. |
