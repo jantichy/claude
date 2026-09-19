@@ -23,8 +23,10 @@ Nástroj, který vznikl 19. 9. 2026 při přejmenování „partie“ na „podo
 
 ## Doložená mez, kvůli které tu tenhle text je
 
-Převod označil 3 294 míst za jistá a 528 za nejistá. **Nejistá se přečetla ručně, jistá ne** – a právě mezi nimi zůstalo 16 chyb jediné třídy, které našel až čtenář bez kontextu v `/cleanup`: tvar 7. pádu jednotného čísla („nad existující partií“) se převedl na 2. pád množného.
+Převod označil 3 294 míst za jistá a 528 za nejistá. **Nejistá se přečetla ručně, jistá ne** – a právě mezi nimi zůstalo **87 chyb v šesti třídách**, které našli až dva čtenáři bez kontextu v `/cleanup`: 7. pád jednotného čísla převedený na 2. pád množného, 4. pád nahrazený třetím, souřadné „ne partii“ v opačném pádě, instrumentál místo 2. pádu množného, nominativ místo genitivu a množné číslo tam, kde je podmět jednotný.
 
-**Poučení tedy nezní „číst pozorněji“.** U převodu, kde se rozhoduje mezi dvěma tvary, se musí **prohledat obě strany každého rozhodnutí** – tedy i to, co nástroj prohlásil za jisté. Kontrolní sada vět to nechytí, protože testuje jen věty, na které někdo pomyslel; hledání nesouhlasu přívlastku napříč dokumentací ano.
+**Poučení tedy nezní „číst pozorněji“.** U převodu, kde se rozhoduje mezi dvěma tvary, se musí **prohledat obě strany každého rozhodnutí** – tedy i to, co nástroj prohlásil za jisté. Kontrolní sada vět to nechytí, protože testuje jen věty, na které někdo pomyslel; hledání nesouhlasu přívlastku napříč dokumentací chytí jen část.
+
+**Co se ověřit deterministicky dá a co ne.** Tvar proti předložce před ním ano – je to uzavřená tabulka a vyšlo z ní čisto. Shoda s přívlastkem ne: heuristika neodliší přívlastek od vztažného zájmena a slovesa, takže ze 40 nálezů byly 2 skutečné. Zbytek je úsudek nad větou.
 
 Rozbor konkrétního běhu drží `~/Dev/rezervace/main/docs/decisions.md`, §121.
