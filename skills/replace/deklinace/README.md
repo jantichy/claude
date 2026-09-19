@@ -19,7 +19,7 @@ Nástroj, který vznikl 19. 9. 2026 při přejmenování „partie“ na „podo
 |---|---|
 | `deklinace.py` | pravidla převodu; `convert(text, report, path)` vrací text a do `report` seznam rozhodnutí s příznakem jistoty |
 | `prepis.py` | průchod soubory s **chráněnými úseky** (místa, kde je slovo předmětem řeči) a zdrojem z `git show HEAD:`, takže běh jde opakovat bez zahazování rozdělané práce |
-| `test_deklinace.py` | kontrolní sada vět vytažených z revize; hlídá, že se úpravy pravidel navzájem neruší |
+| `test_deklinace.py` | kontrolní sada 44 vět vytažených z revize; hlídá, že se úpravy pravidel navzájem neruší. **Dvě věty v ní selhávají schválně** – jsou nejednoznačné i pro člověka („na první partii“ je 4. i 6. pád) a v textu se opravily ručně |
 
 ## Doložená mez, kvůli které tu tenhle text je
 

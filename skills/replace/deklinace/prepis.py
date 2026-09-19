@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Přepíše „partii“ na „podobjednávku“ v dokumentaci a chrání místa, kde je to slovo předmětem řeči."""
-import sys, re, glob, json, subprocess
-sys.path.insert(0, '/private/tmp/claude-501/-Users-honza-Dev-rezervace/ddbf121e-d275-4737-82cc-8e7489edcb16/scratchpad')
+import sys, re, glob, json, subprocess, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import deklinace as D
 
 CHRANENE = [
@@ -39,5 +39,5 @@ if __name__ == '__main__':
     print('nahrazeno:', len(rep), '| jistých:', sum(1 for r in rep if r['sure']),
           '| k revizi:', sum(1 for r in rep if not r['sure']), '| chráněných úseků:', celkem_chran)
     json.dump([r for r in rep if not r['sure']],
-              open('/private/tmp/claude-501/-Users-honza-Dev-rezervace/ddbf121e-d275-4737-82cc-8e7489edcb16/scratchpad/nejiste.json','w'),
+              open('nejiste.json', 'w', encoding='utf-8'),
               ensure_ascii=False)

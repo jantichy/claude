@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Kontrolní sada vět, které při revizi převodu vyšly špatně."""
-import sys, unittest
-sys.path.insert(0, '/private/tmp/claude-501/-Users-honza-Dev-rezervace/ddbf121e-d275-4737-82cc-8e7489edcb16/scratchpad')
+import sys, os, unittest
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import deklinace as D
 
 PRIPADY = [
