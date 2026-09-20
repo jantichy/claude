@@ -88,6 +88,24 @@
   9. **Checklisty `/skill`** – `skills/skill/SKILL.md:174, 176, 225, 274, 277` počítají s jedním rámečkem v jedné řadě a s povinnými sousedy z obou stran.
   10. **Drobnosti:** `.claude/CLAUDE.md:12` („životní cyklus tady končí `/cleanupem`“), `skills/SEVERITY.md:21` (výčet skillů hlásících nálezy, přibude `/consolidate`), `STRUCTURE.md:273–289` (kdo zapisuje do *Průchodů životním cyklem* – rozšiřovat ten výčet mlčky se nesmí, takže `/consolidate` se musí doplnit vědomě).
 
+  **Co našel čtenář bez kontextu 20. 9. 2026 a v seznamu výš chybělo:**
+
+  - **`verify.sh` je `Stop` hook, takže červený `test` blokuje každou odpověď v `~/.claude`.** Testy jsou červené (viz stav výš), takže **příští session nad konfigurační vrstvou neskončí ani jednu odpověď, dokud se nedorovnají**. Tohle povyšuje bod 1 z „první v pořadí“ na „bez něj se nedá pracovat“.
+  - **`/next` je jediné místo, kde se cyklus fakticky spouští** – patří hned za testy, ne jako bod 7. `collect.py` bere fázi jako `row.split()[0]`, takže ze zalomené osy vyrobí **neexistující fázi jménem `/breakdown`**; není to tedy jen ztráta měření, ale nesmyslná data, se kterými pak počítá porovnání vět ve skillech.
+  - **Kořenové `README.md` je jediný soubor, který čte člověk zvenčí** – patří výš než bod 6.
+  - **`RULES.md`, *Doc-first vývoj*: „V životním cyklu plní doc-first `/specify` a `/breakdown`“** – chybí `/architect`, tedy právě ten krok, který drží prostřední článek řetězu `requirements.md` → `architecture.md` → `plan.md`.
+  - **`skills/SKILLS.md`, *Jak se píše text uvnitř*, popisuje rámeček jako „krajní kroky a mezi nimi výpustku“**, ale skutečný vzor vypisuje všechny kroky i s odkazy. Není poznat, jestli je `…` doslovné znění, nebo zástupný symbol – kdo to vezme doslova, vyrobí rámeček bez odkazů, tedy bez toho, kvůli čemu existuje.
+  - **`STRUCTURE.md` má dvě jména pro týž řádek** – *Návrh sešitý* v `todo.md` proti `- **Návrh uzavřen (<datum>)**` v `done.md`; `skills/next/collect.py` pro jistotu hledá oba. Starší dluh, ale sedí na týž soubor, který se bude přepisovat.
+
+  **Otevřené otázky, které se musí rozhodnout dřív, než se sáhne na texty:**
+
+  1. **Kola návrhu: `/specify`, nebo `/architect`?** Tahle položka říká `/architect`, `STRUCTURE.md` na pěti místech `/specify`. Je to rozhodnutí o rozsahu obou skillů, ne redakční oprava – a tichou volbou jedné strany se rozhodovat nemá (`RULES.md`, *Kolizi uvnitř tohohle souboru neřeš svépomocí*).
+  2. **Hlásí `/consolidate` nálezy podle `skills/SEVERITY.md`, nebo vrací jen návrhy?** `LIFECYCLE.md` o něm říká, že „jako jediný vrací návrh řešení, ne nález“; bod 10 níž počítá s tím, že do výčtu skillů hlásících nálezy přibude. Jedno z toho je špatně.
+  3. **Kam jde zamítnutý návrh `/consolidate`, aby se nepředkládal každý běh znovu?** `RULES.md` má výjimku pro zamítnuté nálezy prověřovacích kroků (kapitoly `## Review` a `## Consistency` v projektovém `CLAUDE.md`) a jmenuje v ní `/review`, `/attack` a `/consistency`. Nový krok, jehož výstup se z definice zamítá častěji, než přijímá, do toho systému zapojený není.
+  4. **Má `/consolidate` přibýt do *Průchodů životním cyklem*** (`STRUCTURE.md`, *`done.md`*)? Ten výčet se nesmí rozšiřovat mlčky; kritérium je „má to svého čtenáře“.
+  5. **Dorovnat texty, nebo nejdřív napsat oba skilly?** Psát texty o krocích, které nejde vyvolat, zakazuje `SKILLS.md`. Doporučení čtenáře: nejdřív testy, pak `/architect` a `/consolidate` jako skutečné skilly, teprve pak texty – opačné pořadí vyrobí sadu README slibující neexistující sadu.
+  6. **Jak se pozná, ve které mezeře člověk stojí?** `LIFECYCLE.md` říká, co v které mezeře smí stát, ale ne jak poznat, kde jsi. U osy to jde z artefaktů (je `requirements.md`? je `plan.md`?), u kontrolních kroků ne – `/consolidate` se pouští „až se nasbírá dost kol“ a `/consistency` „až se nasbírá dost změn“, a ani u jednoho není práh. Zvážit rozhodovací postup přímo v `LIFECYCLE.md`.
+
   **Neprošlo se `decisions.md` (96 zmínek) a `done.md` (80).** Průzkumník je vynechal jako historický záznam. **V `decisions.md` ale můžou být odůvodnění, která přestavba zneplatnila** – projít je zvlášť a opravit jen ta, která tvrdí o dnešku něco nepravdivého; historické „tehdy to bylo takhle“ se nechává.
 
 - [ ] **Rozdělit skill `/specify` na `/specify` a `/architect`.** Největší kus z celé přestavby a **nedá se udělat mechanicky**. Dnešní `skills/specify/SKILL.md` obsluhuje obě vrstvy naráz: má `Fázi 3a` (produktová specifikace) a `3b` (návrh řešení), režimy `auto`, `create`, `round`, `close` a celou mechaniku tematických kol.

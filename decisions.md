@@ -885,3 +885,26 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Praktický důsledek:** u projektu, ke kterému žádný relevantní standard v `~/Dev/context/` neexistuje, je `/review` skoro prázdný a má se přeskočit. `/oponent` funguje vždycky.
 
+### Vznikl krok `/consolidate` na návrhový dluh z postupného záplatování (20. 9. 2026)
+
+**Problém, který ho vyvolal:** návrh vzniká po kolech a v každém se ukáže další kombinace, na kterou se přidá sloupec nebo hodnota výčtu. Každý ten krok je ve své chvíli správný; dohromady z nich vznikne řešení, které by při znalosti všech případů předem šlo nahradit jedním jednodušším. **Žádný dosavadní krok to nenajde:** `/review` měří proti specifikaci, jenže dluh je v samotné specifikaci; `/consistency` se ptá, jestli si projekt sedí sám se sebou – a takový dluh je dokonale konzistentní, protože každá záplata se poctivě zanesla všude; `/oponent` posuzuje dokument, jak stojí dnes, a nemá odkud vědět, že tři sousední mechanismy vznikly ve třech týdnech ze tří podnětů.
+
+**Rozhodnutí:** nový kontrolní krok, který se ptá **„bylo by to dnes navržené jinak?“** – a odpověď „ano“ přitom vadu neznamená. **Jako jediný krok cyklu čte historii rozhodnutí**, ne dnešní stav: kroniku z `decisions.md`, `done.md` a z git logu.
+
+**Čtyři lovné vzory, po kterých jde adresně** (vyjmenoval uživatel): přetížená osa (poznávacím znamením je, že se každý guard ptá jen na jinou podmnožinu hodnot); táž situace řešená pokaždé jinak; řetěz lepení, kde se má dostopovat na **první článek**; slepá místa, do kterých model narazí opakovaně.
+
+**Dvě pravidla, která mu dávají smysl:**
+
+- **„Uživatel to zamítl“ není zeď.** Rozhodnutí vzniklo v tehdejším kontextu a ten se mohl změnit – platí to i pro rozhodnutí uživatele. Podmínkou je pojmenovat, **co se od té doby změnilo**.
+- **Ověřovatel se na dřívější zamítnutí odvolávat nesmí.** Musí doložit, co konkrétně se rozbije. Doloženo v pilotním běhu, kde ověřovatel argumentoval větou „to je přesně ta varianta, kterou §125 zamítlo“ a bod se udržel jen proto, že k němu vedle toho vypsal šest skutečných čtenářů.
+
+**Hranice:** relativizují se **řešení, ne zadání**. Rozhodnutí o tom, co se má dělat, je pro krok vstup – jinak by z něj byl `/oponent` s právem měnit zadání.
+
+**Ověřuje se dvojmo a obě zkoušky jsou blokující:** pokrývá nové řešení všechno, co dnešní, i tam, kde to dnešek zvládá nedokonale? A je to opravdu zlepšení, ne výměna jednoho hacku za jiný? Druhá zkouška je ta, na kterou se zapomíná.
+
+**„Nic velkého k přepsání“ je platný výsledek.** V pilotu (rezervační systém, platební brána) padly **dva ze dvou** velkých návrhů a jako vedlejší produkt ověřování vypadly dvě skutečné vady. Bez téhle věty by se ze skillu stal stroj na návrhy, které projdou, protože je nikdo nezkusil vyvrátit.
+
+**Zamítnuto – nechat to jako hledisko `/oponent`.** Hlediska se vybírají podle vlastnosti dokumentu a posuzují hotový text; tenhle krok potřebuje historii a vrací návrh řešení, ne nález. **Zamítnuto – pouštět po každé featuře:** je drahý a jeho nález je vždycky velký přepis.
+
+**Zadání skillu i to, co k jeho napsání zbývá, drží `todo.md`.** Rozbor pilotu je v rezervačním systému, `docs/done.md` a `docs/decisions.md` §133 a §134.
+

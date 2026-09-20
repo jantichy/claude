@@ -20,6 +20,8 @@ V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code
 
 Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu kroků, ve které polovina čísel nic neznamenala.
 
+**`/architect` a `/consolidate` zatím neexistují jako skilly.** Jsou rozhodnuté a popsané, ale `skills/architect/` ani `skills/consolidate/` na disku nejsou – kdo je zavolá, nic se nestane. Dokud nevzniknou, dělá práci obou `/specify`, respektive nikdo. Stojí to tady schválně, protože popsaný krok, který nejde vyvolat, je horší než chybějící (`~/.claude/skills/SKILLS.md`, *Jak se píše text uvnitř*). Co k jejich založení zbývá, drží `todo.md`; **až vzniknou, tenhle odstavec zmizí.**
+
 ### Hlavní osa – kroky, které tvoří
 
 - **`/project`** – u nového projektu, nebo když je potřeba dorovnat nastavení stávajícího. **Volá se znovu i nad dávno nastaveným projektem, kdykoliv se posunuly standardy nebo konfigurační vrstva** – pozná podle bloku metadat, že už jednou běžel, a místo ptání projde projekt proti dnešní podobě standardu. Projekt bez toho otisku projde nejdřív průvodcem a revizi dostane na jeho konci. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí, a doplňovat je zpětně znamená rekonstruovat je z paměti. Zakládá i *Kontrakt příkazů*. Ten sám o sobě průběžnou kontrolu **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/verify.sh --allow`), protože kontrakt je kód z repozitáře a hooky se na povolení neptají.
