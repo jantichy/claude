@@ -84,6 +84,8 @@ Zapiš do `docs/competition.md` jako úvodní sekci `## Co poměřujeme`. `/spec
 
 **Pusť subagenty paralelně, jedním voláním s víc tool calls.** Každý dostane jinou cestu hledání – redundantní agenti najdou tolikrát totéž, kolik jich pustíš.
 
+**Typem `researcher`** (`subagent_type`). Zadání zní prohledat web a vrátit JSON, takže agent nemá co spouštět ani kam zapisovat – a typ bez shellu je jediné, čím ta hranice doopravdy drží; věta v zadání ne (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*).
+
 **Výchozí model, `low`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: údaj bez URL se ve Fázi 3 zahodí. Na `xhigh` běží až syntéza a rizika, kde se chyba násobí do zadání.
 
 **Cesty, pravidla výběru i zadání pro agenty drží `~/.claude/skills/discovery/paths.md`.** Přečti si ho celý a řiď se jím: je v něm katalog dvanácti cest ve třech blocích, pravidla, kolik jich pustit a která je povinná, a dvě šablony zadání podle toho, jestli cesta vrací produkty, nebo zjištění.

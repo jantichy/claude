@@ -45,7 +45,7 @@ Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni
 
 Navíc si zjisti tohle:
 
-1. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury.
+1. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta **typem `reader`** (`subagent_type`) a na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury. Typ bez shellu proto, že agent má jen číst – a zdrojová data bývají cizí soubor, do kterého nemá co sáhnout.
 2. **Načti doménové znalosti**, které se na výstup vztahují:
    - `~/Dev/context/text/text.md` – stavba a stylistika komentářů. **Vždy.**
    - `~/Dev/context/text/typography.md` – česká sazba čísel, procent, jednotek, dat a interpunkce. **Vždy** – report je plný čísel.

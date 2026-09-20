@@ -2,7 +2,7 @@
 name: specify
 description: Skill se použije, když uživatel zadá "/specify" (volitelně s režimem auto, create, round nebo close a se jménem kola), nebo chce z nápadu udělat zadání – produktovou specifikaci a návrh řešení nového projektu, aplikace, webu nebo větší feature, ještě než se začne programovat –, případně pokračovat dalším kolem rozpracovaného návrhu. Vede řízený rozhovor otázku po otázce a sepíše docs/requirements.md a docs/architecture.md. Větší záměr nejdřív rozdělí na tematická kola a zapíše je do todo.md, aby šla řešit postupně i souběžně v samostatných větvích, a nakonec je sešije do jednoho návrhu. Navazující kroky jen doporučuje, sám je nevolá.
 argument-hint: [auto|create|round|close] [kolo]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
 # Specify

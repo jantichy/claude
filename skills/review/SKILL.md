@@ -27,6 +27,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to první krok uzavírá
 
 - **Průběžnou kontrolu nenahrazuje, ale ověřuje ji jako vstupní podmínku.** Běží průběžně u každého úkolu (viz `~/Dev/context/coding/quality.md`), takže sem se přichází se stavem, který už zelený byl. Ověřuje se přesto znovu, a je pro to důvod: hook ji vynutil po **poslední odpovědi**, kdežto tady se pouští **na celém rozsahu větve** a proti aktuálnímu stromu – „prošlo to po posledním úkolu“ a „prochází to jako celek“ jsou dvě různá tvrzení. Není-li zelená, skill se zastaví a pošle tě to dodělat.
 - **Neaudituje vnitřní konzistenci projektu.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`, který běží až po tomhle.
+- **Nedopisuje, co v plánu zbylo.** Úkoly odpracovává `/implement` před tímhle; sem se přichází s hotovou prací a opravuje se jen to, co panel sám našel.
 - **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/cleanup`. Vlastní nálezy si ale zapisuje sám: odložené do `docs/todo.md`, zamítnuté do `## Review` v `CLAUDE.md`.
 - **Neaudituje cizí web zvenčí.** Čte repozitář a měří proti specifikaci; na cizí běžící web, ke kterému není zdroják ani zadání, je `/audit` – ten ho spustí, projde jako návštěvník a měří proti auditnímu postupu domény.

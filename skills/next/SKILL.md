@@ -29,6 +29,8 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 
 **Proč skript, a ne pokyny:** dřív skill vedl model přes desítky volání gitu a čtení souborů, každé s čekáním na model, a k tomu si pokaždé načítal `STRUCTURE.md`, `PREFLIGHT.md` a `LIFECYCLE.md`. Běh trval přes minutu, přestože uživatel chce jen rychlý návrh. Skript běží kolem vteřiny a model dělá jen úsudek. Druhý důvod je spolehlivost: **registr i transcript jsou vnitřní formát Claude Code bez dokumentace** a o obsazenosti větve rozhoduje testovaný kód (`tests/test_next.py`), ne úvaha modelu.
 
+**Nástroj `ListAgents` je nenahradí, ověřeno 20. 9. 2026.** Vypisuje sice běžící session na stroji, ale jen jejich jméno, stav a stáří – ne větev ani adresář projektu. Rozhodnutí *nabídnout, nebo skrýt* stojí právě na větvi, takže registr i transcript se čtou dál vlastním skriptem.
+
 **Skripty jsou implementační detail.** Závazné je jen to, co z nich plyne pro nabídku: úkol ve větvi, nad kterou běží živá session, se nenabízí; **session, která běží – i obnovená v jiném okně –, se k obnovení nenabízí nikdy**; opuštěná větev se nabídne jako první; a **nedá-li se to zjistit, bere se větev jako obsazená** a řekne se to nahlas.
 
 ------

@@ -2,7 +2,7 @@
 name: serviceaccount
 description: Skill se použije, když uživatel zadá "/serviceaccount", nebo chce založit service account pro strojový přístup ke klientským systémům – do Google Analytics, Tag Manageru nebo reklamních účtů. Z kontextu projektu odvodí, o kterého klienta a které weby jde, nabídne jména účtů podle konvence, ke každému složí lidský popis, připraví příkaz pro bezpečné uložení klíčů a text žádosti o přístupy pro klienta, a nakonec vzniklé účty zapíše do profilu organizace. Konvenci pojmenování a úrovně oprávnění drží ~/Dev/context/organizations/access.md; skill sám žádné pravidlo nenese. Účty ani klíče nezakládá, protože to je za přihlášením uživatele, a do administrace klientských systémů nevolá.
 argument-hint: [klient]
-allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
+allowed-tools: [Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion]
 ---
 
 # Service account

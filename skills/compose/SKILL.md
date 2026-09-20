@@ -2,7 +2,7 @@
 name: compose
 description: Skill se použije, když uživatel zadá "/compose" (volitelně s režimem collect nebo profile), nebo zadá "/compose write", anebo chce napsat či přepracovat článek, příspěvek na sociální sítě nebo vlákno vlastním hlasem a stylem – včetně zkrácení nebo překlopení vlastního staršího textu do jiného formátu. Výchozí režim píše text podle znalostní báze autorova psaní. Režim "collect" provede shromážděním všech jeho dosavadních textů do archivu – exporty ze sociálních sítí, články z webů, lokální zálohy. Režim "profile" nad tím archivem vydestiluje znalostní bázi, nebo ji aktualizuje o texty, které mezitím přibyly. Na rozdíl od /transcript, který přepisuje nahrávky, tenhle skill píše nový text; cizí text neredaguje ani nekorekturuje. Autorovy názory a pointy si nikdy nevymýšlí – bez nich se nerozjede.
 argument-hint: [write|collect|profile]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, WebFetch, AskUserQuestion]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, WebFetch, AskUserQuestion]
 ---
 
 # Compose

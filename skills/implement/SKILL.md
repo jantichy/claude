@@ -12,9 +12,9 @@ Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, im
 
 ## Co skill nedělá
 
-- **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*.
+- **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*. Plán píše `/breakdown` a opravit ho patří jemu; tady se odpracovává.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md` nebo `docs/backlog.md`, ne do kódu.
-- **Neuzavírá feature.** Review, audit konzistence a úklid jsou samostatné kroky po tomhle – viz `~/.claude/skills/LIFECYCLE.md`, druhá půlka životního cyklu.
+- **Neuzavírá feature.** Hotovou práci prověřuje `/review` hned po tomhle, vnitřní konzistenci `/consistency` a úklid `/cleanup` – samostatné kroky, viz `~/.claude/skills/LIFECYCLE.md`, druhá půlka životního cyklu.
 
 ## Jak je to postavené uvnitř
 

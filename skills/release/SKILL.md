@@ -16,6 +16,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) stojí **mimo uzavírání,
 ## Co skill nedělá
 
 - **Neopravuje.** Najde-li kontrola problém, skill **skončí** a pošle to zpátky do `/implement` nebo `/review`. Neopravuj v předvečer nasazení – změna, která neprošla review, je přesně ta, která spadne.
+- **Neprověřuje, jestli to obstojí.** Rozbít hotovou práci spuštěním zkouší `/attack` před tímhle; sem se přichází se stavem, který tím prošel, a nasazuje se, ne testuje.
 - **Nerozhoduje o obsahu vydání.** Co se nasazuje, je to, co je na větvi. Vybírat commity na poslední chvíli je cesta k tomu nasadit půlku feature.
 - **Nezakládá infrastrukturu.** Nastavení prostředí, domén a proměnných je jednorázová práce, ne součást každého vydání.
 
