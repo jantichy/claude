@@ -85,6 +85,24 @@
 
   **Píše se až po pilotním běhu**, který proběhne ad hoc v rezervačním systému nad platební bránou (zapsáno v jeho `docs/todo.md`). Rozhodl uživatel: ze zadání pro agenty se z hlavy netrefí, co v něm musí stát, a pilot poslouží jako srovnávací běh.
 
+  **Čeho se skill cíleně chytá – vyjmenoval uživatel 20. 9. 2026 po pilotním běhu.** Nejsou to příklady, ale lovné vzory; skill po nich jde adresně, ne že by na ně náhodou narazil.
+
+  - **Přetížená osa.** Jedno pole, kterým se postupně řešily různé problémy, až odpovídá na víc otázek naráz. **Poznávací znamení je v guardech, ne v poli:** ptá-li se každý guard jen na jinou podmnožinu hodnot a k rozlišení dvou z nich je potřeba druhé pole vedle, jsou to osy dvě nebo tři. Uživatel to popsal takhle: *„postupně jsme tím jedním sloupcem řešili různé problémy, až se přetížil a pak jsme museli dodatečnýma obskurníma podmínkama řešit, co to vlastně říká.“*
+  - **Táž situace řešená pokaždé jinak.** Tři podobné případy, tři různé mechanismy – jednou nová hodnota, podruhé nový sloupec, potřetí nový nález. Úkol není vybrat, který z nich je nejlepší, ale **sjednotit filozofii na jeden typ řešení** – a je-li těch případů víc za sebou, hledat, jestli z nich neplyne **jeden vzor, který je vyřeší všechny naráz** místo tří dílčích záplat.
+  - **Řetěz lepení.** Oprava, která si vynutí další opravu, která si vynutí další. Skill má **dostopovat na první článek řetězu** a říct, co se mělo rozhodnout tam – ne opravovat poslední článek. Uživatel: *„hele, tohle byla volovina, měli jsme to udělat jinak tak a tak, v důsledku toho bychom nemuseli takhle lepit pět navazujících problémů.“*
+  - **Slepá místa, do kterých se model dostává opakovaně.** Nerozhodné a neřešitelné stavy, ze kterých vede ven jedině další podmínka, další sloupec nebo další datum. Opakování je signál, že je špatně osa, ne ten konkrétní stav.
+
+  **„Uživatel to zamítl“ není zeď a skill přes ni smí.** Rozhodnutí vzniklo v tehdejším rozpoložení a kontextu, a ten se vývojem projektu mohl změnit – platí to i pro rozhodnutí, která udělal uživatel sám. **Podmínka je pojmenovat, co se od té doby změnilo**; „udělal bych to jinak“ bez toho je jen jiný názor na tutéž věc. Rozhodl uživatel 20. 9. 2026.
+
+  **Z toho plyne tvrdý zákaz pro ověřovatele:** odvolat se na to, že něco už jednou bylo zamítnuto, **není argument**. Ověřovatel musí doložit, **co konkrétně se rozbije** – jmenovat guard, invariant, text pro zákazníka. Doloženo v pilotním běhu: ověřovatel argumentoval větou „to je přesně ta varianta, kterou §125 zamítlo“, a ten bod se udržel jen proto, že k němu vedle toho vypsal šest skutečných čtenářů. Bez toho zákazu skill jen potvrzuje, že co je rozhodnuté, je rozhodnuté.
+
+  **Ověřuje se dvojmo a obě zkoušky jsou blokující** (formuloval uživatel 20. 9. 2026):
+
+  1. **Pokrývá nové řešení úplně všechno**, na co se v minulosti narazilo a co dnešní řešení pokrývá – i tam, kde to dnešek zvládá nedokonale nebo neúplně?
+  2. **Je to opravdu zlepšení** – jednodušší, systematičtější, přímočařejší, bez hacků –, a ne jen přepsání jednoho řešení za jiné stejně nebo obdobně dobré? Druhá zkouška je ta, na kterou se zapomíná: výměna hacku za jiný hack projde první zkouškou hladce.
+
+  **„Nic velkého k přepsání“ je platný výsledek, ne selhání běhu.** Skill musí umět skončit větou *„shluk vypadal jako dluh, ale každá záplata má doložený důvod“* – jinak se z něj stane stroj na návrhy, které projdou proto, že je nikdo nezkusil vyvrátit. V pilotu padly dva ze dvou velkých návrhů a jako vedlejší produkt ověřování vypadly dva skutečné nálezy.
+
 ### Nedodělky přestavby vývojového workflow (2. 9. 2026)
 
 **Kontext pro novou session.** V jedné dlouhé session se přestavěl celý řetěz vývojové práce v `~/.claude`. Hotové a commitnuté je tohle: přejmenování `/spec` → `/specify` a dokumentů na `requirements.md` + `architecture.md`; `/standards` přepsaný na `/review` s panelem specialistů a adversariálním ověřováním nálezů; nový `/release`; průběžná kontrola jako `Stop` hook (`~/.claude/verify.sh`) čtoucí *Kontrakt příkazů* ze sekce `## Kontrakt příkazů` v projektovém `CLAUDE.md`; nový *Životní cyklus projektu* v `RULES.md`; sekce *Ověřování a kontroly kvality* a *Autonomie se stupňuje* v `coding/coding.md` (od 7. 9. 2026 vlastní soubor `coding/quality.md`). Zdůvodnění všech rozhodnutí včetně zamítnutých variant je v `decisions.md`, sekce `## coding` a `## Celý repozitář` k datu 2. 9. 2026.
