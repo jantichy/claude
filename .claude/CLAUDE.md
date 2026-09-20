@@ -3,27 +3,17 @@
 Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, sdílená pro inspiraci.
 
 - **Slug:** `claude`
+- **Struktura:** root
 - **Repozitář:** https://github.com/jantichy/claude
 
 ## Výjimky z obecných pravidel
 
 - **Blok metadat je tady, ne v kořenovém `CLAUDE.md`**, jak jinak velí `~/.claude/STRUCTURE.md`. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata tohohle repozitáře tam nepatří, mátla by v cizím projektu.
 - **`/attack` ani `/release` se tu nikdy nepouštějí.** Repozitář je konfigurace, ne aplikace – není co spustit ani kam nasadit. Životní cyklus tady končí `/cleanupem`. Zapsáno schválně, ne odvozeno (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
-- **Tenhle repozitář má `todo.md`, `backlog.md`, `done.md` i `decisions.md` v `~/Dev/context/`**, ne u sebe. Platí to pro každý skill, který do nich zapisuje a zároveň se tu pouští – `/review`, `/oponent`, `/consistency`, `/cleanup`, `/implement` a `/skill`. (`/attack` a `/release` se tu nepouštějí vůbec, viz výš.) **U `/skill` to platí bezvýhradně**, protože jako jediný nikde jinde běžet nemůže – spravuje skilly, a ty jsou jen tady. A **neptej se na to pokaždé znovu**:
+- **Standardní soubory leží v kořeni, ne v `docs/`** – režim `root` podle `~/.claude/STRUCTURE.md`, *Dva režimy umístění*. Repozitář není vyvíjený projekt, ale konfigurace, takže by `docs/` byl prázdný obal nad čtyřmi soubory. `rules.md` tu není a nezakládá se: pravidla téhle vrstvy jsou samy jejím obsahem, ne meta-vrstvou nad ním.
+- **Repozitář je veřejný, takže `todo.md`, `backlog.md`, `done.md` a `decisions.md` píšeš pro cizí oči.** Do konce září 2026 ležely v soukromém `~/Dev/context/` právě proto; od 20. 9. 2026 jsou tady a tu ochranu musí nahradit pravidlo. **Hranice vede mezi strukturou a obsahem.** Struktura veřejná je a `README.md` ji sám píše – že analytické know-how leží v `context/analytics/`, autorovy články v `context/archive/` a jeho styl psaní v `context/compose/`, se smí napsat a odkazovat se na to. **Konkrétní obsah veřejný není:** jméno klienta nebo organizace (tedy i to, že `context/organizations/` drží zrovna tenhle profil), sazba a obchodní údaj, osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu nebo domény a know-how, které se prodává.
 
-  | Co | Kam | Jak |
-  |---|---|---|
-  | odložený nález, zaparkovaný bod | `~/Dev/context/todo.md` | **do sekce `## Claude`** – ta je tam právě pro tenhle repozitář |
-  | nezávazný nápad, o kterém se nerozhodlo | `~/Dev/context/backlog.md` | tamtéž do `## Claude`; hranici proti todo drží `~/.claude/STRUCTURE.md`, *`backlog.md`* |
-  | rozhodnutí, zamítnutá varianta, vědomá mezera | `~/Dev/context/decisions.md` | tamtéž do `## Claude`; týká-li se rozhodnutí **jednoho skillu**, patří rovnou do jeho `SKILL.md` k místu, kde platí – tam ho příště najde ten, kdo ho potřebuje |
-  | záznam dokončeného průchodu (`## Průchody životním cyklem`) | `~/Dev/context/done.md` | **vždy**, bez odchylky – čtenáře i důvod drží `~/.claude/STRUCTURE.md`, *`done.md`*. Dřívější výjimka „u `/review` jen když má smysl ho pak číst“ padla 8. 9. 2026 |
-
-  **První tři řádky jdou do sekce `## Claude`**, ne do doménových – ty patří tématům knowledge base (analytics, text, brand…), kdežto tohle je práce na konfigurační vrstvě. Ta sekce má v záhlaví napsáno, že hashe commitů v ní pocházejí odsud, takže se u jednotlivých položek neopakuje.
-
-  **Záznam průchodu je výjimka:** jde do `## Průchody životním cyklem`, což je samostatná sekce vedle `## Claude`, a hash v něm se kvalifikuje (`~/.claude@2acbdbd`). Sdílí ji totiž oba repozitáře, takže holý hash by tam nešlo přiřadit ke stromu – `~/.claude/STRUCTURE.md`, *`done.md`*, to označuje za horší než hash žádný.
-
-  Je to jediné místo, kde struktura tohohle repozitáře sahá ven; důvod je, že fronta rozdělané práce a deník rozhodnutí do **veřejného** repozitáře nepatří, a konfigurační vrstva je zároveň téma, které ta znalostní báze už drží. **Pozor: platí to jen pro tenhle repozitář** – proto to stojí tady v projektovém souboru, a ne v kořenovém `CLAUDE.md`, který se rozbaluje do každé session v každém projektu.
-- **`docs/` neexistuje.** Repozitář není vyvíjený projekt, ale konfigurace; `todo.md`, `backlog.md`, `done.md`, `decisions.md` ani `rules.md` nemá a nezakládají se.
+  **Platí to na každý zápis, ne na ten první.** Úkol vzniklý při práci pro klienta se zapisuje tak, aby popsal *co* se má v konfigurační vrstvě udělat, ne *u koho* se to ukázalo: „u jednoho projektu chyběl kontrakt příkazů“, ne jméno toho projektu. Potřebuje-li položka konkrétní klientský kontext, aby dávala smysl, patří celá do `~/Dev/context/todo.md` – tam se nic nezveřejňuje.
 
 ## Instrukce pro tenhle repozitář
 

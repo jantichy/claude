@@ -142,7 +142,7 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 | Odpověď znamená | Co uděláš |
 |---|---|
 | rozhodnutí | přidej ho jako položku do Fáze 1 (kategorie 1) a normálně zapiš ve Fázi 5 – i se zdůvodněním, které tady padlo |
-| „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) |
+| „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka |
 | „někdy by šlo“, nezávazný nápad | do `docs/backlog.md` – **ne do todo**; hranici drží `~/.claude/STRUCTURE.md`, *`backlog.md`* |
 | bezpředmětné | nic nezapisuj; v přehledu ve Fázi 9 to ale uveď, ať je vidět, že se to probralo |
 | práce navíc (dodělat kód, přepsat návrh) | to je nad rámec úklidu. Udělej to **jen na výslovný pokyn** a pak pokračuj skillem dál; jinak do `docs/todo.md` (tamtéž) |
@@ -352,7 +352,7 @@ Sem dorazí, co našli čtenáři z Fáze 6. **Nedorazili-li ještě, počkej na
 - **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · N nevypořádaných témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak se s tím naložilo>
 ```
 
-Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku. V tomhle repozitáři se zapisuje do `~/Dev/context/done.md` a **bez odchylky**, i když tu `docs/` neexistuje (viz `.claude/CLAUDE.md`); hash se tam kvalifikuje jako `` `~/.claude@<short HEAD>` ``.
+Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.
 
 **Git:**
 

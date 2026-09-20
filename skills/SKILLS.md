@@ -271,7 +271,7 @@ Vyhrává první kritérium, které sedí – a všechna vedou ven:
 | Kdyby platilo | Kam to patří |
 |---|---|
 | Je to postup, kritérium nebo instrukce pro Clauda | **do `SKILL.md`.** |
-| Je to obhajoba návrhového rozhodnutí | **do `SKILL.md`** k místu, kde platí, nebo do `~/Dev/context/decisions.md`. |
+| Je to obhajoba návrhového rozhodnutí | **do `SKILL.md`** k místu, kde platí, nebo do `decisions.md`. |
 | Je to implementační detail – jméno přepínače, souboru, funkce, modelu, agenta | **nikam.** Čtenáře nezajímá a zestárne dřív než zbytek textu. |
 | Je to historka z provozu, číslo z jednoho běhu, „poprvé jsem ho pustil a…“ | **nikam.** |
 

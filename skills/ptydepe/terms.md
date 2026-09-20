@@ -185,7 +185,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Sjednoceno z dvojice „ověřovatel“ a „skeptik“** (2026-09-07). Nešlo o cizí slovo, ale o dvě jména pro jednu věc: `/attack` je mělo dokonce v jedné větě (*„nahrazuje **ověřovatele** z `/review`: **skeptik** nad pozorováním jen stojí čas“*). Zvítězil „ověřovatel“, protože ho nese norma (*Ověřovací vrstva*), jméno fáze (*Ověření nálezů*) i většina užití; „skeptik“ popisoval postoj, a ten stejně stojí ve větě vedle.
 
-**Výjimka, na kterou se nesahá:** *Skeptik* je jméno zrušeného hlediska `/oponent` – v `~/Dev/context/done.md` i v `~/.claude/skills/oponent/SKILL.md`, kde se popisuje, s čím splynulo. Není to označení ověřovatele.
+**Výjimka, na kterou se nesahá:** *Skeptik* je jméno zrušeného hlediska `/oponent` – v `~/.claude/done.md` i v `~/.claude/skills/oponent/SKILL.md`, kde se popisuje, s čím splynulo. Není to označení ověřovatele.
 
 ### ověřovací pokus
 

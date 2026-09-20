@@ -1,0 +1,17 @@
+# Zásobník nápadů
+
+Nezávazné nápady ke konfigurační vrstvě. Nic z toho není odsouhlasené, rozpracované ani naplánované – je to materiál k výběru, když se řeší, co dál.
+
+**Repozitář je veřejný.** Nic, co sem přibude, nesmí prozradit **obsah** soukromého `~/Dev/context/` – jméno klienta či organizace, sazbu, obchodní nebo osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu ani know-how, které se prodává. Struktura toho adresáře veřejná je a `README.md` ji sám píše; konkrétní obsah ne. Podrobněji `.claude/CLAUDE.md`, *Výjimky z obecných pravidel*.
+
+**Co je rozhodnuté, že se udělá, patří do `todo.md`**, i kdyby to bylo až za rok; hranici drží `STRUCTURE.md`, *`backlog.md`*. Rozhodne-li se, že se nápad udělá, **přesune se odsud** a tady po něm nezbude nic. Zamítnutý nápad se smaže a jeho odůvodnění jde do `decisions.md`.
+
+- **Úzká deterministická kontrola češtiny nad korpusem.** Nápad z 14. 9. 2026, nerozhodnutý. Šlo by o tři až pět nesporných pravidel – dvojitá mezera, rovné uvozovky místo českých, mezera před procentem, nedělitelná mezera po jednopísmenné předložce –, která by běžela v `lint` nebo v CI nad `*.md`. **Pro:** 19 z 66 nálezů posledního `/review full` bylo textových a typografických a našel je drahý agent, který na ně musel přečíst 4 000 řádků. **Proti:** redakční pravidla z `~/Dev/context/text/text.md` jsou z větší části o úsudku, takže nástroj by v technickém textu sypal falešné poplachy – a ty jsou u vynucovací vrstvy horší směr selhání než propuštěná chyba, protože se vrstva vypne. Zavádět až jako druhý krok po CI, a jen tu užší sadu; širší kontrolu dál dělá panel specialistů v `/review`, který má navíc úsudek.
+
+Nápady ke konfigurační vrstvě v `~/.claude`. Hashe commitů v téhle sekci pocházejí z toho repozitáře.
+
+- **Dotáhnout auditní dráhu i v ostatních doménách.** `/audit` (od 10. 9. 2026) jede naplno jen nad doménou, která má sepsaný **postup auditu** i **katalog typických nálezů**. Dnes to splňuje jedině `analytics/` (`audit.md` + `findings.md`). `web/web.md` a `design/design.md` mají checklist, takže nad nimi skill pojede mělčeji a nahlas na to upozorní; `seo/` neexistuje vůbec a tam se nerozjede.
+
+  **Není rozhodnuto, že se to udělá** – katalog nálezů se nedá vymyslet od stolu, vzniká z odpracovaných zakázek. Proto je to nápad, ne úkol: vytáhne se, až přijde zakázka, která ho bude chtít, a `/audit` sám nabídne vytěžit nalezené zpátky do domény přes `/learn`. Doména tak může vyrůst používáním místo dopředu.
+
+- **Skilly by přejmenovávaly aktuální session podle toho, co dělají.** Nápad ze 17. 9. 2026, nerozhodnutý. Místo ručního `/rename` by si session název nastavila sama, třeba `/review` na „Review <větev>“. **Dnes to oficiálně nejde:** `/rename` smí zadat jen uživatel, `claude -n/--name` pojmenuje session jen při spuštění a výstup hooku podle dokumentace žádné pole pro název nemá (https://code.claude.com/docs/en/hooks.md, https://code.claude.com/docs/en/sessions.md; ověřeno na verzi 2.1.267). **Zamítnutá náhradní cesta:** `/rename` zapisuje do transcriptu session záznamy `custom-title` a `agent-name`, jenže běžící proces si název drží v paměti a zapisuje ho znovu – připsaný záznam by nejspíš přepsal a rozhraní by ho neukázalo. Navíc jde o interní formát bez záruky. **Co jde hned:** skill na začátku vypíše hotový příkaz `/rename <název>` k potvrzení. Vytáhne se, až Claude Code přidá oficiální cestu (nástroj nebo pole ve výstupu hooku) – pak se v příslušných skillech vymění ten jeden řádek.
