@@ -537,13 +537,16 @@ Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit
 Od nápadu k nasazené feature vede jeden životní cyklus:
 
 ```
-Zakládání   /project → /discovery → /specify požadavky → /oponent →
-            /specify návrh řešení → /oponent → /consolidate → /breakdown → /implement
-Uzavírání   /review → /consistency → /cleanup
-Nasazení    /attack → /release
+Osa        /project → /discovery → /specify požadavky → /specify návrh řešení →
+           /breakdown → /implement → /release
+
+Kontroly   /oponent, /consolidate, /review, /consistency, /attack, /cleanup
+           stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 ```
 
-**Je to pořadí, ve kterém kroky stojí, když se pustí všechny – ne řetěz, kde každý spouští ten další.** Sedm ze čtrnácti má **vlastní spouštěč** a do řady se řadí jen tehdy, když nastal: `/project` a `/discovery` podle stavu venku, `/consolidate` a `/consistency` podle toho, co se v projektu nasbíralo, `/cleanup` podle toho, že končí session – tedy klidně uprostřed rozdělané práce. Druhy spouštěčů a jejich rozdělení drží `LIFECYCLE.md`, *Pořadí není totéž co spouštěč*.
+**Jsou to dvě vrstvy, ne jedna řada.** Kroky **osy** něco tvoří – vyrobí soubor, kód nebo nasazení – a čekají na výstup toho předchozího. **Kontrolní kroky nepřidávají nic**, jen měří, co už je; nejsou body v řadě, ale vrstva mezi nimi, a proto se tentýž smí objevit v několika mezerách. `/cleanup` je ve všech, protože jeho spouštěčem je konec session – běží i uprostřed rozdělané práce.
+
+**Co smí stát v které mezeře, v jakém pořadí a co na který krok pouští**, drží `LIFECYCLE.md`, *Kroky cyklu a jejich uspořádání*.
 
 **Rozhraní jeho kroků drží `~/.claude/skills/LIFECYCLE.md`** – co který krok dělá, co po něm platí, proč stojí v tom pořadí, co se smí opakovat a proč cyklus nekončí nasazením. **Načti si ho, jakmile v některém kroku stojíš** nebo rozhoduješ, který přijde na řadu; paušálně se neimportuje, protože v projektu, kde se žádný krok nepouští, je to jen zabraný kontext.
 
