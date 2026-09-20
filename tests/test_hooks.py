@@ -24,6 +24,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -575,6 +576,104 @@ class CIChecksMutation(unittest.TestCase):
         souborem, byly by ty mutační testy zelené omylem."""
         self.assertFalse(self.reports(lambda s: s + "\n# neškodný komentář\n",
                                       "test_contract_read_via_verify_sh"))
+
+
+class GitGuard(unittest.TestCase):
+    """`git-guard.py` musí zastavit přepsání historie bez ohledu na tvar příkazu.
+
+    Vznikl proto, že deny seznam v `settings.json` porovnává **prefix celého
+    příkazu**: `git push --force` zachytí, kdežto `git push origin main --force`
+    projde pod plošným `Bash(git push:*)`. Testují se oba směry a ten druhý je
+    tu důležitější – hook běží před **každým** Bash příkazem, takže falešný
+    poplach neblokuje jeden případ, ale běžnou práci; kdo na něj narazí, hook
+    si vypne, a pak nehlídá nic.
+    """
+
+    GUARD = ROOT / "git-guard.py"
+
+    def run_guard(self, command):
+        event = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
+        return subprocess.run([sys.executable, str(self.GUARD)], input=event,
+                              capture_output=True, text=True, check=False)
+
+    def assertBlocked(self, command):
+        done = self.run_guard(command)
+        self.assertEqual(2, done.returncode, f"nezastaveno: {command}")
+        self.assertIn("git-guard", done.stderr)
+
+    def assertAllowed(self, command):
+        done = self.run_guard(command)
+        self.assertEqual(0, done.returncode,
+                         f"falešný poplach nad {command!r}: {done.stderr}")
+
+    def test_reordered_arguments_are_blocked(self):
+        """Tvar, kvůli kterému hook vznikl: deny na něj prefixem nedosáhne."""
+        for command in ["git push origin main --force",
+                        "git push origin main -f",
+                        "git push --repo=origin --force-with-lease",
+                        "git push origin +main",
+                        "git -C /tmp/x reset --hard HEAD~3"]:
+            with self.subTest(command=command):
+                self.assertBlocked(command)
+
+    def test_aliases_are_expanded(self):
+        """Výčet aliasů v deny seznamu stárne s každým novým řádkem
+        v `~/.gitconfig`; hook je proto rozbaluje z konfigurace."""
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, HOME=tmp, GIT_CONFIG_GLOBAL=str(Path(tmp) / ".gitconfig"))
+            subprocess.run(["git", "config", "--global", "alias.zz", "push --force"],
+                           env=env, check=True, capture_output=True)
+            event = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git zz"}})
+            done = subprocess.run([sys.executable, str(self.GUARD)], input=event,
+                                  capture_output=True, text=True, check=False, env=env)
+            self.assertEqual(2, done.returncode, "alias se nerozbalil")
+
+    def test_shell_alias_is_blocked(self):
+        """U aliasu začínajícího `!` nejde poznat, co spustí – zastaví se."""
+        with tempfile.TemporaryDirectory() as tmp:
+            env = dict(os.environ, HOME=tmp, GIT_CONFIG_GLOBAL=str(Path(tmp) / ".gitconfig"))
+            subprocess.run(["git", "config", "--global", "alias.zz", "!sh -c 'echo ahoj'"],
+                           env=env, check=True, capture_output=True)
+            event = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git zz"}})
+            done = subprocess.run([sys.executable, str(self.GUARD)], input=event,
+                                  capture_output=True, text=True, check=False, env=env)
+            self.assertEqual(2, done.returncode, "shellový alias prošel")
+
+    def test_ordinary_commands_pass(self):
+        """Druhý směr: co je v pořádku, nesmí hook shodit."""
+        for command in ["git push",
+                        "git push -u origin docs/nalezy",
+                        "git status",
+                        "git log --grep=force",
+                        "git commit -m 'popiš --force v textu zprávy'",
+                        "git branch -d docs/hotovo",
+                        "git worktree remove /tmp/x",
+                        "python3 -m unittest discover -s tests",
+                        "grep -rn 'git push --force' docs/"]:
+            with self.subTest(command=command):
+                self.assertAllowed(command)
+
+    def test_other_tools_pass(self):
+        """Hook má matcher na Bash, ale nesmí spoléhat jen na něj."""
+        event = json.dumps({"tool_name": "Read", "tool_input": {"file_path": "/tmp/x"}})
+        done = subprocess.run([sys.executable, str(self.GUARD)], input=event,
+                              capture_output=True, text=True, check=False)
+        self.assertEqual(0, done.returncode)
+
+    def test_malformed_input_passes(self):
+        """Rozbitý vstup nesmí zastavit práci – hook je pojistka, ne brána."""
+        done = subprocess.run([sys.executable, str(self.GUARD)], input="{tohle není JSON",
+                              capture_output=True, text=True, check=False)
+        self.assertEqual(0, done.returncode)
+
+    def test_guard_is_registered(self):
+        """Hook, který není v `settings.json`, nehlídá nic."""
+        settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        commands = [h.get("command", "")
+                    for g in settings.get("hooks", {}).get("PreToolUse", [])
+                    for h in g.get("hooks", [])]
+        self.assertTrue(any("git-guard.py" in c for c in commands),
+                        "git-guard.py není mezi PreToolUse hooky")
 
 
 if __name__ == "__main__":

@@ -314,6 +314,15 @@
             "type": "command"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/git-guard.py"
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -428,11 +437,12 @@
   "autoCompactEnabled": false,
   "autoContinueAtUsageLimit": true,
   "remoteControlAtStartup": false,
-  "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true,
+  "inputNeededNotifEnabled": false,
+  "agentPushNotifEnabled": false,
   "modelSettings": {
     "claude-opus-5": {
       "effortLevel": "high"
     }
-  }
+  },
+  "terminalProgressBarEnabled": false
 }

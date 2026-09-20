@@ -38,6 +38,20 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 | PR z forku spustí kontrakt z cizí větve | `fork-pr-contributor-approval` je na `first_time_contributors` | **accepted** pro přispěvatele, který už jednou prošel |
 | Doinstalované nástroje nejsou připnuté na verzi (`brew`, `pip install ruff`) | Nic | **accepted**: repozitář nemá secret, který by šlo ukrást, `GITHUB_TOKEN` je read-only a runner je efemérní. Připnutý `ruff` by navíc znamenal zmrazený lint, protože nové verze hlásí nové nálezy. **Akce samotné připnuté na SHA jsou** od 15. 9. 2026 a hlídá je Dependabot (`.github/dependabot.yml`). |
 
+## Zastavení destruktivního git příkazu (`git-guard.py` jako `PreToolUse` hook)
+
+| Čím se obejde | Co to chytí | Stav |
+|---|---|---|
+| Přeházet argumenty (`git push origin main --force`) | Hook čte celý příkaz a hledá přepínač jako **slovo**, ne prefix – právě proto vznikl | hlídáno, `tests/test_hooks.py` |
+| Schovat příkaz do aliasu (`git pf`, `git test`) | Alias se rozbalí z konfigurace gitu a posoudí znovu, do tří úrovní zanoření | hlídáno |
+| Shellový alias (`!sh -c '…'`) | Nerozebírá se, ale **zastaví se** – u shellu nejde poznat, co spustí | hlídáno |
+| Schovat příkaz do skriptu, který se spustí (`./deploy.sh`) | Nic – hook vidí jen text příkazu | **accepted**: skript je kód a čte ho člověk při psaní i revizi; hook brání ukliknutí, ne útoku. |
+| Napsat příkaz přes proměnnou (`F=--force; git push $F`) | Nic – expanzi dělá shell až po hooku | **accepted**: je to vědomé obcházení, ne omyl, a hook proti vlastnímu úmyslu nechrání. |
+| `CLAUDE_NO_VERIFY` a spol. | Nic – hook na ně nesahá a běží vždy | – |
+| Spustit to člověk z terminálu přes `!` | Nic | **accepted**, je to zamýšlená cesta: rozhodnutí přepsat historii patří člověku. |
+
+**Nenahrazuje deny seznam, doplňuje ho.** Deny je levný a zastaví nejčastější tvar dřív, než se na cokoliv sáhne; hook dorovnává to, na co textový prefix nedosáhne. Zapsáno 20. 9. 2026 z nálezu `/review full`.
+
 ## Permission systém (`settings.json`)
 
 | Čím se obejde | Co to chytí | Stav |
