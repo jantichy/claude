@@ -21,7 +21,7 @@ Stojí na třech vrstvách, které se liší cenou i spolehlivostí – a poušt
 
 **Bez třetí vrstvy je panel k ničemu** – zavalí tě pravděpodobně znějícími nálezy, po třetím falešném ho začneš ignorovat a čtvrtý, pravý, přehlédneš.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to první krok uzavírání: navazuje na `/implement` a předává na `/consistency`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne bod na ose: **stojí za každým krokem osy, který vyrobil artefakt**, ne jen za `/implementem`. Jedinou výjimkou je `/project`, který si svůj výsledek měří sám. V mezeře jde první, protože jeho opravy mění text, nad kterým pracují ostatní.
 
 ## Co skill nedělá
 

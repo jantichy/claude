@@ -8,7 +8,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 ## Co skill dělá
 
-Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, implementace, ověření a commit. V *Životním cyklu projektu* (`~/.claude/RULES.md`) navazuje na `/breakdown` a předává na `/review`.
+Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, implementace, ověření a commit. V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to šestý krok osy: navazuje na `/breakdown` a předává na `/release`; v mezeře mezi nimi stojí `/review` po každé hotové featuře.
 
 ## Co skill nedělá
 

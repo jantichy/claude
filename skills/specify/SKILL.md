@@ -16,7 +16,7 @@ Uživatel má nápad a chce z něj zadání, podle kterého se dá stavět. Skil
 | **`docs/requirements.md`** | Co stavíme a proč | Zadavatel, produkt, obchod – a ty za půl roku |
 | **`docs/architecture.md`** | Jak to postavíme | Ten, kdo to bude implementovat |
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok zakládání: navazuje na `/discovery` a předává na `/oponent`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok osy: navazuje na `/discovery` a předává na `/architect`. **`/architect` zatím neexistuje jako skill** – dokud nevznikne, dělá jeho práci tenhle skill a pokračuje se rovnou `/breakdownem`.
 
 **Větší záměr se nedělá jedním zátahem, ale po kolech.** Kolo je uzavřený průchod jedním tematickým okruhem návrhu do posledního detailu – DPH, upomínání, administrace, platební brána. Skill záměr na začátku zmapuje, rozdělí na kola a zapíše je do `docs/todo.md`. Každé kolo se pak dá odjet v samostatné session a větvi, souběžně s ostatními. Proč to funguje: témata se prolínají, takže průchod po dokumentech by každý z nich otevřel pětkrát a pokaždé s jiným kusem znalosti v hlavě, kdežto průchod po tématech ho otevře stejněkrát, ale pokaždé s uzavřenou otázkou.
 

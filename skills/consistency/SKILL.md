@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 
 Proveď audit vnitřní konzistence projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok uzavírání: navazuje na `/review` a předává na `/cleanup`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne bod na ose: stojí v mezeře před `/breakdownem` a v mezeře před `/release`, pokaždé až za `/review` – uklízí i to, co nastřílel on. Nečeká na pozici, ale na to, až se v projektu nasbírá dost změn.
 
 ## Co skill nedělá
 

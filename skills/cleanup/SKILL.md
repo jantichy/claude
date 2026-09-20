@@ -17,7 +17,7 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 
 Skill je **opakovatelný**. Když ho uživatel spustí podruhé, co je zapsané a v pořádku, projde bez zásahu – druhý průchod slouží jako verifikace.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok uzavírání – navazuje na `/consistency` a předává na `/attack`, nasazuje-li se. Poslední je i proto, že jako jediný odolá kompaktaci: co zapíše, přežije ztrátu kontextu.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne bod na ose: **stojí v každé mezeře a vždycky jako poslední**, protože jako jediný odolá kompaktaci – co zapíše, přežije ztrátu kontextu. Jeho spouštěčem není pozice, ale konec session, takže běží i uprostřed rozdělané práce. V poslední mezeře stojí dvakrát, před `/attackem` i za ním.
 
 ## Co skill nedělá
 

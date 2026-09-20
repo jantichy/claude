@@ -15,7 +15,7 @@ Než se začne psát zadání, zjistí, do čeho produkt vstupuje. Sepíše **dv
 | **`docs/competition.md`** | Kdo to už dělá, co umí, za kolik – a jaká je proti nim naše pozice | Z toho plyne, co produkt musí umět, aby ho někdo vzal, a čím se má lišit |
 | **`docs/risks.md`** | Co je na tom rizikové a čím to v produktu mitigujeme | Z toho plyne, co musí být postavené jinak, než by se stavělo bez toho |
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok zakládání: navazuje na `/project` a předává na `/specify`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok osy: navazuje na `/project` a předává na `/specify`.
 
 **Je opakovatelný sám o sobě.** Druhý běh nad hotovými dokumenty je aktualizace, ne nový začátek – konkurence se hne bez ohledu na to, jestli se zrovna mění zadání.
 

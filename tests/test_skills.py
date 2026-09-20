@@ -668,34 +668,68 @@ def cycle_from_rules() -> set:
 
 
 def cycle_with_order() -> dict:
-    """Kroky životního cyklu i s pořadím a fází, ne jen jako množina.
+    """Kroky životního cyklu i s vrstvou a pořadím, ne jen jako množina.
 
-    `cycle_from_rules()` vrací set, takže na tvrzení „je to třetí krok zakládání“
+    `cycle_from_rules()` vrací set, takže na tvrzení „je to třetí krok osy“
     nestačí. Zdrojem je týž blok v `RULES.md`, jen se z něj čte i pořadí řádků.
 
-    Vrací {skill: (fáze, index v rámci fáze od 1, předchůdce, následník)};
-    předchůdce a následník jdou napříč fázemi, protože `/review` navazuje na
-    `/implement` z předchozí fáze.
+    Vrací {skill: (vrstva, index v rámci vrstvy od 1, předchůdce, následník)}.
+    **Sousedy i pořadí má jen osa.** Kontrolní kroky nejsou řada, ale vrstva
+    v mezerách mezi kroky osy, takže u nich je index i oba sousedi `None` –
+    tvrdit o `/oponent`, že je čtvrtý a navazuje na `/release`, je nesmysl,
+    který z jednořadého čtení vycházel jako platný údaj.
     """
-    order, line_phases = [], []
+    layers, layer = [], None
     for row in _lifecycle_block().splitlines():
-        # Řádek fáze pozná podle toho, že na něm jsou kroky – ne podle šipky mezi
-        # nimi. Záměna „→“ za „->“ by jinak celou fázi tiše vyhodila.
+        # Řádek s kroky se pozná podle nich, ne podle šipky mezi nimi: záměna
+        # „→“ za „->“ by jinak celou vrstvu tiše vyhodila. Řádek bez kroků je
+        # komentář pod rámečkem a vrstvu nezakládá ani neukončuje.
         steps = re.findall(r"/([a-z][a-z-]*)", row)
         if not steps:
             continue
-        phase = row.split()[0].lower()
-        line_phases.append((phase, steps))
-        order.extend(steps)
+        # Novou vrstvu zakládá jen řádek, který začíná jejím jménem. Odsazené
+        # pokračování začíná krokem, takže patří pod tu předchozí – bez toho
+        # `row.split()[0]` na zalomené ose vyrobí vrstvu jménem `/breakdown`,
+        # tedy nesmyslná data, se kterými se pak dál počítá.
+        head = row.split()[0]
+        if not head.startswith("/"):
+            layer = head.lower()
+            layers.append((layer, []))
+        if layer is None:
+            raise AssertionError(f"rámeček začíná krokem bez jména vrstvy: {row!r}")
+        layers[-1][1].extend(steps)
 
     out = {}
-    for phase, steps in line_phases:
+    for layer, steps in layers:
         for n, step in enumerate(steps, start=1):
-            g = order.index(step)
-            out[step] = (phase, n,
-                         order[g - 1] if g > 0 else None,
-                         order[g + 1] if g + 1 < len(order) else None)
+            if step in out:
+                raise AssertionError(
+                    f"krok `/{step}` stojí v rámečku dvakrát; slovník klíčovaný "
+                    "jménem skillu by jeden z výskytů tiše přepsal")
+            if layer == "osa":
+                out[step] = (layer, n,
+                             steps[n - 2] if n > 1 else None,
+                             steps[n] if n < len(steps) else None)
+            else:
+                out[step] = (layer, None, None, None)
     return out
+
+
+def cycle_missing_skills() -> set:
+    """Kroky, které rámeček jmenuje, ale skill k nim ještě nevznikl.
+
+    `LIFECYCLE.md` je přiznává v jednom odstavci a slibuje, že zmizí, jakmile
+    skilly vzniknou. Bez měření je to jen slib: odstavec přežije svůj důvod
+    a bude o hotovém skillu tvrdit, že neexistuje. Čte se proto odtamtud
+    a `test_cycle_was_read` ho porovná se skutečností v obou směrech.
+    """
+    text = (ROOT / "skills" / "LIFECYCLE.md").read_text(encoding="utf-8")
+    declared = set()
+    for row in text.splitlines():
+        m = re.search(r"zatím neexistuj\w* jako skill", row)
+        if m:
+            declared |= set(re.findall(r"`/([a-z][a-z-]*)`", row[:m.start()]))
+    return declared
 
 
 #: Řetěz tří a víc kroků životního cyklu spojených šipkami. Dva sousedi jsou
@@ -886,8 +920,14 @@ class Structure(unittest.TestCase):
         # kroků z cyklu nechá pořád dost na to, aby práh nesplnil.
         self.assertEqual(self.CYCLE, set(cycle_with_order()),
             "cyklus_z_rules() a cyklus_s_poradim() čtou z RULES.md jinou množinu kroků")
-        absent = sorted(self.CYCLE - {s.parent.name for s in SKILLS})
-        self.assertFalse(absent, f"životní cyklus jmenuje kroky, které nemají skill: {absent}")
+        # Krok bez skillu se nezakazuje, ale musí být přiznaný: `LIFECYCLE.md`
+        # ho jmenuje a slibuje, že odstavec zmizí, jakmile skill vznikne.
+        # Porovnává se v obou směrech – nepřiznaný chybějící krok je slib bez
+        # krytí, přiznaný existující je naopak text, který přežil svůj důvod.
+        absent = self.CYCLE - {s.parent.name for s in SKILLS}
+        self.assertEqual(absent, cycle_missing_skills(),
+            "kroky bez skillu nesedí s tím, co přiznává LIFECYCLE.md; "
+            f"bez skillu: {sorted(absent)}, přiznané: {sorted(cycle_missing_skills())}")
 
 
     def test_lifecycle_describes_same_steps_as_rules(self):
@@ -902,8 +942,10 @@ class Structure(unittest.TestCase):
         lifecycle = ROOT / "skills" / "LIFECYCLE.md"
         self.assertTrue(lifecycle.exists(), "chybí skills/LIFECYCLE.md")
         text = lifecycle.read_text(encoding="utf-8")
-        # Krok je vyložený tehdy, když ho jmenuje číslovaná odrážka: `1. **`/project`**`.
-        explained = set(re.findall(r"^\d+\. \*\*`/([a-z][a-z-]*)`\*\*", text, re.M))
+        # Krok je vyložený tehdy, když ho jmenuje odrážka: `- **`/project`**`.
+        # Číslovaná řada to být nemůže – cyklus má dvě vrstvy a kontrolní kroky
+        # v žádném pořadí nestojí.
+        explained = set(re.findall(r"^- \*\*`/([a-z][a-z-]*)`\*\*", text, re.M))
         self.assertEqual(explained, self.CYCLE,
             "LIFECYCLE.md a rámeček v RULES.md jmenují jiné kroky; "
             f"jen v LIFECYCLE: {sorted(explained - self.CYCLE)}, "
@@ -962,8 +1004,16 @@ class Structure(unittest.TestCase):
         exp_phase, exp_n, exp_pred, exp_succ = cycle[name]
         errors = []
 
-        if phase != exp_phase:
-            errors.append(f"{name}: tvrdí fázi `{phase}`, RULES.md má `{exp_phase}`")
+        # `osy` ve větě proti `osa` v rámečku: skloňuje se, protože to je česká
+        # věta („je to třetí krok osy“), ne jméno klíče.
+        if {"osy": "osa", "kontroly": "kontroly"}.get(phase) != exp_phase:
+            errors.append(f"{name}: tvrdí vrstvu `{phase}`, RULES.md má `{exp_phase}`")
+        if exp_n is None:
+            # Kontrolní krok není bod v řadě, takže nemá co tvrdit o pořadí ani
+            # o sousedech – stojí v mezerách a v několika naráz.
+            errors.append(f"{name}: je kontrolní krok, ale tvrdí pořadí v cyklu "
+                         "– nahraď to větou o tom, ve kterých mezerách stojí")
+            return errors
         if ordinal == "poslední":
             # „Poslední“ se ověřuje jen proti počtu kroků ve fázi. Následník
             # se posuzuje níž stejně jako u číslovaných kroků: poslední krok
@@ -981,6 +1031,31 @@ class Structure(unittest.TestCase):
             errors.append(f"{name}: tvrdí, že předává na `/{successor}`, RULES.md má `/{exp_succ}`")
         return errors
 
+    def _one_step_sentence(self, name, text, cycle, pattern) -> tuple:
+        """Věta o pořadí jednoho skillu. Vrací (počet poznaných vět, chyby).
+
+        Osa a kontrolní vrstva se měří jinak, a proto to stojí zvlášť: kontrolní
+        krok nemá pořadí ani sousedy, takže se u něj ověřuje opak – že o svém
+        místě v cyklu mluví a že to nedělá větou o pořadí.
+        """
+        names_cycle = bool(re.search(r"V \*Životním cyklu projektu\*", text))
+        m = pattern.search(text)
+        if cycle[name][0] != "osa":
+            defects = [] if names_cycle else [f"{name}: kontrolní krok neříká, kde v cyklu stojí"]
+            return 0, defects + (self._compare_sentence(name, m.groups(), cycle) if m else [])
+        if m:
+            return 1, self._compare_sentence(name, m.groups(), cycle)
+        # Skill, který o svém pořadí mluví, ale vzor na tvar té věty nesedne, se
+        # dřív tiše přeskočil – a jeho tvrzení pak neověřil nikdo. Přeformulovat
+        # větu se smí, ale ne potichu. Kotvou je proto odkaz na cyklus, ne znění
+        # věty za ním: vzor psaný podle dnešního znění mlčí přesně nad tím, co se
+        # přepisuje – po přestavbě cyklu zůstalo v šesti skillech „krok zakládání“
+        # a všech šest se tiše přeskočilo, protože na nový vzor nesedlo.
+        if names_cycle and not re.search(r"Je (?:první|poslední) článek", text):
+            return 0, [f"{name}: mluví o svém pořadí, ale vzor na tvar té věty nesedne "
+                      "– přeformuluj ji, nebo uprav vzor v testu"]
+        return 0, []
+
     def test_step_order_sentence_matches_rules(self):
         """Skill tvrdí, kolikátý je a na koho navazuje – nic to neměřilo.
 
@@ -994,8 +1069,9 @@ class Structure(unittest.TestCase):
         self.assertEqual(set(cycle), self.CYCLE,
             f"cyklus_s_poradim() vrátil jinou množinu kroků než cyklus_z_rules(): {sorted(cycle)}")
 
+        live = {s.parent.name for s in SKILLS}
         pattern = re.compile(
-            r"je to \*{0,2}(\w+) krok (zakládání|uzavírání|nasazení)\*{0,2}"
+            r"je to \*{0,2}(\w+) krok (osy|kontroly)\*{0,2}"
             r"(?:[:\s–-]+navazuje na `/([a-z-]+)`)?"
             r"(?:\s+a předává na `/([a-z-]+)`)?")
         errors, matched = [], 0
@@ -1003,26 +1079,18 @@ class Structure(unittest.TestCase):
             name = skill.parent.name
             if name not in cycle:
                 continue
-            text = body(skill)
-            m = pattern.search(text)
-            if not m:
-                # Skill, který o svém pořadí mluví, ale vzor na tvar té věty
-                # nesedne, se dřív tiše přeskočil – a jeho tvrzení pak neověřil
-                # nikdo. Přeformulovat větu se smí, ale ne potichu.
-                # Bez tečky ve vyloučení: tvar „3. krok“ ji obsahuje, a právě ten
-                # se dřív přeskočil, protože detekce sama na něj nesedla.
-                if re.search(r"je to [^\n]{0,25}krok (?:zakládání|uzavírání|nasazení)", text):
-                    errors.append(f"{name}: mluví o svém pořadí, ale vzor na tvar té věty nesedne "
-                                 f"– přeformuluj ji, nebo uprav vzor v testu")
-                continue
-            matched += 1
-            errors += self._compare_sentence(name, m.groups(), cycle)
+            found, defects = self._one_step_sentence(name, body(skill), cycle, pattern)
+            matched += found
+            errors += defects
 
         # Druhý tvar téhož tvrzení: `/project` píše „Je první článek Životního
         # cyklu projektu“. Vzor výš ho nepoznal, takže se skill tiše přeskakoval
         # – a právě on nesl vadu, kvůli které tenhle test vznikl (posílal na
         # `/specify`, ačkoli jeho následník je `/discovery`).
-        order = [k for k, v in sorted(cycle.items(), key=lambda x: (x[1][0], x[1][1]))]
+        # Jen osa: kontrolní kroky v žádném pořadí nestojí, takže „první“
+        # a „poslední“ článek se hledá mezi tím, co řadu tvoří.
+        order = [k for k, v in sorted(cycle.items(), key=lambda x: x[1][1] or 0)
+                if v[0] == "osa"]
         for skill in SKILLS:
             name = skill.parent.name
             if name not in cycle:
@@ -1040,10 +1108,13 @@ class Structure(unittest.TestCase):
         # přestal poznávat, protože ostatní ho vyváží. Zvedne-li se počet skillů,
         # které tu větu nesou, číslo se tu vědomě upraví. Jde do téhož seznamu
         # jako ostatní chyby, aby se konkrétní nález nezakryl souhrnným číslem.
-        # Zbylé kroky své pořadí netvrdí vůbec, takže tady není co měřit –
-        # že jmenují oba sousedy, hlídá `test_what_skill_does_not_names_both_neighbours`.
-        if matched != 7:
-            errors.append(f"větu o pořadí kroku nese {matched} skillů, čekalo se 7 "
+        # Počet se odvozuje, ne fixuje: větu o pořadí nese každý existující krok
+        # osy. Že ji kontrolní kroky nést nesmějí, hlídá `_one_step_sentence`;
+        # že se kroky osy vymezují vůči sousedům, hlídá
+        # `test_what_skill_does_not_names_both_neighbours`.
+        expected = len([n for n, v in cycle.items() if v[0] == "osa" and n in live])
+        if matched != expected:
+            errors.append(f"větu o pořadí kroku nese {matched} skillů, čekalo se {expected} "
                          f"– změnil se její tvar, nebo ji získal či ztratil další skill?")
         self.assertFalse(errors, "věty o pořadí kroku nesedí s RULES.md:\n  " + "\n  ".join(errors))
 
@@ -1055,6 +1126,9 @@ class Structure(unittest.TestCase):
 
     def test_what_skill_does_not_names_both_neighbours(self):
         """Norma žádá jmenované sousedy, měřila se ale jen existence nadpisu.
+
+        Platí to **jen pro kroky osy**; kontrolní kroky místo sousedů jmenují,
+        čí práci nepřebírají.
 
         Vada, kterou to propustilo: `/project` roky posílal na `/specify`
         a o svém skutečném následníkovi `/discovery` nevěděl, přestože
@@ -1072,7 +1146,11 @@ class Structure(unittest.TestCase):
         absent = []
         for skill in SKILLS:
             name = skill.parent.name
-            if name not in cycle:
+            # Jen osa. Kontrolní krok sousedy nemá – `/cleanup` stojí ve všech
+            # mezerách a `/review` ve dvou, takže „soused z obou stran“ u nich
+            # není definovaný; norma v `SKILLS.md` tu výjimku má a měla ji dřív
+            # než tenhle test, který ji vynucoval na všech.
+            if cycle.get(name, (None,))[0] != "osa":
                 continue
             text = body(skill)
             stop = text.find("\n## Fáze")
@@ -1673,6 +1751,12 @@ class SkillReadme(unittest.TestCase):
     """
 
     CYCLE = cycle_from_rules()
+    #: Kroky, které rámeček jmenuje, ale skill k nim ještě nevznikl. V rámečku
+    #: stojí jen kódem bez odkazu (norma, *Skill ze životního cyklu*) a do
+    #: hromadné instalace nepatří vůbec – pokyn, který si vyžádá neexistující
+    #: adresář, se nepovede celý, takže by chybějící krok shodil i instalaci
+    #: těch hotových.
+    MISSING = cycle_missing_skills()
 
     def _readme(self, skill: Path) -> Path:
         return skill.parent / "README.md"
@@ -1717,6 +1801,12 @@ class SkillReadme(unittest.TestCase):
                 for step in sorted(self.CYCLE):
                     if step == own:
                         continue
+                    if step in self.MISSING:
+                        self.assertIn(f"`/{step}`", text,
+                            f"{readme}: rámeček nejmenuje `/{step}`")
+                        self.assertNotIn(f"(../{step}/README.md)", text,
+                            f"{readme}: rámeček odkazuje na README, které neexistuje: `/{step}`")
+                        continue
                     self.assertTrue(f"(../{step}/README.md)" in text,
                         f"{readme}: rámeček neodkazuje na `/{step}`")
 
@@ -1746,6 +1836,10 @@ class SkillReadme(unittest.TestCase):
             paragraph = text[i:min(ends) if ends else len(text)]
             with self.subTest(skill=skill.parent.name):
                 for step in sorted(self.CYCLE):
+                    if step in self.MISSING:
+                        self.assertNotRegex(paragraph, rf"\b{step}\b",
+                            f"{readme}: hromadná instalace slibuje `{step}`, který zatím není skill")
+                        continue
                     self.assertRegex(paragraph, rf"\b{step}\b",
                         f"{readme}: hromadná instalace nejmenuje `{step}`")
 
@@ -1814,6 +1908,11 @@ class SkillReadme(unittest.TestCase):
         template = standard[i:stop if stop > 0 else len(standard)]
         for step in sorted(self.CYCLE):
             with self.subTest(step=step):
+                if step in self.MISSING:
+                    self.assertNotRegex(template, rf"\b{step}\b",
+                        f"šablona hromadné instalace v SKILLS.md slibuje `{step}`, "
+                        "který zatím není skill")
+                    continue
                 self.assertRegex(template, rf"\b{step}\b",
                     f"šablona hromadné instalace v SKILLS.md nejmenuje `{step}`")
 

@@ -10,7 +10,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Vezme schválené zadání a rozpadne ho na **`docs/plan.md`** – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu, příkaz na spuštění a commit. Plán je psaný pro někoho, kdo projekt vůbec nezná.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) navazuje na `/oponent` a předává na `/implement`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to pátý krok osy: navazuje na `/architect` a předává na `/implement`. **`/architect` zatím neexistuje jako skill**, takže než vznikne, přichází se sem ze `/specify`.
 
 ## Co skill nedělá
 
