@@ -50,7 +50,7 @@ Pět skillů hlásí nálezy a každý z jiného světa: chyba v kódu, rozbitá
 
 ### [`BYPASS.md`](BYPASS.md) – čím se dají obejít vlastní kontroly
 
-Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběžná kontrola, git hook, CI, permission systém, status line –, stojí čím se dá obejít, co to chytí a co je vědomě přijaté riziko. Většina řádků je „accepted“ a u každého je důvod. Zákaz se totiž dá obejít i dodržet a nikde po tom nezůstane stopa, kdežto katalog se dá přečíst a rozporovat. Kompletnost hlídá test, který seznam vrstev čte z disku, takže nová vrstva bez řádku shodí testy.
+Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběžná kontrola, oba git hooky, CI, permission systém, status line –, stojí čím se dá obejít, co to chytí a co je vědomě přijaté riziko. Většina řádků je „accepted“ a u každého je důvod. Zákaz se totiž dá obejít i dodržet a nikde po tom nezůstane stopa, kdežto katalog se dá přečíst a rozporovat. Kompletnost hlídá test, který seznam vrstev čte z disku, takže nová vrstva bez řádku shodí testy.
 
 ## Skilly životního cyklu projektu
 
@@ -182,11 +182,11 @@ Jednořádková status line, která mi ukazuje všechno, co potřebuju průběž
 
 ### [`git-guard.py`](git-guard.py) – nevratný příkaz zastavený dřív, než se spustí
 
-`PreToolUse` hook, který čte celý příkaz, ne jeho začátek. Seznam zakázaných příkazů v `settings.json` totiž porovnává jen prefix, takže `git push --force` zachytí, kdežto `git push origin main --force` projde – a to je tvar, který člověk napíše častěji. Aliasy si rozbalí z konfigurace gitu, takže vlastní zkratka hook neobejde. Zastavuje jen to, po čem práci nejde vrátit: přepsání vzdálené historie, zahození necommitnutých změn, smazání větve nebo reflogu. Falešný poplach je u něj horší než propuštěný příkaz – kdo na něj narazí při běžné práci, si hook vypne a pak nehlídá nic –, takže se testují oba směry.
+`PreToolUse` hook, který čte celý příkaz, ne jeho začátek. Seznam zakázaných příkazů v `settings.json` totiž porovnává jen prefix, takže `git push --force` zachytí, kdežto `git push origin main --force` projde – a to je tvar, který člověk napíše častěji. Aliasy si rozbalí z konfigurace gitu, takže vlastní zkratka hook neobejde. Zastavuje to, po čem práci nejde vrátit: přepsání vzdálené historie, zahození necommitnutých změn, smazání větve, reflogu nebo stashe, úklid netrackovaných souborů a `gc --prune`. Suchý běh propouští.
 
 ### [`agents/`](agents/) – posuzovatel, který nemá čím zapisovat
 
-Definice dvou typů subagentů, na kterých stojí půlka skillů. Liší se jedinou věcí: jestli smí na web. Ani jeden nemá shell, takže posudek, o který si řeknu, nemůže sáhnout na to, co posuzuje – a nedrží to věta v zadání, ale chybějící nástroj. Berte si je spolu se skilly: bez nich spadne každý, který je jmenuje, na neznámém typu agenta.
+Definice dvou typů subagentů, kterými si skilly vyžádají posudek – sedm z nich to dělá. Liší se jedinou věcí: jestli agent smí na web. Ani jeden nemá shell, takže posudek nemůže sáhnout na to, co posuzuje. Berte si je spolu se skilly; bez nich musí skill sáhnout po náhradní cestě, kterou pro ten případ popisuje.
 
 ### [`githooks/`](githooks/) – historie main jako jeden řádek na větev
 
@@ -194,7 +194,7 @@ Definice dvou typů subagentů, na kterých stojí půlka skillů. Liší se jed
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
-Testy nad textem, který nikdo nespouští, a nad vrstvami, které tu něco doopravdy vynucují: hlídají režim popsaný v těle skillu a chybějící v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez README – a k tomu průběžnou kontrolu, git hook nad zprávou merge commitu, status line a CI, kde tichá regrese stojí nejvíc. Zvlášť pak skripty skillů tam, kde hrozí ztráta dat. Běží v průběžné kontrole po každé odpovědi, jen na standardní knihovně Pythonu a bez instalace; tytéž příkazy pouští i [GitHub Actions](.github/workflows/verify.yml), protože lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork.
+Testy nad textem, který nikdo nespouští, a nad vrstvami, které tu něco doopravdy vynucují: hlídají režim popsaný v těle skillu a chybějící v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez README – a k tomu průběžnou kontrolu, oba git hooky, status line a CI, kde tichá regrese stojí nejvíc. Zvlášť pak skripty skillů tam, kde hrozí ztráta dat. Běží v průběžné kontrole po každé odpovědi, jen na standardní knihovně Pythonu a bez instalace; tytéž příkazy pouští i [GitHub Actions](.github/workflows/verify.yml), protože lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 

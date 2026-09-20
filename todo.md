@@ -8,6 +8,12 @@
 
 **Hotové věci se sem nevracejí** – jakmile je úkol hotový, přesune se do `done.md`.
 
+- [ ] **Rozhodnout, jestli mez 12 znaků pro `header` v `AskUserQuestion` platí, nebo ne.** `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*, ji uvádí jako tvrdou, ale pět skillů ji překračuje právě tím tvarem, který je nejužitečnější – číslem položky v hlavičce: `/cleanup` má `Téma N/celkem` (14 znaků) a `Položka N/celkem` (16), `/review`, `/attack` a `/oponent` shodně `Nález N/celkem`. Našel to čtenář bez kontextu 20. 9. 2026 na rozporu se `skills/cleanup/out-of-scope.md`, kde se mez nově cituje jako důvod, proč číslo v hlavičce **není**.
+
+  **Jsou tři možnosti a každá něco stojí.** Buď mez platí a všech pět hlaviček se zkrátí – pak uživatel ztratí orientaci v tom, kolikátá otázka z kolika přichází, a získá ji jen z výpisu nad otázkou. Nebo mez neplatí a opraví se pravidlo – pak je potřeba zjistit, co se s delší hlavičkou v rozhraní opravdu stane, protože dnes to nikdo neměřil. Nebo se mez zjemní na „do 12 znaků, číslo položky se nepočítá“, což je výjimka a musí mít napsaný důvod.
+
+  **Nejdřív to změř, pak rozhoduj:** mez se vzala z dokumentace nástroje, ne z pozorování. Zjisti, jestli se delší `header` ořízne, zalomí, nebo projde.
+
 - [ ] **Rozhodnout, čím stahovat cizí články do projektu** (zadáno 18. 9. 2026). Při zakládání projektu pro klientský web se ukázalo, že se jeho vydané články stahovaly a převáděly do Markdownu ručně – a přitom **mechanika už existuje v `/compose collect`**, který tímhle způsobem postavil celý `~/Dev/context/archive/`: stahování po zdrojích, ověření úplnosti proti datům (`X-WP-Total`, sitemapa), převod do jednotné podoby, konvence pojmenování `YYYYMMDD - Titulek.md`. Postupy a pasti jednotlivých zdrojů drží `~/.claude/skills/compose/sources.md`.
 
   **Proč se to nedá použít rovnou:** `/compose collect` plní **Honzův** archiv, ze kterého `/compose profile` destiluje jeho hlas. Proto v něm jsou věci, které u cizího webu nedávají smysl – značení AI textů, aby se učení nezacyklilo, vyřazování cizích zadání, časové vážení ročníků. Cizí články se naopak nestahují kvůli hlasu, ale kvůli znalosti o klientovi a kvůli tomu, aby bylo vidět, jak se na tom webu píše.

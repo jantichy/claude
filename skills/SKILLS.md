@@ -365,8 +365,10 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do
 > `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown,
-> implement, review, consistency, cleanup, attack a release. U každého si přečti README
-> a řekni mi, co k nim potřebuju doplnit.
+> implement, review, consistency, cleanup, attack a release. Z
+> https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů
+> subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim
+> potřebuju doplnit.
 ```
 
 **Skilly mimo životní cyklus rámeček ani hromadnou instalaci nemají.** Pouštějí se samostatně a předstírat u nich sadu by mátlo.

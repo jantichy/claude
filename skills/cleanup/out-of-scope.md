@@ -65,7 +65,7 @@ Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozs
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Mimo rozsah` (`~/.claude/RULES.md`, *Ptej se postupně*, dovoluje 12 znaků, takže se číslo položky do hlavičky nevejde – nese ho výpis nad otázkou). Volby:
+   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Mimo rozsah` (`~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*, dovoluje 12 znaků, takže se číslo položky do hlavičky nevejde – nese ho výpis nad otázkou). Volby:
 
    | Volba | Co uděláš |
    |---|---|

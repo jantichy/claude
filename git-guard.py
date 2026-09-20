@@ -13,8 +13,10 @@ Alias rozbalí z konfigurace gitu, takže nový alias nepotřebuje zápis nikam.
 Oba směry selhání jsou nebezpečné a testuje je `tests/test_hooks.py`:
 propuštěné přepsání historie znamená ztracenou práci cizí session, kdežto
 falešný poplach nad běžným příkazem znamená, že si hook někdo vypne – a pak
-nehlídá nic. Proto se přepínač poznává jako **celé slovo** a ne podřetězec:
-`git log --grep=force` ani commit se slovem „--force“ ve zprávě nesmí spadnout.
+nehlídá nic. Přepínač se poznává jako **celé slovo** a ne podřetězec: `git log --grep=force`
+ani commit se slovem „--force“ ve zprávě nesmí spadnout. **Výjimkou je `clean`**,
+kde se krátké přepínače slepují (`-fx`, `-xdf`) a rozhoduje tedy písmeno uvnitř;
+tam se navíc neptáme na `-f`, ale na to, jestli je běh suchý.
 
 Vrací 2 a důvod na stderr, což je pro PreToolUse zastavení nástroje.
 """
@@ -120,7 +122,11 @@ def table_verdict(sub, args):
             return reason
         if sub == "push" and any(len(a) > 1 and a.startswith("+") for a in args):
             return "refspec s `+` přepíše vzdálenou větev stejně jako `--force`"
-        if sub == "clean" and any(short_flag_has(a, "f") for a in args):
+        # `clean` se neposuzuje podle `-f`, ale podle toho, jestli jde o suchý
+        # běh: s `clean.requireForce=false` v konfiguraci maže i bez `-f`
+        # (ověřeno 20. 9. 2026) a výčet přepínačů by tu cestu propustil.
+        if sub == "clean" and not any(short_flag_has(a, "n") or a == "--dry-run"
+                                      for a in args):
             return reason
 
     for (s, a), reason in FORBIDDEN_PAIRS.items():

@@ -639,25 +639,29 @@ class GitGuard(unittest.TestCase):
                                   capture_output=True, text=True, check=False, env=env)
             self.assertEqual(2, done.returncode, "shellový alias prošel")
 
-    def test_clean_short_flags_are_blocked(self):
-        """Slepená zkratka je pořád `--force`.
+    def test_clean_is_blocked_unless_dry_run(self):
+        """`clean` se neposuzuje podle `-f`, ale podle toho, jestli je běh suchý.
 
-        Výčet tvarů (`-f`, `-fd`, `-fdx`, `-xdf`, `-df`) byl děravý a `git clean -fx`
-        jím prošel – přitom maže netrackované **i ignorované** soubory, tedy `.env`
-        a `node_modules`. Rozhoduje proto obsah přepínače, ne jeho celý tvar.
+        Dvě různé díry v jedné tabulce. Výčet tvarů (`-f`, `-fd`, `-fdx`, `-xdf`,
+        `-df`) propustil slepené zkratky jako `git clean -fx`, které mažou
+        netrackované **i ignorované** soubory, tedy `.env` a `node_modules`.
+        A samotné `-f` nestačí jako kritérium: s `clean.requireForce=false`
+        v konfiguraci maže `git clean` i bez něj (ověřeno 20. 9. 2026), takže
+        by propadlo úplně holé volání.
         """
-        for command in ["git clean -fx", "git clean -ffd", "git clean -xf",
-                        "git clean -fd", "git clean -xdf", "git clean --force"]:
+        for command in ["git clean", "git clean -x", "git clean -fx",
+                        "git clean -ffd", "git clean -xf", "git clean -fd",
+                        "git clean -xdf", "git clean --force"]:
             with self.subTest(command=command):
                 self.assertBlocked(command)
 
-    def test_clean_without_force_passes(self):
-        """Druhý směr: bez `-f` git sám nic nesmaže, takže hook nemá co zastavovat.
+    def test_clean_dry_run_passes(self):
+        """Druhý směr: suchý běh nic nesmaže, a je to nejběžnější použití.
 
-        `--dry-run` je navíc nejběžnější způsob, jak se před úklidem podívat, co
-        by zmizelo – falešný poplach zrovna na něm by hook vypnul komukoliv.
+        `git clean -n` se pouští právě proto, aby bylo vidět, co by zmizelo –
+        falešný poplach zrovna na něm by hook vypnul komukoliv.
         """
-        for command in ["git clean -n", "git clean -nd", "git clean -x",
+        for command in ["git clean -n", "git clean -nd", "git clean -xn",
                         "git clean --dry-run"]:
             with self.subTest(command=command):
                 self.assertAllowed(command)

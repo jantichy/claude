@@ -39,7 +39,7 @@ Zadání obou čtenářů bez kontextu leží v [`readers.md`](readers.md); **z�
 
 ## Rozsah
 
-**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Čtenáři bez kontextu ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sami neopravují – putuje do Fáze 8, kde se podle kritéria Fáze 7 buď rovnou vyřeší, nebo o něm rozhodne uživatel.
+**Skill má jediné chování a žádné režimy.** Session se vytěžuje vždycky celá – to je jeho smysl a nedá se to zúžit ani rozšířit. Čtenáři bez kontextu ve Fázi 6 se soustředí na to, čeho se dotkla tahle session; starší dluh v dokumentaci sami neopravují – putuje do Fáze 8, kde se podle kritéria z [`out-of-scope.md`](out-of-scope.md) buď rovnou vyřeší, nebo o něm rozhodne uživatel.
 
 **Audit celé dokumentace sem nepatří** – je to jiná otázka („sedí si projekt sám se sebou?“) a dělá ho `/consistency full` o krok dřív. Dřív tu byl režim `full`, který rozšiřoval čtenáře bez kontextu na celou dokumentaci; zrušen 6. 9. 2026, protože jméno svádělo ke čtení „bez `full` se session neprojde celá“ – a to je přesně naopak.
 
@@ -48,7 +48,7 @@ Zadání obou čtenářů bez kontextu leží v [`readers.md`](readers.md); **z�
 - **Dvourychlostní režim.** Jednoznačné a mechanické věci dělej rovnou sám a jen je vypiš. Sporné věci předkládej uživateli jeden po druhém, nikdy víc najednou.
   - **Dělej sám:** zápis jednoznačné dohody na zjevně správné místo, oprava rozbitého odkazu, který tvým zápisem vznikl, dorovnání README / TODO / CLAUDE.md v rozsahu session, commit a push.
   - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky.
-  - **Co jde nad rámec session, se neřeší tady**, ale ve Fázi 7 – a u toho, co najdou čtenáři, ve Fázi 8. Rozhoduje o tom kritérium Fáze 7, ne tenhle režim. Jednoznačnou opravu mimo rozsah tedy neodkládej jako „sporné“, jen ji neprováděj uprostřed jiné fáze.
+  - **Co jde nad rámec session, se neřeší tady**, ale ve Fázi 7 – a u toho, co najdou čtenáři, ve Fázi 8. Rozhoduje o tom kritérium z [`out-of-scope.md`](out-of-scope.md), ne tenhle režim. Jednoznačnou opravu mimo rozsah tedy neodkládej jako „sporné“, jen ji neprováděj uprostřed jiné fáze.
 - **Ptej se vždy přes tool `AskUserQuestion`** – mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 - Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč“*, *Živá struktura*, *Naming – jedno výstižné slovo*).
 - **Nezakládej nové soubory, když to jde bez nich.** Struktura projektu je daná; hledej v ní správné místo. Když žádné neexistuje, zeptej se, než nějaké vytvoříš.
@@ -326,7 +326,7 @@ Nejsou-li změny session commitnuté, vezmi `git diff` bez rozsahu; je-li zákla
 
 ## Fáze 7 – Naložení s tím, co by zůstalo mimo rozsah
 
-Sem patří všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* a nechal být: rozbité věci známé ze session, starší dluh, na který jsi narazil při zápisu, odložené nálezy. **Vypsat a nechat být je nepřijatelné** – uživatel session vzápětí zavře a položky zmizí s ní. **Nálezy čtenářů sem nepatří**, ti v tuhle chvíli teprve běží a vypořádají se ve Fázi 8 podle téhož kritéria.
+Sem patří všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* a nechal být: rozbité věci známé ze session, starší dluh, na který jsi narazil při zápisu, odložené nálezy. **Vypsat a nechat být je nepřijatelné** – uživatel session vzápětí zavře a položky zmizí s ní. **Nálezy čtenářů sem nepatří**, ti v tuhle chvíli teprve běží a vypořádají se ve Fázi 8 podle téhož kritéria z [`out-of-scope.md`](out-of-scope.md).
 
 **Celý postup drží [`out-of-scope.md`](out-of-scope.md)** – čím se dělí položky k vyřešení rovnou od těch, o kterých rozhoduje uživatel, šablony výpisu i volby k jednotlivým položkám. Přečti si ho celý a řiď se jím; co se s položkami stalo, patří pak do přehledu ve Fázi 9.
 
