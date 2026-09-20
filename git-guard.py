@@ -37,7 +37,9 @@ FORBIDDEN = {
               "zahodil by necommitnuté změny, včetně cizích"),
     "filter-branch": (None,
                       "přepisuje celou historii větve"),
-    "clean": ({"-f", "--force", "-fd", "-fdx", "-xdf", "-df"},
+    # U `clean` se krátké přepínače slepují (`-fx`, `-ffd`, `-xdf`), takže výčet
+    # tvarů je vždycky děravý – rozhoduje proto **obsah** přepínače, viz níž.
+    "clean": ({"--force"},
               "smaže netrackované soubory, které nikde jinde nejsou"),
 }
 
@@ -98,6 +100,16 @@ def expand_alias(name):
         return None
 
 
+def short_flag_has(arg, letter):
+    """Je `arg` jednopomlkový přepínač obsahující `letter`?
+
+    `-fx` i `-xdf` znamenají totéž co `-f`, ale jako řetězec se neshodují
+    s ničím. Dvojitá pomlčka se schválně vylučuje: `--foo` písmeno `f` obsahuje
+    a přepínačem s `-f` není.
+    """
+    return arg.startswith("-") and not arg.startswith("--") and letter in arg[1:]
+
+
 def table_verdict(sub, args):
     """Podpříkaz proti tabulkám `FORBIDDEN` a `FORBIDDEN_PAIRS`."""
     if sub in FORBIDDEN:
@@ -108,6 +120,8 @@ def table_verdict(sub, args):
             return reason
         if sub == "push" and any(len(a) > 1 and a.startswith("+") for a in args):
             return "refspec s `+` přepíše vzdálenou větev stejně jako `--force`"
+        if sub == "clean" and any(short_flag_has(a, "f") for a in args):
+            return reason
 
     for (s, a), reason in FORBIDDEN_PAIRS.items():
         if sub == s and a in args:
@@ -129,9 +143,10 @@ def combo_verdict(sub, args):
 def verdict(words, depth=0):
     """Vrátí důvod zastavení, nebo None.
 
-    Rozhodování je rozdělené do tří funkcí, ne kvůli eleganci: dohromady měly
-    složitost 14 proti prahu 10 z *Kontraktu příkazů*, a práh se nesnižuje.
-    Pořadí vyhodnocení zůstává, na kterém stojí `tests/test_hooks.py`.
+    Rozhodování je rozdělené do tří funkcí, ne kvůli eleganci: dokud bylo
+    v jedné, měla složitost 14 proti prahu 10 z *Kontraktu příkazů*, a práh
+    se nesnižuje. Pořadí vyhodnocení zůstává, na kterém stojí
+    `tests/test_hooks.py`.
     """
     rest = strip_global(words)
     if not rest:

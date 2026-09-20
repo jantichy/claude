@@ -54,7 +54,7 @@ Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola h
 
 Výchozí sada by tu hlásila pořadí importů a závorky navíc. `--isolated` k tomu zajistí, že se nechytí cizí konfigurace odněkud z domovského adresáře. Python přibyl do repozitáře 6. 9. 2026 se skripty `/compose`.
 
-**Od 20. 9. 2026 kryje i kořen repozitáře (`./*.py`).** Chyběl tam od začátku a nikomu to nevadilo, dokud v kořeni žádný Python neležel; jakmile tam přibyl `git-guard.py`, četl ho jen `test_contract_patterns_cover_repo` – a ten hlásí nepokrytí, ne vady uvnitř. Po doplnění vzoru vyšla najevo první z nich: `verdict` měl cyklomatickou složitost 14 proti prahu 10, takže se rozdělil na `table_verdict` a `combo_verdict`. **Práh se kvůli tomu nesnižoval** a snižovat se nesmí; je to přesně ten případ, na který ta věta níž míří.
+**Od 20. 9. 2026 kryje i kořen repozitáře (`./*.py`).** Chyběl tam od začátku a nikomu to nevadilo, dokud v kořeni žádný Python neležel; jakmile tam přibyl `git-guard.py`, nečetla ho **žádná statická kontrola** – chování mu testuje `tests/test_hooks.py`, ale lint ani typecheck na kořen nesahaly a `test_contract_patterns_cover_repo` hlásí nepokrytí, ne vady uvnitř. Po doplnění vzoru vyšla najevo první z nich: funkce `verdict` měla cyklomatickou složitost 14 proti prahu 10, takže se rozdělila na `table_verdict` a `combo_verdict`. **Práh se kvůli tomu nesnižoval** a snižovat se nesmí; je to přesně ten případ, na který ta věta níž míří.
 
 **Od 7. 9. 2026 lint kryje i `tests/`** – je to největší Python v repozitáři a nekontroloval ho nikdo, přestože je to zároveň jediná vrstva, která tu něco doopravdy vynucuje. Běh testů sám chytí syntaktickou chybu, ale ne nepoužitý import ani překlep ve jménu uvnitř větve, která se zrovna nevykonala.
 

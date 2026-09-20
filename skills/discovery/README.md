@@ -67,6 +67,8 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/discovery
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
+> i definice typů subagentů do `~/.claude/agents/`.
 
 Skill předpokládá, že projekt má kam zapisovat – chybí-li `docs/`, upozorní na to a nezaloží nic potichu. Odkazuje se na obecná pravidla práce a na standard struktury projektu; bez nich funguje, ale ptá se víc.
 

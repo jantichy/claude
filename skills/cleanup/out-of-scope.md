@@ -3,7 +3,7 @@
 Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely by se session. Stojí mimo `SKILL.md`, protože se čte až ve chvíli, kdy se v té fázi opravdu stojí.
 
 ------
-Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – rozbité věci známé ze session, starší dluh, na který jsi narazil při zápisu, odložené nálezy –, se tady musí vyřídit. **Nálezy čtenářů sem nepatří**: ti v tuhle chvíli teprve běží a jejich nálezy se vypořádají ve Fázi 8 podle téhož kritéria. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. Proto sem patří i to, co jsi během skillu odložil jako „mimo rozsah“.
+**Patří sem i to, co jsi během skillu sám odložil jako „mimo rozsah“** – vymezení fáze drží `SKILL.md`, *Fáze 7 – Naložení s tím, co by zůstalo mimo rozsah*.
 
 **Vyřídit ale neznamená zeptat se.** Položka mimo rozsah je nález zadarmo – všiml sis jí jen proto, že jsi u toho zrovna byl, a příště u toho nebude nikdo. Co umíš opravit jednoznačně, **oprav proto rovnou a bez ptaní, i když je to mimo rozsah úklidu**. Otázka, u které je předem jasné, jak zní jediná rozumná odpověď, nic nerozhoduje a stojí uživatele pozornost, kterou pak nemá na otázky, kde na jeho odpovědi opravdu záleží. Ptej se jen na to, co rozhodnout neumíš.
 
@@ -65,13 +65,13 @@ Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – rozbité v�
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Mimo rozsah N/celkem`. Volby:
+   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Mimo rozsah` (`~/.claude/RULES.md`, *Ptej se postupně*, dovoluje 12 znaků, takže se číslo položky do hlavičky nevejde – nese ho výpis nad otázkou). Volby:
 
    | Volba | Co uděláš |
    |---|---|
    | **Vyřešit teď** | Vyřeš položku **hned**, ještě než se zeptáš na další – ne až po posledním dotazu. Rozhodnutí odložené na konec ztratí kontext, ve kterém padlo. |
    | **Zapsat do todo** | Zapiš ji do `docs/todo.md` (v tomhle repozitáři do `~/Dev/context/todo.md`, viz `.claude/CLAUDE.md`) – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. Volí se u položky, o které je rozhodnuto, že se udělá. |
-   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` (v tomhle repozitáři do `~/Dev/context/backlog.md`) – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/STRUCTURE.md`, *`backlog.md`*; totéž říká *Když soubory neexistují* níž). |
+   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` (v tomhle repozitáři do `~/Dev/context/backlog.md`) – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/STRUCTURE.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Když soubory neexistují*). |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
 
    Když jsi vyřídil poslední položku, pokračuj Fází 8 – tam na tebe čekají nálezy čtenářů z Fáze 6.

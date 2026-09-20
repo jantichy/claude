@@ -639,6 +639,29 @@ class GitGuard(unittest.TestCase):
                                   capture_output=True, text=True, check=False, env=env)
             self.assertEqual(2, done.returncode, "shellový alias prošel")
 
+    def test_clean_short_flags_are_blocked(self):
+        """Slepená zkratka je pořád `--force`.
+
+        Výčet tvarů (`-f`, `-fd`, `-fdx`, `-xdf`, `-df`) byl děravý a `git clean -fx`
+        jím prošel – přitom maže netrackované **i ignorované** soubory, tedy `.env`
+        a `node_modules`. Rozhoduje proto obsah přepínače, ne jeho celý tvar.
+        """
+        for command in ["git clean -fx", "git clean -ffd", "git clean -xf",
+                        "git clean -fd", "git clean -xdf", "git clean --force"]:
+            with self.subTest(command=command):
+                self.assertBlocked(command)
+
+    def test_clean_without_force_passes(self):
+        """Druhý směr: bez `-f` git sám nic nesmaže, takže hook nemá co zastavovat.
+
+        `--dry-run` je navíc nejběžnější způsob, jak se před úklidem podívat, co
+        by zmizelo – falešný poplach zrovna na něm by hook vypnul komukoliv.
+        """
+        for command in ["git clean -n", "git clean -nd", "git clean -x",
+                        "git clean --dry-run"]:
+            with self.subTest(command=command):
+                self.assertAllowed(command)
+
     def test_ordinary_commands_pass(self):
         """Druhý směr: co je v pořádku, nesmí hook shodit."""
         for command in ["git push",

@@ -42,7 +42,8 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
-| Přeházet argumenty (`git push origin main --force`) | Hook čte celý příkaz a hledá přepínač jako **slovo**, ne prefix – právě proto vznikl | hlídáno, `tests/test_hooks.py` |
+| Přeházet argumenty (`git push origin main --force`) | Hook čte celý příkaz a posuzuje přepínač jako **celé slovo**, ne prefix – právě proto vznikl | hlídáno, `tests/test_hooks.py` |
+| Slepit krátké přepínače (`git clean -fx`, `-xdf`, `-ffd`) | U `clean` rozhoduje **obsah** přepínače, ne jeho tvar – výčet slepenin je vždycky děravý a `-fx` jím prošel | hlídáno, doplněno 20. 9. 2026 |
 | Schovat příkaz do aliasu (`git pf`, `git test`) | Alias se rozbalí z konfigurace gitu a posoudí znovu, do tří úrovní zanoření | hlídáno |
 | Shellový alias (`!sh -c '…'`) | Nerozebírá se, ale **zastaví se** – u shellu nejde poznat, co spustí | hlídáno |
 | Schovat příkaz do skriptu, který se spustí (`./deploy.sh`) | Nic – hook vidí jen text příkazu | **accepted**: skript je kód a čte ho člověk při psaní i revizi; hook brání ukliknutí, ne útoku. |

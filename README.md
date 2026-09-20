@@ -180,6 +180,14 @@ Jednořádková status line, která mi ukazuje všechno, co potřebuju průběž
 
 `Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. Rozliší přitom nalezenou chybu od kroku, který vůbec nejde spustit, i od kontraktu, co se nedá přečíst, ať se nespuštěná kontrola nevydává za „prošlo všechno“. O projektu sám nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí, takže se registruje jednou globálně a v projektu bez kontraktu neudělá nic. Ten kontrakt je ale kód ležící v repozitáři, takže v něm hook nespustí nic, dokud pro něj nevydám souhlas – a ten jde vydat jen ze samostatného okna terminálu.
 
+### [`git-guard.py`](git-guard.py) – nevratný příkaz zastavený dřív, než se spustí
+
+`PreToolUse` hook, který čte celý příkaz, ne jeho začátek. Seznam zakázaných příkazů v `settings.json` totiž porovnává jen prefix, takže `git push --force` zachytí, kdežto `git push origin main --force` projde – a to je tvar, který člověk napíše častěji. Aliasy si rozbalí z konfigurace gitu, takže vlastní zkratka hook neobejde. Zastavuje jen to, po čem práci nejde vrátit: přepsání vzdálené historie, zahození necommitnutých změn, smazání větve nebo reflogu. Falešný poplach je u něj horší než propuštěný příkaz – kdo na něj narazí při běžné práci, si hook vypne a pak nehlídá nic –, takže se testují oba směry.
+
+### [`agents/`](agents/) – posuzovatel, který nemá čím zapisovat
+
+Definice dvou typů subagentů, na kterých stojí půlka skillů. Liší se jedinou věcí: jestli smí na web. Ani jeden nemá shell, takže posudek, o který si řeknu, nemůže sáhnout na to, co posuzuje – a nedrží to věta v zadání, ale chybějící nástroj. Berte si je spolu se skilly: bez nich spadne každý, který je jmenuje, na neznámém typu agenta.
+
 ### [`githooks/`](githooks/) – historie main jako jeden řádek na větev
 
 `commit-msg` hook, který nad hlavní větví odmítne výchozí zprávu `Merge branch 'feat/payments'` a vyžádá si shrnutí odvedené práce. Díky tomu ukazuje `git log --first-parent` každou zamergovanou větev jako jeden řádek, který něco říká, a dílčí commity zůstanou dostupné pod ním. Aktualizace rozdělané větve ani merge po `git pull` mu nepřekážejí. Nasazený je globálně přes `core.hooksPath`, takže platí ve všech repozitářích na stroji.

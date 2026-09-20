@@ -137,7 +137,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### cílený zásah
 
-**Editace dokumentace po jednotlivých větách** místo přepsání celé sekce. Vada, kterou pojmenovává: **zásah je úzký, jeho následky nikoliv** – přejmenuje se sekce a zůstane odkaz na staré jméno, dopíše se věta o něčem, co v cílovém souboru mezitím není. Pozůstatky po nich hledá `/cleanup`, *Ověření čtenářem bez kontextu*.
+**Editace dokumentace po jednotlivých větách** místo přepsání celé sekce. Vada, kterou pojmenovává: **zásah je úzký, jeho následky nikoliv** – přejmenuje se sekce a zůstane odkaz na staré jméno, dopíše se věta o něčem, co v cílovém souboru mezitím není. Pozůstatky po nich hledá `/cleanup`, *Kontrola odkazů a spuštění čtenářů bez kontextu*.
 
 **Nahrazuje dřívější „chirurgický zásah“** (2026-09-07). Anglicky je *surgical edit* běžný obrat, ale doslovný překlad mate – „chirurgický zásah“ je česky operace, tedy obraz o řezání, ne o přesnosti. Čeština má pro *surgical strike* ustálené „cílený úder“, takže „cílený“ nese v téhle vazbě přesně tu úzkost, o kterou jde.
 
@@ -145,7 +145,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### čtenář bez kontextu
 
-**Subagent, který nemá žádný kontext z běžící session a čte výhradně soubory.** Ptá se, jestli se z toho, co je zapsané, dá pochopit, co se rozhodlo a proč – nebo jestli to dává smysl jen tomu, kdo u toho byl. Pouští ho `/cleanup`, *Ověření čtenářem bez kontextu*, až po zápisu.
+**Subagent, který nemá žádný kontext z běžící session a čte výhradně soubory.** Ptá se, jestli se z toho, co je zapsané, dá pochopit, co se rozhodlo a proč – nebo jestli to dává smysl jen tomu, kdo u toho byl. Pouští ho `/cleanup`, *Kontrola odkazů a spuštění čtenářů bez kontextu*, až po zápisu.
 
 **Nahrazuje dřívější „fresh-reader“** (2026-09-07). Anglicismus uprostřed české věty, který se navíc skloňoval po česku („fresh-readera“, „2 fresh-readeři“), a prolézal i do `done.md`, tedy do textu pro člověka.
 

@@ -326,11 +326,10 @@ Nejsou-li změny session commitnuté, vezmi `git diff` bez rozsahu; je-li zákla
 
 ## Fáze 7 – Naložení s tím, co by zůstalo mimo rozsah
 
-Všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* – rozbité věci známé ze session, starší dluh, na který jsi narazil při zápisu, odložené nálezy –, se tady musí vyřídit. **Vypsat je do závěru a nechat být je nepřijatelné:** uživatel session vzápětí zavře a položky zmizí s ní. **Nálezy čtenářů sem nepatří** – ti v tuhle chvíli teprve běží a vypořádají se ve Fázi 8 podle téhož kritéria.
+Sem patří všechno, co bys jinak jen vypsal do sekce *Mimo rozsah úklidu* a nechal být: rozbité věci známé ze session, starší dluh, na který jsi narazil při zápisu, odložené nálezy. **Vypsat a nechat být je nepřijatelné** – uživatel session vzápětí zavře a položky zmizí s ní. **Nálezy čtenářů sem nepatří**, ti v tuhle chvíli teprve běží a vypořádají se ve Fázi 8 podle téhož kritéria.
 
-**Vyřídit ale neznamená zeptat se.** Položka mimo rozsah je nález zadarmo – všiml sis jí jen proto, že jsi u toho zrovna byl, a příště u toho nebude nikdo. Co umíš opravit jednoznačně, oprav proto rovnou a bez ptaní, i když je to mimo rozsah úklidu; ptej se jen na to, co rozhodnout neumíš.
+**Celý postup drží [`out-of-scope.md`](out-of-scope.md)** – čím se dělí položky k vyřešení rovnou od těch, o kterých rozhoduje uživatel, šablony výpisu i volby k jednotlivým položkám. Přečti si ho celý a řiď se jím; co se s položkami stalo, patří pak do přehledu ve Fázi 9.
 
-**Kritérium toho dělení, šablony výpisu i volby k jednotlivým položkám drží [`out-of-scope.md`](out-of-scope.md).** Přečti si ho celý a řiď se jím; co se s položkami stalo, patří pak do přehledu ve Fázi 9.
 ------
 
 ## Fáze 8 – Vypořádání nálezů čtenářů
@@ -340,7 +339,7 @@ Sem dorazí, co našli čtenáři z Fáze 6. **Nedorazili-li ještě, počkej na
 **Než s nálezem cokoliv uděláš, ověř, že pořád platí** – Fáze 7 mezitím sahala na soubory a část nálezů mohla vyřešit. Neplatné zahoď mlčky; hlásit nález, který už neexistuje, je totéž jako hlásit falešný poplach.
 
 - **Nálezy, které se týkají téhle session**, oprav – mechanické sám, sporné předlož uživateli po jednom jako ve Fázi 7.
-- **Nálezy mimo rozsah session** (starší dluh v dokumentaci) projdi kritériem z Fáze 7, bodu 2: co má jednu zjevně správnou podobu, oprav rovnou a vypiš; o zbytku nech rozhodnout uživatele. Fáze 7 už proběhla, takže se rozhoduje tady a stejným způsobem – a **do přehledu jdou tyhle položky do téhož seznamu** *Mimo rozsah úklidu* jako ty z Fáze 7, ne stranou.
+- **Nálezy mimo rozsah session** (starší dluh v dokumentaci) projdi kritériem z [`out-of-scope.md`](out-of-scope.md), bodu 2: co má jednu zjevně správnou podobu, oprav rovnou a vypiš; o zbytku nech rozhodnout uživatele. Fáze 7 už proběhla, takže se rozhoduje tady a stejným způsobem – a **do přehledu jdou tyhle položky do téhož seznamu** *Mimo rozsah úklidu* jako ty z Fáze 7, ne stranou.
 - **Byly-li opravy netriviální** (přepisovala se struktura, měnil se obsah více souborů), pusť **znovu čtenáře pozůstatků** – jen jeho, ne oba, a **vyrob mu nový diff**: ten z Fáze 6 opravy z Fází 7 a 8 neobsahuje, takže by hledal v zastaralém podkladu. Opravy samy zanechávají nové pozůstatky, ale navazitelnost se jimi nemění, takže druhý průchod celou dokumentací by byl čekání bez zisku. Tenhle běh už na pozadí schovat nejde, protože po něm nic dalšího nezbývá; proto se pouští jen tehdy, když opravy opravdu byly netriviální.
 
 ------
