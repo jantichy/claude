@@ -10,7 +10,7 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 4. **U každého úkolu ukáže, jak je velký** – drobnost, práce na jednu session, nebo velký úkol –, a u těch nabízených řekne i to, v čem spočívá a čím se začíná.
 5. **Tři až čtyři nejaktuálnější nabídne k výběru** – a pořád můžete napsat, že chcete jít úplně jinudy.
 6. **Po výběru se do toho rovnou pustí** – má-li úkol vlastní skill, zavolá ho, jinak načte podklady a začne.
-7. **Zúžení** – `/next review` nebo `/next DPH` ukáže jen to, co se tématu týká. Tímhle způsobem si nabídku zbývajících kol návrhu bere i skill `/specify`.
+7. **Zúžení** – `/next review` nebo `/next DPH` ukáže jen to, co se tématu týká. Tímhle způsobem si nabídku zbývajících kol návrhu bere i skill `/architect`.
 
 ## Proč zrovna tenhle
 
@@ -33,7 +33,7 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 
 Že kolo o fakturaci navazuje na export faktur, je domněnka z textu úkolu, výslovně zapsané to není.
 
-**Pracuje se jinde:** Kolo o upomínkách (`specify-reminders`, běží v jiném okně)
+**Pracuje se jinde:** Kolo o upomínkách (`architect-reminders`, běží v jiném okně)
 
 **Čeká na něco:** Kolo o fakturaci (na kolo o DPH) · Napojení na účetní systém (na odpověď podpory)
 
@@ -61,7 +61,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/next a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill počítá s mojí strukturou projektu – seznam úkolů, nápadů a hotové práce v `docs/`, implementační plán a kola návrhu ze skillu `/specify`. **Máte-li úkoly jinde, řekněte Claudovi, ať skillu cesty upraví**; jádro – sběr, řazení a nabídka – na tom nezávisí.
+Skill počítá s mojí strukturou projektu – seznam úkolů, nápadů a hotové práce v `docs/`, implementační plán a kola návrhu ze skillu `/architect`. **Máte-li úkoly jinde, řekněte Claudovi, ať skillu cesty upraví**; jádro – sběr, řazení a nabídka – na tom nezávisí.
 
 ---
 

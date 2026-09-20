@@ -54,7 +54,9 @@ Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběž
 
 ## Skilly životního cyklu projektu
 
-Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení a jdou tu v pořadí, ve kterém se pouštějí. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
+Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada:** kroky **osy** něco tvoří – vyrobí soubor, kód nebo nasazení – a jdou tu v pořadí, ve kterém se pouštějí; **kontrolní kroky** nic nepřidávají, jen měří, co už je, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
+
+### Osa – kroky, které tvoří
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
@@ -66,11 +68,11 @@ Zjistí, do jakého světa produkt vstupuje: kdo to už dělá, co to umí a za 
 
 ### [`/specify`](skills/specify/) – z nápadu zadání, než se sáhne na kód
 
-Vyptá se mě na záměr a udělá z něj **dva dokumenty**: `requirements.md` odpovídá na otázku co stavíme a proč, `architecture.md` na otázku jak. Hranici mezi nimi drží tvrdě, včetně testu, kam která věta patří: *změní se to, když vyměním databázi?* A dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold. Větší záměr nejdřív rozdělí na tematická kola, která jdou řešit i souběžně v samostatných větvích, a návrh řešení udělá až nad jejich výsledkem.
+Vyptá se mě na záměr a udělá z něj `requirements.md` – dokument, který odpovídá na otázku *co stavíme a proč*, a k němu scénáře, glosář a ceník, vede-li je projekt. Jak se to postaví, nerozhoduje: hranici drží tvrdě, včetně testu, kam která věta patří – *změní se to, když vyměním databázi?* Ano → návrh, ne → sem. Dokud není zadání schválené, nesmí vzniknout ani řádek kódu, ani scaffold. A pozná, kdy se specifikace psát nemá, protože jde o změnu v existujícím kódu.
 
-### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
+### [`/architect`](skills/architect/) – rozhodnout, jak se to postaví
 
-Pošle na hotový dokument agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory, každého z jiného hlediska. Je to krok mezi zadáním a plánem, protože jinak návrh neměří nikdo: `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu. Každou závažnou námitku pak dostane ověřovatel s jediným úkolem – **vyvrátit ji**.
+Ze schválených požadavků udělá návrh řešení – architekturu, data, stavy a přechody, rozhraní, cizí systémy, bezpečnostní model. **Není to jeden dokument, ale sada**, a nový přibývá jen tehdy, když odpovídá na otázku, na kterou žádný jiný neodpovídá. Větší záměr rozdělí na tematická kola, která jdou řešit i souběžně v samostatných větvích, a návrh nad celkem sešije až z jejich výsledku. Nemá režimy – ze stavu projektu sám pozná, co je na řadě, a než sáhne na první soubor, jednou větou to oznámí.
 
 ### [`/breakdown`](skills/breakdown/) – ze zadání implementační plán
 
@@ -80,6 +82,16 @@ Vyrobí ze schváleného zadání `docs/plan.md` – seřazený seznam úkolů v
 
 Projde plán od začátku do konce, u každého úkolu test, kód, průběžná kontrola a commit. Umí navázat na rozdělaný plán a nevěří přitom zaškrtávátkům – ověří si v kódu, že odškrtnuté úkoly opravdu existují a procházejí. Nabídne tři režimy podle toho, jak často se do toho chci dívat.
 
+### [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
+
+Nasadí do produkce přes **oddělenou nasazovací větev**, takže `main` zůstane integrační a merge feature nic nenasazuje. Před nasazením projde kontroly, zvlášť řeší migrace dopředu kompatibilně a nikdy se nespustí sám. A tím nekončí: poslední fází je **sledovací okno** s konkrétním koncem, protože celá třída chyb se projeví až později. Dokud okno neuplyne a někdo ho výslovně neuzavře, nasazení není hotové.
+
+### Kontroly – kroky, které měří
+
+### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
+
+Pošle na hotový dokument agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory, každého z jiného hlediska. V cyklu stojí třikrát – za průzkumem, za zadáním a za návrhem –, protože jinak ty vrstvy neměří nikdo: `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu. Každou závažnou námitku pak dostane ověřovatel s jediným úkolem – **vyvrátit ji**.
+
 ### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
 Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu, pak paralelní panel agentů, kde každý má jediné hledisko – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura, moje doménové standardy –, a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
@@ -88,17 +100,13 @@ Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje 
 
 Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, rozejití mezi vrstvami. Jednoznačné opravy udělá rovnou, o sporných se mnou mluví jednu po druhé. A pamatuje si, co jsem rozhodl neopravovat – jen do chvíle, než se ten kód změní.
 
-### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
-
-Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Na konec pošle na projekt dva agenty bez kontextu – jeden řekne, jestli z dokumentace jde na dnešní práci navázat, druhý hledá rozpory a zbytky po přepisování v tom, co dnes přibylo –, a nabídne, co dál: ve větvi i rovnou merge. Čtou na pozadí, takže se na ně nečeká.
-
 ### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 
 Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test; útočí se výhradně na lokální instanci nad testovacími daty, a že tomu tak opravdu je, se dokládá příkazem, ne slibem.
 
-### [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
+### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
-Nasadí do produkce přes **oddělenou nasazovací větev**, takže `main` zůstane integrační a merge feature nic nenasazuje. Před nasazením projde kontroly, zvlášť řeší migrace dopředu kompatibilně a nikdy se nespustí sám. A tím nekončí: poslední fází je **sledovací okno** s konkrétním koncem, protože celá třída chyb se projeví až později. Dokud okno neuplyne a někdo ho výslovně neuzavře, nasazení není hotové.
+Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Na konec pošle na projekt dva agenty bez kontextu – jeden řekne, jestli z dokumentace jde na dnešní práci navázat, druhý hledá rozpory a zbytky po přepisování v tom, co dnes přibylo –, a nabídne, co dál: ve větvi i rovnou merge. Čtou na pozadí, takže se na ně nečeká.
 
 ## Skilly mimo životní cyklus
 

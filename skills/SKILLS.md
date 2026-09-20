@@ -372,8 +372,8 @@ Rozejde-li se rámeček s životním cyklem v `RULES.md`, platí `RULES.md` – 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do
-> `~/.claude/skills/` celý životní cyklus: project, discovery, specify, oponent, breakdown,
-> implement, review, consistency, cleanup, attack a release. Z
+> `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect,
+> breakdown, implement, release, oponent, review, consistency, attack a cleanup. Z
 > https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů
 > subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim
 > potřebuju doplnit.
@@ -401,7 +401,7 @@ Skill má navíc **vlastní sekci v `README.md` v kořeni**. Jak je dlouhá a co
 
 Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou vypíše. Zvláštní řádek „Podrobně: …“ by tedy vedl na totéž místo dvakrát.
 
-**Pořadí skillů v hlavním README je dané, ne libovolné.** Skilly ze životního cyklu stojí v pořadí, ve kterém se v životním cyklu pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Skilly mimo životní cyklus stojí **pod nimi a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
+**Pořadí skillů v hlavním README je dané, ne libovolné.** Skilly ze životního cyklu stojí **ve dvou blocích jako v rámečku**: nejdřív kroky osy v pořadí, ve kterém se pouštějí, pak kontrolní kroky. Ne abecedně a ne podle důležitosti; čtenář ten první seznam čte jako postup. **Rozdělení na dva bloky je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/cleanup` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Uvnitř bloku kontrol platí pořadí z rámečku v `~/.claude/RULES.md`. Skilly mimo životní cyklus stojí **pod nimi a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
 
 **Obě README se aktualizují spolu se skillem**, ne na vyžádání. Změní-li se, co skill umí, je to součást té změny – stejně jako hlavička nebo test.
 

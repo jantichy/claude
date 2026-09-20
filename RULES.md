@@ -456,7 +456,7 @@ V projektech s vlastní živou dokumentací (typicky `docs/`):
 
 Změna teče **shora dolů, nikdy obráceně** – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód. Konkrétní posloupnost souborů definuje `STRUCTURE.md`.
 
-V životním cyklu plní doc-first `/specify` a `/breakdown`. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
+V životním cyklu plní doc-first `/specify`, `/architect` a `/breakdown` – tedy celý řetěz `requirements.md` → `architecture.md` → `plan.md`. **Během implementace se dokumentace nedopisuje průběžně** – narazíš-li na rozpor, zastav se a oprav návrh shora; teprve pak pokračuj v kódu.
 
 ### Živá struktura
 

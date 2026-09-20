@@ -155,7 +155,7 @@ Celý postup proveď najednou a **průběžně hlas, co se povedlo** – merge n
 - **Necommitnuté změny ve worktree větve** – commitni je, patří-li k práci větve; soubor, který jsi nezměnil ty, nech být a ohlas ho (`~/.claude/RULES.md`, *Commituj jmenované cesty, ne `-A`*).
 - **Rozpracovaný `main/`** – je to cizí práce a merge by se s ní promíchal; ohlas to a zastav.
 - **`main` je nasazovací větev.** Stojí-li v `## Nasazení` projektového `CLAUDE.md`, že se z `main` automaticky nasazuje, je merge samotné nasazení a patří `/release` (`~/.claude/skills/release/SKILL.md`, *Nasazovací větev není integrační větev*). Zastav a řekni to.
-- **Větev kola návrhu** (`/specify`) – pozná se podle toho, že ji jmenuje blok kola v `docs/todo.md` nebo záznam v `docs/done.md`, sekce `## Kola návrhu`. Neproběhl-li v ní zápis před sloučením (blok v `todo.md` ještě je), pusť v ní nejdřív `/specify`. Proběhl-li, pokračuj – ale krok 3 dělej podle *Zápisu před sloučením*, bod 6, ve `~/.claude/skills/specify/SKILL.md`, protože po natažení se kolu přiděluje číslo znovu.
+- **Větev kola návrhu** (`/architect`) – pozná se podle toho, že ji jmenuje blok kola v `docs/todo.md` nebo záznam v `docs/done.md`, sekce `## Kola návrhu`. Neproběhl-li v ní zápis před sloučením (blok v `todo.md` ještě je), pusť v ní nejdřív `/architect`. Proběhl-li, pokračuj – ale krok 3 dělej podle zápisu před sloučením ve `~/.claude/skills/architect/SKILL.md`, protože po natažení se kolu přiděluje číslo znovu.
 
 ### 2. Posunul se `main` od odbočení větve?
 

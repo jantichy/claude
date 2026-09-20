@@ -17,7 +17,7 @@ Režimy nemá. **První běh v projektu vezme všechny session, každý další 
 ## Co skill nedělá
 
 - **Nevytěžuje běžící session.** To dělá `/cleanup` na jejím konci – a dělá to jinak: zapisuje dohody a rozhodnutí do všech souborů projektu. Tenhle skill jde zpětně přes uzavřené konverzace a sahá jen na `scenarios.md`.
-- **Nezakládá scénáře z návrhu.** Zakládá je `/specify` ve svém kole, z rozhovoru se zadavatelem. Tenhle skill dopisuje to, co se do nich při tom kole nedostalo.
+- **Nezakládá scénáře z návrhu.** Zakládá je `/specify`, z rozhovoru se zadavatelem. Tenhle skill dopisuje to, co se do nich tehdy nedostalo.
 - **Neaudituje `scenarios.md`.** Rozpory mezi scénáři a modelem, mrtvé odkazy a rozejité počty řeší `/consistency`.
 - **Nerozhoduje o produktu.** Narazí-li na situaci, na kterou odpověď není, zapíše scénář i s tím, že pokrytá není – nevymýšlí, jak by se to mělo chovat.
 

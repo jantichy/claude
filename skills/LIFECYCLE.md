@@ -20,7 +20,7 @@ V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code
 
 Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu kroků, ve které polovina čísel nic neznamenala.
 
-**`/architect` a `/consolidate` zatím neexistují jako skilly.** Jsou rozhodnuté a popsané, ale `skills/architect/` ani `skills/consolidate/` na disku nejsou – kdo je zavolá, nic se nestane. Dokud nevzniknou, dělá práci obou `/specify`, respektive nikdo. Stojí to tady schválně, protože popsaný krok, který nejde vyvolat, je horší než chybějící (`~/.claude/skills/SKILLS.md`, *Jak se píše text uvnitř*). Co k jejich založení zbývá, drží `todo.md`; **až vzniknou, tenhle odstavec zmizí.**
+**`/consolidate` zatím neexistuje jako skill.** Je rozhodnutý a popsaný, ale `skills/consolidate/` na disku není – kdo ho zavolá, nic se nestane, a jeho práci zatím nedělá nikdo. Stojí to tady schválně, protože popsaný krok, který nejde vyvolat, je horší než chybějící (`~/.claude/skills/SKILLS.md`, *Jak se píše text uvnitř*). Co k jeho založení zbývá, drží `todo.md`; **až vznikne, tenhle odstavec zmizí.** `/architect` takhle chyběl taky a vznikl 20. 9. 2026 rozdělením `/specify`.
 
 ### Hlavní osa – kroky, které tvoří
 

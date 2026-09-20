@@ -167,7 +167,7 @@ Všechno, co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to uděl
 
 Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Parkované v session`** a po vyřešení se **smaže** – do `done.md` nepatří, není to odvedená práce projektu. Sekce je dočasná: prázdná se ruší.
 
-**Sekce `## Kola návrhu`** je mapa kol, na která `/specify` rozdělil větší návrh. Co je kolo a kdy vzniká, drží `~/.claude/skills/specify/SKILL.md`, *Mapa okruhů: kola, nebo jeden zátah*; jak kolo běží, tamtéž *Režim `round`*; jak se kola čtou a nabízejí, `~/.claude/skills/next/SKILL.md`, *Kola návrhu*. Na každé kolo připadá jeden blok v tomhle tvaru:
+**Sekce `## Kola návrhu`** je mapa kol, na která `/architect` rozdělil větší návrh. Co je kolo, kdy vzniká a jak běží, drží `~/.claude/skills/architect/SKILL.md`; jak se kola čtou a nabízejí, `~/.claude/skills/next/SKILL.md`, *Kola návrhu*. Na každé kolo připadá jeden blok v tomhle tvaru:
 
 ```markdown
 ### Kolo o <tématu>
@@ -189,7 +189,7 @@ Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Pa
 - **Otázka odložená na kolo se zapisuje do jeho bloku**, ne jako samostatná položka s poznámkou „patří ke kolu o …“. Jinak se ztratí, jakmile kolo proběhne bez ní: položka dál čeká na něco, co už se nestane, a nerozezná se od fronty.
 - **O pořadí rozhoduje řádek *Čeká na*, ne pořadí bloků.** Kola bez nesplněné závislosti smí běžet souběžně; řádek *Sahá na* říká, kde se jejich větve můžou srazit.
 - **Hotové kolo se přesune do stejnojmenné sekce `done.md`**, v tvaru popsaném tam. Blok se maže až tímhle přesunem, a ten proběhne ve větvi kola těsně před sloučením.
-- Sekce žije jen po dobu návrhu po kolech; po posledním kole do ní `/specify close` zapíše řádek *Návrh sešitý* a při dočištění ji zruší. Chybějící sekce znamená totéž co sekce bez bloků.
+- Sekce žije jen po dobu návrhu po kolech; po posledním kole do ní `/architect` zapíše řádek *Návrh sešitý* a při dočištění ji zruší. Chybějící sekce znamená totéž co sekce bez bloků.
 
 ### `backlog.md`
 
@@ -250,7 +250,7 @@ Zapisuj hned, jak rozhodnutí padne. Z odstupu se zdůvodnění rekonstruuje šp
 
 Zapisuje ji `/release` (viz jeho *Když chyba projde vším*). **Pole „doplněno“ nesmí být prázdné:** buď z defektu vzejde nová blokující kontrola, nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – tedy z té množiny, kterou už chytat umí.
 
-**Kapitola kola návrhu se píše bez čísla**, i když ho ostatní kapitoly mají; číslo dostane těsně před sloučením větve kola (`~/.claude/skills/specify/SKILL.md`, *Zápis před sloučením*), protože souběžná kola by si jinak vzala totéž.
+**Kapitola kola návrhu se píše bez čísla**, i když ho ostatní kapitoly mají; číslo dostane těsně před sloučením větve kola (`~/.claude/skills/architect/SKILL.md`), protože souběžná kola by si jinak vzala totéž.
 
 **Nejstarší nahoře. Nový zápis se připojuje na konec** – své sekce, je-li soubor členěný. Důvod je provozní: připsat na konec je jediný způsob zápisu, který nejde udělat špatně, protože nevyžaduje hledat správné místo. Opačné pravidlo se v praxi nedodrží. Navíc se soubor čte jako vývoj uvažování a revize stojí **za** původním rozhodnutím, ne před ním.
 
@@ -302,9 +302,9 @@ Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem,
   - **Nová kola:** <kola, která z tohohle vzešla, nebo „žádná“>
 ```
 
-Datum vyrob `date +%F`. Po posledním kole připíše `/specify close` řádek `- **Návrh uzavřen (<datum>)** – <počet> kol` – podle něj se pozná, že návrh po kolech doběhl celý.
+Datum vyrob `date +%F`. Po posledním kole připíše `/architect` řádek `- **Návrh uzavřen (<datum>)** – <počet> kol` – podle něj se pozná, že návrh po kolech doběhl celý.
 
-**Nejcennější je pole *Neotevřelo*.** Díky němu jde o půl roku později odlišit **nerozhodnuté** od **rozhodnutého jinak** – „kolo o administraci proběhlo a tuhle otázku neotevřelo“ –, což se z dokumentace samotné vyčíst nedá. Proto je povinné i tehdy, když zní „nic“. Pevný tvar má ze stejného důvodu jako *Průchody životním cyklem*: čte ho stroj, konkrétně `/specify` při rozhodování, co je na řadě.
+**Nejcennější je pole *Neotevřelo*.** Díky němu jde o půl roku později odlišit **nerozhodnuté** od **rozhodnutého jinak** – „kolo o administraci proběhlo a tuhle otázku neotevřelo“ –, což se z dokumentace samotné vyčíst nedá. Proto je povinné i tehdy, když zní „nic“. Pevný tvar má ze stejného důvodu jako *Průchody životním cyklem*: čte ho stroj, konkrétně `/architect` při rozhodování, co je na řadě.
 
 ### `requirements.md`, `architecture.md`, `plan.md`
 
@@ -316,7 +316,9 @@ Datum vyrob `date +%F`. Po posledním kole připíše `/specify close` řádek `
 | `architecture.md` | Jak to postavíme – **páteř návrhu řešení, ne celý návrh** | `/architect` |
 | `plan.md` | Kdo co udělá v jakém pořadí, s ověřitelným akceptačním kritériem u každého úkolu | `/breakdown` |
 
-Hranice mezi požadavky a návrhem řešení je tvrdá: do požadavků patří **omezení**, do návrhu řešení **volba**.
+Hranice mezi požadavky a návrhem řešení je tvrdá: do požadavků patří **omezení**, do návrhu řešení **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je omezení; „použijeme SQLite, protože…“ je volba. Kontrolní otázka, když si nejsi jistý, kam věta patří: *změní se, když se změní technologie?* Ano → návrh, ne → požadavky.
+
+**Proč to jsou dva soubory a ne jeden:** mají **jinou životnost**. Produktový záměr se mění zřídka, technické řešení s každým rozhodnutím o technologii. V jednom souboru by se při výměně databáze editoval tentýž dokument, ve kterém stojí popis cílové skupiny, a produktová část by se tím postupně obrušovala – platí tu *Cílová skupina určuje umístění* z `~/.claude/RULES.md`. **Nerozejdou se, protože se nepřekrývají:** `requirements.md` nesmí obsahovat architekturu ani „nejspíš to bude na Vercelu“, `architecture.md` nesmí obsahovat zdůvodnění produktu – argumentuje z požadavků odkazem a neopisuje je.
 
 **Návrh řešení je sada dokumentů, ne jeden soubor**, a `architecture.md` je jeho páteř. Požadavky jsou seznam a vejdou se do jednoho dokumentu; návrh je **soustava, ve které se věci navzájem omezují**, a tu nejde popsat lineárně. Každý dokument návrhu je **řez toutéž věcí z jiného úhlu**: stavba (`architecture.md`), data a stavy (`model.md`), operace (`transitions.md`), zásady domény (`rules.md`), jednotlivé okruhy (tematické dokumenty kol). Táž funkce je pak ve víc z nich – jednou jako osa, jednou jako přechod, jednou jako celý okruh –, a je to správně: jsou to dvě nezávislé osy a jejich průnik se neskládá (`~/.claude/RULES.md`, *Jednoduchost před úplností*).
 
@@ -324,13 +326,13 @@ Hranice mezi požadavky a návrhem řešení je tvrdá: do požadavků patří *
 
 **Kolik jich vznikne, rozhoduje projekt.** Malému stačí `architecture.md` samotný a víc jich zakládat se nemá; `model.md` a `transitions.md` jsou tu pojmenované proto, aby si je každá aplikace nevymyslela jinak, ne proto, že jsou povinné. Doloženo rezervačním systémem, kde má dokumentace 27 tisíc řádků a jediný `architecture.md` by z nich držel přes dvacet tisíc. Zapsáno 20. 9. 2026.
 
-Podrobně v `~/.claude/skills/specify/SKILL.md`.
+Podrobně v `~/.claude/skills/specify/SKILL.md` a `~/.claude/skills/architect/SKILL.md`.
 
 Změna teče **shora dolů**: `requirements.md` → `architecture.md` → `plan.md` → kód. Nikdy obráceně – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód.
 
 Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requirements.md`; místo plánu se kroky rozepíšou do `todo.md`.
 
-**Návrh po kolech přidává tematické dokumenty** `docs/<topic>.md` (například `gateway.md`, `emails.md`, `admin.md`), jeden na kolo. Tematický dokument drží celý okruh do detailu. Do `requirements.md` a dalších sdílených dokumentů (glosář, scénáře, model) zapisuje kolo jen to, co z tématu plyne pro celek, a odkazuje se na něj. **`architecture.md` kola nepíšou** – vzniká až v `/specify close` nad výsledky všech kol. Technickou volbu, kterou téma rozhodnout musí (třeba dodavatele), zapíše kolo do technické části svého dokumentu a `architecture.md` na ni pak odkáže. Hranice požadavků a návrhu tedy platí i uvnitř tematického dokumentu: omezení a volba se nemíchají, jen stojí u sebe. **Proč samostatný soubor:** kola běží souběžně v různých větvích a psaní do týchž kapitol sdílených dokumentů by je srazilo.
+**Návrh po kolech přidává tematické dokumenty** `docs/<topic>.md` (například `gateway.md`, `emails.md`, `admin.md`), jeden na kolo. Tematický dokument drží celý okruh do detailu. Do `requirements.md` a dalších sdílených dokumentů (glosář, scénáře, model) zapisuje kolo jen to, co z tématu plyne pro celek, a odkazuje se na něj. **`architecture.md` kola nepíšou** – vzniká až nad výsledky všech kol, při sešití v `/architect`. Technickou volbu, kterou téma rozhodnout musí (třeba dodavatele), zapíše kolo do technické části svého dokumentu a `architecture.md` na ni pak odkáže. Hranice požadavků a návrhu tedy platí i uvnitř tematického dokumentu: omezení a volba se nemíchají, jen stojí u sebe. **Proč samostatný soubor:** kola běží souběžně v různých větvích a psaní do týchž kapitol sdílených dokumentů by je srazilo.
 
 ### Produktové podklady
 

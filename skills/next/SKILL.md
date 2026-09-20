@@ -11,7 +11,7 @@ allowed-tools: [Read, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Na začátku session v rozdělaném projektu odpoví na otázku **„s čím můžeme pokračovat?“** – rychle. Posbírá práci, která je rozhodnutá a nehotová, oddělí od ní to, na čem se právě pracuje v jiné session, zbytek seřadí podle toho, co je na stole nejvíc, vypíše ho kompaktně a několik nejaktuálnějších položek nabídne přes `AskUserQuestion`. Po výběru se do úkolu rovnou pustí, nebo – je-li to opuštěná session – řekne, jak ji obnovit.
 
-Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`, `/next Kola návrhu` – a omezí celý výpis včetně práce ve větvích na položky, v jejichž názvu, textu nebo nadpisu sekce se výraz vyskytuje, bez ohledu na velikost písmen; položka *sešít návrh po kolech* patří k zúžení `Kola návrhu` vždy. Bez argumentu jde o celou frontu. **Na zúžení `Kola návrhu` spoléhá `/specify round` bez jména kola** – nabídku kol si přenechává sem, takže sekce *Kola návrhu* níž je rozhraní mezi oběma skilly, ne vnitřek, který se smí tiše změnit.
+Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`, `/next Kola návrhu` – a omezí celý výpis včetně práce ve větvích na položky, v jejichž názvu, textu nebo nadpisu sekce se výraz vyskytuje, bez ohledu na velikost písmen; položka *sešít návrh po kolech* patří k zúžení `Kola návrhu` vždy. Bez argumentu jde o celou frontu. **Na zúžení `Kola návrhu` spoléhá `/architect` bez jména kola** – nabídku kol si přenechává sem, takže sekce *Kola návrhu* níž je rozhraní mezi oběma skilly, ne vnitřek, který se smí tiše změnit.
 
 ## Co skill nedělá
 
@@ -19,7 +19,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 - **Nerozkládá práci na úkoly.** Položka, která je na jednu session moc velká, se nabídne celá; rozpad do plánu dělá `/breakdown`.
 - **Nerozhoduje o nápadech z backlogu.** Vypíše je, když fronta dojde, a přesun do `todo.md` nechá na uživateli.
 - **Nevybírá za uživatele.** Doporučí, ale začne až po výběru.
-- **Neodjede kolo návrhu ani ho nesešije.** Vybrané kolo předá `/specify round <kolo>`, sešití `/specify`; tenhle skill jen drží, jak se kola nabízejí.
+- **Neodjede kolo návrhu ani ho nesešije.** Vybrané kolo i sešití předá `/architect`; tenhle skill jen drží, jak se kola nabízejí.
 - **Nesahá do práce jiné session.** Co právě běží jinde, jen ohlásí – nepřepíná se do toho, nemerguje to a nenabízí to.
 - **Neobnoví session sám.** `/resume` je příkaz, který píše uživatel; skill mu dá přesné znění a skončí.
 
@@ -54,7 +54,7 @@ Co z výstupu je položka fronty:
 | `current.uncommitted` | necommitnuté změny tam, kde session stojí – rozdělaná práce tady |
 | `todo` | každá položka ze všech sekcí (hotové skript vynechal) |
 | `rounds` | kolo návrhu – viz *Kola návrhu* |
-| `stitch_pending` | položka *sešít návrh po kolech*, spouštěč `/specify` |
+| `stitch_pending` | položka *sešít návrh po kolech*, spouštěč `/architect` |
 | `plan.open` | jedna položka „dokončit plán“ s počtem zbývajících, spouštěč `/implement` |
 | `artifacts`, `passes`, `lifecycle` | chybějící krok cyklu – viz *Místo v cyklu* |
 | `branches` | práce ve větvi – viz *Práce ve větvích* |
@@ -82,7 +82,7 @@ Obsazenost už rozhodl skript, pole `state`:
 ### Kola návrhu
 
 - **Kolo s `branch_state`, jehož větev je v `branches` jako `occupied`, `uncertain` nebo `abandoned`,** je práce ve větvi – řídí se *Prací ve větvích*, **nikdy se nenabízí jako nové kolo**. Chybí-li jeho větev v `branches` nebo je `empty`, nic v ní není a kolo se nabízí jako každé jiné. `branch_state` říká, co ve větvi čeká: hodnota řádku *Stav* z `todo.md` ve větvi (`rozhoduje se` = rozhodování, `rozhodnuto` = zápis před sloučením), nebo `merge_pending`, když blok kola ve větvi už chybí a zbývá jen sloučení.
-- **Kolo bez větve** se nabízí se spouštěčem `/specify round <kolo>`; u něj řekni, do kterých dokumentů sahá (*Sahá na*) a jestli se to kříží s rozběhnutým kolem. **Souběh neblokuj, jen na něj upozorni.**
+- **Kolo bez větve** se nabízí se spouštěčem `/architect <kolo>`; u něj řekni, do kterých dokumentů sahá (*Sahá na*) a jestli se to kříží s rozběhnutým kolem. **Souběh neblokuj, jen na něj upozorni.**
 - **Bez worktree layoutu** větve kol nevznikají; kolo ve stavu `rozhoduje se` nebo `rozhodnuto` ber jako rozdělanou práci tady.
 
 ### Místo v cyklu
@@ -160,4 +160,4 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím. U vybrané pol
 - `Vybráno: <položka>, pokračuju <skillem / prací na ní / obnovením session – napiš /resume <session_id>>.`
 - `Vybrat není z čeho – brání tomu: <konkrétní seznam>.`
 
-Prázdná fronta i fronta, kde všechno běží jinde nebo na něco čeká, patří do druhé věty i s tím, co se prošlo: *„v `todo.md` ani v plánu nic nečeká, v gitu není nic rozdělaného, backlog je prázdný“*, nebo *„kolo o DPH běží ve větvi `specify-vat`, kolo o fakturaci čeká na něj“*.
+Prázdná fronta i fronta, kde všechno běží jinde nebo na něco čeká, patří do druhé věty i s tím, co se prošlo: *„v `todo.md` ani v plánu nic nečeká, v gitu není nic rozdělaného, backlog je prázdný“*, nebo *„kolo o DPH běží ve větvi `architect-vat`, kolo o fakturaci čeká na něj“*.
