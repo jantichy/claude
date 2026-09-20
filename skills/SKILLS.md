@@ -354,10 +354,10 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 > od založení projektu až po nasazení. Jedny tvoří, druhé měří, co už je – a žádný nedělá práci
 > toho vedle:
 >
-> **Osa** [`/project`](../project/README.md) → … → [`/release`](../release/README.md)
+> **Osa** [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/release`](../release/README.md)
 >
-> **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** – stojí v mezerách mezi kroky
-> osy, některé z nich ve víc mezerách
+> **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** · … – stojí v mezerách mezi
+> kroky osy, některé z nich ve víc mezerách
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 ```

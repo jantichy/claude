@@ -318,7 +318,7 @@ Skilly měly jediný text pro člověka – odstavec v kořenovém `README.md` r
 
 **Zamítnuto – zobecnit pravidlo „README je pro lidi“ i do `structure/structure.md`**, tedy na všechny projekty: nabídnuto a nevybráno. `structure.md` už hranici *README je popis pro člověka, ne instrukce pro Clauda* drží; tohle je navíc tvar README **skillu**, což je věc normy skillů, ne struktury projektu.
 
-**Zamítnuto – uvádět v rámečku počet kroků číslovkou** („ucelené sady jedenácti skillů“). Vydrželo to půl dne: `/discovery` přibyl týž večer a číslo se muselo ručně dorovnat na dvanácti místech. Číslovka z rámečku vypadla úplně – čtenář si počet spočítá ze šipek pod tím. *Zvažováno – přidat na ni test:* šlo by to (testy už mají mechaniku na řadové číslovky), ale je to kontrola na údaj, který v textu nemusí být vůbec.
+**Zamítnuto – uvádět v rámečku počet kroků číslovkou** („ucelené sady jedenácti skillů“). Vydrželo to půl dne: `/discovery` přibyl týž večer a číslo se muselo ručně dorovnat na dvanácti místech. Číslovka z rámečku vypadla úplně – čtenář si počet spočítá z rámečku pod tím. **Od 20. 9. 2026** má rámeček dva bloky místo jedné šipkové řady, takže se nepočítá ze šipek, ale z obou výčtů. *Zvažováno – přidat na ni test:* šlo by to (testy už mají mechaniku na řadové číslovky), ale je to kontrola na údaj, který v textu nemusí být vůbec.
 
 **Zamítnuto – dopsat do README skillů, co člověk potřebuje, aby mu Claude skill nainstaloval.** Čtenář bez kontextu to hlásil jako chybějící kontext: všech osmnáct README říká „napište Claudovi, ať to nainstaluje“, ale nikde nestojí, jestli k tomu stačí Claude Code, nebo i Git a přístup na síť. Zamítnuto 7. 9. 2026 – kdo Claude Code používá, tohle řešit nemusí, a věta navíc by v každém README jen zabrala místo.
 

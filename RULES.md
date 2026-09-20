@@ -546,7 +546,7 @@ Kontroly   /oponent, /consolidate, /review, /consistency, /attack, /cleanup
 
 **Jsou to dvě vrstvy, ne jedna řada.** Kroky **osy** něco tvoří – vyrobí soubor, kód nebo nasazení – a čekají na výstup toho předchozího. **Kontrolní kroky nepřidávají nic**, jen měří, co už je; nejsou body v řadě, ale vrstva mezi nimi, a proto se tentýž smí objevit v několika mezerách. `/cleanup` je ve všech, protože jeho spouštěčem je konec session – běží i uprostřed rozdělané práce.
 
-**Co smí stát v které mezeře, v jakém pořadí a co na který krok pouští**, drží `LIFECYCLE.md`, *Kroky cyklu a jejich uspořádání*.
+**Co smí stát v které mezeře a v jakém pořadí**, drží `LIFECYCLE.md`, *Kroky cyklu a jejich uspořádání*.
 
 **Rozhraní jeho kroků drží `~/.claude/skills/LIFECYCLE.md`** – co který krok dělá, co po něm platí, proč stojí v tom pořadí, co se smí opakovat a proč cyklus nekončí nasazením. **Načti si ho, jakmile v některém kroku stojíš** nebo rozhoduješ, který přijde na řadu; paušálně se neimportuje, protože v projektu, kde se žádný krok nepouští, je to jen zabraný kontext.
 
