@@ -248,7 +248,7 @@ U každého nejdřív vypiš:
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“ – u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Vždy nech mezi volbami i **Nechat být** a **Vrátit se k tomu později**.
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“ – u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. **Tenhle tvar otázky platí pro celou rodinu kontrolních skillů** a drží ho `~/.claude/skills/FINDINGS.md`; vznikl 20. 9. 2026 zobecněním právě odsud. Vždy nech mezi volbami i **Nechat být** a **Vrátit se k tomu později**.
 
 **Která volba znamená který stav** (bez toho nejde odpověď zpracovat):
 

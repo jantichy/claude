@@ -172,7 +172,7 @@ Rozlišovat podle toho, „jestli se uživatel může kdykoliv zastavit“, nest
 
 **Neodkazuj se na číslo fáze cizího skillu.** Cizí fáze se přečíslují a odkaz tiše ukáže jinam. **Na jméno sekce odkazovat lze** – to se mění zřídka a při změně je to vidět; rozhoduje křehkost odkazu, ne to, že vede jinam.
 
-**Potřebují-li tentýž obsah dva skilly, nepatří ani do jednoho.** Patří do sdíleného souboru přímo v `skills/` – tak vznikly `PREFLIGHT.md` (začátek běhu), `SESSION.md` (čtení nahrané konverzace) a `SEVERITY.md` (škála závažnosti nálezu). Odkaz do přílohy souseda je horší než odkaz na jeho sekci: tváří se jako detail, ale ve skutečnosti si dva skilly sdílejí obsah, o kterém ani jeden neví, že ho sdílí.
+**Potřebují-li tentýž obsah dva skilly, nepatří ani do jednoho.** Patří do sdíleného souboru přímo v `skills/` – tak vznikly `PREFLIGHT.md` (začátek běhu), `SESSION.md` (čtení nahrané konverzace), `SEVERITY.md` (škála závažnosti nálezu) a `FINDINGS.md` (kdo o nálezu rozhoduje). Odkaz do přílohy souseda je horší než odkaz na jeho sekci: tváří se jako detail, ale ve skutečnosti si dva skilly sdílejí obsah, o kterém ani jeden neví, že ho sdílí.
 
 **Jeden termín pro jednu věc** (`~/.claude/RULES.md`, *Jeden termín pro jednu věc*). Ve skillech to platí navíc **napříč nimi**, ne jen uvnitř jednoho: skilly se čtou jeden po druhém v jednom životním cyklu a rozdílné pojmenování téhož kroku vypadá jako rozdílný krok.
 

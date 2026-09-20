@@ -932,3 +932,21 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 **Třetí varianta se nezkoušela a je to vědomé:** demotovat skilly na `####` a nechat bloky na `###` by hierarchii spravilo, ale je to změna normy tvaru README, ne úprava jednoho souboru – a normu v tomhle nikdo nerozporoval.
 
 **Našel to čtenář bez kontextu při `/cleanup`**, oba nezávisle na sobě. Je to typický nález téhle vrstvy: struktura, která vypadá správně v textu a lže v osnově.
+
+### Osou pro ptaní je volba, ne riskantnost zásahu (20. 9. 2026)
+
+**Rozhodl uživatel** uprostřed `/consistency full` nad rezervačním systémem, po jedenácti otázkách, ze kterých ani jedna nenabízela volbu: *„když jsou ty opravy takhle jednoznačné a není se mezi čím rozhodovat (a dáváš mi stejně jen na výběr, jestli opravit hned nebo opravit později nebo se na to vykašlat a nechat to špatně), tak se mě ani neptej a hned to všechno oprav – odkládat na později to nechceme a odmítnout opravu věci, kterou je potřeba opravit, taky nechceme. Ptej se mě jen na věci, kde se to dá opravit více způsoby a chceš se zeptat, jaký zvolit.“*
+
+**Co bylo špatně.** Kontrolní skilly dělily nálezy na **mechanické** (oprav rovnou) a **sporné** (zeptej se), a kritériem bylo „je oprava bezriziková a nemění chování ani strukturu?“. To je ale otázka o **zásahu**, ne o tom, jestli je z čeho vybírat – a ta dvě kritéria se rozcházejí přesně u nálezů, které něco mění a přitom je zjevné jak. Těch je v dokumentačním projektu většina: dorovnání počtu proti zdroji, doplnění guardu do rodiny, která ho u ostatních má, dotažení přejmenování. Všechny padly do „sporných“ a dostaly otázku s volbami *Opravit / Odložit / Přeskočit*, kde je odpověď předem známá.
+
+**Cena se platí pozorností.** Ve zmíněném běhu bylo sporných 37 a po uživatelově větě jich 18 padlo bez jediné otázky – tedy skoro polovina interaktivního průchodu byla přehazování práce zpátky na uživatele. A ubírá to právě tam, kde je vytrvalost nejtenčí: uprostřed nejdelší fáze běhu, kdy mají přijít otázky, na kterých doopravdy záleží.
+
+**Řešení.** Vznikl sdílený `skills/FINDINGS.md` – čtvrtý soubor toho druhu vedle `PREFLIGHT.md`, `SESSION.md` a `SEVERITY.md`. Drží tři skupiny (**mechanické** nemění chování, **jednoznačné** mění, ale podoba opravy je jedna, **sporné** mají víc obhajitelných podob) a pravidlo, že **volby v otázce jsou varianty opravy**; vyjde-li trojice *Opravit / Odložit / Přeskočit*, je to doklad, že nález mezi sporné nepatří. Přehled na začátku běhu vyčísluje obojí – kolik se opraví rovnou a kolik doopravdy zbývá na rozhodnutí –, protože to druhé číslo je jediné, které říká, jak dlouhý bude průchod.
+
+**Dotčené skilly:** `/review` (držel definici pro ostatní), `/consistency`, `/attack`, `/audit`, `/oponent` a `/cleanup`.
+
+**Předlohou byl `/oponent`**, který tohle dodržoval odjakživa: jeho volby jsou konkrétní varianty řešení a má u nich tabulku, která říká, na jaký stav se mapují. Zobecnilo se tedy to, co jeden skill z rodiny už uměl – ne nové pravidlo.
+
+**Zamítnuto** přejmenovat skupinu „mechanické“ tak, aby jméno novému kritériu odpovídalo. Slovo je v konfigurační vrstvě na desítkách míst a většina jich míří na něco jiného (mechanické pravidlo, mechanická kontrola odkazů), takže by šlo o ruční průchod s nejistým ziskem. Místo toho přibyla třetí skupina s vlastním jménem.
+
+**Nedořešeno zůstala podoba té otázky**, ne její kdy: `/oponent` má záchytné volby *Nechat být* a *Vrátit se k tomu později*, zbytek rodiny *Přeskočit* a *Odložit*, a je to dvojí slovní zásoba pro totéž. Vedeno v `todo.md`.

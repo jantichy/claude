@@ -273,3 +273,17 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   **Oprava bez mechanismu evidentně nevydrží.** Zapisují tam skilly samy a každý z nich se řídí tím, co v souboru zrovna vidí – takže jeden obrácený zápis stačí, aby ho další napodobily. Soubor leží v `~/Dev/context`, a **ten nemá `tests/`, CI ani *Kontrakt příkazů*** – na rozdíl od `~/.claude`, kam tahle sekce úkolů jinak míří –, takže kontrolu není kam pověsit; nejlevnější vrstva by se musela celá založit.
 
   **Rozhodnout je potřeba dvojí:** jestli sem kontrolní vrstvu zavést (a co všechno by ještě mohla hlídat – struktura sekcí, formát datovaných záznamů, odkazy mezi doménami), nebo jestli místo toho normu obrátit na „nejnovější nahoře“, když se v praxi prosazuje sama. Druhá varianta je levnější, ale platí i pro `decisions.md`, kde pravidlo *Nejstarší nahoře* má vlastní zdůvodnění.
+
+- [ ] **Sjednotit podobu otázky napříč kontrolními skilly.** Zadal uživatel 20. 9. 2026 hned po předchozí položce. `FINDINGS.md` od té chvíle říká, **kdy** se ptát a že volby jsou varianty řešení – ale **jak ta otázka vypadá**, si každý skill drží po svém, a jsou to dvě slovní zásoby pro totéž:
+
+  | Skill | Záchytné volby | Na jaký stav se mapují |
+  |---|---|---|
+  | `/oponent` | *Nechat být*, *Vrátit se k tomu později* | Zamítnuto, Odloženo |
+  | `/review`, `/consistency`, `/attack` | *Přeskočit*, *Odložit* | won't fix, `todo.md` |
+  | `/cleanup` | vlastní sada v `out-of-scope.md` | – |
+
+  **Je to porušení *Jeden termín pro jednu věc*** (`~/.claude/RULES.md`) o úroveň výš: uživatel vidí v jednom životním cyklu dvě jména pro tutéž volbu a musí hádat, jestli znamenají totéž. `/oponent` navíc jako jediný má tabulku *Která volba znamená který stav*, bez které se odpověď nedá zpracovat – ostatní ji nemají a mapování je implicitní.
+
+  **Co rozhodnout:** jedno pojmenování obou záchytných voleb a jejich pořadí; jestli mapování na stav patří do `FINDINGS.md` (a tedy jednou), nebo je doménové; co se stane, když variant je víc než dvě (dnes to řeší `/oponent` i `/review` každý jinou větou); a jestli `header` má napříč skilly týž tvar (`Nález N/celkem`).
+
+  **Dotčené soubory:** `~/.claude/skills/FINDINGS.md`, `skills/review/SKILL.md`, `skills/consistency/SKILL.md`, `skills/attack/SKILL.md`, `skills/oponent/SKILL.md`, `skills/audit/SKILL.md`, `skills/cleanup/out-of-scope.md`.

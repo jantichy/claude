@@ -192,24 +192,27 @@ Slož nálezy z deterministické vrstvy a z panelu (ty, které přežily ověře
 
 **Deduplikuj napříč specialisty.** Překrývají se schválně – bezpečnost a `coding.md` najdou tutéž díru, `web/web.md` a `web/admin.md` totéž tlačítko, `web/web.md` a `text/typography.md` tutéž typografii. Když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba podklady.
 
-Pak rozděl na dvě skupiny:
+Pak rozděl na tři skupiny. **Kritérium drží `~/.claude/skills/FINDINGS.md`** – přečti si ho a řiď se jím; osou je „má oprava víc obhajitelných podob?“, ne „je zásah riskantní?“. Doménové čtení téhle sady:
 
-**Mechanické** – oprava je jednoznačná, bezriziková a nemění chování ani strukturu:
+**Mechanické** – nemění chování ani strukturu:
 - chybějící `alt`, `aria-label`, `lang`, `type` u tlačítka, popisek k poli formuláře
 - chybějící `rel="noopener"`, `autocomplete`, `inputmode`
 - porušení naming konvence u nové, nikde jinde nereferencované věci
 - chybějící metadata stránky, kde je jasné, co tam patří
 - formulační a formátovací drobnosti podle standardu
 
-**Sporné** – všechno ostatní, tedy vždy když existuje víc rozumných řešení nebo oprava zasahuje dál než na jedno místo:
-- **cokoliv od pracovních specialistů** – korektnost, bezpečnost, data a stavy, provoz a chyby a testy jsou vždy sporné, i když se oprava zdá triviální
+**Jednoznačné** – chování nebo strukturu mění, ale podoba opravy je jedna:
+- dorovnání kódu na to, co už rozhoduje specifikace, standard nebo jiné místo v repozitáři
+- doplnění chybějícího kusu, jehož tvar určuje okolí – další guard do rodiny, která je ostatní má, další pole do výčtu, který se sám prohlašuje za taxativní
+- dotažení přejmenování, které se rozhodlo a minulo pár míst
+- `batch` nález, jehož náhrada je jedna a ověří se diffem
+
+**Sporné** – volba mezi podobami opravy je uživatelova:
+- **cokoliv od pracovních specialistů** – korektnost, bezpečnost, data a stavy, provoz a chyby a testy jsou sporné, i když se oprava zdá triviální: u nich rozhoduje, **kterou** cestou se díra zavře
 - **přidání závislosti** – vždy, i když ji přidal někdo jiný a ty jen prošel diff (`~/Dev/context/coding/quality.md`, *Nová závislost je rozhodnutí, ne detail*)
-- změny struktury, layoutu, informační architektury
-- změny datového modelu, typů, API kontraktů, autorizace
-- přejmenování čehokoliv, na co se odkazuje odjinud
-- doplnění chybějícího stavu, guardu, potvrzovacího kroku nebo auditní stopy
-- `batch` nálezy – vždy sporné
-- cokoliv, co mění chování
+- návrh, který se má rozhodnout: chybějící obrazovka, nová osa v modelu, změna API kontraktu, kde jsou dvě obhajitelné podoby
+- zásah nevratný, mimo repozitář nebo do cizího systému
+- cokoliv, u čeho si netroufáš
 
 **Při sloučení vyhrává přísnější zařazení.** Stačí, aby měl nález **jediný podklad od pracovního specialisty**, a je sporný – bez ohledu na to, co si o něm myslel standardový specialista, který ho hlásil taky. Je to deterministické kritérium ve smyslu `~/.claude/RULES.md`, *Mechanická pravidla nad rozhodováním případ od případu*, a řeší kolizi, kterou tenhle skill sám jmenuje jako typickou: chybějící `rel="noopener"` je pro `web/web.md` kosmetika vyjmenovaná mezi mechanickými opravami, kdežto pro specialistu na bezpečnost je to tabnabbing, tedy vždy sporné. Bez pravidla by o tom rozhodovala náhoda.
 
@@ -253,8 +256,8 @@ Při pochybnosti patří nález mezi sporné.
 
 - [title] – vyvráceno: [reason] (ochrana: [guard])
 
-- **Mechanických** (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
-- **Sporných:** M – ty projdeme spolu od nejzávažnějších.
+- **Opravím rovnou:** N – z toho mechanických (nemění chování) X a jednoznačných (mění, ale podoba opravy je jedna) Y. Jen je vypíšu.
+- **Zbývá na rozhodnutí:** M – ty projdeme spolu od nejzávažnějších; u každého navrhnu varianty.
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -263,9 +266,9 @@ Když nálezy nejsou, řekni to a skonči.
 
 ------
 
-## Fáze 6 – Mechanické opravy
+## Fáze 6 – Opravy bez ptaní
 
-Mechanické nálezy oprav **rovnou, bez ptaní**. Pak:
+Mechanické **i jednoznačné** nálezy oprav **rovnou, bez ptaní** (`~/.claude/skills/FINDINGS.md`). Pak:
 
 1. **Ověř** – spusť průběžnou kontrolu podle kontraktu příkazů. Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
@@ -305,13 +308,11 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text. Jedno volání = jeden nález = jedna otázka (`multiSelect: false`):
    - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`
    - `question`: název nálezu a v čem je, jednou větou
-   - `options` (v tomto pořadí, `description` u každé konkrétně popíše, co se stane):
-     - **Opravit** – provedu navrhovanou změnu
-     - **Odložit** – zapíšu do `docs/todo.md` i s úvahou, vrátíme se k tomu později
-     - **Přeskočit** – neopravovat, zapíšu do `CLAUDE.md` jako „won't fix“
-     - **Rozbalit** – *jen u `batch` nálezů*: vypíšu všechny lokace a projdeme je jednotlivě
+   - `options`: **první jsou konkrétní varianty opravy** – čím se ten rozpor zavře, u každé v `description` co se stane a čím to platí. Až za nimi **Odložit** (zapíšu do `docs/todo.md` i s úvahou) a **Přeskočit** (neopravovat, zapíšu do `CLAUDE.md` jako „won't fix“); u `batch` nálezu místo jedné z nich **Rozbalit** (vypíšu všechny lokace a projdeme je jednotlivě).
 
-   Tool má strop **4 volby** na otázku – tenhle výčet ho vyčerpává. Pátou volbu sem nepřidávej.
+   **Vyjdou-li ti volby *Opravit / Odložit / Přeskočit*, nález mezi sporné nepatří** – patří mezi jednoznačné a máš ho opravit ve Fázi 6 (`~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení*). Vrať ho tam a neptej se.
+
+   Tool má strop **4 volby** na otázku. Je-li variant víc než dvě, vejdou se dvě nejsilnější a zbytek popiš v textu před otázkou.
 
    Chování volby **Other** viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 
@@ -336,7 +337,7 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 
 Rozsah: [změny na větvi / celý projekt] · Specialisté: [kteří] · Agentů celkem: [N]
 
-- ⚡ Opraveno rovnou (mechanické): N
+- ⚡ Opraveno rovnou (mechanické i jednoznačné): N
 - ✅ Opraveno po odsouhlasení: N
 - 🪄 Vyřešeno automaticky (následek root opravy): N
 - 📌 Odloženo: N

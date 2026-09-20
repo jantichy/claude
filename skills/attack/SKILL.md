@@ -261,7 +261,9 @@ Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup
 
 ## Fáze 5 – Průchod s uživatelem
 
-**Všechny nálezy jsou sporné.** Mechanická větev tady není: každý nález z útoku znamená změnu chování a ta se neopravuje bez souhlasu.
+**Skoro všechny nálezy jsou sporné, a je to doménové čtení, ne výjimka** (`~/.claude/skills/FINDINGS.md`). Nález z útoku znamená změnu chování běžící aplikace a **kterou** cestou se díra zavře, je obvykle volba: guard versus validace vstupu, odmítnutí versus tolerance, opravit versus omezit rozsah. Mechanická větev tady proto není.
+
+**Jednoznačný nález ale nastat může** a pak se opraví rovnou bez ptaní: typicky když útok narazil na chybějící kus něčeho, co je **jinde v dokumentaci rozhodnuté** – guard, který rodina má u všech ostatních přechodů, nebo normalizace vstupu, kterou standard předepisuje jmenovitě. Nerozhoduje se tam *jak*, jen se to musí udělat.
 
 Pro každý, jeden po druhém, od nejzávažnějšího:
 
@@ -281,7 +283,7 @@ Pro každý, jeden po druhém, od nejzávažnějšího:
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby **Opravit** / **Odložit** / **Přeskočit**. Chování volby *Other* viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby jsou **konkrétní varianty, kterou cestou díru zavřít**, a za nimi *Odložit* a *Přeskočit* – ne trojice *Opravit / Odložit / Přeskočit*, u které je odpověď předem známá (`~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení*). Chování volby *Other* viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 
 Při volbě **Opravit**:
 

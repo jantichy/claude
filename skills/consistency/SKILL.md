@@ -1,6 +1,6 @@
 ---
 name: consistency
-description: Skill se použije, když uživatel zadá "/consistency", "/consistency branch" nebo "/consistency full", nebo chce audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Mechanické opravy provede rovnou, sporné řeší interaktivně jeden po druhém.
+description: Skill se použije, když uživatel zadá "/consistency", "/consistency branch" nebo "/consistency full", nebo chce audit projektu – konzistence pojmenování, patternů, typů, konfigurace a dokumentace. Co má jedinou zjevnou opravu, opraví rovnou; ptá se jen tam, kde je z čeho vybírat.
 argument-hint: [branch|full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
@@ -186,13 +186,14 @@ Výstup strukturuj jako JSON pole objektů:
 
 Z JSON výstupu agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak NÍZKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
 
-### Rozdělení na mechanické a sporné
+### Rozdělení podle toho, kdo o nálezu rozhoduje
 
-**Kritérium je společné s `/review`** – plná definice obou skupin i s výčtem typických případů je v `~/.claude/skills/review/SKILL.md`, *Zpracování výsledků*. Neopisuj ji sem; drž se jí a přidej jen to, co platí navíc tady:
+**Kritérium drží `~/.claude/skills/FINDINGS.md`** – tři skupiny, a osou je „má oprava víc obhajitelných podob?“, ne „je zásah riskantní?“. Doménové čtení pro tuhle sadu jmenuje `~/.claude/skills/review/SKILL.md`, *Zpracování výsledků*. Neopisuj to sem; drž se toho a přidej jen to, co platí navíc tady:
 
+- **Většina nálezů tohohle skillu je jednoznačná, a tedy k opravě bez ptaní.** Konzistenční nález je rozpor mezi dvěma místy a z nich je obvykle jedno zdroj – katalog přechodů pro guardy, model pro schéma, `copy.md` pro znění. Pak se nerozhoduje *jak*, jen se to musí udělat. Sporný je takový rozpor teprve tehdy, když zdroj není poznat, nebo když se srovnáním rozhoduje o návrhu.
 - Nálezy s tagem **`toolchain`** (z `knip`/`depcheck`) posuzuj stejně jako ostatní – nástroj ukazuje, že se něco nepoužívá, ne že se to má smazat.
 - **Mazání kódu, který vypadá mrtvý, je vždy sporné.** Může být volaný dynamicky, z konfigurace nebo z jiného repozitáře.
-- Práh pro `batch` je **>20 výskytů** (shodně s `/review`), a `batch` nález je vždy sporný.
+- Práh pro `batch` je **>20 výskytů** (shodně s `/review`). `batch` nález **sporný být nemusí** – rozhoduje, jestli je náhrada jedna a dá se ověřit diffem.
 
 ## Fáze 3 – Přehled
 
@@ -212,27 +213,27 @@ Zobraz uživateli přehled před tím, než začneš procházet problémy:
 - [toolchain] hlášeno již existujícím nástrojem: N
 - [batch] hromadné (>20 výskytů): N
 
-- **Mechanických** (jednoznačná bezriziková oprava): N – ty opravím rovnou a jen je vypíšu.
-- **Sporných:** M – ty projdeme spolu od nejzávažnějších, u každého navrhnu řešení a zeptám se.
+- **Opravím rovnou:** N – z toho mechanických (nemění chování) X a jednoznačných (mění, ale podoba opravy je jedna) Y. Jen je vypíšu.
+- **Zbývá na rozhodnutí:** M – ty projdeme spolu od nejzávažnějších; u každého navrhnu varianty a zeptám se, kterou zvolit.
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
 Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
-## Fáze 4 – Mechanické opravy
+## Fáze 4 – Opravy bez ptaní
 
-Mechanické nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
+Mechanické **i jednoznačné** nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
 
 1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/quality.md`): celou **průběžnou kontrolu** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj kontrolu znovu těsně před koncem odpovědi – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
-   ## Opraveno rovnou (N mechanických)
+   ## Opraveno rovnou (N – X mechanických, Y jednoznačných)
    - 🔵 [název] – soubor:řádek – [co konkrétně změněno]
    ```
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
-3. Commit dle autocommit nastavení projektu. Mechanické opravy commituj **jedním commitem** dohromady, ne po jedné.
+3. Commit dle autocommit nastavení projektu. Mechanické opravy commituj **jedním commitem** dohromady, ne po jedné; jednoznačné, které měnily strukturu, po tematických celcích, ať je v `git blame` vidět důvod.
 
 Pokud uživatel na některou z těchto oprav zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
 
@@ -240,7 +241,7 @@ Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné
 
 ## Fáze 5 – Interaktivní průchod
 
-**Postup je společný s `/review`** – tvar výpisu nálezu, volání `AskUserQuestion` (jeden nález = jedna otázka, volby *Opravit / Odložit / Přeskočit*, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Interaktivní průchod*. Řiď se jím a lišíš se jen v těchhle bodech:
+**Postup je společný s `/review`** – tvar výpisu nálezu, volání `AskUserQuestion` (jeden nález = jedna otázka, **volby jsou konkrétní varianty opravy**, za nimi *Odložit* a *Přeskočit*, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Interaktivní průchod*. Řiď se jím a lišíš se jen v těchhle bodech:
 
 **Kam se zapisuje „won't fix“.** Do kapitoly `## Consistency` v projektovém `CLAUDE.md`, ne `## Review` – jsou to odpovědi na jinou otázku a nemají se míchat. Kapitolu založ, když chybí, a zapisuj na její konec:
 
@@ -278,7 +279,7 @@ Po projití všech problémů zobraz:
 ```
 ## Hotovo
 
-- ⚡ Opraveno rovnou (mechanické): N problémů
+- ⚡ Opraveno rovnou (mechanické i jednoznačné): N problémů
 - ✅ Opraveno po odsouhlasení: N problémů
 - 🪄 Vyřešeno automaticky (následek root opravy): N problémů
 - 📌 Odloženo: N problémů

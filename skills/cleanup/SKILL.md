@@ -338,7 +338,7 @@ Sem dorazí, co našli čtenáři z Fáze 6. **Nedorazili-li ještě, počkej na
 
 **Než s nálezem cokoliv uděláš, ověř, že pořád platí** – Fáze 7 mezitím sahala na soubory a část nálezů mohla vyřešit. Neplatné zahoď mlčky; hlásit nález, který už neexistuje, je totéž jako hlásit falešný poplach.
 
-- **Nálezy, které se týkají téhle session**, oprav – mechanické sám, sporné předlož uživateli po jednom jako ve Fázi 7.
+- **Nálezy, které se týkají téhle session**, oprav – **co má jednu zjevně správnou podobu, sám a bez ptaní**, i když to mění strukturu; předlož jen to, u čeho je z čeho vybírat (`~/.claude/skills/FINDINGS.md`). Je to táž hranice jako u položek mimo rozsah o odrážku níž, ne mírnější.
 - **Nálezy mimo rozsah session** (starší dluh v dokumentaci) projdi kritériem z [`out-of-scope.md`](out-of-scope.md), bodu 2: co má jednu zjevně správnou podobu, oprav rovnou a vypiš; o zbytku nech rozhodnout uživatele. Fáze 7 už proběhla, takže se rozhoduje tady a stejným způsobem – a **do přehledu jdou tyhle položky do téhož seznamu** *Mimo rozsah úklidu* jako ty z Fáze 7, ne stranou.
 - **Byly-li opravy netriviální** (přepisovala se struktura, měnil se obsah více souborů), pusť **znovu čtenáře pozůstatků** – jen jeho, ne oba, a **vyrob mu nový diff**: ten z Fáze 6 opravy z Fází 7 a 8 neobsahuje, takže by hledal v zastaralém podkladu. Opravy samy zanechávají nové pozůstatky, ale navazitelnost se jimi nemění, takže druhý průchod celou dokumentací by byl čekání bez zisku. Tenhle běh už na pozadí schovat nejde, protože po něm nic dalšího nezbývá; proto se pouští jen tehdy, když opravy opravdu byly netriviální.
 

@@ -9,11 +9,11 @@ Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozs
 
 1. **Nemáš-li nic**, fázi přeskoč a v přehledu uveď „žádné“.
 
-2. **Rozděl položky na ty, které vyřešíš sám, a ty, na které se zeptáš.**
+2. **Rozděl položky na ty, které vyřešíš sám, a ty, na které se zeptáš.** Hranice je táž jako u nálezů kontrolních skillů a drží ji `~/.claude/skills/FINDINGS.md`; tady k ní patří dvě podmínky navíc, protože položka mimo rozsah se nevypořádává ve fázi, která na ni má čas.
 
    | | Podmínka |
    |---|---|
-   | **Vyřeš sám** – musí platit všechno | řešení má právě jednu zjevně správnou podobu, ne volbu mezi variantami; je to oprava nebo dorovnání toho, co už je rozhodnuté, ne nová práce ani nové rozhodnutí; zásah celý vidíš a umíš ho po sobě ověřit; je vratný – mění verzované soubory, nic nemaže nenávratně a nesahá mimo repozitář |
+   | **Vyřeš sám** – musí platit všechno | řešení má právě jednu zjevně správnou podobu, ne volbu mezi variantami; je to oprava nebo dorovnání toho, co už je rozhodnuté, ne nová práce ani nové rozhodnutí; **zásah celý vidíš a umíš ho po sobě ověřit**; **je vratný** – mění verzované soubory, nic nemaže nenávratně a nesahá mimo repozitář |
    | **Zeptej se** – stačí jedna | řešení má víc obhajitelných podob a volba mezi nimi je uživatelova; je to nová práce, změna pravidla, rozhodnutí nebo struktury; chybí ti údaj, který ví jen uživatel; zásah je nevratný, sahá mimo repozitář nebo do cizího systému; **netroufáš si** |
 
    **Takhle vypadají položky, u kterých se nemá co ptát** – všechny tři jsou z jednoho běhu (18. 9. 2026) a u všech uživatel odpověděl „vyřešit teď“:
