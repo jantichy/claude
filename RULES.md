@@ -537,7 +537,7 @@ Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit
 Od nápadu k nasazené feature vede jeden životní cyklus:
 
 ```
-Osa        /project → /discovery → /specify požadavky → /specify návrh řešení →
+Osa        /project → /discovery → /specify → /architect →
            /breakdown → /implement → /release
 
 Kontroly   /oponent, /consolidate, /review, /consistency, /attack, /cleanup

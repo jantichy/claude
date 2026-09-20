@@ -50,8 +50,8 @@ Povinný je jediný soubor – **`CLAUDE.md`**, bez něj projekt není projekt. 
 |---|---|
 | `README.md`, `decisions.md`, `rules.md` | volitelně, výběrem při `/project` (výchozí ano) |
 | `todo.md` + `backlog.md` + `done.md` | volitelně, ale **jen jako trojice** – jedna volba pro všechny tři |
-| `requirements.md`, `architecture.md`, `plan.md` | až prací, přes `/specify` a `/breakdown` |
-| `<topic>.md` – tematický dokument kola | až prací, kolem návrhu přes `/specify` – viz *`requirements.md`, `architecture.md`, `plan.md`* |
+| `requirements.md`, `architecture.md`, `plan.md` | až prací, přes `/specify`, `/architect` a `/breakdown` |
+| `<topic>.md` – tematický dokument kola | až prací, kolem návrhu přes `/architect` – viz *`requirements.md`, `architecture.md`, `plan.md`* |
 | `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md` | **vybírá se** při `/project` (výchozí ne), zakládá se až prací – viz *Produktové podklady* |
 | `research/` | až je co uložit |
 | `.claude/run/` | samo, přerušitelným během skillu – není to standardní soubor, viz *Běhový stav skillů* |
@@ -313,10 +313,18 @@ Datum vyrob `date +%F`. Po posledním kole připíše `/specify close` řádek `
 | Soubor | Odpovídá na otázku | Zakládá |
 |---|---|---|
 | `requirements.md` | Co stavíme a proč | `/specify` |
-| `architecture.md` | Jak to postavíme | `/specify` |
+| `architecture.md` | Jak to postavíme – **páteř návrhu řešení, ne celý návrh** | `/architect` |
 | `plan.md` | Kdo co udělá v jakém pořadí, s ověřitelným akceptačním kritériem u každého úkolu | `/breakdown` |
 
-Hranice mezi `requirements.md` a `architecture.md` je tvrdá: do požadavků patří **omezení**, do návrhu řešení **volba**. Podrobně v `~/.claude/skills/specify/SKILL.md`.
+Hranice mezi požadavky a návrhem řešení je tvrdá: do požadavků patří **omezení**, do návrhu řešení **volba**.
+
+**Návrh řešení je sada dokumentů, ne jeden soubor**, a `architecture.md` je jeho páteř. Požadavky jsou seznam a vejdou se do jednoho dokumentu; návrh je **soustava, ve které se věci navzájem omezují**, a tu nejde popsat lineárně. Každý dokument návrhu je **řez toutéž věcí z jiného úhlu**: stavba (`architecture.md`), data a stavy (`model.md`), operace (`transitions.md`), zásady domény (`rules.md`), jednotlivé okruhy (tematické dokumenty kol). Táž funkce je pak ve víc z nich – jednou jako osa, jednou jako přechod, jednou jako celý okruh –, a je to správně: jsou to dvě nezávislé osy a jejich průnik se neskládá (`~/.claude/RULES.md`, *Jednoduchost před úplností*).
+
+**Nový dokument vzniká tehdy, když drží jiný řez – ne když je ten stávající dlouhý.** Kontrolní otázka: *odpovídá na otázku, na kterou žádný jiný neodpovídá?* Když ne, je to kapitola, ne dokument. `model.md` se proto nesmí rozdělit na dvě půlky kvůli délce, a katalog operací se nesmí vlít do dokumentu o stavbě jen proto, že „to je taky návrh“.
+
+**Kolik jich vznikne, rozhoduje projekt.** Malému stačí `architecture.md` samotný a víc jich zakládat se nemá; `model.md` a `transitions.md` jsou tu pojmenované proto, aby si je každá aplikace nevymyslela jinak, ne proto, že jsou povinné. Doloženo rezervačním systémem, kde má dokumentace 27 tisíc řádků a jediný `architecture.md` by z nich držel přes dvacet tisíc. Zapsáno 20. 9. 2026.
+
+Podrobně v `~/.claude/skills/specify/SKILL.md`.
 
 Změna teče **shora dolů**: `requirements.md` → `architecture.md` → `plan.md` → kód. Nikdy obráceně – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód.
 
