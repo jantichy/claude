@@ -94,6 +94,8 @@
 
   **„Uživatel to zamítl“ není zeď a skill přes ni smí.** Rozhodnutí vzniklo v tehdejším rozpoložení a kontextu, a ten se vývojem projektu mohl změnit – platí to i pro rozhodnutí, která udělal uživatel sám. **Podmínka je pojmenovat, co se od té doby změnilo**; „udělal bych to jinak“ bez toho je jen jiný názor na tutéž věc. Rozhodl uživatel 20. 9. 2026.
 
+  **Relativizují se řešení, ne zadání.** Otevřít znovu se smí rozhodnutí o tom, **jak se něco udělalo** – hodnota výčtu, sloupec, guard, mechanismus. **Nikdy rozhodnutí o tom, co se má dělat**: zadání projektu, rozsah funkcí, produktová volba, obchodní pravidlo. Ta jsou pro skill vstup, ne materiál. Bez téhle hranice by z něj byl `/oponent` s právem měnit zadání, a to je jiný krok cyklu s jiným vstupem. Vymezil uživatel 20. 9. 2026.
+
   **Z toho plyne tvrdý zákaz pro ověřovatele:** odvolat se na to, že něco už jednou bylo zamítnuto, **není argument**. Ověřovatel musí doložit, **co konkrétně se rozbije** – jmenovat guard, invariant, text pro zákazníka. Doloženo v pilotním běhu: ověřovatel argumentoval větou „to je přesně ta varianta, kterou §125 zamítlo“, a ten bod se udržel jen proto, že k němu vedle toho vypsal šest skutečných čtenářů. Bez toho zákazu skill jen potvrzuje, že co je rozhodnuté, je rozhodnuté.
 
   **Ověřuje se dvojmo a obě zkoušky jsou blokující** (formuloval uživatel 20. 9. 2026):
