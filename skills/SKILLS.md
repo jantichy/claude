@@ -381,7 +381,7 @@ Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README.
 
 ### Sekce v hlavním README repozitáře
 
-Skill má navíc **jeden odstavec** v `README.md` v kořeni. Platí pro něj totéž co výš, jen ještě stručněji: **k čemu ten skill je, případně velice stručně, co dělá.** Ne dva odstavce, ne tři.
+Skill má navíc **vlastní sekci v `README.md` v kořeni**. Jak je dlouhá a co do ní patří, drží `~/.claude/STRUCTURE.md`, *`README.md`* – to pravidlo platí pro každou součást představenou vlastním nadpisem a pro skill se nijak neliší. Zdejší dodatky jsou dva: tvar nadpisu a pořadí.
 
 **Na podrobné README se odkazuje nadpisem**, ne řádkem pod odstavcem:
 

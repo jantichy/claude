@@ -18,9 +18,7 @@ Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje
 
 ### [`STRUCTURE.md`](STRUCTURE.md) – každý projekt vypadá uvnitř stejně
 
-Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat. A hlavně vědí, kam zapsat i skilly, kterých je na to půl tuctu.
-
-Zakládá ji `/project`, ale nepatří jemu – čte ji většina ostatních skillů a každý si z ní bere něco jiného. Do každé session se nenačítá: je to katalog k nahlédnutí ve chvíli, kdy se do některého z těch souborů zapisuje.
+Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat – a vědí to i skilly, kterých do těch souborů zapisuje půl tuctu. Zakládá ji `/project`, čte ji většina ostatních.
 
 ### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
@@ -36,9 +34,7 @@ Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adre
 
 ### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
 
-Dlouho jsem tvar svých skillů nikde zapsaný neměl – vymyslel jsem ho jednou a pak ho u každého dalšího skillu opsal, což z něj dělá zvyk, ne standard. Tohle je jeho sepsání a zároveň revize. Co obstálo: vymezení proti **jmenovanému** sousedovi, ověřovatel, jehož úkolem je nález vyvrátit, jednoznačný závěrečný verdikt. Co byla jen setrvačnost: příprava opsaná v každém skillu zvlášť. A co chybělo: sekce s častými chybami, mez délky, progresivní odhalení do vedlejších souborů.
-
-Je tu i pravidlo, které mi dlouho unikalo, přestože jsem ho už dvakrát použil: **skládej, nepiš znovu**. Než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook – a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
+Norma tvaru vlastních skillů: kdy skill vůbec zakládat a kdy to patří jinam, co musí být v hlavičce, jaké sekce a v jakém pořadí, jak dlouhý smí být, jak se vybírá model a typ agenta a co musí mít obě README. Stojí na pravidle **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
 
 ### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
 
@@ -182,32 +178,15 @@ Jednořádková status line, která mi ukazuje všechno, co potřebuju průběž
 
 ### [`verify.sh`](verify.sh) – nad rozbitým projektem se práce neuzavře
 
-`Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy. Když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. O projektu sám nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí. Registruje se tedy jednou globálně a v projektu bez kontraktu neudělá nic.
-
-Ten kontrakt je ale kód ležící v repozitáři, takže hook v něm nespustí nic, dokud pro něj nevydám souhlas (`--allow`). Souhlas platí pro **celý repozitář včetně jeho worktree**, takže nová větev si o něj neříká znovu. Platí ale jen pro ten kontrakt, který jsem viděl: podadresář s vlastním `CLAUDE.md` si ho nepůjčí a jeho změna si vyžádá nové odsouhlasení. **Vydat ho jde jen ze samostatného okna terminálu** – zákaz v permission systému se dá obejít voláním přes interpret a hranice bez mechanismu je jen přání. Nestačí přitom ani `!` prefix v Claude Code: ten běží jako nástroj, nemá řídicí terminál, a pojistka ho odmítne stejně jako skript.
-
-Rozlišuje přitom 4 různé věci:
-
-- **test, který našel chybu** – odpověď se zablokuje,
-- **krok, který vůbec nejde spustit** nebo jehož výstup přeteče a nedoběhne – ohlásí se zvlášť, protože tam není co opravovat na kódu, ale na prostředí,
-- **kontrakt, který se nepodaří přečíst** (třeba kvůli nedovřenému bloku kódu nad ním) – řekne se to nahlas, místo aby kontrola tiše nespustila nic,
-- **chybějící klíč v kontraktu** – projde, ale nahlásí se jako nezkontrolovaný krok, ať se to nedá vydávat za „prošlo všechno“.
+`Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. Rozliší přitom nalezenou chybu od kroku, který vůbec nejde spustit, i od kontraktu, co se nedá přečíst, ať se nespuštěná kontrola nevydává za „prošlo všechno“. O projektu sám nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí, takže se registruje jednou globálně a v projektu bez kontraktu neudělá nic. Ten kontrakt je ale kód ležící v repozitáři, takže v něm hook nespustí nic, dokud pro něj nevydám souhlas – a ten jde vydat jen ze samostatného okna terminálu.
 
 ### [`githooks/`](githooks/) – historie main jako jeden řádek na větev
 
-Když se do hlavní větve přimerguje větev o 30 commitech, rozteče se těch 30 commitů po historii `main`. Přehled o tom, co se kdy dělo, je pryč. Nemergovat je přitom škoda a squashovat taky: rozpad na dílčí kroky je užitečný, jen ho nechci mít pořád před očima.
-
-Řeší to `git log --first-parent`. Do zamergovaných větví nevstupuje a ukáže jednu větev jako jeden řádek, dílčí commity zůstanou dostupné pod ním. Jediná cena je, že ten řádek pak musí něco říkat – a výchozí `Merge branch 'feat/payments'` neříká nic.
-
-Proto tu leží `commit-msg` hook. Takovou zprávu odmítne a vyžádá si shrnutí odvedené práce. Hlídá jen hlavní větev, takže aktualizace rozdělané větve ani merge po `git pull` mu nepřekážejí. Nasazený je globálně přes `core.hooksPath` a platí ve všech repozitářích na stroji.
+`commit-msg` hook, který nad hlavní větví odmítne výchozí zprávu `Merge branch 'feat/payments'` a vyžádá si shrnutí odvedené práce. Díky tomu ukazuje `git log --first-parent` každou zamergovanou větev jako jeden řádek, který něco říká, a dílčí commity zůstanou dostupné pod ním. Aktualizace rozdělané větve ani merge po `git pull` mu nepřekážejí. Nasazený je globálně přes `core.hooksPath`, takže platí ve všech repozitářích na stroji.
 
 ### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
-Skilly a pravidla jsou z velké části text, který nikdo nespouští. Jejich vady se proto projeví až za běhu a obvykle tiše: režim popsaný v těle skillu, který chybí v jeho hlavičce; odkaz na soubor nebo sekci, co mezitím zmizela; skill bez vlastního README.
-
-Kde skill vlastní skripty má, čte je kontrola: Python `/compose`, `/transcript` a `/cleanup` hlídají testy, swiftový skript `/invoicing` čte `typecheck` v kontraktu. Další sady testují to, co v téhle konfiguraci něco doopravdy **vynucuje** – průběžnou kontrolu, git hook nad zprávou merge commitu a CI. Právě tam stojí tichá regrese nejvíc. A jedna sada hlídá skripty `/transcript` tam, kde hrozí ztráta dat: vstupem jsou nahrávky, které většinou nejde pořídit znovu, takže chyba v převodu neznamená vadu nástroje, ale ztracený podklad.
-
-Všechno to stojí nula tokenů a běží v průběžné kontrole po každé odpovědi. Jen standardní knihovna Pythonu, žádná instalace. Tytéž 3 příkazy pouští i [GitHub Actions](.github/workflows/verify.yml) – lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork, kdežto CI ne. Příkazy si přitom neopisuje, čte je ze stejného *Kontraktu příkazů*.
+Testy nad textem, který nikdo nespouští, a nad vrstvami, které tu něco doopravdy vynucují: hlídají režim popsaný v těle skillu a chybějící v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez README – a k tomu průběžnou kontrolu, git hook nad zprávou merge commitu, status line a CI, kde tichá regrese stojí nejvíc. Zvlášť pak skripty skillů tam, kde hrozí ztráta dat. Běží v průběžné kontrole po každé odpovědi, jen na standardní knihovně Pythonu a bez instalace; tytéž příkazy pouští i [GitHub Actions](.github/workflows/verify.yml), protože lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork.
 
 ### [`settings.json`](settings.json) – průběžně laděné permissions
 

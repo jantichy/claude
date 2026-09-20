@@ -129,7 +129,11 @@ Průběžně aktualizuj podle vývoje – má vždy odpovídat skutečnému stav
 
 **Popisuj, nevyprávěj. Jeden odstavec na jednu věc.**
 
-Má-li projekt víc součástí, které se v README představují jednotlivě – skilly, moduly, nástroje, balíčky – dostane každá **jeden odstavec**: co to je a k čemu je, případně velmi stručně co dělá. Ne dva, ne tři. Čtenář README hledá orientaci, ne výklad.
+**Každá součást, kterou README představuje vlastním nadpisem, dostane právě jeden odstavec**: co to je a k čemu je, případně velmi stručně co dělá. Ne dva, ne tři. Čtenář README hledá orientaci, ne výklad.
+
+**Platí to pro každý druh součásti, ne jen pro tu, která se dá spustit**: skill, modul, balíček, nástroj, skript, hook, adresář **i jednotlivý dokument** – soubor s pravidly, normou nebo konvencí se popisuje stejně stručně jako program. Právě u dokumentů a u vlastní infrastruktury (kontrolní vrstvy, testy, hooky) se to porušuje nejčastěji: autor ví, proč je to postavené zrovna takhle, a bez toho výkladu mu popis připadá nesrozumitelný. Čtenáři srozumitelný je – rozhoduje se, jestli si tu věc otevře, ne jak ji postavit znovu.
+
+**Obrázek nebo ukázka výstupu pod odstavcem odstavec navíc není.** Je to jediná výjimka; druhý odstavec textu se jí neospravedlňuje.
 
 Do toho odstavce **nepatří**:
 

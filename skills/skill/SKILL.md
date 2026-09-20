@@ -170,7 +170,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | Kam | Co |
 |---|---|
 | `skills/<name>/README.md` | **README skillu pro člověka zvenčí** podle `SKILLS.md`, *README skillu* – sekce, hromadná instalace u skillu ze životního cyklu, odkaz do repozitáře |
-| `~/.claude/README.md` | jeden odstavec ve stylu ostatních – k čemu skill je. **Odkaz na README skillu nese nadpis sekce** (`### [`/jméno`](skills/jméno/)`), ne zvláštní řádek pod odstavcem; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
+| `~/.claude/README.md` | sekce podle `~/.claude/STRUCTURE.md`, *`README.md`* – právě jeden odstavec o tom, k čemu skill je. **Odkaz na README skillu nese nadpis sekce** (`### [`/jméno`](skills/jméno/)`), ne zvláštní řádek pod odstavcem; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
 | `~/.claude/RULES.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
 | `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRATION` se **nedoplňuje**, ten seznam se jen zkracuje |
 | `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních README cyklu**. Testy to chytí, ale samy to nedopíšou |
