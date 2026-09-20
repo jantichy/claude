@@ -119,7 +119,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Co skill dělá`** – co to je a jaké má režimy. 3 až 10 řádků. Ne převyprávěný postup; ten je níž.
 
-**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec.
+**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/cleanup` stojí ve všech mezerách a `/review` ve dvou, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
 
 **`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
 
@@ -345,18 +345,26 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 **Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/RULES.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je celá řada a že spolu drží.
 
-**Znění je doslova stejné ve všech**, liší se jen tím, který krok je tučný. **Počet kroků se v něm neuvádí číslovkou** – ta se při přidání dalšího kroku rozejde ve všech rámečcích naráz a nic ji nehlídá; čtenář si počet spočítá ze šipek pod tím:
+**Znění je doslova stejné ve všech**, liší se jen tím, který krok je tučný. **Počet kroků se v něm neuvádí číslovkou** – ta se při přidání dalšího kroku rozejde ve všech rámečcích naráz a nic ji nehlídá; čtenář si počet spočítá z rámečku pod tím.
+
+**Rámeček má dva bloky, protože cyklus má dvě vrstvy** (`~/.claude/skills/LIFECYCLE.md`, *Kroky cyklu a jejich uspořádání*): kroky **osy** něco tvoří a stojí v pořadí, **kontrolní kroky** nic nepřidávají a stojí v mezerách mezi nimi – některé z nich ve víc mezerách naráz. Jednořádková šipková řada, která tu stála do 20. 9. 2026, obojí slévala a tvrdila tím pořadí, které neexistuje.
 
 ```
 > **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci
-> od založení projektu až po nasazení. Každý má svůj krok a žádný nedělá práci toho vedle:
+> od založení projektu až po nasazení. Jedny tvoří, druhé měří, co už je – a žádný nedělá práci
+> toho vedle:
 >
-> [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/release`](../release/README.md)
+> **Osa** [`/project`](../project/README.md) → … → [`/release`](../release/README.md)
+>
+> **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** – stojí v mezerách mezi kroky
+> osy, některé z nich ve víc mezerách
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 ```
 
-Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README. Rozejde-li se pořadí se životním cyklem v `RULES.md`, platí `RULES.md` – rámeček je jeho zobrazení, ne druhý zdroj pravdy.
+Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README – a stojí v tom bloku, do kterého patří; v druhém se neopakuje. **Krok, který README ještě nemá**, se uvádí jen kódem bez odkazu, aby kontrola odkazů neselhala na souboru, který teprve vznikne.
+
+Rozejde-li se rámeček s životním cyklem v `RULES.md`, platí `RULES.md` – rámeček je jeho zobrazení, ne druhý zdroj pravdy.
 
 **Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech:
 

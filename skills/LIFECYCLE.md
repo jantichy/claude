@@ -50,14 +50,18 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 | Mezera | Co v ní může stát |
 |---|---|
 | `/project` → `/discovery` | `/cleanup` |
-| `/discovery` → `/specify` nad požadavky | `/oponent` → `/cleanup` |
-| `/specify` nad požadavky → `/specify` nad návrhem řešení | `/oponent` → `/cleanup` |
-| `/specify` nad návrhem řešení → `/breakdown` | `/oponent` → `/consolidate` → `/consistency` → `/cleanup` |
-| `/breakdown` → `/implement` | `/cleanup` |
+| `/discovery` → `/specify` nad požadavky | `/review` → `/oponent` → `/cleanup` |
+| `/specify` nad požadavky → `/specify` nad návrhem řešení | `/review` → `/oponent` → `/cleanup` |
+| `/specify` nad návrhem řešení → `/breakdown` | `/review` → `/oponent` → `/consolidate` → `/consistency` → `/cleanup` |
+| `/breakdown` → `/implement` | `/review` → `/cleanup` |
 | `/implement` → `/release` | `/review` → `/consistency` → `/cleanup` → `/attack` → `/cleanup` |
 | za `/release` | `/cleanup` |
 
-**Pořadí uvnitř mezery není libovolné.** `/review` musí před `/consistency`, protože ten uklízí i to, co `/review` nastřílel; `/cleanup` je vždycky poslední, protože jako jediný odolá kompaktaci.
+**`/review` stojí za každým krokem osy, který vyrobil artefakt, ne jen za `/implement`.** Prověřuje **hotovou práci**, a tou je u projektu bez kódu dokumentace návrhu – specialisty si vybírá podle toho, čeho se změny týkají, takže nad obsahovým projektem pustí jen textové. **Doplněno 20. 9. 2026**: do té chvíle ho tabulka měla jen v poslední mezeře, protože vznikala s projektem s kódem před očima. Doloženo v rezervačním systému, kde `/review full` nad samou dokumentací vrátil 177 nálezů a velká část z nich byly návrhové díry, ne typografie.
+
+**Jediná výjimka je `/project`**, který artefakt sice vyrábí, ale měří si ho sám – jeho revize souladu se standardem je jeho vlastní fází. Pouštět na ni `/review` by bylo opakování, ne kontrola.
+
+**Pořadí uvnitř mezery není libovolné.** `/review` jde první, protože hledá vady v tom, co krok osy právě vyrobil, a jeho opravy mění text, nad kterým pracují ostatní; `/consistency` až po něm, protože uklízí i to, co `/review` nastřílel; `/cleanup` je vždycky poslední, protože jako jediný odolá kompaktaci.
 
 **`/cleanup` je v každé mezeře, a to je celý jeho popis.** Jeho spouštěčem není pozice, ale konec session – takže běží i uprostřed rozdělaného `/implement`, kde žádná mezera není. V poslední mezeře stojí dvakrát, před `/attack` i za ním, a ten druhý průchod slouží jako verifikace.
 
