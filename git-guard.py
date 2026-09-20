@@ -98,8 +98,41 @@ def expand_alias(name):
         return None
 
 
+def table_verdict(sub, args):
+    """Podpříkaz proti tabulkám `FORBIDDEN` a `FORBIDDEN_PAIRS`."""
+    if sub in FORBIDDEN:
+        flags, reason = FORBIDDEN[sub]
+        if flags is None:
+            return reason
+        if flags & set(args):
+            return reason
+        if sub == "push" and any(len(a) > 1 and a.startswith("+") for a in args):
+            return "refspec s `+` přepíše vzdálenou větev stejně jako `--force`"
+
+    for (s, a), reason in FORBIDDEN_PAIRS.items():
+        if sub == s and a in args:
+            return reason
+    return None
+
+
+def combo_verdict(sub, args):
+    """Kombinace, které se do tabulky zapsat nedají – teprve dvě slova dohromady škodí."""
+    if sub == "branch" and {"--delete", "-d"} & set(args) and {"--force", "-f"} & set(args):
+        return "smaže větev bez ohledu na to, jestli je přimergovaná"
+    if sub == "worktree" and "remove" in args and {"--force", "-f"} & set(args):
+        return "smaže worktree i s neuloženým obsahem"
+    if sub == "gc" and any(a == "--prune" or a.startswith("--prune=") for a in args):
+        return "nenávratně zahodí commity, na které nevede reference"
+    return None
+
+
 def verdict(words, depth=0):
-    """Vrátí důvod zastavení, nebo None."""
+    """Vrátí důvod zastavení, nebo None.
+
+    Rozhodování je rozdělené do tří funkcí, ne kvůli eleganci: dohromady měly
+    složitost 14 proti prahu 10 z *Kontraktu příkazů*, a práh se nesnižuje.
+    Pořadí vyhodnocení zůstává, na kterém stojí `tests/test_hooks.py`.
+    """
     rest = strip_global(words)
     if not rest:
         return None
@@ -113,27 +146,7 @@ def verdict(words, depth=0):
         if expanded is not None:
             return verdict(expanded + args, depth + 1)
 
-    if sub in FORBIDDEN:
-        flags, reason = FORBIDDEN[sub]
-        if flags is None:
-            return reason
-        if flags & set(args):
-            return reason
-        if sub == "push" and any(len(a) > 1 and a.startswith("+") for a in args):
-            return "refspec s `+` přepíše vzdálenou větev stejně jako `--force`"
-
-    for (s, a), reason in FORBIDDEN_PAIRS.items():
-        if sub == s and a in args:
-            return reason
-
-    if sub == "branch" and {"--delete", "-d"} & set(args) and {"--force", "-f"} & set(args):
-        return "smaže větev bez ohledu na to, jestli je přimergovaná"
-    if sub == "worktree" and "remove" in args and {"--force", "-f"} & set(args):
-        return "smaže worktree i s neuloženým obsahem"
-    if sub == "gc" and any(a == "--prune" or a.startswith("--prune=") for a in args):
-        return "nenávratně zahodí commity, na které nevede reference"
-
-    return None
+    return table_verdict(sub, args) or combo_verdict(sub, args)
 
 
 def main():

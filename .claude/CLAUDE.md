@@ -39,7 +39,7 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
 
 - typecheck: swiftc -typecheck -warnings-as-errors skills/*/*.swift
-- lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' skills/*/*.py skills/*/scripts/*.py tests/*.py
+- lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' ./*.py skills/*/*.py skills/*/scripts/*.py tests/*.py
 - test: python3 -m unittest discover -s tests
 - build: -
 - e2e: -
@@ -53,6 +53,8 @@ Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola h
 `shellcheck` běží se `--severity=info`, ne se `--severity=style`: stylové nálezy jsou preference a kontrola, která padá na preferenci, se obchází. **Ze stejného důvodu má `ruff` jen `--select F,E9,C901`** – nedefinovaná jména, nepoužité importy, syntaktické chyby a cyklomatická složitost, tedy vady a jeden měřitelný práh, ne názory. `C901` je tu od 8. 9. 2026 s prahem 10 podle `~/Dev/context/coding/quality.md`. Do té doby se neměřila vůbec a 5 funkcí ho překračovalo, nejvíc `progress.py` s 19. Práh se **nesnižuje kvůli tomu, že překáží** – to smí jen člověk a se zápisem do rozhodnutí.
 
 Výchozí sada by tu hlásila pořadí importů a závorky navíc. `--isolated` k tomu zajistí, že se nechytí cizí konfigurace odněkud z domovského adresáře. Python přibyl do repozitáře 6. 9. 2026 se skripty `/compose`.
+
+**Od 20. 9. 2026 kryje i kořen repozitáře (`./*.py`).** Chyběl tam od začátku a nikomu to nevadilo, dokud v kořeni žádný Python neležel; jakmile tam přibyl `git-guard.py`, četl ho jen `test_contract_patterns_cover_repo` – a ten hlásí nepokrytí, ne vady uvnitř. Po doplnění vzoru vyšla najevo první z nich: `verdict` měl cyklomatickou složitost 14 proti prahu 10, takže se rozdělil na `table_verdict` a `combo_verdict`. **Práh se kvůli tomu nesnižoval** a snižovat se nesmí; je to přesně ten případ, na který ta věta níž míří.
 
 **Od 7. 9. 2026 lint kryje i `tests/`** – je to největší Python v repozitáři a nekontroloval ho nikdo, přestože je to zároveň jediná vrstva, která tu něco doopravdy vynucuje. Běh testů sám chytí syntaktickou chybu, ale ne nepoužitý import ani překlep ve jménu uvnitř větve, která se zrovna nevykonala.
 
