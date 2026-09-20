@@ -54,7 +54,7 @@ Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběž
 
 ## Skilly životního cyklu projektu
 
-Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada.** Nejdřív jde sedm kroků **osy**, které něco tvoří – vyrobí soubor, kód nebo nasazení – a stojí tu v pořadí, ve kterém se pouštějí: od `/project` po `/release`. Za nimi pět **kontrolních kroků** od `/oponent` po `/cleanup`; ty nic nepřidávají, jen měří, co už je, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz – takže je nečti jako pokračování té řady. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
+Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada.** Nejdřív jdou kroky **osy**, které něco tvoří – vyrobí soubor, kód nebo nasazení – a stojí tu v pořadí, ve kterém se pouštějí: od `/project` po `/release`. Za nimi **kontrolní kroky** od `/oponent` po `/cleanup`; ty nic nepřidávají, jen měří, co už je, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz – takže je nečti jako pokračování té řady. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 

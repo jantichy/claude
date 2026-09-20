@@ -44,9 +44,9 @@ Navíc si ověř tohle:
    | Co existuje | Co je zadání pro plán |
    |---|---|
    | `docs/architecture.md` | **architecture.md** jako spec, `docs/requirements.md` jako doplňkový kontext |
+   | jen `docs/requirements.md` a projekt má kód, který se teprve navrhuje | **Zastav se.** Nabídni `/architect` – návrh řešení se nepřeskočil, jen ještě nevznikl. |
    | jen `docs/requirements.md` | **requirements.md** – návrh řešení byl vědomě přeskočen, což je legitimní |
    | ani jedno | **Zastav se.** Nabídni `/specify` a skonči. Plán bez zadání je jen seznam dohadů. |
-   | jen `docs/requirements.md` a projekt má kód, který se teprve navrhuje | **Zastav se.** Nabídni `/architect` – návrh řešení se nepřeskočil, jen ještě nevznikl. |
 
    **Má-li `docs/todo.md` neprázdnou sekci `## Kola návrhu`, nebo chybí-li v `docs/done.md` za posledními záznamy kol řádek *Návrh uzavřen*, zastav se bez ohledu na tabulku:** návrh běží po kolech a zadání je zatím poloviční. Nabídni `/architect`, který kola vede i sešívá, a skonči.
 
