@@ -63,6 +63,22 @@
 
 - [ ] **Rate-limitované neblokující připomínky.** Stavový soubor pojmenovaný datem (rotace ničením, žádná čistící logika), klíč podle toho, co se připomíná, a zápis klíče **i když se nic nenašlo**. Až budeme chtít připomínat věci jako „projekt nemá CI“ nebo „`plan.md` je 40 dní starý“.
 
+- [ ] **Nový krok životního cyklu `/consolidate` – hledání návrhového dluhu z postupného záplatování.** Jméno i místo rozhodl uživatel 20. 9. 2026: **stojí těsně před `/breakdown`**. Vznikl z konkrétní bolesti v rezervačním systému – návrh se vedl po kolech, v každém se ukázala další kombinace a přidal se na ni sloupec nebo hodnota výčtu (`gateway_closed`, postupně přibývající `gateway_status`). Každý krok byl ve své chvíli správný, ale dohromady z nich vzniklo řešení, které by při znalosti všech případů předem šlo nahradit jedním jednodušším.
+
+  **Proč to musí být vlastní krok a ne hledisko `/oponent`.** Všechny tři uzavírací kroky se ptají „je to **špatně**?“, kdežto tenhle se ptá „bylo by to dnes navržené **jinak**?“ – a odpověď „ano“ vadu neznamená, takže propadne každým sítem. `/review` měří kód proti specifikaci, jenže dluh je v samotné specifikaci a kód by ji plnil poslušně. `/consistency` hledá rozejití, jenže tenhle dluh je **dokonale konzistentní** – čím poctivěji se záplata zanesla do všech dokumentů, tím je neviditelnější. `/oponent` je nejblíž, ale posuzuje dokument, jak stojí dnes; nemá odkud vědět, že tři sousední mechanismy vznikly ve třech týdnech ze tří podnětů, protože v textu stojí vedle sebe jako rovnocenné.
+
+  **Čte historii, ne dnešní stav – jako jediný krok v cyklu.** Vstupem není `model.md`, ale `decisions.md`, `done.md`, git log a umlčené nálezy v `CLAUDE.md`. Shluk záplat se pozná z jejich dat narození.
+
+  **Poznatky k designu, které už jsou rozhodnuté** (všechny 20. 9. 2026, k zapracování do zadání pro agenty):
+
+  - **Rozsah vymezuje vstup, ne výstup.** „Nad platební bránou“ znamená, že se z ní vychází, ne že se výsledek smí týkat jen polí s tím prefixem. Nález „ten sloupec je zbytečný“ ušetří sloupec; nález „stavový prostor je vedený podle špatné osy, a proto se do něj tahle věc nevejde bez tří záplat“ ušetří celý shluk – a ten druhý je ten cenný. Omezit výstup rozsahem znamená odříznout si přesně ho.
+  - **Zpětná zkouška je hlavní mechanismus, ne kontrola navíc.** Kdo dostane zadání „navrhni to elegantněji“, **vždycky něco navrhne** – a jeho varianta bude působit čistěji právě proto, že nezná zatáčky, kvůli kterým dnešní řešení vzniklo; nezná je schválně, protože jsme mu dali čerstvý pohled zvenčí. Ke každému návrhu se proto taxativně vypíšou všechny doložené případy, které dnešní řešení pokrývá, a u každého se ukáže, čím ho pokrývá varianta nová. Návrh, který tou zkouškou neprojde, se nepředkládá. Bez ní krok vyrábí regrese převlečené za úklid.
+  - **Výstupem není nález, ale návrh alternativy plus doklad, že nic neztratil**, a k tomu cena přepisu. Rozhoduje uživatel.
+  - **Pouští se nad sloučeným stavem**, ne nad rozdělanou větví – jinak označí za záplatu něco, co je mezitím vyřešené jinak, a chybí mu část dokladů.
+  - **Ne po každé featuře.** Je drahý a jeho nález je vždycky velký přepis. Spouštěcí podmínky: povinně před `/breakdown` velkého celku, po několika kolech `/specify`, a kdykoli to člověku leží v hlavě – což je signál sám o sobě.
+
+  **Píše se až po pilotním běhu**, který proběhne ad hoc v rezervačním systému nad platební bránou (zapsáno v jeho `docs/todo.md`). Rozhodl uživatel: ze zadání pro agenty se z hlavy netrefí, co v něm musí stát, a pilot poslouží jako srovnávací běh.
+
 ### Nedodělky přestavby vývojového workflow (2. 9. 2026)
 
 **Kontext pro novou session.** V jedné dlouhé session se přestavěl celý řetěz vývojové práce v `~/.claude`. Hotové a commitnuté je tohle: přejmenování `/spec` → `/specify` a dokumentů na `requirements.md` + `architecture.md`; `/standards` přepsaný na `/review` s panelem specialistů a adversariálním ověřováním nálezů; nový `/release`; průběžná kontrola jako `Stop` hook (`~/.claude/verify.sh`) čtoucí *Kontrakt příkazů* ze sekce `## Kontrakt příkazů` v projektovém `CLAUDE.md`; nový *Životní cyklus projektu* v `RULES.md`; sekce *Ověřování a kontroly kvality* a *Autonomie se stupňuje* v `coding/coding.md` (od 7. 9. 2026 vlastní soubor `coding/quality.md`). Zdůvodnění všech rozhodnutí včetně zamítnutých variant je v `decisions.md`, sekce `## coding` a `## Celý repozitář` k datu 2. 9. 2026.
