@@ -194,6 +194,14 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 
   **Pozůstatky po vlastní práci byly tři** a všechny vznikly řezem, kterým se z `/cleanup` vytáhla *Fáze 7*: dvě doslovné kopie téhož textu, které se hned rozešly, odkaz na „bod 2“ mířící do souboru, kde už nebyl, a chybějící prázdný řádek před `------`, kterým se ze závěrečné věty stal setext nadpis. Žádný z nich nechytil skript ani testy.
 
+- **2026-09-20** · `/cleanup` · `532b9ce` · 1 nevypořádané téma (1 rozhodnuto, 0 bezpředmětných) · mimo rozsah: 3 položky – věta o konci cyklu v `.claude/CLAUDE.md` vyřešena rovnou, přečíslování rozbitého seznamu v `todo.md` a přednost `/next` před číslovanou řadou vyřešeny na přání.
+
+  **Nevypořádaná zůstala délka `/architect`** – otevřel jsem ji sám v rozhovoru o zadání, uživatel odpověděl na něco jiného a k délce jsme se nevrátili. Rozhodl ji nechat na měkké mezi a posoudit při revizi.
+
+  **Čtenáři bez kontextu našli 22 nálezů a byli tím nejcennějším krokem celého běhu.** Navazitelnost přinesla, že seznam práce v `todo.md` byl rozbitý – písmenný bod 5a stál nad pětkou, takže v Markdownu končila číslovaná řada, a dva pokyny o pořadí si v témže odstavci odporovaly. Pozůstatky přinesly osm míst, kde dnešní práce nechala nepravdu: `/breakdown` tvrdil, že `/architect` neexistuje, `/project` o něm nevěděl a norma dokládala písmennou podfázi příkladem, který téhož dne zanikl.
+
+  **Druhý průchod čtenáře pozůstatků nad opravami byl to podstatné.** Našel čtrnáct dalších věcí a mezi nimi **jedinou funkční vadu celého úklidu**: nový řádek tabulky v `/breakdown` stál pod obecnějším případem, takže se na něj při čtení shora dolů nikdy nedošlo a `/architect` by se nenabídl nikdy. Zbytek byla evidence, která se rozešla s vlastními opravami – stav bodů, počet testů, odrážky popisující vady, které se mezitím vyřešily. **Bez druhého průchodu by ta vada v repozitáři zůstala**, protože první čtenáři ji vidět nemohli: vznikla až jejich opravou.
+
 
 ## Odvedená práce
 
@@ -338,3 +346,9 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
   **Testy předcházely textům a chovaly se přesně podle plánu.** Nejdřív se dorovnaly měřicí funkce (`cycle_with_order()` čte rámeček jako dvě vrstvy, kontrolní kroky nemají pořadí ani sousedy, nová `cycle_missing_skills()` porovnává přiznané chybějící kroky se skutečností v obou směrech), načež se z 28 selhání stal jmenovitý seznam práce, který zhasínal, jak se texty přepisovaly. Dorovnalo se okolí: rámečky a hromadná instalace ve dvanácti README, kořenové `README.md` přeskládané do dvou bloků podle vrstev cyklu, `RULES.md`, `STRUCTURE.md`, `WORKTREE.md`, `LIFECYCLE.md`, `SKILLS.md`, `/next` a `/scenarios`.
 
   **Nezkontrolováno zůstaly tlakové scénáře na *Zákaz implementace***, které `/skill` u vynucujícího pravidla žádá povinně, a **první ostrý běh** – skill nikdy neběžel. Srovnávací běh se vynechal vědomě: vstupem nebylo nové téma, ale 423 řádků odladěného textu.
+
+- **2026-09-20** · `1de1d70` · **`/next` čte rámeček cyklu po vrstvách** – `lifecycle()` v `skills/next/collect.py` vracela syrové řádky bloku z `RULES.md`, takže po rozdělení rámečku na osu a kontroly dělala z odsazeného pokračování osy „krok“ jménem `/breakdown` a z komentáře pod rámečkem další položku. Vrací `{"osa": [...], "kontroly": [...]}` a `SKILL.md` z toho odvozuje chybějící krok **jen pro osu** – u kontrolních kroků „ještě nepřišel na řadu“ nic neznamená, protože stojí v mezerách a některé ve víc naráz.
+
+  **Přibyly k tomu testy** (`tests/test_next.py`, třída `LifecycleLayers`) a jsou ověřené mutací: s původní plochou podobou padají. Bez nich by to byla přesně ta tichá vada, kterou má `/next` sám hlídat u živých session – nic nespadne, jen fronta práce nabídne krok, který neexistuje.
+
+  **Uživatel si o tenhle bod řekl uprostřed `/cleanupu`**, hned poté, co ho postavil na první místo před číslovanou řadu.
