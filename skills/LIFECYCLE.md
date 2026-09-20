@@ -61,6 +61,8 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 
 **Jediná výjimka je `/project`**, který artefakt sice vyrábí, ale měří si ho sám – jeho revize souladu se standardem je jeho vlastní fází. Pouštět na ni `/review` by bylo opakování, ne kontrola.
 
+**`/review` má měřítko v souboru, `/oponent` žádné nemá** – tím se ty dva liší, a nad dokumentací to platí stejně jako nad kódem. `/review` měří proti **předpisu, který existuje jako dokument**, takže nález zní „porušuje pravidlo X ze standardu Y“ a dá se vyvrátit ukázáním na to pravidlo; jeho specialisté na korektnost, bezpečnost a testy se zapínají jen na kód, nad obsahovým projektem zbydou doménové sady z `~/Dev/context/`. `/oponent` žádný předpis nemá a posuzuje **samotný obsah**, takže se jeho nález vyvrací argumentem. **Praktický důsledek:** u projektu, ke kterému žádný relevantní standard neexistuje, je `/review` skoro prázdný a má se přeskočit – `/oponent` funguje vždycky. Rozbor drží `decisions.md`, *Rozdíl mezi `/review` a `/oponent` nad obsahovým projektem* (20. 9. 2026).
+
 **Pořadí uvnitř mezery není libovolné.** `/review` jde první, protože hledá vady v tom, co krok osy právě vyrobil, a jeho opravy mění text, nad kterým pracují ostatní; `/consistency` až po něm, protože uklízí i to, co `/review` nastřílel; `/cleanup` je vždycky poslední, protože jako jediný odolá kompaktaci.
 
 **`/cleanup` je v každé mezeře, a to je celý jeho popis.** Jeho spouštěčem není pozice, ale konec session – takže běží i uprostřed rozdělaného `/implement`, kde žádná mezera není. V poslední mezeře stojí dvakrát, před `/attack` i za ním, a ten druhý průchod slouží jako verifikace.
