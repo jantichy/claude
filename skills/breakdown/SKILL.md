@@ -10,7 +10,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Vezme schválené zadání a rozpadne ho na **`docs/plan.md`** – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu, příkaz na spuštění a commit. Plán je psaný pro někoho, kdo projekt vůbec nezná.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to pátý krok osy: navazuje na `/architect` a předává na `/implement`. **`/architect` zatím neexistuje jako skill**, takže než vznikne, přichází se sem ze `/specify`.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to pátý krok osy: navazuje na `/architect` a předává na `/implement`.
 
 ## Co skill nedělá
 
@@ -46,8 +46,9 @@ Navíc si ověř tohle:
    | `docs/architecture.md` | **architecture.md** jako spec, `docs/requirements.md` jako doplňkový kontext |
    | jen `docs/requirements.md` | **requirements.md** – návrh řešení byl vědomě přeskočen, což je legitimní |
    | ani jedno | **Zastav se.** Nabídni `/specify` a skonči. Plán bez zadání je jen seznam dohadů. |
+   | jen `docs/requirements.md` a projekt má kód, který se teprve navrhuje | **Zastav se.** Nabídni `/architect` – návrh řešení se nepřeskočil, jen ještě nevznikl. |
 
-   **Má-li `docs/todo.md` neprázdnou sekci `## Kola návrhu`, nebo chybí-li v `docs/done.md` za posledními záznamy kol řádek *Návrh uzavřen*, zastav se bez ohledu na tabulku:** návrh běží po kolech a zadání je zatím poloviční. Nabídni `/specify` a skonči.
+   **Má-li `docs/todo.md` neprázdnou sekci `## Kola návrhu`, nebo chybí-li v `docs/done.md` za posledními záznamy kol řádek *Návrh uzavřen*, zastav se bez ohledu na tabulku:** návrh běží po kolech a zadání je zatím poloviční. Nabídni `/architect`, který kola vede i sešívá, a skonči.
 
 3. **Ověř, že je zadání schválené.** Není-li jasné, že jím uživatel prošel, zeptej se. Plán postavený na neschváleném zadání se zahazuje celý.
 4. **Existuje už `docs/plan.md`?** Nepřepisuj ho:

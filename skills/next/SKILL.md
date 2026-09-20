@@ -56,7 +56,7 @@ Co z výstupu je položka fronty:
 | `rounds` | kolo návrhu – viz *Kola návrhu* |
 | `stitch_pending` | položka *sešít návrh po kolech*, spouštěč `/architect` |
 | `plan.open` | jedna položka „dokončit plán“ s počtem zbývajících, spouštěč `/implement` |
-| `artifacts`, `passes`, `lifecycle` | chybějící krok cyklu – viz *Místo v cyklu* |
+| `artifacts`, `passes`, `lifecycle` | chybějící krok cyklu – viz *Místo v cyklu*; `lifecycle` je `{"osa": [...], "kontroly": [...]}` |
 | `branches` | práce ve větvi – viz *Práce ve větvích* |
 | `backlog` | skript ho vrací jen při prázdné frontě – viz *Fáze 2* |
 
@@ -87,7 +87,11 @@ Obsazenost už rozhodl skript, pole `state`:
 
 ### Místo v cyklu
 
-Chybějící krok odvoď z `artifacts` a `passes` proti pořadí v `lifecycle` – zakládací kroky do průchodů nepíšou, takže rozhodují dokumenty: návrh bez plánu, odpracovaný plán bez `/review` v průchodech. **Nejsi-li si jistý, že krok opravdu chybí, řekni to u položky jako domněnku** – vědomě přeskočený krok se ze souborů pozná jen tehdy, když ho někdo zapsal.
+Chybějící krok odvoď z `artifacts` a `passes` proti `lifecycle`, a **jen pro osu** – `lifecycle["osa"]` je řada, ve které každý krok čeká na výstup toho předchozího, takže díra v ní je nález. Rozhodují přitom dokumenty, ne průchody: kroky osy do `## Průchodů životním cyklem` nepíšou, takže „chybí `/architect`“ poznáš z toho, že je `requirements.md` a není `architecture.md`, a „chybí `/breakdown`“ z návrhu bez plánu.
+
+**Z `lifecycle["kontroly"]` chybějící krok neodvozuj.** Kontrolní kroky nejsou řada, stojí v mezerách a některé ve víc naráz, takže „ještě nepřišel na řadu“ u nich nic neznamená. Jediné, co se o nich dá z `passes` říct, je, že po odpracovaném plánu není zapsaný průchod `/review` – a to hlas jako domněnku.
+
+**Nejsi-li si jistý, že krok opravdu chybí, řekni to u položky jako domněnku** – vědomě přeskočený krok se ze souborů pozná jen tehdy, když ho někdo zapsal.
 
 ## Fáze 2 – Řazení
 

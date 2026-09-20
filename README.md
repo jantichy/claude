@@ -54,9 +54,7 @@ Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběž
 
 ## Skilly životního cyklu projektu
 
-Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada:** kroky **osy** něco tvoří – vyrobí soubor, kód nebo nasazení – a jdou tu v pořadí, ve kterém se pouštějí; **kontrolní kroky** nic nepřidávají, jen měří, co už je, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
-
-### Osa – kroky, které tvoří
+Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada.** Nejdřív jde sedm kroků **osy**, které něco tvoří – vyrobí soubor, kód nebo nasazení – a stojí tu v pořadí, ve kterém se pouštějí: od `/project` po `/release`. Za nimi pět **kontrolních kroků** od `/oponent` po `/cleanup`; ty nic nepřidávají, jen měří, co už je, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz – takže je nečti jako pokračování té řady. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
@@ -85,8 +83,6 @@ Projde plán od začátku do konce, u každého úkolu test, kód, průběžná 
 ### [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
 
 Nasadí do produkce přes **oddělenou nasazovací větev**, takže `main` zůstane integrační a merge feature nic nenasazuje. Před nasazením projde kontroly, zvlášť řeší migrace dopředu kompatibilně a nikdy se nespustí sám. A tím nekončí: poslední fází je **sledovací okno** s konkrétním koncem, protože celá třída chyb se projeví až později. Dokud okno neuplyne a někdo ho výslovně neuzavře, nasazení není hotové.
-
-### Kontroly – kroky, které měří
 
 ### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 

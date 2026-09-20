@@ -922,3 +922,13 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 **Zamítnut sdílený `skills/DOCUMENTS.md`.** Návrh zněl přestěhovat šablony obou dokumentů o úroveň výš vedle `PREFLIGHT.md`, protože hranici omezení/volba potřebují oba skilly. **Uživatel to zpochybnil otázkou, jestli to není věc `STRUCTURE.md`** – a byla: hranice tam stála doslova už předtím, takže kapitola *Proč dva dokumenty a ne jeden* ve `specify/SKILL.md` byla druhá kopie už v té chvíli. Do `STRUCTURE.md` se doplnilo jen chybějící **odůvodnění** (různá životnost obou dokumentů a kontrolní otázka *změní se to, když se změní technologie?*) a kapitola ze skillu zmizela. Šablony sekcí jsou naproti tomu instrukce pro Clauda za běhu, ne katalog struktury, takže se rozdělily na `skills/specify/documents.md` a `skills/architect/documents.md`.
 
 **Srovnávací běh se vědomě vynechal** (`~/.claude/skills/skill/SKILL.md`, *Fáze 4*). Měří, jak agent selže bez skillu; vstupem tady ale nebylo nové téma, nýbrž 423 řádků odladěného textu, takže by neměřil nic.
+
+### Dvě vrstvy cyklu v kořenovém README nese pořadí, ne nadpisy (20. 9. 2026)
+
+**Rozhodnutí:** v `README.md` se osa a kontrolní kroky **nerozdělují nadpisem**. Hranici drží pořadí sekcí a úvodní odstavec, který jmenuje první a poslední krok každého bloku.
+
+**Důvod:** obě zjevnější varianty se zkusily a obě jsou vadné. **Nadpis `### Osa`** stojí na téže úrovni jako sekce jednotlivých skillů (`### [`/project`](skills/project/)`, tvar předepisuje `skills/SKILLS.md`), takže je neobsahuje – v osnově dokumentu vypadá jako dvanáctý skill v řadě. **Bold řádek mezi sekcemi** hierarchii nelže, ale spadne dovnitř té předchozí: shodil test `test_readme_sections_hold_one_paragraph`, protože sekce `/release` tím dostala druhý odstavec.
+
+**Třetí varianta se nezkoušela a je to vědomé:** demotovat skilly na `####` a nechat bloky na `###` by hierarchii spravilo, ale je to změna normy tvaru README, ne úprava jednoho souboru – a normu v tomhle nikdo nerozporoval.
+
+**Našel to čtenář bez kontextu při `/cleanup`**, oba nezávisle na sobě. Je to typický nález téhle vrstvy: struktura, která vypadá správně v textu a lže v osnově.

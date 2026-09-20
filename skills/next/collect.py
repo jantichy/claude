@@ -18,7 +18,7 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 - `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`)
 - `rounds` – bloky kol návrhu s poli a stavem ve větvi kola; `stitch_pending` – čeká sešití
 - `plan` – počet otevřených a hotových úkolů a první otevřené; `artifacts` – které návrhové dokumenty existují
-- `passes` – posledních pět záznamů `## Průchody životním cyklem`; `lifecycle` – rámeček cyklu z `RULES.md`
+- `passes` – posledních pět záznamů `## Průchody životním cyklem`; `lifecycle` – kroky cyklu z `RULES.md` po vrstvách (`osa`, `kontroly`)
 - `branches` – nesloučené větve a větve živých session: `state` (`occupied`, `abandoned`,
   `uncertain`, `empty`), session, commity, změny `todo.md`/`plan.md`/`done.md` a přiřazená kola
 - `sessions_error` – proč se živé session nedaly zjistit (pak jsou všechny větve `uncertain`)
@@ -234,9 +234,32 @@ def parse_plan(text):
 
 
 def lifecycle():
+    """Kroky cyklu z rámečku v `RULES.md`, rozdělené podle vrstev.
+
+    Vrací {"osa": [...], "kontroly": [...]}. Vrstvu zakládá jen řádek, který
+    začíná jejím jménem; odsazené pokračování patří pod tu předchozí. Dřív se
+    vracely syrové řádky bloku – nad dvouvrstvým rámečkem z toho byly položky
+    jako `"Kontroly   /oponent, …"` a věta pod nimi, tedy data, ze kterých
+    „chybějící krok cyklu“ odvodit nejde.
+
+    Kroky osy jsou řada a čekají na výstup toho předchozího; kontrolní kroky
+    stojí v mezerách mezi nimi a některé ve víc naráz, takže pořadí nemají
+    a odvozovat z nich chybějící krok nelze.
+    """
     text = RULES.read_text(encoding="utf-8") if RULES.is_file() else ""
     m = re.search(r"### Životní cyklus projektu.*?```\n(.*?)```", text, re.S)
-    return [x.strip() for x in m.group(1).splitlines()] if m else []
+    out, layer = {}, None
+    for row in (m.group(1).splitlines() if m else []):
+        steps = re.findall(r"/([a-z][a-z-]*)", row)
+        if not steps:
+            continue
+        head = row.split()[0]
+        if not head.startswith("/"):
+            layer = head.lower()
+        if layer is None:
+            continue
+        out.setdefault(layer, []).extend(steps)
+    return out
 
 
 def worktrees(repo: Repo):

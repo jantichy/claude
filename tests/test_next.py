@@ -20,6 +20,7 @@ jedna konverzace otevřela dvakrát.
 Spouští se: python3 -m unittest discover -s tests -q
 """
 import json
+import re
 import os
 import subprocess
 import sys
@@ -318,6 +319,56 @@ class QueueCollection(unittest.TestCase):
         (self.home / ".claude" / "sessions" / f"{self.sleeper.pid}.json").write_text(json.dumps(
             {"pid": self.sleeper.pid, "sessionId": "nova", "cwd": str(self.box)}))
         self.assertEqual({b["state"] for b in self.branches().values()}, {"uncertain"})
+
+
+class LifecycleLayers(unittest.TestCase):
+    """`lifecycle()` rozhoduje, jestli `/next` nabídne chybějící krok cyklu.
+
+    Vrací-li nesmysl, neselže nic – fronta práce jen tiše nabídne krok, který
+    neexistuje, nebo zamlčí ten, který chybí. Přesně to se stalo, když se
+    rámeček v `RULES.md` rozdělil na dvě vrstvy: funkce vracela syrové řádky
+    bloku, takže z odsazeného pokračování osy vycházela „fáze“ jménem
+    `/breakdown` a z komentáře pod rámečkem další položka.
+    """
+
+    def setUp(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("collect", COLLECT)
+        self.c = importlib.util.module_from_spec(spec)
+        sys.path.insert(0, str(COLLECT.parent))
+        spec.loader.exec_module(self.c)
+
+    def test_reads_both_layers_from_rules(self):
+        out = self.c.lifecycle()
+        self.assertEqual(set(out), {"osa", "kontroly"},
+            f"z rámečku se přečetly jiné vrstvy než osa a kontroly: {sorted(out)}")
+        for layer, steps in out.items():
+            self.assertGreaterEqual(len(steps), 5,
+                f"vrstva `{layer}` má jen {len(steps)} kroků: {steps}")
+            for step in steps:
+                self.assertRegex(step, r"^[a-z][a-z-]*$",
+                    f"ve vrstvě `{layer}` není jméno kroku, ale `{step}`")
+
+    def test_axis_order_matches_the_frame(self):
+        # Osa je řada, takže na jejím pořadí stojí odvození chybějícího kroku.
+        # Pořadí se čte z `RULES.md`, ne z konstanty tady – opsaný seznam by se
+        # při přidání kroku rozešel a vypadal by přitom pořád platně.
+        block = (Path.home() / ".claude" / "RULES.md").read_text(encoding="utf-8")
+        i = block.index("### Životní cyklus projektu")
+        frame = block[block.index("```", i) + 3:]
+        frame = frame[:frame.index("```")]
+        axis_row = next(r for r in frame.splitlines() if r.split()[:1] == ["Osa"])
+        first = re.findall(r"/([a-z][a-z-]*)", axis_row)[0]
+        self.assertEqual(self.c.lifecycle()["osa"][0], first,
+            "prvním krokem osy je něco jiného než v rámečku")
+
+    def test_comment_under_frame_is_not_a_step(self):
+        # Řádek bez kroků vrstvu nezakládá ani neukončuje; braný jako položka
+        # by z věty „stojí v mezerách mezi kroky osy…“ udělal krok cyklu.
+        for steps in self.c.lifecycle().values():
+            self.assertNotIn("stojí", steps)
+            self.assertFalse([s for s in steps if " " in s],
+                "mezi kroky se dostal celý řádek rámečku")
 
 
 if __name__ == "__main__":

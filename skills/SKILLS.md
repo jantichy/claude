@@ -162,7 +162,7 @@ Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal j
 
 **Číslují se plochou vzestupnou řadou, bez písmen.** `0, 1, 2, 3…`, ne `1, 1b, 2`. Čtenář bere číslování jako tvrzení o vztazích, takže `1b`, které o vztahu k `1` nic neříká, lže.
 
-**Písmenná podfáze je v souladu jen tam, kde sdružuje tematicky příbuzné podkroky téhož kroku.** Kritérium je ostré: písmena jen tehdy, když by jinak jeden krok musel vyrábět **dva samostatné výstupy**. Tak to má `/specify` s `Fází 3a` (produktová specifikace) a `3b` (návrh řešení) – dva dokumenty jednoho zadání.
+**Písmenná podfáze je v souladu jen tam, kde sdružuje tematicky příbuzné podkroky téhož kroku.** Kritérium je ostré: písmena jen tehdy, když by jinak jeden krok musel vyrábět **dva samostatné výstupy**. **Doložený případ dnes v repozitáři žádný není** a je to tak v pořádku: jediný, který existoval, byla `Fáze 3a` (produktová specifikace) a `3b` (návrh řešení) ve `/specify`, a ta zanikla 20. 9. 2026 rozdělením na `/specify` a `/architect` – dva samostatné výstupy se ukázaly být dva kroky, ne jeden krok o dvou půlkách. Pravidlo zůstává jako kritérium pro případ, který znovu nastane; **nezdůvodňuj ho příkladem, který si čtenář nemá kde ověřit**.
 
 Není to výjimka, ale splněné kritérium: co mu vyhoví, revize nesahá; co mu nevyhoví, je nedodělek a **opraví se**.
 
@@ -210,7 +210,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Neopisuj seznam, který má vlastní zdroj pravdy.** Pořadí kroků životního cyklu, prahy kontrol, inventář domén – na ty se odkazuj, nevypisuj je. Opsaný seznam se při přidání položky rozejde a **vypadá přitom pořád platně**, takže si toho nikdo nevšimne. Platí to dvojnásob pro **šablony, které skill zapisuje jinam**: `/project` psal do každého vývojářského `CLAUDE.md` cestu bez `/discovery` a projekty ji četly jako úplnou. Řetěz 3 a víc kroků cyklu v `SKILL.md` hlídají testy.
 
-**Výjimku mají 2 místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který ukazuje krajní kroky a mezi nimi výpustku, a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `RULES.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
+**Výjimku mají 2 místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který vypisuje **všechny** kroky obou vrstev i s odkazy (výpustka `…` ve vzoru níž je zástupný symbol pro zbytek řady, ne doslovné znění), a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `RULES.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
 
 **Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…“ zestárnou tiše. Piš specialisty, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
 
@@ -362,7 +362,7 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 ```
 
-Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README – a stojí v tom bloku, do kterého patří; v druhém se neopakuje. **Krok, který README ještě nemá**, se uvádí jen kódem bez odkazu, aby kontrola odkazů neselhala na souboru, který teprve vznikne.
+**Výpustky `…` ve vzoru jsou zástupný symbol pro zbytek řady, ne doslovné znění** – rámeček vypisuje všechny kroky obou vrstev i s odkazy, protože právě kvůli těm odkazům existuje. Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README – a stojí v tom bloku, do kterého patří; v druhém se neopakuje. **Krok, který README ještě nemá**, se uvádí jen kódem bez odkazu, aby kontrola odkazů neselhala na souboru, který teprve vznikne.
 
 Rozejde-li se rámeček s životním cyklem v `RULES.md`, platí `RULES.md` – rámeček je jeho zobrazení, ne druhý zdroj pravdy.
 
@@ -401,7 +401,9 @@ Skill má navíc **vlastní sekci v `README.md` v kořeni**. Jak je dlouhá a co
 
 Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou vypíše. Zvláštní řádek „Podrobně: …“ by tedy vedl na totéž místo dvakrát.
 
-**Pořadí skillů v hlavním README je dané, ne libovolné.** Skilly ze životního cyklu stojí **ve dvou blocích jako v rámečku**: nejdřív kroky osy v pořadí, ve kterém se pouštějí, pak kontrolní kroky. Ne abecedně a ne podle důležitosti; čtenář ten první seznam čte jako postup. **Rozdělení na dva bloky je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/cleanup` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Uvnitř bloku kontrol platí pořadí z rámečku v `~/.claude/RULES.md`. Skilly mimo životní cyklus stojí **pod nimi a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
+**Pořadí skillů v hlavním README je dané, ne libovolné.** Skilly ze životního cyklu stojí **ve dvou blocích jako v rámečku**: nejdřív kroky osy v pořadí, ve kterém se pouštějí, pak kontrolní kroky. Ne abecedně a ne podle důležitosti; čtenář ten první seznam čte jako postup. **Rozdělení na dva bloky je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/cleanup` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Uvnitř bloku kontrol platí pořadí z rámečku v `~/.claude/RULES.md`.
+
+**Bloky nese pořadí a úvodní odstavec sekce, ne nadpisy.** Nadpis `### Osa` by stál na téže úrovni jako sekce jednotlivých skillů, takže by je neobsahoval a v osnově by vypadal jako další skill v řadě; bold řádek mezi sekcemi zase spadne dovnitř té předchozí a poruší pravidlo jednoho odstavce na sekci. Úvodní odstavec proto musí říct, kde osa končí a kontroly začínají – jmenovitě prvním a posledním krokem každého bloku. Zjištěno 20. 9. 2026 oběma variantami po sobě. Skilly mimo životní cyklus stojí **pod nimi a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
 
 **Obě README se aktualizují spolu se skillem**, ne na vyžádání. Změní-li se, co skill umí, je to součást té změny – stejně jako hlavička nebo test.
 

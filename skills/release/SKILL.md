@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 Nasadí hotovou práci do produkce – s blokujícími kontrolami před, s plánem návratu a s ověřením po.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok osy: navazuje na `/implement` a v mezeře před ním stojí `/attack`. To není kosmetika: uzavírání mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok osy: navazuje na `/implement` a v mezeře před ním stojí `/attack`. To není kosmetika: všechno před ním mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
 
 ## Co skill nedělá
 

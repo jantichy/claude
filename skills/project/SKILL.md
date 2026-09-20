@@ -19,7 +19,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 ## Co skill nedělá
 
-- **Nepíše zadání ani plán.** Je první článek *Životního cyklu projektu* (`~/.claude/RULES.md`) a předává na `/discovery`, který zkoumá svět venku. Co se staví, řeší `/specify`, rozpad na úkoly `/breakdown`. `docs/requirements.md`, `docs/architecture.md` ani `docs/plan.md` proto nezakládá.
+- **Nepíše zadání ani plán.** Je první článek *Životního cyklu projektu* (`~/.claude/RULES.md`) a předává na `/discovery`, který zkoumá svět venku. Co se staví, řeší `/specify`, jak se to postaví `/architect`, rozpad na úkoly `/breakdown`. `docs/requirements.md`, `docs/architecture.md` ani `docs/plan.md` proto nezakládá.
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
 - **Nepřepisuje nic naslepo.** U existujícího projektu se na každý rozpor ptá.
 - **Nenaplňuje soubory obsahem.** `docs/` zakládá prázdné, jen s nadpisem.
@@ -251,7 +251,7 @@ Povinný je jen `CLAUDE.md`. U zbytku se zeptej (AskUserQuestion, `multiSelect: 
 
 Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUDE.md` (krok 7, *Zápis*) vypiš jen ty, které vznikly.
 
-`requirements.md`, `architecture.md` a `plan.md` **nezakládej**, vznikají prací přes `/specify` a `/breakdown`.
+`requirements.md`, `architecture.md` a `plan.md` **nezakládej**, vznikají prací přes `/specify`, `/architect` a `/breakdown`.
 
 ### Produktové podklady
 
