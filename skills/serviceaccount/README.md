@@ -29,14 +29,14 @@ Zavolá se v adresáři projektu, na kterém zrovna děláte:
 /serviceaccount
 ```
 
-Zeptá se na klienta a systémy a vrátí tabulku účtů plus čtyři kroky k provedení. Mimo projekt mu můžete klienta rovnou napovědět: `/serviceaccount planetum`.
+Zeptá se na klienta a systémy a vrátí tabulku účtů plus čtyři kroky k provedení. Mimo projekt mu můžete klienta rovnou napovědět: `/serviceaccount <klient>`.
 
 ## Ukázka výstupu
 
 | Service account ID | Display name | Description |
 |---|---|---|
-| `planetum-ga4` | GA4 Planetum | Přístup k měření webu planetum.cz |
-| `planetum-gtm` | GTM Planetum | Správa kontejneru webu planetum.cz |
+| `<klient>-ga4` | GA4 <Klient> | Přístup k měření webu <klient>.cz |
+| `<klient>-gtm` | GTM <Klient> | Správa kontejneru webu <klient>.cz |
 
 A pod tím kroky: kde účty založit, jak vygenerovat klíče, jediný příkaz na jejich uklizení a hotový text žádosti o přístupy pro klienta.
 

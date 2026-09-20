@@ -46,7 +46,7 @@ U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvypl
 Když projekt vzniká **pro konkrétní organizaci**, zeptej se, jestli má profil v `~/Dev/context/organizations/`, a když ano, přidej ho do importů:
 
 ```
-@~/Dev/context/organizations/planetum.md
+@~/Dev/context/organizations/<organizace>.md
 ```
 
 **Není to doménový standard, ale korpus** – kdo v organizaci sedí, kdo co schvaluje, jaké mají systémy. Profil zůstává v knowledge base a projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil. Když profil neexistuje a jde o **opakovaný vztah, u kterého je potřeba znát vnitřek organizace**, navrhni jeho založení – kritérium je v `~/Dev/context/organizations/organizations.md`, sekce *Kdo dostane profil*.

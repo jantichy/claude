@@ -42,7 +42,7 @@ Plán – 3 soubory
 |---|---|---|---|
 | prednaska.m4a | Přepsat nahrávku a vytěžit ji | ~/Depot/20260912 - MeasureCamp - Konverzační analytika/ | /transcript, pak /learn |
 | slajdy.pdf | Vytěžit cizí materiál z akce | tamtéž – jedna událost, jeden adresář | /learn |
-| export-ga4.csv | Uložit ke klientovi | ~/Dev/favi/research/ | nic plošně, /learn jen na zobecnitelné |
+| export-ga4.csv | Uložit ke klientovi | ~/Dev/<klient>/research/ | nic plošně, /learn jen na zobecnitelné |
 
 Mimo směrování: recovery-codes.txt – přístupové údaje, rozhoduje člověk
 ```
