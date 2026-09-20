@@ -537,10 +537,13 @@ Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit
 Od nápadu k nasazené feature vede jeden životní cyklus:
 
 ```
-Zakládání   /project → /discovery → /specify → /oponent → /breakdown → /implement
+Zakládání   /project → /discovery → /specify požadavky → /oponent →
+            /specify návrh řešení → /oponent → /consolidate → /breakdown → /implement
 Uzavírání   /review → /consistency → /cleanup
 Nasazení    /attack → /release
 ```
+
+**Je to pořadí, ve kterém kroky stojí, když se pustí všechny – ne řetěz, kde každý spouští ten další.** Sedm ze čtrnácti má **vlastní spouštěč** a do řady se řadí jen tehdy, když nastal: `/project` a `/discovery` podle stavu venku, `/consolidate` a `/consistency` podle toho, co se v projektu nasbíralo, `/cleanup` podle toho, že končí session – tedy klidně uprostřed rozdělané práce. Druhy spouštěčů a jejich rozdělení drží `LIFECYCLE.md`, *Pořadí není totéž co spouštěč*.
 
 **Rozhraní jeho kroků drží `~/.claude/skills/LIFECYCLE.md`** – co který krok dělá, co po něm platí, proč stojí v tom pořadí, co se smí opakovat a proč cyklus nekončí nasazením. **Načti si ho, jakmile v některém kroku stojíš** nebo rozhoduješ, který přijde na řadu; paušálně se neimportuje, protože v projektu, kde se žádný krok nepouští, je to jen zabraný kontext.
 
