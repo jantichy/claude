@@ -280,8 +280,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -290,8 +290,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -300,8 +300,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -310,8 +310,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       },
@@ -329,8 +329,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -339,8 +339,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -349,18 +349,18 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "/Users/honza/.claude/verify.sh",
-            "statusMessage": "Průběžná kontrola…",
             "timeout": 320,
-            "type": "command"
+            "statusMessage": "Průběžná kontrola…"
           }
         ]
       },
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -369,8 +369,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -379,8 +379,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -389,8 +389,8 @@
       {
         "hooks": [
           {
-            "command": "/Users/honza/.config/iterm2/cc-status",
-            "type": "command"
+            "type": "command",
+            "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
       }
@@ -425,6 +425,11 @@
   },
   "language": "Czech",
   "effortLevel": "medium",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "medium"
+    }
+  },
   "autoUpdatesChannel": "stable",
   "minimumVersion": "2.1.90",
   "tui": "fullscreen",
@@ -436,13 +441,8 @@
   "preferredNotifChannel": "iterm2",
   "autoCompactEnabled": false,
   "autoContinueAtUsageLimit": true,
+  "terminalProgressBarEnabled": false,
   "remoteControlAtStartup": false,
   "inputNeededNotifEnabled": false,
-  "agentPushNotifEnabled": false,
-  "modelSettings": {
-    "claude-opus-5": {
-      "effortLevel": "high"
-    }
-  },
-  "terminalProgressBarEnabled": false
+  "agentPushNotifEnabled": false
 }
