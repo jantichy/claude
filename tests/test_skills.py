@@ -840,6 +840,40 @@ class CommandContract(unittest.TestCase):
                         f"kontrakt má {key}: {value}, ale {binary} není na PATH")
 
 
+def root_readme_defects(text: str) -> list:
+    """Vrátí sekce kořenového README, které mají víc než jeden odstavec.
+
+    Norma je `~/.claude/STRUCTURE.md`, *`README.md`*: každá součást
+    představená vlastním nadpisem dostane právě jeden odstavec. Mez je
+    mechanická, takže ji nemá hledat model čtením – a dřív ji neměřil nikdo,
+    takže pět sekcí nabralo dva až čtyři odstavce s příběhem vzniku,
+    obhajobou návrhu a výčtem vnitřních kroků, než si toho někdo všiml.
+
+    Obrázek a ukázka výstupu jsou jediná výjimka normy, takže se nepočítají.
+    Čistá funkce nad textem kvůli mutacím, stejně jako `readme_defects()`.
+    """
+    defects, heading, paragraphs, open_block, in_code = [], None, 0, False, False
+    for row in text.splitlines() + ["## konec"]:
+        if not in_code and row.startswith("#"):
+            if heading and paragraphs > 1:
+                defects.append(f"{heading}: odstavců je {paragraphs}, norma žádá jeden")
+            heading = row.strip() if row.startswith("### ") else None
+            paragraphs, open_block = 0, False
+            continue
+        if row.lstrip().startswith("```"):
+            in_code, open_block = not in_code, False
+            continue
+        if in_code or heading is None:
+            continue
+        if not row.strip():
+            open_block = False
+        elif not open_block:
+            open_block = True
+            if not row.lstrip().startswith("!["):
+                paragraphs += 1
+    return defects
+
+
 class Structure(unittest.TestCase):
     CYCLE = cycle_from_rules()
 
@@ -1075,6 +1109,25 @@ class Structure(unittest.TestCase):
         """Opačný směr: po smazání skillu zůstane v README mrtvá sekce."""
         extra = sorted(self._skills_in_readme() - {s.parent.name for s in SKILLS})
         self.assertFalse(extra, f"README má sekci pro skill, který neexistuje: {extra}")
+
+    def test_readme_sections_hold_one_paragraph(self):
+        """Rozcestník, ve kterém se jedna položka rozroste ve výklad, přestane
+        být rozcestníkem – čtenář hledající orientaci ho přestane číst."""
+        defects = root_readme_defects((ROOT / "README.md").read_text(encoding="utf-8"))
+        self.assertFalse(defects, "sekce README nad mez jednoho odstavce:\n  "
+            + "\n  ".join(defects))
+
+    def test_second_paragraph_is_reported(self):
+        """Mutace: kontrola, která nic nechytá, mlčí stejně jako ta funkční."""
+        self.assertTrue(root_readme_defects(
+            "### [`x`](x) – popis\n\nPrvní odstavec.\n\nDruhý odstavec.\n"))
+
+    def test_image_and_sample_are_not_a_paragraph(self):
+        """Druhý směr – falešný poplach je ta horší polovina: obrázek a ukázku
+        výstupu norma povoluje a kontrola, která křičí na správný text, se vypne."""
+        self.assertFalse(root_readme_defects(
+            "### [`x`](x) – popis\n\nJediný odstavec.\n\n![Náhled](x.png)\n\n"
+            "```\nukázka výstupu\n\nse dvěma odstavci\n```\n"))
 
 
 def _appendix_defects(order: dict, first_phase, conclusion) -> list:
