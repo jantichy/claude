@@ -813,3 +813,75 @@ Notifikace „Claude is waiting for your input“ má titul „Alert“ a skute�
 - **Nechat mobilní push zapnutý** – `agentPushNotifEnabled` dává modelu nástroj `PushNotification`, kterým smí vyrušit z vlastního rozhodnutí; výchozí hodnota je přitom `false`. Bez připojeného Remote Control stejně nic nedělá, takže zapnutý byl jen překvapením do budoucna. Ven při tom odchází pouze dvojice booleanů na `/api/claude_code/notification/preferences`, žádný obsah session.
 
 **Nález k vypořádání jinde:** `~/.claude/STRUCTURE.md` žádá datum v prvním odstavci a ne v nadpisu, kdežto celý tenhle soubor má datum v nadpisu `###`. Zápis drží konvenci souboru; srovnat to je práce pro `/consistency`, ne pro jeden zápis.
+
+### Životní cyklus se dělí na osu a kontroly v mezerách (20. 9. 2026)
+
+**Problém:** cyklus byl jedna číslovaná řada kroků a ta předstírala, že každý krok spouští ten předchozí. Platilo to zhruba u poloviny; `/cleanup`, `/consistency`, `/discovery` a `/project` čekaly na stav, ne na předchůdce. `/cleanup` si v `LIFECYCLE.md` dokonce sám odporoval – stálo o něm „poslední krok uzavírání, **ne životního cyklu**“ a zároveň měl v seznamu číslo 9.
+
+**Rozhodnutí (navrhl uživatel):** kroky mají dvě různé role a patří do dvou vrstev.
+
+- **Osa – kroky, které tvoří:** `/project` → `/discovery` → `/specify` → `/architect` → `/breakdown` → `/implement` → `/release`. Vyrobí soubor, kód nebo nasazení a čekají na výstup předchozího.
+- **Kontroly – kroky, které měří:** `/oponent`, `/consolidate`, `/review`, `/consistency`, `/attack`, `/cleanup`. Nic nepřidávají; **nejsou body v řadě, ale vrstva mezi nimi**, a proto se tentýž smí objevit ve víc mezerách.
+
+Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/skills/LIFECYCLE.md`. **Číslování kroků zaniklo úplně**, stejně jako dělení na zakládání/uzavírání/nasazení.
+
+**Proč je to lepší:** zmizela potřeba vysvětlovat u každého kroku zvlášť, proč se pouští mimo řadu. Dřívější pokus to řešil tabulkou tří druhů spouštěčů (pozice / stav projektu / stav session); ta byla správná, ale popisovala důsledek místo příčiny. Příčina je, že kontrolní krok není bod.
+
+**Zamítnuto:** ponechat jednu řadu a doplnit u každého kroku jen řádek *Spouštěč* – stálo to půl hodiny a skončilo tím, že polovina čísel dál nic neznamenala.
+
+### `/specify` se dělí na `/specify` a `/architect` (20. 9. 2026)
+
+**Rozhodnutí:** jeden skill, který vyráběl `requirements.md` i `architecture.md`, se dělí na dva kroky osy.
+
+**Důvod:** oponovat zadání má smysl **dřív**, než se podle něj postaví řešení. Dokud obojí vznikalo v jednom kroku, `/oponent` dostal obě vrstvy naráz a nemohl říct „tohle zadání je špatně“ ve chvíli, kdy ta informace ještě něco změní.
+
+**Dělení je na vrstvě, ne uvnitř kol.** Požadavky se sepíšou **jednou na začátku**; návrh řešení vzniká **po tematických kolech**. Kolo o platební bráně řeší osy, guardy i přechody naráz, protože je to jedno téma – rozdělit ho na dvě poloviny by znamenalo dvakrát načítat týž kontext. Nejsou to tedy symetrické kroky se stejnou mechanikou.
+
+**Jméno `/architect` je záměrně činnost, ne výsledek**, protože krok vyrábí **sadu** dokumentů a `architecture.md` je jen její páteř; jméno podle toho souboru by pojmenovávalo část za celek.
+
+**Zamítnutá jména a proč:**
+
+- **`/design`** – oborově nejzavedenější (superpowers své fázi říká „design doc“), ale **koliduje s vestavěným příkazem Claude Code** `/design`, `/design-sync`, `/design-login`. Navíc `~/Dev/context/design/` je doména vizuální tvorby.
+- **`/architecture`** – uživatelova první volba; padla, když se ukázalo, že krok vyrábí sadu a ne jeden soubor.
+- **`/solution`** – protějšek českého „návrh řešení“, ale vágní: řešení může být cokoliv.
+- **`/specification`** (s ponecháním `/specify` návrhu) – nejdelší jméno v sadě a pojmenovávalo by dokument, který se jmenuje `requirements.md`.
+- **`/requirements` + `/architecture`** – návrh stál na principu „skill nese jméno výstupu“; **uživatel ho vyvrátil** protipříkladem `/breakdown` → `breakdown.md`, což by bylo horší než `plan.md`. Princip tedy neplatí: soubory se jmenují podle otázky, na kterou odpovídají, skilly podle práce, kterou dělají.
+- **`/architect`, `/blueprint`, `/shape`, `/decide`** – zvažovány; `/architect` vyhrál jako jediné volné jméno, které pojmenovává práci.
+
+**Nepřejmenovává se:** `requirements.md` ani `plan.md`. Jsou pojmenované podle obsahu a `specification.md` by z trojice vybočilo.
+
+### Návrh řešení je sada dokumentů, ne jeden soubor (20. 9. 2026)
+
+**Rozhodnutí:** `architecture.md` je **páteř** návrhu, ne celý návrh. K ní podle potřeby `model.md` (data a stavy), `transitions.md` (operace), `rules.md` (zásady domény) a tematické dokumenty kol.
+
+**Důvod:** požadavky jsou **seznam** a vejdou se do jednoho souboru; návrh je **soustava, ve které se věci navzájem omezují**, a tu nejde popsat lineárně. Každý dokument je **řez toutéž věcí z jiného úhlu**, takže táž funkce je ve víc z nich – jednou jako osa, jednou jako přechod, jednou jako celý okruh. Jsou to dvě nezávislé osy a jejich průnik se neskládá (`RULES.md`, *Jednoduchost před úplností*).
+
+**Pravidlo proti hromadě:** nový dokument vzniká, když drží **jiný řez** – ne když je ten stávající dlouhý. Kontrolní otázka: *odpovídá na otázku, na kterou žádný jiný neodpovídá?*
+
+**Doklad:** rezervační systém má v `docs/` 27 452 řádků; jediný `architecture.md` by z nich držel přes dvacet tisíc.
+
+**Vedlejší nález:** `STRUCTURE.md` mluvila o „návrhu řešení“, ale soubor se jmenuje `architecture.md` – dvě jména pro jednu věc, jen jedno česky a druhé anglicky. Opraveno.
+
+### `/review` stojí za každým krokem osy, který vyrobil artefakt (20. 9. 2026)
+
+**Problém:** první verze tabulky mezer měla `/review` jen za `/implement`, protože vznikala s projektem s kódem před očima. Uživatel na to upozornil otázkou, proč jsme ho tedy nad rezervacemi pouštěli v návrhové fázi.
+
+**Rozhodnutí:** `/review` patří do mezery za **každým** krokem osy, který vyrobil měřitelný artefakt – tedy i za `/specify`, `/architect` a `/breakdown`. Zapsáno jako princip, ne jako doplnění výčtu. **Výjimkou je `/project`**, který si svůj artefakt měří sám vlastní revizní fází.
+
+**Doklad:** `/review full` nad rezervacemi, které nemají řádku kódu, vrátil 177 nálezů a velká část byly návrhové díry.
+
+**Pořadí uvnitř mezery:** `/review` jde **první**, protože jeho opravy mění text, nad kterým pracují ostatní; `/consistency` po něm; `/cleanup` vždy poslední.
+
+### Rozdíl mezi `/review` a `/oponent` nad obsahovým projektem (20. 9. 2026)
+
+Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude odvozovat znovu:
+
+**`/review` má měřítko v souboru, `/oponent` žádné nemá.**
+
+- `/review` měří hotovou práci **proti předpisu, který existuje jako dokument**. Nález zní „porušuje pravidlo X ze standardu Y“ a dá se vyvrátit ukázáním na to pravidlo. Jeho **specialisté** (korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura) se zapínají **jen na kód**; nad obsahovým projektem se zapnou pouze **doménové sady** z `~/Dev/context/`.
+- `/oponent` žádný předpis nemá a **posuzuje samotný obsah**. Nález zní „nedává to smysl“ nebo „chybí tu odpověď“ a vyvrátit se dá jen argumentem.
+
+**Proč `/review` u rezervací našel návrhové díry:** nejsou to čistě obsahový projekt, ale dokumentace popisující aplikaci, takže se zapnuly sady `coding/coding.md`, `coding/architecture.md` a `web/admin.md`. Nález *„guard posílá admina udělat něco, co neexistuje“* je porušení konkrétního pravidla, ne oponentura.
+
+**Praktický důsledek:** u projektu, ke kterému žádný relevantní standard v `~/Dev/context/` neexistuje, je `/review` skoro prázdný a má se přeskočit. `/oponent` funguje vždycky.
+
