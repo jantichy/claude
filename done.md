@@ -8,6 +8,8 @@ Odvedená práce na konfigurační vrstvě a záznamy průchodů životním cykl
 
 Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle repozitářem. Čtenářem je příští běh téhož skillu: potřebuje vědět, co minule zůstalo mimo rozsah a jak se s tím naložilo.
 
+- **2026-09-20** · `/cleanup` · `96e0b4d` · session přestavby životního cyklu na osu a kontroly · 2 nevypořádaná témata (2 rozhodnuta) · čtenáři našli 13 + 13 nálezů, opraveno 15, zbytek do `todo.md` · mimo rozsah: 1 položka (testy změřeny, neopravovány)
+
 - **2026-09-02** · `/oponent` · `~/.claude@574dade` · konfigurační vrstva `~/.claude` (životní cyklus projektu, `/review`, `/attack`, `coding.md`, `verify.sh`, meta-testy) · hlediska: vnitřní rozpor, co chybí, skeptik, provoz, hraniční případy · 75 nálezů (70 zapracováno, 0 zamítnuto, 5 odloženo)
   - Katalog hledisek se **po tomhle běhu** zmenšil na sedmnáct: *skeptik* splynul s *předpoklady* a *hraniční případy* s *co chybí*. Příští oponentura ať proti tomuhle řádku srovnává obsah, ne názvy – ty dva hlediska už v katalogu nejsou.
   - Před konsolidací bylo nálezů 84; do počtu výš se sloučily duplicity nalezené víc hledisky nezávisle.
