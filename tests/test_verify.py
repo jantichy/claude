@@ -109,6 +109,57 @@ class ContinuousCheck(unittest.TestCase):
         return subprocess.run(["shasum"], input=str(path.resolve()),
                               capture_output=True, text=True).stdout.split()[0]
 
+    def run_switch(self, *argv):
+        env = dict(os.environ, HOME=str(self.home))
+        env.pop("XDG_STATE_HOME", None)
+        return subprocess.run(["bash", str(VERIFY), *argv],
+                              capture_output=True, text=True, env=env)
+
+    def test_switch_lives_outside_the_repository(self):
+        """Vypínač se nesmí dát commitnout.
+
+        Do 20. 9. 2026 se hledal soubor `.claude/no-verify` **v projektu**.
+        Commitnutý se tedy rozšířil s repozitářem a vypnul kontrolu v každém
+        dalším klonu i worktree – tedy i tam, kde o tom nikdo nerozhodl.
+        Stav proto leží v `$HOME` vedle souhlasů a zapíná se přepínačem.
+
+        Testuje se obojí: že vypnutí platí a že soubor uvnitř repozitáře
+        neznamená nic. Druhý směr je tu ten důležitější – kdyby se stará cesta
+        omylem nechala, přesun by nic nevyřešil a vypadal by hotově.
+        """
+        self.commit_contract(lint="-", test="true")
+        self.allow()
+
+        stale = self.repo / ".claude"
+        stale.mkdir(parents=True, exist_ok=True)
+        (stale / "no-verify").write_text("")
+        done = self.run_verify()
+        self.assertNotIn("no-verify", done.stderr,
+                         "soubor uvnitř repozitáře kontrolu pořád vypíná")
+
+        done = self.run_switch("--disable", str(self.repo))
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertFalse((self.repo / ".claude" / "disabled").exists(),
+                         "vypínač se zapsal do repozitáře")
+        self.assertTrue((self.home / ".local/state/claude-verify/disabled").is_dir(),
+                        "vypínač se nezapsal mimo repozitář")
+
+        done = self.run_verify()
+        self.assertEqual(0, done.returncode)
+        self.assertIn("vypnutá", done.stderr, "vypnutí neplatí")
+
+        done = self.run_switch("--enable", str(self.repo))
+        self.assertEqual(0, done.returncode, done.stderr)
+        done = self.run_verify()
+        self.assertNotIn("vypnutá", done.stderr, "zapnutí zpátky neplatí")
+
+    def test_enabling_what_is_not_disabled_fails(self):
+        """Tiché „hotovo“ nad něčím, co se nestalo, je horší než chyba."""
+        self.commit_contract(lint="-", test="true")
+        done = self.run_switch("--enable", str(self.repo))
+        self.assertEqual(1, done.returncode)
+        self.assertIn("vypnutá nebyla", done.stderr)
+
     def test_run_state_ignores_xdg_state_home(self):
         """Stav běhu nesmí jít přesměrovat proměnnou prostředí.
 
@@ -284,8 +335,7 @@ class ContinuousCheck(unittest.TestCase):
         """Vypnutá kontrola, o které se mlčí, je horší než chybějící kontrola."""
         self.commit_contract(typecheck="-", lint="-", test="false")
         self.allow()
-        (self.repo / ".claude").mkdir(exist_ok=True)
-        (self.repo / ".claude/no-verify").touch()
+        self.run_switch("--disable", str(self.repo))
         r = self.run_verify()
         self.assertEqual(r.returncode, PASSES)
         self.assertIn("vypnutá souborem", r.stderr)

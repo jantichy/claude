@@ -19,6 +19,7 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 | Přesměrovat stav běhu a podstrčit „tenhle strom už prošel“ | `RUN_DIR` je natvrdo pod `$HOME`, `XDG_STATE_HOME` se ignoruje | hlídáno, od 14. 9. 2026 |
 | Podvrhnout sekci `## Kontrakt příkazů` v komentáři nebo v bloku kódu nad tou pravou | Tělo se čte parserem podle CommonMarku; dvě sekce téhož jména běh zastaví | hlídáno |
 | `CLAUDE_NO_VERIFY=1` | Nic – proměnná kontrolu vypne | **accepted**: je to únikový východ pro případ, kdy je kontrola sama rozbitá. Kdo ho použije, ví to; v logu session je to vidět. |
+| Vypínač commitnutý do repozitáře | Vypínač leží od 20. 9. 2026 **mimo repozitář** (`~/.local/state/claude-verify/disabled/<klíč>`, přepínač `--disable`), takže ho tam nejde zanést; hlídá to `tests/test_verify.py` oběma směry | hlídáno, od 20. 9. 2026 |
 | Commit z jiného stroje, z GUI nebo s `--no-verify` | Nic lokálně | **accepted**: přesně proto existuje CI – ta běží bez ohledu na to, kdo a odkud commituje, a je to jediná vrstva, kterou lokální obejití nezasáhne. |
 | Splnit krok `test` triviálním testem | Nic automaticky | **accepted**: měří to jen mutační testy, a ty tu běží nad vzory kontrol, ne nad celou sadou. Proti tomu stojí zákaz editace testů během implementace a to, že diff testů čte `/review`. |
 

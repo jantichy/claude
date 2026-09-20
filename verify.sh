@@ -26,7 +26,8 @@
 # stderr jen uživatel, kdežto shrnutí píše model – a ten by nad neprověřeným
 # stavem nechal stát svoje "hotovo".
 #
-# Vypnout: .claude/no-verify v projektu, nebo CLAUDE_NO_VERIFY=1.
+# Vypnout: soubor ~/.local/state/claude-verify/disabled/<klíč projektu>, nebo CLAUDE_NO_VERIFY=1.
+# Zapíná a vypíná se `verify.sh --disable <project>` / `--enable <project>`; uvnitř repozitáře vypínač nehledá, aby se nedal commitnout.
 
 set -uo pipefail
 
@@ -52,6 +53,7 @@ MAX_OUT=200000  # kolik bajtů výstupu si od kroku vezmeme
 # řádek pod ni nespadal, protože se rozsah pravidla sám nešíří.
 ALLOW_DIR="$HOME/.local/state/claude-verify/allowed"
 RUN_DIR="$HOME/.local/state/claude-verify/runs"
+DISABLED_DIR="$HOME/.local/state/claude-verify/disabled"
 
 # Jméno klíče v kontraktu. Jeden vzor pro všechna místa, která kontrakt čtou –
 # výpis ke schválení, otisk souhlasu, --contract i spouštění. Dřív výpisy
@@ -267,6 +269,30 @@ if [ "${1:-}" = "--list" ]; then
   exit 0
 fi
 
+# Vypnutí a zapnutí kontroly pro jeden repozitář. Stav leží mimo něj, takže se
+# nedá commitnout – dřív se hledal soubor `.claude/no-verify` uvnitř projektu
+# a commitnutý vypínal kontrolu i v každém dalším klonu a worktree. Klíč je týž
+# jako u souhlasu, takže vypnutí platí pro repozitář, ne pro jednu jeho větev.
+if [ "${1:-}" = "--disable" ] || [ "${1:-}" = "--enable" ]; then
+  need_tools
+  [ -n "${2:-}" ] || die "použití: verify.sh ${1} <project>"
+  P=$(norm_path "$2")
+  K=$(proj_key "$(repo_id "$P")")
+  if [ "${1}" = "--disable" ]; then
+    mkdir -p "$DISABLED_DIR" || die "nelze založit $DISABLED_DIR"
+    printf '%s\n' "$P" > "$DISABLED_DIR/$K" || die "nelze zapsat $DISABLED_DIR/$K"
+    echo "Průběžná kontrola vypnuta pro $P. Zapnout: verify.sh --enable $P"
+    exit 0
+  fi
+  if [ -f "$DISABLED_DIR/$K" ]; then
+    rm -f "$DISABLED_DIR/$K" || die "nelze smazat $DISABLED_DIR/$K"
+    echo "Průběžná kontrola zapnuta pro $P."
+    exit 0
+  fi
+  echo "Pro $P vypnutá nebyla." >&2
+  exit 1
+fi
+
 if [ "${1:-}" = "--revoke" ]; then
   need_tools
   [ -n "${2:-}" ] || die "použití: verify.sh --revoke <project>"
@@ -423,7 +449,7 @@ fi
 # Neznámý přepínač: bez tohohle by hook čekal na stdin a vypadal by jako zaseknutý.
 case "${1:-}" in
   "") ;;
-  *) die "neznámý přepínač ${1}. Použití: --allow <project> | --list | --revoke <project> | --contract <project>" ;;
+  *) die "neznámý přepínač ${1}. Použití: --allow <project> | --list | --revoke <project> | --disable <project> | --enable <project> | --contract <project>" ;;
 esac
 
 # --- Vstup ---------------------------------------------------------------------
@@ -483,17 +509,20 @@ CLAUDE_MD=$(find_contract "$PWD" || find_contract "${ROOT:-/nonexistent}") || {
 }
 PROJ=$(canon "$(proj_for_md "$CLAUDE_MD")")
 
-for d in "$PROJ" "$PWD"; do
-  if [ -f "$d/.claude/no-verify" ]; then
-    echo "Průběžná kontrola: vypnutá souborem $d/.claude/no-verify, nespustil jsem nic." >&2
-    exit 0
-  fi
-done
-
 need_tools
 [ -d "$ALLOW_DIR" ] && [ ! -O "$ALLOW_DIR" ] && die "$ALLOW_DIR nepatří tobě, nespouštím nic."
 
 KEY=$(proj_key "$(repo_id "$PROJ")")
+
+# Vypínač leží mimo repozitář, a je to záměr. Do 20. 9. 2026 se hledal soubor
+# `.claude/no-verify` v projektu – jenže ten se dá commitnout, a pak kontrolu
+# vypne i v každém dalším klonu a worktree, aniž by si toho někdo všiml. Tady
+# ho může založit jedině ten, kdo má přístup k `$HOME`, a klíč je týž jako
+# u souhlasu, takže vypnutí platí pro jeden repozitář, ne pro adresář.
+if [ -f "$DISABLED_DIR/$KEY" ]; then
+  echo "Průběžná kontrola: vypnutá souborem $DISABLED_DIR/$KEY, nespustil jsem nic." >&2
+  exit 0
+fi
 if ! allow_file "$PROJ" >/dev/null; then
   {
     echo "Průběžná kontrola: pro $PROJ není vydaný souhlas, nespustil jsem nic."
