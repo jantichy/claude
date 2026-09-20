@@ -110,6 +110,26 @@
 
   **Píše se až po pilotním běhu**, který proběhne ad hoc v rezervačním systému nad platební bránou (zapsáno v jeho `docs/todo.md`). Rozhodl uživatel: ze zadání pro agenty se z hlavy netrefí, co v něm musí stát, a pilot poslouží jako srovnávací běh.
 
+  **Pilot proběhl 20. 9. 2026** v rezervačním systému nad platební bránou; zápis je v jeho `docs/done.md` a výsledek v `docs/decisions.md` §133. **Zadání skillu níž z něj vychází – sepsat ho podle `skills/SKILLS.md` je už jen mechanická práce.**
+
+  **Fáze, které se v pilotu osvědčily:**
+
+  1. **Kronika.** Z `decisions.md`, `done.md` a git logu vytáhnout všechna rozhodnutí o zkoumané oblasti **v pořadí vzniku, s datem a s podnětem**. Podnět je nejcennější položka – hledá se ve formulacích „vyplavalo při“, „nález z `/review`“, „ukázalo se, že“. **Git log je samostatný zdroj**, který dokumentace nenese: `git log --reverse -S '<pole>' -- docs/` ukáže, kdy která hodnota vznikla, a zprávy commitů nesou zdůvodnění, které se do dokumentace nedostalo.
+  2. **Inventura mechanismů.** Taxativně všechna pole, hodnoty výčtů, invarianty, přechody a guardy dotčené oblasti, **s doslovnými citacemi**. Zvlášť se ptát, **na kterou podmnožinu hodnot se který guard ptá** – to je detektor přetížené osy.
+  3. **Zkušební sada situací.** Všechno, co dnešní řešení musí unést, s citací a se jménem mechanismu, který to řeší. Bez ní není proti čemu měřit návrh.
+  4. **Návrh alternativy** nad kronikou a shluky.
+  5. **Ověření s úkolem vyvrátit.** Jeden ověřovatel na jeden návrh.
+
+  **Tři fáze sběru běžely paralelně jako `reader` agenti a vyplatilo se to** – celkem pět agentů (tři sběrači, dva ověřovatelé). Dva sběrače stačí, když je oblast malá.
+
+  **Co musí být v zadání ověřovatele doslova:** úkol **vyvrátit**, ne posoudit; zákaz odvolávat se na dřívější zamítnutí; povinnost jmenovat **konkrétní guard, invariant nebo text pro zákazníka**, který se rozbije. V pilotu ověřovatelé zabili **dva ze dvou** velkých návrhů a jako vedlejší produkt našli dvě skutečné vady – to je ten skutečný výnos, ne návrh sám.
+
+  **Past, kterou pilot doložil:** sběrač, který čte jen část dokumentů, vrátí neúplný seznam čtenářů hodnoty a **hlavní session z toho udělá závěr**. Stalo se to u hodnoty `UNDOCUMENTED` – sběrač našel jednoho čtenáře a uvedl to s mezí („v obou prohledaných souborech“), hlavní session tu mez zahodila a ohlásila nález, který ověřovatel vzápětí vyvrátil šesti čtenáři. **Do zadání proto patří jmenovitý výčet souborů, které má agent projít**, a do výstupu povinná sekce *Meze posudku*.
+
+  **Výstup skillu:** u každého shluku kronika (co vzniklo kdy a z jakého podnětu), návrh alternativy, verdikt ověřovatele a cena přepisu. **„Nic velkého k přepsání“ je platný výstup** a musí na něj být šablona – jinak se z něj stane stroj na návrhy, které projdou, protože je nikdo nezkusil vyvrátit.
+
+  **Rozsah se zadává jako výchozí bod, ne jako hranice výstupu** (`/consolidate gateway` znamená „vyjdi ze záplat kolem brány“, ne „výsledek se smí týkat jen pole s tím prefixem“).
+
   **Čeho se skill cíleně chytá – vyjmenoval uživatel 20. 9. 2026 po pilotním běhu.** Nejsou to příklady, ale lovné vzory; skill po nich jde adresně, ne že by na ně náhodou narazil.
 
   - **Přetížená osa.** Jedno pole, kterým se postupně řešily různé problémy, až odpovídá na víc otázek naráz. **Poznávací znamení je v guardech, ne v poli:** ptá-li se každý guard jen na jinou podmnožinu hodnot a k rozlišení dvou z nich je potřeba druhé pole vedle, jsou to osy dvě nebo tři. Uživatel to popsal takhle: *„postupně jsme tím jedním sloupcem řešili různé problémy, až se přetížil a pak jsme museli dodatečnýma obskurníma podmínkama řešit, co to vlastně říká.“*
