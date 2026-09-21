@@ -76,6 +76,10 @@ Nemáš jasný podklad, jednoznačný pokyn nebo deterministické kritérium →
 
 Platí zejména pro **technické názvy** (proměnné v cizí doméně, API volání a parametry, event names, ID, klíče) a **chybějící podklady** (šablona, JSON, schéma, příklad). **Vymyšlený název je horší než žádný** – způsobuje chyby, které se těžko dohledávají.
 
+**Kotva odkazu je technický název jako každý jiný a skládá se z nadpisu, ne z paměti.** Míří-li odkaz na sekci – `#nazev-sekce`, `soubor.md#nadpis` –, **dohledej cílový nadpis a slug z něj odvoď**; neskládej ho podle toho, jak si myslíš, že se ta sekce jmenuje. Platí to i pro odkaz uvnitř téhož souboru a zvlášť pro odkaz do dokumentu, který zrovna nemáš otevřený.
+
+**Je to zrádné tím, že uhodnutá kotva vypadá správně** – slug se z nadpisu odvozuje mechanicky, takže odhad bývá blízko a rozdíl je v jednom slově. A **kontrola nemusí být** ta, na kterou spoléháš: test nad odkazy chytí jen soubory, které prověřuje, kdežto odkaz z jiného dokumentu na přejmenovanou sekci propustí. **Doloženo 21. 9. 2026** v rezervačním systému: během jedné session jsem kotvu uhodl místo dohledání **pětkrát**, dvakrát i po tom, co jsem to sám prohlásil za poučení. Všech pět zastavil test tvaru dokumentace – tedy vrstva, která v jiném projektu být nemusí.
+
 ### Zapiš i to, co vědomě nemáš
 
 Chybějící věc se z projektu nepozná od zapomenuté. Rozhodl-li ses něco **nemít** – nezakládat vrstvu, nepoužít nástroj, nepodporovat režim –, patří to do `docs/decisions.md` i s důvodem, ne do prázdného místa. Bez toho to za půl roku někdo navrhne znovu, projde celou úvahou znovu a dojde ke stejnému závěru, nebo hůř k opačnému, protože si nevzpomene na argument, který tehdy rozhodl.
