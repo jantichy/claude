@@ -103,7 +103,7 @@ Zeptej se **na pět věcí, jednu po druhé**:
 
 **Typem `researcher`, výchozí model, `low`.** Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: doklad bez URL se zahodí hned pod tímhle odstavcem.
 
-**Ověř nálezy** – zahoď, co nemá `basis` s funkční URL, co má nízkou jistotu, a slouč duplicity mezi agenty. Navíc přísněji na jednu věc: **doklad musí mluvit o problému, ne o kategorii produktu**. Článek „deset nejlepších nástrojů na X“ dokládá, že někdo píše o nástrojích, ne že někdo má ten problém. Stížnost člověka, který popisuje, jak to dnes obchází, doklad je.
+**Ověř nálezy stejným sítem jako ve Fázi 3** – vypadne, co nemá `basis` s funkční URL; co má nízkou jistotu u nosného údaje, buď doověř přes `WebFetch`, nebo zapiš jako neznámé; duplicity mezi agenty slouč. Navíc přísněji na jednu věc: **doklad musí mluvit o problému, ne o kategorii produktu**. Článek „deset nejlepších nástrojů na X“ dokládá, že někdo píše o nástrojích, ne že někdo má ten problém. Stížnost člověka, který popisuje, jak to dnes obchází, doklad je.
 
 Sepiš `docs/demand.md`:
 
@@ -225,26 +225,9 @@ U každého rizika:
 4. **Verdikt** – je v `demand.md` jedna ze dvou hodnot, ne něco mezi? Je u nedoložené poptávky zapsané, jak uživatel rozhodl dál, i s důvodem?
 5. **Vymyšlené věci** – je tam jméno, číslo nebo tvrzení, které jsi neměl od uživatele ani ze zdroje? To je nález.
 
-**Oponentura.** Nabídni `/oponent docs/demand.md docs/competition.md` – rešerši psal ten, kdo si zároveň přeje, aby produkt vyšel, a to je přesně ta zaujatost, kterou má posudek chytat. Panel hledisek si sestaví sám.
+**Oponentura.** Nabídni `/oponent docs/demand.md docs/competition.md docs/risks.md` – rešerši psal ten, kdo si zároveň přeje, aby produkt vyšel, a to je přesně ta zaujatost, kterou má posudek chytat. **Rizika patří do posudku taky**, protože je to ze všech tří dokument, kde se nejvíc tvrdí a nejmíň dokládá: pravděpodobnost i *Promítnutí do produktu* jsou úsudek, ne údaj s URL. Panel hledisek si sestaví sám.
 
 **Předání.** Po schválení nabídni `/specify`. Ten si dokumenty najde sám a **nebude se ptát na to, co je v nich** – zejména sekce *Co poměřujeme* a *Verdikt* bere jako hotový vstup.
-
-------
-
-## Časté chyby
-
-| Chyba | Proč je to chyba |
-|---|---|
-| Zapsat uživatelův dojem jako doklad poptávky | „Myslím, že to lidi chtějí“ a „tři lidé mě o to sami požádali“ vypadají v dokumentu stejně, ale unese jen druhé. Dojem má vlastní sekci právě proto, aby se to nestíralo. |
-| Přejít přes nedoloženou poptávku mlčky | Od `/specify` dál se všude předpokládá, že je rozhodnuto stavět. Tohle je jediné místo, kde ta otázka zazní; nezazní-li tady, nezazní nikdy. |
-| Vzít „deset nejlepších nástrojů na X“ za doklad problému | Dokládá to, že někdo píše o nástrojích – typicky proto, že na tom vydělává. Doklad je člověk, který popisuje, jak problém dnes obchází. |
-| Vynechat celý skill u interního nástroje | Trh nemá, nositele problému ano. Bez `demand.md` vznikne nástroj, který si lidé v organizaci obejdou tabulkou – stejné selhání jako aplikace bez zákazníků, jen za ni platí někdo jiný. |
-| Hledat jen přímé konkurenty | Nejsilnější konkurent je zvyk. Cesta *Náhradní řešení* existuje právě proto. |
-| Opsat marketingové sliby z webu konkurenta jako fakta o funkcích | Web říká, co chtějí prodat, ne co produkt umí. Doloženo je to, co jde ověřit v dokumentaci, ceníku nebo recenzi. |
-| Napsat pozici jako claim | „Jednodušší a rychlejší“ se nedá ověřit ani vyvrátit, takže z toho neplyne žádný požadavek. |
-| Nechat *Promítnutí do produktu* prázdné | Riziko, které nic nemění, je poznámka. Buď se promítne, nebo se výslovně přijme. |
-| Sepsat rizika technického řešení | Technologie se ještě nevybrala, takže riziko její volby je dohad. Patří do `architecture.md`, až volba padne. |
-| Pustit konkurenční rešerši na interní nástroj | Nemá trh. Prázdná analýza konkurence předstírá úvahu, která se nestala – na rozdíl od poptávky a rizik, která tam smysl mají. |
 
 ------
 
@@ -276,7 +259,7 @@ U každého rizika:
 - [seznam, nebo „žádné“]
 
 **Další krok**
-- [/oponent nad demand.md a competition.md / /specify]
+- [/oponent nad demand.md, competition.md a risks.md / /specify]
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.

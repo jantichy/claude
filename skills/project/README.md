@@ -19,7 +19,7 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 5. **Nastaví Git** včetně založení vzdáleného repozitáře a propíše do jeho popisku a odkazu totéž, co je v projektu, aby na obou místech nestálo něco jiného.
 6. **Zvládne i uspořádání s jedním pracovním adresářem na větev**, takže nad projektem může běžet víc sezení naráz, aniž si přepisují soubory. Přijde-li do projektu, který tak už uspořádaný je, **hlavní větev nechá být** a vlastní si založí, teprve až se má opravdu něco změnit; merge nechává na vás.
 7. **Založí dokumentační strukturu** – co je odložené, co je jen nezávazný nápad, co hotové, co se rozhodlo a proč, jaké principy platí – a nechá vás vybrat, jestli má ležet ve vlastní složce, nebo v kořeni.
-8. **Nabídne produktové podklady** – analýzu konkurence, registr rizik, scénáře, glosář, ceník. Nezakládá je prázdné; jen si zapíše, které z nich projekt vede, aby se pak poznal chybějící dokument od nechtěného.
+8. **Nabídne produktové podklady** – doklady poptávky, analýzu konkurence, registr rizik, scénáře, glosář, ceník. Nezakládá je prázdné; jen si zapíše, které z nich projekt vede, aby se pak poznal chybějící dokument od nechtěného.
 9. **Zmigruje starší pojmenování souborů** a projde celý repozitář, aby nezůstal rozbitý odkaz.
 10. **Zapne kontroly kvality** – zapíše, čím se v projektu pouštějí testy, typová kontrola, linter a build, a řekne, co se tím nebude kontrolovat, když projekt některý z nich nemá.
 11. **Napojí doménové checklisty** podle povahy projektu.

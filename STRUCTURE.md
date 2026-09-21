@@ -349,7 +349,7 @@ Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requir
 | `glossary.md` | Jak se v téhle doméně čemu říká | `/specify` |
 | `pricing.md` | Tarify, limity, trial, upgrade, co se stane po expiraci | `/specify` |
 
-**Žádný z nich není povinný a většina projektů vede jen hrstku.** Interní nástroj nemá konkurenci ani ceník; jednoduchá aplikace nepotřebuje glosář. Prázdný podklad je horší než žádný, protože předstírá, že se ta úvaha udělala.
+**Žádný z nich není povinný a většina projektů nevede ani jeden** – nestaví se v nich produkt pro lidi zvenčí. Interní nástroj nemá konkurenci ani ceník; jednoduchá aplikace nepotřebuje glosář. Prázdný podklad je horší než žádný, protože předstírá, že se ta úvaha udělala.
 
 **Výjimka je `demand.md`** – ten dává smysl všude, kde se staví něco pro lidi, **i tam, kde produkt nemá trh**. Interní nástroj konkurenci nemá, ale nositele problému ano, a nástroj, který si lidé v organizaci obejdou tabulkou, je totéž selhání jako aplikace bez zákazníků. Povinný přesto není: u přírůstku do hotového produktu se o „proč“ rozhodlo dřív, a je-li to rozhodnutí zapsané, nemá se přepisovat.
 

@@ -210,12 +210,12 @@ Neber jako samozřejmé, že aktualizace proběhla. **Empiricky se na ni zapomí
    | `docs/rules.md` | vybrousil se princip, hranice, „takhle to v tomhle projektu děláme vždycky“ |
    | `docs/requirements.md` | změnil se produktový záměr – co se staví, pro koho, co je v MVP a co mimo rozsah |
    | `docs/architecture.md` | změnil se návrh řešení – architektura, datový model, stavy, technologie, bezpečnostní model |
-| `docs/demand.md` | přibyl doklad poptávky nebo dojem o ní, nebo se objevilo zjištění, které zpochybňuje verdikt |
-| `docs/competition.md` | zjistilo se něco o konkurenci nebo se posunulo, čím se proti ní vymezujeme |
-| `docs/risks.md` | objevilo se riziko, nebo se změnilo, čím mu čelíme; **zvlášť ověř pole *Promítnutí do produktu*** – rozhodlo-li se v session něco kvůli riziku, patří to tam |
-| `docs/scenarios.md` | přibyla, změnila se nebo zanikla cesta, kterou uživatel produktem projde – včetně chybové |
-| `docs/glossary.md` | zavedl se, přejmenoval nebo upřesnil pojem; **pozor i na pojem, který se v session začal používat mimoděk** |
-| `docs/pricing.md` | změnil se tarif, limit, chování po expiraci nebo cokoliv, co z toho plyne pro produkt |
+   | `docs/demand.md` | přibyl doklad poptávky nebo dojem o ní, nebo se objevilo zjištění, které zpochybňuje verdikt |
+   | `docs/competition.md` | zjistilo se něco o konkurenci nebo se posunulo, čím se proti ní vymezujeme |
+   | `docs/risks.md` | objevilo se riziko, nebo se změnilo, čím mu čelíme; **zvlášť ověř pole *Promítnutí do produktu*** – rozhodlo-li se v session něco kvůli riziku, patří to tam |
+   | `docs/scenarios.md` | přibyla, změnila se nebo zanikla cesta, kterou uživatel produktem projde – včetně chybové |
+   | `docs/glossary.md` | zavedl se, přejmenoval nebo upřesnil pojem; **pozor i na pojem, který se v session začal používat mimoděk** |
+   | `docs/pricing.md` | změnil se tarif, limit, chování po expiraci nebo cokoliv, co z toho plyne pro produkt |
    | `CLAUDE.md` → `## Kontrakt příkazů` | přibyl nebo se změnil příkaz na testy, lint, build nebo audit |
    | `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |
 
