@@ -347,7 +347,7 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 **Znění je doslova stejné ve všech**, liší se jen tím, který krok je tučný. **Počet kroků se v něm neuvádí číslovkou** – ta se při přidání dalšího kroku rozejde ve všech rámečcích naráz a nic ji nehlídá; čtenář si počet spočítá z rámečku pod tím.
 
-**Rámeček má dva bloky, protože cyklus má dvě vrstvy** (`~/.claude/skills/LIFECYCLE.md`, *Kroky cyklu a jejich uspořádání*): kroky **osy** něco tvoří a stojí v pořadí, **kontrolní kroky** nic nepřidávají a stojí v mezerách mezi nimi – některé z nich ve víc mezerách naráz. Jednořádková šipková řada, která tu stála do 20. 9. 2026, obojí slévala a tvrdila tím pořadí, které neexistuje.
+**Rámeček má dva bloky, protože cyklus má dvě vrstvy** (`~/.claude/skills/LIFECYCLE.md`, *Kroky cyklu a jejich uspořádání*): kroky **osy** něco tvoří a stojí v pořadí, **kontrolní kroky** nezvětšují rozsah práce a stojí v mezerách mezi nimi – některé z nich ve víc mezerách naráz. Jednořádková šipková řada, která tu stála do 20. 9. 2026, obojí slévala a tvrdila tím pořadí, které neexistuje.
 
 ```
 > **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci

@@ -30,7 +30,7 @@ Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a z
 
 ### [`WORKTREE.md`](WORKTREE.md) – několik rozdělaných věcí vedle sebe
 
-Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik session naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá a dokončuje, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i příprava a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.
+Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik session naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i příprava a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.
 
 ### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
 

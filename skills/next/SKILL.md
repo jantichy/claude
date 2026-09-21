@@ -81,7 +81,7 @@ Obsazenost už rozhodl skript, pole `state`:
 
 ### Kola návrhu
 
-- **Kolo s `branch_state`, jehož větev je v `branches` jako `occupied`, `uncertain` nebo `abandoned`,** je práce ve větvi – řídí se *Prací ve větvích*, **nikdy se nenabízí jako nové kolo**. Chybí-li jeho větev v `branches` nebo je `empty`, nic v ní není a kolo se nabízí jako každé jiné. `branch_state` říká, co ve větvi čeká: hodnota řádku *Stav* z `todo.md` ve větvi (`rozhoduje se` = rozhodování, `rozhodnuto` = zápis před sloučením), nebo `merge_pending`, když blok kola ve větvi už chybí a zbývá jen sloučení.
+- **Kolo s `branch_state`, jehož větev je v `branches` jako `occupied`, `uncertain` nebo `abandoned`,** je práce ve větvi – řídí se *Prací ve větvích*, **nikdy se nenabízí jako nové kolo**. Chybí-li jeho větev v `branches` nebo je `empty`, nic v ní není a kolo se nabízí jako každé jiné. `branch_state` říká, co ve větvi čeká: hodnota řádku *Stav* z `todo.md` ve větvi (`rozhoduje se` = rozhodování, `rozhodnuto` = zápis před sloučením), nebo `merge_pending` (zbývá sloučit, provede `/merge`), když blok kola ve větvi už chybí a zbývá jen sloučení.
 - **Kolo bez větve** se nabízí se spouštěčem `/architect <kolo>`; u něj řekni, do kterých dokumentů sahá (*Sahá na*) a jestli se to kříží s rozběhnutým kolem. **Souběh neblokuj, jen na něj upozorni.**
 - **Bez worktree layoutu** větve kol nevznikají; kolo ve stavu `rozhoduje se` nebo `rozhodnuto` ber jako rozdělanou práci tady.
 

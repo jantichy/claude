@@ -63,7 +63,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 - **Neopakuje audit konzistence.** Ptá se na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
 - **Nespouští testy, linter ani build** a nedělá obecnou revizi souborů nad rámec toho, co z konverzace vzešlo.
 - **Nezakládá potichu chybějící soubory.** Vypíše, které chybí, a nabídne `/project`.
-- **Nemerguje větev sám od sebe.** Nabídne to a udělá, jen když to vyberete.
+- **Nemerguje větev sám od sebe.** Nabídne to a vyberete-li to, předá práci skillu [`/merge`](../merge/README.md).
 
 ## Jak si ho nainstalovat
 
