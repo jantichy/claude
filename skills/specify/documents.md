@@ -72,7 +72,7 @@ Co ještě není rozhodnuté a co to blokuje.
 
 ## Scénáře, glosář a ceník
 
-Tři z pěti *Produktových podkladů*, které projekt vede volitelně – zbylé dva, `competition.md` a `risks.md`, píše `/discovery` a šablonu tady nemají. Kdy se píšou a podle čeho se pozná, že je projekt vede, říká `SKILL.md`; **co který dokument je a k čemu slouží, drží `~/.claude/STRUCTURE.md`, *Produktové podklady***. Tady je jen tvar a to, co platí při psaní.
+Tři ze šesti *Produktových podkladů*, které projekt vede volitelně – zbylé tři, `demand.md`, `competition.md` a `risks.md`, píše `/discovery` a šablonu tady nemají. Kdy se píšou a podle čeho se pozná, že je projekt vede, říká `SKILL.md`; **co který dokument je a k čemu slouží, drží `~/.claude/STRUCTURE.md`, *Produktové podklady***. Tady je jen tvar a to, co platí při psaní.
 
 **`docs/scenarios.md`** – jeden scénář na tenhle tvar, včetně okrajových a chybových cest:
 

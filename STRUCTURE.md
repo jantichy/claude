@@ -52,7 +52,7 @@ Povinný je jediný soubor – **`CLAUDE.md`**, bez něj projekt není projekt. 
 | `todo.md` + `backlog.md` + `done.md` | volitelně, ale **jen jako trojice** – jedna volba pro všechny tři |
 | `requirements.md`, `architecture.md`, `plan.md` | až prací, přes `/specify`, `/architect` a `/breakdown` |
 | `<topic>.md` – tematický dokument kola | až prací, kolem návrhu přes `/architect` – viz *`requirements.md`, `architecture.md`, `plan.md`* |
-| `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md` | **vybírá se** při `/project` (výchozí ne), zakládá se až prací – viz *Produktové podklady* |
+| `demand.md`, `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md` | **vybírá se** při `/project` (výchozí ne), zakládá se až prací – viz *Produktové podklady* |
 | `research/` | až je co uložit |
 | `.claude/run/` | samo, přerušitelným během skillu – není to standardní soubor, viz *Běhový stav skillů* |
 | testy | s první kontrolou, kterou projekt dostane – umístění se řídí jeho runnerem, viz *Testy* |
@@ -342,6 +342,7 @@ Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requir
 
 | Soubor | Odpovídá na otázku | Plní |
 |---|---|---|
+| `demand.md` | Proč to vůbec stavět – kdo má ten problém, jak ho dnes řeší, co ho to stojí a čím je doložené, že ho chce řešit jinak | `/discovery` |
 | `competition.md` | Kdo je konkurence, co umí, za kolik – a jaká je proti nim naše pozice | `/discovery` |
 | `risks.md` | Co je na produktu rizikové a čím to v návrhu mitigujeme | `/discovery` |
 | `scenarios.md` | Co s produktem uživatel dělá, krok za krokem, taxativně | `/specify` |
@@ -349,6 +350,12 @@ Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requir
 | `pricing.md` | Tarify, limity, trial, upgrade, co se stane po expiraci | `/specify` |
 
 **Žádný z nich není povinný a většina projektů má nanejvýš dva.** Interní nástroj nemá konkurenci ani ceník; jednoduchá aplikace nepotřebuje glosář. Prázdný podklad je horší než žádný, protože předstírá, že se ta úvaha udělala.
+
+**Výjimka je `demand.md`** – ten dává smysl všude, kde se staví něco pro lidi, **i tam, kde produkt nemá trh**. Interní nástroj konkurenci nemá, ale nositele problému ano, a nástroj, který si lidé v organizaci obejdou tabulkou, je totéž selhání jako aplikace bez zákazníků. Povinný přesto není: u přírůstku do hotového produktu se o „proč“ rozhodlo dřív, a je-li to rozhodnutí zapsané, nemá se přepisovat.
+
+**`demand.md`** drží problém, jeho nositele, dnešní řešení a jeho cenu, **doklady poptávky odděleně od dojmů**, sekci *Co by verdikt vyvrátilo* a **verdikt o dvou hodnotách** – poptávka doložená, nebo nedoložená; nic mezi tím. Dojem se od dokladu liší zdrojem: „myslím, že to lidi chtějí“ je dojem, „tři jmenovaní lidé o to požádali“ nebo URL diskuse je doklad. **Nedoložená poptávka není vada dokumentu**, ale jeho platný výsledek – a patří pak do `risks.md` jako riziko s nejvyšším dopadem.
+
+Hranice proti `requirements.md` je táž jako u ostatních podkladů: sem **doklady a verdikt**, tam **rozhodnutí, co se z toho postaví**. Hranice proti `competition.md` vede po tom, o kom nález mluví: článek o nástrojích patří ke konkurenci, člověk popisující, jak problém dnes obchází, k poptávce.
 
 **`competition.md`** drží data o trhu i jejich závěr. Začíná sekcí `## Co poměřujeme` – jaký problém řešíme, komu, v jaké kategorii produktu tedy soutěžíme a čím se to má hrubě lišit. **Je to vymezení pole hledání, ne specifikace**: bez něj by se nedalo rozhodnout, kdo vůbec je konkurence, a `/specify` ho pak čte jako hotový vstup, místo aby se na totéž ptal podruhé. Pak následuje analýza sama (kdo, co, za kolik, co umí) a závěrečná sekce `## Naše pozice a odlišení`: co musíme mít, protože to má každý, co děláme jinak a kde vědomě zaostáváme.
 

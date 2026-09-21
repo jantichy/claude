@@ -261,6 +261,7 @@ Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračn�
 
 | Soubor | Popis pro uživatele |
 |---|---|
+| `demand.md` | Proč to vůbec stavět – kdo má ten problém, jak ho dnes řeší a čím je doložené, že ho chce řešit jinak. Má smysl i u interního nástroje a zakázky. |
 | `competition.md` | Kdo je konkurence, co umí, za kolik – a čím se proti nim vymezíme. Nemá smysl u interního nástroje ani zakázky. |
 | `risks.md` | Co je na produktu rizikové a co se kvůli tomu v návrhu změní. |
 | `scenarios.md` | Co s produktem uživatel dělá, krok za krokem. Slouží i testování, nápovědě a FAQ. |
@@ -321,6 +322,7 @@ Vybral-li uživatel v kroku 6 nějaké **produktové podklady**, připoj pod ten
 ```
 **Produktové podklady**, které tenhle projekt vede (zakládají se prací, ne dopředu):
 
+- `docs/demand.md` – proč to stavíme, čím je poptávka doložená a jaký je verdikt (`/discovery`)
 - `docs/competition.md` – kdo je konkurence, co umí a jaká je proti nim naše pozice (`/discovery`)
 - `docs/risks.md` – co je na produktu rizikové a co se kvůli tomu v návrhu změnilo (`/discovery`)
 - `docs/scenarios.md` – co s produktem uživatel dělá, krok za krokem (`/specify`)

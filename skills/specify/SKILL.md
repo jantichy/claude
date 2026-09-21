@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Uživatel má nápad a chce z něj zadání, podle kterého se dá rozhodovat. Skill ho provede řízeným rozhovorem a sepíše **`docs/requirements.md`** – dokument, který odpovídá na otázku *co stavíme a proč*, a čte ho zadavatel, produkt, obchod i ten, kdo se k tomu za půl roku vrátí.
 
-**Vede-li projekt produktové podklady**, sepíše v témže kroku i `scenarios.md`, `glossary.md` a `pricing.md`. Jsou produktové, ne technické, a vznikají z téhož dialogu; zbylé dva podklady, `competition.md` a `risks.md`, píše `/discovery`.
+**Vede-li projekt produktové podklady**, sepíše v témže kroku i `scenarios.md`, `glossary.md` a `pricing.md`. Jsou produktové, ne technické, a vznikají z téhož dialogu; zbylé tři podklady, `demand.md`, `competition.md` a `risks.md`, píše `/discovery`.
 
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok osy: navazuje na `/discovery` a předává na `/architect`.
 
@@ -20,7 +20,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok osy: nav
 ## Co skill nedělá
 
 - **Nerozhoduje, jak se to postaví.** Architektura, datový model, stavy a přechody, rozhraní, technologie a bezpečnostní model jsou `/architect` a jeho `docs/architecture.md`. **Hranice je tvrdá:** do požadavků patří **omezení**, do návrhu **volba** (`~/.claude/STRUCTURE.md`, *`requirements.md`, `architecture.md`, `plan.md`*). „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je omezení a patří sem; „použijeme SQLite, protože…“ je volba a patří do návrhu. Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → návrh. Ne → sem.
-- **Nezkoumá konkurenci ani trh.** Kdo to už dělá, za kolik a co je na tom rizikové, zjišťuje `/discovery` do `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekci *Co poměřujeme*, na kterou se tedy neptá podruhé.
+- **Nezkoumá konkurenci ani trh a neptá se, jestli to někdo chce.** Kdo to už dělá, za kolik, co je na tom rizikové a čím je doložená poptávka, zjišťuje `/discovery` do `docs/demand.md`, `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekce *Co poměřujeme* a *Verdikt*, na které se tedy neptá podruhé. **Dorazí-li zadání s nedoloženou poptávkou, není to důvod se zastavit**, ale patří to do `requirements.md` k rozsahu MVP: první verze má být co nejmenší, aby poptávku ověřila.
 - **Nezakládá projekt.** Strukturu, git, autocommit a doménové importy dělá `/project`. Když chybí, skill na to upozorní a nabídne ho.
 - **Nepíše implementační plán.** Ten dělá `/breakdown`, a to až z hotového návrhu řešení, ne z požadavků.
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá kontrola – viz *Zákaz implementace*.
@@ -74,7 +74,7 @@ Navíc si zjisti tohle:
 
 1. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce. **Chybějící `backlog.md` sám o sobě neblokuje** – není kam zapisovat, ale je co číst; zmiň ho ve výpisu a pokračuj (*Fáze 1*, bod 5 s tím počítá).
 
-   **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést. **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md`; `competition.md` a `risks.md` patří `/discovery`. Chybí-li ty dva, přestože jsou zapsané, **nabídni `/discovery`**: bez konkurence a rizik se píše zadání naslepo.
+   **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést. **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md`; `demand.md`, `competition.md` a `risks.md` patří `/discovery`. Chybí-li ty tři, přestože jsou zapsané, **nabídni `/discovery`**: bez poptávky, konkurence a rizik se píše zadání naslepo.
 2. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
 3. **Urči vstupní bod.** Skill se dá spustit i uprostřed – neběží vždycky celý:
 
@@ -93,7 +93,7 @@ Navíc si zjisti tohle:
 
 **Než se na cokoliv zeptáš**, vyzvi ho, ať přiloží nebo nakopíruje všechno, co k tomu má – i nestrukturovaně. Zápis ze schůzky, poznámky, starý dokument, screenshoty, konkurenční web, mail od klienta.
 
-0. **Nejdřív si přečti, co v projektu už je** – zejména `docs/competition.md` a `docs/risks.md` od `/discovery`, a `docs/backlog.md` a `docs/todo.md` (viz bod 5). Sekce *Co poměřujeme* odpovídá na to, jaký problém řešíme a komu; *Naše pozice a odlišení* říká, co produkt musí umět a čím se liší; rizika říkají, co musí být postavené jinak. **Na nic z toho se neptej znovu** – shrň to a nech potvrdit.
+0. **Nejdřív si přečti, co v projektu už je** – zejména `docs/demand.md`, `docs/competition.md` a `docs/risks.md` od `/discovery`, a `docs/backlog.md` a `docs/todo.md` (viz bod 5). `demand.md` odpovídá na to, proč to stavíme a čím je to doložené; sekce *Co poměřujeme* na to, jaký problém řešíme a komu; *Naše pozice a odlišení* říká, co produkt musí umět a čím se liší; rizika říkají, co musí být postavené jinak. **Na nic z toho se neptej znovu** – shrň to a nech potvrdit.
 1. **Originály ulož** do projektu (`docs/research/`), ať se dají dohledat.
 2. **Sám si z nich zodpověz co nejvíc.** Cokoliv, co z podkladů plyne, se už neptej.
 3. **Vypiš souhrn, co sis z toho odvodil**, ať to uživatel jedním pohledem potvrdí nebo opraví.
