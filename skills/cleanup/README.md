@@ -73,7 +73,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
 
-**Nabídka merge stojí na pravidlech pro uspořádání s adresářem na každou větev** – vezměte k tomu i [`WORKTREE.md`](../../WORKTREE.md) do `~/.claude/`; bez něj skill merge nenabízí a zbytek funguje beze změny.
+**Nabídku merge na konci provádí skill [`/merge`](../merge/README.md)** – nainstalujte si ho k tomu, jinak se nabídne, ale nebude ho kdo vyřídit. Pracujete-li v uspořádání, kde má každá větev vlastní adresář, vezměte k tomu ještě [`WORKTREE.md`](../../WORKTREE.md) do `~/.claude/`.
 
 Skill předpokládá, že má projekt ustálenou dokumentační strukturu – ví, co patří do instrukcí, co mezi rozhodnutí, co mezi odložené věci. **Řekněte Claudovi, ať to přizpůsobí tomu, jak máte soubory uspořádané vy**; sada, kterou používám já, je v tomhle repozitáři popsaná jen odkazem do soukromých standardů.
 

@@ -967,4 +967,6 @@ Postup dokončení větve – přihrát hlavní větev do pracovní, vyřešit k
 
 **Zamítnuto – třetí vrstva cyklu:** rámeček v `RULES.md` je zdrojem pravdy pro `/next`, který ho rozebírá na vrstvy `osa` a `kontroly`, a `tests/test_next.py` tvrdí, že jiné dvě tam být nesmí. Třetí vrstva by rozbila infrastrukturu kvůli jednomu kroku.
 
+**Nabídka v `/cleanup` se tím rozšířila i mimo worktree layout.** Do té chvíle se volba *Přimergovat do main* objevovala jen v kontejneru s `.bare`, protože jinde nebyl žádný postup popsaný a merge by znamenal přepnout pracovní strom, ve kterém může pracovat jiná session. První důvod vznikem `/merge` odpadl, druhý kryje podmínka čistého pracovního stromu, kterou `/cleanup` vyžaduje tak jako tak. Nově tedy rozhoduje jediné: stojíš na jiné než hlavní větvi.
+
 **Vědomě nepokryto:** slučování přes pull request na serveru. `/merge` merguje lokálně a pushuje výsledek; projekt s povinným review v GitHubu by potřeboval jinou cestu a ta se zatím nenavrhovala.
