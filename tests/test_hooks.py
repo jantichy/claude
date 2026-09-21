@@ -222,20 +222,26 @@ class HookDeployment(unittest.TestCase):
     def test_hook_is_executable(self):
         self.assertTrue(os.access(COMMIT_MSG_HOOK, os.X_OK), f"{COMMIT_MSG_HOOK} není spustitelný")
 
-    def test_rule_is_written_in_worktree_md(self):
-        """Hook je mechanismus, ne zdroj pravdy. Zmizí-li pravidlo z WORKTREE.md,
-        nikdo se z odmítnutí nedozví, jakou zprávu má napsat místo toho.
+    def test_rule_is_written_in_merge_skill(self):
+        """Hook je mechanismus, ne zdroj pravdy. Zmizí-li pravidlo odtamtud, kde
+        se dokončení větve vede, nikdo se z odmítnutí nedozví, jakou zprávu má
+        napsat místo toho.
 
         Hledá se **příkaz i jeho odůvodnění**, ne dva řetězce kdekoliv v souboru.
         Ta volnější podoba by prošla i tehdy, kdyby pravidlo zmizelo a zbyly po
         něm zmínky jinde – tedy přesně v případě, kvůli kterému test vznikl.
+
+        Do 21. 9. 2026 se měřil `WORKTREE.md`, kde postup dokončení větve tehdy
+        žil. Přestěhoval se do `/merge`, protože hook platí pro **každý**
+        repozitář, ne jen pro worktree layout – a pravidlo se musí měřit tam, kde
+        je dnes, ne tam, kde bylo.
         """
-        text = (ROOT / "WORKTREE.md").read_text()
+        text = (ROOT / "skills" / "merge" / "SKILL.md").read_text()
         self.assertIn('git merge --no-ff', text,
-                      "WORKTREE.md neuvádí příkaz, kterým se větev dokončuje")
+                      "/merge neuvádí příkaz, kterým se větev dokončuje")
         self.assertRegex(
             text, r"githooks/commit-msg[^\n]*core\.hooksPath",
-            "WORKTREE.md neříká, že to vynucuje globálně nasazený hook – "
+            "/merge neříká, že to vynucuje globálně nasazený hook – "
             "bez toho se z odmítnutého commitu nedá poznat, kdo ho odmítl a proč")
 
 
