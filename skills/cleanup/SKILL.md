@@ -268,7 +268,11 @@ Nedává-li standardní struktura pro tenhle projekt smysl (jednorázový scratc
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-   Pak se zeptej **přes tool `AskUserQuestion`** (viz Zásady výš) – jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou, volby **Zapsat** / **Odložit** / **Přeskočit**. U položky s nejasným zařazením nabídni místo toho **konkrétní cílové soubory** jako volby (např. `CLAUDE.md` / `docs/decisions.md` / `docs/todo.md` / `docs/backlog.md`) – je to rychlejší než se ptát dvakrát.
+   **Máš-li návrh a je jednoznačný, zapiš ho rovnou a neptej se.** Položka, u které víš, co kam patří – chybějící zápis dohody, zastaralá věta proti tomu, co v session padlo, duplicita s jasným vítězem –, je dorovnání toho, co už je rozhodnuté, ne rozhodnutí. Platí tu táž hranice jako u nálezů kontrolních skillů a drží ji `~/.claude/skills/FINDINGS.md`. Vypiš jedním řádkem na položku, co jsi zapsal a kam.
+
+   **Ptej se jen tam, kde je z čeho vybírat**, tedy voláním `AskUserQuestion` (viz Zásady výš), jedno volání na jednu položku, `header` `Položka N/celkem`, `question` shrnuje položku jednou větou. **Volbami jsou konkrétní cílové soubory** (např. `CLAUDE.md` / `docs/decisions.md` / `docs/todo.md` / `docs/backlog.md`) u položky s nejasným zařazením, nebo **konkrétní podoby zápisu** tam, kde se text dá napsat dvěma obhajitelnými způsoby.
+
+   **Trojici *Zapsat / Odložit / Přeskočit* nenabízej** – žádná z nich není podobou řešení a odpověď je u ní předem známá (`~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*). Stála tu do 21. 9. 2026 a byla to nejčastější falešná otázka celého skillu: `question` nesla hotový návrh, co kam zapsat, a přesto se ptala, jestli ho provést.
 
 3. **Piš tak, aby to bylo čisté, jasné, systematické, čitelné a přímočaré.** Když při zápisu narazíš na to, že okolní text je rozbředlý, redundantní nebo si protiřečí, přestrukturuj ho – to je smyslem úklidu, ne zásah nad rámec zadání.
 

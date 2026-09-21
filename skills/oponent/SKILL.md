@@ -260,7 +260,7 @@ Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `h
 
 Tool má strop čtyři volby, takže věcných variant nabízej **nejvýš dvě** – zbylá dvě místa patří *Nechat být* a *Vrátit se k tomu později*. Je-li rozumných cest víc, vyber dvě nejsilnější a ostatní zmiň v popisu nálezu.
 
-(V `/consistency` a `/review` je to naopak správně: tam má nález jedno navrhované řešení a volby jsou *Opravit / Odložit / Přeskočit*, u hromadných nálezů navíc *Rozbalit*.)
+(V `/consistency` a `/review` jsou volby stejně věcné: nález, u kterého by vyšlo jen *Opravit / Odložit / Přeskočit*, tam mezi sporné nepatří a opraví se bez ptaní – `~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*. Liší se jen tím, že tam k variantám přibývá u hromadných nálezů *Rozbalit*.)
 
 **Zpracování odpovědi:**
 
