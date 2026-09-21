@@ -29,6 +29,7 @@ Dílčí režimy jsou tytéž fáze puštěné samostatně, když je potřeba je
 - **Nerozbíjí a nezkouší zranitelnosti.** To je `/attack`, a ten běží výhradně proti lokální instanci. Audit se cizího webu dotýká jako běžný návštěvník.
 - **Neopravuje, co našel.** Nesahá na klientovu konfiguraci, kód ani účty. Oprava je jiná zakázka a jiný běh.
 - **Nedělá revizi, jen audit.** Audit projde stav, pojmenuje chyby a navrhne směr oprav; revize je zakázka, do které audit vstupuje jako podklad a jejíž podstatou jsou navazující opravy – často až přestavba celé struktury a scénářů. Výstupem auditu je dokument, výstupem revize naimplementovaný web – a ten tenhle skill nestaví.
+- **Nevyhodnocuje provoz vlastního produktu.** Na to je `/evaluate`, krok životního cyklu: ptá se, jestli se nasazená věc používá a co si lidé vyžádali, a čte k tomu **vlastní** data – databázi, logy, tikety. Tenhle skill měří **cizí** web proti katalogu nálezů a dovnitř nevidí. U vlastního nasazeného webu tedy dávají smysl oba a neruší se: audit řekne, co je na něm špatně, `/evaluate` co s ním lidé dělají.
 - **Nedělá obchodní ani marketingový rozbor.** Konkurenci a rizika produktu řeší `/discovery`.
 - **Nevytěžuje nalezené do knowledge base sám.** Nabídne to a předá `/learn`, protože rozpouštění nové znalosti do existujících textů je jeho práce.
 - **Nevyrábí interaktivní HTML sám.** Výstupy sestavuje jako dokumenty; je-li potřeba jeden HTML soubor s grafy k odeslání mailem, deleguje to na `/report` – viz *Fáze 7*.
