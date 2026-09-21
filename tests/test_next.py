@@ -337,6 +337,11 @@ class LifecycleLayers(unittest.TestCase):
         self.c = importlib.util.module_from_spec(spec)
         sys.path.insert(0, str(COLLECT.parent))
         spec.loader.exec_module(self.c)
+        # `collect.py` čte `RULES.md` z `$HOME` – tam je za běhu uživatelova
+        # konfigurace a to je správně. V testu ale musí jít o **tenhle**
+        # repozitář: na CI `$HOME/.claude` neexistuje, takže by `lifecycle()`
+        # vrátila prázdno a test by padal na chybějícím souboru místo na vadě.
+        self.c.RULES = ROOT / "RULES.md"
 
     def test_reads_both_layers_from_rules(self):
         out = self.c.lifecycle()
@@ -353,7 +358,7 @@ class LifecycleLayers(unittest.TestCase):
         # Osa je řada, takže na jejím pořadí stojí odvození chybějícího kroku.
         # Pořadí se čte z `RULES.md`, ne z konstanty tady – opsaný seznam by se
         # při přidání kroku rozešel a vypadal by přitom pořád platně.
-        block = (Path.home() / ".claude" / "RULES.md").read_text(encoding="utf-8")
+        block = (ROOT / "RULES.md").read_text(encoding="utf-8")
         i = block.index("### Životní cyklus projektu")
         frame = block[block.index("```", i) + 3:]
         frame = frame[:frame.index("```")]

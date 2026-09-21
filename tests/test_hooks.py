@@ -73,7 +73,7 @@ class MergeCommitMessage(unittest.TestCase):
     def test_default_english_message_on_main_rejected(self):
         v = self.run_commit_msg_hook("Merge branch 'feat/platby'\n")
         self.assertEqual(v.returncode, REJECT)
-        self.assertIn("WORKTREE.md", v.stderr)
+        self.assertIn("skills/merge/SKILL.md", v.stderr)
 
     def test_default_czech_message_on_main_rejected(self):
         self.assertEqual(self.run_commit_msg_hook("Merge větve docs/znamky\n").returncode, REJECT)
@@ -319,8 +319,15 @@ class VerifyHookIsRegistered(unittest.TestCase):
         Část cesty za posledním `.claude` se proto vztáhne ke kořenu repozitáře.
         """
         for h in self.entries():
-            path = self.in_repo(Path(h.get("command", "").split()[0]).expanduser())
+            raw = Path(h.get("command", "").split()[0]).expanduser()
+            path = self.in_repo(raw)
             with self.subTest(hook=str(path)):
+                if ".claude" not in raw.parts and not path.is_file():
+                    # Hook mimo tenhle repozitář je uživatelův lokální soubor
+                    # (status line v `~/.config`), ne jeho součást. Na cizím
+                    # stroji tam není a být nemá – hlásit to jako vadu by byl
+                    # falešný poplach na každém pushi, a ten si člověk vypne.
+                    self.skipTest(f"hook {raw} leží mimo repozitář a na tomhle stroji není")
                 self.assertTrue(path.is_file(), f"Stop hook {path} neexistuje")
 
     @staticmethod
