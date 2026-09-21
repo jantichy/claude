@@ -107,7 +107,7 @@ Ze surových údajů složíš **poznatky**: tvrzení o provozu, každé s čís
 
 1. **Používá se to?** Kolik lidí, jak často, vrací se.
 2. **Kde to lidé nedokončili?** Kde se cesta láme a kolik lidí tam zůstalo.
-3. **Co si vyžádali?** I to, co je v zadání vědomě vyloučené – dvě nezávislé žádosti o totéž jsou doklad, který tam při psaní zadání nebyl.
+3. **Co si vyžádali?** I to, co je v zadání vědomě vyloučené – dvě nezávislé žádosti o totéž jsou doklad, který tam při psaní zadání nebyl. **Použití nepostavené funkce ale v datech být nemůže:** není-li cesta postavená, nemá aplikace čím ji zaznamenat, takže záznam, který se jí tváří, měří něco jiného. Doloženo tlakovým scénářem (22. 9. 2026), kde by týž řádek sloužil zároveň jako doklad, že funkce chybí, i jako doklad, že ji lidé použili.
 4. **Co jim systém odmítl?** Zamítnutá akce, vypršelý limit, odmítnuté zrušení. **Nejsou to pády, takže o nich sledovací okno neví**, a přitom je to nejpřesnější seznam míst, kde návrh nesouhlasí se životem.
 5. **Co z `risks.md` se projevilo?** U rizika, které nastalo, doplň, čím se projevilo.
 6. **Co nepoužil nikdo?** Funkce, která stála práci a nemá jediné použití.
@@ -126,6 +126,10 @@ Ze surových údajů složíš **poznatky**: tvrzení o provozu, každé s čís
 Rozdělení navrhl první ostrý běh a obě zjevné alternativy jsou horší: odložit celé vyhodnocení by zahodilo i nálezy, které na datech nezávisí, a poznámka „data jsou možná nedůvěryhodná“ někde v úvodu se s konkrétním číslem o dva odstavce dál nikdy nespojí.
 
 **Poznatek, který se nepodařilo zopakovat, se nehlásí.** Zmizí, a v závěru se řekne, že se nepotvrdil.
+
+**Platí to i pro poznatek uklidňující, ne jen pro alarmující.** „Nic se neztratilo“ je tvrzení jako každé jiné a musí ověření přežít taky – jinak se z chybějícího dokladu o škodě stane doklad, že škoda není. Doloženo tlakovým scénářem (22. 9. 2026): log hlásil pětkrát ztracenou objednávku, všech pět jich v databázi bylo jako zaplacené, a přesto nešlo tvrdit ani jedno – v datech nebylo čím řádek s logem spárovat. **Nedá-li se tvrzení ani doložit, ani vyvrátit, patří to do závěru jako nepotvrzené v obou směrech**, ne jako dobrá zpráva.
+
+**Závažnost pak odvoď z toho, co nejde vyloučit, ne z toho, co se prokázalo.** Nedoložená ztráta dat, kterou data neumí vyvrátit, je KRITICKÁ podle `~/.claude/skills/SEVERITY.md`, protože chybějící stopa je sama tou vadou.
 
 **Odmítneš-li námitku ověřovatele, zapiš obojí** – jeho námitku i to, čím neobstojí. Bez toho nejde zkontrolovat, že jsi ho nepřehlasoval proto, že se ti nález hodil.
 
@@ -158,7 +162,7 @@ Nejdřív **vypiš přehled**: kolik poznatků je vad, kolik nové práce, kolik
 **Pak pokračuj hned v téže odpovědi**, nekonči na přehledu:
 
 - **Vady** vypořádej podle `FINDINGS.md` – mechanické a jednoznačné zapiš jako úkol rovnou, sporné předlož po jedné.
-- **Nová práce** jde k uživateli vždy, jeden poznatek = jedna otázka, s volbami *do `todo.md`* / *do `backlog.md`* / *vědomě neděláme*. U třetí volby se ptej na důvod a zapiš ho – bez něj to za rok někdo navrhne znovu (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
+- **Nová práce** jde k uživateli vždy, jeden poznatek = jedna otázka, s volbami *do `todo.md`* / *do `backlog.md`* / *vědomě neděláme*. **Vylučuje-li tu věc zadání, rozliš rozhodnutí od jeho odůvodnění:** rozhodnutí smí platit dál, ale **vyvrácený důvod se hlásí vždy**. Věta „kapacity se plní z 80 %, takže čekací listina by byla funkce pro nikoho“ přestane být pravdivá ve chvíli, kdy jsou tři z pěti kroužků plné – a dokud v zadání stojí, čte ji každý příští běh jako fakt. Ptej se tedy na jednu větu odůvodnění, ne na to, jestli se ta funkce postaví. Vymyslel to tlakový scénář 22. 9. 2026 a je to lepší rozlišení, než skill měl. U třetí volby se ptej na důvod a zapiš ho – bez něj to za rok někdo navrhne znovu (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
 - **Zjištění bez akce** neprobírej po jednom, jen je vypiš.
 
 Každé rozhodnutí **zapiš na dvě místa**: k poznatku do `operation.md` a jako úkol do `todo.md`, nápad do `backlog.md`, nebo zdůvodněné „neděláme“ do `decisions.md`. Není to dvojí pravda – v podkladu stojí, **jak se rozhodlo**, ve frontě práce, **co se má udělat**.
@@ -174,7 +178,8 @@ Každé rozhodnutí **zapiš na dvě místa**: k poznatku do `operation.md` a ja
 - **Vlastní nález se ověří vlastním přepočtem.** Zopakovat si číslo odhalí překlep v dotazu, ne špatný předpoklad o datech – a ten druhý je ta dražší chyba. Nejsilnější poznatky musí zkusit vyvrátit někdo, kdo je nenašel.
 - **Sběr se rozešle agentům i tam, kde jsou zdroje pětikilobajtové.** Delegace je pak čistá ztráta: každý agent si načte totéž a výstup se vrátí převyprávěný.
 - **Nedůvěryhodná data se vezmou jako důvod nehlásit nic.** Poznatek o chybějícím omezení v databázi platí, i když jsou všechna čísla rozbitá – zahodit obojí naráz znamená přijít o tu polovinu, která na datech nestojí.
-- **Vyžádaná věc se zamítne odkazem na zadání.** Že je něco v `requirements.md` vědomě vyloučené, byl závěr z doby, kdy provoz neexistoval. Dvě nezávislé žádosti o totéž jsou nový doklad, ne opakovaná otázka.
+- **Vyžádaná věc se zamítne odkazem na zadání.** Že je něco v `requirements.md` vědomě vyloučené, byl závěr z doby, kdy provoz neexistoval. Dvě nezávislé žádosti o totéž jsou nový doklad, ne opakovaná otázka – a vyvrácené **odůvodnění** toho rozhodnutí se hlásí, i když rozhodnutí samo platí dál.
+- **Chybějící doklad o škodě se vezme jako doklad, že škoda není.** Uklidňující závěr musí ověření přežít stejně jako alarmující; nejde-li tvrzení ani doložit, ani vyvrátit, je nepotvrzené v obou směrech.
 
 ## Fáze 6 – Závěr
 

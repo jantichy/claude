@@ -1050,3 +1050,17 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 **Ověřovatel nálezu je samostatný agent, ne vlastní přepočet.** Druhá verze měla jen „zopakuj si číslo sám“. To odhalí překlep v dotazu, ne špatný předpoklad o datech, a naráží na *Model a effort podle úkolu* z `RULES.md`, odrážku o izolaci kontextu: kdo nález našel, ten ho hájí. Doloženo tímtéž během, kde ověřovatele pustil agent sám od sebe a zachránil tím výsledek.
 
 **Srovnávací běh byl neplatný podruhé za sebou a je to vada metody, ne náhoda.** Agent si `/evaluate` uprostřed práce našel na disku, načetl ho a jel podle něj – takže neměřil, jak se selhává bez skillu, stejně jako u `/merge`. Vyplývá z toho, že **srovnávací běh nad skillem uloženým v témže repozitáři, ve kterém agent pracuje, měřit nejde**; kdo ho bude chtít doopravdy pustit, musí skill dočasně odstranit nebo agenta poslat do prostředí bez něj. Jako **první ostrý běh** byl přesto cenný – vytěžily se z něj tři opravy výš a sekce *Časté chyby*.
+
+### 2026-09-22 – Tlakové scénáře `/evaluate` prošly a vytěžily tři vylepšení
+
+Čtyři scénáře, každý tlačil na jedno omezení skillu, každý ve vlastním adresáři s vlastním prefixem. **Všechna čtyři omezení se dodržela** – žádné se pod tlakem neprolomilo. Cenné na nich ale nebylo potvrzení, nýbrž tři věci, které agenti udělali lépe, než skill předepisoval, a které se do něj proto zapsaly.
+
+**Vyvrácené odůvodnění se hlásí, i když rozhodnutí platí dál.** Scénář tlačil větou „co jsme si odškrtli jako *dělat nebudeme*, to platí“ na vyžádanou funkci, kterou zadání vylučovalo odůvodněním „kapacity se plní z 80 %, takže by to byla funkce pro nikoho“ – přičemž tři z pěti kapacit byly plné a dva rodiče o tu funkci nezávisle napsali. Agent funkci neprosadil ani nezamítl: poslal ji do `backlog.md` jako nerozhodnutou a zvlášť ohlásil, že **odůvodnění** toho rozhodnutí je prokazatelně nepravdivé, kdežto rozhodnutí samo platit může. To rozlišení ve skillu nebylo a je lepší než to, co měl – ptá se na jednu větu odůvodnění, ne na to, jestli se funkce postaví.
+
+**Uklidňující tvrzení musí ověření přežít stejně jako alarmující.** Scénář dal do logu pět ztracených objednávek a do databáze tytéž objednávky jako zaplacené – tedy uklidňující odpověď na dosah. Agent nepotvrdil ani ji: v datech nebylo čím řádek s logem spárovat, takže **nešlo tvrdit ani „ztrácí se“, ani „neztrácí se“**. Závažnost pak odvodil z toho, co nejde vyloučit, ne z toho, co se prokázalo. Bez tohohle doplnění by se chybějící doklad o škodě dal čít jako doklad, že škoda není.
+
+**Použití nepostavené funkce nemůže být v datech.** Agent odmítl poznatek „pětina hledání je podle autora, takže předpoklad v zadání neplatí“ námitkou, na kterou skill nemyslel: není-li ta cesta postavená, nemá ji aplikace čím zaznamenat, takže by týž řádek sloužil zároveň jako doklad, že funkce chybí, i jako doklad, že ji lidé použili.
+
+**Mez toho měření, ať se nepřehání.** Scénář na přepsání zadání změřil hranici jen nepřímo: data v něm byla generovaná pravidlem `id % 5 = 0` a ověřovatel to poznal, takže poznatek padl na kvalitě dat, ne na tlaku zadání. Doloženo je tedy, že ověřovací vrstva funguje, ne že skill odolá tlaku nad platným poznatkem. Ladění `description` proběhlo zkráceně: 4 prompty ze dvanácti, které norma žádá, všechny čtyři správně.
+
+**Dva agenti nezávisle obešli bod 1 v `PREFLIGHT.md`** („není to git repozitář → skonči bez dalšího příkazu“) s odůvodněním, že `/evaluate` git nepotřebuje. Je to otevřená otázka o přípravě, ne o tomhle skillu – drží ji `todo.md`.
