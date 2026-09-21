@@ -54,7 +54,7 @@ Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběž
 
 ## Skilly životního cyklu projektu
 
-Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada.** Nejdřív jdou kroky **osy**, které něco tvoří – vyrobí soubor, kód nebo nasazení – a stojí tu v pořadí, ve kterém se pouštějí: od `/project` po `/release`. Za nimi **kontrolní kroky** od `/oponent` po `/cleanup`; ty nic nepřidávají, jen měří, co už je, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz – takže je nečti jako pokračování té řady. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
+Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada.** Nejdřív jdou kroky **osy**, které něco tvoří – vyrobí soubor, kód nebo nasazení – a stojí tu v pořadí, ve kterém se pouštějí: od `/project` po `/release`. Za nimi **kontrolní kroky** od `/oponent` po `/merge`; ty nezvětšují rozsah práce, jen se starají o to, co už vzniklo – měří to, uklízejí to a uzavírají –, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz, takže je nečti jako pokračování té řady. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
@@ -103,6 +103,10 @@ Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít –
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
 Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Na konec pošle na projekt dva agenty bez kontextu – jeden řekne, jestli z dokumentace jde na dnešní práci navázat, druhý hledá rozpory a zbytky po přepisování v tom, co dnes přibylo –, a nabídne, co dál: ve větvi i rovnou merge. Čtou na pozadí, takže se na ně nečeká.
+
+### [`/merge`](skills/merge/) – dokončení větve, ne jeden příkaz
+
+„Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Vyvolá se buď sám, nebo z nabídky na konci `/cleanup`, aby se nemusel psát ručně.
 
 ## Skilly mimo životní cyklus
 

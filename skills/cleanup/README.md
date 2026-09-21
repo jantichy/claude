@@ -1,10 +1,10 @@
 # /cleanup – ať po mně zůstane čisto a jasno
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé měří, co už je – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md)
 >
-> **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · **`/cleanup`** – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
+> **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · **`/cleanup`** · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
 
@@ -73,13 +73,13 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
 
-**Nabídka merge stojí na pravidlech pro uspořádání s adresářem na každou větev** – vezměte k tomu i [`WORKTREE.md`](../../WORKTREE.md) do `~/.claude/`; bez něj skill merge nenabízí a zbytek funguje beze změny.
+**Nabídku merge na konci provádí skill [`/merge`](../merge/README.md)** – nainstalujte si ho k tomu, jinak se nabídne, ale nebude ho kdo vyřídit. Pracujete-li v uspořádání, kde má každá větev vlastní adresář, vezměte k tomu ještě [`WORKTREE.md`](../../WORKTREE.md) do `~/.claude/`.
 
 Skill předpokládá, že má projekt ustálenou dokumentační strukturu – ví, co patří do instrukcí, co mezi rozhodnutí, co mezi odložené věci. **Řekněte Claudovi, ať to přizpůsobí tomu, jak máte soubory uspořádané vy**; sada, kterou používám já, je v tomhle repozitáři popsaná jen odkazem do soukromých standardů.
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, oponent, review, consistency, attack a cleanup. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, oponent, review, consistency, attack, cleanup a merge. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
 
 ---
 

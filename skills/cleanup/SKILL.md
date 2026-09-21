@@ -25,7 +25,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 
 Tohle **není** audit projektu ani technická kontrola. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. **Ani `/attack`**, ten přijde naopak až po tomhle a jako jediný aplikaci spouští, aby ji rozbil. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo. **Vlastní kontrola odkazů ve Fázi 6 výjimkou není** – neposuzuje projekt, ale to, co jsi právě zapsal, a běží zlomek vteřiny.
 
-**Výjimka pro dokončení větve:** vybere-li uživatel v závěru *Přimergovat do main*, provedeš postup z `~/.claude/WORKTREE.md`, *Dokončení větve*, celý, i s kontrolami, které předepisuje. Merge sám od sebe neprovádíš.
+**Výjimka pro dokončení větve:** vybere-li uživatel v závěru *Přimergovat do main*, zavoláš `/merge` nástrojem `Skill` a necháš ho proběhnout celý, i s kontrolami, které předepisuje. **Merge sám neprovádíš ani nepopisuješ** – nabídka je zkratka k volání navazujícího kroku, ne jeho součást.
 
 Druhá výjimka: pokud ze session **víš**, že něco zůstalo rozbité (padající test, nedodělaná změna), vezmi to do Fáze 7 a nech uživatele rozhodnout, co s tím. Netvrď, že je hotovo, když není – ale sám to neověřuj a neopravuj, dokud si to uživatel nevyžádá.
 
@@ -397,12 +397,12 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Ze session je všechno zapsané, můžeš pokračovat, zkompaktovat i odejít.`
-- **Stojíš-li ve worktree větve** (`~/.claude/WORKTREE.md`), tedy v kontejneru s `.bare` a mimo `main/`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, použij místo ní `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – merge zatím brání: <konkrétní seznam>.` a merge v otázce níž nenabízej. Totéž platí, zjistil-li Git výš rozpracovaný `main/`, nebo stojí-li v `## Nasazení` projektového `CLAUDE.md`, že se z `main` automaticky nasazuje – merge by tam byl nasazení a patří `/release`.
+- **Stojíš-li na jiné než hlavní větvi** – ve worktree layoutu (`~/.claude/WORKTREE.md`) tedy v kontejneru s `.bare` a mimo `main/`, v běžném repozitáři prostě podle `git branch --show-current`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, použij místo ní `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – merge zatím brání: <konkrétní seznam>.` a merge v otázce níž nenabízej. Totéž platí, zjistil-li Git výš rozpracovaný `main/`, nebo stojí-li v `## Nasazení` projektového `CLAUDE.md`, že se z `main` automaticky nasazuje – merge by tam byl nasazení a patří `/release`. **V běžném repozitáři merge navíc přepne pracovní strom**, takže se nabízí jen tehdy, je-li `git status` čistý; to Git výš stejně vyžaduje, takže nečistý strom zastaví běh dřív.
 - `Zapsané zatím není všechno – brání tomu: <konkrétní seznam>.`
 
 **Nenabízej „opustit session“ jako jedinou cestu.** Zápis je hotový, ale to neznamená, že je hotová práce: uživatel klidně pokračuje dál v téže session a `/cleanup` mu jen zajistil, že ho kompaktace nepřipraví o kontext. Ve worktree layoutu to platí dvojnásob – „můžeš odejít“ tam neodpovídá na otázku, kterou má uživatel v hlavě, totiž co s tou větví.
 
-**Že merge přichází v úvahu, musí zaznít explicitně** – vedle pokračování a kompaktace. Věta ručí jen za zápis ze session; jestli merge smí projít (větev kola návrhu, rozpracovaný `main/`, konflikt), ověří až postup v `~/.claude/WORKTREE.md`, *Dokončení větve*, a proto v ní nestojí „bez obav“. Uživatel má v hlavě otázku „můžu to zavřít, nebo tam něco visí?“ a mlčení o mergi ji nezodpoví; „dokončit větev“ je vágní a nechává ho hádat, jestli něco nepřehlédl.
+**Že merge přichází v úvahu, musí zaznít explicitně** – vedle pokračování a kompaktace. Věta ručí jen za zápis ze session; jestli merge smí projít (větev kola návrhu, rozpracovaný `main/`, konflikt), ověří až `/merge`, a proto v ní nestojí „bez obav“. Uživatel má v hlavě otázku „můžu to zavřít, nebo tam něco visí?“ a mlčení o mergi ji nezodpoví; „dokončit větev“ je vágní a nechává ho hádat, jestli něco nepřehlédl.
 
 ### Co dál
 
@@ -410,15 +410,15 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 | Volba | Kdy se nabízí | Co se po ní stane |
 |---|---|---|
-| **Přimergovat do main** | jen ve worktree větve, tedy v kontejneru s `.bare` a mimo `main/`, a jen když verdikt nepojmenoval nic, co merge brání | provedeš *Dokončení větve* z `~/.claude/WORKTREE.md` |
+| **Přimergovat do main** | jen stojíš-li na jiné než hlavní větvi – ve worktree layoutu v kontejneru s `.bare` a mimo `main/`, jinak podle `git branch --show-current` – a jen když verdikt nepojmenoval nic, co merge brání | zavoláš `/merge` nástrojem `Skill` |
 | **Pokračovat v práci** | vždy | nic – čekáš na další zadání |
 | **Další kolo úklidu** | vždy | pustíš `/cleanup` znovu nástrojem `Skill` |
 
-**Proč otázka, a ne rovnou merge:** `/cleanup` se pouští i před kompaktací uprostřed rozdělané větve, takže automatický merge by jednou poslal do `main` nedodělanou práci. Uživatel přitom po úklidu podle vlastních slov (16. 9. 2026) mergoval skoro vždycky, a ruční příkaz navíc byl jen tření. Zavržené varianty (16. 9. 2026): **režim `/cleanup merge`** – záměr by se řekl předem, ale uživatel by si režim musel pamatovat, kdežto otázka stojí jeden stisk; **samostatný krok životního cyklu pro dokončení větve** – merge navazuje právě na úklid a vlastní krok by jen přidal příkaz, který se pouští pokaždé hned po něm. **Vybraná volba je výslovný pokyn** ve smyslu `~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak* – bez ní merge neprovádíš, nepřipravuješ ani nevypisuješ příkazy.
+**Proč otázka, a ne rovnou merge:** `/cleanup` se pouští i před kompaktací uprostřed rozdělané větve, takže automatický merge by jednou poslal do `main` nedodělanou práci. Uživatel přitom po úklidu podle vlastních slov (16. 9. 2026) mergoval skoro vždycky, a ruční příkaz navíc byl jen tření. Zavržená varianta (16. 9. 2026): **režim `/cleanup merge`** – záměr by se řekl předem, ale uživatel by si režim musel pamatovat, kdežto otázka stojí jeden stisk. **Samostatný krok životního cyklu pro dokončení větve se tehdy zamítl taky, a 21. 9. 2026 se to obrátilo** – vznikl `/merge`. Nabídka tím nepadá, jen přestala být popisem postupu: je to zkratka k volání navazujícího kroku, aby se nemusel psát ručně. Rozbor drží `decisions.md`, *Merge je samostatný krok, ne fáze `/cleanup`*. **Vybraná volba je výslovný pokyn** ve smyslu `~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak* – bez ní merge neprovádíš, nepřipravuješ ani nevypisuješ příkazy.
 
 **Proč `/compact`, `/clear` a `/exit` nejsou volby:** jsou to vestavěné příkazy Claude Code a skill je spustit neumí. Volba, po které by následovalo jen „teď to napiš sám“, je krok navíc; stačí je jmenovat v textu otázky. Ukončit session natvrdo přes shell se nesmí – utrhla by se rozepsaná historie.
 
-**Proč jen ve worktree layoutu:** jen tam je dokončení větve popsané postupem a `main/` má vlastní pracovní adresář. V běžném repozitáři by merge znamenal přepnout pracovní strom, ve kterém může pracovat jiná session.
+**Proč i mimo worktree layout:** postup dokončení větve drží od 21. 9. 2026 `/merge` a platí pro každý repozitář, ne jen pro kontejner s `.bare`. Do té doby se nabídka omezovala na worktree layout, protože jinde žádný postup popsaný nebyl a merge by znamenal přepnout pracovní strom, ve kterém může pracovat jiná session. První důvod odpadl a druhý kryje podmínka čistého stromu výš. **Nabízí se jen tam, kde je co dokončovat** – na hlavní větvi ne.
 
 **Merge se nikam dál nezapisuje.** Záznam průchodu v `done.md` vznikl před otázkou a nese hash úklidu; merge commit se zprávou shrnující práci je záznam sám o sobě a do `main/` se kvůli němu nic dalšího necommituje.
 
