@@ -18,3 +18,12 @@ Nápady ke konfigurační vrstvě v `~/.claude`. Hashe commitů v téhle sekci p
 
   **Vzniklo 21. 9. 2026** spolu se skillem; `decisions.md`, *Merge je samostatný krok, ne fáze `/cleanup`*, to vede jako vědomě nepokryté.
 
+- **Podadresáře v `docs/` podle kroků, které dokumenty vyrábějí.** Nápad z 2026-09-21, nerozhodnutý – uživatel ho výslovně otevřel jako hypotézu („teď to nechci dělat“). Dnes leží všechny dokumenty v `docs/` na jedné hromadě; šlo by je rozdělit podle toho, který krok osy je vyrábí, a zvlášť oddělit průběžnou evidenci projektu.
+
+  **Jména, ke kterým úvaha došla:** `docs/discovery/` (`demand.md`, `competition.md`, `risks.md`), `docs/product/` (`requirements.md`, `scenarios.md`, `glossary.md`, `pricing.md`), `docs/solution/` (`architecture.md`, `model.md`, `transitions.md`, tematické dokumenty kol), `docs/state/` (`todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md`), `docs/research/` beze změny a `plan.md` přímo v kořeni `docs/`.
+
+  **Pravidlo, které z toho vyšlo:** adresář se jmenuje podle **toho, co v něm leží**, ne podle skillu, který ho naplnil. Fázová jména (`specify/`, `architect/`, `breakdown/`) jsou slovesa a rozešla by se při přejmenování nebo rozdělení skillu – což se `/specify` a `/architect` právě stalo. Dělítko mezi čtyřmi fázovými adresáři a `state/` je **čas**: první drží výstupy, které se jednou dopíšou, druhý to, co se mění každou session a nikdy nebude hotové.
+
+  **Zamítnuté varianty a proč:** `misc/` a `shared/` (první je přímo v zákazu z `~/.claude/RULES.md`, *Naming*, druhé tvrdí, že ostatní adresáře sdílené nejsou, a jako kritérium pro zařazení nového souboru neposlouží, protože mu vyhoví skoro všechno); `design/` pro návrh řešení (kolize s doménou vizuální tvorby `~/Dev/context/design/` – totéž slovo by v jednom projektu znamenalo dvě věci); `tasks/` pro plán (každý by tam hledal `todo.md` a `done.md`); `requirements/` a `architecture/` (koktají s dokumentem uvnitř a tvrdí, že adresář je ten jeden dokument, přestože drží i ostatní řezy).
+
+  **Co by se muselo dořešit, kdyby se to dělalo:** `rules.md` vede `STRUCTURE.md` dvakrát – jako principy projektu (patřily by do `state/`) a zároveň jako jeden z řezů návrhu řešení (patřil by do `solution/`); jedno z obou by muselo dostat jiné jméno. K tomu propagace do `STRUCTURE.md`, všech skillů, které cesty jmenují, a do existujících projektů.
