@@ -221,6 +221,8 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
+**Přehledem odpověď nekonči.** Pokračuj **v téže odpovědi** rovnou Fází 4 a za ní první otázkou Fáze 5 – `~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*. Věta „pouštím se do oprav bez ptaní“ místo oprav samotných je přesně ta chyba, kterou to pravidlo zakazuje.
+
 ## Fáze 4 – Opravy bez ptaní
 
 Mechanické **i jednoznačné** nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:

@@ -264,6 +264,8 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Když nálezy nejsou, řekni to a skonči.
 
+**Přehledem odpověď nekonči.** Pokračuj **v téže odpovědi** rovnou Fází 6 a za ní první otázkou Fáze 7 – `~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*.
+
 ------
 
 ## Fáze 6 – Opravy bez ptaní

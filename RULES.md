@@ -128,6 +128,18 @@ Volbu **Other** doplňuje tool sám. Ber ji jako **doplňující instrukci, ne o
 
 Otázka, na kterou nejdou nabídnout varianty (název, text, číslo), se ptá normálně v odpovědi.
 
+### Co ohlásíš, udělej hned v téže odpovědi
+
+Věta „teď se do toho pustím“, „jdu na opravy“ nebo „pokračuju dál“ **není práce, ale slib**. Ukončíš-li jí odpověď, vrátíš řízení uživateli, který musí napsat „jdeme na to“, aby se stalo přesně to, cos právě ohlásil – zaplatí tedy odpověď navíc za nic. **Ohlášená akce proto patří do téže odpovědi jako ohlášení:** buď ji udělej a teprve pak mluv, nebo ji ohlas a hned pokračuj.
+
+**Řízení se předává jedině otázkou nebo hotovým během**, ne koncem odstavce, koncem výpisu ani hranicí fáze ve skillu. Fáze je členění postupu, ne mez odpovědi.
+
+**Proč se to stává:** dlouhý strukturovaný výpis – přehled nálezů, seznam úkolů, shrnutí analýzy – působí jako hotový výstup, po kterém se odpověď přirozeně uzavírá. Je to přitom mezivýsledek, po kterém teprve přijde práce, kvůli které se běh pustil.
+
+Doloženo 21. 9. 2026 v běhu `/consistency`: skill vypsal výsledky auditu, zakončil je větou *„Pouštím se do oprav bez ptaní; sporné pak projdeme jeden po druhém.“* – a skončil. Uživatel ho musel vyzvat, aby udělal to, co právě oznámil.
+
+Rozhodnutí, co se dělá bez ptaní a co jde k uživateli, je jiná otázka a drží ji `~/.claude/skills/FINDINGS.md`.
+
 ### Parkované body zapiš a sám je otevři
 
 Cokoliv uživatel odloží („k tomu se vrátíme“, „teď přeskoč“), **zapiš hned do `docs/todo.md`** – ne do hlavy. Konverzace není úložiště (viz *Pravda v souborech, ne v konverzaci*) a při kompaktaci se parkovaný bod ztratí.

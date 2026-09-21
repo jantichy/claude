@@ -42,6 +42,10 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`.
 
 **Kolik se opraví rovnou a kolik doopravdy zbývá na rozhodnutí** – to druhé číslo je jediné, které uživateli říká, jak dlouhý bude interaktivní průchod. Report, který vypíše „mechanických 12, sporných 40“ a pak se u třiceti z těch čtyřiceti nemá na co ptát, to číslo nadsazuje a průchod působí dráž, než je.
 
+## Ohlášená akce patří do téže odpovědi
+
+**Přehled nálezů není konec odpovědi** (`~/.claude/RULES.md`, *Co ohlásíš, udělej hned v téže odpovědi*). Vypsal-li jsi, že se N nálezů opraví rovnou a M zbývá na rozhodnutí, **pokračuj hned v téže odpovědi**: oprav, co se opravuje bez ptaní, vypiš to, a rovnou polož první otázku na sporné. Věta „pouštím se do oprav bez ptaní“ místo oprav samotných je přesně to, co pravidlo zakazuje – běh se o ni prodlouží o jednu odpověď uživatele a nic se za ni neudělá.
+
 ## Kdo ji používá
 
 `/review`, `/consistency`, `/attack`, `/audit` a `/cleanup` – ten u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.

@@ -257,6 +257,8 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup nebyl prázdný** – prázdný výsledek je taky výsledek a je to ten lepší.
 
+**Jsou-li nálezy, přehledem odpověď nekonči** – první otázka Fáze 5 jde **v téže odpovědi** (`~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*).
+
 ------
 
 ## Fáze 5 – Průchod s uživatelem

@@ -30,7 +30,7 @@ Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozs
 
    **Objem důvod k dotazu není.** Zdlouhavá, ale jednoznačná oprava se dělá, ne předkládá; naopak jednořádková změna pravidla se předkládá, i když trvá vteřinu. Rozhoduje, čí je to rozhodnutí, ne kolik je s ním práce.
 
-3. **Vyřeš první skupinu rovnou**, celou, ještě než se začneš ptát na druhou – a vypiš, cos udělal:
+3. **Vyřeš první skupinu rovnou**, celou, ještě než se začneš ptát na druhou – a vypiš, cos udělal – **výpisem ale odpověď nekonči**, bod 4 i první otázka bodu 5 patří do téže odpovědi (`~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*):
 
    ```
    **Mimo rozsah, vyřešeno rovnou:**
