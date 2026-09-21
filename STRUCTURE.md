@@ -53,6 +53,7 @@ Povinný je jediný soubor – **`CLAUDE.md`**, bez něj projekt není projekt. 
 | `requirements.md`, `architecture.md`, `plan.md` | až prací, přes `/specify`, `/architect` a `/breakdown` |
 | `<topic>.md` – tematický dokument kola | až prací, kolem návrhu přes `/architect` – viz *`requirements.md`, `architecture.md`, `plan.md`* |
 | `demand.md`, `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md` | **vybírá se** při `/project` (výchozí ne), zakládá se až prací – viz *Produktové podklady* |
+| `operation.md` | až prací, prvním během `/evaluate` nad nasazeným projektem – viz *Produktové podklady*; při `/project` se nevybírá, protože dokud není co nasadit, není o čem rozhodovat |
 | `research/` | až je co uložit |
 | `.claude/run/` | samo, přerušitelným během skillu – není to standardní soubor, viz *Běhový stav skillů* |
 | testy | s první kontrolou, kterou projekt dostane – umístění se řídí jeho runnerem, viz *Testy* |
@@ -162,6 +163,8 @@ Všechno, co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to uděl
 **Otevřená otázka sem patří tehdy, když se zodpovědět musí** – pak je jejím úkolem to rozhodnutí. Nepatří sem otázka typu „nemělo by se někdy…“, u které nikdo neřekl, že se jí budeme zabývat; ta je nápad a patří do `backlog.md`.
 
 **Odložení po termín ani po první použitelné verzi (MVP) z položky nedělá nápad.** „Až po spuštění“, „ve druhé fázi“, „až budou data“ je nalajnovaný plán a patří sem; nezávazný nápad, o kterém se nikdo nerozhodl, patří do `backlog.md` – viz níž.
+
+**Má-li položka smysl až od konkrétního dne, napiš to hned za její název** jako `od <YYYY-MM-DD>` – například `- [ ] **Vyhodnotit provoz přes /evaluate** – od 2026-10-12.` `/next` takovou položku do fronty nezařadí, dokud ten den nenastane, a jen ji zmíní, aby bylo vidět, že se na ni nezapomnělo. **Datum patří na začátek, ne do popisu:** uvnitř textu bývá datum ze zdůvodnění a odklad z něj dělat nelze. Je to **odstup, ne termín** – položka po tom dni nezaniká ani neprotéká nikam dál.
 
 **Drží jen nehotové položky.** Jakmile je něco hotové, **přesuň to hned do `done.md`** – ne až při úklidu na konci session. `todo.md` tak na první pohled ukazuje, co zbývá.
 
@@ -348,6 +351,7 @@ Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requir
 | `scenarios.md` | Co s produktem uživatel dělá, krok za krokem, taxativně | `/specify` |
 | `glossary.md` | Jak se v téhle doméně čemu říká | `/specify` |
 | `pricing.md` | Tarify, limity, trial, upgrade, co se stane po expiraci | `/specify` |
+| `operation.md` | Co o produktu víme z provozu – jestli se používá, kde to lidé nedokončili, co si vyžádali | `/evaluate` |
 
 **Žádný z nich není povinný a většina projektů nevede ani jeden** – nestaví se v nich produkt pro lidi zvenčí. Interní nástroj nemá konkurenci ani ceník; jednoduchá aplikace nepotřebuje glosář. Prázdný podklad je horší než žádný, protože předstírá, že se ta úvaha udělala.
 
@@ -372,6 +376,12 @@ Hranice proti sekci *Rizika* v `architecture.md` je tvrdá a jde po téže čá�
 **`glossary.md`** dává *Jednomu termínu pro jednu věc* z `~/.claude/RULES.md` místo, kde ten termín stojí zapsaný. U každého pojmu: jak se jmenuje česky, jak v kódu, co znamená a **čím se liší od pojmu, se kterým se plete**. To poslední je hlavní obsah – slovník bez rozlišení blízkých pojmů nic neřeší. Zakládá se u projektu s netriviální doménou, kde se plete víc entit naráz. **Termíny platné napříč projekty sem nepatří** – ty drží `~/.claude/PTYDEPE.md` a spravuje je `/ptydepe`.
 
 **`pricing.md`** má smysl jen u produktu, který se prodává. Není to ceník pro web, ale **soupis toho, co z cenového modelu plyne pro produkt**: co který tarif smí, kde jsou limity a co se stane při jejich dosažení, jak vypadá trial a co po něm, jak se přechází nahoru a dolů, co se stane po expiraci a co s daty. Každá z těch vět je funkce, kterou někdo musí naprogramovat.
+
+**`operation.md`** drží **poznatky z provozu, ne měsíční report**. Zakládá ho první běh `/evaluate` a každý další **přidává nové období nad starší, aniž maže čísla stará** – trend je celý důvod, proč ten soubor existuje; bez něj by poznatky mohly rovnou skončit jako úkoly. U každého poznatku: čeho se týká, číslo, **odkud se to ví**, jak se to dá zopakovat, a **jak se o něm rozhodlo**. Hlavička nese datum běhu, období, za které se měří, a **verdikt o důvěryhodnosti dat** – vyjde-li z ověření, že se zdroji není něco v pořádku, poznatky stojící na číslech se tím označí a nesmí se z nich argumentovat, kdežto ty stojící na struktuře (chybějící omezení, chybějící auditní stopa) platí dál.
+
+**Hranice proti `demand.md` je v čase, ne v tématu.** Tam doklady o tom, že problém existuje, **než** se něco postavilo; sem doklady o tom, co lidé dělají s hotovou věcí. Splynout nesmí: verdikt v `demand.md` se vztahuje k otázce, jestli stavět, a přepisovat ho čísly z provozu znamená měnit odpověď na jinou otázku. **Hranice proti `requirements.md` je táž jako u ostatních podkladů:** sem doklady a rozhodnutí o poznatku, tam rozhodnutí, co se z toho postaví – to dělá `/specify`, který si `operation.md` přečte jako vstup.
+
+**Sekce *Rizika* se sem nekopíruje.** Projeví-li se riziko z `risks.md`, zapíše se to jako poznatek s číslem a `risks.md` zůstává tím, čím je – registrem s mitigacemi.
 
 ### `research/`
 

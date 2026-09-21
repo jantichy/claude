@@ -26,6 +26,7 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 
 Pravidla, podle kterých se tu rozhoduje, drží `SKILL.md`; tenhle docstring jen popisuje výstup.
 """
+import datetime
 import json
 import re
 import subprocess
@@ -137,11 +138,18 @@ def parse_items(lines):
         waits = WAITS.search(full)
         if waits:
             entry["waits"] = short(waits.group(1))
+        # Položka odložená k datu se do té doby nemá nabízet. Datum musí stát hned
+        # za názvem – uvnitř popisu bývá datum ze zdůvodnění, které odklad neznamená.
+        not_before = NOT_BEFORE.match(full.lstrip())
+        if not_before:
+            entry["not_before"] = not_before.group(1)
+            entry["waiting"] = not_before.group(1) > datetime.date.today().isoformat()
         out.append(entry)
     return out
 
 
 WAITS = re.compile(r"\b[Čč]ek(?:á|ají)\s+na\b[:\s]*\**\s*([^.;\n]{3,160})")
+NOT_BEFORE = re.compile(r"[–—:-]?\s*od\s+\**(\d{4}-\d{2}-\d{2})")
 CHECKBOX = re.compile(r"\s*[-*] \[( |x|X)\]")
 
 

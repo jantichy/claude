@@ -1034,3 +1034,19 @@ Kritérium *Kdo o nálezu rozhoduje* (`skills/FINDINGS.md`, 20. 9. 2026) mělo z
 **Proč to není neškodná předjímka.** Ve skillu vypadá stejně jako doložená sekce u sousedů, takže čtenář – model i člověk – jí přisuzuje váhu poučení z provozu, které za ní nestojí. Zvažovalo se nechat ji s poznámkou „zatím nedoložené“; zamítnuto, protože poznámka tu váhu nesejme a sekce tím přestane být tím, čím podle normy je. Ve `/discovery` se proto smazala celá a **založí se znovu po prvním běhu**; hlídá to položka v `todo.md`.
 
 **Neplatí to jen pro tenhle skill, ale řeší se zatím jednotlivě.** Jestli má norma rozlišit předjímku od doloženého poučení obecně, nebo se má pravidlo jen důsledněji dodržovat, se nerozhodlo – u ostatních skillů se nic nemazalo.
+
+### 2026-09-21 – Co se rozhodlo při stavbě `/evaluate`
+
+Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`* – tam je šest rozhodnutí o tom, **jestli a jak**; tady čtyři, která padla až při psaní skillu.
+
+**Skill nemá režimy.** Má jedno chování, takže se podle `skills/SKILLS.md` žádný nepojmenovává. Zvažovalo se oddělit sběr od rozhodování, aby šlo „jen sebrat čísla“; zamítnuto, protože přesně to je slepá ulička, kterou krok zavírá – běh bez rozhodnutí by byl režim na výrobu evidence, kterou nikdo nečte.
+
+**Odložení položky k datu je obecný mechanismus, ne věc `/evaluate`.** `collect.py` v `/next` rozpozná `od <YYYY-MM-DD>` **hned za názvem** položky a do té doby ji do fronty nezařadí. Vyšlo to najevo při psaní: „datum, kdy vyhodnotit provoz“ je jen první uživatel něčeho, co platí pro každou položku se smyslem od určitého dne. **Datum se hledá jen na začátku textu**, protože první verze prohledávala prvních 80 znaků a věta „sazba platí od <datum>“ jí položku skryla – falešné parkování je přitom ta horší polovina, protože položka nezmizí hlučně, jen se nikdy nenabídne.
+
+**Sběr se deleguje podmíněně, ne vždy.** První verze skillu přikazovala pustit na každý zdroj jednoho agenta. **Doložil to první ostrý běh (21. 9. 2026):** agent delegaci vědomě neprovedl s odůvodněním, že všech pět zdrojů má dohromady pár kilobajtů, takže by si každý agent načetl totéž a výstup by se vrátil převyprávěný. Bylo to správné a je to přímá aplikace *Velké průzkumné úkoly deleguj* z `RULES.md` – deleguje se kvůli kontextu, ne kvůli úspoře.
+
+**Poznatky se dělí podle toho, na čem stojí, a přibyl verdikt o důvěryhodnosti dat.** Taky z prvního ostrého běhu: ověřovatel tam našel, že u poloviny sousedních záznamů podle autoinkrementovaného klíče neroste `created_at`, čímž padla celá číselná vrstva běhu – zatímco nálezy o chybějícím omezení v databázi a chybějící auditní stopě platily dál. **Zamítnuto – odložit celé vyhodnocení, dokud se data nevyjasní:** zahodilo by i to, co na datech nezávisí. **Zamítnuto – poznámka o nedůvěryhodnosti v úvodu podkladu:** s konkrétním číslem o dva odstavce dál se nikdy nespojí.
+
+**Ověřovatel nálezu je samostatný agent, ne vlastní přepočet.** Druhá verze měla jen „zopakuj si číslo sám“. To odhalí překlep v dotazu, ne špatný předpoklad o datech, a naráží na *Model a effort podle úkolu* z `RULES.md`, odrážku o izolaci kontextu: kdo nález našel, ten ho hájí. Doloženo tímtéž během, kde ověřovatele pustil agent sám od sebe a zachránil tím výsledek.
+
+**Srovnávací běh byl neplatný podruhé za sebou a je to vada metody, ne náhoda.** Agent si `/evaluate` uprostřed práce našel na disku, načetl ho a jel podle něj – takže neměřil, jak se selhává bez skillu, stejně jako u `/merge`. Vyplývá z toho, že **srovnávací běh nad skillem uloženým v témže repozitáři, ve kterém agent pracuje, měřit nejde**; kdo ho bude chtít doopravdy pustit, musí skill dočasně odstranit nebo agenta poslat do prostředí bez něj. Jako **první ostrý běh** byl přesto cenný – vytěžily se z něj tři opravy výš a sekce *Časté chyby*.

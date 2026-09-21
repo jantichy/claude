@@ -11,10 +11,11 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 Nasadí hotovou práci do produkce – s blokujícími kontrolami před, s plánem návratu a s ověřením po.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to poslední krok osy: navazuje na `/implement` a v mezeře před ním stojí `/attack`. To není kosmetika: všechno před ním mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
+V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to sedmý krok osy: navazuje na `/implement` a předává na `/evaluate`, který měří, co z nasazení vzešlo. V mezeře před ním stojí `/attack`. **Je to poslední krok, který mění svět**, a to není kosmetika: všechno před ním mění repozitář, nasazení mění produkci, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
 
 ## Co skill nedělá
 
+- **Nevyhodnocuje, jestli je nasazená věc k něčemu.** Sledovací okno měří **pády** a má odpověď za hodiny; otázku „používá se to a co si lidé vyžádali“ řeší `/evaluate` za týdny. Tenhle skill mu jen zapíše datum, kdy na to bude čas.
 - **Neopravuje.** Najde-li kontrola problém, skill **skončí** a pošle to zpátky do `/implement` nebo `/review`. Neopravuj v předvečer nasazení – změna, která neprošla review, je přesně ta, která spadne.
 - **Neprověřuje, jestli to obstojí.** Rozbít hotovou práci spuštěním zkouší `/attack` před tímhle; sem se přichází se stavem, který tím prošel, a nasazuje se, ne testuje.
 - **Nerozhoduje o obsahu vydání.** Co se nasazuje, je to, co je na větvi. Vybírat commity na poslední chvíli je cesta k tomu nasadit půlku feature.
@@ -216,7 +217,15 @@ Zapiš do `docs/decisions.md` jen to, co má trvalou hodnotu (změna postupu nas
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/skills/LIFECYCLE.md`, krok 9.
+**Zapiš do `docs/todo.md` datum, kdy vyhodnotit provoz.** Je to jediný spouštěč, který `/evaluate` má – čeká na čas, ne na výstup předchozího kroku, a bez tohohle záznamu se na něj nedojde nikdy. Položka nese **datum, od kdy to má smysl**, a co se nasadilo:
+
+```
+- [ ] **Vyhodnotit provoz přes `/evaluate`** – od <datum>. Nasazeno <verze> dne <datum nasazení>: <co to přineslo>.
+```
+
+Datum vyrob příkazem, nepiš ho z hlavy (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš*) – u běžného vydání `date -v+3w +%F`, u něčeho, co člověk použije zřídka, odpovídajícím delším odstupem. **Je to odstup, ne termín:** dřív vrátí `/evaluate` šum, později nic nepokazí.
+
+**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/skills/LIFECYCLE.md`, *Co smí stát v které mezeře*.
 
 ------
 

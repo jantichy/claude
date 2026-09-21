@@ -554,13 +554,13 @@ Od nápadu k nasazené feature vede jeden životní cyklus:
 
 ```
 Osa        /project → /discovery → /specify → /architect →
-           /breakdown → /implement → /release
+           /breakdown → /implement → /release → /evaluate
 
 Kontroly   /oponent, /consolidate, /review, /consistency, /attack, /cleanup, /merge
            stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 ```
 
-**Jsou to dvě vrstvy, ne jedna řada.** Kroky **osy** něco tvoří – vyrobí soubor, kód nebo nasazení – a čekají na výstup toho předchozího. **Kontrolní kroky nezvětšují rozsah práce**; jsou to údržba nad tím, co už vzniklo – měří to, uklízejí to a uzavírají to. Nejsou body v řadě, ale vrstva mezi nimi, a proto se tentýž smí objevit v několika mezerách. `/cleanup` je ve všech, protože jeho spouštěčem je konec session – běží i uprostřed rozdělané práce, a hned za ním stojí `/merge`, kdykoliv se uzavírá větev.
+**Jsou to dvě vrstvy, ne jedna řada.** Kroky **osy** něco tvoří – vyrobí soubor, kód nebo nasazení – a čekají na výstup toho předchozího; **jedinou výjimkou je `/evaluate`, který čeká na čas**, protože data o provozu vznikají týdny po nasazení. **Kontrolní kroky nezvětšují rozsah práce**; jsou to údržba nad tím, co už vzniklo – měří to, uklízejí to a uzavírají to. Nejsou body v řadě, ale vrstva mezi nimi, a proto se tentýž smí objevit v několika mezerách. `/cleanup` je ve všech, protože jeho spouštěčem je konec session – běží i uprostřed rozdělané práce, a hned za ním stojí `/merge`, kdykoliv se uzavírá větev.
 
 **Co smí stát v které mezeře a v jakém pořadí**, drží `LIFECYCLE.md`, *Kroky cyklu a jejich uspořádání*.
 

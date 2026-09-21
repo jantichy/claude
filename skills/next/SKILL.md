@@ -60,6 +60,17 @@ Co z výstupu je položka fronty:
 | `branches` | práce ve větvi – viz *Práce ve větvích* |
 | `backlog` | skript ho vrací jen při prázdné frontě – viz *Fáze 2* |
 
+### Položka odložená k datu
+
+Položka, která nese hned za názvem `od <datum>`, má smysl až od toho dne – typicky *vyhodnotit provoz přes `/evaluate`*, kterou tam zapsal `/release`. Skript to rozhodl za tebe, pole `not_before` a `waiting`:
+
+| `waiting` | S položkou |
+|---|---|
+| `true` | **do fronty nevstupuje** – jen ji zmiň v poznámkách i s datem, aby bylo vidět, že se na ni nezapomnělo |
+| `false` | den nastal, řadí se jako každá jiná |
+
+**Datum nepočítej sám a nepřepisuj ho.** Dnešní den zná skript a porovnal ho; položka, u které si termín přepočítáš z hlavy, se nabídne ve špatný den (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš*).
+
 **Závislosti ber jen ze zápisu**, ne z odhadu: řádek *Čeká na*, pole `waits` u položky (skript ho vytáhne i z konce dlouhého popisu, který `text` ořízne), pořadí v plánu, výslovná zmínka v položce. Tuší-li se závislost, která zapsaná není, řekni ji u položky jako domněnku.
 
 ### Práce ve větvích
@@ -95,7 +106,7 @@ Chybějící krok odvoď z `artifacts` a `passes` proti `lifecycle`, a **jen pro
 
 ## Fáze 2 – Řazení
 
-Obsazené a nejisté větve do řazení nevstupují. Zbytek seřaď:
+Obsazené a nejisté větve ani položky s `waiting: true` do řazení nevstupují. Zbytek seřaď:
 
 1. **Opuštěné větve** – od nejčerstvější (`last_ts`). Větev bez session k obnovení, na kterou nikdo nesáhl déle než měsíc, nedávej na první místo – je to spíš zapomenutý pokus než rozdělaná práce; nabídni ji mezi ostatními a řekni její stáří.
 2. **Rozdělaná práce tady** – necommitnuté změny, rozpracovaný plán.

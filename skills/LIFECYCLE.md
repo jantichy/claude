@@ -32,7 +32,8 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
    **Byl to jeden skill `/specify` a rozdělil se 20. 9. 2026.** Důvod: oponovat zadání má smysl dřív, než se podle něj něco postaví. **Dělení je na vrstvě, ne uvnitř kol** – požadavky se sepíšou **jednou na začátku**, kdežto návrh řešení vzniká **po tématech**; kolo o platební bráně řeší osy, guardy i přechody naráz, protože je to jedno téma, a rozdělit ho na dvě poloviny by znamenalo dvakrát načítat týž kontext. **Jméno `/architect` je záměrně činnost, ne výsledek** – krok vyrábí sadu dokumentů a `architecture.md` je jen její páteř, takže jméno podle toho souboru by pojmenovávalo část za celek.
 - **`/breakdown`** – implementační plán (`docs/plan.md`). Až po schválení zadání: plán argumentuje ze specifikace, takže měnit specifikaci pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**, ne popis souvislým textem.
 - **`/implement`** – odpracování plánu, úkol po úkolu, každý do průběžné kontroly a do commitu.
-- **`/release`** – nasazení do produkce. **Stojí na ose až úplně na konci schválně:** kontrolní kroky před ním mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť. **Končí až uzavřením sledovacího okna**, ne nasazením – viz níž.
+- **`/release`** – nasazení do produkce. **Stojí za všemi kontrolními kroky schválně:** ty mění repozitář, kdežto nasazení mění svět, kde jsou cizí data a živí uživatelé. Je to **poslední krok, který něco vyrábí**; za ním stojí už jen `/evaluate`, který měří, co z toho vzešlo. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť. **Končí až uzavřením sledovacího okna**, ne nasazením – viz níž.
+- **`/evaluate`** – vyhodnocení provozu: co nasazená věc doopravdy dělá v rukách lidí. Odpovídá na šest otázek, které se po nasazení nikdo neptá – používá se to, kde to lidé nedokončili, co si vyžádali, co jim systém odmítl, co z rizik se projevilo a co nepoužil nikdo –, a vyrábí `docs/operation.md`. **Jako jediný krok osy ho nespouští výstup předchozího kroku, ale čas:** data vznikají dny a týdny po `/release`, takže se pouští na pokyn uživatele; `/release` k tomu zapíše do `todo.md` datum, kdy to má smysl, a `/next` tu položku v ten den nabídne. **Je to krok osy, ne kontrola, protože rozsah práce zvětšuje** – z podkladu vzejde další průchod cyklem. **Dělí se s `/release` o jednu otázku a je to rozdíl v čase, ne v tématu:** sledovací okno se ptá „nerozbilo se to?“ a odpověď má za hodiny, `/evaluate` se ptá „je to k něčemu?“ a odpověď má za týdny. **Do `requirements.md` nepropisuje nic** – poznatek je vstup pro `/specify` v dalším průchodu, ne rozhodnutí. **Přeskakuje se u toho, co provoz nemá** (knihovna, konfigurace, jednorázový skript) a u nenasazené věci; **ne kvůli tomu, že se neměří** – to je jeho nejcennější nález a výstupem je pak, co začít měřit.
 
 ### Kontrolní kroky – údržba nad tím, co už je
 
@@ -58,7 +59,8 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 | `/architect` → `/breakdown` | `/review` → `/oponent` → `/consolidate` → `/consistency` → `/cleanup` → `/merge` |
 | `/breakdown` → `/implement` | `/review` → `/cleanup` → `/merge` |
 | `/implement` → `/release` | `/review` → `/consistency` → `/cleanup` → `/merge` → `/attack` → `/cleanup` |
-| za `/release` | `/cleanup` |
+| `/release` → `/evaluate` | `/cleanup` |
+| za `/evaluate` | `/review` → `/cleanup` → `/merge` |
 
 **`/review` stojí za každým krokem osy, který vyrobil artefakt, ne jen za `/implement`.** Prověřuje **hotovou práci**, a tou je u projektu bez kódu dokumentace návrhu – specialisty si vybírá podle toho, čeho se změny týkají, takže nad obsahovým projektem pustí jen textové. **Doplněno 20. 9. 2026**: do té chvíle ho tabulka měla jen v poslední mezeře, protože vznikala s projektem s kódem před očima. Doloženo v rezervačním systému, kde `/review full` nad samou dokumentací vrátil 177 nálezů a velká část z nich byly návrhové díry, ne typografie.
 
@@ -68,19 +70,25 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 
 **Pořadí uvnitř mezery není libovolné.** `/review` jde první, protože hledá vady v tom, co krok osy právě vyrobil, a jeho opravy mění text, nad kterým pracují ostatní; `/consistency` až po něm, protože uklízí i to, co `/review` nastřílel; `/cleanup` je vždycky poslední, protože jako jediný odolá kompaktaci.
 
-**`/merge` stojí za tím `/cleanup`, kterým se uzavírá větev** – ne za každým. Pracuje-li se bez větví, nebo zůstává-li větev otevřená přes víc mezer (typicky během `/implement`, kde `/cleanup` běží před každou kompaktací), prostě na řadu nepřijde. V poslední mezeře proto stojí **před** `/attack`: útok se pouští nad hlavní větví, ne nad rozdělanou prací. **Za `/release` chybí schválně** – tam už žádná větev k uzavření není, a u projektu, který nasazuje z hlavní větve, je merge samotné nasazení.
+**`/merge` stojí za tím `/cleanup`, kterým se uzavírá větev** – ne za každým. Pracuje-li se bez větví, nebo zůstává-li větev otevřená přes víc mezer (typicky během `/implement`, kde `/cleanup` běží před každou kompaktací), prostě na řadu nepřijde. V poslední mezeře proto stojí **před** `/attack`: útok se pouští nad hlavní větví, ne nad rozdělanou prací. **Za `/release` chybí schválně** – tam už žádná větev k uzavření není, a u projektu, který nasazuje z hlavní větve, je merge samotné nasazení. **Za `/evaluate` stát může**, protože ten zapisuje podklad a úkoly jako každá jiná práce; pracuje-li se bez větví, prostě na řadu nepřijde.
 
 **`/cleanup` je v každé mezeře, a to je celý jeho popis.** Jeho spouštěčem není pozice, ale konec session – takže běží i uprostřed rozdělaného `/implement`, kde žádná mezera není. V poslední mezeře stojí dvakrát, před `/attack` i za ním, a ten druhý průchod slouží jako verifikace.
 
 **Poslední mezera se točí.** `/implement` a `/review` se v ní střídají po každé hotové featuře, dokud je co dělat; není to jeden průchod, ale smyčka.
 
-**Spouštěč rozhoduje, jestli se na krok v mezeře dojde.** Kroky hlavní osy čekají na výstup toho předchozího. Z kontrolních čekají na pozici jen `/oponent`, `/review` a `/attack`; `/consolidate` a `/consistency` se pouštějí, až se v projektu nasbírá, co měří – dost kol, respektive dost změn –, `/cleanup` podle konce session a `/merge` podle výslovného pokynu uživatele – ten je jeho jediným spouštěčem, takže se na něj nedojde nikdy samovolně. **Přeskočení se hlásí nahlas i s důvodem**, stejně jako u kroků osy.
+**Spouštěč rozhoduje, jestli se na krok v mezeře dojde.** Kroky hlavní osy čekají na výstup toho předchozího – **kromě `/evaluate`, který čeká na čas** a pouští se na pokyn uživatele; `/release` mu k tomu zapíše do `todo.md` datum a `/next` tu položku v ten den nabídne. Z kontrolních čekají na pozici jen `/oponent`, `/review` a `/attack`; `/consolidate` a `/consistency` se pouštějí, až se v projektu nasbírá, co měří – dost kol, respektive dost změn –, `/cleanup` podle konce session a `/merge` podle výslovného pokynu uživatele – ten je jeho jediným spouštěčem, takže se na něj nedojde nikdy samovolně. **Přeskočení se hlásí nahlas i s důvodem**, stejně jako u kroků osy.
 
 **Proč v tomhle pořadí:** každý krok osy vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo.
 
 ## Cyklus nekončí nasazením
 
-`/release` má poslední fází **sledovací okno**: nasazení se nepovažuje za hotové, dokud neuplyne a někdo ho výslovně neuzavře větou *„okno uzavřeno, N nových chyb“*. Bez toho se nasazení uzavře tichem a scénář „spadlo to o dvě hodiny později“ – migrace s backfillem, cache, chyba, která se projeví až na produkčním objemu – nemá vlastníka.
+**Zavírají se dvě smyčky a každá jinak dlouhá.**
+
+**Pro pády** je to sledovací okno – poslední fáze `/release`. Nasazení se nepovažuje za hotové, dokud neuplyne a někdo ho výslovně neuzavře větou *„okno uzavřeno, N nových chyb“*. Bez toho se nasazení uzavře tichem a scénář „spadlo to o dvě hodiny později“ – migrace s backfillem, cache, chyba, která se projeví až na produkčním objemu – nemá vlastníka. Měří se v hodinách až dnech.
+
+**Pro poznání** je to `/evaluate`. Otázka „je to k něčemu?“ odpověď za hodiny nemá: jestli se to používá, kde to lidé nedokončili a co si vyžádali, se pozná za týdny. Sledovací okno tu druhou smyčku zavřít nemůže – protáhnout ho na týdny by znamenalo, že `/release` nikdy neskončí –, takže je to samostatný krok na konci osy. **Jeho výstup je vstup do dalšího průchodu:** `docs/operation.md` čte `/specify`, když se rozhoduje, co se bude stavět dál. Tím se cyklus doopravdy uzavírá do kruhu, místo aby končil nasazením.
+
+**Do 21. 9. 2026 byla zavřená jen ta první.** Byla to naše mezera i mezera oboru – srovnání spec-driven frameworků jmenuje *feedback integration* mezi šesti věcmi, které těmhle soustavám systematicky chybí. Rozbor drží `decisions.md`, *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`*.
 
 ## Hotfix
 
@@ -106,5 +114,7 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 ## Jeden člověk, jedna interaktivní session
 
 Celý životní cyklus je nástroj pro **jednu interaktivní session jednoho člověka**. Je to vědomé omezení, ne opomenutí: skoro celý stojí na `AskUserQuestion` a na souhlasu průběžné kontroly vydaném lokálně pro jednoho uživatele. V CI ani u druhého člověka neplatí ani jedno – hook nespustí nic, protože souhlas je vázaný na `$HOME`, a interaktivní průchod nálezy nemá komu položit otázku.
+
+**`/evaluate` na to omezení naráží nejtvrději a řeší to tím, že se mu podřídí.** Data o provozu vznikají týdny po běhu, takže se nabízí pustit sběr naplánovaným agentem – a to by právě tuhle hranici překročilo: běželo by to bez souhlasu průběžné kontroly a bez toho, komu položit otázku. **Rozdělilo se to proto na dvě věci:** připomenutí je záznam v souboru, který nic nespouští (`/release` zapíše datum, `/next` ho nabídne), a samotný běh je interaktivní jako všechno ostatní. Kdo u toho sedí, rozhoduje; nikdo za něj.
 
 Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen deterministická vrstva** – typecheck, lint, test, audit, scan tajemství, statická analýza. Ty běží kdekoliv a nepotřebují nikoho, kdo by odpovídal. Panel specialistů, průchod nálezy, útok ani nasazení se v neinteraktivním prostředí nepouštějí; kdo je chce, pustí je u sebe.

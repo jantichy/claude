@@ -172,6 +172,44 @@ class PlanAndQueueParsing(unittest.TestCase):
         [item] = self.c.parse_items([long_item])
         self.assertEqual(item["waits"], "odpověď podpory")
 
+    def test_future_date_after_title_parks_item(self):
+        """Odložená položka se do fronty nesmí dostat dřív, než datum nastane.
+
+        Zapisuje ji `/release` pro `/evaluate`, jehož spouštěčem je čas, ne
+        výstup předchozího kroku. Nabídnout ji dřív znamená pustit vyhodnocení
+        provozu nad daty, která ještě nevznikla – a to je šum vydávaný za nález.
+        """
+        [item] = self.c.parse_items(
+            ["- [ ] **Vyhodnotit provoz přes `/evaluate`** – od 2099-10-12. Nasazeno v1.2."])
+        self.assertEqual(item["not_before"], "2099-10-12")
+        self.assertTrue(item["waiting"])
+
+    def test_past_date_does_not_park_item(self):
+        """Druhý směr: po tom dni se položka musí nabízet jako každá jiná.
+
+        Falešné parkování je ta horší polovina – položka nezmizí hlučně, jen se
+        nikdy nenabídne, a nikde to nesvítí.
+        """
+        [item] = self.c.parse_items(["- [ ] **Dávno platí** – od 2020-01-01."])
+        self.assertEqual(item["not_before"], "2020-01-01")
+        self.assertFalse(item["waiting"])
+
+    def test_date_inside_description_is_not_a_park(self):
+        """Datum ve zdůvodnění uprostřed popisu odklad neznamená.
+
+        Proto se hledá jen hned za názvem: první verze prohledávala začátek
+        textu a věta „sazba platí od <datum>“ jí položku skryla.
+        """
+        [item] = self.c.parse_items(
+            ["- [ ] **Úkol** – pracuje se na tom, protože sazba platí od 2099-01-01."])
+        self.assertNotIn("not_before", item)
+        self.assertNotIn("waiting", item)
+
+    def test_item_without_date_has_no_parking_fields(self):
+        """Běžná položka nesmí pole vůbec dostat – prázdné pole se čte jako údaj."""
+        [item] = self.c.parse_items(["- [ ] **Běžný úkol** – bez data."])
+        self.assertNotIn("not_before", item)
+
 
 TODO = """# TODO
 

@@ -527,6 +527,41 @@ class CoreParts(unittest.TestCase):
             self.assertIn(fragment, phase,
                           f"/cleanup, Fáze 2 přišla o {fragment!r} – zbyl jen nadpis")
 
+    def test_evaluate_decides_about_every_finding(self):
+        """Krok, který sebere čísla a nerozhodne o nich, je evidence bez čtenáře.
+
+        Je to celý důvod, proč `/evaluate` vznikl: sledovací okno v `/release`
+        končí větou „N nových chyb“ a tím to končí – číslo se zapíše a nikdo
+        s ním nemá povinnost nic udělat. Kdyby tahle fáze vypadla, běh by navenek
+        vypadal stejně (podklad se zapíše, souhrn se vypíše) a druhá smyčka by se
+        tiše přestala zavírat.
+
+        **Hledá se uvnitř té fáze, ne kdekoliv v souboru.** Odkaz na `FINDINGS.md`
+        a rozdělení na vadu a novou práci stojí i ve *Fázi 3*, takže hledání nad
+        celým tělem by propustilo smazání celé *Fáze 5*.
+        """
+        text = body(ROOT / "skills/evaluate/SKILL.md")
+        heading = "## Fáze 5 – Rozhodnutí u každého poznatku"
+        self.assertIn(heading, text, "/evaluate přišel o fázi rozhodování o poznatcích")
+        phase = text[text.index(heading):]
+        phase = phase[:phase.index("\n## ")]
+        for fragment in ("FINDINGS.md", "backlog.md", "vědomě neděláme", "todo.md"):
+            self.assertIn(fragment, phase,
+                          f"/evaluate, Fáze 5 přišla o {fragment!r} – zbyl jen nadpis")
+
+    def test_evaluate_grades_its_sources(self):
+        """Žebříček zdrojů je to, čím se poznatek odlišuje od dojmu.
+
+        Bez pořadí by skill bral mail stejně vážně jako dotaz do databáze, a
+        podklad by vypadal doloženě, i když stojí na tom, co kdo napsal. Hlídá se
+        proto, že žebříček má oba krajní stupně a že u každého poznatku stojí,
+        čím se doloží.
+        """
+        text = body(ROOT / "skills/evaluate/SKILL.md")
+        for fragment in ("Analytika", "Databáze aplikace", "Vlastní pozorování",
+                         "Čím se doloží", "kolik si člověk musí domyslet"):
+            self.assertIn(fragment, text, f"/evaluate přišel o {fragment!r} ze žebříčku zdrojů")
+
     def test_claude_md_imports_are_not_in_backticks(self):
         """Import uvnitř code spanu se nerozbalí a selže to tiše.
 

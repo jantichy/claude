@@ -54,7 +54,7 @@ Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběž
 
 ## Skilly životního cyklu projektu
 
-Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada.** Nejdřív jdou kroky **osy**, které něco tvoří – vyrobí soubor, kód nebo nasazení – a stojí tu v pořadí, ve kterém se pouštějí: od `/project` po `/release`. Za nimi **kontrolní kroky** od `/oponent` po `/merge`; ty nezvětšují rozsah práce, jen se starají o to, co už vzniklo – měří to, uklízejí to a uzavírají –, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz, takže je nečti jako pokračování té řady. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
+Následující skilly tvoří jeden životní cyklus od založení projektu po nasazení. **Jsou to dvě vrstvy, ne jedna řada.** Nejdřív jdou kroky **osy**, které něco tvoří – vyrobí soubor, kód nebo nasazení – a stojí tu v pořadí, ve kterém se pouštějí: od `/project` po `/evaluate`. Za nimi **kontrolní kroky** od `/oponent` po `/merge`; ty nezvětšují rozsah práce, jen se starají o to, co už vzniklo – měří to, uklízejí to a uzavírají –, a stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz, takže je nečti jako pokračování té řady. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu i nasazení.
 
 ### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
@@ -83,6 +83,10 @@ Projde plán od začátku do konce, u každého úkolu test, kód, průběžná 
 ### [`/release`](skills/release/) – nasazení jako vědomý úkon, ne vedlejší efekt
 
 Nasadí do produkce přes **oddělenou nasazovací větev**, takže `main` zůstane integrační a merge feature nic nenasazuje. Před nasazením projde kontroly, zvlášť řeší migrace dopředu kompatibilně a nikdy se nespustí sám. A tím nekončí: poslední fází je **sledovací okno** s konkrétním koncem, protože celá třída chyb se projeví až později. Dokud okno neuplyne a někdo ho výslovně neuzavře, nasazení není hotové.
+
+### [`/evaluate`](skills/evaluate/) – co provoz říká o hotové věci
+
+Za pár týdnů po nasazení nikdo neví, jestli tu věc někdo používá, kde lidé odpadli, ani že si dvakrát napsali o totéž. Tenhle skill sebere čísla ze zdrojů, které projekt doopravdy má – databáze, logy, maily –, u každého poznatku zapíše, odkud se to ví a jak se to dá přepočítat, a **nepustí vás dřív, než se o každém rozhodne**: úkol, nápad, nebo vědomé „tohle dělat nebudeme“ i s důvodem. Najde přitom i to, co nespadlo, jako odmítnutou akci nebo vypršelý limit. Zjistí-li, že se neměří nic, je to jeho výsledek, ne selhání.
 
 ### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 

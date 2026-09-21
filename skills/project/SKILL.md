@@ -268,6 +268,8 @@ Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračn�
 | `glossary.md` | Jak se v téhle doméně čemu říká. Vyplatí se, plete-li se víc entit naráz. |
 | `pricing.md` | Tarify, limity, trial, co po expiraci – jen u produktu, který se prodává. |
 
+**`operation.md` se tady nevybírá a není to opomenutí.** Zakládá ho až první běh `/evaluate` nad nasazeným projektem – dokud není co nasadit, není o čem rozhodovat, a závazek vést podklad o provozu by u projektu před prvním vydáním nic neznamenal. Ostatní podklady jsou naopak rozhodnutí, které se dá udělat hned.
+
 **Soubory nezakládej.** Prázdný `competition.md` předstírá úvahu, která se nestala. Vybrané jen **zapiš do `CLAUDE.md`** (krok 7, *Zápis*) jako závazek; vzniknou prací v `/discovery` a `/specify`, a `/cleanup` pak podle toho seznamu pozná chybějící dokument od nechtěného.
 
 *`adopt` a `update`:* co už existuje, ber jako zvolené. Existuje-li soubor, který v `CLAUDE.md` zapsaný není, doplň zápis; je-li zapsaný a nevznikl, zmiň to a nech rozhodnout, jestli se čeká, nebo se závazek ruší.
