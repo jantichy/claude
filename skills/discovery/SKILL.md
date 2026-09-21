@@ -101,9 +101,9 @@ Zeptej se **na pět věcí, jednu po druhé**:
 
 **Pusť subagenty na blok *Poptávka*** z `~/.claude/skills/discovery/paths.md` – **2 až 3 cesty, *Hlas problému* je povinná**. Je to vlastní rozpočet, ne část rozpočtu pro konkurenční rešerši: hledá se, co o problému říkají **lidé**, ne co nabízejí produkty.
 
-**Typem `researcher`, výchozí model, `low`** – stejné zdůvodnění jako u Fáze 3.
+**Typem `researcher`, výchozí model, `low`.** Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: doklad bez URL se zahodí hned pod tímhle odstavcem.
 
-**Ověř nálezy stejně jako v Fázi 3** a navíc přísněji na jednu věc: **doklad musí mluvit o problému, ne o kategorii produktu**. Článek „deset nejlepších nástrojů na X“ dokládá, že někdo píše o nástrojích, ne že někdo má ten problém. Stížnost člověka, který popisuje, jak to dnes obchází, doklad je.
+**Ověř nálezy** – zahoď, co nemá `basis` s funkční URL, co má nízkou jistotu, a slouč duplicity mezi agenty. Navíc přísněji na jednu věc: **doklad musí mluvit o problému, ne o kategorii produktu**. Článek „deset nejlepších nástrojů na X“ dokládá, že někdo píše o nástrojích, ne že někdo má ten problém. Stížnost člověka, který popisuje, jak to dnes obchází, doklad je.
 
 Sepiš `docs/demand.md`:
 
@@ -150,7 +150,7 @@ Sepiš `docs/demand.md`:
 
 **Typem `researcher`** (`subagent_type`). Zadání zní prohledat web a vrátit JSON, takže agent nemá co spouštět ani kam zapisovat – a typ bez shellu je jediné, čím ta hranice doopravdy drží; věta v zadání ne (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*).
 
-**Výchozí model, `low`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: údaj bez URL se ve Fázi 3 zahodí. Na `xhigh` běží až syntéza a rizika, kde se chyba násobí do zadání.
+**Výchozí model, `low`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: údaj bez URL zahodí *Ověření* hned pod tímhle odstavcem. Na `xhigh` běží až syntéza a rizika, kde se chyba násobí do zadání.
 
 **Cesty, pravidla výběru i zadání pro agenty drží `~/.claude/skills/discovery/paths.md`.** Přečti si ho celý a řiď se jím: je v něm katalog cest ve čtyřech blocích, pravidla, kolik jich pustit a která je povinná, a šablony zadání podle toho, co cesta vrací. **Blok *Poptávka* se tady nepouští** – ten patří Fázi 2 a má vlastní rozpočet.
 
@@ -188,7 +188,7 @@ Projdi nálezy s uživatelem a sepiš závěr do sekce `## Naše pozice a odliš
 
 Sepiš `docs/risks.md`. **Není to SWOT** – silné stránky a příležitosti už drží *Naše pozice a odlišení*, tady jsou slabiny a hrozby.
 
-**Odkud rizika brát** – projdi všechny čtyři zdroje, ne jen ten první:
+**Odkud rizika brát** – projdi všech pět zdrojů, ne jen ten první:
 
 1. **Z rešerše** – konkurent, který to umí líp; nízká bariéra vstupu; velký hráč, který to může přidat jako funkci.
 2. **Z povahy produktu** – na čem stojí, co musí platit, aby to fungovalo, kde závisí na někom cizím.
@@ -227,7 +227,7 @@ U každého rizika:
 
 **Oponentura.** Nabídni `/oponent docs/demand.md docs/competition.md` – rešerši psal ten, kdo si zároveň přeje, aby produkt vyšel, a to je přesně ta zaujatost, kterou má posudek chytat. Panel hledisek si sestaví sám.
 
-**Předání.** Po schválení nabídni `/specify`. Ten si dokumenty najde sám a **nebude se ptát na to, co je v nich** – zejména sekci *Co poměřujeme* bere jako hotový vstup.
+**Předání.** Po schválení nabídni `/specify`. Ten si dokumenty najde sám a **nebude se ptát na to, co je v nich** – zejména sekce *Co poměřujeme* a *Verdikt* bere jako hotový vstup.
 
 ------
 
@@ -258,7 +258,7 @@ U každého rizika:
 - docs/competition.md – <počet> konkurentů, <počet> ověřených údajů
 - docs/risks.md – <počet> rizik (<počet> promítnutých do produktu, <počet> přijatých)
 
-- **Spotřeba:** [N agentů: X průzkumníků · na jakém modelu a effortu]
+- **Spotřeba:** [N agentů: X na poptávku, Y na konkurenci · na jakém modelu a effortu]
 
 **Proč to stavíme**
 - <problém jednou větou a kdo ho má>
@@ -276,7 +276,7 @@ U každého rizika:
 - [seznam, nebo „žádné“]
 
 **Další krok**
-- [/oponent nad competition.md / /specify]
+- [/oponent nad demand.md a competition.md / /specify]
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.

@@ -255,7 +255,7 @@ Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUD
 
 ### Produktové podklady
 
-Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Definici všech pěti drží `~/.claude/STRUCTURE.md`, *Produktové podklady*; tady se jen vybírá.
+Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Definici všech šesti drží `~/.claude/STRUCTURE.md`, *Produktové podklady*; tady se jen vybírá.
 
 `AskUserQuestion`, `multiSelect: true`, **nic předvybrané** – opačně než u standardních souborů. Většina projektů nemá ani jeden a předvybraný seznam by je odklikl všechny:
 
@@ -459,7 +459,7 @@ V režimu `adopt` vypiš i **co jsi záměrně nechal být a proč** – ať je 
 
 *Režim `update`:* souhrn je jiný – nevypisuje nastavení, ale **rozdíl proti standardu**. Tři skupiny: co bylo dorovnáno, co čeká na rozhodnutí uživatele a co jsi vědomě nechal být i s důvodem. Oblasti, které vyšly čistě, shrň jednou větou; jejich výčet nikoho nezajímá.
 
-**Další krok:** /discovery, staví-li se produkt pro trh, jinak rovnou /specify – u dorovnaného projektu se rovnou pracuje
+**Další krok:** /discovery, staví-li se cokoliv pro lidi – u projektu bez trhu z něj odpadá jen konkurence, ne poptávka a rizika; rovnou /specify jen u přírůstku, kde je „proč“ rozhodnuté a zapsané. U dorovnaného projektu se rovnou pracuje
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
