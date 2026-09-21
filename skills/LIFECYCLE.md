@@ -16,7 +16,7 @@ Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → k
 
 V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code** – u obojího je rozhraní stabilní. **Externí skilly z pluginů** (`superpowers:*` a podobné) v životním cyklu nikdy nestojí; krok si je volá jako svůj vnitřek. Ten se může kdykoliv změnit, aniž se změní, jak se krok volá.
 
-**Kroky cyklu nestojí v jedné řadě, protože nemají tutéž roli.** Jedny **tvoří** – vyrobí soubor, kód nebo nasazení, které předtím neexistovalo, a posunou práci dopředu. Druhé **nepřidávají nic**; měří, co už je, a zlepšují to. Vypsat obojí do jedné číslované posloupnosti vypadá přehledně, ale lže: kontrolní krok není bod v řadě, nýbrž **vrstva mezi dvěma body**, a proto se v cyklu objevuje vícekrát, aniž je to opakování nebo výjimka.
+**Kroky cyklu nestojí v jedné řadě, protože nemají tutéž roli.** Jedny **tvoří** – vyrobí soubor, kód nebo nasazení, které předtím neexistovalo, a posunou práci dopředu. Druhé **nezvětšují rozsah práce**; jsou to údržba nad tím, co už vzniklo – měří to, uklízejí to a uzavírají to. Vypsat obojí do jedné číslované posloupnosti vypadá přehledně, ale lže: kontrolní krok není bod v řadě, nýbrž **vrstva mezi dvěma body**, a proto se v cyklu objevuje vícekrát, aniž je to opakování nebo výjimka.
 
 Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu kroků, ve které polovina čísel nic neznamenala.
 
@@ -34,9 +34,9 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 - **`/implement`** – odpracování plánu, úkol po úkolu, každý do průběžné kontroly a do commitu.
 - **`/release`** – nasazení do produkce. **Stojí na ose až úplně na konci schválně:** kontrolní kroky před ním mění repozitář, nasazení mění svět, kde jsou cizí data a živí uživatelé. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť. **Končí až uzavřením sledovacího okna**, ne nasazením – viz níž.
 
-### Kontrolní kroky – kroky, které měří
+### Kontrolní kroky – údržba nad tím, co už je
 
-Žádný z nich nezvětšuje rozsah práce. **Hraniční je `/consolidate`**, protože jako jediný vrací návrh řešení, ne nález; patří sem proto, že ten návrh nic nepřidává – bere hotovou práci a hledá, čím by šla nahradit. Totéž ostatně dělá `/consistency`, když opravuje.
+Žádný z nich nezvětšuje rozsah práce. **Hraniční jsou dva.** `/consolidate` jako jediný vrací návrh řešení, ne nález; patří sem proto, že ten návrh nic nepřidává – bere hotovou práci a hledá, čím by šla nahradit. Totéž ostatně dělá `/consistency`, když opravuje. `/merge` zase jako jediný mění hlavní větev, takže vypadá jako krok osy; jenže nic nevyrábí, jen přesouvá hotovou práci tam, kam patří – je to táž údržba nad už vytvořeným jako `/cleanup` nebo `/consistency`.
 
 - **`/oponent`** – nezávislý posudek čerstvýma očima, subagenty bez kontextu session. **Stojí v cyklu třikrát** – po `/discovery`, po `/specify` a po `/architect`. **Po požadavcích schválně:** vada v zadání se jinak najde až ve chvíli, kdy se podle něj něco postavilo, a oprava pak přepisuje obojí. **Do cyklu patří proto, že jinak návrh neměří nikdo:** specialista na korektnost v `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu – vada v ní projde celým cyklem jako korektní, protože kód poslušně dělá to, co je v ní napsané. Je to zároveň jediná vrstva, kde se chyba násobí do všeho pod ní: `~/Dev/context/coding/quality.md` tvrdí, že *„bezpečnost se dělá strukturou, ne kontrolou na konci“*, a ta struktura vzniká právě tady. **Opakované běhy nejsou opakování** – hlediska si vybírá podle vlastnosti dokumentu, ne podle jeho typu, takže nad požadavky vyjdou produktová (*Cíl a měřitelnost*, *Konkurence a trh*, *Cílová skupina*) a nad návrhem technická (*Data a proveditelnost*, *Reverzibilita*, *Zneužití*); test duplicity níž se ptá, jestli krok vrací nad **týmž** vstupem tutéž odpověď, a tady je vstup pokaždé jiný. **Oba běhy se přeskakují stejným pravidlem jako každý jiný krok** – drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano.
 - **`/consolidate`** – hledání návrhového dluhu z postupného záplatování. Ptá se „bylo by to dnes navržené **jinak**?“, což je otázka, kterou nepoloží nikdo jiný: `/review` měří proti specifikaci, `/consistency` hledá rozejití a `/oponent` čte hotový text bez historie jeho vzniku. **Jako jediný krok cyklu čte historii rozhodnutí**, ne dnešní stav. **V prvním průchodu se přeskakuje** – po prvním návrhu žádný dluh z postupného lepení neexistuje; nabíhá až s druhým a dalším kolem. **Relativizuje řešení, ne zadání**: rozhodnutí o tom, co se má dělat, je pro něj vstup. **Pilotní běh proběhl 20. 9. 2026**, takže zadání skillu z něj vychází a sepsat ho je mechanická práce; čtyři věci o něm ale rozhodnuté nejsou a drží je `todo.md` – jestli hlásí nálezy podle `~/.claude/skills/SEVERITY.md`, nebo vrací jen návrhy; kam jde zamítnutý návrh, aby se nepředkládal každý běh znovu; jestli patří do *Průchodů životním cyklem*; a podle čeho se pozná, že se nasbíralo dost kol.
@@ -44,6 +44,7 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 - **`/consistency`** – audit vnitřní konzistence. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všichni specialisté v `/review`, a uklidí i to, co nastřílel `/review`. Výchozí rozsah jsou soubory dotčené větví a ty, které na ně odkazují; `full` projede celý projekt a pouští se zřídka – kompletní audit po každé feature znovu předkládá tentýž starý dluh, a umlčet ho je pak levnější než odklikat.
 - **`/attack`** – explorativní útok: aplikace se **spustí** a zkouší se rozbít vstupy, pořadím kroků, cizími identitami a nesmyslnými daty. Je to třetí druh záruky vedle deterministických kontrol a posouzení modelem, a ani jedna ho nenahrazuje – `/review` kód čte, tenhle ho spouští. **Stojí až tady schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost, kdežto `/review` je levný a běží po každé feature. Projekt bez spustitelné aplikace ho nemá.
 - **`/cleanup`** – **poslední krok každé mezery, ne bod na ose**. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z kontrolních kroků (co bylo odmítnuto a proč). Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání – otázku, na kterou se neodpovědělo, návrh, který nikdo nepřijal ani nezamítl –, a probere je s uživatelem, dokud je koho se ptát. Běží-li po něm ještě `/attack` nebo `/release`, ty si své zápisy dělají samy a na konci se `/cleanup` **pouští znovu** – je opakovatelný a druhý průchod slouží jako verifikace. **Ve worktree větvi po úspěšném zápisu nabídne merge do `main`**; provede ho jen na výběr uživatele, podle `~/.claude/WORKTREE.md`, *Dokončení větve*. Nabízí ho i před `/attack` – útok pak běží nad `main` a nasazuje se až vědomým povýšením do `production`. **U projektu, který nasazuje přímo z `main`, merge nenabízí**, protože by to bylo nasazení a to patří `/release`.
+- **`/merge`** – dokončení větve: sloučení do hlavní větve a úklid po ní. **Stojí hned za `/cleanup`** a je to jediný krok, který se v praxi skoro vždycky vyvolá odtamtud – `/cleanup` ho na konci svého běhu nabídne, aby se nemusel psát ručně. **Není proto jeho součástí, ale navazujícím krokem**: nabídka je zkratka k volání, ne fáze. **Do kontrolní vrstvy patří i přesto, že mění hlavní větev** – nic nevyrábí, jen převádí hotovou práci tam, kam patří, a tím uzavírá průchod mezerou. **Jádrem je pořadí:** spojený stav vzniká a ověřuje se ve větvi, ne v hlavní větvi, takže do ní jde jen to, co prošlo *Kontraktem příkazů*. **Nemerguje sám od sebe** – `~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak*. **U projektu, který nasazuje přímo z hlavní větve, se nepouští vůbec**, protože tam je merge nasazení a patří `/release`. Odpadá celý u projektu, který větve nepoužívá.
 
 ### Co smí stát v které mezeře
 
@@ -51,12 +52,12 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 
 | Mezera | Co v ní může stát |
 |---|---|
-| `/project` → `/discovery` | `/cleanup` |
-| `/discovery` → `/specify` | `/review` → `/oponent` → `/cleanup` |
-| `/specify` → `/architect` | `/review` → `/oponent` → `/cleanup` |
-| `/architect` → `/breakdown` | `/review` → `/oponent` → `/consolidate` → `/consistency` → `/cleanup` |
-| `/breakdown` → `/implement` | `/review` → `/cleanup` |
-| `/implement` → `/release` | `/review` → `/consistency` → `/cleanup` → `/attack` → `/cleanup` |
+| `/project` → `/discovery` | `/cleanup` → `/merge` |
+| `/discovery` → `/specify` | `/review` → `/oponent` → `/cleanup` → `/merge` |
+| `/specify` → `/architect` | `/review` → `/oponent` → `/cleanup` → `/merge` |
+| `/architect` → `/breakdown` | `/review` → `/oponent` → `/consolidate` → `/consistency` → `/cleanup` → `/merge` |
+| `/breakdown` → `/implement` | `/review` → `/cleanup` → `/merge` |
+| `/implement` → `/release` | `/review` → `/consistency` → `/cleanup` → `/merge` → `/attack` → `/cleanup` |
 | za `/release` | `/cleanup` |
 
 **`/review` stojí za každým krokem osy, který vyrobil artefakt, ne jen za `/implement`.** Prověřuje **hotovou práci**, a tou je u projektu bez kódu dokumentace návrhu – specialisty si vybírá podle toho, čeho se změny týkají, takže nad obsahovým projektem pustí jen textové. **Doplněno 20. 9. 2026**: do té chvíle ho tabulka měla jen v poslední mezeře, protože vznikala s projektem s kódem před očima. Doloženo v rezervačním systému, kde `/review full` nad samou dokumentací vrátil 177 nálezů a velká část z nich byly návrhové díry, ne typografie.
@@ -67,11 +68,13 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 
 **Pořadí uvnitř mezery není libovolné.** `/review` jde první, protože hledá vady v tom, co krok osy právě vyrobil, a jeho opravy mění text, nad kterým pracují ostatní; `/consistency` až po něm, protože uklízí i to, co `/review` nastřílel; `/cleanup` je vždycky poslední, protože jako jediný odolá kompaktaci.
 
+**`/merge` stojí za tím `/cleanup`, kterým se uzavírá větev** – ne za každým. Pracuje-li se bez větví, nebo zůstává-li větev otevřená přes víc mezer (typicky během `/implement`, kde `/cleanup` běží před každou kompaktací), prostě na řadu nepřijde. V poslední mezeře proto stojí **před** `/attack`: útok se pouští nad hlavní větví, ne nad rozdělanou prací. **Za `/release` chybí schválně** – tam už žádná větev k uzavření není, a u projektu, který nasazuje z hlavní větve, je merge samotné nasazení.
+
 **`/cleanup` je v každé mezeře, a to je celý jeho popis.** Jeho spouštěčem není pozice, ale konec session – takže běží i uprostřed rozdělaného `/implement`, kde žádná mezera není. V poslední mezeře stojí dvakrát, před `/attack` i za ním, a ten druhý průchod slouží jako verifikace.
 
 **Poslední mezera se točí.** `/implement` a `/review` se v ní střídají po každé hotové featuře, dokud je co dělat; není to jeden průchod, ale smyčka.
 
-**Spouštěč rozhoduje, jestli se na krok v mezeře dojde.** Kroky hlavní osy čekají na výstup toho předchozího. Z kontrolních čekají na pozici jen `/oponent`, `/review` a `/attack`; `/consolidate` a `/consistency` se pouštějí, až se v projektu nasbírá, co měří – dost kol, respektive dost změn –, a `/cleanup` podle konce session. **Přeskočení se hlásí nahlas i s důvodem**, stejně jako u kroků osy.
+**Spouštěč rozhoduje, jestli se na krok v mezeře dojde.** Kroky hlavní osy čekají na výstup toho předchozího. Z kontrolních čekají na pozici jen `/oponent`, `/review` a `/attack`; `/consolidate` a `/consistency` se pouštějí, až se v projektu nasbírá, co měří – dost kol, respektive dost změn –, `/cleanup` podle konce session a `/merge` podle výslovného pokynu uživatele – ten je jeho jediným spouštěčem, takže se na něj nedojde nikdy samovolně. **Přeskočení se hlásí nahlas i s důvodem**, stejně jako u kroků osy.
 
 **Proč v tomhle pořadí:** každý krok osy vyrábí vstup pro další, obráceně bys uklízel nad stavem, který se ještě změní. Korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy – proto jsou obě uvnitř jednoho `/review`, kde se pořadí řídí samo.
 
@@ -81,7 +84,7 @@ Rozdělení navrhl uživatel 20. 9. 2026 a nahradilo jedinou číslovanou řadu 
 
 ## Hotfix
 
-**Jde týmž životním cyklem, jen zkráceně.** Není to jiný postup, ale tentýž s vědomě přeskočenými kroky: `/specify`, `/architect`, všechny běhy `/oponent`, `/consolidate` a `/breakdown` odpadají (opravuje se to, co je navržené, ne co se navrhuje), `/consistency` a `/attack` taky. **Nepřeskakuje se `/review` ani průběžná kontrola** – oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější. Přeskočení se hlásí nahlas i s důvodem, jako u každého jiného kroku.
+**Jde týmž životním cyklem, jen zkráceně.** Není to jiný postup, ale tentýž s vědomě přeskočenými kroky: `/specify`, `/architect`, všechny běhy `/oponent`, `/consolidate` a `/breakdown` odpadají (opravuje se to, co je navržené, ne co se navrhuje), `/consistency` a `/attack` taky. **Nepřeskakuje se `/review`, průběžná kontrola ani `/merge`** – oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější, a hotfix na větvi je pořád větev, kterou někdo musí uzavřít. Přeskočení se hlásí nahlas i s důvodem, jako u každého jiného kroku.
 
 ## Povolená opakování
 

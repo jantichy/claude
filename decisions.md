@@ -951,6 +951,25 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Nedořešeno zůstala podoba té otázky**, ne její kdy: `/oponent` má záchytné volby *Nechat být* a *Vrátit se k tomu později*, zbytek rodiny *Přeskočit* a *Odložit*, a je to dvojí slovní zásoba pro totéž. Vedeno v `todo.md`.
 
+### 2026-09-21 – Merge je samostatný krok, ne fáze `/cleanup`
+
+Postup dokončení větve – přihrát hlavní větev do pracovní, vyřešit konflikty, pustit nad spojeným stavem *Kontrakt příkazů*, teprve pak mergovat a uklízet – žil do téhle chvíle jako sekce *Dokončení větve* v `~/.claude/WORKTREE.md`. Mělo to dvě vady. **Neplatil v projektu bez worktree layoutu:** `WORKTREE.md` se tam nenačte, takže se merguje bez celého postupu, přestože nejdražší doložená chyba – souběžně puštěný úklid, který 17. 9. 2026 smazal nepřimergovanou větev lokálně i na remote – na layoutu vůbec nezávisí. A **`/cleanup` ho opisoval** odkazem dovnitř cizího souboru na třech místech.
+
+**Rozhodnutí:** vznikl skill `/merge`, který nese postup celý a zobecněný na projekt bez worktree layoutu. `WORKTREE.md` si nechal *Větev žije, dokud uživatel neřekne jinak* a z *Dokončení větve* jen to, co plyne z layoutu (odkud se pouštějí příkazy, mazání worktree, proč spojený stav nesmí vznikat v `main/`). V životním cyklu stojí mezi **kontrolními kroky**, hned za `/cleanup`.
+
+**Proč skill, a ne další soubor v `~/.claude`:** nový soubor by se v projektu bez worktree nenačetl stejně jako `WORKTREE.md`. Skill je jediný mechanismus, který se aktivuje podle toho, **co uživatel chce**, ne podle toho, jak vypadá adresář – napíše „přimerguj to“ a `description` ho vyvolá i v obyčejném repozitáři.
+
+**Proč mezi kontroly, když mění hlavní větev:** nic nevyrábí. Bere hotovou práci a přesouvá ji tam, kam patří – je to táž údržba nad už vytvořeným jako `/cleanup` nebo `/consistency` (formulace uživatele, 21. 9. 2026). Vrstva se tím nerozmělnila: její nosné kritérium *nezvětšuje rozsah práce* platilo v `LIFECYCLE.md` už předtím a `/merge` mu vyhovuje stejně jako `/consolidate`, který taky nevrací nález.
+
+**Obrací to zamítnutí ze 16. 9. 2026**, kdy se samostatný krok pro dokončení větve odmítl s tím, že „merge navazuje právě na úklid a vlastní krok by jen přidal příkaz, který se pouští pokaždé hned po něm“. Argument padl na tom, že mířil jen na **volání**, ne na **umístění postupu** – a volání se nemění: `/cleanup` merge dál nabízí jedním stiskem na konci svého běhu. Nabídka je ale zkratka k volání navazujícího kroku, ne jeho fáze; kdyby merge byl součástí `/cleanup`, nemohl by existovat samostatně.
+
+**Zamítnuto – `/merge` jako krok osy:** vyrábí merge commit, takže by to sedělo na „něco tvoří“. Jenže kroky osy stojí v pořadí a čekají na výstup toho předchozího, kdežto větev se zakládá na každou práci, takže se merguje i po `/specify` nebo po kole `/architect`. Zařazení do osy by tvrdilo pořadí, které neexistuje.
+
+**Zamítnuto – třetí vrstva cyklu:** rámeček v `RULES.md` je zdrojem pravdy pro `/next`, který ho rozebírá na vrstvy `osa` a `kontroly`, a `tests/test_next.py` tvrdí, že jiné dvě tam být nesmí. Třetí vrstva by rozbila infrastrukturu kvůli jednomu kroku.
+
+**Nabídka v `/cleanup` se tím rozšířila i mimo worktree layout.** Do té chvíle se volba *Přimergovat do main* objevovala jen v kontejneru s `.bare`, protože jinde nebyl žádný postup popsaný a merge by znamenal přepnout pracovní strom, ve kterém může pracovat jiná session. První důvod vznikem `/merge` odpadl, druhý kryje podmínka čistého pracovního stromu, kterou `/cleanup` vyžaduje tak jako tak. Nově tedy rozhoduje jediné: stojíš na jiné než hlavní větvi.
+
+**Vědomě nepokryto:** slučování přes pull request na serveru. `/merge` merguje lokálně a pushuje výsledek; projekt s povinným review v GitHubu by potřeboval jinou cestu a ta se zatím nenavrhovala.
 ### 2026-09-21 – Ptaní se zúžilo podruhé: „netroufáš si“ padlo a zákaz falešné trojice míří na tvar
 
 Kritérium *Kdo o nálezu rozhoduje* (`skills/FINDINGS.md`, 20. 9. 2026) mělo zabránit otázkám, ve kterých není z čeho vybírat. Den nato se přesto v běhu `/cleanup` objevila otázka s volbami *Zapsat do todo / Vyřešit teď / Zahodit* nad nálezem „dva dokumenty uvádějí u téže věci jiný počet“. Uživatel to zachytil a poslal snímek obrazovky.
