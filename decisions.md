@@ -970,6 +970,7 @@ Postup dokončení větve – přihrát hlavní větev do pracovní, vyřešit k
 **Nabídka v `/cleanup` se tím rozšířila i mimo worktree layout.** Do té chvíle se volba *Přimergovat do main* objevovala jen v kontejneru s `.bare`, protože jinde nebyl žádný postup popsaný a merge by znamenal přepnout pracovní strom, ve kterém může pracovat jiná session. První důvod vznikem `/merge` odpadl, druhý kryje podmínka čistého pracovního stromu, kterou `/cleanup` vyžaduje tak jako tak. Nově tedy rozhoduje jediné: stojíš na jiné než hlavní větvi.
 
 **Vědomě nepokryto:** slučování přes pull request na serveru. `/merge` merguje lokálně a pushuje výsledek; projekt s povinným review v GitHubu by potřeboval jinou cestu a ta se zatím nenavrhovala.
+
 ### 2026-09-21 – Ptaní se zúžilo podruhé: „netroufáš si“ padlo a zákaz falešné trojice míří na tvar
 
 Kritérium *Kdo o nálezu rozhoduje* (`skills/FINDINGS.md`, 20. 9. 2026) mělo zabránit otázkám, ve kterých není z čeho vybírat. Den nato se přesto v běhu `/cleanup` objevila otázka s volbami *Zapsat do todo / Vyřešit teď / Zahodit* nad nálezem „dva dokumenty uvádějí u téže věci jiný počet“. Uživatel to zachytil a poslal snímek obrazovky.

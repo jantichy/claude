@@ -106,7 +106,7 @@ Před opuštěním nebo zkompaktováním session přečte celou konverzaci – v
 
 ### [`/merge`](skills/merge/) – dokončení větve, ne jeden příkaz
 
-„Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Vyvolá se buď sám, nebo z nabídky na konci `/cleanup`, aby se nemusel psát ručně.
+„Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Zavoláte ho sami, nebo ho vyberete z nabídky na konci `/cleanup`, aby se nemusel psát ručně – sám od sebe se nespustí nikdy.
 
 ## Skilly mimo životní cyklus
 

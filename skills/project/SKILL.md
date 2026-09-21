@@ -58,7 +58,7 @@ git -C <container> worktree add <container>/project-update -b docs/project-updat
 - **Jméno podle režimu** – `docs/project-update`, `docs/project-adopt`. Prefix je vždycky `docs/`: skill nesahá na kód, jen na dokumentaci a konfiguraci.
 - **Existuje-li větev z minulého běhu**, pokračuj v ní: má-li worktree, přejdi do něj; nemá-li ho, `worktree add` **bez `-b`** (s ním by to spadlo na `branch already exists`).
 - Převezmi lokální stav z `main/` podle `~/.claude/WORKTREE.md`, *Lokální stav se bere z `main/`*, a přejdi do nového adresáře – **od téhle chvíle je projektovým adresářem on** (viz níž). Pozor na cesty, které máš přečtené z `main/`: číst se smí odtamtud, zapisovat se musí do větve.
-- **Na konci práci ve větvi commitni**, i když projekt autocommit nemá: necommitnutá práce ve větvi merge zastaví (`~/.claude/WORKTREE.md`, *Dokončení větve*, krok 1).
+- **Na konci práci ve větvi commitni**, i když projekt autocommit nemá: necommitnutá práce ve větvi merge zastaví (`/merge`).
 - **Nemerguj.** Větev zůstane otevřená a merge je na výslovný pokyn uživatele (`~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak*). V kroku 15 jen řekni, jak se jmenuje.
 
 **Zakládá-li worktree layout teprve tenhle běh** (krok 4 v režimu `create` nebo při konverzi), pravidlo se neuplatní: kontejner právě vzniká, žádná jiná session v něm neběží, takže zbytek běhu píše rovnou do `main/`.

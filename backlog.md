@@ -10,8 +10,11 @@ Nezávazné nápady ke konfigurační vrstvě. Nic z toho není odsouhlasené, r
 
 Nápady ke konfigurační vrstvě v `~/.claude`. Hashe commitů v téhle sekci pocházejí z toho repozitáře.
 
-- **Dotáhnout auditní dráhu i v ostatních doménách.** `/audit` (od 10. 9. 2026) jede naplno jen nad doménou, která má sepsaný **postup auditu** i **katalog typických nálezů**. Dnes to splňuje jedině `analytics/` (`audit.md` + `findings.md`). `web/web.md` a `design/design.md` mají checklist, takže nad nimi skill pojede mělčeji a nahlas na to upozorní; `seo/` neexistuje vůbec a tam se nerozjede.
-
-  **Není rozhodnuto, že se to udělá** – katalog nálezů se nedá vymyslet od stolu, vzniká z odpracovaných zakázek. Proto je to nápad, ne úkol: vytáhne se, až přijde zakázka, která ho bude chtít, a `/audit` sám nabídne vytěžit nalezené zpátky do domény přes `/learn`. Doména tak může vyrůst používáním místo dopředu.
-
 - **Skilly by přejmenovávaly aktuální session podle toho, co dělají.** Nápad ze 17. 9. 2026, nerozhodnutý. Místo ručního `/rename` by si session název nastavila sama, třeba `/review` na „Review <větev>“. **Dnes to oficiálně nejde:** `/rename` smí zadat jen uživatel, `claude -n/--name` pojmenuje session jen při spuštění a výstup hooku podle dokumentace žádné pole pro název nemá (https://code.claude.com/docs/en/hooks.md, https://code.claude.com/docs/en/sessions.md; ověřeno na verzi 2.1.267). **Zamítnutá náhradní cesta:** `/rename` zapisuje do transcriptu session záznamy `custom-title` a `agent-name`, jenže běžící proces si název drží v paměti a zapisuje ho znovu – připsaný záznam by nejspíš přepsal a rozhraní by ho neukázalo. Navíc jde o interní formát bez záruky. **Co jde hned:** skill na začátku vypíše hotový příkaz `/rename <název>` k potvrzení. Vytáhne se, až Claude Code přidá oficiální cestu (nástroj nebo pole ve výstupu hooku) – pak se v příslušných skillech vymění ten jeden řádek.
+
+- **Dokončení větve přes pull request v `/merge`.** Skill dnes merguje lokálně a pushuje výsledek. V projektu, kde má hlavní větev povinné review na GitHubu, tahle cesta nestačí – větev by se měla nabídnout jako pull request (`gh pr create`) a merge nechat na schválení.
+
+  **Není rozhodnuto, že se to udělá.** Žádný ze současných projektů povinné review nemá, takže by se to navrhovalo naslepo pro případ, který zatím nenastal. Až takový projekt vznikne, bude potřeba rozhodnout dvě věci: že při PR odpadá úklid větve (mizí až po schválení, a ne z téhle session) a co se stane s natažením hlavní větve do pracovní – to zůstává, protože kontrola nad spojeným stavem je smysl celého postupu.
+
+  **Vzniklo 21. 9. 2026** spolu se skillem; `decisions.md`, *Merge je samostatný krok, ne fáze `/cleanup`*, to vede jako vědomě nepokryté.
+

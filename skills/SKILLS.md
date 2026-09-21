@@ -351,7 +351,7 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 ```
 > **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci
-> od založení projektu až po nasazení. Jedny tvoří, druhé měří, co už je – a žádný nedělá práci
+> od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci
 > toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/release`](../release/README.md)

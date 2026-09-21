@@ -40,7 +40,7 @@ Sessions v `payments/` a `export/` na sebe nevidí a nešlapou si po souborech.
 
 ## Co nedělá
 
-- **Nezakládá větve ani nemerguje.** To je běžná práce – Claude ji dělá podle pravidel, která skill do projektu nainstaluje, ne voláním skillu.
+- **Nezakládá větve ani nemerguje.** Zakládání větve je běžná práce podle pravidel, která skill do projektu nainstaluje; na dokončení a sloučení větve je samostatný skill [`/merge`](../merge/README.md).
 - **Nezakládá projekt.** Celé nastavení projektu vede `/project`, který se na tohle uspořádání ptá jako na jeden ze svých kroků.
 - **Neradí, jestli se vám to hodí.** Nad projektem, kde děláte vždycky jednu věc, je to zbytečná složitost.
 

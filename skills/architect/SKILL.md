@@ -26,7 +26,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to čtvrtý krok osy: na
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá kontrola – viz *Zákaz implementace*.
 - **Neposuzuje vlastní návrh.** Nezávislý posudek dělá `/oponent`, soulad s předpisem `/review`, vnitřní konzistenci `/consistency`. Skill je v závěru doporučuje, sám je nevolá – kdyby je pouštěl, staly by se jeho součástí. **Kromě `/next` nevolá žádný jiný krok**, a to jen u nabídky zbývajících kol; není to krok cyklu, ale seznam, ze kterého si uživatel kolo teprve vybere.
 - **Nehledá návrhový dluh z postupného lepení.** Že by celá soustava po několika kolech šla nahradit jednodušší, je otázka pro `/consolidate`; tenhle skill rozhoduje dopředu, ne zpětně.
-- **Neslučuje větve sám.** Kdy a jak se větev kola slučuje, drží `~/.claude/WORKTREE.md` – merguje se jen na výslovný pokyn.
+- **Neslučuje větve sám.** Dokončení větve vede `/merge` (`~/.claude/skills/merge/SKILL.md`) a merguje se jen na výslovný pokyn uživatele.
 
 ## Jak je to postavené uvnitř
 
@@ -179,14 +179,14 @@ Vypiš, co kolo rozhodlo, co zapsalo kam, které otázky zůstaly a jaká nová 
 
 ## Fáze 3 – Zápis kola před sloučením
 
-Pouští se ve větvi kola po doporučených krocích. **Bez něj se větev kola neslučuje** – `~/.claude/WORKTREE.md`, *Dokončení větve*, na to odkazuje. Bez worktree layoutu odpadá natažení `<main-branch>` i sloučení a zbytek se udělá rovnou v pracovním stromu.
+Pouští se ve větvi kola po doporučených krocích. **Bez něj se větev kola neslučuje** – `/merge` to má mezi tím, co merge zastaví. Bez worktree layoutu odpadá natažení `<main-branch>` i sloučení a zbytek se udělá rovnou v pracovním stromu.
 
 1. **Natáhni `<main-branch>` do větve.** Konflikt na konci `done.md` nebo `decisions.md` od souběžného kola vyřeš ponecháním obou zápisů za sebou. **Přibyla-li tím do bloku kola nová otázka, nebo změnilo-li souběžné kolo dokument z řádku *Sahá na* v tom, na čem tohle kolo stojí**, zápis nedělej: vrať *Stav* na `rozhoduje se`, řekni, co se změnilo, a vrať se do *Fáze 2*, kroku 2.
 2. **Odložené otázky, které kolo neotevřelo, přepiš.** Přesuň je do bloku jiného kola; když na žádné kolo nečekají, ale na něco jiného (rozhodnutí, podklad, odpověď zvenčí), udělej z nich samostatnou položku `todo.md` a napiš, na co čekají. Položka s poznámkou, že čeká na kolo, které už proběhlo, se nesmí zachovat – nerozezná se od fronty.
 3. **Přiděl kapitole v `decisions.md` další volné číslo** podle stavu po natažení a přepiš odkazy na ni ve všech souborech, na které kolo sáhlo.
 4. **Záznam do `docs/done.md`**, sekce `## Kola návrhu`, v tvaru podle `~/.claude/STRUCTURE.md`, *`done.md`* – pole *Neotevřelo* z kroku 2 –, a smazání bloku z `docs/todo.md`.
 5. **Commit.**
-6. **Doporuč sloučení větve** – samo podle `~/.claude/WORKTREE.md`, *Dokončení větve*, a jen na pokyn. **Posune-li se mezitím `<main-branch>`** (`git log HEAD..<main-branch>` není prázdný), zopakuj těsně před sloučením natažení `<main-branch>` včetně jeho kontroly a pak přidělení čísla: jinak by si souběžné kolo sloučené o chvíli dřív vzalo totéž číslo. **Konflikt „smazáno ve větvi, změněno na `main`“ u bloku kola** znamená, že souběžné kolo do bloku mezitím přesunulo otázku: vezmi ji z verze na `main`, zpracuj ji podle kontroly po natažení a blok pak znovu smaž – nikdy ho nenechávej vedle hotového záznamu.
+6. **Doporuč sloučení větve** – provede ho `/merge` a jen na výslovný pokyn uživatele. **Posune-li se mezitím `<main-branch>`** (`git log HEAD..<main-branch>` není prázdný), zopakuj těsně před sloučením natažení `<main-branch>` včetně jeho kontroly a pak přidělení čísla: jinak by si souběžné kolo sloučené o chvíli dřív vzalo totéž číslo. **Konflikt „smazáno ve větvi, změněno na `main`“ u bloku kola** znamená, že souběžné kolo do bloku mezitím přesunulo otázku: vezmi ji z verze na `main`, zpracuj ji podle kontroly po natažení a blok pak znovu smaž – nikdy ho nenechávej vedle hotového záznamu.
 
 ------
 
@@ -247,7 +247,7 @@ Pouští se po doporučených krocích nad sešitým návrhem. Potvrď s uživat
 1. **Otázky přesunuté mezi koly** musí být vypořádané, nebo vedené jako samostatná položka `todo.md` s tím, na co čekají.
 2. **Zruš sekci *Kola návrhu*** v `todo.md` i s řádkem *Návrh sešitý*.
 3. **Do `done.md` připiš řádek *Návrh uzavřen*** podle `~/.claude/STRUCTURE.md`, *`done.md`*.
-4. **Commit** a doporuč sloučení větve podle `~/.claude/WORKTREE.md`.
+4. **Commit** a doporuč sloučení větve – provede ho `/merge`.
 
 **Proč se dočištění odkládá za doporučené kroky:** řádek *Návrh uzavřen* nesmí vzniknout dřív, než se nálezy z posudku mají kam vrátit.
 

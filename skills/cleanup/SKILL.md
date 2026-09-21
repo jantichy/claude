@@ -47,7 +47,7 @@ Zadání obou čtenářů bez kontextu leží v [`readers.md`](readers.md); **z�
 
 - **Dvourychlostní režim.** Jednoznačné a mechanické věci dělej rovnou sám a jen je vypiš. Sporné věci předkládej uživateli jeden po druhém, nikdy víc najednou.
   - **Dělej sám:** zápis jednoznačné dohody na zjevně správné místo, oprava rozbitého odkazu, který tvým zápisem vznikl, dorovnání README / TODO / CLAUDE.md v rozsahu session, commit a push.
-  - **Předlož uživateli:** kam co patří, když to není zřejmé; restrukturalizace nebo přesuny souborů; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky.
+  - **Předlož uživateli:** kam co patří, když to není zřejmé; dvě protichůdné informace, kde není jasné, která platí; nedořešené otázky. **Restrukturalizace ani přesun souboru sem sám o sobě nepatří** – rozhoduje, jestli je z čeho vybírat, ne jak velký ten zásah je (`~/.claude/skills/FINDINGS.md`).
   - **Co jde nad rámec session, se neřeší tady**, ale ve Fázi 7 – a u toho, co najdou čtenáři, ve Fázi 8. Rozhoduje o tom kritérium z [`out-of-scope.md`](out-of-scope.md), ne tenhle režim. Jednoznačnou opravu mimo rozsah tedy neodkládej jako „sporné“, jen ji neprováděj uprostřed jiné fáze.
 - **Ptej se vždy přes tool `AskUserQuestion`** – mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 - Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč“*, *Živá struktura*, *Naming – jedno výstižné slovo*).
@@ -393,7 +393,7 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `
 - [seznam z Fází 7 a 8 a u každé položky, jak se s ní naložilo: vyřešeno rovnou / vyřešeno na přání / todo / backlog / zahozeno – nebo „žádné“]
 - Položka z Fáze 7 nebo 8 patří sem, i když skončila v `todo.md`; do *Odložených položek* se nekopíruje.
 
-**Další krok:** /attack a /release, nasazuje-li se – co dál s větví a session, rozhodne otázka za verdiktem
+**Další krok:** /merge, stojíš-li na větvi, pak /attack a /release, nasazuje-li se – co dál s větví a session, rozhodne otázka za verdiktem
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.

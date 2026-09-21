@@ -3,7 +3,7 @@
 #
 # Historie main se čte přes `git log --first-parent`, kde je merge commit jediný
 # řádek za celou větev – jméno větve tam neřekne nic o tom, co se v ní udělalo.
-# Pravidlo drží ~/.claude/WORKTREE.md, sekce "Dokončení větve".
+# Pravidlo drží ~/.claude/skills/merge/SKILL.md, sekce "Zpráva merge commitu shrnuje práci, ne jméno větve".
 #
 # Hlídá jen commity na hlavní větvi: merge main do rozdělané větve je běžná
 # aktualizace a jeho defaultní zpráva je v pořádku.
@@ -64,7 +64,7 @@ commit jediný řádek za celou větev. Napiš do něj, co se v té větvi uděl
 
     git merge --no-ff <branch> -m "Shrnutí toho, co větev přinesla"
 
-Pravidlo drží ~/.claude/WORKTREE.md, sekce "Dokončení větve".
+Pravidlo drží ~/.claude/skills/merge/SKILL.md, sekce "Zpráva merge commitu shrnuje práci, ne jméno větve".
 MSG
 		exit 1
 		;;

@@ -21,7 +21,7 @@ Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém ad
 
 ## Co skill nedělá
 
-- **Nezakládá větve a nemerguje.** Zakládání větve, převzetí lokálního stavu a dokončení větve jsou běžná práce podle pravidel v `~/.claude/WORKTREE.md`, ne režim skillu. Skill, který bys musel volat pokaždé, když zakládáš větev, by byl horší než pravidlo, které prostě platí.
+- **Nezakládá větve a nemerguje.** Zakládání větve a převzetí lokálního stavu jsou běžná práce podle pravidel v `~/.claude/WORKTREE.md`, ne režim skillu; **dokončení větve vede `/merge`** (`~/.claude/skills/merge/SKILL.md`), protože platí i v projektu bez tohohle layoutu. Skill, který bys musel volat pokaždé, když zakládáš větev, by byl horší než pravidlo, které prostě platí.
 - **Nezakládá projekt.** Celé nastavení projektu včetně volby layoutu vede `/project`, který si tenhle skill volá jako jeden ze svých kroků. Tenhle skill je přepínač pro adresář, který už existuje.
 - **Nerozhoduje, jestli se layout hodí.** To je volba uživatele; `/project` se na ni ptá, skill ji jen provede.
 - **Necommituje.** Kontejner není pracovní strom a nic v něm ve gitu není. Změny v `main/` po konverzi zůstanou tak, jak byly.

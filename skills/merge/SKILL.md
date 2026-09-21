@@ -2,7 +2,7 @@
 name: merge
 description: Skill se použije, když uživatel zadá "/merge", nebo chce dokončit hotovou větev a sloučit ji do hlavní – "přimerguj to", "tahle větev je hotová", "ukliď tu větev". Nejdřív natáhne hlavní větev do pracovní, nechá vyřešit konflikty a nad spojeným stavem pustí kontrakt příkazů, teprve pak merguje a uklidí větev i její worktree. Funguje ve worktree layoutu i v obyčejném repozitáři s jednou pracovní kopií. Sám od sebe se nespouští – merguje se jen na výslovný pokyn uživatele. Na rozdíl od /cleanup, který zapisuje, co se v session domluvilo, a merge na konci jen nabídne, tenhle skill ho provádí. U projektu, který se z hlavní větve automaticky nasazuje, je merge samotné nasazení a patří /release.
 argument-hint: [větev]
-allowed-tools: Bash, Read, Edit, Grep, Glob, AskUserQuestion
+allowed-tools: [Bash, Read, Edit, Grep, Glob, AskUserQuestion, Skill]
 ---
 
 # Merge
@@ -38,7 +38,8 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Navíc:
 
 1. **Načti si `~/.claude/WORKTREE.md`**, stojíš-li v kontejneru s `.bare/`. Rozhoduje o tom, odkud se pouštějí příkazy nad hlavní větví a co se po mergi maže.
 2. **Zjisti, kterou větev dokončuješ** – z argumentu, jinak `git branch --show-current`. Jsi-li na hlavní větvi a argument není, řekni to a skonči: není co dokončovat.
-3. **Bod 4 přípravy vynech** – průběžnou kontrolu nad rozděláním stavem nepouštěj. Kontrakt příkazů se tu pouští až nad **spojeným** stavem ve *Fázi 3*, a to je jiné tvrzení.
+3. **Bod 4 přípravy vynech** – průběžnou kontrolu nad rozdělaným stavem nepouštěj. Kontrakt příkazů se tu pouští až nad **spojeným** stavem ve *Fázi 3*, a to je jiné tvrzení.
+4. **Bod 3 přípravy se u rozpracovaných změn neptá.** Patří-li k práci větve, commitni je – je to *Fáze 1* a u dokončení větve není z čeho vybírat. Zeptej se jen na soubor, který jsi nezměnil ty.
 
 ## Fáze 1 – Co merge zastaví
 

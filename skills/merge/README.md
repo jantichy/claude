@@ -63,7 +63,7 @@ Ověřeno
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/merge
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Pracujete-li v uspořádání, kde má každá větev vlastní adresář, vezměte k tomu ještě soubor `WORKTREE.md` z kořene toho repozitáře do `~/.claude/` – bez něj skill funguje dál, jen neuklidí pracovní adresář větve. Ověřování spojeného stavu se opírá o sekci `## Kontrakt příkazů` v projektových instrukcích; nemáte-li ji, skill to řekne a mergne bez ní.
+Pracujete-li v uspořádání, kde má každá větev vlastní adresář, vezměte k tomu ještě soubor `WORKTREE.md` z kořene toho repozitáře do `~/.claude/` – skill funguje i bez něj, jen z něj bere, odkud se která část postupu pouští. Ověřování spojeného stavu se opírá o sekci `## Kontrakt příkazů` v projektových instrukcích; nemáte-li ji, skill to řekne a mergne bez ní.
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 

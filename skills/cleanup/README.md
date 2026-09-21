@@ -32,7 +32,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 - **Co je zjevné, opraví rovnou a bez ptaní.** Všiml si toho jen proto, že byl zrovna u toho, takže hotový úkol visící mezi nedodělanými nebo přejmenování, které minulo dvě místa, prostě opraví a vypíše jednou řádkou. Rozhodovat nechává vás jen tam, kde je z čeho vybírat.
 - **Zapisuje i důvody.** Samotný závěr bez zdůvodnění je pro příští práci málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
 - **Hlásí i čistý výsledek.** Že se nic nedoplňovalo, se řekne nahlas – a bez komentáře k tomu.
-- **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Hned potom se zeptá, co dál: pokračovat v práci, projít úklid znovu, a pracujete-li v odděleném adresáři větve, i přimergovat ji do hlavní větve. Merge udělá jen tehdy, když ho vyberete, a nenabídne ho, když něco zůstalo nezapsané nebo když by merge do hlavní větve znamenal nasazení do produkce.
+- **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Hned potom se zeptá, co dál: pokračovat v práci, projít úklid znovu, a stojíte-li na jiné než hlavní větvi, i přimergovat ji – to pak vyřídí [`/merge`](../merge/README.md). Merge udělá jen tehdy, když ho vyberete, a nenabídne ho, když něco zůstalo nezapsané nebo když by merge do hlavní větve znamenal nasazení do produkce.
 
 ## Jak se to používá
 
