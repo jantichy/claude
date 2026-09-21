@@ -14,7 +14,7 @@ Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozs
    | | Podmínka |
    |---|---|
    | **Vyřeš sám** – musí platit všechno | řešení má právě jednu zjevně správnou podobu, ne volbu mezi variantami; je to oprava nebo dorovnání toho, co už je rozhodnuté, ne nová práce ani nové rozhodnutí; **zásah celý vidíš a umíš ho po sobě ověřit**; **je vratný** – mění verzované soubory, nic nemaže nenávratně a nesahá mimo repozitář |
-   | **Zeptej se** – stačí jedna | řešení má víc obhajitelných podob a volba mezi nimi je uživatelova; je to nová práce, změna pravidla, rozhodnutí nebo struktury; chybí ti údaj, který ví jen uživatel; zásah je nevratný, sahá mimo repozitář nebo do cizího systému; **netroufáš si** |
+   | **Zeptej se** – stačí jedna | řešení má víc obhajitelných podob a volba mezi nimi je uživatelova; je to nová práce, změna pravidla, rozhodnutí nebo struktury; chybí ti údaj, který ví jen uživatel a **nedá se zjistit z repozitáře**; zásah je nevratný, sahá mimo repozitář nebo do cizího systému |
 
    **Takhle vypadají položky, u kterých se nemá co ptát** – všechny tři jsou z jednoho běhu (18. 9. 2026) a u všech uživatel odpověděl „vyřešit teď“:
 
@@ -23,6 +23,8 @@ Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozs
    - Přejmenování minulo dvě místa. Nové jméno je rozhodnuté, zbytek je grep a náhrada.
 
    Společné mají to, že se nerozhoduje **jestli**, ani **jak** – jen to někdo musí udělat. Otázka nad takovou položkou není opatrnost, ale přehazování práce zpátky na uživatele.
+
+   **Nejistotu nejdřív zkus odstranit** (`~/.claude/skills/FINDINGS.md`, *Nejistotu nejdřív zkus odstranit*): jde-li odpověď spočítat, dohledat nebo porovnat se zdrojem v repozitáři, není to položka k rozhodnutí, ale práce – a ta se dělá. **Pracnost sem nepatří**; „musel bych projít celý katalog a přepočítat to“ je popis práce, ne důvod k otázce.
 
    **Váhání je odpověď.** Nepřemlouvej se, že položka do první skupiny „nejspíš patří“ – patří tam jen to, u čeho je to zřejmé na první pohled. Toho, co uživatel nezadal a tys to přesto změnil, se nesmí nakupit tolik, aby to nešlo přečíst.
 
@@ -66,6 +68,8 @@ Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozs
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
    Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Mimo rozsah` (`~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*, dovoluje 12 znaků, takže se číslo položky do hlavičky nevejde – nese ho výpis nad otázkou). Volby:
+
+   **Ty volby platí pro položku, která je novou prací nebo nápadem** – tam je „jestli a kdy“ doopravdy uživatelovo rozhodnutí. **Je-li položka vadou** – dvě místa si odporují, odkaz nikam nevede, číslo nesedí se zdrojem –, je volba „kdy“ falešná a položka patřila do bodu 3 (`~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*). **Objeví-li se v nabídce *Vyřešit teď*, ověř si proto ještě jednou, proč ji tam dáváš**: u vady, kterou umíš opravit, je to doklad, že se nemáš ptát.
 
    | Volba | Co uděláš |
    |---|---|

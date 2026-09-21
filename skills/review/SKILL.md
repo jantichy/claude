@@ -212,7 +212,7 @@ Pak rozděl na tři skupiny. **Kritérium drží `~/.claude/skills/FINDINGS.md`*
 - **přidání závislosti** – vždy, i když ji přidal někdo jiný a ty jen prošel diff (`~/Dev/context/coding/quality.md`, *Nová závislost je rozhodnutí, ne detail*)
 - návrh, který se má rozhodnout: chybějící obrazovka, nová osa v modelu, změna API kontraktu, kde jsou dvě obhajitelné podoby
 - zásah nevratný, mimo repozitář nebo do cizího systému
-- cokoliv, u čeho si netroufáš
+- **chybí ti údaj, který ví jen uživatel a nedá se zjistit z repozitáře** – co se dá spočítat, dohledat nebo porovnat se zdrojem, je práce, ne sporný nález (`~/.claude/skills/FINDINGS.md`, *Nejistotu nejdřív zkus odstranit*)
 
 **Při sloučení vyhrává přísnější zařazení.** Stačí, aby měl nález **jediný podklad od pracovního specialisty**, a je sporný – bez ohledu na to, co si o něm myslel standardový specialista, který ho hlásil taky. Je to deterministické kritérium ve smyslu `~/.claude/RULES.md`, *Mechanická pravidla nad rozhodováním případ od případu*, a řeší kolizi, kterou tenhle skill sám jmenuje jako typickou: chybějící `rel="noopener"` je pro `web/web.md` kosmetika vyjmenovaná mezi mechanickými opravami, kdežto pro specialistu na bezpečnost je to tabnabbing, tedy vždy sporné. Bez pravidla by o tom rozhodovala náhoda.
 
