@@ -24,9 +24,9 @@
 
 - [ ] **Naučit `/depot` pracovat s proudem a pamatovat si, kde skončil** (rozhodnuto 22. 9. 2026, návrh ověřen ostrým během téhož dne). Dnes stojí skill na pravidle *rozsah je přesně to, co stojí v argumentu, ani o soubor víc* a zdrojem je jmenovaná dávka souborů. Honza chce navíc tvary `/depot downloads` a `/depot email`, případně s intervalem: zdrojem je **proud**, do kterého se skill opakovaně vrací, takže musí vědět, co už viděl.
 
-  **Mechanismus je celý navržený, ověřený a zapsaný jinde – neopisuj ho sem zpátky.** Dvě vrstvy paměti, dvě osy tabulek, tři úrovně duplicity, tvar `_state/` i chování při posunu čáry drží `~/Dev/context/depot/depot.md` (*Zdroje* a *Workflow dokumentu*); proč to tak je a co se zamítlo, `~/Dev/context/decisions.md`, sekce `depot`.
+  **Mechanismus je celý navržený, ověřený a zapsaný jinde – neopisuj ho sem zpátky.** Dvě vrstvy paměti, dvě osy tabulek, tři úrovně duplicity i tvar `_state/` drží `~/Dev/context/depot/depot.md` (*Zdroje* a *Workflow dokumentu*); proč to tak je a co se zamítlo, `~/Dev/context/decisions.md`, sekce `depot`.
 
-  **Co z toho už funguje:** doména to popisuje celé a `_state/` existuje a je naplněný – aktuální hodnoty drží on, ne tenhle zápis. **Celý běh `/depot` proběhl 22. 9. 2026 ostře**: deset souborů rozpoznaných obsahem, duplikát odhalený hashem, dvě faktury zpracované až do Fakturoidu, sedm položek vědomě přeskočených a čára posunutá za ně.
+  **Co z toho už funguje:** doména to popisuje celé a `_state/` existuje a je naplněný – aktuální hodnoty drží on, ne tenhle zápis. **Jeden celý běh proběhl 22. 9. 2026 ostře** – `/depot` nad Downloads: deset souborů rozpoznaných obsahem, duplikát odhalený hashem, dvě faktury zpracované až do Fakturoidu, sedm položek vědomě přeskočených a čára posunutá za ně. Kolik dokladů prošlo celkem toho dne, drží `~/Dev/context/done.md`, sekce `depot`.
 
   **Co zbývá udělat ve skillu:** jel jsem to celé ručně podle domény, `SKILL.md` o proudu neví nic. Musí se přepsat:
 
@@ -36,7 +36,7 @@
   - **Zúžení zákazu mazání.** Dnešní *Hranice* říkají „skill nemá jediný důvod volat `rm`“. Platí dál **mimo potvrzený duplikát s ověřeným originálem**, který jde do koše – nikdy přes `rm`. Napiš to jako zúžení s důvodem, ne jako povolení mazat.
   - **Vědomé přeskočení jako plnohodnotný výsledek** – bez něj se čára nepohne nikdy.
 
-- [ ] **Projít startovní tabulku workflow v `~/Dev/context/depot/depot.md`.** Šest řádků, které skillu `/depot` říkají, kam co uložit a co s tím pak udělat, napsal 15. 9. 2026 Claude jako návrh – nejsou to Honzova pravidla. Čtyři řádky (nahrávka, materiál z akce, cizí dokument, vlastní poznámky) jsou odvozené z toho, co v `~/Depot` opravdu leží, a dají se brát za doložené. **Nedořešené jsou dva:**
+- [ ] **Projít startovní tabulku workflow v `~/Dev/context/depot/depot.md`.** Startovní tabulku napsal 15. 9. 2026 Claude jako návrh – nejsou to Honzova pravidla. Čtyři řádky (nahrávka, materiál z akce, cizí dokument, vlastní poznámky) jsou odvozené z toho, co v `~/Depot` opravdu leží, a dají se brát za doložené; **řádek přijaté nákladové faktury přibyl 22. 9. 2026 a ostrým během ověřený je**. **Nedořešené zůstávají dva:**
 
   - **Řádek *Uložit ke klientovi*** – dnes v tabulce stojí, že se mezi `~/Dev/<project>/` a `~/Documents/Projekty/<client>/` rozhoduje podle toho, jestli klient má repozitář. Je to odhad. Ve hře byly ještě dvě varianty: rozhodovat podle **povahy podkladu** (do `~/Dev/` jen to, z čeho se bude pracovat v kódu – exporty, zadání, data; zápisy, nahrávky a obchodní věci vždycky do `~/Documents/Projekty/`, i když repozitář existuje), nebo mít **jediný cíl** `~/Documents/Projekty/<client>/` bez výjimky.
   - **Řádek *Odložit osobní věc*** – cíl `~/Documents/` je hrubý, konkrétní podadresář zapsaný není.
