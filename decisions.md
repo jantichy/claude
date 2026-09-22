@@ -1064,3 +1064,19 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 **Mez toho měření, ať se nepřehání.** Scénář na přepsání zadání změřil hranici jen nepřímo: data v něm byla generovaná pravidlem `id % 5 = 0` a ověřovatel to poznal, takže poznatek padl na kvalitě dat, ne na tlaku zadání. Doloženo je tedy, že ověřovací vrstva funguje, ne že skill odolá tlaku nad platným poznatkem. Ladění `description` proběhlo zkráceně: 4 prompty ze dvanácti, které norma žádá, všechny čtyři správně.
 
 **Dva agenti nezávisle obešli bod 1 v `PREFLIGHT.md`** („není to git repozitář → skonči bez dalšího příkazu“) s odůvodněním, že `/evaluate` git nepotřebuje. Je to otevřená otázka o přípravě, ne o tomhle skillu – drží ji `todo.md`.
+
+### 2026-09-22 – Bod 1 přípravy rozlišuje, jestli skill git doopravdy potřebuje
+
+**Rozhodl uživatel** ze tří předložených variant. `PREFLIGHT.md`, bod 1, velel u adresáře bez `.git` *„skonči bez dalšího příkazu“* – jedna tvrdá podmínka pro každý skill, který běží nad projektem. **Obešli ji tři agenti nezávisle na sobě** (běhy `/evaluate`, 21. a 22. 9. 2026) se shodným odůvodněním, že jejich skill nic nemění, necommituje a diff nepotřebuje. Podle *Mechanická pravidla nad rozhodováním případ od případu* z `RULES.md` je opakované obcházení nejdřív signál o formulaci pravidla.
+
+**Vada byla v tom, že bod mísil dvě věci:** *zjisti, kde stojíš* (kořen projektu a worktree layout), což potřebuje každý skill nad projektem, a *bez gitu nepokračuj*, což potřebuje jen ten, kdo commituje, diffuje proti hlavní větvi, čte historii nebo pouští průběžnou kontrolu. Rozdělily se tedy na dvě a druhá se váže na kritérium, ne na jmenovitý výčet skillů – ten by při dalším skillu zestárnul a nikdo by ho nepřepsal.
+
+**Dopsalo se i to, co bez gitu odpadá dál.** Povolit pokračování a nechat platit body 3 až 5 by vedlo do slepé uličky: stav pracovního stromu, průběžná kontrola před startem i rozsah změn na větvi stojí všechny na gitu. Bez něj zbývá bod 1 a 2, a mez se hlásí jako jedna věc – včetně toho, že bez stavu pracovního stromu nejde poznat cizí rozdělaná práce.
+
+**Zamítnuto – git zůstává tvrdým předpokladem soustavy a obcházení je chyba agenta.** Mělo to oporu (bez gitu neplatí autocommit, `/merge`, worktree layout ani souhlas průběžné kontroly, a `/project` git zakládá), ale tři agenti už prokázali, že to pravidlo obejdou, a nikde po tom nezůstane stopa.
+
+**Zamítnuto – přeformulovat bod 1 na doporučení pro všechny.** Přestalo by chránit skilly, které git doopravdy potřebují: `/merge` nebo `/implement` by běžely až do místa, kde jim první git příkaz spadne.
+
+**Zamítnuto – odchylku si napíše každý takový skill do své `Fáze 0`.** Znamenalo by to opsat totéž do `/evaluate`, `/diagram` a `/report` a doufat, že si na to vzpomene i příští skill – přesně ten způsob, jakým se pravidla rozcházejí.
+
+**Poznámka k tomu, jak se to našlo:** ti tři agenti běželi v adresářích postavených ve scratchpadu, a ty git nebyly. V reálném projektu téhle soustavy to nastat nemůže. **Není to tedy provozní vada, ale nepřesnost normy, kterou měření odhalilo** – a stojí to tu zapsané proto, aby se příště nehledalo znovu.
