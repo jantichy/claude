@@ -40,6 +40,25 @@
   - **Přístup ke schránce:** Gmail konektor (`mcp__claude_ai_Gmail__*`), ne lokální IMAP klient ani vlastní skript nad API – nevzniká tím nové tajemství ke správě a deny list už drží odesílání, odpověď, přeposlání a koš. **Nejdřív se musí ověřit, jestli jde zapnout pro Claude Code**, protože v session z 22. 9. 2026 jeho nástroje dostupné nebyly. Než se to ověří, je celý mailový tvar blokovaný nezávisle na paměti.
   - **Zásah do schránky:** štítek a archivace **jen tam, kde to workflow výslovně říká, a až po potvrzení plánu** – nikdy plošně a nikdy automaticky. Je to zápis do cizího systému, který skill dnes nikde nedělá; špatně rozpoznaný mail by jinak zmizel z inboxu dřív, než si toho někdo všimne.
 
+  **Dvě nezávislé osy, doplněno 22. 9. 2026.** Skill dnes míchá do jedné tabulky dvě věci, které spolu nesouvisí, a je to nejdůležitější část téhle přestavby:
+
+  - **Osa dokumentu** – co to je a co se s tím stane. Rozpozná se zevnitř dokumentu, nezávisle na tom, odkud přišel. To je dnešní tabulka workflow, zbavená zmínek o zdroji.
+  - **Osa zdroje** – odkud se čerpá a co se stane se **zdrojovou položkou**, až je dokument vypořádaný: v Downloads jedno, v mailu druhé, jinde třetí. Plus držení čáry.
+
+  Bez rozdělení se to násobí – každý nový zdroj by znamenal přepsat všechny řádky (mail × faktura, mail × prezentace, Downloads × faktura…). Je to `~/.claude/RULES.md`, *Jednoduchost před úplností*: drž osy zvlášť a skládej je až za běhu. **Do domény to jde jako dvě samostatné tabulky** – *Workflow dokumentu* a *Zdroje* –, ne jako rozšíření jedné.
+
+  **Duplicita je nejlepší doklad, že ty osy jsou opravdu nezávislé.** Pustí-li se `/depot` nejdřív na mail a pak na Downloads, spadne táž faktura do téhož workflow s týmž cílem. Druhý běh musí poznat, že tam už je, nahlásit to a neukládat ji vedle. Osa dokumentu pak neudělá nic, ale **osa zdroje se uplatní celá** – mail se stejně archivuje, čára se stejně posune. Kdyby to byla jedna osa, duplikát by zablokoval obojí a ten mail by v inboxu zůstal navždy.
+
+  **Z toho plyne tvar `_state/`:** čára je **per zdroj**, ale **rejstřík vypořádaných dokumentů je jeden společný napříč zdroji** – jinak hash zapsaný při běhu nad Downloads druhý běh nad mailem nenajde.
+
+  **Tři úrovně duplicity, liší se jistotou:**
+
+  1. **Bajtová shoda** – hash z rejstříku sedí. Jistota, hlásí se jako fakt.
+  2. **Shoda klíče dokumentu** – táž faktura vygenerovaná dvakrát je obsahově identická, ale bajtově jiná. Tabulka workflow proto dostane **pátý, výslovně volitelný sloupec *Klíč dokumentu*** (u faktury dodavatel a číslo dokladu, u nahrávky datum a délka, u stažené prezentace nic). Pravidlo o čtyřech povinných sloupcích platí dál; prázdný pátý znamená, že se jede jen na hash a cílovou cestu.
+  3. **Obsazená cílová cesta bez shody hashe i klíče** – zůstává dotazem jako dnes, protože to duplikát být nemusí.
+
+  **Duplikát v Downloads jde do koše, ne přes `rm`** – a až po ověření, že soubor na cílovém místě opravdu leží a hash sedí. V plánu je to vidět předem a provádí se po potvrzení. **Otevírá to dnešní tvrdý zákaz v *Hranicích*** („Mažeš-li něco, nemažeš. Skill nemá jediný důvod volat `rm`.“), který dosud platil proto, že se soubor přesouvá a z Downloads zmizí sám. Duplikát je první případ, kdy se neuloží, takže by po sobě zůstal. **Zákaz se tím nemaže, ale zužuje**: mimo potvrzený duplikát s ověřeným originálem se dál nemaže nic a `rm` se nevolá nikdy – koš je vratný, `rm` ne.
+
   **Co se tím musí přepsat:** sekce *Rozsah* v `SKILL.md` (dnes zakazuje jít do adresáře sám a je opřená o srovnávací běh, kde si agent rozsah rozšířil na pět tisíc položek – ta ochrana nepadá, ale nově ji drží interval a čára místo výčtu cest), *Fáze 2* až *4* o práci s proudem, a doména dostane seznam proudů. **Rozhodnutí o mechanismu se při implementaci přesunou do `SKILL.md`** k místu, kde platí; tahle položka je drží jen do té doby.
 
 - [ ] **Projít startovní tabulku workflow v `~/Dev/context/depot/depot.md`.** Šest řádků, které skillu `/depot` říkají, kam co uložit a co s tím pak udělat, napsal 15. 9. 2026 Claude jako návrh – nejsou to Honzova pravidla. Čtyři řádky (nahrávka, materiál z akce, cizí dokument, vlastní poznámky) jsou odvozené z toho, co v `~/Depot` opravdu leží, a dají se brát za doložené. **Nedořešené jsou dva:**
