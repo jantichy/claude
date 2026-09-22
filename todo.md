@@ -22,44 +22,19 @@
 
 - [ ] **Vyladit skill `/diagram` po prvních ostrých bězích.** Vznikl 17. 9. 2026 vytěžením ze session nad rezervačním systémem a Honza ho založil s tím, že ho bude ladit později – je to zápis jedné session, ne vyzkoušený postup. **Co se při vzniku neověřilo:** plný běh až do publikace artefaktu (srovnávací i tlakový běh končily před publikací), vyvolání doslovným `/diagram` (měřilo se jen popisem situace, 24 z 24) a test na nosnou část skillu, který zatím není. **Kandidáti na ladění:** čtení schématu z migrací nebo ORM (dnes vědomě jen z dokumentace, viz `decisions.md`, *Skill `/diagram`*) a vytažení parseru nebo šablony stránky do vedlejších souborů skillu, až se ukáže, co je napříč projekty společné. **Co ostré běhy ukážou, patří do sekce *Časté chyby* skillu**; úkol je hotový, až skill projde plným během ve dvou projektech s rozdílně psanou dokumentací modelu. *Nosnou částí* se tu myslí pravidlo „nekreslit hranu, kterou dokumentace nejmenuje“ – to je kandidát na test.
 
-- [ ] **Naučit `/depot` pracovat s proudem a pamatovat si, kde skončil** (rozhodnuto 22. 9. 2026). Dnes stojí skill na pravidle *rozsah je přesně to, co stojí v argumentu, ani o soubor víc* a zdrojem je jmenovaná dávka souborů. Honza chce navíc tvary `/depot downloads za poslední tři dny` a `/depot email za poslední týden`: zdrojem je **proud**, do kterého se skill opakovaně vrací, takže musí vědět, co už viděl, aby nezpracovával totéž znovu.
+- [ ] **Naučit `/depot` pracovat s proudem a pamatovat si, kde skončil** (rozhodnuto 22. 9. 2026, návrh ověřen ostrým během téhož dne). Dnes stojí skill na pravidle *rozsah je přesně to, co stojí v argumentu, ani o soubor víc* a zdrojem je jmenovaná dávka souborů. Honza chce navíc tvary `/depot downloads` a `/depot email`, případně s intervalem: zdrojem je **proud**, do kterého se skill opakovaně vrací, takže musí vědět, co už viděl.
 
-  **Mechanismus jsou dvě vrstvy.** **Čára** je hrubý filtr – co je pod ní, se vůbec nenabízí. **Evidence vypořádaných položek** je přesná: jeden řádek na položku i s tím, co se s ní stalo. Mezi nimi platí pravidlo, které drží celý mechanismus pohromadě: **čára se posune jen tam, kde je pod ní všechno vypořádané** – zpracované *nebo vědomě přeskočené*. Zůstane-li v dávce něco nerozhodnutého, čára se zastaví před tím a zbytek drží evidence.
+  **Mechanismus je celý navržený, ověřený a zapsaný jinde – neopisuj ho sem zpátky.** Dvě vrstvy paměti, dvě osy tabulek, tři úrovně duplicity, tvar `_state/` i chování při posunu čáry drží `~/Dev/context/depot/depot.md` (*Zdroje* a *Workflow dokumentu*); proč to tak je a co se zamítlo, `~/Dev/context/decisions.md`, sekce `depot`.
 
-  **Proč samotná čára nestačí:** proud není monotónní. Mail doručený se zpožděním a starším datem odeslání, faktura přeposlaná za tři týdny, soubor stažený znovu se starším časem změny – čára posunutá přes ně je tiše přeskočí a nikde to nesvítí.
+  **Co z toho už funguje:** doména to popisuje celé, `_state/` existuje a je naplněný, čára pro `downloads` stojí na 22. 9. 2026 a rejstřík nese patnáct vypořádaných dokumentů. **Celý běh proběhl ostře** – rozpoznání deseti souborů obsahem, duplikát odhalený hashem, dvě faktury zpracované až do Fakturoidu, sedm položek vědomě přeskočených, čára posunutá.
 
-  **Z toho plyne, že „viděl jsem to a nechal být“ je plnohodnotný výsledek**, který se zapisuje stejně jako uložení – jinak se newsletter nabídne každý týden znovu. Rozlišit u něj dva důvody: *nezajímavé* (příště se neptej) a *odloženo* (příště připomeň).
+  **Co zbývá udělat ve skillu:** jel jsem to celé ručně podle domény, `SKILL.md` o proudu neví nic. Musí se přepsat:
 
-  **Interval a čára se skládají průnikem.** Zadaný interval je horní mez, ne příkaz jít do všeho; čára ho ořízne zespodu. Do plánu patří řádek, **kolik položek čára odfiltrovala** – ať je vidět, že se něco přeskočilo, a dá se to přepsat.
-
-  **Rozhodnuté volby:**
-
-  - **Umístění:** `~/Dev/context/depot/_state/`, **neverzované** (do `.gitignore`). Sedí u domény, která to čte, a konvence `_prefix` pro pomocný adresář tam existuje. Neverzuje se proto, že je to provozní stav měnící se po každém běhu, ne znalost – a u mailu by nesl odesílatele a předměty. Cena je přiznaná: po reinstalaci se paměť ztratí a pár položek se nabídne podruhé.
-  - **Identita položky:** u mailu `Message-ID` z hlavičky. U souboru **plný SHA-256 obsahu a velikost** – cesta po přesunu zmizí a název se mění. K tomu se ukládá velikost a čas změny jako levná zkratka: shoduje-li se obojí s dřív viděným záznamem, soubor se znovu nečte. Hash se počítá až u souborů, které projdou intervalem a čárou. **Datum se na identitu nepoužívá nikdy.**
-  - **Retence:** evidence je append-only, nic se z ní nemaže. I po roce provozu to budou jednotky tisíc řádků.
-  - **Přístup ke schránce:** Gmail konektor (`mcp__claude_ai_Gmail__*`), ne lokální IMAP klient ani vlastní skript nad API – nevzniká tím nové tajemství ke správě a deny list už drží odesílání, odpověď, přeposlání a koš. Honza ho má ke svému účtu připojený a `/invoicing` přes něj zakládá drafty.
-  - **Zásah do schránky:** štítek a archivace **jen tam, kde to workflow výslovně říká, a až po potvrzení plánu** – nikdy plošně a nikdy automaticky. Je to zápis do cizího systému, který skill dnes nikde nedělá; špatně rozpoznaný mail by jinak zmizel z inboxu dřív, než si toho někdo všimne.
-
-  **Dvě nezávislé osy, doplněno 22. 9. 2026.** Skill dnes míchá do jedné tabulky dvě věci, které spolu nesouvisí, a je to nejdůležitější část téhle přestavby:
-
-  - **Osa dokumentu** – co to je a co se s tím stane. Rozpozná se zevnitř dokumentu, nezávisle na tom, odkud přišel. To je dnešní tabulka workflow, zbavená zmínek o zdroji.
-  - **Osa zdroje** – odkud se čerpá a co se stane se **zdrojovou položkou**, až je dokument vypořádaný: v Downloads jedno, v mailu druhé, jinde třetí. Plus držení čáry.
-
-  Bez rozdělení se to násobí – každý nový zdroj by znamenal přepsat všechny řádky (mail × faktura, mail × prezentace, Downloads × faktura…). Je to `~/.claude/RULES.md`, *Jednoduchost před úplností*: drž osy zvlášť a skládej je až za běhu. **Do domény to jde jako dvě samostatné tabulky** – *Workflow dokumentu* a *Zdroje* –, ne jako rozšíření jedné.
-
-  **Duplicita je nejlepší doklad, že ty osy jsou opravdu nezávislé.** Pustí-li se `/depot` nejdřív na mail a pak na Downloads, spadne táž faktura do téhož workflow s týmž cílem. Druhý běh musí poznat, že tam už je, nahlásit to a neukládat ji vedle. Osa dokumentu pak neudělá nic, ale **osa zdroje se uplatní celá** – mail se stejně archivuje, čára se stejně posune. Kdyby to byla jedna osa, duplikát by zablokoval obojí a ten mail by v inboxu zůstal navždy.
-
-  **Z toho plyne tvar `_state/`:** čára je **per zdroj**, ale **rejstřík vypořádaných dokumentů je jeden společný napříč zdroji** – jinak hash zapsaný při běhu nad Downloads druhý běh nad mailem nenajde.
-
-  **Tři úrovně duplicity, liší se jistotou:**
-
-  1. **Bajtová shoda** – hash z rejstříku sedí. Jistota, hlásí se jako fakt.
-  2. **Shoda klíče dokumentu** – táž faktura vygenerovaná dvakrát je obsahově identická, ale bajtově jiná. Tabulka workflow proto dostane **pátý, výslovně volitelný sloupec *Klíč dokumentu*** (u faktury dodavatel a číslo dokladu, u nahrávky datum a délka, u stažené prezentace nic). Pravidlo o čtyřech povinných sloupcích platí dál; prázdný pátý znamená, že se jede jen na hash a cílovou cestu.
-  3. **Obsazená cílová cesta bez shody hashe i klíče** – zůstává dotazem jako dnes, protože to duplikát být nemusí.
-
-  **Duplikát v Downloads jde do koše, ne přes `rm`** – a až po ověření, že soubor na cílovém místě opravdu leží a hash sedí. V plánu je to vidět předem a provádí se po potvrzení. **Otevírá to dnešní tvrdý zákaz v *Hranicích*** („Mažeš-li něco, nemažeš. Skill nemá jediný důvod volat `rm`.“), který dosud platil proto, že se soubor přesouvá a z Downloads zmizí sám. Duplikát je první případ, kdy se neuloží, takže by po sobě zůstal. **Zákaz se tím nemaže, ale zužuje**: mimo potvrzený duplikát s ověřeným originálem se dál nemaže nic a `rm` se nevolá nikdy – koš je vratný, `rm` ne.
-
-  **Co se tím musí přepsat:** sekce *Rozsah* v `SKILL.md` (dnes zakazuje jít do adresáře sám a je opřená o srovnávací běh, kde si agent rozsah rozšířil na pět tisíc položek – ta ochrana nepadá, ale nově ji drží interval a čára místo výčtu cest), *Fáze 2* až *4* o práci s proudem, a doména dostane seznam proudů. **Rozhodnutí o mechanismu se při implementaci přesunou do `SKILL.md`** k místu, kde platí; tahle položka je drží jen do té doby.
+  - **Sekce *Rozsah*** – dnes zakazuje jít do adresáře sám a je opřená o srovnávací běh, kde si agent rozsah rozšířil na pět tisíc položek. **Ta ochrana nepadá, ale nově ji drží interval a čára místo výčtu cest** – napiš to jako změnu s důvodem, ne jako tiché zmírnění, jinak to příští revize vrátí zpátky.
+  - **Rozpoznání režimu** – `/depot downloads` a `/depot email` nejsou ani cesta, ani dnešní režim; `stažené` má fungovat taky.
+  - **Fáze 2 až 4** – práce s proudem, čtení a zápis `_state/`, průnik intervalu s čárou a řádek v plánu, kolik položek čára odfiltrovala.
+  - **Zúžení zákazu mazání.** Dnešní *Hranice* říkají „skill nemá jediný důvod volat `rm`“. Platí dál **mimo potvrzený duplikát s ověřeným originálem**, který jde do koše – nikdy přes `rm`. Napiš to jako zúžení s důvodem, ne jako povolení mazat.
+  - **Vědomé přeskočení jako plnohodnotný výsledek** – bez něj se čára nepohne nikdy.
 
 - [ ] **Projít startovní tabulku workflow v `~/Dev/context/depot/depot.md`.** Šest řádků, které skillu `/depot` říkají, kam co uložit a co s tím pak udělat, napsal 15. 9. 2026 Claude jako návrh – nejsou to Honzova pravidla. Čtyři řádky (nahrávka, materiál z akce, cizí dokument, vlastní poznámky) jsou odvozené z toho, co v `~/Depot` opravdu leží, a dají se brát za doložené. **Nedořešené jsou dva:**
 
