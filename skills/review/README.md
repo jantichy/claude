@@ -1,12 +1,12 @@
 # /review – panel nezávislých pohledů na hotovou práci
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · **`/review`** · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/cleanup`](../cleanup/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
 Prověří hotovou práci před uzavřením z několika nezávislých hledisek naráz. Stojí to na třech vrstvách: nejdřív běží nástroje projektu, které nic nedomýšlejí a stojí nula tokenů, pak paralelní panel, kde každý má **jediné hledisko**, a nakonec ověřovatel, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se vám vůbec nezobrazí – bez té třetí vrstvy vás panel zavalí pravděpodobně znějícími nálezy, po třetím falešném ho začnete ignorovat a čtvrtý, pravý, přehlédnete.
 

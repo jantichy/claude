@@ -550,7 +550,7 @@ Mimo kód platí totéž v mírnější podobě: **tvrzení, které jde ověřit
 
 ### Životní cyklus projektu
 
-Od nápadu k nasazené feature vede jeden životní cyklus:
+Od nápadu k nasazené feature a k tomu, co o ní řekne provoz, vede jeden životní cyklus:
 
 ```
 Osa        /project → /discovery → /specify → /architect →

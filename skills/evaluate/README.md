@@ -1,12 +1,12 @@
 # /evaluate – co provoz říká o hotové věci
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → **`/evaluate`**
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/cleanup`](../cleanup/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
 Nasadit a jít dál je nejběžnější konec práce. Za pár týdnů nikdo neví, jestli tu věc někdo používá, kde lidé odpadli, ani že si dvakrát napsali o totéž – a nová funkce se plánuje z hlavy místo z toho, co provoz ukázal. Tenhle skill sebere čísla ze zdrojů, které projekt doopravdy má, u každého poznatku zapíše, odkud se to ví, a **nepustí vás dřív, než se o každém rozhodne**. Hodí se každému, kdo něco nasadil a nemá na to analytické oddělení.
 
@@ -72,7 +72,7 @@ Nepotvrzeno
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/evaluate
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill se opírá o tři soubory, které v tom adresáři nejsou: sdílený začátek běhu, pravidlo o tom, kdo rozhoduje o nálezu, a škálu jeho závažnosti. Leží v [`skills/`](../) jako `PREFLIGHT.md`, `FINDINGS.md` a `SEVERITY.md` – vezměte je k tomu, jinak si skill bude stěžovat na chybějící odkazy.
+Skill se opírá o čtyři soubory, které v tom adresáři nejsou: sdílený začátek běhu, rozhraní kroků životního cyklu, pravidlo o tom, kdo rozhoduje o nálezu, a škálu jeho závažnosti. Leží v [`skills/`](../) jako `PREFLIGHT.md`, `LIFECYCLE.md`, `FINDINGS.md` a `SEVERITY.md` – vezměte je k tomu, jinak si skill bude stěžovat na chybějící odkazy.
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 

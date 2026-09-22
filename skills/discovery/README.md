@@ -1,12 +1,12 @@
 # /discovery – co je venku, než začnete stavět
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → **`/discovery`** → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/cleanup`](../cleanup/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
 Chystáte se postavit produkt. Skill se nejdřív zeptá na otázku, která se snadno přeskočí – **chce to vůbec někdo?** – a nespokojí se s dojmem: dohledá, jestli ten problém lidé někde sami popisují a jestli za jeho řešení dnes platí. Pak teprve zjistí, do čeho vstupujete: kdo to už dělá, co to umí, kolik to stojí a proč by si někdo vybral zrovna vás. Z toho vytřídí, **co váš produkt musí umět, aby ho někdo vzal vážně**, a sepíše, co je na celé věci rizikové a co s tím udělat v návrhu. Pouští se dřív než psaní zadání schválně – aby to, co najde, mohlo zadání ještě změnit.
 

@@ -41,7 +41,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 ## Krok 0 – Zjisti režim a stav
 
-**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`**, ale tenhle skill se od něj v jednom bodě **vědomě odchyluje**: bod 1 velí skončit, není-li to git repozitář, kdežto tady je prázdný adresář bez `.git` legitimní vstup – je to režim `create`. Zbytek bodu 1 (rozpoznání worktree layoutu) a bod 2 platí; body 3 až 5 odpadají, protože nad projektem, který teprve vzniká, není co kontrolovat ani diffovat.
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`**, ale tenhle skill se od něj v jednom bodě **vědomě odchyluje**: bod 1 velí skillu, který git potřebuje, skončit, není-li to git repozitář – kdežto tady je prázdný adresář bez `.git` legitimní vstup, protože je to režim `create` a repozitář teprve zakládá. Zbytek bodu 1 (rozpoznání worktree layoutu) a bod 2 platí; body 3 až 5 odpadají, protože nad projektem, který teprve vzniká, není co kontrolovat ani diffovat.
 
 ### Nejdřív zjisti, kde stojíš
 

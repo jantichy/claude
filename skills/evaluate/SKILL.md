@@ -147,7 +147,7 @@ Rozdělení navrhl první ostrý běh a obě zjevné alternativy jsou horší: o
 
 Zapiš `docs/operation.md`. Tvar produktového podkladu drží `~/.claude/STRUCTURE.md`; **existuje-li už z dřívějšího běhu, nepřepisuj ho** – přidej nové období nad starší a **nech čísla stará stát**, aby byl vidět trend. To je celý důvod, proč podklad existuje a proč poznatky nekončí jako úkoly.
 
-Hlavička nese **datum běhu a období**, za které se měří; datum vyrob příkazem (`date +%F`), nepiš ho z hlavy (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš*).
+Hlavička nese **datum běhu a období**, za které se měří, a **vyšlo-li z ověření, že s daty není něco v pořádku, i verdikt o jejich důvěryhodnosti** (*Fáze 3*); datum vyrob příkazem (`date +%F`), nepiš ho z hlavy (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš*).
 
 U každého poznatku: čeho se týká, číslo, zdroj, jak se to dá zopakovat, druh, a **místo na rozhodnutí**, které se doplní ve *Fázi 5*.
 
@@ -171,7 +171,6 @@ Každé rozhodnutí **zapiš na dvě místa**: k poznatku do `operation.md` a ja
 
 ## Časté chyby
 
-- **Sběr se pustí a poznatky zůstanou zapsané bez rozhodnutí.** Je to táž slepá ulička jako sledovací okno `/release`: čísla v souboru, ke kterým se nikdo nevrátí. Krok není hotový, dokud každý poznatek rozhodnutí nemá.
 - **Stav v databázi se čte podle jména.** `draft`, `pending` a `inactive` znamenají v každé aplikaci něco jiného. Bez ověření, co ten stav v téhle doméně opravdu je, vznikne poznatek o problému, který neexistuje.
 - **Poznatek se propíše rovnou do `requirements.md`.** Tím se rozbije doc-first řetěz: zadání se mění krokem `/specify`, ne měřením. Podklad je vstup, ne rozhodnutí.
 - **Chybějící měření se vyhodnotí jako důvod krok přeskočit.** Je to jeho nejcennější výsledek – projekt, o kterém nikdo neví, jestli k něčemu je.

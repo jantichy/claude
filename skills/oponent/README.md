@@ -1,12 +1,12 @@
 # /oponent – oponentura na to, co nejde otestovat
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** **`/oponent`** · `/consolidate` · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/cleanup`](../cleanup/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
 Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, datový model nebo koncepci – dokument, na kterém jste s Claudem dlouho pracovali. **Právě proto na něj ani jeden z vás nemá nezávislý pohled:** spoluautor nevidí, co v dokumentu chybí, protože to má v hlavě, a nevidí, co je slabé, protože si to sám odsouhlasil. Tenhle skill pošle na dokument několik oponentů, kteří **nevědí nic z vaší konverzace** a čtou jenom soubory, každého z jiného hlediska. Jejich námitky pak projde s vámi jednu po druhé.
 

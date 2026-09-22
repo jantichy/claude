@@ -102,6 +102,8 @@ Chybějící krok odvoď z `artifacts` a `passes` proti `lifecycle`, a **jen pro
 
 **Z `lifecycle["kontroly"]` chybějící krok neodvozuj.** Kontrolní kroky nejsou řada, stojí v mezerách a některé ve víc naráz, takže „ještě nepřišel na řadu“ u nich nic neznamená. Jediné, co se o nich dá z `passes` říct, je, že po odpracovaném plánu není zapsaný průchod `/review` – a to hlas jako domněnku.
 
+**`/evaluate` a `/release` se z artefaktů neodvozují nikdy.** Chybějící `operation.md` neznamená, že se má vyhodnotit provoz – znamená obvykle, že se ještě nenasazovalo, a z repozitáře se to nepozná. Oba kroky mají vlastní spouštěč: `/release` výslovný pokyn uživatele a `/evaluate` **datovanou položku v `todo.md`**, kterou tam `/release` zapsal (viz *Položka odložená k datu* výš). Nabízí se tedy jako ta položka, ne jako díra v ose.
+
 **Nejsi-li si jistý, že krok opravdu chybí, řekni to u položky jako domněnku** – vědomě přeskočený krok se ze souborů pozná jen tehdy, když ho někdo zapsal.
 
 ## Fáze 2 – Řazení
@@ -123,7 +125,7 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 **Výpis je kompaktní: jeden řádek na položku.** Podrobnosti – co se bude dělat a čím se začne – nese až `description` u nabízených položek v `AskUserQuestion`. Generování textu je nejpomalejší část běhu a totéž dvakrát je čekání navíc.
 
 ```
-<zastaralá položka, kříž kol, domnělá závislost, selhaný fetch – nebo že nic rozdělaného ani běžícího jinde není>
+<zastaralá položka, kříž kol, domnělá závislost, položka odložená k datu i s tím datem, selhaný fetch – nebo že nic rozdělaného ani běžícího jinde není>
 
 **Pracuje se jinde:** <název> (`<branch>`, <session / nejisté: proč>) · …
 

@@ -1,12 +1,12 @@
 # /consistency – audit proti bordelu v projektu
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · [`/review`](../review/README.md) · **`/consistency`** · [`/attack`](../attack/README.md) · [`/cleanup`](../cleanup/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
 Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je špatně zatříděné nebo zbylo po něčem, co se dávno smazalo. Neptá se „je ten kód správně?“, ale **„sedí si projekt sám se sebou?“** – což je jiná otázka a nikdo jiný si ji neklade. Jednoznačné opravy udělá rovnou a jen je vypíše; o sporných se s vámi baví jednu po druhé.
 

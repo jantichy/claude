@@ -1,12 +1,12 @@
 # /attack – zkusit aplikaci doopravdy rozbít
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · **`/attack`** · [`/cleanup`](../cleanup/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
 Zvedne aplikaci lokálně a pošle na ni útočníky, jejichž zadání zní jednoduše: **najdi, co spadne.** Žádný seznam, co hledat, žádná předem daná kritéria. Je to třetí druh záruky vedle automatických kontrol a čtení kódu, a ani jedna z nich ho nenahradí – rozdíl proti kontrole kódu je v jednom slově: ta kód **čte**, tenhle ho **spouští**. Přehlédnutá větev se v kódu hledá těžko a v běžící aplikaci se projeví bílou stránkou.
 

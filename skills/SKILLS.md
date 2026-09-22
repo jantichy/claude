@@ -119,7 +119,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Co skill dělá`** – co to je a jaké má režimy. 3 až 10 řádků. Ne převyprávěný postup; ten je níž.
 
-**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/cleanup` stojí ve všech mezerách a `/review` ve dvou, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
+**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/RULES.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/cleanup` stojí ve všech mezerách a `/review` v šesti, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
 
 **`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
 
@@ -351,15 +351,15 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 ```
 > **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci
-> od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci
+> od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci
 > toho vedle:
 >
-> **Osa** [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/release`](../release/README.md)
+> **Osa** [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** · … – stojí v mezerách mezi
 > kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 ```
 
 **Výpustky `…` ve vzoru jsou zástupný symbol pro zbytek řady, ne doslovné znění** – rámeček vypisuje všechny kroky obou vrstev i s odkazy, protože právě kvůli těm odkazům existuje. Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README – a stojí v tom bloku, do kterého patří; v druhém se neopakuje. **Krok, který README ještě nemá**, se uvádí jen kódem bez odkazu, aby kontrola odkazů neselhala na souboru, který teprve vznikne.

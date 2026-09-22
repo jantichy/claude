@@ -48,7 +48,7 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`.
 
 ## Kdo ji používá
 
-`/review`, `/consistency`, `/attack`, `/audit` a `/cleanup` – ten u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
+`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate` a `/cleanup` – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/cleanup` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
 
 **Skill si nad tímhle kritériem podává vlastní doménové čtení** – `/attack` má sporných skoro všechno, protože každý jeho nález mění chování běžící aplikace, kdežto `/consistency` má většinu jednoznačnou, protože srovnává dvě místa, z nichž jedno je zdroj. **Stavět vlastní hranici vedle téhle se ale nesmí**; přibude-li další skill, který nálezy opravuje, odkáže sem taky a **neopisuje si ji** (`~/.claude/RULES.md`, *Single source of truth*).
 

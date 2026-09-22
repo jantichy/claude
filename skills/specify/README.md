@@ -1,12 +1,12 @@
 # /specify – z nápadu zadání, než se sáhne na kód
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → **`/specify`** → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/cleanup`](../cleanup/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
 Máte nápad a chcete z něj něco, podle čeho se dá rozhodovat. Skill vás provede vyptáváním otázku po otázce a udělá z toho **zadání**: dokument, který odpovídá na otázku *co stavíme a proč* – a k němu scénáře, glosář a ceník, vede-li je projekt. Jak se to postaví, nerozhoduje; to je práce navazujícího [`/architect`](../architect/README.md). Dokud není zadání hotové a schválené, nesmí vzniknout ani řádek kódu – a to je tvrdé pravidlo, ne doporučení.
 

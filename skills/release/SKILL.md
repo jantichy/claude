@@ -265,7 +265,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - `Nasazeno není – brání tomu: <konkrétní seznam>.`
 - `Nasazeno bylo, ale ověření selhalo – vrátil jsem to zpátky, protože: <důvod>.`
 - `Nasazeno a ověřeno. Sledovací okno běží do <čas>, sleduju: <co>.` – **tímhle končí běh skillu**, ne nasazení. Fáze 6 je zapsaná, ale okno je otevřené.
-- `Nasazeno a ověřeno, sledovací okno uzavřeno – <N nových chyb / žádné>.` – jen když okno mezitím opravdu uplynulo a uzavřel jsi ho podle Fáze 7.
+- `Nasazeno a ověřeno, sledovací okno uzavřeno – <N nových chyb / žádné>. Provoz vyhodnotí /evaluate od <datum>.` – jen když okno mezitím opravdu uplynulo a uzavřel jsi ho podle Fáze 7. Datum je to, které jsi zapsal do `todo.md` ve *Fázi 6*; **tímhle nasazení končí, ale cyklus ne**.
 
 **Nikdy neříkej „nasazeno a ověřeno na produkci“ bez zmínky o okně.** Ta věta tvrdí, že je hotovo, kdežto podle *Životního cyklu projektu* (`~/.claude/RULES.md`) nasazení končí až uzavřením okna – a právě ta chybějící zmínka je důvod, proč se scénář „spadlo to o dvě hodiny později“ dosud nikdy nedozvěděl vlastníka.
 

@@ -1,12 +1,12 @@
 # /merge – dokončení větve, ne jeden příkaz
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po nasazení. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
+> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · `/consolidate` · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/cleanup`](../cleanup/README.md) · **`/merge`** – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení.
+> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
 „Přimerguj to“ vypadá jako jeden příkaz. Ve skutečnosti je to postup, ve kterém se dá přijít o práci – a nejčastěji se to stane tak, že se dvě větve rozejdou obsahově, ne textově: jedna přejmenuje funkci, druhá ji nově volá, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: spojený stav nechá vzniknout a ověřit **ve vaší větvi**, a do hlavní pustí až to, co prošlo.
 

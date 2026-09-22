@@ -277,6 +277,8 @@ Existuje **jen spolu s `todo.md`**: jeden bez druhého nedává smysl, tak se ta
 - **`/oponent`** – čte ho příští `/oponent`, který bez seznamu hledisek nepozná, s čím srovnávat počty nálezů.
 - **`/consistency` a `/cleanup`** – čte je příští běh téhož skillu: `/consistency` pozná, co už bylo auditované a s jakým vědomě zúženým rozsahem, `/cleanup` co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
 
+**`/evaluate` sem nezapisuje** a je to vědomá mezera, ne opomenutí: datum svého posledního běhu nese v hlavičce `operation.md`, protože z něj počítá období, za které měří – řádek v `done.md` by byl druhý zdroj téhož údaje a ty dva by se rozešly.
+
 **`/merge` sem nezapisuje** a je to vědomá mezera, ne opomenutí: merge commit se zprávou shrnující práci je záznam sám o sobě, takže by řádek v `done.md` jen zdvojoval to, co je v historii gitu.
 
 **Kritérium je „má to svého čtenáře“, ne „je to krok cyklu“.** Krok, jehož záznam by nikdo nečetl, sem nezapisuje – jinak sekce zbytní a přestane se číst. **Rozšiřovat ten výčet mlčky se nesmí:** `/consistency` a `/cleanup` do sekce fakticky zapisovaly už delší dobu, zatímco norma je nejmenovala, a odhalilo to až ověření čtenářem bez kontextu 7. 9. 2026.
@@ -341,7 +343,7 @@ Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requir
 
 ### Produktové podklady
 
-**Podklady, ze kterých se staví produkt** – ne obchodní plán a ne marketing. Vybírají se při `/project`, který je **nezakládá**, jen si zapíše, které z nich projekt vede. Vznikají prací:
+**Podklady, ze kterých se staví produkt** – ne obchodní plán a ne marketing. Vybírají se při `/project`, který je **nezakládá**, jen si zapíše, které z nich projekt vede. Vznikají prací. **Výjimkou je `operation.md`** – ten se nevybírá, protože dokud není co nasadit, není o čem rozhodovat; zakládá ho až první běh `/evaluate`:
 
 | Soubor | Odpovídá na otázku | Plní |
 |---|---|---|
@@ -377,7 +379,7 @@ Hranice proti sekci *Rizika* v `architecture.md` je tvrdá a jde po téže čá�
 
 **`pricing.md`** má smysl jen u produktu, který se prodává. Není to ceník pro web, ale **soupis toho, co z cenového modelu plyne pro produkt**: co který tarif smí, kde jsou limity a co se stane při jejich dosažení, jak vypadá trial a co po něm, jak se přechází nahoru a dolů, co se stane po expiraci a co s daty. Každá z těch vět je funkce, kterou někdo musí naprogramovat.
 
-**`operation.md`** drží **poznatky z provozu, ne měsíční report**. Zakládá ho první běh `/evaluate` a každý další **přidává nové období nad starší, aniž maže čísla stará** – trend je celý důvod, proč ten soubor existuje; bez něj by poznatky mohly rovnou skončit jako úkoly. U každého poznatku: čeho se týká, číslo, **odkud se to ví**, jak se to dá zopakovat, a **jak se o něm rozhodlo**. Hlavička nese datum běhu, období, za které se měří, a **verdikt o důvěryhodnosti dat** – vyjde-li z ověření, že se zdroji není něco v pořádku, poznatky stojící na číslech se tím označí a nesmí se z nich argumentovat, kdežto ty stojící na struktuře (chybějící omezení, chybějící auditní stopa) platí dál.
+**`operation.md`** drží **poznatky z provozu, ne měsíční report**. Zakládá ho první běh `/evaluate` a každý další **přidává nové období nad starší, aniž maže čísla stará** – trend je celý důvod, proč ten soubor existuje; bez něj by poznatky mohly rovnou skončit jako úkoly. U každého poznatku: čeho se týká, číslo, **odkud se to ví**, jak se to dá zopakovat, a **jak se o něm rozhodlo**. Hlavička nese datum běhu a období, za které se měří; **vyjde-li z ověření**, že se zdroji není něco v pořádku, přibude k tomu **verdikt o důvěryhodnosti dat** – a pak, že se zdroji není něco v pořádku, poznatky stojící na číslech se tím označí a nesmí se z nich argumentovat, kdežto ty stojící na struktuře (chybějící omezení, chybějící auditní stopa) platí dál.
 
 **Hranice proti `demand.md` je v čase, ne v tématu.** Tam doklady o tom, že problém existuje, **než** se něco postavilo; sem doklady o tom, co lidé dělají s hotovou věcí. Splynout nesmí: verdikt v `demand.md` se vztahuje k otázce, jestli stavět, a přepisovat ho čísly z provozu znamená měnit odpověď na jinou otázku. **Hranice proti `requirements.md` je táž jako u ostatních podkladů:** sem doklady a rozhodnutí o poznatku, tam rozhodnutí, co se z toho postaví – to dělá `/specify`, který si `operation.md` přečte jako vstup.
 
