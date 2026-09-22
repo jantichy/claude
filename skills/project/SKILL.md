@@ -255,7 +255,7 @@ Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUD
 
 ### Produktové podklady
 
-Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Definici všech šesti drží `~/.claude/STRUCTURE.md`, *Produktové podklady*; tady se jen vybírá.
+Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Jejich definici drží `~/.claude/STRUCTURE.md`, *Produktové podklady*; tady se jen vybírá.
 
 `AskUserQuestion`, `multiSelect: true`, **nic předvybrané** – opačně než u standardních souborů. Většina projektů nemá ani jeden a předvybraný seznam by je odklikl všechny:
 

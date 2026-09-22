@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Uživatel má nápad a chce z něj zadání, podle kterého se dá rozhodovat. Skill ho provede řízeným rozhovorem a sepíše **`docs/requirements.md`** – dokument, který odpovídá na otázku *co stavíme a proč*, a čte ho zadavatel, produkt, obchod i ten, kdo se k tomu za půl roku vrátí.
 
-**Vede-li projekt produktové podklady**, sepíše v témže kroku i `scenarios.md`, `glossary.md` a `pricing.md`. Jsou produktové, ne technické, a vznikají z téhož dialogu; zbylé tři podklady, `demand.md`, `competition.md` a `risks.md`, píše `/discovery`.
+**Vede-li projekt produktové podklady**, sepíše v témže kroku i `scenarios.md`, `glossary.md` a `pricing.md`. Jsou produktové, ne technické, a vznikají z téhož dialogu; z ostatních píše `demand.md`, `competition.md` a `risks.md` `/discovery` a `operation.md` až `/evaluate` po nasazení.
 
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok osy: navazuje na `/discovery` a předává na `/architect`.
 
@@ -74,7 +74,7 @@ Navíc si zjisti tohle:
 
 1. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce. **Chybějící `backlog.md` sám o sobě neblokuje** – není kam zapisovat, ale je co číst; zmiň ho ve výpisu a pokračuj (*Fáze 1*, bod 5 s tím počítá).
 
-   **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést. **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md`; `demand.md`, `competition.md` a `risks.md` patří `/discovery`. Chybí-li ty tři, přestože jsou zapsané, **nabídni `/discovery`**: bez poptávky, konkurence a rizik se píše zadání naslepo.
+   **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést. **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md`; `demand.md`, `competition.md` a `risks.md` patří `/discovery` a `operation.md` vzniká až po nasazení v `/evaluate`. Chybí-li ty tři, přestože jsou zapsané, **nabídni `/discovery`**: bez poptávky, konkurence a rizik se píše zadání naslepo.
 2. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
 3. **Urči vstupní bod.** Skill se dá spustit i uprostřed – neběží vždycky celý:
 

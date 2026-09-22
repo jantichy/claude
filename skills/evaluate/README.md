@@ -72,7 +72,7 @@ Nepotvrzeno
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/evaluate
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill se opírá o čtyři soubory, které v tom adresáři nejsou: sdílený začátek běhu, rozhraní kroků životního cyklu, pravidlo o tom, kdo rozhoduje o nálezu, a škálu jeho závažnosti. Leží v [`skills/`](../) jako `PREFLIGHT.md`, `LIFECYCLE.md`, `FINDINGS.md` a `SEVERITY.md` – vezměte je k tomu, jinak si skill bude stěžovat na chybějící odkazy.
+Skill se odkazuje na několik souborů, které v jeho adresáři nejsou – sdílený začátek běhu, rozhraní kroků životního cyklu, pravidlo o tom, kdo rozhoduje o nálezu, škálu závažnosti a normu struktury projektu. Leží o patro výš v [`skills/`](../) a v kořeni repozitáře; **nejjednodušší je vzít celý adresář `skills/`**, jinak si skill bude stěžovat na chybějící odkazy.
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 

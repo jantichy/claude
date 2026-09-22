@@ -86,7 +86,7 @@ Znamená to: řekni **co** se stane, **proč** to potřebuješ a **jak** to prov
 
 Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Odchylky:
 
-1. **Skill nemusí běžet nad projektem.** Audit začíná nejčastěji jako holá složka s exporty od klienta, ne jako repozitář – a co v takovém případě dělat, řeší bod 1 `PREFLIGHT.md` sám: tenhle skill git nepotřebuje, takže **pokračuje a nahlas řekne, co tím odpadá**. Kde co leží, řeší *Fáze 2*.
+1. **Není to odchylka, ale připomenutí:** audit začíná nejčastěji jako holá složka s exporty od klienta, ne jako repozitář. Bod 1 `PREFLIGHT.md` na to má vlastní větev – tenhle skill git nepotřebuje, takže **pokračuje a nahlas řekne, co tím odpadá**. Stojí to tu proto, že je to nejčastější vstup téhle práce, ne proto, že by se tu pravidlo měnilo. Kde co leží, řeší *Fáze 2*.
 2. **Načti běhový stav** `.claude/run/audit.json`, existuje-li. Nabídni navázání dřív, než začneš cokoliv počítat znovu.
 3. **Kontrola závislostí.** Ověř, že je dostupný `chrome-devtools` MCP. Chybí-li, **neselhávej**: řekni, že odpadá všechno, co se ověřuje průchodem, a nabídni běh jen nad dodanými podklady – nebo instalaci.
 4. **Zjisti doménu a cíl** z argumentu (`/audit analytiky na www.example.com`). Chybí-li jedno z toho, doptej se; **adresu si nikdy nedomýšlej.**
