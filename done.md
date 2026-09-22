@@ -8,6 +8,8 @@ Odvedená práce na konfigurační vrstvě a záznamy průchodů životním cykl
 
 Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle repozitářem. Čtenářem je příští běh téhož skillu: potřebuje vědět, co minule zůstalo mimo rozsah a jak se s tím naložilo.
 
+- **2026-09-22** · `/cleanup` · `ddac9c8` · session zavedení `/evaluate` do životního cyklu · 1 nevypořádané téma (1 rozhodnuto: doměřit `description`, výsledek 12/12) · kontrola odkazů čistá (33 souborů) · čtenáři našli 11 + 14 nálezů, **1 vyvrácen** (opsané pořadí kroku v `/release` hlídá test, takže to není vada), 22 opraveno, 1 sporný rozhodnut uživatelem; **druhý průchod čtenáře pozůstatků našel dalších 9**, z toho jednu rozbitou větu, kterou vyrobila vlastní oprava · mimo rozsah: nic – vše z dneška spadalo do rozsahu · **do `backlog.md` přibyly 2 nápady** (podmínka srovnávacího běhu ve `/skill`, zápis fáze cyklu do projektového `CLAUDE.md`)
+
 - **2026-09-21** · `/cleanup` · `0ca8b42` · session přestavby `/discovery` na otázku „proč“ · 2 nevypořádaná témata (2 rozhodnuta) · čtenáři našli 12 + 8 nálezů, 1 falešný, zbytek opraven; druhý průchod čtenáře pozůstatků přidal 9 · mimo rozsah: 2 položky rozhodnuty uživatelem (sekce *Časté chyby* v `/discovery` smazána celá jako nedoložená, oponentura rozšířena o `risks.md`) · **zjištěno souběžné běžení druhé session** – commit `9455ff2` sebral rozpracovanou práci, zapsáno jako devátý výskyt do `todo.md`
 
 - **2026-09-20** · `/cleanup` · `96e0b4d` · session přestavby životního cyklu na osu a kontroly · 2 nevypořádaná témata (2 rozhodnuta) · čtenáři našli 13 + 13 nálezů, opraveno 15, zbytek do `todo.md` · mimo rozsah: 1 položka (testy změřeny, neopravovány)
