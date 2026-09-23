@@ -1126,3 +1126,19 @@ Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nák
 **Doložená vada dnešního `/cleanup`:** Fáze 0 velí zapamatovat si základ session přes `git rev-parse HEAD`. Ve 153 bězích se plný `rev-parse HEAD` zavolal **osmkrát (5 %)**, zatímco `rev-parse --short HEAD` pro záznam do `done.md` v 50 %. Fáze 6 si tedy diff pro čtenáře skládá z čehokoli, co je po ruce – v naměřených bězích `git diff --name-only origin/main`, `git diff main...<větev>` nebo hash odjinud. **Otevřená otázka, kterou to odkrylo:** mají čtenáři dostat diff session, nebo diff větve? Skill předepisuje první a improvizuje druhé.
 
 **Poučení, které se zaplatilo šestkrát za jeden den: v transcriptu se hledá dotazem na strukturu, ne grepem na řetězec.** Postupně se takhle chytlo slovo „cleanup“ ze seznamu skillů v systémovém promptu (a prohlásilo za úklid celou session), `rev-parse` z textu skillu načteného do transcriptu, `/clear` z vlastní věty o `/clear`u, a dvakrát selhal filtr na tvar `<command-name>`, protože **pořadí tagů není pevné** – někdy je první `<command-message>`. Nejzrádnější instance dala **správnou odpověď ze špatného důvodu**: detekce nenašla nic a náhodou to byla pravda. Je to `quality.md`, *Měřidlo musí odlišit vlastní selhání od nálezu*, v čisté podobě.
+
+### 2026-09-23 – Co subagent dědí od rodičovské session
+
+Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní prostředí). Zapsáno zvlášť, protože to **platí pro každý skill, který deleguje**, ne jen pro `/cleanup`.
+
+| Co | Hodnota u agenta |
+|---|---|
+| pracovní adresář (`pwd` i *Primary working directory*) | **shodný s rodičem** |
+| cesta ke scratchpadu | **nese session-id rodiče**, ne vlastní |
+| `Write`, `Edit`, `Skill` | má |
+| `AskUserQuestion` | **nemá** – je jen mezi odloženými nástroji |
+| effort | **nejde nastavit**; `Agent` bere `model`, ne `effort` |
+
+**Nejdůležitější důsledek:** agent si **najde transcript rodičovské session sám**, protože jeho scratchpad ukazuje na ni – nemusí se mu předávat žádné id. To dělá z delegace úplně jinou možnost, než jaká se jevila, dokud se počítalo s `/clear`em.
+
+**Pozor na jednu nekonzistenci:** adresář, do kterého agent ukládá svůj výstup (`…/tasks/<agentId>.output`), leží pod **jiným** UUID než scratchpad session. Vypadá to jako změna session-id a není to ona – transcript pod tím druhým UUID neexistuje. Kdo bude odvozovat session-id z cesty, musí brát tu ze systémového promptu, ne z cesty k výstupu agenta.

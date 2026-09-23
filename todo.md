@@ -363,6 +363,23 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   - **F — drobnosti.** Potvrzení „co uklízím“ nemá určenou fázi; stojí-li až před Fází 5, uživatel nejdřív odpoví na otázky o **cizí** session a teprve pak to zjistí. A závěrečné věty Fáze 9 nabízejí „pokračovat v práci“ v session, která o té práci nic neví – u cizí session by se místo toho měl nabídnout `/resume <id>`.
   - **Otázka odkrytá měřením, nikoliv oponenturou:** mají čtenáři bez kontextu dostat **diff session, nebo diff větve**? Skill předepisuje první, praxe dělá druhé (viz `decisions.md`). Na tom závisí, jak se má opravit základ session ve Fázi 0.
 
+
+  **Varianta k rozmyšlení, která přišla na konci a je podle mě silnější než celý postup výš: nechat skoro celý skill běžet v subagentovi.** Rodičovská session ho jen zavolá; agent si sám načte transcript, vytěží ho, zkonfrontuje se soubory, opraví všechno jednoznačné a nahoru vrátí jen to, co si nerozhodl sám. Čtenáře bez kontextu pouští pak zase rodič (*Hloubka delegace je jedna*).
+
+  **Proč je to silnější:** co agent dědí od rodiče, drží `~/.claude/decisions.md`, *Co subagent dědí od rodičovské session* – podstatné je, že **dědí pracovní adresář i session-id přes cestu ke scratchpadu**, takže si transcript najde sám. Tím **odpadá sedm z patnácti nálezů oponentury naráz**: všechny, co byly o výběru session, o `find` napříč projekty, o víc adresářích v jedné session, o prázdném vlastním transcriptu, o worktree smazaném pod nohama, o seznamu bez cesty ven a o verdiktu mluvícím o cizí session. Existovaly jen proto, že `/clear` tu vazbu trhá.
+
+  **Navíc splní i to, co `/clear` neuměl:** jde zavolat uprostřed session, na které se má dál pracovat, a nezdržuje, protože běží na pozadí.
+
+  **Tři háčky:**
+
+  - **Agent nemá `AskUserQuestion`, a interaktivita je jádro tohohle skillu.** Fáze 2 se ptá **před** zápisem, protože odpovědi mění, co se zapíše. „Zapiš všechno a pak vrať otázky“ tedy nejde. Navrhované řešení: agent vrátí otázky **i s hotovými zápisy** – „u volby A tahle věta do `decisions.md`, u volby B tahle do `todo.md`“ –, rodič se zeptá a provede jednu editaci. Druhý běh agenta by musel načíst všechno znovu.
+  - **Uživatel během běhu nic nevidí** a agent přitom sám zapisuje, commituje a pushuje. Dnes je průběh na očích a jde ho zastavit.
+  - **Effort nejde nastavit**, jen model – to platí bez ohledu na architekturu.
+
+  **Co to neřeší** a zůstává k práci tak jako tak: cizí rozpracovaná práce v pracovním stromu (skupina C), základ session z `HEAD`, chybějící kategorie „co zůstalo rozbité“ ve Fázi 1, a Fáze 4 měřící „během téhle session“.
+
+  **Rozhodnout se musí nejdřív tohle** – jestli se jde cestou subagenta, nebo `/clear`u –, protože tvar všeho ostatního z toho plyne. Rozpracovaný postup s `/clear`em výš zůstává zapsaný proto, že část jeho rozhodnutí platí v obou variantách (kritérium čisté session, potvrzení před zápisem, `/compact` jako horší alternativa).
+
   **Vědomě zamítnuté – nenavrhuj znovu bez nového argumentu:**
 
   - **Evidence uklizených session** (rejstřík a čára po vzoru `/depot` `_state/`): skill je záměrně opakovatelný a evidence by šla proti té vlastnosti. Opakovaný běh je legitimní použití, ne chyba. Oponent na to navázal měkčí variantou – **doplnit id uklizené session do řádku v `done.md`**, který Fáze 9 zapisuje tak jako tak; to nový rejstřík nezakládá a zůstává jako otevřený návrh.
