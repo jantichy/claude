@@ -158,6 +158,27 @@ Před dalším velkým tématem nebo na konci session projdi konverzaci a zkontr
 
 Je to **kontrola, ne náhrada průběžného zápisu** – u bodu (3) má správná odpověď znít „ano, průběžně“. Čím se která otázka řeší a v jakém pořadí, viz `~/.claude/skills/LIFECYCLE.md`.
 
+### Co vložíš do kontextu, platíš do konce session
+
+**Cena vloženého obsahu není jeho velikost, ale velikost krát počet volání, která po něm ještě přijdou.** Každé další volání v session čte celý dosavadní kontext znovu, takže výpis vložený v polovině dlouhého běhu se přečte ještě stokrát. Jednorázově pohodlný `cat` celého souboru je proto v dlouhé session dražší než dvacet cílených čtení.
+
+**Změřeno 23. 9. 2026** nad 117 tisíci voláními API za jeden měsíc: čtení kontextu je **67 %** nákladů, zápis nového obsahu do něj 22 % a **výstup modelu jen 10 %**. Zkracovat odpovědi je tedy páka na nejmenší položku; páka na tu největší je nevkládat, co není potřeba.
+
+- **Čti cíleně, ne celé soubory.** `sed -n '40,80p'` nebo `grep` s úzkým `-C` místo `cat`; strukturu zjisti výpisem nadpisů, ne přečtením obsahu.
+- **Velký výstup zpracuj na číslo nebo do souboru**, ne do kontextu – spočítej, zfiltruj, ulož do scratchpadu a přečti si z něj jen to, co potřebuješ.
+- **Než si něco vyžádáš, řekni si, co z toho chceš**, a vyžádej si rovnou to.
+- **Pozdě je levněji než brzy.** Podklad, který bude potřeba až za deset volání, načti až tam.
+
+**Není to spor s *Neopírej rozhodnutí o neověřené tvrzení*.** Ověřit se musí všechno, o co se opírá rozhodnutí; tohle pravidlo mluví o tom, **kolik balastu kolem toho ověření přiteče**. Ušetřit se má na cestě k faktu, ne na faktu.
+
+### Dlouhá session je dražší než dvě krátké
+
+Kontext roste s délkou session a každé volání ho čte celý, takže **náklad session roste s její délkou kvadraticky**: dvojnásobně dlouhá session stojí zhruba čtyřnásobek. Změřeno 23. 9. 2026: session nad 400 volání jsou **4 % všech session a 52 % nákladů**, a průměrný kontext je v nich 423k tokenů proti 71k u krátkých.
+
+**Přesáhne-li session zhruba 150 volání nebo 250k kontextu, ohlas to** – jednou větou s tím, co by se `/cleanup`em zapsalo a kde by nová session navázala. **Nabídni, nepřerušuj:** rozhodnutí je uživatelovo a souvislý kontext má u dlouhé návrhové práce vlastní cenu, kterou tahle úspora nemusí vyvážit. A ohlas to **jednou za práh**, ne opakovaně – z připomínky, která chodí pořád, se stane šum a přestane se číst.
+
+**Je to důvod navíc pro *Pravda v souborech, ne v konverzaci*.** Session, ze které se průběžně zapisuje, jde ukončit kdykoliv; ta, která si dohody drží jen v hlavě, se ukončit nedá vůbec – a platí proto svou délku až do konce.
+
 ### Velké průzkumné úkoly deleguj
 
 U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek exportu, hromadné hledání) nabídni delegaci na subagenty. Řídicí úvahu a syntézu si nech, mechanický sběr ne.
@@ -173,6 +194,8 @@ U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek expor
 **Co už víš, agentovi předej – ať to nezjišťuje znovu.** Kořen projektu, platforma, obsah kontraktu, rozsah souborů, konvence z `CLAUDE.md`: tohle všechno jsi zjistil v přípravě a agent to udělá znovu, pokud mu to nedáš. Při pěti paralelních specialistech je to pětinásobek téže práce a pětinásobek kontextu, který jim pak chybí na vlastní úkol. Platí to i o tom, co se **vědomě zamítlo** – bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy.
 
 **Strukturovaný výstup agenta předávej dál doslova, neparafrázuj.** Parafráze je přesně to místo, kde se ztrácí detail, kvůli kterému se agent posílal – a ztratí se tiše, protože shrnutí vypadá úplně. Vrátí-li agent nález s doložením a závažností, jde ta trojice dál celá.
+
+**Zadej agentovi i to, co vracet nemá.** Jeho výstup se ti vrací do kontextu a platíš ho pak do konce session (*Co vložíš do kontextu, platíš do konce session*); subagenti jsou přitom **26 % nákladů** (změřeno 23. 9. 2026). **Není to spor s doslovným předáváním o odstavec výš: nález se vrací celý, cesta k němu ne.** Do zadání proto patří věta, že se vrací závěr s doložením – ne přečtené soubory, mezivýpisy, rekapitulace zadání a popis vlastního postupu.
 
 **Souběžní agenti sdílejí scratchpad, takže každý potřebuje vlastní jmenný prostor.** Pomocné soubory si agenti pojmenovávají stejně – `conv.txt`, `out.md` – a navzájem si je přepíšou. Do zadání proto patří **prefix odvozený z toho, co ten agent zpracovává**, a pokyn ověřit, že v pomocném souboru je opravdu jeho vstup. Doloženo 17. 9. 2026 při vytěžování konverzací: čtyři agenti z třiceti šesti to nahlásili nezávisle a jeden chvíli četl cizí transcript, než si toho všiml. **Je to zrádné tím, že se to neprojeví jako chyba, ale jako správně vypadající výstup o něčem jiném** – agent, který si toho nevšimne, odevzdá analýzu cizího podkladu a nikdo to nepozná.
 
@@ -205,6 +228,15 @@ Jména modelů zastarají, specialisté ne – rozhoduje sloupec *Práce*. Aktu�
 - **Co se stane, když to udělá špatně a nikdo si nevšimne?** Ztracená dohoda, kterou nikdo nehledá, je dražší než celý ušetřený běh.
 
 Mechanická práce ve smyslu tohohle pravidla není „nudná práce“, ale práce, u které je **zjevné, že je hotová špatně**.
+
+**Vyjmenovaná mechanická práce se v hlavní session nedělá.** Tabulka výš to doporučuje už dlouho a **změřeno 23. 9. 2026** to nestačí: na nejlevnější model připadá **0,1 %** volání, na nejsilnější 97,6 %. Pravidlo ve tvaru tabulky si totiž jde u každého jednotlivého případu odsouhlasit jako výjimku. Platí proto jako zákaz – tyhle čtyři druhy práce se **delegují, ne dělají v hlavní session**:
+
+- **hromadné čtení souborů kvůli jednomu faktu** – kde se co používá, ve kterém souboru to stojí,
+- **převod formátu** – export do tabulky, JSON do Markdownu, přepis struktury,
+- **mechanický přepis** podle jednoznačného zadání,
+- **sběr čísel** – počty, velikosti, výskyty, historie gitu.
+
+**Výjimku řekni nahlas i s důvodem.** Legitimní jsou tři: rozsah je malý (jednotky souborů), výsledkem se hned rozhoduje a chyba levného modelu by se nepoznala (platí *Levný model se vyplatí jen tam, kde se jeho chyba pozná levně* výš), nebo podklad už v kontextu je. Bez vyřčeného důvodu je to porušení pravidla, ne úsudek.
 
 **Effort lad dřív než model.** Je to plynulá páka na tomtéž modelu, kdežto výměna modelu je skok. Silný model na nízkém effortu zůstává silný – u agentů s úzkým zadáním je `low` doporučená volba, ne nouzová. Eskaluj po krocích: `high` → `xhigh` → `max` → teprve pak silnější model. A **nejsilnější neznamená nejdražší dostupný**: nejvyšší tier (dnes Fable) je dvojnásobně drahý a pomalejší, takže se po něm sahá teprve tehdy, když silný model na vyšším effortu prokazatelně nestačil.
 

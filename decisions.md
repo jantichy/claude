@@ -1080,3 +1080,21 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 **Zamítnuto – odchylku si napíše každý takový skill do své `Fáze 0`.** Znamenalo by to opsat totéž do `/evaluate`, `/diagram` a `/report` a doufat, že si na to vzpomene i příští skill – přesně ten způsob, jakým se pravidla rozcházejí.
 
 **Poznámka k tomu, jak se to našlo:** ti tři agenti běželi v adresářích postavených ve scratchpadu, a ty git nebyly. V reálném projektu téhle soustavy to nastat nemůže. **Není to tedy provozní vada, ale nepřesnost normy, kterou měření odhalilo** – a stojí to tu zapsané proto, aby se příště nehledalo znovu.
+
+### 2026-09-23 – Úspora nákladů míří na kontext, ne na délku odpovědí
+
+**Podnět:** dotaz na nástroje `caveman`, `ponytail`, `headroom` a `rtk` – tři z nich slibují úsporu tokenů, čtvrtý úsporu kódu. Místo posouzení podle jejich README se **změřila skutečná spotřeba** ze session logů: 117 tisíc volání API za měsíc (`~/.claude/projects/**/*.jsonl`, pole `usage`), vážené relativní cenou (zápis cache 1,25×, čtení cache 0,1×, výstup 5× vůči vstupnímu tokenu).
+
+**Naměřeno:** čtení kontextu **67 %** nákladů, zápis do kontextu 22 %, výstup modelu **10 %**. Session nad 400 volání jsou **4 % session a 52 % nákladů**; průměrný kontext v nich je 423k tokenů proti 71k u krátkých a s pozicí ve session roste lineárně (108k na začátku, 545k po třístém volání). Subagenti jsou 26 % nákladů. Na nejlevnější model připadá **0,1 %** volání, na nejsilnější 97,6 %.
+
+**Rozhodnutí:** do `RULES.md` přibyly dvě sekce – *Co vložíš do kontextu, platíš do konce session* (cena obsahu je jeho velikost krát počet zbývajících volání) a *Dlouhá session je dražší než dvě krátké* (kvadratický růst, ohlásit při ~150 voláních nebo 250k kontextu). *Model a effort* dostal **zákaz s výčtem** místo doporučení a *Velké průzkumné úkoly deleguj* větu o tom, co agent vracet nemá. Do `~/Dev/context/coding/` šlo to, co platí jen u kódu: *Příkaz vol podle velikosti jeho výstupu* (`quality.md`) a *Než napíšeš kód, projdi, čím by se psát nemusel* (`coding.md`).
+
+**Zamítnuty všechny čtyři nástroje.** `caveman` řeže výstup modelu, tedy **nejmenší** z těch tří položek, a jeho skill si navíc bere ~1000 tokenů pravidel na každou konverzaci a koliduje se stylem komunikace v `RULES.md`. `headroom` a proxy část `caveman` sedí jako MITM mezi Claude Code a API (`ANTHROPIC_BASE_URL` na localhost): celý obsah session včetně klientských podkladů by tekl přes cizí binárku a **přepisování historie rozbíjí cache**, tedy tu 67procentní položku – úspora by se obrátila v přirážku. `rtk` míří správným směrem (40 % výstupů nástrojů přesahuje 1k tokenů a platí se do konce session), ale filtruje tak, že **skutečný výstup příkazu přestane být vidět** – proti *Ověřitelná kontrola místo dojmu*; totéž se dá mít volbou příkazu bez proxy, což je dnešní *Příkaz vol podle velikosti jeho výstupu*.
+
+**Z `ponytail` se převzal jediný prvek – řetěz otázek před psaním kódu.** Zbytek jeho pravidel `coding.md` už pokrývá hlouběji a s doloženými důvody (*Nezavádět spekulativní obecnost*, *Nedeklaruj, co neimplementuješ*, *Redundanci obhaj, nebo zruš*, *Nezakládat strukturu, kterou nikdo systémově nečte*); opsat je podruhé by vyrobilo dvě místa, která se rozejdou.
+
+**Zamítnuto – tvrdý práh s hlášením každých 50 volání.** Účinnější, ale u dlouhé návrhové práce, kde je souvislý kontext to cenné, by se z toho stal šum a vypnul by se. Zvoleno ohlásit jednou za práh a nechat rozhodnutí na uživateli.
+
+**Zamítnuto – nechat *Model a effort* jako doporučení.** Právě naměřená 0,1 % jsou doklad, že tenhle tvar pravidla nefunguje: model si u každého jednotlivého případu odsouhlasí výjimku. Cena zákazu je přiznaná – u malého rozsahu je delegace dražší než práce sama, proto má tři vyjmenované výjimky, které se musí říct nahlas.
+
+**Čísla si ověř znovu, než podle nich budeš rozhodovat.** Jsou z jednoho měsíce a z období, kdy 49 % spotřeby dělal jediný projekt; skript je jednorázový a neuložil se.
