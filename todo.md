@@ -380,6 +380,17 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Rozhodnout se musí nejdřív tohle** – jestli se jde cestou subagenta, nebo `/clear`u –, protože tvar všeho ostatního z toho plyne. Rozpracovaný postup s `/clear`em výš zůstává zapsaný proto, že část jeho rozhodnutí platí v obou variantách (kritérium čisté session, potvrzení před zápisem, `/compact` jako horší alternativa).
 
+
+  **Rozsah je nejspíš širší než `/cleanup` – je to vlastnost celé vrstvy kontrolních kroků** (Honza, 23. 9. 2026). Kroky osy běží interaktivně v hlavní session, kontrolní kroky by běžely neinteraktivně v subagentovi a vracely nahoru jen pár konkrétních věcí k rozhodnutí.
+
+  **Není to nové pravidlo, ale důsledek toho, které už platí.** `~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*, říká, že delegace se vyplatí při splnění aspoň jednoho ze tří kritérií – vynucený tvar výstupu, izolace kontextu, práce která se neamortizuje. **Kontrolní kroky splňují všechna tři naráz:** vracejí nález s doložením a závažností, jejich smysl je posuzovat něco, do čeho nemají sáhnout, a je to jeden vstup a jeden výstup. Kroky osy nesplňují ani jedno: výstupem je dokument, kontext je jejich vstupem a práce se amortizuje iteracemi.
+
+  **Vzorec ale sedí na pět ze sedmi, ne na všechny.** `/oponent`, `/review`, `/consistency`, `/attack` a `/cleanup` ano – u prvních dvou už se panel deleguje dnes a nové by bylo jen delegovat i načtení podkladu, konsolidaci a jednoznačné opravy. **`/merge` ne:** je nevratný, mění hlavní větev a maže worktree, a jeho vlastní pravidlo velí mergovat jen na výslovný pokyn – agent na pozadí je přesně to, co má zakázané. **`/consolidate` ne** z jiného důvodu, který `LIFECYCLE.md` sám pojmenovává: jako jediný z kontrol vrací **návrh řešení, ne nález**, a návrh je rozhodnutí, ne měření.
+
+  **Přesné kritérium proto zní:** do agenta patří práce, jejímž výstupem je **nález nebo jednoznačná oprava**; v hlavní session zůstává to, co potřebuje **uživatelovo rozhodnutí**, a to, co je **nevratné**.
+
+  **Do `~/.claude/skills/LIFECYCLE.md` to zatím nepatří** – ten popisuje, jak to je, a dnes to tak není. Až se první takový skill přepíše a ověří, zapíše se to tam k rozdělení na osu a kontrolní vrstvu; do té doby je to tady.
+
   **Vědomě zamítnuté – nenavrhuj znovu bez nového argumentu:**
 
   - **Evidence uklizených session** (rejstřík a čára po vzoru `/depot` `_state/`): skill je záměrně opakovatelný a evidence by šla proti té vlastnosti. Opakovaný běh je legitimní použití, ne chyba. Oponent na to navázal měkčí variantou – **doplnit id uklizené session do řádku v `done.md`**, který Fáze 9 zapisuje tak jako tak; to nový rejstřík nezakládá a zůstává jako otevřený návrh.
