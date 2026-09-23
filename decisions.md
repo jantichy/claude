@@ -1098,3 +1098,31 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 **Zamítnuto – nechat *Model a effort* jako doporučení.** Právě naměřená 0,1 % jsou doklad, že tenhle tvar pravidla nefunguje: model si u každého jednotlivého případu odsouhlasí výjimku. Cena zákazu je přiznaná – u malého rozsahu je delegace dražší než práce sama, proto má tři vyjmenované výjimky, které se musí říct nahlas.
 
 **Čísla si ověř znovu, než podle nich budeš rozhodovat.** Jsou z jednoho měsíce a z období, kdy 49 % spotřeby dělal jediný projekt; skript je jednorázový a neuložil se.
+
+### 2026-09-23 – Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`
+
+Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nákladů míří na kontext, ne na délku odpovědí* výš). **Zapsáno jako podklad, ne jako rozhodnutí** – návrh, který z toho vyšel, je rozpracovaný v `todo.md` a platí i kdyby se zahodil, protože `/review` a `/consistency` čeká totéž.
+
+**Co stojí `/cleanup`** (249 běhů, ze session logů):
+
+| | |
+|---|---|
+| podíl úklidu na nákladech session, ve kterých běží | **55 %**, medián 60 % |
+| z toho subagenti (dva čtenáři bez kontextu) | **2 %** |
+| z toho opakované čtení téhož kontextu | 78 % |
+| volání hlavní session v úklidu | medián 142, průměr 196, maximum 1872 |
+| kontext při startu úklidu → na konci | 253k → 449k |
+
+**Úklid dělá zhruba stejnou práci bez ohledu na to, co uklízí** – 102 až 158 volání napříč všemi velikostmi –, ale stojí **11,8× víc** po dlouhé session než po krátké. Podle velikosti transcriptu: do 300 kB stojí 2,3M nákladových jednotek, 300–600 kB 3,2M, 600–1200 kB 5,1M, **nad 1200 kB 10,2M**. Z toho plyne **podlaha ~2,3M** i nad malinkou session – to je cena vlastních 150 volání, dnes schovaná pod cenou kontextu.
+
+**Chování Claude Code, ověřené testem a měřením:**
+
+- **`/clear` zakládá zcela novou session** – nové id, nový transcript, nový scratchpad – a **resetuje pracovní adresář** na ten, kde se `claude` spustil. Ověřeno 23. 9. 2026 testem v `~/Dev/cwdtest`: vznikly dva soubory, `55a0559a` (cwd se měnil na `sub`) a `8ff20c90` (cwd jen `cwdtest`). **Dřívější opačné tvrzení v téže session bylo chybné** – vzniklo z toho, že starý transcript po `/clear` pokračuje, jenže jsou to jen dozvuky příkazu, ne nová konverzace.
+- **`/compact` naopak zachovává** session-id, transcript i pracovní adresář a zmenší kontext z mediánu 810k na 132k (o 81 %, 13 měřených případů).
+- **`cd` do podadresáře mění working directory celé session**, ne jen shellu – systém to oznámí jako změnu Primary working directory.
+- **Transcript je nadmnožina kontextu, ne podmnožina.** Obsahuje odpovědi včetně thinking bloků, zprávy poslané uprostřed odpovědi (`queue-operation`), hooky, system-remindery i odkazy na odložené velké výstupy. **A obsahuje všechno před kompaktací** – doloženo na session se 7 916 kB před ní, kde je čitelná i první zpráva.
+- V čerstvé session po `/clear` stojí **před prvním skutečným promptem dva uživatelské záznamy** – `<local-command-caveat>` a `<command-name>/clear</command-name>`. Kritérium „čistá session“ proto nejde postavit na počtu uživatelských záznamů, ale na tom, že **žádný z nich nemá obsah začínající jinak než `<`**.
+
+**Doložená vada dnešního `/cleanup`:** Fáze 0 velí zapamatovat si základ session přes `git rev-parse HEAD`. Ve 153 bězích se plný `rev-parse HEAD` zavolal **osmkrát (5 %)**, zatímco `rev-parse --short HEAD` pro záznam do `done.md` v 50 %. Fáze 6 si tedy diff pro čtenáře skládá z čehokoli, co je po ruce – v naměřených bězích `git diff --name-only origin/main`, `git diff main...<větev>` nebo hash odjinud. **Otevřená otázka, kterou to odkrylo:** mají čtenáři dostat diff session, nebo diff větve? Skill předepisuje první a improvizuje druhé.
+
+**Poučení, které se zaplatilo šestkrát za jeden den: v transcriptu se hledá dotazem na strukturu, ne grepem na řetězec.** Postupně se takhle chytlo slovo „cleanup“ ze seznamu skillů v systémovém promptu (a prohlásilo za úklid celou session), `rev-parse` z textu skillu načteného do transcriptu, `/clear` z vlastní věty o `/clear`u, a dvakrát selhal filtr na tvar `<command-name>`, protože **pořadí tagů není pevné** – někdy je první `<command-message>`. Nejzrádnější instance dala **správnou odpověď ze špatného důvodu**: detekce nenašla nic a náhodou to byla pravda. Je to `quality.md`, *Měřidlo musí odlišit vlastní selhání od nálezu*, v čisté podobě.

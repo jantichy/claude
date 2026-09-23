@@ -333,3 +333,40 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 - [ ] **Rozhodnout, jestli *Kontrakt příkazů* dostane klíč pro tichou variantu příkazu** (zadáno 23. 9. 2026). `~/Dev/context/coding/quality.md`, *Příkaz vol podle velikosti jeho výstupu*, žádá pouštět kontroly tiše, dokud procházejí – jenže kontrakt dnes zná jeden příkaz na klíč, takže tichou podobu si musí složit ten, kdo ho pouští, a u každého projektu znovu. Nabízel se klíč `- test:quiet: …`.
 
   **Zamítnuto zatím, ne natrvalo** (`~/Dev/context/decisions.md`, sekce `coding`): formát kontraktu parsuje `~/.claude/verify.sh` i jeho testy, takže by to byl zásah do vynucovací vrstvy kvůli pravidlu, které se zatím nikde neosvědčilo. **Rozhodne se, až bude doložené, že si tichou variantu skládá víc projektů stejně** – do té doby je ruční volba levnější než nový klíč, který musí umět skript, testy, `/project` i každý existující kontrakt.
+
+- [ ] **Zredukovat počet volání uvnitř `/cleanup`** (zadáno 23. 9. 2026). Úklid dělá **zhruba 150 volání bez ohledu na to, co uklízí** – medián 142, průměr 196, maximum 1872, změřeno na 249 bězích ze session logů. Má proto **podlahu kolem 2,3M nákladových jednotek** i nad malinkou session, kde není co zapisovat.
+
+  **Dnes je ta podlaha schovaná pod cenou kontextu** – úklid nad velkou session stojí 10,2M, takže se v tom vlastní režie skillu ztratí. Jakmile se přesune do čisté session, stane se z ní hlavní zbývající položka a bude vidět.
+
+  **Dělat až po změření přesunu do čisté session, ne současně.** Řezání volání může ublížit kvalitě výstupu, kdežto přesun ne – a kdyby se udělalo obojí naráz, nepozná se, co za co může. **Kandidáti k posouzení:** dávkovat zápisy místo souboru po souboru, sloučit Fázi 3 a 4 (obě čtou tytéž soubory, jen z opačné strany), nepouštět kontrolu odkazů opakovaně po jednotlivých souborech.
+
+- [ ] **Přepsat `/cleanup` na běh v čisté session, pak totéž pro `/review` a `/consistency`** (rozpracováno 23. 9. 2026, přerušeno k rozmyšlení). Naměřená čísla, chování `/clear` a `/compact` i doloženou vadu základu session drží `~/.claude/decisions.md`, *Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`* – **neopisuj je sem zpátky**.
+
+  **Proč:** `/cleanup` stojí 55 % nákladů session, ve kterých běží, protože svých ~150 volání dělá nad největším kontextem, jaký ta session kdy má. Přitom kontext nepotřebuje – session rekonstruuje z transcriptu na disku. Přesun do čisté session má srazit náklad z 10,2M zhruba na 2,5–4M; **horní hranice je odhad, ne měření**, přesné číslo dá až první běh.
+
+  **Rozhodnuto (Honza, 23. 9. 2026):**
+
+  - **Volitelný argument `[session-id]`.** S ním se uklidí zadaná session.
+  - **Bez argumentu rozhodují tři pásma podle vlastního transcriptu:** žádný prompt před vyvoláním → vypíše seznam posledních session k výběru (vlastní se v něm neukáže); do 500 kB → uklidí session, ve které stojí; nad 500 kB → **nespustí se** a řekne „jsem moc velká, udělej to v čisté session“ i s příkazem ke zkopírování.
+  - **Kritérium čisté session:** žádný uživatelský záznam v transcriptu, jehož obsah nezačíná `<`. Nejde to měřit počtem záznamů – po `/clear` tam vždycky stojí `<local-command-caveat>` a `<command-name>/clear</command-name>`.
+  - **Skill si drží zvolené id po celý běh** a Fáze 9 nabízí `/cleanup <id>`, ne holé `/cleanup`. Bez toho by druhé kolo úklidu spadlo do třetího pásma a odmítlo samo sebe.
+  - **Pořadí u nabídky je „zkopíruj, pak `/clear`“** – po `/clear` ten vypsaný příkaz zmizí.
+  - **Než začne zapisovat, skill řekne, co uklízí** (čas, adresář, první zpráva).
+  - **Totéž se udělá i s `/review` a `/consistency`.** Ty ale **session-id nepotřebují** – jejich vstup je git diff a soubory, ne transcript; potřebují jen vědět, ve které větvi stojí.
+
+  **Otevřené – tady se to přerušilo.** Vyšlo to z oponentury (`/oponent`, jedno hledisko *Co chybí*, 15 nálezů: 6 kritických, 7 středních, 2 nízké). Skupina A je vypořádaná výš, zbytek čeká. **Plné znění posudku** – u každého nálezu dvě až tři varianty řešení – leží v transcriptu session `45743833-4be9-4f40-9715-e55cb062f626` (`~/.claude/projects/-Users-honza-Dev/`), stejně jako celý rozbor, ze kterého to vzešlo:
+
+  - **B — kam skill zapisuje.** `find ~/.claude/projects -name '<id>.jsonl'` prohledá **všechny** projekty, takže překlepnuté nebo cizí id znamená zápis, commit a push do cizího repozitáře, a výstup vypadá jako povedený běh. Session má navíc v čase **víc** pracovních adresářů (doloženo na téhle: `Dev` → `Dev/context` → `Dev`; ve worktree layoutu kořen kontejneru → větev), takže „přejdi tam, kde pracovala“ neurčuje kam – a první `cwd` bývá kořen kontejneru, tedy místo mimo git. A po `cd` do větve si skill nechá volbou *Přimergovat do main* smazat adresář pod nohama. **Nabízené varianty:** (a) nevstupovat tam vůbec – `git -C <dir>` a absolutní cesty, cíl mimo aktuální projekt běh zastaví; (b) přejít a před mergem se vrátit; (c) vypsat všechna `cwd` a nechat vybrat.
+  - **C — rozsah práce session.** V čisté session neexistuje kritérium, jak odlišit rozpracovanou práci uklízené session od cizí souběžné – skill vidí jen pracovní strom a commity, takže by commitl a pushnul cizí práci pod svou zprávou (`RULES.md`, *Commituj jmenované cesty, ne `-A`*, popisuje tenhle scénář jako po pushi neopravitelný). K tomu: prázdný nebo neurčitelný základ session vede na prázdný diff a čtenáři ohlásí „nic jsem nenašel“, což vypadá jako úspěch; a Fáze 4 měří „během téhle session“, což v čisté session neznamená nic.
+  - **D — chybějící vstup.** Výjimka *„pokud ze session víš, že něco zůstalo rozbité“* se má přeformulovat na transcript, jenže Fáze 1 má sedm kategorií a **žádná není o tom, co zůstalo rozbité nebo nedodělané** (ověřeno). Skill by tedy nad větví s padajícím testem ohlásil „všechno zapsané“ a rovnou nabídl merge. Dnes to drží kontext hlavní session; po přesunu do čisté ho nedrží nic.
+  - **E — kontrola.** Navržené testy pokrývají práh (levné selhání) a nepokrývají detekci příkazů v transcriptu (šestkrát doložené selhání) ani rozřazení cílového adresáře (selhání končí pushem do cizího repozitáře). Poměr je obrácený, než velí `quality.md`, *Vynucovací vrstva se testuje jako kód, obousměrně*.
+  - **F — drobnosti.** Potvrzení „co uklízím“ nemá určenou fázi; stojí-li až před Fází 5, uživatel nejdřív odpoví na otázky o **cizí** session a teprve pak to zjistí. A závěrečné věty Fáze 9 nabízejí „pokračovat v práci“ v session, která o té práci nic neví – u cizí session by se místo toho měl nabídnout `/resume <id>`.
+  - **Otázka odkrytá měřením, nikoliv oponenturou:** mají čtenáři bez kontextu dostat **diff session, nebo diff větve**? Skill předepisuje první, praxe dělá druhé (viz `decisions.md`). Na tom závisí, jak se má opravit základ session ve Fázi 0.
+
+  **Vědomě zamítnuté – nenavrhuj znovu bez nového argumentu:**
+
+  - **Evidence uklizených session** (rejstřík a čára po vzoru `/depot` `_state/`): skill je záměrně opakovatelný a evidence by šla proti té vlastnosti. Opakovaný běh je legitimní použití, ne chyba. Oponent na to navázal měkčí variantou – **doplnit id uklizené session do řádku v `done.md`**, který Fáze 9 zapisuje tak jako tak; to nový rejstřík nezakládá a zůstává jako otevřený návrh.
+  - **`/compact` jako rovnocenná alternativa k `/clear`:** funguje bez parametru a bez worktree problému, ale nechává v kontextu 132k ztrátového shrnutí – a ztrátové je přesně v tom, co skill hledá (korekce, zavržené varianty, nevypořádaná témata). Zapíše se do skillu jako horší varianta s důvodem.
+  - **Dva režimy skillu** (jeden pro běh v session, druhý v čisté): skill má jediné chování; jde jen o odstranění nevysloveného předpokladu, že kontext existuje.
+  - **Poznat čistou session podle posledního promptu:** nefunguje, protože `/cleanup` je interaktivní a během něj se odpovídá ve Fázi 2, 5 i 7 – poslední prompt tedy nikdy není `/cleanup`.
+  - **Nástroje třetích stran na úsporu tokenů** (caveman, rtk, headroom, ponytail): rozbor drží `~/.claude/decisions.md`, *Úspora nákladů míří na kontext, ne na délku odpovědí*.
