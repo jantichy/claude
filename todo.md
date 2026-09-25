@@ -398,3 +398,22 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   - **Dva režimy skillu** (jeden pro běh v session, druhý v čisté): skill má jediné chování; jde jen o odstranění nevysloveného předpokladu, že kontext existuje.
   - **Poznat čistou session podle posledního promptu:** nefunguje, protože `/cleanup` je interaktivní a během něj se odpovídá ve Fázi 2, 5 i 7 – poslední prompt tedy nikdy není `/cleanup`.
   - **Nástroje třetích stran na úsporu tokenů** (caveman, rtk, headroom, ponytail): rozbor drží `~/.claude/decisions.md`, *Úspora nákladů míří na kontext, ne na délku odpovědí*.
+
+- [ ] **Posoudit, jestli panel a ověřování v `/review` a `/oponent` převést na nástroj `Workflow`** (zadáno 25. 9. 2026). Je to samostatné téma na vlastní session – souvisí s položkou o přepisu `/cleanup` do subagenta (obojí je o delegaci kontrolních kroků), ale řeší jinou osu: ta se ptá **kde** skill běží, tahle **čím se orchestruje jeho panel**.
+
+  **Co `Workflow` je** (ověřeno 25. 9. 2026, ne převzato): **vestavěný nástroj Claude Code**, ne plugin ani nic vlastního – v binárce verze 2.1.274 je zadrátovaný včetně `ultracode`, `workflow-authoring` a `.claude/workflows`; v `~/.claude/plugins/` nic takového není. Přibyl s aktualizací z 2.1.267 na 2.1.274. Spouští JavaScriptový skript, který deterministicky orchestruje víc subagentů – `agent()`, `parallel()`, `pipeline()`, `phase()` –, běží na pozadí, průběh je vidět přes `/workflows` a výstup agenta jde vynutit schématem. **Volat ho smí Claude jen na výslovný pokyn uživatele**, protože umí roztočit desítky agentů; tahle instalace má navíc strop „medium“, tedy pod deset agentů. Dokumentaci k psaní skriptů drží skill `workflow-authoring` – **načíst až ve chvíli, kdy se to bude psát**, ne kvůli rozhodnutí, jestli do toho jít.
+
+  **Proč zrovna `/review`:** ukázkový příklad v dokumentaci toho nástroje je doslova „review changed files across dimensions, verify each finding“, což je přesně jeho Fáze 2 a 3. Převést by šly **jen ty dvě**: Fáze 0 je úsudek a výpis vybraných specialistů uživateli, Fáze 1 jsou příkazy za nulu tokenů, Fáze 4 a 5 je syntéza a Fáze 6 až 8 interakce. Totéž platí pro `/oponent` – panel hledisek a ověřovatel na každý nález.
+
+  **Tři věci by se tím získaly a všechny tři dnes drží jen text v pravidlech:**
+
+  - **Ověřování by běželo průběžně, ne až po celém panelu.** Dnes jsou to dvě bariéry za sebou; `pipeline()` pustí ověření nálezů prvního specialisty ve chvíli, kdy doběhne, zatímco ostatní ještě čtou.
+  - **Tvar nálezu by vynutilo schéma**, ne věta v zadání. `severity` a `basis` podle `~/.claude/skills/SEVERITY.md` dnes drží text, který si agent vykládá sám – schéma to zamkne strojově. Je to *Ověřitelná kontrola místo dojmu* posunutá o vrstvu níž.
+  - **Stropy by přestaly být prosbou.** „Nad sedm specialistů nechoď“ a „nejvýš 12 ověřovatelů“ vykonává tentýž model, který ta pravidla čte.
+
+  **Dvě věci se musí ověřit dřív, než se do toho půjde** – na obojím to může padnout:
+
+  - **Umí `agent()` ve skriptu nastavit model pro jednotlivého agenta?** `/review` rozlišuje pečlivě: standardoví specialisté na výchozím modelu s `medium`–`high`, Bezpečnost a Data a stavy na nejsilnějším s `xhigh`. Jeden model pro všechny by byl krok zpátky, ne dopředu.
+  - **Nahradí `resumeFromRunId` soubor `.claude/run/review.json`?** Dokumentace nástroje říká, že obnovení běhu je **jen v rámci téže session**, kdežto ten soubor existuje právě proto, aby rozpracovaná fronta nálezů přežila kompaktaci **i novou session**. Pak by to byla náhrada jen z poloviny a soubor musí zůstat.
+
+  **Třetí nejistota:** Fáze 2 volá `/code-review` a `/security-review` jako vestavěné skilly Claude Code. Agent v workflow nástroj `Skill` nejspíš má (běžný subagent ho má – ověřeno), ale nevyzkoušelo se to.
