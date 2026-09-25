@@ -342,6 +342,32 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
 - [ ] **Přepsat `/cleanup` na běh v čisté session, pak totéž pro `/review` a `/consistency`** (rozpracováno 23. 9. 2026, přerušeno k rozmyšlení). Naměřená čísla, chování `/clear` a `/compact` i doloženou vadu základu session drží `~/.claude/decisions.md`, *Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`* – **neopisuj je sem zpátky**.
 
+  **ROZHODNUTO 25. 9. 2026 PO ZMĚŘENÍ: jde se cestou subagenta.** Text níž zůstává jako doložení cesty; co z něj platí a co padlo, říká tenhle blok.
+
+  **Čím se to rozhodlo.** Pustil se pokusný běh: subagent bez práva zapisovat dostal transcript téhle session (2,8 MB, 1398 záznamů, 33 promptů, tři dny) a měl vytěžit dohody a zkonfrontovat je se soubory. **Správná odpověď byla známá** – session se zapisovala průběžně.
+
+  | | Volání | Náklad |
+  |---|---|---|
+  | vytěžovací agent (Fáze 1 a 3) | 45 | **0,87M** nákladových jednotek |
+  | dnešní `/cleanup` nad transcriptem 1200+ kB | ~150 | 10,2M (medián z 249 běhů) |
+
+  **Není to srovnání jedna ku jedné:** agent nezapisoval, necommitoval, neběželi čtenáři a neproběhl interaktivní průchod. Celý úklid v agentovi bude stát víc – **odhad 1,5 až 2,5M, tedy 75 až 85 % úspora, je extrapolace, ne měření.** Doloží ji až první ostrý běh.
+
+  **Kvalita obstála.** Agent vytěžil 37 položek v šesti kategoriích, 35 označil za zapsané a při kontrole to sedělo – včetně detailů, které musel vylovit z konverzace (že práh 500 kB je korekce návrhu 600, znění kritéria čisté session, past s cizím UUID u `tasks/`). Dva nálezy mimo OK byly oba správné a **jedno nevypořádané téma našel, které hlavní session přehlédla**.
+
+  **Doložená mez, která platí i pro dnešní stav:** agent nečetl odpovědi celé, jen úseky kolem rozhodovacích míst, a posudek oponenta jen ze čtvrtiny – u 2,8 MB to jinak nejde. Drobná dohoda uprostřed dlouhé odpovědi mu uniknout mohla. **Není to argument proti subagentovi**, protože `SESSION.md` na dlouhý transcript posílá subagenta tak jako tak; je to mez vytěžování jako takového a patří do zadání jako pokyn hlásit, co se nestihlo.
+
+  **Co z postupu níž padá:** tři pásma podle velikosti vlastního transcriptu, nabídka `/clear` s příkazem ke zkopírování, pořadí „zkopíruj, pak `/clear`“, kritérium čisté session i celá skupina B (kam skill zapisuje) – agent dědí pracovní adresář i session-id od rodiče, takže není co vybírat ani kam zabloudit.
+
+  **Co platí dál:** potvrzení toho, co se uklízí, před zápisem; držení zvoleného id po celý běh (kvůli druhému kolu); volitelný argument `[session-id]` pro úklid **cizí** session; skupiny C, D, E a F z oponentury; otázka diff session proti diffu větve; a zjištění, že se `git rev-parse HEAD` ve Fázi 0 skoro nikdy nevolá.
+
+  **Nevypořádaná témata, která to vytěžení našlo** (zapsáno, ať nezmizí se session):
+
+  - **Bod „aby totéž platilo i pro druhý běh nad opravami prvního“** z osmibodového výčtu požadavků na skill zůstal bez odpovědi – odbyl se půlvětou o tom, že druhý běh agenta by musel načíst všechno znovu, a nikdo neřekl, jestli to vadí. **Tohle přehlédla hlavní session a našel to až agent.**
+  - **Doplnit id uklizené session do řádku v `done.md`** – měkčí varianta po zamítnutí evidence, vedená jako otevřený návrh, o kterém se nikdy nerozhodlo.
+  - **Skupiny B až F z oponentury** se procházely jedna po druhé a přerušilo se to po skupině A; část z nich varianta se subagentem ruší, ale neprošlo se to nález po nálezu.
+  - **Převod panelů na nástroj `Workflow`** – padl návrh, uživatel se zeptal jen na to, co ten nástroj je. Má dnes vlastní položku níž v tomhle souboru.
+
   **Proč:** `/cleanup` stojí 55 % nákladů session, ve kterých běží, protože svých ~150 volání dělá nad největším kontextem, jaký ta session kdy má. Přitom kontext nepotřebuje – session rekonstruuje z transcriptu na disku. Přesun do čisté session má srazit náklad z 10,2M zhruba na 2,5–4M; **horní hranice je odhad, ne měření**, přesné číslo dá až první běh.
 
   **Rozhodnuto (Honza, 23. 9. 2026):**
