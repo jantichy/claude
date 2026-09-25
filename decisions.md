@@ -1252,3 +1252,32 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Čtenář pozůstatků se pouští dvakrát až třikrát v jednom běhu**, ne jednou: jednou ve *Fázi 2*, pak znovu ve *Fázi 6* po opravách, a k tomu ho *Fáze 6* pouští znovu, „vrátil-li chybu **nebo nic**“ – přičemž prázdný výsledek je podle jeho vlastního zadání úspěch („Pokud je něco v pořádku, nepiš to“). Skill si tedy vyrobil vstup, který podle vlastní definice znamená čisto, a vyhodnocuje ho jako selhání.
 
 **Mez měření:** 7 běhů proti 110, všechny z jednoho dne a z pásma nad 1200 kB – pro menší session po přepisu data nejsou. Vyloučen jeden běh, který skončil po 3 voláních. Čísla jsou vážený součet tokenů, ne fakturovaná částka; poměry platí, absolutní hodnoty se s cenami změní.
+
+### 2026-09-26 – `/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit
+
+**Rozhodnuto 26. 9. 2026** po změření předchozího tvaru (záznam výš) a po třech nezávislých posudcích. Spouštěčem byla věta, kterou běh sám vydal: *„ze tří posudků čtenářů, které přišly jako dlouhý JSON, četl jen začátky… nedá se vyloučit, že v nepřečtené části zůstal nález“*. Uživatel na tom pojmenoval, co od skillu čeká: ověření, že se ze session opravdu všechno zapsalo – **s odškrtáváním, ne s dojmem**.
+
+**Tři změny, každá z jiného důvodu:**
+
+1. **Zrušeni oba čtenáři bez kontextu.** Byli **40,8 % ceny běhu** při 3,1 spuštění a posuzovali jinou otázku než tu, kvůli které se skill pouští: navazitelnost dokumentace a pozůstatky po přepisování. Třetí spuštění vznikalo pravidlem „vrátil-li chybu **nebo nic**, pusť ho znovu“, přičemž prázdný výsledek podle jejich vlastního zadání znamenal, že je čisto – skill si vyrobil vstup značící úspěch a vyhodnocoval ho jako selhání.
+2. **Vytěžení se vrátilo do hlavní session.** Delegace ubrala rodičovi 8 % a přidala agenta za dvojnásobek; počet volání na tutéž práci stoupl o 51 % (110 → 166), protože agent rekonstruuje z transcriptu to, co hlavní session má v kontextu zdarma. Změřený scénář „vše v hlavní session bez čtenářů“ vyšel na 105,8 jednotky proti 115,9 se subagentem. **Rozhodlo ale hlavně to, že zmizel prostředník** – nález se nemůže ztratit převyprávěním výstupu, který nikdo nedočte.
+3. **Úplnost se měří.** `scripts/extract.py` vytáhne z transcriptu **kotvy** – místa, kde uživatel něco napsal – a skill u každé vyplní stav v evidenci ve scratchpadu. Počet řádků musí sedět s počtem kotev; do `done.md` jde poměr `kotvy N/N` a povinné pole `meze`. Řádek, který se čte jako „uklizeno“, tím přestal být vydatelný nad nepřečteným transcriptem.
+
+**Tři interaktivní fronty se slily do jedné** (*Fáze 5*). Kritérium rozhodování bylo u všech totéž a smyčky nad velkým kontextem jsou nejdražší část skillu – 46,7 %. Zdroj položky je metadatum na řádku, ne důvod k dalšímu průchodu.
+
+**Zamítnuté varianty:**
+
+- **Přesunout čtenáře do `/consistency`** – nejde: ten běží **před** úklidem, takže by dostal dokumentaci bez dnešního zápisu, tedy přesně to, co nemá posuzovat. Byla to původně doporučená varianta a padla na téhle premise.
+- **Přesunout je do `/merge`** – věcně by to šlo, ale cena se jen přesune a session, která mergem nekončí, by kontrolu neměla vůbec.
+- **Nechat subagenta a jen ho zlevnit** – dražší o 9 % a prostředník zůstává.
+- **Jen přidat evidenci a zachovat celý záběr** – spolehlivost by stoupla, ale cena ne; velká mašina by zůstala velká.
+
+**Čím se nahrazuje, co zmizelo:** mrtvé odkazy a kotvy po zápisu dál hlídá `links.py`. Věta, která zápisem přestala platit, se chytí až v příštím `/consistency` – **to je vědomě přijatá cena**, ne opomenutí. Navazitelnost dokumentace neposuzuje nikdo; kdyby se ukázalo, že chybí, patří to do `/consistency`, který čte dokumentaci tak jako tak.
+
+**Bloky myšlení se nečtou, a není to volba.** Změřeno na šesti transcriptech: pět mělo 0 kB při desítkách až stovkách bloků, jeden 12,8 kB na 302 bloků. V transcriptu jsou zapsané prázdné, takže ten obsah tam není. Dřív to stálo v `SESSION.md` jako rozhodnutí „myšlení není závazek“, což svádělo k dojmu, že se něco čitelného vědomě přeskakuje.
+
+**Zaniklé soubory:** `skills/cleanup/agent.md` (zadání vytěžovacího agenta) a `skills/cleanup/readers.md` (zadání čtenářů). Jádro z prvního je v `SKILL.md`, tabulka povinností v novém `obligations.md`. Stopa je tady, protože obojí se dá zkopírovat zpátky z historie gitu a vypadalo by to jako regrese.
+
+**Co se tím rozbilo a spravilo:** test na nevypořádaná témata hlídal nadpis *Fáze 3* a fragmenty v `agent.md` – míří teď na *Fázi 5* a do `SKILL.md`, s podmínkou, že nevypořádaná témata v té frontě zůstanou **jmenovaným druhem položky**; sloučení je úspora na průchodech, ne záminka ztratit kategorii, kterou nikdo jiný nehledá.
+
+**Cesta zpátky:** po několika ostrých bězích změřit znovu skriptem `scripts/cost.py` a porovnat se 105,8 z tohohle záznamu. Nevyjde-li úspora, je na řadě řez v *Fázi 5*, ne návrat čtenářů.

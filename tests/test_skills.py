@@ -516,24 +516,30 @@ class CoreParts(unittest.TestCase):
         pětkrát – šlo tedy smazat celou sekci *Jak to probrat* a testy zůstaly
         zelené. Způsob dotazování je přitom to podstatné: kdyby se položky jen
         vypsaly do závěru, uživatel session zavře a zmizí s ní.
+
+        Od 26. 9. 2026 jsou tři interaktivní fronty sloučené do jedné, protože
+        kritérium rozhodování bylo u všech totéž a smyčky nad velkým kontextem
+        byly nejdražší část skillu. Nevypořádaná témata v ní ale musí zůstat
+        **jmenovaným druhem položky** – sloučení je úspora na průchodech, ne
+        záminka ztratit kategorii, kterou nikdo jiný nehledá.
         """
         text = body(ROOT / "skills/cleanup/SKILL.md")
-        heading = "## Fáze 3 – Nevypořádaná témata"
-        self.assertIn(heading, text, "/cleanup přišel o fázi na nevypořádaná témata")
+        heading = "## Fáze 5 – Fronta rozhodnutí"
+        self.assertIn(heading, text, "/cleanup přišel o fázi, ve které se fronta probírá")
         phase = text[text.index(heading):]
         phase = phase[:phase.index("\n## ")]
-        for fragment in ("AskUserQuestion", "Bezpředmětné"):
+        for fragment in ("AskUserQuestion", "Bezpředmětné", "nevypořádan"):
             self.assertIn(fragment, phase,
-                          f"/cleanup, Fáze 3 přišla o {fragment!r} – zbyl jen nadpis")
+                          f"/cleanup, Fáze 5 přišla o {fragment!r} – zbyl jen nadpis")
 
         # Síto – ověření kandidáta proti zbytku transcriptu a práh důležitosti –
-        # se od 25. 9. 2026 dělá ve vytěžovacím agentovi, protože transcript čte
-        # on. Hlídá se proto tam: bez síta by nahoru šli hrubí kandidáti a rodič
-        # by je musel proklepávat vlastním čtením transcriptu.
-        agent = body(ROOT / "skills/cleanup/agent.md")
+        # se od 26. 9. 2026 dělá zase v hlavní session, protože vytěžovací agent
+        # zanikl (delegace stála víc, než ušetřila; rozbor v decisions.md).
+        # Bez síta by se do fronty dostali hrubí kandidáti a uživatel by
+        # rozhodoval o něčem, co se mezitím vyřešilo jinudy.
         for fragment in ("Jak ověřit, že to opravdu není vypořádané", "Práh důležitosti"):
-            self.assertIn(fragment, agent,
-                          f"/cleanup, zadání agenta přišlo o {fragment!r}")
+            self.assertIn(fragment, text,
+                          f"/cleanup přišel o {fragment!r}")
 
     def test_evaluate_decides_about_every_finding(self):
         """Krok, který sebere čísla a nerozhodne o nich, je evidence bez čtenáře.
@@ -1518,6 +1524,7 @@ class TemplatesPrintMarkdown(unittest.TestCase):
     #: stejně jako nová šablona bez pokynu.
     WRITTEN_TO_FILE = {
         ("autocommit/SKILL.md", "## Autocommit"),
+        ("cleanup/SKILL.md", "| # | řádek | co uživatel napsal (zkráceně) | stav | kde |"),
         ("consistency/SKILL.md", "## Consistency"),
         ("project/SKILL.md", "- **Struktura:** docs/"),
         ("project/SKILL.md", "## Struktura a dokumentace"),

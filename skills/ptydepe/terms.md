@@ -145,7 +145,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### čtenář bez kontextu
 
-**Subagent, který nemá žádný kontext z běžící session a čte výhradně soubory.** Ptá se, jestli se z toho, co je zapsané, dá pochopit, co se rozhodlo a proč – nebo jestli to dává smysl jen tomu, kdo u toho byl. Pouští ho `/cleanup` až po zápisu.
+**Subagent, který nemá žádný kontext z běžící session a čte výhradně soubory.** Ptá se, jestli se z toho, co je zapsané, dá pochopit, co se rozhodlo a proč – nebo jestli to dává smysl jen tomu, kdo u toho byl. Pouští ho skill, který se ptá, jestli je zapsané srozumitelné bez účasti na té práci.
 
 **Nahrazuje dřívější „fresh-reader“** (2026-09-07). Anglicismus uprostřed české věty, který se navíc skloňoval po česku („fresh-readera“, „2 fresh-readeři“), a prolézal i do `done.md`, tedy do textu pro člověka.
 
