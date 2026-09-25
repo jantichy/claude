@@ -391,6 +391,56 @@ Musí-li se **mechanické pravidlo** porušit, je to **nejdřív signál, že je
 
 Děláš-li něco volitelné, podmíněné nebo výjimečné, **zapiš proč**. Kde ten důvod neplatí, výjimka padá – nepřenášej ji mechanicky jen proto, že „to tak je jinde“.
 
+### Před každým měřením vypiš, co který výsledek rozhodne
+
+Než pustíš dotaz, test nebo jakékoliv zjišťování, napiš **všechny možné výsledky a u každého to, co z něj plyne** – které tvrzení potvrzuje, které vylučuje a co se po něm dělá dál. Teprve pak měř. Zkráceně **vidlička**.
+
+**Ke každé větvi patří i ta, která se nehodí.** Větev „tohle by byl vážný stav, protože bychom se vraceli k tomu, co jsme odložili“ má v tom výpisu tutéž váhu jako ta čekaná. **Vidlička, ve které jedna cesta chybí, dovede k tomu, co v ní zbylo** – doloženo 25. 9. 2026, kdy chybějící třetí možný původ hodnoty vedl k závěru „příčina je u dodavatele nástroje“, protože na jiný původ nikdo nepomyslel.
+
+**Nejde to odbýt seznamem hypotéz.** Vidlička se píše nad **konkrétním výstupem** toho měření – nad sloupcem, který se vrátí, nad číslem, které skočí nebo neskočí. Jinak se u nečekaného výsledku hledá, které z obecných tvrzení se na to dá natáhnout.
+
+**Proč:** výsledek, ke kterému chybí předem daný výklad, se vykládá zpětně podle toho, co se čekalo. Není to nepoctivost, ale mechanika – z čísla jde odvodit skoro cokoliv, když se výklad hledá teprve nad ním, a **žádná kontrola v datech nepozná, že se závěr ohnul**. Druhý důvod je provozní: vypisováním větví se pozná dotaz, který měří něco jiného, než co tvrzení tvrdí, protože se ukáže, že ho nerozhoduje ani jedna z nich.
+
+**Platí to i pro měření, které se zdá jednoznačné.** Čím jistější je čekaný výsledek, tím kratší je ta vidlička – ne že se nepíše.
+
+### Vyloučení má tři stupně a ke každému patří cesta zpátky
+
+**Vyloučená možnost zůstane vyloučená a nikdo se do ní už nepodívá.** Proti tomu drží tři věci a všechny se vyplňují ve chvíli, kdy se ta možnost zavírá – zpětně to dopsat nejde, protože **si už nikdo nevzpomene, jestli se tehdy měřilo, nebo usuzovalo**.
+
+**První: píše se, čím se vylučovalo, protože to nejsou tři stejně pevné věci.**
+
+| Jak | Co to znamená | Co to otevře znovu |
+|---|---|---|
+| **měřením** | změřil se mechanismus sám, ne jeho následek | že měření bylo užší, než se myslelo |
+| **nesouladem podpisu** | „kdyby to byla příčina, viděli bychom X; vidíme Y“ | že očekávaný podpis byl odvozený špatně, nebo že mechanismus umí i jiný |
+| **úvahou** | nezměřilo se nic, jen se to nezdálo | jakýkoliv údaj, který se toho dotkne |
+
+**Vyloučení úvahou není vyloučení, je to odložení.** Smí se tak uzavřít jen to, u čeho by měření stálo víc než celý dopad – a i tak se to musí napsat tímhle slovem.
+
+**Druhé: ke každému vyloučení patří podmínka, která ho ruší.** Ne obecná ostražitost, ale **věta, po které se pozná, že je čas se vrátit** – „platí pro tenhle rozsah, jinde neměřeno“, „platí pro dnešní stav, ne pro dobu, o kterou jde“. Bez ní se mez vyloučení ztratí do měsíce, protože zůstane jen slovo *vyloučeno*.
+
+**Třetí: po každém novém poznatku se seznam vyloučených projde znovu** – ne z kalendáře, ale na spouštěč: **změní-li se premisa, na které vyloučení stálo**. A je to levné právě díky té první věci, protože se prochází v pořadí úvaha → nesoulad podpisu → měření, a to poslední jen tehdy, když nový poznatek sahá na rozsah toho měření.
+
+**Proč:** doloženo 25. 9. 2026, kdy se jediné platné vysvětlení dvakrát vyloučilo špatně a vrátilo se do hry jen proto, že u jednoho z těch vyloučení stála zapsaná mez. Bez ní by se hledalo dál v prázdnu.
+
+### Měř to, co tvrzení tvrdí, na tom, o čem to tvrdí
+
+Vyloučení i potvrzení platí jen tehdy, když měření sedí na tvrzení **ve třech věcech naráz**. Rozejde-li se kterákoliv z nich, výsledek vypadá průkazně a nerozhoduje nic:
+
+- **Veličina.** Kolik lidí pravidlo odmítne, není totéž jako jestli se podle odmítnutí něco děje. První se změří snadno, druhé tvrzení tvrdí.
+- **Populace.** Vada vázaná na jednu část celku je v průměru přes celek neviditelná, takže test na zbytku ji nevyvrací.
+- **Surové proti dopočítanému.** Tvrzení „chybu dělá až zpracování na druhé straně“ nesmí vyvracet hodnota, kterou si ta druhá strana sama dopočítala. **Zrádné je, že se to nepozná z názvu** – ověř na případu, kde víš, co se poslalo, že to pole nese jen to poslané.
+
+**Proč:** takové vyloučení se nepozná jako chyba, protože čísla jsou správná – jen odpovídají na jinou otázku. Zůstane po něm zavřená větev, do které se nikdo nevrací.
+
+### Než pole použiješ v podmínce, vypiš jeho hodnoty
+
+Před filtrem, agregací nebo výčtem se **podívej, jaké hodnoty v tom poli doopravdy jsou**, s počty. Teprve pak se nad ním staví podmínka.
+
+**Proč:** jinak se filtruje podle podoby, ve které se nález čeká, ne podle té, ve které je zapsaný – a **nesedne-li podmínka na nic, vypadá to jako nález**. Podmínka na prázdnou hodnotu vrátí nulu i nad polem, které je z pětiny prázdné, když se prázdnota ukládá zástupným řetězcem. Test na přítomnost podřetězce zase propustí i zápis, který se pak nepřečte.
+
+**Platí to na každou vrstvu, ne jen na dotazy do databáze:** parametry v požadavku, klíče v JSONu, hodnoty v konfiguraci, stavy v evidenci. Pokaždé jde o totéž – **doména hodnot se zjišťuje, neodhaduje.** Doloženo 25. 9. 2026 třikrát za jeden den, každý pokus v jiné vrstvě.
+
 ### Detekce konfliktů před přidáním
 
 Než přidáš pravidlo, soubor, adresář nebo koncept, **zkontroluj rozpor a duplicitu odpovědnosti** s něčím existujícím. Najdeš-li konflikt, vyřeš ho **dřív** (sloučit / rozdělit / přejmenovat / probrat).
