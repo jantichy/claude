@@ -814,7 +814,7 @@ Notifikace „Claude is waiting for your input“ má titul „Alert“ a skute�
 
 **Nález k vypořádání jinde:** `~/.claude/STRUCTURE.md` žádá datum v prvním odstavci a ne v nadpisu, kdežto celý tenhle soubor má datum v nadpisu `###`. Zápis drží konvenci souboru; srovnat to je práce pro `/consistency`, ne pro jeden zápis.
 
-### Životní cyklus se dělí na osu a kontroly v mezerách (20. 9. 2026)
+### 2026-09-20 – Životní cyklus se dělí na osu a kontroly v mezerách
 
 **Problém:** cyklus byl jedna číslovaná řada kroků a ta předstírala, že každý krok spouští ten předchozí. Platilo to zhruba u poloviny; `/cleanup`, `/consistency`, `/discovery` a `/project` čekaly na stav, ne na předchůdce. `/cleanup` si v `LIFECYCLE.md` dokonce sám odporoval – stálo o něm „poslední krok uzavírání, **ne životního cyklu**“ a zároveň měl v seznamu číslo 9.
 
@@ -829,7 +829,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Zamítnuto:** ponechat jednu řadu a doplnit u každého kroku jen řádek *Spouštěč* – stálo to půl hodiny a skončilo tím, že polovina čísel dál nic neznamenala.
 
-### `/specify` se dělí na `/specify` a `/architect` (20. 9. 2026)
+### 2026-09-20 – `/specify` se dělí na `/specify` a `/architect`
 
 **Rozhodnutí:** jeden skill, který vyráběl `requirements.md` i `architecture.md`, se dělí na dva kroky osy.
 
@@ -850,7 +850,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Nepřejmenovává se:** `requirements.md` ani `plan.md`. Jsou pojmenované podle obsahu a `specification.md` by z trojice vybočilo.
 
-### Návrh řešení je sada dokumentů, ne jeden soubor (20. 9. 2026)
+### 2026-09-20 – Návrh řešení je sada dokumentů, ne jeden soubor
 
 **Rozhodnutí:** `architecture.md` je **páteř** návrhu, ne celý návrh. K ní podle potřeby `model.md` (data a stavy), `transitions.md` (operace), `rules.md` (zásady domény) a tematické dokumenty kol.
 
@@ -862,7 +862,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Vedlejší nález:** `STRUCTURE.md` mluvila o „návrhu řešení“, ale soubor se jmenuje `architecture.md` – dvě jména pro jednu věc, jen jedno česky a druhé anglicky. Opraveno.
 
-### `/review` stojí za každým krokem osy, který vyrobil artefakt (20. 9. 2026)
+### 2026-09-20 – `/review` stojí za každým krokem osy, který vyrobil artefakt
 
 **Problém:** první verze tabulky mezer měla `/review` jen za `/implement`, protože vznikala s projektem s kódem před očima. Uživatel na to upozornil otázkou, proč jsme ho tedy nad rezervacemi pouštěli v návrhové fázi.
 
@@ -872,7 +872,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Pořadí uvnitř mezery:** `/review` jde **první**, protože jeho opravy mění text, nad kterým pracují ostatní; `/consistency` po něm; `/cleanup` vždy poslední.
 
-### Rozdíl mezi `/review` a `/oponent` nad obsahovým projektem (20. 9. 2026)
+### 2026-09-20 – Rozdíl mezi `/review` a `/oponent` nad obsahovým projektem
 
 Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude odvozovat znovu:
 
@@ -885,7 +885,7 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Praktický důsledek:** u projektu, ke kterému žádný relevantní standard v `~/Dev/context/` neexistuje, je `/review` skoro prázdný a má se přeskočit. `/oponent` funguje vždycky.
 
-### Vznikl krok `/consolidate` na návrhový dluh z postupného záplatování (20. 9. 2026)
+### 2026-09-20 – Vznikl krok `/consolidate` na návrhový dluh z postupného záplatování
 
 **Problém, který ho vyvolal:** návrh vzniká po kolech a v každém se ukáže další kombinace, na kterou se přidá sloupec nebo hodnota výčtu. Každý ten krok je ve své chvíli správný; dohromady z nich vznikne řešení, které by při znalosti všech případů předem šlo nahradit jedním jednodušším. **Žádný dosavadní krok to nenajde:** `/review` měří proti specifikaci, jenže dluh je v samotné specifikaci; `/consistency` se ptá, jestli si projekt sedí sám se sebou – a takový dluh je dokonale konzistentní, protože každá záplata se poctivě zanesla všude; `/oponent` posuzuje dokument, jak stojí dnes, a nemá odkud vědět, že tři sousední mechanismy vznikly ve třech týdnech ze tří podnětů.
 
@@ -909,7 +909,7 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 **Zadání skillu i to, co k jeho napsání zbývá, drží `todo.md`.** Rozbor pilotu je v rezervačním systému, `docs/done.md` a `docs/decisions.md` §133 a §134.
 
 
-### `/architect` vznikl a nemá režimy (20. 9. 2026)
+### 2026-09-20 – `/architect` vznikl a nemá režimy
 
 **Rozhodnutí:** `/specify` se rozdělil na dva skilly. `/specify` zůstal **jeden běh bez režimů** a vyrábí `requirements.md` plus produktové podklady; `/architect` dostal návrh řešení jako **sadu dokumentů** a celou mechaniku tematických kol. Zdůvodnění dělení drží zápis *`/specify` se dělí na `/specify` a `/architect`* výš; tohle je záznam o jeho provedení a o třech rozhodnutích, která při něm padla.
 
@@ -923,7 +923,7 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Srovnávací běh se vědomě vynechal** (`~/.claude/skills/skill/SKILL.md`, *Fáze 4*). Měří, jak agent selže bez skillu; vstupem tady ale nebylo nové téma, nýbrž 423 řádků odladěného textu, takže by neměřil nic.
 
-### Dvě vrstvy cyklu v kořenovém README nese pořadí, ne nadpisy (20. 9. 2026)
+### 2026-09-20 – Dvě vrstvy cyklu v kořenovém README nese pořadí, ne nadpisy
 
 **Rozhodnutí:** v `README.md` se osa a kontrolní kroky **nerozdělují nadpisem**. Hranici drží pořadí sekcí a úvodní odstavec, který jmenuje první a poslední krok každého bloku.
 
@@ -933,7 +933,7 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Našel to čtenář bez kontextu při `/cleanup`**, oba nezávisle na sobě. Je to typický nález téhle vrstvy: struktura, která vypadá správně v textu a lže v osnově.
 
-### Osou pro ptaní je volba, ne riskantnost zásahu (20. 9. 2026)
+### 2026-09-20 – Osou pro ptaní je volba, ne riskantnost zásahu
 
 **Rozhodl uživatel** uprostřed `/consistency full` nad rezervačním systémem, po jedenácti otázkách, ze kterých ani jedna nenabízela volbu: *„když jsou ty opravy takhle jednoznačné a není se mezi čím rozhodovat (a dáváš mi stejně jen na výběr, jestli opravit hned nebo opravit později nebo se na to vykašlat a nechat to špatně), tak se mě ani neptej a hned to všechno oprav – odkládat na později to nechceme a odmítnout opravu věci, kterou je potřeba opravit, taky nechceme. Ptej se mě jen na věci, kde se to dá opravit více způsoby a chceš se zeptat, jaký zvolit.“*
 

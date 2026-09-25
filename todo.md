@@ -444,3 +444,8 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   - **Nahradí `resumeFromRunId` soubor `.claude/run/review.json`?** Dokumentace nástroje říká, že obnovení běhu je **jen v rámci téže session**, kdežto ten soubor existuje právě proto, aby rozpracovaná fronta nálezů přežila kompaktaci **i novou session**. Pak by to byla náhrada jen z poloviny a soubor musí zůstat.
 
   **Třetí nejistota:** Fáze 2 volá `/code-review` a `/security-review` jako vestavěné skilly Claude Code. Agent v workflow nástroj `Skill` nejspíš má (běžný subagent ho má – ověřeno), ale nevyzkoušelo se to.
+
+- [ ] **Dvě věci, na které narazil čtenář bez kontextu 25. 9. 2026 a nevyřešily se** (zapsáno při úklidu, aby nezmizely se session).
+
+  - **`decisions.md` není chronologický, ačkoliv to sám vyžaduje.** Mezi zápisy z 18. 9. sedí *2026-09-08 – `deny` v `settings.json`…*, *2026-09-08 – Dvě podmínky pro `PostToolUse` hook* a *2026-09-10 – Skill `/audit`…*. Buď jsou to vědomé tematické shluky, a pak to musí být napsané, nebo se mají přesunout. **Tvar nadpisů se 25. 9. sjednotil** (všech 75 nese `### YYYY-MM-DD – Název`), pořadí ne. **Pozor při opravě:** zápisy mají vnořené odrážky, takže se nesmí řadit po řádcích, ale po blocích – týž řez tentýž den rozbil `done.md` a musel se vracet z gitu.
+  - **Není jasné, jestli se práh z *Dlouhá session je dražší než dvě krátké* vztahuje i na běh skillu.** `RULES.md` velí ohlásit se při ~150 voláních; změřeno je, že `/cleanup` dělá zhruba 150 volání bez ohledu na to, co uklízí. Ohlášení uprostřed vlastního běhu by nemělo komu pomoct, ale pravidlo tu výjimku nezná. Rozhodne se nejspíš samo při přepisu skillu do subagenta – tam se práh vztahuje na rodiče, ne na agenta.
