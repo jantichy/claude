@@ -179,6 +179,12 @@ Kontext roste s délkou session a každé volání ho čte celý, takže **nákl
 
 **Je to důvod navíc pro *Pravda v souborech, ne v konverzaci*.** Session, ze které se průběžně zapisuje, jde ukončit kdykoliv; ta, která si dohody drží jen v hlavě, se ukončit nedá vůbec – a platí proto svou délku až do konce.
 
+**Co do session patří, rozhoduje sdílené *rozmyšlené*, ne sdílené soubory.** Soubory si každá session načte znovu a levně; kontext rozpravy se přenést nedá a platí se za něj do konce. Práce, která jen sahá na tytéž soubory, proto patří do nové session – práce, která staví na tom, co se v téhle session promyslelo, do téhle.
+
+**Posudek vlastní práce má pro nový začátek i druhý důvod, věcný.** Nálezy sice hledají izolovaní agenti, ale syntézu a rozhodování o nich dělá hlavní session – a ta, která ten návrh před chvílí obhajovala, je na něj zaujatá a odmítne je snáz.
+
+**Opačná mez platí taky a snadno se přestřelí:** zakládat session kvůli pár voláním gitu je dražší než je doběhnout, protože start session stojí načtení `CLAUDE.md` a všech jeho importů. Doloženo 25. 9. 2026 v rezervačním systému, kde jsem přesně tohle navrhl u `/merge` a uživatel to opravil.
+
 ### Velké průzkumné úkoly deleguj
 
 U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek exportu, hromadné hledání) nabídni delegaci na subagenty. Řídicí úvahu a syntézu si nech, mechanický sběr ne.
