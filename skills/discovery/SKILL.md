@@ -175,6 +175,12 @@ Zapiš do `docs/competition.md` a **u každého údaje nech datum zjištění** 
 Projdi nálezy s uživatelem a sepiš závěr do sekce `## Naše pozice a odlišení` v témž souboru. Tři skupiny, každá jako seznam:
 
 - **Co musíme mít**, protože to má každý a bez toho nás nikdo nevezme vážně. Tohle je nejcennější výstup celého skillu – jsou to požadavky, na které by se jinak přišlo až po spuštění.
+
+  **Stav „máme to, nebo ne“ se u každého řádku ověřuje proti návrhu, ne odhaduje.** Běží-li skill nad projektem, který už návrh má – `docs/model.md`, `docs/transitions.md`, `docs/architecture.md` –, **otevři ho a najdi tu funkci**, než napíšeš, že chybí. Totéž platí pro každý nález, který odsud odchází do `docs/todo.md`.
+
+  **Proč se na to musí upozorňovat:** celý tenhle krok se dívá ven a jeho vstupem jsou podklady o trhu, ne dokumentace vlastního řešení. Nález tvaru *„tohle systém nemá“* proto vzniká z toho, co skill **nevidí**, a vypadá doloženě, protože doložená je ta půlka o konkurenci. **Vymyšlený požadavek stojí víc než vynechaný:** dostane se do fronty jako práce, projde řezem MVP a rozhoduje se o něm znovu, přestože je hotový.
+
+  **Doloženo 25. 9. 2026** v rezervačním systému: z osmi řádků se stavem **nemá** byly dva neplatné – volba mezi zálohovkou a daňovým dokladem, kterou drží zděděné nastavení `document`, a vynechání platebního kroku u nulové ceny, které řeší `payFree` a stav `FREE_PAID`. Obojí bylo rozhodnuté měsíce předtím a našlo se až při práci na té položce. **Zbylé nálezy platily**, takže to není argument proti kroku, ale proti psaní stavu zpaměti.
 - **Co děláme jinak** a proč si kvůli tomu někdo vybere nás. U každého bodu **řekni, čím je to doložené** – co v rešerši ukazuje, že to konkurence nemá nebo dělá špatně. Odlišení bez opory v datech je přání, ne pozice.
 - **Kde vědomě zaostáváme** a proč nám to nevadí. Neprázdné: prázdná skupina znamená, že se tvrdí „budeme lepší ve všem“, což neplatí nikdy.
 
@@ -225,7 +231,9 @@ U každého rizika:
 4. **Verdikt** – je v `demand.md` jedna ze dvou hodnot, ne něco mezi? Je u nedoložené poptávky zapsané, jak uživatel rozhodl dál, i s důvodem?
 5. **Vymyšlené věci** – je tam jméno, číslo nebo tvrzení, které jsi neměl od uživatele ani ze zdroje? To je nález.
 
-**Oponentura.** Nabídni `/oponent docs/demand.md docs/competition.md docs/risks.md` – rešerši psal ten, kdo si zároveň přeje, aby produkt vyšel, a to je přesně ta zaujatost, kterou má posudek chytat. **Rizika patří do posudku taky**, protože je to ze všech tří dokument, kde se nejvíc tvrdí a nejmíň dokládá: pravděpodobnost i *Promítnutí do produktu* jsou úsudek, ne údaj s URL. Panel hledisek si sestaví sám.
+**Oponentura.** Nabídni `/oponent docs/demand.md docs/competition.md docs/risks.md` – rešerši psal ten, kdo si zároveň přeje, aby produkt vyšel, a to je přesně ta zaujatost, kterou má posudek chytat.
+
+**Její nálezy podléhají témuž ověření jako *Co musíme mít*** (Fáze 4). Posudek dostane jen tyhle tři dokumenty, takže o vlastním návrhu neví nic a řekne *„není rozhodnuté“* i tam, kde rozhodnuté je. Než nález zapíšeš do `docs/todo.md`, dohledej ho v návrhu. **Rizika patří do posudku taky**, protože je to ze všech tří dokument, kde se nejvíc tvrdí a nejmíň dokládá: pravděpodobnost i *Promítnutí do produktu* jsou úsudek, ne údaj s URL. Panel hledisek si sestaví sám.
 
 **Předání.** Po schválení nabídni `/specify`. Ten si dokumenty najde sám a **nebude se ptát na to, co je v nich** – zejména sekce *Co poměřujeme* a *Verdikt* bere jako hotový vstup.
 
