@@ -26,6 +26,9 @@ tasks/
 # Pluginy
 plugins/
 
+# Skilly synchronizované z claude.ai (cache harnessu, ne obsah repozitáře)
+skills/synced/
+
 # Zálohy
 backups/
 
