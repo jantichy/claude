@@ -27,7 +27,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 
 **Neopakuje, co udělal `/consistency`.** Ten proběhl o krok dřív a prošel soubory dotčené větví (v režimu `full` celý projekt) – jiná otázka, jiný skill; čtenáři bez kontextu se tady ptají na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledají jen v tom, co na větvi přibylo.
 
-Tohle **není** audit projektu ani technická kontrola. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. **Ani `/attack`**, ten přijde naopak až po tomhle a jako jediný aplikaci spouští, aby ji rozbil. Nespouštěj testy, lint, typecheck ani build a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo. **Kontrola odkazů, kterou pouští agent, výjimkou není** – neposuzuje projekt, ale to, co se právě zapsalo, a běží zlomek vteřiny.
+Tohle **není** audit projektu ani technická kontrola. Nespouštěj `/consistency`, `/code-review` ani `/code-review ultra` – uživatel je volá zvlášť a před tímhle skillem. **Ani `/attack`**, ten přijde naopak až po tomhle a jako jediný aplikaci spouští, aby ji rozbil. Nespouštěj testy, lint, typecheck ani build **jako revizi projektu** a nedělej obecnou revizi souborů nad rámec toho, co ze session vzešlo. **Zákaz míří na revizi, ne na ověření vlastního zápisu.** Co skill sám napsal, se před commitem kontroluje – jinak by vracel neověřenou práci (`~/.claude/RULES.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Výjimky jsou proto dvě a obě posuzují jen to, co se právě zapsalo: **kontrola odkazů**, kterou pouští agent a která běží zlomek vteřiny, a **ten krok *Kontraktu příkazů*, který prověřuje soubory, do kterých se zapsalo** – podmínky drží *Fáze 7*.
 
 **Výjimka pro dokončení větve:** vybere-li uživatel v závěru *Přimergovat do main*, zavoláš `/merge` nástrojem `Skill` a necháš ho proběhnout celý, i s kontrolami, které předepisuje. **Merge sám neprovádíš ani nepopisuješ** – nabídka je zkratka k volání navazujícího kroku, ne jeho součást.
 
@@ -56,6 +56,7 @@ Druhá výjimka: to, co ze session zůstalo rozbité (padající test, nedoděla
 - **Ptej se vždy přes tool `AskUserQuestion`** – mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 - **Výstup agenta předávej dál doslova, neparafrázuj.** Nález se vrací celý i s doložením; parafráze je přesně to místo, kde se ztratí detail, kvůli kterému agent běžel.
 - Řiď se `~/.claude/RULES.md` (zejména *Pravda v souborech, ne v konverzaci*, *Single source of truth*, *K pravidlům ukládej i „proč“*, *Živá struktura*).
+- **Poznámky o skillu samotném si sbírej ty, ne agent.** Zkouší-li se `/cleanup` sám – ostrý běh, ladění, měření –, patří postřehy o jeho chování do `~/.claude/todo.md`, tedy **mimo uklízený projekt**. Agent tam sáhnout nesmí ([`agent.md`](agent.md), *Co nesmíš*), takže mu je nezadávej a nečekej je ve výstupu; zapíšeš je průběžně ty. V projektovém `todo.md` by to byla položka, se kterou projekt nemá nic společného.
 - Tam, kde jsou nezávislé čtecí operace, používej paralelní tool calls.
 
 ------
@@ -68,13 +69,16 @@ Druhá výjimka: to, co ze session zůstalo rozbité (padající test, nedoděla
 
 Navíc si zjisti tohle – všechno to předáš agentovi, ať to nezjišťuje znovu:
 
-1. **Id session a cesta k jejímu transcriptu** – id si vezmi z cesty ke scratchpadu (`~/.claude/skills/SESSION.md`), je v ní jako předposlední komponenta. **Ověř, že soubor existuje**, a přečti si z něj čas prvního záznamu; potřebuješ ho na základ session v bodu 2.
+1. **Id session a cesta k jejímu transcriptu** – id si vezmi z cesty ke scratchpadu (`~/.claude/skills/SESSION.md`), je v ní jako předposlední komponenta. **Ověř, že soubor existuje**, a vezmi z něj čas **prvního záznamu, který `timestamp` vyplněný má** – ne prvního řádku; příkaz a proč to tak je drží `~/.claude/skills/SESSION.md`, *Pasti ve formátu*. Potřebuješ ho na základ session v bodu 2.
 2. **Základ session** – commit, na kterém session stála, **než cokoliv zapsala**. Z něj se skládá diff pro čtenáře bez kontextu, takže na něm visí celá *Fáze 2*.
 
    **`git rev-parse HEAD` to není**, má-li projekt zapnutý autocommit: session mohla commitnout dávno předtím, než se úklid spustil, a `HEAD` je pak commit **uvnitř** session. Najdi proto nejstarší commit novější než začátek session a vezmi jeho **rodiče**; není-li takový commit, je základ `HEAD`.
 
+   **Časy porovnávej jako čísla, ne jako řetězce.** Commit nese lokální posun (`+02:00`), transcript UTC (`Z`), takže se `2026-09-25T17:59:02+02:00` řetězcově jeví jako pozdější než `2026-09-25T16:22:14Z`, přestože je o dvacet minut starší. Na epochu ten rozdíl neexistuje:
+
    ```sh
-   git log --format='%H %cI' | awk -v start='<čas prvního záznamu transcriptu>' '$2 > start {h=$1} END {print h}'
+   START=$(python3 -c "import datetime,sys;print(int(datetime.datetime.fromisoformat(sys.argv[1].replace('Z','+00:00')).timestamp()))" '<čas prvního záznamu transcriptu>')
+   git log --format='%H %ct' | awk -v s="$START" '$2+0 > s+0 {h=$1} END {print h}'
    git rev-parse <ten hash>^
    ```
 
@@ -113,7 +117,9 @@ Tenhle blok se posílá agentovi jako prompt, ne do konverzace.
 
 ## Fáze 2 – Čtenáři bez kontextu
 
-Ověř, že to, co agent zapsal, **dává smysl někomu bez kontextu téhle session**. Pusť čtenáře **hned**, ještě než se začneš ptát: běží na pozadí a jejich latence se schová za celou interaktivní část. Vypořádají se v *Fázi 6*.
+Ověř, že to, co agent zapsal, **dává smysl někomu bez kontextu téhle session**. Pusť čtenáře **hned, jak agent dojde** – ještě než se začneš ptát: běží na pozadí a jejich latence se schová za celou interaktivní část. Vypořádají se v *Fázi 6*.
+
+**„Hned“ znamená hned po agentovi, ne hned po zadání.** Čtenář pozůstatků dostává diff proti pracovnímu stromu a ten musí obsahovat agentovy **necommitnuté zápisy**; ty vznikají až na konci jeho běhu, takže souběžně s ním se pustit nedají. Mezi *Fází 1* a *Fází 2* je proto **tvrdé zablokování** – *Fáze 3* visí na výstupu agenta taky, takže se nedá předsunout nic a **legitimně se čeká**. Čekání ale **není důvod předat řízení uživateli**: nekonči odpověď větou „čekám na agenta“ (`~/.claude/RULES.md`, *Co ohlásíš, udělej hned v téže odpovědi*) – notifikace o dokončení tě vyvolá sama a ty pokračuješ.
 
 Zadání obou drží [`readers.md`](readers.md) – *Čtenář navazitelnosti* čte dokumentaci od obecného ke konkrétnímu, *Čtenář pozůstatků* dostane diff. Tamtéž stojí, proč jsou dva, jaký model mají a co dělat, když typ `reader` v instalaci není. **Shrnutí, co se řešilo a kam se to zapsalo, vezmi z výstupu agenta** ze seznamu *Zapsáno* – ne z vlastní paměti, tu o té práci nemáš.
 
@@ -221,6 +227,12 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id session** vezmi
 
 **Id session není evidence uklizených session ani čára.** Opakovaný běh nad toutéž session je legitimní použití a tenhle řádek mu nijak nebrání – dvě data u téhož id znamenají dva úklidy, ne duplicitu. Zapisuje se proto, že jinak z `done.md` nejde poznat, **co** se uklidilo; rozhodnuto 25. 9. 2026, rozbor v `decisions.md`.
 
+**Před commitem ověř vlastní zápis.** Pouští se **ten krok *Kontraktu příkazů* (`## Kontrakt příkazů` v projektovém `CLAUDE.md`), který prověřuje soubory, do kterých se v tomhle běhu zapsalo** – typicky `test` v projektu, jehož testová sada hlídá **tvar dokumentace**: odkazy, kotvy, dvojznačné nadpisy, seznamy dokumentů proti obsahu `docs/`. To je přesně to, co úklid vyrábí, a `scripts/links.py` z toho umí zlomek.
+
+- **Poznáš to z toho, co ta sada testuje** – z popisu kontraktu v projektovém `CLAUDE.md` nebo ze jmen testovacích souborů (`tests/test_docs.py`). V projektu, kde testy hlídají jen kód, je ta množina **prázdná a nespouští se nic** – a řekne se to nahlas, ne mlčením.
+- **Selže-li to na tom, co jsi zapsal**, oprav to před commitem. **Selže-li to na něčem, do čeho jsi nesahal**, není to nález úklidu – uveď to v *Mezích běhu* a commituj dál; opravovat cizí rozbitou věc je ta revize projektu, kterou má skill zakázanou.
+- **Není to spor s *Co skill nedělá*.** Ten zakazuje testy jako **revizi projektu**; tohle je ověření vlastního zápisu, které žádá `~/.claude/RULES.md`, *Ověřitelná kontrola místo dojmu*. Rozlišení sem přibylo 25. 9. 2026, protože bez něj agent vracel zápis s poznámkou „kontrakt jsem nespouštěl, zadání to zakazuje“ a rodič ho commitoval neověřený.
+
 **Git:**
 
 - **Commituj jmenované cesty, které vrátil agent**, spolu s tím, co jsi zapsal ty – ne `git add -A` ani adresář. Soubor, který byl rozpracovaný už před začátkem běhu, nech být a ohlas ho (`~/.claude/RULES.md`, *Commituj jmenované cesty, ne `-A`*).
@@ -244,6 +256,7 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id session** vezmi
 **Kontrola odkazů a čtenáři bez kontextu**
 - [nálezy skriptu, verdikt obou čtenářů a co z nich vzešlo]
 - Čtenáři: 2 (`reader`, [model]), ověřeni čtením zdroje – [N nálezů, M vyvráceno]
+- Ověření zápisu: [příkaz a jeho návratový kód / projekt nemá krok kontraktu, který by na zapsané soubory sahal]
 
 **Git**
 - Pracovní strom: [čistý / co zbývá / čí cizí práce se vynechala]
@@ -305,5 +318,6 @@ Z ostrých běhů, ne z toho, co by se pokazit mohlo.
 
 - **`HEAD` se vydává za základ session.** V projektu se zapnutým autocommitem bývá `HEAD` commit **uvnitř** session, takže diff pro čtenáře vyjde prázdný – a prázdný diff se od čistého nepozná. Proto ho *Fáze 0* počítá z času session, ne z `HEAD`. Doloženo při prvním ostrém běhu 25. 9. 2026.
 - **Agentovi se zapomene říct, kde struktura leží.** Píše cesty v podobě pro režim `docs/`; v projektu s kořenovým režimem nebo tam, kde pracovní adresář session není kořen projektu, si to bez pole v promptu odvodí špatně. Vyplň tedy celou šablonu, i to, co je z kořene vidět.
+- **Časy commitů a transcriptu se porovnávají jako řetězce.** Je to druhá, samostatná vada téhož kroku a varování o `HEAD` před ní nechrání, protože recept vypadá, že funguje: commit nese lokální posun a transcript `Z`, takže základ session spadne o commity zpátky a čtenáři dostanou diff předchozích session. Porovnávej epochu (`%ct`). Doloženo 25. 9. 2026, kdy to vrátilo commit z včerejší session.
 - **Diff pro čtenáře se skládá mezi dvěma revizemi.** Agent necommituje, takže `main...<větev>` ani `<základ>..HEAD` jeho zápisy neobsahuje a čtenář posuzuje podklad bez toho, kvůli čemu běží.
 - **Fáze se přeskakuje, protože „nic nepřišlo“.** Nedorazili-li čtenáři, není to výsledek, ale čekání; a nemá-li agent položky k rozhodnutí, řekne se to nahlas, ne mlčením.
