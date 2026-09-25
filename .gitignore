@@ -29,6 +29,9 @@ plugins/
 # Skilly synchronizované z claude.ai (cache harnessu, ne obsah repozitáře)
 skills/synced/
 
+# Drafty zpětné vazby (harness; nesou cesty a request ID z jiných session)
+feedback/
+
 # Zálohy
 backups/
 
