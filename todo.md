@@ -8,6 +8,12 @@
 
 **Hotové věci se sem nevracejí** – jakmile je úkol hotový, přesune se do `done.md`.
 
+- [ ] **Opravit ve `/cleanup` výpočet základu session – porovnává časy jako řetězce** (nalezeno 25. 9. 2026 ostrým během nad rezervačním systémem). `skills/cleanup/SKILL.md`, *Fáze 0*, bod 2, vypíše `git log --format='%H %cI'` a v `awk` srovná druhý sloupec s časem prvního záznamu transcriptu. **Commity ale nesou lokální offset (`+02:00`) a transcript UTC (`Z`)**, takže se řetězcově porovnávají neporovnatelné hodnoty: „17:59:02+02:00“ vyjde jako pozdější než „16:22:14Z“, přestože je reálně o dvacet minut starší.
+
+  **Dopad je přesně ten, před kterým skill sám varuje.** Základ session spadl o patnáct commitů zpátky, takže by čtenáři bez kontextu dostali diff tří předchozích session místo té uklízené. **Příliš široký diff se od správného nepozná** stejně jako prázdný – a *Časté chyby* už první polovinu téhle vady popisují („`HEAD` se vydává za základ session“), jen u druhé nikoho nenapadlo, že se časy nedají srovnávat jako text.
+
+  **Oprava, která v tom běhu zabrala:** `TZ=UTC git log --format='%H %cd' --date=format-local:'%Y-%m-%dT%H:%M:%SZ'`. Samotné `--date=iso-strict` nestačí, protože respektuje pásmo commitu; `format-local` je to, co ho přepne na `TZ`. K opravě patří **řádek do *Častých chyb*** a zvážit, jestli tuhle třídu vady nemá hlídat test – je to vynucovací vrstva, která selhává tiše a ve svůj prospěch.
+
 - [ ] **Rozhodnout, jestli mez 12 znaků pro `header` v `AskUserQuestion` platí, nebo ne.** `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*, ji uvádí jako tvrdou, ale pět skillů ji překračuje právě tím tvarem, který je nejužitečnější – číslem položky v hlavičce: `/cleanup` má `Téma N/celkem` (14 znaků) a `Položka N/celkem` (16), `/review`, `/attack` a `/oponent` shodně `Nález N/celkem`. Našel to čtenář bez kontextu 20. 9. 2026 na rozporu se `skills/cleanup/out-of-scope.md`, kde se mez nově cituje jako důvod, proč číslo v hlavičce **není**.
 
   **Jsou tři možnosti a každá něco stojí.** Buď mez platí a všech pět hlaviček se zkrátí – pak uživatel ztratí orientaci v tom, kolikátá otázka z kolika přichází, a získá ji jen z výpisu nad otázkou. Nebo mez neplatí a opraví se pravidlo – pak je potřeba zjistit, co se s delší hlavičkou v rozhraní opravdu stane, protože dnes to nikdo neměřil. Nebo se mez zjemní na „do 12 znaků, číslo položky se nepočítá“, což je výjimka a musí mít napsaný důvod.
