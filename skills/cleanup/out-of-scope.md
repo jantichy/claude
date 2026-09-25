@@ -1,9 +1,11 @@
 # Naložení s tím, co by zůstalo mimo rozsah
 
-Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely by se session. Stojí mimo `SKILL.md`, protože se čte až ve chvíli, kdy se v té fázi opravdu stojí.
+Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely by se session. Stojí mimo `SKILL.md`, protože se čte až ve chvíli, kdy je opravdu potřeba.
+
+**Čte ho dvakrát dvojí čtenář.** Body 2 a 3 – rozdělení položek a vyřešení těch jednoznačných – plní **vytěžovací agent** ([`agent.md`](agent.md), bod 7). Body 4 až 6 – přehled, průchod položka po položce a zápis osudu – plní **rodičovská session** (`SKILL.md`, *Fáze 5 – Naložení s tím, co by zůstalo mimo rozsah*), protože jen ona se smí ptát. Bod 2 přitom platí pro oba: rodič podle něj rozhoduje znovu o nálezech čtenářů (`SKILL.md`, *Fáze 6 – Vypořádání nálezů čtenářů*).
 
 ------
-**Patří sem i to, co jsi během skillu sám odložil jako „mimo rozsah“** – vymezení fáze drží `SKILL.md`, *Fáze 7 – Naložení s tím, co by zůstalo mimo rozsah*.
+**Patří sem i to, co jsi během běhu sám odložil jako „mimo rozsah“** – vymezení drží `SKILL.md`, *Fáze 5 – Naložení s tím, co by zůstalo mimo rozsah*.
 
 **Vyřídit ale neznamená zeptat se.** Položka mimo rozsah je nález zadarmo – všiml sis jí jen proto, že jsi u toho zrovna byl, a příště u toho nebude nikdo. Co umíš opravit jednoznačně, **oprav proto rovnou a bez ptaní, i když je to mimo rozsah úklidu**. Otázka, u které je předem jasné, jak zní jediná rozumná odpověď, nic nerozhoduje a stojí uživatele pozornost, kterou pak nemá na otázky, kde na jeho odpovědi opravdu záleží. Ptej se jen na to, co rozhodnout neumíš.
 
@@ -43,7 +45,7 @@ Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozs
 
    **Nic z toho nezamlč, ale ani to nedramatizuj.** Uživatel tu práci nezadal, takže musí vidět, co se v jeho projektu změnilo, a mít možnost to vrátit – tichá oprava mimo rozsah je zásah do jeho domény bez jeho vědomí (`~/.claude/RULES.md`, *Nerozhoduj potichu nad rámec zadání*). Řádka na položku ale stačí: **žádné rozepisování, čeho se týkala, proč byla mimo rozsah a co by se stalo, kdyby se neopravila.** Ten rozbor patří jen k položkám, o kterých se uživatel rozhoduje; u opravené věci je to hlášení nálezu, který už neexistuje.
 
-4. **Zbytek vypiš najednou** jako číslovaný seznam **seřazený od nejdůležitější** – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Práh důležitosti tady neplatí**, na rozdíl od Fáze 2: tohle je poslední místo, kde se o starším dluhu a o rozbitých věcech ze session dá rozhodnout, a co se nezeptá, zmizí se session. Řadí se proto jen proto, aby uživatel narazil na podstatné dřív, ne aby se zbytek zahodil. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
+4. **Zbytek vypiš najednou** jako číslovaný seznam **seřazený od nejdůležitější** – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Práh důležitosti tady neplatí**, na rozdíl od nevypořádaných témat: tohle je poslední místo, kde se o starším dluhu a o rozbitých věcech ze session dá rozhodnout, a co se nezeptá, zmizí se session. Řadí se proto jen proto, aby uživatel narazil na podstatné dřív, ne aby se zbytek zahodil. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
 
    ```
    **Mimo rozsah úklidu zůstává:**
@@ -78,10 +80,10 @@ Postup *Fáze 7* skillu `/cleanup`: jak se naloží s položkami, které do rozs
    | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/STRUCTURE.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Když soubory neexistují*). |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
 
-   Když jsi vyřídil poslední položku, pokračuj Fází 8 – tam na tebe čekají nálezy čtenářů z Fáze 6.
+   Když jsi vyřídil poslední položku, pokračuj *Fází 6* – tam na tebe čekají nálezy čtenářů.
 
    **Neptej se předtím hromadně**, co s celou skupinou. Dřív tady stála meziotázka, jestli položky vyřešit všechny naráz, zapsat všechny do todo, nebo je projít po jedné – a v provozu z ní vždycky vyšlo „po jedné“, protože položky se povahou liší skoro vždycky; zrušena 7. 9. 2026. Volba, která má jediný reálný výsledek, stojí jednu odpověď navíc a nic nerozhoduje. **Platí to na tuhle skupinu, ne obecně:** kde jsou položky stejnorodé, je hromadná volba na místě a jinde ve skillech se schválně používá.
 
-6. Ať se rozhodne jakkoli, v přehledu ve Fázi 9 pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu. **Vyřešené z bodu 3 patří do téhož seznamu**, ne stranou: uživatel má na jednom místě vidět všechno, co bylo mimo rozsah, a u každé položky, kdo o ní rozhodl.
+6. Ať se rozhodne jakkoli, v přehledu v závěru pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu. **Vyřešené z bodu 3 patří do téhož seznamu**, ne stranou: uživatel má na jednom místě vidět všechno, co bylo mimo rozsah, a u každé položky, kdo o ní rozhodl.
 
 **Proč se dnes část řeší bez ptaní:** dřív se tady vypisovalo všechno a nedělalo nic, pak se skill začal ptát na každou položku zvlášť. Druhá podoba vyřešila mizení položek se session, ale u jednoznačných oprav se ptala zbytečně – uživatel měl odklikávat, že se má opravit rozbitý odkaz, kterého si model všiml jen náhodou. Rozhodnuto 18. 9. 2026.

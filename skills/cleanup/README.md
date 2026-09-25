@@ -10,16 +10,19 @@
 
 Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat, tíží vás pokaždé totéž: neztratí se něco? Tenhle skill to vyřeší. Přečte si **celý surový záznam konverzace** – tedy včetně části, kterou už kompaktace z paměti vyhodila –, vytáhne z něj všechno, co se domluvilo, a zapíše to tam, kam to patří. Pak si otočí pohled a hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání. Nakonec pošle na projekt dva pomocníky, kteří o něm nic nevědí: jeden řekne, jestli se na dnešní práci dá navázat, druhý hledá rozpory a zbytky po přepisování. Čtou na pozadí, takže se na ně nečeká.
 
+**Tu nejtěžší část – přečtení záznamu, porovnání se soubory a zápis – dělá samostatný pomocník**, ne hlavní sezení. Vychází to tak zhruba pětkrát levněji, protože záznam leží na disku a paměť celého sezení k té práci není potřeba. Na vás pak zbývají jen otázky, u kterých na vaší odpovědi doopravdy záleží.
+
 ## Co umí
 
 1. **Vytěží konverzaci celou** – i tu část, kterou už kompaktace vyhodila z paměti. Závěrečná kontrola se pak soustředí na to, čeho se dnešní práce dotkla.
-2. **Vytáhne ze záznamu sedm věcí** – dohody a rozhodnutí (vždy i s důvodem a zavrženými variantami), nová pravidla a konvence, odvedenou práci, vědomě odložené úkoly, postřehy mimo hlavní téma, korekce (platí poslední verze, ne první) a nevypořádaná témata.
+2. **Vytáhne ze záznamu osm věcí** – dohody a rozhodnutí (vždy i s důvodem a zavrženými variantami), nová pravidla a konvence, odvedenou práci, vědomě odložené úkoly, postřehy mimo hlavní téma, korekce (platí poslední verze, ne první), nevypořádaná témata a to, co zůstalo rozbité nebo nedodělané.
 3. **Dohledá, co propadlo.** Nejčastější ztráta v dlouhé konverzaci není zapomenutý zápis, ale nevypořádané téma: přišla dlouhá odpověď s několika body, vy jste se chytili poloviny a zbytek zůstal bez vypořádání. Nikdo to nezavrhl ani neschválil – jen se to nikdy nedořešilo.
 4. **Ověří, že se soubory udržovaly průběžně.** Projde záznam znovu a u každého souboru se ptá, co do něj během práce mělo přibýt – a co chybí, doplní zpětně ve stejné kvalitě, jako by to bylo zapsané v okamžiku, kdy to padlo.
 5. **Ptá se i na produktové podklady**, vede-li je projekt – jestli přibyl doklad poptávky, jestli se změnilo, co víme o konkurenci, jestli přibylo riziko, jestli se posunul některý scénář nebo pojem. Jsou to soubory, na které se při běžné práci nesahá, takže tiše zastarávají jako první.
-6. **Pošle na projekt čerstvé oči** – dva pomocníky, kteří nemají žádný kontext a čtou jen repozitář. Jeden se do projektu zaučuje a řekne, jestli je jasné, co dělat dál a kde by musel hádat; druhý dostane jen dnešní změny a hledá v nich rozpory a zbytky po přepisování. Rozbité odkazy najde ještě před nimi skript.
+6. **Pošle na projekt čerstvé oči** – dva pomocníky, kteří nemají žádný kontext a čtou jen repozitář. Jeden se do projektu zaučuje a řekne, jestli je jasné, co dělat dál a kde by musel hádat; druhý dostane změny celé rozdělané větve a hledá v nich rozpory a zbytky po přepisování – i takové, které zbyly po předchozím sezení, protože ty dnes nenajde nikdo jiný. Rozbité odkazy najde ještě před nimi skript.
 7. **Uklidí Git** a ověří výsledek, ne že ho předpokládá.
-8. **Je opakovatelný.** Druhý průchod slouží jako ověření – co je zapsané a v pořádku, projde bez zásahu.
+8. **Je opakovatelný.** Druhý průchod slouží jako ověření – co je zapsané a v pořádku, projde bez zásahu. Navazuje přitom na záznam o předchozím úklidu, takže nečte celý záznam znovu.
+9. **Umí uklidit i jiné sezení**, než ve kterém stojíte – stačí mu předat jeho identifikátor. Nejdřív se ale zeptá, jestli je to opravdu ono, a do cizího projektu nesáhne.
 
 ## Proč zrovna tenhle
 
@@ -37,7 +40,8 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 ## Jak se to používá
 
 ```
-/cleanup        # vytěží sezení, kontrola se drží dnešní práce
+/cleanup              # vytěží sezení, ve kterém stojíte
+/cleanup <id sezení>  # vytěží jiné, dřívější sezení
 ```
 
 ## Ukázka výstupu
@@ -60,7 +64,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 
 ## Co nedělá
 
-- **Neopakuje audit konzistence.** Ptá se na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co dnes přibylo.
+- **Neopakuje audit konzistence.** Ptá se na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co na větvi přibylo.
 - **Nespouští testy, linter ani build** a nedělá obecnou revizi souborů nad rámec toho, co z konverzace vzešlo.
 - **Nezakládá potichu chybějící soubory.** Vypíše, které chybí, a nabídne `/project`.
 - **Nemerguje větev sám od sebe.** Nabídne to a vyberete-li to, předá práci skillu [`/merge`](../merge/README.md).
@@ -85,4 +89,6 @@ Skill předpokládá, že má projekt ustálenou dokumentační strukturu – v�
 
 ### Požadavky a omezení
 
-Git (bez něj funguje, jen odpadne závěrečný úklid repozitáře) a **Python 3** na kontrolu odkazů – bez něj se přeskočí a hledání rozbitých odkazů zůstane na čtenářích. Vytěžení dlouhé konverzace se deleguje na pomocníka, takže u opravdu dlouhého sezení to není nejlevnější běh – zato je to jediný krok, který odolá kompaktaci: co zapíše, přežije ztrátu kontextu.
+Git (bez něj funguje, jen odpadne závěrečný úklid repozitáře) a **Python 3** na kontrolu odkazů – bez něj se přeskočí a hledání rozbitých odkazů zůstane na čtenářích.
+
+**Pomocník, který záznam vytěžuje, po sobě nic necommituje ani neposílá na server** – to dělá až hlavní sezení, kde je to vidět a kde se dá zastavit. Na druhou stranu jeho práci nevidíte průběžně, jen výsledek. A u velmi dlouhého záznamu nepřečte odpovědi celé, jen okolí míst, kde se rozhodovalo; co nestihl, řekne nahlas, takže se to neztratí potichu.

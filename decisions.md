@@ -1163,10 +1163,40 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Proč subagent a ne `/clear`.** Ověřeno testem (*Co subagent dědí od rodičovské session* výš), že agent dědí pracovní adresář i session-id přes cestu ke scratchpadu – **najde si tedy transcript rodiče sám**. Tím odpadá sedm z patnácti nálezů oponentury naráz: všechny, co byly o výběru session, o hledání transcriptu napříč projekty, o víc pracovních adresářích, o prázdném vlastním transcriptu, o worktree smazaném pod nohama, o seznamu bez cesty ven a o verdiktu mluvícím o cizí session. Existovaly jen proto, že `/clear` tu vazbu trhá – **zakládá novou session s novým id a resetuje pracovní adresář**. Navíc jde volat uprostřed session, na které se má dál pracovat.
 
-**Zamítnuto – `/clear` s předaným session-id.** Rozpracovalo se to do detailu (tři pásma podle velikosti vlastního transcriptu, kritérium čisté session, nabídka s příkazem ke zkopírování) a padlo to celé. Postup zůstává zapsaný v `todo.md` jako doložení cesty, **ne jako platný plán**.
+**Zamítnuto – `/clear` s předaným session-id.** Rozpracovalo se to do detailu a padlo to celé: tři pásma podle velikosti vlastního transcriptu, kritérium čisté session (žádný uživatelský záznam, jehož obsah nezačíná `<`), nabídka s příkazem ke zkopírování v pořadí „zkopíruj, pak `/clear`“. **Všechno to existovalo jen proto, že `/clear` trhá vazbu na session** – u subagenta není co vybírat ani kam zabloudit. Rozpracovaný postup se z `todo.md` smazal při přepisu skillu 25. 9. 2026; tenhle odstavec je z něj to jediné, co má cenu si pamatovat, totiž **čím se to zaplatilo**.
 
 **Zamítnuto – `/compact` místo `/clear`.** Zachovává session-id i adresář, takže by fungoval bez parametru, ale nechává v kontextu 132k ztrátového shrnutí – a ztrátové je přesně v tom, co skill hledá: korekce, zavržené varianty, nevypořádaná témata. Zůstane ve skillu zapsaný jako horší varianta s důvodem.
 
-**Tři háčky, které se musí vyřešit při přepisu** a drží je `todo.md`: agent nemá `AskUserQuestion`, takže interaktivní fáze musí vracet otázky nahoru i s hotovými zápisy; uživatel během běhu nevidí průběh, ačkoliv agent zapisuje a commituje; a **effort nejde nastavit**, jen model.
+**Tři háčky, které se musely vyřešit při přepisu:** agent nemá `AskUserQuestion`, takže interaktivní fáze musí vracet otázky nahoru i s hotovými zápisy; uživatel během běhu nevidí průběh, ačkoliv agent zapisuje; a **effort nejde nastavit**, jen model. První dva vyřešil tvar rozhodnutý týž den (*Tvar `/cleanup` po přesunu do subagenta* níž) – druhý tím, že agent necommituje ani nepushuje. Třetí zůstává přiznanou mezerou.
 
 **Doložená mez, která platí i pro dnešní stav:** agent nečetl odpovědi celé, jen úseky kolem rozhodovacích míst, a posudek oponenta jen ze čtvrtiny – u 2,8 MB to jinak nejde. Není to argument proti subagentovi, protože `SESSION.md` na dlouhý transcript posílá subagenta tak jako tak; je to mez vytěžování jako takového a patří do zadání jako pokyn hlásit, co se nestihlo.
+
+### 2026-09-25 – Tvar `/cleanup` po přesunu do subagenta
+
+**Rozhodl uživatel** v šesti otázkách za sebou, hned po tom, co padlo *že* se do subagenta jde (*Skill `/cleanup` poběží v subagentovi, ne v čisté session po `/clear`u* výš). Naměřená ekonomika a doložení cesty jsou tam; tady je jen tvar.
+
+| Otázka | Rozhodnutí |
+|---|---|
+| kde je řez | agent vytěží **i zapíše** a nahoru vrátí jen otázky, každou s hotovým textem zápisu ke každé volbě |
+| kdo commituje | **rodič**, podle výčtu cest od agenta; agent necommituje ani nepushuje |
+| kdy se pouští čtenáři | **hned po agentovi, před otázkami** – latence se schová za celou interaktivní část |
+| jaký diff dostane čtenář pozůstatků | **diff větve**, ne diff session |
+| co dělá druhý běh | **naváže na hash z řádku `/cleanup`** v `done.md` a vytěžuje jen přírůstek |
+| jak se dělí dokumentace | `SKILL.md` drží postup rodiče, nový `agent.md` celé zadání agenta |
+
+**Jedno rozhodnutí z toho plyne a rozhodlo se samo:** agent nezapisuje položky, jejichž podoba závisí na nevypořádaném tématu – uživatelova odpověď je vzápětí zneplatní.
+
+**Čtyři věci, které přesun sám neřešil, se vyřešily až tímhle tvarem:**
+
+- **Cizí rozpracovaná práce** v pracovním stromu (skupina C z oponentury) padá s jmenovanými cestami: agent vrací výčet toho, co bylo rozpracované už před ním, a rodič to z commitu vynechá.
+- **Základ session** dostal vynucení. Byl to doložený nedodělek – `git rev-parse HEAD` se volal v 5 % běhů, protože ho nic nepotřebovalo dřív než o šest fází později. Nově je to **první příkaz agenta** a vrací ho ve výstupu, protože rodič z něj skládá diff pro čtenáře; bez něj tedy nejde pokračovat.
+- **Kategorie „co zůstalo rozbité nebo nedodělané“** přibyla do rekonstrukce session jako osmá. Dřív tam nebyla žádná a skill by nad větví s padajícím testem ohlásil „všechno zapsané“ – držel to kontext hlavní session a po přesunu by ho nedržel nic.
+- **Měření „během téhle session“** přestalo být dojmem: znamená od základu session, tedy od toho commitu.
+
+**Zamítnuto – agent jen vytěží a rodič zapisuje.** Odpovídalo by to přesně tomu, co se změřilo (0,87M za vytěžení a konfrontaci), ale zápis by pak běžel nad velkým kontextem rodiče, takže by z odhadované úspory 75–85 % zbyl zlomek. **Zamítnuto – dva běhy agenta** (první vytěží, rodič se zeptá, druhý zapíše): zápis by byl plně informovaný odpověďmi, ale vytěžení se platí dvakrát.
+
+**Zamítnuto – čtenáře pouštět až po otázkách, nad finálním stavem.** Posuzovali by to, co opravdu zůstane, a nevznikaly by neplatné nálezy; čekalo by se ale naprázdno na konci běhu. Mechanismus proti neplatným nálezům skill už má z 19. 9. 2026 – ověřit, že nález pořád platí, a po netriviálních opravách pustit čtenáře pozůstatků znovu nad novým diffem.
+
+**Zamítnuto – sloučit dva čtenáře do jednoho.** Uživatel se na to zeptal znovu, protože po přesunu jejich podíl na nákladech vzroste (dnes 2 %). Neobstálo: dělící čára z 19. 9. 2026 je o obsahu otázek, ne o tom, kde skill běží – „nevím, co dělat dál“ pozná jen ten, kdo přečetl dokumentaci jako celek, kdežto čtenáři pozůstatků by znalost celku **škodila**, protože by začal soudit starší dluh. Jeden agent by navíc musel přečíst celý projekt i diff, tedy víc práce než dva paralelní.
+
+**Zamítnuto – zachovat číslování fází.** Nové rozdělení práce pořadí láme: čtenáře pouští rodič mezi dnešní Fází 5 a Fází 2, takže čísla by přestala být pořadím běhu a skill by se podle sebe sama nedal provést bez čtení napřeskáčku. Čísla fází `/cleanup` se přitom mimo jeho vlastní soubory necitují nikde než v historických záznamech v `done.md`, které se jako historie nepřepisují.

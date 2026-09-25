@@ -340,90 +340,27 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Dělat až po změření přesunu do subagenta, ne současně.** Řezání volání může ublížit kvalitě výstupu, kdežto přesun ne – a kdyby se udělalo obojí naráz, nepozná se, co za co může. **Kandidáti k posouzení:** dávkovat zápisy místo souboru po souboru, sloučit Fázi 3 a 4 (obě čtou tytéž soubory, jen z opačné strany), nepouštět kontrolu odkazů opakovaně po jednotlivých souborech.
 
-- [ ] **Přepsat `/cleanup` na běh v subagentovi, pak totéž pro `/review` a `/consistency`** (rozhodnuto 25. 9. 2026 po změření; cesta přes `/clear` zamítnuta). Naměřená čísla, chování `/clear` a `/compact` i doloženou vadu základu session drží `~/.claude/decisions.md`, *Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`* – **neopisuj je sem zpátky**.
+- [ ] **Přepsat `/review` a `/consistency` na běh v subagentovi** (rozhodnuto 25. 9. 2026; `/cleanup` hotový týž den). Tvar, o který se to opře, drží `~/.claude/decisions.md`, *Tvar `/cleanup` po přesunu do subagenta*, a hotová podoba `skills/cleanup/` – **neopisuj je sem**. Doložení cesty a naměřená čísla jsou v *Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`* a v *Skill `/cleanup` poběží v subagentovi, ne v čisté session po `/clear`u*.
 
-  **ROZHODNUTO 25. 9. 2026 PO ZMĚŘENÍ: jde se cestou subagenta.** Text níž zůstává jako doložení cesty; co z něj platí a co padlo, říká tenhle blok.
+  **Co se dá vzít beze změny:** řez (agent vytěží, posoudí a zapíše jednoznačné, nahoru vrací otázky s hotovým textem zápisu), commit jmenovaných cest v rodiči, agent bez práva ptát se a pushovat, a rozdělení dokumentace na postup rodiče a zadání agenta ve vlastním souboru.
 
-  **Čím se to rozhodlo.** Pustil se pokusný běh: subagent bez práva zapisovat dostal transcript téhle session (2,8 MB, 1398 záznamů, 33 promptů, tři dny) a měl vytěžit dohody a zkonfrontovat je se soubory. **Správná odpověď byla známá** – session se zapisovala průběžně.
+  **Co je u nich jinak:** **session-id nepotřebují** – jejich vstup je git diff a soubory, ne transcript; potřebují jen vědět, ve které větvi stojí. A **panel specialistů už dnes delegují**, takže nové je jen delegovat načtení podkladu, konsolidaci a jednoznačné opravy. Pozor na *Hloubka delegace je jedna*: poběží-li skill v agentovi, panel musí pouštět rodič, stejně jako `/cleanup` pouští čtenáře bez kontextu.
 
-  | | Volání | Náklad |
-  |---|---|---|
-  | vytěžovací agent (Fáze 1 a 3) | 45 | **0,87M** nákladových jednotek |
-  | dnešní `/cleanup` nad transcriptem 1200+ kB | ~150 | 10,2M (medián pásma nad 1200 kB; měřeno na 249 bězích) |
+  **Ověřovací vrstva k tomu chybí a je to vědomá mezera.** Že agent necommituje a že rodič commituje jen jmenované cesty, drží dnes jen věta v zadání – tedy text pro model, ne mechanismus (`~/.claude/RULES.md`, *Přednost pravidel*). Testy v tomhle repozitáři měří tvar Markdownu, ne chování běhu, takže tohle by musel být tlakový scénář přes `superpowers:writing-skills`. Zapsáno jako mezera, ne jako úkol navíc: rozhodne se u něj spolu s položkou o evaluacích výš.
 
-  **Není to srovnání jedna ku jedné:** agent nezapisoval, necommitoval, neběželi čtenáři a neproběhl interaktivní průchod. Celý úklid v agentovi bude stát víc – **odhad 1,5 až 2,5M, tedy 75 až 85 % úspora, je extrapolace, ne měření.** Doloží ji až první ostrý běh.
-
-  **Kvalita obstála.** Agent vytěžil 37 položek v šesti z předepsaných sedmi kategorií (sedmá jsou nevypořádaná témata, ta se nezapisují), 35 označil za zapsané a při kontrole to sedělo – včetně detailů, které musel vylovit z konverzace (že práh 500 kB je korekce návrhu 600, znění kritéria čisté session, past s cizím UUID u `tasks/`). Dva nálezy mimo OK byly oba správné a **jedno nevypořádané téma našel, které hlavní session přehlédla**.
-
-  **Doložená mez, která platí i pro dnešní stav:** agent nečetl odpovědi celé, jen úseky kolem rozhodovacích míst, a posudek oponenta jen ze čtvrtiny – u 2,8 MB to jinak nejde. Drobná dohoda uprostřed dlouhé odpovědi mu uniknout mohla. **Není to argument proti subagentovi**, protože `SESSION.md` na dlouhý transcript posílá subagenta tak jako tak; je to mez vytěžování jako takového a patří do zadání jako pokyn hlásit, co se nestihlo.
-
-  **Co z postupu níž padá:** tři pásma podle velikosti vlastního transcriptu, nabídka `/clear` s příkazem ke zkopírování, pořadí „zkopíruj, pak `/clear`“, kritérium čisté session i celá skupina B (kam skill zapisuje) – agent dědí pracovní adresář i session-id od rodiče, takže není co vybírat ani kam zabloudit.
-
-  **Co platí dál:** potvrzení toho, co se uklízí, před zápisem; držení zvoleného id po celý běh (kvůli druhému kolu); volitelný argument `[session-id]` pro úklid **cizí** session; skupiny C, D, E a F z oponentury; otázka diff session proti diffu větve; a zjištění, že se `git rev-parse HEAD` ve Fázi 0 skoro nikdy nevolá.
-
-  **Nevypořádaná témata, která to vytěžení našlo** (zapsáno, ať nezmizí se session):
-
-  - **Bod „aby totéž platilo i pro druhý běh nad opravami prvního“** z osmibodového výčtu požadavků na skill zůstal bez odpovědi – odbyl se půlvětou o tom, že druhý běh agenta by musel načíst všechno znovu, a nikdo neřekl, jestli to vadí. **Tohle přehlédla hlavní session a našel to až agent.**
-  - **Skupiny B až F z oponentury** se procházely jedna po druhé a přerušilo se to po skupině A; část z nich varianta se subagentem ruší, ale neprošlo se to nález po nálezu.
-  - **Převod panelů na nástroj `Workflow`** – padl návrh, uživatel se zeptal jen na to, co ten nástroj je. Má dnes vlastní položku níž v tomhle souboru.
-
-  **Proč:** `/cleanup` stojí 55 % nákladů session, ve kterých běží, protože svých ~150 volání dělá nad největším kontextem, jaký ta session kdy má. Přitom kontext nepotřebuje – session rekonstruuje z transcriptu na disku. Přesun mimo hlavní session měl srazit náklad z 10,2M; **tenhle odhad z 23. 9. zněl 2,5–4M a překonalo ho měření z 25. 9.** – platí odhad 1,5 až 2,5M z bloku výš.
-
-  **Rozhodnuto (Honza, 23. 9. 2026):**
-
-  - **Volitelný argument `[session-id]`.** S ním se uklidí zadaná session.
-  - **Bez argumentu rozhodují tři pásma podle vlastního transcriptu:** žádný prompt před vyvoláním → vypíše seznam posledních session k výběru (vlastní se v něm neukáže); do 500 kB → uklidí session, ve které stojí; nad 500 kB → **nespustí se** a řekne „jsem moc velká, udělej to v čisté session“ i s příkazem ke zkopírování.
-  - **Kritérium čisté session:** žádný uživatelský záznam v transcriptu, jehož obsah nezačíná `<`. Nejde to měřit počtem záznamů – po `/clear` tam vždycky stojí `<local-command-caveat>` a `<command-name>/clear</command-name>`.
-  - **Skill si drží zvolené id po celý běh** a Fáze 9 nabízí `/cleanup <id>`, ne holé `/cleanup`. Bez toho by druhé kolo úklidu spadlo do třetího pásma a odmítlo samo sebe.
-  - **Pořadí u nabídky je „zkopíruj, pak `/clear`“** – po `/clear` ten vypsaný příkaz zmizí.
-  - **Než začne zapisovat, skill řekne, co uklízí** (čas, adresář, první zpráva).
-  - **Totéž se udělá i s `/review` a `/consistency`.** Ty ale **session-id nepotřebují** – jejich vstup je git diff a soubory, ne transcript; potřebují jen vědět, ve které větvi stojí.
-
-  **Otevřené – tady se to přerušilo.** Vyšlo to z oponentury (`/oponent`, jedno hledisko *Co chybí*, 15 nálezů: 6 kritických, 7 středních, 2 nízké). Skupina A je vypořádaná výš, zbytek čeká. **Plné znění posudku** – u každého nálezu dvě až tři varianty řešení – leží v transcriptu session `45743833-4be9-4f40-9715-e55cb062f626` (`~/.claude/projects/-Users-honza-Dev/`), stejně jako celý rozbor, ze kterého to vzešlo:
-
-  - **B — kam skill zapisuje.** `find ~/.claude/projects -name '<id>.jsonl'` prohledá **všechny** projekty, takže překlepnuté nebo cizí id znamená zápis, commit a push do cizího repozitáře, a výstup vypadá jako povedený běh. Session má navíc v čase **víc** pracovních adresářů (doloženo na téhle: `Dev` → `Dev/context` → `Dev`; ve worktree layoutu kořen kontejneru → větev), takže „přejdi tam, kde pracovala“ neurčuje kam – a první `cwd` bývá kořen kontejneru, tedy místo mimo git. A po `cd` do větve si skill nechá volbou *Přimergovat do main* smazat adresář pod nohama. **Nabízené varianty:** (a) nevstupovat tam vůbec – `git -C <dir>` a absolutní cesty, cíl mimo aktuální projekt běh zastaví; (b) přejít a před mergem se vrátit; (c) vypsat všechna `cwd` a nechat vybrat.
-  - **C — rozsah práce session.** V čisté session neexistuje kritérium, jak odlišit rozpracovanou práci uklízené session od cizí souběžné – skill vidí jen pracovní strom a commity, takže by commitl a pushnul cizí práci pod svou zprávou (`RULES.md`, *Commituj jmenované cesty, ne `-A`*, popisuje tenhle scénář jako po pushi neopravitelný). K tomu: prázdný nebo neurčitelný základ session vede na prázdný diff a čtenáři ohlásí „nic jsem nenašel“, což vypadá jako úspěch; a Fáze 4 měří „během téhle session“, což v čisté session neznamená nic.
-  - **D — chybějící vstup.** Výjimka *„pokud ze session víš, že něco zůstalo rozbité“* se má přeformulovat na transcript, jenže Fáze 1 má sedm kategorií a **žádná není o tom, co zůstalo rozbité nebo nedodělané** (ověřeno). Skill by tedy nad větví s padajícím testem ohlásil „všechno zapsané“ a rovnou nabídl merge. Dnes to drží kontext hlavní session; po přesunu do čisté ho nedrží nic.
-  - **E — kontrola.** Navržené testy pokrývají práh (levné selhání) a nepokrývají detekci příkazů v transcriptu (šestkrát doložené selhání) ani rozřazení cílového adresáře (selhání končí pushem do cizího repozitáře). Poměr je obrácený, než velí `quality.md`, *Vynucovací vrstva se testuje jako kód, obousměrně*.
-  - **F — drobnosti.** Potvrzení „co uklízím“ nemá určenou fázi; stojí-li až před Fází 5, uživatel nejdřív odpoví na otázky o **cizí** session a teprve pak to zjistí. A závěrečné věty Fáze 9 nabízejí „pokračovat v práci“ v session, která o té práci nic neví – u cizí session by se místo toho měl nabídnout `/resume <id>`.
-  - **Otázka odkrytá měřením, nikoliv oponenturou:** mají čtenáři bez kontextu dostat **diff session, nebo diff větve**? Skill předepisuje první, praxe dělá druhé (viz `decisions.md`). Na tom závisí, jak se má opravit základ session ve Fázi 0.
-
-
-  **Varianta, která přišla na konci a 25. 9. 2026 vyhrála** (zápis níž je z doby, kdy se o ní teprve rozhodovalo): **nechat skoro celý skill běžet v subagentovi.** Rodičovská session ho jen zavolá; agent si sám načte transcript, vytěží ho, zkonfrontuje se soubory, opraví všechno jednoznačné a nahoru vrátí jen to, co si nerozhodl sám. Čtenáře bez kontextu pouští pak zase rodič (*Hloubka delegace je jedna*).
-
-  **Proč je to silnější:** co agent dědí od rodiče, drží `~/.claude/decisions.md`, *Co subagent dědí od rodičovské session* – podstatné je, že **dědí pracovní adresář i session-id přes cestu ke scratchpadu**, takže si transcript najde sám. Tím **odpadá sedm z patnácti nálezů oponentury naráz**: všechny, co byly o výběru session, o `find` napříč projekty, o víc adresářích v jedné session, o prázdném vlastním transcriptu, o worktree smazaném pod nohama, o seznamu bez cesty ven a o verdiktu mluvícím o cizí session. Existovaly jen proto, že `/clear` tu vazbu trhá.
-
-  **Navíc splní i to, co `/clear` neuměl:** jde zavolat uprostřed session, na které se má dál pracovat, a nezdržuje, protože běží na pozadí.
-
-  **Tři háčky:**
-
-  - **Agent nemá `AskUserQuestion`, a interaktivita je jádro tohohle skillu.** Fáze 2 se ptá **před** zápisem, protože odpovědi mění, co se zapíše. „Zapiš všechno a pak vrať otázky“ tedy nejde. Navrhované řešení: agent vrátí otázky **i s hotovými zápisy** – „u volby A tahle věta do `decisions.md`, u volby B tahle do `todo.md`“ –, rodič se zeptá a provede jednu editaci. Druhý běh agenta by musel načíst všechno znovu.
-  - **Uživatel během běhu nic nevidí** a agent přitom sám zapisuje, commituje a pushuje. Dnes je průběh na očích a jde ho zastavit.
-  - **Effort nejde nastavit**, jen model – to platí bez ohledu na architekturu.
-  - **Kolize s vlastním pravidlem *Hloubka delegace je jedna***: skill **už dnes deleguje** – Fáze 1 posílá na transcript subagenta a Fáze 4 bod 2 ho posílá znovu. Poběží-li celý skill v agentovi, jsou to vnuci, což `~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*, zakazuje. U čtenářů je to vyřešené (pouští je rodič), u těchhle dvou delegací ne. **Nabízí se, že agent transcript čte sám** – má na to kontext i nástroje –, ale musí se to rozhodnout, ne přejít.
-  - **Rozpadá se optimalizace, na které stojí Fáze 6.** Dnes se čekání na čtenáře schová za interaktivní Fázi 7 (*Proč zrovna během Fáze 7*). V subagentové variantě je interaktivní část u rodiče a čtenáře pouští taky rodič – kde se latence schová, se musí vyřešit, jinak se běh o to čekání prodlouží.
-
-  **Co to neřeší** a zůstává k práci tak jako tak: cizí rozpracovaná práce v pracovním stromu (skupina C), základ session z `HEAD`, chybějící kategorie „co zůstalo rozbité“ ve Fázi 1, a Fáze 4 měřící „během téhle session“.
-
-  **Tohle bylo rozhodnuto jako první** – jestli se jde cestou subagenta, nebo `/clear`u –, protože tvar všeho ostatního z toho plyne. **Rozhodnuto 25. 9. 2026 pro subagenta**, viz blok na začátku položky. Rozpracovaný postup s `/clear`em výš zůstává zapsaný jako doložení cesty; co z něj platí dál, vyjmenovává blok *Co platí dál* – **kritérium čisté session mezi tím není**, protože agent má čistý kontext vždycky.
-
-
-  **Rozsah je nejspíš širší než `/cleanup` – je to vlastnost celé vrstvy kontrolních kroků** (Honza, 23. 9. 2026). Kroky osy běží interaktivně v hlavní session, kontrolní kroky by běžely neinteraktivně v subagentovi a vracely nahoru jen pár konkrétních věcí k rozhodnutí.
+  **Rozsah je nejspíš širší – je to vlastnost celé vrstvy kontrolních kroků** (Honza, 23. 9. 2026). Kroky osy běží interaktivně v hlavní session, kontrolní kroky neinteraktivně v subagentovi a vracejí nahoru jen pár konkrétních věcí k rozhodnutí.
 
   **Není to nové pravidlo, ale důsledek toho, které už platí.** `~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*, říká, že delegace se vyplatí při splnění aspoň jednoho ze tří kritérií – vynucený tvar výstupu, izolace kontextu, práce která se neamortizuje. **Kontrolní kroky splňují všechna tři naráz:** vracejí nález s doložením a závažností, jejich smysl je posuzovat něco, do čeho nemají sáhnout, a je to jeden vstup a jeden výstup. Kroky osy nesplňují ani jedno: výstupem je dokument, kontext je jejich vstupem a práce se amortizuje iteracemi.
 
-  **Vzorec ale sedí na pět ze sedmi, ne na všechny.** `/oponent`, `/review`, `/consistency`, `/attack` a `/cleanup` ano – u prvních dvou už se panel deleguje dnes a nové by bylo jen delegovat i načtení podkladu, konsolidaci a jednoznačné opravy. **`/merge` ne:** je nevratný, mění hlavní větev a maže worktree, a jeho vlastní pravidlo velí mergovat jen na výslovný pokyn – agent na pozadí je přesně to, co má zakázané. **`/consolidate` ne** z jiného důvodu, který `LIFECYCLE.md` sám pojmenovává: jako jediný z kontrol vrací **návrh řešení, ne nález**, a návrh je rozhodnutí, ne měření.
+  **Vzorec ale sedí na pět ze sedmi, ne na všechny.** `/oponent`, `/review`, `/consistency`, `/attack` a `/cleanup` ano. **`/merge` ne:** je nevratný, mění hlavní větev a maže worktree, a jeho vlastní pravidlo velí mergovat jen na výslovný pokyn – agent na pozadí je přesně to, co má zakázané. **`/consolidate` ne** z jiného důvodu, který `LIFECYCLE.md` sám pojmenovává: jako jediný z kontrol vrací **návrh řešení, ne nález**, a návrh je rozhodnutí, ne měření.
 
   **Přesné kritérium proto zní:** do agenta patří práce, jejímž výstupem je **nález nebo jednoznačná oprava**; v hlavní session zůstává to, co potřebuje **uživatelovo rozhodnutí**, a to, co je **nevratné**.
 
-  **Do `~/.claude/skills/LIFECYCLE.md` to zatím nepatří** – ten popisuje, jak to je, a dnes to tak není. Až se první takový skill přepíše a ověří, zapíše se to tam k rozdělení na osu a kontrolní vrstvu; do té doby je to tady.
+  **Do `~/.claude/skills/LIFECYCLE.md` to zatím nepatří** – ten popisuje, jak to je, a platí to dnes u jednoho skillu ze pěti. Až se přepíše druhý a ověří se, že vzorec drží i tam, zapíše se to k rozdělení na osu a kontrolní vrstvu; do té doby je to tady.
 
   **Vědomě zamítnuté – nenavrhuj znovu bez nového argumentu:**
 
-  - **Evidence uklizených session** (rejstřík a čára po vzoru `/depot` `_state/`): skill je záměrně opakovatelný a evidence by šla proti té vlastnosti. Opakovaný běh je legitimní použití, ne chyba. Oponent na to navázal měkčí variantou – **doplnit id uklizené session do řádku v `done.md`**, který Fáze 9 zapisuje tak jako tak; to nový rejstřík nezakládá. **Přijato 25. 9. 2026** a zapsané ve skillu i v `~/.claude/STRUCTURE.md`; zamítnutá zůstává jen ta evidence.
-  - **`/compact` jako rovnocenná alternativa k `/clear`:** funguje bez parametru a bez worktree problému, ale nechává v kontextu 132k ztrátového shrnutí – a ztrátové je přesně v tom, co skill hledá (korekce, zavržené varianty, nevypořádaná témata). Zapíše se do skillu jako horší varianta s důvodem.
-  - **Dva režimy skillu** (jeden pro běh v session, druhý v čisté): skill má jediné chování; jde jen o odstranění nevysloveného předpokladu, že kontext existuje.
-  - **Poznat čistou session podle posledního promptu:** nefunguje, protože `/cleanup` je interaktivní a během něj se odpovídá ve Fázi 2, 5 i 7 – poslední prompt tedy nikdy není `/cleanup`.
+  - **Evidence uklizených session** (rejstřík a čára po vzoru `/depot` `_state/`): skill je záměrně opakovatelný a evidence by šla proti té vlastnosti. Opakovaný běh je legitimní použití, ne chyba. Měkčí varianta – **id uklizené session v řádku `done.md`** – přijata 25. 9. 2026 a zapsaná ve skillu i v `~/.claude/STRUCTURE.md`; od téhož dne z toho řádku bere druhý běh i hash, odkud vytěžovat.
   - **Nástroje třetích stran na úsporu tokenů** (caveman, rtk, headroom, ponytail): rozbor drží `~/.claude/decisions.md`, *Úspora nákladů míří na kontext, ne na délku odpovědí*.
 
 - [ ] **Posoudit, jestli panel a ověřování v `/review` a `/oponent` převést na nástroj `Workflow`** (zadáno 25. 9. 2026). Je to samostatné téma na vlastní session – souvisí s položkou o přepisu `/cleanup` do subagenta (obojí je o delegaci kontrolních kroků), ale řeší jinou osu: ta se ptá **kde** skill běží, tahle **čím se orchestruje jeho panel**.

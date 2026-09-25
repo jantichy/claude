@@ -518,14 +518,22 @@ class CoreParts(unittest.TestCase):
         vypsaly do závěru, uživatel session zavře a zmizí s ní.
         """
         text = body(ROOT / "skills/cleanup/SKILL.md")
-        heading = "## Fáze 2 – Nevypořádaná témata"
+        heading = "## Fáze 3 – Nevypořádaná témata"
         self.assertIn(heading, text, "/cleanup přišel o fázi na nevypořádaná témata")
         phase = text[text.index(heading):]
         phase = phase[:phase.index("\n## ")]
-        for fragment in ("Jak ověřit, že to opravdu není vypořádané", "Práh důležitosti",
-                    "AskUserQuestion", "Bezpředmětné"):
+        for fragment in ("AskUserQuestion", "Bezpředmětné"):
             self.assertIn(fragment, phase,
-                          f"/cleanup, Fáze 2 přišla o {fragment!r} – zbyl jen nadpis")
+                          f"/cleanup, Fáze 3 přišla o {fragment!r} – zbyl jen nadpis")
+
+        # Síto – ověření kandidáta proti zbytku transcriptu a práh důležitosti –
+        # se od 25. 9. 2026 dělá ve vytěžovacím agentovi, protože transcript čte
+        # on. Hlídá se proto tam: bez síta by nahoru šli hrubí kandidáti a rodič
+        # by je musel proklepávat vlastním čtením transcriptu.
+        agent = body(ROOT / "skills/cleanup/agent.md")
+        for fragment in ("Jak ověřit, že to opravdu není vypořádané", "Práh důležitosti"):
+            self.assertIn(fragment, agent,
+                          f"/cleanup, zadání agenta přišlo o {fragment!r}")
 
     def test_evaluate_decides_about_every_finding(self):
         """Krok, který sebere čísla a nerozhodne o nich, je evidence bez čtenáře.
