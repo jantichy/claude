@@ -181,6 +181,12 @@
 
   **„Nic velkého k přepsání“ je platný výsledek, ne selhání běhu.** Skill musí umět skončit větou *„shluk vypadal jako dluh, ale každá záplata má doložený důvod“* – jinak se z něj stane stroj na návrhy, které projdou proto, že je nikdo nezkusil vyvrátit. V pilotu padly dva ze dvou velkých návrhů a jako vedlejší produkt ověřování vypadly dva skutečné nálezy.
 
+- [ ] **`/cleanup`: mezi *Fází 1* a *Fází 2* se nutně čeká a skill to nikde neříká.** *Fáze 2* velí „Pusť čtenáře **hned**, ještě než se začneš ptát: běží na pozadí a jejich latence se schová za celou interaktivní část“ – jenže čtenář pozůstatků dostává diff proti pracovnímu stromu, a ten musí obsahovat **necommitnuté zápisy vytěžovacího agenta**. Ten je zapisuje až na konci svého běhu, takže čtenáře nelze pustit souběžně s ním. „Hned“ tedy znamená „hned po agentovi“, ne „hned po zadání“.
+
+  **Proč to vadí:** skill čte jako plynulý řetěz, ve kterém se nikde nečeká, a přitom je v něm **jedno tvrdé zablokování** – po *Fázi 1* nezbývá než stát, protože *Fáze 2* na agentovi visí a *Fáze 3* visí na výstupu agenta taky. Model, který tomu textu věří, se buď pokusí pustit čtenáře předčasně (a dá jim podklad bez toho, kvůli čemu běží), nebo se zastaví a nechá řízení uživateli s větou „čekám na agenta“ – tedy přesně to, co `~/.claude/RULES.md`, *Co ohlásíš, udělej hned v téže odpovědi*, zakazuje.
+
+  **Co s tím:** říct ve *Fázi 2* výslovně, že čtenáři jdou až nad hotovým výstupem agenta a proč; a doplnit, co se má dělat v době, kdy agent běží – buď že se legitimně čeká, nebo které kroky se dají předsunout. Doloženo druhým ostrým během 25. 9. 2026 v rezervačním systému, kde model to váhání napsal nahlas do odpovědi uživateli.
+
 - [ ] **`/cleanup`, *Fáze 0*: první řádek transcriptu nemusí mít `timestamp`.** Skill říká „přečti si z něj čas prvního záznamu“, což svádí k `head -1`; jenže první řádek bývá meta záznam bez toho pole a vrátí `None`. Bez času pak nejde spočítat základ session, na kterém visí celá *Fáze 2*. **Správně se musí iterovat, dokud se nenajde první řádek s vyplněným `timestamp`.** Doloženo druhým ostrým během 25. 9. 2026 v rezervačním systému; nezaseklo to běh jen proto, že si toho model všiml a opravil se. **Patří to do skillu jako věta, ne do zkušenosti** – je to přesně ten druh pasti, který se při dalším běhu zopakuje.
 
 ### Nedodělky přestavby vývojového workflow (2. 9. 2026)
