@@ -1083,7 +1083,7 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 
 ### 2026-09-23 – Úspora nákladů míří na kontext, ne na délku odpovědí
 
-**Podnět:** dotaz na nástroje `caveman`, `ponytail`, `headroom` a `rtk` – tři z nich slibují úsporu tokenů, čtvrtý úsporu kódu. Místo posouzení podle jejich README se **změřila skutečná spotřeba** ze session logů: 117 tisíc volání API za měsíc (`~/.claude/projects/**/*.jsonl`, pole `usage`), vážené relativní cenou (zápis cache 1,25×, čtení cache 0,1×, výstup 5× vůči vstupnímu tokenu).
+**Podnět:** dotaz na nástroje `caveman`, `ponytail`, `headroom` a `rtk` – tři z nich slibují úsporu tokenů, čtvrtý úsporu kódu. Místo posouzení podle jejich README se **změřila skutečná spotřeba** ze session logů: 117 tisíc volání API za měsíc (`~/.claude/projects/**/*.jsonl`, pole `usage`), vážené relativní cenou (zápis cache 1,25×, čtení cache 0,1×, výstup 5× vůči vstupnímu tokenu). **„Nákladová jednotka“ v těchhle zápisech znamená jeden takto vážený token** – je to tedy počet vstupních tokenů, za který by táž práce vyšla stejně. Na peníze se převádí cenou vstupního tokenu použitého modelu a mezi modely se **porovnávat nedá**.
 
 **Naměřeno:** čtení kontextu **67 %** nákladů, zápis do kontextu 22 %, výstup modelu **10 %**. Session nad 400 volání jsou **4 % session a 52 % nákladů**; průměrný kontext v nich je 423k tokenů proti 71k u krátkých a s pozicí ve session roste lineárně (108k na začátku, 545k po třístém volání). Subagenti jsou 26 % nákladů. Na nejlevnější model připadá **0,1 %** volání, na nejsilnější 97,6 %.
 
@@ -1101,7 +1101,7 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 
 ### 2026-09-23 – Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`
 
-Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nákladů míří na kontext, ne na délku odpovědí* výš). **Zapsáno jako podklad, ne jako rozhodnutí** – návrh, který z toho vyšel, je rozpracovaný v `todo.md` a platí i kdyby se zahodil, protože `/review` a `/consistency` čeká totéž.
+Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nákladů míří na kontext, ne na délku odpovědí* výš). **Zapsáno jako podklad, ne jako rozhodnutí** – návrh, který z toho vyšel, žil v `todo.md` a rozhodl se 25. 9. 2026 (*Skill `/cleanup` poběží v subagentovi* níž). Podklad platí i kdyby se návrh zahodil, protože `/review` a `/consistency` čeká totéž.
 
 **Co stojí `/cleanup`** (249 běhů, ze session logů):
 
@@ -1113,12 +1113,12 @@ Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nák
 | volání hlavní session v úklidu | medián 142, průměr 196, maximum 1872 |
 | kontext při startu úklidu → na konci | 253k → 449k |
 
-**Úklid dělá zhruba stejnou práci bez ohledu na to, co uklízí** – 102 až 158 volání napříč všemi velikostmi –, ale stojí **11,8× víc** po dlouhé session než po krátké. Podle velikosti transcriptu: do 300 kB stojí 2,3M nákladových jednotek, 300–600 kB 3,2M, 600–1200 kB 5,1M, **nad 1200 kB 10,2M**. Z toho plyne **podlaha ~2,3M** i nad malinkou session – to je cena vlastních 150 volání, dnes schovaná pod cenou kontextu.
+**Úklid dělá zhruba stejnou práci bez ohledu na to, co uklízí** – 102 až 158 volání napříč všemi velikostmi –, ale stojí **11,8× víc** po dlouhé session než po krátké – to je poměr mediánů podle **délky práce před úklidem** (do 80 volání 1,0M, nad 200 volání 12,0M). Členěno podle **velikosti transcriptu** vychází poměr krajních pásem 4,4×; jsou to dvě různá členění téhož, ne rozpor. Podle velikosti transcriptu: do 300 kB stojí 2,3M nákladových jednotek, 300–600 kB 3,2M, 600–1200 kB 5,1M, **nad 1200 kB 10,2M**. Z toho plyne **podlaha ~2,3M** i nad malinkou session – to je cena vlastních 150 volání, dnes schovaná pod cenou kontextu.
 
 **Chování Claude Code, ověřené testem a měřením:**
 
 - **`/clear` zakládá zcela novou session** – nové id, nový transcript, nový scratchpad – a **resetuje pracovní adresář** na ten, kde se `claude` spustil. Ověřeno 23. 9. 2026 testem v `~/Dev/cwdtest`: vznikly dva soubory, `55a0559a` (cwd se měnil na `sub`) a `8ff20c90` (cwd jen `cwdtest`). **Dřívější opačné tvrzení v téže session bylo chybné** – vzniklo z toho, že starý transcript po `/clear` pokračuje, jenže jsou to jen dozvuky příkazu, ne nová konverzace.
-- **`/compact` naopak zachovává** session-id, transcript i pracovní adresář a zmenší kontext z mediánu 810k na 132k (o 81 %, 13 měřených případů).
+- **`/compact` naopak zachovává** session-id, transcript i pracovní adresář a zmenší kontext z mediánu 810k na 132k (13 měřených případů). **Medián zmenšení jednotlivých případů je 81 %**; poměr těch dvou mediánů vychází na 84 % – počítá se to z jiných čísel, takže se ty hodnoty nemusí rovnat.
 - **`cd` do podadresáře mění working directory celé session**, ne jen shellu – systém to oznámí jako změnu Primary working directory.
 - **Transcript je nadmnožina kontextu, ne podmnožina.** Obsahuje odpovědi včetně thinking bloků, zprávy poslané uprostřed odpovědi (`queue-operation`), hooky, system-remindery i odkazy na odložené velké výstupy. **A obsahuje všechno před kompaktací** – doloženo na session se 7 916 kB před ní, kde je čitelná i první zpráva.
 - V čerstvé session po `/clear` stojí **před prvním skutečným promptem dva uživatelské záznamy** – `<local-command-caveat>` a `<command-name>/clear</command-name>`. Kritérium „čistá session“ proto nejde postavit na počtu uživatelských záznamů, ale na tom, že **žádný z nich nemá obsah začínající jinak než `<`**.
@@ -1152,3 +1152,21 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Proč to není evidence:** rejstřík by rozhodoval, **jestli** se smí uklidit znovu; tenhle řádek jen říká, **co** se uklidilo. Dvě data u téhož id znamenají dva úklidy, ne duplicitu, a nic se podle nich nefiltruje. Bez id se z `done.md` nedá poznat, čeho se běh týkal – a **je to tím podstatnější, že se skill chystá přepsat na běh v subagentovi nad cizí session** (`todo.md`), kde „uklizeno dnes“ přestane znamenat „uklizena tahle session“.
 
 **Zamítnuto – nechat řádek beze změny.** Argument byl, že id je dlouhý řetězec, který člověk nečte, a že opakované běhy vyrobí víc řádků s týmž id. Neobstál: řádek čte **příští běh téhož skillu**, ne člověk, a víc řádků s týmž id je věcně správný záznam dvou úklidů.
+
+### 2026-09-25 – Skill `/cleanup` poběží v subagentovi, ne v čisté session po `/clear`u
+
+**Rozhodl uživatel po změření**, ne po úvaze – a to byla jeho podmínka: odhad úspory nebyl doložený, takže se nejdřív pustil pokusný běh.
+
+**Co se měřilo.** Subagent bez práva zapisovat dostal transcript rozpracované session (2,8 MB, 1398 záznamů, 33 promptů, tři dny) a měl vytěžit dohody a zkonfrontovat je se soubory. **Správná odpověď byla známá** – do té session se zapisovalo průběžně, takže se vědělo, co má najít.
+
+**Výsledek:** 45 volání a **0,87M nákladových jednotek** za Fázi 1 a 3, proti 10,2M mediánu dnešního úklidu nad transcriptem téže velikosti. Agent vytěžil 37 položek, 35 správně označil za zapsané, dva nálezy mimo OK byly oba správné a **jedno nevypořádané téma našel, které hlavní session přehlédla**. **Celý úklid bude stát víc** – odhad 1,5 až 2,5M je extrapolace z poměru fází, ne měření.
+
+**Proč subagent a ne `/clear`.** Ověřeno testem (*Co subagent dědí od rodičovské session* výš), že agent dědí pracovní adresář i session-id přes cestu ke scratchpadu – **najde si tedy transcript rodiče sám**. Tím odpadá sedm z patnácti nálezů oponentury naráz: všechny, co byly o výběru session, o hledání transcriptu napříč projekty, o víc pracovních adresářích, o prázdném vlastním transcriptu, o worktree smazaném pod nohama, o seznamu bez cesty ven a o verdiktu mluvícím o cizí session. Existovaly jen proto, že `/clear` tu vazbu trhá – **zakládá novou session s novým id a resetuje pracovní adresář**. Navíc jde volat uprostřed session, na které se má dál pracovat.
+
+**Zamítnuto – `/clear` s předaným session-id.** Rozpracovalo se to do detailu (tři pásma podle velikosti vlastního transcriptu, kritérium čisté session, nabídka s příkazem ke zkopírování) a padlo to celé. Postup zůstává zapsaný v `todo.md` jako doložení cesty, **ne jako platný plán**.
+
+**Zamítnuto – `/compact` místo `/clear`.** Zachovává session-id i adresář, takže by fungoval bez parametru, ale nechává v kontextu 132k ztrátového shrnutí – a ztrátové je přesně v tom, co skill hledá: korekce, zavržené varianty, nevypořádaná témata. Zůstane ve skillu zapsaný jako horší varianta s důvodem.
+
+**Tři háčky, které se musí vyřešit při přepisu** a drží je `todo.md`: agent nemá `AskUserQuestion`, takže interaktivní fáze musí vracet otázky nahoru i s hotovými zápisy; uživatel během běhu nevidí průběh, ačkoliv agent zapisuje a commituje; a **effort nejde nastavit**, jen model.
+
+**Doložená mez, která platí i pro dnešní stav:** agent nečetl odpovědi celé, jen úseky kolem rozhodovacích míst, a posudek oponenta jen ze čtvrtiny – u 2,8 MB to jinak nejde. Není to argument proti subagentovi, protože `SESSION.md` na dlouhý transcript posílá subagenta tak jako tak; je to mez vytěžování jako takového a patří do zadání jako pokyn hlásit, co se nestihlo.

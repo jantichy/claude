@@ -358,7 +358,7 @@ Sem dorazí, co našli čtenáři z Fáze 6. **Nedorazili-li ještě, počkej na
 - **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · session `<session-id>` · N nevypořádaných témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak se s tím naložilo>
 ```
 
-Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id uklizené session** vezmi z cesty ke scratchpadu (`~/.claude/skills/SESSION.md`); uklízíš-li cizí session, patří sem její id, ne tvoje. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.
+Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id uklizené session** vezmi z cesty ke scratchpadu (`~/.claude/skills/SESSION.md`) – dnes je to vždycky id té session, ve které běžíš. (Až skill dostane argument `[session-id]` a poběží nad cizí session, patří sem její id, ne tvoje; do té doby ten případ nenastane.) **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.
 
 **Id session není evidence uklizených session ani čára.** Opakovaný běh nad toutéž session je legitimní použití (viz *Co skill dělá*, opakovatelnost) a tenhle řádek mu nijak nebrání – dvě data u téhož id znamenají dva úklidy, ne duplicitu. Zapisuje se proto, že jinak z `done.md` nejde poznat, **co** se uklidilo; rozhodnuto 25. 9. 2026, rozbor v `decisions.md`.
 

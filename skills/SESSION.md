@@ -8,7 +8,7 @@ Mechanika hledání a čtení nahrané konverzace. Stojí mimo jednotlivé skill
 
 Leží v `~/.claude/projects/<working-directory-slug>/<session-id>.jsonl`, kde slug vznikne z absolutní cesty nahrazením `/` a `.` pomlčkami (`/Users/honza/Dev/score` → `-Users-honza-Dev-score`).
 
-**`<session-id>` si vezmi z cesty ke scratchpadu**, kterou máš v systémovém promptu – je v ní jako poslední adresář. To je jediný spolehlivý klíč.
+**`<session-id>` si vezmi z cesty ke scratchpadu**, kterou máš v systémovém promptu – je v ní jako **předposlední** komponenta – cesta končí na `/scratchpad`, takže id je adresář nad ním (`…/-Users-honza-Dev/<session-id>/scratchpad`). To je jediný spolehlivý klíč.
 
 **Nesahej po naposledy modifikovaném `.jsonl` v tom adresáři.** Nad jedním projektem běžívají dvě session naráz a ta druhá do svého souboru zapisuje taky – heuristika pak ukáže na cizí konverzaci, kterou vytěžíš místo své vlastní. Doloženo 10. 9. 2026: nad `~/.claude` běžela souběžná session a „nejnovější soubor“ byl její. Zbude-li ti opravdu jen tahle cesta, **ověř obsah** proti tomu, co si z konverzace pamatuješ, dřív než z něj cokoliv vytěžíš.
 

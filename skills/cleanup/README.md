@@ -8,7 +8,7 @@
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
-Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat, tíží vás pokaždé totéž: neztratí se něco? Tenhle skill to vyřeší. Přečte si **celý surový záznam konverzace** – tedy včetně části, kterou už kompaktace z paměti vyhodila –, vytáhne z něj všechno, co se domluvilo, a zapíše to tam, kam to patří. Pak si otočí pohled a hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání. Ještě předtím pošle na projekt dva pomocníky, kteří o něm nic nevědí: jeden řekne, jestli se na dnešní práci dá navázat, druhý hledá rozpory a zbytky po přepisování. Čtou na pozadí, takže se na ně nečeká.
+Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat, tíží vás pokaždé totéž: neztratí se něco? Tenhle skill to vyřeší. Přečte si **celý surový záznam konverzace** – tedy včetně části, kterou už kompaktace z paměti vyhodila –, vytáhne z něj všechno, co se domluvilo, a zapíše to tam, kam to patří. Pak si otočí pohled a hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání. Nakonec pošle na projekt dva pomocníky, kteří o něm nic nevědí: jeden řekne, jestli se na dnešní práci dá navázat, druhý hledá rozpory a zbytky po přepisování. Čtou na pozadí, takže se na ně nečeká.
 
 ## Co umí
 

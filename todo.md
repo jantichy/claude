@@ -288,7 +288,7 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
 - [ ] **Pořadí v `## Průchody životním cyklem` se rozpadá opakovaně a nic ho nehlídá.** `~/.claude/STRUCTURE.md` (*`done.md`*, *`decisions.md`*) žádá nejstarší nahoře a nové na konec. **Poprvé se sekce rozešla do 6. 9. 2026** – tehdejší `/cleanup` to našel a srovnal vzestupně, jak stojí v jeho vlastním záznamu v téhle sekci. **Podruhé se rozešla během deseti dnů:** 19. 9. 2026 stálo prvních 11 záznamů (19. 9. → 15. 9.) sestupně nad 40 vzestupnými. Znovu srovnáno.
 
-  **Oprava bez mechanismu evidentně nevydrží.** Zapisují tam skilly samy a každý z nich se řídí tím, co v souboru zrovna vidí – takže jeden obrácený zápis stačí, aby ho další napodobily. Soubor leží v `~/Dev/context`, a **ten nemá `tests/`, CI ani *Kontrakt příkazů*** – na rozdíl od `~/.claude`, kam tahle sekce úkolů jinak míří –, takže kontrolu není kam pověsit; nejlevnější vrstva by se musela celá založit.
+  **Oprava bez mechanismu evidentně nevydrží.** Zapisují tam skilly samy a každý z nich se řídí tím, co v souboru zrovna vidí – takže jeden obrácený zápis stačí, aby ho další napodobily. Soubor leží v `~/Dev/context`, a **ten nemá `tests/`, CI ani *Kontrakt příkazů*** – takže tam kontrolu není kam pověsit a nejlevnější vrstva by se musela celá založit. **Jenže táž sekce je i v `~/.claude/done.md`, kde testy i CI jsou** – a právě tam se pořadí 25. 9. 2026 rozpadlo **potřetí** (tři nejnovější záznamy stály nad vzestupnou řadou; našel to čtenář bez kontextu, srovnáno). Tam tedy vrstva chybí jen proto, že ji nikdo nenapsal. **Test je navíc jednodušší, než se zdálo:** sekce má vnořené poznámky pod záznamy, takže se nesmí řadit po řádcích, ale po blocích – kontrolovat stačí, že datumy záznamů jdou vzestupně.
 
   **Rozhodnout je potřeba dvojí:** jestli sem kontrolní vrstvu zavést (a co všechno by ještě mohla hlídat – struktura sekcí, formát datovaných záznamů, odkazy mezi doménami), nebo jestli místo toho normu obrátit na „nejnovější nahoře“, když se v praxi prosazuje sama. Druhá varianta je levnější, ale platí i pro `decisions.md`, kde pravidlo *Nejstarší nahoře* má vlastní zdůvodnění.
 
@@ -336,11 +336,11 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
 - [ ] **Zredukovat počet volání uvnitř `/cleanup`** (zadáno 23. 9. 2026). Úklid dělá **zhruba 150 volání bez ohledu na to, co uklízí** – medián 142, průměr 196, maximum 1872, změřeno na 249 bězích ze session logů. Má proto **podlahu kolem 2,3M nákladových jednotek** i nad malinkou session, kde není co zapisovat.
 
-  **Dnes je ta podlaha schovaná pod cenou kontextu** – úklid nad velkou session stojí 10,2M, takže se v tom vlastní režie skillu ztratí. Jakmile se přesune do čisté session, stane se z ní hlavní zbývající položka a bude vidět.
+  **Dnes je ta podlaha schovaná pod cenou kontextu** – úklid nad velkou session stojí 10,2M, takže se v tom vlastní režie skillu ztratí. Jakmile skill poběží v subagentovi (rozhodnuto 25. 9. 2026), stane se z ní hlavní zbývající položka a bude vidět.
 
-  **Dělat až po změření přesunu do čisté session, ne současně.** Řezání volání může ublížit kvalitě výstupu, kdežto přesun ne – a kdyby se udělalo obojí naráz, nepozná se, co za co může. **Kandidáti k posouzení:** dávkovat zápisy místo souboru po souboru, sloučit Fázi 3 a 4 (obě čtou tytéž soubory, jen z opačné strany), nepouštět kontrolu odkazů opakovaně po jednotlivých souborech.
+  **Dělat až po změření přesunu do subagenta, ne současně.** Řezání volání může ublížit kvalitě výstupu, kdežto přesun ne – a kdyby se udělalo obojí naráz, nepozná se, co za co může. **Kandidáti k posouzení:** dávkovat zápisy místo souboru po souboru, sloučit Fázi 3 a 4 (obě čtou tytéž soubory, jen z opačné strany), nepouštět kontrolu odkazů opakovaně po jednotlivých souborech.
 
-- [ ] **Přepsat `/cleanup` na běh v čisté session, pak totéž pro `/review` a `/consistency`** (rozpracováno 23. 9. 2026, přerušeno k rozmyšlení). Naměřená čísla, chování `/clear` a `/compact` i doloženou vadu základu session drží `~/.claude/decisions.md`, *Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`* – **neopisuj je sem zpátky**.
+- [ ] **Přepsat `/cleanup` na běh v subagentovi, pak totéž pro `/review` a `/consistency`** (rozhodnuto 25. 9. 2026 po změření; cesta přes `/clear` zamítnuta). Naměřená čísla, chování `/clear` a `/compact` i doloženou vadu základu session drží `~/.claude/decisions.md`, *Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`* – **neopisuj je sem zpátky**.
 
   **ROZHODNUTO 25. 9. 2026 PO ZMĚŘENÍ: jde se cestou subagenta.** Text níž zůstává jako doložení cesty; co z něj platí a co padlo, říká tenhle blok.
 
@@ -349,11 +349,11 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   | | Volání | Náklad |
   |---|---|---|
   | vytěžovací agent (Fáze 1 a 3) | 45 | **0,87M** nákladových jednotek |
-  | dnešní `/cleanup` nad transcriptem 1200+ kB | ~150 | 10,2M (medián z 249 běhů) |
+  | dnešní `/cleanup` nad transcriptem 1200+ kB | ~150 | 10,2M (medián pásma nad 1200 kB; měřeno na 249 bězích) |
 
   **Není to srovnání jedna ku jedné:** agent nezapisoval, necommitoval, neběželi čtenáři a neproběhl interaktivní průchod. Celý úklid v agentovi bude stát víc – **odhad 1,5 až 2,5M, tedy 75 až 85 % úspora, je extrapolace, ne měření.** Doloží ji až první ostrý běh.
 
-  **Kvalita obstála.** Agent vytěžil 37 položek v šesti kategoriích, 35 označil za zapsané a při kontrole to sedělo – včetně detailů, které musel vylovit z konverzace (že práh 500 kB je korekce návrhu 600, znění kritéria čisté session, past s cizím UUID u `tasks/`). Dva nálezy mimo OK byly oba správné a **jedno nevypořádané téma našel, které hlavní session přehlédla**.
+  **Kvalita obstála.** Agent vytěžil 37 položek v šesti z předepsaných sedmi kategorií (sedmá jsou nevypořádaná témata, ta se nezapisují), 35 označil za zapsané a při kontrole to sedělo – včetně detailů, které musel vylovit z konverzace (že práh 500 kB je korekce návrhu 600, znění kritéria čisté session, past s cizím UUID u `tasks/`). Dva nálezy mimo OK byly oba správné a **jedno nevypořádané téma našel, které hlavní session přehlédla**.
 
   **Doložená mez, která platí i pro dnešní stav:** agent nečetl odpovědi celé, jen úseky kolem rozhodovacích míst, a posudek oponenta jen ze čtvrtiny – u 2,8 MB to jinak nejde. Drobná dohoda uprostřed dlouhé odpovědi mu uniknout mohla. **Není to argument proti subagentovi**, protože `SESSION.md` na dlouhý transcript posílá subagenta tak jako tak; je to mez vytěžování jako takového a patří do zadání jako pokyn hlásit, co se nestihlo.
 
@@ -367,7 +367,7 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   - **Skupiny B až F z oponentury** se procházely jedna po druhé a přerušilo se to po skupině A; část z nich varianta se subagentem ruší, ale neprošlo se to nález po nálezu.
   - **Převod panelů na nástroj `Workflow`** – padl návrh, uživatel se zeptal jen na to, co ten nástroj je. Má dnes vlastní položku níž v tomhle souboru.
 
-  **Proč:** `/cleanup` stojí 55 % nákladů session, ve kterých běží, protože svých ~150 volání dělá nad největším kontextem, jaký ta session kdy má. Přitom kontext nepotřebuje – session rekonstruuje z transcriptu na disku. Přesun do čisté session má srazit náklad z 10,2M zhruba na 2,5–4M; **horní hranice je odhad, ne měření**, přesné číslo dá až první běh.
+  **Proč:** `/cleanup` stojí 55 % nákladů session, ve kterých běží, protože svých ~150 volání dělá nad největším kontextem, jaký ta session kdy má. Přitom kontext nepotřebuje – session rekonstruuje z transcriptu na disku. Přesun mimo hlavní session měl srazit náklad z 10,2M; **tenhle odhad z 23. 9. zněl 2,5–4M a překonalo ho měření z 25. 9.** – platí odhad 1,5 až 2,5M z bloku výš.
 
   **Rozhodnuto (Honza, 23. 9. 2026):**
 
@@ -389,7 +389,7 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   - **Otázka odkrytá měřením, nikoliv oponenturou:** mají čtenáři bez kontextu dostat **diff session, nebo diff větve**? Skill předepisuje první, praxe dělá druhé (viz `decisions.md`). Na tom závisí, jak se má opravit základ session ve Fázi 0.
 
 
-  **Varianta k rozmyšlení, která přišla na konci a je podle mě silnější než celý postup výš: nechat skoro celý skill běžet v subagentovi.** Rodičovská session ho jen zavolá; agent si sám načte transcript, vytěží ho, zkonfrontuje se soubory, opraví všechno jednoznačné a nahoru vrátí jen to, co si nerozhodl sám. Čtenáře bez kontextu pouští pak zase rodič (*Hloubka delegace je jedna*).
+  **Varianta, která přišla na konci a 25. 9. 2026 vyhrála** (zápis níž je z doby, kdy se o ní teprve rozhodovalo): **nechat skoro celý skill běžet v subagentovi.** Rodičovská session ho jen zavolá; agent si sám načte transcript, vytěží ho, zkonfrontuje se soubory, opraví všechno jednoznačné a nahoru vrátí jen to, co si nerozhodl sám. Čtenáře bez kontextu pouští pak zase rodič (*Hloubka delegace je jedna*).
 
   **Proč je to silnější:** co agent dědí od rodiče, drží `~/.claude/decisions.md`, *Co subagent dědí od rodičovské session* – podstatné je, že **dědí pracovní adresář i session-id přes cestu ke scratchpadu**, takže si transcript najde sám. Tím **odpadá sedm z patnácti nálezů oponentury naráz**: všechny, co byly o výběru session, o `find` napříč projekty, o víc adresářích v jedné session, o prázdném vlastním transcriptu, o worktree smazaném pod nohama, o seznamu bez cesty ven a o verdiktu mluvícím o cizí session. Existovaly jen proto, že `/clear` tu vazbu trhá.
 
@@ -400,10 +400,12 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   - **Agent nemá `AskUserQuestion`, a interaktivita je jádro tohohle skillu.** Fáze 2 se ptá **před** zápisem, protože odpovědi mění, co se zapíše. „Zapiš všechno a pak vrať otázky“ tedy nejde. Navrhované řešení: agent vrátí otázky **i s hotovými zápisy** – „u volby A tahle věta do `decisions.md`, u volby B tahle do `todo.md`“ –, rodič se zeptá a provede jednu editaci. Druhý běh agenta by musel načíst všechno znovu.
   - **Uživatel během běhu nic nevidí** a agent přitom sám zapisuje, commituje a pushuje. Dnes je průběh na očích a jde ho zastavit.
   - **Effort nejde nastavit**, jen model – to platí bez ohledu na architekturu.
+  - **Kolize s vlastním pravidlem *Hloubka delegace je jedna***: skill **už dnes deleguje** – Fáze 1 posílá na transcript subagenta a Fáze 4 bod 2 ho posílá znovu. Poběží-li celý skill v agentovi, jsou to vnuci, což `~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*, zakazuje. U čtenářů je to vyřešené (pouští je rodič), u těchhle dvou delegací ne. **Nabízí se, že agent transcript čte sám** – má na to kontext i nástroje –, ale musí se to rozhodnout, ne přejít.
+  - **Rozpadá se optimalizace, na které stojí Fáze 6.** Dnes se čekání na čtenáře schová za interaktivní Fázi 7 (*Proč zrovna během Fáze 7*). V subagentové variantě je interaktivní část u rodiče a čtenáře pouští taky rodič – kde se latence schová, se musí vyřešit, jinak se běh o to čekání prodlouží.
 
   **Co to neřeší** a zůstává k práci tak jako tak: cizí rozpracovaná práce v pracovním stromu (skupina C), základ session z `HEAD`, chybějící kategorie „co zůstalo rozbité“ ve Fázi 1, a Fáze 4 měřící „během téhle session“.
 
-  **Rozhodnout se musí nejdřív tohle** – jestli se jde cestou subagenta, nebo `/clear`u –, protože tvar všeho ostatního z toho plyne. Rozpracovaný postup s `/clear`em výš zůstává zapsaný proto, že část jeho rozhodnutí platí v obou variantách (kritérium čisté session, potvrzení před zápisem, `/compact` jako horší alternativa).
+  **Tohle bylo rozhodnuto jako první** – jestli se jde cestou subagenta, nebo `/clear`u –, protože tvar všeho ostatního z toho plyne. **Rozhodnuto 25. 9. 2026 pro subagenta**, viz blok na začátku položky. Rozpracovaný postup s `/clear`em výš zůstává zapsaný jako doložení cesty; co z něj platí dál, vyjmenovává blok *Co platí dál* – **kritérium čisté session mezi tím není**, protože agent má čistý kontext vždycky.
 
 
   **Rozsah je nejspíš širší než `/cleanup` – je to vlastnost celé vrstvy kontrolních kroků** (Honza, 23. 9. 2026). Kroky osy běží interaktivně v hlavní session, kontrolní kroky by běžely neinteraktivně v subagentovi a vracely nahoru jen pár konkrétních věcí k rozhodnutí.
