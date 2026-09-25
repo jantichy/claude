@@ -15,7 +15,7 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 3. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
 4. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
 
-**Záruka číslo 1 je jádro a měří se, ne tvrdí.** Očištěný transcript nese kotvy – místa, kde uživatel něco napsal – a ty se v evidenci odškrtávají jedno po druhém. Nedá se tedy vydat za hotové něco, u čeho zbyl nevyplněný řádek: pokrytí je vidět jako počet, ne jako dojem.
+**Záruka číslo 1 je jádro a měří se, ne tvrdí.** Inventura transcriptu vypíše **kotvy** – místa, kde uživatel něco napsal – a ty se v evidenci odškrtávají jedno po druhém. Nedá se tedy vydat za hotové něco, u čeho zbyl nevyplněný řádek: pokrytí je vidět jako počet, ne jako dojem.
 
 Skill je **opakovatelný**. Spustí-li ho uživatel podruhé, druhý průchod vytěžuje transcript celý znovu – slepá místa se tím ale nevyčistí sama, protože nejsou náhodná; co se nepřečetlo systematicky, se nepřečte znovu. Cenu má proto druhý běh hlavně tam, kde od prvního přibyla práce.
 
@@ -101,19 +101,29 @@ python3 ~/.claude/skills/cleanup/scripts/extract.py inventory <transcript>
 python3 ~/.claude/skills/cleanup/scripts/extract.py filter <transcript> > <scratchpad>/cleanup-clean.txt
 ```
 
-Z inventury si vezmi tři věci a **všechny tři si zapiš, protože je budeš vykazovat v závěru**:
+Z inventury si vezmi pět věcí a **všechny si zapiš, protože je budeš vykazovat v závěru**:
 
 - **kolik je kotev** – uživatelských promptů a zpráv poslaných uprostřed odpovědi. To je ta množina, která se v *Fázi 3* odškrtává.
 - **co se čte** a v jakém objemu,
-- **co se nečte** – to jde celé do *Mezí běhu* a nedá se to vynechat.
+- **co se nečte** – to jde celé do *Mezí běhu* a nedá se to vynechat,
+- **kolik bylo kompaktací** – podle toho se rozhoduje hned v následujícím odstavci,
+- **odložené výstupy** – cesty k nim.
 
-**Očištěný transcript pak přečti celý.** Je to zlomek původního souboru, takže na to není potřeba nikoho posílat; čísla řádků v hranatých závorkách odkazují do původního `.jsonl`, takže se každá citace dá ověřit `sed -n '<číslo>p'`.
+**Kolik z transcriptu opravdu přečteš, rozhoduje počet kompaktací**, ne zvyk. Běžíš v hlavní session, takže **celou konverzaci od poslední kompaktace máš v kontextu už zaplacenou** – přečíst ji podruhé z disku je tentýž obsah za druhou cenu, kterou pak platíš do konce session (`~/.claude/RULES.md`, *Co vložíš do kontextu, platíš do konce session*).
+
+- **Kompaktací nula** – očištěný transcript **nečti celý**. Projdi konverzaci, kterou máš v kontextu, a inventuru použij jako **checklist**: ke každé kotvě si najdi, co u ní padlo. Nemáš-li u některé jistotu, dočti **jen ji** – `sed -n '<číslo>,<číslo+40>p' <scratchpad>/cleanup-clean.txt`.
+- **Kompaktace jedna a víc** – část konverzace v kontextu **není** a přesně v ní bývají uzavřené dohody. Očištěný transcript přečti celý; je to zlomek původního souboru, takže na to není potřeba nikoho posílat.
+
+**Ať čteš odkud čteš, kotvy a čísla řádků ber z inventury.** Z kontextu se pokrytí spočítat nedá – nemáš nad ním index a „prošel jsem to celé“ je zase jen tvrzení. Čísla řádků v hranatých závorkách odkazují do původního `.jsonl`, takže se každá citace dá ověřit `sed -n '<číslo>p'`.
+
+**Odložené výstupy přečti, hlásí-li je inventura.** Velký výstup nástroje je uříznutý **v transcriptu i v kontextu** – transcript tedy není nadmnožina kontextu ve všem a tuhle díru mají oba stejnou. Plná verze leží v `tool-results/<id>.txt` a u session, která měřila nebo se dotazovala cizího systému, tam bývá celá podstata: naměřená čísla, odpověď API, výsledek dotazu. **Nečti je paušálně** – podívej se, čeho se to volání týkalo, a otevři ten výstup tehdy, když v odpovědi na něj nikdo čísla nepřevyprávěl. Co neotevřeš, patří do *Mezí běhu* i s cestou.
 
 **Co se nečte a proč** – tenhle výčet patří doslova do *Mezí běhu*, ne do obecné formulace „něco jsem nestihl“:
 
 - **Bloky myšlení** jsou v transcriptu zapsané prázdné. Změřeno 26. 9. 2026 na šesti transcriptech: pět mělo 0 kB při desítkách až stovkách bloků, jeden 12,8 kB na 302 bloků. **Není to tedy volba skillu, ale vlastnost formátu** – ten obsah tam není a nedá se přečíst. Inventura počet vypíše, ať je vidět, kolik míst se minulo.
 - **Výstupy `Read`, `Grep` a `Glob`** – jejich obsahem jsou soubory, které čteš přímo ze zdroje, kde jsou navíc aktuální.
 - **Obrázky** – z transcriptu se vytěžit nedají. Pracovala-li session se snímky obrazovky, řekni to jmenovitě.
+- **Neotevřené odložené výstupy** – s cestou, ať se k nim dá vrátit.
 
 ------
 

@@ -1281,3 +1281,21 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Co se tím rozbilo a spravilo:** test na nevypořádaná témata hlídal nadpis *Fáze 3* a fragmenty v `agent.md` – míří teď na *Fázi 5* a do `SKILL.md`, s podmínkou, že nevypořádaná témata v té frontě zůstanou **jmenovaným druhem položky**; sloučení je úspora na průchodech, ne záminka ztratit kategorii, kterou nikdo jiný nehledá.
 
 **Cesta zpátky:** po několika ostrých bězích změřit znovu skriptem `scripts/cost.py` a porovnat se 105,8 z tohohle záznamu. Nevyjde-li úspora, je na řadě řez v *Fázi 5*, ne návrat čtenářů.
+
+
+### 2026-09-26 – Kolik z transcriptu se čte, rozhoduje počet kompaktací, ne zvyk
+
+**Rozhodnuto 26. 9. 2026**, hned po vrácení `/cleanup` do hlavní session. Otázka zněla: má smysl číst transcript z disku, když v hlavní session je konverzace v kontextu už zaplacená?
+
+**Odpověď je „obojí, ale ne vždycky celé“, a stojí na dvou změřených faktech:**
+
+1. **Transcript má navíc jen to, co vyhodila kompaktace.** Prošla-li session kompaktací, je v něm část, která v kontextu není – a přesně v ní bývají uzavřené dohody. Kompaktace se pozná z `isCompactSummary` a `compactMetadata`, takže to nemusí být dojem: `extract.py inventory` je počítá.
+2. **Velký výstup nástroje je v transcriptu uříznutý stejně jako v kontextu.** Nese náhled a větu `Full output saved to: <cesta>`; plná verze leží v `tool-results/<id>.txt` vedle transcriptu (má to 180 session). **Transcript tedy není nadmnožina kontextu ve všem** – tuhle díru mají oba stejnou, a u session, která měřila nebo se ptala cizího systému, tam bývá celá podstata.
+
+**Postup je proto hybridní:** inventura vždycky (kotvy, počty, kompaktace, cesty k odloženým výstupům), plný očištěný transcript **jen při kompaktaci**, jinak se konverzace projde v kontextu a inventura slouží jako checklist. Odložené výstupy se čtou cíleně tam, kde čísla nikdo nepřevyprávěl v odpovědi.
+
+**Proč ne jen kontext:** z kontextu se **pokrytí spočítat nedá** – není nad ním index a „prošel jsem to celé“ je zase jen tvrzení. Kotvy a čísla řádků proto pokaždé vycházejí z inventury, i když se obsah bere z kontextu. Bez toho by zmizelo právě to, co se toho dne zavádělo.
+
+**Proč ne vždycky celý transcript:** je to tentýž obsah za druhou cenu, kterou se pak platí do konce session (`~/.claude/RULES.md`, *Co vložíš do kontextu, platíš do konce session*). U session bez kompaktace je to čistá duplikace – řádově 90 tisíc tokenů navíc za nic.
+
+**Zamítnuto rozhodovat to podle velikosti transcriptu.** Velký transcript bez kompaktace je pořád celý v kontextu, kdežto malý po dvou kompaktacích ne. Rozhoduje tedy kompaktace, ne objem – a to je jeden z mála případů, kde jde kritérium postavit na počtu, ne na úsudku.

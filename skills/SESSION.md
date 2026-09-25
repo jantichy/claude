@@ -46,7 +46,9 @@ jq -rs '(map(select(.type=="assistant") | .message.content[]? | select(.type=="t
   | .[] | if type=="string" then . else (.[]? | .text? // empty) end' <transcript>
 ```
 
-**Bloky myšlení (`thinking`) a obrázky se nečtou vůbec** – myšlení není závazek a snímek obrazovky se z transcriptu vytěžit nedá. Kde na nich něco viselo, je to **mez vytěžení a musí se přiznat**, ne dopočítat.
+**Velký výstup nástroje je v transcriptu uříznutý stejně jako v kontextu.** Nese jen náhled a věsuvku `Full output saved to: <cesta>`; plná verze leží v `tool-results/<id>.txt` vedle transcriptu. **Transcript tedy není nadmnožina kontextu ve všem** – navíc má jen to, co vyhodila kompaktace, kdežto tuhle díru mají oba stejnou. U session, která měřila nebo se ptala cizího systému, tam bývá celá podstata. Ověřeno 26. 9. 2026; `skills/cleanup/scripts/extract.py inventory` ty cesty vypisuje.
+
+**Bloky myšlení (`thinking`) a obrázky se nečtou vůbec** – u myšlení to není volba, ale vlastnost formátu: v transcriptu je zapsané **prázdné** (změřeno 26. 9. 2026 na šesti transcriptech – pět mělo 0 kB při desítkách až stovkách bloků), takže ten obsah tam není. Snímek obrazovky se z transcriptu vytěžit nedá. Kde na nich něco viselo, je to **mez vytěžení a musí se přiznat**, ne dopočítat.
 
 **Zprávy poslané uprostřed rozepsané odpovědi nejsou uložené jako `type: "user"`**, ale jako `type: "queue-operation"` s `operation: "enqueue"` a textem v poli `content`. Kdo filtruje jen `type=="user"`, tiše o ně přijde – a přitom to bývají důležité dovětky („ještě ať to udělá i…“). Vytáhni je vždy taky:
 

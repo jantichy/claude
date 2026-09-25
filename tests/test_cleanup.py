@@ -352,5 +352,38 @@ class MutacePredfiltru(PredfiltrBase):
                         "vyřazení isMeta nic nezměnilo – test na vsuvky tedy neměří to, co tvrdí")
 
 
+class KontextProtiTranscriptu(PredfiltrBase):
+    """Co transcript navíc má a co v něm chybí stejně jako v kontextu.
+
+    Podle obojího se skill rozhoduje, jestli má očištěný transcript vůbec číst,
+    nebo jestli stačí projít podle kotev konverzaci, kterou má v kontextu
+    zaplacenou. Chyba v tom je tichá v obou směrech: nepřečtená část po
+    kompaktaci zmizí bez stopy, a zbytečně přečtený transcript se platí do
+    konce session.
+    """
+
+    def test_kompaktace_se_pozna(self):
+        """Po kompaktaci část konverzace v kontextu není – transcript ji má."""
+        rows = self.extract.load(str(self.transcript([
+            self.user("před"), {"type": "user", "isCompactSummary": True, "message": {"role": "user", "content": []}},
+        ])))
+        self.assertEqual(self.extract.compactions(rows), 1)
+
+    def test_bez_kompaktace_nula(self):
+        """Falešná kompaktace by poslala skill čist transcript zbytečně."""
+        rows = self.extract.load(str(self.transcript([self.user("ahoj")])))
+        self.assertEqual(self.extract.compactions(rows), 0)
+
+    def test_odlozeny_vystup_se_nahlasi_s_cestou(self):
+        """Velký výstup je uříznutý v transcriptu i v kontextu; plný leží jinde."""
+        records = self.tool("Bash", "Output too large (31.6KB). Full output saved to: /tmp/x/ab12.txt\n\nPreview")
+        rows = self.extract.load(str(self.transcript(records)))
+        self.assertEqual([p for _, p in self.extract.persisted(rows)], ["/tmp/x/ab12.txt"])
+
+    def test_bezny_vystup_se_za_odlozeny_nepovazuje(self):
+        rows = self.extract.load(str(self.transcript(self.tool("Bash", "NAMĚŘENO 42"))))
+        self.assertEqual(self.extract.persisted(rows), [])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -30,11 +30,18 @@ Skript má dva režimy:
 - **Hooky, upomínky, snímky promptu, výpisy nástrojů** – balast bez obsahu.
 - **Obrázky** – z transcriptu se vytěžit nedají.
 
+**Transcript není nadmnožina kontextu ve všem.** Navíc má to, co kompaktace
+z kontextu vyhodila – proto `inventory` počítá kompaktace. **Ale velký výstup
+nástroje je v něm uříznutý stejně jako v kontextu** a plná verze leží
+v `tool-results/<id>.txt`; inventura proto ty cesty vypíše, protože u měřicí
+session tam bývá celá podstata.
+
 Použití: extract.py filter|inventory <transcript.jsonl>
 Návratový kód: 0 hotovo, 2 chyba volání.
 """
 
 import json
+import re
 import sys
 from collections import Counter
 
@@ -44,6 +51,11 @@ CONTENT_TOOLS = ("Bash", "Agent", "Task", "WebFetch", "WebSearch", "mcp__")
 SKIPPED_TOOLS = ("Read", "Grep", "Glob")
 # Attachmenty, které nesou obsah od uživatele, ne technický balast.
 CONTENT_ATTACHMENTS = ("queued_command",)
+# Velký výstup nástroje se do transcriptu uloží **stejně uříznutý jako do
+# kontextu** a plná verze leží v samostatném souboru. Transcript tedy není
+# nadmnožina kontextu ve všem – tady mají oba stejnou díru a podstata měřicí
+# session může být právě v ní. Ověřeno 26. 9. 2026.
+PERSISTED = re.compile(r"Full output saved to:\s*(\S+)")
 
 
 def load(path):
@@ -130,6 +142,25 @@ def extra_rows(number, record):
     return []
 
 
+def persisted(rows):
+    """Cesty k plným výstupům, které se do transcriptu nevešly."""
+    found = []
+    for number, record in rows:
+        for block in blocks(record):
+            if block.get("type") != "tool_result":
+                continue
+            match = PERSISTED.search(result_text(block))
+            if match:
+                found.append((number, match.group(1)))
+    return found
+
+
+def compactions(rows):
+    """Počet kompaktací – podle nich se pozná, co v kontextu už není."""
+    return sum(1 for _, r in rows if r.get("isCompactSummary")
+               or (r.get("compactMetadata") is not None))
+
+
 def written_by_user(text):
     """Napsal to uživatel, nebo to do fronty vložil harness?
 
@@ -209,6 +240,14 @@ def run_inventory(rows, path):
     print("\nNEČTE SE (patří do mezí běhu):")
     for key in sorted(skip, key=lambda k: -counts[k]):
         print(f"  {counts[key]:5}× {key}")
+    cuts = compactions(rows)
+    print(f"\nKOMPAKTACÍ: {cuts}"
+          + ("  – část konverzace už v kontextu není, čti očištěný transcript celý"
+             if cuts else "  – celý obsah je i v kontextu, stačí podle kotev projít jeho"))
+    saved = persisted(rows)
+    print(f"\nODLOŽENÝCH VÝSTUPŮ: {len(saved)} – uříznuté v transcriptu i v kontextu, plné jsou tady:")
+    for number, path in saved:
+        print(f"  [{number}] {path}")
     found = prompts(rows)
     print(f"\nUŽIVATELSKÝCH PROMPTŮ: {len(found)} – kotvy evidence, každý musí být odškrtnutý")
     for index, (number, text) in enumerate(found, 1):
