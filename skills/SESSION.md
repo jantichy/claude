@@ -16,7 +16,7 @@ Leží v `~/.claude/projects/<working-directory-slug>/<session-id>.jsonl`, kde s
 
 ## 2. Přečti ho od úplného začátku
 
-Zajímají tě uživatelovy prompty i tvoje odpovědi.
+Zajímají tě uživatelovy prompty i tvoje odpovědi – a k nim **výstupy volání nástrojů**, ve kterých u měřicí nebo datové session leží celá podstata; které a proč, drží bod 3.
 
 U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti kontext nesnědla surová data – předej mu cestu k souboru a to, co hledáš, a nech si vrátit strukturovaný výtah. Pošli ho na **výchozím modelu session s `medium`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*), **ne na nejlevnějším**. Vypadá to jako výtah podle seznamu, ale není: agent musí poznat, která dohoda později přestala platit, odlišit rozhodnutí od nápadu a korekci od zaváhání. Levný model tohle splete a **jeho chybu nepoznáš, aniž bys přečetl celý transcript sám** – tedy přesně tu práci, kvůli které jsi ho poslal.
 
@@ -28,7 +28,7 @@ U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti ko
 
 ## 3. Pasti ve formátu
 
-**První řádek nemusí mít `timestamp`.** Na začátku souboru stojí meta záznamy (`last-prompt`, `mode`, `permission-mode`, `attachment`), které to pole nenesou, takže `head -1 | .timestamp` vrátí `None` – a kdo z toho času počítá základ session, počítá z ničeho. **Ber proto první řádek, který ho vyplněný má:**
+**První řádek nemusí mít `timestamp`.** Na začátku souboru stojí meta záznamy (`last-prompt`, `mode`, `permission-mode`, `atis-latch`), které to pole nenesou, takže `head -1 | .timestamp` vrátí `None` – a kdo z toho času počítá základ session, počítá z ničeho. **Ber proto první řádek, který ho vyplněný má:**
 
 ```sh
 jq -r 'select(.timestamp) | .timestamp' <transcript> | head -1
@@ -38,10 +38,10 @@ Doloženo 25. 9. 2026 dvakrát v jednom dni, ve dvou ze tří ostrých běhů `/
 
 **Podstata může ležet ve výstupech nástrojů, ne v textu odpovědi.** Uživatelovy prompty a textové bloky odpovědí jsou jen část konverzace: naměřená čísla, odpovědi cizích systémů a výsledky dotazů se vracejí jako **výsledky volání nástrojů**, uložené v záznamech `type: "user"` jako blok `tool_result`, kde jméno nástroje nese odpovídající `tool_use` v předchozí odpovědi. Session, která dělala datovou analýzu, má tedy podstatu tam – doloženo 25. 9. 2026, kdy vytěžení prošlo jen proto, že hlavní session každý výsledek dotazu převyprávěla v textu včetně čísel.
 
-**Čti je selektivně podle jména nástroje:** `Bash` a MCP dotazy ano, `Read`, `Grep` a `Glob` ne – u těch je výstupem obsah souborů, který si přečteš přímo ze zdroje, a čtení celých výstupů by u velkého transcriptu nafouklo vstup mnohonásobně.
+**Čti je selektivně podle jména nástroje.** Dělítko je, jestli výstup nese obsah, který nikde jinde není: `Bash`, MCP dotazy, **zprávy subagentů (`Agent`, `Task`) a stažené stránky (`WebFetch`, `WebSearch`)** ano – u session s panelem specialistů leží podstata právě ve zprávách agentů. `Read`, `Grep` a `Glob` ne: jejich výstupem je obsah souborů, který si přečteš přímo ze zdroje, a číst ho z transcriptu by u velkého souboru nafouklo vstup mnohonásobně.
 
 ```sh
-jq -rs '(map(select(.type=="assistant") | .message.content[]? | select(.type=="tool_use") | select(.name|test("^(Bash|mcp__)")) | .id) | unique) as $ids
+jq -rs '(map(select(.type=="assistant") | .message.content[]? | select(.type=="tool_use") | select(.name|test("^(Bash|Agent|Task|WebFetch|WebSearch|mcp__)")) | .id) | unique) as $ids
   | map(select(.type=="user") | .message.content[]? | select(.type=="tool_result") | select(.tool_use_id as $i | $ids | index($i)) | .content)
   | .[] | if type=="string" then . else (.[]? | .text? // empty) end' <transcript>
 ```

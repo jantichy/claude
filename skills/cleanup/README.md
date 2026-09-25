@@ -53,8 +53,9 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 **Nevypořádaná témata**
 - 3 probrána: 1 rozhodnuto, 1 do todo, 1 bezpředmětné
 
-**Kontrola odkazů a čtenáři bez kontextu**
+**Kontroly a čtenáři bez kontextu**
 - odkazy v pořádku; z dokumentace jde navázat; 2 nálezy opraveny (počet v tabulce, věta o zrušeném postupu)
+- ověření zápisu: testy projektu prošly
 
 **Git**
 - Pracovní strom: čistý · Commity: 4, push: ano
@@ -63,7 +64,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 ## Co nedělá
 
 - **Neopakuje audit konzistence.** Ptá se na jinou věc – *dá se na dnešní práci navázat?* – a rozpory hledá jen v tom, co na větvi přibylo.
-- **Nespouští testy, linter ani build** a nedělá obecnou revizi souborů nad rámec toho, co z konverzace vzešlo.
+- **Nedělá revizi projektu.** Testy, linter ani build nepouští proto, aby prověřil cizí práci, a soubory nekontroluje nad rámec toho, co z konverzace vzešlo. To, co sám zapsal, si naopak ověřit musí – pustí na to tu kontrolu projektu, která na zapsané soubory doopravdy sahá, a její výsledek vypíše.
 - **Nezakládá potichu chybějící soubory.** Vypíše, které chybí, a nabídne `/project`.
 - **Nemerguje větev sám od sebe.** Nabídne to a vyberete-li to, předá práci skillu [`/merge`](../merge/README.md).
 
@@ -87,6 +88,6 @@ Skill předpokládá, že má projekt ustálenou dokumentační strukturu – v�
 
 ### Požadavky a omezení
 
-Git – bez něj to proběhne, ale odpadne závěrečný úklid repozitáře, bod, od kterého se skládá podklad pro druhé z čerstvých očí, a tím i ony samy; sezení se zapíše, ověřitelná stopa po něm nezůstane. A **Python 3** na kontrolu odkazů – bez něj se přeskočí a hledání rozbitých odkazů zůstane na čtenářích.
+Git – bez něj to proběhne, ale odpadne závěrečný úklid repozitáře i podklad pro druhé z čerstvých očí, takže **ty druhé se nepustí; ty první běží normálně**. Sezení se zapíše, ověřitelná stopa po něm nezůstane. A **Python 3** na kontrolu odkazů – bez něj se přeskočí a hledání rozbitých odkazů zůstane na čtenářích.
 
-**Pomocník, který záznam vytěžuje, po sobě nic necommituje ani neposílá na server** – to dělá až hlavní sezení, kde je to vidět a kde se dá zastavit. Na druhou stranu jeho práci nevidíte průběžně, jen výsledek. A u velmi dlouhého záznamu nepřečte odpovědi celé, jen okolí míst, kde se rozhodovalo; co nestihl, řekne nahlas, takže se to neztratí potichu.
+**Pomocník, který záznam vytěžuje, po sobě nic necommituje ani neposílá na server** – to dělá až hlavní sezení, kde je to vidět a kde se dá zastavit. Na druhou stranu jeho práci nevidíte průběžně, jen výsledek. A u velmi dlouhého záznamu nepřečte odpovědi celé, jen okolí míst, kde se rozhodovalo; co nestihl, řekne nahlas, takže se to neztratí potichu. Ze snímků obrazovky a z vnitřního přemýšlení nečte nic – kde na nich něco viselo, přizná to jako mez, místo aby to dopočítal.

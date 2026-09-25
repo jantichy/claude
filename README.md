@@ -42,7 +42,7 @@ Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav p
 
 ### [`skills/SESSION.md`](skills/SESSION.md) – jak se čte nahraná konverzace
 
-Claude Code ukládá každou session do souboru a dvěma skillům se z něj vytěžuje: `/cleanup` z něj bere dohody, `/skill` to, co se při ladění vyladilo. Drží pasti, které stojí celý výtěžek – že se nesmí sáhnout po naposledy změněném souboru (nad projektem běžívají dvě session naráz) a že zpráva poslaná uprostřed rozepsané odpovědi se neukládá jako uživatelská, takže ji běžný filtr přeskočí.
+Claude Code ukládá každou session do souboru a dvěma skillům se z něj vytěžuje: `/cleanup` z něj bere dohody, `/skill` to, co se při ladění vyladilo. Drží pasti, které stojí celý výtěžek – od toho, že se nesmí sáhnout po naposledy změněném souboru (nad projektem běžívají dvě session naráz), přes první řádek bez času a to, že podstata může ležet ve výstupech nástrojů, až po to, že zpráva poslaná uprostřed rozepsané odpovědi se neukládá jako uživatelská, takže ji běžný filtr přeskočí.
 
 ### [`skills/SEVERITY.md`](skills/SEVERITY.md) – jak vážné to je, měří všichni stejně
 
