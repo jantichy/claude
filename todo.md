@@ -334,6 +334,23 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Zamítnuto zatím, ne natrvalo** (`~/Dev/context/decisions.md`, sekce `coding`): formát kontraktu parsuje `~/.claude/verify.sh` i jeho testy, takže by to byl zásah do vynucovací vrstvy kvůli pravidlu, které se zatím nikde neosvědčilo. **Rozhodne se, až bude doložené, že si tichou variantu skládá víc projektů stejně** – do té doby je ruční volba levnější než nový klíč, který musí umět skript, testy, `/project` i každý existující kontrakt.
 
+- [ ] **Opravit ve `/cleanup` recept na základ session – porovnává časy v různých pásmech.** *Fáze 0* dává tenhle příkaz:
+
+  ```sh
+  git log --format='%H %cI' | awk -v start='<čas prvního záznamu transcriptu>' '$2 > start {h=$1} END {print h}'
+  ```
+
+  **`%cI` nese lokální posun (`+02:00`), kdežto transcript má časy v UTC (`Z`).** Awk je porovnává jako řetězce, takže se srovnává `2026-09-25T15:43:34+02:00` proti `2026-09-24T19:31:17` – dvě různá pásma bez převodu. **Při prvním ostrém běhu 25. 9. 2026 to vrátilo `987e39b`, tedy commit ze *včerejší* session**, místo správného `b24d8c1`. Chyba je tichá: vrátí platný hash, jen ne ten správný, takže diff pro čtenáře by obsahoval cizí práci.
+
+  **Oprava je na epoch, kde pásmo nehraje roli:**
+
+  ```sh
+  START=$(python3 -c "import datetime;print(int(datetime.datetime.fromisoformat('<čas prvního záznamu>'.replace('Z','+00:00')).timestamp()))")
+  git log --format='%H %ct' | awk -v s="$START" '$2+0 > s+0 {h=$1} END {print h}'
+  ```
+
+  **Sekce *Časté chyby* už varuje, že `HEAD` není základ** – tohle je druhá, samostatná vada v tomtéž kroku a varování před ní nechrání, protože vypadá, že recept funguje.
+
 - [ ] **Změřit první ostrý běh `/cleanup` v subagentovi a doložit, nebo vyvrátit slíbenou úsporu.** Ohlášených **75 až 85 %** proti dnešním 10,2M je **extrapolace z poměru fází**, ne měření: pokusný běh 25. 9. 2026 pokryl jen vytěžení a konfrontaci (45 volání, 0,87M) a odhad celého úklidu v agentovi zněl 1,5–2,5M. Změř to týmž způsobem, jakým se měřilo 249 běhů – ze session logů –, a porovnej s pásmem podle velikosti transcriptu, ne s jedním číslem. **Změřit je potřeba obě části zvlášť**, agenta i rodiče: kdyby úspora nevyšla, rozhoduje, jestli ji sežral agent, nebo režie rodiče. Výsledek patří do `decisions.md` k záznamům o ekonomice úklidu; nevyjde-li, je to argument pro zúžení řezu, ne pro návrat.
 
   **Agentská část je od 25. 9. 2026 změřená, rodičovská ne.** První ostrý běh nad transcriptem 1,7 MB: vytěžovací agent **33 volání a 197k tokenů**, čtenář navazitelnosti 32 volání a 272k, čtenář pozůstatků 29 volání a 189k (`done.md`). Chybí právě to, co rozhoduje – **kolik stál rodič**: jeho volání a kontext se z notifikací o agentech nedozvíš a je k tomu potřeba týž postup ze session logů jako u těch 249 běhů. Bez toho se úspora tvrdit nedá, protože rodič nesl celou interaktivní část a pět rozhodnutí nad nálezy čtenářů.
