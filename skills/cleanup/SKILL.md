@@ -1,7 +1,6 @@
 ---
 name: cleanup
 description: Skill se použije, když uživatel zadá "/cleanup", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je.
-argument-hint: [id session]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
 
@@ -18,9 +17,9 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 
 **Vytěžení, konfrontaci se soubory a zápis dělá subagent, ne ty.** Transcript session leží na disku a k té práci není potřeba kontext hlavní session – běžela by nad největším kontextem, jaký ta session kdy má, a to je 55 % jejích nákladů. Ty zůstáváš u toho, co agent udělat nemůže: ptáš se, pouštíš čtenáře bez kontextu, commituješ a vydáváš verdikt.
 
-Skill je **opakovatelný**. Spustí-li ho uživatel podruhé, druhý průchod slouží jako verifikace – navazuje na řádek předchozího běhu v `docs/done.md`, takže nevytěžuje transcript celý znovu.
+Skill je **opakovatelný**. Spustí-li ho uživatel podruhé, druhý průchod slouží jako verifikace a **vytěžuje transcript celý znovu** – to je záměr, ne opomenutí: agent druhého běhu tak nezdědí slepá místa toho prvního. Zkratka přes zapsaný hash předchozího úklidu se zamítla 25. 9. 2026, rozbor v `decisions.md`.
 
-Volitelný argument je **id cizí session**, kterou se má uklidit. Bez argumentu se uklízí ta, ve které stojíš.
+**Uklízí se vždycky ta session, ve které stojíš, a jinak to nejde.** Agent dědí od rodiče pracovní adresář i session-id přes cestu ke scratchpadu, takže si transcript najde sám a není co vybírat. Argument s cizím id tu do 25. 9. 2026 byl – zbyl po zamítnuté cestě přes `/clear`, kde se skill pouštěl z jiné session než z uklízené; rozbor v `decisions.md`.
 
 V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne bod na ose: **stojí v každé mezeře a vždycky jako poslední**, protože jako jediný odolá kompaktaci – co zapíše, přežije ztrátu kontextu. Jeho spouštěčem není pozice, ale konec session, takže běží i uprostřed rozdělané práce. V poslední mezeře stojí dvakrát, před `/attackem` i za ním.
 
@@ -63,12 +62,23 @@ Druhá výjimka: to, co ze session zůstalo rozbité (padající test, nedoděla
 
 ## Fáze 0 – Příprava
 
-**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: tenhle skill nesahá na kód a vytěžuje celou session, ne diff větve. U gitu tě navíc zajímá remote, a ten zjišťuj `git remote get-url origin`, ne `git remote` – to druhé vypíše jméno, ne adresu.
+**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. **V bodu 1 patří `/cleanup` na řádek *Ne*, a tedy bez gitu pokračuje.** Jeho jádro je čtení transcriptu a zápis do dokumentace, což na gitu nestojí – a znalostní projekt bez verzování by jinak o zápis session přišel úplně, tedy o to nejcennější, co skill umí. **Ohlas nahlas, co tím odpadá:** základ session, diff pro čtenáře, commit i push, a s nimi **čtvrtá záruka** z *Co skill dělá*. **Čtenáře pozůstatků nepouštěj** – nemá z čeho mít podklad –, čtenář navazitelnosti běží normálně, a verdikt to musí říct místo tvrzení, že je hotovo.
+
+**Bod 4 odpadá** – tenhle skill nesahá na kód, takže není co zkontrolovat před prvním zápisem. **Bod 5 naopak platí**, i když se session vytěžuje celá: diff větve je podklad pro čtenáře bez kontextu ve *Fázi 2*, takže hlavní větev hledej přes `merge-base` a `origin/HEAD`, jak ten bod předepisuje, ne doslovným `main`. U gitu tě navíc zajímá remote, a ten zjišťuj `git remote get-url origin`, ne `git remote` – to druhé vypíše jméno, ne adresu.
 
 Navíc si zjisti tohle – všechno to předáš agentovi, ať to nezjišťuje znovu:
 
-1. **Id session, která se uklízí.** Bez argumentu je to ta, ve které stojíš – id si vezmi z cesty ke scratchpadu (`~/.claude/skills/SESSION.md`). **S argumentem** ověř, že transcript existuje, přečti z něj čas, pracovní adresář a první uživatelskou zprávu, a **nech si potvrdit, že jde o tu správnou session** – dřív, než agent začne zapisovat. Vede-li pracovní adresář té session mimo projekt, ve kterém stojíš, **zastav se a řekni to**: zápis, commit a push do cizího repozitáře vypadá jako povedený běh.
-2. **Hash předchozího úklidu téže session**, je-li jaký – řádek `/cleanup` s týmž id v `docs/done.md`, sekce `## Průchody životním cyklem`. Druhý běh podle něj vytěžuje jen to, co přibylo.
+1. **Id session a cesta k jejímu transcriptu** – id si vezmi z cesty ke scratchpadu (`~/.claude/skills/SESSION.md`), je v ní jako předposlední komponenta. **Ověř, že soubor existuje**, a přečti si z něj čas prvního záznamu; potřebuješ ho na základ session v bodu 2.
+2. **Základ session** – commit, na kterém session stála, **než cokoliv zapsala**. Z něj se skládá diff pro čtenáře bez kontextu, takže na něm visí celá *Fáze 2*.
+
+   **`git rev-parse HEAD` to není**, má-li projekt zapnutý autocommit: session mohla commitnout dávno předtím, než se úklid spustil, a `HEAD` je pak commit **uvnitř** session. Najdi proto nejstarší commit novější než začátek session a vezmi jeho **rodiče**; není-li takový commit, je základ `HEAD`.
+
+   ```sh
+   git log --format='%H %cI' | awk -v start='<čas prvního záznamu transcriptu>' '$2 > start {h=$1} END {print h}'
+   git rev-parse <ten hash>^
+   ```
+
+   **Nepřeskakuj to s tím, že se to pozná později.** Prázdný diff se od čistého nepozná: čtenáři ohlásí „nic jsem nenašel“ a vypadá to jako úspěch. Doloženo při prvním ostrém běhu 25. 9. 2026, kdy `HEAD` byl commit té session – zachránilo to jen to, že si toho agent všiml sám.
 
 ------
 
@@ -82,15 +92,20 @@ Načti si ~/.claude/skills/cleanup/agent.md a řiď se jím celým. Je to tvoje 
 Transcript: <cesta k .jsonl>
 Session: <id>
 Kořen projektu: <absolutní cesta> · větev: <jméno> · autocommit: <zapnutý/vypnutý> · paměťová politika: <co platí>
-Předchozí úklid téže session: <hash z done.md, nebo „žádný“>
+Standardní struktura: <v docs/, nebo v kořeni repozitáře> · pracovní adresář session: <cesta, a je-li mimo projekt, řekni to>
+Základ session: <hash z Fáze 0>
 Rozpracováno už před začátkem: <výčet z git status, nebo „nic“>
 ```
 
 Tenhle blok se posílá agentovi jako prompt, ne do konverzace.
 
+**Kde struktura leží, řekni agentovi i tehdy, když je to z kořene vidět.** [`agent.md`](agent.md) píše cesty v podobě pro režim `docs/` (`~/.claude/STRUCTURE.md`, *Dva režimy umístění*), takže v projektu s kořenovým režimem musí agent vědět, že se ten zápis překládá. A **pracovní adresář session nemusí být kořen projektu** – nemusí to být ani git repozitář, takže co si agent odvodí z prostředí, může mířit úplně jinam.
+
 **Nečti transcript sám** – ani kvůli ověření jednoho nálezu. Agent vrací doslovné citace s čísly řádků právě proto, aby se dalo ověřit grepem.
 
 **Než budeš pokračovat, projdi jeho výstup a rozhodni tři věci:** platí meze běhu, které přiznal (co nestihl přečíst)? Je mezi cestami k commitu něco, co podle *Fáze 0* rozpracoval někdo jiný? A vypsal u každé položky k rozhodnutí hotový text zápisu, nebo bys ho musel psát ty? **Chybí-li to poslední, vrať mu to** – jedním dotazem na tu položku, ne novým během.
+
+**Práci, která v téhle session vznikne až za běhu, nekryje nic.** Agentův snímek `git status` z *Fáze 0* zná jen to, co bylo rozpracované **před** ním. Pokračuje-li uživatel v práci nad týmž repozitářem, zeptej se ho, čeho se dotkl, a ty cesty z commitu vyjmi – jinak je zatáhneš pod zprávu o úklidu a po pushi se to neopravuje. Nad jiným repozitářem ani při čtení a hovoru to riziko nevzniká; rozbor drží `decisions.md`, *Skill `/cleanup` poběží v subagentovi, ne v čisté session po `/clear`u*.
 
 **Vrátil-li agent chybějící soubory** ze standardní struktury, vypiš je a **nabídni spuštění `/project`**, který ji doplní celou a konzistentně – nezakládej je po jednom. Výjimkou je soubor, který si vyžádá zvolená odpověď: zvolí-li uživatel *Zapsat do backlogu* a projekt `docs/backlog.md` nemá, založ ho a řekni to ([`out-of-scope.md`](out-of-scope.md), bod 5) – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze. Agent má zakázáno je zakládat sám právě proto, že tohle je rozhodnutí, ne dorovnání; jedinou výjimku měl u souboru, do kterého ze session jednoznačně něco patřilo, a tu ti vypsal mezi zápisy.
 
@@ -105,10 +120,12 @@ Zadání obou drží [`readers.md`](readers.md) – *Čtenář navazitelnosti* �
 Čtenář pozůstatků nemá shell, takže si diff nevyrobí – **připrav mu ho do souboru** ve scratchpadu a v zadání mu předej cestu:
 
 ```sh
-git diff main...<větev> -- '*.md' > <scratchpad>/cleanup-diff.txt
+git diff "$(git merge-base HEAD origin/HEAD 2>/dev/null || git merge-base HEAD main)" -- '*.md' > <scratchpad>/cleanup-diff.txt
 ```
 
-**Podkladem je diff větve, ne jen diff session.** Pozůstatek, který na větvi zůstal po předevčerejší session, dnes nenajde nikdo: `/consistency` běží před úklidem, ne za ním. Nálezy mimo dnešní práci pak projdou kritériem z [`out-of-scope.md`](out-of-scope.md) jako cokoliv jiného mimo rozsah. **Stojíš-li na hlavní větvi**, diff větve neexistuje – vezmi `git diff <základ session>..HEAD` s hashem od agenta; nejsou-li změny commitnuté, `git diff` bez rozsahu.
+**Diffuj proti pracovnímu stromu, ne mezi dvěma revizemi.** Agent své zápisy **necommituje**, takže `main...<větev>` ani `<základ>..HEAD` je neobsahuje – čtenář by dostal podklad bez toho, kvůli čemu se pouští. Jeden hash bez `..` znamená „od tam po pracovní strom“ a to je správný rozsah.
+
+**Podkladem je diff větve, ne jen diff session.** Pozůstatek, který na větvi zůstal po předevčerejší session, dnes nenajde nikdo: `/consistency` běží před úklidem, ne za ním. Nálezy mimo dnešní práci pak projdou kritériem z [`out-of-scope.md`](out-of-scope.md) jako cokoliv jiného mimo rozsah. **Stojíš-li na hlavní větvi**, diff větve neexistuje – vezmi `git diff <základ session> -- '*.md'` se základem z *Fáze 0*.
 
 **Spusť oba jedním blokem** jako podagenty typu `reader`, tedy `subagent_type: "reader"`, a **nečekej na ně**. Nenastavuje se pro to nic zvláštního: `Agent` vrací řízení sám od sebe, jakmile agenta předá, a výsledek dorazí později jako notifikace o dokončení úlohy. Stačí tedy po zavolání pokračovat další prací – rovnou *Fází 3*. Ověřeno 19. 9. 2026.
 
@@ -194,13 +211,13 @@ Sem dorazí, co našli čtenáři z *Fáze 2*. **Nedorazili-li ještě, počkej 
 
 ## Fáze 7 – Git a závěr
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*). Čtenářem je **příští `/cleanup`**, který jinak nepozná, co zůstalo mimo rozsah úklidu a jak se s tím naložilo – a bude se na totéž ptát znovu. Hash z tohohle řádku navíc říká druhému běhu, odkud vytěžovat.
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*). Čtenářem je **příští `/cleanup`**, který jinak nepozná, co zůstalo mimo rozsah úklidu a jak se s tím naložilo – a bude se na totéž ptát znovu.
 
 ```
 - **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · session `<session-id>` · N nevypořádaných témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak se s tím naložilo>
 ```
 
-Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id session** je to, které se uklízelo – u cizí session tedy její, ne tvoje. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.
+Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id session** vezmi z cesty ke scratchpadu, stejně jako v *Fázi 0*. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.
 
 **Id session není evidence uklizených session ani čára.** Opakovaný běh nad toutéž session je legitimní použití a tenhle řádek mu nijak nebrání – dvě data u téhož id znamenají dva úklidy, ne duplicitu. Zapisuje se proto, že jinak z `done.md` nejde poznat, **co** se uklidilo; rozhodnuto 25. 9. 2026, rozbor v `decisions.md`.
 
@@ -253,6 +270,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Ze session je všechno zapsané, můžeš pokračovat, zkompaktovat i odejít.`
 - **Stojíš-li na jiné než hlavní větvi** – ve worktree layoutu (`~/.claude/WORKTREE.md`) tedy v kontejneru s `.bare` a mimo `main/`, v běžném repozitáři prostě podle `git branch --show-current`: `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – můžeš pokračovat, zkompaktovat, nebo ji přimergovat do main.` Je-li ze session známé něco rozbitého nebo nedodělaného, použij místo ní `Ze session je všechno zapsané. Větev <jméno> zůstává otevřená – merge zatím brání: <konkrétní seznam>.` a merge v otázce níž nenabízej. Totéž platí, zjistil-li Git výš rozpracovaný `main/`, nebo stojí-li v `## Nasazení` projektového `CLAUDE.md`, že se z `main` automaticky nasazuje – merge by tam byl nasazení a patří `/release`. **V běžném repozitáři merge navíc přepne pracovní strom**, takže se nabízí jen tehdy, je-li `git status` čistý; to Git výš stejně vyžaduje, takže nečistý strom zastaví běh dřív.
+- **Není-li to git repozitář:** `Ze session je všechno zapsané do souborů. Commit odpadá, protože projekt není git repozitář – ohlásil jsem to na začátku běhu.`
 - `Zapsané zatím není všechno – brání tomu: <konkrétní seznam>.`
 
 **Nenabízej „opustit session“ jako jedinou cestu.** Zápis je hotový, ale to neznamená, že je hotová práce: uživatel klidně pokračuje dál v téže session a `/cleanup` mu jen zajistil, že ho kompaktace nepřipraví o kontext. Ve worktree layoutu to platí dvojnásob – „můžeš odejít“ tam neodpovídá na otázku, kterou má uživatel v hlavě, totiž co s tou větví.
@@ -266,9 +284,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 | Volba | Kdy se nabízí | Co se po ní stane |
 |---|---|---|
 | **Přimergovat do main** | jen stojíš-li na jiné než hlavní větvi – ve worktree layoutu v kontejneru s `.bare` a mimo `main/`, jinak podle `git branch --show-current` – a jen když verdikt nepojmenoval nic, co merge brání | zavoláš `/merge` nástrojem `Skill` |
-| **Pokračovat v práci** | vždy, uklízel-li ses sám | nic – čekáš na další zadání |
-| **Otevřít uklizenou session** | jen uklízel-li jsi cizí session podle argumentu | vypíšeš `/resume <id>` ke zkopírování – spustit ho za uživatele nejde |
-| **Další kolo úklidu** | vždy | pustíš `/cleanup <id>` nástrojem `Skill`, s tím id, které se uklízelo |
+| **Pokračovat v práci** | vždy | nic – čekáš na další zadání. **Další úklid bude potřeba**: co se od teď domluví, v souborech není |
+| **Další kolo úklidu** | vždy | pustíš `/cleanup` znovu nástrojem `Skill` |
 
 **Proč otázka, a ne rovnou merge:** `/cleanup` se pouští i před kompaktací uprostřed rozdělané větve, takže automatický merge by jednou poslal do `main` nedodělanou práci. Uživatel přitom po úklidu podle vlastních slov (16. 9. 2026) mergoval skoro vždycky, a ruční příkaz navíc byl jen tření. Zavržená varianta (16. 9. 2026): **režim `/cleanup merge`** – záměr by se řekl předem, ale uživatel by si režim musel pamatovat, kdežto otázka stojí jeden stisk. **Samostatný krok životního cyklu pro dokončení větve se tehdy zamítl taky, a 21. 9. 2026 se to obrátilo** – vznikl `/merge`. Nabídka tím nepadá, jen přestala být popisem postupu. Rozbor drží `decisions.md`, *Merge je samostatný krok, ne fáze `/cleanup`*. **Vybraná volba je výslovný pokyn** ve smyslu `~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak* – bez ní merge neprovádíš, nepřipravuješ ani nevypisuješ příkazy.
 
@@ -279,3 +296,14 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Merge se nikam dál nezapisuje.** Záznam průchodu v `done.md` vznikl před otázkou a nese hash úklidu; merge commit se zprávou shrnující práci je záznam sám o sobě.
 
 **Skončil-li běh třetí větou** (zapsané není všechno), otázku nepokládej: další krok je odstranit to, co zápisu brání, a merge by šel přes nevypořádanou práci.
+
+------
+
+## Časté chyby
+
+Z ostrých běhů, ne z toho, co by se pokazit mohlo.
+
+- **`HEAD` se vydává za základ session.** V projektu se zapnutým autocommitem bývá `HEAD` commit **uvnitř** session, takže diff pro čtenáře vyjde prázdný – a prázdný diff se od čistého nepozná. Proto ho *Fáze 0* počítá z času session, ne z `HEAD`. Doloženo při prvním ostrém běhu 25. 9. 2026.
+- **Agentovi se zapomene říct, kde struktura leží.** Píše cesty v podobě pro režim `docs/`; v projektu s kořenovým režimem nebo tam, kde pracovní adresář session není kořen projektu, si to bez pole v promptu odvodí špatně. Vyplň tedy celou šablonu, i to, co je z kořene vidět.
+- **Diff pro čtenáře se skládá mezi dvěma revizemi.** Agent necommituje, takže `main...<větev>` ani `<základ>..HEAD` jeho zápisy neobsahuje a čtenář posuzuje podklad bez toho, kvůli čemu běží.
+- **Fáze se přeskakuje, protože „nic nepřišlo“.** Nedorazili-li čtenáři, není to výsledek, ale čekání; a nemá-li agent položky k rozhodnutí, řekne se to nahlas, ne mlčením.

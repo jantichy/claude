@@ -30,12 +30,12 @@ Soubor si **načte agent sám** – v promptu dostane cestu k němu a nic víc. 
 
 ## 1. Základ session a stav, ze kterého vycházíš
 
-**První příkaz celého běhu je `git rev-parse HEAD`.** Je to commit, na kterém session stála, než cokoliv zapsala – rodič z něj skládá diff pro čtenáře bez kontextu. Zjisti ho **dřív než cokoliv zapíšeš**; po prvním commitu už ho nezjistíš.
+**Základ session dostaneš v promptu** – je to commit, na kterém session stála, než cokoliv zapsala. Nezjišťuj ho sám a zvlášť ne přes `git rev-parse HEAD`: má-li projekt zapnutý autocommit, `HEAD` bývá commit **uvnitř** session. Vrať ho ve výstupu, protože rodič z něj skládá diff pro čtenáře bez kontextu. **Chybí-li v promptu, řekni to jako mez běhu** a bod 4 pak měř podle času, ne podle commitu – nedomýšlej si hash.
 
-**Co máš v promptu, nezjišťuj znovu** – kořen projektu, větev, autocommit, paměťovou politiku a soubory rozpracované před začátkem běhu ti předal rodič. Zbytek si zjisti:
+**Co máš v promptu, nezjišťuj znovu** – cestu k transcriptu, základ session, kořen projektu, větev, režim umístění standardních souborů, autocommit a paměťovou politiku ti předal rodič. Zbytek si zjisti:
 
 1. **Projektový `CLAUDE.md`** – z něj `## Výjimky z obecných pravidel`, tedy co je v tomhle projektu vědomá odchylka, a tedy **není nález** (`~/.claude/skills/PREFLIGHT.md`, bod 2). Ve worktree layoutu je to ten ve worktree větve, ne rozcestník v kořeni kontejneru.
-2. **Co bylo v pracovním stromu už před tebou** – `git status --porcelain`. Jsou to soubory, které nemůžeš připsat téhle session: nad jedním repozitářem běžívá víc session naráz. Vrať ten výčet nahoru a **žádný z nich neuváděj mezi cestami, kterých jsi se dotkl**, pokud jsi do něj sám nezapsal.
+2. **Co bylo v pracovním stromu už před tebou** – `git status --porcelain`. Výčet máš i v promptu; **pusť to přesto a rozchází-li se to, vrať oba seznamy** – mezi tím, co viděl rodič, a tvým startem mohla vzniknout další změna. Jsou to soubory, které nemůžeš připsat téhle session: nad jedním repozitářem běžívá víc session naráz. **Žádný z nich neuváděj mezi cestami, kterých jsi se dotkl**, pokud jsi do něj sám nezapsal.
 3. **Dokumentační mapa** – jaké soubory jsou v projektu nositeli pravdy a co je čí doména. Autoritativní je `~/.claude/STRUCTURE.md`; zaznamenej, které ze standardních souborů v projektu chybí.
 
 ## 2. Rekonstrukce session
@@ -46,8 +46,6 @@ Tohle je jádro: vychází z něj všechno ostatní.
 
 - **Subagenta na transcript neposílej** – tím subagentem jsi ty. Čti ho sám.
 - **Ověření proti dokumentaci si nech taky** – v bodu 3 ho děláš ty, ne rodič. Zůstává z něj jen to podstatné: **u každé položky si drž doslovnou citaci a číslo řádku**, ať se dá nahoře ověřit grepem místo čtením transcriptu.
-
-**Dostal-li jsi v promptu hash předchozího úklidu téže session** (rodič ho vezme z řádku `/cleanup` v `docs/done.md`), vytěžuj podrobně jen záznamy **od toho okamžiku dál**. Starší část transcriptu už jednou vytěžená byla; nad ní stačí bod 3, tedy konfrontace se soubory. Druhý běh je tím výrazně levnější a pořád platí jako verifikace prvního.
 
 Vytěž **osm kategorií**:
 
@@ -140,7 +138,7 @@ Zvlášť projdi hlavní soubory – `README.md`, `docs/todo.md`, `docs/backlog.
    | `CLAUDE.md` → `## Kontrakt příkazů` | přibyl nebo se změnil příkaz na testy, lint, build nebo audit |
    | `docs/plan.md` | odpracovaly se úkoly (odškrtnout), nebo se plán rozešel se skutečností |
 
-3. **Porovnej s tím, co v souborech skutečně je.** Nestačí, že se soubor během session změnil – ověř, že obsahuje **všechno**, co tam podle bodu 2 patří.
+3. **Porovnej s tím, co v souborech skutečně je.** Nestačí, že se soubor během session změnil – ověř, že obsahuje **všechno**, co tam podle tabulky v předchozím kroku patří.
 
 4. **Chybějící doplň zpětně z celé session** – ne jen holé odrážky, ale ve stejné kvalitě, jako by to bylo zapsané v okamžiku, kdy to padlo: u rozhodnutí i **proč**, jaké varianty byly ve hře a proč padly; u odložených věcí **celou úvahu**, ne jen název; u principů **obecnou formulaci**, ne popis jednoho případu. Zároveň **přeformuluj**, co bylo zapsáno ve spěchu nebo se od té doby posunulo.
 

@@ -9,7 +9,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
 **Vyřídit ale neznamená zeptat se.** Položka mimo rozsah je nález zadarmo – všiml sis jí jen proto, že jsi u toho zrovna byl, a příště u toho nebude nikdo. Co umíš opravit jednoznačně, **oprav proto rovnou a bez ptaní, i když je to mimo rozsah úklidu**. Otázka, u které je předem jasné, jak zní jediná rozumná odpověď, nic nerozhoduje a stojí uživatele pozornost, kterou pak nemá na otázky, kde na jeho odpovědi opravdu záleží. Ptej se jen na to, co rozhodnout neumíš.
 
-1. **Nemáš-li nic**, fázi přeskoč a v přehledu uveď „žádné“.
+1. **Nemáš-li nic**, přeskoč to. Platí to pro oba: agent nahoru nepošle nic a rodič uvede v přehledu „žádné“.
 
 2. **Rozděl položky na ty, které vyřešíš sám, a ty, na které se zeptáš.** Hranice je táž jako u nálezů kontrolních skillů a drží ji `~/.claude/skills/FINDINGS.md`; tady k ní patří dvě podmínky navíc, protože položka mimo rozsah se nevypořádává ve fázi, která na ni má čas.
 
@@ -32,7 +32,9 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
    **Objem důvod k dotazu není.** Zdlouhavá, ale jednoznačná oprava se dělá, ne předkládá; naopak jednořádková změna pravidla se předkládá, i když trvá vteřinu. Rozhoduje, čí je to rozhodnutí, ne kolik je s ním práce.
 
-3. **Vyřeš první skupinu rovnou**, celou, ještě než se začneš ptát na druhou – a vypiš, cos udělal – **výpisem ale odpověď nekonči**, bod 4 i první otázka bodu 5 patří do téže odpovědi (`~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*):
+3. **Vyřeš první skupinu rovnou**, celou, ještě než se přejde ke druhé, a vypiš, cos udělal. **Tenhle bod plní agent**, takže „vypiš“ znamená vrátit to ve výstupu, ne do konverzace – ptát se nemůže a nemá.
+
+   **Rodiči pak platí, že výpisem odpověď nekončí** – bod 4 i první otázka bodu 5 patří do téže odpovědi (`~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*). Šablona výpisu je tahle:
 
    ```
    **Mimo rozsah, vyřešeno rovnou:**
@@ -77,7 +79,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
    |---|---|
    | **Vyřešit teď** | Vyřeš položku **hned**, ještě než se zeptáš na další – ne až po posledním dotazu. Rozhodnutí odložené na konec ztratí kontext, ve kterém padlo. |
    | **Zapsat do todo** | Zapiš ji do `docs/todo.md` – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. Volí se u položky, o které je rozhodnuto, že se udělá. |
-   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/STRUCTURE.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Když soubory neexistují*). |
+   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/STRUCTURE.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Fáze 1 – Vytěžovací agent*). |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
 
    Když jsi vyřídil poslední položku, pokračuj *Fází 6* – tam na tebe čekají nálezy čtenářů.

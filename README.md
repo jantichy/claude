@@ -106,7 +106,7 @@ Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít –
 
 ### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
 
-Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Celé to těžké čtení a zápis přitom dělá subagent, ne hlavní session: transcript leží na disku a kontext session k té práci není potřeba, takže běh stojí zlomek toho, co dřív. Na konec pošle na projekt dva agenty bez kontextu – jeden řekne, jestli z dokumentace jde na dnešní práci navázat, druhý hledá rozpory a zbytky po přepisování v tom, co přibylo na větvi –, a nabídne, co dál: ve větvi i rovnou merge. Čtou na pozadí, takže se na ně nečeká.
+Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. Celé to těžké čtení a zápis přitom dělá subagent, ne hlavní session: transcript leží na disku a kontext session k té práci není potřeba, takže běh stojí zlomek toho, co dřív. Mezitím pošle na projekt dva agenty bez kontextu – jeden řekne, jestli z dokumentace jde na dnešní práci navázat, druhý hledá rozpory a zbytky po přepisování v tom, co přibylo na větvi –, a nabídne, co dál: ve větvi i rovnou merge. Čtou na pozadí, takže se na ně nečeká.
 
 ### [`/merge`](skills/merge/) – dokončení větve, ne jeden příkaz
 
