@@ -1239,4 +1239,16 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Z toho plyne, kde se dá ušetřit, a kde ne:** ne u čtenářů (dřívější měření jim dává 2 % a platí to dál), ale u interaktivních smyček rodiče a u průchodů transcriptu. Podíl subagentů na celku stoupl z 31 % na 53 %.
 
+**Rozklad po vrstvách** (7 běhů, součet 1600 jednotek, párováno na jednotlivé subagenty podle session-id a časového okna):
+
+| vrstva | podíl | pozn. |
+|---|---|---|
+| hlavní session – interaktivní fáze | **46,7 %** | čtyři fronty s dotazem na položku |
+| čtenáři bez kontextu | **40,8 %** | **3,1 spuštění na běh**, přestože jsou dva |
+| vytěžovací agent – jádro skillu | **12,5 %** | to, kvůli čemu skill existuje |
+
+**To, co se od skillu očekává, je osmina jeho ceny.** Dřívější údaj „čtenáři 2 % nákladů“ platil pro starý tvar, kde vytěžení dělala hlavní session a čtenáři se poměřovali s jejím obřím kontextem; po přesunu vytěžení do agenta se poměr převrátil. **Kdo se rozhoduje podle toho starého čísla, rozhodne špatně** – proto tohle stojí tady a ne jen v `todo.md`.
+
+**Čtenář pozůstatků se pouští dvakrát až třikrát v jednom běhu**, ne jednou: jednou ve *Fázi 2*, pak znovu ve *Fázi 6* po opravách, a k tomu ho *Fáze 6* pouští znovu, „vrátil-li chybu **nebo nic**“ – přičemž prázdný výsledek je podle jeho vlastního zadání úspěch („Pokud je něco v pořádku, nepiš to“). Skill si tedy vyrobil vstup, který podle vlastní definice znamená čisto, a vyhodnocuje ho jako selhání.
+
 **Mez měření:** 7 běhů proti 110, všechny z jednoho dne a z pásma nad 1200 kB – pro menší session po přepisu data nejsou. Vyloučen jeden běh, který skončil po 3 voláních. Čísla jsou vážený součet tokenů, ne fakturovaná částka; poměry platí, absolutní hodnoty se s cenami změní.
