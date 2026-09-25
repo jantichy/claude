@@ -364,7 +364,6 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
   **Nevypořádaná témata, která to vytěžení našlo** (zapsáno, ať nezmizí se session):
 
   - **Bod „aby totéž platilo i pro druhý běh nad opravami prvního“** z osmibodového výčtu požadavků na skill zůstal bez odpovědi – odbyl se půlvětou o tom, že druhý běh agenta by musel načíst všechno znovu, a nikdo neřekl, jestli to vadí. **Tohle přehlédla hlavní session a našel to až agent.**
-  - **Doplnit id uklizené session do řádku v `done.md`** – měkčí varianta po zamítnutí evidence, vedená jako otevřený návrh, o kterém se nikdy nerozhodlo.
   - **Skupiny B až F z oponentury** se procházely jedna po druhé a přerušilo se to po skupině A; část z nich varianta se subagentem ruší, ale neprošlo se to nález po nálezu.
   - **Převod panelů na nástroj `Workflow`** – padl návrh, uživatel se zeptal jen na to, co ten nástroj je. Má dnes vlastní položku níž v tomhle souboru.
 
@@ -419,7 +418,7 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Vědomě zamítnuté – nenavrhuj znovu bez nového argumentu:**
 
-  - **Evidence uklizených session** (rejstřík a čára po vzoru `/depot` `_state/`): skill je záměrně opakovatelný a evidence by šla proti té vlastnosti. Opakovaný běh je legitimní použití, ne chyba. Oponent na to navázal měkčí variantou – **doplnit id uklizené session do řádku v `done.md`**, který Fáze 9 zapisuje tak jako tak; to nový rejstřík nezakládá a zůstává jako otevřený návrh.
+  - **Evidence uklizených session** (rejstřík a čára po vzoru `/depot` `_state/`): skill je záměrně opakovatelný a evidence by šla proti té vlastnosti. Opakovaný běh je legitimní použití, ne chyba. Oponent na to navázal měkčí variantou – **doplnit id uklizené session do řádku v `done.md`**, který Fáze 9 zapisuje tak jako tak; to nový rejstřík nezakládá. **Přijato 25. 9. 2026** a zapsané ve skillu i v `~/.claude/STRUCTURE.md`; zamítnutá zůstává jen ta evidence.
   - **`/compact` jako rovnocenná alternativa k `/clear`:** funguje bez parametru a bez worktree problému, ale nechává v kontextu 132k ztrátového shrnutí – a ztrátové je přesně v tom, co skill hledá (korekce, zavržené varianty, nevypořádaná témata). Zapíše se do skillu jako horší varianta s důvodem.
   - **Dva režimy skillu** (jeden pro běh v session, druhý v čisté): skill má jediné chování; jde jen o odstranění nevysloveného předpokladu, že kontext existuje.
   - **Poznat čistou session podle posledního promptu:** nefunguje, protože `/cleanup` je interaktivní a během něj se odpovídá ve Fázi 2, 5 i 7 – poslední prompt tedy nikdy není `/cleanup`.

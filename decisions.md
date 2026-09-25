@@ -1142,3 +1142,13 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Nejdůležitější důsledek:** agent si **najde transcript rodičovské session sám**, protože jeho scratchpad ukazuje na ni – nemusí se mu předávat žádné id. To dělá z delegace úplně jinou možnost, než jaká se jevila, dokud se počítalo s `/clear`em.
 
 **Pozor na jednu nekonzistenci:** adresář, do kterého agent ukládá svůj výstup (`…/tasks/<agentId>.output`), leží pod **jiným** UUID než scratchpad session. Vypadá to jako změna session-id a není to ona – transcript pod tím druhým UUID neexistuje. Kdo bude odvozovat session-id z cesty, musí brát tu ze systémového promptu, ne z cesty k výstupu agenta.
+
+### 2026-09-25 – Řádek `/cleanup` v `done.md` nese i id uklizené session
+
+**Rozhodl uživatel** při úklidu jako jediné nevypořádané téma, které nesouviselo s odloženou přestavbou skillu. Návrh vzešel z oponentury 23. 9. jako měkčí protějšek k **zamítnuté evidenci uklizených session** – ta padla proto, že skill je záměrně opakovatelný a rejstřík s čárou by šel proti té vlastnosti.
+
+**Co se mění:** šablona v `skills/cleanup/SKILL.md`, Fáze 9, nově nese `session <session-id>` mezi hashem a počtem témat; `STRUCTURE.md` to popisuje u odrážky o tom, co `/cleanup` do sekce zapisuje.
+
+**Proč to není evidence:** rejstřík by rozhodoval, **jestli** se smí uklidit znovu; tenhle řádek jen říká, **co** se uklidilo. Dvě data u téhož id znamenají dva úklidy, ne duplicitu, a nic se podle nich nefiltruje. Bez id se z `done.md` nedá poznat, čeho se běh týkal – a **je to tím podstatnější, že se skill chystá přepsat na běh v subagentovi nad cizí session** (`todo.md`), kde „uklizeno dnes“ přestane znamenat „uklizena tahle session“.
+
+**Zamítnuto – nechat řádek beze změny.** Argument byl, že id je dlouhý řetězec, který člověk nečte, a že opakované běhy vyrobí víc řádků s týmž id. Neobstál: řádek čte **příští běh téhož skillu**, ne člověk, a víc řádků s týmž id je věcně správný záznam dvou úklidů.
