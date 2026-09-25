@@ -1218,3 +1218,25 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Rozhodnuto 25. 9. 2026.** `skills/cleanup/SKILL.md` má po zapracování zpětné vazby z prvních tří ostrých běhů a po vypořádání nálezů čtenářů **326 řádků** (`wc -l`, 25. 9. 2026), tedy pásmo 300–500 z `skills/SKILLS.md`, *Délka a progresivní odhalení*, kde norma velí rozdělení zvážit a říct to při revizi. **Nedělí se**, a to ze dvou důvodů: přírůstek toho dne byl 17 řádků (309 → 326), takže do pásma soubor spadl setrvačností, ne novou složitostí; a jádro skillu už venku je – `agent.md`, `readers.md` a `out-of-scope.md` vznikly při přesunu do subagenta, takže v `SKILL.md` zbyl samotný postup rodiče, který se čte souvisle.
 
 **Cesta zpátky:** k dělení se sáhne, až se soubor přiblíží tvrdé mezi 500 řádků, a vytáhnou se z něj šablony výstupu *Fází 3, 4 a 7* a kapitola *Časté chyby*. Zamítnuto zapsat to jako úkol do `todo.md` ani jako nápad do `backlog.md` – fronta ani backlog nejsou místo pro rozhodnutí, že se něco **dělat nemá** (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*), a bez tohohle zápisu by dělení někdo navrhl znovu a prošel by touž úvahou od nuly.
+
+### 2026-09-25 – Přesun `/cleanup` do subagenta úspory nepřinesl: celek je o třetinu dražší
+
+**Změřeno 25. 9. 2026**, den po přepisu, skriptem `skills/cleanup/scripts/cost.py` (uložen schválně – předchozí měření výš svůj skript neuložilo a chybí). Metodika je v jeho docstringu; běh se ohraničuje markerem `Úklid dokončen`, srovnává se po pásmech velikosti transcriptu.
+
+**Srovnání v pásmu nad 1200 kB**, kde leží všech 7 ostrých běhů po přepisu (medián, proti 110 běhům před ním):
+
+| | před | po | změna |
+|---|---|---|---|
+| hlavní session | 105,8 | 97,7 | **−8 %** |
+| subagenti | 43,1 | 112,6 | **+161 %** |
+| **celkem** | **149,9** | **200,6** | **+34 %** |
+| volání hlavní session | 110 | 103 | −6 % |
+| volání agentů | 113 | 281 | +149 %|
+| agentů na běh | 2 | 4 | +100 % |
+| délka | 44 min | 49 min | +12 % |
+
+**Slib 80 % úspory se nesplnil a nemohl se splnit.** Pilot měřil jen *Fázi 1 a 3*, kdežto přepis nechal v rodiči celou interaktivní část – *Fáze 3 až 6*, čtyři samostatné fronty s jedním dotazem na položku. Proto volání hlavní session klesla jen o 6 %: **náklad rodiče je počet jeho volání krát jeho kontext**, a delegace ubrala volání, kterých bylo málo. Vytěžovací agent k tomu prochází transcript třikrát v surové podobě, takže agenti zdvojnásobili počet i cenu.
+
+**Z toho plyne, kde se dá ušetřit, a kde ne:** ne u čtenářů (dřívější měření jim dává 2 % a platí to dál), ale u interaktivních smyček rodiče a u průchodů transcriptu. Podíl subagentů na celku stoupl z 31 % na 53 %.
+
+**Mez měření:** 7 běhů proti 110, všechny z jednoho dne a z pásma nad 1200 kB – pro menší session po přepisu data nejsou. Vyloučen jeden běh, který skončil po 3 voláních. Čísla jsou vážený součet tokenů, ne fakturovaná částka; poměry platí, absolutní hodnoty se s cenami změní.
