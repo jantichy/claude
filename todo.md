@@ -353,6 +353,13 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Sekce *Časté chyby* už varuje, že `HEAD` není základ** – tohle je druhá, samostatná vada v tomtéž kroku a varování před ní nechrání, protože vypadá, že recept funguje.
 
+- [ ] **Ověřit, jestli je id session ve scratchpadu spolehlivé – cesty se rozcházejí.** `/cleanup` i `SESSION.md` říkají brát id session z cesty ke scratchpadu. Při prvním ostrém běhu 25. 9. 2026 to sedělo, ale **vedle toho existovala druhá cesta s jiným id**:
+
+  - scratchpad: `/private/tmp/claude-501/-Users-honza-Dev-veneti/53e03c78-…/scratchpad` – správné id téhle session,
+  - výstupy subagentů: `/private/tmp/claude-501/-Users-honza-Dev-veneti/3168ebc9-…/tasks/…` – **id předchozí session** z téhož projektu.
+
+  Kdo by id vzal z druhé cesty, sáhne po cizím transcriptu a nic mu to neřekne – oba soubory existují a oba se parsují. **Zjistit, čím ta druhá cesta vzniká** (zůstává po dřívější session? je to jiná komponenta harnessu?) a jestli se na první dá spolehnout vždycky. Než se to ověří, stojí za to v `SESSION.md` napsat, že platí **scratchpad**, ne libovolná cesta pod `/private/tmp` s podobným tvarem.
+
 - [ ] **Změřit první ostrý běh `/cleanup` v subagentovi a doložit, nebo vyvrátit slíbenou úsporu.** Ohlášených **75 až 85 %** proti dnešním 10,2M je **extrapolace z poměru fází**, ne měření: pokusný běh 25. 9. 2026 pokryl jen vytěžení a konfrontaci (45 volání, 0,87M) a odhad celého úklidu v agentovi zněl 1,5–2,5M. Změř to týmž způsobem, jakým se měřilo 249 běhů – ze session logů –, a porovnej s pásmem podle velikosti transcriptu, ne s jedním číslem. **Změřit je potřeba obě části zvlášť**, agenta i rodiče: kdyby úspora nevyšla, rozhoduje, jestli ji sežral agent, nebo režie rodiče. Výsledek patří do `decisions.md` k záznamům o ekonomice úklidu; nevyjde-li, je to argument pro zúžení řezu, ne pro návrat.
 
   **Agentská část je od 25. 9. 2026 změřená, rodičovská ne.** První ostrý běh nad transcriptem 1,7 MB: vytěžovací agent **33 volání a 197k tokenů**, čtenář navazitelnosti 32 volání a 272k, čtenář pozůstatků 29 volání a 189k (`done.md`). Chybí právě to, co rozhoduje – **kolik stál rodič**: jeho volání a kontext se z notifikací o agentech nedozvíš a je k tomu potřeba týž postup ze session logů jako u těch 249 běhů. Bez toho se úspora tvrdit nedá, protože rodič nesl celou interaktivní část a pět rozhodnutí nad nálezy čtenářů.
