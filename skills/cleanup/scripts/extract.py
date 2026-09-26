@@ -161,15 +161,20 @@ def compactions(rows):
                or (r.get("compactMetadata") is not None))
 
 
+#: Hlášky harnessu, které mají tvar uživatelského textu, ale nikdo je nenapsal.
+HARNESS_NOTES = ("[Request interrupted", "[SYSTEM")
+
+
 def written_by_user(text):
     """Napsal to uživatel, nebo to do fronty vložil harness?
 
     Do fronty padají i notifikace o dokončení úlohy a zprávy subagentů. Mají
     tvar značky nebo hlášky systému, takže se poznají podle prvního znaku –
-    uživatelův text značkou nezačíná.
+    uživatelův text značkou nezačíná. Přerušení běhu je zvláštní případ: čte
+    se jako věta, ale je to záznam o akci, ne obsah k zapsání.
     """
     text = text.strip()
-    return bool(text) and not text.startswith("<") and not text.startswith("[SYSTEM")
+    return bool(text) and not text.startswith("<") and not text.startswith(HARNESS_NOTES)
 
 
 def walk(rows):
@@ -209,19 +214,46 @@ def prompts(rows):
     přicházejí jinou cestou (`queue-operation`) a snadno se přehlédnou. Naopak
     sem nepatří vsuvky s rolí uživatele, které nenapsal on.
     """
-    found = []
+    found, seen = [], set()
+
+    def add(number, text):
+        # Zpráva poslaná uprostřed odpovědi je v transcriptu **dvakrát**: jako
+        # `queue-operation` při zařazení a jako `queued_command` při doručení.
+        # Bez deduplikace by evidence žádala dva řádky na jednu větu a poměr
+        # by nikdy nesedl. Odhaleno prvním ostrým během 26. 9. 2026.
+        key = " ".join(text.split())
+        if not written_by_user(text) or key in seen:
+            return
+        seen.add(key)
+        found.append((number, text.strip()))
+
     for number, record in rows:
         for _, _, text in extra_rows(number, record):
-            if written_by_user(text):
-                found.append((number, text.strip()))
+            add(number, text)
         if (record.get("message") or {}).get("role") != "user" or record.get("isMeta"):
             continue
         for block in blocks(record):
-            if block.get("type") != "text":
-                continue
-            if written_by_user(block.get("text", "")):
-                found.append((number, block.get("text", "").strip()))
-    return sorted(found)
+            if block.get("type") == "text":
+                add(number, block.get("text", ""))
+    return sorted(drop_prefixes(found))
+
+
+def drop_prefixes(found):
+    """Zahodí kotvu, která je jen rozepsanou verzí jiné.
+
+    Harness uloží prompt i ve stavu před doplněním, a to pod **jiným**
+    `promptId`, takže podle něj se to rozlišit nedá (ověřeno 26. 9. 2026).
+    Kratší verze je prefixem delší a nenese nic, co by v ní nebylo – zůstává
+    proto ta delší. Bez toho by evidence žádala dva řádky na jednu větu
+    a poměr by nikdy nesedl.
+    """
+    texts = [(number, " ".join(text.split()), text) for number, text in found]
+    kept = []
+    for number, flat, text in texts:
+        if any(other.startswith(flat) and other != flat for _, other, _ in texts):
+            continue
+        kept.append((number, text))
+    return kept
 
 
 def run_inventory(rows, path):

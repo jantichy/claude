@@ -297,6 +297,24 @@ class KotvyEvidence(PredfiltrBase):
     def test_prikaz_skillu_kotva_neni(self):
         self.assertEqual(self.anchors([self.user("<command-name>/cleanup</command-name>")]), [])
 
+
+    def test_zprava_z_fronty_se_nepocita_dvakrat(self):
+        """Fronta ukládá zprávu dvakrát: při zařazení a při doručení."""
+        records = [
+            {"type": "queue-operation", "operation": "enqueue", "content": "ještě dodělej tohle"},
+            {"type": "attachment", "attachment": {"type": "queued_command", "prompt": "ještě dodělej tohle"}},
+        ]
+        self.assertEqual(self.anchors(records), ["ještě dodělej tohle"])
+
+    def test_rozepsany_prompt_se_nepocita_zvlast(self):
+        """Harness uloží i verzi před doplněním – a pod jiným promptId."""
+        records = [self.user("Zhodnoť ten skill"), self.user("Zhodnoť ten skill a řekni, co s ním dál")]
+        self.assertEqual(self.anchors(records), ["Zhodnoť ten skill a řekni, co s ním dál"])
+
+    def test_preruseni_behu_kotva_neni(self):
+        """Čte se to jako věta, ale je to záznam o akci, ne obsah k zapsání."""
+        self.assertEqual(self.anchors([self.user("[Request interrupted by user]")]), [])
+
     def test_vsuvka_se_ale_cte(self):
         """Nález subagenta je obsah, který zmizí se session – čte se, jen není kotva."""
         kept = self.kept([self.user("NÁLEZ OD AGENTA", isMeta=True)])

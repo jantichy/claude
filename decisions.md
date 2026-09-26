@@ -1120,7 +1120,7 @@ Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nák
 - **`/clear` zakládá zcela novou session** – nové id, nový transcript, nový scratchpad – a **resetuje pracovní adresář** na ten, kde se `claude` spustil. Ověřeno 23. 9. 2026 testem v `~/Dev/cwdtest`: vznikly dva soubory, `55a0559a` (cwd se měnil na `sub`) a `8ff20c90` (cwd jen `cwdtest`). **Dřívější opačné tvrzení v téže session bylo chybné** – vzniklo z toho, že starý transcript po `/clear` pokračuje, jenže jsou to jen dozvuky příkazu, ne nová konverzace.
 - **`/compact` naopak zachovává** session-id, transcript i pracovní adresář a zmenší kontext z mediánu 810k na 132k (13 měřených případů). **Medián zmenšení jednotlivých případů je 81 %**; poměr těch dvou mediánů vychází na 84 % – počítá se to z jiných čísel, takže se ty hodnoty nemusí rovnat.
 - **`cd` do podadresáře mění working directory celé session**, ne jen shellu – systém to oznámí jako změnu Primary working directory.
-- **Transcript je nadmnožina kontextu, ne podmnožina.** Obsahuje odpovědi včetně thinking bloků, zprávy poslané uprostřed odpovědi (`queue-operation`), hooky, system-remindery i odkazy na odložené velké výstupy. **A obsahuje všechno před kompaktací** – doloženo na session se 7 916 kB před ní, kde je čitelná i první zpráva.
+- **Transcript je nadmnožina kontextu, ne podmnožina.** (**Od 26. 9. 2026 to platí s výjimkou:** velký výstup nástroje je v transcriptu uříznutý stejně jako v kontextu a plná verze leží v `tool-results/<id>.txt` – viz *Kolik z transcriptu se čte, rozhoduje počet kompaktací, ne zvyk* níž.) Obsahuje odpovědi včetně thinking bloků, zprávy poslané uprostřed odpovědi (`queue-operation`), hooky, system-remindery i odkazy na odložené velké výstupy. **A obsahuje všechno před kompaktací** – doloženo na session se 7 916 kB před ní, kde je čitelná i první zpráva.
 - V čerstvé session po `/clear` stojí **před prvním skutečným promptem dva uživatelské záznamy** – `<local-command-caveat>` a `<command-name>/clear</command-name>`. Kritérium „čistá session“ proto nejde postavit na počtu uživatelských záznamů, ale na tom, že **žádný z nich nemá obsah začínající jinak než `<`**.
 
 **Doložená vada dnešního `/cleanup`:** Fáze 0 velí zapamatovat si základ session přes `git rev-parse HEAD`. Ve 153 bězích se plný `rev-parse HEAD` zavolal **osmkrát (5 %)**, zatímco `rev-parse --short HEAD` pro záznam do `done.md` v 50 %. Fáze 6 si tedy diff pro čtenáře skládá z čehokoli, co je po ruce – v naměřených bězích `git diff --name-only origin/main`, `git diff main...<větev>` nebo hash odjinud. **Otevřená otázka, kterou to odkrylo:** mají čtenáři dostat diff session, nebo diff větve? Skill předepisuje první a improvizuje druhé.
@@ -1215,7 +1215,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 ### 2026-09-25 – `/cleanup` se v pásmu „zvaž rozdělení“ nedělí
 
-**Rozhodnuto 25. 9. 2026.** `skills/cleanup/SKILL.md` má po zapracování zpětné vazby z prvních tří ostrých běhů a po vypořádání nálezů čtenářů **326 řádků** (`wc -l`, 25. 9. 2026), tedy pásmo 300–500 z `skills/SKILLS.md`, *Délka a progresivní odhalení*, kde norma velí rozdělení zvážit a říct to při revizi. **Nedělí se**, a to ze dvou důvodů: přírůstek toho dne byl 17 řádků (309 → 326), takže do pásma soubor spadl setrvačností, ne novou složitostí; a jádro skillu už venku je – `agent.md`, `readers.md` a `out-of-scope.md` vznikly při přesunu do subagenta, takže v `SKILL.md` zbyl samotný postup rodiče, který se čte souvisle.
+**Rozhodnuto 25. 9. 2026.** `skills/cleanup/SKILL.md` má po zapracování zpětné vazby z prvních tří ostrých běhů a po vypořádání nálezů čtenářů **326 řádků** (`wc -l`, 25. 9. 2026), tedy pásmo 300–500 z `skills/SKILLS.md`, *Délka a progresivní odhalení*, kde norma velí rozdělení zvážit a říct to při revizi. **Nedělí se**, a to ze dvou důvodů: přírůstek toho dne byl 17 řádků (309 → 326), takže do pásma soubor spadl setrvačností, ne novou složitostí; a jádro skillu už venku je – `agent.md`, `readers.md` a `out-of-scope.md` vznikly při přesunu do subagenta, takže v `SKILL.md` zbyl samotný postup rodiče, který se čte souvisle. (**Od 26. 9. 2026 to platí jinak, závěr ale drží:** `agent.md` i `readers.md` zanikly se zrušením subagenta a čtenářů, venku zůstaly `obligations.md` a `out-of-scope.md`. Soubor má 334 řádků, tedy pořád totéž pásmo a pořád daleko od tvrdé meze 500.)
 
 **Cesta zpátky:** k dělení se sáhne, až se soubor přiblíží tvrdé mezi 500 řádků, a vytáhnou se z něj šablony výstupu *Fází 3, 4 a 7* a kapitola *Časté chyby*. Zamítnuto zapsat to jako úkol do `todo.md` ani jako nápad do `backlog.md` – fronta ani backlog nejsou místo pro rozhodnutí, že se něco **dělat nemá** (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*), a bez tohohle zápisu by dělení někdo navrhl znovu a prošel by touž úvahou od nuly.
 
@@ -1299,3 +1299,17 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Proč ne vždycky celý transcript:** je to tentýž obsah za druhou cenu, kterou se pak platí do konce session (`~/.claude/RULES.md`, *Co vložíš do kontextu, platíš do konce session*). U session bez kompaktace je to čistá duplikace – řádově 90 tisíc tokenů navíc za nic.
 
 **Zamítnuto rozhodovat to podle velikosti transcriptu.** Velký transcript bez kompaktace je pořád celý v kontextu, kdežto malý po dvou kompaktacích ne. Rozhoduje tedy kompaktace, ne objem – a to je jeden z mála případů, kde jde kritérium postavit na počtu, ne na úsudku.
+
+
+### 2026-09-26 – Kotvy evidence se deduplikují, protože harness tentýž prompt uloží víckrát
+
+**Zjištěno prvním ostrým během nového `/cleanup`** a opraveno hned, protože na počtu kotev stojí celá záruka úplnosti: nesedí-li, poměr `N/N` nic netvrdí. Transcript ukládá tentýž uživatelův vstup dvakrát ve dvou různých případech:
+
+1. **Zpráva poslaná uprostřed odpovědi** je tam jako `queue-operation` (při zařazení) a jako `attachment` typu `queued_command` (při doručení).
+2. **Rozepsaný prompt** se uloží i ve stavu před doplněním, a to **pod jiným `promptId`** – podle id se tedy rozlišit nedá. Kratší verze je prefixem té delší.
+
+**Deduplikuje se proto dvakrát:** podle normalizovaného textu (případ 1) a zahozením kotvy, která je prefixem jiné (případ 2). **U prefixů je to volba s rizikem** – napíše-li uživatel dvě samostatné zprávy, z nichž druhá začíná slovy té první, první se zahodí. Přijato vědomě: obsahově je delší nadmnožinou kratší, takže se neztratí zadání, jen jedna kotva v evidenci. Opačná chyba je horší – dva řádky na jednu větu znamenají poměr, který nikdy nesedne, a z čísla se stane šum.
+
+**Zamítnuto rozlišovat podle `promptId`** – ověřeno, že rozepsaná a hotová verze mají různé. **Zamítnuto počítat kotvy až z `filter` výstupu**, kde jsou obě verze taky: dedup patří k sestavení seznamu, ne k jeho čtení.
+
+**Přerušení běhu (`[Request interrupted by user]`) kotva není** – čte se jako věta, ale je to záznam o akci, ne obsah k zapsání.

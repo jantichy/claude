@@ -208,7 +208,7 @@ git log --name-only --format='%h' <základ session>..HEAD && git status --porcel
 python3 ~/.claude/skills/cleanup/scripts/links.py <změněné .md soubory>
 ```
 
-Seznam vezmi z gitu ze **tří** míst, ať ti nic neuteče: `git diff --name-only HEAD` (pracovní strom **i index** – samotné `git diff` to, co je ve stage, neukáže), `git diff --name-only <základ session>..HEAD` a `git status --porcelain --untracked-files=all`. Filtruj na `*.md` a seznam sjednoť.
+Seznam vezmi z gitu ze **tří** míst, ať ti nic neuteče: `git diff --name-only HEAD` (pracovní strom **i index** – samotné `git diff` to, co je ve stage, neukáže), `git diff --name-only <základ session>..HEAD` a `git status --porcelain --untracked-files=all`. Filtruj na `*.md`, seznam sjednoť a **vynech smazané soubory** – ty v diffu jsou, na disku ne, takže by skript hlásil „nelze přečíst“ jako nález. Doloženo prvním ostrým během 26. 9. 2026, kdy zanikly dva soubory skillu.
 
 **Nálezy oprav rovnou** – jsou jednoznačné. **Čistý výsledek je jedině `0`.** `1` znamená nálezy, `2` chybu volání – tu neber jako čisto: oprav volání a pusť skript znovu. **Nezměnil-li se žádný Markdown, krok přeskoč** a uveď v závěru, že kontrola odkazů neběžela, protože nebylo co kontrolovat.
 
