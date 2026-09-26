@@ -8,7 +8,7 @@ Odvedená práce na konfigurační vrstvě a záznamy průchodů životním cykl
 
 Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle repozitářem. Čtenářem je příští běh téhož skillu: potřebuje vědět, co minule zůstalo mimo rozsah a jak se s tím naložilo.
 
-- **2026-09-26** · `/cleanup` · `<HASH>` · session `360969c4-01ba-4f55-a831-2d1acdbe0c65` · kotvy 7/7 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: 77 bloků myšlení (v transcriptu prázdné), 4 výstupy Write, 4 Edit, 4 AskUserQuestion; odložený výstup [150] neotevřen – je to náhled vlastního prvního měření, které pozdější běh cost.py nahradil, plný soubor v tool-results/bcxllee1e.txt
+- **2026-09-26** · `/cleanup` · `01da972` · session `360969c4-01ba-4f55-a831-2d1acdbe0c65` · kotvy 7/7 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: 77 bloků myšlení (v transcriptu prázdné), 4 výstupy Write, 4 Edit, 4 AskUserQuestion; odložený výstup [150] neotevřen – je to náhled vlastního prvního měření, které pozdější běh cost.py nahradil, plný soubor v tool-results/bcxllee1e.txt
 - **2026-09-02** · `/oponent` · `~/.claude@574dade` · konfigurační vrstva `~/.claude` (životní cyklus projektu, `/review`, `/attack`, `coding.md`, `verify.sh`, meta-testy) · hlediska: vnitřní rozpor, co chybí, skeptik, provoz, hraniční případy · 75 nálezů (70 zapracováno, 0 zamítnuto, 5 odloženo)
   - Katalog hledisek se **po tomhle běhu** zmenšil na sedmnáct: *skeptik* splynul s *předpoklady* a *hraniční případy* s *co chybí*. Příští oponentura ať proti tomuhle řádku srovnává obsah, ne názvy – ty dva hlediska už v katalogu nejsou.
   - Před konsolidací bylo nálezů 84; do počtu výš se sloučily duplicity nalezené víc hledisky nezávisle.
