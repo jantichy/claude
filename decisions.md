@@ -1313,3 +1313,25 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Zamítnuto rozlišovat podle `promptId`** – ověřeno, že rozepsaná a hotová verze mají různé. **Zamítnuto počítat kotvy až z `filter` výstupu**, kde jsou obě verze taky: dedup patří k sestavení seznamu, ne k jeho čtení.
 
 **Přerušení běhu (`[Request interrupted by user]`) kotva není** – čte se jako věta, ale je to záznam o akci, ne obsah k zapsání.
+
+### 2026-09-26 – První ostrý běh zúženého `/cleanup`: 58,7 jednotky proti 200,6
+
+**Změřeno 26. 9. 2026** skriptem `skills/cleanup/scripts/cost.py` hned po prvním ostrém běhu nového tvaru, nad session s transcriptem 3,3 MB – tedy v témž pásmu, ve kterém jsou obě starší čísla.
+
+| srovnání | jednotky | změna | volání | změna | délka |
+|---|---|---|---|---|---|
+| před celým přepisem (2 čtenáři, bez subagenta) | 149,9 | −61 % | 110 | −52 % | 44 min |
+| včerejší tvar (subagent + 3,1 čtenáře) | 200,6 | **−71 %** | 166 | −68 % | 49 min |
+| odvozený scénář „vše v hlavní session bez čtenářů“ | 105,8 | −45 % | 110 | −52 % | – |
+| **dnešní běh** | **58,7** | | **53** | | **17 min** |
+
+**Vyšlo to lépe, než odvozený scénář předpovídal**, a to o 45 %. Rozdíl dělají tři věci, které se v odvozeném čísle neuplatnily: očištěný transcript se **vůbec nečetl celý** (nula kompaktací, obsah byl v kontextu), tři interaktivní fronty jsou jedna, a nepustil se žádný agent.
+
+**Tohle číslo je ale dolní hranice, ne typický běh, a nesmí se tak citovat.** Dvě věci ho srážejí a u jiné session nastanou:
+
+- **Fronta rozhodnutí byla prázdná.** Právě interaktivní smyčky byly ve včerejším rozkladu **46,7 %** ceny, takže největší položka se neuplatnila vůbec. Běh s pěti položkami ve frontě bude výrazně dražší a **kolik, se z tohohle měření nedá odhadnout** – proto se to tady nedopočítává.
+- **Nula kompaktací.** Po kompaktaci se očištěný transcript čte celý, tedy asi 90 tisíc tokenů navíc.
+
+**Proti tomu jedna věc číslo naopak nadhodnocuje:** běh v sobě nesl **opravu tří vad skillu** (deduplikace kotev, smazané soubory v kontrole odkazů, zápis nálezu o základu session), což k úklidu nepatří. Čistý úklid téže session by byl levnější.
+
+**Co se z toho smí tvrdit:** zúžení fungovalo a stav před přepisem je překonaný. **Co se tvrdit nesmí:** že je typický úklid za 58,7 – to řekne teprve běh s neprázdnou frontou. Do té doby platí jako mez zdola.
