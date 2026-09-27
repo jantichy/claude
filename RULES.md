@@ -133,7 +133,9 @@ Stojí-li na faktu rozhodnutí, návrh nebo argument, **ověř ho, než ho zapí
 
 Doloženo 17. 9. 2026 v rezervačním systému: uprostřed osmibodového řízeného rozhovoru přišla otázka „vyznačí náhled obě vady, nebo jen neznámý kód“ bez věty o tom, že vady jsou dvě a které to jsou. Uživatel: *„Necybí ti tu zase úvodní kontextový text před otázkou? Vůbec netuším, na co se ptáš. jaký oba? co oba?“* – slovo **zase** je na tom to podstatné: v téže session to byl druhý případ, protože předchozí otázka na omezení rychlosti taky neřekla, kdo a kdy to volání vůbec vyvolá.
 
-**Jak se ptát:** přes tool `AskUserQuestion`, ne vypsáním voleb jako textu – uživatel pak vybírá šipkami, místo aby psal písmena. Jedno volání = **jedna otázka** (`multiSelect: false`), `header` max 12 znaků, `description` u každé volby konkrétně říká, co se stane.
+**Jak se ptát:** přes tool `AskUserQuestion`, ne vypsáním voleb jako textu – uživatel pak vybírá šipkami, místo aby psal písmena. Jedno volání = **jedna otázka** (`multiSelect: false`), `header` **krátký, řádově do dvanácti znaků**, `description` u každé volby konkrétně říká, co se stane.
+
+**Dvanáct znaků je doporučení, ne mez, a je to rozhodnuté 28. 9. 2026.** Do té doby to tu stálo jako tvrdá mez převzatá z dokumentace nástroje – **nikdy ji nikdo nepozoroval** a dvě měření v jednom běhu se nevrátila. Tvrdá mez bez doloženého chování je horší než doporučení: skilly se podle ní zkracovaly a `cleanup/out-of-scope.md` se jí dokonce zdůvodňoval, proč v hlavičce nemá číslo položky. Ukáže-li se, že delší hlavička se ořezává, vrátí se sem jako mez **i s tím, co se pozorovalo**.
 
 Volbu **Other** doplňuje tool sám. Ber ji jako **doplňující instrukci, ne odmítnutí** – vyřeš, co uživatel napsal, a pak se na tutéž věc zeptej znovu. Nikdy ji nezapisuj jako „přeskočeno“.
 

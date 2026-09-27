@@ -949,7 +949,7 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Zamítnuto** přejmenovat skupinu „mechanické“ tak, aby jméno novému kritériu odpovídalo. Slovo je v konfigurační vrstvě na desítkách míst a většina jich míří na něco jiného (mechanické pravidlo, mechanická kontrola odkazů), takže by šlo o ruční průchod s nejistým ziskem. Místo toho přibyla třetí skupina s vlastním jménem.
 
-**Nedořešeno zůstala podoba té otázky**, ne její kdy: `/oponent` má záchytné volby *Nechat být* a *Vrátit se k tomu později*, zbytek rodiny *Přeskočit* a *Odložit*, a je to dvojí slovní zásoba pro totéž. Vedeno v `todo.md`.
+**Nedořešeno zůstala podoba té otázky**, ne její kdy: `/oponent` má záchytné volby *Nechat být* a *Vrátit se k tomu později*, zbytek rodiny *Přeskočit* a *Odložit*, a je to dvojí slovní zásoba pro totéž. **Sjednoceno 28. 9. 2026** – viz záznam *Nález vypadá ve všech kontrolních skillech stejně, a je to odstavec, ne mřížka*.
 
 ### 2026-09-21 – Merge je samostatný krok, ne fáze `/cleanup`
 
@@ -1475,3 +1475,14 @@ Kontrolní skilly měly pro tytéž dvě věci **tři různé slovníky**: `/opo
 **Vynucuje to `tests/test_skills.py`, ne jen věta.** Nová třída `FindingsAreUniform` hlídá, že se zastaralé popisky nevrátí a že se výpis nevrátí k mřížce; **rozsah se nebere z výčtu v testu, ale z toho, kdo na `FINDINGS.md` odkazuje**, takže nový skill se začne měřit sám. Ověřeno v obou směrech podstrčenou vadou. **Vzor schválně nehlídá `Kde` a `Podklad`** – nesou je i závěrečné souhrny, takže by kontrola křičela na to, co je v pořádku, a vypnula by se; doloženo hned prvním během, kdy vyskočila nad souhrnem `/evaluate`.
 
 **Nedoměřená zůstala mez 12 znaků pro `header`.** Sjednocený tvar je `Nález N/celkem`, který se v běhu vypíše jako `Nález 3/11`, tedy pod mezí; přetéct umí až u trojmístných počtů. Otázka, co se s delší hlavičkou v rozhraní doopravdy stane, zůstává otevřená v `todo.md` – měřilo se dvakrát, ale pozorování se nevrátilo.
+
+
+### 2026-09-28 – Mez 12 znaků pro `header` padla jako nedoložená
+
+`RULES.md` uváděl `header` v `AskUserQuestion` jako **tvrdou mez dvanácti znaků**. Pocházela z dokumentace nástroje, ne z pozorování, a **nikdo ji nikdy neověřil**: čtenář bez kontextu na ni 20. 9. 2026 upozornil kvůli rozporu, protože pět skillů ji zdánlivě překračovalo tvarem `Nález N/celkem`.
+
+**Ta premisa byla špatně a měřila jinou věc.** Počítala délku **šablony**, ne hodnoty, která se odesílá: `Nález N/celkem` má 14 znaků, ale v běhu se vypíše `Nález 3/11`, tedy 10. Mez se tedy překročí až u trojmístných počtů a v běžném provozu nikdy.
+
+**Změřit to zbylé nešlo.** Vykreslenou hlavičku vidí jedině uživatel ve svém terminálu; dvakrát během běhu 28. 9. 2026 dostal otázku se záměrně delší hlavičkou (13 a 14 znaků) s prosbou o pozorování a ani jednou se nevrátilo. **Rozhodl proto mez zrušit**, ne dál čekat.
+
+**Dvanáct znaků zůstává jako doporučení.** Tvrdá mez bez doloženého chování je horší než doporučení: skilly se podle ní zkracovaly a `cleanup/out-of-scope.md` se jí zdůvodňoval, proč v hlavičce nemá číslo položky – kvůli nedoložené větě tedy uživatel přicházel o orientaci, kolikátá otázka z kolika přichází. Ta hlavička se tím srovnala na `Položka N/celkem` jako zbytek rodiny. Ukáže-li se někdy, že se delší hlavička ořezává, vrátí se mez **i s tím, co se pozorovalo**.

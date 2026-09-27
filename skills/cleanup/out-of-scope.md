@@ -71,7 +71,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Mimo rozsah` (`~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*, dovoluje 12 znaků, takže se číslo položky do hlavičky nevejde – nese ho výpis nad otázkou). Volby:
+   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Položka N/celkem` jako v hlavní frontě (`~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají*). Volby:
 
    **Nejdřív ale rozhodni, do které fronty položka věcně patří.** *Zapsat do todo* i *Zapsat do backlogu* míří na soubory **uklízeného projektu**. Položka, která patří jinam – obecné pravidlo do `~/.claude/RULES.md`, úkol na konfigurační vrstvě do `~/.claude/todo.md`, doménová znalost do `~/Dev/context/` –, do nich nepatří: obecné pravidlo zapsané do `docs/todo.md` jednoho projektu se schová tam, kde ho nikdo nehledá. U takové položky **skládej volby věcně** – kam a v jaké podobě ten zápis patří –, ne z předepsané čtveřice. Mimo uklízený projekt se nezapisuje bez rozhodnutí (`SKILL.md`, *Zásady pro celý průběh*), takže se na to ptáš vždycky. **Poznámka o `/cleanup` samotném sem nepatří** – ta jde do fronty konfigurační vrstvy. Doloženo 25. 9. 2026.
 
