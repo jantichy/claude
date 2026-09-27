@@ -240,40 +240,15 @@ Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který F
 
 Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – nízké jdou nakonec jedním blokem (viz níž).
 
-**NÍZKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Zahodit všechny* / *Vrátit se k tomu později*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Neprošly navíc ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany. (Bez ověření jdou dál i nálezy nad stropem – ty se ale procházejí jednotlivě, protože jsou závažné; jen se u nich řekne, že ověřené nejsou.)
+**NÍZKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Neopravovat žádný* / *Zapsat do todo*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Neprošly navíc ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany. (Bez ověření jdou dál i nálezy nad stropem – ty se ale procházejí jednotlivě, protože jsou závažné; jen se u nich řekne, že ověřené nejsou.)
 
 U každého nejdřív vypiš:
 
-```
-**[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU** · <hledisko, případně „2 oponenti nezávisle“>
+**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků. Ve větě řekni, **v čem je problém a jaký má důsledek**, a odkud to je (soubor, sekce, citace). Za titulní název připoj `· <hledisko>`, případně „2 oponenti nezávisle“ – čtenář tím pozná, odkud námitka přišla.
 
-- **Kde:** <soubor, sekce, citace>
-- **Co:** <jednou větou>
-- **Proč to vadí:** <konkrétní důsledek>
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“: u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Jejich počet, `header`, pojmenování obou záchytných voleb i to, který stav která znamená, drží `~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají* – **tvar otázky platí pro celou rodinu kontrolních skillů** a vznikl 20. 9. 2026 zobecněním právě odsud.
 
-**Varianty řešení**
-- **A)** <…> – důsledek
-- **B)** <…> – důsledek
-- **C) Nechat být** – <proč to může být v pořádku>
-
-**Doporučuji:** <jedna z nich a proč>
-```
-
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
-
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález, `header` `Nález N/celkem`, volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“ – u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. **Tenhle tvar otázky platí pro celou rodinu kontrolních skillů** a drží ho `~/.claude/skills/FINDINGS.md`; vznikl 20. 9. 2026 zobecněním právě odsud. Vždy nech mezi volbami i **Nechat být** a **Vrátit se k tomu později**.
-
-**Která volba znamená který stav** (bez toho nejde odpověď zpracovat):
-
-| Volba | Stav |
-|---|---|
-| kterákoliv věcná varianta (A, B, C…) | **Přijato** |
-| Nechat být | **Zamítnuto** |
-| Vrátit se k tomu později | **Odloženo** |
-
-Tool má strop čtyři volby, takže věcných variant nabízej **nejvýš dvě** – zbylá dvě místa patří *Nechat být* a *Vrátit se k tomu později*. Je-li rozumných cest víc, vyber dvě nejsilnější a ostatní zmiň v popisu nálezu.
-
-(V `/consistency` a `/review` jsou volby stejně věcné: nález, u kterého by vyšlo jen *Opravit / Odložit / Přeskočit*, tam mezi sporné nepatří a opraví se bez ptaní – `~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*. Liší se jen tím, že tam k variantám přibývá u hromadných nálezů *Rozbalit*.)
+**Věcná varianta znamená stav Přijato**; oba záchytné stavy překládá tabulka v `FINDINGS.md`.
 
 **Zpracování odpovědi:**
 

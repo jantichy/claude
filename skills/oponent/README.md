@@ -43,18 +43,18 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 ## Ukázka výstupu
 
 ```
-[3/11] 🔴 CENÍK NEMÁ ODPOVĚĎ NA SOUBĚH DVOU SLEV
-Našel: 2 oponenti nezávisle
+[3/11] 🔴 Ceník nemá odpověď na souběh dvou slev · 2 oponenti nezávisle
 
-Kde: cenik.md, sekce „Slevy", věta „Sleva se uplatní automaticky."
-Co: Není určeno, co se stane, když má zákazník nárok na dvě slevy zároveň.
-Proč to vadí: U tří dnes existujících slev jsou tři možné kombinace; systém
-  vybere podle pořadí v databázi, tedy nahodile, a reklamaci nelze rozsoudit.
+Ceník v sekci „Slevy" slibuje, že se sleva uplatní automaticky, ale neříká,
+co se stane, když má zákazník nárok na dvě zároveň. U tří dnes existujících
+slev jsou to tři možné kombinace a systém vybere podle pořadí v databázi,
+tedy nahodile – reklamaci pak nejde rozsoudit ani jedním směrem.
 
 Varianty řešení:
 A) Slevy se nesčítají, uplatní se nejvyšší – jednoduché, zákazník neztrácí
 B) Slevy se sčítají do stropu 40 % – vstřícnější, ale nutné hlídat marži
-C) Nechat být – u tří slev je to okrajové
+
+Doporučuji A: u tří slev je souběh okrajový a pravidlo se vysvětlí jednou větou.
 ```
 
 ## Co nedělá

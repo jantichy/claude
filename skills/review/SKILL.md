@@ -299,25 +299,12 @@ Nejsou-li žádné sporné nálezy, přeskoč Fázi 7 rovnou na shrnutí.
 
 Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 
-1. Zobraz ho:
-
-```
-**[N/celkem] 🔴/🟡/🔵 [specialista] [tagy] NÁZEV NÁLEZU**
-
-- **Podklad:** [scénář z requirements / bod ASVS / sekce standardu]
-- **Problém:** [v čem konkrétně]
-- **Selže takhle:** [vstupy nebo stav → co se stane špatně]
-- **Kde:** [soubory:řádky, nebo „X výskytů, např. …“ u batch]
-
-**Navrhované řešení:** [konkrétně co změnit]
-```
-
-   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+1. **Zobraz ho.** Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce standardu), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku.
 
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text. Jedno volání = jeden nález = jedna otázka (`multiSelect: false`):
    - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`
    - `question`: název nálezu a v čem je, jednou větou
-   - `options`: **první jsou konkrétní varianty opravy** – čím se ten rozpor zavře, u každé v `description` co se stane a čím to platí. Až za nimi **Odložit** (zapíšu do `docs/todo.md` i s úvahou) a **Přeskočit** (neopravovat, zapíšu do `CLAUDE.md` jako „won't fix“); u `batch` nálezu místo jedné z nich **Rozbalit** (vypíšu všechny lokace a projdeme je jednotlivě).
+   - `options`: **první jsou konkrétní varianty opravy** – čím se ten rozpor zavře, u každé v `description` co se stane a čím to platí. Za nimi dvě záchytné volby, jejichž pojmenování a význam drží `~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají*; u `batch` nálezu smí jednu z nich nahradit **Rozbalit** (vypíšu všechny lokace a projdeme je jednotlivě).
 
    **Vyjdou-li ti volby *Opravit / Odložit / Přeskočit*, nález mezi sporné nepatří** – patří mezi jednoznačné a máš ho opravit ve Fázi 6 (`~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení*). Vrať ho tam a neptej se.
 
@@ -335,7 +322,7 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
    d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky“.
    e. Commit dle autocommit nastavení projektu.
 
-4. Zápis do `## Review` v projektovém `CLAUDE.md` (volba Přeskočit) – **formát a mechanika jsou popsané níž v kapitole *Kapitola `## Review`*.** Píše do ní i `/attack`, takže formát je společný a definuje se na jednom místě.
+4. Zápis do `## Review` v projektovém `CLAUDE.md` (volba Neopravovat) – **formát a mechanika jsou popsané níž v kapitole *Kapitola `## Review`*.** Píše do ní i `/attack`, takže formát je společný a definuje se na jednom místě.
 
 ------
 

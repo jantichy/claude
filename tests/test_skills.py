@@ -1598,6 +1598,71 @@ def templates(text: str):
             block.append(l)
 
 
+class FindingsAreUniform(unittest.TestCase):
+    """Nález vypadá a ptá se stejně ve všech skillech, které se hlásí k FINDINGS.
+
+    Uživatel prochází nálezy z několika skillů v jednom životním cyklu, takže
+    dvě jména pro tutéž volbu čte jako dvě různé volby, a dvě podoby výpisu
+    jako dva druhy nálezu. Do 28. 9. 2026 měly kontrolní skilly **tři** slovníky
+    záchytných voleb a **tři** různé mřížky popisků; sjednotily se do
+    `skills/FINDINGS.md` a tenhle test brání návratu.
+
+    Rozsah se nebere z výčtu v testu, ale z toho, **kdo na `FINDINGS.md`
+    odkazuje** – nový skill, který se k němu přihlásí, se tím začne měřit sám.
+    """
+
+    RETIRED = re.compile(r'[*_]{1,2}(Přeskočit|Odložit|Nechat být|'
+                         r'Vrátit se k tomu později)[*_]{1,2}')
+    # mřížka popisků, kterou nahradil souvislý odstavec. `Kde` a `Podklad`
+    # v ní schválně nejsou: nesou je i závěrečné souhrny a zápis do
+    # `CLAUDE.md`, takže by vzor hlásil poplach nad tím, co je v pořádku –
+    # a kontrola, která křičí na legitimní případ, se vypne. Doloženo hned
+    # prvním během na souhrnu `/evaluate`.
+    GRID = re.compile(r'^- \*\*(Problém|Selže takhle|Co|Proč to vadí|'
+                      r'Pozorováno|Mělo být):\*\*', re.M)
+
+    def subscribers(self):
+        """SKILL.md, které se k FINDINGS.md hlásí odkazem."""
+        out = []
+        for path in SKILLS:
+            text = path.read_text(encoding="utf-8")
+            if "FINDINGS.md" in text:
+                out.append((path, text))
+        self.assertTrue(out, "k FINDINGS.md se nehlásí ani jeden skill – čte se vůbec?")
+        return out
+
+    def test_retired_option_labels_are_gone(self):
+        """Popisek volby musí říct, co se stane – proto Neopravovat a Zapsat do todo.
+
+        Zakázaná trojice *Opravit / Odložit / Přeskočit* se smí jmenovat dál:
+        je to jméno zakázaného tvaru, ne nabízená volba. Vzor proto míří na
+        popisek stojící sám, ne na ten výčet.
+        """
+        bad = []
+        for path, text in self.subscribers():
+            for m in self.RETIRED.finditer(text):
+                line = text[:m.start()].count("\n") + 1
+                bad.append(f"{path.parent.name}/SKILL.md:{line} – {m.group(0)}")
+        self.assertEqual(bad, [], "zastaralé popisky voleb:\n" + "\n".join(bad))
+
+    def test_finding_is_shown_as_prose(self):
+        """Mřížka popisků se nevrací – uživatel ji označil za nečitelnou."""
+        bad = []
+        for path, text in self.subscribers():
+            for m in self.GRID.finditer(text):
+                line = text[:m.start()].count("\n") + 1
+                bad.append(f"{path.parent.name}/SKILL.md:{line} – {m.group(0)}")
+        self.assertEqual(bad, [], "výpis nálezu jako mřížka popisků:\n" + "\n".join(bad))
+
+    def test_findings_defines_both(self):
+        """Obě sekce musí v FINDINGS.md být – odkazy z pěti skillů na ně míří."""
+        text = (ROOT / "skills" / "FINDINGS.md").read_text(encoding="utf-8")
+        for heading in ("## Jak nález vypadá", "## Dvě záchytné volby a co znamenají"):
+            self.assertIn(heading, text)
+        for label in ("**Neopravovat**", "**Zapsat do todo**"):
+            self.assertIn(label, text)
+
+
 class TemplatesPrintMarkdown(unittest.TestCase):
     """Šablona výstupu v bloku kódu se reprodukuje jako blok kódu.
 

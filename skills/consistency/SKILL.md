@@ -270,9 +270,9 @@ Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné
 
 ## Fáze 5 – Interaktivní průchod
 
-**Postup je společný s `/review`** – tvar výpisu nálezu, volání `AskUserQuestion` (jeden nález = jedna otázka, **volby jsou konkrétní varianty opravy**, za nimi *Odložit* a *Přeskočit*, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Interaktivní průchod*. Řiď se jím a lišíš se jen v těchhle bodech:
+**Postup je společný s `/review`** – volání `AskUserQuestion` (jeden nález = jedna otázka, **volby jsou konkrétní varianty opravy**, za nimi dvě záchytné, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Interaktivní průchod*. **Tvar výpisu nálezu i pojmenování záchytných voleb drží `~/.claude/skills/FINDINGS.md`** (*Jak nález vypadá*, *Dvě záchytné volby a co znamenají*), takže platí i tehdy, kdyby se `/review` rozešel. Řiď se jimi a lišíš se jen v těchhle bodech:
 
-**Kam se zapisuje „won't fix“.** Do kapitoly `## Consistency` v projektovém `CLAUDE.md`, ne `## Review` – jsou to odpovědi na jinou otázku a nemají se míchat. Kapitolu založ, když chybí, a zapisuj na její konec:
+**Kam se zapisuje volba Neopravovat.** Do kapitoly `## Consistency` v projektovém `CLAUDE.md`, ne `## Review` – jsou to odpovědi na jinou otázku a nemají se míchat. Kapitolu založ, když chybí, a zapisuj na její konec:
 
 ```
 ## Consistency

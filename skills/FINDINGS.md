@@ -1,6 +1,6 @@
-# Kdo o nálezu rozhoduje
+# Nález: kdo o něm rozhoduje a jak vypadá
 
-Jedno kritérium pro všechny skilly, které nálezy nejen hlásí, ale i opravují. Stojí mimo ně, protože **hranice mezi „opravím sám“ a „rozhodne uživatel“ musí být napříč skilly tatáž** – jinak si týž nález v `/review` vyžádá otázku a v `/consistency` se opraví mlčky, a uživatel nemá jak odhadnout, co ho v kterém běhu čeká.
+Jedno kritérium a jeden tvar pro všechny skilly, které nálezy nejen hlásí, ale i opravují. Stojí mimo ně, protože **hranice mezi „opravím sám“ a „rozhodne uživatel“ musí být napříč skilly tatáž** – jinak si týž nález v `/review` vyžádá otázku a v `/consistency` se opraví mlčky, a uživatel nemá jak odhadnout, co ho v kterém běhu čeká. Totéž platí o **podobě výpisu a voleb**: uživatel prochází nálezy z několika skillů v jednom životním cyklu, takže dvě jména pro tutéž volbu čte jako dvě různé volby.
 
 Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`. **Stupeň neurčuje, kdo rozhoduje:** kritický nález s jedinou zjevnou opravou se opraví rovnou, nízký s dvěma obhajitelnými podobami jde k uživateli.
 
@@ -36,7 +36,56 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`.
 
 **Sporný nález se proto ptá na podobu opravy:** „nese to pole API, nebo si to widget bere z vlastního kontextu?“, „loguje se to do `UserLogu`, nebo se ta mez pojmenuje?“. Volby jsou konkrétní a u každé stojí, co se stane.
 
-**Odložit a přeskočit zůstávají**, ale jako volby vedle variant, ne místo nich – a u nálezu, který se odložit doopravdy může, protože závisí na něčem nehotovém.
+**Záchytné volby zůstávají**, ale vedle variant, ne místo nich – a odložení se nabízí u nálezu, který se odložit doopravdy může, protože závisí na něčem nehotovém. Jak se jmenují a co znamenají, drží *Dvě záchytné volby a co znamenají* níž.
+
+## Jak nález vypadá
+
+**Odstavcem, ne mřížkou popisků.** Začne tučným názvem, za kterým hned pokračuje normální věta:
+
+```
+**[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU.** <plynulý text: čeho se to týká, jak to je dnes a proč to nestačí – kde to je a čím je to doložené řekni uvnitř věty, ne na zvláštním řádku>
+
+**Varianty řešení**
+- **A)** <…> – <důsledek>
+- **B)** <…> – <důsledek>
+
+**Doporučuji:** <jedna z nich a proč>
+```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`~/.claude/RULES.md`, *Styl odpovědí*).
+
+**Tučný je jen název, zbytek ne.** Odstavec, ve kterém svítí tučně každý druhý popisek, se nedá číst – oko skáče po zvýrazněních místo aby četlo větu.
+
+**Seznam popisků typu `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` se nepoužívá.** Do 28. 9. 2026 ho měly tři kontrolní skilly, každý jinou sadu, a **uživatel je označil za nečitelné**. Heslo za dvojtečkou vypadá úplně a přitom vynechá právě to, proč na tom záleží; kde nález je a čím je doložený, se řekne uvnitř věty a odkazy se dávají do textu.
+
+**Delší nález smí mít druhý odstavec** – typicky tam, kde je potřeba dodat, proč navrhované cesty nejsou rovnocenné. Pořád je to souvislý text.
+
+**Není to převyprávěný název.** „Chybí kontrola vlastníka“ → „Kontrola vlastníka chybí“ je vata. Text říká, co ta věc v projektu dělá a co se stane, když zůstane, jak je.
+
+**Zrádné je, že tobě ten kontext nechybí.** Máš před sebou soubor, ve kterém jsi nález právě našel, takže heslovitý výpis vypadá úplně; uživatel má v hlavě celý projekt, ne řádek, na kterém stojíš ty.
+
+**Varianty musí sedět s volbami v otázce** – otázka je jejich zrcadlo, ne druhá sada. Vypsat jedno řešení a pak se zeptat na tři je rozpor, který uživatele donutí číst obojí a hledat, čím se to liší.
+
+**Pole ve schématu nálezu tím dotčená nejsou.** Závažnost, lokace a doložení, které vracejí agenti, zůstávají – stojí na nich ověřování a zápis do `CLAUDE.md`. Mění se jen to, **jak se nález ukazuje člověku**: pole jsou vstup, odstavec je výstup.
+
+**Proč zrovna tenhle tvar:** změřeno 28. 9. 2026 při sjednocování. Uživatel označil za srozumitelný výpis nálezu, který **nevyrobil žádný skill** – vznikl v běžné rozpravě, kde žádná šablona neplatila. Tři tehdejší šablony se proti němu lišily jen tím, že souvislý text nahradily popisky. **Šablona tedy výsledek nezlepšovala, ale zhoršovala**, protože svedla k heslům tam, kde se má vysvětlovat.
+
+## Dvě záchytné volby a co znamenají
+
+Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s tímhle pojmenováním:
+
+| Volba | Co se stane | Stav |
+|---|---|---|
+| **Neopravovat** | zeptej se na důvod a zapiš ho do kapitoly `## Review` (u `/consistency` `## Consistency`) v projektovém `CLAUDE.md`; umlčení vyprší změnou kódu, kterého se týká | zamítnuto |
+| **Zapsat do todo** | zapiš do `docs/todo.md` i s úvahou a doložením, ať se na to dá navázat bez téhle session | odloženo |
+
+**Popisek říká, co se stane** (`~/Dev/context/text/copy.md`, *Popisky akcí*). Proto ne *Přeskočit* – to se čte jako „teď ne“, přestože to znamená natrvalo a se zápisem –, a ne *Nechat být* ani *Vrátit se k tomu později*, které mlčí o tom, že se nález někam zapíše. Sjednoceno 28. 9. 2026; do té doby měly kontrolní skilly tři různé slovníky pro tytéž dva konce.
+
+**Věcné varianty jsou nejvýš dvě.** Tool má strop čtyři volby a dvě z nich patří záchytným. Je-li rozumných cest víc, vyber dvě nejsilnější a ostatní zmiň v `Kontextu`. U hromadného nálezu smí jednu záchytnou volbu nahradit **Rozbalit** (vypíšu všechny lokace a projdeme je jednotlivě).
+
+**`header` má napříč skilly týž tvar:** `Nález N/celkem`, u položky, která nálezem není, `Položka N/celkem`.
+
+**Výjimka pro položku, která není vadou, ale novou prací** – tam se neopravuje, takže *Neopravovat* nedává smysl a platí čtveřice *Vyřešit teď / Zapsat do todo / Zapsat do backlogu / Zahodit*. Používá ji `/cleanup` u položek mimo rozsah a `/evaluate` u vyžádaných funkcí; podmínku, kdy je legitimní, drží *Volby v otázce jsou varianty řešení* výš.
 
 ## Přehled na začátku vyčísluje obojí
 

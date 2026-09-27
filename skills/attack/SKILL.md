@@ -269,23 +269,11 @@ Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup
 
 Pro každý, jeden po druhém, od nejzávažnějšího:
 
-```
-**[N/celkem] 🔴/🟡/🔵 [vektor] NÁZEV NÁLEZU**
+**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků. Ve větě řekni, **co se stalo a co se stát mělo**, a kde to je, dá-li se to dohledat; jméno vektoru patří do hranatých závorek v titulním řádku.
 
-**Reprodukce**
-1. …
-2. …
+**Reprodukční postup je tu výjimka a zůstává číslovaným seznamem** pod tím odstavcem, uvozený tučným slovem *Reprodukce*. Je to návod ke spuštění, ne vysvětlení – souvislý text by z něj udělal to, co se nedá přepsat do terminálu.
 
-- **Pozorováno:** [co se stalo]
-- **Mělo být:** [co se stát mělo]
-- **Kde:** [soubor:řádek, když se dá dohledat]
-
-**Navrhované řešení:** [konkrétně co změnit]
-```
-
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
-
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby jsou **konkrétní varianty, kterou cestou díru zavřít**, a za nimi *Odložit* a *Přeskočit* – ne trojice *Opravit / Odložit / Přeskočit*, u které je odpověď předem známá (`~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení*). Chování volby *Other* viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby jsou **konkrétní varianty, kterou cestou díru zavřít**, a za nimi dvě záchytné – ne trojice *Opravit / Odložit / Přeskočit*, u které je odpověď předem známá. Pojmenování obou záchytných voleb i tvar `header` drží `~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají*. Chování volby *Other* viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
 
 Při volbě **Opravit**:
 
@@ -295,9 +283,9 @@ Při volbě **Opravit**:
 4. Když kontrola selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
 5. Commit dle autocommit nastavení projektu.
 
-Při volbě **Odložit** zapiš nález do `docs/todo.md` **i s reprodukčním postupem** – bez něj je za měsíc nepoužitelný.
+Při volbě **Zapsat do todo** ulož nález do `docs/todo.md` **i s reprodukčním postupem** – bez něj je za měsíc nepoužitelný.
 
-Při volbě **Přeskočit** se zeptej na důvod a zapiš do kapitoly `## Review` v projektovém `CLAUDE.md` – **formát a mechaniku drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`***, včetně toho, že se datum i hash vyrábějí příkazem. Do pole `zdroj` napiš `útok`, do pole `podklad` reprodukční postup. Sdílená kapitola je schválně: nálezy odtud a z `/review` se přeskakují ze stejných důvodů a hledat je na dvou místech nemá smysl. **Nález, který dovolí akci bez oprávnění nebo ztrátu dat, sem nezapisuj bez výslovného potvrzení.**
+Při volbě **Neopravovat** se zeptej na důvod a zapiš do kapitoly `## Review` v projektovém `CLAUDE.md` – **formát a mechaniku drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`***, včetně toho, že se datum i hash vyrábějí příkazem. Do pole `zdroj` napiš `útok`, do pole `podklad` reprodukční postup. Sdílená kapitola je schválně: nálezy odtud a z `/review` se přeskakují ze stejných důvodů a hledat je na dvou místech nemá smysl. **Nález, který dovolí akci bez oprávnění nebo ztrátu dat, sem nezapisuj bez výslovného potvrzení.**
 
 ------
 

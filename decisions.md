@@ -1456,3 +1456,22 @@ Funkce `resolve` v `skills/replace/deklinace/deklinace.py` měla cyklomatickou s
 **Tři mrtvé větve zanikly a je to doložené, ne odhadnuté.** Původní pořadí obsahovalo tři podmínky, na které se nikdy nedošlo, protože je dřív vyřídila shodná podmínka výš (`prev` ve slovesech u druhé zmínky, `nxt` v přísudku u dvou dalších). Zmizely a výčet okolí potvrdil, že se tím nezměnilo nic.
 
 **Lint tím pokrývá repozitář beze zbytku a `KNOWN_GAPS` je prázdný.** Vyšlo přitom najevo, že vzor `skills/*/scripts/*.py` mířil jen na jméno `scripts`, takže skript dvě úrovně pod skillem v jinak pojmenovaném adresáři by nečetla žádná kontrola; nahradil se obecnějším `skills/*/*/*.py`. Prázdný seznam výjimek se hlídá v obou směrech, takže znamená „žádná výjimka neexistuje“, ne „na výjimku se zapomnělo“.
+
+
+### 2026-09-28 – Nález vypadá ve všech kontrolních skillech stejně, a je to odstavec, ne mřížka
+
+Kontrolní skilly měly pro tytéž dvě věci **tři různé slovníky**: `/oponent` nabízel *Nechat být* a *Vrátit se k tomu později*, `/review`, `/consistency` a `/attack` *Přeskočit* a *Odložit*, `/cleanup` u položek mimo rozsah vlastní čtveřici. Mapování volby na stav měl navíc jen `/oponent`. Uživatel přitom prochází nálezy z několika skillů v jednom životním cyklu, takže dvě jména pro tutéž volbu čte jako dvě různé volby.
+
+**Záchytné volby se jmenují `Neopravovat` a `Zapsat do todo`.** Rozhodl uživatel; kritérium dodal redakční standard pro rozhraní (`~/Dev/context/text/copy.md`, *Popisky akcí*): popisek musí říct, co se stane. *Přeskočit* se čte jako „teď ne“, přestože znamená natrvalo a se zápisem do `CLAUDE.md`; *Nechat být* mlčí o tom, že se nález někam zapíše. Tabulka volba → stav je nově v `FINDINGS.md` jednou pro všechny.
+
+**Výpis nálezu je odstavec: tučný název a za ním normální věta.** Tohle je ta podstatnější polovina a přišla od uživatele během práce – mřížky `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` označil za nečitelné a slovo `Kontext` jako popisek za zbytečné.
+
+**Doklad, proč mřížka padla, je nečekaný.** Uživatel ukázal výpis nálezu, který mu vyhovoval, a nevěděl, čí je. Dohledáním v transcriptech se ukázalo, že ho **nevyrobil žádný skill** – v obou session, kde ta pasáž je, běžel jedině `/next`, takže to byla běžná rozprava bez jakékoliv šablony. **Tři napsané šablony tedy výsledek nezlepšovaly, ale zhoršovaly**: lišily se od té nešablonovité právě tím, že souvislý text nahradily hesly za dvojtečkou. Heslo vypadá úplně a vynechá přesně to, proč na nálezu záleží.
+
+**Pole ve schématu nálezu se neruší.** Závažnost, lokace a doložení, které vracejí agenti, zůstávají – stojí na nich ověřovací vrstva i zápis do `CLAUDE.md`. Změnil se jen **výstup pro člověka**: pole jsou vstup, odstavec je výstup. Bez tohohle rozlišení by sjednocení tvaru rozbilo ověřování.
+
+**Dvě odchylky zůstávají a obě mají napsaný důvod.** `/attack` drží reprodukční postup číslovaným seznamem, protože je to návod ke spuštění, ne vysvětlení. `/cleanup` drží u položek mimo rozsah čtveřici *Vyřešit teď / Zapsat do todo / Zapsat do backlogu / Zahodit*, protože u položky, která není vadou, se neopravuje, takže *Neopravovat* nedává smysl.
+
+**Vynucuje to `tests/test_skills.py`, ne jen věta.** Nová třída `FindingsAreUniform` hlídá, že se zastaralé popisky nevrátí a že se výpis nevrátí k mřížce; **rozsah se nebere z výčtu v testu, ale z toho, kdo na `FINDINGS.md` odkazuje**, takže nový skill se začne měřit sám. Ověřeno v obou směrech podstrčenou vadou. **Vzor schválně nehlídá `Kde` a `Podklad`** – nesou je i závěrečné souhrny, takže by kontrola křičela na to, co je v pořádku, a vypnula by se; doloženo hned prvním během, kdy vyskočila nad souhrnem `/evaluate`.
+
+**Nedoměřená zůstala mez 12 znaků pro `header`.** Sjednocený tvar je `Nález N/celkem`, který se v běhu vypíše jako `Nález 3/11`, tedy pod mezí; přetéct umí až u trojmístných počtů. Otázka, co se s delší hlavičkou v rozhraní doopravdy stane, zůstává otevřená v `todo.md` – měřilo se dvakrát, ale pozorování se nevrátilo.

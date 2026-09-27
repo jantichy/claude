@@ -302,22 +302,6 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Rozhodnout je potřeba dvojí:** jestli sem kontrolní vrstvu zavést (a co všechno by ještě mohla hlídat – struktura sekcí, formát datovaných záznamů, odkazy mezi doménami), nebo jestli místo toho normu obrátit na „nejnovější nahoře“, když se v praxi prosazuje sama. Druhá varianta je levnější, ale platí i pro `decisions.md`, kde pravidlo *Nejstarší nahoře* má vlastní zdůvodnění.
 
-- [ ] **Sjednotit podobu otázky napříč kontrolními skilly.** Zadal uživatel 20. 9. 2026 hned po předchozí položce. `FINDINGS.md` od té chvíle říká, **kdy** se ptát a že volby jsou varianty řešení – ale **jak ta otázka vypadá**, si každý skill drží po svém, a jsou to dvě slovní zásoby pro totéž:
-
-  | Skill | Záchytné volby | Na jaký stav se mapují |
-  |---|---|---|
-  | `/oponent` | *Nechat být*, *Vrátit se k tomu později* | Zamítnuto, Odloženo |
-  | `/review`, `/consistency`, `/attack` | *Přeskočit*, *Odložit* | won't fix, `todo.md` |
-  | `/cleanup` | vlastní sada v `out-of-scope.md` | – |
-
-  **Je to porušení *Jeden termín pro jednu věc*** (`~/.claude/RULES.md`) o úroveň výš: uživatel vidí v jednom životním cyklu dvě jména pro tutéž volbu a musí hádat, jestli znamenají totéž. `/oponent` navíc jako jediný má tabulku *Která volba znamená který stav*, bez které se odpověď nedá zpracovat – ostatní ji nemají a mapování je implicitní.
-
-  **Co rozhodnout:** jedno pojmenování obou záchytných voleb a jejich pořadí; jestli mapování na stav patří do `FINDINGS.md` (a tedy jednou), nebo je doménové; co se stane, když variant je víc než dvě (dnes to řeší `/oponent` i `/review` každý jinou větou); a jestli `header` má napříč skilly týž tvar (`Nález N/celkem`).
-
-  **Dotčené soubory:** `~/.claude/skills/FINDINGS.md`, `skills/review/SKILL.md`, `skills/consistency/SKILL.md`, `skills/attack/SKILL.md`, `skills/oponent/SKILL.md`, `skills/audit/SKILL.md`, `skills/cleanup/out-of-scope.md`.
-
-  **Dnešní práce (21. 9. 2026) se téhle položky nedotkla, i když sahala na tytéž soubory.** Zúžilo se *kdy* se ptát – padla podmínka „netroufáš si“ a zákaz falešné trojice začal mířit na tvar voleb místo na jejich znění. **Jak ta otázka vypadá, zůstává nesjednocené**, a tabulka výš platí beze změny. Nové zjištění k ní: `cleanup/out-of-scope.md` má vlastní sadu voleb (*Vyřešit teď / Zapsat do todo / Zapsat do backlogu / Zahodit*), která je od dneška legitimní **jen u položky, která není vadou, ale novou prací** – při sjednocování se s tím musí počítat, protože záchytné volby se tam mapují na jiné stavy než u nálezu.
-
 - [ ] **Doměřit u `/merge`, co zůstalo nezkontrolované.** Skill vznikl 21. 9. 2026 a jeho zakládací běh **nedokončil ověřovací fázi `/skill`**: změřil se jen tvar (testy prošly), ale neproběhlo **ladění `description`** ani **tlakové scénáře**. Obojí je u něj na místě – „merge“ je běžné slovo, takže hrozí, že se skill chytne i na `git pull` nebo na merge uprostřed rozdělané práce; a skill něco **zakazuje** (nemergovat bez pokynu, neobcházet selhání `--force`, nemazat větev souběžně s mergem), což je přesně ta třída, u které `/skill` tlakové scénáře označuje za povinné, protože tvarem se omezení ověřit nedá.
 
   **Srovnávací běh se pustil, ale je neplatný** – agent si mezitím `/merge` načetl a jel podle něj, takže neměřil, jak se selhává bez skillu. Doložil jen to, že se skill dodrží, když je k dispozici; pro sekci *Časté chyby* tedy nepřinesl nic a ta dnes stojí na doložených selháních z provozu, ne na měření.
