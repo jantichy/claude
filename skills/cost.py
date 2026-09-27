@@ -18,9 +18,24 @@ transcripty v `<slug>/<session-id>/subagents/`.
 
 Váhy jsou ceny Opus 5 v USD za milion tokenů; číslo tedy není fakturovaná
 částka, ale vážený součet tokenů, ve kterém čtení cache váží desetinu vstupu
-a výstup pětinásobek. Srovnává se **po pásmech velikosti transcriptu**, protože
-cena běhu roste s délkou session a medián přes všechna pásma by srovnával jiné
-běhy s jinými.
+a výstup pětinásobek.
+
+Srovnává se **po pásmech, a to na dvou osách**, protože medián přes všechna
+pásma by srovnával jiné běhy s jinými:
+
+- **velikost transcriptu** – rozhoduje u skillu, jehož vstupem transcript je
+  (`/cleanup`), protože cena běhu roste s délkou session;
+- **velikost rozsahu** – rozhoduje u skillu, který čte kód a dokumentaci na
+  disku (`/review`, `/consistency`, `/oponent`). U `/consistency` vyšlo pásmo
+  nejkratších session **dráž** než pásmo nejdelších, tedy obráceně: délka
+  session u něj cenu neurčuje a srovnání po první ose porovnává nesrovnatelné.
+
+Rozsah se čte z řádku `Pokrytí:` v závěrečném přehledu, tedy z čísla, které si
+skill zapisuje sám. Z disku se vzít nedá – rozsah minulého běhu už neexistuje –
+a počet souborů, do kterých běh sáhl, měří vykonanou práci, ne zadání, takže by
+srovnání ceny podle něj bylo kruhové. **Běh, který rozsah nevykázal, do pásma
+druhé osy nespadne a hlásí se to**; měřené pokrytí vzniklo 27. 9. 2026, takže
+starší běhy ho nenesou a zpětně dopočítat nejdou.
 """
 import json
 import glob
@@ -34,6 +49,14 @@ P_IN, P_CW, P_CR, P_OUT = 15.0, 18.75, 1.5, 75.0
 HARNESS = ('/clear', '/compact', '/resume', '/exit', '/rename', '/config',
            '/cost', '/help', '/model', '/status', '/vim', '/doctor')
 CMD = re.compile(r'command-name>(/[a-z-]+)</command-name>')
+# `- **Pokrytí panelem:** 12 z 30 souborů rozsahu …`; jednotka je povinná, ať se
+# za rozsah nevezme `N/N` kotev ani `X kB z Y kB` transcriptu, což je osa první
+SCOPE = re.compile(r'\*\*Pokrytí[^:*\n]{0,24}:\*\*[^\n0-9]{0,24}'
+                   r'(\d+)\s+z\s+(\d+)\s+(souborů|sekcí|scénářů)')
+KB_BANDS = ('A do300kB', 'B 300-600', 'C 600-1200', 'D nad1200')
+SCOPE_BANDS = ('A do10', 'B 10-50', 'C 50-200', 'D nad200')
+AXES = (('band', KB_BANDS, 'VELIKOSTI TRANSCRIPTU'),
+        ('sband', SCOPE_BANDS, 'VELIKOSTI ROZSAHU'))
 
 
 def price(u):
@@ -77,6 +100,43 @@ def band(kb):
     if kb < 1200:
         return 'C 600-1200'
     return 'D nad1200'
+
+
+def sband(n):
+    """Pásmo podle velikosti rozsahu, nebo None, není-li rozsah znám.
+
+    Hranice jsou **přiznaný odhad, ne fit z dat**: v den vzniku téhle osy
+    nenesl měřené pokrytí ani jeden naměřený běh, takže nebylo z čeho je
+    odvodit. Ladí se na řádovou představu – jednotky souborů je běh na větvi,
+    dvě stě a víc celý repozitář. Po prvních desítkách běhů je přepočítej
+    z naměřeného rozdělení a tenhle odstavec přepiš.
+    """
+    if n is None:
+        return None
+    if n < 10:
+        return 'A do10'
+    if n < 50:
+        return 'B 10-50'
+    if n < 200:
+        return 'C 50-200'
+    return 'D nad200'
+
+
+def scope_of(seg):
+    """Velikost rozsahu z řádku `Pokrytí:` v přehledu běhu, nebo None.
+
+    Bere se **poslední** výskyt v odpovědích modelu, protože závěrečný přehled
+    stojí na konci běhu, kdežto dřív v něm mohl padnout mezivýpis. Čte se jen
+    text odpovědi, ne vstupy nástrojů – jinak by se za naměřený rozsah vzala
+    šablona ze `SKILL.md`, kterou běh zrovna čte nebo píše.
+    """
+    found = None
+    for r in seg:
+        if r.get('type') != 'assistant':
+            continue
+        for m in SCOPE.finditer(txt(r)):
+            found = (int(m.group(2)), m.group(3))
+    return found
 
 
 def end_markers(skill):
@@ -234,9 +294,13 @@ def measure(seg, before, subs, path):
         def parse(s):
             return datetime.fromisoformat(s.replace('Z', '+00:00'))
         dur = (parse(ts1) - parse(ts0)).total_seconds() / 60
+    scope = scope_of(seg)
     return dict(ts=ts0, proj=os.path.basename(os.path.dirname(path)), kb=kb,
                 band=band(kb), dur=dur, n=calls, c=cost_main, na=ag_n,
-                sn=ag_calls, sc=ag_cost, tot=cost_main + ag_cost)
+                sn=ag_calls, sc=ag_cost, tot=cost_main + ag_cost,
+                scope=scope[0] if scope else None,
+                unit=scope[1] if scope else '',
+                sband=sband(scope[0] if scope else None))
 
 
 def med(xs):
@@ -246,20 +310,33 @@ def med(xs):
 
 def table(runs, title):
     print(f"\n=== {title} ===")
-    print(f"{'kdy':17}{'projekt':24}{'kB':>7}{'min':>5}{'call':>5}"
+    print(f"{'kdy':17}{'projekt':24}{'kB':>7}{'rozsah':>8}{'min':>5}{'call':>5}"
           f"{'$main':>8}{'ag':>4}{'agcall':>7}{'$ag':>8}{'$CELK':>8}")
     for r in runs:
-        print(f"{r['ts'][:16]:17}{r['proj'][:24]:24}{r['kb']:7.0f}{r['dur']:5.0f}"
+        print(f"{r['ts'][:16]:17}{r['proj'][:24]:24}{r['kb']:7.0f}"
+              f"{(str(r['scope']) if r['scope'] else '-'):>8}{r['dur']:5.0f}"
               f"{r['n']:5}{r['c']:8.2f}{r['na']:4}{r['sn']:7}{r['sc']:8.2f}{r['tot']:8.2f}")
 
 
-def bands(pre, post):
-    print("\n=== SROVNÁNÍ PO PÁSMECH VELIKOSTI TRANSCRIPTU (medián) ===")
+def missing(runs, key):
+    """Kolik běhů na dané ose pásmo nemá – hlásí se, ať medián nelže vzorkem."""
+    return sum(1 for r in runs if not r.get(key))
+
+
+def note(runs, key, title):
+    miss = missing(runs, key)
+    if miss:
+        print(f"  ({miss} z {len(runs)} běhů pásmo podle {title.lower()} nemá – "
+              f"rozsah v přehledu nevykázaly)")
+
+
+def bands(pre, post, key, order, title):
+    print(f"\n=== SROVNÁNÍ PO PÁSMECH {title} (medián) ===")
     print(f"{'pásmo':12}{'n před':>7}{'$před':>9}{'min':>6} | "
           f"{'n po':>5}{'$po':>9}{'min':>6} | {'změna $':>9}{'z toho $ag':>11}")
-    for b in ('A do300kB', 'B 300-600', 'C 600-1200', 'D nad1200'):
-        pb = [r for r in pre if r['band'] == b]
-        qb = [r for r in post if r['band'] == b]
+    for b in order:
+        pb = [r for r in pre if r[key] == b]
+        qb = [r for r in post if r[key] == b]
         if not qb:
             print(f"{b:12}{len(pb):7}{med([r['tot'] for r in pb]):9.2f}"
                   f"{med([r['dur'] for r in pb]):6.0f} |  ---  žádný běh po mezi")
@@ -305,14 +382,16 @@ def report_all(runs):
     table(runs, 'VŠECHNY DOKONČENÉ BĚHY')
     print("\n=== PODÍL AGENTŮ NA CELKU ===")
     share(runs, 'vše')
-    print("\n=== PO PÁSMECH (medián) ===")
-    for b in ('A do300kB', 'B 300-600', 'C 600-1200', 'D nad1200'):
-        sel = [r for r in runs if r['band'] == b]
-        if sel:
-            print(f"  {b:12} n={len(sel):3}  $ {med([r['tot'] for r in sel]):7.2f}"
-                  f"  min {med([r['dur'] for r in sel]):4.0f}"
-                  f"  volání {med([r['n'] for r in sel]):4}"
-                  f"  agentů {med([r['na'] for r in sel]):3}")
+    for key, order, title in AXES:
+        print(f"\n=== PO PÁSMECH {title} (medián) ===")
+        for b in order:
+            sel = [r for r in runs if r[key] == b]
+            if sel:
+                print(f"  {b:12} n={len(sel):3}  $ {med([r['tot'] for r in sel]):7.2f}"
+                      f"  min {med([r['dur'] for r in sel]):4.0f}"
+                      f"  volání {med([r['n'] for r in sel]):4}"
+                      f"  agentů {med([r['na'] for r in sel]):3}")
+        note(runs, key, title)
 
 
 def report_since(runs, since):
@@ -320,7 +399,9 @@ def report_since(runs, since):
     post = [r for r in runs if r['ts'] >= since]
     print(f"MEZ: {since}   před {len(pre)}, po {len(post)}")
     table(post, f"BĚHY PO MEZI ({since})")
-    bands(pre, post)
+    for key, order, title in AXES:
+        bands(pre, post, key, order, title)
+        note(post, key, title)
     print("\n=== PODÍL AGENTŮ NA CELKU ===")
     share(pre, 'před')
     share(post, 'po  ')

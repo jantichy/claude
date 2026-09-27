@@ -374,3 +374,56 @@ class Mutace(Fixture):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Rozsah(Fixture):
+    """Druhá osa: pásmo podle velikosti rozsahu, který si skill vykázal sám.
+
+    Osa existuje proto, že u skillu čtoucího disk cenu neurčuje délka session:
+    u `/consistency` vyšlo pásmo nejkratších session dráž než pásmo nejdelších,
+    takže srovnání po transcriptu u něj porovnává nesrovnatelné.
+
+    Testují se oba směry selhání. **Nepřečtený rozsah** je ta hlučnější
+    polovina – běh do pásma nespadne a hlásí se to. **Přečtený omylem** je
+    zrádnější: vezme-li se za rozsah číslo z jiného řádku (kotvy `N/N`, kB
+    transcriptu) nebo zástupné `N z M` ze šablony ve `SKILL.md`, dostane běh
+    pásmo, které si nezaslouží, a medián se spočítá z pomíchaného vzorku.
+    """
+
+    def run_with(self, summary):
+        recs = [user("<command-name>/demo</command-name>"),
+                call(f"## Hotovo\n\n{summary}", 100)]
+        self.session(recs)
+        runs, _ = self.scan()
+        self.assertEqual(len(runs), 1)
+        return runs[0]
+
+    def test_rozsah_z_prehledu_urci_pasmo(self):
+        run = self.run_with("- **Pokrytí panelem:** 12 z 30 souborů rozsahu prošel specialista")
+        self.assertEqual(run["scope"], 30)
+        self.assertEqual(run["unit"], "souborů")
+        self.assertEqual(run["sband"], "B 10-50")
+
+    def test_bere_se_posledni_vykaz_v_behu(self):
+        run = self.run_with("Průběžně: 1 z 5 sekcí\n\n- **Pokrytí předmětu:** 8 z 9 sekcí")
+        self.assertEqual(run["scope"], 9)
+        self.assertEqual(run["sband"], "A do10")
+
+    def test_beh_bez_vykazu_pasmo_nema(self):
+        run = self.run_with("Nic o pokrytí tu nestojí.")
+        self.assertIsNone(run["scope"])
+        self.assertIsNone(run["sband"])
+        self.assertEqual(run["band"], "A do300kB")
+
+    def test_kotvy_a_kilobajty_rozsah_nejsou(self):
+        run = self.run_with("**Pokrytí:** kotvy 23/23 odškrtnuto · přečteno 312 kB z 3000 kB")
+        self.assertIsNone(run["scope"])
+
+    def test_zastupne_n_z_m_ze_sablony_se_nevezme(self):
+        run = self.run_with("- **Pokrytí:** N z M souborů rozsahu prošel agent")
+        self.assertIsNone(run["scope"])
+
+    def test_hlaseni_o_nepasmovanych_behech(self):
+        runs = [dict(sband=None), dict(sband="A do10"), dict(sband=None)]
+        self.assertEqual(self.cost.missing(runs, "sband"), 2)
+        self.assertEqual(self.cost.missing(runs, "band"), 3)

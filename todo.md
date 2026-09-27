@@ -8,11 +8,10 @@
 
 **Hotové věci se sem nevracejí** – jakmile je úkol hotový, přesune se do `done.md`.
 
-**Čím začít v nové session (nejvyšší priorita, rozhodl uživatel 27. 9. 2026).** Tyhle tři úkoly jsou jediné z dnešní práce, které **nečekají na další běhy skillů** – zbytek se vyhodnotí až tím, že se `/review`, `/consistency` a `/oponent` několikrát pustí v novém tvaru. Ber je **postupně v tomhle pořadí**, protože druhé chrání to, do čeho sahá třetí:
+**Čím začít v nové session (nejvyšší priorita, rozhodl uživatel 27. 9. 2026).** Tyhle dva úkoly **nečekají na další běhy skillů** – zbytek se vyhodnotí až tím, že se `/review`, `/consistency` a `/oponent` několikrát pustí v novém tvaru. Ber je **postupně v tomhle pořadí**, protože první chrání to, do čeho sahá druhý. **Třetí bod, druhá osa měřidla, je hotový** (28. 9. 2026, `done.md`):
 
-1. **Doplnit měřidlu druhou osu** podle velikosti rozsahu na disku (položka *Doplnit měřidlu druhou osu* níž). Odblokuje příští měření – dnes se běhy `/consistency` a `/review` po pásmech srovnávat nedají a kdo to udělá, porovná nesrovnatelné.
-2. **Rozhodnout, jestli `discover` má sahat i do `skills/`** (položka o padajícím `test_deklinace.py` níž). **Tohle je ta tišší polovina** – dnes může kterýkoliv skill nést červený test a nikdo se to nedozví. K tomu rozhodnout o těch dvou selháních: opravit, nebo přiznat jako mez heuristiky.
-3. **Rozdělit funkci `resolve`** v `/replace` (položka níž). Až po bodu 2: chrání ji právě ten test, který je dnes červený, takže bez něj by se refaktor dělal bez sítě.
+1. **Rozhodnout, jestli `discover` má sahat i do `skills/`** (položka o padajícím `test_deklinace.py` níž). **Tohle je ta tišší polovina** – dnes může kterýkoliv skill nést červený test a nikdo se to nedozví. K tomu rozhodnout o těch dvou selháních: opravit, nebo přiznat jako mez heuristiky.
+2. **Rozdělit funkci `resolve`** v `/replace` (položka níž). Až po bodu 1: chrání ji právě ten test, který je dnes červený, takže bez něj by se refaktor dělal bez sítě.
 
 ------
 
@@ -363,7 +362,7 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
 - [ ] **Přeměřit `/review`, `/consistency` a `/oponent` po několika bězích v novém tvaru.** Základ z 27. 9. 2026 je v `decisions.md` (*Měřidlo nákladů platí pro každý skill…*): `/review` 494,4 jednotky, `/consistency` 76,6, `/oponent` 420,7. **Vzorek `/review` a `/oponent` je ale jen 6 a 2 běhy**, takže ta čísla jsou orientace, ne základ ke srovnání – přeměř `python3 ~/.claude/skills/cost.py <skill> --since 2026-09-27`. Teprve to řekne, jestli měřené pokrytí a deterministická kontrola odkazů opravdu nic neprodražily; dnešní výpočet přírůstku (0,02 až 0,12 % ceny běhu) je odvozený z velikosti těla skillu, ne naměřený z běhů.
 
-- [ ] **Doplnit měřidlu druhou osu: velikost rozsahu na disku.** Dnes umí `skills/cost.py` pásma jen podle velikosti transcriptu, a ta platí pro `/cleanup`, jehož vstupem transcript **je**. U `/consistency` vyšlo pásmo A na 286,5 jednotky proti 63,2 v pásmu D, tedy obráceně – rozhoduje u něj velikost rozsahu, ne délka session. **Kdo bude srovnávat jeho běhy po pásmech transcriptu, porovná nesrovnatelné.** Kandidát na řešení: číst počet souborů v rozsahu z výpisu, který si skill do přehledu zapisuje sám (`Pokrytí: N z M`), a pásmovat podle `M`.
+  **Ke stejnému běhu patří přepočet hranic pásem druhé osy měřidla.** Pásma podle velikosti rozsahu (`sband` v `skills/cost.py`) stojí na řádovém odhadu – v den vzniku osy 28. 9. 2026 nevykázal rozsah ani jeden naměřený běh, takže nebylo z čeho je fitovat. Odvoď je z naměřeného rozdělení `M` a přepiš i docstring, který se k tomu odhadu přiznává.
 
 - [ ] **Rozdělit funkci `resolve` v `skills/replace/deklinace/deklinace.py`, ať jde adresář pokrýt lintem.** Má cyklomatickou složitost **64 proti prahu 10** a je to tabulka pravidel české deklinace. Práh se kvůli tomu nesnižuje, takže celý adresář dnes stojí mimo lint jako zapsaná výjimka v `KNOWN_GAPS` v `tests/test_skills.py`; ten seznam se porovnává v obou směrech, takže po rozdělení si vyžádá vyškrtnutí. Přirozený řez je podle tvaru (`partií`, `partii`, `partie`), ale jedna větev pak má pořád ~20, takže se musí dělit dál podle druhu pravidla (předložky, přívlastky, slovesa). **Chráněno testem** `skills/replace/deklinace/test_deklinace.py` – pozor, ten je dnes červený, viz položka pod tímhle.
 

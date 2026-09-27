@@ -1405,3 +1405,21 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 - **Obecná** – zapnutý plugin, který na disku nese `hooks/hooks.json`, musí mít řádek v `BYPASS.md`. **Tuhle vrstvu registr neznal vůbec**, protože test čte hooky jen ze `settings.json`, `githooks/` a `.github/`. Mlčí, když plugin na disku není (`plugins/` je v `.gitignore`, v CI se nemá co měřit), takže je to lokální ochrana, ne záruka – proto vedle ní stojí ta jmenovitá.
 
 **Obecná kontrola hned našla pravý nález:** `superpowers@claude-plugins-official` nese `SessionStart` hook, který do každé session (i po `/clear` a `/compact`) vkládá obsah svého skillu obaleného do `<EXTREMELY_IMPORTANT>`. V registru o něm nebyl řádek. Doplněn i s tím, co z toho plyne: podle *Přednost pravidel* je pobídka harnessu **poslední** v pořadí, takže se ta vsuvka posuzuje, nevykonává.
+
+
+### 2026-09-28 – Měřidlo pásmuje na dvou osách a druhá z nich platí jen dopředu
+
+`skills/cost.py` srovnával běhy jen po pásmech velikosti transcriptu. To platí u `/cleanup`, jehož vstupem transcript **je**, ale u skillu, který čte disk, cenu neurčuje délka session: u `/consistency` vyšlo pásmo nejkratších session na **286,5 jednotky proti 63,2** v pásmu nejdelších, tedy obráceně. Kdo by jeho běhy srovnával po první ose, porovná nesrovnatelné – a nepozná to, protože čísla vypadají stejně věrohodně.
+
+**Druhá osa proto pásmuje podle velikosti rozsahu** a čte ji z řádku `Pokrytí:` v závěrečném přehledu, tedy z čísla, které si skill zapisuje sám. Do tabulky přibyl sloupec `rozsah` a obě osy se vypisují vedle sebe, i při srovnání přes `--since`.
+
+**Zamítnuté zdroje rozsahu – nenavrhuj znovu bez nového argumentu:**
+
+- **Změřit rozsah na disku dnes.** Rozsah minulého běhu už neexistuje: větev je smazaná a repozitář jinde. Pásmo by se odvozovalo z dnešního stavu a tvrdilo něco o tehdejším.
+- **Počet souborů, do kterých běh sáhl.** Měří **vykonanou práci, ne zadaný rozsah**, takže srovnávat podle něj cenu je kruhové – běh, který přečetl víc souborů, je z definice dražší. Je to přesně ten případ, na který míří `~/.claude/RULES.md`, *Měř to, co tvrzení tvrdí, na tom, o čem to tvrdí*: čísla by byla správná a odpovídala by na jinou otázku.
+
+**Osa platí jen dopředu a je to změřené, ne odhadnuté.** Měřené pokrytí zavedl commit `473bd2f` 27. 9. 2026, takže ho nenese ani jeden dřívější běh – nad vzorkem 36 běhů `/consistency` vykázalo rozsah **nula z nich**. Historie se tím přeřadit nedá a dopočítat taky ne, viz zamítnuté zdroje výš. Běh bez vykázaného rozsahu proto do pásma druhé osy **nespadne a hlásí se to**; mlčky zařazený běh by zkazil medián, kdežto ohlášená mezera se pozná.
+
+**Hranice pásem jsou přiznaný odhad, ne fit z dat** – v den vzniku osy nebylo z čeho je odvodit. Stojí na řádové představě: jednotky souborů je běh na větvi, dvě stě a víc celý repozitář (tenhle má 151 sledovaných souborů). Přepočítat se mají z naměřeného rozdělení po prvních desítkách běhů, úkol je v `todo.md` u položky o přeměření tří skillů.
+
+**Regresní testy hlídají oba směry**, protože špatně přečtený rozsah je zrádnější než nepřečtený: vzít za rozsah kotvy `N/N`, kilobajty transcriptu nebo zástupné `N z M` ze šablony ve `SKILL.md` by dalo běhu pásmo, které si nezaslouží. Jednotka je proto v regulárním výrazu povinná a čte se jen text odpovědi, ne vstupy nástrojů – jinak by se za naměřený rozsah vzala šablona, kterou běh zrovna píše.
