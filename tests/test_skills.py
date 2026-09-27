@@ -983,15 +983,12 @@ class CommandContract(unittest.TestCase):
         # nepokrytý soubor mimo seznam shodí testy stejně jako položka, která
         # přežila svůj důvod. Bez té druhé poloviny by ze seznamu vznikl
         # odkladiště, do kterého se dopisuje a nikdy nemaže.
-        KNOWN_GAPS = {
-            # Pokrytí by si vyžádalo rozdělit `resolve` s cyklomatickou
-            # složitostí 64 proti prahu 10 – tedy rozebrat tabulku pravidel
-            # české deklinace v cizím skillu. Práh se nesnižuje (viz
-            # *Kontrakt příkazů* v .claude/CLAUDE.md), takže dokud se ta
-            # funkce nerozdělí, zůstává adresář mimo lint. Úkol je v todo.md.
-            "skills/replace/deklinace/deklinace.py",
-            "skills/replace/deklinace/prepis.py",
-        }
+        # Prázdný schválně: od 28. 9. 2026 nemá lint výjimku ani jednu.
+        # Naposled v něm stál `skills/replace/deklinace/`, dokud měla funkce
+        # `resolve` složitost 64 proti prahu 10; rozdělila se a práh se
+        # nesnižoval. Seznam se porovnává v obou směrech, takže tady nesmí
+        # zbýt položka, která přežila svůj důvod.
+        KNOWN_GAPS = set()
         uncovered = {c for c in tracked
                      if os.path.splitext(c)[1] in extensions
                      and not any(glob_matches(c, v) for v in patterns)}

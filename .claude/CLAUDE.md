@@ -29,7 +29,7 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
 
 - typecheck: swiftc -typecheck -warnings-as-errors skills/*/*.swift
-- lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' ./*.py skills/*.py skills/*/*.py skills/*/scripts/*.py tests/*.py
+- lint: shellcheck -x --severity=info ./*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' ./*.py skills/*.py skills/*/*.py skills/*/*/*.py tests/*.py
 - test: python3 -m unittest discover -s tests
 - build: -
 - e2e: -
@@ -48,7 +48,7 @@ Výchozí sada by tu hlásila pořadí importů a závorky navíc. `--isolated` 
 
 **Od 27. 9. 2026 kryje i kořen `skills/` (`skills/*.py`).** Vzory tam mířily jen na `skills/*/*.py` a `skills/*/scripts/*.py`, takže sdílený skript přímo ve `skills/` by nečetla žádná kontrola. Doloženo měřidlem `skills/cost.py` hned v den jeho vzniku: nedefinované jméno vložené do něj prošlo lintem zeleně. **Nejhorší na tom bylo, že mlčel i test pokrytí** – `test_contract_patterns_cover_repo` porovnával cesty `fnmatch`em, jehož `*` přechází přes lomítko, takže vzor `./*.py` vypadal jako pokrytí celého repozitáře. Shoda se proto počítá po segmentech cesty, jak ji dělá shell, a test tím rovnou odhalil tři nepokryté skripty `/replace`, o kterých nikdo nevěděl.
 
-**`skills/replace/deklinace/` zůstává mimo lint a je to zapsaná výjimka, ne díra.** Pokrytí by si vyžádalo rozdělit funkci `resolve` s cyklomatickou složitostí 64 proti prahu 10, tedy rozebrat tabulku pravidel české deklinace. Práh se kvůli tomu nesnižuje, takže výjimka žije v seznamu `KNOWN_GAPS` v `tests/test_skills.py`, který se **porovnává se skutečností v obou směrech**: nepokrytý soubor mimo seznam shodí testy stejně jako položka, která přežila svůj důvod. Úkol na rozdělení je v `todo.md`. **Od 28. 9. 2026 jsou v seznamu dva soubory místo tří** – kontrolní sada vět se přesunula do `tests/test_deklinace.py`, takže ji kryje lint i kontrakt `test`; ležela-li uvnitř skillu, nespouštěl ji nikdo.
+**Od 28. 9. 2026 je `KNOWN_GAPS` v `tests/test_skills.py` prázdný a lint kryje repozitář beze zbytku.** Do té doby v něm stál celý `skills/replace/deklinace/`, protože funkce `resolve` měla cyklomatickou složitost **64 proti prahu 10** – tabulku pravidel české deklinace. **Práh se nesnižoval**; funkce se rozdělila na dispečera a devět pojmenovaných stupňů, každý pod prahem. Vzor `skills/*/scripts/*.py` se přitom nahradil obecnějším `skills/*/*/*.py`: mířil jen na jméno `scripts`, takže skript dvě úrovně pod skillem v jiném adresáři nečetla žádná kontrola. Seznam se **porovnává se skutečností v obou směrech**, takže nepokrytý soubor mimo seznam shodí testy stejně jako položka, která přežila svůj důvod – a prázdný seznam znamená, že žádná výjimka neexistuje, ne že se na ni zapomnělo.
 
 **Od 7. 9. 2026 lint kryje i `tests/`** – je to největší Python v repozitáři a nekontroloval ho nikdo, přestože je to zároveň jediná vrstva, která tu něco doopravdy vynucuje. Běh testů sám chytí syntaktickou chybu, ale ne nepoužitý import ani překlep ve jménu uvnitř větve, která se zrovna nevykonala.
 

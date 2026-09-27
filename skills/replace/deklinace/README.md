@@ -17,7 +17,7 @@ Nástroj, který vznikl 19. 9. 2026 při přejmenování „partie“ na „podo
 
 | Soubor | Co dělá |
 |---|---|
-| `deklinace.py` | pravidla převodu; `convert(text, report, path)` vrací text a do `report` seznam rozhodnutí s příznakem jistoty |
+| `deklinace.py` | pravidla převodu; `convert(text, report, path)` vrací text a do `report` seznam rozhodnutí s příznakem jistoty. Pád určuje `resolve` **ve stupních**: dispečer podle tvaru a za ním pojmenované stupně podle toho, co pád rozhodlo – předložka a kvantifikátor vlevo, přívlastek, výčet vpravo, přísudek, a nakonec odhad z koncovky. Vyhrává první stupeň, který se chytí, takže **přesunout pravidlo mezi stupni není úprava, ale změna chování** |
 | `prepis.py` | průchod soubory s **chráněnými úseky** (místa, kde je slovo předmětem řeči) a zdrojem z `git show HEAD:`, takže běh jde opakovat bez zahazování rozdělané práce |
 | `tests/test_deklinace.py` (v kořeni repozitáře) | kontrolní sada 44 vět vytažených z revize; hlídá, že se úpravy pravidel navzájem neruší. **Dvě věty rozhodnout nejde** – jsou nejednoznačné i pro člověka („na první partii“ je 4. i 6. pád) a v textu se opravily ručně –, takže stojí ve vyjmenovaném seznamu `LIMITS`, který se porovnává se skutečností v obou směrech. **Leží mimo tenhle adresář schválně:** kontrakt `test` pouští jen `tests/`, a dokud test ležel tady, nespouštěl ho nikdo a dvě věty v něm padaly, aniž by se to kdokoliv dozvěděl |
 

@@ -1439,3 +1439,20 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Dvě padající věty se přiznaly jako mez, a to rozhodnutí nové není** – `deklinace/README.md` je za nejednoznačné označoval od začátku. Špatný byl jen tvar, kterým se ta mez vyjadřovala: **pád testu**. Takový test nemůže nikdy zezelenat, takže nechrání nic a při každém běhu je z něj šum, který se naučí přeskakovat. Věty proto stojí ve vyjmenovaném seznamu `LIMITS`, který se **porovnává se skutečností v obou směrech**: věta, která mez přežila a dnes prochází, shodí testy stejně jako nová vada.
 
 **Opravovat je nemá čím.** *Partie* má shodný tvar v 1. pádě jednotného i množného čísla a *neplatí* je taky obojí, takže věta o čísle nenese informaci vůbec – je to nerozhodnutelné v principu, ne mezera v pravidlech. *Partii* je shodné ve 4. i 6. pádě a rozhodla by jedině tabulka vazeb sloves (*ozvat se na* + 4. pád), tedy další pravidla do funkce `resolve`, která má složitost 64 proti prahu 10 a čeká na rozdělení. Obojí zůstává ruční kontrolou, jak to `deklinace/README.md` popisuje u doložené meze převodu.
+
+
+### 2026-09-28 – `resolve` se rozdělila na stupně a rovnocennost se ověřila výčtem, ne sadou vět
+
+Funkce `resolve` v `skills/replace/deklinace/deklinace.py` měla cyklomatickou složitost **64 proti prahu 10**, takže kvůli ní stál celý adresář mimo lint jako zapsaná výjimka. **Práh se nesnižoval** – to smí jen člověk a se zápisem do rozhodnutí.
+
+**Řez je dvoustupňový.** `resolve` je dnes dispečer: neslévající se tvary vyřídí tabulkou, zbytek pošle podle tvaru do `instrumental_or_genitive`, `dative_or_accusative` nebo `nominative_or_genitive`. Rozdělení jen podle tvaru ale nestačilo – větev pro `partie` by sama měla přes dvacet rozhodnutí –, takže se dělí dál **podle toho, co pád rozhodlo**: řídící slovo vlevo, přívlastek, výčet vpravo, slovo vpravo, přísudek za předložkovou frází, plnovýznamové slovo vlevo, nejednoznačný přívlastek a nakonec odhad z koncovky přísudku. Každý stupeň vrací hotovou trojici, nebo `None`, a pomocná funkce `first_hit` bere první, který se chytí.
+
+**Okolí se počítá jednou do objektu `Context`** (`left`, `right`, `prev`, `prev2`, `nxt`), protože po něm sahá skoro každé pravidlo a předávat pět hodnot do devíti funkcí by byl šum.
+
+**Podstatné je, že pořadí stupňů nese význam.** Pravidla jsou seřazená od silnějšího signálu ke slabšímu – přívlastek vlevo je silnější než přísudek vpravo, což se v původním běhu projevilo na 80 místech naráz. **Přesunout pravidlo mezi stupni proto není úprava, ale změna chování**, a je to napsané v docstringu `resolve` i v README skriptů, protože z rozdělené funkce to vypadá jako volný výčet.
+
+**Rovnocennost se ověřila výčtem okolí, ne kontrolní sadou vět.** Sada 44 vět je na zásah tohohle druhu slabá síť: testuje věty, na které někdo pomyslel, a refaktor devíti větví může tiše změnit chování kdekoliv jinde. Proto se stará verze vytáhla z gitu a obě se pustily nad **křížovým součinem** všech slov, na která se kterékoli pravidlo odvolává (předložky, kvantifikátory, slovesa, přívlastky, funkční slova, podstatná jména, výčty a k tomu cizí slova), krát šest tvarů, krát devatenáct slov vpravo, krát šest slov o pozici dál vlevo. **Porovnalo se 316 692 okolí a výsledek se shodoval do posledního – včetně řetězce s pravidlem, ne jen náhrady a jistoty.** Skript byl jednorázový a v repozitáři nezůstal: po smazání staré verze není proti čemu srovnávat.
+
+**Tři mrtvé větve zanikly a je to doložené, ne odhadnuté.** Původní pořadí obsahovalo tři podmínky, na které se nikdy nedošlo, protože je dřív vyřídila shodná podmínka výš (`prev` ve slovesech u druhé zmínky, `nxt` v přísudku u dvou dalších). Zmizely a výčet okolí potvrdil, že se tím nezměnilo nic.
+
+**Lint tím pokrývá repozitář beze zbytku a `KNOWN_GAPS` je prázdný.** Vyšlo přitom najevo, že vzor `skills/*/scripts/*.py` mířil jen na jméno `scripts`, takže skript dvě úrovně pod skillem v jinak pojmenovaném adresáři by nečetla žádná kontrola; nahradil se obecnějším `skills/*/*/*.py`. Prázdný seznam výjimek se hlídá v obou směrech, takže znamená „žádná výjimka neexistuje“, ne „na výjimku se zapomnělo“.
