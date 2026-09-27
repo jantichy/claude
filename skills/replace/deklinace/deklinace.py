@@ -9,7 +9,7 @@ zbývají tři binární rozhodnutí:
     partii  → podobjednávce (3., 6.)  | podobjednávku (4.)
     partií  → podobjednávkou (7. j.)  | podobjednávek (2. mn.)
 """
-import re, sys, json
+import re
 
 # --- předložky podle pádu, který si vynucují -----------------------------
 P2 = {'u','do','z','ze','od','ode','bez','beze','podle','vedle','kolem','během','kromě','místo','okolo','stran'}

@@ -19,6 +19,25 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS = sorted(p for p in (ROOT / "skills").glob("*/SKILL.md"))
 
 
+def glob_matches(path, pattern):
+    """Sedí cesta na shellový vzor? `*` nepřechází přes lomítko, jako v shellu.
+
+    `fnmatch` se použít nedá: jeho `*` lomítka přeskakuje, takže `./*.py`
+    vypadá jako pokrytí celého repozitáře, přestože shell ho rozbalí jen
+    v jednom adresáři.
+    """
+    parts = path.split("/")
+    globs = pattern.split("/")
+    if len(parts) != len(globs):
+        return False
+    for part, one in zip(parts, globs):
+        expr = "".join(".*" if ch == "*" else "[^/]" if ch == "?" else re.escape(ch)
+                       for ch in one)
+        if not re.fullmatch(expr, part):
+            return False
+    return True
+
+
 def frontmatter(path: Path) -> dict:
     """Minimální parser YAML hlavičky – jen klíč: hodnota na první úrovni."""
     text = path.read_text(encoding="utf-8")
@@ -865,8 +884,15 @@ class CommandContract(unittest.TestCase):
 
         Kontroluje se jen to, co některý vzor zachytit MÁ: přípony, které se
         v kontraktu vyskytují. Nový jazyk bez řádku v kontraktu je jiný nález.
+
+        **Shoda se počítá po segmentech cesty, ne `fnmatch`em.** Ten bere `*`
+        jako „cokoliv včetně lomítek“, takže vzor `./*.py` – který shell rozbalí
+        jen v kořeni – se jeví jako pokrytí celého repozitáře. Test pak mlčel
+        nad souborem, který žádná kontrola nečte: doloženo 27. 9. 2026 na
+        `skills/cost.py`, kde nedefinované jméno prošlo lintem zeleně, protože
+        vzory kryly `skills/*/*.py`, ale ne `skills/*.py`. Je to nejhorší možná
+        podoba téhle vady – kontrola tvrdí, že měří, a neměří.
         """
-        import fnmatch
         import subprocess
         tracked = subprocess.run(["git", "ls-files"], cwd=ROOT,
                                    capture_output=True, text=True).stdout.split()
@@ -893,12 +919,29 @@ class CommandContract(unittest.TestCase):
             "v repozitáři jsou soubory s příponou, kterou kontrakt vůbec neřeší: "
             f"{sorted(in_repo - extensions)}")
 
-        uncovered = [c for c in tracked
+        # Známé díry. Seznam musí přesně sedět se skutečností v OBOU směrech:
+        # nepokrytý soubor mimo seznam shodí testy stejně jako položka, která
+        # přežila svůj důvod. Bez té druhé poloviny by ze seznamu vznikl
+        # odkladiště, do kterého se dopisuje a nikdy nemaže.
+        KNOWN_GAPS = {
+            # Pokrytí by si vyžádalo rozdělit `resolve` s cyklomatickou
+            # složitostí 64 proti prahu 10 – tedy rozebrat tabulku pravidel
+            # české deklinace v cizím skillu. Práh se nesnižuje (viz
+            # *Kontrakt příkazů* v .claude/CLAUDE.md), takže dokud se ta
+            # funkce nerozdělí, zůstává adresář mimo lint. Úkol je v todo.md.
+            "skills/replace/deklinace/deklinace.py",
+            "skills/replace/deklinace/prepis.py",
+            "skills/replace/deklinace/test_deklinace.py",
+        }
+        uncovered = {c for c in tracked
                      if os.path.splitext(c)[1] in extensions
-                     and not any(fnmatch.fnmatch(c, v) for v in patterns)]
-        self.assertFalse(uncovered,
+                     and not any(glob_matches(c, v) for v in patterns)}
+        self.assertFalse(uncovered - KNOWN_GAPS,
             "tyhle soubory nezachytí žádný vzor z kontraktu, takže je nečte "
-            f"žádná kontrola: {uncovered}")
+            f"žádná kontrola: {sorted(uncovered - KNOWN_GAPS)}")
+        self.assertFalse(KNOWN_GAPS - uncovered,
+            "tyhle soubory už kontrakt pokrývá – vyškrtni je z KNOWN_GAPS, "
+            f"jinak seznam přestane odpovídat skutečnosti: {sorted(KNOWN_GAPS - uncovered)}")
 
     def test_contract_commands_are_runnable(self):
         """Pomlčka je vědomé rozhodnutí, ale příkaz musí existovat.
