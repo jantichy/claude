@@ -1335,3 +1335,26 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Proti tomu jedna věc číslo naopak nadhodnocuje:** běh v sobě nesl **opravu tří vad skillu** (deduplikace kotev, smazané soubory v kontrole odkazů, zápis nálezu o základu session), což k úklidu nepatří. Čistý úklid téže session by byl levnější.
 
 **Co se z toho smí tvrdit:** zúžení fungovalo a stav před přepisem je překonaný. **Co se tvrdit nesmí:** že je typický úklid za 58,7 – to řekne teprve běh s neprázdnou frontou. Do té doby platí jako mez zdola.
+
+### 2026-09-27 – Měřidlo nákladů platí pro každý skill a první čísla obrací doporučení u `/consistency`
+
+**Změřeno 27. 9. 2026** zobecněným `skills/cost.py` nad všemi session logy. Spouštěčem byla otázka, jestli se poučení z přestavby `/cleanup` nemají promítnout do `/review`, `/consistency` a `/oponent` – a podmínka, že změna nesmí fungovat hůř, běžet dýl ani stát víc. Bez měřidla se ani jedna z těch tří podmínek ověřit nedá, takže bylo první.
+
+| skill | dokončených běhů | medián jednotek | medián minut | medián agentů | podíl agentů na ceně |
+|---|---|---|---|---|---|
+| `/cleanup` (pásmo D) | 117 | 149,9 | 44 | 2 | 32,6 % |
+| `/review` | 6 | 494,4 | 533 | 22 | 42,4 % |
+| `/consistency` | 42 | 76,6 | 25 | 1 | 40,8 % |
+| `/oponent` | 2 | 420,7 | 910 | 23 | 48,6 % |
+
+**`/review` je nejdražší skill v repozitáři** – 3,3násobek `/cleanup` při 22 agentech na běh. **`/consistency` je naopak nejlevnější** a má **jediného agenta**, což potvrzuje, co říká jeho *Fáze 1*.
+
+**Hlavní důsledek: rozpad `/consistency` na panel specialistů se zamítá, a je to obrat proti doporučení z téže session.** Diagnóza platí – jeden `reader` na `low` dostane v jednom zadání šedesát kritérií napříč deseti různými otázkami, a `/review` si u volby effortu sám píše, že „prázdné pole vypadá stejně, ať prošel šedesát pravidel, nebo dvanáct“. Jenže panel čtyř až pěti specialistů nad **týmiž** soubory znamená čtyř- až pětinásobek ceny agentů, tedy při jejich 40,8% podílu celkový nárůst o 80 až 160 %. To porušuje podmínku „nesmí stát víc“ a **kvalita se za to platit nemá tímhle**, dokud existuje cesta, která zlepší všechny tři osy naráz.
+
+**Tou cestou je deterministický předfiltr, ne víc agentů.** Je to táž páka, jakou u `/cleanup` zabral `extract.py`: část kritérií toho zadání je **mechanicky měřitelná** (průnik sekcí ve skupině souborů téhož druhu, konvence pojmenování v jednom kontextu, styly exportu), a co změří nástroj, je **úplné**, kdežto agent nad tím dělá vzorek. Skript zadání zúží, takže cena neroste, a běží ve zlomku sekundy.
+
+**Co se z čísel tvrdit nesmí.** U `/review` a `/oponent` je vzorek 6 a 2 běhy, takže jejich medián je orientační, ne základ pro srovnání. A **medián minut měří čas od začátku po závěr včetně čekání na uživatele** v interaktivním průchodu – 910 minut u `/oponent` není strojový čas, ale rozdělaná věc přes noc. Strojový čas měřidlo neumí a je to přiznaná mez.
+
+**Pásma podle velikosti transcriptu platí jen pro `/cleanup`.** Jeho vstupem transcript **je**, takže cena s ním roste. U `/consistency` vyšlo pásmo A (transcript do 300 kB) na 286,5 jednotky proti 63,2 v pásmu D – tedy obráceně, protože u něj rozhoduje **velikost rozsahu na disku**, ne délka session. Srovnávat jeho běhy po pásmech transcriptu proto nemá cenu a **kdo to udělá, porovná nesrovnatelné**. Druhou osu měřidlo dnes nemá.
+
+**Poučení z `/cleanup`, které se nepřenáší:** zrušení subagenta. Kritérium za ním bylo úzké – agent rekonstruoval z transcriptu to, co hlavní session má v kontextu zdarma, a proto volání stoupla o 51 %. `/review`, `/consistency` i `/oponent` čtou soubory, které v kontextu nejsou, a u `/oponent` je izolace kontextu celý smysl skillu. Mechanický přenos by rozbil tři skilly naráz.
