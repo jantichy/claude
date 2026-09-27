@@ -48,9 +48,17 @@ Claude Code ukládá každou session do souboru a dvěma skillům se z něj vyt�
 
 Pět skillů hlásí nálezy a každý z jiného světa: chyba v kódu, rozbitá aplikace, rozejitá dokumentace, námitka k návrhu, vada na cizím webu. Stupeň u nich musí znamenat totéž, jinak se nálezy z různých běhů nedají porovnat ani seřadit. Původní trojice to nezvládla, protože míchala dvě osy – nejvyšší stupeň mluvil o naléhavosti, nejnižší o povaze nálezu –, takže jí audit cizího webu utekl a zavedl si vlastní. Dnes stojí celá na jedné ose a každý skill si nad ní podává vlastní čtení.
 
+### [`skills/FINDINGS.md`](skills/FINDINGS.md) – kdy se ptát a kdy prostě opravit
+
+Pět skillů nálezy nejen hlásí, ale i opravuje, a hranice mezi „opravím sám“ a „rozhodne uživatel“ musí být u všech tatáž – jinak si týž nález v jednom běhu vyžádá otázku a v druhém se opraví mlčky a nikdo neodhadne, co ho čeká. Osou schválně **není, jak je zásah riskantní**, ale jestli je z čeho vybírat: co má jedinou zjevně správnou podobu, se udělá, i kdyby to měnilo strukturu. Zvlášť je zakázaná trojice *opravit / odložit / přeskočit* – žádná z těch voleb není podobou řešení, takže otázka nic nerozhoduje a jen sebere pozornost, která pak chybí tam, kde na odpovědi opravdu záleží.
+
 ### [`BYPASS.md`](BYPASS.md) – čím se dají obejít vlastní kontroly
 
 Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběžná kontrola, oba git hooky, CI, permission systém, status line –, stojí čím se dá obejít, co to chytí a co je vědomě přijaté riziko. Většina řádků je „accepted“ a u každého je důvod. Zákaz se totiž dá obejít i dodržet a nikde po tom nezůstane stopa, kdežto katalog se dá přečíst a rozporovat. Kompletnost hlídá test, který seznam vrstev čte z disku, takže nová vrstva bez řádku shodí testy.
+
+### [`skills/cost.py`](skills/cost.py) a [`skills/links.py`](skills/links.py) – dva nástroje, které si skilly půjčují
+
+Deterministické skripty, u kterých by posuzování modelem bylo dražší i horší. **`cost.py`** změří, co stojí jeden běh kteréhokoli skillu – ohraničí ho v nahrané konverzaci od vyvolání po závěrečnou šablonu, sečte hlavní session i agenty a srovná běhy po pásmech, takže se o stavbě skillů dá rozhodovat čísly místo dojmem. Marker konce si odvozuje ze závěrečné fáze toho skillu, aby ho nikdo neudržoval ručně. **`links.py`** ověří, že odkazy v textech vedou na existující soubor a kotvy na existující nadpis; nad celým repozitářem to trvá desetiny sekundy, kdežto čtením se přejmenovaná sekce přehlédne snadno, protože kotva odvozená z nadpisu vypadá správně. Oba leží tady, a ne v adresáři jednoho skillu, protože je volá víc skillů a odkazovat dovnitř cizího skillu norma zakazuje.
 
 ## Skilly životního cyklu projektu
 
