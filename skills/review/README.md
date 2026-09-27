@@ -24,6 +24,7 @@ Prověří hotovou práci před uzavřením z několika nezávislých hledisek n
 ## Proč zrovna tenhle
 
 - **Nespuštěný nástroj není nula.** Kontrola, kterou nešlo spustit, se vypisuje jako nespuštěná – tři nespuštěné kontroly vypsané jako tři nuly by vypadaly jako tři čisté výsledky.
+- **Vykazuje, co kdo doopravdy přečetl.** Každý specialista odevzdá seznam souborů, které prošel, a skill z toho spočítá poměr proti rozsahu; co nepřečetl nikdo, se vypíše jmenovitě. **Prázdný výstup agenta tím přestal znamenat „je čisto“** – bez toho poměru se totiž nedá odlišit od toho, že spadl.
 - **Vypisuje poměry, ne jen počty.** „Pět nálezů“ vypadá stejně po řádném i po odbytém běhu; skill ukazuje, kolik jich panel našel, kolik jich zbylo po sloučení, kolik se jich ověřilo a kolik přežilo.
 - **Důkazní břemeno je záměrně nesymetrické.** U střední závažnosti platí „při pochybnosti vyvracej“, u kritické naopak: vyvrátit ji lze jedině tak, že ověřovatel **jmenuje konkrétní ochranu a její místo**. „Nejspíš to řeší framework“ vyvrácení není. Cena omylu je totiž nesymetrická – falešný nález stojí jednu otázku, přehlédnutá chyba díru v produkci, a je navždy neviditelná.
 - **Umlčené nálezy expirují změnou kódu.** Důvod zamítnutí bývá vázaný na stav kódu v ten den; po přepsání přestane platit, ale filtr se aplikuje dřív než hledání, takže by se to nikdo nedozvěděl. Bez expirace je z toho seznam, kterým projekt za rok oslepne.

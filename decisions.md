@@ -1358,3 +1358,27 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Pásma podle velikosti transcriptu platí jen pro `/cleanup`.** Jeho vstupem transcript **je**, takže cena s ním roste. U `/consistency` vyšlo pásmo A (transcript do 300 kB) na 286,5 jednotky proti 63,2 v pásmu D – tedy obráceně, protože u něj rozhoduje **velikost rozsahu na disku**, ne délka session. Srovnávat jeho běhy po pásmech transcriptu proto nemá cenu a **kdo to udělá, porovná nesrovnatelné**. Druhou osu měřidlo dnes nemá.
 
 **Poučení z `/cleanup`, které se nepřenáší:** zrušení subagenta. Kritérium za ním bylo úzké – agent rekonstruoval z transcriptu to, co hlavní session má v kontextu zdarma, a proto volání stoupla o 51 %. `/review`, `/consistency` i `/oponent` čtou soubory, které v kontextu nejsou, a u `/oponent` je izolace kontextu celý smysl skillu. Mechanický přenos by rozbil tři skilly naráz.
+
+### 2026-09-27 – Panel vykazuje měřené pokrytí a prázdný výstup agenta přestal znamenat „čisto“
+
+**Rozhodnuto 27. 9. 2026** jako druhá polovina přenosu poučení z `/cleanup`. První (deterministický předfiltr) míří na cenu, tahle na **spolehlivost** – a je to ta, kvůli které se `/cleanup` přepisoval.
+
+**Vada, která se opravuje.** `/review`, `/consistency` i `/oponent` pouštějí agenty a z jejich výstupu skládají verdikt, ale **žádný z nich neměřil, kolik ze svého vstupu ten agent doopravdy prošel**. Prázdné pole nálezů proto vypadalo stejně, ať agent prošel dvě stě souborů, nebo dvanáct, a „prošel jsem to systematicky“ bylo tvrzení bez čehokoliv, čím by se dalo doložit. U `/cleanup` přesně tohle stálo nejdražší vadu jeho historie: pravidlo „vrátil-li chybu **nebo nic**, pusť ho znovu“ vyrábělo třetí běh čtenářů, protože prázdný výsledek podle jejich vlastního zadání znamenal, že je čisto – skill si vyrobil vstup značící úspěch a vyhodnocoval ho jako selhání.
+
+**Co se zavádí, je u všech tří stejný vzorec ve třech krocích:** inventura vstupu **příkazem** (ne odhadem), povinné pole ve výstupu agenta, a poměr v přehledu i v záznamu do `done.md`. Kotvou je u `/consistency` a `/review` seznam souborů v rozsahu, u `/oponent` seznam nadpisů posuzovaného předmětu.
+
+| skill | čím se měří | pole agenta | kde se vykazuje |
+|---|---|---|---|
+| `/consistency` | soubory v rozsahu | `covered` | *Přehled*, `done.md` |
+| `/review` | soubory v rozsahu | `covered` | *Přehled* |
+| `/oponent` | nadpisy předmětu | řádek `PROŠEL JSEM:` | *Konsolidace*, závěrečný verdikt |
+
+**Prázdný výstup je od teď selhání agenta, ne čistý výsledek** – chybí-li vykázané pokrytí, agent se pouští znovu, a nepovede-li se to podruhé, řekne se nahlas, že dimenze prověřená není. Protiváhou je, že **neúplné pokrytí je platný výsledek**: agent má vrátit jen to, co prošel. Zamlčené neúplné pokrytí je to, co se zakazuje, ne přiznané.
+
+**Mez u `/review`:** dva specialisté jsou vestavěné skilly (`/code-review`, `/security-review`) a svůj výstup si předefinovat nenechají, takže u korektnosti a bezpečnosti se pokrytí **nedokládá** a místo čísla se píše `nedokládá`. Kdyby se to po nich chtělo, bylo by to pole, které nikdy nepřijde, a z povinnosti by se stala formalita.
+
+**Slabina, kterou to nezavírá:** agent může seznam ze zadání opsat zpátky a tvrdit, že prošel všechno. Proti tomu drží jediná věc – že prázdné `findings` spolu s plným `covered` se posuzuje jako podezřelé, ne jako čisto. Je to **slabší pojistka než u `/cleanup`**, kde se u každé kotvy vyplňuje stav; tam je vstupem konverzace, kterou má hlavní session v kontextu, takže si opsání umí zkontrolovat. Nad cizím kódem to nejde a **předstírat se to nemá**.
+
+**Vynucovací vrstva** je `test_panels_report_measured_coverage` v `tests/test_skills.py`, a hlídá všechny tři skilly naráz: je to princip, ne vlastnost jednoho z nich, a skill, který by ho pozbyl, by se navenek nezměnil – vypisoval by dál nálezy, jen by přestal tvrdit, kolik jich nevidí.
+
+**Zavedení narazilo dvakrát na vlastní kontroly a obojí byla vada kontroly, ne textu.** Test na odkazy do vnitřku `/review` porovnával povolená slova case-sensitive, takže „Vestavěné skilly…“ na začátku věty hlásil jako nález, kdežto „…jako vestavěné skilly“ propustil; a test měřeného pokrytí hledal jedno konkrétní znění, které se ve třech skillech nedalo napsat gramaticky stejně. První se opravilo porovnáním bez ohledu na velikost písmen (ověřeno mutací, že vadu dál chytá), druhé sjednocením formulace na *„čistý výsledek, ale selhání“* – což je i `~/.claude/RULES.md`, *Jeden termín pro jednu věc*.

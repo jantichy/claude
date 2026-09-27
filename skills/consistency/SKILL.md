@@ -109,7 +109,13 @@ Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí ta
 
 **Škálu závažnosti drží `~/.claude/skills/SEVERITY.md`** a je společná se všemi skilly, které hlásí nálezy. Zadání níž si stupně opisuje schválně – je to text pro agenta bez kontextu session, kde je odkaz do nenačteného souboru mrtvý (`SEVERITY.md`, *Kdo ji používá*, výjimka pro zadání subagentů). Doménové čtení stupňů v zadání obecnou definici **zpřesňuje, nenahrazuje**.
 
-Spusť subagenta typu `reader` s tímto zadáním (předej mu absolutní cestu k projektu, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
+### Nejdřív inventura rozsahu, pak agent
+
+**Vyrob si seznam souborů v rozsahu příkazem a zapamatuj si jeho délku** – u `branch` z diffu proti hlavní větvi plus soubory, které na ně odkazují, u `full` z `git ls-files`. **Ten počet je to, proti čemu se v *Přehledu* vykazuje pokrytí**, takže ho neodhaduj (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+
+**Proč to tady je:** prázdné pole nálezů vypadá stejně, ať agent prošel dvě stě souborů, nebo dvanáct – a „prošel jsem to systematicky“ je tvrzení, které nemá čím být doložené. Je to táž vada, kterou u `/cleanup` vyřešily kotvy s měřeným poměrem; zdůvodnění drží `~/.claude/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*.
+
+Spusť subagenta typu `reader` s tímto zadáním (předej mu absolutní cestu k projektu, **seznam souborů v rozsahu**, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
 
 ```
 Prohledej zadaný rozsah (viz *Rozsah* výš) a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
@@ -173,8 +179,11 @@ Pro každý nalezený problém uveď:
 - Tagy `toolchain` / `batch`, pokud se hodí
 - `related_root` – title jiného problému, jehož je tento následkem (volitelné)
 
-Výstup strukturuj jako JSON pole objektů:
-[
+Výstup strukturuj jako JSON objekt se dvěma klíči. `covered` je **povinné a nesmí být prázdné**:
+
+{
+  "covered": ["cesty, které jsi OPRAVDU otevřel a prošel – ne seznam ze zadání opsaný zpátky"],
+  "findings": [
   {
     "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
     "title": "krátký název problému",
@@ -183,8 +192,10 @@ Výstup strukturuj jako JSON pole objektů:
     "suggested_fix": "konkrétní navrhované řešení",
     "tags": ["toolchain"?, "batch"?],
     "related_root": "title jiného problému, jehož je tento následkem (volitelné)"
-  }
-]
+  }]
+}
+
+Nestihl-li jsi rozsah projít celý, **vrať `covered` jen s tím, co jsi prošel** – neúplné pokrytí je platný výsledek, zamlčené neúplné pokrytí ne. Prázdné `findings` se bez `covered` nedá odlišit od toho, že jsi spadl.
 ```
 
 **Pole `basis` schéma nemá schválně** – nález je nesoulad mezi místy a doložením jsou `locations`, podle kterých se dá rozpor ověřit přečtením (`~/.claude/skills/SKILLS.md`, *Ověřovací vrstva*).
@@ -192,6 +203,10 @@ Výstup strukturuj jako JSON pole objektů:
 ## Fáze 2 – Zpracování výsledků
 
 **O nálezech mluv obsahem, ne značkou z výstupu agenta.** Pořadová čísla a zkratky, pod kterými se nálezy vracejí, jsou interní – uživatel je nikdy neviděl, takže „N1 je širší, než agent hlásil“ mu neřekne nic. Napiš, čeho se to týká: *„Chybějící sekce Rizika není jen v `discovery.md` – chybí ve všech třech dokumentech.“* (`~/.claude/RULES.md`, *Interní značky ven nepatří*.)
+
+**Nejdřív zkontroluj pokrytí, teprve pak nálezy.** Chybí-li `covered`, je prázdné, nebo v něm sedí jen opsaný seznam ze zadání bez jediného nálezu, **není to čistý výsledek, ale selhání agenta** – pusť ho znovu a nepovede-li se to podruhé, řekni nahlas, že audit pokrytí nedoložil, a nálezy předkládej jako neúplné. **Prázdné `findings` samo o sobě čisto neznamená:** u `/cleanup` se přesně takový výsledek bral za úspěch i za selhání podle situace, a stálo to třetí běh čtenářů navíc.
+
+**Soubory z rozsahu, které v `covered` nejsou, si vypiš jmenovitě** – jdou do *Přehledu* jako neprověřené. Tři neprověřené soubory zamlčené v čistém výsledku jsou horší než tři nálezy.
 
 Z JSON výstupu agenta sestav interní seznam problémů. Seřaď: KRITICKÉ první, pak STŘEDNÍ, pak NÍZKÉ. V rámci každé kategorie umísti root položky před jejich následky (přes `related_root`), aby se opravou rootu mohlo automaticky vyřešit víc následných.
 
@@ -221,6 +236,9 @@ Zobraz uživateli přehled před tím, než začneš procházet problémy:
 
 - [toolchain] hlášeno již existujícím nástrojem: N
 - [batch] hromadné (>20 výskytů): N
+
+- **Pokrytí:** N z M souborů rozsahu prošel agent [· neprověřeno: jmenovitý seznam, nebo „nic“]
+- **Deterministická vrstva:** [který nástroj, kolik nálezů; nespuštěné vypiš jako nespuštěné, ne jako nuly]
 
 - **Opravím rovnou:** N – z toho mechanických (nemění chování) X a jednoznačných (mění, ale podoba opravy je jedna) Y. Jen je vypíšu.
 - **Zbývá na rozhodnutí:** M – ty projdeme spolu od nejzávažnějších; u každého navrhnu varianty a zeptám se, kterou zvolit.
@@ -279,7 +297,7 @@ Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/RULES.md`, *
 **Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*). Čtenářem je **příští `/consistency`**, který jinak nepozná, co už bylo auditované a s jakým vědomě zúženým rozsahem – a projede totéž znovu.
 
 ```
-- **YYYY-MM-DD** · `/consistency` · `<short HEAD>` · <rozsah> · N nálezů (X opraveno mechanicky, Y po odsouhlasení, Z won't fix)
+- **YYYY-MM-DD** · `/consistency` · `<short HEAD>` · <rozsah> · pokrytí N/M · N nálezů (X opraveno mechanicky, Y po odsouhlasení, Z won't fix)
 ```
 
 Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Nemá-li projekt `done.md`, krok přeskoč nahlas.**

@@ -188,6 +188,12 @@ Hotovou frontu ulož do **`.claude/run/review.json`** (`~/.claude/STRUCTURE.md`,
 
 ## Fáze 4 – Zpracování výsledků
 
+**Nejdřív zkontroluj pokrytí, teprve pak nálezy.** Každý specialista vrací `covered` – cesty, které opravdu prošel. **Chybí-li, je prázdné, nebo v něm sedí jen opsaný seznam ze zadání bez jediného nálezu, není to čistý výsledek, ale selhání agenta**: pusť ho znovu a nepovede-li se to podruhé, vypiš tu dimenzi jako neprověřenou. Prázdné `findings` samo o sobě čisto neznamená – u `/cleanup` se přesně takový výsledek bral za úspěch i za selhání podle situace a stálo to třetí běh čtenářů navíc (`~/.claude/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
+
+**Vestavěné skilly `covered` nevrátí a nemá se to po nich chtít.** `/code-review` a `/security-review` mají vlastní výstup, který si předefinovat nenechají, takže u korektnosti a bezpečnosti se pokrytí **nedokládá** a místo čísla se u nich napíše `nedokládá` – ne nula a ne mlčení. Platí to jen pro ty dva; vlastní zadání pole nese.
+
+**Soubory z rozsahu, které nepokryl žádný specialista, si vypiš jmenovitě** – jdou do *Přehledu*. Údaj *Rozsah: N z M souborů diffu* dnes říká, co skill do rozsahu **vzal**; tohle říká, co z toho někdo **opravdu přečetl**, a to jsou dvě různá čísla.
+
 Slož nálezy z deterministické vrstvy a z panelu (ty, které přežily ověření) do jednoho seznamu. Seřaď: KRITICKÉ, STŘEDNÍ, NÍZKÉ; v rámci kategorie root položky před jejich následky.
 
 **Deduplikuj napříč specialisty.** Překrývají se schválně – bezpečnost a `coding.md` najdou tutéž díru, `web/web.md` a `web/admin.md` totéž tlačítko, `web/web.md` a `text/typography.md` tutéž typografii. Když dva agenti hlásí totéž na stejném místě, nech jeden nález a u něj uveď oba podklady.
@@ -228,6 +234,7 @@ Při pochybnosti patří nález mezi sporné.
 ## Výsledky review
 
 - **Rozsah:** [N z M souborů diffu – co a proč vynecháno]
+- **Pokrytí panelem:** [N z M souborů rozsahu prošel aspoň jeden specialista · neprověřeno: jmenovitě, nebo „nic“]
 - **Specialisté:** [kteří běželi / kteří vybraní neběželi a proč] · [na čem: code-review high, bezpečnost nejsilnější model, standardy výchozí]
 - **Spotřeba:** [N agentů: X specialistů, Y ověřovatelů, průzkumník ano/ne · na jakém modelu a effortu]
 

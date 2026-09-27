@@ -81,8 +81,10 @@ NÍZKÝ se neověřuje a část z nich se opraví bez ptaní. Proto u NÍZKÉHO
 napiš do `basis` konkrétní pravidlo nebo bod standardu, o který se opíráš – ne
 dojem. Nemáš-li ho čím podložit, je to STŘEDNÍ, nebo to nehlas.
 
-VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
-[
+VÝSTUP: JSON objekt, nic jiného. `covered` je povinné a nesmí být prázdné.
+{
+  "covered": ["cesty, které jsi OPRAVDU otevřel a prošel – ne seznam ze zadání opsaný zpátky"],
+  "findings": [
   {
     "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
     "specialist": "<jméno specialisty>",
@@ -95,8 +97,12 @@ VÝSTUP: JSON pole, nic jiného. Prázdné pole, když je vše v pořádku.
     "evidence": {"cmd": "...", "exit_code": 1, "stdout_tail": "..."},   // jen když jsi to opravdu spustil, jinak vynech
     "tags": ["batch"?],
     "related_root": "title jiného nálezu, jehož je tento následkem (volitelné)"
-  }
-]
+  }]
+}
+
+Nestihl-li jsi rozsah projít celý, vrať `covered` jen s tím, co jsi prošel. Neúplné
+pokrytí je platný výsledek, zamlčené neúplné pokrytí ne – a prázdné `findings` se bez
+`covered` nedá odlišit od toho, že jsi spadl.
 
 Pracuj výhradně v `/tmp` a s absolutními cestami; do auditovaného projektu nezapisuj a nic v něm neměň. **Není to pojistka, ale pokyn** – shell máš a zapsat bys jím mohl; hranici tu drží zadání, ne nástroj.
 ```

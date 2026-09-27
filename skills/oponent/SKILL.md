@@ -111,6 +111,10 @@ Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku
 
 ## Fáze 2 – Nezávislé posudky
 
+**Nejdřív si vyrob inventuru předmětu, pak pouštěj oponenty.** Vypiš nadpisy posuzovaných dokumentů příkazem (`grep -n '^#' <cesty>`) a **zapamatuj si jejich počet** – proti němu se v *Konsolidaci* vykazuje, kolik z předmětu který oponent doopravdy prošel. Neodhaduj to (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+
+**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a u pěti dokumentů se proletnutí od přečtení nepozná. Posudek, který pokryl třetinu předmětu, přitom vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní. Je to táž vada, kterou u `/cleanup` vyřešily kotvy s měřeným poměrem (`~/.claude/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
+
 Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
 
 **Typ agenta podle sloupce *Web*:** hledisko bez ✔ jede na `reader`, hledisko s ✔ na `researcher`. Oba posuzují hotový text a **nemají shell**, takže do dokumentu nemůžou zapsat; `researcher` má navíc `WebSearch` a `WebFetch`. Viz `~/.claude/skills/SKILLS.md`, *Model, effort a delegace*.
@@ -131,6 +135,11 @@ TVOJE HLEDISKO: <hledisko a jeho otázky ze sloupce *Ptá se*>
 
 Přečti dokument celý a hledej výhradně ze svého hlediska. Ostatní hlediska pokrývají jiní
 oponenti – nepřebíhej k nim.
+
+ZAČNI ŘÁDKEM: `PROŠEL JSEM: <sekce, které jsi opravdu přečetl>` – jmenovitě, ne „vše“.
+Nestihl-li jsi předmět celý, napiš jen to, co jsi přečetl. Neúplný posudek je platný
+výsledek, zamlčeně neúplný ne. Nenašel-li jsi nic, ten řádek napiš i tak: bez něj se
+prázdný posudek nedá odlišit od toho, že jsi spadl.
 
 U KAŽDÉHO NÁLEZU UVEĎ:
 - **Kde** – soubor a sekce, ideálně citace věty, které se to týká
@@ -202,6 +211,10 @@ Do žádného souboru nezapisuj.
 ## Fáze 4 – Konsolidace
 
 Než cokoliv předložíš, nálezy **zpracuj**:
+
+**Nejdřív pokrytí, teprve pak nálezy.** U každého oponenta si z jeho úvodního řádku vezmi, které sekce prošel, a porovnej s inventurou. **Posudek bez toho řádku není čistý výsledek, ale selhání běhu** – pusť ho znovu, a nepovede-li se to podruhé, řekni nahlas, že jeho pokrytí není doložené. Hledisko, které prošlo výrazně méně než ostatní, **uveď v přehledu jmenovitě**: jeho mlčení nic netvrdí.
+
+Pak nálezy:
 
 1. **Duplicity už jsou sloučené** – dedup proběhl před ověřením (Fáze 3). Zůstává jen poznamenat u nálezu, že ho našli dva oponenti z různých hledisek; je to signál závažnosti.
 2. **Vyvrácené nálezy vyřadil ověřovatel**, ne ty. Sám nefiltruj: nález, u kterého máš pochybnost, ale ověřením prošel, předlož s poznámkou. Tichý filtr je přesně to, co má tenhle skill obcházet, a spoluautor je ten poslední, kdo ho má dělat.
@@ -287,6 +300,7 @@ Ve verdiktu:
 - **Předmět:** <dokumenty>
 - **Hlediska:** <seznam>
 - **Panel:** A oponentů → B nálezů hrubě → C po dedupu → D ověřeno, E neověřeno
+- **Pokrytí předmětu:** N z M sekcí [· hledisko s nejmenším pokrytím a kolik prošlo]
 - **Spotřeba:** [N agentů: X oponentů, Y ověřovatelů · na jakém modelu a effortu]
 
 **Nálezy:** N celkem – 🔴 X kritických, 🟡 Y středních, 🔵 Z nízkých

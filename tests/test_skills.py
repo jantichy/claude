@@ -437,14 +437,18 @@ class SkillLinks(unittest.TestCase):
         zadaná. Chyba je poslat *uživatele*, aby si `/code-review` pustil místo
         `/review`: dostal by jednoho specialistu z panelu bez ověření nálezů.
         """
-        allowed = ("vyvolej", "volá", "uvnitř", "vestavěn", "Korektnost", "Bezpečnost",
+        # Porovnává se bez ohledu na velikost písmen: „Vestavěné skilly…“ na
+        # začátku věty je týž kontext volání jako „…jako vestavěné skilly“,
+        # a test, který propustí jen jednu z těch dvou podob, hlásí nález nad
+        # správným textem podle toho, kde ve větě slovo stojí.
+        allowed = ("vyvolej", "volá", "uvnitř", "vestavěn", "korektnost", "bezpečnost",
                     "/code-review low", "/code-review high", "/code-review ultra")
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
                 for line in body(skill).splitlines():
                     if "/code-review" not in line and "/security-review" not in line:
                         continue
-                    if any(w in line for w in allowed):
+                    if any(w in line.lower() for w in allowed):
                         continue
                     self.fail(f"{skill}: odkaz na vnitřek `/review` mimo kontext volání:\n  {line.strip()}")
 
@@ -522,6 +526,39 @@ class CoreParts(unittest.TestCase):
         auxiliary = "\n".join(body(p) for p in sorted((ROOT / "skills/review").glob("*.md")))
         self.assertIn("Tenhle nález se snaž VYVRÁTIT", auxiliary,
                       "/review přišel o zadání pro ověřovatele")
+
+    def test_panels_report_measured_coverage(self):
+        """Prázdný výstup agenta se musí odlišit od čistého výsledku.
+
+        `/cleanup` na tomhle prodělal nejdražší vadu své historie: pravidlo
+        „vrátil-li chybu **nebo nic**, pusť ho znovu“ vyrábělo třetí běh čtenářů,
+        protože prázdný výsledek podle jejich zadání znamenal, že je čisto. Skill
+        si tedy vyrobil vstup značící úspěch a vyhodnocoval ho jako selhání. Lék
+        je měřený poměr: agent vykáže, co prošel, a proti čemu se to poměřuje,
+        vzniklo příkazem.
+
+        Hlídá se to u všech tří skillů s panelem naráz, protože **to je princip,
+        ne vlastnost jednoho z nich** – a ten, který by ho pozbyl, by se navenek
+        nezměnil: vypisoval by dál nálezy, jen by přestal tvrdit, kolik jich
+        nevidí. Zdůvodnění drží `decisions.md`, *Měřidlo nákladů platí pro každý
+        skill…*.
+        """
+        # (skill, řetězec v zadání pro agenta, řetězec v šabloně přehledu)
+        CASES = (
+            ("consistency", '"covered"', "Pokrytí:"),
+            ("review", '"covered"', "Pokrytí panelem:"),
+            ("oponent", "PROŠEL JSEM:", "Pokrytí předmětu:"),
+        )
+        for skill, in_brief, in_summary in CASES:
+            with self.subTest(skill=skill):
+                files = sorted((ROOT / "skills" / skill).glob("*.md"))
+                everything = "\n".join(body(path) for path in files)
+                self.assertIn(in_brief, everything,
+                    f"/{skill}: zadání pro agenta přestalo žádat vykázané pokrytí")
+                self.assertIn(in_summary, body(ROOT / "skills" / skill / "SKILL.md"),
+                    f"/{skill}: přehled přestal vypisovat poměr pokrytí")
+                self.assertIn("čistý výsledek, ale selhání", everything,
+                    f"/{skill}: zmizelo pravidlo, že prázdný výstup agenta není čisto")
 
     def test_cleanup_looks_for_unresolved_topics(self):
         """Skill sám tvrdí, že tohle je nejčastější ztráta v dlouhé konverzaci.
