@@ -1423,3 +1423,19 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Hranice pásem jsou přiznaný odhad, ne fit z dat** – v den vzniku osy nebylo z čeho je odvodit. Stojí na řádové představě: jednotky souborů je běh na větvi, dvě stě a víc celý repozitář (tenhle má 151 sledovaných souborů). Přepočítat se mají z naměřeného rozdělení po prvních desítkách běhů, úkol je v `todo.md` u položky o přeměření tří skillů.
 
 **Regresní testy hlídají oba směry**, protože špatně přečtený rozsah je zrádnější než nepřečtený: vzít za rozsah kotvy `N/N`, kilobajty transcriptu nebo zástupné `N z M` ze šablony ve `SKILL.md` by dalo běhu pásmo, které si nezaslouží. Jednotka je proto v regulárním výrazu povinná a čte se jen text odpovědi, ne vstupy nástrojů – jinak by se za naměřený rozsah vzala šablona, kterou běh zrovna píše.
+
+
+### 2026-09-28 – Testy patří do `tests/`, protože jinde je nespouští nikdo
+
+`test_deklinace.py` ležel uvnitř `/replace` u skriptů, které zkouší. Kontrakt `test` pouští jedinou věc – `python3 -m unittest discover -s tests` –, takže ho od jeho vzniku **nespustila žádná kontrola**: padal na 2 ze 44 vět a nikdo se to nedozvěděl. Je to táž třída vady jako nepokrytý soubor v lintu, jen o vrstvu výš: nechybí kontrola nad souborem, chybí spuštění celé kontroly.
+
+**Vyhrálo přesunutí do `tests/` a zákaz testů jinde.** Test si modul načte po cestě, jak to dělají všechny ostatní (`test_cost.py`, `test_cleanup.py`, `test_transcript.py`), a `tests/test_skills.py` má nový meta-test, který shodí sadu, jakmile kdekoliv mimo `tests/` vznikne soubor `test_*.py`. Kontrakt se nemění a zůstává jedním příkazem. Ověřeno v obou směrech – nad dnešním stavem je zelený a nad podstrčeným testem ve skillu padá.
+
+**Zamítnuté varianty:**
+
+- **Rozšířit `discover` na `skills/`.** Nefunguje: adresáře skillů nejsou pythonové balíčky a `unittest` skončí na `ImportError: Start directory is not importable`. Šlo by to jen smyčkou přes listové adresáře, čímž kontrakt přestane být jeden příkaz a začne spoléhat na to, že smyčka nikde nespolkne návratový kód, nebo přidáním `__init__.py` do každého skillu, což je smetí v adresáři, který s Pythonem nemá nic společného.
+- **Obal v `tests/`, který testy ve skillech spustí jako podproces.** Fungovalo by a testy by zůstaly u kódu, ale zavádí mechanismus pro rozložení, které používá **jediný soubor** – a celý zbytek repozitáře už dávno testuje skripty ve skillech z `tests/` po cestě.
+
+**Dvě padající věty se přiznaly jako mez, a to rozhodnutí nové není** – `deklinace/README.md` je za nejednoznačné označoval od začátku. Špatný byl jen tvar, kterým se ta mez vyjadřovala: **pád testu**. Takový test nemůže nikdy zezelenat, takže nechrání nic a při každém běhu je z něj šum, který se naučí přeskakovat. Věty proto stojí ve vyjmenovaném seznamu `LIMITS`, který se **porovnává se skutečností v obou směrech**: věta, která mez přežila a dnes prochází, shodí testy stejně jako nová vada.
+
+**Opravovat je nemá čím.** *Partie* má shodný tvar v 1. pádě jednotného i množného čísla a *neplatí* je taky obojí, takže věta o čísle nenese informaci vůbec – je to nerozhodnutelné v principu, ne mezera v pravidlech. *Partii* je shodné ve 4. i 6. pádě a rozhodla by jedině tabulka vazeb sloves (*ozvat se na* + 4. pád), tedy další pravidla do funkce `resolve`, která má složitost 64 proti prahu 10 a čeká na rozdělení. Obojí zůstává ruční kontrolou, jak to `deklinace/README.md` popisuje u doložené meze převodu.

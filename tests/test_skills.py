@@ -910,6 +910,29 @@ class CommandContract(unittest.TestCase):
                 self.assertIsNotNone(self._value(key),
                     f"klíč {key} se z kontraktu nepřečetl – změnil se formát?")
 
+    def test_every_test_file_is_run_by_the_contract(self):
+        """Test ležící mimo `tests/` nepouští nikdo a jeho pád se nedozví nikdo.
+
+        Klíč `test` v kontraktu pouští `unittest discover -s tests`, takže sada
+        vidí jen tenhle adresář. Doloženo 28. 9. 2026: `test_deklinace.py` ležel
+        uvnitř `/replace`, **padal na 2 ze 44 vět a nevěděl to nikdo** – od jeho
+        vzniku ho nespustila žádná kontrola. Je to táž třída vady jako nepokrytý
+        soubor v `test_contract_patterns_cover_repo` níž, jen o vrstvu výš:
+        nechybí kontrola nad souborem, chybí spuštění celé kontroly.
+
+        Rozšířit `discover` na `skills/` nejde – adresáře skillů nejsou balíčky
+        a `unittest` skončí na `Start directory is not importable`. Testy proto
+        patří do `tests/` a modul si načtou po cestě, jak to dělají všechny.
+        """
+        import subprocess
+        tracked = subprocess.run(["git", "ls-files"], cwd=ROOT,
+                                 capture_output=True, text=True).stdout.split()
+        self.assertTrue(tracked, "git ls-files nic nevrátil – měří se vůbec něco?")
+        stray = [p for p in tracked
+                 if Path(p).name.startswith("test_") and Path(p).suffix == ".py"
+                 and Path(p).parent != Path("tests")]
+        self.assertEqual(stray, [], "tyhle testy nepouští kontrakt – přesuň je do tests/")
+
     def test_contract_patterns_cover_repo(self):
         """Soubor, na který nesedí žádný vzor, nečte žádná kontrola – a nikdo se to nedozví.
 
@@ -968,7 +991,6 @@ class CommandContract(unittest.TestCase):
             # funkce nerozdělí, zůstává adresář mimo lint. Úkol je v todo.md.
             "skills/replace/deklinace/deklinace.py",
             "skills/replace/deklinace/prepis.py",
-            "skills/replace/deklinace/test_deklinace.py",
         }
         uncovered = {c for c in tracked
                      if os.path.splitext(c)[1] in extensions
