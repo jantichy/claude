@@ -18,7 +18,8 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 4. **Zvlášť kontroluje skupiny souborů, které mají mít stejnou stavbu** – adresáře, kde každý soubor reprezentuje jednu instanci téhož konceptu. Chybějící sekce v jednom z nich se jinak nenajde.
 5. **Hlídá i to, co stárne** – poznámky „doplnit později“ starší než půl roku, komentáře s termínem v minulosti, přepínače funkcí, které mají všude stejnou hodnotu, nedokončené migrace.
 6. **Seskupuje nálezy podle příčiny.** Jedno přejmenování, které zasáhlo padesát souborů, je jedna položka, ne padesát.
-7. **Pamatuje si, co jste rozhodli neopravovat** – a příště se na to už neptá, dokud se ten kód nezmění.
+7. **Mrtvé odkazy a kotvy v textech hledá nástrojem, ne čtením** – dostane je tedy úplné a zdarma, kdežto při čtení se odkaz na přejmenovanou sekci přehlédne snadno, protože vypadá správně.
+8. **Pamatuje si, co jste rozhodli neopravovat** – a příště se na to už neptá, dokud se ten kód nezmění.
 
 ## Proč zrovna tenhle
 
@@ -28,6 +29,7 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 - **U hromadných nálezů neodklikáváte padesát otázek.** Ukáže vzorec, počet a tři příklady a nabídne to udělat najednou.
 - **Po každé své opravě si ověří, že nic nerozbil**, a pouští k tomu jen ty příkazy, které projekt sám deklaruje. Co spustit nemohl, vypíše jako nezkontrolované.
 - **Neopakuje práci, která už proběhla.** Testy a linter běžely o krok dřív, takže se před auditem nespouštějí znovu – jen po vlastních opravách.
+- **Co se dá změřit, neodhaduje.** Mechanické vady hledá nástroj a jejich výčet je úplný; posuzování zbývá jen na to, co změřit nejde. Ušetřené místo padne na vlastní úsudek.
 - **Řekne, kdy se vyplatí pustit ho znovu.** Po rozsáhlé opravě má čerstvě napsaný text vad nejvíc; po drobných opravách by další běh hledal hlavně sám sebe.
 
 ## Jak se to používá
@@ -64,7 +66,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
 
-Skill sdílí část postupu se `/review` (určení rozsahu, tvar interaktivního průchodu), takže si **nechte nainstalovat rovnou oba**. Odkazuje se i na moje soukromé standardy pro strukturu projektu – ty odkazy ať Claude nahradí vašimi, nebo je smaže.
+Kontrolu odkazů sdílí s `/cleanup`, takže si vezměte i soubor `skills/links.py`. Skill sdílí část postupu se `/review` (určení rozsahu, tvar interaktivního průchodu), takže si **nechte nainstalovat rovnou oba**. Odkazuje se i na moje soukromé standardy pro strukturu projektu – ty odkazy ať Claude nahradí vašimi, nebo je smaže.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:

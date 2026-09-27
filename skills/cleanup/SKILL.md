@@ -36,7 +36,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 ## Jak je to postavené uvnitř
 
 - **`scripts/extract.py`** – očistí transcript a spočítá, co v něm je. Bez něj by se čtením procházelo devět desetin balastu: měřeno 26. 9. 2026 na transcriptu o 3,0 MB, ze kterého je vytěžitelného textu 234 kB. Režim `filter` vypíše obsah s čísly řádků zdroje, `inventory` inventuru pokrytí a kotvy evidence.
-- **`scripts/links.py`** – ověří, že relativní odkazy ve změněných Markdownech vedou na existující soubor a kotvy na existující nadpis.
+- **`~/.claude/skills/links.py`** – ověří, že relativní odkazy ve změněných Markdownech vedou na existující soubor a kotvy na existující nadpis. **Je sdílený, ne jeho vlastní**: od 27. 9. 2026 ho volá i `/consistency`, a skript uvnitř skillu by z cizího skillu volat nesměl (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*).
 - **[`obligations.md`](obligations.md)** – co v session zakládá povinnost zápisu, kam co patří a v jakých stavech položku najdeš. Referenční tabulka pro *Fázi 3*.
 - **[`out-of-scope.md`](out-of-scope.md)** – jak se naloží s položkami mimo rozsah úklidu.
 
@@ -205,7 +205,7 @@ git log --name-only --format='%h' <základ session>..HEAD && git status --porcel
 **Pak pusť kontrolu odkazů** nad Markdowny, kterých se session dotkla:
 
 ```sh
-python3 ~/.claude/skills/cleanup/scripts/links.py <změněné .md soubory>
+python3 ~/.claude/skills/links.py <změněné .md soubory>
 ```
 
 Seznam vezmi z gitu ze **tří** míst, ať ti nic neuteče: `git diff --name-only HEAD` (pracovní strom **i index** – samotné `git diff` to, co je ve stage, neukáže), `git diff --name-only <základ session>..HEAD` a `git status --porcelain --untracked-files=all`. Filtruj na `*.md`, seznam sjednoť a **vynech smazané soubory** – ty v diffu jsou, na disku ne, takže by skript hlásil „nelze přečíst“ jako nález. Doloženo prvním ostrým během 26. 9. 2026, kdy zanikly dva soubory skillu.

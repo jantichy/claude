@@ -3,7 +3,6 @@
 Katalog ke kroku 11 v `SKILL.md`: jak se na typ ptát, co která volba znamená a co se z ní zapisuje do projektového `CLAUDE.md`. Vytažené ze `SKILL.md`, aby se do něj nemusel načítat pokaždé – rozhoduje se podle něj jednou za projekt.
 
 - [Jak se ptát](#jak-se-ptát)
-- [Co se zapisuje do `CLAUDE.md`](#co-se-zapisuje-do-claudemd)
 - [U typu Vývoj se ptej ještě na aplikaci versus nástroj](#u-typu-vývoj-se-ptej-ještě-na-aplikaci-versus-nástroj)
 
 ## Jak se ptát

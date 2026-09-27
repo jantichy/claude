@@ -1,6 +1,6 @@
 """Regresní testy deterministických skriptů `/cleanup`.
 
-Skript `skills/cleanup/scripts/links.py` existuje kvůli pravidlu nula
+Skript `skills/links.py` existuje kvůli pravidlu nula
 (`~/.claude/RULES.md`, *Model a effort podle úkolu*): rozbitý odkaz a mrtvá kotva
 jsou mechanické vady a hledat je čtením přes model je ta nejdražší možná cesta.
 Skript je tedy **zrychlení** – část práce, kterou dřív dělal agent, se udělá
@@ -42,7 +42,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LINKS = ROOT / "skills" / "cleanup" / "scripts" / "links.py"
+LINKS = ROOT / "skills" / "links.py"
 EXTRACT = ROOT / "skills" / "cleanup" / "scripts" / "extract.py"
 
 
@@ -112,6 +112,20 @@ class NehlasiSpravne(Fixture):
 
     def test_platna_kotva(self):
         self.assertEqual("", self.findings("[x](b.md#druhý-nadpis)\n"))
+
+    def test_zastupny_symbol_v_cestě_neni_odkaz(self):
+        """`skills/<name>/` je ukázka, ne odkaz – skutečná cesta závorky nenese.
+
+        Doloženo 27. 9. 2026 při zapojení skriptu do `/consistency`: nad celým
+        repozitářem to byl jediný falešný poplach ze tří nálezů, a falešný
+        poplach je ta horší polovina, protože otravnou kontrolu si člověk vypne.
+        """
+        self.assertEqual("", self.findings("[`/<name>`](skills/<name>/)\n"))
+        self.assertEqual("", self.findings("[x](docs/<project>/plan.md)\n"))
+
+    def test_zastupny_symbol_neumlci_skutecny_nalez(self):
+        """Opačný směr: bez závorek se nález hlásit musí, jinak to umlčí vše."""
+        self.assertIn("neexistuje", self.findings("[x](skills/name/)\n"))
 
     def test_kotva_do_sebe(self):
         self.assertEqual("", self.findings("# Živá sekce\n\n[x](#živá-sekce)\n"))

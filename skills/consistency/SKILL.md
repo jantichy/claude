@@ -22,6 +22,14 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
 - **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky životního cyklu nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
 
+## Jak je to postavené uvnitř
+
+**Deterministickou vrstvu skill nepíše sám** (*Spusť nástroje, které předchozí kroky životního cyklu nedělají*): mrtvý kód a nepoužité závislosti měří `knip`, odkazy a kotvy v Markdownu `~/.claude/skills/links.py`, zbytek grep a `git blame`. **Který nástroj to je, je implementační detail** – vymění se, jakmile bude lepší, a na tom, jak se `/consistency` volá a co vrací, se tím nezmění nic.
+
+**Závazné je proti tomu tohle a tiše se to změnit nesmí:** co jde změřit nástrojem, nehledá agent čtením (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula); nespuštěná kontrola se vypisuje jako nespuštěná, nikdy jako nula nálezů; a nálezy z nástrojů nesou tag `toolchain` a neprocházejí posouzením, protože nástroj nehalucinuje.
+
+**`links.py` leží ve `skills/`, ne v adresáři skillu, a je to záměr.** Volá ho i `/cleanup` a skript uvnitř cizího skillu by se volat nesměl (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*). Kdo si nainstaluje `/consistency` bez `/cleanup`, dostane ho stejně.
+
 ## Rozsah
 
 - **`/consistency`** nebo **`/consistency branch`** (výchozí) – soubory dotčené prací na aktuální větvi **a soubory, které na ně odkazují**. Ten druhý půlkruh je podstatný: nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví.
@@ -85,10 +93,11 @@ Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se s
 | překladové klíče proti slovníku, oběma směry | `i18next-parser`, jinak grep | projekt má překlady |
 | shoda verze runtime napříč `engines`, `.nvmrc`, `.tool-versions`, CI a hostingem | porovnání hodnot | projekt některé z nich má |
 | `TODO`/`FIXME` starší než půl roku a prošlé deadliny v komentářích | `git blame` nad nalezenými řádky | vždy, kde je git |
+| mrtvé odkazy na soubory a kotvy na neexistující nadpisy v Markdownu | `python3 ~/.claude/skills/links.py <soubory v rozsahu>` | projekt má Markdown, tedy skoro vždy |
 
 **Běžela-li nad týmž stromem CI, přečti její výsledek** místo opakovaného spouštění – podmínky jsou tytéž jako v `/review`, *Deterministická vrstva*: `headSha` sedí s `HEAD` **a** `git status --porcelain` je prázdné. Nesedí-li obojí, pusť nástroje lokálně a řekni, že se CI nepoužila.
 
-**Nemá-li projekt, čím to spustit, krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo, položku po položce. Nespuštěná kontrola se nikdy nevypisuje jako nula nálezů: tři přeskočené kroky vypsané jako tři nuly čte uživatel jako tři čisté výsledky. U obsahového či znalostního projektu je normální, že se přeskočí skoro všechno; audit v dalších fázích běží stejně, jen bez téhle vrstvy.
+**Nemá-li projekt, čím to spustit, krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo, položku po položce. Nespuštěná kontrola se nikdy nevypisuje jako nula nálezů: tři přeskočené kroky vypsané jako tři nuly čte uživatel jako tři čisté výsledky. U obsahového či znalostního projektu je normální, že se přeskočí skoro všechno – **kromě kontroly odkazů, která tam funguje nejlépe z celé tabulky**: rozejití odkazu na přejmenovanou sekci je nejčastější vada textového repozitáře a zároveň ta, kterou agent nejspolehlivěji přehlédne, protože kotva uhodnutá z nadpisu vypadá správně (`~/.claude/RULES.md`, *Při nejistotě se zeptej*). Audit v dalších fázích běží stejně, jen bez zbytku téhle vrstvy.
 
 Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí tagem `[toolchain]` a **neprocházejí posouzením** – nástroj nehalucinuje.
 
@@ -105,7 +114,7 @@ Spusť subagenta typu `reader` s tímto zadáním (předej mu absolutní cestu k
 ```
 Prohledej zadaný rozsah (viz *Rozsah* výš) a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.
 
-Část nekonzistencí už našly nástroje před tebou (mrtvý kód a nepoužité závislosti, env proti `.env.example`, překladové klíče, shoda verzí runtime, zastaralé TODO) a jejich nálezy dostáváš v zadání. **Nehledej je znovu** – hledej to, co nástroj změřit neumí.
+Část nekonzistencí už našly nástroje před tebou (mrtvý kód a nepoužité závislosti, env proti `.env.example`, překladové klíče, shoda verzí runtime, zastaralé TODO, **mrtvé odkazy a kotvy v Markdownu**) a jejich nálezy dostáváš v zadání. **Nehledej je znovu** – hledej to, co nástroj změřit neumí. Platí to i o odkazech: nekontroluj, jestli cíl existuje, to je změřené. Tvoje otázka je, jestli text u odkazu **tvrdí o cíli pravdu**.
 
 PŘED HLÁŠENÍM PROBLÉMU vždy zkontroluj, že:
 - Není uveden v kapitole `## Consistency` projektového `CLAUDE.md` (předané v zadání) – pokud ano, neuváděj ho

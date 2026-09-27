@@ -3,7 +3,7 @@
 Jak se staví `.transcript-glossary.md` – seznam jmen, značek a termínů, který se podstrkuje whisperu, aby je nekomolil. Vytažené ze `SKILL.md`, protože se to čte jen v kroku 3 průvodce; naměřené hodnoty k účinnosti drží [`internals.md`](internals.md).
 
 - [Jak se slovník sestavuje](#jak-se-slovník-sestavuje)
-- [Šablona souboru](#šablona-souboru)
+- [Šablona souboru](#zbytek-rešerše-si-ulož) – leží v bloku kódu na konci té sekce, takže vlastní nadpis nemá
 
 ## Jak se slovník sestavuje
 

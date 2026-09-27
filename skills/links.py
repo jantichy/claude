@@ -86,6 +86,12 @@ def skip(path, anchor):
     """Cíle, které se schválně neověřují – viz docstring modulu."""
     if not path and not anchor:
         return True
+    if "<" in path or ">" in path:
+        # Zástupný symbol uvnitř cesty (`skills/<name>/`): skutečná cesta ostré
+        # závorky nenese, takže je to ukázka, ne odkaz. Bez tohohle vzniká
+        # falešný poplach – a otravnou kontrolu si člověk vypne, čímž přestane
+        # hlídat i pravé nálezy.
+        return True
     return path.startswith(EXTERNAL) or path.startswith(("/", "~"))
 
 
