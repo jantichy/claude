@@ -79,6 +79,8 @@ Nemáš jasný podklad, jednoznačný pokyn nebo deterministické kritérium →
 
 **Nejdřív ale zvaž, jestli se ptát vůbec máš:** údaj, který jde dohledat (v repozitáři, v dokumentaci, v rejstříku), si **ověř sám** – viz *Neopírej rozhodnutí o neověřené tvrzení*. Ptej se na to, co ví jen uživatel. Když to neví nikdo, napiš, že to není známé – nedoplňuj.
 
+**Platí to i na pravidlo, které si projekt už zapsal.** Doloženo 27. 9. 2026 v rezervačním systému: v návrhovém kole padla otázka, kdo nese haléřový zbytek při dělení ceny, přestože pravidlo „zbytek dostává první účastník v pořadí“ stálo v projektu **na pěti místech**. Vyšlo to nastejno, ale nastejno vyjít nemuselo – rozhodnutá věc předložená znovu se smí rozhodnout jinak, a pak má projekt dvě pravidla pro tutéž věc. **Zrádné je, že otázka vypadá jako pečlivost**: ptám se na něco, co v mém kontextu není, a že to někde zapsané je, nesvítí nikde. Než položíš otázku o pravidle, konvenci nebo hodnotě, **zkus ji v projektu najít grepem** – a najdeš-li ji, není to otázka, ale nanejvýš zpřesnění toho, co už platí.
+
 Platí zejména pro **technické názvy** (proměnné v cizí doméně, API volání a parametry, event names, ID, klíče) a **chybějící podklady** (šablona, JSON, schéma, příklad). **Vymyšlený název je horší než žádný** – způsobuje chyby, které se těžko dohledávají.
 
 **Kotva odkazu je technický název jako každý jiný a skládá se z nadpisu, ne z paměti.** Míří-li odkaz na sekci – `#nazev-sekce`, `soubor.md#nadpis` –, **dohledej cílový nadpis a slug z něj odvoď**; neskládej ho podle toho, jak si myslíš, že se ta sekce jmenuje. Platí to i pro odkaz uvnitř téhož souboru a zvlášť pro odkaz do dokumentu, který zrovna nemáš otevřený.
