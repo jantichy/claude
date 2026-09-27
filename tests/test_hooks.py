@@ -716,5 +716,62 @@ class GitGuard(unittest.TestCase):
                         "git-guard.py není mezi PreToolUse hooky")
 
 
+class PluginHooks(unittest.TestCase):
+    """Plugin smí do session přidat hooky, a registr o nich dosud nevěděl.
+
+    `BYPASS.md` má evidovat každou vrstvu, která běží automaticky, ale test,
+    který to vynucuje, čte jen `settings.json`, `githooks/` a `.github/`.
+    Plugin přitom nese vlastní `hooks/hooks.json` a zapíná se jedním řádkem
+    v `enabledPlugins` – tedy vrstva, kterou registr nezná a nikdo neměří.
+
+    Doloženo 27. 9. 2026 na `gitkraken-hooks`: v pracovní kopii se objevil
+    zapnutý, přestože se **18. 9. 2026 po měření vědomě vypnul** (164× volal
+    binárku, kterou nikdo neposlouchal, hook na 21 událostech,
+    `PermissionRequest` s timeoutem 24 hodin). Bylo to už třetí kolo téhož –
+    8. 9. vypršelo umlčení nálezu, 18. 9. se vypnul, 27. 9. byl zpátky – a to
+    je práh, po kterém rozhodnutí potřebuje mechanismus, ne zápis.
+    """
+
+    SETTINGS = ROOT / "settings.json"
+
+    def enabled(self):
+        d = json.loads(self.SETTINGS.read_text(encoding="utf-8"))
+        return [name for name, on in d.get("enabledPlugins", {}).items() if on]
+
+    def test_gitkraken_hooks_stays_off(self):
+        """Rozhodnutí z 18. 9. 2026 se obrátilo dvakrát; potřetí to má spadnout.
+
+        Míří na jméno schválně: obecná kontrola níž mlčí, když plugin na disku
+        není, takže po smazání by zapnutí v `settings.json` nehlídalo nic –
+        a právě tou cestou se to vrátilo.
+        """
+        for name in self.enabled():
+            self.assertNotIn("gitkraken", name.lower(),
+                "gitkraken-hooks je zapnutý, přestože ho decisions.md "
+                "(2026-09-18) vypnul po měření. Zapnul se sám, nebo to byl "
+                "záměr? Je-li to záměr, přepiš rozhodnutí i tenhle test.")
+
+    def test_enabled_plugin_with_hooks_is_in_bypass_registry(self):
+        """Zapnutý plugin s vlastními hooky musí být v registru obcházení.
+
+        **Mlčí, když plugin na disku není** – `plugins/` je v `.gitignore`,
+        takže v CI se nemá co měřit a tvrdit tam cokoliv by byl falešný
+        poplach. Je to tedy lokální ochrana, ne záruka, a proto vedle ní stojí
+        jmenovitá kontrola výš.
+        """
+        registry = (ROOT / "BYPASS.md").read_text(encoding="utf-8").lower()
+        for name in self.enabled():
+            short = name.split("@")[0]
+            hooks = list((ROOT / "plugins").glob(f"*/*/{short}/*/hooks/hooks.json"))
+            hooks += list((ROOT / "plugins").glob(f"*/*/{short}/hooks/hooks.json"))
+            if not hooks:
+                continue
+            with self.subTest(plugin=name):
+                self.assertIn(short.lower(), registry,
+                    f"plugin {name} přináší {hooks[0]} – tedy vrstvu, která "
+                    "běží automaticky –, ale v BYPASS.md o něm není řádek. "
+                    "Registr, který zestárne, je horší než žádný.")
+
+
 if __name__ == "__main__":
     unittest.main()

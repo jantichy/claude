@@ -80,3 +80,16 @@ Nainstalovala ji 2026-09-19 sama iTerm2 volbou *Install Claude Code Integration*
 | Je to kompilovaná binárka uvnitř `iTerm.app`, takže se nedá přečíst, co dělá | Nic | **accepted**: je to cizí kód dodávaný s aplikací, ve které ta session stejně běží. Zvenčí je zjistitelné jen tolik, že čte JSON ze stdin a volá `it2 --status`. |
 | Payload hooku, který dostane na stdin, nese cestu k projektu i text promptu (`UserPromptSubmit`) | Nic | **accepted**: příjemcem je lokální terminál, ve kterém se ten prompt právě napsal. Ven z počítače nejde nic. |
 | Odinstalace z menu iTerm2 vyndá hooky, ale symlink `~/.config/iterm2/cc-status` a zapnuté Python API nechá | Nic | **accepted**: symlink sám nespouští nic, spouštěčem jsou hooky. |
+
+## Hooky z pluginů (`enabledPlugins` v `settings.json`)
+
+Plugin smí přinést vlastní `hooks/hooks.json` a zapíná se **jedním řádkem** v `enabledPlugins`. Do 27. 9. 2026 o téhle vrstvě registr nevěděl vůbec: test čte hooky ze `settings.json`, `githooks/` a `.github/`, tedy z míst, kde pluginové hooky nestojí. Dnes to hlídá `PluginHooks` v `tests/test_hooks.py` – **mlčí ale, když plugin na disku není**, protože `plugins/` je v `.gitignore` a v CI se nemá co měřit.
+
+**`superpowers@claude-plugins-official`** – `SessionStart` (i po `/clear` a `/compact`) vloží do kontextu obsah svého skillu `using-superpowers` obaleného do `<EXTREMELY_IMPORTANT>`.
+
+| Čím se obejde | Co to chytí | Stav |
+|---|---|---|
+| Vkládá si do každé session instrukce, které se tvářejí jako nadřazené („you do not have a choice“) | Nic – je to text v kontextu, ne mechanismus | **accepted**: podle `~/.claude/RULES.md`, *Přednost pravidel*, je pobídka harnessu **poslední** v pořadí, tedy pod tímhle repozitářem i pod pokynem uživatele. Co ta vsuvka žádá, se posuzuje, nevykonává. |
+| Čte soubor z adresáře pluginu, který se samoaktualizuje | Nic – obsah se může změnit bez schválení | **accepted**: je to `cat` skillu z oficiálního marketplace a výstup jde jen do kontextu téhle session, ne ven ze stroje. Kdyby se plugin začal chovat jinak, projeví se to vsuvkou, která je v každé session vidět. |
+
+**Zrušený plugin sem nepatří, ale jeho odstranění má stopu.** `gitkraken-hooks` byl 27. 9. 2026 odstraněný úplně – ze `settings.json`, z marketplace i z cache –, protože se vrátil zapnutý potřetí (8. 9. vypršelo umlčení nálezu, 18. 9. vypnut po měření, 27. 9. zpátky). Proti čtvrtému kolu drží jmenovitá kontrola v `tests/test_hooks.py`; důvody a měření jsou v `decisions.md`.

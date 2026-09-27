@@ -1386,3 +1386,22 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Cena těch dvou změn je změřená, ne odhadnutá.** Tělo skillu se načte při každém vyvolání a pak se čte z cache v každém dalším volání, takže přidaný text není zdarma. Naměřeno proti stavu před prací (`c949bae`): `/consistency` +15,2 % těla, `/review` +3,6 %, `/oponent` +5,1 %. Přepočteno na cenu běhu při naměřených počtech volání je to **0,12 %, 0,03 % a 0,02 %** – tedy pod rozlišovací schopností měřidla. Proti tomu stojí ubraná kategorie ze zadání agenta a tři nálezy, které deterministická kontrola našla hned v prvním běhu za nulu tokenů. **Podmínka „nesmí stát víc“ je tím splněná s rezervou tří řádů**, a bylo správné ji spočítat, ne o ní usoudit.
 
 **`/consistency` se tím dostal na 329 řádků, tedy do pásma *zvaž rozdělení* podle `~/.claude/skills/SKILLS.md`.** Nedělí se dnes: nejsilnější kandidát na vytažení je zadání pro agenta (jeden blok, který hlavní běh jen předává dál), ale to je samostatná úvaha o hranici řezu, ne mechanická oprava – a `todo.md` už tutéž otázku vede u `/review` a `/project`. Patří tedy k nim, ne do téhle práce.
+
+### 2026-09-27 – Plugin `gitkraken-hooks` odstraněný úplně; pluginové hooky přibyly do registru
+
+**Rozhodl uživatel 27. 9. 2026** slovy *„Nenene, žádný gitkraken plugin, pryč s ním“*, když se ukázalo, že je v pracovní kopii `settings.json` zapnutý.
+
+**Je to třetí kolo téhož.** 8. 9. 2026 se nález o pluginu vypořádal jako vědomě přijaté riziko a umlčení vypršelo změnou `settings.json`; 18. 9. 2026 se plugin **vypnul po měření** (164× v `gk_cli.log` „blocking broadcast returned no decision“ při nule registrovaných agentů, hook na 21 událostech, binárka na symlinku do samoaktualizovaného adresáře a `PermissionRequest` s `timeout: 86400`); 27. 9. 2026 byl zapnutý zpátky. **Po třetím kole nestačí zápis, musí přijít mechanismus.**
+
+**V repozitáři přitom rozhodnutí drželo** – commitnutá verze měla `false` a zapnuto to bylo jen na disku. To je důležité pro to, co se z toho smí odvodit: nešlo o regresi v gitu, ale o změnu, kterou nic nehlídalo mezi commity.
+
+**Zrádné bylo, jak to vypadalo v diffu.** Někdo nebo něco celý `settings.json` přeformátoval z mezer na taby a zarovnal hodnoty, takže diff měl 439 přidaných a 446 odebraných řádků a **jediná věcná změna se v něm ztratila**. Odhalilo ji až strukturální porovnání parsovaného JSONu proti `HEAD`, ne čtení diffu. **Poučení obecnější než tenhle plugin:** u reformátovaného konfiguračního souboru se změna hodnoty nedá vidět v diffu a musí se porovnat struktura.
+
+**Odstraněno úplně, ne vypnuto:** řádek v `enabledPlugins`, blok v `extraKnownMarketplaces`, stažený marketplace (16 kB) i `plugins/cache/gitkraken` a `plugins/data/gitkraken-hooks-gitkraken`. Strukturální diff doložil, že se odebraly **jen tři klíče** vázané na gitkraken a nic jiného se nezměnilo.
+
+**Proti čtvrtému kolu drží dvě kontroly v `tests/test_hooks.py`, a je to schválně dvojice:**
+
+- **Jmenovitá** – žádný zapnutý plugin nesmí mít v názvu „gitkraken“. Míří na jméno, protože obecná kontrola níž mlčí, když plugin na disku není, a **právě tou cestou se to vrátilo**: samotné zapnutí v `settings.json` by nehlídalo nic.
+- **Obecná** – zapnutý plugin, který na disku nese `hooks/hooks.json`, musí mít řádek v `BYPASS.md`. **Tuhle vrstvu registr neznal vůbec**, protože test čte hooky jen ze `settings.json`, `githooks/` a `.github/`. Mlčí, když plugin na disku není (`plugins/` je v `.gitignore`, v CI se nemá co měřit), takže je to lokální ochrana, ne záruka – proto vedle ní stojí ta jmenovitá.
+
+**Obecná kontrola hned našla pravý nález:** `superpowers@claude-plugins-official` nese `SessionStart` hook, který do každé session (i po `/clear` a `/compact`) vkládá obsah svého skillu obaleného do `<EXTREMELY_IMPORTANT>`. V registru o něm nebyl řádek. Doplněn i s tím, co z toho plyne: podle *Přednost pravidel* je pobídka harnessu **poslední** v pořadí, takže se ta vsuvka posuzuje, nevykonává.
