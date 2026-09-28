@@ -153,8 +153,14 @@ NOT_BEFORE = re.compile(r"[–—:-]?\s*od\s+\**(\d{4}-\d{2}-\d{2})")
 CHECKBOX = re.compile(r"\s*[-*] \[( |x|X)\]")
 
 
-def sections(text, level="## "):
-    """Rozdělí Markdown na sekce dané úrovně: [(nadpis, řádky)]."""
+def sections(text, level="## ", preamble=False):
+    """Rozdělí Markdown na sekce dané úrovně: [(nadpis, řádky)].
+
+    Řádky před prvním nadpisem jsou bezejmenná sekce a ve výchozím nastavení
+    se zahodí. S `preamble=True` se vrátí s `None` místo nadpisu – fronta psaná
+    bez `## ` nadpisů by se jinak ztratila celá a `/next` by nad ní tvrdil, že
+    projekt nemá co dělat.
+    """
     out, title, buf = [], None, []
     for line in text.splitlines():
         if line.startswith(level):
@@ -163,7 +169,7 @@ def sections(text, level="## "):
         else:
             buf.append(line)
     out.append((title, buf))
-    return [(t, b) for t, b in out if t is not None]
+    return [(t, b) for t, b in out if t is not None or (preamble and any(x.strip() for x in b))]
 
 
 # Pole bloku kola: popisek v Markdownu je česky, klíč ve výstupu anglicky.
@@ -185,7 +191,7 @@ def parse_rounds(lines):
 
 def parse_todo(text):
     out, rounds, stitched = [], [], False
-    for title, body in sections(text):
+    for title, body in sections(text, preamble=True):
         if title == "Kola návrhu":
             rounds = parse_rounds(body)
             stitched = any("Návrh sešitý" in line for line in body)
@@ -195,7 +201,11 @@ def parse_todo(text):
         entries = [{"subsection": None, "items": [i for i in parse_items(head) if not i["done"]]}]
         entries += [{"subsection": t, "items": [i for i in parse_items(b) if not i["done"]]}
                     for t, b in subs[1:]]
-        out.append({"section": title, "parts": [e for e in entries if e["items"]]})
+        parts = [e for e in entries if e["items"]]
+        # Bezejmenná preambule se vypisuje jen tehdy, když v ní opravdu něco čeká –
+        # jinak by každá fronta s úvodním odstavcem začínala prázdnou sekcí.
+        if parts or title is not None:
+            out.append({"section": title, "parts": parts})
     return out, rounds, stitched
 
 

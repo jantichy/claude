@@ -210,6 +210,31 @@ class PlanAndQueueParsing(unittest.TestCase):
         [item] = self.c.parse_items(["- [ ] **Běžný úkol** – bez data."])
         self.assertNotIn("not_before", item)
 
+    def test_items_above_first_section_are_not_swallowed(self):
+        """Fronta psaná bez `## ` nadpisů nesmí zmizet celá.
+
+        `sections()` zahazuje řádky před prvním nadpisem své úrovně, takže
+        `todo.md`, který má jen `#` a pod ním rovnou odrážky, dal prázdnou frontu –
+        a `/next` pak tvrdil, že projekt nemá co dělat. Je to tichá vada: skript
+        skončí kódem 0 a prázdný seznam vypadá jako prázdná fronta. Doloženo
+        28. 9. 2026 na `todo.md` repozitáře s konfigurací, kde takhle zmizelo
+        přes třicet otevřených položek.
+        """
+        todo, _, _ = self.c.parse_todo(
+            "# Co zbývá\n\nÚvodní odstavec.\n\n- [ ] **První úkol.** Popis.\n"
+            "- [x] **Hotové.** Už ne.\n\n### Starší dávka\n\n- [ ] **Druhý úkol.** Popis.\n")
+        self.assertEqual([(p["subsection"], [i["title"] for i in p["items"]])
+                          for s in todo for p in s["parts"]],
+                         [(None, ["První úkol"]), ("Starší dávka", ["Druhý úkol"])])
+
+    def test_sections_still_separate_items_that_have_headings(self):
+        """Druhý směr: fronta s `## ` sekcemi se nesmí slít do jedné bezejmenné."""
+        todo, _, _ = self.c.parse_todo(
+            "# TODO\n\n- [ ] **Nezařazený.** Text.\n\n## Probíhá\n\n- [ ] **V sekci.** Text.\n")
+        self.assertEqual([(s["section"], [i["title"] for p in s["parts"] for i in p["items"]])
+                          for s in todo],
+                         [(None, ["Nezařazený"]), ("Probíhá", ["V sekci"])])
+
 
 TODO = """# TODO
 
