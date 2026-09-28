@@ -1530,3 +1530,21 @@ Dvě vynucující pravidla skillu se změřila hned v den jeho vzniku, ne odlož
 **Zamítnuto odsunout to do `~/Dev/context/coding/`.** Vypadá to jako znalost o kódu, ale doména se nad projektem bez kódu vůbec nenačte – tedy ani nad repozitářem s touhle konfigurací, kde se to stalo a kde `settings.json` žádný kód není. Kapitola *Git* v `coding.md` je navíc o konvencích větví a commitů, ne o čtení diffu jako dokladu.
 
 **Cena, o které se ví:** `RULES.md` se rozbaluje do každé session včetně těch nad čistě textovými projekty, kde se strojově formátovaný soubor nevyskytne. Je to čtyři odstavce a platí to pro každý repozitář, ne pro každý soubor – táž úvaha jako u *Commituj jmenované cesty, ne `-A`*.
+
+### 2026-09-28 – Ve frontě se zaškrtávátky je položkou jen zaškrtávátko
+
+`/next` počítal za položku fronty každou odrážku i číslovaný řádek na nejvyšší úrovni, jak to `parse_items` uměl od začátku kvůli projektům, které `todo.md` vedou jako holý seznam. Ve zdejším `todo.md` tím ale vznikly položky ze čtyřřádkového **návodu k pořadí** („čím začít u skillů“) – podsekce se nafoukla z 31 na 35 a nadbytečná položka vypadá jako práce.
+
+**Rozhoduje zaškrtávátko, ne odsazení.** První úvaha byla brát jen odrážky na nulovém odsazení, jenže ten návod na nule stojí taky; od položky se liší jedině tím, že nemá `[ ]`. Nese-li tedy soubor zaškrtávátka, jsou položkami jen ona.
+
+**Rozhoduje se to nad celým souborem, ne nad sekcí**, protože výklad téže značky se uvnitř jednoho `todo.md` měnit nesmí – jinak by `- ` znamenala v jedné sekci úkol a ve druhé poznámku. Fronta psaná bez zaškrtávátek i `backlog.md` si proto ponechávají starý výklad a testy hlídají oba směry.
+
+### 2026-09-28 – Pořadí datovaných záznamů hlídá nástroj a norma *Nejstarší nahoře* zůstává
+
+Norma ze `~/.claude/STRUCTURE.md` se rozpadla **počtvrté** a ruční srovnání se do té doby dělalo třikrát. Příčina je strukturální: do těch sekcí zapisují skilly samy a každý se řídí tím, co v souboru zrovna vidí, takže jeden obrácený zápis stačí, aby ho další napodobily. Naměřeno 28. 9. 2026: *Průchody životním cyklem* 2 zlomy, *Odvedená práce* **9**, `decisions.md` 2.
+
+**Zamítnuto obrátit normu na „nejnovější nahoře“** s odůvodněním, že se opačné pořadí prosazuje samo. Neprosazuje: kdyby ano, byly by ty řady sestupné celé, kdežto naměřený stav je vzestupná řada, na kterou se nahoře nabalují nové zápisy. Obrácení by tedy neopravilo nic – soubory by se stejně musely přerovnat a stejně by se rozpadaly, jen na druhou stranu. Navíc by padlo provozní zdůvodnění, že připsat na konec je jediný způsob zápisu, který nejde udělat špatně, protože nevyžaduje hledat správné místo.
+
+**Skript hlásí jeden nález na sekci, ne na záznam.** První verze vypisovala každý záznam pod dosud nejvyšším datem a nad zdejšími soubory vyrobila stovky řádků – takový výstup nikdo nedočte, takže by se kontrola přestala pouštět a nehlídala by nic. Sekce je zároveň jednotka, ve které se pořadí opravuje.
+
+**Cena, o které se ví:** `~/Dev/context` nemá `tests/` ani CI, takže tam test nedosáhne a kontrolu musí pustit `/cleanup`. Je to slabší vrstva – běží, jen když někdo uklízí –, ale je to totéž místo, které ty datované záznamy zapisuje.
