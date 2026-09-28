@@ -408,12 +408,28 @@ class KontextProtiTranscriptu(PredfiltrBase):
 
     def test_odlozeny_vystup_se_nahlasi_s_cestou(self):
         """Velký výstup je uříznutý v transcriptu i v kontextu; plný leží jinde."""
-        records = self.tool("Bash", "Output too large (31.6KB). Full output saved to: /tmp/x/ab12.txt\n\nPreview")
+        full = self.dir / "ab12.txt"
+        full.write_text("celý výstup", encoding="utf-8")
+        records = self.tool("Bash", f"Output too large (31.6KB). Full output saved to: {full}\n\nPreview")
         rows = self.extract.load(str(self.transcript(records)))
-        self.assertEqual([p for _, p in self.extract.persisted(rows)], ["/tmp/x/ab12.txt"])
+        self.assertEqual([p for _, p in self.extract.persisted(rows)], [str(full)])
 
     def test_bezny_vystup_se_za_odlozeny_nepovazuje(self):
         rows = self.extract.load(str(self.transcript(self.tool("Bash", "NAMĚŘENO 42"))))
+        self.assertEqual(self.extract.persisted(rows), [])
+
+    def test_citovany_marker_neni_odlozeny_vystup(self):
+        """Fantom je tišší než chybějící nález: skill si ho připíše do Mezí běhu.
+
+        Vzor se chytí kdekoliv v obsahu, takže výpis souboru, který ten marker
+        jen **popisuje**, vyrobí odložený výstup, jaký nikdy nevznikl. Nad
+        konfigurační vrstvou to nastane skoro pokaždé – doloženo během
+        28. 9. 2026, kde se jako cesta vzal zástupný symbol `<cesta>`
+        z dokumentace. Proto se hlásí jen cesta, která na disku opravdu je;
+        totéž ověření chytí i odložený výstup, který mezitím někdo smazal.
+        """
+        citace = "Nese jen náhled a věsuvku `Full output saved to: <cesta>`; plná verze leží jinde."
+        rows = self.extract.load(str(self.transcript(self.tool("Bash", citace))))
         self.assertEqual(self.extract.persisted(rows), [])
 
 

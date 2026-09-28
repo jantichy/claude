@@ -44,6 +44,7 @@ import json
 import re
 import sys
 from collections import Counter
+from pathlib import Path
 
 # Nástroje, jejichž výstup nese obsah, který nikde jinde není. Zprávy
 # subagentů a stažené stránky sem patří právě proto, že zmizí se session.
@@ -143,14 +144,24 @@ def extra_rows(number, record):
 
 
 def persisted(rows):
-    """Cesty k plným výstupům, které se do transcriptu nevešly."""
+    """Cesty k plným výstupům, které se do transcriptu nevešly.
+
+    Hlásí se jen cesta, která na disku **opravdu je**. Vzor se totiž chytí
+    i na text, který marker jen cituje – a to není okrajový případ: session
+    nad konfigurační vrstvou čte soubory, které ten marker popisují, takže
+    `<cesta>` ze zástupného symbolu v dokumentaci se do inventury dostala
+    hned prvním během (28. 9. 2026). Fantom je tišší, než vypadá: skill si
+    ho poctivě připíše do *Mezí běhu* jako nepřečtený podklad, a tím si
+    nadsadí přiznanou díru. Ověření navíc chytí i opačný případ – odložený
+    výstup, který mezitím někdo smazal, se dnes hlásí jako čitelný.
+    """
     found = []
     for number, record in rows:
         for block in blocks(record):
             if block.get("type") != "tool_result":
                 continue
             match = PERSISTED.search(result_text(block))
-            if match:
+            if match and Path(match.group(1)).expanduser().exists():
                 found.append((number, match.group(1)))
     return found
 
