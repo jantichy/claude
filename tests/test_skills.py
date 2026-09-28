@@ -1105,21 +1105,43 @@ class Structure(unittest.TestCase):
             f"jen v LIFECYCLE: {sorted(explained - self.CYCLE)}, "
             f"jen v RULES: {sorted(self.CYCLE - explained)}")
 
-    def test_unimported_files_are_not_imported(self):
-        """`STRUCTURE.md` a `LIFECYCLE.md` se schválně neimportují.
+    # Soubor, který se schválně neimportuje, a `CLAUDE.md`, ve kterém má stát jako
+    # odkaz. `SKILLS.md` přestala být importem 28. 9. 2026 – je to největší z nich
+    # a mířila do každé session v tomhle repozitáři, i tam, kde se žádného skillu
+    # nedotkneme.
+    UNIMPORTED = {
+        "~/.claude/STRUCTURE.md": "CLAUDE.md",
+        "~/.claude/skills/LIFECYCLE.md": "CLAUDE.md",
+        "~/.claude/skills/SKILLS.md": ".claude/CLAUDE.md",
+    }
 
-        Držet je mimo paušální kontext je celý smysl toho, že jsou zvlášť: dohromady
-        je to přes 40 kB, které by jinak šly do každé session v každém projektu.
-        Vrátit `@` před cestu je jednoznaková změna, kterou nic jiného nehlásí –
-        a projeví se jen tím, že je kontext o něco plnější, čehož si nikdo nevšimne.
+    def test_unimported_files_are_not_imported(self):
+        """Soubory držené mimo paušální kontext se schválně neimportují.
+
+        Držet je zvlášť je celý smysl toho, že jsou zvlášť: dohromady je to přes
+        80 kB, které by jinak šly do každé session. Vrátit `@` před cestu je
+        jednoznaková změna, kterou nic jiného nehlásí – a projeví se jen tím, že
+        je kontext o něco plnější, čehož si nikdo nevšimne.
         """
-        text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-        for file_path in ("~/.claude/STRUCTURE.md", "~/.claude/skills/LIFECYCLE.md"):
+        for file_path, claude_md in self.UNIMPORTED.items():
             with self.subTest(file_path=file_path):
+                text = (ROOT / claude_md).read_text(encoding="utf-8")
                 self.assertNotIn(f"@{file_path}", text,
                     f"{file_path} se importuje, přestože má být jen odkaz")
                 self.assertIn(f"`{file_path}`", text,
-                    f"{file_path} není v CLAUDE.md ani zmíněný jako odkaz")
+                    f"{file_path} není v {claude_md} ani zmíněný jako odkaz")
+
+    def test_skill_skill_loads_the_standard(self):
+        """Odkaz bez mechanismu je přání – u normy skillů ho drží `/skill`.
+
+        `SKILLS.md` se přestala importovat výměnou za to, že si ji načte ten, kdo
+        na skill sahá. Ruční úprava se opře o testy v tomhle souboru, ale `/skill`
+        je jediná cesta, která normu potřebuje celou – zmizí-li ten pokyn z jeho
+        přípravy, zbude z celé úspory jen chybějící znalost.
+        """
+        text = (ROOT / "skills" / "skill" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertRegex(text, r"Přečti `~/\.claude/skills/SKILLS\.md` celou",
+            "/skill nežádá přečtení normy celé, přestože se neimportuje")
 
     def test_preflight_requires_loading_unimported_files(self):
         """Odkaz bez mechanismu je přání.
