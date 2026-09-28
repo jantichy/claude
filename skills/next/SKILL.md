@@ -110,6 +110,7 @@ Chybějící krok odvoď z `artifacts` a `passes` proti `lifecycle`, a **jen pro
 
 Obsazené a nejisté větve ani položky s `waiting: true` do řazení nevstupují. Zbytek seřaď:
 
+0. **Položky ze sekce `## Přerušený běh`** – zbytek fronty, kterou předchozí session nedokončila, protože jí nabyl kontext (`~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*). Jdou **první, před opuštěnými větvemi**, a v pořadí, ve kterém je ta session zapsala. Je to práce rozdělaná do půlky, u které navíc nikdo nedrží kontext – čím dýl leží, tím spíš se přestane rozumět tomu, proč nález nálezem je. V nabídce u nich řekni, ze kterého skillu zbyly a kolik jich je.
 1. **Opuštěné větve** – od nejčerstvější (`last_ts`). Větev bez session k obnovení, na kterou nikdo nesáhl déle než měsíc, nedávej na první místo – je to spíš zapomenutý pokus než rozdělaná práce; nabídni ji mezi ostatními a řekni její stáří.
 2. **Rozdělaná práce tady** – necommitnuté změny, rozpracovaný plán.
 3. **Položky bez nesplněné závislosti** před těmi, které na něco čekají.

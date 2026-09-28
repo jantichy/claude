@@ -270,6 +270,8 @@ Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné
 
 ## Fáze 5 – Interaktivní průchod
 
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+
 **Postup je společný s `/review`** – volání `AskUserQuestion` (jeden nález = jedna otázka, **volby jsou konkrétní varianty opravy**, za nimi dvě záchytné, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Interaktivní průchod*. **Tvar výpisu nálezu i pojmenování záchytných voleb drží `~/.claude/skills/FINDINGS.md`** (*Jak nález vypadá*, *Dvě záchytné volby a co znamenají*), takže platí i tehdy, kdyby se `/review` rozešel. Řiď se jimi a lišíš se jen v těchhle bodech:
 
 **Kam se zapisuje volba Neopravovat.** Do kapitoly `## Consistency` v projektovém `CLAUDE.md`, ne `## Review` – jsou to odpovědi na jinou otázku a nemají se míchat. Kapitolu založ, když chybí, a zapisuj na její konec:
@@ -315,8 +317,6 @@ Po projití všech problémů zobraz:
 - ⏭️ Přeskočeno (zapsáno do CLAUDE.md → Consistency): N problémů
 
 [Pokud jsou odložené: seznam odložených s jejich popisy]
-
-**Další krok:** /cleanup
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -327,3 +327,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Projekt je konzistentní, všechny nálezy jsou vypořádané.`
 - `Konzistentní zatím není – zbývá: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/cleanup` – zápis toho, co se v běhu domluvilo; a byla-li práce na větvi, za ním `/merge`
+- byla-li některá oprava rozsáhlá, pusť audit znovu – a to až v nové session, protože tahle už opravovala a na vlastní opravy je zaujatá

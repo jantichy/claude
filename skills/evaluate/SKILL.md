@@ -155,6 +155,8 @@ U každého poznatku: čeho se týká, číslo, zdroj, jak se to dá zopakovat, 
 
 ## Fáze 5 – Rozhodnutí u každého poznatku
 
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+
 **Tohle je fáze, kvůli které krok existuje.** Bez ní je to evidence, kterou nikdo nečte.
 
 Nejdřív **vypiš přehled**: kolik poznatků je vad, kolik nové práce, kolik zjištění bez akce – a kolik z nich doopravdy potřebuje rozhodnutí uživatele. To poslední číslo je jediné, které říká, jak dlouhý bude průchod (`FINDINGS.md`, *Přehled na začátku vyčísluje obojí*).
@@ -209,3 +211,9 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - `Provoz je vyhodnocený a každý poznatek má rozhodnutí, můžeš pokračovat dalším průchodem cyklu.`
 - `Provoz je vyhodnocený: neměří se nic, a to je ten výsledek – zapsané je i to, čím začít.`
 - `Provoz vyhodnocený není – brání tomu: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- krok osy, do kterého poznatky sahají – `/specify` u změny zadání, `/architect` u změny návrhu
+- u samých drobností místo toho rovnou `/breakdown` nad položkami, které v `todo.md` vznikly
+- neplyne-li z poznatků žádná práce, řekni to – vyhodnocený provoz bez akce je platný výsledek

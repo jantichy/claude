@@ -263,6 +263,8 @@ Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup
 
 ## Fáze 5 – Průchod s uživatelem
 
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+
 **Skoro všechny nálezy jsou sporné, a je to doménové čtení, ne výjimka** (`~/.claude/skills/FINDINGS.md`). Nález z útoku znamená změnu chování běžící aplikace a **kterou** cestou se díra zavře, je obvykle volba: guard versus validace vstupu, odmítnutí versus tolerance, opravit versus omezit rozsah. Mechanická větev tady proto není.
 
 **Jednoznačný nález ale nastat může** a pak se opraví rovnou bez ptaní: typicky když útok narazil na chybějící kus něčeho, co je **jinde v dokumentaci rozhodnuté** – guard, který rodina má u všech ostatních přechodů, nebo normalizace vstupu, kterou standard předepisuje jmenovitě. Nerozhoduje se tam *jak*, jen se to musí udělat.
@@ -310,8 +312,6 @@ Cíl: <adresa> · Vektory: [které]
 **Nezkoušelo se:** [vektory vynechané kvůli hranicím, nebo „nic"]
 
 **Prostředí:** [co bylo zastaveno · co jsem kvůli útoku zvedl a zůstalo běžet, s důvodem]
-
-**Další krok:** /release · po nasazení ještě `/cleanup` podruhé
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -328,3 +328,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Rozbít se to nepodařilo, v prověřených vektorech aplikace drží.`
 - `Rozbít se to podařilo a není vypořádané – zbývá: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/release` – nasazení prověřené práce
+- před tím `/cleanup`, zbyl-li v běhu nezapsaný nález nebo rozhodnutí

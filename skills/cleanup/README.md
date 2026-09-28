@@ -22,6 +22,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 6. **Ptá se i na produktové podklady**, vede-li je projekt – jestli přibyl doklad poptávky, jestli se změnilo, co víme o konkurenci, jestli přibylo riziko, jestli se posunul některý scénář nebo pojem. Jsou to soubory, na které se při běžné práci nesahá, takže tiše zastarávají jako první.
 7. **Ptá se na jednu frontu, ne na čtyři.** Všechno, co potřebuje vaše rozhodnutí, projde jedním seznamem seřazeným podle váhy – ať je to nevypořádané téma, nejasné zařazení zápisu, nebo starší dluh, na který u toho narazil.
 8. **Uklidí Git** a ověří výsledek, ne že ho předpokládá.
+9. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 

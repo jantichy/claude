@@ -20,6 +20,7 @@ Prověří hotovou práci před uzavřením z několika nezávislých hledisek n
 6. **Umí navázat na přerušený běh** – ověřený seznam nálezů se ukládá na disk, takže se nejdražší část práce neplatí dvakrát.
 7. **Mechanické opravy udělá rovnou**, sporné projde s vámi jednu po druhé, a u opravy hlášené pracovním specialistou rovnou doplní test.
 8. **Pamatuje si, co jste rozhodli neopravovat** – a příště se na to už neptá, dokud se dotčený kód nezmění.
+9. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 

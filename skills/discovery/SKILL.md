@@ -265,9 +265,6 @@ U každého rizika:
 
 **Otevřené otázky**
 - [seznam, nebo „žádné“]
-
-**Další krok**
-- [/oponent nad demand.md, competition.md a risks.md / /specify]
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -285,3 +282,9 @@ Běželo-li se bez konkurence, protože projekt nemá trh, platí druhá dvojice
 
 - `Poptávka a rizika jsou hotové a ověřené, konkurenci jsme vynechali – <důvod>. Můžeme na zadání.`
 - `Podklady hotové nejsou – brání tomu: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/specify` – zadání nad hotovými podklady
+- volitelně před tím `/oponent` nad `demand.md`, `competition.md` a `risks.md`, jsou-li rozsáhlé
+- vyšla-li poptávka nedoložená a uživatel se rozhodl ji ověřit, je další krok to ověření, ne zadání – pojmenuj ho konkrétně

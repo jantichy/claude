@@ -70,6 +70,8 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`
 
 **Varianty musí sedět s volbami v otázce** – otázka je jejich zrcadlo, ne druhá sada. Vypsat jedno řešení a pak se zeptat na tři je rozpor, který uživatele donutí číst obojí a hledat, čím se to liší.
 
+**Kde mřížka naopak legitimně zůstává, aby se nesrovnávala i tam.** Tvar míří na **položku předloženou k rozhodnutí**, ne na všechno, co skill vypíše. Odrážky s popisky proto zůstávají ve třech případech: u **tabulkových dat**, kde je odstavec horší (kontrola faktury ve `/invoicing` – datumy, hodiny, sazba, text položky), v **dokumentu pro třetí stranu** (nález v auditním reportu, který dostane klient) a v **závěrečném souhrnu** skillu, kde čtenář hledá počty a stavy, ne vysvětlení. Rozhodnuto 28. 9. 2026; bez tohohle odstavce to vypadá jako tři místa, na která se zapomnělo.
+
 **Pole ve schématu nálezu tím dotčená nejsou.** Závažnost, lokace a doložení, které vracejí agenti, zůstávají – stojí na nich ověřování a zápis do `CLAUDE.md`. Mění se jen to, **jak se nález ukazuje člověku**: pole jsou vstup, odstavec je výstup.
 
 **Proč zrovna tenhle tvar:** změřeno 28. 9. 2026 při sjednocování. Uživatel označil za srozumitelný výpis nálezu, který **nevyrobil žádný skill** – vznikl v běžné rozpravě, kde žádná šablona neplatila. Tři tehdejší šablony se proti němu lišily jen tím, že souvislý text nahradily popisky. **Šablona tedy výsledek nezlepšovala, ale zhoršovala**, protože svedla k heslům tam, kde se má vysvětlovat.
@@ -98,6 +100,10 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 ## Ohlášená akce patří do téže odpovědi
 
 **Přehled nálezů není konec odpovědi** (`~/.claude/RULES.md`, *Co ohlásíš, udělej hned v téže odpovědi*). Vypsal-li jsi, že se N nálezů opraví rovnou a M zbývá na rozhodnutí, **pokračuj hned v téže odpovědi**: oprav, co se opravuje bez ptaní, vypiš to, a rovnou polož první otázku na sporné. Věta „pouštím se do oprav bez ptaní“ místo oprav samotných je přesně to, co pravidlo zakazuje – běh se o ni prodlouží o jednu odpověď uživatele a nic se za ni neudělá.
+
+## Když se průchod nevejde do session
+
+Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, zbytek se uloží do `todo.md` a dokončí ho nová session – práh, tvar nabídky a to, co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
 
 ## Kdo ji používá
 

@@ -297,6 +297,8 @@ Nejsou-li žádné sporné nálezy, přeskoč Fázi 7 rovnou na shrnutí.
 
 ## Fáze 7 – Interaktivní průchod
 
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+
 Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 
 1. **Zobraz ho.** Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce standardu), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku.
@@ -345,8 +347,6 @@ Rozsah: [změny na větvi / celý projekt] · Specialisté: [kteří] · Agentů
 
 - **Nezkontrolováno:** [kroky přeskočené kvůli chybějícímu příkazu v kontraktu, nebo „nic“]
 - **Nespuštěno:** [nástroje, které na stroji nejsou – gitleaks, semgrep, shellcheck –, nebo „nic“]
-
-**Další krok:** /consistency
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -363,6 +363,13 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `V prověřeném rozsahu je práce v pořádku.`
 - `V pořádku není – zbývá: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/consistency` – a to v nové session: tahle už v panelu i v opravách spotřebovala kontext a na vlastní opravy je zaujatá
+- `/cleanup`, zbyl-li nezapsaný nález nebo rozhodnutí; stojí-li práce na větvi, za ním `/merge`
+- běžel-li jen výchozí rozsah nad starším projektem, volitelně `/review full` – taky v nové session
+
 
 ------
 

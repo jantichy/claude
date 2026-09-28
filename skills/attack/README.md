@@ -18,6 +18,7 @@ Zvedne aplikaci lokálně a pošle na ni útočníky, jejichž zadání zní jed
 4. **Každý útočník má svůj vektor a svoje účty**, takže si navzájem nepřepisují data a nepopisují stav, který nikdy nenastal.
 5. **Projde s vámi nálezy jeden po druhém** a u opravy rovnou napíše regresní test.
 6. **Uklidí po sobě** – zastaví, co zvedl, a řekne, co kvůli útoku nastartoval a nechal běžet.
+7. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 

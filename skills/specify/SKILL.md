@@ -213,9 +213,6 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 
 **Otevřené otázky**
 - [seznam, nebo „žádné“]
-
-**Další krok**
-- [/oponent docs/requirements.md, /cleanup, pak /architect; u projektu bez kódu rozpis kroků do docs/todo.md]
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -224,3 +221,9 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Zadání je hotové a schválené, můžeme na návrh řešení.`
 - `Zadání hotové není – brání tomu: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/architect` – návrh řešení nad schváleným zadáním
+- volitelně před tím `/oponent docs/requirements.md`
+- u projektu bez kódu místo návrhu rozpis kroků do `docs/todo.md`

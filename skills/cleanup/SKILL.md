@@ -225,6 +225,8 @@ Hlásí sekci, ve které datum mezi sousedními záznamy klesá – nový zápis
 
 ## Fáze 5 – Fronta rozhodnutí
 
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+
 Sem přišlo všechno, co potřebuje uživatelovu volbu: **nevypořádaná témata** z kategorie 7, **položky, u kterých je z čeho vybírat** (nejasné zařazení, dvě obhajitelné podoby téhož zápisu, dvě protichůdné informace bez vítěze) a **položky mimo rozsah** – starší dluh a to, co ze session zůstalo rozbité.
 
 **Je to jedna fronta, ne tři.** Do 26. 9. 2026 to byly tři samostatné fáze s vlastním průchodem, přestože kritérium rozhodování je u všech totéž a interaktivní smyčky jsou nejdražší část skillu. Zdroj položky je **metadatum na řádku**, ne důvod k dalšímu kolu.
@@ -259,6 +261,16 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 
 **U každé vyřízené položky dopiš stav do evidence.** Na konci fáze nesmí v ní zůstat řádek ve stavu *k rozhodnutí* nebo *mimo rozsah*.
 
+------
+
+## Časté chyby
+
+- **Vydat „všechno zapsané“ s nevyplněnou evidencí.** Kotvy `N/M` nejsou detail do mezí, ale nehotový úklid.
+- **Číst surový `.jsonl`.** Je z devíti desetin balast; očištěný transcript z *Fáze 1* nese totéž za zlomek.
+- **Zapsat dohodu, která v půlce session přestala platit.** Platí poslední verze; kategorie 6 existuje právě proto.
+- **Ptát se na to, co má jedinou podobu.** Fronta je na volby, ne na potvrzování hotových návrhů.
+- **Nechat frontu jako výčet v závěru.** Uživatel session zavře a položky zmizí s ní.
+- **Commitnout `-A`.** Zatáhne cizí rozdělanou práci pod zprávu o úklidu a po pushi se to neopravuje.
 ------
 
 ## Fáze 6 – Git a závěr
@@ -314,14 +326,6 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo.
 
 **Meze běhu nezamlčuj a neformuluj obecně.** Patří do nich celý nečtený zbytek z inventury *Fáze 1* i s počty – bloky myšlení, výstupy čtecích nástrojů, obrázky –, a k tomu cokoliv, co se nepovedlo. Je to mez vytěžování, ne chyba, **ale musí být vidět**, jinak vydáš za úplné něco, co úplné není.
 
-### Co dál
-
-Nabídni, čím pokračovat, podle stavu:
-
-- **Stojíš-li na větvi a je pushnutá** – *Přimergovat do main* (zavolá `/merge`), nebo *Nechat větev být*.
-- **Zbyla-li rozbitá věc** – pojmenuj ji a nabídni, že ji vyřeší příští session, nebo ji doděláte teď.
-- **Jinak** – *Zavřít session*.
-
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Ze session je všechno zapsané a ověřené – kotvy N/N, můžeš <zavřít session | přimergovat větev>.`
@@ -329,13 +333,10 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Nepřečtená část transcriptu patří do druhé věty**, ne do mezí u první – kotvy `N/M`, kde `M` je větší, znamenají, že úklid úplný není. Naopak kategorie, které se **nečtou z principu** (myšlení, výstupy čtecích nástrojů), hotovost nezpochybňují: jsou to meze nástroje, ne nedodělaná práce.
 
-------
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
-## Časté chyby
+- **stojíš-li na pushnuté větvi** – `/merge`; nabídni to jednou odrážkou, neptej se na to dialogem
+- **zbyla-li rozbitá věc** – pojmenuj ji a řekni, že ji vyřeší příští session, nebo ji doděláte teď
+- **jinak** – zavřít session; a míří-li práce dál na kontrolní krok, patří do odrážky celý řetěz s `/clear`, protože tenhle skill běží právě proto, že kontext nabyl
 
-- **Vydat „všechno zapsané“ s nevyplněnou evidencí.** Kotvy `N/M` nejsou detail do mezí, ale nehotový úklid.
-- **Číst surový `.jsonl`.** Je z devíti desetin balast; očištěný transcript z *Fáze 1* nese totéž za zlomek.
-- **Zapsat dohodu, která v půlce session přestala platit.** Platí poslední verze; kategorie 6 existuje právě proto.
-- **Ptát se na to, co má jedinou podobu.** Fronta je na volby, ne na potvrzování hotových návrhů.
-- **Nechat frontu jako výčet v závěru.** Uživatel session zavře a položky zmizí s ní.
-- **Commitnout `-A`.** Zatáhne cizí rozdělanou práci pod zprávu o úklidu a po pushi se to neopravuje.
+

@@ -77,6 +77,8 @@ Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vesta
 
 ## Fáze 2 – Průběh
 
+**Přeruš včas, nabyl-li kontext.** Dlouhý běh přes mnoho úkolů je místo, kde session narazí na strop okna. Práh a tvar nabídky drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*; ukládá se tu ale **méně** než u nálezů – úkoly už v `docs/plan.md` stojí, takže do `todo.md` jde jen to, co v plánu není: odchylky, na které jsi narazil, a rozhodnutí, která z nich vzešla.
+
 **Výchozí model, `medium`–`high`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Odpracování dobrého plánu je z velké části uplatnění hotového rozhodnutí, ne vymýšlení – proto sem nepatří nejdražší tier. **Eskaluj ale u konkrétního úkolu**, který se nedaří: nejdřív zvyš effort, teprve pak sáhni po silnějším modelu. Opakované „skoro to funguje“ na jednom úkolu je signál, že je málo chytrosti nebo špatný plán, ne že se má zkoušet dál totéž.
 
 Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
@@ -137,8 +139,6 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 - docs/done.md: N · docs/todo.md: N · docs/backlog.md: N · docs/rules.md: N
 
 **Průběžná kontrola:** <výstup posledního běhu – příkaz a návratový kód>
-
-**Další krok:** `/review` a za ním zbytek uzavírání (RULES.md, *Životní cyklus projektu*)
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -147,3 +147,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Plán je odpracovaný a průběžná kontrola je zelená, můžeš jít na /review.`
 - `Odpracovaný není – zbývá: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/review` – prověření hotové práce; za ním zbytek uzavírání (`~/.claude/RULES.md`, *Životní cyklus projektu*)
+- zbyl-li v plánu zablokovaný úkol, je další krok jeho odblokování, ne revize – pojmenuj, co k němu chybí

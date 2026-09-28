@@ -136,3 +136,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Větev je přimergovaná a ověřená, můžeš pokračovat v main.`
 - `Větev přimergovaná není – brání tomu: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/next` v hlavní větvi – fronta práce nad sloučeným stavem
+- zbývá-li k témuž záměru další větev, pojmenuj ji

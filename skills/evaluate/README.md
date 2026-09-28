@@ -19,6 +19,7 @@ Nasadit a jít dál je nejběžnější konec práce. Za pár týdnů nikdo nev�
 5. **Vede historii, ne jednorázový report.** Každý další běh přidá nové období nad starší a čísla stará nechá stát, takže je vidět trend.
 6. **Zjistí-li, že se neměří nic, je to výsledek, ne selhání** – napíše, co začít měřit, a nejmenším možným krokem, obvykle jedním dotazem do databáze.
 7. **Připomene se sám.** Nasazení si zapíše datum, odkdy má vyhodnocení smysl, a průvodce další prací ho v ten den nabídne.
+8. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 

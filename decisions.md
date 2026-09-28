@@ -1550,3 +1550,17 @@ Norma ze `~/.claude/STRUCTURE.md` se rozpadla **počtvrté** a ruční srovnán�
 **Skript hlásí jeden nález na sekci, ne na záznam.** První verze vypisovala každý záznam pod dosud nejvyšším datem a nad zdejšími soubory vyrobila stovky řádků – takový výstup nikdo nedočte, takže by se kontrola přestala pouštět a nehlídala by nic. Sekce je zároveň jednotka, ve které se pořadí opravuje.
 
 **Cena, o které se ví:** `~/Dev/context` nemá `tests/` ani CI, takže tam test nedosáhne a kontrolu musí pustit `/cleanup`. Je to slabší vrstva – běží, jen když někdo uklízí –, ale je to totéž místo, které ty datované záznamy zapisuje.
+
+### 2026-09-28 – Práh kontextu je 300k/400k a konec každého běhu nese blok *Kudy dál*
+
+Dlouhá session se dosud ukončovala citem – v praxi kolem 500 až 700k tokenů, tedy o celé pásmo později, než se vyplatí. Rozhodlo se **300k jako práh, kdy skill nabídne přerušení, a 400k jako mez, kdy ho doporučí rovnou**; obojí drží nový sdílený soubor `skills/HANDOFF.md` a testy hlídají, že se to číslo neopisuje do jednotlivých skillů.
+
+**Čím je práh podepřený:** výchozí spouštěč server-side kompaktace v API je 150k tokenů, tedy pětina dosavadní praxe. Cena sama proti dlouhé session nemluví tak silně, jak se čekalo – kontext má jednotný tarif a opakovaný prefix jde z cache za desetinu –, takže hlavní důvod není peněžní, ale ten, že model v 700k oknu přestává spolehlivě vidět pravidla z jeho první poloviny. Měření z 23. 9. 2026 to potvrzuje z druhé strany: session nad 400 volání jsou 4 % session a 52 % nákladů.
+
+**Zamítnuto `/compact` jako první volba.** Rozhoduje v něm model, co si zapamatuje, a zahodí právě to, co nikdo nezapsal do souboru. Doporučuje se `/cleanup` → `/clear`; `/compact` zbývá na rozdělanou úvahu, která se zapsat nedá.
+
+**Blok `**Kudy dál**` stojí za závěrečným verdiktem, ne v něm.** Verdikt tvrdí hotovost, blok říká, co se s tím dělá – a dokud byl další krok součástí verdiktové věty, unesla to jen jednoduchá cesta: jakmile mezi kroky patřilo ukončení session, navigace z té věty tiše vypadla. **Zamítnuto ptát se na konci přes `AskUserQuestion`** (dosud to dělal `/cleanup`): na konci hotového běhu to nutí uživatele kliknout, i když chtěl jen vidět, že je hotovo.
+
+**Zbytek přerušené fronty jde do `todo.md`, do nové sekce `## Přerušený běh`, a `/next` ji nabízí první** – před opuštěnými větvemi. Ukládá se celý nález i s doložením, závažností a variantami řešení, ne jeho jméno: nová session nemá kontext, ve kterém vznikl, a položka, ze které se nedá rozhodnout, je horší než žádná.
+
+**Vedlejší nález:** odstranění nabídky z konce `/cleanup` odhalilo, že `## Časté chyby` tam stály za závěrečnou fází jen proto, že je před nimi držel nadpis `### Co dál`, který kontrola pořadí brala za přílohu. Přesunuly se před závěr, kam podle normy patří.

@@ -2459,3 +2459,102 @@ class DepotCorePartsActuallyCatch(unittest.TestCase):
     def test_boundaries_without_rule_precedence_link_are_reported(self):
         skill_body = body(ROOT / "skills" / "depot" / "SKILL.md").replace("Přednost pravidel", "něco")
         self.assertTrue(self._reports(skill_body), "hranice bez opory v RULES.md neshodila kontrolu")
+
+
+HANDOFF = ROOT / "skills" / "HANDOFF.md"
+
+
+def queue_skills() -> set:
+    """Skilly s dlouhým průchodem frontou – čtené z `HANDOFF.md`, ne z konstanty.
+
+    Výčet stojí v kapitole *Přerušení dlouhého průchodu* a je to jeho jediný
+    zdroj pravdy. Opsaný do testu by se rozešel přesně v tom směru, který nikdo
+    nepozná: skill, který frontou začne procházet a do výčtu ho nikdo nepřidá,
+    by pak pravidlo o přerušení nemusel nést a test by mlčel.
+    """
+    block = _section(HANDOFF.read_text(), "## Přerušení dlouhého průchodu")
+    head = next((p for p in block.split("\n\n") if p.strip()), "")
+    return set(re.findall(r"`/([a-z][a-z-]*)`", head))
+
+
+def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
+    """Nese skill blok `**Kudy dál**` a pravidlo o přerušení průchodu?
+
+    Obojí drží `skills/HANDOFF.md` a skilly se na něj mají odkazovat, ne ho
+    opisovat – kontrola proto hlídá odkaz a přítomnost bloku, ne znění.
+
+    Proč vůbec: navigace na konci běhu je to první, co z odpovědi vypadne, když
+    je závěr dlouhý – a nepozná se to, protože verdikt zůstane a odpověď vypadá
+    úplná. Totéž platí o přerušení: běh bez něj doběhne do stropu okna a
+    vynutí si kompaktaci uprostřed nevypořádaného nálezu.
+    """
+    out = []
+    if in_cycle:
+        if "**Kudy dál**" not in text:
+            out.append("chybí blok `**Kudy dál**`")
+        if "HANDOFF.md" not in text:
+            out.append("neodkazuje na `skills/HANDOFF.md`")
+        # Blok musí stát ZA verdiktem, jinak je poslední věc v odpovědi verdikt
+        # a navigace se do ní schová doprostřed.
+        verdict = text.find("Zakonči jednou z těchto vět")
+        nav = text.find("**Kudy dál**")
+        if verdict >= 0 and nav >= 0 and nav < verdict:
+            out.append("blok `**Kudy dál**` stojí před závěrečným verdiktem")
+    if name in queue_skills() and "Přerušení dlouhého průchodu" not in text:
+        out.append("prochází frontu a nenese pravidlo o jejím přerušení")
+    return out
+
+
+class HandoffContract(unittest.TestCase):
+    """Konec běhu: kudy dál a co když se průchod nevejde do session."""
+
+    def test_cycle_skills_carry_navigation(self):
+        cycle = cycle_from_rules()
+        bad = {}
+        for skill in SKILLS:
+            name = skill.parent.name
+            defects = handoff_defects(body(skill), name, name in cycle)
+            if defects:
+                bad[name] = defects
+        self.assertFalse(bad, "; ".join(f"{n}: {', '.join(v)}" for n, v in bad.items()))
+
+    def test_queue_skills_are_all_real(self):
+        """Výčet v HANDOFF.md se porovnává se skutečností i druhým směrem."""
+        names = {s.parent.name for s in SKILLS}
+        self.assertFalse(queue_skills() - names,
+                         "HANDOFF.md jmenuje skill, který neexistuje: "
+                         + ", ".join(sorted(queue_skills() - names)))
+        self.assertTrue(queue_skills(), "výčet skillů s frontou se z HANDOFF.md nepřečetl")
+
+    def test_threshold_is_stated_once(self):
+        """Práh kontextu drží HANDOFF.md, ne jednotlivé skilly.
+
+        Číslo opsané do skillu se rozejde při prvním přeladění prahu a nikdo si
+        toho nevšimne, protože vypadá pořád stejně platně.
+        """
+        offenders = [s.parent.name for s in SKILLS
+                     if re.search(r"\b[34]00\s?k\b", body(s))]
+        self.assertFalse(offenders, "práh kontextu opsaný do skillu: " + ", ".join(offenders))
+
+    def test_no_dialog_at_the_end(self):
+        """Na konci hotového běhu se nemá ptát dialogem, jen doporučit."""
+        self.assertIn("Neptej se na to přes `AskUserQuestion`", HANDOFF.read_text())
+
+
+class HandoffChecksActuallyCatch(unittest.TestCase):
+    """Mutační testy: poškoď vzor a ověř, že kontrola nález opravdu nahlásí."""
+
+    def test_missing_navigation_is_reported(self):
+        text = body(ROOT / "skills" / "merge" / "SKILL.md").replace("**Kudy dál**", "")
+        self.assertIn("chybí blok `**Kudy dál**`", handoff_defects(text, "merge", True))
+
+    def test_navigation_before_verdict_is_reported(self):
+        text = "**Kudy dál**\n\nZakonči jednou z těchto vět\nHANDOFF.md"
+        self.assertIn("blok `**Kudy dál**` stojí před závěrečným verdiktem",
+                      handoff_defects(text, "merge", True))
+
+    def test_missing_interruption_rule_is_reported(self):
+        name = sorted(queue_skills())[0]
+        text = body(ROOT / "skills" / name / "SKILL.md").replace("Přerušení dlouhého průchodu", "x")
+        self.assertIn("prochází frontu a nenese pravidlo o jejím přerušení",
+                      handoff_defects(text, name, True))

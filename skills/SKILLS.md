@@ -156,6 +156,12 @@ Skill s vlastním koncem pro některý režim (rušení, zamítnutí) smí mít 
 
 Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky“ od „výsledek platí“. Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
 
+**Za verdiktem stojí blok `**Kudy dál**` a je to úplně poslední věc v odpovědi.** Tvar, pravidla skládání odrážek a to, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md` – **odkaž se na něj, neopisuj ho.** U skillu ze *Životního cyklu projektu* (`~/.claude/RULES.md`) je ten blok povinný; skill mimo cyklus ho mít nemusí, ale vede-li od něj cesta dál, platí týž tvar.
+
+**Proč je až za verdiktem, a ne v něm:** verdikt tvrdí, jestli je věc hotová, tenhle blok říká, co se s tím dělá. Dokud je další krok jeden a patří do téže session, unese to i věta verdiktu – jakmile jsou dva, nebo se mezi ně vejde `/clear`, navigace z té věty tiše vypadne. To se dělo doložitelně: běh skončil na verdiktu a uživatel neměl kde vyčíst, že kontrolní krok se má pustit až v čisté session.
+
+**Pouští-li skill dlouhý průchod frontou** – nálezy, poznatky, úkoly –, nese navíc pravidlo o jeho přerušení při nabytém kontextu; drží ho týž soubor, kapitola *Přerušení dlouhého průchodu*, a odkazuje se na něj z té fáze, která frontou prochází.
+
 ## 5. Číslování a názvosloví
 
 **„Fáze“ je norma.** Číslují se od nuly (`Fáze 0 – Příprava`) a čísla se nemění bezdůvodně – odkazuje se na ně napříč skilly.

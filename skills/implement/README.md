@@ -21,6 +21,7 @@ Vezme hotový implementační plán a projde ho od začátku do konce: u každé
 4. **Levné mezikontroly** po každé skupině souvisejících úkolů, v čerstvém pohledu.
 5. **Průběžný zápis mimo kód** – co se cestou rozhodlo, včetně zavržených variant; co se dodělalo, se přesune mezi hotové.
 6. **Zastaví se, když plán neplatí**, a rozliší, jak hluboko problém sahá – jestli jde o překlep v úkolu, o vadu návrhu, nebo o to, že chceme něco jiného.
+7. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 

@@ -19,6 +19,7 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 5. **Zapíše i to, co jste zamítli**, i s důvodem, aby to příští oponentura nenašla znovu jako nový nález.
 6. **Umí navázat na přerušený běh.** Ověřený seznam nálezů se ukládá na disk, takže se nejdražší část práce neplatí dvakrát.
 7. **Je určený k opakování.** Nález, který se vrátí, znamená, že se neopravil, jen přeformuloval – a skill to řekne výslovně.
+8. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 

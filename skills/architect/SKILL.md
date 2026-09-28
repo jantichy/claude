@@ -293,9 +293,6 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 
 **Otevřené otázky**
 - [seznam, nebo „žádné“]
-
-**Další krok**
-- [doporučené kroky v pořadí, pak /breakdown]
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -314,3 +311,9 @@ U ostatních cest místo nich tytéž dvojice, vždy jen hotovo a nehotovo:
 - `Kolo je zapsané a připravené ke sloučení, můžeš větev přimergovat.` / `Kolo zapsané není – brání tomu: <konkrétní seznam>.`
 - `Návrh je sešitý a schválený, můžeš pustit doporučené kroky a pak /architect k dočištění.` / `Návrh sešitý není – brání tomu: <konkrétní seznam>.`
 - `Návrh je uzavřený, můžeš větev přimergovat a pokračovat na /breakdown.` / `Návrh uzavřený není – brání tomu: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/breakdown` – rozpad schváleného návrhu na úkoly
+- volitelně před tím `/oponent docs/architecture.md`
+- u návrhu po kolech to, co říká Fáze 7 pro danou cestu – otevřít kola, sešít je, nebo větev sloučit

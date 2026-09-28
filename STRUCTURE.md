@@ -170,6 +170,8 @@ Všechno, co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to uděl
 
 Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Parkované v session`** a po vyřešení se **smaže** – do `done.md` nepatří, není to odvedená práce projektu. Sekce je dočasná: prázdná se ruší.
 
+**Sekce `## Přerušený běh`** drží zbytek fronty běhu, který se přerušil, protože nabyl kontext – nevypořádané nálezy `/review`, poznatky `/evaluate`, úkoly `/implement`. **Stojí první v souboru a `/next` ji nabízí přednostně**, protože je to práce rozdělaná do půlky, ne nový úkol. Co v položce musí stát, aby se z ní dalo rozhodnout bez kontextu původní session, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*. Sekce je dočasná jako `## Parkované v session`: vypořádaná položka jde do `done.md`, jen když je to odvedená práce projektu, jinak se maže, a prázdná sekce se ruší.
+
 **Sekce `## Kola návrhu`** je mapa kol, na která `/architect` rozdělil větší návrh. Co je kolo, kdy vzniká a jak běží, drží `~/.claude/skills/architect/SKILL.md`; jak se kola čtou a nabízejí, `~/.claude/skills/next/SKILL.md`, *Kola návrhu*. Na každé kolo připadá jeden blok v tomhle tvaru:
 
 ```markdown

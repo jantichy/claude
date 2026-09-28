@@ -141,6 +141,8 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 ## Fáze 4 – Průchod s uživatelem
 
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+
 **Nejdřív vypiš přehled** – kolik shluků, kolik návrhů padlo v ověření a kolik zbývá k rozhodnutí, plus kolik vedlejších vad se našlo. Pak **hned v téže odpovědi** pokračuj první otázkou; ohlásit průchod a skončit je porušení `~/.claude/RULES.md`, *Co ohlásíš, udělej hned v téže odpovědi*.
 
 **Tvar nálezu i volby drží `~/.claude/skills/FINDINGS.md`** – neopisuj si je sem. U návrhu platí výjimka o položce, která není vadou: dnešní řešení funguje, takže *Neopravovat* nedává smysl a volba „jestli a kdy" je legitimní.
@@ -188,3 +190,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - `Prověřený není – brání tomu: <konkrétní seznam>.`
 
 **„Nic velkého k přepsání" patří do první věty**, ne do druhé. Shluk, u kterého má každá záplata doložený důvod, je prověřený výsledek – ne nedodělaný běh.
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/breakdown` – rozpad prověřeného celku na úkoly
+- vzešla-li ze shluků přestavba návrhu, je další krok `/architect` nad ní, ne rozpad

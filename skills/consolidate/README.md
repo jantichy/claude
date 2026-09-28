@@ -19,6 +19,7 @@ Návrh se obvykle nerodí naráz. Vede se po kolech, v každém vyplave další 
 5. **Nechá každý návrh zkusit vyvrátit** někým, kdo ho nepsal a má za úkol ho položit.
 6. **Vedlejší vady hlásí zvlášť.** Při ověřování obvykle vypadnou skutečné chyby v dnešním řešení – ty jdou ven jako normální nálezy se závažností.
 7. **Umí skončit tím, že není co přepisovat.** Je to plnohodnotný výsledek, ne nepovedený běh.
+8. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 

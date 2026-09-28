@@ -126,8 +126,6 @@ Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Hle
 
 **Nepokryto vědomě**
 - [co zůstalo na další fázi, nebo „nic“]
-
-**Další krok:** /implement
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
@@ -136,3 +134,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Plán je hotový, můžeš ho projít a pak spustit /implement.`
 - `Plán hotový není – brání tomu: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/implement` – až uživatel plán přečte a odsouhlasí
+- volitelně před tím `/oponent docs/plan.md`, je-li plán rozsáhlý

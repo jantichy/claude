@@ -20,6 +20,7 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 6. **Seskupuje nálezy podle příčiny.** Jedno přejmenování, které zasáhlo padesát souborů, je jedna položka, ne padesát.
 7. **Mrtvé odkazy a kotvy v textech hledá nástrojem, ne čtením** – dostane je tedy úplné a zdarma, kdežto při čtení se odkaz na přejmenovanou sekci přehlédne snadno, protože vypadá správně.
 8. **Pamatuje si, co jste rozhodli neopravovat** – a příště se na to už neptá, dokud se ten kód nezmění.
+9. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 

@@ -461,8 +461,6 @@ V režimu `adopt` vypiš i **co jsi záměrně nechal být a proč** – ať je 
 
 *Režim `update`:* souhrn je jiný – nevypisuje nastavení, ale **rozdíl proti standardu**. Tři skupiny: co bylo dorovnáno, co čeká na rozhodnutí uživatele a co jsi vědomě nechal být i s důvodem. Oblasti, které vyšly čistě, shrň jednou větou; jejich výčet nikoho nezajímá.
 
-**Další krok:** /discovery, staví-li se cokoliv pro lidi – u projektu bez trhu z něj odpadá jen konkurence, ne poptávka a rizika; rovnou /specify jen u přírůstku, kde je „proč“ rozhodnuté a zapsané. U dorovnaného projektu se rovnou pracuje
-
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Projekt je nastavený, můžeš v něm začít pracovat.`
@@ -472,3 +470,9 @@ V režimu `update` jednou z těchto:
 
 - `Projekt je v souladu s aktuálním standardem.`
 - `V souladu úplně není – zbývá: <konkrétní seznam>.`
+
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/discovery`, staví-li se cokoliv pro lidi – u projektu bez trhu z něj odpadá jen konkurence, ne poptávka a rizika
+- `/specify` rovnou jen u přírůstku, kde je „proč“ rozhodnuté a zapsané
+- u dorovnaného projektu (`update`, `adopt`) se rovnou pracuje – další krok je `/next`, ne krok osy

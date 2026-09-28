@@ -269,6 +269,12 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Nikdy neříkej „nasazeno a ověřeno na produkci“ bez zmínky o okně.** Ta věta tvrdí, že je hotovo, kdežto podle *Životního cyklu projektu* (`~/.claude/RULES.md`) nasazení končí až uzavřením okna – a právě ta chybějící zmínka je důvod, proč se scénář „spadlo to o dvě hodiny později“ dosud nikdy nedozvěděl vlastníka.
 
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+
+- `/evaluate` až od data zapsaného v `todo.md` – dřív nejsou data, ze kterých by se dalo cokoliv vyčíst
+- běží-li ještě sledovací okno, je další krok jeho uzavření podle Fáze 7, ne nový krok cyklu
+- `/cleanup`, zbylo-li z nasazení nezapsané rozhodnutí
+
 ## Když chyba projde vším
 
 Chyba, kterou nechytila deterministická kontrola, panel v `/review`, útok v `/attack` **ani sledovací okno**, a projevila se u uživatele, je nejcennější vstup, jaký celá soustava záruk dostane – a dosud nevedla k ničemu, jen se opravila commitem.
