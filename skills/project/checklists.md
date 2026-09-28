@@ -29,6 +29,8 @@ Přehled všech devíti i s cílem importu:
 | Vizuální tvorba a grafika | `@~/Dev/context/design/design.md` |
 | Prezentace a slajdy | `@~/Dev/context/design/slides.md` |
 
+`~/Dev/context/legal/legal.md` se do importů **nedává ze stejného důvodu** – čte se, když se o právní úpravu opírá rozhodnutí, ne při každé práci. Projekt, který právní požadavky nese (lhůty dokladů, povinnosti vůči spotřebiteli, retenční doby), na něj narazí přes `~/.claude/CLAUDE.md`, kde je vedený jako podmíněná doménová znalost.
+
 `~/Dev/context/coding/quality.md` ani `~/Dev/context/coding/architecture.md` se do importů **nedávají** – čtou se jen při zakládání projektu, návrhu jeho stavby, revizi a nasazení, ne při každé práci na kódu. Skilly, které je potřebují, si je načtou samy; `coding.md` na oba odkazuje. U architektury nese závaznost navíc věta v sekci `## Typ projektu`, kterou zapisuje krok 11.
 
 U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md` a `web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text/text.md` i `text/typography.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.

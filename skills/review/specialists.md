@@ -42,6 +42,7 @@ Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
 | `design/design.md` | vizuální výstupy – grafika, barevné systémy, práce s písmem, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu (sazbu znaků drží `text/typography.md`) | `reader` |
 | `design/slides.md` | promítané prezentace (**navíc** k `design/design.md`) | `reader` |
 | `training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) | `reader` |
+| `legal/legal.md` | dokumentace nebo kód, které se opírají o právní úpravu – lhůta, náležitost dokladu, povinnost vůči spotřebiteli, místo plnění, retenční doba. Měří **doložení, ne výklad**: má tvrzení doslovnou citaci, číslo paragrafu nebo článku, odkud to je (primární zdroj proti reprodukci) a míru jistoty? Nezávazná metodika jako opora právního stavu je nález | `reader` |
 
 `~/.claude/WORKTREE.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
 
