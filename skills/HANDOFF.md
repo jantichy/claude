@@ -91,7 +91,9 @@ Rozhoduje **absolutní velikost kontextu**, ne to, kolik z něj sežral start pr
 
 ## Přerušení dlouhého průchodu
 
-Platí pro každý běh, který **prochází frontu jedna položka po druhé** – nálezy `/review`, `/consistency`, `/attack`, `/oponent`, `/consolidate`, poznatky `/evaluate`, frontu rozhodnutí `/cleanup`, úkoly `/implement`.
+Platí pro každý běh, který **prochází frontu jedna položka po druhé** – nálezy `/review`, `/consistency`, `/attack`, `/oponent`, `/consolidate`, poznatky `/evaluate`, frontu rozhodnutí `/cleanup`, úkoly `/implement`, sporné nálezy `/audit`.
+
+Dva skilly s vlastní frontou tu vědomě **nejsou** – ten, který rozpouští nový zdroj do znalostní báze, a ten, který vytahuje scénáře ze starých konverzací. Jejich fronta bývá krátká a pravidlo, které se nikdy neuplatní, je jen text k údržbě (`decisions.md`, 28. 9. 2026).
 
 **Nabídni přerušení, jakmile kontext překročí práh a ve frontě zbývají aspoň dvě položky.** Ne po každé položce – **jednou za práh**, jinak se z připomínky stane šum a přestane se čítat.
 

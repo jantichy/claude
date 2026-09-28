@@ -14,6 +14,7 @@ Sám žádnou odbornou znalost nenese, jen celý audit řídí. Hodí se každé
 - Web opravdu **spustí v prohlížeči**: prochází ho, sleduje, co si posílá po síti, jak se chová před souhlasem se sledováním a po něm, a dělá snímky obrazovky.
 - Práci rozdělí několika nezávislým pohledům naráz a **každou námitku pak nechá někoho jiného zkusit vyvrátit** tím, že projde tutéž cestu znovu.
 - Na konci se zeptá, které výstupy má sepsat: pracovní seznam nálezů pro vás, dokument pro klienta, rozpad na úkoly podle toho, kdo je má provést, a případně interaktivní HTML report k odeslání mailem. Jejich tvar bere z vaší metodiky, takže se řídí tím, co v ní máte, ne tím, co si vymyslí skill.
+- **Nedojde-li seznam sporných nálezů do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje tam, kde jste skončili, nad týmž registrem nálezů.
 
 ## Proč zrovna tenhle
 

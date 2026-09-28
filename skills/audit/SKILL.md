@@ -225,6 +225,8 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Pak **projdi s uživatelem sporné** – co je na hraně závažnosti, co je nález mimo katalog a co se má klientovi zamlčet, protože to nesouvisí se zakázkou. Ptej se přes `AskUserQuestion` a po jednom; **tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků (ta patří do reportu pro klienta, ne do rozpravy). **Tohle jsou tři otázky, na které odpověď neznáš**, a jiné se tady neptají: cizí web tenhle skill neopravuje, takže volba „opravit hned, nebo později“ u něj nevzniká (`~/.claude/skills/FINDINGS.md`).
 
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou sporných nálezů je místo, kde session narazí na strop okna – u auditu cizího webu tím spíš, že před ním stojí společný průchod webem a panel specialistů. Práh a tvar nabídky drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*; ukládá se tu ale **méně** než u nálezů v repozitáři: `registry.md` už na disku leží, takže do `todo.md` jde jen to, co v něm není – které položky zbývá projít, co je u každé uživatelova volba a co už se v tomhle běhu rozhodlo o sousedních nálezech.
+
 ## Fáze 7 – Výstupy
 
 Tady začíná režim **`report`**, spouští-li se samostatně nad hotovým registrem.
