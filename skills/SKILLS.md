@@ -396,14 +396,16 @@ Skill má navíc **vlastní sekci v `README.md` v kořeni**. Jak je dlouhá a co
 **Na podrobné README se odkazuje nadpisem**, ne řádkem pod odstavcem:
 
 ```
-### [`/<name>`](skills/<name>/) – <k čemu to je, půl věty>
+#### [`/<name>`](skills/<name>/) – <k čemu to je, půl věty>
 ```
 
 Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou vypíše. Zvláštní řádek „Podrobně: …“ by tedy vedl na totéž místo dvakrát.
 
-**Pořadí skillů v hlavním README je dané, ne libovolné.** Skilly ze životního cyklu stojí **ve dvou blocích jako v rámečku**: nejdřív kroky osy v pořadí, ve kterém se pouštějí, pak kontrolní kroky. Ne abecedně a ne podle důležitosti; čtenář ten první seznam čte jako postup. **Rozdělení na dva bloky je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/cleanup` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Uvnitř bloku kontrol platí pořadí z rámečku v `~/.claude/RULES.md`.
+**Sekce skillu je o úroveň níž než skupina, do které patří.** Všechny skilly stojí pod nadpisem `## Skilly` ve třech skupinách s vlastním nadpisem `###` – kroky osy, kontrolní kroky, skilly mimo cyklus –, takže sekce jednotlivého skillu je `####`. Do 28. 9. 2026 byly skupiny jen nadpisy druhé úrovně a skilly `###`; skupinový nadpis se tehdy zamítl s tím, že by stál na téže úrovni jako skilly a v osnově vypadal jako další skill v řadě. To platí pro nadpis **téže** úrovně, ne pro zanoření – zanořený skupinu opravdu obsahuje a v osnově je vidět, co do ní patří.
 
-**Bloky nese pořadí a úvodní odstavec sekce, ne nadpisy.** Nadpis `### Osa` by stál na téže úrovni jako sekce jednotlivých skillů, takže by je neobsahoval a v osnově by vypadal jako další skill v řadě; bold řádek mezi sekcemi zase spadne dovnitř té předchozí a poruší pravidlo jednoho odstavce na sekci. Úvodní odstavec proto musí říct, kde osa končí a kontroly začínají – jmenovitě prvním a posledním krokem každého bloku. Zjištěno 20. 9. 2026 oběma variantami po sobě. Skilly mimo životní cyklus stojí **pod nimi a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
+**Pořadí skillů v hlavním README je dané, ne libovolné.** Kroky osy stojí v pořadí, ve kterém se pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Uvnitř skupiny kontrol platí pořadí z rámečku v `~/.claude/RULES.md`. Skilly mimo životní cyklus stojí **ve třetí skupině a abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu.
+
+**Rozdělení cyklu na dvě skupiny je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/cleanup` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Úvodní odstavec skupiny proto říká, čím se ta vrstva liší; **bold řádek mezi sekcemi to nezastane**, protože spadne dovnitř té předchozí a poruší pravidlo jednoho odstavce na sekci.
 
 **Obě README se aktualizují spolu se skillem**, ne na vyžádání. Změní-li se, co skill umí, je to součást té změny – stejně jako hlavička nebo test.
 

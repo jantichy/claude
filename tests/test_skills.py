@@ -1033,13 +1033,19 @@ def root_readme_defects(text: str) -> list:
 
     Obrázek a ukázka výstupu jsou jediná výjimka normy, takže se nepočítají.
     Čistá funkce nad textem kvůli mutacím, stejně jako `readme_defects()`.
+
+    Měří se **každý nadpis od třetí úrovně níž**, ne jen `###`. Norma mluví
+    o součásti představené vlastním nadpisem a nic neříká o jeho úrovni;
+    zanořením sekcí pod skupinové nadpisy by kontrola vázaná na `###` tiše
+    přestala měřit cokoliv – tedy selhala ve svůj prospěch, což je přesně
+    ta polovina, kterou nikdo nepozná.
     """
     defects, heading, paragraphs, open_block, in_code = [], None, 0, False, False
     for row in text.splitlines() + ["## konec"]:
         if not in_code and row.startswith("#"):
             if heading and paragraphs > 1:
                 defects.append(f"{heading}: odstavců je {paragraphs}, norma žádá jeden")
-            heading = row.strip() if row.startswith("### ") else None
+            heading = row.strip() if re.match(r"#{3,} \S", row) else None
             paragraphs, open_block = 0, False
             continue
         if row.lstrip().startswith("```"):
