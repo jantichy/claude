@@ -8,9 +8,9 @@ Co bych z celého repozitáře vypíchl, aby to neuteklo vaší pozornosti?
 
 ## Nastavení
 
-### Základní nastavení a instrukce
+### Základní nastavení
 
-Nastavení samotného Claude Code a instrukce, které platí v každém projektu a v každé session.
+Nastavení samotného Claude Code, instrukce platné v každém projektu a v každé session, a k tomu definice subagentů a git hook nad tvarem historie.
 
 #### [`settings.json`](settings.json) – průběžně laděné permissions
 
@@ -41,10 +41,6 @@ Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adre
 #### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
 Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: tabulka, co se místo čeho používá a v jakém rozsahu. Nejcennější je vždycky ten rozsah – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc. Je to schválně jen tabulka: soubor se načítá do každé session, takže důvody a historie náhrad leží stranou, u skillu `/ptydepe`.
-
-### Další nastavení, hooky a skripty
-
-Zbytek konfigurace, která se nenačítá jako instrukce, ale běží: definice subagentů a git hook nad tvarem historie.
 
 #### [`agents/`](agents/) – posuzovatel, který nemá čím zapisovat
 
