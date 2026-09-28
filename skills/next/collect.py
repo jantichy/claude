@@ -119,12 +119,18 @@ def item_title(first_line):
     return short(first_line)[:120], first_line
 
 
-def parse_items(lines):
-    """Položky na nejvyšší úrovni seznamu (`- `, `- [ ]`, `1.`) i s pokračováním."""
+def parse_items(lines, checkbox_only=False):
+    """Položky na nejvyšší úrovni seznamu (`- `, `- [ ]`, `1.`) i s pokračováním.
+
+    S `checkbox_only=True` je položkou jen zaškrtávátko a ostatní seznamy jsou
+    komentář k nim – výčet kandidátů, pořadí, v jakém se mají dělat. Rozhoduje
+    se to nad celým souborem, ne nad sekcí, protože výklad odrážky se uvnitř
+    jednoho `todo.md` měnit nesmí.
+    """
     items, cur = [], None
     for line in lines:
         m = re.match(r"(?:[-*]|\d+\.) (?:\[( |x|X)\] )?(.*)", line)
-        if m:
+        if m and (m.group(1) is not None or not checkbox_only):
             cur = {"done": (m.group(1) or " ").lower() == "x", "first": m.group(2), "rest": []}
             items.append(cur)
         elif cur is not None and line.startswith((" ", "\t")):
@@ -191,6 +197,9 @@ def parse_rounds(lines):
 
 def parse_todo(text):
     out, rounds, stitched = [], [], False
+    # Nese-li fronta zaškrtávátka, jsou položkami jen ona; holý seznam je pak
+    # komentář k nim. Fronta psaná bez zaškrtávátek si ponechá starý výklad.
+    boxed = any(CHECKBOX.match(line) for line in text.splitlines())
     for title, body in sections(text, preamble=True):
         if title == "Kola návrhu":
             rounds = parse_rounds(body)
@@ -198,8 +207,8 @@ def parse_todo(text):
             continue
         subs = [(None, body)] + sections("\n".join(body), "### ")
         head = body[:next((i for i, x in enumerate(body) if x.startswith("### ")), len(body))]
-        entries = [{"subsection": None, "items": [i for i in parse_items(head) if not i["done"]]}]
-        entries += [{"subsection": t, "items": [i for i in parse_items(b) if not i["done"]]}
+        entries = [{"subsection": None, "items": [i for i in parse_items(head, boxed) if not i["done"]]}]
+        entries += [{"subsection": t, "items": [i for i in parse_items(b, boxed) if not i["done"]]}
                     for t, b in subs[1:]]
         parts = [e for e in entries if e["items"]]
         # Bezejmenná preambule se vypisuje jen tehdy, když v ní opravdu něco čeká –

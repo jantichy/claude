@@ -227,6 +227,33 @@ class PlanAndQueueParsing(unittest.TestCase):
                           for s in todo for p in s["parts"]],
                          [(None, ["První úkol"]), ("Starší dávka", ["Druhý úkol"])])
 
+    def test_plain_list_beside_checkboxes_is_commentary(self):
+        """Číslovaný nebo odrážkový seznam vedle zaškrtávátek není fronta.
+
+        `todo.md` vedle položek nese i výčty, které k nim něco vysvětlují –
+        pořadí, v jakém se mají dělat, nebo výčet kandidátů. Bez zaškrtávátka
+        se od položky liší jedině tím, a tak se do fronty počítaly jako úkoly:
+        čtyři řádky návodu „čím začít u skillů“ nafoukly zdejší podsekci z 31
+        položek na 35. Vada je tichá – nadbytečná položka vypadá jako práce.
+        """
+        todo, _, _ = self.c.parse_todo(
+            "# TODO\n\n- [ ] **Skutečný úkol.** Text.\n\n"
+            "**Čím začít (platí pro položky výš).**\n\n"
+            "1. **První krok.** Text.\n2. **Druhý krok.** Text.\n")
+        self.assertEqual([i["title"] for s in todo for p in s["parts"] for i in p["items"]],
+                         ["Skutečný úkol"])
+
+    def test_plain_list_without_any_checkbox_stays_a_queue(self):
+        """Druhý směr: fronta psaná bez zaškrtávátek se nesmí vyprázdnit.
+
+        Projekty vedou `todo.md` i jako holý seznam a `backlog.md` tak vypadá
+        vždycky – pravidlo proto platí jen tam, kde se zaškrtávátka opravdu
+        vyskytují, a jinde zůstává starý výklad.
+        """
+        todo, _, _ = self.c.parse_todo("# TODO\n\n- **První.** Text.\n- **Druhý.** Text.\n")
+        self.assertEqual([i["title"] for s in todo for p in s["parts"] for i in p["items"]],
+                         ["První", "Druhý"])
+
     def test_sections_still_separate_items_that_have_headings(self):
         """Druhý směr: fronta s `## ` sekcemi se nesmí slít do jedné bezejmenné."""
         todo, _, _ = self.c.parse_todo(
