@@ -8,9 +8,9 @@ Co bych z celého repozitáře vypíchl, aby to neuteklo vaší pozornosti?
 
 ## Nastavení
 
-### Základní nastavení
+### Nastavení
 
-Nastavení samotného Claude Code, instrukce platné v každém projektu a v každé session, a k tomu definice subagentů a git hook nad tvarem historie.
+Konfigurace samotného Claude Code – co smí spustit bez ptaní a co mi průběžně ukazuje.
 
 #### [`settings.json`](settings.json) – průběžně laděné permissions
 
@@ -22,6 +22,10 @@ Jednořádková status line, která mi ukazuje všechno, co potřebuju průběž
 
 ![Status line](statusline.png)
 
+### Základní instrukce
+
+Co Claude čte v každé session a v každém projektu: jak pracuje, jak se rozhoduje a jakými slovy o tom mluví.
+
 #### [`CLAUDE.md`](CLAUDE.md) – hlavní soubor s instrukcemi
 
 Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není. Většina instrukcí je rozdělená do dalších .md souborů. Všimněte si, že mezi nimi rozlišuju ty, které obsahují kritické body společné pro všechny projekty a mají se použít vždy, a ty, které se načtou, jen když je to podle situace potřeba. Šetří to kontextové okno.
@@ -30,6 +34,14 @@ Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není. Většin
 
 Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i rámeček s životním cyklem projektu – od `/project` až po `/release` –, jehož podrobnosti drží [`skills/LIFECYCLE.md`](skills/LIFECYCLE.md). A tabulka, podle které se vybírá model a effort pro každý typ úkolu: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**.
 
+#### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
+
+Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: tabulka, co se místo čeho používá a v jakém rozsahu. Nejcennější je vždycky ten rozsah – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc. Je to schválně jen tabulka: soubor se načítá do každé session, takže důvody a historie náhrad leží stranou, u skillu `/ptydepe`.
+
+### Struktura projektu
+
+Jak je práce uspořádaná – kde který soubor leží, jak se rozdělaná větev promítne na disk a jak pak vypadá historie.
+
 #### [`STRUCTURE.md`](STRUCTURE.md) – každý projekt vypadá uvnitř stejně
 
 Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat – a vědí to i skilly, kterých do těch souborů zapisuje půl tuctu. Zakládá ji `/project`, čte ji většina ostatních.
@@ -37,14 +49,6 @@ Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.
 #### [`WORKTREE.md`](WORKTREE.md) – několik rozdělaných věcí vedle sebe
 
 Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik session naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i příprava a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.
-
-#### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
-
-Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: tabulka, co se místo čeho používá a v jakém rozsahu. Nejcennější je vždycky ten rozsah – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc. Je to schválně jen tabulka: soubor se načítá do každé session, takže důvody a historie náhrad leží stranou, u skillu `/ptydepe`.
-
-#### [`agents/`](agents/) – posuzovatel, který nemá čím zapisovat
-
-Definice dvou typů subagentů, kterými si skilly vyžádají posudek – sedm z nich to dělá. Liší se jedinou věcí: jestli agent smí na web. Ani jeden nemá shell, takže posudek nemůže sáhnout na to, co posuzuje. Berte si je spolu se skilly; bez nich musí skill sáhnout po náhradní cestě, kterou pro ten případ popisuje.
 
 #### [`githooks/`](githooks/) – historie main jako jeden řádek na větev
 
@@ -231,6 +235,10 @@ Pět skillů hlásí nálezy a každý z jiného světa: chyba v kódu, rozbitá
 #### [`skills/FINDINGS.md`](skills/FINDINGS.md) – kdy se ptát a kdy prostě opravit
 
 Pět skillů nálezy nejen hlásí, ale i opravuje, a hranice mezi „opravím sám“ a „rozhodne uživatel“ musí být u všech tatáž – jinak si týž nález v jednom běhu vyžádá otázku a v druhém se opraví mlčky a nikdo neodhadne, co ho čeká. Osou schválně **není, jak je zásah riskantní**, ale jestli je z čeho vybírat: co má jedinou zjevně správnou podobu, se udělá, i kdyby to měnilo strukturu. Zvlášť je zakázaná trojice *opravit / odložit / přeskočit* – žádná z těch voleb není podobou řešení, takže otázka nic nerozhoduje a jen sebere pozornost, která pak chybí tam, kde na odpovědi opravdu záleží.
+
+#### [`agents/`](agents/) – posuzovatel, který nemá čím zapisovat
+
+Definice dvou typů subagentů, kterými si skilly vyžádají posudek – sedm z nich to dělá. Liší se jedinou věcí: jestli agent smí na web. Ani jeden nemá shell, takže posudek nemůže sáhnout na to, co posuzuje. Berte si je spolu se skilly; bez nich musí skill sáhnout po náhradní cestě, kterou pro ten případ popisuje.
 
 #### [`skills/cost.py`](skills/cost.py) a [`skills/links.py`](skills/links.py) – dva nástroje, které si skilly půjčují
 
