@@ -76,6 +76,8 @@ Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběž
 
 ## Skilly
 
+První dvě skupiny tvoří životní cyklus projektu a stojí v pořadí, ve kterém se pouštějí. Zbytek se pouští podle potřeby, nezávisle na fázi projektu, a uvnitř své skupiny stojí abecedně.
+
 ### Kroky životního cyklu projektu
 
 Kroky **osy** životního cyklu – ty, které něco tvoří: vyrobí soubor, kód nebo nasazení. Stojí tu v pořadí, ve kterém se pouštějí, od `/project` po `/evaluate`. Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
@@ -140,17 +142,9 @@ Před opuštěním nebo zkompaktováním session přečte celou konverzaci – v
 
 „Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Zavoláte ho sami, nebo ho vyberete z nabídky na konci `/cleanup`, aby se nemusel psát ručně – sám od sebe se nespustí nikdy.
 
-### Další skilly
+### Podklady, znalost a texty
 
-Tyhle se pouštějí podle potřeby, nezávisle na fázi projektu. Jsou seřazené abecedně.
-
-#### [`/audit`](skills/audit/) – audit cizího webu proti mojí vlastní metodice
-
-Zaudituje cizí web v zadané oblasti – analytiku, SEO, použitelnost, přístupnost – proti postupu a katalogu typických nálezů, které mám sepsané ve své znalostní bázi. Web opravdu spustí a projde, práci rozdělí několika nezávislým pohledům a každý nález pak nechá někoho jiného zkusit vyvrátit opakovaným průchodem, takže ven jde jen to, co obstálo. Sám žádnou odbornou znalost nenese.
-
-#### [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
-
-Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
+Jeden proud od přijatého souboru k hotovému textu: co přijde, se zařadí, nahrávka se přepíše, přepis se rozpustí do znalostní báze a z ní se pak píše.
 
 #### [`/compose`](skills/compose/) – texty, co znějí jako já
 
@@ -160,53 +154,73 @@ Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem �
 
 Řeknu mu soubor nebo celou dávku z Downloads a on pozná, o jaký podklad jde, uloží ho na správné místo pod správným názvem a hned spustí, co po tom má následovat – přepis nahrávky, vytěžení do knowledge base, zápis do evidence. Rozsah je přesně to, co zadám: neuklízí okolí, nic nepřepíše a při kolizi se zeptá místo toho, aby přilepil `(1)`. Konkrétní pravidla, co kam patří, v tomhle repozitáři nejsou – skill je jen rámec a tabulku si čte z mojí privátní knowledge base.
 
-#### [`/diagram`](skills/diagram/) – datový model jako mapa, na kterou se dá kliknout
-
-Z dokumentace navrženého modelu nakreslí interaktivní stránku: ER diagram všech tabulek, ve kterém po kliknutí vidím popis entity, vazby, sloupce a constrainty, a stavový prostor s přechody mezi stavy. Žije jako soukromý artefakt a při dalším zavolání se překreslí na stejném odkazu, klidně z jiné rozdělané větve. Nekreslí nic, co v dokumentaci není, a do projektu nezapisuje.
-
-#### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
-
-Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je mu podezřelé, vystaví faktury a nechá v mailu rozepsaný draft s fakturou a výkazem hodin v příloze. **Odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: dohledat čas, který jsem si zapomněl natrackovat. Sazby a dohody s klienty v tomhle repozitáři nejsou, skill je jen rámec.
-
 #### [`/learn`](skills/learn/) – nová znalost dovnitř té staré, ne vedle ní
 
 Vezme přepis školení, článek, poznámky, ale i rovnou nahrávku, obrázek nebo PDF a zapracuje je do mojí knihovny know-how – rozebere zdroj na jednotlivé poznatky a rozpustí je na místa, kam patří, klidně i s přestavbou textu kolem. Rozliší přitom skutečný rozpor od toho, že jsem na školení něco jen řekl jednodušeji, a ptá se opravdu jen tam, kde neví. Metodiku přepisuje volně, ručně psané texty jen doplňuje a doslovných přetisků se nedotkne.
-
-#### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
-
-Na začátku session posbírá všechno, co v projektu čeká – seznam úkolů, zbytek plánu, kola rozpracovaného návrhu, rozdělané větve a necommitnuté změny –, vypíše zvlášť, na čem se právě pracuje v jiné session, nabídne pokračování v zapomenutých větvích, zbytek seřadí podle závislostí, u každého úkolu řekne, v čem spočívá a jak je velký, a nejaktuálnější mi nabídne k výběru. Po výběru se do toho rovnou pustí. Nahrazuje dlouhý prompt, který jsem psal do každé nové session.
-
-#### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
-
-Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem, a začne ho používat jako zavedený pojem – napříč projekty, v dokumentaci, v názvech souborů. Tenhle skill takové termíny vyhledá, projedná se mnou jeden po druhém, a co odsouhlasím, nahradí ve všech repozitářích naráz. Skončit umí i tím, že se v textech nic nepřepíše – slovo je běžná čeština a **ponechá se**, nebo se používá český protějšek a to cizí se **zakáže preventivně**, ať se nezačne zavádět. Dohodnuté náhrady pak drží [`PTYDEPE.md`](PTYDEPE.md), takže se totéž slovo neotevírá za měsíc znovu.
-
-#### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
-
-Přejmenuje pojem napříč projektem včetně **odvozených tvarů** a české skloňované varianty, kterou grep na základní tvar nenajde. Sahá i na názvy souborů a adresářů, přesouvá přes `git mv`, ať se neztratí historie, a hlídá pořadí – delší tvary před kratšími. Povinný poslední krok je kontrolní průchod na starý tvar, který musí vrátit nulu.
-
-#### [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
-
-Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu protečou samy z výpočetního skriptu nebo ze screenshotu administrace.
-
-#### [`/scenarios`](skills/scenarios/) – situace, na které se v návrhu zapomnělo
-
-Projde konverzace nad projektem, které se od minule nevytěžily, a doplní z nich chybějící uživatelské scénáře. Řeší tichou vadu, která vzniká při každém kole návrhu: rozhodne se, jak se má systém v nějaké situaci chovat, zapíše se to do modelu – a scénář k té situaci nikdo nedopíše. Seznam situací pak vypadá úplně a není, takže se proti němu nedá ověřit, co nový návrh rozbil.
-
-#### [`/serviceaccount`](skills/serviceaccount/) – strojový přístup ke klientským systémům
-
-Připraví service account pro přístup do klientské analytiky nebo Tag Manageru: odvodí z rozpracovaného projektu, o koho jde, poskládá jméno podle konvence tak, aby z něj byl vidět rozsah přístupu, a sepíše žádost o oprávnění pro klienta. Řeší past, kterou je snadné přehlédnout – jméno účtu je neměnné, takže oprava znamená znovu obtěžovat klienta.
-
-#### [`/skill`](skills/skill/) – skilly, které se samy udržují
-
-Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale hotové skilly zůstanou stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
 
 #### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
 Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované shrnutí se soupisem domluv a úkolů na konci; na vyžádání rozliší i mluvčí, takže úkoly mají majitele. Přepis běží **lokálně a offline**, takže nahrávka neopustí můj počítač. Než začne, podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy. Leží-li v adresáři víc souborů, zeptá se, jestli to není **jedna schůzka rozřezaná na části** – diktafon se zastavil, spadl hovor –, a spojí ji ještě před přepisem: vznikne jeden souvislý přepis a jedno rozlišení mluvčích místo několika oddělených, mezi kterými by se stejní lidé nedali spárovat. A když se rozpoznávač uprostřed dlouhé nahrávky zakousne, umí ji dopřepsat po úsecích: problémový kus přeskočí a o zbytek nepřijdu.
 
+### Klientská práce
+
+Skilly, jejichž výstup míří ven ke klientovi. Opírají se o soukromé znalosti a evidence, které v repozitáři nejsou.
+
+#### [`/audit`](skills/audit/) – audit cizího webu proti mojí vlastní metodice
+
+Zaudituje cizí web v zadané oblasti – analytiku, SEO, použitelnost, přístupnost – proti postupu a katalogu typických nálezů, které mám sepsané ve své znalostní bázi. Web opravdu spustí a projde, práci rozdělí několika nezávislým pohledům a každý nález pak nechá někoho jiného zkusit vyvrátit opakovaným průchodem, takže ven jde jen to, co obstálo. Sám žádnou odbornou znalost nenese.
+
+#### [`/invoicing`](skills/invoicing/) – faktury na konci měsíce bez ručního sčítání
+
+Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je mu podezřelé, vystaví faktury a nechá v mailu rozepsaný draft s fakturou a výkazem hodin v příloze. **Odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: dohledat čas, který jsem si zapomněl natrackovat. Sazby a dohody s klienty v tomhle repozitáři nejsou, skill je jen rámec.
+
+#### [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
+
+Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu protečou samy z výpočetního skriptu nebo ze screenshotu administrace.
+
+#### [`/serviceaccount`](skills/serviceaccount/) – strojový přístup ke klientským systémům
+
+Připraví service account pro přístup do klientské analytiky nebo Tag Manageru: odvodí z rozpracovaného projektu, o koho jde, poskládá jméno podle konvence tak, aby z něj byl vidět rozsah přístupu, a sepíše žádost o oprávnění pro klienta. Řeší past, kterou je snadné přehlédnout – jméno účtu je neměnné, takže oprava znamená znovu obtěžovat klienta.
+
+### Práce v projektu
+
+Sahají na projekt, ale nestojí v jeho životním cyklu – orientace ve frontě práce, hromadné přejmenování, mapa modelu i dva přepínače uspořádání.
+
+#### [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
+
+Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
+
+#### [`/diagram`](skills/diagram/) – datový model jako mapa, na kterou se dá kliknout
+
+Z dokumentace navrženého modelu nakreslí interaktivní stránku: ER diagram všech tabulek, ve kterém po kliknutí vidím popis entity, vazby, sloupce a constrainty, a stavový prostor s přechody mezi stavy. Žije jako soukromý artefakt a při dalším zavolání se překreslí na stejném odkazu, klidně z jiné rozdělané větve. Nekreslí nic, co v dokumentaci není, a do projektu nezapisuje.
+
+#### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
+
+Na začátku session posbírá všechno, co v projektu čeká – seznam úkolů, zbytek plánu, kola rozpracovaného návrhu, rozdělané větve a necommitnuté změny –, vypíše zvlášť, na čem se právě pracuje v jiné session, nabídne pokračování v zapomenutých větvích, zbytek seřadí podle závislostí, u každého úkolu řekne, v čem spočívá a jak je velký, a nejaktuálnější mi nabídne k výběru. Po výběru se do toho rovnou pustí. Nahrazuje dlouhý prompt, který jsem psal do každé nové session.
+
+#### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
+
+Přejmenuje pojem napříč projektem včetně **odvozených tvarů** a české skloňované varianty, kterou grep na základní tvar nenajde. Sahá i na názvy souborů a adresářů, přesouvá přes `git mv`, ať se neztratí historie, a hlídá pořadí – delší tvary před kratšími. Povinný poslední krok je kontrolní průchod na starý tvar, který musí vrátit nulu.
+
+#### [`/scenarios`](skills/scenarios/) – situace, na které se v návrhu zapomnělo
+
+Projde konverzace nad projektem, které se od minule nevytěžily, a doplní z nich chybějící uživatelské scénáře. Řeší tichou vadu, která vzniká při každém kole návrhu: rozhodne se, jak se má systém v nějaké situaci chovat, zapíše se to do modelu – a scénář k té situaci nikdo nedopíše. Seznam situací pak vypadá úplně a není, takže se proti němu nedá ověřit, co nový návrh rozbil.
+
 #### [`/worktree`](skills/worktree/) – každá rozdělaná větev ve vlastním adresáři
 
 Přepne projekt do uspořádání, kde má každá rozdělaná větev vlastní adresář, takže nad ním může běžet několik session naráz, aniž si přepisují soubory. Umí to i zpátky. Přeskládává `.git`, tedy to nejcitlivější v repozitáři – proto nejdřív zálohuje, na konci porovná a smaže zálohu, teprve když porovnání vyjde. Pravidla, jak se v takovém projektu pracuje, si nainstaluje rovnou do něj, takže platí od začátku každé session, aniž ho člověk volá.
+
+### Údržba konfigurační vrstvy
+
+Jediné dva, jejichž předmětem není projekt, ale tenhle repozitář a slovník sdílený napříč všemi projekty.
+
+#### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
+
+Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem, a začne ho používat jako zavedený pojem – napříč projekty, v dokumentaci, v názvech souborů. Tenhle skill takové termíny vyhledá, projedná se mnou jeden po druhém, a co odsouhlasím, nahradí ve všech repozitářích naráz. Skončit umí i tím, že se v textech nic nepřepíše – slovo je běžná čeština a **ponechá se**, nebo se používá český protějšek a to cizí se **zakáže preventivně**, ať se nezačne zavádět. Dohodnuté náhrady pak drží [`PTYDEPE.md`](PTYDEPE.md), takže se totéž slovo neotevírá za měsíc znovu.
+
+#### [`/skill`](skills/skill/) – skilly, které se samy udržují
+
+Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale hotové skilly zůstanou stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
 
 ### Instrukce ke skillům
 
