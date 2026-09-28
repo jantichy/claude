@@ -56,7 +56,13 @@ jq -rs '(map(select(.type=="assistant") | .message.content[]? | select(.type=="t
 jq -r 'select(.type=="queue-operation" and .operation=="enqueue") | .content' <transcript>
 ```
 
-Stejná past hrozí u `type: "attachment"`. Nejsi-li si jistý, že máš všechno, projdi si rozložení `.type` v souboru a ověř, že jsi nic nevynechal:
+**Táž past hrozí u `type: "attachment"`, a je horší, protože vypadá jako příloha.** Zpráva, kterou uživatel poslal jako zařazený příkaz, se ukládá jako `attachment` s `type: "queued_command"` a **textem v poli `.prompt`**, ne v `.content`. Doloženo 28. 9. 2026 při vytěžování konverzací: v jedné session takhle ležely **tři ze čtyř uživatelových vstupů** včetně toho, kterým vyvolal přejmenování entity napříč repozitářem – a filtr na `type=="user"` by z ní vrátil jedinou větu.
+
+```
+jq -r 'select(.type=="attachment") | .attachment | select(.type=="queued_command") | .prompt' <transcript>
+```
+
+Nejsi-li si jistý, že máš všechno, projdi si rozložení `.type` v souboru a ověř, že jsi nic nevynechal:
 
 ```
 grep -o '"type":"[a-z_-]*"' <transcript> | sort | uniq -c
