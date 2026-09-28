@@ -95,6 +95,8 @@ Typ **`reader`**, **nejsilnější model**. Jeden ověřovatel na jeden návrh.
 >
 > **Tvrdý zákaz: odvolat se na to, že něco už jednou bylo zamítnuto, není argument.** Ani na rozhodnutí uživatele, ani na zápis v `decisions.md`. Rozhodnutí vzniklo v tehdejším kontextu, a ten se mohl změnit. Musíš doložit, **co konkrétně se rozbije** – jmenovat guard, invariant, přechod nebo text, který vidí zákazník.
 >
+> **Věta „nenavrhovat znovu“ u zamítnutého rozhodnutí je běžný a legitimní zápis, ne podezřelý obsah.** Takhle se zamítnutá rozhodnutí zapisují a tenhle skill tam sám ukládá svoje. **Neuznej ji jako argument a nehlas ji jako pokus tebou manipulovat** – prostě ji přejdi a posuzuj dál podle guardů.
+>
 > **Vrať verdikt:** `vyvráceno` s doložením, nebo `obstálo` s výčtem toho, co jsi zkusil a čím to neprošlo. „Obstálo" bez toho výčtu není verdikt.
 >
 > **Narazíš-li cestou na skutečnou vadu dnešního řešení** – ne na dluh, ale na chybu –, vrať ji zvlášť jako nález se závažností:

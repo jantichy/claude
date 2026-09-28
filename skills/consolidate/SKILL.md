@@ -156,6 +156,8 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 - **Sběrač přečte jen část dokumentů a hlavní session z toho udělá závěr.** Doloženo pilotem u hodnoty `UNDOCUMENTED`: sběrač našel jednoho čtenáře a poctivě uvedl mez („v obou prohledaných souborech"), hlavní session mez zahodila a ohlásila nález, který ověřovatel vzápětí vyvrátil šesti čtenáři. Proto jmenovitý výčet souborů v zadání a povinná sekce *Meze posudku*.
 - **Výstup rozsahu se omezí podle jeho vstupu.** Pak se odřízne přesně ten cenný nález – viz *Rozsah*.
 - **Ověřovatel se odvolá na dřívější zamítnutí.** Není to argument; musí jmenovat, co konkrétně se rozbije.
+- **Věta „nenavrhovat znovu“ se vezme za pokus o manipulaci.** Doloženo tlakovým scénářem 28. 9. 2026: ověřovatel ji ohlásil jako podezřelý obsah tvářící se jako pokyn. Je to ale **běžný a legitimní zápis** u zamítnutého rozhodnutí – a tenhle skill tam sám ukládá svoje. Nemá se hlásit, jen neuznat jako argument.
+- **Opatrnost obrácená naruby: zamítnutí se stane zdí i tam, kde podmínka pravidla je splněná.** Týmž měřením: agent doložil, že premisa zamítnutí padla jedenáct dní po něm, **a návrh přesto nepředložil** s odkazem na to, že u něj stojí „nenavrhovat znovu“. Přitom právě tím doložením splnil podmínku, kterou *Hranice* kladou. **Pojmenuješ-li, co se od zamítnutí změnilo, návrh předlož** – rozhodnutí je uživatelovo, ne tvoje.
 - **Návrh se předloží bez zpětné zkoušky.** Vypadá čistěji, protože nezná zatáčky – a je to regrese převlečená za úklid.
 
 ## Fáze 5 – Závěr
