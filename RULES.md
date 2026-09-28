@@ -619,6 +619,10 @@ Grep odpovídá na otázku *„zůstal tam zbytek?“*. Nebezpečnější je ale
 
 **Z toho plyne i kontrola, která je levnější než diff:** u souboru se známou strukturou si po zásahu **spočítej položky** (`grep -c '^#### '`) a porovnej s číslem před ním. Řez, který snědl víc, než měl, se pozná jedním číslem, kdežto v diffu o tisíci řádcích se to hledá dlouho.
 
+**Druhý směr téhož selhání: řez umí obsah taky zdvojit.** Výraz `s[:s.index(zacatek)] + s[s.index(konec):]` mlčky předpokládá, že konec stojí za začátkem. Stojí-li hledaná koncová značka v souboru dřív – jako **vnitřní zmínka** v jiné položce, citovaný nadpis, ukázka v bloku kódu –, je `end < start` a ten výraz místo mazání **vloží kus souboru podruhé**. Doloženo 27. 9. 2026 v rezervačním systému: řez podle `## Kola návrhu` **vložil 33 řádků navíc**. Grep to nenajde, protože hledaný text v souboru zůstal; **nechytí to ani počítání položek** z odstavce výš, protože se nic nesmazalo. Jediné, co to ukáže, je `git diff --stat` s `33 insertions(+)` a žádným mazáním.
+
+**Prakticky z toho plyne dvojí.** Hranice řezu hledej jako **čísla řádků s ověřeným obsahem** (`lines[i].startswith(…)` na obou koncích), ne přes `index()` nad celým souborem – hledání řetězce nezná ani úroveň nadpisu, ani pořadí, a vrátí první výskyt, i kdyby to byla citace. A **po řezu ověř, že diff obsahuje jen mazání**: přibyl-li v něm jediný řádek, řez neproběhl. Opravuje se to pak reverzním diffem, ne psaním zpaměti – ztracené znění se z hlavy rekonstruuje hůř, než se zdá.
+
 **Platí i pro nástroje**, které mažou za tebe – hromadná náhrada, codemod, `sed -i`. Diff je jediné místo, kde je vidět rozsah zásahu, ne jeho záměr.
 
 ### Při odstranění nechej stopu
