@@ -38,25 +38,13 @@ Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.
 
 Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik session naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i příprava a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.
 
-#### [`BYPASS.md`](BYPASS.md) – čím se dají obejít vlastní kontroly
-
-Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběžná kontrola, oba git hooky, CI, permission systém, status line –, stojí čím se dá obejít, co to chytí a co je vědomě přijaté riziko. Většina řádků je „accepted“ a u každého je důvod. Zákaz se totiž dá obejít i dodržet a nikde po tom nezůstane stopa, kdežto katalog se dá přečíst a rozporovat. Kompletnost hlídá test, který seznam vrstev čte z disku, takže nová vrstva bez řádku shodí testy.
-
 #### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
 Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: tabulka, co se místo čeho používá a v jakém rozsahu. Nejcennější je vždycky ten rozsah – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc. Je to schválně jen tabulka: soubor se načítá do každé session, takže důvody a historie náhrad leží stranou, u skillu `/ptydepe`.
 
 ### Další nastavení, hooky a skripty
 
-Vrstvy, které něco vynucují za mě: spouštějí se samy a nezávisí na tom, jestli si na ně Claude vzpomene.
-
-#### [`verify.sh`](verify.sh) – nad rozbitým projektem se práce neuzavře
-
-`Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. Rozliší přitom nalezenou chybu od kroku, který vůbec nejde spustit, i od kontraktu, co se nedá přečíst, ať se nespuštěná kontrola nevydává za „prošlo všechno“. O projektu sám nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí, takže se registruje jednou globálně a v projektu bez kontraktu neudělá nic. Ten kontrakt je ale kód ležící v repozitáři, takže v něm hook nespustí nic, dokud pro něj nevydám souhlas – a ten jde vydat jen ze samostatného okna terminálu.
-
-#### [`git-guard.py`](git-guard.py) – nevratný příkaz zastavený dřív, než se spustí
-
-`PreToolUse` hook, který čte celý příkaz, ne jeho začátek. Seznam zakázaných příkazů v `settings.json` totiž porovnává jen prefix, takže `git push --force` zachytí, kdežto `git push origin main --force` projde – a to je tvar, který člověk napíše častěji. Aliasy si rozbalí z konfigurace gitu, takže vlastní zkratka hook neobejde. Zastavuje to, po čem práci nejde vrátit: přepsání vzdálené historie, zahození necommitnutých změn, smazání větve, reflogu nebo stashe, úklid netrackovaných souborů a `gc --prune`. Suchý běh propouští.
+Zbytek konfigurace, která se nenačítá jako instrukce, ale běží: definice subagentů a git hook nad tvarem historie.
 
 #### [`agents/`](agents/) – posuzovatel, který nemá čím zapisovat
 
@@ -66,41 +54,25 @@ Definice dvou typů subagentů, kterými si skilly vyžádají posudek – sedm 
 
 `commit-msg` hook, který nad hlavní větví odmítne výchozí zprávu `Merge branch 'feat/payments'` a vyžádá si shrnutí odvedené práce. Díky tomu ukazuje `git log --first-parent` každou zamergovanou větev jako jeden řádek, který něco říká, a dílčí commity zůstanou dostupné pod ním. Aktualizace rozdělané větve ani merge po `git pull` mu nepřekážejí. Nasazený je globálně přes `core.hooksPath`, takže platí ve všech repozitářích na stroji.
 
+### Testy a bezpečnost
+
+Vrstvy, které něco vynucují za mě: spouštějí se samy a nezávisí na tom, jestli si na ně Claude vzpomene – a k tomu mapa toho, čím se dají obejít.
+
+#### [`verify.sh`](verify.sh) – nad rozbitým projektem se práce neuzavře
+
+`Stop` hook, který před ukončením odpovědi spustí typecheck, lint a testy, a když něco padá, **nepustí Clauda skončit** – dostane zpátky výstup a musí to dořešit. Rozliší přitom nalezenou chybu od kroku, který vůbec nejde spustit, i od kontraktu, co se nedá přečíst, ať se nespuštěná kontrola nevydává za „prošlo všechno“. O projektu sám nic neví: přečte si sekci `## Kontrakt příkazů` v jeho `CLAUDE.md` a spustí, co tam stojí, takže se registruje jednou globálně a v projektu bez kontraktu neudělá nic. Ten kontrakt je ale kód ležící v repozitáři, takže v něm hook nespustí nic, dokud pro něj nevydám souhlas – a ten jde vydat jen ze samostatného okna terminálu.
+
 #### [`tests/`](tests/) – testy nad konfigurací, ne nad kódem
 
 Testy nad textem, který nikdo nespouští, a nad vrstvami, které tu něco doopravdy vynucují: hlídají režim popsaný v těle skillu a chybějící v jeho hlavičce, odkaz na soubor nebo sekci, co mezitím zmizela, skill bez README – a k tomu průběžnou kontrolu, oba git hooky, status line a CI, kde tichá regrese stojí nejvíc. Zvlášť pak skripty skillů tam, kde hrozí ztráta dat. Běží v průběžné kontrole po každé odpovědi, jen na standardní knihovně Pythonu a bez instalace; tytéž příkazy pouští i [GitHub Actions](.github/workflows/verify.yml), protože lokální kontrolu obejde commit z jiného stroje, z GUI nebo cizí fork.
 
-### Instrukce ke skillům
+#### [`git-guard.py`](git-guard.py) – nevratný příkaz zastavený dřív, než se spustí
 
-Normy a sdílené texty, ze kterých skilly čerpají – načítají se až ve chvíli, kdy je nějaký skill potřebuje.
+`PreToolUse` hook, který čte celý příkaz, ne jeho začátek. Seznam zakázaných příkazů v `settings.json` totiž porovnává jen prefix, takže `git push --force` zachytí, kdežto `git push origin main --force` projde – a to je tvar, který člověk napíše častěji. Aliasy si rozbalí z konfigurace gitu, takže vlastní zkratka hook neobejde. Zastavuje to, po čem práci nejde vrátit: přepsání vzdálené historie, zahození necommitnutých změn, smazání větve, reflogu nebo stashe, úklid netrackovaných souborů a `gc --prune`. Suchý běh propouští.
 
-#### [`skills/LIFECYCLE.md`](skills/LIFECYCLE.md) – co je čí krok
+#### [`BYPASS.md`](BYPASS.md) – čím se dají obejít vlastní kontroly
 
-Životní cyklus projektu podrobně: co který krok dělá, co po něm platí a proč stojí zrovna v tom pořadí. Hlídá hlavně to, aby si dva kroky nedělaly tutéž práci – u věci, kterou kontrolují tři, ji nakonec neudělá pořádně žádný. Načítá se, až když se v některém kroku opravdu stojí; v `RULES.md` zůstal rámeček s pořadím a pravidla, která platí i mimo cyklus.
-
-#### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
-
-Norma tvaru vlastních skillů: kdy skill vůbec zakládat a kdy to patří jinam, co musí být v hlavičce, jaké sekce a v jakém pořadí, jak dlouhý smí být, jak se vybírá model a typ agenta a co musí mít obě README. Stojí na pravidle **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
-
-#### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
-
-Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. Převedená je celá sada a nové skilly vznikají rovnou podle normy. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
-
-#### [`skills/SESSION.md`](skills/SESSION.md) – jak se čte nahraná konverzace
-
-Claude Code ukládá každou session do souboru a dvěma skillům se z něj vytěžuje: `/cleanup` z něj bere dohody, `/skill` to, co se při ladění vyladilo. Drží pasti, které stojí celý výtěžek – od toho, že se nesmí sáhnout po naposledy změněném souboru (nad projektem běžívají dvě session naráz), přes první řádek bez času a to, že podstata může ležet ve výstupech nástrojů, až po to, že zpráva poslaná uprostřed rozepsané odpovědi se neukládá jako uživatelská, takže ji běžný filtr přeskočí.
-
-#### [`skills/SEVERITY.md`](skills/SEVERITY.md) – jak vážné to je, měří všichni stejně
-
-Pět skillů hlásí nálezy a každý z jiného světa: chyba v kódu, rozbitá aplikace, rozejitá dokumentace, námitka k návrhu, vada na cizím webu. Stupeň u nich musí znamenat totéž, jinak se nálezy z různých běhů nedají porovnat ani seřadit. Původní trojice to nezvládla, protože míchala dvě osy – nejvyšší stupeň mluvil o naléhavosti, nejnižší o povaze nálezu –, takže jí audit cizího webu utekl a zavedl si vlastní. Dnes stojí celá na jedné ose a každý skill si nad ní podává vlastní čtení.
-
-#### [`skills/FINDINGS.md`](skills/FINDINGS.md) – kdy se ptát a kdy prostě opravit
-
-Pět skillů nálezy nejen hlásí, ale i opravuje, a hranice mezi „opravím sám“ a „rozhodne uživatel“ musí být u všech tatáž – jinak si týž nález v jednom běhu vyžádá otázku a v druhém se opraví mlčky a nikdo neodhadne, co ho čeká. Osou schválně **není, jak je zásah riskantní**, ale jestli je z čeho vybírat: co má jedinou zjevně správnou podobu, se udělá, i kdyby to měnilo strukturu. Zvlášť je zakázaná trojice *opravit / odložit / přeskočit* – žádná z těch voleb není podobou řešení, takže otázka nic nerozhoduje a jen sebere pozornost, která pak chybí tam, kde na odpovědi opravdu záleží.
-
-#### [`skills/cost.py`](skills/cost.py) a [`skills/links.py`](skills/links.py) – dva nástroje, které si skilly půjčují
-
-Deterministické skripty, u kterých by posuzování modelem bylo dražší i horší. **`cost.py`** změří, co stojí jeden běh kteréhokoli skillu – ohraničí ho v nahrané konverzaci od vyvolání po závěrečnou šablonu, sečte hlavní session i agenty a srovná běhy po pásmech, takže se o stavbě skillů dá rozhodovat čísly místo dojmem. Pásmuje na dvou osách, protože co u kterého skillu určuje cenu, se liší: u toho, který vytěžuje konverzaci, délka session, u toho, který čte kód a dokumentaci, velikost prověřovaného rozsahu – a srovnávat jedno podle druhého dá čísla, která odpovídají na jinou otázku. Marker konce si odvozuje ze závěrečné fáze toho skillu, aby ho nikdo neudržoval ručně. **`links.py`** ověří, že odkazy v textech vedou na existující soubor a kotvy na existující nadpis; nad celým repozitářem to trvá desetiny sekundy, kdežto čtením se přejmenovaná sekce přehlédne snadno, protože kotva odvozená z nadpisu vypadá správně. Oba leží tady, a ne v adresáři jednoho skillu, protože je volá víc skillů a odkazovat dovnitř cizího skillu norma zakazuje.
+Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběžná kontrola, oba git hooky, CI, permission systém, status line –, stojí čím se dá obejít, co to chytí a co je vědomě přijaté riziko. Většina řádků je „accepted“ a u každého je důvod. Zákaz se totiž dá obejít i dodržet a nikde po tom nezůstane stopa, kdežto katalog se dá přečíst a rozporovat. Kompletnost hlídá test, který seznam vrstev čte z disku, takže nová vrstva bez řádku shodí testy.
 
 ## Skilly
 
@@ -235,6 +207,38 @@ Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované
 #### [`/worktree`](skills/worktree/) – každá rozdělaná větev ve vlastním adresáři
 
 Přepne projekt do uspořádání, kde má každá rozdělaná větev vlastní adresář, takže nad ním může běžet několik session naráz, aniž si přepisují soubory. Umí to i zpátky. Přeskládává `.git`, tedy to nejcitlivější v repozitáři – proto nejdřív zálohuje, na konci porovná a smaže zálohu, teprve když porovnání vyjde. Pravidla, jak se v takovém projektu pracuje, si nainstaluje rovnou do něj, takže platí od začátku každé session, aniž ho člověk volá.
+
+### Instrukce ke skillům
+
+Normy a sdílené texty, ze kterých skilly čerpají – načítají se až ve chvíli, kdy je nějaký skill potřebuje.
+
+#### [`skills/LIFECYCLE.md`](skills/LIFECYCLE.md) – co je čí krok
+
+Životní cyklus projektu podrobně: co který krok dělá, co po něm platí a proč stojí zrovna v tom pořadí. Hlídá hlavně to, aby si dva kroky nedělaly tutéž práci – u věci, kterou kontrolují tři, ji nakonec neudělá pořádně žádný. Načítá se, až když se v některém kroku opravdu stojí; v `RULES.md` zůstal rámeček s pořadím a pravidla, která platí i mimo cyklus.
+
+#### [`skills/SKILLS.md`](skills/SKILLS.md) – norma, jak vypadá skill
+
+Norma tvaru vlastních skillů: kdy skill vůbec zakládat a kdy to patří jinam, co musí být v hlavičce, jaké sekce a v jakém pořadí, jak dlouhý smí být, jak se vybírá model a typ agenta a co musí mít obě README. Stojí na pravidle **skládej, nepiš znovu** – než napíšeš krok, zjisti, jestli ho neumí vestavěný skill, plugin nebo hook, a jestli ho nejde jen obalit tak, aby se ta implementace dala později vyměnit beze změny volání.
+
+#### [`skills/PREFLIGHT.md`](skills/PREFLIGHT.md) – společný začátek běhu
+
+Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav pracovního stromu, průběžná kontrola a určení rozsahu z gitu. Čtrnáct skillů to mělo každý svoje, což je nejhrubší porušení „single source of truth“, jakého jsem se v téhle konfiguraci dopustil. Teď je to sepsané na jednom místě a skill si má psát jen svoje odchylky. Převedená je celá sada a nové skilly vznikají rovnou podle normy. Výčet, kdo je kde, tady schválně není: rozešel by se po každém dalším převodu.
+
+#### [`skills/SESSION.md`](skills/SESSION.md) – jak se čte nahraná konverzace
+
+Claude Code ukládá každou session do souboru a dvěma skillům se z něj vytěžuje: `/cleanup` z něj bere dohody, `/skill` to, co se při ladění vyladilo. Drží pasti, které stojí celý výtěžek – od toho, že se nesmí sáhnout po naposledy změněném souboru (nad projektem běžívají dvě session naráz), přes první řádek bez času a to, že podstata může ležet ve výstupech nástrojů, až po to, že zpráva poslaná uprostřed rozepsané odpovědi se neukládá jako uživatelská, takže ji běžný filtr přeskočí.
+
+#### [`skills/SEVERITY.md`](skills/SEVERITY.md) – jak vážné to je, měří všichni stejně
+
+Pět skillů hlásí nálezy a každý z jiného světa: chyba v kódu, rozbitá aplikace, rozejitá dokumentace, námitka k návrhu, vada na cizím webu. Stupeň u nich musí znamenat totéž, jinak se nálezy z různých běhů nedají porovnat ani seřadit. Původní trojice to nezvládla, protože míchala dvě osy – nejvyšší stupeň mluvil o naléhavosti, nejnižší o povaze nálezu –, takže jí audit cizího webu utekl a zavedl si vlastní. Dnes stojí celá na jedné ose a každý skill si nad ní podává vlastní čtení.
+
+#### [`skills/FINDINGS.md`](skills/FINDINGS.md) – kdy se ptát a kdy prostě opravit
+
+Pět skillů nálezy nejen hlásí, ale i opravuje, a hranice mezi „opravím sám“ a „rozhodne uživatel“ musí být u všech tatáž – jinak si týž nález v jednom běhu vyžádá otázku a v druhém se opraví mlčky a nikdo neodhadne, co ho čeká. Osou schválně **není, jak je zásah riskantní**, ale jestli je z čeho vybírat: co má jedinou zjevně správnou podobu, se udělá, i kdyby to měnilo strukturu. Zvlášť je zakázaná trojice *opravit / odložit / přeskočit* – žádná z těch voleb není podobou řešení, takže otázka nic nerozhoduje a jen sebere pozornost, která pak chybí tam, kde na odpovědi opravdu záleží.
+
+#### [`skills/cost.py`](skills/cost.py) a [`skills/links.py`](skills/links.py) – dva nástroje, které si skilly půjčují
+
+Deterministické skripty, u kterých by posuzování modelem bylo dražší i horší. **`cost.py`** změří, co stojí jeden běh kteréhokoli skillu – ohraničí ho v nahrané konverzaci od vyvolání po závěrečnou šablonu, sečte hlavní session i agenty a srovná běhy po pásmech, takže se o stavbě skillů dá rozhodovat čísly místo dojmem. Pásmuje na dvou osách, protože co u kterého skillu určuje cenu, se liší: u toho, který vytěžuje konverzaci, délka session, u toho, který čte kód a dokumentaci, velikost prověřovaného rozsahu – a srovnávat jedno podle druhého dá čísla, která odpovídají na jinou otázku. Marker konce si odvozuje ze závěrečné fáze toho skillu, aby ho nikdo neudržoval ručně. **`links.py`** ověří, že odkazy v textech vedou na existující soubor a kotvy na existující nadpis; nad celým repozitářem to trvá desetiny sekundy, kdežto čtením se přejmenovaná sekce přehlédne snadno, protože kotva odvozená z nadpisu vypadá správně. Oba leží tady, a ne v adresáři jednoho skillu, protože je volá víc skillů a odkazovat dovnitř cizího skillu norma zakazuje.
 
 ## Než si odsud něco vezmete
 
