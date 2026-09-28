@@ -385,6 +385,20 @@ class QueueCollection(unittest.TestCase):
         b = self.branches()["specify-faktury"]
         self.assertEqual((b["state"], b["session"]), ("occupied", "ziva"))
 
+    def test_clean_main_not_reported_as_occupied(self):
+        # Session, která startuje v kořeni kontejneru a vlastní větev si ještě nezaložila,
+        # hlásí jako svou hlavní větev. Dokud v ní nic neleží, nesmí se vypsat vůbec –
+        # jinak ji `/next` podle vlastního pravidla přestane nabízet.
+        self.session(self.sleeper.pid, "bez-vetve", str(self.box), "main")
+        self.assertNotIn("main", self.branches())
+
+    def test_main_with_work_stays_reported(self):
+        # Druhý směr téhož: leží-li v hlavní větvi neuložená změna, vypsat se musí.
+        (self.box / "main" / "rozdelane.txt").write_text("práce")
+        self.session(self.sleeper.pid, "bez-vetve", str(self.box), "main")
+        b = self.branches()["main"]
+        self.assertEqual((b["state"], b["uncommitted"]), ("occupied", 1))
+
     def test_run_from_worktree_subdir_finds_container(self):
         run = subprocess.run([sys.executable, str(COLLECT), str(self.box / "dph" / "docs")],
                              capture_output=True, text=True, env=self.env)

@@ -358,8 +358,12 @@ def collect_branches(repo, ref, prefix, rounds, current_branch, project):
                     rounds=[r["title"] for r in rounds if r.get("branch") == b])
         work = info["ahead"] or info["uncommitted"]
         info.update(classify_branch(b, others, idle, error, work))
-        # Hlavní větev se vypisuje jen tehdy, když v ní někdo pracuje nebo něco leží.
-        if info["main"] and info["state"] in ("empty", "abandoned") and not info["uncommitted"]:
+        # Hlavní větev se vypisuje jen tehdy, když v ní opravdu něco leží – commit nad
+        # hlavní referencí nebo neuložená změna. Na `state` se to neváže: session, která
+        # startuje v kořeni kontejneru a vlastní větev si ještě nezaložila, hlásí hlavní
+        # větev jako svou, takže by se vypsala jako `occupied` a `/next` by ji podle
+        # vlastního pravidla přestal nabízet, přestože na ní nikdo nepracuje.
+        if info["main"] and not work:
             continue
         out.append(info)
     return out, error

@@ -88,7 +88,7 @@ Obsazenost už rozhodl skript, pole `state`:
 
 **Na položku z fronty větev přiřaď** podle pole `rounds` (kola s řádkem *Větev*), podle `changes` (které položky větev v `todo.md` a `plan.md` mění nebo odškrtává; `adds_stitch` znamená sešití návrhu) a nakonec podle jména větve a `commits` – shoda jen podle jména je **domněnka** a řekni to. Položka přiřazená obsazené nebo nejisté větvi se **z fronty vyřadí**; větev bez přiřazené položky se vypíše sama, s tím, co v ní podle commitů je.
 
-**Větev s `current: true`** je ta, ve které session stojí: je-li `abandoned`, je to rozdělaná práce tady; je-li `occupied`, pracuje nad ní ještě jiné okno a platí totéž co pro jiné obsazené větve – **i když je to hlavní větev** (`main: true`). Hlavní větev skript vypíše jen tehdy, když na ní někdo pracuje nebo v jejím worktree leží neuložené změny.
+**Větev s `current: true`** je ta, ve které session stojí: je-li `abandoned`, je to rozdělaná práce tady; je-li `occupied`, pracuje nad ní ještě jiné okno a platí totéž co pro jiné obsazené větve – **i když je to hlavní větev** (`main: true`). **Hlavní větev skript vypíše jedině tehdy, když v ní opravdu něco leží** – commit nad hlavní referencí, nebo neuložená změna v jejím worktree. **Živá session to nestačí a je to opravené 28. 9. 2026:** session, která ve worktree layoutu startuje v kořeni kontejneru a vlastní větev si ještě nezaložila, hlásí jako svou hlavní větev – a ta se pak vypisovala jako `occupied`, takže ji skill podle vlastního pravidla přestal nabízet. Stačilo tedy druhé otevřené okno nad projektem a práce mířící do hlavní větve zmizela z nabídky. Hlídají to dva testy v obou směrech.
 
 ### Kola návrhu
 
