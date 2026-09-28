@@ -1512,3 +1512,11 @@ Dvě vynucující pravidla skillu se změřila hned v den jeho vzniku, ne odlož
 **Je to jedna chyba ze dvou stran, ne dvě.** Pravidlo se bálo, že se zamítnutí bude obcházet; ve skutečnosti se z něj stala zeď i tam, kde samo říká, že zeď není. Opraveno na obou místech: `agents.md` říká ověřovateli tu větu **neuznat jako argument a nehlásit jako manipulaci**, a `Časté chyby` nesou oba případy i s tím, že rozhodnutí o předloženém návrhu je uživatelovo, ne agentovo.
 
 **Vedlejší výnos potvrdil, co tvrdil pilot.** Agenti našli v podstrčeném modelu dvě skutečné vady, které se scénářem nesouvisely – G4 by po rozdělení os začala upomínat stornované a G2 by vracela peníze za nezaplacené přihlášky. Nález byl v obou případech cennější než posuzovaný návrh, což je přesně to, kvůli čemu se vedlejší vady hlásí jako nálezy se závažností.
+
+### 2026-09-28 – `/scenarios` zůstává jen o scénářích, selling se vytěžuje na vyžádání
+
+Čtvrtá dávka vytěžení se pustila s argumentem „a hned při tom rovnou doplň analogicky i selling“ a agenti dělali nad týmž transcriptem dva úkoly naráz: situace lidí do `scenarios.md` a materiál pro komunikaci produktu do `selling.md`. **Vyplatilo se to** – argumenty nesly zhruba polovinu zápisů dávky (14 z 32) a **filtr na situace lidí by je zahodil**, protože doložená bolest konkurence ani mez, kterou je potřeba říct poctivě, scénářem nejsou.
+
+**Rozhodl uživatel 28. 9. 2026 to přesto do skillu nezapisovat.** Zůstává to jednorázovým pokynem v argumentu příkazu. **Zamítnuto rozšířit skill natrvalo** o druhý úkol podmíněný tím, že projekt `selling.md` vede, **zamítnut samostatný `/selling`** (oba skilly by četly tytéž transcripty dvakrát) i odklad do fronty konfigurační vrstvy.
+
+**Cena, o které se ví:** `selling.md` nemá vlastní běh, takže zestárne, kdykoliv si o něj nikdo neřekne. Doplňuje se tedy buď argumentem u `/scenarios`, nebo průběžně ve chvíli, kdy argument padne – což je stejně to, co `selling.md` sám o sobě předepisuje.
