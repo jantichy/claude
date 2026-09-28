@@ -97,7 +97,7 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 ## Kdo ji používá
 
-`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate` a `/cleanup` – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/cleanup` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
+`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate`, `/cleanup` a `/consolidate` – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/cleanup` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů; `/consolidate` u vedlejších vad od ověřovatelů, a **u svých návrhů taky podle výjimky o nové práci** – dnešní řešení funguje, takže *Neopravovat* u něj nedává smysl a „jestli a kdy“ je doopravdy rozhodnutí uživatele. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
 
 **Skill si nad tímhle kritériem podává vlastní doménové čtení** – `/attack` má sporných skoro všechno, protože každý jeho nález mění chování běžící aplikace, kdežto `/consistency` má většinu jednoznačnou, protože srovnává dvě místa, z nichž jedno je zdroj. **Stavět vlastní hranici vedle téhle se ale nesmí**; přibude-li další skill, který nálezy opravuje, odkáže sem taky a **neopisuje si ji** (`~/.claude/RULES.md`, *Single source of truth*).
 

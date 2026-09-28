@@ -122,6 +122,10 @@ Druhá vrstva téhož cyklu. Tyhle kroky nezvětšují rozsah práce, jen se sta
 
 Pošle na hotový dokument agenty, kteří **nemají z naší session žádný kontext** a čtou jenom soubory, každého z jiného hlediska. V cyklu stojí třikrát – za průzkumem, za zadáním a za návrhem –, protože jinak ty vrstvy neměří nikdo: `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu. Každou závažnou námitku pak dostane ověřovatel s jediným úkolem – **vyvrátit ji**.
 
+#### [`/consolidate`](skills/consolidate/) – dluh, který vznikl postupným lepením
+
+Návrh se vede po kolech a v každém se přidá sloupec nebo hodnota na případ, který zrovna vyplaval. Každý ten krok je ve své chvíli správný, dohromady z nich ale bývá řešení, které by při znalosti všech případů předem šlo nahradit jedním jednodušším. Skill proto jako jediný krok cyklu **čte historii, ne dnešní stav** – z dat narození rozhodnutí vyznačí shluky, navrhne alternativu a nechá ji zkusit vyvrátit, aby se z úklidu nestala regrese. Ptá se „bylo by to dnes navržené **jinak**?“, což je otázka, na kterou zní „ano“ i tam, kde není nic špatně, takže propadne každým jiným sítem.
+
 #### [`/review`](skills/review/) – panel nezávislých pohledů na hotovou práci
 
 Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje projektu, pak paralelní panel agentů, kde každý má jediné hledisko – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura, moje doménové standardy –, a nakonec ověřovatele, jehož úkolem je nález **vyvrátit**. Co ověření nepřežije, se mi vůbec nezobrazí.
