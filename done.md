@@ -220,6 +220,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
   - **Nad repozitářem běžela souběžná session** a dvakrát commitla do `todo.md` (`b4f7526`, `09cab81`). Nic se nepřekrylo, protože obě strany commitovaly jmenované cesty.
 
 - **2026-09-28** · `/cleanup` · `b253c08` · session `97490df9-f04a-4a57-84d0-0a6ab26e2aa5` · kotvy 10/10 · 1 téma (1 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: 58 bloků myšlení (v transcriptu prázdné), 3 výstupy AskUserQuestion; odložený výstup [35] neotevřen – je to uříznutý výpis `todo.md`, jehož obsah se týž běh četl přímo ze souboru. V rozsahu `0ec4a00..HEAD` leží cizí commit `51dfc7c` (souběžná session, `RULES.md`) – nezapočítán do odvedené práce.
+- **2026-09-28** · `/cleanup` · `3433bb9` · session `a46c3689-dca1-449d-8c2c-70e7ad521dc2` · kotvy 1/1 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: 48 bloků myšlení (v transcriptu prázdné), 8 výstupů Edit, 6 AskUserQuestion, 3 Write, 2 Read, 1 Skill; odložené výstupy žádné. **Základ session vyšel z postupu `Fáze 0` špatně** – mezi jejím začátkem a její první prací leží pět commitů souběžné session (`bbd9a54`…`0229611`), takže se za základ vzal `a1b79e8` místo `0229611`; opraveno ručně podle autorství a zapsáno jako druhý doložený výskyt do `todo.md`.
 
 ## Odvedená práce
 
