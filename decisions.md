@@ -1520,3 +1520,13 @@ Dvě vynucující pravidla skillu se změřila hned v den jeho vzniku, ne odlož
 **Rozhodl uživatel 28. 9. 2026 to přesto do skillu nezapisovat.** Zůstává to jednorázovým pokynem v argumentu příkazu. **Zamítnuto rozšířit skill natrvalo** o druhý úkol podmíněný tím, že projekt `selling.md` vede, **zamítnut samostatný `/selling`** (oba skilly by četly tytéž transcripty dvakrát) i odklad do fronty konfigurační vrstvy.
 
 **Cena, o které se ví:** `selling.md` nemá vlastní běh, takže zestárne, kdykoliv si o něj nikdo neřekne. Doplňuje se tedy buď argumentem u `/scenarios`, nebo průběžně ve chvíli, kdy argument padne – což je stejně to, co `selling.md` sám o sobě předepisuje.
+
+### 2026-09-28 – Poučení o strukturálním diffu je obecné pravidlo, ne doménová znalost o kódu
+
+`RULES.md` dostalo sekci *Velký diff nad strukturovaným souborem čti parsovaný, ne jako text* a s ní i pravidlo commitovat formátování zvlášť od věcné změny. Do té doby to byla jedna věta uvnitř záznamu o pluginu `gitkraken-hooks` z 27. 9. 2026 – tedy na místě, kde to nikdo nehledá, když příště čte velký diff v jiném projektu.
+
+**Zamítnuto připsat to jako odstavec k *Mazání ověř diffem, ne grepem*.** Drželo by to pohromadě všechno o čtení diffu, jenže to pravidlo je o **mazání podle značek** a tohle o **čtení cizí změny** – závěr sekce by říkal něco jiného než její název. Vztah mezi nimi tím nezmizel: obě sekce stojí vedle sebe a nová na tu starší odkazuje jako na svého sourozence z druhé strany, protože tam řez sebere víc, než měl, a diff je jediné místo, kde to je vidět, kdežto tady je diff tak velký, že v něm není vidět nic.
+
+**Zamítnuto odsunout to do `~/Dev/context/coding/`.** Vypadá to jako znalost o kódu, ale doména se nad projektem bez kódu vůbec nenačte – tedy ani nad repozitářem s touhle konfigurací, kde se to stalo a kde `settings.json` žádný kód není. Kapitola *Git* v `coding.md` je navíc o konvencích větví a commitů, ne o čtení diffu jako dokladu.
+
+**Cena, o které se ví:** `RULES.md` se rozbaluje do každé session včetně těch nad čistě textovými projekty, kde se strojově formátovaný soubor nevyskytne. Je to čtyři odstavce a platí to pro každý repozitář, ne pro každý soubor – táž úvaha jako u *Commituj jmenované cesty, ne `-A`*.

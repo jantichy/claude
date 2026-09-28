@@ -625,6 +625,16 @@ Grep odpovídá na otázku *„zůstal tam zbytek?“*. Nebezpečnější je ale
 
 **Platí i pro nástroje**, které mažou za tebe – hromadná náhrada, codemod, `sed -i`. Diff je jediné místo, kde je vidět rozsah zásahu, ne jeho záměr.
 
+### Velký diff nad strukturovaným souborem čti parsovaný, ne jako text
+
+Je-li diff **nepoměrně velký vůči změně, která se dělala**, přestal být dokladem: u strojově formátovatelného souboru – JSON, YAML, konfigurace, lockfile, export – stačí přeformátování na jiné odsazení nebo jiné pořadí klíčů a přepíše se celý soubor. Věcná změna se v těch stovkách řádků neztratí nápadně, ale tiše, protože vypadá jako jedna z nich. **Porovnej proto strukturu, ne text**: načti obě verze parsované (`git show HEAD:<soubor>` proti pracovní kopii) a srovnej hodnoty klíč po klíči.
+
+**Doloženo 27. 9. 2026** v repozitáři s touhle konfigurací: `settings.json` se celý přeformátoval z mezer na taby, diff měl **439 přidaných a 446 odebraných řádků** a jediná věcná změna – zapnutý plugin, který se předtím vědomě vypnul – se v něm ztratila. Odhalilo ji až strukturální porovnání parsovaného JSONu proti `HEAD`.
+
+**Platí i na vlastní zásah, ne jen na cizí změnu.** Formátovač spuštěný nad souborem, do kterého zároveň něco měníš, vyrobí přesně tenhle diff – a recenzent tvého commitu má pak stejnou šanci najít tu změnu jako ty. Formátování proto commituj zvlášť od věcné změny.
+
+**Je to sourozenec pravidla o mazání výš, z druhé strany.** Tam řez sebere víc, než měl, a diff je jediné místo, kde je to vidět. Tady je diff tak velký, že v něm není vidět nic – takže se doklad musí vzít odjinud.
+
 ### Při odstranění nechej stopu
 
 Mažeš-li funkci, pravidlo, pole nebo soubor, které by se mohly omylem „vrátit“ (kopírováním odjinud, z legacy, z dokumentace), nech stopu.
