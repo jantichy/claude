@@ -486,6 +486,26 @@ Po přesunu worktree a autocommitu zbyl `structure.md` jako poslední soubor, kt
 
 **Zamítnuto – `~/.claude/standards/` jako podadresář.** Dnes by to byl obal nad jedním souborem. Otevře se, až jich v kořeni bude víc; do té doby `STRUCTURE.md` leží vedle `RULES.md`, se kterým sdílí status závazného pravidla importovaného přes `@`.
 
+### 2026-09-08 – `deny` v `settings.json` je ochrana proti omylu, ne proti obejití
+
+`/review full` nad konfigurační vrstvou našel třídu děr, kde `deny` a `ask` nedosáhnou na cestu, kterou si vynutí interpret nebo správce balíčků. **Tři z nich zůstaly vědomě otevřené** – jediná účinná oprava by přesunula běžné nástroje do `ask` a odklikávala by se u každého spuštění, takže by ji první kolize vypnula.
+
+**Poučení, které z toho platí obecně:** `deny` je ochrana proti ukliknutí, ne proti cílenému obejití. Vrstva, která se tváří jako hranice a přitom jí není, je horší než žádná, protože se na ni někdo spolehne. Skutečnou hranici drží jen to, co si model nemůže odsouhlasit sám – souhlas vydaný z terminálu, ověření cíle, potvrzovací dialog (`RULES.md`, *Přednost pravidel*).
+
+**Konkrétní cesty, kterými to jde obejít, tady nestojí** a je to záměr: repozitář je veřejný a popis funkčního obchvatu vlastní ochrany je návod, ne poznámka. Drží je `~/Dev/context/decisions.md`, sekce `## Claude`.
+
+### 2026-09-08 – Dvě podmínky pro `PostToolUse` hook
+
+Dnešní `/review full` zrušil oba `PostToolUse` hooky v `~/.claude/settings.json` (`npx tsc --noEmit` po editaci `.ts`, `py_compile` po editaci `.py`). Zapisuje se, **za jakých podmínek smí `PostToolUse` hook existovat** – bez toho je prázdné místo k nerozeznání od opomenutí a příště se hook přidá zpátky se stejnými vadami.
+
+**Podmínka 1 – nesmí maskovat návratový kód.** Oba končily `; true`, takže vracely vždy nulu. Dokumentace k hookům přitom uvádí, že `PostToolUse` při rc=0 stdout modelu ani do transkriptu neukáže – jde jen do debug logu. Kontrola tedy chybu našla, spolkla ji a nikdo se nic nedozvěděl; platilo se za ni až 30 s po každé editaci. Chce-li hook něco sdělit, musí skončit `exit 2` se stručným stderr (blokovat stejně neumí, takže obava z otravnosti je bezpředmětná).
+
+**Podmínka 2 – nesmí spouštět binárku z auditovaného repozitáře.** `npx` bere `tsc` primárně z `./node_modules/.bin`, tedy z klonovaného projektu. Hooky běží mimo permission systém a tenhle žádnou obdobu souhlasu `verify.sh --allow` neměl: stačilo naklonovat cizí repozitář a upravit v něm libovolný `.ts`. Reprodukováno – podvržená binárka se spustila s právy uživatele bez jediného dotazu.
+
+**Není to zákaz celé události.** `PostToolUse` hook, který obě podmínky splní – volá absolutní cestu k důvěryhodnému nástroji a výsledek doopravdy hlásí –, je v pořádku. Dnešní dva neplnily ani jednu.
+
+**Vědomá mezera, kterou to otevírá:** v repozitáři **bez** souhlasu `verify.sh` teď nekontroluje nic. Je to přijaté: právě tam byl hook nejnebezpečnější, a kontrola, jejíž výsledek nikdo nevidí, stejně nic nekontrolovala.
+
 ### 2026-09-10 – Skill `/learn`: nová znalost se zapracovává dovnitř báze, ne vedle ní
 
 Vznikl skill `/learn` (`~/.claude@b78caa4`). Řeší mezeru mezi `/transcript` a knowledge base: z přepisu školení nebo konzultace se dá vytěžit hodně metodiky, ale ta se dosud buď nezapsala vůbec, nebo skončila jako další samostatný soubor vedle stávající struktury – tedy na místě, kde ji nikdo nehledá.
@@ -591,6 +611,28 @@ Pokračování téhož úklidu: `RULES.md` se stlačil z **45,5 kB na 43,8 kB**,
 
 - **Deny seznam v `settings.json` není bezpečnostní hranice, ale doporučení** (14. 9. 2026). Vyplynulo z revize a platí obecně: pravidla porovnávají text příkazu, takže je obejde kterýkoliv plošně povolený interpret, a u `Read` navíc platí jen relativně ke kořeni aktuálního projektu – soubory mimo něj nechrání vůbec (ověřeno návnadou). **Nestaví se na něm nic, co má doopravdy držet.** Kde je potřeba skutečná hranice, musí stát mechanismus, který si model nemůže odsouhlasit sám: potvrzení na terminálu, souhlas v souboru mimo repozitář, potvrzovací dialog.
 
+### 2026-09-10 – Skill `/audit`: audit cizího webu proti doménové znalosti
+
+Vznikl skill `/audit`, který zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně `~/Dev/context/`. Sám nenese žádnou doménovou znalost – je to dirigent.
+
+**Proč nový skill a ne režim `/review`:** oba měří proti týmž doménovým standardům, ale liší se předmětem a všemi předpoklady. `/review` čte vlastní práci v repozitáři, má diff, kontrakt příkazů a specifikaci, proti které měří korektnost. `/audit` nemá ani jedno – má URL, exporty od klienta a přístupy do cizích účtů. Sloučení by znamenalo skill, jehož polovina fází v každém běhu neplatí.
+
+**Režimy `full` (výchozí), `brief`, `audit`, `report`, `update`.** Fáze jsou pojmenované jako režimy, aby šla pustit jen ta část, která je potřeba – typicky přepsat výstupy bez nového sběru. **Zamítnuto `collect` pro první fázi:** v `/compose` už znamená posbírání hotových textů a tady by svádělo i na sběr nálezů. **Zamítnuto `intake`, `inputs`, `gather`, `create`** ve prospěch `brief` – v oboru zavedený termín přesně pro to, co klient před zakázkou dodá.
+
+**Hranice na cizím webu se dělí na tři pásma podle jediné otázky: přežije následek zavření prohlížeče?** Volné je, co žije jen v relaci (košík, vyhledávání, filtry) – a je to chtěné, protože bez toho se měření neodchytí. Svolení pokaždé zvlášť vyžaduje, co splní aspoň jedno ze tří: vznikne trvalý záznam ke smazání, odejde zpráva člověku, sáhne to na cizí peníze či sklad. Nikdy se nedělá zásah do klientovy konfigurace a zkoušení zranitelností. **Zamítnut výčet konkrétních případů** („objednávky na dotaz, ostatní v pohodě“) – nešel by aplikovat na případ, který ve výčtu není.
+
+**Třetí pásmo drží pořadí prací, ne zákaz nad uživatelem.** Tlakový scénář ukázal, že se skill na výslovné trvání uživatele k opravě v klientově GTM nakonec upsal – a je to podle `~/.claude/RULES.md`, *Přednost pravidel*, správně: pokyn uživatele stojí nad skillem a žádná věta v Markdownu ho nepřebije. Původní formulace „nikdy, a souhlas se na to neptá“ tedy slibovala tvrdost bez mechanismu. Přepsáno na důvod, který obstojí sám: auditor, který si vlastní nález rovnou opraví, ho už nemá jak vyvrátit, a opravou v produkci změní data, proti kterým měří zbytek auditu. Trvá-li uživatel na svém, oprava se provede a u dotčených nálezů se zapíše, že se ověřovaly až po zásahu.
+
+**Ověřovatel má přístup k webu a nález vyvrací reprodukcí**, ne argumentací jako v `/review`. Je to dražší, ale u auditu se většina nálezů dá ověřit pozorováním a nález poslaný klientovi omylem stojí důvěru celé zakázky.
+
+**Sběr dělá hlavní session jednou pro všechny**, specialisté nad ním pracují a smí si dozískat vlastní záložkou. Pět agentů stahujících totéž je pětkrát dražší, pětkrát rozdílné a pětkrát zatěžuje cizí web. Ověřeno, že to jde: nástroje `chrome-devtools` MCP mají `pageId` jako povinný parametr, takže sdílený výběr stránky neexistuje a záložky se nepřebíjejí.
+
+**Audit a revize jsou dva pojmy, ne dvě jména téhož** – doména je dosud nerozlišovala a skill si tím vysloužil podezření z *jednoho termínu pro jednu věc*. Audit je projití stavu, pojmenování chyb a návrh základních fixů; revize je zakázka, do které audit vstupuje jako podklad a jejíž podstatou jsou navazující opravy, často až přestavba struktury, filozofie a scénářů. Z toho plyne i to, proč se ucelené vývojářské šablony v auditní zprávě nevyužijí v plné šíři – patří k revizi. Nejkratší test: **výstupem auditu je dokument, výstupem revize naimplementovaný web** (s dokumentací). Rozdíl zapsán do `analytics/audit.md`, *Audit není revize*; `/audit` dělá audit a v *Co skill nedělá* se proti revizi vymezuje.
+
+**Režim `full` zůstává, i když v `/review` a `/consistency` znamená rozsah, kdežto tady úplnost.** V obou případech čte člověk „nezaříznutý běh“ a jiné jméno by tu podobnost jen zakrylo; k tomu má skill v těle napsané, jak se pozná režim od volného popisu zakázky.
+
+**Vědomá mezera – auditní dráhu má dnes jen `analytics/`.** Nad doménou, která má jen checklist, skill poběží v omezeném režimu a nahlas to řekne; po auditu nabídne vytěžit nalezené zpátky do domény přes `/learn`. **Zamítnuto vyžadovat kontrakt domény** a běh jinak odmítnout – zablokovalo by to audity nad `web/` a `design/`, které se dají dělat proti checklistu, jen mělčeji.
+
 ### 2026-09-15 – `/depot` je mechanika ve veřejném repozitáři, pravidla v privátní doméně
 
 Zakládání skillu, který převezme stažený soubor, uloží ho tam, kam patří, a rovnou spustí navazující zpracování. Rozdělený je stejně jako `/audit` a `/invoicing`: veřejný `~/.claude/skills/depot/` drží mechaniku a nenese jediné konkrétní pravidlo, privátní doména `~/Dev/context/depot/` drží směrovací tabulku. Kdo si skill stáhne z GitHubu, napíše si tabulku podle svého.
@@ -604,6 +646,41 @@ Zakládání skillu, který převezme stažený soubor, uloží ho tam, kam pat�
 **Srovnávací běh (bez skillu) rozhodl o sekci *Rozsah*:** agent si rozšířil rozsah ze dvou předaných souborů na celé `~/Downloads` (5 685 položek) a kvůli tomu rozsahu se zastavil, aniž hnul jediným souborem. Rozšíření rozsahu se tváří jako služba navíc.
 
 **Vědomé mezery:** doména nemá zapsané přijaté faktury a doklady, videa natočeného kurzu (cíl neexistuje) ani screenshoty k rozdělané práci. Vedeny v `depot.md`, *Co zatím zapsané není*, aby se nepletly s opomenutím.
+
+### 2026-09-15 – Třetí stupeň závažnosti je NÍZKÉ, protože trojice musí stát na jedné ose
+
+Vyšlo z konzistenčního auditu: `/audit` si vedl vlastní škálu *kritická / vážná / drobná* mimo `skills/SEVERITY.md`, přestože ten se prohlašuje za jedinou škálu pro všechny skilly, které hlásí nálezy. Příčina nebyla nedbalost, ale **vada původní trojice** KRITICKÉ / STŘEDNÍ / KOSMETICKÉ: míchala dvě osy – *kritické* je o naléhavosti, *kosmetické* o povaze nálezu. Na auditu cizího webu proto nesedla, protože „kosmetický nález“ tam nedává smysl, a skill si přirozeně zavedl vlastní.
+
+**Zavržené varianty.** *Nechat KOSMETICKÉ a zapsat do `SEVERITY.md`, proč `/audit` stojí mimo* – legalizovalo by to dvě škály a tím i důvod, proč soubor vznikl. *DROBNÉ* – odmítnuto uživatelem; slovo hodnotí velikost práce, ne dopad. *VYSOKÉ / STŘEDNÍ / NÍZKÉ* – nejčistší jedna osa, ale nejvyšší stupeň by zněl jako další dílek škály, a přitom právě on spouští přísnější ověřování. *KRITICKÉ / STŘEDNÍ / OKRAJOVÉ* – „okrajové“ není ustálené a míchá osu podobně jako předtím.
+
+Zvoleno **KRITICKÉ / STŘEDNÍ / NÍZKÉ**: celá trojice na ose závažnosti, „nález nízké závažnosti“ funguje u kódu, útoku, cizího webu i oponovaného dokumentu, a nejvyšší stupeň si nechává sílu poplachu. `/audit` ji přebírá s vlastním doménovým čtením, jak to dělá `/attack`.
+
+**Cena, kterou to stálo, a poučení k ní.** Náhrada napříč osmnácti soubory se dělala hromadným `str.replace` a přepsala i slova mimo škálu – „drobná změna“ → „nízká změna“, „podrobné README“ → „ponízké README“. Grep by to nenašel, protože hledané slovo právě zmizelo; chytlo se to až čtením diffu (`~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*, platí i na náhradu). **Na přejmenování napříč projektem je `/replace`, ne ruční náhrada** – právě proto, že kontroluje tvary a hranice slov.
+
+### 2026-09-15 – Norma skillů uznává blok předběžných podmínek, místo aby ho zakázala
+
+Konzistenční audit hlásil, že „sekci navíc mezi *Co skill nedělá* a *Fází 0* mají dva skilly“. Měření ukázalo **14 z 22** – `Rozsah`, `Zásady pro celý průběh`, `Hranice`, `Kdy se pouští a kdy se přeskakuje`, `Tvrdá pravidla` a další. Vada tedy nebyla v těch skillech, ale v `skills/SKILLS.md`: šablona povinných sekcí ten prostor vůbec neznala, přestože ho používala většina.
+
+**Zavržené varianty.** *Zakázat a obsah přesunout* – znamenalo by nacpat rozsah a hranice do `Co skill nedělá`, kam nepatří, nebo je odsunout za závěrečnou fázi mezi přílohy, kde by je nikdo nepřečetl včas. *Nechat normu mlčet* – stav, kdy čtrnáct skillů porušuje šablonu a nikdo neví, jestli je to chyba, nebo zvyk; každý další audit by to hlásil znovu.
+
+Zvoleno: norma blok **uznává jako nepovinný** s kritériem **„sekce se vztahuje k víc než jedné fázi“**. Co platí pro jedinou fázi, patří do ní; co se čte jen někdy, je příloha za závěrem. Sekce, kterou norma nezná a všichni ji mají, není odchylka, ale mezera v normě.
+
+**Důsledek, který si vyžádal další práci:** čtyři skilly (`/consistency`, `/release`, `/replace`, `/specify`) měly takovou sekci ještě **před** `Co skill nedělá` a musely se přeskládat. Přesun zanechal pozůstatky – osiřelý oddělovač v `/replace` a větu o kroku cyklu, která ve `/specify` zůstala viset na konci úvahy o dvou dokumentech, kam nepatří. Obojí našel až čtenář bez kontextu v `/cleanupu`, ne audit sám.
+
+
+### 2026-09-15 – Subagenti se volají typy s vymezenými právy, ne slibem v zadání
+
+Věta „nezapisuj do žádného souboru“ v zadání subagenta **nic nedrží** – je to text pro model, ne mechanismus. A `Explore`, na kterém dosud jely všechny čtecí panely, sice nemá `Edit` ani `Write`, ale **`Bash` má**, takže jím lze zapsat i commitnout. V projektu se zapnutým autocommitem z toho vznikne pushnutá změna, kterou nikdo neschválil.
+
+Zavedeny dva typy v `~/.claude/agents/`: **`reader`** (`Read, Grep, Glob`) a **`researcher`** (týž plus `WebSearch` a `WebFetch`). Ani jeden nemá shell. Norma je v `skills/SKILLS.md`, *Model, effort a delegace*, a uplatnila se v pěti skillech; `/attack` a `/audit` zůstaly na typu s nástroji, protože útočník bez shellu nepošle požadavek a auditor bez prohlížeče neuvidí stránku.
+
+**Zavržený `inspector` – typ se shellem omezeným na čtecí příkazy.** Původní záměr byly typy dva: čtenář a měřič. Měření to zrušilo: `tools: …, Bash(git log:*)` dá agentovi **plný** shell, `disallowedTools: Bash(date:*)` mu ho **sebere celý** a `claude -p --allowedTools "Bash(whoami:*)"` propustí i `date`. **Závorkový tvar neomezuje nikde**; funguje jen celé jméno nástroje. Typ, jehož jméno slibuje „čtecí shell“, by tedy byl vrstva bez vynucení – a to je horší než žádná, protože se jí věří.
+
+**Zavrženo přidat webové nástroje rovnou `readeru`.** Nezapisují, takže by záruku neporušily, ale čtenář nad soukromými dokumenty by dostal přístup ven i tam, kde ho nepotřebuje. Proto druhý typ.
+
+**Co se přitom ukázalo o dědění v zadáních.** Standardoví specialisté `/review` dědili z pracovních zkratkou „zbytek shodný s pracovním specialistou“ i odrážku o `evidence`, která žádá spuštěný příkaz – po přepnutí na `reader` si typ a zadání odporovaly. Vyříznuto výslovně. **Ta zkratka je past téže třídy jako *Rozsah pravidla se nešíří sám*** v `RULES.md`, jen obráceně: dědí neviditelně, takže změna u rodiče tiše změní dítě.
+
+**Měřeno, ne odhadnuto,** a dvě věci z toho stojí za zapamatování: **výpověď agenta o vlastních nástrojích není doklad** (jeden běh hlásil sadu, která neodpovídala definici – spolehlivé je jen to, co mu volání nástroje projde), a **nový typ je vidět až v nové session**, protože registr se načítá při startu. Překlep v názvu naopak selže hlučně i s výčtem dostupných typů.
 
 ### 2026-09-16 – `/next`: fronta další práce, obsazené a opuštěné větve, nabídka kol přestěhovaná ze `/specify`
 
@@ -661,14 +738,25 @@ Vytěžený ze session nad rezervačním systémem, kde se z `docs/model.md` a `
 
 **Co ukázal tlakový běh se skillem:** agent pod tlakem „rozepiš obecné hrany, smazání dej jako uzel, bez poznámek“ kreslil jen hrany doložené citací z katalogu a smazání nechal jako osu. Zápis diagramu do `docs/` a commit by na výslovný pokyn uživatele udělal, ale s varováním – pokyn uživatele má před skillem přednost. Vyvolání popisem situace se měřilo přes `claude -p` na 6 pozitivních a 6 negativních promptech po dvou bězích: 24 z 24 správně.
 
-### 2026-09-08 – `deny` v `settings.json` je ochrana proti omylu, ne proti obejití
+### 2026-09-17 – Skill `/scenarios`: vytěžení scénářů z konverzací stojí mimo životní cyklus
 
-`/review full` nad konfigurační vrstvou našel třídu děr, kde `deny` a `ask` nedosáhnou na cestu, kterou si vynutí interpret nebo správce balíčků. **Tři z nich zůstaly vědomě otevřené** – jediná účinná oprava by přesunula běžné nástroje do `ask` a odklikávala by se u každého spuštění, takže by ji první kolize vypnula.
+Kolo návrhu rozhodne, jak se má systém v nějaké situaci chovat, zapíše to do modelu nebo do katalogu přechodů – a scénář k té situaci nikdo nedopíše. Seznam scénářů pak vypadá úplně a není, takže se proti němu nedá ověřit, co nový návrh rozbil. Doloženo dvěma ručními běhy nad rezervačním systémem (15. a 17. 9. 2026): první přidal 42 + 23 + 11 scénářů ze 22 konverzací, druhý našel z 37 konverzací 1376 situací, z nichž 317 nemělo ve scénářích protějšek.
 
-**Poučení, které z toho platí obecně:** `deny` je ochrana proti ukliknutí, ne proti cílenému obejití. Vrstva, která se tváří jako hranice a přitom jí není, je horší než žádná, protože se na ni někdo spolehne. Skutečnou hranici drží jen to, co si model nemůže odsouhlasit sám – souhlas vydaný z terminálu, ověření cíle, potvrzovací dialog (`RULES.md`, *Přednost pravidel*).
+**Zařazeno mimo životní cyklus**, k `/ptydepe` a `/replace`. Zavržena varianta „krok za `/cleanup`“: ta by tvrdila, že se má pouštět pokaždé, kdežto zpětné vytěžení dává smysl jednou za čas, až se ukáže, že se scénáře rozešly. Vymezuje se proti `/cleanup` (ten bere **běžící** session a zapisuje dohody do všech souborů) a proti `/specify` (ten scénáře **zakládá** z rozhovoru se zadavatelem).
 
-**Konkrétní cesty, kterými to jde obejít, tady nestojí** a je to záměr: repozitář je veřejný a popis funkčního obchvatu vlastní ochrany je návod, ne poznámka. Drží je `~/Dev/context/decisions.md`, sekce `## Claude`.
+**Bez režimů.** Zavržena dvojice `since` / `full`: první běh nemá v `done.md` žádný záznam, takže z něj vyjde plný rozsah sám od sebe, a druhý pojem by nic nepřidal.
 
+**Rozdělení práce je to podstatné a je stejné jako v `SESSION.md`:** agent dělá úplnost, hlavní session dělá zařazení. Agent spolehlivě pozná, že se o něčem mluvilo; nepozná, jestli je to situace člověka a jestli je táž věc v souboru pod jiným jménem. Proto se od něj žádá **doslovná citace s číslem řádku** – s ní se nález ověří grepem, bez ní jen přečtením celého transcriptu, tedy tou prací, kvůli které se agent posílal.
+
+**Tři pasti, které oba běhy odhalily a které jsou ve skillu zapsané:**
+
+- **Výstup nástroje se bere za nález.** Session začínající `/next` obsahuje vypsanou frontu z `todo.md`; agent z ní vyrobí desítky „naznačených situací“, které v projektu dávno jsou. Poznají se podle toho, že u všech stojí `rozhodnuto: nic`.
+- **Rozsah se určí podle data změny souboru.** Transcript se dopisuje, takže datum ukazuje konec session, ne začátek – běh pak mine konverzaci, která začala před posledním vytěžením a skončila po něm. Čte se první časová značka z obsahu.
+- **Souběžní agenti si přepíšou pomocné soubory.** Sdílejí jeden scratchpad a bez vlastního prefixu si vzájemně přebijí mezivýstupy; v běhu 17. 9. 2026 to nahlásili čtyři agenti nezávisle a jeden chvíli četl cizí transcript. Prefix a ověření obsahu jsou proto součástí zadání.
+
+**Typ subagenta je výchozí, ne `reader` ani `Explore`, a je to vědomé.** Agent musí pouštět `jq` nad JSONL (tedy potřebuje shell) a zapsat dlouhý strukturovaný výstup do souboru (tedy potřebuje `Write`). `reader` nemá první, `Explore` druhé. Hranice se proto nepředstírá – zákaz zápisu do repozitáře projektu je v zadání jako pokyn a je to ve skillu napsané.
+
+**Srovnávací běh se vědomě nedělal.** Místo něj stojí dva skutečné ostré běhy, ve kterých je zaznamenané, jak práce bez skillu selhala – to je silnější doklad než syntetický pokus.
 ### 2026-09-18 – Souhlas s průběžnou kontrolou platí na repozitář, ne na obsah příkazů, a dialog to teď říká
 
 Nález `/review full` nad rezervačním systémem (specialista na agentní infrastrukturu): `Stop` hook po každé odpovědi vykoná `test` z kontraktu, což u toho projektu znamená naimportovat a spustit všechny `tests/test_*.py`. Souhlas se přitom otiskuje výhradně z řádků `- klíč: příkaz`, takže obsah těch souborů do něj nevstupuje. **Kdo dostane commit do `tests/` – smerguje PR, předá větev, přesvědčí agenta –, dostane spuštění svého kódu s právy uživatele po první další odpovědi, bez promptu a bez nového souhlasu.** Sedí to vedle `.env` s přístupovými údaji, které deny pravidla chrání proti nástroji `Read`, ne proti procesu, který si hook spustí sám.
@@ -693,94 +781,6 @@ Nález `/review full` nad rezervačním systémem ho našel znovu poté, co uml�
 
 **Zamítnuto – nechat zapnuté a jen srazit timeout.** Zavřelo by to provozní půlku (čekání na svolení), ale platilo by se za funkci, kterou nikdo nepoužívá.
 
-### 2026-09-08 – Dvě podmínky pro `PostToolUse` hook
-
-Dnešní `/review full` zrušil oba `PostToolUse` hooky v `~/.claude/settings.json` (`npx tsc --noEmit` po editaci `.ts`, `py_compile` po editaci `.py`). Zapisuje se, **za jakých podmínek smí `PostToolUse` hook existovat** – bez toho je prázdné místo k nerozeznání od opomenutí a příště se hook přidá zpátky se stejnými vadami.
-
-**Podmínka 1 – nesmí maskovat návratový kód.** Oba končily `; true`, takže vracely vždy nulu. Dokumentace k hookům přitom uvádí, že `PostToolUse` při rc=0 stdout modelu ani do transkriptu neukáže – jde jen do debug logu. Kontrola tedy chybu našla, spolkla ji a nikdo se nic nedozvěděl; platilo se za ni až 30 s po každé editaci. Chce-li hook něco sdělit, musí skončit `exit 2` se stručným stderr (blokovat stejně neumí, takže obava z otravnosti je bezpředmětná).
-
-**Podmínka 2 – nesmí spouštět binárku z auditovaného repozitáře.** `npx` bere `tsc` primárně z `./node_modules/.bin`, tedy z klonovaného projektu. Hooky běží mimo permission systém a tenhle žádnou obdobu souhlasu `verify.sh --allow` neměl: stačilo naklonovat cizí repozitář a upravit v něm libovolný `.ts`. Reprodukováno – podvržená binárka se spustila s právy uživatele bez jediného dotazu.
-
-**Není to zákaz celé události.** `PostToolUse` hook, který obě podmínky splní – volá absolutní cestu k důvěryhodnému nástroji a výsledek doopravdy hlásí –, je v pořádku. Dnešní dva neplnily ani jednu.
-
-**Vědomá mezera, kterou to otevírá:** v repozitáři **bez** souhlasu `verify.sh` teď nekontroluje nic. Je to přijaté: právě tam byl hook nejnebezpečnější, a kontrola, jejíž výsledek nikdo nevidí, stejně nic nekontrolovala.
-
-### 2026-09-10 – Skill `/audit`: audit cizího webu proti doménové znalosti
-
-Vznikl skill `/audit`, který zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně `~/Dev/context/`. Sám nenese žádnou doménovou znalost – je to dirigent.
-
-**Proč nový skill a ne režim `/review`:** oba měří proti týmž doménovým standardům, ale liší se předmětem a všemi předpoklady. `/review` čte vlastní práci v repozitáři, má diff, kontrakt příkazů a specifikaci, proti které měří korektnost. `/audit` nemá ani jedno – má URL, exporty od klienta a přístupy do cizích účtů. Sloučení by znamenalo skill, jehož polovina fází v každém běhu neplatí.
-
-**Režimy `full` (výchozí), `brief`, `audit`, `report`, `update`.** Fáze jsou pojmenované jako režimy, aby šla pustit jen ta část, která je potřeba – typicky přepsat výstupy bez nového sběru. **Zamítnuto `collect` pro první fázi:** v `/compose` už znamená posbírání hotových textů a tady by svádělo i na sběr nálezů. **Zamítnuto `intake`, `inputs`, `gather`, `create`** ve prospěch `brief` – v oboru zavedený termín přesně pro to, co klient před zakázkou dodá.
-
-**Hranice na cizím webu se dělí na tři pásma podle jediné otázky: přežije následek zavření prohlížeče?** Volné je, co žije jen v relaci (košík, vyhledávání, filtry) – a je to chtěné, protože bez toho se měření neodchytí. Svolení pokaždé zvlášť vyžaduje, co splní aspoň jedno ze tří: vznikne trvalý záznam ke smazání, odejde zpráva člověku, sáhne to na cizí peníze či sklad. Nikdy se nedělá zásah do klientovy konfigurace a zkoušení zranitelností. **Zamítnut výčet konkrétních případů** („objednávky na dotaz, ostatní v pohodě“) – nešel by aplikovat na případ, který ve výčtu není.
-
-**Třetí pásmo drží pořadí prací, ne zákaz nad uživatelem.** Tlakový scénář ukázal, že se skill na výslovné trvání uživatele k opravě v klientově GTM nakonec upsal – a je to podle `~/.claude/RULES.md`, *Přednost pravidel*, správně: pokyn uživatele stojí nad skillem a žádná věta v Markdownu ho nepřebije. Původní formulace „nikdy, a souhlas se na to neptá“ tedy slibovala tvrdost bez mechanismu. Přepsáno na důvod, který obstojí sám: auditor, který si vlastní nález rovnou opraví, ho už nemá jak vyvrátit, a opravou v produkci změní data, proti kterým měří zbytek auditu. Trvá-li uživatel na svém, oprava se provede a u dotčených nálezů se zapíše, že se ověřovaly až po zásahu.
-
-**Ověřovatel má přístup k webu a nález vyvrací reprodukcí**, ne argumentací jako v `/review`. Je to dražší, ale u auditu se většina nálezů dá ověřit pozorováním a nález poslaný klientovi omylem stojí důvěru celé zakázky.
-
-**Sběr dělá hlavní session jednou pro všechny**, specialisté nad ním pracují a smí si dozískat vlastní záložkou. Pět agentů stahujících totéž je pětkrát dražší, pětkrát rozdílné a pětkrát zatěžuje cizí web. Ověřeno, že to jde: nástroje `chrome-devtools` MCP mají `pageId` jako povinný parametr, takže sdílený výběr stránky neexistuje a záložky se nepřebíjejí.
-
-**Audit a revize jsou dva pojmy, ne dvě jména téhož** – doména je dosud nerozlišovala a skill si tím vysloužil podezření z *jednoho termínu pro jednu věc*. Audit je projití stavu, pojmenování chyb a návrh základních fixů; revize je zakázka, do které audit vstupuje jako podklad a jejíž podstatou jsou navazující opravy, často až přestavba struktury, filozofie a scénářů. Z toho plyne i to, proč se ucelené vývojářské šablony v auditní zprávě nevyužijí v plné šíři – patří k revizi. Nejkratší test: **výstupem auditu je dokument, výstupem revize naimplementovaný web** (s dokumentací). Rozdíl zapsán do `analytics/audit.md`, *Audit není revize*; `/audit` dělá audit a v *Co skill nedělá* se proti revizi vymezuje.
-
-**Režim `full` zůstává, i když v `/review` a `/consistency` znamená rozsah, kdežto tady úplnost.** V obou případech čte člověk „nezaříznutý běh“ a jiné jméno by tu podobnost jen zakrylo; k tomu má skill v těle napsané, jak se pozná režim od volného popisu zakázky.
-
-**Vědomá mezera – auditní dráhu má dnes jen `analytics/`.** Nad doménou, která má jen checklist, skill poběží v omezeném režimu a nahlas to řekne; po auditu nabídne vytěžit nalezené zpátky do domény přes `/learn`. **Zamítnuto vyžadovat kontrakt domény** a běh jinak odmítnout – zablokovalo by to audity nad `web/` a `design/`, které se dají dělat proti checklistu, jen mělčeji.
-
-### 2026-09-15 – Třetí stupeň závažnosti je NÍZKÉ, protože trojice musí stát na jedné ose
-
-Vyšlo z konzistenčního auditu: `/audit` si vedl vlastní škálu *kritická / vážná / drobná* mimo `skills/SEVERITY.md`, přestože ten se prohlašuje za jedinou škálu pro všechny skilly, které hlásí nálezy. Příčina nebyla nedbalost, ale **vada původní trojice** KRITICKÉ / STŘEDNÍ / KOSMETICKÉ: míchala dvě osy – *kritické* je o naléhavosti, *kosmetické* o povaze nálezu. Na auditu cizího webu proto nesedla, protože „kosmetický nález“ tam nedává smysl, a skill si přirozeně zavedl vlastní.
-
-**Zavržené varianty.** *Nechat KOSMETICKÉ a zapsat do `SEVERITY.md`, proč `/audit` stojí mimo* – legalizovalo by to dvě škály a tím i důvod, proč soubor vznikl. *DROBNÉ* – odmítnuto uživatelem; slovo hodnotí velikost práce, ne dopad. *VYSOKÉ / STŘEDNÍ / NÍZKÉ* – nejčistší jedna osa, ale nejvyšší stupeň by zněl jako další dílek škály, a přitom právě on spouští přísnější ověřování. *KRITICKÉ / STŘEDNÍ / OKRAJOVÉ* – „okrajové“ není ustálené a míchá osu podobně jako předtím.
-
-Zvoleno **KRITICKÉ / STŘEDNÍ / NÍZKÉ**: celá trojice na ose závažnosti, „nález nízké závažnosti“ funguje u kódu, útoku, cizího webu i oponovaného dokumentu, a nejvyšší stupeň si nechává sílu poplachu. `/audit` ji přebírá s vlastním doménovým čtením, jak to dělá `/attack`.
-
-**Cena, kterou to stálo, a poučení k ní.** Náhrada napříč osmnácti soubory se dělala hromadným `str.replace` a přepsala i slova mimo škálu – „drobná změna“ → „nízká změna“, „podrobné README“ → „ponízké README“. Grep by to nenašel, protože hledané slovo právě zmizelo; chytlo se to až čtením diffu (`~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*, platí i na náhradu). **Na přejmenování napříč projektem je `/replace`, ne ruční náhrada** – právě proto, že kontroluje tvary a hranice slov.
-
-### 2026-09-15 – Norma skillů uznává blok předběžných podmínek, místo aby ho zakázala
-
-Konzistenční audit hlásil, že „sekci navíc mezi *Co skill nedělá* a *Fází 0* mají dva skilly“. Měření ukázalo **14 z 22** – `Rozsah`, `Zásady pro celý průběh`, `Hranice`, `Kdy se pouští a kdy se přeskakuje`, `Tvrdá pravidla` a další. Vada tedy nebyla v těch skillech, ale v `skills/SKILLS.md`: šablona povinných sekcí ten prostor vůbec neznala, přestože ho používala většina.
-
-**Zavržené varianty.** *Zakázat a obsah přesunout* – znamenalo by nacpat rozsah a hranice do `Co skill nedělá`, kam nepatří, nebo je odsunout za závěrečnou fázi mezi přílohy, kde by je nikdo nepřečetl včas. *Nechat normu mlčet* – stav, kdy čtrnáct skillů porušuje šablonu a nikdo neví, jestli je to chyba, nebo zvyk; každý další audit by to hlásil znovu.
-
-Zvoleno: norma blok **uznává jako nepovinný** s kritériem **„sekce se vztahuje k víc než jedné fázi“**. Co platí pro jedinou fázi, patří do ní; co se čte jen někdy, je příloha za závěrem. Sekce, kterou norma nezná a všichni ji mají, není odchylka, ale mezera v normě.
-
-**Důsledek, který si vyžádal další práci:** čtyři skilly (`/consistency`, `/release`, `/replace`, `/specify`) měly takovou sekci ještě **před** `Co skill nedělá` a musely se přeskládat. Přesun zanechal pozůstatky – osiřelý oddělovač v `/replace` a větu o kroku cyklu, která ve `/specify` zůstala viset na konci úvahy o dvou dokumentech, kam nepatří. Obojí našel až čtenář bez kontextu v `/cleanupu`, ne audit sám.
-
-
-### 2026-09-15 – Subagenti se volají typy s vymezenými právy, ne slibem v zadání
-
-Věta „nezapisuj do žádného souboru“ v zadání subagenta **nic nedrží** – je to text pro model, ne mechanismus. A `Explore`, na kterém dosud jely všechny čtecí panely, sice nemá `Edit` ani `Write`, ale **`Bash` má**, takže jím lze zapsat i commitnout. V projektu se zapnutým autocommitem z toho vznikne pushnutá změna, kterou nikdo neschválil.
-
-Zavedeny dva typy v `~/.claude/agents/`: **`reader`** (`Read, Grep, Glob`) a **`researcher`** (týž plus `WebSearch` a `WebFetch`). Ani jeden nemá shell. Norma je v `skills/SKILLS.md`, *Model, effort a delegace*, a uplatnila se v pěti skillech; `/attack` a `/audit` zůstaly na typu s nástroji, protože útočník bez shellu nepošle požadavek a auditor bez prohlížeče neuvidí stránku.
-
-**Zavržený `inspector` – typ se shellem omezeným na čtecí příkazy.** Původní záměr byly typy dva: čtenář a měřič. Měření to zrušilo: `tools: …, Bash(git log:*)` dá agentovi **plný** shell, `disallowedTools: Bash(date:*)` mu ho **sebere celý** a `claude -p --allowedTools "Bash(whoami:*)"` propustí i `date`. **Závorkový tvar neomezuje nikde**; funguje jen celé jméno nástroje. Typ, jehož jméno slibuje „čtecí shell“, by tedy byl vrstva bez vynucení – a to je horší než žádná, protože se jí věří.
-
-**Zavrženo přidat webové nástroje rovnou `readeru`.** Nezapisují, takže by záruku neporušily, ale čtenář nad soukromými dokumenty by dostal přístup ven i tam, kde ho nepotřebuje. Proto druhý typ.
-
-**Co se přitom ukázalo o dědění v zadáních.** Standardoví specialisté `/review` dědili z pracovních zkratkou „zbytek shodný s pracovním specialistou“ i odrážku o `evidence`, která žádá spuštěný příkaz – po přepnutí na `reader` si typ a zadání odporovaly. Vyříznuto výslovně. **Ta zkratka je past téže třídy jako *Rozsah pravidla se nešíří sám*** v `RULES.md`, jen obráceně: dědí neviditelně, takže změna u rodiče tiše změní dítě.
-
-**Měřeno, ne odhadnuto,** a dvě věci z toho stojí za zapamatování: **výpověď agenta o vlastních nástrojích není doklad** (jeden běh hlásil sadu, která neodpovídala definici – spolehlivé je jen to, co mu volání nástroje projde), a **nový typ je vidět až v nové session**, protože registr se načítá při startu. Překlep v názvu naopak selže hlučně i s výčtem dostupných typů.
-
-### 2026-09-17 – Skill `/scenarios`: vytěžení scénářů z konverzací stojí mimo životní cyklus
-
-Kolo návrhu rozhodne, jak se má systém v nějaké situaci chovat, zapíše to do modelu nebo do katalogu přechodů – a scénář k té situaci nikdo nedopíše. Seznam scénářů pak vypadá úplně a není, takže se proti němu nedá ověřit, co nový návrh rozbil. Doloženo dvěma ručními běhy nad rezervačním systémem (15. a 17. 9. 2026): první přidal 42 + 23 + 11 scénářů ze 22 konverzací, druhý našel z 37 konverzací 1376 situací, z nichž 317 nemělo ve scénářích protějšek.
-
-**Zařazeno mimo životní cyklus**, k `/ptydepe` a `/replace`. Zavržena varianta „krok za `/cleanup`“: ta by tvrdila, že se má pouštět pokaždé, kdežto zpětné vytěžení dává smysl jednou za čas, až se ukáže, že se scénáře rozešly. Vymezuje se proti `/cleanup` (ten bere **běžící** session a zapisuje dohody do všech souborů) a proti `/specify` (ten scénáře **zakládá** z rozhovoru se zadavatelem).
-
-**Bez režimů.** Zavržena dvojice `since` / `full`: první běh nemá v `done.md` žádný záznam, takže z něj vyjde plný rozsah sám od sebe, a druhý pojem by nic nepřidal.
-
-**Rozdělení práce je to podstatné a je stejné jako v `SESSION.md`:** agent dělá úplnost, hlavní session dělá zařazení. Agent spolehlivě pozná, že se o něčem mluvilo; nepozná, jestli je to situace člověka a jestli je táž věc v souboru pod jiným jménem. Proto se od něj žádá **doslovná citace s číslem řádku** – s ní se nález ověří grepem, bez ní jen přečtením celého transcriptu, tedy tou prací, kvůli které se agent posílal.
-
-**Tři pasti, které oba běhy odhalily a které jsou ve skillu zapsané:**
-
-- **Výstup nástroje se bere za nález.** Session začínající `/next` obsahuje vypsanou frontu z `todo.md`; agent z ní vyrobí desítky „naznačených situací“, které v projektu dávno jsou. Poznají se podle toho, že u všech stojí `rozhodnuto: nic`.
-- **Rozsah se určí podle data změny souboru.** Transcript se dopisuje, takže datum ukazuje konec session, ne začátek – běh pak mine konverzaci, která začala před posledním vytěžením a skončila po něm. Čte se první časová značka z obsahu.
-- **Souběžní agenti si přepíšou pomocné soubory.** Sdílejí jeden scratchpad a bez vlastního prefixu si vzájemně přebijí mezivýstupy; v běhu 17. 9. 2026 to nahlásili čtyři agenti nezávisle a jeden chvíli četl cizí transcript. Prefix a ověření obsahu jsou proto součástí zadání.
-
-**Typ subagenta je výchozí, ne `reader` ani `Explore`, a je to vědomé.** Agent musí pouštět `jq` nad JSONL (tedy potřebuje shell) a zapsat dlouhý strukturovaný výstup do souboru (tedy potřebuje `Write`). `reader` nemá první, `Explore` druhé. Hranice se proto nepředstírá – zákaz zápisu do repozitáře projektu je v zadání jako pokyn a je to ve skillu napsané.
-
-**Srovnávací běh se vědomě nedělal.** Místo něj stojí dva skutečné ostré běhy, ve kterých je zaznamenané, jak práce bez skillu selhala – to je silnější doklad než syntetický pokus.
 ### 2026-09-18 – Skill `/serviceaccount` konvenci nenese, jen ji čte
 
 Skill provede založením service accountů pro strojový přístup ke klientským systémům. Vznikl proto, že se týž postup dělal ručně a nezapamatoval by se – hlavně kvůli tomu, že **ID service accountu je neměnné**, takže chyba v pojmenování se opravuje jedině novým účtem a novou žádostí u klienta.

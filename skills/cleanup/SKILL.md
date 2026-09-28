@@ -37,10 +37,11 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 
 - **`scripts/extract.py`** – očistí transcript a spočítá, co v něm je. Bez něj by se čtením procházelo devět desetin balastu: měřeno 26. 9. 2026 na transcriptu o 3,0 MB, ze kterého je vytěžitelného textu 234 kB. Režim `filter` vypíše obsah s čísly řádků zdroje, `inventory` inventuru pokrytí a kotvy evidence.
 - **`~/.claude/skills/links.py`** – ověří, že relativní odkazy ve změněných Markdownech vedou na existující soubor a kotvy na existující nadpis. **Je sdílený, ne jeho vlastní**: od 27. 9. 2026 ho volá i `/consistency`, a skript uvnitř skillu by z cizího skillu volat nesměl (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*).
+- **`~/.claude/skills/order.py`** – ověří, že datované záznamy v `done.md` a `decisions.md` jdou vzestupně, jak žádá `~/.claude/STRUCTURE.md`. **Je sdílený ze stejného důvodu jako `links.py`.** Vznikl 28. 9. 2026 poté, co se pořadí rozpadlo počtvrté: ruční srovnání se dělalo třikrát a nevydrželo, protože do těch sekcí zapisují skilly samy a každý se řídí tím, co v souboru zrovna vidí.
 - **[`obligations.md`](obligations.md)** – co v session zakládá povinnost zápisu, kam co patří a v jakých stavech položku najdeš. Referenční tabulka pro *Fázi 3*.
 - **[`out-of-scope.md`](out-of-scope.md)** – jak se naloží s položkami mimo rozsah úklidu.
 
-**Oba skripty jsou implementační detail, ne rozhraní** – jejich přepínače, výstup i samotná existence se smí změnit bez ohlášení. Co se změnit nesmí tiše, je **pravidlo za nimi**: mechanické vady a počty hledá deterministický nástroj, ne model (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula), a pokrytí transcriptu se měří, ne přiznává odhadem. Vynucovací vrstvu k oběma drží `tests/test_cleanup.py`, včetně mutačních testů.
+**Všechny tři skripty jsou implementační detail, ne rozhraní** – jejich přepínače, výstup i samotná existence se smí změnit bez ohlášení. Co se změnit nesmí tiše, je **pravidlo za nimi**: mechanické vady a počty hledá deterministický nástroj, ne model (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula), a pokrytí transcriptu se měří, ne přiznává odhadem. Vynucovací vrstvu k oběma drží `tests/test_cleanup.py`, včetně mutačních testů.
 
 **Skill neběží v subagentovi a je to měřené rozhodnutí.** Od 25. do 26. 9. 2026 celé vytěžení dělal subagent. Delegace ubrala rodičovi 8 % nákladů a přidala agenta za dvojnásobek toho, co ubrala; počet volání na tutéž práci stoupl o 51 %, protože agent rekonstruuje z transcriptu to, co hlavní session má v kontextu zdarma. A navíc vznikl prostředník, přes kterého se nálezy ztrácely převyprávěním. Rozbor v `decisions.md`.
 
@@ -211,6 +212,14 @@ python3 ~/.claude/skills/links.py <změněné .md soubory>
 Seznam vezmi z gitu ze **tří** míst, ať ti nic neuteče: `git diff --name-only HEAD` (pracovní strom **i index** – samotné `git diff` to, co je ve stage, neukáže), `git diff --name-only <základ session>..HEAD` a `git status --porcelain --untracked-files=all`. Filtruj na `*.md`, seznam sjednoť a **vynech smazané soubory** – ty v diffu jsou, na disku ne, takže by skript hlásil „nelze přečíst“ jako nález. Doloženo prvním ostrým během 26. 9. 2026, kdy zanikly dva soubory skillu.
 
 **Nálezy oprav rovnou** – jsou jednoznačné. **Čistý výsledek je jedině `0`.** `1` znamená nálezy, `2` chybu volání – tu neber jako čisto: oprav volání a pusť skript znovu. **Nezměnil-li se žádný Markdown, krok přeskoč** a uveď v závěru, že kontrola odkazů neběžela, protože nebylo co kontrolovat.
+
+**A pusť kontrolu pořadí** nad soubory, do kterých jsi zapisoval datované záznamy:
+
+```sh
+python3 ~/.claude/skills/order.py <done.md a decisions.md, které jsi změnil>
+```
+
+Hlásí sekci, ve které datum mezi sousedními záznamy klesá – nový zápis tedy nestojí na konci. **Oprav to přesunem celého bloku záznamu**, ne přepsáním data, a ověř výsledek diffem (`~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*): po přesunu smí být počet přidaných a odebraných řádků shodný. Kódy platí stejně jako u kontroly odkazů a **krok se přeskakuje, jen když jsi do žádného z těch souborů nezapsal**.
 
 ------
 
