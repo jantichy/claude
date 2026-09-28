@@ -95,6 +95,8 @@ Zvlášť to platí pro věci, které **vypadají jako opomenutí**: chybějíc�
 
 Rozdíl proti `todo.md`: tam patří to, co **chceš a zatím nemáš**. Sem to, co **mít nechceš**. A do `docs/backlog.md` to, o čem se **nikdo nerozhodl ani tak, ani tak**.
 
+**Totéž platí o domněnkách, které se při zkoumání vyvrátily.** Zjistíš-li, že něco funguje jinak, než jsi čekal, patří do zápisu **obojí** – jak to je, i co se ukázalo jako mylné, a to i tehdy, když ta mylná verze byla jen tvoje pracovní hypotéza. Bez toho projde tatáž slepá ulička znovu každý, kdo se na to podívá po tobě, protože se nabízí stejně přirozeně jako tobě. **Píše se to k věci, které se to týká, ne do rozhodnutí** – je to vlastnost té věci, ne volba projektu.
+
 ### Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem
 
 Má-li do souboru přijít údaj, se kterým pak někdo dál počítá – datum, časové razítko, hash commitu, číslo verze, počet položek – **nepiš ho z hlavy ani z kontextu, ale spusť příkaz, který ho vyrobí**, a zapiš jeho výstup. Instrukce v pravidlech a skillech proto ten příkaz jmenují (`date +%F`, `git rev-parse --short HEAD`), místo aby popisovaly, co má být uvnitř.
@@ -430,7 +432,11 @@ Než pustíš dotaz, test nebo jakékoliv zjišťování, napiš **všechny mož
 
 **Třetí: po každém novém poznatku se seznam vyloučených projde znovu** – ne z kalendáře, ale na spouštěč: **změní-li se premisa, na které vyloučení stálo**. A je to levné právě díky té první věci, protože se prochází v pořadí úvaha → nesoulad podpisu → měření, a to poslední jen tehdy, když nový poznatek sahá na rozsah toho měření.
 
-**Proč:** doloženo 25. 9. 2026, kdy se jediné platné vysvětlení dvakrát vyloučilo špatně a vrátilo se do hry jen proto, že u jednoho z těch vyloučení stála zapsaná mez. Bez ní by se hledalo dál v prázdnu.
+**Vylučuje se cesta, ne tvrzení, a tohle je to nejlepší místo, kde se to splete.** Mechanismus může vést několika cestami; uzavřít jednu z nich znamená vyloučit **ji**, ne celý mechanismus. Zapsat „vyvráceno“ nad tvrzením, u kterého se prověřila jediná cesta, je proto chyba, která vypadá jako výsledek – a zavře i cesty, na které nikdo nesáhl. **Pojmenuj proto cesty dřív, než začneš vylučovat**, a u každé si drž vlastní stav.
+
+**Nenalezení navíc není doklad neexistence.** Hledaná věc chybí ze dvou různých důvodů – buď tam není, nebo ji hledáš špatně –, a negativní výsledek mezi nimi nerozlišuje. **Zrádné je, že mlčící nástroj vypadá jako čistý výsledek:** `grep` nad souborem, který vezme za binární, nevypíše nic a chová se úplně stejně, jako když hledaný řetězec doopravdy chybí (`grep -a` to obejde). Než z nenalezení uděláš tvrzení, **ověř si, že tvůj postup by to vůbec našel, kdyby to tam bylo.**
+
+**Proč:** doloženo 25. 9. 2026, kdy se jediné platné vysvětlení dvakrát vyloučilo špatně a vrátilo se do hry jen proto, že u jednoho z těch vyloučení stála zapsaná mez. Bez ní by se hledalo dál v prázdnu. **A znovu 28. 9. 2026:** mechanismus přenosu souhlasu se hledal jako hodnota v parametru, ta se nenašla – a zapsalo se, že mechanismus neexistuje. Přenášel se přitom **existencí** toho parametru, ne jeho hodnotou; opravilo se to jedinou otázkou uživatele, který si všiml, že vedle toho stojí změřený doklad o opaku.
 
 ### Měř to, co tvrzení tvrdí, na tom, o čem to tvrdí
 
