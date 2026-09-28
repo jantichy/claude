@@ -233,17 +233,15 @@ Sem přišlo všechno, co potřebuje uživatelovu volbu: **nevypořádaná téma
 
 **Nejdřív uživateli řekni, kolik položek ve frontě je a jakého druhu** – a je-li prázdná, řekni i to; je to výsledek, ne důvod mlčet. Pak **jednu položku po druhé**, nikdy víc najednou:
 
-```
-**[N/celkem] NÁZEV POLOŽKY**
+**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků:
 
-- **Druh:** nevypořádané téma | zařazení zápisu | mimo rozsah
-- **O co jde:** věcně, jednou dvěma větami
-- **Doložení:** citace a číslo řádku transcriptu, nebo soubor a sekce
-- **Proč to nerozhoduju sám:** co je na tom uživatelova volba
-- **Prověřeno:** u nevypořádaného tématu, čím jsi vyloučil, že se to vyřešilo jinudy
+```
+**[N/celkem] NÁZEV POLOŽKY.** <plynulý text: čeho se to týká, jak to dnes je a proč to nestačí>
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+
+**V tom odstavci musí zaznít čtyři věci, ale jako věty, ne jako popisky za dvojtečkou:** čeho se to týká a jak to dnes je, **odkud to víš** (citace a číslo řádku transcriptu, nebo soubor a sekce), **co je na tom uživatelova volba**, a u nevypořádaného tématu i **čím jsi vyloučil, že se to mezitím vyřešilo jinudy**. Druh položky – nevypořádané téma, zařazení zápisu, mimo rozsah – patří do hranatých závorek v titulním řádku, ne na vlastní řádek. Delší položka smí mít druhý odstavec.
 
 Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu položku, `header` `Položka N/celkem`. **Volby dej věcné, tedy skutečné odpovědi na tu konkrétní otázku** (varianty, které byly ve hře; konkrétní cílové soubory u nejasného zařazení; konkrétní podoby zápisu), a ke každé měj **hotový text zápisu**, ať stačí jedna editace. U nevypořádaného tématu vždy přidej volbu **„Bezpředmětné“** pro případ, že to uživatel mezitím vyřešil v hlavě nebo o to už nestojí.
 

@@ -223,7 +223,7 @@ Sestav `registry.md` – jeden soubor, **nález = sekce**, řazeno podle dopadu.
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
 
-Pak **projdi s uživatelem sporné** – co je na hraně závažnosti, co je nález mimo katalog a co se má klientovi zamlčet, protože to nesouvisí se zakázkou. Ptej se přes `AskUserQuestion` a po jednom. **Tohle jsou tři otázky, na které odpověď neznáš**, a jiné se tady neptají: cizí web tenhle skill neopravuje, takže volba „opravit hned, nebo později“ u něj nevzniká (`~/.claude/skills/FINDINGS.md`).
+Pak **projdi s uživatelem sporné** – co je na hraně závažnosti, co je nález mimo katalog a co se má klientovi zamlčet, protože to nesouvisí se zakázkou. Ptej se přes `AskUserQuestion` a po jednom; **tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků (ta patří do reportu pro klienta, ne do rozpravy). **Tohle jsou tři otázky, na které odpověď neznáš**, a jiné se tady neptají: cizí web tenhle skill neopravuje, takže volba „opravit hned, nebo později“ u něj nevzniká (`~/.claude/skills/FINDINGS.md`).
 
 ## Fáze 7 – Výstupy
 

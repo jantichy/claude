@@ -60,16 +60,15 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
 5. **Projdi je jednu po druhé.** U každé ji nejdřív vypiš:
 
-   ```
-   **[N/celkem] NÁZEV POLOŽKY**
+   **Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků:
 
-   - **Čeho se týká:** [co to je, jednou dvěma větami]
-   - **Proč je mimo rozsah:** [co ji drží mimo dnešní úklid]
-   - **Proč se ptám:** [která podmínka z bodu 2 na ni sedí]
-   - **Co se stane, když se to nevyřeší:** [konkrétní důsledek, ne „bylo by to lepší“]
+   ```
+   **[N/celkem] NÁZEV POLOŽKY.** <plynulý text: čeho se to týká, proč je to mimo dnešní úklid a co se stane, když se to nevyřeší>
    ```
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+
+   **V odstavci musí zaznít čtyři věci, ale jako věty, ne jako popisky za dvojtečkou:** čeho se položka týká, **co ji drží mimo rozsah**, **která podmínka z bodu 2 na ni sedí** – tedy proč se na ni vůbec ptáš – a **konkrétní důsledek toho, že se nevyřeší**, ne „bylo by to lepší“.
 
    Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Položka N/celkem` jako v hlavní frontě (`~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají*). Volby:
 

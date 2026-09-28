@@ -1627,15 +1627,64 @@ class FindingsAreUniform(unittest.TestCase):
     GRID = re.compile(r'^- \*\*(Problém|Selže takhle|Co|Proč to vadí|'
                       r'Pozorováno|Mělo být):\*\*', re.M)
 
+    # Šablona jedné položky předložené uživateli. Pozná se podle titulního
+    # řádku s `[N/celkem]`; pod ním už nesmí stát mřížka popisků, ať se
+    # jmenují jakkoliv.
+    ITEM_HEAD = re.compile(r'^\s*\*\*\[N/celkem\]')
+    LABEL = re.compile(r'^\s*- \*\*[^*]+:\*\*')
+
     def subscribers(self):
-        """SKILL.md, které se k FINDINGS.md hlásí odkazem."""
+        """Soubory skillů, které se k FINDINGS.md hlásí odkazem.
+
+        Bere i **vedlejší soubory** toho skillu, ne jen jeho `SKILL.md`:
+        `/cleanup` má frontu položek mimo rozsah v `out-of-scope.md` a právě
+        ta mřížku přežila, protože se do rozsahu nedívala. README se vynechává
+        – je pro člověka zvenčí a smí ukazovat i tvar reportu do souboru.
+        """
         out = []
         for path in SKILLS:
             text = path.read_text(encoding="utf-8")
-            if "FINDINGS.md" in text:
-                out.append((path, text))
+            if "FINDINGS.md" not in text:
+                continue
+            out.append((path, text))
+            for side in sorted(path.parent.glob("*.md")):
+                if side.name in ("SKILL.md", "README.md"):
+                    continue
+                out.append((side, side.read_text(encoding="utf-8")))
         self.assertTrue(out, "k FINDINGS.md se nehlásí ani jeden skill – čte se vůbec?")
         return out
+
+    def test_item_template_is_not_a_grid(self):
+        """Šablona položky nesmí pod titulním řádkem nést popisky za dvojtečkou.
+
+        Vzor `GRID` níž hlídá jmenovitý seznam popisků, a proto 28. 9. 2026
+        nechytil dvě místa v `/cleanup`: jejich mřížka se jmenovala
+        `Druh` / `O co jde` / `Doložení` / `Prověřeno`. Uživatel ji dostal do
+        rozhraní hned prvním během po sjednocení. Tenhle test proto neměří
+        jména popisků, ale **tvar** – dvě a víc odrážek `- **Popisek:**` pod
+        řádkem s `[N/celkem]`. Závěrečné souhrny tím dotčené nejsou, ty
+        titulní řádek položky nemají.
+        """
+        bad = []
+        for path, text in self.subscribers():
+            lines = text.split("\n")
+            head = None
+            labels = 0
+            for i, line in enumerate(lines, 1):
+                if self.ITEM_HEAD.match(line):
+                    head, labels = i, 0
+                    continue
+                if head is None:
+                    continue
+                if self.LABEL.match(line):
+                    labels += 1
+                elif line.strip() and not line.strip().startswith("```"):
+                    if labels >= 2:
+                        bad.append(f"{path.relative_to(ROOT)}:{head}")
+                    head = None
+            if head is not None and labels >= 2:
+                bad.append(f"{path.relative_to(ROOT)}:{head}")
+        self.assertEqual(bad, [], "šablona položky jako mřížka popisků:\n" + "\n".join(bad))
 
     def test_retired_option_labels_are_gone(self):
         """Popisek volby musí říct, co se stane – proto Neopravovat a Zapsat do todo.

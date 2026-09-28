@@ -159,7 +159,7 @@ U každého poznatku: čeho se týká, číslo, zdroj, jak se to dá zopakovat, 
 
 Nejdřív **vypiš přehled**: kolik poznatků je vad, kolik nové práce, kolik zjištění bez akce – a kolik z nich doopravdy potřebuje rozhodnutí uživatele. To poslední číslo je jediné, které říká, jak dlouhý bude průchod (`FINDINGS.md`, *Přehled na začátku vyčísluje obojí*).
 
-**Pak pokračuj hned v téže odpovědi**, nekonči na přehledu:
+**Pak pokračuj hned v téže odpovědi**, nekonči na přehledu. **Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název poznatku a za ním souvislý text, ve kterém uvnitř věty řekneš, z čeho se to ví a co z toho plyne; žádná mřížka popisků.
 
 - **Vady** vypořádej podle `FINDINGS.md` – mechanické a jednoznačné zapiš jako úkol rovnou, sporné předlož po jedné.
 - **Nová práce** jde k uživateli vždy, jeden poznatek = jedna otázka, s volbami *do `todo.md`* / *do `backlog.md`* / *vědomě neděláme*. **Vylučuje-li tu věc zadání, rozliš rozhodnutí od jeho odůvodnění:** rozhodnutí smí platit dál, ale **vyvrácený důvod se hlásí vždy**. Věta „kapacity se plní z 80 %, takže čekací listina by byla funkce pro nikoho“ přestane být pravdivá ve chvíli, kdy jsou tři z pěti kroužků plné – a dokud v zadání stojí, čte ji každý příští běh jako fakt. Ptej se tedy na jednu větu odůvodnění, ne na to, jestli se ta funkce postaví. Vymyslel to tlakový scénář 22. 9. 2026 a je to lepší rozlišení, než skill měl. U třetí volby se ptej na důvod a zapiš ho – bez něj to za rok někdo navrhne znovu (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
