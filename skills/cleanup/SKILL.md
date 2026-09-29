@@ -235,10 +235,12 @@ Sem přišlo všechno, co potřebuje uživatelovu volbu: **nevypořádaná téma
 
 **Nejdřív uživateli řekni, kolik položek ve frontě je a jakého druhu** – a je-li prázdná, řekni i to; je to výsledek, ne důvod mlčet. Pak **jednu položku po druhé**, nikdy víc najednou:
 
-**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků:
+**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků:
 
 ```
-**[N/celkem] NÁZEV POLOŽKY.** <plynulý text: čeho se to týká, jak to dnes je a proč to nestačí>
+**[N/celkem] NÁZEV POLOŽKY**
+
+<plynulý text: čeho se to týká, jak to dnes je a proč to nestačí>
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.

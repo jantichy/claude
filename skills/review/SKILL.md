@@ -301,7 +301,7 @@ Nejsou-li žádné sporné nálezy, přeskoč Fázi 7 rovnou na shrnutí.
 
 Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 
-1. **Zobraz ho.** Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce standardu), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku.
+1. **Zobraz ho.** **Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce standardu), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku.
 
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text. Jedno volání = jeden nález = jedna otázka (`multiSelect: false`):
    - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`

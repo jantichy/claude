@@ -246,7 +246,7 @@ Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi n�
 
 U každého nejdřív vypiš:
 
-**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků. Ve větě řekni, **v čem je problém a jaký má důsledek**, a odkud to je (soubor, sekce, citace). Za titulní název připoj `· <hledisko>`, případně „2 oponenti nezávisle“ – čtenář tím pozná, odkud námitka přišla.
+**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Ve větě řekni, **v čem je problém a jaký má důsledek**, a odkud to je (soubor, sekce, citace). Za titulní název připoj `· <hledisko>`, případně „2 oponenti nezávisle“ – čtenář tím pozná, odkud námitka přišla.
 
 Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“: u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Jejich počet, `header`, pojmenování obou záchytných voleb i to, který stav která znamená, drží `~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají* – **tvar otázky platí pro celou rodinu kontrolních skillů** a vznikl 20. 9. 2026 zobecněním právě odsud.
 

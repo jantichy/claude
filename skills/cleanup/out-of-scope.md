@@ -60,10 +60,12 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
 5. **Projdi je jednu po druhé.** U každé ji nejdřív vypiš:
 
-   **Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků:
+   **Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků:
 
    ```
-   **[N/celkem] NÁZEV POLOŽKY.** <plynulý text: čeho se to týká, proč je to mimo dnešní úklid a co se stane, když se to nevyřeší>
+   **[N/celkem] NÁZEV POLOŽKY**
+
+   <plynulý text: čeho se to týká, proč je to mimo dnešní úklid a co se stane, když se to nevyřeší>
    ```
 
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.

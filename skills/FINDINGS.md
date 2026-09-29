@@ -40,10 +40,12 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`.
 
 ## Jak nález vypadá
 
-**Odstavcem, ne mřížkou popisků.** Začne tučným názvem, za kterým hned pokračuje normální věta:
+**Odstavcem, ne mřížkou popisků.** Titulní řádek stojí sám a text začíná až pod ním, odstavcem:
 
 ```
-**[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU.** <plynulý text: čeho se to týká, jak to je dnes a proč to nestačí – kde to je a čím je to doložené řekni uvnitř věty, ne na zvláštním řádku>
+**[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU**
+
+<plynulý text: čeho se to týká, jak to je dnes a proč to nestačí – kde to je a čím je to doložené řekni uvnitř věty, ne na zvláštním řádku>
 
 **Varianty řešení**
 - **A)** <…> – <důsledek>
@@ -55,6 +57,8 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`.
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`~/.claude/RULES.md`, *Styl odpovědí*).
 
 **Tučný je jen název, zbytek ne.** Odstavec, ve kterém svítí tučně každý druhý popisek, se nedá číst – oko skáče po zvýrazněních místo aby četlo větu.
+
+**Titulní řádek je samostatný odstavec a nekončí tečkou.** Do 29. 9. 2026 na něj text navazoval na témž řádku a tučný název tečku měl, aby se od té věty oddělil; osamocený nadpis ji nepotřebuje. Rozhodl uživatel: název se tím dá přehlédnout očima jako nadpis a delší nález nezačíná zdí textu přilepenou k závažnosti. **Platí to i pro titulní řádek s příponou** – hledisko `/oponent` (`· <hledisko>`) i jméno specialisty nebo vektoru v hranatých závorkách patří na ten řádek, ne do odstavce pod ním.
 
 **Platí to na každou položku, o které se uživatel rozhoduje**, ne jen na nález: nevypořádané téma, položka mimo rozsah, poznatek z provozu i návrh alternativy. Liší se jen slovo v titulním řádku (`NÁZEV NÁLEZU`, `NÁZEV POLOŽKY`), ne tvar.
 

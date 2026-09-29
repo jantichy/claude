@@ -271,7 +271,7 @@ Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup
 
 Pro každý, jeden po druhém, od nejzávažnějšího:
 
-**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název a za ním souvislý text, žádná mřížka popisků. Ve větě řekni, **co se stalo a co se stát mělo**, a kde to je, dá-li se to dohledat; jméno vektoru patří do hranatých závorek v titulním řádku.
+**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Ve větě řekni, **co se stalo a co se stát mělo**, a kde to je, dá-li se to dohledat; jméno vektoru patří do hranatých závorek v titulním řádku.
 
 **Reprodukční postup je tu výjimka a zůstává číslovaným seznamem** pod tím odstavcem, uvozený tučným slovem *Reprodukce*. Je to návod ke spuštění, ne vysvětlení – souvislý text by z něj udělal to, co se nedá přepsat do terminálu.
 

@@ -1655,6 +1655,11 @@ class FindingsAreUniform(unittest.TestCase):
     ITEM_HEAD = re.compile(r'^\s*\*\*\[N/celkem\]')
     LABEL = re.compile(r'^\s*- \*\*[^*]+:\*\*')
 
+    # Titulní řádek položky: tučný název a za uzavírajícím `**` už jen
+    # povolená přípona – hledisko `/oponent` uvozené `·`. Skupina `tail`
+    # drží to, co za názvem zbylo, `dot` tečku před uzavřením.
+    TITLE = re.compile(r'^\s*\*\*\[N/celkem\].*?(?P<dot>\.?)\*\*(?P<tail>.*)$')
+
     def subscribers(self):
         """Soubory skillů, které se k FINDINGS.md hlásí odkazem.
 
@@ -1707,6 +1712,33 @@ class FindingsAreUniform(unittest.TestCase):
             if head is not None and labels >= 2:
                 bad.append(f"{path.relative_to(ROOT)}:{head}")
         self.assertEqual(bad, [], "šablona položky jako mřížka popisků:\n" + "\n".join(bad))
+
+    def test_item_title_stands_alone(self):
+        """Titulní řádek položky stojí sám a text začíná až pod ním.
+
+        Do 29. 9. 2026 text navazoval na témž řádku a tučný název proto
+        končil tečkou, aby se od věty oddělil. Uživatel si vyžádal osamocený
+        nadpis: název se dá přehlédnout očima a delší nález nezačíná zdí
+        textu přilepenou k závažnosti. Tečka tím ztratila funkci.
+
+        Za názvem smí zůstat jedině přípona uvozená `·` – hledisko
+        `/oponent` nebo „2 oponenti nezávisle“. Jméno specialisty a vektoru
+        stojí v hranatých závorkách **uvnitř** tučného názvu, takže se do
+        `tail` nedostane.
+        """
+        bad = []
+        for path, text in self.subscribers():
+            for i, line in enumerate(text.split("\n"), 1):
+                m = self.TITLE.match(line)
+                if m is None:
+                    continue
+                where = f"{path.relative_to(ROOT)}:{i}"
+                tail = m.group("tail").strip()
+                if tail and not tail.startswith("·"):
+                    bad.append(f"{where} – text za názvem: {tail[:40]}")
+                if m.group("dot"):
+                    bad.append(f"{where} – tučný název končí tečkou")
+        self.assertEqual(bad, [], "titulní řádek položky nestojí sám:\n" + "\n".join(bad))
 
     def test_retired_option_labels_are_gone(self):
         """Popisek volby musí říct, co se stane – proto Neopravovat a Zapsat do todo.
