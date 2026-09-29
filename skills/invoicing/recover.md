@@ -39,8 +39,8 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 | **Kalendář** | titulek, začátek, konec, účastníci, délka v minutách | **nejlepší** – délka je v datech, neodhaduje se |
 | **Hovory** (Zoom, Teams) | čas a délka hovoru, případně nahrávka | **nejlepší** – totéž, a navíc se to opravdu konalo |
 | **Slack** | čas zprávy, autor, **obsah** | silný – obsah často délku přímo říká, viz níž |
-| **Claude Code** | timestampy zpráv v `~/.claude/projects/<project>/*.jsonl` | silný – souvislá session je skutečný interval u klávesnice |
-| **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek |
+| **Claude Code** | bloky od–do z timestampů zpráv v `~/.claude/projects/<project>/*.jsonl`, počet promptů, první prompty | silný – blok s prompty je skutečný interval u klávesnice |
+| **Git** | author date commitu, první řádek zprávy | střední – ukazuje konec práce, ne její začátek; se session téhož projektu se skládá do jednoho bloku |
 | **Prohlížeč** | navštívená URL, čas návštěvy **a doba na stránce** | střední – u výlučné URL použitelné, u sdílené ne |
 | **Sdílené dokumenty** | zápisy ze schůzek, **odevzdané výstupy**, zmínky o tom, co bylo dodáno | silný – nese obsah i hotové výsledky, viz *Odevzdaný výstup jako stopa* |
 | **Pracovní poznámky v cizím nástroji** | názvy stránek a časy návštěv z historie prohlížeče | **silný** – hustý shluk návštěv jedné stránky je práce na ní, viz níž |
@@ -49,7 +49,21 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 
 **Nástroj, ve kterém si klient nebo Honza vede poznámky, bývá to nejcennější, co se v historii prohlížeče najde** – a přehlédne se, protože host je obecný a neupozorní na sebe jménem klienta. Poznáš ho podle toho, že se na jedné stránce nastřádají stovky návštěv za hodinu: prohlížeč loguje každé uložení nebo přepnutí karty, takže **počet návštěv je hrubá míra intenzity práce**, ne počet otevření. Obsah z něj ale nepřečteš, jen názvy a časy; zapiš ho proto klientovi mezi *výlučné vzory URL* i s tím, že je to uvnitř slepé místo.
 
-**Session logy Clauda se prohledávají obsahem, ne jménem adresáře.** Projekt pojmenovaný po klientovi je vodítko, ne podmínka – práce pro něj běží i v jinak pojmenovaném adresáři. Vyhazují se z nich dvě věci:
+**Session logy Clauda a git se čtou po projektech klienta, a celé.** Soubor klienta vyjmenuje v poli *Projekty* cesty, ve kterých se pro něj pracuje; **veškerá aktivita v nich je práce pro klienta** a jméno klienta se v ní nehledá. Bloky od–do z nich skládá skript `~/.claude/skills/invoicing/activity.py`:
+
+```bash
+python3 ~/.claude/skills/invoicing/activity.py 2026-09-01 2026-09-30 ~/Dev/favi ~/Documents/Projekty/Favi
+```
+
+Cesta je **prefix** – pokryje i projekty v podadresářích – a session logy se hledají podle zakódovaného jména cesty v `~/.claude/projects/`, takže se najdou **i u adresáře, který na disku už není**. Každý blok je jedna stopa se `start` i `end`; vrací počet promptů, počet ostatních záznamů, počet commitů, první prompty a první řádky commitů. Výklad bloků:
+
+- **Blok končí mezerou delší než 20 minut** (`--gap`). Změřeno 30. 9. 2026 nad zářím FAVI: mez 10 minut dala 16,0 h, 20 minut 20,3 h a 30 minut 22,0 h. Pod 20 minut se blok trhá na pauzách, kdy Claude pracuje a uživatel čeká; nad 20 minut se slévají samostatná sezení. **Mez se vypisuje u nálezu**, protože o hodinách spolurozhoduje.
+- **Blok bez promptu není čas u klávesnice.** `prompts: 0` znamená, že Claude běžel sám – doběhl agent na pozadí, dojela dlouhá úloha. Zprávy, které do konverzace vkládá harness (`<task-notification>`, `<system-reminder>`), skript za prompt nepočítá, i když nesou roli `user`. Takový blok sám nález nedělá.
+- **Blok jen z commitů začal dřív, než ukazuje.** Commit je konec práce; blok z autocommitů bez session je *odvozený* a jeho začátek je dolní mez, ne skutečnost.
+- **I v projektu klienta běží vlastní administrativa** – session o fakturaci nebo o stopách práce, dorovnání konfigurace projektu na nové standardy. Pozná se z prvních promptů a řádků commitů a vyhazuje se. Kde se to u klienta opakuje, patří konkrétní případy do jeho souboru.
+- **Hranice období blok přetne** – blok přes půlnoc na konci období skončí ve 23:59. U posledního dne se proto pouští o den dál.
+
+**Projekt, který v souboru klienta chybí, se hledá obsahem** – jménem klienta a jeho identifikátory napříč `~/.claude/projects/`. Nález z něj není stopa sám o sobě, ale **návrh doplnit projekt do pole *Projekty*** a pustit na něj skript. Při hledání obsahem se vyhazují dvě věci:
 
 - **Vlastní administrativa.** Session o fakturaci, o vlastních skillech a o vlastní knowledge base není práce pro klienta, i když v ní jméno klienta padne.
 - **Falešná shoda v řetězci.** U krátkého jména klienta se do shody trefí i náhodný text – doloženo 11. 9. 2026 na slově `favicon` a na OAuth kódu v URL, kde se jméno klienta objevilo uvnitř náhodného řetězce. **Ověř shodu v kontextu věty**, ne jako podřetězec.
@@ -74,8 +88,6 @@ Tady to není teoretické – rozhoduje se tu o částkách na faktuře a text d
 **Obsah je nadřazený času.** Věta „koukal jsem na to, dělal jsem na tom asi tři hodiny“ je **doložená délka**, i když ji nese jednominutová zpráva na Slacku. Časy říkají *kdy*, obsah často *kolik* – a když se rozejdou, vyhrává obsah. Zdroj, ze kterého se čte jen razítko, je promarněný.
 
 **Odchozí, ne příchozí.** Mail od klienta a zpráva od klienta nejsou Honzova práce. Sbírá se **to, co odeslal on**; příchozí zpráva se hodí nanejvýš jako kontext, proč ta práce vznikla.
-
-**Claude Code nese i obsah.** Když v `~/Dev` není adresář pojmenovaný po klientovi, neznamená to, že se pro něj nepracovalo – práce mohla proběhnout v session jiného projektu. Hledej i **jméno klienta a jeho identifikátory v obsahu session**, ne jen v názvu adresáře.
 
 ## Výlučné a sdílené zdroje
 
