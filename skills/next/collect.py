@@ -23,6 +23,8 @@ Výstup: jeden řádek JSON na stdout. Klíče:
   `uncertain`, `empty`), session, commity, změny `todo.md`/`plan.md`/`done.md` a přiřazená kola
 - `sessions_error` – proč se živé session nedaly zjistit (pak jsou všechny větve `uncertain`)
 - `backlog` – názvy nápadů, jen když je fronta prázdná
+- `text_limit` – na kolik znaků se popisy položek dokrátily, aby se výstup vešel
+  do kontextu; `null` znamená, že se krátit nemuselo, `0` že popisy odpadly celé
 
 Pravidla, podle kterých se tu rozhoduje, drží `SKILL.md`; tenhle docstring jen popisuje výstup.
 """
@@ -37,6 +39,12 @@ from pathlib import Path
 import sessions
 
 TEXT_LIMIT = 300
+# Výstup nad ~30 kB harness do kontextu nevloží – uloží ho do souboru a modelu dá
+# jen náhled. Skill pak data dolovává zpátky dalšími voláními a celá úspora padne
+# (změřeno 29. 9. 2026 na frontě o 74 položkách: 39 kB, useknuto, běh 4:30).
+# Rozpočet je proto tvrdý a `fit_budget` pod něj popisy položek dokrátí.
+BUDGET = 25000
+TEXT_STEPS = (200, 160, 120, 80, 40, 0)
 DIFF_LINES = 12
 RULES = Path.home() / ".claude" / "RULES.md"
 
@@ -405,6 +413,32 @@ def current_info(repo: Repo):
     return {"branch": branch, "uncommitted": status[:15], "uncommitted_total": len(status)}
 
 
+def encoded_size(result):
+    return len(json.dumps(result, ensure_ascii=False, separators=(",", ":")).encode())
+
+
+def fit_budget(result):
+    """Dokrátí popisy položek `todo`, aby se výstup vešel do `BUDGET`.
+
+    Krátí se jen `text` – na jednořádkový výpis stačí název, a celý popis skill
+    potřebuje u tří čtyř položek, které jde nabídnout. Zvolený limit se vrací
+    v `text_limit`, aby bylo vidět, že popis není celý.
+    """
+    if encoded_size(result) <= BUDGET:
+        return None
+    texts = [(item, item["text"]) for section in result["todo"]
+             for part in section["parts"] for item in part["items"] if item.get("text")]
+    for limit in TEXT_STEPS:
+        for item, full in texts:
+            if limit == 0:
+                item.pop("text", None)
+            else:
+                item["text"] = full if len(full) <= limit else full[:limit - 1] + "\u2026"
+        if encoded_size(result) <= BUDGET:
+            return limit
+    return 0
+
+
 def main() -> int:
     repo = Repo(Path(sys.argv[1] if len(sys.argv) > 1 else "."))
     fetch = None
@@ -435,6 +469,7 @@ def main() -> int:
         "backlog": ([i["title"] for i in parse_items((read(f"{base}backlog.md") or "").splitlines())]
                     if queue_empty else None),
     }
+    result["text_limit"] = fit_budget(result)
     json.dump(result, sys.stdout, ensure_ascii=False, separators=(",", ":"))
     print()
     return 0

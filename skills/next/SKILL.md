@@ -41,7 +41,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 
 ## Fáze 1 – Sběr
 
-Pusť `python3 ~/.claude/skills/next/collect.py` z adresáře session. Nic dalšího nečti – **každé další volání stojí vteřiny čekání**, a výstup skriptu na nabídku stačí. Soubor otevři jen tehdy, když bez něj položku opravdu nejde popsat.
+Pusť `python3 ~/.claude/skills/next/collect.py` z adresáře session – bez `head` a bez dalšího zpracování v shellu, výstup je jeden řádek JSON a skript si jeho velikost hlídá sám. Nic dalšího nečti – **každé další volání stojí vteřiny čekání**, a výstup skriptu na nabídku stačí. Soubor otevři jen tehdy, když bez něj položku opravdu nejde popsat.
 
 - **Skript skončil chybou** (není to git repozitář, nejde určit hlavní větev) → řekni to a skonči závěrečným verdiktem.
 - **`docs` je null a nic dalšího nenašel** → projekt frontu nevede; řekni to a skonči.
@@ -59,6 +59,8 @@ Co z výstupu je položka fronty:
 | `artifacts`, `passes`, `lifecycle` | chybějící krok cyklu – viz *Místo v cyklu*; `lifecycle` je `{"osa": [...], "kontroly": [...]}` |
 | `branches` | práce ve větvi – viz *Práce ve větvích* |
 | `backlog` | skript ho vrací jen při prázdné frontě – viz *Fáze 2* |
+
+**Popis položky může být zkrácený a dolovat ho zpátky se nesmí.** Výstup nad ~30 kB harness do kontextu nevloží – uloží ho do souboru a dá jen náhled –, takže skript si sám hlídá rozpočet a popisy položek dokrátí. Na kolik, říká `text_limit`: `null` znamená celé popisy, číslo zkrácení na tolik znaků, `0` popisy zahozené a zbylý název. **Jednořádkový výpis *Fáze 3* vystačí se jménem vždycky**; teprve u tří čtyř položek, které jdou do nabídky, otevři `todo.md` na jejím místě – a jen tehdy, když se z názvu `description` napsat nedá. Číst kvůli tomu celou frontu znovu je přesně ta ztráta, kvůli které skript vznikl (změřeno 29. 9. 2026: useknutý výstup a dolování zpátky protáhly běh na 4:30).
 
 ### Položka odložená k datu
 

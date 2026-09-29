@@ -480,5 +480,59 @@ class LifecycleLayers(unittest.TestCase):
                 "mezi kroky se dostal celý řádek rámečku")
 
 
+class OutputBudget(unittest.TestCase):
+    """`fit_budget` rozhoduje, jestli se výstup vejde do kontextu modelu.
+
+    Selhává tiše a ve svůj prospěch: harness výstup nad stropem nezahodí, ale
+    uloží do souboru a modelu dá náhled – takže `/next` vypadá, že proběhl,
+    a přitom si data dolovává zpátky dalšími voláními. Přesně to se stalo
+    29. 9. 2026 nad frontou o 74 položkách: 39 kB, useknuto, běh 4:30 místo
+    půl minuty. Testují se oba směry: nad rozpočtem se krátit musí, pod ním
+    se krátit nesmí – zbytečně zkrácený popis vezme skillu podklad pro nabídku.
+    """
+
+    def setUp(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("collect_budget", COLLECT)
+        self.c = importlib.util.module_from_spec(spec)
+        sys.path.insert(0, str(COLLECT.parent))
+        spec.loader.exec_module(self.c)
+
+    def result_with(self, count, text_len):
+        items = [{"title": f"Polozka {i}", "text": "x" * text_len, "done": False}
+                 for i in range(count)]
+        return {"todo": [{"section": "Fronta", "parts": [{"subsection": None, "items": items}]}]}
+
+    def test_small_queue_keeps_full_texts(self):
+        result = self.result_with(5, self.c.TEXT_LIMIT)
+        self.assertIsNone(self.c.fit_budget(result),
+            "krátilo se, přestože se výstup do rozpočtu vešel")
+        for item in result["todo"][0]["parts"][0]["items"]:
+            self.assertEqual(len(item["text"]), self.c.TEXT_LIMIT,
+                "popis se zkrátil u fronty, která je pod rozpočtem")
+
+    def test_large_queue_fits_into_budget(self):
+        result = self.result_with(300, self.c.TEXT_LIMIT)
+        self.assertGreater(self.c.encoded_size(result), self.c.BUDGET,
+            "testovací fronta rozpočet vůbec nepřekročila, test by neměřil nic")
+        limit = self.c.fit_budget(result)
+        self.assertLessEqual(self.c.encoded_size(result), self.c.BUDGET,
+            f"výstup zůstal nad rozpočtem i po zkrácení na {limit}")
+        self.assertIn(limit, self.c.TEXT_STEPS,
+            f"vrácený limit `{limit}` není z `TEXT_STEPS`")
+
+    def test_titles_survive_every_step(self):
+        # Název je jediné, z čeho skill sestaví jednořádkový výpis; zmizet nesmí
+        # ani v kroku, kde se popisy zahazují celé.
+        result = self.result_with(4000, self.c.TEXT_LIMIT)
+        self.assertEqual(self.c.fit_budget(result), 0,
+            "fronta téhle velikosti se musí dostat až na zahození popisů")
+        items = result["todo"][0]["parts"][0]["items"]
+        self.assertEqual(len(items), 4000, "zkrácení ubralo položky, ne jen popisy")
+        for item in items:
+            self.assertTrue(item["title"], "položka přišla o název")
+            self.assertNotIn("text", item, "popis zůstal i v kroku, který je zahazuje")
+
+
 if __name__ == "__main__":
     unittest.main()
