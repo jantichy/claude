@@ -60,6 +60,8 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`
 
 **Titulní řádek je samostatný odstavec a nekončí tečkou.** Do 29. 9. 2026 na něj text navazoval na témž řádku a tučný název tečku měl, aby se od té věty oddělil; osamocený nadpis ji nepotřebuje. Rozhodl uživatel: název se tím dá přehlédnout očima jako nadpis a delší nález nezačíná zdí textu přilepenou k závažnosti. **Platí to i pro titulní řádek s příponou** – hledisko `/oponent` (`· <hledisko>`) i jméno specialisty nebo vektoru v hranatých závorkách patří na ten řádek, ne do odstavce pod ním.
 
+**Emoji je jediná barva, kterou v odpovědi máš, a značka závažnosti zůstává za číslováním.** Odrážka, kterou terminál vykresluje před každým blokem, patří harnessu – barvu si vybírá podle druhu bloku, ne podle obsahu, takže se k ní text nedostane. **ANSI escape sekvence neprojdou**: změřeno 29. 9. 2026 výpisem do terminálu, vypsaly se doslova jako `[31m●`. Zbývalo by přesunout kolečko před `[N/celkem]`, což uživatel téhož dne zamítl – přilepené za bílou odrážkou harnessu vypadá hůř než uprostřed řádku.
+
 **Platí to na každou položku, o které se uživatel rozhoduje**, ne jen na nález: nevypořádané téma, položka mimo rozsah, poznatek z provozu i návrh alternativy. Liší se jen slovo v titulním řádku (`NÁZEV NÁLEZU`, `NÁZEV POLOŽKY`), ne tvar.
 
 **Seznam popisků typu `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` se nepoužívá.** Do 28. 9. 2026 ho měly tři kontrolní skilly, každý jinou sadu, a **uživatel je označil za nečitelné**. Heslo za dvojtečkou vypadá úplně a přitom vynechá právě to, proč na tom záleží; kde nález je a čím je doložený, se řekne uvnitř věty a odkazy se dávají do textu.
