@@ -1601,3 +1601,13 @@ Claude Code začal v projektech, které importují `coding.md`, varovat, že ins
 **Pojistka:** `tests/test_size.py` hlídá `RULES.md` do 35k znaků a součet paušálně načítaného (`CLAUDE.md` + jeho `@` importy) do 50k; třetí test drží seznam paušálních souborů v souladu s importy. Ověřeno v obou směrech: propustí dnešní stav, zastaví přerostlý soubor i nový import mimo seznam.
 
 **Týž den stejným postupem i `WORKTREE.md`** (14,3k → 7,1k), který se importuje do každého projektu s worktree layoutem; nadpisy zůstaly kvůli odkazům, obsah dokumentu a zdůvodnění „proč kořen, ne skill“ vypadly. `coding.md` viz `~/Dev/context/decisions.md` z téhož dne.
+
+### 2026-10-01 – `/slim` zeštíhluje instrukce načítané do každé session
+
+Totéž zmenšování se dělalo třikrát ručně – 10. 9. (`PTYDEPE.md`, `RULES.md`, `STRUCTURE.md`), 28. 9. (projektový kontext tohoto repozitáře) a 30. 9. (`RULES.md`, `coding.md`, `WORKTREE.md`, eventoid) – a pokaždé s týmiž chybami: odhady úspory od oka řádově vedle, kopie místo přesunu, věty popisující starý rozsah, míchání znaků a bajtů, zastavení v půlce. Skill je sepsaný z těch tří běhů; poučení z prvních dvou vytěžili agenti z jejich transcriptů.
+
+**Rozhodnutí:** skill bez režimů, argument je cílový soubor. Pracuje s celým stromem načítání a přesměrovává odkazy ve všech repozitářích v `~/Dev` (cizí projekt: odkazy výjimkou pro hromadnou migraci, obsah větví). Strom měří skript `skills/slim/scripts/measure.py` – počítá jen importy, které Claude Code vyhodnotí, ve znacích a s nejkratší hloubkou (prochází do šířky). Kritéria drží `skills/slim/catalog.md`: přesun jen tam, kde text pak opravdu něco načte, nejvýš jeden krok od paušálu; prevence zůstává tenká v paušálu; doklady a komprese bez změny významu rovnou, přesuny a zrušení pravidel po jednom. Nově oproti ručním během: hledání pravidel, která nabobtnání vyrábějí, a agent `reader`, který porovná starou a novou verzi a hledá ztracené pravidlo.
+
+**Zamítnuto – srovnávací běh agenta bez skillu:** tři skutečné běhy bez skillu s popsanými selháními jsou lepší podklad než uměle vyrobený. **Druhá řada** (popisy skillů, pluginy, MCP) se jen měří a nabízí – 28. 9. ji uživatel označil za bezpředmětnou a konektory z claude.ai se lokálně vypnout nedají.
+
+**Neověřeno:** tlakové scénáře (dodržení zákazu mazat bez rozhodnutí pod tlakem) – daly by se změřit jen během proti skutečným souborům.

@@ -224,7 +224,7 @@ Přepne projekt do uspořádání, kde má každá rozdělaná větev vlastní a
 
 ### Údržba konfigurační vrstvy
 
-Jediné dva, jejichž předmětem není projekt, ale tenhle repozitář a slovník sdílený napříč všemi projekty.
+Jediné tři, jejichž předmětem není projekt, ale tenhle repozitář, slovník sdílený napříč všemi projekty a instrukce, které se do každé session načítají.
 
 #### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
 
@@ -233,6 +233,10 @@ Claude si z konverzace odnese slovo, které jsem použil jednou a třeba omylem,
 #### [`/skill`](skills/skill/) – skilly, které se samy udržují
 
 Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, **prožene existující skilly revizí** a umí skill i zrušit včetně všech stop. Revize je ten důvod, proč vznikl: norma se posouvá dál, ale hotové skilly zůstanou stát a samy o tom neřeknou. Klade přitom otázku, kterou nepoloží nikdo jiný – *nevzniklo mezitím něco, co tenhle skill dělá ručně?*
+
+#### [`/slim`](skills/slim/) – instrukce, které se nenafukují
+
+Změří všechno, co se načítá do každé session – `CLAUDE.md` a jeho importy –, a zmenší to: pravidla, která platí jen při určité práci, přesune na podmíněné načítání, škrtne doklady, rozvláčná zdůvodnění a duplicity, navrhne zrušit pravidla, která nic nerozhodují, a hlavně ta, kvůli kterým soubory bobtnají. Sporné zásahy předloží po jednom, provede je napříč repozitáři včetně odkazů a nakonec nechá nezávislého čtenáře hledat pravidlo, které se po cestě ztratilo.
 
 ### Instrukce ke skillům
 
