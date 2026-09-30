@@ -607,6 +607,14 @@ Obsah se přitom neztratí – rozejde se **zdůvodnění**: commit popisuje dif
 
 **Zprávu commitu předávej heredocem a nic za něj neřetěz.** Spojíš-li `git commit -F - <<'MSG' … MSG` s dalším příkazem přes `&&`, shell rozdělí vstup jinak, než čekáš, a do zprávy se dostane kus následujícího příkazu. Poznáš to až v `git log`, kdy je commit pushnutý a opravit ho znamená přepsat historii, na které může stát jiná session. **Jeden heredoc, jeden příkaz, žádné `&&` za ním.**
 
+### Práci nespojuj s příkazem, který může být zablokovaný
+
+Příkaz, který může zastavit deny pravidlo nebo hook, **nespojuj `&&` s prací, která musí proběhnout**. Kontrola posuzuje **celý řetěz předem**, takže se nespustí nic – ani ta část, která se zakázanou cestou nemá co dělat.
+
+**Zrádné je, že se to neprojeví jako chyba té práce.** Návratový kód i hláška patří zablokovanému příkazu, kdežto po zbytku řetězu nezůstane žádná stopa – takže se pak hledá, proč selhalo něco, co se ani nezkusilo spustit. Doloženo 30. 9. 2026: řetěz `git fetch && git worktree add … && git merge --ff-only … && ln -s ../main/.env .env && ls -la .env` skončil na `.env` v deny seznamu a **worktree vůbec nevznikl**, přestože zakládání větve s tajemstvím nesouvisí.
+
+**Prakticky:** co sahá na chráněnou cestu – tajemství, cizí adresář, soubor mimo repozitář –, dej do samostatného příkazu a pusť ho jako poslední, nebo ho rovnou předej uživateli (`! <příkaz>`). **Je to sourozenec pravidla o heredocu výš**, jen s horším dopadem: tam řetězení rozdělí vstup jinak, než čekáš, tady zruší celý běh.
+
 ### Mazání ověř diffem, ne grepem
 
 Mažeš-li **podle značek** – od nadpisu k nadpisu, od markeru k markeru, od řádku po řádek –, ověř výsledek **diffem toho, co zmizelo**, ne hledáním toho, co zbylo.
