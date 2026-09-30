@@ -41,7 +41,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 - **[`obligations.md`](obligations.md)** – co v session zakládá povinnost zápisu, kam co patří a v jakých stavech položku najdeš. Referenční tabulka pro *Fázi 3*.
 - **[`out-of-scope.md`](out-of-scope.md)** – jak se naloží s položkami mimo rozsah úklidu.
 
-**Všechny tři skripty jsou implementační detail, ne rozhraní** – jejich přepínače, výstup i samotná existence se smí změnit bez ohlášení. Co se změnit nesmí tiše, je **pravidlo za nimi**: mechanické vady a počty hledá deterministický nástroj, ne model (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula), a pokrytí transcriptu se měří, ne přiznává odhadem. Vynucovací vrstvu k oběma drží `tests/test_cleanup.py`, včetně mutačních testů.
+**Všechny tři skripty jsou implementační detail, ne rozhraní** – jejich přepínače, výstup i samotná existence se smí změnit bez ohlášení. Co se změnit nesmí tiše, je **pravidlo za nimi**: mechanické vady a počty hledá deterministický nástroj, ne model (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*, pravidlo nula), a pokrytí transcriptu se měří, ne přiznává odhadem. Vynucovací vrstvu k oběma drží `tests/test_cleanup.py`, včetně mutačních testů.
 
 **Skill neběží v subagentovi a je to měřené rozhodnutí.** Od 25. do 26. 9. 2026 celé vytěžení dělal subagent. Delegace ubrala rodičovi 8 % nákladů a přidala agenta za dvojnásobek toho, co ubrala; počet volání na tutéž práci stoupl o 51 %, protože agent rekonstruuje z transcriptu to, co hlavní session má v kontextu zdarma. A navíc vznikl prostředník, přes kterého se nálezy ztrácely převyprávěním. Rozbor v `decisions.md`.
 

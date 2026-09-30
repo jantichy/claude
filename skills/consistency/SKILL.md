@@ -26,7 +26,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 
 **Deterministickou vrstvu skill nepíše sám** (*Spusť nástroje, které předchozí kroky životního cyklu nedělají*): mrtvý kód a nepoužité závislosti měří `knip`, odkazy a kotvy v Markdownu `~/.claude/skills/links.py`, zbytek grep a `git blame`. **Který nástroj to je, je implementační detail** – vymění se, jakmile bude lepší, a na tom, jak se `/consistency` volá a co vrací, se tím nezmění nic.
 
-**Závazné je proti tomu tohle a tiše se to změnit nesmí:** co jde změřit nástrojem, nehledá agent čtením (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula); nespuštěná kontrola se vypisuje jako nespuštěná, nikdy jako nula nálezů; a nálezy z nástrojů nesou tag `toolchain` a neprocházejí posouzením, protože nástroj nehalucinuje.
+**Závazné je proti tomu tohle a tiše se to změnit nesmí:** co jde změřit nástrojem, nehledá agent čtením (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*, pravidlo nula); nespuštěná kontrola se vypisuje jako nespuštěná, nikdy jako nula nálezů; a nálezy z nástrojů nesou tag `toolchain` a neprocházejí posouzením, protože nástroj nehalucinuje.
 
 **`links.py` leží ve `skills/`, ne v adresáři skillu, a je to záměr.** Volá ho i `/cleanup` a skript uvnitř cizího skillu by se volat nesměl (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*). Kdo si nainstaluje `/consistency` bez `/cleanup`, dostane ho stejně.
 
@@ -84,7 +84,7 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 **Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/skills/LIFECYCLE.md`, *Povolená opakování*.
 
-Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
+Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
 
 | Co | Čím | Kdy má smysl |
 |---|---|---|
@@ -105,7 +105,7 @@ Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí ta
 
 ## Fáze 1 – Průzkum projektu
 
-**Agent je sběr, ne posouzení: typ `reader`, výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
+**Agent je sběr, ne posouzení: typ `reader`, výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
 
 **Škálu závažnosti drží `~/.claude/skills/SEVERITY.md`** a je společná se všemi skilly, které hlásí nálezy. Zadání níž si stupně opisuje schválně – je to text pro agenta bez kontextu session, kde je odkaz do nenačteného souboru mrtvý (`SEVERITY.md`, *Kdo ji používá*, výjimka pro zadání subagentů). Doménové čtení stupňů v zadání obecnou definici **zpřesňuje, nenahrazuje**.
 

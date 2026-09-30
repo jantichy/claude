@@ -423,7 +423,7 @@ Importuj **jen to, co je pro projekt opravdu relevantní** – každý import st
 **Standard si načti, neopisuj ho z hlavy.** Rozdíl mezi projektem a tvou pamětí není nález – tvoje paměť je zrovna to, co je zastaralé. Než začneš kontrolovat, přečti si:
 
 - `~/.claude/STRUCTURE.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
-- `~/.claude/RULES.md` – zejména *Životní cyklus projektu* (jaké kroky životního cyklu dnes existují) a *Co do tohoto souboru nepatří* (kam co patří);
+- `~/.claude/RULES.md` – zejména *Životní cyklus projektu* (jaké kroky životního cyklu dnes existují) a *Kam co zapsat* (kam co patří);
 - `~/Dev/context/coding/quality.md` – jen u projektu, ve kterém se něco spouští;
 - `~/.claude/WORKTREE.md` – jen u worktree layoutu;
 - výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.

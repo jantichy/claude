@@ -32,11 +32,19 @@ Na tomhle souboru je zajímavé hlavně to, že v něm skoro nic není. Většin
 
 #### [`RULES.md`](RULES.md) – struktura a pořádek pod kontrolou
 
-Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i rámeček s životním cyklem projektu – od `/project` až po `/release` –, jehož podrobnosti drží [`skills/LIFECYCLE.md`](skills/LIFECYCLE.md). A tabulka, podle které se vybírá model a effort pro každý typ úkolu: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**.
+Obecná pravidla práce napříč všemi projekty: jak se mnou Claude komunikuje, jak organizuje soubory a obsah, jak rozhoduje a kde končí rozsah zadání, jak zachází se změnami. Je tu i rámeček s životním cyklem projektu – od `/project` až po `/release` –, jehož podrobnosti drží [`skills/LIFECYCLE.md`](skills/LIFECYCLE.md). Jde do každé session, takže drží jen pravidla bez dokladů a zdůvodnění – velikost mu hlídá test a co platí jen při určité činnosti, leží ve vedlejších souborech níž.
 
 #### [`PTYDEPE.md`](PTYDEPE.md) – termíny, které znamenají to, co si myslíme
 
 Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a začne ho používat napříč projekty, jako by to byl zavedený pojem. Tenhle soubor je proti tomu: tabulka, co se místo čeho používá a v jakém rozsahu. Nejcennější je vždycky ten rozsah – termín se nejčastěji nekazí tím, že by se přejmenoval, ale tím, že se tiše rozšíří na příbuznou věc. Je to schválně jen tabulka: soubor se načítá do každé session, takže důvody a historie náhrad leží stranou, u skillu `/ptydepe`.
+
+#### [`EVIDENCE.md`](EVIDENCE.md) – měřit tak, aby výsledek něco rozhodl
+
+Pravidla pro chvíle, kdy se něco zjišťuje z dat nebo se hledá příčina chyby: předem vypsat, co který výsledek rozhodne, u každé vyloučené možnosti zapsat, jak pevně je vyloučená a co ji otevře znovu, a než se odpoví z dat, ověřit, že v nich ptaná věc vůbec je. Načítá se, jen když se měří nebo ladí, ne do každé session.
+
+#### [`DELEGATION.md`](DELEGATION.md) – kdy a jak pouštět agenty
+
+Jak zadat subagenta, co po něm chtít zpátky a na jakém modelu a effortu ho pustit: na návrhu a na ověřování nálezů se nešetří, mechanický sběr jede levně, a **levný model se vyplatí jen tam, kde se jeho chyba pozná levně**. Načítá se před pouštěním agenta; v každé session platí jen zákaz dělat mechanickou práci v hlavním vlákně.
 
 ### Struktura projektu
 

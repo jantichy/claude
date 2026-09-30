@@ -136,7 +136,7 @@ Na **každého** vybraného specialistu pošli **samostatného subagenta** – v
 
 Vlastní zadání piš jen pro specialisty, kteří vestavěný protějšek nemají – **a pro Bezpečnost v citlivé oblasti**, kde běží obojí vedle sebe.
 
-**Model a effort podle specialisty** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Standardoví specialisté měří text proti textu, ale checklist si z pětisetřádkového standardu **teprve sami sestavují**, a to mechanická práce není: jedou proto na **výchozím modelu s `medium`–`high`**, jak pro kontrolu proti standardu předepisuje tabulka. Agent na nižším effortu nad takovým vstupem udělá vzorek – a prázdné pole vypadá stejně, ať prošel šedesát pravidel, nebo dvanáct. **Bezpečnost a Data a stavy pouštěj na nejsilnějším modelu s `xhigh`**: tam přehlédnutí stojí nejvíc a levný model mlčí, místo aby hlásil.
+**Model a effort podle specialisty** (Volba modelu a effortu podle `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*.) Standardoví specialisté měří text proti textu, ale checklist si z pětisetřádkového standardu **teprve sami sestavují**, a to mechanická práce není: jedou proto na **výchozím modelu s `medium`–`high`**, jak pro kontrolu proti standardu předepisuje tabulka. Agent na nižším effortu nad takovým vstupem udělá vzorek – a prázdné pole vypadá stejně, ať prošel šedesát pravidel, nebo dvanáct. **Bezpečnost a Data a stavy pouštěj na nejsilnějším modelu s `xhigh`**: tam přehlédnutí stojí nejvíc a levný model mlčí, místo aby hlásil.
 
 **Texty zadání pro obě skupiny drží [`agents.md`](agents.md).** Načti si ho ve chvíli, kdy agenty pouštíš; do těla skillu nepatří, protože se čtou jen tehdy a jinak by zabíraly kontext každého běhu.
 

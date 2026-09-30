@@ -25,7 +25,7 @@ Než skill založíš, projdi čtyři možnosti v tomhle pořadí. Vyhrává prv
 
 | Kdyby platilo | Nepatří to do skillu, ale sem |
 |---|---|
-| Chytne to typecheck, linter, test nebo hook | **do té kontroly.** `~/.claude/RULES.md`, *Model a effort podle úkolu*, pravidlo nula: nejlevnější práce je ta, kterou neudělá model. Mechanické omezení zapsané do skillu se dodržuje hůř a stojí tokeny při každém běhu. |
+| Chytne to typecheck, linter, test nebo hook | **do té kontroly.** `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*, pravidlo nula: nejlevnější práce je ta, kterou neudělá model. Mechanické omezení zapsané do skillu se dodržuje hůř a stojí tokeny při každém běhu. |
 | Platí to pro každou práci, ne jen pro tenhle postup | **`~/.claude/RULES.md`.** |
 | Je to znalost oboru – jak se dělá web, text, měření, kód | **doména v `~/Dev/context/`.** Skill ji smí načítat, ne obsahovat. |
 | Platí to jen v jednom repozitáři | **jeho `CLAUDE.md`.** |
@@ -218,7 +218,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Výjimku mají 2 místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který vypisuje **všechny** kroky obou vrstev i s odkazy (výpustka `…` ve vzoru níž je zástupný symbol pro zbytek řady, ne doslovné znění), a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `RULES.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
 
-**Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…“ zestárnou tiše. Piš specialisty, ne jména – `~/.claude/RULES.md`, *Model a effort podle úkolu*, to dělá takhle.
+**Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…“ zestárnou tiše. Piš specialisty, ne jména – `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*, to dělá takhle.
 
 **Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen názvy souborů, příkazy a technické identifikátory.
 
@@ -226,7 +226,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 ## 8. Model, effort a delegace
 
-Ve skillu se píše **jen delta** proti tabulce v `~/.claude/RULES.md`, *Model a effort podle úkolu* – tedy tam, kde se krok od výchozí volby odchyluje, a proč. Celou tabulku neopisuj.
+Ve skillu se píše **jen delta** proti tabulce v `~/.claude/DELEGATION.md`, *Model a effort podle úkolu* – tedy tam, kde se krok od výchozí volby odchyluje, a proč. Celou tabulku neopisuj.
 
 Odchylku odůvodni **tím, čí vstup to je**: chyba v návrhu nebo v ověření nálezu se násobí do všeho, co po ní přijde, kdežto chyba v mechanickém sběru se pozná hned.
 

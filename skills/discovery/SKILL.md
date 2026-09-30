@@ -150,7 +150,7 @@ Sepiš `docs/demand.md`:
 
 **Typem `researcher`** (`subagent_type`). Zadání zní prohledat web a vrátit JSON, takže agent nemá co spouštět ani kam zapisovat – a typ bez shellu je jediné, čím ta hranice doopravdy drží; věta v zadání ne (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*).
 
-**Výchozí model, `low`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: údaj bez URL zahodí *Ověření* hned pod tímhle odstavcem. Na `xhigh` běží až syntéza a rizika, kde se chyba násobí do zadání.
+**Výchozí model, `low`** (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*). Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: údaj bez URL zahodí *Ověření* hned pod tímhle odstavcem. Na `xhigh` běží až syntéza a rizika, kde se chyba násobí do zadání.
 
 **Cesty, pravidla výběru i zadání pro agenty drží `~/.claude/skills/discovery/paths.md`.** Přečti si ho celý a řiď se jím: je v něm katalog cest ve čtyřech blocích, pravidla, kolik jich pustit a která je povinná, a šablony zadání podle toho, co cesta vrací. **Blok *Poptávka* se tady nepouští** – ten patří Fázi 2 a má vlastní rozpočet.
 

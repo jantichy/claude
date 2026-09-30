@@ -124,7 +124,7 @@ Nejde-li srovnávací běh udělat (skill je čistě mechanický, nebo prostřed
 
 ## Fáze 5 – Sepsání
 
-**Nejsilnější model, `xhigh`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Skill řídí veškerou práci, která pod ním poběží; vada v něm se násobí do každého běhu a projeví se až u posledního.
+**Nejsilnější model, `xhigh`** (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*). Skill řídí veškerou práci, která pod ním poběží; vada v něm se násobí do každého běhu a projeví se až u posledního.
 
 **Piš sám, proti normě.** Tenhle krok se nedeleguje – je to jediné místo, kudy by prosákl cizí tvar.
 

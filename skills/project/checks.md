@@ -50,7 +50,7 @@ CI je proto druhá vrstva, ne zdvojení té první. Běží po každém pushi be
 
 **Zakládá se, když je projekt na hostingu, který CI umí** (typicky GitHub). Nemá-li remote nebo běží-li jen lokálně, krok přeskoč a řekni to.
 
-Workflow **nesmí opisovat příkazy z kontraktu ani si ho parsovat samo**. Opsaný seznam se po první změně rozejde a vypadá přitom platně (`~/.claude/RULES.md`, *Neopisuj seznam, který má vlastní zdroj pravdy*). Druhý parser je horší ještě o stupeň, protože se rozejde v detailech, které nikdo neporovnává.
+Workflow **nesmí opisovat příkazy z kontraktu ani si ho parsovat samo**. Opsaný seznam se po první změně rozejde a vypadá přitom platně (`~/.claude/RULES.md`, *Single source of truth*). Druhý parser je horší ještě o stupeň, protože se rozejde v detailech, které nikdo neporovnává.
 
 Kontrakt vypíše **`~/.claude/verify.sh --contract <project>`** ve tvaru `key<tab>command`. Je to tentýž kód, který příkazy spouští lokálně, takže umí i filtraci HTML komentářů, pojistku proti dvěma sekcím téhož jména a klíč `cwd`.
 

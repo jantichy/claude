@@ -1,7 +1,7 @@
 """Regresní testy deterministických skriptů `/cleanup`.
 
 Skript `skills/links.py` existuje kvůli pravidlu nula
-(`~/.claude/RULES.md`, *Model a effort podle úkolu*): rozbitý odkaz a mrtvá kotva
+(`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*): rozbitý odkaz a mrtvá kotva
 jsou mechanické vady a hledat je čtením přes model je ta nejdražší možná cesta.
 Skript je tedy **zrychlení** – část práce, kterou dřív dělal agent, se udělá
 za zlomek vteřiny a agentovi zbude úsudek.

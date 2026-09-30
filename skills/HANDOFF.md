@@ -112,7 +112,7 @@ Jednou odrážkou, ne otázkou přes `AskUserQuestion`: kolik položek zbývá, 
 - **cesta a řádek**, kde se to opravuje, a co se tím ještě rozbije
 - **co už se v tomhle běhu rozhodlo** o sousedních nálezech, závisí-li na tom volba u tohohle
 
-**Předávej to doslova, neparafrázuj** – parafráze je přesně to místo, kde se ztratí detail, kvůli kterému nález vznikl, a ztratí se tiše, protože shrnutí vypadá úplně (`~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*).
+**Předávej to doslova, neparafrázuj** – parafráze je přesně to místo, kde se ztratí detail, kvůli kterému nález vznikl, a ztratí se tiše, protože shrnutí vypadá úplně (`~/.claude/DELEGATION.md`, *Velké průzkumné úkoly deleguj*).
 
 **Zapiš i to, co se v tomhle běhu už vypořádalo** – jedním řádkem nad položkami, s počtem opravených a zamítnutých. Bez toho nová session neví, jestli má před sebou celou frontu nebo její zbytek, a nemá jak poznat, že nález, který v souborech nenachází, je opravený.
 

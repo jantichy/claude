@@ -95,7 +95,7 @@ class SkillFrontmatter(unittest.TestCase):
     def test_usage_line_has_uniform_form(self):
         """Kde se spotřeba agentů vypisuje, musí mít všude týž tvar.
 
-        `~/.claude/RULES.md`, *Model a effort podle úkolu*, žádá „kolik jich
+        `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*, žádá „kolik jich
         bylo, na jakém modelu a effortu“ jako jednu trojici. Pravidlo vzniklo
         14. 9. 2026 a zapsalo se nejdřív do dvou skillů, které byly po ruce –
         navíc každý jinak: jeden uváděl model a effort, druhý ne. Je to

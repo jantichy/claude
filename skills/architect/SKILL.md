@@ -69,7 +69,7 @@ Skill **vede rozhovor sám** podle *Zásad pro celý průběh* a na `superpowers
 - **Zapisuj průběžně** – ve chvíli, kdy rozhodnutí padne, ne až na konci. Viz `~/.claude/RULES.md`, *Pravda v souborech, ne v konverzaci*; kam co patří, definuje `STRUCTURE.md`.
 - **Navrhuj kompletně, implementuj postupně** – viz `~/.claude/RULES.md`. Tady to znamená: návrh popisuje celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
 - **YAGNI.** Z každého návrhu vyhoď, co není potřeba – ale zapiš to do *Mimo rozsah* v požadavcích, ať je vidět, že to bylo zvážené a zamítnuté, ne opomenuté.
-- **Na návrhu se nešetří: nejsilnější model, `xhigh`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Není to výroba dokumentu – dokument je jen zápis. Je to rozhodnutí, které se propíše do každého úkolu plánu a do každého řádku kódu pod ním, a **špatný návrh se dobrou implementací nezachrání**: špatná věc se jen udělá pořádně. Skill běží v hlavní session, kde model ani effort nastavit neumí – **doporuč proto běh v session na nejsilnějším modelu**, hned v přípravě.
+- **Na návrhu se nešetří: nejsilnější model, `xhigh`** (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*). Není to výroba dokumentu – dokument je jen zápis. Je to rozhodnutí, které se propíše do každého úkolu plánu a do každého řádku kódu pod ním, a **špatný návrh se dobrou implementací nezachrání**: špatná věc se jen udělá pořádně. Skill běží v hlavní session, kde model ani effort nastavit neumí – **doporuč proto běh v session na nejsilnějším modelu**, hned v přípravě.
 
 ------
 

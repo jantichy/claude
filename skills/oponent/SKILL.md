@@ -119,7 +119,7 @@ Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dos
 
 **Typ agenta podle sloupce *Web*:** hledisko bez ✔ jede na `reader`, hledisko s ✔ na `researcher`. Oba posuzují hotový text a **nemají shell**, takže do dokumentu nemůžou zapsat; `researcher` má navíc `WebSearch` a `WebFetch`. Viz `~/.claude/skills/SKILLS.md`, *Model, effort a delegace*.
 
-**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/RULES.md`, *Model a effort podle úkolu*.) Oponentura je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
+**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*.) Oponentura je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
 
 Zadání pro každého (doplň hledisko, cesty a projektový kontext):
 

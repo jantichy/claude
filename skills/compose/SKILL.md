@@ -183,7 +183,7 @@ Korpus se do kontextu nevejde. Rozděl ho na části podle formátu – dlouhé 
 
 **Každé stylistické tvrzení musí mít doklad**: cestu k souboru a doslovný úryvek. Tvrzení bez dokladu je dojem a do báze nesmí. Formát analýz je v `distillation.md`.
 
-**Model a effort** (delta proti `~/.claude/RULES.md`, *Model a effort podle úkolu*): analýzy jedou na výchozím modelu session, protože jde o čtení proti zadané struktuře a chyba je vidět v dokladu. **Syntéza do stylu jede na nejsilnějším modelu a `xhigh`** – je vstupem každého budoucího textu, takže se její chyba násobí do všeho, co po ní přijde.
+**Model a effort** (delta proti `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*): analýzy jedou na výchozím modelu session, protože jde o čtení proti zadané struktuře a chyba je vidět v dokladu. **Syntéza do stylu jede na nejsilnějším modelu a `xhigh`** – je vstupem každého budoucího textu, takže se její chyba násobí do všeho, co po ní přijde.
 
 ### 3. Syntéza
 

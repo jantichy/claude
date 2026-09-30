@@ -76,7 +76,7 @@ Volný popis za `/learn` nese obojí. Co v něm chybí, doplň z adresáře, ve 
 
 ## Fáze 2 – Vytěžení zdroje
 
-**Nejsilnější model, `xhigh`** (`~/.claude/RULES.md`, *Model a effort podle úkolu*). Poznatek, který tady propadne, se už nikdy nenajde: zdroj příště nemusí existovat a nikdo nebude vědět, že chybí.
+**Nejsilnější model, `xhigh`** (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*). Poznatek, který tady propadne, se už nikdy nenajde: zdroj příště nemusí existovat a nikdo nebude vědět, že chybí.
 
 Projdi zdroj a vypiš **očíslovaný seznam poznatků**. Není-li zdrojem text, platí to beze změny – přepis, oskenovaná stránka i slajd se vytěžují stejně, jen se k nim čte podle *Fáze 1*. Jeden poznatek = jedno tvrzení, které se dá samostatně použít nebo popřít. Číslo mu zůstane po celý běh a odkazuje se na něj ve všech dalších fázích.
 

@@ -2,6 +2,8 @@
 
 Úkoly na konfigurační vrstvě Claude Code: v pravidlech, skillech, hoocích, testech a průběžné kontrole.
 
+- [ ] **Zmenšit `~/Dev/context/coding/coding.md` stejně jako `RULES.md`** (přesun do podmíněných souborů, škrt zdůvodnění a dokladů, komprese). Za 20 dní narostl z 25,6k na 49,3k znaků a v projektech, které ho importují, drží součet instrukcí nad limitem Claude Code 150k. Navazuje hned po úklidu `RULES.md` (30. 9. 2026).
+
 **Repozitář je veřejný.** Nic, co sem přibude, nesmí prozradit **obsah** soukromého `~/Dev/context/` – jméno klienta či organizace, sazbu, obchodní nebo osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu ani know-how, které se prodává. Struktura toho adresáře veřejná je a `README.md` ji sám píše; konkrétní obsah ne. Podrobněji `.claude/CLAUDE.md`, *Výjimky z obecných pravidel*.
 
 **Nezávazné nápady sem nepatří** – co nikdo neschválil ani nezamítl, leží v `backlog.md`; sem jde jen to, u čeho je rozhodnuto, že se udělá, i kdyby to bylo až za rok. Hranici drží `STRUCTURE.md`, *`backlog.md`*.
@@ -300,7 +302,7 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Rozsah je nejspíš širší – je to vlastnost celé vrstvy kontrolních kroků** (Honza, 23. 9. 2026). Kroky osy běží interaktivně v hlavní session, kontrolní kroky neinteraktivně v subagentovi a vracejí nahoru jen pár konkrétních věcí k rozhodnutí.
 
-  **Není to nové pravidlo, ale důsledek toho, které už platí.** `~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*, říká, že delegace se vyplatí při splnění aspoň jednoho ze tří kritérií – vynucený tvar výstupu, izolace kontextu, práce která se neamortizuje. **Kontrolní kroky splňují všechna tři naráz:** vracejí nález s doložením a závažností, jejich smysl je posuzovat něco, do čeho nemají sáhnout, a je to jeden vstup a jeden výstup. Kroky osy nesplňují ani jedno: výstupem je dokument, kontext je jejich vstupem a práce se amortizuje iteracemi.
+  **Není to nové pravidlo, ale důsledek toho, které už platí.** `~/.claude/DELEGATION.md`, *Velké průzkumné úkoly deleguj*, říká, že delegace se vyplatí při splnění aspoň jednoho ze tří kritérií – vynucený tvar výstupu, izolace kontextu, práce která se neamortizuje. **Kontrolní kroky splňují všechna tři naráz:** vracejí nález s doložením a závažností, jejich smysl je posuzovat něco, do čeho nemají sáhnout, a je to jeden vstup a jeden výstup. Kroky osy nesplňují ani jedno: výstupem je dokument, kontext je jejich vstupem a práce se amortizuje iteracemi.
 
   **Vzorec ale sedí na pět ze sedmi, ne na všechny.** `/oponent`, `/review`, `/consistency`, `/attack` a `/cleanup` ano. **`/merge` ne:** je nevratný, mění hlavní větev a maže worktree, a jeho vlastní pravidlo velí mergovat jen na výslovný pokyn – agent na pozadí je přesně to, co má zakázané. **`/consolidate` ne** z jiného důvodu, který `LIFECYCLE.md` sám pojmenovává: jako jediný z kontrol vrací **návrh řešení, ne nález**, a návrh je rozhodnutí, ne měření.
 

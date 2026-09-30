@@ -156,7 +156,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 ### Posudek dvěma agenty, než sáhneš na první soubor
 
-U rozsahu nad několik stovek míst **pusť dva `reader` agenty naráz** (`~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*) a teprve nad jejich výstupem předkládej inventuru:
+U rozsahu nad několik stovek míst **pusť dva `reader` agenty naráz** (`~/.claude/DELEGATION.md`, *Velké průzkumné úkoly deleguj*) a teprve nad jejich výstupem předkládej inventuru:
 
 - **první hledá místa, kde slovo znamená něco jiného** – smluvní stranu místo služby, zákonný pojem, cizí firmu, jiného aktéra;
 - **druhý místa, kde je slovo obsahem** – zdůvodnění rozhodnutí o pojmech, hesla glosáře, doslovné citace jmen kapitol cizích standardů, historické záznamy, a k tomu **nadpisy a počty odkazů na jejich kotvy**.

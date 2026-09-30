@@ -39,7 +39,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to **poslední krok osy*
 
 **Sběrači mají zakázáno posuzovat.** Vrací čísla a citace, ne závěry – úsudek zůstává v hlavní session, která zná zadání i to, co se v projektu vědomě nedělá. Agent, který dostane volnost soudit, přinese poznatky o tom, co mu přišlo divné, a jeho výstup pak nejde odlišit od dat.
 
-**Souběžní agenti si sdílejí scratchpad**, takže každý dostane prefix podle svého zdroje a pokyn ověřit, že v pomocném souboru je jeho vstup (`~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*).
+**Souběžní agenti si sdílejí scratchpad**, takže každý dostane prefix podle svého zdroje a pokyn ověřit, že v pomocném souboru je jeho vstup (`~/.claude/DELEGATION.md`, *Velké průzkumné úkoly deleguj*).
 
 ## Kdy se pouští a kdy se přeskakuje
 
@@ -80,7 +80,7 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Body 4 a 5 odpadají 
 
 ## Fáze 2 – Sběr
 
-**Nejdřív rozhodni, jestli se delegace vyplatí.** Deleguje se kvůli kontextu, ne kvůli úspoře (`~/.claude/RULES.md`, *Velké průzkumné úkoly deleguj*) – a u projektu, kde je všech pět zdrojů dohromady pár kilobajtů, je levnější je přečíst rovnou. Rozeslání agentů má smysl, až když by sběr hlavní session kontext ucpal: export o tisících řádků, dlouhý log, databáze, ze které se dotazuje po částech.
+**Nejdřív rozhodni, jestli se delegace vyplatí.** Deleguje se kvůli kontextu, ne kvůli úspoře (`~/.claude/DELEGATION.md`, *Velké průzkumné úkoly deleguj*) – a u projektu, kde je všech pět zdrojů dohromady pár kilobajtů, je levnější je přečíst rovnou. Rozeslání agentů má smysl, až když by sběr hlavní session kontext ucpal: export o tisících řádků, dlouhý log, databáze, ze které se dotazuje po částech.
 
 **Čteš-li to sám, čti to rovnou** a *Fáze 2* se scvrkne na dotazy a výpisy. Doloženo prvním ostrým během (21. 9. 2026): agent delegaci vědomě neprovedl, protože zdroje byly pětikilobajtové, a bylo to správné rozhodnutí – každý agent by si načetl totéž a výstup by se vrátil převyprávěný.
 
@@ -114,7 +114,7 @@ Ze surových údajů složíš **poznatky**: tvrzení o provozu, každé s čís
 
 **Každý poznatek ověř tím, že číslo zopakuješ.** Pusť dotaz znovu sám, nebo ho přečti a řekni, co doopravdy počítá. Padá tím nejčastější vada celého kroku: **stav v databázi neznamená, co jeho jméno napovídá.** Řádek `draft` může být nedokončená platba, ale taky rozepsaný formulář, který nikdo nemyslel vážně – a rozdíl mezi tím je celý rozdíl mezi nálezem a šumem.
 
-**Na nejsilnější poznatky pusť ověřovatele** – agenta typu `Explore` (přepočítává, takže shell potřebuje) s jediným úkolem: **ten poznatek vyvrátit.** Dostane tvrzení, jeho číslo a příkaz k zopakování, nic víc. Vlastní ověření to nenahradí a je to celá podstata téhle vrstvy: poznatky jsi našel ty, takže máš zájem na tom, aby platily (`~/.claude/RULES.md`, *Model a effort podle úkolu*, odrážka o izolaci kontextu). Model nejsilnější, protože vyvrácený nález je to, co se do podkladu nedostane – chyba ověřovatele se násobí do všeho, co pak na podkladu stojí.
+**Na nejsilnější poznatky pusť ověřovatele** – agenta typu `Explore` (přepočítává, takže shell potřebuje) s jediným úkolem: **ten poznatek vyvrátit.** Dostane tvrzení, jeho číslo a příkaz k zopakování, nic víc. Vlastní ověření to nenahradí a je to celá podstata téhle vrstvy: poznatky jsi našel ty, takže máš zájem na tom, aby platily (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*, odrážka o izolaci kontextu). Model nejsilnější, protože vyvrácený nález je to, co se do podkladu nedostane – chyba ověřovatele se násobí do všeho, co pak na podkladu stojí.
 
 **Doloženo prvním ostrým během (21. 9. 2026).** Ověřovatel tehdy přinesl doklad, který nikdo nehledal: u poloviny sousedních záznamů podle rostoucího klíče **nerostlo `created_at`**. U autoinkrementovaného klíče to nemůže nastat, takže se časy přiřadily nezávisle na pořadí vkládání – a padla tím celá číselná vrstva běhu. Bez ověřovatele by z toho byla analýza chování lidí postavená na datech, která o lidech neříkají nic.
 

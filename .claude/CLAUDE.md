@@ -24,6 +24,20 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 - **Norma platí pro každou cestu ke změně skillu:** ruční úpravu, `/skill` i cizí nástroj typu `skill-creator` nebo `superpowers:writing-skills`. Ty mají vlastní představu o tvaru a prosadí ji, když jim nic neřekneš; tenhle řádek je to, co jim ji přebíjí (`~/.claude/RULES.md`, *Přednost pravidel*). Postup zakládání, revize a rušení drží `/skill`, ne norma.
 - **Každý skill má dvě README.** Vlastní `skills/<name>/README.md` psané pro člověka zvenčí, na které se posílá odkaz, a k tomu jeden odstavec v kořenovém `README.md`, jehož nadpis na ně odkazuje. Tvar obojího drží `skills/SKILLS.md`, *README skillu*, a vynucují ho testy. Když skill přidáš nebo zásadně změníš jeho chování, aktualizuj obojí rovnou jako součást té změny – nečekej na vyžádání.
 
+## Co do `RULES.md` nepatří
+
+`~/.claude/RULES.md` drží **obecná pravidla práce** a jde do každé session, takže každá věta v něm stojí kontext všude. Než do něj něco zapíšeš, projdi test – vyhrává první kritérium, které sedí:
+
+1. Říká, **co smí stát** v konkrétním souboru v `docs/`? → `~/.claude/STRUCTURE.md`
+2. Platí obecně pro skilly? → `~/.claude/skills/SKILLS.md`
+3. Popisuje **rozhraní kroku životního cyklu**? → `~/.claude/skills/LIFECYCLE.md`; obecné pravidlo o přeskakování zůstává v `RULES.md`
+4. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu
+5. Platí jen při určité činnosti – zjišťování z dat (`~/.claude/EVIDENCE.md`), delegaci na agenty (`~/.claude/DELEGATION.md`), kódu, webu, textu, vizuálu či měření (doména v `~/Dev/context/`)? → tam, a v `RULES.md` nanejvýš jednořádkový spouštěč
+6. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, *Výjimky z obecných pravidel*
+7. Nic z toho → `RULES.md`
+
+**K pravidlu jen jedna věta pointy** (`~/.claude/RULES.md`, *K pravidlům ukládej i „proč“*); datum, incident a měření patří do commitu nebo `decisions.md`. Velikost `RULES.md` i součtu paušálně načítaných souborů hlídá test v `tests/test_size.py` – když spadne, uvolni místo nebo pravidlo přesuň, mez nezvedej mimochodem.
+
 ## Kontrakt příkazů
 
 Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.

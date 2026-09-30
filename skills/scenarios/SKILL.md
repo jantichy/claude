@@ -77,7 +77,7 @@ Do scratchpadu připrav dva soubory:
 
 ## Fáze 3 – Rozeslání
 
-**Jeden agent na jednu session.** Výchozí model session, **ne nejlevnější** – agent musí poznat, která dohoda později přestala platit, a jeho chybu nepoznáš jinak než tím, že si ten transcript přečteš sám (`~/.claude/RULES.md`, *Model a effort podle úkolu*).
+**Jeden agent na jednu session.** Výchozí model session, **ne nejlevnější** – agent musí poznat, která dohoda později přestala platit, a jeho chybu nepoznáš jinak než tím, že si ten transcript přečteš sám (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*).
 
 Každému předej: cestu k zadání, cestu k seznamu zapsaných scénářů, **svůj** transcript i s jeho velikostí a datem, jméno výstupního souboru `out-<id>.md` a **vlastní prefix pro pomocné soubory**.
 
