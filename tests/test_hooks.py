@@ -350,6 +350,71 @@ class VerifyHookIsRegistered(unittest.TestCase):
             "se utne uprostřed a nahlásí chybu tam, kde žádná není")
 
 
+class PermissionRuleSyntax(unittest.TestCase):
+    """Pravidlo v `permissions`, které nikdy nezabere, vypadá stejně jako to funkční.
+
+    Claude Code zná dvě syntaxe: prefix `Bash(příkaz:*)` a wildcard
+    `Bash(a*b)`. Smíchané (`Bash(*verify.sh --allow:*)`) se čte jako prefix,
+    takže `*` na začátku je doslovný znak a pravidlo nechytí nic. Deny
+    na souhlas `verify.sh` takhle nedrželo od svého vzniku a nikdo si toho
+    nevšiml, protože nefunkční deny mlčí stejně jako funkční.
+
+    Testují se oba směry: kontrola musí chytit smíchaný tvar, ale nesmí hlásit
+    čistý prefix ani čistý wildcard – jinak by kvůli ní někdo syntaxi rozbil.
+    Třetí test ověřuje, že deny na souhlas skutečně pokryje volání s cestou
+    i bez ní; porovnání napodobuje wildcard, kde `*` znamená cokoliv.
+    """
+
+    SETTINGS = ROOT / "settings.json"
+
+    @staticmethod
+    def is_mixed(rule):
+        m = re.fullmatch(r"\w+\((.*)\)", rule)
+        return bool(m) and m.group(1).endswith(":*") and "*" in m.group(1)[:-2]
+
+    @staticmethod
+    def wildcard_matches(rule, command):
+        m = re.fullmatch(r"Bash\((.*)\)", rule)
+        if not m or m.group(1).endswith(":*"):
+            return False
+        pattern = ".*".join(re.escape(p) for p in m.group(1).split("*"))
+        return re.fullmatch(pattern, command) is not None
+
+    def permissions(self):
+        d = json.loads(self.SETTINGS.read_text(encoding="utf-8"))
+        return d.get("permissions", {})
+
+    def test_no_rule_mixes_wildcard_with_prefix(self):
+        perms = self.permissions()
+        for kind in ("allow", "deny", "ask"):
+            for rule in perms.get(kind, []):
+                with self.subTest(kind=kind, rule=rule):
+                    self.assertFalse(
+                        self.is_mixed(rule),
+                        f"{kind} pravidlo {rule} míchá `*` s koncovým `:*` – čte se jako "
+                        "doslovný prefix a nezabere nikdy. Napiš ho jako wildcard bez `:`")
+
+    def test_checker_distinguishes_valid_forms(self):
+        self.assertTrue(self.is_mixed("Bash(*verify.sh --allow:*)"))
+        self.assertTrue(self.is_mixed("Bash(/a/*.sh:*)"))
+        self.assertFalse(self.is_mixed("Bash(git log:*)"))
+        self.assertFalse(self.is_mixed("Bash(*verify.sh --allow*)"))
+        self.assertFalse(self.is_mixed("Read(/Users/honza/.claude/**)"))
+
+    def test_verify_consent_is_denied_in_every_form(self):
+        deny = self.permissions().get("deny", [])
+        for command in ("verify.sh --allow .",
+                        "~/.claude/verify.sh --allow /Users/honza/Dev/x",
+                        "/Users/honza/.claude/verify.sh --revoke .",
+                        "./verify.sh --revoke ."):
+            with self.subTest(command=command):
+                self.assertTrue(
+                    any(self.wildcard_matches(r, command) for r in deny),
+                    f"deny v settings.json nezastaví `{command}`")
+        self.assertFalse(any(self.wildcard_matches(r, "~/.claude/verify.sh") for r in deny),
+                         "deny zastavuje i samotnou kontrolu, ne jen souhlas")
+
+
 class BypassRegistry(unittest.TestCase):
     """`BYPASS.md` musí jmenovat každou vrstvu, která něco vynucuje.
 
