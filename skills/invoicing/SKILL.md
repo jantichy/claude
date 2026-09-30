@@ -16,7 +16,7 @@ Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého
 - **`/invoicing recover`** – dohledá čas, který se zapomněl natrackovat, a ukáže tipy s doložením. Taky nic nevystaví a **sám od sebe nezapíše ani do timetrackingu, ani do souboru klienta**.
 - **`/invoicing sync`** – přepíše odpracovaný čas do timetrackingu klienta, má-li ho klient vyplněný. Nic nevystavuje; **jako jediný režim zapisuje do cizího systému**.
 
-Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají soubor v `~/Dev/context/business/invoicing/`. **Klienta bez vyplněné části *Dohoda* vynech a řekni to** – takový soubor existuje kvůli `recover`, který identifikátory potřebuje dřív, než se začne fakturovat, a fakturovat podle nevyplněné dohody nejde.
+Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají soubor v `~/Dev/context/business/invoicing/`. **Klienta bez vyplněné části *Dohoda* vynech a řekni to** – takový soubor existuje kvůli `recover`, který identifikátory potřebuje dřív, než se začne fakturovat, a fakturovat podle nevyplněné dohody nejde. **Stejně vynech a ohlas klienta, který má ve *Stavu spolupráce* hodnotu `uzavřená`** – fakturovat se mu už nebude a jeho zbylý čas drží deník propadlého času (`~/Dev/context/business/invoicing.md`, *Soubor klienta*).
 
 **Jen u `recover` smí za jménem klienta stát ještě období** (`2026-05`), kterým se přebije výchozí rozsah. **`sync` období nepřijímá** – to, do čeho smí sáhnout, si určuje sám z otevřeného okna a přebít se nedá.
 
