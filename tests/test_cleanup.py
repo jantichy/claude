@@ -127,6 +127,39 @@ class NehlasiSpravne(Fixture):
         """Opačný směr: bez závorek se nález hlásit musí, jinak to umlčí vše."""
         self.assertIn("neexistuje", self.findings("[x](skills/name/)\n"))
 
+    def test_ukazka_syntaxe_odkazu_v_backticku_neni_odkaz(self):
+        """`[text](cíl)` v backticku je věta o tom, jak se odkaz píše.
+
+        Doloženo 30. 9. 2026 při `/cleanup` v projektu eventoid: session psala
+        dokumentaci o kontrole odkazů a skript nad ní ohlásil 4 nálezy, všechny
+        falešné – byly to věty o syntaxi.
+        """
+        self.assertEqual("", self.findings("Píše se `[text](cíl.md)`.\n"))
+        self.assertEqual("", self.findings("Platí i `[text](<cíl s mezerou>)`.\n"))
+
+    def test_ukazka_v_delsim_ohraniceni_neni_odkaz(self):
+        """Inline kód nesoucí backtick se zapisuje delším ohraničením.
+
+        Vzor, který nepáruje stejný počet backticků, se na `` `x` `` zlomí
+        a ukázku nechá nechráněnou. Doloženo 30. 9. 2026 tím, že tahle kontrola
+        ohlásila nález nad zápisem vlastní opravy do `done.md`.
+        """
+        self.assertEqual("", self.findings("Píše se `` `[text](cíl.md)` ``.\n"))
+
+    def test_ukazka_v_backticku_neumlci_odkaz_na_temze_radku(self):
+        """Opačný směr: vyjímá se úsek v backticku, ne celý řádek.
+
+        Zahození celého řádku by umlčelo i skutečný odkaz vedle ukázky, a to je
+        tišší selhání než falešný poplach – nikde by po něm nezůstala stopa.
+        """
+        body = "Píše se `[text](cíl.md)`, viz [x](chybi.md).\n"
+        self.assertIn("neexistuje", self.findings(body))
+
+    def test_cesta_v_backticku_se_kontroluje_dal(self):
+        """Backtick v textu odkazu vyjmutí nespustí – nenese `](`."""
+        self.assertIn("neexistuje", self.findings("[`chybi.md`](chybi.md)\n"))
+        self.assertEqual("", self.findings("[`b.md`](b.md)\n"))
+
     def test_kotva_do_sebe(self):
         self.assertEqual("", self.findings("# Živá sekce\n\n[x](#živá-sekce)\n"))
 
@@ -217,6 +250,19 @@ class Mutace(Fixture):
         findings = load(mutant, "links_mutant").check([str(self.write(body))])
         self.assertTrue(findings, "vyřazení vynechávání bloků kódu nic nezměnilo – "
                                   "test nad blokem kódu tedy neměří to, co tvrdí")
+
+    def test_bez_vynechani_ukazky_v_backticku_vznikne_falesny_poplach(self):
+        source = LINKS.read_text(encoding="utf-8").replace(
+            "            for raw in LINK.findall(without_code_links(line)):",
+            "            for raw in LINK.findall(line):",
+            1,
+        )
+        mutant = self.dir / "links_mutant_kod.py"
+        mutant.write_text(source, encoding="utf-8")
+        body = "Píše se `[text](vubec-nic.md)`.\n"
+        findings = load(mutant, "links_mutant_kod").check([str(self.write(body))])
+        self.assertTrue(findings, "vyřazení vyjímání ukázek v backticku nic nezměnilo – "
+                                  "test nad ukázkou syntaxe tedy neměří to, co tvrdí")
 
 
 class PredfiltrBase(unittest.TestCase):

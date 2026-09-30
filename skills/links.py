@@ -14,6 +14,8 @@ Vyloučeno je schválně:
   nesou zástupné symboly (`<name>`) a šablony výstupu začínají řádkem
   `## Něco`, který nadpis dokumentu není. Falešný poplach je ta horší
   polovina selhání: kontrolu, která křičí na správný text, si člověk vypne.
+- **zápis odkazu uvnitř backticků** – je to ukázka syntaxe, ne odkaz. Cesta
+  v backticku se naopak kontroluje dál, viz `without_code_links`.
 - **absolutní cesty a `~/`** – míří mimo repozitář, takže jejich platnost
   nezávisí na tomhle projektu a v cizím prostředí by hlásily nesmysly.
 - **http, https, mailto** – ověřit je znamená jít na síť, což je jiná
@@ -31,6 +33,10 @@ from urllib.parse import unquote
 
 LINK = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 FENCE = re.compile(r"^\s*(```|~~~)")
+# Ohraničení se páruje na stejný počet backticků: inline kód, který sám nese
+# backtick, se v Markdownu zapisuje delším ohraničením (``…``). Vzor, který
+# to nepáruje, se na takovém zápisu zlomí a ukázku nechá nechráněnou.
+INLINE_CODE = re.compile(r"(`+)[^\n]*?\1")
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*$")
 EXTERNAL = ("http://", "https://", "mailto:", "tel:", "ftp://", "//")
 
@@ -47,6 +53,21 @@ def outside_fences(text):
         elif fence is None:
             rows.append((number, line))
     return rows
+
+
+def without_code_links(line):
+    """Zahodí úsek v backticku, ve kterém stojí zápis odkazu – je to ukázka syntaxe.
+
+    Inline kód se **nevyjímá celý**: cesta v backticku (`docs/model.md`) se
+    kontrolovat má, a v textu odkazu stojí běžně. Zahodí se proto jen úsek,
+    který nese `](`, tedy Markdownový odkaz.
+
+    Bez tohohle nejde v dokumentaci napsat, jak se odkaz píše: věta o syntaxi
+    se vyhodnotí jako mrtvý odkaz. Doloženo 30. 9. 2026 v projektu eventoid,
+    kde to byly 4 nálezy ze 4 a všechny falešné – a falešný poplach je ta horší
+    polovina, protože otravnou kontrolu si člověk vypne.
+    """
+    return INLINE_CODE.sub(lambda m: "" if "](" in m.group(0) else m.group(0), line)
 
 
 def slug(text):
@@ -123,7 +144,7 @@ def check(paths):
             findings.append(f"{source}: nelze přečíst – {error}")
             continue
         for number, line in outside_fences(text):
-            for raw in LINK.findall(line):
+            for raw in LINK.findall(without_code_links(line)):
                 finding = check_link(source, number, raw, cache)
                 if finding:
                     findings.append(finding)
