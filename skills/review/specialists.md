@@ -29,7 +29,8 @@ Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
 
 | Sada | Kdy se aplikuje | Typ |
 |---|---|---|
-| `coding/coding.md` | jakýkoliv kód, datový model, migrace, konfigurace, CI | `reader` |
+| `coding/coding.md` | jakýkoliv kód, migrace, konfigurace, CI | `reader` |
+| `coding/modeling.md` | datový model, stavy a přechody, guardy a autorizace, tvar API, napojení na vnější systém, konfigurace a dědění (**navíc** k `coding/coding.md`) | `reader` |
 | `coding/architecture.md` | vrstvy a jejich hranice, cesta k datům, transakce kolem cizích volání, souběh, běhy na pozadí – a u projektu, který je v `CLAUDE.md` vedený jako **aplikace**, i kontrolní seznam *Minimum hotové aplikace* (**navíc** k `coding/coding.md`) | `reader` |
 | `coding/quality.md` | kontroly kvality, kontrakt příkazů, CI, testovací infrastruktura, závislosti (**navíc** k `coding/coding.md`) | `Explore` |
 | `web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky | `reader` |

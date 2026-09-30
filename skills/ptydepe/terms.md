@@ -318,7 +318,7 @@ Revize neustálených termínů se zastavila u „stopy práce“ v `/invoicing 
 
 ### 2026-09-07 – Termín „guard“ se ponechává, a plyne z toho obecné pravidlo
 
-Kandidát z `/ptydepe suggest`: 25 výskytů v 10 souborech, skloňovaný po česku („guardy“, „jednoduchému guardu“). Znamená funkci, která rozhoduje, jestli je operace přípustná, a vrací důvod – `coding.md`, *Rozhraní, guardy a autorizace*.
+Kandidát z `/ptydepe suggest`: 25 výskytů v 10 souborech, skloňovaný po česku („guardy“, „jednoduchému guardu“). Znamená funkci, která rozhoduje, jestli je operace přípustná, a vrací důvod – `modeling.md`, *Rozhraní, guardy a autorizace*.
 
 **Rozhodnutí:** ponechat. Na rozdíl od „stubu“, který se použil **mimo** svůj oborový význam, je „guard“ použitý přesně tak, jak ho obor používá: `guard` je klíčové slovo Swiftu, `Guard` třída v NestJS, *route guard* v Angularu, *guard clause* zavedený vzor.
 
@@ -388,7 +388,7 @@ Revize neustálených termínů se zastavila u „sledovacího okna“ v `/relea
 
 Revize neustálených termínů se zastavila u „invariantu“ – podmínky o datech, která musí platit v každém okamžiku a kterou vynucuje databáze (`CHECK` omezení, unikátní index, cizí klíč). Není to validace vstupu ani kontrola za běhu: ty se dají obejít, invariant ne.
 
-Stojí jako standard v `~/Dev/context/coding/coding.md`, *Pojmenuj, co nesmí nastat, a braň tomu*, a odtud se na tu sekci odkazuje `coding/architecture.md` (dvakrát, mimo jiné v seznamu toho, co platí i pro nástroj) a `coding/quality.md` v argumentu proti zamockované databázi. V `kdojekde` je ve dvou komentářích u testů (`src/lib/__tests__/migrations.test.ts`, `supabase/tests/rls-hardening.test.ts`).
+Stojí jako standard v `~/Dev/context/coding/modeling.md`, *Pojmenuj, co nesmí nastat, a braň tomu*, a odtud se na tu sekci odkazuje `coding/architecture.md` (dvakrát, mimo jiné v seznamu toho, co platí i pro nástroj) a `coding/quality.md` v argumentu proti zamockované databázi. V `kdojekde` je ve dvou komentářích u testů (`src/lib/__tests__/migrations.test.ts`, `supabase/tests/rls-hardening.test.ts`).
 
 **Rozhodnutí:** ponechat. Je to zavedený odborný termín, a to v angličtině (*class invariant*, *loop invariant*, Design by Contract) i v češtině – v matematice, ve fyzice i v programování. Skloňuje se jako běžné české podstatné jméno mužského rodu, takže to není anglicismus ohnutý po česku. Padá tím jediné kritérium skillu: **neříká se tomu normálně jinak.**
 

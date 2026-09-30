@@ -2,8 +2,6 @@
 
 Úkoly na konfigurační vrstvě Claude Code: v pravidlech, skillech, hoocích, testech a průběžné kontrole.
 
-- [ ] **Zmenšit `~/Dev/context/coding/coding.md` stejně jako `RULES.md`** (přesun do podmíněných souborů, škrt zdůvodnění a dokladů, komprese). Za 20 dní narostl z 25,6k na 49,3k znaků a v projektech, které ho importují, drží součet instrukcí nad limitem Claude Code 150k. Navazuje hned po úklidu `RULES.md` (30. 9. 2026).
-
 **Repozitář je veřejný.** Nic, co sem přibude, nesmí prozradit **obsah** soukromého `~/Dev/context/` – jméno klienta či organizace, sazbu, obchodní nebo osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu ani know-how, které se prodává. Struktura toho adresáře veřejná je a `README.md` ji sám píše; konkrétní obsah ne. Podrobněji `.claude/CLAUDE.md`, *Výjimky z obecných pravidel*.
 
 **Nezávazné nápady sem nepatří** – co nikdo neschválil ani nezamítl, leží v `backlog.md`; sem jde jen to, u čeho je rozhodnuto, že se udělá, i kdyby to bylo až za rok. Hranici drží `STRUCTURE.md`, *`backlog.md`*.
