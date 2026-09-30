@@ -1600,4 +1600,4 @@ Claude Code začal v projektech, které importují `coding.md`, varovat, že ins
 
 **Pojistka:** `tests/test_size.py` hlídá `RULES.md` do 35k znaků a součet paušálně načítaného (`CLAUDE.md` + jeho `@` importy) do 50k; třetí test drží seznam paušálních souborů v souladu s importy. Ověřeno v obou směrech: propustí dnešní stav, zastaví přerostlý soubor i nový import mimo seznam.
 
-**Zbývá:** stejný úklid `coding.md` (`todo.md`). Samotný `RULES.md` na limit v projektech s `coding.md` nestačí.
+**Týž den stejným postupem i `WORKTREE.md`** (14,3k → 7,1k), který se importuje do každého projektu s worktree layoutem; nadpisy zůstaly kvůli odkazům, obsah dokumentu a zdůvodnění „proč kořen, ne skill“ vypadly. `coding.md` viz `~/Dev/context/decisions.md` z téhož dne.

@@ -1,6 +1,6 @@
 # Worktree layout projektu
 
-Uspořádání, ve kterém adresář projektu není pracovní adresář, ale **kontejner** s jedním git repozitářem a několika jeho pracovními adresáři – jeden na každou rozdělanou větev.
+Adresář projektu není pracovní adresář, ale **kontejner** s jedním git repozitářem a pracovním adresářem pro každou rozdělanou větev – aby nad projektem mohlo běžet víc session naráz, aniž si přepisují soubory a commitují cizí práci.
 
 ```
 <container>/                    KONTEJNER – není ve gitu, nic se odsud neverzuje
@@ -16,34 +16,11 @@ Uspořádání, ve kterém adresář projektu není pracovní adresář, ale **k
 └── <branch>/                  dočasné pracovní adresáře rozdělaných větví
 ```
 
-**Proč:** nad projektem běží typicky několik Claude session najednou, každá na jiné featuře. Ve sdíleném pracovním adresáři by si přepisovaly soubory a commitovaly si navzájem rozdělanou práci. Oddělený worktree na větev je jediná skutečná izolace; sdílejí přitom jeden `.bare`, takže to nestojí ani místo, ani čas.
-
-Hlavní větev se jmenuje `main`. Narazíš-li na starší projekt, kde se jmenuje jinak, platí níž psané pro jeho hlavní větev bez ohledu na jméno.
-
-**Tenhle soubor drží provoz layoutu** – co kde leží a jak se v tom pracuje. Platí pro každou session nad projektem s tímhle uspořádáním a čte ho `~/.claude/skills/PREFLIGHT.md` i skilly, které nad projektem běží. **Zřízení kontejneru a jeho zrušení sem nepatří** – to vede `/worktree` (`~/.claude/skills/worktree/SKILL.md`), který si tenhle soubor zároveň importuje do rozcestníku v kořeni kontejneru.
-
-Leží v kořeni `~/.claude` vedle `RULES.md` a `STRUCTURE.md`, ne uvnitř skillu, **protože ho čte většina skillů i příprava** – tedy i ten, kdo `/worktree` nainstalovaný nemá.
-
-## Obsah
-
-- [Na začátku session](#na-začátku-session)
-- [Co žije v kontejneru a co v pracovním adresáři](#co-žije-v-kontejneru-a-co-v-pracovním-adresáři)
-- [Založení větve](#založení-větve)
-- [Lokální stav se bere z `main/`](#lokální-stav-se-bere-z-main)
-- [`main/` se nemaže a nepracuje se v něm](#main-se-nemaže-a-nepracuje-se-v-něm)
-- [Větev žije, dokud uživatel neřekne jinak](#větev-žije-dokud-uživatel-neřekne-jinak)
-- [Dokončení větve](#dokončení-větve)
-- [Kontrola stavu](#kontrola-stavu)
-- [V kořeni kontejneru git nefunguje](#v-kořeni-kontejneru-git-nefunguje)
-- [Jak si skill najde projektový adresář](#jak-si-skill-najde-projektový-adresář)
-
----
+Hlavní větev je `main`; jmenuje-li se ve starším projektu jinak, platí tohle pro ni. Soubor drží provoz layoutu; zřízení a zrušení kontejneru vede `/worktree` (`~/.claude/skills/worktree/SKILL.md`).
 
 ## Na začátku session
 
-Session se pouští z **kořene kontejneru**, ne z podadresáře – session se ukládají podle adresáře spuštění, takže `/resume` díky tomu nabídne session ze všech větví na jednom místě.
-
-Stojíš tedy v kontejneru, ne v projektu. Prvním úkolem je přesunout se podle toho, co uživatel chce:
+Session se pouští z **kořene kontejneru**, aby `/resume` nabízel session ze všech větví na jednom místě. Pak se přesuň:
 
 | Uživatel chce | Kam |
 |---|---|
@@ -51,107 +28,70 @@ Stojíš tedy v kontejneru, ne v projektu. Prvním úkolem je přesunout se podl
 | jen se zeptat, vysvětlit, najít, přečíst | `main/`, bez zakládání čehokoliv |
 | pokračovat v rozdělané práci | do příslušného existujícího podadresáře |
 
-Když si nejsi jistý kategorií, **zeptej se**, než založíš větev – zbytečně založená větev je odpad, který pak někdo musí uklidit.
+Nejsi-li si kategorií jistý, zeptej se dřív, než založíš větev.
 
 ## Co žije v kontejneru a co v pracovním adresáři
 
-Kontejner **není pracovní strom**: nic, co v něm leží, není ve gitu, nikdy se to nedá commitnout a zmizí to s adresářem. Zároveň Claude Code načítá při startu session `CLAUDE.md` z aktuálního adresáře a **z adresářů nad ním** – `CLAUDE.md` z podadresáře se načte až on-demand, když z něj něco čteš. Session přitom startuje v kontejneru.
+Kontejner není ve gitu – co v něm leží, nejde commitnout. Claude Code při startu načítá `CLAUDE.md` z adresáře spuštění a nad ním, z podadresářů až při čtení. Z toho plyne rozdělení, které se nesmí prohodit:
 
-Z těch dvou faktů plyne rozdělení, které se **nesmí prohodit**:
-
-| Soubor | Kde | Proč |
-|---|---|---|
-| `CLAUDE.md` s pravidly projektu | `main/` (a tím ve všech worktree) | je to projektový soubor – patří do gitu a má se s větví vyvíjet |
-| `CLAUDE.md` kontejneru | kořen kontejneru | jen tenký rozcestník, viz níž – existuje čistě proto, aby se ten projektový načetl při startu |
-| `README.md`, `docs/*` | `main/` | projektové soubory, patří do gitu |
-| `.claude/settings.local.json` | kořen kontejneru | hooky a povolení čte Claude Code z adresáře, ze kterého session startuje |
-| `.env`, `node_modules/` | `main/`, odtud se přebírá | netrackovaný lokální stav, viz níž |
+| Soubor | Kde |
+|---|---|
+| `CLAUDE.md` s pravidly projektu, `README.md`, `docs/*` | `main/` (a tím v každém worktree) – patří do gitu |
+| `CLAUDE.md` kontejneru | kořen – jen rozcestník, aby se projektový načetl při startu |
+| `.claude/settings.local.json` | kořen – Claude Code ho čte z adresáře spuštění |
+| `.env`, `node_modules/` | `main/`, odtud se přebírá |
 
 ### Rozcestník v kořeni kontejneru
 
-`<container>/CLAUDE.md` neobsahuje žádná pravidla projektu. Obsahuje popis layoutu, odchylky, **import tohohle souboru** a **import projektového `CLAUDE.md`** (`@main/CLAUDE.md`). Zakládá ho `/worktree` a jeho doslovné znění drží `~/.claude/skills/worktree/SKILL.md`, režim `enable`.
-
-Relativní cesta v importu se resolvuje vůči souboru, který import obsahuje – `@main/CLAUDE.md` tedy míří na `<container>/main/CLAUDE.md`. Řetěz importů smí být hluboký nejvýš **4 úrovně**, takže kontejner → `main` → doménový standard se pohodlně vejde.
-
-Když pracuješ ve worktree `<branch>/`, načte se `<branch>/CLAUDE.md` on-demand, jakmile v té větvi něco čteš. Pravidla té větve tedy platí, i když rozcestník v kořeni importuje verzi z `main`.
-
-**Nikdy nekopíruj pravidla projektu do rozcestníku.** Dvě kopie se rozejdou a Claude pak dostane do kontextu obě, protože se načítají obě.
+`<container>/CLAUDE.md` nese jen popis layoutu, odchylky, import tohohle souboru a `@main/CLAUDE.md`; znění drží `/worktree`, režim `enable`. Relativní import se resolvuje vůči souboru, který ho obsahuje; řetěz importů smí mít nejvýš 4 úrovně. Ve worktree `<branch>/` se `<branch>/CLAUDE.md` načte při čtení z větve, takže platí pravidla té větve. **Pravidla projektu do rozcestníku nikdy nekopíruj** – načetly by se obě kopie.
 
 ## Založení větve
 
 ```bash
+git -C <container> fetch
 git -C <container> worktree add <container>/<directory> -b <branch>
+git -C <container>/<directory> merge --ff-only origin/main
 ```
 
-- Větev pojmenuj `feat/`, `fix/` nebo `docs/` podle povahy práce; zbytek názvu česky nebo anglicky podle toho, co je v projektu zvykem.
-- **Adresář pojmenuj plochým jménem bez lomítka** – větev `feat/payments` patří do `payments/`, ne `feat/payments/`.
-- Převezmi lokální stav z `main/` (viz níž) a řekni uživateli jednou větou, co jsi založil.
-
-**Nejdřív si natáhni aktuální `main`.** Kontejner existuje právě proto, že nad projektem běží víc session naráz – takže `main` se mohl posunout od chvíle, kdy tahle session začala, a to i o práci, na kterou tvoje větev staví. Před založením proto `git fetch` a hned po založení `git merge --ff-only origin/main`; teprve pak začni pracovat. **Musí to být `origin/main`, ne `main`:** `git fetch` posune remote-tracking referenci, kdežto lokální `main` zůstane tam, kde byl – merge lokální větve by tedy nepřinesl nic a celý ten krok by tiše nedělal nic.
-
-**Nestačí to udělat jednou na začátku session.** Zakládáš-li větev po delší práci, zopakuj to – jinak stavíš na stavu, který byl aktuální před hodinou. Pozná se to pozdě: konflikt nevznikne, jen se tiše rozhodne podruhé něco, co už rozhodla vedlejší session.
-
-**Návrat do větve, která už existuje** (její worktree byl mezitím smazán) – bez `-b`:
-
-```bash
-git -C <container> worktree add <container>/<directory> <branch>
-```
-
-S `-b` by to spadlo na `branch already exists`. Nejdřív se proto podívej do `git branch -a`, jestli větev není.
-
-**Tutéž větev nelze mít ve dvou worktree najednou.** Git to odmítne (`is already checked out at …`) a je to záměr – dva pracovní adresáře nad jednou větví by si přepisovaly commity. Chceš-li vedle sebe dvě varianty téhož, jsou to dvě větve. Je to i důvod, proč kontejner stojí na **holém** repozitáři: kdyby jeho kořen byl obyčejný pracovní adresář s checkoutnutým `main`, nešel by `main` rozbalit do podadresáře.
+- **Před založením `git fetch`, po něm `merge --ff-only origin/main`** – ne lokální `main`, ten fetch neposune. Opakuj to při každém zakládání, ne jednou za session: vedlejší session mohla mezitím něco rozhodnout.
+- Větev pojmenuj `feat/`, `fix/` nebo `docs/` podle povahy práce; **adresář plochým jménem bez lomítka** (`feat/payments` → `payments/`).
+- Převezmi lokální stav z `main/` a jednou větou řekni, co jsi založil.
+- **Návrat do existující větve** (worktree byl smazán) jde bez `-b`; nejdřív se podívej do `git branch -a`.
+- **Tutéž větev nelze mít ve dvou worktree** – dvě varianty téhož jsou dvě větve.
 
 ## Lokální stav se bere z `main/`
 
-`main/` je **kanonickým zdrojem netrackovaného lokálního stavu**. Co není v gitu, ale je potřeba k práci, žije tam a odtud se přebírá.
+`main/` je kanonický zdroj netrackovaného lokálního stavu. **Symlinkuje se, co má zůstat sdílené, klonuje se, co se smí rozejít:**
 
-| Co | Jak | Proč |
-|---|---|---|
-| `.env`, `.env.local` | symlink | jeden zdroj pravdy, tajemství na disku jednou, nová proměnná platí všude |
-| `node_modules/` | `cp -c -R` (APFS clone) | instantní, nula místa navíc, ale vlastní kopie – větev si smí doinstalovat balíček, aniž rozbije ostatní |
-| build cache (`.next/`, `dist/`, `build/`, `out/`) | nepřebírat | sdílená cache mezi větvemi je zdroj záhadných chyb |
+| Co | Jak |
+|---|---|
+| `.env`, `.env.local` | symlink |
+| `node_modules/` | `cp -c -R` (APFS clone) – symlink by `npm install` ve větvi přepsal balíčky v `main/` |
+| build cache (`.next/`, `dist/`, `build/`, `out/`) | nepřebírat |
 
-Pravidlo: **symlinkuje se, co má zůstat sdílené, klonuje se, co se smí rozejít.** Symlinknuté `node_modules` je past – `npm install` v jedné větvi by přepsal balíčky v masteru.
-
-Když dev server poběží ve víc větvích, poperou se o port. Řeš `.env.local` ve worktree s vlastním `PORT` – přebíjí symlinknutý `.env`.
-
-`.claude/settings.local.json` se **z `main/` nepřebírá** – žije v kořeni kontejneru, protože odtud se pouští session a odtud si ho Claude Code čte. Do `main/` ani do větví nepatří vůbec.
-
-**Je nepovinný a vzniká sám**, až když se v projektu udělí první povolení; v tabulce výš stojí kvůli umístění, ne proto, že by tam musel být. **Jeho absence tedy není vada** – znamená, že se nic projektového neudělilo a platí globální nastavení z `~/.claude/settings.json`. Nezakládej ho ručně jen proto, že chybí.
+Běží-li dev server ve víc větvích, dej worktree vlastní `PORT` v `.env.local`. `.claude/settings.local.json` se nepřebírá – žije v kořeni kontejneru, je nepovinný a vzniká sám s prvním povolením; nezakládej ho ručně.
 
 ## `main/` se nemaže a nepracuje se v něm
 
-1. **Nikdy nemaž `main/`** – žije v něm netrackovaný lokální stav, který v gitu není a nikde se nezálohuje.
-2. **Nedělej v `main/` změny** – slouží ke čtení, ke sdílení lokálního stavu a k mergování. Práce patří do vlastní větve.
+1. **Nikdy nemaž `main/`** – drží lokální stav, který není v gitu.
+2. **Nedělej v `main/` změny** – slouží ke čtení, sdílení lokálního stavu a mergování.
 
-**Jediná výjimka je hromadná migrace konfigurační vrstvy** – týž jednořádkový zápis do všech projektů naráz, typicky přepis odkazu po přesunu standardu nebo doplnění přepínače do `CLAUDE.md`. Zakládat kvůli jednomu řádku větev ve dvaceti projektech stojí víc, než kolik izolace přinese. Platí pro ni tři podmínky a všechny tři se ověřují, ne předpokládají:
-
-- pracovní strom je před zásahem **čistý** – jinak nevíš, co je čí,
-- commituje se **jmenovitě ten jeden soubor**, ne `git add -A`,
-- před commitem se **řádek po řádku ověří**, že v diffu není nic než ta migrace.
-
-**Nerozšiřuj to na běžnou práci.** Kritérium je, že tentýž zápis jde do všech projektů a nikdo nad ním nerozhoduje projekt po projektu; jakmile se u některého zastavíš a přemýšlíš, co tam napsat, je to práce a patří na větev.
+**Jediná výjimka je hromadná migrace konfigurační vrstvy** – týž jednořádkový zápis do všech projektů naráz. Podmínky: strom je před zásahem čistý, commituje se jmenovitě ten soubor a diff se před commitem ověří řádek po řádku. Jakmile u projektu přemýšlíš, co napsat, je to práce a patří na větev.
 
 ## Větev žije, dokud uživatel neřekne jinak
 
-**Nikdy nemerguj sám od sebe.** Založit větev, udělat práci a hned ji mergnout zpátky je chyba – větev je pracovní prostor, ne obálka na jeden příkaz.
-
-Po dokončení zadání tedy: commitni (má-li projekt autocommit), řekni, co je hotové, a **zůstaň ve worktree**. Větev zůstává otevřená napříč prompty i napříč session, klidně týden. Na další zadání ve stejném tématu prostě pokračuj ve stejné větvi.
-
-Merguje se **jen na výslovný pokyn** – „tohle je hotové“, „přimerguj to“, „ukliď tu větev“, nebo volba *Přimergovat do main* v závěrečné otázce `/cleanup`. Není-li pokyn jednoznačný, zeptej se; předčasný merge se odestává hůř než pozdní.
-
-Chce-li uživatel začít **jinou** věc, nemerguj tu rozdělanou – založ vedle ní další worktree. Právě proto to takhle je.
+**Nikdy nemerguj sám od sebe.** Po dokončení zadání commitni (má-li projekt autocommit), řekni, co je hotové, a zůstaň ve worktree – větev žije napříč prompty i session. Merguje se jen na výslovný pokyn („přimerguj to“, „ukliď tu větev“, volba v `/cleanup`); nejednoznačný pokyn si ověř. Jiná věc = další worktree vedle, ne merge té rozdělané.
 
 ## Dokončení větve
 
-*Až na výslovný pokyn uživatele.* **Postup drží `/merge`** (`~/.claude/skills/merge/SKILL.md`): co merge zastaví, jak se hlavní větev nejdřív přihraje do té pracovní a ověří tam, jak se merguje a co se pak uklízí. Je psaný tak, aby platil i v projektu bez tohohle layoutu – tady stojí jen to, co z layoutu plyne navíc:
+*Jen na výslovný pokyn.* Postup drží `/merge` (`~/.claude/skills/merge/SKILL.md`); z layoutu plyne navíc:
 
-- **Příkazy nad hlavní větví pouštěj z `<container>/main`**, ne z worktree dokončované větve. Ten adresář se na konci maže a session, která v něm stojí, by přišla o pracovní adresář pod nohama.
-- **Před smazáním větve jde `git worktree remove <container>/<directory>`** – a až po ověřeném mergi, nikdy souběžně s ním. Odmítne-li příkaz kvůli neuloženému obsahu, nepoužívej `--force`, dokud se nezeptáš.
-- **Rozpracovaný `main/` merge zastaví.** Je to cizí práce a merge by se s ní promíchal; ohlas to a zastav.
-- **Spojený stav vzniká ve worktree větve, ne v `main/`.** Důvod je zdejší: na `main/` stojí ostatní session, takže by rozdělané řešení konfliktů viděly a zaseklé by ho tam nechalo.
+- **Příkazy nad hlavní větví pouštěj z `<container>/main`** – worktree dokončované větve se na konci maže.
+- **`git worktree remove <container>/<directory>` až po ověřeném mergi**; odmítne-li kvůli neuloženému obsahu, `--force` jen po dotazu.
+- **Rozpracovaný `main/` merge zastaví** – ohlas to.
+- **Spojený stav vzniká ve worktree větve, ne v `main/`**, na kterém stojí ostatní session.
 
-**Nemáš-li `/merge` nainstalovaný**, platí z tohohle souboru pořád pravidlo výš – merguje se jen na pokyn –, ale postup nemá kdo vést; pak se řiď aspoň tím, že se hlavní větev nejdřív natáhne do té pracovní, ověří se tam kontraktem příkazů a teprve pak se merguje a uklízí.
+Bez `/merge`: hlavní větev nejdřív natáhni do pracovní, ověř tam kontraktem příkazů, pak merguj a ukliď.
 
 ## Kontrola stavu
 
@@ -160,31 +100,19 @@ git -C <container> worktree list    # co je rozdělané
 git -C <container> branch -a        # jaké větve existují
 ```
 
-Worktree, o kterém uživatel neví nebo který zůstal po nedokončené session, ohlas – ale nemaž bez ptaní.
+Neznámý nebo opuštěný worktree ohlas, ale nemaž bez ptaní.
 
 ## V kořeni kontejneru git nefunguje
 
-Kořen kontejneru **není pracovní adresář** – `.git` v něm míří na holé `.bare`. Každý příkaz, který potřebuje working tree nebo index, tam dá nesmysl, ne chybu:
-
-| Příkaz v kořeni | Co udělá |
-|---|---|
-| `git status`, `git diff` | `fatal: this operation must be run in a work tree` |
-| `git diff --cached` | **projde a vrátí smyšlený seznam** – porovná HEAD proti indexu bare repa, který k ničemu nepatří |
-| `git rev-parse --git-dir` | uspěje, takže jako detekce repa nestačí |
-
-Bare repo svůj `index` nikdy nepoužívá – každý worktree má vlastní v `.bare/worktrees/<directory>/index`. Vznikl-li kontejner konverzí existujícího repa, zůstane po původním pracovním adresáři ležet `.bare/index` zamrzlý na posledním commitu před konverzí a `git diff --cached` z něj hlásí trvale stejný počet „změn“, které nikdo neudělal. Proto ho `/worktree enable` po konverzi maže.
-
-**Nástroje, které si samy pouštějí git nad adresářem projektu** (statusline, editor, skripty), musí bare repo přeskočit – `rev-parse --git-dir` na to nestačí:
+Kořen není pracovní adresář: `git status` a `git diff` skončí `fatal: this operation must be run in a work tree`, **`git diff --cached` vrátí smyšlený seznam** z indexu bare repa (po konverzi existujícího repa ho `/worktree enable` maže) a `git rev-parse --git-dir` uspěje, takže jako detekce nestačí. Nástroje, které pouštějí git nad adresářem projektu, musí bare repo přeskočit – nejlépe počítat nad `cwd`:
 
 ```bash
 [ "$(git -C "$dir" rev-parse --is-bare-repository 2>/dev/null)" = "false" ] || exit
 ```
 
-Lepší je počítat rovnou nad adresářem, ve kterém se pracuje (`cwd`), ne nad kořenem projektu – v kontejneru se pracuje vždy ve worktree.
-
 ## Jak si skill najde projektový adresář
 
-Skilly hledají projekt tak, že jdou nahoru od `cwd`, dokud nenajdou `.git`. V kontejneru je `.git` **soubor**, ne adresář – a to v kořeni i v každém worktree, takže samotný nález `.git` nerozliší, kde jsi. Rozhodni podle přítomnosti `.bare`:
+Jdi nahoru od `cwd` k `.git`; v kontejneru je `.git` soubor v kořeni i v každém worktree, rozhoduje `.bare`:
 
 | Nález | Kde jsi | Co je projektový adresář |
 |---|---|---|
@@ -192,6 +120,4 @@ Skilly hledají projekt tak, že jdou nahoru od `cwd`, dokud nenajdou `.git`. V 
 | `.git` soubor **a** vedle něj `.bare/` | kořen kontejneru | `<container>/main` |
 | `.git` soubor **bez** `.bare/` vedle | worktree větve | ten adresář |
 
-Projektové soubory – `CLAUDE.md`, `README.md`, `docs/` – čti a zapisuj vždy v **projektovém adresáři**, nikdy v kořeni kontejneru. Výjimkou je `.claude/settings.local.json` a rozcestník `CLAUDE.md`, které patří do kořene.
-
-Jmenuje-li se hlavní větev jinak než `main`, zjisti její worktree z `git --git-dir=<container>/.bare worktree list`.
+Projektové soubory čti a zapisuj v projektovém adresáři; do kořene patří jen `.claude/settings.local.json` a rozcestník. Jmenuje-li se hlavní větev jinak, najdi její worktree přes `git --git-dir=<container>/.bare worktree list`.
