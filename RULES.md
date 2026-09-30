@@ -438,6 +438,16 @@ Než pustíš dotaz, test nebo jakékoliv zjišťování, napiš **všechny mož
 
 **Proč:** špatně vyloučené vysvětlení se do hry vrátí jedině tehdy, když u něj stojí zapsaná mez – bez ní se hledá dál v prázdnu. A nenalezení se s neexistencí splete nejsnáz tam, kde se mechanismus hledá jako hodnota v parametru, přestože se přenáší už jeho existencí.
 
+### Než odpovíš z dat, ověř, že v nich ta věc je
+
+Ptá-li se někdo na konkrétní věc – zdroj, kanál, segment, období, metriku –, **prvním krokem není výpočet, ale kontrola, že ji podklady obsahují v tom rozlišení, na které se ptá**. Najdi soubor a sloupec, ve kterém ta věc stojí pod svým jménem. Nenajdeš-li ho, **odpověď začíná touhle větou**: co v podkladech chybí a jaký konkrétní podklad by otázku rozhodl – s dimenzí, filtrem, obdobím a metrikou, tak aby se o něj dalo rovnou požádat.
+
+**Žádost o data je plnohodnotná odpověď, ne ústup.** Náhradní výpočet z příbuzných dat je horší, protože vypadá jako výsledek a čtenář ho předá dál jako fakt.
+
+**Zástupný údaj smí zaznít jen označený jako zástupný**, a to až za větou o tom, co chybí, s tím, v čem se od ptané věci liší. Skupina, do které ptaná věc patří, není ta věc: kanál není zdroj, kategorie není produkt, celek není segment.
+
+**Zrádné je, že zástupný údaj se jménem ptané věci podobá** – a data „z okolí“ vyvolávají dojem, že otázka je zodpovězená. Nejistota pak vůbec nevznikne, takže nepomůže ani *Při nejistotě se zeptej*. Proto se to kontroluje mechanicky na začátku, ne podle pocitu. Jestli pak měření sedí na tvrzení, řeší pravidlo hned níž.
+
 ### Měř to, co tvrzení tvrdí, na tom, o čem to tvrdí
 
 Vyloučení i potvrzení platí jen tehdy, když měření sedí na tvrzení **ve třech věcech naráz**. Rozejde-li se kterákoliv z nich, výsledek vypadá průkazně a nerozhoduje nic:
