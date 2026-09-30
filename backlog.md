@@ -38,3 +38,5 @@ Nápady ke konfigurační vrstvě v `~/.claude`. Hashe commitů v téhle sekci p
 
   **Co by se muselo rozhodnout, kdyby se to dělalo:** kdo ten řádek píše a kdy (každý krok osy sám, nebo `/cleanup` jako záchranná síť); co se zapíše u projektu se souběžnými větvemi; a jestli se vede **fáze**, nebo jen **seznam vědomě přeskočených kroků** – to druhé je mnohem levnější, nerozchází se tak snadno a pokrývá polovinu přínosu.
 
+
+- **`/review` v mezeře za krokem osy má měřit všechny výstupy toho kroku, ne diff větve.** Nápad z 30. 9. 2026, nerozhodnutý. V pilotním projektu `/review` za `/specify` prošel jen `requirements.md`, protože jen ten se na větvi měnil – scénáře a glosář, které jsou taky výstupem `/specify`, revizí neprošly nikdy. A za `/discovery` `/review` neběžel vůbec, proběhla jen oponentura, a nikde to nesvítilo. Na obojí se přišlo až důkladným průchodem před `/architect`. **Co by se muselo rozhodnout:** jestli si `/review` rozsah odvodí z mezery (výstupy kroku podle `LIFECYCLE.md`), nebo to ohlídá `/next` či `/cleanup` jako chybějící krok v mezeře.
