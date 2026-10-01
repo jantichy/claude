@@ -50,7 +50,7 @@ K rozhodnutí: záznam 12. 8. bez popisu (2 h)
 ## Co nedělá
 
 - **Neodesílá maily. Nikdy.** Končí draftem.
-- **Neúčtuje.** Nehlídá úhrady, upomínky ani daňové termíny. Vystaví doklad a tím jeho práce končí.
+- **Neúčtuje.** Nehlídá úhrady, upomínky ani daňové termíny. Vystaví doklad a tím jeho práce končí; po uživatelově potvrzení ho jen označí za odeslaný.
 - **Nesynchronizuje obousměrně.** Režim `sync` píše jen do systému klienta, zpátky nikdy – zdroj pravdy se podle kopie neupravuje.
 - **Netrackuje čas.** Dohledá ho a ukáže, zapsat si ho musíte sami.
 - **Nedrží evidenci faktur** – zdrojem pravdy je fakturační systém, ne soubor v repozitáři.

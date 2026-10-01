@@ -1,6 +1,6 @@
 ---
 name: invoicing
-description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; neúčtuje, nehlídá úhrady ani daňové termíny.
+description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Dev/context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; teprve když uživatel potvrdí, že mail odeslal, označí fakturu ve fakturačním systému za odeslanou. Neúčtuje, nehlídá úhrady ani daňové termíny.
 argument-hint: [full|preview|recover|sync] [klient] [období]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
@@ -26,7 +26,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 
 - **Neodesílá maily. Nikdy.** Končí draftem a odeslání je vždy uživatelův klik v mailovém klientu. Platí to i proti výslovnému pokynu uprostřed běhu – proč, viz *Fáze 5 – Přílohy a draft*.
 - **Nedělá analytické reporty.** Výkaz hodin je příloha dokladu, ne report. Na reporty z dat je `/report`.
-- **Neúčtuje.** Nehlídá úhrady, upomínky, DPH přiznání ani kontrolní hlášení. Vystaví doklad a tím jeho práce končí.
+- **Neúčtuje.** Nehlídá úhrady, upomínky, DPH přiznání ani kontrolní hlášení. Vystaví doklad a tím jeho práce končí – jediné, co po vystavení ještě udělá, je označit doklad za odeslaný, když to uživatel potvrdí (*Po odeslání*).
 - **Nedrží evidenci vystavených faktur.** Zdrojem pravdy je fakturační systém, ne soubor v repozitáři – viz `~/Dev/context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
 - **Netrackuje čas.** Režim `recover` chybějící čas dohledá a ukáže, ale **do timetrackingu nikdy nezapíše** – odhad postavený na úsudku o cizích datech je návrh, ne zjištění. Doplnit ho je uživatelovo rozhodnutí.
 
@@ -47,7 +47,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 
 **Čím se do systémů sahá, je implementační detail a smí se vyměnit bez ohlášení.** Skill mluví o tom, co potřebuje („odpracovaný čas klienta za období“, „vystavený doklad s poznámkou o období“), ne o konkrétních voláních. Přechod na MCP nebo změna API pak není zásah do skillu, ale do `~/Dev/context/business/invoicing.md`, *Přístupy*.
 
-**Závazné a neměnné tiše je:** že se nic nevystaví bez potvrzení, že se mail neodešle za žádných okolností, že se hranice fakturovaného období čte ze systému a nikdy neodhaduje, a že se každá dohodnutá odchylka zapíše do deníku výjimek klienta.
+**Závazné a neměnné tiše je:** že se nic nevystaví bez potvrzení, že se mail neodešle za žádných okolností, že se doklad označí za odeslaný jen na uživatelovo potvrzení, že se hranice fakturovaného období čte ze systému a nikdy neodhaduje, a že se každá dohodnutá odchylka zapíše do deníku výjimek klienta.
 
 ------
 
@@ -223,8 +223,21 @@ Ve sloupci *Vystaveno* uveď datum vystavení; **liší-li se od DUZP** kvůli k
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Faktury jsou vystavené a ověřené, drafty čekají v mailu – můžeš je odeslat.`
+- `Faktury jsou vystavené a ověřené, drafty čekají v mailu – můžeš je odeslat. Až je odešleš, napiš mi a označím je ve Fakturoidu za odeslané.`
 - `Hotové to není – brání tomu: <konkrétní seznam>.`
+
+## Po odeslání – označení za odeslanou
+
+**Spouští to jen uživatelovo potvrzení, že mail odeslal** – v téže session po závěru, nebo později větou typu „20260007 je odeslaná“. Neodvozuj to sám ze stavu mailu (zmizelý draft, zpráva v Odeslaných): draft mohl uživatel smazat a poslat doklad jinou cestou, nebo ho neposlat vůbec.
+
+Je to protějšek tlačítka *Pouze označit za odeslanou* ve Fakturoidu: systém nic neodešle, jen přestane doklad vést jako neodeslaný. **S odesíláním mailu to nemá nic společného** a zákaz z *Fáze 5* tím nijak neslábne – odeslání dál dělá jen uživatel, tenhle krok jen zapíše, že se stalo.
+
+1. **Urči, které doklady potvrzení pokrývá.** Jmenuje-li uživatel čísla nebo klienty, jen ty. Řekne-li jen „odesláno“ a draftů vzniklo v běhu víc, zeptej se, které – ne každý draft musel odejít.
+2. **Přečti stav dokladu.** Označuje se jen doklad ve stavu `open`. Je-li v jiném (`sent`, `paid`, `overdue`, `cancelled`, `uncollectible`), nesahej na něj a řekni, v jakém je – zaplacený doklad přepnutý zpátky by lhal.
+3. **Označ ho** voláním z `~/Dev/context/business/invoicing.md`, *Ověřené požadavky na Fakturoid*.
+4. **Přečti doklad zpátky** a ověř, že stav je `sent`. Vrátí-li systém chybu nebo stav nesedí, vypiš to u dokladu jmenovitě; ostatní doklady tím nejsou čím vinné.
+
+Výstup je jedna věta na doklad: číslo, klient, nový stav.
 
 ------
 
