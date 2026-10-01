@@ -415,6 +415,44 @@ class PermissionRuleSyntax(unittest.TestCase):
                          "deny zastavuje i samotnou kontrolu, ne jen souhlas")
 
 
+class SettingsFormat(unittest.TestCase):
+    """`settings.json` drží přesně ten tvar, ve kterém ho zapisuje Claude Code.
+
+    Soubor se opakovaně přeformátoval na taby se zarovnanými hodnotami – pokaždé
+    spolu s tím, jak se do něj vracel plugin GitKraken. Diff pak měl stovky
+    řádků a jediná věcná změna se v něm ztratila. Kanonický tvar (dvě mezery,
+    bez escapování diakritiky, koncový řádek) je ten, který vyrobí sám Claude
+    Code, takže jeho vlastní zápis kontrolu neshodí a cizí přeformátování ano.
+
+    Testují se oba směry: kontrola musí chytit taby i zarovnání, ale nesmí
+    hlásit soubor v kanonickém tvaru.
+    """
+
+    SETTINGS = ROOT / "settings.json"
+
+    @staticmethod
+    def is_canonical(text):
+        return json.dumps(json.loads(text), indent=2, ensure_ascii=False) + "\n" == text
+
+    def test_settings_is_canonical(self):
+        text = self.SETTINGS.read_text(encoding="utf-8")
+        self.assertTrue(
+            self.is_canonical(text),
+            "settings.json není v kanonickém tvaru (odsazení dvěma mezerami). "
+            "Něco ho přeformátovalo – porovnej parsovaný obsah s HEAD, ať se v diffu "
+            "neztratí věcná změna, a formátování vrať nebo commitni zvlášť")
+
+    def test_checker_distinguishes_formats(self):
+        data = {"permissions": {"allow": ["Grep", "Read(~/Dev/**)"]}, "model": "opus", "note": "čeština"}
+        self.assertTrue(self.is_canonical(json.dumps(data, indent=2, ensure_ascii=False) + "\n"))
+        self.assertFalse(self.is_canonical(json.dumps(data, indent="\t", ensure_ascii=False) + "\n"),
+                         "kontrola propustila odsazení taby")
+        self.assertFalse(self.is_canonical(json.dumps(data, indent=2) + "\n"),
+                         "kontrola propustila escapovanou diakritiku")
+        aligned = json.dumps(data, indent=2, ensure_ascii=False).replace('"model": ', '"model":    ') + "\n"
+        self.assertFalse(self.is_canonical(aligned), "kontrola propustila zarovnané hodnoty")
+
+
 class BypassRegistry(unittest.TestCase):
     """`BYPASS.md` musí jmenovat každou vrstvu, která něco vynucuje.
 

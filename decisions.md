@@ -1409,6 +1409,14 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Obecná kontrola hned našla pravý nález:** `superpowers@claude-plugins-official` nese `SessionStart` hook, který do každé session (i po `/clear` a `/compact`) vkládá obsah svého skillu obaleného do `<EXTREMELY_IMPORTANT>`. V registru o něm nebyl řádek. Doplněn i s tím, co z toho plyne: podle *Přednost pravidel* je pobídka harnessu **poslední** v pořadí, takže se ta vsuvka posuzuje, nevykonává.
 
 
+### 2026-10-01 – Formát `settings.json` hlídá test, ne pozornost
+
+`settings.json` se potřetí přeformátoval z mezer na taby se zarovnanými hodnotami (verze s taby jsou `064ccf7`, `c96893d` a `7ab5fa9`, vráceno v `3fb2ec4`). Vadí to kvůli diffu: věcná změna se ztratí ve stovkách řádků, a právě tak 27. 9. 2026 proklouzl zapnutý `gitkraken-hooks` (viz záznam výš). Taby se objevovaly zároveň s GitKrakenem, ale jestli soubor přepisuje on, doložené není.
+
+**Test `SettingsFormat` v `tests/test_hooks.py` vyžaduje kanonický tvar**: `json.dumps(..., indent=2, ensure_ascii=False)` s koncovým řádkem. To je tvar, ve kterém soubor zapisuje sám Claude Code, takže jeho vlastní zápis kontrolu neshodí.
+
+**Zamítnuto: hlídat jen tabulátory.** Přeformátování se zarovnanými hodnotami by prošlo, a diff by byl stejně nečitelný.
+
 ### 2026-09-28 – Měřidlo pásmuje na dvou osách a druhá z nich platí jen dopředu
 
 `skills/cost.py` srovnával běhy jen po pásmech velikosti transcriptu. To platí u `/cleanup`, jehož vstupem transcript **je**, ale u skillu, který čte disk, cenu neurčuje délka session: u `/consistency` vyšlo pásmo nejkratších session na **286,5 jednotky proti 63,2** v pásmu nejdelších, tedy obráceně. Kdo by jeho běhy srovnával po první ose, porovná nesrovnatelné – a nepozná to, protože čísla vypadají stejně věrohodně.
