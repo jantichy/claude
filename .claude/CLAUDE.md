@@ -45,12 +45,15 @@ Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola h
 - typecheck: swiftc -typecheck -warnings-as-errors skills/*/*.swift
 - lint: shellcheck -x --severity=info ./*.sh .github/*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' ./*.py .github/*.py skills/*.py skills/*/*.py skills/*/*/*.py tests/*.py
 - test: python3 -m unittest discover -s tests
+- format: sh -c 'case "$1" in *.py) exec ruff format --isolated -q "$1" ;; esac' --
 - build: -
 - e2e: -
 - audit: -
 - coverage: -
 - mutation: -
 - dev: -
+
+**`format` filtruje příponu, protože `ruff format` bere každý soubor zadaný cestou jako Python** – JSON i bloky kódu v Markdownu by přepsal a nad shellem by spadl (`~/Dev/context/coding/quality.md`, *Formátování po editaci*). `--isolated` drží týž styl jako `lint`.
 
 **Pomlčky jsou rozhodnutí, ne díra.** `dev` mezi nimi stojí schválně: `/attack` se tu nikdy nepouští (viz *Výjimky z obecných pravidel* výš), takže není co zvedat – a chybějící klíč se od vědomé pomlčky nepozná. Repozitář nemá manifest závislostí, nic se z něj nebuildí ani nenasazuje a není tu aplikace, kterou by šlo projít; `coverage` a `mutation` nad sadou, která z devadesáti procent testuje Markdown, měří délku textu, ne sílu testů. Bez pomlčky by je `/review` i CI hlásily jako nezkontrolované kroky – tedy jako trvalý šum místo informace (`~/Dev/context/coding/quality.md`, *Kontrakt příkazů*).
 

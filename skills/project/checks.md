@@ -22,7 +22,7 @@ Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů`:
 
 Zapisuj **jen ty klíče, které projekt opravdu umí spustit** – vymyšlený příkaz je horší než chybějící. U klíče, který chybí, napiš pod seznam, co tím odpadne: bez `dev` nemá `/attack` co spustit, bez `e2e` neproběhne průchod aplikací před nasazením, bez `coverage` neporovná `/review` pokrytí s prahem.
 
-**Má-li projekt formátovač, přidej klíč `format`** – příkaz nad jedním souborem, který projde i nad typem souboru, jaký neumí (`npx prettier --write --ignore-unknown`, `ruff format`). Pouští ho po každé editaci `PostToolUse` hook; zavádí se jedním commitem, který naformátuje celý repozitář (`~/Dev/context/coding/quality.md`, *Formátování po editaci*).
+**Má-li projekt formátovač, přidej klíč `format`** – příkaz nad jedním souborem, který projde i nad typem souboru, jaký neumí (`npx prettier --write --ignore-unknown`; formátovač, který bere každý soubor jako svůj, jako `ruff format`, se zabalí do filtru přípony). Pouští ho po každé editaci `PostToolUse` hook; zavádí se jedním commitem, který naformátuje celý repozitář (`~/Dev/context/coding/quality.md`, *Formátování po editaci*).
 
 Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
 
