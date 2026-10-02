@@ -1408,6 +1408,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Obecná kontrola hned našla pravý nález:** `superpowers@claude-plugins-official` nese `SessionStart` hook, který do každé session (i po `/clear` a `/compact`) vkládá obsah svého skillu obaleného do `<EXTREMELY_IMPORTANT>`. V registru o něm nebyl řádek. Doplněn i s tím, co z toho plyne: podle *Přednost pravidel* je pobídka harnessu **poslední** v pořadí, takže se ta vsuvka posuzuje, nevykonává.
 
+**Vyvrácené 3. 10. 2026: „odstraněno úplně“ úplné nebylo.** V `plugins/installed_plugins.json` zůstal záznam instalace a průzkum konfigurace ho pak četl jako nainstalovaný, vypnutý plugin. Neškodil – bez cache, marketplace a řádku v `enabledPlugins` se nenačítal –, ale soubor je v `.gitignore`, takže ho neukázal diff ani test. Odstranil ho až `claude plugin uninstall gitkraken-hooks@gitkraken`. **Plugin se proto odstraňuje příkazem CLI, ne mazáním souborů:** ruční výčet míst, kde plugin žije, je neúplný z principu.
 
 ### 2026-09-28 – Měřidlo pásmuje na dvou osách a druhá z nich platí jen dopředu
 
