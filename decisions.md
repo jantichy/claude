@@ -1664,3 +1664,15 @@ Podnět z porovnání s článkem o nastavení Claude Code: styl má srovnat for
 
 **Zamítnuto: `format` jako čtvrtý krok průběžné kontroly.** Na konci odpovědi by přepsal soubory, které model už nevidí, a diff odpovědi by se změnil po tom, co ho model popsal. **Zamítnuto: `format` v CI.** Formátovač přepisuje, nic nekontroluje; naformátovanost ověří `lint` s `--check`.
 
+### 2026-10-03 – Zbylé podněty z článku: LSP, převzatý kód, zákazy – a adresa dev serveru zamítnutá
+
+Dořešení tří zbylých podnětů z porovnání s článkem o nastavení Claude Code.
+
+**LSP je plugin, ne proměnná prostředí.** Ověřeno v oficiální dokumentaci (*Code intelligence*, *Tools reference*, *Plugins – install*): zapíná se pluginem z `claude-plugins-official` a `ENABLE_LSP_TOOL`, o kterém si nebyl jistý ani článek, dokumentace nezná. Zápis do `enabledPlugins` v projektu plugin jen zapne, každý stroj ho instaluje sám i se serverem – proto `/project` vypisuje, co má udělat uživatel, místo aby to slibovalo zápisem. Language server **nenahrazuje `typecheck`**: běží jen tam, kde je nainstalovaný, a v cloudové session vůbec, kdežto průběžná kontrola a CI musí rozhodovat stejně všude. Pravidlo v `~/Dev/context/coding/quality.md`, *Language server*.
+
+**Převzatý kód: charakterizační testy dřív než jakákoliv změna**, v pořadí podle citlivých míst ze *Bezpečnost se dělá strukturou*. `/project` v režimu `adopt` je zapíše jako první položku `todo.md` projektu, neodpracovává je – jejich obsah musí potvrdit člověk, který ví, co je dnešní chování správně. Zpětná rekonstrukce celého návrhu z kódu zůstává samostatnou položkou v `todo.md`; mapa modulů tady stačí na výběr toho, co testovat. Pravidlo v `quality.md`, *Převzatý kód bez testů*.
+
+**Zákazy drží `permissions`, sekce `## Zákazy` v `CLAUDE.md` jen říká proč.** Článek je řadí do `CLAUDE.md`; tady by tím vznikla hranice z věty v Markdownu, kterou `RULES.md`, *Přednost pravidel*, odmítá. `deny` na to, co se nesmí vůbec, `ask` na to, co jen bez ptaní – „migrace bez ptaní“ je přesně ten druhý případ. Tvar v `STRUCTURE.md`, *`CLAUDE.md`*, zakládání v `skills/project/checks.md`.
+
+**Zamítnuto: adresa dev serveru jako klíč kontraktu `url`.** Kontrakt je commitnutý a sdílený všemi worktree, kdežto port má podle rozpracované položky o `githooks/post-checkout` dostat každá větev vlastní v `.env.local` – pevná adresa v kontraktu by ve větvích lhala. `/attack` už teď port bere z výstupu spuštěného `dev` („ne z domněnky“) a `/release` ověřuje produkci podle řádku *Web* v metadatech, takže klíč by nepoužil nikdo, komu chybí.
+

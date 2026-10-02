@@ -470,3 +470,10 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - [x] **CI napsané jednou.** (2026-10-03) Sdílený `.github/workflows/contract.yml` s runnerem `.github/run-contract.sh` a kontrolou volajícího `.github/caller.py`; projekty (context, artihub, eventoid) ho volají připnutý na SHA místo vlastních kopií. Testy v `tests/test_ci.py`, rozhodnutí v `decisions.md`, postup v `skills/project/checks.md`.
 
 - [x] **Formátovač po každé editaci.** (2026-10-03) Klíč `format` v kontraktu příkazů a `PostToolUse` hook `verify.sh --format`, který ho po `Edit`/`Write` pustí nad upraveným souborem pod týmž souhlasem a otiskem kontraktu jako průběžná kontrola. Testy `FormatAfterEdit` v `tests/test_verify.py` a registrace v `tests/test_hooks.py`, pravidla v `~/Dev/context/coding/quality.md`, *Formátování po editaci*, rozhodnutí v `decisions.md`. Zavedený i tady (`format` s filtrem na `.py`) a ověřený naostro: rozformátovaný řádek v `tests/test_size.py` vrátil hook hned po `Edit` do tvaru `ruff format`.
+
+- [x] **LSP do standardu a do `/project`.** (2026-10-03) `~/Dev/context/coding/quality.md`, *Language server*, a bod 4 konfiguračních kontrol v `skills/project/checks.md`: plugin z `claude-plugins-official` do `enabledPlugins` projektu a pokyn, co nainstalovat na stroji. `ENABLE_LSP_TOOL` dokumentace nezná.
+
+- [x] **Postup pro převzatý kód bez testů.** (2026-10-03) `quality.md`, *Převzatý kód bez testů* – mapa modulů, charakterizační testy podle citlivých míst, teprve pak změny; `/project adopt` je zapíše jako první položku `todo.md` projektu.
+
+- [x] **Zákazy v šabloně `CLAUDE.md`.** (2026-10-03) Sekce `## Zákazy` v `STRUCTURE.md` a bod 5 v `skills/project/checks.md`; hranici drží `permissions.deny` a `ask` v projektovém `.claude/settings.json`. Adresa dev serveru jako klíč `url` zamítnutá, důvod v `decisions.md`.
+

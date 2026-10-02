@@ -396,7 +396,9 @@ Liší se tedy **co se vybere**, ne jestli se krok udělá. Rozhoduj podle `~/De
 
 Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/verify.sh --allow <project-directory>` a nech ho spustit **jeho** – souhlasem se zapíná kontrola, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu. Ve worktree layoutu vypiš `main/` nebo svou větev, **nikdy kořen kontejneru**: souhlas se počítá z `git rev-parse --git-common-dir`, takže z kteréhokoliv worktree platí pro celý repozitář, ale v kořeni kontejneru žádný kontrakt neleží.
 
-**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly, založení CI i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/quality.md`.
+*`adopt`:* **má-li projekt kód, ale žádné testy** (kontrakt bez `test`, nebo `test`, který nic nespouští), zapiš do jeho `todo.md` jako **první položku** charakterizační testy podle `~/Dev/context/coding/quality.md`, *Převzatý kód bez testů* – zmapovat klíčové moduly, zachytit dnešní chování v pořadí podle citlivých míst, teprve pak měnit. Řekni to v souhrnu: do té doby je průběžná kontrola zelená z prázdnoty.
+
+**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly, založení CI i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/quality.md`.
 
 ## Krok 13 – Doménové checklisty
 
@@ -453,7 +455,7 @@ Nabízí se do projektu zapsat otisk – datum posledního běhu nebo hash `~/De
 Vypiš přehledně:
 
 - **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
-- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula průběžná kontrola, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
+- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula průběžná kontrola, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 - *(worktree layout)* **Na jaké větvi výsledek leží**, že je ve větvi commitnutý a že merge do hlavní větve čeká na jeho pokyn. Neměnilo-li se nic, žádná větev nevznikla – řekni to místo toho.
 
