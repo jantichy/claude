@@ -111,7 +111,7 @@ Nainstalovala ji 2026-09-19 sama iTerm2 volbou *Install Claude Code Integration*
 
 ## Hooky z pluginů (`enabledPlugins` v `settings.json`)
 
-Plugin smí přinést vlastní `hooks/hooks.json` a zapíná se **jedním řádkem** v `enabledPlugins`. Do 27. 9. 2026 o téhle vrstvě registr nevěděl vůbec: test čte hooky ze `settings.json`, `githooks/` a `.github/`, tedy z míst, kde pluginové hooky nestojí. Dnes to hlídá `PluginHooks` v `tests/test_hooks.py` – **mlčí ale, když plugin na disku není**, protože `plugins/` je v `.gitignore` a v CI se nemá co měřit.
+Plugin smí přinést vlastní `hooks/hooks.json` a zapíná se **jedním řádkem** v `enabledPlugins`. Do 27. 9. 2026 o téhle vrstvě registr nevěděl vůbec: test čte hooky ze `settings.json`, `githooks/` a `.github/`, tedy z míst, kde pluginové hooky nestojí. Dnes to hlídá `PluginHooks` v `tests/test_hooks.py` – **mlčí ale, když plugin na disku není**, protože `plugins/` je v `.gitignore` a v CI se nemá co měřit. Co se s pluginem dělá, než přibude, a jak se zachází s jeho aktualizacemi, drží `~/Dev/context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*.
 
 **`superpowers@claude-plugins-official`** – `SessionStart` (i po `/clear` a `/compact`) vloží do kontextu obsah svého skillu `using-superpowers` obaleného do `<EXTREMELY_IMPORTANT>`.
 

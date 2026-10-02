@@ -1676,3 +1676,11 @@ Dořešení tří zbylých podnětů z porovnání s článkem o nastavení Clau
 
 **Zamítnuto: adresa dev serveru jako klíč kontraktu `url`.** Kontrakt je commitnutý a sdílený všemi worktree, kdežto port má podle rozpracované položky o `githooks/post-checkout` dostat každá větev vlastní v `.env.local` – pevná adresa v kontraktu by ve větvích lhala. `/attack` už teď port bere z výstupu spuštěného `dev` („ne z domněnky“) a `/release` ověřuje produkci podle řádku *Web* v metadatech, takže klíč by nepoužil nikdo, komu chybí.
 
+### 2026-10-03 – Plugin a MCP server se přidávají po prohlídce, cizí marketplace bez automatických aktualizací
+
+Při kontrole úplnosti porovnání s článkem o nastavení Claude Code zbyl jediný podnět bez náhrady: článek radí držet se oficiálních pluginů a cizí si před instalací projít. Tady to dosud pokrýval jen `BYPASS.md`, a to až pro hooky už zapnutých pluginů. Pravidlo je v `~/Dev/context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*; schválil ho uživatel po vysvětlení, co plugin přináší.
+
+**Oprava původního návrhu podle dokumentace:** návrh zněl „z oficiálního marketplace stačí vědět, co přináší“. Dokumentace (*Plugin security and trust*) výslovně říká, že jméno marketplace určuje vydavatele katalogu, ne obsah pluginu, takže prohlídka platí pro každý. Výjimka zůstala jen u aktualizací: u `claude-plugins-official` jsou automatické a přijímají se.
+
+**Zamítnuto: připnout pluginy na verzi.** Uživatel to neumí – `enabledPlugins` nese jen boolean, `ref` u marketplace je větev nebo tag a pevný `sha` dává jen autor marketplace ve zdroji pluginu. Nahrazuje to ruční aktualizace u cizích marketplaců, kde jsou automatické ve výchozím stavu vypnuté. **Zamítnuto: vypnout automatické aktualizace globálně** (`DISABLE_AUTOUPDATER`) – vypnulo by i aktualizace samotného Claude Code, a oficiální katalog by tím ztratil opravy, kvůli kterým se mu věří.
+

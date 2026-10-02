@@ -479,3 +479,5 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 
 - [x] **Varování o zastaralém připnutí sdíleného CI ověřené.** (2026-10-03) Běh `37077068593` v contextu, připnutém na `7eab73a`, vypsal po změně `verify.sh` varování i se správným počtem (2 změny). Text hlášky přeformulovaný, aby nezávisel na skloňování.
 
+- [x] **Pravidlo pro pluginy a MCP servery.** (2026-10-03) Jediný podnět z článku, který po kontrole úplnosti (46 doporučení) zbyl bez náhrady. `~/Dev/context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*, odkaz z `BYPASS.md`, rozhodnutí v `decisions.md`.
+
