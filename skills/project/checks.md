@@ -24,7 +24,7 @@ Zapisuj **jen ty klíče, které projekt opravdu umí spustit** – vymyšlený 
 
 Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
 
-**Co tím vzniká.** Globální `Stop` hook `~/.claude/verify.sh` od téhle chvíle po každé odpovědi spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json`, takže se nikde nic dalšího **neinstaluje** – ale spustit se v projektu ještě nesmí: chybí mu souhlas, viz níž. Vypnout se dá souborem `.claude/no-verify` v projektu nebo proměnnou `CLAUDE_NO_VERIFY=1`.
+**Co tím vzniká.** Globální `Stop` hook `~/.claude/verify.sh` od téhle chvíle po každé odpovědi spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json`, takže se nikde nic dalšího **neinstaluje** – ale spustit se v projektu ještě nesmí: chybí mu souhlas, viz níž. Vypnout se dá přepínačem `~/.claude/verify.sh --disable <project>`, který si stav drží mimo repozitář, nebo proměnnou `CLAUDE_NO_VERIFY=1` – soubor v projektu se k tomu nepoužívá, protože by se commitnul a vypnul kontrolu v každém klonu (`~/Dev/context/coding/quality.md`, *Průběžná kontrola*).
 
 **Uživatel musí vydat souhlas, jinak průběžná kontrola neběží.** Kontrakt je kód v repozitáři a hook běží mimo permission systém, takže se souhlas dává jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá kontrola ztratila smysl:
 
