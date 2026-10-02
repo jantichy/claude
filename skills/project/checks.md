@@ -44,7 +44,7 @@ Definice a prahy jednotlivých kontrol jsou v `~/Dev/context/coding/quality.md`.
 
 ## CI: co je na průběžnou kontrolu moc pomalé
 
-Průběžná kontrola má strop 60 sekund na příkaz a běží **jen na tomhle stroji a jen se souhlasem**. Obejde ji commit odjinud, z GUI, s `--no-verify` i cizí fork.
+Průběžná kontrola má strop 90 sekund na příkaz a běží **jen na tomhle stroji a jen se souhlasem**. Obejde ji commit odjinud, z GUI, s `--no-verify` i cizí fork.
 
 CI je proto druhá vrstva, ne zdvojení té první. Běží po každém pushi bez ohledu na to, kdo commituje, a je v ní místo pro to, co se do vteřinového okna nevejde: `build`, `e2e`, `audit`, `gitleaks`, `coverage`, `a11y`, `perf` a mutation testing.
 
