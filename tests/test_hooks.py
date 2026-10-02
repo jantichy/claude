@@ -771,6 +771,101 @@ class GitGuard(unittest.TestCase):
                         "git-guard.py není mezi PreToolUse hooky")
 
 
+class SecretGuard(unittest.TestCase):
+    """`secret-guard.py` zastaví Bash příkaz, který čte existující tajemství.
+
+    Deny `Read(//**/.env)` hlídá jen nástroj Read; shell kolem něj prošel
+    (`. ./.env`, `grep KEY .env`) a hodnota mohla skončit v transcriptu. Oba
+    směry se testují: propuštěné čtení vrací díru, falešný poplach nad
+    dokumentací nebo zprávou commitu, která `.env` jen zmiňuje, vede k vypnutí
+    hooku, který běží před každým příkazem.
+    """
+
+    GUARD = ROOT / "secret-guard.py"
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="secret-guard-test-")).resolve()
+        (self.tmp / "sub").mkdir()
+        (self.tmp / ".env").write_text("")
+        (self.tmp / ".env.example").write_text("")
+        (self.tmp / "id_ed25519").write_text("")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def run_guard(self, command):
+        event = json.dumps({"tool_name": "Bash", "cwd": str(self.tmp),
+                            "tool_input": {"command": command}})
+        return subprocess.run([sys.executable, str(self.GUARD)], input=event,
+                              capture_output=True, text=True, check=False)
+
+    def assertBlocked(self, command):
+        done = self.run_guard(command)
+        self.assertEqual(2, done.returncode, f"nezastaveno: {command!r}")
+        self.assertIn("secret-guard", done.stderr)
+
+    def assertAllowed(self, command):
+        done = self.run_guard(command)
+        self.assertEqual(0, done.returncode, f"falešný poplach nad {command!r}: {done.stderr}")
+
+    def test_shell_reads_are_blocked(self):
+        """Tvary, kterými tajemství četla skutečná session, a jejich příbuzní."""
+        for command in ["set -a; . ./.env; set +a; curl -s -u x https://api.example",
+                        "K=$(grep '^MAILGUN_KEY=' .env | cut -d= -f2-)",
+                        "source .env",
+                        "cat < .env",
+                        "cp .env /tmp/x",
+                        "cd sub && cat ../.env",
+                        f"cat {self.tmp}/.env",
+                        "head -c 100 id_ed25519"]:
+            with self.subTest(command=command):
+                self.assertBlocked(command)
+
+    def test_interpreter_code_is_read(self):
+        for command in ["python3 -c \"print(open('.env').read())\"",
+                        "python3 - <<'EOF'\nprint(open('.env').read())\nEOF"]:
+            with self.subTest(command=command):
+                self.assertBlocked(command)
+
+    def test_metadata_only_commands_pass(self):
+        """Ověřit, že hook převzal `.env` do větve, musí jít bez obsahu."""
+        for command in ["ls -la .env", "test -e .env && echo ok", "stat .env",
+                        "git add .env.example", "git status --short"]:
+            with self.subTest(command=command):
+                self.assertAllowed(command)
+
+    def test_mentions_are_not_reads(self):
+        """Zmínka o `.env` v dokumentaci nebo ve zprávě commitu není čtení."""
+        for command in ["grep -n '\\.env' README.md",
+                        "git commit -m 'oprava .env'",
+                        "git commit -q -F - <<'EOF'\nhook symlinkuje .env do main\nEOF",
+                        "echo .env"]:
+            with self.subTest(command=command):
+                self.assertAllowed(command)
+
+    def test_missing_file_passes(self):
+        """Bez existujícího souboru není co uniknout – a padala by i každá zmínka."""
+        self.assertAllowed("cat .env.production")
+
+    def test_patterns_come_from_deny_list(self):
+        """Seznam tajemství je jen v `settings.json`; opsaný výčet by se rozešel."""
+        import ast
+        tree = ast.parse(self.GUARD.read_text(encoding="utf-8"))
+        doc = ast.get_docstring(tree, clean=False)
+        literals = [n.value for n in ast.walk(tree)
+                    if isinstance(n, ast.Constant) and isinstance(n.value, str) and n.value != doc]
+        self.assertFalse([v for v in literals if re.fullmatch(r"\.env.*|\*\.pem|.*id_rsa.*", v)],
+                         "secret-guard.py nese vlastní výčet tajemství místo deny seznamu")
+
+    def test_registered_as_pretooluse(self):
+        settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        commands = [h.get("command", "")
+                    for g in settings.get("hooks", {}).get("PreToolUse", [])
+                    for h in g.get("hooks", [])]
+        self.assertTrue(any("secret-guard.py" in c for c in commands),
+                        "secret-guard.py není mezi PreToolUse hooky")
+
+
 class PluginHooks(unittest.TestCase):
     """Plugin smí do session přidat hooky, a registr o nich dosud nevěděl.
 

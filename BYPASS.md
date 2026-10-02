@@ -37,7 +37,7 @@ Tahle vrstva nic nehlídá, ale **sama je výjimkou z kontroly**: deny `Edit(//*
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
-| Model nechá založit symlink na `.env` gitem, přestože jemu samotnému to deny zakazuje | Nic – hook deny pravidla nevidí | **accepted**: hook jen zakládá odkaz do `main/`, respektive kopíruje `.env.local`, obsah nečte ani neposílá dál. `Read(//**/.env)` platí i pro cestu odkazu, takže model obsah ve větvi dál číst nesmí. Riziko se proti `main/` nemění. |
+| Model nechá založit symlink na `.env` gitem, přestože jemu samotnému to deny zakazuje | Nic – hook deny pravidla nevidí | **accepted**: hook jen zakládá odkaz do `main/`, respektive kopíruje `.env.local`, obsah nečte ani neposílá dál. Čtení obsahu ve větvi hlídá totéž, co v `main/` – nástroj Read deny `Read(//**/.env)`, shell `secret-guard.py` –, takže se riziko proti `main/` nemění. |
 | Hook běží nad každým repozitářem na stroji a mohl by zasáhnout mimo layout | Spustí se jen při nulovém předchozím HEAD (založení worktree) a jen tehdy, když je společný git adresář `<kontejner>/.bare` a vedle leží `main/`; existující soubor ve větvi nepřepíše | hlídáno, `tests/test_hooks.py` |
 | Vlastní `core.hooksPath` v projektu | Nic – hook se nespustí a větev vznikne bez `.env` | **accepted**: projekt s vlastními hooky si je volí sám; `WORKTREE.md` říká, že chybějící převzetí se ohlásí, ne obchází ručně. |
 
@@ -68,6 +68,19 @@ Tahle vrstva nic nehlídá, ale **sama je výjimkou z kontroly**: deny `Edit(//*
 
 **Nenahrazuje deny seznam, doplňuje ho.** Deny je levný a zastaví nejčastější tvar dřív, než se na cokoliv sáhne; hook dorovnává to, na co textový prefix nedosáhne. Zapsáno 20. 9. 2026 z nálezu `/review full`.
 
+## Čtení tajemství přes shell (`secret-guard.py` jako `PreToolUse` hook)
+
+Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. ./.env`, `grep KEY .env`) a hodnota mohla skončit v transcriptu. Hook bere seznam tajemství z týchž deny pravidel a zastaví příkaz, jehož slovo odpovídá vzoru a odkazuje na existující soubor.
+
+| Čím se obejde | Co to chytí | Stav |
+|---|---|---|
+| Kód interpretu (`python3 -c "open('.env')"`, heredoc do `python3 -`) | Kód interpretu se prohledává po kouscích cesty | hlídáno, `tests/test_hooks.py` |
+| Relativní cesta po `cd` (`cd sub && cat ../.env`) | Cesta se zkouší vůči `cwd` i vůči každému adresáři, který příkaz jmenuje | hlídáno |
+| Jméno v proměnné (`F=.env; cat $F`), glob (`cat .e*`), rekurze (`grep -r KEY .`) | Nic – hook vidí text příkazu, ne expanzi shellu | **accepted**: je to vědomé obcházení, ne omyl, stejně jako u `git-guard.py`. Rekurzivní `grep` nad projektem je běžný a jeho blokování by hook vyřadilo z provozu; `rg` navíc gitignorované soubory sám přeskakuje. |
+| Program, který si tajemství načte sám (`npm run dev`, `docker compose` s `env_file`) | Nic | **accepted**, je to zamýšlené: aplikace tajemství potřebuje a hodnota do kontextu nejde, dokud ji program nevypíše. Explicitní `--env-file .env` naopak zastaví, protože jméno stojí v příkazu. |
+| Spustit to člověk přes `!` | Nic | **accepted**, je to zamýšlená cesta: rozhodnutí použít tajemství patří člověku. Výstup takového příkazu ale do kontextu jde, takže ho má člověk psát tak, aby hodnotu nevypsal. |
+| Soubor s tajemstvím mimo deny seznam (`config/database.yml`) | Nic | **accepted**: hook hlídá přesně deny seznam, nic navíc. Chybí-li v něm vzor, doplňuje se tam a hook ho převezme sám. |
+
 ## Permission systém (`settings.json`)
 
 | Čím se obejde | Co to chytí | Stav |
@@ -75,6 +88,7 @@ Tahle vrstva nic nehlídá, ale **sama je výjimkou z kontroly**: deny `Edit(//*
 | Zavolat zakázaný příkaz přes interpret (`python3 -c`, `osascript`) | Nic – deny porovnává text příkazu | **accepted**, je to vlastnost mechanismu. Proto se na deny nespoléhá tam, kde má držet skutečná hranice (souhlas průběžné kontroly čte `/dev/tty`). |
 | Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `RULES.md`, *Commituj jmenované cesty, ne `-A`*. |
 | Nový destruktivní příkaz, na který vzor nemyslel | Nic | **accepted**: seznam je výčet, ne princip. Roste, když se něco objeví. |
+| Deny `Read(...)` na tajemství obejde čtení přes Bash (`. ./.env`, `grep`, `cat`) | `secret-guard.py`, viz sekce výš | hlídáno od 3. 10. 2026 |
 | Deny na `.env` obejde git hook, který zakládá odkaz za model | Nic | **accepted**, je to zamýšlené – viz *Převzetí lokálního stavu do worktree* výš. Je to jediná vědomá cesta kolem deny na tajemství. |
 
 ## Status line (`statusline.sh`)

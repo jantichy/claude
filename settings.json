@@ -317,6 +317,10 @@
           {
             "type": "command",
             "command": "/Users/honza/.claude/git-guard.py"
+          },
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/secret-guard.py"
           }
         ]
       }

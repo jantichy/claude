@@ -1642,3 +1642,11 @@ Tím přestává platit věta záznamu ze 14. 9. 2026 o `commit-msg`, že ostatn
 **Cena:** po změně sdíleného CI se SHA v projektech posouvá ručně. Dependabot to neumí, protože repozitář nemá vydání ani značky; workflow proto vypíše varování, když od připnutého commitu přibyla změna ve workflow, runneru, `verify.sh`, `links.py` nebo `order.py`. Je to varování, ne pád: starší verze není chyba projektu.
 
 **Test volajícího se nekopíruje ani v malém.** Co sdílený workflow zevnitř uhlídat nemůže – že se vůbec spustí a s jakým tokenem –, kontroluje `.github/caller.py` a projekt ho jen pouští ze svého testu přes `CLAUDE_CONFIG`, stejně jako `links.py`.
+
+### 2026-10-03 – Čtení tajemství přes shell zastavuje hook `secret-guard.py`
+
+Den po zavedení `post-checkout` načetla vedlejší session `.env` ve větvi shellem – `set -a; . ./.env` a pak `grep '^MAILGUN_…=' .env` do proměnné –, aby zavolala API poskytovatele mailů. Deny `Read(//**/.env)` hlídá jen nástroj Read, takže kolem něj prošla bez povšimnutí; hodnota do kontextu nešla jen díky tomu, jak byl příkaz zrovna napsaný, a první pokus skončil chybovou hláškou, která kus řádku obvykle vypíše. Hookem `post-checkout` to nevzniklo – totéž šlo v `main/` –, ale věta v `BYPASS.md`, že model obsah ve větvi „dál číst nesmí“, byla nepravdivá.
+
+**Zvolen `PreToolUse` hook, rozhodl uživatel.** Seznam tajemství bere z `Read(//**/…)` v deny seznamu, aby existoval jednou. Zastaví příkaz, jehož slovo odpovídá vzoru **a odkazuje na existující soubor**; bez druhé podmínky by padal `grep` nad dokumentací i zpráva commitu, která `.env` zmiňuje, a hook běžící před každým příkazem by si někdo vypnul. Propouští `ls`, `stat`, `test`, `echo` a git podpříkazy, které soubor jen evidují. **Cena:** legitimní použití klíče (dotaz na API poskytovatele) musí spustit člověk přes `!`.
+
+**Zamítnuto: pravidlo „tajemství použít smíš, vypsat ne“.** Drží jen na tom, že si model vzpomene, a selhání se pozná až v transcriptu. **Zamítnuto: jen zapsat jako přijaté riziko.** Ochrana, která drží proti jedné cestě ze tří, se tváří jako úplná. **Zamítnuto: blokovat podle jména bez ohledu na existenci souboru.** Falešné poplachy nad každou zmínkou `.env`.
