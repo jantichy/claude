@@ -464,3 +464,5 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - [x] **Test kanonického formátu `settings.json`.** (2026-10-01) `SettingsFormat` v `tests/test_hooks.py` s mutačním testem; zdůvodnění v `decisions.md`.
 
 - [x] **Nová větev ve worktree layoutu dostane `.env` a `node_modules/` sama.** (2026-10-02) Globální `githooks/post-checkout` při `git worktree add` v kontejneru symlinkuje `.env*`, kopíruje `.env.local` a klonuje `node_modules/`; hook zapsal uživatel, protože model to deny na `.env` ani klasifikátor nedovolí. Testy `WorktreeLocalState` v `tests/test_hooks.py`, výjimka v `BYPASS.md`, rozhodnutí v `decisions.md`.
+
+- [x] **CI napsané jednou.** (2026-10-03) Sdílený `.github/workflows/contract.yml` s runnerem `.github/run-contract.sh` a kontrolou volajícího `.github/caller.py`; projekty (context, artihub, eventoid) ho volají připnutý na SHA místo vlastních kopií. Testy v `tests/test_ci.py`, rozhodnutí v `decisions.md`, postup v `skills/project/checks.md`.
