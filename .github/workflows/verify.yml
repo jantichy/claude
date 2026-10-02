@@ -1,10 +1,6 @@
-# Tytéž kontroly, jaké lokálně pouští `verify.sh` po každé odpovědi – jenže na
-# cizím stroji a bez souhlasu, který jde odvolat. Lokální vrstvu obejde commit
-# z jiného počítače, z GUI, s `--no-verify` i cizí fork; tahle ne.
-#
-# Příkazy se odsud neopisují ani neparsují podruhé: vypíše je `verify.sh
-# --contract`, tedy tentýž kód, který je spouští lokálně. Vlastní parser tu byl
-# do 13. 9. 2026 a rozešel se s ním ve třech vlastnostech naráz.
+# CI tohohle repozitáře. Samo nic nespouští – volá sdílený
+# `contract.yml`, který stejně volají projekty, jen místo připnutého SHA
+# lokální cestou: tady je workflow i konfigurační vrstva v témže commitu.
 
 name: Kontroly
 
@@ -13,91 +9,22 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Token jobu nesmí umět zapisovat. Bez tohohle bloku rozhoduje nastavení
+# GitHubu (Settings → Actions), tedy hodnota mimo repozitář, kterou kdokoli
+# s právy přepne a od dalšího pushe dostane každý job zapisovací
+# `GITHUB_TOKEN` – aniž by se v repozitáři cokoli změnilo. Volaný workflow
+# oprávnění dědí a víc si vzít nemůže.
+permissions:
+  contents: read
+
 jobs:
   contract:
-    # macOS kvůli `swiftc` – na Linuxu není a typecheck by se musel vynechat.
-    runs-on: macos-latest
-    steps:
-      # Připnuté na SHA, ne na značku: `v5` může majitel akce kdykoliv
-      # přesměrovat jinam a je to doložená cesta útoku na dodavatelský řetěz
-      # (trivy-action, kics-github-action). Aktualizaci hlídá Dependabot
-      # (`.github/dependabot.yml`), takže připnutí nezmrazí chyby natrvalo –
-      # což byl jediný důvod, proč se sem připnutí do 15. 9. 2026 nedávalo.
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
-        with:
-          python-version: '3.12'
-
-      - name: Doinstaluj nástroje
-        run: |
-          command -v shellcheck >/dev/null || brew install shellcheck
-          # `verify.sh` si hlídá timeout přes gtimeout; na čistém macOS není.
-          command -v gtimeout >/dev/null || brew install coreutils
-          python3 -m pip install --quiet ruff
-
-      # Obecné nástroje, které nejsou příkazem projektu, takže v kontraktu nestojí
-      # a smyčka v kroku „Spusť kontrakt příkazů“ je nepustí. Do CI patří přesto: jsou deterministické, rychlé
-      # a jejich nález je vždy kritický. Bez nich by scan tajemství běžel jen tehdy,
-      # když někdo pustí `/review` na stroji, kde má gitleaks nainstalovaný.
-      - name: Tajemství v repu
-        run: |
-          command -v gitleaks >/dev/null || brew install gitleaks
-          gitleaks detect --no-banner --redact
-
-      - name: Statická analýza
-        run: |
-          python3 -m pip install --quiet semgrep
-          # Celý strom, ne jmenovaný výčet adresářů. Ten dřív vynechával kořen,
-          # tedy `verify.sh` a `statusline.sh` – zrovna ten kód, který něco
-          # vynucuje a běží nad cizím repozitářem bez souhlasu. Výčet se navíc
-          # rozejde s prvním novým adresářem a nic to nehlásí.
-          #
-          # `plugins/` je cizí a jeho nálezy nemá kdo opravit; ve verzi sice není,
-          # takže v CI nevznikne, ale vyloučení drží i pro lokální spuštění téhož
-          # příkazu. `projects/` a `todos/` jsou runtime data Claude Code.
-          #
-          semgrep --config p/owasp-top-ten --quiet --error \
-            --exclude=plugins --exclude=projects --exclude=todos \
-            .
-
-      - name: Spusť kontrakt příkazů
-        run: |
-          set -e
-          # Kontrakt čte `verify.sh --contract`, ne vlastní parser. Dřív si ho
-          # workflow parsovalo samo a ta druhá implementace se s první rozešla
-          # hned ve třech vlastnostech: nefiltrovala HTML komentáře (zakomentovaná
-          # sekce nad tou pravou tu vyhrála), neměla pojistku proti dvěma sekcím
-          # téhož jména a neznala klíč cwd.
-          ./verify.sh --contract . > "$RUNNER_TEMP/contract.tsv"
-          cat "$RUNNER_TEMP/contract.tsv"
-
-          # cwd posouvá, kde se příkazy spouštějí – průběžná kontrola ho respektuje,
-          # takže CI musí taky, jinak by každá pouštěla něco jiného.
-          cwd=$(awk -F'\t' '$1 == "cwd" { print $2 }' "$RUNNER_TEMP/contract.tsv")
-          [ -n "$cwd" ] && cd "$cwd"
-
-          # Jmenovaný seznam kroků, které do CI patří. Ne všechny klíče kontraktu:
-          # `dev` je watch server, který nikdy neskončí, `cwd` není příkaz. Klíč,
-          # který projekt nemá, se přeskočí nahlas.
-          status=0
-          for key in typecheck lint test build e2e audit coverage a11y perf mutation; do
-            cmd=$(awk -F'\t' -v k="$key" '$1 == k { print $2 }' "$RUNNER_TEMP/contract.tsv")
-            if [ -z "$cmd" ]; then
-              echo "::notice::$key – není v kontraktu, nekontroluje se"
-              continue
-            fi
-            if [ "$cmd" = "-" ]; then
-              echo "::notice::$key – projekt ho vědomě nemá"
-              continue
-            fi
-            echo "::group::$key"
-            if sh -c "$cmd"; then
-              echo "::endgroup::"
-            else
-              echo "::endgroup::"
-              echo "::error::$key selhal"
-              status=1
-            fi
-          done
-          exit $status
+    uses: ./.github/workflows/contract.yml
+    with:
+      # macOS kvůli `swiftc` v klíči `typecheck`.
+      runs-on: macos-latest
+      # Ruff se nepřipíná vědomě – viz `BYPASS.md`, *CI*.
+      install: |
+        command -v shellcheck >/dev/null || brew install shellcheck
+        command -v gtimeout >/dev/null || brew install coreutils
+        python3 -m pip install --quiet ruff

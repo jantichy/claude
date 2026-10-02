@@ -1,0 +1,135 @@
+# Sdílené CI pro každý projekt s *Kontraktem příkazů* – tytéž kontroly, jaké
+# lokálně pouští `verify.sh` po každé odpovědi, jenže na cizím stroji a bez
+# souhlasu, který jde odvolat. Lokální vrstvu obejde commit z jiného počítače,
+# z GUI, s `--no-verify` i cizí fork; tahle ne.
+#
+# Projekt ho volá připnutý na commit:
+#
+#   uses: jantichy/claude/.github/workflows/contract.yml@<40 hex>
+#
+# a tenhle jediný SHA připíná všechno naráz: workflow i nástroje konfigurační
+# vrstvy (`verify.sh`, runner, `links.py`, `order.py`), které si job naklonuje
+# přesně z téhož commitu (`job.workflow_sha`). Dřív si to každý projekt nesl
+# v kopii a tři kopie se rozcházely – vlastní workflow tohohle repozitáře byl
+# nakonec slabší než ty, které z něj vznikly.
+#
+# Příkazy se odsud neopisují ani neparsují podruhé: vypíše je `verify.sh
+# --contract`, tedy tentýž kód, který je spouští lokálně.
+
+name: Kontrakt příkazů
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: Runner. Linux je rychlejší a levnější; macOS jen tam, kde ho kontrakt potřebuje (Swift).
+        type: string
+        default: ubuntu-latest
+      python-version:
+        description: Verze Pythonu na runneru.
+        type: string
+        default: '3.12'
+      install:
+        description: Shell, který doinstaluje, co kontrakt projektu volá (ruff, shellcheck…). Na runneru není nic z Homebrew.
+        type: string
+        default: ''
+
+jobs:
+  contract:
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      # Akce jsou připnuté na SHA, ne na značku: `v5` může majitel akce kdykoliv
+      # přesměrovat jinam a je to doložená cesta útoku na dodavatelský řetěz
+      # (trivy-action, kics-github-action). Cenou je ruční aktualizace – značka
+      # v komentáři říká, která to je; hlídá je Dependabot tohohle repozitáře.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Celá historie, ne jen poslední commit: gitleaks níž prohledává
+          # všechny commity, a nad mělkým klonem by mu chyběly reference.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Konfigurační vrstva ve verzi, na kterou je workflow připnutý
+        # Klon do tempa, ne do pracovního stromu projektu: tam by ho prohledal
+        # semgrep a projekt by se tvářil, že obsahuje cizí kód.
+        #
+        # Volání přes pohyblivý ref (`@main`, větev, značka) se odmítá: projekt
+        # by pak pouštěl kód, který se mezi dvěma běhy může změnit, a CI by
+        # zčervenalo nebo zezelenalo bez jediné změny v projektu.
+        env:
+          WORKFLOW_REF: ${{ job.workflow_ref }}
+          WORKFLOW_SHA: ${{ job.workflow_sha }}
+          WORKFLOW_REPOSITORY: ${{ job.workflow_repository }}
+          CALLER: ${{ github.repository }}
+        run: |
+          set -e
+          ref="${WORKFLOW_REF##*@}"
+          if [ "$WORKFLOW_REPOSITORY" != "$CALLER" ] && ! printf '%s' "$ref" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "::error::workflow je volaný přes pohyblivý ref „$ref“ – připni ho na 40místný SHA commitu"
+            exit 1
+          fi
+          git clone --quiet "https://github.com/$WORKFLOW_REPOSITORY" "$RUNNER_TEMP/claude"
+          git -C "$RUNNER_TEMP/claude" checkout --quiet "$WORKFLOW_SHA"
+          # Připnutí zmrazí i opravy. Kdo od připnutého commitu změnil něco,
+          # co se v CI pouští, dozví se to tady – varováním, ne pádem, protože
+          # starší verze není chyba projektu.
+          behind=$(git -C "$RUNNER_TEMP/claude" log --oneline "$WORKFLOW_SHA..origin/HEAD" -- \
+            .github/workflows/contract.yml .github/run-contract.sh verify.sh skills/links.py skills/order.py | wc -l | tr -d ' ')
+          if [ "$behind" -gt 0 ]; then
+            echo "::warning::od připnutého commitu přibylo v CI nebo jeho skriptech $behind změn – posuň SHA v uses:"
+          fi
+          echo "CLAUDE_CONFIG=$RUNNER_TEMP/claude" >> "$GITHUB_ENV"
+
+      - name: Doinstaluj nástroje projektu
+        if: ${{ inputs.install != '' }}
+        env:
+          INSTALL: ${{ inputs.install }}
+        run: sh -c "$INSTALL"
+
+      # Obecné nástroje, které nejsou příkazem projektu, takže v kontraktu nestojí
+      # a smyčka níž je nepustí. Do CI patří přesto: jsou deterministické, rychlé
+      # a jejich nález je vždy kritický.
+      - name: Tajemství v repu
+        # Binárka, ne `gitleaks-action`: ta skenuje jen rozsah commitů push
+        # události a nad mělkým klonem neprohlédne nic, přitom hlásí „no leaks
+        # found“ (`~/Dev/context/coding/quality.md`, *Měřidlo musí odlišit vlastní
+        # selhání od nálezu*). Binárka prohledává celou historii. Výjimky si
+        # projekt vede v `.gitleaksignore` po otisku nálezu.
+        env:
+          GITLEAKS_VERSION: 8.24.3
+        run: |
+          case "$RUNNER_OS-$RUNNER_ARCH" in
+            Linux-X64)   asset=linux_x64 ;;
+            Linux-ARM64) asset=linux_arm64 ;;
+            macOS-ARM64) asset=darwin_arm64 ;;
+            macOS-X64)   asset=darwin_x64 ;;
+            *) echo "::error::gitleaks pro $RUNNER_OS-$RUNNER_ARCH není namapovaný"; exit 1 ;;
+          esac
+          curl -fsSL -o "$RUNNER_TEMP/gitleaks.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v$GITLEAKS_VERSION/gitleaks_${GITLEAKS_VERSION}_${asset}.tar.gz"
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+          "$RUNNER_TEMP/gitleaks" detect --no-banner --redact
+
+      - name: Statická analýza
+        # Bez `--quiet` schválně: s ním vypadá nulový nález stejně jako analýza,
+        # která neprohlédla jediný soubor. Zarážka pod tím čte počet prohledaných
+        # souborů z JSON výstupu a nulu odmítne.
+        run: |
+          python3 -m pip install --quiet semgrep==1.177.0
+          semgrep --config p/owasp-top-ten --error --metrics=off \
+            --json-output="$RUNNER_TEMP/semgrep.json" .
+          scanned=$(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(len(d.get('paths',{}).get('scanned',[])))" "$RUNNER_TEMP/semgrep.json")
+          echo "semgrep prohledal $scanned souborů"
+          [ "$scanned" -gt 0 ] || { echo "semgrep neprohledal jediný soubor"; exit 1; }
+
+      - name: Spusť kontrakt příkazů
+        # Tělo kroku žije v `.github/run-contract.sh`, aby se dalo spustit
+        # a změřit (`tests/test_ci.py`).
+        run: |
+          set -e
+          "$RUNNER_TEMP/claude/verify.sh" --contract . > "$RUNNER_TEMP/contract.tsv"
+          cat "$RUNNER_TEMP/contract.tsv"
+          "$RUNNER_TEMP/claude/.github/run-contract.sh" "$RUNNER_TEMP/contract.tsv"

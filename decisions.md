@@ -1630,3 +1630,15 @@ Totéž zmenšování se dělalo třikrát ručně – 10. 9. (`PTYDEPE.md`, `RU
 **Zamítnuto: hook v `<kontejner>/.bare/hooks/`, který by instaloval `/worktree`.** Globální `core.hooksPath` lokální hooky vypíná, takže by se nespustil; navíc by vyžadoval instalaci do každého kontejneru. **Zamítnuto: skript, který zakládání větve obalí a model ho spustí.** Kontrolou by prošel jen proto, že v jeho příkazu není vidět `.env` – to je obejití deny skrytím, ne rozhodnutá výjimka. **Zamítnuto: povolit modelu `ln -s` na `.env`.** Allow pravidlo deny nepřebije a uvolnit deny by otevřelo i zápis do tajemství.
 
 Tím přestává platit věta záznamu ze 14. 9. 2026 o `commit-msg`, že ostatní typy lokálních hooků globálním `core.hooksPath` nasazené nejsou: `post-checkout` na lokální hook deleguje stejně jako `commit-msg`.
+
+### 2026-10-03 – CI je napsané jednou: sdílený workflow volaný připnutý na SHA
+
+**Rozhodl uživatel 2. 10. 2026** z variant níž. Běh kontraktu v CI existoval ve čtyřech kopiích – vlastní `verify.yml` a v eventoidu, artihubu a context `scripts/run-contract.sh` s `tests/test_ci.py` – a kopie se už rozešly: **předloha byla nakonec nejslabší ze všech**. Neměla `permissions: contents: read`, semgrep pouštěla s `--quiet`, takže nerozlišila nulu nálezů od nuly prohledaných souborů, a nástroje nepřipínala; projekty to mezitím doplnily, ale zpátky to nedoteklo.
+
+**Jak to teď je:** `.github/workflows/contract.yml` je znovupoužitelný workflow (`on: workflow_call`), runner `.github/run-contract.sh` a kontrola volajícího souboru `.github/caller.py` leží jen tady. Projekt volá `jantichy/claude/.github/workflows/contract.yml@<sha>` a **ten jediný SHA připne i nástroje**: job si repozitář naklonuje v `job.workflow_sha`, takže `verify.sh`, runner, `links.py` i `order.py` jsou vždycky z téhož commitu jako workflow. Volání přes pohyblivý ref se odmítne. Tenhle repozitář volá týž workflow lokální cestou.
+
+**Zamítnuto – režim `verify.sh --ci`:** smyčka by se přesunula do `verify.sh` a runner by z projektů zmizel, ale testy tvaru workflow (spouštěče, oprávnění, připnutí akcí) by v každém projektu zůstaly jako kopie – tedy polovina problému. **Zamítnuto – nechat kopie a zapsat to:** rozejití už nastalo a nic by ho dál nehlídalo.
+
+**Cena:** po změně sdíleného CI se SHA v projektech posouvá ručně. Dependabot to neumí, protože repozitář nemá vydání ani značky; workflow proto vypíše varování, když od připnutého commitu přibyla změna ve workflow, runneru, `verify.sh`, `links.py` nebo `order.py`. Je to varování, ne pád: starší verze není chyba projektu.
+
+**Test volajícího se nekopíruje ani v malém.** Co sdílený workflow zevnitř uhlídat nemůže – že se vůbec spustí a s jakým tokenem –, kontroluje `.github/caller.py` a projekt ho jen pouští ze svého testu přes `CLAUDE_CONFIG`, stejně jako `links.py`.

@@ -41,13 +41,16 @@ Tahle vrstva nic nehlídá, ale **sama je výjimkou z kontroly**: deny `Edit(//*
 | Hook běží nad každým repozitářem na stroji a mohl by zasáhnout mimo layout | Spustí se jen při nulovém předchozím HEAD (založení worktree) a jen tehdy, když je společný git adresář `<kontejner>/.bare` a vedle leží `main/`; existující soubor ve větvi nepřepíše | hlídáno, `tests/test_hooks.py` |
 | Vlastní `core.hooksPath` v projektu | Nic – hook se nespustí a větev vznikne bez `.env` | **accepted**: projekt s vlastními hooky si je volí sám; `WORKTREE.md` říká, že chybějící převzetí se ohlásí, ne obchází ručně. |
 
-## CI (`.github/workflows/verify.yml`)
+## CI (`.github/workflows/contract.yml`, volaný z `verify.yml` a z projektů)
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
 | Přepsat workflow v témže PR | Nic | **accepted**: repozitář nemá secrets, `GITHUB_TOKEN` je read-only a runner je efemérní, takže cizí kód nemá co ukrást. Podrobně v `.claude/CLAUDE.md`, `## Review`. |
 | PR z forku spustí kontrakt z cizí větve | `fork-pr-contributor-approval` je na `first_time_contributors` | **accepted** pro přispěvatele, který už jednou prošel |
-| Doinstalované nástroje nejsou připnuté na verzi (`brew`, `pip install ruff`) | Nic | **accepted**: repozitář nemá secret, který by šlo ukrást, `GITHUB_TOKEN` je read-only a runner je efemérní. Připnutý `ruff` by navíc znamenal zmrazený lint, protože nové verze hlásí nové nálezy. **Akce samotné připnuté na SHA jsou** od 15. 9. 2026 a hlídá je Dependabot (`.github/dependabot.yml`). |
+| Doinstalované nástroje projektu nejsou připnuté (`brew`, `pip install ruff` ve `verify.yml`) | Nic – vstup `install` je volba volajícího | **accepted** pro tenhle repozitář: nemá secret, který by šlo ukrást, `GITHUB_TOKEN` je read-only a runner je efemérní; připnutý `ruff` by navíc znamenal zmrazený lint, protože nové verze hlásí nové nálezy. Nástroje sdíleného workflow samotného (gitleaks, semgrep) připnuté **jsou** a hlídá to `tests/test_ci.py`; akce jsou připnuté na SHA a hlídá je Dependabot (`.github/dependabot.yml`). |
+| Projekt zavolá sdílený workflow přes pohyblivý ref (`@main`, značka) | Krok *Konfigurační vrstva…* takové volání odmítne – rozhoduje `job.workflow_ref` | hlídáno, `tests/test_ci.py` (spuštěním té podmínky) |
+| Projekt zůstane připnutý na starém commitu a opravy CI ho minou | Varování v běhu, když od připnutého commitu přibyla změna ve workflow, runneru, `verify.sh`, `links.py` nebo `order.py` | **accepted**: varování, ne pád – starší verze není chyba projektu a pád by shazoval CI bez jediné změny v něm. Dependabot to nevyřeší, protože tenhle repozitář nemá vydání ani značky, podle kterých by SHA posouval. |
+| Projekt si sdílený workflow nevolá, nebo ho volá s osekanými spouštěči či bez `permissions` | Nic odsud – sdílený workflow, který neběží, nemá co hlídat | hlídá krátký test volajícího v každém projektu (`tests/test_ci.py` tam) |
 
 ## Zastavení destruktivního git příkazu (`git-guard.py` jako `PreToolUse` hook)
 

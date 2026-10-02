@@ -54,17 +54,51 @@ Workflow **nesmí opisovat příkazy z kontraktu ani si ho parsovat samo**. Opsa
 
 Kontrakt vypíše **`~/.claude/verify.sh --contract <project>`** ve tvaru `key<tab>command`. Je to tentýž kód, který příkazy spouští lokálně, takže umí i filtraci HTML komentářů, pojistku proti dvěma sekcím téhož jména a klíč `cwd`.
 
-**Na runneru `verify.sh` není**, takže ho tam workflow musí dostat: buď ho projekt stáhne (`curl -fsSL https://raw.githubusercontent.com/jantichy/claude/main/verify.sh`), nebo si ho nese ve vlastním repozitáři. Stažení připni na konkrétní commit, ne na `main` – jinak si do CI pouštíš cizí skript, který se může kdykoliv změnit.
+**CI je napsané jednou a projekt ho jen volá.** Sdílený workflow `~/.claude/.github/workflows/contract.yml` pouští gitleaks, semgrep a kontrakt přes `verify.sh --contract` a runner `.github/run-contract.sh`. Projekt si do `.github/workflows/verify.yml` zapíše jen volání, **připnuté na 40místný SHA commitu** v `jantichy/claude` – dnešní hlavu zjistíš `git -C ~/.claude rev-parse origin/main`:
 
-Hotovou a ověřenou podobu má `~/.claude/.github/workflows/verify.yml`; **vezmi ji jako předlohu a uprav čtyři věci**:
+```yaml
+name: Kontroly
 
-1. **Runner.** `ubuntu-latest`, pokud projekt nepotřebuje macOS (Swift, Xcode) – je rychlejší a u privátního repozitáře levnější.
-2. **Nástroje.** Doinstaluj, co kontrakt opravdu volá; na runneru není nic z Homebrew. Nedeklarovaná lokální závislost je tu nejčastější příčina prvního červeného běhu.
-3. **Klíče.** Výčet ve workflow je **jmenovaný seznam kroků, které do CI patří** – vedle `typecheck`, `lint` a `test` i `build`, `e2e`, `audit`, `coverage`, `a11y`, `perf` a `mutation`. Průběžná kontrola je nepouští, CI ano. **Nedělej z něj rovnost s kontraktem:** ten smí nést i klíče, které se nespouštějí (`dev` je watch server, který nikdy neskončí, `cwd` není příkaz), a kontrola, která na nich zčervená, je falešný poplach – tedy ten horší směr selhání.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
-4. **Kroky mimo kontrakt.** `gitleaks` a `semgrep` nejsou příkazy projektu, takže v kontraktu nestojí a smyčka přes něj je nepustí – do CI ale patří, protože jsou deterministické, rychlé a jejich nález je vždy kritický. Zapiš je do workflow jako samostatné kroky a doinstaluj je v něm; bez toho tvrdí katalog kontrol něco, co žádná cesta nezařídí.
+permissions:
+  contents: read
 
-**Napiš k tomu test, který ověří, že se workflow s kontraktem nerozešlo** – že pouští právě jeho klíče a žádný příkaz si neopisuje. Je to vynucovací vrstva jako každá jiná (`~/Dev/context/coding/quality.md`, *Vynucovací vrstva se testuje jako kód, obousměrně*); předloha je v `~/.claude/tests/test_hooks.py`.
+jobs:
+  contract:
+    uses: jantichy/claude/.github/workflows/contract.yml@<sha>
+    with:
+      install: python3 -m pip install --quiet ruff==0.16.7
+```
+
+Ten jeden SHA připíná workflow i nástroje: job si `jantichy/claude` naklonuje přesně v téhle verzi (`job.workflow_sha`) a proměnnou `CLAUDE_CONFIG` nastaví na ten klon. Volání přes `@main` nebo značku workflow odmítne. Projekt **nekopíruje workflow, runner ani jejich testy** – dřív to dělal a kopie se rozešly.
+
+Volání se liší jen vstupy:
+
+1. **`runs-on`** – výchozí `ubuntu-latest`; `macos-latest` jen tam, kde to kontrakt vyžaduje (Swift, Xcode).
+2. **`install`** – shell, který doinstaluje, co kontrakt volá; na runneru není nic z Homebrew. Nedeklarovaná lokální závislost je nejčastější příčina prvního červeného běhu.
+3. **`python-version`** – výchozí `3.12`.
+
+**Klíče, které do CI patří**, drží runner jako jmenovaný seznam – vedle `typecheck`, `lint` a `test` i `build`, `e2e`, `audit`, `coverage`, `a11y`, `perf` a `mutation`. Rovnost s kontraktem to schválně není: `dev` je watch server, který nikdy neskončí, a kontrola, která na něm zčervená, je falešný poplach.
+
+**Test volajícího workflow** si projekt nese, ale jen jako volání sdílené kontroly – co se uvnitř hlídá (spouštěče bez filtrů, `permissions: contents: read`, job bez `if:`, připnuté volání), drží `~/.claude/.github/caller.py`:
+
+```python
+CONFIG = Path(os.environ.get("CLAUDE_CONFIG", Path.home() / ".claude"))
+
+def test_ci_caller(self):
+    done = subprocess.run([sys.executable, str(CONFIG / ".github" / "caller.py"),
+                           str(ROOT / ".github" / "workflows" / "verify.yml")],
+                          capture_output=True, text=True, check=False)
+    self.assertEqual(0, done.returncode, done.stdout + done.stderr)
+```
+
+Stejně se v testech projektu dostane k `skills/links.py` a `order.py` – přes `CLAUDE_CONFIG`, ne přes kopii. **V CI chybějící skript test shodí, nepřeskočí** (`os.environ.get("CI")`): zelený běh, který nic nezkontroloval, se od kontroly nepozná.
+
+**Po změně sdíleného CI se SHA v projektech posouvá ručně.** Dependabot to neudělá, protože `jantichy/claude` nemá vydání ani značky; workflow proto vypíše varování, když od připnutého commitu přibyla změna ve workflow, runneru, `verify.sh`, `links.py` nebo `order.py`.
 
 ## Dependabot: podmínka toho, aby připínání dávalo smysl
 
@@ -85,7 +119,7 @@ updates:
 
 **`cooldown` není volitelný.** Bez něj Dependabot navrhne aktualizaci na balíček zveřejněný před hodinou – a čerstvě publikovaná verze je typická cesta útoku na dodavatelský řetěz, protože škodlivý balíček bývá stažen dřív, než si toho někdo všimne. Týden odstupu aktualizace nezastaví, jen je posune za okno, ve kterém se to stihne odhalit. Semgrep to hlídá pravidlem `dependabot-missing-cooldown`, takže konfigurace bez něj shodí CI – doloženo 15. 9. 2026.
 
-**Ekosystémů přidej tolik, kolik jich projekt má** – `npm`, `composer`, `gomod`, `pip` podle manifestu. `github-actions` patří ke každému projektu s workflow.
+**Ekosystémů přidej tolik, kolik jich projekt má** – `npm`, `composer`, `gomod`, `pip` podle manifestu. `github-actions` patří k workflow, které samo používá akce; **projekt, jehož workflow jen volá sdílený `contract.yml`, ho nepotřebuje** – akce uvnitř hlídá Dependabot v `~/.claude` a SHA volání Dependabot posouvat neumí (viz výš). Nemá-li projekt ani žádný jiný ekosystém, `dependabot.yml` nezakládá.
 
 **Co pod něj nespadá:** nástroje instalované v shellu (`brew install`, `curl | tar`) a skripty stažené za běhu. Dependabot do shellu nevidí, takže ty zůstávají ruční – a nástroje ze správce balíčků se nepřipínají vůbec, protože připnutý linter znamená zmrazené kontroly.
 
