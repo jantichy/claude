@@ -229,6 +229,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - **2026-09-29** · `/cleanup` · `d05f957` · session `605befaa-0bac-4bd3-b5ab-8ab05e3419e9` · kotvy 1/1 · 0 témat ve frontě (jediná kotva se vypořádala v session) · mimo rozsah: žádné · meze: 24 bloků myšlení (v transcriptu prázdné), 2 výstupy AskUserQuestion (obě odpovědi jsou v kontextu), 0 kompaktací, odložené výstupy žádné · **vedlejší nález opraven**: `README.md` i `SKILL.md` skillu tvrdily, že `collect.py` běží „zhruba za vteřinu“ – naměřeno 2,3 až 3,5 s, z toho zhruba polovina je `git fetch` po síti
 - **2026-10-01** · `/cleanup` · `7a86a71` · session `d1e53fc8-e22a-48f8-b0ca-820bc40171fb` · kotvy 9/9 · 0 témat · mimo rozsah: žádné · meze: 128 bloků myšlení a výstupy čtecích nástrojů (4 Read, 9 Write, 2 Edit, 10 AskUserQuestion, 1 Skill) se nečtou; zadání k `/skill extract` inventura jako kotvu nepočítá (zapsáno do `todo.md`), odškrtnuto ručně
 - **2026-10-01** · `/cleanup` · `771dc9b` · session `e036abfd-fb53-462d-bb75-7d20480ba0aa` · kotvy 7/7 · 1 téma (1 rozhodnuto) · mimo rozsah: devět chyb při prvním běhu testů – prověřeno, šlo o chybné pořadí v `decisions.md` zavlečené commitem `771dc9b`, opraveno · meze: 24 bloků myšlení, 1 výstup Edit a 1 snímek obrazovky se nečtou; dotaz „Commit & push“ (první) inventura jako kotvu nepočítá, odškrtnuto ručně
+- **2026-10-02** · `/cleanup` · `5e59fc9` · session `14f5f28c-657c-4f94-9279-e276e73f9e08` · kotvy 5/5 · 1 téma (1 rozhodnuto: port nové větvi přidělí hook – do `todo.md`, protože hook smí zapsat jen uživatel) · mimo rozsah: existující větev `errors/` v cizím projektu nemá `.env` – hook běží jen při zakládání, uživatel dostal příkaz `!` · meze: 22 bloků myšlení, 8 výstupů Edit, 4 výstupy Read a 1 výstup Write se nečtou
 
 ## Odvedená práce
 
@@ -461,3 +462,5 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - [x] **`/invoicing` po potvrzení odeslání označí fakturu za odeslanou.** (2026-10-01) Nový krok *Po odeslání* ve skillu; volání fakturačního systému ověřené naostro a zapsané v soukromé doméně. Zákaz odesílat maily beze změny.
 
 - [x] **Test kanonického formátu `settings.json`.** (2026-10-01) `SettingsFormat` v `tests/test_hooks.py` s mutačním testem; zdůvodnění v `decisions.md`.
+
+- [x] **Nová větev ve worktree layoutu dostane `.env` a `node_modules/` sama.** (2026-10-02) Globální `githooks/post-checkout` při `git worktree add` v kontejneru symlinkuje `.env*`, kopíruje `.env.local` a klonuje `node_modules/`; hook zapsal uživatel, protože model to deny na `.env` ani klasifikátor nedovolí. Testy `WorktreeLocalState` v `tests/test_hooks.py`, výjimka v `BYPASS.md`, rozhodnutí v `decisions.md`.

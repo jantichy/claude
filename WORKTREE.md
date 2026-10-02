@@ -73,7 +73,7 @@ git -C <container>/<directory> merge --ff-only origin/main
 
 **Vykonává to git hook `~/.claude/githooks/post-checkout`** nasazený globálně přes `core.hooksPath`, při každém `git worktree add` v kontejneru; co převzal, vypíše. Ručně to nedělej: deny pravidla na `.env` v `settings.json` zastaví i `ln -s`, takže by větev vznikla bez něj. Chybí-li po založení něco z tabulky, je hook rozbitý nebo odpojený – ohlas to, neobcházej. Výjimku z kontroly tajemství eviduje `~/.claude/BYPASS.md`.
 
-Běží-li dev server ve víc větvích, dej worktree vlastní `PORT` v jeho `.env.local`. `.claude/settings.local.json` se nepřebírá – žije v kořeni kontejneru, je nepovinný a vzniká sám s prvním povolením; nezakládej ho ručně.
+Běží-li dev server ve víc větvích, potřebuje každý worktree vlastní port v `.env.local`. Model ho tam zapsat nesmí (deny na `.env.*`), takže to ohlásí a nabídne uživateli příkaz s `!` prefixem; přidělení portu hookem je rozhodnuté, ale zatím neudělané. `.claude/settings.local.json` se nepřebírá – žije v kořeni kontejneru, je nepovinný a vzniká sám s prvním povolením; nezakládej ho ručně.
 
 ## `main/` se nemaže a nepracuje se v něm
 
