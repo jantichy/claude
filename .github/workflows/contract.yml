@@ -79,7 +79,7 @@ jobs:
           behind=$(git -C "$RUNNER_TEMP/claude" log --oneline "$WORKFLOW_SHA..origin/HEAD" -- \
             .github/workflows/contract.yml .github/run-contract.sh verify.sh skills/links.py skills/order.py | wc -l | tr -d ' ')
           if [ "$behind" -gt 0 ]; then
-            echo "::warning::od připnutého commitu přibylo v CI nebo jeho skriptech $behind změn – posuň SHA v uses:"
+            echo "::warning::od připnutého commitu se CI nebo jeho skripty změnily (počet změn: $behind) – posuň SHA v uses:"
           fi
           echo "CLAUDE_CONFIG=$RUNNER_TEMP/claude" >> "$GITHUB_ENV"
 

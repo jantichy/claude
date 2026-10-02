@@ -477,3 +477,5 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 
 - [x] **Zákazy v šabloně `CLAUDE.md`.** (2026-10-03) Sekce `## Zákazy` v `STRUCTURE.md` a bod 5 v `skills/project/checks.md`; hranici drží `permissions.deny` a `ask` v projektovém `.claude/settings.json`. Adresa dev serveru jako klíč `url` zamítnutá, důvod v `decisions.md`.
 
+- [x] **Varování o zastaralém připnutí sdíleného CI ověřené.** (2026-10-03) Běh `37077068593` v contextu, připnutém na `7eab73a`, vypsal po změně `verify.sh` varování i se správným počtem (2 změny). Text hlášky přeformulovaný, aby nezávisel na skloňování.
+
