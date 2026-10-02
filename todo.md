@@ -276,6 +276,8 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   Kdo by id vzal z druhé cesty, sáhne po cizím transcriptu a nic mu to neřekne – oba soubory existují a oba se parsují. **Věta o tom, že platí jedině cesta ke scratchpadu, v `SESSION.md` od 25. 9. 2026 je.** Zbývá ta druhá polovina: **zjistit, čím ta druhá cesta vzniká** (zůstává po dřívější session? je to jiná komponenta harnessu?) a jestli se na první dá spolehnout vždycky.
 
+  **Druhý doklad z 3. 10. 2026 ukazuje na `/clear`:** session začala `/clear` nad předchozí session v témže projektu. Scratchpad nesl nové id (`d34b9c1c-…`, jeho transcript se zapisoval), výstupy subagentů a úloh na pozadí šly do `…/153e5f34-…/tasks/` – id session **před** `/clear`, jejíž transcript se už neměnil. Domněnka k ověření: adresář úloh zůstává svázaný s procesem, kdežto `/clear` mění id session.
+
 - [ ] **Soudržnost už zapsaného nekontroluje po úklidu nikdo.** Přepsáno 28. 9. 2026 z položky *Vyhodnotit dělbu práce mezi vytěžovacím agentem a čtenáři*, která se ptala na řez mezi dvěma věcmi, ze kterých **dnes neexistuje ani jedna**: čtenáři bez kontextu se 26. 9. zrušili a vytěžení se vrátilo do hlavní session.
 
   **Podstata toho nálezu ale platí dál.** Ostrý běh nad datovou analýzou v jiném projektu (25. 9. 2026, session o 2 850 řádcích, průběžně uklízená) ukázal, že u takové session je vytěžení levnější část hodnoty a **kontrola vnitřní soudržnosti toho, co už zapsané je, ta dražší**: čtenáři tehdy vrátili 9 nálezů navazitelnosti a 21 pozůstatků, z toho obrácené znaménko u hlavního dokladu potvrzené hypotézy, dvě čísla o velikosti dopadu, která se navzájem vylučovala, a tvrzení „100 % po celý rok“ opřené o šest vzorkovaných dnů.
