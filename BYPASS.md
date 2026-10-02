@@ -31,6 +31,16 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 | Vlastní `core.hooksPath` v projektu | Nic – projektové nastavení přebije globální | **accepted**, je to zamýšlené: projekt smí mít vlastní hooky. Lokální `commit-msg` naopak zdejší hook volá, aby se nevypnul omylem. |
 | Zpráva, která pravidlo splní formálně („Merge hotové práce“) | Nic | **accepted**: smysl je donutit napsat větu, ne posoudit její kvalitu. |
 
+## Převzetí lokálního stavu do worktree (`githooks/post-checkout`)
+
+Tahle vrstva nic nehlídá, ale **sama je výjimkou z kontroly**: deny `Edit(//**/.env)` a `Edit(//**/.env.*)` v `settings.json` brání modelu založit v nové větvi odkaz na `.env`, a hook, který spouští git, ne model, to udělá za něj. Rozhodnuto vědomě a uživatelem – hook zapsal on, ne model.
+
+| Čím se obejde | Co to chytí | Stav |
+|---|---|---|
+| Model nechá založit symlink na `.env` gitem, přestože jemu samotnému to deny zakazuje | Nic – hook deny pravidla nevidí | **accepted**: hook jen zakládá odkaz do `main/`, respektive kopíruje `.env.local`, obsah nečte ani neposílá dál. `Read(//**/.env)` platí i pro cestu odkazu, takže model obsah ve větvi dál číst nesmí. Riziko se proti `main/` nemění. |
+| Hook běží nad každým repozitářem na stroji a mohl by zasáhnout mimo layout | Spustí se jen při nulovém předchozím HEAD (založení worktree) a jen tehdy, když je společný git adresář `<kontejner>/.bare` a vedle leží `main/`; existující soubor ve větvi nepřepíše | hlídáno, `tests/test_hooks.py` |
+| Vlastní `core.hooksPath` v projektu | Nic – hook se nespustí a větev vznikne bez `.env` | **accepted**: projekt s vlastními hooky si je volí sám; `WORKTREE.md` říká, že chybějící převzetí se ohlásí, ne obchází ručně. |
+
 ## CI (`.github/workflows/verify.yml`)
 
 | Čím se obejde | Co to chytí | Stav |
@@ -62,6 +72,7 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 | Zavolat zakázaný příkaz přes interpret (`python3 -c`, `osascript`) | Nic – deny porovnává text příkazu | **accepted**, je to vlastnost mechanismu. Proto se na deny nespoléhá tam, kde má držet skutečná hranice (souhlas průběžné kontroly čte `/dev/tty`). |
 | Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `RULES.md`, *Commituj jmenované cesty, ne `-A`*. |
 | Nový destruktivní příkaz, na který vzor nemyslel | Nic | **accepted**: seznam je výčet, ne princip. Roste, když se něco objeví. |
+| Deny na `.env` obejde git hook, který zakládá odkaz za model | Nic | **accepted**, je to zamýšlené – viz *Převzetí lokálního stavu do worktree* výš. Je to jediná vědomá cesta kolem deny na tajemství. |
 
 ## Status line (`statusline.sh`)
 

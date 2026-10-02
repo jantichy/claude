@@ -55,7 +55,7 @@ git -C <container>/<directory> merge --ff-only origin/main
 
 - **Před založením `git fetch`, po něm `merge --ff-only origin/main`** – ne lokální `main`, ten fetch neposune. Opakuj to při každém zakládání, ne jednou za session: vedlejší session mohla mezitím něco rozhodnout.
 - Větev pojmenuj `feat/`, `fix/` nebo `docs/` podle povahy práce; **adresář plochým jménem bez lomítka** (`feat/payments` → `payments/`).
-- Převezmi lokální stav z `main/` a jednou větou řekni, co jsi založil.
+- Lokální stav z `main/` převezme hook sám (viz níž); jednou větou řekni, co jsi založil a co hook převzal.
 - **Návrat do existující větve** (worktree byl smazán) jde bez `-b`; nejdřív se podívej do `git branch -a`.
 - **Tutéž větev nelze mít ve dvou worktree** – dvě varianty téhož jsou dvě větve.
 
@@ -65,11 +65,15 @@ git -C <container>/<directory> merge --ff-only origin/main
 
 | Co | Jak |
 |---|---|
-| `.env`, `.env.local` | symlink |
-| `node_modules/` | `cp -c -R` (APFS clone) – symlink by `npm install` ve větvi přepsal balíčky v `main/` |
+| `.env`, `.env.*` | symlink `../main/<soubor>` |
+| `.env.local` | kopie – je to soubor pro odchylky jedné instance (`PORT`), přes symlink by se změna propsala do `main/` i do ostatních větví |
+| `node_modules/` | `cp -c -R` (APFS clone) – symlink by `npm install` ve větvi přepsal balíčky v `main/`; kde klon nejde, vynechá se a závislosti se ve větvi nainstalují |
 | build cache (`.next/`, `dist/`, `build/`, `out/`) | nepřebírat |
+| soubor, který už ve větvi je (trackovaný `.env.example`) | nechat být |
 
-Běží-li dev server ve víc větvích, dej worktree vlastní `PORT` v `.env.local`. `.claude/settings.local.json` se nepřebírá – žije v kořeni kontejneru, je nepovinný a vzniká sám s prvním povolením; nezakládej ho ručně.
+**Vykonává to git hook `~/.claude/githooks/post-checkout`** nasazený globálně přes `core.hooksPath`, při každém `git worktree add` v kontejneru; co převzal, vypíše. Ručně to nedělej: deny pravidla na `.env` v `settings.json` zastaví i `ln -s`, takže by větev vznikla bez něj. Chybí-li po založení něco z tabulky, je hook rozbitý nebo odpojený – ohlas to, neobcházej. Výjimku z kontroly tajemství eviduje `~/.claude/BYPASS.md`.
+
+Běží-li dev server ve víc větvích, dej worktree vlastní `PORT` v jeho `.env.local`. `.claude/settings.local.json` se nepřebírá – žije v kořeni kontejneru, je nepovinný a vzniká sám s prvním povolením; nezakládej ho ručně.
 
 ## `main/` se nemaže a nepracuje se v něm
 

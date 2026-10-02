@@ -1620,3 +1620,11 @@ Totéž zmenšování se dělalo třikrát ručně – 10. 9. (`PTYDEPE.md`, `RU
 **Test `SettingsFormat` v `tests/test_hooks.py` vyžaduje kanonický tvar**: `json.dumps(..., indent=2, ensure_ascii=False)` s koncovým řádkem. To je tvar, ve kterém soubor zapisuje sám Claude Code, takže jeho vlastní zápis kontrolu neshodí.
 
 **Zamítnuto: hlídat jen tabulátory.** Přeformátování se zarovnanými hodnotami by prošlo, a diff by byl stejně nečitelný.
+
+### 2026-10-02 – Lokální stav do nového worktree převezme git hook, ne model
+
+`WORKTREE.md` odjakživa předepisoval symlinkovat `.env` z `main/` do každé nové větve, ale vykonávat to měl model – a ten to vykonat nesmí: deny `Edit(//**/.env)` a `Edit(//**/.env.*)` v `settings.json` zastaví i `ln -s`, protože příkaz zakládá soubor na cestě `.env`. Větev pak vznikla bez něj a model to přešel větou „pro dokumentaci ho nepotřebuji“. Pravidlo navíc samo sobě odporovalo: `.env.local` se symlinkoval, a zároveň se do něj měl psát `PORT` pro jednu větev.
+
+**Zvolen globální `githooks/post-checkout`**, spuštěný při `git worktree add` v kontejneru s `.bare`: `.env` a `.env.*` symlinkuje, `.env.local` kopíruje, `node_modules/` klonuje na APFS a existující soubor nepřepíše. Je to vědomá výjimka z kontroly tajemství, zapsaná v `BYPASS.md`. Riziko se nemění, protože hook obsah nečte a `Read(//**/.env)` platí i pro cestu odkazu. Model se o zápis hooku pokusil sám a klasifikátor auto režimu ho zastavil, tak ho zapsal uživatel – rozhodnutí obejít ochranu tajemství patří člověku.
+
+**Zamítnuto: hook v `<kontejner>/.bare/hooks/`, který by instaloval `/worktree`.** Globální `core.hooksPath` lokální hooky vypíná, takže by se nespustil; navíc by vyžadoval instalaci do každého kontejneru. **Zamítnuto: skript, který zakládání větve obalí a model ho spustí.** Kontrolou by prošel jen proto, že v jeho příkazu není vidět `.env` – to je obejití deny skrytím, ne rozhodnutá výjimka. **Zamítnuto: povolit modelu `ln -s` na `.env`.** Allow pravidlo deny nepřebije a uvolnit deny by otevřelo i zápis do tajemství.

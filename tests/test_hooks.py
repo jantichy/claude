@@ -31,6 +31,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 COMMIT_MSG_HOOK = ROOT / "githooks" / "commit-msg"
+POST_CHECKOUT_HOOK = ROOT / "githooks" / "post-checkout"
 
 REJECT = 1
 ALLOW = 0
@@ -216,6 +217,127 @@ class MergeCommitMessage(unittest.TestCase):
         """Lokální hook smí přidat vlastní pravidlo, ne zrušit tohle."""
         self.local_hook("#!/bin/sh\nexit 0\n")
         self.assertEqual(self.run_commit_msg_hook("Merge branch 'feat/x'\n").returncode, REJECT)
+
+
+class WorktreeLocalState(unittest.TestCase):
+    """`githooks/post-checkout` převezme při založení worktree lokální stav z `main/`.
+
+    Pravidlo drží `WORKTREE.md`, *Lokální stav se bere z `main/`*; hook ho vykonává,
+    protože model ho vykonat nesmí – deny `Edit(//**/.env*)` zastaví i `ln -s`.
+
+    Nebezpečné směry jsou dva. Hook, který mlčí, vrátí stav, kdy větev vznikne bez
+    `.env` a nikdo si toho nevšimne. Hook, který zasáhne jinam, běží nad **každým**
+    repozitářem na stroji: založí odkaz mimo kontejner, nebo přepíše trackovaný
+    soubor větve. Testují se oba.
+
+    Hook se v testu volá přes `-c core.hooksPath`, ne přes globální konfiguraci –
+    měří se hook z pracovní kopie, ne ten, který je zrovna nasazený.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="post-checkout-test-")).resolve()
+        seed = self.tmp / "seed"
+        seed.mkdir()
+        git(seed, "init", "-q", "-b", "main", ".")
+        git(seed, "config", "user.email", "t@t")
+        git(seed, "config", "user.name", "t")
+        (seed / ".env.example").write_text("TRACKED=1\n")
+        git(seed, "add", ".env.example")
+        git(seed, "commit", "-qm", "init")
+        self.container = self.tmp / "project"
+        self.container.mkdir()
+        subprocess.run(["git", "clone", "-q", "--bare", str(seed), str(self.container / ".bare")],
+                       capture_output=True, check=True)
+        (self.container / ".git").write_text("gitdir: ./.bare\n")
+        self.add_worktree("main", "main", new_branch=False)
+        self.main = self.container / "main"
+        (self.main / ".env").write_text("SECRET=x\n")
+        (self.main / ".env.production").write_text("SECRET=y\n")
+        (self.main / ".env.local").write_text("PORT=3000\n")
+        (self.main / ".env.example").write_text("LOCAL=changed\n")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def add_worktree(self, directory, branch, new_branch=True, repo=None):
+        # Worktree vzniká vedle `main/` v kontejneru, u obyčejného repozitáře vedle něj.
+        target = self.container / directory if repo is None else repo.parent / directory
+        repo = repo or self.container
+        args = ["-c", f"core.hooksPath={POST_CHECKOUT_HOOK.parent}",
+                "worktree", "add", "-q", str(target)]
+        args += ["-b", branch] if new_branch else [branch]
+        v = git(repo, *args)
+        self.assertEqual(v.returncode, 0, v.stderr)
+        return v
+
+    def test_env_is_symlinked_relatively(self):
+        self.add_worktree("payments", "feat/payments")
+        for name in (".env", ".env.production"):
+            link = self.container / "payments" / name
+            self.assertTrue(link.is_symlink(), f"{name} se do větve nesymlinkoval")
+            self.assertEqual(os.readlink(link), f"../main/{name}",
+                             "odkaz není relativní, přesun kontejneru by ho rozbil")
+
+    def test_env_local_is_copied_not_linked(self):
+        """Do `.env.local` si větev píše vlastní `PORT` – přes symlink by ho
+        přepsala v `main/` i ve všech ostatních větvích."""
+        self.add_worktree("payments", "feat/payments")
+        local = self.container / "payments" / ".env.local"
+        self.assertTrue(local.is_file() and not local.is_symlink(),
+                        ".env.local není samostatná kopie")
+
+    def test_tracked_file_is_not_overwritten(self):
+        self.add_worktree("payments", "feat/payments")
+        example = self.container / "payments" / ".env.example"
+        self.assertFalse(example.is_symlink(), "trackovaný soubor větve nahradil odkaz do main/")
+        self.assertEqual(example.read_text(), "TRACKED=1\n")
+
+    def test_node_modules_is_never_symlinked(self):
+        """Symlink by `npm install` ve větvi přepsal balíčky v `main/`. Klon jde
+        jen na APFS; jinde hook adresář vynechá a řekne to."""
+        (self.main / "node_modules" / "pkg").mkdir(parents=True)
+        (self.main / "node_modules" / "pkg" / "index.js").write_text("x\n")
+        self.add_worktree("payments", "feat/payments")
+        nm = self.container / "payments" / "node_modules"
+        self.assertFalse(nm.is_symlink(), "node_modules je symlink do main/")
+        if nm.exists():
+            self.assertTrue((nm / "pkg" / "index.js").is_file(), "klon node_modules je neúplný")
+
+    def test_plain_checkout_does_nothing(self):
+        """Přepnutí větve v existujícím worktree není založení – předchozí HEAD
+        není nulový."""
+        self.add_worktree("payments", "feat/payments")
+        wt = self.container / "payments"
+        (wt / ".env").unlink()
+        v = git(wt, "-c", f"core.hooksPath={POST_CHECKOUT_HOOK.parent}",
+                "checkout", "-q", "-b", "feat/other")
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertFalse((wt / ".env").exists(), "hook zasáhl při obyčejném checkoutu")
+
+    def test_ordinary_repository_is_left_alone(self):
+        """Hook běží nad každým repozitářem – mimo kontejner nesmí založit nic,
+        ani když vedle leží adresář jménem `main`."""
+        repo = self.tmp / "plain" / "repo"
+        repo.parent.mkdir()
+        subprocess.run(["git", "clone", "-q", str(self.tmp / "seed"), str(repo)],
+                       capture_output=True, check=True)
+        (repo / ".env").write_text("SECRET=x\n")
+        (self.tmp / "plain" / "main").mkdir()
+        (self.tmp / "plain" / "main" / ".env").write_text("SECRET=x\n")
+        self.add_worktree("feature", "feat/x", repo=repo)
+        self.assertFalse((self.tmp / "plain" / "feature" / ".env").exists(),
+                         "hook převzal .env mimo worktree layout")
+
+    def test_local_hook_is_delegated(self):
+        """Globální `core.hooksPath` vypne lokální `post-checkout` projektu;
+        hook ho proto musí zavolat sám, jinak ho tiše odstřihne."""
+        trace = self.tmp / "trace"
+        hook = self.container / ".bare" / "hooks" / "post-checkout"
+        hook.parent.mkdir(exist_ok=True)
+        hook.write_text(f"#!/bin/sh\ntouch {trace}\nexit 0\n")
+        hook.chmod(0o755)
+        self.add_worktree("payments", "feat/payments")
+        self.assertTrue(trace.exists(), "lokální post-checkout se nezavolal")
 
 
 class HookDeployment(unittest.TestCase):

@@ -58,9 +58,9 @@ Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.
 
 Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik session naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i příprava a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.
 
-#### [`githooks/`](githooks/) – historie main jako jeden řádek na větev
+#### [`githooks/`](githooks/) – historie main jako jeden řádek na větev a nová větev rovnou s `.env`
 
-`commit-msg` hook, který nad hlavní větví odmítne výchozí zprávu `Merge branch 'feat/payments'` a vyžádá si shrnutí odvedené práce. Díky tomu ukazuje `git log --first-parent` každou zamergovanou větev jako jeden řádek, který něco říká, a dílčí commity zůstanou dostupné pod ním. Aktualizace rozdělané větve ani merge po `git pull` mu nepřekážejí. Nasazený je globálně přes `core.hooksPath`, takže platí ve všech repozitářích na stroji.
+`commit-msg` nad hlavní větví odmítne výchozí zprávu `Merge branch 'feat/payments'` a vyžádá si shrnutí odvedené práce, takže `git log --first-parent` ukazuje každou zamergovanou větev jako jeden řádek, který něco říká; aktualizace rozdělané větve ani merge po `git pull` mu nepřekážejí. `post-checkout` při založení větve ve worktree layoutu převezme z `main/` lokální stav mimo git – `.env` nasymlinkuje, `.env.local` zkopíruje kvůli vlastnímu portu a `node_modules/` naklonuje –, protože Claude to sám nesmí: ochrana tajemství mu zakazuje sahat na cestu `.env`, i jen odkazem. Oba jsou nasazené globálně přes `core.hooksPath`, takže platí ve všech repozitářích na stroji, a oba zavolají i lokální hook projektu, který by tím jinak vypadl.
 
 ### Testy a bezpečnost
 
