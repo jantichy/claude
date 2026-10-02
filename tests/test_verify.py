@@ -1011,5 +1011,153 @@ class ContractListing(unittest.TestCase):
         self.assertFalse(marker.exists(), "--contract spustil příkaz z kontraktu")
 
 
+class FormatAfterEdit(unittest.TestCase):
+    """`verify.sh --format` – PostToolUse hook, který po editaci pustí klíč `format`.
+
+    Hook běží mimo permission systém po **každé** editaci a spouští binárku
+    z repozitáře. Proto se testuje v obou směrech: že soubor opravdu naformátuje
+    (jinak je to dekorace) a že ho nechá být všude, kde nesmí – bez souhlasu,
+    po změně kontraktu, u ignorovaného souboru, mimo projekt, přes symbolický
+    odkaz. Druhý směr je ten nebezpečný: propustit tam znamená spustit cizí kód.
+
+    Formátovač je skript ležící v repozitáři, tedy přesně ten případ, kvůli
+    kterému `decisions.md`, *Dvě podmínky pro `PostToolUse` hook*, žádá souhlas.
+    """
+
+    FORMATTER = '#!/bin/sh\nprintf "naformátováno\\n" > "$1"\n'
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="verify-format-"))
+        self.home = self.tmp / "home"
+        self.home.mkdir()
+        self.repo = self.tmp / "repo"
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", ".")
+        git(self.repo, "config", "user.email", "t@t")
+        git(self.repo, "config", "user.name", "t")
+        (self.repo / "fmt.sh").write_text(self.FORMATTER)
+        (self.repo / ".gitignore").write_text("generated/\n")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def commit_contract(self, **commands):
+        lines = "\n".join(f"- {k}: {v}" for k, v in commands.items())
+        (self.repo / "CLAUDE.md").write_text(f"# Test\n\n## Kontrakt příkazů\n\n{lines}\n")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "kontrakt")
+
+    def edit(self, path, cwd=None):
+        """Zavolá hook, jako by model právě zapsal `path`."""
+        path = Path(path)
+        if not path.is_symlink():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("rozházený  kód\n")
+        env = dict(os.environ, HOME=str(self.home))
+        env.pop("XDG_STATE_HOME", None)
+        env.pop("CLAUDE_NO_VERIFY", None)
+        stdin_data = json.dumps({"session_id": "s1", "cwd": str(cwd or self.repo),
+                                 "hook_event_name": "PostToolUse", "tool_name": "Edit",
+                                 "tool_input": {"file_path": str(path)}})
+        return subprocess.run(["bash", str(VERIFY), "--format"], input=stdin_data,
+                              capture_output=True, text=True, env=env)
+
+    def formatted(self, path):
+        return Path(path).read_text() == "naformátováno\n"
+
+    def test_consented_project_formats_edited_file(self):
+        self.commit_contract(format="sh fmt.sh")
+        grant_consent(self.repo, self.home)
+        r = self.edit(self.repo / "src" / "app.py")
+        self.assertEqual(r.returncode, PASSES, r.stderr)
+        self.assertTrue(self.formatted(self.repo / "src" / "app.py"),
+                        "soubor po editaci zůstal nenaformátovaný")
+
+    def test_without_consent_nothing_runs_and_nothing_is_said(self):
+        """Bez souhlasu se nespustí nic – a mlčí se, protože to řekne Stop hook."""
+        self.commit_contract(format="sh fmt.sh")
+        r = self.edit(self.repo / "app.py")
+        self.assertEqual(r.returncode, PASSES)
+        self.assertEqual(r.stderr, "")
+        self.assertFalse(self.formatted(self.repo / "app.py"),
+                         "formátovač z repozitáře běžel bez souhlasu")
+
+    def test_changed_contract_is_not_run(self):
+        """Souhlas platí pro kontrakt, který člověk viděl, ne pro vyměněný příkaz."""
+        self.commit_contract(format="true")
+        grant_consent(self.repo, self.home)
+        self.commit_contract(format="sh fmt.sh")
+        r = self.edit(self.repo / "app.py")
+        self.assertEqual(r.returncode, PASSES)
+        self.assertFalse(self.formatted(self.repo / "app.py"),
+                         "vyměněný formátovač běžel na starý souhlas")
+
+    def test_ignored_file_is_left_alone(self):
+        self.commit_contract(format="sh fmt.sh")
+        grant_consent(self.repo, self.home)
+        self.edit(self.repo / "generated" / "out.js")
+        self.assertFalse(self.formatted(self.repo / "generated" / "out.js"),
+                         "formátovač přepsal soubor, který git ignoruje")
+
+    def test_file_outside_project_is_left_alone(self):
+        self.commit_contract(format="sh fmt.sh")
+        grant_consent(self.repo, self.home)
+        outside = self.tmp / "outside.py"
+        self.edit(outside)
+        self.assertFalse(self.formatted(outside), "formátovač sáhl na soubor mimo projekt")
+
+    def test_symlink_out_of_project_is_left_alone(self):
+        self.commit_contract(format="sh fmt.sh")
+        grant_consent(self.repo, self.home)
+        target = self.tmp / "target.py"
+        target.write_text("cizí\n")
+        (self.repo / "link.py").symlink_to(target)
+        self.edit(self.repo / "link.py")
+        self.assertEqual(target.read_text(), "cizí\n",
+                         "formátovač zapsal přes symbolický odkaz mimo projekt")
+
+    def test_file_name_is_not_executed(self):
+        """Jméno souboru jde jako argument, ne jako kus příkazu."""
+        self.commit_contract(format="sh fmt.sh")
+        grant_consent(self.repo, self.home)
+        name = self.repo / "$(touch pwned).py"
+        r = self.edit(name)
+        self.assertEqual(r.returncode, PASSES, r.stderr)
+        self.assertFalse((self.repo / "pwned").exists(), "jméno souboru se spustilo jako příkaz")
+        self.assertTrue(self.formatted(name))
+
+    def test_project_is_taken_from_file_not_from_session(self):
+        """Session stojí jinde (kořen kontejneru, jiný repozitář), soubor patří sem."""
+        self.commit_contract(format="sh fmt.sh")
+        grant_consent(self.repo, self.home)
+        elsewhere = self.tmp / "elsewhere"
+        elsewhere.mkdir()
+        self.edit(self.repo / "app.py", cwd=elsewhere)
+        self.assertTrue(self.formatted(self.repo / "app.py"))
+
+    def test_formatter_failure_is_reported_to_model(self):
+        """Podmínka 1 z decisions.md: výsledek se nemaskuje."""
+        self.commit_contract(format="sh -c 'echo syntax error >&2; exit 1' --")
+        grant_consent(self.repo, self.home)
+        r = self.edit(self.repo / "app.py")
+        self.assertEqual(r.returncode, BLOCKS)
+        self.assertIn("syntax error", r.stderr)
+
+    def test_missing_formatter_is_told_only_to_human(self):
+        self.commit_contract(format="no-such-formatter-xyz")
+        grant_consent(self.repo, self.home)
+        r = self.edit(self.repo / "app.py")
+        self.assertEqual(r.returncode, SILENT)
+        self.assertIn("nejde spustit", r.stderr)
+
+    def test_without_format_key_nothing_happens(self):
+        self.commit_contract(test="true")
+        grant_consent(self.repo, self.home)
+        r = self.edit(self.repo / "app.py")
+        self.assertEqual(r.returncode, PASSES)
+        self.assertEqual(r.stderr, "")
+        self.assertFalse(self.formatted(self.repo / "app.py"))
+
+
 if __name__ == "__main__":
     unittest.main()

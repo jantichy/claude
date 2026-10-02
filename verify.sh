@@ -41,6 +41,10 @@ set -uo pipefail
 # obcházet – a to je horší směr selhání než pomalý krok.
 LIMIT=90
 MAX_OUT=200000  # kolik bajtů výstupu si od kroku vezmeme
+# Strop formátovače jednoho souboru. Vejde se do timeoutu PostToolUse hooku
+# v settings.json (45 s); formátovač, který potřebuje víc, nad jedním souborem
+# nedělá jen formátování.
+FORMAT_LIMIT=30
 
 # Obojí leží mimo dosah XDG_STATE_HOME schválně: je to bezpečnostní stav a
 # proměnná prostředí se dá nastavit z .envrc nebo z konfigurace editoru.
@@ -71,6 +75,10 @@ MODE=cli
 
 die() {
   echo "Průběžná kontrola: $1" >&2
+  # Ve formátovacím hooku se chyba nastavení (souhlas, kontrakt, nástroje) nehlásí:
+  # běží po každé editaci a tutéž věc řekne `Stop` hook na konci téže odpovědi.
+  # Hlásit ji i tady by z jedné chyby udělalo deset stejných hlášek.
+  [ "$MODE" = format ] && exit 0
   if [ "$MODE" = hook ] && [ "${STOP_ACTIVE:-false}" != true ]; then exit 2; fi
   exit 1
 }
@@ -448,12 +456,16 @@ fi
 
 # Neznámý přepínač: bez tohohle by hook čekal na stdin a vypadal by jako zaseknutý.
 case "${1:-}" in
-  "") ;;
-  *) die "neznámý přepínač ${1}. Použití: --allow <project> | --list | --revoke <project> | --disable <project> | --enable <project> | --contract <project>" ;;
+  "") MODE=hook ;;
+  # PostToolUse hook po Edit/Write: pustí klíč `format` nad upraveným souborem.
+  # Projde celou cestu souhlasu a otisku kontraktu jako Stop hook, protože
+  # formátovač je binárka z repozitáře (decisions.md, *Dvě podmínky pro
+  # `PostToolUse` hook*), a od kontroly stavu se oddělí až těsně před ní.
+  --format) MODE=format ;;
+  *) die "neznámý přepínač ${1}. Použití: --allow <project> | --list | --revoke <project> | --disable <project> | --enable <project> | --contract <project> | --format" ;;
 esac
 
 # --- Vstup ---------------------------------------------------------------------
-MODE=hook
 INPUT=$(cat)
 # Čte se hned, protože na něm závisí návratový kód die() – viz jeho komentář.
 STOP_ACTIVE=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/null)
@@ -461,6 +473,20 @@ have jq || die "chybí jq, hook neběží."
 CWD=$(printf '%s' "$INPUT" | jq -r '.cwd // empty' 2>/dev/null)
 SESSION=$(printf '%s' "$INPUT" | jq -r '.session_id // "nosession"' 2>/dev/null | tr -cd 'A-Za-z0-9._-')
 [ -n "$SESSION" ] || SESSION=nosession
+# Formátuje se v projektu SOUBORU, ne session: ve worktree layoutu session stojí
+# v kořeni kontejneru a hledání od cwd by našlo kontrakt v main/, takže by se
+# soubor z větve buď nenaformátoval, nebo by ho formátoval cizí kontrakt. Totéž
+# platí pro soubor v jiném repozitáři, než ve kterém session běží.
+FILE=""
+if [ "$MODE" = format ]; then
+  FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+  [ -n "$FILE" ] || exit 0
+  case "$FILE" in /*) ;; *) FILE="${CWD:-$PWD}/$FILE" ;; esac
+  # Symbolický odkaz se neformátuje: formátovač by zapsal tam, kam vede, a to
+  # může být mimo projekt, pro který platí souhlas.
+  [ -f "$FILE" ] && [ ! -L "$FILE" ] || exit 0
+  CWD=$(dirname "$FILE")
+fi
 # Když cwd neexistuje, nepokračovat "někde jinde" – našel by se cizí projekt.
 if [ -n "$CWD" ]; then cd "$CWD" 2>/dev/null || die "adresář $CWD neexistuje."; fi
 
@@ -524,6 +550,7 @@ if [ -f "$DISABLED_DIR/$KEY" ]; then
   exit 0
 fi
 if ! allow_file "$PROJ" >/dev/null; then
+  [ "$MODE" = format ] && exit 0   # hlásí Stop hook, viz die()
   {
     echo "Průběžná kontrola: pro $PROJ není vydaný souhlas, nespustil jsem nic."
     echo "Kontrakt je kód z repozitáře. Projdi si ho a jestli tomu repozitáři věříš:"
@@ -582,6 +609,55 @@ cmd_for() {
   printf '%s\n' "$SECTION" | sed -n "s/^[[:space:]]*[-*][[:space:]]*$1:[[:space:]]\{1,\}//p" \
     | head -1 | sed 's/[[:space:]]*$//'
 }
+
+# Adresář, ve kterém se kroky spustí. Monorepo a projekt, kde příkazy nejsou
+# v kořeni, se jinak nemají jak deklarovat: buď se do kořene napíše příkaz, který
+# pustí všechno (a přeteče LIMIT po každé odpovědi), nebo se kontrakt nenapíše vůbec.
+WORKDIR="$PROJ"
+CWD_KEY=$(cmd_for cwd)
+if [ -n "$CWD_KEY" ] && [ "$CWD_KEY" != "-" ]; then
+  case "$CWD_KEY" in
+    /*|*..*) die "kontrakt v $CLAUDE_MD má cwd mimo projekt: $CWD_KEY" ;;
+  esac
+  [ -d "$PROJ/$CWD_KEY" ] || die "kontrakt v $CLAUDE_MD ukazuje cwd na $CWD_KEY, ten adresář neexistuje."
+  WORKDIR="$PROJ/$CWD_KEY"
+fi
+
+# --- Formátování jednoho souboru -----------------------------------------------
+# Odbočka PostToolUse hooku. Stav, zámek ani otisk stromu se tu nepoužívají:
+# formátovač nic nekontroluje, jen přepíše soubor, a o zelenosti rozhoduje
+# Stop hook na konci odpovědi.
+if [ "$MODE" = format ]; then
+  FMT=$(cmd_for format)
+  { [ -z "$FMT" ] || [ "$FMT" = "-" ]; } && exit 0
+  REAL="$(canon "$(dirname "$FILE")")/$(basename "$FILE")"
+  # Jen soubor uvnitř pracovního stromu, mimo .git a mimo to, co git ignoruje
+  # (generované soubory, node_modules, build) – souhlas platí pro projekt,
+  # ne pro všechno, co model upraví.
+  case "$REAL" in "$PROJ"/.git/*) exit 0 ;; "$PROJ"/*) ;; *) exit 0 ;; esac
+  git -C "$PROJ" check-ignore -q -- "$REAL" 2>/dev/null && exit 0
+  TMP=$(mktemp "${TMPDIR:-/tmp}/verify.XXXXXX") || die "nelze založit dočasný soubor."
+  trap 'rm -f "$TMP"' EXIT INT TERM
+  # Cesta jde jako poslední argument, ne vložená do řetězce příkazu: jméno
+  # souboru s mezerou nebo `$(…)` tak zůstane jménem a nespustí se.
+  ( cd "$WORKDIR" && "$TIMEOUT_BIN" --kill-after=5 "$FORMAT_LIMIT" \
+      bash -c "$FMT \"\$1\"" verify-format "$REAL" 2>&1 ) | head -c "$MAX_OUT" > "$TMP"
+  RC=${PIPESTATUS[0]}
+  [ "$RC" -eq 0 ] && exit 0
+  BODY=$(tail -20 "$TMP")
+  [ -s "$TMP" ] || BODY="(příkaz skončil kódem $RC bez výstupu)"
+  # Nejde spustit nebo nedoběhl: v kódu není co opravovat, ví to jen člověk.
+  case "$RC" in
+    126|127) { echo "Formátovač nejde spustit – chybí nástroj, nebo je špatně klíč format v $CLAUDE_MD. Soubor $REAL zůstal nenaformátovaný."
+               echo "$BODY"; } >&2; exit 1 ;;
+    124|137) echo "Formátovač nedoběhl do ${FORMAT_LIMIT} s a byl ukončen; soubor $REAL zůstal nenaformátovaný." >&2; exit 1 ;;
+  esac
+  # Podmínka 1 z decisions.md: výsledek se nemaskuje. Chyba formátovače nad
+  # právě zapsaným souborem je skoro vždy rozbitá syntaxe, a tu má vidět model.
+  { echo "Formátovač ($FMT) nad souborem $REAL skončil kódem $RC – soubor zůstal, jak jsi ho zapsal. Nejspíš je v něm chyba syntaxe."
+    echo "$BODY"; } >&2
+  exit 2
+fi
 
 # --- Otisk stavu ---------------------------------------------------------------
 # HEAD i rozpracované změny: v projektu se zapnutým autocommitem je strom na konci
@@ -666,19 +742,6 @@ TMP=$(mktemp "${TMPDIR:-/tmp}/verify.XXXXXX") || die "nelze založit dočasný s
 # Jeden trap na obojí: druhý `trap ... EXIT` by ten první tiše přepsal a zámek
 # by po doběhnutí zůstal ležet, takže by se kontrola v další odpovědi přeskočila.
 trap 'rm -f "$TMP"; rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
-
-# Adresář, ve kterém se kroky spustí. Monorepo a projekt, kde příkazy nejsou
-# v kořeni, se jinak nemají jak deklarovat: buď se do kořene napíše příkaz, který
-# pustí všechno (a přeteče LIMIT po každé odpovědi), nebo se kontrakt nenapíše vůbec.
-WORKDIR="$PROJ"
-CWD_KEY=$(cmd_for cwd)
-if [ -n "$CWD_KEY" ] && [ "$CWD_KEY" != "-" ]; then
-  case "$CWD_KEY" in
-    /*|*..*) die "kontrakt v $CLAUDE_MD má cwd mimo projekt: $CWD_KEY" ;;
-  esac
-  [ -d "$PROJ/$CWD_KEY" ] || die "kontrakt v $CLAUDE_MD ukazuje cwd na $CWD_KEY, ten adresář neexistuje."
-  WORKDIR="$PROJ/$CWD_KEY"
-fi
 
 run() {
   # timeout bez --foreground schválně: pak běží krok ve vlastní procesní skupině

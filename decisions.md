@@ -1651,3 +1651,16 @@ Den po zavedení `post-checkout` načetla vedlejší session `.env` ve větvi sh
 **Zvolen `PreToolUse` hook, rozhodl uživatel.** Seznam tajemství bere z `Read(//**/…)` v deny seznamu, aby existoval jednou. Zastaví příkaz, jehož slovo odpovídá vzoru **a odkazuje na existující soubor**; bez druhé podmínky by padal `grep` nad dokumentací i zpráva commitu, která `.env` zmiňuje, a hook běžící před každým příkazem by si někdo vypnul. Propouští `ls`, `stat`, `test`, `echo` a git podpříkazy, které soubor jen evidují. **Cena:** legitimní použití klíče (dotaz na API poskytovatele) musí spustit člověk přes `!`.
 
 **Zamítnuto: pravidlo „tajemství použít smíš, vypsat ne“.** Drží jen na tom, že si model vzpomene, a selhání se pozná až v transcriptu. **Zamítnuto: jen zapsat jako přijaté riziko.** Ochrana, která drží proti jedné cestě ze tří, se tváří jako úplná. **Zamítnuto: blokovat podle jména bez ohledu na existenci souboru.** Falešné poplachy nad každou zmínkou `.env`.
+
+### 2026-10-03 – Formátovač po editaci je režim `verify.sh`, ne samostatný hook
+
+Podnět z porovnání s článkem o nastavení Claude Code: styl má srovnat formátovač hned po zápisu, ne model a ne `lint` na konci odpovědi. Kontrakt dostal klíč `format` (příkaz nad jedním souborem, cestu připojí hook jako poslední argument) a `settings.json` `PostToolUse` hook `verify.sh --format` na `Edit|Write|MultiEdit`. Pravidla pro projekty drží `~/Dev/context/coding/quality.md`, *Formátování po editaci*.
+
+**Obě podmínky z *Dvě podmínky pro `PostToolUse` hook* platí.** Druhou – nespustit binárku z repozitáře bez souhlasu – jde splnit jen převzetím souhlasu `verify.sh --allow` včetně otisku kontraktu, protože formátovač projektu z jeho prostředí běžet musí. Proto je to **režim `verify.sh`, ne vlastní skript**: druhá kopie hledání kontraktu, souhlasu a otisku by se rozešla s první a každá z dosavadních oprav té cesty by se musela udělat dvakrát. Režim se odpojí až těsně před stavem a zámkem.
+
+**Projekt se určuje podle upraveného souboru, ne podle cwd session.** Ve worktree layoutu session stojí v kořeni kontejneru, takže by se našel kontrakt v `main/` a soubor z větve by formátoval cizí kontrakt nebo vůbec žádný. Formátuje se jen soubor uvnitř pracovního stromu, který git neignoruje a není symbolický odkaz.
+
+**Chyba nastavení se po editaci nehlásí, chyba formátovače ano.** Chybějící souhlas nebo změněný kontrakt řekne `Stop` hook na konci téže odpovědi; po každé editaci by to byla desetkrát táž hláška. Selhání formátovače končí `exit 2`, protože nad právě zapsaným souborem je to skoro vždy rozbitá syntaxe; nespustitelný nebo nedoběhnutý formátovač `exit 1`.
+
+**Zamítnuto: `format` jako čtvrtý krok průběžné kontroly.** Na konci odpovědi by přepsal soubory, které model už nevidí, a diff odpovědi by se změnil po tom, co ho model popsal. **Zamítnuto: `format` v CI.** Formátovač přepisuje, nic nekontroluje; naformátovanost ověří `lint` s `--check`.
+

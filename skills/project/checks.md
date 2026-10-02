@@ -22,6 +22,8 @@ Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů`:
 
 Zapisuj **jen ty klíče, které projekt opravdu umí spustit** – vymyšlený příkaz je horší než chybějící. U klíče, který chybí, napiš pod seznam, co tím odpadne: bez `dev` nemá `/attack` co spustit, bez `e2e` neproběhne průchod aplikací před nasazením, bez `coverage` neporovná `/review` pokrytí s prahem.
 
+**Má-li projekt formátovač, přidej klíč `format`** – příkaz nad jedním souborem, který projde i nad typem souboru, jaký neumí (`npx prettier --write --ignore-unknown`, `ruff format`). Pouští ho po každé editaci `PostToolUse` hook; zavádí se jedním commitem, který naformátuje celý repozitář (`~/Dev/context/coding/quality.md`, *Formátování po editaci*).
+
 Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **řádek vynech a řekni to** – ať je vidět, co se nebude kontrolovat. Doplní se, až to vznikne.
 
 **Co tím vzniká.** Globální `Stop` hook `~/.claude/verify.sh` od téhle chvíle po každé odpovědi spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json`, takže se nikde nic dalšího **neinstaluje** – ale spustit se v projektu ještě nesmí: chybí mu souhlas, viz níž. Vypnout se dá přepínačem `~/.claude/verify.sh --disable <project>`, který si stav drží mimo repozitář, nebo proměnnou `CLAUDE_NO_VERIFY=1` – soubor v projektu se k tomu nepoužívá, protože by se commitnul a vypnul kontrolu v každém klonu (`~/Dev/context/coding/quality.md`, *Průběžná kontrola*).
@@ -82,7 +84,7 @@ Volání se liší jen vstupy:
 2. **`install`** – shell, který doinstaluje, co kontrakt volá; na runneru není nic z Homebrew. Nedeklarovaná lokální závislost je nejčastější příčina prvního červeného běhu.
 3. **`python-version`** – výchozí `3.12`.
 
-**Klíče, které do CI patří**, drží runner jako jmenovaný seznam – vedle `typecheck`, `lint` a `test` i `build`, `e2e`, `audit`, `coverage`, `a11y`, `perf` a `mutation`. Rovnost s kontraktem to schválně není: `dev` je watch server, který nikdy neskončí, a kontrola, která na něm zčervená, je falešný poplach.
+**Klíče, které do CI patří**, drží runner jako jmenovaný seznam – vedle `typecheck`, `lint` a `test` i `build`, `e2e`, `audit`, `coverage`, `a11y`, `perf` a `mutation`. Rovnost s kontraktem to schválně není: `dev` je watch server, který nikdy neskončí, a kontrola, která na něm zčervená, je falešný poplach; `format` soubory přepisuje, nic nekontroluje.
 
 **Test volajícího workflow** si projekt nese, ale jen jako volání sdílené kontroly – co se uvnitř hlídá (spouštěče bez filtrů, `permissions: contents: read`, job bez `if:`, připnuté volání), drží `~/.claude/.github/caller.py`:
 

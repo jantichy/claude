@@ -471,6 +471,29 @@ class VerifyHookIsRegistered(unittest.TestCase):
             f"timeout Stop hooku nepokryje ani tři kroky po {limit} s – kontrola "
             "se utne uprostřed a nahlásí chybu tam, kde žádná není")
 
+    def format_entry(self):
+        d = json.loads(self.SETTINGS.read_text(encoding="utf-8"))
+        for group in d.get("hooks", {}).get("PostToolUse", []):
+            for h in group.get("hooks", []):
+                if h.get("command", "").endswith("verify.sh --format"):
+                    return group.get("matcher", ""), h
+        return None, None
+
+    def test_format_is_post_tool_use_hook_after_edit_and_write(self):
+        """Bez registrace se formátovač nespustí nikdy, a nikdo si toho nevšimne."""
+        matcher, hook = self.format_entry()
+        self.assertIsNotNone(hook, "verify.sh --format není v settings.json jako PostToolUse hook")
+        tools = set(matcher.split("|"))
+        self.assertTrue({"Edit", "Write"} <= tools,
+                        f"formátovací hook nechytá Edit i Write, matcher je {matcher!r}")
+
+    def test_format_timeout_covers_formatter_limit(self):
+        limit = int(re.search(r"^FORMAT_LIMIT=(\d+)",
+                              (ROOT / "verify.sh").read_text(encoding="utf-8"), re.M).group(1))
+        _, hook = self.format_entry()
+        self.assertGreater(hook.get("timeout", 60), limit,
+                           f"timeout formátovacího hooku nepokryje strop formátovače {limit} s")
+
 
 class PermissionRuleSyntax(unittest.TestCase):
     """Pravidlo v `permissions`, které nikdy nezabere, vypadá stejně jako to funkční.

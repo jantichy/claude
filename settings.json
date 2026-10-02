@@ -300,6 +300,16 @@
             "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/verify.sh --format",
+            "timeout": 45
+          }
+        ]
       }
     ],
     "PreToolUse": [
