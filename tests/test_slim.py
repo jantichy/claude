@@ -12,7 +12,9 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SPEC = importlib.util.spec_from_file_location("measure", ROOT / "skills/slim/scripts/measure.py")
+SPEC = importlib.util.spec_from_file_location(
+    "measure", ROOT / "skills/slim/scripts/measure.py"
+)
 measure = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(measure)
 
@@ -34,7 +36,9 @@ class Imports(unittest.TestCase):
         self.assertEqual(self.found("- @a.md – popis\n@b.md"), ["a.md", "b.md"])
 
     def test_code_span_is_not_import(self):
-        self.assertEqual(self.found("ukázka `@a.md`, `` `@b.md` `` a `viz @c.md tady`"), [])
+        self.assertEqual(
+            self.found("ukázka `@a.md`, `` `@b.md` `` a `viz @c.md tady`"), []
+        )
 
     def test_fenced_block_is_not_import(self):
         self.assertEqual(self.found("```\n@a.md\n```\n@c.md"), ["c.md"])
@@ -51,10 +55,14 @@ class Walk(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             project = Path(tmp).resolve() / "project"
             (project / "docs").mkdir(parents=True)
-            (project / "CLAUDE.md").write_text("@docs/x.md\n@docs/y.md", encoding="utf-8")
+            (project / "CLAUDE.md").write_text(
+                "@docs/x.md\n@docs/y.md", encoding="utf-8"
+            )
             (project / "docs/x.md").write_text("@y.md", encoding="utf-8")
             (project / "docs/y.md").write_text("list", encoding="utf-8")
-            rows = [(d, p.name) for d, p, _ in measure.walk(project) if project in p.parents]
+            rows = [
+                (d, p.name) for d, p, _ in measure.walk(project) if project in p.parents
+            ]
             # y.md je importovaný přímo i přes x.md; platí kratší hloubka a jen jednou.
             self.assertEqual(rows, [(0, "CLAUDE.md"), (1, "x.md"), (1, "y.md")])
 
@@ -62,7 +70,9 @@ class Walk(unittest.TestCase):
 class Sections(unittest.TestCase):
     def test_markers_are_counted(self):
         body = "## A\nDoloženo 6. 9. 2026.\n**Proč:** protože.\n## B\nnic"
-        counts = [len(p.findall(body.split("## B")[0])) for p in measure.MARKERS.values()]
+        counts = [
+            len(p.findall(body.split("## B")[0])) for p in measure.MARKERS.values()
+        ]
         self.assertEqual(counts, [1, 1, 1, 0])
 
 

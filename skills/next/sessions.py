@@ -33,6 +33,7 @@ Návratový kód 2, když registr neexistuje **nebo se některý jeho záznam ne
 přečíst** – nečitelný záznam může patřit běžící session, takže by se jinak mohla
 nabídnout k obnovení. `/next` pak bere všechny větve jako obsazené a řekne to.
 """
+
 import argparse
 import json
 import os
@@ -62,8 +63,12 @@ def ancestors() -> set:
     while pid > 1:
         out.add(pid)
         try:
-            ppid = subprocess.run(["ps", "-o", "ppid=", "-p", str(pid)],
-                                  capture_output=True, text=True, check=True).stdout.strip()
+            ppid = subprocess.run(
+                ["ps", "-o", "ppid=", "-p", str(pid)],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
             pid = int(ppid)
         except (subprocess.CalledProcessError, ValueError):
             break
@@ -117,9 +122,18 @@ def live_sessions(home: Path) -> list:
         sid = record.get("sessionId")
         found = sorted(home.glob(f"projects/*/{sid}.jsonl")) if sid else []
         cwd, branch = last_location(found[0]) if found else (None, None)
-        out.append({"pid": pid, "session_id": sid, "name": record.get("name"),
-                    "status": record.get("status"), "start_cwd": record.get("cwd"),
-                    "cwd": cwd, "branch": branch, "self": pid in mine})
+        out.append(
+            {
+                "pid": pid,
+                "session_id": sid,
+                "name": record.get("name"),
+                "status": record.get("status"),
+                "start_cwd": record.get("cwd"),
+                "cwd": cwd,
+                "branch": branch,
+                "self": pid in mine,
+            }
+        )
     return out
 
 
@@ -144,8 +158,13 @@ def idle_sessions(home: Path, project: Path, live_ids: set) -> list:
             continue
         updated = transcript.stat().st_mtime
         if branch not in latest or updated > latest[branch]["updated"]:
-            latest[branch] = {"session_id": sid, "start_cwd": first_cwd(transcript),
-                              "cwd": cwd, "branch": branch, "updated": int(updated)}
+            latest[branch] = {
+                "session_id": sid,
+                "start_cwd": first_cwd(transcript),
+                "cwd": cwd,
+                "branch": branch,
+                "updated": int(updated),
+            }
     return sorted(latest.values(), key=lambda s: s["branch"])
 
 
@@ -165,7 +184,9 @@ def main() -> int:
     if args.project:
         project = Path(args.project).resolve()
         for s in result["sessions"]:
-            s["in_project"] = inside(s["start_cwd"], project) or inside(s["cwd"], project)
+            s["in_project"] = inside(s["start_cwd"], project) or inside(
+                s["cwd"], project
+            )
         live_ids = {s["session_id"] for s in result["sessions"] if s["session_id"]}
         result["idle"] = idle_sessions(home, project, live_ids)
     json.dump(result, sys.stdout, ensure_ascii=False, indent=2)

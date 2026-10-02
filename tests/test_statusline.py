@@ -19,6 +19,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 
 Schválně jen stdlib – stejný důvod jako u `test_verify.py`.
 """
+
 import json
 import shutil
 import subprocess
@@ -33,8 +34,9 @@ WARNING = "config spouští program"
 
 
 def git(cwd, *args):
-    return subprocess.run(["git", "-C", str(cwd), *args],
-                          capture_output=True, text=True, check=False)
+    return subprocess.run(
+        ["git", "-C", str(cwd), *args], capture_output=True, text=True, check=False
+    )
 
 
 class StatusLineOverForeignRepo(unittest.TestCase):
@@ -61,19 +63,32 @@ class StatusLineOverForeignRepo(unittest.TestCase):
     def plant_filter(self):
         """Nastaví clean filtr, který při zavolání vytvoří marker."""
         (self.repo / ".gitattributes").write_text("* filter=evil\n")
-        git(self.repo, "config", "filter.evil.clean",
-            f"sh -c 'touch {self.marker}; cat'")
+        git(
+            self.repo,
+            "config",
+            "filter.evil.clean",
+            f"sh -c 'touch {self.marker}; cat'",
+        )
 
     def run_statusline(self, script=None):
-        stdin_json = json.dumps({
-            "workspace": {"current_dir": str(self.repo),
-                          "project_dir": str(self.repo)},
-            "model": {"display_name": "Opus"},
-            "context_window": {},
-        })
-        proc = subprocess.run(["bash", str(script or STATUSLINE)],
-                              input=stdin_json, capture_output=True, text=True,
-                              cwd=str(self.repo), check=False)
+        stdin_json = json.dumps(
+            {
+                "workspace": {
+                    "current_dir": str(self.repo),
+                    "project_dir": str(self.repo),
+                },
+                "model": {"display_name": "Opus"},
+                "context_window": {},
+            }
+        )
+        proc = subprocess.run(
+            ["bash", str(script or STATUSLINE)],
+            input=stdin_json,
+            capture_output=True,
+            text=True,
+            cwd=str(self.repo),
+            check=False,
+        )
         self.assertEqual(proc.returncode, 0, proc.stderr)
         return proc.stdout
 
@@ -82,8 +97,9 @@ class StatusLineOverForeignRepo(unittest.TestCase):
     def test_clean_filter_is_not_run(self):
         self.plant_filter()
         output = self.run_statusline()
-        self.assertFalse(self.marker.exists(),
-                         "status line spustila program z .git/config")
+        self.assertFalse(
+            self.marker.exists(), "status line spustila program z .git/config"
+        )
         self.assertIn(WARNING, output)
 
     def test_fsmonitor_is_finding(self):
@@ -135,8 +151,10 @@ class StatusLineOverForeignRepo(unittest.TestCase):
 
         self.plant_filter()
         self.run_statusline(broken)
-        self.assertTrue(self.marker.exists(),
-                        "poškozená verze filtr nespustila – test tedy neměří kontrolu")
+        self.assertTrue(
+            self.marker.exists(),
+            "poškozená verze filtr nespustila – test tedy neměří kontrolu",
+        )
 
 
 class UsageBar(unittest.TestCase):
@@ -153,8 +171,11 @@ class UsageBar(unittest.TestCase):
     def bar(self, pct):
         r = subprocess.run(
             ["bash", "-c", f'source "{STATUSLINE}" >/dev/null 2>&1; make_bar {pct}'],
-            capture_output=True, text=True, check=False,
-            stdin=subprocess.DEVNULL)
+            capture_output=True,
+            text=True,
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
         return r.stdout.strip().splitlines()[-1]
 
     def test_width_is_constant(self):
@@ -183,17 +204,24 @@ class InputNumbersDoNotRunCommand(unittest.TestCase):
     z nějakého jiného důvodu.
     """
 
-    MALICIOUS_JSON = json.dumps({
-        "context_window": {
-            "current_usage": {"input_tokens": "a[$(touch {marker})]",
-                              "cache_creation_input_tokens": 0,
-                              "cache_read_input_tokens": 0},
-            "used_percentage": 10, "context_window_size": 200000},
-        "rate_limits": {"five_hour": {"used_percentage": 5,
-                                      "resets_at": "a[$(touch {marker})]"}},
-        "workspace": {"current_dir": "/tmp"},
-        "model": {"display_name": "T"},
-    })
+    MALICIOUS_JSON = json.dumps(
+        {
+            "context_window": {
+                "current_usage": {
+                    "input_tokens": "a[$(touch {marker})]",
+                    "cache_creation_input_tokens": 0,
+                    "cache_read_input_tokens": 0,
+                },
+                "used_percentage": 10,
+                "context_window_size": 200000,
+            },
+            "rate_limits": {
+                "five_hour": {"used_percentage": 5, "resets_at": "a[$(touch {marker})]"}
+            },
+            "workspace": {"current_dir": "/tmp"},
+            "model": {"display_name": "T"},
+        }
+    )
 
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="sl-arith-"))
@@ -203,14 +231,21 @@ class InputNumbersDoNotRunCommand(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def run_statusline(self, script):
-        subprocess.run(["bash", str(script)],
-                       input=self.MALICIOUS_JSON.replace("{marker}", str(self.marker)),
-                       capture_output=True, text=True, check=False, timeout=30)
+        subprocess.run(
+            ["bash", str(script)],
+            input=self.MALICIOUS_JSON.replace("{marker}", str(self.marker)),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
 
     def test_malicious_number_does_not_run_command(self):
         self.run_statusline(STATUSLINE)
-        self.assertFalse(self.marker.exists(),
-                         "hodnota z JSONu se dostala do aritmetické expanze a spustila příkaz")
+        self.assertFalse(
+            self.marker.exists(),
+            "hodnota z JSONu se dostala do aritmetické expanze a spustila příkaz",
+        )
 
     def test_without_sanitization_command_runs(self):
         """Mutace: bez `num()` musí marker vzniknout – jinak test neměří sanitizaci."""
@@ -218,12 +253,17 @@ class InputNumbersDoNotRunCommand(unittest.TestCase):
         text = STATUSLINE.read_text()
         mutation = text.replace(
             """ctx_in=$(num "$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')")""",
-            """ctx_in=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')""")
-        self.assertNotEqual(text, mutation, "sanitizace v statusline.sh se přejmenovala")
+            """ctx_in=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')""",
+        )
+        self.assertNotEqual(
+            text, mutation, "sanitizace v statusline.sh se přejmenovala"
+        )
         broken.write_text(mutation)
         self.run_statusline(broken)
-        self.assertTrue(self.marker.exists(),
-                        "poškozená verze příkaz nespustila – test tedy neměří sanitizaci")
+        self.assertTrue(
+            self.marker.exists(),
+            "poškozená verze příkaz nespustila – test tedy neměří sanitizaci",
+        )
 
 
 if __name__ == "__main__":

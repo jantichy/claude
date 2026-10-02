@@ -36,16 +36,25 @@ NARROWING = ("branches", "branches-ignore", "paths", "paths-ignore", "tags")
 
 
 def body(text):
-    return "\n".join(r for r in text.splitlines() if not r.lstrip().startswith("#")) + "\n"
+    return (
+        "\n".join(r for r in text.splitlines() if not r.lstrip().startswith("#")) + "\n"
+    )
 
 
 def trigger_problems(b):
     on = re.search(r"(?m)^on:\n((?:[ \t]+\S.*\n)+)", b)
     if not on:
         return ["chybí blok `on:` – CI se nespouští"]
-    found = [f"nespouští se na {t}" for t in ("push", "pull_request")
-             if not re.search(rf"(?m)^\s+{t}:", on.group(1))]
-    found += [f"spouštěče jsou zúžené filtrem `{n}:`" for n in NARROWING if f"{n}:" in on.group(1)]
+    found = [
+        f"nespouští se na {t}"
+        for t in ("push", "pull_request")
+        if not re.search(rf"(?m)^\s+{t}:", on.group(1))
+    ]
+    found += [
+        f"spouštěče jsou zúžené filtrem `{n}:`"
+        for n in NARROWING
+        if f"{n}:" in on.group(1)
+    ]
     return found
 
 

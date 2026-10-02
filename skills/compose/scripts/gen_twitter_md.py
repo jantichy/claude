@@ -3,6 +3,7 @@
 Zdroj: data/tweets.js (+ note-tweet.js s plnými texty dlouhých tweetů)
 z oficiálního Twitter exportu. Čisté retweety (RT @…) se vynechávají.
 """
+
 import sys
 import json
 import re
@@ -20,12 +21,14 @@ OUT = Path(sys.argv[2])
 OUT.mkdir(parents=True, exist_ok=True)
 
 THREAD_MARK = re.compile(r"🧵|\b\d+\s*/\s*\d+\s*:")
-STATUS_URL = re.compile(r"https?://(?:www\.)?(?:twitter|x)\.com/(\w+)/status(?:es)?/(\d+)")
+STATUS_URL = re.compile(
+    r"https?://(?:www\.)?(?:twitter|x)\.com/(\w+)/status(?:es)?/(\d+)"
+)
 
 
 def load(name):
     raw = (BASE / name).read_text(encoding="utf-8")
-    return json.loads(raw[raw.index("["):])
+    return json.loads(raw[raw.index("[") :])
 
 
 def load_optional(name):
@@ -122,16 +125,18 @@ for t in tweets_raw:
         screen = t.get("in_reply_to_screen_name") or "i/web"
         reply_url = f"https://x.com/{screen}/status/{t['in_reply_to_status_id_str']}"
 
-    posts.append({
-        "id": t["id_str"],
-        "url": f"https://x.com/{ME}/status/{t['id_str']}",
-        "dt": dt,
-        "text": text.strip(),
-        "reply_parent_id": t.get("in_reply_to_status_id_str"),
-        "reply_parent_is_mine": t.get("in_reply_to_user_id_str") == MY_ID,
-        "reply_url": reply_url,
-        "quotes": quotes,
-    })
+    posts.append(
+        {
+            "id": t["id_str"],
+            "url": f"https://x.com/{ME}/status/{t['id_str']}",
+            "dt": dt,
+            "text": text.strip(),
+            "reply_parent_id": t.get("in_reply_to_status_id_str"),
+            "reply_parent_is_mine": t.get("in_reply_to_user_id_str") == MY_ID,
+            "reply_url": reply_url,
+            "quotes": quotes,
+        }
+    )
 
 posts.sort(key=lambda p: p["dt"])
 by_id = {p["id"]: p for p in posts}
@@ -141,7 +146,11 @@ root_of = {}
 for p in posts:
     chain = [p["id"]]
     cur = p
-    while cur["reply_parent_is_mine"] and cur["reply_parent_id"] in by_id and cur["reply_parent_id"] not in chain:
+    while (
+        cur["reply_parent_is_mine"]
+        and cur["reply_parent_id"] in by_id
+        and cur["reply_parent_id"] not in chain
+    ):
         nxt = by_id[cur["reply_parent_id"]]
         if nxt["id"] in root_of:
             chain.append(root_of[nxt["id"]])
@@ -160,7 +169,9 @@ threads = {}
 for root_id, members in groups.items():
     members.sort(key=lambda p: p["dt"])
     root = by_id[root_id]
-    root_is_reply_to_other = root["reply_parent_id"] and not (root["reply_parent_is_mine"] and root["reply_parent_id"] in by_id)
+    root_is_reply_to_other = root["reply_parent_id"] and not (
+        root["reply_parent_is_mine"] and root["reply_parent_id"] in by_id
+    )
     marked = any(THREAD_MARK.search(m["text"][:40]) for m in members)
     if len(members) >= 2 and (not root_is_reply_to_other or marked):
         threads[root_id] = members
@@ -177,7 +188,9 @@ def fmt(p_or_members):
     root = members[0]
     head = [f"### {stamp(root['dt'])}"]
     head += [f"- {m['url']}" for m in members]
-    if root["reply_url"] and not (root["reply_parent_is_mine"] and root["reply_parent_id"] in by_id):
+    if root["reply_url"] and not (
+        root["reply_parent_is_mine"] and root["reply_parent_id"] in by_id
+    ):
         head.append(f"- Odpověď na: {root['reply_url']}")
     for m in members:
         for q in m["quotes"]:

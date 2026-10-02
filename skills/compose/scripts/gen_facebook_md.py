@@ -5,6 +5,7 @@ Bere jen příspěvky s textem (beztextová sdílení a fotky se vynechávají).
 Pozor: FB export kóduje UTF-8 jako latin-1 escapy — nutná oprava (mojibake).
 FB export neobsahuje URL jednotlivých příspěvků.
 """
+
 import sys
 import json
 from collections import defaultdict
@@ -12,7 +13,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 if len(sys.argv) < 3:
-    sys.exit("Použití: gen_facebook_md.py <your_posts__…_1.json> <target_dir> [profile_url]")
+    sys.exit(
+        "Použití: gen_facebook_md.py <your_posts__…_1.json> <target_dir> [profile_url]"
+    )
 SRC = Path(sys.argv[1])
 OUT = Path(sys.argv[2])
 PROFILE = f" ({sys.argv[3]})" if len(sys.argv) > 3 else ""
@@ -33,8 +36,11 @@ items = []
 skipped = 0
 for p in data:
     ts = p.get("timestamp")
-    texts = [fix(d["post"]).replace("\r\n", "\n").replace("\r", "\n").strip()
-             for d in p.get("data", []) if "post" in d and fix(d["post"]).strip()]
+    texts = [
+        fix(d["post"]).replace("\r\n", "\n").replace("\r", "\n").strip()
+        for d in p.get("data", [])
+        if "post" in d and fix(d["post"]).strip()
+    ]
     if not ts or not texts:
         skipped += 1
         continue
@@ -47,7 +53,9 @@ for p in data:
             url = fix(ec.get("url", ""))
             name = fix(ec.get("name", ""))
             if url and url not in ("facebook.com",):
-                bullets.append(f"- Sdílený odkaz: {url}" + (f" ({name})" if name else ""))
+                bullets.append(
+                    f"- Sdílený odkaz: {url}" + (f" ({name})" if name else "")
+                )
             pl = ad.get("place") or {}
             if pl.get("name"):
                 bullets.append(f"- Místo: {fix(pl['name'])}")
@@ -75,8 +83,7 @@ for year, ilist in sorted(by_year.items()):
         f"- **Počet příspěvků:** {len(ilist)}\n"
         f"- **Zdroj:** oficiální export `{SRC}`\n"
         f"- **Poznámka:** časy jsou v UTC; beztextová sdílení, fotky bez popisu a check-iny bez textu nejsou zahrnuty; export neobsahuje URL jednotlivých příspěvků\n\n"
-        f"---\n\n"
-        + "\n\n".join(blocks) + "\n"
+        f"---\n\n" + "\n\n".join(blocks) + "\n"
     )
     (OUT / f"Facebook {year}.md").write_text(content, encoding="utf-8")
     print(f"  Facebook {year}.md — {len(ilist)} příspěvků")

@@ -5,6 +5,7 @@ InstantReposts (reposty bez komentáře) se vynechávají. Komentáře jsou řaz
 chronologicky mezi posty a nesou odrážku „Odpověď na:" (vlastní URL komentáře
 export neobsahuje).
 """
+
 import sys
 import csv
 from collections import defaultdict
@@ -16,12 +17,15 @@ from common import plural
 
 
 if len(sys.argv) < 3:
-    sys.exit("Použití: gen_linkedin_md.py <dir_with_shares_and_comments_csv> <target_dir> [profile_url]")
+    sys.exit(
+        "Použití: gen_linkedin_md.py <dir_with_shares_and_comments_csv> <target_dir> [profile_url]"
+    )
 BASE = Path(sys.argv[1])
 OUT = Path(sys.argv[2])
 PROFILE = f" ({sys.argv[3]})" if len(sys.argv) > 3 else ""
 
 OUT.mkdir(parents=True, exist_ok=True)
+
 
 def strip_line_quotes(t):
     """LinkedIn balí každý vnitřní řádek víceřádkového pole do uvozovek — odstranit."""
@@ -45,7 +49,12 @@ with next(BASE.glob("Shares_*.csv")).open(encoding="utf-8") as f:
     shares_empty = 0
     for r in csv.DictReader(f):
         shares_total += 1
-        text = strip_line_quotes((r["ShareCommentary"] or "")).replace("\r\n", "\n").replace("\r", "\n").strip()
+        text = (
+            strip_line_quotes((r["ShareCommentary"] or ""))
+            .replace("\r\n", "\n")
+            .replace("\r", "\n")
+            .strip()
+        )
         if not text:
             shares_empty += 1
             continue
@@ -58,7 +67,12 @@ with next(BASE.glob("Shares_*.csv")).open(encoding="utf-8") as f:
 with next(BASE.glob("Comments_*.csv")).open(encoding="utf-8") as f:
     comments_total = 0
     for r in csv.DictReader(f, escapechar="\\"):
-        text = strip_line_quotes((r["Message"] or "")).replace("\r\n", "\n").replace("\r", "\n").strip()
+        text = (
+            strip_line_quotes((r["Message"] or ""))
+            .replace("\r\n", "\n")
+            .replace("\r", "\n")
+            .strip()
+        )
         if not text:
             continue
         comments_total += 1
@@ -67,7 +81,9 @@ with next(BASE.glob("Comments_*.csv")).open(encoding="utf-8") as f:
         items.append((dt, bullets, text, True))
 
 items.sort(key=lambda x: x[0])
-print(f"shares: {shares_total} (bez textu vynecháno {shares_empty}), komentářů: {comments_total}")
+print(
+    f"shares: {shares_total} (bez textu vynecháno {shares_empty}), komentářů: {comments_total}"
+)
 
 by_year = defaultdict(list)
 for it in items:
@@ -87,8 +103,7 @@ for year, ilist in sorted(by_year.items()):
         f"{plural(n_comments, 'komentář', 'komentáře', 'komentářů')} u cizích postů)\n"
         f"- **Zdroj:** oficiální export `{BASE}`\n"
         f"- **Poznámka:** časy jsou v UTC; reposty bez komentáře nejsou zahrnuty; komentáře nemají v exportu vlastní URL – odkaz vede na komentovaný post\n\n"
-        f"---\n\n"
-        + "\n\n".join(blocks) + "\n"
+        f"---\n\n" + "\n\n".join(blocks) + "\n"
     )
     (OUT / f"LinkedIn {year}.md").write_text(content, encoding="utf-8")
     print(f"  LinkedIn {year}.md — {len(ilist)} položek ({n_comments} komentářů)")

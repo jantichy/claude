@@ -5,6 +5,7 @@ Formát: pod mezinadpisem (datum a čas) hned URL postu; u odpovědí řádek
 typicky značené 🧵 N/M:) jsou sloučená pod jedním mezinadpisem prvního postu —
 nejdřív URL všech dílů, pak texty.
 """
+
 import sys
 import json
 import re
@@ -30,8 +31,10 @@ posts = json.loads(SRC.read_text(encoding="utf-8"))
 # tedy chyba v jednom záznamu zlikvidovala celý archiv. Vynechat a nahlásit.
 broken = [p for p in posts if not p.get("createdAt") or not p.get("uri")]
 if broken:
-    print(f"poznámka: vynechávám {len(broken)} postů bez createdAt nebo uri",
-          file=sys.stderr)
+    print(
+        f"poznámka: vynechávám {len(broken)} postů bez createdAt nebo uri",
+        file=sys.stderr,
+    )
     posts = [p for p in posts if p.get("createdAt") and p.get("uri")]
 
 by_uri = {p["uri"]: p for p in posts}
@@ -59,11 +62,20 @@ def find_root(p):
     while True:
         chain.append(cur["uri"])
         parent = cur.get("reply_parent")
-        if parent and parent in by_uri and root_of.get(parent) is None and parent not in chain:
+        if (
+            parent
+            and parent in by_uri
+            and root_of.get(parent) is None
+            and parent not in chain
+        ):
             cur = by_uri[parent]
         else:
             break
-    root = root_of.get(cur.get("reply_parent"), cur["uri"]) if cur.get("reply_parent") in by_uri else cur["uri"]
+    root = (
+        root_of.get(cur.get("reply_parent"), cur["uri"])
+        if cur.get("reply_parent") in by_uri
+        else cur["uri"]
+    )
     for uri in chain:
         root_of[uri] = root
     return root
@@ -81,7 +93,9 @@ threads = {}
 for root_uri, members in groups.items():
     members.sort(key=lambda p: p["createdAt"])
     root = by_uri[root_uri]
-    root_is_reply_to_other = root.get("reply_parent") and root["reply_parent"] not in by_uri
+    root_is_reply_to_other = (
+        root.get("reply_parent") and root["reply_parent"] not in by_uri
+    )
     marked = any(THREAD_MARK.search(m.get("text", "")[:40]) for m in members)
     if len(members) >= 2 and (not root_is_reply_to_other or marked):
         threads[root_uri] = members
@@ -128,7 +142,14 @@ items = []
 for p in posts:
     if p["uri"] in in_thread:
         if p["uri"] in threads:
-            items.append((p["createdAt"], fmt_thread(threads[p["uri"]]), len(threads[p["uri"]]), True))
+            items.append(
+                (
+                    p["createdAt"],
+                    fmt_thread(threads[p["uri"]]),
+                    len(threads[p["uri"]]),
+                    True,
+                )
+            )
     else:
         items.append((p["createdAt"], fmt_single(p), 1, False))
 
@@ -140,7 +161,9 @@ for year, ilist in sorted(by_year.items()):
     ilist.sort(key=lambda x: x[0])
     n_posts = sum(i[2] for i in ilist)
     n_threads = sum(1 for i in ilist if i[3])
-    replies = sum(1 for p in posts if p["createdAt"][:4] == year and p.get("reply_parent"))
+    replies = sum(
+        1 for p in posts if p["createdAt"][:4] == year and p.get("reply_parent")
+    )
     body = "\n\n".join(i[1] for i in ilist)
     content = (
         f"# Bluesky – posty {year}\n\n"

@@ -13,6 +13,7 @@ Vznikne <output_base>.json (úseky s mluvčím a textem) a <output_base>.vtt (ti
 značkou <v Jméno>). Pojmenování mluvčích je volitelné; bez něj zůstanou
 SPEAKER_00 a spol.
 """
+
 import json
 import re
 import sys
@@ -58,7 +59,7 @@ def parse_srt(path):
         if start is None or end is None:
             continue
         idx = block.index(timing)
-        text = " ".join(ln.strip() for ln in block[idx + 1:]).strip()
+        text = " ".join(ln.strip() for ln in block[idx + 1 :]).strip()
         if text:
             out.append({"start": start, "end": end, "text": text})
     return out
@@ -108,7 +109,9 @@ def main(argv):
 
     names = {}
     if "--names" in argv:
-        names = json.loads(Path(argv[argv.index("--names") + 1]).read_text(encoding="utf-8"))
+        names = json.loads(
+            Path(argv[argv.index("--names") + 1]).read_text(encoding="utf-8")
+        )
 
     diar = json.loads(Path(diar_path).read_text(encoding="utf-8"))
     turns = diar.get("turns", [])
@@ -116,12 +119,14 @@ def main(argv):
 
     segments = []
     for cue in cues:
-        segments.append({
-            "start": round(cue["start"], 3),
-            "end": round(cue["end"], 3),
-            "speaker": assign(cue, turns),
-            "text": cue["text"],
-        })
+        segments.append(
+            {
+                "start": round(cue["start"], 3),
+                "end": round(cue["end"], 3),
+                "speaker": assign(cue, turns),
+                "text": cue["text"],
+            }
+        )
 
     unassigned = sum(1 for s in segments if s["speaker"] is None)
     payload = {
@@ -131,8 +136,11 @@ def main(argv):
         "segments": segments,
     }
     Path(out_base + ".json").write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    Path(out_base + ".vtt").write_text(to_vtt(segments, payload["speakers"]), encoding="utf-8")
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    Path(out_base + ".vtt").write_text(
+        to_vtt(segments, payload["speakers"]), encoding="utf-8"
+    )
 
     print(f"### MERGESTAT {len(segments)} {unassigned} {payload['num_speakers']}")
     return 0

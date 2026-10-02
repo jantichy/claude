@@ -5,6 +5,7 @@ Blok = CID (v1: varint verze, varint kodek, multihash 0x12 0x20 + 32 B) + DAG-CB
 Rkey každého záznamu je v MST stromu: commit blok (did+sig+data) → root MST uzel,
 uzly mají 'l' (levý podstrom) a 'e' (entries s prefixovou kompresí klíčů).
 """
+
 import io
 import json
 import sys
@@ -48,7 +49,7 @@ def iter_blocks(path):
             read_varint(bio)  # hash fn
             hash_len = read_varint(bio)
             bio.read(hash_len)
-            cid_bytes = block[start:bio.tell()]
+            cid_bytes = block[start : bio.tell()]
             yield cid_bytes, codec, bio.read()
 
 
@@ -136,16 +137,18 @@ if __name__ == "__main__":
         ext = embed.get("external", {})
         if isinstance(ext, dict) and ext.get("uri"):
             links.append(ext["uri"])
-        posts.append({
-            "rkey": rkey,
-            "url": f"https://bsky.app/profile/{HANDLE or did}/post/{rkey}",
-            "uri": f"at://{did}/app.bsky.feed.post/{rkey}",
-            "createdAt": rec.get("createdAt", ""),
-            "text": rec.get("text", ""),
-            "reply_parent": (rec.get("reply") or {}).get("parent", {}).get("uri"),
-            "quote": quote_uri,
-            "links": links,
-        })
+        posts.append(
+            {
+                "rkey": rkey,
+                "url": f"https://bsky.app/profile/{HANDLE or did}/post/{rkey}",
+                "uri": f"at://{did}/app.bsky.feed.post/{rkey}",
+                "createdAt": rec.get("createdAt", ""),
+                "text": rec.get("text", ""),
+                "reply_parent": (rec.get("reply") or {}).get("parent", {}).get("uri"),
+                "quote": quote_uri,
+                "links": links,
+            }
+        )
     posts.sort(key=lambda p: p["createdAt"])
     out = Path(sys.argv[2])
     out.write_text(json.dumps(posts, ensure_ascii=False, indent=1), encoding="utf-8")

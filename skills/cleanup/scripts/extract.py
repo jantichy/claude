@@ -168,8 +168,11 @@ def persisted(rows):
 
 def compactions(rows):
     """Počet kompaktací – podle nich se pozná, co v kontextu už není."""
-    return sum(1 for _, r in rows if r.get("isCompactSummary")
-               or (r.get("compactMetadata") is not None))
+    return sum(
+        1
+        for _, r in rows
+        if r.get("isCompactSummary") or (r.get("compactMetadata") is not None)
+    )
 
 
 #: Hlášky harnessu, které mají tvar uživatelského textu, ale nikdo je nenapsal.
@@ -185,7 +188,9 @@ def written_by_user(text):
     se jako věta, ale je to záznam o akci, ne obsah k zapsání.
     """
     text = text.strip()
-    return bool(text) and not text.startswith("<") and not text.startswith(HARNESS_NOTES)
+    return (
+        bool(text) and not text.startswith("<") and not text.startswith(HARNESS_NOTES)
+    )
 
 
 def walk(rows):
@@ -270,7 +275,11 @@ def drop_prefixes(found):
 def run_inventory(rows, path):
     """Vypíše, co v transcriptu je, a co z toho se čte."""
     _, counts, sizes = walk(rows)
-    read = {k: v for k, v in counts.items() if sizes[k] or k in ("uživatel", "vsuvka", "odpověď", "ve frontě")}
+    read = {
+        k: v
+        for k, v in counts.items()
+        if sizes[k] or k in ("uživatel", "vsuvka", "odpověď", "ve frontě")
+    }
     skip = {k: v for k, v in counts.items() if k not in read}
     print(f"INVENTURA: {path}")
     print(f"záznamů v souboru: {len(rows)}\n")
@@ -284,15 +293,24 @@ def run_inventory(rows, path):
     for key in sorted(skip, key=lambda k: -counts[k]):
         print(f"  {counts[key]:5}× {key}")
     cuts = compactions(rows)
-    print(f"\nKOMPAKTACÍ: {cuts}"
-          + ("  – část konverzace už v kontextu není, čti očištěný transcript celý"
-             if cuts else "  – celý obsah je i v kontextu, stačí podle kotev projít jeho"))
+    print(
+        f"\nKOMPAKTACÍ: {cuts}"
+        + (
+            "  – část konverzace už v kontextu není, čti očištěný transcript celý"
+            if cuts
+            else "  – celý obsah je i v kontextu, stačí podle kotev projít jeho"
+        )
+    )
     saved = persisted(rows)
-    print(f"\nODLOŽENÝCH VÝSTUPŮ: {len(saved)} – uříznuté v transcriptu i v kontextu, plné jsou tady:")
+    print(
+        f"\nODLOŽENÝCH VÝSTUPŮ: {len(saved)} – uříznuté v transcriptu i v kontextu, plné jsou tady:"
+    )
     for number, path in saved:
         print(f"  [{number}] {path}")
     found = prompts(rows)
-    print(f"\nUŽIVATELSKÝCH PROMPTŮ: {len(found)} – kotvy evidence, každý musí být odškrtnutý")
+    print(
+        f"\nUŽIVATELSKÝCH PROMPTŮ: {len(found)} – kotvy evidence, každý musí být odškrtnutý"
+    )
     for index, (number, text) in enumerate(found, 1):
         first = " ".join(text.split())[:100]
         print(f"  {index:3}. [{number}] {first}")
@@ -301,7 +319,9 @@ def run_inventory(rows, path):
 
 def main(argv):
     if len(argv) != 2 or argv[0] not in ("filter", "inventory"):
-        print("Použití: extract.py filter|inventory <transcript.jsonl>", file=sys.stderr)
+        print(
+            "Použití: extract.py filter|inventory <transcript.jsonl>", file=sys.stderr
+        )
         return 2
     mode, path = argv
     try:

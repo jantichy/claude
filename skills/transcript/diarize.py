@@ -5,6 +5,7 @@ Vstup přes proměnné prostředí (DIAR_WAV, DIAR_OUT, DIAR_NSPK, DIAR_MODEL, H
 aby se nemusely řešit uvozovky kolem cest. Výstup je JSON s úseky bez textu; text
 k nim přiřadí merge.py.
 """
+
 import json
 import os
 import sys
@@ -28,7 +29,10 @@ def main():
         pipeline = Pipeline.from_pretrained(model, use_auth_token=token)
     if pipeline is None:
         # Nastane, když uživatel neodsouhlasil licenci gated modelu na HuggingFace.
-        print("Pipeline se nenačetla – nejspíš neodsouhlasená licence modelu.", file=sys.stderr)
+        print(
+            "Pipeline se nenačetla – nejspíš neodsouhlasená licence modelu.",
+            file=sys.stderr,
+        )
         return 1
 
     # MPS urychlí běh na Apple Silicon; když není, zůstane CPU.
@@ -60,7 +64,9 @@ def main():
     with open(out, "w", encoding="utf-8") as fh:
         json.dump(
             {"num_speakers": len(speakers), "speakers": speakers, "turns": turns},
-            fh, ensure_ascii=False, indent=2,
+            fh,
+            ensure_ascii=False,
+            indent=2,
         )
         fh.write("\n")
     return 0

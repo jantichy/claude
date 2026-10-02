@@ -29,6 +29,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 
 Jen stdlib.
 """
+
 import importlib.util
 import json
 import os
@@ -50,16 +51,29 @@ def load(path, name):
 
 
 def user(text):
-    return {"type": "user", "timestamp": "2026-09-27T10:00:00Z",
-            "message": {"role": "user", "content": text}}
+    return {
+        "type": "user",
+        "timestamp": "2026-09-27T10:00:00Z",
+        "message": {"role": "user", "content": text},
+    }
 
 
 def call(text, tokens, ts="2026-09-27T10:01:00Z"):
     """Odpověď modelu, která něco stála – `tokens` jsou výstupní tokeny."""
-    return {"type": "assistant", "timestamp": ts,
-            "message": {"role": "assistant", "content": [{"type": "text", "text": text}],
-                        "usage": {"input_tokens": 0, "cache_creation_input_tokens": 0,
-                                  "cache_read_input_tokens": 0, "output_tokens": tokens}}}
+    return {
+        "type": "assistant",
+        "timestamp": ts,
+        "message": {
+            "role": "assistant",
+            "content": [{"type": "text", "text": text}],
+            "usage": {
+                "input_tokens": 0,
+                "cache_creation_input_tokens": 0,
+                "cache_read_input_tokens": 0,
+                "output_tokens": tokens,
+            },
+        },
+    }
 
 
 class Fixture(unittest.TestCase):
@@ -89,13 +103,15 @@ class Ohraniceni(Fixture):
 
     def test_beh_konci_markerem_a_dalsi_praci_nebere(self):
         """Práce za markerem konce do ceny běhu nepatří."""
-        self.session([
-            user("<command-name>/demo</command-name>"),
-            call("pracuju", 100),
-            call("## Hotovo\nvše hotovo", 10),
-            user("ještě něco jiného"),
-            call("tohle už není součást běhu", 9000),
-        ])
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("pracuju", 100),
+                call("## Hotovo\nvše hotovo", 10),
+                user("ještě něco jiného"),
+                call("tohle už není součást běhu", 9000),
+            ]
+        )
         runs, dropped = self.scan()
         self.assertEqual(len(runs), 1)
         self.assertEqual(dropped, 0)
@@ -104,47 +120,55 @@ class Ohraniceni(Fixture):
 
     def test_beh_bez_markeru_se_zahodi_a_spocita(self):
         """Nedokončený běh se nepočítá – a ohlásí se, místo aby zmizel."""
-        self.session([
-            user("<command-name>/demo</command-name>"),
-            call("pracuju a nikdy nedojdu k závěru", 100),
-        ])
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("pracuju a nikdy nedojdu k závěru", 100),
+            ]
+        )
         runs, dropped = self.scan()
         self.assertEqual(runs, [])
         self.assertEqual(dropped, 1)
 
     def test_cizi_skill_ukonci_hranici(self):
         """Marker za vyvoláním jiného skillu už tomuhle běhu nepatří."""
-        self.session([
-            user("<command-name>/demo</command-name>"),
-            call("pracuju", 100),
-            user("<command-name>/jiny</command-name>"),
-            call("## Hotovo\nzávěr jiného skillu", 9000),
-        ])
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("pracuju", 100),
+                user("<command-name>/jiny</command-name>"),
+                call("## Hotovo\nzávěr jiného skillu", 9000),
+            ]
+        )
         runs, dropped = self.scan()
         self.assertEqual(runs, [])
         self.assertEqual(dropped, 1)
 
     def test_harnessovy_prikaz_hranici_neukonci(self):
         """`/compact` uprostřed dlouhého běhu je běžný, ne konec běhu."""
-        self.session([
-            user("<command-name>/demo</command-name>"),
-            call("pracuju", 100),
-            user("<command-name>/compact</command-name>"),
-            call("## Hotovo\nzávěr", 10),
-        ])
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("pracuju", 100),
+                user("<command-name>/compact</command-name>"),
+                call("## Hotovo\nzávěr", 10),
+            ]
+        )
         runs, dropped = self.scan()
         self.assertEqual(len(runs), 1)
         self.assertEqual(dropped, 0)
 
     def test_dva_behy_v_jedne_session_se_nespletou(self):
         """Druhé vyvolání uzavírá první běh, i když ten marker neměl."""
-        self.session([
-            user("<command-name>/demo</command-name>"),
-            call("první běh se nedokončil", 100),
-            user("<command-name>/demo</command-name>"),
-            call("druhý běh", 20),
-            call("## Hotovo", 10),
-        ])
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("první běh se nedokončil", 100),
+                user("<command-name>/demo</command-name>"),
+                call("druhý běh", 20),
+                call("## Hotovo", 10),
+            ]
+        )
         runs, dropped = self.scan()
         self.assertEqual(len(runs), 1)
         self.assertEqual(dropped, 1)
@@ -161,11 +185,13 @@ class Subagenti(Fixture):
             fh.write(json.dumps(call("posudek", tokens, ts)) + "\n")
 
     def test_agent_v_okne_behu_se_pricte(self):
-        self.session([
-            user("<command-name>/demo</command-name>"),
-            call("pouštím agenta", 100, "2026-09-27T10:00:00Z"),
-            call("## Hotovo", 10, "2026-09-27T10:05:00Z"),
-        ])
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("pouštím agenta", 100, "2026-09-27T10:00:00Z"),
+                call("## Hotovo", 10, "2026-09-27T10:05:00Z"),
+            ]
+        )
         self.subagent("sess", "2026-09-27T10:02:00Z", 400)
         runs, _ = self.scan()
         self.assertEqual(runs[0]["na"], 1)
@@ -174,11 +200,13 @@ class Subagenti(Fixture):
 
     def test_agent_mimo_okno_behu_se_nepricte(self):
         """Agent puštěný po skončení běhu jeho cenu nezvedá."""
-        self.session([
-            user("<command-name>/demo</command-name>"),
-            call("pracuju", 100, "2026-09-27T10:00:00Z"),
-            call("## Hotovo", 10, "2026-09-27T10:05:00Z"),
-        ])
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("pracuju", 100, "2026-09-27T10:00:00Z"),
+                call("## Hotovo", 10, "2026-09-27T10:05:00Z"),
+            ]
+        )
         self.subagent("sess", "2026-09-27T11:00:00Z", 9000)
         runs, _ = self.scan()
         self.assertEqual(runs[0]["na"], 0)
@@ -192,7 +220,8 @@ class Marker(Fixture):
         home = Path(self.tmp.name) / "home"
         (home / ".claude" / "skills" / "demo").mkdir(parents=True, exist_ok=True)
         (home / ".claude" / "skills" / "demo" / "SKILL.md").write_text(
-            textwrap.dedent(body), encoding="utf-8")
+            textwrap.dedent(body), encoding="utf-8"
+        )
         old = os.environ.get("HOME")
         os.environ["HOME"] = str(home)
         self.addCleanup(lambda: os.environ.__setitem__("HOME", old) if old else None)
@@ -293,8 +322,11 @@ class Duplikaty(Fixture):
     def test_tyz_beh_ve_dvou_transcriptech_se_pocita_jednou(self):
         """`/resume` zkopíruje transcript; běh v něm je pořád jeden."""
         self.session(self.run_records(), name="puvodni")
-        self.session([user("starší kontext, kvůli kterému je soubor delší")]
-                     + self.run_records(), name="po-resume")
+        self.session(
+            [user("starší kontext, kvůli kterému je soubor delší")]
+            + self.run_records(),
+            name="po-resume",
+        )
         runs, dropped = self.scan()
         self.assertEqual(len(runs), 1)
         self.assertEqual(dropped, 1, "duplikát se má nahlásit, ne zmizet")
@@ -302,11 +334,14 @@ class Duplikaty(Fixture):
     def test_dva_ruzne_behy_se_nesliji(self):
         """Opačný směr: běhy s jinou cenou jsou dva, i když jsou v jeden den."""
         self.session(self.run_records(), name="prvni")
-        self.session([
-            user("<command-name>/demo</command-name>"),
-            call("pracuju jinak", 555),
-            call("## Hotovo", 10),
-        ], name="druhy")
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("pracuju jinak", 555),
+                call("## Hotovo", 10),
+            ],
+            name="druhy",
+        )
         runs, dropped = self.scan()
         self.assertEqual(len(runs), 2)
         self.assertEqual(dropped, 0)
@@ -341,9 +376,9 @@ class Mutace(Fixture):
         mutated = Path(self.tmp.name) / "cost_mutated.py"
         source = COST.read_text(encoding="utf-8")
         broken = source.replace(
-            "        other = [c for c in commands(recs[j])\n"
-            "                 if c != f'/{skill}' and c not in HARNESS]",
-            "        other = []")
+            '        other = [c for c in commands(recs[j]) if c != f"/{skill}" and c not in HARNESS]',
+            "        other = []",
+        )
         self.assertNotEqual(source, broken, "mutace nenašla hlídaný řez")
         mutated.write_text(broken, encoding="utf-8")
         runs, _ = self.scan(module=load(mutated, "cost_mutated"))
@@ -364,8 +399,8 @@ class Mutace(Fixture):
         mutated = Path(self.tmp.name) / "cost_nodedup.py"
         source = COST.read_text(encoding="utf-8")
         broken = source.replace(
-            "    runs, duplicates = dedup(runs)",
-            "    duplicates = 0")
+            "    runs, duplicates = dedup(runs)", "    duplicates = 0"
+        )
         self.assertNotEqual(source, broken, "mutace nenašla volání dedupu")
         mutated.write_text(broken, encoding="utf-8")
         runs, _ = self.scan(module=load(mutated, "cost_nodedup"))
@@ -391,21 +426,27 @@ class Rozsah(Fixture):
     """
 
     def run_with(self, summary):
-        recs = [user("<command-name>/demo</command-name>"),
-                call(f"## Hotovo\n\n{summary}", 100)]
+        recs = [
+            user("<command-name>/demo</command-name>"),
+            call(f"## Hotovo\n\n{summary}", 100),
+        ]
         self.session(recs)
         runs, _ = self.scan()
         self.assertEqual(len(runs), 1)
         return runs[0]
 
     def test_rozsah_z_prehledu_urci_pasmo(self):
-        run = self.run_with("- **Pokrytí panelem:** 12 z 30 souborů rozsahu prošel specialista")
+        run = self.run_with(
+            "- **Pokrytí panelem:** 12 z 30 souborů rozsahu prošel specialista"
+        )
         self.assertEqual(run["scope"], 30)
         self.assertEqual(run["unit"], "souborů")
         self.assertEqual(run["sband"], "B 10-50")
 
     def test_bere_se_posledni_vykaz_v_behu(self):
-        run = self.run_with("Průběžně: 1 z 5 sekcí\n\n- **Pokrytí předmětu:** 8 z 9 sekcí")
+        run = self.run_with(
+            "Průběžně: 1 z 5 sekcí\n\n- **Pokrytí předmětu:** 8 z 9 sekcí"
+        )
         self.assertEqual(run["scope"], 9)
         self.assertEqual(run["sband"], "A do10")
 
@@ -416,7 +457,9 @@ class Rozsah(Fixture):
         self.assertEqual(run["band"], "A do300kB")
 
     def test_kotvy_a_kilobajty_rozsah_nejsou(self):
-        run = self.run_with("**Pokrytí:** kotvy 23/23 odškrtnuto · přečteno 312 kB z 3000 kB")
+        run = self.run_with(
+            "**Pokrytí:** kotvy 23/23 odškrtnuto · přečteno 312 kB z 3000 kB"
+        )
         self.assertIsNone(run["scope"])
 
     def test_zastupne_n_z_m_ze_sablony_se_nevezme(self):

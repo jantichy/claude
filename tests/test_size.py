@@ -29,18 +29,22 @@ class InstructionSize(unittest.TestCase):
         """`RULES.md` nesmí přerůst mez."""
         size = chars("RULES.md")
         self.assertLessEqual(
-            size, RULES_LIMIT,
+            size,
+            RULES_LIMIT,
             f"RULES.md má {size} znaků, mez je {RULES_LIMIT}. Zkrať ho nebo přesuň "
-            "pravidlo do podmíněně načítaného souboru.")
+            "pravidlo do podmíněně načítaného souboru.",
+        )
 
     def test_always_loaded_within_limit(self):
         """Součet všeho, co jde do každé session, nesmí přerůst mez."""
         sizes = {name: chars(name) for name in ALWAYS_LOADED}
         total = sum(sizes.values())
         self.assertLessEqual(
-            total, ALWAYS_LOADED_LIMIT,
+            total,
+            ALWAYS_LOADED_LIMIT,
             f"Paušálně načítané soubory mají dohromady {total} znaků, mez je "
-            f"{ALWAYS_LOADED_LIMIT}: {sizes}")
+            f"{ALWAYS_LOADED_LIMIT}: {sizes}",
+        )
 
     def test_always_loaded_list_matches_imports(self):
         """Seznam paušálních souborů musí sedět s `@` importy v `CLAUDE.md`.
@@ -49,9 +53,11 @@ class InstructionSize(unittest.TestCase):
         nepočítal.
         """
         text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-        imported = {line.split()[1][len("@~/.claude/"):]
-                    for line in text.splitlines()
-                    if line.startswith("- @~/.claude/")}
+        imported = {
+            line.split()[1][len("@~/.claude/") :]
+            for line in text.splitlines()
+            if line.startswith("- @~/.claude/")
+        }
         self.assertEqual(imported, set(ALWAYS_LOADED) - {"CLAUDE.md"})
 
 

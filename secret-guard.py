@@ -22,6 +22,7 @@ eviduje `BYPASS.md`.
 
 Vrací 2 a důvod na stderr, což je pro PreToolUse zastavení nástroje.
 """
+
 import fnmatch
 import json
 import os
@@ -40,8 +41,18 @@ PREFIXES = {"sudo", "command", "env", "time", "nohup", "exec"}
 # Příkazy, které se souboru dotknou nebo ho jmenují, ale obsah nečtou.
 NO_READ = {"ls", "stat", "test", "[", "[[", "echo", "printf"}
 GIT_METADATA_ONLY = {"add", "rm", "mv", "status", "check-ignore", "ls-files"}
-INTERPRETERS = {"python", "python3", "node", "ruby", "perl", "php",
-                "sh", "bash", "zsh", "osascript"}
+INTERPRETERS = {
+    "python",
+    "python3",
+    "node",
+    "ruby",
+    "perl",
+    "php",
+    "sh",
+    "bash",
+    "zsh",
+    "osascript",
+}
 
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)(\w+)\1")
 PATHLIKE = re.compile(r"[\w./~-]+")
@@ -83,7 +94,7 @@ def split_heredocs(command):
         kept.append(line)
         i += 1
         for m in HEREDOC.finditer(line):
-            owner = re.split(r"&&|\|\||[;|(]", line[:m.start()])[-1].split()
+            owner = re.split(r"&&|\|\||[;|(]", line[: m.start()])[-1].split()
             body = []
             while i < len(lines) and lines[i].strip() != m.group(2):
                 body.append(lines[i])
@@ -186,7 +197,8 @@ def main():
         f"Zastaveno hookem `secret-guard.py`: příkaz čte `{word}`, který je na seznamu "
         "tajemství (deny `Read(...)` v settings.json). Hodnota by se mohla dostat do "
         "kontextu a transcriptu – i chybovou hláškou. Potřebuje-li úkol tajemství použít, "
-        "napiš uživateli celý příkaz a nech ho spustit přes `!`.\n")
+        "napiš uživateli celý příkaz a nech ho spustit přes `!`.\n"
+    )
     return BLOCK
 
 

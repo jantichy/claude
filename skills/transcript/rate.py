@@ -10,6 +10,7 @@ Usage:
     rate.py eta <model> <audio_seconds>      # odhad běhu, "MM:SS"
     rate.py update <model> <audio_s> <wall_s>
 """
+
 import json
 import os
 import sys
@@ -46,7 +47,11 @@ def load():
 
 def rate_for(model):
     entry = load().get(model)
-    if isinstance(entry, dict) and isinstance(entry.get("rate"), (int, float)) and entry["rate"] > 0:
+    if (
+        isinstance(entry, dict)
+        and isinstance(entry.get("rate"), (int, float))
+        and entry["rate"] > 0
+    ):
         return float(entry["rate"])
     return DEFAULTS.get(model, FALLBACK)
 

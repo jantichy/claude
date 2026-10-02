@@ -81,7 +81,10 @@ def walk(start: Path) -> list:
             continue
         seen.add(path)
         rows.append((depth, path, parent))
-        queue.extend((depth + 1, child, short(path)) for child in imports(read(path), path.parent))
+        queue.extend(
+            (depth + 1, child, short(path))
+            for child in imports(read(path), path.parent)
+        )
     return rows
 
 
@@ -104,10 +107,14 @@ def cmd_tree(args) -> int:
         total += size
         print(f"{depth:>7} {size:>8} {total:>8}  {short(path)}  ← {parent}")
     state = "NAD LIMITEM" if total > args.limit else "pod limitem"
-    print(f"\ncelkem {total} znaků v {len(rows)} souborech · limit {args.limit} · {state}")
+    print(
+        f"\ncelkem {total} znaků v {len(rows)} souborech · limit {args.limit} · {state}"
+    )
     count, chars = skill_descriptions()
-    print(f"druhá řada: popisy {count} vlastních skillů {chars} znaků "
-          "(pluginy, MCP a systémový prompt ukáže /context)")
+    print(
+        f"druhá řada: popisy {count} vlastních skillů {chars} znaků "
+        "(pluginy, MCP a systémový prompt ukáže /context)"
+    )
     return 1 if total > args.limit else 0
 
 
@@ -120,7 +127,7 @@ def cmd_sections(args) -> int:
     print(f"{'znaků':>7} {'data':>5} {'dolož':>5} {'proč':>5} {'zrád':>5}  sekce")
     for i, name in enumerate(names):
         end = starts[i + 1] if i + 1 < len(starts) else len(text)
-        body = text[starts[i]:end]
+        body = text[starts[i] : end]
         counts = [len(p.findall(body)) for p in MARKERS.values()]
         print(f"{len(body):>7} " + " ".join(f"{c:>5}" for c in counts) + f"  {name}")
     return 0
@@ -129,15 +136,20 @@ def cmd_sections(args) -> int:
 def cmd_history(args) -> int:
     path = Path(args.file).resolve()
     git = ["git", "-C", str(path.parent)]
-    log = subprocess.run(git + ["log", "--format=%h %ad", "--date=short", "--", path.name],
-                         capture_output=True, text=True, check=True).stdout.split("\n")
+    log = subprocess.run(
+        git + ["log", "--format=%h %ad", "--date=short", "--", path.name],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.split("\n")
     days = {}
     for line in filter(None, log):
         commit, day = line.split()
         days.setdefault(day, commit)
-    for day, commit in sorted(days.items())[-args.days:]:
-        show = subprocess.run(git + ["show", f"{commit}:./{path.name}"],
-                              capture_output=True, text=True)
+    for day, commit in sorted(days.items())[-args.days :]:
+        show = subprocess.run(
+            git + ["show", f"{commit}:./{path.name}"], capture_output=True, text=True
+        )
         print(f"{day} {commit} {len(show.stdout):>8}")
     return 0
 
@@ -154,7 +166,9 @@ def main() -> int:
     history.add_argument("file")
     history.add_argument("--days", type=int, default=30)
     args = parser.parse_args()
-    return {"tree": cmd_tree, "sections": cmd_sections, "history": cmd_history}[args.mode](args)
+    return {"tree": cmd_tree, "sections": cmd_sections, "history": cmd_history}[
+        args.mode
+    ](args)
 
 
 if __name__ == "__main__":

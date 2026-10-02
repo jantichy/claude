@@ -9,6 +9,7 @@ Usage:
     progress.py <logfile>                 # délky si načte z logu (### DURATION)
     progress.py <logfile> N=SECONDS ...   # délky lze i předat ručně
 """
+
 import re
 import sys
 from datetime import datetime
@@ -110,7 +111,9 @@ def main():
 
     total = sum(v for k, v in dur.items() if k not in failed)
     done_audio = sum(dur.get(n, 0) for n in done)
-    running = next((n for n in reversed(started) if n not in done and n not in failed), None)
+    running = next(
+        (n for n in reversed(started) if n not in done and n not in failed), None
+    )
     cur = last_pos if running else 0
     processed = min(done_audio + cur, total)
     remaining = max(0.0, total - processed)
@@ -134,7 +137,9 @@ def main():
         status += f"  •  selhalo: {len(failed)}"
     print(f"  [{bar}] {pct * 100:5.1f}%")
     print(f"  {mmss(processed)} / {mmss(total)} min   (zbývá {mmss(remaining)})")
-    print(f"  {status}  •  hotové: {len(done)}/{n_files}  •  tempo: {rate_txt}  •  ETA: {eta_txt}")
+    print(
+        f"  {status}  •  hotové: {len(done)}/{n_files}  •  tempo: {rate_txt}  •  ETA: {eta_txt}"
+    )
 
 
 if __name__ == "__main__":

@@ -32,6 +32,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 
 Jen stdlib.
 """
+
 import importlib.util
 import json
 import subprocess
@@ -169,7 +170,9 @@ class NehlasiSpravne(Fixture):
 
     def test_kotva_z_nadpisu_se_znackami(self):
         """Nadpis se sází s kódem a tučným písmem; slug je ignoruje."""
-        (self.dir / "b.md").write_text("## `docs/plan.md` – **plán**\n", encoding="utf-8")
+        (self.dir / "b.md").write_text(
+            "## `docs/plan.md` – **plán**\n", encoding="utf-8"
+        )
         self.assertEqual("", self.findings("[x](b.md#docsplanmd--plán)\n"))
 
     def test_odkaz_v_bloku_kodu(self):
@@ -212,7 +215,9 @@ class Rozhrani(Fixture):
     def run_script(self, *args):
         return subprocess.run(
             [sys.executable, str(LINKS), *args],
-            capture_output=True, text=True, check=False,
+            capture_output=True,
+            text=True,
+            check=False,
         )
 
     def test_cisto_vraci_nulu(self):
@@ -248,8 +253,11 @@ class Mutace(Fixture):
         mutant.write_text(source, encoding="utf-8")
         body = "```\n[x](vubec-nic.md)\n```\n"
         findings = load(mutant, "links_mutant").check([str(self.write(body))])
-        self.assertTrue(findings, "vyřazení vynechávání bloků kódu nic nezměnilo – "
-                                  "test nad blokem kódu tedy neměří to, co tvrdí")
+        self.assertTrue(
+            findings,
+            "vyřazení vynechávání bloků kódu nic nezměnilo – "
+            "test nad blokem kódu tedy neměří to, co tvrdí",
+        )
 
     def test_bez_vynechani_ukazky_v_backticku_vznikne_falesny_poplach(self):
         source = LINKS.read_text(encoding="utf-8").replace(
@@ -261,8 +269,11 @@ class Mutace(Fixture):
         mutant.write_text(source, encoding="utf-8")
         body = "Píše se `[text](vubec-nic.md)`.\n"
         findings = load(mutant, "links_mutant_kod").check([str(self.write(body))])
-        self.assertTrue(findings, "vyřazení vyjímání ukázek v backticku nic nezměnilo – "
-                                  "test nad ukázkou syntaxe tedy neměří to, co tvrdí")
+        self.assertTrue(
+            findings,
+            "vyřazení vyjímání ukázek v backticku nic nezměnilo – "
+            "test nad ukázkou syntaxe tedy neměří to, co tvrdí",
+        )
 
 
 class PredfiltrBase(unittest.TestCase):
@@ -276,17 +287,40 @@ class PredfiltrBase(unittest.TestCase):
 
     def transcript(self, records):
         path = self.dir / "t.jsonl"
-        path.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in records), encoding="utf-8")
+        path.write_text(
+            "\n".join(json.dumps(r, ensure_ascii=False) for r in records),
+            encoding="utf-8",
+        )
         return path
 
     def user(self, text, **extra):
-        return {"type": "user", "message": {"role": "user", "content": [{"type": "text", "text": text}]}, **extra}
+        return {
+            "type": "user",
+            "message": {"role": "user", "content": [{"type": "text", "text": text}]},
+            **extra,
+        }
 
     def tool(self, name, output):
-        use = {"type": "assistant", "message": {"role": "assistant", "content": [
-            {"type": "tool_use", "id": f"id-{name}", "name": name}]}}
-        result = {"type": "user", "message": {"role": "user", "content": [
-            {"type": "tool_result", "tool_use_id": f"id-{name}", "content": output}]}}
+        use = {
+            "type": "assistant",
+            "message": {
+                "role": "assistant",
+                "content": [{"type": "tool_use", "id": f"id-{name}", "name": name}],
+            },
+        }
+        result = {
+            "type": "user",
+            "message": {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "tool_result",
+                        "tool_use_id": f"id-{name}",
+                        "content": output,
+                    }
+                ],
+            },
+        }
         return [use, result]
 
     def kept(self, records):
@@ -300,24 +334,37 @@ class Predfiltr(PredfiltrBase):
 
     def test_vystup_ctecich_nastroju_se_vynecha(self):
         """Obsah souborů se čte ze zdroje, kde je navíc aktuální."""
-        kept = self.kept(self.tool("Read", "OBSAH SOUBORU") + self.tool("Grep", "SHODA"))
+        kept = self.kept(
+            self.tool("Read", "OBSAH SOUBORU") + self.tool("Grep", "SHODA")
+        )
         self.assertNotIn("výstup Read", kept)
         self.assertNotIn("výstup Grep", kept)
 
     def test_vystup_nesouci_obsah_zustane(self):
         """Výstup shellu a zpráva subagenta nikde jinde nejsou – zmizí se session."""
-        kept = self.kept(self.tool("Bash", "NAMĚŘENO 42") + self.tool("Agent", "NÁLEZ AGENTA"))
+        kept = self.kept(
+            self.tool("Bash", "NAMĚŘENO 42") + self.tool("Agent", "NÁLEZ AGENTA")
+        )
         self.assertEqual(kept.get("výstup Bash"), "NAMĚŘENO 42")
         self.assertEqual(kept.get("výstup Agent"), "NÁLEZ AGENTA")
 
     def test_mysleni_se_vynecha_ale_spocita(self):
         """Bloky myšlení jsou v transcriptu prázdné, takže se čtou naprázdno."""
-        records = [{"type": "assistant", "message": {"role": "assistant", "content": [
-            {"type": "thinking", "thinking": ""}]}}]
+        records = [
+            {
+                "type": "assistant",
+                "message": {
+                    "role": "assistant",
+                    "content": [{"type": "thinking", "thinking": ""}],
+                },
+            }
+        ]
         rows = self.extract.load(str(self.transcript(records)))
         kept, counts, _ = self.extract.walk(rows)
         self.assertEqual(kept, [])
-        self.assertEqual(counts["myšlení"], 1, "myšlení musí být vidět v inventuře jako mez běhu")
+        self.assertEqual(
+            counts["myšlení"], 1, "myšlení musí být vidět v inventuře jako mez běhu"
+        )
 
     def test_cislo_radku_odpovida_zdroji(self):
         """Bez pravého čísla řádku se citace nedá ověřit a padá doložitelnost."""
@@ -328,7 +375,13 @@ class Predfiltr(PredfiltrBase):
 
     def test_zprava_z_fronty_se_neztrati(self):
         """Dovětek poslaný uprostřed odpovědi jde jinou cestou než prompt."""
-        records = [{"type": "queue-operation", "operation": "enqueue", "content": "JEŠTĚ DODĚLEJ TOHLE"}]
+        records = [
+            {
+                "type": "queue-operation",
+                "operation": "enqueue",
+                "content": "JEŠTĚ DODĚLEJ TOHLE",
+            }
+        ]
         self.assertEqual(self.kept(records).get("ve frontě"), "JEŠTĚ DODĚLEJ TOHLE")
 
 
@@ -340,36 +393,65 @@ class KotvyEvidence(PredfiltrBase):
         return [t for _, t in self.extract.prompts(rows)]
 
     def test_skutecny_prompt_je_kotva(self):
-        self.assertEqual(self.anchors([self.user("ZAPIŠ TO DO TODA")]), ["ZAPIŠ TO DO TODA"])
+        self.assertEqual(
+            self.anchors([self.user("ZAPIŠ TO DO TODA")]), ["ZAPIŠ TO DO TODA"]
+        )
 
     def test_vsuvka_harnessu_kotva_neni(self):
         """Výpis skillu a zpráva subagenta mají roli uživatele, ale nenapsal je on."""
-        self.assertEqual(self.anchors([self.user("Base directory for this skill: …", isMeta=True)]), [])
+        self.assertEqual(
+            self.anchors([self.user("Base directory for this skill: …", isMeta=True)]),
+            [],
+        )
 
     def test_notifikace_z_fronty_kotva_neni(self):
         """Do fronty padají i hlášky systému; odškrtávat se nemají."""
         records = [
-            {"type": "queue-operation", "operation": "enqueue", "content": "<task-notification>hotovo</task-notification>"},
-            {"type": "queue-operation", "operation": "enqueue", "content": "[SYSTEM NOTIFICATION] nic"},
+            {
+                "type": "queue-operation",
+                "operation": "enqueue",
+                "content": "<task-notification>hotovo</task-notification>",
+            },
+            {
+                "type": "queue-operation",
+                "operation": "enqueue",
+                "content": "[SYSTEM NOTIFICATION] nic",
+            },
         ]
         self.assertEqual(self.anchors(records), [])
 
     def test_prikaz_skillu_kotva_neni(self):
-        self.assertEqual(self.anchors([self.user("<command-name>/cleanup</command-name>")]), [])
-
+        self.assertEqual(
+            self.anchors([self.user("<command-name>/cleanup</command-name>")]), []
+        )
 
     def test_zprava_z_fronty_se_nepocita_dvakrat(self):
         """Fronta ukládá zprávu dvakrát: při zařazení a při doručení."""
         records = [
-            {"type": "queue-operation", "operation": "enqueue", "content": "ještě dodělej tohle"},
-            {"type": "attachment", "attachment": {"type": "queued_command", "prompt": "ještě dodělej tohle"}},
+            {
+                "type": "queue-operation",
+                "operation": "enqueue",
+                "content": "ještě dodělej tohle",
+            },
+            {
+                "type": "attachment",
+                "attachment": {
+                    "type": "queued_command",
+                    "prompt": "ještě dodělej tohle",
+                },
+            },
         ]
         self.assertEqual(self.anchors(records), ["ještě dodělej tohle"])
 
     def test_rozepsany_prompt_se_nepocita_zvlast(self):
         """Harness uloží i verzi před doplněním – a pod jiným promptId."""
-        records = [self.user("Zhodnoť ten skill"), self.user("Zhodnoť ten skill a řekni, co s ním dál")]
-        self.assertEqual(self.anchors(records), ["Zhodnoť ten skill a řekni, co s ním dál"])
+        records = [
+            self.user("Zhodnoť ten skill"),
+            self.user("Zhodnoť ten skill a řekni, co s ním dál"),
+        ]
+        self.assertEqual(
+            self.anchors(records), ["Zhodnoť ten skill a řekni, co s ním dál"]
+        )
 
     def test_preruseni_behu_kotva_neni(self):
         """Čte se to jako věta, ale je to záznam o akci, ne obsah k zapsání."""
@@ -385,7 +467,9 @@ class RozhraniPredfiltru(PredfiltrBase):
     """Návratové kódy – podle nich se skill rozhoduje."""
 
     def run_script(self, *args):
-        return subprocess.run([sys.executable, str(EXTRACT), *args], capture_output=True, text=True)
+        return subprocess.run(
+            [sys.executable, str(EXTRACT), *args], capture_output=True, text=True
+        )
 
     def test_hotovo_vraci_nulu(self):
         path = self.transcript([self.user("ahoj")])
@@ -397,7 +481,9 @@ class RozhraniPredfiltru(PredfiltrBase):
         self.assertEqual(self.run_script("neco", str(path)).returncode, 2)
 
     def test_chybejici_soubor_vraci_dvojku(self):
-        self.assertEqual(self.run_script("filter", str(self.dir / "není.jsonl")).returncode, 2)
+        self.assertEqual(
+            self.run_script("filter", str(self.dir / "není.jsonl")).returncode, 2
+        )
 
     def test_prazdny_transcript_vraci_dvojku(self):
         """Prázdný výsledek se nesmí tvářit jako čistý úklid."""
@@ -426,8 +512,10 @@ class MutacePredfiltru(PredfiltrBase):
         mutant.write_text(source, encoding="utf-8")
         module = load(mutant, "extract_mutant")
         rows = module.load(str(self.transcript([self.user("VSUVKA", isMeta=True)])))
-        self.assertTrue(module.prompts(rows),
-                        "vyřazení isMeta nic nezměnilo – test na vsuvky tedy neměří to, co tvrdí")
+        self.assertTrue(
+            module.prompts(rows),
+            "vyřazení isMeta nic nezměnilo – test na vsuvky tedy neměří to, co tvrdí",
+        )
 
 
 class KontextProtiTranscriptu(PredfiltrBase):
@@ -442,9 +530,20 @@ class KontextProtiTranscriptu(PredfiltrBase):
 
     def test_kompaktace_se_pozna(self):
         """Po kompaktaci část konverzace v kontextu není – transcript ji má."""
-        rows = self.extract.load(str(self.transcript([
-            self.user("před"), {"type": "user", "isCompactSummary": True, "message": {"role": "user", "content": []}},
-        ])))
+        rows = self.extract.load(
+            str(
+                self.transcript(
+                    [
+                        self.user("před"),
+                        {
+                            "type": "user",
+                            "isCompactSummary": True,
+                            "message": {"role": "user", "content": []},
+                        },
+                    ]
+                )
+            )
+        )
         self.assertEqual(self.extract.compactions(rows), 1)
 
     def test_bez_kompaktace_nula(self):
@@ -456,7 +555,10 @@ class KontextProtiTranscriptu(PredfiltrBase):
         """Velký výstup je uříznutý v transcriptu i v kontextu; plný leží jinde."""
         full = self.dir / "ab12.txt"
         full.write_text("celý výstup", encoding="utf-8")
-        records = self.tool("Bash", f"Output too large (31.6KB). Full output saved to: {full}\n\nPreview")
+        records = self.tool(
+            "Bash",
+            f"Output too large (31.6KB). Full output saved to: {full}\n\nPreview",
+        )
         rows = self.extract.load(str(self.transcript(records)))
         self.assertEqual([p for _, p in self.extract.persisted(rows)], [str(full)])
 

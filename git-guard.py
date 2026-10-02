@@ -20,6 +20,7 @@ tam se navíc neptáme na `-f`, ale na to, jestli je běh suchý.
 
 Vrací 2 a důvod na stderr, což je pro PreToolUse zastavení nástroje.
 """
+
 import json
 import re
 import shlex
@@ -33,16 +34,15 @@ SEPARATORS = {";", "&&", "||", "|", "&", "\n"}
 
 # podpříkaz → (přepínače, které zastavují, věta pro člověka)
 FORBIDDEN = {
-    "push": ({"--force", "-f", "--force-with-lease", "--force-if-includes"},
-             "přepsal by vzdálenou historii, na které může stát jiná session"),
-    "reset": ({"--hard"},
-              "zahodil by necommitnuté změny, včetně cizích"),
-    "filter-branch": (None,
-                      "přepisuje celou historii větve"),
+    "push": (
+        {"--force", "-f", "--force-with-lease", "--force-if-includes"},
+        "přepsal by vzdálenou historii, na které může stát jiná session",
+    ),
+    "reset": ({"--hard"}, "zahodil by necommitnuté změny, včetně cizích"),
+    "filter-branch": (None, "přepisuje celou historii větve"),
     # U `clean` se krátké přepínače slepují (`-fx`, `-ffd`, `-xdf`), takže výčet
     # tvarů je vždycky děravý – rozhoduje proto **obsah** přepínače, viz níž.
-    "clean": ({"--force"},
-              "smaže netrackované soubory, které nikde jinde nejsou"),
+    "clean": ({"--force"}, "smaže netrackované soubory, které nikde jinde nejsou"),
 }
 
 # podpříkaz + první argument → věta
@@ -55,7 +55,14 @@ FORBIDDEN_PAIRS = {
     ("stash", "drop"): "smaže položku zásobníku, kterou mohla odložit jiná session",
 }
 
-GLOBAL_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path"}
+GLOBAL_WITH_VALUE = {
+    "-C",
+    "-c",
+    "--git-dir",
+    "--work-tree",
+    "--namespace",
+    "--exec-path",
+}
 
 
 def segments(words):
@@ -88,8 +95,12 @@ def strip_global(words):
 
 
 def expand_alias(name):
-    done = subprocess.run(["git", "config", "--get", f"alias.{name}"],
-                          capture_output=True, text=True, check=False)
+    done = subprocess.run(
+        ["git", "config", "--get", f"alias.{name}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     if done.returncode != 0:
         return None
     value = done.stdout.strip()
@@ -125,8 +136,9 @@ def table_verdict(sub, args):
         # `clean` se neposuzuje podle `-f`, ale podle toho, jestli jde o suchý
         # běh: s `clean.requireForce=false` v konfiguraci maže i bez `-f`
         # (ověřeno 20. 9. 2026) a výčet přepínačů by tu cestu propustil.
-        if sub == "clean" and not any(short_flag_has(a, "n") or a == "--dry-run"
-                                      for a in args):
+        if sub == "clean" and not any(
+            short_flag_has(a, "n") or a == "--dry-run" for a in args
+        ):
             return reason
 
     for (s, a), reason in FORBIDDEN_PAIRS.items():
@@ -137,7 +149,11 @@ def table_verdict(sub, args):
 
 def combo_verdict(sub, args):
     """Kombinace, které se do tabulky zapsat nedají – teprve dvě slova dohromady škodí."""
-    if sub == "branch" and {"--delete", "-d"} & set(args) and {"--force", "-f"} & set(args):
+    if (
+        sub == "branch"
+        and {"--delete", "-d"} & set(args)
+        and {"--force", "-f"} & set(args)
+    ):
         return "smaže větev bez ohledu na to, jestli je přimergovaná"
     if sub == "worktree" and "remove" in args and {"--force", "-f"} & set(args):
         return "smaže worktree i s neuloženým obsahem"
@@ -196,7 +212,8 @@ def main():
                 f"Zastaveno hookem `git-guard.py`: {reason}.\n"
                 "Deny seznam v settings.json tenhle tvar nezachytí, protože porovnává prefix "
                 "celého příkazu. Potřebuje-li to situace opravdu, musí to spustit člověk "
-                "z terminálu.\n")
+                "z terminálu.\n"
+            )
             return BLOCK
     return PASS
 

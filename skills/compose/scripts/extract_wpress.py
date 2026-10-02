@@ -4,6 +4,7 @@ Formát: opakující se bloky [header 4377 B][obsah souboru].
 Header: 255 B jméno, 14 B velikost, 12 B mtime, 4096 B cesta (vše \x00-padded).
 Konec: 4377 B samých \x00.
 """
+
 import sys
 from pathlib import Path
 
@@ -13,7 +14,9 @@ if len(sys.argv) < 3:
     sys.exit("Použití: extract_wpress.py <archive.wpress> <target_dir> [filter]")
 src = Path(sys.argv[1])
 out_dir = Path(sys.argv[2])
-want = sys.argv[3] if len(sys.argv) > 3 else None  # jen soubory obsahující tento řetězec
+want = (
+    sys.argv[3] if len(sys.argv) > 3 else None
+)  # jen soubory obsahující tento řetězec
 
 with src.open("rb") as f:
     while True:

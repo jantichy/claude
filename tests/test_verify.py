@@ -16,6 +16,7 @@ Schválně jen stdlib – stejný důvod jako u `test_skills.py`. Každý test s
 vlastní dočasný repozitář a přesměrovaný HOME, takže nesahá na skutečné souhlasy
 ani na skutečný běhový stav.
 """
+
 import json
 import os
 import pty
@@ -52,16 +53,23 @@ def grant_consent(path, home):
         env = dict(os.environ, HOME=str(home))
         env.pop("XDG_STATE_HOME", None)
         env.pop("CLAUDE_NO_VERIFY", None)
-        return subprocess.run([str(VERIFY), "--allow", str(path)], stdin=slave,
-                              capture_output=True, text=True, env=env, check=False)
+        return subprocess.run(
+            [str(VERIFY), "--allow", str(path)],
+            stdin=slave,
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
     finally:
         os.close(master)
         os.close(slave)
 
 
 def git(cwd, *args):
-    return subprocess.run(["git", "-C", str(cwd), *args],
-                          capture_output=True, text=True, check=False)
+    return subprocess.run(
+        ["git", "-C", str(cwd), *args], capture_output=True, text=True, check=False
+    )
 
 
 class ContinuousCheck(unittest.TestCase):
@@ -83,7 +91,9 @@ class ContinuousCheck(unittest.TestCase):
     def commit_contract(self, **commands):
         """Napíše CLAUDE.md se sekcí ## Kontrakt příkazů a commitne ho."""
         lines = "\n".join(f"- {k}: {v}" for k, v in commands.items())
-        (self.repo / "CLAUDE.md").write_text(f"# Test\n\n## Kontrakt příkazů\n\n{lines}\n")
+        (self.repo / "CLAUDE.md").write_text(
+            f"# Test\n\n## Kontrakt příkazů\n\n{lines}\n"
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "kontrakt")
 
@@ -94,11 +104,20 @@ class ContinuousCheck(unittest.TestCase):
         env = dict(os.environ, HOME=str(self.home))
         env.pop("XDG_STATE_HOME", None)
         env.pop("CLAUDE_NO_VERIFY", None)
-        stdin_data = json.dumps({"session_id": "s1",
-                                 "cwd": str(cwd or self.repo),
-                                 "stop_hook_active": stop_hook_active})
-        return subprocess.run(["bash", str(VERIFY), *(argv or [])],
-                              input=stdin_data, capture_output=True, text=True, env=env)
+        stdin_data = json.dumps(
+            {
+                "session_id": "s1",
+                "cwd": str(cwd or self.repo),
+                "stop_hook_active": stop_hook_active,
+            }
+        )
+        return subprocess.run(
+            ["bash", str(VERIFY), *(argv or [])],
+            input=stdin_data,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
     def key(self):
         """Klíč projektu počítaný stejně jako ve skriptu: sha1 kanonického
@@ -106,14 +125,16 @@ class ContinuousCheck(unittest.TestCase):
         stav neukládá."""
         common = git(self.repo, "rev-parse", "--git-common-dir").stdout.strip()
         path = Path(common) if common.startswith("/") else self.repo / common
-        return subprocess.run(["shasum"], input=str(path.resolve()),
-                              capture_output=True, text=True).stdout.split()[0]
+        return subprocess.run(
+            ["shasum"], input=str(path.resolve()), capture_output=True, text=True
+        ).stdout.split()[0]
 
     def run_switch(self, *argv):
         env = dict(os.environ, HOME=str(self.home))
         env.pop("XDG_STATE_HOME", None)
-        return subprocess.run(["bash", str(VERIFY), *argv],
-                              capture_output=True, text=True, env=env)
+        return subprocess.run(
+            ["bash", str(VERIFY), *argv], capture_output=True, text=True, env=env
+        )
 
     def test_switch_lives_outside_the_repository(self):
         """Vypínač se nesmí dát commitnout.
@@ -134,15 +155,20 @@ class ContinuousCheck(unittest.TestCase):
         stale.mkdir(parents=True, exist_ok=True)
         (stale / "no-verify").write_text("")
         done = self.run_verify()
-        self.assertNotIn("no-verify", done.stderr,
-                         "soubor uvnitř repozitáře kontrolu pořád vypíná")
+        self.assertNotIn(
+            "no-verify", done.stderr, "soubor uvnitř repozitáře kontrolu pořád vypíná"
+        )
 
         done = self.run_switch("--disable", str(self.repo))
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertFalse((self.repo / ".claude" / "disabled").exists(),
-                         "vypínač se zapsal do repozitáře")
-        self.assertTrue((self.home / ".local/state/claude-verify/disabled").is_dir(),
-                        "vypínač se nezapsal mimo repozitář")
+        self.assertFalse(
+            (self.repo / ".claude" / "disabled").exists(),
+            "vypínač se zapsal do repozitáře",
+        )
+        self.assertTrue(
+            (self.home / ".local/state/claude-verify/disabled").is_dir(),
+            "vypínač se nezapsal mimo repozitář",
+        )
 
         done = self.run_verify()
         self.assertEqual(0, done.returncode)
@@ -174,21 +200,39 @@ class ContinuousCheck(unittest.TestCase):
         """
         # Plný kontrakt s pomlčkami: nejde o to, co se spustí, ale kam se zapíše
         # stav. Chybějící klíče by daly `exit 2` a test by měřil něco jiného.
-        self.commit_contract(typecheck="-", lint="-", test="true", build="-",
-                      e2e="-", audit="-", coverage="-", mutation="-")
+        self.commit_contract(
+            typecheck="-",
+            lint="-",
+            test="true",
+            build="-",
+            e2e="-",
+            audit="-",
+            coverage="-",
+            mutation="-",
+        )
         self.allow()
         xdg = self.tmp / "xdg"
         env = dict(os.environ, HOME=str(self.home), XDG_STATE_HOME=str(xdg))
         env.pop("CLAUDE_NO_VERIFY", None)
-        stdin_data = json.dumps({"session_id": "s1", "cwd": str(self.repo),
-                            "stop_hook_active": False})
-        r = subprocess.run(["bash", str(VERIFY)], input=stdin_data,
-                           capture_output=True, text=True, env=env)
+        stdin_data = json.dumps(
+            {"session_id": "s1", "cwd": str(self.repo), "stop_hook_active": False}
+        )
+        r = subprocess.run(
+            ["bash", str(VERIFY)],
+            input=stdin_data,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
         self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertFalse((xdg / "claude-verify" / "runs").exists(),
-                         "stav běhu šel do XDG_STATE_HOME – dá se přesměrovat zvenčí")
-        self.assertTrue((self.home / ".local/state/claude-verify/runs").is_dir(),
-                        "stav běhu nevznikl na pevné cestě pod HOME")
+        self.assertFalse(
+            (xdg / "claude-verify" / "runs").exists(),
+            "stav běhu šel do XDG_STATE_HOME – dá se přesměrovat zvenčí",
+        )
+        self.assertTrue(
+            (self.home / ".local/state/claude-verify/runs").is_dir(),
+            "stav běhu nevznikl na pevné cestě pod HOME",
+        )
 
     def test_allow_says_repository_content_can_change_later(self):
         """Dialog musí říct, co člověk u terminálu schvaluje.
@@ -208,10 +252,16 @@ class ContinuousCheck(unittest.TestCase):
         """
         self.commit_contract(test="true")
         out = self.allow().stdout
-        self.assertIn("mění dál a nový", out,
-                      "dialog neříká, že se spouštěné soubory mění bez nového souhlasu")
-        self.assertIn("cizí commity", out,
-                      "dialog neříká, čeho se to týká – repozitáře s cizími commity")
+        self.assertIn(
+            "mění dál a nový",
+            out,
+            "dialog neříká, že se spouštěné soubory mění bez nového souhlasu",
+        )
+        self.assertIn(
+            "cizí commity",
+            out,
+            "dialog neříká, čeho se to týká – repozitáře s cizími commity",
+        )
 
     def test_list_flags_legacy_format_consent(self):
         """Mrtvý záznam nesmí ve výpisu vypadat jako živý.
@@ -224,12 +274,18 @@ class ContinuousCheck(unittest.TestCase):
         self.commit_contract(test="true")
         self.allow()
         file = next((self.home / ".local/state/claude-verify/allowed").glob("*"))
-        file.write_text(f"{self.repo}\n")          # starý jednořádkový formát
+        file.write_text(f"{self.repo}\n")  # starý jednořádkový formát
 
         env = dict(os.environ, HOME=str(self.home))
         env.pop("XDG_STATE_HOME", None)
-        r = subprocess.run(["bash", str(VERIFY), "--list"], capture_output=True,
-                           text=True, env=env, stdin=subprocess.DEVNULL, check=False)
+        r = subprocess.run(
+            ["bash", str(VERIFY), "--list"],
+            capture_output=True,
+            text=True,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            check=False,
+        )
         self.assertIn("NEPLATNÝ", r.stdout, "výpis neoznačil mrtvý souhlas")
         self.assertIn("Neplatných záznamů: 1", r.stdout)
         self.assertIn(str(file), r.stdout, "výpis neřekl, který soubor uklidit")
@@ -242,8 +298,10 @@ class ContinuousCheck(unittest.TestCase):
         r = self.run_verify()
         self.assertEqual(r.returncode, SILENT)
         self.assertIn("není vydaný souhlas", r.stderr)
-        self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
-                         "hook spustil příkaz z repozitáře, pro který nebyl vydaný souhlas")
+        self.assertFalse(
+            (self.repo / "NESMI-VZNIKNOUT").exists(),
+            "hook spustil příkaz z repozitáře, pro který nebyl vydaný souhlas",
+        )
 
     def test_consent_covers_repo_including_worktrees(self):
         """Ve worktree layoutu má každá větev vlastní adresář.
@@ -256,8 +314,9 @@ class ContinuousCheck(unittest.TestCase):
         branch = self.tmp / "feat"
         git(self.repo, "worktree", "add", "-q", str(branch), "-b", "feat")
         r = self.run_verify(cwd=branch)
-        self.assertEqual(r.returncode, PASSES,
-                         f"na nové větvi kontrola neběžela: {r.stderr}")
+        self.assertEqual(
+            r.returncode, PASSES, f"na nové větvi kontrola neběžela: {r.stderr}"
+        )
 
     def test_consent_survives_symlink_in_path(self):
         """Souhlas vydaný přes symlink se musí potkat s během, který ho má rozřešený.
@@ -270,10 +329,13 @@ class ContinuousCheck(unittest.TestCase):
         self.commit_contract(typecheck="-", lint="-", test="true")
         link = self.tmp / "odkaz"
         link.symlink_to(self.repo)
-        self.allow(link)                       # souhlas přes symlink
+        self.allow(link)  # souhlas přes symlink
         r = self.run_verify(cwd=self.repo.resolve())  # běh přes skutečnou cestu
-        self.assertEqual(r.returncode, PASSES,
-                         f"souhlas se nepotkal kvůli symlinku v cestě: {r.stderr}")
+        self.assertEqual(
+            r.returncode,
+            PASSES,
+            f"souhlas se nepotkal kvůli symlinku v cestě: {r.stderr}",
+        )
 
     # --- exit kódy ---------------------------------------------------------
 
@@ -307,7 +369,9 @@ class ContinuousCheck(unittest.TestCase):
 
     def test_missing_tool_is_not_failing_check(self):
         """Blokovat by znamenalo hnát model opravovat kód, který za to nemůže."""
-        self.commit_contract(typecheck="-", lint="-", test="prikaz-ktery-neexistuje-xyz")
+        self.commit_contract(
+            typecheck="-", lint="-", test="prikaz-ktery-neexistuje-xyz"
+        )
         self.allow()
         r = self.run_verify()
         self.assertEqual(r.returncode, SILENT)
@@ -353,10 +417,15 @@ class ContinuousCheck(unittest.TestCase):
         self.allow()
         (self.repo / "nove").mkdir()
         (self.repo / "nove/dobre.txt").write_text("ok\n")
-        self.assertEqual(self.run_verify().returncode, PASSES, "výchozí stav měl být zelený")
+        self.assertEqual(
+            self.run_verify().returncode, PASSES, "výchozí stav měl být zelený"
+        )
         (self.repo / "nove/spatne.txt").write_text("rozbito\n")
-        self.assertEqual(self.run_verify().returncode, BLOCKS,
-                         "změna uvnitř neverzovaného adresáře se do otisku nepromítla")
+        self.assertEqual(
+            self.run_verify().returncode,
+            BLOCKS,
+            "změna uvnitř neverzovaného adresáře se do otisku nepromítla",
+        )
 
     def test_fingerprint_sees_modified_file_change(self):
         """Porcelain vypíše " M soubor" stejně pro první i desátou úpravu."""
@@ -380,14 +449,19 @@ class ContinuousCheck(unittest.TestCase):
         """
         (self.repo / "CLAUDE.md").write_text(
             "# Test\n\nKontrakt nemáme. Formát vypadá takhle:\n\n"
-            "```markdown\n## Kontrakt příkazů\n\n- test: touch NESMI-VZNIKNOUT\n```\n")
+            "```markdown\n## Kontrakt příkazů\n\n- test: touch NESMI-VZNIKNOUT\n```\n"
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "dokumentace")
         r = self.allow()
-        self.assertNotEqual(r.returncode, 0, "--allow přijal ukázku v bloku kódu jako kontrakt")
+        self.assertNotEqual(
+            r.returncode, 0, "--allow přijal ukázku v bloku kódu jako kontrakt"
+        )
         self.run_verify()
-        self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
-                         "hook spustil příkaz z bloku kódu v dokumentaci")
+        self.assertFalse(
+            (self.repo / "NESMI-VZNIKNOUT").exists(),
+            "hook spustil příkaz z bloku kódu v dokumentaci",
+        )
 
     def test_contract_in_html_comment_is_not_contract(self):
         """HTML komentář nevidí žádný vykreslený Markdown – ale skript ho četl.
@@ -402,15 +476,21 @@ class ContinuousCheck(unittest.TestCase):
         """
         (self.repo / "CLAUDE.md").write_text(
             "# Test\n\nKontrakt nemáme.\n\n"
-            "<!--\n## Kontrakt příkazů\n\n- test: touch NESMI-VZNIKNOUT\n-->\n")
+            "<!--\n## Kontrakt příkazů\n\n- test: touch NESMI-VZNIKNOUT\n-->\n"
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "skryty kontrakt")
         r = self.allow()
-        self.assertNotEqual(r.returncode, 0,
-                            "--allow přijal sekci schovanou v HTML komentáři jako kontrakt")
+        self.assertNotEqual(
+            r.returncode,
+            0,
+            "--allow přijal sekci schovanou v HTML komentáři jako kontrakt",
+        )
         self.run_verify()
-        self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
-                         "hook spustil příkaz schovaný v HTML komentáři")
+        self.assertFalse(
+            (self.repo / "NESMI-VZNIKNOUT").exists(),
+            "hook spustil příkaz schovaný v HTML komentáři",
+        )
 
     def test_verbose_passing_step_is_not_failing_check(self):
         """Uříznutý výstup neznamená, že kód je špatně.
@@ -425,12 +505,16 @@ class ContinuousCheck(unittest.TestCase):
         zachytí BrokenPipeError a končí 120. První verze opravy hlídala 141 a
         kvůli tomu nefungovala.
         """
-        self.commit_contract(typecheck="-", lint="-",
-                      test="python3 -c \"print('x'*300000)\"")
+        self.commit_contract(
+            typecheck="-", lint="-", test="python3 -c \"print('x'*300000)\""
+        )
         self.allow()
         r = self.run_verify()
-        self.assertNotEqual(r.returncode, BLOCKS,
-                            "upovídaný úspěšný krok se hlásí jako padající kontrola")
+        self.assertNotEqual(
+            r.returncode,
+            BLOCKS,
+            "upovídaný úspěšný krok se hlásí jako padající kontrola",
+        )
         self.assertIn("není známo", r.stderr)
         self.assertIn("Není to nález v kódu", r.stderr)
 
@@ -442,8 +526,9 @@ class ContinuousCheck(unittest.TestCase):
         """
         self.commit_contract(typecheck="-", lint="-", test="false")
         self.allow()
-        self.assertEqual(self.run_verify().returncode, BLOCKS,
-                         "padající test přestal blokovat")
+        self.assertEqual(
+            self.run_verify().returncode, BLOCKS, "padající test přestal blokovat"
+        )
 
     def test_unclosed_fence_does_not_silently_disable_check(self):
         """Vypnutá kontrola, o které nikdo neví, je horší než žádná.
@@ -456,15 +541,19 @@ class ContinuousCheck(unittest.TestCase):
         """
         (self.repo / "CLAUDE.md").write_text(
             "# Test\n\n```bash\nneuzavrene ohraniceni\n\n## Kontrakt příkazů\n\n"
-            "- typecheck: -\n- lint: -\n- test: false\n")
+            "- typecheck: -\n- lint: -\n- test: false\n"
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "neuzavrene ohraniceni")
         self.allow()
         r = self.run_verify()
-        self.assertEqual(r.returncode, BLOCKS, "nečitelný kontrakt kontrolu vypnul mlčky")
+        self.assertEqual(
+            r.returncode, BLOCKS, "nečitelný kontrakt kontrolu vypnul mlčky"
+        )
         self.assertIn("nejde přečíst", r.stderr)
-        self.assertIn("blok kódu", r.stderr,
-                      "hláška neříká, kterou z možných příčin hook vidí")
+        self.assertIn(
+            "blok kódu", r.stderr, "hláška neříká, kterou z možných příčin hook vidí"
+        )
 
     def test_message_does_not_blame_file_for_hook_bug(self):
         """Sekce je čitelná, hledání ji přesto nenašlo – hláška musí ukázat na hook.
@@ -477,7 +566,8 @@ class ContinuousCheck(unittest.TestCase):
         Scénář se vyrábí mutací hooku, protože jinak nejde nastat – a právě proto
         by bez tohohle testu diagnostika mohla tiše zůstat zavádějící."""
         (self.repo / "CLAUDE.md").write_text(
-            "# Test\n\n## Kontrakt příkazů\n\n- test: false\n")
+            "# Test\n\n## Kontrakt příkazů\n\n- test: false\n"
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "kontrakt")
 
@@ -491,12 +581,21 @@ class ContinuousCheck(unittest.TestCase):
         env = dict(os.environ, HOME=str(self.home))
         env.pop("XDG_STATE_HOME", None)
         env.pop("CLAUDE_NO_VERIFY", None)
-        stdin_data = json.dumps({"session_id": "s1", "cwd": str(self.repo),
-                            "stop_hook_active": False})
-        r = subprocess.run(["bash", str(broken)], input=stdin_data,
-                           capture_output=True, text=True, env=env)
-        self.assertIn("chyba ve verify.sh", r.stderr,
-                      "hláška svaluje chybu hooku na prověřovaný soubor")
+        stdin_data = json.dumps(
+            {"session_id": "s1", "cwd": str(self.repo), "stop_hook_active": False}
+        )
+        r = subprocess.run(
+            ["bash", str(broken)],
+            input=stdin_data,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+        self.assertIn(
+            "chyba ve verify.sh",
+            r.stderr,
+            "hláška svaluje chybu hooku na prověřovaný soubor",
+        )
 
     def test_project_without_contract_stays_silent(self):
         """Protějšek testu výš: chybějící kontrakt není chyba a nesmí se hlásit.
@@ -521,33 +620,45 @@ class ContinuousCheck(unittest.TestCase):
         (self.repo / "CLAUDE.md").write_text(
             "# Test\n\n## Kontrakt příkazů\n\n- test: touch NESMI-VZNIKNOUT\n\n"
             "## Jiná sekce\n\ntext\n\n"
-            "## Kontrakt příkazů\n\n- typecheck: -\n- lint: -\n- test: true\n")
+            "## Kontrakt příkazů\n\n- typecheck: -\n- lint: -\n- test: true\n"
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "dva kontrakty")
         self.allow()
         self.run_verify()
-        self.assertFalse((self.repo / "NESMI-VZNIKNOUT").exists(),
-                         "hook spustil příkaz z první ze dvou sekcí místo odmítnutí")
+        self.assertFalse(
+            (self.repo / "NESMI-VZNIKNOUT").exists(),
+            "hook spustil příkaz z první ze dvou sekcí místo odmítnutí",
+        )
 
     def test_contract_in_claude_subdir(self):
         """Druhé z povolených umístění – kořenový CLAUDE.md bývá obsazený."""
         (self.repo / ".claude").mkdir()
         (self.repo / ".claude/CLAUDE.md").write_text(
-            "# Test\n\n## Kontrakt příkazů\n\n- typecheck: -\n- lint: -\n- test: test -d .claude\n")
+            "# Test\n\n## Kontrakt příkazů\n\n- typecheck: -\n- lint: -\n- test: test -d .claude\n"
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "kontrakt")
         self.allow()
-        self.assertEqual(self.run_verify().returncode, PASSES,
-                         "příkazy neběžely v kořeni repozitáře, ale v .claude/")
+        self.assertEqual(
+            self.run_verify().returncode,
+            PASSES,
+            "příkazy neběžely v kořeni repozitáře, ale v .claude/",
+        )
 
     def test_cwd_moves_where_commands_run(self):
         """Monorepo a projekt, kde se nespouští z kořene."""
         (self.repo / "packages/api").mkdir(parents=True)
         (self.repo / "packages/api/ZNACKA").touch()
-        self.commit_contract(typecheck="-", lint="-", test="test -f ZNACKA", cwd="packages/api")
+        self.commit_contract(
+            typecheck="-", lint="-", test="test -f ZNACKA", cwd="packages/api"
+        )
         self.allow()
-        self.assertEqual(self.run_verify().returncode, PASSES,
-                         "příkaz neběžel v adresáři z klíče cwd")
+        self.assertEqual(
+            self.run_verify().returncode,
+            PASSES,
+            "příkaz neběžel v adresáři z klíče cwd",
+        )
 
     def test_cwd_outside_project_is_rejected(self):
         """Cesta ven z projektu se odmítne a model se to musí dozvědět.
@@ -563,7 +674,9 @@ class ContinuousCheck(unittest.TestCase):
         self.assertEqual(r.returncode, BLOCKS)
         self.assertIn("cwd", r.stderr)
         r2 = self.run_verify(stop_hook_active=True)
-        self.assertEqual(r2.returncode, SILENT, "druhý pokus se musí vzdát, ne zacyklit")
+        self.assertEqual(
+            r2.returncode, SILENT, "druhý pokus se musí vzdát, ne zacyklit"
+        )
 
     # --- souběh ------------------------------------------------------------
 
@@ -587,10 +700,16 @@ class ContinuousCheck(unittest.TestCase):
         for argument in [".", str(self.repo) + "/"]:
             with self.subTest(argument=argument):
                 self.allow()
-                r = subprocess.run(["bash", str(VERIFY), "--revoke", argument],
-                                   capture_output=True, text=True, cwd=str(self.repo),
-                                   env=dict(os.environ, HOME=str(self.home)))
-                self.assertEqual(r.returncode, 0, f"--revoke {argument} neuspěl: {r.stderr}")
+                r = subprocess.run(
+                    ["bash", str(VERIFY), "--revoke", argument],
+                    capture_output=True,
+                    text=True,
+                    cwd=str(self.repo),
+                    env=dict(os.environ, HOME=str(self.home)),
+                )
+                self.assertEqual(
+                    r.returncode, 0, f"--revoke {argument} neuspěl: {r.stderr}"
+                )
 
 
 class ConsentGrantedByHuman(unittest.TestCase):
@@ -614,7 +733,8 @@ class ConsentGrantedByHuman(unittest.TestCase):
         self.repo.mkdir()
         git(self.repo, "init", "-q", ".")
         (self.repo / "CLAUDE.md").write_text(
-            "# T\n\n## Kontrakt příkazů\n\n- test: true\n", encoding="utf-8")
+            "# T\n\n## Kontrakt příkazů\n\n- test: true\n", encoding="utf-8"
+        )
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
@@ -622,8 +742,14 @@ class ConsentGrantedByHuman(unittest.TestCase):
     def without_terminal(self, stdin_data=subprocess.DEVNULL):
         env = dict(os.environ, HOME=str(self.home))
         env.pop("XDG_STATE_HOME", None)
-        return subprocess.run([str(VERIFY), "--allow", str(self.repo)], stdin=stdin_data,
-                              capture_output=True, text=True, env=env, check=False)
+        return subprocess.run(
+            [str(VERIFY), "--allow", str(self.repo)],
+            stdin=stdin_data,
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
 
     def consents(self):
         d = self.home / ".local/state/claude-verify/allowed"
@@ -637,7 +763,8 @@ class ConsentGrantedByHuman(unittest.TestCase):
         kódu z repozitáře."""
         (self.repo / "CLAUDE.md").write_text(
             "# T\n\n## Kontrakt příkazů\n\n- test: true\n- dev: npm run dev\n- build: -\n",
-            encoding="utf-8")
+            encoding="utf-8",
+        )
         v = grant_consent(self.repo, self.home)
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertRegex(v.stdout, r"Nespouští: dev")
@@ -649,7 +776,8 @@ class ConsentGrantedByHuman(unittest.TestCase):
         neznaly – člověk tak schvaloval krok, který se nikdy nespustí."""
         (self.repo / "CLAUDE.md").write_text(
             "# T\n\n## Kontrakt příkazů\n\n- test: true\n- test:unit: echo NIKDY\n",
-            encoding="utf-8")
+            encoding="utf-8",
+        )
         v = grant_consent(self.repo, self.home)
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertNotIn("test:unit", v.stdout)
@@ -683,10 +811,17 @@ class ConsentGrantedByHuman(unittest.TestCase):
             os.write(master, b"jo\n")
             env = dict(os.environ, HOME=str(self.home))
             env.pop("XDG_STATE_HOME", None)
-            v = subprocess.run([str(VERIFY), "--allow", str(self.repo)], stdin=slave,
-                               capture_output=True, text=True, env=env, check=False)
+            v = subprocess.run(
+                [str(VERIFY), "--allow", str(self.repo)],
+                stdin=slave,
+                capture_output=True,
+                text=True,
+                env=env,
+                check=False,
+            )
         finally:
-            os.close(master); os.close(slave)
+            os.close(master)
+            os.close(slave)
         self.assertNotEqual(v.returncode, 0)
         self.assertEqual(self.consents(), [], "souhlas vznikl bez slova „ano“")
 
@@ -720,16 +855,29 @@ class ConsentBoundToContract(unittest.TestCase):
     def write_contract(self, target, command):
         target.mkdir(parents=True, exist_ok=True)
         (target / "CLAUDE.md").write_text(
-            f"# T\n\n## Kontrakt příkazů\n\n- test: {command}\n", encoding="utf-8")
+            f"# T\n\n## Kontrakt příkazů\n\n- test: {command}\n", encoding="utf-8"
+        )
 
     def run_verify(self, cwd):
         env = dict(os.environ, HOME=str(self.home))
         env.pop("XDG_STATE_HOME", None)
         env.pop("CLAUDE_NO_VERIFY", None)
-        stdin_data = json.dumps({"session_id": "s1", "cwd": str(cwd),
-                                 "transcript_path": "", "stop_hook_active": False})
-        return subprocess.run([str(VERIFY)], input=stdin_data, capture_output=True,
-                              text=True, env=env, check=False)
+        stdin_data = json.dumps(
+            {
+                "session_id": "s1",
+                "cwd": str(cwd),
+                "transcript_path": "",
+                "stop_hook_active": False,
+            }
+        )
+        return subprocess.run(
+            [str(VERIFY)],
+            input=stdin_data,
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
 
     def allow(self, where):
         return grant_consent(where, self.home)
@@ -742,7 +890,10 @@ class ConsentBoundToContract(unittest.TestCase):
         self.assertEqual(self.allow(self.repo).returncode, 0)
         self.write_contract(self.repo / "vendor" / "cizi", f"touch {marker}")
         v = self.run_verify(self.repo / "vendor" / "cizi")
-        self.assertFalse(marker.exists(), "příkaz z podadresáře se spustil pod souhlasem pro repozitář")
+        self.assertFalse(
+            marker.exists(),
+            "příkaz z podadresáře se spustil pod souhlasem pro repozitář",
+        )
         self.assertIn("podadresáři", v.stderr)
 
     def test_text_change_below_contract_keeps_consent(self):
@@ -754,15 +905,20 @@ class ConsentBoundToContract(unittest.TestCase):
         vrstvy horší směr selhání než propuštěná chyba: vede k jejímu vypnutí.
         """
         (self.repo / "CLAUDE.md").write_text(
-            "# T\n\n## Kontrakt příkazů\n\n- test: true\n\nPůvodní vysvětlení.\n", encoding="utf-8")
+            "# T\n\n## Kontrakt příkazů\n\n- test: true\n\nPůvodní vysvětlení.\n",
+            encoding="utf-8",
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "init")
         self.assertEqual(self.allow(self.repo).returncode, 0)
         (self.repo / "CLAUDE.md").write_text(
             "# T\n\n## Kontrakt příkazů\n\n- test: true\n\nPřepsané vysvětlení, delší a jiné.\n",
-            encoding="utf-8")
+            encoding="utf-8",
+        )
         v = self.run_verify(self.repo)
-        self.assertNotIn("změnil", v.stderr, "změna textu pod kontraktem si vyžádala nový souhlas")
+        self.assertNotIn(
+            "změnil", v.stderr, "změna textu pod kontraktem si vyžádala nový souhlas"
+        )
 
     def test_changed_contract_does_not_run(self):
         """Souhlas se vydává na konkrétní kontrakt, ne na repozitář navždy."""
@@ -773,7 +929,9 @@ class ConsentBoundToContract(unittest.TestCase):
         self.assertEqual(self.allow(self.repo).returncode, 0)
         self.write_contract(self.repo, f"touch {marker}")
         v = self.run_verify(self.repo)
-        self.assertFalse(marker.exists(), "spustil se příkaz, který nikdo neodsouhlasil")
+        self.assertFalse(
+            marker.exists(), "spustil se příkaz, který nikdo neodsouhlasil"
+        )
         self.assertIn("změnil", v.stderr)
 
     def test_legacy_format_consent_is_invalid(self):
@@ -787,7 +945,7 @@ class ConsentBoundToContract(unittest.TestCase):
         git(self.repo, "commit", "-qm", "init")
         self.assertEqual(self.allow(self.repo).returncode, 0)
         file = next((self.home / ".local/state/claude-verify/allowed").glob("*"))
-        file.write_text(f"{self.repo}\n")          # starý jednořádkový formát
+        file.write_text(f"{self.repo}\n")  # starý jednořádkový formát
         v = self.run_verify(self.repo)
         self.assertIn("starém formátu", v.stderr)
         self.assertEqual(v.returncode, 2)
@@ -799,7 +957,9 @@ class ConsentBoundToContract(unittest.TestCase):
         git(self.repo, "commit", "-qm", "init")
         self.assertEqual(self.allow(self.repo).returncode, 0)
         wt = self.tmp / "wt"
-        self.assertEqual(git(self.repo, "worktree", "add", "-q", str(wt), "-b", "feat").returncode, 0)
+        self.assertEqual(
+            git(self.repo, "worktree", "add", "-q", str(wt), "-b", "feat").returncode, 0
+        )
         v = self.run_verify(wt)
         self.assertNotIn("není vydaný souhlas", v.stderr)
         self.assertNotIn("podadresáři", v.stderr)
@@ -829,9 +989,13 @@ class MarkdownBodyParser(unittest.TestCase):
 
     def list_contract(self, content):
         (self.repo / "CLAUDE.md").write_text(content, encoding="utf-8")
-        return subprocess.run([str(VERIFY), "--contract", str(self.repo)],
-                              capture_output=True, text=True, check=False,
-                              stdin=subprocess.DEVNULL)
+        return subprocess.run(
+            [str(VERIFY), "--contract", str(self.repo)],
+            capture_output=True,
+            text=True,
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
 
     def test_four_char_fence_does_not_flip_polarity(self):
         """Ukázka kontraktu se sází do ````markdown, aby šel uvnitř ukázat ```.
@@ -840,17 +1004,21 @@ class MarkdownBodyParser(unittest.TestCase):
         podvržená sekce uvnitř ukázky se stala tělem a skutečný kontrakt pod ní
         zmizel jako blok kódu.
         """
-        v = self.list_contract("# T\n\nUkázka:\n\n````markdown\n```\n## Kontrakt příkazů\n\n"
-                          "- test: echo PODVRZENY\n```\n````\n\n"
-                          "## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        v = self.list_contract(
+            "# T\n\nUkázka:\n\n````markdown\n```\n## Kontrakt příkazů\n\n"
+            "- test: echo PODVRZENY\n```\n````\n\n"
+            "## Kontrakt příkazů\n\n- test: echo PRAVY\n"
+        )
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertIn("echo PRAVY", v.stdout)
         self.assertNotIn("PODVRZENY", v.stdout)
 
     def test_tilde_fence_inside_backtick_fence_is_not_fence(self):
         """Uvnitř ```-bloku je ~~~ obyčejný text, ne zavírací ohraničení."""
-        v = self.list_contract("# T\n\n```\n~~~\n## Kontrakt příkazů\n- test: echo PODVRZENY\n"
-                          "~~~\n```\n\n## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        v = self.list_contract(
+            "# T\n\n```\n~~~\n## Kontrakt příkazů\n- test: echo PODVRZENY\n"
+            "~~~\n```\n\n## Kontrakt příkazů\n\n- test: echo PRAVY\n"
+        )
         self.assertIn("echo PRAVY", v.stdout)
         self.assertNotIn("PODVRZENY", v.stdout)
 
@@ -860,22 +1028,28 @@ class MarkdownBodyParser(unittest.TestCase):
         Výraz, který ho nechytil, posílal takový řádek do víceřádkové větve, a ta
         zahodila všechno až po další `-->` – tedy i skutečný kontrakt.
         """
-        v = self.list_contract("# T\n\n<!-- pozn. -- viz níž -->\n\n"
-                          "## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        v = self.list_contract(
+            "# T\n\n<!-- pozn. -- viz níž -->\n\n"
+            "## Kontrakt příkazů\n\n- test: echo PRAVY\n"
+        )
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertIn("echo PRAVY", v.stdout)
 
     def test_multiline_comment_ends_at_first_close(self):
-        v = self.list_contract("# T\n\n<!--\n## Kontrakt příkazů\n- test: echo PODVRZENY\n-->\n\n"
-                          "## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        v = self.list_contract(
+            "# T\n\n<!--\n## Kontrakt příkazů\n- test: echo PODVRZENY\n-->\n\n"
+            "## Kontrakt příkazů\n\n- test: echo PRAVY\n"
+        )
         self.assertIn("echo PRAVY", v.stdout)
         self.assertNotIn("PODVRZENY", v.stdout)
 
     def test_two_comments_on_one_line(self):
         """Stavový automat musí zvládnout víc komentářů v jednom řádku,
         jinak by druhý otevřel stav, který nikdo nezavře."""
-        v = self.list_contract("# T\n\n<!-- a --> text <!-- b -->\n\n"
-                          "## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        v = self.list_contract(
+            "# T\n\n<!-- a --> text <!-- b -->\n\n"
+            "## Kontrakt příkazů\n\n- test: echo PRAVY\n"
+        )
         self.assertIn("echo PRAVY", v.stdout)
 
 
@@ -902,9 +1076,13 @@ class ContractListing(unittest.TestCase):
 
     def list_contract(self, content):
         (self.repo / "CLAUDE.md").write_text(content, encoding="utf-8")
-        return subprocess.run([str(VERIFY), "--contract", str(self.repo)],
-                              capture_output=True, text=True, check=False,
-                              stdin=subprocess.DEVNULL)
+        return subprocess.run(
+            [str(VERIFY), "--contract", str(self.repo)],
+            capture_output=True,
+            text=True,
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
 
     def test_prints_key_and_command_tab_separated(self):
         v = self.list_contract("# T\n\n## Kontrakt příkazů\n\n- test: echo ahoj\n")
@@ -915,35 +1093,45 @@ class ContractListing(unittest.TestCase):
         """HTML komentář ve vykresleném Markdownu ani v náhledu PR není vidět,
         takže sekce schovaná nad tou pravou je cesta, jak vyměnit spouštěné
         příkazy a nechat diff vypadat jako dokumentaci."""
-        v = self.list_contract("# T\n\n<!--\n## Kontrakt příkazů\n\n- test: echo PODVRZENY\n-->\n"
-                          "\n## Kontrakt příkazů\n\n- test: echo PRAVY\n")
+        v = self.list_contract(
+            "# T\n\n<!--\n## Kontrakt příkazů\n\n- test: echo PODVRZENY\n-->\n"
+            "\n## Kontrakt příkazů\n\n- test: echo PRAVY\n"
+        )
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertIn("echo PRAVY", v.stdout)
         self.assertNotIn("PODVRZENY", v.stdout)
 
     def test_two_same_named_sections_are_rejected(self):
         """Stejná pojistka jako u běhu hooku: druhá sekce je tiše mrtvá."""
-        v = self.list_contract("# T\n\n## Kontrakt příkazů\n\n- test: echo PRVNI\n"
-                          "\n## Jiné\n\n## Kontrakt příkazů\n\n- test: echo DRUHY\n")
+        v = self.list_contract(
+            "# T\n\n## Kontrakt příkazů\n\n- test: echo PRVNI\n"
+            "\n## Jiné\n\n## Kontrakt příkazů\n\n- test: echo DRUHY\n"
+        )
         self.assertNotEqual(v.returncode, 0)
         self.assertNotIn("echo PRVNI", v.stdout)
 
     def test_example_in_code_block_is_not_contract(self):
-        v = self.list_contract("# T\n\nFormát vypadá takhle:\n\n```markdown\n"
-                          "## Kontrakt příkazů\n\n- test: echo UKAZKA\n```\n")
+        v = self.list_contract(
+            "# T\n\nFormát vypadá takhle:\n\n```markdown\n"
+            "## Kontrakt příkazů\n\n- test: echo UKAZKA\n```\n"
+        )
         self.assertNotIn("UKAZKA", v.stdout)
 
     def test_cwd_key_is_printed(self):
         """CI podle něj mění adresář; bez něj by pouštěla příkazy jinde
         než průběžná kontrola."""
         (self.repo / "main").mkdir()
-        v = self.list_contract("# T\n\n## Kontrakt příkazů\n\n- cwd: main\n- test: echo ahoj\n")
+        v = self.list_contract(
+            "# T\n\n## Kontrakt příkazů\n\n- cwd: main\n- test: echo ahoj\n"
+        )
         self.assertIn("cwd\tmain", v.stdout)
 
     def test_cwd_dash_is_not_printed(self):
         """Pomlčka u cwd znamená „není“. Vypsaná by v CI skončila jako `cd -`,
         které v čerstvém shellu selže – průběžná kontrola ji přitom přeskočí."""
-        v = self.list_contract("# T\n\n## Kontrakt příkazů\n\n- cwd: -\n- test: echo ahoj\n")
+        v = self.list_contract(
+            "# T\n\n## Kontrakt příkazů\n\n- cwd: -\n- test: echo ahoj\n"
+        )
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertNotIn("cwd\t", v.stdout)
         self.assertIn("test\techo ahoj", v.stdout)
@@ -955,12 +1143,21 @@ class ContractListing(unittest.TestCase):
         a cwd míří z `main/`."""
         (self.repo / "main" / "api").mkdir(parents=True)
         (self.repo / "main" / "CLAUDE.md").write_text(
-            "# T\n\n## Kontrakt příkazů\n\n- cwd: api\n- test: echo ahoj\n", encoding="utf-8")
-        ok = subprocess.run([str(VERIFY), "--contract", str(self.repo)], capture_output=True,
-                            text=True, check=False, stdin=subprocess.DEVNULL)
+            "# T\n\n## Kontrakt příkazů\n\n- cwd: api\n- test: echo ahoj\n",
+            encoding="utf-8",
+        )
+        ok = subprocess.run(
+            [str(VERIFY), "--contract", str(self.repo)],
+            capture_output=True,
+            text=True,
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
         self.assertEqual(ok.returncode, 0, ok.stderr)
         self.assertIn("cwd\tapi", ok.stdout)
-        v = self.list_contract("# T\n\n## Kontrakt příkazů\n\n- cwd: nikde\n- test: echo ahoj\n")
+        v = self.list_contract(
+            "# T\n\n## Kontrakt příkazů\n\n- cwd: nikde\n- test: echo ahoj\n"
+        )
         self.assertNotEqual(v.returncode, 0)
         self.assertIn("nikde", v.stderr)
 
@@ -969,15 +1166,22 @@ class ContractListing(unittest.TestCase):
         pro CI – jinak by CI pouštěla příkazy tam, kam průběžná kontrola nesmí."""
         for bad in ("../jinam", "/tmp"):
             with self.subTest(cwd=bad):
-                v = self.list_contract(f"# T\n\n## Kontrakt příkazů\n\n- cwd: {bad}\n- test: echo ahoj\n")
+                v = self.list_contract(
+                    f"# T\n\n## Kontrakt příkazů\n\n- cwd: {bad}\n- test: echo ahoj\n"
+                )
                 self.assertNotEqual(v.returncode, 0)
-                self.assertIn("mimo projekt", v.stderr,
-                              "odmítla to až kontrola existence adresáře, ne pojistka proti cestě ven")
+                self.assertIn(
+                    "mimo projekt",
+                    v.stderr,
+                    "odmítla to až kontrola existence adresáře, ne pojistka proti cestě ven",
+                )
 
     def test_dash_is_printed_as_is(self):
         """Rozhodnutí „vědomě se neaplikuje“ musí dojít až k tomu, kdo spouští –
         jinak by ho CI hlásila jako chybějící klíč, tedy jako díru."""
-        v = self.list_contract("# T\n\n## Kontrakt příkazů\n\n- build: -\n- test: echo ahoj\n")
+        v = self.list_contract(
+            "# T\n\n## Kontrakt příkazů\n\n- build: -\n- test: echo ahoj\n"
+        )
         self.assertIn("build\t-", v.stdout)
 
     def test_project_without_contract_fails(self):
@@ -999,7 +1203,9 @@ class ContractListing(unittest.TestCase):
         spolehlivě i tam, kde má systém buffer větší než macOS."""
         padding = "Vysvětlující odstavec pod kontraktem.\n\n" * 3000
         self.assertGreater(len(padding), 100_000)
-        v = self.list_contract("# T\n\n## Kontrakt příkazů\n\n- test: echo ahoj\n\n" + padding)
+        v = self.list_contract(
+            "# T\n\n## Kontrakt příkazů\n\n- test: echo ahoj\n\n" + padding
+        )
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertIn("test\techo ahoj", v.stdout)
 
@@ -1043,7 +1249,9 @@ class FormatAfterEdit(unittest.TestCase):
 
     def commit_contract(self, **commands):
         lines = "\n".join(f"- {k}: {v}" for k, v in commands.items())
-        (self.repo / "CLAUDE.md").write_text(f"# Test\n\n## Kontrakt příkazů\n\n{lines}\n")
+        (self.repo / "CLAUDE.md").write_text(
+            f"# Test\n\n## Kontrakt příkazů\n\n{lines}\n"
+        )
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "kontrakt")
 
@@ -1056,11 +1264,22 @@ class FormatAfterEdit(unittest.TestCase):
         env = dict(os.environ, HOME=str(self.home))
         env.pop("XDG_STATE_HOME", None)
         env.pop("CLAUDE_NO_VERIFY", None)
-        stdin_data = json.dumps({"session_id": "s1", "cwd": str(cwd or self.repo),
-                                 "hook_event_name": "PostToolUse", "tool_name": "Edit",
-                                 "tool_input": {"file_path": str(path)}})
-        return subprocess.run(["bash", str(VERIFY), "--format"], input=stdin_data,
-                              capture_output=True, text=True, env=env)
+        stdin_data = json.dumps(
+            {
+                "session_id": "s1",
+                "cwd": str(cwd or self.repo),
+                "hook_event_name": "PostToolUse",
+                "tool_name": "Edit",
+                "tool_input": {"file_path": str(path)},
+            }
+        )
+        return subprocess.run(
+            ["bash", str(VERIFY), "--format"],
+            input=stdin_data,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
     def formatted(self, path):
         return Path(path).read_text() == "naformátováno\n"
@@ -1070,8 +1289,10 @@ class FormatAfterEdit(unittest.TestCase):
         grant_consent(self.repo, self.home)
         r = self.edit(self.repo / "src" / "app.py")
         self.assertEqual(r.returncode, PASSES, r.stderr)
-        self.assertTrue(self.formatted(self.repo / "src" / "app.py"),
-                        "soubor po editaci zůstal nenaformátovaný")
+        self.assertTrue(
+            self.formatted(self.repo / "src" / "app.py"),
+            "soubor po editaci zůstal nenaformátovaný",
+        )
 
     def test_without_consent_nothing_runs_and_nothing_is_said(self):
         """Bez souhlasu se nespustí nic – a mlčí se, protože to řekne Stop hook."""
@@ -1079,8 +1300,10 @@ class FormatAfterEdit(unittest.TestCase):
         r = self.edit(self.repo / "app.py")
         self.assertEqual(r.returncode, PASSES)
         self.assertEqual(r.stderr, "")
-        self.assertFalse(self.formatted(self.repo / "app.py"),
-                         "formátovač z repozitáře běžel bez souhlasu")
+        self.assertFalse(
+            self.formatted(self.repo / "app.py"),
+            "formátovač z repozitáře běžel bez souhlasu",
+        )
 
     def test_changed_contract_is_not_run(self):
         """Souhlas platí pro kontrakt, který člověk viděl, ne pro vyměněný příkaz."""
@@ -1089,22 +1312,28 @@ class FormatAfterEdit(unittest.TestCase):
         self.commit_contract(format="sh fmt.sh")
         r = self.edit(self.repo / "app.py")
         self.assertEqual(r.returncode, PASSES)
-        self.assertFalse(self.formatted(self.repo / "app.py"),
-                         "vyměněný formátovač běžel na starý souhlas")
+        self.assertFalse(
+            self.formatted(self.repo / "app.py"),
+            "vyměněný formátovač běžel na starý souhlas",
+        )
 
     def test_ignored_file_is_left_alone(self):
         self.commit_contract(format="sh fmt.sh")
         grant_consent(self.repo, self.home)
         self.edit(self.repo / "generated" / "out.js")
-        self.assertFalse(self.formatted(self.repo / "generated" / "out.js"),
-                         "formátovač přepsal soubor, který git ignoruje")
+        self.assertFalse(
+            self.formatted(self.repo / "generated" / "out.js"),
+            "formátovač přepsal soubor, který git ignoruje",
+        )
 
     def test_file_outside_project_is_left_alone(self):
         self.commit_contract(format="sh fmt.sh")
         grant_consent(self.repo, self.home)
         outside = self.tmp / "outside.py"
         self.edit(outside)
-        self.assertFalse(self.formatted(outside), "formátovač sáhl na soubor mimo projekt")
+        self.assertFalse(
+            self.formatted(outside), "formátovač sáhl na soubor mimo projekt"
+        )
 
     def test_symlink_out_of_project_is_left_alone(self):
         self.commit_contract(format="sh fmt.sh")
@@ -1113,8 +1342,11 @@ class FormatAfterEdit(unittest.TestCase):
         target.write_text("cizí\n")
         (self.repo / "link.py").symlink_to(target)
         self.edit(self.repo / "link.py")
-        self.assertEqual(target.read_text(), "cizí\n",
-                         "formátovač zapsal přes symbolický odkaz mimo projekt")
+        self.assertEqual(
+            target.read_text(),
+            "cizí\n",
+            "formátovač zapsal přes symbolický odkaz mimo projekt",
+        )
 
     def test_file_name_is_not_executed(self):
         """Jméno souboru jde jako argument, ne jako kus příkazu."""
@@ -1123,7 +1355,9 @@ class FormatAfterEdit(unittest.TestCase):
         name = self.repo / "$(touch pwned).py"
         r = self.edit(name)
         self.assertEqual(r.returncode, PASSES, r.stderr)
-        self.assertFalse((self.repo / "pwned").exists(), "jméno souboru se spustilo jako příkaz")
+        self.assertFalse(
+            (self.repo / "pwned").exists(), "jméno souboru se spustilo jako příkaz"
+        )
         self.assertTrue(self.formatted(name))
 
     def test_project_is_taken_from_file_not_from_session(self):

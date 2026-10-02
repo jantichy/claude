@@ -19,6 +19,7 @@ jedna konverzace otevřela dvakrát.
 
 Spouští se: python3 -m unittest discover -s tests -q
 """
+
 import json
 import re
 import os
@@ -48,18 +49,32 @@ class LiveSessionsAndBranches(unittest.TestCase):
         self.tmp.cleanup()
 
     def register(self, pid, sid, transcript_lines=None):
-        (self.claude / "sessions" / f"{pid}.json").write_text(json.dumps(
-            {"pid": pid, "sessionId": sid, "cwd": "/projekt", "name": sid, "status": "waiting"}))
+        (self.claude / "sessions" / f"{pid}.json").write_text(
+            json.dumps(
+                {
+                    "pid": pid,
+                    "sessionId": sid,
+                    "cwd": "/projekt",
+                    "name": sid,
+                    "status": "waiting",
+                }
+            )
+        )
         if transcript_lines is not None:
             project_dir = self.claude / "projects" / "-projekt"
             project_dir.mkdir(parents=True, exist_ok=True)
             (project_dir / f"{sid}.jsonl").write_text(
-                "\n".join(json.dumps(r) for r in transcript_lines) + "\n")
+                "\n".join(json.dumps(r) for r in transcript_lines) + "\n"
+            )
 
     def run_script(self, *args):
         env = dict(os.environ, HOME=str(self.home))
-        return subprocess.run([sys.executable, str(SCRIPT), *args], capture_output=True,
-                              text=True, env=env)
+        return subprocess.run(
+            [sys.executable, str(SCRIPT), *args],
+            capture_output=True,
+            text=True,
+            env=env,
+        )
 
     def idle(self):
         run = self.run_script("--project", "/projekt")
@@ -72,19 +87,30 @@ class LiveSessionsAndBranches(unittest.TestCase):
         return p.pid
 
     def test_branch_taken_from_last_entry(self):
-        self.register(self.sleeper.pid, "ziva", [
-            {"type": "user", "cwd": "/projekt/main", "gitBranch": "main"},
-            {"type": "assistant", "cwd": "/projekt/dph", "gitBranch": "specify-dph"},
-            {"type": "attachment"},
-        ])
+        self.register(
+            self.sleeper.pid,
+            "ziva",
+            [
+                {"type": "user", "cwd": "/projekt/main", "gitBranch": "main"},
+                {
+                    "type": "assistant",
+                    "cwd": "/projekt/dph",
+                    "gitBranch": "specify-dph",
+                },
+                {"type": "attachment"},
+            ],
+        )
         run = self.run_script()
         self.assertEqual(run.returncode, 0, run.stderr)
         [s] = json.loads(run.stdout)["sessions"]
-        self.assertEqual((s["cwd"], s["branch"], s["self"]),
-                         ("/projekt/dph", "specify-dph", False))
+        self.assertEqual(
+            (s["cwd"], s["branch"], s["self"]), ("/projekt/dph", "specify-dph", False)
+        )
 
     def test_entry_of_crashed_process_ignored(self):
-        self.register(self.dead_pid(), "mrtva", [{"cwd": "/projekt/x", "gitBranch": "x"}])
+        self.register(
+            self.dead_pid(), "mrtva", [{"cwd": "/projekt/x", "gitBranch": "x"}]
+        )
         run = self.run_script()
         self.assertEqual(json.loads(run.stdout)["sessions"], [])
 
@@ -100,40 +126,59 @@ class LiveSessionsAndBranches(unittest.TestCase):
         self.assertTrue(s["self"])
 
     def test_abandoned_session_offered_for_resume(self):
-        self.register(self.dead_pid(), "stara", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
+        self.register(
+            self.dead_pid(),
+            "stara",
+            [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}],
+        )
         self.assertEqual(self.idle(), {"specify-dph": "stara"})
 
     def test_live_session_never_abandoned(self):
         # Táž session je i živá (obnovená v jiném okně) – mezi opuštěné nepatří,
         # ani když má v registru i starý záznam po spadlém procesu.
-        self.register(self.dead_pid(), "obnovena", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
+        self.register(
+            self.dead_pid(),
+            "obnovena",
+            [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}],
+        )
         self.register(self.sleeper.pid, "obnovena")
         self.assertEqual(self.idle(), {})
 
     def test_session_from_other_project_ignored(self):
-        self.register(self.dead_pid(), "cizi", [{"cwd": "/jiny/dph", "gitBranch": "specify-dph"}])
+        self.register(
+            self.dead_pid(), "cizi", [{"cwd": "/jiny/dph", "gitBranch": "specify-dph"}]
+        )
         self.assertEqual(self.idle(), {})
 
     def test_unreadable_registry_entry_is_not_empty_list(self):
         # Nečitelný záznam může patřit běžící session – kdyby se přeskočil,
         # nabídla by se její konverzace k obnovení podruhé.
-        self.register(self.dead_pid(), "stara", [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}])
+        self.register(
+            self.dead_pid(),
+            "stara",
+            [{"cwd": "/projekt/dph", "gitBranch": "specify-dph"}],
+        )
         (self.claude / "sessions" / "rozbity.json").write_text("{nedopsano")
         run = self.run_script("--project", "/projekt")
         self.assertEqual(run.returncode, 2)
         self.assertEqual(run.stdout, "")
 
     def test_foreign_project_not_in_project(self):
-        (self.claude / "sessions" / f"{self.sleeper.pid}.json").write_text(json.dumps(
-            {"pid": self.sleeper.pid, "sessionId": "cizi", "cwd": "/jiny"}))
+        (self.claude / "sessions" / f"{self.sleeper.pid}.json").write_text(
+            json.dumps({"pid": self.sleeper.pid, "sessionId": "cizi", "cwd": "/jiny"})
+        )
         [s] = json.loads(self.run_script("--project", "/projekt").stdout)["sessions"]
         self.assertFalse(s["in_project"])
 
     def test_abandoned_session_carries_start_dir(self):
-        self.register(self.dead_pid(), "stara", [
-            {"cwd": "/projekt", "gitBranch": "main"},
-            {"cwd": "/projekt/dph", "gitBranch": "specify-dph"},
-        ])
+        self.register(
+            self.dead_pid(),
+            "stara",
+            [
+                {"cwd": "/projekt", "gitBranch": "main"},
+                {"cwd": "/projekt/dph", "gitBranch": "specify-dph"},
+            ],
+        )
         run = self.run_script("--project", "/projekt")
         [s] = json.loads(run.stdout)["idle"]
         self.assertEqual((s["start_cwd"], s["cwd"]), ("/projekt", "/projekt/dph"))
@@ -145,22 +190,24 @@ class LiveSessionsAndBranches(unittest.TestCase):
         self.assertEqual(run.stdout, "")
 
 
-
 class PlanAndQueueParsing(unittest.TestCase):
     """Parsery `collect.py`: úkoly plánu a závislost schovaná na konci popisu."""
 
     def setUp(self):
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("collect", COLLECT)
         self.c = importlib.util.module_from_spec(spec)
         import sys as _sys
+
         _sys.path.insert(0, str(COLLECT.parent))
         spec.loader.exec_module(self.c)
 
     def test_plan_counts_tasks_by_heading(self):
         plan = self.c.parse_plan(
             "## Úkol 1\n- [x] krok\n- [x] krok\nKritérium:\n- vrací 200\n"
-            "## Úkol 2\n- [x] krok\n- [ ] krok\n")
+            "## Úkol 2\n- [x] krok\n- [ ] krok\n"
+        )
         self.assertEqual((plan["open"], plan["done"], plan["next"]), (1, 1, ["Úkol 2"]))
 
     def test_plain_bullet_does_not_keep_plan_open(self):
@@ -168,7 +215,9 @@ class PlanAndQueueParsing(unittest.TestCase):
         self.assertEqual(plan["open"], 0)
 
     def test_dependency_at_end_of_long_description(self):
-        long_item = "- [ ] **Úkol.** " + "vata " * 100 + "Čeká na odpověď podpory. Konec."
+        long_item = (
+            "- [ ] **Úkol.** " + "vata " * 100 + "Čeká na odpověď podpory. Konec."
+        )
         [item] = self.c.parse_items([long_item])
         self.assertEqual(item["waits"], "odpověď podpory")
 
@@ -180,7 +229,10 @@ class PlanAndQueueParsing(unittest.TestCase):
         provozu nad daty, která ještě nevznikla – a to je šum vydávaný za nález.
         """
         [item] = self.c.parse_items(
-            ["- [ ] **Vyhodnotit provoz přes `/evaluate`** – od 2099-10-12. Nasazeno v1.2."])
+            [
+                "- [ ] **Vyhodnotit provoz přes `/evaluate`** – od 2099-10-12. Nasazeno v1.2."
+            ]
+        )
         self.assertEqual(item["not_before"], "2099-10-12")
         self.assertTrue(item["waiting"])
 
@@ -201,7 +253,8 @@ class PlanAndQueueParsing(unittest.TestCase):
         textu a věta „sazba platí od <datum>“ jí položku skryla.
         """
         [item] = self.c.parse_items(
-            ["- [ ] **Úkol** – pracuje se na tom, protože sazba platí od 2099-01-01."])
+            ["- [ ] **Úkol** – pracuje se na tom, protože sazba platí od 2099-01-01."]
+        )
         self.assertNotIn("not_before", item)
         self.assertNotIn("waiting", item)
 
@@ -222,10 +275,16 @@ class PlanAndQueueParsing(unittest.TestCase):
         """
         todo, _, _ = self.c.parse_todo(
             "# Co zbývá\n\nÚvodní odstavec.\n\n- [ ] **První úkol.** Popis.\n"
-            "- [x] **Hotové.** Už ne.\n\n### Starší dávka\n\n- [ ] **Druhý úkol.** Popis.\n")
-        self.assertEqual([(p["subsection"], [i["title"] for i in p["items"]])
-                          for s in todo for p in s["parts"]],
-                         [(None, ["První úkol"]), ("Starší dávka", ["Druhý úkol"])])
+            "- [x] **Hotové.** Už ne.\n\n### Starší dávka\n\n- [ ] **Druhý úkol.** Popis.\n"
+        )
+        self.assertEqual(
+            [
+                (p["subsection"], [i["title"] for i in p["items"]])
+                for s in todo
+                for p in s["parts"]
+            ],
+            [(None, ["První úkol"]), ("Starší dávka", ["Druhý úkol"])],
+        )
 
     def test_plain_list_beside_checkboxes_is_commentary(self):
         """Číslovaný nebo odrážkový seznam vedle zaškrtávátek není fronta.
@@ -239,9 +298,12 @@ class PlanAndQueueParsing(unittest.TestCase):
         todo, _, _ = self.c.parse_todo(
             "# TODO\n\n- [ ] **Skutečný úkol.** Text.\n\n"
             "**Čím začít (platí pro položky výš).**\n\n"
-            "1. **První krok.** Text.\n2. **Druhý krok.** Text.\n")
-        self.assertEqual([i["title"] for s in todo for p in s["parts"] for i in p["items"]],
-                         ["Skutečný úkol"])
+            "1. **První krok.** Text.\n2. **Druhý krok.** Text.\n"
+        )
+        self.assertEqual(
+            [i["title"] for s in todo for p in s["parts"] for i in p["items"]],
+            ["Skutečný úkol"],
+        )
 
     def test_plain_list_without_any_checkbox_stays_a_queue(self):
         """Druhý směr: fronta psaná bez zaškrtávátek se nesmí vyprázdnit.
@@ -250,17 +312,26 @@ class PlanAndQueueParsing(unittest.TestCase):
         vždycky – pravidlo proto platí jen tam, kde se zaškrtávátka opravdu
         vyskytují, a jinde zůstává starý výklad.
         """
-        todo, _, _ = self.c.parse_todo("# TODO\n\n- **První.** Text.\n- **Druhý.** Text.\n")
-        self.assertEqual([i["title"] for s in todo for p in s["parts"] for i in p["items"]],
-                         ["První", "Druhý"])
+        todo, _, _ = self.c.parse_todo(
+            "# TODO\n\n- **První.** Text.\n- **Druhý.** Text.\n"
+        )
+        self.assertEqual(
+            [i["title"] for s in todo for p in s["parts"] for i in p["items"]],
+            ["První", "Druhý"],
+        )
 
     def test_sections_still_separate_items_that_have_headings(self):
         """Druhý směr: fronta s `## ` sekcemi se nesmí slít do jedné bezejmenné."""
         todo, _, _ = self.c.parse_todo(
-            "# TODO\n\n- [ ] **Nezařazený.** Text.\n\n## Probíhá\n\n- [ ] **V sekci.** Text.\n")
-        self.assertEqual([(s["section"], [i["title"] for p in s["parts"] for i in p["items"]])
-                          for s in todo],
-                         [(None, ["Nezařazený"]), ("Probíhá", ["V sekci"])])
+            "# TODO\n\n- [ ] **Nezařazený.** Text.\n\n## Probíhá\n\n- [ ] **V sekci.** Text.\n"
+        )
+        self.assertEqual(
+            [
+                (s["section"], [i["title"] for p in s["parts"] for i in p["items"]])
+                for s in todo
+            ],
+            [(None, ["Nezařazený"]), ("Probíhá", ["V sekci"])],
+        )
 
 
 TODO = """# TODO
@@ -299,8 +370,14 @@ class QueueCollection(unittest.TestCase):
         base = Path(self.tmp.name)
         self.home = base / "home"
         (self.home / ".claude" / "sessions").mkdir(parents=True)
-        self.env = dict(os.environ, HOME=str(self.home), GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t",
-                        GIT_COMMITTER_NAME="t", GIT_COMMITTER_EMAIL="t@t")
+        self.env = dict(
+            os.environ,
+            HOME=str(self.home),
+            GIT_AUTHOR_NAME="t",
+            GIT_AUTHOR_EMAIL="t@t",
+            GIT_COMMITTER_NAME="t",
+            GIT_COMMITTER_EMAIL="t@t",
+        )
         self.box = base / "projekt"
         src = base / "src"
         self.git("init", "-q", "-b", "main", str(src))
@@ -313,10 +390,23 @@ class QueueCollection(unittest.TestCase):
         self.bare = ["--git-dir", str(self.box / ".bare")]
         self.git(*self.bare, "worktree", "add", "-q", str(self.box / "main"), "main")
         # Kolo o DPH se rozhoduje ve větvi s worktree, fakturace má větev bez commitu.
-        self.git(*self.bare, "worktree", "add", "-q", "-b", "specify-dph", str(self.box / "dph"), "main")
+        self.git(
+            *self.bare,
+            "worktree",
+            "add",
+            "-q",
+            "-b",
+            "specify-dph",
+            str(self.box / "dph"),
+            "main",
+        )
         vat_todo = self.box / "dph" / "docs" / "todo.md"
-        vat_todo.write_text(TODO.replace("- **Stav:** čeká\n- **Větev:** `specify-dph`",
-                                    "- **Stav:** rozhoduje se\n- **Větev:** `specify-dph`"))
+        vat_todo.write_text(
+            TODO.replace(
+                "- **Stav:** čeká\n- **Větev:** `specify-dph`",
+                "- **Stav:** rozhoduje se\n- **Větev:** `specify-dph`",
+            )
+        )
         self.git("-C", str(self.box / "dph"), "commit", "-qam", "DPH rozhoduje se")
         self.git(*self.bare, "branch", "specify-faktury", "main")
         self.sleeper = subprocess.Popen(["sleep", "60"])
@@ -327,20 +417,36 @@ class QueueCollection(unittest.TestCase):
         self.tmp.cleanup()
 
     def git(self, *args):
-        subprocess.run(["git", *args], check=True, env=getattr(self, "env", None), capture_output=True)
+        subprocess.run(
+            ["git", *args],
+            check=True,
+            env=getattr(self, "env", None),
+            capture_output=True,
+        )
 
     def session(self, pid, sid, cwd, branch):
         claude = self.home / ".claude"
-        (claude / "sessions" / f"{pid}.json").write_text(json.dumps(
-            {"pid": pid, "sessionId": sid, "cwd": str(self.box), "name": sid}))
+        (claude / "sessions" / f"{pid}.json").write_text(
+            json.dumps(
+                {"pid": pid, "sessionId": sid, "cwd": str(self.box), "name": sid}
+            )
+        )
         project_dir = claude / "projects" / "-projekt"
         project_dir.mkdir(parents=True, exist_ok=True)
         (project_dir / f"{sid}.jsonl").write_text(
-            json.dumps({"cwd": str(self.box)}) + "\n" + json.dumps({"cwd": cwd, "gitBranch": branch}) + "\n")
+            json.dumps({"cwd": str(self.box)})
+            + "\n"
+            + json.dumps({"cwd": cwd, "gitBranch": branch})
+            + "\n"
+        )
 
     def collect(self):
-        run = subprocess.run([sys.executable, str(COLLECT), str(self.box)],
-                             capture_output=True, text=True, env=self.env)
+        run = subprocess.run(
+            [sys.executable, str(COLLECT), str(self.box)],
+            capture_output=True,
+            text=True,
+            env=self.env,
+        )
         self.assertEqual(run.returncode, 0, run.stderr)
         return json.loads(run.stdout)
 
@@ -368,20 +474,24 @@ class QueueCollection(unittest.TestCase):
         vat_todo = self.box / "dph" / "docs" / "todo.md"
         text = vat_todo.read_text()
         start = text.index("### Kolo o DPH")
-        vat_todo.write_text(text[:start] + text[text.index("### Kolo o fakturaci"):])
+        vat_todo.write_text(text[:start] + text[text.index("### Kolo o fakturaci") :])
         self.git("-C", str(self.box / "dph"), "commit", "-qam", "DPH zapsáno")
         self.assertEqual(self.collect()["rounds"][0]["branch_state"], "merge_pending")
 
     def test_abandoned_branch_with_session_to_resume(self):
         self.session(self.dead_pid(), "stara", str(self.box / "dph"), "specify-dph")
         b = self.branches()["specify-dph"]
-        self.assertEqual((b["state"], b["resume"]["session_id"], b["resume"]["start_cwd"]),
-                         ("abandoned", "stara", str(self.box)))
+        self.assertEqual(
+            (b["state"], b["resume"]["session_id"], b["resume"]["start_cwd"]),
+            ("abandoned", "stara", str(self.box)),
+        )
         self.assertEqual(b["rounds"], ["Kolo o DPH"])
 
     def test_occupied_branch_without_commit(self):
         # `--no-merged` větev bez commitu nevypíše; živá session nad ní ji musí přidat.
-        self.session(self.sleeper.pid, "ziva", str(self.box / "faktury"), "specify-faktury")
+        self.session(
+            self.sleeper.pid, "ziva", str(self.box / "faktury"), "specify-faktury"
+        )
         b = self.branches()["specify-faktury"]
         self.assertEqual((b["state"], b["session"]), ("occupied", "ziva"))
 
@@ -400,28 +510,55 @@ class QueueCollection(unittest.TestCase):
         self.assertEqual((b["state"], b["uncommitted"]), ("occupied", 1))
 
     def test_run_from_worktree_subdir_finds_container(self):
-        run = subprocess.run([sys.executable, str(COLLECT), str(self.box / "dph" / "docs")],
-                             capture_output=True, text=True, env=self.env)
+        run = subprocess.run(
+            [sys.executable, str(COLLECT), str(self.box / "dph" / "docs")],
+            capture_output=True,
+            text=True,
+            env=self.env,
+        )
         data = json.loads(run.stdout)
-        self.assertEqual((data["layout"], Path(data["root"]).resolve(), data["current"]["branch"]),
-                         ("worktree", self.box.resolve(), "specify-dph"))
+        self.assertEqual(
+            (data["layout"], Path(data["root"]).resolve(), data["current"]["branch"]),
+            ("worktree", self.box.resolve(), "specify-dph"),
+        )
 
     def test_branch_without_work_not_abandoned(self):
         # Větev bez commitu a bez neuložených změn není zapomenutá práce – buď se
         # nevypíše vůbec, nebo jako prázdná; opuštěná být nesmí.
         # Worktree bez práce je přesně ten případ, kdy se větev vypíše – po sloučení zůstal stát.
-        self.git(*self.bare, "worktree", "add", "-q", str(self.box / "faktury"), "specify-faktury")
+        self.git(
+            *self.bare,
+            "worktree",
+            "add",
+            "-q",
+            str(self.box / "faktury"),
+            "specify-faktury",
+        )
         self.assertEqual(self.branches()["specify-faktury"]["state"], "empty")
 
     def test_uncommitted_changes_in_other_worktree_are_work(self):
-        self.git(*self.bare, "worktree", "add", "-q", "-b", "export", str(self.box / "export"), "main")
+        self.git(
+            *self.bare,
+            "worktree",
+            "add",
+            "-q",
+            "-b",
+            "export",
+            str(self.box / "export"),
+            "main",
+        )
         (self.box / "export" / "novy.txt").write_text("rozdělané")
         b = self.branches()["export"]
-        self.assertEqual((b["state"], b["uncommitted"], b["ahead"]), ("abandoned", 1, 0))
+        self.assertEqual(
+            (b["state"], b["uncommitted"], b["ahead"]), ("abandoned", 1, 0)
+        )
 
     def test_session_without_branch_makes_all_uncertain(self):
-        (self.home / ".claude" / "sessions" / f"{self.sleeper.pid}.json").write_text(json.dumps(
-            {"pid": self.sleeper.pid, "sessionId": "nova", "cwd": str(self.box)}))
+        (self.home / ".claude" / "sessions" / f"{self.sleeper.pid}.json").write_text(
+            json.dumps(
+                {"pid": self.sleeper.pid, "sessionId": "nova", "cwd": str(self.box)}
+            )
+        )
         self.assertEqual({b["state"] for b in self.branches().values()}, {"uncertain"})
 
 
@@ -437,6 +574,7 @@ class LifecycleLayers(unittest.TestCase):
 
     def setUp(self):
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("collect", COLLECT)
         self.c = importlib.util.module_from_spec(spec)
         sys.path.insert(0, str(COLLECT.parent))
@@ -449,14 +587,21 @@ class LifecycleLayers(unittest.TestCase):
 
     def test_reads_both_layers_from_rules(self):
         out = self.c.lifecycle()
-        self.assertEqual(set(out), {"osa", "kontroly"},
-            f"z rámečku se přečetly jiné vrstvy než osa a kontroly: {sorted(out)}")
+        self.assertEqual(
+            set(out),
+            {"osa", "kontroly"},
+            f"z rámečku se přečetly jiné vrstvy než osa a kontroly: {sorted(out)}",
+        )
         for layer, steps in out.items():
-            self.assertGreaterEqual(len(steps), 5,
-                f"vrstva `{layer}` má jen {len(steps)} kroků: {steps}")
+            self.assertGreaterEqual(
+                len(steps), 5, f"vrstva `{layer}` má jen {len(steps)} kroků: {steps}"
+            )
             for step in steps:
-                self.assertRegex(step, r"^[a-z][a-z-]*$",
-                    f"ve vrstvě `{layer}` není jméno kroku, ale `{step}`")
+                self.assertRegex(
+                    step,
+                    r"^[a-z][a-z-]*$",
+                    f"ve vrstvě `{layer}` není jméno kroku, ale `{step}`",
+                )
 
     def test_axis_order_matches_the_frame(self):
         # Osa je řada, takže na jejím pořadí stojí odvození chybějícího kroku.
@@ -464,20 +609,25 @@ class LifecycleLayers(unittest.TestCase):
         # při přidání kroku rozešel a vypadal by přitom pořád platně.
         block = (ROOT / "RULES.md").read_text(encoding="utf-8")
         i = block.index("### Životní cyklus projektu")
-        frame = block[block.index("```", i) + 3:]
-        frame = frame[:frame.index("```")]
+        frame = block[block.index("```", i) + 3 :]
+        frame = frame[: frame.index("```")]
         axis_row = next(r for r in frame.splitlines() if r.split()[:1] == ["Osa"])
         first = re.findall(r"/([a-z][a-z-]*)", axis_row)[0]
-        self.assertEqual(self.c.lifecycle()["osa"][0], first,
-            "prvním krokem osy je něco jiného než v rámečku")
+        self.assertEqual(
+            self.c.lifecycle()["osa"][0],
+            first,
+            "prvním krokem osy je něco jiného než v rámečku",
+        )
 
     def test_comment_under_frame_is_not_a_step(self):
         # Řádek bez kroků vrstvu nezakládá ani neukončuje; braný jako položka
         # by z věty „stojí v mezerách mezi kroky osy…“ udělal krok cyklu.
         for steps in self.c.lifecycle().values():
             self.assertNotIn("stojí", steps)
-            self.assertFalse([s for s in steps if " " in s],
-                "mezi kroky se dostal celý řádek rámečku")
+            self.assertFalse(
+                [s for s in steps if " " in s],
+                "mezi kroky se dostal celý řádek rámečku",
+            )
 
 
 class OutputBudget(unittest.TestCase):
@@ -493,40 +643,62 @@ class OutputBudget(unittest.TestCase):
 
     def setUp(self):
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("collect_budget", COLLECT)
         self.c = importlib.util.module_from_spec(spec)
         sys.path.insert(0, str(COLLECT.parent))
         spec.loader.exec_module(self.c)
 
     def result_with(self, count, text_len):
-        items = [{"title": f"Polozka {i}", "text": "x" * text_len, "done": False}
-                 for i in range(count)]
-        return {"todo": [{"section": "Fronta", "parts": [{"subsection": None, "items": items}]}]}
+        items = [
+            {"title": f"Polozka {i}", "text": "x" * text_len, "done": False}
+            for i in range(count)
+        ]
+        return {
+            "todo": [
+                {"section": "Fronta", "parts": [{"subsection": None, "items": items}]}
+            ]
+        }
 
     def test_small_queue_keeps_full_texts(self):
         result = self.result_with(5, self.c.TEXT_LIMIT)
-        self.assertIsNone(self.c.fit_budget(result),
-            "krátilo se, přestože se výstup do rozpočtu vešel")
+        self.assertIsNone(
+            self.c.fit_budget(result),
+            "krátilo se, přestože se výstup do rozpočtu vešel",
+        )
         for item in result["todo"][0]["parts"][0]["items"]:
-            self.assertEqual(len(item["text"]), self.c.TEXT_LIMIT,
-                "popis se zkrátil u fronty, která je pod rozpočtem")
+            self.assertEqual(
+                len(item["text"]),
+                self.c.TEXT_LIMIT,
+                "popis se zkrátil u fronty, která je pod rozpočtem",
+            )
 
     def test_large_queue_fits_into_budget(self):
         result = self.result_with(300, self.c.TEXT_LIMIT)
-        self.assertGreater(self.c.encoded_size(result), self.c.BUDGET,
-            "testovací fronta rozpočet vůbec nepřekročila, test by neměřil nic")
+        self.assertGreater(
+            self.c.encoded_size(result),
+            self.c.BUDGET,
+            "testovací fronta rozpočet vůbec nepřekročila, test by neměřil nic",
+        )
         limit = self.c.fit_budget(result)
-        self.assertLessEqual(self.c.encoded_size(result), self.c.BUDGET,
-            f"výstup zůstal nad rozpočtem i po zkrácení na {limit}")
-        self.assertIn(limit, self.c.TEXT_STEPS,
-            f"vrácený limit `{limit}` není z `TEXT_STEPS`")
+        self.assertLessEqual(
+            self.c.encoded_size(result),
+            self.c.BUDGET,
+            f"výstup zůstal nad rozpočtem i po zkrácení na {limit}",
+        )
+        self.assertIn(
+            limit, self.c.TEXT_STEPS, f"vrácený limit `{limit}` není z `TEXT_STEPS`"
+        )
 
     def test_titles_survive_every_step(self):
         # Název je jediné, z čeho skill sestaví jednořádkový výpis; zmizet nesmí
         # ani v kroku, kde se popisy zahazují celé.
         result = self.result_with(4000, self.c.TEXT_LIMIT)
-        self.assertEqual(self.c.fit_budget(result), 0,
-            "fronta téhle velikosti se musí dostat až na zahození popisů")
+        self.assertEqual(
+            self.c.fit_budget(result),
+            0,
+            "fronta téhle velikosti se musí dostat až na zahození popisů",
+        )
         items = result["todo"][0]["parts"][0]["items"]
         self.assertEqual(len(items), 4000, "zkrácení ubralo položky, ne jen popisy")
         for item in items:

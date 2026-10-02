@@ -33,8 +33,18 @@ RUNNER = ROOT / ".github" / "run-contract.sh"
 #: který nikdy neskončí, `cwd` není příkaz. Množinová rovnost s kontraktem by
 #: v projektu s `dev` vyrobila falešný poplach – a falešný poplach je
 #: u vynucovací vrstvy horší směr selhání než propuštěná chyba.
-CI_STEPS = {"typecheck", "lint", "test", "build", "e2e", "audit", "coverage",
-            "a11y", "perf", "mutation"}
+CI_STEPS = {
+    "typecheck",
+    "lint",
+    "test",
+    "build",
+    "e2e",
+    "audit",
+    "coverage",
+    "a11y",
+    "perf",
+    "mutation",
+}
 
 
 def without_comments(path):
@@ -58,29 +68,44 @@ class ReusableWorkflow(unittest.TestCase):
         return without_comments(self.WORKFLOW)
 
     def test_is_callable(self):
-        self.assertRegex(self.body(), r"(?m)^on:\n\s+workflow_call:",
-                         "workflow nejde volat z jiného repozitáře – chybí `on: workflow_call`")
+        self.assertRegex(
+            self.body(),
+            r"(?m)^on:\n\s+workflow_call:",
+            "workflow nejde volat z jiného repozitáře – chybí `on: workflow_call`",
+        )
 
     def test_job_is_not_conditional(self):
         """Jen úroveň jobu (4 mezery). Krok smí být podmíněný legitimně –
         doinstalování nástrojů běží jen tam, kde projekt nějaké chce."""
-        self.assertNotRegex(self.body(), r"(?m)^ {4}if:\s",
-                            "job je podmíněný `if:` – může se tiše přeskočit")
+        self.assertNotRegex(
+            self.body(),
+            r"(?m)^ {4}if:\s",
+            "job je podmíněný `if:` – může se tiše přeskočit",
+        )
 
     def test_does_not_swallow_failures(self):
-        self.assertNotIn("continue-on-error", self.body(),
-                         "krok nebo job má `continue-on-error` – selhání se spolkne")
+        self.assertNotIn(
+            "continue-on-error",
+            self.body(),
+            "krok nebo job má `continue-on-error` – selhání se spolkne",
+        )
 
     def test_contract_read_via_verify_sh(self):
-        self.assertRegex(self.body(), r'verify\.sh" --contract',
-                         "workflow nevolá `verify.sh --contract` – nevznikl tu druhý parser?")
+        self.assertRegex(
+            self.body(),
+            r'verify\.sh" --contract',
+            "workflow nevolá `verify.sh --contract` – nevznikl tu druhý parser?",
+        )
 
     def test_does_not_parse_contract(self):
         """Bílá listina místo černé: jméno zdroje kontraktu ve workflow nemá co
         dělat a do `contract.tsv` se zapisuje jedinkrát – tím, co vypsal
         `verify.sh`. Černou listinu řetězců obešel v projektu přidaný `awk`."""
-        self.assertNotIn("CLAUDE.md", self.body(),
-                         "workflow sahá na CLAUDE.md – kontrakt se čte jen přes verify.sh")
+        self.assertNotIn(
+            "CLAUDE.md",
+            self.body(),
+            "workflow sahá na CLAUDE.md – kontrakt se čte jen přes verify.sh",
+        )
         writes = len(re.findall(r'>\s*"?\$RUNNER_TEMP/contract\.tsv', self.body()))
         self.assertEqual(1, writes, f"do contract.tsv se zapisuje {writes}×")
 
@@ -90,45 +115,89 @@ class ReusableWorkflow(unittest.TestCase):
         by se mu pod rukama měnily."""
         body = self.body()
         self.assertRegex(body, r"WORKFLOW_SHA:\s*\$\{\{ job\.workflow_sha \}\}")
-        self.assertRegex(body, r"WORKFLOW_REPOSITORY:\s*\$\{\{ job\.workflow_repository \}\}")
-        self.assertRegex(body, r'checkout --quiet "\$WORKFLOW_SHA"',
-                         "klon konfigurační vrstvy se nepřepíná na připnutý commit")
-        self.assertRegex(body, r'"\$RUNNER_TEMP/claude/\.github/run-contract\.sh"',
-                         "runner se nebere z klonu připnutého commitu")
-        self.assertRegex(body, r'CLAUDE_CONFIG=\$RUNNER_TEMP/claude"? >> "\$GITHUB_ENV"',
-                         "testy projektů nedostanou skripty z připnutého commitu")
+        self.assertRegex(
+            body, r"WORKFLOW_REPOSITORY:\s*\$\{\{ job\.workflow_repository \}\}"
+        )
+        self.assertRegex(
+            body,
+            r'checkout --quiet "\$WORKFLOW_SHA"',
+            "klon konfigurační vrstvy se nepřepíná na připnutý commit",
+        )
+        self.assertRegex(
+            body,
+            r'"\$RUNNER_TEMP/claude/\.github/run-contract\.sh"',
+            "runner se nebere z klonu připnutého commitu",
+        )
+        self.assertRegex(
+            body,
+            r'CLAUDE_CONFIG=\$RUNNER_TEMP/claude"? >> "\$GITHUB_ENV"',
+            "testy projektů nedostanou skripty z připnutého commitu",
+        )
 
     def test_moving_ref_is_rejected(self):
         """Volání přes `@main` musí CI shodit – měřeno spuštěním té podmínky."""
-        m = re.search(r'ref="\$\{WORKFLOW_REF##\*@\}"\n(.*?\n\s+fi\n)', self.body(), re.S)
+        m = re.search(
+            r'ref="\$\{WORKFLOW_REF##\*@\}"\n(.*?\n\s+fi\n)', self.body(), re.S
+        )
         self.assertIsNotNone(m, "kontrola pohyblivého ref se nenašla – změnil se tvar?")
         script = 'ref="${WORKFLOW_REF##*@}"\n' + m.group(1)
         cases = {
-            ("jantichy/claude/.github/workflows/contract.yml@refs/heads/main", "jantichy/eventoid"): 1,
-            ("jantichy/claude/.github/workflows/contract.yml@v1", "jantichy/eventoid"): 1,
-            ("jantichy/claude/.github/workflows/contract.yml@" + "a" * 40, "jantichy/eventoid"): 0,
+            (
+                "jantichy/claude/.github/workflows/contract.yml@refs/heads/main",
+                "jantichy/eventoid",
+            ): 1,
+            (
+                "jantichy/claude/.github/workflows/contract.yml@v1",
+                "jantichy/eventoid",
+            ): 1,
+            (
+                "jantichy/claude/.github/workflows/contract.yml@" + "a" * 40,
+                "jantichy/eventoid",
+            ): 0,
             # Vlastní repozitář volá lokální cestou, tam je workflow i nástroj v témže commitu.
-            ("jantichy/claude/.github/workflows/contract.yml@refs/heads/main", "jantichy/claude"): 0,
+            (
+                "jantichy/claude/.github/workflows/contract.yml@refs/heads/main",
+                "jantichy/claude",
+            ): 0,
         }
         for (ref, caller), expected in cases.items():
             with self.subTest(ref=ref[-20:], caller=caller):
-                env = {**os.environ, "WORKFLOW_REF": ref, "WORKFLOW_REPOSITORY": "jantichy/claude",
-                       "CALLER": caller}
-                done = subprocess.run(["sh", "-c", script], env=env, capture_output=True,
-                                      text=True, encoding="utf-8", errors="replace", check=False)
+                env = {
+                    **os.environ,
+                    "WORKFLOW_REF": ref,
+                    "WORKFLOW_REPOSITORY": "jantichy/claude",
+                    "CALLER": caller,
+                }
+                done = subprocess.run(
+                    ["sh", "-c", script],
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    check=False,
+                )
                 self.assertEqual(expected, done.returncode, done.stdout + done.stderr)
 
     def test_downloads_are_pinned(self):
         """Co si CI stahuje mimo `uses:`, musí mít konkrétní verzi."""
         body = self.body()
-        for url in re.findall(r"https://github\.com/[\w.-]+/[\w.-]+/releases/download/(\S+)", body):
+        for url in re.findall(
+            r"https://github\.com/[\w.-]+/[\w.-]+/releases/download/(\S+)", body
+        ):
             with self.subTest(url=url[:60]):
-                self.assertNotIn("latest", url, "vydání se stahuje z pohyblivého `latest`")
-        versions = re.findall(r"^\s*([A-Z][A-Z0-9_]*_VERSION):\s*(\S+)", body, re.MULTILINE)
+                self.assertNotIn(
+                    "latest", url, "vydání se stahuje z pohyblivého `latest`"
+                )
+        versions = re.findall(
+            r"^\s*([A-Z][A-Z0-9_]*_VERSION):\s*(\S+)", body, re.MULTILINE
+        )
         self.assertTrue(versions, "žádná proměnná s verzí – přesunula se jinam?")
         for name, value in versions:
             with self.subTest(variable=name):
-                self.assertNotRegex(value, r"^(latest|main|\$)", f"verze v `{name}` není konkrétní")
+                self.assertNotRegex(
+                    value, r"^(latest|main|\$)", f"verze v `{name}` není konkrétní"
+                )
         for package in re.findall(r"pip install[^\n]*", body):
             for token in package.replace("pip install", "").split():
                 if token.startswith("-"):
@@ -137,32 +206,52 @@ class ReusableWorkflow(unittest.TestCase):
                 if not re.fullmatch(r"[A-Za-z][\w.-]*", name):
                     continue
                 with self.subTest(package=name):
-                    self.assertRegex(package, rf"{re.escape(name)}==[\d.]+",
-                                     f"balíček `{name}` se instaluje bez připnuté verze")
+                    self.assertRegex(
+                        package,
+                        rf"{re.escape(name)}==[\d.]+",
+                        f"balíček `{name}` se instaluje bez připnuté verze",
+                    )
 
     def test_actions_pinned_to_commit(self):
         uses = re.findall(r"^\s*-?\s*uses:\s*(\S+)", self.body(), re.M)
         self.assertTrue(uses, "workflow nepoužívá žádnou akci – opravdu?")
         for u in uses:
             with self.subTest(uses=u):
-                self.assertRegex(u, r"@[0-9a-f]{40}$", f"akce `{u}` není připnutá na commit")
+                self.assertRegex(
+                    u, r"@[0-9a-f]{40}$", f"akce `{u}` není připnutá na commit"
+                )
 
     def test_checkout_fetches_full_history(self):
-        self.assertRegex(self.body(), r"fetch-depth:\s*0",
-                         "checkout nestahuje celou historii – gitleaks by hledal v mělkém klonu")
+        self.assertRegex(
+            self.body(),
+            r"fetch-depth:\s*0",
+            "checkout nestahuje celou historii – gitleaks by hledal v mělkém klonu",
+        )
 
     def test_security_steps_are_present(self):
-        for step, invocation in (("gitleaks", '"$RUNNER_TEMP/gitleaks" detect'),
-                                 ("semgrep", "semgrep --config")):
+        for step, invocation in (
+            ("gitleaks", '"$RUNNER_TEMP/gitleaks" detect'),
+            ("semgrep", "semgrep --config"),
+        ):
             with self.subTest(step=step):
-                self.assertIn(invocation, self.body(), f"ve workflow se nespouští krok {step}")
-        self.assertNotIn("--quiet --error", self.body(),
-                         "semgrep s `--quiet` nerozliší nulu nálezů od nuly prohledaných souborů")
+                self.assertIn(
+                    invocation, self.body(), f"ve workflow se nespouští krok {step}"
+                )
+        self.assertNotIn(
+            "--quiet --error",
+            self.body(),
+            "semgrep s `--quiet` nerozliší nulu nálezů od nuly prohledaných souborů",
+        )
 
     def test_does_not_copy_commands(self):
         """Kdyby se příkaz z kontraktu do workflow opsal, změna kontraktu by ho minula."""
-        v = subprocess.run([str(ROOT / "verify.sh"), "--contract", str(ROOT)],
-                           capture_output=True, text=True, check=False, stdin=subprocess.DEVNULL)
+        v = subprocess.run(
+            [str(ROOT / "verify.sh"), "--contract", str(ROOT)],
+            capture_output=True,
+            text=True,
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
         self.assertEqual(v.returncode, 0, v.stderr)
         commands = [r.split("\t", 1)[1] for r in v.stdout.splitlines() if "\t" in r]
         self.assertTrue(commands, "z kontraktu se nepřečetl jediný příkaz")
@@ -175,20 +264,33 @@ class ReusableWorkflow(unittest.TestCase):
             if command.strip() == "-":
                 continue
             with self.subTest(command=command[:40]):
-                self.assertNotIn(squeeze(command), body,
-                                 "workflow má příkaz opsaný, místo aby ho četl z kontraktu")
+                self.assertNotIn(
+                    squeeze(command),
+                    body,
+                    "workflow má příkaz opsaný, místo aby ho četl z kontraktu",
+                )
 
     def test_runner_runs_ci_steps(self):
-        m = re.search(r"for key in ([a-z0-9 ]+); do", RUNNER.read_text(encoding="utf-8"))
+        m = re.search(
+            r"for key in ([a-z0-9 ]+); do", RUNNER.read_text(encoding="utf-8")
+        )
         self.assertIsNotNone(m, "v runneru se nenašel výčet kroků – změnil se tvar?")
-        self.assertEqual(set(m.group(1).split()), CI_STEPS,
-                         "výčet kroků v CI se rozešel se seznamem v testu")
+        self.assertEqual(
+            set(m.group(1).split()),
+            CI_STEPS,
+            "výčet kroků v CI se rozešel se seznamem v testu",
+        )
 
     def test_runner_honors_cwd(self):
         body = RUNNER.read_text(encoding="utf-8")
-        self.assertRegex(body, r"cwd=\$\(.*contract", "runner klíč cwd nečte z kontraktu")
-        self.assertRegex(body, r'if \[ -n "\$cwd" \]; then\s*\n\s*cd "\$cwd"',
-                         "runner nemění adresář podle cwd jednou podmínkou `[ -n ]`")
+        self.assertRegex(
+            body, r"cwd=\$\(.*contract", "runner klíč cwd nečte z kontraktu"
+        )
+        self.assertRegex(
+            body,
+            r'if \[ -n "\$cwd" \]; then\s*\n\s*cd "\$cwd"',
+            "runner nemění adresář podle cwd jednou podmínkou `[ -n ]`",
+        )
 
 
 CALLER_CHECK = ROOT / ".github" / "caller.py"
@@ -196,8 +298,12 @@ CALLER_CHECK = ROOT / ".github" / "caller.py"
 
 def check_caller(path):
     """Pustí sdílenou kontrolu volajícího workflow, jak ji pouštějí projekty."""
-    done = subprocess.run([sys.executable, str(CALLER_CHECK), str(path)],
-                          capture_output=True, text=True, check=False)
+    done = subprocess.run(
+        [sys.executable, str(CALLER_CHECK), str(path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     return done.returncode, done.stdout + done.stderr
 
 
@@ -215,27 +321,65 @@ class CallerWorkflow(unittest.TestCase):
     def test_checker_rejects_and_accepts(self):
         """Oba směry selhání: zastaví, co má, a propustí, co má."""
         good = CALLER.read_text(encoding="utf-8")
-        pinned = good.replace("uses: ./.github/workflows/contract.yml",
-                              "uses: jantichy/claude/.github/workflows/contract.yml@" + "0" * 40)
+        pinned = good.replace(
+            "uses: ./.github/workflows/contract.yml",
+            "uses: jantichy/claude/.github/workflows/contract.yml@" + "0" * 40,
+        )
         cases = {
             "lokální volání": (good, 0),
             "připnuté volání z projektu": (pinned, 0),
             "neškodný komentář": (good + "\n# uses: nic\n", 0),
-            "volání přes @main": (good.replace("uses: ./.github/workflows/contract.yml",
-                                               "uses: jantichy/claude/.github/workflows/contract.yml@main"), 1),
-            "volání jen v komentáři": (good.replace("    uses: ./.github", "    # uses: ./.github"), 1),
-            "osekané spouštěče": (good.replace("on:\n  push:\n  pull_request:\n", "on:\n  workflow_dispatch:\n"), 1),
-            "filtr větví": (good.replace("  push:\n", "  push:\n    branches: [ nikdy ]\n"), 1),
-            "podmíněný job": (good.replace("  contract:\n", "  contract:\n    if: false\n"), 1),
-            "continue-on-error": (good.replace("  contract:\n", "  contract:\n    continue-on-error: true\n"), 1),
-            "bez permissions": (good.replace("permissions:\n  contents: read\n", ""), 1),
-            "zápis": (good.replace("  contents: read\n", "  contents: read\n  pull-requests: write\n"), 1),
+            "volání přes @main": (
+                good.replace(
+                    "uses: ./.github/workflows/contract.yml",
+                    "uses: jantichy/claude/.github/workflows/contract.yml@main",
+                ),
+                1,
+            ),
+            "volání jen v komentáři": (
+                good.replace("    uses: ./.github", "    # uses: ./.github"),
+                1,
+            ),
+            "osekané spouštěče": (
+                good.replace(
+                    "on:\n  push:\n  pull_request:\n", "on:\n  workflow_dispatch:\n"
+                ),
+                1,
+            ),
+            "filtr větví": (
+                good.replace("  push:\n", "  push:\n    branches: [ nikdy ]\n"),
+                1,
+            ),
+            "podmíněný job": (
+                good.replace("  contract:\n", "  contract:\n    if: false\n"),
+                1,
+            ),
+            "continue-on-error": (
+                good.replace(
+                    "  contract:\n", "  contract:\n    continue-on-error: true\n"
+                ),
+                1,
+            ),
+            "bez permissions": (
+                good.replace("permissions:\n  contents: read\n", ""),
+                1,
+            ),
+            "zápis": (
+                good.replace(
+                    "  contents: read\n", "  contents: read\n  pull-requests: write\n"
+                ),
+                1,
+            ),
         }
         with tempfile.TemporaryDirectory() as tmp:
             for name, (text, expected) in cases.items():
                 with self.subTest(case=name):
                     if expected:
-                        self.assertNotEqual(text, good, "mutace se neaplikovala – změnil se tvar workflow?")
+                        self.assertNotEqual(
+                            text,
+                            good,
+                            "mutace se neaplikovala – změnil se tvar workflow?",
+                        )
                     path = Path(tmp) / "verify.yml"
                     path.write_text(text, encoding="utf-8")
                     code, out = check_caller(path)
@@ -263,7 +407,9 @@ class WorkflowMutation(unittest.TestCase):
     def reports(self, cls, mutation, method):
         original = cls.WORKFLOW.read_text(encoding="utf-8")
         text = mutation(original)
-        self.assertNotEqual(text, original, "mutace se neaplikovala – změnil se tvar workflow?")
+        self.assertNotEqual(
+            text, original, "mutace se neaplikovala – změnil se tvar workflow?"
+        )
         fake = self.tmp / cls.WORKFLOW.name
         fake.write_text(text, encoding="utf-8")
         result = unittest.TestResult()
@@ -271,43 +417,84 @@ class WorkflowMutation(unittest.TestCase):
         return bool(result.failures or result.errors)
 
     def test_own_parser_is_reported(self):
-        self.assertTrue(self.reports(ReusableWorkflow,
-            lambda s: s.replace('"$RUNNER_TEMP/claude/verify.sh" --contract .',
-                                "grep -A20 Kontrakt CLAUDE.md"),
-            "test_contract_read_via_verify_sh"))
+        self.assertTrue(
+            self.reports(
+                ReusableWorkflow,
+                lambda s: s.replace(
+                    '"$RUNNER_TEMP/claude/verify.sh" --contract .',
+                    "grep -A20 Kontrakt CLAUDE.md",
+                ),
+                "test_contract_read_via_verify_sh",
+            )
+        )
 
     def test_head_instead_of_pinned_commit_is_reported(self):
-        self.assertTrue(self.reports(ReusableWorkflow,
-            lambda s: s.replace('git -C "$RUNNER_TEMP/claude" checkout --quiet "$WORKFLOW_SHA"\n', ""),
-            "test_tools_come_from_pinned_commit"))
+        self.assertTrue(
+            self.reports(
+                ReusableWorkflow,
+                lambda s: s.replace(
+                    'git -C "$RUNNER_TEMP/claude" checkout --quiet "$WORKFLOW_SHA"\n',
+                    "",
+                ),
+                "test_tools_come_from_pinned_commit",
+            )
+        )
 
     def test_disabled_ref_guard_is_reported(self):
-        self.assertTrue(self.reports(ReusableWorkflow,
-            lambda s: s.replace("            exit 1\n          fi\n          git clone",
-                                "          fi\n          git clone"),
-            "test_moving_ref_is_rejected"))
+        self.assertTrue(
+            self.reports(
+                ReusableWorkflow,
+                lambda s: s.replace(
+                    "            exit 1\n          fi\n          git clone",
+                    "          fi\n          git clone",
+                ),
+                "test_moving_ref_is_rejected",
+            )
+        )
 
     def test_quiet_semgrep_is_reported(self):
-        self.assertTrue(self.reports(ReusableWorkflow,
-            lambda s: s.replace("semgrep --config p/owasp-top-ten --error",
-                                "semgrep --config p/owasp-top-ten --quiet --error"),
-            "test_security_steps_are_present"))
+        self.assertTrue(
+            self.reports(
+                ReusableWorkflow,
+                lambda s: s.replace(
+                    "semgrep --config p/owasp-top-ten --error",
+                    "semgrep --config p/owasp-top-ten --quiet --error",
+                ),
+                "test_security_steps_are_present",
+            )
+        )
 
     def test_unpinned_semgrep_is_reported(self):
-        self.assertTrue(self.reports(ReusableWorkflow,
-            lambda s: s.replace("semgrep==1.177.0", "semgrep"),
-            "test_downloads_are_pinned"))
+        self.assertTrue(
+            self.reports(
+                ReusableWorkflow,
+                lambda s: s.replace("semgrep==1.177.0", "semgrep"),
+                "test_downloads_are_pinned",
+            )
+        )
 
     def test_conditional_job_is_reported(self):
-        self.assertTrue(self.reports(ReusableWorkflow,
-            lambda s: s.replace("  contract:\n    runs-on:", "  contract:\n    if: false\n    runs-on:"),
-            "test_job_is_not_conditional"))
+        self.assertTrue(
+            self.reports(
+                ReusableWorkflow,
+                lambda s: s.replace(
+                    "  contract:\n    runs-on:",
+                    "  contract:\n    if: false\n    runs-on:",
+                ),
+                "test_job_is_not_conditional",
+            )
+        )
 
     def test_intact_workflows_pass(self):
         """Pojistka proti obrácené chybě: kdyby kontroly hlásily i nad zdravým
         souborem, byly by mutační testy zelené omylem."""
-        self.assertFalse(self.reports(ReusableWorkflow, lambda s: s + "\n# neškodný komentář\n",
-                                      "test_tools_come_from_pinned_commit"))
+        self.assertFalse(
+            self.reports(
+                ReusableWorkflow,
+                lambda s: s + "\n# neškodný komentář\n",
+                "test_tools_come_from_pinned_commit",
+            )
+        )
 
 
 class TestRunner(unittest.TestCase):
@@ -331,8 +518,13 @@ class TestRunner(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "contract.tsv"
             path.write_text(contract, encoding="utf-8")
-            done = subprocess.run([str(RUNNER), str(path)], capture_output=True,
-                                  text=True, check=False, stdin=subprocess.DEVNULL)
+            done = subprocess.run(
+                [str(RUNNER), str(path)],
+                capture_output=True,
+                text=True,
+                check=False,
+                stdin=subprocess.DEVNULL,
+            )
             return done.returncode, done.stdout + done.stderr
 
     def test_runner_exists_and_is_executable(self):
@@ -353,8 +545,11 @@ class TestRunner(unittest.TestCase):
         self.assertEqual(0, code, f"runner shodil kontrakt ze samých pomlček:\n{out}")
         for key in sorted(CI_STEPS):
             with self.subTest(key=key):
-                self.assertIn(f"{key} – projekt ho vědomě nemá", out,
-                              "vědomě přeskočený krok se neozval")
+                self.assertIn(
+                    f"{key} – projekt ho vědomě nemá",
+                    out,
+                    "vědomě přeskočený krok se neozval",
+                )
 
     def test_failing_command_turns_red(self):
         """Jediný padající příkaz musí shodit celý běh."""
@@ -406,23 +601,35 @@ class TestRunner(unittest.TestCase):
             elsewhere = Path(tmp) / "elsewhere"
             elsewhere.mkdir()
             (Path(tmp) / "contract.tsv").write_text(
-                f"cwd\t{elsewhere}\nlint\t-\ntest\tfalse\n", encoding="utf-8")
-            done = subprocess.run([str(RUNNER), "contract.tsv"], cwd=tmp,
-                                  capture_output=True, text=True, check=False,
-                                  stdin=subprocess.DEVNULL)
+                f"cwd\t{elsewhere}\nlint\t-\ntest\tfalse\n", encoding="utf-8"
+            )
+            done = subprocess.run(
+                [str(RUNNER), "contract.tsv"],
+                cwd=tmp,
+                capture_output=True,
+                text=True,
+                check=False,
+                stdin=subprocess.DEVNULL,
+            )
         output = done.stdout + done.stderr
-        self.assertEqual(1, done.returncode,
-                         f"runner s relativní cestou a cwd neskončil na padajícím příkazu:\n{output}")
+        self.assertEqual(
+            1,
+            done.returncode,
+            f"runner s relativní cestou a cwd neskončil na padajícím příkazu:\n{output}",
+        )
         self.assertIn("test selhal", output, output)
 
     def test_unreadable_contract_is_an_error(self):
         """Chybějící soubor nesmí projít jako „nic ke spuštění“."""
         with tempfile.TemporaryDirectory() as tmp:
-            done = subprocess.run([str(RUNNER), str(Path(tmp) / "není.tsv")],
-                                  capture_output=True, text=True, check=False,
-                                  stdin=subprocess.DEVNULL)
+            done = subprocess.run(
+                [str(RUNNER), str(Path(tmp) / "není.tsv")],
+                capture_output=True,
+                text=True,
+                check=False,
+                stdin=subprocess.DEVNULL,
+            )
         self.assertEqual(1, done.returncode, done.stdout + done.stderr)
-
 
 
 if __name__ == "__main__":

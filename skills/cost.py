@@ -37,6 +37,7 @@ srovnání ceny podle něj bylo kruhové. **Běh, který rozsah nevykázal, do p
 druhé osy nespadne a hlásí se to**; měřené pokrytí vzniklo 27. 9. 2026, takže
 starší běhy ho nenesou a zpětně dopočítat nejdou.
 """
+
 import json
 import glob
 import os
@@ -46,24 +47,42 @@ from datetime import datetime
 from collections import defaultdict
 
 P_IN, P_CW, P_CR, P_OUT = 15.0, 18.75, 1.5, 75.0
-HARNESS = ('/clear', '/compact', '/resume', '/exit', '/rename', '/config',
-           '/cost', '/help', '/model', '/status', '/vim', '/doctor')
-CMD = re.compile(r'command-name>(/[a-z-]+)</command-name>')
+HARNESS = (
+    "/clear",
+    "/compact",
+    "/resume",
+    "/exit",
+    "/rename",
+    "/config",
+    "/cost",
+    "/help",
+    "/model",
+    "/status",
+    "/vim",
+    "/doctor",
+)
+CMD = re.compile(r"command-name>(/[a-z-]+)</command-name>")
 # `- **Pokrytí panelem:** 12 z 30 souborů rozsahu …`; jednotka je povinná, ať se
 # za rozsah nevezme `N/N` kotev ani `X kB z Y kB` transcriptu, což je osa první
-SCOPE = re.compile(r'\*\*Pokrytí[^:*\n]{0,24}:\*\*[^\n0-9]{0,24}'
-                   r'(\d+)\s+z\s+(\d+)\s+(souborů|sekcí|scénářů)')
-KB_BANDS = ('A do300kB', 'B 300-600', 'C 600-1200', 'D nad1200')
-SCOPE_BANDS = ('A do10', 'B 10-50', 'C 50-200', 'D nad200')
-AXES = (('band', KB_BANDS, 'VELIKOSTI TRANSCRIPTU'),
-        ('sband', SCOPE_BANDS, 'VELIKOSTI ROZSAHU'))
+SCOPE = re.compile(
+    r"\*\*Pokrytí[^:*\n]{0,24}:\*\*[^\n0-9]{0,24}"
+    r"(\d+)\s+z\s+(\d+)\s+(souborů|sekcí|scénářů)"
+)
+KB_BANDS = ("A do300kB", "B 300-600", "C 600-1200", "D nad1200")
+SCOPE_BANDS = ("A do10", "B 10-50", "C 50-200", "D nad200")
+AXES = (
+    ("band", KB_BANDS, "VELIKOSTI TRANSCRIPTU"),
+    ("sband", SCOPE_BANDS, "VELIKOSTI ROZSAHU"),
+)
 
 
 def price(u):
-    return (u.get('input_tokens', 0) * P_IN
-            + u.get('cache_creation_input_tokens', 0) * P_CW
-            + u.get('cache_read_input_tokens', 0) * P_CR
-            + u.get('output_tokens', 0) * P_OUT) / 1e6
+    return (
+        u.get("input_tokens", 0) * P_IN
+        + u.get("cache_creation_input_tokens", 0) * P_CW
+        + u.get("cache_read_input_tokens", 0) * P_CR
+        + u.get("output_tokens", 0) * P_OUT
+    ) / 1e6
 
 
 def agg(recs):
@@ -72,34 +91,38 @@ def agg(recs):
     calls = 0
     total = 0.0
     for r in recs:
-        u = (r.get('message') or {}).get('usage')
+        u = (r.get("message") or {}).get("usage")
         if not u:
             continue
         calls += 1
         total += price(u)
-        for k in ('input_tokens', 'cache_creation_input_tokens',
-                  'cache_read_input_tokens', 'output_tokens'):
+        for k in (
+            "input_tokens",
+            "cache_creation_input_tokens",
+            "cache_read_input_tokens",
+            "output_tokens",
+        ):
             tok[k] += u.get(k, 0)
     return calls, dict(tok), total
 
 
 def txt(r):
-    c = (r.get('message') or {}).get('content')
+    c = (r.get("message") or {}).get("content")
     if isinstance(c, str):
         return c
     if isinstance(c, list):
-        return ' '.join(b.get('text', '') for b in c if isinstance(b, dict))
-    return ''
+        return " ".join(b.get("text", "") for b in c if isinstance(b, dict))
+    return ""
 
 
 def band(kb):
     if kb < 300:
-        return 'A do300kB'
+        return "A do300kB"
     if kb < 600:
-        return 'B 300-600'
+        return "B 300-600"
     if kb < 1200:
-        return 'C 600-1200'
-    return 'D nad1200'
+        return "C 600-1200"
+    return "D nad1200"
 
 
 def sband(n):
@@ -114,12 +137,12 @@ def sband(n):
     if n is None:
         return None
     if n < 10:
-        return 'A do10'
+        return "A do10"
     if n < 50:
-        return 'B 10-50'
+        return "B 10-50"
     if n < 200:
-        return 'C 50-200'
-    return 'D nad200'
+        return "C 50-200"
+    return "D nad200"
 
 
 def scope_of(seg):
@@ -132,7 +155,7 @@ def scope_of(seg):
     """
     found = None
     for r in seg:
-        if r.get('type') != 'assistant':
+        if r.get("type") != "assistant":
             continue
         for m in SCOPE.finditer(txt(r)):
             found = (int(m.group(2)), m.group(3))
@@ -149,12 +172,12 @@ def end_markers(skill):
     která se v konverzaci vyskytne kdekoliv. Bral-li by se poslední blok,
     ohraničil by běh na cizím textu a jeho cena by byla nafouknutá.
     """
-    path = os.path.expanduser(f'~/.claude/skills/{skill}/SKILL.md')
+    path = os.path.expanduser(f"~/.claude/skills/{skill}/SKILL.md")
     if not os.path.exists(path):
         return []
-    with open(path, encoding='utf-8') as fh:
+    with open(path, encoding="utf-8") as fh:
         lines = fh.read().splitlines()
-    return first_template(lines[last_phase(lines):])
+    return first_template(lines[last_phase(lines) :])
 
 
 def last_phase(lines):
@@ -162,9 +185,9 @@ def last_phase(lines):
     inside = False
     at = 0
     for i, line in enumerate(lines):
-        if line.startswith('```'):
+        if line.startswith("```"):
             inside = not inside
-        elif not inside and line.startswith('## Fáze'):
+        elif not inside and line.startswith("## Fáze"):
             at = i
     return at
 
@@ -174,20 +197,20 @@ def first_template(lines):
     inside = False
     head = None
     for line in lines:
-        if line.startswith('```'):
+        if line.startswith("```"):
             if inside and head:
                 return [head]
             inside = not inside
             head = None
             continue
         if inside and head is None and line.strip():
-            head = line.strip() if line.startswith('## ') else ''
+            head = line.strip() if line.startswith("## ") else ""
     return []
 
 
 def commands(rec):
     """Slash příkazy vyvolané v jednom záznamu."""
-    return CMD.findall(json.dumps(rec.get('message', {}), ensure_ascii=False))
+    return CMD.findall(json.dumps(rec.get("message", {}), ensure_ascii=False))
 
 
 def run_bounds(recs, starts, idx, skill, markers):
@@ -197,10 +220,11 @@ def run_bounds(recs, starts, idx, skill, markers):
     for j in range(i0 + 1, len(recs)):
         if j >= nxt:
             return None
-        if recs[j].get('type') == 'assistant' and any(m in txt(recs[j]) for m in markers):
+        if recs[j].get("type") == "assistant" and any(
+            m in txt(recs[j]) for m in markers
+        ):
             return j + 1
-        other = [c for c in commands(recs[j])
-                 if c != f'/{skill}' and c not in HARNESS]
+        other = [c for c in commands(recs[j]) if c != f"/{skill}" and c not in HARNESS]
         if other:
             return None
     return None
@@ -208,7 +232,7 @@ def run_bounds(recs, starts, idx, skill, markers):
 
 def load(path):
     recs, raw = [], []
-    with open(path, encoding='utf-8', errors='replace') as fh:
+    with open(path, encoding="utf-8", errors="replace") as fh:
         lines = fh.read().splitlines()
     for line in lines:
         try:
@@ -223,21 +247,21 @@ def subagents(path):
     """Transcripty subagentů dané session s časem prvního záznamu."""
     sid = os.path.basename(path)[:-6]
     out = []
-    pattern = os.path.join(os.path.dirname(path), sid, 'subagents', 'agent-*.jsonl')
+    pattern = os.path.join(os.path.dirname(path), sid, "subagents", "agent-*.jsonl")
     for sp in glob.glob(pattern):
         sr, _ = load(sp)
-        ts = next((r['timestamp'] for r in sr if r.get('timestamp')), None)
+        ts = next((r["timestamp"] for r in sr if r.get("timestamp")), None)
         if ts:
             out.append((ts, sr))
     return out
 
 
-def scan(skill, markers, root='~/.claude/projects'):
+def scan(skill, markers, root="~/.claude/projects"):
     """Všechny dokončené běhy skillu; vrací i počet zahozených bez markeru."""
     runs, dropped = [], 0
-    for path in glob.glob(os.path.expanduser(f'{root}/*/*.jsonl')):
+    for path in glob.glob(os.path.expanduser(f"{root}/*/*.jsonl")):
         recs, raw = load(path)
-        starts = [i for i, r in enumerate(recs) if f'/{skill}' in commands(r)]
+        starts = [i for i, r in enumerate(recs) if f"/{skill}" in commands(r)]
         if not starts:
             continue
         subs = subagents(path)
@@ -252,7 +276,7 @@ def scan(skill, markers, root='~/.claude/projects'):
             else:
                 dropped += 1
     runs, duplicates = dedup(runs)
-    runs.sort(key=lambda r: r['ts'])
+    runs.sort(key=lambda r: r["ts"])
     return runs, dropped + duplicates
 
 
@@ -267,17 +291,17 @@ def dedup(runs):
     """
     seen = {}
     for r in runs:
-        key = (r['proj'], r['ts'], round(r['c'], 6))
+        key = (r["proj"], r["ts"], round(r["c"], 6))
         # z dvojice si nech tu s vyšším počtem agentů: kopie po /resume
         # nemusí nést podadresář se subagenty, a chybějící agent je ztráta dat
-        if key not in seen or r['na'] > seen[key]['na']:
+        if key not in seen or r["na"] > seen[key]["na"]:
             seen[key] = r
     return list(seen.values()), len(runs) - len(seen)
 
 
 def measure(seg, before, subs, path):
-    ts0 = next((r['timestamp'] for r in seg if r.get('timestamp')), None)
-    ts1 = next((r['timestamp'] for r in reversed(seg) if r.get('timestamp')), None)
+    ts0 = next((r["timestamp"] for r in seg if r.get("timestamp")), None)
+    ts1 = next((r["timestamp"] for r in reversed(seg) if r.get("timestamp")), None)
     if not ts0:
         return None
     kb = sum(len(x.encode()) for x in before) / 1024
@@ -291,16 +315,28 @@ def measure(seg, before, subs, path):
             ag_cost += d
     dur = 0.0
     if ts1:
+
         def parse(s):
-            return datetime.fromisoformat(s.replace('Z', '+00:00'))
+            return datetime.fromisoformat(s.replace("Z", "+00:00"))
+
         dur = (parse(ts1) - parse(ts0)).total_seconds() / 60
     scope = scope_of(seg)
-    return dict(ts=ts0, proj=os.path.basename(os.path.dirname(path)), kb=kb,
-                band=band(kb), dur=dur, n=calls, c=cost_main, na=ag_n,
-                sn=ag_calls, sc=ag_cost, tot=cost_main + ag_cost,
-                scope=scope[0] if scope else None,
-                unit=scope[1] if scope else '',
-                sband=sband(scope[0] if scope else None))
+    return dict(
+        ts=ts0,
+        proj=os.path.basename(os.path.dirname(path)),
+        kb=kb,
+        band=band(kb),
+        dur=dur,
+        n=calls,
+        c=cost_main,
+        na=ag_n,
+        sn=ag_calls,
+        sc=ag_cost,
+        tot=cost_main + ag_cost,
+        scope=scope[0] if scope else None,
+        unit=scope[1] if scope else "",
+        sband=sband(scope[0] if scope else None),
+    )
 
 
 def med(xs):
@@ -310,12 +346,16 @@ def med(xs):
 
 def table(runs, title):
     print(f"\n=== {title} ===")
-    print(f"{'kdy':17}{'projekt':24}{'kB':>7}{'rozsah':>8}{'min':>5}{'call':>5}"
-          f"{'$main':>8}{'ag':>4}{'agcall':>7}{'$ag':>8}{'$CELK':>8}")
+    print(
+        f"{'kdy':17}{'projekt':24}{'kB':>7}{'rozsah':>8}{'min':>5}{'call':>5}"
+        f"{'$main':>8}{'ag':>4}{'agcall':>7}{'$ag':>8}{'$CELK':>8}"
+    )
     for r in runs:
-        print(f"{r['ts'][:16]:17}{r['proj'][:24]:24}{r['kb']:7.0f}"
-              f"{(str(r['scope']) if r['scope'] else '-'):>8}{r['dur']:5.0f}"
-              f"{r['n']:5}{r['c']:8.2f}{r['na']:4}{r['sn']:7}{r['sc']:8.2f}{r['tot']:8.2f}")
+        print(
+            f"{r['ts'][:16]:17}{r['proj'][:24]:24}{r['kb']:7.0f}"
+            f"{(str(r['scope']) if r['scope'] else '-'):>8}{r['dur']:5.0f}"
+            f"{r['n']:5}{r['c']:8.2f}{r['na']:4}{r['sn']:7}{r['sc']:8.2f}{r['tot']:8.2f}"
+        )
 
 
 def missing(runs, key):
@@ -326,50 +366,60 @@ def missing(runs, key):
 def note(runs, key, title):
     miss = missing(runs, key)
     if miss:
-        print(f"  ({miss} z {len(runs)} běhů pásmo podle {title.lower()} nemá – "
-              f"rozsah v přehledu nevykázaly)")
+        print(
+            f"  ({miss} z {len(runs)} běhů pásmo podle {title.lower()} nemá – "
+            f"rozsah v přehledu nevykázaly)"
+        )
 
 
 def bands(pre, post, key, order, title):
     print(f"\n=== SROVNÁNÍ PO PÁSMECH {title} (medián) ===")
-    print(f"{'pásmo':12}{'n před':>7}{'$před':>9}{'min':>6} | "
-          f"{'n po':>5}{'$po':>9}{'min':>6} | {'změna $':>9}{'z toho $ag':>11}")
+    print(
+        f"{'pásmo':12}{'n před':>7}{'$před':>9}{'min':>6} | "
+        f"{'n po':>5}{'$po':>9}{'min':>6} | {'změna $':>9}{'z toho $ag':>11}"
+    )
     for b in order:
         pb = [r for r in pre if r[key] == b]
         qb = [r for r in post if r[key] == b]
         if not qb:
-            print(f"{b:12}{len(pb):7}{med([r['tot'] for r in pb]):9.2f}"
-                  f"{med([r['dur'] for r in pb]):6.0f} |  ---  žádný běh po mezi")
+            print(
+                f"{b:12}{len(pb):7}{med([r['tot'] for r in pb]):9.2f}"
+                f"{med([r['dur'] for r in pb]):6.0f} |  ---  žádný běh po mezi"
+            )
             continue
-        mp, mq = med([r['tot'] for r in pb]), med([r['tot'] for r in qb])
+        mp, mq = med([r["tot"] for r in pb]), med([r["tot"] for r in qb])
         ch = f"{(mq / mp - 1) * 100:+.0f}%" if mp else "?"
-        print(f"{b:12}{len(pb):7}{mp:9.2f}{med([r['dur'] for r in pb]):6.0f} | "
-              f"{len(qb):5}{mq:9.2f}{med([r['dur'] for r in qb]):6.0f} | "
-              f"{ch:>9}{med([r['sc'] for r in qb]):11.2f}")
+        print(
+            f"{b:12}{len(pb):7}{mp:9.2f}{med([r['dur'] for r in pb]):6.0f} | "
+            f"{len(qb):5}{mq:9.2f}{med([r['dur'] for r in qb]):6.0f} | "
+            f"{ch:>9}{med([r['sc'] for r in qb]):11.2f}"
+        )
 
 
 def share(runs, label):
     if not runs:
         return
-    tot = sum(r['tot'] for r in runs)
-    ags = sum(r['sc'] for r in runs)
+    tot = sum(r["tot"] for r in runs)
+    ags = sum(r["sc"] for r in runs)
     pct = ags / tot * 100 if tot else 0
-    print(f"  {label}: agenti {pct:.1f} % celkových nákladů, "
-          f"medián agentů na běh {med([r['na'] for r in runs])}, "
-          f"medián $ {med([r['tot'] for r in runs]):.2f}, "
-          f"medián min {med([r['dur'] for r in runs]):.0f}")
+    print(
+        f"  {label}: agenti {pct:.1f} % celkových nákladů, "
+        f"medián agentů na běh {med([r['na'] for r in runs])}, "
+        f"medián $ {med([r['tot'] for r in runs]):.2f}, "
+        f"medián min {med([r['dur'] for r in runs]):.0f}"
+    )
 
 
 def parse_args(argv):
     """Vrací (skill, since, markers) nebo None, je-li volání vadné."""
-    skill = argv[0].lstrip('/')
+    skill = argv[0].lstrip("/")
     since, markers = None, []
     i = 1
     while i < len(argv):
-        if argv[i] == '--since' and i + 1 < len(argv):
+        if argv[i] == "--since" and i + 1 < len(argv):
             since = argv[i + 1]
             i += 2
-        elif argv[i] == '--end-marker' and i + 1 < len(argv):
+        elif argv[i] == "--end-marker" and i + 1 < len(argv):
             markers.append(argv[i + 1])
             i += 2
         else:
@@ -379,36 +429,38 @@ def parse_args(argv):
 
 
 def report_all(runs):
-    table(runs, 'VŠECHNY DOKONČENÉ BĚHY')
+    table(runs, "VŠECHNY DOKONČENÉ BĚHY")
     print("\n=== PODÍL AGENTŮ NA CELKU ===")
-    share(runs, 'vše')
+    share(runs, "vše")
     for key, order, title in AXES:
         print(f"\n=== PO PÁSMECH {title} (medián) ===")
         for b in order:
             sel = [r for r in runs if r[key] == b]
             if sel:
-                print(f"  {b:12} n={len(sel):3}  $ {med([r['tot'] for r in sel]):7.2f}"
-                      f"  min {med([r['dur'] for r in sel]):4.0f}"
-                      f"  volání {med([r['n'] for r in sel]):4}"
-                      f"  agentů {med([r['na'] for r in sel]):3}")
+                print(
+                    f"  {b:12} n={len(sel):3}  $ {med([r['tot'] for r in sel]):7.2f}"
+                    f"  min {med([r['dur'] for r in sel]):4.0f}"
+                    f"  volání {med([r['n'] for r in sel]):4}"
+                    f"  agentů {med([r['na'] for r in sel]):3}"
+                )
         note(runs, key, title)
 
 
 def report_since(runs, since):
-    pre = [r for r in runs if r['ts'] < since]
-    post = [r for r in runs if r['ts'] >= since]
+    pre = [r for r in runs if r["ts"] < since]
+    post = [r for r in runs if r["ts"] >= since]
     print(f"MEZ: {since}   před {len(pre)}, po {len(post)}")
     table(post, f"BĚHY PO MEZI ({since})")
     for key, order, title in AXES:
         bands(pre, post, key, order, title)
         note(post, key, title)
     print("\n=== PODÍL AGENTŮ NA CELKU ===")
-    share(pre, 'před')
-    share(post, 'po  ')
+    share(pre, "před")
+    share(post, "po  ")
 
 
 def main(argv):
-    if not argv or argv[0].startswith('-'):
+    if not argv or argv[0].startswith("-"):
         print(__doc__)
         return 2
     parsed = parse_args(argv)
@@ -418,13 +470,17 @@ def main(argv):
     if not markers:
         markers = end_markers(skill)
     if not markers:
-        print(f"Marker konce se nepodařilo odvodit ze skills/{skill}/SKILL.md – "
-              f"předej ho --end-marker.")
+        print(
+            f"Marker konce se nepodařilo odvodit ze skills/{skill}/SKILL.md – "
+            f"předej ho --end-marker."
+        )
         return 2
     runs, dropped = scan(skill, markers)
     print(f"SKILL: /{skill}   MARKER KONCE: {markers}")
-    print(f"BĚHŮ DOKONČENÝCH: {len(runs)}   ZAHOZENO (bez markeru konce "
-          f"nebo přerušeno jiným skillem): {dropped}")
+    print(
+        f"BĚHŮ DOKONČENÝCH: {len(runs)}   ZAHOZENO (bez markeru konce "
+        f"nebo přerušeno jiným skillem): {dropped}"
+    )
     if not runs:
         return 1
     if since:
@@ -434,5 +490,5 @@ def main(argv):
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))

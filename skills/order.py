@@ -101,7 +101,8 @@ def check(paths):
             findings.append(
                 f"{path}{where}: {len(found)} × klesá datum mezi sousedními záznamy "
                 f"z {len(entries)} – poprvé na řádku {next_line} ({next_date} pod "
-                f"{first_date} z řádku {first_line}). Nejstarší patří nahoru, nový na konec.")
+                f"{first_date} z řádku {first_line}). Nejstarší patří nahoru, nový na konec."
+            )
     return findings
 
 

@@ -19,6 +19,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 
 Schválně jen stdlib – stejný důvod jako u `test_verify.py`.
 """
+
 import json
 import os
 import re
@@ -38,8 +39,9 @@ ALLOW = 0
 
 
 def git(cwd, *args):
-    return subprocess.run(["git", "-C", str(cwd), *args],
-                          capture_output=True, text=True, check=False)
+    return subprocess.run(
+        ["git", "-C", str(cwd), *args], capture_output=True, text=True, check=False
+    )
 
 
 class MergeCommitMessage(unittest.TestCase):
@@ -63,8 +65,13 @@ class MergeCommitMessage(unittest.TestCase):
         """Zavolá hook nad souborem se zprávou, jak to dělá git."""
         msg_file = self.repo / ".git" / "COMMIT_EDITMSG"
         msg_file.write_text(message)
-        return subprocess.run([str(COMMIT_MSG_HOOK), str(msg_file)], cwd=self.repo,
-                              capture_output=True, text=True, check=False)
+        return subprocess.run(
+            [str(COMMIT_MSG_HOOK), str(msg_file)],
+            cwd=self.repo,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
 
     def checkout_branch(self, name):
         git(self.repo, "checkout", "-q", "-b", name)
@@ -77,12 +84,16 @@ class MergeCommitMessage(unittest.TestCase):
         self.assertIn("skills/merge/SKILL.md", v.stderr)
 
     def test_default_czech_message_on_main_rejected(self):
-        self.assertEqual(self.run_commit_msg_hook("Merge větve docs/znamky\n").returncode, REJECT)
+        self.assertEqual(
+            self.run_commit_msg_hook("Merge větve docs/znamky\n").returncode, REJECT
+        )
 
     def test_comments_above_message_do_not_confuse_hook(self):
         """Git dává do COMMIT_EDITMSG vysvětlující komentáře; první *neprázdný
         nekomentářový* řádek je ta zpráva, a hook musí hledat ten."""
-        v = self.run_commit_msg_hook("\n# Please enter a commit message\n\nMerge branch 'feat/x'\n")
+        v = self.run_commit_msg_hook(
+            "\n# Please enter a commit message\n\nMerge branch 'feat/x'\n"
+        )
         self.assertEqual(v.returncode, REJECT)
 
     def test_real_merge_on_main_is_stopped(self):
@@ -107,19 +118,25 @@ class MergeCommitMessage(unittest.TestCase):
         takže v `git log --first-parent` neřeknou nic; vzor jen na první z nich
         propouštěl celou tuhle třídu a žádný test o ní nevěděl.
         """
-        for message in ("Merge remote-tracking branch 'origin/feat/x'",
-                       "Merge branches 'feat/a' and 'feat/b'",
-                       "Merge tag 'v1.2.0'",
-                       "Merge commit '9fceb02'",
-                       "Merge branch 'feat/platby' into main",
-                       "Squashed commit of the following:"):
+        for message in (
+            "Merge remote-tracking branch 'origin/feat/x'",
+            "Merge branches 'feat/a' and 'feat/b'",
+            "Merge tag 'v1.2.0'",
+            "Merge commit '9fceb02'",
+            "Merge branch 'feat/platby' into main",
+            "Squashed commit of the following:",
+        ):
             with self.subTest(message=message):
-                self.assertEqual(self.run_commit_msg_hook(message + "\n").returncode, REJECT)
+                self.assertEqual(
+                    self.run_commit_msg_hook(message + "\n").returncode, REJECT
+                )
 
     def test_indented_first_line_does_not_bypass_pattern(self):
         """`case` je kotvený na začátek řetězce, takže mezera před zprávou
         by stačila k obejití celé kontroly."""
-        self.assertEqual(self.run_commit_msg_hook("   Merge branch 'feat/x'\n").returncode, REJECT)
+        self.assertEqual(
+            self.run_commit_msg_hook("   Merge branch 'feat/x'\n").returncode, REJECT
+        )
 
     def test_real_remote_tracking_merge_is_stopped(self):
         """Integračně tou cestou, kterou to potká uživatel: větev existuje jen
@@ -140,13 +157,20 @@ class MergeCommitMessage(unittest.TestCase):
     # --- co musí projít ----------------------------------------------------
 
     def test_custom_message_passes(self):
-        self.assertEqual(self.run_commit_msg_hook("Zaveď platby kartou\n").returncode, ALLOW)
+        self.assertEqual(
+            self.run_commit_msg_hook("Zaveď platby kartou\n").returncode, ALLOW
+        )
 
     def test_merge_into_feature_branch_passes(self):
         """Aktualizace větve z main je běžný provoz a její defaultní zpráva
         do historie main nikdy nedoteče – hlídá se jen hlavní větev."""
         self.checkout_branch("feat/platby")
-        self.assertEqual(self.run_commit_msg_hook("Merge branch 'main' into feat/platby\n").returncode, ALLOW)
+        self.assertEqual(
+            self.run_commit_msg_hook(
+                "Merge branch 'main' into feat/platby\n"
+            ).returncode,
+            ALLOW,
+        )
 
     def test_merge_after_pull_of_same_branch_passes(self):
         """`git pull` nad toutéž větví je synchronizace, ne dokončení práce,
@@ -162,14 +186,21 @@ class MergeCommitMessage(unittest.TestCase):
         pushnutá odjinud nebo z pull requestu. Dvě slova navíc stačila i k obejití
         (`Merge branch 'feat/x' of course`).
         """
-        for message in ("Merge branch 'feat/z' of https://github.com/x/y",
-                       "Merge branch 'feat/x' of course",
-                       "Merge branch 'feat/z' of /tmp/remote"):
+        for message in (
+            "Merge branch 'feat/z' of https://github.com/x/y",
+            "Merge branch 'feat/x' of course",
+            "Merge branch 'feat/z' of /tmp/remote",
+        ):
             with self.subTest(message=message):
-                self.assertEqual(self.run_commit_msg_hook(message + "\n").returncode, REJECT)
+                self.assertEqual(
+                    self.run_commit_msg_hook(message + "\n").returncode, REJECT
+                )
 
     def test_message_mentioning_merge_passes(self):
-        self.assertEqual(self.run_commit_msg_hook("Oprav merge větve v dokumentaci\n").returncode, ALLOW)
+        self.assertEqual(
+            self.run_commit_msg_hook("Oprav merge větve v dokumentaci\n").returncode,
+            ALLOW,
+        )
 
     # --- delegace na lokální hook -----------------------------------------
 
@@ -183,7 +214,9 @@ class MergeCommitMessage(unittest.TestCase):
     def test_local_hook_is_called(self):
         trace = self.repo / "trace"
         self.local_hook(f"#!/bin/sh\ntouch {trace}\nexit 0\n")
-        self.assertEqual(self.run_commit_msg_hook("Zaveď platby kartou\n").returncode, ALLOW)
+        self.assertEqual(
+            self.run_commit_msg_hook("Zaveď platby kartou\n").returncode, ALLOW
+        )
         self.assertTrue(trace.exists(), "lokální hook repozitáře se nespustil")
 
     def test_local_hook_rejection_stops(self):
@@ -208,15 +241,23 @@ class MergeCommitMessage(unittest.TestCase):
         self.assertEqual(v.returncode, 0, v.stderr)
         msg_file = wt / "MSG"
         msg_file.write_text("Zaveď platby kartou\n")
-        subprocess.run([str(COMMIT_MSG_HOOK), str(msg_file)], cwd=wt,
-                       capture_output=True, text=True, check=False)
-        self.assertTrue(trace.exists(),
-                        "ve worktree se lokální hook repozitáře nezavolal")
+        subprocess.run(
+            [str(COMMIT_MSG_HOOK), str(msg_file)],
+            cwd=wt,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertTrue(
+            trace.exists(), "ve worktree se lokální hook repozitáře nezavolal"
+        )
 
     def test_local_hook_does_not_override_message_check(self):
         """Lokální hook smí přidat vlastní pravidlo, ne zrušit tohle."""
         self.local_hook("#!/bin/sh\nexit 0\n")
-        self.assertEqual(self.run_commit_msg_hook("Merge branch 'feat/x'\n").returncode, REJECT)
+        self.assertEqual(
+            self.run_commit_msg_hook("Merge branch 'feat/x'\n").returncode, REJECT
+        )
 
 
 class WorktreeLocalState(unittest.TestCase):
@@ -246,8 +287,11 @@ class WorktreeLocalState(unittest.TestCase):
         git(seed, "commit", "-qm", "init")
         self.container = self.tmp / "project"
         self.container.mkdir()
-        subprocess.run(["git", "clone", "-q", "--bare", str(seed), str(self.container / ".bare")],
-                       capture_output=True, check=True)
+        subprocess.run(
+            ["git", "clone", "-q", "--bare", str(seed), str(self.container / ".bare")],
+            capture_output=True,
+            check=True,
+        )
         (self.container / ".git").write_text("gitdir: ./.bare\n")
         self.add_worktree("main", "main", new_branch=False)
         self.main = self.container / "main"
@@ -263,8 +307,14 @@ class WorktreeLocalState(unittest.TestCase):
         # Worktree vzniká vedle `main/` v kontejneru, u obyčejného repozitáře vedle něj.
         target = self.container / directory if repo is None else repo.parent / directory
         repo = repo or self.container
-        args = ["-c", f"core.hooksPath={POST_CHECKOUT_HOOK.parent}",
-                "worktree", "add", "-q", str(target)]
+        args = [
+            "-c",
+            f"core.hooksPath={POST_CHECKOUT_HOOK.parent}",
+            "worktree",
+            "add",
+            "-q",
+            str(target),
+        ]
         args += ["-b", branch] if new_branch else [branch]
         v = git(repo, *args)
         self.assertEqual(v.returncode, 0, v.stderr)
@@ -275,21 +325,28 @@ class WorktreeLocalState(unittest.TestCase):
         for name in (".env", ".env.production"):
             link = self.container / "payments" / name
             self.assertTrue(link.is_symlink(), f"{name} se do větve nesymlinkoval")
-            self.assertEqual(os.readlink(link), f"../main/{name}",
-                             "odkaz není relativní, přesun kontejneru by ho rozbil")
+            self.assertEqual(
+                os.readlink(link),
+                f"../main/{name}",
+                "odkaz není relativní, přesun kontejneru by ho rozbil",
+            )
 
     def test_env_local_is_copied_not_linked(self):
         """Do `.env.local` si větev píše vlastní `PORT` – přes symlink by ho
         přepsala v `main/` i ve všech ostatních větvích."""
         self.add_worktree("payments", "feat/payments")
         local = self.container / "payments" / ".env.local"
-        self.assertTrue(local.is_file() and not local.is_symlink(),
-                        ".env.local není samostatná kopie")
+        self.assertTrue(
+            local.is_file() and not local.is_symlink(),
+            ".env.local není samostatná kopie",
+        )
 
     def test_tracked_file_is_not_overwritten(self):
         self.add_worktree("payments", "feat/payments")
         example = self.container / "payments" / ".env.example"
-        self.assertFalse(example.is_symlink(), "trackovaný soubor větve nahradil odkaz do main/")
+        self.assertFalse(
+            example.is_symlink(), "trackovaný soubor větve nahradil odkaz do main/"
+        )
         self.assertEqual(example.read_text(), "TRACKED=1\n")
 
     def test_node_modules_is_never_symlinked(self):
@@ -301,7 +358,9 @@ class WorktreeLocalState(unittest.TestCase):
         nm = self.container / "payments" / "node_modules"
         self.assertFalse(nm.is_symlink(), "node_modules je symlink do main/")
         if nm.exists():
-            self.assertTrue((nm / "pkg" / "index.js").is_file(), "klon node_modules je neúplný")
+            self.assertTrue(
+                (nm / "pkg" / "index.js").is_file(), "klon node_modules je neúplný"
+            )
 
     def test_plain_checkout_does_nothing(self):
         """Přepnutí větve v existujícím worktree není založení – předchozí HEAD
@@ -309,8 +368,15 @@ class WorktreeLocalState(unittest.TestCase):
         self.add_worktree("payments", "feat/payments")
         wt = self.container / "payments"
         (wt / ".env").unlink()
-        v = git(wt, "-c", f"core.hooksPath={POST_CHECKOUT_HOOK.parent}",
-                "checkout", "-q", "-b", "feat/other")
+        v = git(
+            wt,
+            "-c",
+            f"core.hooksPath={POST_CHECKOUT_HOOK.parent}",
+            "checkout",
+            "-q",
+            "-b",
+            "feat/other",
+        )
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertFalse((wt / ".env").exists(), "hook zasáhl při obyčejném checkoutu")
 
@@ -319,14 +385,19 @@ class WorktreeLocalState(unittest.TestCase):
         ani když vedle leží adresář jménem `main`."""
         repo = self.tmp / "plain" / "repo"
         repo.parent.mkdir()
-        subprocess.run(["git", "clone", "-q", str(self.tmp / "seed"), str(repo)],
-                       capture_output=True, check=True)
+        subprocess.run(
+            ["git", "clone", "-q", str(self.tmp / "seed"), str(repo)],
+            capture_output=True,
+            check=True,
+        )
         (repo / ".env").write_text("SECRET=x\n")
         (self.tmp / "plain" / "main").mkdir()
         (self.tmp / "plain" / "main" / ".env").write_text("SECRET=x\n")
         self.add_worktree("feature", "feat/x", repo=repo)
-        self.assertFalse((self.tmp / "plain" / "feature" / ".env").exists(),
-                         "hook převzal .env mimo worktree layout")
+        self.assertFalse(
+            (self.tmp / "plain" / "feature" / ".env").exists(),
+            "hook převzal .env mimo worktree layout",
+        )
 
     def test_local_hook_is_delegated(self):
         """Globální `core.hooksPath` vypne lokální `post-checkout` projektu;
@@ -342,7 +413,9 @@ class WorktreeLocalState(unittest.TestCase):
 
 class HookDeployment(unittest.TestCase):
     def test_hook_is_executable(self):
-        self.assertTrue(os.access(COMMIT_MSG_HOOK, os.X_OK), f"{COMMIT_MSG_HOOK} není spustitelný")
+        self.assertTrue(
+            os.access(COMMIT_MSG_HOOK, os.X_OK), f"{COMMIT_MSG_HOOK} není spustitelný"
+        )
 
     def test_rule_is_written_in_merge_skill(self):
         """Hook je mechanismus, ne zdroj pravdy. Zmizí-li pravidlo odtamtud, kde
@@ -359,12 +432,17 @@ class HookDeployment(unittest.TestCase):
         je dnes, ne tam, kde bylo.
         """
         text = (ROOT / "skills" / "merge" / "SKILL.md").read_text()
-        self.assertIn('git merge --no-ff', text,
-                      "/merge neuvádí příkaz, kterým se větev dokončuje")
+        self.assertIn(
+            "git merge --no-ff",
+            text,
+            "/merge neuvádí příkaz, kterým se větev dokončuje",
+        )
         self.assertRegex(
-            text, r"githooks/commit-msg[^\n]*core\.hooksPath",
+            text,
+            r"githooks/commit-msg[^\n]*core\.hooksPath",
             "/merge neříká, že to vynucuje globálně nasazený hook – "
-            "bez toho se z odmítnutého commitu nedá poznat, kdo ho odmítl a proč")
+            "bez toho se z odmítnutého commitu nedá poznat, kdo ho odmítl a proč",
+        )
 
 
 class GlobalHookDeployment(unittest.TestCase):
@@ -386,14 +464,20 @@ class GlobalHookDeployment(unittest.TestCase):
         # `--global`, ne efektivní hodnota: tu uspokojí i `core.hooksPath` nastavený
         # jen v tomhle repozitáři – a hook by pak neběžel nikde jinde, přestože
         # pravidlo o zprávě merge commitu platí pro všechny projekty.
-        v = subprocess.run(["git", "config", "--global", "--get", "core.hooksPath"],
-                           capture_output=True, text=True, check=False)
+        v = subprocess.run(
+            ["git", "config", "--global", "--get", "core.hooksPath"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
         path = Path(v.stdout.strip()).expanduser() if v.stdout.strip() else None
         self.assertEqual(
-            path, COMMIT_MSG_HOOK.parent,
+            path,
+            COMMIT_MSG_HOOK.parent,
             "git hook není nasazený – `git log --first-parent` se zaplní zprávami "
             "'Merge branch ...'. Naprav příkazem:\n"
-            f"    git config --global core.hooksPath {COMMIT_MSG_HOOK.parent}")
+            f"    git config --global core.hooksPath {COMMIT_MSG_HOOK.parent}",
+        )
 
 
 class VerifyHookIsRegistered(unittest.TestCase):
@@ -420,15 +504,19 @@ class VerifyHookIsRegistered(unittest.TestCase):
 
     def entries(self):
         d = json.loads(self.SETTINGS.read_text(encoding="utf-8"))
-        return [h for group in d.get("hooks", {}).get("Stop", [])
-                for h in group.get("hooks", [])]
+        return [
+            h
+            for group in d.get("hooks", {}).get("Stop", [])
+            for h in group.get("hooks", [])
+        ]
 
     def test_verify_is_stop_hook(self):
         commands = [h.get("command", "") for h in self.entries()]
         self.assertTrue(
             any(p.endswith("verify.sh") for p in commands),
             "verify.sh není v settings.json jako Stop hook – průběžná kontrola "
-            f"neběží vůbec. Nalezené Stop hooky: {commands}")
+            f"neběží vůbec. Nalezené Stop hooky: {commands}",
+        )
 
     def test_stop_hook_path_exists(self):
         """Registrace na neexistující soubor je totéž jako žádná registrace.
@@ -449,7 +537,9 @@ class VerifyHookIsRegistered(unittest.TestCase):
                     # (status line v `~/.config`), ne jeho součást. Na cizím
                     # stroji tam není a být nemá – hlásit to jako vadu by byl
                     # falešný poplach na každém pushi, a ten si člověk vypne.
-                    self.skipTest(f"hook {raw} leží mimo repozitář a na tomhle stroji není")
+                    self.skipTest(
+                        f"hook {raw} leží mimo repozitář a na tomhle stroji není"
+                    )
                 self.assertTrue(path.is_file(), f"Stop hook {path} neexistuje")
 
     @staticmethod
@@ -458,18 +548,24 @@ class VerifyHookIsRegistered(unittest.TestCase):
         if ".claude" not in parts:
             return path
         i = len(parts) - 1 - parts[::-1].index(".claude")
-        return ROOT.joinpath(*parts[i + 1:])
+        return ROOT.joinpath(*parts[i + 1 :])
 
     def test_timeout_covers_three_steps(self):
         """`LIMIT` ve verify.sh se čte ze skriptu, ne opisuje – jinak se rozejdou."""
-        limit = int(re.search(r"^LIMIT=(\d+)", (ROOT / "verify.sh").read_text(encoding="utf-8"),
-                              re.M).group(1))
-        verify = next(h for h in self.entries()
-                      if h.get("command", "").endswith("verify.sh"))
+        limit = int(
+            re.search(
+                r"^LIMIT=(\d+)", (ROOT / "verify.sh").read_text(encoding="utf-8"), re.M
+            ).group(1)
+        )
+        verify = next(
+            h for h in self.entries() if h.get("command", "").endswith("verify.sh")
+        )
         self.assertGreaterEqual(
-            verify.get("timeout", 0), 3 * limit,
+            verify.get("timeout", 0),
+            3 * limit,
             f"timeout Stop hooku nepokryje ani tři kroky po {limit} s – kontrola "
-            "se utne uprostřed a nahlásí chybu tam, kde žádná není")
+            "se utne uprostřed a nahlásí chybu tam, kde žádná není",
+        )
 
     def format_entry(self):
         d = json.loads(self.SETTINGS.read_text(encoding="utf-8"))
@@ -482,17 +578,29 @@ class VerifyHookIsRegistered(unittest.TestCase):
     def test_format_is_post_tool_use_hook_after_edit_and_write(self):
         """Bez registrace se formátovač nespustí nikdy, a nikdo si toho nevšimne."""
         matcher, hook = self.format_entry()
-        self.assertIsNotNone(hook, "verify.sh --format není v settings.json jako PostToolUse hook")
+        self.assertIsNotNone(
+            hook, "verify.sh --format není v settings.json jako PostToolUse hook"
+        )
         tools = set(matcher.split("|"))
-        self.assertTrue({"Edit", "Write"} <= tools,
-                        f"formátovací hook nechytá Edit i Write, matcher je {matcher!r}")
+        self.assertTrue(
+            {"Edit", "Write"} <= tools,
+            f"formátovací hook nechytá Edit i Write, matcher je {matcher!r}",
+        )
 
     def test_format_timeout_covers_formatter_limit(self):
-        limit = int(re.search(r"^FORMAT_LIMIT=(\d+)",
-                              (ROOT / "verify.sh").read_text(encoding="utf-8"), re.M).group(1))
+        limit = int(
+            re.search(
+                r"^FORMAT_LIMIT=(\d+)",
+                (ROOT / "verify.sh").read_text(encoding="utf-8"),
+                re.M,
+            ).group(1)
+        )
         _, hook = self.format_entry()
-        self.assertGreater(hook.get("timeout", 60), limit,
-                           f"timeout formátovacího hooku nepokryje strop formátovače {limit} s")
+        self.assertGreater(
+            hook.get("timeout", 60),
+            limit,
+            f"timeout formátovacího hooku nepokryje strop formátovače {limit} s",
+        )
 
 
 class PermissionRuleSyntax(unittest.TestCase):
@@ -537,7 +645,8 @@ class PermissionRuleSyntax(unittest.TestCase):
                     self.assertFalse(
                         self.is_mixed(rule),
                         f"{kind} pravidlo {rule} míchá `*` s koncovým `:*` – čte se jako "
-                        "doslovný prefix a nezabere nikdy. Napiš ho jako wildcard bez `:`")
+                        "doslovný prefix a nezabere nikdy. Napiš ho jako wildcard bez `:`",
+                    )
 
     def test_checker_distinguishes_valid_forms(self):
         self.assertTrue(self.is_mixed("Bash(*verify.sh --allow:*)"))
@@ -548,16 +657,21 @@ class PermissionRuleSyntax(unittest.TestCase):
 
     def test_verify_consent_is_denied_in_every_form(self):
         deny = self.permissions().get("deny", [])
-        for command in ("verify.sh --allow .",
-                        "~/.claude/verify.sh --allow /Users/honza/Dev/x",
-                        "/Users/honza/.claude/verify.sh --revoke .",
-                        "./verify.sh --revoke ."):
+        for command in (
+            "verify.sh --allow .",
+            "~/.claude/verify.sh --allow /Users/honza/Dev/x",
+            "/Users/honza/.claude/verify.sh --revoke .",
+            "./verify.sh --revoke .",
+        ):
             with self.subTest(command=command):
                 self.assertTrue(
                     any(self.wildcard_matches(r, command) for r in deny),
-                    f"deny v settings.json nezastaví `{command}`")
-        self.assertFalse(any(self.wildcard_matches(r, "~/.claude/verify.sh") for r in deny),
-                         "deny zastavuje i samotnou kontrolu, ne jen souhlas")
+                    f"deny v settings.json nezastaví `{command}`",
+                )
+        self.assertFalse(
+            any(self.wildcard_matches(r, "~/.claude/verify.sh") for r in deny),
+            "deny zastavuje i samotnou kontrolu, ne jen souhlas",
+        )
 
 
 class SettingsFormat(unittest.TestCase):
@@ -585,17 +699,35 @@ class SettingsFormat(unittest.TestCase):
             self.is_canonical(text),
             "settings.json není v kanonickém tvaru (odsazení dvěma mezerami). "
             "Něco ho přeformátovalo – porovnej parsovaný obsah s HEAD, ať se v diffu "
-            "neztratí věcná změna, a formátování vrať nebo commitni zvlášť")
+            "neztratí věcná změna, a formátování vrať nebo commitni zvlášť",
+        )
 
     def test_checker_distinguishes_formats(self):
-        data = {"permissions": {"allow": ["Grep", "Read(~/Dev/**)"]}, "model": "opus", "note": "čeština"}
-        self.assertTrue(self.is_canonical(json.dumps(data, indent=2, ensure_ascii=False) + "\n"))
-        self.assertFalse(self.is_canonical(json.dumps(data, indent="\t", ensure_ascii=False) + "\n"),
-                         "kontrola propustila odsazení taby")
-        self.assertFalse(self.is_canonical(json.dumps(data, indent=2) + "\n"),
-                         "kontrola propustila escapovanou diakritiku")
-        aligned = json.dumps(data, indent=2, ensure_ascii=False).replace('"model": ', '"model":    ') + "\n"
-        self.assertFalse(self.is_canonical(aligned), "kontrola propustila zarovnané hodnoty")
+        data = {
+            "permissions": {"allow": ["Grep", "Read(~/Dev/**)"]},
+            "model": "opus",
+            "note": "čeština",
+        }
+        self.assertTrue(
+            self.is_canonical(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+        )
+        self.assertFalse(
+            self.is_canonical(json.dumps(data, indent="\t", ensure_ascii=False) + "\n"),
+            "kontrola propustila odsazení taby",
+        )
+        self.assertFalse(
+            self.is_canonical(json.dumps(data, indent=2) + "\n"),
+            "kontrola propustila escapovanou diakritiku",
+        )
+        aligned = (
+            json.dumps(data, indent=2, ensure_ascii=False).replace(
+                '"model": ', '"model":    '
+            )
+            + "\n"
+        )
+        self.assertFalse(
+            self.is_canonical(aligned), "kontrola propustila zarovnané hodnoty"
+        )
 
 
 class BypassRegistry(unittest.TestCase):
@@ -644,19 +776,25 @@ class BypassRegistry(unittest.TestCase):
         return out
 
     def test_registry_exists(self):
-        self.assertTrue(self.REGISTRY.is_file(), "chybí BYPASS.md – registr obcházení kontrol")
+        self.assertTrue(
+            self.REGISTRY.is_file(), "chybí BYPASS.md – registr obcházení kontrol"
+        )
 
     def test_every_enforcing_layer_has_registry_row(self):
         text = self.REGISTRY.read_text(encoding="utf-8")
         missing = sorted(v for v in self.layers() if v not in text)
-        self.assertFalse(missing,
+        self.assertFalse(
+            missing,
             "tyhle vynucovací vrstvy nejsou v BYPASS.md, takže u nich nikdo nesepsal, "
-            f"čím se dají obejít: {missing}")
+            f"čím se dají obejít: {missing}",
+        )
 
     def test_accepted_risks_have_reason(self):
         """`accepted` bez důvodu je jen zamlčený problém."""
         defects = []
-        for i, r in enumerate(self.REGISTRY.read_text(encoding="utf-8").splitlines(), 1):
+        for i, r in enumerate(
+            self.REGISTRY.read_text(encoding="utf-8").splitlines(), 1
+        ):
             if "accepted" in r and not r.strip().startswith("|"):
                 continue
             if "accepted" in r:
@@ -684,8 +822,13 @@ class GitGuard(unittest.TestCase):
 
     def run_guard(self, command):
         event = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
-        return subprocess.run([sys.executable, str(self.GUARD)], input=event,
-                              capture_output=True, text=True, check=False)
+        return subprocess.run(
+            [sys.executable, str(self.GUARD)],
+            input=event,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
 
     def assertBlocked(self, command):
         done = self.run_guard(command)
@@ -694,16 +837,19 @@ class GitGuard(unittest.TestCase):
 
     def assertAllowed(self, command):
         done = self.run_guard(command)
-        self.assertEqual(0, done.returncode,
-                         f"falešný poplach nad {command!r}: {done.stderr}")
+        self.assertEqual(
+            0, done.returncode, f"falešný poplach nad {command!r}: {done.stderr}"
+        )
 
     def test_reordered_arguments_are_blocked(self):
         """Tvar, kvůli kterému hook vznikl: deny na něj prefixem nedosáhne."""
-        for command in ["git push origin main --force",
-                        "git push origin main -f",
-                        "git push --repo=origin --force-with-lease",
-                        "git push origin +main",
-                        "git -C /tmp/x reset --hard HEAD~3"]:
+        for command in [
+            "git push origin main --force",
+            "git push origin main -f",
+            "git push --repo=origin --force-with-lease",
+            "git push origin +main",
+            "git -C /tmp/x reset --hard HEAD~3",
+        ]:
             with self.subTest(command=command):
                 self.assertBlocked(command)
 
@@ -711,23 +857,51 @@ class GitGuard(unittest.TestCase):
         """Výčet aliasů v deny seznamu stárne s každým novým řádkem
         v `~/.gitconfig`; hook je proto rozbaluje z konfigurace."""
         with tempfile.TemporaryDirectory() as tmp:
-            env = dict(os.environ, HOME=tmp, GIT_CONFIG_GLOBAL=str(Path(tmp) / ".gitconfig"))
-            subprocess.run(["git", "config", "--global", "alias.zz", "push --force"],
-                           env=env, check=True, capture_output=True)
-            event = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git zz"}})
-            done = subprocess.run([sys.executable, str(self.GUARD)], input=event,
-                                  capture_output=True, text=True, check=False, env=env)
+            env = dict(
+                os.environ, HOME=tmp, GIT_CONFIG_GLOBAL=str(Path(tmp) / ".gitconfig")
+            )
+            subprocess.run(
+                ["git", "config", "--global", "alias.zz", "push --force"],
+                env=env,
+                check=True,
+                capture_output=True,
+            )
+            event = json.dumps(
+                {"tool_name": "Bash", "tool_input": {"command": "git zz"}}
+            )
+            done = subprocess.run(
+                [sys.executable, str(self.GUARD)],
+                input=event,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=env,
+            )
             self.assertEqual(2, done.returncode, "alias se nerozbalil")
 
     def test_shell_alias_is_blocked(self):
         """U aliasu začínajícího `!` nejde poznat, co spustí – zastaví se."""
         with tempfile.TemporaryDirectory() as tmp:
-            env = dict(os.environ, HOME=tmp, GIT_CONFIG_GLOBAL=str(Path(tmp) / ".gitconfig"))
-            subprocess.run(["git", "config", "--global", "alias.zz", "!sh -c 'echo ahoj'"],
-                           env=env, check=True, capture_output=True)
-            event = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git zz"}})
-            done = subprocess.run([sys.executable, str(self.GUARD)], input=event,
-                                  capture_output=True, text=True, check=False, env=env)
+            env = dict(
+                os.environ, HOME=tmp, GIT_CONFIG_GLOBAL=str(Path(tmp) / ".gitconfig")
+            )
+            subprocess.run(
+                ["git", "config", "--global", "alias.zz", "!sh -c 'echo ahoj'"],
+                env=env,
+                check=True,
+                capture_output=True,
+            )
+            event = json.dumps(
+                {"tool_name": "Bash", "tool_input": {"command": "git zz"}}
+            )
+            done = subprocess.run(
+                [sys.executable, str(self.GUARD)],
+                input=event,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=env,
+            )
             self.assertEqual(2, done.returncode, "shellový alias prošel")
 
     def test_clean_is_blocked_unless_dry_run(self):
@@ -740,9 +914,16 @@ class GitGuard(unittest.TestCase):
         v konfiguraci maže `git clean` i bez něj (ověřeno 20. 9. 2026), takže
         by propadlo úplně holé volání.
         """
-        for command in ["git clean", "git clean -x", "git clean -fx",
-                        "git clean -ffd", "git clean -xf", "git clean -fd",
-                        "git clean -xdf", "git clean --force"]:
+        for command in [
+            "git clean",
+            "git clean -x",
+            "git clean -fx",
+            "git clean -ffd",
+            "git clean -xf",
+            "git clean -fd",
+            "git clean -xdf",
+            "git clean --force",
+        ]:
             with self.subTest(command=command):
                 self.assertBlocked(command)
 
@@ -752,46 +933,66 @@ class GitGuard(unittest.TestCase):
         `git clean -n` se pouští právě proto, aby bylo vidět, co by zmizelo –
         falešný poplach zrovna na něm by hook vypnul komukoliv.
         """
-        for command in ["git clean -n", "git clean -nd", "git clean -xn",
-                        "git clean --dry-run"]:
+        for command in [
+            "git clean -n",
+            "git clean -nd",
+            "git clean -xn",
+            "git clean --dry-run",
+        ]:
             with self.subTest(command=command):
                 self.assertAllowed(command)
 
     def test_ordinary_commands_pass(self):
         """Druhý směr: co je v pořádku, nesmí hook shodit."""
-        for command in ["git push",
-                        "git push -u origin docs/nalezy",
-                        "git status",
-                        "git log --grep=force",
-                        "git commit -m 'popiš --force v textu zprávy'",
-                        "git branch -d docs/hotovo",
-                        "git worktree remove /tmp/x",
-                        "python3 -m unittest discover -s tests",
-                        "grep -rn 'git push --force' docs/"]:
+        for command in [
+            "git push",
+            "git push -u origin docs/nalezy",
+            "git status",
+            "git log --grep=force",
+            "git commit -m 'popiš --force v textu zprávy'",
+            "git branch -d docs/hotovo",
+            "git worktree remove /tmp/x",
+            "python3 -m unittest discover -s tests",
+            "grep -rn 'git push --force' docs/",
+        ]:
             with self.subTest(command=command):
                 self.assertAllowed(command)
 
     def test_other_tools_pass(self):
         """Hook má matcher na Bash, ale nesmí spoléhat jen na něj."""
         event = json.dumps({"tool_name": "Read", "tool_input": {"file_path": "/tmp/x"}})
-        done = subprocess.run([sys.executable, str(self.GUARD)], input=event,
-                              capture_output=True, text=True, check=False)
+        done = subprocess.run(
+            [sys.executable, str(self.GUARD)],
+            input=event,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
         self.assertEqual(0, done.returncode)
 
     def test_malformed_input_passes(self):
         """Rozbitý vstup nesmí zastavit práci – hook je pojistka, ne brána."""
-        done = subprocess.run([sys.executable, str(self.GUARD)], input="{tohle není JSON",
-                              capture_output=True, text=True, check=False)
+        done = subprocess.run(
+            [sys.executable, str(self.GUARD)],
+            input="{tohle není JSON",
+            capture_output=True,
+            text=True,
+            check=False,
+        )
         self.assertEqual(0, done.returncode)
 
     def test_guard_is_registered(self):
         """Hook, který není v `settings.json`, nehlídá nic."""
         settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
-        commands = [h.get("command", "")
-                    for g in settings.get("hooks", {}).get("PreToolUse", [])
-                    for h in g.get("hooks", [])]
-        self.assertTrue(any("git-guard.py" in c for c in commands),
-                        "git-guard.py není mezi PreToolUse hooky")
+        commands = [
+            h.get("command", "")
+            for g in settings.get("hooks", {}).get("PreToolUse", [])
+            for h in g.get("hooks", [])
+        ]
+        self.assertTrue(
+            any("git-guard.py" in c for c in commands),
+            "git-guard.py není mezi PreToolUse hooky",
+        )
 
 
 class SecretGuard(unittest.TestCase):
@@ -817,10 +1018,20 @@ class SecretGuard(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def run_guard(self, command):
-        event = json.dumps({"tool_name": "Bash", "cwd": str(self.tmp),
-                            "tool_input": {"command": command}})
-        return subprocess.run([sys.executable, str(self.GUARD)], input=event,
-                              capture_output=True, text=True, check=False)
+        event = json.dumps(
+            {
+                "tool_name": "Bash",
+                "cwd": str(self.tmp),
+                "tool_input": {"command": command},
+            }
+        )
+        return subprocess.run(
+            [sys.executable, str(self.GUARD)],
+            input=event,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
 
     def assertBlocked(self, command):
         done = self.run_guard(command)
@@ -829,40 +1040,53 @@ class SecretGuard(unittest.TestCase):
 
     def assertAllowed(self, command):
         done = self.run_guard(command)
-        self.assertEqual(0, done.returncode, f"falešný poplach nad {command!r}: {done.stderr}")
+        self.assertEqual(
+            0, done.returncode, f"falešný poplach nad {command!r}: {done.stderr}"
+        )
 
     def test_shell_reads_are_blocked(self):
         """Tvary, kterými tajemství četla skutečná session, a jejich příbuzní."""
-        for command in ["set -a; . ./.env; set +a; curl -s -u x https://api.example",
-                        "K=$(grep '^MAILGUN_KEY=' .env | cut -d= -f2-)",
-                        "source .env",
-                        "cat < .env",
-                        "cp .env /tmp/x",
-                        "cd sub && cat ../.env",
-                        f"cat {self.tmp}/.env",
-                        "head -c 100 id_ed25519"]:
+        for command in [
+            "set -a; . ./.env; set +a; curl -s -u x https://api.example",
+            "K=$(grep '^MAILGUN_KEY=' .env | cut -d= -f2-)",
+            "source .env",
+            "cat < .env",
+            "cp .env /tmp/x",
+            "cd sub && cat ../.env",
+            f"cat {self.tmp}/.env",
+            "head -c 100 id_ed25519",
+        ]:
             with self.subTest(command=command):
                 self.assertBlocked(command)
 
     def test_interpreter_code_is_read(self):
-        for command in ["python3 -c \"print(open('.env').read())\"",
-                        "python3 - <<'EOF'\nprint(open('.env').read())\nEOF"]:
+        for command in [
+            "python3 -c \"print(open('.env').read())\"",
+            "python3 - <<'EOF'\nprint(open('.env').read())\nEOF",
+        ]:
             with self.subTest(command=command):
                 self.assertBlocked(command)
 
     def test_metadata_only_commands_pass(self):
         """Ověřit, že hook převzal `.env` do větve, musí jít bez obsahu."""
-        for command in ["ls -la .env", "test -e .env && echo ok", "stat .env",
-                        "git add .env.example", "git status --short"]:
+        for command in [
+            "ls -la .env",
+            "test -e .env && echo ok",
+            "stat .env",
+            "git add .env.example",
+            "git status --short",
+        ]:
             with self.subTest(command=command):
                 self.assertAllowed(command)
 
     def test_mentions_are_not_reads(self):
         """Zmínka o `.env` v dokumentaci nebo ve zprávě commitu není čtení."""
-        for command in ["grep -n '\\.env' README.md",
-                        "git commit -m 'oprava .env'",
-                        "git commit -q -F - <<'EOF'\nhook symlinkuje .env do main\nEOF",
-                        "echo .env"]:
+        for command in [
+            "grep -n '\\.env' README.md",
+            "git commit -m 'oprava .env'",
+            "git commit -q -F - <<'EOF'\nhook symlinkuje .env do main\nEOF",
+            "echo .env",
+        ]:
             with self.subTest(command=command):
                 self.assertAllowed(command)
 
@@ -873,20 +1097,32 @@ class SecretGuard(unittest.TestCase):
     def test_patterns_come_from_deny_list(self):
         """Seznam tajemství je jen v `settings.json`; opsaný výčet by se rozešel."""
         import ast
+
         tree = ast.parse(self.GUARD.read_text(encoding="utf-8"))
         doc = ast.get_docstring(tree, clean=False)
-        literals = [n.value for n in ast.walk(tree)
-                    if isinstance(n, ast.Constant) and isinstance(n.value, str) and n.value != doc]
-        self.assertFalse([v for v in literals if re.fullmatch(r"\.env.*|\*\.pem|.*id_rsa.*", v)],
-                         "secret-guard.py nese vlastní výčet tajemství místo deny seznamu")
+        literals = [
+            n.value
+            for n in ast.walk(tree)
+            if isinstance(n, ast.Constant)
+            and isinstance(n.value, str)
+            and n.value != doc
+        ]
+        self.assertFalse(
+            [v for v in literals if re.fullmatch(r"\.env.*|\*\.pem|.*id_rsa.*", v)],
+            "secret-guard.py nese vlastní výčet tajemství místo deny seznamu",
+        )
 
     def test_registered_as_pretooluse(self):
         settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
-        commands = [h.get("command", "")
-                    for g in settings.get("hooks", {}).get("PreToolUse", [])
-                    for h in g.get("hooks", [])]
-        self.assertTrue(any("secret-guard.py" in c for c in commands),
-                        "secret-guard.py není mezi PreToolUse hooky")
+        commands = [
+            h.get("command", "")
+            for g in settings.get("hooks", {}).get("PreToolUse", [])
+            for h in g.get("hooks", [])
+        ]
+        self.assertTrue(
+            any("secret-guard.py" in c for c in commands),
+            "secret-guard.py není mezi PreToolUse hooky",
+        )
 
 
 class PluginHooks(unittest.TestCase):
@@ -919,10 +1155,13 @@ class PluginHooks(unittest.TestCase):
         a právě tou cestou se to vrátilo.
         """
         for name in self.enabled():
-            self.assertNotIn("gitkraken", name.lower(),
+            self.assertNotIn(
+                "gitkraken",
+                name.lower(),
                 "gitkraken-hooks je zapnutý, přestože ho decisions.md "
                 "(2026-09-18) vypnul po měření. Zapnul se sám, nebo to byl "
-                "záměr? Je-li to záměr, přepiš rozhodnutí i tenhle test.")
+                "záměr? Je-li to záměr, přepiš rozhodnutí i tenhle test.",
+            )
 
     def test_enabled_plugin_with_hooks_is_in_bypass_registry(self):
         """Zapnutý plugin s vlastními hooky musí být v registru obcházení.
@@ -940,10 +1179,13 @@ class PluginHooks(unittest.TestCase):
             if not hooks:
                 continue
             with self.subTest(plugin=name):
-                self.assertIn(short.lower(), registry,
+                self.assertIn(
+                    short.lower(),
+                    registry,
                     f"plugin {name} přináší {hooks[0]} – tedy vrstvu, která "
                     "běží automaticky –, ale v BYPASS.md o něm není řádek. "
-                    "Registr, který zestárne, je horší než žádný.")
+                    "Registr, který zestárne, je horší než žádný.",
+                )
 
 
 if __name__ == "__main__":
