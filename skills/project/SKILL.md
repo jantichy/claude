@@ -93,7 +93,7 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 
 | Co zjistit | Jak |
 |---|---|
-| Git a jeho podoba | je `.git` adresář (běžný), nebo `.bare` + `.git` soubor (worktree layout)? má remote – ověř `git remote get-url origin`, ne `git remote`, který hlásí `origin` i tam, kde žádný není, kvůli globálnímu `~/.gitconfig`? |
+| Git a jeho podoba | je `.git` adresář (běžný), nebo `.bare` + `.git` soubor (worktree layout)? má remote – ověř `git remote get-url origin`, ne `git remote`, který hlásí `origin` i tam, kde je jen sekce bez adresy, třeba z globálního `~/.gitconfig`? |
 | Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, paměť, typ, importy)? |
 | Standardní struktura | existuje `README.md`, `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 5) |
 | *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni rozcestník s `@main/CLAUDE.md`? |

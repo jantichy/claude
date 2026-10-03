@@ -1684,3 +1684,9 @@ Při kontrole úplnosti porovnání s článkem o nastavení Claude Code zbyl je
 
 **Zamítnuto: připnout pluginy na verzi.** Uživatel to neumí – `enabledPlugins` nese jen boolean, `ref` u marketplace je větev nebo tag a pevný `sha` dává jen autor marketplace ve zdroji pluginu. Nahrazuje to ruční aktualizace u cizích marketplaců, kde jsou automatické ve výchozím stavu vypnuté. **Zamítnuto: vypnout automatické aktualizace globálně** (`DISABLE_AUTOUPDATER`) – vypnulo by i aktualizace samotného Claude Code, a oficiální katalog by tím ztratil opravy, kvůli kterým se mu věří.
 
+
+### 2026-10-03 – Push na stejnojmennou větev drží `push.default = current`, ne `remote.origin.push`
+
+V lokálních projektech bez GitHubu model opakovaně hlásil „neúplný remote origin“ a autocommit se pokoušel pushovat. Domněnka, že `/project` při volbě *Jen lokální* zakládá prázdný remote, se nepotvrdila: skill dělá jen `git init`. Příčinou byla sekce `[remote "origin"] push = HEAD` v globálním `~/.gitconfig`. Ta se propíše do každého repozitáře, a `git remote` proto všude vypsal `origin` bez adresy.
+
+Sekce se nahradila `[push] default = current`. Push se chová stejně (aktuální větev do stejnojmenné na remote), ale žádný remote nezakládá. Ověřeno: v lokálním projektu `git remote` nevypíše nic a `git remote get-url origin` skončí `No such remote 'origin'`, v tomhle repozitáři push dál prochází. **Zavrženo: jen zrušit remote v dotčeném repozitáři.** Lokální `.git/config` žádný `origin` nemá a globální sekce by fantom vrátila všude. Ověřování přes `git remote get-url origin` ve skillech zůstává jako obrana, protože `git remote` vypíše i sekci bez adresy, ať se vezme odkudkoliv.

@@ -235,6 +235,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - **2026-10-03** · `/cleanup` · `ba8c73c` · session `d34b9c1c-2764-4095-948a-8376a3c5812d` · kotvy 6/6 · 1 téma (1 rozhodnuto: větve `ci/pin` v artihubu a eventoidu se slučují přes `/merge` hned po úklidu) · mimo rozsah: session psala i do `~/Dev/context` (`coding/quality.md`, commitnuté tam) a posunula SHA sdíleného CI v contextu, artihubu a eventoidu · meze: 81 bloků myšlení a výstupy čtecích nástrojů (14 Edit, 5 Read, 5 AskUserQuestion, 1 Skill, 1 ToolSearch) se nečtou; odpovědi z `AskUserQuestion` inventura jako kotvy nepočítá, prošly se z kontextu
 - **2026-10-03** · `/cleanup` · `3ad81a2` · session `d34b9c1c-2764-4095-948a-8376a3c5812d` · druhý průchod · kotvy 9/9 · 0 témat · mimo rozsah: zavedení formátovače v contextu, artihubu a eventoidu je commitnuté v těch repozitářích, sem jde jen řádek v `done.md` · meze: 106 bloků myšlení a výstupy čtecích nástrojů (14 Edit, 6 AskUserQuestion, 5 Read, 2 Skill, 1 ToolSearch, 1 Write) se nečtou
 - **2026-10-03** · `/cleanup` · `c06ea71` · session `3ecb201c-16bc-41b2-89cd-4184575104f4` · kotvy 1/1 · 0 témat · mimo rozsah: žádné · meze: 7 bloků myšlení a 2 výstupy Edit se nečtou; snímek obrazovky v zadání se z transcriptu nevytěží, obsah prošel z kontextu
+- **2026-10-03** · `/cleanup` · `e994d92` · session `d5525868-8f40-4719-bd30-5c123697417b` · kotvy 4/4 · 1 téma (1 rozhodnuto: ověření remote přes `get-url` doplněno do `autocommit.md` hned, ne nechané v `todo.md`) · mimo rozsah: zastaralý důvod „kvůli globálnímu `~/.gitconfig`“ v `/project` zobecněn · meze: 9 bloků myšlení, 2 výstupy Edit a 1 Read se nečtou; dva snímky obrazovky z transcriptu vytěžit nejde, jejich obsah je v odpovědích
 
 ## Odvedená práce
 
@@ -484,3 +485,4 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 
 - [x] **Pravidlo pro pluginy a MCP servery.** (2026-10-03) Jediný podnět z článku, který po kontrole úplnosti (46 doporučení) zbyl bez náhrady. `~/Dev/context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*, odkaz z `BYPASS.md`, rozhodnutí v `decisions.md`.
 
+- [x] **Fantomový remote `origin` zmizel ze všech repozitářů.** (2026-10-03) Globální `~/.gitconfig` měl `[remote "origin"] push = HEAD`, takže každé lokální repo vypadalo jako repo s neúplným remotem a autocommit se v něm pokoušel pushovat. Nahrazeno `push.default = current`, ověřeno v lokálním projektu i pushem tady. `autocommit.md` nově ověřuje remote přes `git remote get-url origin`. Rozhodnutí v `decisions.md`.
