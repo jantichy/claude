@@ -135,9 +135,9 @@ Dokumentace návrhu říká, jak to je; záznam rozhodnutí, proč to tak je. Ne
 
 Každé pravidlo, fakt a instrukce existuje na **právě jednom** místě; ostatní odkazují, nekopírují. Potřeba dvou míst je chyba designu – najdi vyšší úroveň, kam to patří. Hlídá se před vznikem (*Detekce konfliktů před přidáním*) i po něm (*Živá struktura*).
 
-**Počet, který vzniká jinde, neopisuj číslem** – odkaž na zdroj nebo piš bez čísla. Číslo zůstává jen tam, kde ho měří test, nebo kde samo je pravidlem.
-
 **Výjimka – text pro subagenta:** prompt pro agenta bez kontextu session si potřebná pravidla nese opsaná celá, protože odkaz do nenačteného souboru je mrtvý.
+
+**Počet, který vzniká jinde, neopisuj číslem** – odkaž na zdroj nebo piš bez čísla. Číslo zůstává jen tam, kde ho měří test, nebo kde samo je pravidlem.
 
 ### Vše o jedné věci pohromadě u ní
 
