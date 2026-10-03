@@ -64,6 +64,18 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`
 
 **Platí to na každou položku, o které se uživatel rozhoduje**, ne jen na nález: nevypořádané téma, položka mimo rozsah, poznatek z provozu i návrh alternativy. Liší se jen slovo v titulním řádku (`NÁZEV NÁLEZU`, `NÁZEV POLOŽKY`), ne tvar.
 
+**Potvrzení předchozí položky a úvod další jsou dva bloky, nikdy jedna věta za druhou.** Po vypořádání položky napiš, co se s ní stalo (co se změnilo, commit, kam se zapsalo), jako **samostatný odstavec**, za ním prázdný řádek a teprve pak titulní řádek `**[N/celkem] …**` další položky a její text. Pořadí v odpovědi je tedy:
+
+```
+<potvrzení předchozí položky: co se udělalo a kde>
+
+**[N/celkem] 🔴/🟡/🔵 NÁZEV DALŠÍ POLOŽKY**
+
+<kontext další položky>
+```
+
+**Titulní řádek nesmí chybět ani tady** – navazující položka není pokračování předchozí věty, ale nová položka, a bez čísla a názvu uživatel nepozná, kde jedna končí a druhá začíná. Bez toho se v jednom odstavci slije hotová věc s otázkou, o které se teprve rozhoduje, a uživatel musí hledat, kde se téma zlomilo.
+
 **Seznam popisků typu `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` se nepoužívá.** Do 28. 9. 2026 ho měly tři kontrolní skilly, každý jinou sadu, a **uživatel je označil za nečitelné**. Heslo za dvojtečkou vypadá úplně a přitom vynechá právě to, proč na tom záleží; kde nález je a čím je doložený, se řekne uvnitř věty a odkazy se dávají do textu.
 
 **Zákaz míří na tvar, ne na těch pět jmen.** Přejmenovat popisky nic nemění – `Druh` / `O co jde` / `Doložení` / `Prověřeno` je táž mřížka jako `Kde` / `Co` / `Problém`, jen jinak nadepsaná, a projde i tam, kde si ji skill předepisuje vlastní šablonou. **Test před každým výpisem: stojí pod titulním řádkem dvě a víc odrážek tvaru `- **Popisek:** …`?** Pak je to mřížka, ať se popisky jmenují jakkoliv. Doplněno 28. 9. 2026, protože verze psaná na konkrétní slova dvě místa v `/cleanup` nechytila a uživatel je dostal do rozhraní hned první běh po sjednocení.

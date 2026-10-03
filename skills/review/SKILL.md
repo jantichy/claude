@@ -323,6 +323,7 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
    c. Když kontrola selže: **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat. Nepokračuj automaticky na další nález.
    d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky“.
    e. Commit dle autocommit nastavení projektu.
+   f. **Ohlas, co se udělalo, samostatným odstavcem** a další nález začni až za prázdným řádkem jeho titulním řádkem – `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*.
 
 4. Zápis do `## Review` v projektovém `CLAUDE.md` (volba Neopravovat) – **formát a mechanika jsou popsané níž v kapitole *Kapitola `## Review`*.** Píše do ní i `/attack`, takže formát je společný a definuje se na jednom místě.
 
