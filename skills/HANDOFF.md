@@ -77,13 +77,15 @@ Vyhrává první kritérium, které sedí:
 
 Rozhoduje **absolutní velikost kontextu**, ne to, kolik z něj sežral start projektu – na cenu i na to, jak spolehlivě model vidí pravidla z první poloviny okna, se velký startovní kontext nezohledňuje. V projektu, který startuje na 200k, má proto session prostě kratší život.
 
-| Kontext | Co s tím |
+| Session | Co s tím |
 |---|---|
-| **do 300k** | komfortní pásmo, neřeší se nic |
-| **nad 300k** | **nabídni přerušení** – dlouhý průchod nedokončuj, nové velké téma neotevírej |
+| **do 300k a do 150 volání** | komfortní pásmo, neřeší se nic |
+| **nad 300k** nebo **nad 150 volání** | **nabídni přerušení** – dlouhý průchod nedokončuj, nové velké téma neotevírej |
 | **nad 400k** | přerušení už **nenabízej, doporuč ho rovnou** i s řetězem; pokračování tady je volba uživatele, ne výchozí stav |
 
-**Velikost kontextu nehádej.** Není-li po ruce údaj, který ji říká, opři rozhodnutí o délku běhu – panel specialistů s ověřováním a průchod přes dvacet nálezů se do 300k nevejde – a řekni, že je to odhad z rozsahu, ne měřený údaj (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš*).
+Volání se počítají jen v hlavní session, ne v subagentech, a obojí se měří od poslední kompaktace.
+
+**Překročení prahu ti ohlásí hook `~/.claude/handoff.py`** – při odeslání zprávy uživatelem vloží do kontextu naměřený údaj, a to u každého prahu jednou. Na jeho hlášku nabídni, respektive doporuč, přerušení hned v té odpovědi, i mimo skill. **Bez hlášky velikost nehádej:** běží-li dlouhý průchod uvnitř jedné odpovědi, kde hook nemá kdy změřit, opři rozhodnutí o délku běhu – panel specialistů s ověřováním a průchod přes dvacet nálezů se do 300k nevejde – a řekni, že je to odhad z rozsahu, ne měřený údaj (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš*).
 
 **`/compact` nedoporučuj jako první volbu.** Rozhoduje v něm model, co si zapamatuje, a zahodí právě to, co nikdo nezapsal do souboru. Správná cesta je `/cleanup` → `/clear`, protože po úklidu je pravda v souborech a nová session si ji načte celou. `/compact` zbývá na případ, kdy je rozdělaná jedna úvaha, která se zapsat nedá.
 

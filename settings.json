@@ -403,6 +403,14 @@
             "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/handoff.py"
+          }
+        ]
       }
     ]
   },

@@ -109,6 +109,17 @@ Nainstalovala ji 2026-09-19 sama iTerm2 volbou *Install Claude Code Integration*
 | Payload hooku, který dostane na stdin, nese cestu k projektu i text promptu (`UserPromptSubmit`) | Nic | **accepted**: příjemcem je lokální terminál, ve kterém se ten prompt právě napsal. Ven z počítače nejde nic. |
 | Odinstalace z menu iTerm2 vyndá hooky, ale symlink `~/.config/iterm2/cc-status` a zapnuté Python API nechá | Nic | **accepted**: symlink sám nespouští nic, spouštěčem jsou hooky. |
 
+## Hlášení prahu délky session (`handoff.py` jako `UserPromptSubmit` hook)
+
+Nic nezastavuje – při odeslání zprávy změří z transcriptu velikost kontextu a počet volání a nad prahem z `skills/HANDOFF.md` vloží modelu hlášku, jednou za práh. V registru je, protože běží automaticky nad každou session v každém projektu.
+
+| Čím se obejde | Co to chytí | Stav |
+|---|---|---|
+| Model hlášku dostane a přerušení nenabídne | Nic | **accepted**: hook dodává měřený údaj, který modelu chyběl; rozhodnutí z něj zůstává textovým pravidlem. Porušení je vidět v odpovědi hned po hlášce. |
+| Dlouhý běh uvnitř jedné odpovědi, kde se zpráva neodešle | Nic – hook měří jen při odeslání zprávy | **accepted**: přerušení se nabízí uživateli, a ten odpovídá zprávou; měřit po každém nástroji by znamenalo číst celý transcript po každém volání. Pro tenhle případ zůstává v `HANDOFF.md` odhad z rozsahu běhu. |
+| Změněný formát transcriptu (jiný klíč `usage`, jiná značka kompaktace) | Nic – hook potichu změří nulu a mlčí | **accepted**: chyba hooku nesmí zablokovat zprávu, takže selhává potichu. Formát hlídá jen `tests/test_hooks.py` nad syntetickým transcriptem, ne nad skutečným. |
+| Smazaný stavový soubor v `~/.local/state/claude-handoff/` | Prahy se ohlásí znovu | **accepted**: následek je jedna hláška navíc. |
+
 ## Hooky z pluginů (`enabledPlugins` v `settings.json`)
 
 Plugin smí přinést vlastní `hooks/hooks.json` a zapíná se **jedním řádkem** v `enabledPlugins`. Do 27. 9. 2026 o téhle vrstvě registr nevěděl vůbec: test čte hooky ze `settings.json`, `githooks/` a `.github/`, tedy z míst, kde pluginové hooky nestojí. Dnes to hlídá `PluginHooks` v `tests/test_hooks.py` – **mlčí ale, když plugin na disku není**, protože `plugins/` je v `.gitignore` a v CI se nemá co měřit. Co se s pluginem dělá, než přibude, a jak se zachází s jeho aktualizacemi, drží `~/Dev/context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*.

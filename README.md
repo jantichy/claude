@@ -82,6 +82,10 @@ Testy nad textem, který nikdo nespouští, a nad vrstvami, které tu něco doop
 
 `PreToolUse` hook, který zastaví příkaz čtoucí soubor s tajemstvím – `. ./.env`, `grep KEY .env`, `cat`, `cp` i kód předaný Pythonu. Zákaz čtení `.env` v `settings.json` totiž hlídá jen nástroj na čtení souborů a shell kolem něj procházel, takže se klíč mohl objevit v konverzaci třeba v chybové hlášce. Seznam tajemství si bere z týchž zákazů, takže se drží na jednom místě. Zmínku o `.env` v dokumentaci nebo ve zprávě commitu propustí, stejně jako ověření, že soubor existuje; tajemství, které úkol opravdu potřebuje, spustí člověk sám.
 
+#### [`handoff.py`](handoff.py) – nový začátek nabídnutý včas, ne podle dojmu
+
+`UserPromptSubmit` hook, který při každé zprávě změří z transcriptu velikost kontextu a počet volání nástrojů a nad prahem řekne modelu, že má nabídnout úklid a novou session. Model velikost kontextu sám nevidí – ukazuje ji jen status line člověku –, takže práh dřív odhadoval z dojmu a ozval se o celé pásmo pozdě. Pod prahem mlčí, nad každým se ozve jednou; subagenty nepočítá a po kompaktaci měří od začátku.
+
 #### [`BYPASS.md`](BYPASS.md) – čím se dají obejít vlastní kontroly
 
 Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběžná kontrola, oba git hooky, CI, permission systém, status line –, stojí čím se dá obejít, co to chytí a co je vědomě přijaté riziko. Většina řádků je „accepted“ a u každého je důvod. Zákaz se totiž dá obejít i dodržet a nikde po tom nezůstane stopa, kdežto katalog se dá přečíst a rozporovat. Kompletnost hlídá test, který seznam vrstev čte z disku, takže nová vrstva bez řádku shodí testy.

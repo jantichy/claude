@@ -20,6 +20,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 Schválně jen stdlib – stejný důvod jako u `test_verify.py`.
 """
 
+import importlib.util
 import json
 import os
 import re
@@ -1186,6 +1187,160 @@ class PluginHooks(unittest.TestCase):
                     "běží automaticky –, ale v BYPASS.md o něm není řádek. "
                     "Registr, který zestárne, je horší než žádný.",
                 )
+
+
+class HandoffHook(unittest.TestCase):
+    """`handoff.py` hlásí překročení prahu délky session jednou za práh.
+
+    Oba směry selhání stojí něco jiného. Mlčení nad prahem vrací stav, kvůli
+    kterému hook vznikl: model práh odhaduje a nabídne nový začátek o celé
+    pásmo pozdě. Hláška pod prahem nebo opakovaná po každé zprávě je šum,
+    který naučí hlášku přehlížet – a pak nehlídá nic.
+    """
+
+    HOOK = ROOT / "handoff.py"
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="handoff-test-"))
+        self.transcript = self.tmp / "session.jsonl"
+        self.transcript.write_text("")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def add(self, *, context=0, calls=0, sidechain=False, compact=False):
+        if compact:
+            entry = {"type": "system", "subtype": "compact_boundary"}
+        else:
+            content = [{"type": "tool_use", "name": "Bash"}] * calls
+            entry = {
+                "type": "assistant",
+                "isSidechain": sidechain,
+                "message": {
+                    "content": content or [{"type": "text", "text": "x"}],
+                    "usage": {
+                        "input_tokens": 10,
+                        "cache_read_input_tokens": max(context - 10, 0),
+                        "cache_creation_input_tokens": 0,
+                    },
+                },
+            }
+        with self.transcript.open("a") as f:
+            f.write(json.dumps(entry) + "\n")
+
+    def run_hook(self, session="s1", transcript=None):
+        payload = {
+            "session_id": session,
+            "transcript_path": str(transcript or self.transcript),
+            "hook_event_name": "UserPromptSubmit",
+            "prompt": "dál",
+        }
+        r = subprocess.run(
+            [sys.executable, str(self.HOOK)],
+            input=json.dumps(payload),
+            capture_output=True,
+            text=True,
+            env={**os.environ, "HOME": str(self.tmp)},
+            check=False,
+        )
+        self.assertEqual(r.returncode, 0, r.stderr)
+        if not r.stdout.strip():
+            return ""
+        out = json.loads(r.stdout)["hookSpecificOutput"]
+        self.assertEqual(out["hookEventName"], "UserPromptSubmit")
+        return out["additionalContext"]
+
+    def test_silent_below_thresholds(self):
+        self.add(context=299_000, calls=149)
+        self.assertEqual(self.run_hook(), "")
+
+    def test_context_offer_fires_once(self):
+        self.add(context=301_000)
+        msg = self.run_hook()
+        self.assertIn("301k", msg)
+        self.assertIn("nabídni", msg)
+        self.add(context=320_000)
+        self.assertEqual(self.run_hook(), "", "nabídka zazněla podruhé")
+
+    def test_context_recommend_after_offer(self):
+        self.add(context=301_000)
+        self.run_hook()
+        self.add(context=401_000)
+        msg = self.run_hook()
+        self.assertIn("401k", msg)
+        self.assertIn("doporuč rovnou", msg)
+        self.add(context=450_000)
+        self.assertEqual(self.run_hook(), "")
+
+    def test_jump_over_both_context_thresholds_recommends_only(self):
+        self.add(context=410_000)
+        msg = self.run_hook()
+        self.assertIn("doporuč rovnou", msg)
+        self.assertNotIn("300k", msg)
+        self.assertEqual(self.run_hook(), "", "nabídka dorazila po doporučení")
+
+    def test_calls_threshold_fires_once(self):
+        self.add(context=50_000, calls=150)
+        msg = self.run_hook()
+        self.assertIn("150 volání", msg)
+        self.add(context=60_000, calls=5)
+        self.assertEqual(self.run_hook(), "")
+
+    def test_subagent_calls_and_context_do_not_count(self):
+        self.add(context=500_000, calls=200, sidechain=True)
+        self.add(context=10_000)
+        self.assertEqual(self.run_hook(), "")
+
+    def test_compaction_resets_measurement(self):
+        self.add(context=350_000, calls=160)
+        self.assertNotEqual(self.run_hook(), "")
+        self.add(compact=True)
+        self.add(context=40_000, calls=3)
+        self.assertEqual(self.run_hook(), "", "po kompaktaci hlásí starý stav")
+        self.add(context=310_000)
+        self.assertIn("310k", self.run_hook(), "nový úsek po kompaktaci mlčí")
+
+    def test_sessions_are_independent(self):
+        self.add(context=301_000)
+        self.assertNotEqual(self.run_hook("s1"), "")
+        self.assertNotEqual(self.run_hook("s2"), "")
+
+    def test_broken_input_is_silent(self):
+        self.transcript.write_text("not json\n")
+        self.assertEqual(self.run_hook(), "")
+        self.assertEqual(self.run_hook(transcript=self.tmp / "missing.jsonl"), "")
+        r = subprocess.run(
+            [sys.executable, str(self.HOOK)],
+            input="garbage",
+            capture_output=True,
+            text=True,
+            env={**os.environ, "HOME": str(self.tmp)},
+            check=False,
+        )
+        self.assertEqual((r.returncode, r.stdout), (0, ""))
+
+    def test_registered_as_user_prompt_submit(self):
+        settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        commands = [
+            h.get("command", "")
+            for g in settings["hooks"].get("UserPromptSubmit", [])
+            for h in g.get("hooks", [])
+        ]
+        self.assertTrue(
+            any(c.split()[0] == str(self.HOOK) for c in commands if c),
+            "handoff.py není zaregistrovaný jako UserPromptSubmit hook – "
+            "neměří tedy nic, přestože jeho testy procházejí",
+        )
+
+    def test_thresholds_match_handoff_table(self):
+        """Prahy v hooku a v tabulce `HANDOFF.md` se nesmí rozejít."""
+        spec = importlib.util.spec_from_file_location("handoff", self.HOOK)
+        hook = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(hook)
+        table = (ROOT / "skills" / "HANDOFF.md").read_text(encoding="utf-8")
+        for value in (hook.CONTEXT_OFFER, hook.CONTEXT_RECOMMEND):
+            self.assertIn(f"nad {value // 1000}k", table)
+        self.assertIn(f"nad {hook.CALLS_OFFER} volání", table)
 
 
 if __name__ == "__main__":
