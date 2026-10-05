@@ -49,7 +49,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 ```
 ## Úklid dokončen
 
-**Pokrytí:** kotvy 23/23 odškrtnuto · přečteno 312 kB z 3,0 MB záznamu
+**Pokrytí:** prompty 23/23 odškrtnuto · přečteno 312 kB z 3,0 MB záznamu
 
 **Zapsáno** – 12 zápisů
 - decisions.md – rozhodnutí o řezu skillu i se dvěma zamítnutými variantami

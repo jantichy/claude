@@ -63,7 +63,7 @@ HARNESS = (
 )
 CMD = re.compile(r"command-name>(/[a-z-]+)</command-name>")
 # `- **Pokrytí panelem:** 12 z 30 souborů rozsahu …`; jednotka je povinná, ať se
-# za rozsah nevezme `N/N` kotev ani `X kB z Y kB` transcriptu, což je osa první
+# za rozsah nevezme `N/N` promptů ani `X kB z Y kB` transcriptu, což je osa první
 SCOPE = re.compile(
     r"\*\*Pokrytí[^:*\n]{0,24}:\*\*[^\n0-9]{0,24}"
     r"(\d+)\s+z\s+(\d+)\s+(souborů|sekcí|scénářů)"

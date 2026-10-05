@@ -1263,7 +1263,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 1. **Zrušeni oba čtenáři bez kontextu.** Byli **40,8 % ceny běhu** při 3,1 spuštění a posuzovali jinou otázku než tu, kvůli které se skill pouští: navazitelnost dokumentace a pozůstatky po přepisování. Třetí spuštění vznikalo pravidlem „vrátil-li chybu **nebo nic**, pusť ho znovu“, přičemž prázdný výsledek podle jejich vlastního zadání znamenal, že je čisto – skill si vyrobil vstup značící úspěch a vyhodnocoval ho jako selhání.
 2. **Vytěžení se vrátilo do hlavní session.** Delegace ubrala rodičovi 8 % a přidala agenta za dvojnásobek; počet volání na tutéž práci stoupl o 51 % (110 → 166), protože agent rekonstruuje z transcriptu to, co hlavní session má v kontextu zdarma. Změřený scénář „vše v hlavní session bez čtenářů“ vyšel na 105,8 jednotky proti 115,9 se subagentem. **Rozhodlo ale hlavně to, že zmizel prostředník** – nález se nemůže ztratit převyprávěním výstupu, který nikdo nedočte.
-3. **Úplnost se měří.** `scripts/extract.py` vytáhne z transcriptu **kotvy** – místa, kde uživatel něco napsal – a skill u každé vyplní stav v evidenci ve scratchpadu. Počet řádků musí sedět s počtem kotev; do `done.md` jde poměr `kotvy N/N` a povinné pole `meze`. Řádek, který se čte jako „uklizeno“, tím přestal být vydatelný nad nepřečteným transcriptem.
+3. **Úplnost se měří.** `scripts/extract.py` vytáhne z transcriptu **prompty** – všechno, co uživatel napsal, včetně zpráv poslaných uprostřed odpovědi – a skill u každého vyplní stav v evidenci ve scratchpadu. Počet řádků musí sedět s počtem promptů; do `done.md` jde poměr `prompty N/N` (do 5. 10. 2026 pod jménem `kotvy N/N`) a povinné pole `meze`. Řádek, který se čte jako „uklizeno“, tím přestal být vydatelný nad nepřečteným transcriptem.
 
 **Tři interaktivní fronty se slily do jedné** (*Fáze 5*). Kritérium rozhodování bylo u všech totéž a smyčky nad velkým kontextem jsou nejdražší část skillu – 46,7 %. Zdroj položky je metadatum na řádku, ne důvod k dalšímu průchodu.
 
@@ -1294,27 +1294,27 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 1. **Transcript má navíc jen to, co vyhodila kompaktace.** Prošla-li session kompaktací, je v něm část, která v kontextu není – a přesně v ní bývají uzavřené dohody. Kompaktace se pozná z `isCompactSummary` a `compactMetadata`, takže to nemusí být dojem: `extract.py inventory` je počítá.
 2. **Velký výstup nástroje je v transcriptu uříznutý stejně jako v kontextu.** Nese náhled a větu `Full output saved to: <cesta>`; plná verze leží v `tool-results/<id>.txt` vedle transcriptu (má to 180 session). **Transcript tedy není nadmnožina kontextu ve všem** – tuhle díru mají oba stejnou, a u session, která měřila nebo se ptala cizího systému, tam bývá celá podstata.
 
-**Postup je proto hybridní:** inventura vždycky (kotvy, počty, kompaktace, cesty k odloženým výstupům), plný očištěný transcript **jen při kompaktaci**, jinak se konverzace projde v kontextu a inventura slouží jako checklist. Odložené výstupy se čtou cíleně tam, kde čísla nikdo nepřevyprávěl v odpovědi.
+**Postup je proto hybridní:** inventura vždycky (prompty, počty, kompaktace, cesty k odloženým výstupům), plný očištěný transcript **jen při kompaktaci**, jinak se konverzace projde v kontextu a inventura slouží jako checklist. Odložené výstupy se čtou cíleně tam, kde čísla nikdo nepřevyprávěl v odpovědi.
 
-**Proč ne jen kontext:** z kontextu se **pokrytí spočítat nedá** – není nad ním index a „prošel jsem to celé“ je zase jen tvrzení. Kotvy a čísla řádků proto pokaždé vycházejí z inventury, i když se obsah bere z kontextu. Bez toho by zmizelo právě to, co se toho dne zavádělo.
+**Proč ne jen kontext:** z kontextu se **pokrytí spočítat nedá** – není nad ním index a „prošel jsem to celé“ je zase jen tvrzení. Prompty a čísla řádků proto pokaždé vycházejí z inventury, i když se obsah bere z kontextu. Bez toho by zmizelo právě to, co se toho dne zavádělo.
 
 **Proč ne vždycky celý transcript:** je to tentýž obsah za druhou cenu, kterou se pak platí do konce session (`~/.claude/RULES.md`, *Co vložíš do kontextu, platíš do konce session*). U session bez kompaktace je to čistá duplikace – řádově 90 tisíc tokenů navíc za nic.
 
 **Zamítnuto rozhodovat to podle velikosti transcriptu.** Velký transcript bez kompaktace je pořád celý v kontextu, kdežto malý po dvou kompaktacích ne. Rozhoduje tedy kompaktace, ne objem – a to je jeden z mála případů, kde jde kritérium postavit na počtu, ne na úsudku.
 
 
-### 2026-09-26 – Kotvy evidence se deduplikují, protože harness tentýž prompt uloží víckrát
+### 2026-09-26 – Prompty v evidenci se deduplikují, protože harness tentýž prompt uloží víckrát
 
-**Zjištěno prvním ostrým během nového `/cleanup`** a opraveno hned, protože na počtu kotev stojí celá záruka úplnosti: nesedí-li, poměr `N/N` nic netvrdí. Transcript ukládá tentýž uživatelův vstup dvakrát ve dvou různých případech:
+**Zjištěno prvním ostrým během nového `/cleanup`** a opraveno hned, protože na počtu promptů stojí celá záruka úplnosti: nesedí-li, poměr `N/N` nic netvrdí. Transcript ukládá tentýž uživatelův vstup dvakrát ve dvou různých případech:
 
 1. **Zpráva poslaná uprostřed odpovědi** je tam jako `queue-operation` (při zařazení) a jako `attachment` typu `queued_command` (při doručení).
 2. **Rozepsaný prompt** se uloží i ve stavu před doplněním, a to **pod jiným `promptId`** – podle id se tedy rozlišit nedá. Kratší verze je prefixem té delší.
 
-**Deduplikuje se proto dvakrát:** podle normalizovaného textu (případ 1) a zahozením kotvy, která je prefixem jiné (případ 2). **U prefixů je to volba s rizikem** – napíše-li uživatel dvě samostatné zprávy, z nichž druhá začíná slovy té první, první se zahodí. Přijato vědomě: obsahově je delší nadmnožinou kratší, takže se neztratí zadání, jen jedna kotva v evidenci. Opačná chyba je horší – dva řádky na jednu větu znamenají poměr, který nikdy nesedne, a z čísla se stane šum.
+**Deduplikuje se proto dvakrát:** podle normalizovaného textu (případ 1) a zahozením promptu, který je prefixem jiného (případ 2). **U prefixů je to volba s rizikem** – napíše-li uživatel dvě samostatné zprávy, z nichž druhá začíná slovy té první, první se zahodí. Přijato vědomě: obsahově je delší nadmnožinou kratší, takže se neztratí zadání, jen jeden prompt v evidenci. Opačná chyba je horší – dva řádky na jednu větu znamenají poměr, který nikdy nesedne, a z čísla se stane šum.
 
-**Zamítnuto rozlišovat podle `promptId`** – ověřeno, že rozepsaná a hotová verze mají různé. **Zamítnuto počítat kotvy až z `filter` výstupu**, kde jsou obě verze taky: dedup patří k sestavení seznamu, ne k jeho čtení.
+**Zamítnuto rozlišovat podle `promptId`** – ověřeno, že rozepsaná a hotová verze mají různé. **Zamítnuto počítat prompty až z `filter` výstupu**, kde jsou obě verze taky: dedup patří k sestavení seznamu, ne k jeho čtení.
 
-**Přerušení běhu (`[Request interrupted by user]`) kotva není** – čte se jako věta, ale je to záznam o akci, ne obsah k zapsání.
+**Přerušení běhu (`[Request interrupted by user]`) prompt není** – čte se jako věta, ale je to záznam o akci, ne obsah k zapsání.
 
 ### 2026-09-26 – První ostrý běh zúženého `/cleanup`: 58,7 jednotky proti 200,6
 
@@ -1334,7 +1334,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 - **Fronta rozhodnutí byla prázdná.** Právě interaktivní smyčky byly ve včerejším rozkladu **46,7 %** ceny, takže největší položka se neuplatnila vůbec. Běh s pěti položkami ve frontě bude výrazně dražší a **kolik, se z tohohle měření nedá odhadnout** – proto se to tady nedopočítává.
 - **Nula kompaktací.** Po kompaktaci se očištěný transcript čte celý, tedy asi 90 tisíc tokenů navíc.
 
-**Proti tomu jedna věc číslo naopak nadhodnocuje:** běh v sobě nesl **opravu tří vad skillu** (deduplikace kotev, smazané soubory v kontrole odkazů, zápis nálezu o základu session), což k úklidu nepatří. Čistý úklid téže session by byl levnější.
+**Proti tomu jedna věc číslo naopak nadhodnocuje:** běh v sobě nesl **opravu tří vad skillu** (deduplikace promptů, smazané soubory v kontrole odkazů, zápis nálezu o základu session), což k úklidu nepatří. Čistý úklid téže session by byl levnější.
 
 **Co se z toho smí tvrdit:** zúžení fungovalo a stav před přepisem je překonaný. **Co se tvrdit nesmí:** že je typický úklid za 58,7 – to řekne teprve běh s neprázdnou frontou. Do té doby platí jako mez zdola.
 
@@ -1367,7 +1367,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Vada, která se opravuje.** `/review`, `/consistency` i `/oponent` pouštějí agenty a z jejich výstupu skládají verdikt, ale **žádný z nich neměřil, kolik ze svého vstupu ten agent doopravdy prošel**. Prázdné pole nálezů proto vypadalo stejně, ať agent prošel dvě stě souborů, nebo dvanáct, a „prošel jsem to systematicky“ bylo tvrzení bez čehokoliv, čím by se dalo doložit. U `/cleanup` přesně tohle stálo nejdražší vadu jeho historie: pravidlo „vrátil-li chybu **nebo nic**, pusť ho znovu“ vyrábělo třetí běh čtenářů, protože prázdný výsledek podle jejich vlastního zadání znamenal, že je čisto – skill si vyrobil vstup značící úspěch a vyhodnocoval ho jako selhání.
 
-**Co se zavádí, je u všech tří stejný vzorec ve třech krocích:** inventura vstupu **příkazem** (ne odhadem), povinné pole ve výstupu agenta, a poměr v přehledu i v záznamu do `done.md`. Kotvou je u `/consistency` a `/review` seznam souborů v rozsahu, u `/oponent` seznam nadpisů posuzovaného předmětu.
+**Co se zavádí, je u všech tří stejný vzorec ve třech krocích:** inventura vstupu **příkazem** (ne odhadem), povinné pole ve výstupu agenta, a poměr v přehledu i v záznamu do `done.md`. Úplnost se u `/consistency` a `/review` měří proti seznamu souborů v rozsahu, u `/oponent` proti seznamu nadpisů posuzovaného předmětu.
 
 | skill | čím se měří | pole agenta | kde se vykazuje |
 |---|---|---|---|
@@ -1379,7 +1379,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Mez u `/review`:** dva specialisté jsou vestavěné skilly (`/code-review`, `/security-review`) a svůj výstup si předefinovat nenechají, takže u korektnosti a bezpečnosti se pokrytí **nedokládá** a místo čísla se píše `nedokládá`. Kdyby se to po nich chtělo, bylo by to pole, které nikdy nepřijde, a z povinnosti by se stala formalita.
 
-**Slabina, kterou to nezavírá:** agent může seznam ze zadání opsat zpátky a tvrdit, že prošel všechno. Proti tomu drží jediná věc – že prázdné `findings` spolu s plným `covered` se posuzuje jako podezřelé, ne jako čisto. Je to **slabší pojistka než u `/cleanup`**, kde se u každé kotvy vyplňuje stav; tam je vstupem konverzace, kterou má hlavní session v kontextu, takže si opsání umí zkontrolovat. Nad cizím kódem to nejde a **předstírat se to nemá**.
+**Slabina, kterou to nezavírá:** agent může seznam ze zadání opsat zpátky a tvrdit, že prošel všechno. Proti tomu drží jediná věc – že prázdné `findings` spolu s plným `covered` se posuzuje jako podezřelé, ne jako čisto. Je to **slabší pojistka než u `/cleanup`**, kde se u každého promptu vyplňuje stav; tam je vstupem konverzace, kterou má hlavní session v kontextu, takže si opsání umí zkontrolovat. Nad cizím kódem to nejde a **předstírat se to nemá**.
 
 **Vynucovací vrstva** je `test_panels_report_measured_coverage` v `tests/test_skills.py`, a hlídá všechny tři skilly naráz: je to princip, ne vlastnost jednoho z nich, a skill, který by ho pozbyl, by se navenek nezměnil – vypisoval by dál nálezy, jen by přestal tvrdit, kolik jich nevidí.
 
@@ -1425,7 +1425,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Hranice pásem jsou přiznaný odhad, ne fit z dat** – v den vzniku osy nebylo z čeho je odvodit. Stojí na řádové představě: jednotky souborů je běh na větvi, dvě stě a víc celý repozitář (tenhle má 151 sledovaných souborů). Přepočítat se mají z naměřeného rozdělení po prvních desítkách běhů, úkol je v `todo.md` u položky o přeměření tří skillů.
 
-**Regresní testy hlídají oba směry**, protože špatně přečtený rozsah je zrádnější než nepřečtený: vzít za rozsah kotvy `N/N`, kilobajty transcriptu nebo zástupné `N z M` ze šablony ve `SKILL.md` by dalo běhu pásmo, které si nezaslouží. Jednotka je proto v regulárním výrazu povinná a čte se jen text odpovědi, ne vstupy nástrojů – jinak by se za naměřený rozsah vzala šablona, kterou běh zrovna píše.
+**Regresní testy hlídají oba směry**, protože špatně přečtený rozsah je zrádnější než nepřečtený: vzít za rozsah prompty `N/N`, kilobajty transcriptu nebo zástupné `N z M` ze šablony ve `SKILL.md` by dalo běhu pásmo, které si nezaslouží. Jednotka je proto v regulárním výrazu povinná a čte se jen text odpovědi, ne vstupy nástrojů – jinak by se za naměřený rozsah vzala šablona, kterou běh zrovna píše.
 
 
 ### 2026-09-28 – Testy patří do `tests/`, protože jinde je nespouští nikdo

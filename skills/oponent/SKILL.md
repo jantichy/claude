@@ -113,7 +113,7 @@ Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku
 
 **Nejdřív si vyrob inventuru předmětu, pak pouštěj oponenty.** Vypiš nadpisy posuzovaných dokumentů příkazem (`grep -n '^#' <cesty>`) a **zapamatuj si jejich počet** – proti němu se v *Konsolidaci* vykazuje, kolik z předmětu který oponent doopravdy prošel. Neodhaduj to (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a u pěti dokumentů se proletnutí od přečtení nepozná. Posudek, který pokryl třetinu předmětu, přitom vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní. Je to táž vada, kterou u `/cleanup` vyřešily kotvy s měřeným poměrem (`~/.claude/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
+**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a u pěti dokumentů se proletnutí od přečtení nepozná. Posudek, který pokryl třetinu předmětu, přitom vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní. Je to táž vada, kterou u `/cleanup` vyřešil měřený poměr odškrtnutých promptů (`~/.claude/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
 
 Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
 

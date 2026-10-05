@@ -113,7 +113,7 @@ Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí ta
 
 **Vyrob si seznam souborů v rozsahu příkazem a zapamatuj si jeho délku** – u `branch` z diffu proti hlavní větvi plus soubory, které na ně odkazují, u `full` z `git ls-files`. **Ten počet je to, proti čemu se v *Přehledu* vykazuje pokrytí**, takže ho neodhaduj (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**Proč to tady je:** prázdné pole nálezů vypadá stejně, ať agent prošel dvě stě souborů, nebo dvanáct – a „prošel jsem to systematicky“ je tvrzení, které nemá čím být doložené. Je to táž vada, kterou u `/cleanup` vyřešily kotvy s měřeným poměrem; zdůvodnění drží `~/.claude/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*.
+**Proč to tady je:** prázdné pole nálezů vypadá stejně, ať agent prošel dvě stě souborů, nebo dvanáct – a „prošel jsem to systematicky“ je tvrzení, které nemá čím být doložené. Je to táž vada, kterou u `/cleanup` vyřešil měřený poměr odškrtnutých promptů; zdůvodnění drží `~/.claude/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*.
 
 Spusť subagenta typu `reader` s tímto zadáním (předej mu absolutní cestu k projektu, **seznam souborů v rozsahu**, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
 

@@ -21,9 +21,9 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ## Obsah
 
-**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [cesta k datům](#cesta-k-datům) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička) · [ohraničení bloku kódu](#ohraničení-bloku-kódu) · [nápověda](#nápověda)
+**[Termíny](#termíny)** – [blokující kontrola](#blokující-kontrola) · [cesta k datům](#cesta-k-datům) · [specialista, panel specialistů](#specialista-panel-specialistů) · [rozcestník](#rozcestník) · [řízený rozhovor](#řízený-rozhovor) · [rozeslání práce agentům](#rozeslání-práce-agentům) · [tabulka delegací](#tabulka-delegací) · [rozejití](#rozejití) · [seznam, který musí přesně sedět](#seznam-který-musí-přesně-sedět) · [README skillu](#readme-skillu) · [průzkumník](#průzkumník) · [příprava](#příprava) · [průběžná kontrola](#průběžná-kontrola) · [závěrečný verdikt](#závěrečný-verdikt) · [cílený zásah](#cílený-zásah) · [čtenář bez kontextu](#čtenář-bez-kontextu) · [hlavní scénář](#hlavní-scénář) · [hledisko](#hledisko) · [nevypořádané téma](#nevypořádané-téma) · [odpověď](#odpověď) · [ověřovatel](#ověřovatel) · [ověřovací pokus](#ověřovací-pokus) · [konvence projektu](#konvence-projektu) · [srovnávací běh](#srovnávací-běh) · [kontrola závislostí](#kontrola-závislostí) · [pozůstatek](#pozůstatek) · [vata](#vata) · [souvislý text, běžný text](#souvislý-text-běžný-text) · [hlavička](#hlavička) · [ohraničení bloku kódu](#ohraničení-bloku-kódu) · [nápověda](#nápověda) · [prompt, zpráva uživatele](#prompt-zpráva-uživatele) · [referenční datum, počátek lhůty](#referenční-datum-počátek-lhůty) · [anonymizovaný záznam](#anonymizovaný-záznam) · [hledaný řetězec](#hledaný-řetězec) · [další významy kotvy](#další-významy-kotvy)
 
-**[Ponechané termíny](#ponechané-termíny)** – [heuristika, osa, vektor útoku](#2026-09-07--ponechané-termíny-z-revize-heuristika-osa-vektor-útoku) · [„stopa práce“](#2026-09-07--termín-stopa-práce-se-ponechává-i-když-má-stopa-pět-významů) · [„guard“](#2026-09-07--termín-guard-se-ponechává-a-plyne-z-toho-obecné-pravidlo) · [„mutace“](#2026-09-07--termín-mutace-se-ponechává) · [„session“](#2026-09-07--termín-session-se-ponechává) · [„soustava“](#2026-09-07--termín-soustava-se-ponechává) · [„kontrakt příkazů“](#2026-09-07--termín-kontrakt-příkazů-se-ponechává) · [„sledovací okno“](#2026-09-07--termín-sledovací-okno-se-ponechává) · [„invariant“](#2026-09-14--termín-invariant-se-ponechává)
+**[Ponechané termíny](#ponechané-termíny)** – [heuristika, osa, vektor útoku](#2026-09-07--ponechané-termíny-z-revize-heuristika-osa-vektor-útoku) · [„stopa práce“](#2026-09-07--termín-stopa-práce-se-ponechává-i-když-má-stopa-pět-významů) · [„guard“](#2026-09-07--termín-guard-se-ponechává-a-plyne-z-toho-obecné-pravidlo) · [„mutace“](#2026-09-07--termín-mutace-se-ponechává) · [„session“](#2026-09-07--termín-session-se-ponechává) · [„soustava“](#2026-09-07--termín-soustava-se-ponechává) · [„kontrakt příkazů“](#2026-09-07--termín-kontrakt-příkazů-se-ponechává) · [„sledovací okno“](#2026-09-07--termín-sledovací-okno-se-ponechává) · [„invariant“](#2026-09-14--termín-invariant-se-ponechává) · [„kotva“](#2026-10-05--termín-kotva-se-ponechává-ve-čtyřech-zavedených-významech)
 
 ## Termíny
 
@@ -290,6 +290,50 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 **Kde starý tvar vědomě zůstává:** `~/Dev/context/archive/twitter/Twitter 2017.md` – matriční rodný list, jiný význam a publikovaný text. V rezervacích zůstal na `main` a ve větvi `docs/stranky`, dokud do nich nedorazí větev `docs/podminky`, kde se nahradil.
 
+### prompt, zpráva uživatele
+
+**Prompt je to, co uživatel v session napsal** – zpráva na začátku odpovědi i zpráva poslaná uprostřed ní. V `/cleanup` je to položka inventury transcriptu, kterou úklid odškrtává v evidenci, a poměr se zapisuje jako `prompty N/N`. **Zpráva uživatele je role:** prompt, který se do evidence započítá. Rozlišují to hlavně testy (`tests/test_cleanup.py`, třída `ZpravyUzivatele`) – vsuvka harnessu má v transcriptu roli `user`, ale zpráva uživatele to není.
+
+**Nahrazuje dřívější „kotvu“, „kotvy evidence“** (2026-10-05). Uživatel slovu rozuměl jen jako kotvě odkazu a týž skill ho v tom významu používal taky („mrtvé kotvy“), takže výstup `/cleanup` hlásil „kotvy 23/23“ a o řádek níž „dvě mrtvé kotvy opraveny“ – dvě různé věci pod jedním jménem. Navíc slévalo věc a roli: `test_skutecny_prompt_je_kotva` se ptal na roli, „kotvy N/N“ počítal věci.
+
+**Zamítnuto:** *zpráva uživatele* pro obojí – navrženo jako hlavní varianta, uživatel zvolil kratší *prompt* a *zprávu uživatele* nechal jen pro roli, aby se ty dvě věci odlišily. *Položka evidence* – pojmenovává formu, ne to, co se počítá.
+
+**Kde starý tvar vědomě zůstává:** záznamy `kotvy N/N` v `done.md` všech projektů – datovaný doklad o tom, jak se to tehdy vykazovalo.
+
+### referenční datum, počátek lhůty
+
+**Referenční datum je datum, od kterého se počítá relativně zadané datum** – cena nebo konec prodeje zadaný jako „2 dny před začátkem akce“ si pamatuje, že se vztahuje k začátku akce, a posune se s ní. Takové ceně se říká **ceník vázaný na termín akce**. **Počátek lhůty** je den, od kterého běží lhůta (DUZP, konec akce). Používá to hlavně dokumentace eventoidu a `~/Dev/context/coding/modeling.md`, *Relativní hodnoty ukládej tak, aby přežily posun referenčního data*.
+
+**Nahrazuje dřívější „kotvu“, „kotvený ceník“, „kotvu lhůty“** (2026-10-05) – metafora, kterou uživatel nechápal.
+
+**Zamítnuto:** *vztažné datum* – navrženo, protože „referenční“ je v eventoidu už obsazené („ID referenčního pohybu“, „referenční kurz“); uživatel dal přednost běžnějšímu slovu a kolizi vzal jako slabou. *Rozhodný den* – v daňovém právu má vlastní význam a v eventoidu se o DUZP mluví hned vedle. *Výchozí datum* – svádí k významu „default“.
+
+### anonymizovaný záznam
+
+**Řádek, který po výmazu účtu zůstane bez osobních údajů, aby na něj dál mohla ukazovat historie** (`OrganizationLog.user_id`, `created_by` v eventoidu); u uživatele **anonymizovaný účet**. Navazuje na tamní princip, že výmaz je anonymizace, ne příznak.
+
+**Nahrazuje dřívější „prázdnou kotvu“** (2026-10-05). **Zamítnuto:** *tombstone* – česky neznámé a v databázích znamená dočasnou značku, kterou systém uklidí, kdežto tenhle záznam zůstává navždy; *prázdný záznam* – svádí k představě řádku bez identity.
+
+### hledaný řetězec
+
+**Řetězec nebo nadpis, podle kterého skript najde místo, kam vložit text, nebo kde začíná a končí řez.** Sjednocuje i dřívější „značky“ v `~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*.
+
+**Nahrazuje dřívější „kotvu“** (2026-10-05) – v souborech skoro nebyla, mluvil jsem tak v odpovědích („spadlo na nenalezené kotvě“, „ASCII kotva“). **Zamítnuto:** *značka* – navrženo, protože už stála v `RULES.md`; uživatel zvolil popis, který říká, co to je.
+
+### další významy kotvy
+
+Revize 5. 10. 2026 našla vedle výše uvedených ještě řadu přenesených významů, každý v jednom až dvou repozitářích. **Společné slovo nedostaly schválně** – jsou to různé věci a jedno slovo by vyrobilo přesně tu vadu, kvůli které „kotva“ padla. Nahrazeno:
+
+- test, který hlídá, že jiná kontrola neprošla naprázdno („kotva proti tichému výpadku“) → popisem **„kontrola, že test něco našel“**; podle čeho kontrola pozná hlídané místo („kotva kontroly“) → slovesem („kontrola pozná … podle …“). Uživatel zamítl *pojistku proti prázdnému průchodu* i *sanity check*;
+- ověřitelný údaj za obecným tvrzením (`brand/bio.md`) → **doklad**, jak už mu říká `brand/brand.md`;
+- kratší text mezi ukázkami článků, který ukazuje, kde článek začíná („kalibrační kotva“, `compose/`) → **srovnávací ukázka**; uživatel zamítl *ukázku pod hranicí formátu* jako nesrozumitelnou;
+- částky dělící doporučovací text na scénáře („rozpočtové kotvy“) → **modelové rozpočty**; typ úvodu příspěvku („výroční kotva“) → **odkaz na datum nebo výročí**; nepodložené číslo („falešná kotva“) → **nepodložené číslo**;
+- cena, se kterou se zatím počítá („pracovní kotva ~890 Kč“, projekt `ai`) → **pracovní cena**;
+- sémantický rodič v CSS selektoru → **rodič**; nepoužitý návrh v repozitáři („kotva, která leží v repozitáři, se použije“) → **návrh**; body tabulky NASA, mezi kterými se dopočítává → **opěrné body**; připomínka navázaná na místo v artefaktu → **připnutá**; otisk uložený mimo vlastní infrastrukturu → **uložení otisku**;
+- sloveso „ukotvit / zakotvit“ v přeneseném smyslu → v každé větě konkrétní sloveso (opřít o, upevnit, podpořit, záviset na).
+
+**Kde starý tvar vědomě zůstává:** viz *Termín „kotva“ se ponechává ve čtyřech zavedených významech* níž.
+
 ## Ponechané termíny
 
 Rozhodnutí, že se termín **nemění**. Do tabulky v `~/.claude/PTYDEPE.md` nepatří – ta říká, co se čím nahrazuje –, ale hledají se tady, spolu se zbytkem rozvahy o termínech. Přestěhováno z `~/Dev/context/decisions.md`, kde do té doby leželo odděleně od nahrazených termínů: osm položek 10. 9. 2026 ze sekce `## Claude`, `guard` a `stopa práce` až 11. 9., protože leží v doménových sekcích a první průchod je minul.
@@ -399,3 +443,14 @@ Stojí jako standard v `~/Dev/context/coding/modeling.md`, *Pojmenuj, co nesmí 
 **Zamítnuto – „omezení“ (constraint):** omezení je **mechanismus, kterým se invariant vynutí**, ne invariant sám. Jeden invariant se dá vynutit `CHECK` omezením, parciálním indexem i cizím klíčem. Sloučit ta dvě slova by vyrobilo jedno jméno pro dvě věci – přesně to, co zakazuje *Jeden termín pro jednu věc* v `~/.claude/RULES.md`.
 
 **Vědomě ponecháno v cizích souborech:** `~/Dev/mediowiki/w/extensions/SyntaxHighlight_GeSHi/` má `invariant` jako klíčové slovo jazyků D, Eiffel a GLSL ve vendor kódu, `~/Dev/olympiada/` v zadáních a řešeních olympiády. Ani na jedno se nesahá – vendor kód a cizí text (`SKILL.md`, *Fáze 4*).
+
+### 2026-10-05 – Termín „kotva“ se ponechává ve čtyřech zavedených významech
+
+Revize 5. 10. 2026 rozložila „kotvu“ na asi deset významů a většinu nahradila (*prompt*, *referenční datum*, *anonymizovaný záznam*, *hledaný řetězec*, *další významy kotvy* výš). **Ponechává se tam, kde je slovo zavedené i česky:**
+
+- **kotva odkazu** – `#fragment`, odkaz na nadpis uvnitř stránky; jediný význam, kterému uživatel rozuměl. Stojí v `RULES.md`, `STRUCTURE.md`, `skills/links.py`, `skills/replace/` a testech odkazů v `~/.claude`, `~/Dev/context` i eventoidu;
+- **ukotvení vzoru** – regulární výraz nebo `case` navázaný na začátek řetězce (*regex anchor*; `skills/transcript/transcribe.sh`, `tests/test_hooks.py`);
+- **cenová kotva** – psychologické ukotvení ceny, drahá varianta, vedle které ostatní vypadají rozumně (projekty `ai`, `byt`). Ne „pracovní kotva“ ve smyslu ceny, se kterou se počítá – ta je *pracovní cena*;
+- **kotva v CSS anchor positioning** – prvek, ke kterému se váže popover (`score`); tak se ta vlastnost jmenuje (`anchor-name`).
+
+**Kde starý tvar zůstává i v nahrazených významech:** `done.md` všech projektů (`kotvy N/N`), `~/Dev/context/archive/`, `compose/_analysis/`, vendor CKEditor a eventoid ve větvi `stitch`, dokud do ní nedorazí `main`.

@@ -274,7 +274,7 @@ Příkaz, který může zastavit deny pravidlo nebo hook (tajemství, cizí adre
 
 ### Mazání ověř diffem, ne grepem
 
-Mažeš-li podle značek (od nadpisu k nadpisu, od markeru k markeru), ověř výsledek **diffem toho, co zmizelo**. Grep najde zbytek, ale ne to, co zmizelo navíc.
+Mažeš-li podle hledaných řetězců (od nadpisu k nadpisu, od jedné hranice k druhé), ověř výsledek **diffem toho, co zmizelo**. Grep najde zbytek, ale ne to, co zmizelo navíc.
 
 - **Hranici řezu hledej jako kterýkoli nadpis nebo oddělovač**, ne nadpis určité úrovně – jinak řez sebere všechno až k dalšímu nadpisu téže úrovně.
 - **Hranice urči čísly řádků s ověřeným obsahem na obou koncích**, ne `index()` nad celým souborem: najde první výskyt, i citaci, a při `end < start` kus souboru místo smazání zdvojí.

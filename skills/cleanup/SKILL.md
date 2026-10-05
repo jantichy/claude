@@ -15,7 +15,7 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 3. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
 4. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
 
-**Záruka číslo 1 je jádro a měří se, ne tvrdí.** Inventura transcriptu vypíše **kotvy** – místa, kde uživatel něco napsal – a ty se v evidenci odškrtávají jedno po druhém. Nedá se tedy vydat za hotové něco, u čeho zbyl nevyplněný řádek: pokrytí je vidět jako počet, ne jako dojem.
+**Záruka číslo 1 je jádro a měří se, ne tvrdí.** Inventura transcriptu vypíše **prompty** – všechno, co uživatel napsal, včetně zpráv poslaných uprostřed odpovědi – a ty se v evidenci odškrtávají jeden po druhém. Nedá se tedy vydat za hotové něco, u čeho zbyl nevyplněný řádek: pokrytí je vidět jako počet, ne jako dojem.
 
 Skill je **opakovatelný**. Spustí-li ho uživatel podruhé, druhý průchod vytěžuje transcript celý znovu – slepá místa se tím ale nevyčistí sama, protože nejsou náhodná; co se nepřečetlo systematicky, se nepřečte znovu. Cenu má proto druhý běh hlavně tam, kde od prvního přibyla práce.
 
@@ -35,7 +35,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 
 ## Jak je to postavené uvnitř
 
-- **`scripts/extract.py`** – očistí transcript a spočítá, co v něm je. Bez něj by se čtením procházelo devět desetin balastu: měřeno 26. 9. 2026 na transcriptu o 3,0 MB, ze kterého je vytěžitelného textu 234 kB. Režim `filter` vypíše obsah s čísly řádků zdroje, `inventory` inventuru pokrytí a kotvy evidence.
+- **`scripts/extract.py`** – očistí transcript a spočítá, co v něm je. Bez něj by se čtením procházelo devět desetin balastu: měřeno 26. 9. 2026 na transcriptu o 3,0 MB, ze kterého je vytěžitelného textu 234 kB. Režim `filter` vypíše obsah s čísly řádků zdroje, `inventory` inventuru pokrytí a prompty do evidence.
 - **`~/.claude/skills/links.py`** – ověří, že relativní odkazy ve změněných Markdownech vedou na existující soubor a kotvy na existující nadpis. **Je sdílený, ne jeho vlastní**: od 27. 9. 2026 ho volá i `/consistency`, a skript uvnitř skillu by z cizího skillu volat nesměl (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*).
 - **`~/.claude/skills/order.py`** – ověří, že datované záznamy v `done.md` a `decisions.md` jdou vzestupně, jak žádá `~/.claude/STRUCTURE.md`. **Je sdílený ze stejného důvodu jako `links.py`.** Vznikl 28. 9. 2026 poté, co se pořadí rozpadlo počtvrté: ruční srovnání se dělalo třikrát a nevydrželo, protože do těch sekcí zapisují skilly samy a každý se řídí tím, co v souboru zrovna vidí.
 - **[`obligations.md`](obligations.md)** – co v session zakládá povinnost zápisu, kam co patří a v jakých stavech položku najdeš. Referenční tabulka pro *Fázi 3*.
@@ -104,7 +104,7 @@ python3 ~/.claude/skills/cleanup/scripts/extract.py filter <transcript> > <scrat
 
 Z inventury si vezmi pět věcí a **všechny si zapiš, protože je budeš vykazovat v závěru**:
 
-- **kolik je kotev** – uživatelských promptů a zpráv poslaných uprostřed odpovědi. To je ta množina, která se v *Fázi 3* odškrtává.
+- **kolik je promptů** – za prompt se počítá i zpráva poslaná uprostřed odpovědi. To je ta množina, která se v *Fázi 3* odškrtává.
 - **co se čte** a v jakém objemu,
 - **co se nečte** – to jde celé do *Mezí běhu* a nedá se to vynechat,
 - **kolik bylo kompaktací** – podle toho se rozhoduje hned v následujícím odstavci,
@@ -112,10 +112,10 @@ Z inventury si vezmi pět věcí a **všechny si zapiš, protože je budeš vyka
 
 **Kolik z transcriptu opravdu přečteš, rozhoduje počet kompaktací**, ne zvyk. Běžíš v hlavní session, takže **celou konverzaci od poslední kompaktace máš v kontextu už zaplacenou** – přečíst ji podruhé z disku je tentýž obsah za druhou cenu, kterou pak platíš do konce session (`~/.claude/RULES.md`, *Co vložíš do kontextu, platíš do konce session*).
 
-- **Kompaktací nula** – očištěný transcript **nečti celý**. Projdi konverzaci, kterou máš v kontextu, a inventuru použij jako **checklist**: ke každé kotvě si najdi, co u ní padlo. Nemáš-li u některé jistotu, dočti **jen ji** – `sed -n '<číslo>,<číslo+40>p' <scratchpad>/cleanup-clean.txt`.
+- **Kompaktací nula** – očištěný transcript **nečti celý**. Projdi konverzaci, kterou máš v kontextu, a inventuru použij jako **checklist**: ke každému promptu si najdi, co u něj padlo. Nemáš-li u některého jistotu, dočti **jen jeho** – `sed -n '<číslo>,<číslo+40>p' <scratchpad>/cleanup-clean.txt`.
 - **Kompaktace jedna a víc** – část konverzace v kontextu **není** a přesně v ní bývají uzavřené dohody. Očištěný transcript přečti celý; je to zlomek původního souboru, takže na to není potřeba nikoho posílat.
 
-**Ať čteš odkud čteš, kotvy a čísla řádků ber z inventury.** Z kontextu se pokrytí spočítat nedá – nemáš nad ním index a „prošel jsem to celé“ je zase jen tvrzení. Čísla řádků v hranatých závorkách odkazují do původního `.jsonl`, takže se každá citace dá ověřit `sed -n '<číslo>p'`.
+**Ať čteš odkud čteš, prompty a čísla řádků ber z inventury.** Z kontextu se pokrytí spočítat nedá – nemáš nad ním index a „prošel jsem to celé“ je zase jen tvrzení. Čísla řádků v hranatých závorkách odkazují do původního `.jsonl`, takže se každá citace dá ověřit `sed -n '<číslo>p'`.
 
 **Odložené výstupy přečti, hlásí-li je inventura.** Velký výstup nástroje je uříznutý **v transcriptu i v kontextu** – transcript tedy není nadmnožina kontextu ve všem a tuhle díru mají oba stejnou. Plná verze leží v `tool-results/<id>.txt` a u session, která měřila nebo se dotazovala cizího systému, tam bývá celá podstata: naměřená čísla, odpověď API, výsledek dotazu. **Nečti je paušálně** – podívej se, čeho se to volání týkalo, a otevři ten výstup tehdy, když v odpovědi na něj nikdo čísla nepřevyprávěl. Co neotevřeš, patří do *Mezí běhu* i s cestou.
 
@@ -163,7 +163,7 @@ Nepředkládej řečnické otázky, zdvořilostní nabídky („mám to ještě 
 
 ## Fáze 3 – Evidence a konfrontace se soubory
 
-**Tady se záruka číslo 1 přestává tvrdit a začíná měřit.** Založ evidenci do `<scratchpad>/cleanup-ledger.md` – jeden řádek na kotvu z inventury, v tomtéž pořadí:
+**Tady se záruka číslo 1 přestává tvrdit a začíná měřit.** Založ evidenci do `<scratchpad>/cleanup-ledger.md` – jeden řádek na prompt z inventury, v tomtéž pořadí:
 
 ```
 | # | řádek | co uživatel napsal (zkráceně) | stav | kde |
@@ -175,7 +175,7 @@ Nepředkládej řečnické otázky, zdvořilostní nabídky („mám to ještě 
 
 Stavy jsou právě tyhle a nic mezi nimi: **zapsáno** (je v souboru, uveď který), **přebito** (později v session to přestalo platit), **k rozhodnutí** (jde do *Fáze 5*), **mimo rozsah** (jde do *Fáze 5* podle [`out-of-scope.md`](out-of-scope.md)), **bez zápisu** (nic k zapsání – dotaz, příkaz, potvrzení).
 
-**Řádek se nesmí nechat prázdný a počet řádků musí sedět s počtem kotev z inventury.** Je to jediná mechanická kontrola úplnosti, jakou skill má: bez ní se „přečetl jsem začátek“ nedá poznat od „prošel jsem to celé“. Vyjde-li rozdíl, dočti chybějící kotvy, než budeš pokračovat.
+**Řádek se nesmí nechat prázdný a počet řádků musí sedět s počtem promptů z inventury.** Je to jediná mechanická kontrola úplnosti, jakou skill má: bez ní se „přečetl jsem začátek“ nedá poznat od „prošel jsem to celé“. Vyjde-li rozdíl, dočti chybějící prompty, než budeš pokračovat.
 
 **Evidence je pracovní soubor ve scratchpadu, ne výstup** – necommituje se a nepřežije session. Přežít má to, co z ní vzešlo: zápisy v souborech a řádek v `done.md`.
 
@@ -267,7 +267,7 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 
 ## Časté chyby
 
-- **Vydat „všechno zapsané“ s nevyplněnou evidencí.** Kotvy `N/M` nejsou detail do mezí, ale nehotový úklid.
+- **Vydat „všechno zapsané“ s nevyplněnou evidencí.** Prompty `N/M` nejsou detail do mezí, ale nehotový úklid.
 - **Číst surový `.jsonl`.** Je z devíti desetin balast; očištěný transcript z *Fáze 1* nese totéž za zlomek.
 - **Zapsat dohodu, která v půlce session přestala platit.** Platí poslední verze; kategorie 6 existuje právě proto.
 - **Ptát se na to, co má jedinou podobu.** Fronta je na volby, ne na potvrzování hotových návrhů.
@@ -280,12 +280,12 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 **Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*). Čtenářem je **příští `/cleanup`**, který jinak nepozná, co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
 
 ```
-- **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · session `<session-id>` · kotvy N/N · N témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak> · meze: <co se nepřečetlo, nebo „žádné“>
+- **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · session `<session-id>` · prompty N/N · N témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak> · meze: <co se nepřečetlo, nebo „žádné“>
 ```
 
 Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id session** vezmi z cesty ke scratchpadu, stejně jako ve *Fázi 0*. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.
 
-**Pole `kotvy` a `meze` jsou povinná a nesmí být prázdná.** Bez nich se řádek čte jako „uklizeno“ i po běhu, ve kterém část transcriptu nikdo nepřečetl – a příští session to nemá odkud zjistit. `kotvy N/N` znamená odškrtnuto ze všech; jiný poměr je přiznaná díra, ne detail.
+**Pole `prompty` a `meze` jsou povinná a nesmí být prázdná.** Bez nich se řádek čte jako „uklizeno“ i po běhu, ve kterém část transcriptu nikdo nepřečetl – a příští session to nemá odkud zjistit. `prompty N/N` znamená odškrtnuto ze všech; jiný poměr je přiznaná díra, ne detail. Starší záznamy nesou totéž pole pod jménem `kotvy`.
 
 **Před commitem ověř vlastní zápis.** Pouští se **ten krok *Kontraktu příkazů* (`## Kontrakt příkazů` v projektovém `CLAUDE.md`), který prověřuje soubory, do kterých se v tomhle běhu zapsalo** – typicky `test` v projektu, jehož testová sada hlídá tvar dokumentace.
 
@@ -306,7 +306,7 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id session** vezmi
 ```
 ## Úklid dokončen
 
-**Pokrytí:** kotvy N/N odškrtnuto · přečteno X kB z Y kB transcriptu
+**Pokrytí:** prompty N/N odškrtnuto · přečteno X kB z Y kB transcriptu
 
 **Zapsáno** – N zápisů
 - <soubor> – <co tam přibylo nebo se přepsalo, jednou větou>
@@ -330,10 +330,10 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Ze session je všechno zapsané a ověřené – kotvy N/N, můžeš <zavřít session | přimergovat větev>.`
-- `Zapsané to není celé – brání tomu: <konkrétní seznam: nevyplněné kotvy, selhaná kontrola, nepřečtená část transcriptu>.`
+- `Ze session je všechno zapsané a ověřené – prompty N/N, můžeš <zavřít session | přimergovat větev>.`
+- `Zapsané to není celé – brání tomu: <konkrétní seznam: prompty bez vyplněného stavu, selhaná kontrola, nepřečtená část transcriptu>.`
 
-**Nepřečtená část transcriptu patří do druhé věty**, ne do mezí u první – kotvy `N/M`, kde `M` je větší, znamenají, že úklid úplný není. Naopak kategorie, které se **nečtou z principu** (myšlení, výstupy čtecích nástrojů), hotovost nezpochybňují: jsou to meze nástroje, ne nedodělaná práce.
+**Nepřečtená část transcriptu patří do druhé věty**, ne do mezí u první – prompty `N/M`, kde `M` je větší, znamenají, že úklid úplný není. Naopak kategorie, které se **nečtou z principu** (myšlení, výstupy čtecích nástrojů), hotovost nezpochybňují: jsou to meze nástroje, ne nedodělaná práce.
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 

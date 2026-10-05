@@ -420,7 +420,7 @@ class Rozsah(Fixture):
 
     Testují se oba směry selhání. **Nepřečtený rozsah** je ta hlučnější
     polovina – běh do pásma nespadne a hlásí se to. **Přečtený omylem** je
-    zrádnější: vezme-li se za rozsah číslo z jiného řádku (kotvy `N/N`, kB
+    zrádnější: vezme-li se za rozsah číslo z jiného řádku (prompty `N/N`, kB
     transcriptu) nebo zástupné `N z M` ze šablony ve `SKILL.md`, dostane běh
     pásmo, které si nezaslouží, a medián se spočítá z pomíchaného vzorku.
     """
@@ -456,9 +456,9 @@ class Rozsah(Fixture):
         self.assertIsNone(run["sband"])
         self.assertEqual(run["band"], "A do300kB")
 
-    def test_kotvy_a_kilobajty_rozsah_nejsou(self):
+    def test_prompty_a_kilobajty_rozsah_nejsou(self):
         run = self.run_with(
-            "**Pokrytí:** kotvy 23/23 odškrtnuto · přečteno 312 kB z 3000 kB"
+            "**Pokrytí:** prompty 23/23 odškrtnuto · přečteno 312 kB z 3000 kB"
         )
         self.assertIsNone(run["scope"])
 

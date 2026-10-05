@@ -320,8 +320,8 @@ def _bad_links(skill, pattern, own: set, foreign: set) -> list:
 #: místa: do **tohohle repozitáře**, nebo do privátní knowledge base mimo něj.
 LINK_PATTERN = r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`"
 
-#: Kotva na sekci: `soubor`, *Sekce*. Stojí tady, a ne jen u testu, který ji hlídá,
-#: protože z ní počítá i ohlašovací test – jinak by hlásil menší rozsah přeskočené
+#: Odkaz na sekci: `soubor`, *Sekce*. Stojí tady, a ne jen u testu, který ho hlídá,
+#: protože z něj počítá i ohlašovací test – jinak by hlásil menší rozsah přeskočené
 #: kontroly, než jaký doopravdy je.
 ANCHOR_PATTERN = (
     r"`(~/(?:\.claude|Dev)/[^`\s]+\.md)`,\s*(?:kapitola\s+|sekce\s+)?"
@@ -354,7 +354,7 @@ class SkillLinks(unittest.TestCase):
     # nejvíc odkazů ze všech a netestovaly se vůbec. Projektový .claude/CLAUDE.md
     # nese kontrakt příkazů a odkazy na sekce v jiném repozitáři, takže patří sem taky.
     # `SKILLS.md` nese po zavedení normy nejvíc odkazů na sekce ze všech souborů
-    # a byl jediný mimo kontrolu – uříznutá kotva v něm prošla všemi testy.
+    # a byl jediný mimo kontrolu – uříznutý odkaz na sekci v něm prošel všemi testy.
     REFERRING = SKILLS + [
         ROOT / "RULES.md",
         ROOT / "CLAUDE.md",
@@ -386,7 +386,7 @@ class SkillLinks(unittest.TestCase):
         stejně, ať knowledge base existuje, nebo ne (`~/.claude/skills/SKILLS.md`,
         *Jak se píše text uvnitř* – žádné tiché ořezání rozsahu).
 
-        **Počítá se obojí – odkazy na soubory i kotvy na sekce.** Kotvy přeskakuje
+        **Počítá se obojí – odkazy na soubory i odkazy na sekce.** Odkazy na sekce přeskakuje
         `test_section_links_point_to_existing_heading` mlčky (`continue` nad
         neexistujícím cílem), takže dokud se nezapočítaly sem, hlásilo se menší
         číslo než skutečný rozsah přeskočené kontroly – a to je táž vada, jaké má
@@ -408,7 +408,7 @@ class SkillLinks(unittest.TestCase):
         if not KNOWLEDGE_BASE.exists():
             self.skipTest(
                 f"{KNOWLEDGE_BASE} tu není, takže zůstalo neověřeno "
-                f"{len(external)} odkazů na soubory a {len(anchors)} kotev na sekce"
+                f"{len(external)} odkazů na soubory a {len(anchors)} odkazů na sekce"
             )
         absent = sorted(ref for ref in external if not link_target(ref).exists())
         self.assertFalse(absent, f"neexistující odkazy do knowledge base: {absent}")
@@ -420,10 +420,10 @@ class SkillLinks(unittest.TestCase):
         skillu je jednořádková změna, po které pět odkazů z jiného souboru tiše
         ukazuje jinam. Kontrola existence souboru to nechytí – ten pořád existuje.
 
-        Kotva se hledá jako *podřetězec* nadpisu, aby prošly i tvary typu
+        Název sekce se hledá jako *podřetězec* nadpisu, aby prošly i tvary typu
         *Fáze 1*, bod 6 nebo *`done.md`*.
         """
-        # Kotva se pozná podle tvaru `soubor`, *Sekce* – tedy čárka hned za
+        # Odkaz na sekci se pozná podle tvaru `soubor`, *Sekce* – tedy čárka hned za
         # zpětným apostrofem. Volnější vzor bral i běžné zvýraznění v okolní
         # větě ("`RULES.md`) stojí **před `/release`**") a hlásil samé nesmysly.
         pattern = re.compile(ANCHOR_PATTERN)
@@ -1448,8 +1448,8 @@ class Structure(unittest.TestCase):
             return 1, self._compare_sentence(name, m.groups(), cycle)
         # Skill, který o svém pořadí mluví, ale vzor na tvar té věty nesedne, se
         # dřív tiše přeskočil – a jeho tvrzení pak neověřil nikdo. Přeformulovat
-        # větu se smí, ale ne potichu. Kotvou je proto odkaz na cyklus, ne znění
-        # věty za ním: vzor psaný podle dnešního znění mlčí přesně nad tím, co se
+        # větu se smí, ale ne potichu. Kontrola proto pozná odstavec podle odkazu na cyklus,
+        # ne podle znění věty za ním: vzor psaný podle dnešního znění mlčí přesně nad tím, co se
         # přepisuje – po přestavbě cyklu zůstalo v šesti skillech „krok zakládání“
         # a všech šest se tiše přeskočilo, protože na nový vzor nesedlo.
         if names_cycle and not re.search(r"Je (?:první|poslední) článek", text):

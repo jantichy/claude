@@ -15,8 +15,9 @@ Skript má dva režimy:
 - **`inventory`** vypíše, co v transcriptu je, rozdělené na **čtené** a
   **nečtené** kategorie, s počty a velikostmi. Je to podklad pro meze běhu:
   bez něj se hranice vytěžení přiznává odhadem, a co se nepřiznalo, nezjistí
-  nikdo. Navíc vypíše číslovaný seznam uživatelských promptů – ty jsou kotvy
-  evidence, protože u každého se dá odškrtnout, jestli se z něj něco zapsalo.
+  nikdo. Navíc vypíše číslovaný seznam uživatelských promptů – ty se
+  odškrtávají v evidenci, protože u každého se dá říct, jestli se z něj něco
+  zapsalo.
 
 **Co se nečte a proč:**
 
@@ -116,7 +117,7 @@ def classify(record, block, names):
         # Vsuvka je záznam s rolí uživatele, který uživatel nenapsal: výpis
         # skillu, zpráva subagenta, upozornění harnessu. Pozná se podle
         # `isMeta` – ověřeno na třech transcriptech 26. 9. 2026. Čte se
-        # (nese nálezy agentů), ale kotva evidence to není.
+        # (nese nálezy agentů), ale prompt do evidence to není.
         label = "vsuvka" if record.get("isMeta") else "uživatel"
         return label, True, block.get("text", "")
     if kind == "tool_result":
@@ -224,11 +225,11 @@ def run_filter(rows):
 
 
 def prompts(rows):
-    """Co uživatel v session skutečně napsal – kotvy evidence.
+    """Co uživatel v session skutečně napsal – prompty do evidence.
 
-    Patří sem prompty bez `isMeta` a zprávy poslané uprostřed odpovědi, které
-    přicházejí jinou cestou (`queue-operation`) a snadno se přehlédnou. Naopak
-    sem nepatří vsuvky s rolí uživatele, které nenapsal on.
+    Patří sem prompty bez `isMeta` a za prompt se počítá i zpráva poslaná
+    uprostřed odpovědi, která přichází jinou cestou (`queue-operation`) a snadno
+    se přehlédne. Naopak sem nepatří vsuvky s rolí uživatele, které nenapsal on.
     """
     found, seen = [], set()
 
@@ -255,7 +256,7 @@ def prompts(rows):
 
 
 def drop_prefixes(found):
-    """Zahodí kotvu, která je jen rozepsanou verzí jiné.
+    """Zahodí prompt, který je jen rozepsanou verzí jiného.
 
     Harness uloží prompt i ve stavu před doplněním, a to pod **jiným**
     `promptId`, takže podle něj se to rozlišit nedá (ověřeno 26. 9. 2026).
@@ -298,7 +299,7 @@ def run_inventory(rows, path):
         + (
             "  – část konverzace už v kontextu není, čti očištěný transcript celý"
             if cuts
-            else "  – celý obsah je i v kontextu, stačí podle kotev projít jeho"
+            else "  – celý obsah je i v kontextu, stačí podle promptů projít jeho"
         )
     )
     saved = persisted(rows)
@@ -309,7 +310,7 @@ def run_inventory(rows, path):
         print(f"  [{number}] {path}")
     found = prompts(rows)
     print(
-        f"\nUŽIVATELSKÝCH PROMPTŮ: {len(found)} – kotvy evidence, každý musí být odškrtnutý"
+        f"\nUŽIVATELSKÝCH PROMPTŮ: {len(found)} – každý musí být v evidenci odškrtnutý"
     )
     for index, (number, text) in enumerate(found, 1):
         first = " ".join(text.split())[:100]

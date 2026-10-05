@@ -26,7 +26,7 @@ transcript je z devíti desetin technický balast, takže jeho očištění je �
 řádu, ne procent. Jeho tiché selhání je ale dražší než u odkazů – **vynechá-li
 kategorii, která obsah nese, nikdo to nepozná**, protože výsledek vypadá
 úplně. Testuje se proto obojí: že se vynechává jen to, co se vynechávat má,
-a že kotvy evidence nesou jen to, co uživatel skutečně napsal.
+a že prompty v evidenci nesou jen to, co uživatel skutečně napsal.
 
 Spouští se: python3 -m unittest discover -s tests -q
 
@@ -385,26 +385,28 @@ class Predfiltr(PredfiltrBase):
         self.assertEqual(self.kept(records).get("ve frontě"), "JEŠTĚ DODĚLEJ TOHLE")
 
 
-class KotvyEvidence(PredfiltrBase):
-    """Kotvy jsou to, co uživatel napsal – ne všechno s rolí uživatele."""
+class ZpravyUzivatele(PredfiltrBase):
+    """Do evidence jde jen to, co uživatel napsal – ne všechno s jeho rolí."""
 
-    def anchors(self, records):
+    def user_messages(self, records):
         rows = self.extract.load(str(self.transcript(records)))
         return [t for _, t in self.extract.prompts(rows)]
 
-    def test_skutecny_prompt_je_kotva(self):
+    def test_skutecny_prompt_je_zprava_uzivatele(self):
         self.assertEqual(
-            self.anchors([self.user("ZAPIŠ TO DO TODA")]), ["ZAPIŠ TO DO TODA"]
+            self.user_messages([self.user("ZAPIŠ TO DO TODA")]), ["ZAPIŠ TO DO TODA"]
         )
 
-    def test_vsuvka_harnessu_kotva_neni(self):
+    def test_vsuvka_harnessu_neni_zprava_uzivatele(self):
         """Výpis skillu a zpráva subagenta mají roli uživatele, ale nenapsal je on."""
         self.assertEqual(
-            self.anchors([self.user("Base directory for this skill: …", isMeta=True)]),
+            self.user_messages(
+                [self.user("Base directory for this skill: …", isMeta=True)]
+            ),
             [],
         )
 
-    def test_notifikace_z_fronty_kotva_neni(self):
+    def test_notifikace_z_fronty_neni_zprava_uzivatele(self):
         """Do fronty padají i hlášky systému; odškrtávat se nemají."""
         records = [
             {
@@ -418,11 +420,11 @@ class KotvyEvidence(PredfiltrBase):
                 "content": "[SYSTEM NOTIFICATION] nic",
             },
         ]
-        self.assertEqual(self.anchors(records), [])
+        self.assertEqual(self.user_messages(records), [])
 
-    def test_prikaz_skillu_kotva_neni(self):
+    def test_prikaz_skillu_neni_zprava_uzivatele(self):
         self.assertEqual(
-            self.anchors([self.user("<command-name>/cleanup</command-name>")]), []
+            self.user_messages([self.user("<command-name>/cleanup</command-name>")]), []
         )
 
     def test_zprava_z_fronty_se_nepocita_dvakrat(self):
@@ -441,7 +443,7 @@ class KotvyEvidence(PredfiltrBase):
                 },
             },
         ]
-        self.assertEqual(self.anchors(records), ["ještě dodělej tohle"])
+        self.assertEqual(self.user_messages(records), ["ještě dodělej tohle"])
 
     def test_rozepsany_prompt_se_nepocita_zvlast(self):
         """Harness uloží i verzi před doplněním – a pod jiným promptId."""
@@ -450,15 +452,17 @@ class KotvyEvidence(PredfiltrBase):
             self.user("Zhodnoť ten skill a řekni, co s ním dál"),
         ]
         self.assertEqual(
-            self.anchors(records), ["Zhodnoť ten skill a řekni, co s ním dál"]
+            self.user_messages(records), ["Zhodnoť ten skill a řekni, co s ním dál"]
         )
 
-    def test_preruseni_behu_kotva_neni(self):
+    def test_preruseni_behu_neni_zprava_uzivatele(self):
         """Čte se to jako věta, ale je to záznam o akci, ne obsah k zapsání."""
-        self.assertEqual(self.anchors([self.user("[Request interrupted by user]")]), [])
+        self.assertEqual(
+            self.user_messages([self.user("[Request interrupted by user]")]), []
+        )
 
     def test_vsuvka_se_ale_cte(self):
-        """Nález subagenta je obsah, který zmizí se session – čte se, jen není kotva."""
+        """Nález subagenta je obsah, který zmizí se session – čte se, jen není zprávou uživatele."""
         kept = self.kept([self.user("NÁLEZ OD AGENTA", isMeta=True)])
         self.assertEqual(kept.get("vsuvka"), "NÁLEZ OD AGENTA")
 
@@ -500,9 +504,9 @@ class RozhraniPredfiltru(PredfiltrBase):
 
 
 class MutacePredfiltru(PredfiltrBase):
-    """Ověří, že vynechávání vsuvek z kotev drží `isMeta`, ne náhoda."""
+    """Ověří, že vynechávání vsuvek ze zpráv uživatele drží `isMeta`, ne náhoda."""
 
-    def test_bez_ismeta_se_vsuvka_stane_kotvou(self):
+    def test_bez_ismeta_se_vsuvka_stane_zpravou_uzivatele(self):
         source = EXTRACT.read_text(encoding="utf-8").replace(
             'if (record.get("message") or {}).get("role") != "user" or record.get("isMeta"):',
             'if (record.get("message") or {}).get("role") != "user":',
@@ -522,7 +526,7 @@ class KontextProtiTranscriptu(PredfiltrBase):
     """Co transcript navíc má a co v něm chybí stejně jako v kontextu.
 
     Podle obojího se skill rozhoduje, jestli má očištěný transcript vůbec číst,
-    nebo jestli stačí projít podle kotev konverzaci, kterou má v kontextu
+    nebo jestli stačí projít podle promptů konverzaci, kterou má v kontextu
     zaplacenou. Chyba v tom je tichá v obou směrech: nepřečtená část po
     kompaktaci zmizí bez stopy, a zbytečně přečtený transcript se platí do
     konce session.

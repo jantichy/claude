@@ -29,6 +29,11 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | frontmatter | hlavička | blok YAML metadat mezi `---` na začátku `SKILL.md`; kde hrozí záměna, *hlavička skillu*. **Hlavička souboru** jako úvodní odstavec pro čtenáře je něco jiného. V anglickém textu `frontmatter` zůstává |
 | chirurgický zásah | cílený zásah | editace dokumentace po jednotlivých větách. **Ne** „zacílený“, **ne** „cílená změna“ |
 | koncové věty | závěrečný verdikt | povinná závěrečná věta skillu – hotovo a čím pokračovat, nebo co tomu brání |
+| kotva (co uživatel v session napsal) | prompt; jako role v testech `/cleanup` **zpráva uživatele** | položka inventury `/cleanup` a poměr `prompty N/N`. Prompt je i zpráva poslaná uprostřed odpovědi |
+| kotva (datum, od kterého se počítá jiné datum) | referenční datum; u lhůt **počátek lhůty**; cena tak zadaná je **vázaná na termín akce** | relativně zadaná data, hlavně eventoid a `coding/modeling.md` |
+| kotva (řádek po výmazu účtu) | anonymizovaný záznam, anonymizovaný účet | řádek bez osobních údajů, na který dál ukazuje historie |
+| kotva (místo pro skriptovou úpravu textu) | hledaný řetězec | podle čeho skript vkládá nebo kde řeže |
+| kotva (ostatní přenesené významy), ukotvit | konkrétní slovo podle smyslu – doklad, srovnávací ukázka, modelový rozpočet, pracovní cena, rodič v selektoru, opěrný bod, „kontrola, že test něco našel“; sloveso konkrétním slovesem | **Zůstává:** kotva odkazu (`#nadpis`), ukotvení vzoru v regexu, cenová kotva v psychologii ceny a CSS anchor positioning |
 | plot | ohraničení bloku kódu | řádek tří a víc zpětných apostrofů nebo vlnovek, kterým se v Markdownu otevírá a zavírá blok kódu; v kódu anglicky `fence`. **Plot u domu** tím dotčený není |
 | pre-flight | příprava | `Fáze 0` každého skillu. Soubor se dál jmenuje `PREFLIGHT.md` |
 | próza (proti struktuře) | souvislý text | nestrukturovaný zápis tam, kde se čeká tabulka, seznam, kritérium |
