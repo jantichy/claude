@@ -1717,3 +1717,11 @@ Odkaz, který vrátí agent, se do 5. 10. 2026 bral jako doklad; `/discovery` za
 **Známá mez:** `socket.getaddrinfo` nemá ve standardní knihovně časový limit, takže pomalý DNS dotaz celkový limit obejde.
 
 **Zamítnuto – ověřovat dál modelem přes `WebFetch`:** je to přesně ten krok, ve kterém se nepřečtená stránka mění v „nepodložené“. **Zamítnuto – jen pravidlo bez skriptu:** pravidlo by žádalo ověření, které by zase dělal model.
+
+### 2026-10-05 – Jména klíčů v `.env` vypisuje `envkeys.py`, jediná výjimka ze `secret-guard.py`
+
+`secret-guard.py` zastavuje každé čtení tajemství přes shell, a model, který potřeboval jen vědět, jaké klíče v `.env` jsou a jestli jsou vyplněné, stál před zdí bez povolené cesty – a to je stav, ve kterém zkouší zákaz obejít. Podnět je z cizího startovního balíku konfigurace (`list-env-keys.sh --classify`).
+
+**Rozhodnutí:** skript `envkeys.py` vypíše jména klíčů a stav `prázdný` / `zástupný` / `vyplněný`; hodnotu čte jen kvůli stavu a nevypíše z ní nic, ani nerozebraný řádek. Hook ho pouští podle vyřešené cesty, ne podle jména, a jeho hláška na něj odkazuje.
+
+**Zamítnuto – druh hodnoty u vyplněného klíče** (URL, číslo, token), jak to dělá předloha: každá další vlastnost hodnoty je kus hodnoty, a pro ladění konfigurace stačí vědět, že klíč vyplněný je. **Zamítnuto – výjimka podle jména souboru:** cizí repozitář by si přibalil vlastní `envkeys.py`.

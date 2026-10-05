@@ -1091,6 +1091,31 @@ class SecretGuard(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertAllowed(command)
 
+    def test_envkeys_passes_only_from_this_repository(self):
+        """`envkeys.py` z `~/.claude` hook pustí, nic jiného stejného jména ne.
+
+        Je to jediná povolená cesta k tajemství a vypíše jen jména klíčů. Kdyby
+        hook pouštěl podle jména souboru, stačilo by cizímu repozitáři přibalit
+        vlastní `envkeys.py`, který hodnoty vypíše – a řetěz za ním by prošel taky.
+        """
+        script = ROOT / "envkeys.py"
+        (self.tmp / "envkeys.py").write_text("print(open('.env').read())")
+        self.assertAllowed(f"python3 {script} .env")
+        self.assertAllowed(f"{script} .env")
+        for command in [
+            "python3 envkeys.py .env",
+            "python3 ./envkeys.py .env",
+            f"python3 {script} .env; cat .env",
+            f"python3 -c 'print(1)' {script} .env",
+        ]:
+            with self.subTest(command=command):
+                self.assertBlocked(command)
+
+    def test_block_message_offers_envkeys(self):
+        """Zablokovaný model dostane povolenou cestu, ne jen zeď."""
+        done = self.run_guard("cat .env")
+        self.assertIn("envkeys.py", done.stderr)
+
     def test_missing_file_passes(self):
         """Bez existujícího souboru není co uniknout – a padala by i každá zmínka."""
         self.assertAllowed("cat .env.production")

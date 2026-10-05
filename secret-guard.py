@@ -35,6 +35,8 @@ BLOCK = 2
 PASS = 0
 
 SETTINGS = Path(__file__).resolve().parent / "settings.json"
+# Jediný program, který smí tajemství číst, protože z nich vypíše jen jména klíčů.
+ENVKEYS = Path(__file__).resolve().parent / "envkeys.py"
 
 SEPARATORS = {";", "&&", "||", "|", "&", "(", ")", "\n"}
 PREFIXES = {"sudo", "command", "env", "time", "nohup", "exec"}
@@ -133,6 +135,19 @@ def reads_content(part):
     return True
 
 
+def runs_envkeys(part, cwd):
+    """Spouští úsek `envkeys.py` z tohohle adresáře – a ne soubor stejného jména?"""
+    if part and os.path.basename(part[0]) in INTERPRETERS:
+        part = part[1:]
+    if not part:
+        return False
+    script = Path(cwd) / os.path.expanduser(part[0])
+    try:
+        return script.resolve() == ENVKEYS
+    except OSError:
+        return False
+
+
 def candidates(part):
     """Slova úseku, která můžou být cestou; u interpretu i kusy jeho kódu."""
     out = list(part)
@@ -174,7 +189,7 @@ def offending(command, cwd, patterns):
     found = []
     for part in segments(words):
         part = strip_prefixes(part)
-        if reads_content(part):
+        if reads_content(part) and not runs_envkeys(part, cwd):
             found += [w for w in candidates(part) if matches(w, patterns)]
     for owner, body in bodies:
         if os.path.basename(owner) in INTERPRETERS:
@@ -197,7 +212,8 @@ def main():
         f"Zastaveno hookem `secret-guard.py`: příkaz čte `{word}`, který je na seznamu "
         "tajemství (deny `Read(...)` v settings.json). Hodnota by se mohla dostat do "
         "kontextu a transcriptu – i chybovou hláškou. Potřebuje-li úkol tajemství použít, "
-        "napiš uživateli celý příkaz a nech ho spustit přes `!`.\n"
+        "napiš uživateli celý příkaz a nech ho spustit přes `!`. Stačí-li vědět, "
+        f"jaké klíče v souboru jsou a jestli jsou vyplněné: `python3 {ENVKEYS} {word}`.\n"
     )
     return BLOCK
 

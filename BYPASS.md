@@ -79,6 +79,8 @@ Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. 
 | Jméno v proměnné (`F=.env; cat $F`), glob (`cat .e*`), rekurze (`grep -r KEY .`) | Nic – hook vidí text příkazu, ne expanzi shellu | **accepted**: je to vědomé obcházení, ne omyl, stejně jako u `git-guard.py`. Rekurzivní `grep` nad projektem je běžný a jeho blokování by hook vyřadilo z provozu; `rg` navíc gitignorované soubory sám přeskakuje. |
 | Program, který si tajemství načte sám (`npm run dev`, `docker compose` s `env_file`) | Nic | **accepted**, je to zamýšlené: aplikace tajemství potřebuje a hodnota do kontextu nejde, dokud ji program nevypíše. Explicitní `--env-file .env` naopak zastaví, protože jméno stojí v příkazu. |
 | Spustit to člověk přes `!` | Nic | **accepted**, je to zamýšlená cesta: rozhodnutí použít tajemství patří člověku. Výstup takového příkazu ale do kontextu jde, takže ho má člověk psát tak, aby hodnotu nevypsal. |
+| Podvržený `envkeys.py`, který hodnoty vypíše | Hook pouští jen `envkeys.py` z `~/.claude` (porovnává vyřešenou cestu, ne jméno) a jen jeho vlastní úsek příkazu | hlídáno, `tests/test_hooks.py` |
+| Úprava samotného `~/.claude/envkeys.py` tak, aby hodnoty vypsal | Nic – hook věří souboru, ne jeho obsahu | **accepted**: zápis do `~/.claude` je táž hranice jako zápis do hooku samotného; změnu nese diff a commit. |
 | Soubor s tajemstvím mimo deny seznam (`config/database.yml`) | Nic | **accepted**: hook hlídá přesně deny seznam, nic navíc. Chybí-li v něm vzor, doplňuje se tam a hook ho převezme sám. |
 
 ## Permission systém (`settings.json`)

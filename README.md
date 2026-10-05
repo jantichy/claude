@@ -80,7 +80,7 @@ Testy nad textem, který nikdo nespouští, a nad vrstvami, které tu něco doop
 
 #### [`secret-guard.py`](secret-guard.py) – tajemství se nedostane do konverzace přes shell
 
-`PreToolUse` hook, který zastaví příkaz čtoucí soubor s tajemstvím – `. ./.env`, `grep KEY .env`, `cat`, `cp` i kód předaný Pythonu. Zákaz čtení `.env` v `settings.json` totiž hlídá jen nástroj na čtení souborů a shell kolem něj procházel, takže se klíč mohl objevit v konverzaci třeba v chybové hlášce. Seznam tajemství si bere z týchž zákazů, takže se drží na jednom místě. Zmínku o `.env` v dokumentaci nebo ve zprávě commitu propustí, stejně jako ověření, že soubor existuje; tajemství, které úkol opravdu potřebuje, spustí člověk sám.
+`PreToolUse` hook, který zastaví příkaz čtoucí soubor s tajemstvím – `. ./.env`, `grep KEY .env`, `cat`, `cp` i kód předaný Pythonu. Zákaz čtení `.env` v `settings.json` totiž hlídá jen nástroj na čtení souborů a shell kolem něj procházel, takže se klíč mohl objevit v konverzaci třeba v chybové hlášce. Seznam tajemství si bere z týchž zákazů, takže se drží na jednom místě. Zmínku o `.env` v dokumentaci nebo ve zprávě commitu propustí, stejně jako ověření, že soubor existuje; tajemství, které úkol opravdu potřebuje, spustí člověk sám. Jedinou výjimkou je [`envkeys.py`](envkeys.py), který ze souboru vypíše jen jména klíčů a jestli jsou prázdné, zástupné, nebo vyplněné – hlášku hooku na něj odkáže, takže model nestojí před slepou zdí.
 
 #### [`handoff.py`](handoff.py) – nový začátek nabídnutý včas, ne podle dojmu
 
