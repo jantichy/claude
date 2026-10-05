@@ -40,6 +40,7 @@ Skill **skládá**, nepíše vše sám – je to první uplatnění pravidla *Sk
 | Tlakové scénáře | `superpowers:writing-skills` | Měří dodržení pravidla pod tlakem, ne kvalitu výstupu. |
 | Ladění `description` | `skill-creator` | Umí spolehlivost vyvolání proměřit, ne odhadnout. |
 | Okolí, revize, rušení | **vlastní** | Neumí to nikdo. |
+| Průchod nanečisto při revizi | agent typu `reader` | Jen čte a ze skillu nic nevykoná, takže jím projde jako nový uživatel, ne jako autor, který ví, co se myslelo. |
 
 **Volání cizích nástrojů je implementační detail, ne rozhraní.** Vyměnit se smí kdykoliv. Závazné je: tvar výstupu podle `SKILLS.md`, že se skill nezaloží bez odsouhlaseného zadání, že revize nic nepřepíše bez zeptání a že se po dokončení dorovná okolí.
 
@@ -230,11 +231,14 @@ Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez j
 | Názvosloví | „Fáze“ vs. „Krok“; jeden termín pro jednu věc |
 | Delegace | volané nástroje existují; sekce *Jak je to postavené uvnitř* je tam, kde se deleguje, a označuje vnitřek za vyměnitelný |
 | README skillu | existuje, má povinné sekce v pořadí z normy, instalace je psaná jako pokyn pro Clauda a u skillu ze životního cyklu nechybí rámeček ani hromadná instalace |
+| Proveditelnost | každý krok jde provést nástroji z `allowed-tools` a soubory, na které odkazuje, existují – ověřuje průchod nanečisto níž |
 | **Nové možnosti v okolí** | *nevzniklo mezitím něco, co tenhle skill dělá ručně?* Přibyl vestavěný skill, plugin, MCP server nebo vlastní skill, který by nahradil kus jeho postupu? |
 
 Poslední řádek je druhý druh rozejití vedle toho s normou a **neklade ho nikdo jiný**. Konfigurační vrstva roste pod nohama a starší skill o ní neví.
 
 ### Jak to proběhne
+
+**Napřed skill projdi nanečisto.** Pusť nad ním agenta typu `reader` se zadáním z `~/.claude/skills/skill/dryrun.md` a se 3–5 realistickými vstupy, z toho aspoň jedním okrajovým (prázdný argument, chybějící soubor). Agent u každého vstupu vypíše kroky a nástroj, který každý potřebuje, porovná ho s `allowed-tools` a vrátí kroky, které provést nejdou, místa, kde musel hádat, a co by udělal slabší model. Strojová kontrola v `tests/test_skills.py` chytí jen nástroj jmenovaný v kódu; průchod najde i krok popsaný slovy („pusť agenta“) a mezeru, kterou skill nechává domyslet. Chybějící nástroj jde mezi nálezy jako „potřebuju rozhodnout“ – doplnit ho do hlavičky znamená rozšířit oprávnění.
 
 **Napřed vypiš nálezy, pak teprve jednej.** Uživatel musí vidět rozsah dřív, než se sáhne na soubory.
 

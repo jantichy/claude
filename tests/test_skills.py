@@ -316,6 +316,208 @@ def _bad_links(skill, pattern, own: set, foreign: set) -> list:
     return bad
 
 
+#: Nástroje harnessu, jejichž jméno ve skillu znamená, že je skill volá. Schválně
+#: bez `Read`, `Grep` a `Glob`: ty má každý skill a jejich jména se v textu
+#: objevují jako běžná slova („read“), takže by kontrola hlásila jen šum.
+HARNESS_TOOLS = (
+    "Agent",
+    "AskUserQuestion",
+    "WebFetch",
+    "WebSearch",
+    "Bash",
+    "Write",
+    "Edit",
+    "Skill",
+    "Workflow",
+    "NotebookEdit",
+)
+
+#: Jméno nástroje jako kód (`` `Agent` ``, `` `mcp__…` ``) nebo v tvaru volání
+#: (`Skill(`). Holé slovo se nepočítá – „agent“ a „edit“ jsou i česká slova.
+NAMED_TOOL = re.compile(
+    r"`(%s|mcp__[\w-]+)`|\b(%s)\(" % ("|".join(HARNESS_TOOLS), "|".join(HARNESS_TOOLS))
+)
+
+#: Typy subagentů: vlastní z `agents/` a vestavěné. Typ jmenovaný u slova
+#: „agent“ (`pusť dva `reader` agenty`) je jednoznačné volání nástroje `Agent`.
+AGENT_TYPES = sorted(p.stem for p in (ROOT / "agents").glob("*.md")) + [
+    "Explore",
+    "general-purpose",
+]
+AGENT_CALL = re.compile(
+    r"subagent_type|`(?:{t})`[^`\n]{{0,40}}\bagent|\bagent\w*[^`\n]{{0,40}}`(?:{t})`".format(
+        t="|".join(map(re.escape, AGENT_TYPES))
+    ),
+    re.I,
+)
+
+
+def prose_rows(text: str):
+    """Řádky mimo hlavičku a bloky kódu, i s číslem řádku v souboru.
+
+    Blok kódu je zadání pro subagenta, šablona výstupu nebo ukázka cizího
+    skillu – nástroj jmenovaný v něm volá někdo jiný než skill sám.
+    """
+    rows = text.splitlines()
+    start = 0
+    if text.startswith("---\n"):
+        start = rows.index("---", 1) + 1
+    in_fence = False
+    for number, row in enumerate(rows[start:], start + 1):
+        if row.lstrip().startswith(("```", "~~~")):
+            in_fence = not in_fence
+        elif not in_fence:
+            yield number, row
+
+
+def prescribed_tools(text: str) -> dict:
+    """Nástroje, které text předepisuje: {jméno: řádek prvního výskytu}."""
+    found = {}
+    for number, row in prose_rows(text):
+        names = {a or b for a, b in NAMED_TOOL.findall(row)}
+        if AGENT_CALL.search(row):
+            names.add("Agent")
+        for name in names:
+            found.setdefault(name, number)
+    return found
+
+
+def is_allowed(tool: str, allowed: set) -> bool:
+    """Je nástroj v `allowed-tools`? Počítá i se zástupným `mcp__server__*`."""
+    return tool in allowed or any(
+        a.endswith("*") and tool.startswith(a[:-1]) for a in allowed
+    )
+
+
+def tool_gaps(skill_dir: Path) -> dict:
+    """Předepsané nástroje, které hlavička nedává: {(skill, nástroj): místo}.
+
+    Čte `SKILL.md` i vedlejší `.md` soubory skillu – postup bývá vytažený do
+    nich. `README.md` je text pro člověka, ne postup, a nečte se.
+    """
+    value = frontmatter(skill_dir / "SKILL.md").get("allowed-tools", "")
+    allowed = {t.strip() for t in value.strip("[] ").split(",") if t.strip()}
+    gaps = {}
+    for file in sorted(skill_dir.glob("*.md")):
+        if file.name == "README.md":
+            continue
+        for tool, row in prescribed_tools(file.read_text(encoding="utf-8")).items():
+            if not is_allowed(tool, allowed):
+                gaps.setdefault((skill_dir.name, tool), f"{file.name}:{row}")
+    return gaps
+
+
+def unexcused(gaps: dict, exceptions: dict) -> list:
+    """Mezery, které žádná výjimka nekryje – výjimka platí pro dvojici, ne pro skill."""
+    return sorted(
+        f"/{s}: `{t}` ({gaps[(s, t)]})" for s, t in gaps if (s, t) not in exceptions
+    )
+
+
+class PrescribedToolsAreAllowed(unittest.TestCase):
+    """Skill, který v těle předepisuje nástroj, ho musí mít v `allowed-tools`.
+
+    Jinak krok nejde provést, a pozná se to až uprostřed běhu: skill má pustit
+    agenta a `Agent` nedostal, takže práci buď udělá sám v hlavní session,
+    nebo ji potichu vynechá. Hlavička i tělo přitom vypadají v pořádku, každé
+    zvlášť.
+
+    **Falešný poplach je tu ta horší polovina** – kontrolu, která hlásí
+    nesmysly, si člověk vypne. Proto se počítá jen jméno nástroje jako kód nebo
+    v jednoznačném tvaru volání, ne holé slovo, a nic z bloků kódu: tam stojí
+    zadání subagentů, jejichž nástroje nejsou nástroji skillu. Krok popsaný jen
+    slovy („jeden agent na zdroj“) tahle kontrola nevidí; ten chytá průchod
+    nanečisto v `/skill`, režim `update`.
+
+    Co strojově rozlišit nejde – zmínka typu „nemá `Bash`“ nebo nástroj, který
+    skill dává agentovi –, stojí v `EXCEPTIONS` i s důvodem. Seznam se
+    **porovnává se skutečností v obou směrech**: výjimka, která přestala být
+    potřeba, shodí testy stejně jako nová mezera.
+    """
+
+    #: (skill, nástroj): proč to není vada. Skutečné mezery, o kterých má
+    #: rozhodnout uživatel, sem jdou jen dočasně a s tím, že na rozhodnutí čekají.
+    EXCEPTIONS = {
+        (
+            "replace",
+            "Agent",
+        ): "čeká na rozhodnutí uživatele – SKILL.md velí u velkého rozsahu pustit dva `reader` agenty, hlavička `Agent` nemá",
+        (
+            "skill",
+            "Agent",
+        ): "čeká na rozhodnutí uživatele – režim `update` pouští průchod nanečisto agentem `reader`, hlavička `Agent` nemá",
+    }
+
+    def gaps(self) -> dict:
+        found = {}
+        for skill in SKILLS:
+            found.update(tool_gaps(skill.parent))
+        return found
+
+    def test_prescribed_tools_are_allowed(self):
+        missing = unexcused(self.gaps(), self.EXCEPTIONS)
+        self.assertFalse(
+            missing,
+            "skill předepisuje nástroj, který nemá v `allowed-tools`:\n  "
+            + "\n  ".join(missing),
+        )
+
+    def test_exceptions_match_reality(self):
+        """Výjimka pro mezeru, která zmizela, kryje nikoho – vyškrtni ji."""
+        stale = sorted(set(self.EXCEPTIONS) - set(self.gaps()))
+        self.assertFalse(stale, f"výjimky, které nic nekryjí: {stale}")
+        for key, reason in self.EXCEPTIONS.items():
+            self.assertTrue(reason.strip(), f"výjimka {key} nemá důvod")
+
+    def test_removed_tool_is_reported(self):
+        """Mutace: vzor, kterému se z hlavičky odebere nástroj, musí spadnout."""
+        import shutil
+        import tempfile
+
+        original = (ROOT / "skills/review/SKILL.md").read_text(encoding="utf-8")
+        self.assertEqual(tool_gaps(ROOT / "skills/review"), {}, "vzor už mezeru má")
+        header = next(
+            r for r in original.splitlines() if r.startswith("allowed-tools:")
+        )
+        self.assertIn("Agent, ", header, "vzor přestal mít `Agent` v hlavičce")
+        damaged = original.replace(header, header.replace("Agent, ", ""), 1)
+        temp_dir = Path(tempfile.mkdtemp())
+        try:
+            (temp_dir / "review").mkdir()
+            (temp_dir / "review" / "SKILL.md").write_text(damaged, encoding="utf-8")
+            gaps = tool_gaps(temp_dir / "review")
+        finally:
+            shutil.rmtree(temp_dir)
+        self.assertIn(
+            ("review", "Agent"), gaps, f"kontrola neohlásila odebraný `Agent`: {gaps}"
+        )
+
+    def test_detects_call_forms_and_skips_code_blocks(self):
+        """Volání agenta typem i `subagent_type` je nález, zadání v bloku kódu ne."""
+        for row in (
+            "Pusť dva `reader` agenty naráz.",
+            'Typ se předává `subagent_type: "reader"`.',
+            "Zeptej se přes `AskUserQuestion`.",
+        ):
+            with self.subTest(row=row):
+                self.assertTrue(prescribed_tools(row), f"kontrola nevidí {row!r}")
+        block = "```\nJsi agent. Použij `WebFetch` a `Bash`.\n```\n"
+        self.assertEqual(prescribed_tools(block), {}, "kontrola čte zadání subagenta")
+        self.assertEqual(prescribed_tools("Pak agent upraví text."), {})
+
+    def test_exception_silences_only_its_pair(self):
+        """Výjimka pro (skill, nástroj) neztiší jiný nástroj ani jiný skill."""
+        gaps = {
+            ("x", "Agent"): "SKILL.md:1",
+            ("x", "WebFetch"): "SKILL.md:2",
+            ("y", "Agent"): "SKILL.md:3",
+        }
+        left = unexcused(gaps, {("x", "Agent"): "důvod"})
+        self.assertEqual(
+            left, ["/x: `WebFetch` (SKILL.md:2)", "/y: `Agent` (SKILL.md:3)"], left
+        )
+
+
 #: Odkazy se píšou domovskou cestou (`~/.claude/RULES.md`), ale míří na dvě různá
 #: místa: do **tohohle repozitáře**, nebo do privátní knowledge base mimo něj.
 LINK_PATTERN = r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`"

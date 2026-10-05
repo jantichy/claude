@@ -14,6 +14,7 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 ## Proč zrovna tenhle
 
 - **Revize je opakovatelná.** Konfigurace se vyvíjí dál a starší skilly v ní zůstanou stát; tohle je způsob, jak je dorovnat jedním zavoláním.
+- **Zkusí skill projít nanečisto.** Čtenář, který ho nezná, ho na několika vstupech včetně prázdného „vykoná“ jen čtením a ohlásí krok, na který skill nemá potřebný nástroj, i místo, kde musel hádat, co se myslelo.
 - **Ptá se na možnosti, které dřív neexistovaly.** Přibyl mezitím nástroj, který by nahradil kus postupu ručně napsaného ve skillu? Tenhle druh zastarávání jinak nikdo neměří.
 - **Nezaloží alias.** Zbylo-li po odečtení všeho, co umí někdo jiný, prázdno, řekne to rovnou – a ušetří vám skill, který nic nepřidává.
 - **Změří, jak agent selže bez skillu**, a píše proti tomu, ne proti představě. Konkrétní výmluvy, kterými si agent zvolí jinou cestu, jsou pak přesně ta místa, kde má být pravidlo formulované tvrději.
