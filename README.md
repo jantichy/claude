@@ -40,7 +40,7 @@ Claude si zvykne na slovo, které v konverzaci padlo jednou a třeba omylem, a z
 
 #### [`EVIDENCE.md`](EVIDENCE.md) – měřit tak, aby výsledek něco rozhodl
 
-Pravidla pro chvíle, kdy se něco zjišťuje z dat nebo se hledá příčina chyby: předem vypsat, co který výsledek rozhodne, u každé vyloučené možnosti zapsat, jak pevně je vyloučená a co ji otevře znovu, a než se odpoví z dat, ověřit, že v nich ptaná věc vůbec je. Načítá se, jen když se měří nebo ladí, ne do každé session.
+Pravidla pro chvíle, kdy se něco zjišťuje z dat nebo se hledá příčina chyby: předem vypsat, co který výsledek rozhodne, u každé vyloučené možnosti zapsat, jak pevně je vyloučená a co ji otevře znovu, a než se odpoví z dat, ověřit, že v nich ptaná věc vůbec je. Odkaz z webu bere jako tvrzení, dokud skript `skills/sources.py` nepřečte stránku a nenajde na ní citovaný úryvek. Načítá se, jen když se měří, ladí nebo přebírá tvrzení z webu, ne do každé session.
 
 #### [`DELEGATION.md`](DELEGATION.md) – kdy a jak pouštět agenty
 

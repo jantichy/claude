@@ -189,7 +189,7 @@ U všeho volitelného, podmíněného nebo výjimečného zapiš proč. Kde dův
 
 ### Zjišťuj podle pravidel pro práci s daty
 
-Než měříš, dotazuješ se do dat nebo hledáš příčinu chyby, **načti si `~/.claude/EVIDENCE.md`** – vidlička před měřením, stupně vyloučení, shoda měření s tvrzením, doména hodnot pole. Ptá-li se někdo na věc, kterou podklady v tom rozlišení neobsahují, **odpověď začíná tím, co chybí**, ne zástupným výpočtem.
+Než měříš, dotazuješ se do dat, hledáš příčinu chyby nebo zapisuješ tvrzení z webu, **načti si `~/.claude/EVIDENCE.md`** – vidlička před měřením, stupně vyloučení, shoda měření s tvrzením, doména hodnot pole, ověření zdroje skriptem. Ptá-li se někdo na věc, kterou podklady v tom rozlišení neobsahují, **odpověď začíná tím, co chybí**, ne zástupným výpočtem.
 
 ### Detekce konfliktů před přidáním
 

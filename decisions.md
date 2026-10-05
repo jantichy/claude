@@ -1707,3 +1707,13 @@ Claude Code maže transcripty session po 30 dnech, dokud `settings.json` neřekn
 **Rozhodnutí:** `cleanupPeriodDays: 3650`. Co se smazalo do 5. 10. 2026, se nevrátí.
 
 **Zamítnuto – `0` jako „nemazat nikdy“:** podle autorů toho balíku hodnota `0` kvůli chybě vypne ukládání transcriptů úplně; neověřeno, ale riziko nestojí za ověřování. **Zamítnuto – 365 dní:** historie by po roce mizela zase a disk tím nic podstatného neušetří.
+
+### 2026-10-05 – Tvrzení z webu ověřuje skript, ne model
+
+Odkaz, který vrátí agent, se do 5. 10. 2026 bral jako doklad; `/discovery` zahazoval jen nálezy „bez funkční URL“ a nejistý údaj doověřoval přes `WebFetch`. Agent přitom umí vymyslet věrohodnou citaci i adresu a model, který čte paywall, přihlašovací zeď nebo falešnou 404 (všechny odpovídají HTTP 200), prohlásí nepřečtený zdroj za nepodložený.
+
+**Rozhodnutí:** pravidlo v `EVIDENCE.md` (*Tvrzení z webu je jen tvrzení, dokud skript nepřečte stránku*) a skript `skills/sources.py`, který stránku stáhne, vytáhne text viditelný čtenáři a hledá v něm doslovný úryvek. Agent `researcher` a zadání agentů v `/discovery` proto vracejí u zdroje i úryvek. Skript je přepis `check_source.py` z repozitáře hradniai/claude-starter-pack (MIT) na zdejší konvence; při přepisu se v originálu našlo a opravilo šest vad, mezi nimi obejití časového limitu pomalým serverem a kvadratický rozbor HTML. Vynechal se otisk úryvku (`quote_digest`), který tam slouží jen předávání výsledku přes agenta bez shellu.
+
+**Známá mez:** `socket.getaddrinfo` nemá ve standardní knihovně časový limit, takže pomalý DNS dotaz celkový limit obejde.
+
+**Zamítnuto – ověřovat dál modelem přes `WebFetch`:** je to přesně ten krok, ve kterém se nepřečtená stránka mění v „nepodložené“. **Zamítnuto – jen pravidlo bez skriptu:** pravidlo by žádalo ověření, které by zase dělal model.

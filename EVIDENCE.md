@@ -1,6 +1,6 @@
 # Zjišťování z dat
 
-Pravidla pro měření, analýzu dat a hledání příčin – dotaz do databáze nebo analytiky, test hypotézy, ladění chyby. **Odkaz, ne import:** načítá se, když se zjišťuje; spouštěč drží `~/.claude/RULES.md`, *Zjišťuj podle pravidel pro práci s daty*.
+Pravidla pro měření, analýzu dat a hledání příčin – dotaz do databáze nebo analytiky, test hypotézy, ladění chyby – a pro přebírání tvrzení z webu. **Odkaz, ne import:** načítá se, když se zjišťuje; spouštěč drží `~/.claude/RULES.md`, *Zjišťuj podle pravidel pro práci s daty*.
 
 ## Před každým měřením vypiš, co který výsledek rozhodne
 
@@ -53,3 +53,16 @@ Vyloučení i potvrzení platí, jen když měření sedí na tvrzení ve třech
 ## Než pole použiješ v podmínce, vypiš jeho hodnoty
 
 Před filtrem, agregací nebo výčtem vypiš, jaké hodnoty v poli doopravdy jsou, s počty. Jinak se filtruje podle podoby, ve které se nález čeká – a podmínka, která nesedne na nic, vypadá jako nález (prázdnota uložená zástupným řetězcem, podřetězec, který propustí nečitelný zápis). Platí na každé vrstvě: dotaz do databáze, parametry požadavku, klíče v JSONu, konfigurace, stavy v evidenci.
+
+## Tvrzení z webu je jen tvrzení, dokud skript nepřečte stránku
+
+Odkaz, který vrátí agent, je tvrzení, a jeho „ověřil jsem to“ taky – agent umí vymyslet věrohodnou citaci i adresu. **Než tvrzení z webu skončí v souboru** (rešerše, `competition.md`, znalostní báze, kód), ověř ho skriptem: zapiš pole `{"id", "url", "quote"}` nástrojem Write do scratchpadu a pusť `python3 ~/.claude/skills/sources.py --batch <soubor> --compact`. URL ani text stránky na příkazovou řádku nepatří, shell v nich spustí `$(...)`. Odpověď v konverzaci smí tvrzení předat i neověřené, ale označené jako hlášení agenta.
+
+- **HTTP 200 není ověření.** Paywall, přihlašovací zeď i stránka „nenalezeno“ odpovídají 200 vlastním obsahem a vymyšlená adresa se často přesměruje na nesouvisející stránku.
+- **Přečtená stránka (`REACHED…`) teprve otevírá posouzení**, jestli úryvek tvrzení opravdu nese. `REACHED_QUOTE_MISSING` je důvod stránku přečíst, ne důkaz podvrhu.
+- **Každý jiný verdikt znamená „neověřeno (důvod)“**, nikdy „nepodložené“ ani „nepravdivé“ – nikdo stránku nečetl.
+- **U každého tvrzení stojí, odkud se ví:** *změřeno* (spustil jsi to, nebo je to doložené přesně pro tenhle případ), *doloženo* (někdo to postavil nebo zjistil a napsal o tom – s URL), *úsudek* (tvoje odvození, ne nález). Nižší stupeň se za vyšší nevydává; neobsahuje-li rešerše doporučení, řekni to, místo abys ho odvodil.
+- **Tvrzení bez zdroje se nezahazuje ani nedoplňuje**, hlásí se jako „bez ověřitelného zdroje“. Domyšlená URL je horší než žádná, protože na ni čtenář klikne.
+- **Zařazení je slabší než fakt.** Agent spolehlivěji sesbírá, co produkt umí, než ho správně zařadí („X je nejbližší konkurent Y“, „X je lídr trhu“). Zařazení ověř nad primárními zdroji – že ty dvě věci opravdu dělají totéž.
+
+Bez toho se do dokumentu dostane odkaz, který vypadá doloženě, a nikdo ho už nezpochybní.

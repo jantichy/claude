@@ -89,7 +89,7 @@ a konkrétní ceny, na koho to cílí, v jakém je stavu, čím je to omezené.
 
 [{"name": "...", "url": "...", "features": ["..."], "pricing": "...", "target_audience": "...",
   "status": "aktivní | zaniklý <kdy a proč>", "limitations": ["..."],
-  "basis": ["URL, ze které to je"], "confidence": "vysoká|střední|nízká"}]
+  "basis": [{"url": "URL, ze které to je", "quote": "doslovný úryvek ze stránky, který to dokládá"}], "confidence": "vysoká|střední|nízká"}]
 
 U zaniklého produktu je pole "status" to nejdůležitější, co vracíš – uveď doložený důvod
 konce, ne domněnku. Nenajdeš-li ho, napiš "zaniklý, důvod neznámý".
@@ -103,7 +103,7 @@ který se staví.
 
 [{"finding": "...", "type": "stížnost | očekávaná funkce | povinnost | pojem | cenový model",
   "implication": "jednou větou, co by produkt měl umět nebo splnit",
-  "basis": ["URL, ze které to je"], "confidence": "vysoká|střední|nízká"}]
+  "basis": [{"url": "URL, ze které to je", "quote": "doslovný úryvek ze stránky, který to dokládá"}], "confidence": "vysoká|střední|nízká"}]
 
 Pole "implication" musí být konkrétní a ověřitelné. "Musí to být jednoduché" není
 zjištění; "uživatelé si stěžují, že export nejde spustit bez administrátora" je.

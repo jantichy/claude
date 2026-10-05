@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>How we verify cited sources before publishing | Example Engineering</title>
+<link rel="canonical" href="/article"></head>
+<body><header><nav><a href="/">Home</a> <a href="/blog/">Blog</a></nav></header>
+<main><article><h1>How we verify cited sources before publishing</h1>
+<p>Every research report we ship goes through a link audit. Our team
+<em>measured the redirect chain</em> on every cited link, recorded the final URL, and compared the page text with the quoted excerpt.</p>
+<p>We found that roughly one link in eight pointed at a page that no longer carried the claim, usually because the publisher had restructured its archive.</p>
+<p>The fix was boring: a script that fetches the raw HTML, follows redirects and searches for the quote. It runs in seconds and costs nothing.</p>
+</article></main><footer>Example Engineering blog</footer></body></html>

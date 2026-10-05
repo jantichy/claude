@@ -103,7 +103,7 @@ Zeptej se **na pět věcí, jednu po druhé**:
 
 **Typem `researcher`, výchozí model, `low`.** Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: doklad bez URL se zahodí hned pod tímhle odstavcem.
 
-**Ověř nálezy stejným sítem jako ve Fázi 3** – vypadne, co nemá `basis` s funkční URL; co má nízkou jistotu u nosného údaje, buď doověř přes `WebFetch`, nebo zapiš jako neznámé; duplicity mezi agenty slouč. Navíc přísněji na jednu věc: **doklad musí mluvit o problému, ne o kategorii produktu**. Článek „deset nejlepších nástrojů na X“ dokládá, že někdo píše o nástrojích, ne že někdo má ten problém. Stížnost člověka, který popisuje, jak to dnes obchází, doklad je.
+**Ověř nálezy stejným sítem jako ve Fázi 3** včetně skriptu na zdroje; co má nízkou jistotu u nosného údaje, buď doověř přes `WebFetch`, nebo zapiš jako neznámé; duplicity mezi agenty slouč. Navíc přísněji na jednu věc: **doklad musí mluvit o problému, ne o kategorii produktu**. Článek „deset nejlepších nástrojů na X“ dokládá, že někdo píše o nástrojích, ne že někdo má ten problém. Stížnost člověka, který popisuje, jak to dnes obchází, doklad je.
 
 Sepiš `docs/demand.md`:
 
@@ -158,7 +158,8 @@ Sepiš `docs/demand.md`:
 
 **Nálezy se nezapisují rovnou.** Projdi je a zahoď:
 
-- co nemá `basis` s funkční URL,
+- co nemá `basis` s URL a doslovným úryvkem,
+- co `skills/sources.py` nepřečetl nebo na stránce úryvek nenašel – zapiš jako neověřené i s důvodem, nebo stránku přečti sám; postup a výklad verdiktů drží `~/.claude/EVIDENCE.md`, *Tvrzení z webu je jen tvrzení, dokud skript nepřečte stránku*,
 - co má `confidence: nízká` u ceny nebo klíčové funkce – buď údaj ověř sám přes `WebFetch`, nebo ho zapiš jako neznámý,
 - duplicity mezi agenty – týž produkt našlo víc cest, sloučí se do jednoho záznamu.
 
