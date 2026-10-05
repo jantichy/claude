@@ -1699,3 +1699,11 @@ Rozhodnutí z 28. 9. 2026, že práh „drží text, ne měřidlo“, padlo podl
 **Rozhodnutí:** hook `handoff.py` na `UserPromptSubmit` měří z transcriptu velikost kontextu a počet volání hlavní session od poslední kompaktace a nad prahem vloží modelu hlášku, u každého prahu jednou. Prahy jsou **300k a 150 volání pro nabídku, 400k pro doporučení**. Tabulka v `HANDOFF.md` je pravidlo, konstanty v hooku jeho měřidlo a test hlídá, že se nerozejdou. `RULES.md` čísla neopisuje, odkazuje na `HANDOFF.md` a na hook.
 
 **Argument o režii, kvůli kterému byl hook 28. 9. zamítnut, neplatí:** pod prahem hook do kontextu nevloží nic a nad ním jednu větu za práh, takže trvalá režie je jen čtení transcriptu při odeslání zprávy. **Zamítnuto měřit po každém nástroji (`PostToolUse`):** četl by celý transcript po každém volání kvůli případu, kdy dlouhý běh proběhne uvnitř jedné odpovědi; pro ten zůstává v `HANDOFF.md` odhad z rozsahu běhu. **Zamítnuto ukazovat hlášku přímo uživateli:** čísla vidí ve status line a nabídka s tím, co by se zapsalo a kde navázat, je práce modelu.
+
+### 2026-10-05 – Transcripty se drží deset let (`cleanupPeriodDays: 3650`)
+
+Claude Code maže transcripty session po 30 dnech, dokud `settings.json` neřekne jinak – a neříkal. 5. 10. 2026 byl nejstarší ze 739 transcriptů z 5. 9. Na transcriptech přitom stojí skilly, které jdou zpětně přes uzavřené session (`/scenarios`, dohledání nenatrackovaného času v `/invoicing recover`, vytěžení konverzace v `/skill`), a mez 30 dní se popisovala jako vlastnost zdroje, ne jako nastavení. Podnět přišel z prohlídky cizího startovního balíku konfigurace, který hodnotu nastavuje.
+
+**Rozhodnutí:** `cleanupPeriodDays: 3650`. Co se smazalo do 5. 10. 2026, se nevrátí.
+
+**Zamítnuto – `0` jako „nemazat nikdy“:** podle autorů toho balíku hodnota `0` kvůli chybě vypne ukládání transcriptů úplně; neověřeno, ale riziko nestojí za ověřování. **Zamítnuto – 365 dní:** historie by po roce mizela zase a disk tím nic podstatného neušetří.

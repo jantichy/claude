@@ -451,6 +451,7 @@
   "theme": "dark",
   "preferredNotifChannel": "iterm2",
   "autoCompactEnabled": false,
+  "cleanupPeriodDays": 3650,
   "autoContinueAtUsageLimit": true,
   "terminalProgressBarEnabled": false,
   "remoteControlAtStartup": false,
