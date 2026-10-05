@@ -996,6 +996,24 @@ class GitGuard(unittest.TestCase):
         )
 
 
+class BypassLock(unittest.TestCase):
+    """Režim bypass je zamčený.
+
+    Bypass vypne deny seznam i ptaní na povolení, takže by naráz přestaly
+    platit všechny vrstvy v `BYPASS.md`, které na permission systému stojí.
+    Zámek je jeden řádek a jeho tiché zmizení by nic neshodilo – proto test.
+    """
+
+    def test_bypass_mode_disabled(self):
+        """`settings.json` nese `disableBypassPermissionsMode: disable`."""
+        settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            "disable",
+            settings["permissions"].get("disableBypassPermissionsMode"),
+            "režim bypass není zamčený",
+        )
+
+
 class SecretGuard(unittest.TestCase):
     """`secret-guard.py` zastaví Bash příkaz, který čte existující tajemství.
 

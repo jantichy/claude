@@ -89,6 +89,7 @@ Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. 
 |---|---|---|
 | Zavolat zakázaný příkaz přes interpret (`python3 -c`, `osascript`) | Nic – deny porovnává text příkazu | **accepted**, je to vlastnost mechanismu. Proto se na deny nespoléhá tam, kde má držet skutečná hranice (souhlas průběžné kontroly čte `/dev/tty`). |
 | Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `RULES.md`, *Commituj jmenované cesty, ne `-A`*. |
+| Pustit session v režimu bypass (`--dangerously-skip-permissions`), který vypne deny i hooky na povolení | `disableBypassPermissionsMode: "disable"` v `settings.json` | hlídáno, `tests/test_hooks.py`; zámek se dá smazat z téhož souboru, ale změna `settings.json` jde přes diff a commit |
 | Nový destruktivní příkaz, na který vzor nemyslel | Nic | **accepted**: seznam je výčet, ne princip. Roste, když se něco objeví. |
 | Deny `Read(...)` na tajemství obejde čtení přes Bash (`. ./.env`, `grep`, `cat`) | `secret-guard.py`, viz sekce výš | hlídáno od 3. 10. 2026 |
 | Deny na `.env` obejde git hook, který zakládá odkaz za model | Nic | **accepted**, je to zamýšlené – viz *Převzetí lokálního stavu do worktree* výš. Je to jediná vědomá cesta kolem deny na tajemství. |

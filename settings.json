@@ -268,7 +268,8 @@
       "Bash(git clone:*)",
       "Bash(git init:*)"
     ],
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "disableBypassPermissionsMode": "disable"
   },
   "model": "opus[1m]",
   "hooks": {

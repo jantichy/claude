@@ -1725,3 +1725,11 @@ Odkaz, který vrátí agent, se do 5. 10. 2026 bral jako doklad; `/discovery` za
 **Rozhodnutí:** skript `envkeys.py` vypíše jména klíčů a stav `prázdný` / `zástupný` / `vyplněný`; hodnotu čte jen kvůli stavu a nevypíše z ní nic, ani nerozebraný řádek. Hook ho pouští podle vyřešené cesty, ne podle jména, a jeho hláška na něj odkazuje.
 
 **Zamítnuto – druh hodnoty u vyplněného klíče** (URL, číslo, token), jak to dělá předloha: každá další vlastnost hodnoty je kus hodnoty, a pro ladění konfigurace stačí vědět, že klíč vyplněný je. **Zamítnuto – výjimka podle jména souboru:** cizí repozitář by si přibalil vlastní `envkeys.py`.
+
+### 2026-10-05 – Režim bypass je zamčený; `rm` a `mv` hlídá dál klasifikátor režimu auto
+
+Při prohlídce cizího startovního balíku konfigurace padly tři pojistky mimo git: zámek režimu bypass, hook na `rm -rf` schovaný v řetězu příkazů a hook na `mv`, který tiše přepíše existující soubor.
+
+**Rozhodnutí:** jen zámek, `disableBypassPermissionsMode: "disable"`. Bypass by naráz vypnul deny seznam i ptaní na povolení, tedy všechno, co v `BYPASS.md` stojí na permission systému, a zámek nic nestojí.
+
+**Zamítnuto – hook na `rm -rf` v řetězu:** zastavoval by i běžné mazání build adresářů a `node_modules`; falešný poplach u hooku před každým příkazem vede k jeho vypnutí. Destruktivní příkazy posuzuje podle kontextu klasifikátor režimu auto. **Zamítnuto – hook na přepisující `mv`:** chyba je skutečná, ale vzácná a vratná z gitu; další hook před každým příkazem za ni nestojí. Vrátit se k tomu má smysl, kdyby se taková ztráta jednou stala.
