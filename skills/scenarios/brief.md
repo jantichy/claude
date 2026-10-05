@@ -71,6 +71,9 @@ Pro každou nalezenou situaci přesně tyhle položky:
 Řaď to podle pořadí v transcriptu. Na konec přidej `## Témata session` – tři až šest
 odrážek, o čem ta konverzace byla, ať se dá výstup zařadit.
 
+**Nezazněla-li v session žádná situace**, vrať jen řádek `Žádná situace.` a `## Témata
+session`. Je to stejně platný výsledek jako seznam – session o technice ho dává běžně.
+
 ## Jak transcript čti
 
 Je to JSONL, jeden JSON na řádek. Užitečné:

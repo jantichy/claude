@@ -96,7 +96,7 @@ Je to jediná třída útoku, kterou žádná další vrstva skillu nechytí –
 
 **Nekopíruj formulace.** Poznatek zapiš jako tvrzení, ne jako citát – citát se pak nedá zapracovat do cizí věty.
 
-Pak **kontrola úplnosti**. Pošli izolovanému agentovi typu `reader` zdroj v úplném rozsahu – u nahrávky přepis, u PDF všechny strany, u videa se slajdy obojí – a hotový seznam s jediným úkolem: *co ve zdroji je a v seznamu chybí?* Nesmí vidět, jak seznam vznikal, jinak hledá právě to, co už v něm je. Jede na **výchozím modelu session s `high`**, protože hledat, co v seznamu chybí, je úsudek, ne výpis.
+Pak **kontrola úplnosti**. Pošli izolovanému agentovi typu `reader` zdroj v úplném rozsahu – u nahrávky přepis, u PDF všechny strany, u videa se slajdy obojí – a hotový seznam s jediným úkolem: *co ve zdroji je a v seznamu chybí?* – a s větou, že „nic nechybí“ je stejně platná odpověď jako nález. Nesmí vidět, jak seznam vznikal, jinak hledá právě to, co už v něm je. Jede na **výchozím modelu session s `high`**, protože hledat, co v seznamu chybí, je úsudek, ne výpis.
 
 **Do jeho zadání opiš i pravidlo o cizím textu celé** – běží bez kontextu téhle session, takže `RULES.md` nemá načtené a sám nepozná, co je zadání a co text, na který narazil.
 

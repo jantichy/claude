@@ -79,6 +79,8 @@ Nezapisuj do žádného souboru.
 
 Nález bez `basis` nevracej. „Mohlo by to být špatně“ není nález; „na /kosik se
 purchase odesílá při zobrazení stránky, doloženo požadavkem v 14:03“ nález je.
+Nenajdeš-li ve své oblasti nic, vrať prázdné `findings` – je to stejně platný
+výsledek jako nález.
 ```
 
 ## Ověřovatel

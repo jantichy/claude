@@ -73,4 +73,7 @@ Nález musí mít konkrétní zneužití: kdo co udělá → co se stane. „Hoo
 nebezpečný“ není nález; „soubor .claude/settings.local.json spouští po každé
 editaci npx z node_modules tohohle repa, takže kdokoliv s právem zápisu do
 package.json spustí libovolný kód“ nález je.
+
+Položku, kterou projekt nemá, uveď s „v rozsahu se nevyskytuje“ a položku bez
+zneužití s „bez nálezu“ – obojí je stejně platná odpověď jako nález.
 ```

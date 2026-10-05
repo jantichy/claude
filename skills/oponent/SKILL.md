@@ -138,7 +138,8 @@ oponenti – nepřebíhej k nim.
 
 ZAČNI ŘÁDKEM: `PROŠEL JSEM: <sekce, které jsi opravdu přečetl>` – jmenovitě, ne „vše“.
 Nestihl-li jsi předmět celý, napiš jen to, co jsi přečetl. Neúplný posudek je platný
-výsledek, zamlčeně neúplný ne. Nenašel-li jsi nic, ten řádek napiš i tak: bez něj se
+výsledek, zamlčeně neúplný ne. Nenašel-li jsi nic, je to stejně platný výsledek jako
+nález – ten řádek ale napiš i tak: bez něj se
 prázdný posudek nedá odlišit od toho, že jsi spadl.
 
 U KAŽDÉHO NÁLEZU UVEĎ:
@@ -196,11 +197,15 @@ Tvůj úkol není nález potvrdit, ale pokusit se ho vyvrátit. Ptej se:
 - Je důsledek doložený, nebo je to obecná obava? („Nebude to škálovat“ je nic.)
 - Sedí navržená závažnost, nebo je nafouknutá?
 
-Vrať: POTVRZENO / VYVRÁCENO / PŘEKVALIFIKOVÁNO NA <závažnost>, jednou větou proč,
-a u vyvráceného doklad – citaci z dokumentu nebo kontextu, která ho boří.
+Vrať: POTVRZENO / VYVRÁCENO / PŘEKVALIFIKOVÁNO NA <závažnost> / NEOVĚŘITELNÉ, jednou
+větou proč, a u vyvráceného doklad – citaci z dokumentu nebo kontextu, která ho boří.
+NEOVĚŘITELNÉ vrať, stojí-li nález na faktu, který v dokumentu ani kontextu není,
+a napiš, co chybí – je to stejně platná odpověď jako vyvrácení.
 
 Do žádného souboru nezapisuj.
 ```
+
+**NEOVĚŘITELNÉ jde do Fáze 5 jako `neověřeno`**, stejně jako nález nad stropem – nezahazuje se ani nepotvrzuje.
 
 **Výsledky ověření hlas obsahem, ne značkou.** Identifikátory, pod kterými se nálezy vracejí od oponentů a ověřovatelů, jsou interní – uživatel je nikdy neviděl a „N1 je širší, než oponent hlásil“ mu neřekne nic. Pojmenuj, čeho se to týká (`~/.claude/RULES.md`, *Interní značky ven nepatří*). Čísla z přehledu v kroku 5 níž jsou naopak v pořádku – ta uživatel viděl i s obsahem.
 

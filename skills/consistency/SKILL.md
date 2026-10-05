@@ -195,7 +195,7 @@ Výstup strukturuj jako JSON objekt se dvěma klíči. `covered` je **povinné a
   }]
 }
 
-Nestihl-li jsi rozsah projít celý, **vrať `covered` jen s tím, co jsi prošel** – neúplné pokrytí je platný výsledek, zamlčené neúplné pokrytí ne. Prázdné `findings` se bez `covered` nedá odlišit od toho, že jsi spadl.
+Nenašel-li jsi v prošlém rozsahu nic, vrať prázdné `findings` – s vyplněným `covered` je to stejně platný výsledek jako nález. Nestihl-li jsi rozsah projít celý, **vrať `covered` jen s tím, co jsi prošel** – neúplné pokrytí je platný výsledek, zamlčené neúplné pokrytí ne. Prázdné `findings` se bez `covered` nedá odlišit od toho, že jsi spadl.
 ```
 
 **Pole `basis` schéma nemá schválně** – nález je nesoulad mezi místy a doložením jsou `locations`, podle kterých se dá rozpor ověřit přečtením (`~/.claude/skills/SKILLS.md`, *Ověřovací vrstva*).

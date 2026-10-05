@@ -79,6 +79,8 @@ PRAVIDLA:
 - "confidence" dej nízkou všude, kde jsi údaj odvodil místo přečetl.
 - Nehodnoť a nedoporučuj. Sbíráš fakta, závěry dělá někdo jiný.
 - Vrať nejvýš 8 nálezů – ty nejrelevantnější. Ne seznam všeho, co existuje.
+- Nenajdeš-li na své cestě nic doložitelného, vrať prázdné pole `[]`. Je to stejně
+  platný výsledek jako nález – i to, že nic nenajdeš, o produktu něco říká.
 ```
 
 **Vrací produkty:**

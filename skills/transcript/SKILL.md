@@ -381,7 +381,7 @@ Jména ulož do `<workdir>/.speakers.json` a pusť `merge.py` znovu s `--names`,
 
 **Typ subagenta je výchozí, ne `reader`, a je to vědomé:** agent zapisuje `<name>.md`, takže potřebuje `Write`, který typ bez shellu nemá. Hranice se tu tedy nepředstírá (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*).
 
-**Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen ten výběr, který šel do promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i **stručný brief pro shrnutí** – témata, závěry a kdo co slíbil. Shrnutí pak píšeš z briefů a slovníku, ne z celých přepisů znovu.
+**Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen ten výběr, který šel do promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i **stručný brief pro shrnutí** – témata, závěry a kdo co slíbil – a **seznam míst, kterým nerozuměl a nechal je být**; řekni mu, že takové místo i část, ze které po smazání smyček nic nezbude, je stejně platný výsledek jako opravený text, kdežto domyšlená věta ne. Shrnutí pak píšeš z briefů a slovníku, ne z celých přepisů znovu.
 
 Fáze opravy přeslechů zůstává, i když se slovník použil. Slovník zmenší počet chyb, nevynuluje ho – v ostrém běhu prošlo sledované místní jméno zkomolené i s nasazeným promptem.
 

@@ -179,7 +179,7 @@ Každý agent dostane: **klienta, období, své identifikátory ze souboru klien
 
 **Sběrač, který vidí obsah** – dokument, chat, mail –, vrací i **odevzdané výstupy a zmínky o nich**: název, datum, rozsah vlastního textu a to, komu se odevzdal. Bez rozsahu se dolní mez práce odhadnout nedá a hlavní session by se pro něj musela vracet ke zdroji.
 
-**Agent, který nemá přístup, to řekne** a vrátí prázdné pole s důvodem. Nedostupný zdroj se ve výstupu vypíše jako slepé místo – bez toho by věta „nic dalšího jsem nenašel“ znamenala pokaždé něco jiného.
+**Agent, který nemá přístup, to řekne** a vrátí prázdné pole s důvodem. Nedostupný zdroj se ve výstupu vypíše jako slepé místo – bez toho by věta „nic dalšího jsem nenašel“ znamenala pokaždé něco jiného. **Prázdné pole bez důvodu** naopak znamená, že zdroj prošel a stopa v něm není – stejně platný výsledek jako nález.
 
 ## Ověření nálezů
 

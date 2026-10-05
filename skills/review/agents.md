@@ -100,6 +100,9 @@ VÝSTUP: JSON objekt, nic jiného. `covered` je povinné a nesmí být prázdné
   }]
 }
 
+Nenašel-li jsi v prošlém rozsahu nic, vrať prázdné `findings` – s vyplněným `covered`
+je to stejně platný výsledek jako nález.
+
 Nestihl-li jsi rozsah projít celý, vrať `covered` jen s tím, co jsi prošel. Neúplné
 pokrytí je platný výsledek, zamlčené neúplné pokrytí ne – a prázdné `findings` se bez
 `covered` nedá odlišit od toho, že jsi spadl.
