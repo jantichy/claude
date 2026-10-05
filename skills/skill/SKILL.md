@@ -2,7 +2,7 @@
 name: skill
 description: Skill se použije, když uživatel zadá "/skill" (volitelně s režimem create, extract, update nebo delete), nebo chce založit nový vlastní skill, vytěžit rozdělanou konverzaci do skillu, prohnat existující skilly revizí proti dnešní podobě normy, anebo skill zrušit i se všemi jeho stopami. Norma tvaru je v ~/.claude/skills/SKILLS.md; tenhle skill je proti ní instalátor a revizor, měření a vytěžení deleguje na skill-creator a superpowers:writing-skills.
 argument-hint: [create|extract|update|delete] [jméno]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill, Agent]
 ---
 
 # Skill

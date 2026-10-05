@@ -437,16 +437,7 @@ class PrescribedToolsAreAllowed(unittest.TestCase):
 
     #: (skill, nástroj): proč to není vada. Skutečné mezery, o kterých má
     #: rozhodnout uživatel, sem jdou jen dočasně a s tím, že na rozhodnutí čekají.
-    EXCEPTIONS = {
-        (
-            "replace",
-            "Agent",
-        ): "čeká na rozhodnutí uživatele – SKILL.md velí u velkého rozsahu pustit dva `reader` agenty, hlavička `Agent` nemá",
-        (
-            "skill",
-            "Agent",
-        ): "čeká na rozhodnutí uživatele – režim `update` pouští průchod nanečisto agentem `reader`, hlavička `Agent` nemá",
-    }
+    EXCEPTIONS: dict = {}
 
     def gaps(self) -> dict:
         found = {}
