@@ -7,7 +7,7 @@ Jak se práce předává subagentům a na jakém modelu a effortu běží. **Odk
 U rozsáhlého procházení podkladů (cizí repozitář, tisíce položek exportu, hromadné hledání) nabídni delegaci. Řídicí úvahu a syntézu si nech, mechanický sběr ne.
 
 - **Deleguj kvůli kontextu, ne kvůli úspoře.** Delegace šetří kontext hlavní session, celkové tokeny spíš zvýší. Vejdou-li se data do hlavní session a nepřekáží, přečti je rovnou.
-- **Hloubka delegace je jedna.** Agent dalšího agenta nepouští – vnuk načítá totéž co rodič a jeho výstup se ztrácí v převyprávění. Potřebuje-li skill víc úrovní, špatně dělí práci: rozešli všechny agenty z hlavní session naráz. Mechanismus, který by hloubku vynutil, vědomě chybí – vyžadoval by typ agenta bez nástroje na spouštění agentů a s plným posuzováním.
+- **Hloubka delegace je jedna.** Agent dalšího agenta nepouští – vnuk načítá totéž co rodič a jeho výstup se ztrácí v převyprávění. Potřebuje-li skill víc úrovní, špatně dělí práci: rozešli všechny agenty z hlavní session naráz. Hloubku vynucují typy `reader` a `researcher`, které nástroj na spouštění agentů nemají; agent, který potřebuje shell, ji drží jen tímhle pravidlem.
 - **Co už víš, předej**: kořen projektu, platformu, kontrakt, rozsah souborů, konvence z `CLAUDE.md` i to, co se vědomě zamítlo – jinak to každý agent zjišťuje znovu.
 - **Strukturovaný výstup agenta předávej dál doslova.** Parafráze tiše ztrácí detail, kvůli kterému se agent posílal. Uživateli se ale hlásí obsahem, ne značkou (`~/.claude/rules/rules.md`, *Interní značky ven nepatří*).
 - **Zadej, co vracet nemá:** závěr s doložením ano; přečtené soubory, mezivýpisy, rekapitulaci zadání a popis postupu ne. Jeho výstup platíš v kontextu do konce session.
