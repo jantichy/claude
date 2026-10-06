@@ -245,8 +245,8 @@ Počkej na odpověď. Chce-li změny, proveď je a projdi sebe-revizi znovu.
 Pouští se po doporučených krocích nad sešitým návrhem. Potvrď s uživatelem, že proběhly.
 
 1. **Otázky přesunuté mezi koly** musí být vypořádané, nebo vedené jako samostatná položka `todo.md` s tím, na co čekají.
-2. **Zruš sekci *Kola návrhu*** v `todo.md` i s řádkem *Návrh sešitý*.
-3. **Do `done.md` připiš řádek *Návrh uzavřen*** podle `~/.claude/STRUCTURE.md`, *`done.md`*.
+2. **Zruš sekci *Kola návrhu*** v `todo.md` i s řádkem *Návrh sešitý* – **nese-li ale bloky kol**, která uživatel pustil až za sešití, smaž jen řádek *Návrh sešitý* a bloky nech: tvoří další várku. Smazáním by zmizela jejich mapa; po jejich doběhnutí orientace sama pozná, že je na řadě další sešití.
+3. **Do `done.md` připiš řádek *Návrh uzavřen*** podle `~/.claude/STRUCTURE.md`, *`done.md`*. Uzavírá várku, ne nutně celý návrh – zbyla-li v *Kolech návrhu* další, řekni to a `/breakdown` nedoporučuj, dokud se nesešije i ona.
 4. **Commit** a doporuč sloučení větve – provede ho `/merge`.
 
 **Proč se dočištění odkládá za doporučené kroky:** řádek *Návrh uzavřen* nesmí vzniknout dřív, než se nálezy z posudku mají kam vrátit.
@@ -310,7 +310,7 @@ U ostatních cest místo nich tytéž dvojice, vždy jen hotovo a nehotovo:
 - `Kolo je rozhodnuté a schválené, můžeš pustit doporučené kroky a pak /architect k zápisu před sloučením.` / `Kolo rozhodnuté není – brání tomu: <konkrétní seznam>.`
 - `Kolo je zapsané a připravené ke sloučení, můžeš větev přimergovat.` / `Kolo zapsané není – brání tomu: <konkrétní seznam>.`
 - `Návrh je sešitý a schválený, můžeš pustit doporučené kroky a pak /architect k dočištění.` / `Návrh sešitý není – brání tomu: <konkrétní seznam>.`
-- `Návrh je uzavřený, můžeš větev přimergovat a pokračovat na /breakdown.` / `Návrh uzavřený není – brání tomu: <konkrétní seznam>.`
+- `Návrh je uzavřený, můžeš větev přimergovat a pokračovat na /breakdown.` (zbyla-li další várka kol: `Várka návrhu je uzavřená, můžeš větev přimergovat a otevřít další kola.`) / `Návrh uzavřený není – brání tomu: <konkrétní seznam>.`
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 

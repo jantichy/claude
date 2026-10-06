@@ -196,7 +196,7 @@ Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Pa
 - **Otázka odložená na kolo se zapisuje do jeho bloku**, ne jako samostatná položka s poznámkou „patří ke kolu o …“. Jinak se ztratí, jakmile kolo proběhne bez ní: položka dál čeká na něco, co už se nestane, a nerozezná se od fronty.
 - **O pořadí rozhoduje řádek *Čeká na*, ne pořadí bloků.** Kola bez nesplněné závislosti smí běžet souběžně; řádek *Sahá na* říká, kde se jejich větve můžou srazit.
 - **Hotové kolo se přesune do stejnojmenné sekce `done.md`**, v tvaru popsaném tam. Blok se maže až tímhle přesunem, a ten proběhne ve větvi kola těsně před sloučením.
-- Sekce žije jen po dobu návrhu po kolech; po posledním kole do ní `/architect` zapíše řádek *Návrh sešitý* a při dočištění ji zruší. Chybějící sekce znamená totéž co sekce bez bloků.
+- Sekce žije jen po dobu návrhu po kolech; po posledním kole do ní `/architect` zapíše řádek *Návrh sešitý* a při dočištění ji zruší – kromě bloků kol puštěných až za sešití, které zůstanou jako další várka. Chybějící sekce znamená totéž co sekce bez bloků.
 
 ### `backlog.md`
 
@@ -314,7 +314,7 @@ Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem,
   - **Nová kola:** <kola, která z tohohle vzešla, nebo „žádná“>
 ```
 
-Datum vyrob `date +%F`. Po posledním kole připíše `/architect` řádek `- **Návrh uzavřen (<datum>)** – <počet> kol` – podle něj se pozná, že návrh po kolech doběhl celý.
+Datum vyrob `date +%F`. Po posledním kole připíše `/architect` řádek `- **Návrh uzavřen (<datum>)** – <počet> kol` – podle něj se pozná, že doběhla celá várka kol; zůstaly-li v `todo.md` bloky další várky, návrh uzavřený celý není.
 
 **Nejcennější je pole *Neotevřelo*.** Díky němu jde o půl roku později odlišit **nerozhodnuté** od **rozhodnutého jinak** – „kolo o administraci proběhlo a tuhle otázku neotevřelo“ –, což se z dokumentace samotné vyčíst nedá. Proto je povinné i tehdy, když zní „nic“. Pevný tvar má ze stejného důvodu jako *Průchody životním cyklem*: čte ho stroj, konkrétně `/architect` při rozhodování, co je na řadě.
 
