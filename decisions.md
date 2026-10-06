@@ -1733,3 +1733,15 @@ Při prohlídce cizího startovního balíku konfigurace padly tři pojistky mim
 **Rozhodnutí:** jen zámek, `disableBypassPermissionsMode: "disable"`. Bypass by naráz vypnul deny seznam i ptaní na povolení, tedy všechno, co v `BYPASS.md` stojí na permission systému, a zámek nic nestojí.
 
 **Zamítnuto – hook na `rm -rf` v řetězu:** zastavoval by i běžné mazání build adresářů a `node_modules`; falešný poplach u hooku před každým příkazem vede k jeho vypnutí. Destruktivní příkazy posuzuje podle kontextu klasifikátor režimu auto. **Zamítnuto – hook na přepisující `mv`:** chyba je skutečná, ale vzácná a vratná z gitu; další hook před každým příkazem za ni nestojí. Vrátit se k tomu má smysl, kdyby se taková ztráta jednou stala.
+
+### 2026-10-06 – Každý odchod ze session začíná `/cleanup`, bez podmínky
+
+Bloky *Kudy dál* nabízely `/merge` před `/cleanup`, nebo `/clear` a novou session bez `/cleanup` vůbec. Pořadí bylo v `skills/HANDOFF.md` jen v příkladech, ne jako pravidlo, a skilly si `/cleanup` podmiňovaly větou „zbyl-li nezapsaný nález nebo rozhodnutí“.
+
+**Rozhodnutí:** odchodem je `/clear`, `/compact`, nová session, zavření okna i `/merge` a před každým stojí `/cleanup`. Mezi ním a odchodem smí stát jen `/merge`. Úplný výčet řetězů drží `HANDOFF.md` jako tabulku se sloupci *S větví* a *Bez větví*; který platí, rozhoduje `git branch --show-current`. Odrážky ve skillech hlídá `tests/test_skills.py`, `exits_without_cleanup`.
+
+**Zamítnuto – `/cleanup` podmíněný tím, jestli něco zbylo:** jestli zbylo něco nezapsaného, zjišťuje až `/cleanup` sám. Skill, který se na to ptá sám sebe, odpoví „ne“ a session se zahodí i s tím. **Zamítnuto – pořadí `/cleanup` → `/clear` → `/merge`:** funguje taky, ale merge je krátký a nic nedědí, takže dvě rovnocenná pořadí by uživatele jen mátla; po merge se navíc ve worktree layoutu pokračuje v `<container>/main`. **Zamítnuto – `/merge` v projektu bez větví:** není co slučovat, práci do hlavní větve dostane commit a push, který dělá `/cleanup` sám. **Zamítnuto – druhý `/cleanup` za `/merge`:** merge nic nezapisuje a stojí hned za úklidem.
+
+**Posudek vlastní práce se píše do odrážky celým řetězem rovnou ve skillu** – `/oponent` za `/specify`, `/architect`, `/breakdown` a `/discovery`, `/review` za `/implement`. Na rozdíl od prahu kontextu ten důvod platí vždy, takže ho není potřeba nechávat na úsudku za běhu.
+
+**Co test nechytí:** odrážku, která slučování popíše slovy („větev sloučit“) místo `/merge`, a `/cleanup` podmíněný až textem odrážky. Obojí drží jen znění pravidla v `HANDOFF.md`.
