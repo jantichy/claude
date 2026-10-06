@@ -68,6 +68,6 @@ Závazné pro tenhle projekt:
 
 Platí to **pro projekt**, kde je doména relevantní pořád. Globální `~/.claude/CLAUDE.md` naopak odkazuje běžným textem schválně – tam se domény střídají a import všech by stál kontext v každé session.
 
-Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session; `web/web.md` a `web/admin.md` mají dohromady skoro 500 řádků.
+Importuj **jen to, co je pro projekt opravdu relevantní.** Každý import stojí kontext v každé session.
 
 Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.

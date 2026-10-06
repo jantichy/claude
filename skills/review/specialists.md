@@ -33,7 +33,7 @@ Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
 | `coding/modeling.md` | datový model, stavy a přechody, guardy a autorizace, tvar API, napojení na vnější systém, konfigurace a dědění (**navíc** k `coding/coding.md`) | `reader` |
 | `coding/architecture.md` | vrstvy a jejich hranice, cesta k datům, transakce kolem cizích volání, souběh, běhy na pozadí – a u projektu, který je v `CLAUDE.md` vedený jako **aplikace**, i kontrolní seznam *Minimum hotové aplikace* (**navíc** k `coding/coding.md`) | `reader` |
 | `coding/quality.md` | kontroly kvality, kontrakt příkazů, CI, testovací infrastruktura, závislosti (**navíc** k `coding/coding.md`) | `Explore` |
-| `web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky | `reader` |
+| `web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky; jsou-li v rozsahu strukturovaná data nebo `og:image`, i `web/metadata.md` | `reader` |
 | `web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) | `reader` |
 | `analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`) | `Explore` |
 | `advertising/` | vedení placených kampaní – struktura účtu, biddovací strategie, konverzní akce jako vstup pro bidding, kreativy a cesta po prokliku (měřicí stranu téhož drží `analytics/`) | `Explore` |
