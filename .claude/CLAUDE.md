@@ -3,17 +3,30 @@
 Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, sdílená pro inspiraci.
 
 - **Slug:** `claude`
-- **Struktura:** root
+- **Struktura:** docs/
 - **Repozitář:** https://github.com/jantichy/claude
 
 ## Výjimky z obecných pravidel
 
 - **Blok metadat je tady, ne v kořenovém `CLAUDE.md`**, jak jinak velí `~/.claude/rules/structure.md`. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata tohohle repozitáře tam nepatří, mátla by v cizím projektu.
 - **`/attack`, `/release` ani `/evaluate` se tu nikdy nepouštějí.** Repozitář je konfigurace, ne aplikace – není co spustit, kam nasadit, a tedy ani žádný provoz, který by šlo vyhodnotit. **Posledním krokem osy, na který se tu dojde, je `/implement`**; kontrolní kroky se pouštějí dál a běh uzavírá `/cleanup` a po něm `/merge`, stojí-li práce na větvi – spouštěčem obou není pozice v cyklu, ale konec session, respektive pokyn uživatele. Zapsáno schválně, ne odvozeno (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*).
-- **Standardní soubory leží v kořeni, ne v `docs/`** – režim `root` podle `~/.claude/rules/structure.md`, *Dva režimy umístění*. Repozitář není vyvíjený projekt, ale konfigurace, takže by `docs/` byl prázdný obal nad čtyřmi soubory. `rules.md` tu není a nezakládá se: pravidla téhle vrstvy jsou samy jejím obsahem, ne meta-vrstvou nad ním.
-- **Repozitář je veřejný, takže `todo.md`, `backlog.md`, `done.md` a `decisions.md` píšeš pro cizí oči.** Do konce září 2026 ležely v soukromém `~/Dev/context/` právě proto; od 20. 9. 2026 jsou tady a tu ochranu musí nahradit pravidlo. **Hranice vede mezi strukturou a obsahem.** Struktura veřejná je a `README.md` ji sám píše – že analytické know-how leží v `context/analytics/`, autorovy články v `context/archive/` a jeho styl psaní v `context/compose/`, se smí napsat a odkazovat se na to. **Konkrétní obsah veřejný není:** jméno klienta nebo organizace (tedy i to, že `context/organizations/` drží zrovna tenhle profil), sazba a obchodní údaj, osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu nebo domény a know-how, které se prodává.
+- **Repozitář je veřejný, takže `docs/todo.md`, `docs/backlog.md`, `docs/done.md` a `docs/decisions.md` píšeš pro cizí oči.** Do konce září 2026 ležely v soukromém `~/Dev/context/` právě proto; od 20. 9. 2026 jsou tady a tu ochranu musí nahradit pravidlo. **Hranice vede mezi strukturou a obsahem.** Struktura veřejná je a `README.md` ji sám píše – že analytické know-how leží v `context/analytics/`, autorovy články v `context/archive/` a jeho styl psaní v `context/compose/`, se smí napsat a odkazovat se na to. **Konkrétní obsah veřejný není:** jméno klienta nebo organizace (tedy i to, že `context/organizations/` drží zrovna tenhle profil), sazba a obchodní údaj, osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu nebo domény a know-how, které se prodává.
 
   **Platí to na každý zápis, ne na ten první.** Úkol vzniklý při práci pro klienta se zapisuje tak, aby popsal *co* se má v konfigurační vrstvě udělat, ne *u koho* se to ukázalo: „u jednoho projektu chyběl kontrakt příkazů“, ne jméno toho projektu. Potřebuje-li položka konkrétní klientský kontext, aby dávala smysl, patří celá do `~/Dev/context/todo.md` – tam se nic nezveřejňuje.
+
+## Struktura a dokumentace
+
+Projekt drží standardní strukturu podle `~/.claude/rules/structure.md`:
+
+- `README.md` – co projekt je, pro člověka (ne instrukce pro Clauda)
+- `docs/todo.md` – co je odložené na později, ale rozhodnuté, že se to udělá
+- `docs/backlog.md` – nezávazné nápady, o kterých se nerozhodlo; vybírá se z nich, když se řeší, co dál
+- `docs/done.md` – co je hotové
+- `docs/decisions.md` – co jsme rozhodli a proč, včetně zamítnutých variant
+
+Všechny tyhle soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/cleanup`.
+
+**`docs/rules.md` tu není a nezakládá se:** pravidla téhle vrstvy jsou samy jejím obsahem (`rules/`), ne meta-vrstvou nad ním.
 
 ## Instrukce pro tenhle repozitář
 
@@ -36,7 +49,15 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 6. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, *Výjimky z obecných pravidel*
 7. Nic z toho → `~/.claude/rules/rules.md`
 
-**K pravidlu jen jedna věta pointy** (`~/.claude/rules/rules.md`, *K pravidlům ukládej i „proč“*); datum, incident a měření patří do commitu nebo `decisions.md`. Velikost `~/.claude/rules/rules.md` i součtu paušálně načítaných souborů hlídá test v `tests/test_size.py` – když spadne, uvolni místo nebo pravidlo přesuň, mez nezvedej mimochodem.
+**K pravidlu jen jedna věta pointy** (`~/.claude/rules/rules.md`, *K pravidlům ukládej i „proč“*); datum, incident a měření patří do commitu nebo `docs/decisions.md`. Velikost `~/.claude/rules/rules.md` i součtu paušálně načítaných souborů hlídá test v `tests/test_size.py` – když spadne, uvolni místo nebo pravidlo přesuň, mez nezvedej mimochodem.
+
+## Typ projektu
+
+Projekt mimo výš uvedené kategorie – konfigurační vrstva Claude Code. Které kroky *Životního cyklu projektu* (`~/.claude/rules/rules.md`) se tu pouštějí, drží *Výjimky z obecných pravidel* výš.
+
+## Paměť
+
+Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/.claude/rules/structure.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
 
 ## Kontrakt příkazů
 
