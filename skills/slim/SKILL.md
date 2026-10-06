@@ -173,5 +173,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
-- nová session a v ní `/context` – ověření, že úspora platí; celý řetěz včetně `/clear` nebo zavření session
-- zůstala-li práce ve větvi cizího projektu – `/merge` v něm
+- `/cleanup`, pak `/clear`, a `/context` až v nové session – ověření, že úspora platí
+- zůstala-li práce ve větvi cizího projektu – `/cleanup`, pak `/merge` v něm

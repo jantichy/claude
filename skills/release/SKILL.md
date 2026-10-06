@@ -273,7 +273,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `/evaluate` až od data zapsaného v `todo.md` – dřív nejsou data, ze kterých by se dalo cokoliv vyčíst
 - běží-li ještě sledovací okno, je další krok jeho uzavření podle Fáze 7, ne nový krok cyklu
-- `/cleanup`, zbylo-li z nasazení nezapsané rozhodnutí
+- `/cleanup` před koncem session – vždy, i když se zdá, že z nasazení nic nezapsaného nezbylo
 
 ## Když chyba projde vším
 

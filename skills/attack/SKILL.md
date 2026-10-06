@@ -332,4 +332,4 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
 - `/release` – nasazení prověřené práce
-- před tím `/cleanup`, zbyl-li v běhu nezapsaný nález nebo rozhodnutí
+- před tím vždy `/cleanup` – druhý průchod po útoku, viz `~/.claude/skills/LIFECYCLE.md`

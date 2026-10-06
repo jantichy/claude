@@ -331,4 +331,4 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
 - `/cleanup` – zápis toho, co se v běhu domluvilo; a byla-li práce na větvi, za ním `/merge`
-- byla-li některá oprava rozsáhlá, pusť audit znovu – a to až v nové session, protože tahle už opravovala a na vlastní opravy je zaujatá
+- byla-li některá oprava rozsáhlá, `/cleanup`, pak `/clear`, a audit znovu až v nové session, protože tahle už opravovala a na vlastní opravy je zaujatá

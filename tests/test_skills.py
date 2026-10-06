@@ -3206,6 +3206,47 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
             out.append("blok `**Kudy dál**` stojí před závěrečným verdiktem")
     if name in queue_skills() and "Přerušení dlouhého průchodu" not in text:
         out.append("prochází frontu a nenese pravidlo o jejím přerušení")
+    if name != "cleanup":
+        out += [
+            f"odchod ze session bez `/cleanup` před ním: {line}"
+            for line in exits_without_cleanup(text)
+        ]
+    return out
+
+
+EXIT = re.compile(r"`/merge`|`/clear`|nov[éá] session")
+
+
+def navigation_lines(text: str) -> list:
+    """Odrážky bloku `**Kudy dál**` – od popisku po nejbližší nadpis nebo oddělovač."""
+    start = text.find("**Kudy dál**")
+    if start < 0:
+        return []
+    lines = []
+    for line in text[start:].splitlines()[1:]:
+        if line.startswith("#") or line.startswith("------"):
+            break
+        if line.startswith("- "):
+            lines.append(line)
+    return lines
+
+
+def exits_without_cleanup(text: str) -> list:
+    """Odrážky, které opouštějí session a `/cleanup` před tím nejmenují.
+
+    Odchodem je `/merge`, `/clear` i nová session a pořadí drží `HANDOFF.md`,
+    *Řetěz, který nepatří do téhle session*: `/cleanup` → `/merge` → `/clear`.
+    Bez kontroly se z odrážky `/cleanup` vytratí jako první, protože skill si
+    ho podmíní dojmem, že nic nezapsaného nezbylo – a session se zahodí i s tím.
+    """
+    out = []
+    for line in navigation_lines(text):
+        exit_at = EXIT.search(line)
+        if not exit_at:
+            continue
+        cleanup_at = line.find("`/cleanup`")
+        if cleanup_at < 0 or cleanup_at > exit_at.start():
+            out.append(line[:80])
     return out
 
 
@@ -3265,6 +3306,18 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
             "blok `**Kudy dál**` stojí před závěrečným verdiktem",
             handoff_defects(text, "merge", True),
         )
+
+    def test_exit_without_cleanup_is_reported(self):
+        text = "**Kudy dál**\n\n- `/consistency` až v nové session\n"
+        self.assertTrue(exits_without_cleanup(text))
+
+    def test_merge_before_cleanup_is_reported(self):
+        text = "**Kudy dál**\n\n- `/merge`, pak `/cleanup`\n"
+        self.assertTrue(exits_without_cleanup(text))
+
+    def test_cleanup_first_passes(self):
+        text = "**Kudy dál**\n\n- `/cleanup`, pak `/merge`, pak `/clear`\n- `/review`\n"
+        self.assertFalse(exits_without_cleanup(text))
 
     def test_missing_interruption_rule_is_reported(self):
         name = sorted(queue_skills())[0]

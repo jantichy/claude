@@ -53,7 +53,10 @@ Vyhrává první kritérium, které sedí:
 ```
 - `/cleanup`, pak `/clear`, a `/consistency` až v nové session – kontext je na <N>k
 - `/cleanup`, pak `/merge` – větev je hotová
+- `/cleanup`, pak `/merge`, pak `/clear`, a `/consistency` až v nové session – větev je hotová a kontext je na <N>k
 ```
+
+**Každý odchod ze session začíná `/cleanup`, bezpodmínečně, a pořadí je pevné: `/cleanup` → `/merge` → `/clear`.** Odchodem je `/clear`, nová session i `/merge`; odrážka, která kterýkoliv z nich jmenuje, jmenuje `/cleanup` před ním. **Nepodmiňuj ho tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/cleanup` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. `/merge` stojí za ním, protože do hlavní větve má jít i to, co úklid zapsal, a `/clear` až na konci, protože po něm už není z čeho zapisovat.
 
 **Kdy krok do téhle session nepatří** – stačí jedno:
 
