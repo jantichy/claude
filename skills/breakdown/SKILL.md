@@ -140,4 +140,4 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
 - `/implement` – až uživatel plán přečte a odsouhlasí
-- volitelně před tím `/oponent docs/plan.md`, je-li plán rozsáhlý
+- volitelně před tím, je-li plán rozsáhlý, `/cleanup`, pak `/clear`, a `/oponent docs/plan.md` až v nové session – tahle plán psala a je na něj zaujatá

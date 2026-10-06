@@ -225,5 +225,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
 - `/architect` – návrh řešení nad schváleným zadáním
-- volitelně před tím `/oponent docs/requirements.md`
+- volitelně před tím `/cleanup`, pak `/clear`, a `/oponent docs/requirements.md` až v nové session – tahle zadání psala a je na něj zaujatá
 - u projektu bez kódu místo návrhu rozpis kroků do `docs/todo.md`

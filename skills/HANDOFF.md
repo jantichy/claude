@@ -50,23 +50,36 @@ Vyhrává první kritérium, které sedí:
 
 **Odrážka, jejíž krok nemá běžet v téhle session, nesmí být jen jméno skillu.** Vypíše se celý řetěz včetně ukončení session, jinak si ho uživatel spustí tady – a přesně to je chyba, kterou to má odchytit.
 
+**Každý odchod ze session začíná `/cleanup`, bezpodmínečně.** Odchodem je `/clear`, `/compact`, nová session, zavření okna i `/merge`; odrážka, která kterýkoliv z nich jmenuje, jmenuje `/cleanup` před ním. **Nepodmiňuj ho tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/cleanup` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi `/cleanup` a odchodem nesmí stát jiná práce než `/merge`**, jinak ji zase nikdo nezapíše. `/merge` jde za `/cleanup` a před `/clear`: do hlavní větve má jít i to, co úklid zapsal, a sám nic nezapisuje, takže druhý `/cleanup` nepotřebuje.
+
+Úplný výčet řetězů – jiná pořadí nedávají smysl:
+
+| Situace | Řetěz |
+|---|---|
+| další krok patří do téhle session | `/X` |
+| další krok v nové session, větev zůstává otevřená | `/cleanup` → `/clear` → `/X` |
+| větev je hotová a dál se nic nedělá | `/cleanup` → `/merge` |
+| větev je hotová a další krok běží nad hlavní větví | `/cleanup` → `/merge` → `/clear` → `/X` |
+| ve větvi musí ještě proběhnout kontrola v nové session | `/cleanup` → `/clear` → `/X`, merge až po jejím `/cleanup` |
+| přerušený průchod frontou | `/cleanup` → `/clear` → `/next` |
+| rozdělaná úvaha, která se zapsat nedá | `/cleanup` → `/compact` |
+| konec práce | `/cleanup` → zavřít okno |
+
 ```
 - `/cleanup`, pak `/clear`, a `/consistency` až v nové session – kontext je na <N>k
 - `/cleanup`, pak `/merge` – větev je hotová
-- `/cleanup`, pak `/merge`, pak `/clear`, a `/consistency` až v nové session – větev je hotová a kontext je na <N>k
+- `/cleanup`, pak `/merge`, pak `/clear`, a `/next` až v nové session v `<container>/main` – větev je hotová
 ```
-
-**Každý odchod ze session začíná `/cleanup`, bezpodmínečně, a pořadí je pevné: `/cleanup` → `/merge` → `/clear`.** Odchodem je `/clear`, nová session i `/merge`; odrážka, která kterýkoliv z nich jmenuje, jmenuje `/cleanup` před ním. **Nepodmiňuj ho tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/cleanup` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. `/merge` stojí za ním, protože do hlavní větve má jít i to, co úklid zapsal, a `/clear` až na konci, protože po něm už není z čeho zapisovat.
 
 **Kdy krok do téhle session nepatří** – stačí jedno:
 
 | Důvod | Proč |
 |---|---|
 | **Kontext je nad prahem** | viz *Práh kontextu* níž |
-| **Je to posudek toho, co tahle session právě vyrobila** | session, která návrh obhajovala, je na něj zaujatá a nález odmítne snáz (`~/.claude/RULES.md`, *Dlouhá session je dražší než dvě krátké*) |
+| **Je to posudek toho, co tahle session právě vyrobila** | session, která návrh obhajovala, je na něj zaujatá a nález odmítne snáz (`~/.claude/RULES.md`, *Dlouhá session je dražší než dvě krátké*). Tenhle důvod platí vždy, nezávisle na běhu – `/oponent` nad dokumentem, který krok osy právě napsal, nebo `/review` za `/implement` –, takže ho skill píše do své odrážky rovnou celým řetězem |
 | **Krok nedědí nic z rozmyšleného tady** | soubory si nová session načte znovu a levně; platí se jen kontext rozpravy, a ten ten krok nepotřebuje |
 
-**Řekni, kde ta práce leží.** `/clear` vyprázdní konverzaci v běžící session, ale **neukončí ji** – pracovní adresář zůstane ten samý, takže po něm nikam přecházet netřeba a odrážka to nemá komplikovat. Co odrážka **má** nést, je jméno adresáře, kde práce leží, stojí-li projekt ve worktree layoutu (`~/.claude/WORKTREE.md`): jeden pracovní adresář na větev znamená, že v jiném okně je session jinde, a `cd` do správného worktree je pak jediná věc, kterou nová session nemá odkud zjistit.
+**Řekni, kde ta práce leží.** `/clear` vyprázdní konverzaci v běžící session, ale **neukončí ji** – pracovní adresář zůstane ten samý, takže po něm nikam přecházet netřeba a odrážka to nemá komplikovat. Co odrážka **má** nést, je jméno adresáře, kde práce leží, stojí-li projekt ve worktree layoutu (`~/.claude/WORKTREE.md`): jeden pracovní adresář na větev znamená, že v jiném okně je session jinde, a `cd` do správného worktree je pak jediná věc, kterou nová session nemá odkud zjistit. **Po `/merge` je to `<container>/main`**, protože merge pracovní adresář větve smaže a práce nad sloučeným stavem leží v hlavní větvi.
 
 ```
 - `/cleanup`, pak `/clear`, a `/consistency` až v nové session – zůstáváš v `<cesta k worktree>`, clear adresář nemění

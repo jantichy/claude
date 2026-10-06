@@ -315,5 +315,5 @@ U ostatních cest místo nich tytéž dvojice, vždy jen hotovo a nehotovo:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
 - `/breakdown` – rozpad schváleného návrhu na úkoly
-- volitelně před tím `/oponent docs/architecture.md`
+- volitelně před tím `/cleanup`, pak `/clear`, a `/oponent docs/architecture.md` až v nové session – tahle návrh psala a je na něj zaujatá
 - u návrhu po kolech to, co říká Fáze 7 pro danou cestu – otevřít kola, sešít je, nebo `/cleanup` a za ním sloučení větve

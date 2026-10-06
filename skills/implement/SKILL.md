@@ -150,5 +150,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
-- `/review` – prověření hotové práce; za ním zbytek uzavírání (`~/.claude/RULES.md`, *Životní cyklus projektu*)
+- `/cleanup`, pak `/clear`, a `/review` až v nové session – prověření hotové práce, kterou tahle session psala; za ním zbytek uzavírání (`~/.claude/RULES.md`, *Životní cyklus projektu*)
 - zbyl-li v plánu zablokovaný úkol, je další krok jeho odblokování, ne revize – pojmenuj, co k němu chybí

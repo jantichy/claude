@@ -139,5 +139,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
-- `/next` v hlavní větvi – fronta práce nad sloučeným stavem
+- `/clear`, a `/next` v `<container>/main`, respektive v hlavní větvi – fronta práce nad sloučeným stavem; `/cleanup` proběhl před mergem a merge sám nic nezapisuje
 - zbývá-li k témuž záměru další větev, pojmenuj ji

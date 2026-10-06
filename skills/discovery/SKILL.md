@@ -287,5 +287,5 @@ Běželo-li se bez konkurence, protože projekt nemá trh, platí druhá dvojice
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
 
 - `/specify` – zadání nad hotovými podklady
-- volitelně před tím `/oponent` nad `demand.md`, `competition.md` a `risks.md`, jsou-li rozsáhlé
+- volitelně před tím, jsou-li `demand.md`, `competition.md` a `risks.md` rozsáhlé, `/cleanup`, pak `/clear`, a `/oponent` nad nimi až v nové session – tahle je psala a je na ně zaujatá
 - vyšla-li poptávka nedoložená a uživatel se rozhodl ji ověřit, je další krok to ověření, ne zadání – pojmenuj ho konkrétně

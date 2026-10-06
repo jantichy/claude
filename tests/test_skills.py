@@ -3206,7 +3206,8 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
             out.append("blok `**Kudy dál**` stojí před závěrečným verdiktem")
     if name in queue_skills() and "Přerušení dlouhého průchodu" not in text:
         out.append("prochází frontu a nenese pravidlo o jejím přerušení")
-    if name != "cleanup":
+    # `/cleanup` je sám úklidem a `/merge` za ním stojí přímo, druhý nepotřebuje.
+    if name not in ("cleanup", "merge"):
         out += [
             f"odchod ze session bez `/cleanup` před ním: {line}"
             for line in exits_without_cleanup(text)
@@ -3214,7 +3215,7 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
     return out
 
 
-EXIT = re.compile(r"`/merge`|`/clear`|nov[éá] session")
+EXIT = re.compile(r"`/merge`|`/clear`|`/compact`|nov[éá] session")
 
 
 def navigation_lines(text: str) -> list:
@@ -3234,8 +3235,8 @@ def navigation_lines(text: str) -> list:
 def exits_without_cleanup(text: str) -> list:
     """Odrážky, které opouštějí session a `/cleanup` před tím nejmenují.
 
-    Odchodem je `/merge`, `/clear` i nová session a pořadí drží `HANDOFF.md`,
-    *Řetěz, který nepatří do téhle session*: `/cleanup` → `/merge` → `/clear`.
+    Odchodem je `/merge`, `/clear`, `/compact` i nová session a pořadí drží `HANDOFF.md`,
+    *Řetěz, který nepatří do téhle session*, i s výčtem všech platných řetězů.
     Bez kontroly se z odrážky `/cleanup` vytratí jako první, protože skill si
     ho podmíní dojmem, že nic nezapsaného nezbylo – a session se zahodí i s tím.
     """
