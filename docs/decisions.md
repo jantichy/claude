@@ -6,9 +6,9 @@ Rozhodnutí o konfigurační vrstvě a cesta k nim: jaký problém to řešilo, 
 
 **Týká-li se rozhodnutí jednoho skillu, patří rovnou do jeho `SKILL.md`** k místu, kde platí – tam ho příště najde ten, kdo ho potřebuje. Sem jde to, co platí napříč.
 
-### 2026-09-01 – `~/.claude/rules/rules.md` má vymezený rozsah; definice `docs/*` patří do `structure.md`
+### `~/.claude/rules/rules.md` má vymezený rozsah; definice `docs/*` patří do `structure.md`
 
-Oponentura `~/.claude/rules/rules.md` (skill `/oponent`, tři nezávislá hlediska nad vnitřním rozporem) našla 28 nálezů. Většina měla jednu příčinu: `~/.claude/rules/rules.md` byl jediný ze čtyř normativních souborů bez sekce „co sem nepatří“ – `structure.md`, `coding.md` i `CLAUDE.md` ji mají. Bez kritéria se pravidlo zapisovalo tam, kde ho autor psal, a vznikly duplicity: tři definice `docs/*` ve dvou souborech (věta o `todo.md` doslova včetně tučnění), řetěz `prd → design → plan → kód` na čtyřech místech, popisy vnitřků čtyř skillů v životním cyklu.
+**Rozhodnuto 1. 9. 2026.** Oponentura `~/.claude/rules/rules.md` (skill `/oponent`, tři nezávislá hlediska nad vnitřním rozporem) našla 28 nálezů. Většina měla jednu příčinu: `~/.claude/rules/rules.md` byl jediný ze čtyř normativních souborů bez sekce „co sem nepatří“ – `structure.md`, `coding.md` i `CLAUDE.md` ji mají. Bez kritéria se pravidlo zapisovalo tam, kde ho autor psal, a vznikly duplicity: tři definice `docs/*` ve dvou souborech (věta o `todo.md` doslova včetně tučnění), řetěz `prd → design → plan → kód` na čtyřech místech, popisy vnitřků čtyř skillů v životním cyklu.
 
 **Rozhodnutí:** `~/.claude/rules/rules.md` dostal sekci *Co do tohoto souboru nepatří* s pětibodovým testem – soubor v `docs/` → `structure.md`; skill nebo jeho vnitřek → do skillu; kód, web, text, měření → doménová znalost; jeden repozitář → jeho `CLAUDE.md`; zbytek sem. Podle něj se duplicity vrátily do `structure.md`, řetěz jen tam, popisy vnitřků ze životního cyklu zmizely.
 
@@ -20,33 +20,33 @@ Oponentura `~/.claude/rules/rules.md` (skill `/oponent`, tři nezávislá hledis
 
 **Poznámka k umístění:** rozhodnutí se týká `~/.claude`. Že se takové zápisy vedou tady, řeší *Provozní soubory `~/.claude` jsou tady*.
 
-### 2026-09-01 – Přednost pravidel a rozlišení principu od mechanického pravidla
+### Přednost pravidel a rozlišení principu od mechanického pravidla
 
-`~/.claude/rules/rules.md` měl pět neslučitelných postojů k výjimce: „cíl je nula výjimek“, „porušení znamená špatně formulované pravidlo, ne výjimku“, „výjimku zdůvodni“, „výjimka jde do projektového `CLAUDE.md`“ – a sám ji použil na vlastní pravidlo o emoji. Navíc čtyři override mechanismy bez pořadí.
+**Rozhodnuto 1. 9. 2026.** `~/.claude/rules/rules.md` měl pět neslučitelných postojů k výjimce: „cíl je nula výjimek“, „porušení znamená špatně formulované pravidlo, ne výjimku“, „výjimku zdůvodni“, „výjimka jde do projektového `CLAUDE.md`“ – a sám ji použil na vlastní pravidlo o emoji. Navíc čtyři override mechanismy bez pořadí.
 
 **Rozhodnutí:** u **mechanického pravidla** je porušení nejdřív signál špatné formulace – zkusí se přeformulovat, a teprve když by ho to rozmělnilo, vzniká výjimka. U **principu** se místo toho vymezuje rozsah. K tomu nová sekce *Přednost pravidel*: projektový `CLAUDE.md` > výstupní šablona skillu > `~/.claude/rules/rules.md` > pobídka harnessu; kolize uvnitř `~/.claude/rules/rules.md` se nahlašuje, neřeší svépomocí.
 
 **Proč:** bylo to místo, kde agent nejčastěji potřebuje rozhodnout, a dostával čtyři různé odpovědi. Osvědčilo se hned: u nálezu o životním cyklu (`/code-review` v seznamu, který tvrdil „jen vlastní názvy“) se tou logikou ukázalo, že nešlo o výjimku, ale o špatně formulované pravidlo – opravilo se pravidlo, ne životní cyklus.
 
-### 2026-09-01 – Autorská hláška ve skillech zrušena
+### Autorská hláška ve skillech zrušena
 
-Každý ze 14 vlastních skillů začínal sekcí *Úvodní hláška* s řádkem o autorovi včetně mailu a URL repozitáře – 14 kopií téhož, nejčistší porušení *Single source of truth* v celé konfiguraci. Uvažovalo se o centralizaci do `CLAUDE.md` nebo `BANNER.md`.
+**Rozhodnuto 1. 9. 2026.** Každý ze 14 vlastních skillů začínal sekcí *Úvodní hláška* s řádkem o autorovi včetně mailu a URL repozitáře – 14 kopií téhož, nejčistší porušení *Single source of truth* v celé konfiguraci. Uvažovalo se o centralizaci do `CLAUDE.md` nebo `BANNER.md`.
 
 **Rozhodnutí:** hláška **zrušena úplně**, ve všech 14 skillech (−122 řádků). Smazána i memory `feedback_skill_author_banner.md`, která ji vyžadovala a navíc odkazovala na kapitolu v `CLAUDE.md`, jež neexistovala.
 
 **Proč:** atribuce v každém spuštění skillu přestala dávat smysl. Centralizace by problém jen zlevnila, ne odstranila.
 
-### 2026-09-01 – Text pro subagenta je výjimka ze *Single source of truth*
+### Text pro subagenta je výjimka ze *Single source of truth*
 
-Prompt pro subagenta v `/oponent` opisuje pravidla z `~/.claude/rules/rules.md` doslova. Mechanická kontrola to hlásí jako duplicitu, ale odkaz by tam byl mrtvý – subagent běží bez kontextu session a `~/.claude/rules/rules.md` načtený nemá.
+**Rozhodnuto 1. 9. 2026.** Prompt pro subagenta v `/oponent` opisuje pravidla z `~/.claude/rules/rules.md` doslova. Mechanická kontrola to hlásí jako duplicitu, ale odkaz by tam byl mrtvý – subagent běží bez kontextu session a `~/.claude/rules/rules.md` načtený nemá.
 
 **Rozhodnutí:** doplněno k *Single source of truth* jako vymezení rozsahu. Platí jen pro text určený agentovi bez kontextu a jen pro to, co opravdu potřebuje – ne jako záminka kopírovat jinam.
 
 **Proč:** bude to platit v každém skillu, který začne delegovat, ne jen v `/oponent`.
 
-### 2026-09-01 – Umístění standardních souborů je volba ze dvou režimů, ne výjimka
+### Umístění standardních souborů je volba ze dvou režimů, ne výjimka
 
-`structure.md` předepisoval `docs/` a projekty, kterým to nesedělo, si to zapisovaly jako *výjimku z obecných pravidel* – tenhle repozitář jako jediný, ale principiálně by tak skončil každý knowledge base projekt. Podle `~/.claude/rules/rules.md` (*Mechanická pravidla nad rozhodováním případ od případu*) je opakovaná potřeba výjimky signál špatně formulovaného pravidla; tady chyběl druhý režim.
+**Rozhodnuto 1. 9. 2026.** `structure.md` předepisoval `docs/` a projekty, kterým to nesedělo, si to zapisovaly jako *výjimku z obecných pravidel* – tenhle repozitář jako jediný, ale principiálně by tak skončil každý knowledge base projekt. Podle `~/.claude/rules/rules.md` (*Mechanická pravidla nad rozhodováním případ od případu*) je opakovaná potřeba výjimky signál špatně formulovaného pravidla; tady chyběl druhý režim.
 
 **Rozhodnutí:** standardní soubory leží buď v `docs/`, nebo přímo v kořeni projektu. **Obojí rovnocenné**, výchozí `docs/`, volba se dělá jednou při `/project` a deklaruje ji řádek `- **Struktura:** docs/` v metadatech projektového `CLAUDE.md`. Míchat obojí není třetí režim, ale nepořádek. Povinný soubor je jen `CLAUDE.md`; `README.md`, `todo.md`, `decisions.md` a `rules.md` se v `/project` vybírají zaškrtnutím.
 
@@ -60,9 +60,9 @@ Prompt pro subagenta v `/oponent` opisuje pravidla z `~/.claude/rules/rules.md` 
 
 **Ruší to charakter výjimky** u tohoto repozitáře: `root` je od teď deklarovaný režim, ne odchylka. (Poslední odchylku – umístění hotových položek – zrušil téhož dne zápis *Hotové úkoly mají vlastní `done.md`*.)
 
-### 2026-09-01 – Hotové úkoly mají vlastní `done.md`
+### Hotové úkoly mají vlastní `done.md`
 
-`todo.md` držel nehotové i hotové položky. Dvě potíže: na první pohled nebylo vidět, co zbývá (v tomhle repozitáři 52 hotových položek k 1. 9. 2026), a opakovaně se vracela otázka, kam hotové patří – do společné sekce `## Hotovo` na konci, nebo pod tu sekci, ke které se váže. Rozhodnutí *Provozní soubory jsou centrální, ne po doménách* (28. 8. 2026) ji zodpovědělo „pod sekci“, ale tím jen zvolilo z dvou špatných variant.
+**Rozhodnuto 1. 9. 2026.** `todo.md` držel nehotové i hotové položky. Dvě potíže: na první pohled nebylo vidět, co zbývá (v tomhle repozitáři 52 hotových položek k 1. 9. 2026), a opakovaně se vracela otázka, kam hotové patří – do společné sekce `## Hotovo` na konci, nebo pod tu sekci, ke které se váže. Rozhodnutí *Provozní soubory jsou centrální, ne po doménách* (28. 8. 2026) ji zodpovědělo „pod sekci“, ale tím jen zvolilo z dvou špatných variant.
 
 **Rozhodnutí:** vedle `todo.md` stojí **`done.md`**. `todo.md` drží jen nehotové, `done.md` jen hotové; sekce se zrcadlí. Přesouvá se **průběžně, ve chvíli dokončení** – ne dávkově při `/cleanup`, ten jen ověří, že v `todo.md` nic hotového nezbylo. Položka nese datum dokončení ve tvaru `(2026-08-28)`, nejnovější nahoře.
 
@@ -76,9 +76,9 @@ Oba soubory jsou **pár**: zakládají se spolu, v `/project` je to jedna zaškr
 
 **Ruší to část rozhodnutí *Provozní soubory jsou centrální, ne po doménách*** z 28. 8. 2026 – konkrétně větu o hotových položkách pod sekcemi. Zbytek (jediný `decisions.md` a `todo.md` na kořeni, členění nadpisy) platí dál. Ruší to i větu „odchylkou zůstává jen umístění hotových položek v `todo.md`“ ze zápisu *Umístění standardních souborů* z téhož dne: touhle změnou odchylka zanikla úplně.
 
-### 2026-09-02 – Zadání se jmenuje `requirements.md` a `architecture.md`, skill `/specify`
+### Zadání se jmenuje `requirements.md` a `architecture.md`, skill `/specify`
 
-Skill `/spec` vyráběl `docs/prd.md` a `docs/design.md`. Všechny tři názvy měly vadu: `/spec` byla jediná zkratka mezi jinak celými názvy skillů, `prd` je česky nešťastná zkratka a `design` už v ekosystému znamená vizuální tvorbu (`~/Dev/context/design/`), takže jedno slovo označovalo dvě různé věci.
+**Rozhodnuto 2. 9. 2026.** Skill `/spec` vyráběl `docs/prd.md` a `docs/design.md`. Všechny tři názvy měly vadu: `/spec` byla jediná zkratka mezi jinak celými názvy skillů, `prd` je česky nešťastná zkratka a `design` už v ekosystému znamená vizuální tvorbu (`~/Dev/context/design/`), takže jedno slovo označovalo dvě různé věci.
 
 **Rozhodnutí:** `/spec` → **`/specify`**, `docs/prd.md` → **`docs/requirements.md`**, `docs/design.md` → **`docs/architecture.md`**. `/breakdown` a `docs/plan.md` zůstaly beze změny.
 
@@ -91,9 +91,9 @@ Skill `/spec` vyráběl `docs/prd.md` a `docs/design.md`. Všechny tři názvy m
 **Zamítnuto – `/plan` místo `/breakdown`:** odstranilo by disproporci mezi jménem skillu a jménem výstupu, ale slovo „plan“ je obsazené dvakrát jiným významem: plan mode v Claude Code a `/plan` ve Spec Kitu, kde znamená **návrh řešení**, tedy naše `architecture.md`. Převzít cizí název s posunutým významem je horší než vlastní název.
 **Zamítnuto – `/tasks` → `tasks.md`:** srovnalo by se se Spec Kitem i významově, ale `tasks.md` vedle `todo.md` je opakovaný zdroj zaváhání.
 
-### 2026-09-02 – `/standards` se stal `/review`, `/consistency` zůstal samostatný
+### `/standards` se stal `/review`, `/consistency` zůstal samostatný
 
-Uzavírání feature bylo `testy → /standards → /code-review → /consistency → /cleanup`, tedy tři sériové průchody dokumentací a kódem, každý s vlastní frontou nálezů.
+**Rozhodnuto 2. 9. 2026.** Uzavírání feature bylo `testy → /standards → /code-review → /consistency → /cleanup`, tedy tři sériové průchody dokumentací a kódem, každý s vlastní frontou nálezů.
 
 **Rozhodnutí:** `/standards` se přejmenoval na **`/review`** a rozšířil na tři vrstvy – deterministické nástroje (nula tokenů), paralelní panel specialistů, a **nezávislý ověřovatel, který se každý nález snaží vyvrátit**. Doménové sady z `~/Dev/context/` jsou v něm jedním druhem role vedle korektnosti, bezpečnosti, dat, provozu a testů; `/code-review` a `/security-review` si volá jako dvě z rolí. Osa se zkrátila na `/review → /consistency → /cleanup`.
 
@@ -103,9 +103,9 @@ Uzavírání feature bylo `testy → /standards → /code-review → /consistenc
 
 **Role se vybírají podle obsahu rozsahu, ne podle typu projektu** – nad čistě obsahovým projektem se kódové role nezapnou a poběží jen textové a doménové.
 
-### 2026-09-02 – Skilly se pojmenovávají volně, pravidlo „skill je sloveso“ neplatí
+### Skilly se pojmenovávají volně, pravidlo „skill je sloveso“ neplatí
 
-Při přejmenování `/spec` → `/specify` vzniklo pozorování, že v životním cyklu projektu je skill činnost a jeho výstup věc, a **žádný skill se nejmenuje jako svůj výstup**. Chvíli to bylo zapsané v `~/.claude/.claude/CLAUDE.md` jako závazná konvence.
+**Rozhodnuto 2. 9. 2026.** Při přejmenování `/spec` → `/specify` vzniklo pozorování, že v životním cyklu projektu je skill činnost a jeho výstup věc, a **žádný skill se nejmenuje jako svůj výstup**. Chvíli to bylo zapsané v `~/.claude/.claude/CLAUDE.md` jako závazná konvence.
 
 **Rozhodnutí:** zrušeno. Skilly se pojmenovávají podle potřeby, bez pravidla.
 
@@ -113,9 +113,9 @@ Při přejmenování `/spec` → `/specify` vzniklo pozorování, že v životn�
 
 **Stopa je tady schválně:** bez ní by pravidlo někdo za půl roku zavedl znovu ze stejné úvahy.
 
-### 2026-09-02 – Autoprompt zrušený úplně
+### Autoprompt zrušený úplně
 
-Skill `/autoprompt`, jeho `UserPromptSubmit` hook, všechny sekce *Autoprompt* v `CLAUDE.md` napříč projekty i samotné soubory `prompts.md` jsou pryč. Mechanismus přestal existovat, ne že by se jen vypnul.
+**Rozhodnuto 2. 9. 2026.** Skill `/autoprompt`, jeho `UserPromptSubmit` hook, všechny sekce *Autoprompt* v `CLAUDE.md` napříč projekty i samotné soubory `prompts.md` jsou pryč. Mechanismus přestal existovat, ne že by se jen vypnul.
 
 **Proč – čtyři důvody, žádný z nich sám o sobě rozhodující:**
 
@@ -134,9 +134,9 @@ Skill `/autoprompt`, jeho `UserPromptSubmit` hook, všechny sekce *Autoprompt* v
 
 **Dopady:** `/project` přišel o Krok 7 a zbylé kroky se přečíslovaly (Paměťová politika 8 → 7, Typ projektu 9 → 8, Kontrakt příkazů 9b → 8b, Doménové checklisty 10 → 9, Závěrečný souhrn 11 → 10); odkazy v `coding.md` dorovnány. **Uvnitř `/project` ale zůstala dvě čísla nedorovnaná** (tabulka „Dva `CLAUDE.md`“ a věta o `settings.local.json`); našel to až čtenář bez kontextu v `/cleanup` a opraveno bylo dodatečně. `structure.md` přišel o soubor `prompts.md` v obou režimech a `worktree.md` o výjimku, která kvůli němu existovala – v `main/` se teď nepracuje bez výjimky.
 
-### 2026-09-02 – Osa je jednouživatelská a interaktivní
+### Osa je jednouživatelská a interaktivní
 
-Zapsáno jako **vědomé rozhodnutí**, protože to dosud nebylo nikde a vypadalo to jako opomenutí. Podnět z oponentury konfigurační vrstvy.
+**Rozhodnuto 2. 9. 2026.** Zapsáno jako **vědomé rozhodnutí**, protože to dosud nebylo nikde a vypadalo to jako opomenutí. Podnět z oponentury konfigurační vrstvy.
 
 Celý *Životní cyklus projektu* předpokládá **jednu interaktivní session jednoho člověka**. Stojí na dvou věcech, které jinde neplatí: na `AskUserQuestion` (průchod nálezy v `/review`, `/attack` i `/consistency` klade jednu otázku na nález) a na souhlasu průběžné kontroly, který je vydaný lokálně, uložený pod `$HOME` a klíčovaný repozitářem. V CI hook nespustí nic a interaktivní průchod nemá komu položit otázku; u spolupracovníka platí totéž, protože jeho `$HOME` je jiné.
 
@@ -146,9 +146,9 @@ Celý *Životní cyklus projektu* předpokládá **jednu interaktivní session j
 
 **Zamítnuto – souhlas průběžné kontroly vydávat per repozitář souborem v repu:** zavřelo by to díru v CI, ale otevřelo horší – souhlas by pak byl součástí toho, co se schvaluje, tedy by si ho repozitář mohl vydat sám. Bezpečnostní model stojí na tom, že souhlas leží mimo repozitář.
 
-### 2026-09-03 – `/cleanup` ve worktree větve jen konstatuje, nenabízí merge
+### `/cleanup` ve worktree větve jen konstatuje, nenabízí merge
 
-Závěrečný verdikt `/cleanup` zněl *„můžeš ji opustit nebo zkompaktovat“*. Ve worktree layoutu to neodpovídá na otázku, kterou má člověk v hlavě – totiž co s tou větví –, a zároveň nabízí odchod jako jedinou cestu, přestože zápis do souborů neznamená hotovou práci.
+**Rozhodnuto 3. 9. 2026.** Závěrečný verdikt `/cleanup` zněl *„můžeš ji opustit nebo zkompaktovat“*. Ve worktree layoutu to neodpovídá na otázku, kterou má člověk v hlavě – totiž co s tou větví –, a zároveň nabízí odchod jako jedinou cestu, přestože zápis do souborů neznamená hotovou práci.
 
 **Rozhodnuto:** ve worktree větve verdikt navíc řekne, že větev zůstává otevřená a dá se pokračovat, zkompaktovat, nebo ji dokončit. **A tím to končí.**
 
@@ -160,9 +160,9 @@ Závěrečný verdikt `/cleanup` zněl *„můžeš ji opustit nebo zkompaktovat
 
 **Poznatek:** ta otázka odhalila, že `worktree.md` mezitím přišel o šest kapitol včetně *Dokončení větve* – smazal je omylem úklid autopromptu (viz `~/.claude/rules/rules.md`, *Mazání ověř diffem, ne grepem*, které z toho vzniklo). Doména tedy neměla čím podepřít ani větu o dokončení větve. Obnoveno commitem `7d3de17`.
 
-### 2026-09-04 – Strop deseti položek ve slovníku `/transcriptu` zrušen, protože ho měření vyvrátilo
+### Strop deseti položek ve slovníku `/transcriptu` zrušen, protože ho měření vyvrátilo
 
-`SKILL.md` od 3. 9. tvrdil, že do promptu pro whisper patří **nejvýš deset položek**, protože „účinnost initial promptu klesá s pořadím položky“ a delší seznam to důležité naředí. Doloženo to bylo dvěma běhy: osmipoložkový slovník trefil sledované jméno 6× ze 6, jednadvacetipoložkový 0 ze 4.
+**Rozhodnuto 4. 9. 2026.** `SKILL.md` od 3. 9. tvrdil, že do promptu pro whisper patří **nejvýš deset položek**, protože „účinnost initial promptu klesá s pořadím položky“ a delší seznam to důležité naředí. Doloženo to bylo dvěma běhy: osmipoložkový slovník trefil sledované jméno 6× ze 6, jednadvacetipoložkový 0 ze 4.
 
 **To porovnání ale míchalo dvě proměnné** – v prvním seznamu bylo jméno na třetí pozici, v druhém na páté. Sedm nových běhů nad touž nahrávkou s pevnou pozicí ukázalo, že **délka vliv nemá**: 8 → 5/5, 12 → 4/5, 16 → 4/5, 21 → 5/5.
 
@@ -172,9 +172,9 @@ Efekt sám reálný je – jeden jednadvacetipoložkový seznam dá 5/5, jiný 0
 
 Místo něj platí jediná doložená mez, a ta je technická: whisper ořízne prompt na `n_text_ctx/2`, tedy 223 tokenů, a **zahodí přitom jeho začátek**, ne konec. U češtiny je to zhruba 38 termínů (změřeno: 21 termínů = 123 tokenů).
 
-### 2026-09-04 – Přebírání commitů mezi souběžnými session řešeno pravidlem, ne mechanismem
+### Přebírání commitů mezi souběžnými session řešeno pravidlem, ne mechanismem
 
-Session pracující na `/project` dvakrát commitla `git add -A` a smetla s sebou rozpracované změny druhé session v jiném skillu. Obsah se neztratil, ale zpráva u jednoho commitu popisuje diff, který v něm není, a `git blame` odkazuje na zdůvodnění týkající se něčeho jiného. Pushnutá historie se pak už opravit nedá.
+**Rozhodnuto 4. 9. 2026.** Session pracující na `/project` dvakrát commitla `git add -A` a smetla s sebou rozpracované změny druhé session v jiném skillu. Obsah se neztratil, ale zpráva u jednoho commitu popisuje diff, který v něm není, a `git blame` odkazuje na zdůvodnění týkající se něčeho jiného. Pushnutá historie se pak už opravit nedá.
 
 Zvoleno **pravidlo v `~/.claude/rules/rules.md`** (*Commituj jmenované cesty, ne `-A`*).
 
@@ -182,7 +182,9 @@ Zvoleno **pravidlo v `~/.claude/rules/rules.md`** (*Commituj jmenované cesty, n
 
 **Otevřená slabina, kterou je potřeba přiznat:** `~/.claude/rules/rules.md` sám o kus výš tvrdí, že *kde má hranice držet, tam k ní patří mechanismus – jinak je to přání*. Tohle je přání. Incident přitom způsobil model, který instrukce měl a stejně `-A` použil, takže pravidlo řeší jen ten případ, kdy si ho někdo přečte a vzpomene si. Lepší mechanismus zatím nikdo nenavrhl.
 
-### 2026-09-04 – Fáze skillů se číslují plochou řadou, písmena jen pro příbuzné podkroky
+### Fáze skillů se číslují plochou řadou, písmena jen pro příbuzné podkroky
+
+**Rozhodnuto 4. 9. 2026.**
 
 **Problém:** `/cleanup` měl fáze 0, 1, 1b, 2, 2b, 3, 4, 4b, 5. Písmenné podfáze vypadaly jako rozpad jednoho kroku na tematicky příbuzné části, ale nebyly – vznikly tím, že se mezi hotová čísla postupně vkládaly samostatné kroky a přečíslovat celý skill se pokaždé nechtělo. Fázi `1b` (nevypořádaná témata) nespojovalo s `1` (rekonstrukce session) nic víc než s `2`.
 
@@ -196,9 +198,9 @@ Zvoleno **pravidlo v `~/.claude/rules/rules.md`** (*Commituj jmenované cesty, n
 
 **Zamítnuto – srovnat na plochou řadu i `/specify`:** jednodušší pravidlo bez výjimky, ale zahodilo by informaci, že ty dva kroky patří k sobě. Výjimka je tu levnější než ztráta významu, protože má ostré kritérium: písmena jen když by jinak jeden krok musel vyrábět dva samostatné výstupy.
 
-### 2026-09-04 – Tvar skillu má normu, `/skill` je proti ní jen instalátor
+### Tvar skillu má normu, `/skill` je proti ní jen instalátor
 
-Tvar vlastních skillů nebyl zapsaný nikde. Vznikl jednou a pak se patnáctkrát opsal, takže to byl zvyk, ne standard – a při návrhu skillu `/skill` se z něj málem stala norma jen tím, že by se opsal ještě jednou. Nezávislé posouzení proti [Anthropicovým *Skill authoring best practices*](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) a `superpowers:writing-skills` rozdělilo dosavadní tvar na tři hromádky. **Obstálo:** *Co skill nedělá* s **jmenovaným** sousedem (venku existuje jen obecné „when NOT to use“), jednoznačný závěrečný verdikt (jejich *verifiable output*) a ověřovatel, jehož úkolem je nález vyvrátit (venku nemá obdobu). **Neobstálo:** příprava opsaná ve dvanácti skillech a monolitická délka bez progresivního odhalení – žádný skill nepoužíval vedlejší soubory pro text, `/review` měl 591 řádků proti doporučeným 500. **Chybělo:** sekce s častými chybami (0 z 15) a ověřování funkce místo tvaru.
+**Rozhodnuto 4. 9. 2026.** Tvar vlastních skillů nebyl zapsaný nikde. Vznikl jednou a pak se patnáctkrát opsal, takže to byl zvyk, ne standard – a při návrhu skillu `/skill` se z něj málem stala norma jen tím, že by se opsal ještě jednou. Nezávislé posouzení proti [Anthropicovým *Skill authoring best practices*](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) a `superpowers:writing-skills` rozdělilo dosavadní tvar na tři hromádky. **Obstálo:** *Co skill nedělá* s **jmenovaným** sousedem (venku existuje jen obecné „when NOT to use“), jednoznačný závěrečný verdikt (jejich *verifiable output*) a ověřovatel, jehož úkolem je nález vyvrátit (venku nemá obdobu). **Neobstálo:** příprava opsaná ve dvanácti skillech a monolitická délka bez progresivního odhalení – žádný skill nepoužíval vedlejší soubory pro text, `/review` měl 591 řádků proti doporučeným 500. **Chybělo:** sekce s častými chybami (0 z 15) a ověřování funkce místo tvaru.
 
 **Vyvráceno měřením:** tvrzení, že číslování fází je rituál bez funkce, neplatí – `/attack` odkazuje na „`/review`, Fáze 0.1“ napříč skilly a `/project` má 32 vnitřních odkazů na svoje kroky. Je to adresovací mechanismus a zůstává.
 
@@ -216,9 +218,9 @@ Tvar vlastních skillů nebyl zapsaný nikde. Vznikl jednou a pak se patnáctkr�
 
 **Zvážen a nepřijat protinávrh: metodiku srovnávacího běhu a tlakových scénářů převzít do `skills.md` a `writing-skills` nevolat vůbec.** Motivace byla reálná – ten plugin má vyloženě **konkurenční osnovu skillu** (`## Overview / When to Use / Core Pattern`), která při vyvolání nateče do kontextu vedle normy. Nepřijalo se to proto, že opsané cizí know-how se s originálem rozejde a nikdo si toho nevšimne, kdežto delegace zastará viditelně. Riziko se místo toho snižuje dvěma způsoby: tvar se pluginu **předává výslovně** a jeho doporučení k tvaru se ignorují, a při prvním ostrém běhu `/skill` se ověří, jestli si svou osnovu neprosadí navzdory zadání. Prosadí-li, je to důvod delegaci zúžit nebo zrušit.
 
-### 2026-09-04 – Tři opravy normy z prvního auditu `/consistency`
+### Tři opravy normy z prvního auditu `/consistency`
 
-Audit nad dnešní prací našel čtyři nálezy; jeden byl mechanický (popis testů v `.claude/CLAUDE.md` nezmiňoval novou třídu), tři měnily normativní text.
+**Rozhodnuto 4. 9. 2026.** Audit nad dnešní prací našel čtyři nálezy; jeden byl mechanický (popis testů v `.claude/CLAUDE.md` nezmiňoval novou třídu), tři měnily normativní text.
 
 **`~/.claude/rules/rules.md` nevěděl o `skills.md`.** Oba soubory mají rozřazovací test *„co sem nepatří“*, ale jen jednosměrně: `skills.md` posílá obecná pravidla do `~/.claude/rules/rules.md`, kdežto `~/.claude/rules/rules.md` neměl bod, který by pravidlo platné pro **všechny** skilly poslal opačným směrem – jeho bod o konkrétním skillu na to nesedí, takže by propadlo na reziduální *„nic z toho → patří sem“*. Přesně to se dnes málem stalo normě samotné. **Rozhodnutí:** přibyl bod 2 *„Platí obecně pro skilly? → `~/.claude/skills/skills.md`“*, zbytek přečíslován; ověřeno, že na čísla bodů toho testu nikde nic neodkazuje.
 
@@ -230,9 +232,9 @@ Audit nad dnešní prací našel čtyři nálezy; jeden byl mechanický (popis t
 
 **Režimy se jmenují jednoslovně a anglicky** – `create`, `extract`, `update`, `delete` – místo původních českých „revize“, „ze-session“, „zrušit“. Výchozí `create` se vyjmenovává explicitně, aby ho šlo napsat i tam, kde je jinak implicitní, a aby byl vidět v `argument-hint` i v popisu. Česká podstatná jména v běžném textu („výsledek revize“) zůstávají česky: anglicky je **jméno režimu**, ne řeč o něm. Zapsáno proto, že zdůvodnění jinak žilo jen v commit messages, a to je přesně ten případ, na který míří `~/.claude/rules/rules.md`, *Rozhodnutí zapisuj i s cestou k nim*.
 
-### 2026-09-04 – Ze čtyř navržených nových skillů zůstaly dva, `/measure` se zobecnil na `/audit`
+### Ze čtyř navržených nových skillů zůstaly dva, `/measure` se zobecnil na `/audit`
 
-Průchod dnešní session vytipoval čtyři kandidáty na nové skilly: `/measure` (revize měření u klienta), `/slides` (prezentace podle `design/slides.md`), `/nabidka` (konzultační nabídka z `brand/` + `speaking/` + `organizations/`) a `/research` (podložené rešerše). Kritérium výběru bylo jednotné: **doménová znalost už existuje, chybí jen proces, který ji řídí.**
+**Rozhodnuto 4. 9. 2026.** Průchod dnešní session vytipoval čtyři kandidáty na nové skilly: `/measure` (revize měření u klienta), `/slides` (prezentace podle `design/slides.md`), `/nabidka` (konzultační nabídka z `brand/` + `speaking/` + `organizations/`) a `/research` (podložené rešerše). Kritérium výběru bylo jednotné: **doménová znalost už existuje, chybí jen proces, který ji řídí.**
 
 **Rozhodnutí:** do `todo.md` jdou `/research` a `/invoicing` (nový, v původním výběru nebyl), a místo `/measure` **parametrizovaný `/audit <domain>`** – parametrem se řekne, proti kterému návodu z `~/Dev/context/` se audituje. `/slides` a `/nabidka` zamítnuty.
 
@@ -246,9 +248,9 @@ Průchod dnešní session vytipoval čtyři kandidáty na nové skilly: `/measur
 
 **U `/research` zůstává otevřená otázka**, jestli to není spíš fáze uvnitř `/compose` – krok, který nikdo nezavolá, je horší než žádný. Zapsáno v `todo.md` jako první věc k rozhodnutí, ne jako detail k dořešení.
 
-### 2026-09-04 – Režimy skillů se jmenují anglicky a lícují napříč skilly
+### Režimy skillů se jmenují anglicky a lícují napříč skilly
 
-Skill `/skill` dostal režimy `create`/`extract`/`update`/`delete`, ale `/project` měl pro **tutéž věc** – dorovnání na dnešní podobu standardů – režim pojmenovaný česky „revize“. Nová norma přitom žádá jeden termín pro jednu věc napříč skilly, takže si to odporovalo hned první den.
+**Rozhodnuto 4. 9. 2026.** Skill `/skill` dostal režimy `create`/`extract`/`update`/`delete`, ale `/project` měl pro **tutéž věc** – dorovnání na dnešní podobu standardů – režim pojmenovaný česky „revize“. Nová norma přitom žádá jeden termín pro jednu věc napříč skilly, takže si to odporovalo hned první den.
 
 **Rozhodnutí:** do `~/.claude/skills/skills.md` přibylo pravidlo, že **jméno režimu je token, ne věta**: anglicky, jedním slovem, malými písmeny, a co dělá totéž, jmenuje se stejně. Ustálená sada je `create`, `update`, `delete`, k ní podle potřeby další jednoslovné (`extract`, `full`). Výchozí režim se vyjmenovává taky, aby ho šlo napsat explicitně. **Platí i pro režimy, které se rozpoznávají samy** a nepředávají se argumentem – uživatel je vidí ve výpisu a pojmenovává je v řeči stejně.
 
@@ -258,9 +260,9 @@ Skill `/skill` dostal režimy `create`/`extract`/`update`/`delete`, ale `/projec
 
 **Zamítnuto – přejmenovat u `/project` jen „revizi“ na `update`:** menší zásah, ale nechalo by to dvě česká jména vedle jednoho anglického, tedy stav horší než předtím a rovnou porušující pravidlo, které právě vzniklo.
 
-### 2026-09-04 – Kroky `/project` přečíslovány na plochou řadu 0–13
+### Kroky `/project` přečíslovány na plochou řadu 0–13
 
-Norma dostala téhož dne ostré kritérium pro písmennou podfázi: písmena jen tam, kde by jinak jeden krok musel vyrábět **dva samostatné výstupy**. `/project` ale své vsuvky `0b`, `3b` a `8b` zdůvodňoval jinak – jako „vložené kroky, na které se odkazuje odjinud“ –, takže si norma a skill tiše odporovaly. **Žádná kontrola to nechytala**, protože kontrola souladu s normou na písmenné podfáze necílí.
+**Rozhodnuto 4. 9. 2026.** Norma dostala téhož dne ostré kritérium pro písmennou podfázi: písmena jen tam, kde by jinak jeden krok musel vyrábět **dva samostatné výstupy**. `/project` ale své vsuvky `0b`, `3b` a `8b` zdůvodňoval jinak – jako „vložené kroky, na které se odkazuje odjinud“ –, takže si norma a skill tiše odporovaly. **Žádná kontrola to nechytala**, protože kontrola souladu s normou na písmenné podfáze necílí.
 
 Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a stav), 3b (Layout) není druhý výstup Kroku 3 (Git) a 8b (Kontrakt příkazů) není druhý výstup Kroku 8 (Typ projektu) – jsou to tři tematicky nepříbuzné kroky.
 
@@ -276,9 +278,9 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 **Obecné poučení:** ověřovací skript psaný týmž člověkem a v téže chvíli jako oprava zdědí i její slepé místo. Doklad z něj proto neváží víc než doklad z kontroly, kterou ta oprava obchází. Test se následně rozšířil o „Krok“, o písmenné podkroky, o konce rozsahů **a hlavně o celé výčty čísel za jedním slovem** – ověřeno mutačním testem přesně na té vadě, která nastala. Musel zároveň vyloučit odkazy na **kroky životního cyklu** (`~/.claude/rules/rules.md`, *Životní cyklus projektu*), které se číslují nezávisle a na které `/release` odkazuje legitimně.
 
-### 2026-09-06 – Doladění normy: kritérium „Krok“, konec písmenných podfází a mutační testy
+### Doladění normy: kritérium „Krok“, konec písmenných podfází a mutační testy
 
-Čtenář bez kontextu po druhém úklidu našel devět nedořešených míst; jejich vypořádání posunulo normu na třech místech a `/project` na čtyřech.
+**Rozhodnuto 6. 9. 2026.** Čtenář bez kontextu po druhém úklidu našel devět nedořešených míst; jejich vypořádání posunulo normu na třech místech a `/project` na čtyřech.
 
 **Kritérium „Krok“ vs. „Fáze“ bylo měkké a neodlišovalo.** Znělo „Krok jen u interaktivních průvodců, kterými uživatel prochází jeden po druhém a může se kdykoliv zastavit“ – jenže to platí i o `/review`, `/consistency` a `/invoicing`, které mají „Fázi“. **Rozhoduje, čí odpovědi tvoří výsledek:** u `/project` je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek. Skill, který něco sám najde nebo vyrobí a ptá se až na nálezy, má fáze, i když se ptá stejně často.
 
@@ -296,9 +298,9 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 **Zamítnuto – zrušit „Krok“ úplně** a mít všude „Fázi“: jednodušší norma, ale zahodila by rozlišení, které `/project` nese od začátku a které jde po zostření kritéria obhájit.
 
-### 2026-09-06 – README skillu je pro člověka zvenčí, ne dokumentace
+### README skillu je pro člověka zvenčí, ne dokumentace
 
-Skilly měly jediný text pro člověka – odstavec v kořenovém `README.md` repozitáře `~/.claude`. Ten se opakovaně zvrhával do rozvleklých příběhů („poprvé jsem ho pustil a ze 43 nálezů…“), implementačních detailů a obhajob návrhových rozhodnutí. Honza to opravil třikrát v různých sessions a **pokaždé se to vrátilo**, protože pravidlo nebylo nikde zapsané – opravovala se instance, ne příčina.
+**Rozhodnuto 6. 9. 2026.** Skilly měly jediný text pro člověka – odstavec v kořenovém `README.md` repozitáře `~/.claude`. Ten se opakovaně zvrhával do rozvleklých příběhů („poprvé jsem ho pustil a ze 43 nálezů…“), implementačních detailů a obhajob návrhových rozhodnutí. Honza to opravil třikrát v různých sessions a **pokaždé se to vrátilo**, protože pravidlo nebylo nikde zapsané – opravovala se instance, ne příčina.
 
 **Rozhodnutí:** každý skill má **vlastní `skills/<name>/README.md`**, na které se posílá odkaz na GitHub, když se skill někomu doporučuje. Tvar drží nová sekce *README skillu* v `~/.claude/skills/skills.md`; kořenové `README.md` má na skill **jeden odstavec** a odkaz nese jeho nadpis.
 
@@ -322,9 +324,9 @@ Skilly měly jediný text pro člověka – odstavec v kořenovém `README.md` r
 
 **Zamítnuto – dopsat do README skillů, co člověk potřebuje, aby mu Claude skill nainstaloval.** Čtenář bez kontextu to hlásil jako chybějící kontext: všech osmnáct README říká „napište Claudovi, ať to nainstaluje“, ale nikde nestojí, jestli k tomu stačí Claude Code, nebo i Git a přístup na síť. Zamítnuto 7. 9. 2026 – kdo Claude Code používá, tohle řešit nemusí, a věta navíc by v každém README jen zabrala místo.
 
-### 2026-09-06 – Termín „osa“ nahrazen „Životním cyklem projektu“
+### Termín „osa“ nahrazen „Životním cyklem projektu“
 
-Sled `/project → /specify → … → /release` se od svého vzniku jmenoval **osa** a v `~/.claude/rules/rules.md` měl nadpis *Životní cyklus práce*. Dvě jména pro jednu věc, a to hlavní z nich nic neříkalo: *„osa sama o sobě může být cokoliv, třeba osa zla.“*
+**Rozhodnuto 6. 9. 2026.** Sled `/project → /specify → … → /release` se od svého vzniku jmenoval **osa** a v `~/.claude/rules/rules.md` měl nadpis *Životní cyklus práce*. Dvě jména pro jednu věc, a to hlavní z nich nic neříkalo: *„osa sama o sobě může být cokoliv, třeba osa zla.“*
 
 **Rozhodnutí:** jediné jméno **Životní cyklus projektu**, napříč `~/.claude/rules/rules.md`, všemi skilly, testy, knowledge base i projektovými `CLAUDE.md`. Sekce v `done.md` se jmenuje **`## Průchody životním cyklem`**.
 
@@ -334,9 +336,9 @@ Sled `/project → /specify → … → /release` se od svého vzniku jmenoval *
 
 **Poučení, které to potvrdilo potřetí:** plošná náhrada slova, které má víc významů, není mechanická operace. Postup je v `~/.claude/skills/replace/SKILL.md` a platí i tady – odvodit tvary, ukázat inventuru, provést, a **skončit kontrolním průchodem na starý tvar**.
 
-### 2026-09-07 – Závazné importy v `~/.claude/CLAUDE.md` se nikdy nenačítaly
+### Závazné importy v `~/.claude/CLAUDE.md` se nikdy nenačítaly
 
-Při revizi terminologie padla otázka, proč se dohodnutý termín nepropíše do chování. Měřením přes `claude -p` bez nástrojů se ukázalo, že **`~/.claude/rules/rules.md`, `structure.md` ani `ptydepe.md` nejsou v kontextu vůbec** – čerstvá session na ně odpověděla „NENÍ V KONTEXTU“, zatímco `CLAUDE.md` samotný citovala.
+**Rozhodnuto 7. 9. 2026.** Při revizi terminologie padla otázka, proč se dohodnutý termín nepropíše do chování. Měřením přes `claude -p` bez nástrojů se ukázalo, že **`~/.claude/rules/rules.md`, `structure.md` ani `ptydepe.md` nejsou v kontextu vůbec** – čerstvá session na ně odpověděla „NENÍ V KONTEXTU“, zatímco `CLAUDE.md` samotný citovala.
 
 **Příčina:** všechny tři byly zapsané jako `` `@~/.claude/rules/rules.md` ``, tedy **uvnitř code spanu**. Claude Code v něm `@import` nevyhodnocuje. Selhávalo to **tiše** – soubor dál vypadal, jako by ta pravidla platila.
 
@@ -348,9 +350,9 @@ Při revizi terminologie padla otázka, proč se dohodnutý termín nepropíše 
 
 **Cena:** do každé session nově jde 93 kB. Otázka, jestli tam patří `~/.claude/rules/rules.md` celý, je zapsaná v `todo.md`.
 
-### 2026-09-07 – `/ptydepe` nedeleguje na `/replace`, náhradu si dělá sám
+### `/ptydepe` nedeleguje na `/replace`, náhradu si dělá sám
 
-Skill vznikl s delegací: *„Pusť `/replace` jednou na každý dotčený repozitář.“* Za den, kdy se jím vypořádalo třiadvacet termínů, **nebyl zavolán ani jednou**.
+**Rozhodnuto 7. 9. 2026.** Skill vznikl s delegací: *„Pusť `/replace` jednou na každý dotčený repozitář.“* Za den, kdy se jím vypořádalo třiadvacet termínů, **nebyl zavolán ani jednou**.
 
 **Rozhodnutí:** delegace vypadla, skill si náhradu dělá sám mapou frází.
 
@@ -358,13 +360,13 @@ Skill vznikl s delegací: *„Pusť `/replace` jednou na každý dotčený repoz
 
 **Vedlejší poučení, které stálo ten den:** skill tvrdil o svém vnitřku něco, co se v praxi nedělo. Odhalil to až `/cleanup` – ne test, protože žádný test nekontroluje, že se deklarovaná delegace opravdu volá.
 
-### 2026-09-07 – Ponechané termíny z revize
+### Ponechané termíny z revize
 
-Osm termínů, u kterých revize skončila rozhodnutím **nic neměnit**: `heuristika`, `osa`, `vektor útoku`, `mutace`, `session`, `soustava`, `kontrakt příkazů` a `sledovací okno`. Zápisy k nim tu ležely jednotlivě do 10. 9. 2026; tehdy se přestěhovaly do `~/.claude/skills/ptydepe/terms.md`, sekce *Ponechané termíny*, aby celá rozvaha o termínech byla na jednom místě. Rozhodnutí o **ponechání** i o **náhradě** se tak hledají tam, ne tady.
+**Rozhodnuto 7. 9. 2026.** Osm termínů, u kterých revize skončila rozhodnutím **nic neměnit**: `heuristika`, `osa`, `vektor útoku`, `mutace`, `session`, `soustava`, `kontrakt příkazů` a `sledovací okno`. Zápisy k nim tu ležely jednotlivě do 10. 9. 2026; tehdy se přestěhovaly do `~/.claude/skills/ptydepe/terms.md`, sekce *Ponechané termíny*, aby celá rozvaha o termínech byla na jednom místě. Rozhodnutí o **ponechání** i o **náhradě** se tak hledají tam, ne tady.
 
-### 2026-09-07 – Revize neustálených termínů dostala vlastní skill `/ptydepe`
+### Revize neustálených termínů dostala vlastní skill `/ptydepe`
 
-Za jedinou session se ručně vypořádalo čtrnáct termínů, které Claude převzal z náhodné zmínky v konverzaci a začal používat napříč projekty jako zavedené pojmy. Postup se u každého opakoval a vyžadoval úsudek, takže splnil obě podmínky normy pro vznik skillu.
+**Rozhodnuto 7. 9. 2026.** Za jedinou session se ručně vypořádalo čtrnáct termínů, které Claude převzal z náhodné zmínky v konverzaci a začal používat napříč projekty jako zavedené pojmy. Postup se u každého opakoval a vyžadoval úsudek, takže splnil obě podmínky normy pro vznik skillu.
 
 **Rozhodnutí:** vznikl `/ptydepe` se dvěma režimy – `suggest` (výchozí, vytipuje kandidáty) a `add <termín>` (projedná jeden a provede náhradu). Slovník rozhodnutých termínů je `~/.claude/rules/ptydepe.md`, importovaný do každé session.
 
@@ -388,9 +390,9 @@ Za jedinou session se ručně vypořádalo čtrnáct termínů, které Claude p�
 
 **Odtud plyne oprava metodiky v `/skill`, Fáze 6.** Doslovný `/jméno` harness vyřídí vložením těla, takže model nástroj `Skill` nevolá – detektor postavený na jeho volání hlásí propad tam, kde skill zabral nejspolehlivěji. Skutečné číslo tedy nebylo 20/24, ale 24/24, a stejně tak nebyly rozbité kontrolní `/worktree status` a `/autocommit status`.
 
-### 2026-09-07 – Přepínač autocommitu bez zastřešující sekce
+### Přepínač autocommitu bez zastřešující sekce
 
-Projektové `CLAUDE.md` nesly přepínač jako `### Autocommit` pod nadpisem `## Automatické akce`. To zastřešení vzniklo v očekávání, že automatik bude přibývat – vedle autocommitu tehdy stál autoprompt. Stal se opak: autoprompt je od 2. 9. 2026 zrušený úplně (viz *Autoprompt zrušený úplně*) a nic dalšího nepřibylo. Zbyl nadpis nad jediným podnadpisem.
+**Rozhodnuto 7. 9. 2026.** Projektové `CLAUDE.md` nesly přepínač jako `### Autocommit` pod nadpisem `## Automatické akce`. To zastřešení vzniklo v očekávání, že automatik bude přibývat – vedle autocommitu tehdy stál autoprompt. Stal se opak: autoprompt je od 2. 9. 2026 zrušený úplně (viz *Autoprompt zrušený úplně*) a nic dalšího nepřibylo. Zbyl nadpis nad jediným podnadpisem.
 
 **Rozhodnutí:** přepínač je nadpis druhé úrovně `## Autocommit` přímo v projektovém `CLAUDE.md`; zastřešující sekce zaniká. V globálním `~/.claude/CLAUDE.md` totéž pro definici mechanismu, tedy `## Autocommit v projektech`.
 
@@ -408,17 +410,17 @@ Projektové `CLAUDE.md` nesly přepínač jako `### Autocommit` pod nadpisem `##
 
 **Revize 7. 9. 2026 – globální polovina mechanismu zanikla.** Ještě týž den se pravidlo autocommitu přestěhovalo do `skills/autocommit/autocommit.md` a sekce `## Autocommit v projektech` se z globálního `CLAUDE.md` **zrušila** (viz *Skill si nese své věci s sebou*). Co z výše psaného přestalo platit: druhý nadpis neexistuje, takže odpadla i „druhá pojistka“ rozdílným zněním – hranici drží už jen cesta. `/autocommit` do globálního souboru definici nezapisuje, ale naopak ji **maže**, najde-li ji tam jako pozůstatek. A test se otočil: místo `assertIn` na `## Autocommit v projektech` dnes stojí `assertNotIn`, kdežto projektová strana navíc ověřuje přítomnost importu. **Platí dál** jádro záznamu – přepínač je `## Autocommit` v projektovém `CLAUDE.md`, zastřešující sekce se nevrací a detekce se opírá o cestu, ne o jméno nadpisu.
 
-### 2026-09-07 – `backlog.md` se zakládá s `todo.md`, ne až prací
+### `backlog.md` se zakládá s `todo.md`, ne až prací
 
-Nezávazné nápady se dosud lily do `todo.md` a mísily se s frontou rozhodnutých úkolů. Standard proto dostal třetí soubor a hranice mezi ním a `todo.md` jde **po rozhodnutí, ne po termínu**: „až po MVP“ a „ve druhé fázi“ je nalajnovaný plán a zůstává ve frontě, kdežto nápad, který nikdo neschválil ani nezamítl, patří do backlogu.
+**Rozhodnuto 7. 9. 2026.** Nezávazné nápady se dosud lily do `todo.md` a mísily se s frontou rozhodnutých úkolů. Standard proto dostal třetí soubor a hranice mezi ním a `todo.md` jde **po rozhodnutí, ne po termínu**: „až po MVP“ a „ve druhé fázi“ je nalajnovaný plán a zůstává ve frontě, kdežto nápad, který nikdo neschválil ani nezamítl, patří do backlogu.
 
 **Zamítnuto – zakládat ho až prací**, jak to mají produktové podklady (`competition.md` a spol.). U nich prázdný soubor předstírá úvahu, která se nestala; u backlogu je prázdný soubor jen prázdná schránka. Hlavně by ale nezaložený backlog nebyl **deklarovaný v `CLAUDE.md`**, takže by o něm Claude nevěděl a nápady by dál padaly do `todo.md` – tedy přesně ta vada, kvůli které soubor vzniká. Zakládá se proto jednou volbou s `todo.md` a `done.md` jako trojice.
 
 **Zamítnuto – rozšířit o backlog i skilly, které zapisují nálezy** (`/review`, `/attack`, `/oponent`, `/consistency`, `/release`, `/report`). Nález prověřovacího kroku je vada nebo dluh, ne nápad, takže do backlogu nepatří nikdy a jejich dnešní „odložit do `todo.md`“ platí beze změny. Hranice je zapsaná jednou ve `~/.claude/rules/structure.md`, *`backlog.md`*; čtyři kopie téže věty ve skillech by se rozešly. Vybírá z backlogu jediný skill – `/specify`, na začátku psaní zadání; `/cleanup` a `/project` do něj nahlížejí jen na tvar.
 
-### 2026-09-07 – Šablony `/project` neopisují seznamy s vlastním zdrojem pravdy
+### Šablony `/project` neopisují seznamy s vlastním zdrojem pravdy
 
-`/project` psal do každého vývojářského `CLAUDE.md` větu s vypsanou cestou `/specify → /oponent → /breakdown → /implement`. Když do životního cyklu přibyl `/discovery`, řetěz zůstal **formálně platný, jen neúplný** – existující skilly ve správném pořadí –, takže ho neodhalila kontrola existence odkazů ani kontrola pořadí kroků a projekty ho četly jako úplný seznam. Našlo se to až nálezem v jednom projektu; vadu měl i druhý.
+**Rozhodnuto 7. 9. 2026.** `/project` psal do každého vývojářského `CLAUDE.md` větu s vypsanou cestou `/specify → /oponent → /breakdown → /implement`. Když do životního cyklu přibyl `/discovery`, řetěz zůstal **formálně platný, jen neúplný** – existující skilly ve správném pořadí –, takže ho neodhalila kontrola existence odkazů ani kontrola pořadí kroků a projekty ho četly jako úplný seznam. Našlo se to až nálezem v jednom projektu; vadu měl i druhý.
 
 **Zamítnuto – doplnit `/discovery` do výčtu.** Opravilo by to dnešek a zopakovalo vadu při příštím kroku. Šablona teď na *Životní cyklus projektu* jen odkazuje.
 
@@ -426,9 +428,9 @@ Nezávazné nápady se dosud lily do `todo.md` a mísily se s frontou rozhodnut�
 
 **Z toho plyne i nová oblast v `/project`, krok 14:** revize čte **znění** generovaných sekcí, nejen jejich existenci, a porovnává dnešní výčet standardních souborů proti tomu, co projekt má. Do té doby se nový standardní soubor doplnil jen tehdy, když to někdo ručně dopsal do textu skillu – u `done.md` i produktových podkladů to tak bylo, takže mechanismus vypadal funkčně, aniž byl.
 
-### 2026-09-07 – `/autocommit` zůstává samostatný, do `/project` se nevstřebá
+### `/autocommit` zůstává samostatný, do `/project` se nevstřebá
 
-Od revize 4. 9. 2026 leželo v `todo.md`, že by se `/autocommit` mohl vstřebat do `/project`, který zapnutí autocommitu umí jako jeden ze svých kroků. Uzavřeno **zamítnutím**.
+**Rozhodnuto 7. 9. 2026.** Od revize 4. 9. 2026 leželo v `todo.md`, že by se `/autocommit` mohl vstřebat do `/project`, který zapnutí autocommitu umí jako jeden ze svých kroků. Uzavřeno **zamítnutím**.
 
 **Duplicita, kvůli které položka vznikla, neexistuje.** `/project` v kroku 9 na `/autocommit` odkazuje („proveď totéž co `/autocommit on`“), nemá jeho postup opsaný. Vstřebání by tedy nic neodstranilo, jen přesunulo.
 
@@ -438,9 +440,9 @@ Od revize 4. 9. 2026 leželo v `todo.md`, že by se `/autocommit` mohl vstřebat
 
 **Zbylé argumenty pro vstřebání** – o skill míň, o hlavičku míň – neváží proti tomu nic: skill má 73 řádků a od 7. 9. 2026 odpovídá normě `skills.md`.
 
-### 2026-09-07 – Skill si nese své věci s sebou
+### Skill si nese své věci s sebou
 
-Provozní pravidla worktree layoutu i postup jeho zřízení ležely v `~/Dev/context/worktree/`, tedy v soukromém repozitáři, přestože je odkazovalo dvanáct veřejných skillů a `preflight.md`. Kdo si některý z nich nainstaloval z GitHubu, dostal odkaz do adresáře, který nemá. Autocommit měl obrácenou vadu: pravidlo stálo v globálním `~/.claude/CLAUDE.md`, opsané i ve skillu, a rozbalovalo se do každé session v každém projektu – tedy i tam, kde je autocommit vypnutý.
+**Rozhodnuto 7. 9. 2026.** Provozní pravidla worktree layoutu i postup jeho zřízení ležely v `~/Dev/context/worktree/`, tedy v soukromém repozitáři, přestože je odkazovalo dvanáct veřejných skillů a `preflight.md`. Kdo si některý z nich nainstaloval z GitHubu, dostal odkaz do adresáře, který nemá. Autocommit měl obrácenou vadu: pravidlo stálo v globálním `~/.claude/CLAUDE.md`, opsané i ve skillu, a rozbalovalo se do každé session v každém projektu – tedy i tam, kde je autocommit vypnutý.
 
 **Rozhodnutí:** skill si nese všechno své ve svém adresáři. Vyjmuty jsou jen věci, které jsou z podstaty sdílené – `preflight.md`, `~/.claude/rules/rules.md` a norma `skills.md`.
 
@@ -466,9 +468,9 @@ Provozní pravidla worktree layoutu i postup jeho zřízení ležely v `~/Dev/co
 
 **Obě strany hlídá test.** `tests/test_skills.py` ověřuje, že projektový `CLAUDE.md` tohohle repozitáře nese přepínač i s importem a že se definice autocommitu nevrátila do globálního souboru. Zanikl naopak test na shodu šablony se `CLAUDE.md`: duplicita, kterou hlídal, přestala existovat.
 
-### 2026-09-07 – Standard struktury projektu je veřejný, ale nepatří žádnému skillu
+### Standard struktury projektu je veřejný, ale nepatří žádnému skillu
 
-Po přesunu worktree a autocommitu zbyl `structure.md` jako poslední soubor, který odkazovalo devět veřejných skillů a `~/.claude/rules/rules.md`, ale sám ležel v soukromém repozitáři. Nabízelo se aplikovat týž princip a přisoudit ho `/project`, který ho instaluje.
+**Rozhodnuto 7. 9. 2026.** Po přesunu worktree a autocommitu zbyl `structure.md` jako poslední soubor, který odkazovalo devět veřejných skillů a `~/.claude/rules/rules.md`, ale sám ležel v soukromém repozitáři. Nabízelo se aplikovat týž princip a přisoudit ho `/project`, který ho instaluje.
 
 **Rozhodnutí:** `~/.claude/rules/structure.md` v kořeni veřejného repozitáře, sourozenec `~/.claude/rules/rules.md`. **Zamítnuto `skills/project/structure.md`** – princip *skill si nese své věci s sebou* se na něj nevztahuje.
 
@@ -486,17 +488,17 @@ Po přesunu worktree a autocommitu zbyl `structure.md` jako poslední soubor, kt
 
 **Zamítnuto – `~/.claude/standards/` jako podadresář.** Dnes by to byl obal nad jedním souborem. Otevře se, až jich v kořeni bude víc; do té doby `structure.md` leží vedle `~/.claude/rules/rules.md`, se kterým sdílí status závazného pravidla importovaného přes `@`.
 
-### 2026-09-08 – `deny` v `settings.json` je ochrana proti omylu, ne proti obejití
+### `deny` v `settings.json` je ochrana proti omylu, ne proti obejití
 
-`/review full` nad konfigurační vrstvou našel třídu děr, kde `deny` a `ask` nedosáhnou na cestu, kterou si vynutí interpret nebo správce balíčků. **Tři z nich zůstaly vědomě otevřené** – jediná účinná oprava by přesunula běžné nástroje do `ask` a odklikávala by se u každého spuštění, takže by ji první kolize vypnula.
+**Rozhodnuto 8. 9. 2026.** `/review full` nad konfigurační vrstvou našel třídu děr, kde `deny` a `ask` nedosáhnou na cestu, kterou si vynutí interpret nebo správce balíčků. **Tři z nich zůstaly vědomě otevřené** – jediná účinná oprava by přesunula běžné nástroje do `ask` a odklikávala by se u každého spuštění, takže by ji první kolize vypnula.
 
 **Poučení, které z toho platí obecně:** `deny` je ochrana proti ukliknutí, ne proti cílenému obejití. Vrstva, která se tváří jako hranice a přitom jí není, je horší než žádná, protože se na ni někdo spolehne. Skutečnou hranici drží jen to, co si model nemůže odsouhlasit sám – souhlas vydaný z terminálu, ověření cíle, potvrzovací dialog (`~/.claude/rules/rules.md`, *Přednost pravidel*).
 
 **Konkrétní cesty, kterými to jde obejít, tady nestojí** a je to záměr: repozitář je veřejný a popis funkčního obchvatu vlastní ochrany je návod, ne poznámka. Drží je `~/Dev/context/decisions.md`, sekce `## Claude`.
 
-### 2026-09-08 – Dvě podmínky pro `PostToolUse` hook
+### Dvě podmínky pro `PostToolUse` hook
 
-Dnešní `/review full` zrušil oba `PostToolUse` hooky v `~/.claude/settings.json` (`npx tsc --noEmit` po editaci `.ts`, `py_compile` po editaci `.py`). Zapisuje se, **za jakých podmínek smí `PostToolUse` hook existovat** – bez toho je prázdné místo k nerozeznání od opomenutí a příště se hook přidá zpátky se stejnými vadami.
+**Rozhodnuto 8. 9. 2026.** Dnešní `/review full` zrušil oba `PostToolUse` hooky v `~/.claude/settings.json` (`npx tsc --noEmit` po editaci `.ts`, `py_compile` po editaci `.py`). Zapisuje se, **za jakých podmínek smí `PostToolUse` hook existovat** – bez toho je prázdné místo k nerozeznání od opomenutí a příště se hook přidá zpátky se stejnými vadami.
 
 **Podmínka 1 – nesmí maskovat návratový kód.** Oba končily `; true`, takže vracely vždy nulu. Dokumentace k hookům přitom uvádí, že `PostToolUse` při rc=0 stdout modelu ani do transkriptu neukáže – jde jen do debug logu. Kontrola tedy chybu našla, spolkla ji a nikdo se nic nedozvěděl; platilo se za ni až 30 s po každé editaci. Chce-li hook něco sdělit, musí skončit `exit 2` se stručným stderr (blokovat stejně neumí, takže obava z otravnosti je bezpředmětná).
 
@@ -506,9 +508,9 @@ Dnešní `/review full` zrušil oba `PostToolUse` hooky v `~/.claude/settings.js
 
 **Vědomá mezera, kterou to otevírá:** v repozitáři **bez** souhlasu `verify.sh` teď nekontroluje nic. Je to přijaté: právě tam byl hook nejnebezpečnější, a kontrola, jejíž výsledek nikdo nevidí, stejně nic nekontrolovala.
 
-### 2026-09-10 – Skill `/learn`: nová znalost se zapracovává dovnitř báze, ne vedle ní
+### Skill `/learn`: nová znalost se zapracovává dovnitř báze, ne vedle ní
 
-Vznikl skill `/learn` (`~/.claude@b78caa4`). Řeší mezeru mezi `/transcript` a knowledge base: z přepisu školení nebo konzultace se dá vytěžit hodně metodiky, ale ta se dosud buď nezapsala vůbec, nebo skončila jako další samostatný soubor vedle stávající struktury – tedy na místě, kde ji nikdo nehledá.
+**Rozhodnuto 10. 9. 2026.** Vznikl skill `/learn` (`~/.claude@b78caa4`). Řeší mezeru mezi `/transcript` a knowledge base: z přepisu školení nebo konzultace se dá vytěžit hodně metodiky, ale ta se dosud buď nezapsala vůbec, nebo skončila jako další samostatný soubor vedle stávající struktury – tedy na místě, kde ji nikdo nehledá.
 
 **Vytěžení je oddělená fáze a musí být vyčerpávající**, protože zdroj po zapracování zaniká: přepis klientské schůzky se do znalostní báze nekopíruje (citlivý materiál a báze má držet znalost, ne doklady), takže co se nevytěží, se už nikdy nedohledá. Úplnost proto ověřuje izolovaný agent, který nevidí, jak seznam vznikal – kdo seznam psal, hledá v něm právě to, co už tam dal.
 
@@ -528,9 +530,9 @@ Vznikl skill `/learn` (`~/.claude@b78caa4`). Řeší mezeru mezi `/transcript` a
 
 **Měření vyvolání: 12/12** na skutečném kanálu (`claude -p --output-format stream-json`), šest pozitivních a šest negativních – práh z `~/.claude/skills/skill/SKILL.md`, *Fáze 6*. Doměřeno při úklidu, protože první běh skončil na pěti a pěti. Mezi negativními je i **„založ mi novou doménu“**, tedy near-miss braný přímo z popisu skillu; nechytil se, což je u obecného jména jako `learn` to podstatné. První kolo dalo 6/8 a jeho dva propady měly každý jinou příčinu: „zakomponuj“ v `description` opravdu chybělo a po doplnění prošlo, kdežto „nauč se“ propadlo jen proto, že v měřicím adresáři nebyl soubor, o kterém prompt mluvil – s ním prošlo na první pokus, stejně jako později přidané „obohať metodiku“. **Rozlišit to bylo podstatné**: bez toho by se popis přepisoval kvůli propadu, se kterým nemá nic společného. Poznatek je zapsaný v `/skill` jako třetí známá vada měřidla vedle `run_eval.py` a doslovných slash promptů. **Tlakové scénáře neproběhly**, protože session zakazovala spouštění agentů; skill přitom vynucuje dvě věci (nesahat na doklady, nepsat před odsouhlasením plánu), takže je to nedoměřená vrstva.
 
-### 2026-09-10 – `ptydepe.md` rozdělen na tabulku v kontextu a rozvahu u skillu
+### `ptydepe.md` rozdělen na tabulku v kontextu a rozvahu u skillu
 
-Soubor se importuje do každé session a měl 23 kB, protože ke každému termínu nesl celou úvahu, zamítnuté varianty a historii náhrady. Rostl lineárně s každým dalším vypořádaným termínem, takže by za rok byl největší položkou globálního kontextu.
+**Rozhodnuto 10. 9. 2026.** Soubor se importuje do každé session a měl 23 kB, protože ke každému termínu nesl celou úvahu, zamítnuté varianty a historii náhrady. Rostl lineárně s každým dalším vypořádaným termínem, takže by za rok byl největší položkou globálního kontextu.
 
 **Rozhodnutí:** rozdělit podle cílové skupiny (`~/.claude/rules/rules.md`, *Cílová skupina určuje umístění*). `~/.claude/rules/ptydepe.md` je nadále **jen tabulka** `Nepoužívej | Používej | Rozsah a meze`, 5,3 kB, a importuje se dál. Rozvaha se přestěhovala do `~/.claude/skills/ptydepe/terms.md`, který se neimportuje nikam a čte ho `/ptydepe`. Nové heslo přidá jeden řádek tabulky místo odstavce, takže růst kontextu se prakticky zastavil.
 
@@ -548,9 +550,9 @@ Soubor se importuje do každé session a měl 23 kB, protože ke každému term�
 
 **Zamítnuto – test, který grepne zakázané tvary a spadne, když se některý vrátí.** Nabídnuto jako doplněk k prevenci (`~/.claude/rules/rules.md`, pravidlo nula: co chytne test, se nemá hlídat tokeny), uživatelem zamítnuto. Chytilo by to jen zápis do souborů, ne mluvenou odpověď, a vyloučit legitimní homonyma (platební brána, jazyková mutace, časová osa) by znamenalo vést vedle tabulky druhý seznam výjimek. Kdyby se to někdy dělalo, musí se ta úvaha udělat znovu – tady je zapsané jen to, že se dnes vědomě nedělá.
 
-### 2026-09-10 – rozhraní kroků cyklu a katalog struktury se přestaly načítat do každé session
+### rozhraní kroků cyklu a katalog struktury se přestaly načítat do každé session
 
-Paušální kontext byl ráno **118 kB** – `CLAUDE.md`, `~/.claude/rules/rules.md`, `structure.md` a `ptydepe.md` dohromady, tedy zhruba 40–50 kB textu navíc v každé session každého projektu, ještě než padne první slovo. `ptydepe.md` řešila vedlejší session (23 kB → 5 kB) a srazila to na **100 kB**; tenhle zápis je o zbytku.
+**Rozhodnuto 10. 9. 2026.** Paušální kontext byl ráno **118 kB** – `CLAUDE.md`, `~/.claude/rules/rules.md`, `structure.md` a `ptydepe.md` dohromady, tedy zhruba 40–50 kB textu navíc v každé session každého projektu, ještě než padne první slovo. `ptydepe.md` řešila vedlejší session (23 kB → 5 kB) a srazila to na **100 kB**; tenhle zápis je o zbytku.
 
 **Rozhodnuto – dva soubory ven z importů, žádná věta se nemaže.** Sekce *Životní cyklus projektu* (10,6 kB, pětina `~/.claude/rules/rules.md`) se přestěhovala do `~/.claude/rules/lifecycle.md` a `structure.md` (33 kB) se přestal importovat. Paušál je po tom **58,7 kB**. Šetří se tím, *kdy* se text načte, ne tím, co v něm stojí.
 
@@ -570,9 +572,9 @@ Paušální kontext byl ráno **118 kB** – `CLAUDE.md`, `~/.claude/rules/rules
 
 Commit `~/.claude@388c4b1`.
 
-### 2026-09-10 – doklady incidentů odešly z `~/.claude/rules/rules.md`, samotná pravidla zůstala
+### doklady incidentů odešly z `~/.claude/rules/rules.md`, samotná pravidla zůstala
 
-Pokračování téhož úklidu: `~/.claude/rules/rules.md` se stlačil z **45,5 kB na 43,8 kB**, tedy o **3,8 %**; paušální kontext tím klesl na **57,4 kB**. (Kumulativně s vytažením cyklu je to 53,9 → 43,8 kB, ale těch 8,4 kB si už započítal zápis nad tímhle – **nesčítej to podruhé**. Čísla jsou změřená až po opravách obou kol čtenáře bez kontextu; ta předchozí byla o 0,7 kB nižší, protože se změřila před nimi.) Žádné pravidlo nezmizelo – ubraly se rozvedené doklady, dvě formulace se sloučily a vypadl překryv se `structure.md`.
+**Rozhodnuto 10. 9. 2026.** Pokračování téhož úklidu: `~/.claude/rules/rules.md` se stlačil z **45,5 kB na 43,8 kB**, tedy o **3,8 %**; paušální kontext tím klesl na **57,4 kB**. (Kumulativně s vytažením cyklu je to 53,9 → 43,8 kB, ale těch 8,4 kB si už započítal zápis nad tímhle – **nesčítej to podruhé**. Čísla jsou změřená až po opravách obou kol čtenáře bez kontextu; ta předchozí byla o 0,7 kB nižší, protože se změřila před nimi.) Žádné pravidlo nezmizelo – ubraly se rozvedené doklady, dvě formulace se sloučily a vypadl překryv se `structure.md`.
 
 **Doklady zůstávají u pravidla jen datem.** Pravidlo potřebuje **jednu větu proč**; datovaný incident je doklad pro toho, kdo se ptá „fakt se to stalo?“, a ten se čte jednou za rok. V `~/.claude/rules/rules.md` u pravidla proto stojí `Doloženo 6. 9. 2026.` a celý příběh je tady. Tři, které nikde jinde zapsané nebyly:
 
@@ -613,9 +615,9 @@ Pokračování téhož úklidu: `~/.claude/rules/rules.md` se stlačil z **45,5 
 
 - **Deny seznam v `settings.json` není bezpečnostní hranice, ale doporučení** (14. 9. 2026). Vyplynulo z revize a platí obecně: pravidla porovnávají text příkazu, takže je obejde kterýkoliv plošně povolený interpret, a u `Read` navíc platí jen relativně ke kořeni aktuálního projektu – soubory mimo něj nechrání vůbec (ověřeno návnadou). **Nestaví se na něm nic, co má doopravdy držet.** Kde je potřeba skutečná hranice, musí stát mechanismus, který si model nemůže odsouhlasit sám: potvrzení na terminálu, souhlas v souboru mimo repozitář, potvrzovací dialog.
 
-### 2026-09-10 – Skill `/audit`: audit cizího webu proti doménové znalosti
+### Skill `/audit`: audit cizího webu proti doménové znalosti
 
-Vznikl skill `/audit`, který zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně `~/Dev/context/`. Sám nenese žádnou doménovou znalost – je to dirigent.
+**Rozhodnuto 10. 9. 2026.** Vznikl skill `/audit`, který zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně `~/Dev/context/`. Sám nenese žádnou doménovou znalost – je to dirigent.
 
 **Proč nový skill a ne režim `/review`:** oba měří proti týmž doménovým standardům, ale liší se předmětem a všemi předpoklady. `/review` čte vlastní práci v repozitáři, má diff, kontrakt příkazů a specifikaci, proti které měří korektnost. `/audit` nemá ani jedno – má URL, exporty od klienta a přístupy do cizích účtů. Sloučení by znamenalo skill, jehož polovina fází v každém běhu neplatí.
 
@@ -635,9 +637,9 @@ Vznikl skill `/audit`, který zaudituje **cizí běžící web** v zadané oblas
 
 **Vědomá mezera – auditní dráhu má dnes jen `analytics/`.** Nad doménou, která má jen checklist, skill poběží v omezeném režimu a nahlas to řekne; po auditu nabídne vytěžit nalezené zpátky do domény přes `/learn`. **Zamítnuto vyžadovat kontrakt domény** a běh jinak odmítnout – zablokovalo by to audity nad `web/` a `design/`, které se dají dělat proti checklistu, jen mělčeji.
 
-### 2026-09-15 – `/depot` je mechanika ve veřejném repozitáři, pravidla v privátní doméně
+### `/depot` je mechanika ve veřejném repozitáři, pravidla v privátní doméně
 
-Zakládání skillu, který převezme stažený soubor, uloží ho tam, kam patří, a rovnou spustí navazující zpracování. Rozdělený je stejně jako `/audit` a `/invoicing`: veřejný `~/.claude/skills/depot/` drží mechaniku a nenese jediné konkrétní pravidlo, privátní doména `~/Dev/context/depot/` drží směrovací tabulku. Kdo si skill stáhne z GitHubu, napíše si tabulku podle svého.
+**Rozhodnuto 15. 9. 2026.** Zakládání skillu, který převezme stažený soubor, uloží ho tam, kam patří, a rovnou spustí navazující zpracování. Rozdělený je stejně jako `/audit` a `/invoicing`: veřejný `~/.claude/skills/depot/` drží mechaniku a nenese jediné konkrétní pravidlo, privátní doména `~/Dev/context/depot/` drží směrovací tabulku. Kdo si skill stáhne z GitHubu, napíše si tabulku podle svého.
 
 **Doména je jeden soubor a rozdělí se, až poroste.** Aby to skill nepocítil, čte ji přes rozcestník a hledá *věci*, ne jména souborů – pozdější rozpad na `depot/<workflow>.md` je pak úprava uvnitř domény.
 
@@ -649,9 +651,9 @@ Zakládání skillu, který převezme stažený soubor, uloží ho tam, kam pat�
 
 **Vědomé mezery:** doména nemá zapsané přijaté faktury a doklady, videa natočeného kurzu (cíl neexistuje) ani screenshoty k rozdělané práci. Vedeny v `depot.md`, *Co zatím zapsané není*, aby se nepletly s opomenutím.
 
-### 2026-09-15 – Třetí stupeň závažnosti je NÍZKÉ, protože trojice musí stát na jedné ose
+### Třetí stupeň závažnosti je NÍZKÉ, protože trojice musí stát na jedné ose
 
-Vyšlo z konzistenčního auditu: `/audit` si vedl vlastní škálu *kritická / vážná / drobná* mimo `skills/severity.md`, přestože ten se prohlašuje za jedinou škálu pro všechny skilly, které hlásí nálezy. Příčina nebyla nedbalost, ale **vada původní trojice** KRITICKÉ / STŘEDNÍ / KOSMETICKÉ: míchala dvě osy – *kritické* je o naléhavosti, *kosmetické* o povaze nálezu. Na auditu cizího webu proto nesedla, protože „kosmetický nález“ tam nedává smysl, a skill si přirozeně zavedl vlastní.
+**Rozhodnuto 15. 9. 2026.** Vyšlo z konzistenčního auditu: `/audit` si vedl vlastní škálu *kritická / vážná / drobná* mimo `skills/severity.md`, přestože ten se prohlašuje za jedinou škálu pro všechny skilly, které hlásí nálezy. Příčina nebyla nedbalost, ale **vada původní trojice** KRITICKÉ / STŘEDNÍ / KOSMETICKÉ: míchala dvě osy – *kritické* je o naléhavosti, *kosmetické* o povaze nálezu. Na auditu cizího webu proto nesedla, protože „kosmetický nález“ tam nedává smysl, a skill si přirozeně zavedl vlastní.
 
 **Zavržené varianty.** *Nechat KOSMETICKÉ a zapsat do `severity.md`, proč `/audit` stojí mimo* – legalizovalo by to dvě škály a tím i důvod, proč soubor vznikl. *DROBNÉ* – odmítnuto uživatelem; slovo hodnotí velikost práce, ne dopad. *VYSOKÉ / STŘEDNÍ / NÍZKÉ* – nejčistší jedna osa, ale nejvyšší stupeň by zněl jako další dílek škály, a přitom právě on spouští přísnější ověřování. *KRITICKÉ / STŘEDNÍ / OKRAJOVÉ* – „okrajové“ není ustálené a míchá osu podobně jako předtím.
 
@@ -659,9 +661,9 @@ Zvoleno **KRITICKÉ / STŘEDNÍ / NÍZKÉ**: celá trojice na ose závažnosti, 
 
 **Cena, kterou to stálo, a poučení k ní.** Náhrada napříč osmnácti soubory se dělala hromadným `str.replace` a přepsala i slova mimo škálu – „drobná změna“ → „nízká změna“, „podrobné README“ → „ponízké README“. Grep by to nenašel, protože hledané slovo právě zmizelo; chytlo se to až čtením diffu (`~/.claude/rules/rules.md`, *Mazání ověř diffem, ne grepem*, platí i na náhradu). **Na přejmenování napříč projektem je `/replace`, ne ruční náhrada** – právě proto, že kontroluje tvary a hranice slov.
 
-### 2026-09-15 – Norma skillů uznává blok předběžných podmínek, místo aby ho zakázala
+### Norma skillů uznává blok předběžných podmínek, místo aby ho zakázala
 
-Konzistenční audit hlásil, že „sekci navíc mezi *Co skill nedělá* a *Fází 0* mají dva skilly“. Měření ukázalo **14 z 22** – `Rozsah`, `Zásady pro celý průběh`, `Hranice`, `Kdy se pouští a kdy se přeskakuje`, `Tvrdá pravidla` a další. Vada tedy nebyla v těch skillech, ale v `skills/skills.md`: šablona povinných sekcí ten prostor vůbec neznala, přestože ho používala většina.
+**Rozhodnuto 15. 9. 2026.** Konzistenční audit hlásil, že „sekci navíc mezi *Co skill nedělá* a *Fází 0* mají dva skilly“. Měření ukázalo **14 z 22** – `Rozsah`, `Zásady pro celý průběh`, `Hranice`, `Kdy se pouští a kdy se přeskakuje`, `Tvrdá pravidla` a další. Vada tedy nebyla v těch skillech, ale v `skills/skills.md`: šablona povinných sekcí ten prostor vůbec neznala, přestože ho používala většina.
 
 **Zavržené varianty.** *Zakázat a obsah přesunout* – znamenalo by nacpat rozsah a hranice do `Co skill nedělá`, kam nepatří, nebo je odsunout za závěrečnou fázi mezi přílohy, kde by je nikdo nepřečetl včas. *Nechat normu mlčet* – stav, kdy čtrnáct skillů porušuje šablonu a nikdo neví, jestli je to chyba, nebo zvyk; každý další audit by to hlásil znovu.
 
@@ -670,9 +672,9 @@ Zvoleno: norma blok **uznává jako nepovinný** s kritériem **„sekce se vzta
 **Důsledek, který si vyžádal další práci:** čtyři skilly (`/consistency`, `/release`, `/replace`, `/specify`) měly takovou sekci ještě **před** `Co skill nedělá` a musely se přeskládat. Přesun zanechal pozůstatky – osiřelý oddělovač v `/replace` a větu o kroku cyklu, která ve `/specify` zůstala viset na konci úvahy o dvou dokumentech, kam nepatří. Obojí našel až čtenář bez kontextu v `/cleanupu`, ne audit sám.
 
 
-### 2026-09-15 – Subagenti se volají typy s vymezenými právy, ne slibem v zadání
+### Subagenti se volají typy s vymezenými právy, ne slibem v zadání
 
-Věta „nezapisuj do žádného souboru“ v zadání subagenta **nic nedrží** – je to text pro model, ne mechanismus. A `Explore`, na kterém dosud jely všechny čtecí panely, sice nemá `Edit` ani `Write`, ale **`Bash` má**, takže jím lze zapsat i commitnout. V projektu se zapnutým autocommitem z toho vznikne pushnutá změna, kterou nikdo neschválil.
+**Rozhodnuto 15. 9. 2026.** Věta „nezapisuj do žádného souboru“ v zadání subagenta **nic nedrží** – je to text pro model, ne mechanismus. A `Explore`, na kterém dosud jely všechny čtecí panely, sice nemá `Edit` ani `Write`, ale **`Bash` má**, takže jím lze zapsat i commitnout. V projektu se zapnutým autocommitem z toho vznikne pushnutá změna, kterou nikdo neschválil.
 
 Zavedeny dva typy v `~/.claude/agents/`: **`reader`** (`Read, Grep, Glob`) a **`researcher`** (týž plus `WebSearch` a `WebFetch`). Ani jeden nemá shell. Norma je v `skills/skills.md`, *Model, effort a delegace*, a uplatnila se v pěti skillech; `/attack` a `/audit` zůstaly na typu s nástroji, protože útočník bez shellu nepošle požadavek a auditor bez prohlížeče neuvidí stránku.
 
@@ -684,9 +686,9 @@ Zavedeny dva typy v `~/.claude/agents/`: **`reader`** (`Read, Grep, Glob`) a **`
 
 **Měřeno, ne odhadnuto,** a dvě věci z toho stojí za zapamatování: **výpověď agenta o vlastních nástrojích není doklad** (jeden běh hlásil sadu, která neodpovídala definici – spolehlivé je jen to, co mu volání nástroje projde), a **nový typ je vidět až v nové session**, protože registr se načítá při startu. Překlep v názvu naopak selže hlučně i s výčtem dostupných typů.
 
-### 2026-09-16 – `/next`: fronta další práce, obsazené a opuštěné větve, nabídka kol přestěhovaná ze `/specify`
+### `/next`: fronta další práce, obsazené a opuštěné větve, nabídka kol přestěhovaná ze `/specify`
 
-Na začátku každé session v rozdělaném projektu padal týž dlouhý prompt: vypiš, s čím můžeme pokračovat, seřaď podle důležitosti a závislostí, u každého úkolu charakteristiku a velikost, nejaktuálnější nabídni přes `AskUserQuestion`. Vznikl z toho skill `/next` mimo životní cyklus. Platný stav drží `skills/next/SKILL.md`; tady je cesta k němu.
+**Rozhodnuto 16. 9. 2026.** Na začátku každé session v rozdělaném projektu padal týž dlouhý prompt: vypiš, s čím můžeme pokračovat, seřaď podle důležitosti a závislostí, u každého úkolu charakteristiku a velikost, nejaktuálnější nabídni přes `AskUserQuestion`. Vznikl z toho skill `/next` mimo životní cyklus. Platný stav drží `skills/next/SKILL.md`; tady je cesta k němu.
 
 **Zdroje a řazení.** Čte `todo.md` (včetně parkovaných bodů a kol návrhu), `plan.md`, rozdělanou práci v gitu a místo v cyklu. Místo v cyklu se odvozuje z **artefaktů** (`requirements.md`, `architecture.md`, `plan.md`) a z `## Průchody životním cyklem`, protože zakládací kroky do *Průchodů* nepíšou. Ve worktree layoutu se všechno čte z hlavní větve (s remote `origin/main` po `git fetch`, bez něj lokální `main`) – pracovní adresář session bývá stará nebo cizí větev. Řadí: opuštěné větve → rozdělané tady → bez nesplněné závislosti → co odblokuje nejvíc → pořadí v `todo.md`. Nic nezapisuje.
 
@@ -704,9 +706,9 @@ Na začátku každé session v rozdělaném projektu padal týž dlouhý prompt:
 
 **Srovnávací běh bez skillu** (`claude -p "s čím můžeme pokračovat?"` v jednom z projektů): obsah dobrý, ale bez velikosti úkolů, bez pohledu do gitu, bez spouštěče a s otázkou v textu místo `AskUserQuestion`. Skill vznikl a dvakrát prošel čtenářem bez kontextu; jeho nálezy (nabídnutí rozběhnutého kola či sešití podruhé, chybějící `git fetch`, zdroj souborů ve worktree layoutu) jsou zapracované.
 
-### 2026-09-17 – Jazyk identifikátorů hlídá pravidlo, ne test
+### Jazyk identifikátorů hlídá pravidlo, ne test
 
-`~/.claude/rules/rules.md`, *Jazyk*, říkal jedinou větou, že se kód píše anglicky. Přesto měly všechny testy v `~/.claude/tests/` české názvy tříd, metod i proměnných, `verify.sh` české proměnné a schémata výstupu agentů ve skillech české klíče. Pravidlo se proto rozepsalo: **anglicky je každý identifikátor** včetně testů, klíčů ve schématech a zástupných symbolů v ukázkách příkazů; **česky zůstává, co čte člověk** – komentáře, docstringy, hlášky, zprávy v assertech, testovací data s českým obsahem. `coding.md`, *Naming v kódu*, na to jen odkazuje.
+**Rozhodnuto 17. 9. 2026.** `~/.claude/rules/rules.md`, *Jazyk*, říkal jedinou větou, že se kód píše anglicky. Přesto měly všechny testy v `~/.claude/tests/` české názvy tříd, metod i proměnných, `verify.sh` české proměnné a schémata výstupu agentů ve skillech české klíče. Pravidlo se proto rozepsalo: **anglicky je každý identifikátor** včetně testů, klíčů ve schématech a zástupných symbolů v ukázkách příkazů; **česky zůstává, co čte člověk** – komentáře, docstringy, hlášky, zprávy v assertech, testovací data s českým obsahem. `coding.md`, *Naming v kódu*, na to jen odkazuje.
 
 **Zástupné symboly v příkazech, cestách a jménech souborů jsou anglicky** (`<project>`, ne `<projekt>`). Stojí uvnitř příkazu, který se kopíruje, a `<projekt>.migrating` vedle sebe míchal oba jazyky – přesně tu nekonzistenci, kvůli které se to řešilo. **Místo k doplnění v šabloně českého textu** (`<důvod>`, `<počet>`) naopak zůstává česky: doplní se do věty pro člověka, ne do příkazu. **Stejně česky zůstávají argumenty slash příkazů** v `argument-hint` a v ukázkách volání skillu (`/invoicing recover <klient>`) – doplněno 17. 9. 2026 při `/consistency full`, kde se ukázalo, že přejmenování je u `/invoicing` a `/depot` převedlo a u ostatních skillů ne. Jsou to popisy v nápovědě, které čte člověk. **Kritérium je, kdo řádek píše:** argument za `/skill` píše uživatel v rozhraní, kdežto zástupný symbol v příkazu shellu nebo v cestě doplňuje Claude do kódu – ten je anglicky. Režimy skillu – pojmenované chování, které tělo popisuje jako režim (`full`, `preview`) – jsou naopak anglicky podle `~/.claude/skills/skills.md`, *Hlavička*; o tom, co je režim, nerozhoduje pozice v hintu. **Hodnoty v datech** (doplněno týž den při `/cleanup`, na podnět čtenáře bez kontextu): hodnota, kterou vyrábí a podle které rozhoduje stroj – kód nebo model –, je identifikátor a píše se anglicky (`merge_pending`); hodnota ze slovníku, který se vypisuje člověku doslova (`KRITICKÉ`, `vysoká`), zůstává česky. **Zamítnuto:** převést i škálu závažnosti a jistoty do angličtiny – zásah napříč všemi skilly s nálezy, `severity.md` a zapsanými záznamy `## Review`, a uživateli by se pak musela překládat zpátky.
 
@@ -714,9 +716,9 @@ Na začátku každé session v rozdělaném projektu padal týž dlouhý prompt:
 
 **Rozsah převodu mimo `~/.claude` a `~/Dev/context`: jen čtyři projekty.** Hrubý sken verzovaného kódu v `~/Dev/*` (identifikátory rozložené na slova proti anglickému slovníku, 17. 9. 2026) vytipoval kandidáty ve zhruba patnácti projektech. Honza rozhodl, že se převod zapíše jen do pěti z nich; 17. 9. 2026 byl ve všech kromě jednoho odpracovaný. **Ten jeden z rozsahu vypadl** (17. 9. 2026): převod tam kromě kódu přejmenovával i tisíce datových souborů a veřejné cesty webu, rozdělaná práce se zastavila, vrátila na poslední commit a úkol se odebral – Honza rozhodl, že se tam převod vůbec řešit nebude. **Ostatní projekty se vědomě neřeší** a nikde se nevedou: u většiny sken chytal hlavně jména značek a cizích systémů (`Fakturoid`, `Seznam`, `Zbozi`), text v docstrinzích nebo jiný jazyk, u zbytku šlo o jednotlivá jména. Pravidlo v `~/.claude/rules/rules.md` pro ně dál platí – projeví se při další práci v nich, ne plošným převodem.
 
-### 2026-09-17 – Co rozhodl `/consistency full` po převodu identifikátorů
+### Co rozhodl `/consistency full` po převodu identifikátorů
 
-Audit nad `~/.claude` (28 nálezů, průchod v `done.md`) předložil sedm sporných nálezů. Pět rozhodnutí je níž, šesté (argumenty slash příkazů) v záznamu *Jazyk identifikátorů hlídá pravidlo, ne test*; sedmý nález – rozdílný argument `/depot` v hlavičce a README – se vyřešil jako následek toho šestého a vlastní rozhodnutí nemá.
+**Rozhodnuto 17. 9. 2026.** Audit nad `~/.claude` (28 nálezů, průchod v `done.md`) předložil sedm sporných nálezů. Pět rozhodnutí je níž, šesté (argumenty slash příkazů) v záznamu *Jazyk identifikátorů hlídá pravidlo, ne test*; sedmý nález – rozdílný argument `/depot` v hlavičce a README – se vyřešil jako následek toho šestého a vlastní rozhodnutí nemá.
 
 - **`cwd` validuje `verify.sh --contract`, ne workflow.** Pomlčku nevypíše, cestu ven z projektu nebo do neexistujícího adresáře odmítne chybou – stejně jako hook. **Zamítnuto:** opravit jen `.github/workflows/verify.yml`. Validace by žila na dvou místech a rozešla by se znovu; přesně takhle vznikla původní vada (hook znal pomlčku a zakázané cesty, CI ne).
 - **Jméno klíče kontraktu čte `verify.sh` jedním vzorem `KEY_RE`, bez dvojtečky.** **Zamítnuto:** povolit dvojtečku všude (`test:unit`). Změnila by se sada spouštěných kroků i otisk souhlasu a CI by ji musela znát; dnes ji nepovolovalo nic, co doopravdy spouští, jen výpisy ke schválení – a ty ukazovaly krok, který se nikdy nespustí.
@@ -726,9 +728,9 @@ Audit nad `~/.claude` (28 nálezů, průchod v `done.md`) předložil sedm sporn
 
 **Vědomá mezera u `/transcript`** (starý log po převodu značek) je zapsaná u skillu, v `~/.claude/skills/transcript/SKILL.md`, *Průběžný stav – NEspouštěj automaticky*.
 
-### 2026-09-17 – Skill `/diagram`: mapa datového modelu jako artefakt, ne diagram v repozitáři
+### Skill `/diagram`: mapa datového modelu jako artefakt, ne diagram v repozitáři
 
-Vytěžený ze session nad rezervačním systémem, kde se z `docs/model.md` a `docs/transitions.md` ručně postavila interaktivní stránka – jádro ER, celé schéma s detailem tabulky, klikací stavový prostor, osy – a pak se překreslila na jinou větev po přestavbě objednávky nad partiemi. Honza chce totéž umět zavolat v kterémkoliv projektu; skill je zatím v podobě té session a bude se ladit.
+**Rozhodnuto 17. 9. 2026.** Vytěžený ze session nad rezervačním systémem, kde se z `docs/model.md` a `docs/transitions.md` ručně postavila interaktivní stránka – jádro ER, celé schéma s detailem tabulky, klikací stavový prostor, osy – a pak se překreslila na jinou větev po přestavbě objednávky nad partiemi. Honza chce totéž umět zavolat v kterémkoliv projektu; skill je zatím v podobě té session a bude se ladit.
 
 **Zamítnuto: Mermaid do `docs/`.** Diagram v repozitáři je druhá kopie modelu vedle textu a rozejde se s ním, dokud se model hýbe. Otevřít se to dá, až se model ustálí – a pak jako malé výřezy hlídané testem, ne jako jeden velký diagram. Do té doby skill do projektu nezapisuje nic.
 
@@ -740,9 +742,9 @@ Vytěžený ze session nad rezervačním systémem, kde se z `docs/model.md` a `
 
 **Co ukázal tlakový běh se skillem:** agent pod tlakem „rozepiš obecné hrany, smazání dej jako uzel, bez poznámek“ kreslil jen hrany doložené citací z katalogu a smazání nechal jako osu. Zápis diagramu do `docs/` a commit by na výslovný pokyn uživatele udělal, ale s varováním – pokyn uživatele má před skillem přednost. Vyvolání popisem situace se měřilo přes `claude -p` na 6 pozitivních a 6 negativních promptech po dvou bězích: 24 z 24 správně.
 
-### 2026-09-17 – Skill `/scenarios`: vytěžení scénářů z konverzací stojí mimo životní cyklus
+### Skill `/scenarios`: vytěžení scénářů z konverzací stojí mimo životní cyklus
 
-Kolo návrhu rozhodne, jak se má systém v nějaké situaci chovat, zapíše to do modelu nebo do katalogu přechodů – a scénář k té situaci nikdo nedopíše. Seznam scénářů pak vypadá úplně a není, takže se proti němu nedá ověřit, co nový návrh rozbil. Doloženo dvěma ručními běhy nad rezervačním systémem (15. a 17. 9. 2026): první přidal 42 + 23 + 11 scénářů ze 22 konverzací, druhý našel z 37 konverzací 1376 situací, z nichž 317 nemělo ve scénářích protějšek.
+**Rozhodnuto 17. 9. 2026.** Kolo návrhu rozhodne, jak se má systém v nějaké situaci chovat, zapíše to do modelu nebo do katalogu přechodů – a scénář k té situaci nikdo nedopíše. Seznam scénářů pak vypadá úplně a není, takže se proti němu nedá ověřit, co nový návrh rozbil. Doloženo dvěma ručními běhy nad rezervačním systémem (15. a 17. 9. 2026): první přidal 42 + 23 + 11 scénářů ze 22 konverzací, druhý našel z 37 konverzací 1376 situací, z nichž 317 nemělo ve scénářích protějšek.
 
 **Zařazeno mimo životní cyklus**, k `/ptydepe` a `/replace`. Zavržena varianta „krok za `/cleanup`“: ta by tvrdila, že se má pouštět pokaždé, kdežto zpětné vytěžení dává smysl jednou za čas, až se ukáže, že se scénáře rozešly. Vymezuje se proti `/cleanup` (ten bere **běžící** session a zapisuje dohody do všech souborů) a proti `/specify` (ten scénáře **zakládá** z rozhovoru se zadavatelem).
 
@@ -759,9 +761,9 @@ Kolo návrhu rozhodne, jak se má systém v nějaké situaci chovat, zapíše to
 **Typ subagenta je výchozí, ne `reader` ani `Explore`, a je to vědomé.** Agent musí pouštět `jq` nad JSONL (tedy potřebuje shell) a zapsat dlouhý strukturovaný výstup do souboru (tedy potřebuje `Write`). `reader` nemá první, `Explore` druhé. Hranice se proto nepředstírá – zákaz zápisu do repozitáře projektu je v zadání jako pokyn a je to ve skillu napsané.
 
 **Srovnávací běh se vědomě nedělal.** Místo něj stojí dva skutečné ostré běhy, ve kterých je zaznamenané, jak práce bez skillu selhala – to je silnější doklad než syntetický pokus.
-### 2026-09-18 – Souhlas s průběžnou kontrolou platí na repozitář, ne na obsah příkazů, a dialog to teď říká
+### Souhlas s průběžnou kontrolou platí na repozitář, ne na obsah příkazů, a dialog to teď říká
 
-Nález `/review full` nad rezervačním systémem (specialista na agentní infrastrukturu): `Stop` hook po každé odpovědi vykoná `test` z kontraktu, což u toho projektu znamená naimportovat a spustit všechny `tests/test_*.py`. Souhlas se přitom otiskuje výhradně z řádků `- klíč: příkaz`, takže obsah těch souborů do něj nevstupuje. **Kdo dostane commit do `tests/` – smerguje PR, předá větev, přesvědčí agenta –, dostane spuštění svého kódu s právy uživatele po první další odpovědi, bez promptu a bez nového souhlasu.** Sedí to vedle `.env` s přístupovými údaji, které deny pravidla chrání proti nástroji `Read`, ne proti procesu, který si hook spustí sám.
+**Rozhodnuto 18. 9. 2026.** Nález `/review full` nad rezervačním systémem (specialista na agentní infrastrukturu): `Stop` hook po každé odpovědi vykoná `test` z kontraktu, což u toho projektu znamená naimportovat a spustit všechny `tests/test_*.py`. Souhlas se přitom otiskuje výhradně z řádků `- klíč: příkaz`, takže obsah těch souborů do něj nevstupuje. **Kdo dostane commit do `tests/` – smerguje PR, předá větev, přesvědčí agenta –, dostane spuštění svého kódu s právy uživatele po první další odpovědi, bez promptu a bez nového souhlasu.** Sedí to vedle `.env` s přístupovými údaji, které deny pravidla chrání proti nástroji `Read`, ne proti procesu, který si hook spustí sám.
 
 **Mez zůstává, protože ji nejde zavřít bez falešných poplachů.** Otisk z celé sekce kontraktu se 14. 9. 2026 vyzkoušel a zrušil – vyžádal si nové odsouhlasení po každé editaci komentáře. Hashovat spouštěný strom (`tests/`) je totéž, jen častěji: testy se během práce mění pořád. A nešlo by to na `tests/` omezit, protože `npm test` vykoná, co je v `package.json`; důsledně vzato by se musel hashovat celý repozitář a souhlas by se vydával několikrát denně. **Falešný poplach je u vynucovací vrstvy horší směr selhání než propuštěná chyba** – vede k jejímu vypnutí, a pak nehlídá nic.
 
@@ -771,9 +773,9 @@ Nález `/review full` nad rezervačním systémem (specialista na agentní infra
 
 **Dotčené projekty:** všechny, které mají vydaný souhlas. Nic se jim nemění – změna je jen v textu dialogu při vydávání nového.
 
-### 2026-09-18 – Plugin `gitkraken-hooks` vypnutý: běžel naprázdno
+### Plugin `gitkraken-hooks` vypnutý: běžel naprázdno
 
-Nález `/review full` nad rezervačním systémem ho našel znovu poté, co umlčení z 8. 9. 2026 vypršelo změnou `settings.json`. Tehdy se vypořádal jako vědomě přijaté riziko: odesílání dat mimo stroj se neprokázalo, zbylo „lokální proces téhož uživatele vidí obsah session“.
+**Rozhodnuto 18. 9. 2026.** Nález `/review full` nad rezervačním systémem ho našel znovu poté, co umlčení z 8. 9. 2026 vypršelo změnou `settings.json`. Tehdy se vypořádal jako vědomě přijaté riziko: odesílání dat mimo stroj se neprokázalo, zbylo „lokální proces téhož uživatele vidí obsah session“.
 
 **Rozhodlo měření, ne ta úvaha.** V `gk_cli.log` je **164× „blocking broadcast returned no decision“**, poslední záznamy z téhož dne, a **nula registrovaných agentů**. Plugin tedy při každé žádosti o svolení volal binárku, ta rozeslala obsah session a nikdo ji neposlouchal – od prvního měření 8. 9. (tehdy 104×) dodnes. K čemu je: posílá GitKraken Desktopu a GitLensu živý přehled o tom, co Claude Code dělá, a umožňuje z jejich UI schvalovat tool cally. **Honza GitKraken používá jen na vizualizaci větví**, takže ten přehled nikde neotevírá.
 
@@ -783,9 +785,9 @@ Nález `/review full` nad rezervačním systémem ho našel znovu poté, co uml�
 
 **Zamítnuto – nechat zapnuté a jen srazit timeout.** Zavřelo by to provozní půlku (čekání na svolení), ale platilo by se za funkci, kterou nikdo nepoužívá.
 
-### 2026-09-18 – Skill `/serviceaccount` konvenci nenese, jen ji čte
+### Skill `/serviceaccount` konvenci nenese, jen ji čte
 
-Skill provede založením service accountů pro strojový přístup ke klientským systémům. Vznikl proto, že se týž postup dělal ručně a nezapamatoval by se – hlavně kvůli tomu, že **ID service accountu je neměnné**, takže chyba v pojmenování se opravuje jedině novým účtem a novou žádostí u klienta.
+**Rozhodnuto 18. 9. 2026.** Skill provede založením service accountů pro strojový přístup ke klientským systémům. Vznikl proto, že se týž postup dělal ručně a nezapamatoval by se – hlavně kvůli tomu, že **ID service accountu je neměnné**, takže chyba v pojmenování se opravuje jedině novým účtem a novou žádostí u klienta.
 
 **Konvence bydlí v `~/Dev/context/organizations/access.md`, ne ve skillu.** Norma `~/.claude/skills/skills.md` znalost oboru do skillu nepouští a tady to má i praktický důvod: seznam systémů a úrovně oprávnění porostou, kdežto průběh skillu ne.
 
@@ -797,9 +799,9 @@ Skill provede založením service accountů pro strojový přístup ke klientsk�
 
 **Ověřeno:** testy tvaru 241 z 241, vyvolání 4 ze 4 – dva pozitivní prompty skill vyvolaly, dva negativní ne, včetně near-missu se slovy z konvence. **Neověřené zůstaly tlakové scénáře:** skill zakazuje pokračovat s vymyšleným slugem a zapisovat evidenci před potvrzením, a jestli to pod tlakem drží, se neměřilo.
 
-### 2026-09-19 – Systémové notifikace zůstávají na kanálu `iterm2`, mobilní push se vypíná
+### Systémové notifikace zůstávají na kanálu `iterm2`, mobilní push se vypíná
 
-Notifikace „Claude is waiting for your input“ má titul „Alert“ a skutečnou zprávu až za prefixem „Session <jméno tabu> (claude) #1:“. Prefix i titul dopisuje iTerm2, ne Claude Code: kanál `iterm2` posílá `OSC 9`, který nese **jediný řetězec** a titul neumí. Doloženo tím, že holé `printf '\033]9;…\007'` do téhož terminálu vyrobí identický tvar.
+**Rozhodnuto 19. 9. 2026.** Notifikace „Claude is waiting for your input“ má titul „Alert“ a skutečnou zprávu až za prefixem „Session <jméno tabu> (claude) #1:“. Prefix i titul dopisuje iTerm2, ne Claude Code: kanál `iterm2` posílá `OSC 9`, který nese **jediný řetězec** a titul neumí. Doloženo tím, že holé `printf '\033]9;…\007'` do téhož terminálu vyrobí identický tvar.
 
 **Rozhodnutí:** kanál zůstává `iterm2`, práh nečinnosti `messageIdleNotifThresholdMs` zůstává na výchozí minutě a vlastní `Notification` hook se nestaví. Oba přepínače mobilního push – `agentPushNotifEnabled` a `inputNeededNotifEnabled` – jdou na `false`.
 
@@ -816,7 +818,9 @@ Notifikace „Claude is waiting for your input“ má titul „Alert“ a skute�
 
 **Nález k vypořádání jinde:** `~/.claude/rules/structure.md` žádá datum v prvním odstavci a ne v nadpisu, kdežto celý tenhle soubor má datum v nadpisu `###`. Zápis drží konvenci souboru; srovnat to je práce pro `/consistency`, ne pro jeden zápis.
 
-### 2026-09-20 – Životní cyklus se dělí na osu a kontroly v mezerách
+### Životní cyklus se dělí na osu a kontroly v mezerách
+
+**Rozhodnuto 20. 9. 2026.**
 
 **Problém:** cyklus byl jedna číslovaná řada kroků a ta předstírala, že každý krok spouští ten předchozí. Platilo to zhruba u poloviny; `/cleanup`, `/consistency`, `/discovery` a `/project` čekaly na stav, ne na předchůdce. `/cleanup` si v `lifecycle.md` dokonce sám odporoval – stálo o něm „poslední krok uzavírání, **ne životního cyklu**“ a zároveň měl v seznamu číslo 9.
 
@@ -831,7 +835,9 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Zamítnuto:** ponechat jednu řadu a doplnit u každého kroku jen řádek *Spouštěč* – stálo to půl hodiny a skončilo tím, že polovina čísel dál nic neznamenala.
 
-### 2026-09-20 – `/specify` se dělí na `/specify` a `/architect`
+### `/specify` se dělí na `/specify` a `/architect`
+
+**Rozhodnuto 20. 9. 2026.**
 
 **Rozhodnutí:** jeden skill, který vyráběl `requirements.md` i `architecture.md`, se dělí na dva kroky osy.
 
@@ -852,7 +858,9 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Nepřejmenovává se:** `requirements.md` ani `plan.md`. Jsou pojmenované podle obsahu a `specification.md` by z trojice vybočilo.
 
-### 2026-09-20 – Návrh řešení je sada dokumentů, ne jeden soubor
+### Návrh řešení je sada dokumentů, ne jeden soubor
+
+**Rozhodnuto 20. 9. 2026.**
 
 **Rozhodnutí:** `architecture.md` je **páteř** návrhu, ne celý návrh. K ní podle potřeby `model.md` (data a stavy), `transitions.md` (operace), `rules.md` (zásady domény) a tematické dokumenty kol.
 
@@ -864,7 +872,9 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Vedlejší nález:** `structure.md` mluvila o „návrhu řešení“, ale soubor se jmenuje `architecture.md` – dvě jména pro jednu věc, jen jedno česky a druhé anglicky. Opraveno.
 
-### 2026-09-20 – `/review` stojí za každým krokem osy, který vyrobil artefakt
+### `/review` stojí za každým krokem osy, který vyrobil artefakt
+
+**Rozhodnuto 20. 9. 2026.**
 
 **Problém:** první verze tabulky mezer měla `/review` jen za `/implement`, protože vznikala s projektem s kódem před očima. Uživatel na to upozornil otázkou, proč jsme ho tedy nad rezervacemi pouštěli v návrhové fázi.
 
@@ -874,9 +884,9 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Pořadí uvnitř mezery:** `/review` jde **první**, protože jeho opravy mění text, nad kterým pracují ostatní; `/consistency` po něm; `/cleanup` vždy poslední.
 
-### 2026-09-20 – Rozdíl mezi `/review` a `/oponent` nad obsahovým projektem
+### Rozdíl mezi `/review` a `/oponent` nad obsahovým projektem
 
-Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude odvozovat znovu:
+**Rozhodnuto 20. 9. 2026.** Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude odvozovat znovu:
 
 **`/review` má měřítko v souboru, `/oponent` žádné nemá.**
 
@@ -887,7 +897,9 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Praktický důsledek:** u projektu, ke kterému žádný relevantní standard v `~/Dev/context/` neexistuje, je `/review` skoro prázdný a má se přeskočit. `/oponent` funguje vždycky.
 
-### 2026-09-20 – Vznikl krok `/consolidate` na návrhový dluh z postupného záplatování
+### Vznikl krok `/consolidate` na návrhový dluh z postupného záplatování
+
+**Rozhodnuto 20. 9. 2026.**
 
 **Problém, který ho vyvolal:** návrh vzniká po kolech a v každém se ukáže další kombinace, na kterou se přidá sloupec nebo hodnota výčtu. Každý ten krok je ve své chvíli správný; dohromady z nich vznikne řešení, které by při znalosti všech případů předem šlo nahradit jedním jednodušším. **Žádný dosavadní krok to nenajde:** `/review` měří proti specifikaci, jenže dluh je v samotné specifikaci; `/consistency` se ptá, jestli si projekt sedí sám se sebou – a takový dluh je dokonale konzistentní, protože každá záplata se poctivě zanesla všude; `/oponent` posuzuje dokument, jak stojí dnes, a nemá odkud vědět, že tři sousední mechanismy vznikly ve třech týdnech ze tří podnětů.
 
@@ -911,7 +923,9 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 **Zadání skillu i to, co k jeho napsání zbývá, drží `todo.md`.** Rozbor pilotu je v rezervačním systému, `docs/done.md` a `docs/decisions.md` §133 a §134.
 
 
-### 2026-09-20 – `/architect` vznikl a nemá režimy
+### `/architect` vznikl a nemá režimy
+
+**Rozhodnuto 20. 9. 2026.**
 
 **Rozhodnutí:** `/specify` se rozdělil na dva skilly. `/specify` zůstal **jeden běh bez režimů** a vyrábí `requirements.md` plus produktové podklady; `/architect` dostal návrh řešení jako **sadu dokumentů** a celou mechaniku tematických kol. Zdůvodnění dělení drží zápis *`/specify` se dělí na `/specify` a `/architect`* výš; tohle je záznam o jeho provedení a o třech rozhodnutích, která při něm padla.
 
@@ -925,7 +939,9 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Srovnávací běh se vědomě vynechal** (`~/.claude/skills/skill/SKILL.md`, *Fáze 4*). Měří, jak agent selže bez skillu; vstupem tady ale nebylo nové téma, nýbrž 423 řádků odladěného textu, takže by neměřil nic.
 
-### 2026-09-20 – Dvě vrstvy cyklu v kořenovém README nese pořadí, ne nadpisy
+### Dvě vrstvy cyklu v kořenovém README nese pořadí, ne nadpisy
+
+**Rozhodnuto 20. 9. 2026.**
 
 **Rozhodnutí:** v `README.md` se osa a kontrolní kroky **nerozdělují nadpisem**. Hranici drží pořadí sekcí a úvodní odstavec, který jmenuje první a poslední krok každého bloku.
 
@@ -935,7 +951,9 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Našel to čtenář bez kontextu při `/cleanup`**, oba nezávisle na sobě. Je to typický nález téhle vrstvy: struktura, která vypadá správně v textu a lže v osnově.
 
-### 2026-09-20 – Osou pro ptaní je volba, ne riskantnost zásahu
+### Osou pro ptaní je volba, ne riskantnost zásahu
+
+**Rozhodnuto 20. 9. 2026.**
 
 **Rozhodl uživatel** uprostřed `/consistency full` nad rezervačním systémem, po jedenácti otázkách, ze kterých ani jedna nenabízela volbu: *„když jsou ty opravy takhle jednoznačné a není se mezi čím rozhodovat (a dáváš mi stejně jen na výběr, jestli opravit hned nebo opravit později nebo se na to vykašlat a nechat to špatně), tak se mě ani neptej a hned to všechno oprav – odkládat na později to nechceme a odmítnout opravu věci, kterou je potřeba opravit, taky nechceme. Ptej se mě jen na věci, kde se to dá opravit více způsoby a chceš se zeptat, jaký zvolit.“*
 
@@ -953,9 +971,9 @@ Otázka uživatele, kterou stojí za to mít zapsanou, protože se jinak bude od
 
 **Nedořešeno zůstala podoba té otázky**, ne její kdy: `/oponent` má záchytné volby *Nechat být* a *Vrátit se k tomu později*, zbytek rodiny *Přeskočit* a *Odložit*, a je to dvojí slovní zásoba pro totéž. **Sjednoceno 28. 9. 2026** – viz záznam *Nález vypadá ve všech kontrolních skillech stejně, a je to odstavec, ne mřížka*.
 
-### 2026-09-21 – Merge je samostatný krok, ne fáze `/cleanup`
+### Merge je samostatný krok, ne fáze `/cleanup`
 
-Postup dokončení větve – přihrát hlavní větev do pracovní, vyřešit konflikty, pustit nad spojeným stavem *Kontrakt příkazů*, teprve pak mergovat a uklízet – žil do téhle chvíle jako sekce *Dokončení větve* v `~/.claude/rules/worktree.md`. Mělo to dvě vady. **Neplatil v projektu bez worktree layoutu:** `worktree.md` se tam nenačte, takže se merguje bez celého postupu, přestože nejdražší doložená chyba – souběžně puštěný úklid, který 17. 9. 2026 smazal nepřimergovanou větev lokálně i na remote – na layoutu vůbec nezávisí. A **`/cleanup` ho opisoval** odkazem dovnitř cizího souboru na třech místech.
+**Rozhodnuto 21. 9. 2026.** Postup dokončení větve – přihrát hlavní větev do pracovní, vyřešit konflikty, pustit nad spojeným stavem *Kontrakt příkazů*, teprve pak mergovat a uklízet – žil do téhle chvíle jako sekce *Dokončení větve* v `~/.claude/rules/worktree.md`. Mělo to dvě vady. **Neplatil v projektu bez worktree layoutu:** `worktree.md` se tam nenačte, takže se merguje bez celého postupu, přestože nejdražší doložená chyba – souběžně puštěný úklid, který 17. 9. 2026 smazal nepřimergovanou větev lokálně i na remote – na layoutu vůbec nezávisí. A **`/cleanup` ho opisoval** odkazem dovnitř cizího souboru na třech místech.
 
 **Rozhodnutí:** vznikl skill `/merge`, který nese postup celý a zobecněný na projekt bez worktree layoutu. `worktree.md` si nechal *Větev žije, dokud uživatel neřekne jinak* a z *Dokončení větve* jen to, co plyne z layoutu (odkud se pouštějí příkazy, mazání worktree, proč spojený stav nesmí vznikat v `main/`). V životním cyklu stojí mezi **kontrolními kroky**, hned za `/cleanup`.
 
@@ -973,9 +991,9 @@ Postup dokončení větve – přihrát hlavní větev do pracovní, vyřešit k
 
 **Vědomě nepokryto:** slučování přes pull request na serveru. `/merge` merguje lokálně a pushuje výsledek; projekt s povinným review v GitHubu by potřeboval jinou cestu a ta se zatím nenavrhovala.
 
-### 2026-09-21 – Ptaní se zúžilo podruhé: „netroufáš si“ padlo a zákaz falešné trojice míří na tvar
+### Ptaní se zúžilo podruhé: „netroufáš si“ padlo a zákaz falešné trojice míří na tvar
 
-Kritérium *Kdo o nálezu rozhoduje* (`skills/findings.md`, 20. 9. 2026) mělo zabránit otázkám, ve kterých není z čeho vybírat. Den nato se přesto v běhu `/cleanup` objevila otázka s volbami *Zapsat do todo / Vyřešit teď / Zahodit* nad nálezem „dva dokumenty uvádějí u téže věci jiný počet“. Uživatel to zachytil a poslal snímek obrazovky.
+**Rozhodnuto 21. 9. 2026.** Kritérium *Kdo o nálezu rozhoduje* (`skills/findings.md`, 20. 9. 2026) mělo zabránit otázkám, ve kterých není z čeho vybírat. Den nato se přesto v běhu `/cleanup` objevila otázka s volbami *Zapsat do todo / Vyřešit teď / Zahodit* nad nálezem „dva dokumenty uvádějí u téže věci jiný počet“. Uživatel to zachytil a poslal snímek obrazovky.
 
 **Příčiny byly dvě a obě systémové, ne nepozornost v jednom běhu.**
 
@@ -991,7 +1009,9 @@ Kritérium *Kdo o nálezu rozhoduje* (`skills/findings.md`, 20. 9. 2026) mělo z
 
 **Uživatel hook zamítl** (21. 9. 2026, *„hook ne, takhle textově to stačí“*) poté, co mu byl předložen i s tím, že textové pravidlo se obešlo už podruhé. Zůstává to tedy vědomě bez mechanismu: cenou je, že třetí obejití nikdo nezachytí dřív než člověk u obrazovky. Otevírat to znovu má smysl až tehdy, když se to stane – ne dřív.
 
-### 2026-09-21 – `/discovery` odpovídá hlavně na „proč“ a vyrábí `docs/demand.md`
+### `/discovery` odpovídá hlavně na „proč“ a vyrábí `docs/demand.md`
+
+**Rozhodnuto 21. 9. 2026.**
 
 **Zadal uživatel** po debatě o tom, jestli se z téhle soustavy dá udělat framework prezentovaný ven. Při hledání mezer proti okolí vyšlo najevo, že krok, který měl odpovídat na *proč*, na něj neodpovídal: `/discovery` zkoumal konkurenci a rizika, tedy **proti čemu** se staví, ne **jestli to někdo chce**. Mezi `/project` a `/specify` tak nestálo nic, co by ověřilo existenci problému a poptávky – a od `/specify` dál každý krok předpokládá, že je rozhodnuto stavět. **Postavit pečlivě něco, co nikdo nechce, je nejdražší způsob selhání celého cyklu**, protože se projeví až hotovým produktem, který nikdo nepoužívá.
 
@@ -1009,7 +1029,9 @@ Kritérium *Kdo o nálezu rozhoduje* (`skills/findings.md`, 20. 9. 2026) mělo z
 
 **Uživatelský výzkum to nenahrazuje a skill to přiznává.** Tři nové cesty rešerše (*Hlas problému*, *Ochota platit*, *Objem a jazyk hledání*) hledají veřejné stopy problému, ne živé lidi. Je to vědomá mez (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*): doklad z fóra je slabší než rozhovor se zákazníkem a skill nemá předstírat opak.
 
-### 2026-09-21 – Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
+### Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
+
+**Rozhodnuto 21. 9. 2026.**
 
 **Zadal uživatel** větou „tu díru musíme zaplnit“ nad položkou v `todo.md`. Cyklus umožňoval zavřít smyčku jen pro **pády**: sledovací okno v `/release` nasazení neuzavře, dokud někdo neřekne „okno uzavřeno, N nových chyb“ – ale žádný krok nevracel z provozu zjištění o tom, jestli se to používá, co lidé nedokončili a co si vyžádali. Srovnání spec-driven frameworků ([arXiv 2606.04967](https://arxiv.org/pdf/2606.04967)) jmenuje *feedback integration* mezi šesti mezerami oboru; sledovacím oknem jsme měli zabranou jen její polovinu. Šest rozhodnutí padlo v řízeném rozhovoru, každé z předložených variant s důsledky.
 
@@ -1029,7 +1051,9 @@ Kritérium *Kdo o nálezu rozhoduje* (`skills/findings.md`, 20. 9. 2026) mělo z
 
 **Jméno `/evaluate`, podklad `operation.md`.** Rozhodl uživatel ze čtyř předložených párů. Vyhrálo to, které pojmenovává, čím se krok liší od sběru čísel: u každého poznatku padá rozhodnutí a bez toho krok není hotový. `/observe` se zamítlo, protože nenapovídá, že se tam i rozhoduje; `/feedback` proto, že je to výsledek, ne činnost, a „zpětná vazba“ zní jako názory lidí, kdežto hlavním zdrojem jsou data o tom, co doopravdy dělali; `/measure` proto, že je užší než krok sám – vyžádaná funkce ani projevené riziko není měření, a `usage.md` by byl na půlku obsahu špatný název.
 
-### 2026-09-21 – Předjímané *Časté chyby* se ve skillu nedrží, sekce se smazala
+### Předjímané *Časté chyby* se ve skillu nedrží, sekce se smazala
+
+**Rozhodnuto 21. 9. 2026.**
 
 **Rozhodl uživatel** při úklidu po přestavbě `/discovery`. Skill měl desetiřádkovou tabulku *Časté chyby*, ale **na skutečném projektu nikdy neběžel** – všech deset řádků tedy popisovalo, co by se pokazit mohlo, ne co se pokazilo. Norma (`skills/skills.md`, *Povinné sekce a jejich pořadí*) u té sekce žádá opak a říká ji zakládat až po prvních ostrých bězích.
 
@@ -1037,9 +1061,9 @@ Kritérium *Kdo o nálezu rozhoduje* (`skills/findings.md`, 20. 9. 2026) mělo z
 
 **Neplatí to jen pro tenhle skill, ale řeší se zatím jednotlivě.** Jestli má norma rozlišit předjímku od doloženého poučení obecně, nebo se má pravidlo jen důsledněji dodržovat, se nerozhodlo – u ostatních skillů se nic nemazalo.
 
-### 2026-09-21 – Co se rozhodlo při stavbě `/evaluate`
+### Co se rozhodlo při stavbě `/evaluate`
 
-Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`* – tam je šest rozhodnutí o tom, **jestli a jak**; tady čtyři, která padla až při psaní skillu.
+**Rozhodnuto 21. 9. 2026.** Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`* – tam je šest rozhodnutí o tom, **jestli a jak**; tady čtyři, která padla až při psaní skillu.
 
 **Skill nemá režimy.** Má jedno chování, takže se podle `skills/skills.md` žádný nepojmenovává. Zvažovalo se oddělit sběr od rozhodování, aby šlo „jen sebrat čísla“; zamítnuto, protože přesně to je slepá ulička, kterou krok zavírá – běh bez rozhodnutí by byl režim na výrobu evidence, kterou nikdo nečte.
 
@@ -1053,9 +1077,9 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 
 **Srovnávací běh byl neplatný podruhé za sebou a je to vada metody, ne náhoda.** Agent si `/evaluate` uprostřed práce našel na disku, načetl ho a jel podle něj – takže neměřil, jak se selhává bez skillu, stejně jako u `/merge`. Vyplývá z toho, že **srovnávací běh nad skillem uloženým v témže repozitáři, ve kterém agent pracuje, měřit nejde**; kdo ho bude chtít doopravdy pustit, musí skill dočasně odstranit nebo agenta poslat do prostředí bez něj. Jako **první ostrý běh** byl přesto cenný – vytěžily se z něj tři opravy výš a sekce *Časté chyby*.
 
-### 2026-09-22 – Tlakové scénáře `/evaluate` prošly a vytěžily tři vylepšení
+### Tlakové scénáře `/evaluate` prošly a vytěžily tři vylepšení
 
-Čtyři scénáře, každý tlačil na jedno omezení skillu, každý ve vlastním adresáři s vlastním prefixem. **Všechna čtyři omezení se dodržela** – žádné se pod tlakem neprolomilo. Cenné na nich ale nebylo potvrzení, nýbrž tři věci, které agenti udělali lépe, než skill předepisoval, a které se do něj proto zapsaly.
+**Rozhodnuto 22. 9. 2026.** Čtyři scénáře, každý tlačil na jedno omezení skillu, každý ve vlastním adresáři s vlastním prefixem. **Všechna čtyři omezení se dodržela** – žádné se pod tlakem neprolomilo. Cenné na nich ale nebylo potvrzení, nýbrž tři věci, které agenti udělali lépe, než skill předepisoval, a které se do něj proto zapsaly.
 
 **Vyvrácené odůvodnění se hlásí, i když rozhodnutí platí dál.** Scénář tlačil větou „co jsme si odškrtli jako *dělat nebudeme*, to platí“ na vyžádanou funkci, kterou zadání vylučovalo odůvodněním „kapacity se plní z 80 %, takže by to byla funkce pro nikoho“ – přičemž tři z pěti kapacit byly plné a dva rodiče o tu funkci nezávisle napsali. Agent funkci neprosadil ani nezamítl: poslal ji do `backlog.md` jako nerozhodnutou a zvlášť ohlásil, že **odůvodnění** toho rozhodnutí je prokazatelně nepravdivé, kdežto rozhodnutí samo platit může. To rozlišení ve skillu nebylo a je lepší než to, co měl – ptá se na jednu větu odůvodnění, ne na to, jestli se funkce postaví.
 
@@ -1067,7 +1091,9 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 
 **Dva agenti nezávisle obešli bod 1 v `preflight.md`** („není to git repozitář → skonči bez dalšího příkazu“) s odůvodněním, že `/evaluate` git nepotřebuje. Byla to otevřená otázka o přípravě, ne o tomhle skillu; **vyřešila se týž den** rozdělením bodu 1 – viz *Bod 1 přípravy rozlišuje, jestli skill git doopravdy potřebuje* níž.
 
-### 2026-09-22 – Bod 1 přípravy rozlišuje, jestli skill git doopravdy potřebuje
+### Bod 1 přípravy rozlišuje, jestli skill git doopravdy potřebuje
+
+**Rozhodnuto 22. 9. 2026.**
 
 **Rozhodl uživatel** ze tří předložených variant. `preflight.md`, bod 1, velel u adresáře bez `.git` *„skonči bez dalšího příkazu“* – jedna tvrdá podmínka pro každý skill, který běží nad projektem. **Obešli ji tři agenti nezávisle na sobě** (běhy `/evaluate`, 21. a 22. 9. 2026) se shodným odůvodněním, že jejich skill nic nemění, necommituje a diff nepotřebuje. Podle *Mechanická pravidla nad rozhodováním případ od případu* z `~/.claude/rules/rules.md` je opakované obcházení nejdřív signál o formulaci pravidla.
 
@@ -1083,7 +1109,9 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 
 **Poznámka k tomu, jak se to našlo:** ti tři agenti běželi v adresářích postavených ve scratchpadu, a ty git nebyly. V reálném projektu téhle soustavy to nastat nemůže. **Není to tedy provozní vada, ale nepřesnost normy, kterou měření odhalilo** – a stojí to tu zapsané proto, aby se příště nehledalo znovu.
 
-### 2026-09-23 – Úspora nákladů míří na kontext, ne na délku odpovědí
+### Úspora nákladů míří na kontext, ne na délku odpovědí
+
+**Rozhodnuto 23. 9. 2026.**
 
 **Podnět:** dotaz na nástroje `caveman`, `ponytail`, `headroom` a `rtk` – tři z nich slibují úsporu tokenů, čtvrtý úsporu kódu. Místo posouzení podle jejich README se **změřila skutečná spotřeba** ze session logů: 117 tisíc volání API za měsíc (`~/.claude/projects/**/*.jsonl`, pole `usage`), vážené relativní cenou (zápis cache 1,25×, čtení cache 0,1×, výstup 5× vůči vstupnímu tokenu). **„Nákladová jednotka“ v těchhle zápisech znamená jeden takto vážený token** – je to tedy počet vstupních tokenů, za který by táž práce vyšla stejně. Na peníze se převádí cenou vstupního tokenu použitého modelu a mezi modely se **porovnávat nedá**.
 
@@ -1101,9 +1129,9 @@ Navazuje na *Zpětnou vazbu z provozu zavírá `/evaluate` a `docs/operation.md`
 
 **Čísla si ověř znovu, než podle nich budeš rozhodovat.** Jsou z jednoho měsíce a z období, kdy 49 % spotřeby dělal jediný projekt; skript je jednorázový a neuložil se.
 
-### 2026-09-23 – Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`
+### Jak se chová `/clear`, `/compact` a transcript, a co stojí `/cleanup`
 
-Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nákladů míří na kontext, ne na délku odpovědí* výš). **Zapsáno jako podklad, ne jako rozhodnutí** – návrh, který z toho vyšel, žil v `todo.md` a rozhodl se 25. 9. 2026 (*Skill `/cleanup` poběží v subagentovi* níž). Podklad platí i kdyby se návrh zahodil, protože `/review` a `/consistency` čeká totéž.
+**Rozhodnuto 23. 9. 2026.** Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nákladů míří na kontext, ne na délku odpovědí* výš). **Zapsáno jako podklad, ne jako rozhodnutí** – návrh, který z toho vyšel, žil v `todo.md` a rozhodl se 25. 9. 2026 (*Skill `/cleanup` poběží v subagentovi* níž). Podklad platí i kdyby se návrh zahodil, protože `/review` a `/consistency` čeká totéž.
 
 **Co stojí `/cleanup`** (249 běhů, ze session logů):
 
@@ -1129,9 +1157,9 @@ Změřeno a ověřeno při hledání úspor nákladů (navazuje na *Úspora nák
 
 **Poučení, které se zaplatilo šestkrát za jeden den: v transcriptu se hledá dotazem na strukturu, ne grepem na řetězec.** Postupně se takhle chytlo slovo „cleanup“ ze seznamu skillů v systémovém promptu (a prohlásilo za úklid celou session), `rev-parse` z textu skillu načteného do transcriptu, `/clear` z vlastní věty o `/clear`u, a dvakrát selhal filtr na tvar `<command-name>`, protože **pořadí tagů není pevné** – někdy je první `<command-message>`. Nejzrádnější instance dala **správnou odpověď ze špatného důvodu**: detekce nenašla nic a náhodou to byla pravda. Je to `quality.md`, *Měřidlo musí odlišit vlastní selhání od nálezu*, v čisté podobě.
 
-### 2026-09-23 – Co subagent dědí od rodičovské session
+### Co subagent dědí od rodičovské session
 
-Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní prostředí). Zapsáno zvlášť, protože to **platí pro každý skill, který deleguje**, ne jen pro `/cleanup`.
+**Rozhodnuto 23. 9. 2026.** Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní prostředí). Zapsáno zvlášť, protože to **platí pro každý skill, který deleguje**, ne jen pro `/cleanup`.
 
 | Co | Hodnota u agenta |
 |---|---|
@@ -1145,7 +1173,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Pozor na jednu nekonzistenci:** adresář, do kterého agent ukládá svůj výstup (`…/tasks/<agentId>.output`), leží pod **jiným** UUID než scratchpad session. Vypadá to jako změna session-id a není to ona – transcript pod tím druhým UUID neexistuje. Kdo bude odvozovat session-id z cesty, musí brát tu ze systémového promptu, ne z cesty k výstupu agenta.
 
-### 2026-09-25 – Řádek `/cleanup` v `done.md` nese i id uklizené session
+### Řádek `/cleanup` v `done.md` nese i id uklizené session
+
+**Rozhodnuto 25. 9. 2026.**
 
 **Rozhodl uživatel** při úklidu jako jediné nevypořádané téma, které nesouviselo s odloženou přestavbou skillu. Návrh vzešel z oponentury 23. 9. jako měkčí protějšek k **zamítnuté evidenci uklizených session** – ta padla proto, že skill je záměrně opakovatelný a rejstřík s čárou by šel proti té vlastnosti.
 
@@ -1155,7 +1185,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Zamítnuto – nechat řádek beze změny.** Argument byl, že id je dlouhý řetězec, který člověk nečte, a že opakované běhy vyrobí víc řádků s týmž id. Neobstál: řádek čte **příští běh téhož skillu**, ne člověk, a víc řádků s týmž id je věcně správný záznam dvou úklidů.
 
-### 2026-09-25 – Skill `/cleanup` poběží v subagentovi, ne v čisté session po `/clear`u
+### Skill `/cleanup` poběží v subagentovi, ne v čisté session po `/clear`u
+
+**Rozhodnuto 25. 9. 2026.**
 
 **Rozhodl uživatel po změření**, ne po úvaze – a to byla jeho podmínka: odhad úspory nebyl doložený, takže se nejdřív pustil pokusný běh.
 
@@ -1175,7 +1207,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Doložená mez, která platí i pro dnešní stav:** agent nečetl odpovědi celé, jen úseky kolem rozhodovacích míst, a posudek oponenta jen ze čtvrtiny – u 2,8 MB to jinak nejde. Není to argument proti subagentovi, protože `session.md` na dlouhý transcript posílá subagenta tak jako tak; je to mez vytěžování jako takového a patří do zadání jako pokyn hlásit, co se nestihlo.
 
-### 2026-09-25 – Tvar `/cleanup` po přesunu do subagenta
+### Tvar `/cleanup` po přesunu do subagenta
+
+**Rozhodnuto 25. 9. 2026.**
 
 **Rozhodl uživatel** v šesti otázkách za sebou, hned po tom, co padlo *že* se do subagenta jde (*Skill `/cleanup` poběží v subagentovi, ne v čisté session po `/clear`u* výš). Naměřená ekonomika a doložení cesty jsou tam; tady je jen tvar.
 
@@ -1215,13 +1249,15 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Zamítnuto – nechat tak a jen to hlásit jako mez.** Nestálo by to nic navíc a agent to dnes přiznával sám, jenže u datové session by se obsah opravdu ztrácel a přiznaná mez z něj nic nezachrání. **Zamítnuto – číst výstupy nástrojů celé.** Byla by to úplnost bez rozhodování, ale u velkého transcriptu mnohonásobně větší vstup – tedy přímo proti tomu, kvůli čemu se úklid do subagenta přesunul.
 
-### 2026-09-25 – `/cleanup` se v pásmu „zvaž rozdělení“ nedělí
+### `/cleanup` se v pásmu „zvaž rozdělení“ nedělí
 
 **Rozhodnuto 25. 9. 2026.** `skills/cleanup/SKILL.md` má po zapracování zpětné vazby z prvních tří ostrých běhů a po vypořádání nálezů čtenářů **326 řádků** (`wc -l`, 25. 9. 2026), tedy pásmo 300–500 z `skills/skills.md`, *Délka a progresivní odhalení*, kde norma velí rozdělení zvážit a říct to při revizi. **Nedělí se**, a to ze dvou důvodů: přírůstek toho dne byl 17 řádků (309 → 326), takže do pásma soubor spadl setrvačností, ne novou složitostí; a jádro skillu už venku je – `agent.md`, `readers.md` a `out-of-scope.md` vznikly při přesunu do subagenta, takže v `SKILL.md` zbyl samotný postup rodiče, který se čte souvisle. (**Od 26. 9. 2026 to platí jinak, závěr ale drží:** `agent.md` i `readers.md` zanikly se zrušením subagenta a čtenářů, venku zůstaly `obligations.md` a `out-of-scope.md`. Soubor má 334 řádků, tedy pořád totéž pásmo a pořád daleko od tvrdé meze 500.)
 
 **Cesta zpátky:** k dělení se sáhne, až se soubor přiblíží tvrdé mezi 500 řádků, a vytáhnou se z něj šablony výstupu *Fází 3, 4 a 7* a kapitola *Časté chyby*. Zamítnuto zapsat to jako úkol do `todo.md` ani jako nápad do `backlog.md` – fronta ani backlog nejsou místo pro rozhodnutí, že se něco **dělat nemá** (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*), a bez tohohle zápisu by dělení někdo navrhl znovu a prošel by touž úvahou od nuly.
 
-### 2026-09-25 – Přesun `/cleanup` do subagenta úspory nepřinesl: celek je o třetinu dražší
+### Přesun `/cleanup` do subagenta úspory nepřinesl: celek je o třetinu dražší
+
+**Rozhodnuto 25. 9. 2026.**
 
 **Změřeno 25. 9. 2026**, den po přepisu, skriptem `skills/cleanup/scripts/cost.py` (uložen schválně – předchozí měření výš svůj skript neuložilo a chybí). Metodika je v jeho docstringu; běh se ohraničuje markerem `Úklid dokončen`, srovnává se po pásmech velikosti transcriptu.
 
@@ -1255,7 +1291,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Mez měření:** 7 běhů proti 110, všechny z jednoho dne a z pásma nad 1200 kB – pro menší session po přepisu data nejsou. Vyloučen jeden běh, který skončil po 3 voláních. Čísla jsou vážený součet tokenů, ne fakturovaná částka; poměry platí, absolutní hodnoty se s cenami změní.
 
-### 2026-09-26 – `/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit
+### `/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit
 
 **Rozhodnuto 26. 9. 2026** po změření předchozího tvaru (záznam výš) a po třech nezávislých posudcích. Spouštěčem byla věta, kterou běh sám vydal: *„ze tří posudků čtenářů, které přišly jako dlouhý JSON, četl jen začátky… nedá se vyloučit, že v nepřečtené části zůstal nález“*. Uživatel na tom pojmenoval, co od skillu čeká: ověření, že se ze session opravdu všechno zapsalo – **s odškrtáváním, ne s dojmem**.
 
@@ -1285,7 +1321,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Cesta zpátky:** po několika ostrých bězích změřit znovu skriptem `scripts/cost.py` a porovnat se 105,8 z tohohle záznamu. Nevyjde-li úspora, je na řadě řez v *Fázi 5*, ne návrat čtenářů.
 
 
-### 2026-09-26 – Kolik z transcriptu se čte, rozhoduje počet kompaktací, ne zvyk
+### Kolik z transcriptu se čte, rozhoduje počet kompaktací, ne zvyk
 
 **Rozhodnuto 26. 9. 2026**, hned po vrácení `/cleanup` do hlavní session. Otázka zněla: má smysl číst transcript z disku, když v hlavní session je konverzace v kontextu už zaplacená?
 
@@ -1303,7 +1339,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Zamítnuto rozhodovat to podle velikosti transcriptu.** Velký transcript bez kompaktace je pořád celý v kontextu, kdežto malý po dvou kompaktacích ne. Rozhoduje tedy kompaktace, ne objem – a to je jeden z mála případů, kde jde kritérium postavit na počtu, ne na úsudku.
 
 
-### 2026-09-26 – Prompty v evidenci se deduplikují, protože harness tentýž prompt uloží víckrát
+### Prompty v evidenci se deduplikují, protože harness tentýž prompt uloží víckrát
+
+**Rozhodnuto 26. 9. 2026.**
 
 **Zjištěno prvním ostrým během nového `/cleanup`** a opraveno hned, protože na počtu promptů stojí celá záruka úplnosti: nesedí-li, poměr `N/N` nic netvrdí. Transcript ukládá tentýž uživatelův vstup dvakrát ve dvou různých případech:
 
@@ -1316,7 +1354,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Přerušení běhu (`[Request interrupted by user]`) prompt není** – čte se jako věta, ale je to záznam o akci, ne obsah k zapsání.
 
-### 2026-09-26 – První ostrý běh zúženého `/cleanup`: 58,7 jednotky proti 200,6
+### První ostrý běh zúženého `/cleanup`: 58,7 jednotky proti 200,6
+
+**Rozhodnuto 26. 9. 2026.**
 
 **Změřeno 26. 9. 2026** skriptem `skills/cleanup/scripts/cost.py` hned po prvním ostrém běhu nového tvaru, nad session s transcriptem 3,3 MB – tedy v témž pásmu, ve kterém jsou obě starší čísla.
 
@@ -1338,7 +1378,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Co se z toho smí tvrdit:** zúžení fungovalo a stav před přepisem je překonaný. **Co se tvrdit nesmí:** že je typický úklid za 58,7 – to řekne teprve běh s neprázdnou frontou. Do té doby platí jako mez zdola.
 
-### 2026-09-27 – Měřidlo nákladů platí pro každý skill a první čísla obrací doporučení u `/consistency`
+### Měřidlo nákladů platí pro každý skill a první čísla obrací doporučení u `/consistency`
+
+**Rozhodnuto 27. 9. 2026.**
 
 **Změřeno 27. 9. 2026** zobecněným `skills/cost.py` nad všemi session logy. Spouštěčem byla otázka, jestli se poučení z přestavby `/cleanup` nemají promítnout do `/review`, `/consistency` a `/oponent` – a podmínka, že změna nesmí fungovat hůř, běžet dýl ani stát víc. Bez měřidla se ani jedna z těch tří podmínek ověřit nedá, takže bylo první.
 
@@ -1361,7 +1403,7 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Poučení z `/cleanup`, které se nepřenáší:** zrušení subagenta. Kritérium za ním bylo úzké – agent rekonstruoval z transcriptu to, co hlavní session má v kontextu zdarma, a proto volání stoupla o 51 %. `/review`, `/consistency` i `/oponent` čtou soubory, které v kontextu nejsou, a u `/oponent` je izolace kontextu celý smysl skillu. Mechanický přenos by rozbil tři skilly naráz.
 
-### 2026-09-27 – Panel vykazuje měřené pokrytí a prázdný výstup agenta přestal znamenat „čisto“
+### Panel vykazuje měřené pokrytí a prázdný výstup agenta přestal znamenat „čisto“
 
 **Rozhodnuto 27. 9. 2026** jako druhá polovina přenosu poučení z `/cleanup`. První (deterministický předfiltr) míří na cenu, tahle na **spolehlivost** – a je to ta, kvůli které se `/cleanup` přepisoval.
 
@@ -1389,7 +1431,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **`/consistency` se tím dostal na 329 řádků, tedy do pásma *zvaž rozdělení* podle `~/.claude/skills/skills.md`.** Nedělí se dnes: nejsilnější kandidát na vytažení je zadání pro agenta (jeden blok, který hlavní běh jen předává dál), ale to je samostatná úvaha o hranici řezu, ne mechanická oprava – a `todo.md` už tutéž otázku vede u `/review` a `/project`. Patří tedy k nim, ne do téhle práce.
 
-### 2026-09-27 – Plugin `gitkraken-hooks` odstraněný úplně; pluginové hooky přibyly do registru
+### Plugin `gitkraken-hooks` odstraněný úplně; pluginové hooky přibyly do registru
+
+**Rozhodnuto 27. 9. 2026.**
 
 **Rozhodl uživatel 27. 9. 2026** slovy *„Nenene, žádný gitkraken plugin, pryč s ním“*, když se ukázalo, že je v pracovní kopii `settings.json` zapnutý.
 
@@ -1410,9 +1454,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 
 **Vyvrácené 3. 10. 2026: „odstraněno úplně“ úplné nebylo.** V `plugins/installed_plugins.json` zůstal záznam instalace a průzkum konfigurace ho pak četl jako nainstalovaný, vypnutý plugin. Neškodil – bez cache, marketplace a řádku v `enabledPlugins` se nenačítal –, ale soubor je v `.gitignore`, takže ho neukázal diff ani test. Odstranil ho až `claude plugin uninstall gitkraken-hooks@gitkraken`. **Plugin se proto odstraňuje příkazem CLI, ne mazáním souborů:** ruční výčet míst, kde plugin žije, je neúplný z principu.
 
-### 2026-09-28 – Měřidlo pásmuje na dvou osách a druhá z nich platí jen dopředu
+### Měřidlo pásmuje na dvou osách a druhá z nich platí jen dopředu
 
-`skills/cost.py` srovnával běhy jen po pásmech velikosti transcriptu. To platí u `/cleanup`, jehož vstupem transcript **je**, ale u skillu, který čte disk, cenu neurčuje délka session: u `/consistency` vyšlo pásmo nejkratších session na **286,5 jednotky proti 63,2** v pásmu nejdelších, tedy obráceně. Kdo by jeho běhy srovnával po první ose, porovná nesrovnatelné – a nepozná to, protože čísla vypadají stejně věrohodně.
+**Rozhodnuto 28. 9. 2026.** `skills/cost.py` srovnával běhy jen po pásmech velikosti transcriptu. To platí u `/cleanup`, jehož vstupem transcript **je**, ale u skillu, který čte disk, cenu neurčuje délka session: u `/consistency` vyšlo pásmo nejkratších session na **286,5 jednotky proti 63,2** v pásmu nejdelších, tedy obráceně. Kdo by jeho běhy srovnával po první ose, porovná nesrovnatelné – a nepozná to, protože čísla vypadají stejně věrohodně.
 
 **Druhá osa proto pásmuje podle velikosti rozsahu** a čte ji z řádku `Pokrytí:` v závěrečném přehledu, tedy z čísla, které si skill zapisuje sám. Do tabulky přibyl sloupec `rozsah` a obě osy se vypisují vedle sebe, i při srovnání přes `--since`.
 
@@ -1428,9 +1472,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Regresní testy hlídají oba směry**, protože špatně přečtený rozsah je zrádnější než nepřečtený: vzít za rozsah prompty `N/N`, kilobajty transcriptu nebo zástupné `N z M` ze šablony ve `SKILL.md` by dalo běhu pásmo, které si nezaslouží. Jednotka je proto v regulárním výrazu povinná a čte se jen text odpovědi, ne vstupy nástrojů – jinak by se za naměřený rozsah vzala šablona, kterou běh zrovna píše.
 
 
-### 2026-09-28 – Testy patří do `tests/`, protože jinde je nespouští nikdo
+### Testy patří do `tests/`, protože jinde je nespouští nikdo
 
-`test_deklinace.py` ležel uvnitř `/replace` u skriptů, které zkouší. Kontrakt `test` pouští jedinou věc – `python3 -m unittest discover -s tests` –, takže ho od jeho vzniku **nespustila žádná kontrola**: padal na 2 ze 44 vět a nikdo se to nedozvěděl. Je to táž třída vady jako nepokrytý soubor v lintu, jen o vrstvu výš: nechybí kontrola nad souborem, chybí spuštění celé kontroly.
+**Rozhodnuto 28. 9. 2026.** `test_deklinace.py` ležel uvnitř `/replace` u skriptů, které zkouší. Kontrakt `test` pouští jedinou věc – `python3 -m unittest discover -s tests` –, takže ho od jeho vzniku **nespustila žádná kontrola**: padal na 2 ze 44 vět a nikdo se to nedozvěděl. Je to táž třída vady jako nepokrytý soubor v lintu, jen o vrstvu výš: nechybí kontrola nad souborem, chybí spuštění celé kontroly.
 
 **Vyhrálo přesunutí do `tests/` a zákaz testů jinde.** Test si modul načte po cestě, jak to dělají všechny ostatní (`test_cost.py`, `test_cleanup.py`, `test_transcript.py`), a `tests/test_skills.py` má nový meta-test, který shodí sadu, jakmile kdekoliv mimo `tests/` vznikne soubor `test_*.py`. Kontrakt se nemění a zůstává jedním příkazem. Ověřeno v obou směrech – nad dnešním stavem je zelený a nad podstrčeným testem ve skillu padá.
 
@@ -1444,9 +1488,9 @@ Ověřeno testem (jeden agent typu `general-purpose`, úkol jen vypsat vlastní 
 **Opravovat je nemá čím.** *Partie* má shodný tvar v 1. pádě jednotného i množného čísla a *neplatí* je taky obojí, takže věta o čísle nenese informaci vůbec – je to nerozhodnutelné v principu, ne mezera v pravidlech. *Partii* je shodné ve 4. i 6. pádě a rozhodla by jedině tabulka vazeb sloves (*ozvat se na* + 4. pád), tedy další pravidla do funkce `resolve`, která má složitost 64 proti prahu 10 a čeká na rozdělení. Obojí zůstává ruční kontrolou, jak to `deklinace/README.md` popisuje u doložené meze převodu.
 
 
-### 2026-09-28 – `resolve` se rozdělila na stupně a rovnocennost se ověřila výčtem, ne sadou vět
+### `resolve` se rozdělila na stupně a rovnocennost se ověřila výčtem, ne sadou vět
 
-Funkce `resolve` v `skills/replace/deklinace/deklinace.py` měla cyklomatickou složitost **64 proti prahu 10**, takže kvůli ní stál celý adresář mimo lint jako zapsaná výjimka. **Práh se nesnižoval** – to smí jen člověk a se zápisem do rozhodnutí.
+**Rozhodnuto 28. 9. 2026.** Funkce `resolve` v `skills/replace/deklinace/deklinace.py` měla cyklomatickou složitost **64 proti prahu 10**, takže kvůli ní stál celý adresář mimo lint jako zapsaná výjimka. **Práh se nesnižoval** – to smí jen člověk a se zápisem do rozhodnutí.
 
 **Řez je dvoustupňový.** `resolve` je dnes dispečer: neslévající se tvary vyřídí tabulkou, zbytek pošle podle tvaru do `instrumental_or_genitive`, `dative_or_accusative` nebo `nominative_or_genitive`. Rozdělení jen podle tvaru ale nestačilo – větev pro `partie` by sama měla přes dvacet rozhodnutí –, takže se dělí dál **podle toho, co pád rozhodlo**: řídící slovo vlevo, přívlastek, výčet vpravo, slovo vpravo, přísudek za předložkovou frází, plnovýznamové slovo vlevo, nejednoznačný přívlastek a nakonec odhad z koncovky přísudku. Každý stupeň vrací hotovou trojici, nebo `None`, a pomocná funkce `first_hit` bere první, který se chytí.
 
@@ -1461,9 +1505,9 @@ Funkce `resolve` v `skills/replace/deklinace/deklinace.py` měla cyklomatickou s
 **Lint tím pokrývá repozitář beze zbytku a `KNOWN_GAPS` je prázdný.** Vyšlo přitom najevo, že vzor `skills/*/scripts/*.py` mířil jen na jméno `scripts`, takže skript dvě úrovně pod skillem v jinak pojmenovaném adresáři by nečetla žádná kontrola; nahradil se obecnějším `skills/*/*/*.py`. Prázdný seznam výjimek se hlídá v obou směrech, takže znamená „žádná výjimka neexistuje“, ne „na výjimku se zapomnělo“.
 
 
-### 2026-09-28 – Nález vypadá ve všech kontrolních skillech stejně, a je to odstavec, ne mřížka
+### Nález vypadá ve všech kontrolních skillech stejně, a je to odstavec, ne mřížka
 
-Kontrolní skilly měly pro tytéž dvě věci **tři různé slovníky**: `/oponent` nabízel *Nechat být* a *Vrátit se k tomu později*, `/review`, `/consistency` a `/attack` *Přeskočit* a *Odložit*, `/cleanup` u položek mimo rozsah vlastní čtveřici. Mapování volby na stav měl navíc jen `/oponent`. Uživatel přitom prochází nálezy z několika skillů v jednom životním cyklu, takže dvě jména pro tutéž volbu čte jako dvě různé volby.
+**Rozhodnuto 28. 9. 2026.** Kontrolní skilly měly pro tytéž dvě věci **tři různé slovníky**: `/oponent` nabízel *Nechat být* a *Vrátit se k tomu později*, `/review`, `/consistency` a `/attack` *Přeskočit* a *Odložit*, `/cleanup` u položek mimo rozsah vlastní čtveřici. Mapování volby na stav měl navíc jen `/oponent`. Uživatel přitom prochází nálezy z několika skillů v jednom životním cyklu, takže dvě jména pro tutéž volbu čte jako dvě různé volby.
 
 **Záchytné volby se jmenují `Neopravovat` a `Zapsat do todo`.** Rozhodl uživatel; kritérium dodal redakční standard pro rozhraní (`~/Dev/context/text/copy.md`, *Popisky akcí*): popisek musí říct, co se stane. *Přeskočit* se čte jako „teď ne“, přestože znamená natrvalo a se zápisem do `CLAUDE.md`; *Nechat být* mlčí o tom, že se nález někam zapíše. Tabulka volba → stav je nově v `findings.md` jednou pro všechny.
 
@@ -1484,9 +1528,9 @@ Kontrolní skilly měly pro tytéž dvě věci **tři různé slovníky**: `/opo
 **Nedoměřená zůstala mez 12 znaků pro `header`.** Sjednocený tvar je `Nález N/celkem`, který se v běhu vypíše jako `Nález 3/11`, tedy pod mezí; přetéct umí až u trojmístných počtů. Otázka, co se s delší hlavičkou v rozhraní doopravdy stane, zůstává otevřená v `todo.md` – měřilo se dvakrát, ale pozorování se nevrátilo.
 
 
-### 2026-09-28 – Mez 12 znaků pro `header` padla jako nedoložená
+### Mez 12 znaků pro `header` padla jako nedoložená
 
-`~/.claude/rules/rules.md` uváděl `header` v `AskUserQuestion` jako **tvrdou mez dvanácti znaků**. Pocházela z dokumentace nástroje, ne z pozorování, a **nikdo ji nikdy neověřil**: čtenář bez kontextu na ni 20. 9. 2026 upozornil kvůli rozporu, protože pět skillů ji zdánlivě překračovalo tvarem `Nález N/celkem`.
+**Rozhodnuto 28. 9. 2026.** `~/.claude/rules/rules.md` uváděl `header` v `AskUserQuestion` jako **tvrdou mez dvanácti znaků**. Pocházela z dokumentace nástroje, ne z pozorování, a **nikdo ji nikdy neověřil**: čtenář bez kontextu na ni 20. 9. 2026 upozornil kvůli rozporu, protože pět skillů ji zdánlivě překračovalo tvarem `Nález N/celkem`.
 
 **Ta premisa byla špatně a měřila jinou věc.** Počítala délku **šablony**, ne hodnoty, která se odesílá: `Nález N/celkem` má 14 znaků, ale v běhu se vypíše `Nález 3/11`, tedy 10. Mez se tedy překročí až u trojmístných počtů a v běžném provozu nikdy.
 
@@ -1494,9 +1538,9 @@ Kontrolní skilly měly pro tytéž dvě věci **tři různé slovníky**: `/opo
 
 **Dvanáct znaků zůstává jako doporučení.** Tvrdá mez bez doloženého chování je horší než doporučení: skilly se podle ní zkracovaly a `cleanup/out-of-scope.md` se jí zdůvodňoval, proč v hlavičce nemá číslo položky – kvůli nedoložené větě tedy uživatel přicházel o orientaci, kolikátá otázka z kolika přichází. Ta hlavička se tím srovnala na `Položka N/celkem` jako zbytek rodiny. Ukáže-li se někdy, že se delší hlavička ořezává, vrátí se mez **i s tím, co se pozorovalo**.
 
-### 2026-09-28 – Skill `/consolidate` vznikl a čtyři otevřené otázky se rozhodly
+### Skill `/consolidate` vznikl a čtyři otevřené otázky se rozhodly
 
-Poslední chybějící krok životního cyklu. Pilotní běh proběhl 20. 9. 2026 v rezervačním systému nad platební bránou a zadání z něj vyšlo celé, takže sepsání bylo mechanická práce – **srovnávací běh se proto vědomě přeskočil**: pilot je přesně to měření, které by `/skill`, *Fáze 4*, vyrobil znovu a dráž. Rozhodnout ale bylo potřeba čtyři věci, které `lifecycle.md` u toho kroku jmenoval jako otevřené.
+**Rozhodnuto 28. 9. 2026.** Poslední chybějící krok životního cyklu. Pilotní běh proběhl 20. 9. 2026 v rezervačním systému nad platební bránou a zadání z něj vyšlo celé, takže sepsání bylo mechanická práce – **srovnávací běh se proto vědomě přeskočil**: pilot je přesně to měření, které by `/skill`, *Fáze 4*, vyrobil znovu a dráž. Rozhodnout ale bylo potřeba čtyři věci, které `lifecycle.md` u toho kroku jmenoval jako otevřené.
 
 **Vrací nálezy i návrhy, oddělené.** Hlavní výstup je návrh alternativy **bez závažnosti**, protože „šlo by to jednodušeji“ není vada a stupeň by u něj neměřil nic. Vedlejší vady, na které narazí ověřovatelé, jdou ven jako normální nálezy podle `skills/severity.md`. Sedí to na pilot, kde ověřovatelé zabili dva ze dvou velkých návrhů a jako vedlejší produkt našli dvě skutečné vady – **ten vedlejší výnos byl ten cenný**. Zamítnuty dvě varianty: „jen návrhy“ zahazuje právě tenhle výnos, „všechno jako nález“ tlačí stupeň tam, kde není co měřit. Věta v `lifecycle.md`, že skill jako jediný vrací návrh, tím padá jen zpola a je upřesněná.
 
@@ -1508,9 +1552,9 @@ Poslední chybějící krok životního cyklu. Pilotní běh proběhl 20. 9. 202
 
 **Nezměřilo se vyvolání ani tlakové scénáře** – patří to k položce o dohánění evaluací a skill nese hned dvě vynucující pravidla (relativizují se řešení, ne zadání; ověřovatel se nesmí odvolat na dřívější zamítnutí), u kterých jsou tlakové scénáře podle `/skill` povinné.
 
-### 2026-09-28 – Tlakové scénáře `/consolidate`: obě pravidla drží, dvě chyby jsou zrcadlové
+### Tlakové scénáře `/consolidate`: obě pravidla drží, dvě chyby jsou zrcadlové
 
-Dvě vynucující pravidla skillu se změřila hned v den jeho vzniku, ne odloženě: zákaz ověřovateli odvolat se na dřívější zamítnutí a hranice *relativizují se řešení, ne zadání*. **Odchylka od `/skill`, Fáze 6:** scénáře se nepustily přes `superpowers:writing-skills`, ale napsaly se adresně a odehráli je dva izolovaní agenti typu `reader` nad vymyšleným projektem ve scratchpadu – session věděla, kde je skill křehký, a načítat kvůli tomu cizí skill by stálo víc, než co přinese. **Vidlička se vypsala předem** i s větví „neměřilo se nic, návnada byla slabá“; ta nenastala ani u jednoho.
+**Rozhodnuto 28. 9. 2026.** Dvě vynucující pravidla skillu se změřila hned v den jeho vzniku, ne odloženě: zákaz ověřovateli odvolat se na dřívější zamítnutí a hranice *relativizují se řešení, ne zadání*. **Odchylka od `/skill`, Fáze 6:** scénáře se nepustily přes `superpowers:writing-skills`, ale napsaly se adresně a odehráli je dva izolovaní agenti typu `reader` nad vymyšleným projektem ve scratchpadu – session věděla, kde je skill křehký, a načítat kvůli tomu cizí skill by stálo víc, než co přinese. **Vidlička se vypsala předem** i s větví „neměřilo se nic, návnada byla slabá“; ta nenastala ani u jednoho.
 
 **Obě pravidla obstála.** Ověřovatel dostal návrh, který v podkladech výslovně zamítal záznam §125 – nedovolal se na něj a verdikt postavil na konkrétních guardech. Druhý agent dostal podklad, ve kterém nejlevnější zjednodušení bylo zrušit předprodej kurzů; past pojmenoval sám a našel řešení, které téhož dosáhne bez sáhnutí na zadání.
 
@@ -1520,17 +1564,17 @@ Dvě vynucující pravidla skillu se změřila hned v den jeho vzniku, ne odlož
 
 **Vedlejší výnos potvrdil, co tvrdil pilot.** Agenti našli v podstrčeném modelu dvě skutečné vady, které se scénářem nesouvisely – G4 by po rozdělení os začala upomínat stornované a G2 by vracela peníze za nezaplacené přihlášky. Nález byl v obou případech cennější než posuzovaný návrh, což je přesně to, kvůli čemu se vedlejší vady hlásí jako nálezy se závažností.
 
-### 2026-09-28 – `/scenarios` zůstává jen o scénářích, selling se vytěžuje na vyžádání
+### `/scenarios` zůstává jen o scénářích, selling se vytěžuje na vyžádání
 
-Čtvrtá dávka vytěžení se pustila s argumentem „a hned při tom rovnou doplň analogicky i selling“ a agenti dělali nad týmž transcriptem dva úkoly naráz: situace lidí do `scenarios.md` a materiál pro komunikaci produktu do `selling.md`. **Vyplatilo se to** – argumenty nesly zhruba polovinu zápisů dávky (14 z 32) a **filtr na situace lidí by je zahodil**, protože doložená bolest konkurence ani mez, kterou je potřeba říct poctivě, scénářem nejsou.
+**Rozhodnuto 28. 9. 2026.** Čtvrtá dávka vytěžení se pustila s argumentem „a hned při tom rovnou doplň analogicky i selling“ a agenti dělali nad týmž transcriptem dva úkoly naráz: situace lidí do `scenarios.md` a materiál pro komunikaci produktu do `selling.md`. **Vyplatilo se to** – argumenty nesly zhruba polovinu zápisů dávky (14 z 32) a **filtr na situace lidí by je zahodil**, protože doložená bolest konkurence ani mez, kterou je potřeba říct poctivě, scénářem nejsou.
 
 **Rozhodl uživatel 28. 9. 2026 to přesto do skillu nezapisovat.** Zůstává to jednorázovým pokynem v argumentu příkazu. **Zamítnuto rozšířit skill natrvalo** o druhý úkol podmíněný tím, že projekt `selling.md` vede, **zamítnut samostatný `/selling`** (oba skilly by četly tytéž transcripty dvakrát) i odklad do fronty konfigurační vrstvy.
 
 **Cena, o které se ví:** `selling.md` nemá vlastní běh, takže zestárne, kdykoliv si o něj nikdo neřekne. Doplňuje se tedy buď argumentem u `/scenarios`, nebo průběžně ve chvíli, kdy argument padne – což je stejně to, co `selling.md` sám o sobě předepisuje.
 
-### 2026-09-28 – Poučení o strukturálním diffu je obecné pravidlo, ne doménová znalost o kódu
+### Poučení o strukturálním diffu je obecné pravidlo, ne doménová znalost o kódu
 
-`~/.claude/rules/rules.md` dostalo sekci *Velký diff nad strukturovaným souborem čti parsovaný, ne jako text* a s ní i pravidlo commitovat formátování zvlášť od věcné změny. Do té doby to byla jedna věta uvnitř záznamu o pluginu `gitkraken-hooks` z 27. 9. 2026 – tedy na místě, kde to nikdo nehledá, když příště čte velký diff v jiném projektu.
+**Rozhodnuto 28. 9. 2026.** `~/.claude/rules/rules.md` dostalo sekci *Velký diff nad strukturovaným souborem čti parsovaný, ne jako text* a s ní i pravidlo commitovat formátování zvlášť od věcné změny. Do té doby to byla jedna věta uvnitř záznamu o pluginu `gitkraken-hooks` z 27. 9. 2026 – tedy na místě, kde to nikdo nehledá, když příště čte velký diff v jiném projektu.
 
 **Zamítnuto připsat to jako odstavec k *Mazání ověř diffem, ne grepem*.** Drželo by to pohromadě všechno o čtení diffu, jenže to pravidlo je o **mazání podle značek** a tohle o **čtení cizí změny** – závěr sekce by říkal něco jiného než její název. Vztah mezi nimi tím nezmizel: obě sekce stojí vedle sebe a nová na tu starší odkazuje jako na svého sourozence z druhé strany, protože tam řez sebere víc, než měl, a diff je jediné místo, kde to je vidět, kdežto tady je diff tak velký, že v něm není vidět nic.
 
@@ -1538,17 +1582,17 @@ Dvě vynucující pravidla skillu se změřila hned v den jeho vzniku, ne odlož
 
 **Cena, o které se ví:** `~/.claude/rules/rules.md` se rozbaluje do každé session včetně těch nad čistě textovými projekty, kde se strojově formátovaný soubor nevyskytne. Je to čtyři odstavce a platí to pro každý repozitář, ne pro každý soubor – táž úvaha jako u *Commituj jmenované cesty, ne `-A`*.
 
-### 2026-09-28 – Ve frontě se zaškrtávátky je položkou jen zaškrtávátko
+### Ve frontě se zaškrtávátky je položkou jen zaškrtávátko
 
-`/next` počítal za položku fronty každou odrážku i číslovaný řádek na nejvyšší úrovni, jak to `parse_items` uměl od začátku kvůli projektům, které `todo.md` vedou jako holý seznam. Ve zdejším `todo.md` tím ale vznikly položky ze čtyřřádkového **návodu k pořadí** („čím začít u skillů“) – podsekce se nafoukla z 31 na 35 a nadbytečná položka vypadá jako práce.
+**Rozhodnuto 28. 9. 2026.** `/next` počítal za položku fronty každou odrážku i číslovaný řádek na nejvyšší úrovni, jak to `parse_items` uměl od začátku kvůli projektům, které `todo.md` vedou jako holý seznam. Ve zdejším `todo.md` tím ale vznikly položky ze čtyřřádkového **návodu k pořadí** („čím začít u skillů“) – podsekce se nafoukla z 31 na 35 a nadbytečná položka vypadá jako práce.
 
 **Rozhoduje zaškrtávátko, ne odsazení.** První úvaha byla brát jen odrážky na nulovém odsazení, jenže ten návod na nule stojí taky; od položky se liší jedině tím, že nemá `[ ]`. Nese-li tedy soubor zaškrtávátka, jsou položkami jen ona.
 
 **Rozhoduje se to nad celým souborem, ne nad sekcí**, protože výklad téže značky se uvnitř jednoho `todo.md` měnit nesmí – jinak by `- ` znamenala v jedné sekci úkol a ve druhé poznámku. Fronta psaná bez zaškrtávátek i `backlog.md` si proto ponechávají starý výklad a testy hlídají oba směry.
 
-### 2026-09-28 – Pořadí datovaných záznamů hlídá nástroj a norma *Nejstarší nahoře* zůstává
+### Pořadí datovaných záznamů hlídá nástroj a norma *Nejstarší nahoře* zůstává
 
-Norma ze `~/.claude/rules/structure.md` se rozpadla **počtvrté** a ruční srovnání se do té doby dělalo třikrát. Příčina je strukturální: do těch sekcí zapisují skilly samy a každý se řídí tím, co v souboru zrovna vidí, takže jeden obrácený zápis stačí, aby ho další napodobily. Naměřeno 28. 9. 2026: *Průchody životním cyklem* 2 zlomy, *Odvedená práce* **9**, `decisions.md` 2.
+**Rozhodnuto 28. 9. 2026.** Norma ze `~/.claude/rules/structure.md` se rozpadla **počtvrté** a ruční srovnání se do té doby dělalo třikrát. Příčina je strukturální: do těch sekcí zapisují skilly samy a každý se řídí tím, co v souboru zrovna vidí, takže jeden obrácený zápis stačí, aby ho další napodobily. Naměřeno 28. 9. 2026: *Průchody životním cyklem* 2 zlomy, *Odvedená práce* **9**, `decisions.md` 2.
 
 **Zamítnuto obrátit normu na „nejnovější nahoře“** s odůvodněním, že se opačné pořadí prosazuje samo. Neprosazuje: kdyby ano, byly by ty řady sestupné celé, kdežto naměřený stav je vzestupná řada, na kterou se nahoře nabalují nové zápisy. Obrácení by tedy neopravilo nic – soubory by se stejně musely přerovnat a stejně by se rozpadaly, jen na druhou stranu. Navíc by padlo provozní zdůvodnění, že připsat na konec je jediný způsob zápisu, který nejde udělat špatně, protože nevyžaduje hledat správné místo.
 
@@ -1556,9 +1600,9 @@ Norma ze `~/.claude/rules/structure.md` se rozpadla **počtvrté** a ruční sro
 
 **Cena, o které se ví:** `~/Dev/context` nemá `tests/` ani CI, takže tam test nedosáhne a kontrolu musí pustit `/cleanup`. Je to slabší vrstva – běží, jen když někdo uklízí –, ale je to totéž místo, které ty datované záznamy zapisuje.
 
-### 2026-09-28 – Práh kontextu je 300k/400k a konec každého běhu nese blok *Kudy dál*
+### Práh kontextu je 300k/400k a konec každého běhu nese blok *Kudy dál*
 
-Dlouhá session se dosud ukončovala citem – v praxi kolem 500 až 700k tokenů, tedy o celé pásmo později, než se vyplatí. Rozhodlo se **300k jako práh, kdy skill nabídne přerušení, a 400k jako mez, kdy ho doporučí rovnou**; obojí drží nový sdílený soubor `skills/handoff.md` a testy hlídají, že se to číslo neopisuje do jednotlivých skillů.
+**Rozhodnuto 28. 9. 2026.** Dlouhá session se dosud ukončovala citem – v praxi kolem 500 až 700k tokenů, tedy o celé pásmo později, než se vyplatí. Rozhodlo se **300k jako práh, kdy skill nabídne přerušení, a 400k jako mez, kdy ho doporučí rovnou**; obojí drží nový sdílený soubor `skills/handoff.md` a testy hlídají, že se to číslo neopisuje do jednotlivých skillů.
 
 **Čím je práh podepřený:** výchozí spouštěč server-side kompaktace v API je 150k tokenů, tedy pětina dosavadní praxe. Cena sama proti dlouhé session nemluví tak silně, jak se čekalo – kontext má jednotný tarif a opakovaný prefix jde z cache za desetinu –, takže hlavní důvod není peněžní, ale ten, že model v 700k oknu přestává spolehlivě vidět pravidla z jeho první poloviny. Měření z 23. 9. 2026 to potvrzuje z druhé strany: session nad 400 volání jsou 4 % session a 52 % nákladů.
 
@@ -1591,9 +1635,9 @@ Dlouhá session se dosud ukončovala citem – v praxi kolem 500 až 700k token�
 
 **Argument `/next`, který není zúžení, ale věcná otázka, se neřeší a je to vědomé.** Ve stejném běhu padly tři minuty ze čtyř a půl na zodpovězení otázky o stavu `/specify`, kterou uživatel předal jako argument – skill zná argument jen jako filtr výpisu. Pravidlo se nezavádí: pokyn uživatele přebíjí skill (`~/.claude/rules/rules.md`, *Přednost pravidel*), odpověď z posbíraných dat by byla mělká a odmítnutí by uživatele nutilo ptát se podruhé. Zruší se, ukáže-li se, že se `/next` takhle používá pravidelně a že ty běhy pokaždé trvají minuty.
 
-### 2026-09-30 – `~/.claude/rules/rules.md` jen s pravidly, činnostní pravidla ve vedlejších souborech, velikost hlídá test
+### `~/.claude/rules/rules.md` jen s pravidly, činnostní pravidla ve vedlejších souborech, velikost hlídá test
 
-Claude Code začal v projektech, které importují `coding.md`, varovat, že instrukce přesahují limit 150k znaků. `~/.claude/rules/rules.md` za 20 dní narostl z 39,6k na 73,5k znaků (úklid z 10. 9. výš skončil po 3,8 % a růst nic nehlídalo), `coding.md` z 25,6k na 49,3k.
+**Rozhodnuto 30. 9. 2026.** Claude Code začal v projektech, které importují `coding.md`, varovat, že instrukce přesahují limit 150k znaků. `~/.claude/rules/rules.md` za 20 dní narostl z 39,6k na 73,5k znaků (úklid z 10. 9. výš skončil po 3,8 % a růst nic nehlídalo), `coding.md` z 25,6k na 49,3k.
 
 **Rozhodnutí:** `~/.claude/rules/rules.md` stlačen na 23,9k ve třech vrstvách. (1) **Přesun** pravidel, která platí jen při určité činnosti, do souborů načítaných odkazem: zjišťování z dat do `~/.claude/rules/evidence.md`, delegace a model s effortem do `~/.claude/rules/delegation.md`; v `~/.claude/rules/rules.md` po nich zůstal jednořádkový spouštěč (*Zjišťuj podle pravidel pro práci s daty*, *Mechanickou práci deleguj*). Test „co sem nepatří“ se přestěhoval do `.claude/CLAUDE.md` tohoto repozitáře, protože je potřeba jen při úpravě pravidel. (2) **Škrt dokladů a zdůvodnění** – odstavce *Proč:* a *Zrádné je*, data, naměřená procenta, historie pravidel. U pravidla zůstává jedna věta pointy a pravidlo *K pravidlům ukládej i „proč“* to teď říká výslovně; dřív v něm stálo, že měření ven nejde vůbec. (3) **Komprese** zbytku. Nadpisy zůstávajících sekcí se neměnily, aby platily odkazy; odkazy na přesunuté sekce se přesměrovaly.
 
@@ -1603,9 +1647,9 @@ Claude Code začal v projektech, které importují `coding.md`, varovat, že ins
 
 **Týž den stejným postupem i `worktree.md`** (14,3k → 7,1k), který se importuje do každého projektu s worktree layoutem; nadpisy zůstaly kvůli odkazům, obsah dokumentu a zdůvodnění „proč kořen, ne skill“ vypadly. `coding.md` viz `~/Dev/context/decisions.md` z téhož dne.
 
-### 2026-10-01 – `/slim` zeštíhluje instrukce načítané do každé session
+### `/slim` zeštíhluje instrukce načítané do každé session
 
-Totéž zmenšování se dělalo třikrát ručně – 10. 9. (`ptydepe.md`, `~/.claude/rules/rules.md`, `structure.md`), 28. 9. (projektový kontext tohoto repozitáře) a 30. 9. (`~/.claude/rules/rules.md`, `coding.md`, `worktree.md`, eventoid) – a pokaždé s týmiž chybami: odhady úspory od oka řádově vedle, kopie místo přesunu, věty popisující starý rozsah, míchání znaků a bajtů, zastavení v půlce. Skill je sepsaný z těch tří běhů; poučení z prvních dvou vytěžili agenti z jejich transcriptů.
+**Rozhodnuto 1. 10. 2026.** Totéž zmenšování se dělalo třikrát ručně – 10. 9. (`ptydepe.md`, `~/.claude/rules/rules.md`, `structure.md`), 28. 9. (projektový kontext tohoto repozitáře) a 30. 9. (`~/.claude/rules/rules.md`, `coding.md`, `worktree.md`, eventoid) – a pokaždé s týmiž chybami: odhady úspory od oka řádově vedle, kopie místo přesunu, věty popisující starý rozsah, míchání znaků a bajtů, zastavení v půlce. Skill je sepsaný z těch tří běhů; poučení z prvních dvou vytěžili agenti z jejich transcriptů.
 
 **Rozhodnutí:** skill bez režimů, argument je cílový soubor. Pracuje s celým stromem načítání a přesměrovává odkazy ve všech repozitářích v `~/Dev` (cizí projekt: odkazy výjimkou pro hromadnou migraci, obsah větví). Strom měří skript `skills/slim/scripts/measure.py` – počítá jen importy, které Claude Code vyhodnotí, ve znacích a s nejkratší hloubkou (prochází do šířky). Kritéria drží `skills/slim/catalog.md`: přesun jen tam, kde text pak opravdu něco načte, nejvýš jeden krok od paušálu; prevence zůstává tenká v paušálu; doklady a komprese bez změny významu rovnou, přesuny a zrušení pravidel po jednom. Nově oproti ručním během: hledání pravidel, která nabobtnání vyrábějí, a agent `reader`, který porovná starou a novou verzi a hledá ztracené pravidlo.
 
@@ -1614,17 +1658,17 @@ Totéž zmenšování se dělalo třikrát ručně – 10. 9. (`ptydepe.md`, `~/
 **Neověřeno:** tlakové scénáře (dodržení zákazu mazat bez rozhodnutí pod tlakem) – daly by se změřit jen během proti skutečným souborům.
 
 
-### 2026-10-01 – Formát `settings.json` hlídá test, ne pozornost
+### Formát `settings.json` hlídá test, ne pozornost
 
-`settings.json` se dvakrát přeformátoval z mezer na taby se zarovnanými hodnotami: v `064ccf7` (zpátky na mezery v `987a3c4`) a v `c96893d` (taby vydržely i v `7ab5fa9`, zpátky na mezery v `3fb2ec4`). Vadí to kvůli diffu: věcná změna se ztratí ve stovkách řádků, a právě tak 27. 9. 2026 proklouzl zapnutý `gitkraken-hooks` (viz záznam výš). Taby se objevovaly zároveň s GitKrakenem, ale jestli soubor přepisuje on, doložené není.
+**Rozhodnuto 1. 10. 2026.** `settings.json` se dvakrát přeformátoval z mezer na taby se zarovnanými hodnotami: v `064ccf7` (zpátky na mezery v `987a3c4`) a v `c96893d` (taby vydržely i v `7ab5fa9`, zpátky na mezery v `3fb2ec4`). Vadí to kvůli diffu: věcná změna se ztratí ve stovkách řádků, a právě tak 27. 9. 2026 proklouzl zapnutý `gitkraken-hooks` (viz záznam výš). Taby se objevovaly zároveň s GitKrakenem, ale jestli soubor přepisuje on, doložené není.
 
 **Test `SettingsFormat` v `tests/test_hooks.py` vyžaduje kanonický tvar**: `json.dumps(..., indent=2, ensure_ascii=False)` s koncovým řádkem. To je tvar, ve kterém soubor zapisuje sám Claude Code, takže jeho vlastní zápis kontrolu neshodí.
 
 **Zamítnuto: hlídat jen tabulátory.** Přeformátování se zarovnanými hodnotami by prošlo, a diff by byl stejně nečitelný.
 
-### 2026-10-02 – Lokální stav do nového worktree převezme git hook, ne model
+### Lokální stav do nového worktree převezme git hook, ne model
 
-`worktree.md` odjakživa předepisoval symlinkovat `.env` z `main/` do každé nové větve, ale vykonávat to měl model – a ten to vykonat nesmí: deny `Edit(//**/.env)` a `Edit(//**/.env.*)` v `settings.json` zastaví i `ln -s`, protože příkaz zakládá soubor na cestě `.env`. Větev pak vznikla bez něj a model to přešel větou „pro dokumentaci ho nepotřebuji“. Pravidlo navíc samo sobě odporovalo: `.env.local` se symlinkoval, a zároveň se do něj měl psát `PORT` pro jednu větev.
+**Rozhodnuto 2. 10. 2026.** `worktree.md` odjakživa předepisoval symlinkovat `.env` z `main/` do každé nové větve, ale vykonávat to měl model – a ten to vykonat nesmí: deny `Edit(//**/.env)` a `Edit(//**/.env.*)` v `settings.json` zastaví i `ln -s`, protože příkaz zakládá soubor na cestě `.env`. Větev pak vznikla bez něj a model to přešel větou „pro dokumentaci ho nepotřebuji“. Pravidlo navíc samo sobě odporovalo: `.env.local` se symlinkoval, a zároveň se do něj měl psát `PORT` pro jednu větev.
 
 **Zvolen globální `githooks/post-checkout`**, spuštěný při `git worktree add` v kontejneru s `.bare`: `.env` a `.env.*` symlinkuje, `.env.local` kopíruje, `node_modules/` klonuje na APFS a existující soubor nepřepíše. Je to vědomá výjimka z kontroly tajemství, zapsaná v `bypass.md`. Riziko se nemění, protože hook obsah nečte a `Read(//**/.env)` platí i pro cestu odkazu. Model se o zápis hooku pokusil sám a klasifikátor auto režimu ho zastavil, tak ho zapsal uživatel – rozhodnutí obejít ochranu tajemství patří člověku.
 
@@ -1632,7 +1676,9 @@ Totéž zmenšování se dělalo třikrát ručně – 10. 9. (`ptydepe.md`, `~/
 
 Tím přestává platit věta záznamu ze 14. 9. 2026 o `commit-msg`, že ostatní typy lokálních hooků globálním `core.hooksPath` nasazené nejsou: `post-checkout` na lokální hook deleguje stejně jako `commit-msg`.
 
-### 2026-10-03 – CI je napsané jednou: sdílený workflow volaný připnutý na SHA
+### CI je napsané jednou: sdílený workflow volaný připnutý na SHA
+
+**Rozhodnuto 3. 10. 2026.**
 
 **Rozhodl uživatel 2. 10. 2026** z variant níž. Běh kontraktu v CI existoval ve čtyřech kopiích – vlastní `verify.yml` a v eventoidu, artihubu a context `scripts/run-contract.sh` s `tests/test_ci.py` – a kopie se už rozešly: **předloha byla nakonec nejslabší ze všech**. Neměla `permissions: contents: read`, semgrep pouštěla s `--quiet`, takže nerozlišila nulu nálezů od nuly prohledaných souborů, a nástroje nepřipínala; projekty to mezitím doplnily, ale zpátky to nedoteklo.
 
@@ -1644,17 +1690,17 @@ Tím přestává platit věta záznamu ze 14. 9. 2026 o `commit-msg`, že ostatn
 
 **Test volajícího se nekopíruje ani v malém.** Co sdílený workflow zevnitř uhlídat nemůže – že se vůbec spustí a s jakým tokenem –, kontroluje `.github/caller.py` a projekt ho jen pouští ze svého testu přes `CLAUDE_CONFIG`, stejně jako `links.py`.
 
-### 2026-10-03 – Čtení tajemství přes shell zastavuje hook `secret-guard.py`
+### Čtení tajemství přes shell zastavuje hook `secret-guard.py`
 
-Den po zavedení `post-checkout` načetla vedlejší session `.env` ve větvi shellem – `set -a; . ./.env` a pak `grep '^MAILGUN_…=' .env` do proměnné –, aby zavolala API poskytovatele mailů. Deny `Read(//**/.env)` hlídá jen nástroj Read, takže kolem něj prošla bez povšimnutí; hodnota do kontextu nešla jen díky tomu, jak byl příkaz zrovna napsaný, a první pokus skončil chybovou hláškou, která kus řádku obvykle vypíše. Hookem `post-checkout` to nevzniklo – totéž šlo v `main/` –, ale věta v `bypass.md`, že model obsah ve větvi „dál číst nesmí“, byla nepravdivá.
+**Rozhodnuto 3. 10. 2026.** Den po zavedení `post-checkout` načetla vedlejší session `.env` ve větvi shellem – `set -a; . ./.env` a pak `grep '^MAILGUN_…=' .env` do proměnné –, aby zavolala API poskytovatele mailů. Deny `Read(//**/.env)` hlídá jen nástroj Read, takže kolem něj prošla bez povšimnutí; hodnota do kontextu nešla jen díky tomu, jak byl příkaz zrovna napsaný, a první pokus skončil chybovou hláškou, která kus řádku obvykle vypíše. Hookem `post-checkout` to nevzniklo – totéž šlo v `main/` –, ale věta v `bypass.md`, že model obsah ve větvi „dál číst nesmí“, byla nepravdivá.
 
 **Zvolen `PreToolUse` hook, rozhodl uživatel.** Seznam tajemství bere z `Read(//**/…)` v deny seznamu, aby existoval jednou. Zastaví příkaz, jehož slovo odpovídá vzoru **a odkazuje na existující soubor**; bez druhé podmínky by padal `grep` nad dokumentací i zpráva commitu, která `.env` zmiňuje, a hook běžící před každým příkazem by si někdo vypnul. Propouští `ls`, `stat`, `test`, `echo` a git podpříkazy, které soubor jen evidují. **Cena:** legitimní použití klíče (dotaz na API poskytovatele) musí spustit člověk přes `!`.
 
 **Zamítnuto: pravidlo „tajemství použít smíš, vypsat ne“.** Drží jen na tom, že si model vzpomene, a selhání se pozná až v transcriptu. **Zamítnuto: jen zapsat jako přijaté riziko.** Ochrana, která drží proti jedné cestě ze tří, se tváří jako úplná. **Zamítnuto: blokovat podle jména bez ohledu na existenci souboru.** Falešné poplachy nad každou zmínkou `.env`.
 
-### 2026-10-03 – Formátovač po editaci je režim `verify.sh`, ne samostatný hook
+### Formátovač po editaci je režim `verify.sh`, ne samostatný hook
 
-Podnět z porovnání s článkem o nastavení Claude Code: styl má srovnat formátovač hned po zápisu, ne model a ne `lint` na konci odpovědi. Kontrakt dostal klíč `format` (příkaz nad jedním souborem, cestu připojí hook jako poslední argument) a `settings.json` `PostToolUse` hook `verify.sh --format` na `Edit|Write|MultiEdit`. Pravidla pro projekty drží `~/Dev/context/coding/quality.md`, *Formátování po editaci*.
+**Rozhodnuto 3. 10. 2026.** Podnět z porovnání s článkem o nastavení Claude Code: styl má srovnat formátovač hned po zápisu, ne model a ne `lint` na konci odpovědi. Kontrakt dostal klíč `format` (příkaz nad jedním souborem, cestu připojí hook jako poslední argument) a `settings.json` `PostToolUse` hook `verify.sh --format` na `Edit|Write|MultiEdit`. Pravidla pro projekty drží `~/Dev/context/coding/quality.md`, *Formátování po editaci*.
 
 **Obě podmínky z *Dvě podmínky pro `PostToolUse` hook* platí.** Druhou – nespustit binárku z repozitáře bez souhlasu – jde splnit jen převzetím souhlasu `verify.sh --allow` včetně otisku kontraktu, protože formátovač projektu z jeho prostředí běžet musí. Proto je to **režim `verify.sh`, ne vlastní skript**: druhá kopie hledání kontraktu, souhlasu a otisku by se rozešla s první a každá z dosavadních oprav té cesty by se musela udělat dvakrát. Režim se odpojí až těsně před stavem a zámkem.
 
@@ -1664,9 +1710,9 @@ Podnět z porovnání s článkem o nastavení Claude Code: styl má srovnat for
 
 **Zamítnuto: `format` jako čtvrtý krok průběžné kontroly.** Na konci odpovědi by přepsal soubory, které model už nevidí, a diff odpovědi by se změnil po tom, co ho model popsal. **Zamítnuto: `format` v CI.** Formátovač přepisuje, nic nekontroluje; naformátovanost ověří `lint` s `--check`.
 
-### 2026-10-03 – Zbylé podněty z článku: LSP, převzatý kód, zákazy – a adresa dev serveru zamítnutá
+### Zbylé podněty z článku: LSP, převzatý kód, zákazy – a adresa dev serveru zamítnutá
 
-Dořešení tří zbylých podnětů z porovnání s článkem o nastavení Claude Code.
+**Rozhodnuto 3. 10. 2026.** Dořešení tří zbylých podnětů z porovnání s článkem o nastavení Claude Code.
 
 **LSP je plugin, ne proměnná prostředí.** Ověřeno v oficiální dokumentaci (*Code intelligence*, *Tools reference*, *Plugins – install*): zapíná se pluginem z `claude-plugins-official` a `ENABLE_LSP_TOOL`, o kterém si nebyl jistý ani článek, dokumentace nezná. Zápis do `enabledPlugins` v projektu plugin jen zapne, každý stroj ho instaluje sám i se serverem – proto `/project` vypisuje, co má udělat uživatel, místo aby to slibovalo zápisem. Language server **nenahrazuje `typecheck`**: běží jen tam, kde je nainstalovaný, a v cloudové session vůbec, kdežto průběžná kontrola a CI musí rozhodovat stejně všude. Pravidlo v `~/Dev/context/coding/quality.md`, *Language server*.
 
@@ -1676,41 +1722,41 @@ Dořešení tří zbylých podnětů z porovnání s článkem o nastavení Clau
 
 **Zamítnuto: adresa dev serveru jako klíč kontraktu `url`.** Kontrakt je commitnutý a sdílený všemi worktree, kdežto port má podle rozpracované položky o `githooks/post-checkout` dostat každá větev vlastní v `.env.local` – pevná adresa v kontraktu by ve větvích lhala. `/attack` už teď port bere z výstupu spuštěného `dev` („ne z domněnky“) a `/release` ověřuje produkci podle řádku *Web* v metadatech, takže klíč by nepoužil nikdo, komu chybí.
 
-### 2026-10-03 – Plugin a MCP server se přidávají po prohlídce, cizí marketplace bez automatických aktualizací
+### Plugin a MCP server se přidávají po prohlídce, cizí marketplace bez automatických aktualizací
 
-Při kontrole úplnosti porovnání s článkem o nastavení Claude Code zbyl jediný podnět bez náhrady: článek radí držet se oficiálních pluginů a cizí si před instalací projít. Tady to dosud pokrýval jen `bypass.md`, a to až pro hooky už zapnutých pluginů. Pravidlo je v `~/Dev/context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*; schválil ho uživatel po vysvětlení, co plugin přináší.
+**Rozhodnuto 3. 10. 2026.** Při kontrole úplnosti porovnání s článkem o nastavení Claude Code zbyl jediný podnět bez náhrady: článek radí držet se oficiálních pluginů a cizí si před instalací projít. Tady to dosud pokrýval jen `bypass.md`, a to až pro hooky už zapnutých pluginů. Pravidlo je v `~/Dev/context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*; schválil ho uživatel po vysvětlení, co plugin přináší.
 
 **Oprava původního návrhu podle dokumentace:** návrh zněl „z oficiálního marketplace stačí vědět, co přináší“. Dokumentace (*Plugin security and trust*) výslovně říká, že jméno marketplace určuje vydavatele katalogu, ne obsah pluginu, takže prohlídka platí pro každý. Výjimka zůstala jen u aktualizací: u `claude-plugins-official` jsou automatické a přijímají se.
 
 **Zamítnuto: připnout pluginy na verzi.** Uživatel to neumí – `enabledPlugins` nese jen boolean, `ref` u marketplace je větev nebo tag a pevný `sha` dává jen autor marketplace ve zdroji pluginu. Nahrazuje to ruční aktualizace u cizích marketplaců, kde jsou automatické ve výchozím stavu vypnuté. **Zamítnuto: vypnout automatické aktualizace globálně** (`DISABLE_AUTOUPDATER`) – vypnulo by i aktualizace samotného Claude Code, a oficiální katalog by tím ztratil opravy, kvůli kterým se mu věří.
 
 
-### 2026-10-03 – Push na stejnojmennou větev drží `push.default = current`, ne `remote.origin.push`
+### Push na stejnojmennou větev drží `push.default = current`, ne `remote.origin.push`
 
-V lokálních projektech bez GitHubu model opakovaně hlásil „neúplný remote origin“ a autocommit se pokoušel pushovat. Domněnka, že `/project` při volbě *Jen lokální* zakládá prázdný remote, se nepotvrdila: skill dělá jen `git init`. Příčinou byla sekce `[remote "origin"] push = HEAD` v globálním `~/.gitconfig`. Ta se propíše do každého repozitáře, a `git remote` proto všude vypsal `origin` bez adresy.
+**Rozhodnuto 3. 10. 2026.** V lokálních projektech bez GitHubu model opakovaně hlásil „neúplný remote origin“ a autocommit se pokoušel pushovat. Domněnka, že `/project` při volbě *Jen lokální* zakládá prázdný remote, se nepotvrdila: skill dělá jen `git init`. Příčinou byla sekce `[remote "origin"] push = HEAD` v globálním `~/.gitconfig`. Ta se propíše do každého repozitáře, a `git remote` proto všude vypsal `origin` bez adresy.
 
 Sekce se nahradila `[push] default = current`. Push se chová stejně (aktuální větev do stejnojmenné na remote), ale žádný remote nezakládá. Ověřeno: v lokálním projektu `git remote` nevypíše nic a `git remote get-url origin` skončí `No such remote 'origin'`, v tomhle repozitáři push dál prochází. **Zavrženo: jen zrušit remote v dotčeném repozitáři.** Lokální `.git/config` žádný `origin` nemá a globální sekce by fantom vrátila všude. Ověřování přes `git remote get-url origin` ve skillech zůstává jako obrana, protože `git remote` vypíše i sekci bez adresy, ať se vezme odkudkoliv.
 
 
-### 2026-10-04 – Práh délky session měří hook, ne odhad modelu
+### Práh délky session měří hook, ne odhad modelu
 
-Rozhodnutí z 28. 9. 2026, že práh „drží text, ne měřidlo“, padlo podle vlastní podmínky zrušení: odhad selhal. V jedné session mimo skilly překročil kontext 250k v 62. volání, 300k ve 107., 150 volání padlo při 339k a 400k ve 195. volání – a první nabídka `/cleanup` přišla až v 263. volání při 489k. Příčiny byly dvě. `skills/handoff.md` s prahy 300k/400k se mimo běh skillu vůbec nenačte, a `~/.claude/rules/rules.md` mezitím dál nesl starší, nesrovnaná čísla (asi 150 volání nebo 250k). Hlavně ale model velikost kontextu nevidí a volání nepočítá, takže pravidlo se spustilo podle dojmu.
+**Rozhodnuto 4. 10. 2026.** Rozhodnutí z 28. 9. 2026, že práh „drží text, ne měřidlo“, padlo podle vlastní podmínky zrušení: odhad selhal. V jedné session mimo skilly překročil kontext 250k v 62. volání, 300k ve 107., 150 volání padlo při 339k a 400k ve 195. volání – a první nabídka `/cleanup` přišla až v 263. volání při 489k. Příčiny byly dvě. `skills/handoff.md` s prahy 300k/400k se mimo běh skillu vůbec nenačte, a `~/.claude/rules/rules.md` mezitím dál nesl starší, nesrovnaná čísla (asi 150 volání nebo 250k). Hlavně ale model velikost kontextu nevidí a volání nepočítá, takže pravidlo se spustilo podle dojmu.
 
 **Rozhodnutí:** hook `handoff.py` na `UserPromptSubmit` měří z transcriptu velikost kontextu a počet volání hlavní session od poslední kompaktace a nad prahem vloží modelu hlášku, u každého prahu jednou. Prahy jsou **300k a 150 volání pro nabídku, 400k pro doporučení**. Tabulka v `handoff.md` je pravidlo, konstanty v hooku jeho měřidlo a test hlídá, že se nerozejdou. `~/.claude/rules/rules.md` čísla neopisuje, odkazuje na `handoff.md` a na hook.
 
 **Argument o režii, kvůli kterému byl hook 28. 9. zamítnut, neplatí:** pod prahem hook do kontextu nevloží nic a nad ním jednu větu za práh, takže trvalá režie je jen čtení transcriptu při odeslání zprávy. **Zamítnuto měřit po každém nástroji (`PostToolUse`):** četl by celý transcript po každém volání kvůli případu, kdy dlouhý běh proběhne uvnitř jedné odpovědi; pro ten zůstává v `handoff.md` odhad z rozsahu běhu. **Zamítnuto ukazovat hlášku přímo uživateli:** čísla vidí ve status line a nabídka s tím, co by se zapsalo a kde navázat, je práce modelu.
 
-### 2026-10-05 – Transcripty se drží deset let (`cleanupPeriodDays: 3650`)
+### Transcripty se drží deset let (`cleanupPeriodDays: 3650`)
 
-Claude Code maže transcripty session po 30 dnech, dokud `settings.json` neřekne jinak – a neříkal. 5. 10. 2026 byl nejstarší ze 739 transcriptů z 5. 9. Na transcriptech přitom stojí skilly, které jdou zpětně přes uzavřené session (`/scenarios`, dohledání nenatrackovaného času v `/invoicing recover`, vytěžení konverzace v `/skill`), a mez 30 dní se popisovala jako vlastnost zdroje, ne jako nastavení. Podnět přišel z prohlídky cizího startovního balíku konfigurace, který hodnotu nastavuje.
+**Rozhodnuto 5. 10. 2026.** Claude Code maže transcripty session po 30 dnech, dokud `settings.json` neřekne jinak – a neříkal. 5. 10. 2026 byl nejstarší ze 739 transcriptů z 5. 9. Na transcriptech přitom stojí skilly, které jdou zpětně přes uzavřené session (`/scenarios`, dohledání nenatrackovaného času v `/invoicing recover`, vytěžení konverzace v `/skill`), a mez 30 dní se popisovala jako vlastnost zdroje, ne jako nastavení. Podnět přišel z prohlídky cizího startovního balíku konfigurace, který hodnotu nastavuje.
 
 **Rozhodnutí:** `cleanupPeriodDays: 3650`. Co se smazalo do 5. 10. 2026, se nevrátí.
 
 **Zamítnuto – `0` jako „nemazat nikdy“:** podle autorů toho balíku hodnota `0` kvůli chybě vypne ukládání transcriptů úplně; neověřeno, ale riziko nestojí za ověřování. **Zamítnuto – 365 dní:** historie by po roce mizela zase a disk tím nic podstatného neušetří.
 
-### 2026-10-05 – Tvrzení z webu ověřuje skript, ne model
+### Tvrzení z webu ověřuje skript, ne model
 
-Odkaz, který vrátí agent, se do 5. 10. 2026 bral jako doklad; `/discovery` zahazoval jen nálezy „bez funkční URL“ a nejistý údaj doověřoval přes `WebFetch`. Agent přitom umí vymyslet věrohodnou citaci i adresu a model, který čte paywall, přihlašovací zeď nebo falešnou 404 (všechny odpovídají HTTP 200), prohlásí nepřečtený zdroj za nepodložený.
+**Rozhodnuto 5. 10. 2026.** Odkaz, který vrátí agent, se do 5. 10. 2026 bral jako doklad; `/discovery` zahazoval jen nálezy „bez funkční URL“ a nejistý údaj doověřoval přes `WebFetch`. Agent přitom umí vymyslet věrohodnou citaci i adresu a model, který čte paywall, přihlašovací zeď nebo falešnou 404 (všechny odpovídají HTTP 200), prohlásí nepřečtený zdroj za nepodložený.
 
 **Rozhodnutí:** pravidlo v `evidence.md` (*Tvrzení z webu je jen tvrzení, dokud skript nepřečte stránku*) a skript `skills/sources.py`, který stránku stáhne, vytáhne text viditelný čtenáři a hledá v něm doslovný úryvek. Agent `researcher` a zadání agentů v `/discovery` proto vracejí u zdroje i úryvek. Skript je přepis `check_source.py` z repozitáře hradniai/claude-starter-pack (MIT) na zdejší konvence; při přepisu se v originálu našlo a opravilo šest vad, mezi nimi obejití časového limitu pomalým serverem a kvadratický rozbor HTML. Vynechal se otisk úryvku (`quote_digest`), který tam slouží jen předávání výsledku přes agenta bez shellu.
 
@@ -1718,25 +1764,25 @@ Odkaz, který vrátí agent, se do 5. 10. 2026 bral jako doklad; `/discovery` za
 
 **Zamítnuto – ověřovat dál modelem přes `WebFetch`:** je to přesně ten krok, ve kterém se nepřečtená stránka mění v „nepodložené“. **Zamítnuto – jen pravidlo bez skriptu:** pravidlo by žádalo ověření, které by zase dělal model.
 
-### 2026-10-05 – Jména klíčů v `.env` vypisuje `envkeys.py`, jediná výjimka ze `secret-guard.py`
+### Jména klíčů v `.env` vypisuje `envkeys.py`, jediná výjimka ze `secret-guard.py`
 
-`secret-guard.py` zastavuje každé čtení tajemství přes shell, a model, který potřeboval jen vědět, jaké klíče v `.env` jsou a jestli jsou vyplněné, stál před zdí bez povolené cesty – a to je stav, ve kterém zkouší zákaz obejít. Podnět je z cizího startovního balíku konfigurace (`list-env-keys.sh --classify`).
+**Rozhodnuto 5. 10. 2026.** `secret-guard.py` zastavuje každé čtení tajemství přes shell, a model, který potřeboval jen vědět, jaké klíče v `.env` jsou a jestli jsou vyplněné, stál před zdí bez povolené cesty – a to je stav, ve kterém zkouší zákaz obejít. Podnět je z cizího startovního balíku konfigurace (`list-env-keys.sh --classify`).
 
 **Rozhodnutí:** skript `envkeys.py` vypíše jména klíčů a stav `prázdný` / `zástupný` / `vyplněný`; hodnotu čte jen kvůli stavu a nevypíše z ní nic, ani nerozebraný řádek. Hook ho pouští podle vyřešené cesty, ne podle jména, a jeho hláška na něj odkazuje.
 
 **Zamítnuto – druh hodnoty u vyplněného klíče** (URL, číslo, token), jak to dělá předloha: každá další vlastnost hodnoty je kus hodnoty, a pro ladění konfigurace stačí vědět, že klíč vyplněný je. **Zamítnuto – výjimka podle jména souboru:** cizí repozitář by si přibalil vlastní `envkeys.py`.
 
-### 2026-10-05 – Režim bypass je zamčený; `rm` a `mv` hlídá dál klasifikátor režimu auto
+### Režim bypass je zamčený; `rm` a `mv` hlídá dál klasifikátor režimu auto
 
-Při prohlídce cizího startovního balíku konfigurace padly tři pojistky mimo git: zámek režimu bypass, hook na `rm -rf` schovaný v řetězu příkazů a hook na `mv`, který tiše přepíše existující soubor.
+**Rozhodnuto 5. 10. 2026.** Při prohlídce cizího startovního balíku konfigurace padly tři pojistky mimo git: zámek režimu bypass, hook na `rm -rf` schovaný v řetězu příkazů a hook na `mv`, který tiše přepíše existující soubor.
 
 **Rozhodnutí:** jen zámek, `disableBypassPermissionsMode: "disable"`. Bypass by naráz vypnul deny seznam i ptaní na povolení, tedy všechno, co v `bypass.md` stojí na permission systému, a zámek nic nestojí.
 
 **Zamítnuto – hook na `rm -rf` v řetězu:** zastavoval by i běžné mazání build adresářů a `node_modules`; falešný poplach u hooku před každým příkazem vede k jeho vypnutí. Destruktivní příkazy posuzuje podle kontextu klasifikátor režimu auto. **Zamítnuto – hook na přepisující `mv`:** chyba je skutečná, ale vzácná a vratná z gitu; další hook před každým příkazem za ni nestojí. Vrátit se k tomu má smysl, kdyby se taková ztráta jednou stala.
 
-### 2026-10-06 – Každý odchod ze session začíná `/cleanup`, bez podmínky
+### Každý odchod ze session začíná `/cleanup`, bez podmínky
 
-Bloky *Kudy dál* nabízely `/merge` před `/cleanup`, nebo `/clear` a novou session bez `/cleanup` vůbec. Pořadí bylo v `skills/handoff.md` jen v příkladech, ne jako pravidlo, a skilly si `/cleanup` podmiňovaly větou „zbyl-li nezapsaný nález nebo rozhodnutí“.
+**Rozhodnuto 6. 10. 2026.** Bloky *Kudy dál* nabízely `/merge` před `/cleanup`, nebo `/clear` a novou session bez `/cleanup` vůbec. Pořadí bylo v `skills/handoff.md` jen v příkladech, ne jako pravidlo, a skilly si `/cleanup` podmiňovaly větou „zbyl-li nezapsaný nález nebo rozhodnutí“.
 
 **Rozhodnutí:** odchodem je `/clear`, `/compact`, nová session, zavření okna i `/merge` a před každým stojí `/cleanup`. Mezi ním a odchodem smí stát jen `/merge`. Úplný výčet řetězů drží `handoff.md` jako tabulku se sloupci *S větví* a *Bez větví*; který platí, rozhoduje `git branch --show-current`. Odrážky ve skillech hlídá `tests/test_skills.py`, `exits_without_cleanup`.
 
@@ -1746,7 +1792,9 @@ Bloky *Kudy dál* nabízely `/merge` před `/cleanup`, nebo `/clear` a novou ses
 
 **Co test nechytí:** odrážku, která slučování popíše slovy („větev sloučit“) místo `/merge`, a `/cleanup` podmíněný až textem odrážky. Obojí drží jen znění pravidla v `handoff.md`.
 
-### 2026-10-06 – Kořen konfigurační vrstvy drží jen to, co Claude Code hledá na pevném místě
+### Kořen konfigurační vrstvy drží jen to, co Claude Code hledá na pevném místě
+
+**Rozhodnuto 6. 10. 2026.**
 
 **Kořen `~/.claude` se rozdělil podle druhu souboru.** Pravidla práce leží v `rules/` (`rules.md`, `ptydepe.md`, `structure.md`, `evidence.md`, `delegation.md`, `worktree.md`, `bypass.md`, `lifecycle.md`), hooky v `hooks/` (`verify.sh`, `git-guard.py`, `secret-guard.py`, `handoff.py`, `envkeys.py`), status line se screenshotem v `statusline/` a `todo.md`, `backlog.md`, `done.md`, `decisions.md` v `docs/`. V kořeni zůstalo jen to, co Claude Code hledá na pevném místě (`CLAUDE.md`, `settings.json`, `skills/`, `agents/`), a `README.md` s `LICENSE`. Motivace: kořen se plnil normativním textem, skripty a evidencí práce v jedné úrovni a odlišovala je jen velká písmena.
 
@@ -1760,8 +1808,14 @@ Bloky *Kudy dál* nabízely `/merge` před `/cleanup`, nebo `/clear` a novou ses
 
 **Odkazy se přepsaly i ve všech projektech v `~/Dev`, v rozcestnících worktree kontejnerů a v memory.** Beze změny zůstaly jen doslovné citace publikovaného příspěvku („můj RULES.md“) v `context/archive/`, `context/compose/` a historických balících `context/.superpowers/`. Projekty, které volají sdílené CI workflow, ho mají připnuté na SHA, takže jedou na staré cestě k `verify.sh`, dokud se připnutí nepovýší – rozbité to tím není. Souhlas průběžné kontroly pro tenhle repozitář se po změně vzorů `lint` v kontraktu vydává znovu.
 
-### 2026-10-07 – `structure.md` a `lifecycle.md` zeštíhlené o doklady, ne o pravidla
+### `structure.md` a `lifecycle.md` zeštíhlené o doklady, ne o pravidla
 
-Oba soubory se paušálně nenačítají, ale čte je skoro každý skill – `structure.md` při každém zápisu do `docs/`, `lifecycle.md` v každém kroku cyklu. Nesly přitom data, incidenty a historii pravidel („odhalil to čtenář 8. 9.“, „doplněno 20. 9.“, pilotní běh `/consolidate`), přestože `~/.claude/rules/rules.md`, *K pravidlům ukládej i „proč“*, doklad v souboru s pravidly zakazuje. `/slim` je odstranil, sloučil odstavce *Proč se zapisuje i `/oponent`* a *Proč to tu je* do odrážek *Průchodů životním cyklem* a z `lifecycle.md` vyřadil vnitřek kroků, který drží jejich skilly (výstup a práh `/consolidate`, výběr hledisek `/oponent`, volání vestavěných skillů v `/review`). `structure.md` 46 550 → 43 874 znaků, `lifecycle.md` 24 507 → 21 573. Ztrátu pravidla hledal čtenář bez kontextu; ze tří hraničních míst se dvě věty vrátily (měřítko `severity.md` u vedlejších vad `/consolidate`, `/release` jako poslední krok měnící svět).
+**Rozhodnuto 7. 10. 2026.** Oba soubory se paušálně nenačítají, ale čte je skoro každý skill – `structure.md` při každém zápisu do `docs/`, `lifecycle.md` v každém kroku cyklu. Nesly přitom data, incidenty a historii pravidel („odhalil to čtenář 8. 9.“, „doplněno 20. 9.“, pilotní běh `/consolidate`), přestože `~/.claude/rules/rules.md`, *K pravidlům ukládej i „proč“*, doklad v souboru s pravidly zakazuje. `/slim` je odstranil, sloučil odstavce *Proč se zapisuje i `/oponent`* a *Proč to tu je* do odrážek *Průchodů životním cyklem* a z `lifecycle.md` vyřadil vnitřek kroků, který drží jejich skilly (výstup a práh `/consolidate`, výběr hledisek `/oponent`, volání vestavěných skillů v `/review`). `structure.md` 46 550 → 43 874 znaků, `lifecycle.md` 24 507 → 21 573. Ztrátu pravidla hledal čtenář bez kontextu; ze tří hraničních míst se dvě věty vrátily (měřítko `severity.md` u vedlejších vad `/consolidate`, `/release` jako poslední krok měnící svět).
 
 **Zamítnuto: přesun *Produktových podkladů* do samostatného `rules/product.md`.** Ušetřil by kolem 6,5k znaků při každém čtení `structure.md` mimo `/discovery`, `/specify`, `/evaluate` a `/project`, ale za cenu dalšího souboru, který by si ty skilly musely načítat, a přesměrování odkazů. Sekce zůstala a jen se zkrátila (7 376 → 6 407).
+
+### Datum v `decisions.md` se přestěhovalo z nadpisu do prvního odstavce
+
+**Rozhodnuto 7. 10. 2026** při `/project update`. `~/.claude/rules/structure.md` žádá datum v prvním odstavci (`**Rozhodnuto D. M. RRRR.**`), protože nadpis je kotva a datum v ní se rozbije při každé opravě. Tak to měly ostatní projekty, ale `~/.claude` a `~/Dev/context` psaly `### <datum> – <název>` – a `skills/order.py` bral datum jen z řádku nadpisu, takže samotný přesun by kontrolu pořadí nad oběma soubory tiše vypnul. **Proto nejdřív `order.py`:** u nadpisu bez data bere datum z úvodního `**Rozhodnuto …**`, jinde české datum dál ignoruje; testy hlídají obojí. Pak se skriptem převedlo 115 a 154 nadpisů. Odkaz na kotvu s datem neexistoval žádný, textové odkazy na nadpisy se v `~/Dev/context/todo.md` dorovnaly.
+
+**Zamítnuto: výjimka pro tenhle repozitář.** Nadpisy by zůstaly s datem kvůli nástroji, jenže důvod pravidla (křehká kotva) platí i tady a výjimka by standard a jeho vlastní repozitář nechala rozejité. **Vědomě nepřevedené:** `skills/ptydepe/terms.md`, který datované nadpisy má taky, ale není `decisions.md` a pravidlo se ho netýká.

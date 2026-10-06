@@ -14,7 +14,8 @@ srovnání se do té doby dělalo třikrát a pokaždé se to vrátilo.
 
 Záznamem je odrážka na nulovém odsazení nebo nadpis `### `; datum se bere
 **z jeho prvního řádku**, takže datum ve vnořené poznámce ani v textu pod
-záznamem nic neznamená. Nedatované záznamy se přeskakují – sekce mívá úvodní
+záznamem nic neznamená. Nadpis bez data bere datum z úvodního
+`**Rozhodnuto D. M. RRRR.**` prvního odstavce – tam ho `decisions.md` píše. Nedatované záznamy se přeskakují – sekce mívá úvodní
 odrážku a záznam bez data není vada pořadí.
 
 Vyloučeno je schválně:
@@ -37,6 +38,7 @@ DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 FENCE = re.compile(r"^\s*(```|~~~)")
 SECTION = re.compile(r"^## +(.*?)\s*#*$")
 RECORD = re.compile(r"^(?:[-*] |### )")
+DECIDED = re.compile(r"^\*\*Rozhodnuto (\d{1,2})\. (\d{1,2})\. (\d{4})\b")
 
 
 def outside_fences(text):
@@ -53,10 +55,23 @@ def outside_fences(text):
     return rows
 
 
+def decided(rows, start):
+    """ISO datum z úvodního `**Rozhodnuto D. M. RRRR.**` pod nadpisem, jinak None."""
+    for _, line in rows[start + 1 :]:
+        if line.strip():
+            found = DECIDED.match(line)
+            if not found:
+                return None
+            day, month, year = found.groups()
+            return f"{year}-{int(month):02}-{int(day):02}"
+    return None
+
+
 def records(text):
     """[(sekce, číslo řádku, datum)] pro datované záznamy nejvyšší úrovně."""
     out, section = [], None
-    for number, line in outside_fences(text):
+    rows = outside_fences(text)
+    for index, (number, line) in enumerate(rows):
         heading = SECTION.match(line)
         if heading:
             section = heading.group(1)
@@ -64,8 +79,11 @@ def records(text):
         if not RECORD.match(line):
             continue
         found = DATE.search(line)
-        if found:
-            out.append((section, number, found.group(0)))
+        date = found.group(0) if found else None
+        if date is None and line.startswith("### "):
+            date = decided(rows, index)
+        if date:
+            out.append((section, number, date))
     return out
 
 

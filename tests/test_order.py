@@ -115,11 +115,38 @@ class Findings(unittest.TestCase):
         self.assertEqual(self.order.check([path]), [])
 
     def test_headings_are_records_too(self):
-        """`decisions.md` píše záznamy jako `### <datum> – <název>`, ne odrážkou."""
+        """Nadpis s ISO datem je záznam – tak píše `skills/ptydepe/terms.md`."""
         path = self.write(
             "### 2026-09-28 – nové\n\ntext\n\n### 2026-09-27 – starší\n\ntext\n"
         )
         self.assertEqual(len(self.order.check([path])), 1)
+
+    def test_decided_date_under_heading_counts(self):
+        """Datum patří do prvního odstavce (`structure.md`, *`decisions.md`*), ne do nadpisu.
+
+        Bez čtení úvodního `**Rozhodnuto …**` by se nadpis bez data přeskočil
+        a kontrola nad takovým `decisions.md` tiše nehlídala nic.
+        """
+        path = self.write(
+            "### Nové\n\n**Rozhodnuto 28. 9. 2026.** text\n\n"
+            "### Starší\n\n**Rozhodnuto 27. 9. 2026.** text\n"
+        )
+        self.assertEqual(len(self.order.check([path])), 1)
+
+    def test_decided_date_in_order_passes(self):
+        path = self.write(
+            "### Starší\n\n**Rozhodnuto 2. 9. 2026.** text\n\n"
+            "### Nové\n\n**Rozhodnuto 15. 9. 2026.** text\n"
+        )
+        self.assertEqual(self.order.check([path]), [])
+
+    def test_czech_date_elsewhere_is_ignored(self):
+        """České datum mimo úvod záznamu dál nic neznamená – odkazuje na událost, ne na zápis."""
+        path = self.write(
+            "### Nové\n\nText, který zmiňuje 28. 9. 2026.\n\n"
+            "### Starší\n\n**Upřesněno 27. 9. 2026.** text\n"
+        )
+        self.assertEqual(self.order.check([path]), [])
 
     def test_one_finding_per_section(self):
         """Jeden obrácený zápis nahoře nesmí vypsat celý soubor.
