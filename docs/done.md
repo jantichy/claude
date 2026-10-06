@@ -241,6 +241,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - **2026-10-05** · `/cleanup` · `70d37f9` · session `6bf2893e-0810-41ec-8e94-bf42b55d0ed3` · prompty 5/5 · 1 téma (0 rozhodnuto, 1 bezpředmětné) · mimo rozsah: žádné · meze: 63 bloků myšlení (prázdné ve formátu), výstupy Read/Edit/Write a 8 výstupů AskUserQuestion se nečetly; 2 odložené výstupy neotevřeny (výpisy cizího repozitáře, obsah převyprávěný v odpovědích)
 - **2026-10-06** · `/cleanup` · `74c53b0` · session `9ad64717-7d05-4700-a269-b92325d332f7` · prompty 4/4 · 0 témat · mimo rozsah: žádné · meze: 26 bloků myšlení a 3 výstupy Edit nečtené z principu
 - **2026-10-07** · `/cleanup` · `bcffcfa` · session `515e6d83-9867-4306-b935-6ed2b45e9f4f` · prompty 10/10 · 0 témat · mimo rozsah: obsahová část revize `/project` (nápady v `todo.md`, položky ve špatném souboru) neproběhla → `docs/todo.md` · meze: 83 bloků myšlení (ve formátu prázdné), 5 výstupů `AskUserQuestion`, 2× `Skill`, 1× `Edit`, 1× `Read` se nečetly; obrázky žádné
+- **2026-10-07** · `/cleanup` · `7a30ee5` · session `112b5704-fba4-424f-a204-216684691183` · prompty 4/4 (+ 2 volání slash příkazu mimo inventuru) · 4 témata (3 rozhodnuto, 1 mimo rozsah) · mimo rozsah: obrácený zápis v `decisions.md` artihubu – vyřeší se při práci tam · meze: 77 bloků myšlení (prázdné ve formátu), výstupy 8 AskUserQuestion, 6 Edit, 3 Write, 2 Read, 1 Skill nečtené z principu
 
 ## Odvedená práce
 
