@@ -12,6 +12,8 @@
 
 ------
 
+- [ ] **Dokončit obsahovou část revize `/project` nad tímhle repozitářem** (zjištěno 7. 10. 2026 při `/cleanup`). Běh `/project update` 6. 10. 2026 prošel z kroku 14 jen mechanickou část – pořadí záznamů (`order.py`), odškrtnuté položky, prázdné sekce, zrcadlení –, kdežto obsahová část podle `skills/project/standard.md`, *Obsah dokumentačních souborů*, neproběhla: nezávazné nápady promíchané ve frontě `docs/todo.md` (patří do `docs/backlog.md`) a položky ve špatném souboru. Pustit `/project update` v čerstvé session; `docs/todo.md` má přes 100 kB.
+
 - [ ] **`/project` nemá postup pro přepnutí režimu umístění `root` ↔ `docs/`** (zjištěno 6. 10. 2026 při přestěhování kořene konfigurační vrstvy). Krok 5 režim v `adopt` jen detekuje podle toho, kde soubory leží, a v `update` přepnutí nenabízí vůbec; přesun souborů a přepis odkazů se proto musel udělat `/replace` ručně a `/project` jen dorovnal metadata. Doplnit krok, který při změně režimu udělá `git mv` všech standardních souborů, předá přepis odkazů `/replace` a přepíše deklaraci `Struktura` i sekci *Struktura a dokumentace*.
 
 - [ ] **`githooks/post-checkout` má nové větvi přidělit vlastní port v kopii `.env.local`** (rozhodl uživatel 2. 10. 2026 při `/cleanup`). Běží-li dev server ve víc větvích naráz, potřebuje každá svůj port, a `.env.local` je k tomu určený soubor – proto ho hook kopíruje, ne symlinkuje. Zapsat ho do něj ale nesmí model: deny `Edit(//**/.env.*)` v `settings.json` ho zastaví stejně jako dřív symlink na `.env`. **Zamítnuto:** port nastavuje uživatel ručně na připomenutí (tichá díra, která se ukáže až kolizí portů) a předávat ho proměnnou prostředí při spuštění dev serveru (nepřežije restart a každý projekt spouští server jinak).

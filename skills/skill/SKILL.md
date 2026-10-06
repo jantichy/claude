@@ -177,7 +177,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních README cyklu**. Testy to chytí, ale samy to nedopíšou |
 | `~/.claude/skills/<name>/` | vedlejší soubory, skripty, jejich kontrola závislostí |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
-| `decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo. Leží v kořeni repozitáře, ne v `docs/` |
+| `~/.claude/docs/decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo |
 
 **Commitni**, má-li repozitář zapnutý autocommit.
 

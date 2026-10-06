@@ -240,6 +240,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - **2026-10-05** · `/cleanup` · `4ff52d8` · session `e15949fc-5649-4c22-be47-818d2acc15b7` · prompty 5/5 (4 z inventury + úvodní zadání `/ptydepe add kotvy`, které inventura minula – známá vada v `todo.md`) · 1 téma (1 rozhodnuto: commity v pěti dalších repozitářích pushnuty) · mimo rozsah: žádné · meze: 64 bloků myšlení se nečtou (formát), 11 výstupů `AskUserQuestion` odškrtnuto z kontextu, 5 výstupů čtecích nástrojů, 1 odložený výstup (`tool-results/bfeqij7kx.txt`, výpis grepu, převyprávěný v kontextu)
 - **2026-10-05** · `/cleanup` · `70d37f9` · session `6bf2893e-0810-41ec-8e94-bf42b55d0ed3` · prompty 5/5 · 1 téma (0 rozhodnuto, 1 bezpředmětné) · mimo rozsah: žádné · meze: 63 bloků myšlení (prázdné ve formátu), výstupy Read/Edit/Write a 8 výstupů AskUserQuestion se nečetly; 2 odložené výstupy neotevřeny (výpisy cizího repozitáře, obsah převyprávěný v odpovědích)
 - **2026-10-06** · `/cleanup` · `74c53b0` · session `9ad64717-7d05-4700-a269-b92325d332f7` · prompty 4/4 · 0 témat · mimo rozsah: žádné · meze: 26 bloků myšlení a 3 výstupy Edit nečtené z principu
+- **2026-10-07** · `/cleanup` · `bcffcfa` · session `515e6d83-9867-4306-b935-6ed2b45e9f4f` · prompty 10/10 · 0 témat · mimo rozsah: obsahová část revize `/project` (nápady v `todo.md`, položky ve špatném souboru) neproběhla → `docs/todo.md` · meze: 83 bloků myšlení (ve formátu prázdné), 5 výstupů `AskUserQuestion`, 2× `Skill`, 1× `Edit`, 1× `Read` se nečetly; obrázky žádné
 
 ## Odvedená práce
 
