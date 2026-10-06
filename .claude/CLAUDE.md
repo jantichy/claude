@@ -4,6 +4,7 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
 - **Slug:** `claude`
 - **Struktura:** docs/
+- **Web:** https://www.jantichy.cz
 - **Repozitář:** https://github.com/jantichy/claude
 
 ## Výjimky z obecných pravidel
