@@ -85,6 +85,7 @@ Navíc si ověř tohle:
 - **doménové standardy** z Fáze 1,
 - že **volbu způsobu implementace na konci nenabízí** – tu řeší `/implement`,
 - že každý úkol musí mít **ověřitelné akceptační kritérium** – viz Fáze 3.
+- že každý úkol odkazuje na **konkrétní sekce dokumentace s kotvou**, ne na celé soubory – viz Fáze 3.
 
 ------
 
@@ -100,6 +101,7 @@ Navíc si ověř tohle:
 6. **Každý úkol má ověřitelné akceptační kritérium.** Ne holou větu („funguje přihlášení“), ale zaškrtávací seznam, u kterého jde jednoznačně říct ano/ne – a u kódu **příkaz z kontraktu, který to ověří**. Kritérium, které neumí rozsoudit stroj ani jednoznačně člověk, je nedopsaný úkol.
 7. **Testy pokrývají scénáře, ne řádky.** Projdi scénáře a *Varianty* a ukaž, který úkol je pokrývá testem. Nepokrytý scénář je nález. Scénáře ber ze `docs/scenarios.md`, vede-li ho projekt – je taxativní, takže pokrytí jde spočítat; jinak ze sekce *Hlavní scénáře* v `docs/requirements.md`.
 8. **Testy jsou psané tak, aby šly schválit teď.** Tenhle plán je jediné místo, kde si člověk testy přečte dřív, než existuje kód – potom už je nemůže nezaujatě posoudit, protože bude posuzovat, jestli procházejí. Piš je konkrétně, včetně vstupů a očekávaných hodnot.
+9. **Úkol unese svůj kontext.** Každý úkol odkazuje na konkrétní sekce dokumentace s kotvou (`model.md#order`), ne na celý soubor ani na kapitolu, a kód nebo cestu v backticku nebere jako odkaz. Implementující agent dostane jen to, nač úkol ukazuje: odkaz na soubor o stovkách tisíc znaků znamená, že buď čte obří text a ztratí zadání, nebo hádá. Hlavičkové pole `**Spec:**` nese cestu v backticku, ne odkaz. Má-li projekt mez velikosti sekce a součtu za úkol hlídanou testem, plán ji musí splnit; úkol nad mezí se rozdělí, nebo odkáže na podsekci.
 
 Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuestion`.
 
