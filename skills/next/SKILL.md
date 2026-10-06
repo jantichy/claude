@@ -25,9 +25,9 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 
 ## Jak je to postavené uvnitř
 
-**Všechno, co jde zjistit mechanicky, posbírá jedním během skript `collect.py`** v adresáři skillu a vrátí to jako JSON: kořen a uspořádání projektu, hlavní větev po `git fetch`, položky `todo.md` rozdělené podle sekcí, bloky kol se stavem z jejich větví, stav plánu, návrhové dokumenty, poslední průchody cyklem, rámeček cyklu z `RULES.md`, necommitnuté změny a nesloučené větve i s tím, jestli nad nimi běží session. **Živé a opuštěné session zjišťuje `sessions.py`**, který `collect.py` volá – čte registr běžících session Claude Code (`~/.claude/sessions/`), ověří, že proces žije, a větev bere z posledního záznamu transcriptu, protože session ve worktree layoutu startuje v kořeni kontejneru.
+**Všechno, co jde zjistit mechanicky, posbírá jedním během skript `collect.py`** v adresáři skillu a vrátí to jako JSON: kořen a uspořádání projektu, hlavní větev po `git fetch`, položky `todo.md` rozdělené podle sekcí, bloky kol se stavem z jejich větví, stav plánu, návrhové dokumenty, poslední průchody cyklem, rámeček cyklu z `~/.claude/rules/rules.md`, necommitnuté změny a nesloučené větve i s tím, jestli nad nimi běží session. **Živé a opuštěné session zjišťuje `sessions.py`**, který `collect.py` volá – čte registr běžících session Claude Code (`~/.claude/sessions/`), ověří, že proces žije, a větev bere z posledního záznamu transcriptu, protože session ve worktree layoutu startuje v kořeni kontejneru.
 
-**Proč skript, a ne pokyny:** dřív skill vedl model přes desítky volání gitu a čtení souborů, každé s čekáním na model, a k tomu si pokaždé načítal `STRUCTURE.md`, `PREFLIGHT.md` a `LIFECYCLE.md`. Běh trval přes minutu, přestože uživatel chce jen rychlý návrh. Skript běží pár vteřin – z toho zhruba polovina je `git fetch` po síti – a model dělá jen úsudek. Druhý důvod je spolehlivost: **registr i transcript jsou vnitřní formát Claude Code bez dokumentace** a o obsazenosti větve rozhoduje testovaný kód (`tests/test_next.py`), ne úvaha modelu.
+**Proč skript, a ne pokyny:** dřív skill vedl model přes desítky volání gitu a čtení souborů, každé s čekáním na model, a k tomu si pokaždé načítal `structure.md`, `preflight.md` a `lifecycle.md`. Běh trval přes minutu, přestože uživatel chce jen rychlý návrh. Skript běží pár vteřin – z toho zhruba polovina je `git fetch` po síti – a model dělá jen úsudek. Druhý důvod je spolehlivost: **registr i transcript jsou vnitřní formát Claude Code bez dokumentace** a o obsazenosti větve rozhoduje testovaný kód (`tests/test_next.py`), ne úvaha modelu.
 
 **Nástroj `ListAgents` je nenahradí, ověřeno 20. 9. 2026.** Vypisuje sice běžící session na stroji, ale jen jejich jméno, stav a stáří – ne větev ani adresář projektu. Rozhodnutí *nabídnout, nebo skrýt* stojí právě na větvi, takže registr i transcript se čtou dál vlastním skriptem.
 
@@ -37,7 +37,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 
 ## Fáze 0 – Příprava
 
-`~/.claude/skills/PREFLIGHT.md` se **nenačítá**, ani `STRUCTURE.md` a `LIFECYCLE.md`. Co z nich skill potřebuje – kořen projektu a worktree layout, hlavní větev, stav pracovního stromu, režim umístění souborů, tvar bloku kola a pořadí kroků cyklu – zjistí nebo vyčte `collect.py`. Stav pracovního stromu neblokuje: rozpracované změny jsou položka fronty.
+`~/.claude/skills/preflight.md` se **nenačítá**, ani `structure.md` a `lifecycle.md`. Co z nich skill potřebuje – kořen projektu a worktree layout, hlavní větev, stav pracovního stromu, režim umístění souborů, tvar bloku kola a pořadí kroků cyklu – zjistí nebo vyčte `collect.py`. Stav pracovního stromu neblokuje: rozpracované změny jsou položka fronty.
 
 ## Fáze 1 – Sběr
 
@@ -71,7 +71,7 @@ Položka, která nese hned za názvem `od <datum>`, má smysl až od toho dne �
 | `true` | **do fronty nevstupuje** – jen ji zmiň v poznámkách i s datem, aby bylo vidět, že se na ni nezapomnělo |
 | `false` | den nastal, řadí se jako každá jiná |
 
-**Datum nepočítej sám a nepřepisuj ho.** Dnešní den zná skript a porovnal ho; položka, u které si termín přepočítáš z hlavy, se nabídne ve špatný den (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš*).
+**Datum nepočítej sám a nepřepisuj ho.** Dnešní den zná skript a porovnal ho; položka, u které si termín přepočítáš z hlavy, se nabídne ve špatný den (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš*).
 
 **Závislosti ber jen ze zápisu**, ne z odhadu: řádek *Čeká na*, pole `waits` u položky (skript ho vytáhne i z konce dlouhého popisu, který `text` ořízne), pořadí v plánu, výslovná zmínka v položce. Tuší-li se závislost, která zapsaná není, řekni ji u položky jako domněnku.
 
@@ -112,7 +112,7 @@ Chybějící krok odvoď z `artifacts` a `passes` proti `lifecycle`, a **jen pro
 
 Obsazené a nejisté větve ani položky s `waiting: true` do řazení nevstupují. Zbytek seřaď:
 
-0. **Položky ze sekce `## Přerušený běh`** – zbytek fronty, kterou předchozí session nedokončila, protože jí nabyl kontext (`~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*). Jdou **první, před opuštěnými větvemi**, a v pořadí, ve kterém je ta session zapsala. Je to práce rozdělaná do půlky, u které navíc nikdo nedrží kontext – čím dýl leží, tím spíš se přestane rozumět tomu, proč nález nálezem je. V nabídce u nich řekni, ze kterého skillu zbyly a kolik jich je.
+0. **Položky ze sekce `## Přerušený běh`** – zbytek fronty, kterou předchozí session nedokončila, protože jí nabyl kontext (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*). Jdou **první, před opuštěnými větvemi**, a v pořadí, ve kterém je ta session zapsala. Je to práce rozdělaná do půlky, u které navíc nikdo nedrží kontext – čím dýl leží, tím spíš se přestane rozumět tomu, proč nález nálezem je. V nabídce u nich řekni, ze kterého skillu zbyly a kolik jich je.
 1. **Opuštěné větve** – od nejčerstvější (`last_ts`). Větev bez session k obnovení, na kterou nikdo nesáhl déle než měsíc, nedávej na první místo – je to spíš zapomenutý pokus než rozdělaná práce; nabídni ji mezi ostatními a řekni její stáří.
 2. **Rozdělaná práce tady** – necommitnuté změny, rozpracovaný plán.
 3. **Položky bez nesplněné závislosti** před těmi, které na něco čekají.
@@ -142,7 +142,7 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 ○ drobnost · ◐ střední · ● velký
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*. Prázdnou část vynech.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*. Prázdnou část vynech.
 
 **Pořadí je schválně od kontextu k výběru** (vyžádal si ho uživatel 16. 9. 2026): poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky jsou holý odstavec bez popisku** a stojí úplně nahoře; **práce jinde a čekající položky jsou každá jeden odstavec** s tučným popiskem, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
 
@@ -169,7 +169,7 @@ Pak přes `AskUserQuestion` nabídni **tři až čtyři** položky v pořadí z 
 - v téhle session: `/resume <session_id>`,
 - v novém okně terminálu: `cd <start_cwd> && claude --resume <session_id>` – `start_cwd` z `resume`: session se obnovuje z adresáře, kde startovala, a ve worktree layoutu to je kořen kontejneru.
 
-**Opuštěná větev bez session.** Ve worktree layoutu přejdi do jejího pracovního adresáře podle `~/.claude/WORKTREE.md`; bez worktree layoutu se na větev přepni jen s čistým pracovním stromem, jinak se nejdřív zeptej, co s rozdělanými změnami.
+**Opuštěná větev bez session.** Ve worktree layoutu přejdi do jejího pracovního adresáře podle `~/.claude/rules/worktree.md`; bez worktree layoutu se na větev přepni jen s čistým pracovním stromem, jinak se nejdřív zeptej, co s rozdělanými změnami.
 
 **Je-li spouštěčem skill, vyvolej ho** přes nástroj `Skill` s argumentem, který položku určuje. Nic z toho, co jsi posbíral, mu neopakuj jako zadání.
 

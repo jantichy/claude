@@ -45,7 +45,7 @@ Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
 | `training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) | `reader` |
 | `legal/legal.md` | dokumentace nebo kód, které se opírají o právní úpravu – lhůta, náležitost dokladu, povinnost vůči spotřebiteli, místo plnění, retenční doba. Měří **doložení, ne výklad**: má tvrzení doslovnou citaci, číslo paragrafu nebo článku, odkud to je (primární zdroj proti reprodukci) a míru jistoty? Nezávazná metodika jako opora právního stavu je nález | `reader` |
 
-`~/.claude/WORKTREE.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
+`~/.claude/rules/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
 
 ## Zadání pro Agentní infrastrukturu
 
@@ -57,7 +57,7 @@ běží mimo permission systém a co si to pouští?
 
 Hooky se totiž na povolení neptají – spustí se samy, s právy uživatele, a jejich
 obsah nikdo neschvaluje. Zatímco na příkazy projektu existuje souhlasový
-mechanismus (`~/.claude/verify.sh --allow`), na tenhle adresář žádný není.
+mechanismus (`~/.claude/hooks/verify.sh --allow`), na tenhle adresář žádný není.
 
 U KAŽDÉ POLOŽKY ODPOVĚZ:
 - Hook: kdy se spouští, co spouští, odkud bere binárku (PATH? node_modules

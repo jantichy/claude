@@ -67,7 +67,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
 
-Chcete-li mu předhazovat i nahrávky, **vezměte si s sebou rovnou `skills/transcript`** – bez něj skill zvládne text, obrázky a PDF, ale zvukový záznam přepsat nemá čím. Kde vaše knihovna leží, mu říkat dopředu nemusíte – řeknete mu to při každém zavolání. **Skill se ale odkazuje na dva soubory z téhož repozitáře**, které kopie samotného adresáře nepřinese: `skills/PREFLIGHT.md` (společný začátek běhu) a `RULES.md` (obecná pravidla práce). Bez nich doběhne, jen přijde o kus opatrnosti na začátku – vezměte si je s sebou, nebo si o ně řekněte rovnou v tom pokynu.
+Chcete-li mu předhazovat i nahrávky, **vezměte si s sebou rovnou `skills/transcript`** – bez něj skill zvládne text, obrázky a PDF, ale zvukový záznam přepsat nemá čím. Kde vaše knihovna leží, mu říkat dopředu nemusíte – řeknete mu to při každém zavolání. **Skill se ale odkazuje na dva soubory z téhož repozitáře**, které kopie samotného adresáře nepřinese: `skills/preflight.md` (společný začátek běhu) a `~/.claude/rules/rules.md` (obecná pravidla práce). Bez nich doběhne, jen přijde o kus opatrnosti na začátku – vezměte si je s sebou, nebo si o ně řekněte rovnou v tom pokynu.
 
 ---
 

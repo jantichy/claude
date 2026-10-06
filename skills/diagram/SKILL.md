@@ -38,7 +38,7 @@ Skill nemá režimy. Existující artefakt najde a aktualizuje sám; nový zalo�
 
 ## Fáze 0 – Příprava
 
-Společný začátek drží `~/.claude/skills/PREFLIGHT.md`. **Body 1 a 2 platí, bod 3 jen zmínit** – skill nic nemění, takže rozpracované změny ve stromu neblokují, jen se řekne, že se kreslí i z nich. **Body 4 a 5 odpadají**, skill nesahá na kód ani na diff větve.
+Společný začátek drží `~/.claude/skills/preflight.md`. **Body 1 a 2 platí, bod 3 jen zmínit** – skill nic nemění, takže rozpracované změny ve stromu neblokují, jen se řekne, že se kreslí i z nich. **Body 4 a 5 odpadají**, skill nesahá na kód ani na diff větve.
 
 Navíc:
 
@@ -153,7 +153,7 @@ Stránku stav podle `artifact-design` a `artifact-diagramming`. **Každá sekce 
 - <vykreslení, úzká obrazovka, …, nebo „nic“>
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

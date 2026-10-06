@@ -46,7 +46,7 @@ Zapomenutý výskyt se pak vrací měsíce jako záhada. Proto se tenhle skill v
 
 ## Fáze 0 – Příprava
 
-**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Z projektového `CLAUDE.md` si všímej hlavně konvencí pojmenování; podle nich se pozná, jestli je nový tvar v projektu vůbec přípustný. Bod 5 odpadá, přejmenování jde napříč celým projektem, ne po diffu větve.
+**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím. Z projektového `CLAUDE.md` si všímej hlavně konvencí pojmenování; podle nich se pozná, jestli je nový tvar v projektu vůbec přípustný. Bod 5 odpadá, přejmenování jde napříč celým projektem, ne po diffu větve.
 
 **U bodu 3 je tenhle skill přísnější než ostatní: git musí být čistý, ne jen vypsaný.** Rozpracovaná změna se s hromadným přejmenováním smíchá tak, že už nepůjde oddělit – a diff je u téhle práce jediná kontrola, kterou máš.
 
@@ -144,7 +144,7 @@ Celkem: 95 výskytů ve 18 souborech + 2 přejmenování
 Nesahám na: docs/research/ (12 výskytů), CHANGELOG.md (31 výskytů)
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 ### Měření piš jako skript, ne inline, a ověř nejdřív měřidlo
 
@@ -156,7 +156,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 ### Posudek dvěma agenty, než sáhneš na první soubor
 
-U rozsahu nad několik stovek míst **pusť dva `reader` agenty naráz** (`~/.claude/DELEGATION.md`, *Velké průzkumné úkoly deleguj*) a teprve nad jejich výstupem předkládej inventuru:
+U rozsahu nad několik stovek míst **pusť dva `reader` agenty naráz** (`~/.claude/rules/delegation.md`, *Velké průzkumné úkoly deleguj*) a teprve nad jejich výstupem předkládej inventuru:
 
 - **první hledá místa, kde slovo znamená něco jiného** – smluvní stranu místo služby, zákonný pojem, cizí firmu, jiného aktéra;
 - **druhý místa, kde je slovo obsahem** – zdůvodnění rozhodnutí o pojmech, hesla glosáře, doslovné citace jmen kapitol cizích standardů, historické záznamy, a k tomu **nadpisy a počty odkazů na jejich kotvy**.
@@ -187,7 +187,7 @@ Po každém kroku ověř, že se změnilo přesně to, co mělo.
 Postupuj takto a v tomhle pořadí:
 
 1. **Vyjmenuj nadpisy, které staré slovo nesou**, a u každého spočítej odkazy na jeho kotvu.
-2. **Z nového nadpisu odvoď nový slug** – nikdy ho neskládej z paměti (`~/.claude/RULES.md`, *Při nejistotě se zeptej*).
+2. **Z nového nadpisu odvoď nový slug** – nikdy ho neskládej z paměti (`~/.claude/rules/rules.md`, *Při nejistotě se zeptej*).
 3. **Nadpis a všechny odkazy na něj přepiš jedním krokem.** Nadpis bez odkazů znamená tiše rozbitou kotvu, odkazy bez nadpisu totéž.
 4. **Obecná náhrada pak odkazy vynechává** – ať už vzorem, nebo tím, že proběhne až po nich a nová jména už v nich stojí.
 
@@ -230,7 +230,7 @@ Místa, kde staré slovo zůstává, se před náhradou nahradí zástupným zna
 2. **Grep na nový tvar.** Sedí počet s tím, co jsi měnil? Nevzniklo dvojité přejmenování (`sitesite`, `siteId` z `marketId` už přejmenovaného)?
 3. **Rozbité odkazy.** Ověř, že každý odkaz na přejmenovaný soubor, sekci nebo kotvu míří někam, co existuje.
    **Zvlášť hledej kotvu, ve které je mezera** – `grep` na `](…# … )`. Test nad odkazy ji totiž najít nemusí: rozpoznávač odkazu se na mezeře zlomí a takový text za odkaz vůbec nepovažuje, takže **mlčí stejně, jako když je všechno v pořádku**. Doloženo: 34 rozbitých odkazů, které sada testů propustila, a jedna kotva zbyla rozbitá i po první opravě – proto se tenhle `grep` pouští **po každé dávce**, ne jednou na konci.
-4. **Odvozené údaje.** Souhrnné počty, přehledové tabulky a seznamy na začátku dokumentů – viz `~/.claude/RULES.md`, *Propagace změny*, kde se přehlížejí nejčastěji.
+4. **Odvozené údaje.** Souhrnné počty, přehledové tabulky a seznamy na začátku dokumentů – viz `~/.claude/rules/rules.md`, *Propagace změny*, kde se přehlížejí nejčastěji.
 5. **Vnější místa.** Byl-li přejmenovaný celý projekt: remote, popis repozitáře, odkazy z jiných projektů v `~/Dev`.
 6. **Testy a build**, existují-li a jde-li to rychle.
 
@@ -253,7 +253,7 @@ Nesedí-li něco, **oprav a projdi znovu** – ne že to jen ohlásíš.
 **Zapiš:**
 
 - `docs/decisions.md` – proč se přejmenovávalo, zvlášť když je nový název méně zřejmý než starý. Za rok to nikdo nezrekonstruuje.
-- Existuje-li v projektu místo pro odstraněné a přejmenované věci, **nech tam stopu** – starý název se rád vrací kopírováním odjinud (*Při odstranění nechej stopu* v `~/.claude/RULES.md`).
+- Existuje-li v projektu místo pro odstraněné a přejmenované věci, **nech tam stopu** – starý název se rád vrací kopírováním odjinud (*Při odstranění nechej stopu* v `~/.claude/rules/rules.md`).
 
 **Commitni** jako jeden commit, má-li projekt zapnutý autocommit. Přejmenování rozsekané do deseti commitů se špatně čte i vrací. **Výjimkou je dávkování podle gramatiky** z Fáze 3: tam dostane každá dávka vlastní commit, protože se liší metodou a vrací se samostatně.
 
@@ -276,7 +276,7 @@ Nesedí-li něco, **oprav a projdi znovu** – ne že to jen ohlásíš.
 - Odkazy: [ověřeno / co nesedělo a jak opraveno]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

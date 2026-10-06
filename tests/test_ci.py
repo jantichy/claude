@@ -246,7 +246,7 @@ class ReusableWorkflow(unittest.TestCase):
     def test_does_not_copy_commands(self):
         """Kdyby se příkaz z kontraktu do workflow opsal, změna kontraktu by ho minula."""
         v = subprocess.run(
-            [str(ROOT / "verify.sh"), "--contract", str(ROOT)],
+            [str(ROOT / "hooks" / "verify.sh"), "--contract", str(ROOT)],
             capture_output=True,
             text=True,
             check=False,
@@ -421,7 +421,7 @@ class WorkflowMutation(unittest.TestCase):
             self.reports(
                 ReusableWorkflow,
                 lambda s: s.replace(
-                    '"$RUNNER_TEMP/claude/verify.sh" --contract .',
+                    '"$RUNNER_TEMP/claude/hooks/verify.sh" --contract .',
                     "grep -A20 Kontrakt CLAUDE.md",
                 ),
                 "test_contract_read_via_verify_sh",

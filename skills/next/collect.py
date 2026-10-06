@@ -2,7 +2,7 @@
 """Posbírá pro `/next` všechno, co jde o frontě práce zjistit mechanicky – jedním během.
 
 Dřív to skill dělal přes desítky volání gitu a čtení souborů, každé s čekáním na model,
-a k tomu si pokaždé načítal `STRUCTURE.md` a `LIFECYCLE.md`, aby věděl, jak soubory
+a k tomu si pokaždé načítal `structure.md` a `lifecycle.md`, aby věděl, jak soubory
 vypadají. Běh trval přes minutu. Tenhle skript z toho nechává modelu jen úsudek:
 popis, velikost a co je na stole nejvíc. Rozhodnutí o obsazenosti větve je tady,
 v testovaném kódu, ne v úvaze modelu.
@@ -18,7 +18,7 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 - `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`)
 - `rounds` – bloky kol návrhu s poli a stavem ve větvi kola; `stitch_pending` – čeká sešití
 - `plan` – počet otevřených a hotových úkolů a první otevřené; `artifacts` – které návrhové dokumenty existují
-- `passes` – posledních pět záznamů `## Průchody životním cyklem`; `lifecycle` – kroky cyklu z `RULES.md` po vrstvách (`osa`, `kontroly`)
+- `passes` – posledních pět záznamů `## Průchody životním cyklem`; `lifecycle` – kroky cyklu z `~/.claude/rules/rules.md` po vrstvách (`osa`, `kontroly`)
 - `branches` – nesloučené větve a větve živých session: `state` (`occupied`, `abandoned`,
   `uncertain`, `empty`), session, commity, změny `todo.md`/`plan.md`/`done.md` a přiřazená kola
 - `sessions_error` – proč se živé session nedaly zjistit (pak jsou všechny větve `uncertain`)
@@ -47,7 +47,7 @@ TEXT_LIMIT = 300
 BUDGET = 25000
 TEXT_STEPS = (200, 160, 120, 80, 40, 0)
 DIFF_LINES = 12
-RULES = Path.home() / ".claude" / "RULES.md"
+RULES = Path.home() / ".claude" / "rules" / "rules.md"
 
 
 class Repo:
@@ -310,7 +310,7 @@ def parse_plan(text):
 
 
 def lifecycle():
-    """Kroky cyklu z rámečku v `RULES.md`, rozdělené podle vrstev.
+    """Kroky cyklu z rámečku v `~/.claude/rules/rules.md`, rozdělené podle vrstev.
 
     Vrací {"osa": [...], "kontroly": [...]}. Vrstvu zakládá jen řádek, který
     začíná jejím jménem; odsazené pokračování patří pod tu předchozí. Dřív se

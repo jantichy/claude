@@ -39,7 +39,7 @@ Tahle vrstva nic nehlídá, ale **sama je výjimkou z kontroly**: deny `Edit(//*
 |---|---|---|
 | Model nechá založit symlink na `.env` gitem, přestože jemu samotnému to deny zakazuje | Nic – hook deny pravidla nevidí | **accepted**: hook jen zakládá odkaz do `main/`, respektive kopíruje `.env.local`, obsah nečte ani neposílá dál. Čtení obsahu ve větvi hlídá totéž, co v `main/` – nástroj Read deny `Read(//**/.env)`, shell `secret-guard.py` –, takže se riziko proti `main/` nemění. |
 | Hook běží nad každým repozitářem na stroji a mohl by zasáhnout mimo layout | Spustí se jen při nulovém předchozím HEAD (založení worktree) a jen tehdy, když je společný git adresář `<kontejner>/.bare` a vedle leží `main/`; existující soubor ve větvi nepřepíše | hlídáno, `tests/test_hooks.py` |
-| Vlastní `core.hooksPath` v projektu | Nic – hook se nespustí a větev vznikne bez `.env` | **accepted**: projekt s vlastními hooky si je volí sám; `WORKTREE.md` říká, že chybějící převzetí se ohlásí, ne obchází ručně. |
+| Vlastní `core.hooksPath` v projektu | Nic – hook se nespustí a větev vznikne bez `.env` | **accepted**: projekt s vlastními hooky si je volí sám; `worktree.md` říká, že chybějící převzetí se ohlásí, ne obchází ručně. |
 
 ## CI (`.github/workflows/contract.yml`, volaný z `verify.yml` a z projektů)
 
@@ -80,7 +80,7 @@ Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. 
 | Program, který si tajemství načte sám (`npm run dev`, `docker compose` s `env_file`) | Nic | **accepted**, je to zamýšlené: aplikace tajemství potřebuje a hodnota do kontextu nejde, dokud ji program nevypíše. Explicitní `--env-file .env` naopak zastaví, protože jméno stojí v příkazu. |
 | Spustit to člověk přes `!` | Nic | **accepted**, je to zamýšlená cesta: rozhodnutí použít tajemství patří člověku. Výstup takového příkazu ale do kontextu jde, takže ho má člověk psát tak, aby hodnotu nevypsal. |
 | Podvržený `envkeys.py`, který hodnoty vypíše | Hook pouští jen `envkeys.py` z `~/.claude` (porovnává vyřešenou cestu, ne jméno) a jen jeho vlastní úsek příkazu | hlídáno, `tests/test_hooks.py` |
-| Úprava samotného `~/.claude/envkeys.py` tak, aby hodnoty vypsal | Nic – hook věří souboru, ne jeho obsahu | **accepted**: zápis do `~/.claude` je táž hranice jako zápis do hooku samotného; změnu nese diff a commit. |
+| Úprava samotného `~/.claude/hooks/envkeys.py` tak, aby hodnoty vypsal | Nic – hook věří souboru, ne jeho obsahu | **accepted**: zápis do `~/.claude` je táž hranice jako zápis do hooku samotného; změnu nese diff a commit. |
 | Soubor s tajemstvím mimo deny seznam (`config/database.yml`) | Nic | **accepted**: hook hlídá přesně deny seznam, nic navíc. Chybí-li v něm vzor, doplňuje se tam a hook ho převezme sám. |
 
 ## Permission systém (`settings.json`)
@@ -88,7 +88,7 @@ Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
 | Zavolat zakázaný příkaz přes interpret (`python3 -c`, `osascript`) | Nic – deny porovnává text příkazu | **accepted**, je to vlastnost mechanismu. Proto se na deny nespoléhá tam, kde má držet skutečná hranice (souhlas průběžné kontroly čte `/dev/tty`). |
-| Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `RULES.md`, *Commituj jmenované cesty, ne `-A`*. |
+| Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `~/.claude/rules/rules.md`, *Commituj jmenované cesty, ne `-A`*. |
 | Pustit session v režimu bypass (`--dangerously-skip-permissions`), který vypne deny i hooky na povolení | `disableBypassPermissionsMode: "disable"` v `settings.json` | hlídáno, `tests/test_hooks.py`; zámek se dá smazat z téhož souboru, ale změna `settings.json` jde přes diff a commit |
 | Nový destruktivní příkaz, na který vzor nemyslel | Nic | **accepted**: seznam je výčet, ne princip. Roste, když se něco objeví. |
 | Deny `Read(...)` na tajemství obejde čtení přes Bash (`. ./.env`, `grep`, `cat`) | `secret-guard.py`, viz sekce výš | hlídáno od 3. 10. 2026 |
@@ -114,12 +114,12 @@ Nainstalovala ji 2026-09-19 sama iTerm2 volbou *Install Claude Code Integration*
 
 ## Hlášení prahu délky session (`handoff.py` jako `UserPromptSubmit` hook)
 
-Nic nezastavuje – při odeslání zprávy změří z transcriptu velikost kontextu a počet volání a nad prahem z `skills/HANDOFF.md` vloží modelu hlášku, jednou za práh. V registru je, protože běží automaticky nad každou session v každém projektu.
+Nic nezastavuje – při odeslání zprávy změří z transcriptu velikost kontextu a počet volání a nad prahem z `skills/handoff.md` vloží modelu hlášku, jednou za práh. V registru je, protože běží automaticky nad každou session v každém projektu.
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
 | Model hlášku dostane a přerušení nenabídne | Nic | **accepted**: hook dodává měřený údaj, který modelu chyběl; rozhodnutí z něj zůstává textovým pravidlem. Porušení je vidět v odpovědi hned po hlášce. |
-| Dlouhý běh uvnitř jedné odpovědi, kde se zpráva neodešle | Nic – hook měří jen při odeslání zprávy | **accepted**: přerušení se nabízí uživateli, a ten odpovídá zprávou; měřit po každém nástroji by znamenalo číst celý transcript po každém volání. Pro tenhle případ zůstává v `HANDOFF.md` odhad z rozsahu běhu. |
+| Dlouhý běh uvnitř jedné odpovědi, kde se zpráva neodešle | Nic – hook měří jen při odeslání zprávy | **accepted**: přerušení se nabízí uživateli, a ten odpovídá zprávou; měřit po každém nástroji by znamenalo číst celý transcript po každém volání. Pro tenhle případ zůstává v `handoff.md` odhad z rozsahu běhu. |
 | Změněný formát transcriptu (jiný klíč `usage`, jiná značka kompaktace) | Nic – hook potichu změří nulu a mlčí | **accepted**: chyba hooku nesmí zablokovat zprávu, takže selhává potichu. Formát hlídá jen `tests/test_hooks.py` nad syntetickým transcriptem, ne nad skutečným. |
 | Smazaný stavový soubor v `~/.local/state/claude-handoff/` | Prahy se ohlásí znovu | **accepted**: následek je jedna hláška navíc. |
 
@@ -131,7 +131,7 @@ Plugin smí přinést vlastní `hooks/hooks.json` a zapíná se **jedním řádk
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
-| Vkládá si do každé session instrukce, které se tvářejí jako nadřazené („you do not have a choice“) | Nic – je to text v kontextu, ne mechanismus | **accepted**: podle `~/.claude/RULES.md`, *Přednost pravidel*, je pobídka harnessu **poslední** v pořadí, tedy pod tímhle repozitářem i pod pokynem uživatele. Co ta vsuvka žádá, se posuzuje, nevykonává. |
+| Vkládá si do každé session instrukce, které se tvářejí jako nadřazené („you do not have a choice“) | Nic – je to text v kontextu, ne mechanismus | **accepted**: podle `~/.claude/rules/rules.md`, *Přednost pravidel*, je pobídka harnessu **poslední** v pořadí, tedy pod tímhle repozitářem i pod pokynem uživatele. Co ta vsuvka žádá, se posuzuje, nevykonává. |
 | Čte soubor z adresáře pluginu, který se samoaktualizuje | Nic – obsah se může změnit bez schválení | **accepted**: je to `cat` skillu z oficiálního marketplace a výstup jde jen do kontextu téhle session, ne ven ze stroje. Kdyby se plugin začal chovat jinak, projeví se to vsuvkou, která je v každé session vidět. |
 
 **Zrušený plugin sem nepatří, ale jeho odstranění má stopu.** `gitkraken-hooks` byl 27. 9. 2026 odstraněný úplně – ze `settings.json`, z marketplace i z cache –, protože se vrátil zapnutý potřetí (8. 9. vypršelo umlčení nálezu, 18. 9. vypnut po měření, 27. 9. zpátky). Proti čtvrtému kolu drží jmenovitá kontrola v `tests/test_hooks.py`; důvody a měření jsou v `decisions.md`.

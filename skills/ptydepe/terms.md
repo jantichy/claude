@@ -2,22 +2,22 @@
 
 Rozvaha ke každému termínu, na kterém jsme se dohodli: co znamená, co jím naopak není, který termín nahradil a proč ten starý padl. Spravuje ho skill `/ptydepe`.
 
-**Tenhle soubor se neimportuje nikam a do kontextu session nepatří.** Za běhu stačí tabulka náhrad v `~/.claude/PTYDEPE.md`; sem se sahá tehdy, když se rozhoduje o termínu samotném – při revizi, při návrhu nové náhrady nebo když je potřeba vrátit rozhodnutí zpátky. Rozdělené je to proto, že `PTYDEPE.md` jde do každé session a rostl by s každým dalším termínem, kdežto důvody potřebuje jen ten, kdo rozhoduje.
+**Tenhle soubor se neimportuje nikam a do kontextu session nepatří.** Za běhu stačí tabulka náhrad v `~/.claude/rules/ptydepe.md`; sem se sahá tehdy, když se rozhoduje o termínu samotném – při revizi, při návrhu nové náhrady nebo když je potřeba vrátit rozhodnutí zpátky. Rozdělené je to proto, že `ptydepe.md` jde do každé session a rostl by s každým dalším termínem, kdežto důvody potřebuje jen ten, kdo rozhoduje.
 
-Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro jednu věc* v `~/.claude/RULES.md`; ta pravidla zůstávají tam. Doménové glosáře jednotlivých projektů (`docs/glossary.md`, viz `~/.claude/STRUCTURE.md`) tím nejsou dotčené – tady je jen to, co platí **napříč** projekty.
+Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro jednu věc* v `~/.claude/rules/rules.md`; ta pravidla zůstávají tam. Doménové glosáře jednotlivých projektů (`docs/glossary.md`, viz `~/.claude/rules/structure.md`) tím nejsou dotčené – tady je jen to, co platí **napříč** projekty.
 
 ## Jak se to zapisuje
 
 - **Každý termín tu má heslo s celou úvahou**, včetně zamítnutých variant. Bez nich se za rok projde touž slepou uličkou znovu.
 - **Starý termín zůstává zapsaný tady, a jenom tady.** Ve všech ostatních souborech se nahradil beze stopy; tady u nástupce stojí věta „nahrazuje …“ i s důvodem, aby se dalo rozhodnutí dohledat nebo vrátit.
 - **„Beze stopy“ platí na termín v jeho významu, ne na řetězec** – a jsou čtyři druhy míst, kde starý tvar vědomě zůstává. Heslo u sebe vždycky řekne které a proč; bez toho vypadá zbylý výskyt jako [pozůstatek](#pozůstatek).
-  - **Identifikátor v kódu a název souboru** – píšou se anglicky (`~/.claude/RULES.md`), takže se nepřekládají: `PREFLIGHT.md` u [přípravy](#příprava), `frontmatter()` u [hlavičky](#hlavička).
+  - **Identifikátor v kódu a název souboru** – píšou se anglicky (`~/.claude/rules/rules.md`), takže se nepřekládají: `preflight.md` u [přípravy](#příprava), `frontmatter()` u [hlavičky](#hlavička).
   - **Jméno cizí kategorie nebo vady v anglickém výčtu** – `spike` v tabulce `/specify` u [ověřovacího pokusu](#ověřovací-pokus), *lockfile drift* u [rozejití](#rozejití).
   - **Jméno zrušené nebo přejmenované věci** – *Skeptik* jako zaniklé hledisko `/oponent` u [ověřovatele](#ověřovatel).
   - **Datovaný doklad a cizí text** – archiv, ohlasy, plány, vendor kód. Nesahá se na ně z jiného důvodu: přepsat je znamená falšovat záznam (`SKILL.md`, *Fáze 4*).
-- **Ponechané termíny sem patří taky** – rozhodnutí, že se termín **nemění**, je rozhodnutí o termínu jako každé jiné a hledá se na témž místě. Zapisuje se do sekce *Ponechané termíny* na konci; do tabulky v `PTYDEPE.md` nejde, protože ta říká, co se čím nahrazuje.
-- **Běh smí skončit i preventivním zápisem.** Termín se **v běžném českém textu** nevyskytuje – protože je protějšek zavedený dávno, nebo protože to slovo zatím nikdo nepoužil –, ale zapíše se, aby se nezačalo zavádět. **Zapisuje se stejně jako náhrada**, tedy řádek v `PTYDEPE.md` i heslo tady; ponechání to není, protože rozhodnutí zní „nepoužívej“. Heslo pak místo přepsaných vazeb doloží, **odkud se to slovo hrozí vzít** – u [hlavičky](#hlavička) je to zavedený protějšek v týchž souborech.
-- **Přibude-li heslo, přibude i řádek v `~/.claude/PTYDEPE.md`.** Tabulka bez hesla je rozhodnutí bez důvodu, heslo bez řádku je rozhodnutí, o kterém se za běhu neví.
+- **Ponechané termíny sem patří taky** – rozhodnutí, že se termín **nemění**, je rozhodnutí o termínu jako každé jiné a hledá se na témž místě. Zapisuje se do sekce *Ponechané termíny* na konci; do tabulky v `ptydepe.md` nejde, protože ta říká, co se čím nahrazuje.
+- **Běh smí skončit i preventivním zápisem.** Termín se **v běžném českém textu** nevyskytuje – protože je protějšek zavedený dávno, nebo protože to slovo zatím nikdo nepoužil –, ale zapíše se, aby se nezačalo zavádět. **Zapisuje se stejně jako náhrada**, tedy řádek v `ptydepe.md` i heslo tady; ponechání to není, protože rozhodnutí zní „nepoužívej“. Heslo pak místo přepsaných vazeb doloží, **odkud se to slovo hrozí vzít** – u [hlavičky](#hlavička) je to zavedený protějšek v týchž souborech.
+- **Přibude-li heslo, přibude i řádek v `~/.claude/rules/ptydepe.md`.** Tabulka bez hesla je rozhodnutí bez důvodu, heslo bez řádku je rozhodnutí, o kterém se za běhu neví.
 
 ## Obsah
 
@@ -75,7 +75,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Puštění několika agentů paralelně na jeden úkol.** Šetří kontext hlavní session, celkové tokeny spíš zvýší – proto se deleguje kvůli kontextu, ne kvůli úspoře.
 
-**Nahrazuje dřívější „fan-out“** (2026-09-07). Anglicismus bez opory v češtině – a `~/.claude/skills/SKILLS.md` si ho v tabulce lidské řeči **sama překládala**, takže norma dávno věděla, že mu člověk nerozumí. Ta ukázka tam zůstává jako **negativní příklad**.
+**Nahrazuje dřívější „fan-out“** (2026-09-07). Anglicismus bez opory v češtině – a `~/.claude/skills/skills.md` si ho v tabulce lidské řeči **sama překládala**, takže norma dávno věděla, že mu člověk nerozumí. Ta ukázka tam zůstává jako **negativní příklad**.
 
 ### tabulka delegací
 
@@ -101,7 +101,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### README skillu
 
-**Text pro člověka zvenčí, na který se posílá odkaz, když se skill někomu doporučuje.** Tvar drží `~/.claude/skills/SKILLS.md`, *README skillu*.
+**Text pro člověka zvenčí, na který se posílá odkaz, když se skill někomu doporučuje.** Tvar drží `~/.claude/skills/skills.md`, *README skillu*.
 
 **Neříkej mu „vizitka“** (2026-09-07). „README“ je zavedené jméno přesně pro tenhle soubor a metafora nic nepřidávala – že je psaný pro člověka zvenčí, stojí v normě vedle. Česká „vizitka“ je navíc obsazená: znamená jednostránkový firemní web, a v tom významu v `~/Dev/context` dál zůstává.
 
@@ -113,11 +113,11 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### příprava
 
-**Společný začátek běhu skillu:** najít kořen projektu, přečíst projektový `CLAUDE.md`, zkontrolovat stav pracovního stromu. Je to `Fáze 0` každého skillu; společný text drží `~/.claude/skills/PREFLIGHT.md` a skill si k němu píše **jen své odchylky**.
+**Společný začátek běhu skillu:** najít kořen projektu, přečíst projektový `CLAUDE.md`, zkontrolovat stav pracovního stromu. Je to `Fáze 0` každého skillu; společný text drží `~/.claude/skills/preflight.md` a skill si k němu píše **jen své odchylky**.
 
 **Nahrazuje dřívější „pre-flight“** (2026-09-07). Letecká metafora, anglicky zavedená (*preflight check*), česky ne – a hlavně skloňovaná po česku: *„v pre-flightu“*, *„opsaným pre-flightem“*. Ta fáze navíc nic neprověřuje, jen zjišťuje výchozí stav, takže „příprava“ sedí i významem.
 
-**Soubor se dál jmenuje `PREFLIGHT.md`** – názvy souborů zůstávají anglicky. Česky pojmenované testy a proměnné se přejmenovaly (`ma_pripravu` → `has_preflight`, `test_norma_a_priprava_existuji` → `test_standard_and_preflight_exist`).
+**Soubor se dál jmenuje `preflight.md`** – názvy souborů zůstávají anglicky. Česky pojmenované testy a proměnné se přejmenovaly (`ma_pripravu` → `has_preflight`, `test_norma_a_priprava_existuji` → `test_standard_and_preflight_exist`).
 
 **Ne „kontrola před startem“** – ve skloňovaných vazbách je to nepoužitelně dlouhé a kolidovalo by s blokující i průběžnou kontrolou, které znamenají něco jiného.
 
@@ -131,7 +131,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### závěrečný verdikt
 
-**Věta, kterou musí skill povinně skončit.** Má dvě předepsaná znění a skill si mezi nimi **jen vybírá, vlastní si neformuluje**: buď je věc hotová a ověřená a řekne se, čím se dá pokračovat, nebo hotová není a jmenuje se konkrétně, co tomu brání. Mezi nimi není nic. Vzorec drží `~/.claude/skills/SKILLS.md`, *Povinné sekce a jejich pořadí*.
+**Věta, kterou musí skill povinně skončit.** Má dvě předepsaná znění a skill si mezi nimi **jen vybírá, vlastní si neformuluje**: buď je věc hotová a ověřená a řekne se, čím se dá pokračovat, nebo hotová není a jmenuje se konkrétně, co tomu brání. Mezi nimi není nic. Vzorec drží `~/.claude/skills/skills.md`, *Povinné sekce a jejich pořadí*.
 
 **Nahrazuje dřívější „koncové věty“** (2026-09-07). „Koncový“ se česky pojí s uživatelem, stanicí nebo stavem – s něčím na konci řady; věta na konci textu je závěrečná. A pojmenovat to „větami“ mířilo na formu místo na účel: skill nevydává dvě věty, ale jeden verdikt, pro který má dvě znění.
 
@@ -141,7 +141,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Nahrazuje dřívější „chirurgický zásah“** (2026-09-07). Anglicky je *surgical edit* běžný obrat, ale doslovný překlad mate – „chirurgický zásah“ je česky operace, tedy obraz o řezání, ne o přesnosti. Čeština má pro *surgical strike* ustálené „cílený úder“, takže „cílený“ nese v téhle vazbě přesně tu úzkost, o kterou jde.
 
-**Ne „zacílený“** – to je příčestí od „zacílit“ a v marketingu navíc obsazené významem targeting. **Ne „cílená změna“** – „změna“ je v `~/.claude/RULES.md` obsazená (*Rozlišuj typ změny*, *Propagace změny*), a právě to druhé pravidlo se cíleným zásahem porušuje.
+**Ne „zacílený“** – to je příčestí od „zacílit“ a v marketingu navíc obsazené významem targeting. **Ne „cílená změna“** – „změna“ je v `~/.claude/rules/rules.md` obsazená (*Rozlišuj typ změny*, *Propagace změny*), a právě to druhé pravidlo se cíleným zásahem porušuje.
 
 ### čtenář bez kontextu
 
@@ -155,7 +155,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Průchod aplikací, ve kterém uživatel dělá všechno správně a nic neselže.** `/attack` hledá právě mimo něj, `/release` ho po nasazení projde celý jako smoke test. Zdrojem je první scénář v `docs/requirements.md` nebo `docs/scenarios.md`.
 
-**Nahrazuje dřívější „šťastnou cestu“** (2026-09-07) v popisu `/attack`. Anglicky je *happy path* zavedený pojem, ale doslovný český překlad se nepoužívá – a hlavně **„hlavní scénář“ už byl zavedený na pěti jiných místech** (`STRUCTURE.md`, `/specify`, `/release`). Byla to tedy dvě jména pro jednu věc, jen každé v jiném skillu.
+**Nahrazuje dřívější „šťastnou cestu“** (2026-09-07) v popisu `/attack`. Anglicky je *happy path* zavedený pojem, ale doslovný český překlad se nepoužívá – a hlavně **„hlavní scénář“ už byl zavedený na pěti jiných místech** (`structure.md`, `/specify`, `/release`). Byla to tedy dvě jména pro jednu věc, jen každé v jiném skillu.
 
 ### hledisko
 
@@ -181,11 +181,11 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### ověřovatel
 
-**Agent, který dostane jediný úkol: nález vyvrátit.** Co ověření nepřežije, se uživateli vůbec nezobrazí. Běží v čerstvém kontextu, který nevidí ani panel, ani konverzaci. Povinný u každého skillu, který pouští specialisty hledající problémy – `~/.claude/skills/SKILLS.md`, *Ověřovací vrstva*.
+**Agent, který dostane jediný úkol: nález vyvrátit.** Co ověření nepřežije, se uživateli vůbec nezobrazí. Běží v čerstvém kontextu, který nevidí ani panel, ani konverzaci. Povinný u každého skillu, který pouští specialisty hledající problémy – `~/.claude/skills/skills.md`, *Ověřovací vrstva*.
 
 **Sjednoceno z dvojice „ověřovatel“ a „skeptik“** (2026-09-07). Nešlo o cizí slovo, ale o dvě jména pro jednu věc: `/attack` je mělo dokonce v jedné větě (*„nahrazuje **ověřovatele** z `/review`: **skeptik** nad pozorováním jen stojí čas“*). Zvítězil „ověřovatel“, protože ho nese norma (*Ověřovací vrstva*), jméno fáze (*Ověření nálezů*) i většina užití; „skeptik“ popisoval postoj, a ten stejně stojí ve větě vedle.
 
-**Výjimka, na kterou se nesahá:** *Skeptik* je jméno zrušeného hlediska `/oponent` – v `~/.claude/done.md` i v `~/.claude/skills/oponent/SKILL.md`, kde se popisuje, s čím splynulo. Není to označení ověřovatele.
+**Výjimka, na kterou se nesahá:** *Skeptik* je jméno zrušeného hlediska `/oponent` – v `~/.claude/docs/done.md` i v `~/.claude/skills/oponent/SKILL.md`, kde se popisuje, s čím splynulo. Není to označení ověřovatele.
 
 ### ověřovací pokus
 
@@ -231,9 +231,9 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Dva termíny, protože to jsou dvě věci.** *Souvislý text* je nestrukturovaný zápis tam, kde se čeká **struktura** – data, tabulka, zaškrtávací seznam, akceptační kritérium, příkaz („agent vrací strukturu, ne souvislý text“). *Běžný text* je česká věta tam, kde stojí proti **identifikátoru** – jménu režimu, klíči, poli ve schématu („česká podstatná jména v běžném textu zůstávají česky“).
 
-**Nahrazuje dřívější „prózu“** (2026-09-08). Anglicky je *prose* v obou významech zavedený obrat (*write in prose, not bullets*), česky ne: „próza“ je literární pojem, opak poezie, a technický význam je kalk. Zavedl si ho Claude sám 2. 9. 2026 v `RULES.md` a `/breakdown`. Ověřeno, že v uživatelových vlastních textech se v tomhle významu nevyskytuje ani jednou – dva výskyty v archivu z roku 2010 znamenají prózu literární a jako publikované texty byly z náhrady vyloučené.
+**Nahrazuje dřívější „prózu“** (2026-09-08). Anglicky je *prose* v obou významech zavedený obrat (*write in prose, not bullets*), česky ne: „próza“ je literární pojem, opak poezie, a technický význam je kalk. Zavedl si ho Claude sám 2. 9. 2026 v `~/.claude/rules/rules.md` a `/breakdown`. Ověřeno, že v uživatelových vlastních textech se v tomhle významu nevyskytuje ani jednou – dva výskyty v archivu z roku 2010 znamenají prózu literární a jako publikované texty byly z náhrady vyloučené.
 
-**Rozhodující byl ale ten dvojí význam.** Jedno slovo krylo dvě různé opozice a rozdíl mezi nimi nebyl z textu poznat; že náhrada potřebuje dvě hesla, je doklad, že šlo o *jedno jméno pro dvě věci* (`~/.claude/RULES.md`, *Jeden termín pro jednu věc*).
+**Rozhodující byl ale ten dvojí význam.** Jedno slovo krylo dvě různé opozice a rozdíl mezi nimi nebyl z textu poznat; že náhrada potřebuje dvě hesla, je doklad, že šlo o *jedno jméno pro dvě věci* (`~/.claude/rules/rules.md`, *Jeden termín pro jednu věc*).
 
 **Ne „volný text“** – v IT obsazený vstupním polem formuláře a fulltextem. **Ne samotný „text“** – nerozlišuje: zaškrtávací seznam je taky text, takže věta „ne text, ale seznam“ netvrdí nic.
 
@@ -241,9 +241,9 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### hlavička
 
-**Blok metadat ve formátu YAML mezi dvěma `---` na začátku `SKILL.md`**, který nese `name`, `description`, `argument-hint` a `allowed-tools`. Tvar drží `~/.claude/skills/SKILLS.md`, *Hlavička*. Kde hrozí záměna, přidává se přívlastek – *hlavička skillu* proti *hlavičce souboru* jako úvodnímu odstavci pro čtenáře, což je homonymum (viz níž), ne tenhle termín.
+**Blok metadat ve formátu YAML mezi dvěma `---` na začátku `SKILL.md`**, který nese `name`, `description`, `argument-hint` a `allowed-tools`. Tvar drží `~/.claude/skills/skills.md`, *Hlavička*. Kde hrozí záměna, přidává se přívlastek – *hlavička skillu* proti *hlavičce souboru* jako úvodnímu odstavci pro čtenáře, což je homonymum (viz níž), ne tenhle termín.
 
-**Zamítnuto – rozšířit rozsah na každý Markdown** (2026-09-11). Lákalo to: definice agenta v `.claude/agents/` a příkaz pluginu mají tutéž hlavičku, a na disku pod `plugins/` jich leží desítky (adresář je v `.gitignore`, takže je `git ls-files` nevidí). Jenže `PTYDEPE.md` se importuje do **každé session v každém projektu**, a v projektu se statickým generátorem – Astro, Hugo, Jekyll, 11ty – je *front matter* **jméno funkce nástroje**: stojí v jeho dokumentaci i v klíčích konfigurace. To je přesně situace, která v tomhle souboru udržela „session“, `worktree` i `hook`.
+**Zamítnuto – rozšířit rozsah na každý Markdown** (2026-09-11). Lákalo to: definice agenta v `.claude/agents/` a příkaz pluginu mají tutéž hlavičku, a na disku pod `plugins/` jich leží desítky (adresář je v `.gitignore`, takže je `git ls-files` nevidí). Jenže `ptydepe.md` se importuje do **každé session v každém projektu**, a v projektu se statickým generátorem – Astro, Hugo, Jekyll, 11ty – je *front matter* **jméno funkce nástroje**: stojí v jeho dokumentaci i v klíčích konfigurace. To je přesně situace, která v tomhle souboru udržela „session“, `worktree` i `hook`.
 
 Rozsah proto zůstává u `SKILL.md`; pro hlavičku agenta nebo příkazu se rozhodne, až takový soubor vznikne.
 
@@ -254,7 +254,7 @@ Zápis tedy nic nepřepisoval – brání tomu, aby se anglické slovo do těch 
 
 Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `description`) zůstávají anglicky tak jako tak a žádný příkaz slovo „frontmatter“ nevyžaduje. Překládá se tedy pojmenování, ne rozhraní.
 
-**Identifikátory v kódu zůstávají anglicky** – funkce `frontmatter()` a třída `SkillFrontmatter` v `~/.claude/tests/test_skills.py`. Kód se podle `~/.claude/RULES.md` píše anglicky, takže je to táž situace jako `PREFLIGHT.md` u [přípravy](#příprava).
+**Identifikátory v kódu zůstávají anglicky** – funkce `frontmatter()` a třída `SkillFrontmatter` v `~/.claude/tests/test_skills.py`. Kód se podle `~/.claude/rules/rules.md` píše anglicky, takže je to táž situace jako `preflight.md` u [přípravy](#příprava).
 
 **Homonymum se nechává vědomě:** HTTP hlavička, hlavička tabulky (`~/Dev/context/web/admin.md`) i hlavička souboru jako úvodní odstavec pro čtenáře (`~/Dev/context/decisions.md`, *Hlavička provozního souboru smí opakovat pravidlo z `CLAUDE.md`*) znamenají něco jiného. Rozlišuje je přívlastek a doména – táž obrana jako u „platební brány“ proti [blokující kontrole](#blokující-kontrola). **Pozor, jak snadno se to splete:** `/autocommit` stál v prvním znění tohohle hesla mezi doklady zavedenosti, ačkoliv jeho jediná „hlavička“ je ta od projektového `CLAUDE.md`, tedy právě to vyloučené homonymum. Našel to čtenář bez kontextu.
 
@@ -274,7 +274,7 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 **Zamítnuto – ponechat „plot“:** nemá oporu v češtině a koliduje s významem „graf“.
 
-**Zamítnuto – „značka“:** krátké a srozumitelné, ale slovo je obsazené – `~/.claude/RULES.md` má sekci *Interní značky ven nepatří*, kde značka znamená `B1` nebo `N3`. Jedno jméno pro dvě věci je táž vada jako dvě jména pro jednu.
+**Zamítnuto – „značka“:** krátké a srozumitelné, ale slovo je obsazené – `~/.claude/rules/rules.md` má sekci *Interní značky ven nepatří*, kde značka znamená `B1` nebo `N3`. Jedno jméno pro dvě věci je táž vada jako dvě jména pro jednu.
 
 **Zamítnuto – „trojice apostrofů“:** lže. CommonMark povoluje tři a víc a zavírací musí být aspoň tak dlouhé jako otevírací – celá ta pasáž ve `verify.sh` je právě o délce.
 
@@ -316,9 +316,9 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 ### hledaný řetězec
 
-**Řetězec nebo nadpis, podle kterého skript najde místo, kam vložit text, nebo kde začíná a končí řez.** Sjednocuje i dřívější „značky“ v `~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*.
+**Řetězec nebo nadpis, podle kterého skript najde místo, kam vložit text, nebo kde začíná a končí řez.** Sjednocuje i dřívější „značky“ v `~/.claude/rules/rules.md`, *Mazání ověř diffem, ne grepem*.
 
-**Nahrazuje dřívější „kotvu“** (2026-10-05) – v souborech skoro nebyla, mluvil jsem tak v odpovědích („spadlo na nenalezené kotvě“, „ASCII kotva“). **Zamítnuto:** *značka* – navrženo, protože už stála v `RULES.md`; uživatel zvolil popis, který říká, co to je.
+**Nahrazuje dřívější „kotvu“** (2026-10-05) – v souborech skoro nebyla, mluvil jsem tak v odpovědích („spadlo na nenalezené kotvě“, „ASCII kotva“). **Zamítnuto:** *značka* – navrženo, protože už stála v `~/.claude/rules/rules.md`; uživatel zvolil popis, který říká, co to je.
 
 ### další významy kotvy
 
@@ -336,7 +336,7 @@ Revize 5. 10. 2026 našla vedle výše uvedených ještě řadu přenesených v�
 
 ## Ponechané termíny
 
-Rozhodnutí, že se termín **nemění**. Do tabulky v `~/.claude/PTYDEPE.md` nepatří – ta říká, co se čím nahrazuje –, ale hledají se tady, spolu se zbytkem rozvahy o termínech. Přestěhováno z `~/Dev/context/decisions.md`, kde do té doby leželo odděleně od nahrazených termínů: osm položek 10. 9. 2026 ze sekce `## Claude`, `guard` a `stopa práce` až 11. 9., protože leží v doménových sekcích a první průchod je minul.
+Rozhodnutí, že se termín **nemění**. Do tabulky v `~/.claude/rules/ptydepe.md` nepatří – ta říká, co se čím nahrazuje –, ale hledají se tady, spolu se zbytkem rozvahy o termínech. Přestěhováno z `~/Dev/context/decisions.md`, kde do té doby leželo odděleně od nahrazených termínů: osm položek 10. 9. 2026 ze sekce `## Claude`, `guard` a `stopa práce` až 11. 9., protože leží v doménových sekcích a první průchod je minul.
 
 ### 2026-09-07 – Ponechané termíny z revize: heuristika, osa, vektor útoku
 
@@ -358,7 +358,7 @@ Revize neustálených termínů se zastavila u „stopy práce“ v `/invoicing 
 
 **Zamítnuto – „záznam o práci“:** koliduje se záznamem v Clockify, proti kterému se stopy porovnávají. Věta „záznam se nepotkal se záznamem“ nedává smysl.
 
-**Vědomě přijatá cena:** slovo „stopa“ nese napříč repozitářem **pět různých významů** – auditní stopa (`web/admin.md`), doložená stopa (`brand/`), zvuková stopa (`/transcript`), „při odstranění nechej stopu“ (`RULES.md`) a tahle stopa práce. Všechny jsou samostatně zavedené a rozlišuje je přívlastek, takže se nesjednocují. Zapsáno proto, aby se to při příští revizi termínů neotvíralo znovu.
+**Vědomě přijatá cena:** slovo „stopa“ nese napříč repozitářem **pět různých významů** – auditní stopa (`web/admin.md`), doložená stopa (`brand/`), zvuková stopa (`/transcript`), „při odstranění nechej stopu“ (`~/.claude/rules/rules.md`) a tahle stopa práce. Všechny jsou samostatně zavedené a rozlišuje je přívlastek, takže se nesjednocují. Zapsáno proto, aby se to při příští revizi termínů neotvíralo znovu.
 
 ### 2026-09-07 – Termín „guard“ se ponechává, a plyne z toho obecné pravidlo
 
@@ -440,7 +440,7 @@ Stojí jako standard v `~/Dev/context/coding/modeling.md`, *Pojmenuj, co nesmí 
 
 **Zamítnuto – „podmínka, která musí platit vždy“:** opis je delší a zároveň méně přesný. Neříká to, co je na invariantu podstatné – že ho vynucuje databáze, ne kázeň volajícího –, a splývá s validací vstupu, proti které se ta sekce vymezuje.
 
-**Zamítnuto – „omezení“ (constraint):** omezení je **mechanismus, kterým se invariant vynutí**, ne invariant sám. Jeden invariant se dá vynutit `CHECK` omezením, parciálním indexem i cizím klíčem. Sloučit ta dvě slova by vyrobilo jedno jméno pro dvě věci – přesně to, co zakazuje *Jeden termín pro jednu věc* v `~/.claude/RULES.md`.
+**Zamítnuto – „omezení“ (constraint):** omezení je **mechanismus, kterým se invariant vynutí**, ne invariant sám. Jeden invariant se dá vynutit `CHECK` omezením, parciálním indexem i cizím klíčem. Sloučit ta dvě slova by vyrobilo jedno jméno pro dvě věci – přesně to, co zakazuje *Jeden termín pro jednu věc* v `~/.claude/rules/rules.md`.
 
 **Vědomě ponecháno v cizích souborech:** `~/Dev/mediowiki/w/extensions/SyntaxHighlight_GeSHi/` má `invariant` jako klíčové slovo jazyků D, Eiffel a GLSL ve vendor kódu, `~/Dev/olympiada/` v zadáních a řešeních olympiády. Ani na jedno se nesahá – vendor kód a cizí text (`SKILL.md`, *Fáze 4*).
 
@@ -448,7 +448,7 @@ Stojí jako standard v `~/Dev/context/coding/modeling.md`, *Pojmenuj, co nesmí 
 
 Revize 5. 10. 2026 rozložila „kotvu“ na asi deset významů a většinu nahradila (*prompt*, *referenční datum*, *anonymizovaný záznam*, *hledaný řetězec*, *další významy kotvy* výš). **Ponechává se tam, kde je slovo zavedené i česky:**
 
-- **kotva odkazu** – `#fragment`, odkaz na nadpis uvnitř stránky; jediný význam, kterému uživatel rozuměl. Stojí v `RULES.md`, `STRUCTURE.md`, `skills/links.py`, `skills/replace/` a testech odkazů v `~/.claude`, `~/Dev/context` i eventoidu;
+- **kotva odkazu** – `#fragment`, odkaz na nadpis uvnitř stránky; jediný význam, kterému uživatel rozuměl. Stojí v `~/.claude/rules/rules.md`, `structure.md`, `skills/links.py`, `skills/replace/` a testech odkazů v `~/.claude`, `~/Dev/context` i eventoidu;
 - **ukotvení vzoru** – regulární výraz nebo `case` navázaný na začátek řetězce (*regex anchor*; `skills/transcript/transcribe.sh`, `tests/test_hooks.py`);
 - **cenová kotva** – psychologické ukotvení ceny, drahá varianta, vedle které ostatní vypadají rozumně (projekty `ai`, `byt`). Ne „pracovní kotva“ ve smyslu ceny, se kterou se počítá – ta je *pracovní cena*;
 - **kotva v CSS anchor positioning** – prvek, ke kterému se váže popover (`score`); tak se ta vlastnost jmenuje (`anchor-name`).

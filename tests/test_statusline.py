@@ -28,7 +28,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-STATUSLINE = ROOT / "statusline.sh"
+STATUSLINE = ROOT / "statusline" / "statusline.sh"
 
 WARNING = "config spouští program"
 

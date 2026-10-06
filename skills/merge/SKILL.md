@@ -13,17 +13,17 @@ Dokončí hotovou větev: sloučí ji do hlavní a uklidí po ní. Není to jede
 
 Jádrem je **pořadí**: spojený stav vzniká a ověřuje se **ve větvi**, ne v hlavní větvi. Do ní jde až to, co prošlo kontrolou.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok: nic nevyrábí, jen převádí hotovou práci tam, kam patří. Stojí v mezerách mezi kroky osy, hned za `/cleanup`, který ho na konci svého běhu nabídne.
+V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to kontrolní krok: nic nevyrábí, jen převádí hotovou práci tam, kam patří. Stojí v mezerách mezi kroky osy, hned za `/cleanup`, který ho na konci svého běhu nabídne.
 
-Bez argumentu pracuje s větví, na které stojíš; se jménem větve v argumentu s ní. Funguje ve worktree layoutu (`~/.claude/WORKTREE.md`) i v obyčejném repozitáři s jednou pracovní kopií.
+Bez argumentu pracuje s větví, na které stojíš; se jménem větve v argumentu s ní. Funguje ve worktree layoutu (`~/.claude/rules/worktree.md`) i v obyčejném repozitáři s jednou pracovní kopií.
 
 ## Co skill nedělá
 
-- **Nerozhoduje, že se má mergovat.** Merguje se jen na výslovný pokyn uživatele – `~/.claude/WORKTREE.md`, *Větev žije, dokud uživatel neřekne jinak*. Vyvolání skillu tím pokynem je; nic jiného ne.
+- **Nerozhoduje, že se má mergovat.** Merguje se jen na výslovný pokyn uživatele – `~/.claude/rules/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*. Vyvolání skillu tím pokynem je; nic jiného ne.
 - **Nezapisuje, co se v session domluvilo.** To je `/cleanup`, který na konci svého běhu merge jen **nabídne** – provést ho je tenhle skill. Zápis do `todo.md`, `done.md` a `decisions.md` tedy nepřebírá a předpokládá, že proběhl.
 - **Nenasazuje.** Stojí-li v `## Nasazení` projektového `CLAUDE.md`, že se z hlavní větve automaticky nasazuje, je merge samotné nasazení a patří `/release`. Skill to pozná a zastaví.
 - **Nekontroluje kvalitu práce ve větvi.** Že je práce správná, měří `/review`, `/consistency` a `/attack`. Tenhle skill pouští jen *Kontrakt příkazů* nad spojeným stavem – tedy ověřuje spojení, ne obsah.
-- **Nezakládá větve a nepřepíná layout.** Zakládání drží `~/.claude/WORKTREE.md`, zřízení a zrušení kontejneru `/worktree`.
+- **Nezakládá větve a nepřepíná layout.** Zakládání drží `~/.claude/rules/worktree.md`, zřízení a zrušení kontejneru `/worktree`.
 
 ## Zásady pro celý průběh
 
@@ -34,9 +34,9 @@ Bez argumentu pracuje s větví, na které stojíš; se jménem větve v argumen
 
 ## Fáze 0 – Příprava
 
-Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Navíc:
+Společný začátek je v `~/.claude/skills/preflight.md`. Navíc:
 
-1. **Načti si `~/.claude/WORKTREE.md`**, stojíš-li v kontejneru s `.bare/`. Rozhoduje o tom, odkud se pouštějí příkazy nad hlavní větví a co se po mergi maže.
+1. **Načti si `~/.claude/rules/worktree.md`**, stojíš-li v kontejneru s `.bare/`. Rozhoduje o tom, odkud se pouštějí příkazy nad hlavní větví a co se po mergi maže.
 2. **Zjisti, kterou větev dokončuješ** – z argumentu, jinak `git branch --show-current`. Jsi-li na hlavní větvi a argument není, řekni to a skonči: není co dokončovat.
 3. **Bod 4 přípravy vynech** – průběžnou kontrolu nad rozdělaným stavem nepouštěj. Kontrakt příkazů se tu pouští až nad **spojeným** stavem ve *Fázi 3*, a to je jiné tvrzení.
 4. **Bod 3 přípravy se u rozpracovaných změn neptá.** Patří-li k práci větve, commitni je – je to *Fáze 1* a u dokončení větve není z čeho vybírat. Zeptej se jen na soubor, který jsi nezměnil ty.
@@ -45,7 +45,7 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Navíc:
 
 Projdi všechny čtyři, než uděláš první `merge`. Kterákoliv z nich znamená zastavit a ohlásit, ne obejít.
 
-- **Necommitnuté změny ve větvi** – commitni je, patří-li k práci větve; soubor, který jsi nezměnil ty, nech být a ohlas ho (`~/.claude/RULES.md`, *Commituj jmenované cesty, ne `-A`*).
+- **Necommitnuté změny ve větvi** – commitni je, patří-li k práci větve; soubor, který jsi nezměnil ty, nech být a ohlas ho (`~/.claude/rules/rules.md`, *Commituj jmenované cesty, ne `-A`*).
 - **Rozpracovaná hlavní větev** – ve worktree layoutu rozpracovaný `main/`, jinak necommitnuté změny, které by přepnutí vzalo s sebou. Je to cizí práce a merge by se s ní promíchal.
 - **`main` je nasazovací větev** – stojí-li to v `## Nasazení` projektového `CLAUDE.md`, zastav a pošli na `/release` (`~/.claude/skills/release/SKILL.md`, *Nasazovací větev není integrační větev*).
 - **Větev kola návrhu** – pozná se podle toho, že ji jmenuje blok kola v `docs/todo.md` nebo záznam v `docs/done.md`, sekce `## Kola návrhu`. Neproběhl-li v ní zápis před sloučením (blok v `todo.md` ještě je), pusť v ní nejdřív `/architect`. Proběhl-li, pokračuj – ale *Fázi 3* dělej podle zápisu před sloučením ve `~/.claude/skills/architect/SKILL.md`, protože po natažení se kolu přiděluje číslo znovu.
@@ -130,14 +130,14 @@ Vynucuje to git hook `~/.claude/githooks/commit-msg` nasazený globálně přes 
 - <co se smazalo: worktree, lokální větev, větev na remote – nebo co zůstalo a proč>
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Větev je přimergovaná a ověřená, můžeš pokračovat v main.`
 - `Větev přimergovaná není – brání tomu: <konkrétní seznam>.`
 
-**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/clear`, a `/next` v `<container>/main`, respektive v hlavní větvi – fronta práce nad sloučeným stavem; `/cleanup` proběhl před mergem a merge sám nic nezapisuje
 - zbývá-li k témuž záměru další větev, pojmenuj ji

@@ -23,7 +23,7 @@ jobs:
     with:
       # macOS kvůli `swiftc` v klíči `typecheck`.
       runs-on: macos-latest
-      # Ruff se nepřipíná vědomě – viz `BYPASS.md`, *CI*.
+      # Ruff se nepřipíná vědomě – viz `bypass.md`, *CI*.
       install: |
         command -v shellcheck >/dev/null || brew install shellcheck
         command -v gtimeout >/dev/null || brew install coreutils

@@ -15,7 +15,7 @@ Co `/slim` v souboru hledá, jak to pozná a co s tím. Čte se ve *Fázi 2* a *
 Paušál je to, co se načte do každé session bez ptaní – soubory, které Claude Code najde sám, a jejich `@` importy. Rozhodující otázka u každé sekce: **kdo ten text čte a kdy.**
 
 - **Zůstává, co se uplatní v každé odpovědi** nebo co model potřebuje, aniž ví, že to potřebuje – prevence. Tabulka zakázaných termínů pryč nesmí, protože model neví, že sahá po nezavedeném slově; smí ale ztenčit na „místo X piš Y, platí na Z“.
-- **Pryč smí, co se uplatní jen při určité činnosti** – zakládání projektu, zápis do `docs/`, pouštění agentů, měření, návrh modelu –, ale jen když **tu činnost opravdu něco spustí**: skill si soubor přečte v přípravě, test ho vynucuje, nebo v paušálu zůstane jednořádkový spouštěč („než pustíš agenta, načti si `DELEGATION.md`“). Odkaz bez mechanismu je přání.
+- **Pryč smí, co se uplatní jen při určité činnosti** – zakládání projektu, zápis do `docs/`, pouštění agentů, měření, návrh modelu –, ale jen když **tu činnost opravdu něco spustí**: skill si soubor přečte v přípravě, test ho vynucuje, nebo v paušálu zůstane jednořádkový spouštěč („než pustíš agenta, načti si `delegation.md`“). Odkaz bez mechanismu je přání.
 - **Nejvýš jeden krok od paušálu.** Soubor, na který odkazuje soubor načítaný odkazem, se v praxi nenačte. Spouštěč proto stojí vždy v souboru, který se čte pokaždé.
 - **Kde je cena nedodržení vysoká a spouštěč nejistý, pravidlo zůstává** (typicky git: `add -A`, heredoc, řetězení za blokovatelný příkaz) – jen zkrácené.
 - **Čte-li soubor jediný skill, patří k němu**; čte-li ho víc skillů, do sdíleného místa (`~/.claude/`, `~/.claude/skills/`), ne dovnitř cizího skillu.
@@ -53,7 +53,7 @@ Pravidlo se neruší proto, že je dlouhé, ale proto, že nic nerozhoduje. Dlou
 
 ## Pravidla, která nabobtnání vyrábějí
 
-Soubor nenaroste sám – narostl, protože nějaké pravidlo žádá ke každému zápisu text navíc. Bez revize takového pravidla se úklid do měsíce vrátí. Hledej ve stromu načítání i v normách, podle kterých se do něj píše (`STRUCTURE.md`, `SKILLS.md`, rozřazovací sekce „co sem nepatří“):
+Soubor nenaroste sám – narostl, protože nějaké pravidlo žádá ke každému zápisu text navíc. Bez revize takového pravidla se úklid do měsíce vrátí. Hledej ve stromu načítání i v normách, podle kterých se do něj píše (`structure.md`, `skills.md`, rozřazovací sekce „co sem nepatří“):
 
 - povinnost psát ke každému pravidlu zdůvodnění, a to v tomtéž souboru,
 - povinnost zapisovat doklad, datum, incident nebo počet výskytů k pravidlu,

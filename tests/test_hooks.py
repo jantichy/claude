@@ -231,7 +231,7 @@ class MergeCommitMessage(unittest.TestCase):
         (`.git/worktrees/<name>`), kde hooky nejsou – cesta se proto musí
         skládat z `--git-common-dir`.
 
-        Bez toho by delegace tiše selhala právě v layoutu, který `WORKTREE.md`
+        Bez toho by delegace tiše selhala právě v layoutu, který `worktree.md`
         předepisuje jako standard: lokální `commit-msg` projektu (gitleaks,
         commitlint, kontrola podpisu) by se přestal spouštět a nic by to neřeklo.
         """
@@ -264,7 +264,7 @@ class MergeCommitMessage(unittest.TestCase):
 class WorktreeLocalState(unittest.TestCase):
     """`githooks/post-checkout` převezme při založení worktree lokální stav z `main/`.
 
-    Pravidlo drží `WORKTREE.md`, *Lokální stav se bere z `main/`*; hook ho vykonává,
+    Pravidlo drží `worktree.md`, *Lokální stav se bere z `main/`*; hook ho vykonává,
     protože model ho vykonat nesmí – deny `Edit(//**/.env*)` zastaví i `ln -s`.
 
     Nebezpečné směry jsou dva. Hook, který mlčí, vrátí stav, kdy větev vznikne bez
@@ -427,7 +427,7 @@ class HookDeployment(unittest.TestCase):
         Ta volnější podoba by prošla i tehdy, kdyby pravidlo zmizelo a zbyly po
         něm zmínky jinde – tedy přesně v případě, kvůli kterému test vznikl.
 
-        Do 21. 9. 2026 se měřil `WORKTREE.md`, kde postup dokončení větve tehdy
+        Do 21. 9. 2026 se měřil `worktree.md`, kde postup dokončení větve tehdy
         žil. Přestěhoval se do `/merge`, protože hook platí pro **každý**
         repozitář, ne jen pro worktree layout – a pravidlo se musí měřit tam, kde
         je dnes, ne tam, kde bylo.
@@ -452,7 +452,7 @@ class GlobalHookDeployment(unittest.TestCase):
     `core.hooksPath` je stav stroje, ne repozitáře: nová instalace systému, jiný
     počítač nebo přepsaný `~/.gitconfig` hook odpojí, a nic o tom nedá vědět –
     merge prostě zase začne procházet s defaultní zprávou. Je to přesně ten tichý
-    směr selhání, kvůli kterému `~/.claude/RULES.md`, *Ověřitelná kontrola místo
+    směr selhání, kvůli kterému `~/.claude/rules/rules.md`, *Ověřitelná kontrola místo
     dojmu*, žádá test k vynucovací vrstvě hned.
 
     Selhání tu není falešný poplach ani po čerstvém klonu: hook v tu chvíli
@@ -492,7 +492,7 @@ class VerifyHookIsRegistered(unittest.TestCase):
     Ztráta té registrace je nejtišší možné selhání celé vrstvy: nic nespadne,
     nic nezčervená, jen se od té chvíle nekontroluje nic a každé „hotovo“ stojí
     nad neověřeným stavem. Přesně ten směr selhání, kvůli kterému
-    `~/.claude/RULES.md`, *Ověřitelná kontrola místo dojmu*, žádá test
+    `~/.claude/rules/rules.md`, *Ověřitelná kontrola místo dojmu*, žádá test
     k vynucovací vrstvě hned, ne až se ukáže, že nefunguje.
 
     Hlídá se i timeout: `verify.sh` si sám dává `LIMIT` na krok a počítá
@@ -555,7 +555,7 @@ class VerifyHookIsRegistered(unittest.TestCase):
         """`LIMIT` ve verify.sh se čte ze skriptu, ne opisuje – jinak se rozejdou."""
         limit = int(
             re.search(
-                r"^LIMIT=(\d+)", (ROOT / "verify.sh").read_text(encoding="utf-8"), re.M
+                r"^LIMIT=(\d+)", (ROOT / "hooks" / "verify.sh").read_text(encoding="utf-8"), re.M
             ).group(1)
         )
         verify = next(
@@ -592,7 +592,7 @@ class VerifyHookIsRegistered(unittest.TestCase):
         limit = int(
             re.search(
                 r"^FORMAT_LIMIT=(\d+)",
-                (ROOT / "verify.sh").read_text(encoding="utf-8"),
+                (ROOT / "hooks" / "verify.sh").read_text(encoding="utf-8"),
                 re.M,
             ).group(1)
         )
@@ -660,8 +660,8 @@ class PermissionRuleSyntax(unittest.TestCase):
         deny = self.permissions().get("deny", [])
         for command in (
             "verify.sh --allow .",
-            "~/.claude/verify.sh --allow /Users/honza/Dev/x",
-            "/Users/honza/.claude/verify.sh --revoke .",
+            "~/.claude/hooks/verify.sh --allow /Users/honza/Dev/x",
+            "/Users/honza/.claude/hooks/verify.sh --revoke .",
             "./verify.sh --revoke .",
         ):
             with self.subTest(command=command):
@@ -670,7 +670,7 @@ class PermissionRuleSyntax(unittest.TestCase):
                     f"deny v settings.json nezastaví `{command}`",
                 )
         self.assertFalse(
-            any(self.wildcard_matches(r, "~/.claude/verify.sh") for r in deny),
+            any(self.wildcard_matches(r, "~/.claude/hooks/verify.sh") for r in deny),
             "deny zastavuje i samotnou kontrolu, ne jen souhlas",
         )
 
@@ -732,7 +732,7 @@ class SettingsFormat(unittest.TestCase):
 
 
 class BypassRegistry(unittest.TestCase):
-    """`BYPASS.md` musí jmenovat každou vrstvu, která něco vynucuje.
+    """`bypass.md` musí jmenovat každou vrstvu, která něco vynucuje.
 
     Registr, který zestárne, je horší než žádný: tváří se jako úplná mapa
     známého povrchu, ale nová vrstva v něm chybí a nikdo si toho nevšimne.
@@ -744,7 +744,7 @@ class BypassRegistry(unittest.TestCase):
     zamyslel, ne předstírat, že se to dá změřit.
     """
 
-    REGISTRY = ROOT / "BYPASS.md"
+    REGISTRY = ROOT / "rules" / "bypass.md"
 
     #: Vrstvy, které se v registru záměrně neuvádějí – nic nevynucují.
     #: Prázdné od chvíle, kdy `iterm-notify.sh` nahradila vestavěná integrace
@@ -778,7 +778,7 @@ class BypassRegistry(unittest.TestCase):
 
     def test_registry_exists(self):
         self.assertTrue(
-            self.REGISTRY.is_file(), "chybí BYPASS.md – registr obcházení kontrol"
+            self.REGISTRY.is_file(), "chybí bypass.md – registr obcházení kontrol"
         )
 
     def test_every_enforcing_layer_has_registry_row(self):
@@ -786,7 +786,7 @@ class BypassRegistry(unittest.TestCase):
         missing = sorted(v for v in self.layers() if v not in text)
         self.assertFalse(
             missing,
-            "tyhle vynucovací vrstvy nejsou v BYPASS.md, takže u nich nikdo nesepsal, "
+            "tyhle vynucovací vrstvy nejsou v bypass.md, takže u nich nikdo nesepsal, "
             f"čím se dají obejít: {missing}",
         )
 
@@ -819,7 +819,7 @@ class GitGuard(unittest.TestCase):
     si vypne, a pak nehlídá nic.
     """
 
-    GUARD = ROOT / "git-guard.py"
+    GUARD = ROOT / "hooks" / "git-guard.py"
 
     def run_guard(self, command):
         event = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
@@ -1000,7 +1000,7 @@ class BypassLock(unittest.TestCase):
     """Režim bypass je zamčený.
 
     Bypass vypne deny seznam i ptaní na povolení, takže by naráz přestaly
-    platit všechny vrstvy v `BYPASS.md`, které na permission systému stojí.
+    platit všechny vrstvy v `bypass.md`, které na permission systému stojí.
     Zámek je jeden řádek a jeho tiché zmizení by nic neshodilo – proto test.
     """
 
@@ -1024,7 +1024,7 @@ class SecretGuard(unittest.TestCase):
     hooku, který běží před každým příkazem.
     """
 
-    GUARD = ROOT / "secret-guard.py"
+    GUARD = ROOT / "hooks" / "secret-guard.py"
 
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="secret-guard-test-")).resolve()
@@ -1116,7 +1116,7 @@ class SecretGuard(unittest.TestCase):
         hook pouštěl podle jména souboru, stačilo by cizímu repozitáři přibalit
         vlastní `envkeys.py`, který hodnoty vypíše – a řetěz za ním by prošel taky.
         """
-        script = ROOT / "envkeys.py"
+        script = ROOT / "hooks" / "envkeys.py"
         (self.tmp / "envkeys.py").write_text("print(open('.env').read())")
         self.assertAllowed(f"python3 {script} .env")
         self.assertAllowed(f"{script} .env")
@@ -1172,7 +1172,7 @@ class SecretGuard(unittest.TestCase):
 class PluginHooks(unittest.TestCase):
     """Plugin smí do session přidat hooky, a registr o nich dosud nevěděl.
 
-    `BYPASS.md` má evidovat každou vrstvu, která běží automaticky, ale test,
+    `bypass.md` má evidovat každou vrstvu, která běží automaticky, ale test,
     který to vynucuje, čte jen `settings.json`, `githooks/` a `.github/`.
     Plugin přitom nese vlastní `hooks/hooks.json` a zapíná se jedním řádkem
     v `enabledPlugins` – tedy vrstva, kterou registr nezná a nikdo neměří.
@@ -1215,7 +1215,7 @@ class PluginHooks(unittest.TestCase):
         poplach. Je to tedy lokální ochrana, ne záruka, a proto vedle ní stojí
         jmenovitá kontrola výš.
         """
-        registry = (ROOT / "BYPASS.md").read_text(encoding="utf-8").lower()
+        registry = (ROOT / "rules" / "bypass.md").read_text(encoding="utf-8").lower()
         for name in self.enabled():
             short = name.split("@")[0]
             hooks = list((ROOT / "plugins").glob(f"*/*/{short}/*/hooks/hooks.json"))
@@ -1227,7 +1227,7 @@ class PluginHooks(unittest.TestCase):
                     short.lower(),
                     registry,
                     f"plugin {name} přináší {hooks[0]} – tedy vrstvu, která "
-                    "běží automaticky –, ale v BYPASS.md o něm není řádek. "
+                    "běží automaticky –, ale v bypass.md o něm není řádek. "
                     "Registr, který zestárne, je horší než žádný.",
                 )
 
@@ -1241,7 +1241,7 @@ class HandoffHook(unittest.TestCase):
     který naučí hlášku přehlížet – a pak nehlídá nic.
     """
 
-    HOOK = ROOT / "handoff.py"
+    HOOK = ROOT / "hooks" / "handoff.py"
 
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="handoff-test-"))
@@ -1376,11 +1376,11 @@ class HandoffHook(unittest.TestCase):
         )
 
     def test_thresholds_match_handoff_table(self):
-        """Prahy v hooku a v tabulce `HANDOFF.md` se nesmí rozejít."""
+        """Prahy v hooku a v tabulce `handoff.md` se nesmí rozejít."""
         spec = importlib.util.spec_from_file_location("handoff", self.HOOK)
         hook = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(hook)
-        table = (ROOT / "skills" / "HANDOFF.md").read_text(encoding="utf-8")
+        table = (ROOT / "skills" / "handoff.md").read_text(encoding="utf-8")
         for value in (hook.CONTEXT_OFFER, hook.CONTEXT_RECOMMEND):
             self.assertIn(f"nad {value // 1000}k", table)
         self.assertIn(f"nad {hook.CALLS_OFFER} volání", table)

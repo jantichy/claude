@@ -1,8 +1,8 @@
 # Pravidla práce
 
-Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém. Co do tohoto souboru nepatří a kam to jde, drží `~/.claude/.claude/CLAUDE.md`, *Co do `RULES.md` nepatří*.
+Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém. Co do tohoto souboru nepatří a kam to jde, drží `~/.claude/.claude/CLAUDE.md`, *Co do `~/.claude/rules/rules.md` nepatří*.
 
-Doménové znalosti z `~/Dev/context/` si projekt importuje tvrdým `@import`em v `CLAUDE.md` – jen ty relevantní (rozcestník `~/Dev/context/CLAUDE.md`, importy zakládá `/project`). Projekt pro konkrétní organizaci si importuje i její profil, `@~/Dev/context/organizations/<organizace>.md`. **Ukázka importu v textu stojí v apostrofech**, jinak se soubor načte; skutečný import je naopak nesnese (`~/.claude/STRUCTURE.md`, *`CLAUDE.md`*).
+Doménové znalosti z `~/Dev/context/` si projekt importuje tvrdým `@import`em v `CLAUDE.md` – jen ty relevantní (rozcestník `~/Dev/context/CLAUDE.md`, importy zakládá `/project`). Projekt pro konkrétní organizaci si importuje i její profil, `@~/Dev/context/organizations/<organizace>.md`. **Ukázka importu v textu stojí v apostrofech**, jinak se soubor načte; skutečný import je naopak nesnese (`~/.claude/rules/structure.md`, *`CLAUDE.md`*).
 
 ------
 
@@ -11,7 +11,7 @@ Doménové znalosti z `~/Dev/context/` si projekt importuje tvrdým `@import`em 
 ### Jazyk
 
 - S uživatelem mluv **česky** a **tykej** mu, o sobě mluv v **mužském rodě**. MD dokumenty piš česky.
-- Kód piš **anglicky – každý identifikátor**: proměnné, funkce, třídy, soubory, adresáře, jména testů, klíče v datech a ve schématech výstupu agentů, přepínače, proměnné prostředí, zástupné symboly v příkazech a cestách (`<project>`). Režimy skillů jsou identifikátory. Výjimka: **argumenty slash příkazu** v `argument-hint` a v ukázce volání se píšou česky, protože je uživatel čte jako popis (`~/.claude/skills/SKILLS.md`, *Hlavička*).
+- Kód piš **anglicky – každý identifikátor**: proměnné, funkce, třídy, soubory, adresáře, jména testů, klíče v datech a ve schématech výstupu agentů, přepínače, proměnné prostředí, zástupné symboly v příkazech a cestách (`<project>`). Režimy skillů jsou identifikátory. Výjimka: **argumenty slash příkazu** v `argument-hint` a v ukázce volání se píšou česky, protože je uživatel čte jako popis (`~/.claude/skills/skills.md`, *Hlavička*).
 - **Hodnota v datech se řídí tím, kdo ji čte.** Co vyrábí a podle čeho rozhoduje stroj (`merge_pending`), je identifikátor, tedy anglicky. Hodnota ze slovníku, který se člověku vypisuje doslova (`KRITICKÉ`, `vysoká`), zůstává česky, i když podle ní kód řadí.
 - **Česky zůstává, co čte člověk:** komentáře, docstringy, hlášky, zprávy v assertech, popisné řetězce v `describe`/`it`/`test`, testovací data s českým obsahem, místa k doplnění v českém textu (`<důvod>`). Do testů a schémat čeština přetéká nejsnáz – hlídej je.
 - Jiný jazyk určený projektem nebo situací má přednost.
@@ -32,7 +32,7 @@ Doménové znalosti z `~/Dev/context/` si projekt importuje tvrdým `@import`em 
 
 ### Nezaváděj neustálené termíny
 
-Cizí slovo budící dojem zavedeného vzoru („resolver“, „fasáda“) nepoužívej tam, kde stačí prosté pojmenování; buď je termín ustálený, nebo hned řekni, co jím myslíš. Slovo, které jednou padlo v konverzaci, ještě není termín. Rozhodnuté termíny drží `~/.claude/PTYDEPE.md`, spravuje je `/ptydepe`.
+Cizí slovo budící dojem zavedeného vzoru („resolver“, „fasáda“) nepoužívej tam, kde stačí prosté pojmenování; buď je termín ustálený, nebo hned řekni, co jím myslíš. Slovo, které jednou padlo v konverzaci, ještě není termín. Rozhodnuté termíny drží `~/.claude/rules/ptydepe.md`, spravuje je `/ptydepe`.
 
 ### Interní značky ven nepatří
 
@@ -76,7 +76,7 @@ Ptej se přes `AskUserQuestion`: jedno volání = jedna otázka (`multiSelect: f
 
 ### Co ohlásíš, udělej hned v téže odpovědi
 
-„Teď se do toho pustím“ je slib, ne práce – ohlášenou akci udělej v téže odpovědi. Řízení předávej jen otázkou nebo hotovým během, ne koncem výpisu nebo hranicí fáze skillu; dlouhý přehled nálezů je mezivýsledek. Co se dělá bez ptaní, drží `~/.claude/skills/FINDINGS.md`.
+„Teď se do toho pustím“ je slib, ne práce – ohlášenou akci udělej v téže odpovědi. Řízení předávej jen otázkou nebo hotovým během, ne koncem výpisu nebo hranicí fáze skillu; dlouhý přehled nálezů je mezivýsledek. Co se dělá bez ptaní, drží `~/.claude/skills/findings.md`.
 
 ### Parkované body zapiš a sám je otevři
 
@@ -84,7 +84,7 @@ Co uživatel odloží, zapiš hned do `docs/todo.md` a po uzavření aktuálníh
 
 ### Než přejdeš dál, ověř, že se nic neztratilo
 
-Před dalším velkým tématem a na konci session zkontroluj: zbyly nedořešené otázky? Nevznikly nekonzistence? Je dohodnuté zapsané? Na poslední má odpověď znít „ano, průběžně“. Pořadí kroků drží `~/.claude/skills/LIFECYCLE.md`.
+Před dalším velkým tématem a na konci session zkontroluj: zbyly nedořešené otázky? Nevznikly nekonzistence? Je dohodnuté zapsané? Na poslední má odpověď znít „ano, průběžně“. Pořadí kroků drží `~/.claude/rules/lifecycle.md`.
 
 ### Co vložíš do kontextu, platíš do konce session
 
@@ -92,11 +92,11 @@ Vložený obsah se čte znovu v každém dalším volání – čtení kontextu 
 
 ### Dlouhá session je dražší než dvě krátké
 
-Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu délky session ohlásí hook `handoff.py`; na jeho hlášku jednou za práh nabídni** `/cleanup` a novou session – s tím, co by se zapsalo a kde by se navázalo; rozhodne uživatel. Prahy drží `~/.claude/skills/HANDOFF.md`, *Práh kontextu*. Do téže session patří práce, která staví na tom, co se v ní promyslelo; práce, která jen sahá na tytéž soubory, do nové. Posudek vlastní práce patří do nové session – ta, která návrh obhajovala, je zaujatá. Kvůli pár voláním gitu novou session nezakládej.
+Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu délky session ohlásí hook `handoff.py`; na jeho hlášku jednou za práh nabídni** `/cleanup` a novou session – s tím, co by se zapsalo a kde by se navázalo; rozhodne uživatel. Prahy drží `~/.claude/skills/handoff.md`, *Práh kontextu*. Do téže session patří práce, která staví na tom, co se v ní promyslelo; práce, která jen sahá na tytéž soubory, do nové. Posudek vlastní práce patří do nové session – ta, která návrh obhajovala, je zaujatá. Kvůli pár voláním gitu novou session nezakládej.
 
 ### Mechanickou práci deleguj
 
-**Hromadné čtení souborů kvůli jednomu faktu, převod formátu, mechanický přepis a sběr čísel se v hlavní session nedělají, ale delegují** na nejlevnější model. Výjimku – malý rozsah, podklad už v kontextu, chyba levného modelu by se nepoznala – řekni nahlas i s důvodem. **Hloubka delegace je jedna.** Než agenta pustíš, načti si `~/.claude/DELEGATION.md`: jak ho zadat, na jakém modelu a effortu, co má vracet.
+**Hromadné čtení souborů kvůli jednomu faktu, převod formátu, mechanický přepis a sběr čísel se v hlavní session nedělají, ale delegují** na nejlevnější model. Výjimku – malý rozsah, podklad už v kontextu, chyba levného modelu by se nepoznala – řekni nahlas i s důvodem. **Hloubka delegace je jedna.** Než agenta pustíš, načti si `~/.claude/rules/delegation.md`: jak ho zadat, na jakém modelu a effortu, co má vracet.
 
 ------
 
@@ -117,7 +117,7 @@ Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu 
 | Kdo co udělá v jakém pořadí? | `plan.md` |
 | Odkud to máme? | `research/` |
 
-**Než do některého z nich zapíšeš, načti si `~/.claude/STRUCTURE.md`** – tabulka říká, kam zápis míří, ne co v tom souboru smí stát. Cesty `docs/…` znamenají soubor podle režimu projektu (`~/.claude/STRUCTURE.md`, *Dva režimy umístění*).
+**Než do některého z nich zapíšeš, načti si `~/.claude/rules/structure.md`** – tabulka říká, kam zápis míří, ne co v tom souboru smí stát. Cesty `docs/…` znamenají soubor podle režimu projektu (`~/.claude/rules/structure.md`, *Dva režimy umístění*).
 
 ### Pravda v souborech, ne v konverzaci
 
@@ -161,7 +161,7 @@ Soubory a adresáře pojmenuj **jedním sémantickým slovem**, anglicky; víc s
 
 ### Jeden termín pro jednu věc
 
-Jeden pojem má **jedno jméno** v kódu, dokumentaci, UI i řeči. Dvě jména čtenář bere jako dvě věci a grep najde jen polovinu výskytů; jedno jméno pro dvě věci je táž vada z druhé strany. Ustálený termín se mění jen s důvodem a všude naráz (`/replace`); termíny napříč projekty drží `~/.claude/PTYDEPE.md`.
+Jeden pojem má **jedno jméno** v kódu, dokumentaci, UI i řeči. Dvě jména čtenář bere jako dvě věci a grep najde jen polovinu výskytů; jedno jméno pro dvě věci je táž vada z druhé strany. Ustálený termín se mění jen s důvodem a všude naráz (`/replace`); termíny napříč projekty drží `~/.claude/rules/ptydepe.md`.
 
 ### Generic-base + delta
 
@@ -177,7 +177,7 @@ Nezávislé dimenze A, B, C drž zvlášť a kombinace skládej za běhu, místo
 
 ### Stavěj doménové principy a rozhoduj proti nim
 
-Formuluj **silné principy domény** – věty, které rozhodují („o penězích u platební brány rozhoduje jen platební brána“); co principem je, definuje `STRUCTURE.md` (`docs/rules.md`). Každou další otázku odvoď z principu, ne od nuly; nesedí-li žádný, chybí princip. **Cíl je nula výjimek** – potřebuje-li řešení výjimku, je skoro vždy špatně řešení. Odporují-li si dva principy, vymez aspoň jednomu rozsah.
+Formuluj **silné principy domény** – věty, které rozhodují („o penězích u platební brány rozhoduje jen platební brána“); co principem je, definuje `structure.md` (`docs/rules.md`). Každou další otázku odvoď z principu, ne od nuly; nesedí-li žádný, chybí princip. **Cíl je nula výjimek** – potřebuje-li řešení výjimku, je skoro vždy špatně řešení. Odporují-li si dva principy, vymez aspoň jednomu rozsah.
 
 ### Mechanická pravidla nad rozhodováním případ od případu
 
@@ -189,7 +189,7 @@ U všeho volitelného, podmíněného nebo výjimečného zapiš proč. Kde dův
 
 ### Zjišťuj podle pravidel pro práci s daty
 
-Než měříš, dotazuješ se do dat, hledáš příčinu chyby nebo zapisuješ tvrzení z webu, **načti si `~/.claude/EVIDENCE.md`** – vidlička před měřením, stupně vyloučení, shoda měření s tvrzením, doména hodnot pole, ověření zdroje skriptem. Ptá-li se někdo na věc, kterou podklady v tom rozlišení neobsahují, **odpověď začíná tím, co chybí**, ne zástupným výpočtem.
+Než měříš, dotazuješ se do dat, hledáš příčinu chyby nebo zapisuješ tvrzení z webu, **načti si `~/.claude/rules/evidence.md`** – vidlička před měřením, stupně vyloučení, shoda měření s tvrzením, doména hodnot pole, ověření zdroje skriptem. Ptá-li se někdo na věc, kterou podklady v tom rozlišení neobsahují, **odpověď začíná tím, co chybí**, ne zástupným výpočtem.
 
 ### Detekce konfliktů před přidáním
 
@@ -240,7 +240,7 @@ Návrh dělej celý, včetně částí na později; implementaci řež agresivn�
 
 ### Odložené věci pojmenuj a zaparkuj
 
-Rozhodnutou věc mimo aktuální rozsah – úkol, otázku, i bod odložený o pár minut – zapiš **okamžitě** do `docs/todo.md` (tvar drží `STRUCTURE.md`). Dělí se podle **rozhodnutosti, ne termínu**: nerozhodnutý nápad patří do `docs/backlog.md`. Body odložené v rámci session drž ve vyhrazené sekci a po vyřešení je smaž; skutečný hotový úkol se přesune do `done.md`.
+Rozhodnutou věc mimo aktuální rozsah – úkol, otázku, i bod odložený o pár minut – zapiš **okamžitě** do `docs/todo.md` (tvar drží `structure.md`). Dělí se podle **rozhodnutosti, ne termínu**: nerozhodnutý nápad patří do `docs/backlog.md`. Body odložené v rámci session drž ve vyhrazené sekci a po vyřešení je smaž; skutečný hotový úkol se přesune do `done.md`.
 
 ------
 
@@ -265,7 +265,7 @@ Nástroj do počítače instaluj v pořadí **homebrew → npm → uv → pip**;
 ### Commituj jmenované cesty, ne `-A`
 
 - **Do commitu vyjmenuj cesty**, kterých se tvoje práce dotkla; před commitem se podívej na `git status` a cizí změny nech být. `git add -A`, `git add .`, `git add <directory>` a `git commit -a` seberou i práci souběžné session – a rozejde se zdůvodnění: commit popisuje diff, který v něm není, a pushnutá historie se už opravit nedá.
-- **Nepoužívej git aliasy**, piš rozbalený příkaz. Aliasy z `~/.gitconfig` skrývají `add -A` i `--force` a textový deny seznam je nevidí (hook `~/.claude/git-guard.py` hlídá jen nevratné příkazy).
+- **Nepoužívej git aliasy**, piš rozbalený příkaz. Aliasy z `~/.gitconfig` skrývají `add -A` i `--force` a textový deny seznam je nevidí (hook `~/.claude/hooks/git-guard.py` hlídá jen nevratné příkazy).
 - **Zprávu commitu předávej heredocem a nic za něj neřetěz** – `&&` za heredocem umí vložit kus dalšího příkazu do zprávy.
 
 ### Práci nespojuj s příkazem, který může být zablokovaný
@@ -307,4 +307,4 @@ Kontroly   /oponent, /consolidate, /review, /consistency, /attack, /cleanup, /me
 
 Kroky **osy** něco tvoří a čekají na výstup předchozího; `/evaluate` čeká na čas, protože data o provozu vznikají týdny po nasazení. **Kontrolní kroky** nezvětšují rozsah práce – měří, uklízejí a uzavírají, co vzniklo; `/cleanup` běží na konci každé session, za ním `/merge`, uzavírá-li se větev.
 
-**Načti si `~/.claude/skills/LIFECYCLE.md`, jakmile v některém kroku stojíš** – drží rozhraní kroků, co smí stát ve které mezeře, povolená opakování a kritéria přeskočení. Krok se přeskakuje jen tam, kde pro něj není důvod, a **nahlas i s důvodem**. Žádný krok neopakuje práci předchozího.
+**Načti si `~/.claude/rules/lifecycle.md`, jakmile v některém kroku stojíš** – drží rozhraní kroků, co smí stát ve které mezeře, povolená opakování a kritéria přeskočení. Krok se přeskakuje jen tam, kde pro něj není důvod, a **nahlas i s důvodem**. Žádný krok neopakuje práci předchozího.

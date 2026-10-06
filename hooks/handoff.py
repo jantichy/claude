@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """UserPromptSubmit hook: řekne modelu, že session překročila práh délky.
 
-Práh drží `skills/HANDOFF.md`, *Práh kontextu*, a dokud stál jen v textu,
+Práh drží `skills/handoff.md`, *Práh kontextu*, a dokud stál jen v textu,
 nedodržel se: model velikost kontextu nevidí – ukazuje ji status line člověku –
 a volání nepočítá, takže práh odhadoval z dojmu. Tenhle hook ho proto měří
 z transcriptu session a při odeslání zprávy uživatelem vloží do kontextu
@@ -24,7 +24,7 @@ import os
 import sys
 from pathlib import Path
 
-# Hodnoty musí sedět s tabulkou v `skills/HANDOFF.md`, *Práh kontextu*;
+# Hodnoty musí sedět s tabulkou v `skills/handoff.md`, *Práh kontextu*;
 # hlídá to `tests/test_hooks.py`.
 CONTEXT_OFFER = 300_000
 CONTEXT_RECOMMEND = 400_000
@@ -33,12 +33,12 @@ CALLS_OFFER = 150
 STATE_DIR = Path.home() / ".local" / "state" / "claude-handoff"
 
 OFFER = (
-    "Podle `~/.claude/skills/HANDOFF.md`, *Práh kontextu*, jednou nabídni "
+    "Podle `~/.claude/skills/handoff.md`, *Práh kontextu*, jednou nabídni "
     "`/cleanup` a pokračování v nové session – s tím, co by se zapsalo a kde "
     "by se navázalo. Rozhoduje uživatel."
 )
 RECOMMEND = (
-    "Podle `~/.claude/skills/HANDOFF.md`, *Práh kontextu*, přerušení už "
+    "Podle `~/.claude/skills/handoff.md`, *Práh kontextu*, přerušení už "
     "nenabízej, ale doporuč rovnou: `/cleanup`, `/clear` a pokračování "
     "v nové session. Pokračování tady je volba uživatele, ne výchozí stav."
 )

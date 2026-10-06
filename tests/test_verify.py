@@ -27,7 +27,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-VERIFY = ROOT / "verify.sh"
+VERIFY = ROOT / "hooks" / "verify.sh"
 
 # Návratové kódy Stop hooku. Rozdíl mezi 1 a 2 je celý smysl téhle vrstvy:
 # při 2 dostane výstup MODEL jako pokyn, při 1 jen člověk do transkriptu.

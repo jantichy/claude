@@ -10,9 +10,9 @@ Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo 
 
 **Pozor: „neběží nad projektem“ neznamená „nesahá na soubory“.** `/invoicing` zapisuje do deníku výjimek v `~/Dev/context/`, což je repozitář se zapnutým autocommitem. Skill, který takhle zapisuje, **musí sám říct, co se svým zápisem udělá** – jestli ho commituje, nebo nechá v pracovním stromu –, jinak ho posbírá autocommit cizí session spolu s něčím nesouvisejícím.
 
-**Stojíš-li v kroku životního cyklu, načti si `~/.claude/skills/LIFECYCLE.md`.** Neimportuje se paušálně – v `RULES.md` je z něj jen rámeček s pořadím a obecná pravidla o přeskakování a neopakování kroků. Bez něj nevíš, co po tvém kroku platí, čí práci nemáš přebírat a co se smí opakovat.
+**Stojíš-li v kroku životního cyklu, načti si `~/.claude/rules/lifecycle.md`.** Neimportuje se paušálně – v `~/.claude/rules/rules.md` je z něj jen rámeček s pořadím a obecná pravidla o přeskakování a neopakování kroků. Bez něj nevíš, co po tvém kroku platí, čí práci nemáš přebírat a co se smí opakovat.
 
-**Chystáš-li se zapsat do kteréhokoliv standardního souboru projektu, načti si `~/.claude/STRUCTURE.md`.** Které to jsou, vypisuje on sám – opsaný seznam by tady zestárnul při prvním přírůstku a mlčky by z pokynu vyňal soubory, které do něj patří. Také se neimportuje; `RULES.md`, *Kam co zapsat*, říká jen kam zápis míří, ne co v tom souboru smí stát.
+**Chystáš-li se zapsat do kteréhokoliv standardního souboru projektu, načti si `~/.claude/rules/structure.md`.** Které to jsou, vypisuje on sám – opsaný seznam by tady zestárnul při prvním přírůstku a mlčky by z pokynu vyňal soubory, které do něj patří. Také se neimportuje; `~/.claude/rules/rules.md`, *Kam co zapsat*, říká jen kam zápis míří, ne co v tom souboru smí stát.
 
 **Nezávislé čtecí operace pouštěj paralelně.** Zjišťování kořene, čtení `CLAUDE.md` a stav gitu na sobě nezávisí.
 
@@ -22,7 +22,7 @@ Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo 
 
 Kořen projektu je adresář s `.git`. Hledej ho **přes Glob, ne přes `git` v Bashi** – nenulový návratový kód by vyrobil červenou chybu, která uživatele zbytečně vyděsí. Zkus `.git`, pak `../.git`, `../../.git`, `../../../.git`.
 
-**Najdeš-li vedle `.git` taky `.bare/`, stojíš v kořeni kontejneru worktree layoutu** (`~/.claude/WORKTREE.md`). Ten není pracovní strom: `git diff` ani `git status` v něm neprojdou a commitovat se tam nedá. Přesuň se do adresáře té větve, na které se má pracovat. Projektový `CLAUDE.md` je pak ten ve worktree, ne rozcestník v kořeni kontejneru.
+**Najdeš-li vedle `.git` taky `.bare/`, stojíš v kořeni kontejneru worktree layoutu** (`~/.claude/rules/worktree.md`). Ten není pracovní strom: `git diff` ani `git status` v něm neprojdou a commitovat se tam nedá. Přesuň se do adresáře té větve, na které se má pracovat. Projektový `CLAUDE.md` je pak ten ve worktree, ne rozcestník v kořeni kontejneru.
 
 **Není-li to git repozitář vůbec, rozhoduje, jestli ho tvůj skill potřebuje** – a to jsou dvě různé věci, které tenhle bod do 22. 9. 2026 sléval do jedné:
 
@@ -37,7 +37,7 @@ Kořen projektu je adresář s `.git`. Hledej ho **přes Glob, ne přes `git` v 
 
 **Pokračuješ-li bez gitu, odpadají s ním i body 3 až 5**, protože všechny tři na něm stojí: stav pracovního stromu, průběžná kontrola před startem i rozsah změn na větvi. Zbývá tedy jen tenhle bod a bod 2. **Řekni to nahlas jako jednu věc**, ne u každého bodu zvlášť – a ber to jako meze celého běhu: bez stavu pracovního stromu nepoznáš cizí rozdělanou práci, takže si nesmíš přisvojit ani vyloučit nic, co v souborech najdeš.
 
-**Proč to má vlastní rozlišení:** pravidlo psané jako tvrdá podmínka pro všechny **obešli tři agenti nezávisle na sobě** (21. a 22. 9. 2026, běhy `/evaluate`) se shodným odůvodněním, že jejich skill nic nemění a necommituje. Opakované obcházení je podle `~/.claude/RULES.md`, *Mechanická pravidla nad rozhodováním případ od případu*, nejdřív signál, že je pravidlo špatně formulované – a tohle bylo: mísilo *zjisti, kde stojíš* s *bez gitu nepokračuj*, přičemž to první potřebuje každý skill nad projektem a to druhé jen část z nich.
+**Proč to má vlastní rozlišení:** pravidlo psané jako tvrdá podmínka pro všechny **obešli tři agenti nezávisle na sobě** (21. a 22. 9. 2026, běhy `/evaluate`) se shodným odůvodněním, že jejich skill nic nemění a necommituje. Opakované obcházení je podle `~/.claude/rules/rules.md`, *Mechanická pravidla nad rozhodováním případ od případu*, nejdřív signál, že je pravidlo špatně formulované – a tohle bylo: mísilo *zjisti, kde stojíš* s *bez gitu nepokračuj*, přičemž to první potřebuje každý skill nad projektem a to druhé jen část z nich.
 
 ## 2. Projektový `CLAUDE.md`
 

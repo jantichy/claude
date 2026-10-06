@@ -41,11 +41,11 @@ Tohle není doporučení. Když některý bod nejde splnit, **zastav se a řekni
 
 ## Fáze 0 – Příprava
 
-**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: report je samostatný výstup, nesahá na kód projektu ani na diff větve.
+**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: report je samostatný výstup, nesahá na kód projektu ani na diff větve.
 
 Navíc si zjisti tohle:
 
-1. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta **typem `reader`** (`subagent_type`) a na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury. Typ bez shellu proto, že agent má jen číst – a zdrojová data bývají cizí soubor, do kterého nemá co sáhnout.
+1. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta **typem `reader`** (`subagent_type`) a na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury. Typ bez shellu proto, že agent má jen číst – a zdrojová data bývají cizí soubor, do kterého nemá co sáhnout.
 2. **Načti doménové znalosti**, které se na výstup vztahují:
    - `~/Dev/context/text/text.md` – stavba a stylistika komentářů. **Vždy.**
    - `~/Dev/context/text/typography.md` – česká sazba čísel, procent, jednotek, dat a interpunkce. **Vždy** – report je plný čísel.
@@ -58,7 +58,7 @@ Navíc si zjisti tohle:
 
 ## Fáze 1 – Co se reportuje
 
-Ptej se **postupně, jednu otázku za druhou**, přes `AskUserQuestion` (viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*). Nemá-li otázka nabídnutelné varianty, ptej se normálně.
+Ptej se **postupně, jednu otázku za druhou**, přes `AskUserQuestion` (viz `~/.claude/rules/rules.md`, *Ptej se postupně, ne všechno najednou*). Nemá-li otázka nabídnutelné varianty, ptej se normálně.
 
 Co potřebuješ vědět, než začneš počítat:
 
@@ -207,7 +207,7 @@ Nespoléhej na to, že to vypadá dobře ve zdrojáku.
 - [limity dat, osobní údaje, nedopočítané věci – nebo „nic“]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět:
 

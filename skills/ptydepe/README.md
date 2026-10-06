@@ -63,7 +63,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/ptydepe
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill si vede slovník rozhodnutých termínů na dvou místech: tabulku náhrad v `~/.claude/PTYDEPE.md` a rozvahu k nim v `terms.md` u sebe. Obojí si vytvoří sám při prvním běhu, ale **tabulku si musíte naimportovat do svého `~/.claude/CLAUDE.md`**, jinak o dohodnutých termínech Claude v dalších session neví a začne je zavádět znovu. Rozvaha se schválně neimportuje – do každé session by rostla s každým dalším termínem.
+Skill si vede slovník rozhodnutých termínů na dvou místech: tabulku náhrad v `~/.claude/rules/ptydepe.md` a rozvahu k nim v `terms.md` u sebe. Obojí si vytvoří sám při prvním běhu, ale **tabulku si musíte naimportovat do svého `~/.claude/CLAUDE.md`**, jinak o dohodnutých termínech Claude v dalších session neví a začne je zavádět znovu. Rozvaha se schválně neimportuje – do každé session by rostla s každým dalším termínem.
 
 ---
 

@@ -18,7 +18,7 @@ Než se začne psát zadání, zjistí, **proč se to má stavět** a do čeho t
 
 **Hlavní z těch tří je první.** Konkurence i rizika se dají dohnat později a chyba v nich se pozná za provozu; **nedoložená poptávka se nepozná nikdy**, protože se projeví jako hotový produkt, který nikdo nepoužívá. Tenhle krok je jediné místo v celém cyklu, kde se na to ještě stojí za pár hodin – od `/specify` dál už každý krok předpokládá, že je rozhodnuto stavět.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok osy: navazuje na `/project` a předává na `/specify`.
+V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to druhý krok osy: navazuje na `/project` a předává na `/specify`.
 
 **Je opakovatelný sám o sobě.** Druhý běh nad hotovými dokumenty je aktualizace, ne nový začátek – konkurence se hne bez ohledu na to, jestli se zrovna mění zadání.
 
@@ -28,14 +28,14 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok osy: nava
 - **Nezakládá projekt.** Strukturu, git a doménové importy dělá `/project`. Chybí-li, upozorní a nabídne ho.
 - **Nedělá obchodní ani marketingový plán.** Žádná finanční projekce, žádný kanálový mix, žádná komunikační strategie. Sbírá jen to, z čeho plynou požadavky na produkt.
 - **Nedělá osobní brand ani pozicování autora.** To drží `~/Dev/context/brand/brand.md`; tady jde o pozici produktu proti konkurenčním produktům.
-- **Nepředstírá uživatelský výzkum.** Doklad z veřejného zdroje není rozhovor se zákazníkem a nedá se jím nahradit. Skill dohledá, co o problému lidé sami napsali, a sesbírá, co ví uživatel – **nedokáže-li poptávku doložit, řekne to** místo toho, aby ji odvodil (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
+- **Nepředstírá uživatelský výzkum.** Doklad z veřejného zdroje není rozhovor se zákazníkem a nedá se jím nahradit. Skill dohledá, co o problému lidé sami napsali, a sesbírá, co ví uživatel – **nedokáže-li poptávku doložit, řekne to** místo toho, aby ji odvodil (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*).
 - **Nerozhoduje, jestli se to postaví.** Vyrobí verdikt o poptávce s doložením; co s ním, rozhoduje uživatel. Skill jen nedovolí, aby se přes nedoloženou poptávku přešlo mlčky.
 - **Neoponuje výsledek.** Posudek čerstvýma očima dělá `/oponent`, kterému se dokumenty předávají stejně jako zadání.
 - **Nedělá analytický report z dat.** Na to je `/report`; tady se sbírají fakta o cizích produktech, ne čísla z měření.
 
 ## Kdy se přeskakuje
 
-**Základní kritérium drží `~/.claude/skills/LIFECYCLE.md`** – tam, kde stojí popis tohohle kroku. Neopisuj ho sem: rozhodnutí o přeskakování se ladí napříč celým cyklem a opsaná kopie se s ním tiše rozejde. Níž je jen to, co z obecného kritéria neplyne.
+**Základní kritérium drží `~/.claude/rules/lifecycle.md`** – tam, kde stojí popis tohohle kroku. Neopisuj ho sem: rozhodnutí o přeskakování se ladí napříč celým cyklem a opsaná kopie se s ním tiše rozejde. Níž je jen to, co z obecného kritéria neplyne.
 
 **Rozsah se škrtá po dokumentech, ne celý.** Obecné kritérium mluví o trhu, a trh se týká `competition.md` – ne zbylých dvou:
 
@@ -51,9 +51,9 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok osy: nava
 
 ## Zásady pro celý průběh
 
-- **Ptej se postupně a přes tool `AskUserQuestion`** – viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
+- **Ptej se postupně a přes tool `AskUserQuestion`** – viz `~/.claude/rules/rules.md`, *Ptej se postupně, ne všechno najednou*.
 - **Žádný údaj bez doložení.** Cena, funkce ani počet zákazníků se nezapisuje bez URL a data zjištění. Viz *Ověření*.
-- **Nic si nevymýšlej** – ani jméno konkurenta, ani tarif. Viz `~/.claude/RULES.md`, *Při nejistotě se zeptej*.
+- **Nic si nevymýšlej** – ani jméno konkurenta, ani tarif. Viz `~/.claude/rules/rules.md`, *Při nejistotě se zeptej*.
 - **Zapisuj průběžně**, ve chvíli, kdy fakt dorazí, ne až na konci.
 - **Nic neprogramuje.** Zákaz implementace z `/specify` platí tím spíš tady – ještě není ani zadání.
 
@@ -61,7 +61,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to druhý krok osy: nava
 
 ## Fáze 0 – Příprava
 
-Postupuj podle `~/.claude/skills/PREFLIGHT.md`. Navíc:
+Postupuj podle `~/.claude/skills/preflight.md`. Navíc:
 
 1. **Zjisti, co v projektu už je** – `docs/demand.md`, `docs/competition.md`, `docs/risks.md`, `docs/requirements.md`, `docs/research/`, `README.md`. Z toho urči vstupní bod:
 
@@ -148,9 +148,9 @@ Sepiš `docs/demand.md`:
 
 **Pusť subagenty paralelně, jedním voláním s víc tool calls.** Každý dostane jinou cestu hledání – redundantní agenti najdou tolikrát totéž, kolik jich pustíš.
 
-**Typem `researcher`** (`subagent_type`). Zadání zní prohledat web a vrátit JSON, takže agent nemá co spouštět ani kam zapisovat – a typ bez shellu je jediné, čím ta hranice doopravdy drží; věta v zadání ne (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*).
+**Typem `researcher`** (`subagent_type`). Zadání zní prohledat web a vrátit JSON, takže agent nemá co spouštět ani kam zapisovat – a typ bez shellu je jediné, čím ta hranice doopravdy drží; věta v zadání ne (`~/.claude/skills/skills.md`, *Model, effort a delegace*).
 
-**Výchozí model, `low`** (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*). Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: údaj bez URL zahodí *Ověření* hned pod tímhle odstavcem. Na `xhigh` běží až syntéza a rizika, kde se chyba násobí do zadání.
+**Výchozí model, `low`** (`~/.claude/rules/delegation.md`, *Model a effort podle úkolu*). Je to sběr s vynuceným tvarem výstupu a jeho chyba se pozná levně: údaj bez URL zahodí *Ověření* hned pod tímhle odstavcem. Na `xhigh` běží až syntéza a rizika, kde se chyba násobí do zadání.
 
 **Cesty, pravidla výběru i zadání pro agenty drží `~/.claude/skills/discovery/paths.md`.** Přečti si ho celý a řiď se jím: je v něm katalog cest ve čtyřech blocích, pravidla, kolik jich pustit a která je povinná, a šablony zadání podle toho, co cesta vrací. **Blok *Poptávka* se tady nepouští** – ten patří Fázi 2 a má vlastní rozpočet.
 
@@ -159,13 +159,13 @@ Sepiš `docs/demand.md`:
 **Nálezy se nezapisují rovnou.** Projdi je a zahoď:
 
 - co nemá `basis` s URL a doslovným úryvkem,
-- co `skills/sources.py` nepřečetl nebo na stránce úryvek nenašel – zapiš jako neověřené i s důvodem, nebo stránku přečti sám; postup a výklad verdiktů drží `~/.claude/EVIDENCE.md`, *Tvrzení z webu je jen tvrzení, dokud skript nepřečte stránku*,
+- co `skills/sources.py` nepřečetl nebo na stránce úryvek nenašel – zapiš jako neověřené i s důvodem, nebo stránku přečti sám; postup a výklad verdiktů drží `~/.claude/rules/evidence.md`, *Tvrzení z webu je jen tvrzení, dokud skript nepřečte stránku*,
 - co má `confidence: nízká` u ceny nebo klíčové funkce – buď údaj ověř sám přes `WebFetch`, nebo ho zapiš jako neznámý,
 - duplicity mezi agenty – týž produkt našlo víc cest, sloučí se do jednoho záznamu.
 
 **Co ověření nepřežije, se do dokumentu nedostane.** Vymyšlený konkurent nebo cena o řád vedle je horší než prázdné místo: postaví se na tom rozhodnutí o produktu a nikdo ho nezpochybní, protože vypadá doloženě.
 
-Zapiš do `docs/competition.md` a **u každého údaje nech datum zjištění** (`date +%F`, ne z hlavy – `~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš*). Ceny stárnou a bez data se nepozná, co je čerstvé.
+Zapiš do `docs/competition.md` a **u každého údaje nech datum zjištění** (`date +%F`, ne z hlavy – `~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš*). Ceny stárnou a bez data se nepozná, co je čerstvé.
 
 ------
 
@@ -214,7 +214,7 @@ U každého rizika:
 - **Promítnutí do produktu:** co se kvůli tomu v návrhu změnilo nebo přibylo
 ```
 
-**Pole *Promítnutí do produktu* je smysl celého souboru.** Bez něj je to seznam obav, který nikoho nezavazuje a nikdo ho nečte. Vyjde-li prázdné, jsou dvě možnosti a obě se musí napsat: buď se produkt kvůli tomu riziku změní – pak to patří do zadání a `/specify` to tam ponese –, nebo riziko **vědomě přijímáme** a napíše se proč (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
+**Pole *Promítnutí do produktu* je smysl celého souboru.** Bez něj je to seznam obav, který nikoho nezavazuje a nikdo ho nečte. Vyjde-li prázdné, jsou dvě možnosti a obě se musí napsat: buď se produkt kvůli tomu riziku změní – pak to patří do zadání a `/specify` to tam ponese –, nebo riziko **vědomě přijímáme** a napíše se proč (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*).
 
 **Rizika technického řešení sem nepatří** – „nezvládne to zátěž“, „ta knihovna může skončit“. Ta jdou do sekce *Rizika* v `docs/architecture.md`, protože závisí na zvolené technologii, a ta se ještě nevybrala. Hranice je táž jako mezi požadavky a návrhem: sem produkt a trh, tam řešení.
 
@@ -268,7 +268,7 @@ U každého rizika:
 - [seznam, nebo „žádné“]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
@@ -284,7 +284,7 @@ Běželo-li se bez konkurence, protože projekt nemá trh, platí druhá dvojice
 - `Poptávka a rizika jsou hotové a ověřené, konkurenci jsme vynechali – <důvod>. Můžeme na zadání.`
 - `Podklady hotové nejsou – brání tomu: <konkrétní seznam>.`
 
-**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/specify` – zadání nad hotovými podklady
 - volitelně před tím, jsou-li `demand.md`, `competition.md` a `risks.md` rozsáhlé, `/cleanup`, pak `/clear`, a `/oponent` nad nimi až v nové session – tahle je psala a je na ně zaujatá

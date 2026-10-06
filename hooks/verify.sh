@@ -36,7 +36,7 @@ set -uo pipefail
 #
 # Bylo 60 s, dokud se neukázalo, že to nestačí na stroji, kde běží víc session
 # naráz. Sada testů tohohle repozitáře trvá 18 s nezatíženě a 79 s při load 37,
-# a několik session nad jedním projektem je podle ~/.claude/WORKTREE.md normální
+# a několik session nad jedním projektem je podle ~/.claude/rules/worktree.md normální
 # provoz, ne výjimka. Kontrola, která padá na zatížení místo na chybě, se začne
 # obcházet – a to je horší směr selhání než pomalý krok.
 LIMIT=90
@@ -554,7 +554,7 @@ if ! allow_file "$PROJ" >/dev/null; then
   {
     echo "Průběžná kontrola: pro $PROJ není vydaný souhlas, nespustil jsem nic."
     echo "Kontrakt je kód z repozitáře. Projdi si ho a jestli tomu repozitáři věříš:"
-    echo "  ~/.claude/verify.sh --allow $PROJ"
+    echo "  ~/.claude/hooks/verify.sh --allow $PROJ"
     contract_section "$CLAUDE_MD" \
       | sed -n 's/^[[:space:]]*[-*][[:space:]]*\('"$KEY_RE"'\):[[:space:]]\{1,\}/  \1: /p' || true
   } >&2
@@ -572,7 +572,7 @@ fi
 AF=$(allow_file "$PROJ")
 STORED_FINGERPRINT=$(sed -n 3p "$AF")
 if [ -z "$STORED_FINGERPRINT" ]; then
-  die "souhlas pro $PROJ je ve starém formátu bez otisku kontraktu, nespustil jsem nic. Obnov ho: ~/.claude/verify.sh --allow $PROJ"
+  die "souhlas pro $PROJ je ve starém formátu bez otisku kontraktu, nespustil jsem nic. Obnov ho: ~/.claude/hooks/verify.sh --allow $PROJ"
 fi
 
 # Kontrakt musí ležet v KOŘENI pracovního stromu, ne v podadresáři pod ním.
@@ -586,7 +586,7 @@ if [ -n "$TOPLEVEL" ] && [ "$(canon "$TOPLEVEL")" != "$PROJ" ]; then
   die "kontrakt $CLAUDE_MD leží v podadresáři, ne v kořeni pracovního stromu ($TOPLEVEL). Souhlas pro repozitář na něj neplatí, nespustil jsem nic."
 fi
 if [ "$(contract_fingerprint "$CLAUDE_MD")" != "$STORED_FINGERPRINT" ]; then
-  die "kontrakt v $CLAUDE_MD se od vydání souhlasu změnil, nespustil jsem nic. Projdi si ho a potvrď: ~/.claude/verify.sh --allow $PROJ"
+  die "kontrakt v $CLAUDE_MD se od vydání souhlasu změnil, nespustil jsem nic. Projdi si ho a potvrď: ~/.claude/hooks/verify.sh --allow $PROJ"
 fi
 
 # Rozlišit "není to repozitář" (v pořádku, mlčky ven) od "git nefunguje" (nahlas):

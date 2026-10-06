@@ -69,9 +69,9 @@ Než se pustíš do práce, projdeš s uživatelem krátkého průvodce. Teprve 
 
 ## Krok 0 – Příprava
 
-**Tenhle skill neběží nad kódem projektu, takže body 1 až 3 z `~/.claude/skills/PREFLIGHT.md` nahrazuje vlastními předpoklady** – pouští se nad nahrávkou, která leží kdekoliv, často mimo repozitář. Body 4 a 5 odpadají ze stejného důvodu: nic nespouští nad kódem a nesahá na diff větve. Načti si ho přesto; platí z něj závěr o shrnutí zjištěného, než se cokoliv stane. Co je potřeba zjistit místo toho, stojí v kroku 1 níž.
+**Tenhle skill neběží nad kódem projektu, takže body 1 až 3 z `~/.claude/skills/preflight.md` nahrazuje vlastními předpoklady** – pouští se nad nahrávkou, která leží kdekoliv, často mimo repozitář. Body 4 a 5 odpadají ze stejného důvodu: nic nespouští nad kódem a nesahá na diff větve. Načti si ho přesto; platí z něj závěr o shrnutí zjištěného, než se cokoliv stane. Co je potřeba zjistit místo toho, stojí v kroku 1 níž.
 
-**Kroky místo fází jsou tu schválně.** Výsledkem téhle práce je to, co uživatel naodpovídá v průvodci – model, slovník jmen, co má vzniknout –, takže postup je sled otázek (`~/.claude/skills/SKILLS.md`, *Číslování a názvosloví*).
+**Kroky místo fází jsou tu schválně.** Výsledkem téhle práce je to, co uživatel naodpovídá v průvodci – model, slovník jmen, co má vzniknout –, takže postup je sled otázek (`~/.claude/skills/skills.md`, *Číslování a názvosloví*).
 
 ## Krok 1 – Zjisti si fakta o vstupu
 
@@ -377,9 +377,9 @@ Jména ulož do `<workdir>/.speakers.json` a pusť `merge.py` znovu s `--names`,
 
 ## Krok 9 – Vyrob výstupy, které si uživatel vybral
 
-**Doslovný přepis.** Pro každou nahrávku zpracuj její `<name>.txt` do `<name>.md` dle [Pravidel doslovného přepisu](output.md#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor; u spojené schůzky, kde je soubor jediný, rozděl vstup na zhruba stejně velké souvislé části a dej každému agentovi jednu, s překryvem pár vět, ať se na švu neztratí replika. **Rozlišovali-li se mluvčí, dělej řez mezi replikami v `<name>.json`** – ten je nese i se jmény, takže agent dostane rovnou dialog. Jinak děl `<name>.txt` po řádcích. **Nedělej řez podle kapitol:** ty ve vstupu nejsou, mezinadpisy vznikají teprve tím čištěním, které má agent udělat) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
+**Doslovný přepis.** Pro každou nahrávku zpracuj její `<name>.txt` do `<name>.md` dle [Pravidel doslovného přepisu](output.md#pravidla-doslovného-přepisu). U více nebo delších nahrávek to udělej **paralelně přes subagenty** (jeden na soubor; u spojené schůzky, kde je soubor jediný, rozděl vstup na zhruba stejně velké souvislé části a dej každému agentovi jednu, s překryvem pár vět, ať se na švu neztratí replika. **Rozlišovali-li se mluvčí, dělej řez mezi replikami v `<name>.json`** – ten je nese i se jmény, takže agent dostane rovnou dialog. Jinak děl `<name>.txt` po řádcích. **Nedělej řez podle kapitol:** ty ve vstupu nejsou, mezinadpisy vznikají teprve tím čištěním, které má agent udělat) na **výchozím modelu s `low`** (Volba modelu a effortu podle `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*). Nejlevnější model sem nepatří: oprava přeslechů je úsudek a **vymyšlená věta v přepisu vypadá stejně věrohodně jako správná** – nepozná se jinak než poslechem nahrávky.
 
-**Typ subagenta je výchozí, ne `reader`, a je to vědomé:** agent zapisuje `<name>.md`, takže potřebuje `Write`, který typ bez shellu nemá. Hranice se tu tedy nepředstírá (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*).
+**Typ subagenta je výchozí, ne `reader`, a je to vědomé:** agent zapisuje `<name>.md`, takže potřebuje `Write`, který typ bez shellu nemá. Hranice se tu tedy nepředstírá (`~/.claude/skills/skills.md`, *Model, effort a delegace*).
 
 **Každému subagentovi předej celý `.transcript-glossary.md`**, ne jen ten výběr, který šel do promptu. Tady platí opak než u whisperu: čím víc kontextu, tím líp. Rozdíl mezi „tohle je zkomolenina, opravím ji“ a „tohle je jejich interní pojem, nechám ho být“ se dá udělat jedině proti úplnému slovníku. Nech si od subagenta vrátit i **stručný brief pro shrnutí** – témata, závěry a kdo co slíbil – a **seznam míst, kterým nerozuměl a nechal je být**; řekni mu, že takové místo i část, ze které po smazání smyček nic nezbude, je stejně platný výsledek jako opravený text, kdežto domyšlená věta ne. Shrnutí pak píšeš z briefů a slovníku, ne z celých přepisů znovu.
 

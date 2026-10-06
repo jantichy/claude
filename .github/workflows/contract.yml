@@ -77,7 +77,7 @@ jobs:
           # co se v CI pouští, dozví se to tady – varováním, ne pádem, protože
           # starší verze není chyba projektu.
           behind=$(git -C "$RUNNER_TEMP/claude" log --oneline "$WORKFLOW_SHA..origin/HEAD" -- \
-            .github/workflows/contract.yml .github/run-contract.sh verify.sh skills/links.py skills/order.py | wc -l | tr -d ' ')
+            .github/workflows/contract.yml .github/run-contract.sh hooks/verify.sh skills/links.py skills/order.py | wc -l | tr -d ' ')
           if [ "$behind" -gt 0 ]; then
             echo "::warning::od připnutého commitu se CI nebo jeho skripty změnily (počet změn: $behind) – posuň SHA v uses:"
           fi
@@ -130,6 +130,6 @@ jobs:
         # a změřit (`tests/test_ci.py`).
         run: |
           set -e
-          "$RUNNER_TEMP/claude/verify.sh" --contract . > "$RUNNER_TEMP/contract.tsv"
+          "$RUNNER_TEMP/claude/hooks/verify.sh" --contract . > "$RUNNER_TEMP/contract.tsv"
           cat "$RUNNER_TEMP/contract.tsv"
           "$RUNNER_TEMP/claude/.github/run-contract.sh" "$RUNNER_TEMP/contract.tsv"

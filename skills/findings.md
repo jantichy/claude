@@ -2,7 +2,7 @@
 
 Jedno kritérium a jeden tvar pro všechny skilly, které nálezy nejen hlásí, ale i opravují. Stojí mimo ně, protože **hranice mezi „opravím sám“ a „rozhodne uživatel“ musí být napříč skilly tatáž** – jinak si týž nález v `/review` vyžádá otázku a v `/consistency` se opraví mlčky, a uživatel nemá jak odhadnout, co ho v kterém běhu čeká. Totéž platí o **podobě výpisu a voleb**: uživatel prochází nálezy z několika skillů v jednom životním cyklu, takže dvě jména pro tutéž volbu čte jako dvě různé volby.
 
-Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`. **Stupeň neurčuje, kdo rozhoduje:** kritický nález s jedinou zjevnou opravou se opraví rovnou, nízký s dvěma obhajitelnými podobami jde k uživateli.
+Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/severity.md`. **Stupeň neurčuje, kdo rozhoduje:** kritický nález s jedinou zjevnou opravou se opraví rovnou, nízký s dvěma obhajitelnými podobami jde k uživateli.
 
 ## Osa není „jak riskantní“, ale „je z čeho vybírat“
 
@@ -18,7 +18,7 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`.
 
 ### Nejistotu nejdřív zkus odstranit
 
-**Než nález prohlásíš za sporný, zjisti, jestli je odpověď vůbec zjistitelná.** Dá se spočítat, dohledat, porovnat se zdrojem, který v repozitáři je? Pak to není sporný nález, ale **práce** – a ta se dělá (`~/.claude/RULES.md`, *Při nejistotě se zeptej*: údaj, který jde dohledat, si ověř sám; ptej se na to, co ví jen uživatel).
+**Než nález prohlásíš za sporný, zjisti, jestli je odpověď vůbec zjistitelná.** Dá se spočítat, dohledat, porovnat se zdrojem, který v repozitáři je? Pak to není sporný nález, ale **práce** – a ta se dělá (`~/.claude/rules/rules.md`, *Při nejistotě se zeptej*: údaj, který jde dohledat, si ověř sám; ptej se na to, co ví jen uživatel).
 
 **Pracnost není spornost.** „Tohle bych musel projít celé a přepočítat“ je popis práce, ne důvod k otázce. Uživatel má na tutéž práci tytéž soubory, takže ho dotazem nešetříš – jen mu ji přehazuješ zpátky i s kontextem, který máš načtený ty a on ne.
 
@@ -54,7 +54,7 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/SEVERITY.md`.
 **Doporučuji:** <jedna z nich a proč>
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`~/.claude/RULES.md`, *Styl odpovědí*).
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`~/.claude/rules/rules.md`, *Styl odpovědí*).
 
 **Tučný je jen název, zbytek ne.** Odstavec, ve kterém svítí tučně každý druhý popisek, se nedá číst – oko skáče po zvýrazněních místo aby četlo větu.
 
@@ -117,17 +117,17 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 ## Ohlášená akce patří do téže odpovědi
 
-**Přehled nálezů není konec odpovědi** (`~/.claude/RULES.md`, *Co ohlásíš, udělej hned v téže odpovědi*). Vypsal-li jsi, že se N nálezů opraví rovnou a M zbývá na rozhodnutí, **pokračuj hned v téže odpovědi**: oprav, co se opravuje bez ptaní, vypiš to, a rovnou polož první otázku na sporné. Věta „pouštím se do oprav bez ptaní“ místo oprav samotných je přesně to, co pravidlo zakazuje – běh se o ni prodlouží o jednu odpověď uživatele a nic se za ni neudělá.
+**Přehled nálezů není konec odpovědi** (`~/.claude/rules/rules.md`, *Co ohlásíš, udělej hned v téže odpovědi*). Vypsal-li jsi, že se N nálezů opraví rovnou a M zbývá na rozhodnutí, **pokračuj hned v téže odpovědi**: oprav, co se opravuje bez ptaní, vypiš to, a rovnou polož první otázku na sporné. Věta „pouštím se do oprav bez ptaní“ místo oprav samotných je přesně to, co pravidlo zakazuje – běh se o ni prodlouží o jednu odpověď uživatele a nic se za ni neudělá.
 
 ## Když se průchod nevejde do session
 
-Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, zbytek se uloží do `todo.md` a dokončí ho nová session – práh, tvar nabídky a to, co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
+Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, zbytek se uloží do `todo.md` a dokončí ho nová session – práh, tvar nabídky a to, co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
 
 ## Kdo ji používá
 
 `/review`, `/consistency`, `/attack`, `/audit`, `/evaluate`, `/cleanup` a `/consolidate` – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/cleanup` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů; `/consolidate` u vedlejších vad od ověřovatelů, a **u svých návrhů taky podle výjimky o nové práci** – dnešní řešení funguje, takže *Neopravovat* u něj nedává smysl a „jestli a kdy“ je doopravdy rozhodnutí uživatele. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
 
-**Skill si nad tímhle kritériem podává vlastní doménové čtení** – `/attack` má sporných skoro všechno, protože každý jeho nález mění chování běžící aplikace, kdežto `/consistency` má většinu jednoznačnou, protože srovnává dvě místa, z nichž jedno je zdroj. **Stavět vlastní hranici vedle téhle se ale nesmí**; přibude-li další skill, který nálezy opravuje, odkáže sem taky a **neopisuje si ji** (`~/.claude/RULES.md`, *Single source of truth*).
+**Skill si nad tímhle kritériem podává vlastní doménové čtení** – `/attack` má sporných skoro všechno, protože každý jeho nález mění chování běžící aplikace, kdežto `/consistency` má většinu jednoznačnou, protože srovnává dvě místa, z nichž jedno je zdroj. **Stavět vlastní hranici vedle téhle se ale nesmí**; přibude-li další skill, který nálezy opravuje, odkáže sem taky a **neopisuje si ji** (`~/.claude/rules/rules.md`, *Single source of truth*).
 
 **Výjimka pro zadání subagentů:** text, který jde agentovi bez kontextu session, si potřebné části **opisuje celé**, protože odkaz do souboru, který nemá načtený, je mrtvý. Platí to jen na zadání, ne na tělo skillu – a u tohohle kritéria to bude potřeba zřídka, protože rozhoduje hlavní session, ne agent.
 

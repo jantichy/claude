@@ -16,7 +16,7 @@ Stavy:
   zástupný   hodnota, která tajemstvím zjevně není (`changeme`, `<token>`, `xxx`)
   vyplněný   cokoliv jiného
 
-Použití: python3 ~/.claude/envkeys.py <soubor> [<soubor> …]
+Použití: python3 ~/.claude/hooks/envkeys.py <soubor> [<soubor> …]
 Návratový kód: 0 vypsáno, 2 chyba volání (soubor chybí nebo nejde přečíst).
 """
 

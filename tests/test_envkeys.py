@@ -16,7 +16,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SCRIPT = ROOT / "envkeys.py"
+SCRIPT = ROOT / "hooks" / "envkeys.py"
 SECRET = "sk-live-7f3a9c"
 
 

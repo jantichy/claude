@@ -2,7 +2,7 @@
 
 Texty, se kterými `/review` pouští subagenty – panel specialistů ve *Fázi 2* a ověřovatele ve *Fázi 3*. Vytažené ze `SKILL.md`, protože se čtou jen ve chvíli, kdy se agent doopravdy pouští, a jinak by zabíraly kontext každého běhu.
 
-**Agent běží bez kontextu téhle session**, takže si všechno podstatné musí nést v zadání – proto jsou texty opsané celé a ne odkazem (`~/.claude/RULES.md`, *Single source of truth*, výjimka pro subagenty).
+**Agent běží bez kontextu téhle session**, takže si všechno podstatné musí nést v zadání – proto jsou texty opsané celé a ne odkazem (`~/.claude/rules/rules.md`, *Single source of truth*, výjimka pro subagenty).
 
 - [Zadání pro pracovního specialistu](#zadání-pro-pracovního-specialistu)
 - [Zadání pro standardového specialistu](#zadání-pro-standardového-specialistu)
@@ -70,7 +70,7 @@ PRAVIDLA HLÁŠENÍ:
 - Když má víc nálezů společnou příčinu, seskup je: root nález + u následků vyplň
   `related_root` s titulkem rootu.
 
-ZÁVAŽNOST (škálu drží `~/.claude/skills/SEVERITY.md`, tady je opsaná schválně –
+ZÁVAŽNOST (škálu drží `~/.claude/skills/severity.md`, tady je opsaná schválně –
 agent ten soubor nemá načtený):
 - KRITICKÉ – bezpečnost, ztráta dat, nepřístupnost pro část uživatelů, nevratná akce bez pojistky
 - STŘEDNÍ – reálný dopad na správnost, použitelnost nebo udržovatelnost

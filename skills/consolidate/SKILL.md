@@ -15,7 +15,7 @@ Ptá se **„bylo by to dnes navržené jinak?"** – ne „je to špatně?". Od
 
 **Jako jediný krok cyklu čte historii, ne dnešní stav.** Vstupem není `architecture.md`, ale `decisions.md`, `done.md`, git log a umlčené nálezy v `CLAUDE.md`. Shluk záplat se pozná z dat jejich narození.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne bod na ose: **stojí v mezeře před `/breakdownem`**, u velkého celku povinně. Nečeká na pozici, ale na to, až se v projektu nasbírá dost kol návrhu – a v prvním průchodu se přeskakuje úplně, protože po prvním návrhu žádný dluh z lepení neexistuje.
+V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to kontrolní krok, ne bod na ose: **stojí v mezeře před `/breakdownem`**, u velkého celku povinně. Nečeká na pozici, ale na to, až se v projektu nasbírá dost kol návrhu – a v prvním průchodu se přeskakuje úplně, protože po prvním návrhu žádný dluh z lepení neexistuje.
 
 Režimy nemá. Argument je **výchozí bod**, ne hranice – viz *Rozsah*.
 
@@ -82,7 +82,7 @@ Spouštěče jsou tři a rozhoduje mezi nimi člověk:
 
 ## Fáze 0 – Příprava
 
-**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Bod 4 odpadá, skill na kód nesahá. Bod 5 odpadá taky: rozsahem není diff větve, ale historie celého projektu.
+**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím. Bod 4 odpadá, skill na kód nesahá. Bod 5 odpadá taky: rozsahem není diff větve, ale historie celého projektu.
 
 Nad rámec toho:
 
@@ -137,19 +137,19 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 **Co ověření nepřežije, se uživateli vůbec nezobrazí.** V pilotu padly dva ze dvou velkých návrhů – a **to je platný výsledek, ne selhání běhu**.
 
-**Vedlejší vady, na které ověřovatelé narazí, se nezahazují.** Jsou to normální nálezy: hlásí se se závažností podle `~/.claude/skills/SEVERITY.md` a rozhoduje se o nich podle `~/.claude/skills/FINDINGS.md`. V pilotu byly cennější než návrhy samotné.
+**Vedlejší vady, na které ověřovatelé narazí, se nezahazují.** Jsou to normální nálezy: hlásí se se závažností podle `~/.claude/skills/severity.md` a rozhoduje se o nich podle `~/.claude/skills/findings.md`. V pilotu byly cennější než návrhy samotné.
 
 ## Fáze 4 – Průchod s uživatelem
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*.
 
-**Nejdřív vypiš přehled** – kolik shluků, kolik návrhů padlo v ověření a kolik zbývá k rozhodnutí, plus kolik vedlejších vad se našlo. Pak **hned v téže odpovědi** pokračuj první otázkou; ohlásit průchod a skončit je porušení `~/.claude/RULES.md`, *Co ohlásíš, udělej hned v téže odpovědi*.
+**Nejdřív vypiš přehled** – kolik shluků, kolik návrhů padlo v ověření a kolik zbývá k rozhodnutí, plus kolik vedlejších vad se našlo. Pak **hned v téže odpovědi** pokračuj první otázkou; ohlásit průchod a skončit je porušení `~/.claude/rules/rules.md`, *Co ohlásíš, udělej hned v téže odpovědi*.
 
-**Tvar nálezu i volby drží `~/.claude/skills/FINDINGS.md`** – neopisuj si je sem. U návrhu platí výjimka o položce, která není vadou: dnešní řešení funguje, takže *Neopravovat* nedává smysl a volba „jestli a kdy" je legitimní.
+**Tvar nálezu i volby drží `~/.claude/skills/findings.md`** – neopisuj si je sem. U návrhu platí výjimka o položce, která není vadou: dnešní řešení funguje, takže *Neopravovat* nedává smysl a volba „jestli a kdy" je legitimní.
 
 **O každém návrhu rozhoduje uživatel**, jeden po druhém. U každého ukaž kroniku shluku (co vzniklo kdy a z jakého podnětu), návrh, verdikt ověřovatele a cenu přepisu.
 
-**Zamítnutý návrh zapiš do `docs/decisions.md`** k rozhodnutí, jehož alternativou byl – jako zavrženou variantu i s důvodem zamítnutí a s verdiktem ověřovatele. Filtr proti opakovanému předkládání tím funguje sám: `decisions.md` je vstup tohohle skillu, takže si ho příští běh přečte ve *Fázi 1*. **Nezakládej kvůli tomu kapitolu v `CLAUDE.md`** – výjimka z `~/.claude/RULES.md` pro umlčené nálezy prověřovacích kroků tady neplatí, protože stojí na tom, že `decisions.md` by nikdo nečetl.
+**Zamítnutý návrh zapiš do `docs/decisions.md`** k rozhodnutí, jehož alternativou byl – jako zavrženou variantu i s důvodem zamítnutí a s verdiktem ověřovatele. Filtr proti opakovanému předkládání tím funguje sám: `decisions.md` je vstup tohohle skillu, takže si ho příští běh přečte ve *Fázi 1*. **Nezakládej kvůli tomu kapitolu v `CLAUDE.md`** – výjimka z `~/.claude/rules/rules.md` pro umlčené nálezy prověřovacích kroků tady neplatí, protože stojí na tom, že `decisions.md` by nikdo nečetl.
 
 **Přijatý návrh zapiš do `docs/todo.md`** jako práci i s cenou přepisu a předej `/breakdown`.
 
@@ -182,7 +182,7 @@ Pak vypiš souhrn:
 **Zapsáno**
 - <kam a co – decisions.md, todo.md, done.md>
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
@@ -191,7 +191,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **„Nic velkého k přepsání" patří do první věty**, ne do druhé. Shluk, u kterého má každá záplata doložený důvod, je prověřený výsledek – ne nedodělaný běh.
 
-**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/breakdown` – rozpad prověřeného celku na úkoly
 - vzešla-li ze shluků přestavba návrhu, je další krok `/architect` nad ní, ne rozpad

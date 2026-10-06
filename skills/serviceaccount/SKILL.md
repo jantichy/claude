@@ -23,7 +23,7 @@ Jediné chování, žádné režimy. Volitelný argument je slug klienta pro př
 
 ## Fáze 0 – Příprava
 
-Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Odchylky:
+Společný začátek je v `~/.claude/skills/preflight.md`. Odchylky:
 
 1. **Načti `~/Dev/context/organizations/access.md` celou.** Bez ní skill nemá podle čeho jednat a **nesmí si tvar jména domyslet** – vymyšlené jméno je neměnné a opravuje se jedině novým účtem.
 2. **Průběžná kontrola odpadá**, protože skill nemění kód. Řekni to nahlas.

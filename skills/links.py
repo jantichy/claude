@@ -2,7 +2,7 @@
 """Ověří, že odkazy v zadaných Markdownech vedou někam.
 
 Hledá dvě vady, které jinak musí najít čtenář bez kontextu ve /cleanup –
-a které jsou přitom mechanické, takže na ně podle ~/.claude/DELEGATION.md,
+a které jsou přitom mechanické, takže na ně podle ~/.claude/rules/delegation.md,
 *Model a effort podle úkolu*, pravidla nula nemá chodit model:
 
 1. relativní odkaz na soubor, který neexistuje,

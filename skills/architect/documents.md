@@ -2,7 +2,7 @@
 
 Šablony a pravidla psaní pro dokumenty, které vyrábí `/architect`. Průběh – kdy se který píše, co ho spouští, kde jsou schvalovací kontroly – drží `SKILL.md`; tady je jen to, co má vzniknout. Požadavky a produktové podklady tady nejsou: jejich šablonu drží `~/.claude/skills/specify/documents.md`.
 
-**Návrh řešení je sada dokumentů**, ne jeden soubor. `architecture.md` je jeho páteř a šablona níž patří jemu; kdy vzniká vedle něj `model.md`, `transitions.md`, `rules.md` nebo tematický dokument kola, drží `~/.claude/STRUCTURE.md`, *`requirements.md`, `architecture.md`, `plan.md`*. Ty vlastní šablonu nemají a mít nemají – každý z nich je řez toutéž věcí z jiného úhlu a předepsaná kostra by je srovnala do jednoho.
+**Návrh řešení je sada dokumentů**, ne jeden soubor. `architecture.md` je jeho páteř a šablona níž patří jemu; kdy vzniká vedle něj `model.md`, `transitions.md`, `rules.md` nebo tematický dokument kola, drží `~/.claude/rules/structure.md`, *`requirements.md`, `architecture.md`, `plan.md`*. Ty vlastní šablonu nemají a mít nemají – každý z nich je řez toutéž věcí z jiného úhlu a předepsaná kostra by je srovnala do jednoho.
 
 - [Jak se píše](#jak-se-píše) – platí pro všechny dokumenty návrhu
 - [`docs/architecture.md`](#docsarchitecturemd) – páteř návrhu řešení

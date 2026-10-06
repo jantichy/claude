@@ -43,12 +43,12 @@ Režimy nemá. **První běh v projektu vezme všechny session, každý další 
 
 ## Fáze 0 – Příprava
 
-Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Navíc:
+Společný začátek je v `~/.claude/skills/preflight.md`. Navíc:
 
 1. **Ověř, že projekt vede `docs/scenarios.md`.** Nevede-li ho, řekni to a skonči – zakládá ho `/specify`, ne tenhle skill.
 2. **Přečti jeho úvod celý** (viz *Rozsah*) a **vypiš jeho kapitoly i s čísly řádků**: `grep -n '^\(## \|### \|#### \)' docs/scenarios.md`. Je to zároveň vstupní počet scénářů pro *Fázi 6*.
-3. **Mechaniku hledání a čtení transcriptů drží `~/.claude/skills/SESSION.md`.** Načti si ji – zvlášť pasti formátu, bez kterých agenti tiše přijdou o část konverzace.
-4. **Změny patří na vlastní větev.** Je-li projekt ve worktree layoutu, založ ji podle `~/.claude/WORKTREE.md` – běh sahá na jeden soubor, ale zapisuje do něj desítky míst naráz.
+3. **Mechaniku hledání a čtení transcriptů drží `~/.claude/skills/session.md`.** Načti si ji – zvlášť pasti formátu, bez kterých agenti tiše přijdou o část konverzace.
+4. **Změny patří na vlastní větev.** Je-li projekt ve worktree layoutu, založ ji podle `~/.claude/rules/worktree.md` – běh sahá na jeden soubor, ale zapisuje do něj desítky míst naráz.
 
 ## Fáze 1 – Které session se vytěžují
 
@@ -72,12 +72,12 @@ Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Navíc:
 
 Do scratchpadu připrav dva soubory:
 
-- **Zadání** – vezmi `~/.claude/skills/scenarios/brief.md` a doplň do něj to, co je v tomhle projektu jiné: čím se projekt zabývá, kdo v konverzacích vystupuje za aktéry, jak vypadají jeho scénáře. Agent běží bez kontextu téhle session, takže **si musí nést všechno opsané** (`~/.claude/RULES.md`, *Single source of truth*, výjimka pro subagenty).
+- **Zadání** – vezmi `~/.claude/skills/scenarios/brief.md` a doplň do něj to, co je v tomhle projektu jiné: čím se projekt zabývá, kdo v konverzacích vystupuje za aktéry, jak vypadají jeho scénáře. Agent běží bez kontextu téhle session, takže **si musí nést všechno opsané** (`~/.claude/rules/rules.md`, *Single source of truth*, výjimka pro subagenty).
 - **Seznam už zapsaných scénářů** – `grep -n '^#\{2,4\} ' docs/scenarios.md`. Slouží jen k tomu, aby agent u zjevné shody připsal `podobné: <nadpis>`; **filtrovat podle něj nesmí**.
 
 ## Fáze 3 – Rozeslání
 
-**Jeden agent na jednu session.** Výchozí model session, **ne nejlevnější** – agent musí poznat, která dohoda později přestala platit, a jeho chybu nepoznáš jinak než tím, že si ten transcript přečteš sám (`~/.claude/DELEGATION.md`, *Model a effort podle úkolu*).
+**Jeden agent na jednu session.** Výchozí model session, **ne nejlevnější** – agent musí poznat, která dohoda později přestala platit, a jeho chybu nepoznáš jinak než tím, že si ten transcript přečteš sám (`~/.claude/rules/delegation.md`, *Model a effort podle úkolu*).
 
 Každému předej: cestu k zadání, cestu k seznamu zapsaných scénářů, **svůj** transcript i s jeho velikostí a datem, jméno výstupního souboru `out-<id>.md` a **vlastní prefix pro pomocné soubory**.
 
@@ -105,7 +105,7 @@ Každému předej: cestu k zadání, cestu k seznamu zapsaných scénářů, **s
 - **Situaci, kterou systém nepokrývá, zapiš i tak** – a doplň ji do závěrečné kapitoly *Co pokryté není*, ať se dá dohledat z obou stran.
 - **Zamítnutou situaci nezapisuj jako scénář**, pokud o zamítnutí nemáš doklad v `decisions.md`; je to nález pro uživatele, ne hotové rozhodnutí.
 
-**Nikdy neřež podle nadpisů.** Vkládá se mezi existující scénáře a jediné riziko běhu je, že se s novým textem odnese kus starého. Řez „od nadpisu k nejbližšímu nadpisu“ už v tomhle souboru jednou snědl třetinu jeho obsahu a testy zůstaly zelené (`~/.claude/RULES.md`, *Mazání ověř diffem, ne grepem*).
+**Nikdy neřež podle nadpisů.** Vkládá se mezi existující scénáře a jediné riziko běhu je, že se s novým textem odnese kus starého. Řez „od nadpisu k nejbližšímu nadpisu“ už v tomhle souboru jednou snědl třetinu jeho obsahu a testy zůstaly zelené (`~/.claude/rules/rules.md`, *Mazání ověř diffem, ne grepem*).
 
 ## Fáze 6 – Kontrola objemu
 
@@ -115,7 +115,7 @@ Každému předej: cestu k zadání, cestu k seznamu zapsaných scénářů, **s
 grep -c '^#### ' docs/scenarios.md
 ```
 
-Nesedí-li, **zastav se a najdi proč** – neopravuj naslepo. Pak pusť příkazy z *Kontraktu příkazů* projektu a načti změněná místa zpátky (`~/.claude/RULES.md`, *Co jsi vygeneroval, přečti zpátky*).
+Nesedí-li, **zastav se a najdi proč** – neopravuj naslepo. Pak pusť příkazy z *Kontraktu příkazů* projektu a načti změněná místa zpátky (`~/.claude/rules/rules.md`, *Co jsi vygeneroval, přečti zpátky*).
 
 **Zapiš záznam běhu do `docs/done.md`** – datum, počet vytěžených session a jejich rozsah, počet přibylých scénářů a co se vědomě nevytěžilo. Bez něj nemá příští běh podle čeho určit rozsah a projede všechno znovu.
 

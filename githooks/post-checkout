@@ -1,11 +1,11 @@
 #!/bin/sh
 # Při založení worktree ve worktree layoutu převezme lokální stav z main/.
 #
-# Pravidlo – co se symlinkuje, co klonuje a proč – drží ~/.claude/WORKTREE.md,
+# Pravidlo – co se symlinkuje, co klonuje a proč – drží ~/.claude/rules/worktree.md,
 # sekce "Lokální stav se bere z main/". Hook ho vykonává, protože jako pokyn pro
 # model nefungovalo: deny pravidla Edit(//**/.env*) v settings.json zastaví
 # i `ln -s` na cestu .env, a Claude pak větev založí bez něj. Git hook spouští
-# git, ne model, takže deny ho nevidí; výjimka je zapsaná v ~/.claude/BYPASS.md.
+# git, ne model, takže deny ho nevidí; výjimka je zapsaná v ~/.claude/rules/bypass.md.
 #
 # Obsah tajemství hook nikdy nečte ani nepřepisuje – jen zakládá odkaz do main/,
 # respektive klonuje soubor, a existující soubor ve větvi nechá být.

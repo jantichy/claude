@@ -13,13 +13,13 @@ Uživatel má nápad a chce z něj zadání, podle kterého se dá rozhodovat. S
 
 **Vede-li projekt produktové podklady**, sepíše v témže kroku i `scenarios.md`, `glossary.md` a `pricing.md`. Jsou produktové, ne technické, a vznikají z téhož dialogu; z ostatních píše `demand.md`, `competition.md` a `risks.md` `/discovery` a `operation.md` až `/evaluate` po nasazení.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok osy: navazuje na `/discovery` a předává na `/architect`.
+V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to třetí krok osy: navazuje na `/discovery` a předává na `/architect`.
 
 **Je to jeden běh a nemá režimy.** Požadavky se sepíšou jednou na začátku; dělení na tematická kola patří návrhu řešení, protože tam se rozhoduje po tématech. Kolo o platební bráně řeší osy, guardy i přechody naráz a rozdělit ho na produktovou a technickou polovinu by znamenalo dvakrát načítat týž kontext.
 
 ## Co skill nedělá
 
-- **Nerozhoduje, jak se to postaví.** Architektura, datový model, stavy a přechody, rozhraní, technologie a bezpečnostní model jsou `/architect` a jeho `docs/architecture.md`. **Hranice je tvrdá:** do požadavků patří **omezení**, do návrhu **volba** (`~/.claude/STRUCTURE.md`, *`requirements.md`, `architecture.md`, `plan.md`*). „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je omezení a patří sem; „použijeme SQLite, protože…“ je volba a patří do návrhu. Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → návrh. Ne → sem.
+- **Nerozhoduje, jak se to postaví.** Architektura, datový model, stavy a přechody, rozhraní, technologie a bezpečnostní model jsou `/architect` a jeho `docs/architecture.md`. **Hranice je tvrdá:** do požadavků patří **omezení**, do návrhu **volba** (`~/.claude/rules/structure.md`, *`requirements.md`, `architecture.md`, `plan.md`*). „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je omezení a patří sem; „použijeme SQLite, protože…“ je volba a patří do návrhu. Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → návrh. Ne → sem.
 - **Nezkoumá konkurenci ani trh a neptá se, jestli to někdo chce.** Kdo to už dělá, za kolik, co je na tom rizikové a čím je doložená poptávka, zjišťuje `/discovery` do `docs/demand.md`, `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekce *Co poměřujeme* a *Verdikt*, na které se tedy neptá podruhé. **Dorazí-li zadání s nedoloženou poptávkou, není to důvod se zastavit**, ale patří to do `requirements.md` k rozsahu MVP: první verze má být co nejmenší, aby poptávku ověřila.
 - **Nezakládá projekt.** Strukturu, git, autocommit a doménové importy dělá `/project`. Když chybí, skill na to upozorní a nabídne ho.
 - **Nepíše implementační plán.** Ten dělá `/breakdown`, a to až z hotového návrhu řešení, ne z požadavků.
@@ -29,7 +29,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok osy: nav
 
 ## Jak je to postavené uvnitř
 
-**Dialog a klasifikaci rozsahu dělá `superpowers:brainstorming`, a to je implementační detail, ne rozhraní.** Kdyby ho nahradil jiný nástroj nebo vlastní postup, nikdo se to nemusí dozvědět. **Závazné je to, co po skillu zbude:** `docs/requirements.md` a produktové podklady na místech podle `~/.claude/STRUCTURE.md`, česky a bez datumových prefixů.
+**Dialog a klasifikaci rozsahu dělá `superpowers:brainstorming`, a to je implementační detail, ne rozhraní.** Kdyby ho nahradil jiný nástroj nebo vlastní postup, nikdo se to nemusí dozvědět. **Závazné je to, co po skillu zbude:** `docs/requirements.md` a produktové podklady na místech podle `~/.claude/rules/structure.md`, česky a bez datumových prefixů.
 
 | Krok | Kdo ho dělá |
 |---|---|
@@ -40,14 +40,14 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to třetí krok osy: nav
 | Návrh řešení | `/architect` |
 | Implementační plán | `/breakdown` |
 
-**Přepis výchozí cesty.** `brainstorming` ukládá svůj výstup do `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`. Explicitně přitom respektuje uživatelovu preferenci a ta zní jinak – podle `~/.claude/STRUCTURE.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů. **Řekni mu to výslovně**, když ho vyvoláváš, jinak si založí vlastní adresářový strom vedle toho tvého. A řekni mu taky, že **návrhovou část v tomhle běhu nepíše vůbec** – ta patří `/architect`.
+**Přepis výchozí cesty.** `brainstorming` ukládá svůj výstup do `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`. Explicitně přitom respektuje uživatelovu preferenci a ta zní jinak – podle `~/.claude/rules/structure.md` jsou v `docs/` jednoslovné anglické názvy bez datumových prefixů. **Řekni mu to výslovně**, když ho vyvoláváš, jinak si založí vlastní adresářový strom vedle toho tvého. A řekni mu taky, že **návrhovou část v tomhle běhu nepíše vůbec** – ta patří `/architect`.
 
 ## Zásady pro celý průběh
 
-- **Ptej se postupně a přes tool `AskUserQuestion`** – postup, tvar otázky i mechanika toolu viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
-- **Nic si nevymýšlej** – technický název, ID, parametr, cizí API, cena. Viz `~/.claude/RULES.md`, *Při nejistotě se zeptej*.
-- **Zapisuj průběžně** – ve chvíli, kdy rozhodnutí padne, ne až na konci. Viz `~/.claude/RULES.md`, *Pravda v souborech, ne v konverzaci*; kam co patří, definuje `STRUCTURE.md`.
-- **Navrhuj kompletně, implementuj postupně** – viz `~/.claude/RULES.md`. Tady to znamená: požadavky popisují celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
+- **Ptej se postupně a přes tool `AskUserQuestion`** – postup, tvar otázky i mechanika toolu viz `~/.claude/rules/rules.md`, *Ptej se postupně, ne všechno najednou*.
+- **Nic si nevymýšlej** – technický název, ID, parametr, cizí API, cena. Viz `~/.claude/rules/rules.md`, *Při nejistotě se zeptej*.
+- **Zapisuj průběžně** – ve chvíli, kdy rozhodnutí padne, ne až na konci. Viz `~/.claude/rules/rules.md`, *Pravda v souborech, ne v konverzaci*; kam co patří, definuje `structure.md`.
+- **Navrhuj kompletně, implementuj postupně** – viz `~/.claude/rules/rules.md`. Tady to znamená: požadavky popisují celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
 - **YAGNI.** Z každého záměru vyhoď, co není potřeba – ale zapiš to do *Mimo rozsah*, ať je vidět, že to bylo zvážené a zamítnuté, ne opomenuté.
 
 ------
@@ -68,7 +68,7 @@ Výjimka je jediná: **ověřovací pokus**, když na odpovědi stojí rozhodnut
 
 ## Fáze 0 – Příprava
 
-**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: tenhle skill nesahá na kód a pracuje nad nápadem, ne nad diffem větve.
+**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím. Body 4 a 5 odpadají: tenhle skill nesahá na kód a pracuje nad nápadem, ne nad diffem větve.
 
 Navíc si zjisti tohle:
 
@@ -85,7 +85,7 @@ Navíc si zjisti tohle:
    | `requirements.md` existuje a jde o revizi | **Nepřepisuj** – rozšiř a přeformuluj stávající. |
    | `requirements.md` existuje a uživatel chce návrh řešení | Sem nepatří. Řekni to a nabídni `/architect`. |
 
-4. **Větev.** Běží-li projekt ve worktree layoutu a session stojí v `main/` nebo ve větvi, která se zadáním nesouvisí, nabídni založení větve `docs/specify` podle `~/.claude/WORKTREE.md`, *Založení větve*, **dřív, než cokoliv zapíšeš**. Existuje-li větev toho jména z dřívějška, přidej příponu `-2`. Zakládej ji až po bodu 3, ať nevznikne zbytečně.
+4. **Větev.** Běží-li projekt ve worktree layoutu a session stojí v `main/` nebo ve větvi, která se zadáním nesouvisí, nabídni založení větve `docs/specify` podle `~/.claude/rules/worktree.md`, *Založení větve*, **dřív, než cokoliv zapíšeš**. Existuje-li větev toho jména z dřívějška, přidej příponu `-2`. Zakládej ji až po bodu 3, ať nevznikne zbytečně.
 
 ------
 
@@ -98,7 +98,7 @@ Navíc si zjisti tohle:
 2. **Sám si z nich zodpověz co nejvíc.** Cokoliv, co z podkladů plyne, se už neptej.
 3. **Vypiš souhrn, co sis z toho odvodil**, ať to uživatel jedním pohledem potvrdí nebo opraví.
 4. **Doptávej se jen na zbytek** – a na věci, kde si nejsi jistý.
-5. **Projdi `docs/backlog.md` a vytěž z něj, co do tohohle zadání patří.** Je to zásobník nezávazných nápadů (`~/.claude/STRUCTURE.md`, *`backlog.md`*) a tohle je jediné místo, kde se čte – nápad, který nikdo neprojde teď, tam bude ležet dál a nikomu se nepřipomene.
+5. **Projdi `docs/backlog.md` a vytěž z něj, co do tohohle zadání patří.** Je to zásobník nezávazných nápadů (`~/.claude/rules/structure.md`, *`backlog.md`*) a tohle je jediné místo, kde se čte – nápad, který nikdo neprojde teď, tam bude ležet dál a nikomu se nepřipomene.
 
    Postup: vypiš položky, které se s tématem zadání překrývají nebo ho přirozeně rozšiřují, u každé jednou větou proč. Pak se **zeptej přes `AskUserQuestion`, jednu položku na volání** – *Zařadit do zadání* / *Nechat v backlogu* / *Zahodit*. Zařazenou položku **přesuň z backlogu do rozpracovaného zadání**, ať neleží na dvou místech; zahozenou smaž a měla-li odůvodnění, zapiš ho do `docs/decisions.md`.
 
@@ -134,7 +134,7 @@ Zapiš do **`docs/requirements.md`**. Šablona je v `~/.claude/skills/specify/do
 
 ### Scénáře, glosář a ceník
 
-Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz *Fáze 0*). Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/.claude/STRUCTURE.md`, *Produktové podklady*.
+Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz *Fáze 0*). Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/.claude/rules/structure.md`, *Produktové podklady*.
 
 **Nevede-li projekt žádný z nich, nic nezakládej** a jdi rovnou na kontrolu. Zdá-li se ti přitom, že by se některý hodil, řekni to jednou větou a nech rozhodnout – závazek vede `CLAUDE.md`, ne tenhle běh.
 
@@ -160,7 +160,7 @@ Běží **po každém dokumentu zvlášť**, ne až na konci.
 
 **Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. `/oponent` je **krok životního cyklu**, ne nabídka: pusť ho, nebo nahlas řekni, proč se u téhle změny přeskakuje.
 
-**Hlediska nevypisuj** – sestaví si je sám podle sloupce *Spouštěč* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Volba hledisek*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/RULES.md`, *Single source of truth*).
+**Hlediska nevypisuj** – sestaví si je sám podle sloupce *Spouštěč* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Volba hledisek*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/rules/rules.md`, *Single source of truth*).
 
 **Kontrola uživatele:**
 
@@ -178,13 +178,13 @@ Po schválení požadavků **doporuč `/architect`**, který z nich udělá náv
 
 **U projektu bez kódu** `/architect` ani `/breakdown` nedoporučuj – je-li to znalostní, obsahový nebo obchodní projekt (kurz, brand, pozicování, evidence), `requirements.md` dává smysl, ale návrh řešení a plán předpokládají kód, testy a commity. Rozepiš místo nich kroky do `docs/todo.md`.
 
-Celý řetěz i s tím, co následuje po implementaci, je v `~/.claude/skills/LIFECYCLE.md`.
+Celý řetěz i s tím, co následuje po implementaci, je v `~/.claude/rules/lifecycle.md`.
 
 ------
 
 ## Když se zadání změní později
 
-Platí *Doc-first vývoj* z `~/.claude/RULES.md`; posloupnost souborů definuje `STRUCTURE.md`:
+Platí *Doc-first vývoj* z `~/.claude/rules/rules.md`; posloupnost souborů definuje `structure.md`:
 
 1. Změní se požadavek → uprav **`requirements.md`** a s ním **`scenarios.md`**, vede-li ho projekt. Změněný požadavek skoro vždycky mění nějaký scénář; scénář, který zůstal, ale už nejde provést, je horší než chybějící.
 2. Zkontroluj, jestli to mění návrh → to je `/architect`.
@@ -215,14 +215,14 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 - [seznam, nebo „žádné“]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Zadání je hotové a schválené, můžeme na návrh řešení.`
 - `Zadání hotové není – brání tomu: <konkrétní seznam>.`
 
-**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/architect` – návrh řešení nad schváleným zadáním
 - volitelně před tím `/cleanup`, pak `/clear`, a `/oponent docs/requirements.md` až v nové session – tahle zadání psala a je na něj zaujatá

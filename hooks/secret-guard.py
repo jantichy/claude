@@ -11,14 +11,14 @@ jediný zdroj pravdy, a co se do nich přidá, hlídá hook od té chvíle taky.
 
 Zastaví se příkaz, jehož slovo se jménem shoduje se vzorem **a zároveň odkazuje
 na existující soubor** – vůči `cwd`, cílům `cd` a adresářům předaným příkazu.
-Bez té druhé podmínky by padal `grep '\\.env' WORKTREE.md` nad dokumentací
+Bez té druhé podmínky by padal `grep '\\.env' worktree.md` nad dokumentací
 i zpráva commitu, která `.env` jen zmiňuje; falešný poplach u hooku, který běží
 před každým příkazem, znamená, že si ho někdo vypne. Tělo heredocu se proto čte
 jen tehdy, když ho dostává interpret – jinak je to text, ne cesta.
 
 Propouští se, co obsah nečte: `ls`, `stat`, `test` a git podpříkazy, které
 soubor jen evidují. Co hook nevidí – proměnnou, glob, rekurzivní `grep -r` –,
-eviduje `BYPASS.md`.
+eviduje `bypass.md`.
 
 Vrací 2 a důvod na stderr, což je pro PreToolUse zastavení nástroje.
 """
@@ -34,7 +34,7 @@ from pathlib import Path
 BLOCK = 2
 PASS = 0
 
-SETTINGS = Path(__file__).resolve().parent / "settings.json"
+SETTINGS = Path(__file__).resolve().parent.parent / "settings.json"
 # Jediný program, který smí tajemství číst, protože z nich vypíše jen jména klíčů.
 ENVKEYS = Path(__file__).resolve().parent / "envkeys.py"
 

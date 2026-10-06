@@ -80,7 +80,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/cleanup a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-**Nabídku merge na konci provádí skill [`/merge`](../merge/README.md)** – nainstalujte si ho k tomu, jinak se nabídne, ale nebude ho kdo vyřídit. Pracujete-li v uspořádání, kde má každá větev vlastní adresář, vezměte k tomu ještě [`WORKTREE.md`](../../WORKTREE.md) do `~/.claude/`.
+**Nabídku merge na konci provádí skill [`/merge`](../merge/README.md)** – nainstalujte si ho k tomu, jinak se nabídne, ale nebude ho kdo vyřídit. Pracujete-li v uspořádání, kde má každá větev vlastní adresář, vezměte k tomu ještě [`worktree.md`](../../rules/worktree.md) do `~/.claude/`.
 
 Skill předpokládá, že má projekt ustálenou dokumentační strukturu – ví, co patří do instrukcí, co mezi rozhodnutí, co mezi odložené věci. **Řekněte Claudovi, ať to přizpůsobí tomu, jak máte soubory uspořádané vy**; sada, kterou používám já, je v tomhle repozitáři popsaná jen odkazem do soukromých standardů.
 

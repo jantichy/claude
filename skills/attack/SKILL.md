@@ -23,7 +23,7 @@ Rozdíl proti `/review` je v jednom slově: ten kód **čte**, tenhle ho **spou�
 
 **Nález odsud má jinou váhu než nález z panelu.** Panel tvrdí, že něco *nastane*; útok přiloží postup, kterým to nastalo. Proto se nálezy z `/attack` nedávají ověřovateli – ověřuje se tvrzení, ne pozorování.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne bod na ose: stojí v poslední mezeře, **až za `/cleanupem` a před `/release`**.
+V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to kontrolní krok, ne bod na ose: stojí v poslední mezeře, **až za `/cleanupem` a před `/release`**.
 
 **Proč tam a ne po každé feature:** `/review` je levný, čte diff a snese, aby běžel pokaždé, když se něco dodělá. Tenhle skill je drahý – zvedá prostředí, potřebuje celé toky a trvá desítky minut – a nad rozestavěnou aplikací hlásí hlavně nedodělanost, ne chyby. Dává smysl jednou za čas nad **hotovým celkem**, který se chystá ven.
 
@@ -41,7 +41,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 
 **Pouští se před nasazením**, ne po každé feature: nad stavem, který je hotový, prošel uzavíráním a měl by jít ven. U dlouhého projektu klidně vícekrát – ale vždycky nad celkem, který drží pohromadě, ne nad jednou dodělanou obrazovkou.
 
-**Kdy se přeskakuje, drží `~/.claude/skills/LIFECYCLE.md`** u popisu tohohle kroku – neopisuj ho sem. Platí-li to, řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten patří do uzavírání a proběhl dávno.)
+**Kdy se přeskakuje, drží `~/.claude/rules/lifecycle.md`** u popisu tohohle kroku – neopisuj ho sem. Platí-li to, řekni to nahlas i s důvodem a pokračuj na `/release`. (Nikoliv na `/review` – ten patří do uzavírání a proběhl dávno.)
 
 Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna v autorizaci nebo ve stavovém automatu je přesně to, co útok chytá a čtení přehlédne.
 
@@ -56,7 +56,7 @@ Naopak se **nepřeskakuje** jen proto, že „změna byla malá“. Malá změna
 
 ## Hranice
 
-**Čím to drží.** Tenhle odstavec sám o sobě nedrží nic: vykonává ho tentýž model, který čte i pokyny uživatele, a ze stejného kontextu (`~/.claude/RULES.md`, *Přednost pravidel*). Kdyby stačila věta, byl by souhlasový mechanismus průběžné kontroly – soubor, hash, `--allow`, `--revoke` – zbytečný, přestože ten hlídá pouhé spuštění `npm test`, kdežto tady se **záměrně posílá `'; drop`, mažou záznamy a lámou stavy**.
+**Čím to drží.** Tenhle odstavec sám o sobě nedrží nic: vykonává ho tentýž model, který čte i pokyny uživatele, a ze stejného kontextu (`~/.claude/rules/rules.md`, *Přednost pravidel*). Kdyby stačila věta, byl by souhlasový mechanismus průběžné kontroly – soubor, hash, `--allow`, `--revoke` – zbytečný, přestože ten hlídá pouhé spuštění `npm test`, kdežto tady se **záměrně posílá `'; drop`, mažou záznamy a lámou stavy**.
 
 Hranice proto **stojí na dokladech, ne na slibu**. Body 1 a 2 mají každý svůj příkaz a **jeho výstup se doslova vlepí do přehledu ve Fázi 0**. Bez obou dokladů se Fáze 2 nespustí – a to i tehdy, když uživatel řekne, že je to v pořádku. Řekne-li to, není to důvod doklad vynechat, ale získat ho:
 
@@ -80,12 +80,12 @@ Platí bez výjimky:
 
 ## Fáze 0 – Příprava
 
-**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím; bod 5 je rovnou první položkou níž. Bod 4 odpadá: kontroly nad kódem pustil `/review` dávno a tenhle skill kód nečte, ale spouští.
+**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím; bod 5 je rovnou první položkou níž. Bod 4 odpadá: kontroly nad kódem pustil `/review` dávno a tenhle skill kód nečte, ale spouští.
 
 Navíc si zjisti tohle – a teprve pak se ptej na potvrzení:
 
-1. **Rozsah změn** – **postupem z `~/.claude/skills/PREFLIGHT.md`, bod 5**, včetně toho, co dělat, když se hlavní větev nenajde. Neopisuj ho sem: dřív tu stál zkrácený řetěz bez `master` a bez poslední větve, takže `/attack` selhal tam, kde `/review` prošel, přestože obojí tvrdí „stejně“.
-   *Worktree layout* (`~/.claude/WORKTREE.md`): pouštěj to ve worktree větve, ne v kořeni kontejneru.
+1. **Rozsah změn** – **postupem z `~/.claude/skills/preflight.md`, bod 5**, včetně toho, co dělat, když se hlavní větev nenajde. Neopisuj ho sem: dřív tu stál zkrácený řetěz bez `master` a bez poslední větve, takže `/attack` selhal tam, kde `/review` prošel, přestože obojí tvrdí „stejně“.
+   *Worktree layout* (`~/.claude/rules/worktree.md`): pouštěj to ve worktree větve, ne v kořeni kontejneru.
 
 2. **Jak se to spouští** – z `## Kontrakt příkazů` v projektovém `CLAUDE.md` (*Kontrakt příkazů*). Zajímá tě `dev`, případně `build`. **Chybí-li, nevymýšlej příkaz** – zeptej se, čím se aplikace lokálně spouští, a nabídni, že to rovnou doplníš do kontraktu.
 
@@ -114,7 +114,7 @@ Zjištěné shrň a **zeptej se na potvrzení, než něco spustíš** (`AskUserQ
 - **Rozsah:** <obrazovky, endpointy, vektory>
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Chybí-li kterýkoliv z těch dvou dokladů, **nepokračuj a řekni proč**. Je to jediné místo v celém životním cyklu s destruktivními vedlejšími účinky, takže „vypadá to lokálně“ tu není argument.
 
@@ -122,7 +122,7 @@ Chybí-li kterýkoliv z těch dvou dokladů, **nepokračuj a řekni proč**. Je 
 
 ## Fáze 1 – Zvednout aplikaci
 
-**Nejdřív se podívej, jestli po tobě něco nezůstalo.** Existuje-li `.claude/run/attack.json` z předchozího běhu (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*), znamená to, že se minulý běh nedokončil – vypiš, co je v něm zapsané, a **nabídni úklid, než cokoliv zvedneš**. Zkontroluj taky, jestli na cílovém portu už něco neběží: pokud ano, zastav se a zeptej se. Útok proti serveru ze starého kódu měří něco jiného, než si myslíš, a jeho reprodukční postupy pak nikde neplatí.
+**Nejdřív se podívej, jestli po tobě něco nezůstalo.** Existuje-li `.claude/run/attack.json` z předchozího běhu (`~/.claude/rules/structure.md`, *Běhový stav skillů*), znamená to, že se minulý běh nedokončil – vypiš, co je v něm zapsané, a **nabídni úklid, než cokoliv zvedneš**. Zkontroluj taky, jestli na cílovém portu už něco neběží: pokud ano, zastav se a zeptej se. Útok proti serveru ze starého kódu měří něco jiného, než si myslíš, a jeho reprodukční postupy pak nikde neplatí.
 
 Spusť `dev` na pozadí, počkej, až odpoví, a ověř, že běží. Port si zjisti z výstupu, ne z domněnky.
 
@@ -145,7 +145,7 @@ Nech si otevřený přístup ke **konzoli, síti a logu serveru** – většina 
 
 Pošli **paralelní subagenty, každého s jedním vektorem**. Ne dvacet, tři až pět podle toho, čeho se rozsah týká. Každý má vlastní kontext a vlastní hledisko; společné mají jen to, že hlásí jen doložené.
 
-**Útočníci potřebují nejvíc chytrosti z celého životního cyklu: nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*.) Zadání zní „najdi, co nikoho nenapadlo“, a to je pravý opak mechanické práce – levný model odzkouší učebnicové payloady ze seznamu, silný vymyslí kombinaci, na kterou seznam nestačí. Je to zároveň **dlouhá agentní práce**, tedy přesně profil, na který je `xhigh` určený. Nedaří-li se ani tak, je to jeden z mála případů, kdy má smysl sáhnout po **nejvyšším tieru** – ale až potom, ne rovnou. Který to je, drží `~/.claude/RULES.md`; jméno modelu sem nepatří, zestárlo by tiše.
+**Útočníci potřebují nejvíc chytrosti z celého životního cyklu: nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*.) Zadání zní „najdi, co nikoho nenapadlo“, a to je pravý opak mechanické práce – levný model odzkouší učebnicové payloady ze seznamu, silný vymyslí kombinaci, na kterou seznam nestačí. Je to zároveň **dlouhá agentní práce**, tedy přesně profil, na který je `xhigh` určený. Nedaří-li se ani tak, je to jeden z mála případů, kdy má smysl sáhnout po **nejvyšším tieru** – ale až potom, ne rovnou. Který to je, drží `~/.claude/rules/rules.md`; jméno modelu sem nepatří, zestárlo by tiše.
 
 **Rozděl jim data, ne jen vektory.** Agenti běží nad jednou instancí, takže se přepisují navzájem: jeden ti změní jméno na profilu, který druhý zrovna měří, a oba pak popisují stav, který nikdy nenastal. Každému v zadání urči **vlastní účty a vlastní záznamy** (typicky vlastní e-mailovou doménu) a ulož mu, ať cizí nechá být. Sdílený účet smí mít nanejvýš jeden z nich.
 
@@ -215,9 +215,9 @@ VÝSTUP: JSON pole, nic jiného. Prázdné, když se nic rozbít nepodařilo.
 Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 ```
 
-**Pole `basis` schéma nemá schválně** – doložením nálezu je `reproduction` s `observed`, a právě podle nich si ho hlavní session přehraje (`~/.claude/skills/SKILLS.md`, *Ověřovací vrstva*).
+**Pole `basis` schéma nemá schválně** – doložením nálezu je `reproduction` s `observed`, a právě podle nich si ho hlavní session přehraje (`~/.claude/skills/skills.md`, *Ověřovací vrstva*).
 
-**Závažnost:** škálu drží `~/.claude/skills/SEVERITY.md` a je **společná** se všemi skilly, které hlásí nálezy – stupeň musí napříč nimi měřit totéž, jinak zpětně nejde poznat, čím byl odůvodněný. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **NÍZKÉ** – technická hláška bez dalšího dopadu.
+**Závažnost:** škálu drží `~/.claude/skills/severity.md` a je **společná** se všemi skilly, které hlásí nálezy – stupeň musí napříč nimi měřit totéž, jinak zpětně nejde poznat, čím byl odůvodněný. Pro útok se čte takhle: **KRITICKÉ** – ztráta dat, akce bez oprávnění, nedostupnost pro část uživatelů, nevratná akce bez pojistky. **STŘEDNÍ** – pád nebo nekonzistence v běžném toku. **NÍZKÉ** – technická hláška bez dalšího dopadu.
 
 ------
 
@@ -229,7 +229,7 @@ Nezapisuj do žádného souboru a nic v aplikaci neopravuj.
 - **Nereprodukovalo se** → zahoď a spočítej do souhrnu. Neptej se agenta znovu.
 - **Reprodukovalo se jinak, než tvrdil** → platí, co jsi viděl ty.
 
-**O nálezech mluv obsahem, ne značkou od agenta.** Identifikátory, pod kterými se nálezy vracejí od útočníků, jsou interní – uživatel je nikdy neviděl. Místo „C2 se reprodukovalo“ napiš, co se reprodukovalo: *„Odeslání formuláře dvakrát rychle po sobě založí objednávku dvakrát.“* (`~/.claude/RULES.md`, *Interní značky ven nepatří*.)
+**O nálezech mluv obsahem, ne značkou od agenta.** Identifikátory, pod kterými se nálezy vracejí od útočníků, jsou interní – uživatel je nikdy neviděl. Místo „C2 se reprodukovalo“ napiš, co se reprodukovalo: *„Odeslání formuláře dvakrát rychle po sobě založí objednávku dvakrát.“* (`~/.claude/rules/rules.md`, *Interní značky ven nepatří*.)
 
 Deduplikuj: jedna příčina se projeví přes víc vektorů. Nech jeden nález a vypiš u něj všechny cesty, kterými se k ní dá dojít.
 
@@ -253,29 +253,29 @@ Deduplikuj: jedna příčina se projeví přes víc vektorů. Nech jeden nález 
 **Nezkoušelo se:** [vektory vynechané kvůli hranicím – platby, odesílání mailů, …]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup nebyl prázdný** – prázdný výsledek je taky výsledek a je to ten lepší.
 
-**Jsou-li nálezy, přehledem odpověď nekonči** – první otázka Fáze 5 jde **v téže odpovědi** (`~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*).
+**Jsou-li nálezy, přehledem odpověď nekonči** – první otázka Fáze 5 jde **v téže odpovědi** (`~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*).
 
 ------
 
 ## Fáze 5 – Průchod s uživatelem
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*.
 
-**Skoro všechny nálezy jsou sporné, a je to doménové čtení, ne výjimka** (`~/.claude/skills/FINDINGS.md`). Nález z útoku znamená změnu chování běžící aplikace a **kterou** cestou se díra zavře, je obvykle volba: guard versus validace vstupu, odmítnutí versus tolerance, opravit versus omezit rozsah. Mechanická větev tady proto není.
+**Skoro všechny nálezy jsou sporné, a je to doménové čtení, ne výjimka** (`~/.claude/skills/findings.md`). Nález z útoku znamená změnu chování běžící aplikace a **kterou** cestou se díra zavře, je obvykle volba: guard versus validace vstupu, odmítnutí versus tolerance, opravit versus omezit rozsah. Mechanická větev tady proto není.
 
 **Jednoznačný nález ale nastat může** a pak se opraví rovnou bez ptaní: typicky když útok narazil na chybějící kus něčeho, co je **jinde v dokumentaci rozhodnuté** – guard, který rodina má u všech ostatních přechodů, nebo normalizace vstupu, kterou standard předepisuje jmenovitě. Nerozhoduje se tam *jak*, jen se to musí udělat.
 
 Pro každý, jeden po druhém, od nejzávažnějšího:
 
-**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Ve větě řekni, **co se stalo a co se stát mělo**, a kde to je, dá-li se to dohledat; jméno vektoru patří do hranatých závorek v titulním řádku.
+**Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Ve větě řekni, **co se stalo a co se stát mělo**, a kde to je, dá-li se to dohledat; jméno vektoru patří do hranatých závorek v titulním řádku.
 
 **Reprodukční postup je tu výjimka a zůstává číslovaným seznamem** pod tím odstavcem, uvozený tučným slovem *Reprodukce*. Je to návod ke spuštění, ne vysvětlení – souvislý text by z něj udělal to, co se nedá přepsat do terminálu.
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby jsou **konkrétní varianty, kterou cestou díru zavřít**, a za nimi dvě záchytné – ne trojice *Opravit / Odložit / Přeskočit*, u které je odpověď předem známá. Pojmenování obou záchytných voleb i tvar `header` drží `~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají*. Chování volby *Other* viz `~/.claude/RULES.md`, *Ptej se postupně, ne všechno najednou*.
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby jsou **konkrétní varianty, kterou cestou díru zavřít**, a za nimi dvě záchytné – ne trojice *Opravit / Odložit / Přeskočit*, u které je odpověď předem známá. Pojmenování obou záchytných voleb i tvar `header` drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*. Chování volby *Other* viz `~/.claude/rules/rules.md`, *Ptej se postupně, ne všechno najednou*.
 
 Při volbě **Opravit**:
 
@@ -314,22 +314,22 @@ Cíl: <adresa> · Vektory: [které]
 **Prostředí:** [co bylo zastaveno · co jsem kvůli útoku zvedl a zůstalo běžet, s důvodem]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/rules/structure.md`, *`done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
 
 ```
 - **YYYY-MM-DD** · `/attack` · `<short HEAD>` · <rozsah a vektory> · N nálezů (X opraveno, Y odloženo, Z won't fix)
 ```
 
-Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Rozbít se to nepodařilo, v prověřených vektorech aplikace drží.`
 - `Rozbít se to podařilo a není vypořádané – zbývá: <konkrétní seznam>.`
 
-**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/release` – nasazení prověřené práce
-- před tím vždy `/cleanup` – druhý průchod po útoku, viz `~/.claude/skills/LIFECYCLE.md`
+- před tím vždy `/cleanup` – druhý průchod po útoku, viz `~/.claude/rules/lifecycle.md`

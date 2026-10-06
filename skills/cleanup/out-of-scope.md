@@ -11,7 +11,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
 1. **Nemáš-li nic**, přeskoč to. Uveď v přehledu „žádné“ – prázdný výsledek je taky výsledek.
 
-2. **Rozděl položky na ty, které vyřešíš sám, a ty, na které se zeptáš.** Hranice je táž jako u nálezů kontrolních skillů a drží ji `~/.claude/skills/FINDINGS.md`; tady k ní patří dvě podmínky navíc, protože položka mimo rozsah se nevypořádává ve fázi, která na ni má čas.
+2. **Rozděl položky na ty, které vyřešíš sám, a ty, na které se zeptáš.** Hranice je táž jako u nálezů kontrolních skillů a drží ji `~/.claude/skills/findings.md`; tady k ní patří dvě podmínky navíc, protože položka mimo rozsah se nevypořádává ve fázi, která na ni má čas.
 
    | | Podmínka |
    |---|---|
@@ -26,7 +26,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
    Společné mají to, že se nerozhoduje **jestli**, ani **jak** – jen to někdo musí udělat. Otázka nad takovou položkou není opatrnost, ale přehazování práce zpátky na uživatele.
 
-   **Nejistotu nejdřív zkus odstranit** (`~/.claude/skills/FINDINGS.md`, *Nejistotu nejdřív zkus odstranit*): jde-li odpověď spočítat, dohledat nebo porovnat se zdrojem v repozitáři, není to položka k rozhodnutí, ale práce – a ta se dělá. **Pracnost sem nepatří**; „musel bych projít celý katalog a přepočítat to“ je popis práce, ne důvod k otázce.
+   **Nejistotu nejdřív zkus odstranit** (`~/.claude/skills/findings.md`, *Nejistotu nejdřív zkus odstranit*): jde-li odpověď spočítat, dohledat nebo porovnat se zdrojem v repozitáři, není to položka k rozhodnutí, ale práce – a ta se dělá. **Pracnost sem nepatří**; „musel bych projít celý katalog a přepočítat to“ je popis práce, ne důvod k otázce.
 
    **Váhání je odpověď.** Nepřemlouvej se, že položka do první skupiny „nejspíš patří“ – patří tam jen to, u čeho je to zřejmé na první pohled. Toho, co uživatel nezadal a tys to přesto změnil, se nesmí nakupit tolik, aby to nešlo přečíst.
 
@@ -34,7 +34,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
 3. **Vyřeš první skupinu rovnou**, celou, ještě než se přejde ke druhé, a vypiš, cos udělal. Vypsat znamená uvést to v přehledu závěru, ne se na to ptát – rozhodnuté věci se nepředkládají k odsouhlasení.
 
-   **Rodiči pak platí, že výpisem odpověď nekončí** – bod 4 i první otázka bodu 5 patří do téže odpovědi (`~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*). Šablona výpisu je tahle:
+   **Rodiči pak platí, že výpisem odpověď nekončí** – bod 4 i první otázka bodu 5 patří do téže odpovědi (`~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*). Šablona výpisu je tahle:
 
    ```
    **Mimo rozsah, vyřešeno rovnou:**
@@ -43,9 +43,9 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
    2. …
    ```
 
-   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
-   **Nic z toho nezamlč, ale ani to nedramatizuj.** Uživatel tu práci nezadal, takže musí vidět, co se v jeho projektu změnilo, a mít možnost to vrátit – tichá oprava mimo rozsah je zásah do jeho domény bez jeho vědomí (`~/.claude/RULES.md`, *Nerozhoduj potichu nad rámec zadání*). Řádka na položku ale stačí: **žádné rozepisování, čeho se týkala, proč byla mimo rozsah a co by se stalo, kdyby se neopravila.** Ten rozbor patří jen k položkám, o kterých se uživatel rozhoduje; u opravené věci je to hlášení nálezu, který už neexistuje.
+   **Nic z toho nezamlč, ale ani to nedramatizuj.** Uživatel tu práci nezadal, takže musí vidět, co se v jeho projektu změnilo, a mít možnost to vrátit – tichá oprava mimo rozsah je zásah do jeho domény bez jeho vědomí (`~/.claude/rules/rules.md`, *Nerozhoduj potichu nad rámec zadání*). Řádka na položku ale stačí: **žádné rozepisování, čeho se týkala, proč byla mimo rozsah a co by se stalo, kdyby se neopravila.** Ten rozbor patří jen k položkám, o kterých se uživatel rozhoduje; u opravené věci je to hlášení nálezu, který už neexistuje.
 
 4. **Zbytek vypiš najednou** jako číslovaný seznam **seřazený od nejdůležitější** – u každé položky jednou větou, čeho se týká a proč je mimo rozsah úklidu. **Práh důležitosti tady neplatí**, na rozdíl od nevypořádaných témat: tohle je poslední místo, kde se o starším dluhu a o rozbitých věcech ze session dá rozhodnout, a co se nezeptá, zmizí se session. Řadí se proto jen proto, aby uživatel narazil na podstatné dřív, ne aby se zbytek zahodil. **Není to nabídka, ale přehled:** uživatel má vidět celý rozsah dřív, než se začne rozhodovat o jednotlivostech, aby věděl, kolik otázek ho čeká a jak spolu položky souvisí.
 
@@ -56,11 +56,11 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
    2. …
    ```
 
-   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 5. **Projdi je jednu po druhé.** U každé ji nejdřív vypiš:
 
-   **Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků:
+   **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků:
 
    ```
    **[N/celkem] NÁZEV POLOŽKY**
@@ -68,21 +68,21 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
    <plynulý text: čeho se to týká, proč je to mimo dnešní úklid a co se stane, když se to nevyřeší>
    ```
 
-   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
    **V odstavci musí zaznít čtyři věci, ale jako věty, ne jako popisky za dvojtečkou:** čeho se položka týká, **co ji drží mimo rozsah**, **která podmínka z bodu 2 na ni sedí** – tedy proč se na ni vůbec ptáš – a **konkrétní důsledek toho, že se nevyřeší**, ne „bylo by to lepší“.
 
-   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Položka N/celkem` jako v hlavní frontě (`~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají*). Volby:
+   Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Položka N/celkem` jako v hlavní frontě (`~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*). Volby:
 
-   **Nejdřív ale rozhodni, do které fronty položka věcně patří.** *Zapsat do todo* i *Zapsat do backlogu* míří na soubory **uklízeného projektu**. Položka, která patří jinam – obecné pravidlo do `~/.claude/RULES.md`, úkol na konfigurační vrstvě do `~/.claude/todo.md`, doménová znalost do `~/Dev/context/` –, do nich nepatří: obecné pravidlo zapsané do `docs/todo.md` jednoho projektu se schová tam, kde ho nikdo nehledá. U takové položky **skládej volby věcně** – kam a v jaké podobě ten zápis patří –, ne z předepsané čtveřice. Mimo uklízený projekt se nezapisuje bez rozhodnutí (`SKILL.md`, *Zásady pro celý průběh*), takže se na to ptáš vždycky. **Poznámka o `/cleanup` samotném sem nepatří** – ta jde do fronty konfigurační vrstvy. Doloženo 25. 9. 2026.
+   **Nejdřív ale rozhodni, do které fronty položka věcně patří.** *Zapsat do todo* i *Zapsat do backlogu* míří na soubory **uklízeného projektu**. Položka, která patří jinam – obecné pravidlo do `~/.claude/rules/rules.md`, úkol na konfigurační vrstvě do `~/.claude/docs/todo.md`, doménová znalost do `~/Dev/context/` –, do nich nepatří: obecné pravidlo zapsané do `docs/todo.md` jednoho projektu se schová tam, kde ho nikdo nehledá. U takové položky **skládej volby věcně** – kam a v jaké podobě ten zápis patří –, ne z předepsané čtveřice. Mimo uklízený projekt se nezapisuje bez rozhodnutí (`SKILL.md`, *Zásady pro celý průběh*), takže se na to ptáš vždycky. **Poznámka o `/cleanup` samotném sem nepatří** – ta jde do fronty konfigurační vrstvy. Doloženo 25. 9. 2026.
 
-   **Tahle čtveřice je zapsaná výjimka z jednotného tvaru voleb** (`~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají*): u položky, která není vadou, se neopravuje, takže *Neopravovat* nedává smysl. **Volby v tabulce níž platí pro položku, která je novou prací nebo nápadem** – tam je „jestli a kdy“ doopravdy uživatelovo rozhodnutí. **Je-li položka vadou** – dvě místa si odporují, odkaz nikam nevede, číslo nesedí se zdrojem –, je volba „kdy“ falešná a položka patřila do bodu 3 (`~/.claude/skills/FINDINGS.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*). **Objeví-li se v nabídce *Vyřešit teď*, ověř si proto ještě jednou, proč ji tam dáváš**: u vady, kterou umíš opravit, je to doklad, že se nemáš ptát.
+   **Tahle čtveřice je zapsaná výjimka z jednotného tvaru voleb** (`~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*): u položky, která není vadou, se neopravuje, takže *Neopravovat* nedává smysl. **Volby v tabulce níž platí pro položku, která je novou prací nebo nápadem** – tam je „jestli a kdy“ doopravdy uživatelovo rozhodnutí. **Je-li položka vadou** – dvě místa si odporují, odkaz nikam nevede, číslo nesedí se zdrojem –, je volba „kdy“ falešná a položka patřila do bodu 3 (`~/.claude/skills/findings.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*). **Objeví-li se v nabídce *Vyřešit teď*, ověř si proto ještě jednou, proč ji tam dáváš**: u vady, kterou umíš opravit, je to doklad, že se nemáš ptát.
 
    | Volba | Co uděláš |
    |---|---|
    | **Vyřešit teď** | Vyřeš položku **hned**, ještě než se zeptáš na další – ne až po posledním dotazu. Rozhodnutí odložené na konec ztratí kontext, ve kterém padlo. |
    | **Zapsat do todo** | Zapiš ji do `docs/todo.md` – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. Volí se u položky, o které je rozhodnuto, že se udělá. |
-   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/STRUCTURE.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Fáze 3 – Evidence a konfrontace se soubory*). |
+   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/rules/structure.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Fáze 3 – Evidence a konfrontace se soubory*). |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
 
    Když jsi vyřídil poslední položku, pokračuj *Fází 6* – tam na tebe čekají nálezy čtenářů.

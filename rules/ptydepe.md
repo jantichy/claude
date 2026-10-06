@@ -2,7 +2,7 @@
 
 Termíny, na kterých jsme se výslovně dohodli. Řeší jedinou vadu: **beru za termín, co byl jen náhodné slovo v konverzaci**, a pak ho používám napříč projekty, jako by byl zavedený. Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo nerozumí, ale všichni předstírají, že ano. Spravuje ho skill `/ptydepe`.
 
-Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro jednu věc* v `~/.claude/RULES.md`. Doménové glosáře projektů (`docs/glossary.md`) tím nejsou dotčené – tady je jen to, co platí **napříč** projekty.
+Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro jednu věc* v `~/.claude/rules/rules.md`. Doménové glosáře projektů (`docs/glossary.md`) tím nejsou dotčené – tady je jen to, co platí **napříč** projekty.
 
 ## Jak se používá
 
@@ -35,7 +35,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | kotva (místo pro skriptovou úpravu textu) | hledaný řetězec | podle čeho skript vkládá nebo kde řeže |
 | kotva (ostatní přenesené významy), ukotvit | konkrétní slovo podle smyslu – doklad, srovnávací ukázka, modelový rozpočet, pracovní cena, rodič v selektoru, opěrný bod, „kontrola, že test něco našel“; sloveso konkrétním slovesem | **Zůstává:** kotva odkazu (`#nadpis`), ukotvení vzoru v regexu, cenová kotva v psychologii ceny a CSS anchor positioning |
 | plot | ohraničení bloku kódu | řádek tří a víc zpětných apostrofů nebo vlnovek, kterým se v Markdownu otevírá a zavírá blok kódu; v kódu anglicky `fence`. **Plot u domu** tím dotčený není |
-| pre-flight | příprava | `Fáze 0` každého skillu. Soubor se dál jmenuje `PREFLIGHT.md` |
+| pre-flight | příprava | `Fáze 0` každého skillu. Soubor se dál jmenuje `preflight.md` |
 | próza (proti struktuře) | souvislý text | nestrukturovaný zápis tam, kde se čeká tabulka, seznam, kritérium |
 | próza (proti identifikátoru) | běžný text | česká věta tam, kde stojí proti jménu režimu, klíči, poli. **Ne** „volný text“ |
 | ráčna | seznam, který musí přesně sedět | výjimka v seznamu, který test porovnává se skutečností v obou směrech |

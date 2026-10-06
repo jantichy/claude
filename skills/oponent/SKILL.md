@@ -13,7 +13,7 @@ Uživatel má hotový nebo rozpracovaný dokument, na kterém jste spolu dlouho 
 
 Skill proto pošle na dokument **subagenty bez kontextu téhle session**, každého z jiného hlediska, a jejich nálezy s uživatelem probere jeden po druhém.
 
-V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne bod na ose: **stojí ve třech mezerách** – za `/discovery`, za `/specify` a za `/architect`. Do životního cyklu patří proto, že jinak návrh neměří nikdo – `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celým životním cyklem jako korektní. Přeskakuje se stejným pravidlem jako každý jiný krok: drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano – a přeskočení se řekne nahlas i s důvodem.
+V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to kontrolní krok, ne bod na ose: **stojí ve třech mezerách** – za `/discovery`, za `/specify` a za `/architect`. Do životního cyklu patří proto, že jinak návrh neměří nikdo – `/review` ověřuje kód proti specifikaci, ale samotnou specifikaci nikdo proti ničemu, takže vada v ní projde celým životním cyklem jako korektní. Přeskakuje se stejným pravidlem jako každý jiný krok: drobná změna uvnitř navrženého systému posudek nepotřebuje, nový systém nebo nový podsystém ano – a přeskočení se řekne nahlas i s důvodem.
 
 ## Co skill nedělá
 
@@ -25,7 +25,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 - **Nevytěžuje session.** Že je všechno dohodnuté zapsané v souborech, hlídá `/cleanup`.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují.
 
-**Vědomé volby, ať je nikdo neřeší znovu** (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*):
+**Vědomé volby, ať je nikdo neřeší znovu** (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*):
 
 - **Hledisko *Vnitřní rozpor* se s `/consistency` částečně překrývá a je to přijatá cena.** Ano, „sedí čísla a výčty“ najde i `/consistency`. Ale oponentura běží i nad dokumentem, který `/consistency` nevidí (cizí podklad, text mimo projekt), a rozpor mezi dvěma tvrzeními ve věci samé je jiná práce než rozpor mezi součtem a tabulkou. Nález se vrací při každé oponentuře skillu; není to omyl, je to volba.
 - **Katalog se jednou vědomě zmenšil z devatenácti na sedmnáct** a ta hlediska nepatří zpátky: *Hraniční případy* splynuly s *Co chybí* (byl to týž generátor okrajů dvakrát), *Skeptik* s *Předpoklady* (tatáž otázka zprava a zleva) a *Technická proveditelnost* s *Daty* (měla nejchudší zadání a nad datovým modelem sahala po témže). Navrhne-li je někdo znovu jako „chybějící pokrytí“, tohle je odpověď. Naopak **Reverzibilita a závislosti se rozdělila na dva hlediska**, protože držela dvě různé otázky najednou – proto devatenáct minus tři sloučení plus jedno rozdělení dá sedmnáct, ne šestnáct.
@@ -33,7 +33,7 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 
 ## Fáze 0 – Co se oponuje
 
-**Tenhle skill neběží nad kódem projektu, takže body 1 až 3 z `~/.claude/skills/PREFLIGHT.md` nahrazuje vlastními předpoklady níž** – posuzuje dokument, který může ležet i mimo projekt. Body 4 a 5 odpadají ze stejného důvodu: nic nespouští a nesahá na diff větve. Načti si ho přesto; platí z něj závěr o shrnutí zjištěného, než se cokoliv stane.
+**Tenhle skill neběží nad kódem projektu, takže body 1 až 3 z `~/.claude/skills/preflight.md` nahrazuje vlastními předpoklady níž** – posuzuje dokument, který může ležet i mimo projekt. Body 4 a 5 odpadají ze stejného důvodu: nic nespouští a nesahá na diff větve. Načti si ho přesto; platí z něj závěr o shrnutí zjištěného, než se cokoliv stane.
 
 **Předmět posudku.** Uživatel ho může zadat jako argument (`/oponent docs/requirements.md`, `/oponent 01 až 04`, `/oponent pozicování`). Když ho nezadá, **nabídni mu, co jsi našel** – projdi projekt, vypiš kandidáty (dokumenty, na kterých se v poslední době pracovalo) a nech ho vybrat přes `AskUserQuestion`.
 
@@ -61,11 +61,11 @@ V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to kontrolní krok, ne b
 
 Vyber **čtyři až pět hledisek** z katalogu níž podle sloupce *Spouštěč*. Je to **vlastnost dokumentu, ne jeho typ** – „PRD“ nebo „cenotvorba“ by propustily skoro celý katalog a filtr by nefiltroval; „slibuje výsledek“ nebo „sbírají se údaje o lidech“ se dá ověřit v textu, který máš před sebou. Výběr **předlož uživateli přes `AskUserQuestion`** předtím, než kohokoliv pustíš – volby *Pustit tak, jak je* / *Vyměnit jedno hledisko* / *Vybrat panel znovu*. **Na odpověď se čeká**, do té doby žádný subagent neběží.
 
-Prostý výpis nestačí: další odstavec velí pustit panel jedním voláním, takže by se uživatel k výměně dostal až ve chvíli, kdy 4 agenti na `xhigh` už pracují (`~/.claude/RULES.md`, *Ptej se postupně*).
+Prostý výpis nestačí: další odstavec velí pustit panel jedním voláním, takže by se uživatel k výměně dostal až ve chvíli, kdy 4 agenti na `xhigh` už pracují (`~/.claude/rules/rules.md`, *Ptej se postupně*).
 
 **Vlastní hledisko** si vymysli, jen když **žádný z katalogu nepokrývá** to, co je na dokumentu specifické. Pak ale: napiš, které katalogové hledisko bylo nejbližší a čím se od něj tvoje liší; napiš mu **otázky ve stejném tvaru jako v katalogu** (bez nich dorazí k subagentovi holý název a ten pak najde cokoliv); zařaď ho mezi metody, nebo domény. Osvědčí-li se, **navrhni ho doplnit do katalogu** – jinak se poznatek ztratí a příště se vymýšlí znovu a jinak.
 
-Před přidáním ale **porovnej jeho otázky se sloupcem *Ptá se* u všech stávajících hledisek**: sdílí-li s některým víc než jednu otázku, do katalogu nepatří jako nový řádek, ale jako zúžení nebo doplněk toho stávajícího (`~/.claude/RULES.md`, *Detekce konfliktů před přidáním*). Katalog roste snadno a nic ho samo nezmenšuje. Hledisko, které jde formulovat jako zúžení existujícího na doménu (*Právo → GDPR a consent*), vlastní hledisko není.
+Před přidáním ale **porovnej jeho otázky se sloupcem *Ptá se* u všech stávajících hledisek**: sdílí-li s některým víc než jednu otázku, do katalogu nepatří jako nový řádek, ale jako zúžení nebo doplněk toho stávajícího (`~/.claude/rules/rules.md`, *Detekce konfliktů před přidáním*). Katalog roste snadno a nic ho samo nezmenšuje. Hledisko, které jde formulovat jako zúžení existujícího na doménu (*Právo → GDPR a consent*), vlastní hledisko není.
 
 Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku; ostatním se to zakazuje, ať neutíkají od dokumentu.
 
@@ -105,21 +105,21 @@ Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku
 - **Kolik jich pustit podle rozsahu předmětu:** čtyři u jednoho dokumentu zhruba do 15 kB, pět nad tím nebo když je dokumentů víc. Je-li předmět velký (blíží se hranici z Fáze 0), dělí se **hledisko × podmnožina dokumentů**, ne jen hledisko – jinak čte každý agent celý objem a dělba škáluje jen jedním směrem.
 - **Běžela-li už oponentura nad tímhle předmětem** (Fáze 0 to zjistila z `docs/done.md`), **začni jejím panelem**. Nález, který se vrátí ve stejném hlediska, znamená, že se neopravil; nález, který zmizel s vyměněným hlediskem, neznamená nic. Vyměnit hledisko smíš, ale řekni, který a proč – Fáze 6 pak počty nesrovnává.
 - **Sedí-li spouštěč na víc hledisek, než máš slotů**, ber ty, kde by chyba stála nejvíc – ne ty, kde se nález hledá nejsnáz.
-- **Volbu dolož.** U každého zvoleného hlediska napiš jednou větou, co konkrétně v dokumentu tě k němu vedlo, a jmenuj **jedno hledisko, které jsi vědomě nevzal, a proč**. Nevybrané hledisko totiž nevrátí nula nálezů, ale neexistenci – a ta neprojde žádným počítadlem ve Fázi 4 ani ve verdiktu. Volbu přitom dělá ten, kdo dokument spoluautorsky psal, takže je to jediné místo, kde má jeho slepota volnou ruku (`~/.claude/RULES.md`, *Zapiš i to, co vědomě nemáš*).
+- **Volbu dolož.** U každého zvoleného hlediska napiš jednou větou, co konkrétně v dokumentu tě k němu vedlo, a jmenuj **jedno hledisko, které jsi vědomě nevzal, a proč**. Nevybrané hledisko totiž nevrátí nula nálezů, ale neexistenci – a ta neprojde žádným počítadlem ve Fázi 4 ani ve verdiktu. Volbu přitom dělá ten, kdo dokument spoluautorsky psal, takže je to jediné místo, kde má jeho slepota volnou ruku (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*).
 
 ------
 
 ## Fáze 2 – Nezávislé posudky
 
-**Nejdřív si vyrob inventuru předmětu, pak pouštěj oponenty.** Vypiš nadpisy posuzovaných dokumentů příkazem (`grep -n '^#' <cesty>`) a **zapamatuj si jejich počet** – proti němu se v *Konsolidaci* vykazuje, kolik z předmětu který oponent doopravdy prošel. Neodhaduj to (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+**Nejdřív si vyrob inventuru předmětu, pak pouštěj oponenty.** Vypiš nadpisy posuzovaných dokumentů příkazem (`grep -n '^#' <cesty>`) a **zapamatuj si jejich počet** – proti němu se v *Konsolidaci* vykazuje, kolik z předmětu který oponent doopravdy prošel. Neodhaduj to (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a u pěti dokumentů se proletnutí od přečtení nepozná. Posudek, který pokryl třetinu předmětu, přitom vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní. Je to táž vada, kterou u `/cleanup` vyřešil měřený poměr odškrtnutých promptů (`~/.claude/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
+**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a u pěti dokumentů se proletnutí od přečtení nepozná. Posudek, který pokryl třetinu předmětu, přitom vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní. Je to táž vada, kterou u `/cleanup` vyřešil měřený poměr odškrtnutých promptů (`~/.claude/docs/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
 
 Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
 
-**Typ agenta podle sloupce *Web*:** hledisko bez ✔ jede na `reader`, hledisko s ✔ na `researcher`. Oba posuzují hotový text a **nemají shell**, takže do dokumentu nemůžou zapsat; `researcher` má navíc `WebSearch` a `WebFetch`. Viz `~/.claude/skills/SKILLS.md`, *Model, effort a delegace*.
+**Typ agenta podle sloupce *Web*:** hledisko bez ✔ jede na `reader`, hledisko s ✔ na `researcher`. Oba posuzují hotový text a **nemají shell**, takže do dokumentu nemůžou zapsat; `researcher` má navíc `WebSearch` a `WebFetch`. Viz `~/.claude/skills/skills.md`, *Model, effort a delegace*.
 
-**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*.) Oponentura je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
+**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*.) Oponentura je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
 
 Zadání pro každého (doplň hledisko, cesty a projektový kontext):
 
@@ -149,7 +149,7 @@ U KAŽDÉHO NÁLEZU UVEĎ:
   „při 20 000 účastnících vyjde ruční párování na 300 hodin práce“ je nález.
 - **Návrh** – dvě až tři konkrétní varianty řešení, ne jedna. Nemáš-li řešení, řekni to
   a označ nález jako otázku k rozhodnutí.
-- **Závažnost** – škálu drží `~/.claude/skills/SEVERITY.md` a je společná se všemi skilly, které hlásí nálezy, ať jdou porovnat napříč běhy. U oponentury se čte jako síla námitky: **KRITICKÉ** boří předpoklad, na kterém dokument stojí; **STŘEDNÍ** mění závěr nebo rozsah; **NÍZKÉ** zpřesňuje.
+- **Závažnost** – škálu drží `~/.claude/skills/severity.md` a je společná se všemi skilly, které hlásí nálezy, ať jdou porovnat napříč běhy. U oponentury se čte jako síla námitky: **KRITICKÉ** boří předpoklad, na kterém dokument stojí; **STŘEDNÍ** mění závěr nebo rozsah; **NÍZKÉ** zpřesňuje.
 
 PRAVIDLA:
 - Co je v pořádku, nepiš. Žádné shrnutí kladů, žádné „jinak je to dobře promyšlené“.
@@ -165,7 +165,7 @@ Do žádného souboru nezapisuj.
 
 **Volitelně rešerše.** Hledisku, které má v katalogu ve sloupci *Web* ✔, dej výslovné svolení hledat na webu. U ostatních to zakaž, ať neutíkají od dokumentu.
 
-**Sloupec *Typ* nekopíruje sloupec *Web*.** *Ekonomika provozu* má web i `Explore`, protože po ní zadání chce **přepočítat** break-even, marži a kapacitu – a agent, který má počítat a nemá čím, si číslo domyslí (`~/.claude/skills/SKILLS.md`, *Model, effort a delegace*, pravidlo o hraničním případu). U zbylých hledisek s ✔ je web zdroj faktu, ne kalkulačka, takže jim stačí `researcher`.
+**Sloupec *Typ* nekopíruje sloupec *Web*.** *Ekonomika provozu* má web i `Explore`, protože po ní zadání chce **přepočítat** break-even, marži a kapacitu – a agent, který má počítat a nemá čím, si číslo domyslí (`~/.claude/skills/skills.md`, *Model, effort a delegace*, pravidlo o hraničním případu). U zbylých hledisek s ✔ je web zdroj faktu, ne kalkulačka, takže jim stačí `researcher`.
 
 ------
 
@@ -207,7 +207,7 @@ Do žádného souboru nezapisuj.
 
 **NEOVĚŘITELNÉ jde do Fáze 5 jako `neověřeno`**, stejně jako nález nad stropem – nezahazuje se ani nepotvrzuje.
 
-**Výsledky ověření hlas obsahem, ne značkou.** Identifikátory, pod kterými se nálezy vracejí od oponentů a ověřovatelů, jsou interní – uživatel je nikdy neviděl a „N1 je širší, než oponent hlásil“ mu neřekne nic. Pojmenuj, čeho se to týká (`~/.claude/RULES.md`, *Interní značky ven nepatří*). Čísla z přehledu v kroku 5 níž jsou naopak v pořádku – ta uživatel viděl i s obsahem.
+**Výsledky ověření hlas obsahem, ne značkou.** Identifikátory, pod kterými se nálezy vracejí od oponentů a ověřovatelů, jsou interní – uživatel je nikdy neviděl a „N1 je širší, než oponent hlásil“ mu neřekne nic. Pojmenuj, čeho se to týká (`~/.claude/rules/rules.md`, *Interní značky ven nepatří*). Čísla z přehledu v kroku 5 níž jsou naopak v pořádku – ta uživatel viděl i s obsahem.
 
 **NÍZKÉ nálezy se neověřují** – ne proto, že by ověření bylo drahé (stojí strojový čas), ale proto, že se ani nevypořádávají jednotlivě: jdou ve Fázi 5 jedním blokem, takže na nich nestojí žádné rozhodnutí, které by ověření chránilo. **Vyvrácené zahoď a spočítej je do souhrnu**; kolik jich bylo, se říká nahlas, ne potichu.
 
@@ -225,11 +225,11 @@ Pak nálezy:
 2. **Vyvrácené nálezy vyřadil ověřovatel**, ne ty. Sám nefiltruj: nález, u kterého máš pochybnost, ale ověřením prošel, předlož s poznámkou. Tichý filtr je přesně to, co má tenhle skill obcházet, a spoluautor je ten poslední, kdo ho má dělat.
 3. **Vyřaď už rozhodnuté.** Nález, který navrhuje zamítnutou variantu bez nového argumentu, zahoď a **řekni, kolik jsi jich zahodil a proč** – ne potichu.
 4. **Seřaď podle závažnosti**, ne podle pořadí v dokumentu.
-5. **Vypiš přehled** – všechny nálezy jednou větou, očíslované, se závažností. Uživatel musí vidět, co ho čeká, než se ho začneš ptát. **Přehledem ale odpověď nekonči** – první otázka Fáze 5 jde v téže odpovědi (`~/.claude/skills/FINDINGS.md`, *Ohlášená akce patří do téže odpovědi*).
+5. **Vypiš přehled** – všechny nálezy jednou větou, očíslované, se závažností. Uživatel musí vidět, co ho čeká, než se ho začneš ptát. **Přehledem ale odpověď nekonči** – první otázka Fáze 5 jde v téže odpovědi (`~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*).
 
 ### Ověřený seznam zapiš na disk, než půjdeš dál
 
-Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/.claude/STRUCTURE.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "subject": [...], "perspectives": [...], "findings": [{...nález..., "verified": true/false, "status": "open"}]}`.
+Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/.claude/rules/structure.md`, *Běhový stav skillů*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "subject": [...], "perspectives": [...], "findings": [{...nález..., "verified": true/false, "status": "open"}]}`.
 
 **Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 5 s ním pak dlouze interaguje **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
 
@@ -243,25 +243,25 @@ Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který F
 
 ## Fáze 5 – Průchod nálezy
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*.
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*.
 
-Podle `~/.claude/RULES.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – nízké jdou nakonec jedním blokem (viz níž).
+Podle `~/.claude/rules/rules.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – nízké jdou nakonec jedním blokem (viz níž).
 
 **NÍZKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Neopravovat žádný* / *Zapsat do todo*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Neprošly navíc ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany. (Bez ověření jdou dál i nálezy nad stropem – ty se ale procházejí jednotlivě, protože jsou závažné; jen se u nich řekne, že ověřené nejsou.)
 
 U každého nejdřív vypiš:
 
-**Tvar výpisu drží `~/.claude/skills/FINDINGS.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Ve větě řekni, **v čem je problém a jaký má důsledek**, a odkud to je (soubor, sekce, citace). Za titulní název připoj `· <hledisko>`, případně „2 oponenti nezávisle“ – čtenář tím pozná, odkud námitka přišla.
+**Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Ve větě řekni, **v čem je problém a jaký má důsledek**, a odkud to je (soubor, sekce, citace). Za titulní název připoj `· <hledisko>`, případně „2 oponenti nezávisle“ – čtenář tím pozná, odkud námitka přišla.
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“: u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Jejich počet, `header`, pojmenování obou záchytných voleb i to, který stav která znamená, drží `~/.claude/skills/FINDINGS.md`, *Dvě záchytné volby a co znamenají* – **tvar otázky platí pro celou rodinu kontrolních skillů** a vznikl 20. 9. 2026 zobecněním právě odsud.
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“: u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Jejich počet, `header`, pojmenování obou záchytných voleb i to, který stav která znamená, drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají* – **tvar otázky platí pro celou rodinu kontrolních skillů** a vznikl 20. 9. 2026 zobecněním právě odsud.
 
-**Věcná varianta znamená stav Přijato**; oba záchytné stavy překládá tabulka v `FINDINGS.md`.
+**Věcná varianta znamená stav Přijato**; oba záchytné stavy překládá tabulka v `findings.md`.
 
 **Zpracování odpovědi:**
 
 - **Přijato** → zapracuj do dokumentu rovnou a zapiš rozhodnutí do `docs/decisions.md`.
 - **Zamítnuto** → zapiš do `docs/decisions.md` **taky**, i s důvodem. Zamítnutý nález je cenný záznam – brání tomu, aby ho příští oponentura našla znovu jako nový.
-- **Odloženo** → do `docs/todo.md`, ve tvaru podle `~/.claude/RULES.md`, *Odložené věci pojmenuj a zaparkuj*.
+- **Odloženo** → do `docs/todo.md`, ve tvaru podle `~/.claude/rules/rules.md`, *Odložené věci pojmenuj a zaparkuj*.
 
 **Odbočky.** Uživatel u nálezu často rozvine úvahu, která zasáhne jinam. Tu úvahu zapiš celou – bývá cennější než původní nález. Pak se vrať k seznamu a pokračuj; sám si hlídej, které nálezy zbývají.
 
@@ -297,15 +297,15 @@ Ve verdiktu:
 - <jedna až tři věty – co to reálně změnilo>
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
-Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/STRUCTURE.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/rules/structure.md`, *`done.md`*) a **smaž `.claude/run/oponent.json`**:
 
 ```
 - **YYYY-MM-DD** · `/oponent` · `<short HEAD>` · <předmět> · hlediska: <seznam> · N nálezů (X zapracováno, Y zamítnuto, Z odloženo)
 ```
 
-Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem (`~/.claude/RULES.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*). **Ten řádek je jediné, co z běhu přežije**: bez seznamu hledisek neví příští oponentura, s čím se má srovnávat, a bez hashe nepozná, jestli se předmět od té doby vůbec změnil. Nemá-li projekt `done.md` (viz Fáze 0, režim bez `docs/`), řekni nahlas, že se záznam nezapsal a srovnání s příštím během nebude možné.
+Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*). **Ten řádek je jediné, co z běhu přežije**: bez seznamu hledisek neví příští oponentura, s čím se má srovnávat, a bez hashe nepozná, jestli se předmět od té doby vůbec změnil. Nemá-li projekt `done.md` (viz Fáze 0, režim bez `docs/`), řekni nahlas, že se záznam nezapsal a srovnání s příštím během nebude možné.
 
 Zakonči jednou z těchto vět:
 
@@ -314,7 +314,7 @@ Zakonči jednou z těchto vět:
 
 Nikdy nekonči tím, že je dokument „v dobrém stavu“ – to není verdikt oponenta, ale autora.
 
-**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - krok, který posuzovaný dokument vyrobil, zbyla-li v něm práce – oprava patří jemu, ne oponentuře
 - je-li vypořádáno, krok osy, který na ten dokument čeká

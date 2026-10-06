@@ -23,13 +23,13 @@ Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md
 
 ## Fáze 0 – Příprava
 
-Společný začátek je v `~/.claude/skills/PREFLIGHT.md`; platí z něj **body 1 a 2** – kořen projektu (včetně worktree layoutu) a projektový `CLAUDE.md`. **Bod 3 a dál neplatí**: skill nic nespouští, necommituje a na kód nesahá, takže stav pracovního stromu ani kontrakt příkazů jeho běh neovlivní.
+Společný začátek je v `~/.claude/skills/preflight.md`; platí z něj **body 1 a 2** – kořen projektu (včetně worktree layoutu) a projektový `CLAUDE.md`. **Bod 3 a dál neplatí**: skill nic nespouští, necommituje a na kód nesahá, takže stav pracovního stromu ani kontrakt příkazů jeho běh neovlivní.
 
 **Vlastní odchylka:** `.git` hledej **výhradně přes Glob**, nikdy `git` přes Bash – nenulový návratový kód by vyrobil červenou chybu a zbytečně vyděsil uživatele.
 
 ## Fáze 1 – Zjisti stav
 
-**Ve worktree layoutu sekce do kořene kontejneru nepatří** – ten je jen rozcestník s popisem layoutu, přepínač patří do `<container>/main/CLAUDE.md`. Tabulka je v `~/.claude/WORKTREE.md`, sekce *Jak si skill najde projektový adresář*.
+**Ve worktree layoutu sekce do kořene kontejneru nepatří** – ten je jen rozcestník s popisem layoutu, přepínač patří do `<container>/main/CLAUDE.md`. Tabulka je v `~/.claude/rules/worktree.md`, sekce *Jak si skill najde projektový adresář*.
 
 Stav zjisti podle definice v *Co skill dělá* výš – **obě možná umístění projektového `CLAUDE.md`**, kanonické místo nadpisu i to, že nadpis v globálním souboru se nepočítá. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
 

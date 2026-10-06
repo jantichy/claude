@@ -307,7 +307,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/honza/.claude/verify.sh --format",
+            "command": "/Users/honza/.claude/hooks/verify.sh --format",
             "timeout": 45
           }
         ]
@@ -327,11 +327,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/honza/.claude/git-guard.py"
+            "command": "/Users/honza/.claude/hooks/git-guard.py"
           },
           {
             "type": "command",
-            "command": "/Users/honza/.claude/secret-guard.py"
+            "command": "/Users/honza/.claude/hooks/secret-guard.py"
           }
         ]
       }
@@ -361,7 +361,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/honza/.claude/verify.sh",
+            "command": "/Users/honza/.claude/hooks/verify.sh",
             "timeout": 320,
             "statusMessage": "Průběžná kontrola…"
           }
@@ -409,7 +409,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/honza/.claude/handoff.py"
+            "command": "/Users/honza/.claude/hooks/handoff.py"
           }
         ]
       }
@@ -417,7 +417,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/Users/honza/.claude/statusline.sh"
+    "command": "/Users/honza/.claude/statusline/statusline.sh"
   },
   "enabledPlugins": {
     "chrome-devtools-mcp@claude-plugins-official": true,

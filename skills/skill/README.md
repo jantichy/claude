@@ -46,7 +46,7 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 - Tlakové scénáře: neměřeno – skill nic nezakazuje
 
 **Okolí**
-- README.md · RULES.md · tests/ – dorovnáno
+- README.md · ~/.claude/rules/rules.md · tests/ – dorovnáno
 ```
 
 ## Co nedělá
@@ -60,9 +60,9 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 
 Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/skill a nainstaluj mi ten skill k sobě do `~/.claude/skills/`. Vezmi k němu i soubor `skills/SKILLS.md`, na kterém stojí.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/skill a nainstaluj mi ten skill k sobě do `~/.claude/skills/`. Vezmi k němu i soubor `skills/skills.md`, na kterém stojí.
 
-**Norma tvaru v `SKILLS.md` je povinná součást** – bez ní nemá skill proti čemu revidovat. Volitelně navíc: nástroj `skill-creator` od Anthropicu (bez něj odpadne vytěžení konverzace a celá měřicí část – skill si na to sám posvítí a řekne, co se tím neověřilo) a plugin [superpowers](https://github.com/obra/superpowers) kvůli tlakovým scénářům.
+**Norma tvaru v `skills.md` je povinná součást** – bez ní nemá skill proti čemu revidovat. Volitelně navíc: nástroj `skill-creator` od Anthropicu (bez něj odpadne vytěžení konverzace a celá měřicí část – skill si na to sám posvítí a řekne, co se tím neověřilo) a plugin [superpowers](https://github.com/obra/superpowers) kvůli tlakovým scénářům.
 
 ---
 

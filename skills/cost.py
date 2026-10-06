@@ -165,7 +165,7 @@ def scope_of(seg):
 def end_markers(skill):
     """Odvodí marker konce ze šablony **závěrečné fáze** `SKILL.md`.
 
-    Závěrečná fáze je poslední sekce `## Fáze …` (norma `skills/SKILLS.md`,
+    Závěrečná fáze je poslední sekce `## Fáze …` (norma `skills/skills.md`,
     *Povinné sekce a jejich pořadí*); marker je nadpis na prvním řádku prvního
     bloku kódu v ní. **Poslední blok v souboru to není** – za závěrečnou fází
     smí stát přílohová sekce, a `/review` tam má šablonu kapitoly `## Review`,

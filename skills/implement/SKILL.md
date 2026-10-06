@@ -8,13 +8,13 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 ## Co skill dělá
 
-Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, implementace, ověření a commit. V *Životním cyklu projektu* (`~/.claude/RULES.md`) je to šestý krok osy: navazuje na `/breakdown` a předává na `/release`; v mezeře mezi nimi stojí `/review` po každé hotové featuře.
+Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, implementace, ověření a commit. V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to šestý krok osy: navazuje na `/breakdown` a předává na `/release`; v mezeře mezi nimi stojí `/review` po každé hotové featuře.
 
 ## Co skill nedělá
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*. Plán píše `/breakdown` a opravit ho patří jemu; tady se odpracovává.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md` nebo `docs/backlog.md`, ne do kódu.
-- **Neuzavírá feature.** Hotovou práci prověřuje `/review` hned po tomhle, vnitřní konzistenci `/consistency` a úklid `/cleanup` – samostatné kroky, viz `~/.claude/skills/LIFECYCLE.md`, druhá půlka životního cyklu.
+- **Neuzavírá feature.** Hotovou práci prověřuje `/review` hned po tomhle, vnitřní konzistenci `/consistency` a úklid `/cleanup` – samostatné kroky, viz `~/.claude/rules/lifecycle.md`, druhá půlka životního cyklu.
 
 ## Jak je to postavené uvnitř
 
@@ -26,7 +26,7 @@ Co je závazné: vstupem je `docs/plan.md`, pracuje se úkol po úkolu, každý 
 
 ## Fáze 0 – Příprava
 
-**Společný začátek drží `~/.claude/skills/PREFLIGHT.md`** – načti si ho a řiď se jím **včetně bodu 4**: průběžná kontrola musí být zelená dřív, než se dotkneš prvního souboru, jinak nepůjde poznat, co jsi rozbil ty. Bod 5 odpadá, tenhle skill pracuje nad plánem, ne nad diffem větve.
+**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím **včetně bodu 4**: průběžná kontrola musí být zelená dřív, než se dotkneš prvního souboru, jinak nepůjde poznat, co jsi rozbil ty. Bod 5 odpadá, tenhle skill pracuje nad plánem, ne nad diffem větve.
 
 Navíc si ověř tohle:
 
@@ -77,9 +77,9 @@ Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vesta
 
 ## Fáze 2 – Průběh
 
-**Přeruš včas, nabyl-li kontext.** Dlouhý běh přes mnoho úkolů je místo, kde session narazí na strop okna. Práh a tvar nabídky drží `~/.claude/skills/HANDOFF.md`, *Přerušení dlouhého průchodu*; ukládá se tu ale **méně** než u nálezů – úkoly už v `docs/plan.md` stojí, takže do `todo.md` jde jen to, co v plánu není: odchylky, na které jsi narazil, a rozhodnutí, která z nich vzešla.
+**Přeruš včas, nabyl-li kontext.** Dlouhý běh přes mnoho úkolů je místo, kde session narazí na strop okna. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; ukládá se tu ale **méně** než u nálezů – úkoly už v `docs/plan.md` stojí, takže do `todo.md` jde jen to, co v plánu není: odchylky, na které jsi narazil, a rozhodnutí, která z nich vzešla.
 
-**Výchozí model, `medium`–`high`** (Volba modelu a effortu podle `~/.claude/DELEGATION.md`, *Model a effort podle úkolu*.) Odpracování dobrého plánu je z velké části uplatnění hotového rozhodnutí, ne vymýšlení – proto sem nepatří nejdražší tier. **Eskaluj ale u konkrétního úkolu**, který se nedaří: nejdřív zvyš effort, teprve pak sáhni po silnějším modelu. Opakované „skoro to funguje“ na jednom úkolu je signál, že je málo chytrosti nebo špatný plán, ne že se má zkoušet dál totéž.
+**Výchozí model, `medium`–`high`** (Volba modelu a effortu podle `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*.) Odpracování dobrého plánu je z velké části uplatnění hotového rozhodnutí, ne vymýšlení – proto sem nepatří nejdražší tier. **Eskaluj ale u konkrétního úkolu**, který se nedaří: nejdřív zvyš effort, teprve pak sáhni po silnějším modelu. Opakované „skoro to funguje“ na jednom úkolu je signál, že je málo chytrosti nebo špatný plán, ne že se má zkoušet dál totéž.
 
 Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
@@ -93,9 +93,9 @@ Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
 **Doménové standardy.** Kód se má psát podle nich rovnou, ne se k nim vracet až v `/review`. Neznamená to duplikovat kontrolu – znamená to je respektovat.
 
-**Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, zapiš s celou úvahou – do kódu ne. *Nerozhoduj potichu nad rámec zadání.* **Kam:** chybějící kus práce, který se udělat musí, do `docs/todo.md`; volný nápad, o kterém nikdo nerozhodl, do `docs/backlog.md` (`~/.claude/STRUCTURE.md`, *`backlog.md`*). Fronta úkolů zaplevelená nápady přestane být frontou. **Nemá-li projekt `backlog.md`, založ ho** a řekni to; do `todo.md` nápad nepatří, tím by se z fronty stal mišmaš (`~/.claude/RULES.md`, *Odložené věci pojmenuj a zaparkuj*).
+**Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, zapiš s celou úvahou – do kódu ne. *Nerozhoduj potichu nad rámec zadání.* **Kam:** chybějící kus práce, který se udělat musí, do `docs/todo.md`; volný nápad, o kterém nikdo nerozhodl, do `docs/backlog.md` (`~/.claude/rules/structure.md`, *`backlog.md`*). Fronta úkolů zaplevelená nápady přestane být frontou. **Nemá-li projekt `backlog.md`, založ ho** a řekni to; do `todo.md` nápad nepatří, tím by se z fronty stal mišmaš (`~/.claude/rules/rules.md`, *Odložené věci pojmenuj a zaparkuj*).
 
-**Průběžné zápisy.** Padne-li během práce rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. **Hotovou položku z `docs/todo.md` přesuň do `docs/done.md`** hned, jak je hotová – neodškrtává se na místě (`~/.claude/RULES.md`, *Odložené věci pojmenuj a zaparkuj*). Nečekej na `/cleanup`; ten je jen záchranná síť.
+**Průběžné zápisy.** Padne-li během práce rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. **Hotovou položku z `docs/todo.md` přesuň do `docs/done.md`** hned, jak je hotová – neodškrtává se na místě (`~/.claude/rules/rules.md`, *Odložené věci pojmenuj a zaparkuj*). Nečekej na `/cleanup`; ten je jen záchranná síť.
 
 **Po každém větším celku levné review.** Po skupině souvisejících úkolů (ne po každém) spusť **`/code-review low`** – úroveň uveď jako parametr, ne slovem: bez ní se použije ta, kterou uživatel zadal naposledy, klidně v jiném projektu. Běží v čerstvém kontextu, takže vidí, co ty už nevidíš, a chyba nalezená teď stojí minuty. Plný panel je až `/review` při uzavírání.
 
@@ -111,7 +111,7 @@ Podle toho, jak hluboko problém sahá:
 |---|---|
 | Jen úkol – špatný název souboru, chybějící krok | Oprav plán i kód, řekni to v jedné větě a pokračuj. |
 | Návrh – takhle postavené to nefunguje | **Zastav se.** Vrať se do `docs/architecture.md`, uprav ho a nech přepsat dotčené nehotové úkoly. |
-| Zadání – ukázalo se, že chceme něco jiného | **Zastav se a zeptej se.** Změna produktového záměru není tvoje rozhodnutí; teče shora dolů, viz `STRUCTURE.md`. |
+| Zadání – ukázalo se, že chceme něco jiného | **Zastav se a zeptej se.** Změna produktového záměru není tvoje rozhodnutí; teče shora dolů, viz `structure.md`. |
 
 **Nikdy neškrtej úkol jako hotový, aby se dalo pokračovat.** Zablokovaný úkol nech neodškrtnutý, zapiš proč, a zeptej se.
 
@@ -141,14 +141,14 @@ Po posledním úkolu **feature neuzavírej**. Vypiš stav a předej to na řetě
 **Průběžná kontrola:** <výstup posledního běhu – příkaz a návratový kód>
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `Plán je odpracovaný a průběžná kontrola je zelená, můžeš jít na /review.`
 - `Odpracovaný není – zbývá: <konkrétní seznam>.`
 
-**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/HANDOFF.md`. Odtud vede:
+**Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/cleanup`, pak `/clear`, a `/review` až v nové session – prověření hotové práce, kterou tahle session psala; za ním zbytek uzavírání (`~/.claude/RULES.md`, *Životní cyklus projektu*)
+- `/cleanup`, pak `/clear`, a `/review` až v nové session – prověření hotové práce, kterou tahle session psala; za ním zbytek uzavírání (`~/.claude/rules/rules.md`, *Životní cyklus projektu*)
 - zbyl-li v plánu zablokovaný úkol, je další krok jeho odblokování, ne revize – pojmenuj, co k němu chybí

@@ -50,7 +50,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/worktree
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`. Vezmi k němu i
-> soubor WORKTREE.md z kořene toho repozitáře a dej ho do `~/.claude/`.
+> soubor worktree.md z kořene toho repozitáře a dej ho do `~/.claude/`.
 
 **Ten druhý soubor je potřeba**, i když leží mimo adresář skillu: jsou v něm pravidla, jak se v tom uspořádání pracuje, a skill je do projektu jen vkládá odkazem. V kořeni je proto, že je čte i řada dalších skillů – bez něj by se instalací jednoho skillu rozbily.
 

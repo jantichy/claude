@@ -57,7 +57,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 
   **Číslo, které do názvu dal operační systém při stahování, se naopak odstraňuje** – viz *Fáze 3*. Není to uhnutí před kolizí, ale opak: stopa po kolizi v `~/Downloads`, která do Depotu nepatří.
 
-  **Není to zákaz nad uživatelem** (`~/.claude/RULES.md`, *Přednost pravidel*), ale pořadí prací opřené o důvod. Dovolení dané dopředu („kdyby tam něco bylo, přepiš to“) je ale vydané naslepo, protože v tu chvíli ještě nikdo neví, co tam leží – **ukaž tedy nejdřív oba soubory** a nech rozhodnout o téhle konkrétní dvojici. Rozhodne-li se uživatel i pak pro přepis, je to jeho volba: proveď ji a **zapiš do závěru, co bylo přepsáno**.
+  **Není to zákaz nad uživatelem** (`~/.claude/rules/rules.md`, *Přednost pravidel*), ale pořadí prací opřené o důvod. Dovolení dané dopředu („kdyby tam něco bylo, přepiš to“) je ale vydané naslepo, protože v tu chvíli ještě nikdo neví, co tam leží – **ukaž tedy nejdřív oba soubory** a nech rozhodnout o téhle konkrétní dvojici. Rozhodne-li se uživatel i pak pro přepis, je to jeho volba: proveď ji a **zapiš do závěru, co bylo přepsáno**.
 - **Nerozpoznaný soubor se nepřesouvá nikam**, dokud se o něm nerozhodne. Ani „zatím do Depotu“.
 - **Originál se přesouvá, ne kopíruje.** Dvě kopie téhož podkladu znamenají, že se příště nepozná, která je ta zaevidovaná.
 - **Citlivý obsah se nesměruje automaticky.** Co doména označuje za obsah, o kterém rozhoduje člověk, se vypíše a nechá rozhodnout. Skill takový soubor **neotevírá**, aby zjistil víc.
@@ -67,7 +67,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 
 ## Fáze 0 – Příprava
 
-Společný začátek je v `~/.claude/skills/PREFLIGHT.md`. Odchylky:
+Společný začátek je v `~/.claude/skills/preflight.md`. Odchylky:
 
 1. **Skill neběží nad projektem.** Body 1 až 3 vynech a **řekni to nahlas** – pouští se odkudkoliv, typicky nad staženým souborem. Pracovní adresář nehraje roli a stav gitu taky ne.
 2. **Kontrola závislostí.** Ověř, že existuje doména `depot` – hledej ji přes rozcestník knowledge base (u autora `~/Dev/context/CLAUDE.md`). **Chybí-li, skonči** a řekni, že bez ní není podle čeho směrovat – viz *Fáze 1*. **V režimu `workflow` je to naopak:** chybějící doména je tam běžný výchozí stav, protože právě tím se zakládá. Nabídni její založení a pokračuj; končit by znamenalo, že si první pravidlo nemá kdo napsat.
@@ -128,7 +128,7 @@ Vypiš plán celé dávky a **nech ho potvrdit**. Nic se do téhle chvíle nepř
 **Kolize:** <cílové cesty, které už existují>
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/RULES.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
 
 **Cílovou cestu ukaž celou**, včetně názvu adresáře, který by v Depotu vznikl. Je to poslední chvíle, kdy se dá opravit popis, který se pak už nepřejmenovává.
 
