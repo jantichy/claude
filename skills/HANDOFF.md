@@ -52,18 +52,20 @@ Vyhrává první kritérium, které sedí:
 
 **Každý odchod ze session začíná `/cleanup`, bezpodmínečně.** Odchodem je `/clear`, `/compact`, nová session, zavření okna i `/merge`; odrážka, která kterýkoliv z nich jmenuje, jmenuje `/cleanup` před ním. **Nepodmiňuj ho tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/cleanup` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi `/cleanup` a odchodem nesmí stát jiná práce než `/merge`**, jinak ji zase nikdo nezapíše. `/merge` jde za `/cleanup` a před `/clear`: do hlavní větve má jít i to, co úklid zapsal, a sám nic nezapisuje, takže druhý `/cleanup` nepotřebuje.
 
-Úplný výčet řetězů – jiná pořadí nedávají smysl:
+Úplný výčet řetězů – jiná pořadí nedávají smysl. **Bez větví `/merge` odpadá**: pracuje se rovnou v hlavní větvi a do ní práci dostane commit a push, které dělá `/cleanup` sám. Řádky, které se liší jen mergem, tam proto splývají:
 
-| Situace | Řetěz |
-|---|---|
-| další krok patří do téhle session | `/X` |
-| další krok v nové session, větev zůstává otevřená | `/cleanup` → `/clear` → `/X` |
-| větev je hotová a dál se nic nedělá | `/cleanup` → `/merge` |
-| větev je hotová a další krok běží nad hlavní větví | `/cleanup` → `/merge` → `/clear` → `/X` |
-| ve větvi musí ještě proběhnout kontrola v nové session | `/cleanup` → `/clear` → `/X`, merge až po jejím `/cleanup` |
-| přerušený průchod frontou | `/cleanup` → `/clear` → `/next` |
-| rozdělaná úvaha, která se zapsat nedá | `/cleanup` → `/compact` |
-| konec práce | `/cleanup` → zavřít okno |
+| Situace | S větví | Bez větví |
+|---|---|---|
+| další krok patří do téhle session | `/X` | `/X` |
+| další krok v nové session, práce na věci pokračuje | `/cleanup` → `/clear` → `/X` | `/cleanup` → `/clear` → `/X` |
+| věc je hotová a dál se nic nedělá | `/cleanup` → `/merge` | `/cleanup` |
+| věc je hotová a další krok běží nad hlavní větví | `/cleanup` → `/merge` → `/clear` → `/X` | `/cleanup` → `/clear` → `/X` |
+| ještě musí v nové session proběhnout kontrola | `/cleanup` → `/clear` → `/X`, merge až po jejím `/cleanup` | `/cleanup` → `/clear` → `/X` |
+| přerušený průchod frontou | `/cleanup` → `/clear` → `/next` | `/cleanup` → `/clear` → `/next` |
+| rozdělaná úvaha, která se zapsat nedá | `/cleanup` → `/compact` | `/cleanup` → `/compact` |
+| konec práce | `/cleanup` → zavřít okno; je-li větev hotová, `/merge` před tím | `/cleanup` → zavřít okno |
+
+**Který sloupec platí, rozhoduje ověřitelný stav, ne dojem:** stojí-li session na jiné než hlavní větvi (`git branch --show-current`), platí *S větví*. Odrážka ve skillu, která jmenuje `/merge`, ho proto vždy podmiňuje tím, že práce na větvi stojí.
 
 ```
 - `/cleanup`, pak `/clear`, a `/consistency` až v nové session – kontext je na <N>k
