@@ -12,7 +12,7 @@ Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo 
 
 **Stojíš-li v kroku životního cyklu, načti si `~/.claude/rules/lifecycle.md`.** Neimportuje se paušálně – v `~/.claude/rules/rules.md` je z něj jen rámeček s pořadím a obecná pravidla o přeskakování a neopakování kroků. Bez něj nevíš, co po tvém kroku platí, čí práci nemáš přebírat a co se smí opakovat.
 
-**Chystáš-li se zapsat do kteréhokoliv standardního souboru projektu, načti si `~/.claude/rules/structure.md`.** Které to jsou, vypisuje on sám – opsaný seznam by tady zestárnul při prvním přírůstku a mlčky by z pokynu vyňal soubory, které do něj patří. Také se neimportuje; `~/.claude/rules/rules.md`, *Kam co zapsat*, říká jen kam zápis míří, ne co v tom souboru smí stát.
+**Chystáš-li se zapsat do kteréhokoliv standardního souboru projektu, načti si `~/.claude/rules/structure.md`.** Které to jsou, vypisuje on sám – opsaný seznam by tady zestárnul při prvním přírůstku a mlčky by z pokynu vyňal soubory, které do něj patří. Také se neimportuje; `~/.claude/rules/rules.md`, *Kam co zapsat*, říká jen kam zápis míří, ne co v tom souboru smí stát. **Zapisuješ-li do zadání, návrhu řešení, plánu nebo produktového podkladu** (`requirements.md`, `architecture.md`, `plan.md`, `demand.md` a spol.), načti si navíc `~/.claude/rules/product.md`.
 
 **Nezávislé čtecí operace pouštěj paralelně.** Zjišťování kořene, čtení `CLAUDE.md` a stav gitu na sobě nezávisí.
 

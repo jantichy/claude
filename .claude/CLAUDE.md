@@ -42,7 +42,7 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 
 `~/.claude/rules/rules.md` drží **obecná pravidla práce** a jde do každé session, takže každá věta v něm stojí kontext všude. Než do něj něco zapíšeš, projdi test – vyhrává první kritérium, které sedí:
 
-1. Říká, **co smí stát** v konkrétním souboru v `docs/`? → `~/.claude/rules/structure.md`
+1. Říká, **co smí stát** v konkrétním souboru v `docs/`? → `~/.claude/rules/structure.md`; u zadání, návrhu a produktových podkladů `~/.claude/rules/product.md`
 2. Platí obecně pro skilly? → `~/.claude/skills/skills.md`
 3. Popisuje **rozhraní kroku životního cyklu**? → `~/.claude/rules/lifecycle.md`; obecné pravidlo o přeskakování zůstává v `~/.claude/rules/rules.md`
 4. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu

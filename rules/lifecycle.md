@@ -112,3 +112,26 @@ Celý životní cyklus je nástroj pro **jednu interaktivní session jednoho čl
 **`/evaluate` na to omezení naráží nejtvrději a řeší to tím, že se mu podřídí.** Data o provozu vznikají týdny po běhu, takže se nabízí pustit sběr naplánovaným agentem – a to by právě tuhle hranici překročilo: běželo by to bez souhlasu průběžné kontroly a bez toho, komu položit otázku. **Rozdělilo se to proto na dvě věci:** připomenutí je záznam v souboru, který nic nespouští (`/release` zapíše datum, `/next` ho nabídne), a samotný běh je interaktivní jako všechno ostatní. Kdo u toho sedí, rozhoduje; nikdo za něj.
 
 Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen deterministická vrstva** – typecheck, lint, test, audit, scan tajemství, statická analýza. Ty běží kdekoliv a nepotřebují nikoho, kdo by odpovídal. Panel specialistů, průchod nálezy, útok ani nasazení se v neinteraktivním prostředí nepouštějí; kdo je chce, pustí je u sebe.
+
+## Záznam průchodu v `done.md`
+
+**Sekce `## Průchody životním cyklem`** v `done.md` drží po jednom řádku za dokončený běh těch kroků *Životního cyklu projektu* (`~/.claude/rules/rules.md`), **které mají svého čtenáře**. Zapisují si ho skilly samy, ne člověk:
+
+- **`/review` a `/attack`** – čte je `/release` (proběhly nad tímhle rozsahem?), příští běh téhož skillu (rozsah a co z nálezů zbylo) a člověk; proto se zapisují i tam, kam se nenasazuje. **Hash je tu kvůli `/release`:** o dny později z paměti nepozná, jestli kontrola běžela nad *tímhle*.
+- **`/oponent`** – čte ho příští `/oponent`, který bez seznamu hledisek nepozná, s čím srovnávat počty nálezů.
+- **`/consolidate`** – čte ho příští běh, `/breakdown` (proběhl nad celkem, který se rozpadá?) a člověk. Zapisuje se **i po běhu bez přijatého návrhu**, protože po něm jinak nezůstane žádná stopa, a nese **počty, ze kterých se dá časem dofitovat práh** „dost kol“, který skill vědomě nemá.
+- **`/consistency` a `/cleanup`** – čte je příští běh téhož skillu: co už bylo auditované a s jakým zúženým rozsahem, respektive co zůstalo mimo úklid. **`/cleanup` uvádí i id uklizené session**; dvě data u téhož id znamenají dva úklidy. **Hash je stopa, ne čára:** druhý běh vytěžuje transcript vždy celý – zkratka „jen od zapsaného hashe dál“ je zamítnutá, protože hash vzniká před commitem zápisů úklidu.
+
+**`/evaluate` sem vědomě nezapisuje** – datum běhu nese hlavička `operation.md` a druhý zdroj by se rozešel. **`/merge` taky ne** – záznamem je merge commit.
+
+**Kritérium je „má to svého čtenáře“, ne „je to krok cyklu“** – jinak sekce zbytní a přestane se číst. **Rozšiřovat ten výčet mlčky se nesmí** – skill, který do sekce začne zapisovat, se do něj nejdřív dopíše.
+
+```
+- **2026-09-02** · `/review` · `ff0f765` · změny na větvi (14 souborů) · 12 nálezů (3 opraveno, 7 odloženo, 2 won't fix)
+```
+
+Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem, ne z kontextu (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+
+**Běžel-li krok nad jiným repozitářem, než ve kterém záznam leží, uveď u hashe i zdroj:** `` `~/.claude@574dade` ``. Nastává to tam, kde repozitář bez vlastního `done.md` odkládá záznamy do sousedního – dnes `~/.claude` do `~/Dev/context`. **Holý hash z cizího repozitáře je horší než žádný:** vypadá jako zdejší, takže ho příští běh hledá ve špatném stromu a `git log <hash>..HEAD` tam buď selže, nebo tiše vrátí něco jiného.
+
+**Výjimka z pravidla o zrcadlení:** jako jediná sekce `done.md` nemá protějšek v `todo.md` – průchod není odložený úkol.

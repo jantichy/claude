@@ -125,7 +125,7 @@ Tady končí režim **`brief`**.
 
 **Nemá-li doména layout, rozhoduje, kde stojíš.** V projektu se standardní strukturou (`~/.claude/rules/structure.md`) patří podklady do `research/`. Jinde založ `sources/`, `registry.md` a `output/`. **Nabídni pozdější `/project`** – nezakládej ho potichu.
 
-**Nezaložil-li se projekt, řekni, co to znamená pro běhový stav.** `.claude/run/` patří do `.gitignore` a ten řádek zakládá `/project`; bez něj se v repozitáři se zapnutým autocommitem začne stav commitovat po každé odpovědi (`~/.claude/rules/structure.md`, *Běhový stav skillů*).
+**Nezaložil-li se projekt, řekni, co to znamená pro běhový stav.** `.claude/run/` patří do `.gitignore` a ten řádek zakládá `/project`; bez něj se v repozitáři se zapnutým autocommitem začne stav commitovat po každé odpovědi (`~/.claude/skills/skills.md`, *Běhový stav*).
 
 **Originály se archivují v původní podobě a dál se nemění** (`~/.claude/rules/rules.md`, *Cizí podklady jsou read-only*). Co se z nich vytěží, žije v registru nálezů.
 

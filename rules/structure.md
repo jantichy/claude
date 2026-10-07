@@ -1,12 +1,10 @@
 # Standardní struktura projektu
 
-Konvence platná pro **každý projekt, kde dává smysl** – tedy všude, kde se něco průběžně rozhoduje a vyvíjí. Jednorázový scratch adresář nebo cizí repozitář, do kterého jen nahlížíš, ji nepotřebuje.
-
-Zakládá a udržuje ji skill `/project`. Tenhle soubor konvenci **definuje**; projektový `CLAUDE.md` jen deklaruje, že ji projekt drží, a popisuje odchylky.
+Konvence pro každý projekt, kde se něco průběžně rozhoduje a vyvíjí; jednorázový scratch ani cizí repozitář, do kterého jen nahlížíš, ji nepotřebuje. Zakládá a udržuje ji `/project`. Tenhle soubor konvenci **definuje**; projektový `CLAUDE.md` jen deklaruje, že ji projekt drží, a popisuje odchylky.
 
 ## Dva režimy umístění
 
-Standardní soubory jsou vždycky tytéž. **Kde leží, je volba ze dvou rovnocenných režimů** – ne výjimka z pravidla:
+Standardní soubory jsou vždycky tytéž. **Kde leží, je volba ze dvou rovnocenných režimů:**
 
 ```
 režim  docs/                       režim  root
@@ -21,46 +19,35 @@ režim  docs/                       režim  root
     └── rules.md
 ```
 
-| | `docs/` | `root` |
-|---|---|---|
-| Sedí na | projekt s kódem nebo obsahem, kde `docs/` odděluje meta-vrstvu od vlastní práce | knowledge base a malé projekty, kde by `docs/` byl prázdný obal nad dvěma soubory |
-| Kořen | zůstává čistý | nese o pár souborů víc |
+**Výchozí je `docs/`**, který odděluje meta-vrstvu od vlastní práce; `root` sedí na knowledge base a malé projekty, kde by `docs/` byl prázdný obal. Režim se volí jednou při `/project` a pak se drží – míchat obojí je nepořádek.
 
-**Výchozí je `docs/`.** Režim se volí jednou při `/project` a pak se drží; míchat obojí v jednom projektu není třetí varianta, ale nepořádek.
-
-**Konvence zápisu.** Texty, které popisují konvenci obecně – tenhle soubor, `~/.claude/rules/rules.md` a skilly – píšou cesty v podobě pro režim `docs/`: `docs/todo.md`, `docs/decisions.md`. **Myslí se tím soubor na místě podle režimu daného projektu**, ne doslovná cesta; rozepisovat u každé zmínky obě varianty by texty jen zahltilo.
-
-Naopak texty, které mluví o **jednom konkrétním projektu** – jeho `CLAUDE.md` a `README.md` – píšou **skutečnou cestu**. Projekt svůj režim zná a jeho čtenář ne.
+**Konvence zápisu.** Obecné texty (tenhle soubor, `~/.claude/rules/rules.md`, skilly) píšou cesty v podobě `docs/todo.md` a myslí tím soubor na místě podle režimu projektu. Texty o jednom projektu – jeho `CLAUDE.md` a `README.md` – píšou skutečnou cestu.
 
 ### Deklarace režimu
 
-Který režim projekt používá, říká řádek v bloku metadat projektového `CLAUDE.md`:
+Režim říká řádek v bloku metadat projektového `CLAUDE.md`:
 
 ```
 - **Struktura:** docs/
 ```
 
-Bez toho řádku se režim odvodí ze skutečného umístění souborů – ale deklarace je závazná: podle ní se rozhoduje, kam se zakládá další soubor.
+Bez něj se režim odvodí z umístění souborů; deklarace je ale závazná – podle ní se zakládá další soubor.
 
 ### Které soubory vůbec vzniknou
 
-Povinný je jediný soubor – **`CLAUDE.md`**, bez něj projekt není projekt. Zbytek se vybírá při `/project`:
+Povinný je jen **`CLAUDE.md`**. Zbytek:
 
 | Soubor | Zakládá se |
 |---|---|
-| `README.md`, `decisions.md`, `rules.md` | volitelně, výběrem při `/project` (výchozí ano) |
-| `todo.md` + `backlog.md` + `done.md` | volitelně, ale **jen jako trojice** – jedna volba pro všechny tři |
-| `requirements.md`, `architecture.md`, `plan.md` | až prací, přes `/specify`, `/architect` a `/breakdown` |
-| `<topic>.md` – tematický dokument kola | až prací, kolem návrhu přes `/architect` – viz *`requirements.md`, `architecture.md`, `plan.md`* |
-| `demand.md`, `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md` | **vybírá se** při `/project` (výchozí ne), zakládá se až prací – viz *Produktové podklady* |
-| `operation.md` | až prací, prvním během `/evaluate` nad nasazeným projektem; při `/project` se nevybírá – viz *Produktové podklady* |
+| `README.md`, `decisions.md`, `rules.md` | výběrem při `/project` (výchozí ano) |
+| `todo.md` + `backlog.md` + `done.md` | výběrem při `/project`, **jen jako trojice** |
+| `requirements.md`, `architecture.md`, `plan.md`, tematické dokumenty kol, produktové podklady (`demand.md`, `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md`, `operation.md`) | až prací – co v nich smí stát, drží **`~/.claude/rules/product.md`**; načti si ho, než do některého z nich zapíšeš |
 | `research/` | až je co uložit |
-| `.claude/run/` | samo, přerušitelným během skillu – není to standardní soubor, viz *Běhový stav skillů* |
-| testy | s první kontrolou, kterou projekt dostane – umístění se řídí jeho runnerem, viz *Testy* |
+| testy | s první kontrolou – kam patří, drží `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří* |
 
-Nezaložený soubor **není odchylka** – u projektu, kde se nic nerozhoduje, je prázdný `decisions.md` horší než žádný. Vznikne, až bude potřeba.
+Nezaložený soubor **není odchylka** – prázdný `decisions.md` u projektu, kde se nic nerozhoduje, je horší než žádný. Běhový stav skillů v `.claude/run/` standardní soubor není (`~/.claude/skills/skills.md`, *Běhový stav*).
 
-**Ve worktree layoutu** (`~/.claude/rules/worktree.md`) je „projekt“ pracovní adresář větve, ne kontejner. Celá struktura tedy žije v `main/` a odtud se s větví kopíruje – **i v režimu `root`, kde „kořen projektu“ znamená `main/`, ne kořen kontejneru.** Ten není pracovní strom a nic z něj by nešlo commitnout; je v něm jen tenký `CLAUDE.md` s popisem layoutu a importem `@main/CLAUDE.md`.
+**Ve worktree layoutu** (`~/.claude/rules/worktree.md`) je projekt pracovní adresář větve, takže celá struktura žije v `main/` – i v režimu `root`. Kořen kontejneru není pracovní strom a nese jen rozcestník.
 
 ---
 
@@ -68,7 +55,7 @@ Nezaložený soubor **není odchylka** – u projektu, kde se nic nerozhoduje, j
 
 ### `CLAUDE.md`
 
-Instrukce pro Clauda v tomhle projektu. **Začíná blokem základních metadat projektu** – tím, čím se projekt představuje navenek:
+Instrukce pro Clauda v tomhle projektu. **Začíná blokem metadat**, kterým se projekt představuje navenek:
 
 ```
 # Rezervační systém
@@ -81,361 +68,93 @@ Rezervační systém pro školení, konference a webináře – správa událost
 - **Repozitář:** https://github.com/jantichy/rezervace
 ```
 
-| Údaj | Co to je |
-|---|---|
-| Nadpis | **Lidský název** projektu, jak se o něm mluví – „Rezervační systém“, ne `rezervace`. |
-| Odstavec pod ním | **Popisek** – jedna věta, co projekt je. Vejde se do GitHub description (limit 350 znaků), takže bez odkazů a formátování. |
-| Slug | Technický název: adresář na disku, název repozitáře. |
-| Struktura | Režim umístění standardních souborů: `docs/` nebo `root`. Viz *Dva režimy umístění* výš. |
-| Web | Veřejná URL projektu, pokud existuje. Neexistuje-li, řádek vynech – nepiš „zatím není“. |
-| Repozitář | URL remote, pokud existuje. Jinak řádek vynech. |
+Nadpis je **lidský název** („Rezervační systém“, ne `rezervace`), odstavec pod ním **popisek** – jedna věta bez odkazů a formátování do 350 znaků (limit GitHub description). Slug je adresář a název repozitáře, Struktura režim umístění. Web a Repozitář se uvádějí, jen když existují – jinak řádek vynech, nepiš „zatím není“.
 
-Tenhle blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj dvě další místa a obě se musí držet s ním v souladu:
+Blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj nadpis a první odstavec `README.md` (tam se popisek smí rozvést) a Repository details na GitHubu (`gh repo edit <owner>/<slug> -d "<description>" -h "<web>"`). **Změní-li se název, popisek nebo URL, propiš to hned na všechna tři místa.**
 
-- **`README.md`** – týž lidský název v nadpisu, popisek jako první odstavec (tam se smí rozvést do víc vět).
-- **Repository details na GitHubu** – description a website. Nastavují se z terminálu, ne v UI:
+**Import musí stát holý, ne v apostrofech.** `@~/cesta/soubor.md` uvnitř code spanu se nenačte, a to tiše. Chceš-li cestu vysázet jako kód, napiš ji dvakrát; odkaz, který se importovat nemá, naopak v apostrofech nech.
 
-  ```bash
-  gh repo edit <owner>/<slug> -d "<description>" -h "<web>"
-  ```
+Další sekce:
 
-**Změní-li se název, popisek nebo URL, propiš to hned na všechna tři místa** – jinak zůstane na GitHubu viset popisek, který už neplatí, a nikdo si toho nevšimne, protože ho v repozitáři není vidět.
+- **`## Kontrakt příkazů`** – **má ho každý projekt, ve kterém se něco spouští**: čím se tam spouštějí abstraktní kroky (`test`, `typecheck`, `lint`, `build`…). Zakládá ho `/project`, čte průběžná kontrola a skilly, které pouštějí testy; seznam klíčů drží `~/Dev/context/coding/quality.md`, *Kontrakt příkazů*. Projekt bez kódu ho nemá.
+- **`## Zákazy`** – na co model nesahá nebo co nedělá bez ptaní, a proč. **Hranici drží `permissions` v `.claude/settings.json`** – co se nesmí vůbec, do `deny`, co jen bez ptaní, do `ask`; sekce je seznam s důvody a zákaz bez mechanismu se v ní označí jako jen napsaný. Zakládá ji `/project`, a jen má-li projekt co zakázat.
+- **`## Nasazení`** – jak se projekt dostane do produkce, hlavně která větev je nasazovací. Zakládá ji `/project` nebo první `/release`.
+- **`## Review` a `## Consistency`** – nálezy vyhodnocené jako „neopravovat“, aby se nehlásily znovu. Do první píší `/review` i `/attack` (formát drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*), do druhé `/consistency`. Píší je skilly, ne člověk.
 
-Zbytek `CLAUDE.md` – autocommit, paměťová politika, typ projektu, doménové importy – zakládá `/project`.
-
-**Import musí stát holý, ne v apostrofech.** Řádek `@~/cesta/soubor.md` se rozbalí jen tehdy, když `@` **není uvnitř code spanu**; zpětné apostrofy z něj udělají ukázku cesty a soubor se nenačte. Selhává to **tiše** – `CLAUDE.md` dál vypadá, jako by ta pravidla platila, a pozná se to jedině tím, že se model zeptáš, co má v kontextu.
-
-Chceš-li cestu přesto vysázet jako kód, napiš ji dvakrát – jednou holou jako import, jednou v apostrofech v popisu. A **odkaz, který se schválně importovat nemá** (`~/.claude/rules/worktree.md`), naopak v apostrofech nech: drží ho to spolehlivě jako odkaz.
-
-**Kontrakt příkazů.** Projekt, ve kterém se něco spouští, má v `CLAUDE.md` sekci `## Kontrakt příkazů` – překlad abstraktních kroků (`test`, `typecheck`, `lint`, `build` a dalších) na to, čím se v tomhle projektu doopravdy spouštějí. **Úplný seznam klíčů i s tím, který co vypíná, drží `~/Dev/context/coding/quality.md`, *Kontrakt příkazů*** – opsaný by se odsud rozešel při prvním přírůstku a vypadal by přitom pořád platně. Díky ní nemusí žádné pravidlo ani skill vědět, jestli je za projektem Node, PHP nebo Python. Zakládá ji `/project` a čtou ji kontroly kvality – průběžná kontrola i skilly, které před svou prací pouštějí testy. **Projekt bez kódu ji nemá a nic tím neporušuje.**
-
-**Sekce `## Zákazy`** vyjmenuje, na co model v projektu nesahá nebo co nedělá bez ptaní – generované soubory, vendorovaný kód, migrace databáze, ostrá data – a u každého proč. **Hranici ale drží `permissions` v projektovém `.claude/settings.json`, ne tahle sekce** (`~/.claude/rules/rules.md`, *Přednost pravidel*): co se nesmí vůbec, jde do `deny` (`Edit(/src/generated/**)`, `Write(/src/generated/**)`), co jen bez ptaní, do `ask` (`Bash(npx prisma migrate:*)`). Sekce je seznam pro člověka a pro model, odkud se ví proč; zákaz, ke kterému mechanismus udělat nejde, se tam označí jako jen napsaný. Zakládá ji `/project`; projekt, který nic takového nemá, ji nemá.
-
-**Sekce `## Nasazení`** popisuje, jak se projekt dostane do produkce – u platformy s automatickým nasazením zejména to, která větev je nasazovací. Zakládá ji `/project` nebo první běh `/release`.
-
-**Sekce `## Review` a `## Consistency`** sbírají nálezy vyhodnocené jako „neopravovat“, aby je příště nehlásily znovu. Do `## Review` píší **`/review` i `/attack`** (u nálezu z útoku nese pole `zdroj` hodnotu `útok`; formát řádku definuje `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*), do `## Consistency` píše `/consistency`. Píší je skilly, ne člověk; kapitoly jsou dvě, protože se ptají na jinou otázku – ne tři, protože `/review` a `/attack` se ptají na tutéž.
+Zbytek – autocommit, paměťová politika, typ projektu, doménové importy – zakládá `/project`.
 
 ### `README.md`
 
-**Pro člověka, který sem přijde poprvé.** Ne pro Clauda. To je jediné kritérium, podle kterého se rozhoduje, co do souboru patří.
+**Pro člověka, který sem přijde poprvé, ne pro Clauda.** Krátký úvod: co projekt je a k čemu slouží, co kde najde, jak se používá a spouští a jak se s ním jako celkem pracuje. Nadpis a první odstavec jsou z bloku metadat v `CLAUDE.md`. Musí vždy odpovídat skutečnému stavu.
 
-Krátký popisný nebo odrážkový úvod, ze kterého se čtenář rychle zorientuje:
+**Každá součást představená vlastním nadpisem dostane právě jeden odstavec** – co to je a k čemu je. Platí pro každý druh součásti: skill, modul, nástroj, skript, hook, adresář **i dokument**. Obrázek nebo ukázka výstupu pod odstavcem je jediná výjimka.
 
-- co to je za projekt a k čemu slouží,
-- co kde najde – mapa hlavních adresářů a dokumentů,
-- jak se to používá, spouští, nasazuje,
-- jak se s projektem jako celkem pracuje.
+Test: **jde ta věta škrtnout, aniž čtenář přestane vědět, k čemu ta věc je?** Pak tam nepatří. Nepatří tam tedy:
 
-Nadpis je lidský název projektu a první odstavec popisek – oboje z bloku metadat v `CLAUDE.md`, viz výš. V README se popisek smí rozvést do víc vět.
+- příběh vzniku a čísla dokládající užitečnost,
+- zdůvodnění a obhajoba návrhu → `docs/decisions.md`,
+- výčet fází, parametrů a vnitřních kroků → dokumentace té věci,
+- instrukce pro Clauda (pravidla práce, konvence, povinnosti) → `CLAUDE.md`, **ani odkazem** na ně,
+- principy → `docs/rules.md`, co zbývá → `docs/todo.md`.
 
-Průběžně aktualizuj podle vývoje – má vždy odpovídat skutečnému stavu.
-
-**Popisuj, nevyprávěj. Jeden odstavec na jednu věc.**
-
-**Každá součást, kterou README představuje vlastním nadpisem, dostane právě jeden odstavec**: co to je a k čemu je, případně velmi stručně co dělá. Ne dva, ne tři. Čtenář README hledá orientaci, ne výklad.
-
-**Platí to pro každý druh součásti, ne jen pro tu, která se dá spustit**: skill, modul, balíček, nástroj, skript, hook, adresář **i jednotlivý dokument**. Nejčastěji se to porušuje u dokumentů a vlastní infrastruktury (kontroly, testy, hooky), kde autor cítí potřebu vysvětlit, proč je to postavené takhle – čtenář se ale rozhoduje, jestli si věc otevře, ne jak ji postavit znovu.
-
-**Obrázek nebo ukázka výstupu pod odstavcem odstavec navíc není.** Je to jediná výjimka; druhý odstavec textu se jí neospravedlňuje.
-
-Do toho odstavce **nepatří**:
-
-- příběh, jak věc vznikla, ani co se při jejím prvním použití stalo („když jsem to poprvé pustil, ze 43 nálezů…“),
-- čísla dokládající užitečnost („ruční párování by vyšlo na 300 hodin“),
-- obhajoba návrhu a poučky, proč je to udělané takhle („agent, který má hledat všechno, nenajde nic“) → to je `docs/decisions.md`,
-- výčet fází, parametrů a vnitřních kroků → ten patří do dokumentace té věci, ne do rozcestníku.
-
-Test: **jde ta věta škrtnout, aniž čtenář přestane vědět, k čemu ta věc je?** Pak tam nepatří. Zdůvodnění je cenné, ale patří do `docs/decisions.md`, kde ho někdo hledá – v README ho čtenář musí přeskakovat, aby našel, co potřebuje.
-
-**Co do README nepatří:**
-
-- Normativní instrukce pro Clauda – pravidla práce v repozitáři, konvence pojmenování, „adresář je vždycky doména“, povinnost něco aktualizovat, výčty interních značek a prefixů. To je `CLAUDE.md`.
-- Principy, proti kterým se v projektu rozhoduje → `docs/rules.md`.
-- Zdůvodnění voleb a zamítnuté varianty → `docs/decisions.md`.
-- Co zbývá udělat → `docs/todo.md`.
-
-**Ani odkazem.** Věta „pravidla pro práci s adresářem jsou v `CLAUDE.md`“ v README nemá co dělat – čtenáři README k ničemu nejsou a Claude si `CLAUDE.md` načte sám. Odkazuj z README jen na to, co má číst člověk.
-
-Hraniční případ: konkrétní instrukce nebo popis postupu **nezbytný pro toho čtoucího člověka** (jak si to spustit, jak přidat novou položku, kam uložit podklad) do README patří, i když ho pak vykonává Claude. Rozhodující je, jestli by to potřeboval vědět člověk, který v projektu pracuje sám. Buď s tím ale opatrný – většina takových vět je ve skutečnosti procesní pokyn pro Clauda a patří jinam.
+Postup, který potřebuje znát člověk pracující v projektu sám (jak to spustit, kam uložit podklad), do README patří, i když ho pak vykonává Claude – většina takových vět je ale ve skutečnosti pokyn pro Clauda a patří jinam.
 
 ### `todo.md`
 
-Všechno, co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá**: úkol do další fáze, otázka, kterou je potřeba zodpovědět, věc čekající na rozhodnutí, které padnout musí. **S celou úvahou a zdůvodněním**, ne jako holá odrážka – účel je mít téma připravené, ne ho teprve vymýšlet.
+Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – úkol, otázka, kterou je nutné zodpovědět, rozhodnutí, které padnout musí. **S celou úvahou**, ne jako holá odrážka. Odklad po termín („až po spuštění“, „ve druhé fázi“) z úkolu nápad nedělá; nápad, o kterém nikdo nerozhodl, patří do `backlog.md`.
 
-**Otevřená otázka sem patří tehdy, když se zodpovědět musí** – pak je jejím úkolem to rozhodnutí. Nepatří sem otázka typu „nemělo by se někdy…“, u které nikdo neřekl, že se jí budeme zabývat; ta je nápad a patří do `backlog.md`.
-
-**Odložení po termín ani po první použitelné verzi (MVP) z položky nedělá nápad.** „Až po spuštění“, „ve druhé fázi“, „až budou data“ je nalajnovaný plán a patří sem; nezávazný nápad, o kterém se nikdo nerozhodl, patří do `backlog.md` – viz níž.
-
-**Má-li položka smysl až od konkrétního dne, napiš to hned za její název** jako `od <YYYY-MM-DD>` – například `- [ ] **Vyhodnotit provoz přes /evaluate** – od 2026-10-12.` `/next` takovou položku do fronty nezařadí, dokud ten den nenastane, a jen ji zmíní, aby bylo vidět, že se na ni nezapomnělo. **Datum patří na začátek, ne do popisu:** uvnitř textu bývá datum ze zdůvodnění a odklad z něj dělat nelze. Je to **odstup, ne termín** – položka po tom dni nezaniká ani neprotéká nikam dál.
-
-**Drží jen nehotové položky.** Jakmile je něco hotové, **přesuň to hned do `done.md`** – ne až při úklidu na konci session. `todo.md` tak na první pohled ukazuje, co zbývá.
-
-Parkovaný bod v rámci session („teď přeskoč“) patří do sekce **`## Parkované v session`** a po vyřešení se **smaže** – do `done.md` nepatří, není to odvedená práce projektu. Sekce je dočasná: prázdná se ruší.
-
-**Sekce `## Přerušený běh`** drží zbytek fronty běhu, který se přerušil, protože nabyl kontext – nevypořádané nálezy `/review`, poznatky `/evaluate`, úkoly `/implement`. **Stojí první v souboru a `/next` ji nabízí přednostně**, protože je to práce rozdělaná do půlky, ne nový úkol. Co v položce musí stát, aby se z ní dalo rozhodnout bez kontextu původní session, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*. Sekce je dočasná jako `## Parkované v session`: vypořádaná položka jde do `done.md`, jen když je to odvedená práce projektu, jinak se maže, a prázdná sekce se ruší.
-
-**Sekce `## Kola návrhu`** je mapa kol, na která `/architect` rozdělil větší návrh. Co je kolo, kdy vzniká a jak běží, drží `~/.claude/skills/architect/SKILL.md`; jak se kola čtou a nabízejí, `~/.claude/skills/next/SKILL.md`, *Kola návrhu*. Na každé kolo připadá jeden blok v tomhle tvaru:
-
-```markdown
-### Kolo o <tématu>
-
-- **Stav:** čeká | rozhoduje se | rozhodnuto
-- **Větev:** `<větev podle zvyku projektu>`
-- **Dokument:** `docs/<topic>.md`
-- **Čeká na:** <kola, bez jejichž výsledku nejde začít, nebo „nic“>
-- **Sahá na:** <sdílené dokumenty, do kterých kolo nejspíš zapíše>
-
-**Co rozhodnout.** <otázky, na které má kolo odpovědět – zadání, ne odpověď>
-
-**Podklady.** <co si před kolem přečíst>
-
-**Odložené otázky.** <otázky odložené na tohle kolo odjinud, každá s tím, kde vznikla>
-```
-
-- **Blok musí stačit čisté session.** Kolo se typicky otevírá v jiné session a jiné větvi, takže blok nese celé zadání a neodkazuje na konverzaci, ve které vznikl.
-- **Otázka odložená na kolo se zapisuje do jeho bloku**, ne jako samostatná položka s poznámkou „patří ke kolu o …“. Jinak se ztratí, jakmile kolo proběhne bez ní: položka dál čeká na něco, co už se nestane, a nerozezná se od fronty.
-- **O pořadí rozhoduje řádek *Čeká na*, ne pořadí bloků.** Kola bez nesplněné závislosti smí běžet souběžně; řádek *Sahá na* říká, kde se jejich větve můžou srazit.
-- **Hotové kolo se přesune do stejnojmenné sekce `done.md`**, v tvaru popsaném tam. Blok se maže až tímhle přesunem, a ten proběhne ve větvi kola těsně před sloučením.
-- Sekce žije jen po dobu návrhu po kolech; po posledním kole do ní `/architect` zapíše řádek *Návrh sešitý* a při dočištění ji zruší – kromě bloků kol puštěných až za sešití, které zůstanou jako další várka. Chybějící sekce znamená totéž co sekce bez bloků.
+- **Má-li položka smysl až od určitého dne**, napiš **hned za název** `od <YYYY-MM-DD>` – `/next` ji do té doby nenabídne, jen zmíní. Datum uvnitř popisu odklad nezakládá. Je to odstup, ne termín.
+- **Drží jen nehotové položky.** Hotové **přesuň hned do `done.md`**.
+- **`## Parkované v session`** – bod odložený v rámci session; po vyřešení se maže, prázdná sekce se ruší.
+- **`## Přerušený běh`** – zbytek fronty běhu přerušeného kvůli nabytému kontextu (nálezy, úkoly). Stojí první v souboru a `/next` ji nabízí přednostně; tvar položky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*. Vypořádaná položka jde do `done.md`, jen je-li to odvedená práce, jinak se maže; prázdná sekce se ruší.
+- **`## Kola návrhu`** – mapa kol návrhu; tvar drží `~/.claude/skills/architect/rounds.md`.
 
 ### `backlog.md`
 
-**Zásobník nezávazných nápadů** – co by s produktem někdy šlo udělat, kdyby se chtěl rozšiřovat a nevědělo se kam. Nic z toho není odsouhlasené, rozpracované ani naplánované; je to materiál k výběru, ne fronta.
+**Zásobník nezávazných nápadů** – co by s produktem někdy šlo udělat, ale **nikdo se nerozhodl**. Hranice proti `todo.md` jde po rozhodnutí, ne po termínu.
 
-Hranice proti `todo.md` je tvrdá a jde po **rozhodnutí, ne po termínu**:
-
-| | `todo.md` | `backlog.md` |
-|---|---|---|
-| Stav | rozhodnuto, že se to udělá | nikdo se nerozhodl |
-| Čte se | průběžně, položky ubývají | když se vybírá, co dál |
-| „Až po MVP“ | **sem** – je to nalajnovaný plán | ne |
-| Osud položky | přesune se do `done.md` | buď se vytáhne do `todo.md` či do specifikace, nebo se smaže |
-
-**Položka se z backlogu neodškrtává.** Rozhodne-li se, že se nápad udělá, **přesune se do `todo.md`** (nebo rovnou do zadání) – v backlogu po něm nezbude nic. Do `done.md` z backlogu nevede cesta přímo; hotová položka se tam dostane až přes `todo.md`, aby záznam odvedené práce zůstal jedním seznamem.
-
-Jediná výjimka je **dorovnání staršího projektu**, kde se hotová věc do backlogu dostala omylem – ta jde rovnou do `done.md` a přesun se vypíše. Není to druhá cesta, ale úklid po chybném zařazení.
-
-**Zamítnutý nápad se maže**, ale byl-li zamítnutý s odůvodněním, patří to odůvodnění do `decisions.md` (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*). Backlog není hřbitov – co v něm leží, je pořád ve hře.
-
-**Co sem nepatří:**
-
-- **Nález prověřovacího kroku.** Co našel `/review`, `/attack`, `/consistency` nebo `/oponent`, je vada nebo dluh, ne nápad. **Odložit ho znamená rozhodnout, že se opraví později** – jde tedy do `todo.md`; zamítnutý jde do `## Review` v `CLAUDE.md`. Třetí možnost není: nález, u kterého se řekne „to nás nepálí“, je zamítnutý, ne odložený.
-- **Parkovaný bod session** („teď přeskoč“) – ten patří do `## Parkované v session` v `todo.md` a po vyřešení se maže.
-- **Rozhodnutí o dnešním návrhu a jeho zdůvodnění** → `decisions.md`. Netýká se to úvahy uvnitř nápadu – viz *Nápad smí být rozepsaný do detailu* níž.
-
-**Vybírá z něj jediný skill – `/specify`**: než se začne psát nové zadání, projde ho a nabídne, co se hodí vytáhnout do něj. `/next` ho při prázdné frontě jen vypíše a výběr nenabízí. Bez toho by se nápady zapisovaly navěky a nikdy nečetly.
-
-**Zapisují do něj `/implement` a `/cleanup`** – `/implement` sám a bez ptaní, protože nápad nad rámec plánu je jeho vlastní; `/cleanup` se ptá vždycky, protože jestli za tím, co v konverzaci padlo, uživatel stojí jako za nápadem, ví jen on. **Přesouvá-li se položka z jednoho seznamu do druhého** (`/project` nad starým `todo.md`, `/specify` při výběru do zadání), rozhoduje uživatel o každé zvlášť.
-
-**Chybí-li soubor a je co do něj zapsat, založ ho** a řekni to – jinak nápad zaplevelí `todo.md`, nebo se ztratí. Je to táž výjimka, jakou má `/cleanup` pro každý standardní soubor: *nezakládat potichu* platí na zakládání do zásoby, ne na zápis, který jinak nemá kam.
-
-**Nápad smí být rozepsaný do detailu a hloubka rozpisu o rozhodnutosti neříká nic** – i s datovým modelem, okrajovými případy **a zavrženými cestami a proč**, ať se úvaha za rok nedělá znovu. **Ty vnitřní závěry nejsou rozhodnutí projektu** a do `decisions.md` nepatří, protože platí jen *kdyby* se nápad dělal, a zaniknou s ním; tam patří teprve závěr, který váže **dnešní** návrh – rozhoduje, jestli něco váže dnes, ne jak jistě zní.
-
-**Uvnitř se člení podle sebe, ne podle `todo.md`** – podle toho, čeho se nápady týkají. Pořadí nic neurčuje, backlog není fronta.
-
-**Nápad v backlogu nestárne a sám nevyprchá.** Maže se jen rozhodnutím, že se dělat nebude, a to rozhodnutí jde do `decisions.md`.
-
-Existuje **jen spolu s `todo.md`** – bez fronty, proti které se vymezuje, by z něj byla druhá fronta.
+- **Položka odejde jen dvěma cestami:** rozhodne-li se, že se udělá, **přesune se do `todo.md`** nebo do zadání; rozhodne-li se, že ne, **smaže se** – a bylo-li zamítnuté s odůvodněním, jde to do `decisions.md`. Neodškrtává se, nestárne a podle stáří se neuklízí.
+- **Nepatří sem nález kontroly** (`/review`, `/attack`, `/consistency`, `/oponent`) – odložený jde do `todo.md`, zamítnutý do `## Review` v `CLAUDE.md`; třetí možnost není – „nepálí nás to“ je zamítnutí, ne odklad. Nepatří sem ani parkovaný bod session.
+- **Nápad smí být rozepsaný do detailu** i se zavrženými cestami. Jeho vnitřní závěry **nejsou rozhodnutí projektu** – platí jen *kdyby* se dělal; do `decisions.md` patří jen závěr, který váže **dnešní** návrh.
+- **Vybírá z něj jen `/specify`** před novým zadáním; `/next` ho při prázdné frontě jen vypíše. O přesunu každé položky rozhoduje uživatel.
+- Člení se podle témat; pořadí nic neurčuje.
+- **Chybí-li a je co zapsat, založ ho** a řekni to. Existuje jen spolu s `todo.md`.
 
 ### `decisions.md`
 
-**Konkrétní rozhodnutí** tohoto projektu a cesta k nim: jaký problém to řešilo, jaké varianty byly ve hře, proč vyhrála tahle a proč padly ostatní. Patří sem i místa, kde jsme názor v průběhu změnili – ta se nepřepisují, přibude k nim revize s odůvodněním.
+**Konkrétní rozhodnutí a cesta k nim:** problém, varianty, proč vyhrála tahle a proč padly ostatní. Zapisuj hned, jak rozhodnutí padne. Změna názoru se nepřepisuje – přibude revize s odůvodněním.
 
-Zapisuj hned, jak rozhodnutí padne. Z odstupu se zdůvodnění rekonstruuje špatně nebo vůbec.
-
-**Datum rozhodnutí patří do prvního odstavce, ne do nadpisu.** Je-li soubor členěný na kapitoly, píše se `**Rozhodnuto 15. 9. 2026.**` na začátek těla, kdežto nadpis nese jen to, o čem kapitola je. Nadpis je kotva a datum v ní se při každé opravě tiše rozbije všem, kdo na ni odkazují.
-
-**Netýká se to počtu v nadpisu** u katalogu členěného na sekce („Akce nad objednávkou (9)“): kotvu zkřehčí taky, ale na rozdíl od data pomáhá při skenování.
-
-**Sekce `## Co proklouzlo`** drží jeden řádek na každý produkční defekt, který nechytila žádná vrstva – ani nástroj, ani panel v `/review`, ani útok, ani sledovací okno po nasazení:
-
-```
-- **2026-09-02** – *dvojité odeslání objednávky při rychlém dvojkliku*: měl to chytit panel (specialista na data a stavy), nechytil, protože v rozsahu nebyl frontend → doplněn regresní test a položka do checklistu
-```
-
-Zapisuje ji `/release` (viz jeho *Když chyba projde vším*). **Pole „doplněno“ nesmí být prázdné:** buď z defektu vzejde nová blokující kontrola, nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – tedy z té množiny, kterou už chytat umí.
-
-**Kapitola kola návrhu se píše bez čísla**, i když ho ostatní kapitoly mají; číslo dostane těsně před sloučením větve kola (`~/.claude/skills/architect/SKILL.md`), protože souběžná kola by si jinak vzala totéž.
-
-**Nejstarší nahoře. Nový zápis se připojuje na konec** – své sekce, je-li soubor členěný. Připsat na konec nejde udělat špatně a revize pak stojí **za** původním rozhodnutím. Platí to i bez dat (pořadí vzniku) a uvnitř tematicky členěného souboru: řadí se v rámci kapitoly, kapitoly drží svou logiku.
+- **Nejstarší nahoře, nový zápis na konec** své sekce – i bez dat (pořadí vzniku); kapitoly tematicky členěného souboru drží svou logiku.
+- **Datum patří do prvního odstavce kapitoly, ne do nadpisu** (`**Rozhodnuto 15. 9. 2026.**`) – nadpis je kotva a datum v ní se při opravě tiše rozbije. Počet v nadpisu katalogu („Akce nad objednávkou (9)“) se toho netýká.
+- **`## Co proklouzlo`** – defekty, které prošly všemi kontrolami; tvar drží `~/.claude/skills/release/SKILL.md`, *Když chyba projde vším*.
+- **Kapitola kola návrhu** se píše bez čísla – `~/.claude/skills/architect/rounds.md`, *V `decisions.md`*.
 
 ### `done.md`
 
-**Hotové položky přesunuté z `todo.md`.** Nikdy se nemažou – je to záznam odvedené práce, ze kterého jde zpětně říct, co se kdy udělalo a proč.
+**Hotové položky přesunuté z `todo.md`. Nikdy se nemažou.**
 
-- **Přesouvej průběžně**, ve chvíli, kdy je položka hotová. Ne dávkově na konci.
-- **Nejstarší nahoře, nové položky na konec** sekce – stejné pravidlo i důvod jako v `decisions.md` výš.
-- **Datum dokončení** za názvem položky ve tvaru `(2026-08-28)`.
-- Je-li `todo.md` členěné na sekce, **`done.md` je zrcadlí** – hotová položka jde do sekce, do které patřila.
-- **Přesouvá se úkol, ne odškrtnutý krok uvnitř něj.** Má-li nedokončená položka vnořený checklist, jeho odškrtnuté řádky zůstávají u ní – dávají jí kontext a bez nich není vidět, co z úkolu už je hotové.
+- Přesouvej **průběžně**, ve chvíli, kdy je položka hotová.
+- **Nejstarší nahoře**, nové na konec sekce; **datum dokončení** za názvem `(2026-08-28)`, vyrobené `date +%F`.
+- **Zrcadlí sekce `todo.md`** – položka jde do sekce, do které patřila.
+- **Přesouvá se úkol, ne odškrtnutý krok uvnitř něj** – odškrtnuté řádky checklistu zůstávají u nedokončené položky.
+- **`## Průchody životním cyklem`** – záznamy běhů kontrolních kroků; tvar a kdo zapisuje drží `~/.claude/rules/lifecycle.md`, *Záznam průchodu v `done.md`*. **`## Kola návrhu`** – `~/.claude/skills/architect/rounds.md`. Běhový stav skillů sem nepatří.
 
-Existuje **jen spolu s `todo.md`**: jeden bez druhého nedává smysl, tak se taky zakládají a vybírají – jednou volbou pro celou trojici `todo.md`, `backlog.md`, `done.md`.
-
-**Sekce `## Průchody životním cyklem`** drží po jednom řádku za dokončený běh těch kroků *Životního cyklu projektu* (`~/.claude/rules/rules.md`), **které mají svého čtenáře**. Zapisují si ho skilly samy, ne člověk:
-
-- **`/review` a `/attack`** – čte je `/release` (proběhly nad tímhle rozsahem?), příští běh téhož skillu (rozsah a co z nálezů zbylo) a člověk; proto se zapisují i tam, kam se nenasazuje. **Hash je tu kvůli `/release`:** o dny později z paměti nepozná, jestli kontrola běžela nad *tímhle*.
-- **`/oponent`** – čte ho příští `/oponent`, který bez seznamu hledisek nepozná, s čím srovnávat počty nálezů.
-- **`/consolidate`** – čte ho příští běh, `/breakdown` (proběhl nad celkem, který se rozpadá?) a člověk. Zapisuje se **i po běhu bez přijatého návrhu**, protože po něm jinak nezůstane žádná stopa, a nese **počty, ze kterých se dá časem dofitovat práh** „dost kol“, který skill vědomě nemá.
-- **`/consistency` a `/cleanup`** – čte je příští běh téhož skillu: co už bylo auditované a s jakým zúženým rozsahem, respektive co zůstalo mimo úklid. **`/cleanup` uvádí i id uklizené session**; dvě data u téhož id znamenají dva úklidy. **Hash je stopa, ne čára:** druhý běh vytěžuje transcript vždy celý – zkratka „jen od zapsaného hashe dál“ je zamítnutá, protože hash vzniká před commitem zápisů úklidu.
-
-**`/evaluate` sem vědomě nezapisuje** – datum běhu nese hlavička `operation.md` a druhý zdroj by se rozešel. **`/merge` taky ne** – záznamem je merge commit.
-
-**Kritérium je „má to svého čtenáře“, ne „je to krok cyklu“** – jinak sekce zbytní a přestane se číst. **Rozšiřovat ten výčet mlčky se nesmí** – skill, který do sekce začne zapisovat, se do něj nejdřív dopíše.
-
-```
-- **2026-09-02** · `/review` · `ff0f765` · změny na větvi (14 souborů) · 12 nálezů (3 opraveno, 7 odloženo, 2 won't fix)
-```
-
-Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem, ne z kontextu (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
-
-**Běžel-li krok nad jiným repozitářem, než ve kterém záznam leží, uveď u hashe i zdroj:** `` `~/.claude@574dade` ``. Nastává to tam, kde repozitář bez vlastního `done.md` odkládá záznamy do sousedního – dnes `~/.claude` do `~/Dev/context`. **Holý hash z cizího repozitáře je horší než žádný:** vypadá jako zdejší, takže ho příští běh hledá ve špatném stromu a `git log <hash>..HEAD` tam buď selže, nebo tiše vrátí něco jiného.
-
-**Výjimka z pravidla o zrcadlení:** jako jediná sekce `done.md` nemá protějšek v `todo.md` – průchod není odložený úkol.
-
-**Běhový stav kroku sem nepatří** – rozpracovaná fronta nálezů `/review` ani seznam toho, co zvedl `/attack`, viz *Běhový stav* níž.
-
-**Sekce `## Kola návrhu`** zrcadlí stejnojmennou sekci `todo.md` a drží jeden záznam za každé dokončené kolo návrhu:
-
-```markdown
-- **Kolo o <tématu> (2026-09-14)** · větev `<branch>` · `docs/<topic>.md` · [rozhodnutí](../docs/decisions.md#<anchor>)
-  - **Rozhodlo:** <co padlo, věcně, včetně zamítnutého hlavního směru>
-  - **Uzavřelo:** <odložené otázky, které kolo vyřešilo, nebo „nic“>
-  - **Neotevřelo:** <odložené otázky, které kolo nechalo být, a kam se přesunuly, nebo „nic“>
-  - **Nová kola:** <kola, která z tohohle vzešla, nebo „žádná“>
-```
-
-Datum vyrob `date +%F`. Po posledním kole připíše `/architect` řádek `- **Návrh uzavřen (<datum>)** – <počet> kol` – podle něj se pozná, že doběhla celá várka kol; zůstaly-li v `todo.md` bloky další várky, návrh uzavřený celý není.
-
-**Nejcennější je pole *Neotevřelo*** – odliší **nerozhodnuté** od **rozhodnutého jinak**, což z dokumentace vyčíst nejde; proto je povinné i jako „nic“. Pevný tvar má proto, že ho čte `/architect` při rozhodování, co je na řadě.
-
-### `requirements.md`, `architecture.md`, `plan.md`
-
-**Zadání a plán.** Nevznikají u každého projektu a nezakládá je `/project` – přibudou, až se v projektu něco staví:
-
-| Soubor | Odpovídá na otázku | Zakládá |
-|---|---|---|
-| `requirements.md` | Co stavíme a proč | `/specify` |
-| `architecture.md` | Jak to postavíme – **páteř návrhu řešení, ne celý návrh** | `/architect` |
-| `plan.md` | Kdo co udělá v jakém pořadí, s ověřitelným akceptačním kritériem u každého úkolu | `/breakdown` |
-
-Hranice mezi požadavky a návrhem řešení je tvrdá: do požadavků patří **omezení**, do návrhu řešení **volba**. „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je omezení; „použijeme SQLite, protože…“ je volba. Kontrolní otázka, když si nejsi jistý, kam věta patří: *změní se, když se změní technologie?* Ano → návrh, ne → požadavky.
-
-**Dva soubory, protože mají jinou životnost** – záměr se mění zřídka, řešení s každou technologickou volbou. **Nepřekrývají se:** `requirements.md` nesmí obsahovat architekturu ani „nejspíš to bude na Vercelu“, `architecture.md` nesmí obsahovat zdůvodnění produktu – na požadavky odkazuje a neopisuje je.
-
-**Návrh řešení je sada dokumentů, ne jeden soubor**, a `architecture.md` je jeho páteř. Požadavky jsou seznam a vejdou se do jednoho dokumentu; návrh je soustava, ve které se věci navzájem omezují, a každý dokument je **řez toutéž věcí z jiného úhlu**: stavba (`architecture.md`), data a stavy (`model.md`), operace (`transitions.md`), zásady domény (`rules.md`), jednotlivé okruhy (tematické dokumenty kol). Táž funkce tak stojí ve víc z nich, a je to správně (`~/.claude/rules/rules.md`, *Jednoduchost před úplností*).
-
-**Nový dokument vzniká tehdy, když drží jiný řez – ne když je ten stávající dlouhý.** Kontrolní otázka: *odpovídá na otázku, na kterou žádný jiný neodpovídá?* Když ne, je to kapitola. `model.md` se nedělí kvůli délce a katalog operací se nevlévá do dokumentu o stavbě.
-
-**Kolik jich vznikne, rozhoduje projekt.** Malému stačí `architecture.md` samotný a víc jich zakládat se nemá; `model.md` a `transitions.md` jsou pojmenované, aby si je každá aplikace nevymýšlela jinak, ne protože jsou povinné.
-
-Podrobně v `~/.claude/skills/specify/SKILL.md` a `~/.claude/skills/architect/SKILL.md`.
-
-Změna teče **shora dolů**: `requirements.md` → `architecture.md` → `plan.md` → kód. Nikdy obráceně – ukáže-li se při implementaci, že návrh nefunguje, opraví se návrh, ne potichu kód.
-
-Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requirements.md`; místo plánu se kroky rozepíšou do `todo.md`.
-
-**Návrh po kolech přidává tematické dokumenty** `docs/<topic>.md` (například `gateway.md`, `emails.md`, `admin.md`), jeden na kolo. Tematický dokument drží celý okruh do detailu. Do `requirements.md` a dalších sdílených dokumentů (glosář, scénáře, model) zapisuje kolo jen to, co z tématu plyne pro celek, a odkazuje se na něj. **`architecture.md` kola nepíšou** – vzniká až nad výsledky všech kol, při sešití v `/architect`. Technickou volbu, kterou téma rozhodnout musí (třeba dodavatele), zapíše kolo do technické části svého dokumentu a `architecture.md` na ni pak odkáže. Hranice požadavků a návrhu tedy platí i uvnitř tematického dokumentu: omezení a volba se nemíchají, jen stojí u sebe. **Proč samostatný soubor:** kola běží souběžně v různých větvích a psaní do týchž kapitol sdílených dokumentů by je srazilo.
-
-### Produktové podklady
-
-**Podklady, ze kterých se staví produkt** – ne obchodní plán a ne marketing. Vybírají se při `/project`, který je **nezakládá**, jen si zapíše, které z nich projekt vede. Vznikají prací. **Výjimkou je `operation.md`** – ten se nevybírá, protože dokud není co nasadit, není o čem rozhodovat; zakládá ho až první běh `/evaluate`:
-
-| Soubor | Odpovídá na otázku | Plní |
-|---|---|---|
-| `demand.md` | Proč to vůbec stavět – kdo má ten problém, jak ho dnes řeší, co ho to stojí a čím je doložené, že ho chce řešit jinak | `/discovery` |
-| `competition.md` | Kdo je konkurence, co umí, za kolik – a jaká je proti nim naše pozice | `/discovery` |
-| `risks.md` | Co je na produktu rizikové a čím to v návrhu mitigujeme | `/discovery` |
-| `scenarios.md` | Co s produktem uživatel dělá, krok za krokem, taxativně | `/specify` |
-| `glossary.md` | Jak se v téhle doméně čemu říká | `/specify` |
-| `pricing.md` | Tarify, limity, trial, upgrade, co se stane po expiraci | `/specify` |
-| `operation.md` | Co o produktu víme z provozu – jestli se používá, kde to lidé nedokončili, co si vyžádali | `/evaluate` |
-
-**Žádný z nich není povinný a většina projektů nevede ani jeden** – nestaví se v nich produkt pro lidi zvenčí. Interní nástroj nemá konkurenci ani ceník; jednoduchá aplikace nepotřebuje glosář. Prázdný podklad je horší než žádný, protože předstírá, že se ta úvaha udělala.
-
-**Výjimka je `demand.md`** – ten dává smysl všude, kde se staví něco pro lidi, **i tam, kde produkt nemá trh**. Interní nástroj, který si lidé obejdou tabulkou, je totéž selhání jako aplikace bez zákazníků. Povinný přesto není: u přírůstku do hotového produktu je „proč“ rozhodnuté, a je-li zapsané, nepřepisuje se.
-
-**`demand.md`** drží problém, jeho nositele, dnešní řešení a jeho cenu, **doklady poptávky odděleně od dojmů**, sekci *Co by verdikt vyvrátilo* a **verdikt o dvou hodnotách** – poptávka doložená, nebo nedoložená; nic mezi tím. Doklad má zdroj (jmenovaný člověk, URL diskuse), dojem ne. **Nedoložená poptávka není vada dokumentu**, ale jeho platný výsledek – a patří pak do `risks.md` jako riziko s nejvyšším dopadem.
-
-Hranice proti `requirements.md` je táž jako u ostatních podkladů: sem **doklady a verdikt**, tam **rozhodnutí, co se z toho postaví**. Hranice proti `competition.md` vede po tom, o kom nález mluví: článek o nástrojích patří ke konkurenci, člověk popisující, jak problém dnes obchází, k poptávce.
-
-**`competition.md`** drží data o trhu i jejich závěr. Začíná sekcí `## Co poměřujeme` – jaký problém řešíme, komu, v jaké kategorii produktu tedy soutěžíme a čím se to má hrubě lišit. **Je to vymezení pole hledání, ne specifikace**; `/specify` ho čte jako hotový vstup. Pak následuje analýza sama (kdo, co, za kolik, co umí) a závěrečná sekce `## Naše pozice a odlišení`: co musíme mít, protože to má každý, co děláme jinak a kde vědomě zaostáváme.
-
-**Závěr žije tady, ne zvlášť** (*Vše o jedné věci pohromadě u ní*); samostatný soubor na odlišení (USP) se nezakládá – byl by třetím místem vedle *MVP* v `requirements.md` a `scenarios.md`, kde se tvrdí, co produkt musí umět.
-
-**`risks.md`** je **registr rizik, ne SWOT analýza silných a slabých stránek.** U každého rizika: čeho se týká, jaký by mělo dopad, jak je pravděpodobné, čím ho mitigujeme a **co se kvůli němu v produktu změnilo nebo přibylo**. Bez toho posledního pole je to seznam obav, který nikoho nezavazuje. Silné stránky a příležitosti drží *Naše pozice a odlišení* v `competition.md`.
-
-Hranice proti sekci *Rizika* v `architecture.md`: sem patří **rizika produktu a trhu** (nikdo to nebude používat, konkurence to udělá dřív, data se nedají získat, legislativa se změní), do návrhu **technická rizika zvoleného řešení** (nezvládne to zátěž, ta knihovna může skončit).
-
-**`scenarios.md`** je **taxativní seznam toho, co uživatel s produktem dělá**, každý scénář krok za krokem od začátku do konce, včetně okrajových a chybových cest. Čte ho ten, kdo ověřuje, že produkt umí, co má, kdo píše nápovědu a odpovědi na časté dotazy, a testování na skutečných lidech.
-
-**Má-li projekt `scenarios.md`, sekce *Hlavní scénáře* v `requirements.md` zaniká** a nahradí ji odkaz (*Single source of truth*). V požadavcích zůstává **proč a pro koho** – persony, user stories, varianty jako produktová rozhodnutí; ve scénářích **jak to člověk provede**. Odkazuje se sem odjinud: *Testovací strategie* v `architecture.md` měří pokrytí proti tomuhle seznamu, stejně jako `plan.md` a `/attack`.
-
-**`glossary.md`** dává *Jednomu termínu pro jednu věc* z `~/.claude/rules/rules.md` místo, kde ten termín stojí zapsaný. U každého pojmu: jak se jmenuje česky, jak v kódu, co znamená a **čím se liší od pojmu, se kterým se plete**. Zakládá se u projektu s netriviální doménou, kde se plete víc entit naráz. **Termíny platné napříč projekty sem nepatří** – ty drží `~/.claude/rules/ptydepe.md` a spravuje je `/ptydepe`.
-
-**`pricing.md`** má smysl jen u produktu, který se prodává. Není to ceník pro web, ale **soupis toho, co z cenového modelu plyne pro produkt**: co který tarif smí, kde jsou limity a co se stane při jejich dosažení, jak vypadá trial a co po něm, jak se přechází nahoru a dolů, co se stane po expiraci a co s daty.
-
-**`operation.md`** drží **poznatky z provozu, ne měsíční report**. Zakládá ho první běh `/evaluate` a každý další **přidává nové období nad starší, aniž maže čísla stará** – trend je důvod, proč ten soubor existuje. U každého poznatku: čeho se týká, číslo, **odkud se to ví**, jak se to dá zopakovat, a **jak se o něm rozhodlo**. Hlavička nese datum běhu a období, za které se měří. **Vyjde-li z ověření, že se zdroji není něco v pořádku**, přibude k tomu **verdikt o důvěryhodnosti dat**: poznatky stojící na číslech se tím označí a nesmí se z nich argumentovat, kdežto ty stojící na struktuře (chybějící omezení, chybějící auditní stopa) platí dál.
-
-**Hranice proti `demand.md` je v čase, ne v tématu.** Tam doklady o tom, že problém existuje, **než** se něco postavilo; sem doklady o tom, co lidé dělají s hotovou věcí. Verdikt v `demand.md` se čísly z provozu nepřepisuje – odpovídá na jinou otázku. Proti `requirements.md` jako u ostatních podkladů: sem doklady a rozhodnutí o poznatku, tam co se z toho postaví (`/specify`).
-
-**Sekce *Rizika* se sem nekopíruje.** Projeví-li se riziko z `risks.md`, zapíše se to jako poznatek s číslem a `risks.md` zůstává tím, čím je – registrem s mitigacemi.
+Existuje jen spolu s `todo.md`.
 
 ### `research/`
 
-**Cizí podklady, ze kterých projekt vychází** – brief, zápis ze schůzky, export, dump, PDF od klienta, screenshoty. Zakládá se, až je co uložit; `/project` ho nevytváří.
-
-Platí pro něj *Cizí podklady jsou read-only* z `~/.claude/rules/rules.md`: originály se sem **kopírují a dál nemění**. Co se z nich vytěží, žije v ostatních souborech projektu, ne tady.
-
-Smysl je dohledatelnost – aby šlo za rok ověřit, odkud se rozhodnutí vzalo.
+**Cizí podklady, ze kterých projekt vychází** – brief, zápis, export, PDF od klienta. Zakládá se, až je co uložit. Originály se sem **kopírují a dál nemění** (`~/.claude/rules/rules.md`, *Cizí podklady jsou read-only*); vytěžené žije jinde. Smysl je dohledatelnost.
 
 ### `rules.md`
 
-**Obecné principy tohoto projektu** – věty, které rozhodují, ne popis toho, co systém dělá. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně, aby platily i tam, kam se ještě nedošlo.
-
-Rozdíl proti `docs/decisions.md`: tam je konkrétní rozhodnutí (občas i výjimka z principu), tady rámec, proti kterému se rozhoduje. Každou další otázku validuj proti principům odsud, ne od nuly.
-
-**Hranice – co sem nepatří:**
-
-- Pravidla platná napříč všemi projekty → `~/.claude/rules/rules.md`
-- Doménové standardy a checklisty (kód, web, administrace, analytika, psaní textů, typografie) → do příslušného doménového standardu, který si projekt importuje ve svém `CLAUDE.md`, sekce *Doménové standardy*
-- Pravidla provozu worktree layoutu → `~/.claude/rules/worktree.md`, které si projekt s tímhle layoutem importuje do rozcestníku v kořeni kontejneru
-- Sem patří **jen to, co je specifické pro tenhle projekt.** Duplikovat sem obecné pravidlo je chyba.
-
----
-
-## Běhový stav skillů
-
-Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jednoho běhu** – rozpracovanou frontu nálezů `/review` a `/oponent`, seznam portů a kontejnerů, které zvedl `/attack`. Ten stav žije v **`.claude/run/`** v projektu a **patří do `.gitignore`** (řádek zakládá `/project`).
-
-**Není to standardní soubor a do výčtu výš nepatří** – je strojový, platí jeden běh a mění se po každé odpovědi, takže by ho autocommit commitoval donekonečna. Existuje proto, aby kompaktace uprostřed průchodu nálezy nestála celý běh znovu a přerušený `/attack` nenechal běžet server a kontejnery, o kterých nikdo neví.
-
-**Do `.claude/run/`, ne mimo repozitář:** je per pracovní adresář, tedy ve worktree layoutu per větev, a fronta nálezů k větvi patří. (Souhlas a stav průběžné kontroly naopak leží mimo repozitář a klíčují se sdíleným `.git`, protože se týkají repozitáře, ne větve.)
-
-**Nikdy se z něj nečte jako z pravdy o projektu.** Říká jen, kde skončil přerušený běh; co z toho má trvalou platnost, se zapíše do `todo.md`, `decisions.md` nebo `done.md` jako všechno ostatní.
-
----
-
-## Testy
-
-**Testy nejsou dokumentace a do `docs/` nepatří** – ani v režimu `docs/`. Je to spustitelný kód, i když testuje Markdown.
-
-**Leží tam, kam je hledá runner projektu**, a to i za cenu, že každý jazyk je má jinde:
-
-| Kde | Kdy |
-|---|---|
-| `tests/` v kořeni | Python (pytest), PHP (PHPUnit), Rust integrační testy – a každý projekt, jehož runner výchozí místo nemá |
-| vedle zdroje (`*.test.ts`, `_test.go`) | JavaScript a TypeScript, Go (tam to vynucuje jazyk) |
-
-**Jednotné to schválně není** – kontrola, která se pere s nástrojem, se dřív nebo později obejde. Rozhoduje konvence jazyka; kde žádná není, platí `tests/` v kořeni.
-
-**Znalostní, konfigurační a datový projekt testy má taky** a patří do `tests/` v kořeni. Netestuje se v nich chování, ale **tvar**: mrtvé odkazy, existence sekcí, povinná struktura záznamu, schéma dat a soulad seznamu v dokumentaci s tím, co je na disku. Co do které kontrolní vrstvy patří, drží `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*. Příkaz, kterým se testy pouštějí, deklaruje *Kontrakt příkazů* v projektovém `CLAUDE.md`.
+**Obecné principy tohoto projektu** – věty, které rozhodují, ne popis systému. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně; `decisions.md` drží konkrétní rozhodnutí, tady je rámec, proti kterému se rozhoduje. Patří sem **jen to, co je specifické pro projekt** – obecná pravidla jsou v `~/.claude/rules/rules.md`, doménové standardy v importované doméně, provoz worktree v `~/.claude/rules/worktree.md`.
 
 ---
 
 ## Průběžná aktualizace je povinná
 
-Tyhle soubory doplňuj **sám, průběžně a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží – nečekej na `/cleanup` (`~/.claude/rules/rules.md`, *Pravda v souborech, ne v konverzaci*); kam zápis míří, drží tamtéž *Kam co zapsat*, co v souboru smí stát, kapitoly výš. Patří-li zápis jinam, přesuň ho (*Živá struktura*).
+Tyhle soubory doplňuj **sám, průběžně a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží – nečekej na `/cleanup` (`~/.claude/rules/rules.md`, *Pravda v souborech, ne v konverzaci*); kam zápis míří, drží tamtéž *Kam co zapsat*. Patří-li zápis jinam, přesuň ho (*Živá struktura*).
 
 ## Prázdný soubor je v pořádku
 
-Nový projekt má `todo.md`, `backlog.md`, `done.md`, `decisions.md` i `rules.md` založené a prázdné, jen s nadpisem. Nevymýšlej do nich obsah dopředu; naplní se prací.
+Nový projekt má `todo.md`, `backlog.md`, `done.md`, `decisions.md` a `rules.md` založené jen s nadpisem. Nevymýšlej do nich obsah dopředu.

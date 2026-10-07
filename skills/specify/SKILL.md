@@ -19,7 +19,7 @@ V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to třetí krok os
 
 ## Co skill nedělá
 
-- **Nerozhoduje, jak se to postaví.** Architektura, datový model, stavy a přechody, rozhraní, technologie a bezpečnostní model jsou `/architect` a jeho `docs/architecture.md`. **Hranice je tvrdá:** do požadavků patří **omezení**, do návrhu **volba** (`~/.claude/rules/structure.md`, *`requirements.md`, `architecture.md`, `plan.md`*). „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je omezení a patří sem; „použijeme SQLite, protože…“ je volba a patří do návrhu. Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → návrh. Ne → sem.
+- **Nerozhoduje, jak se to postaví.** Architektura, datový model, stavy a přechody, rozhraní, technologie a bezpečnostní model jsou `/architect` a jeho `docs/architecture.md`. **Hranice je tvrdá:** do požadavků patří **omezení**, do návrhu **volba** (`~/.claude/rules/product.md`, *`requirements.md`, `architecture.md`, `plan.md`*). „Musí to běžet na běžném sdíleném hostingu bez placených závislostí“ je omezení a patří sem; „použijeme SQLite, protože…“ je volba a patří do návrhu. Když si nejsi jistý, kam věta patří, ptej se: *změní se, když se změní technologie?* Ano → návrh. Ne → sem.
 - **Nezkoumá konkurenci ani trh a neptá se, jestli to někdo chce.** Kdo to už dělá, za kolik, co je na tom rizikové a čím je doložená poptávka, zjišťuje `/discovery` do `docs/demand.md`, `docs/competition.md` a `docs/risks.md`. Tenhle skill je čte jako hotový vstup – zejména sekce *Co poměřujeme* a *Verdikt*, na které se tedy neptá podruhé. **Dorazí-li zadání s nedoloženou poptávkou, není to důvod se zastavit**, ale patří to do `requirements.md` k rozsahu MVP: první verze má být co nejmenší, aby poptávku ověřila.
 - **Nezakládá projekt.** Strukturu, git, autocommit a doménové importy dělá `/project`. Když chybí, skill na to upozorní a nabídne ho.
 - **Nepíše implementační plán.** Ten dělá `/breakdown`, a to až z hotového návrhu řešení, ne z požadavků.
@@ -134,7 +134,7 @@ Zapiš do **`docs/requirements.md`**. Šablona je v `~/.claude/skills/specify/do
 
 ### Scénáře, glosář a ceník
 
-Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz *Fáze 0*). Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/.claude/rules/structure.md`, *Produktové podklady*.
+Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz *Fáze 0*). Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/.claude/rules/product.md`, *Produktové podklady*.
 
 **Nevede-li projekt žádný z nich, nic nezakládej** a jdi rovnou na kontrolu. Zdá-li se ti přitom, že by se některý hodil, řekni to jednou větou a nech rozhodnout – závazek vede `CLAUDE.md`, ne tenhle běh.
 
@@ -184,7 +184,7 @@ Celý řetěz i s tím, co následuje po implementaci, je v `~/.claude/rules/lif
 
 ## Když se zadání změní později
 
-Platí *Doc-first vývoj* z `~/.claude/rules/rules.md`; posloupnost souborů definuje `structure.md`:
+Platí *Doc-first vývoj* z `~/.claude/rules/rules.md`; posloupnost souborů definuje `~/.claude/rules/product.md`:
 
 1. Změní se požadavek → uprav **`requirements.md`** a s ním **`scenarios.md`**, vede-li ho projekt. Změněný požadavek skoro vždycky mění nějaký scénář; scénář, který zůstal, ale už nejde provést, je horší než chybějící.
 2. Zkontroluj, jestli to mění návrh → to je `/architect`.

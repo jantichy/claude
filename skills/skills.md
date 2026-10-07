@@ -415,6 +415,16 @@ Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou
 
 **Obě README se aktualizují spolu se skillem**, ne na vyžádání. Změní-li se, co skill umí, je to součást té změny – stejně jako hlavička nebo test.
 
+## 11. Běhový stav
+
+Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jednoho běhu** – rozpracovanou frontu nálezů `/review` a `/oponent`, seznam portů a kontejnerů, které zvedl `/attack`. Ten stav žije v **`.claude/run/`** v projektu a **patří do `.gitignore`** (řádek zakládá `/project`).
+
+**Není to standardní soubor projektu** – je strojový, platí jeden běh a mění se po každé odpovědi, takže by ho autocommit commitoval donekonečna. Existuje proto, aby kompaktace uprostřed průchodu nálezy nestála celý běh znovu a přerušený `/attack` nenechal běžet server a kontejnery, o kterých nikdo neví.
+
+**Do `.claude/run/`, ne mimo repozitář:** je per pracovní adresář, tedy ve worktree layoutu per větev, a fronta nálezů k větvi patří. (Souhlas a stav průběžné kontroly naopak leží mimo repozitář a klíčují se sdíleným `.git`, protože se týkají repozitáře, ne větve.)
+
+**Nikdy se z něj nečte jako z pravdy o projektu.** Říká jen, kde skončil přerušený běh; co z toho má trvalou platnost, se zapíše do `todo.md`, `decisions.md` nebo `done.md` jako všechno ostatní.
+
 ------
 
 ## Co se nepřebírá zvenčí

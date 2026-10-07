@@ -1862,3 +1862,16 @@ Zapsalo se 3. 9. 2026 do `~/.claude/rules/rules.md` právě proto, že souběžn
 ### `structure.md` zkrácený o rozvedená zdůvodnění
 
 **Rozhodnuto 7. 10. 2026.** Druhý průchod `/slim` nad `structure.md` po odstranění dokladů. Soubor se paušálně nenačítá, ale čte ho každý skill před zápisem do `docs/`. Zkrácená byla zdůvodnění rozvedená nad jednu větu pointy (`~/.claude/rules/rules.md`, *K pravidlům ukládej i „proč“*) v sekcích `README.md`, `backlog.md`, `decisions.md`, `done.md`, návrhových souborech a *Běhovém stavu skillů*; *Průběžná aktualizace je povinná* odkazuje na `rules.md`, *Pravda v souborech*, místo aby ho opakovala, a důvod, proč se `operation.md` nevybírá při `/project`, zůstal jen v *Produktových podkladech*. 43 874 → 39 819 znaků. Čtenář bez kontextu našel osm míst, kde komprese ubrala podmínku nebo rozsah (zákaz zakládat u malého projektu další dokumenty návrhu, „nečekej na `/cleanup`“, co `/specify` s backlogem dělá, klíčování stavu kontroly sdíleným `.git` a další); všechna se vrátila. Přesun *Produktových podkladů* se znovu neotevíral – zamítnutý je výš.
+
+### `structure.md` rozdělený na jádro a podmíněně čtené části
+
+**Rozhodnuto 7. 10. 2026.** `structure.md` čte skoro každý skill před zápisem do `docs/`, a i po zkrácení zdůvodnění měl 39 819 znaků, z nichž většina se týkala jen projektů, kde se staví produkt, nebo jen několika skillů. Rozdělil se podle toho, kdo text potřebuje:
+
+- **Zadání, návrh řešení, plán a produktové podklady** → nový `rules/product.md`; spouštěč je v `skills/preflight.md` a v tabulce *Které soubory vůbec vzniknou*, hlídá ho `tests/test_skills.py`. **Reviduje to dnešní zamítnutí výš:** proti přesunu tehdy mluvil další soubor k načítání; uživatel ho přijal, protože se těch dokumentů týkají jen projekty, kde se něco staví.
+- **Kola návrhu** (šablony v `todo.md`, `done.md`, kapitola v `decisions.md`, tematické dokumenty) → `skills/architect/rounds.md`.
+- **Průchody životním cyklem** → `rules/lifecycle.md`, *Záznam průchodu v `done.md`* – zapisují je jen kroky cyklu, které `lifecycle.md` načítají.
+- **Co proklouzlo** – smazáno jako duplicita, celé to drží `/release`.
+- **Běhový stav skillů** → `skills/skills.md`, *Běhový stav* – je to norma pro autora skillu.
+- **Testy** → `~/Dev/context/coding/quality.md`, *Vrstvy kontroly* – uplatní se při zakládání kontrol, kdy se `quality.md` načítá u každého projektu, a polovinu už tam nesl odstavec o nevývojářských projektech.
+
+Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done.md`) se zkrátil na pravidla bez výkladu. Vypadly popisy toho, jak do backlogu zapisují `/implement` a `/cleanup` (drží je ty skilly), výjimka pro dorovnání staršího projektu (drží ji `skills/project/standard.md`) a věta „backlog není hřbitov“. Čtenář bez kontextu porovnal starou verzi s novou a se všemi cíli a našel devět zúžených pravidel; všechna se vrátila. `structure.md` 39 819 → 11 583 znaků.

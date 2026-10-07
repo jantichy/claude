@@ -255,7 +255,7 @@ Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUD
 
 ### Produktové podklady
 
-Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Jejich definici drží `~/.claude/rules/structure.md`, *Produktové podklady*; tady se jen vybírá.
+Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Jejich definici drží `~/.claude/rules/product.md`, *Produktové podklady*; tady se jen vybírá.
 
 `AskUserQuestion`, `multiSelect: true`, **nic předvybrané** – opačně než u standardních souborů. Většina projektů nemá ani jeden a předvybraný seznam by je odklikl všechny:
 
@@ -354,7 +354,7 @@ out/
 .claude/run/
 ```
 
-`.claude/run/` je běhový stav přerušitelných skillů (`~/.claude/rules/structure.md`, *Běhový stav skillů*). **Řádek doplň i do existujícího `.gitignore`**, který ho ještě nemá – mění se po každé odpovědi, takže v projektu se zapnutým autocommitem by se donekonečna commitoval. Zbytek existujícího souboru nech být.
+`.claude/run/` je běhový stav přerušitelných skillů (`~/.claude/skills/skills.md`, *Běhový stav*). **Řádek doplň i do existujícího `.gitignore`**, který ho ještě nemá – mění se po každé odpovědi, takže v projektu se zapnutým autocommitem by se donekonečna commitoval. Zbytek existujícího souboru nech být.
 
 Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a vypiš, co jsi přidal.
 
@@ -390,7 +390,7 @@ Do `CLAUDE.md` z něj vzejde sekce `## Typ projektu` s krátkým popisem. **Krok
 
 Liší se tedy **co se vybere**, ne jestli se krok udělá. Rozhoduj podle `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*: u vývojářského projektu bývá celý kontrakt a CI, u znalostního typicky jen `test` a `lint` nad vlastní strukturou. **Nemá-li projekt opravdu co spustit ani čím, řekni to i s tím, co tím odpadá** – to je legitimní výsledek, ale musí být výsledkem rozhodnutí, ne přeskočení.
 
-**Kam patří soubory s testy**, říká `~/.claude/rules/structure.md`, *Testy*; řídí se runnerem projektu, ne preferencí.
+**Kam patří soubory s testy**, říká `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*; řídí se runnerem projektu, ne preferencí.
 
 **Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
 

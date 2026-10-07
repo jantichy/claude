@@ -54,6 +54,10 @@ Jak je práce uspořádaná – kde který soubor leží, jak se rozdělaná vě
 
 Konvence, kterou drží každý můj projekt: co je v `CLAUDE.md`, co v `README.md` a co v `docs/` – tedy kam patří úkol, kam nezávazný nápad, kam rozhodnutí i s variantami, které jsem zavrhl, a kam záznam o hotové práci. Díky ní se dá vejít do libovolného projektu a hned vědět, kde co hledat – a vědí to i skilly, kterých do těch souborů zapisuje půl tuctu. Zakládá ji `/project`, čte ji většina ostatních.
 
+#### [`rules/product.md`](rules/product.md) – dokumenty, ze kterých se staví produkt
+
+Co smí stát v zadání, návrhu řešení, implementačním plánu a produktových podkladech – poptávce, konkurenci, rizicích, scénářích, glosáři, ceníku a poznatcích z provozu. Je oddělený od [`structure.md`](rules/structure.md), protože se ho týkají jen projekty, ve kterých se něco staví, a čtou ho jen skilly, které tyhle dokumenty píšou.
+
 #### [`rules/worktree.md`](rules/worktree.md) – několik rozdělaných věcí vedle sebe
 
 Pravidla uspořádání, ve kterém má každá rozdělaná větev vlastní adresář na disku, takže nad projektem může běžet několik session naráz, aniž si přepisují soubory. Popisuje, co kde leží, jak se větev zakládá, proč se v hlavním adresáři nepracuje a proč v kořeni takového projektu přestane fungovat git. Zapnout a zrušit to umí [`/worktree`](skills/worktree/), ale samotná pravidla jsou tady – čte je totiž i příprava a většina ostatních skillů, tedy i ten, kdo `/worktree` nainstalovaný nemá.

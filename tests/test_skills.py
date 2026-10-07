@@ -1049,7 +1049,7 @@ class CoreParts(unittest.TestCase):
     def test_runtime_state_is_gitignored(self):
         """Stav, který se mění po každé odpovědi, nesmí skončit v gitu.
 
-        `~/.claude/rules/structure.md`, *Běhový stav skillů*. Skill, který
+        `~/.claude/skills/skills.md`, *Běhový stav*. Skill, který
         do `.claude/run/` zapisuje, spoléhá na to, že `/project` ten řádek do
         `.gitignore` doplní – jinak ho v projektu s autocommitem začne commitovat.
         """
@@ -1546,7 +1546,11 @@ class Structure(unittest.TestCase):
         z celé úspory jen chybějící znalost.
         """
         text = (ROOT / "skills" / "preflight.md").read_text(encoding="utf-8")
-        for file_path in ("~/.claude/rules/structure.md", "~/.claude/rules/lifecycle.md"):
+        for file_path in (
+            "~/.claude/rules/structure.md",
+            "~/.claude/rules/lifecycle.md",
+            "~/.claude/rules/product.md",
+        ):
             with self.subTest(file_path=file_path):
                 self.assertIn(
                     file_path, text, f"příprava neříká, kdy si načíst {file_path}"

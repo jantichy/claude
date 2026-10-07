@@ -56,7 +56,7 @@ V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to **poslední kro
 Společný začátek je v `~/.claude/skills/preflight.md`. Body 4 a 5 odpadají – skill nemění kód a nepracuje nad rozsahem větve. Navíc:
 
 1. **Načti si `~/.claude/rules/lifecycle.md`** – stojíš v kroku cyklu a potřebuješ vědět, co po tobě platí a čí práci nepřebíráš.
-2. **Načti si `~/.claude/rules/structure.md`** – zapisuješ do standardních souborů projektu a do produktového podkladu, jehož tvar drží ona.
+2. **Načti si `~/.claude/rules/structure.md` a `~/.claude/rules/product.md`** – zapisuješ do standardních souborů projektu a do produktového podkladu, jehož tvar drží druhý z nich.
 3. **Má-li projekt napojenou webovou analytiku, načti si `~/Dev/context/analytics/analytics.md`.** Bez ní si spleteš, co která metrika měří, a poznatek postavený na špatně čtené metrice je horší než žádný.
 4. **Zjisti, kdy se nasazovalo a kdy tenhle krok běžel naposledy.** Datum posledního nasazení najdeš v `done.md`, v tagu nebo v historii gitu; datum posledního běhu v hlavičce `docs/operation.md`, existuje-li. **Období, za které se měří, je od jednoho k druhému** – bez něj se čísla nedají srovnat s ničím.
 
@@ -145,7 +145,7 @@ Rozdělení navrhl první ostrý běh a obě zjevné alternativy jsou horší: o
 
 ## Fáze 4 – Zápis podkladu
 
-Zapiš `docs/operation.md`. Tvar produktového podkladu drží `~/.claude/rules/structure.md`; **existuje-li už z dřívějšího běhu, nepřepisuj ho** – přidej nové období nad starší a **nech čísla stará stát**, aby byl vidět trend. To je celý důvod, proč podklad existuje a proč poznatky nekončí jako úkoly.
+Zapiš `docs/operation.md`. Tvar produktového podkladu drží `~/.claude/rules/product.md`, *Produktové podklady*; **existuje-li už z dřívějšího běhu, nepřepisuj ho** – přidej nové období nad starší a **nech čísla stará stát**, aby byl vidět trend. To je celý důvod, proč podklad existuje a proč poznatky nekončí jako úkoly.
 
 Hlavička nese **datum běhu a období**, za které se měří, a **vyšlo-li z ověření, že s daty není něco v pořádku, i verdikt o jejich důvěryhodnosti** (*Fáze 3*); datum vyrob příkazem (`date +%F`), nepiš ho z hlavy (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš*).
 
