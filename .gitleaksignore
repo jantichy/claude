@@ -1,0 +1,5 @@
+# Výjimky gitleaks po otisku nálezu (commit:soubor:pravidlo:řádek).
+# Každá musí mít nad sebou důvod, proč nejde o skutečné tajemství.
+
+# Vymyšlená hodnota, kterou test strká do .env, aby ověřil, že ji envkeys.py nevypíše.
+60dd552782dfaca1e6a1af6792ae5a671740f8a1:tests/test_envkeys.py:generic-api-key:20
