@@ -299,7 +299,7 @@ Ve verdiktu:
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
-Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*) a **smaž `.claude/run/oponent.json`**:
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/skills/passes.md`) a **smaž `.claude/run/oponent.json`**:
 
 ```
 - **YYYY-MM-DD** · `/oponent` · `<short HEAD>` · <předmět> · hlediska: <seznam> · N nálezů (X zapracováno, Y zamítnuto, Z odloženo)

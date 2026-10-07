@@ -1556,6 +1556,29 @@ class Structure(unittest.TestCase):
                     file_path, text, f"příprava neříká, kdy si načíst {file_path}"
                 )
 
+    def test_pass_writers_point_to_passes(self):
+        """Tvar záznamu průchodu se neimportuje a nečte ho každý krok cyklu.
+
+        `skills/passes.md` si načte jen skill, který do `## Průchody životním
+        cyklem` zapisuje – a jediný spouštěč je odkaz v místě zápisu. Zmizí-li,
+        skill zapíše řádek podle toho, co v `done.md` zrovna vidí.
+        """
+        self.assertTrue(
+            (ROOT / "skills" / "passes.md").exists(), "chybí skills/passes.md"
+        )
+        for skill in SKILLS:
+            text = skill.read_text(encoding="utf-8")
+            if not re.search(
+                r"[Zz]apiš (průchod|řádek) do [^\n]*Průchody životním cyklem", text
+            ):
+                continue
+            with self.subTest(skill=skill.parent.name):
+                self.assertIn(
+                    "~/.claude/skills/passes.md",
+                    text,
+                    "skill zapisuje průchod, ale neodkazuje na skills/passes.md",
+                )
+
     def test_skill_does_not_copy_cycle_step_chain(self):
         """Pořadí kroků cyklu se odkazuje, neopisuje.
 
@@ -1591,7 +1614,9 @@ class Structure(unittest.TestCase):
         # `osy` ve větě proti `osa` v rámečku: skloňuje se, protože to je česká
         # věta („je to třetí krok osy“), ne jméno klíče.
         if {"osy": "osa", "kontroly": "kontroly"}.get(phase) != exp_phase:
-            errors.append(f"{name}: tvrdí vrstvu `{phase}`, ~/.claude/standards/rules.md má `{exp_phase}`")
+            errors.append(
+                f"{name}: tvrdí vrstvu `{phase}`, ~/.claude/standards/rules.md má `{exp_phase}`"
+            )
         if exp_n is None:
             # Kontrolní krok není bod v řadě, takže nemá co tvrdit o pořadí ani
             # o sousedech – stojí v mezerách a v několika naráz.
@@ -1612,7 +1637,9 @@ class Structure(unittest.TestCase):
                     f"ale je {exp_n}. z {steps_in_phase}"
                 )
         elif self.ORDINALS.get(ordinal) != exp_n:
-            errors.append(f"{name}: tvrdí `{ordinal} krok`, podle ~/.claude/standards/rules.md je {exp_n}.")
+            errors.append(
+                f"{name}: tvrdí `{ordinal} krok`, podle ~/.claude/standards/rules.md je {exp_n}."
+            )
         if predecessor and predecessor != exp_pred:
             errors.append(
                 f"{name}: tvrdí, že navazuje na `/{predecessor}`, ~/.claude/standards/rules.md má `/{exp_pred}`"
@@ -1734,7 +1761,9 @@ class Structure(unittest.TestCase):
                 f"– změnil se její tvar, nebo ji získal či ztratil další skill?"
             )
         self.assertFalse(
-            errors, "věty o pořadí kroku nesedí s ~/.claude/standards/rules.md:\n  " + "\n  ".join(errors)
+            errors,
+            "věty o pořadí kroku nesedí s ~/.claude/standards/rules.md:\n  "
+            + "\n  ".join(errors),
         )
 
     def test_cycle_steps_have_does_not_section(self):
@@ -3165,7 +3194,8 @@ class DepotCorePartsActuallyCatch(unittest.TestCase):
             "Přednost pravidel", "něco"
         )
         self.assertTrue(
-            self._reports(skill_body), "hranice bez opory v ~/.claude/standards/rules.md neshodila kontrolu"
+            self._reports(skill_body),
+            "hranice bez opory v ~/.claude/standards/rules.md neshodila kontrolu",
         )
 
 

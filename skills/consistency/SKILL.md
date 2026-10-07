@@ -296,7 +296,7 @@ Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/standards/ru
 
 ## Fáze 6 – Závěrečné shrnutí
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*). Čtenářem je **příští `/consistency`**, který jinak nepozná, co už bylo auditované a s jakým vědomě zúženým rozsahem – a projede totéž znovu.
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/skills/passes.md`). Čtenářem je **příští `/consistency`**, který jinak nepozná, co už bylo auditované a s jakým vědomě zúženým rozsahem – a projede totéž znovu.
 
 ```
 - **YYYY-MM-DD** · `/consistency` · `<short HEAD>` · <rozsah> · pokrytí N/M · N nálezů (X opraveno mechanicky, Y po odsouhlasení, Z won't fix)

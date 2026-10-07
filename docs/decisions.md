@@ -1902,3 +1902,11 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 - **`paths` v hlavičce** – načítá podle cesty čteného souboru, a krok cyklu ani zápis do `docs/` se cestou nepoznají.
 
 **Pozor na jméno `rules/`:** adresář tohoto jména v `~/.claude/` ani v `.claude/` projektu nezakládat pro nic, co se nemá načítat pokaždé.
+
+### `lifecycle.md` zredukovaný na jádro, záznam průchodu ve `skills/passes.md`
+
+**Rozhodnuto 7. 10. 2026** během `/slim standards/lifecycle.md`. Soubor se neimportuje, ale podle `preflight.md` si ho každý krok cyklu načte celý. U každého kroku nesl vedle rozhraní (co vyrábí, co po něm platí, kdy se přeskakuje) zdůvodnění v rozsahu odstavce a spouštěč `/evaluate` stál v textu čtyřikrát. **Redukce na jádro** nechala pravidla, podmínky, výjimky a obě tabulky a ze zdůvodnění jen větu pointy. **Sekce *Záznam průchodu v `done.md`* se přesunula do `skills/passes.md`**, protože ji potřebuje jen šest skillů, které záznam zapisují, a `/release`, který ho čte. Všechny odkazují na nový soubor v místě zápisu a test `test_pass_writers_point_to_passes` hlídá, že odkaz nezmizí. Výsledek: `lifecycle.md` 24 209 → 13 177 znaků, `passes.md` 2 357. Čtenář bez kontextu našel čtyři posuny významu a všechny se vrátily: přeskočení `/review` jen u projektu bez kódu, důvod u hotfixu jen pro kroky návrhu, výčet kroků nad koly `/architect` a povýšení do `production` po merge před `/attack`.
+
+**Zamítnuto:**
+- **Konzervativní varianta** (škrty dokladů a duplicit, lehká komprese, asi 22 000 znaků) – zdůvodnění u kroků by dál četl každý krok, přestože ho drží skilly a `decisions.md`.
+- **Vrátit průchody do `structure.md`**, odkud je vystěhoval minulý `/slim` – `structure.md` se čte ještě častěji, takže by se sekce zaplatila na víc místech.

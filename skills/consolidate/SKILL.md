@@ -164,7 +164,7 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 ## Fáze 5 – Závěr
 
-**Zapiš řádek do `## Průchody životním cyklem` v `done.md`.** Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojím příkazem, ne z kontextu. Čtenáři jsou tři: příští běh téhož skillu, `/breakdown` před rozpadem velkého celku, a člověk, který z repozitáře jinak nezjistí, že běh proběhl.
+**Zapiš řádek do `## Průchody životním cyklem` v `done.md`** podle `~/.claude/skills/passes.md`. Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojím příkazem, ne z kontextu. Čtenáři jsou tři: příští běh téhož skillu, `/breakdown` před rozpadem velkého celku, a člověk, který z repozitáře jinak nezjistí, že běh proběhl.
 
 ```
 - **<datum>** · `/consolidate` · `<hash>` · výchozí bod `<oblast>` · <N> shluků, <M> návrhů (<K> přežilo ověření, <L> přijato) · <P> vedlejších vad

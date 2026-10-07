@@ -278,6 +278,10 @@ Pět skillů hlásí nálezy a každý z jiného světa: chyba v kódu, rozbitá
 
 Pět skillů nálezy nejen hlásí, ale i opravuje, a hranice mezi „opravím sám“ a „rozhodne uživatel“ musí být u všech tatáž – jinak si týž nález v jednom běhu vyžádá otázku a v druhém se opraví mlčky a nikdo neodhadne, co ho čeká. Osou schválně **není, jak je zásah riskantní**, ale jestli je z čeho vybírat: co má jedinou zjevně správnou podobu, se udělá, i kdyby to měnilo strukturu. Zvlášť je zakázaná trojice *opravit / odložit / přeskočit* – žádná z těch voleb není podobou řešení, takže otázka nic nerozhoduje a jen sebere pozornost, která pak chybí tam, kde na odpovědi opravdu záleží.
 
+#### [`skills/passes.md`](skills/passes.md) – co po sobě kontrola nechá v evidenci
+
+Šest kontrolních kroků si po každém běhu zapíše řádek do evidence hotového: kdy běžely, nad čím a s jakým výsledkem. Čte ho hlavně nasazení, které se tak nemusí ptát z paměti, jestli kontrola proběhla nad tím, co se právě posílá ven, a příští běh téhož kroku. Soubor drží tvar řádku a uzavřený výčet toho, kdo smí zapisovat – sekce, do které píše každý krok, by zbytněla a přestala se číst. Ze životního cyklu se vyčlenil, protože ho potřebují jen ti, kdo zapisují nebo čtou.
+
 #### [`skills/handoff.md`](skills/handoff.md) – čím běh skončí a kdy se má přerušit
 
 Každý krok končí odstavcem *Kudy dál*, ve kterém stojí konkrétní pokračování – a u kroku, který se nemá pouštět v téže konverzaci, celý postup včetně jejího ukončení. Bez toho se navigace vejde jen do jednoduchých případů: dokud vede dál jediná cesta, unese ji závěrečná věta, ale jakmile se mezi kroky vejde nový start, tiše z ní vypadne. Druhá polovina souboru řeší opačný konec téhož problému – dlouhý seznam nálezů, který se probírá tak dlouho, až konverzace naroste do velikosti, ve které se pracuje pomalu a nepřesně. Skill v tu chvíli nabídne přerušení a zbývající nálezy uloží celé, i s tím, co je u nich potřeba rozhodnout, takže se pokračuje s čistou hlavou a nic se neztratí.

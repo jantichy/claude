@@ -137,7 +137,7 @@ Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – �
 - **Nejstarší nahoře**, nové na konec sekce; **datum dokončení** za názvem `(2026-08-28)`, vyrobené `date +%F`.
 - **Zrcadlí sekce `todo.md`** – položka jde do sekce, do které patřila.
 - **Přesouvá se úkol, ne odškrtnutý krok uvnitř něj** – odškrtnuté řádky checklistu zůstávají u nedokončené položky.
-- **`## Průchody životním cyklem`** – záznamy běhů kontrolních kroků; tvar a kdo zapisuje drží `~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*. **`## Kola návrhu`** – `~/.claude/skills/architect/rounds.md`. Běhový stav skillů sem nepatří.
+- **`## Průchody životním cyklem`** – záznamy běhů kontrolních kroků; tvar a kdo zapisuje drží `~/.claude/skills/passes.md`. **`## Kola návrhu`** – `~/.claude/skills/architect/rounds.md`. Běhový stav skillů sem nepatří.
 
 Existuje jen spolu s `todo.md`.
 

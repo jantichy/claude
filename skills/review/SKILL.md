@@ -352,7 +352,7 @@ Rozsah: [změny na větvi / celý projekt] · Specialisté: [kteří] · Agentů
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
-Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*) a **smaž `.claude/run/review.json`**:
+Nakonec **zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/skills/passes.md`) a **smaž `.claude/run/review.json`**:
 
 ```
 - **YYYY-MM-DD** · `/review` · `<short HEAD>` · <rozsah> · N nálezů (X opraveno, Y odloženo, Z won't fix)

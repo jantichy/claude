@@ -316,7 +316,7 @@ Cíl: <adresa> · Vektory: [které]
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/skills/passes.md`), aby se `/release` nemusel ptát z paměti, jestli útok nad tímhle rozsahem proběhl:
 
 ```
 - **YYYY-MM-DD** · `/attack` · `<short HEAD>` · <rozsah a vektory> · N nálezů (X opraveno, Y odloženo, Z won't fix)

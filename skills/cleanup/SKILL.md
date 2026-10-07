@@ -277,7 +277,7 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 
 ## Fáze 6 – Git a závěr
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*). Čtenářem je **příští `/cleanup`**, který jinak nepozná, co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/skills/passes.md`). Čtenářem je **příští `/cleanup`**, který jinak nepozná, co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
 
 ```
 - **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · session `<session-id>` · prompty N/N · N témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak> · meze: <co se nepřečetlo, nebo „žádné“>
