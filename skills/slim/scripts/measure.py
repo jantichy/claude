@@ -192,22 +192,38 @@ def cmd_sections(args) -> int:
     return 0
 
 
-def cmd_history(args) -> int:
-    path = Path(args.file).resolve()
-    git = ["git", "-C", str(path.parent)]
+def revisions(path: Path) -> list:
+    """Commity souboru i přes přejmenování: (den, commit, cesta v tom commitu).
+
+    S `--follow` má soubor ve starších commitech jinou cestu, proto se čte
+    z `--name-only` u každého commitu zvlášť, ne ze dnešního jména.
+    """
     log = subprocess.run(
-        git + ["log", "--format=%h %ad", "--date=short", "--", path.name],
+        ["git", "-C", str(path.parent), "log", "--follow", "--name-only"]
+        + ["--format=@%h %ad", "--date=short", "--", path.name],
         capture_output=True,
         text=True,
         check=True,
-    ).stdout.split("\n")
+    ).stdout
+    rows = []
+    for line in filter(None, log.split("\n")):
+        if line.startswith("@"):
+            commit, day = line[1:].split()
+        else:
+            rows.append((day, commit, line))
+    return rows
+
+
+def cmd_history(args) -> int:
+    path = Path(args.file).resolve()
     days = {}
-    for line in filter(None, log):
-        commit, day = line.split()
-        days.setdefault(day, commit)
-    for day, commit in sorted(days.items())[-args.days :]:
+    for day, commit, name in revisions(path):
+        days.setdefault(day, (commit, name))
+    for day, (commit, name) in sorted(days.items())[-args.days :]:
         show = subprocess.run(
-            git + ["show", f"{commit}:./{path.name}"], capture_output=True, text=True
+            ["git", "-C", str(path.parent), "show", f"{commit}:{name}"],
+            capture_output=True,
+            text=True,
         )
         print(f"{day} {commit} {len(show.stdout):>8}")
     return 0

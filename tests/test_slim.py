@@ -7,6 +7,7 @@ relativní cesty, rekurze a toho, že se tentýž soubor nezapočítá dvakrát.
 """
 
 import importlib.util
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -89,6 +90,40 @@ class Loads(unittest.TestCase):
 
     def test_plain_mention_does_not_count(self):
         self.assertEqual(measure.loads("Pravidlo drží `~/a.md`, *Sekce*."), [])
+
+
+class History(unittest.TestCase):
+    def test_follows_rename(self):
+        """Po přesunu souboru se počítají i commity pod starým jménem."""
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp).resolve()
+
+            def git(*args):
+                subprocess.run(
+                    [
+                        "git",
+                        "-C",
+                        str(repo),
+                        "-c",
+                        "user.name=t",
+                        "-c",
+                        "user.email=t@t",
+                    ]
+                    + list(args),
+                    check=True,
+                    capture_output=True,
+                )
+
+            git("init", "-q")
+            (repo / "rules").mkdir()
+            (repo / "rules/a.md").write_text("první verze\n" * 20, encoding="utf-8")
+            git("add", "rules/a.md")
+            git("commit", "-q", "-m", "a")
+            (repo / "standards").mkdir()
+            git("mv", "rules/a.md", "standards/a.md")
+            git("commit", "-q", "-m", "b")
+            names = [n for _, _, n in measure.revisions(repo / "standards/a.md")]
+            self.assertEqual(names, ["standards/a.md", "rules/a.md"])
 
 
 if __name__ == "__main__":
