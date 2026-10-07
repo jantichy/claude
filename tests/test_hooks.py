@@ -555,7 +555,9 @@ class VerifyHookIsRegistered(unittest.TestCase):
         """`LIMIT` ve verify.sh se čte ze skriptu, ne opisuje – jinak se rozejdou."""
         limit = int(
             re.search(
-                r"^LIMIT=(\d+)", (ROOT / "hooks" / "verify.sh").read_text(encoding="utf-8"), re.M
+                r"^LIMIT=(\d+)",
+                (ROOT / "hooks" / "verify.sh").read_text(encoding="utf-8"),
+                re.M,
             ).group(1)
         )
         verify = next(
@@ -1215,7 +1217,9 @@ class PluginHooks(unittest.TestCase):
         poplach. Je to tedy lokální ochrana, ne záruka, a proto vedle ní stojí
         jmenovitá kontrola výš.
         """
-        registry = (ROOT / "standards" / "bypass.md").read_text(encoding="utf-8").lower()
+        registry = (
+            (ROOT / "standards" / "bypass.md").read_text(encoding="utf-8").lower()
+        )
         for name in self.enabled():
             short = name.split("@")[0]
             hooks = list((ROOT / "plugins").glob(f"*/*/{short}/*/hooks/hooks.json"))
@@ -1369,8 +1373,15 @@ class HandoffHook(unittest.TestCase):
             for g in settings["hooks"].get("UserPromptSubmit", [])
             for h in g.get("hooks", [])
         ]
+        # Cesta v `settings.json` je absolutní do `$HOME`, repozitář v CI leží
+        # jinde – proto přes `in_repo`, ne doslovným porovnáním.
+        in_repo = VerifyHookIsRegistered.in_repo
         self.assertTrue(
-            any(c.split()[0] == str(self.HOOK) for c in commands if c),
+            any(
+                in_repo(Path(c.split()[0]).expanduser()) == self.HOOK
+                for c in commands
+                if c
+            ),
             "handoff.py není zaregistrovaný jako UserPromptSubmit hook – "
             "neměří tedy nic, přestože jeho testy procházejí",
         )
