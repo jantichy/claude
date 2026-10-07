@@ -1875,3 +1875,17 @@ Zapsalo se 3. 9. 2026 do `~/.claude/rules/rules.md` právě proto, že souběžn
 - **Testy** → `~/Dev/context/coding/quality.md`, *Vrstvy kontroly* – uplatní se při zakládání kontrol, kdy se `quality.md` načítá u každého projektu, a polovinu už tam nesl odstavec o nevývojářských projektech.
 
 Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done.md`) se zkrátil na pravidla bez výkladu. Vypadly popisy toho, jak do backlogu zapisují `/implement` a `/cleanup` (drží je ty skilly), výjimka pro dorovnání staršího projektu (drží ji `skills/project/standard.md`) a věta „backlog není hřbitov“. Čtenář bez kontextu porovnal starou verzi s novou a se všemi cíli a našel devět zúžených pravidel; všechna se vrátila. `structure.md` 39 819 → 11 583 znaků.
+
+### `/slim` rozebírá i často čtené soubory, dělí je podle čtenáře a hledá duplicity mezi soubory načítanými spolu
+
+**Rozhodnuto 7. 10. 2026.** Dva běhy `/slim` nad `structure.md` ubraly 9 %: skill ho bral jako vedlejší cíl, protože se neimportuje, a dělal jen kompresi bez změny významu. Úspora 71 % přišla až z rozdělení podle čtenáře a redukce na jádro, o které si uživatel musel říct sám. Do skillu se proto doplnilo:
+
+- **Soubory čtené odkazem jsou plnohodnotný cíl**, váhou je velikost × jak často se čtou. Nový režim `measure.py refs` sestaví z pokynů „načti si `…`“ graf, kdo co načítá.
+- **Rozbor má tři průchody:** kdo sekci čte (rozdělení do podmíněně čteného dítěte), co by model bez pravidla udělal špatně (redukce na jádro, předložená vedle konzervativní varianty) a jestli totéž stojí v souboru, který se načítá spolu s ním.
+- **Duplicity mezi soubory načítanými spolu** (návrh uživatele): paušál je rodičem všeho, dítě se načítá jen s rodičem. Kopie v dítěti se maže, ale pravidlo rodiče, které se uplatní jen v situacích dítěte, se do dítěte **přesouvá** – to je cennější směr. Patří sem i kopie vnitřku skillu ve sdíleném souboru.
+- **Dřívější zamítnutí je vstup, ne zákaz** – přesun `product.md` zamítnutý ráno se odpoledne nenabídl a uživatel ho pak přijal.
+- **Provedení:** odkazy jen v `main/` worktree layoutu, stav cizích repozitářů předem, nepřímé odkazy na nadřazenou sekci, nový soubor se spouštěčem, testem, úvodem a místem v rozřazování.
+- **Ověřovací čtenář po každém průchodu** a s výčtem typických posunů významu, které při kompresi dvakrát našel.
+- `measure.py sections` přestal počítat nadpis uvnitř bloku kódu jako sekci.
+
+**Zamítnuto: nechat to na `/learn` nebo na harnessu.** Poučení se týkají postupu jednoho skillu a bez zápisu do něj by se příští běh dopustil týchž chyb.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Změří, co se v projektu načítá do každé session, a kde v tom leží místo.
 
-Tři režimy:
+Čtyři režimy:
 
 - `tree [adresář]` – strom načítání: uživatelský `CLAUDE.md`, projektové
   `CLAUDE.md` z adresáře a všech nad ním a rekurzivně jejich `@` importy.
@@ -10,6 +10,10 @@ Tři režimy:
 - `sections <soubor>` – rozpad souboru po nadpisech `##` a `###` se znaky
   a počtem značek dokladů (data, „Doloženo“, „Proč:“, „Zrádné“).
 - `history <soubor>` – velikost souboru v gitu po dnech, ať je vidět, jak rychle roste.
+- `refs [soubor ...]` – graf načítání odkazem: které soubory se nenačítají
+  importem, ale pokynem „načti si `cesta`“, a kdo ten pokyn dává. Počet
+  načítajících je vodítko, jak často se soubor čte; dvojice načítající → cíl
+  jsou hrany rodič → podmíněné dítě, nad kterými se hledají duplicity.
 
 Počítají se **znaky, ne bajty** – limit Claude Code je ve znacích a u češtiny
 dělá rozdíl kolem deseti procent. Import uvnitř bloku kódu nebo v apostrofech
@@ -30,6 +34,12 @@ FENCE = re.compile(r"^(```|~~~).*?^\1[^\n]*$", re.S | re.M)
 CODE_SPAN = re.compile(r"(`+)(?:(?!\1).)+?\1", re.S)
 IMPORT = re.compile(r"(?<![\w`@])@([^\s`)\]>\"']+)")
 HEADING = re.compile(r"^(#{2,3}) (.+)$", re.M)
+LOAD = re.compile(r"[Nn]a(?:čti|čte|čítá|čtou)\b[^\n]{0,240}?")
+MD_PATH = re.compile(r"`(~/[^`\s]+\.md)`")
+CORPUS = (".claude", "Dev/context")
+SKIP = ("/projects/", "/plugins/", "/node_modules/", "/archive/", "superpowers/")
+# Záznamy o práci pokyn k načtení jen citují, nedávají ho.
+RECORDS = ("decisions.md", "done.md", "todo.md", "backlog.md")
 MARKERS = {
     "datum": re.compile(r"\b\d{1,2}\. ?\d{1,2}\. ?20\d\d\b"),
     "doloženo": re.compile(r"Doložen[oa]"),
@@ -118,9 +128,58 @@ def cmd_tree(args) -> int:
     return 1 if total > args.limit else 0
 
 
+def headings(text: str) -> list:
+    """Nadpisy `##` a `###` mimo bloky kódu – nadpis v šabloně není sekce."""
+    fences = [m.span() for m in FENCE.finditer(text)]
+    return [
+        m
+        for m in HEADING.finditer(text)
+        if not any(a <= m.start() < b for a, b in fences)
+    ]
+
+
+def loads(text: str) -> list:
+    """Cesty, které text výslovně velí načíst („načti si `~/x.md`“)."""
+    found = []
+    for line in text.splitlines():
+        for match in LOAD.finditer(line):
+            tail = line[match.start() : match.start() + 260]
+            found += MD_PATH.findall(tail)
+    return sorted(set(found))
+
+
+def corpus() -> list:
+    home = Path.home()
+    files = []
+    for base in CORPUS:
+        files += [
+            p
+            for p in (home / base).rglob("*.md")
+            if not any(s in str(p) for s in SKIP) and p.name not in RECORDS
+        ]
+    return files
+
+
+def cmd_refs(args) -> int:
+    graph = {}
+    for path in corpus():
+        for target in loads(read(path)):
+            graph.setdefault(target, set()).add(short(path))
+    wanted = [short(Path(f).expanduser().resolve()) for f in args.files]
+    print(f"{'znaků':>7} {'načítá':>6}  soubor  ← kdo velí načíst")
+    for target in sorted(graph, key=lambda t: -len(graph[t])):
+        if wanted and target not in wanted:
+            continue
+        path = Path(target).expanduser()
+        size = len(read(path)) if path.is_file() else 0
+        who = ", ".join(sorted(graph[target]))
+        print(f"{size:>7} {len(graph[target]):>6}  {target}  ← {who}")
+    return 0
+
+
 def cmd_sections(args) -> int:
     text = read(Path(args.file))
-    marks = list(HEADING.finditer(text))
+    marks = headings(text)
     starts = [0] + [m.start() for m in marks]
     names = ["(úvod)"] + [f"{m.group(1)} {m.group(2)}" for m in marks]
     print(f"celkem {len(text)} znaků")
@@ -165,10 +224,15 @@ def main() -> int:
     history = sub.add_parser("history")
     history.add_argument("file")
     history.add_argument("--days", type=int, default=30)
+    refs = sub.add_parser("refs")
+    refs.add_argument("files", nargs="*")
     args = parser.parse_args()
-    return {"tree": cmd_tree, "sections": cmd_sections, "history": cmd_history}[
-        args.mode
-    ](args)
+    return {
+        "tree": cmd_tree,
+        "sections": cmd_sections,
+        "history": cmd_history,
+        "refs": cmd_refs,
+    }[args.mode](args)
 
 
 if __name__ == "__main__":

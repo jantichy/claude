@@ -248,7 +248,7 @@ Zakládá nové skilly proti normě, vytěží skill z rozdělané konverzace, *
 
 #### [`/slim`](skills/slim/) – instrukce, které se nenafukují
 
-Změří všechno, co se načítá do každé session – `CLAUDE.md` a jeho importy –, a zmenší to: pravidla, která platí jen při určité práci, přesune na podmíněné načítání, škrtne doklady, rozvláčná zdůvodnění a duplicity, navrhne zrušit pravidla, která nic nerozhodují, a hlavně ta, kvůli kterým soubory bobtnají. Sporné zásahy předloží po jednom, provede je napříč repozitáři včetně odkazů a nakonec nechá nezávislého čtenáře hledat pravidlo, které se po cestě ztratilo.
+Změří všechno, co se načítá do každé session – `CLAUDE.md` a jeho importy –, i soubory, které si čte skoro každá práce, a zmenší to: pravidla, která platí jen při určité práci, přesune do souborů pro ty, kdo je potřebují, zbytek zredukuje na jádro, škrtne doklady, rozvláčná zdůvodnění a duplicity mezi soubory, které se načítají spolu, navrhne zrušit pravidla, která nic nerozhodují, a hlavně ta, kvůli kterým soubory bobtnají. Sporné zásahy předloží po jednom, provede je napříč repozitáři včetně odkazů a nakonec nechá nezávislého čtenáře hledat pravidlo, které se po cestě ztratilo.
 
 ### Instrukce ke skillům
 

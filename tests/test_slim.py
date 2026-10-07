@@ -75,6 +75,21 @@ class Sections(unittest.TestCase):
         ]
         self.assertEqual(counts, [1, 1, 1, 0])
 
+    def test_heading_in_fence_is_not_section(self):
+        text = "## A\n```markdown\n### Šablona\n```\n## B\n"
+        self.assertEqual([m.group(2) for m in measure.headings(text)], ["A", "B"])
+
+
+class Loads(unittest.TestCase):
+    """Graf `refs` stojí na tom, co je pokyn k načtení a co jen zmínka."""
+
+    def test_instruction_to_load_counts(self):
+        text = "Načti si `~/a.md`, než zapíšeš.\nSkill si načítá `~/b.md` v přípravě."
+        self.assertEqual(measure.loads(text), ["~/a.md", "~/b.md"])
+
+    def test_plain_mention_does_not_count(self):
+        self.assertEqual(measure.loads("Pravidlo drží `~/a.md`, *Sekce*."), [])
+
 
 if __name__ == "__main__":
     unittest.main()
