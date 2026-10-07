@@ -242,6 +242,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - **2026-10-06** · `/cleanup` · `74c53b0` · session `9ad64717-7d05-4700-a269-b92325d332f7` · prompty 4/4 · 0 témat · mimo rozsah: žádné · meze: 26 bloků myšlení a 3 výstupy Edit nečtené z principu
 - **2026-10-07** · `/cleanup` · `bcffcfa` · session `515e6d83-9867-4306-b935-6ed2b45e9f4f` · prompty 10/10 · 0 témat · mimo rozsah: obsahová část revize `/project` (nápady v `todo.md`, položky ve špatném souboru) neproběhla → `docs/todo.md` · meze: 83 bloků myšlení (ve formátu prázdné), 5 výstupů `AskUserQuestion`, 2× `Skill`, 1× `Edit`, 1× `Read` se nečetly; obrázky žádné
 - **2026-10-07** · `/cleanup` · `7a30ee5` · session `112b5704-fba4-424f-a204-216684691183` · prompty 4/4 (+ 2 volání slash příkazu mimo inventuru) · 4 témata (3 rozhodnuto, 1 mimo rozsah) · mimo rozsah: obrácený zápis v `decisions.md` artihubu – vyřeší se při práci tam · meze: 77 bloků myšlení (prázdné ve formátu), výstupy 8 AskUserQuestion, 6 Edit, 3 Write, 2 Read, 1 Skill nečtené z principu
+- **2026-10-07** · `/cleanup` · `0a8c3dd` · session `89ea983e-530d-4780-b495-4ab4bae1cf89` · prompty 3/3 · 2 témata (2 rozhodnuta: quality.md do todo, /slim lifecycle.md do todo) · mimo rozsah: žádné · meze: 62 bloků myšlení prázdných, výstupy Edit/Read/Write/AskUserQuestion/ToolSearch nečteny (zdroj čten přímo, odpovědi z dialogu jsou v kontextu)
 
 ## Odvedená práce
 
