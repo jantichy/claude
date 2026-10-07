@@ -67,7 +67,7 @@ Navíc si ověř tohle:
 
 **Když je toho moc.** Pokrývá-li zadání víc nezávislých podsystémů, řekni to a rozděl to na víc plánů – každý musí sám o sobě dát funkční, otestovatelný software. Neposílej do implementace plán, který nejde dokončit v rozumném celku.
 
-**Doménové standardy.** Předej dál, co si projekt importuje v `CLAUDE.md` – `~/Dev/context/coding/coding.md` vždy, dál podle povahy `web/web.md`, `web/admin.md`, `analytics/analytics.md`. Plán je má respektovat, ne je objevovat až při `/review`.
+**Doménové znalosti.** Předej dál, co si projekt importuje v `CLAUDE.md` – `~/Dev/context/coding/coding.md` vždy, dál podle povahy `web/web.md`, `web/admin.md`, `analytics/analytics.md`. Plán je má respektovat, ne je objevovat až při `/review`.
 
 ------
 
@@ -82,7 +82,7 @@ Navíc si ověř tohle:
 - **kontext** = `docs/requirements.md` – ať v hlavičce plánu sedí pole `**Spec:**` a je vidět, proč se to staví, a `docs/scenarios.md`, vede-li ho projekt,
 - **cíl** = `docs/plan.md`, **ne** `docs/superpowers/plans/…` – tohle mu musíš říct, jinak si založí vlastní adresářový strom vedle tvého (`~/.claude/standards/structure.md`: v `docs/` jednoslovné anglické názvy bez datumových prefixů),
 - **rozsah** = jen položky MVP odsouhlasené ve Fázi 1,
-- **doménové standardy** z Fáze 1,
+- **doménové znalosti** z Fáze 1,
 - že **volbu způsobu implementace na konci nenabízí** – tu řeší `/implement`,
 - že každý úkol musí mít **ověřitelné akceptační kritérium** – viz Fáze 3.
 - že každý úkol odkazuje na **konkrétní sekce dokumentace s kotvou**, ne na celé soubory – viz Fáze 3.

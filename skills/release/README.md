@@ -68,7 +68,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/release a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill se odkazuje na **moje soukromé standardy** pro kód a analytiku a na strukturu projektové dokumentace – **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**. Aby kontroly měly co spouštět, potřebuje projekt mít v instrukcích zapsané, čím se u něj pouštějí testy, build, průchod aplikací a audit závislostí – i s tím vám Claude pomůže.
+Skill se odkazuje na **moje soukromé doménové znalosti** pro kód a analytiku a na strukturu projektové dokumentace – **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**. Aby kontroly měly co spouštět, potřebuje projekt mít v instrukcích zapsané, čím se u něj pouštějí testy, build, průchod aplikací a audit závislostí – i s tím vám Claude pomůže.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:

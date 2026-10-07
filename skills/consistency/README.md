@@ -55,7 +55,7 @@ Sporných: 14 – ty projdeme spolu od nejzávažnějších.
 ## Co nedělá
 
 - **Nehledá chyby v kódu.** Na korektnost je `/review`.
-- **Nekontroluje soulad se standardy.** Projekt může být dokonale konzistentní a přitom konzistentně porušovat předpis – to je otázka pro `/review`.
+- **Nekontroluje soulad s doménovými znalostmi.** Projekt může být dokonale konzistentní a přitom konzistentně porušovat předpis – to je otázka pro `/review`.
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
 - **Nemění chování.** Nálezy, které by ho změnily, jdou vždycky přes vás.
 
@@ -67,7 +67,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
 
-Kontrolu odkazů sdílí s `/cleanup`, takže si vezměte i soubor `skills/links.py`. Skill sdílí část postupu se `/review` (určení rozsahu, tvar interaktivního průchodu), takže si **nechte nainstalovat rovnou oba**. Odkazuje se i na moje soukromé standardy pro strukturu projektu – ty odkazy ať Claude nahradí vašimi, nebo je smaže.
+Kontrolu odkazů sdílí s `/cleanup`, takže si vezměte i soubor `skills/links.py`. Skill sdílí část postupu se `/review` (určení rozsahu, tvar interaktivního průchodu), takže si **nechte nainstalovat rovnou oba**. Odkazuje se i na moje pravidla pro strukturu projektu (`standards/structure.md`) – ty odkazy ať Claude nahradí vašimi, nebo je smaže.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:

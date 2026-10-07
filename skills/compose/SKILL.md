@@ -24,7 +24,7 @@ Píše text hlasem konkrétního autora – ne obecnou češtinou, kterou dnes p
 - **Nevymýšlí autorovy názory a pointy.** Zná jeho *jak*, ne jeho *co*. Když k tématu nezná postoj, doptá se – odhadnutý názor je horší než žádný text.
 - **Nespravuje archiv jako korpus.** Konvence pojmenování, metadata a tematické štítky jsou věc toho archivu, ne skillu. `collect` je do něj plní podle jeho pravidel; kde žádná nejsou, založí je.
 - **Nepřepisuje mluvené slovo.** Na nahrávky, schůzky a jejich shrnutí je `/transcript`. Tenhle skill vyrábí nový text.
-- **Nedělá redakční korekturu cizího textu.** Kontrola proti redakčnímu standardu je `~/Dev/context/text/text.md`; tady se standard uplatňuje při psaní, ne jako samostatná služba.
+- **Nedělá redakční korekturu cizího textu.** Kontrola proti redakčním pravidlům je `~/Dev/context/text/text.md`; tady se ta pravidla uplatňují při psaní, ne jako samostatná služba.
 - **Nepublikuje.** Výstupem je text, ne příspěvek někde venku.
 
 ## Jak je to postavené uvnitř
@@ -90,7 +90,7 @@ K tomu dohledej v archivu **3 až 5 textů nejpodobnějších tématem a formát
 
 ## Fáze 3 – Draft
 
-Napiš text podle stylu a profilu formátu. Platí i redakční standard `~/Dev/context/text/text.md` a česká typografie `~/Dev/context/text/typography.md`, existují-li – báze řeší hlas, standard řemeslo a typografie sazbu.
+Napiš text podle stylu a profilu formátu. Platí i redakční pravidla `~/Dev/context/text/text.md` a česká typografie `~/Dev/context/text/typography.md`, existují-li – báze řeší hlas, redakční pravidla řemeslo a typografie sazbu.
 
 ## Fáze 4 – Sebe-revize
 

@@ -59,7 +59,7 @@ agent ten soubor nemá načtený):
 
 Závažnost si přiděluješ sám, ale rozhoduje o tom, co se s nálezem stane: přes strop
 se ověřují nejdřív ty nejzávažnější, takže nízký nález se k ověření nemusí dostat.
-Proto u NÍZKÉHO napiš do `basis` konkrétní bod katalogu nebo standardu, o který se
+Proto u NÍZKÉHO napiš do `basis` konkrétní bod katalogu nebo doménové znalosti, o který se
 opíráš – ne dojem. Nemáš-li ho čím podložit, je to STŘEDNÍ, nebo to nehlas.
 
 VÝSTUP

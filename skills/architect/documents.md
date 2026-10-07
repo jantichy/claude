@@ -19,7 +19,7 @@
 
 Vzniká v dialogu s uživatelem, po sekcích a se schválením po každé. Sekci, která pro projekt nedává smysl, vynech – ale **řekni, že jsi ji vynechal a proč**.
 
-**Je-li projekt *aplikace*** (rozlišení drží `~/Dev/context/coding/architecture.md` a zapisuje ho `/project` do sekce *Typ projektu*), **načti si ten standard dřív, než začneš psát.** Nese kontrolní seznam *Minimum hotové aplikace*, proti kterému se návrh posuzuje – a řadu sekcí téhle šablony přímo předepisuje: vrstvy, cestu k datům, hranici transakce kolem cizího systému, souběh, běhy na pozadí. **Na konci projdi ten seznam položku po položce** a u každé řekni, kde je v návrhu vyřešená, nebo že se vědomě nedělá a proč; nevyřešená položka bez zápisu je nedodělek, ne zjednodušení. U *nástroje* se tohle přeskakuje a řekne se to nahlas.
+**Je-li projekt *aplikace*** (rozlišení drží `~/Dev/context/coding/architecture.md` a zapisuje ho `/project` do sekce *Typ projektu*), **načti si ta pravidla dřív, než začneš psát.** Nesou kontrolní seznam *Minimum hotové aplikace*, proti kterému se návrh posuzuje – a řadu sekcí téhle šablony přímo předepisují: vrstvy, cestu k datům, hranici transakce kolem cizího systému, souběh, běhy na pozadí. **Na konci projdi ten seznam položku po položce** a u každé řekni, kde je v návrhu vyřešená, nebo že se vědomě nedělá a proč; nevyřešená položka bez zápisu je nedodělek, ne zjednodušení. U *nástroje* se tohle přeskakuje a řekne se to nahlas.
 
 ```markdown
 # <Lidský název> – návrh řešení

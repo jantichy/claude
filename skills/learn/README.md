@@ -1,6 +1,6 @@
 # /learn – nová znalost se vpraví do té staré, ne vedle ní
 
-Máte vlastní knihovnu know-how – metodiky, standardy, postupy – a pořád do ní něco přibývá: nahrávka školení, na kterém jste hodinu něco vysvětlovali, článek, cizí dokumentace, poznámky z hovoru, nafocený flipchart, slajdy v PDF. Problém není ten materiál získat, ale dostat ho **dovnitř**. Založit vedle další soubor umí každý; tenhle skill zdroj rozebere na jednotlivé poznatky a zapracuje je na místa, kam věcně patří – doplní, prohloubí, opraví, a když je potřeba, přestaví i strukturu textu kolem.
+Máte vlastní knihovnu know-how – metodiky, pravidla, postupy – a pořád do ní něco přibývá: nahrávka školení, na kterém jste hodinu něco vysvětlovali, článek, cizí dokumentace, poznámky z hovoru, nafocený flipchart, slajdy v PDF. Problém není ten materiál získat, ale dostat ho **dovnitř**. Založit vedle další soubor umí každý; tenhle skill zdroj rozebere na jednotlivé poznatky a zapracuje je na místa, kam věcně patří – doplní, prohloubí, opraví, a když je potřeba, přestaví i strukturu textu kolem.
 
 ## Co umí
 

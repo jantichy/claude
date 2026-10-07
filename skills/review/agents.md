@@ -5,7 +5,7 @@ Texty, se kterými `/review` pouští subagenty – panel specialistů ve *Fázi
 **Agent běží bez kontextu téhle session**, takže si všechno podstatné musí nést v zadání – proto jsou texty opsané celé a ne odkazem (`~/.claude/standards/rules.md`, *Single source of truth*, výjimka pro subagenty).
 
 - [Zadání pro pracovního specialistu](#zadání-pro-pracovního-specialistu)
-- [Zadání pro standardového specialistu](#zadání-pro-standardového-specialistu)
+- [Zadání pro doménového specialistu](#zadání-pro-doménového-specialistu)
 - [Zadání pro ověřovatele](#zadání-pro-ověřovatele)
 
 ## Zadání pro pracovního specialistu
@@ -78,7 +78,7 @@ agent ten soubor nemá načtený):
 
 Závažnost si přiděluješ sám, ale rozhoduje o tom, kolik kontroly nález dostane:
 NÍZKÝ se neověřuje a část z nich se opraví bez ptaní. Proto u NÍZKÉHO
-napiš do `basis` konkrétní pravidlo nebo bod standardu, o který se opíráš – ne
+napiš do `basis` konkrétní pravidlo nebo bod doménové znalosti, o který se opíráš – ne
 dojem. Nemáš-li ho čím podložit, je to STŘEDNÍ, nebo to nehlas.
 
 VÝSTUP: JSON objekt, nic jiného. `covered` je povinné a nesmí být prázdné.
@@ -88,7 +88,7 @@ VÝSTUP: JSON objekt, nic jiného. `covered` je povinné a nesmí být prázdné
   {
     "severity": "KRITICKÉ" | "STŘEDNÍ" | "NÍZKÉ",
     "specialist": "<jméno specialisty>",
-    "basis": "o co se nález opírá – scénář z requirements, bod ASVS, pravidlo standardu",
+    "basis": "o co se nález opírá – scénář z requirements, bod ASVS, pravidlo doménové znalosti",
     "title": "krátký název nálezu",
     "description": "v čem konkrétně je problém",
     "failure": "konkrétní vstupy nebo stav → co se stane špatně",
@@ -110,34 +110,34 @@ pokrytí je platný výsledek, zamlčené neúplné pokrytí ne – a prázdné 
 Pracuj výhradně v `/tmp` a s absolutními cestami; do auditovaného projektu nezapisuj a nic v něm neměň. **Není to pojistka, ale pokyn** – shell máš a zapsat bys jím mohl; hranici tu drží zadání, ne nástroj.
 ```
 
-## Zadání pro standardového specialistu
+## Zadání pro doménového specialistu
 
 Stejné, s jediným rozdílem – měřítkem není úsudek, ale text:
 
 ```
-Prověř soulad zadaných souborů se standardem v souboru <absolutní cesta k sadě>.
+Prověř soulad zadaných souborů s doménovou znalostí v souboru <absolutní cesta k sadě>.
 
 POSTUP:
-1. Přečti celý soubor standardů. Sestav si z něj seznam konkrétních prověřitelných
+1. Přečti celý soubor s doménovou znalostí. Sestav si z něj seznam konkrétních prověřitelných
    pravidel – včetně sekcí „Antipatterns“, pokud existují.
 2. Přečti zadané soubory.
 3. Pro každé pravidlo ověř, jestli ho zadané soubory porušují.
 
-Každý nález **musí být opřený o konkrétní bod standardu** – do pole `basis` uveď
+Každý nález **musí být opřený o konkrétní bod doménové znalosti** – do pole `basis` uveď
 název sekce a citaci nebo parafrázi pravidla. Nález, který takhle podložit neumíš,
 nehlas: na obecné posouzení jsou pracovní specialisté.
 
 Kromě nálezů vrať i **soupis pravidel, která jsi z bodu 1 odvodil**, každé
 s příznakem `porušeno` / `v pořádku` / `netýká se`. Bez něj vypadá prázdný
 výsledek stejně, ať jsi prošel šedesát pravidel, nebo dvanáct – a orchestrátor
-z prázdného pole usoudí „standard je dodržen“ a uzavře běh větou o tom, že je
+z prázdného pole usoudí „pravidla jsou dodržena“ a uzavře běh větou o tom, že je
 práce v pořádku.
 
 Nehlas chyby v logice ani bugy, pokud neporušují konkrétní pravidlo.
 
 <zbytek – soubory, výjimky, pravidla hlášení, závažnost, formát – shodný s pracovním specialistou,
  s jedinou výjimkou: odrážka o `evidence` pro tebe neplatí, protože nic nespouštíš.
- Tvým dokladem je citace z auditovaného souboru a věta ze standardu, kterou porušuje.>
+ Tvým dokladem je citace z auditovaného souboru a věta z doménové znalosti, kterou porušuje.>
 ```
 
 ## Zadání pro ověřovatele
@@ -151,7 +151,7 @@ NÁLEZ: <title>
 ZÁVAŽNOST: <severity>
 TVRZENÍ: <description>
 SELHÁNÍ, KTERÉ TVRDÍ: <failure>
-O CO SE OPÍRÁ: <basis – scénář z requirements, bod seznamu zranitelností, pravidlo standardu>
+O CO SE OPÍRÁ: <basis – scénář z requirements, bod seznamu zranitelností, pravidlo doménové znalosti>
 KDE: <locations>
 <u nálezu z citlivé oblasti: TÉHLE OBLASTI SE TÝKÁ: <položky jmenného seznamu z architecture.md>>
 

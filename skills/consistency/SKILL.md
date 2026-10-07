@@ -16,7 +16,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 ## Co skill nedělá
 
 - **Nehledá chyby v kódu.** Na korektnost provedených změn je `/review` – ten uvnitř volá vestavěné `/code-review` jako jednoho ze svých specialistů, takže poslat uživatele rovnou na něj by ho připravilo o zbytek panelu i o ověření nálezů.
-- **Nekontroluje soulad s doménovými standardy.** Na odchylky od předpisů v `~/Dev/context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat standard.
+- **Nekontroluje soulad s doménovými znalostmi.** Na odchylky od předpisů v `~/Dev/context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat pravidla.
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.

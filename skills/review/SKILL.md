@@ -1,6 +1,6 @@
 ---
 name: review
-description: Skill se použije, když uživatel zadá "/review", "/review branch" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastrukturu a soulad s doménovými standardy (coding, web, admin, analytics, text, design, slides, training). Pouští deterministické nástroje, pak paralelní panel specialistů, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
+description: Skill se použije, když uživatel zadá "/review", "/review branch" nebo "/review full", nebo chce prověřit hotovou práci před uzavřením – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastrukturu a soulad s doménovými znalostmi (coding, web, admin, analytics, text, design, slides, training). Pouští deterministické nástroje, pak paralelní panel specialistů, nálezy nechá ověřit a projde je s uživatelem. Výchozí rozsah jsou změny na větvi, "full" projede celý projekt.
 argument-hint: [branch|full]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill]
 ---
@@ -65,7 +65,7 @@ Navíc si načti tohle:
 
 ### 0.2 Sestav panel specialistů
 
-**Kdo se zapíná a kdy, drží [`specialists.md`](specialists.md)** – dvě tabulky (pracovní specialisté a standardové sady z `~/Dev/context/`) a zadání pro *Agentní infrastrukturu*, která vestavěný protějšek nemá. Načti si ho ve chvíli, kdy panel sestavuješ; je to katalog k nahlédnutí, ne text do každého běhu.
+**Kdo se zapíná a kdy, drží [`specialists.md`](specialists.md)** – dvě tabulky (pracovní specialisté a doménové sady z `~/Dev/context/`) a zadání pro *Agentní infrastrukturu*, která vestavěný protějšek nemá. Načti si ho ve chvíli, kdy panel sestavuješ; je to katalog k nahlédnutí, ne text do každého běhu.
 
 **Kolik specialistů.** Běžná feature snese **tři až čtyři specialisty**; plný panel patří před nasazení nebo na změnu v citlivé oblasti. Není to úspora pro úsporu: panel, který vygeneruje víc nálezů, než kdo přečte, se přestane číst celý, a nálezy stojí čas i po skončení běhu. Nad sedm specialistů nechoď nikdy – při pochybnosti raději pusť `/review` podruhé s jinou sadou než všechno naráz.
 
@@ -111,7 +111,7 @@ Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`
 
 7. **Mutation testing** – `mutation`, jen v rozsahu změn a jen když projekt příkaz má. Odpovídá na otázku, kterou pokrytí nezodpoví: *tvrdí ty testy vůbec něco?* Je pomalé; u `full` se ptej, jestli ho pouštět.
 
-8. **Přístupnost a výkon** – `a11y` a `perf` z kontraktu, jsou-li v rozsahu soubory webového rozhraní. Prahy drží `~/Dev/context/web/web.md` (přístupnost: nula nálezů `serious` a `critical`; výkon: Core Web Vitals). **Deterministicky schválně:** chybějící `alt`, `label`, `lang`, nedostatečný kontrast a přeskočená úroveň nadpisu jsou zjistitelné nástrojem za nulu tokenů a pokaždé, kdežto standardový specialista je najde jen tehdy, když se vůbec vybere. Vypisuj **naměřenou hodnotu i práh**, ne jen počet.
+8. **Přístupnost a výkon** – `a11y` a `perf` z kontraktu, jsou-li v rozsahu soubory webového rozhraní. Prahy drží `~/Dev/context/web/web.md` (přístupnost: nula nálezů `serious` a `critical`; výkon: Core Web Vitals). **Deterministicky schválně:** chybějící `alt`, `label`, `lang`, nedostatečný kontrast a přeskočená úroveň nadpisu jsou zjistitelné nástrojem za nulu tokenů a pokaždé, kdežto doménový specialista je najde jen tehdy, když se vůbec vybere. Vypisuj **naměřenou hodnotu i práh**, ne jen počet.
 
 9. **Pokrytí testy** – `coverage`, má-li ho projekt v kontraktu. Porovnej s prahem z `~/Dev/context/coding/quality.md` (80 % na kritických cestách) a vypiš **naměřenou hodnotu i práh**, ne jen číslo. Samo o sobě to nic nedokazuje – na to je *Mutation testing* výš – ale odhalí modul, ke kterému se testy vůbec nenapsaly.
 
@@ -136,7 +136,7 @@ Na **každého** vybraného specialistu pošli **samostatného subagenta** – v
 
 Vlastní zadání piš jen pro specialisty, kteří vestavěný protějšek nemají – **a pro Bezpečnost v citlivé oblasti**, kde běží obojí vedle sebe.
 
-**Model a effort podle specialisty** (Volba modelu a effortu podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*.) Standardoví specialisté měří text proti textu, ale checklist si z pětisetřádkového standardu **teprve sami sestavují**, a to mechanická práce není: jedou proto na **výchozím modelu s `medium`–`high`**, jak pro kontrolu proti standardu předepisuje tabulka. Agent na nižším effortu nad takovým vstupem udělá vzorek – a prázdné pole vypadá stejně, ať prošel šedesát pravidel, nebo dvanáct. **Bezpečnost a Data a stavy pouštěj na nejsilnějším modelu s `xhigh`**: tam přehlédnutí stojí nejvíc a levný model mlčí, místo aby hlásil.
+**Model a effort podle specialisty** (Volba modelu a effortu podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*.) Doménoví specialisté měří text proti textu, ale checklist si z pětisetřádkových pravidel **teprve sami sestavují**, a to mechanická práce není: jedou proto na **výchozím modelu s `medium`–`high`**, jak pro kontrolu proti doménovým znalostem předepisuje tabulka. Agent na nižším effortu nad takovým vstupem udělá vzorek – a prázdné pole vypadá stejně, ať prošel šedesát pravidel, nebo dvanáct. **Bezpečnost a Data a stavy pouštěj na nejsilnějším modelu s `xhigh`**: tam přehlédnutí stojí nejvíc a levný model mlčí, místo aby hlásil.
 
 **Texty zadání pro obě skupiny drží [`agents.md`](agents.md).** Načti si ho ve chvíli, kdy agenty pouštíš; do těla skillu nepatří, protože se čtou jen tehdy a jinak by zabíraly kontext každého běhu.
 
@@ -205,10 +205,10 @@ Pak rozděl na tři skupiny. **Kritérium drží `~/.claude/skills/findings.md`*
 - chybějící `rel="noopener"`, `autocomplete`, `inputmode`
 - porušení naming konvence u nové, nikde jinde nereferencované věci
 - chybějící metadata stránky, kde je jasné, co tam patří
-- formulační a formátovací drobnosti podle standardu
+- formulační a formátovací drobnosti podle doménových znalostí
 
 **Jednoznačné** – chování nebo strukturu mění, ale podoba opravy je jedna:
-- dorovnání kódu na to, co už rozhoduje specifikace, standard nebo jiné místo v repozitáři
+- dorovnání kódu na to, co už rozhoduje specifikace, doménová znalost nebo jiné místo v repozitáři
 - doplnění chybějícího kusu, jehož tvar určuje okolí – další guard do rodiny, která je ostatní má, další pole do výčtu, který se sám prohlašuje za taxativní
 - dotažení přejmenování, které se rozhodlo a minulo pár míst
 - `batch` nález, jehož náhrada je jedna a ověří se diffem
@@ -220,7 +220,7 @@ Pak rozděl na tři skupiny. **Kritérium drží `~/.claude/skills/findings.md`*
 - zásah nevratný, mimo repozitář nebo do cizího systému
 - **chybí ti údaj, který ví jen uživatel a nedá se zjistit z repozitáře** – co se dá spočítat, dohledat nebo porovnat se zdrojem, je práce, ne sporný nález (`~/.claude/skills/findings.md`, *Nejistotu nejdřív zkus odstranit*)
 
-**Při sloučení vyhrává přísnější zařazení.** Stačí, aby měl nález **jediný podklad od pracovního specialisty**, a je sporný – bez ohledu na to, co si o něm myslel standardový specialista, který ho hlásil taky. Je to deterministické kritérium ve smyslu `~/.claude/standards/rules.md`, *Mechanická pravidla nad rozhodováním případ od případu*, a řeší kolizi, kterou tenhle skill sám jmenuje jako typickou: chybějící `rel="noopener"` je pro `web/web.md` kosmetika vyjmenovaná mezi mechanickými opravami, kdežto pro specialistu na bezpečnost je to tabnabbing, tedy vždy sporné. Bez pravidla by o tom rozhodovala náhoda.
+**Při sloučení vyhrává přísnější zařazení.** Stačí, aby měl nález **jediný podklad od pracovního specialisty**, a je sporný – bez ohledu na to, co si o něm myslel doménový specialista, který ho hlásil taky. Je to deterministické kritérium ve smyslu `~/.claude/standards/rules.md`, *Mechanická pravidla nad rozhodováním případ od případu*, a řeší kolizi, kterou tenhle skill sám jmenuje jako typickou: chybějící `rel="noopener"` je pro `web/web.md` kosmetika vyjmenovaná mezi mechanickými opravami, kdežto pro specialistu na bezpečnost je to tabnabbing, tedy vždy sporné. Bez pravidla by o tom rozhodovala náhoda.
 
 Při pochybnosti patří nález mezi sporné.
 
@@ -235,7 +235,7 @@ Při pochybnosti patří nález mezi sporné.
 
 - **Rozsah:** [N z M souborů diffu – co a proč vynecháno]
 - **Pokrytí panelem:** [N z M souborů rozsahu prošel aspoň jeden specialista · neprověřeno: jmenovitě, nebo „nic“]
-- **Specialisté:** [kteří běželi / kteří vybraní neběželi a proč] · [na čem: code-review high, bezpečnost nejsilnější model, standardy výchozí]
+- **Specialisté:** [kteří běželi / kteří vybraní neběželi a proč] · [na čem: code-review high, bezpečnost nejsilnější model, doménové sady výchozí]
 - **Spotřeba:** [N agentů: X specialistů, Y ověřovatelů, průzkumník ano/ne · na jakém modelu a effortu]
 
 **Deterministická vrstva** [u každého kroku nástroj · návratový kód, ne holé číslo]:
@@ -301,7 +301,7 @@ Nejsou-li žádné sporné nálezy, přeskoč Fázi 7 rovnou na shrnutí.
 
 Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 
-1. **Zobraz ho.** **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce standardu), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku.
+1. **Zobraz ho.** **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce doménové znalosti), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku.
 
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text. Jedno volání = jeden nález = jedna otázka (`multiSelect: false`):
    - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`
@@ -318,7 +318,7 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
    a. Proveď změnu. U `batch` nálezu hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
    b. **Ověř – vždy, ne občas.** Průběžná kontrola podle kontraktu příkazů. U opravy, kterou hlásil pracovní specialista, **doplň test, který ten případ pokrývá** – jinak se chyba vrátí a nikdo se to nedozví.
 
-      **Dávkuj podle rizika, ne po jednom.** Opravy od **pracovních specialistů** ověřuj každou zvlášť: mění chování a hledat mezi pěti změnami tu, která rozbila test, stojí víc než těch pár sekund. Sérii oprav od **standardových specialistů**, kteří sahají jen na text a značky, ověř **jednou na konci série**. 
+      **Dávkuj podle rizika, ne po jednom.** Opravy od **pracovních specialistů** ověřuj každou zvlášť: mění chování a hledat mezi pěti změnami tu, která rozbila test, stojí víc než těch pár sekund. Sérii oprav od **doménových specialistů**, kteří sahají jen na text a značky, ověř **jednou na konci série**. 
       A **nepouštěj kontrolu ještě jednou před koncem odpovědi**: `Stop` hook ji spustí nad tímtéž stromem hned po něm, takže je to čekání navíc bez nové informace. U projektu, kde 3 kroky trvají 40 s, byla dosavadní podoba při 10 opravách 7 minut čistého čekání – a to uprostřed nejdelšího interaktivního průchodu, kdy je vytrvalost nejtenčí.
    c. Když kontrola selže: **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat. Nepokračuj automaticky na další nález.
    d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky“.
@@ -392,7 +392,7 @@ nezmění kód, kterého se týkají.
   - Lokace: <file:line, ...>
 ```
 
-`zdroj` říká, odkud nález přišel, a nahrazuje dřívější pole `role`, které nález z útoku neměl čím vyplnit; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo standardu, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+`zdroj` říká, odkud nález přišel, a nahrazuje dřívější pole `role`, které nález z útoku neměl čím vyplnit; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo doménové znalosti, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 **Umlčení commituj samostatně, až po opravách.** Hash se vyrábí z `HEAD` **před** commitem, takže musí ukazovat na stav, ve kterém se nález posuzoval – tedy na commit s opravami. Kdyby šel zápis do téhož commitu jako ony, ten commit by se dotkl i souborů z pole *Lokace*, expirační kontrola níž by hlásila změnu a **umlčení by vypršelo dřív, než ho kdo přečte**. Pořadí je proto: commitni opravy → zjisti `HEAD` → zapiš záznam → commitni sám zápis. Druhý commit mění jen `CLAUDE.md`, takže se lokací netýká a filtr drží.
 

@@ -53,7 +53,7 @@ Zeptej se **přes `AskUserQuestion`** – jedna otázka, tři volby, v lidské �
 - **V jednom kuse s kontrolními body** – rychlejší, méně režie, ale chyba se odhalí až o několik úkolů dál. Vhodné na krátký plán a na práci, kterou dobře znáš.
 - **Bez zastávek do splnění cíle** – nabízej **jen tehdy, když jsou splněné všechny podmínky níž**, jinak tuhle volbu vůbec neuváděj.
 
-Podle volby vyvolej `superpowers:subagent-driven-development`, respektive `superpowers:executing-plans`, a předej mu cestu k plánu, kořen projektu a doménové standardy z `CLAUDE.md`.
+Podle volby vyvolej `superpowers:subagent-driven-development`, respektive `superpowers:executing-plans`, a předej mu cestu k plánu, kořen projektu a doménové znalosti z `CLAUDE.md`.
 
 ### Bez zastávek do splnění cíle
 
@@ -91,7 +91,7 @@ Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
 **Commity.** Plán má commit jako poslední krok každého úkolu. Má-li projekt zapnutý autocommit, **necommituj dvakrát** – řiď se plánem a autocommit nech na změny mimo úkoly. Commit message piš česky a věcně: co se změnilo, ne které soubory.
 
-**Doménové standardy.** Kód se má psát podle nich rovnou, ne se k nim vracet až v `/review`. Neznamená to duplikovat kontrolu – znamená to je respektovat.
+**Doménové znalosti.** Kód se má psát podle nich rovnou, ne se k nim vracet až v `/review`. Neznamená to duplikovat kontrolu – znamená to je respektovat.
 
 **Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, zapiš s celou úvahou – do kódu ne. *Nerozhoduj potichu nad rámec zadání.* **Kam:** chybějící kus práce, který se udělat musí, do `docs/todo.md`; volný nápad, o kterém nikdo nerozhodl, do `docs/backlog.md` (`~/.claude/standards/structure.md`, *`backlog.md`*). Fronta úkolů zaplevelená nápady přestane být frontou. **Nemá-li projekt `backlog.md`, založ ho** a řekni to; do `todo.md` nápad nepatří, tím by se z fronty stal mišmaš (`~/.claude/standards/rules.md`, *Odložené věci pojmenuj a zaparkuj*).
 

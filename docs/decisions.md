@@ -240,7 +240,7 @@ Zvoleno **pravidlo v `~/.claude/standards/rules.md`** (*Commituj jmenované cest
 
 **Proč `/audit` místo `/measure`:** skill vázaný na jednu doménu by se musel psát pro každou znovu, kdežto parametrizovaný je *generic-base + delta* (`~/.claude/standards/rules.md`). Potřeba přitom zůstává táž – `analytics/` je nejhotovější doménová znalost a jako jediná nemá skill, takže existuje jako checklist, který nikdo nevyvolá ve správný moment.
 
-**Vymezení, bez kterého by to byla duplicita:** `/review` má mezi rolemi „soulad s doménovými standardy“, ale měří **vlastní práci na projektu**; `/audit` měří **cizí věc** – klientský web, měřicí nastavení, převzatý text. Rozdíl je v předmětu, ne v metodě, a musí být v `Co skill nedělá`.
+**Vymezení, bez kterého by to byla duplicita:** `/review` má mezi rolemi „soulad s doménovými znalostmi“, ale měří **vlastní práci na projektu**; `/audit` měří **cizí věc** – klientský web, měřicí nastavení, převzatý text. Rozdíl je v předmětu, ne v metodě, a musí být v `Co skill nedělá`.
 
 **Zamítnuto – `/slides`:** `design/slides.md` a `training/training.md` sice leží nevyužité a promítaný obsah se dělá opakovaně, ale vestavěné `document-skills:pptx` a `design` pokrývají řemeslo a zbytek je úsudek nad jedním konkrétním obsahem, ne opakovaný proces.
 
@@ -480,11 +480,11 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 **Kořen, ne `skills/`.** Precedens `preflight.md` a `skills.md` – sdílené věci, které nepatří žádnému skillu – sem nesedí úplně: ty dvě mluví **o skillech**, takže leží mezi nimi. `structure.md` mluví o projektu, tedy patří vedle `~/.claude/standards/rules.md`. Oba jsou navíc v `CLAUDE.md` importované natvrdo přes `@` jako závazná pravidla; jeden v kořeni a druhý v podadresáři by tvrdil rozdíl, který mezi nimi není. **Podadresář `standards/` se otevře, až jich bude víc** – dnes by to byl obal nad jedním souborem.
 
-**Tři odkazy do `~/Dev/context/coding/coding.md` přepsány věcně, bez odkazu** – kontrakt příkazů, průběžná kontrola a rozcestník doménových standardů. Veřejný soubor tak neukazuje do adresáře, který cizí čtenář nemá. Nic se tím neztrácí: projekt, kde na standardech kódu záleží, si `coding.md` importuje ve svém `CLAUDE.md` natvrdo, takže platí celý bez ohledu na tenhle odkaz. Ověřeno – sedm projektů s kódem ho takhle má.
+**Tři odkazy do `~/Dev/context/coding/coding.md` přepsány věcně, bez odkazu** – kontrakt příkazů, průběžná kontrola a rozcestník doménových znalostí. Veřejný soubor tak neukazuje do adresáře, který cizí čtenář nemá. Nic se tím neztrácí: projekt, kde na pravidlech kódu záleží, si `coding.md` importuje ve svém `CLAUDE.md` natvrdo, takže platí celý bez ohledu na tenhle odkaz. Ověřeno – sedm projektů s kódem ho takhle má.
 
 **Jeden projekt z migrace vynechán.** Měl rozdělanou cizí práci včetně `CLAUDE.md` a odkaz na standard v něm nebyl; sáhnout na něj by znamenalo commitnout cizí rozepsané změny. Dorovná se, až se v něm bude pracovat.
 
-**Zvažováno a zúženo: `coding.md`, `text.md` a `design.md` zůstávají soukromé.** Obsahově citlivé nejsou – neobsahují klientská jména ani osobní data – a `text.md` s `typography.md` jsou převážně opis kodifikovaných pravidel. Rozhodl týž test jako u zbytku: **je to infrastruktura, kterou skilly potřebují k běhu, nebo profesní standard?** `worktree.md` a `structure.md` bez veřejného umístění rozbíjejí nainstalovaný skill; `coding.md` je názor na to, jak se píše kód, a `/review` bez něj doběhne. `design.md` navíc sám sebe označuje za rozdělaný startovní bod. Není to zamítnutí navždy – je to volba pro tenhle průchod; k `design.md` se dá vrátit, až bude hotový.
+**Zvažováno a zúženo: `coding.md`, `text.md` a `design.md` zůstávají soukromé.** Obsahově citlivé nejsou – neobsahují klientská jména ani osobní data – a `text.md` s `typography.md` jsou převážně opis kodifikovaných pravidel. Rozhodl týž test jako u zbytku: **je to infrastruktura, kterou skilly potřebují k běhu, nebo profesní doménová znalost?** `worktree.md` a `structure.md` bez veřejného umístění rozbíjejí nainstalovaný skill; `coding.md` je názor na to, jak se píše kód, a `/review` bez něj doběhne. `design.md` navíc sám sebe označuje za rozdělaný startovní bod. Není to zamítnutí navždy – je to volba pro tenhle průchod; k `design.md` se dá vrátit, až bude hotový.
 
 **Zamítnuto – `~/.claude/standards/` jako podadresář.** Dnes by to byl obal nad jedním souborem. Otevře se, až jich v kořeni bude víc; do té doby `structure.md` leží vedle `~/.claude/standards/rules.md`, se kterým sdílí status závazného pravidla importovaného přes `@`.
 
@@ -619,7 +619,7 @@ Commit `~/.claude@388c4b1`.
 
 **Rozhodnuto 10. 9. 2026.** Vznikl skill `/audit`, který zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně `~/Dev/context/`. Sám nenese žádnou doménovou znalost – je to dirigent.
 
-**Proč nový skill a ne režim `/review`:** oba měří proti týmž doménovým standardům, ale liší se předmětem a všemi předpoklady. `/review` čte vlastní práci v repozitáři, má diff, kontrakt příkazů a specifikaci, proti které měří korektnost. `/audit` nemá ani jedno – má URL, exporty od klienta a přístupy do cizích účtů. Sloučení by znamenalo skill, jehož polovina fází v každém běhu neplatí.
+**Proč nový skill a ne režim `/review`:** oba měří proti týmž doménovým znalostem, ale liší se předmětem a všemi předpoklady. `/review` čte vlastní práci v repozitáři, má diff, kontrakt příkazů a specifikaci, proti které měří korektnost. `/audit` nemá ani jedno – má URL, exporty od klienta a přístupy do cizích účtů. Sloučení by znamenalo skill, jehož polovina fází v každém běhu neplatí.
 
 **Režimy `full` (výchozí), `brief`, `audit`, `report`, `update`.** Fáze jsou pojmenované jako režimy, aby šla pustit jen ta část, která je potřeba – typicky přepsat výstupy bez nového sběru. **Zamítnuto `collect` pro první fázi:** v `/compose` už znamená posbírání hotových textů a tady by svádělo i na sběr nálezů. **Zamítnuto `intake`, `inputs`, `gather`, `create`** ve prospěch `brief` – v oboru zavedený termín přesně pro to, co klient před zakázkou dodá.
 
@@ -643,7 +643,7 @@ Commit `~/.claude@388c4b1`.
 
 **Doména je jeden soubor a rozdělí se, až poroste.** Aby to skill nepocítil, čte ji přes rozcestník a hledá *věci*, ne jména souborů – pozdější rozpad na `depot/<workflow>.md` je pak úprava uvnitř domény.
 
-**Termín: `workflow`.** Doporučen byl `charakter` (pojmenovává rozpoznanou vlastnost a nejde splést s příponou); rozhodnuto pro `workflow`, protože těžiště má být v tom, co se se souborem děje dál. **Zamítnut `scénář`** – sráží se se zavedeným významem v `ptydepe.md` (*hlavní scénář*) a ve `/attack`. Cena volby je přiznaná: `workflow` je anglicismus, který norma skillů ani redakční standard jinak nepřipouštějí. **Rozsah termínu je `/depot` a jeho doména, nikam dál se nešíří** – jinde zůstává postup, fáze, scénář. **Zamítnut řádek v `~/.claude/standards/ptydepe.md`:** ten drží termíny platné napříč projekty a zápis by z jednorázové volby udělal precedens pro celý ekosystém.
+**Termín: `workflow`.** Doporučen byl `charakter` (pojmenovává rozpoznanou vlastnost a nejde splést s příponou); rozhodnuto pro `workflow`, protože těžiště má být v tom, co se se souborem děje dál. **Zamítnut `scénář`** – sráží se se zavedeným významem v `ptydepe.md` (*hlavní scénář*) a ve `/attack`. Cena volby je přiznaná: `workflow` je anglicismus, který norma skillů ani redakční pravidla jinak nepřipouštějí. **Rozsah termínu je `/depot` a jeho doména, nikam dál se nešíří** – jinde zůstává postup, fáze, scénář. **Zamítnut řádek v `~/.claude/standards/ptydepe.md`:** ten drží termíny platné napříč projekty a zápis by z jednorázové volby udělal precedens pro celý ekosystém.
 
 **Zamítnuto – kopírovat originál místo přesunu:** dvě kopie téhož podkladu znamenají, že se příště nepozná, která je ta zaevidovaná. **Zamítnuto – při kolizi přejmenovat na `(1)`:** v `~/Depot` je název identifikátor, na který odkazuje `sources.md`, a sklad není verzovaný. **Zamítnuto – samostatný režim `rules`:** pravidla se zapisují i za běhu nad nerozpoznaným souborem; nakonec ale režim `workflow` zaveden na přání, protože se řádek často upravuje mimo konkrétní soubor.
 
@@ -682,7 +682,7 @@ Zavedeny dva typy v `~/.claude/agents/`: **`reader`** (`Read, Grep, Glob`) a **`
 
 **Zavrženo přidat webové nástroje rovnou `readeru`.** Nezapisují, takže by záruku neporušily, ale čtenář nad soukromými dokumenty by dostal přístup ven i tam, kde ho nepotřebuje. Proto druhý typ.
 
-**Co se přitom ukázalo o dědění v zadáních.** Standardoví specialisté `/review` dědili z pracovních zkratkou „zbytek shodný s pracovním specialistou“ i odrážku o `evidence`, která žádá spuštěný příkaz – po přepnutí na `reader` si typ a zadání odporovaly. Vyříznuto výslovně. **Ta zkratka je past téže třídy jako *Rozsah pravidla se nešíří sám*** v `~/.claude/standards/rules.md`, jen obráceně: dědí neviditelně, takže změna u rodiče tiše změní dítě.
+**Co se přitom ukázalo o dědění v zadáních.** Doménoví specialisté `/review` dědili z pracovních zkratkou „zbytek shodný s pracovním specialistou“ i odrážku o `evidence`, která žádá spuštěný příkaz – po přepnutí na `reader` si typ a zadání odporovaly. Vyříznuto výslovně. **Ta zkratka je past téže třídy jako *Rozsah pravidla se nešíří sám*** v `~/.claude/standards/rules.md`, jen obráceně: dědí neviditelně, takže změna u rodiče tiše změní dítě.
 
 **Měřeno, ne odhadnuto,** a dvě věci z toho stojí za zapamatování: **výpověď agenta o vlastních nástrojích není doklad** (jeden běh hlásil sadu, která neodpovídala definici – spolehlivé je jen to, co mu volání nástroje projde), a **nový typ je vidět až v nové session**, protože registr se načítá při startu. Překlep v názvu naopak selže hlučně i s výčtem dostupných typů.
 
@@ -890,12 +890,12 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **`/review` má měřítko v souboru, `/oponent` žádné nemá.**
 
-- `/review` měří hotovou práci **proti předpisu, který existuje jako dokument**. Nález zní „porušuje pravidlo X ze standardu Y“ a dá se vyvrátit ukázáním na to pravidlo. Jeho **specialisté** (korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura) se zapínají **jen na kód**; nad obsahovým projektem se zapnou pouze **doménové sady** z `~/Dev/context/`.
+- `/review` měří hotovou práci **proti předpisu, který existuje jako dokument**. Nález zní „porušuje pravidlo X z doménové znalosti Y“ a dá se vyvrátit ukázáním na to pravidlo. Jeho **specialisté** (korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura) se zapínají **jen na kód**; nad obsahovým projektem se zapnou pouze **doménové sady** z `~/Dev/context/`.
 - `/oponent` žádný předpis nemá a **posuzuje samotný obsah**. Nález zní „nedává to smysl“ nebo „chybí tu odpověď“ a vyvrátit se dá jen argumentem.
 
 **Proč `/review` u rezervací našel návrhové díry:** nejsou to čistě obsahový projekt, ale dokumentace popisující aplikaci, takže se zapnuly sady `coding/coding.md`, `coding/architecture.md` a `web/admin.md`. Nález *„guard posílá admina udělat něco, co neexistuje“* je porušení konkrétního pravidla, ne oponentura.
 
-**Praktický důsledek:** u projektu, ke kterému žádný relevantní standard v `~/Dev/context/` neexistuje, je `/review` skoro prázdný a má se přeskočit. `/oponent` funguje vždycky.
+**Praktický důsledek:** u projektu, ke kterému žádná relevantní doménová znalost v `~/Dev/context/` neexistuje, je `/review` skoro prázdný a má se přeskočit. `/oponent` funguje vždycky.
 
 ### Vznikl krok `/consolidate` na návrhový dluh z postupného záplatování
 
@@ -1509,7 +1509,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Rozhodnuto 28. 9. 2026.** Kontrolní skilly měly pro tytéž dvě věci **tři různé slovníky**: `/oponent` nabízel *Nechat být* a *Vrátit se k tomu později*, `/review`, `/consistency` a `/attack` *Přeskočit* a *Odložit*, `/cleanup` u položek mimo rozsah vlastní čtveřici. Mapování volby na stav měl navíc jen `/oponent`. Uživatel přitom prochází nálezy z několika skillů v jednom životním cyklu, takže dvě jména pro tutéž volbu čte jako dvě různé volby.
 
-**Záchytné volby se jmenují `Neopravovat` a `Zapsat do todo`.** Rozhodl uživatel; kritérium dodal redakční standard pro rozhraní (`~/Dev/context/text/copy.md`, *Popisky akcí*): popisek musí říct, co se stane. *Přeskočit* se čte jako „teď ne“, přestože znamená natrvalo a se zápisem do `CLAUDE.md`; *Nechat být* mlčí o tom, že se nález někam zapíše. Tabulka volba → stav je nově v `findings.md` jednou pro všechny.
+**Záchytné volby se jmenují `Neopravovat` a `Zapsat do todo`.** Rozhodl uživatel; kritérium dodala redakční pravidla pro rozhraní (`~/Dev/context/text/copy.md`, *Popisky akcí*): popisek musí říct, co se stane. *Přeskočit* se čte jako „teď ne“, přestože znamená natrvalo a se zápisem do `CLAUDE.md`; *Nechat být* mlčí o tom, že se nález někam zapíše. Tabulka volba → stav je nově v `findings.md` jednou pro všechny.
 
 **Výpis nálezu je odstavec: tučný název a za ním normální věta.** Tohle je ta podstatnější polovina a přišla od uživatele během práce – mřížky `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` označil za nečitelné a slovo `Kontext` jako popisek za zbytečné.
 

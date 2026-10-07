@@ -103,6 +103,6 @@ Typ **`reader`**, **nejsilnější model**. Jeden ověřovatel na jeden návrh.
 >
 > - **KRITICKÉ** – bezpečnost, ztráta dat, nepřístupnost pro část uživatelů, nevratná akce bez pojistky
 > - **STŘEDNÍ** – reálný dopad na správnost, použitelnost nebo udržovatelnost
-> - **NÍZKÉ** – bez praktického dopadu; **u tohohle stupně musí být čím ho podložit** – konkrétní pravidlo nebo bod standardu, ne dojem. Není-li čím, je to STŘEDNÍ, nebo se nehlásí vůbec.
+> - **NÍZKÉ** – bez praktického dopadu; **u tohohle stupně musí být čím ho podložit** – konkrétní pravidlo nebo bod doménové znalosti, ne dojem. Není-li čím, je to STŘEDNÍ, nebo se nehlásí vůbec.
 >
 > Tyhle vedlejší nálezy jsou vítané: v pilotním běhu byly cennější než návrhy samotné.

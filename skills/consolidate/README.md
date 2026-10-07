@@ -66,7 +66,7 @@ U obou shluků má každá záplata doložený důvod a navržená alternativa n
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
 
-Skill se opírá o to, že projekt někde vede zápisy o svých rozhodnutích – bez nich nemá z čeho postavit kroniku a zbude mu jen historie verzí. Odkazuje se i na moje soukromé standardy pro strukturu projektu a pro škálu závažnosti nálezů; ty odkazy ať Claude nahradí vašimi, nebo je smaže.
+Skill se opírá o to, že projekt někde vede zápisy o svých rozhodnutích – bez nich nemá z čeho postavit kroniku a zbude mu jen historie verzí. Odkazuje se i na moje pravidla pro strukturu projektu a pro škálu závažnosti nálezů (`standards/structure.md`, `skills/severity.md`); ty odkazy ať Claude nahradí vašimi, nebo je smaže.
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 

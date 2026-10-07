@@ -15,7 +15,7 @@ Prověří hotovou práci před uzavřením z několika nezávislých hledisek n
 1. **`/review`**, případně **`/review branch`** (výchozí) – prověří změny na aktuální větvi.
 2. **`/review full`** – celý projekt. U staršího projektu předem řekne, kolik souborů to bude, a při stovkách se zeptá, jestli pokračovat.
 3. **Deterministická vrstva** – typová kontrola, linter, testy, produkční build, audit závislostí, hledání tajemství v repozitáři, statická analýza, mutační testování, přístupnost, výkon a pokrytí. Vypisuje naměřenou hodnotu i práh, ne jen počet.
-4. **Panel specialistů, který se skládá podle toho, čeho se změny týkají** – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, konfigurace agentní vrstvy. K tomu specialisté měřící soulad s doménovými standardy: kód, web, administrace, analytika, texty, vizuál, prezentace, školení.
+4. **Panel specialistů, který se skládá podle toho, čeho se změny týkají** – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, konfigurace agentní vrstvy. K tomu specialisté měřící soulad s doménovými znalostmi: kód, web, administrace, analytika, texty, vizuál, prezentace, školení.
 5. **Přísnější režim v citlivých oblastech.** Dotkne-li se změna přihlašování, oprávnění, plateb, nahrávání souborů, osobních údajů, mazání dat nebo odesílání pošty ven, je specialista na bezpečnost povinný a dostane úplný jmenný seznam tříd zranitelností.
 6. **Umí navázat na přerušený běh** – ověřený seznam nálezů se ukládá na disk, takže se nejdražší část práce neplatí dvakrát.
 7. **Mechanické opravy udělá rovnou**, sporné projde s vámi jednu po druhé, a u opravy hlášené pracovním specialistou rovnou doplní test.
@@ -77,7 +77,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`.
 
-Standardoví specialisté měří soulad s **mými soukromými doménovými standardy**, které v tomhle repozitáři nejsou – **řekněte Claudovi, ať tu část napojí na vaše vlastní standardy, nebo ji vynechá**; pracovní specialisté fungují bez nich. Aby měla deterministická vrstva co spouštět, potřebuje projekt mít v instrukcích zapsané své příkazy; co chybí, skill vypíše jako nezkontrolované.
+Doménoví specialisté měří soulad s **mými soukromými doménovými znalostmi**, které v tomhle repozitáři nejsou – **řekněte Claudovi, ať tu část napojí na vaše vlastní doménové znalosti, nebo ji vynechá**; pracovní specialisté fungují bez nich. Aby měla deterministická vrstva co spouštět, potřebuje projekt mít v instrukcích zapsané své příkazy; co chybí, skill vypíše jako nezkontrolované.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:

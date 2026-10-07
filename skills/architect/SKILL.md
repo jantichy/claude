@@ -170,7 +170,7 @@ Blok v `todo.md` **zatím zůstává** a do `done.md` se nic nezapisuje: nálezy
 
 Vypiš, co kolo rozhodlo, co zapsalo kam, které otázky zůstaly a jaká nová kola vznikla. Pak **doporuč navazující kroky v tomhle pořadí** – každý jen tehdy, když se vyplatí, a u přeskočeného řekni proč:
 
-1. **`/review`** nad tím, co kolo vyrobilo – měří dokument proti standardům, které projekt vede; **`/oponent docs/<topic>.md`**, zavedlo-li kolo nový podsystém, změnilo model nebo se napojilo na cizí systém; **ani jedno**, bylo-li kolo drobné a posudek by jen zdržel.
+1. **`/review`** nad tím, co kolo vyrobilo – měří dokument proti doménovým znalostem, které projekt vede; **`/oponent docs/<topic>.md`**, zavedlo-li kolo nový podsystém, změnilo model nebo se napojilo na cizí systém; **ani jedno**, bylo-li kolo drobné a posudek by jen zdržel.
 2. **`/consistency`**, jen sáhlo-li kolo do hodně sdílených dokumentů. Většinou se vyplatí až nad celkem po sešití.
 3. **`/cleanup`** – vždycky.
 4. **`/architect` znovu v téhle větvi** – zapíše kolo jako hotové (*Fáze 3*); ve worktree layoutu pak sloučení.
@@ -206,7 +206,7 @@ Pak návrh sám, nad celkem i u jednoho zátahu:
 
 **Bezpečnost se navrhuje, neaudituje.** Zhruba polovina kódu psaného modely obsahuje bezpečnostní chybu a je to předvídatelná množina. Nejúčinnější obrana není kontrola na konci, ale struktura, ve které díra nejde udělat – jedna vrstva autorizace, kterou nelze obejít, výhradně parametrizované dotazy, validace na hranici, tajemství jen z prostředí. Proto má návrh sekci *Bezpečnostní model*, a proto v ní nesmí stát „ošetříme to při implementaci“.
 
-**Doménové standardy.** Návrh se řídí tím, co si projekt importuje v `CLAUDE.md` – `~/Dev/context/coding/coding.md` a `~/Dev/context/coding/modeling.md` vždy, dál podle povahy `web/web.md`, `web/admin.md`, `analytics/analytics.md`. Načti je, **než začneš navrhovat**, ne až při kontrole.
+**Doménové znalosti.** Návrh se řídí tím, co si projekt importuje v `CLAUDE.md` – `~/Dev/context/coding/coding.md` a `~/Dev/context/coding/modeling.md` vždy, dál podle povahy `web/web.md`, `web/admin.md`, `analytics/analytics.md`. Načti je, **než začneš navrhovat**, ne až při kontrole.
 
 **Konec prvního běhu po kolech se zapisuje:** po schválení `architecture.md` připiš do prázdné sekce *Kola návrhu* v `todo.md` řádek `**Návrh sešitý** – čeká na doporučené kroky a dočištění.` a commitni. Podle něj orientace pozná, že na řadě je *Fáze 6*; přerušené sešití ten řádek nemá, takže se nezamění.
 

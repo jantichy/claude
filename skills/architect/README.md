@@ -65,7 +65,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/architect a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill se odkazuje na moje soukromé standardy pro psaní textů a pro kód – **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**. Nabídku rozdělaných kol si vyžádá od skillu `/next`; bez něj funguje všechno ostatní a kolo se vybírá jménem.
+Skill se odkazuje na moje soukromé doménové znalosti pro psaní textů a pro kód – **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**. Nabídku rozdělaných kol si vyžádá od skillu `/next`; bez něj funguje všechno ostatní a kolo se vybírá jménem.
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 

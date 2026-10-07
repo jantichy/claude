@@ -69,7 +69,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/specify a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Skill je z části **obálka nad pluginem [superpowers](https://github.com/obra/superpowers)** – ten potřebujete mít nainstalovaný, klidně o to Clauda požádejte zároveň. Sám k němu přidává produktový rámec, tvar dokumentů a vynucené umístění. Odkazuje se i na moje soukromé standardy pro psaní textů – **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**.
+Skill je z části **obálka nad pluginem [superpowers](https://github.com/obra/superpowers)** – ten potřebujete mít nainstalovaný, klidně o to Clauda požádejte zároveň. Sám k němu přidává produktový rámec, tvar dokumentů a vynucené umístění. Odkazuje se i na moje soukromé doménové znalosti pro psaní textů – **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**.
 
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:

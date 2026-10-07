@@ -44,6 +44,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | skeptik | ověřovatel | agent, jehož jediný úkol je nález vyvrátit. **Výjimka:** *Skeptik* je jméno zrušeného hlediska `/oponent` |
 | sonda (experiment) | ověřovací pokus | kód napsaný jen kvůli zodpovězení otázky v návrhu, pak se zahodí |
 | sonda na závislosti | kontrola závislostí | ověření na začátku běhu, že nástroj, na který se deleguje, existuje |
+| standard, standardy (o souborech v `~/Dev/context`) | doménové znalosti, doména; o konkrétním souboru **pravidla** („redakční pravidla“); proti korpusu **metodika** | **Zůstává:** „standard“ v `/project` (dnešní podoba konfigurační vrstvy, `~/.claude/standards/`), cizí technické a oborové standardy, „standardní“ |
 | stub | rozcestník | tenký `CLAUDE.md` v kořeni worktree kontejneru. **Ne** „ukazatel“ |
 | šťastná cesta | hlavní scénář | průchod, kde uživatel dělá všechno správně a nic neselže |
 | tabulka švů | tabulka delegací | inventura v `/skill`: u každého kroku odpověď „umí to už něco?“ |

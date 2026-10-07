@@ -49,7 +49,7 @@ Leží buď v `<root>/CLAUDE.md`, nebo v `<root>/.claude/CLAUDE.md` – **zkontr
 | `## Autocommit` | jestli po ucelené změně commitovat a pushovat |
 | `## Výjimky z obecných pravidel` | co je v tomhle projektu vědomá odchylka, a tedy **není nález** |
 | Paměťová politika | píše se do Memory, nebo výhradně do souborů? |
-| Doménové `@import`y | které standardy z `~/Dev/context/` v projektu platí |
+| Doménové `@import`y | které doménové znalosti z `~/Dev/context/` v projektu platí |
 
 **Chybí-li `## Kontrakt příkazů` a projekt má kód**, zastav se a nabídni doplnění. Bez kontraktu nemá průběžná kontrola co spouštět a práce by běžela nezkontrolovaná. Podklad zjistíš z `package.json`, `composer.json`, `Makefile` nebo obdoby; návrh ukaž a nech potvrdit.
 

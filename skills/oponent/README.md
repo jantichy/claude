@@ -60,7 +60,7 @@ Doporučuji A: u tří slev je souběh okrajový a pravidlo se vysvětlí jednou
 
 ## Co nedělá
 
-- **Není to kontrola kódu** ani kontrola proti standardům. Na to je `/review`.
+- **Není to kontrola kódu** ani kontrola proti doménovým znalostem. Na to je `/review`.
 - **Není to audit vnitřní konzistence.** Ptá se „je to dobře vymyšlené?“, ne „sedí to na sebe?“ – na druhou otázku je `/consistency`.
 - **Nic sám nemění.** Změny až po schválení jednotlivých námitek.
 - **Nemá cenu nad torzem.** Posudek na kostru vygeneruje hlavně nálezy „chybí obsah“, což víte i bez něj – skill se na to zeptá předem.

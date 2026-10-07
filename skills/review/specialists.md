@@ -3,7 +3,7 @@
 Kdo se v panelu `/review` zapíná a kdy. Vytažené ze `SKILL.md`, protože je to referenční katalog k nahlédnutí při sestavování panelu, ne text, který se čte v každém běhu. Texty zadání pro agenty drží [`agents.md`](agents.md) – s jedinou výjimkou, zadáním pro *Agentní infrastrukturu*, které stojí tady; proč, je napsané u něj.
 
 - [Pracovní specialisté](#pracovní-specialisté)
-- [Standardoví specialisté](#standardoví-specialisté)
+- [Doménoví specialisté](#doménoví-specialisté)
 - [Zadání pro Agentní infrastrukturu](#zadání-pro-agentní-infrastrukturu)
 
 Specialisté se vybírají **podle toho, čeho se soubory v rozsahu týkají**, ne podle typu projektu. Obsahový projekt tedy nedostane specialisty na kód, web dostane obojí. Neposílej agenta na hledisko, ke kterému v rozsahu není co prověřovat.
@@ -21,7 +21,7 @@ Ptají se, jestli je to správně:
 | **Testy** | co není pokryté a které testy jsou falešně zelené? | jakýkoliv kód, u kterého projekt má `test` v kontraktu příkazů | `Explore` |
 | **Agentní infrastruktura** | co běží mimo permission systém a co si to pouští? | `.claude/settings*.json`, hooky, `.mcp.json`, `allowed-tools` ve skillech, `.semgrep/`, cokoliv v `.claude/` | `Explore` |
 
-## Standardoví specialisté
+## Doménoví specialisté
 
 Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
 
@@ -45,11 +45,11 @@ Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
 | `training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) | `reader` |
 | `legal/legal.md` | dokumentace nebo kód, které se opírají o právní úpravu – lhůta, náležitost dokladu, povinnost vůči spotřebiteli, místo plnění, retenční doba. Měří **doložení, ne výklad**: má tvrzení doslovnou citaci, číslo paragrafu nebo článku, odkud to je (primární zdroj proti reprodukci) a míru jistoty? Nezávazná metodika jako opora právního stavu je nález | `reader` |
 
-`~/.claude/standards/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne standard.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
+`~/.claude/standards/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne metodika.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
 
 ## Zadání pro Agentní infrastrukturu
 
-Tenhle specialista má **vlastní zadání**, protože proti němu nestojí žádný standard v `~/Dev/context/`, a tedy ani nic, proti čemu by měřil standardový specialista:
+Tenhle specialista má **vlastní zadání**, protože proti němu nestojí žádná doménová znalost v `~/Dev/context/`, a tedy ani nic, proti čemu by měřil doménový specialista:
 
 ```
 Prověř konfiguraci agentní vrstvy projektu. Ptáš se na jedinou věc: co z tohohle

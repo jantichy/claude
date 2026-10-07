@@ -25,7 +25,7 @@ Dílčí režimy jsou tytéž fáze puštěné samostatně, když je potřeba je
 
 ## Co skill nedělá
 
-- **Neprověřuje vlastní hotovou práci.** Na to je `/review`: čte repozitář, měří proti specifikaci a proti týmž doménovým standardům. Tenhle skill nemá repozitář ani specifikaci – má cizí web zvenčí a katalog toho, co se na cizích webech nachází.
+- **Neprověřuje vlastní hotovou práci.** Na to je `/review`: čte repozitář, měří proti specifikaci a proti týmž doménovým znalostem. Tenhle skill nemá repozitář ani specifikaci – má cizí web zvenčí a katalog toho, co se na cizích webech nachází.
 - **Nerozbíjí a nezkouší zranitelnosti.** To je `/attack`, a ten běží výhradně proti lokální instanci. Audit se cizího webu dotýká jako běžný návštěvník.
 - **Neopravuje, co našel.** Nesahá na klientovu konfiguraci, kód ani účty. Oprava je jiná zakázka a jiný běh.
 - **Nedělá revizi, jen audit.** Audit projde stav, pojmenuje chyby a navrhne směr oprav; revize je zakázka, do které audit vstupuje jako podklad a jejíž podstatou jsou navazující opravy – často až přestavba celé struktury a scénářů. Výstupem auditu je dokument, výstupem revize naimplementovaný web – a ten tenhle skill nestaví.
@@ -109,7 +109,7 @@ Doména je zdroj pravdy o tom, co se hledá. Najdi ji přes rozcestník `~/Dev/c
 **Podle toho, co doména má, se rozhoduje o režimu běhu, a řekne se to nahlas:**
 
 - **Plný běh** – doména má postup i katalog.
-- **Omezený běh** – doména má jen kontrolní seznam nebo standard. Auditovat se dá, ale chybí metodika sběru a katalog nálezů, takže **hloubka je jiná** a nálezy se opírají o obecný standard, ne o vzorce z praxe. Řekni to na začátku, ne až ve výstupu.
+- **Omezený běh** – doména má jen kontrolní seznam nebo pravidla. Auditovat se dá, ale chybí metodika sběru a katalog nálezů, takže **hloubka je jiná** a nálezy se opírají o obecná pravidla, ne o vzorce z praxe. Řekni to na začátku, ne až ve výstupu.
 
 **Nesedí-li žádná doména, skonči.** Vlastní kritéria si nevymýšlej – audit bez normy, proti které měří, je sbírka dojmů.
 

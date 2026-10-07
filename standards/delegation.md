@@ -26,7 +26,7 @@ Rozhoduje, čí výstup je vstupem pro koho: chyba v návrhu nebo ověření se 
 |---|---|---|
 | Mechanický sběr – hledání, čtení, převod formátu, přepis | nejlevnější (dnes Haiku) | nepodporuje |
 | Rutinní agent s jasným zadáním a úzkým rozsahem | výchozí model session | `low` |
-| Běžná práce – psaní kódu a textu, průzkum, kontrola proti standardu | výchozí model session | `medium`–`high` |
+| Běžná práce – psaní kódu a textu, průzkum, kontrola proti doménovým znalostem | výchozí model session | `medium`–`high` |
 | Návrh, rozpad na úkoly, ověřování nálezů, bezpečnost, explorativní útok | nejsilnější (dnes Opus) | `xhigh` |
 | Dlouhá agentní práce, kde nejsilnější model na `xhigh` nestačil | Fable | `high`–`xhigh` |
 

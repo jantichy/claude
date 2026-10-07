@@ -12,7 +12,7 @@ Jedna škála pro všechny skilly, které hlásí nálezy. Stojí mimo ně, prot
 
 **Závažnost si přiděluje agent sám, ale rozhoduje o tom, kolik kontroly nález dostane.** Čím výš, tím víc pozornosti: kritický jde na ověření a k uživateli jednotlivě, nejnižší stupeň se ověřuje jako poslední, vypořádává hromadně, nebo se k ověření vůbec nedostane. **Čím přesně se to liší, si každý skill určuje sám** – `/review` nízké nálezy neověřuje a část z nich opraví bez ptaní, `/oponent` je předkládá jedním blokem k rozhodnutí, `/audit` je ověřuje až za těmi závažnějšími. Společné je, že nejnižší stupeň nese nejmenší jistotu.
 
-Z toho plyne pravidlo, které platí všude: **u nálezu nejnižšího stupně musí být čím ho podložit** – konkrétní pravidlo, bod standardu nebo položka katalogu, ne dojem. Skilly, které vedou u nálezu pole `basis`, to zapisují do něj. Není-li čím podložit, je to STŘEDNÍ, nebo se nehlásí vůbec. Bez toho je nejnižší stupeň dírou, kterou projde neověřená změna.
+Z toho plyne pravidlo, které platí všude: **u nálezu nejnižšího stupně musí být čím ho podložit** – konkrétní pravidlo, bod doménové znalosti nebo položka katalogu, ne dojem. Skilly, které vedou u nálezu pole `basis`, to zapisují do něj. Není-li čím podložit, je to STŘEDNÍ, nebo se nehlásí vůbec. Bez toho je nejnižší stupeň dírou, kterou projde neověřená změna.
 
 **Stupeň se nenafukuje ani nesnižuje podle toho, kolik práce oprava dá.** To je vlastnost řešení, ne nálezu, a promítat ji do závažnosti znamená rozhodnout za uživatele, že se něco neopraví.
 

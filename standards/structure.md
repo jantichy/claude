@@ -147,7 +147,7 @@ Existuje jen spolu s `todo.md`.
 
 ### `rules.md`
 
-**Obecné principy tohoto projektu** – věty, které rozhodují, ne popis systému. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně; `decisions.md` drží konkrétní rozhodnutí, tady je rámec, proti kterému se rozhoduje. Patří sem **jen to, co je specifické pro projekt** – obecná pravidla jsou v `~/.claude/standards/rules.md`, doménové standardy v importované doméně, provoz worktree v `~/.claude/standards/worktree.md`.
+**Obecné principy tohoto projektu** – věty, které rozhodují, ne popis systému. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně; `decisions.md` drží konkrétní rozhodnutí, tady je rámec, proti kterému se rozhoduje. Patří sem **jen to, co je specifické pro projekt** – obecná pravidla jsou v `~/.claude/standards/rules.md`, doménové znalosti v importované doméně, provoz worktree v `~/.claude/standards/worktree.md`.
 
 ---
 

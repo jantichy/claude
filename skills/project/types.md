@@ -45,7 +45,7 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 | **aplikace** | platí aspoň jedno: data přežijí běh a někdo se o ně opírá; přistupuje k tomu víc lidí nebo rolí; tečou přes to peníze nebo osobní údaje; sahá to na cizí systém |
 | **nástroj** | nic z toho – skript, generátor, jednorázová migrace |
 
-**Při pochybnosti je to aplikace**, a řekni to uživateli nahlas; náklad na dodržení standardu je menší než na jeho dodatečné zavedení.
+**Při pochybnosti je to aplikace**, a řekni to uživateli nahlas; náklad na dodržení pravidel je menší než na jejich dodatečné zavedení.
 
 Do popisu typu v `CLAUDE.md` pak připoj jednu z vět:
 

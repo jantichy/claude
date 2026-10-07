@@ -18,7 +18,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 ## Co skill nedělá
 
 - **Není to kontrola kódu.** Na kód je `/review`.
-- **Není to kontrola proti standardům.** Na soulad s `~/Dev/context/*` je `/review`.
+- **Není to kontrola proti doménovým znalostem.** Na soulad s `~/Dev/context/*` je `/review`.
 - **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
 - **Nepíše zadání, návrh ani plán.** Sám nenavrhuje – jen posuzuje hotový dokument, ať ho napsal `/discovery`, `/specify`, nebo `/architect` –, a rozpad na úkoly nechává `/breakdown`.

@@ -110,7 +110,7 @@ Nastuduj cílovou doménu: strukturu souborů, jak se v ní člení obsah, jaký
 
 | Povaha souboru | Odpovídá na | Co se smí |
 |---|---|---|
-| **Metodika** – návod, princip, standard, checklist postupu | *jak se něco dělá* | Přeformulovat, přeskládat, přejmenovat sekce, sloučit i rozdělit. Přestavba **souborů** se potvrzuje – viz *Fáze 5* |
+| **Metodika** – návod, princip, pravidla, checklist postupu | *jak se něco dělá* | Přeformulovat, přeskládat, přejmenovat sekce, sloučit i rozdělit. Přestavba **souborů** se potvrzuje – viz *Fáze 5* |
 | **Fakta a hotové formulace** – profily osob a organizací, ceníky, medailonky, texty určené k použití | *co platí* | Jen doplnit a opravit nesprávné. **Nepřestavovat a nepřeformulovávat** to, co je správně – někdo to psal ručně a čte to očima |
 | **Doklad** – doslovný přetisk, citace, datovaný záznam události, evidence, log | *co se stalo, co kdo řekl* | **Nic.** Znalost se z něj jen odvozuje a zapisuje jinam |
 
@@ -216,7 +216,7 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 - **Poznatek jde na jedno místo.** Patří-li zdánlivě na dvě, jedno z nich je to pravé a druhé na ně odkazuje – `~/.claude/standards/rules.md`, *Single source of truth*.
 - **Zdůvodnění zapisuj spolu s pravidlem.** Bez „proč“ se pravidlo při první kolizi obejde.
 - **Ukliď po sobě.** Přejmenuješ-li sekci nebo přesuneš obsah, projdi odkazy na ně, souhrnné počty a přehledové tabulky – `~/.claude/standards/rules.md`, *Propagace změny*.
-- **Odliš jisté od tipnutého.** Co ve zdroji zaznělo s „tuším“ nebo „myslím“, **nezapisuj do báze jako fakt** – patří to do fronty úkolů jako věc k ověření. Mluvené slovo nejistotu nese často a v zápisu po ní nezůstane stopa. **Nemá-li báze frontu úkolů, nevyráběj místo ní sekci uvnitř metodiky** – to z nejistoty udělá součást standardu. Založ `todo.md` a řekni to.
+- **Odliš jisté od tipnutého.** Co ve zdroji zaznělo s „tuším“ nebo „myslím“, **nezapisuj do báze jako fakt** – patří to do fronty úkolů jako věc k ověření. Mluvené slovo nejistotu nese často a v zápisu po ní nezůstane stopa. **Nemá-li báze frontu úkolů, nevyráběj místo ní sekci uvnitř metodiky** – to z nejistoty udělá součást pravidel. Založ `todo.md` a řekni to.
 - **Vypusť identifikaci konkrétního případu.** Jména klientů a osob, měřicí identifikátory, URL a čísla z jedné zakázky do znalosti nepatří – zůstává **vzorec, který se opakuje**. Bez toho se z báze stane archiv zakázek.
 - **Zdroje se nedotýkej.** Je to cizí podklad a zůstává, kde je.
 
