@@ -452,7 +452,7 @@ class GlobalHookDeployment(unittest.TestCase):
     `core.hooksPath` je stav stroje, ne repozitáře: nová instalace systému, jiný
     počítač nebo přepsaný `~/.gitconfig` hook odpojí, a nic o tom nedá vědět –
     merge prostě zase začne procházet s defaultní zprávou. Je to přesně ten tichý
-    směr selhání, kvůli kterému `~/.claude/rules/rules.md`, *Ověřitelná kontrola místo
+    směr selhání, kvůli kterému `~/.claude/standards/rules.md`, *Ověřitelná kontrola místo
     dojmu*, žádá test k vynucovací vrstvě hned.
 
     Selhání tu není falešný poplach ani po čerstvém klonu: hook v tu chvíli
@@ -492,7 +492,7 @@ class VerifyHookIsRegistered(unittest.TestCase):
     Ztráta té registrace je nejtišší možné selhání celé vrstvy: nic nespadne,
     nic nezčervená, jen se od té chvíle nekontroluje nic a každé „hotovo“ stojí
     nad neověřeným stavem. Přesně ten směr selhání, kvůli kterému
-    `~/.claude/rules/rules.md`, *Ověřitelná kontrola místo dojmu*, žádá test
+    `~/.claude/standards/rules.md`, *Ověřitelná kontrola místo dojmu*, žádá test
     k vynucovací vrstvě hned, ne až se ukáže, že nefunguje.
 
     Hlídá se i timeout: `verify.sh` si sám dává `LIMIT` na krok a počítá
@@ -744,7 +744,7 @@ class BypassRegistry(unittest.TestCase):
     zamyslel, ne předstírat, že se to dá změřit.
     """
 
-    REGISTRY = ROOT / "rules" / "bypass.md"
+    REGISTRY = ROOT / "standards" / "bypass.md"
 
     #: Vrstvy, které se v registru záměrně neuvádějí – nic nevynucují.
     #: Prázdné od chvíle, kdy `iterm-notify.sh` nahradila vestavěná integrace
@@ -1215,7 +1215,7 @@ class PluginHooks(unittest.TestCase):
         poplach. Je to tedy lokální ochrana, ne záruka, a proto vedle ní stojí
         jmenovitá kontrola výš.
         """
-        registry = (ROOT / "rules" / "bypass.md").read_text(encoding="utf-8").lower()
+        registry = (ROOT / "standards" / "bypass.md").read_text(encoding="utf-8").lower()
         for name in self.enabled():
             short = name.split("@")[0]
             hooks = list((ROOT / "plugins").glob(f"*/*/{short}/*/hooks/hooks.json"))

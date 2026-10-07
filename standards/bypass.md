@@ -88,7 +88,7 @@ Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
 | Zavolat zakázaný příkaz přes interpret (`python3 -c`, `osascript`) | Nic – deny porovnává text příkazu | **accepted**, je to vlastnost mechanismu. Proto se na deny nespoléhá tam, kde má držet skutečná hranice (souhlas průběžné kontroly čte `/dev/tty`). |
-| Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `~/.claude/rules/rules.md`, *Commituj jmenované cesty, ne `-A`*. |
+| Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `~/.claude/standards/rules.md`, *Commituj jmenované cesty, ne `-A`*. |
 | Pustit session v režimu bypass (`--dangerously-skip-permissions`), který vypne deny i hooky na povolení | `disableBypassPermissionsMode: "disable"` v `settings.json` | hlídáno, `tests/test_hooks.py`; zámek se dá smazat z téhož souboru, ale změna `settings.json` jde přes diff a commit |
 | Nový destruktivní příkaz, na který vzor nemyslel | Nic | **accepted**: seznam je výčet, ne princip. Roste, když se něco objeví. |
 | Deny `Read(...)` na tajemství obejde čtení přes Bash (`. ./.env`, `grep`, `cat`) | `secret-guard.py`, viz sekce výš | hlídáno od 3. 10. 2026 |
@@ -131,7 +131,7 @@ Plugin smí přinést vlastní `hooks/hooks.json` a zapíná se **jedním řádk
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
-| Vkládá si do každé session instrukce, které se tvářejí jako nadřazené („you do not have a choice“) | Nic – je to text v kontextu, ne mechanismus | **accepted**: podle `~/.claude/rules/rules.md`, *Přednost pravidel*, je pobídka harnessu **poslední** v pořadí, tedy pod tímhle repozitářem i pod pokynem uživatele. Co ta vsuvka žádá, se posuzuje, nevykonává. |
+| Vkládá si do každé session instrukce, které se tvářejí jako nadřazené („you do not have a choice“) | Nic – je to text v kontextu, ne mechanismus | **accepted**: podle `~/.claude/standards/rules.md`, *Přednost pravidel*, je pobídka harnessu **poslední** v pořadí, tedy pod tímhle repozitářem i pod pokynem uživatele. Co ta vsuvka žádá, se posuzuje, nevykonává. |
 | Čte soubor z adresáře pluginu, který se samoaktualizuje | Nic – obsah se může změnit bez schválení | **accepted**: je to `cat` skillu z oficiálního marketplace a výstup jde jen do kontextu téhle session, ne ven ze stroje. Kdyby se plugin začal chovat jinak, projeví se to vsuvkou, která je v každé session vidět. |
 
 **Zrušený plugin sem nepatří, ale jeho odstranění má stopu.** `gitkraken-hooks` byl 27. 9. 2026 odstraněný úplně – ze `settings.json`, z marketplace i z cache –, protože se vrátil zapnutý potřetí (8. 9. vypršelo umlčení nálezu, 18. 9. vypnut po měření, 27. 9. zpátky). Proti čtvrtému kolu drží jmenovitá kontrola v `tests/test_hooks.py`; důvody a měření jsou v `decisions.md`.

@@ -12,7 +12,7 @@ Claude Code načítá na začátku každé session váš `CLAUDE.md` a všechno,
 - **Hledá duplicity mezi soubory, které se načítají spolu**, a rozhodne, kde má pravidlo zůstat – často to není smazat kopii, ale přesunout pravidlo tam, kde se jediné uplatní.
 - **Navrhne zrušit pravidla, která nic nerozhodují**, a hlavně ta, **kvůli kterým soubory bobtnají** – jinak se úklid do měsíce vrátí.
 - **Provede to napříč repozitáři** včetně přesměrování odkazů a ověří, že se po cestě neztratilo žádné pravidlo.
-- `/slim` projde to, co se načítá v aktuálním projektu; `/slim ~/.claude/rules/rules.md` se soustředí na jeden soubor.
+- `/slim` projde to, co se načítá v aktuálním projektu; `/slim ~/.claude/standards/rules.md` se soustředí na jeden soubor.
 
 ## Proč zrovna tenhle
 
@@ -32,7 +32,7 @@ Claude Code načítá na začátku každé session váš `CLAUDE.md` a všechno,
 
 | Soubor | Před | Po | Zásah |
 |---|---|---|---|
-| ~/.claude/rules/rules.md | 73 515 | 23 898 | pravidla o datech a delegaci na odkaz, doklady pryč |
+| ~/.claude/standards/rules.md | 73 515 | 23 898 | pravidla o datech a delegaci na odkaz, doklady pryč |
 | coding.md | 49 329 | 10 346 | návrh modelu do samostatného souboru |
 | worktree.md | 14 325 | 7 109 | komprese |
 | structure.md | 43 874 | 11 583 | produktové dokumenty, kola návrhu a průchody do souborů pro ty, kdo je píšou; zbytek na jádro |

@@ -1,8 +1,8 @@
 # Životní cyklus projektu
 
-Od nápadu k nasazené feature a k tomu, co o ní řekne provoz, vede jeden životní cyklus. Tenhle soubor drží **rozhraní jeho kroků**: co který krok dělá, co po něm platí, proč stojí zrovna v tom pořadí a co u něj rozhoduje o přeskočení. Obecné pravidlo *kdy se krok přeskakuje* drží `~/.claude/rules/rules.md` – platí i mimo cyklus, takže musí stát v paušálním kontextu. Vnitřek kroku – jeho fáze, šablony, zadání pro agenty – sem nepatří ani zmínkou; ten drží příslušný skill.
+Od nápadu k nasazené feature a k tomu, co o ní řekne provoz, vede jeden životní cyklus. Tenhle soubor drží **rozhraní jeho kroků**: co který krok dělá, co po něm platí, proč stojí zrovna v tom pořadí a co u něj rozhoduje o přeskočení. Obecné pravidlo *kdy se krok přeskakuje* drží `~/.claude/standards/rules.md` – platí i mimo cyklus, takže musí stát v paušálním kontextu. Vnitřek kroku – jeho fáze, šablony, zadání pro agenty – sem nepatří ani zmínkou; ten drží příslušný skill.
 
-**Neimportuje se paušálně** – načítá se v kroku cyklu nebo při rozhodování, který krok je na řadě; rámeček s pořadím a pravidlo o přeskakování drží `~/.claude/rules/rules.md`, *Životní cyklus projektu*.
+**Neimportuje se paušálně** – načítá se v kroku cyklu nebo při rozhodování, který krok je na řadě; rámeček s pořadím a pravidlo o přeskakování drží `~/.claude/standards/rules.md`, *Životní cyklus projektu*.
 
 **Proč to nestojí v jednotlivých skillech:** každý zná jen svoje sousedy, takže celé pořadí by v nich nikdo nenašel.
 
@@ -10,7 +10,7 @@ Od nápadu k nasazené feature a k tomu, co o ní řekne provoz, vede jeden živ
 
 ## Kroky cyklu a jejich uspořádání
 
-Rámeček s celým pořadím drží `~/.claude/rules/rules.md`, *Životní cyklus projektu*, a je zdrojem pravdy – tady stojí, **co ty kroky dělají**. Rozejde-li se jedno s druhým, platí `~/.claude/rules/rules.md`.
+Rámeček s celým pořadím drží `~/.claude/standards/rules.md`, *Životní cyklus projektu*, a je zdrojem pravdy – tady stojí, **co ty kroky dělají**. Rozejde-li se jedno s druhým, platí `~/.claude/standards/rules.md`.
 
 Uvnitř `/implement` běží u **každého úkolu** vlastní smyčka: test → kód → průběžná kontrola → commit. (Je to rozhraní kroku, ne jeho vnitřek: určuje, co po `/implement` platí o stavu repozitáře, a tím i s čím počítá `/review`.)
 
@@ -41,7 +41,7 @@ V životním cyklu smí stát **vlastní skilly a vestavěné skilly Claude Code
 - **`/consistency`** – audit vnitřní konzistence. Ptá se „sedí si projekt sám se sebou?“, což je jiná otázka než všichni specialisté v `/review`, a uklidí i to, co nastřílel `/review`. Výchozí rozsah jsou soubory dotčené větví a ty, které na ně odkazují; `full` projede celý projekt a pouští se zřídka – kompletní audit po každé feature znovu předkládá tentýž starý dluh, a umlčet ho je pak levnější než odklikat.
 - **`/attack`** – explorativní útok: aplikace se **spustí** a zkouší se rozbít vstupy, pořadím kroků, cizími identitami a nesmyslnými daty. Je to třetí druh záruky vedle deterministických kontrol a posouzení modelem, a ani jedna ho nenahrazuje – `/review` kód čte, tenhle ho spouští. **Stojí až tady schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost, kdežto `/review` je levný a běží po každé feature. Projekt bez spustitelné aplikace ho nemá.
 - **`/cleanup`** – **poslední krok každé mezery, ne bod na ose**. Ověří, že je všechno dohodnuté zapsané, a doplní, co průběžnému zápisu uniklo – včetně rozhodnutí z kontrolních kroků (co bylo odmítnuto a proč). Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání – otázku, na kterou se neodpovědělo, návrh, který nikdo nepřijal ani nezamítl –, a probere je s uživatelem, dokud je koho se ptát. Běží-li po něm ještě `/attack` nebo `/release`, ty si své zápisy dělají samy a na konci se `/cleanup` **pouští znovu** – je opakovatelný a druhý průchod slouží jako verifikace. **Po úspěšném zápisu nabídne merge do `main`**, stojí-li session na jiné než hlavní větvi; sám ho neprovádí – volba je zkratka k volání `/merge`. Nabízí ho i před `/attack` – útok pak běží nad `main` a nasazuje se až vědomým povýšením do `production`. **U projektu, který nasazuje přímo z `main`, merge nenabízí**, protože by to bylo nasazení a to patří `/release`.
-- **`/merge`** – dokončení větve: sloučení do hlavní větve a úklid po ní. **Stojí hned za `/cleanup`**, který ho nabízí; není jeho součástí, ale navazujícím krokem. **Jádrem je pořadí:** spojený stav vzniká a ověřuje se ve větvi, ne v hlavní větvi, takže do ní jde jen to, co prošlo *Kontraktem příkazů*. **Nemerguje sám od sebe** – `~/.claude/rules/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*. **U projektu, který nasazuje přímo z hlavní větve, se nepouští vůbec**, protože tam je merge nasazení a patří `/release`. Odpadá celý u projektu, který větve nepoužívá.
+- **`/merge`** – dokončení větve: sloučení do hlavní větve a úklid po ní. **Stojí hned za `/cleanup`**, který ho nabízí; není jeho součástí, ale navazujícím krokem. **Jádrem je pořadí:** spojený stav vzniká a ověřuje se ve větvi, ne v hlavní větvi, takže do ní jde jen to, co prošlo *Kontraktem příkazů*. **Nemerguje sám od sebe** – `~/.claude/standards/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*. **U projektu, který nasazuje přímo z hlavní větve, se nepouští vůbec**, protože tam je merge nasazení a patří `/release`. Odpadá celý u projektu, který větve nepoužívá.
 
 ### Co smí stát v které mezeře
 
@@ -115,7 +115,7 @@ Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen d
 
 ## Záznam průchodu v `done.md`
 
-**Sekce `## Průchody životním cyklem`** v `done.md` drží po jednom řádku za dokončený běh těch kroků *Životního cyklu projektu* (`~/.claude/rules/rules.md`), **které mají svého čtenáře**. Zapisují si ho skilly samy, ne člověk:
+**Sekce `## Průchody životním cyklem`** v `done.md` drží po jednom řádku za dokončený běh těch kroků *Životního cyklu projektu* (`~/.claude/standards/rules.md`), **které mají svého čtenáře**. Zapisují si ho skilly samy, ne člověk:
 
 - **`/review` a `/attack`** – čte je `/release` (proběhly nad tímhle rozsahem?), příští běh téhož skillu (rozsah a co z nálezů zbylo) a člověk; proto se zapisují i tam, kam se nenasazuje. **Hash je tu kvůli `/release`:** o dny později z paměti nepozná, jestli kontrola běžela nad *tímhle*.
 - **`/oponent`** – čte ho příští `/oponent`, který bez seznamu hledisek nepozná, s čím srovnávat počty nálezů.
@@ -130,7 +130,7 @@ Prakticky to znamená: **v CI a u spolupracovníka platí z celé soustavy jen d
 - **2026-09-02** · `/review` · `ff0f765` · změny na větvi (14 souborů) · 12 nálezů (3 opraveno, 7 odloženo, 2 won't fix)
 ```
 
-Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem, ne z kontextu (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem, ne z kontextu (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 **Běžel-li krok nad jiným repozitářem, než ve kterém záznam leží, uveď u hashe i zdroj:** `` `~/.claude@574dade` ``. Nastává to tam, kde repozitář bez vlastního `done.md` odkládá záznamy do sousedního – dnes `~/.claude` do `~/Dev/context`. **Holý hash z cizího repozitáře je horší než žádný:** vypadá jako zdejší, takže ho příští běh hledá ve špatném stromu a `git log <hash>..HEAD` tam buď selže, nebo tiše vrátí něco jiného.
 

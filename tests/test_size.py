@@ -1,10 +1,10 @@
 """Hlídá velikost souborů, které se načítají do každé session.
 
-`~/.claude/rules/rules.md` za dvacet dní zdvojnásobil velikost a spolu s doménovými znalostmi
+`~/.claude/standards/rules.md` za dvacet dní zdvojnásobil velikost a spolu s doménovými znalostmi
 přetáhl limit, nad kterým Claude Code varuje, že instrukce zabírají příliš
 kontextu. Pravidlo v textu růst nezastavilo, proto je mez tady. Spadne-li test,
 uvolni místo nebo pravidlo přesuň do podmíněně načítaného souboru
-(`.claude/CLAUDE.md`, *Co do `~/.claude/rules/rules.md` nepatří*); mez se nezvedá mimochodem.
+(`.claude/CLAUDE.md`, *Co do `~/.claude/standards/rules.md` nepatří*); mez se nezvedá mimochodem.
 """
 
 import unittest
@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RULES_LIMIT = 35_000
 
 #: Soubory, které jdou do každé session: uživatelský `CLAUDE.md` a jeho `@` importy.
-ALWAYS_LOADED = ["CLAUDE.md", "rules/rules.md", "rules/ptydepe.md"]
+ALWAYS_LOADED = ["CLAUDE.md", "standards/rules.md", "standards/ptydepe.md"]
 ALWAYS_LOADED_LIMIT = 50_000
 
 
@@ -26,12 +26,12 @@ def chars(name: str) -> int:
 
 class InstructionSize(unittest.TestCase):
     def test_rules_within_limit(self):
-        """`~/.claude/rules/rules.md` nesmí přerůst mez."""
-        size = chars("rules/rules.md")
+        """`~/.claude/standards/rules.md` nesmí přerůst mez."""
+        size = chars("standards/rules.md")
         self.assertLessEqual(
             size,
             RULES_LIMIT,
-            f"~/.claude/rules/rules.md má {size} znaků, mez je {RULES_LIMIT}. Zkrať ho nebo přesuň "
+            f"~/.claude/standards/rules.md má {size} znaků, mez je {RULES_LIMIT}. Zkrať ho nebo přesuň "
             "pravidlo do podmíněně načítaného souboru.",
         )
 

@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 
 Proveď audit vnitřní konzistence projektu. Cíl: najít vše, co si v projektu vzájemně odporuje, je redundantní, špatně zatříděné nebo nekonsistentní – a opravit to spolu s uživatelem.
 
-V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to kontrolní krok, ne bod na ose: stojí v mezeře před `/breakdownem` a v mezeře před `/release`, pokaždé až za `/review` – uklízí i to, co nastřílel on. Nečeká na pozici, ale na to, až se v projektu nasbírá dost změn.
+V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní krok, ne bod na ose: stojí v mezeře před `/breakdownem` a v mezeře před `/release`, pokaždé až za `/review` – uklízí i to, co nastřílel on. Nečeká na pozici, ale na to, až se v projektu nasbírá dost změn.
 
 ## Co skill nedělá
 
@@ -26,7 +26,7 @@ V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to kontrolní krok
 
 **Deterministickou vrstvu skill nepíše sám** (*Spusť nástroje, které předchozí kroky životního cyklu nedělají*): mrtvý kód a nepoužité závislosti měří `knip`, odkazy a kotvy v Markdownu `~/.claude/skills/links.py`, zbytek grep a `git blame`. **Který nástroj to je, je implementační detail** – vymění se, jakmile bude lepší, a na tom, jak se `/consistency` volá a co vrací, se tím nezmění nic.
 
-**Závazné je proti tomu tohle a tiše se to změnit nesmí:** co jde změřit nástrojem, nehledá agent čtením (`~/.claude/rules/delegation.md`, *Model a effort podle úkolu*, pravidlo nula); nespuštěná kontrola se vypisuje jako nespuštěná, nikdy jako nula nálezů; a nálezy z nástrojů nesou tag `toolchain` a neprocházejí posouzením, protože nástroj nehalucinuje.
+**Závazné je proti tomu tohle a tiše se to změnit nesmí:** co jde změřit nástrojem, nehledá agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula); nespuštěná kontrola se vypisuje jako nespuštěná, nikdy jako nula nálezů; a nálezy z nástrojů nesou tag `toolchain` a neprocházejí posouzením, protože nástroj nehalucinuje.
 
 **`links.py` leží ve `skills/`, ne v adresáři skillu, a je to záměr.** Volá ho i `/cleanup` a skript uvnitř cizího skillu by se volat nesměl (`~/.claude/skills/skills.md`, *Číslování a názvosloví*). Kdo si nainstaluje `/consistency` bez `/cleanup`, dostane ho stejně.
 
@@ -82,9 +82,9 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 ### 0.4 Spusť nástroje, které předchozí kroky životního cyklu nedělají
 
-**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/rules/lifecycle.md`, *Povolená opakování*.
+**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/standards/lifecycle.md`, *Povolená opakování*.
 
-Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/rules/delegation.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
+Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
 
 | Co | Čím | Kdy má smysl |
 |---|---|---|
@@ -97,7 +97,7 @@ Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se s
 
 **Běžela-li nad týmž stromem CI, přečti její výsledek** místo opakovaného spouštění – podmínky jsou tytéž jako v `/review`, *Deterministická vrstva*: `headSha` sedí s `HEAD` **a** `git status --porcelain` je prázdné. Nesedí-li obojí, pusť nástroje lokálně a řekni, že se CI nepoužila.
 
-**Nemá-li projekt, čím to spustit, krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo, položku po položce. Nespuštěná kontrola se nikdy nevypisuje jako nula nálezů: tři přeskočené kroky vypsané jako tři nuly čte uživatel jako tři čisté výsledky. U obsahového či znalostního projektu je normální, že se přeskočí skoro všechno – **kromě kontroly odkazů, která tam funguje nejlépe z celé tabulky**: rozejití odkazu na přejmenovanou sekci je nejčastější vada textového repozitáře a zároveň ta, kterou agent nejspolehlivěji přehlédne, protože kotva uhodnutá z nadpisu vypadá správně (`~/.claude/rules/rules.md`, *Při nejistotě se zeptej*). Audit v dalších fázích běží stejně, jen bez zbytku téhle vrstvy.
+**Nemá-li projekt, čím to spustit, krok přeskoč a řekni to** – i s tím, co se tím nezkontrolovalo, položku po položce. Nespuštěná kontrola se nikdy nevypisuje jako nula nálezů: tři přeskočené kroky vypsané jako tři nuly čte uživatel jako tři čisté výsledky. U obsahového či znalostního projektu je normální, že se přeskočí skoro všechno – **kromě kontroly odkazů, která tam funguje nejlépe z celé tabulky**: rozejití odkazu na přejmenovanou sekci je nejčastější vada textového repozitáře a zároveň ta, kterou agent nejspolehlivěji přehlédne, protože kotva uhodnutá z nadpisu vypadá správně (`~/.claude/standards/rules.md`, *Při nejistotě se zeptej*). Audit v dalších fázích běží stejně, jen bez zbytku téhle vrstvy.
 
 Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí tagem `[toolchain]` a **neprocházejí posouzením** – nástroj nehalucinuje.
 
@@ -105,13 +105,13 @@ Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí ta
 
 ## Fáze 1 – Průzkum projektu
 
-**Agent je sběr, ne posouzení: typ `reader`, výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
+**Agent je sběr, ne posouzení: typ `reader`, výchozí model, `low`** (Volba modelu a effortu podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*.) Prochází soubory podle vyjmenovaných kritérií a vrací nálezy do JSON – úzké zadání, kde `low` stačí. Úsudek, co s nálezem, dělá hlavní session ve Fázi 2, kde se rozhoduje o mechanickém versus sporném.
 
 **Škálu závažnosti drží `~/.claude/skills/severity.md`** a je společná se všemi skilly, které hlásí nálezy. Zadání níž si stupně opisuje schválně – je to text pro agenta bez kontextu session, kde je odkaz do nenačteného souboru mrtvý (`severity.md`, *Kdo ji používá*, výjimka pro zadání subagentů). Doménové čtení stupňů v zadání obecnou definici **zpřesňuje, nenahrazuje**.
 
 ### Nejdřív inventura rozsahu, pak agent
 
-**Vyrob si seznam souborů v rozsahu příkazem a zapamatuj si jeho délku** – u `branch` z diffu proti hlavní větvi plus soubory, které na ně odkazují, u `full` z `git ls-files`. **Ten počet je to, proti čemu se v *Přehledu* vykazuje pokrytí**, takže ho neodhaduj (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+**Vyrob si seznam souborů v rozsahu příkazem a zapamatuj si jeho délku** – u `branch` z diffu proti hlavní větvi plus soubory, které na ně odkazují, u `full` z `git ls-files`. **Ten počet je to, proti čemu se v *Přehledu* vykazuje pokrytí**, takže ho neodhaduj (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 **Proč to tady je:** prázdné pole nálezů vypadá stejně, ať agent prošel dvě stě souborů, nebo dvanáct – a „prošel jsem to systematicky“ je tvrzení, které nemá čím být doložené. Je to táž vada, kterou u `/cleanup` vyřešil měřený poměr odškrtnutých promptů; zdůvodnění drží `~/.claude/docs/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*.
 
@@ -143,7 +143,7 @@ STŘEDNÍ (technický dluh):
 - Behaviorální konzistence: stejný typ chyby řešený různě (throw vs. Result vs. silent vs. null); různé loggery/úrovně/formáty pro stejný typ události; podobné endpointy validují vstup jen někdy; auth/authz mechanismy se liší napříč podobnými endpointy bez důvodu; data fetching / state management řeší stejný use-case různě (lokální state vs. global store, fetch vs. React Query vs. SWR)
 - Špatně zatříděné soubory (utilita v komponentách, komponenta v utils/)
 - README nebo dokumentace popisující funkce, které neexistují nebo fungují jinak
-- Obsah ve špatném souboru podle cílového čtenáře (tohle je zatřídění, ne soulad s předpisem – proto to sem patří, i když se opírá o `structure.md`): `README.md` je popis projektu **pro člověka**, takže normativní pokyny pro Clauda (pravidla práce v repozitáři, konvence, povinnost něco udržovat) v něm nemají co dělat ani odkazem – patří do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md`. Definice je v `~/.claude/rules/structure.md`
+- Obsah ve špatném souboru podle cílového čtenáře (tohle je zatřídění, ne soulad s předpisem – proto to sem patří, i když se opírá o `structure.md`): `README.md` je popis projektu **pro člověka**, takže normativní pokyny pro Clauda (pravidla práce v repozitáři, konvence, povinnost něco udržovat) v něm nemají co dělat ani odkazem – patří do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md`. Definice je v `~/.claude/standards/structure.md`
 - Zapomenuté zbytky po odstranění: když se v minulosti odstraňoval kód, feature nebo komponenta, mohly na dalších místech zůstat pozapomenuté části – importy smazaného modulu, konfigurace pro zrušenou funkci, typy/interfacy pro odstraněnou entitu, registrace odebrané route nebo pluginu, zmínky v dokumentaci nebo komentářích, testy odstraněné funkcionality, env proměnné pro mrtvou feature, reference v package.json apod.
 - i18n a UI texty: stejný UI koncept různě pojmenovaný napříč obrazovkami ("Smazat" vs "Odstranit" vs "Vymazat"); nesystematický mix jazyků v UI textech
 - Zastarání: feature flagy s trvale stejnou hodnotou na všech check-pointech (ready to inline/remove); pozastavené migrace (částečná DB migrace bez follow-upu)
@@ -202,7 +202,7 @@ Nenašel-li jsi v prošlém rozsahu nic, vrať prázdné `findings` – s vypln�
 
 ## Fáze 2 – Zpracování výsledků
 
-**O nálezech mluv obsahem, ne značkou z výstupu agenta.** Pořadová čísla a zkratky, pod kterými se nálezy vracejí, jsou interní – uživatel je nikdy neviděl, takže „N1 je širší, než agent hlásil“ mu neřekne nic. Napiš, čeho se to týká: *„Chybějící sekce Rizika není jen v `discovery.md` – chybí ve všech třech dokumentech.“* (`~/.claude/rules/rules.md`, *Interní značky ven nepatří*.)
+**O nálezech mluv obsahem, ne značkou z výstupu agenta.** Pořadová čísla a zkratky, pod kterými se nálezy vracejí, jsou interní – uživatel je nikdy neviděl, takže „N1 je širší, než agent hlásil“ mu neřekne nic. Napiš, čeho se to týká: *„Chybějící sekce Rizika není jen v `discovery.md` – chybí ve všech třech dokumentech.“* (`~/.claude/standards/rules.md`, *Interní značky ven nepatří*.)
 
 **Nejdřív zkontroluj pokrytí, teprve pak nálezy.** Chybí-li `covered`, je prázdné, nebo v něm sedí jen opsaný seznam ze zadání bez jediného nálezu, **není to čistý výsledek, ale selhání agenta** – pusť ho znovu a nepovede-li se to podruhé, řekni nahlas, že audit pokrytí nedoložil, a nálezy předkládej jako neúplné. **Prázdné `findings` samo o sobě čisto neznamená:** u `/cleanup` se přesně takový výsledek bral za úspěch i za selhání podle situace, a stálo to třetí běh čtenářů navíc.
 
@@ -244,7 +244,7 @@ Zobraz uživateli přehled před tím, než začneš procházet problémy:
 - **Zbývá na rozhodnutí:** M – ty projdeme spolu od nejzávažnějších; u každého navrhnu varianty a zeptám se, kterou zvolit.
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
 Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
@@ -261,7 +261,7 @@ Mechanické **i jednoznačné** nálezy (viz Fáze 2) oprav **rovnou, bez ptaní
    - 🔵 [název] – soubor:řádek – [co konkrétně změněno]
    ```
 
-   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 3. Commit dle autocommit nastavení projektu. Mechanické opravy commituj **jedním commitem** dohromady, ne po jedné; jednoznačné, které měnily strukturu, po tematických celcích, ať je v `git blame` vidět důvod.
 
 Pokud uživatel na některou z těchto oprav zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
@@ -288,7 +288,7 @@ se neuvádějí, dokud se nezmění kód, kterého se týkají.
 
 **Umlčení expiruje změnou kódu, stejně jako u `## Review`** – mechaniku i důvod drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*, a platí tu beze změny. Před aplikací filtru tedy u každého záznamu ověř `git log --oneline <recorded_hash>..HEAD -- <location>`; neprázdný výstup znamená, že se položka předloží znovu i s původním odůvodněním. Hash vyrob `git rev-parse --short HEAD`.
 
-Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 **Verifikace po opravě.** Po každé odsouhlasené opravě platí bod 1 z *Fáze 4* – příkazy z *Kontraktu příkazů*, chybějící krok přeskočit nahlas, u projektu bez kontraktu ověřit aspoň čtením, že cíl opravovaného odkazu existuje.
 
@@ -296,7 +296,7 @@ Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/rules/rules.
 
 ## Fáze 6 – Závěrečné shrnutí
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/rules/lifecycle.md`, *Záznam průchodu v `done.md`*). Čtenářem je **příští `/consistency`**, který jinak nepozná, co už bylo auditované a s jakým vědomě zúženým rozsahem – a projede totéž znovu.
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*). Čtenářem je **příští `/consistency`**, který jinak nepozná, co už bylo auditované a s jakým vědomě zúženým rozsahem – a projede totéž znovu.
 
 ```
 - **YYYY-MM-DD** · `/consistency` · `<short HEAD>` · <rozsah> · pokrytí N/M · N nálezů (X opraveno mechanicky, Y po odsouhlasení, Z won't fix)
@@ -319,7 +319,7 @@ Po projití všech problémů zobraz:
 [Pokud jsou odložené: seznam odložených s jejich popisy]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
 **Byla-li některá oprava rozsáhlá** – přibyl nový blok textu, přepsala se celá sekce, změnilo se víc souborů naráz –, **řekni uživateli, že se vyplatí pustit audit znovu.** Čerstvě napsaný text má vad nejvíc. Opakované průchody nad `~/.claude` ukázaly, že **většina nálezů každého kola vznikla opravami z kola předchozího**: druhý průchod 7 z 8, třetí 8 z 10. Po drobných opravách to naopak smysl nemá – další běh by hledal hlavně sám sebe. Doklad a čísla jsou v `~/Dev/context/decisions.md`, *Čtyři průchody `/consistency` za sebou a co z toho plyne*.
 

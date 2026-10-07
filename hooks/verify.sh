@@ -36,7 +36,7 @@ set -uo pipefail
 #
 # Bylo 60 s, dokud se neukázalo, že to nestačí na stroji, kde běží víc session
 # naráz. Sada testů tohohle repozitáře trvá 18 s nezatíženě a 79 s při load 37,
-# a několik session nad jedním projektem je podle ~/.claude/rules/worktree.md normální
+# a několik session nad jedním projektem je podle ~/.claude/standards/worktree.md normální
 # provoz, ne výjimka. Kontrola, která padá na zatížení místo na chybě, se začne
 # obcházet – a to je horší směr selhání než pomalý krok.
 LIMIT=90

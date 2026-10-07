@@ -1,6 +1,6 @@
 # Zadání pro agenty
 
-Texty, které `/consolidate` předává subagentům. Agent běží **bez kontextu session**, takže si pravidla nese opsaná celá – odkaz do souboru, který nemá načtený, je mrtvý (`~/.claude/rules/rules.md`, *Single source of truth*, výjimka pro subagenty).
+Texty, které `/consolidate` předává subagentům. Agent běží **bez kontextu session**, takže si pravidla nese opsaná celá – odkaz do souboru, který nemá načtený, je mrtvý (`~/.claude/standards/rules.md`, *Single source of truth*, výjimka pro subagenty).
 
 ## Obsah
 

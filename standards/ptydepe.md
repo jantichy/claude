@@ -2,7 +2,7 @@
 
 Termíny, na kterých jsme se výslovně dohodli. Řeší jedinou vadu: **beru za termín, co byl jen náhodné slovo v konverzaci**, a pak ho používám napříč projekty, jako by byl zavedený. Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo nerozumí, ale všichni předstírají, že ano. Spravuje ho skill `/ptydepe`.
 
-Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro jednu věc* v `~/.claude/rules/rules.md`. Doménové glosáře projektů (`docs/glossary.md`) tím nejsou dotčené – tady je jen to, co platí **napříč** projekty.
+Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro jednu věc* v `~/.claude/standards/rules.md`. Doménové glosáře projektů (`docs/glossary.md`) tím nejsou dotčené – tady je jen to, co platí **napříč** projekty.
 
 ## Jak se používá
 

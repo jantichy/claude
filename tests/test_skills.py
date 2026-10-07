@@ -102,7 +102,7 @@ class SkillFrontmatter(unittest.TestCase):
     def test_usage_line_has_uniform_form(self):
         """Kde se spotřeba agentů vypisuje, musí mít všude týž tvar.
 
-        `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*, žádá „kolik jich
+        `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, žádá „kolik jich
         bylo, na jakém modelu a effortu“ jako jednu trojici. Pravidlo vzniklo
         14. 9. 2026 a zapsalo se nejdřív do dvou skillů, které byly po ruce –
         navíc každý jinak: jeden uváděl model a effort, druhý ne. Je to
@@ -304,9 +304,9 @@ def _bad_links(skill, pattern, own: set, foreign: set) -> list:
             window = row[max(0, m.start() - 60) : m.start()]
             if "SKILL.md" in window or any(f"/{j}" in window for j in foreign):
                 continue  # odkaz do cizího skillu
-            # „krok 8 životního cyklu“ v ~/.claude/rules/rules.md není vlastní fáze, ale krok
+            # „krok 8 životního cyklu“ v ~/.claude/standards/rules.md není vlastní fáze, ale krok
             # *Životního cyklu projektu* – ty se číslují nezávisle
-            if "~/.claude/rules/rules.md" in window or "Životní cyklus" in window:
+            if "~/.claude/standards/rules.md" in window or "Životní cyklus" in window:
                 continue
             if re.match(r"\s*os[ay]\b", row[m.end() : m.end() + 8]):
                 continue
@@ -509,7 +509,7 @@ class PrescribedToolsAreAllowed(unittest.TestCase):
         )
 
 
-#: Odkazy se píšou domovskou cestou (`~/.claude/rules/rules.md`), ale míří na dvě různá
+#: Odkazy se píšou domovskou cestou (`~/.claude/standards/rules.md`), ale míří na dvě různá
 #: místa: do **tohohle repozitáře**, nebo do privátní knowledge base mimo něj.
 LINK_PATTERN = r"`(~/(?:\.claude|Dev)/[^`\s]+\.(?:md|sh|json|py))`"
 
@@ -543,13 +543,13 @@ def link_target(ref: str):
 
 
 class SkillLinks(unittest.TestCase):
-    # Kontroluje se i to, co skilly samy odkazují – ~/.claude/rules/rules.md a CLAUDE.md nesou
+    # Kontroluje se i to, co skilly samy odkazují – ~/.claude/standards/rules.md a CLAUDE.md nesou
     # nejvíc odkazů ze všech a netestovaly se vůbec. Projektový .claude/CLAUDE.md
     # nese kontrakt příkazů a odkazy na sekce v jiném repozitáři, takže patří sem taky.
     # `skills.md` nese po zavedení normy nejvíc odkazů na sekce ze všech souborů
     # a byl jediný mimo kontrolu – uříznutý odkaz na sekci v něm prošel všemi testy.
     REFERRING = SKILLS + [
-        ROOT / "rules" / "rules.md",
+        ROOT / "standards" / "rules.md",
         ROOT / "CLAUDE.md",
         ROOT / "README.md",
         ROOT / ".claude/CLAUDE.md",
@@ -618,7 +618,7 @@ class SkillLinks(unittest.TestCase):
         """
         # Odkaz na sekci se pozná podle tvaru `soubor`, *Sekce* – tedy čárka hned za
         # zpětným apostrofem. Volnější vzor bral i běžné zvýraznění v okolní
-        # větě ("`~/.claude/rules/rules.md`) stojí **před `/release`**") a hlásil samé nesmysly.
+        # větě ("`~/.claude/standards/rules.md`) stojí **před `/release`**") a hlásil samé nesmysly.
         pattern = re.compile(ANCHOR_PATTERN)
         for file in self.REFERRING:
             with self.subTest(
@@ -952,8 +952,8 @@ class CoreParts(unittest.TestCase):
         Soubor se pak nenačte, ale `CLAUDE.md` dál vypadá, jako by ta pravidla
         platila – pozná se to jedině tak, že se modelu zeptáš, co má v kontextu.
 
-        Přesně takhle byl rozbitý uživatelský `~/.claude/CLAUDE.md`: ~/.claude/rules/rules.md,
-        structure.md i ptydepe.md v něm byly zapsané jako `` `@~/.claude/rules/rules.md` ``
+        Přesně takhle byl rozbitý uživatelský `~/.claude/CLAUDE.md`: ~/.claude/standards/rules.md,
+        structure.md i ptydepe.md v něm byly zapsané jako `` `@~/.claude/standards/rules.md` ``
         a nenačetl je nikdy nikdo. Nejdražší tichá vada, jaká tu byla – tři
         soubory označené za závazná pravidla, které do session nikdy nedošly.
 
@@ -1029,7 +1029,7 @@ class CoreParts(unittest.TestCase):
     def test_date_is_produced_by_command(self):
         """Zapamatované datum se tiše rozejde se skutečností a vypadá správně.
 
-        `~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit
+        `~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit
         příkazem*. Skill, který někam zapisuje datovaný záznam, musí ten příkaz
         jmenovat, ne popisovat, co má být uvnitř.
         """
@@ -1080,21 +1080,21 @@ def without_code_blocks(path: Path):
 
 
 def _lifecycle_block() -> str:
-    """Blok s životním cyklem z `~/.claude/rules/rules.md`.
+    """Blok s životním cyklem z `~/.claude/standards/rules.md`.
 
     Obě funkce níž ho potřebují a měly to zdvojené. Dvě kopie téhož parsování se
     v hraničním případě rozejdou – a rozešly se: jedna četla kroky bez ohledu na
     tvar šipky, druhá jen z řádků s doslovným „→“, takže po záměně za `->` viděla
     každá jiný počet kroků a nic to nehlásilo.
     """
-    text = (ROOT / "rules" / "rules.md").read_text(encoding="utf-8")
+    text = (ROOT / "standards" / "rules.md").read_text(encoding="utf-8")
     i = text.index("### Životní cyklus projektu")
     block = text[text.index("```", i) + 3 :]
     return block[: block.index("```")]
 
 
 def cycle_from_rules() -> set:
-    """Kroky životního cyklu se čtou z `~/.claude/rules/rules.md`, ne z konstanty v testu.
+    """Kroky životního cyklu se čtou z `~/.claude/standards/rules.md`, ne z konstanty v testu.
 
     Ručně opsaný seznam je druhá kopie pravdy: přejmenovaný nebo přidaný krok by
     testem prošel, a naopak zmizelý krok by ho shodil z jiného důvodu, než je ten
@@ -1107,7 +1107,7 @@ def cycle_with_order() -> dict:
     """Kroky životního cyklu i s vrstvou a pořadím, ne jen jako množina.
 
     `cycle_from_rules()` vrací set, takže na tvrzení „je to třetí krok osy“
-    nestačí. Zdrojem je týž blok v `~/.claude/rules/rules.md`, jen se z něj čte i pořadí řádků.
+    nestačí. Zdrojem je týž blok v `~/.claude/standards/rules.md`, jen se z něj čte i pořadí řádků.
 
     Vrací {skill: (vrstva, index v rámci vrstvy od 1, předchůdce, následník)}.
     **Sousedy i pořadí má jen osa.** Kontrolní kroky nejsou řada, ale vrstva
@@ -1163,7 +1163,7 @@ def cycle_missing_skills() -> set:
     a bude o hotovém skillu tvrdit, že neexistuje. Čte se proto odtamtud
     a `test_cycle_was_read` ho porovná se skutečností v obou směrech.
     """
-    text = (ROOT / "rules" / "lifecycle.md").read_text(encoding="utf-8")
+    text = (ROOT / "standards" / "lifecycle.md").read_text(encoding="utf-8")
     declared = set()
     for row in text.splitlines():
         m = re.search(r"zatím neexistuj\w* jako skill", row)
@@ -1174,7 +1174,7 @@ def cycle_missing_skills() -> set:
 
 #: Řetěz tří a víc kroků životního cyklu spojených šipkami. Dva sousedi jsou
 #: popis vazby („navazuje na `/specify`, předává `/breakdown`“), tři a víc už
-#: je opsané pořadí celého cyklu – tedy druhý zdroj pravdy vedle `~/.claude/rules/rules.md`.
+#: je opsané pořadí celého cyklu – tedy druhý zdroj pravdy vedle `~/.claude/standards/rules.md`.
 #: Řetěz kroků: šipka, nebo souvislý text. **První spojka musí být silná** (šipka nebo
 #: „pak“) a teprve druhá smí být slabá („a“, čárka) – vzorec „A, pak B a C“.
 #: Samotné „a“ mezi dvěma skilly je totiž běžný výčet, ne posloupnost:
@@ -1399,7 +1399,7 @@ class CommandContract(unittest.TestCase):
 def root_readme_defects(text: str) -> list:
     """Vrátí sekce kořenového README, které mají víc než jeden odstavec.
 
-    Norma je `~/.claude/rules/structure.md`, *`README.md`*: každá součást
+    Norma je `~/.claude/standards/structure.md`, *`README.md`*: každá součást
     představená vlastním nadpisem dostane právě jeden odstavec. Mez je
     mechanická, takže ji nemá hledat model čtením – a dřív ji neměřil nikdo,
     takže pět sekcí nabralo dva až čtyři odstavce s příběhem vzniku,
@@ -1440,11 +1440,11 @@ class Structure(unittest.TestCase):
     CYCLE = cycle_from_rules()
 
     def test_cycle_was_read(self):
-        """Kdyby se blok v ~/.claude/rules/rules.md přeformátoval, testy životního cyklu by tiše zmlkly."""
+        """Kdyby se blok v ~/.claude/standards/rules.md přeformátoval, testy životního cyklu by tiše zmlkly."""
         self.assertGreaterEqual(
             len(self.CYCLE),
             8,
-            f"z ~/.claude/rules/rules.md se přečetlo jen {len(self.CYCLE)} kroků životního cyklu: {sorted(self.CYCLE)}",
+            f"z ~/.claude/standards/rules.md se přečetlo jen {len(self.CYCLE)} kroků životního cyklu: {sorted(self.CYCLE)}",
         )
         # Obě funkce čtou týž blok. Rozejdou-li se, jedna z nich přestala vidět
         # celý cyklus – a volný práh výš to sám neodhalí, protože výpadek dvou
@@ -1452,7 +1452,7 @@ class Structure(unittest.TestCase):
         self.assertEqual(
             self.CYCLE,
             set(cycle_with_order()),
-            "cyklus_z_rules() a cyklus_s_poradim() čtou z ~/.claude/rules/rules.md jinou množinu kroků",
+            "cyklus_z_rules() a cyklus_s_poradim() čtou z ~/.claude/standards/rules.md jinou množinu kroků",
         )
         # Krok bez skillu se nezakazuje, ale musí být přiznaný: `lifecycle.md`
         # ho jmenuje a slibuje, že odstavec zmizí, jakmile skill vznikne.
@@ -1467,16 +1467,16 @@ class Structure(unittest.TestCase):
         )
 
     def test_lifecycle_describes_same_steps_as_rules(self):
-        """Rozhraní kroků se odstěhovalo z `~/.claude/rules/rules.md` do `rules/lifecycle.md`.
+        """Rozhraní kroků se odstěhovalo z `~/.claude/standards/rules.md` do `standards/lifecycle.md`.
 
-        Rámeček s pořadím zůstal v `~/.claude/rules/rules.md` a je zdrojem pravdy; výklad kroků
+        Rámeček s pořadím zůstal v `~/.claude/standards/rules.md` a je zdrojem pravdy; výklad kroků
         stojí v `lifecycle.md`. Jsou to dva soubory o téže věci, takže se rozejdou
         přesně tím způsobem, který nikdo nezpozoruje: přibude krok do rámečku a
         nikdo mu nedopíše, co dělá – nebo naopak zmizí ze seznamu a rámeček ho
         dál slibuje. Ani jedno není z jednoho souboru vidět.
         """
-        lifecycle = ROOT / "rules" / "lifecycle.md"
-        self.assertTrue(lifecycle.exists(), "chybí rules/lifecycle.md")
+        lifecycle = ROOT / "standards" / "lifecycle.md"
+        self.assertTrue(lifecycle.exists(), "chybí standards/lifecycle.md")
         text = lifecycle.read_text(encoding="utf-8")
         # Krok je vyložený tehdy, když ho jmenuje odrážka: `- **`/project`**`.
         # Číslovaná řada to být nemůže – cyklus má dvě vrstvy a kontrolní kroky
@@ -1485,7 +1485,7 @@ class Structure(unittest.TestCase):
         self.assertEqual(
             explained,
             self.CYCLE,
-            "lifecycle.md a rámeček v ~/.claude/rules/rules.md jmenují jiné kroky; "
+            "lifecycle.md a rámeček v ~/.claude/standards/rules.md jmenují jiné kroky; "
             f"jen v LIFECYCLE: {sorted(explained - self.CYCLE)}, "
             f"jen v RULES: {sorted(self.CYCLE - explained)}",
         )
@@ -1495,8 +1495,8 @@ class Structure(unittest.TestCase):
     # a mířila do každé session v tomhle repozitáři, i tam, kde se žádného skillu
     # nedotkneme.
     UNIMPORTED = {
-        "~/.claude/rules/structure.md": "CLAUDE.md",
-        "~/.claude/rules/lifecycle.md": "CLAUDE.md",
+        "~/.claude/standards/structure.md": "CLAUDE.md",
+        "~/.claude/standards/lifecycle.md": "CLAUDE.md",
         "~/.claude/skills/skills.md": ".claude/CLAUDE.md",
     }
 
@@ -1547,9 +1547,9 @@ class Structure(unittest.TestCase):
         """
         text = (ROOT / "skills" / "preflight.md").read_text(encoding="utf-8")
         for file_path in (
-            "~/.claude/rules/structure.md",
-            "~/.claude/rules/lifecycle.md",
-            "~/.claude/rules/product.md",
+            "~/.claude/standards/structure.md",
+            "~/.claude/standards/lifecycle.md",
+            "~/.claude/standards/product.md",
         ):
             with self.subTest(file_path=file_path):
                 self.assertIn(
@@ -1561,7 +1561,7 @@ class Structure(unittest.TestCase):
 
         Opsaný řetěz se při přidání kroku rozejde se zdrojem a vypadá přitom
         pořád platně – v `SKILL.md` i v každém `CLAUDE.md`, do kterého ho ten
-        skill jako šablonu zapsal. Zdrojem pravdy je blok v `~/.claude/rules/rules.md`.
+        skill jako šablonu zapsal. Zdrojem pravdy je blok v `~/.claude/standards/rules.md`.
         """
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
@@ -1569,7 +1569,7 @@ class Structure(unittest.TestCase):
                 self.assertFalse(
                     findings,
                     f"{skill.parent.name} opisuje pořadí kroků cyklu: {findings}; "
-                    "odkaž se na *Životní cyklus projektu* v ~/.claude/rules/rules.md",
+                    "odkaž se na *Životní cyklus projektu* v ~/.claude/standards/rules.md",
                 )
 
     ORDINALS = {
@@ -1583,7 +1583,7 @@ class Structure(unittest.TestCase):
     }
 
     def _compare_sentence(self, name, sentence_groups, cycle) -> list:
-        """Jedna věta o pořadí proti ~/.claude/rules/rules.md."""
+        """Jedna věta o pořadí proti ~/.claude/standards/rules.md."""
         ordinal, phase, predecessor, successor = sentence_groups
         exp_phase, exp_n, exp_pred, exp_succ = cycle[name]
         errors = []
@@ -1591,7 +1591,7 @@ class Structure(unittest.TestCase):
         # `osy` ve větě proti `osa` v rámečku: skloňuje se, protože to je česká
         # věta („je to třetí krok osy“), ne jméno klíče.
         if {"osy": "osa", "kontroly": "kontroly"}.get(phase) != exp_phase:
-            errors.append(f"{name}: tvrdí vrstvu `{phase}`, ~/.claude/rules/rules.md má `{exp_phase}`")
+            errors.append(f"{name}: tvrdí vrstvu `{phase}`, ~/.claude/standards/rules.md má `{exp_phase}`")
         if exp_n is None:
             # Kontrolní krok není bod v řadě, takže nemá co tvrdit o pořadí ani
             # o sousedech – stojí v mezerách a v několika naráz.
@@ -1612,14 +1612,14 @@ class Structure(unittest.TestCase):
                     f"ale je {exp_n}. z {steps_in_phase}"
                 )
         elif self.ORDINALS.get(ordinal) != exp_n:
-            errors.append(f"{name}: tvrdí `{ordinal} krok`, podle ~/.claude/rules/rules.md je {exp_n}.")
+            errors.append(f"{name}: tvrdí `{ordinal} krok`, podle ~/.claude/standards/rules.md je {exp_n}.")
         if predecessor and predecessor != exp_pred:
             errors.append(
-                f"{name}: tvrdí, že navazuje na `/{predecessor}`, ~/.claude/rules/rules.md má `/{exp_pred}`"
+                f"{name}: tvrdí, že navazuje na `/{predecessor}`, ~/.claude/standards/rules.md má `/{exp_pred}`"
             )
         if successor and successor != exp_succ:
             errors.append(
-                f"{name}: tvrdí, že předává na `/{successor}`, ~/.claude/rules/rules.md má `/{exp_succ}`"
+                f"{name}: tvrdí, že předává na `/{successor}`, ~/.claude/standards/rules.md má `/{exp_succ}`"
             )
         return errors
 
@@ -1663,7 +1663,7 @@ class Structure(unittest.TestCase):
         ta čísla stojí běžným textem v `Co skill dělá` každého skillu.
         `test_intra_skill_phase_links_point_to_existing_heading` je schválně
         vynechává (míří mimo vlastní číslování skillu), takže regrese prošla tiše
-        a našel ji až audit. Zdrojem pravdy je `~/.claude/rules/rules.md`.
+        a našel ji až audit. Zdrojem pravdy je `~/.claude/standards/rules.md`.
         """
         cycle = cycle_with_order()
         self.assertEqual(
@@ -1716,7 +1716,7 @@ class Structure(unittest.TestCase):
             if not should_be:
                 errors.append(
                     f"{name}: tvrdí, že je {m.group(1)} článek cyklu, "
-                    f"ale ~/.claude/rules/rules.md má na tom místě `/{order[0 if m.group(1) == 'první' else -1]}`"
+                    f"ale ~/.claude/standards/rules.md má na tom místě `/{order[0 if m.group(1) == 'první' else -1]}`"
                 )
 
         # Přesný počet, ne práh: při volném prahu propadne skill, jehož větu vzor
@@ -1734,7 +1734,7 @@ class Structure(unittest.TestCase):
                 f"– změnil se její tvar, nebo ji získal či ztratil další skill?"
             )
         self.assertFalse(
-            errors, "věty o pořadí kroku nesedí s ~/.claude/rules/rules.md:\n  " + "\n  ".join(errors)
+            errors, "věty o pořadí kroku nesedí s ~/.claude/standards/rules.md:\n  " + "\n  ".join(errors)
         )
 
     def test_cycle_steps_have_does_not_section(self):
@@ -2286,8 +2286,8 @@ class TemplatesPrintMarkdown(unittest.TestCase):
     Bez něj to zelený běh nechytí: 7. 9. 2026 se šablony přepisovaly dvakrát
     po sobě a pokaždé zůstalo osm respektive sedm míst neopravených, přičemž
     testy prošly. Horší než chybějící pokyn je přitom to, že podle
-    `~/.claude/rules/rules.md`, *Přednost pravidel*, stojí výstupní šablona skillu
-    **nad** `~/.claude/rules/rules.md` – šablona bez pokynu tedy nové pravidlo přebíjí, ne
+    `~/.claude/standards/rules.md`, *Přednost pravidel*, stojí výstupní šablona skillu
+    **nad** `~/.claude/standards/rules.md` – šablona bez pokynu tedy nové pravidlo přebíjí, ne
     jen neopakuje.
     """
 
@@ -3104,7 +3104,7 @@ class DepotCoreParts(unittest.TestCase):
     hromadného přesunu.
 
     *Hranice* si původně zakazovala přepis absolutně, tedy větou nad uživatelem –
-    a `~/.claude/rules/rules.md`, *Přednost pravidel*, říká, že žádná věta v Markdownu živý pokyn
+    a `~/.claude/standards/rules.md`, *Přednost pravidel*, říká, že žádná věta v Markdownu živý pokyn
     nepřebije. Hranice, která se tváří jako zákaz, se při první kolizi buď obejde,
     nebo vyrobí odmítnutí práce, o kterou si uživatel vědomě řekl. Odkaz na to
     pravidlo je tedy doklad, že hranici drží důvod, ne příkaz.
@@ -3131,7 +3131,7 @@ class DepotCoreParts(unittest.TestCase):
         self.assertIn(
             "Přednost pravidel",
             boundaries,
-            "Hranice se tváří jako zákaz nad uživatelem – chybí odkaz na ~/.claude/rules/rules.md, Přednost pravidel",
+            "Hranice se tváří jako zákaz nad uživatelem – chybí odkaz na ~/.claude/standards/rules.md, Přednost pravidel",
         )
 
 
@@ -3165,7 +3165,7 @@ class DepotCorePartsActuallyCatch(unittest.TestCase):
             "Přednost pravidel", "něco"
         )
         self.assertTrue(
-            self._reports(skill_body), "hranice bez opory v ~/.claude/rules/rules.md neshodila kontrolu"
+            self._reports(skill_body), "hranice bez opory v ~/.claude/standards/rules.md neshodila kontrolu"
         )
 
 

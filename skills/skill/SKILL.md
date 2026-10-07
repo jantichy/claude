@@ -72,16 +72,16 @@ Je-li režim v argumentu, jeď podle něj a jen ho oznam. Není-li, zeptej se p�
 
 ## Fáze 2 – Zadání
 
-**Ptej se postupně, jednu otázku za druhou** (`~/.claude/rules/rules.md`, *Ptej se postupně, ne všechno najednou*).
+**Ptej se postupně, jednu otázku za druhou** (`~/.claude/standards/rules.md`, *Ptej se postupně, ne všechno najednou*).
 
 Nejdřív otázka, která rozhoduje, jestli se vůbec pokračuje:
 
-1. **Má to být skill?** Projdi zadání čtyřmi možnostmi z normy, *Kdy vzniká skill – a kdy ne*. Vyjde-li, že to patří do kontroly, do `~/.claude/rules/rules.md`, do domény nebo do projektového `CLAUDE.md`, **řekni to a skonči.** Skill, který měl být pravidlem, se pak nikdy nevyvolá ve chvíli, kdy je potřeba.
+1. **Má to být skill?** Projdi zadání čtyřmi možnostmi z normy, *Kdy vzniká skill – a kdy ne*. Vyjde-li, že to patří do kontroly, do `~/.claude/standards/rules.md`, do domény nebo do projektového `CLAUDE.md`, **řekni to a skonči.** Skill, který měl být pravidlem, se pak nikdy nevyvolá ve chvíli, kdy je potřeba.
 
 Pak zbytek:
 
 2. **Co skill dělá a kdy se má vyvolat.** Doslovné spouštěče i situace.
-3. **Stojí v *Životním cyklu projektu*** (`~/.claude/rules/rules.md`)? Pokud ano, **proti kterým dvěma sousedům se vymezuje** – to je vstup pro *Co skill nedělá* a bez něj sekce vznikne jako prázdná negace.
+3. **Stojí v *Životním cyklu projektu*** (`~/.claude/standards/rules.md`)? Pokud ano, **proti kterým dvěma sousedům se vymezuje** – to je vstup pro *Co skill nedělá* a bez něj sekce vznikne jako prázdná negace.
 4. **Má režimy?** Určuje `argument-hint`.
 5. **Co je jeho výstup** a podle čeho se pozná, že je hotový. Vstup pro závěrečný verdikt.
 6. **Které doménové znalosti** z `~/Dev/context/` se na něj vztahují.
@@ -125,7 +125,7 @@ Nejde-li srovnávací běh udělat (skill je čistě mechanický, nebo prostřed
 
 ## Fáze 5 – Sepsání
 
-**Nejsilnější model, `xhigh`** (`~/.claude/rules/delegation.md`, *Model a effort podle úkolu*). Skill řídí veškerou práci, která pod ním poběží; vada v něm se násobí do každého běhu a projeví se až u posledního.
+**Nejsilnější model, `xhigh`** (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*). Skill řídí veškerou práci, která pod ním poběží; vada v něm se násobí do každého běhu a projeví se až u posledního.
 
 **Piš sám, proti normě.** Tenhle krok se nedeleguje – je to jediné místo, kudy by prosákl cizí tvar.
 
@@ -171,8 +171,8 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | Kam | Co |
 |---|---|
 | `skills/<name>/README.md` | **README skillu pro člověka zvenčí** podle `skills.md`, *README skillu* – sekce, hromadná instalace u skillu ze životního cyklu, odkaz do repozitáře |
-| `~/.claude/README.md` | sekce podle `~/.claude/rules/structure.md`, *`README.md`* – právě jeden odstavec o tom, k čemu skill je. **Odkaz na README skillu nese nadpis sekce** (`### [`/<name>`](skills/<name>/)`), ne zvláštní řádek pod odstavcem; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
-| `~/.claude/rules/rules.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
+| `~/.claude/README.md` | sekce podle `~/.claude/standards/structure.md`, *`README.md`* – právě jeden odstavec o tom, k čemu skill je. **Odkaz na README skillu nese nadpis sekce** (`### [`/<name>`](skills/<name>/)`), ne zvláštní řádek pod odstavcem; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
+| `~/.claude/standards/rules.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
 | `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRATION` se **nedoplňuje**, ten seznam se jen zkracuje |
 | `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních README cyklu**. Testy to chytí, ale samy to nedopíšou |
 | `~/.claude/skills/<name>/` | vedlejší soubory, skripty, jejich kontrola závislostí |
@@ -196,13 +196,13 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 - Tlakové scénáře: <výsledek, nebo „nepoužito – proč">
 
 **Okolí**
-- README.md · ~/.claude/rules/rules.md · tests/ · /project · decisions.md – co se dorovnalo
+- README.md · ~/.claude/standards/rules.md · tests/ · /project · decisions.md – co se dorovnalo
 
 **Nezkontrolováno**
 - [co a proč, nebo „nic"]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
@@ -246,7 +246,7 @@ Poslední řádek je druhý druh rozejití vedle toho s normou a **neklade ho ni
 - **<skill>** – <N> nálezů: <závažnost> <jednou větou> · [opravím / potřebuju rozhodnout]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
 **Dvourychlostní režim.** Mechanické a jednoznačné oprav rovnou a jen vypiš – chybějící odkaz na `preflight.md`, chybějící znění závěrečného verdiktu, `argument-hint` bez opory. Co **přepisuje nebo maže existující obsah** – rozdělení dlouhého skillu, přeformulování sekce, nahrazení kroku delegací – předlož a nech potvrdit, přes `AskUserQuestion` a **po jednom**.
 
@@ -274,8 +274,8 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 |---|---|
 | `~/.claude/skills/<name>/` | celý adresář včetně vedlejších souborů a skriptů |
 | `~/.claude/README.md` | jeho sekce |
-| `~/.claude/rules/rules.md` | rámeček v *Životním cyklu projektu* a zmínky u sousedů |
-| `~/.claude/rules/lifecycle.md` | **byl-li to krok cyklu**, jeho číslovaná odrážka; bez ní se rozejde s rámečkem a testy to shodí |
+| `~/.claude/standards/rules.md` | rámeček v *Životním cyklu projektu* a zmínky u sousedů |
+| `~/.claude/standards/lifecycle.md` | **byl-li to krok cyklu**, jeho číslovaná odrážka; bez ní se rozejde s rámečkem a testy to shodí |
 | `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRATION`**, je-li tam; jinak `test_migration_names_only_existing_skills` spadne na výjimku pro nikoho |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<name>`“ |
 | `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních README skillů. Osiřelý odkaz na `../<name>/README.md` testy shodí, ale samy ho nevyškrtnou |

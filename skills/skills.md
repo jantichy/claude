@@ -1,6 +1,6 @@
 # Jak se píše skill
 
-Norma tvaru vlastních skillů v `~/.claude/skills/`. Definuje, **co je skill a jak vypadá**; postup, kterým se zakládá, reviduje a ruší, drží `/skill`. Je to týž vztah jako mezi `~/.claude/rules/structure.md` a `/project` – standard říká, jak to má vypadat, nástroj je jen instalátor.
+Norma tvaru vlastních skillů v `~/.claude/skills/`. Definuje, **co je skill a jak vypadá**; postup, kterým se zakládá, reviduje a ruší, drží `/skill`. Je to týž vztah jako mezi `~/.claude/standards/structure.md` a `/project` – standard říká, jak to má vypadat, nástroj je jen instalátor.
 
 Platí pro skilly v tomhle repozitáři. Cizí skilly z pluginů se podle ní neposuzují; ty se **používají**, ne udržují.
 
@@ -8,8 +8,8 @@ Platí pro skilly v tomhle repozitáři. Cizí skilly z pluginů se podle ní ne
 
 Vyhrává první kritérium, které sedí:
 
-1. Je to rozhraní kroku životního cyklu – co krok dělá, co po něm platí, proč stojí v tom pořadí, co u něj rozhoduje o přeskočení? → `~/.claude/rules/lifecycle.md`. **Obecné pravidlo o přeskakování tam nepatří**, to drží `~/.claude/rules/rules.md`, protože platí i mimo cyklus
-2. Platí to pro práci obecně, ne jen pro skilly? → `~/.claude/rules/rules.md`
+1. Je to rozhraní kroku životního cyklu – co krok dělá, co po něm platí, proč stojí v tom pořadí, co u něj rozhoduje o přeskočení? → `~/.claude/standards/lifecycle.md`. **Obecné pravidlo o přeskakování tam nepatří**, to drží `~/.claude/standards/rules.md`, protože platí i mimo cyklus
+2. Platí to pro práci obecně, ne jen pro skilly? → `~/.claude/standards/rules.md`
 3. Je to postup zakládání, revize nebo rušení skillu? → `/skill`
 4. Je to začátek běhu, který sdílí víc skillů? → `~/.claude/skills/preflight.md`
 5. Týká se to jednoho konkrétního skillu? → do jeho `SKILL.md`
@@ -25,8 +25,8 @@ Než skill založíš, projdi čtyři možnosti v tomhle pořadí. Vyhrává prv
 
 | Kdyby platilo | Nepatří to do skillu, ale sem |
 |---|---|
-| Chytne to typecheck, linter, test nebo hook | **do té kontroly.** `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*, pravidlo nula: nejlevnější práce je ta, kterou neudělá model. Mechanické omezení zapsané do skillu se dodržuje hůř a stojí tokeny při každém běhu. |
-| Platí to pro každou práci, ne jen pro tenhle postup | **`~/.claude/rules/rules.md`.** |
+| Chytne to typecheck, linter, test nebo hook | **do té kontroly.** `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula: nejlevnější práce je ta, kterou neudělá model. Mechanické omezení zapsané do skillu se dodržuje hůř a stojí tokeny při každém běhu. |
+| Platí to pro každou práci, ne jen pro tenhle postup | **`~/.claude/standards/rules.md`.** |
 | Je to znalost oboru – jak se dělá web, text, měření, kód | **doména v `~/Dev/context/`.** Skill ji smí načítat, ne obsahovat. |
 | Platí to jen v jednom repozitáři | **jeho `CLAUDE.md`.** |
 
@@ -82,7 +82,7 @@ allowed-tools: [...]   # minimální sada, kterou skill opravdu potřebuje
 
 **Proč lícovat:** dva skilly, které dělají tutéž věc pod jiným jménem, nutí uživatele pamatovat si, který má který. Platí to i pro režimy, které se **rozpoznávají samy** a nepředávají se argumentem – uživatel je vidí ve výpisu a pojmenovává je v řeči stejně.
 
-**Argumenty za režimem jsou naopak česky** (`[klient] [období]`) – píše je uživatel a čte je jako popis; pravidlo drží `~/.claude/rules/rules.md`, *Jazyk*.
+**Argumenty za režimem jsou naopak česky** (`[klient] [období]`) – píše je uživatel a čte je jako popis; pravidlo drží `~/.claude/standards/rules.md`, *Jazyk*.
 
 **`argument-hint` musí sedět s tělem.** Režim popsaný v těle a chybějící v hintu uživatel nikdy neuvidí; hint bez opory v těle slibuje funkci, která neexistuje.
 
@@ -119,7 +119,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Co skill dělá`** – co to je a jaké má režimy. 3 až 10 řádků. Ne převyprávěný postup; ten je níž.
 
-**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/rules/rules.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/cleanup` stojí ve všech mezerách a `/review` v šesti, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
+**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/standards/rules.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/cleanup` stojí ve všech mezerách a `/review` v šesti, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
 
 **`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
 
@@ -156,7 +156,7 @@ Skill s vlastním koncem pro některý režim (rušení, zamítnutí) smí mít 
 
 Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky“ od „výsledek platí“. Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
 
-**Za verdiktem stojí blok `**Kudy dál**` a je to úplně poslední věc v odpovědi.** Tvar, pravidla skládání odrážek a to, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md` – **odkaž se na něj, neopisuj ho.** U skillu ze *Životního cyklu projektu* (`~/.claude/rules/rules.md`) je ten blok povinný; skill mimo cyklus ho mít nemusí, ale vede-li od něj cesta dál, platí týž tvar.
+**Za verdiktem stojí blok `**Kudy dál**` a je to úplně poslední věc v odpovědi.** Tvar, pravidla skládání odrážek a to, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md` – **odkaž se na něj, neopisuj ho.** U skillu ze *Životního cyklu projektu* (`~/.claude/standards/rules.md`) je ten blok povinný; skill mimo cyklus ho mít nemusí, ale vede-li od něj cesta dál, platí týž tvar.
 
 **Proč je až za verdiktem, a ne v něm:** verdikt tvrdí, jestli je věc hotová, tenhle blok říká, co se s tím dělá. Dokud je další krok jeden a patří do téže session, unese to i věta verdiktu – jakmile jsou dva, nebo se mezi ně vejde `/clear`, navigace z té věty tiše vypadne. To se dělo doložitelně: běh skončil na verdiktu a uživatel neměl kde vyčíst, že kontrolní krok se má pustit až v čisté session.
 
@@ -180,7 +180,7 @@ Rozlišovat podle toho, „jestli se uživatel může kdykoliv zastavit“, nest
 
 **Potřebují-li tentýž obsah dva skilly, nepatří ani do jednoho.** Patří do sdíleného souboru přímo v `skills/` – tak vznikly `preflight.md` (začátek běhu), `session.md` (čtení nahrané konverzace), `severity.md` (škála závažnosti nálezu) a `findings.md` (kdo o nálezu rozhoduje). Odkaz do přílohy souseda je horší než odkaz na jeho sekci: tváří se jako detail, ale ve skutečnosti si dva skilly sdílejí obsah, o kterém ani jeden neví, že ho sdílí.
 
-**Jeden termín pro jednu věc** (`~/.claude/rules/rules.md`, *Jeden termín pro jednu věc*). Ve skillech to platí navíc **napříč nimi**, ne jen uvnitř jednoho: skilly se čtou jeden po druhém v jednom životním cyklu a rozdílné pojmenování téhož kroku vypadá jako rozdílný krok.
+**Jeden termín pro jednu věc** (`~/.claude/standards/rules.md`, *Jeden termín pro jednu věc*). Ve skillech to platí navíc **napříč nimi**, ne jen uvnitř jednoho: skilly se čtou jeden po druhém v jednom životním cyklu a rozdílné pojmenování téhož kroku vypadá jako rozdílný krok.
 
 ## 6. Délka a progresivní odhalení
 
@@ -204,11 +204,11 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Jedna doporučená cesta, ne výčet možností.** „Použij X; u zvláštního případu Y“ je návod. „Můžeš X, nebo Y, nebo Z“ je odklad rozhodnutí na horší chvíli.
 
-**Ke každému pravidlu „proč“.** Bez důvodu se pravidlo při prvním konfliktu obejde, protože nikdo neví, co se tím ztratí. `~/.claude/rules/rules.md`, *K pravidlům ukládej i „proč“* – totéž platí uvnitř skillu.
+**Ke každému pravidlu „proč“.** Bez důvodu se pravidlo při prvním konfliktu obejde, protože nikdo neví, co se tím ztratí. `~/.claude/standards/rules.md`, *K pravidlům ukládej i „proč“* – totéž platí uvnitř skillu.
 
 **Konkrétní příklad místo abstraktního.** Ne „ověř formát“, ale ukázka správného a špatného tvaru.
 
-**Šablona výstupu je zápis, ne pokyn k formátu.** Zpětné apostrofy okolo ní v `SKILL.md` jen oddělují šablonu od okolního textu – neříkají, že se má výstup vypsat jako blok kódu. Do konverzace jde běžný Markdown: tučné popisky místo dvojteček zarovnaných mezerami, řádky nezalomené natvrdo (`~/.claude/rules/rules.md`, *Styl odpovědí*). Šablona to musí uvádět výslovně, jinak model reprodukuje, co vidí, a vznikne z toho předformátovaná nudle zalomená kolem šedesáti znaků. Hlídá to test.
+**Šablona výstupu je zápis, ne pokyn k formátu.** Zpětné apostrofy okolo ní v `SKILL.md` jen oddělují šablonu od okolního textu – neříkají, že se má výstup vypsat jako blok kódu. Do konverzace jde běžný Markdown: tučné popisky místo dvojteček zarovnaných mezerami, řádky nezalomené natvrdo (`~/.claude/standards/rules.md`, *Styl odpovědí*). Šablona to musí uvádět výslovně, jinak model reprodukuje, co vidí, a vznikne z toho předformátovaná nudle zalomená kolem šedesáti znaků. Hlídá to test.
 
 **Řada popisků pod sebou musí být odrážkový seznam.** V Markdownu není konec řádku zalomení, takže `**Kde:** …` a `**Co:** …` na dvou řádcích se vykreslí jako jedna slitá věta – tedy hůř než původní blok kódu, kde to zalomení aspoň drželo. Osamocený popisek oddělený prázdným řádkem odrážku nepotřebuje.
 
@@ -216,23 +216,23 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Neopisuj seznam, který má vlastní zdroj pravdy.** Pořadí kroků životního cyklu, prahy kontrol, inventář domén – na ty se odkazuj, nevypisuj je. Opsaný seznam se při přidání položky rozejde a **vypadá přitom pořád platně**, takže si toho nikdo nevšimne. Platí to dvojnásob pro **šablony, které skill zapisuje jinam**: `/project` psal do každého vývojářského `CLAUDE.md` cestu bez `/discovery` a projekty ji četly jako úplnou. Řetěz 3 a víc kroků cyklu v `SKILL.md` hlídají testy.
 
-**Výjimku mají 2 místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který vypisuje **všechny** kroky obou vrstev i s odkazy (výpustka `…` ve vzoru níž je zástupný symbol pro zbytek řady, ne doslovné znění), a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `~/.claude/rules/rules.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
+**Výjimku mají 2 místa v README skillu** (*README skillu*, níž): rámeček s cyklem, který vypisuje **všechny** kroky obou vrstev i s odkazy (výpustka `…` ve vzoru níž je zástupný symbol pro zbytek řady, ne doslovné znění), a šablona hromadné instalace, kde kroky stojí vyjmenované. Obojí míří na člověka, který sadu nezná a jinak by se o ní nedozvěděl, a obojí hlídá test proti `~/.claude/standards/rules.md`. **Opsaný seznam je vada tam, kde ho nikdo neměří** – ne tam, kde je sám předmětem kontroly.
 
-**Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…“ zestárnou tiše. Piš specialisty, ne jména – `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*, to dělá takhle.
+**Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…“ zestárnou tiše. Piš specialisty, ne jména – `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, to dělá takhle.
 
 **Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen názvy souborů, příkazy a technické identifikátory.
 
-**Nedeklaruj, co skill neumí.** Popsaný režim, který není implementovaný, je horší než chybějící funkce – uživatel se na něj spolehne. `~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*: vědomá mezera se přiznává, ne zamlčuje.
+**Nedeklaruj, co skill neumí.** Popsaný režim, který není implementovaný, je horší než chybějící funkce – uživatel se na něj spolehne. `~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*: vědomá mezera se přiznává, ne zamlčuje.
 
 ## 8. Model, effort a delegace
 
-Ve skillu se píše **jen delta** proti tabulce v `~/.claude/rules/delegation.md`, *Model a effort podle úkolu* – tedy tam, kde se krok od výchozí volby odchyluje, a proč. Celou tabulku neopisuj.
+Ve skillu se píše **jen delta** proti tabulce v `~/.claude/standards/delegation.md`, *Model a effort podle úkolu* – tedy tam, kde se krok od výchozí volby odchyluje, a proč. Celou tabulku neopisuj.
 
 Odchylku odůvodni **tím, čí vstup to je**: chyba v návrhu nebo v ověření nálezu se násobí do všeho, co po ní přijde, kdežto chyba v mechanickém sběru se pozná hned.
 
 **Deleguj kvůli kontextu, ne kvůli úspoře.** Rozeslání práce agentům šetří kontext hlavní session, celkové tokeny spíš zvýší.
 
-**Agent, který nemá co spouštět, se volá typem bez `Bash`.** Jsou na to dva: **`reader`** (`Read, Grep, Glob`) a **`researcher`**, což je týž typ plus `WebSearch` a `WebFetch` pro posudek, který si musí dohledat podklad venku. Ani jeden nemá shell. Platí to všude, kde je úkolem **úsudek nad hotovým textem**: čtenář bez kontextu, nezávislý posudek, kontrola tvaru. Věta „nezapisuj do žádného souboru“ v zadání totiž nic nedrží – je to text pro model, ne mechanismus (`~/.claude/rules/rules.md`, *Přednost pravidel*), a `Explore` sice nemá `Edit` ani `Write`, ale **`Bash` má**, takže jím zapsat i commitnout lze. V projektu se zapnutým autocommitem to znamená pushnutou změnu, kterou nikdo neschválil.
+**Agent, který nemá co spouštět, se volá typem bez `Bash`.** Jsou na to dva: **`reader`** (`Read, Grep, Glob`) a **`researcher`**, což je týž typ plus `WebSearch` a `WebFetch` pro posudek, který si musí dohledat podklad venku. Ani jeden nemá shell. Platí to všude, kde je úkolem **úsudek nad hotovým textem**: čtenář bez kontextu, nezávislý posudek, kontrola tvaru. Věta „nezapisuj do žádného souboru“ v zadání totiž nic nedrží – je to text pro model, ne mechanismus (`~/.claude/standards/rules.md`, *Přednost pravidel*), a `Explore` sice nemá `Edit` ani `Write`, ale **`Bash` má**, takže jím zapsat i commitnout lze. V projektu se zapnutým autocommitem to znamená pushnutou změnu, kterou nikdo neschválil.
 
 **Omezit `Bash` na čtecí příkazy nejde a nesmí se to předstírat.** Změřeno 15. 9. 2026 v hlavičce agenta i na příkazové řádce: `tools: …, Bash(git log:*)` dá agentovi **plný** shell, `disallowedTools: Bash(date:*)` mu ho naopak **sebere celý**, a `claude -p --allowedTools "Bash(whoami:*)"` propustí i `date`. **Závorkový tvar tedy neomezuje nikde**; co funguje, je jen celé jméno nástroje (`--disallowedTools "Bash"`). Buď `Bash` má, nebo nemá – nic mezi tím. Typ agenta, jehož popis slibuje „čtecí shell“, je proto vrstva, která vypadá nakonfigurovaně a nevynucuje nic; **nezakládej ho**. Potřebuje-li agent počty, historii gitu nebo spuštěnou kontrolu, dostane `Explore` s plným shellem a **hranice se nepředstírá** – v zadání se pak nepíše, že nesmí zapisovat, protože by to byl slib bez krytí.
 
@@ -349,11 +349,11 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 ### Skill ze životního cyklu
 
-**Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/rules/rules.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je celá řada a že spolu drží.
+**Stojí-li skill v *Životním cyklu projektu*** (`~/.claude/standards/rules.md`), začíná jeho README **rámečkem s celým životním cyklem** – hned pod nadpisem, ještě před úvodním odstavcem. Čtenář, kterému přišel odkaz na jeden skill, jinak nemá jak zjistit, že jich je celá řada a že spolu drží.
 
 **Znění je doslova stejné ve všech**, liší se jen tím, který krok je tučný. **Počet kroků se v něm neuvádí číslovkou** – ta se při přidání dalšího kroku rozejde ve všech rámečcích naráz a nic ji nehlídá; čtenář si počet spočítá z rámečku pod tím.
 
-**Rámeček má dva bloky, protože cyklus má dvě vrstvy** (`~/.claude/rules/lifecycle.md`, *Kroky cyklu a jejich uspořádání*): kroky **osy** něco tvoří a stojí v pořadí, **kontrolní kroky** nezvětšují rozsah práce a stojí v mezerách mezi nimi – některé z nich ve víc mezerách naráz. Jednořádková šipková řada, která tu stála do 20. 9. 2026, obojí slévala a tvrdila tím pořadí, které neexistuje.
+**Rámeček má dva bloky, protože cyklus má dvě vrstvy** (`~/.claude/standards/lifecycle.md`, *Kroky cyklu a jejich uspořádání*): kroky **osy** něco tvoří a stojí v pořadí, **kontrolní kroky** nezvětšují rozsah práce a stojí v mezerách mezi nimi – některé z nich ve víc mezerách naráz. Jednořádková šipková řada, která tu stála do 20. 9. 2026, obojí slévala a tvrdila tím pořadí, které neexistuje.
 
 ```
 > **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci
@@ -370,7 +370,7 @@ Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se
 
 **Výpustky `…` ve vzoru jsou zástupný symbol pro zbytek řady, ne doslovné znění** – rámeček vypisuje všechny kroky obou vrstev i s odkazy, protože právě kvůli těm odkazům existuje. Aktuální skill je **tučně a bez odkazu**, ostatní odkazem na jejich README – a stojí v tom bloku, do kterého patří; v druhém se neopakuje. **Krok, který README ještě nemá**, se uvádí jen kódem bez odkazu, aby kontrola odkazů neselhala na souboru, který teprve vznikne.
 
-Rozejde-li se rámeček s životním cyklem v `~/.claude/rules/rules.md`, platí `~/.claude/rules/rules.md` – rámeček je jeho zobrazení, ne druhý zdroj pravdy.
+Rozejde-li se rámeček s životním cyklem v `~/.claude/standards/rules.md`, platí `~/.claude/standards/rules.md` – rámeček je jeho zobrazení, ne druhý zdroj pravdy.
 
 **Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech:
 
@@ -397,7 +397,7 @@ Rozejde-li se rámeček s životním cyklem v `~/.claude/rules/rules.md`, platí
 
 ### Sekce v hlavním README repozitáře
 
-Skill má navíc **vlastní sekci v `README.md` v kořeni**. Jak je dlouhá a co do ní patří, drží `~/.claude/rules/structure.md`, *`README.md`* – to pravidlo platí pro každou součást představenou vlastním nadpisem a pro skill se nijak neliší. Zdejší dodatky jsou dva: tvar nadpisu a pořadí.
+Skill má navíc **vlastní sekci v `README.md` v kořeni**. Jak je dlouhá a co do ní patří, drží `~/.claude/standards/structure.md`, *`README.md`* – to pravidlo platí pro každou součást představenou vlastním nadpisem a pro skill se nijak neliší. Zdejší dodatky jsou dva: tvar nadpisu a pořadí.
 
 **Na podrobné README se odkazuje nadpisem**, ne řádkem pod odstavcem:
 
@@ -409,7 +409,7 @@ Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou
 
 **Sekce skillu je o úroveň níž než skupina, do které patří.** Všechny skilly stojí pod nadpisem `## Skilly` ve skupinách s vlastním nadpisem `###`, takže sekce jednotlivého skillu je `####`. **Skupiny jsou ploché, ne zanořené do sebe:** skilly mimo cyklus mají vlastní tematické skupiny na téže úrovni jako obě cyklové, protože zanoření pod společný nadpis by z jejich sekcí udělalo `#####` a ty se na GitHubu od `####` skoro neliší. Do 28. 9. 2026 byly skupiny jen nadpisy druhé úrovně a skilly `###`; skupinový nadpis se tehdy zamítl s tím, že by stál na téže úrovni jako skilly a v osnově vypadal jako další skill v řadě. To platí pro nadpis **téže** úrovně, ne pro zanoření – zanořený skupinu opravdu obsahuje a v osnově je vidět, co do ní patří.
 
-**Pořadí skillů v hlavním README je dané, ne libovolné.** Kroky osy stojí v pořadí, ve kterém se pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Uvnitř skupiny kontrol platí pořadí z rámečku v `~/.claude/rules/rules.md`. Skilly mimo životní cyklus se dělí **tematicky podle toho, na čem pracují**, a uvnitř své skupiny stojí **abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu. Že se pouštějí nezávisle na fázi projektu, říká úvod celé kapitoly, ne každá skupina zvlášť.
+**Pořadí skillů v hlavním README je dané, ne libovolné.** Kroky osy stojí v pořadí, ve kterém se pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Uvnitř skupiny kontrol platí pořadí z rámečku v `~/.claude/standards/rules.md`. Skilly mimo životní cyklus se dělí **tematicky podle toho, na čem pracují**, a uvnitř své skupiny stojí **abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu. Že se pouštějí nezávisle na fázi projektu, říká úvod celé kapitoly, ne každá skupina zvlášť.
 
 **Rozdělení cyklu na dvě skupiny je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/cleanup` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Úvodní odstavec skupiny proto říká, čím se ta vrstva liší; **bold řádek mezi sekcemi to nezastane**, protože spadne dovnitř té předchozí a poruší pravidlo jednoho odstavce na sekci.
 

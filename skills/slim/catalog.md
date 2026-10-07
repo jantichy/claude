@@ -37,7 +37,7 @@ Paušál je to, co se načte do každé session bez ptaní – soubory, které C
 
 U každé sekce: **v kolika situacích, kdy se soubor čte, se doopravdy uplatní?** Uplatní-li se jen v části z nich – u některých typů projektů, u jednoho nebo několika skillů –, je kandidátem na přesun do **podmíněně čteného dítěte**: nového souboru, existujícího souboru, který čte jen ta skupina, nebo do skillu, který to jediný dělá.
 
-- **Kam:** jediný skill → do jeho adresáře; víc skillů → sdílený soubor (`~/.claude/rules/`, `~/.claude/skills/`); skupina projektů → soubor, který si načítají jen ony. Existující soubor, který ten čtenář už čte, má přednost před novým.
+- **Kam:** jediný skill → do jeho adresáře; víc skillů → sdílený soubor (`~/.claude/standards/`, `~/.claude/skills/`); skupina projektů → soubor, který si načítají jen ony. Existující soubor, který ten čtenář už čte, má přednost před novým.
 - **Cíl se musí číst ve všech situacích, kde pravidlo platí.** Ověř spouštěč cíle, ne jeho jméno: soubor v doméně `coding/` se může načítat i u dokumentačních projektů (a naopak). Nesedí-li to, pravidlo zůstává, nebo jde jinam.
 - **Nový soubor potřebuje čtyři věci**, jinak je to přání: **spouštěč** v místě, které se čte pokaždé, když je potřeba (paušál nebo `preflight.md`); **test**, že spouštěč nezmizí (vzor `test_preflight_requires_loading_unimported_files`); **úvod**, který říká, kdo ho načítá a kdy; **řádek v rozřazovací sekci** („co sem nepatří“) zdrojového souboru i repozitáře, jinak se příští pravidlo vrátí do rodiče. Plus odstavec v `README.md`, má-li repozitář jeho soupis.
 - **V rodiči zůstane řádek**, kde to stojí a kdy se to čte – ne kopie.

@@ -46,7 +46,7 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 - Tlakové scénáře: neměřeno – skill nic nezakazuje
 
 **Okolí**
-- README.md · ~/.claude/rules/rules.md · tests/ – dorovnáno
+- README.md · ~/.claude/standards/rules.md · tests/ – dorovnáno
 ```
 
 ## Co nedělá

@@ -567,7 +567,7 @@ class LifecycleLayers(unittest.TestCase):
 
     Vrací-li nesmysl, neselže nic – fronta práce jen tiše nabídne krok, který
     neexistuje, nebo zamlčí ten, který chybí. Přesně to se stalo, když se
-    rámeček v `~/.claude/rules/rules.md` rozdělil na dvě vrstvy: funkce vracela syrové řádky
+    rámeček v `~/.claude/standards/rules.md` rozdělil na dvě vrstvy: funkce vracela syrové řádky
     bloku, takže z odsazeného pokračování osy vycházela „fáze“ jménem
     `/breakdown` a z komentáře pod rámečkem další položka.
     """
@@ -579,11 +579,11 @@ class LifecycleLayers(unittest.TestCase):
         self.c = importlib.util.module_from_spec(spec)
         sys.path.insert(0, str(COLLECT.parent))
         spec.loader.exec_module(self.c)
-        # `collect.py` čte `~/.claude/rules/rules.md` z `$HOME` – tam je za běhu uživatelova
+        # `collect.py` čte `~/.claude/standards/rules.md` z `$HOME` – tam je za běhu uživatelova
         # konfigurace a to je správně. V testu ale musí jít o **tenhle**
         # repozitář: na CI `$HOME/.claude` neexistuje, takže by `lifecycle()`
         # vrátila prázdno a test by padal na chybějícím souboru místo na vadě.
-        self.c.RULES = ROOT / "rules" / "rules.md"
+        self.c.RULES = ROOT / "standards" / "rules.md"
 
     def test_reads_both_layers_from_rules(self):
         out = self.c.lifecycle()
@@ -605,9 +605,9 @@ class LifecycleLayers(unittest.TestCase):
 
     def test_axis_order_matches_the_frame(self):
         # Osa je řada, takže na jejím pořadí stojí odvození chybějícího kroku.
-        # Pořadí se čte z `~/.claude/rules/rules.md`, ne z konstanty tady – opsaný seznam by se
+        # Pořadí se čte z `~/.claude/standards/rules.md`, ne z konstanty tady – opsaný seznam by se
         # při přidání kroku rozešel a vypadal by přitom pořád platně.
-        block = (ROOT / "rules" / "rules.md").read_text(encoding="utf-8")
+        block = (ROOT / "standards" / "rules.md").read_text(encoding="utf-8")
         i = block.index("### Životní cyklus projektu")
         frame = block[block.index("```", i) + 3 :]
         frame = frame[: frame.index("```")]

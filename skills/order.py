@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Ověří, že datované záznamy v Markdownu jdou vzestupně – nejstarší nahoře.
 
-`~/.claude/rules/structure.md` (*`done.md`*, *`decisions.md`*) žádá nejstarší zápis
+`~/.claude/standards/structure.md` (*`done.md`*, *`decisions.md`*) žádá nejstarší zápis
 nahoře a nový na konec sekce. Zdůvodnění je provozní: připsat na konec je
 jediný způsob zápisu, který nejde udělat špatně, protože nevyžaduje hledat
 správné místo.

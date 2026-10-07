@@ -2,9 +2,9 @@
 
 Referenční tabulka pro *Fázi 3* skillu [`/cleanup`](SKILL.md). Je to **obrácený pohled** proti běžnému vytěžování: tam se ptáš, kam patří to, co jsi v session našel, tady jestli nezůstala nesplněná povinnost, o které v session nikdo nemluvil. Neber jako samozřejmé, že průběžná aktualizace proběhla – **empiricky se na ni zapomíná**, a proto tenhle pohled existuje.
 
-Obsah jednotlivých souborů definuje `~/.claude/rules/structure.md`; tahle tabulka není druhá definice, ale spouštěč.
+Obsah jednotlivých souborů definuje `~/.claude/standards/structure.md`; tahle tabulka není druhá definice, ale spouštěč.
 
-**Cesty jsou psané pro režim `docs/`.** V projektu s kořenovým režimem (`~/.claude/rules/structure.md`, *Dva režimy umístění*) se překládají do kořene repozitáře.
+**Cesty jsou psané pro režim `docs/`.** V projektu s kořenovým režimem (`~/.claude/standards/structure.md`, *Dva režimy umístění*) se překládají do kořene repozitáře.
 
 ## Které soubory prověřit
 
@@ -21,7 +21,7 @@ Má-li projekt zadání, k tomu `docs/requirements.md`, `docs/architecture.md` a
 | Soubor | Co v session zakládá povinnost zápisu |
 |---|---|
 | `CLAUDE.md` | vzniklo nebo se změnilo pravidlo, konvence, způsob práce v projektu |
-| `README.md` | změnilo se, co projekt je, umí nebo jak se spouští; zároveň ověř, že v něm nezůstal normativní pokyn pro Clauda – ten patří do `CLAUDE.md` nebo `docs/`, viz `~/.claude/rules/structure.md` |
+| `README.md` | změnilo se, co projekt je, umí nebo jak se spouští; zároveň ověř, že v něm nezůstal normativní pokyn pro Clauda – ten patří do `CLAUDE.md` nebo `docs/`, viz `~/.claude/standards/structure.md` |
 | `docs/todo.md` | něco se odložilo, zaparkovalo, označilo „později“ – a je rozhodnuto, že se to udělá |
 | `docs/backlog.md` | padl nápad, o kterém se nerozhodlo, že se udělá; **zvlášť ověř, že takový nápad neskončil v `todo.md`** |
 | `docs/done.md` | ověř, že v `todo.md` nezbylo nic hotového – přesouvá se průběžně, tohle je jen záchranná síť |

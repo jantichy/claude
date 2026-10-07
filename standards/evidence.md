@@ -1,6 +1,6 @@
 # Zjišťování z dat
 
-Pravidla pro měření, analýzu dat a hledání příčin – dotaz do databáze nebo analytiky, test hypotézy, ladění chyby – a pro přebírání tvrzení z webu. **Odkaz, ne import:** načítá se, když se zjišťuje; spouštěč drží `~/.claude/rules/rules.md`, *Zjišťuj podle pravidel pro práci s daty*.
+Pravidla pro měření, analýzu dat a hledání příčin – dotaz do databáze nebo analytiky, test hypotézy, ladění chyby – a pro přebírání tvrzení z webu. **Odkaz, ne import:** načítá se, když se zjišťuje; spouštěč drží `~/.claude/standards/rules.md`, *Zjišťuj podle pravidel pro práci s daty*.
 
 ## Před každým měřením vypiš, co který výsledek rozhodne
 

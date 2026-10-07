@@ -10,7 +10,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Vezme schválené zadání a rozpadne ho na **`docs/plan.md`** – seřazený seznam úkolů, kde každý má konkrétní soubory, kód testu, příkaz na spuštění a commit. Plán je psaný pro někoho, kdo projekt vůbec nezná.
 
-V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to pátý krok osy: navazuje na `/architect` a předává na `/implement`.
+V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to pátý krok osy: navazuje na `/architect` a předává na `/implement`.
 
 ## Co skill nedělá
 
@@ -63,7 +63,7 @@ Navíc si ověř tohle:
 
 ## Fáze 1 – Rozsah plánu
 
-**Jen MVP.** Zadání popisuje celou věc, plán jen první verzi – viz `~/.claude/rules/rules.md`, *Navrhuj kompletně, implementuj postupně*. Vypiš, které položky z MVP checklistu plán pokryje, a nech to potvrdit.
+**Jen MVP.** Zadání popisuje celou věc, plán jen první verzi – viz `~/.claude/standards/rules.md`, *Navrhuj kompletně, implementuj postupně*. Vypiš, které položky z MVP checklistu plán pokryje, a nech to potvrdit.
 
 **Když je toho moc.** Pokrývá-li zadání víc nezávislých podsystémů, řekni to a rozděl to na víc plánů – každý musí sám o sobě dát funkční, otestovatelný software. Neposílej do implementace plán, který nejde dokončit v rozumném celku.
 
@@ -73,14 +73,14 @@ Navíc si ověř tohle:
 
 ## Fáze 2 – Sepsání plánu
 
-**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*.) Plán řídí veškerou práci pod sebou: špatně nařezaný úkol nebo chybějící akceptační kritérium rozsévá chyby do všech kroků, které po něm přijdou, a projeví se až u posledního. Proto se na plánovači nešetří, i když samotné sepsání vypadá mechanicky. Odpovídá to i vestavěnému režimu `opusplan` – plánuje silný model, provádí levnější.
+**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*.) Plán řídí veškerou práci pod sebou: špatně nařezaný úkol nebo chybějící akceptační kritérium rozsévá chyby do všech kroků, které po něm přijdou, a projeví se až u posledního. Proto se na plánovači nešetří, i když samotné sepsání vypadá mechanicky. Odpovídá to i vestavěnému režimu `opusplan` – plánuje silný model, provádí levnější.
 
 
 **Vyvolej `superpowers:writing-plans`** a předej mu výslovně:
 
 - **zadání** = `docs/architecture.md` (nebo `docs/requirements.md`, byl-li návrh řešení přeskočen),
 - **kontext** = `docs/requirements.md` – ať v hlavičce plánu sedí pole `**Spec:**` a je vidět, proč se to staví, a `docs/scenarios.md`, vede-li ho projekt,
-- **cíl** = `docs/plan.md`, **ne** `docs/superpowers/plans/…` – tohle mu musíš říct, jinak si založí vlastní adresářový strom vedle tvého (`~/.claude/rules/structure.md`: v `docs/` jednoslovné anglické názvy bez datumových prefixů),
+- **cíl** = `docs/plan.md`, **ne** `docs/superpowers/plans/…` – tohle mu musíš říct, jinak si založí vlastní adresářový strom vedle tvého (`~/.claude/standards/structure.md`: v `docs/` jednoslovné anglické názvy bez datumových prefixů),
 - **rozsah** = jen položky MVP odsouhlasené ve Fázi 1,
 - **doménové standardy** z Fáze 1,
 - že **volbu způsobu implementace na konci nenabízí** – tu řeší `/implement`,
@@ -115,7 +115,7 @@ Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuest
 
 > Plán je hotový a commitnutý v `docs/plan.md` – <N> úkolů. Přečti si ho prosím; až ho odsouhlasíš, pustíme implementaci přes `/implement`.
 
-Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Hlediska nevypisuj – sestaví si je sám podle svého katalogu (`~/.claude/rules/rules.md`, *Single source of truth*).
+Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Hlediska nevypisuj – sestaví si je sám podle svého katalogu (`~/.claude/standards/rules.md`, *Single source of truth*).
 
 ```
 ## Plán hotový
@@ -130,7 +130,7 @@ Nabídni před tím ještě `/oponent docs/plan.md`, je-li plán rozsáhlý. Hle
 - [co zůstalo na další fázi, nebo „nic“]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

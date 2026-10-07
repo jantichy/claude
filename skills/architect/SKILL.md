@@ -11,9 +11,9 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Ze schválených požadavků udělá **návrh řešení** – rozhodne, jak se to postaví, a zapíše to tak, aby se podle toho dal napsat plán a pak kód.
 
-**Návrh je sada dokumentů, ne jeden soubor.** Páteří je `docs/architecture.md`, k ní podle potřeby `model.md` (data a stavy), `transitions.md` (operace), `rules.md` (zásady domény) a tematické dokumenty kol. Kdy který vzniká, drží `~/.claude/rules/product.md`, *`requirements.md`, `architecture.md`, `plan.md`*; kontrolní otázka je vždycky *odpovídá na otázku, na kterou žádný jiný neodpovídá?*
+**Návrh je sada dokumentů, ne jeden soubor.** Páteří je `docs/architecture.md`, k ní podle potřeby `model.md` (data a stavy), `transitions.md` (operace), `rules.md` (zásady domény) a tematické dokumenty kol. Kdy který vzniká, drží `~/.claude/standards/product.md`, *`requirements.md`, `architecture.md`, `plan.md`*; kontrolní otázka je vždycky *odpovídá na otázku, na kterou žádný jiný neodpovídá?*
 
-V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to čtvrtý krok osy: navazuje na `/specify` a předává na `/breakdown`.
+V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to čtvrtý krok osy: navazuje na `/specify` a předává na `/breakdown`.
 
 **Větší záměr se nedělá jedním zátahem, ale po kolech.** Kolo je uzavřený průchod jedním tematickým okruhem návrhu do posledního detailu – DPH, upomínání, administrace, platební brána. Skill záměr na začátku zmapuje, rozdělí na kola a zapíše je do `docs/todo.md`. Každé kolo se pak dá odjet v samostatné session a větvi, souběžně s ostatními. Proč to funguje: témata se prolínají, takže průchod po dokumentech by každý z nich otevřel pětkrát a pokaždé s jiným kusem znalosti v hlavě, kdežto průchod po tématech ho otevře stejněkrát, ale pokaždé s uzavřenou otázkou.
 
@@ -21,7 +21,7 @@ V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to čtvrtý krok o
 
 ## Co skill nedělá
 
-- **Nepíše požadavky.** Co se staví a proč, pro koho to je, jaké jsou scénáře, glosář a ceník – to je `/specify` a jeho `docs/requirements.md`. Tenhle skill je čte jako hotový vstup a argumentuje z nich odkazem; neopisuje je. **Hranice je tvrdá:** do požadavků patří omezení, do návrhu volba (`~/.claude/rules/product.md`, *`requirements.md`, `architecture.md`, `plan.md`*).
+- **Nepíše požadavky.** Co se staví a proč, pro koho to je, jaké jsou scénáře, glosář a ceník – to je `/specify` a jeho `docs/requirements.md`. Tenhle skill je čte jako hotový vstup a argumentuje z nich odkazem; neopisuje je. **Hranice je tvrdá:** do požadavků patří omezení, do návrhu volba (`~/.claude/standards/product.md`, *`requirements.md`, `architecture.md`, `plan.md`*).
 - **Nepíše implementační plán.** Rozpad na úkoly dělá `/breakdown`. Skill ho jen doporučí jako další krok, až je návrh schválený a sešitý.
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá kontrola – viz *Zákaz implementace*.
 - **Neposuzuje vlastní návrh.** Nezávislý posudek dělá `/oponent`, soulad s předpisem `/review`, vnitřní konzistenci `/consistency`. Skill je v závěru doporučuje, sám je nevolá – kdyby je pouštěl, staly by se jeho součástí. **Kromě `/next` nevolá žádný jiný krok**, a to jen u nabídky zbývajících kol; není to krok cyklu, ale seznam, ze kterého si uživatel kolo teprve vybere.
@@ -41,7 +41,7 @@ Skill **vede rozhovor sám** podle *Zásad pro celý průběh* a na `superpowers
 
 **Volání `/next` je na rozdíl od zbytku rozhraní, ne implementační detail** – `/next` na ně spoléhá ve své sekci *Kola návrhu* a vrací kolo zpátky jako `/architect <kolo>`. Vyměnit se tedy nesmí potichu.
 
-**Závazné je to, co po skillu zbude:** dokumenty návrhu na místech podle `~/.claude/rules/structure.md`, mapa kol v `docs/todo.md` a záznamy kol v `docs/done.md`, vše česky a bez datumových prefixů.
+**Závazné je to, co po skillu zbude:** dokumenty návrhu na místech podle `~/.claude/standards/structure.md`, mapa kol v `docs/todo.md` a záznamy kol v `docs/done.md`, vše česky a bez datumových prefixů.
 
 ------
 
@@ -64,12 +64,12 @@ Skill **vede rozhovor sám** podle *Zásad pro celý průběh* a na `superpowers
 
 ## Zásady pro celý průběh
 
-- **Ptej se postupně a přes tool `AskUserQuestion`** – postup, tvar otázky i mechanika toolu viz `~/.claude/rules/rules.md`, *Ptej se postupně, ne všechno najednou*.
-- **Nic si nevymýšlej** – technický název, ID, parametr, cizí API, cena. Viz `~/.claude/rules/rules.md`, *Při nejistotě se zeptej*.
-- **Zapisuj průběžně** – ve chvíli, kdy rozhodnutí padne, ne až na konci. Viz `~/.claude/rules/rules.md`, *Pravda v souborech, ne v konverzaci*; kam co patří, definuje `structure.md`.
-- **Navrhuj kompletně, implementuj postupně** – viz `~/.claude/rules/rules.md`. Tady to znamená: návrh popisuje celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
+- **Ptej se postupně a přes tool `AskUserQuestion`** – postup, tvar otázky i mechanika toolu viz `~/.claude/standards/rules.md`, *Ptej se postupně, ne všechno najednou*.
+- **Nic si nevymýšlej** – technický název, ID, parametr, cizí API, cena. Viz `~/.claude/standards/rules.md`, *Při nejistotě se zeptej*.
+- **Zapisuj průběžně** – ve chvíli, kdy rozhodnutí padne, ne až na konci. Viz `~/.claude/standards/rules.md`, *Pravda v souborech, ne v konverzaci*; kam co patří, definuje `structure.md`.
+- **Navrhuj kompletně, implementuj postupně** – viz `~/.claude/standards/rules.md`. Tady to znamená: návrh popisuje celou věc včetně toho, co bude až později; řeže se až plán, a ten se dělá jen na MVP.
 - **YAGNI.** Z každého návrhu vyhoď, co není potřeba – ale zapiš to do *Mimo rozsah* v požadavcích, ať je vidět, že to bylo zvážené a zamítnuté, ne opomenuté.
-- **Na návrhu se nešetří: nejsilnější model, `xhigh`** (`~/.claude/rules/delegation.md`, *Model a effort podle úkolu*). Není to výroba dokumentu – dokument je jen zápis. Je to rozhodnutí, které se propíše do každého úkolu plánu a do každého řádku kódu pod ním, a **špatný návrh se dobrou implementací nezachrání**: špatná věc se jen udělá pořádně. Skill běží v hlavní session, kde model ani effort nastavit neumí – **doporuč proto běh v session na nejsilnějším modelu**, hned v přípravě.
+- **Na návrhu se nešetří: nejsilnější model, `xhigh`** (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*). Není to výroba dokumentu – dokument je jen zápis. Je to rozhodnutí, které se propíše do každého úkolu plánu a do každého řádku kódu pod ním, a **špatný návrh se dobrou implementací nezachrání**: špatná věc se jen udělá pořádně. Skill běží v hlavní session, kde model ani effort nastavit neumí – **doporuč proto běh v session na nejsilnějším modelu**, hned v přípravě.
 
 ------
 
@@ -113,8 +113,8 @@ Navíc si zjisti tohle:
 
    **Jméno kola** se porovnává bez ohledu na velikost písmen s nadpisem bloku bez „Kolo o“, se jménem větve i se jménem tematického dokumentu. Víc shod → zeptej se. Argument, který není jménem kola, ber jako téma a řekni to.
 
-5. **Oznam zvolenou cestu jednou větou, než sáhneš na první soubor.** Bez pojmenovaných režimů je to jediná pojistka proti tichému špatnému odhadu – uživatel ji musí mít šanci opravit dřív, než se něco zapíše. Řekl-li v promptu volnými slovy něco jiného, **má přednost jeho pokyn** (`~/.claude/rules/rules.md`, *Přednost pravidel*).
-6. **Větev.** U nabídky kol se nezakládá – kolo ještě není vybrané. Běží-li projekt ve worktree layoutu a session stojí v `main/` nebo ve větvi, která s prací nesouvisí, nabídni založení větve podle `~/.claude/rules/worktree.md`, *Založení větve*, **dřív, než cokoliv zapíšeš**: mapa okruhů do `docs/architect`, kolo do větve z řádku *Větev*, sešití do `docs/stitch`. Existuje-li větev toho jména z dřívější várky, přidej příponu `-2` a **u kola ji přepiš i na řádek *Větev* v bloku** – podle něj větev poznává orientace i pojistka v `~/.claude/rules/worktree.md`. Větev pro mapu okruhů zakládej až po bodu 4, ať nevznikne zbytečně.
+5. **Oznam zvolenou cestu jednou větou, než sáhneš na první soubor.** Bez pojmenovaných režimů je to jediná pojistka proti tichému špatnému odhadu – uživatel ji musí mít šanci opravit dřív, než se něco zapíše. Řekl-li v promptu volnými slovy něco jiného, **má přednost jeho pokyn** (`~/.claude/standards/rules.md`, *Přednost pravidel*).
+6. **Větev.** U nabídky kol se nezakládá – kolo ještě není vybrané. Běží-li projekt ve worktree layoutu a session stojí v `main/` nebo ve větvi, která s prací nesouvisí, nabídni založení větve podle `~/.claude/standards/worktree.md`, *Založení větve*, **dřív, než cokoliv zapíšeš**: mapa okruhů do `docs/architect`, kolo do větve z řádku *Větev*, sešití do `docs/stitch`. Existuje-li větev toho jména z dřívější várky, přidej příponu `-2` a **u kola ji přepiš i na řádek *Větev* v bloku** – podle něj větev poznává orientace i pojistka v `~/.claude/standards/worktree.md`. Větev pro mapu okruhů zakládej až po bodu 4, ať nevznikne zbytečně.
 
 ------
 
@@ -146,7 +146,7 @@ Odjede **jedno kolo** návrhu: vezme blok ze sekce *Kola návrhu* v `docs/todo.m
 
 ### 1. Příprava kola
 
-1. **Větev** podle *Fáze 0*, bod 6. Jméno větve se řídí zvykem projektu (`~/.claude/rules/worktree.md`), jméno tematického dokumentu je jednoslovné anglicky (`~/.claude/rules/rules.md`, *Naming*), nadpis bloku česky. Existuje-li tematický dokument z dřívější várky, **rozšiř ho**. Nastav v bloku *Stav* na `rozhoduje se` a commitni.
+1. **Větev** podle *Fáze 0*, bod 6. Jméno větve se řídí zvykem projektu (`~/.claude/standards/worktree.md`), jméno tematického dokumentu je jednoslovné anglicky (`~/.claude/standards/rules.md`, *Naming*), nadpis bloku česky. Existuje-li tematický dokument z dřívější várky, **rozšiř ho**. Nastav v bloku *Stav* na `rozhoduje se` a commitni.
 2. **Načti blok kola**, `requirements.md`, dokumenty z řádků *Dokument* a *Sahá na*, `decisions.md` a `rules.md`. Kolo, na které tohle čeká, musí mít záznam v `docs/done.md` **za posledním řádkem *Návrh uzavřen*** – starší záznam téhož jména patří dřívější várce. Nemá-li ho, řekni to a zeptej se, jestli pokračovat.
 3. **Zadání kola ověř, ne převezmi.** Blok je zadání, ne odpověď. Ukáže-li se při prvním pohledu do podkladů, že otázky v něm jsou neúplné nebo špatně položené, řekni to a nech nové zadání potvrdit – kolo smí své zadání přepsat.
 
@@ -154,7 +154,7 @@ Odjede **jedno kolo** návrhu: vezme blok ze sekce *Kola návrhu* v `docs/todo.m
 
 Veď rozhovor otázku po otázce, dokud v tématu nezbývá otevřená otázka. Zapisuj průběžně:
 
-- **Tematický dokument** `docs/<topic>.md` drží celý okruh. Produktovou a technickou část v něm odděluj toutéž hranicí jako mezi požadavky a návrhem (`~/.claude/rules/product.md`, *`requirements.md`, `architecture.md`, `plan.md`*): omezení a volba se nemíchají, jen stojí u sebe.
+- **Tematický dokument** `docs/<topic>.md` drží celý okruh. Produktovou a technickou část v něm odděluj toutéž hranicí jako mezi požadavky a návrhem (`~/.claude/standards/product.md`, *`requirements.md`, `architecture.md`, `plan.md`*): omezení a volba se nemíchají, jen stojí u sebe.
 - **Do sdílených dokumentů** – `requirements.md`, glosář, scénáře, `model.md` – zapiš jen to, co z tématu plyne pro celek, a odkaž se na tematický dokument. Psaní celého tématu rovnou do nich je zamítnuté, protože souběžné větve by se srazily v týchž kapitolách. **`architecture.md` nepiš**, vzniká ve *Fázi 4*.
 - **Kapitola v `decisions.md` se píše bez čísla**, i když ho kapitoly v projektu mají, a odkazy na ni se píšou jménem. Číslo dostane až ve *Fázi 3* – souběžná kola by si jinak vzala totéž.
 - **Nová otevřená otázka mimo téma** se odkládá na **jmenované kolo**, ne na „později“: zapiš ji do jeho bloku. Nemá-li kam, vzniká nové kolo – dopiš jeho blok do mapy a řekni to.
@@ -230,7 +230,7 @@ Běží **po každém dokumentu zvlášť** – tematickém dokumentu kola i ná
 
 **Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. `/oponent` je **krok životního cyklu**, ne nabídka: pusť ho, nebo nahlas řekni, proč se u téhle změny přeskakuje. Nabízej ho pro každý dokument zvlášť (`/oponent docs/architecture.md`, `/oponent docs/<topic>.md`).
 
-**Hlediska nevypisuj** – sestaví si je sám podle sloupce *Spouštěč* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Volba hledisek*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/rules/rules.md`, *Single source of truth*).
+**Hlediska nevypisuj** – sestaví si je sám podle sloupce *Spouštěč* ve svém katalogu (`~/.claude/skills/oponent/SKILL.md`, *Volba hledisek*) a nechá si je od uživatele potvrdit. Výčet zopakovaný tady by se s katalogem rozešel při první jeho změně (`~/.claude/standards/rules.md`, *Single source of truth*).
 
 **Kontrola uživatele:**
 
@@ -255,7 +255,7 @@ Pouští se po doporučených krocích nad sešitým návrhem. Potvrď s uživat
 
 ## Když se návrh změní později
 
-Platí *Doc-first vývoj* z `~/.claude/rules/rules.md`; posloupnost souborů definuje `~/.claude/rules/product.md`:
+Platí *Doc-first vývoj* z `~/.claude/standards/rules.md`; posloupnost souborů definuje `~/.claude/standards/product.md`:
 
 1. Změní se požadavek → to je `/specify`; sem se vrať, až je změněný.
 2. Uprav **`architecture.md`** a dotčené dokumenty návrhu, u návrhu po kolech i **tematický dokument** toho okruhu.
@@ -272,7 +272,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 - **Kolo zapíše celé téma do sdílených dokumentů.** Souběžná kola se pak srazí v týchž kapitolách. Do sdílených jde jen to, co z tématu plyne pro celek.
 - **`architecture.md` vznikne uprostřed kol.** Souběžná kola by se v něm srážela a návrh nad celkem stojí na uzavřených tématech.
 - **Orientace se oznámí až po zápisu.** Pak už není co opravit. Věta jde před první soubor, ne za něj.
-- **Zamítnuté varianty se nezapíšou.** Za půl roku je někdo vymyslí znovu a projde celou úvahou nanovo (`~/.claude/rules/rules.md`, *Rozhodnutí zapisuj i s cestou k nim*).
+- **Zamítnuté varianty se nezapíšou.** Za půl roku je někdo vymyslí znovu a projde celou úvahou nanovo (`~/.claude/standards/rules.md`, *Rozhodnutí zapisuj i s cestou k nim*).
 
 ------
 
@@ -295,7 +295,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 - [seznam, nebo „žádné“]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
 **U mapy okruhů** vypadá závěr jinak: místo dokumentů vypiš mapu kol – u každého jméno, větev a na co čeká – a doporuč, **která kola pustit hned a souběžně**: ta bez nesplněné závislosti, a přednostně ta, jejichž řádky *Sahá na* se nepřekrývají. Pod to doporuč `/review`, `/cleanup` a ve worktree layoutu sloučení větve – teprve pak se otevírají kola.
 

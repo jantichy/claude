@@ -9,15 +9,15 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
 ## Výjimky z obecných pravidel
 
-- **Projektový `CLAUDE.md` je tenhle soubor, ne kořenový `~/.claude/CLAUDE.md`** – i blok metadat, který `~/.claude/rules/structure.md` jinak čeká v kořeni. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata ani sekce tohohle repozitáře tam nepatří, mátly by v cizím projektu. **Platí to pro každý skill, který zapisuje do „projektového `CLAUDE.md`“** (`/project`, `/autocommit`, `/review`, `/consistency`): v tomhle repozitáři najde oba soubory a zapisovat smí jen sem.
-- **`/attack`, `/release` ani `/evaluate` se tu nikdy nepouštějí.** Repozitář je konfigurace, ne aplikace – není co spustit, kam nasadit, a tedy ani žádný provoz, který by šlo vyhodnotit. **Posledním krokem osy, na který se tu dojde, je `/implement`**; kontrolní kroky se pouštějí dál a běh uzavírá `/cleanup` a po něm `/merge`, stojí-li práce na větvi – spouštěčem obou není pozice v cyklu, ale konec session, respektive pokyn uživatele. Zapsáno schválně, ne odvozeno (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*).
+- **Projektový `CLAUDE.md` je tenhle soubor, ne kořenový `~/.claude/CLAUDE.md`** – i blok metadat, který `~/.claude/standards/structure.md` jinak čeká v kořeni. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata ani sekce tohohle repozitáře tam nepatří, mátly by v cizím projektu. **Platí to pro každý skill, který zapisuje do „projektového `CLAUDE.md`“** (`/project`, `/autocommit`, `/review`, `/consistency`): v tomhle repozitáři najde oba soubory a zapisovat smí jen sem.
+- **`/attack`, `/release` ani `/evaluate` se tu nikdy nepouštějí.** Repozitář je konfigurace, ne aplikace – není co spustit, kam nasadit, a tedy ani žádný provoz, který by šlo vyhodnotit. **Posledním krokem osy, na který se tu dojde, je `/implement`**; kontrolní kroky se pouštějí dál a běh uzavírá `/cleanup` a po něm `/merge`, stojí-li práce na větvi – spouštěčem obou není pozice v cyklu, ale konec session, respektive pokyn uživatele. Zapsáno schválně, ne odvozeno (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*).
 - **Repozitář je veřejný, takže `docs/todo.md`, `docs/backlog.md`, `docs/done.md` a `docs/decisions.md` píšeš pro cizí oči.** Do konce září 2026 ležely v soukromém `~/Dev/context/` právě proto; od 20. 9. 2026 jsou tady a tu ochranu musí nahradit pravidlo. **Hranice vede mezi strukturou a obsahem.** Struktura veřejná je a `README.md` ji sám píše – že analytické know-how leží v `context/analytics/`, autorovy články v `context/archive/` a jeho styl psaní v `context/compose/`, se smí napsat a odkazovat se na to. **Konkrétní obsah veřejný není:** jméno klienta nebo organizace (tedy i to, že `context/organizations/` drží zrovna tenhle profil), sazba a obchodní údaj, osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu nebo domény a know-how, které se prodává. **Eventoid a artihub jsou autorovy vlastní projekty** a jmenovat se smějí.
 
   **Platí to na každý zápis, ne na ten první.** Úkol vzniklý při práci pro klienta se zapisuje tak, aby popsal *co* se má v konfigurační vrstvě udělat, ne *u koho* se to ukázalo: „u jednoho projektu chyběl kontrakt příkazů“, ne jméno toho projektu. Potřebuje-li položka konkrétní klientský kontext, aby dávala smysl, patří celá do `~/Dev/context/todo.md` – tam se nic nezveřejňuje.
 
 ## Struktura a dokumentace
 
-Projekt drží standardní strukturu podle `~/.claude/rules/structure.md`:
+Projekt drží standardní strukturu podle `~/.claude/standards/structure.md`:
 
 - `README.md` – co projekt je, pro člověka (ne instrukce pro Clauda)
 - `docs/todo.md` – co je odložené na později, ale rozhodnuté, že se to udělá
@@ -27,38 +27,38 @@ Projekt drží standardní strukturu podle `~/.claude/rules/structure.md`:
 
 Všechny tyhle soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/cleanup`.
 
-**`docs/rules.md` tu není a nezakládá se:** pravidla téhle vrstvy jsou samy jejím obsahem (`rules/`), ne meta-vrstvou nad ním.
+**`docs/rules.md` tu není a nezakládá se:** pravidla téhle vrstvy jsou samy jejím obsahem (`standards/`), ne meta-vrstvou nad ním.
 
 ## Instrukce pro tenhle repozitář
 
 Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen tady, na rozdíl od `~/.claude/CLAUDE.md`, který je uživatelský a jde do každé session v každém projektu.
 
-**Norma tvaru skillů je `~/.claude/skills/skills.md` – odkaz, ne import.** Načti si ji, jakmile se chystáš sáhnout na kterýkoliv `SKILL.md` nebo `README.md` skillu, nebo nějaký zakládat či rušit; neopírej se o paměť. Paušálně se neimportuje, protože je to 42 kB, která by šla do každé session v tomhle repozitáři včetně těch, kde se žádného skillu nedotkneme (`~/.claude/rules/rules.md`, *Co vložíš do kontextu, platíš do konce session*). Odkaz drží dvě vrstvy: `/skill` si normu čte celou ve své přípravě a `tests/test_skills.py` ji vynucuje strojem, takže skill, který se od ní odchýlí, neprojde průběžnou kontrolou.
+**Norma tvaru skillů je `~/.claude/skills/skills.md` – odkaz, ne import.** Načti si ji, jakmile se chystáš sáhnout na kterýkoliv `SKILL.md` nebo `README.md` skillu, nebo nějaký zakládat či rušit; neopírej se o paměť. Paušálně se neimportuje, protože je to 42 kB, která by šla do každé session v tomhle repozitáři včetně těch, kde se žádného skillu nedotkneme (`~/.claude/standards/rules.md`, *Co vložíš do kontextu, platíš do konce session*). Odkaz drží dvě vrstvy: `/skill` si normu čte celou ve své přípravě a `tests/test_skills.py` ji vynucuje strojem, takže skill, který se od ní odchýlí, neprojde průběžnou kontrolou.
 
-- **Norma platí pro každou cestu ke změně skillu:** ruční úpravu, `/skill` i cizí nástroj typu `skill-creator` nebo `superpowers:writing-skills`. Ty mají vlastní představu o tvaru a prosadí ji, když jim nic neřekneš; tenhle řádek je to, co jim ji přebíjí (`~/.claude/rules/rules.md`, *Přednost pravidel*). Postup zakládání, revize a rušení drží `/skill`, ne norma.
+- **Norma platí pro každou cestu ke změně skillu:** ruční úpravu, `/skill` i cizí nástroj typu `skill-creator` nebo `superpowers:writing-skills`. Ty mají vlastní představu o tvaru a prosadí ji, když jim nic neřekneš; tenhle řádek je to, co jim ji přebíjí (`~/.claude/standards/rules.md`, *Přednost pravidel*). Postup zakládání, revize a rušení drží `/skill`, ne norma.
 - **Každý skill má dvě README.** Vlastní `skills/<name>/README.md` psané pro člověka zvenčí, na které se posílá odkaz, a k tomu jeden odstavec v kořenovém `README.md`, jehož nadpis na ně odkazuje. Tvar obojího drží `skills/skills.md`, *README skillu*, a vynucují ho testy. Když skill přidáš nebo zásadně změníš jeho chování, aktualizuj obojí rovnou jako součást té změny – nečekej na vyžádání.
 
-## Co do `~/.claude/rules/rules.md` nepatří
+## Co do `~/.claude/standards/rules.md` nepatří
 
-`~/.claude/rules/rules.md` drží **obecná pravidla práce** a jde do každé session, takže každá věta v něm stojí kontext všude. Než do něj něco zapíšeš, projdi test – vyhrává první kritérium, které sedí:
+`~/.claude/standards/rules.md` drží **obecná pravidla práce** a jde do každé session, takže každá věta v něm stojí kontext všude. Než do něj něco zapíšeš, projdi test – vyhrává první kritérium, které sedí:
 
-1. Říká, **co smí stát** v konkrétním souboru v `docs/`? → `~/.claude/rules/structure.md`; u zadání, návrhu a produktových podkladů `~/.claude/rules/product.md`
+1. Říká, **co smí stát** v konkrétním souboru v `docs/`? → `~/.claude/standards/structure.md`; u zadání, návrhu a produktových podkladů `~/.claude/standards/product.md`
 2. Platí obecně pro skilly? → `~/.claude/skills/skills.md`
-3. Popisuje **rozhraní kroku životního cyklu**? → `~/.claude/rules/lifecycle.md`; obecné pravidlo o přeskakování zůstává v `~/.claude/rules/rules.md`
+3. Popisuje **rozhraní kroku životního cyklu**? → `~/.claude/standards/lifecycle.md`; obecné pravidlo o přeskakování zůstává v `~/.claude/standards/rules.md`
 4. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu
-5. Platí jen při určité činnosti – zjišťování z dat (`~/.claude/rules/evidence.md`), delegaci na agenty (`~/.claude/rules/delegation.md`), kódu, webu, textu, vizuálu či měření (doména v `~/Dev/context/`)? → tam, a v `~/.claude/rules/rules.md` nanejvýš jednořádkový spouštěč
+5. Platí jen při určité činnosti – zjišťování z dat (`~/.claude/standards/evidence.md`), delegaci na agenty (`~/.claude/standards/delegation.md`), kódu, webu, textu, vizuálu či měření (doména v `~/Dev/context/`)? → tam, a v `~/.claude/standards/rules.md` nanejvýš jednořádkový spouštěč
 6. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, *Výjimky z obecných pravidel*
-7. Nic z toho → `~/.claude/rules/rules.md`
+7. Nic z toho → `~/.claude/standards/rules.md`
 
-**K pravidlu jen jedna věta pointy** (`~/.claude/rules/rules.md`, *K pravidlům ukládej i „proč“*); datum, incident a měření patří do commitu nebo `docs/decisions.md`. Velikost `~/.claude/rules/rules.md` i součtu paušálně načítaných souborů hlídá test v `tests/test_size.py` – když spadne, uvolni místo nebo pravidlo přesuň, mez nezvedej mimochodem.
+**K pravidlu jen jedna věta pointy** (`~/.claude/standards/rules.md`, *K pravidlům ukládej i „proč“*); datum, incident a měření patří do commitu nebo `docs/decisions.md`. Velikost `~/.claude/standards/rules.md` i součtu paušálně načítaných souborů hlídá test v `tests/test_size.py` – když spadne, uvolni místo nebo pravidlo přesuň, mez nezvedej mimochodem.
 
 ## Typ projektu
 
-Projekt mimo výš uvedené kategorie – konfigurační vrstva Claude Code. Které kroky *Životního cyklu projektu* (`~/.claude/rules/rules.md`) se tu pouštějí, drží *Výjimky z obecných pravidel* výš.
+Projekt mimo výš uvedené kategorie – konfigurační vrstva Claude Code. Které kroky *Životního cyklu projektu* (`~/.claude/standards/rules.md`) se tu pouštějí, drží *Výjimky z obecných pravidel* výš.
 
 ## Paměť
 
-Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/.claude/rules/structure.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
+Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na čem se domluvíme – rozhodnutí, kontext, poznámky – ukládej explicitně do souborů projektu podle `~/.claude/standards/structure.md`. Ty jsou jediný zdroj pravdy pro tento projekt, i když harness bude nabádat k zápisu do Memory.
 
 ## Kontrakt příkazů
 

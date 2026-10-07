@@ -54,7 +54,7 @@ Sloupec *Živí* říká, do kterého dokumentu ta cesta ústí – cesta, její
 - **Ve Fázi 3 vyber aspoň jednu cestu z každého ze svých tří bloků** – *Poptávka* mezi ně nepatří, ta se pouští ve Fázi 2. Samé produkty dají přehled trhu a nula požadavků; samá zjištění dají seznam přání bez opory v tom, co existuje.
 - **Cestu nerozšiřuj, aby jich stačilo pustit míň.** Kapacitu neurčuje šířka zadání, ale výstup agenta – vrátí podobný počet nálezů, ať má zadání úzké, nebo široké. Rozšířením se počet nezvedne, jen se rozptýlí jejich původ.
 - **Vede-li projekt dokument ze sloupce *Živí*, ber jeho cestu přednostně.** Nevede-li žádný, na který cesta ústí, je to nejslabší kandidát z celého katalogu.
-- **Volbu dolož** – u každé zvolené cesty jednou větou, co k ní vedlo, a jmenuj **jednu, kterou jsi vědomě nevzal, a proč**. Nevybraná cesta nevrátí nula nálezů, ale neexistenci, a ta neprojde žádným počítadlem v závěru (`~/.claude/rules/rules.md`, *Zapiš i to, co vědomě nemáš*).
+- **Volbu dolož** – u každé zvolené cesty jednou větou, co k ní vedlo, a jmenuj **jednu, kterou jsi vědomě nevzal, a proč**. Nevybraná cesta nevrátí nula nálezů, ale neexistenci, a ta neprojde žádným počítadlem v závěru (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*).
 - **Doklad poptávky se nezapočítává mezi nálezy konkurence.** Cesty bloku *Poptávka* mají vlastní přísnější měřítko: doklad musí mluvit o problému, ne o kategorii produktu. Nález, který mluví o nástrojích, patří do `competition.md`, ne do `demand.md`.
 - **Běžel-li `/discovery` už dřív** (Fáze 0 to zjistila), začni panelem toho běhu. Nález, který se vrátí v téže cestě, znamená, že se nezměnil; nález, který zmizel s vyměněnou cestou, neznamená nic.
 

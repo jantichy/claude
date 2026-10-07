@@ -1,8 +1,8 @@
 # Pravidla práce
 
-Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém. Co do tohoto souboru nepatří a kam to jde, drží `~/.claude/.claude/CLAUDE.md`, *Co do `~/.claude/rules/rules.md` nepatří*.
+Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém. Co do tohoto souboru nepatří a kam to jde, drží `~/.claude/.claude/CLAUDE.md`, *Co do `~/.claude/standards/rules.md` nepatří*.
 
-Doménové znalosti z `~/Dev/context/` si projekt importuje tvrdým `@import`em v `CLAUDE.md` – jen ty relevantní (rozcestník `~/Dev/context/CLAUDE.md`, importy zakládá `/project`). Projekt pro konkrétní organizaci si importuje i její profil, `@~/Dev/context/organizations/<organizace>.md`. **Ukázka importu v textu stojí v apostrofech**, jinak se soubor načte; skutečný import je naopak nesnese (`~/.claude/rules/structure.md`, *`CLAUDE.md`*).
+Doménové znalosti z `~/Dev/context/` si projekt importuje tvrdým `@import`em v `CLAUDE.md` – jen ty relevantní (rozcestník `~/Dev/context/CLAUDE.md`, importy zakládá `/project`). Projekt pro konkrétní organizaci si importuje i její profil, `@~/Dev/context/organizations/<organizace>.md`. **Ukázka importu v textu stojí v apostrofech**, jinak se soubor načte; skutečný import je naopak nesnese (`~/.claude/standards/structure.md`, *`CLAUDE.md`*).
 
 ------
 
@@ -32,7 +32,7 @@ Doménové znalosti z `~/Dev/context/` si projekt importuje tvrdým `@import`em 
 
 ### Nezaváděj neustálené termíny
 
-Cizí slovo budící dojem zavedeného vzoru („resolver“, „fasáda“) nepoužívej tam, kde stačí prosté pojmenování; buď je termín ustálený, nebo hned řekni, co jím myslíš. Slovo, které jednou padlo v konverzaci, ještě není termín. Rozhodnuté termíny drží `~/.claude/rules/ptydepe.md`, spravuje je `/ptydepe`.
+Cizí slovo budící dojem zavedeného vzoru („resolver“, „fasáda“) nepoužívej tam, kde stačí prosté pojmenování; buď je termín ustálený, nebo hned řekni, co jím myslíš. Slovo, které jednou padlo v konverzaci, ještě není termín. Rozhodnuté termíny drží `~/.claude/standards/ptydepe.md`, spravuje je `/ptydepe`.
 
 ### Interní značky ven nepatří
 
@@ -84,7 +84,7 @@ Co uživatel odloží, zapiš hned do `docs/todo.md` a po uzavření aktuálníh
 
 ### Než přejdeš dál, ověř, že se nic neztratilo
 
-Před dalším velkým tématem a na konci session zkontroluj: zbyly nedořešené otázky? Nevznikly nekonzistence? Je dohodnuté zapsané? Na poslední má odpověď znít „ano, průběžně“. Pořadí kroků drží `~/.claude/rules/lifecycle.md`.
+Před dalším velkým tématem a na konci session zkontroluj: zbyly nedořešené otázky? Nevznikly nekonzistence? Je dohodnuté zapsané? Na poslední má odpověď znít „ano, průběžně“. Pořadí kroků drží `~/.claude/standards/lifecycle.md`.
 
 ### Co vložíš do kontextu, platíš do konce session
 
@@ -96,7 +96,7 @@ Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu 
 
 ### Mechanickou práci deleguj
 
-**Hromadné čtení souborů kvůli jednomu faktu, převod formátu, mechanický přepis a sběr čísel se v hlavní session nedělají, ale delegují** na nejlevnější model. Výjimku – malý rozsah, podklad už v kontextu, chyba levného modelu by se nepoznala – řekni nahlas i s důvodem. **Hloubka delegace je jedna.** Než agenta pustíš, načti si `~/.claude/rules/delegation.md`: jak ho zadat, na jakém modelu a effortu, co má vracet.
+**Hromadné čtení souborů kvůli jednomu faktu, převod formátu, mechanický přepis a sběr čísel se v hlavní session nedělají, ale delegují** na nejlevnější model. Výjimku – malý rozsah, podklad už v kontextu, chyba levného modelu by se nepoznala – řekni nahlas i s důvodem. **Hloubka delegace je jedna.** Než agenta pustíš, načti si `~/.claude/standards/delegation.md`: jak ho zadat, na jakém modelu a effortu, co má vracet.
 
 ------
 
@@ -117,7 +117,7 @@ Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu 
 | Kdo co udělá v jakém pořadí? | `plan.md` |
 | Odkud to máme? | `research/` |
 
-**Než do některého z nich zapíšeš, načti si `~/.claude/rules/structure.md`** – tabulka říká, kam zápis míří, ne co v tom souboru smí stát. Cesty `docs/…` znamenají soubor podle režimu projektu (`~/.claude/rules/structure.md`, *Dva režimy umístění*).
+**Než do některého z nich zapíšeš, načti si `~/.claude/standards/structure.md`** – tabulka říká, kam zápis míří, ne co v tom souboru smí stát. Cesty `docs/…` znamenají soubor podle režimu projektu (`~/.claude/standards/structure.md`, *Dva režimy umístění*).
 
 ### Pravda v souborech, ne v konverzaci
 
@@ -161,7 +161,7 @@ Soubory a adresáře pojmenuj **jedním sémantickým slovem**, anglicky; víc s
 
 ### Jeden termín pro jednu věc
 
-Jeden pojem má **jedno jméno** v kódu, dokumentaci, UI i řeči. Dvě jména čtenář bere jako dvě věci a grep najde jen polovinu výskytů; jedno jméno pro dvě věci je táž vada z druhé strany. Ustálený termín se mění jen s důvodem a všude naráz (`/replace`); termíny napříč projekty drží `~/.claude/rules/ptydepe.md`.
+Jeden pojem má **jedno jméno** v kódu, dokumentaci, UI i řeči. Dvě jména čtenář bere jako dvě věci a grep najde jen polovinu výskytů; jedno jméno pro dvě věci je táž vada z druhé strany. Ustálený termín se mění jen s důvodem a všude naráz (`/replace`); termíny napříč projekty drží `~/.claude/standards/ptydepe.md`.
 
 ### Generic-base + delta
 
@@ -189,7 +189,7 @@ U všeho volitelného, podmíněného nebo výjimečného zapiš proč. Kde dův
 
 ### Zjišťuj podle pravidel pro práci s daty
 
-Než měříš, dotazuješ se do dat, hledáš příčinu chyby nebo zapisuješ tvrzení z webu, **načti si `~/.claude/rules/evidence.md`** – vidlička před měřením, stupně vyloučení, shoda měření s tvrzením, doména hodnot pole, ověření zdroje skriptem. Ptá-li se někdo na věc, kterou podklady v tom rozlišení neobsahují, **odpověď začíná tím, co chybí**, ne zástupným výpočtem.
+Než měříš, dotazuješ se do dat, hledáš příčinu chyby nebo zapisuješ tvrzení z webu, **načti si `~/.claude/standards/evidence.md`** – vidlička před měřením, stupně vyloučení, shoda měření s tvrzením, doména hodnot pole, ověření zdroje skriptem. Ptá-li se někdo na věc, kterou podklady v tom rozlišení neobsahují, **odpověď začíná tím, co chybí**, ne zástupným výpočtem.
 
 ### Detekce konfliktů před přidáním
 
@@ -307,4 +307,4 @@ Kontroly   /oponent, /consolidate, /review, /consistency, /attack, /cleanup, /me
 
 Kroky **osy** něco tvoří a čekají na výstup předchozího; `/evaluate` čeká na čas, protože data o provozu vznikají týdny po nasazení. **Kontrolní kroky** nezvětšují rozsah práce – měří, uklízejí a uzavírají, co vzniklo; `/cleanup` běží na konci každé session, za ním `/merge`, uzavírá-li se větev.
 
-**Načti si `~/.claude/rules/lifecycle.md`, jakmile v některém kroku stojíš** – drží rozhraní kroků, co smí stát ve které mezeře, povolená opakování a kritéria přeskočení. Krok se přeskakuje jen tam, kde pro něj není důvod, a **nahlas i s důvodem**. Žádný krok neopakuje práci předchozího.
+**Načti si `~/.claude/standards/lifecycle.md`, jakmile v některém kroku stojíš** – drží rozhraní kroků, co smí stát ve které mezeře, povolená opakování a kritéria přeskočení. Krok se přeskakuje jen tam, kde pro něj není důvod, a **nahlas i s důvodem**. Žádný krok neopakuje práci předchozího.

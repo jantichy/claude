@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 Nasadí hotovou práci do produkce – s blokujícími kontrolami před, s plánem návratu a s ověřením po.
 
-V *Životním cyklu projektu* (`~/.claude/rules/rules.md`) je to sedmý krok osy: navazuje na `/implement` a předává na `/evaluate`, který měří, co z nasazení vzešlo. V mezeře před ním stojí `/attack`. **Je to poslední krok, který mění svět**, a to není kosmetika: všechno před ním mění repozitář, nasazení mění produkci, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
+V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to sedmý krok osy: navazuje na `/implement` a předává na `/evaluate`, který měří, co z nasazení vzešlo. V mezeře před ním stojí `/attack`. **Je to poslední krok, který mění svět**, a to není kosmetika: všechno před ním mění repozitář, nasazení mění produkci, kde jsou cizí data a živí uživatelé. Chyba v repozitáři se opraví commitem, chyba v produkci se opravuje před lidmi, kteří na to koukají.
 
 ## Co skill nedělá
 
@@ -117,7 +117,7 @@ Definice průběžné kontroly, kontraktu příkazů, prahů jednotlivých kontr
 1. **Pracovní strom je čistý** a větev je pushnutá. Necommitnutá změna při nasazení znamená, že v produkci bude něco jiného, než co je v gitu – a to se hledá měsíce.
 2. **Průběžná kontrola a produkční build, obojí na čistém stromu.** Nikoliv „běželo to ráno“. `build` je tu navíc oproti průběžné kontrole, do které schválně nepatří: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
 3. **Průchod aplikací** – `e2e` z kontraktu, má-li ho projekt. **Tohle je jeho poslední místo, ne jediné**: do průběžné kontroly je moc pomalý a v `/review` by běžel nad stavem, který se do nasazení ještě několikrát změní, ale v CI běží po každém pushi – regresi je lepší chytit hned než až tady. Pouští se proto znovu, ze stejného důvodu jako audit závislostí v bodu 6: tam se ptáme „projde to, co jsme napsali?“, tady „projde to, co právě posíláme ven?“. Tady běží naposledy před tím, než se kód potká s uživateli. Chybí-li příkaz, napiš do přehledu, že průchod aplikací nikdo neověřil.
-4. **Proběhlo `/review`?** Odpověď **si přečti, neptej se na ni**: v `docs/done.md`, sekci `## Průchody životním cyklem` (`~/.claude/rules/lifecycle.md`, *Záznam průchodu v `done.md`*), je u každého běhu hash HEAD. Porovnej ho s tím, co nasazuješ – `git log --oneline <zapsaný hash>..HEAD` ukáže, co od té doby přibylo a co tedy nikdo neprověřil. U změny v citlivé oblasti je proběhlé `/review` **podmínka**, ne doporučení. Nemá-li projekt `done.md` nebo v něm ta sekce chybí, zeptej se – ale řekni nahlas, že se odpovídá z paměti, ne ze záznamu.
+4. **Proběhlo `/review`?** Odpověď **si přečti, neptej se na ni**: v `docs/done.md`, sekci `## Průchody životním cyklem` (`~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*), je u každého běhu hash HEAD. Porovnej ho s tím, co nasazuješ – `git log --oneline <zapsaný hash>..HEAD` ukáže, co od té doby přibylo a co tedy nikdo neprověřil. U změny v citlivé oblasti je proběhlé `/review` **podmínka**, ne doporučení. Nemá-li projekt `done.md` nebo v něm ta sekce chybí, zeptej se – ale řekni nahlas, že se odpovídá z paměti, ne ze záznamu.
 5. **Proběhl `/attack`?** Stejným způsobem jako bod 4, ze stejné sekce. U aplikace, kterou jde spustit, se ptej zvlášť: `/review` kód čte, `/attack` ho spouští, a poslední místo, kde má smysl zkusit věc rozbít nanečisto, je právě tady. Neproběhl-li nikdy, řekni to nahlas – nasadit se dá i tak, ale ať je to rozhodnutí, ne opomenutí.
 6. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují. **Pouštěl ho i `/review` a není to duplicita:** mezi ním a tímhle krokem proběhl `/consistency`, `/cleanup` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tam se ptáme „je čisté, co jsme napsali?“, tady „je čisté to, co právě posíláme ven?“.
 7. **Tajemství v repu** – `gitleaks detect`, je-li k dispozici. Nález blokuje vždy; a co bylo commitnuté, patří **rotovat**, ne jen smazat.
@@ -140,7 +140,7 @@ Definice průběžné kontroly, kontraktu příkazů, prahů jednotlivých kontr
 
 **Nasazuješ starší commit, než je v produkci?** Pak platí to nejnepříjemnější pravidlo celého skillu: **kód se vrátí, data ne.** Proběhla-li od té doby migrace, běží starý kód na novém schématu. Právě proto se migruje dopředu kompatibilně – expand/contract existuje kvůli téhle situaci, ne kvůli eleganci. Nemá-li projekt expand/contract a mezi cílem a produkcí je migrace, **řekni, že návrat kódu sám o sobě nestačí**, a vyřeš data zvlášť, než cokoliv nasadíš.
 
-**Před migrací záloha, která je ověřená.** Ne „hosting to nějak zálohuje“ – konkrétní soubor nebo snapshot, o kterém víš, kdy vznikl a jak se z něj obnovuje. U nevratné migrace to řekni nahlas a nech si to zvlášť potvrdit; platí `~/.claude/rules/rules.md`, *Před nevratnou akcí ověř skutečný stav*.
+**Před migrací záloha, která je ověřená.** Ne „hosting to nějak zálohuje“ – konkrétní soubor nebo snapshot, o kterém víš, kdy vznikl a jak se z něj obnovuje. U nevratné migrace to řekni nahlas a nech si to zvlášť potvrdit; platí `~/.claude/standards/rules.md`, *Před nevratnou akcí ověř skutečný stav*.
 
 ------
 
@@ -161,7 +161,7 @@ Teprve teď se ptáš, a ptáš se **jednou otázkou přes `AskUserQuestion`** n
 - **Po nasazení sleduji:** <co konkrétně a jak dlouho>
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
 Volby: **Nasadit** / **Zrušit**.
 
@@ -215,7 +215,7 @@ Zapiš do `docs/decisions.md` jen to, co má trvalou hodnotu (změna postupu nas
 **Zbývá dokončit:** [contract krok migrace v příštím vydání / nic]
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
 **Zapiš do `docs/todo.md` datum, kdy vyhodnotit provoz.** Je to jediný spouštěč, který `/evaluate` má – čeká na čas, ne na výstup předchozího kroku, a bez tohohle záznamu se na něj nedojde nikdy. Položka nese **datum, od kdy to má smysl**, a co se nasadilo:
 
@@ -223,9 +223,9 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 - [ ] **Vyhodnotit provoz přes `/evaluate`** – od <datum>. Nasazeno <verze> dne <datum nasazení>: <co to přineslo>.
 ```
 
-Datum vyrob příkazem, nepiš ho z hlavy (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš*) – u běžného vydání `date -v+3w +%F`, u něčeho, co člověk použije zřídka, odpovídajícím delším odstupem. **Je to odstup, ne termín:** dřív vrátí `/evaluate` šum, později nic nepokazí.
+Datum vyrob příkazem, nepiš ho z hlavy (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš*) – u běžného vydání `date -v+3w +%F`, u něčeho, co člověk použije zřídka, odpovídajícím delším odstupem. **Je to odstup, ne termín:** dřív vrátí `/evaluate` šum, později nic nepokazí.
 
-**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/rules/lifecycle.md`, *Co smí stát v které mezeře*.
+**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*.
 
 ------
 
@@ -248,9 +248,9 @@ Co se v okně dělá:
    **Řešeno:** <co se s nimi udělalo, nebo „nic, nic se neobjevilo“>
    ```
 
-   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*.
+   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
-3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/rules/lifecycle.md`, *Hotfix*: jde týmž životním cyklem ve zkrácené podobě, `/review` a průběžná kontrola se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
+3. **Objeví-li se chyba, je to hotfix, ne nová práce.** Platí pro něj `~/.claude/standards/lifecycle.md`, *Hotfix*: jde týmž životním cyklem ve zkrácené podobě, `/review` a průběžná kontrola se **nepřeskakují** (oprava dělaná ve spěchu je přesně ten případ, kdy je kontrola nejcennější) a po nasazení hotfixu běží **nové sledovací okno**.
 
 **Přeruší-li se session dřív, než okno uplyne**, řekni to a zapiš do `docs/todo.md`, do kdy okno běží a co se má sledovat. Okno, o kterém ví jen kontext session, žádné okno není.
 
@@ -267,7 +267,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - `Nasazeno a ověřeno. Sledovací okno běží do <čas>, sleduju: <co>.` – **tímhle končí běh skillu**, ne nasazení. Fáze 6 je zapsaná, ale okno je otevřené.
 - `Nasazeno a ověřeno, sledovací okno uzavřeno – <N nových chyb / žádné>. Provoz vyhodnotí /evaluate od <datum>.` – jen když okno mezitím opravdu uplynulo a uzavřel jsi ho podle Fáze 7. Datum je to, které jsi zapsal do `todo.md` ve *Fázi 6*; **tímhle nasazení končí, ale cyklus ne**.
 
-**Nikdy neříkej „nasazeno a ověřeno na produkci“ bez zmínky o okně.** Ta věta tvrdí, že je hotovo, kdežto podle *Životního cyklu projektu* (`~/.claude/rules/rules.md`) nasazení končí až uzavřením okna – a právě ta chybějící zmínka je důvod, proč se scénář „spadlo to o dvě hodiny později“ dosud nikdy nedozvěděl vlastníka.
+**Nikdy neříkej „nasazeno a ověřeno na produkci“ bez zmínky o okně.** Ta věta tvrdí, že je hotovo, kdežto podle *Životního cyklu projektu* (`~/.claude/standards/rules.md`) nasazení končí až uzavřením okna – a právě ta chybějící zmínka je důvod, proč se scénář „spadlo to o dvě hodiny později“ dosud nikdy nedozvěděl vlastníka.
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
@@ -285,7 +285,7 @@ Ke každému takovému defektu proto zapiš **jeden řádek do `docs/decisions.m
 - **YYYY-MM-DD** – *<co se stalo>*: měla to chytit <vrstva>, nechytila protože <důvod> → doplněno <co>
 ```
 
-Datum vyrob `date +%F` (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+Datum vyrob `date +%F` (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 **„Doplněno“ nesmí být prázdné.** Buď z toho vzejde nová kontrola (test, semgrep pravidlo, řádek v kontraktu, položka checklistu), nebo výslovné rozhodnutí, že se ta třída chyb hlídat nebude a proč. Bez toho se soustava učí jen z chyb, které sama našla – a to je přesně ta množina, kterou už chytat umí.
 

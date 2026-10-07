@@ -1,7 +1,7 @@
 """Regresní testy kontroly pořadí datovaných záznamů (`skills/order.py`).
 
 Kontrola existuje proto, že norma *Nejstarší nahoře* se sama nedodržuje.
-`~/.claude/rules/structure.md` ji žádá u `done.md` i `decisions.md`, ruční srovnání
+`~/.claude/standards/structure.md` ji žádá u `done.md` i `decisions.md`, ruční srovnání
 se od 6. 9. 2026 dělalo **třikrát** a pokaždé se to vrátilo – zapisují tam
 skilly samy a každý se řídí tím, co v souboru zrovna vidí, takže jeden
 obrácený zápis stačí, aby ho další napodobily.

@@ -21,7 +21,7 @@ režim  docs/                       režim  root
 
 **Výchozí je `docs/`**, který odděluje meta-vrstvu od vlastní práce; `root` sedí na knowledge base a malé projekty, kde by `docs/` byl prázdný obal. Režim se volí jednou při `/project` a pak se drží – míchat obojí je nepořádek.
 
-**Konvence zápisu.** Obecné texty (tenhle soubor, `~/.claude/rules/rules.md`, skilly) píšou cesty v podobě `docs/todo.md` a myslí tím soubor na místě podle režimu projektu. Texty o jednom projektu – jeho `CLAUDE.md` a `README.md` – píšou skutečnou cestu.
+**Konvence zápisu.** Obecné texty (tenhle soubor, `~/.claude/standards/rules.md`, skilly) píšou cesty v podobě `docs/todo.md` a myslí tím soubor na místě podle režimu projektu. Texty o jednom projektu – jeho `CLAUDE.md` a `README.md` – píšou skutečnou cestu.
 
 ### Deklarace režimu
 
@@ -41,13 +41,13 @@ Povinný je jen **`CLAUDE.md`**. Zbytek:
 |---|---|
 | `README.md`, `decisions.md`, `rules.md` | výběrem při `/project` (výchozí ano) |
 | `todo.md` + `backlog.md` + `done.md` | výběrem při `/project`, **jen jako trojice** |
-| `requirements.md`, `architecture.md`, `plan.md`, tematické dokumenty kol, produktové podklady (`demand.md`, `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md`, `operation.md`) | až prací – co v nich smí stát, drží **`~/.claude/rules/product.md`**; načti si ho, než do některého z nich zapíšeš |
+| `requirements.md`, `architecture.md`, `plan.md`, tematické dokumenty kol, produktové podklady (`demand.md`, `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md`, `operation.md`) | až prací – co v nich smí stát, drží **`~/.claude/standards/product.md`**; načti si ho, než do některého z nich zapíšeš |
 | `research/` | až je co uložit |
 | testy | s první kontrolou – kam patří, drží `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří* |
 
 Nezaložený soubor **není odchylka** – prázdný `decisions.md` u projektu, kde se nic nerozhoduje, je horší než žádný. Běhový stav skillů v `.claude/run/` standardní soubor není (`~/.claude/skills/skills.md`, *Běhový stav*).
 
-**Ve worktree layoutu** (`~/.claude/rules/worktree.md`) je projekt pracovní adresář větve, takže celá struktura žije v `main/` – i v režimu `root`. Kořen kontejneru není pracovní strom a nese jen rozcestník.
+**Ve worktree layoutu** (`~/.claude/standards/worktree.md`) je projekt pracovní adresář větve, takže celá struktura žije v `main/` – i v režimu `root`. Kořen kontejneru není pracovní strom a nese jen rozcestník.
 
 ---
 
@@ -137,23 +137,23 @@ Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – �
 - **Nejstarší nahoře**, nové na konec sekce; **datum dokončení** za názvem `(2026-08-28)`, vyrobené `date +%F`.
 - **Zrcadlí sekce `todo.md`** – položka jde do sekce, do které patřila.
 - **Přesouvá se úkol, ne odškrtnutý krok uvnitř něj** – odškrtnuté řádky checklistu zůstávají u nedokončené položky.
-- **`## Průchody životním cyklem`** – záznamy běhů kontrolních kroků; tvar a kdo zapisuje drží `~/.claude/rules/lifecycle.md`, *Záznam průchodu v `done.md`*. **`## Kola návrhu`** – `~/.claude/skills/architect/rounds.md`. Běhový stav skillů sem nepatří.
+- **`## Průchody životním cyklem`** – záznamy běhů kontrolních kroků; tvar a kdo zapisuje drží `~/.claude/standards/lifecycle.md`, *Záznam průchodu v `done.md`*. **`## Kola návrhu`** – `~/.claude/skills/architect/rounds.md`. Běhový stav skillů sem nepatří.
 
 Existuje jen spolu s `todo.md`.
 
 ### `research/`
 
-**Cizí podklady, ze kterých projekt vychází** – brief, zápis, export, PDF od klienta. Zakládá se, až je co uložit. Originály se sem **kopírují a dál nemění** (`~/.claude/rules/rules.md`, *Cizí podklady jsou read-only*); vytěžené žije jinde. Smysl je dohledatelnost.
+**Cizí podklady, ze kterých projekt vychází** – brief, zápis, export, PDF od klienta. Zakládá se, až je co uložit. Originály se sem **kopírují a dál nemění** (`~/.claude/standards/rules.md`, *Cizí podklady jsou read-only*); vytěžené žije jinde. Smysl je dohledatelnost.
 
 ### `rules.md`
 
-**Obecné principy tohoto projektu** – věty, které rozhodují, ne popis systému. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně; `decisions.md` drží konkrétní rozhodnutí, tady je rámec, proti kterému se rozhoduje. Patří sem **jen to, co je specifické pro projekt** – obecná pravidla jsou v `~/.claude/rules/rules.md`, doménové standardy v importované doméně, provoz worktree v `~/.claude/rules/worktree.md`.
+**Obecné principy tohoto projektu** – věty, které rozhodují, ne popis systému. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně; `decisions.md` drží konkrétní rozhodnutí, tady je rámec, proti kterému se rozhoduje. Patří sem **jen to, co je specifické pro projekt** – obecná pravidla jsou v `~/.claude/standards/rules.md`, doménové standardy v importované doméně, provoz worktree v `~/.claude/standards/worktree.md`.
 
 ---
 
 ## Průběžná aktualizace je povinná
 
-Tyhle soubory doplňuj **sám, průběžně a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží – nečekej na `/cleanup` (`~/.claude/rules/rules.md`, *Pravda v souborech, ne v konverzaci*); kam zápis míří, drží tamtéž *Kam co zapsat*. Patří-li zápis jinam, přesuň ho (*Živá struktura*).
+Tyhle soubory doplňuj **sám, průběžně a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží – nečekej na `/cleanup` (`~/.claude/standards/rules.md`, *Pravda v souborech, ne v konverzaci*); kam zápis míří, drží tamtéž *Kam co zapsat*. Patří-li zápis jinam, přesuň ho (*Živá struktura*).
 
 ## Prázdný soubor je v pořádku
 

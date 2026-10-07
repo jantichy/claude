@@ -1,6 +1,6 @@
 # Předání dál
 
-Čím každý běh skončí a co se stane, když práce nedojde do konce, protože kontext nabyl. Sdílené pravidlo pro skilly životního cyklu – obě vrstvy, osu i kontroly (`~/.claude/rules/rules.md`, *Životní cyklus projektu*).
+Čím každý běh skončí a co se stane, když práce nedojde do konce, protože kontext nabyl. Sdílené pravidlo pro skilly životního cyklu – obě vrstvy, osu i kontroly (`~/.claude/standards/rules.md`, *Životní cyklus projektu*).
 
 Řeší dvě vady, které mají týž původ: **běh skončí a není vidět, co dál**, a **běh se vleče do kontextu, ve kterém už nemá běžet**. Obojí stojí na jednom prahu, proto to drží jeden soubor, ne dva.
 
@@ -13,9 +13,9 @@
 
 Vyhrává první kritérium, které sedí:
 
-1. Je to rozhraní kroku cyklu – co krok dělá, co po něm platí, který soused stojí kde? → `~/.claude/rules/lifecycle.md`
+1. Je to rozhraní kroku cyklu – co krok dělá, co po něm platí, který soused stojí kde? → `~/.claude/standards/lifecycle.md`
 2. Rozhoduje to o **jednom nálezu** – kdo o něm rozhoduje, jak se předkládá, jaké má volby? → `~/.claude/skills/findings.md`
-3. Platí to pro práci obecně, ne jen pro konec běhu? → `~/.claude/rules/rules.md`
+3. Platí to pro práci obecně, ne jen pro konec běhu? → `~/.claude/standards/rules.md`
 4. Nic z toho → sem
 
 ------
@@ -78,10 +78,10 @@ Vyhrává první kritérium, které sedí:
 | Důvod | Proč |
 |---|---|
 | **Kontext je nad prahem** | viz *Práh kontextu* níž |
-| **Je to posudek toho, co tahle session právě vyrobila** | session, která návrh obhajovala, je na něj zaujatá a nález odmítne snáz (`~/.claude/rules/rules.md`, *Dlouhá session je dražší než dvě krátké*). Tenhle důvod platí vždy, nezávisle na běhu – `/oponent` nad dokumentem, který krok osy právě napsal, nebo `/review` za `/implement` –, takže ho skill píše do své odrážky rovnou celým řetězem |
+| **Je to posudek toho, co tahle session právě vyrobila** | session, která návrh obhajovala, je na něj zaujatá a nález odmítne snáz (`~/.claude/standards/rules.md`, *Dlouhá session je dražší než dvě krátké*). Tenhle důvod platí vždy, nezávisle na běhu – `/oponent` nad dokumentem, který krok osy právě napsal, nebo `/review` za `/implement` –, takže ho skill píše do své odrážky rovnou celým řetězem |
 | **Krok nedědí nic z rozmyšleného tady** | soubory si nová session načte znovu a levně; platí se jen kontext rozpravy, a ten ten krok nepotřebuje |
 
-**Řekni, kde ta práce leží.** `/clear` vyprázdní konverzaci v běžící session, ale **neukončí ji** – pracovní adresář zůstane ten samý, takže po něm nikam přecházet netřeba a odrážka to nemá komplikovat. Co odrážka **má** nést, je jméno adresáře, kde práce leží, stojí-li projekt ve worktree layoutu (`~/.claude/rules/worktree.md`): jeden pracovní adresář na větev znamená, že v jiném okně je session jinde, a `cd` do správného worktree je pak jediná věc, kterou nová session nemá odkud zjistit. **Po `/merge` je to `<container>/main`**, protože merge pracovní adresář větve smaže a práce nad sloučeným stavem leží v hlavní větvi.
+**Řekni, kde ta práce leží.** `/clear` vyprázdní konverzaci v běžící session, ale **neukončí ji** – pracovní adresář zůstane ten samý, takže po něm nikam přecházet netřeba a odrážka to nemá komplikovat. Co odrážka **má** nést, je jméno adresáře, kde práce leží, stojí-li projekt ve worktree layoutu (`~/.claude/standards/worktree.md`): jeden pracovní adresář na větev znamená, že v jiném okně je session jinde, a `cd` do správného worktree je pak jediná věc, kterou nová session nemá odkud zjistit. **Po `/merge` je to `<container>/main`**, protože merge pracovní adresář větve smaže a práce nad sloučeným stavem leží v hlavní větvi.
 
 ```
 - `/cleanup`, pak `/clear`, a `/consistency` až v nové session – zůstáváš v `<cesta k worktree>`, clear adresář nemění
@@ -103,7 +103,7 @@ Rozhoduje **absolutní velikost kontextu**, ne to, kolik z něj sežral start pr
 
 Volání se počítají jen v hlavní session, ne v subagentech, a obojí se měří od poslední kompaktace.
 
-**Překročení prahu ti ohlásí hook `~/.claude/hooks/handoff.py`** – při odeslání zprávy uživatelem vloží do kontextu naměřený údaj, a to u každého prahu jednou. Na jeho hlášku nabídni, respektive doporuč, přerušení hned v té odpovědi, i mimo skill. **Bez hlášky velikost nehádej:** běží-li dlouhý průchod uvnitř jedné odpovědi, kde hook nemá kdy změřit, opři rozhodnutí o délku běhu – panel specialistů s ověřováním a průchod přes dvacet nálezů se do 300k nevejde – a řekni, že je to odhad z rozsahu, ne měřený údaj (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš*).
+**Překročení prahu ti ohlásí hook `~/.claude/hooks/handoff.py`** – při odeslání zprávy uživatelem vloží do kontextu naměřený údaj, a to u každého prahu jednou. Na jeho hlášku nabídni, respektive doporuč, přerušení hned v té odpovědi, i mimo skill. **Bez hlášky velikost nehádej:** běží-li dlouhý průchod uvnitř jedné odpovědi, kde hook nemá kdy změřit, opři rozhodnutí o délku běhu – panel specialistů s ověřováním a průchod přes dvacet nálezů se do 300k nevejde – a řekni, že je to odhad z rozsahu, ne měřený údaj (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš*).
 
 **`/compact` nedoporučuj jako první volbu.** Rozhoduje v něm model, co si zapamatuje, a zahodí právě to, co nikdo nezapsal do souboru. Správná cesta je `/cleanup` → `/clear`, protože po úklidu je pravda v souborech a nová session si ji načte celou. `/compact` zbývá na případ, kdy je rozdělaná jedna úvaha, která se zapsat nedá.
 
@@ -121,18 +121,18 @@ Jednou odrážkou, ne otázkou přes `AskUserQuestion`: kolik položek zbývá, 
 
 ### Co se zapisuje
 
-Řekne-li uživatel ano, **zbytek fronty se uloží do `todo.md`, do sekce `## Přerušený běh`** (`~/.claude/rules/structure.md`, *`todo.md`*), a teprve pak se běh ukončí.
+Řekne-li uživatel ano, **zbytek fronty se uloží do `todo.md`, do sekce `## Přerušený běh`** (`~/.claude/standards/structure.md`, *`todo.md`*), a teprve pak se běh ukončí.
 
 **Uloží se celý nález, ne jeho jméno.** Nová session nemá kontext, ve kterém nález vznikl, a položka, ze které se nedá rozhodnout, je horší než žádná – tváří se jako zadání a není. U každé zbývající položky proto jde do zápisu:
 
-- **co je špatně** – nález celou větou, ne značkou a ne zkratkou (`~/.claude/rules/rules.md`, *Interní značky ven nepatří*)
+- **co je špatně** – nález celou větou, ne značkou a ne zkratkou (`~/.claude/standards/rules.md`, *Interní značky ven nepatří*)
 - **čím je doložený** – `basis`, nebo lokace či reprodukční postup, nese-li je schéma toho skillu místo něj
 - **závažnost** podle `~/.claude/skills/severity.md`
 - **varianty řešení i s důsledkem každé**, včetně obou záchytných voleb podle `~/.claude/skills/findings.md` – tedy to, co by se bylo uživatele zeptalo tady
 - **cesta a řádek**, kde se to opravuje, a co se tím ještě rozbije
 - **co už se v tomhle běhu rozhodlo** o sousedních nálezech, závisí-li na tom volba u tohohle
 
-**Předávej to doslova, neparafrázuj** – parafráze je přesně to místo, kde se ztratí detail, kvůli kterému nález vznikl, a ztratí se tiše, protože shrnutí vypadá úplně (`~/.claude/rules/delegation.md`, *Velké průzkumné úkoly deleguj*).
+**Předávej to doslova, neparafrázuj** – parafráze je přesně to místo, kde se ztratí detail, kvůli kterému nález vznikl, a ztratí se tiše, protože shrnutí vypadá úplně (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*).
 
 **Zapiš i to, co se v tomhle běhu už vypořádalo** – jedním řádkem nad položkami, s počtem opravených a zamítnutých. Bez toho nová session neví, jestli má před sebou celou frontu nebo její zbytek, a nemá jak poznat, že nález, který v souborech nenachází, je opravený.
 
@@ -146,4 +146,4 @@ Závěr běhu zůstane obvyklý – šablona i verdikt. V něm se přiznají **n
 - `/cleanup`, pak `/clear`, a v nové session `/next` – zbývajících <N> nálezů tam leží první
 ```
 
-**Ověř, že se to uložilo, než to ohlásíš.** Načti sekci zpátky a zkontroluj, že v ní je tolik položek, kolik jich ve frontě zbývalo (`~/.claude/rules/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Ohlášené přerušení s polovinou zapsaných nálezů je tichá ztráta práce – a pozná se až za týden, kdy si na ty nálezy nikdo nevzpomene.
+**Ověř, že se to uložilo, než to ohlásíš.** Načti sekci zpátky a zkontroluj, že v ní je tolik položek, kolik jich ve frontě zbývalo (`~/.claude/standards/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Ohlášené přerušení s polovinou zapsaných nálezů je tichá ztráta práce – a pozná se až za týden, kdy si na ty nálezy nikdo nevzpomene.

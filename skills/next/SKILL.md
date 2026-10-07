@@ -25,7 +25,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 
 ## Jak je to postavené uvnitř
 
-**Všechno, co jde zjistit mechanicky, posbírá jedním během skript `collect.py`** v adresáři skillu a vrátí to jako JSON: kořen a uspořádání projektu, hlavní větev po `git fetch`, položky `todo.md` rozdělené podle sekcí, bloky kol se stavem z jejich větví, stav plánu, návrhové dokumenty, poslední průchody cyklem, rámeček cyklu z `~/.claude/rules/rules.md`, necommitnuté změny a nesloučené větve i s tím, jestli nad nimi běží session. **Živé a opuštěné session zjišťuje `sessions.py`**, který `collect.py` volá – čte registr běžících session Claude Code (`~/.claude/sessions/`), ověří, že proces žije, a větev bere z posledního záznamu transcriptu, protože session ve worktree layoutu startuje v kořeni kontejneru.
+**Všechno, co jde zjistit mechanicky, posbírá jedním během skript `collect.py`** v adresáři skillu a vrátí to jako JSON: kořen a uspořádání projektu, hlavní větev po `git fetch`, položky `todo.md` rozdělené podle sekcí, bloky kol se stavem z jejich větví, stav plánu, návrhové dokumenty, poslední průchody cyklem, rámeček cyklu z `~/.claude/standards/rules.md`, necommitnuté změny a nesloučené větve i s tím, jestli nad nimi běží session. **Živé a opuštěné session zjišťuje `sessions.py`**, který `collect.py` volá – čte registr běžících session Claude Code (`~/.claude/sessions/`), ověří, že proces žije, a větev bere z posledního záznamu transcriptu, protože session ve worktree layoutu startuje v kořeni kontejneru.
 
 **Proč skript, a ne pokyny:** dřív skill vedl model přes desítky volání gitu a čtení souborů, každé s čekáním na model, a k tomu si pokaždé načítal `structure.md`, `preflight.md` a `lifecycle.md`. Běh trval přes minutu, přestože uživatel chce jen rychlý návrh. Skript běží pár vteřin – z toho zhruba polovina je `git fetch` po síti – a model dělá jen úsudek. Druhý důvod je spolehlivost: **registr i transcript jsou vnitřní formát Claude Code bez dokumentace** a o obsazenosti větve rozhoduje testovaný kód (`tests/test_next.py`), ne úvaha modelu.
 
@@ -71,7 +71,7 @@ Položka, která nese hned za názvem `od <datum>`, má smysl až od toho dne �
 | `true` | **do fronty nevstupuje** – jen ji zmiň v poznámkách i s datem, aby bylo vidět, že se na ni nezapomnělo |
 | `false` | den nastal, řadí se jako každá jiná |
 
-**Datum nepočítej sám a nepřepisuj ho.** Dnešní den zná skript a porovnal ho; položka, u které si termín přepočítáš z hlavy, se nabídne ve špatný den (`~/.claude/rules/rules.md`, *Hodnotu, kterou čte stroj, nepiš*).
+**Datum nepočítej sám a nepřepisuj ho.** Dnešní den zná skript a porovnal ho; položka, u které si termín přepočítáš z hlavy, se nabídne ve špatný den (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš*).
 
 **Závislosti ber jen ze zápisu**, ne z odhadu: řádek *Čeká na*, pole `waits` u položky (skript ho vytáhne i z konce dlouhého popisu, který `text` ořízne), pořadí v plánu, výslovná zmínka v položce. Tuší-li se závislost, která zapsaná není, řekni ji u položky jako domněnku.
 
@@ -142,7 +142,7 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 ○ drobnost · ◐ střední · ● velký
 ```
 
-Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/rules/rules.md`, *Styl odpovědí*. Prázdnou část vynech.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*. Prázdnou část vynech.
 
 **Pořadí je schválně od kontextu k výběru** (vyžádal si ho uživatel 16. 9. 2026): poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky jsou holý odstavec bez popisku** a stojí úplně nahoře; **práce jinde a čekající položky jsou každá jeden odstavec** s tučným popiskem, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
 
@@ -169,7 +169,7 @@ Pak přes `AskUserQuestion` nabídni **tři až čtyři** položky v pořadí z 
 - v téhle session: `/resume <session_id>`,
 - v novém okně terminálu: `cd <start_cwd> && claude --resume <session_id>` – `start_cwd` z `resume`: session se obnovuje z adresáře, kde startovala, a ve worktree layoutu to je kořen kontejneru.
 
-**Opuštěná větev bez session.** Ve worktree layoutu přejdi do jejího pracovního adresáře podle `~/.claude/rules/worktree.md`; bez worktree layoutu se na větev přepni jen s čistým pracovním stromem, jinak se nejdřív zeptej, co s rozdělanými změnami.
+**Opuštěná větev bez session.** Ve worktree layoutu přejdi do jejího pracovního adresáře podle `~/.claude/standards/worktree.md`; bez worktree layoutu se na větev přepni jen s čistým pracovním stromem, jinak se nejdřív zeptej, co s rozdělanými změnami.
 
 **Je-li spouštěčem skill, vyvolej ho** přes nástroj `Skill` s argumentem, který položku určuje. Nic z toho, co jsi posbíral, mu neopakuj jako zadání.
 

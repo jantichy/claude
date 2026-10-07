@@ -71,7 +71,7 @@ Společný začátek je v `~/.claude/skills/preflight.md`. **Body 1 až 3 z něj
 
 ## Fáze 1 – Zadání
 
-Je-li v argumentu režim, jeď podle něj a jen ho oznam. Jinak piš text a **ptej se postupně, jednu otázku za druhou** (`~/.claude/rules/rules.md`, *Ptej se postupně, ne všechno najednou*):
+Je-li v argumentu režim, jeď podle něj a jen ho oznam. Jinak piš text a **ptej se postupně, jednu otázku za druhou** (`~/.claude/standards/rules.md`, *Ptej se postupně, ne všechno najednou*):
 
 1. **Formát** – článek, příspěvek, vlákno. Určuje, který profil se načte. Formát, na který báze profil nemá, neslibuj: buď se text napíše podle nejbližšího a řekne se to, nebo profil vznikne v `profile`.
 2. **Vstup.** Nový text, nebo přepracování vlastního staršího – zkrácení, překlopení článku do vlákna, příspěvek postavený na starším článku. **U přepracování je zdrojem pravdy ten původní text**, ne archiv: pointa v něm už je a nevymýšlí se znovu.
@@ -183,7 +183,7 @@ Korpus se do kontextu nevejde. Rozděl ho na části podle formátu – dlouhé 
 
 **Každé stylistické tvrzení musí mít doklad**: cestu k souboru a doslovný úryvek. Tvrzení bez dokladu je dojem a do báze nesmí. Formát analýz je v `distillation.md`.
 
-**Model a effort** (delta proti `~/.claude/rules/delegation.md`, *Model a effort podle úkolu*): analýzy jedou na výchozím modelu session, protože jde o čtení proti zadané struktuře a chyba je vidět v dokladu. **Syntéza do stylu jede na nejsilnějším modelu a `xhigh`** – je vstupem každého budoucího textu, takže se její chyba násobí do všeho, co po ní přijde.
+**Model a effort** (delta proti `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*): analýzy jedou na výchozím modelu session, protože jde o čtení proti zadané struktuře a chyba je vidět v dokladu. **Syntéza do stylu jede na nejsilnějším modelu a `xhigh`** – je vstupem každého budoucího textu, takže se její chyba násobí do všeho, co po ní přijde.
 
 ### 3. Syntéza
 

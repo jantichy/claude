@@ -1,6 +1,6 @@
 # Produktové a návrhové dokumenty
 
-Co smí stát v dokumentech, ze kterých se staví produkt – zadání, návrh řešení, plán a produktové podklady. Doplňuje `~/.claude/rules/structure.md`, který drží standardní soubory každého projektu. **Odkaz, ne import:** načítá ho skill, který tyhle dokumenty zakládá nebo do nich zapisuje (`/project`, `/discovery`, `/specify`, `/architect`, `/breakdown`, `/evaluate`); spouštěč drží `structure.md`, *Které soubory vůbec vzniknou*.
+Co smí stát v dokumentech, ze kterých se staví produkt – zadání, návrh řešení, plán a produktové podklady. Doplňuje `~/.claude/standards/structure.md`, který drží standardní soubory každého projektu. **Odkaz, ne import:** načítá ho skill, který tyhle dokumenty zakládá nebo do nich zapisuje (`/project`, `/discovery`, `/specify`, `/architect`, `/breakdown`, `/evaluate`); spouštěč drží `structure.md`, *Které soubory vůbec vzniknou*.
 
 ## `requirements.md`, `architecture.md`, `plan.md`
 
@@ -16,7 +16,7 @@ Hranice mezi požadavky a návrhem řešení je tvrdá: do požadavků patří *
 
 **Dva soubory, protože mají jinou životnost** – záměr se mění zřídka, řešení s každou technologickou volbou. **Nepřekrývají se:** `requirements.md` nesmí obsahovat architekturu ani „nejspíš to bude na Vercelu“, `architecture.md` nesmí obsahovat zdůvodnění produktu – na požadavky odkazuje a neopisuje je.
 
-**Návrh řešení je sada dokumentů, ne jeden soubor**, a `architecture.md` je jeho páteř. Požadavky jsou seznam a vejdou se do jednoho dokumentu; návrh je soustava, ve které se věci navzájem omezují, a každý dokument je **řez toutéž věcí z jiného úhlu**: stavba (`architecture.md`), data a stavy (`model.md`), operace (`transitions.md`), zásady domény (`rules.md`), jednotlivé okruhy (tematické dokumenty kol). Táž funkce tak stojí ve víc z nich, a je to správně (`~/.claude/rules/rules.md`, *Jednoduchost před úplností*).
+**Návrh řešení je sada dokumentů, ne jeden soubor**, a `architecture.md` je jeho páteř. Požadavky jsou seznam a vejdou se do jednoho dokumentu; návrh je soustava, ve které se věci navzájem omezují, a každý dokument je **řez toutéž věcí z jiného úhlu**: stavba (`architecture.md`), data a stavy (`model.md`), operace (`transitions.md`), zásady domény (`rules.md`), jednotlivé okruhy (tematické dokumenty kol). Táž funkce tak stojí ve víc z nich, a je to správně (`~/.claude/standards/rules.md`, *Jednoduchost před úplností*).
 
 **Nový dokument vzniká tehdy, když drží jiný řez – ne když je ten stávající dlouhý.** Kontrolní otázka: *odpovídá na otázku, na kterou žádný jiný neodpovídá?* Když ne, je to kapitola. `model.md` se nedělí kvůli délce a katalog operací se nevlévá do dokumentu o stavbě.
 
@@ -64,7 +64,7 @@ Hranice proti sekci *Rizika* v `architecture.md`: sem patří **rizika produktu 
 
 **Má-li projekt `scenarios.md`, sekce *Hlavní scénáře* v `requirements.md` zaniká** a nahradí ji odkaz (*Single source of truth*). V požadavcích zůstává **proč a pro koho** – persony, user stories, varianty jako produktová rozhodnutí; ve scénářích **jak to člověk provede**. Odkazuje se sem odjinud: *Testovací strategie* v `architecture.md` měří pokrytí proti tomuhle seznamu, stejně jako `plan.md` a `/attack`.
 
-**`glossary.md`** dává *Jednomu termínu pro jednu věc* z `~/.claude/rules/rules.md` místo, kde ten termín stojí zapsaný. U každého pojmu: jak se jmenuje česky, jak v kódu, co znamená a **čím se liší od pojmu, se kterým se plete**. Zakládá se u projektu s netriviální doménou, kde se plete víc entit naráz. **Termíny platné napříč projekty sem nepatří** – ty drží `~/.claude/rules/ptydepe.md` a spravuje je `/ptydepe`.
+**`glossary.md`** dává *Jednomu termínu pro jednu věc* z `~/.claude/standards/rules.md` místo, kde ten termín stojí zapsaný. U každého pojmu: jak se jmenuje česky, jak v kódu, co znamená a **čím se liší od pojmu, se kterým se plete**. Zakládá se u projektu s netriviální doménou, kde se plete víc entit naráz. **Termíny platné napříč projekty sem nepatří** – ty drží `~/.claude/standards/ptydepe.md` a spravuje je `/ptydepe`.
 
 **`pricing.md`** má smysl jen u produktu, který se prodává. Není to ceník pro web, ale **soupis toho, co z cenového modelu plyne pro produkt**: co který tarif smí, kde jsou limity a co se stane při jejich dosažení, jak vypadá trial a co po něm, jak se přechází nahoru a dolů, co se stane po expiraci a co s daty.
 

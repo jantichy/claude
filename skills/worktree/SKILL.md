@@ -17,11 +17,11 @@ Zapíná a ruší **worktree layout** projektu – uspořádání, ve kterém ad
 | `enable` | zřídí kontejner – u nového projektu i konverzí existujícího repozitáře |
 | `disable` | převede projekt zpátky na obyčejný pracovní adresář |
 
-**Pravidla provozu layoutu drží `~/.claude/rules/worktree.md`** – kde co leží, jak se zakládá a dokončuje větev, proč se v `main/` nepracuje a proč v kořeni kontejneru nefunguje git. Skill je **nevlastní**, jen si je importuje do rozcestníku v kořeni kontejneru, aby platila v každé session projektu. Stojí v kořeni `~/.claude` vedle `~/.claude/rules/rules.md` a `structure.md` schválně: čte je většina skillů i `preflight.md`, tedy i ten, kdo tenhle skill nainstalovaný nemá. Ta cesta je závazné rozhraní a nesmí se měnit tiše.
+**Pravidla provozu layoutu drží `~/.claude/standards/worktree.md`** – kde co leží, jak se zakládá a dokončuje větev, proč se v `main/` nepracuje a proč v kořeni kontejneru nefunguje git. Skill je **nevlastní**, jen si je importuje do rozcestníku v kořeni kontejneru, aby platila v každé session projektu. Stojí v kořeni `~/.claude` vedle `~/.claude/standards/rules.md` a `structure.md` schválně: čte je většina skillů i `preflight.md`, tedy i ten, kdo tenhle skill nainstalovaný nemá. Ta cesta je závazné rozhraní a nesmí se měnit tiše.
 
 ## Co skill nedělá
 
-- **Nezakládá větve a nemerguje.** Zakládání větve je běžná práce podle pravidel v `~/.claude/rules/worktree.md` a převzetí lokálního stavu do ní vykonává globální git hook `githooks/post-checkout`, ne režim skillu; **dokončení větve vede `/merge`** (`~/.claude/skills/merge/SKILL.md`), protože platí i v projektu bez tohohle layoutu. Skill, který bys musel volat pokaždé, když zakládáš větev, by byl horší než pravidlo, které prostě platí.
+- **Nezakládá větve a nemerguje.** Zakládání větve je běžná práce podle pravidel v `~/.claude/standards/worktree.md` a převzetí lokálního stavu do ní vykonává globální git hook `githooks/post-checkout`, ne režim skillu; **dokončení větve vede `/merge`** (`~/.claude/skills/merge/SKILL.md`), protože platí i v projektu bez tohohle layoutu. Skill, který bys musel volat pokaždé, když zakládáš větev, by byl horší než pravidlo, které prostě platí.
 - **Nezakládá projekt.** Celé nastavení projektu včetně volby layoutu vede `/project`, který si tenhle skill volá jako jeden ze svých kroků. Tenhle skill je přepínač pro adresář, který už existuje.
 - **Nerozhoduje, jestli se layout hodí.** To je volba uživatele; `/project` se na ni ptá, skill ji jen provede.
 - **Necommituje.** Kontejner není pracovní strom a nic v něm ve gitu není. Změny v `main/` po konverzi zůstanou tak, jak byly.
@@ -46,7 +46,7 @@ Stav nese **tvar adresáře**, ne zápis v souboru – nemůže se tedy rozejít
 | `.git` adresář | layout není, je to obyčejný repozitář |
 | ani jedno | není to repozitář – pro `enable` je to větev *nový projekt*, jinak to řekni a skonči |
 
-**Stojíš-li v podadresáři**, jdi po `~/.claude/rules/worktree.md`, *Jak si skill najde projektový adresář*, nahoru ke kontejneru – jinak bys layout zapínal uvnitř layoutu.
+**Stojíš-li v podadresáři**, jdi po `~/.claude/standards/worktree.md`, *Jak si skill najde projektový adresář*, nahoru ke kontejneru – jinak bys layout zapínal uvnitř layoutu.
 
 ## Fáze 2 – Proveď režim
 
@@ -101,7 +101,7 @@ Netrackované a gitignorované soubory (`.env`, `node_modules`) přesuň do `mai
 
 Tenhle adresář není projekt, ale kontejner s worktree layoutem. Pravidla práce s ním:
 
-@~/.claude/rules/worktree.md
+@~/.claude/standards/worktree.md
 
 Vlastní pravidla projektu jsou v `main/CLAUDE.md` a importují se odsud:
 
