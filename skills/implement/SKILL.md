@@ -77,7 +77,7 @@ Nejsamostatnější režim: cíl se nastaví jako podmínka přes `/goal` (vesta
 
 ## Fáze 2 – Průběh
 
-**Přeruš včas, nabyl-li kontext.** Dlouhý běh přes mnoho úkolů je místo, kde session narazí na strop okna. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; ukládá se tu ale **méně** než u nálezů – úkoly už v `docs/plan.md` stojí, takže do `todo.md` jde jen to, co v plánu není: odchylky, na které jsi narazil, a rozhodnutí, která z nich vzešla.
+**Přeruš včas, nabyl-li kontext.** Dlouhý běh přes mnoho úkolů je místo, kde session narazí na strop okna. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*, a zápis dělá `/break`; ukládá se tu ale **méně** než u nálezů – úkoly už v `docs/plan.md` stojí, takže do `todo.md` jde jen to, co v plánu není: odchylky, na které jsi narazil, a rozhodnutí, která z nich vzešla.
 
 **Výchozí model, `medium`–`high`** (Volba modelu a effortu podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*.) Odpracování dobrého plánu je z velké části uplatnění hotového rozhodnutí, ne vymýšlení – proto sem nepatří nejdražší tier. **Eskaluj ale u konkrétního úkolu**, který se nedaří: nejdřív zvyš effort, teprve pak sáhni po silnějším modelu. Opakované „skoro to funguje“ na jednom úkolu je signál, že je málo chytrosti nebo špatný plán, ne že se má zkoušet dál totéž.
 

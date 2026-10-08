@@ -1910,3 +1910,13 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Zamítnuto:**
 - **Konzervativní varianta** (škrty dokladů a duplicit, lehká komprese, asi 22 000 znaků) – zdůvodnění u kroků by dál četl každý krok, přestože ho drží skilly a `decisions.md`.
 - **Vrátit průchody do `structure.md`**, odkud je vystěhoval minulý `/slim` – `structure.md` se čte ještě častěji, takže by se sekce zaplatila na víc místech.
+
+### Přerušení rozdělané práce má vlastní skill `/break`
+
+**Rozhodnuto 8. 10. 2026** vytěžením session, ve které se přerušoval `/review` větve `docs/consumer` v eventoidu. Uložení zbytku fronty bylo do té doby jen kapitolou `skills/handoff.md`, *Přerušení dlouhého průchodu*, kterou si skill s frontou načetl uprostřed svého běhu. Postup se v té session skládal ručně a napoprvé zapsal méně, než nová session potřebuje – chyběla doporučení u položek, vyvrácené nálezy, rozhodnuté body a úvodní věta s prioritou, větví a tím, co musí předcházet; uživatel o ně musel říct dvakrát a vlastní test projektu navíc shodil holé odkazy v zápisu. Přerušit se přitom chce i práce, která žádným skillem neběží.
+
+**`/break` mechaniku vlastní** – co se zapisuje, kam, jak se ověří a čím odpověď skončí. V `handoff.md` z kapitoly zůstalo jen to, kdy se přerušení nabízí (práh, jednou za práh, aspoň dvě položky, výčet skillů s frontou), a skilly s frontou na `/break` předávají. Nestojí v životním cyklu; je to předání mezi session jako `/next`. Průchod do `done.md` nezapisuje, protože `passes.md` vede jen dokončené běhy.
+
+**Zamítnuto:**
+- **`/break` jako obal nad textem v `handoff.md`** – skill bez vlastního jádra je podle normy alias, a pravidlo, které si skill čte uprostřed běhu, nemá kde vynutit inventuru dřív než zápis.
+- **Jen fronta skillu, jak to drželo `handoff.md`** – rozdělaná práce mimo skill (návrh v půli, rozprava se zbývajícími otázkami) by zůstala na `/cleanup`, který ji jako frontu k navázání neukládá.

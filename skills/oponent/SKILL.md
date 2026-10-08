@@ -243,7 +243,7 @@ Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který F
 
 ## Fáze 5 – Průchod nálezy
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*.
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 Podle `~/.claude/standards/rules.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – nízké jdou nakonec jedním blokem (viz níž).
 

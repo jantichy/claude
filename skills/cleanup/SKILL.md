@@ -225,7 +225,7 @@ Hlásí sekci, ve které datum mezi sousedními záznamy klesá – nový zápis
 
 ## Fáze 5 – Fronta rozhodnutí
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*.
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 Sem přišlo všechno, co potřebuje uživatelovu volbu: **nevypořádaná témata** z kategorie 7, **položky, u kterých je z čeho vybírat** (nejasné zařazení, dvě obhajitelné podoby téhož zápisu, dvě protichůdné informace bez vítěze) a **položky mimo rozsah** – starší dluh a to, co ze session zůstalo rozbité.
 

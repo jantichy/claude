@@ -263,7 +263,7 @@ Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup
 
 ## Fáze 5 – Průchod s uživatelem
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*.
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 **Skoro všechny nálezy jsou sporné, a je to doménové čtení, ne výjimka** (`~/.claude/skills/findings.md`). Nález z útoku znamená změnu chování běžící aplikace a **kterou** cestou se díra zavře, je obvykle volba: guard versus validace vstupu, odmítnutí versus tolerance, opravit versus omezit rozsah. Mechanická větev tady proto není.
 

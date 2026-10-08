@@ -160,7 +160,7 @@ Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal j
 
 **Proč je až za verdiktem, a ne v něm:** verdikt tvrdí, jestli je věc hotová, tenhle blok říká, co se s tím dělá. Dokud je další krok jeden a patří do téže session, unese to i věta verdiktu – jakmile jsou dva, nebo se mezi ně vejde `/clear`, navigace z té věty tiše vypadne. To se dělo doložitelně: běh skončil na verdiktu a uživatel neměl kde vyčíst, že kontrolní krok se má pustit až v čisté session.
 
-**Pouští-li skill dlouhý průchod frontou** – nálezy, poznatky, úkoly –, nese navíc pravidlo o jeho přerušení při nabytém kontextu; drží ho týž soubor, kapitola *Přerušení dlouhého průchodu*, a odkazuje se na něj z té fáze, která frontou prochází.
+**Pouští-li skill dlouhý průchod frontou** – nálezy, poznatky, úkoly –, nese navíc pravidlo o jeho přerušení při nabytém kontextu; drží ho týž soubor, kapitola *Přerušení dlouhého průchodu*, a odkazuje se na něj z té fáze, která frontou prochází. Zápis zbytku fronty dělá skill `/break`, na který se z nabídky přerušení předává.
 
 ## 5. Číslování a názvosloví
 

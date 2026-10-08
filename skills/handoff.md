@@ -119,31 +119,6 @@ Dva skilly s vlastní frontou tu vědomě **nejsou** – ten, který rozpouští
 
 Jednou odrážkou, ne otázkou přes `AskUserQuestion`: kolik položek zbývá, kde kontext je, a že zbytek se uloží celý. Souhlas je uživatelův.
 
-### Co se zapisuje
+### Kdo zápis dělá
 
-Řekne-li uživatel ano, **zbytek fronty se uloží do `todo.md`, do sekce `## Přerušený běh`** (`~/.claude/standards/structure.md`, *`todo.md`*), a teprve pak se běh ukončí.
-
-**Uloží se celý nález, ne jeho jméno.** Nová session nemá kontext, ve kterém nález vznikl, a položka, ze které se nedá rozhodnout, je horší než žádná – tváří se jako zadání a není. U každé zbývající položky proto jde do zápisu:
-
-- **co je špatně** – nález celou větou, ne značkou a ne zkratkou (`~/.claude/standards/rules.md`, *Interní značky ven nepatří*)
-- **čím je doložený** – `basis`, nebo lokace či reprodukční postup, nese-li je schéma toho skillu místo něj
-- **závažnost** podle `~/.claude/skills/severity.md`
-- **varianty řešení i s důsledkem každé**, včetně obou záchytných voleb podle `~/.claude/skills/findings.md` – tedy to, co by se bylo uživatele zeptalo tady
-- **cesta a řádek**, kde se to opravuje, a co se tím ještě rozbije
-- **co už se v tomhle běhu rozhodlo** o sousedních nálezech, závisí-li na tom volba u tohohle
-
-**Předávej to doslova, neparafrázuj** – parafráze je přesně to místo, kde se ztratí detail, kvůli kterému nález vznikl, a ztratí se tiše, protože shrnutí vypadá úplně (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*).
-
-**Zapiš i to, co se v tomhle běhu už vypořádalo** – jedním řádkem nad položkami, s počtem opravených a zamítnutých. Bez toho nová session neví, jestli má před sebou celou frontu nebo její zbytek, a nemá jak poznat, že nález, který v souborech nenachází, je opravený.
-
-### Co se pak řekne
-
-Závěr běhu zůstane obvyklý – šablona i verdikt. V něm se přiznají **nevypořádané položky**, protože přerušený běh hotový není. Blok `**Kudy dál**` pak nese řetěz:
-
-```
-**Kudy dál**
-
-- `/cleanup`, pak `/clear`, a v nové session `/next` – zbývajících <N> nálezů tam leží první
-```
-
-**Ověř, že se to uložilo, než to ohlásíš.** Načti sekci zpátky a zkontroluj, že v ní je tolik položek, kolik jich ve frontě zbývalo (`~/.claude/standards/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Ohlášené přerušení s polovinou zapsaných nálezů je tichá ztráta práce – a pozná se až za týden, kdy si na ty nálezy nikdo nevzpomene.
+**Řekne-li uživatel ano, zbytek fronty uloží skill [`/break`](break/SKILL.md)** a běh tím končí. Co se zapisuje, kam, jak se zápis ověří a čím odpověď skončí, drží on – tady zůstává jen to, **kdy** se přerušení nabízí. Přerušený skill pak vlastní závěr nevydává: hotový není a závěr `/break` ho nahrazuje.

@@ -104,7 +104,7 @@ Pak dvěma rychlostmi:
 - **Rovnou**, co [`catalog.md`](catalog.md) značí „rovnou“ – doklady, komprese bez změny významu, duplicita s jasným vítězem. Jen vypiš, co se udělá.
 - **Po jednom**, co značí „uživatel“ – přesun, rozdělení, zrušení pravidla, sloučení bez vítěze, revize nabobtnávacího pravidla. U každého kontext (čeho se týká, jak to je, proč to nestačí), varianty s úsporou a doporučení; tvar drží `~/.claude/skills/findings.md`, *Jak nález vypadá*. Přesun má vždy i variantu „nechat, jen zkrátit“. Dříve zamítnutý zásah, který je mezi největšími pákami, předlož znovu i s tehdejším důvodem.
 
-Dlouhou frontu přeruš podle `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*.
+Dlouhou frontu přeruš podle `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; zápis dělá `/break`.
 
 ## Fáze 5 – Provedení
 

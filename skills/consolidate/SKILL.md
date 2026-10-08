@@ -141,7 +141,7 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 ## Fáze 4 – Průchod s uživatelem
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh, tvar nabídky a to, co všechno se o zbývajících položkách musí uložit do `todo.md`, aby z nich nová session rozhodla bez tvého kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*.
+**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 **Nejdřív vypiš přehled** – kolik shluků, kolik návrhů padlo v ověření a kolik zbývá k rozhodnutí, plus kolik vedlejších vad se našlo. Pak **hned v téže odpovědi** pokračuj první otázkou; ohlásit průchod a skončit je porušení `~/.claude/standards/rules.md`, *Co ohlásíš, udělej hned v téže odpovědi*.
 

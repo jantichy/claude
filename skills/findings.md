@@ -121,7 +121,7 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 ## Když se průchod nevejde do session
 
-Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, zbytek se uloží do `todo.md` a dokončí ho nová session – práh, tvar nabídky a to, co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
+Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, zbytek se uloží do `todo.md` a dokončí ho nová session – práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*, a co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `/break`. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
 
 ## Kdo ji používá
 
