@@ -248,6 +248,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - **2026-10-07** · `/cleanup` · `5cbba5a` · session `92b4ad5a-caef-4b05-8b38-c20c1d77b49d` · prompty 1/1 · 0 témat k rozhodnutí · mimo rozsah: žádné · meze: 5 bloků myšlení prázdných, výstupy Read se nečtou z principu
 - **2026-10-07** · `/cleanup` · `8363a2e` · session `d8b26c29-63ff-4593-878e-5c475f56f10a` · prompty 1/1 · 0 témat k rozhodnutí · mimo rozsah: žádné · meze: 14 bloků myšlení prázdných, výstupy Read se nečtou, 1 snímek obrazovky (výpis mailů o selhaném CI) se z transcriptu vytěžit nedá
 - **2026-10-08** · `/cleanup` · `3a118bd` · session `88a15e9a-f392-433c-b9f9-f172d5367735` · prompty 1/1 · 0 témat · mimo rozsah: žádné · meze: 20 bloků myšlení (prázdné ve formátu), 3 výstupy Read a 2 Write (soubory čteny ze zdroje), 1 výstup AskUserQuestion (odpověď je v konverzaci)
+- **2026-10-08** · `/cleanup` · `ff5a174` · session `88fa2933-ef83-4304-8bea-05aa0eed6468` · prompty 1/1 a k tomu 4 odpovědi v `AskUserQuestion` odškrtnuté ručně · 0 témat · mimo rozsah: žádné · meze: 33 bloků myšlení, 3 výstupy Read, 1 výstup Skill a 1 ToolSearch nečteny; odpovědi `AskUserQuestion` inventura nepočítá (úkol v `todo.md`)
 
 ## Odvedená práce
 
