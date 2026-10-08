@@ -294,7 +294,7 @@ Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id session** vezmi
 
 **Git:**
 
-- **Commituj jmenované cesty**, do kterých jsi zapsal – ne `git add -A` ani adresář. Soubor, který byl rozpracovaný už před začátkem běhu, nech být a ohlas ho (`~/.claude/standards/rules.md`, *Commituj jmenované cesty, ne `-A`*).
+- **Commituj jmenované cesty**, do kterých se v session zapsalo – ne `git add -A` ani adresář. **Rozdělaná práce session se commituje i nedodělaná**, zvlášť a s tím ve zprávě commitu – po přerušení `/break` ji nikdo jiný necommitne. Soubor, který byl rozpracovaný už před začátkem session, nech být a ohlas ho (`~/.claude/standards/rules.md`, *Commituj jmenované cesty, ne `-A`*).
 - **Práci, která v session vznikla až za běhu úklidu, nekryje `git status` z *Fáze 0*.** Pokračuje-li uživatel v práci nad týmž repozitářem, zeptej se ho, čeho se dotkl, a ty cesty z commitu vyjmi.
 - `git status` musí být **čistý** – kromě té cizí rozdělané práce, kterou jsi vyňal a pojmenoval. Co tam být nemá, patří do `.gitignore`.
 - *Worktree layout:* `git status` pouštěj ve worktree větve, ne v kořeni kontejneru. Navíc zkontroluj `git -C <container>/main status`: v `main/` nemá být nic rozpracovaného – když je, ohlas to.

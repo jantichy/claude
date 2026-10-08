@@ -21,11 +21,11 @@ Rozdělanou prací je **fronta kteréhokoliv skillu** – nálezy `/review`, úk
 
 ## Fáze 0 – Příprava
 
-Společný začátek drží `~/.claude/skills/preflight.md`; body 4 a 5 odpadají. Navíc:
+Společný začátek drží `~/.claude/skills/preflight.md`; body 4 a 5 odpadají a necommitnuté změny z bodu 3 nejsou důvod k otázce – bývají samy rozdělanou prací a jdou do zápisu. Navíc:
 
 1. **Urči, kde práce leží:** větev (`git branch --show-current`) a pracovní adresář. Ve worktree layoutu (`~/.claude/standards/worktree.md`) je to adresář větve, ne `main/` – a právě to nová session jinak nemá odkud zjistit.
 2. **Najdi běhový stav** v `.claude/run/` (`~/.claude/skills/skills.md`, *Běhový stav*). Nese-li přerušený skill frontu tam, je to výchozí podklad – ale **ne úplný**: kontext kolem položek, doporučení a návaznosti bývají jen v konverzaci.
-3. **Podívej se, jestli `## Přerušený běh` už existuje.** Leží-li v ní zbytek jiného přerušení, nový blok jde pod něj; starý se nepřepisuje, je to cizí rozdělaná práce.
+3. **Podívej se, jestli `## Přerušený běh` už existuje.** Leží-li v ní zbytek jiného přerušení, nový blok jde pod něj; starý se nepřepisuje, je to cizí rozdělaná práce. **Nemá-li starý blok nadpis `### `** (zápis ze starší podoby skillu), nech ho, jak je, a ohlas uživateli, že `/continue` v sekci neodliší, kde končí – takový zápis je přechodný a zmizí, až se jeho fronta dojde.
 4. **Prošla-li session kompaktací**, načti nejdřív transcript (`~/.claude/skills/session.md`). Shrnutí z kompaktace je přesně ta parafráze, ve které se detail ztrácí.
 
 ## Fáze 1 – Inventura rozdělané práce
@@ -35,6 +35,7 @@ Sepiš si, co do zápisu půjde – **nejdřív celé, teprve pak piš**. Zápis
 | Co | Odkud | Proč to nová session potřebuje |
 |---|---|---|
 | **co práci musí předcházet** | co uživatel ohlásil („nejdřív udělám velkou změnu rozhodnutí“) | bez toho se fronta dojde nad stavem, který mezitím neplatí |
+| **necommitnuté soubory rozdělané práce** a co v nich je hotové a co rozbité | `git status --porcelain`, konverzace | bez toho nepozná, co z commitu je záměr a co nedodělek |
 | **co se už udělalo** | `git log` běhu, běhový soubor | jinak nepozná, jestli má před sebou celou frontu, nebo zbytek, a opravené hledá znovu |
 | **zbývající položky** | běhový soubor a konverzace | je to vlastní předmět zápisu |
 | **co se vyvrátilo nebo uzavřelo** | ověření, odpovědi uživatele | jinak se k tomu vrátí a odpracuje to znovu |
@@ -46,24 +47,24 @@ Sepiš si, co do zápisu půjde – **nejdřív celé, teprve pak piš**. Zápis
 
 ## Fáze 2 – Zápis
 
-Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~/.claude/standards/structure.md`, *`todo.md`*). Projekt bez `docs/` ji má v kořenovém `todo.md`. Před zápisem si načti `~/Dev/context/text/typography.md`; zápis je český text.
+Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~/.claude/standards/structure.md`, *`todo.md`*). Projekt bez `docs/` ji má v kořenovém `todo.md`; neexistuje-li `todo.md` vůbec, založ ho podle režimu umístění projektu jen s touhle sekcí. Před zápisem si načti `~/Dev/context/text/typography.md`; zápis je český text.
 
 **Každé přerušení je samostatný blok pod nadpisem `### <práce> – přerušeno <YYYY-MM-DD>`** (datum z `date +%F`), třeba `### /review branch – přerušeno 2026-10-08`. Nadpis je hranice bloku, podle které `/continue` pozná, kolik přerušení v sekci leží a kde které končí; bez něj se dva bloky pod sebou slijí v jeden.
 
 **Pořadí bloku je pevné**, protože nová session ho čte shora a musí se rozhodnout dřív, než dočte:
 
 1. **Úvodní věta s prioritou:** že jde o rozdělanou práci, která se dokončuje **jako první**, ve které větvi a v jakém pracovním adresáři leží a v jakém pořadí se pokračuje – předcházející krok, pak fronta, pak teprve cokoliv dalšího.
-2. **Co přerušilo a co se udělalo:** který skill nebo práce, kdy (`date +%F`), proč přerušeno, počty a **commit u každé vypořádané položky**.
+2. **Co přerušilo a co se udělalo:** který skill nebo práce, kdy (`date +%F`), proč přerušeno, počty a **commit u každé vypořádané položky**. K tomu necommitnuté soubory rozdělané práce, každý s tím, co v něm je hotové a co rozbité.
 3. **Zbývající položky**, každá jednou odrážkou a **celá**:
    - co je špatně, celou větou – bez interních značek, které uživatel nikdy neviděl (`~/.claude/standards/rules.md`, *Interní značky ven nepatří*)
    - čím je to doložené a kde to je – soubor a místo; **čísla řádků se po zápisech posunou**, proto u nich stojí, že se hledá podle textu
    - závažnost podle `~/.claude/skills/severity.md`, je-li to nález
-   - **varianty i s důsledkem každé**, včetně obou záchytných voleb podle `~/.claude/skills/findings.md`
-   - **doporučení i s důvodem** – to, co by se uživateli řeklo tady; bez něj nová session doporučuje od nuly a jinak
+   - **varianty i s důsledkem každé**, u nálezu včetně obou záchytných voleb podle `~/.claude/skills/findings.md`; úkol nebo otevřená otázka mají jen své varianty
+   - **doporučení i s důvodem** – to, co by se uživateli řeklo tady; bez něj nová session doporučuje od nuly a jinak. Nevzniklo-li ještě, protože se položka nepředložila, sestav ho, jak by ho skill předložil – je to příprava, ne rozhodnutí. Chybí-li k němu podklad, napiš, co chybí, a nevymýšlej ho
    - návaznost na to, co se v běhu rozhodlo, i na sousední položky
 4. **Vyvrácené a uzavřené** – každé s tím, o co se vyvrácení opírá, a s vedlejším postřehem, zbyl-li.
 5. **Rozhodnuté v běhu** – stručně, s odkazem na místo, kde rozhodnutí žije.
-6. **Jak pokračovat** – poslední odstavec bloku, uvozený **doslova** návěstím `**Jak pokračovat:**`. **Jeho první věta je jediná první akce**, kterou `/continue` provede bez dalšího úsudku: buď skill i s přesným argumentem (`/review branch od začátku`), nebo položka, kterou se začne, jménem z výčtu výš (*„položkou Volba objednatele po zrušení akce“*). Ne „pokračovat v review“, ne výčet dvou možností – co nejde provést jako první krok, tam nepatří. Za ní: podle čeho se fronta dojde, co udělat s položkou, kterou předcházející krok zneplatní, kdy smazat běhový soubor, tenhle blok a prázdnou sekci, a co zůstalo neprověřené.
+6. **Jak pokračovat** – poslední odstavec bloku, uvozený **doslova** návěstím `**Jak pokračovat:**`. **Jeho první věta je jediná první akce**, kterou `/continue` provede bez dalšího úsudku: buď skill i s přesným argumentem (`/review branch od začátku`), nebo položka, kterou se začne, jménem z výčtu výš (*„položkou Volba objednatele po zrušení akce“*). Ne „pokračovat v review“, ne výčet dvou možností – co nejde provést jako první krok, tam nepatří. **Musí-li předcházet krok uživatele** (změna rozhodnutí), první akcí je to, čím se pokračuje **po něm** – ten krok stojí v úvodní větě a `/continue` se na něj zeptá sám, než začne. Za ní: podle čeho se fronta dojde, co udělat s položkou, kterou předcházející krok zneplatní, kdy smazat běhový soubor, tenhle blok a prázdnou sekci, a co zůstalo neprověřené.
 
 **Předávej doslova, neparafrázuj.** Strukturovaný výstup agentů a znění nálezů jdou do zápisu tak, jak jsou; parafráze ztratí právě ten detail, kvůli kterému položka vznikla, a ztratí ho tiše, protože shrnutí vypadá úplně (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*).
 
@@ -73,9 +74,11 @@ Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj, že je přer
 
 ## Fáze 3 – Ověření
 
-1. **Přečti sekci zpátky a spočítej položky** – musí jich být tolik, kolik jich ve frontě zbývalo (`~/.claude/standards/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Nesedí-li to, doplň chybějící; nehlas přerušení s polovinou fronty.
-2. **Pusť kontrakt příkazů projektu** (`## Kontrakt příkazů` v jeho `CLAUDE.md`). Projekty mívají kontroly tvaru dokumentace – holé odkazy, kotvy, formát výčtu – a zápis na ně narazí stejně jako každý jiný text. Selže-li, oprav zápis, ne kontrolu.
-3. **Commitni jmenovitě `todo.md`** a pushni, má-li projekt autocommit (`~/.claude/skills/autocommit/autocommit.md`).
+1. **Přečti blok zpátky a spočítej v něm položky** – musí jich být tolik, kolik jich ve frontě zbývalo (`~/.claude/standards/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Nesedí-li to, doplň chybějící; nehlas přerušení s polovinou fronty.
+2. **Pusť kontrakt příkazů projektu** (`## Kontrakt příkazů` v jeho `CLAUDE.md`). Projekty mívají kontroly tvaru dokumentace – holé odkazy, kotvy, formát výčtu – a zápis na ně narazí stejně jako každý jiný text. Selže-li na zápisu, oprav zápis, ne kontrolu. Selže-li na rozdělané práci, nic neopravuj – výsledek patří do *Jak pokračovat* jako stav, ve kterém se navazuje. Chybí-li kontrakt, řekni to a v závěru uveď, že se nic nespustilo.
+3. **Commitni jmenovitě `todo.md`** – rozdělanou práci ne, tu commitne `/cleanup`, který jde po tomhle skillu – a pushni, má-li projekt autocommit (`~/.claude/skills/autocommit/autocommit.md`).
+
+**Pokyn ke spěchu zkracuje odpověď, ne ověření.** Čtení zpátky a commit odcházejícího uživatele nezdrží a ověřený zápis je to, s čím odchází.
 
 **Průchod do `done.md` se nezapisuje.** `~/.claude/skills/passes.md` vede jen dokončené běhy a `/release` z nich čte, jestli kontrola proběhla – přerušený běh dokončený není. Zapíše ho až session, která frontu dojde.
 
@@ -94,9 +97,9 @@ Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj, že je přer
 
 - **Práce:** <skill a rozsah, nebo popis práce mimo skill>
 - **Leží:** větev `<branch>`, `<pracovní adresář>`
-- **Zapsáno:** `docs/todo.md`, `## Přerušený běh` – <N> položek z <N> zbývajících · běhový soubor `<cesta>` ponechán
+- **Zapsáno:** `<cesta k todo.md>`, `## Přerušený běh` – <N> položek z <N> zbývajících · běhový soubor `<cesta>` ponechán, existuje-li
 - **Před pokračováním:** <co musí předcházet, nebo „nic“>
-- **Ověřeno:** <příkazy kontraktu a návratové kódy> · commit `<hash>`
+- **Ověřeno:** <příkazy kontraktu a návratové kódy, nebo „kontrakt chybí“> · commit `<hash>`
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.

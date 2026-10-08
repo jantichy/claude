@@ -1931,3 +1931,13 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 - **Zrychlit `/next`** – jeho šíře je jeho účel; navázání na jeden zápis je jiná otázka a zúžení `/next Přerušený běh` by stejně pustilo celý sběr.
 - **Skript místo příkazu v `SKILL.md`** – rozhoduje se jen to, kde sekce leží a kde končí, a to unese jeden řádek shellu; spuštění stejně hlídá test.
 - **Kontrola, jestli nad větví neběží živá session** – `/break` končí `/clear` v téže session, takže by kontrola hlásila jako obsazenou právě tu, která má pokračovat, a byla by nejpomalejší částí běhu.
+
+### Necommitnutou rozdělanou práci po `/break` commituje `/cleanup`, ne `/break`
+
+Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli nijak neřeší – commitoval jen `todo.md`. `/cleanup`, který po něm jde vždycky, to dělat má, jen to v něm stálo dvojznačně: Fáze 0 zakazuje commitovat soubory sahající **před session**, kdežto oddíl *Git* říkal „před začátkem **běhu**“, což jde číst jako běh úklidu. Opraveno na „session“ a doplněno, že rozdělaná práce se commituje i nedodělaná, zvlášť. `/break` ji jen vypíše do zápisu i se stavem, aby nová session poznala, co je v commitu záměr a co nedodělek.
+
+**Zamítnuto:**
+- **`/break` commituje rozdělanou práci sám** – commit by vznikal na dvou místech a dvojznačnost v `/cleanup` by zůstala.
+- **`/break` pouští `/cleanup` sám** – `/cleanup` je interaktivní a ptal by se ve chvíli, kdy uživatel odchází; žádný jiný skill řetěz ukončení nespouští sám, drží ho *Kudy dál* (`skills/handoff.md`). Spoléhá se tedy na to, že se `/cleanup` opravdu pustí, a to je vědomě přijaté.
+
+**Starý blok bez nadpisu se jen ohlásí.** `/break` mu nadpis nedoplňuje a `/continue` se smíšenou sekci číst neučí – zápisy ve starším tvaru jsou přechodné a zmizí s dojitím své fronty.
