@@ -1,6 +1,6 @@
 ---
 name: break
-description: Skill se použije, když uživatel zadá "/break", nebo chce rozdělanou práci přerušit uprostřed a ukončit session – "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, anebo když běh jiného skillu narazí na práh kontextu a uživatel přerušení přijme. Zapíše do docs/todo.md, sekce Přerušený běh, všechno, co nová session potřebuje, aby v práci pokračovala bez ztráty čehokoliv podstatného: kde práce leží, co předchází, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří a commitne a skončí doporučením /cleanup, /clear a /next. Funguje pro frontu kteréhokoliv skillu i pro práci mimo skill. Na rozdíl od /cleanup, který vytěžuje dohody a nevypořádaná témata celé session, tenhle skill ukládá rozdělanou práci jako frontu k navázání; na rozdíl od /next nic nevybírá, jen připraví, co /next nabídne první.
+description: Skill se použije, když uživatel zadá "/break", nebo chce rozdělanou práci přerušit uprostřed a ukončit session – "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, anebo když běh jiného skillu narazí na práh kontextu a uživatel přerušení přijme. Zapíše do docs/todo.md, sekce Přerušený běh, všechno, co nová session potřebuje, aby v práci pokračovala bez ztráty čehokoliv podstatného: kde práce leží, co předchází, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří a commitne a skončí doporučením /cleanup, /clear a /continue, který v nové session na zápis rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci mimo skill. Na rozdíl od /cleanup, který vytěžuje dohody a nevypořádaná témata celé session, tenhle skill ukládá rozdělanou práci jako frontu k navázání; na rozdíl od /continue nic neprovádí, jen připraví, čím se naváže.
 allowed-tools: [Read, Glob, Grep, Bash, Edit, Write, AskUserQuestion]
 ---
 
@@ -8,14 +8,14 @@ allowed-tools: [Read, Glob, Grep, Bash, Edit, Write, AskUserQuestion]
 
 ## Co skill dělá
 
-Přeruší rozdělanou práci a uloží ji tak, aby ji nová session dokončila **bez kontextu téhle**. Zapisuje do `docs/todo.md`, sekce `## Přerušený běh`, kterou `/next` nabízí jako první: kde práce leží, co jí musí předcházet, co se už udělalo, **každou zbývající položku celou**, co se vyvrátilo a co se v běhu rozhodlo. Pak zápis přečte zpátky, pustí kontrakt příkazů projektu, commitne a skončí blokem *Kudy dál*.
+Přeruší rozdělanou práci a uloží ji tak, aby ji nová session dokončila **bez kontextu téhle**. Zapisuje do `docs/todo.md`, sekce `## Přerušený běh`, na kterou v nové session naváže `/continue` (a `/next` ji nabízí jako první): kde práce leží, co jí musí předcházet, co se už udělalo, **každou zbývající položku celou**, co se vyvrátilo a co se v běhu rozhodlo. Pak zápis přečte zpátky, pustí kontrakt příkazů projektu, commitne a skončí blokem *Kudy dál*.
 
 Rozdělanou prací je **fronta kteréhokoliv skillu** – nálezy `/review`, úkoly `/implement`, poznatky `/evaluate` – i **práce mimo skill**: rozepsaný návrh, oprava v půli, rozprava, ve které zbývají otázky. Režimy nemá.
 
 ## Co skill nedělá
 
 - **Nevytěžuje session.** Dohody, poznatky a nevypořádaná témata zapisuje `/cleanup`, který běží **za ním** – `/break` ukládá jen rozdělanou práci jako frontu k navázání a `/cleanup` ji pak nepřebírá ani nepřepisuje.
-- **Nevybírá, čím se pokračuje.** To dělá `/next` v nové session; sekce `## Přerušený běh` mu jen řekne, že tohle jde první.
+- **Nepokračuje.** Navázání dělá `/continue` v nové session – je to druhá strana téhož předání a čte přesně to, co tenhle skill zapíše. Přehled všeho rozdělaného včetně tohohle sestavuje `/next`.
 - **Nerozhoduje ani neopravuje.** Co se do přerušení nevypořádalo, zůstane otevřené – přerušení není místo, kde se zbytek fronty „rychle doklepne“.
 - **Nehlídá práh kontextu.** Ten drží `~/.claude/skills/handoff.md`, *Práh kontextu*, a ohlašuje hook `handoff.py`; skill s frontou podle něj přerušení nabídne a na souhlas zavolá tenhle skill.
 
@@ -48,6 +48,8 @@ Sepiš si, co do zápisu půjde – **nejdřív celé, teprve pak piš**. Zápis
 
 Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~/.claude/standards/structure.md`, *`todo.md`*). Projekt bez `docs/` ji má v kořenovém `todo.md`. Před zápisem si načti `~/Dev/context/text/typography.md`; zápis je český text.
 
+**Každé přerušení je samostatný blok pod nadpisem `### <práce> – přerušeno <YYYY-MM-DD>`** (datum z `date +%F`), třeba `### /review branch – přerušeno 2026-10-08`. Nadpis je hranice bloku, podle které `/continue` pozná, kolik přerušení v sekci leží a kde které končí; bez něj se dva bloky pod sebou slijí v jeden.
+
 **Pořadí bloku je pevné**, protože nová session ho čte shora a musí se rozhodnout dřív, než dočte:
 
 1. **Úvodní věta s prioritou:** že jde o rozdělanou práci, která se dokončuje **jako první**, ve které větvi a v jakém pracovním adresáři leží a v jakém pořadí se pokračuje – předcházející krok, pak fronta, pak teprve cokoliv dalšího.
@@ -61,7 +63,7 @@ Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~
    - návaznost na to, co se v běhu rozhodlo, i na sousední položky
 4. **Vyvrácené a uzavřené** – každé s tím, o co se vyvrácení opírá, a s vedlejším postřehem, zbyl-li.
 5. **Rozhodnuté v běhu** – stručně, s odkazem na místo, kde rozhodnutí žije.
-6. **Jak pokračovat** – kterým skillem a podle čeho se fronta dojde, co udělat s položkou, kterou předcházející krok zneplatní, kdy smazat běhový soubor a tuhle sekci, a co zůstalo neprověřené.
+6. **Jak pokračovat** – poslední odstavec bloku, uvozený **doslova** návěstím `**Jak pokračovat:**`. **Jeho první věta je jediná první akce**, kterou `/continue` provede bez dalšího úsudku: buď skill i s přesným argumentem (`/review branch od začátku`), nebo položka, kterou se začne, jménem z výčtu výš (*„položkou Volba objednatele po zrušení akce“*). Ne „pokračovat v review“, ne výčet dvou možností – co nejde provést jako první krok, tam nepatří. Za ní: podle čeho se fronta dojde, co udělat s položkou, kterou předcházející krok zneplatní, kdy smazat běhový soubor, tenhle blok a prázdnou sekci, a co zůstalo neprověřené.
 
 **Předávej doslova, neparafrázuj.** Strukturovaný výstup agentů a znění nálezů jdou do zápisu tak, jak jsou; parafráze ztratí právě ten detail, kvůli kterému položka vznikla, a ztratí ho tiše, protože shrnutí vypadá úplně (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*).
 
@@ -80,6 +82,7 @@ Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj, že je přer
 ## Časté chyby
 
 - **Zápis jde po kouscích a doplňuje se na upozornění.** Napoprvé chybělo doporučení u položek, vyvrácené nálezy, rozhodnuté body a úvodní věta s prioritou a větví – a uživatel o ně musel říct dvakrát. Inventura z *Fáze 1* je proto celá dřív než první zápis.
+- **Blok nemá nadpis nebo *Jak pokračovat* nezačíná jednou akcí.** `/continue` pak neví, kde blok končí a čím začít, a místo navázání se ptá – tedy přesně to zdržení, kvůli kterému vznikl.
 - **Položka nese jen jméno, ne kontext.** „Nález 8 – delete\* při LINK“ nová session nerozhodne; potřebuje selhání, místo, varianty a doporučení.
 - **Zapomene se, co předchází.** Chystá-li uživatel změnu, která frontu zreviduje, musí stát v první větě – jinak se fronta dojde nad stavem, který už neplatí.
 - **Zápis neprojde kontrolou projektu.** Holé odkazy na kapitolu rozhodnutí v zápisu shodily test tvaru dokumentace; proto se pouští kontrakt, ne jen čtení zpátky.
@@ -107,4 +110,4 @@ Přerušený skill svůj vlastní verdikt nevydává – hotový není a tenhle 
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar drží `~/.claude/skills/handoff.md`, řádek *přerušený průchod frontou* v tabulce řetězů:
 
-- `/cleanup`, pak `/clear`, a v nové session `/next` – rozdělaná práce tam leží první; zůstáváš v `<pracovní adresář>`, clear adresář nemění
+- `/cleanup`, pak `/clear`, a v nové session `/continue` – naváže rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění

@@ -1920,3 +1920,14 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Zamítnuto:**
 - **`/break` jako obal nad textem v `handoff.md`** – skill bez vlastního jádra je podle normy alias, a pravidlo, které si skill čte uprostřed běhu, nemá kde vynutit inventuru dřív než zápis.
 - **Jen fronta skillu, jak to drželo `handoff.md`** – rozdělaná práce mimo skill (návrh v půli, rozprava se zbývajícími otázkami) by zůstala na `/cleanup`, který ji jako frontu k navázání neukládá.
+
+### Navázání na přerušenou práci má vlastní skill `/continue` a s `/break` sdílí pevný tvar zápisu
+
+**Rozhodnuto 8. 10. 2026.** Po `/break` se v nové session dalo navázat jen přes `/next`, a ten dělá něco jiného a mnohem víc: sbírá skriptem celý stav projektu včetně `git fetch` a živých session, řadí frontu a sestavuje nabídku. Uživatel přitom chce jediné – pokračovat tím, co `/break` před chvílí zapsal. `/continue` proto pustí jediný příkaz, který projde `todo.md` všech worktree a vypíše sekci `## Přerušený běh`, přepne se do adresáře zápisu a provede první akci z odstavce `**Jak pokračovat:**`. `/break` nově končí řetězem `/cleanup` → `/clear` → `/continue` (i v `handoff.md`); `/next` sekci dál nabízí první, takže zůstává jako záloha.
+
+**`/break` dostal kvůli tomu pevné značky.** Do té doby neměly bloky v sekci hranici (nový šel „pod starý“) a *Jak pokračovat* byl jen bod obsahu bez pevného návěstí a bez požadavku, aby začínal jednou proveditelnou akcí. Nově má každý blok nadpis `### <práce> – přerušeno <YYYY-MM-DD>` a končí odstavcem `**Jak pokračovat:**`, jehož první věta je jediná první akce. Tvar dál drží `/break`; `/continue` z něj čte jen tyhle dvě značky a test `BreakContinueContract` hlídá, že je obě strany jmenují stejně, a příkaz z `/continue` spouští nad repozitářem s druhým worktree. Zápis ve starším tvaru bez nadpisu čte `/continue` jako jeden blok.
+
+**Zamítnuto:**
+- **Zrychlit `/next`** – jeho šíře je jeho účel; navázání na jeden zápis je jiná otázka a zúžení `/next Přerušený běh` by stejně pustilo celý sběr.
+- **Skript místo příkazu v `SKILL.md`** – rozhoduje se jen to, kde sekce leží a kde končí, a to unese jeden řádek shellu; spuštění stejně hlídá test.
+- **Kontrola, jestli nad větví neběží živá session** – `/break` končí `/clear` v téže session, takže by kontrola hlásila jako obsazenou právě tu, která má pokračovat, a byla by nejpomalejší částí běhu.

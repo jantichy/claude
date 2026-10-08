@@ -214,13 +214,17 @@ Sahají na projekt, ale nestojí v jeho životním cyklu – přerušení a orie
 
 Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
 
+#### [`/continue`](skills/continue/) – navázat na přerušenou práci hned
+
+V nové session po `/break` najde zápis přerušené práce, přejde do adresáře, kde leží, krátce shrne, kde se stojí, a rovnou pokračuje tím, co zápis určil jako první krok – bez sbírání a řazení všeho ostatního, co v projektu čeká. Je to druhá strana `/break` a obě stojí na stejném tvaru zápisu.
+
 #### [`/diagram`](skills/diagram/) – datový model jako mapa, na kterou se dá kliknout
 
 Z dokumentace navrženého modelu nakreslí interaktivní stránku: ER diagram všech tabulek, ve kterém po kliknutí vidím popis entity, vazby, sloupce a constrainty, a stavový prostor s přechody mezi stavy. Žije jako soukromý artefakt a při dalším zavolání se překreslí na stejném odkazu, klidně z jiné rozdělané větve. Nekreslí nic, co v dokumentaci není, a do projektu nezapisuje.
 
 #### [`/break`](skills/break/) – přerušit rozdělanou práci bez ztráty kontextu
 
-Když je session dlouhá nebo se musím k práci vrátit jindy, zapíše do seznamu úkolů všechno, co nová session potřebuje, aby pokračovala, jako by ji nikdo nepřerušil: kde práce leží, co jí musí předcházet, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří kontrolami projektu, commitne a doporučí úklid a novou session, ve které ho `/next` nabídne jako první. Funguje pro frontu kteréhokoliv skillu i pro práci, která skillem neběží.
+Když je session dlouhá nebo se musím k práci vrátit jindy, zapíše do seznamu úkolů všechno, co nová session potřebuje, aby pokračovala, jako by ji nikdo nepřerušil: kde práce leží, co jí musí předcházet, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří kontrolami projektu, commitne a doporučí úklid a novou session, ve které na něj `/continue` rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci, která skillem neběží.
 
 #### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
 

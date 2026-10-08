@@ -16,7 +16,8 @@ Dlouhá session jednou narazí na strop: konverzace je tak velká, že se v ní 
 - **Nic se neparafrázuje.** Zkracování je přesně místo, kde se ztratí detail, kvůli kterému bod vznikl – a pozná se to až za týden.
 - **Nová session nemusí nic domýšlet.** Ví, kde práce leží, co předchází a co doporučit, bez jediného dotazu.
 - **Neohlásí hotovo s polovinou zápisu.** Počet zapsaných bodů se porovná se zbytkem práce.
-- **Na konci řekne, kudy dál**: úklid session, vyčištění a nová session, ve které se rozdělaná práce nabídne jako první.
+- **Na konci řekne, kudy dál**: úklid session, vyčištění a nová session, ve které se na rozdělanou práci rovnou naváže.
+- **Zápis má pevný tvar**, kterému rozumí `/continue`: každé přerušení pod vlastním nadpisem a na konci jedna jasná první akce.
 
 ## Jak se to používá
 
@@ -24,12 +25,12 @@ Dlouhá session jednou narazí na strop: konverzace je tak velká, že se v ní 
 /break
 ```
 
-Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému dochází místo. Na konci doporučí `/cleanup`, `/clear` a v nové session `/next`.
+Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému dochází místo. Na konci doporučí `/cleanup`, `/clear` a v nové session `/continue`, který na zápis rovnou naváže.
 
 ## Co nedělá
 
 - Nezapisuje dohody a poznatky z celé session – na to je `/cleanup`, který jde hned po něm.
-- Nevybírá, čím se pokračuje – to v nové session udělá `/next`.
+- Sám v práci nepokračuje – to v nové session udělá `/continue`.
 - Zbytek práce nedodělává ani nerozhoduje, jen ho uloží.
 
 ## Jak si ho nainstalovat
@@ -37,7 +38,7 @@ Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému docház�
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/break
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Počítá se seznamem úkolů v `docs/todo.md` a s navazujícími skilly `/cleanup` a `/next` ze stejného repozitáře; bez nich zápis vznikne, ale nikdo ho v nové session sám nenabídne.
+Počítá se seznamem úkolů v `docs/todo.md` a s navazujícími skilly `/cleanup` a `/continue` ze stejného repozitáře; bez nich zápis vznikne, ale nikdo na něj v nové session sám nenaváže.
 
 ---
 

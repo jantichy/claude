@@ -61,7 +61,7 @@ Vyhrává první kritérium, které sedí:
 | věc je hotová a dál se nic nedělá | `/cleanup` → `/merge` | `/cleanup` |
 | věc je hotová a další krok běží nad hlavní větví | `/cleanup` → `/merge` → `/clear` → `/X` | `/cleanup` → `/clear` → `/X` |
 | ještě musí v nové session proběhnout kontrola | `/cleanup` → `/clear` → `/X`, merge až po jejím `/cleanup` | `/cleanup` → `/clear` → `/X` |
-| přerušený průchod frontou | `/cleanup` → `/clear` → `/next` | `/cleanup` → `/clear` → `/next` |
+| přerušený průchod frontou | `/cleanup` → `/clear` → `/continue` | `/cleanup` → `/clear` → `/continue` |
 | rozdělaná úvaha, která se zapsat nedá | `/cleanup` → `/compact` | `/cleanup` → `/compact` |
 | konec práce | `/cleanup` → zavřít okno; je-li větev hotová, `/merge` před tím | `/cleanup` → zavřít okno |
 

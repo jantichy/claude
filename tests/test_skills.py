@@ -13,6 +13,8 @@ prostředí neprojeví jako nález, ale jako rozbitý nástroj – a ten se obch
 
 import os
 import re
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -3197,6 +3199,108 @@ class DepotCorePartsActuallyCatch(unittest.TestCase):
             self._reports(skill_body),
             "hranice bez opory v ~/.claude/standards/rules.md neshodila kontrolu",
         )
+
+
+class BreakContinueContract(unittest.TestCase):
+    """/break zapisuje a /continue čte – dvě strany jednoho předání.
+
+    /continue je rychlý jen proto, že nic nedomýšlí: blok pozná podle nadpisu
+    s „– přerušeno“ a první akci podle návěstí `**Jak pokračovat:**`. Přejmenuje-li
+    se značka na jedné straně, druhá ji přestane nacházet a /continue se začne
+    ptát – tedy přesně to zdržení, kvůli kterému vznikl. Proto se tu porovnávají
+    obě strany proti sobě a příkaz, kterým /continue zápis hledá, se doopravdy
+    spustí nad repozitářem s druhým worktree.
+    """
+
+    LABEL = "`**Jak pokračovat:**`"
+    HEADING = "– přerušeno <YYYY-MM-DD>"
+
+    def setUp(self):
+        self.break_body = body(ROOT / "skills" / "break" / "SKILL.md")
+        self.continue_body = body(ROOT / "skills" / "continue" / "SKILL.md")
+
+    def test_both_sides_name_the_same_label(self):
+        self.assertIn(
+            self.LABEL, self.break_body, "/break nepíše návěstí Jak pokračovat doslova"
+        )
+        self.assertIn(
+            self.LABEL, self.continue_body, "/continue nehledá návěstí Jak pokračovat"
+        )
+
+    def test_break_heads_each_block(self):
+        self.assertIn(
+            self.HEADING,
+            self.break_body,
+            "/break nedává bloku nadpis s datem přerušení",
+        )
+        self.assertIn("### ", self.continue_body, "/continue nepočítá s nadpisem bloku")
+
+    def test_chain_leads_to_continue(self):
+        self.assertIn(
+            "v nové session `/continue`",
+            self.break_body,
+            "Kudy dál u /break nevede na /continue",
+        )
+        row = next(
+            line
+            for line in HANDOFF.read_text(encoding="utf-8").splitlines()
+            if line.startswith("| přerušený průchod frontou")
+        )
+        self.assertIn(
+            "/continue", row, "handoff.md nevede přerušený průchod na /continue"
+        )
+
+    def test_find_command_reads_section_from_other_worktree(self):
+        command = re.search(r"```bash\n(.+?)\n```", self.continue_body, re.S).group(1)
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, other = Path(tmp) / "main", Path(tmp) / "feature"
+            git = ["git", "-c", "user.name=t", "-c", "user.email=t@t"]
+            subprocess.run(["git", "init", "-q", "-b", "main", str(repo)], check=True)
+            subprocess.run(
+                git + ["-C", str(repo), "commit", "-q", "--allow-empty", "-m", "x"],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(repo),
+                    "worktree",
+                    "add",
+                    "-q",
+                    "-b",
+                    "feature",
+                    str(other),
+                ],
+                check=True,
+            )
+            (other / "docs").mkdir()
+            (other / "docs" / "todo.md").write_text(
+                "# Todo\n\n## Přerušený běh\n\n### /review – přerušeno 2026-10-08\n\n"
+                "**Jak pokračovat:** `/review branch`.\n\n## Jiné\n\n- [ ] cizí položka\n",
+                encoding="utf-8",
+            )
+            out = subprocess.run(
+                ["sh", "-c", command],
+                cwd=repo,
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout
+        self.assertIn("==> ", out, "příkaz nenašel zápis v sousedním worktree")
+        self.assertIn("**Jak pokračovat:** `/review branch`.", out)
+        self.assertNotIn("cizí položka", out, "příkaz nezastavil na další sekci")
+
+
+class BreakContinueContractActuallyCatch(unittest.TestCase):
+    """Mutační test: návěstí vyříznuté z jedné strany musí kontrolu shodit."""
+
+    def test_label_missing_on_one_side_is_reported(self):
+        case = BreakContinueContract("test_both_sides_name_the_same_label")
+        case.setUp()
+        case.continue_body = case.continue_body.replace(case.LABEL, "Jak pokračovat")
+        with self.assertRaises(AssertionError):
+            case.test_both_sides_name_the_same_label()
 
 
 HANDOFF = ROOT / "skills" / "handoff.md"
