@@ -323,6 +323,16 @@ class PredfiltrBase(unittest.TestCase):
         }
         return [use, result]
 
+    def dialog(self, answers, annotations=None):
+        """Volání `AskUserQuestion` a odpověď v tvaru, jaký ukládá harness."""
+        use, result = self.tool("AskUserQuestion", "Your questions have been answered")
+        result["toolUseResult"] = {
+            "questions": [],
+            "answers": answers,
+            "annotations": annotations or {},
+        }
+        return [use, result]
+
     def kept(self, records):
         rows = self.extract.load(str(self.transcript(records)))
         kept, _, _ = self.extract.walk(rows)
@@ -461,6 +471,38 @@ class ZpravyUzivatele(PredfiltrBase):
             self.user_messages([self.user("[Request interrupted by user]")]), []
         )
 
+    def test_volba_z_dialogu_je_zprava_uzivatele(self):
+        """Rozhodnutí z nabídky mívá větší dopad než dovětek v promptu."""
+        self.assertEqual(
+            self.user_messages(self.dialog({"Jak opravit?": "Vlastní funkce"})),
+            ["Jak opravit? → Vlastní funkce"],
+        )
+
+    def test_vlastni_text_z_dialogu_nese_i_poznamku(self):
+        """Volba Other nese uživatelův text; poznámka k volbě je jeho text taky."""
+        records = self.dialog(
+            {"Jaká paleta?": "výchozí paleta = první šablona"},
+            {"Jaká paleta?": {"notes": "i v náhledu"}},
+        )
+        self.assertEqual(
+            self.user_messages(records),
+            ["Jaká paleta? → výchozí paleta = první šablona (poznámka: i v náhledu)"],
+        )
+
+    def test_kazda_otazka_dialogu_je_zvlast(self):
+        """Odškrtává se rozhodnutí, ne volání nástroje."""
+        records = self.dialog({"První?": "Ano", "Druhá?": "Ne"})
+        self.assertEqual(self.user_messages(records), ["Druhá? → Ne", "První? → Ano"])
+
+    def test_dialog_bez_struktury_se_neztrati(self):
+        """Změní-li harness tvar záznamu, dialog se počítá dál ze surového textu."""
+        records = self.tool("AskUserQuestion", '"Jak?"="Takhle"')
+        self.assertEqual(self.user_messages(records), ['"Jak?"="Takhle"'])
+
+    def test_dialog_se_cte(self):
+        kept = self.kept(self.dialog({"Jak?": "Takhle"}))
+        self.assertEqual(kept.get("dialog"), "Jak? → Takhle")
+
     def test_vsuvka_se_ale_cte(self):
         """Nález subagenta je obsah, který zmizí se session – čte se, jen není zprávou uživatele."""
         kept = self.kept([self.user("NÁLEZ OD AGENTA", isMeta=True)])
@@ -519,6 +561,24 @@ class MutacePredfiltru(PredfiltrBase):
         self.assertTrue(
             module.prompts(rows),
             "vyřazení isMeta nic nezměnilo – test na vsuvky tedy neměří to, co tvrdí",
+        )
+
+    def test_bez_vetve_dialogu_se_odpoved_ztrati(self):
+        """Bez téhle mutace by test dialogu prošel i nad promptem odjinud."""
+        source = EXTRACT.read_text(encoding="utf-8").replace(
+            'and names.get(block.get("tool_use_id")) == DIALOG_TOOL',
+            "and False",
+            1,
+        )
+        mutant = self.dir / "extract_mutant_dialog.py"
+        mutant.write_text(source, encoding="utf-8")
+        module = load(mutant, "extract_mutant_dialog")
+        base = self.dialog({"Jak?": "Takhle"})
+        rows = module.load(str(self.transcript(base)))
+        self.assertEqual(
+            module.prompts(rows),
+            [],
+            "vyřazení větve dialogu nic nezměnilo – test dialogu neměří to, co tvrdí",
         )
 
 

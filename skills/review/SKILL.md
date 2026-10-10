@@ -148,7 +148,7 @@ Vlastní zadání piš jen pro specialisty, kteří vestavěný protějšek nema
 
 **Na verifikaci se nešetří.** Ověřovatele pouštěj na **nejsilnějším modelu**, i když nález hlásil levný specialista. (Effort mu předepsat neumíš: `Agent` bere parametr `model`, ale ne `effort`. **Definice agenta to nezavírá**, ačkoliv se to tu dřív čekalo: `model` v hlavičce funguje – změřeno 15. 9. 2026 –, ale zapsat ho tam by byla chyba, protože týž typ používá víc skillů s různými nároky; předává se proto parametrem při volání. Effort se parametrem předat nedá vůbec, takže „na nejsilnějším modelu s `xhigh`“ je dnes splnitelné jen první polovinou. Vědomá mezera, ne opomenutí.) Slabý model nález nepotvrdí ani nevyvrátí – přizvukuje tomu, co má před sebou, a tím z ověření udělá razítko. Ověřovatelů je přitom míň než nálezů z panelu, protože běží jen na KRITICKÉ a STŘEDNÍ a až po deduplikaci.
 
-**Práh není u obou závažností stejný a je to vědomé.** Cena omylu je asymetrická: falešně pozitivní nález stojí jednu otázku ve Fázi 7 (kde je stejně všechno od pracovních specialistů sporné), falešně negativní stojí díru v produkci – a je **navždy neviditelný**, protože se nezobrazuje ani titulkem. Symetrický práh proto obětuje pravé nálezy, aby ušetřil jednu otázku.
+**Práh není u obou závažností stejný a je to vědomé.** Cena omylu je asymetrická: falešně pozitivní nález stojí jednu otázku ve Fázi 7 (kde je nález pracovního specialisty s víc podobami opravy stejně sporný), falešně negativní stojí díru v produkci – a je **navždy neviditelný**, protože se nezobrazuje ani titulkem. Symetrický práh proto obětuje pravé nálezy, aby ušetřil jednu otázku.
 
 Zvlášť to platí pro bezpečnost: nálezy od toho specialisty jsou ze své podstaty tvrzení o **absenci** (chybí kontrola oprávnění, chybí limit pokusů, chybí auditní stopa). Na „chybí kontrola“ se otázka „nastane to selhání doopravdy?“ nedá z kódu zodpovědět bez pochybnosti nikdy – vždycky *mohl* být guard o vrstvu výš. Kdyby na ni platilo „při pochybnosti vyvracej“, mizely by nálezy toho specialisty systematicky.
 
@@ -214,13 +214,13 @@ Pak rozděl na tři skupiny. **Kritérium drží `~/.claude/skills/findings.md`*
 - `batch` nález, jehož náhrada je jedna a ověří se diffem
 
 **Sporné** – volba mezi podobami opravy je uživatelova:
-- **cokoliv od pracovních specialistů** – korektnost, bezpečnost, data a stavy, provoz a chyby a testy jsou sporné, i když se oprava zdá triviální: u nich rozhoduje, **kterou** cestou se díra zavře
+- **nález pracovního specialisty, jehož oprava má víc obhajitelných podob** – u korektnosti, bezpečnosti, dat a stavů, provozu a chyb a testů rozhoduje, **kterou** cestou se díra zavře, a to i tehdy, když se každá z cest zdá triviální. Má-li oprava jedinou podobu danou okolím, patří mezi jednoznačné; trojice *Opravit / Odložit / Přeskočit* by jinak nic nerozhodla (`~/.claude/skills/findings.md`, *Volby v otázce jsou varianty řešení*)
 - **přidání závislosti** – vždy, i když ji přidal někdo jiný a ty jen prošel diff (`~/Dev/context/coding/quality.md`, *Nová závislost je rozhodnutí, ne detail*)
 - návrh, který se má rozhodnout: chybějící obrazovka, nová osa v modelu, změna API kontraktu, kde jsou dvě obhajitelné podoby
 - zásah nevratný, mimo repozitář nebo do cizího systému
 - **chybí ti údaj, který ví jen uživatel a nedá se zjistit z repozitáře** – co se dá spočítat, dohledat nebo porovnat se zdrojem, je práce, ne sporný nález (`~/.claude/skills/findings.md`, *Nejistotu nejdřív zkus odstranit*)
 
-**Při sloučení vyhrává přísnější zařazení.** Stačí, aby měl nález **jediný podklad od pracovního specialisty**, a je sporný – bez ohledu na to, co si o něm myslel doménový specialista, který ho hlásil taky. Je to deterministické kritérium ve smyslu `~/.claude/standards/rules.md`, *Mechanická pravidla nad rozhodováním případ od případu*, a řeší kolizi, kterou tenhle skill sám jmenuje jako typickou: chybějící `rel="noopener"` je pro `web/web.md` kosmetika vyjmenovaná mezi mechanickými opravami, kdežto pro specialistu na bezpečnost je to tabnabbing, tedy vždy sporné. Bez pravidla by o tom rozhodovala náhoda.
+**Při sloučení vyhrává přísnější zařazení.** Stačí, aby měl nález **jediný podklad od pracovního specialisty** a oprava víc obhajitelných podob, a je sporný – bez ohledu na to, co si o něm myslel doménový specialista, který ho hlásil taky. Je to deterministické kritérium ve smyslu `~/.claude/standards/rules.md`, *Mechanická pravidla nad rozhodováním případ od případu*, a řeší kolizi, kterou tenhle skill sám jmenuje jako typickou: chybějící `rel="noopener"` je pro `web/web.md` kosmetika vyjmenovaná mezi mechanickými opravami, kdežto pro specialistu na bezpečnost je to tabnabbing, který jde zavřít víc cestami (`noopener`, `noreferrer`, odkaz bez `target`). Bez pravidla by o tom rozhodovala náhoda.
 
 Při pochybnosti patří nález mezi sporné.
 

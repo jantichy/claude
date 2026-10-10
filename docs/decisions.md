@@ -1947,3 +1947,17 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 **Rozhodnuto 10. 10. 2026** během `/slim skills/merge/SKILL.md`. Soubor se nečte paušálně, jen při běhu `/merge`, takže páka je malá. Rovnou se škrtl doklad u chyby se souběžným úklidem (datum, projekt, obnova z hashe) a zkrátil se odstavec o předání zprávy merge commitu souborem: 12 551 → 12 278 znaků. Čtenář bez kontextu nenašel žádné ztracené pravidlo.
 
 **Zamítnuto:** redukce zdůvodnění na jádro (proč se spojený stav ověřuje ve větvi, výklad o `--first-parent`, úvod skillu, proč do *Fáze 3* i bez konfliktu) o dalších 890 znaků – u souboru čteného jen při mergi úspora nevyváží ztrátu zdůvodnění, které rozhoduje hraniční případy.
+
+### Inventura `/cleanup` počítá mezi prompty každou odpověď z dialogu
+
+**Rozhodnuto 11. 10. 2026**, po pátém doloženém běhu, ve kterém inventura vydala 0 promptů, přestože se rozhodovalo v dialogu. `extract.py inventory` bere každou odpovězenou otázku z `AskUserQuestion` jako jeden prompt ve tvaru „otázka → odpověď“ i s poznámkou k volbě. Odpověď čte z `toolUseResult.answers` a bez té struktury ze surového textu výsledku. Odpovědi z dialogu se vypisují i ve `filter` jako kategorie `dialog`.
+
+**Zamítnuto:**
+- **Počítat jen *Other*** – rozhodnutí z nabídky mívá větší dopad než dovětek v promptu a evidence by ho minula.
+- **Nechat dialog mimo prompty a vypsat ho zvlášť** – odškrtávání by zůstalo dobrovolné a kontrola úplnosti by dál prošla bez něj.
+
+### Nález pracovního specialisty je sporný, jen když má oprava víc podob
+
+**Rozhodnuto 11. 10. 2026.** *Fáze 4* `/review` dřív řadila mezi sporné každý nález pracovního specialisty, kdežto `skills/findings.md`, *Volby v otázce jsou varianty řešení*, velí nález s volbami *Opravit / Odložit / Přeskočit* opravit rovnou. U nálezu s jedinou podobou opravy danou okolím se tak muselo porušit jedno z pravidel. Pravidlo ve *Fázi 4* i pravidlo o přísnějším zařazení při sloučení se proto zúžily na nálezy, jejichž oprava má víc obhajitelných podob.
+
+**Zamítnuto:** nechat vyhrát `/review` a ptát se i na opravu bez volby – otázka by nic nerozhodla a stála by pozornost, kterou uživatel potřebuje u skutečných voleb.

@@ -17,7 +17,10 @@ Skript má dva režimy:
   bez něj se hranice vytěžení přiznává odhadem, a co se nepřiznalo, nezjistí
   nikdo. Navíc vypíše číslovaný seznam uživatelských promptů – ty se
   odškrtávají v evidenci, protože u každého se dá říct, jestli se z něj něco
-  zapsalo.
+  zapsalo. **Prompt je i odpověď z dialogu `AskUserQuestion`** – výběr
+  nabídnuté volby stejně jako *Other* s vlastním textem: rozhodnutí z nabídky
+  mívá větší dopad než dovětek v promptu a evidence, která ho mine, hlásí
+  čistý výsledek, přestože nic neměřila.
 
 **Co se nečte a proč:**
 
@@ -51,6 +54,8 @@ from pathlib import Path
 # subagentů a stažené stránky sem patří právě proto, že zmizí se session.
 CONTENT_TOOLS = ("Bash", "Agent", "Task", "WebFetch", "WebSearch", "mcp__")
 SKIPPED_TOOLS = ("Read", "Grep", "Glob")
+# Dialog s volbami: jeho výstup je rozhodnutí uživatele, tedy prompt.
+DIALOG_TOOL = "AskUserQuestion"
 # Attachmenty, které nesou obsah od uživatele, ne technický balast.
 CONTENT_ATTACHMENTS = ("queued_command",)
 # Velký výstup nástroje se do transcriptu uloží **stejně uříznutý jako do
@@ -105,6 +110,34 @@ def result_text(block):
     return ""
 
 
+def dialog_answers(record, block):
+    """Odpovědi z dialogu jako texty „otázka → odpověď“, jeden na otázku.
+
+    Strukturu nese `toolUseResult` záznamu: `answers` mapuje otázku na
+    zvolenou odpověď (u *Other* na vlastní text) a `annotations` k ní přidává
+    poznámku. Chybí-li, vrátí se surový text výsledku – dialog se tak nikdy
+    tiše neztratí, jen se hůř čte.
+    """
+    result = record.get("toolUseResult")
+    answers = result.get("answers") if isinstance(result, dict) else None
+    if not isinstance(answers, dict) or not answers:
+        text = result_text(block).strip()
+        return [text] if text else []
+    notes = result.get("annotations") or {}
+    texts = []
+    for question, answer in answers.items():
+        text = f"{question} → {answer}"
+        note = (
+            (notes.get(question) or {}).get("notes")
+            if isinstance(notes, dict)
+            else None
+        )
+        if note:
+            text += f" (poznámka: {note})"
+        texts.append(text)
+    return texts
+
+
 def classify(record, block, names):
     """Vrátí (kategorie, čte se, text) pro jeden blok záznamu."""
     kind = block.get("type")
@@ -122,6 +155,8 @@ def classify(record, block, names):
         return label, True, block.get("text", "")
     if kind == "tool_result":
         name = names.get(block.get("tool_use_id"), "?")
+        if name == DIALOG_TOOL:
+            return "dialog", True, "\n".join(dialog_answers(record, block))
         if name.startswith(SKIPPED_TOOLS):
             return f"výstup {name}", False, ""
         if name.startswith(CONTENT_TOOLS):
@@ -229,8 +264,10 @@ def prompts(rows):
 
     Patří sem prompty bez `isMeta` a za prompt se počítá i zpráva poslaná
     uprostřed odpovědi, která přichází jinou cestou (`queue-operation`) a snadno
-    se přehlédne. Naopak sem nepatří vsuvky s rolí uživatele, které nenapsal on.
+    se přehlédne, a každá odpověď z dialogu. Naopak sem nepatří vsuvky s rolí
+    uživatele, které nenapsal on.
     """
+    names = tool_names(rows)
     found, seen = [], set()
 
     def add(number, text):
@@ -252,6 +289,12 @@ def prompts(rows):
         for block in blocks(record):
             if block.get("type") == "text":
                 add(number, block.get("text", ""))
+            elif (
+                block.get("type") == "tool_result"
+                and names.get(block.get("tool_use_id")) == DIALOG_TOOL
+            ):
+                for text in dialog_answers(record, block):
+                    add(number, text)
     return sorted(drop_prefixes(found))
 
 
@@ -279,7 +322,7 @@ def run_inventory(rows, path):
     read = {
         k: v
         for k, v in counts.items()
-        if sizes[k] or k in ("uživatel", "vsuvka", "odpověď", "ve frontě")
+        if sizes[k] or k in ("uživatel", "vsuvka", "odpověď", "ve frontě", "dialog")
     }
     skip = {k: v for k, v in counts.items() if k not in read}
     print(f"INVENTURA: {path}")

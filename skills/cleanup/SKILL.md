@@ -15,7 +15,7 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 3. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
 4. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
 
-**Záruka číslo 1 je jádro a měří se, ne tvrdí.** Inventura transcriptu vypíše **prompty** – všechno, co uživatel napsal, včetně zpráv poslaných uprostřed odpovědi – a ty se v evidenci odškrtávají jeden po druhém. Nedá se tedy vydat za hotové něco, u čeho zbyl nevyplněný řádek: pokrytí je vidět jako počet, ne jako dojem.
+**Záruka číslo 1 je jádro a měří se, ne tvrdí.** Inventura transcriptu vypíše **prompty** – všechno, co uživatel napsal, včetně zpráv poslaných uprostřed odpovědi a odpovědí z dialogu `AskUserQuestion` – a ty se v evidenci odškrtávají jeden po druhém. Nedá se tedy vydat za hotové něco, u čeho zbyl nevyplněný řádek: pokrytí je vidět jako počet, ne jako dojem.
 
 Skill je **opakovatelný**. Spustí-li ho uživatel podruhé, druhý průchod vytěžuje transcript celý znovu – slepá místa se tím ale nevyčistí sama, protože nejsou náhodná; co se nepřečetlo systematicky, se nepřečte znovu. Cenu má proto druhý běh hlavně tam, kde od prvního přibyla práce.
 
@@ -104,7 +104,7 @@ python3 ~/.claude/skills/cleanup/scripts/extract.py filter <transcript> > <scrat
 
 Z inventury si vezmi pět věcí a **všechny si zapiš, protože je budeš vykazovat v závěru**:
 
-- **kolik je promptů** – za prompt se počítá i zpráva poslaná uprostřed odpovědi. To je ta množina, která se v *Fázi 3* odškrtává.
+- **kolik je promptů** – za prompt se počítá i zpráva poslaná uprostřed odpovědi a každá odpovězená otázka z dialogu, výběr nabídnuté volby stejně jako *Other*. To je ta množina, která se v *Fázi 3* odškrtává.
 - **co se čte** a v jakém objemu,
 - **co se nečte** – to jde celé do *Mezí běhu* a nedá se to vynechat,
 - **kolik bylo kompaktací** – podle toho se rozhoduje hned v následujícím odstavci,
