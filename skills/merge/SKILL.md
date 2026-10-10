@@ -89,7 +89,7 @@ git branch -d <branch>
 git push origin --delete <branch>     # jen byla-li pushnutá
 ```
 
-**Zprávu zapiš nejdřív do souboru ve scratchpadu (nástrojem Write) a předej ji `-F <file>`, nikdy heredocem.** `git merge` na rozdíl od `git commit` zprávu ze standardního vstupu nebere: `-F -` i heredoc spadnou a merge se musí pouštět znovu. Pravidlo o heredocu z `~/.claude/standards/rules.md` (*Commituj jmenované cesty, ne `-A`*) platí pro `git commit`, na `git merge` se nepřenáší. Soubor místo `-m` proto, že zpráva má víc odstavců i řádek autorství a v `-m` se špatně uvozuje.
+**Zprávu zapiš nejdřív do souboru ve scratchpadu a předej ji `-F <file>`, nikdy heredocem.** `git merge` zprávu ze standardního vstupu nebere, takže `-F -` i heredoc spadnou; pravidlo o heredocu z `~/.claude/standards/rules.md` (*Commituj jmenované cesty, ne `-A`*) platí jen pro `git commit`. Soubor místo `-m`, protože zpráva má víc odstavců a řádek autorství.
 
 Ve worktree layoutu předchází mazání větve ještě `git worktree remove <container>/<directory>` – a příkazy nad hlavní větví pouštěj z `<container>/main`, ne z worktree větve, protože ten adresář mizí pod nohama session, která v něm stojí.
 
@@ -112,7 +112,7 @@ Vynucuje to git hook `~/.claude/githooks/commit-msg` nasazený globálně přes 
 
 - **Merge se provede bez pokynu.** Založit větev, udělat práci a hned ji mergnout je chyba – větev je pracovní prostor, ne obálka na jeden příkaz.
 - **Spojený stav se ověří až v `main`.** Textově čistý merge se bere za hotovou věc a kontrola se pustí až nad hlavní větví, kde už selhání vadí všem.
-- **Úklid se pustí souběžně s mergem.** Doloženo 17. 9. 2026 v rezervačním systému: `git merge -F -` spadl (merge zprávu ze stdin nebere, předej ji souborem) a souběžně puštěný úklid smazal worktree i větev. Obnovilo se to z hashe commitu, který byl ještě v repozitáři.
+- **Úklid se pustí souběžně s mergem.** Merge spadl a souběžně puštěný úklid smazal worktree i nepřimergovanou větev.
 - **Do merge commitu se svezou cizí soubory.** `git add -A` před mergem sebere i to, co v pracovním stromu nechala jiná session.
 - **Zpráva merge commitu zůstane výchozí.** Hook ji na hlavní větvi odmítne, ale spolehnout se na to znamená narazit až na konci celého postupu.
 

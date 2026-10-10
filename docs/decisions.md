@@ -1941,3 +1941,9 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 - **`/break` pouští `/cleanup` sám** – `/cleanup` je interaktivní a ptal by se ve chvíli, kdy uživatel odchází; žádný jiný skill řetěz ukončení nespouští sám, drží ho *Kudy dál* (`skills/handoff.md`). Spoléhá se tedy na to, že se `/cleanup` opravdu pustí, a to je vědomě přijaté.
 
 **Starý blok bez nadpisu se jen ohlásí.** `/break` mu nadpis nedoplňuje a `/continue` se smíšenou sekci číst neučí – zápisy ve starším tvaru jsou přechodné a zmizí s dojitím své fronty.
+
+### `/merge` zeštíhlený jen konzervativně
+
+**Rozhodnuto 10. 10. 2026** během `/slim skills/merge/SKILL.md`. Soubor se nečte paušálně, jen při běhu `/merge`, takže páka je malá. Rovnou se škrtl doklad u chyby se souběžným úklidem (datum, projekt, obnova z hashe) a zkrátil se odstavec o předání zprávy merge commitu souborem: 12 551 → 12 278 znaků. Čtenář bez kontextu nenašel žádné ztracené pravidlo.
+
+**Zamítnuto:** redukce zdůvodnění na jádro (proč se spojený stav ověřuje ve větvi, výklad o `--first-parent`, úvod skillu, proč do *Fáze 3* i bez konfliktu) o dalších 890 znaků – u souboru čteného jen při mergi úspora nevyváží ztrátu zdůvodnění, které rozhoduje hraniční případy.
