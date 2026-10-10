@@ -250,6 +250,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - **2026-10-08** · `/cleanup` · `3a118bd` · session `88a15e9a-f392-433c-b9f9-f172d5367735` · prompty 1/1 · 0 témat · mimo rozsah: žádné · meze: 20 bloků myšlení (prázdné ve formátu), 3 výstupy Read a 2 Write (soubory čteny ze zdroje), 1 výstup AskUserQuestion (odpověď je v konverzaci)
 - **2026-10-08** · `/cleanup` · `ff5a174` · session `88fa2933-ef83-4304-8bea-05aa0eed6468` · prompty 1/1 a k tomu 4 odpovědi v `AskUserQuestion` odškrtnuté ručně · 0 témat · mimo rozsah: žádné · meze: 33 bloků myšlení, 3 výstupy Read, 1 výstup Skill a 1 ToolSearch nečteny; odpovědi `AskUserQuestion` inventura nepočítá (úkol v `todo.md`)
 - **2026-10-10** · `/cleanup` · `76fd759` · session `133193ea-7272-4531-ba84-332156290f93` · prompty 3/3 a k tomu 1 odpověď v `AskUserQuestion` (varianta `/slim`) odškrtnutá ručně · 0 témat · mimo rozsah: žádné · meze: 16 bloků myšlení (prázdné ve formátu), 1 výstup Read (soubor čten ze zdroje), 1 výstup AskUserQuestion (odpověď je v konverzaci)
+- **2026-10-11** · `/cleanup` · `cb17779` · session `7e17c968-184b-487a-8ce6-376dbbbf0797` · prompty 1/1 · 0 témat · mimo rozsah: žádné · meze: 22 bloků myšlení (prázdné z principu); příkaz `/cleanup` sám se do promptů nepočítá – známá díra v `todo.md`
 
 ## Odvedená práce
 
