@@ -83,11 +83,13 @@ Ve větvi, ne v hlavní větvi:
 
 ```bash
 git checkout main                     # ve worktree layoutu místo toho: cd <container>/main
-git merge --no-ff <branch> -m "<shrnutí toho, co větev přinesla>"
+git merge --no-ff <branch> -F <file>  # <file> = zpráva zapsaná předem do souboru ve scratchpadu
 git push                              # jen má-li repozitář remote
 git branch -d <branch>
 git push origin --delete <branch>     # jen byla-li pushnutá
 ```
+
+**Zprávu zapiš nejdřív do souboru ve scratchpadu (nástrojem Write) a předej ji `-F <file>`, nikdy heredocem.** `git merge` na rozdíl od `git commit` zprávu ze standardního vstupu nebere: `-F -` i heredoc spadnou a merge se musí pouštět znovu. Pravidlo o heredocu z `~/.claude/standards/rules.md` (*Commituj jmenované cesty, ne `-A`*) platí pro `git commit`, na `git merge` se nepřenáší. Soubor místo `-m` proto, že zpráva má víc odstavců i řádek autorství a v `-m` se špatně uvozuje.
 
 Ve worktree layoutu předchází mazání větve ještě `git worktree remove <container>/<directory>` – a příkazy nad hlavní větví pouštěj z `<container>/main`, ne z worktree větve, protože ten adresář mizí pod nohama session, která v něm stojí.
 
@@ -102,7 +104,7 @@ Historie hlavní větve se čte přes `git log --first-parent`, který do větv�
 
 Cenou za to je, že výchozí zpráva `Merge větve docs/znamky` je o té větvi jediné, co bude vidět – a neříká nic než jméno adresáře.
 
-**Zprávu proto předej `-m` a napiš ji jako běžný commit:** co větev přinesla, ne jak se jmenovala. Ne `Merge branch 'feat/payments'`, ale `Zaveď platby kartou přes platební bránu`. Nese-li větev víc věcí, patří výčet do druhého odstavce zprávy, ne do prvního řádku.
+**Zprávu proto napiš jako běžný commit** a předej ji souborem (výš): co větev přinesla, ne jak se jmenovala. Ne `Merge branch 'feat/payments'`, ale `Zaveď platby kartou přes platební bránu`. Nese-li větev víc věcí, patří výčet do druhého odstavce zprávy, ne do prvního řádku.
 
 Vynucuje to git hook `~/.claude/githooks/commit-msg` nasazený globálně přes `core.hooksPath`; odmítne zprávu, kterou si git vygeneroval sám. Platí jen na hlavní větvi, takže aktualizace rozdělané větve z `main` ve *Fázi 3* projde beze změny.
 
@@ -110,7 +112,7 @@ Vynucuje to git hook `~/.claude/githooks/commit-msg` nasazený globálně přes 
 
 - **Merge se provede bez pokynu.** Založit větev, udělat práci a hned ji mergnout je chyba – větev je pracovní prostor, ne obálka na jeden příkaz.
 - **Spojený stav se ověří až v `main`.** Textově čistý merge se bere za hotovou věc a kontrola se pustí až nad hlavní větví, kde už selhání vadí všem.
-- **Úklid se pustí souběžně s mergem.** Doloženo 17. 9. 2026 v rezervačním systému: `git merge -F -` spadl (merge zprávu ze stdin nebere, předej ji `-m`) a souběžně puštěný úklid smazal worktree i větev. Obnovilo se to z hashe commitu, který byl ještě v repozitáři.
+- **Úklid se pustí souběžně s mergem.** Doloženo 17. 9. 2026 v rezervačním systému: `git merge -F -` spadl (merge zprávu ze stdin nebere, předej ji souborem) a souběžně puštěný úklid smazal worktree i větev. Obnovilo se to z hashe commitu, který byl ještě v repozitáři.
 - **Do merge commitu se svezou cizí soubory.** `git add -A` před mergem sebere i to, co v pracovním stromu nechala jiná session.
 - **Zpráva merge commitu zůstane výchozí.** Hook ji na hlavní větvi odmítne, ale spolehnout se na to znamená narazit až na konci celého postupu.
 
