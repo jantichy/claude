@@ -3249,6 +3249,9 @@ class BreakContinueContract(unittest.TestCase):
         self.assertIn(
             "/continue", row, "handoff.md nevede přerušený průchod na /continue"
         )
+        self.assertIn(
+            "| `/break` →", row, "handoff.md nezačíná přerušený průchod /break"
+        )
 
     def test_find_command_reads_section_from_other_worktree(self):
         command = re.search(r"```bash\n(.+?)\n```", self.continue_body, re.S).group(1)

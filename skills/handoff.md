@@ -61,7 +61,7 @@ Vyhrává první kritérium, které sedí:
 | věc je hotová a dál se nic nedělá | `/cleanup` → `/merge` | `/cleanup` |
 | věc je hotová a další krok běží nad hlavní větví | `/cleanup` → `/merge` → `/clear` → `/X` | `/cleanup` → `/clear` → `/X` |
 | ještě musí v nové session proběhnout kontrola | `/cleanup` → `/clear` → `/X`, merge až po jejím `/cleanup` | `/cleanup` → `/clear` → `/X` |
-| přerušený průchod frontou | `/cleanup` → `/clear` → `/continue` | `/cleanup` → `/clear` → `/continue` |
+| přerušený průchod frontou | `/break` → `/cleanup` → `/clear` → `/continue` | `/break` → `/cleanup` → `/clear` → `/continue` |
 | rozdělaná úvaha, která se zapsat nedá | `/cleanup` → `/compact` | `/cleanup` → `/compact` |
 | konec práce | `/cleanup` → zavřít okno; je-li větev hotová, `/merge` před tím | `/cleanup` → zavřít okno |
 
@@ -98,8 +98,8 @@ Rozhoduje **absolutní velikost kontextu**, ne to, kolik z něj sežral start pr
 | Session | Co s tím |
 |---|---|
 | **do 300k a do 150 volání** | komfortní pásmo, neřeší se nic |
-| **nad 300k** nebo **nad 150 volání** | **nabídni přerušení** – dlouhý průchod nedokončuj, nové velké téma neotevírej |
-| **nad 400k** | přerušení už **nenabízej, doporuč ho rovnou** i s řetězem; pokračování tady je volba uživatele, ne výchozí stav |
+| **nad 300k** nebo **nad 150 volání** | **nabídni přerušení** – dlouhý průchod nedokončuj, nové velké téma neotevírej; průchod frontou přerušuje `/break` (*Přerušení dlouhého průchodu* níž) |
+| **nad 400k** | přerušení už **nenabízej, doporuč ho rovnou** i s řetězem – u průchodu frontou začíná `/break` (*Přerušení dlouhého průchodu* níž); pokračování tady je volba uživatele, ne výchozí stav |
 
 Volání se počítají jen v hlavní session, ne v subagentech, a obojí se měří od poslední kompaktace.
 

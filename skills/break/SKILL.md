@@ -70,7 +70,7 @@ Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~
 
 **Ve worktree layoutu se zápis nezrcadlí do `main/`.** Větev je před mergem a sekce v ní leží tam, kde se v práci pokračuje; do hlavní větve se dostane mergem.
 
-Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj, že je přerušený a kde je zápis. Smaže ho až session, která frontu dojde.
+Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj klíčem `interrupted` cestu k zápisu (`"interrupted": "docs/todo.md"`). Podle toho klíče přerušený skill na startu pozná, že autoritou je zápis, ne běhový soubor (`~/.claude/skills/skills.md`, *Běhový stav*). Smaže ho až session, která frontu dojde.
 
 ## Fáze 3 – Ověření
 

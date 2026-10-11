@@ -32,15 +32,24 @@ CALLS_OFFER = 150
 
 STATE_DIR = Path.home() / ".local" / "state" / "claude-handoff"
 
+# Hook nepozná, jestli běží průchod frontou, proto hláška jmenuje obě větve.
+# Bez první větve se zbytek fronty nabízel k navázání z běhového souboru
+# a kontext kolem položek se s `/clear` ztratil.
+CHAINS = (
+    "Prochází-li běh frontu jednu položku po druhé (`~/.claude/skills/handoff.md`, "
+    "*Přerušení dlouhého průchodu*), řetěz je `/break` → `/cleanup` → `/clear` "
+    "→ `/continue` v nové session – zbytek fronty uloží `/break`, ne běhový "
+    "soubor. Jinak `/cleanup` → `/clear` a další krok v nové session."
+)
 OFFER = (
     "Podle `~/.claude/skills/handoff.md`, *Práh kontextu*, jednou nabídni "
-    "`/cleanup` a pokračování v nové session – s tím, co by se zapsalo a kde "
-    "by se navázalo. Rozhoduje uživatel."
+    "přerušení – s tím, co by se zapsalo a kde by se navázalo. " + CHAINS + " "
+    "Rozhoduje uživatel."
 )
 RECOMMEND = (
     "Podle `~/.claude/skills/handoff.md`, *Práh kontextu*, přerušení už "
-    "nenabízej, ale doporuč rovnou: `/cleanup`, `/clear` a pokračování "
-    "v nové session. Pokračování tady je volba uživatele, ne výchozí stav."
+    "nenabízej, ale doporuč rovnou. " + CHAINS + " Pokračování tady je volba "
+    "uživatele, ne výchozí stav."
 )
 
 

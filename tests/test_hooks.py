@@ -1306,6 +1306,7 @@ class HandoffHook(unittest.TestCase):
         msg = self.run_hook()
         self.assertIn("301k", msg)
         self.assertIn("nabídni", msg)
+        self.assertIn("`/break`", msg, "nabídka nevede průchod frontou přes /break")
         self.add(context=320_000)
         self.assertEqual(self.run_hook(), "", "nabídka zazněla podruhé")
 
@@ -1316,6 +1317,7 @@ class HandoffHook(unittest.TestCase):
         msg = self.run_hook()
         self.assertIn("401k", msg)
         self.assertIn("doporuč rovnou", msg)
+        self.assertIn("`/break`", msg, "doporučení nevede průchod frontou přes /break")
         self.add(context=450_000)
         self.assertEqual(self.run_hook(), "")
 

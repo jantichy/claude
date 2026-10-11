@@ -37,7 +37,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 **Předmět posudku.** Uživatel ho může zadat jako argument (`/oponent docs/requirements.md`, `/oponent 01 až 04`, `/oponent pozicování`). Když ho nezadá, **nabídni mu, co jsi našel** – projdi projekt, vypiš kandidáty (dokumenty, na kterých se v poslední době pracovalo) a nech ho vybrat přes `AskUserQuestion`.
 
-**Nejdřív se podívej, jestli neexistuje `.claude/run/oponent.json`** – přerušený běh. Vzniká na konci Fáze 4; nabídni navázání dřív, než začneš cokoliv počítat znovu.
+**Nejdřív se podívej, jestli neexistuje `.claude/run/oponent.json`** – přerušený běh. Vzniká na konci Fáze 4; nabídni navázání dřív, než začneš cokoliv počítat znovu – podle zápisu z `/break`, nese-li soubor klíč `interrupted`, jinak z něj (`~/.claude/skills/skills.md`, *Běhový stav*).
 
 **Pak zjisti, jestli nad tímhle předmětem oponentura už neběžela** – `docs/done.md`, sekce `## Průchody životním cyklem`. Najdeš-li záznam, přečti z něj panel hledisek a počty nálezů: Fáze 1 z toho vyjde při volbě hledisek a Fáze 6 podle toho pozná, jestli smí srovnávat počty. Porovnej i hash s aktuálním – `git log --oneline <zapsaný hash>..HEAD` ukáže, co se od té doby změnilo.
 
@@ -233,7 +233,7 @@ Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/.claude/skills/skills
 
 **Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 5 s ním pak dlouze interaguje **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
 
-**Na startu skillu** (Fáze 0) se proto podívej, jestli `.claude/run/oponent.json` už neexistuje. Existuje-li, **nabídni navázání** místo nového běhu – a řekni, kolik nálezů v něm zbývá nevypořádaných. Změnil-li se od té doby oponovaný dokument, řekni to a zeptej se: část nálezů může být neaktuální.
+**Na startu skillu** (Fáze 0) se proto podívej, jestli `.claude/run/oponent.json` už neexistuje. Existuje-li, **nabídni navázání** místo nového běhu – a řekni, kolik nálezů v něm zbývá nevypořádaných. Odkud se navazuje, rozhoduje klíč `interrupted` (`~/.claude/skills/skills.md`, *Běhový stav*). Změnil-li se od té doby oponovaný dokument, řekni to a zeptej se: část nálezů může být neaktuální.
 
 **Průběžně do něj zapisuj stav** každého nálezu (`accepted`, `rejected`, `deferred`, `open`), jak jimi procházíš. Po dokončení Fáze 6 soubor smaž.
 

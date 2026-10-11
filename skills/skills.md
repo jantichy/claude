@@ -425,6 +425,11 @@ Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jedno
 
 **Nikdy se z něj nečte jako z pravdy o projektu.** Říká jen, kde skončil přerušený běh; co z toho má trvalou platnost, se zapíše do `todo.md`, `decisions.md` nebo `done.md` jako všechno ostatní.
 
+**Není to cesta k navázání, kterou se přerušení doporučuje.** Nese stav položek, ne kontext kolem nich – doporučení, varianty a návaznosti zůstávají v konverzaci a s `/clear` zmizí. Přerušení průchodu proto vždycky jde přes `/break` a navázání přes `/continue` (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*); věta „skill v nové session naváže na běhový soubor“ do nabídky přerušení nepatří. Skill, který na startu svůj běhový soubor najde, rozliší dva případy:
+
+- **Soubor nese klíč `interrupted`**, kterým ho poznačil `/break` → autoritou je zápis v `docs/todo.md`, sekce `## Přerušený běh`, na který klíč ukazuje; z běhového souboru se bere jen stav položek. Spustil-li skill `/continue`, pokračuje podle zápisu bez ptaní; spustil-li ho uživatel přímo, nabídne navázání podle zápisu.
+- **Klíč chybí** → běh skončil bez `/break` (kompaktace, zavřené okno, pád). Teprve tehdy skill nabídne navázání z běhového souboru a řekne, že kontext kolem položek chybí a doporučení u nich sestaví znovu.
+
 ------
 
 ## Co se nepřebírá zvenčí
