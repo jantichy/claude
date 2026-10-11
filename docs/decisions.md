@@ -1962,7 +1962,7 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 
 **Zamítnuto:** nechat vyhrát `/review` a ptát se i na opravu bez volby – otázka by nic nerozhodla a stála by pozornost, kterou uživatel potřebuje u skutečných voleb.
 
-### Struktura disku: klienti v `~/Projekty`, vlastní věci v `~/Dev`
+### Struktura disku: klienti ve vlastní složce, vlastní věci v `~/Dev`
 
 **Rozhodnuto 11. 10. 2026.** `~/Dev` se rozrostl na desítky adresářů, ve kterých se míchají práce pro klienty, vlastní produkty, osobní nástroje i znalostní báze, a jeden klient se trhal na víc míst podle typu souborů (kód v `~/Dev`, dokumenty v `~/Documents`, profil v `context/organizations/`, fakturace v `context/business/`). Nově se disk člení podle toho, **čí věc to je**, ne jaký typ souborů v ní leží:
 
@@ -1979,3 +1979,7 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 - **Celý klient jeden repozitář** – kód s nasazením, worktree layoutem nebo klientovým remote se do něj nevejde a musel by se řešit zvlášť.
 - **Každý podprojekt vlastní repozitář, klientská složka bez gitu** (dosavadní stav) – klientský soubor a dokumenty by neměly historii a hranice by se hledala případ od případu.
 - **Klienti v `~/Documents/Projekty`** – mimo domovský adresář projektů a v synchronizované složce, kde git repozitáře dělají potíže.
+
+**Revize 11. 10. 2026: složka se jmenuje `~/Klienti`, ne `~/Projekty`.** Skill, který klienta zakládá, se jmenuje `/client` (`/project` je obsazený a pojmenovává projekt, ne klienta), a složka má nést totéž slovo, ať jeden pojem nemá dvě jména. Česky zůstává jako vědomá výjimka z pravidla o anglických názvech adresářů, rozhodl uživatel. Adresa `projekty@…` se tím nemění, je to kanál pro sdílení přístupů, ne jméno složky.
+
+**Skill `/client`** má dva režimy: **`create`** založí klientskou složku jako repozitář s `CLAUDE.md` importujícím profil, vyplní profil a fakturační soubor podle koster s doptáním na všechno a do `organizations/` a `business/invoicing/` zapíše odstavec s odkazem; **`adopt`** převede existujícího klienta, tedy přesune jeho profil a fakturační soubor do nové složky a nechá za nimi odkaz. Migrace dnešních klientů je pak opakované spuštění `adopt`. Zamítnuto `/customer` (druhé jméno pro zavedený pojem „klient“) a `/engagement` (pojmenovává zakázku, kdežto složka je klient).
