@@ -2,7 +2,7 @@
 
 **Dočasný soubor.** Slouží jen jednorázové migraci struktury disku – přesunu existujících projektů z `~/Dev` pod klientské složky v `~/Projekty`. Až bude krok 3 té migrace hotový u všech klientů (`~/.claude/docs/todo.md`, *Migrace na novou strukturu disku*), soubor se smaže celý i s odkazem z [`client.md`](client.md), *Převod*. Do skillu se neslučuje: postup, který se po migraci už nikdy nepoužije, by ho jen nafukoval.
 
-Ověřený je na FAVI (11. 10. 2026): tři repozitáře, 247 commitů, sloučené do `~/Projekty/Favi`.
+Ověřený je na prvním převedeném klientovi (11. 10. 2026): tři repozitáře, 247 commitů, sloučené do jeho klientské složky.
 
 ## Kdy
 
@@ -13,7 +13,7 @@ Klientská složka už existuje, je to git repozitář a `/project` v ní probě
 - **pracovní strom je čistý** (`git status --short`), stash prázdný,
 - **jediná větev a žádné worktree** (`git branch -a`, `git worktree list`). Má-li víc větví nebo worktree layout, **zastav se a rozhodni s uživatelem** – postup níž převádí jen `main`,
 - **neběží v něm session** – nejnovější `*.jsonl` v jeho složce v `~/.claude/projects/` není z posledních minut,
-- jméno podsložky v klientské složce potvrdil uživatel (FAVI: `~/Dev/favi` → `reporting/`).
+- jméno podsložky v klientské složce potvrdil uživatel (třeba `~/Dev/<client>` → `reporting/`).
 
 ## Postup
 
@@ -40,7 +40,7 @@ Klientská složka už existuje, je to git repozitář a `/project` v ní probě
    - **konce řádků** u souborů s CRLF, je-li `core.autocrlf=input`. Ověř, že se liší jen `\r` (`cmp <(tr -d '\r' < a) <(tr -d '\r' < b)`), a zdrojová data zkopíruj s původními bajty (`cp -p`) – podklady v `research/` se nemění. Git je pak vidí jako změněné jen podle stat, věcný diff je prázdný.
 
    Cokoliv jiného je chyba – zastav se.
-5. **Složky session logů** přejmenuj s adresářem, jinak projekt přijde o historii a `/invoicing` o stopy práce: `mv -n ~/.claude/projects/<old> ~/.claude/projects/<new>`, kde jméno je cesta s `/` nahrazeným `-` (`-Users-honza-Dev-favi` → `-Users-honza-Projekty-Favi-reporting`). Nové jméno nesmí existovat.
+5. **Složky session logů** přejmenuj s adresářem, jinak projekt přijde o historii a `/invoicing` o stopy práce: `mv -n ~/.claude/projects/<old> ~/.claude/projects/<new>`, kde jméno je cesta s `/` nahrazeným `-` (`-Users-honza-Dev-<project>` → `-Users-honza-Projekty-<Client>-<sub>`). Nové jméno nesmí existovat. **Opačným směrem to nefunguje:** `/` i `-` dají ve jménu totéž, takže `-Users-honza-Dev-a-b` může být `~/Dev/a-b` i `~/Dev/a/b`. Skutečnou cestu přečti z pole `cwd` v transcriptu (`grep -o '"cwd":"[^"]*"' <složka>/*.jsonl | sort -u`), jinak z dekódovaného jména vyjde neexistující adresář.
 6. **Starý adresář do Koše**, ne `rm`: `mv -n ~/Dev/<project> ~/.Trash/dev-<project>-<date>` (`date +%F`). Vysype ho uživatel.
 7. **Podprojektový `CLAUDE.md` zeštíhli** o to, co dědí z kořene klientské složky – profil, autocommit a paměťovou politiku přebít nejde (`client.md`, *Podprojekt*):
    - pryč: `## Autocommit`, `## Paměť`, import profilu, doménové importy shodné s kořenem (odlišné zůstanou), úvodní kontext, který opakuje profil;
