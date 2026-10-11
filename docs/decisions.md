@@ -1961,3 +1961,19 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 **Rozhodnuto 11. 10. 2026.** *Fáze 4* `/review` dřív řadila mezi sporné každý nález pracovního specialisty, kdežto `skills/findings.md`, *Volby v otázce jsou varianty řešení*, velí nález s volbami *Opravit / Odložit / Přeskočit* opravit rovnou. U nálezu s jedinou podobou opravy danou okolím se tak muselo porušit jedno z pravidel. Pravidlo ve *Fázi 4* i pravidlo o přísnějším zařazení při sloučení se proto zúžily na nálezy, jejichž oprava má víc obhajitelných podob.
 
 **Zamítnuto:** nechat vyhrát `/review` a ptát se i na opravu bez volby – otázka by nic nerozhodla a stála by pozornost, kterou uživatel potřebuje u skutečných voleb.
+
+### Struktura disku: klienti v `~/Projekty`, vlastní věci v `~/Dev`
+
+**Rozhodnuto 11. 10. 2026.** `~/Dev` se rozrostl na desítky adresářů, ve kterých se míchají práce pro klienty, vlastní produkty, osobní nástroje i znalostní báze, a jeden klient se trhal na víc míst podle typu souborů (kód v `~/Dev`, dokumenty v `~/Documents`, profil v `context/organizations/`, fakturace v `context/business/`). Nově se disk člení podle toho, **čí věc to je**, ne jaký typ souborů v ní leží:
+
+- **`~/Projekty/<klient>/`** – všechno pro jednoho klienta. Jméno je česky, přestože adresáře se jinak jmenují anglicky: ustálilo se dřív, než vznikla struktura (adresa `projekty@…`, na kterou klienti sdílejí přístupy), a jedno jméno pro jednu věc má přednost před jazykem.
+- **`~/Dev/`** – vlastní produkty i malé nástroje a jednorázové výpočty, osobní včetně. Samostatný `~/Personal` nebude.
+- **`~/Depot`** a **`~/Claude`** (adresář aplikace) zůstávají beze změny. Synchronizované disky třetích stran se do struktury nezahrnují, protože se ruší.
+- **Podrobnosti o klientovi** (dohody, fakturace a její historie, kontakty) leží v klientské složce v souboru s pevnou strukturou. `context/organizations/` a `context/business/` u klienta s vlastní složkou drží jen krátký odstavec a odkaz. Klienta zakládá na všech místech naráz skill.
+
+**Repozitář pod klientem:** klientská složka je sama git repozitář a drží klientský soubor, `CLAUDE.md`, dokumenty, analýzy a drobnosti. **Podsložka dostane vlastní repozitář, jen když má vlastní nasazení nebo CI, cizí remote, nebo se předává či sdílí samostatně**; klientský repozitář ji pak ignoruje. Dělicí čára je tak kritérium, ne pocit, a klientský `CLAUDE.md` platí v každém podprojektu sám, protože Claude Code načítá `CLAUDE.md` všech nadřazených adresářů.
+
+**Zamítnuto:**
+- **Celý klient jeden repozitář** – kód s nasazením, worktree layoutem nebo klientovým remote se do něj nevejde a musel by se řešit zvlášť.
+- **Každý podprojekt vlastní repozitář, klientská složka bez gitu** (dosavadní stav) – klientský soubor a dokumenty by neměly historii a hranice by se hledala případ od případu.
+- **Klienti v `~/Documents/Projekty`** – mimo domovský adresář projektů a v synchronizované složce, kde git repozitáře dělají potíže.
