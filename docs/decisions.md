@@ -1968,6 +1968,7 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 
 - **`~/Projekty/<klient>/`** – všechno pro jednoho klienta. Jméno je česky, přestože adresáře se jinak jmenují anglicky: ustálilo se dřív, než vznikla struktura (adresa `projekty@…`, na kterou klienti sdílejí přístupy), a jedno jméno pro jednu věc má přednost před jazykem.
 - **`~/Dev/`** – vlastní produkty i malé nástroje a jednorázové výpočty, osobní včetně. Samostatný `~/Personal` nebude.
+- **`~/Context`** – znalostní báze, přesunutá z `~/Dev/context`. Stojí vedle `~/Depot` (ten drží surové podklady, `~/Context` z nich vytěženou znalost), protože pod `~/Dev` nepatří: není to vlastní produkt ani nástroj. Pod `~/Depot` taky ne, protože tam se nepřejmenovává ani nemaže, a to se na živou znalost nehodí.
 - **`~/Depot`** a **`~/Claude`** (adresář aplikace) zůstávají beze změny. Synchronizované disky třetích stran se do struktury nezahrnují, protože se ruší.
 - **Podrobnosti o klientovi** (dohody, fakturace a její historie, kontakty) leží v klientské složce v souboru s pevnou strukturou. `context/organizations/` a `context/business/` u klienta s vlastní složkou drží jen krátký odstavec a odkaz. Klienta zakládá na všech místech naráz skill.
 
