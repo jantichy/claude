@@ -10,8 +10,8 @@ Rozhoduje cesta projektového adresáře, ve worktree layoutu cesta kontejneru:
 
 | Kde leží | Co to je | Co z tohoto souboru platí |
 |---|---|---|
-| `~/Projekty/<client>` | **klient** | *Klient* |
-| hlouběji pod `~/Projekty/<client>/` | **podprojekt** klienta | *Podprojekt* |
+| `~/Projekty/<Client>` | **klient** | *Klient* |
+| hlouběji pod `~/Projekty/<Client>/` | **podprojekt** klienta | *Podprojekt* |
 | jinde | běžný projekt | nic |
 
 Řekni nahlas, co jsi rozpoznal. U klienta, který ještě nemá `invoicing.md` ve složce ani v `~/Context/business/invoicing/`, se pak **zeptej přes `AskUserQuestion`, jestli se mu fakturuje** (*fakturuje se* / *pracuje se pro něj bez fakturace* / *ani jedno*). Na odpovědi stojí, jestli vznikne fakturační soubor, a ze slugu se nepozná. Kde soubor už je, odpověď dává jeho existence a znovu se neptá.
@@ -23,7 +23,7 @@ Rozhoduje cesta projektového adresáře, ve worktree layoutu cesta kontejneru:
 ### Odchylky od kroků
 
 - **Krok 0:** existuje-li `~/Context/organizations/<client>.md` jako plný profil (ne odkaz podle `organizations.md`, *Klient s vlastní složkou*), je to **převod**. Režim se tím nemění – prázdná složka je dál `create`, rozdělaná `adopt` –, jen v něm *Převod* níž nahradí založení profilu a fakturačního souboru. Ohlas to hned v kroku 0, provádí se to až na místě níž.
-- **Krok 1:** slug je jméno složky a zároveň slug profilu – malými písmeny, bez diakritiky, víc slov spojovníkem (`~/Context/CLAUDE.md`, pojmenování v `organizations/`).
+- **Krok 1:** složka nese **jméno klienta s velkým počátečním písmenem** (`Acme`, `ABsoft`), zástupně `<Client>` – navrhni ho a nech potvrdit, jak se má psát zbytek jména, rozhoduje uživatel. **Slug je totéž jméno malými písmeny**, bez diakritiky, víc slov spojovníkem (`~/Context/CLAUDE.md`, pojmenování v `organizations/`), zástupně `<client>`: nese ho blok metadat, profil `<client>.md` a odkazy v `~/Context`. Je to jediná složka, jejíž slug se od jména adresáře liší velikostí písmen; revize v kroku 14 to nehlásí jako odchylku.
 - **Krok 3:** klientská složka je **vždycky git repozitář**, volba *Nic* se nenabízí. Fakturační soubor nese sazby a dohody, takže **remote smí být jen soukromý** – u GitHubu `--private` bez ptaní na viditelnost.
 - **Krok 4:** neptej se, platí jeden pracovní adresář. Podprojekty leží jako podsložky klientské složky a ve worktree layoutu by neměly kam patřit: kořen kontejneru není pracovní strom a v `main/` by chyběly v každé další větvi.
 - **Mezi krokem 3 a 5:** založ profil a fakturační soubor (*Profil a fakturační soubor*), nebo je převeď (*Převod*). Až tady, protože repozitář už existuje a krok 13 bude importovat soubor, který je na disku.
@@ -45,7 +45,7 @@ Fakturační soubor `invoicing.md` se neimportuje – čte ho jen `/invoicing`.
 ### Profil a fakturační soubor
 
 1. **Profil `<client>.md`** založ v klientské složce podle *Kostry profilu*. Má ho **každý klient**, u jednorázové zakázky klidně tenký (*Co to je*, *Vztah k Honzovi*, *Lidé*). Ptej se po sekcích, jednu po druhé. Co organizace nemá, se vynechá; co nevíš, označ značkou `*doplnit*` (`organizations.md`, *Co se sem nepíše*) – nevymýšlej. Sekce *Projekty* u klienta odpadá, protože projekty jsou podsložky vedle profilu.
-2. **Fakturační soubor `invoicing.md`** založ jen klientovi, kterému se fakturuje, podle *Souboru klienta*. Části, které kostra dovoluje vynechat (*Vzdálený timetracking* u klienta bez vlastního timetrackingu), se řídí kostrou; v ostatních vyplň každé pole, i když je odpovědí `nemá` nebo `nezjištěno`. **Oba deníky založ prázdné** – záznamy v kostře jsou ukázka tvaru, ne obsah. **Identifikátory ve Fakturoidu a v Clockify nikdy neodhaduj ze slugu ani z názvu:** nech si je říct, nebo je dohledej voláním podle `business/invoicing.md`, *Přístupy*. Vymyšlené ID vypadá platně a projeví se až prázdným obdobím. Odběratele, který ve Fakturoidu ještě není, nezakládej – nech pole v *Napojení* `nezjištěno` a v souhrnu řekni, že fakturu klientovi vystavit nepůjde, dokud se nedoplní. Pole *Projekty* je `~/Projekty/<client>`.
+2. **Fakturační soubor `invoicing.md`** založ jen klientovi, kterému se fakturuje, podle *Souboru klienta*. Části, které kostra dovoluje vynechat (*Vzdálený timetracking* u klienta bez vlastního timetrackingu), se řídí kostrou; v ostatních vyplň každé pole, i když je odpovědí `nemá` nebo `nezjištěno`. **Oba deníky založ prázdné** – záznamy v kostře jsou ukázka tvaru, ne obsah. **Identifikátory ve Fakturoidu a v Clockify nikdy neodhaduj ze slugu ani z názvu:** nech si je říct, nebo je dohledej voláním podle `business/invoicing.md`, *Přístupy*. Vymyšlené ID vypadá platně a projeví se až prázdným obdobím. Odběratele, který ve Fakturoidu ještě není, nezakládej – nech pole v *Napojení* `nezjištěno` a v souhrnu řekni, že fakturu klientovi vystavit nepůjde, dokud se nedoplní. Pole *Projekty* je `~/Projekty/<Client>`.
 3. **Odkazy v `~/Context`:** do `organizations/<client>.md` a u fakturovaného klienta do `business/invoicing/<client>.md` zapiš odkaz na klientskou složku v tvaru podle `organizations.md`, *Klient s vlastní složkou*.
 
 **Bez `invoicing.md` v klientské složce `/invoicing` klienta nevidí** – hledá jen v `~/Projekty/*/invoicing.md`. Na konci to ověř výpisem toho vzoru.
@@ -57,7 +57,7 @@ Organizace už má profil, případně fakturační soubor, v `~/Context` a teď
 1. **Ukaž, co se přesune, a nech to potvrdit jednou otázkou** – originály v `~/Context` se přepíšou odkazem a *Zásady* `SKILL.md` přepis bez zeptání nedovolují.
 2. **Přesuň obsah, nekopíruj ho:** profil do `<client>.md` a fakturační soubor do `invoicing.md` v klientské složce, originály v `~/Context` nahraď odkazem. Jsou to dva repozitáře, takže to není `git mv` – historie do převodu zůstává v historii souboru v `~/Context` a odkaz to říká.
 3. **Oprav cesty uvnitř přesunutých souborů:** řádek *Profil protistrany* v `invoicing.md` míří na `<client>.md` vedle něj. Pole *Projekty* nově obsahuje klientskou složku a ostatní cesty v něm se nechají, jen dokud projekty ještě neleží pod ní. Sekce *Projekty* v profilu odpadá, jakmile v ní nic mimo složku nezbude.
-4. **Najdi odkazy na starou cestu.** `~/Dev` ani `~/Projekty` nejsou repozitáře, ale adresáře repozitářů, a obyčejný `grep` v shellu Claude Code respektuje `.gitignore` a část výskytů nevidí. Projdi proto každý repozitář zvlášť, a to jednou – worktree layout má víc pracovních stromů nad týmž repozitářem a pracovní strom podprojektu může ležet ve třetí úrovni (`~/Projekty/<client>/<sub>/main`). Výčet adresářů dělá `find`, protože vzor, který se nerozbalí na nic (`~/Projekty/*/` před první klientskou složkou), shodí v `zsh` celý příkaz. **Za `<client>` dosaď slug** – nedosazený vzor nic nenajde a tváří se jako čistý výsledek:
+4. **Najdi odkazy na starou cestu.** `~/Dev` ani `~/Projekty` nejsou repozitáře, ale adresáře repozitářů, a obyčejný `grep` v shellu Claude Code respektuje `.gitignore` a část výskytů nevidí. Projdi proto každý repozitář zvlášť, a to jednou – worktree layout má víc pracovních stromů nad týmž repozitářem a pracovní strom podprojektu může ležet ve třetí úrovni (`~/Projekty/<Client>/<sub>/main`). Výčet adresářů dělá `find`, protože vzor, který se nerozbalí na nic (`~/Projekty/*/` před první klientskou složkou), shodí v `zsh` celý příkaz. **Za `<client>` dosaď slug** – nedosazený vzor nic nenajde a tváří se jako čistý výsledek:
 
 ```bash
 { echo ~/Context; echo ~/.claude; find ~/Dev ~/Projekty -mindepth 1 -maxdepth 3 -type d 2>/dev/null; } | while read -r d; do
@@ -69,7 +69,7 @@ Organizace už má profil, případně fakturační soubor, v `~/Context` a teď
 done
 ```
 
-   **`@import` starého profilu je nejdůležitější nález:** po převodu by importoval jen odkaz a projekt by o klientovi tiše přestal vědět. Nalezené importy vypiš a **jednou otázkou nabídni jejich přepis** na `@~/Projekty/<client>/<client>.md` – je to zápis do cizího projektu. Leží-li projekt ve worktree layoutu, do jeho `main/` nezapisuj (`~/.claude/standards/worktree.md`) a vypiš opravu jako úkol pro práci v tom projektu. Ostatní výskyty vypiš k opravě přes `/replace`. Commit zápisu řídí *Zápis mimo projekt* níž.
+   **`@import` starého profilu je nejdůležitější nález:** po převodu by importoval jen odkaz a projekt by o klientovi tiše přestal vědět. Nalezené importy vypiš a **jednou otázkou nabídni jejich přepis** na `@~/Projekty/<Client>/<client>.md` – je to zápis do cizího projektu. Leží-li projekt ve worktree layoutu, do jeho `main/` nezapisuj (`~/.claude/standards/worktree.md`) a vypiš opravu jako úkol pro práci v tom projektu. Ostatní výskyty vypiš k opravě přes `/replace`. Commit zápisu řídí *Zápis mimo projekt* níž.
 5. **Přesun existujících projektů pod klientskou složku skill nedělá.** Mění cesty session i `@import`y a je to jednorázová migrace, ne krok nastavení. Řekni, které projekty podle pole *Projekty* pod klienta patří a že po přesunu přestanou importovat profil (*Podprojekt*).
 
 ### Revize
@@ -85,8 +85,8 @@ Nálezy jdou do tří skupin souhrnu v režimu `update` jako všechny ostatní.
 
 ## Podprojekt
 
-- **Rodič musí být nastavený.** Nemá-li `~/Projekty/<client>/` `CLAUDE.md` s importem profilu, řekni to, doporuč napřed `/project` v klientské složce a **skonči** – podprojekt by neměl profil odkud zdědit a kroky 9 a 10, které přeskakuje, by mu nechaly bez paměťové politiky i autocommitu.
-- **Profil neimportuje.** Dědí ho z `~/Projekty/<client>/CLAUDE.md`, protože Claude Code načítá `CLAUDE.md` všech nadřazených adresářů. Stejně tak dědí paměťovou politiku a autocommit, takže **kroky 9 a 10 se přeskakují** – dědění se v `CLAUDE.md` podprojektu přebít nedá, a co platí u klienta, platí i tady. **Najdeš-li v podprojektu import profilu** (starou cestou z `~/Context` i novou), nabídni jeho odstranění – profil by se načetl dvakrát.
+- **Rodič musí být nastavený.** Nemá-li `~/Projekty/<Client>/` `CLAUDE.md` s importem profilu, řekni to, doporuč napřed `/project` v klientské složce a **skonči** – podprojekt by neměl profil odkud zdědit a kroky 9 a 10, které přeskakuje, by mu nechaly bez paměťové politiky i autocommitu.
+- **Profil neimportuje.** Dědí ho z `~/Projekty/<Client>/CLAUDE.md`, protože Claude Code načítá `CLAUDE.md` všech nadřazených adresářů. Stejně tak dědí paměťovou politiku a autocommit, takže **kroky 9 a 10 se přeskakují** – dědění se v `CLAUDE.md` podprojektu přebít nedá, a co platí u klienta, platí i tady. **Najdeš-li v podprojektu import profilu** (starou cestou z `~/Context` i novou), nabídni jeho odstranění – profil by se načetl dvakrát.
 - **Vlastní repozitář jen podle kritéria:** podprojekt má vlastní nasazení nebo CI, cizí remote, nebo se předává či sdílí samostatně. Krok 3 se proto ptá napřed na tohle.
   - **Nesplní-li ani jednu podmínku**, patří do klientského repozitáře: krok 3 je *Nic* bez ptaní, kroky 4 a 8 odpadají. Průběžná kontrola se počítá pro repozitář, takže potřebuje-li podprojekt kontrakt příkazů, je to důvod pro vlastní repozitář – zeptej se.
   - **Splní-li některou**, dostane vlastní repozitář (smí i worktree layout) a jeho cestu doplň do `.gitignore` klientské složky. Vlastní remote je soukromý jako u klienta, pokud to není klientův remote.

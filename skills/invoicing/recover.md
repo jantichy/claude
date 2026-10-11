@@ -52,7 +52,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 **Session logy Clauda a git se čtou po projektech klienta, a celé.** Soubor klienta vyjmenuje v poli *Projekty* cesty, ve kterých se pro něj pracuje; **veškerá aktivita v nich je práce pro klienta** a jméno klienta se v ní nehledá. Bloky od–do z nich skládá skript `~/.claude/skills/invoicing/activity.py`:
 
 ```bash
-python3 ~/.claude/skills/invoicing/activity.py 2026-09-01 2026-09-30 ~/Projekty/<client>
+python3 ~/.claude/skills/invoicing/activity.py 2026-09-01 2026-09-30 ~/Projekty/<Client>
 ```
 
 Cesta je **prefix** – pokryje i projekty v podadresářích – a session logy se hledají podle zakódovaného jména cesty v `~/.claude/projects/`, takže se najdou **i u adresáře, který na disku už není**. Každý blok je jedna stopa se `start` i `end`; vrací počet promptů, počet ostatních záznamů, počet commitů, první prompty a první řádky commitů. Výklad bloků:

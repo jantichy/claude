@@ -64,7 +64,7 @@ Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systém
 
 ## Fáze 1 – Rozsah a období
 
-**Rozsah** je klient z argumentu, nebo všichni, kdo mají `~/Projekty/<client>/invoicing.md`; jméno klienta je jméno jeho složky. **Jinde se soubor klienta nehledá** – každý fakturovaný klient má klientskou složku a druhé umístění by se muselo pamatovat. V `~/Context/business/invoicing/` leží jen odkaz pro člověka.
+**Rozsah** je klient z argumentu, nebo všichni, kdo mají `~/Projekty/<Client>/invoicing.md`. Klient se jmenuje podle své složky; jméno z argumentu s ní porovnej bez ohledu na velikost písmen. **Jinde se soubor klienta nehledá** – každý fakturovaný klient má klientskou složku a druhé umístění by se muselo pamatovat. V `~/Context/business/invoicing/` leží jen odkaz pro člověka.
 
 **Projdi zároveň `~/Context/business/invoicing/*.md` a každý soubor s nadpisem `## Dohoda` ohlas jako nepřevedeného klienta, kterého skill nevidí**, i s doporučením `/project` v jeho klientské složce. Odkaz ten nadpis nemá, plný soubor ano. Mlčky přeskočený klient je nevystavená faktura.
 

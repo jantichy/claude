@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # Složí z session logů Clauda a z gitu bloky aktivity od–do – zdroj stop práce pro `/invoicing recover`.
 #
-# Použití:  python3 activity.py 2026-09-01 2026-09-30 ~/Dev/favi ~/Dev/veneti ~/Documents/Projekty/Favi
-#           python3 activity.py --gap 30 2026-09-01 2026-09-30 ~/Dev/veneti
+# Použití:  python3 activity.py 2026-09-01 2026-09-30 ~/Dev/<project> ~/Projekty/<Client>
+#           python3 activity.py --gap 30 2026-09-01 2026-09-30 ~/Dev/<project>
 #
-# Cesta je **prefix**, ne jeden projekt: `~/Documents/Projekty/Favi` pokryje i všechny
+# Cesta je **prefix**, ne jeden projekt: `~/Projekty/<Client>` pokryje i všechny
 # projekty v jeho podadresářích. Session logy se hledají podle zakódovaného jména cesty
 # v `~/.claude/projects/`, takže se najdou i tehdy, když adresář na disku už neexistuje.
 # Git se čte jen z cest, které na disku jsou a jsou to repozitáře.
