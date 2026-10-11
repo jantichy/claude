@@ -47,7 +47,7 @@ Sepiš si, co do zápisu půjde – **nejdřív celé, teprve pak piš**. Zápis
 
 ## Fáze 2 – Zápis
 
-Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~/.claude/standards/structure.md`, *`todo.md`*). Projekt bez `docs/` ji má v kořenovém `todo.md`; neexistuje-li `todo.md` vůbec, založ ho podle režimu umístění projektu jen s touhle sekcí. Před zápisem si načti `~/Dev/context/text/typography.md`; zápis je český text.
+Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~/.claude/standards/structure.md`, *`todo.md`*). Projekt bez `docs/` ji má v kořenovém `todo.md`; neexistuje-li `todo.md` vůbec, založ ho podle režimu umístění projektu jen s touhle sekcí. Před zápisem si načti `~/Context/text/typography.md`; zápis je český text.
 
 **Každé přerušení je samostatný blok pod nadpisem `### <práce> – přerušeno <YYYY-MM-DD>`** (datum z `date +%F`), třeba `### /review branch – přerušeno 2026-10-08`. Nadpis je hranice bloku, podle které `/continue` pozná, kolik přerušení v sekci leží a kde které končí; bez něj se dva bloky pod sebou slijí v jeden.
 

@@ -1,6 +1,6 @@
 ---
 name: depot
-description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty nebo adresář, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Dev/context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, nemaže a v ~/Depot nepřejmenovává.
+description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty nebo adresář, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, nemaže a v ~/Depot nepřejmenovává.
 argument-hint: [full|store] <cesty…> | workflow
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o jaký podklad jde, uloží ho tam, kam podle pravidel patří, a spustí navazující zpracování. Volá se přirozeně: `/depot ~/Downloads/prednaska.m4a`.
 
-**Sám nenese jediné konkrétní pravidlo.** Co se jak pozná, kam to jde a co se s tím pak stane, drží privátní doména `depot` v `~/Dev/context/`. Tenhle skill říká, jak se k tomu dojde, a hlídá, aby se cestou nic neztratilo.
+**Sám nenese jediné konkrétní pravidlo.** Co se jak pozná, kam to jde a co se s tím pak stane, drží privátní doména `depot` v `~/Context/`. Tenhle skill říká, jak se k tomu dojde, a hlídá, aby se cestou nic neztratilo.
 
 | Režim | Co dělá |
 |---|---|
@@ -70,14 +70,14 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 Společný začátek je v `~/.claude/skills/preflight.md`. Odchylky:
 
 1. **Skill neběží nad projektem.** Body 1 až 3 vynech a **řekni to nahlas** – pouští se odkudkoliv, typicky nad staženým souborem. Pracovní adresář nehraje roli a stav gitu taky ne.
-2. **Kontrola závislostí.** Ověř, že existuje doména `depot` – hledej ji přes rozcestník knowledge base (u autora `~/Dev/context/CLAUDE.md`). **Chybí-li, skonči** a řekni, že bez ní není podle čeho směrovat – viz *Fáze 1*. **V režimu `workflow` je to naopak:** chybějící doména je tam běžný výchozí stav, protože právě tím se zakládá. Nabídni její založení a pokračuj; končit by znamenalo, že si první pravidlo nemá kdo napsat.
+2. **Kontrola závislostí.** Ověř, že existuje doména `depot` – hledej ji přes rozcestník knowledge base (u autora `~/Context/CLAUDE.md`). **Chybí-li, skonči** a řekni, že bez ní není podle čeho směrovat – viz *Fáze 1*. **V režimu `workflow` je to naopak:** chybějící doména je tam běžný výchozí stav, protože právě tím se zakládá. Nabídni její založení a pokračuj; končit by znamenalo, že si první pravidlo nemá kdo napsat.
    **Ověř i nástroje, na které se deleguje** – `/transcript` a `/learn`. Chybí-li některý, **neselhávej, ale řekni to před přesunem**: po něm už je soubor jinde a zbude z toho jen hlášení o nespuštěném zpracování.
 3. **Leží-li doména v repozitáři se zapnutým autocommitem**, je doplnění workflow změna v něm. Commitni ji **sám a samostatně**, ať ji neposbírá jiná session spolu s něčím nesouvisejícím. Není-li doména ve verzování, tenhle bod odpadá.
 4. **Rozliš režim od cesty.** První argument je režim jen tehdy, když je to `store` nebo `workflow` **a zároveň neexistuje jako cesta**. Existuje-li soubor toho jména, je to cesta a běží `full`.
 
 ## Fáze 1 – Pravidla domény
 
-Doména je zdroj pravdy. Najdi ji přes rozcestník knowledge base (u autora `~/Dev/context/CLAUDE.md`) a přečti si z ní:
+Doména je zdroj pravdy. Najdi ji přes rozcestník knowledge base (u autora `~/Context/CLAUDE.md`) a přečti si z ní:
 
 | Co hledáš | K čemu to je |
 |---|---|

@@ -44,7 +44,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | skeptik | ověřovatel | agent, jehož jediný úkol je nález vyvrátit. **Výjimka:** *Skeptik* je jméno zrušeného hlediska `/oponent` |
 | sonda (experiment) | ověřovací pokus | kód napsaný jen kvůli zodpovězení otázky v návrhu, pak se zahodí |
 | sonda na závislosti | kontrola závislostí | ověření na začátku běhu, že nástroj, na který se deleguje, existuje |
-| standard, standardy (o souborech v `~/Dev/context`) | doménové znalosti, doména; o konkrétním souboru **pravidla** („redakční pravidla“); proti korpusu **metodika** | **Zůstává:** „standard“ v `/project` (dnešní podoba konfigurační vrstvy, `~/.claude/standards/`), cizí technické a oborové standardy, „standardní“ |
+| standard, standardy (o souborech v `~/Context`) | doménové znalosti, doména; o konkrétním souboru **pravidla** („redakční pravidla“); proti korpusu **metodika** | **Zůstává:** „standard“ v `/project` (dnešní podoba konfigurační vrstvy, `~/.claude/standards/`), cizí technické a oborové standardy, „standardní“ |
 | stub | rozcestník | tenký `CLAUDE.md` v kořeni worktree kontejneru. **Ne** „ukazatel“ |
 | šťastná cesta | hlavní scénář | průchod, kde uživatel dělá všechno správně a nic neselže |
 | tabulka švů | tabulka delegací | inventura v `/skill`: u každého kroku odpověď „umí to už něco?“ |
@@ -52,6 +52,6 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | úhel | hledisko | jeden kritický pohled, se kterým `/oponent` pouští agenta. `/attack` má **vektory útoku** a nesjednocuje se |
 | viséc, viséci | pozůstatek | zbytek po zásahu do textu, který přestal platit – odkaz na přejmenovanou sekci, věta o něčem, co už není |
 | vizitka | README skillu | text pro člověka zvenčí. „Vizitka“ dál znamená jednostránkový firemní web |
-| voda | vata | text, který nic nepřidává. Katalog drží `~/Dev/context/text/text.md` |
+| voda | vata | text, který nic nepřidává. Katalog drží `~/Context/text/text.md` |
 | zamluvené téma | nevypořádané téma | co v konverzaci padlo a nikdy se nedořešilo; hledá je `/end` |
 | zelená linka | průběžná kontrola | mechanismus, který po každé odpovědi pouští blokující kontroly. Anglicky `verify` |

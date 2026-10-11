@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Skill se použije, když uživatel zadá "/audit" (volitelně s režimem full, brief, audit, report nebo update), nebo chce zauditovat cizí web v nějaké oblasti – analytiku, SEO, použitelnost, přístupnost –, prověřit ho proti oborovým standardům, nebo zjistit, co je na něm špatně a co s tím. Řídí celý audit proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně v ~/Dev/context; sám žádnou doménovou znalost nenese a nálezy nechává ověřit reprodukcí, než je ukáže. Na rozdíl od /review, který čte vlastní hotovou práci v repozitáři, tenhle skill ohledává cizí běžící web zvenčí. Nic v něm nemění, neopravuje, co našel, a není penetrační test.
+description: Skill se použije, když uživatel zadá "/audit" (volitelně s režimem full, brief, audit, report nebo update), nebo chce zauditovat cizí web v nějaké oblasti – analytiku, SEO, použitelnost, přístupnost –, prověřit ho proti oborovým standardům, nebo zjistit, co je na něm špatně a co s tím. Řídí celý audit proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně v ~/Context; sám žádnou doménovou znalost nenese a nálezy nechává ověřit reprodukcí, než je ukáže. Na rozdíl od /review, který čte vlastní hotovou práci v repozitáři, tenhle skill ohledává cizí běžící web zvenčí. Nic v něm nemění, neopravuje, co našel, a není penetrační test.
 argument-hint: [full|brief|audit|report|update]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Skill, WebFetch, WebSearch, mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages, mcp__plugin_chrome-devtools-mcp_chrome-devtools__select_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_snapshot, mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot, mcp__plugin_chrome-devtools-mcp_chrome-devtools__click, mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_console_messages, mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_network_requests, mcp__plugin_chrome-devtools-mcp_chrome-devtools__get_network_request, mcp__plugin_chrome-devtools-mcp_chrome-devtools__handle_dialog, mcp__plugin_chrome-devtools-mcp_chrome-devtools__emulate, mcp__plugin_chrome-devtools-mcp_chrome-devtools__resize_page]
 ---
@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Ski
 
 ## Co skill dělá
 
-Zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů, které drží příslušná doména v `~/Dev/context/`. Volá se přirozeně: `/audit analytiky na www.example.com`.
+Zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů, které drží příslušná doména v `~/Context/`. Volá se přirozeně: `/audit analytiky na www.example.com`.
 
 **Sám nenese žádnou doménovou znalost.** Je to spouštěč a dirigent: přečte auditní dráhu domény, sežene podklady, ohledá web, rozdělí práci specialistům, nechá nálezy ověřit a sestaví výstupy. Co se hledá a co je nález, říká doména – tenhle skill říká, jak se k tomu dojde.
 
@@ -94,7 +94,7 @@ Společný začátek je v `~/.claude/skills/preflight.md`. Odchylky:
 
 ## Fáze 1 – Auditní dráha domény
 
-Doména je zdroj pravdy o tom, co se hledá. Najdi ji přes rozcestník `~/Dev/context/CLAUDE.md` a přečti, co v ní k auditu je:
+Doména je zdroj pravdy o tom, co se hledá. Najdi ji přes rozcestník `~/Context/CLAUDE.md` a přečti, co v ní k auditu je:
 
 | Co hledáš | K čemu to je |
 |---|---|

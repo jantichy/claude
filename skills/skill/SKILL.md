@@ -84,7 +84,7 @@ Pak zbytek:
 3. **Stojí v *Životním cyklu projektu*** (`~/.claude/standards/rules.md`)? Pokud ano, **proti kterým dvěma sousedům se vymezuje** – to je vstup pro *Co skill nedělá* a bez něj sekce vznikne jako prázdná negace.
 4. **Má režimy?** Určuje `argument-hint`.
 5. **Co je jeho výstup** a podle čeho se pozná, že je hotový. Vstup pro závěrečný verdikt.
-6. **Které doménové znalosti** z `~/Dev/context/` se na něj vztahují.
+6. **Které doménové znalosti** z `~/Context/` se na něj vztahují.
 
 **V režimu `extract`** body 2 až 6 nevymýšlej – vytěž je z konverzace.
 

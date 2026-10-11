@@ -17,7 +17,7 @@ Ze zdrojových dat udělá **jeden samostatný HTML soubor**, který jde vzít, 
 - **Nepočítá od oka.** Výpočet je vždycky skript, který zůstane v projektu, protože report se přegeneruje.
 - **Neinterpretuje za hranicí dat.** Co z čísel neplyne, do komentáře nepatří.
 - **Nezkoumá svět venku.** Konkurenci a tržní rizika sbírá `/discovery`; tady se počítá z vlastního měření, ne z cizích produktů.
-- **Nereviduje měření.** Jestli se měří správně a co v datové vrstvě chybí, řeší revize měření podle `~/Dev/context/analytics/`; tenhle skill bere data taková, jaká jsou, a jen přizná, kde jsou slabá.
+- **Nereviduje měření.** Jestli se měří správně a co v datové vrstvě chybí, řeší revize měření podle `~/Context/analytics/`; tenhle skill bere data taková, jaká jsou, a jen přizná, kde jsou slabá.
 
 ## Jak je to postavené uvnitř
 
@@ -47,11 +47,11 @@ Navíc si zjisti tohle:
 
 1. **Zdrojová data.** Kde jsou, v jakém formátu, jak velká, jaké mají sloupce. Přečti si vzorek, ne celý soubor – u velkých dat na to pošli subagenta **typem `reader`** (`subagent_type`) a na **nejlevnějším modelu** (Volba modelu a effortu podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*.), je to čtení a shrnutí struktury. Typ bez shellu proto, že agent má jen číst – a zdrojová data bývají cizí soubor, do kterého nemá co sáhnout.
 2. **Načti doménové znalosti**, které se na výstup vztahují:
-   - `~/Dev/context/text/text.md` – stavba a stylistika komentářů. **Vždy.**
-   - `~/Dev/context/text/typography.md` – česká sazba čísel, procent, jednotek, dat a interpunkce. **Vždy** – report je plný čísel.
-   - `~/Dev/context/web/web.md` – část pro **statickou stránku otevřenou z disku** (velikost písma, kontrast, šířka řádku, responzivita, meta tagy). Části pro stránku na serveru a pro dynamickou aplikaci se sem nevztahují.
-   - `~/Dev/context/analytics/analytics.md` – jsou-li data z GA4, GTM nebo BigQuery. Ovlivňuje to interpretaci, ne vzhled.
-   - `~/Dev/context/advertising/advertising.md` – jsou-li data z reklamních systémů (Google Ads, Meta, Sklik, LinkedIn). Rozhoduje o tom, co v číslech vůbec hledat: pokles konverzí po změně konverzní akce znamená něco jiného než pokles z poklesu poptávky.
+   - `~/Context/text/text.md` – stavba a stylistika komentářů. **Vždy.**
+   - `~/Context/text/typography.md` – česká sazba čísel, procent, jednotek, dat a interpunkce. **Vždy** – report je plný čísel.
+   - `~/Context/web/web.md` – část pro **statickou stránku otevřenou z disku** (velikost písma, kontrast, šířka řádku, responzivita, meta tagy). Části pro stránku na serveru a pro dynamickou aplikaci se sem nevztahují.
+   - `~/Context/analytics/analytics.md` – jsou-li data z GA4, GTM nebo BigQuery. Ovlivňuje to interpretaci, ne vzhled.
+   - `~/Context/advertising/advertising.md` – jsou-li data z reklamních systémů (Google Ads, Meta, Sklik, LinkedIn). Rozhoduje o tom, co v číslech vůbec hledat: pokles konverzí po změně konverzní akce znamená něco jiného než pokles z poklesu poptávky.
 3. **Vyvolej skill `dataviz`** – dřív, než napíšeš první řádek kódu grafu. Řeší volbu typu grafu, palety, os a legend. Bez něj vzniknou grafy, které spolu nedrží.
 
 ------
@@ -99,7 +99,7 @@ Má-li report víc tematických celků, udělej záložky. Nesmí to ale rozbít
 
 ### Tonalita
 
-Tohle je místo, kde se reporty nejčastěji kazí. Platí `~/Dev/context/text/text.md`, `~/Dev/context/text/typography.md` a k tomu pravidla níž – a to **pro každý psaný text v reportu**, ne jen pro komentáře u grafů. Tedy i pro *Shrnutí*, *Metodiku* a *Limity dat*. U shrnutí to platí nejvíc, protože se podle *Struktury* výš čte jako první a často jako jediné.
+Tohle je místo, kde se reporty nejčastěji kazí. Platí `~/Context/text/text.md`, `~/Context/text/typography.md` a k tomu pravidla níž – a to **pro každý psaný text v reportu**, ne jen pro komentáře u grafů. Tedy i pro *Shrnutí*, *Metodiku* a *Limity dat*. U shrnutí to platí nejvíc, protože se podle *Struktury* výš čte jako první a často jako jediné.
 
 - **Věcně a krátce.** Co se stalo, o kolik, oproti čemu.
 - **Žádné nadšení.** Ne „skvělý nárůst!“, ne „úžasný výsledek“, ne vykřičníky. Konstatuj číslo a jeho význam.

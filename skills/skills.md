@@ -27,7 +27,7 @@ Než skill založíš, projdi čtyři možnosti v tomhle pořadí. Vyhrává prv
 |---|---|
 | Chytne to typecheck, linter, test nebo hook | **do té kontroly.** `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula: nejlevnější práce je ta, kterou neudělá model. Mechanické omezení zapsané do skillu se dodržuje hůř a stojí tokeny při každém běhu. |
 | Platí to pro každou práci, ne jen pro tenhle postup | **`~/.claude/standards/rules.md`.** |
-| Je to znalost oboru – jak se dělá web, text, měření, kód | **doména v `~/Dev/context/`.** Skill ji smí načítat, ne obsahovat. |
+| Je to znalost oboru – jak se dělá web, text, měření, kód | **doména v `~/Context/`.** Skill ji smí načítat, ne obsahovat. |
 | Platí to jen v jednom repozitáři | **jeho `CLAUDE.md`.** |
 
 Teprve co nezbylo, je skill.
@@ -220,7 +220,7 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Žádné časově citlivé údaje.** Jména modelů, verze nástrojů a „nově od…“ zestárnou tiše. Piš specialisty, ne jména – `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, to dělá takhle.
 
-**Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen názvy souborů, příkazy a technické identifikátory.
+**Česky**, podle `~/Context/text/text.md` a `~/Context/text/typography.md`. Anglicky zůstávají jen názvy souborů, příkazy a technické identifikátory.
 
 **Nedeklaruj, co skill neumí.** Popsaný režim, který není implementovaný, je horší než chybějící funkce – uživatel se na něj spolehne. `~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*: vědomá mezera se přiznává, ne zamlčuje.
 
@@ -391,7 +391,7 @@ Rozejde-li se rámeček s životním cyklem v `~/.claude/standards/rules.md`, pl
 
 **Do 120 řádků.** Je to zhruba dvě obrazovky – tolik člověk přečte, než se rozhodne, jestli ho to zajímá. Co se tam nevejde, patří do `SKILL.md`, kde to čte Claude, a ne do README. Mez je jediná a hlídá ji test; „nesmí být delší než `SKILL.md`“ jako druhé kritérium neplatí – u krátkého skillu by povolilo README, které už nikdo nedočte.
 
-**Česky**, podle `~/Dev/context/text/text.md` a `~/Dev/context/text/typography.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
+**Česky**, podle `~/Context/text/text.md` a `~/Context/text/typography.md`. Anglicky zůstávají jen jména režimů, příkazy a technické identifikátory.
 
 **Neodkazuje dovnitř `SKILL.md`.** Míří-li odkaz na konkrétní fázi, ukazuje do vnitřku, který se přečísluje. Na `SKILL.md` jako celek odkazovat lze.
 

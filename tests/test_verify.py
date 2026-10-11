@@ -5,7 +5,7 @@ všechno ostatní je text, který vykonává model. Zároveň je to přes 500 ř
 s netriviální logikou: otisk stavu, souhlas podle repozitáře, rozlišení
 "test našel chybu" od "test nejde spustit", timeouty, pojistka proti smyčce.
 
-`~/Dev/context/decisions.md` (sekce `## Claude`) dokládá, že v té logice už dvakrát byla kritická díra (otisk
+`~/Context/decisions.md` (sekce `## Claude`) dokládá, že v té logice už dvakrát byla kritická díra (otisk
 nezahrnoval obsah souborů; chybějící nástroj se hlásil jako padající kontrola).
 Selhání je přitom **tiché v nebezpečném směru**: `exit 0` tam, kde má být `exit 2`,
 znamená, že se práce uzavře nad červenými testy a nikdo se to nedozví.

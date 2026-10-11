@@ -394,7 +394,7 @@ class WorkflowMutation(unittest.TestCase):
     """Kontroly nad workflow musí nahlásit poškozený vzor.
 
     Kontrola, kterou nikdo neviděl selhat, je nedoložené tvrzení
-    (`~/Dev/context/coding/quality.md`, *Vynucovací vrstva se testuje jako kód,
+    (`~/Context/coding/quality.md`, *Vynucovací vrstva se testuje jako kód,
     obousměrně*). Mutuje se kopie v tempu, ne soubor v repozitáři.
     """
 
@@ -507,7 +507,7 @@ class TestRunner(unittest.TestCase):
     kontrolami nad workflow. Textová kontrola hlídá známé způsoby; sedmý
     nepozná. Spuštění měří účinek.
 
-    Testují se oba směry selhání, jak to `~/Dev/context/coding/quality.md` žádá
+    Testují se oba směry selhání, jak to `~/Context/coding/quality.md` žádá
     od každé vynucovací vrstvy: že runner propustí, co propustit má, i že
     zastaví, co zastavit má. Falešný poplach je tu ta horší polovina – runner,
     který padá na čistém kontraktu, si někdo při první kolizi vypne.

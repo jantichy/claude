@@ -18,7 +18,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 ## Co skill nedělá
 
 - **Není to kontrola kódu.** Na kód je `/review`.
-- **Není to kontrola proti doménovým znalostem.** Na soulad s `~/Dev/context/*` je `/review`.
+- **Není to kontrola proti doménovým znalostem.** Na soulad s `~/Context/*` je `/review`.
 - **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
 - **Nepíše zadání, návrh ani plán.** Sám nenavrhuje – jen posuzuje hotový dokument, ať ho napsal `/discovery`, `/specify`, nebo `/architect` –, a rozpad na úkoly nechává `/breakdown`.
@@ -51,7 +51,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 **Na soubory ale nespoléhej.** Oponentura se často pouští hned po `/specify` nebo `/architect`, tedy v téže mezeře, ve které se o věci teprve rozhodlo – kdežto rozhodnutí z rozhovoru zapisuje `/end` až na konci té mezery. `decisions.md` je v tu chvíli skoro prázdný, ačkoliv se v téhle session vědomě zamítla spousta věcí. **Projdi proto session a to, co jste zavrhli, vypiš do zadání oponentů** jako samostatný blok *Vědomě zamítnuté* – i s důvodem, ne jen výčtem. Bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy, a druhý už nespustíš.
 
-**Nemá-li projekt `docs/`** (konfigurační repozitář, samostatný dokument mimo projekt, text v knowledge base), řekni to nahlas a veď posudek bez nich: kontextem je pak projektový `CLAUDE.md` a příslušná doména v `~/Dev/context/`, a přijatá i zamítnutá rozhodnutí jdou tam, kam patří v tom projektu – ne do založeného `docs/`.
+**Nemá-li projekt `docs/`** (konfigurační repozitář, samostatný dokument mimo projekt, text v knowledge base), řekni to nahlas a veď posudek bez nich: kontextem je pak projektový `CLAUDE.md` a příslušná doména v `~/Context/`, a přijatá i zamítnutá rozhodnutí jdou tam, kam patří v tom projektu – ne do založeného `docs/`.
 
 ------
 

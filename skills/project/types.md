@@ -38,7 +38,7 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 ### U typu Vývoj se ptej ještě na aplikaci versus nástroj
 
-`~/Dev/context/coding/architecture.md` rozlišuje dvě úrovně a **ptá se na následek chyby, ne na velikost projektu**. Polož tedy ještě jednu otázku (AskUserQuestion, dvě volby) a **návrh odpověz sám** z toho, co jsi o projektu zjistil – uživatel ho jen potvrdí:
+`~/Context/coding/architecture.md` rozlišuje dvě úrovně a **ptá se na následek chyby, ne na velikost projektu**. Polož tedy ještě jednu otázku (AskUserQuestion, dvě volby) a **návrh odpověz sám** z toho, co jsi o projektu zjistil – uživatel ho jen potvrdí:
 
 | Volba | Kdy na ni sedí |
 |---|---|
@@ -49,7 +49,7 @@ Do `CLAUDE.md` přidej sekci `## Typ projektu` s krátkým popisem:
 
 Do popisu typu v `CLAUDE.md` pak připoj jednu z vět:
 
-- aplikace – „Je to **aplikace** ve smyslu `~/Dev/context/coding/architecture.md` – platí celý, včetně kontrolního seznamu *Minimum hotové aplikace*. Chybějící položka toho seznamu je nedodělek, ne zjednodušení; vědomá výjimka patří do `docs/decisions.md` i s důvodem.“
-- nástroj – „Je to **nástroj** ve smyslu `~/Dev/context/coding/architecture.md` – platí z něj jen sekce *Co platí i pro nástroj*. Splní-li projekt některé kritérium aplikace (druhá role, první platba, cizí systém, uživatel kromě autora), úroveň se zvedne a návrh se dorovná tehdy, ne později.“
+- aplikace – „Je to **aplikace** ve smyslu `~/Context/coding/architecture.md` – platí celý, včetně kontrolního seznamu *Minimum hotové aplikace*. Chybějící položka toho seznamu je nedodělek, ne zjednodušení; vědomá výjimka patří do `docs/decisions.md` i s důvodem.“
+- nástroj – „Je to **nástroj** ve smyslu `~/Context/coding/architecture.md` – platí z něj jen sekce *Co platí i pro nástroj*. Splní-li projekt některé kritérium aplikace (druhá role, první platba, cizí systém, uživatel kromě autora), úroveň se zvedne a návrh se dorovná tehdy, ne později.“
 
 **Soubor se neimportuje**, jen odkazuje – ze stejného důvodu jako `quality.md` (viz `checklists.md`). Odkaz v projektovém `CLAUDE.md` ale platí v každé session, protože ten se rozbaluje celý.

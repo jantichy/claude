@@ -388,17 +388,17 @@ Do `CLAUDE.md` z něj vzejde sekce `## Typ projektu` s krátkým popisem. **Krok
 
 **Tenhle krok se nepřeskakuje podle typu projektu.** Dřív se u obsahového a znalostního projektu vynechával celý, protože „kontrakt tam nemá co dělat“ – to bylo špatně. Testovat jde i projekt bez aplikace: netestuje se chování, ale **tvar** – mrtvé odkazy, existence sekcí, povinná struktura záznamu, schéma dat a soulad seznamu v dokumentaci s tím, co je na disku. Doklad je `~/.claude`, konfigurace bez jediné aplikace a s nejsilnější kontrolní vrstvou ze všech projektů.
 
-Liší se tedy **co se vybere**, ne jestli se krok udělá. Rozhoduj podle `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*: u vývojářského projektu bývá celý kontrakt a CI, u znalostního typicky jen `test` a `lint` nad vlastní strukturou. **Nemá-li projekt opravdu co spustit ani čím, řekni to i s tím, co tím odpadá** – to je legitimní výsledek, ale musí být výsledkem rozhodnutí, ne přeskočení.
+Liší se tedy **co se vybere**, ne jestli se krok udělá. Rozhoduj podle `~/Context/coding/quality.md`, *Vrstvy kontroly a co do které patří*: u vývojářského projektu bývá celý kontrakt a CI, u znalostního typicky jen `test` a `lint` nad vlastní strukturou. **Nemá-li projekt opravdu co spustit ani čím, řekni to i s tím, co tím odpadá** – to je legitimní výsledek, ale musí být výsledkem rozhodnutí, ne přeskočení.
 
-**Kam patří soubory s testy**, říká `~/Dev/context/coding/quality.md`, *Vrstvy kontroly a co do které patří*; řídí se runnerem projektu, ne preferencí.
+**Kam patří soubory s testy**, říká `~/Context/coding/quality.md`, *Vrstvy kontroly a co do které patří*; řídí se runnerem projektu, ne preferencí.
 
 **Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
 
 Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/hooks/verify.sh --allow <project-directory>` a nech ho spustit **jeho** – souhlasem se zapíná kontrola, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu. Ve worktree layoutu vypiš `main/` nebo svou větev, **nikdy kořen kontejneru**: souhlas se počítá z `git rev-parse --git-common-dir`, takže z kteréhokoliv worktree platí pro celý repozitář, ale v kořeni kontejneru žádný kontrakt neleží.
 
-*`adopt`:* **má-li projekt kód, ale žádné testy** (kontrakt bez `test`, nebo `test`, který nic nespouští), zapiš do jeho `todo.md` jako **první položku** charakterizační testy podle `~/Dev/context/coding/quality.md`, *Převzatý kód bez testů* – zmapovat klíčové moduly, zachytit dnešní chování v pořadí podle citlivých míst, teprve pak měnit. Řekni to v souhrnu: do té doby je průběžná kontrola zelená z prázdnoty.
+*`adopt`:* **má-li projekt kód, ale žádné testy** (kontrakt bez `test`, nebo `test`, který nic nespouští), zapiš do jeho `todo.md` jako **první položku** charakterizační testy podle `~/Context/coding/quality.md`, *Převzatý kód bez testů* – zmapovat klíčové moduly, zachytit dnešní chování v pořadí podle citlivých míst, teprve pak měnit. Řekni to v souhrnu: do té doby je průběžná kontrola zelená z prázdnoty.
 
-**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly, založení CI i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Dev/context/coding/quality.md`.
+**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly, založení CI i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Context/coding/quality.md`.
 
 ## Krok 13 – Doménové checklisty
 
@@ -426,9 +426,9 @@ Importuj **jen to, co je pro projekt opravdu relevantní** – každý import st
 
 - `~/.claude/standards/structure.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
 - `~/.claude/standards/rules.md` – zejména *Životní cyklus projektu* (jaké kroky životního cyklu dnes existují) a *Kam co zapsat* (kam co patří);
-- `~/Dev/context/coding/quality.md` – jen u projektu, ve kterém se něco spouští;
+- `~/Context/coding/quality.md` – jen u projektu, ve kterém se něco spouští;
 - `~/.claude/standards/worktree.md` – jen u worktree layoutu;
-- výpisy `ls ~/.claude/skills/` a `ls ~/Dev/context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
+- výpisy `ls ~/.claude/skills/` a `ls ~/Context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
 
 **Ve worktree layoutu** je tenhle krok do prvního dorovnání jen čtení – jakmile se má něco změnit, založ si větev podle kroku 0, *Nejdřív zjisti, kde stojíš*, a zapisuj do ní.
 
@@ -448,7 +448,7 @@ Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady 
 
 ### Proč se nikam neukládá, proti čemu se revidovalo naposledy
 
-Nabízí se do projektu zapsat otisk – datum posledního běhu nebo hash `~/Dev/context` – a příště projít jen to, co se od té doby změnilo. **Vědomě se to nedělá.** Soulad se standardem je odvoditelný z toho, jak soubory vypadají teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje: rozejde se se skutečností a vypadá přitom pořád stejně. Hlavně by ale zúžil kontrolu na diff standardu, a tím minul přesně ten případ, kvůli kterému skill vznikl – rozejití, které se do projektu nikdy nepropsalo, protože ho tehdy nikdo nezpropagoval. Ten v žádném diffu od posledního běhu není.
+Nabízí se do projektu zapsat otisk – datum posledního běhu nebo hash `~/Context` – a příště projít jen to, co se od té doby změnilo. **Vědomě se to nedělá.** Soulad se standardem je odvoditelný z toho, jak soubory vypadají teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje: rozejde se se skutečností a vypadá přitom pořád stejně. Hlavně by ale zúžil kontrolu na diff standardu, a tím minul přesně ten případ, kvůli kterému skill vznikl – rozejití, které se do projektu nikdy nepropsalo, protože ho tehdy nikdo nezpropagoval. Ten v žádném diffu od posledního běhu není.
 
 ## Krok 15 – Závěrečný souhrn
 

@@ -3,7 +3,7 @@
 #
 # Přečte "Kontrakt příkazů" (sekce "## Kontrakt příkazů" v projektovém CLAUDE.md) a spustí
 # typecheck, lint a test. Když něco selže, vrátí exit 2 a výstup jde Claudovi jako
-# pokyn, co dodělat. Definice viz ~/Dev/context/coding/quality.md.
+# pokyn, co dodělat. Definice viz ~/Context/coding/quality.md.
 #
 # BEZPEČNOST: kontrakt je kód ležící v repozitáři a hooky běží mimo permission
 # systém. Proto se v projektu nespustí nic, dokud pro něj člověk jednou nevydá

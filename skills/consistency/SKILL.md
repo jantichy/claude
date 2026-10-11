@@ -16,7 +16,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 ## Co skill nedělá
 
 - **Nehledá chyby v kódu.** Na korektnost provedených změn je `/review` – ten uvnitř volá vestavěné `/code-review` jako jednoho ze svých specialistů, takže poslat uživatele rovnou na něj by ho připravilo o zbytek panelu i o ověření nálezů.
-- **Nekontroluje soulad s doménovými znalostmi.** Na odchylky od předpisů v `~/Dev/context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat pravidla.
+- **Nekontroluje soulad s doménovými znalostmi.** Na odchylky od předpisů v `~/Context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat pravidla.
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
 - **Nevytěžuje session.** Zápis dohod do souborů dělá `/end`, který běží až po tomhle.
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
@@ -84,7 +84,7 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 **Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/standards/lifecycle.md`, *Povolená opakování*.
 
-Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Dev/context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
+Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
 
 | Co | Čím | Kdy má smysl |
 |---|---|---|
@@ -254,7 +254,7 @@ Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
 Mechanické **i jednoznačné** nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
 
-1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Dev/context/coding/quality.md`): celou **průběžnou kontrolu** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj kontrolu znovu těsně před koncem odpovědi – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
+1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Context/coding/quality.md`): celou **průběžnou kontrolu** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj kontrolu znovu těsně před koncem odpovědi – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N – X mechanických, Y jednoznačných)
@@ -321,7 +321,7 @@ Po projití všech problémů zobraz:
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
-**Byla-li některá oprava rozsáhlá** – přibyl nový blok textu, přepsala se celá sekce, změnilo se víc souborů naráz –, **řekni uživateli, že se vyplatí pustit audit znovu.** Čerstvě napsaný text má vad nejvíc. Opakované průchody nad `~/.claude` ukázaly, že **většina nálezů každého kola vznikla opravami z kola předchozího**: druhý průchod 7 z 8, třetí 8 z 10. Po drobných opravách to naopak smysl nemá – další běh by hledal hlavně sám sebe. Doklad a čísla jsou v `~/Dev/context/decisions.md`, *Čtyři průchody `/consistency` za sebou a co z toho plyne*.
+**Byla-li některá oprava rozsáhlá** – přibyl nový blok textu, přepsala se celá sekce, změnilo se víc souborů naráz –, **řekni uživateli, že se vyplatí pustit audit znovu.** Čerstvě napsaný text má vad nejvíc. Opakované průchody nad `~/.claude` ukázaly, že **většina nálezů každého kola vznikla opravami z kola předchozího**: druhý průchod 7 z 8, třetí 8 z 10. Po drobných opravách to naopak smysl nemá – další běh by hledal hlavně sám sebe. Doklad a čísla jsou v `~/Context/decisions.md`, *Čtyři průchody `/consistency` za sebou a co z toho plyne*.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

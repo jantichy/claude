@@ -67,7 +67,7 @@ Navíc si ověř tohle:
 
 **Když je toho moc.** Pokrývá-li zadání víc nezávislých podsystémů, řekni to a rozděl to na víc plánů – každý musí sám o sobě dát funkční, otestovatelný software. Neposílej do implementace plán, který nejde dokončit v rozumném celku.
 
-**Doménové znalosti.** Předej dál, co si projekt importuje v `CLAUDE.md` – `~/Dev/context/coding/coding.md` vždy, dál podle povahy `web/web.md`, `web/admin.md`, `analytics/analytics.md`. Plán je má respektovat, ne je objevovat až při `/review`.
+**Doménové znalosti.** Předej dál, co si projekt importuje v `CLAUDE.md` – `~/Context/coding/coding.md` vždy, dál podle povahy `web/web.md`, `web/admin.md`, `analytics/analytics.md`. Plán je má respektovat, ne je objevovat až při `/review`.
 
 ------
 

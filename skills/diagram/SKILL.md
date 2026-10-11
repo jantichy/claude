@@ -45,7 +45,7 @@ Navíc:
 1. **Stojíš-li v kořeni kontejneru worktree layoutu, zeptej se, ze kterého worktree kreslit** – nabídni výpis `git worktree list`. Uživatel mohl mluvit o větvi, která mezitím byla sloučená a smazaná; v tom případě to řekni a nabídni hlavní větev, **nekresli potichu z jiného místa, než o jakém mluvil**.
 2. **Zdroj vyrob příkazy, ne z hlavy:** `git -C <worktree> branch --show-current`, `git -C <worktree> rev-parse --short HEAD`, `date +%F`. Jdou na stránku a do závěru.
 3. **Načti skilly `artifact-design` a `artifact-diagramming`** dřív, než napíšeš první řádek stránky.
-4. **Načti `~/Dev/context/text/typography.md`** – popisy a titulky jsou český text.
+4. **Načti `~/Context/text/typography.md`** – popisy a titulky jsou český text.
 
 ## Fáze 1 – Co je v projektu k nakreslení
 

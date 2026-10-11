@@ -24,7 +24,7 @@ Paušál je to, co se načte do každé session bez ptaní – soubory, které C
 - **Nejvýš jeden krok od místa, které se čte pokaždé.** Soubor, na který odkazuje soubor načítaný odkazem, se v praxi nenačte. Spouštěč proto stojí v paušálu nebo v souboru, který si čte každý skill (`~/.claude/skills/preflight.md`).
 - **Kde je cena nedodržení vysoká a spouštěč nejistý, pravidlo zůstává** (typicky git: `add -A`, heredoc, řetězení za blokovatelný příkaz) – jen zkrácené.
 - **Čte-li soubor jediný skill, patří k němu**; čte-li ho víc skillů, do sdíleného místa (`~/.claude/`, `~/.claude/skills/`), ne dovnitř cizího skillu.
-- **Veřejné × soukromé:** obecné pravidlo patří do veřejného `~/.claude/`, know-how a klientský obsah do `~/Dev/context/`. Přesun nesmí zveřejnit, co veřejné být nemá.
+- **Veřejné × soukromé:** obecné pravidlo patří do veřejného `~/.claude/`, know-how a klientský obsah do `~/Context/`. Přesun nesmí zveřejnit, co veřejné být nemá.
 
 ## Soubory čtené odkazem
 

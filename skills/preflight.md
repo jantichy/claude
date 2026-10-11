@@ -8,7 +8,7 @@ Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo 
 
 **Skill, který nad projektem neběží** – pouští se odkudkoliv a nepracuje nad kódem projektu, jako `/invoicing` – **body 1 až 3 vynechá a nahradí je vlastními předpoklady**: co si musí načíst, aby měl podle čeho jednat, a co musí být dostupné, aby běh nespadl v půlce. Sem se ty předpoklady nepíšou, jsou pro každý takový skill jiné. Vynechání se v jeho `Fázi 0` **řekne nahlas**, ať je poznat, že se na to nezapomnělo.
 
-**Pozor: „neběží nad projektem“ neznamená „nesahá na soubory“.** `/invoicing` zapisuje do deníku výjimek v `~/Dev/context/`, což je repozitář se zapnutým autocommitem. Skill, který takhle zapisuje, **musí sám říct, co se svým zápisem udělá** – jestli ho commituje, nebo nechá v pracovním stromu –, jinak ho posbírá autocommit cizí session spolu s něčím nesouvisejícím.
+**Pozor: „neběží nad projektem“ neznamená „nesahá na soubory“.** `/invoicing` zapisuje do deníku výjimek v `~/Context/`, což je repozitář se zapnutým autocommitem. Skill, který takhle zapisuje, **musí sám říct, co se svým zápisem udělá** – jestli ho commituje, nebo nechá v pracovním stromu –, jinak ho posbírá autocommit cizí session spolu s něčím nesouvisejícím.
 
 **Stojíš-li v kroku životního cyklu, načti si `~/.claude/standards/lifecycle.md`.** Neimportuje se paušálně – v `~/.claude/standards/rules.md` je z něj jen rámeček s pořadím a obecná pravidla o přeskakování a neopakování kroků. Bez něj nevíš, co po tvém kroku platí, čí práci nemáš přebírat a co se smí opakovat.
 
@@ -49,7 +49,7 @@ Leží buď v `<root>/CLAUDE.md`, nebo v `<root>/.claude/CLAUDE.md` – **zkontr
 | `## Autocommit` | jestli po ucelené změně commitovat a pushovat |
 | `## Výjimky z obecných pravidel` | co je v tomhle projektu vědomá odchylka, a tedy **není nález** |
 | Paměťová politika | píše se do Memory, nebo výhradně do souborů? |
-| Doménové `@import`y | které doménové znalosti z `~/Dev/context/` v projektu platí |
+| Doménové `@import`y | které doménové znalosti z `~/Context/` v projektu platí |
 
 **Chybí-li `## Kontrakt příkazů` a projekt má kód**, zastav se a nabídni doplnění. Bez kontraktu nemá průběžná kontrola co spouštět a práce by běžela nezkontrolovaná. Podklad zjistíš z `package.json`, `composer.json`, `Makefile` nebo obdoby; návrh ukaž a nech potvrdit.
 
@@ -63,7 +63,7 @@ U skillu, který nic nemění – čte, hlásí, radí – to stačí zmínit; b
 
 *Jen u skillů, které mění kód.*
 
-Pusť příkazy z kontraktu dřív, než se dotkneš prvního souboru. **Dědíš-li červený stav z dřívějška, ohlas to a zeptej se** – jinak nepůjde poznat, co jsi rozbil ty. Podrobně `~/Dev/context/coding/quality.md`.
+Pusť příkazy z kontraktu dřív, než se dotkneš prvního souboru. **Dědíš-li červený stav z dřívějška, ohlas to a zeptej se** – jinak nepůjde poznat, co jsi rozbil ty. Podrobně `~/Context/coding/quality.md`.
 
 ## 5. Rozsah změn na větvi
 

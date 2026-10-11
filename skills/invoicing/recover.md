@@ -1,6 +1,6 @@
 # Dohledání nenatrackovaného času
 
-Referenční soubor k režimu `recover` skillu `/invoicing`. Drží **katalog zdrojů a heuristiky**; postup, kdy se co dělá, je v `SKILL.md`, *Režim `recover`*. Přístupy, tokeny a konkrétní volání do systémů drží `~/Dev/context/business/invoicing.md`, *Stopy práce* – **sem se nikdy neopisují**, tenhle soubor je veřejný.
+Referenční soubor k režimu `recover` skillu `/invoicing`. Drží **katalog zdrojů a heuristiky**; postup, kdy se co dělá, je v `SKILL.md`, *Režim `recover`*. Přístupy, tokeny a konkrétní volání do systémů drží `~/Context/business/invoicing.md`, *Stopy práce* – **sem se nikdy neopisují**, tenhle soubor je veřejný.
 
 ## Obsah
 
@@ -81,7 +81,7 @@ Tady to není teoretické – rozhoduje se tu o částkách na faktuře a text d
 - **Duplicitní záznamy na týž čas** – táž schůzka bývá v kalendáři několikrát: přijatá z víc stran, nebo ležící ve dvou kalendářích téhož účtu. Slévají se **podle času, ne podle názvu** – tentýž hovor se v obou kopiích běžně jmenuje jinak.
 - **Zasedačky mezi účastníky** – adresy typu `…@resource.calendar.google.com` jsou místnosti, ne lidé. Podle protistrany se schůzka pozná jen z adres skutečných účastníků.
 
-**Dlouhá návštěva v prohlížeči není dlouhá práce.** Doba na stránce se dá číst, ale záložka nechaná otevřená přes noc vyrobí desítky hodin – v reálných datech se našla návštěva dlouhá 58 hodin. **Mez a způsob čtení drží `~/Dev/context/business/invoicing.md`, *Stopy práce***; nevymýšlej si vlastní.
+**Dlouhá návštěva v prohlížeči není dlouhá práce.** Doba na stránce se dá číst, ale záložka nechaná otevřená přes noc vyrobí desítky hodin – v reálných datech se našla návštěva dlouhá 58 hodin. **Mez a způsob čtení drží `~/Context/business/invoicing.md`, *Stopy práce***; nevymýšlej si vlastní.
 
 **Než porovnáš čas z kalendáře s časem odjinud, ověř pásmo.** Skript vypisuje **místní** čas s offsetem; zpráva v chatu („dáme to ve 12:30“) je taky místní, ale záznam v jiném systému nemusí být. Posunutý čas nevypadá jako chyba, ale jako **jiná událost** – a tím se z potvrzené schůzky stane falešný nález chybějících hodin. Stalo se to při prvním ostrém běhu.
 

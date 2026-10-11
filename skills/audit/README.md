@@ -60,7 +60,7 @@ Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/audit
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-**Sám o sobě nestačí.** Skill je jen dirigent – odbornou část si musíte přinést: pro každou oblast, kterou chcete auditovat, potřebujete vlastní sepsaný postup auditu a katalog typických nálezů. Skill je hledá v příslušné doméně v `~/Dev/context/`, kterou najde přes její rozcestník. **Nenajde-li pro zadanou oblast vůbec nic, skončí a řekne to** – vlastní kritéria si nevymýšlí, protože audit bez normy, proti které měří, je sbírka dojmů.
+**Sám o sobě nestačí.** Skill je jen dirigent – odbornou část si musíte přinést: pro každou oblast, kterou chcete auditovat, potřebujete vlastní sepsaný postup auditu a katalog typických nálezů. Skill je hledá v příslušné doméně v `~/Context/`, kterou najde přes její rozcestník. **Nenajde-li pro zadanou oblast vůbec nic, skončí a řekne to** – vlastní kritéria si nevymýšlí, protože audit bez normy, proti které měří, je sbírka dojmů.
 
 Máte-li pro tu oblast aspoň kontrolní seznam, pojede proti němu, ale mělčeji a nahlas na to upozorní.
 
@@ -70,6 +70,6 @@ Máte-li pro tu oblast aspoň kontrolní seznam, pojede proti němu, ale mělče
 
 - macOS, Linux i Windows – skill sám nic neinstaluje.
 - Pro průchod webem je potřeba plugin **chrome-devtools-mcp** a nainstalovaný Chrome. Bez něj audit poběží jen nad dodanými podklady a řekne, co se tím neověřilo.
-- Vlastní znalostní báze v `~/Dev/context/` – viz výš. Cestu lze změnit úpravou skillu.
+- Vlastní znalostní báze v `~/Context/` – viz výš. Cestu lze změnit úpravou skillu.
 - Přístupy do klientových systémů jsou volitelné; bez nich se část nálezů nedá ověřit a skill to vypíše.
 - Běží proti veřejně dostupnému webu. Web za přihlášením vyžaduje, abyste přihlášení zařídili sami.

@@ -23,7 +23,7 @@ Ptají se, jestli je to správně:
 
 ## Doménoví specialisté
 
-Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
+Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Context/`:
 
 **Většina jich nic nespouští** – měří text proti textu, takže jedou na `reader` a odrážka o `evidence` pro ně neplatí (viz [`agents.md`](agents.md)). Tři výjimky mají `Explore`, protože jejich předmět leží mimo čtení souborů: `coding/quality.md` ověřuje kontrakt příkazů a CI, `analytics/` a `advertising/` sahají na běžící měření a na cizí reklamní účty.
 
@@ -49,7 +49,7 @@ Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Dev/context/`:
 
 ## Zadání pro Agentní infrastrukturu
 
-Tenhle specialista má **vlastní zadání**, protože proti němu nestojí žádná doménová znalost v `~/Dev/context/`, a tedy ani nic, proti čemu by měřil doménový specialista:
+Tenhle specialista má **vlastní zadání**, protože proti němu nestojí žádná doménová znalost v `~/Context/`, a tedy ani nic, proti čemu by měřil doménový specialista:
 
 ```
 Prověř konfiguraci agentní vrstvy projektu. Ptáš se na jedinou věc: co z tohohle

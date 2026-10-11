@@ -1,6 +1,6 @@
 ---
 name: serviceaccount
-description: Skill se použije, když uživatel zadá "/serviceaccount", nebo chce založit service account pro strojový přístup ke klientským systémům – do Google Analytics, Tag Manageru nebo reklamních účtů. Z kontextu projektu odvodí, o kterého klienta a které weby jde, nabídne jména účtů podle konvence, ke každému složí lidský popis, připraví příkaz pro bezpečné uložení klíčů a text žádosti o přístupy pro klienta, a nakonec vzniklé účty zapíše do profilu organizace. Konvenci pojmenování a úrovně oprávnění drží ~/Dev/context/organizations/access.md; skill sám žádné pravidlo nenese. Účty ani klíče nezakládá, protože to je za přihlášením uživatele, a do administrace klientských systémů nevolá.
+description: Skill se použije, když uživatel zadá "/serviceaccount", nebo chce založit service account pro strojový přístup ke klientským systémům – do Google Analytics, Tag Manageru nebo reklamních účtů. Z kontextu projektu odvodí, o kterého klienta a které weby jde, nabídne jména účtů podle konvence, ke každému složí lidský popis, připraví příkaz pro bezpečné uložení klíčů a text žádosti o přístupy pro klienta, a nakonec vzniklé účty zapíše do profilu organizace. Konvenci pojmenování a úrovně oprávnění drží ~/Context/organizations/access.md; skill sám žádné pravidlo nenese. Účty ani klíče nezakládá, protože to je za přihlášením uživatele, a do administrace klientských systémů nevolá.
 argument-hint: [klient]
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion]
 ---
@@ -17,7 +17,7 @@ Jediné chování, žádné režimy. Volitelný argument je slug klienta pro př
 
 - **Nezakládá účty ani klíče.** Obojí je za uživatelovým přihlášením do Google Cloudu; skill připraví hodnoty a kroky, provedení je na člověku.
 - **Nevolá do klientských systémů.** Přístupy uděluje klient ve své administraci, skill k tomu jen sepíše žádost.
-- **Nenese konvenci.** Tvar jmen, seznam systémů, úrovně oprávnění a limity drží `~/Dev/context/organizations/access.md`. Ukáže-li se konvence jako špatná, opraví se tam, ne tady.
+- **Nenese konvenci.** Tvar jmen, seznam systémů, úrovně oprávnění a limity drží `~/Context/organizations/access.md`. Ukáže-li se konvence jako špatná, opraví se tam, ne tady.
 - **Nesahá na obsah klíče.** Klíč projde jen příkazem, který skill složí; do konverzace se z něj vrací výhradně `client_email` a `client_id`, což jsou veřejné identifikátory.
 - **Neřeší přístupy, které už existují.** Skill zakládá nové; revizi toho, kdo kam vidí, dělá člověk v administraci každého systému.
 
@@ -25,9 +25,9 @@ Jediné chování, žádné režimy. Volitelný argument je slug klienta pro př
 
 Společný začátek je v `~/.claude/skills/preflight.md`. Odchylky:
 
-1. **Načti `~/Dev/context/organizations/access.md` celou.** Bez ní skill nemá podle čeho jednat a **nesmí si tvar jména domyslet** – vymyšlené jméno je neměnné a opravuje se jedině novým účtem.
+1. **Načti `~/Context/organizations/access.md` celou.** Bez ní skill nemá podle čeho jednat a **nesmí si tvar jména domyslet** – vymyšlené jméno je neměnné a opravuje se jedině novým účtem.
 2. **Průběžná kontrola odpadá**, protože skill nemění kód. Řekni to nahlas.
-3. **Zápis míří do cizího repozitáře.** Evidence se zapisuje do `~/Dev/context`, který má zapnutý autocommit – skill ho tedy sám commitne a pushne, a nic tam nenechává rozdělané.
+3. **Zápis míří do cizího repozitáře.** Evidence se zapisuje do `~/Context`, který má zapnutý autocommit – skill ho tedy sám commitne a pushne, a nic tam nenechává rozdělané.
 4. **Zjisti, o který projekt jde:** projektový `CLAUDE.md` (řádek *Slug*, importovaný profil organizace), jméno adresáře. Nestojíš-li v projektu a argument nedorazil, zeptej se rovnou v *Fázi 1*.
 
 ## Fáze 1 – Koho se to týká
@@ -37,7 +37,7 @@ Z toho, co jsi zjistil v přípravě, sestav **návrhy vlastníka a úrovní zp�
 | Zdroj | Co z něj bereš |
 |---|---|
 | importovaný profil v projektovém `CLAUDE.md` | slug organizace – nejspolehlivější, protože je to táž konvence |
-| `~/Dev/context/organizations/` | weby klienta z tabulky v sekci *Co to je* |
+| `~/Context/organizations/` | weby klienta z tabulky v sekci *Co to je* |
 | řádek *Slug* v projektovém `CLAUDE.md` | jméno projektu, když organizace není jmenovaná |
 | jméno adresáře | poslední záchrana |
 
@@ -87,7 +87,7 @@ Vypiš **čtyři kroky pod sebou**, nic mezi ně nevkládej a mluvnicky je přiz
 
 **Počkej na potvrzení, že účty vznikly**, a vyžádej si interní ID. Bez nich zápis nedělej – evidence, ve které stojí účet, co nikdy nevznikl, je horší než žádná.
 
-Pak zapiš do **profilu organizace** v `~/Dev/context/organizations/` – do souboru toho klienta, sekce *Systémy* – u každého účtu adresu, k čemu má přístup, interní ID a proklik na detail účtu. Vlastní a pokusné účty patří do tabulky na konci `access.md`. Commitni a pushni.
+Pak zapiš do **profilu organizace** v `~/Context/organizations/` – do souboru toho klienta, sekce *Systémy* – u každého účtu adresu, k čemu má přístup, interní ID a proklik na detail účtu. Vlastní a pokusné účty patří do tabulky na konci `access.md`. Commitni a pushni.
 
 Výpis na závěr:
 

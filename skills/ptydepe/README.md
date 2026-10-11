@@ -40,7 +40,7 @@ Ze `add`, po dokončení:
 ```
 ## zelená linka → průběžná kontrola
 
-**Rozsah:** 150 výskytů ve 29 souborech, repozitáře: ~/.claude, ~/Dev/context
+**Rozsah:** 150 výskytů ve 29 souborech, repozitáře: ~/.claude, ~/Context
 **Vyloučeno:** archiv publikovaných textů
 **Ručně přepsané věty:** 8 – repetice po náhradě
 

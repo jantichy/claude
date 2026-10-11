@@ -1,7 +1,7 @@
 """Regresní testy generátorů archivu `/compose` – tam, kde vada nejde poznat.
 
 Tyhle skripty čtou oficiální exporty ze sociálních sítí a přepisují z nich
-archiv v `~/Dev/context/archive/`, ze kterého pak `/compose` destiluje znalostní
+archiv v `~/Context/archive/`, ze kterého pak `/compose` destiluje znalostní
 bázi autorova psaní. Chyba v nich se neprojeví jako pád, ale jako **archiv, který
 vypadá v pořádku a není**: chybí část příspěvků, je rozbitá diakritika, nebo
 tweet nese text jiného tweetu. Pozná to jedině ten, kdo si přečte diff přes

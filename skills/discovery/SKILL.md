@@ -27,7 +27,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to druhý krok
 - **Nepíše zadání.** Co náš produkt je, pro koho a co má umět, sepisuje `/specify` do `docs/requirements.md`. Tenhle skill mu dodává vstup, ne závěr.
 - **Nezakládá projekt.** Strukturu, git a doménové importy dělá `/project`. Chybí-li, upozorní a nabídne ho.
 - **Nedělá obchodní ani marketingový plán.** Žádná finanční projekce, žádný kanálový mix, žádná komunikační strategie. Sbírá jen to, z čeho plynou požadavky na produkt.
-- **Nedělá osobní brand ani pozicování autora.** To drží `~/Dev/context/brand/brand.md`; tady jde o pozici produktu proti konkurenčním produktům.
+- **Nedělá osobní brand ani pozicování autora.** To drží `~/Context/brand/brand.md`; tady jde o pozici produktu proti konkurenčním produktům.
 - **Nepředstírá uživatelský výzkum.** Doklad z veřejného zdroje není rozhovor se zákazníkem a nedá se jím nahradit. Skill dohledá, co o problému lidé sami napsali, a sesbírá, co ví uživatel – **nedokáže-li poptávku doložit, řekne to** místo toho, aby ji odvodil (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*).
 - **Nerozhoduje, jestli se to postaví.** Vyrobí verdikt o poptávce s doložením; co s ním, rozhoduje uživatel. Skill jen nedovolí, aby se přes nedoloženou poptávku přešlo mlčky.
 - **Neoponuje výsledek.** Posudek čerstvýma očima dělá `/oponent`, kterému se dokumenty předávají stejně jako zadání.

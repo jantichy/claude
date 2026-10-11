@@ -36,7 +36,7 @@ IMPORT = re.compile(r"(?<![\w`@])@([^\s`)\]>\"']+)")
 HEADING = re.compile(r"^(#{2,3}) (.+)$", re.M)
 LOAD = re.compile(r"[Nn]a(?:čti|čte|čítá|čtou)\b[^\n]{0,240}?")
 MD_PATH = re.compile(r"`(~/[^`\s]+\.md)`")
-CORPUS = (".claude", "Dev/context")
+CORPUS = (".claude", "Context")
 SKIP = ("/projects/", "/plugins/", "/node_modules/", "/archive/", "superpowers/")
 # Záznamy o práci pokyn k načtení jen citují, nedávají ho.
 RECORDS = ("decisions.md", "done.md", "todo.md", "backlog.md")

@@ -2,7 +2,7 @@
 
 Rozhodnutí o konfigurační vrstvě a cesta k nim: jaký problém to řešilo, jaké varianty byly ve hře, proč vyhrála tahle a proč padly ostatní.
 
-**Repozitář je veřejný.** Nic, co sem přibude, nesmí prozradit **obsah** soukromého `~/Dev/context/` – jméno klienta či organizace, sazbu, obchodní nebo osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu ani know-how, které se prodává. Struktura toho adresáře veřejná je a `README.md` ji sám píše; konkrétní obsah ne. Podrobněji `.claude/CLAUDE.md`, *Výjimky z obecných pravidel*.
+**Repozitář je veřejný.** Nic, co sem přibude, nesmí prozradit **obsah** soukromého `~/Context/` – jméno klienta či organizace, sazbu, obchodní nebo osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu ani know-how, které se prodává. Struktura toho adresáře veřejná je a `README.md` ji sám píše; konkrétní obsah ne. Podrobněji `.claude/CLAUDE.md`, *Výjimky z obecných pravidel*.
 
 **Týká-li se rozhodnutí jednoho skillu, patří rovnou do jeho `SKILL.md`** k místu, kde platí – tam ho příště najde ten, kdo ho potřebuje. Sem jde to, co platí napříč.
 
@@ -16,7 +16,7 @@ Rozhodnutí o konfigurační vrstvě a cesta k nim: jaký problém to řešilo, 
 
 **Zamítnuto – jen jedna prozaická věta v úvodu:** duplicity vznikly právě při takové formě. Bez testu se nedodržuje.
 
-**Zamítnuto – nechat obojí a doplnit „kanonický zdroj je X“:** dvě místa pravdy zůstanou a rozejdou se znovu; `/consistency` to nenajde, protože běží nad projektem, ne nad `~/.claude` a `~/Dev/context` současně.
+**Zamítnuto – nechat obojí a doplnit „kanonický zdroj je X“:** dvě místa pravdy zůstanou a rozejdou se znovu; `/consistency` to nenajde, protože běží nad projektem, ne nad `~/.claude` a `~/Context` současně.
 
 **Poznámka k umístění:** rozhodnutí se týká `~/.claude`. Že se takové zápisy vedou tady, řeší *Provozní soubory `~/.claude` jsou tady*.
 
@@ -78,7 +78,7 @@ Oba soubory jsou **pár**: zakládají se spolu, v `/project` je to jedna zaškr
 
 ### Zadání se jmenuje `requirements.md` a `architecture.md`, skill `/specify`
 
-**Rozhodnuto 2. 9. 2026.** Skill `/spec` vyráběl `docs/prd.md` a `docs/design.md`. Všechny tři názvy měly vadu: `/spec` byla jediná zkratka mezi jinak celými názvy skillů, `prd` je česky nešťastná zkratka a `design` už v ekosystému znamená vizuální tvorbu (`~/Dev/context/design/`), takže jedno slovo označovalo dvě různé věci.
+**Rozhodnuto 2. 9. 2026.** Skill `/spec` vyráběl `docs/prd.md` a `docs/design.md`. Všechny tři názvy měly vadu: `/spec` byla jediná zkratka mezi jinak celými názvy skillů, `prd` je česky nešťastná zkratka a `design` už v ekosystému znamená vizuální tvorbu (`~/Context/design/`), takže jedno slovo označovalo dvě různé věci.
 
 **Rozhodnutí:** `/spec` → **`/specify`**, `docs/prd.md` → **`docs/requirements.md`**, `docs/design.md` → **`docs/architecture.md`**. `/breakdown` a `docs/plan.md` zůstaly beze změny.
 
@@ -95,7 +95,7 @@ Oba soubory jsou **pár**: zakládají se spolu, v `/project` je to jedna zaškr
 
 **Rozhodnuto 2. 9. 2026.** Uzavírání feature bylo `testy → /standards → /code-review → /consistency → /end`, tedy tři sériové průchody dokumentací a kódem, každý s vlastní frontou nálezů.
 
-**Rozhodnutí:** `/standards` se přejmenoval na **`/review`** a rozšířil na tři vrstvy – deterministické nástroje (nula tokenů), paralelní panel specialistů, a **nezávislý ověřovatel, který se každý nález snaží vyvrátit**. Doménové sady z `~/Dev/context/` jsou v něm jedním druhem role vedle korektnosti, bezpečnosti, dat, provozu a testů; `/code-review` a `/security-review` si volá jako dvě z rolí. Osa se zkrátila na `/review → /consistency → /end`.
+**Rozhodnutí:** `/standards` se přejmenoval na **`/review`** a rozšířil na tři vrstvy – deterministické nástroje (nula tokenů), paralelní panel specialistů, a **nezávislý ověřovatel, který se každý nález snaží vyvrátit**. Doménové sady z `~/Context/` jsou v něm jedním druhem role vedle korektnosti, bezpečnosti, dat, provozu a testů; `/code-review` a `/security-review` si volá jako dvě z rolí. Osa se zkrátila na `/review → /consistency → /end`.
 
 **Proč:** panel bez ověřovací vrstvy zavalí uživatele pravděpodobně znějícími nálezy – reviewer požádaný o hledání mezer nějaké najde vždycky. Po třetím falešném se skill přestane pouštět, a to je horší než ho nemít. Pořadí se zároveň otočilo: korektnost jde před soulad s předpisem, protože oprava korektnosti přepisuje strukturu a zahodila by povrchové úpravy.
 
@@ -128,7 +128,7 @@ Oba soubory jsou **pár**: zakládají se spolu, v `/project` je to jedna zaškr
 
 **Zamítnuto – nechat skill a jen ho všude vypnout:** vypnutý skill v `README.md` a v `/project` dál nabízí funkci, kterou nikdo nemá zapnout. Buď se používá, nebo není – viz pravidlo *Nedeklaruj, co skill neumí* v `~/.claude/skills/skills.md`, *7. Jak se píše text uvnitř*.
 
-**Co zůstalo vědomě:** smazání commitem obsah z historie neodstraní, takže po zrušeném mechanismu zbyly staré logy tam, kde byly. Platí na ně pravidlo, které je i tak obecné: co bylo jednou commitnuté, patří **rotovat**, ne jen smazat. Stav a rozsah drží `~/Dev/context/decisions.md`, sekce `## Claude`; sem nepatří, protože ukazovat ve veřejném repozitáři na místo, kde se dá hledat, je návod, ne poznámka.
+**Co zůstalo vědomě:** smazání commitem obsah z historie neodstraní, takže po zrušeném mechanismu zbyly staré logy tam, kde byly. Platí na ně pravidlo, které je i tak obecné: co bylo jednou commitnuté, patří **rotovat**, ne jen smazat. Stav a rozsah drží `~/Context/decisions.md`, sekce `## Claude`; sem nepatří, protože ukazovat ve veřejném repozitáři na místo, kde se dá hledat, je návod, ne poznámka.
 
 **Zamítnuto – vyčistit i historické záznamy a obsah kurzu:** `docs/done.md` v jednom z projektů zaznamenává, co `/project` tehdy udělal („autoprompt vypnutý“), a přepsat ho by byla falzifikace evidence o proběhlé práci – `done.md` se z definice nemaže. Jeden soubor s obsahem kurzu používá autocommit a autoprompt jako **učební příklad** toho, jak se konfiguruje agentní workflow; je to obsah kurzu, ne konfigurace, a zásah do něj by byl obsahové rozhodnutí, ne úklid. Historický řádek v `ai/CLAUDE.md` proto dostal jen doplněk, že mechanismus skončil, místo smazání.
 
@@ -236,7 +236,7 @@ Zvoleno **pravidlo v `~/.claude/standards/rules.md`** (*Commituj jmenované cest
 
 **Rozhodnuto 4. 9. 2026.** Průchod dnešní session vytipoval čtyři kandidáty na nové skilly: `/measure` (revize měření u klienta), `/slides` (prezentace podle `design/slides.md`), `/nabidka` (konzultační nabídka z `brand/` + `speaking/` + `organizations/`) a `/research` (podložené rešerše). Kritérium výběru bylo jednotné: **doménová znalost už existuje, chybí jen proces, který ji řídí.**
 
-**Rozhodnutí:** do `todo.md` jdou `/research` a `/invoicing` (nový, v původním výběru nebyl), a místo `/measure` **parametrizovaný `/audit <domain>`** – parametrem se řekne, proti kterému návodu z `~/Dev/context/` se audituje. `/slides` a `/nabidka` zamítnuty.
+**Rozhodnutí:** do `todo.md` jdou `/research` a `/invoicing` (nový, v původním výběru nebyl), a místo `/measure` **parametrizovaný `/audit <domain>`** – parametrem se řekne, proti kterému návodu z `~/Context/` se audituje. `/slides` a `/nabidka` zamítnuty.
 
 **Proč `/audit` místo `/measure`:** skill vázaný na jednu doménu by se musel psát pro každou znovu, kdežto parametrizovaný je *generic-base + delta* (`~/.claude/standards/rules.md`). Potřeba přitom zůstává táž – `analytics/` je nejhotovější doménová znalost a jako jediná nemá skill, takže existuje jako checklist, který nikdo nevyvolá ve správný moment.
 
@@ -346,7 +346,7 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 **Rozhodnutí:** apostrofy odstraněny; po opravě model vyjmenoval hesla `ptydepe.md` i sekce `~/.claude/standards/rules.md` a na dotaz po terminologii odpověděl správně s odkazem na glosář. Poznatek zapsán do `~/.claude/standards/structure.md` k sekci o `CLAUDE.md` a **vynucen testem ověřeným mutačním testem**; kontrolní průchod přes všechny projekty v `~/Dev` stejnou vadu nikde jinde nenašel.
 
-**Opačný případ se hlídat nedá a řeší ho věta v `~/.claude/standards/rules.md`:** ukázka syntaxe (`` `@~/Dev/context/organizations/<organizace>.md` ``) apostrofy **potřebuje** – bez nich se profil načte do každé session, která to pravidlo čte. Test proto hlídá jen `CLAUDE.md`, aby o importech šlo dál psát.
+**Opačný případ se hlídat nedá a řeší ho věta v `~/.claude/standards/rules.md`:** ukázka syntaxe (`` `@~/Context/organizations/<organizace>.md` ``) apostrofy **potřebuje** – bez nich se profil načte do každé session, která to pravidlo čte. Test proto hlídá jen `CLAUDE.md`, aby o importech šlo dál psát.
 
 **Cena:** do každé session nově jde 93 kB. Otázka, jestli tam patří `~/.claude/standards/rules.md` celý, je zapsaná v `todo.md`.
 
@@ -442,7 +442,7 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 ### Skill si nese své věci s sebou
 
-**Rozhodnuto 7. 9. 2026.** Provozní pravidla worktree layoutu i postup jeho zřízení ležely v `~/Dev/context/worktree/`, tedy v soukromém repozitáři, přestože je odkazovalo dvanáct veřejných skillů a `preflight.md`. Kdo si některý z nich nainstaloval z GitHubu, dostal odkaz do adresáře, který nemá. Autocommit měl obrácenou vadu: pravidlo stálo v globálním `~/.claude/CLAUDE.md`, opsané i ve skillu, a rozbalovalo se do každé session v každém projektu – tedy i tam, kde je autocommit vypnutý.
+**Rozhodnuto 7. 9. 2026.** Provozní pravidla worktree layoutu i postup jeho zřízení ležely v `~/Context/worktree/`, tedy v soukromém repozitáři, přestože je odkazovalo dvanáct veřejných skillů a `preflight.md`. Kdo si některý z nich nainstaloval z GitHubu, dostal odkaz do adresáře, který nemá. Autocommit měl obrácenou vadu: pravidlo stálo v globálním `~/.claude/CLAUDE.md`, opsané i ve skillu, a rozbalovalo se do každé session v každém projektu – tedy i tam, kde je autocommit vypnutý.
 
 **Rozhodnutí:** skill si nese všechno své ve svém adresáři. Vyjmuty jsou jen věci, které jsou z podstaty sdílené – `preflight.md`, `~/.claude/standards/rules.md` a norma `skills.md`.
 
@@ -480,7 +480,7 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 **Kořen, ne `skills/`.** Precedens `preflight.md` a `skills.md` – sdílené věci, které nepatří žádnému skillu – sem nesedí úplně: ty dvě mluví **o skillech**, takže leží mezi nimi. `structure.md` mluví o projektu, tedy patří vedle `~/.claude/standards/rules.md`. Oba jsou navíc v `CLAUDE.md` importované natvrdo přes `@` jako závazná pravidla; jeden v kořeni a druhý v podadresáři by tvrdil rozdíl, který mezi nimi není. **Podadresář `standards/` se otevře, až jich bude víc** – dnes by to byl obal nad jedním souborem.
 
-**Tři odkazy do `~/Dev/context/coding/coding.md` přepsány věcně, bez odkazu** – kontrakt příkazů, průběžná kontrola a rozcestník doménových znalostí. Veřejný soubor tak neukazuje do adresáře, který cizí čtenář nemá. Nic se tím neztrácí: projekt, kde na pravidlech kódu záleží, si `coding.md` importuje ve svém `CLAUDE.md` natvrdo, takže platí celý bez ohledu na tenhle odkaz. Ověřeno – sedm projektů s kódem ho takhle má.
+**Tři odkazy do `~/Context/coding/coding.md` přepsány věcně, bez odkazu** – kontrakt příkazů, průběžná kontrola a rozcestník doménových znalostí. Veřejný soubor tak neukazuje do adresáře, který cizí čtenář nemá. Nic se tím neztrácí: projekt, kde na pravidlech kódu záleží, si `coding.md` importuje ve svém `CLAUDE.md` natvrdo, takže platí celý bez ohledu na tenhle odkaz. Ověřeno – sedm projektů s kódem ho takhle má.
 
 **Jeden projekt z migrace vynechán.** Měl rozdělanou cizí práci včetně `CLAUDE.md` a odkaz na standard v něm nebyl; sáhnout na něj by znamenalo commitnout cizí rozepsané změny. Dorovná se, až se v něm bude pracovat.
 
@@ -494,7 +494,7 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 **Poučení, které z toho platí obecně:** `deny` je ochrana proti ukliknutí, ne proti cílenému obejití. Vrstva, která se tváří jako hranice a přitom jí není, je horší než žádná, protože se na ni někdo spolehne. Skutečnou hranici drží jen to, co si model nemůže odsouhlasit sám – souhlas vydaný z terminálu, ověření cíle, potvrzovací dialog (`~/.claude/standards/rules.md`, *Přednost pravidel*).
 
-**Konkrétní cesty, kterými to jde obejít, tady nestojí** a je to záměr: repozitář je veřejný a popis funkčního obchvatu vlastní ochrany je návod, ne poznámka. Drží je `~/Dev/context/decisions.md`, sekce `## Claude`.
+**Konkrétní cesty, kterými to jde obejít, tady nestojí** a je to záměr: repozitář je veřejný a popis funkčního obchvatu vlastní ochrany je návod, ne poznámka. Drží je `~/Context/decisions.md`, sekce `## Claude`.
 
 ### Dvě podmínky pro `PostToolUse` hook
 
@@ -542,7 +542,7 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 **Ušetřilo se v kontextu, ne v součtu.** `terms.md` má po přesunu 33 kB, tedy víc, než měl původní `ptydepe.md` – přibraly do něj ty ponechané zápisy. To je v pořádku: soubor se neimportuje nikam, takže jeho velikost nikoho nestojí kontext.
 
-**Odrážka o propagaci do `~/Dev` se do tabulky vědomě nevrátila.** Původní `ptydepe.md` nesl větu, že se termín při změně mění všude naráz včetně `~/Dev`. Je to instrukce pro náhradu, ne pro běžnou session – a ve `SKILL.md` už stojí konkrétněji ve *Fázi 0*, která jmenuje kořeny (`~/.claude`, `~/Dev/context`, další repozitáře v `~/Dev`). V tabulce by to byl pokyn pro toho, kdo ji nikdy nevykonává.
+**Odrážka o propagaci do `~/Dev` se do tabulky vědomě nevrátila.** Původní `ptydepe.md` nesl větu, že se termín při změně mění všude naráz včetně `~/Dev`. Je to instrukce pro náhradu, ne pro běžnou session – a ve `SKILL.md` už stojí konkrétněji ve *Fázi 0*, která jmenuje kořeny (`~/.claude`, `~/Context`, další repozitáře v `~/Dev`). V tabulce by to byl pokyn pro toho, kdo ji nikdy nevykonává.
 
 **Zamítnuto – zapsat rozvahu do `## Claude` v tomhle souboru.** `decisions.md` má 286 kB, takže by ho `/ptydepe` musel číst celý kvůli 27 heslům a šesti zápisům o ponechaných termínech, a platí v něm „nejstarší nahoře, přidávej na konec“, protože se čte jako vývoj uvažování. Heslář se takhle uspořádat nedá – ten se čte skokem na jedno heslo.
 
@@ -617,7 +617,7 @@ Commit `~/.claude@388c4b1`.
 
 ### Skill `/audit`: audit cizího webu proti doménové znalosti
 
-**Rozhodnuto 10. 9. 2026.** Vznikl skill `/audit`, který zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně `~/Dev/context/`. Sám nenese žádnou doménovou znalost – je to dirigent.
+**Rozhodnuto 10. 9. 2026.** Vznikl skill `/audit`, který zaudituje **cizí běžící web** v zadané oblasti proti auditnímu postupu a katalogu nálezů uloženým v příslušné doméně `~/Context/`. Sám nenese žádnou doménovou znalost – je to dirigent.
 
 **Proč nový skill a ne režim `/review`:** oba měří proti týmž doménovým znalostem, ale liší se předmětem a všemi předpoklady. `/review` čte vlastní práci v repozitáři, má diff, kontrakt příkazů a specifikaci, proti které měří korektnost. `/audit` nemá ani jedno – má URL, exporty od klienta a přístupy do cizích účtů. Sloučení by znamenalo skill, jehož polovina fází v každém běhu neplatí.
 
@@ -639,7 +639,7 @@ Commit `~/.claude@388c4b1`.
 
 ### `/depot` je mechanika ve veřejném repozitáři, pravidla v privátní doméně
 
-**Rozhodnuto 15. 9. 2026.** Zakládání skillu, který převezme stažený soubor, uloží ho tam, kam patří, a rovnou spustí navazující zpracování. Rozdělený je stejně jako `/audit` a `/invoicing`: veřejný `~/.claude/skills/depot/` drží mechaniku a nenese jediné konkrétní pravidlo, privátní doména `~/Dev/context/depot/` drží směrovací tabulku. Kdo si skill stáhne z GitHubu, napíše si tabulku podle svého.
+**Rozhodnuto 15. 9. 2026.** Zakládání skillu, který převezme stažený soubor, uloží ho tam, kam patří, a rovnou spustí navazující zpracování. Rozdělený je stejně jako `/audit` a `/invoicing`: veřejný `~/.claude/skills/depot/` drží mechaniku a nenese jediné konkrétní pravidlo, privátní doména `~/Context/depot/` drží směrovací tabulku. Kdo si skill stáhne z GitHubu, napíše si tabulku podle svého.
 
 **Doména je jeden soubor a rozdělí se, až poroste.** Aby to skill nepocítil, čte ji přes rozcestník a hledá *věci*, ne jména souborů – pozdější rozpad na `depot/<workflow>.md` je pak úprava uvnitř domény.
 
@@ -714,7 +714,7 @@ Zavedeny dva typy v `~/.claude/agents/`: **`reader`** (`Read, Grep, Glob`) a **`
 
 **Mechanická kontrola vědomě není.** Zvažovaly se dvě: test, který rozloží identifikátory na slova a porovná je s anglickým slovníkem (chytne i `vady` bez diakritiky, ale potřebuje seznam povolených zkratek, který se bude doplňovat), a test jen na diakritiku (bez falešných poplachů, ale většinu skutečných případů nechytí). Honza rozhodl, že zůstane jen pravidlo. **Čím se to nahrazuje:** rozepsaným pravidlem v souboru, který se importuje do každé session, a revizí. Vrátí-li se české identifikátory znovu, je to důvod otevřít slovníkový test znovu – samotná věta v pravidlech nestačila už jednou: 14. 9. 2026 vznikla česká funkce v session, kde byl `~/.claude/standards/rules.md` rozbalený celý a kde se o pár odstavců výš dodržel anglický `git_ro()`.
 
-**Rozsah převodu mimo `~/.claude` a `~/Dev/context`: jen čtyři projekty.** Hrubý sken verzovaného kódu v `~/Dev/*` (identifikátory rozložené na slova proti anglickému slovníku, 17. 9. 2026) vytipoval kandidáty ve zhruba patnácti projektech. Honza rozhodl, že se převod zapíše jen do pěti z nich; 17. 9. 2026 byl ve všech kromě jednoho odpracovaný. **Ten jeden z rozsahu vypadl** (17. 9. 2026): převod tam kromě kódu přejmenovával i tisíce datových souborů a veřejné cesty webu, rozdělaná práce se zastavila, vrátila na poslední commit a úkol se odebral – Honza rozhodl, že se tam převod vůbec řešit nebude. **Ostatní projekty se vědomě neřeší** a nikde se nevedou: u většiny sken chytal hlavně jména značek a cizích systémů (`Fakturoid`, `Seznam`, `Zbozi`), text v docstrinzích nebo jiný jazyk, u zbytku šlo o jednotlivá jména. Pravidlo v `~/.claude/standards/rules.md` pro ně dál platí – projeví se při další práci v nich, ne plošným převodem.
+**Rozsah převodu mimo `~/.claude` a `~/Context`: jen čtyři projekty.** Hrubý sken verzovaného kódu v `~/Dev/*` (identifikátory rozložené na slova proti anglickému slovníku, 17. 9. 2026) vytipoval kandidáty ve zhruba patnácti projektech. Honza rozhodl, že se převod zapíše jen do pěti z nich; 17. 9. 2026 byl ve všech kromě jednoho odpracovaný. **Ten jeden z rozsahu vypadl** (17. 9. 2026): převod tam kromě kódu přejmenovával i tisíce datových souborů a veřejné cesty webu, rozdělaná práce se zastavila, vrátila na poslední commit a úkol se odebral – Honza rozhodl, že se tam převod vůbec řešit nebude. **Ostatní projekty se vědomě neřeší** a nikde se nevedou: u většiny sken chytal hlavně jména značek a cizích systémů (`Fakturoid`, `Seznam`, `Zbozi`), text v docstrinzích nebo jiný jazyk, u zbytku šlo o jednotlivá jména. Pravidlo v `~/.claude/standards/rules.md` pro ně dál platí – projeví se při další práci v nich, ne plošným převodem.
 
 ### Co rozhodl `/consistency full` po převodu identifikátorů
 
@@ -789,7 +789,7 @@ Zavedeny dva typy v `~/.claude/agents/`: **`reader`** (`Read, Grep, Glob`) a **`
 
 **Rozhodnuto 18. 9. 2026.** Skill provede založením service accountů pro strojový přístup ke klientským systémům. Vznikl proto, že se týž postup dělal ručně a nezapamatoval by se – hlavně kvůli tomu, že **ID service accountu je neměnné**, takže chyba v pojmenování se opravuje jedině novým účtem a novou žádostí u klienta.
 
-**Konvence bydlí v `~/Dev/context/organizations/access.md`, ne ve skillu.** Norma `~/.claude/skills/skills.md` znalost oboru do skillu nepouští a tady to má i praktický důvod: seznam systémů a úrovně oprávnění porostou, kdežto průběh skillu ne.
+**Konvence bydlí v `~/Context/organizations/access.md`, ne ve skillu.** Norma `~/.claude/skills/skills.md` znalost oboru do skillu nepouští a tady to má i praktický důvod: seznam systémů a úrovně oprávnění porostou, kdežto průběh skillu ne.
 
 **Zavržené varianty:**
 
@@ -849,7 +849,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Zamítnutá jména a proč:**
 
-- **`/design`** – oborově nejzavedenější (superpowers své fázi říká „design doc“), ale **koliduje s vestavěným příkazem Claude Code** `/design`, `/design-sync`, `/design-login`. Navíc `~/Dev/context/design/` je doména vizuální tvorby.
+- **`/design`** – oborově nejzavedenější (superpowers své fázi říká „design doc“), ale **koliduje s vestavěným příkazem Claude Code** `/design`, `/design-sync`, `/design-login`. Navíc `~/Context/design/` je doména vizuální tvorby.
 - **`/architecture`** – uživatelova první volba; padla, když se ukázalo, že krok vyrábí sadu a ne jeden soubor.
 - **`/solution`** – protějšek českého „návrh řešení“, ale vágní: řešení může být cokoliv.
 - **`/specification`** (s ponecháním `/specify` návrhu) – nejdelší jméno v sadě a pojmenovávalo by dokument, který se jmenuje `requirements.md`.
@@ -890,12 +890,12 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **`/review` má měřítko v souboru, `/oponent` žádné nemá.**
 
-- `/review` měří hotovou práci **proti předpisu, který existuje jako dokument**. Nález zní „porušuje pravidlo X z doménové znalosti Y“ a dá se vyvrátit ukázáním na to pravidlo. Jeho **specialisté** (korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura) se zapínají **jen na kód**; nad obsahovým projektem se zapnou pouze **doménové sady** z `~/Dev/context/`.
+- `/review` měří hotovou práci **proti předpisu, který existuje jako dokument**. Nález zní „porušuje pravidlo X z doménové znalosti Y“ a dá se vyvrátit ukázáním na to pravidlo. Jeho **specialisté** (korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura) se zapínají **jen na kód**; nad obsahovým projektem se zapnou pouze **doménové sady** z `~/Context/`.
 - `/oponent` žádný předpis nemá a **posuzuje samotný obsah**. Nález zní „nedává to smysl“ nebo „chybí tu odpověď“ a vyvrátit se dá jen argumentem.
 
 **Proč `/review` u rezervací našel návrhové díry:** nejsou to čistě obsahový projekt, ale dokumentace popisující aplikaci, takže se zapnuly sady `coding/coding.md`, `coding/architecture.md` a `web/admin.md`. Nález *„guard posílá admina udělat něco, co neexistuje“* je porušení konkrétního pravidla, ne oponentura.
 
-**Praktický důsledek:** u projektu, ke kterému žádná relevantní doménová znalost v `~/Dev/context/` neexistuje, je `/review` skoro prázdný a má se přeskočit. `/oponent` funguje vždycky.
+**Praktický důsledek:** u projektu, ke kterému žádná relevantní doménová znalost v `~/Context/` neexistuje, je `/review` skoro prázdný a má se přeskočit. `/oponent` funguje vždycky.
 
 ### Vznikl krok `/consolidate` na návrhový dluh z postupného záplatování
 
@@ -1117,7 +1117,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Naměřeno:** čtení kontextu **67 %** nákladů, zápis do kontextu 22 %, výstup modelu **10 %**. Session nad 400 volání jsou **4 % session a 52 % nákladů**; průměrný kontext v nich je 423k tokenů proti 71k u krátkých a s pozicí ve session roste lineárně (108k na začátku, 545k po třístém volání). Subagenti jsou 26 % nákladů. Na nejlevnější model připadá **0,1 %** volání, na nejsilnější 97,6 %.
 
-**Rozhodnutí:** do `~/.claude/standards/rules.md` přibyly dvě sekce – *Co vložíš do kontextu, platíš do konce session* (cena obsahu je jeho velikost krát počet zbývajících volání) a *Dlouhá session je dražší než dvě krátké* (kvadratický růst, ohlásit při ~150 voláních nebo 250k kontextu). *Model a effort* dostal **zákaz s výčtem** místo doporučení a *Velké průzkumné úkoly deleguj* větu o tom, co agent vracet nemá. Do `~/Dev/context/coding/` šlo to, co platí jen u kódu: *Příkaz vol podle velikosti jeho výstupu* (`quality.md`) a *Než napíšeš kód, projdi, čím by se psát nemusel* (`coding.md`).
+**Rozhodnutí:** do `~/.claude/standards/rules.md` přibyly dvě sekce – *Co vložíš do kontextu, platíš do konce session* (cena obsahu je jeho velikost krát počet zbývajících volání) a *Dlouhá session je dražší než dvě krátké* (kvadratický růst, ohlásit při ~150 voláních nebo 250k kontextu). *Model a effort* dostal **zákaz s výčtem** místo doporučení a *Velké průzkumné úkoly deleguj* větu o tom, co agent vracet nemá. Do `~/Context/coding/` šlo to, co platí jen u kódu: *Příkaz vol podle velikosti jeho výstupu* (`quality.md`) a *Než napíšeš kód, projdi, čím by se psát nemusel* (`coding.md`).
 
 **Zamítnuty všechny čtyři nástroje.** `caveman` řeže výstup modelu, tedy **nejmenší** z těch tří položek, a jeho skill si navíc bere ~1000 tokenů pravidel na každou konverzaci a koliduje se stylem komunikace v `~/.claude/standards/rules.md`. `headroom` a proxy část `caveman` sedí jako MITM mezi Claude Code a API (`ANTHROPIC_BASE_URL` na localhost): celý obsah session včetně klientských podkladů by tekl přes cizí binárku a **přepisování historie rozbíjí cache**, tedy tu 67procentní položku – úspora by se obrátila v přirážku. `rtk` míří správným směrem (40 % výstupů nástrojů přesahuje 1k tokenů a platí se do konce session), ale filtruje tak, že **skutečný výstup příkazu přestane být vidět** – proti *Ověřitelná kontrola místo dojmu*; totéž se dá mít volbou příkazu bez proxy, což je dnešní *Příkaz vol podle velikosti jeho výstupu*.
 
@@ -1509,7 +1509,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Rozhodnuto 28. 9. 2026.** Kontrolní skilly měly pro tytéž dvě věci **tři různé slovníky**: `/oponent` nabízel *Nechat být* a *Vrátit se k tomu později*, `/review`, `/consistency` a `/attack` *Přeskočit* a *Odložit*, `/end` u položek mimo rozsah vlastní čtveřici. Mapování volby na stav měl navíc jen `/oponent`. Uživatel přitom prochází nálezy z několika skillů v jednom životním cyklu, takže dvě jména pro tutéž volbu čte jako dvě různé volby.
 
-**Záchytné volby se jmenují `Neopravovat` a `Zapsat do todo`.** Rozhodl uživatel; kritérium dodala redakční pravidla pro rozhraní (`~/Dev/context/text/copy.md`, *Popisky akcí*): popisek musí říct, co se stane. *Přeskočit* se čte jako „teď ne“, přestože znamená natrvalo a se zápisem do `CLAUDE.md`; *Nechat být* mlčí o tom, že se nález někam zapíše. Tabulka volba → stav je nově v `findings.md` jednou pro všechny.
+**Záchytné volby se jmenují `Neopravovat` a `Zapsat do todo`.** Rozhodl uživatel; kritérium dodala redakční pravidla pro rozhraní (`~/Context/text/copy.md`, *Popisky akcí*): popisek musí říct, co se stane. *Přeskočit* se čte jako „teď ne“, přestože znamená natrvalo a se zápisem do `CLAUDE.md`; *Nechat být* mlčí o tom, že se nález někam zapíše. Tabulka volba → stav je nově v `findings.md` jednou pro všechny.
 
 **Výpis nálezu je odstavec: tučný název a za ním normální věta.** Tohle je ta podstatnější polovina a přišla od uživatele během práce – mřížky `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` označil za nečitelné a slovo `Kontext` jako popisek za zbytečné.
 
@@ -1578,7 +1578,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Zamítnuto připsat to jako odstavec k *Mazání ověř diffem, ne grepem*.** Drželo by to pohromadě všechno o čtení diffu, jenže to pravidlo je o **mazání podle značek** a tohle o **čtení cizí změny** – závěr sekce by říkal něco jiného než její název. Vztah mezi nimi tím nezmizel: obě sekce stojí vedle sebe a nová na tu starší odkazuje jako na svého sourozence z druhé strany, protože tam řez sebere víc, než měl, a diff je jediné místo, kde to je vidět, kdežto tady je diff tak velký, že v něm není vidět nic.
 
-**Zamítnuto odsunout to do `~/Dev/context/coding/`.** Vypadá to jako znalost o kódu, ale doména se nad projektem bez kódu vůbec nenačte – tedy ani nad repozitářem s touhle konfigurací, kde se to stalo a kde `settings.json` žádný kód není. Kapitola *Git* v `coding.md` je navíc o konvencích větví a commitů, ne o čtení diffu jako dokladu.
+**Zamítnuto odsunout to do `~/Context/coding/`.** Vypadá to jako znalost o kódu, ale doména se nad projektem bez kódu vůbec nenačte – tedy ani nad repozitářem s touhle konfigurací, kde se to stalo a kde `settings.json` žádný kód není. Kapitola *Git* v `coding.md` je navíc o konvencích větví a commitů, ne o čtení diffu jako dokladu.
 
 **Cena, o které se ví:** `~/.claude/standards/rules.md` se rozbaluje do každé session včetně těch nad čistě textovými projekty, kde se strojově formátovaný soubor nevyskytne. Je to čtyři odstavce a platí to pro každý repozitář, ne pro každý soubor – táž úvaha jako u *Commituj jmenované cesty, ne `-A`*.
 
@@ -1598,7 +1598,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Skript hlásí jeden nález na sekci, ne na záznam.** První verze vypisovala každý záznam pod dosud nejvyšším datem a nad zdejšími soubory vyrobila stovky řádků – takový výstup nikdo nedočte, takže by se kontrola přestala pouštět a nehlídala by nic. Sekce je zároveň jednotka, ve které se pořadí opravuje.
 
-**Cena, o které se ví:** `~/Dev/context` nemá `tests/` ani CI, takže tam test nedosáhne a kontrolu musí pustit `/end`. Je to slabší vrstva – běží, jen když někdo uklízí –, ale je to totéž místo, které ty datované záznamy zapisuje.
+**Cena, o které se ví:** `~/Context` nemá `tests/` ani CI, takže tam test nedosáhne a kontrolu musí pustit `/end`. Je to slabší vrstva – běží, jen když někdo uklízí –, ale je to totéž místo, které ty datované záznamy zapisuje.
 
 ### Práh kontextu je 300k/400k a konec každého běhu nese blok *Kudy dál*
 
@@ -1641,11 +1641,11 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Rozhodnutí:** `~/.claude/standards/rules.md` stlačen na 23,9k ve třech vrstvách. (1) **Přesun** pravidel, která platí jen při určité činnosti, do souborů načítaných odkazem: zjišťování z dat do `~/.claude/standards/evidence.md`, delegace a model s effortem do `~/.claude/standards/delegation.md`; v `~/.claude/standards/rules.md` po nich zůstal jednořádkový spouštěč (*Zjišťuj podle pravidel pro práci s daty*, *Mechanickou práci deleguj*). Test „co sem nepatří“ se přestěhoval do `.claude/CLAUDE.md` tohoto repozitáře, protože je potřeba jen při úpravě pravidel. (2) **Škrt dokladů a zdůvodnění** – odstavce *Proč:* a *Zrádné je*, data, naměřená procenta, historie pravidel. U pravidla zůstává jedna věta pointy a pravidlo *K pravidlům ukládej i „proč“* to teď říká výslovně; dřív v něm stálo, že měření ven nejde vůbec. (3) **Komprese** zbytku. Nadpisy zůstávajících sekcí se neměnily, aby platily odkazy; odkazy na přesunuté sekce se přesměrovaly.
 
-**Zamítnuto – pravidla o datech do `~/Dev/context/analytics/`.** Nabízelo se to, ale platí i pro ladění kódu a analýzu jiných dat a jsou obecná, takže patří do veřejného `~/.claude/`. **Zamítnuto – delegace do `skills/skills.md`:** při ruční delegaci mimo skill by se nenačetla.
+**Zamítnuto – pravidla o datech do `~/Context/analytics/`.** Nabízelo se to, ale platí i pro ladění kódu a analýzu jiných dat a jsou obecná, takže patří do veřejného `~/.claude/`. **Zamítnuto – delegace do `skills/skills.md`:** při ruční delegaci mimo skill by se nenačetla.
 
 **Pojistka:** `tests/test_size.py` hlídá `~/.claude/standards/rules.md` do 35k znaků a součet paušálně načítaného (`CLAUDE.md` + jeho `@` importy) do 50k; třetí test drží seznam paušálních souborů v souladu s importy. Ověřeno v obou směrech: propustí dnešní stav, zastaví přerostlý soubor i nový import mimo seznam.
 
-**Týž den stejným postupem i `worktree.md`** (14,3k → 7,1k), který se importuje do každého projektu s worktree layoutem; nadpisy zůstaly kvůli odkazům, obsah dokumentu a zdůvodnění „proč kořen, ne skill“ vypadly. `coding.md` viz `~/Dev/context/decisions.md` z téhož dne.
+**Týž den stejným postupem i `worktree.md`** (14,3k → 7,1k), který se importuje do každého projektu s worktree layoutem; nadpisy zůstaly kvůli odkazům, obsah dokumentu a zdůvodnění „proč kořen, ne skill“ vypadly. `coding.md` viz `~/Context/decisions.md` z téhož dne.
 
 ### `/slim` zeštíhluje instrukce načítané do každé session
 
@@ -1700,7 +1700,7 @@ Tím přestává platit věta záznamu ze 14. 9. 2026 o `commit-msg`, že ostatn
 
 ### Formátovač po editaci je režim `verify.sh`, ne samostatný hook
 
-**Rozhodnuto 3. 10. 2026.** Podnět z porovnání s článkem o nastavení Claude Code: styl má srovnat formátovač hned po zápisu, ne model a ne `lint` na konci odpovědi. Kontrakt dostal klíč `format` (příkaz nad jedním souborem, cestu připojí hook jako poslední argument) a `settings.json` `PostToolUse` hook `verify.sh --format` na `Edit|Write|MultiEdit`. Pravidla pro projekty drží `~/Dev/context/coding/quality.md`, *Formátování po editaci*.
+**Rozhodnuto 3. 10. 2026.** Podnět z porovnání s článkem o nastavení Claude Code: styl má srovnat formátovač hned po zápisu, ne model a ne `lint` na konci odpovědi. Kontrakt dostal klíč `format` (příkaz nad jedním souborem, cestu připojí hook jako poslední argument) a `settings.json` `PostToolUse` hook `verify.sh --format` na `Edit|Write|MultiEdit`. Pravidla pro projekty drží `~/Context/coding/quality.md`, *Formátování po editaci*.
 
 **Obě podmínky z *Dvě podmínky pro `PostToolUse` hook* platí.** Druhou – nespustit binárku z repozitáře bez souhlasu – jde splnit jen převzetím souhlasu `verify.sh --allow` včetně otisku kontraktu, protože formátovač projektu z jeho prostředí běžet musí. Proto je to **režim `verify.sh`, ne vlastní skript**: druhá kopie hledání kontraktu, souhlasu a otisku by se rozešla s první a každá z dosavadních oprav té cesty by se musela udělat dvakrát. Režim se odpojí až těsně před stavem a zámkem.
 
@@ -1714,7 +1714,7 @@ Tím přestává platit věta záznamu ze 14. 9. 2026 o `commit-msg`, že ostatn
 
 **Rozhodnuto 3. 10. 2026.** Dořešení tří zbylých podnětů z porovnání s článkem o nastavení Claude Code.
 
-**LSP je plugin, ne proměnná prostředí.** Ověřeno v oficiální dokumentaci (*Code intelligence*, *Tools reference*, *Plugins – install*): zapíná se pluginem z `claude-plugins-official` a `ENABLE_LSP_TOOL`, o kterém si nebyl jistý ani článek, dokumentace nezná. Zápis do `enabledPlugins` v projektu plugin jen zapne, každý stroj ho instaluje sám i se serverem – proto `/project` vypisuje, co má udělat uživatel, místo aby to slibovalo zápisem. Language server **nenahrazuje `typecheck`**: běží jen tam, kde je nainstalovaný, a v cloudové session vůbec, kdežto průběžná kontrola a CI musí rozhodovat stejně všude. Pravidlo v `~/Dev/context/coding/quality.md`, *Language server*.
+**LSP je plugin, ne proměnná prostředí.** Ověřeno v oficiální dokumentaci (*Code intelligence*, *Tools reference*, *Plugins – install*): zapíná se pluginem z `claude-plugins-official` a `ENABLE_LSP_TOOL`, o kterém si nebyl jistý ani článek, dokumentace nezná. Zápis do `enabledPlugins` v projektu plugin jen zapne, každý stroj ho instaluje sám i se serverem – proto `/project` vypisuje, co má udělat uživatel, místo aby to slibovalo zápisem. Language server **nenahrazuje `typecheck`**: běží jen tam, kde je nainstalovaný, a v cloudové session vůbec, kdežto průběžná kontrola a CI musí rozhodovat stejně všude. Pravidlo v `~/Context/coding/quality.md`, *Language server*.
 
 **Převzatý kód: charakterizační testy dřív než jakákoliv změna**, v pořadí podle citlivých míst ze *Bezpečnost se dělá strukturou*. `/project` v režimu `adopt` je zapíše jako první položku `todo.md` projektu, neodpracovává je – jejich obsah musí potvrdit člověk, který ví, co je dnešní chování správně. Zpětná rekonstrukce celého návrhu z kódu zůstává samostatnou položkou v `todo.md`; mapa modulů tady stačí na výběr toho, co testovat. Pravidlo v `quality.md`, *Převzatý kód bez testů*.
 
@@ -1724,7 +1724,7 @@ Tím přestává platit věta záznamu ze 14. 9. 2026 o `commit-msg`, že ostatn
 
 ### Plugin a MCP server se přidávají po prohlídce, cizí marketplace bez automatických aktualizací
 
-**Rozhodnuto 3. 10. 2026.** Při kontrole úplnosti porovnání s článkem o nastavení Claude Code zbyl jediný podnět bez náhrady: článek radí držet se oficiálních pluginů a cizí si před instalací projít. Tady to dosud pokrýval jen `bypass.md`, a to až pro hooky už zapnutých pluginů. Pravidlo je v `~/Dev/context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*; schválil ho uživatel po vysvětlení, co plugin přináší.
+**Rozhodnuto 3. 10. 2026.** Při kontrole úplnosti porovnání s článkem o nastavení Claude Code zbyl jediný podnět bez náhrady: článek radí držet se oficiálních pluginů a cizí si před instalací projít. Tady to dosud pokrýval jen `bypass.md`, a to až pro hooky už zapnutých pluginů. Pravidlo je v `~/Context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*; schválil ho uživatel po vysvětlení, co plugin přináší.
 
 **Oprava původního návrhu podle dokumentace:** návrh zněl „z oficiálního marketplace stačí vědět, co přináší“. Dokumentace (*Plugin security and trust*) výslovně říká, že jméno marketplace určuje vydavatele katalogu, ne obsah pluginu, takže prohlídka platí pro každý. Výjimka zůstala jen u aktualizací: u `claude-plugins-official` jsou automatické a přijímají se.
 
@@ -1816,13 +1816,13 @@ Sekce se nahradila `[push] default = current`. Push se chová stejně (aktuáln�
 
 ### Datum v `decisions.md` se přestěhovalo z nadpisu do prvního odstavce
 
-**Rozhodnuto 7. 10. 2026** při `/project update`. `~/.claude/standards/structure.md` žádá datum v prvním odstavci (`**Rozhodnuto D. M. RRRR.**`), protože nadpis je kotva a datum v ní se rozbije při každé opravě. Tak to měly ostatní projekty, ale `~/.claude` a `~/Dev/context` psaly `### <datum> – <název>` – a `skills/order.py` bral datum jen z řádku nadpisu, takže samotný přesun by kontrolu pořadí nad oběma soubory tiše vypnul. **Proto nejdřív `order.py`:** u nadpisu bez data bere datum z úvodního `**Rozhodnuto …**`, jinde české datum dál ignoruje; testy hlídají obojí. Pak se skriptem převedlo 115 a 154 nadpisů. Odkaz na kotvu s datem neexistoval žádný, textové odkazy na nadpisy se v `~/Dev/context/todo.md` dorovnaly.
+**Rozhodnuto 7. 10. 2026** při `/project update`. `~/.claude/standards/structure.md` žádá datum v prvním odstavci (`**Rozhodnuto D. M. RRRR.**`), protože nadpis je kotva a datum v ní se rozbije při každé opravě. Tak to měly ostatní projekty, ale `~/.claude` a `~/Context` psaly `### <datum> – <název>` – a `skills/order.py` bral datum jen z řádku nadpisu, takže samotný přesun by kontrolu pořadí nad oběma soubory tiše vypnul. **Proto nejdřív `order.py`:** u nadpisu bez data bere datum z úvodního `**Rozhodnuto …**`, jinde české datum dál ignoruje; testy hlídají obojí. Pak se skriptem převedlo 115 a 154 nadpisů. Odkaz na kotvu s datem neexistoval žádný, textové odkazy na nadpisy se v `~/Context/todo.md` dorovnaly.
 
 **Zamítnuto: výjimka pro tenhle repozitář.** Nadpisy by zůstaly s datem kvůli nástroji, jenže důvod pravidla (křehká kotva) platí i tady a výjimka by standard a jeho vlastní repozitář nechala rozejité. **Vědomě nepřevedené:** `skills/ptydepe/terms.md`, který datované nadpisy má taky, ale není `decisions.md` a pravidlo se ho netýká.
 
 ### Revize měření nedostane vlastní proces v konfigurační vrstvě
 
-**Rozhodnuto 7. 10. 2026** uživatelem při roztřídění `todo.md`. Položka *Revize měření nemá vlastníka procesu* chtěla rozhodnout, jestli výrobu analytické a implementační specifikace z revize ponese skill, sada skillů, nebo návod pro člověka. Uživatel ji zamítl celou. Audit cizího webu dál pokrývá `/audit` a znalost k revizi drží `~/Dev/context/analytics/`; výsledná dokumentace revize vzniká mimo soustavu skillů.
+**Rozhodnuto 7. 10. 2026** uživatelem při roztřídění `todo.md`. Položka *Revize měření nemá vlastníka procesu* chtěla rozhodnout, jestli výrobu analytické a implementační specifikace z revize ponese skill, sada skillů, nebo návod pro člověka. Uživatel ji zamítl celou. Audit cizího webu dál pokrývá `/audit` a znalost k revizi drží `~/Context/analytics/`; výsledná dokumentace revize vzniká mimo soustavu skillů.
 
 ### Kontrolní kroky patří do subagenta, kroky osy a nevratné kroky ne
 
@@ -1842,12 +1842,12 @@ Sekce se nahradila `[push] default = current`. Push se chová stejně (aktuáln�
 
 **Rozhodnuto 7. 10. 2026** přesunem deníku z `todo.md`, kde ležel uvnitř položky *Pravidlo Commituj jmenované cesty, ne `-A` se porušuje i poté, co vzniklo*; položka tam zůstává se zadáním. Zamítnutí hooku padlo 7. 9. 2026.
 
-Zapsalo se 3. 9. 2026 do `~/.claude/standards/rules.md` právě proto, že souběžná session dvakrát smetla cizí rozpracovanou práci. **6. 9. 2026 se to stalo potřetí** – commit `3a22221` v `~/.claude` zatáhl šest rozpracovaných skriptů `skills/compose/scripts/*.py` z druhé session, která je commitovala až o deset minut později. Session, která to udělala, si toho navíc nevšimla a v shrnutí tvrdila opak. **7. 9. 2026 počtvrté a v obou repozitářích naráz** – commity `1222311` (`~/.claude`) a `a651d4e` (`~/Dev/context`) sebraly rozpracovanou práci session, která zaváděla `backlog.md`: sedm souborů včetně `tests/test_skills.py` a `structure/structure.md`. Obsah se neztratil a průběžná kontrola nad ním prošla, ale sedí pod zprávou o typografii. **Poškozená session si toho tentokrát všimla** při vlastním commitu (`nothing to commit, working tree clean`) – to je zatím jediná detekce, kterou máme. **Popáté téhož dne, tentokrát bez škody:** commit `50e1401` v `~/.claude` použil `-A`, ale zabalil jen vlastních dvanáct souborů, protože v repozitáři zrovna nic cizího rozpracovaného neleželo. Session, která to udělala, si toho všimla až zpětně při úklidu. **Je to nejpoučnější z pěti výskytů:** ukazuje, že absence škody není doklad správného postupu – rozhodovala shoda okolností, ne to, co se zadalo. Čtyři předchozí výskyty se od tohohle liší jen tím, že v repozitáři někdo souběžně pracoval.
+Zapsalo se 3. 9. 2026 do `~/.claude/standards/rules.md` právě proto, že souběžná session dvakrát smetla cizí rozpracovanou práci. **6. 9. 2026 se to stalo potřetí** – commit `3a22221` v `~/.claude` zatáhl šest rozpracovaných skriptů `skills/compose/scripts/*.py` z druhé session, která je commitovala až o deset minut později. Session, která to udělala, si toho navíc nevšimla a v shrnutí tvrdila opak. **7. 9. 2026 počtvrté a v obou repozitářích naráz** – commity `1222311` (`~/.claude`) a `a651d4e` (`~/Context`) sebraly rozpracovanou práci session, která zaváděla `backlog.md`: sedm souborů včetně `tests/test_skills.py` a `structure/structure.md`. Obsah se neztratil a průběžná kontrola nad ním prošla, ale sedí pod zprávou o typografii. **Poškozená session si toho tentokrát všimla** při vlastním commitu (`nothing to commit, working tree clean`) – to je zatím jediná detekce, kterou máme. **Popáté téhož dne, tentokrát bez škody:** commit `50e1401` v `~/.claude` použil `-A`, ale zabalil jen vlastních dvanáct souborů, protože v repozitáři zrovna nic cizího rozpracovaného neleželo. Session, která to udělala, si toho všimla až zpětně při úklidu. **Je to nejpoučnější z pěti výskytů:** ukazuje, že absence škody není doklad správného postupu – rozhodovala shoda okolností, ne to, co se zadalo. Čtyři předchozí výskyty se od tohohle liší jen tím, že v repozitáři někdo souběžně pracoval.
 
 
-**10. 9. 2026 přibyl šestý výskyt, a ten je jiný než předchozích pět: pravidlo se neporušilo, jen nestačilo.** Commit `7681ec6` v `~/Dev/context` (session přesouvající životní cyklus do `lifecycle.md`) zatáhl rozepsané změny session, která uklízela po rozdělení `ptydepe.md` – jenže obě psaly do **téhož souboru** `decisions.md`, každá do své sekce. Jmenování cest tady nepomůže z principu: `git add decisions.md` sebere celý soubor včetně cizích řádků. Obsah se neztratil, ale odůvodnění zamítnutého testu a oprava vycucaného počtu hesel sedí pod commit message o životním cyklu.
+**10. 9. 2026 přibyl šestý výskyt, a ten je jiný než předchozích pět: pravidlo se neporušilo, jen nestačilo.** Commit `7681ec6` v `~/Context` (session přesouvající životní cyklus do `lifecycle.md`) zatáhl rozepsané změny session, která uklízela po rozdělení `ptydepe.md` – jenže obě psaly do **téhož souboru** `decisions.md`, každá do své sekce. Jmenování cest tady nepomůže z principu: `git add decisions.md` sebere celý soubor včetně cizích řádků. Obsah se neztratil, ale odůvodnění zamítnutého testu a oprava vycucaného počtu hesel sedí pod commit message o životním cyklu.
 
-**11. 9. 2026 přibyl sedmý výskyt a je zase jiný: `git add <directory>`.** Session běžící `/consistency full` nad `~/Dev/context` použila `git add business`, čímž do commitu `7ebc203` zatáhla rozpracovanou práci souběžné session na `/invoicing` – katalog zdrojů pro `recover`, měření hranice session logů a nové pravidlo o vyplňování polí. **Pravidlo tenhle tvar nejmenuje**: zakazuje `-A`, `.` a `-a`, kdežto adresář vypadá jako jmenovaná cesta, a přitom nese totéž riziko.
+**11. 9. 2026 přibyl sedmý výskyt a je zase jiný: `git add <directory>`.** Session běžící `/consistency full` nad `~/Context` použila `git add business`, čímž do commitu `7ebc203` zatáhla rozpracovanou práci souběžné session na `/invoicing` – katalog zdrojů pro `recover`, měření hranice session logů a nové pravidlo o vyplňování polí. **Pravidlo tenhle tvar nejmenuje**: zakazuje `-A`, `.` a `-a`, kdežto adresář vypadá jako jmenovaná cesta, a přitom nese totéž riziko.
 
 **15. 9. 2026 přibyl osmý výskyt a přinesl druhý způsob detekce.** Commit `82fb4ce` v `~/.claude` („Třetí stupeň závažnosti je NÍZKÉ a platí i pro /audit“) zatáhl odstavec o `/depot`, který do kořenového `README.md` psala souběžná session zakládající ten skill. Obsah se neztratil, rozešlo se jen zdůvodnění: `git blame` nad tím odstavcem ukáže commit o závažnosti nálezů. **Poškozená session si toho všimla až při vlastním commitu**, kdy `README.md` chyběl ve výpisu `git status` – to je po detekci z 7. 9. (`nothing to commit, working tree clean`) druhý doložený způsob, jak se to vůbec pozná, a oba fungují až zpětně a náhodou.
 
@@ -1872,7 +1872,7 @@ Zapsalo se 3. 9. 2026 do `~/.claude/standards/rules.md` právě proto, že soub�
 - **Průchody životním cyklem** → `standards/lifecycle.md`, *Záznam průchodu v `done.md`* – zapisují je jen kroky cyklu, které `lifecycle.md` načítají.
 - **Co proklouzlo** – smazáno jako duplicita, celé to drží `/release`.
 - **Běhový stav skillů** → `skills/skills.md`, *Běhový stav* – je to norma pro autora skillu.
-- **Testy** → `~/Dev/context/coding/quality.md`, *Vrstvy kontroly* – uplatní se při zakládání kontrol, kdy se `quality.md` načítá u každého projektu, a polovinu už tam nesl odstavec o nevývojářských projektech.
+- **Testy** → `~/Context/coding/quality.md`, *Vrstvy kontroly* – uplatní se při zakládání kontrol, kdy se `quality.md` načítá u každého projektu, a polovinu už tam nesl odstavec o nevývojářských projektech.
 
 Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done.md`) se zkrátil na pravidla bez výkladu. Vypadly popisy toho, jak do backlogu zapisují `/implement` a `/end` (drží je ty skilly), výjimka pro dorovnání staršího projektu (drží ji `skills/project/standard.md`) a věta „backlog není hřbitov“. Čtenář bez kontextu porovnal starou verzi s novou a se všemi cíli a našel devět zúžených pravidel; všechna se vrátila. `structure.md` 39 819 → 11 583 znaků.
 
@@ -1993,6 +1993,8 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 **Revize 11. 10. 2026: samostatný skill `/client` nevznikne, klienta zakládá `/project` a složka se vrací na `~/Projekty`.** Klientská složka je repozitář s `CLAUDE.md`, gitem, autocommitem a `docs/`, tedy přesně to, co `/project` zakládá, a jeho režimy `create`, `adopt` a `update` sedí na klienta beze změny. Samostatný skill by je zdvojil a oba by se časem rozešly. Klient je proto **podmíněná větev `/project` podle umístění**: adresář přímo pod `~/Projekty` je klient a k běžnému založení přibude vyplnění profilu a `invoicing.md` podle koster a odkaz v `~/Context/organizations/` a `business/invoicing/`; adresář o úroveň níž je podprojekt, který profil neimportuje, protože ho dědí z rodičovského `CLAUDE.md`. Co se do klientských souborů píše, drží dál kostry v `~/Context`, `/project` je jen volá. Se zrušením `/client` padl důvod jména `~/Klienti` a uživatel zvolil `~/Projekty` kvůli shodě s adresou `projekty@…`. **Pojem zůstává „klient“ (klientská složka), `Projekty` je jen jméno adresáře**; „projekt“ dál znamená cokoliv, co zakládá `/project`. Zamítnuto `~/Klienti` s odůvodněním, že slovo „projekt“ ponese tři významy; uživatel to vědomě přijal.
 
 **Klient znamená organizaci, pro kterou se pracuje, ať platí, nebo ne** (rozhodnuto 11. 10. 2026). Po rozšíření kritéria na neplacenou práci by se pojem dal číst jako „ten, kdo platí“; uživatel ho přesto ponechal v širším významu. Zamítnuto „organizace“ (shoda s `context/organizations/`, ale uživatel chce slovo klient) a „zadavatel“ (druhé jméno vedle zavedeného). Fakturační význam nese `invoicing.md`, který má jen fakturovaný klient.
+
+**Provedení přesunu do `~/Context` (11. 10. 2026).** Adresář se přesunul a odkazy přepsaly ve všech repozitářích v `~/Dev` včetně worktree větví, v `~/.claude` a v `~/Depot`; složky historie session dostaly nová jména. **Symlink `~/Dev/context` vědomě nevznikl:** zapomenutý odkaz má selhat viditelně, ne tiše dál fungovat. **Vědomě nepřepsáno:** archiv textů v `context/archive/` (doslovné texty), reflogy, transcripty session a `~/.claude.json`, který si harness přepisuje sám za běhu. Větve bez vychekoutovaného worktree nesou starou cestu dál a dostanou novou až při sloučení s hlavní větví. **Poučení pro měření:** `grep` je v shellu Claude Code obalený `ugrep`em, který respektuje `.gitignore`, kdežto `/usr/bin/grep` započítá i ignorované adresáře harnessu – rozsah se proto měřil přes `git grep --untracked` po pracovních stromech.
 
 ### Přerušení průchodu frontou jde vždycky přes `/break`, ne přes běhový soubor
 

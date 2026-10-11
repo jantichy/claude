@@ -11,9 +11,9 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
 - **Projektový `CLAUDE.md` je tenhle soubor, ne kořenový `~/.claude/CLAUDE.md`** – i blok metadat, který `~/.claude/standards/structure.md` jinak čeká v kořeni. Kořenový soubor je uživatelský a rozbaluje se do každé session v každém projektu – metadata ani sekce tohohle repozitáře tam nepatří, mátly by v cizím projektu. **Platí to pro každý skill, který zapisuje do „projektového `CLAUDE.md`“** (`/project`, `/autocommit`, `/review`, `/consistency`): v tomhle repozitáři najde oba soubory a zapisovat smí jen sem.
 - **`/attack`, `/release` ani `/evaluate` se tu nikdy nepouštějí.** Repozitář je konfigurace, ne aplikace – není co spustit, kam nasadit, a tedy ani žádný provoz, který by šlo vyhodnotit. **Posledním krokem osy, na který se tu dojde, je `/implement`**; kontrolní kroky se pouštějí dál a běh uzavírá `/end` a po něm `/merge`, stojí-li práce na větvi – spouštěčem obou není pozice v cyklu, ale konec session, respektive pokyn uživatele. Zapsáno schválně, ne odvozeno (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*).
-- **Repozitář je veřejný, takže `docs/todo.md`, `docs/backlog.md`, `docs/done.md` a `docs/decisions.md` píšeš pro cizí oči.** Do konce září 2026 ležely v soukromém `~/Dev/context/` právě proto; od 20. 9. 2026 jsou tady a tu ochranu musí nahradit pravidlo. **Hranice vede mezi strukturou a obsahem.** Struktura veřejná je a `README.md` ji sám píše – že analytické know-how leží v `context/analytics/`, autorovy články v `context/archive/` a jeho styl psaní v `context/compose/`, se smí napsat a odkazovat se na to. **Konkrétní obsah veřejný není:** jméno klienta nebo organizace (tedy i to, že `context/organizations/` drží zrovna tenhle profil), sazba a obchodní údaj, osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu nebo domény a know-how, které se prodává. **Eventoid a artihub jsou autorovy vlastní projekty** a jmenovat se smějí.
+- **Repozitář je veřejný, takže `docs/todo.md`, `docs/backlog.md`, `docs/done.md` a `docs/decisions.md` píšeš pro cizí oči.** Do konce září 2026 ležely v soukromém `~/Context/` právě proto; od 20. 9. 2026 jsou tady a tu ochranu musí nahradit pravidlo. **Hranice vede mezi strukturou a obsahem.** Struktura veřejná je a `README.md` ji sám píše – že analytické know-how leží v `context/analytics/`, autorovy články v `context/archive/` a jeho styl psaní v `context/compose/`, se smí napsat a odkazovat se na to. **Konkrétní obsah veřejný není:** jméno klienta nebo organizace (tedy i to, že `context/organizations/` drží zrovna tenhle profil), sazba a obchodní údaj, osobní údaj, detail přístupu ke klientskému systému, jméno klientského projektu nebo domény a know-how, které se prodává. **Eventoid a artihub jsou autorovy vlastní projekty** a jmenovat se smějí.
 
-  **Platí to na každý zápis, ne na ten první.** Úkol vzniklý při práci pro klienta se zapisuje tak, aby popsal *co* se má v konfigurační vrstvě udělat, ne *u koho* se to ukázalo: „u jednoho projektu chyběl kontrakt příkazů“, ne jméno toho projektu. Potřebuje-li položka konkrétní klientský kontext, aby dávala smysl, patří celá do `~/Dev/context/todo.md` – tam se nic nezveřejňuje.
+  **Platí to na každý zápis, ne na ten první.** Úkol vzniklý při práci pro klienta se zapisuje tak, aby popsal *co* se má v konfigurační vrstvě udělat, ne *u koho* se to ukázalo: „u jednoho projektu chyběl kontrakt příkazů“, ne jméno toho projektu. Potřebuje-li položka konkrétní klientský kontext, aby dávala smysl, patří celá do `~/Context/todo.md` – tam se nic nezveřejňuje.
 
 ## Struktura a dokumentace
 
@@ -46,7 +46,7 @@ Projektové instrukce pro práci **v tomhle repozitáři**. Načítají se jen t
 2. Platí obecně pro skilly? → `~/.claude/skills/skills.md`
 3. Popisuje **rozhraní kroku životního cyklu**? → `~/.claude/standards/lifecycle.md`; obecné pravidlo o přeskakování zůstává v `~/.claude/standards/rules.md`
 4. Jmenuje konkrétní skill nebo popisuje jeho vnitřek? → do toho skillu
-5. Platí jen při určité činnosti – zjišťování z dat (`~/.claude/standards/evidence.md`), delegaci na agenty (`~/.claude/standards/delegation.md`), kódu, webu, textu, vizuálu či měření (doména v `~/Dev/context/`)? → tam, a v `~/.claude/standards/rules.md` nanejvýš jednořádkový spouštěč
+5. Platí jen při určité činnosti – zjišťování z dat (`~/.claude/standards/evidence.md`), delegaci na agenty (`~/.claude/standards/delegation.md`), kódu, webu, textu, vizuálu či měření (doména v `~/Context/`)? → tam, a v `~/.claude/standards/rules.md` nanejvýš jednořádkový spouštěč
 6. Platí jen v jednom repozitáři? → jeho `CLAUDE.md`, *Výjimky z obecných pravidel*
 7. Nic z toho → `~/.claude/standards/rules.md`
 
@@ -62,7 +62,7 @@ Neukládej nic do trvalé Memory (`~/.claude/projects/.../memory/`). Vše, na č
 
 ## Kontrakt příkazů
 
-Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
+Kontrakt příkazů (`~/Context/coding/quality.md`). Průběžná kontrola ho tady najde v `.claude/CLAUDE.md` a příkazy spouští v kořeni repozitáře.
 
 - typecheck: swiftc -typecheck -warnings-as-errors skills/*/*.swift
 - lint: shellcheck -x --severity=info hooks/*.sh statusline/*.sh .github/*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' hooks/*.py .github/*.py skills/*.py skills/*/*.py skills/*/*/*.py tests/*.py
@@ -75,9 +75,9 @@ Kontrakt příkazů (`~/Dev/context/coding/quality.md`). Průběžná kontrola h
 - mutation: -
 - dev: -
 
-**`format` filtruje příponu, protože `ruff format` bere každý soubor zadaný cestou jako Python** – JSON i bloky kódu v Markdownu by přepsal a nad shellem by spadl (`~/Dev/context/coding/quality.md`, *Formátování po editaci*). `--isolated` drží týž styl jako `lint`.
+**`format` filtruje příponu, protože `ruff format` bere každý soubor zadaný cestou jako Python** – JSON i bloky kódu v Markdownu by přepsal a nad shellem by spadl (`~/Context/coding/quality.md`, *Formátování po editaci*). `--isolated` drží týž styl jako `lint`.
 
-**Pomlčky jsou rozhodnutí, ne díra.** `dev` mezi nimi stojí schválně: `/attack` se tu nikdy nepouští (viz *Výjimky z obecných pravidel* výš), takže není co zvedat – a chybějící klíč se od vědomé pomlčky nepozná. Repozitář nemá manifest závislostí, nic se z něj nebuildí ani nenasazuje a není tu aplikace, kterou by šlo projít; `coverage` a `mutation` nad sadou, která z devadesáti procent testuje Markdown, měří délku textu, ne sílu testů. Bez pomlčky by je `/review` i CI hlásily jako nezkontrolované kroky – tedy jako trvalý šum místo informace (`~/Dev/context/coding/quality.md`, *Kontrakt příkazů*).
+**Pomlčky jsou rozhodnutí, ne díra.** `dev` mezi nimi stojí schválně: `/attack` se tu nikdy nepouští (viz *Výjimky z obecných pravidel* výš), takže není co zvedat – a chybějící klíč se od vědomé pomlčky nepozná. Repozitář nemá manifest závislostí, nic se z něj nebuildí ani nenasazuje a není tu aplikace, kterou by šlo projít; `coverage` a `mutation` nad sadou, která z devadesáti procent testuje Markdown, měří délku textu, ne sílu testů. Bez pomlčky by je `/review` i CI hlásily jako nezkontrolované kroky – tedy jako trvalý šum místo informace (`~/Context/coding/quality.md`, *Kontrakt příkazů*).
 
 **Co která vrstva hlídá, proč jsou prahy tam, kde jsou, a proč se nesnižují, drží [`tests/README.md`](../tests/README.md).** Sáhni tam, než změníš některý příkaz výš nebo než začneš snižovat práh, který překáží; při běžné práci ho nepotřebuješ. Změna příkazu v kontraktu si navíc vyžádá nový souhlas průběžné kontroly z terminálu, takže práh nejde snížit tiše.
 

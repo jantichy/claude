@@ -522,7 +522,7 @@ ANCHOR_PATTERN = (
     r"`(~/(?:\.claude|Dev)/[^`\s]+\.md)`,\s*(?:kapitola\s+|sekce\s+)?"
     r"\*([^*\n]{3,80})\*"
 )
-KNOWLEDGE_BASE = Path.home() / "Dev" / "context"
+KNOWLEDGE_BASE = Path.home() / "Context"
 
 
 def link_target(ref: str):

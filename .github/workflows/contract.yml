@@ -95,7 +95,7 @@ jobs:
       - name: Tajemství v repu
         # Binárka, ne `gitleaks-action`: ta skenuje jen rozsah commitů push
         # události a nad mělkým klonem neprohlédne nic, přitom hlásí „no leaks
-        # found“ (`~/Dev/context/coding/quality.md`, *Měřidlo musí odlišit vlastní
+        # found“ (`~/Context/coding/quality.md`, *Měřidlo musí odlišit vlastní
         # selhání od nálezu*). Binárka prohledává celou historii. Výjimky si
         # projekt vede v `.gitleaksignore` po otisku nálezu.
         env:

@@ -31,7 +31,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Automatická kontrola nástrojem, která práci zastaví, dokud neprojde:** `typecheck`, `lint`, `test`, audit závislostí, hledání tajemství, mutation testing. Nula tokenů, stejný výsledek dvakrát. Kde je z kontextu jasné, o co jde, zkracuje se na prosté **„kontrola“**; přívlastek se opakuje tam, kde by hrozila záměna s kontrolou, která jen hlásí.
 
-**Není to** posouzení modelem (`/review`) ani explorativní útok (`/attack`) – to jsou podle `~/Dev/context/coding/quality.md`, *Tři druhy záruk*, dva **jiné** druhy záruky. Není to ani ověřovatel nálezů uvnitř `/review` a nejsou to závěrečné věty skillu, i když obojí taky něco zastavuje.
+**Není to** posouzení modelem (`/review`) ani explorativní útok (`/attack`) – to jsou podle `~/Context/coding/quality.md`, *Tři druhy záruk*, dva **jiné** druhy záruky. Není to ani ověřovatel nálezů uvnitř `/review` a nejsou to závěrečné věty skillu, i když obojí taky něco zastavuje.
 
 **Nahrazuje dřívější „bránu“** (2026-09-07). Anglicky *quality gate* zavedený termín je, ale česká „brána“ ne – čtenář si pod ní představí vrata a potřebuje k ní slovník. Zbylá „brána“ v souborech je proto vždycky **platební brána** a s tímhle pojmem nemá nic společného.
 
@@ -39,7 +39,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### cesta k datům
 
-**Jediná funkce, přes kterou aplikace sahá na databázi** – otevře transakci, nastaví v ní kontext, na kterém stojí izolace dat, a předá handle; doména připojení nedostane. Popsaná je v `~/Dev/context/coding/architecture.md`, *Jediná cesta k datům*.
+**Jediná funkce, přes kterou aplikace sahá na databázi** – otevře transakci, nastaví v ní kontext, na kterém stojí izolace dat, a předá handle; doména připojení nedostane. Popsaná je v `~/Context/coding/architecture.md`, *Jediná cesta k datům*.
 
 **Nahrazuje „bránu k datům“** (2026-09-14). Ta vznikla téhož dne o pět hodin dřív při psaní standardu architektury a byla to **třetí** obsazení slova „brána“ vedle [blokující kontroly](#blokující-kontrola) a platební brány – přesně ta kolize, kterou heslo o blokující kontrole zakazuje větou, že zbylá „brána“ je vždycky platební. Rozhodnuto přejmenovat, ne přidávat druhou výjimku: slovo se třemi významy přestává rozřešovat význam samo a u čtvrtého užití by se výjimka dopisovala zase.
 
@@ -53,7 +53,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Úzkost je celý smysl toho jména.** Proto ne „expert“ – ten slibuje hloubku a autoritu, kterou subagent s promptem nemá, kdežto na panelu záleží právě to, že každý kouká jen na jedno.
 
-**Nahrazuje dřívější „role“ a „panel rolí“** (2026-09-07). „Role“ je v konfiguraci obsazená autorizací – kdo co smí – v `~/Dev/context/coding/coding.md` i ve `web/admin.md`, takže si čtenář pod „panelem rolí“ představil oprávnění uživatelů.
+**Nahrazuje dřívější „role“ a „panel rolí“** (2026-09-07). „Role“ je v konfiguraci obsazená autorizací – kdo co smí – v `~/Context/coding/coding.md` i ve `web/admin.md`, takže si čtenář pod „panelem rolí“ představil oprávnění uživatelů.
 
 **Dva skilly mají vlastní jméno a nechávají si ho**, protože nese sloveso: `/oponent` má **oponenty** (kritizují) a `/attack` **útočníky** (rozbíjejí). Obecně se o obou dál mluvit jako o specialistech smí; `/review` vlastní jméno nemá a používá jen to obecné.
 
@@ -103,7 +103,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 **Text pro člověka zvenčí, na který se posílá odkaz, když se skill někomu doporučuje.** Tvar drží `~/.claude/skills/skills.md`, *README skillu*.
 
-**Neříkej mu „vizitka“** (2026-09-07). „README“ je zavedené jméno přesně pro tenhle soubor a metafora nic nepřidávala – že je psaný pro člověka zvenčí, stojí v normě vedle. Česká „vizitka“ je navíc obsazená: znamená jednostránkový firemní web, a v tom významu v `~/Dev/context` dál zůstává.
+**Neříkej mu „vizitka“** (2026-09-07). „README“ je zavedené jméno přesně pro tenhle soubor a metafora nic nepřidávala – že je psaný pro člověka zvenčí, stojí v normě vedle. Česká „vizitka“ je navíc obsazená: znamená jednostránkový firemní web, a v tom významu v `~/Context` dál zůstává.
 
 ### průzkumník
 
@@ -223,7 +223,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### vata
 
-**Text, který nic nepřidává:** hodnotící adjektiva („úžasný“, „skvělý“), zdvořilostní obraty, motivační moudra, úvod o tom, že autor chce něco sdělit. Termín i katalog konkrétních případů drží `~/Dev/context/text/text.md`, *Vata a zakázané obraty*.
+**Text, který nic nepřidává:** hodnotící adjektiva („úžasný“, „skvělý“), zdvořilostní obraty, motivační moudra, úvod o tom, že autor chce něco sdělit. Termín i katalog konkrétních případů drží `~/Context/text/text.md`, *Vata a zakázané obraty*.
 
 **Neříkej tomu „voda“** (2026-09-07). V češtině to zavedené není – je to nejspíš kalk z ruského *вода*. „Vata“ je zavedená a stojí v redakčním standardu jako název sekce, takže druhé jméno pro tutéž věc jen tříští termín.
 
@@ -256,9 +256,9 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 **Identifikátory v kódu zůstávají anglicky** – funkce `frontmatter()` a třída `SkillFrontmatter` v `~/.claude/tests/test_skills.py`. Kód se podle `~/.claude/standards/rules.md` píše anglicky, takže je to táž situace jako `preflight.md` u [přípravy](#příprava).
 
-**Homonymum se nechává vědomě:** HTTP hlavička, hlavička tabulky (`~/Dev/context/web/admin.md`) i hlavička souboru jako úvodní odstavec pro čtenáře (`~/Dev/context/decisions.md`, *Hlavička provozního souboru smí opakovat pravidlo z `CLAUDE.md`*) znamenají něco jiného. Rozlišuje je přívlastek a doména – táž obrana jako u „platební brány“ proti [blokující kontrole](#blokující-kontrola). **Pozor, jak snadno se to splete:** `/autocommit` stál v prvním znění tohohle hesla mezi doklady zavedenosti, ačkoliv jeho jediná „hlavička“ je ta od projektového `CLAUDE.md`, tedy právě to vyloučené homonymum. Našel to čtenář bez kontextu.
+**Homonymum se nechává vědomě:** HTTP hlavička, hlavička tabulky (`~/Context/web/admin.md`) i hlavička souboru jako úvodní odstavec pro čtenáře (`~/Context/decisions.md`, *Hlavička provozního souboru smí opakovat pravidlo z `CLAUDE.md`*) znamenají něco jiného. Rozlišuje je přívlastek a doména – táž obrana jako u „platební brány“ proti [blokující kontrole](#blokující-kontrola). **Pozor, jak snadno se to splete:** `/autocommit` stál v prvním znění tohohle hesla mezi doklady zavedenosti, ačkoliv jeho jediná „hlavička“ je ta od projektového `CLAUDE.md`, tedy právě to vyloučené homonymum. Našel to čtenář bez kontextu.
 
-**Dva výskyty starého tvaru se vědomě nepřepsaly.** `~/Dev/context/compose/_superpowers/plans/2026-08-12-compose.md` je datovaný plán z 12. 8. 2026, tedy doklad stavu, ne pravidlo – přepsat ho by falšovalo záznam. A `~/Dev/mediowiki/…/geshi/latex.php` je cizí vendor kód, kde `frontmatter` znamená klíčové slovo LaTeXu.
+**Dva výskyty starého tvaru se vědomě nepřepsaly.** `~/Context/compose/_superpowers/plans/2026-08-12-compose.md` je datovaný plán z 12. 8. 2026, tedy doklad stavu, ne pravidlo – přepsat ho by falšovalo záznam. A `~/Dev/mediowiki/…/geshi/latex.php` je cizí vendor kód, kde `frontmatter` znamená klíčové slovo LaTeXu.
 
 **Zamítnuto – „YAML hlavička“:** přesnější, ale ve skloňovaných vazbách zbytečně dlouhé a formát je z kontextu zřejmý. Zůstává použitelné tam, kde by jinak nebylo poznat, o kterou hlavičku jde; tak to má docstring funkce `frontmatter()`. **Zamítnuto – „záhlaví“:** česky obsazené záhlavím stránky a tabulky, vyměnilo by jednu záměnu za druhou.
 
@@ -284,11 +284,11 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 **Text u editovaného objektu v rozhraní, který vysvětluje, k čemu objekt je, kdy se uplatní a co v něm nesmí chybět.** V rezervačním systému stojí u editoru šablon jako *nápověda k mailingu*: k čemu mailing je, v jaké situaci a v jakém kroku životního cyklu partie odchází, co v textu nesmí chybět a jaké placeholdery a podmínky jsou v jeho kontextu. Váže se k mailingu, ne k šabloně, protože je stejná pro všechny šablony téhož mailingu na všech úrovních dědění.
 
-**Nahrazuje dřívější „rodný list“** (2026-09-17). Metafora z návrhu mailingů v rezervačním systému, jinde se nevyskytovala; kdy a kdo ji poprvé napsal, se nedohledalo. Anglicky by to bylo *help text* nebo *usage notes*, česky je „rodný list“ matriční doklad a v rozhraní mu bez vysvětlení nikdo nerozumí. Protějšek je zavedený ve standardu administrace: `~/Dev/context/web/admin.md`, *Efektivita pro experty*, **„Nápověda v kontextu**, ne příručka bokem“.
+**Nahrazuje dřívější „rodný list“** (2026-09-17). Metafora z návrhu mailingů v rezervačním systému, jinde se nevyskytovala; kdy a kdo ji poprvé napsal, se nedohledalo. Anglicky by to bylo *help text* nebo *usage notes*, česky je „rodný list“ matriční doklad a v rozhraní mu bez vysvětlení nikdo nerozumí. Protějšek je zavedený ve standardu administrace: `~/Context/web/admin.md`, *Efektivita pro experty*, **„Nápověda v kontextu**, ne příručka bokem“.
 
 **Zamítnuto:** *popis mailingu* – zní jako datové pole a plete se s katalogem mailingů, který mailingy popisuje pro vývojáře, ne pro pořadatele; *průvodní text* – zní jako text, který odchází se mailem k zákazníkovi; *doložení* – znamená důkaz nebo podklad k tvrzení a v pravidlech se tak používá („doloženo“, „dolož příkazem“), kdežto nápověda nic nedokazuje.
 
-**Kde starý tvar vědomě zůstává:** `~/Dev/context/archive/twitter/Twitter 2017.md` – matriční rodný list, jiný význam a publikovaný text. V rezervacích zůstal na `main` a ve větvi `docs/stranky`, dokud do nich nedorazí větev `docs/podminky`, kde se nahradil.
+**Kde starý tvar vědomě zůstává:** `~/Context/archive/twitter/Twitter 2017.md` – matriční rodný list, jiný význam a publikovaný text. V rezervacích zůstal na `main` a ve větvi `docs/stranky`, dokud do nich nedorazí větev `docs/podminky`, kde se nahradil.
 
 ### prompt, zpráva uživatele
 
@@ -302,7 +302,7 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 ### referenční datum, počátek lhůty
 
-**Referenční datum je datum, od kterého se počítá relativně zadané datum** – cena nebo konec prodeje zadaný jako „2 dny před začátkem akce“ si pamatuje, že se vztahuje k začátku akce, a posune se s ní. Takové ceně se říká **ceník vázaný na termín akce**. **Počátek lhůty** je den, od kterého běží lhůta (DUZP, konec akce). Používá to hlavně dokumentace eventoidu a `~/Dev/context/coding/modeling.md`, *Relativní hodnoty ukládej tak, aby přežily posun referenčního data*.
+**Referenční datum je datum, od kterého se počítá relativně zadané datum** – cena nebo konec prodeje zadaný jako „2 dny před začátkem akce“ si pamatuje, že se vztahuje k začátku akce, a posune se s ní. Takové ceně se říká **ceník vázaný na termín akce**. **Počátek lhůty** je den, od kterého běží lhůta (DUZP, konec akce). Používá to hlavně dokumentace eventoidu a `~/Context/coding/modeling.md`, *Relativní hodnoty ukládej tak, aby přežily posun referenčního data*.
 
 **Nahrazuje dřívější „kotvu“, „kotvený ceník“, „kotvu lhůty“** (2026-10-05) – metafora, kterou uživatel nechápal.
 
@@ -336,7 +336,7 @@ Revize 5. 10. 2026 našla vedle výše uvedených ještě řadu přenesených v�
 
 ### doménové znalosti, pravidla, metodika
 
-**Soubory v `~/Dev/context/` se jmenují domény a jejich obsah doménové znalosti** – `coding/`, `web/`, `text/`, `design/`, `analytics/` a další, které si projekt importuje nebo načítá podle činnosti. Mluví-li věta o jednom konkrétním souboru jako o předpisu, je to **pravidla** („redakční pravidla“, „pravidla administrace“, „podle pravidel `copy.md`“). Stojí-li proti **korpusu** (fakta o Honzovi, organizacích, školeních), je to **metodika**: „Je to korpus, ne metodika.“
+**Soubory v `~/Context/` se jmenují domény a jejich obsah doménové znalosti** – `coding/`, `web/`, `text/`, `design/`, `analytics/` a další, které si projekt importuje nebo načítá podle činnosti. Mluví-li věta o jednom konkrétním souboru jako o předpisu, je to **pravidla** („redakční pravidla“, „pravidla administrace“, „podle pravidel `copy.md`“). Stojí-li proti **korpusu** (fakta o Honzovi, organizacích, školeních), je to **metodika**: „Je to korpus, ne metodika.“
 
 **Nahrazuje dřívější „standard, standardy“** (2026-10-07). Rozhodl uživatel: o těch souborech se vždycky mluví jako o doménách a doménových znalostech, „standard“ byl druhý název pro tutéž věc. Navíc se týž den adresář pravidel práce přejmenoval z `~/.claude/rules/` na `~/.claude/standards/`, takže „standard“ by jinak znamenal dvě různé vrstvy. Zvoleno „pravidla“ pro nadpisy domén před „metodikou“ (u krátkých pravidel typografie zní nadneseně) a před nadpisy bez druhového slova (pracnější, každý soubor jinak). Proti korpusu zvolena „metodika“, ne „doménová znalost“ – i korpus leží v doméně a `brand/` se načítá jako doménová znalost, takže „korpus, ne doménová znalost“ by nebyla pravda.
 
@@ -344,7 +344,7 @@ Revize 5. 10. 2026 našla vedle výše uvedených ještě řadu přenesených v�
 
 ## Ponechané termíny
 
-Rozhodnutí, že se termín **nemění**. Do tabulky v `~/.claude/standards/ptydepe.md` nepatří – ta říká, co se čím nahrazuje –, ale hledají se tady, spolu se zbytkem rozvahy o termínech. Přestěhováno z `~/Dev/context/decisions.md`, kde do té doby leželo odděleně od nahrazených termínů: osm položek 10. 9. 2026 ze sekce `## Claude`, `guard` a `stopa práce` až 11. 9., protože leží v doménových sekcích a první průchod je minul.
+Rozhodnutí, že se termín **nemění**. Do tabulky v `~/.claude/standards/ptydepe.md` nepatří – ta říká, co se čím nahrazuje –, ale hledají se tady, spolu se zbytkem rozvahy o termínech. Přestěhováno z `~/Context/decisions.md`, kde do té doby leželo odděleně od nahrazených termínů: osm položek 10. 9. 2026 ze sekce `## Claude`, `guard` a `stopa práce` až 11. 9., protože leží v doménových sekcích a první průchod je minul.
 
 ### 2026-09-07 – Ponechané termíny z revize: heuristika, osa, vektor útoku
 
@@ -396,17 +396,17 @@ Nejčetnější kandidát z běhu `/ptydepe suggest`: 315 výskytů v konfigura�
 
 **Rozhodnutí:** ponechat. **Tak tu věc pojmenovává samo Claude Code** – je to termín nástroje, ne převzatý ústřel, a stejnou logikou tu zůstávají `worktree` nebo `hook`. Přejmenovat ho na „sezení“ by znamenalo, že konfigurace mluví jinak než nástroj, o kterém je.
 
-**Zamítnuto – „sezení“:** skloňuje se hezky, ale rozešlo by se s dokumentací i rozhraním Claude Code. **Zamítnuto – „relace“:** je to zavedený překlad pro *session* v HTTP a webové analytice, takže by kolidovalo se `~/Dev/context/analytics/`, kde `session` znamená návštěvu a používá se 17×.
+**Zamítnuto – „sezení“:** skloňuje se hezky, ale rozešlo by se s dokumentací i rozhraním Claude Code. **Zamítnuto – „relace“:** je to zavedený překlad pro *session* v HTTP a webové analytice, takže by kolidovalo se `~/Context/analytics/`, kde `session` znamená návštěvu a používá se 17×.
 
 **Homonymum se nechává vědomě:** v `~/.claude` je *session* konverzace s Claudem, v `analytics/` návštěva na webu. Rozlišuje je doména, stejně jako u „platební brány“.
 
 ### 2026-09-07 – Termín „soustava“ se ponechává
 
-Revize neustálených termínů se zastavila u „soustavy“ – šest výskytů, kde slovo znamená celek složený z provázaných částí: soustava kontrol, soustava záruk, konfigurace jako celek, `~/.claude` plus `~/Dev/context` plus projekty.
+Revize neustálených termínů se zastavila u „soustavy“ – šest výskytů, kde slovo znamená celek složený z provázaných částí: soustava kontrol, soustava záruk, konfigurace jako celek, `~/.claude` plus `~/Context` plus projekty.
 
 **Rozhodnutí:** ponechat. Do fronty se to zapisovalo s poznámkou „normálně systém“, jenže „soustava“ není výmysl ani anglicismus – je to běžné české slovo (soustava rovnic, nervová soustava, daňová soustava) a spojení „soustava kontrol“ je idiomatické. Proti termínům, které téhož dne padly, je rozdíl zásadní: „tah“ nebo „chirurgický zásah“ si čtenář vyloží špatně, tady jde jen o volbu rejstříku.
 
-**Zamítnuto – „systém“:** kolidoval by. `~/Dev/context/analytics/systems/` a věty o systémech v `/invoicing` mluví o konkrétních softwarech (GA4, Fakturoid, Clockify); zavést „systém“ i pro konfigurační celek by ty dva významy smíchalo.
+**Zamítnuto – „systém“:** kolidoval by. `~/Context/analytics/systems/` a věty o systémech v `/invoicing` mluví o konkrétních softwarech (GA4, Fakturoid, Clockify); zavést „systém“ i pro konfigurační celek by ty dva významy smíchalo.
 
 **Zpřesnily se ale dvě věty**, kde slovo stálo holé bez určení čeho – v `/release` a ve dvou docstringech `test_skills.py`. Nebyla to vada termínu, ale vágnost: čtenář musel dohadovat, který celek se myslí.
 
@@ -440,7 +440,7 @@ Revize neustálených termínů se zastavila u „sledovacího okna“ v `/relea
 
 Revize neustálených termínů se zastavila u „invariantu“ – podmínky o datech, která musí platit v každém okamžiku a kterou vynucuje databáze (`CHECK` omezení, unikátní index, cizí klíč). Není to validace vstupu ani kontrola za běhu: ty se dají obejít, invariant ne.
 
-Stojí jako standard v `~/Dev/context/coding/modeling.md`, *Pojmenuj, co nesmí nastat, a braň tomu*, a odtud se na tu sekci odkazuje `coding/architecture.md` (dvakrát, mimo jiné v seznamu toho, co platí i pro nástroj) a `coding/quality.md` v argumentu proti zamockované databázi. V `kdojekde` je ve dvou komentářích u testů (`src/lib/__tests__/migrations.test.ts`, `supabase/tests/rls-hardening.test.ts`).
+Stojí jako standard v `~/Context/coding/modeling.md`, *Pojmenuj, co nesmí nastat, a braň tomu*, a odtud se na tu sekci odkazuje `coding/architecture.md` (dvakrát, mimo jiné v seznamu toho, co platí i pro nástroj) a `coding/quality.md` v argumentu proti zamockované databázi. V `kdojekde` je ve dvou komentářích u testů (`src/lib/__tests__/migrations.test.ts`, `supabase/tests/rls-hardening.test.ts`).
 
 **Rozhodnutí:** ponechat. Je to zavedený odborný termín, a to v angličtině (*class invariant*, *loop invariant*, Design by Contract) i v češtině – v matematice, ve fyzice i v programování. Skloňuje se jako běžné české podstatné jméno mužského rodu, takže to není anglicismus ohnutý po česku. Padá tím jediné kritérium skillu: **neříká se tomu normálně jinak.**
 
@@ -456,9 +456,9 @@ Stojí jako standard v `~/Dev/context/coding/modeling.md`, *Pojmenuj, co nesmí 
 
 Revize 5. 10. 2026 rozložila „kotvu“ na asi deset významů a většinu nahradila (*prompt*, *referenční datum*, *anonymizovaný záznam*, *hledaný řetězec*, *další významy kotvy* výš). **Ponechává se tam, kde je slovo zavedené i česky:**
 
-- **kotva odkazu** – `#fragment`, odkaz na nadpis uvnitř stránky; jediný význam, kterému uživatel rozuměl. Stojí v `~/.claude/standards/rules.md`, `structure.md`, `skills/links.py`, `skills/replace/` a testech odkazů v `~/.claude`, `~/Dev/context` i eventoidu;
+- **kotva odkazu** – `#fragment`, odkaz na nadpis uvnitř stránky; jediný význam, kterému uživatel rozuměl. Stojí v `~/.claude/standards/rules.md`, `structure.md`, `skills/links.py`, `skills/replace/` a testech odkazů v `~/.claude`, `~/Context` i eventoidu;
 - **ukotvení vzoru** – regulární výraz nebo `case` navázaný na začátek řetězce (*regex anchor*; `skills/transcript/transcribe.sh`, `tests/test_hooks.py`);
 - **cenová kotva** – psychologické ukotvení ceny, drahá varianta, vedle které ostatní vypadají rozumně (projekty `ai`, `byt`). Ne „pracovní kotva“ ve smyslu ceny, se kterou se počítá – ta je *pracovní cena*;
 - **kotva v CSS anchor positioning** – prvek, ke kterému se váže popover (`score`); tak se ta vlastnost jmenuje (`anchor-name`).
 
-**Kde starý tvar zůstává i v nahrazených významech:** `done.md` všech projektů (`kotvy N/N`), `~/Dev/context/archive/`, `compose/_analysis/`, vendor CKEditor a eventoid ve větvi `stitch`, dokud do ní nedorazí `main`.
+**Kde starý tvar zůstává i v nahrazených významech:** `done.md` všech projektů (`kotvy N/N`), `~/Context/archive/`, `compose/_analysis/`, vendor CKEditor a eventoid ve větvi `stitch`, dokud do ní nedorazí `main`.

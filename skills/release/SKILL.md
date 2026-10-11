@@ -112,7 +112,7 @@ Všechny běží proti **čistému stromu**, ne proti tomu, co máš rozpracovan
 
 Na konci fáze vypiš **souhrn všeho, co padlo** – kolik kontrol, které to byly a kde je výstup –, a teprve pak skonči. Prošlo-li všechno, řekni to jednou větou a pokračuj.
 
-Definice průběžné kontroly, kontraktu příkazů, prahů jednotlivých kontrol i auditu závislostí drží `~/Dev/context/coding/quality.md` – **prahy a příkazy opisuj odtamtud, ne odsud**, aby se dvě místa nerozešla.
+Definice průběžné kontroly, kontraktu příkazů, prahů jednotlivých kontrol i auditu závislostí drží `~/Context/coding/quality.md` – **prahy a příkazy opisuj odtamtud, ne odsud**, aby se dvě místa nerozešla.
 
 1. **Pracovní strom je čistý** a větev je pushnutá. Necommitnutá změna při nasazení znamená, že v produkci bude něco jiného, než co je v gitu – a to se hledá měsíce.
 2. **Průběžná kontrola a produkční build, obojí na čistém stromu.** Nikoliv „běželo to ráno“. `build` je tu navíc oproti průběžné kontrole, do které schválně nepatří: „běží to v devu“ a „projde produkční build“ jsou dvě různá tvrzení a druhé padá na typech, tree-shakingu a proměnných prostředí.
@@ -193,7 +193,7 @@ Nasazeno neznamená funguje. Ověř, a ověř na **produkční URL**, ne na loca
 2. **Projde hlavní scénář.** Ten první z `docs/requirements.md` – klidně ručně přes prohlížeč (`chrome-devtools`), ale projdi ho celý, včetně odeslání formuláře nebo přihlášení.
 3. **Data sedí.** Proběhla-li migrace, ověř na produkčních datech, že se čtou a zapisují správně.
 4. **Chyby.** Podívej se do logu nebo monitoringu, jestli po nasazení nepřibyla nová třída chyb.
-5. **Měření**, má-li ho projekt implementované (`~/Dev/context/analytics/`). Projdi hlavní konverzní tok s otevřenou síťovou záložkou a ověř **jmenovitě očekávané eventy a stav consentu**, ne jen že se stránka načte. Přejmenovaná třída nebo přesunutý formulář, kvůli kterému přestane chodit konverzní event, **projde vším ostatním**: typy sedí, testy jsou zelené, panel se do měřicích souborů nemusel trefit a `/attack` sleduje pády, ne to, co se neodeslalo. Projeví se to za týden dírou v datech, kterou nejde zpětně dopočítat.
+5. **Měření**, má-li ho projekt implementované (`~/Context/analytics/`). Projdi hlavní konverzní tok s otevřenou síťovou záložkou a ověř **jmenovitě očekávané eventy a stav consentu**, ne jen že se stránka načte. Přejmenovaná třída nebo přesunutý formulář, kvůli kterému přestane chodit konverzní event, **projde vším ostatním**: typy sedí, testy jsou zelené, panel se do měřicích souborů nemusel trefit a `/attack` sleduje pády, ne to, co se neodeslalo. Projeví se to za týden dírou v datech, kterou nejde zpětně dopočítat.
 
 **Když je zle:** vrať se cestou, kterou jsi popsal v poli `**Návrat:**` ve Fázi 3, hned. Neladí se to v produkci pod tlakem – nejdřív návrat, potom hledání příčiny.
 
