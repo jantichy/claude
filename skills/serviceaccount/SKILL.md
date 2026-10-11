@@ -36,8 +36,8 @@ Z toho, co jsi zjistil v přípravě, sestav **návrhy vlastníka a úrovní zp�
 
 | Zdroj | Co z něj bereš |
 |---|---|
-| importovaný profil v projektovém `CLAUDE.md` | slug organizace – nejspolehlivější, protože je to táž konvence |
-| `~/Context/organizations/` | weby klienta z tabulky v sekci *Co to je* |
+| importovaný profil v `CLAUDE.md` projektu nebo nadřazené klientské složky | slug organizace – nejspolehlivější, protože je to táž konvence |
+| profil organizace – u klienta `~/Projekty/<client>/<client>.md`, jinak `~/Context/organizations/` | weby klienta z tabulky v sekci *Co to je* |
 | řádek *Slug* v projektovém `CLAUDE.md` | jméno projektu, když organizace není jmenovaná |
 | jméno adresáře | poslední záchrana |
 
@@ -87,7 +87,7 @@ Vypiš **čtyři kroky pod sebou**, nic mezi ně nevkládej a mluvnicky je přiz
 
 **Počkej na potvrzení, že účty vznikly**, a vyžádej si interní ID. Bez nich zápis nedělej – evidence, ve které stojí účet, co nikdy nevznikl, je horší než žádná.
 
-Pak zapiš do **profilu organizace** v `~/Context/organizations/` – do souboru toho klienta, sekce *Systémy* – u každého účtu adresu, k čemu má přístup, interní ID a proklik na detail účtu. Vlastní a pokusné účty patří do tabulky na konci `access.md`. Commitni a pushni.
+Pak zapiš do **profilu organizace**, sekce *Systémy* – u klienta s vlastní složkou do `~/Projekty/<client>/<client>.md`, jinak do jeho souboru v `~/Context/organizations/`; soubor v `~/Context`, který je jen odkazem na klientskou složku, se nedoplňuje – u každého účtu adresu, k čemu má přístup, interní ID a proklik na detail účtu. Vlastní a pokusné účty patří do tabulky na konci `access.md`. Commitni a pushni v repozitáři, do kterého jsi zapsal.
 
 Výpis na závěr:
 

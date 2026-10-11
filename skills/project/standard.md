@@ -16,6 +16,7 @@ Katalog ke kroku 14 v `SKILL.md`: oblasti revize s tím, co v každé ověřit a
 | Odkazy ven z projektu | Každá cesta do `~/.claude/` nebo `~/Context/` a každý zmíněný skill **existuje**. Vygrepuj je z `CLAUDE.md`, `README.md` i dokumentace a ověř proti inventáři výš. Tohle chytá přejmenované a zrušené věci v konfigurační vrstvě, aniž bys musel vědět, co se změnilo. | inventář z výpisů výš |
 | Doménové importy | Cíle `@import`ů existují. Nepřibyla doménová znalost, která na projekt sedí a chybí mu? Nezůstal import, který už neplatí, protože se povaha projektu posunula? Přidání ani odebrání **nedělej sám** – nabídni v kroku 13. | krok 13, `~/.claude/CLAUDE.md` |
 | Layout a `.gitignore` | Ve worktree layoutu leží projektové soubory v projektovém adresáři a v kořeni kontejneru je jen rozcestník (a pracovní adresáře větví). `.gitignore` má řádky z jádra včetně `.claude/run/`. | kroky 4 a 7 |
+| Klientská složka | *Jen pod `~/Projekty`.* Klient má profil ve složce a importuje ho, fakturovaný klient `invoicing.md`, odkazy v `~/Context` míří sem, podsložky s vlastním repozitářem jsou v `.gitignore`; podprojekt profil neimportuje. | [`client.md`](client.md), *Revize* a *Podprojekt* |
 
 ### Obsah dokumentačních souborů
 

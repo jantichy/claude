@@ -2,7 +2,7 @@
 
 Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém. Co do tohoto souboru nepatří a kam to jde, drží `~/.claude/.claude/CLAUDE.md`, *Co do `~/.claude/standards/rules.md` nepatří*.
 
-Doménové znalosti z `~/Context/` si projekt importuje tvrdým `@import`em v `CLAUDE.md` – jen ty relevantní (rozcestník `~/Context/CLAUDE.md`, importy zakládá `/project`). Projekt pro konkrétní organizaci si importuje i její profil, `@~/Context/organizations/<organizace>.md`. **Ukázka importu v textu stojí v apostrofech**, jinak se soubor načte; skutečný import je naopak nesnese (`~/.claude/standards/structure.md`, *`CLAUDE.md`*).
+Doménové znalosti z `~/Context/` si projekt importuje tvrdým `@import`em v `CLAUDE.md` – jen ty relevantní (rozcestník `~/Context/CLAUDE.md`, importy zakládá `/project`). Profil klienta importuje jeho složka pod `~/Projekty` a podprojekty ho dědí; projekt mimo ni si profil organizace importuje z `~/Context/organizations/`. **Ukázka importu v textu stojí v apostrofech**, jinak se soubor načte; skutečný import je naopak nesnese (`~/.claude/standards/structure.md`, *`CLAUDE.md`*).
 
 ------
 

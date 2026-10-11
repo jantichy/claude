@@ -45,6 +45,8 @@ U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvypl
 
 ### Profil organizace
 
+**Pod `~/Projekty` tenhle odstavec neplatí** – klient má profil ve vlastní složce a podprojekty ho dědí, viz [`client.md`](client.md). Platí jen pro projekt mimo ni, který se organizace týká, ale práce pro ni to není (osobní projekt v `~/Dev`).
+
 Když projekt vzniká **pro konkrétní organizaci**, zeptej se, jestli má profil v `~/Context/organizations/`, a když ano, přidej ho do importů:
 
 ```

@@ -1,6 +1,6 @@
 ---
 name: project
-description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři, přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty), anebo dorovnat dřív nastavený projekt na aktuální podobu standardů a konfigurační vrstvy – revize souladu struktury, dokumentace, sekcí CLAUDE.md, kontraktů a importů. Interaktivní wizard, který se ptá krok po kroku.
+description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři, přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty), anebo dorovnat dřív nastavený projekt na aktuální podobu standardů a konfigurační vrstvy – revize souladu struktury, dokumentace, sekcí CLAUDE.md, kontraktů a importů. Pod ~/Projekty zakládá a převádí i klientskou složku – profil klienta, fakturační soubor a odkazy na ně v ~/Context – a podprojekty, které profil dědí. Interaktivní wizard, který se ptá krok po kroku.
 argument-hint: [create|adopt|update]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
@@ -14,6 +14,8 @@ Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do proje
 - **`create`** *(nový projekt)* – čistý adresář, všechno se zakládá od nuly.
 - **`adopt`** *(existující projekt)* – adresář, ve kterém už něco je, ale chybí v něm otisk `/project` (blok metadat v `CLAUDE.md`) – ať proto, že skill v něm nikdy neběžel, nebo proto, že ho nastavovala starší verze. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i krok 14. Nic se nepřepisuje naslepo.
 - **`update`** *(revize)* – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/.claude/standards/structure.md`, `~/.claude/standards/rules.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 14.
+
+**Pod `~/Projekty` rozliší klientskou složku a podprojekt klienta** a ke kterémukoliv režimu přidá, co k nim patří: profil klienta, fakturační soubor a odkazy na ně v `~/Context`. Drží to [`client.md`](client.md).
 
 Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a skilly se vyvíjejí dál, kdežto projekty založené za starého nastavení zůstávají stát – a rozdíl se z projektu sám nepozná. Druhý běh je tedy plnohodnotná kontrola, ne jen verifikace, že se nic nezměnilo.
 
@@ -87,6 +89,8 @@ Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) 
 - **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 14.
 - **Cokoliv jiného** → režim `adopt`.
 
+**Leží-li projektový adresář pod `~/Projekty`, načti si [`client.md`](client.md)** a řiď se jím ve všech krocích, které jmenuje – rozliší klientskou složku od podprojektu a u klienta pozná převod profilu, který už leží v `~/Context` – režim se tím nemění.
+
 Řekni nahlas, který režim to je a podle čeho jsi to poznal. Trvá-li uživatel na plném průchodu průvodcem i nad nastaveným projektem, ber to jako pokyn a jeď režim `adopt`.
 
 V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uživateli v pár řádcích**, ať oba víte, z čeho se vychází:
@@ -146,7 +150,7 @@ Rezervační systém pro školení, konference a webináře – správa událost
 
 Zeptej se (AskUserQuestion), 4 možnosti:
 
-- **Nic** – git se neřeší, přeskoč i kroky 4 a 7.
+- **Nic** – git se neřeší, přeskoč i kroky 4 a 8.
 - **Jen lokální** – `git init`, žádný remote.
 - **Remote (napojit na existující)** – `git init`, pak se v chatu zeptej na URL a spusť `git remote add origin <url>`.
 - **Remote (založit nový)** – `git init`, pak AskUserQuestion na hostitele (GitHub / GitLab). U GitHubu s dostupným `gh` (`which gh`) se zeptej na viditelnost a spusť `gh repo create <directory-name> --private|--public --source=. --remote=origin`. Jinak vypiš instrukci „Založ prázdné repo na <platforma>, pak mi dej URL“ a počkej.
@@ -404,7 +408,7 @@ Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů` a **jen ty kl
 
 Zeptej se **ve třech tematických kolech** (`multiSelect: true`, nejvýš čtyři volby na kolo), co všechno se v projektu bude dělat, a vybrané doménové znalosti zapiš do projektového `CLAUDE.md` jako **tvrdé `@import`y**, ne jako odkazy v běžném textu. Volby předvyplň podle typu z kroku 11, ale nech rozhodnout uživatele – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
-**Znění kol, všech devět checklistů i s cílem importu, předvyplnění podle typu projektu, profil organizace a důvod, proč se importuje a neodkazuje, drží `~/.claude/skills/project/checklists.md`.** Řiď se jím, neopisuj ho z hlavy.
+**Znění kol, všech devět checklistů i s cílem importu, předvyplnění podle typu projektu, profil organizace a důvod, proč se importuje a neodkazuje, drží `~/.claude/skills/project/checklists.md`.** Řiď se jím, neopisuj ho z hlavy. Pod `~/Projekty` se profil neimportuje odtamtud: klient podle [`client.md`](client.md), *Klient*, podprojekt ho neimportuje vůbec (*Podprojekt*).
 
 Importuj **jen to, co je pro projekt opravdu relevantní** – každý import stojí kontext v každé session. Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
@@ -457,6 +461,7 @@ Vypiš přehledně:
 - **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
 - Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula průběžná kontrola, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
+- *(klientská složka, `create` a `adopt`)* profil a fakturační soubor – co se založilo nebo převedlo –, odkazy v `~/Context` a jejich commit, a výpis `~/Projekty/*/invoicing.md`, ve kterém fakturovaný klient je; u převodu i nalezené odkazy na starou cestu profilu.
 - *(worktree layout)* **Na jaké větvi výsledek leží**, že je ve větvi commitnutý a že merge do hlavní větve čeká na jeho pokyn. Neměnilo-li se nic, žádná větev nevznikla – řekni to místo toho.
 
 V režimu `adopt` vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí. A protože v tomhle režimu proběhl těsně předtím krok 14, **připoj za souhrn i jeho tři skupiny** (dorovnáno / čeká na rozhodnutí / vědomě nechal být) – jinak revize proběhne, ale její výsledek se nikde neukáže.

@@ -1,6 +1,6 @@
 ---
 name: invoicing
-description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim, dohody s klienty a konkrétní volání systémů drží ~/Context/business/, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; teprve když uživatel potvrdí, že mail odeslal, označí fakturu ve fakturačním systému za odeslanou. Neúčtuje, nehlídá úhrady ani daňové termíny.
+description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim a konkrétní volání systémů drží ~/Context/business/, dohodu s klientem jeho fakturační soubor v klientské složce pod ~/Projekty, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; teprve když uživatel potvrdí, že mail odeslal, označí fakturu ve fakturačním systému za odeslanou. Neúčtuje, nehlídá úhrady ani daňové termíny.
 argument-hint: [full|preview|recover|sync] [klient] [období]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Agent]
 ---
@@ -16,11 +16,11 @@ Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého
 - **`/invoicing recover`** – dohledá čas, který se zapomněl natrackovat, a ukáže tipy s doložením. Taky nic nevystaví a **sám od sebe nezapíše ani do timetrackingu, ani do souboru klienta**.
 - **`/invoicing sync`** – přepíše odpracovaný čas do timetrackingu klienta, má-li ho klient vyplněný. Nic nevystavuje; **jako jediný režim zapisuje do cizího systému**.
 
-Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají soubor v `~/Context/business/invoicing/`. **Klienta bez vyplněné části *Dohoda* vynech a řekni to** – takový soubor existuje kvůli `recover`, který identifikátory potřebuje dřív, než se začne fakturovat, a fakturovat podle nevyplněné dohody nejde. **Stejně vynech a ohlas klienta, který má ve *Stavu spolupráce* hodnotu `uzavřená`** – fakturovat se mu už nebude a jeho zbylý čas drží deník propadlého času (`~/Context/business/invoicing.md`, *Soubor klienta*).
+Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají **fakturační soubor ve své klientské složce** – kde se hledá, drží *Fáze 1*. **Klienta bez vyplněné části *Dohoda* vynech a řekni to** – takový soubor existuje kvůli `recover`, který identifikátory potřebuje dřív, než se začne fakturovat, a fakturovat podle nevyplněné dohody nejde. **Stejně vynech a ohlas klienta, který má ve *Stavu spolupráce* hodnotu `uzavřená`** – fakturovat se mu už nebude a jeho zbylý čas drží deník propadlého času (`~/Context/business/invoicing.md`, *Soubor klienta*).
 
 **Jen u `recover` smí za jménem klienta stát ještě období** (`2026-05`), kterým se přebije výchozí rozsah. **`sync` období nepřijímá** – to, do čeho smí sáhnout, si určuje sám z otevřeného okna a přebít se nedá.
 
-**Skill je rámec, ne pravidla.** Daňový režim, agregace, šablony a dohody s jednotlivými klienty žijí v `~/Context/business/invoicing.md` a v souborech klientů vedle něj; **sazebník má vlastní soubor `~/Context/business/pricing.md`**. Bez nich skill nemá podle čeho fakturovat a neběží.
+**Skill je rámec, ne pravidla.** Daňový režim, agregace, šablony a dohody s jednotlivými klienty žijí v `~/Context/business/invoicing.md` a v souboru `invoicing.md` v klientské složce; **sazebník má vlastní soubor `~/Context/business/pricing.md`**. Bez nich skill nemá podle čeho fakturovat a neběží.
 
 ## Co skill nedělá
 
@@ -32,7 +32,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 
   **Zákaz platí na skill, ne na uživatele.** Rozhodne-li se uživatel nechat si výstup uložit do souboru klienta jako dočasný blok k odpracování, je to jeho volba a provede ji jiný krok – `/end` nebo výslovný pokyn –, ne `recover` sám od sebe. Jak se takový blok chová při dalším běhu, drží `~/Context/decisions.md`, *Blok nálezů `recover` se při dalším běhu nahrazuje, ne kupí*.
 - **Nesynchronizuje obousměrně.** Režim `sync` píše **jen** do systému klienta a **do Clockify nezapíše nikdy** – zdroj pravdy se neupravuje podle kopie.
-- **Nepíše profily protistran.** Kdo klient je a kdo v něm rozhoduje, patří do `~/Context/organizations/`; sem jen fakturační dohoda.
+- **Nepíše profily protistran.** Kdo klient je a kdo v něm rozhoduje, patří do jeho profilu – u klienta ve složce vedle fakturačního souboru, jinak v `~/Context/organizations/`; sem jen fakturační dohoda.
 
 ## Jak je to postavené uvnitř
 
@@ -64,11 +64,13 @@ Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systém
 
 ## Fáze 1 – Rozsah a období
 
-**Rozsah** je klient z argumentu, nebo všichni se souborem v `~/Context/business/invoicing/`.
+**Rozsah** je klient z argumentu, nebo všichni, kdo mají `~/Projekty/<client>/invoicing.md`; jméno klienta je jméno jeho složky. **Jinde se soubor klienta nehledá** – každý fakturovaný klient má klientskou složku a druhé umístění by se muselo pamatovat. V `~/Context/business/invoicing/` leží jen odkaz pro člověka.
+
+**Projdi zároveň `~/Context/business/invoicing/*.md` a každý soubor s nadpisem `## Dohoda` ohlas jako nepřevedeného klienta, kterého skill nevidí**, i s doporučením `/project` v jeho klientské složce. Odkaz ten nadpis nemá, plný soubor ano. Mlčky přeskočený klient je nevystavená faktura.
 
 **Období se každému klientovi počítá zvlášť** a nikdy se neodhaduje:
 
-1. Vytáhni ze systému **poslední fakturu tomu klientovi** a přečti z ní konec fakturovaného období. **Žádná tam není?** Pak se tomu klientovi ještě nikdy nefakturovalo a hranici drží **soubor klienta** – deník výjimek nebo dohoda. Přečti ho; není-li tam, zeptej se a odpověď do deníku zapiš. **Nepleť si to s prázdným obdobím** – to je stav, kdy fakturovat není co, ne kdy se ještě nezačalo.
+1. Vytáhni ze systému **poslední fakturu tomu klientovi** a přečti z ní konec fakturovaného období. **Žádná tam není?** Pak se tomu klientovi ještě nikdy nefakturovalo a hranici drží **soubor klienta** – deník výjimek nebo dohoda. Přečti ho; není-li tam, zeptej se a odpověď do deníku zapiš (v režimu `full`; v `preview` se nezapisuje nic). **Nepleť si to s prázdným obdobím** – to je stav, kdy fakturovat není co, ne kdy se ještě nezačalo.
 2. Začátek nového období je **následující den**, konec je konec posledního uzavřeného měsíce. **Zbývají-li nevyfakturované hodiny i v běžícím měsíci, zeptej se přes `AskUserQuestion`**, jestli období ukončit posledním uzavřeným měsícem, nebo dneškem – druhá možnost je právě skončená práce, která na konec měsíce nečeká. Volba určí obě data ve *Fázi 4*.
 3. **Chybí-li v poslední faktuře záznam o období, nejdřív hledej v souboru klienta** – v dohodě a v deníku výjimek. **Je-li tam, neptej se**; je to předem daná odpověď. Není-li, **zeptej se, od kdy počítat**, a odpověď zapiš **do deníku výjimek** (v režimu `full`; v `preview` se nezapisuje nic). Neodvozuj hranici z data vystavení ani ze zaplacených hodin – obojí je jinde než skutečná hranice.
 

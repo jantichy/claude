@@ -44,7 +44,7 @@ Je to obecné pravidlo pro každý vzdálený timetracking, ne vlastnost jednoho
 
 Klient může mít lhůtu **kratší**, než je vystavení faktury: „měsíc se uzavírá do třetího pracovního dne měsíce následujícího“. Pak platí ta lhůta, ne datum dokladu.
 
-**Uzávěrka klienta je v jeho souboru v `invoicing/`.** Není-li tam žádná, okno zavírá až faktura.
+**Uzávěrka klienta je v jeho fakturačním souboru.** Není-li tam žádná, okno zavírá až faktura.
 
 **Přelitý čas není rozdíl mezi stranami.** Porovnává-li se Clockify se vzdáleným systémem – ať už v zrcadlení, nebo při kontrole před fakturací –, **počítá se přelitý záznam k datu ze svého prefixu**, ne ke dni, na kterém leží. Bez toho by u každého klienta po přelití vycházel rozdíl, který rozdíl není, a fakturace by se zastavovala pokaždé.
 
