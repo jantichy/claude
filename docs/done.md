@@ -254,6 +254,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-10-11** · `/end` · `f24dcc4` · session `31950262-0c6c-461f-800f-2b12c0b84da3` · prompty 20/20 · 0 témat · mimo rozsah: žádné (soukromá inventura adresářů leží v `~/Context/todo.md`, zapsaná průběžně) · meze: 61 bloků myšlení a 1 výstup `Read` se nečtou z principu
 - **2026-10-11** · `/end` · `3d2aa96` · session `31950262-0c6c-461f-800f-2b12c0b84da3` · prompty 21/21 (druhý průchod, od prvního přibyl jen zápis, že `~/Sites` zůstává) · 0 témat · mimo rozsah: žádné · meze: bloky myšlení a 1 výstup `Read` se nečtou z principu
 - **2026-10-11** · `/end` · `fbbc370` · session `784f43e3-fa99-4821-ab03-07462ee5e573` · prompty 4/4 · 1 téma (1 rozhodnuto: zbytek úkolu o `/break` do todo) · mimo rozsah: v `todo.md` zůstal řádek už hotové inventury dialogů – smazán · meze: 44 bloků myšlení, 1 výstup Read, 1 výstup Skill
+- **2026-10-11** · `/end` · `d336fe2` · session `6b67fc53-9663-427f-8848-70d6b713d695` · prompty 7/7 (inventura jich vypsala 5, `/continue` a `/break` doplněny ručně – známá díra v `todo.md`) · 0 témat · mimo rozsah: dvě zjištění o skillech (`/next` a blok `/break`, měření v `/replace`) zapsána do `todo.md` · meze: 55 bloků myšlení, 1 výstup Read a 1 výstup Skill se nečtou z principu; odložený výstup `bzrikgom6.txt` je čtení `todo.md`, čteno ze zdroje
 
 ## Odvedená práce
 
