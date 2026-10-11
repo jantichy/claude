@@ -253,6 +253,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-10-11** · `/end` · `cb17779` · session `7e17c968-184b-487a-8ce6-376dbbbf0797` · prompty 1/1 · 0 témat · mimo rozsah: žádné · meze: 22 bloků myšlení (prázdné z principu); příkaz `/end` sám se do promptů nepočítá – známá díra v `todo.md`
 - **2026-10-11** · `/end` · `f24dcc4` · session `31950262-0c6c-461f-800f-2b12c0b84da3` · prompty 20/20 · 0 témat · mimo rozsah: žádné (soukromá inventura adresářů leží v `~/Dev/context/todo.md`, zapsaná průběžně) · meze: 61 bloků myšlení a 1 výstup `Read` se nečtou z principu
 - **2026-10-11** · `/end` · `3d2aa96` · session `31950262-0c6c-461f-800f-2b12c0b84da3` · prompty 21/21 (druhý průchod, od prvního přibyl jen zápis, že `~/Sites` zůstává) · 0 témat · mimo rozsah: žádné · meze: bloky myšlení a 1 výstup `Read` se nečtou z principu
+- **2026-10-11** · `/end` · `fbbc370` · session `784f43e3-fa99-4821-ab03-07462ee5e573` · prompty 4/4 · 1 téma (1 rozhodnuto: zbytek úkolu o `/break` do todo) · mimo rozsah: v `todo.md` zůstal řádek už hotové inventury dialogů – smazán · meze: 44 bloků myšlení, 1 výstup Read, 1 výstup Skill
 
 ## Odvedená práce
 
@@ -545,3 +546,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - [x] **Inventura `/end` počítá odpovědi z dialogu jako prompty.** (2026-10-11) `extract.py` bere každou odpovězenou otázku z `AskUserQuestion` jako prompt do evidence a ve `filter` ji vypisuje jako `dialog`. Testy v `tests/test_end.py` pokrývají hotovou volbu, *Other* s poznámkou, víc otázek v jednom dialogu i záznam bez struktury; mutační test ověřuje, že prompt vzniká opravdu z dialogové větve. Nad ostrým transcriptem, kde dřív vyšlo 0 promptů, jich teď vyšlo 22. Rozhodnutí drží `decisions.md`.
 
 - [x] **`/review` řadí nález pracovního specialisty mezi sporné, jen když má oprava víc podob.** (2026-10-11) *Fáze 4* v `skills/review/SKILL.md` se tím srovnala se `skills/findings.md`, *Volby v otázce jsou varianty řešení*; zúžilo se i pravidlo o přísnějším zařazení při sloučení. Rozhodnutí drží `decisions.md`.
+
+- [x] **Na práh kontextu se u průchodu frontou doporučuje `/break`, ne navázání z běhového souboru.** (2026-10-11) Hláška hooku `handoff.py` jmenuje obě větve, tabulka řetězců v `skills/handoff.md` začíná u přerušeného průchodu `/break` a *Práh kontextu* odkazuje na *Přerušení dlouhého průchodu*. `skills/skills.md`, *Běhový stav*, říká, že běhový soubor není cesta k navázání; `/break` do něj zapíše klíč `interrupted` a `/oponent`, `/review` a `/audit` podle něj na startu rozliší, jestli platí zápis v `todo.md`. Testy hlídají hlášku hooku a řádek tabulky; širší test a nezávislá kontrola zůstaly v `todo.md`. Rozbor v `decisions.md`.
+
+- [x] **Skill `/cleanup` se jmenuje `/end`.** (2026-10-11) Přejmenovaný adresář skillu, test, hlavička a všechny odkazy v `~/.claude` včetně historie v `docs/`, k tomu dokumentace všech projektů v `~/Dev` včetně worktree větví, každý projekt vlastním commitem. Stopa a vědomé výjimky v `decisions.md`.
