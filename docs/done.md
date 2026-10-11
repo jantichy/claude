@@ -252,6 +252,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/cleanup` nad tímhle r
 - **2026-10-10** · `/cleanup` · `76fd759` · session `133193ea-7272-4531-ba84-332156290f93` · prompty 3/3 a k tomu 1 odpověď v `AskUserQuestion` (varianta `/slim`) odškrtnutá ručně · 0 témat · mimo rozsah: žádné · meze: 16 bloků myšlení (prázdné ve formátu), 1 výstup Read (soubor čten ze zdroje), 1 výstup AskUserQuestion (odpověď je v konverzaci)
 - **2026-10-11** · `/cleanup` · `cb17779` · session `7e17c968-184b-487a-8ce6-376dbbbf0797` · prompty 1/1 · 0 témat · mimo rozsah: žádné · meze: 22 bloků myšlení (prázdné z principu); příkaz `/cleanup` sám se do promptů nepočítá – známá díra v `todo.md`
 - **2026-10-11** · `/cleanup` · `f24dcc4` · session `31950262-0c6c-461f-800f-2b12c0b84da3` · prompty 20/20 · 0 témat · mimo rozsah: žádné (soukromá inventura adresářů leží v `~/Dev/context/todo.md`, zapsaná průběžně) · meze: 61 bloků myšlení a 1 výstup `Read` se nečtou z principu
+- **2026-10-11** · `/cleanup` · `3d2aa96` · session `31950262-0c6c-461f-800f-2b12c0b84da3` · prompty 21/21 (druhý průchod, od prvního přibyl jen zápis, že `~/Sites` zůstává) · 0 témat · mimo rozsah: žádné · meze: bloky myšlení a 1 výstup `Read` se nečtou z principu
 
 ## Odvedená práce
 
