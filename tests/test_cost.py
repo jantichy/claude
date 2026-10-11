@@ -1,7 +1,7 @@
 """Regresní testy měřidla `skills/cost.py`.
 
 Měřidlo existuje proto, aby se o stavbě skillů rozhodovalo čísly, ne dojmem –
-`/cleanup` se podle dojmu dvakrát přepsal špatně a stálo to dva dny práce.
+`/end` se podle dojmu dvakrát přepsal špatně a stálo to dva dny práce.
 Tím se z něj ale stala vrstva, na které rozhodnutí stojí, a **měřidlo, které
 lže, je horší než žádné**: čísla vypadají stejně věrohodně, ať jsou z celého
 vzorku, nebo z jeho poloviny (`~/Dev/context/coding/quality.md`, *Měřidlo musí

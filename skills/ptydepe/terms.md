@@ -137,7 +137,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### cílený zásah
 
-**Editace dokumentace po jednotlivých větách** místo přepsání celé sekce. Vada, kterou pojmenovává: **zásah je úzký, jeho následky nikoliv** – přejmenuje se sekce a zůstane odkaz na staré jméno, dopíše se věta o něčem, co v cílovém souboru mezitím není. Pozůstatky po nich hledá `/cleanup`.
+**Editace dokumentace po jednotlivých větách** místo přepsání celé sekce. Vada, kterou pojmenovává: **zásah je úzký, jeho následky nikoliv** – přejmenuje se sekce a zůstane odkaz na staré jméno, dopíše se věta o něčem, co v cílovém souboru mezitím není. Pozůstatky po nich hledá `/end`.
 
 **Nahrazuje dřívější „chirurgický zásah“** (2026-09-07). Anglicky je *surgical edit* běžný obrat, ale doslovný překlad mate – „chirurgický zásah“ je česky operace, tedy obraz o řezání, ne o přesnosti. Čeština má pro *surgical strike* ustálené „cílený úder“, takže „cílený“ nese v téhle vazbě přesně tu úzkost, o kterou jde.
 
@@ -167,7 +167,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### nevypořádané téma
 
-**Co v konverzaci padlo a nikdy se nedořešilo** – otázka bez odpovědi, návrh, který nikdo nepřijal ani nezamítl, nebo vícebodová odpověď vyřízená jen zčásti. Nikdo to nezavrhl ani neschválil. Hledá je `/cleanup`.
+**Co v konverzaci padlo a nikdy se nedořešilo** – otázka bez odpovědi, návrh, který nikdo nepřijal ani nezamítl, nebo vícebodová odpověď vyřízená jen zčásti. Nikdo to nezavrhl ani neschválil. Hledá je `/end`.
 
 **Nahrazuje dřívější „zamluvené téma“** (2026-09-07). „Zamluvit“ znamená česky vědomě odvést řeč jinam, takže termín podsouval úmysl, který tam není – téma jen propadlo. A „zamluvit si“ navíc znamená rezervovat, takže se to při rychlém čtení dá číst jako téma, které si někdo zabral. „Vypořádat“ je přitom zavedené sloveso téhle konfigurace (vypořádané nálezy).
 
@@ -215,7 +215,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 
 ### pozůstatek
 
-**Zbytek po zásahu do textu, který přestal platit.** Dvě situace: odkaz zůstal na sekci, která se mezitím přejmenovala, nebo věta tvrdí něco, co v cílovém souboru už není. Hledá je `/cleanup` po každé session, `/consistency` u staršího dluhu.
+**Zbytek po zásahu do textu, který přestal platit.** Dvě situace: odkaz zůstal na sekci, která se mezitím přejmenovala, nebo věta tvrdí něco, co v cílovém souboru už není. Hledá je `/end` po každé session, `/consistency` u staršího dluhu.
 
 **Nahrazuje dřívější „viséc“ / „viséci“ / „viséce“** (2026-09-07). To slovo v češtině neexistuje – vzniklo z „zůstalo to viset“ a začalo se skloňovat. Sloveso je v pořádku, podstatné jméno byl výmysl.
 
@@ -292,9 +292,9 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 ### prompt, zpráva uživatele
 
-**Prompt je to, co uživatel v session napsal** – zpráva na začátku odpovědi i zpráva poslaná uprostřed ní. V `/cleanup` je to položka inventury transcriptu, kterou úklid odškrtává v evidenci, a poměr se zapisuje jako `prompty N/N`. **Zpráva uživatele je role:** prompt, který se do evidence započítá. Rozlišují to hlavně testy (`tests/test_cleanup.py`, třída `ZpravyUzivatele`) – vsuvka harnessu má v transcriptu roli `user`, ale zpráva uživatele to není.
+**Prompt je to, co uživatel v session napsal** – zpráva na začátku odpovědi i zpráva poslaná uprostřed ní. V `/end` je to položka inventury transcriptu, kterou úklid odškrtává v evidenci, a poměr se zapisuje jako `prompty N/N`. **Zpráva uživatele je role:** prompt, který se do evidence započítá. Rozlišují to hlavně testy (`tests/test_end.py`, třída `ZpravyUzivatele`) – vsuvka harnessu má v transcriptu roli `user`, ale zpráva uživatele to není.
 
-**Nahrazuje dřívější „kotvu“, „kotvy evidence“** (2026-10-05). Uživatel slovu rozuměl jen jako kotvě odkazu a týž skill ho v tom významu používal taky („mrtvé kotvy“), takže výstup `/cleanup` hlásil „kotvy 23/23“ a o řádek níž „dvě mrtvé kotvy opraveny“ – dvě různé věci pod jedním jménem. Navíc slévalo věc a roli: `test_skutecny_prompt_je_kotva` se ptal na roli, „kotvy N/N“ počítal věci.
+**Nahrazuje dřívější „kotvu“, „kotvy evidence“** (2026-10-05). Uživatel slovu rozuměl jen jako kotvě odkazu a týž skill ho v tom významu používal taky („mrtvé kotvy“), takže výstup `/end` hlásil „kotvy 23/23“ a o řádek níž „dvě mrtvé kotvy opraveny“ – dvě různé věci pod jedním jménem. Navíc slévalo věc a roli: `test_skutecny_prompt_je_kotva` se ptal na roli, „kotvy N/N“ počítal věci.
 
 **Zamítnuto:** *zpráva uživatele* pro obojí – navrženo jako hlavní varianta, uživatel zvolil kratší *prompt* a *zprávu uživatele* nechal jen pro roli, aby se ty dvě věci odlišily. *Položka evidence* – pojmenovává formu, ne to, co se počítá.
 

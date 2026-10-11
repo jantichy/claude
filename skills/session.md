@@ -1,6 +1,6 @@
 # Jak se čte transcript aktuální session
 
-Mechanika hledání a čtení nahrané konverzace. Stojí mimo jednotlivé skilly, protože ji potřebuje víc než jeden – `/cleanup` z ní vytěžuje dohody, `/skill` to, co se při ladění skillu vyladilo. Co se z transcriptu **vytěžuje**, drží každý z nich sám; tady je jen to, jak se k němu vůbec dostat.
+Mechanika hledání a čtení nahrané konverzace. Stojí mimo jednotlivé skilly, protože ji potřebuje víc než jeden – `/end` z ní vytěžuje dohody, `/skill` to, co se při ladění skillu vyladilo. Co se z transcriptu **vytěžuje**, drží každý z nich sám; tady je jen to, jak se k němu vůbec dostat.
 
 **Nepracuj jen s tím, co máš právě v kontextu.** Prošla-li session kompaktací, je první polovina konverzace pryč – a přesně v ní bývá to, co hledáš.
 
@@ -34,7 +34,7 @@ U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti ko
 jq -r 'select(.timestamp) | .timestamp' <transcript> | head -1
 ```
 
-Doloženo 25. 9. 2026 dvakrát v jednom dni, ve dvou ze tří ostrých běhů `/cleanup`.
+Doloženo 25. 9. 2026 dvakrát v jednom dni, ve dvou ze tří ostrých běhů `/end`.
 
 **Session po `/clear` začíná záznamem `/clear`, ne první zprávou.** `/clear` nepokračuje ve starém souboru: založí novou session s vlastním id a vlastním `.jsonl`, takže konverzace před ním v transcriptu **není**. Nový soubor ale otevírá sám záznam `<command-name>/clear</command-name>` a za ním upozornění k lokálnímu příkazu a přílohy s kontextem – všechno o pár sekund dřív než první uživatelův prompt. **První `timestamp` proto nejde brát jako začátek konverzace a porovnávat s tím, kdy začala tvoje práce:** vyjde o chvilku dřív a svádí k závěru, že transcript sahá před `/clear` a v kontextu ti část chybí jako po kompaktaci. Nechybí. Kompaktaci pozná jen záznam s `"isCompactSummary": true`; nemá-li ho soubor, máš v kontextu celou session.
 
@@ -48,7 +48,7 @@ jq -rs '(map(select(.type=="assistant") | .message.content[]? | select(.type=="t
   | .[] | if type=="string" then . else (.[]? | .text? // empty) end' <transcript>
 ```
 
-**Velký výstup nástroje je v transcriptu uříznutý stejně jako v kontextu.** Nese jen náhled a věsuvku `Full output saved to: <cesta>`; plná verze leží v `tool-results/<id>.txt` vedle transcriptu. **Transcript tedy není nadmnožina kontextu ve všem** – navíc má jen to, co vyhodila kompaktace, kdežto tuhle díru mají oba stejnou. U session, která měřila nebo se ptala cizího systému, tam bývá celá podstata. Ověřeno 26. 9. 2026; `skills/cleanup/scripts/extract.py inventory` ty cesty vypisuje.
+**Velký výstup nástroje je v transcriptu uříznutý stejně jako v kontextu.** Nese jen náhled a věsuvku `Full output saved to: <cesta>`; plná verze leží v `tool-results/<id>.txt` vedle transcriptu. **Transcript tedy není nadmnožina kontextu ve všem** – navíc má jen to, co vyhodila kompaktace, kdežto tuhle díru mají oba stejnou. U session, která měřila nebo se ptala cizího systému, tam bývá celá podstata. Ověřeno 26. 9. 2026; `skills/end/scripts/extract.py inventory` ty cesty vypisuje.
 
 **Bloky myšlení (`thinking`) a obrázky se nečtou vůbec** – u myšlení to není volba, ale vlastnost formátu: v transcriptu je zapsané **prázdné** (změřeno 26. 9. 2026 na šesti transcriptech – pět mělo 0 kB při desítkách až stovkách bloků), takže ten obsah tam není. Snímek obrazovky se z transcriptu vytěžit nedá. Kde na nich něco viselo, je to **mez vytěžení a musí se přiznat**, ne dopočítat.
 

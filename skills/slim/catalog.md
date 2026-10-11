@@ -126,7 +126,7 @@ Ověřovací čtenář našel při kompresi a redukci opakovaně tyhle posuny �
 
 - **zákaz → doporučení** („víc jich zakládat se nemá“ → „stačí“),
 - **podmíněné → povinné** („byl-li zamítnutý s odůvodněním, jde to do `decisions.md`“ → „jde to do `decisions.md`“),
-- **vypadlý spouštěč nebo čas** („nečekej na `/cleanup`“, „prázdná sekce se ruší“, „datum patří na začátek“),
+- **vypadlý spouštěč nebo čas** („nečekej na `/end`“, „prázdná sekce se ruší“, „datum patří na začátek“),
 - **vypadlá uzávěra** („třetí možnost není“) a kritérium, podle kterého se hraniční případ pozná,
 - **výčet pod úvodní větou, která na všechny položky nesedí** („Další sekce, které zakládá `/project`:“ nad sekcí, kterou zakládá jiný skill),
 - **rozšířený rozsah** – konkrétní výčet souborů nahrazený obecným „standardní soubory“,

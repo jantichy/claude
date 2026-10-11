@@ -25,7 +25,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to sedmý krok
 
 Tahle pětice platí bez výjimky a bez ohledu na to, jak triviální změna to je:
 
-1. **Nikdy se nespouští sám.** Ani jako pokračování `/implement`, `/review` nebo `/cleanup`. Ani když uživatel řekl „a nasaď to“ na začátku dlouhé session – to byl záměr, ne potvrzení. Potvrzení se dává **teď a k tomuhle konkrétnímu nasazení**.
+1. **Nikdy se nespouští sám.** Ani jako pokračování `/implement`, `/review` nebo `/end`. Ani když uživatel řekl „a nasaď to“ na začátku dlouhé session – to byl záměr, ne potvrzení. Potvrzení se dává **teď a k tomuhle konkrétnímu nasazení**.
 2. **Nasazuje se jen zelený, prověřený stav.** Neproběhlo `/review`? Řekni to a zeptej se, jestli opravdu chce nasadit neprověřenou práci.
 3. **Návrat musí existovat dřív, než se nasadí.** Když neumíš odpovědět na otázku „jak se vrátíme za deset minut zpátky“, nenasazuj a vyřeš nejdřív ji.
 4. **Migrace dat se nikdy nemíchá s nasazením kódu do jednoho nevratného kroku.** Viz *Migrace*.
@@ -119,7 +119,7 @@ Definice průběžné kontroly, kontraktu příkazů, prahů jednotlivých kontr
 3. **Průchod aplikací** – `e2e` z kontraktu, má-li ho projekt. **Tohle je jeho poslední místo, ne jediné**: do průběžné kontroly je moc pomalý a v `/review` by běžel nad stavem, který se do nasazení ještě několikrát změní, ale v CI běží po každém pushi – regresi je lepší chytit hned než až tady. Pouští se proto znovu, ze stejného důvodu jako audit závislostí v bodu 6: tam se ptáme „projde to, co jsme napsali?“, tady „projde to, co právě posíláme ven?“. Tady běží naposledy před tím, než se kód potká s uživateli. Chybí-li příkaz, napiš do přehledu, že průchod aplikací nikdo neověřil.
 4. **Proběhlo `/review`?** Odpověď **si přečti, neptej se na ni**: v `docs/done.md`, sekci `## Průchody životním cyklem` (`~/.claude/skills/passes.md`), je u každého běhu hash HEAD. Porovnej ho s tím, co nasazuješ – `git log --oneline <zapsaný hash>..HEAD` ukáže, co od té doby přibylo a co tedy nikdo neprověřil. U změny v citlivé oblasti je proběhlé `/review` **podmínka**, ne doporučení. Nemá-li projekt `done.md` nebo v něm ta sekce chybí, zeptej se – ale řekni nahlas, že se odpovídá z paměti, ne ze záznamu.
 5. **Proběhl `/attack`?** Stejným způsobem jako bod 4, ze stejné sekce. U aplikace, kterou jde spustit, se ptej zvlášť: `/review` kód čte, `/attack` ho spouští, a poslední místo, kde má smysl zkusit věc rozbít nanečisto, je právě tady. Neproběhl-li nikdy, řekni to nahlas – nasadit se dá i tak, ale ať je to rozhodnutí, ne opomenutí.
-6. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují. **Pouštěl ho i `/review` a není to duplicita:** mezi ním a tímhle krokem proběhl `/consistency`, `/cleanup` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tam se ptáme „je čisté, co jsme napsali?“, tady „je čisté to, co právě posíláme ven?“.
+6. **Audit závislostí** – `audit` z kontraktu. `HIGH` a `CRITICAL` blokují. **Pouštěl ho i `/review` a není to duplicita:** mezi ním a tímhle krokem proběhl `/consistency`, `/end` i `/attack`, každý s vlastními commity, a databáze zranitelností se mění bez ohledu na to, jestli se v projektu něco změnilo. Tam se ptáme „je čisté, co jsme napsali?“, tady „je čisté to, co právě posíláme ven?“.
 7. **Tajemství v repu** – `gitleaks detect`, je-li k dispozici. Nález blokuje vždy; a co bylo commitnuté, patří **rotovat**, ne jen smazat.
 8. **Proměnné prostředí.** Přibyla-li v kódu nová, **ověř, že je nastavená v produkci**, ne jen lokálně v `.env`. Tohle je nejčastější příčina toho, že build projde a aplikace spadne až na produkci.
 
@@ -225,7 +225,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Datum vyrob příkazem, nepiš ho z hlavy (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš*) – u běžného vydání `date -v+3w +%F`, u něčeho, co člověk použije zřídka, odpovídajícím delším odstupem. **Je to odstup, ne termín:** dřív vrátí `/evaluate` šum, později nic nepokazí.
 
-**Další krok:** `/cleanup` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*.
+**Další krok:** `/end` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*.
 
 ------
 
@@ -273,7 +273,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 - `/evaluate` až od data zapsaného v `todo.md` – dřív nejsou data, ze kterých by se dalo cokoliv vyčíst
 - běží-li ještě sledovací okno, je další krok jeho uzavření podle Fáze 7, ne nový krok cyklu
-- `/cleanup` před koncem session – vždy, i když se zdá, že z nasazení nic nezapsaného nezbylo
+- `/end` před koncem session – vždy, i když se zdá, že z nasazení nic nezapsaného nezbylo
 
 ## Když chyba projde vším
 

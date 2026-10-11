@@ -50,27 +50,27 @@ Vyhrává první kritérium, které sedí:
 
 **Odrážka, jejíž krok nemá běžet v téhle session, nesmí být jen jméno skillu.** Vypíše se celý řetěz včetně ukončení session, jinak si ho uživatel spustí tady – a přesně to je chyba, kterou to má odchytit.
 
-**Každý odchod ze session začíná `/cleanup`, bezpodmínečně.** Odchodem je `/clear`, `/compact`, nová session, zavření okna i `/merge`; odrážka, která kterýkoliv z nich jmenuje, jmenuje `/cleanup` před ním. **Nepodmiňuj ho tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/cleanup` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi `/cleanup` a odchodem nesmí stát jiná práce než `/merge`**, jinak ji zase nikdo nezapíše. `/merge` jde za `/cleanup` a před `/clear`: do hlavní větve má jít i to, co úklid zapsal, a sám nic nezapisuje, takže druhý `/cleanup` nepotřebuje.
+**Každý odchod ze session začíná `/end`, bezpodmínečně.** Odchodem je `/clear`, `/compact`, nová session, zavření okna i `/merge`; odrážka, která kterýkoliv z nich jmenuje, jmenuje `/end` před ním. **Nepodmiňuj ho tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/end` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi `/end` a odchodem nesmí stát jiná práce než `/merge`**, jinak ji zase nikdo nezapíše. `/merge` jde za `/end` a před `/clear`: do hlavní větve má jít i to, co úklid zapsal, a sám nic nezapisuje, takže druhý `/end` nepotřebuje.
 
-Úplný výčet řetězů – jiná pořadí nedávají smysl. **Bez větví `/merge` odpadá**: pracuje se rovnou v hlavní větvi a do ní práci dostane commit a push, které dělá `/cleanup` sám. Řádky, které se liší jen mergem, tam proto splývají:
+Úplný výčet řetězů – jiná pořadí nedávají smysl. **Bez větví `/merge` odpadá**: pracuje se rovnou v hlavní větvi a do ní práci dostane commit a push, které dělá `/end` sám. Řádky, které se liší jen mergem, tam proto splývají:
 
 | Situace | S větví | Bez větví |
 |---|---|---|
 | další krok patří do téhle session | `/X` | `/X` |
-| další krok v nové session, práce na věci pokračuje | `/cleanup` → `/clear` → `/X` | `/cleanup` → `/clear` → `/X` |
-| věc je hotová a dál se nic nedělá | `/cleanup` → `/merge` | `/cleanup` |
-| věc je hotová a další krok běží nad hlavní větví | `/cleanup` → `/merge` → `/clear` → `/X` | `/cleanup` → `/clear` → `/X` |
-| ještě musí v nové session proběhnout kontrola | `/cleanup` → `/clear` → `/X`, merge až po jejím `/cleanup` | `/cleanup` → `/clear` → `/X` |
-| přerušený průchod frontou | `/break` → `/cleanup` → `/clear` → `/continue` | `/break` → `/cleanup` → `/clear` → `/continue` |
-| rozdělaná úvaha, která se zapsat nedá | `/cleanup` → `/compact` | `/cleanup` → `/compact` |
-| konec práce | `/cleanup` → zavřít okno; je-li větev hotová, `/merge` před tím | `/cleanup` → zavřít okno |
+| další krok v nové session, práce na věci pokračuje | `/end` → `/clear` → `/X` | `/end` → `/clear` → `/X` |
+| věc je hotová a dál se nic nedělá | `/end` → `/merge` | `/end` |
+| věc je hotová a další krok běží nad hlavní větví | `/end` → `/merge` → `/clear` → `/X` | `/end` → `/clear` → `/X` |
+| ještě musí v nové session proběhnout kontrola | `/end` → `/clear` → `/X`, merge až po jejím `/end` | `/end` → `/clear` → `/X` |
+| přerušený průchod frontou | `/break` → `/end` → `/clear` → `/continue` | `/break` → `/end` → `/clear` → `/continue` |
+| rozdělaná úvaha, která se zapsat nedá | `/end` → `/compact` | `/end` → `/compact` |
+| konec práce | `/end` → zavřít okno; je-li větev hotová, `/merge` před tím | `/end` → zavřít okno |
 
 **Který sloupec platí, rozhoduje ověřitelný stav, ne dojem:** stojí-li session na jiné než hlavní větvi (`git branch --show-current`), platí *S větví*. Odrážka ve skillu, která jmenuje `/merge`, ho proto vždy podmiňuje tím, že práce na větvi stojí.
 
 ```
-- `/cleanup`, pak `/clear`, a `/consistency` až v nové session – kontext je na <N>k
-- `/cleanup`, pak `/merge` – větev je hotová
-- `/cleanup`, pak `/merge`, pak `/clear`, a `/next` až v nové session v `<container>/main` – větev je hotová
+- `/end`, pak `/clear`, a `/consistency` až v nové session – kontext je na <N>k
+- `/end`, pak `/merge` – větev je hotová
+- `/end`, pak `/merge`, pak `/clear`, a `/next` až v nové session v `<container>/main` – větev je hotová
 ```
 
 **Kdy krok do téhle session nepatří** – stačí jedno:
@@ -84,10 +84,10 @@ Vyhrává první kritérium, které sedí:
 **Řekni, kde ta práce leží.** `/clear` vyprázdní konverzaci v běžící session, ale **neukončí ji** – pracovní adresář zůstane ten samý, takže po něm nikam přecházet netřeba a odrážka to nemá komplikovat. Co odrážka **má** nést, je jméno adresáře, kde práce leží, stojí-li projekt ve worktree layoutu (`~/.claude/standards/worktree.md`): jeden pracovní adresář na větev znamená, že v jiném okně je session jinde, a `cd` do správného worktree je pak jediná věc, kterou nová session nemá odkud zjistit. **Po `/merge` je to `<container>/main`**, protože merge pracovní adresář větve smaže a práce nad sloučeným stavem leží v hlavní větvi.
 
 ```
-- `/cleanup`, pak `/clear`, a `/consistency` až v nové session – zůstáváš v `<cesta k worktree>`, clear adresář nemění
+- `/end`, pak `/clear`, a `/consistency` až v nové session – zůstáváš v `<cesta k worktree>`, clear adresář nemění
 ```
 
-**Neprodlužuj to, když krok patří sem.** Řetěz `/cleanup → /clear → nová session` u kroku, který má proběhnout hned, je zbytečná režie: start session stojí načtení `CLAUDE.md` a všech jeho importů. Kontrolní krok nad malou změnou v čerstvé session se pouští tady.
+**Neprodlužuj to, když krok patří sem.** Řetěz `/end → /clear → nová session` u kroku, který má proběhnout hned, je zbytečná režie: start session stojí načtení `CLAUDE.md` a všech jeho importů. Kontrolní krok nad malou změnou v čerstvé session se pouští tady.
 
 ------
 
@@ -105,13 +105,13 @@ Volání se počítají jen v hlavní session, ne v subagentech, a obojí se mě
 
 **Překročení prahu ti ohlásí hook `~/.claude/hooks/handoff.py`** – při odeslání zprávy uživatelem vloží do kontextu naměřený údaj, a to u každého prahu jednou. Na jeho hlášku nabídni, respektive doporuč, přerušení hned v té odpovědi, i mimo skill. **Bez hlášky velikost nehádej:** běží-li dlouhý průchod uvnitř jedné odpovědi, kde hook nemá kdy změřit, opři rozhodnutí o délku běhu – panel specialistů s ověřováním a průchod přes dvacet nálezů se do 300k nevejde – a řekni, že je to odhad z rozsahu, ne měřený údaj (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš*).
 
-**`/compact` nedoporučuj jako první volbu.** Rozhoduje v něm model, co si zapamatuje, a zahodí právě to, co nikdo nezapsal do souboru. Správná cesta je `/cleanup` → `/clear`, protože po úklidu je pravda v souborech a nová session si ji načte celou. `/compact` zbývá na případ, kdy je rozdělaná jedna úvaha, která se zapsat nedá.
+**`/compact` nedoporučuj jako první volbu.** Rozhoduje v něm model, co si zapamatuje, a zahodí právě to, co nikdo nezapsal do souboru. Správná cesta je `/end` → `/clear`, protože po úklidu je pravda v souborech a nová session si ji načte celou. `/compact` zbývá na případ, kdy je rozdělaná jedna úvaha, která se zapsat nedá.
 
 ------
 
 ## Přerušení dlouhého průchodu
 
-Platí pro každý běh, který **prochází frontu jedna položka po druhé** – nálezy `/review`, `/consistency`, `/attack`, `/oponent`, `/consolidate`, poznatky `/evaluate`, frontu rozhodnutí `/cleanup`, úkoly `/implement`, sporné nálezy `/audit`.
+Platí pro každý běh, který **prochází frontu jedna položka po druhé** – nálezy `/review`, `/consistency`, `/attack`, `/oponent`, `/consolidate`, poznatky `/evaluate`, frontu rozhodnutí `/end`, úkoly `/implement`, sporné nálezy `/audit`.
 
 Dva skilly s vlastní frontou tu vědomě **nejsou** – ten, který rozpouští nový zdroj do znalostní báze, a ten, který vytahuje scénáře ze starých konverzací. Jejich fronta bývá krátká a pravidlo, které se nikdy neuplatní, je jen text k údržbě (`decisions.md`, 28. 9. 2026).
 

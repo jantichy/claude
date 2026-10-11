@@ -818,7 +818,7 @@ class CoreParts(unittest.TestCase):
     def test_panels_report_measured_coverage(self):
         """Prázdný výstup agenta se musí odlišit od čistého výsledku.
 
-        `/cleanup` na tomhle prodělal nejdražší vadu své historie: pravidlo
+        `/end` na tomhle prodělal nejdražší vadu své historie: pravidlo
         „vrátil-li chybu **nebo nic**, pusť ho znovu“ vyrábělo třetí běh čtenářů,
         protože prázdný výsledek podle jejich zadání znamenal, že je čisto. Skill
         si tedy vyrobil vstup značící úspěch a vyhodnocoval ho jako selhání. Lék
@@ -857,7 +857,7 @@ class CoreParts(unittest.TestCase):
                     f"/{skill}: zmizelo pravidlo, že prázdný výstup agenta není čisto",
                 )
 
-    def test_cleanup_looks_for_unresolved_topics(self):
+    def test_end_looks_for_unresolved_topics(self):
         """Skill sám tvrdí, že tohle je nejčastější ztráta v dlouhé konverzaci.
 
         Je to druhá ze čtyř záruk v *Co skill dělá*, a jako jediná z nich nestojí
@@ -876,10 +876,10 @@ class CoreParts(unittest.TestCase):
         **jmenovaným druhem položky** – sloučení je úspora na průchodech, ne
         záminka ztratit kategorii, kterou nikdo jiný nehledá.
         """
-        text = body(ROOT / "skills/cleanup/SKILL.md")
+        text = body(ROOT / "skills/end/SKILL.md")
         heading = "## Fáze 5 – Fronta rozhodnutí"
         self.assertIn(
-            heading, text, "/cleanup přišel o fázi, ve které se fronta probírá"
+            heading, text, "/end přišel o fázi, ve které se fronta probírá"
         )
         phase = text[text.index(heading) :]
         phase = phase[: phase.index("\n## ")]
@@ -887,7 +887,7 @@ class CoreParts(unittest.TestCase):
             self.assertIn(
                 fragment,
                 phase,
-                f"/cleanup, Fáze 5 přišla o {fragment!r} – zbyl jen nadpis",
+                f"/end, Fáze 5 přišla o {fragment!r} – zbyl jen nadpis",
             )
 
         # Síto – ověření kandidáta proti zbytku transcriptu a práh důležitosti –
@@ -899,7 +899,7 @@ class CoreParts(unittest.TestCase):
             "Jak ověřit, že to opravdu není vypořádané",
             "Práh důležitosti",
         ):
-            self.assertIn(fragment, text, f"/cleanup přišel o {fragment!r}")
+            self.assertIn(fragment, text, f"/end přišel o {fragment!r}")
 
     def test_evaluate_decides_about_every_finding(self):
         """Krok, který sebere čísla a nerozhodne o nich, je evidence bez čtenáře.
@@ -1180,7 +1180,7 @@ def cycle_missing_skills() -> set:
 #: Řetěz kroků: šipka, nebo souvislý text. **První spojka musí být silná** (šipka nebo
 #: „pak“) a teprve druhá smí být slabá („a“, čárka) – vzorec „A, pak B a C“.
 #: Samotné „a“ mezi dvěma skilly je totiž běžný výčet, ne posloupnost:
-#: „vzniknou prací v `/discovery` a `/specify`, a `/cleanup` pak…“ posloupnost
+#: „vzniknou prací v `/discovery` a `/specify`, a `/end` pak…“ posloupnost
 #: netvrdí a hlásit ho jako opsaný cyklus by kontrolu shodilo na falešném nálezu.
 #: Mezera se schválně bere bez konce řádku (`[^\S\n]`): se `\s` by vzor spojil
 #: tři nesouvisející zmínky ob několik odstavců.
@@ -1630,7 +1630,7 @@ class Structure(unittest.TestCase):
         if ordinal == "poslední":
             # „Poslední“ se ověřuje jen proti počtu kroků ve fázi. Následník
             # se posuzuje níž stejně jako u číslovaných kroků: poslední krok
-            # fáze ho legitimně má – `/cleanup` uzavírá uzavírání a přitom
+            # fáze ho legitimně má – `/end` uzavírá uzavírání a přitom
             # správně předává na `/attack` z nasazení.
             steps_in_phase = len([k for k, v in cycle.items() if v[0] == exp_phase])
             if exp_n != steps_in_phase:
@@ -1801,7 +1801,7 @@ class Structure(unittest.TestCase):
         absent = []
         for skill in SKILLS:
             name = skill.parent.name
-            # Jen osa. Kontrolní krok sousedy nemá – `/cleanup` stojí ve všech
+            # Jen osa. Kontrolní krok sousedy nemá – `/end` stojí ve všech
             # mezerách a `/review` ve dvou, takže „soused z obou stran“ u nich
             # není definovaný; norma v `skills.md` tu výjimku má a měla ji dřív
             # než tenhle test, který ji vynucoval na všech.
@@ -1922,7 +1922,7 @@ class StandardCompliance(unittest.TestCase):
     #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak
     #: tiše ukazuje jinam – proto to má být v preflight.md, ne v odkazu.
     FOREIGN_PHASE = re.compile(
-        # `\*{0,2}` schválně: odkaz se běžně píše kurzívou (`/cleanup`, *Fáze 1 – …*)
+        # `\*{0,2}` schválně: odkaz se běžně píše kurzívou (`/end`, *Fáze 1 – …*)
         # a dřív ho vzor kvůli hvězdičce minul. Právě v té podobě byl v repozitáři
         # skutečný odkaz dovnitř cizí fáze, který kontrola neviděla.
         r"(?:`/[a-z-]+`|skills/\w+/SKILL\.md`),\s*\*{0,2}(?:Fáze|Krok)"
@@ -2190,7 +2190,7 @@ class FindingsAreUniform(unittest.TestCase):
         """Soubory skillů, které se k findings.md hlásí odkazem.
 
         Bere i **vedlejší soubory** toho skillu, ne jen jeho `SKILL.md`:
-        `/cleanup` má frontu položek mimo rozsah v `out-of-scope.md` a právě
+        `/end` má frontu položek mimo rozsah v `out-of-scope.md` a právě
         ta mřížku přežila, protože se do rozsahu nedívala. README se vynechává
         – je pro člověka zvenčí a smí ukazovat i tvar reportu do souboru.
         """
@@ -2211,7 +2211,7 @@ class FindingsAreUniform(unittest.TestCase):
         """Šablona položky nesmí pod titulním řádkem nést popisky za dvojtečkou.
 
         Vzor `GRID` níž hlídá jmenovitý seznam popisků, a proto 28. 9. 2026
-        nechytil dvě místa v `/cleanup`: jejich mřížka se jmenovala
+        nechytil dvě místa v `/end`: jejich mřížka se jmenovala
         `Druh` / `O co jde` / `Doložení` / `Prověřeno`. Uživatel ji dostal do
         rozhraní hned prvním během po sjednocení. Tenhle test proto neměří
         jména popisků, ale **tvar** – dvě a víc odrážek `- **Popisek:**` pod
@@ -2330,7 +2330,7 @@ class TemplatesPrintMarkdown(unittest.TestCase):
     WRITTEN_TO_FILE = {
         ("autocommit/SKILL.md", "## Autocommit"),
         (
-            "cleanup/SKILL.md",
+            "end/SKILL.md",
             "| # | řádek | co uživatel napsal (zkráceně) | stav | kde |",
         ),
         ("consistency/SKILL.md", "## Consistency"),
@@ -3347,11 +3347,11 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
             out.append("blok `**Kudy dál**` stojí před závěrečným verdiktem")
     if name in queue_skills() and "Přerušení dlouhého průchodu" not in text:
         out.append("prochází frontu a nenese pravidlo o jejím přerušení")
-    # `/cleanup` je sám úklidem a `/merge` za ním stojí přímo, druhý nepotřebuje.
-    if name not in ("cleanup", "merge"):
+    # `/end` je sám úklidem a `/merge` za ním stojí přímo, druhý nepotřebuje.
+    if name not in ("end", "merge"):
         out += [
-            f"odchod ze session bez `/cleanup` před ním: {line}"
-            for line in exits_without_cleanup(text)
+            f"odchod ze session bez `/end` před ním: {line}"
+            for line in exits_without_end(text)
         ]
     return out
 
@@ -3373,12 +3373,12 @@ def navigation_lines(text: str) -> list:
     return lines
 
 
-def exits_without_cleanup(text: str) -> list:
-    """Odrážky, které opouštějí session a `/cleanup` před tím nejmenují.
+def exits_without_end(text: str) -> list:
+    """Odrážky, které opouštějí session a `/end` před tím nejmenují.
 
     Odchodem je `/merge`, `/clear`, `/compact` i nová session a pořadí drží `handoff.md`,
     *Řetěz, který nepatří do téhle session*, i s výčtem všech platných řetězů.
-    Bez kontroly se z odrážky `/cleanup` vytratí jako první, protože skill si
+    Bez kontroly se z odrážky `/end` vytratí jako první, protože skill si
     ho podmíní dojmem, že nic nezapsaného nezbylo – a session se zahodí i s tím.
     """
     out = []
@@ -3386,8 +3386,8 @@ def exits_without_cleanup(text: str) -> list:
         exit_at = EXIT.search(line)
         if not exit_at:
             continue
-        cleanup_at = line.find("`/cleanup`")
-        if cleanup_at < 0 or cleanup_at > exit_at.start():
+        end_at = line.find("`/end`")
+        if end_at < 0 or end_at > exit_at.start():
             out.append(line[:80])
     return out
 
@@ -3449,17 +3449,17 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
             handoff_defects(text, "merge", True),
         )
 
-    def test_exit_without_cleanup_is_reported(self):
+    def test_exit_without_end_is_reported(self):
         text = "**Kudy dál**\n\n- `/consistency` až v nové session\n"
-        self.assertTrue(exits_without_cleanup(text))
+        self.assertTrue(exits_without_end(text))
 
-    def test_merge_before_cleanup_is_reported(self):
-        text = "**Kudy dál**\n\n- `/merge`, pak `/cleanup`\n"
-        self.assertTrue(exits_without_cleanup(text))
+    def test_merge_before_end_is_reported(self):
+        text = "**Kudy dál**\n\n- `/merge`, pak `/end`\n"
+        self.assertTrue(exits_without_end(text))
 
-    def test_cleanup_first_passes(self):
-        text = "**Kudy dál**\n\n- `/cleanup`, pak `/merge`, pak `/clear`\n- `/review`\n"
-        self.assertFalse(exits_without_cleanup(text))
+    def test_end_first_passes(self):
+        text = "**Kudy dál**\n\n- `/end`, pak `/merge`, pak `/clear`\n- `/review`\n"
+        self.assertFalse(exits_without_end(text))
 
     def test_missing_interruption_rule_is_reported(self):
         name = sorted(queue_skills())[0]

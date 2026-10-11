@@ -84,7 +84,7 @@ Běží-li dev server ve víc větvích, potřebuje každý worktree vlastní po
 
 ## Větev žije, dokud uživatel neřekne jinak
 
-**Nikdy nemerguj sám od sebe.** Po dokončení zadání commitni (má-li projekt autocommit), řekni, co je hotové, a zůstaň ve worktree – větev žije napříč prompty i session. Merguje se jen na výslovný pokyn („přimerguj to“, „ukliď tu větev“, volba v `/cleanup`); nejednoznačný pokyn si ověř. Jiná věc = další worktree vedle, ne merge té rozdělané.
+**Nikdy nemerguj sám od sebe.** Po dokončení zadání commitni (má-li projekt autocommit), řekni, co je hotové, a zůstaň ve worktree – větev žije napříč prompty i session. Merguje se jen na výslovný pokyn („přimerguj to“, „ukliď tu větev“, volba v `/end`); nejednoznačný pokyn si ověř. Jiná věc = další worktree vedle, ne merge té rozdělané.
 
 ## Dokončení větve
 

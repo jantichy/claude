@@ -22,7 +22,7 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/severity.md`.
 
 **Pracnost není spornost.** „Tohle bych musel projít celé a přepočítat“ je popis práce, ne důvod k otázce. Uživatel má na tutéž práci tytéž soubory, takže ho dotazem nešetříš – jen mu ji přehazuješ zpátky i s kontextem, který máš načtený ty a on ne.
 
-**Proto tu není podmínka „netroufáš si“**, která tu do 21. 9. 2026 stála. Byla to jediná položka v celé tabulce bez vnějšího kritéria – pocit, kterým se dá odůvodnit skoro cokoliv, a nejspolehlivěji zrovna nález, jehož vyřešení by dalo práci. **Doloženo v běhu `/cleanup` (21. 9. 2026):** dva dokumenty uváděly různý počet akcí u téže věci a skill se na to zeptal s odůvodněním, že si netroufá určit hranici mezi dvěma pojmy bez uživatelova výkladu. Ta hranice přitom byla v katalogu, ze kterého se obě čísla počítala – šlo o půlhodinu počítání, ne o rozhodnutí. **Zbylo-li ti po téhle zkoušce „nevím“, formuluj, co přesně nevíš**; nejde-li to napsat jednou větou, je to nedodělaná rešerše, ne sporný nález.
+**Proto tu není podmínka „netroufáš si“**, která tu do 21. 9. 2026 stála. Byla to jediná položka v celé tabulce bez vnějšího kritéria – pocit, kterým se dá odůvodnit skoro cokoliv, a nejspolehlivěji zrovna nález, jehož vyřešení by dalo práci. **Doloženo v běhu `/end` (21. 9. 2026):** dva dokumenty uváděly různý počet akcí u téže věci a skill se na to zeptal s odůvodněním, že si netroufá určit hranici mezi dvěma pojmy bez uživatelova výkladu. Ta hranice přitom byla v katalogu, ze kterého se obě čísla počítala – šlo o půlhodinu počítání, ne o rozhodnutí. **Zbylo-li ti po téhle zkoušce „nevím“, formuluj, co přesně nevíš**; nejde-li to napsat jednou větou, je to nedodělaná rešerše, ne sporný nález.
 
 **Objem důvod k dotazu není.** Zdlouhavá, ale jednoznačná oprava se dělá, ne předkládá; naopak jednořádková změna pravidla se předkládá, i když trvá vteřinu. Rozhoduje, čí je to rozhodnutí, ne kolik je s ním práce.
 
@@ -78,7 +78,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`
 
 **Seznam popisků typu `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` se nepoužívá.** Do 28. 9. 2026 ho měly tři kontrolní skilly, každý jinou sadu, a **uživatel je označil za nečitelné**. Heslo za dvojtečkou vypadá úplně a přitom vynechá právě to, proč na tom záleží; kde nález je a čím je doložený, se řekne uvnitř věty a odkazy se dávají do textu.
 
-**Zákaz míří na tvar, ne na těch pět jmen.** Přejmenovat popisky nic nemění – `Druh` / `O co jde` / `Doložení` / `Prověřeno` je táž mřížka jako `Kde` / `Co` / `Problém`, jen jinak nadepsaná, a projde i tam, kde si ji skill předepisuje vlastní šablonou. **Test před každým výpisem: stojí pod titulním řádkem dvě a víc odrážek tvaru `- **Popisek:** …`?** Pak je to mřížka, ať se popisky jmenují jakkoliv. Doplněno 28. 9. 2026, protože verze psaná na konkrétní slova dvě místa v `/cleanup` nechytila a uživatel je dostal do rozhraní hned první běh po sjednocení.
+**Zákaz míří na tvar, ne na těch pět jmen.** Přejmenovat popisky nic nemění – `Druh` / `O co jde` / `Doložení` / `Prověřeno` je táž mřížka jako `Kde` / `Co` / `Problém`, jen jinak nadepsaná, a projde i tam, kde si ji skill předepisuje vlastní šablonou. **Test před každým výpisem: stojí pod titulním řádkem dvě a víc odrážek tvaru `- **Popisek:** …`?** Pak je to mřížka, ať se popisky jmenují jakkoliv. Doplněno 28. 9. 2026, protože verze psaná na konkrétní slova dvě místa v `/end` nechytila a uživatel je dostal do rozhraní hned první běh po sjednocení.
 
 **Delší nález smí mít druhý odstavec** – typicky tam, kde je potřeba dodat, proč navrhované cesty nejsou rovnocenné. Pořád je to souvislý text.
 
@@ -109,7 +109,7 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 **`header` má napříč skilly týž tvar:** `Nález N/celkem`, u položky, která nálezem není, `Položka N/celkem`.
 
-**Výjimka pro položku, která není vadou, ale novou prací** – tam se neopravuje, takže *Neopravovat* nedává smysl a platí čtveřice *Vyřešit teď / Zapsat do todo / Zapsat do backlogu / Zahodit*. Používá ji `/cleanup` u položek mimo rozsah a `/evaluate` u vyžádaných funkcí; podmínku, kdy je legitimní, drží *Volby v otázce jsou varianty řešení* výš.
+**Výjimka pro položku, která není vadou, ale novou prací** – tam se neopravuje, takže *Neopravovat* nedává smysl a platí čtveřice *Vyřešit teď / Zapsat do todo / Zapsat do backlogu / Zahodit*. Používá ji `/end` u položek mimo rozsah a `/evaluate` u vyžádaných funkcí; podmínku, kdy je legitimní, drží *Volby v otázce jsou varianty řešení* výš.
 
 ## Přehled na začátku vyčísluje obojí
 
@@ -125,7 +125,7 @@ Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, zb
 
 ## Kdo ji používá
 
-`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate`, `/cleanup` a `/consolidate` – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/cleanup` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů; `/consolidate` u vedlejších vad od ověřovatelů, a **u svých návrhů taky podle výjimky o nové práci** – dnešní řešení funguje, takže *Neopravovat* u něj nedává smysl a „jestli a kdy“ je doopravdy rozhodnutí uživatele. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
+`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate`, `/end` a `/consolidate` – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/end` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů; `/consolidate` u vedlejších vad od ověřovatelů, a **u svých návrhů taky podle výjimky o nové práci** – dnešní řešení funguje, takže *Neopravovat* u něj nedává smysl a „jestli a kdy“ je doopravdy rozhodnutí uživatele. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
 
 **Skill si nad tímhle kritériem podává vlastní doménové čtení** – `/attack` má sporných skoro všechno, protože každý jeho nález mění chování běžící aplikace, kdežto `/consistency` má většinu jednoznačnou, protože srovnává dvě místa, z nichž jedno je zdroj. **Stavět vlastní hranici vedle téhle se ale nesmí**; přibude-li další skill, který nálezy opravuje, odkáže sem taky a **neopisuje si ji** (`~/.claude/standards/rules.md`, *Single source of truth*).
 

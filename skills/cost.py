@@ -24,7 +24,7 @@ Srovnává se **po pásmech, a to na dvou osách**, protože medián přes všec
 pásma by srovnával jiné běhy s jinými:
 
 - **velikost transcriptu** – rozhoduje u skillu, jehož vstupem transcript je
-  (`/cleanup`), protože cena běhu roste s délkou session;
+  (`/end`), protože cena běhu roste s délkou session;
 - **velikost rozsahu** – rozhoduje u skillu, který čte kód a dokumentaci na
   disku (`/review`, `/consistency`, `/oponent`). U `/consistency` vyšlo pásmo
   nejkratších session **dráž** než pásmo nejdelších, tedy obráceně: délka

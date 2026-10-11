@@ -119,7 +119,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Co skill dělá`** – co to je a jaké má režimy. 3 až 10 řádků. Ne převyprávěný postup; ten je níž.
 
-**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/standards/rules.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/cleanup` stojí ve všech mezerách a `/review` v šesti, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
+**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/standards/rules.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/end` stojí ve všech mezerách a `/review` v šesti, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
 
 **`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
 
@@ -152,7 +152,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 Skill s vlastním koncem pro některý režim (rušení, zamítnutí) smí mít druhou dvojici, ale musí splňovat týž vzorec.
 
-**Hotové znění smí mít obměny podle místa, kde skill běží** – `/cleanup` má jiné ve worktree větvi a jiné, když merge něco brání. Podmínka je, že všechny obměny tvrdí totéž (věc je hotová a ověřená) a liší se jen tím, co z toho plyne a čím pokračovat; o tom, která platí, rozhoduje ověřitelný stav, ne dojem. **Obměna, která hotovost zpochybňuje, není obměna, ale zakázaná třetí varianta** – „zapsané, ale něco je rozbité“ tedy patří do nehotového znění, pokud to rozbité brání tomu, co věc slibuje. Zpřesněno 17. 9. 2026, když se u `/cleanup` ukázalo, že doslovné čtení „dvou vět“ by vynutilo buď mlčet o mergi, nebo tvrdit nehotovost u zapsané session.
+**Hotové znění smí mít obměny podle místa, kde skill běží** – `/end` má jiné ve worktree větvi a jiné, když merge něco brání. Podmínka je, že všechny obměny tvrdí totéž (věc je hotová a ověřená) a liší se jen tím, co z toho plyne a čím pokračovat; o tom, která platí, rozhoduje ověřitelný stav, ne dojem. **Obměna, která hotovost zpochybňuje, není obměna, ale zakázaná třetí varianta** – „zapsané, ale něco je rozbité“ tedy patří do nehotového znění, pokud to rozbité brání tomu, co věc slibuje. Zpřesněno 17. 9. 2026, když se u `/end` ukázalo, že doslovné čtení „dvou vět“ by vynutilo buď mlčet o mergi, nebo tvrdit nehotovost u zapsané session.
 
 Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal jsem kroky“ od „výsledek platí“. Bez nich končí každý běh smířlivým odstavcem, ze kterého nejde poznat, jestli se dá pokračovat.
 
@@ -380,7 +380,7 @@ Rozejde-li se rámeček s životním cyklem v `~/.claude/standards/rules.md`, pl
 > Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do
 > `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect,
 > breakdown, implement, release, evaluate, oponent, consolidate, review, consistency,
-> attack, cleanup a merge. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
+> attack, end a merge. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
 > i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README
 > a řekni mi, co k nim potřebuju doplnit.
 ```
@@ -411,7 +411,7 @@ Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou
 
 **Pořadí skillů v hlavním README je dané, ne libovolné.** Kroky osy stojí v pořadí, ve kterém se pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Uvnitř skupiny kontrol platí pořadí z rámečku v `~/.claude/standards/rules.md`. Skilly mimo životní cyklus se dělí **tematicky podle toho, na čem pracují**, a uvnitř své skupiny stojí **abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu. Že se pouštějí nezávisle na fázi projektu, říká úvod celé kapitoly, ne každá skupina zvlášť.
 
-**Rozdělení cyklu na dvě skupiny je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/cleanup` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Úvodní odstavec skupiny proto říká, čím se ta vrstva liší; **bold řádek mezi sekcemi to nezastane**, protože spadne dovnitř té předchozí a poruší pravidlo jednoho odstavce na sekci.
+**Rozdělení cyklu na dvě skupiny je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/end` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Úvodní odstavec skupiny proto říká, čím se ta vrstva liší; **bold řádek mezi sekcemi to nezastane**, protože spadne dovnitř té předchozí a poruší pravidlo jednoho odstavce na sekci.
 
 **Obě README se aktualizují spolu se skillem**, ne na vyžádání. Změní-li se, co skill umí, je to součást té změny – stejně jako hlavička nebo test.
 

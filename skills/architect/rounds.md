@@ -1,6 +1,6 @@
 # Kola návrhu
 
-Jak se v souborech projektu zapisuje návrh rozdělený na tematická kola. Co je kolo, kdy vzniká a jak běží, drží `~/.claude/skills/architect/SKILL.md`; tenhle soubor drží **tvar zápisů**, protože je kromě `/architect` čtou i `/next`, `/breakdown`, `/merge` a `/cleanup`. **Odkaz, ne import** – načítá se, když se sahá na sekci `## Kola návrhu` v `todo.md` nebo `done.md` nebo na kapitolu kola v `decisions.md`.
+Jak se v souborech projektu zapisuje návrh rozdělený na tematická kola. Co je kolo, kdy vzniká a jak běží, drží `~/.claude/skills/architect/SKILL.md`; tenhle soubor drží **tvar zápisů**, protože je kromě `/architect` čtou i `/next`, `/breakdown`, `/merge` a `/end`. **Odkaz, ne import** – načítá se, když se sahá na sekci `## Kola návrhu` v `todo.md` nebo `done.md` nebo na kapitolu kola v `decisions.md`.
 
 ## V `todo.md`
 

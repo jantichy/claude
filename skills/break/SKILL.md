@@ -1,6 +1,6 @@
 ---
 name: break
-description: Skill se použije, když uživatel zadá "/break", nebo chce rozdělanou práci přerušit uprostřed a ukončit session – "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, anebo když běh jiného skillu narazí na práh kontextu a uživatel přerušení přijme. Zapíše do docs/todo.md, sekce Přerušený běh, všechno, co nová session potřebuje, aby v práci pokračovala bez ztráty čehokoliv podstatného: kde práce leží, co předchází, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří a commitne a skončí doporučením /cleanup, /clear a /continue, který v nové session na zápis rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci mimo skill. Na rozdíl od /cleanup, který vytěžuje dohody a nevypořádaná témata celé session, tenhle skill ukládá rozdělanou práci jako frontu k navázání; na rozdíl od /continue nic neprovádí, jen připraví, čím se naváže.
+description: Skill se použije, když uživatel zadá "/break", nebo chce rozdělanou práci přerušit uprostřed a ukončit session – "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, anebo když běh jiného skillu narazí na práh kontextu a uživatel přerušení přijme. Zapíše do docs/todo.md, sekce Přerušený běh, všechno, co nová session potřebuje, aby v práci pokračovala bez ztráty čehokoliv podstatného: kde práce leží, co předchází, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří a commitne a skončí doporučením /end, /clear a /continue, který v nové session na zápis rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci mimo skill. Na rozdíl od /end, který vytěžuje dohody a nevypořádaná témata celé session, tenhle skill ukládá rozdělanou práci jako frontu k navázání; na rozdíl od /continue nic neprovádí, jen připraví, čím se naváže.
 allowed-tools: [Read, Glob, Grep, Bash, Edit, Write, AskUserQuestion]
 ---
 
@@ -14,7 +14,7 @@ Rozdělanou prací je **fronta kteréhokoliv skillu** – nálezy `/review`, úk
 
 ## Co skill nedělá
 
-- **Nevytěžuje session.** Dohody, poznatky a nevypořádaná témata zapisuje `/cleanup`, který běží **za ním** – `/break` ukládá jen rozdělanou práci jako frontu k navázání a `/cleanup` ji pak nepřebírá ani nepřepisuje.
+- **Nevytěžuje session.** Dohody, poznatky a nevypořádaná témata zapisuje `/end`, který běží **za ním** – `/break` ukládá jen rozdělanou práci jako frontu k navázání a `/end` ji pak nepřebírá ani nepřepisuje.
 - **Nepokračuje.** Navázání dělá `/continue` v nové session – je to druhá strana téhož předání a čte přesně to, co tenhle skill zapíše. Přehled všeho rozdělaného včetně tohohle sestavuje `/next`.
 - **Nerozhoduje ani neopravuje.** Co se do přerušení nevypořádalo, zůstane otevřené – přerušení není místo, kde se zbytek fronty „rychle doklepne“.
 - **Nehlídá práh kontextu.** Ten drží `~/.claude/skills/handoff.md`, *Práh kontextu*, a ohlašuje hook `handoff.py`; skill s frontou podle něj přerušení nabídne a na souhlas zavolá tenhle skill.
@@ -76,7 +76,7 @@ Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj klíčem `int
 
 1. **Přečti blok zpátky a spočítej v něm položky** – musí jich být tolik, kolik jich ve frontě zbývalo (`~/.claude/standards/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Nesedí-li to, doplň chybějící; nehlas přerušení s polovinou fronty.
 2. **Pusť kontrakt příkazů projektu** (`## Kontrakt příkazů` v jeho `CLAUDE.md`). Projekty mívají kontroly tvaru dokumentace – holé odkazy, kotvy, formát výčtu – a zápis na ně narazí stejně jako každý jiný text. Selže-li na zápisu, oprav zápis, ne kontrolu. Selže-li na rozdělané práci, nic neopravuj – výsledek patří do *Jak pokračovat* jako stav, ve kterém se navazuje. Chybí-li kontrakt, řekni to a v závěru uveď, že se nic nespustilo.
-3. **Commitni jmenovitě `todo.md`** – rozdělanou práci ne, tu commitne `/cleanup`, který jde po tomhle skillu – a pushni, má-li projekt autocommit (`~/.claude/skills/autocommit/autocommit.md`).
+3. **Commitni jmenovitě `todo.md`** – rozdělanou práci ne, tu commitne `/end`, který jde po tomhle skillu – a pushni, má-li projekt autocommit (`~/.claude/skills/autocommit/autocommit.md`).
 
 **Pokyn ke spěchu zkracuje odpověď, ne ověření.** Čtení zpátky a commit odcházejícího uživatele nezdrží a ověřený zápis je to, s čím odchází.
 
@@ -113,4 +113,4 @@ Přerušený skill svůj vlastní verdikt nevydává – hotový není a tenhle 
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar drží `~/.claude/skills/handoff.md`, řádek *přerušený průchod frontou* v tabulce řetězů:
 
-- `/cleanup`, pak `/clear`, a v nové session `/continue` – naváže rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění
+- `/end`, pak `/clear`, a v nové session `/continue` – naváže rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění

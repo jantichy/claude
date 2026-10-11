@@ -17,7 +17,7 @@ Kontrolní krok není bod v řadě, ale **vrstva mezi dvěma kroky osy** – pro
 - **`/project`** – u nového projektu, a **znovu nad dávno nastaveným, kdykoliv se posunuly standardy nebo konfigurační vrstva**. Musí být první: bez založených souborů není kam průběžně zapisovat rozhodnutí. Zakládá i *Kontrakt příkazů*; ten sám průběžnou kontrolu **nezapne** – hook spouští příkazy jen v repozitáři, pro který člověk vydal souhlas (`~/.claude/hooks/verify.sh --allow`).
 - **`/discovery`** – **proč se to má stavět**: doklady poptávky s verdiktem (`docs/demand.md`), konkurence a naše pozice proti ní (`docs/competition.md`), produktová a tržní rizika s mitigacemi (`docs/risks.md`). **Hlavní je poptávka** – nedoložená se projeví až jako hotový produkt, který nikdo nepoužívá; **tenhle krok je jediné místo, kde ta otázka zazní**, od `/specify` dál je rozhodnuto stavět. Stojí před `/specify`, protože co produkt musí umět a co v něm musí být jinak, je vstup do specifikace. Problém, jeho nositele, dnešní řešení, kategorii a zamýšlené odlišení zapíše sám, takže `/specify` se na ně neptá podruhé. **Je opakovatelný samostatně.** **Přeskakuje se po dokumentech:** u toho, co nemá trh (interní nástroj, zakázka pro jednoho klienta), odpadá jen konkurence; celý odpadá jen u přírůstku do hotového produktu, kde je „proč“ rozhodnuté a **zapsané**.
 - **`/specify`** – požadavky, co stavíme a proč: **jeden dokument** `docs/requirements.md`, volitelně scénáře (`docs/scenarios.md`), glosář a cenový model. Sám rozhodne, jestli je zadání na specifikaci; když ne, odpadá i všechno pod ním.
-- **`/architect`** – návrh řešení jako **sada dokumentů**: páteř `docs/architecture.md`, podle potřeby `model.md`, `transitions.md` a tematické dokumenty kol. **Větší záměr dělí na tematická kola uvnitř sebe**, ne jako krok cyklu; `/oponent`, `/review`, `/consistency` a `/cleanup` se nad koly pouštějí podle doporučení v závěru kola a `/breakdown` přichází až po uzavření všech kol nad sešitým celkem. Od `/specify` je oddělený, protože oponovat zadání má smysl dřív, než se podle něj něco postaví: požadavky se sepíšou **jednou na začátku**, návrh vzniká **po tématech**.
+- **`/architect`** – návrh řešení jako **sada dokumentů**: páteř `docs/architecture.md`, podle potřeby `model.md`, `transitions.md` a tematické dokumenty kol. **Větší záměr dělí na tematická kola uvnitř sebe**, ne jako krok cyklu; `/oponent`, `/review`, `/consistency` a `/end` se nad koly pouštějí podle doporučení v závěru kola a `/breakdown` přichází až po uzavření všech kol nad sešitým celkem. Od `/specify` je oddělený, protože oponovat zadání má smysl dřív, než se podle něj něco postaví: požadavky se sepíšou **jednou na začátku**, návrh vzniká **po tématech**.
 - **`/breakdown`** – implementační plán (`docs/plan.md`), až po schválení zadání – změna specifikace pod hotovým plánem znamená plán přepsat. Každý úkol dostane **ověřitelné akceptační kritérium**.
 - **`/implement`** – odpracování plánu, úkol po úkolu, každý do průběžné kontroly a do commitu.
 - **`/release`** – nasazení do produkce. **Stojí za všemi kontrolami toho, co se nasazuje**, protože ty mění repozitář a nasazení svět; kontrolní kroky za ním uklízejí po vyhodnocení provozu. Je to **poslední krok, který mění svět**. Nikdy se nespouští jako pokračování jiného kroku a vždy se potvrzuje zvlášť. **Končí až uzavřením sledovacího okna** (*Cyklus nekončí nasazením*).
@@ -32,7 +32,7 @@ Kontrolní krok není bod v řadě, ale **vrstva mezi dvěma kroky osy** – pro
 - **`/review`** – paralelní panel specialistů nad změnami: korektnost, bezpečnost, data a stavy, provoz a chyby, testy, agentní infrastruktura a doménové znalosti z `~/Dev/context/`. Specialisty vybírá podle toho, čeho se změny týkají.
 - **`/consistency`** – „sedí si projekt sám se sebou?“; uklidí i to, co nastřílel `/review`. Výchozí rozsah jsou soubory dotčené větví a ty, které na ně odkazují; `full` se pouští zřídka, protože po každé feature by znovu předkládal tentýž starý dluh.
 - **`/attack`** – aplikace se **spustí** a zkouší se rozbít; `/review` kód čte, tenhle ho spouští. **Stojí až v poslední mezeře schválně:** je drahý a nad rozestavěnou prací by hlásil hlavně nedodělanost. Projekt bez spustitelné aplikace ho nemá.
-- **`/cleanup`** – **poslední krok každé mezery**; spouští ho konec session, ne pozice, takže běží i uprostřed rozdělaného `/implement`. Zapíše i rozhodnutí z kontrolních kroků (co bylo odmítnuto a proč). Běží-li po něm ještě `/attack` nebo `/release`, ty si zápisy dělají samy a `/cleanup` se **pouští znovu** jako verifikace. **Po úspěšném zápisu nabídne `/merge`**, stojí-li session mimo hlavní větev – i před `/attack` – útok pak běží nad hlavní větví a nasazuje se až vědomým povýšením do `production`; **u projektu, který nasazuje přímo z hlavní větve, merge nenabízí**.
+- **`/end`** – **poslední krok každé mezery**; spouští ho konec session, ne pozice, takže běží i uprostřed rozdělaného `/implement`. Zapíše i rozhodnutí z kontrolních kroků (co bylo odmítnuto a proč). Běží-li po něm ještě `/attack` nebo `/release`, ty si zápisy dělají samy a `/end` se **pouští znovu** jako verifikace. **Po úspěšném zápisu nabídne `/merge`**, stojí-li session mimo hlavní větev – i před `/attack` – útok pak běží nad hlavní větví a nasazuje se až vědomým povýšením do `production`; **u projektu, který nasazuje přímo z hlavní větve, merge nenabízí**.
 - **`/merge`** – dokončení větve: sloučení do hlavní větve a úklid. Spojený stav vzniká a ověřuje se ve větvi, takže do hlavní větve jde jen to, co prošlo *Kontraktem příkazů*. **Jediným spouštěčem je výslovný pokyn uživatele** (`~/.claude/standards/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*). **U projektu, který nasazuje přímo z hlavní větve, se nepouští vůbec** – merge je tam nasazení a patří `/release`. Odpadá u projektu bez větví.
 
 ### Co smí stát v které mezeře
@@ -41,26 +41,26 @@ Mezera je prostor, ve kterém se kontrolní kroky pouštějí v uvedeném pořad
 
 | Mezera | Co v ní může stát |
 |---|---|
-| `/project` → `/discovery` | `/cleanup` → `/merge` |
-| `/discovery` → `/specify` | `/review` → `/oponent` → `/cleanup` → `/merge` |
-| `/specify` → `/architect` | `/review` → `/oponent` → `/cleanup` → `/merge` |
-| `/architect` → `/breakdown` | `/review` → `/oponent` → `/consolidate` → `/consistency` → `/cleanup` → `/merge` |
-| `/breakdown` → `/implement` | `/review` → `/cleanup` → `/merge` |
-| `/implement` → `/release` | `/review` → `/consistency` → `/cleanup` → `/merge` → `/attack` → `/cleanup` |
-| `/release` → `/evaluate` | `/cleanup` |
-| za `/evaluate` | `/review` → `/cleanup` → `/merge` |
+| `/project` → `/discovery` | `/end` → `/merge` |
+| `/discovery` → `/specify` | `/review` → `/oponent` → `/end` → `/merge` |
+| `/specify` → `/architect` | `/review` → `/oponent` → `/end` → `/merge` |
+| `/architect` → `/breakdown` | `/review` → `/oponent` → `/consolidate` → `/consistency` → `/end` → `/merge` |
+| `/breakdown` → `/implement` | `/review` → `/end` → `/merge` |
+| `/implement` → `/release` | `/review` → `/consistency` → `/end` → `/merge` → `/attack` → `/end` |
+| `/release` → `/evaluate` | `/end` |
+| za `/evaluate` | `/review` → `/end` → `/merge` |
 
 **`/review` stojí za každým krokem osy, který vyrobil artefakt** – u projektu bez kódu je hotovou prací dokumentace návrhu. **Jedinou výjimkou je `/project`**, který si artefakt měří sám revizí souladu se standardem.
 
 **`/review` měří proti předpisu v souboru, `/oponent` posuzuje obsah bez předpisu.** Nález `/review` se vyvrací ukázáním na pravidlo doménové znalosti, nález `/oponent` argumentem. Specialisté na korektnost, bezpečnost a testy se zapínají jen na kód, takže u projektu bez kódu, ke kterému žádná relevantní doménová znalost neexistuje, je `/review` skoro prázdný a má se přeskočit; `/oponent` funguje vždycky (`decisions.md`, *Rozdíl mezi `/review` a `/oponent` nad obsahovým projektem*).
 
-**Pořadí uvnitř mezery:** `/review` první, protože jeho opravy mění text, nad kterým pracují ostatní; `/consistency` po něm, protože uklízí i to, co `/review` nastřílel; `/cleanup` poslední, protože jako jediný odolá kompaktaci.
+**Pořadí uvnitř mezery:** `/review` první, protože jeho opravy mění text, nad kterým pracují ostatní; `/consistency` po něm, protože uklízí i to, co `/review` nastřílel; `/end` poslední, protože jako jediný odolá kompaktaci.
 
-**`/merge` stojí jen za tím `/cleanup`, kterým se uzavírá větev.** Zůstává-li větev otevřená přes víc mezer (typicky během `/implement`), na řadu nepřijde. V poslední mezeře stojí **před** `/attack`, protože útok běží nad hlavní větví. **Za `/release` chybí schválně** – žádná větev k uzavření tam není. **Za `/evaluate` stát může**, protože ten zapisuje jako každá jiná práce.
+**`/merge` stojí jen za tím `/end`, kterým se uzavírá větev.** Zůstává-li větev otevřená přes víc mezer (typicky během `/implement`), na řadu nepřijde. V poslední mezeře stojí **před** `/attack`, protože útok běží nad hlavní větví. **Za `/release` chybí schválně** – žádná větev k uzavření tam není. **Za `/evaluate` stát může**, protože ten zapisuje jako každá jiná práce.
 
 **Poslední mezera se točí:** `/implement` a `/review` se v ní střídají po každé hotové featuře, dokud je co dělat.
 
-**Spouštěč rozhoduje, jestli se na krok dojde.** Kroky osy čekají na výstup předchozího, kromě `/evaluate`. Z kontrolních čekají na pozici jen `/oponent`, `/review` a `/attack`; `/consolidate` a `/consistency` se pouštějí, až se nasbírá, co měří – dost kol, respektive dost změn –, `/cleanup` podle konce session a `/merge` jen na pokyn uživatele, takže se na něj nedojde nikdy samovolně. **Přeskočení se hlásí nahlas i s důvodem.**
+**Spouštěč rozhoduje, jestli se na krok dojde.** Kroky osy čekají na výstup předchozího, kromě `/evaluate`. Z kontrolních čekají na pozici jen `/oponent`, `/review` a `/attack`; `/consolidate` a `/consistency` se pouštějí, až se nasbírá, co měří – dost kol, respektive dost změn –, `/end` podle konce session a `/merge` jen na pokyn uživatele, takže se na něj nedojde nikdy samovolně. **Přeskočení se hlásí nahlas i s důvodem.**
 
 **Proč v tomhle pořadí:** každý krok osy vyrábí vstup pro další; obráceně by se uklízelo nad stavem, který se ještě změní.
 
@@ -90,7 +90,7 @@ Mezera je prostor, ve kterém se kontrolní kroky pouštějí v uvedeném pořad
 |---|---|---|
 | průběžná kontrola | `/implement` → `/review` | hook ji vynutil po poslední odpovědi, `/review` ji pouští nad celým rozsahem větve |
 | audit závislostí | `/review` → `/release` | databáze zranitelností se mění bez ohledu na projekt |
-| scan tajemství | `/review` → `/release` | mezi oběma kroky přibyly commity z `/consistency`, `/cleanup` i `/attack` |
+| scan tajemství | `/review` → `/release` | mezi oběma kroky přibyly commity z `/consistency`, `/end` i `/attack` |
 | produkční build | `/review` → `/release` | kontrolní kroky i útok mezitím commitují, a `/release` ho navíc pouští **na čistém stromu** – „prošlo to při kontrolách“ a „projde to jako to, co posíláme ven“ jsou dvě tvrzení |
 
 ## Jeden člověk, jedna interaktivní session

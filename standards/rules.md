@@ -92,7 +92,7 @@ Vložený obsah se čte znovu v každém dalším volání – čtení kontextu 
 
 ### Dlouhá session je dražší než dvě krátké
 
-Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu délky session ohlásí hook `handoff.py`; na jeho hlášku jednou za práh nabídni** `/cleanup` a novou session – s tím, co by se zapsalo a kde by se navázalo; rozhodne uživatel. Prahy drží `~/.claude/skills/handoff.md`, *Práh kontextu*. Do téže session patří práce, která staví na tom, co se v ní promyslelo; práce, která jen sahá na tytéž soubory, do nové. Posudek vlastní práce patří do nové session – ta, která návrh obhajovala, je zaujatá. Kvůli pár voláním gitu novou session nezakládej.
+Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu délky session ohlásí hook `handoff.py`; na jeho hlášku jednou za práh nabídni** `/end` a novou session – s tím, co by se zapsalo a kde by se navázalo; rozhodne uživatel. Prahy drží `~/.claude/skills/handoff.md`, *Práh kontextu*. Do téže session patří práce, která staví na tom, co se v ní promyslelo; práce, která jen sahá na tytéž soubory, do nové. Posudek vlastní práce patří do nové session – ta, která návrh obhajovala, je zaujatá. Kvůli pár voláním gitu novou session nezakládej.
 
 ### Mechanickou práci deleguj
 
@@ -121,7 +121,7 @@ Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu 
 
 ### Pravda v souborech, ne v konverzaci
 
-Cokoliv se dohodne (pravidlo, konvence, rozhodnutí, poznatek), **zapiš okamžitě** do souborů projektu – nečekej na `/cleanup` ani na konec session. Historie konverzace ani memory nejsou autoritativní zdroj. Předat kontext subagentovi v zadání je v pořádku; porušením je, když poznatek zůstane jen v konverzaci. Zakazuje-li projektový `CLAUDE.md` trvalou Memory, platí to i proti pobídkám harnessu.
+Cokoliv se dohodne (pravidlo, konvence, rozhodnutí, poznatek), **zapiš okamžitě** do souborů projektu – nečekej na `/end` ani na konec session. Historie konverzace ani memory nejsou autoritativní zdroj. Předat kontext subagentovi v zadání je v pořádku; porušením je, když poznatek zůstane jen v konverzaci. Zakazuje-li projektový `CLAUDE.md` trvalou Memory, platí to i proti pobídkám harnessu.
 
 ### Rozhodnutí zapisuj i s cestou k nim
 
@@ -301,10 +301,10 @@ Práce, u které jde spustit kontrola, se **nehlásí jako hotová bez jejího v
 Osa        /project → /discovery → /specify → /architect →
            /breakdown → /implement → /release → /evaluate
 
-Kontroly   /oponent, /consolidate, /review, /consistency, /attack, /cleanup, /merge
+Kontroly   /oponent, /consolidate, /review, /consistency, /attack, /end, /merge
            stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 ```
 
-Kroky **osy** něco tvoří a čekají na výstup předchozího; `/evaluate` čeká na čas, protože data o provozu vznikají týdny po nasazení. **Kontrolní kroky** nezvětšují rozsah práce – měří, uklízejí a uzavírají, co vzniklo; `/cleanup` běží na konci každé session, za ním `/merge`, uzavírá-li se větev.
+Kroky **osy** něco tvoří a čekají na výstup předchozího; `/evaluate` čeká na čas, protože data o provozu vznikají týdny po nasazení. **Kontrolní kroky** nezvětšují rozsah práce – měří, uklízejí a uzavírají, co vzniklo; `/end` běží na konci každé session, za ním `/merge`, uzavírá-li se větev.
 
 **Načti si `~/.claude/standards/lifecycle.md`, jakmile v některém kroku stojíš** – drží rozhraní kroků, co smí stát ve které mezeře, povolená opakování a kritéria přeskočení. Krok se přeskakuje jen tam, kde pro něj není důvod, a **nahlas i s důvodem**. Žádný krok neopakuje práci předchozího.

@@ -17,7 +17,7 @@ Režimy ani argument nemá. Tvar zápisu, ze kterého čte, drží `/break` – 
 - **Nezapisuje rozdělanou práci.** To dělá `/break`; když zápis chybí nebo je neúplný, nedomýšlí ho z hlavy.
 - **Nesestavuje nabídku.** Projít celé `todo.md`, plán, kola, větve a místo v cyklu a vybrat z toho je `/next` – a právě ta šíře je to, co tady nechceme. Není-li na co navázat, odkáže na něj.
 - **Nemaže sekci ani běhový soubor.** Kdy se smažou, říká *Jak pokračovat* v zápisu; dělá to až práce, která frontu dojde.
-- **Nehlídá, jestli nad větví běží jiná session.** `/break` končí řetězem `/cleanup` → `/clear` v téže session, takže by kontrola hlásila jako obsazenou právě tu, která má pokračovat – a byla by to nejpomalejší část běhu. Druhé okno nad týmž worktree je tedy věc uživatele, ne tohohle skillu.
+- **Nehlídá, jestli nad větví běží jiná session.** `/break` končí řetězem `/end` → `/clear` v téže session, takže by kontrola hlásila jako obsazenou právě tu, která má pokračovat – a byla by to nejpomalejší část běhu. Druhé okno nad týmž worktree je tedy věc uživatele, ne tohohle skillu.
 
 ## Fáze 0 – Příprava
 

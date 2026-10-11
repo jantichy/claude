@@ -7,7 +7,7 @@ Tvar a pravidla řádku, který si kontrolní kroky životního cyklu zapisují 
 - **`/review` a `/attack`** – zapisují se i tam, kam se nenasazuje. **Hash je tu kvůli `/release`:** o dny později z paměti nepozná, jestli kontrola běžela nad *tímhle*.
 - **`/oponent`** – se seznamem hledisek, bez kterého příští běh nepozná, s čím srovnávat počty nálezů.
 - **`/consolidate`** – **i po běhu bez přijatého návrhu** a s **počty, ze kterých se dá časem dofitovat práh** „dost kol“.
-- **`/consistency` a `/cleanup`** – **`/cleanup` uvádí i id uklizené session**; dvě data u téhož id znamenají dva úklidy. **Hash je stopa, ne čára:** druhý běh vytěžuje transcript vždy celý, protože hash vzniká před commitem zápisů úklidu.
+- **`/consistency` a `/end`** – **`/end` uvádí i id uklizené session**; dvě data u téhož id znamenají dva úklidy. **Hash je stopa, ne čára:** druhý běh vytěžuje transcript vždy celý, protože hash vzniká před commitem zápisů úklidu.
 
 **`/evaluate` sem vědomě nezapisuje** – datum běhu nese hlavička `operation.md`. **`/merge` taky ne** – záznamem je merge commit.
 

@@ -158,13 +158,13 @@ Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zby
 
 Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test; útočí se výhradně na lokální instanci nad testovacími daty, a že tomu tak opravdu je, se dokládá příkazem, ne slibem.
 
-#### [`/cleanup`](skills/cleanup/) – ať po mně zůstane čisto a jasno
+#### [`/end`](skills/end/) – ať po mně zůstane čisto a jasno
 
 Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. **Úplnost přitom měří, ne tvrdí:** transcript si nejdřív skriptem očistí od balastu, který je v něm z devíti desetin, vytáhne z něj seznam všech míst, kde jsem něco napsal, a u každého odškrtne, co se s tím stalo – v závěru pak stojí poměr, který jde ověřit, a vedle něj jmenovitě to, co se nepřečetlo. Všechno, co potřebuje moje rozhodnutí, projde jednou frontou podle váhy a nabídne, co dál: ve větvi i rovnou merge.
 
 #### [`/merge`](skills/merge/) – dokončení větve, ne jeden příkaz
 
-„Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Zavoláte ho sami, nebo ho vyberete z nabídky na konci `/cleanup`, aby se nemusel psát ručně – sám od sebe se nespustí nikdy.
+„Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Zavoláte ho sami, nebo ho vyberete z nabídky na konci `/end`, aby se nemusel psát ručně – sám od sebe se nespustí nikdy.
 
 ### Podklady, znalost a texty
 
@@ -276,7 +276,7 @@ Kořen projektu, worktree layout, co se čte z projektového `CLAUDE.md`, stav p
 
 #### [`skills/session.md`](skills/session.md) – jak se čte nahraná konverzace
 
-Claude Code ukládá každou session do souboru a dvěma skillům se z něj vytěžuje: `/cleanup` z něj bere dohody, `/skill` to, co se při ladění vyladilo. Drží pasti, které stojí celý výtěžek – od toho, že se nesmí sáhnout po naposledy změněném souboru (nad projektem běžívají dvě session naráz), přes první řádek bez času a to, že podstata může ležet ve výstupech nástrojů, až po to, že zpráva poslaná uprostřed rozepsané odpovědi se neukládá jako uživatelská, takže ji běžný filtr přeskočí.
+Claude Code ukládá každou session do souboru a dvěma skillům se z něj vytěžuje: `/end` z něj bere dohody, `/skill` to, co se při ladění vyladilo. Drží pasti, které stojí celý výtěžek – od toho, že se nesmí sáhnout po naposledy změněném souboru (nad projektem běžívají dvě session naráz), přes první řádek bez času a to, že podstata může ležet ve výstupech nástrojů, až po to, že zpráva poslaná uprostřed rozepsané odpovědi se neukládá jako uživatelská, takže ji běžný filtr přeskočí.
 
 #### [`skills/severity.md`](skills/severity.md) – jak vážné to je, měří všichni stejně
 

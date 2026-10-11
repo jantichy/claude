@@ -18,7 +18,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **Nehledá chyby v kódu.** Na korektnost provedených změn je `/review` – ten uvnitř volá vestavěné `/code-review` jako jednoho ze svých specialistů, takže poslat uživatele rovnou na něj by ho připravilo o zbytek panelu i o ověření nálezů.
 - **Nekontroluje soulad s doménovými znalostmi.** Na odchylky od předpisů v `~/Dev/context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat pravidla.
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
-- **Nevytěžuje session.** Zápis dohod do souborů dělá `/cleanup`, který běží až po tomhle.
+- **Nevytěžuje session.** Zápis dohod do souborů dělá `/end`, který běží až po tomhle.
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
 - **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky životního cyklu nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
 
@@ -28,7 +28,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 **Závazné je proti tomu tohle a tiše se to změnit nesmí:** co jde změřit nástrojem, nehledá agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula); nespuštěná kontrola se vypisuje jako nespuštěná, nikdy jako nula nálezů; a nálezy z nástrojů nesou tag `toolchain` a neprocházejí posouzením, protože nástroj nehalucinuje.
 
-**`links.py` leží ve `skills/`, ne v adresáři skillu, a je to záměr.** Volá ho i `/cleanup` a skript uvnitř cizího skillu by se volat nesměl (`~/.claude/skills/skills.md`, *Číslování a názvosloví*). Kdo si nainstaluje `/consistency` bez `/cleanup`, dostane ho stejně.
+**`links.py` leží ve `skills/`, ne v adresáři skillu, a je to záměr.** Volá ho i `/end` a skript uvnitř cizího skillu by se volat nesměl (`~/.claude/skills/skills.md`, *Číslování a názvosloví*). Kdo si nainstaluje `/consistency` bez `/end`, dostane ho stejně.
 
 ## Rozsah
 
@@ -113,7 +113,7 @@ Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí ta
 
 **Vyrob si seznam souborů v rozsahu příkazem a zapamatuj si jeho délku** – u `branch` z diffu proti hlavní větvi plus soubory, které na ně odkazují, u `full` z `git ls-files`. **Ten počet je to, proti čemu se v *Přehledu* vykazuje pokrytí**, takže ho neodhaduj (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**Proč to tady je:** prázdné pole nálezů vypadá stejně, ať agent prošel dvě stě souborů, nebo dvanáct – a „prošel jsem to systematicky“ je tvrzení, které nemá čím být doložené. Je to táž vada, kterou u `/cleanup` vyřešil měřený poměr odškrtnutých promptů; zdůvodnění drží `~/.claude/docs/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*.
+**Proč to tady je:** prázdné pole nálezů vypadá stejně, ať agent prošel dvě stě souborů, nebo dvanáct – a „prošel jsem to systematicky“ je tvrzení, které nemá čím být doložené. Je to táž vada, kterou u `/end` vyřešil měřený poměr odškrtnutých promptů; zdůvodnění drží `~/.claude/docs/decisions.md`, *`/end` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*.
 
 Spusť subagenta typu `reader` s tímto zadáním (předej mu absolutní cestu k projektu, **seznam souborů v rozsahu**, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
 
@@ -204,7 +204,7 @@ Nenašel-li jsi v prošlém rozsahu nic, vrať prázdné `findings` – s vypln�
 
 **O nálezech mluv obsahem, ne značkou z výstupu agenta.** Pořadová čísla a zkratky, pod kterými se nálezy vracejí, jsou interní – uživatel je nikdy neviděl, takže „N1 je širší, než agent hlásil“ mu neřekne nic. Napiš, čeho se to týká: *„Chybějící sekce Rizika není jen v `discovery.md` – chybí ve všech třech dokumentech.“* (`~/.claude/standards/rules.md`, *Interní značky ven nepatří*.)
 
-**Nejdřív zkontroluj pokrytí, teprve pak nálezy.** Chybí-li `covered`, je prázdné, nebo v něm sedí jen opsaný seznam ze zadání bez jediného nálezu, **není to čistý výsledek, ale selhání agenta** – pusť ho znovu a nepovede-li se to podruhé, řekni nahlas, že audit pokrytí nedoložil, a nálezy předkládej jako neúplné. **Prázdné `findings` samo o sobě čisto neznamená:** u `/cleanup` se přesně takový výsledek bral za úspěch i za selhání podle situace, a stálo to třetí běh čtenářů navíc.
+**Nejdřív zkontroluj pokrytí, teprve pak nálezy.** Chybí-li `covered`, je prázdné, nebo v něm sedí jen opsaný seznam ze zadání bez jediného nálezu, **není to čistý výsledek, ale selhání agenta** – pusť ho znovu a nepovede-li se to podruhé, řekni nahlas, že audit pokrytí nedoložil, a nálezy předkládej jako neúplné. **Prázdné `findings` samo o sobě čisto neznamená:** u `/end` se přesně takový výsledek bral za úspěch i za selhání podle situace, a stálo to třetí běh čtenářů navíc.
 
 **Soubory z rozsahu, které v `covered` nejsou, si vypiš jmenovitě** – jdou do *Přehledu* jako neprověřené. Tři neprověřené soubory zamlčené v čistém výsledku jsou horší než tři nálezy.
 
@@ -330,5 +330,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/cleanup` – zápis toho, co se v běhu domluvilo; a byla-li práce na větvi, za ním `/merge`
-- byla-li některá oprava rozsáhlá, `/cleanup`, pak `/clear`, a audit znovu až v nové session, protože tahle už opravovala a na vlastní opravy je zaujatá
+- `/end` – zápis toho, co se v běhu domluvilo; a byla-li práce na větvi, za ním `/merge`
+- byla-li některá oprava rozsáhlá, `/end`, pak `/clear`, a audit znovu až v nové session, protože tahle už opravovala a na vlastní opravy je zaujatá

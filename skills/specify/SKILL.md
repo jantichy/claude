@@ -25,7 +25,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to třetí kro
 - **Nepíše implementační plán.** Ten dělá `/breakdown`, a to až z hotového návrhu řešení, ne z požadavků.
 - **Nic neprogramuje.** Ani scaffold, ani „jen rychle rozjedu projekt“. Tvrdá kontrola – viz *Zákaz implementace*.
 - **Neduplikuje `superpowers:brainstorming`.** Klasifikaci rozsahu i doptávání řídí ten skill.
-- **Nevolá další kroky, jen je doporučuje.** `/oponent`, `/review`, `/cleanup` i `/architect` jsou samostatné kroky; kdyby je skill pouštěl sám, staly by se jeho součástí. V závěru řekne, co a v jakém pořadí pustit.
+- **Nevolá další kroky, jen je doporučuje.** `/oponent`, `/review`, `/end` i `/architect` jsou samostatné kroky; kdyby je skill pouštěl sám, staly by se jeho součástí. V závěru řekne, co a v jakém pořadí pustit.
 
 ## Jak je to postavené uvnitř
 
@@ -225,5 +225,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/architect` – návrh řešení nad schváleným zadáním
-- volitelně před tím `/cleanup`, pak `/clear`, a `/oponent docs/requirements.md` až v nové session – tahle zadání psala a je na něj zaujatá
+- volitelně před tím `/end`, pak `/clear`, a `/oponent docs/requirements.md` až v nové session – tahle zadání psala a je na něj zaujatá
 - u projektu bez kódu místo návrhu rozpis kroků do `docs/todo.md`

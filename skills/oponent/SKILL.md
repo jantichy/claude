@@ -22,7 +22,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
 - **Nepíše zadání, návrh ani plán.** Sám nenavrhuje – jen posuzuje hotový dokument, ať ho napsal `/discovery`, `/specify`, nebo `/architect` –, a rozpad na úkoly nechává `/breakdown`.
-- **Nevytěžuje session.** Že je všechno dohodnuté zapsané v souborech, hlídá `/cleanup`.
+- **Nevytěžuje session.** Že je všechno dohodnuté zapsané v souborech, hlídá `/end`.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují.
 
 **Vědomé volby, ať je nikdo neřeší znovu** (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*):
@@ -49,7 +49,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 **Načti kontext, který posudek potřebuje:** projektový `CLAUDE.md`, `docs/rules.md` (principy, proti kterým se v projektu rozhoduje) a `docs/decisions.md` (co už bylo rozhodnuto a proč). Bez toho subagenti navrhnou znovu to, co už bylo vědomě zamítnuto – a to je nejotravnější druh oponentury.
 
-**Na soubory ale nespoléhej.** Oponentura se často pouští hned po `/specify` nebo `/architect`, tedy v téže mezeře, ve které se o věci teprve rozhodlo – kdežto rozhodnutí z rozhovoru zapisuje `/cleanup` až na konci té mezery. `decisions.md` je v tu chvíli skoro prázdný, ačkoliv se v téhle session vědomě zamítla spousta věcí. **Projdi proto session a to, co jste zavrhli, vypiš do zadání oponentů** jako samostatný blok *Vědomě zamítnuté* – i s důvodem, ne jen výčtem. Bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy, a druhý už nespustíš.
+**Na soubory ale nespoléhej.** Oponentura se často pouští hned po `/specify` nebo `/architect`, tedy v téže mezeře, ve které se o věci teprve rozhodlo – kdežto rozhodnutí z rozhovoru zapisuje `/end` až na konci té mezery. `decisions.md` je v tu chvíli skoro prázdný, ačkoliv se v téhle session vědomě zamítla spousta věcí. **Projdi proto session a to, co jste zavrhli, vypiš do zadání oponentů** jako samostatný blok *Vědomě zamítnuté* – i s důvodem, ne jen výčtem. Bez toho první běh předloží nálezy, které umíš vyvrátit z hlavy, a druhý už nespustíš.
 
 **Nemá-li projekt `docs/`** (konfigurační repozitář, samostatný dokument mimo projekt, text v knowledge base), řekni to nahlas a veď posudek bez nich: kontextem je pak projektový `CLAUDE.md` a příslušná doména v `~/Dev/context/`, a přijatá i zamítnutá rozhodnutí jdou tam, kam patří v tom projektu – ne do založeného `docs/`.
 
@@ -113,7 +113,7 @@ Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku
 
 **Nejdřív si vyrob inventuru předmětu, pak pouštěj oponenty.** Vypiš nadpisy posuzovaných dokumentů příkazem (`grep -n '^#' <cesty>`) a **zapamatuj si jejich počet** – proti němu se v *Konsolidaci* vykazuje, kolik z předmětu který oponent doopravdy prošel. Neodhaduj to (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a u pěti dokumentů se proletnutí od přečtení nepozná. Posudek, který pokryl třetinu předmětu, přitom vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní. Je to táž vada, kterou u `/cleanup` vyřešil měřený poměr odškrtnutých promptů (`~/.claude/docs/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
+**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a u pěti dokumentů se proletnutí od přečtení nepozná. Posudek, který pokryl třetinu předmětu, přitom vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní. Je to táž vada, kterou u `/end` vyřešil měřený poměr odškrtnutých promptů (`~/.claude/docs/decisions.md`, *`/end` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
 
 Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
 

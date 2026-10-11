@@ -270,7 +270,7 @@ Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračn�
 
 **`operation.md` se tady nevybírá a není to opomenutí.** Zakládá ho až první běh `/evaluate` nad nasazeným projektem – dokud není co nasadit, není o čem rozhodovat, a závazek vést podklad o provozu by u projektu před prvním vydáním nic neznamenal. Ostatní podklady jsou naopak rozhodnutí, které se dá udělat hned.
 
-**Soubory nezakládej.** Prázdný `competition.md` předstírá úvahu, která se nestala. Vybrané jen **zapiš do `CLAUDE.md`** (krok 7, *Zápis*) jako závazek; vzniknou prací v `/discovery` a `/specify`, a `/cleanup` pak podle toho seznamu pozná chybějící dokument od nechtěného.
+**Soubory nezakládej.** Prázdný `competition.md` předstírá úvahu, která se nestala. Vybrané jen **zapiš do `CLAUDE.md`** (krok 7, *Zápis*) jako závazek; vzniknou prací v `/discovery` a `/specify`, a `/end` pak podle toho seznamu pozná chybějící dokument od nechtěného.
 
 *`adopt` a `update`:* co už existuje, ber jako zvolené. Existuje-li soubor, který v `CLAUDE.md` zapsaný není, doplň zápis; je-li zapsaný a nevznikl, zmiň to a nech rozhodnout, jestli se čeká, nebo se závazek ruší.
 
@@ -316,7 +316,7 @@ Projekt drží standardní strukturu podle `~/.claude/standards/structure.md`:
 - `docs/decisions.md` – co jsme rozhodli a proč, včetně zamítnutých variant
 - `docs/rules.md` – principy, ve kterých se projekt pohybuje
 
-Všechny tyhle soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/cleanup`.
+Všechny tyhle soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/end`.
 ```
 
 Vybral-li uživatel v kroku 6 nějaké **produktové podklady**, připoj pod ten seznam druhý – i u těch, které ještě nevznikly. Je to závazek, ne inventura:

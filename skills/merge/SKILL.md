@@ -1,6 +1,6 @@
 ---
 name: merge
-description: Skill se použije, když uživatel zadá "/merge", nebo chce dokončit hotovou větev a sloučit ji do hlavní – "přimerguj to", "tahle větev je hotová", "ukliď tu větev". Nejdřív natáhne hlavní větev do pracovní, nechá vyřešit konflikty a nad spojeným stavem pustí kontrakt příkazů, teprve pak merguje a uklidí větev i její worktree. Funguje ve worktree layoutu i v obyčejném repozitáři s jednou pracovní kopií. Sám od sebe se nespouští – merguje se jen na výslovný pokyn uživatele. Na rozdíl od /cleanup, který zapisuje, co se v session domluvilo, a merge na konci jen nabídne, tenhle skill ho provádí. U projektu, který se z hlavní větve automaticky nasazuje, je merge samotné nasazení a patří /release.
+description: Skill se použije, když uživatel zadá "/merge", nebo chce dokončit hotovou větev a sloučit ji do hlavní – "přimerguj to", "tahle větev je hotová", "ukliď tu větev". Nejdřív natáhne hlavní větev do pracovní, nechá vyřešit konflikty a nad spojeným stavem pustí kontrakt příkazů, teprve pak merguje a uklidí větev i její worktree. Funguje ve worktree layoutu i v obyčejném repozitáři s jednou pracovní kopií. Sám od sebe se nespouští – merguje se jen na výslovný pokyn uživatele. Na rozdíl od /end, který zapisuje, co se v session domluvilo, a merge na konci jen nabídne, tenhle skill ho provádí. U projektu, který se z hlavní větve automaticky nasazuje, je merge samotné nasazení a patří /release.
 argument-hint: [větev]
 allowed-tools: [Bash, Read, Edit, Grep, Glob, AskUserQuestion, Skill]
 ---
@@ -13,14 +13,14 @@ Dokončí hotovou větev: sloučí ji do hlavní a uklidí po ní. Není to jede
 
 Jádrem je **pořadí**: spojený stav vzniká a ověřuje se **ve větvi**, ne v hlavní větvi. Do ní jde až to, co prošlo kontrolou.
 
-V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní krok: nic nevyrábí, jen převádí hotovou práci tam, kam patří. Stojí v mezerách mezi kroky osy, hned za `/cleanup`, který ho na konci svého běhu nabídne.
+V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní krok: nic nevyrábí, jen převádí hotovou práci tam, kam patří. Stojí v mezerách mezi kroky osy, hned za `/end`, který ho na konci svého běhu nabídne.
 
 Bez argumentu pracuje s větví, na které stojíš; se jménem větve v argumentu s ní. Funguje ve worktree layoutu (`~/.claude/standards/worktree.md`) i v obyčejném repozitáři s jednou pracovní kopií.
 
 ## Co skill nedělá
 
 - **Nerozhoduje, že se má mergovat.** Merguje se jen na výslovný pokyn uživatele – `~/.claude/standards/worktree.md`, *Větev žije, dokud uživatel neřekne jinak*. Vyvolání skillu tím pokynem je; nic jiného ne.
-- **Nezapisuje, co se v session domluvilo.** To je `/cleanup`, který na konci svého běhu merge jen **nabídne** – provést ho je tenhle skill. Zápis do `todo.md`, `done.md` a `decisions.md` tedy nepřebírá a předpokládá, že proběhl.
+- **Nezapisuje, co se v session domluvilo.** To je `/end`, který na konci svého běhu merge jen **nabídne** – provést ho je tenhle skill. Zápis do `todo.md`, `done.md` a `decisions.md` tedy nepřebírá a předpokládá, že proběhl.
 - **Nenasazuje.** Stojí-li v `## Nasazení` projektového `CLAUDE.md`, že se z hlavní větve automaticky nasazuje, je merge samotné nasazení a patří `/release`. Skill to pozná a zastaví.
 - **Nekontroluje kvalitu práce ve větvi.** Že je práce správná, měří `/review`, `/consistency` a `/attack`. Tenhle skill pouští jen *Kontrakt příkazů* nad spojeným stavem – tedy ověřuje spojení, ne obsah.
 - **Nezakládá větve a nepřepíná layout.** Zakládání drží `~/.claude/standards/worktree.md`, zřízení a zrušení kontejneru `/worktree`.
@@ -141,5 +141,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/clear`, a `/next` v `<container>/main`, respektive v hlavní větvi – fronta práce nad sloučeným stavem; `/cleanup` proběhl před mergem a merge sám nic nezapisuje
+- `/clear`, a `/next` v `<container>/main`, respektive v hlavní větvi – fronta práce nad sloučeným stavem; `/end` proběhl před mergem a merge sám nic nezapisuje
 - zbývá-li k témuž záměru další větev, pojmenuj ji

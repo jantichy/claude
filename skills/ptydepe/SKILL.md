@@ -19,7 +19,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 ## Co skill nedělá
 
 - **Nepřejmenovává na zadání.** `/replace` dostane starý a nový tvar a provede to; tenhle skill nejdřív **rozhoduje, jestli se má přejmenovat vůbec**, a teprve pak nahrazuje – a to napříč všemi repozitáři, ne v jednom projektu.
-- **Neaudituje projekt.** Rozpory mezi soubory řeší `/consistency`, srozumitelnost zápisu `/cleanup`. Tady jde výhradně o pojmenování.
+- **Neaudituje projekt.** Rozpory mezi soubory řeší `/consistency`, srozumitelnost zápisu `/end`. Tady jde výhradně o pojmenování.
 - **Neposuzuje obsah.** Jestli dokument dává smysl, řeší `/oponent`.
 - **Nesahá na cizí a publikované texty**, ani když jsou verzované – archiv článků, ohlasy, rozbory cizího stylu. Termín v nich není pravidlo, ale doklad, jak to tehdy bylo napsané.
 - **Nezakládá projektové glosáře.** `docs/glossary.md` doménových pojmů jednoho projektu (`~/.claude/standards/structure.md`) je jiná věc: ten vysvětluje pojmy oboru, tenhle skill ruší vymyšlené.
@@ -197,4 +197,4 @@ Všechny z ostrých běhů, každá se opravdu stala:
 - **Změna rodu rozbila shodu.** „Úhel“ je mužský, „hledisko“ střední, a jedenáct přívlastků zůstalo v původním tvaru.
 - **Termín se obhajoval z paměti místo ze souborů.** Vznikla tím tabulka tří vrstev, kterou zdrojový dokument nikdy neobsahoval. **U preventivního zápisu je to naopak jediný možný postup** – výskyty nejsou –, ale i tam se z paměti neberou fakta o **cizích souborech**: doklad, že je protějšek zavedený, se cituje z grepu, ne z dojmu. Právě takový doklad se 11. 9. 2026 ukázal jako vymyšlený: heslo *hlavička* dokládalo zavedenost `/autocommitem`, který mluví o něčem jiném.
 - **Náhrada se začala dělat před souhlasem.** Uživatel se rozhodl jinak a muselo se to vracet.
-- **Náhrada minula popisky ve formuláři.** Podstatné jméno se v `/cleanup` nahradilo všude, ale v `header`u a v šabloně zbyl tvar odvozený ze slovesa: krok se jmenoval „Viselo 4/4“. Prošlo to kontrolním průchodem i testy a všimlo si toho až oko nad běžícím formulářem.
+- **Náhrada minula popisky ve formuláři.** Podstatné jméno se v `/end` nahradilo všude, ale v `header`u a v šabloně zbyl tvar odvozený ze slovesa: krok se jmenoval „Viselo 4/4“. Prošlo to kontrolním průchodem i testy a všimlo si toho až oko nad běžícím formulářem.

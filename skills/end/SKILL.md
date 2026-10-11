@@ -1,10 +1,10 @@
 ---
-name: cleanup
-description: Skill se použije, když uživatel zadá "/cleanup", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je. Na rozdíl od `/consistency`, který se ptá, jestli si projekt sedí sám se sebou, tenhle skill vytěžuje konverzaci.
+name: end
+description: Skill se použije, když uživatel zadá "/end", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je. Na rozdíl od `/consistency`, který se ptá, jestli si projekt sedí sám se sebou, tenhle skill vytěžuje konverzaci.
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
-# Cleanup
+# End
 
 ## Co skill dělá
 
@@ -41,7 +41,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **[`obligations.md`](obligations.md)** – co v session zakládá povinnost zápisu, kam co patří a v jakých stavech položku najdeš. Referenční tabulka pro *Fázi 3*.
 - **[`out-of-scope.md`](out-of-scope.md)** – jak se naloží s položkami mimo rozsah úklidu.
 
-**Všechny tři skripty jsou implementační detail, ne rozhraní** – jejich přepínače, výstup i samotná existence se smí změnit bez ohlášení. Co se změnit nesmí tiše, je **pravidlo za nimi**: mechanické vady a počty hledá deterministický nástroj, ne model (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula), a pokrytí transcriptu se měří, ne přiznává odhadem. Vynucovací vrstvu k oběma drží `tests/test_cleanup.py`, včetně mutačních testů.
+**Všechny tři skripty jsou implementační detail, ne rozhraní** – jejich přepínače, výstup i samotná existence se smí změnit bez ohlášení. Co se změnit nesmí tiše, je **pravidlo za nimi**: mechanické vady a počty hledá deterministický nástroj, ne model (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula), a pokrytí transcriptu se měří, ne přiznává odhadem. Vynucovací vrstvu k oběma drží `tests/test_end.py`, včetně mutačních testů.
 
 **Skill neběží v subagentovi a je to měřené rozhodnutí.** Od 25. do 26. 9. 2026 celé vytěžení dělal subagent. Delegace ubrala rodičovi 8 % nákladů a přidala agenta za dvojnásobek toho, co ubrala; počet volání na tutéž práci stoupl o 51 %, protože agent rekonstruuje z transcriptu to, co hlavní session má v kontextu zdarma. A navíc vznikl prostředník, přes kterého se nálezy ztrácely převyprávěním. Rozbor v `decisions.md`.
 
@@ -66,7 +66,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 ## Fáze 0 – Příprava
 
-**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím. **V bodu 1 patří `/cleanup` na řádek *Ne*, a tedy bez gitu pokračuje.** Jeho jádro je čtení transcriptu a zápis do dokumentace, což na gitu nestojí – a znalostní projekt bez verzování by jinak o zápis session přišel úplně. **Ohlas nahlas, co tím odpadá:** základ session, commit i push, a s nimi **čtvrtá záruka** z *Co skill dělá*.
+**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím. **V bodu 1 patří `/end` na řádek *Ne*, a tedy bez gitu pokračuje.** Jeho jádro je čtení transcriptu a zápis do dokumentace, což na gitu nestojí – a znalostní projekt bez verzování by jinak o zápis session přišel úplně. **Ohlas nahlas, co tím odpadá:** základ session, commit i push, a s nimi **čtvrtá záruka** z *Co skill dělá*.
 
 **Bod 4 odpadá** – tenhle skill nesahá na kód, takže není co zkontrolovat před prvním zápisem. **Bod 5 taky odpadá**: diff větve sloužil čtenářům bez kontextu a ti jsou od 26. 9. 2026 zrušení. U gitu tě zajímá remote, a ten zjišťuj `git remote get-url origin`, ne `git remote` – to druhé vypíše jméno, ne adresu.
 
@@ -98,8 +98,8 @@ Navíc si zjisti tohle:
 **Nejdřív inventura, pak čtení.** Bez ní se hranice vytěžení přiznává odhadem, a co se nepřiznalo, nezjistí nikdo.
 
 ```sh
-python3 ~/.claude/skills/cleanup/scripts/extract.py inventory <transcript> 
-python3 ~/.claude/skills/cleanup/scripts/extract.py filter <transcript> > <scratchpad>/cleanup-clean.txt
+python3 ~/.claude/skills/end/scripts/extract.py inventory <transcript> 
+python3 ~/.claude/skills/end/scripts/extract.py filter <transcript> > <scratchpad>/end-clean.txt
 ```
 
 Z inventury si vezmi pět věcí a **všechny si zapiš, protože je budeš vykazovat v závěru**:
@@ -112,7 +112,7 @@ Z inventury si vezmi pět věcí a **všechny si zapiš, protože je budeš vyka
 
 **Kolik z transcriptu opravdu přečteš, rozhoduje počet kompaktací**, ne zvyk. Běžíš v hlavní session, takže **celou konverzaci od poslední kompaktace máš v kontextu už zaplacenou** – přečíst ji podruhé z disku je tentýž obsah za druhou cenu, kterou pak platíš do konce session (`~/.claude/standards/rules.md`, *Co vložíš do kontextu, platíš do konce session*).
 
-- **Kompaktací nula** – očištěný transcript **nečti celý**. Projdi konverzaci, kterou máš v kontextu, a inventuru použij jako **checklist**: ke každému promptu si najdi, co u něj padlo. Nemáš-li u některého jistotu, dočti **jen jeho** – `sed -n '<číslo>,<číslo+40>p' <scratchpad>/cleanup-clean.txt`.
+- **Kompaktací nula** – očištěný transcript **nečti celý**. Projdi konverzaci, kterou máš v kontextu, a inventuru použij jako **checklist**: ke každému promptu si najdi, co u něj padlo. Nemáš-li u některého jistotu, dočti **jen jeho** – `sed -n '<číslo>,<číslo+40>p' <scratchpad>/end-clean.txt`.
 - **Kompaktace jedna a víc** – část konverzace v kontextu **není** a přesně v ní bývají uzavřené dohody. Očištěný transcript přečti celý; je to zlomek původního souboru, takže na to není potřeba nikoho posílat.
 
 **Ať čteš odkud čteš, prompty a čísla řádků ber z inventury.** Z kontextu se pokrytí spočítat nedá – nemáš nad ním index a „prošel jsem to celé“ je zase jen tvrzení. Čísla řádků v hranatých závorkách odkazují do původního `.jsonl`, takže se každá citace dá ověřit `sed -n '<číslo>p'`.
@@ -163,7 +163,7 @@ Nepředkládej řečnické otázky, zdvořilostní nabídky („mám to ještě 
 
 ## Fáze 3 – Evidence a konfrontace se soubory
 
-**Tady se záruka číslo 1 přestává tvrdit a začíná měřit.** Založ evidenci do `<scratchpad>/cleanup-ledger.md` – jeden řádek na prompt z inventury, v tomtéž pořadí:
+**Tady se záruka číslo 1 přestává tvrdit a začíná měřit.** Založ evidenci do `<scratchpad>/end-ledger.md` – jeden řádek na prompt z inventury, v tomtéž pořadí:
 
 ```
 | # | řádek | co uživatel napsal (zkráceně) | stav | kde |
@@ -277,10 +277,10 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 
 ## Fáze 6 – Git a závěr
 
-**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/skills/passes.md`). Čtenářem je **příští `/cleanup`**, který jinak nepozná, co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
+**Zapiš průchod do `docs/done.md`, sekce `## Průchody životním cyklem`** (`~/.claude/skills/passes.md`). Čtenářem je **příští `/end`**, který jinak nepozná, co zůstalo mimo rozsah úklidu a jak se s tím naložilo.
 
 ```
-- **YYYY-MM-DD** · `/cleanup` · `<short HEAD>` · session `<session-id>` · prompty N/N · N témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak> · meze: <co se nepřečetlo, nebo „žádné“>
+- **YYYY-MM-DD** · `/end` · `<short HEAD>` · session `<session-id>` · prompty N/N · N témat (X rozhodnuto, Y bezpředmětných) · mimo rozsah: <co a jak> · meze: <co se nepřečetlo, nebo „žádné“>
 ```
 
 Datum vyrob `date +%F` a hash `git rev-parse --short HEAD`. **Id session** vezmi z cesty ke scratchpadu, stejně jako ve *Fázi 0*. **Nemá-li projekt `done.md`, krok přeskoč nahlas** – nezakládá se kvůli jednomu řádku.

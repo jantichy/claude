@@ -1,6 +1,6 @@
 ---
 name: scenarios
-description: Skill se použije, když uživatel zadá "/scenarios", nebo chce z dřívějších konverzací nad projektem vytáhnout uživatelské scénáře, které v nich zazněly nebo ke kterým diskuze mířila, a doplnit je do docs/scenarios.md. Projde uzavřené session, u každé nechá vypsat každou situaci i s doslovnou citací, pak je sám profiltruje proti už zapsaným scénářům a chybějící zapíše do správné kapitoly. Na rozdíl od /cleanup, který vytěžuje právě běžící session a zapisuje dohody, tenhle skill jde zpětně přes hromadu už uzavřených konverzací a zajímají ho jen situace lidí. Návrh nedělá a nerozhoduje – co v konverzaci nezaznělo, si nevymýšlí.
+description: Skill se použije, když uživatel zadá "/scenarios", nebo chce z dřívějších konverzací nad projektem vytáhnout uživatelské scénáře, které v nich zazněly nebo ke kterým diskuze mířila, a doplnit je do docs/scenarios.md. Projde uzavřené session, u každé nechá vypsat každou situaci i s doslovnou citací, pak je sám profiltruje proti už zapsaným scénářům a chybějící zapíše do správné kapitoly. Na rozdíl od /end, který vytěžuje právě běžící session a zapisuje dohody, tenhle skill jde zpětně přes hromadu už uzavřených konverzací a zajímají ho jen situace lidí. Návrh nedělá a nerozhoduje – co v konverzaci nezaznělo, si nevymýšlí.
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep, Agent, AskUserQuestion]
 ---
 
@@ -16,7 +16,7 @@ Režimy nemá. **První běh v projektu vezme všechny session, každý další 
 
 ## Co skill nedělá
 
-- **Nevytěžuje běžící session.** To dělá `/cleanup` na jejím konci – a dělá to jinak: zapisuje dohody a rozhodnutí do všech souborů projektu. Tenhle skill jde zpětně přes uzavřené konverzace a sahá jen na `scenarios.md`.
+- **Nevytěžuje běžící session.** To dělá `/end` na jejím konci – a dělá to jinak: zapisuje dohody a rozhodnutí do všech souborů projektu. Tenhle skill jde zpětně přes uzavřené konverzace a sahá jen na `scenarios.md`.
 - **Nezakládá scénáře z návrhu.** Zakládá je `/specify`, z rozhovoru se zadavatelem. Tenhle skill dopisuje to, co se do nich tehdy nedostalo.
 - **Neaudituje `scenarios.md`.** Rozpory mezi scénáři a modelem, mrtvé odkazy a rozejité počty řeší `/consistency`.
 - **Nerozhoduje o produktu.** Narazí-li na situaci, na kterou odpověď není, zapíše scénář i s tím, že pokrytá není – nevymýšlí, jak by se to mělo chovat.

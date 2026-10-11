@@ -1,6 +1,6 @@
 ---
 name: next
-description: Skill se použije, když uživatel zadá "/next", nebo se na začátku session v projektu ptá, s čím pokračovat, co ho čeká a do čeho se může pustit – chce vidět seznam dalších úkolů seřazený podle důležitosti a závislostí a z nabídky si vybrat. Sestaví frontu z todo.md, implementačního plánu, kol návrhu, rozdělané práce v gitu a místa v životním cyklu, zvlášť vypíše, na čem se právě pracuje v jiné session, nabídne pokračování v opuštěných větvích, u každé položky řekne, v čem spočívá a jak je velká, nejaktuálnější nabídne k výběru a do vybrané se rovnou pustí. Na rozdíl od /cleanup, který dohledává, co se v session domluvilo, a zapisuje to, tenhle skill nic nezapisuje ani nepřeřazuje – jen čte, co už zapsané je. Nápady z backlogu vypíše až tehdy, když je fronta prázdná.
+description: Skill se použije, když uživatel zadá "/next", nebo se na začátku session v projektu ptá, s čím pokračovat, co ho čeká a do čeho se může pustit – chce vidět seznam dalších úkolů seřazený podle důležitosti a závislostí a z nabídky si vybrat. Sestaví frontu z todo.md, implementačního plánu, kol návrhu, rozdělané práce v gitu a místa v životním cyklu, zvlášť vypíše, na čem se právě pracuje v jiné session, nabídne pokračování v opuštěných větvích, u každé položky řekne, v čem spočívá a jak je velká, nejaktuálnější nabídne k výběru a do vybrané se rovnou pustí. Na rozdíl od /end, který dohledává, co se v session domluvilo, a zapisuje to, tenhle skill nic nezapisuje ani nepřeřazuje – jen čte, co už zapsané je. Nápady z backlogu vypíše až tehdy, když je fronta prázdná.
 argument-hint: [zúžení]
 allowed-tools: [Read, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
@@ -15,7 +15,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 
 ## Co skill nedělá
 
-- **Nic nezapisuje ani nepřeřazuje.** Zjistí-li, že je `todo.md` zastaralé (hotová položka, která se nepřesunula), řekne to jako poznámku; úklid souborů po session drží `/cleanup`. Jediné, co mění, jsou vzdálené reference po `git fetch`.
+- **Nic nezapisuje ani nepřeřazuje.** Zjistí-li, že je `todo.md` zastaralé (hotová položka, která se nepřesunula), řekne to jako poznámku; úklid souborů po session drží `/end`. Jediné, co mění, jsou vzdálené reference po `git fetch`.
 - **Nerozkládá práci na úkoly.** Položka, která je na jednu session moc velká, se nabídne celá; rozpad do plánu dělá `/breakdown`.
 - **Nerozhoduje o nápadech z backlogu.** Vypíše je, když fronta dojde, a přesun do `todo.md` nechá na uživateli.
 - **Nevybírá za uživatele.** Doporučí, ale začne až po výběru.

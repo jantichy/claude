@@ -172,7 +172,7 @@ Vypiš, co kolo rozhodlo, co zapsalo kam, které otázky zůstaly a jaká nová 
 
 1. **`/review`** nad tím, co kolo vyrobilo – měří dokument proti doménovým znalostem, které projekt vede; **`/oponent docs/<topic>.md`**, zavedlo-li kolo nový podsystém, změnilo model nebo se napojilo na cizí systém; **ani jedno**, bylo-li kolo drobné a posudek by jen zdržel.
 2. **`/consistency`**, jen sáhlo-li kolo do hodně sdílených dokumentů. Většinou se vyplatí až nad celkem po sešití.
-3. **`/cleanup`** – vždycky.
+3. **`/end`** – vždycky.
 4. **`/architect` znovu v téhle větvi** – zapíše kolo jako hotové (*Fáze 3*); ve worktree layoutu pak sloučení.
 
 ------
@@ -186,7 +186,7 @@ Pouští se ve větvi kola po doporučených krocích. **Bez něj se větev kola
 3. **Přiděl kapitole v `decisions.md` další volné číslo** podle stavu po natažení a přepiš odkazy na ni ve všech souborech, na které kolo sáhlo.
 4. **Záznam do `docs/done.md`**, sekce `## Kola návrhu`, v tvaru podle `~/.claude/skills/architect/rounds.md`, *V `done.md`* – pole *Neotevřelo* z kroku 2 –, a smazání bloku z `docs/todo.md`.
 5. **Commit.**
-6. **Doporuč `/cleanup` a za ním sloučení větve** – sloučení provede `/merge` a jen na výslovný pokyn uživatele. **Posune-li se mezitím `<main-branch>`** (`git log HEAD..<main-branch>` není prázdný), zopakuj těsně před sloučením natažení `<main-branch>` včetně jeho kontroly a pak přidělení čísla: jinak by si souběžné kolo sloučené o chvíli dřív vzalo totéž číslo. **Konflikt „smazáno ve větvi, změněno na `main`“ u bloku kola** znamená, že souběžné kolo do bloku mezitím přesunulo otázku: vezmi ji z verze na `main`, zpracuj ji podle kontroly po natažení a blok pak znovu smaž – nikdy ho nenechávej vedle hotového záznamu.
+6. **Doporuč `/end` a za ním sloučení větve** – sloučení provede `/merge` a jen na výslovný pokyn uživatele. **Posune-li se mezitím `<main-branch>`** (`git log HEAD..<main-branch>` není prázdný), zopakuj těsně před sloučením natažení `<main-branch>` včetně jeho kontroly a pak přidělení čísla: jinak by si souběžné kolo sloučené o chvíli dřív vzalo totéž číslo. **Konflikt „smazáno ve větvi, změněno na `main`“ u bloku kola** znamená, že souběžné kolo do bloku mezitím přesunulo otázku: vezmi ji z verze na `main`, zpracuj ji podle kontroly po natažení a blok pak znovu smaž – nikdy ho nenechávej vedle hotového záznamu.
 
 ------
 
@@ -247,7 +247,7 @@ Pouští se po doporučených krocích nad sešitým návrhem. Potvrď s uživat
 1. **Otázky přesunuté mezi koly** musí být vypořádané, nebo vedené jako samostatná položka `todo.md` s tím, na co čekají.
 2. **Zruš sekci *Kola návrhu*** v `todo.md` i s řádkem *Návrh sešitý* – **nese-li ale bloky kol**, která uživatel pustil až za sešití, smaž jen řádek *Návrh sešitý* a bloky nech: tvoří další várku. Smazáním by zmizela jejich mapa; po jejich doběhnutí orientace sama pozná, že je na řadě další sešití.
 3. **Do `done.md` připiš řádek *Návrh uzavřen*** podle `~/.claude/skills/architect/rounds.md`, *V `done.md`*. Uzavírá várku, ne nutně celý návrh – zbyla-li v *Kolech návrhu* další, řekni to a `/breakdown` nedoporučuj, dokud se nesešije i ona.
-4. **Commit** a doporuč `/cleanup` a za ním, stojí-li práce na větvi, sloučení – provede ho `/merge`.
+4. **Commit** a doporuč `/end` a za ním, stojí-li práce na větvi, sloučení – provede ho `/merge`.
 
 **Proč se dočištění odkládá za doporučené kroky:** řádek *Návrh uzavřen* nesmí vzniknout dřív, než se nálezy z posudku mají kam vrátit.
 
@@ -297,7 +297,7 @@ Přijde-li změna zdola (při implementaci se ukáže, že návrh nejde), **neop
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
-**U mapy okruhů** vypadá závěr jinak: místo dokumentů vypiš mapu kol – u každého jméno, větev a na co čeká – a doporuč, **která kola pustit hned a souběžně**: ta bez nesplněné závislosti, a přednostně ta, jejichž řádky *Sahá na* se nepřekrývají. Pod to doporuč `/review`, `/cleanup` a ve worktree layoutu sloučení větve – teprve pak se otevírají kola.
+**U mapy okruhů** vypadá závěr jinak: místo dokumentů vypiš mapu kol – u každého jméno, větev a na co čeká – a doporuč, **která kola pustit hned a souběžně**: ta bez nesplněné závislosti, a přednostně ta, jejichž řádky *Sahá na* se nepřekrývají. Pod to doporuč `/review`, `/end` a ve worktree layoutu sloučení větve – teprve pak se otevírají kola.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
@@ -308,12 +308,12 @@ U ostatních cest místo nich tytéž dvojice, vždy jen hotovo a nehotovo:
 
 - `Mapa kol je hotová a schválená, můžeš ji po doporučených krocích sloučit a otevřít první kola.` / `Mapa kol hotová není – brání tomu: <konkrétní seznam>.`
 - `Kolo je rozhodnuté a schválené, můžeš pustit doporučené kroky a pak /architect k zápisu před sloučením.` / `Kolo rozhodnuté není – brání tomu: <konkrétní seznam>.`
-- `Kolo je zapsané a připravené ke sloučení, můžeš pustit /cleanup a větev přimergovat.` / `Kolo zapsané není – brání tomu: <konkrétní seznam>.`
+- `Kolo je zapsané a připravené ke sloučení, můžeš pustit /end a větev přimergovat.` / `Kolo zapsané není – brání tomu: <konkrétní seznam>.`
 - `Návrh je sešitý a schválený, můžeš pustit doporučené kroky a pak /architect k dočištění.` / `Návrh sešitý není – brání tomu: <konkrétní seznam>.`
-- `Návrh je uzavřený, můžeš pustit /cleanup, větev přimergovat a pokračovat na /breakdown.` (zbyla-li další várka kol: `Várka návrhu je uzavřená, můžeš pustit /cleanup, větev přimergovat a otevřít další kola.`; bez větve odpadá z obou „větev přimergovat“) / `Návrh uzavřený není – brání tomu: <konkrétní seznam>.`
+- `Návrh je uzavřený, můžeš pustit /end, větev přimergovat a pokračovat na /breakdown.` (zbyla-li další várka kol: `Várka návrhu je uzavřená, můžeš pustit /end, větev přimergovat a otevřít další kola.`; bez větve odpadá z obou „větev přimergovat“) / `Návrh uzavřený není – brání tomu: <konkrétní seznam>.`
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/breakdown` – rozpad schváleného návrhu na úkoly
-- volitelně před tím `/cleanup`, pak `/clear`, a `/oponent docs/architecture.md` až v nové session – tahle návrh psala a je na něj zaujatá
-- u návrhu po kolech to, co říká Fáze 7 pro danou cestu – otevřít kola, sešít je, nebo `/cleanup` a za ním, stojí-li práce na větvi, sloučení
+- volitelně před tím `/end`, pak `/clear`, a `/oponent docs/architecture.md` až v nové session – tahle návrh psala a je na něj zaujatá
+- u návrhu po kolech to, co říká Fáze 7 pro danou cestu – otevřít kola, sešít je, nebo `/end` a za ním, stojí-li práce na větvi, sloučení

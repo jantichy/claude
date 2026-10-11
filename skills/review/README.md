@@ -4,7 +4,7 @@
 >
 > **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
 >
-> **Kontroly** [`/oponent`](../oponent/README.md) · [`/consolidate`](../consolidate/README.md) · **`/review`** · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/cleanup`](../cleanup/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
+> **Kontroly** [`/oponent`](../oponent/README.md) · [`/consolidate`](../consolidate/README.md) · **`/review`** · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/end`](../end/README.md) · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 
@@ -65,7 +65,7 @@ Panel: 31 nálezů → 22 po deduplikaci → 22 ověřeno → 13 přežilo:
 
 - **Neaudituje vnitřní konzistenci.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`.
 - **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
-- **Nevytěžuje konverzaci** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/cleanup`.
+- **Nevytěžuje konverzaci** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/end`.
 - **Nenasazuje.** To je `/release`.
 - **Nezačne nad rozbitým stavem.** Nejsou-li testy zelené, zastaví se a pošle to dodělat.
 
@@ -82,7 +82,7 @@ Doménoví specialisté měří soulad s **mými soukromými doménovými znalos
 
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency, attack, cleanup a merge. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency, attack, end a merge. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
 
 ---
 

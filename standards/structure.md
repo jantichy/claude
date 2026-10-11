@@ -153,7 +153,7 @@ Existuje jen spolu s `todo.md`.
 
 ## Průběžná aktualizace je povinná
 
-Tyhle soubory doplňuj **sám, průběžně a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží – nečekej na `/cleanup` (`~/.claude/standards/rules.md`, *Pravda v souborech, ne v konverzaci*); kam zápis míří, drží tamtéž *Kam co zapsat*. Patří-li zápis jinam, přesuň ho (*Živá struktura*).
+Tyhle soubory doplňuj **sám, průběžně a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží – nečekej na `/end` (`~/.claude/standards/rules.md`, *Pravda v souborech, ne v konverzaci*); kam zápis míří, drží tamtéž *Kam co zapsat*. Patří-li zápis jinam, přesuň ho (*Živá struktura*).
 
 ## Prázdný soubor je v pořádku
 

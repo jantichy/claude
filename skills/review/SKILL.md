@@ -29,7 +29,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **Neaudituje vnitřní konzistenci projektu.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`, který běží až po tomhle.
 - **Nedopisuje, co v plánu zbylo.** Úkoly odpracovává `/implement` před tímhle; sem se přichází s hotovou prací a opravuje se jen to, co panel sám našel.
 - **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
-- **Nevytěžuje session** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/cleanup`. Vlastní nálezy si ale zapisuje sám: odložené do `docs/todo.md`, zamítnuté do `## Review` v `CLAUDE.md`.
+- **Nevytěžuje session** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/end`. Vlastní nálezy si ale zapisuje sám: odložené do `docs/todo.md`, zamítnuté do `## Review` v `CLAUDE.md`.
 - **Neaudituje cizí web zvenčí.** Čte repozitář a měří proti specifikaci; na cizí běžící web, ke kterému není zdroják ani zadání, je `/audit` – ten ho spustí, projde jako návštěvník a měří proti auditnímu postupu domény.
 - **Nenasazuje.** To je `/release`, a ten se pouští vědomě a zvlášť.
 
@@ -188,7 +188,7 @@ Hotovou frontu ulož do **`.claude/run/review.json`** (`~/.claude/skills/skills.
 
 ## Fáze 4 – Zpracování výsledků
 
-**Nejdřív zkontroluj pokrytí, teprve pak nálezy.** Každý specialista vrací `covered` – cesty, které opravdu prošel. **Chybí-li, je prázdné, nebo v něm sedí jen opsaný seznam ze zadání bez jediného nálezu, není to čistý výsledek, ale selhání agenta**: pusť ho znovu a nepovede-li se to podruhé, vypiš tu dimenzi jako neprověřenou. Prázdné `findings` samo o sobě čisto neznamená – u `/cleanup` se přesně takový výsledek bral za úspěch i za selhání podle situace a stálo to třetí běh čtenářů navíc (`~/.claude/docs/decisions.md`, *`/cleanup` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
+**Nejdřív zkontroluj pokrytí, teprve pak nálezy.** Každý specialista vrací `covered` – cesty, které opravdu prošel. **Chybí-li, je prázdné, nebo v něm sedí jen opsaný seznam ze zadání bez jediného nálezu, není to čistý výsledek, ale selhání agenta**: pusť ho znovu a nepovede-li se to podruhé, vypiš tu dimenzi jako neprověřenou. Prázdné `findings` samo o sobě čisto neznamená – u `/end` se přesně takový výsledek bral za úspěch i za selhání podle situace a stálo to třetí běh čtenářů navíc (`~/.claude/docs/decisions.md`, *`/end` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
 
 **Vestavěné skilly `covered` nevrátí a nemá se to po nich chtít.** `/code-review` a `/security-review` mají vlastní výstup, který si předefinovat nenechají, takže u korektnosti a bezpečnosti se pokrytí **nedokládá** a místo čísla se u nich napíše `nedokládá` – ne nula a ne mlčení. Platí to jen pro ty dva; vlastní zadání pole nese.
 
@@ -367,9 +367,9 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/cleanup`, pak `/clear`, a `/consistency` až v nové session – tahle už v panelu i v opravách spotřebovala kontext a na vlastní opravy je zaujatá
-- `/cleanup` – je-li práce hotová a další kontrola nepřijde; stojí-li na větvi, za ním `/merge`
-- běžel-li jen výchozí rozsah nad starším projektem, volitelně `/cleanup`, pak `/clear`, a `/review full` až v nové session
+- `/end`, pak `/clear`, a `/consistency` až v nové session – tahle už v panelu i v opravách spotřebovala kontext a na vlastní opravy je zaujatá
+- `/end` – je-li práce hotová a další kontrola nepřijde; stojí-li na větvi, za ním `/merge`
+- běžel-li jen výchozí rozsah nad starším projektem, volitelně `/end`, pak `/clear`, a `/review full` až v nové session
 
 
 ------

@@ -1,4 +1,4 @@
-"""Regresní testy deterministických skriptů `/cleanup`.
+"""Regresní testy deterministických skriptů `/end`.
 
 Skript `skills/links.py` existuje kvůli pravidlu nula
 (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*): rozbitý odkaz a mrtvá kotva
@@ -8,7 +8,7 @@ za zlomek vteřiny a agentovi zbude úsudek.
 
 Testují se oba směry selhání, protože u vynucovací vrstvy je ten druhý horší:
 
-- **propustí, co nemá** – rozbitý odkaz nebo mrtvá kotva projde a `/cleanup`
+- **propustí, co nemá** – rozbitý odkaz nebo mrtvá kotva projde a `/end`
   ohlásí čisto, které neplatí;
 - **zastaví, co nemá** – falešný poplach nad správným textem. Ten se neprojeví
   jako díra, ale jako otrava při běžné práci, a otravnou kontrolu si člověk
@@ -44,7 +44,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LINKS = ROOT / "skills" / "links.py"
-EXTRACT = ROOT / "skills" / "cleanup" / "scripts" / "extract.py"
+EXTRACT = ROOT / "skills" / "end" / "scripts" / "extract.py"
 
 
 def load(path, name):
@@ -131,7 +131,7 @@ class NehlasiSpravne(Fixture):
     def test_ukazka_syntaxe_odkazu_v_backticku_neni_odkaz(self):
         """`[text](cíl)` v backticku je věta o tom, jak se odkaz píše.
 
-        Doloženo 30. 9. 2026 při `/cleanup` v projektu eventoid: session psala
+        Doloženo 30. 9. 2026 při `/end` v projektu eventoid: session psala
         dokumentaci o kontrole odkazů a skript nad ní ohlásil 4 nálezy, všechny
         falešné – byly to věty o syntaxi.
         """
@@ -434,7 +434,7 @@ class ZpravyUzivatele(PredfiltrBase):
 
     def test_prikaz_skillu_neni_zprava_uzivatele(self):
         self.assertEqual(
-            self.user_messages([self.user("<command-name>/cleanup</command-name>")]), []
+            self.user_messages([self.user("<command-name>/end</command-name>")]), []
         )
 
     def test_zprava_z_fronty_se_nepocita_dvakrat(self):

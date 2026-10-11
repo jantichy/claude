@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Ověří, že odkazy v zadaných Markdownech vedou někam.
 
-Hledá dvě vady, které jinak musí najít čtenář bez kontextu ve /cleanup –
+Hledá dvě vady, které jinak musí najít čtenář bez kontextu ve /end –
 a které jsou přitom mechanické, takže na ně podle ~/.claude/standards/delegation.md,
 *Model a effort podle úkolu*, pravidla nula nemá chodit model:
 

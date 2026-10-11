@@ -1,6 +1,6 @@
 # Co v session zakládá povinnost zápisu
 
-Referenční tabulka pro *Fázi 3* skillu [`/cleanup`](SKILL.md). Je to **obrácený pohled** proti běžnému vytěžování: tam se ptáš, kam patří to, co jsi v session našel, tady jestli nezůstala nesplněná povinnost, o které v session nikdo nemluvil. Neber jako samozřejmé, že průběžná aktualizace proběhla – **empiricky se na ni zapomíná**, a proto tenhle pohled existuje.
+Referenční tabulka pro *Fázi 3* skillu [`/end`](SKILL.md). Je to **obrácený pohled** proti běžnému vytěžování: tam se ptáš, kam patří to, co jsi v session našel, tady jestli nezůstala nesplněná povinnost, o které v session nikdo nemluvil. Neber jako samozřejmé, že průběžná aktualizace proběhla – **empiricky se na ni zapomíná**, a proto tenhle pohled existuje.
 
 Obsah jednotlivých souborů definuje `~/.claude/standards/structure.md`; tahle tabulka není druhá definice, ale spouštěč.
 

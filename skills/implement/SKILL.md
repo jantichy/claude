@@ -14,7 +14,7 @@ Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, im
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*. Plán píše `/breakdown` a opravit ho patří jemu; tady se odpracovává.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md` nebo `docs/backlog.md`, ne do kódu.
-- **Neuzavírá feature.** Hotovou práci prověřuje `/review` hned po tomhle, vnitřní konzistenci `/consistency` a úklid `/cleanup` – samostatné kroky, viz `~/.claude/standards/lifecycle.md`, druhá půlka životního cyklu.
+- **Neuzavírá feature.** Hotovou práci prověřuje `/review` hned po tomhle, vnitřní konzistenci `/consistency` a úklid `/end` – samostatné kroky, viz `~/.claude/standards/lifecycle.md`, druhá půlka životního cyklu.
 
 ## Jak je to postavené uvnitř
 
@@ -95,7 +95,7 @@ Při práci hlídej osm věcí, které se z plánu samy neuhlídají:
 
 **Nápady nad rámec plánu.** Cokoliv, co tě při psaní napadne a v plánu to není, zapiš s celou úvahou – do kódu ne. *Nerozhoduj potichu nad rámec zadání.* **Kam:** chybějící kus práce, který se udělat musí, do `docs/todo.md`; volný nápad, o kterém nikdo nerozhodl, do `docs/backlog.md` (`~/.claude/standards/structure.md`, *`backlog.md`*). Fronta úkolů zaplevelená nápady přestane být frontou. **Nemá-li projekt `backlog.md`, založ ho** a řekni to; do `todo.md` nápad nepatří, tím by se z fronty stal mišmaš (`~/.claude/standards/rules.md`, *Odložené věci pojmenuj a zaparkuj*).
 
-**Průběžné zápisy.** Padne-li během práce rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. **Hotovou položku z `docs/todo.md` přesuň do `docs/done.md`** hned, jak je hotová – neodškrtává se na místě (`~/.claude/standards/rules.md`, *Odložené věci pojmenuj a zaparkuj*). Nečekej na `/cleanup`; ten je jen záchranná síť.
+**Průběžné zápisy.** Padne-li během práce rozhodnutí (a padá), jde do `docs/decisions.md` hned, i se zavrženými variantami. Vybroušený princip do `docs/rules.md`. **Hotovou položku z `docs/todo.md` přesuň do `docs/done.md`** hned, jak je hotová – neodškrtává se na místě (`~/.claude/standards/rules.md`, *Odložené věci pojmenuj a zaparkuj*). Nečekej na `/end`; ten je jen záchranná síť.
 
 **Po každém větším celku levné review.** Po skupině souvisejících úkolů (ne po každém) spusť **`/code-review low`** – úroveň uveď jako parametr, ne slovem: bez ní se použije ta, kterou uživatel zadal naposledy, klidně v jiném projektu. Běží v čerstvém kontextu, takže vidí, co ty už nevidíš, a chyba nalezená teď stojí minuty. Plný panel je až `/review` při uzavírání.
 
@@ -150,5 +150,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/cleanup`, pak `/clear`, a `/review` až v nové session – prověření hotové práce, kterou tahle session psala; za ním zbytek uzavírání (`~/.claude/standards/rules.md`, *Životní cyklus projektu*)
+- `/end`, pak `/clear`, a `/review` až v nové session – prověření hotové práce, kterou tahle session psala; za ním zbytek uzavírání (`~/.claude/standards/rules.md`, *Životní cyklus projektu*)
 - zbyl-li v plánu zablokovaný úkol, je další krok jeho odblokování, ne revize – pojmenuj, co k němu chybí

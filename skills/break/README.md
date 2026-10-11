@@ -25,11 +25,11 @@ Dlouhá session jednou narazí na strop: konverzace je tak velká, že se v ní 
 /break
 ```
 
-Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému dochází místo. Na konci doporučí `/cleanup`, `/clear` a v nové session `/continue`, který na zápis rovnou naváže.
+Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému dochází místo. Na konci doporučí `/end`, `/clear` a v nové session `/continue`, který na zápis rovnou naváže.
 
 ## Co nedělá
 
-- Nezapisuje dohody a poznatky z celé session – na to je `/cleanup`, který jde hned po něm.
+- Nezapisuje dohody a poznatky z celé session – na to je `/end`, který jde hned po něm.
 - Sám v práci nepokračuje – to v nové session udělá `/continue`.
 - Zbytek práce nedodělává ani nerozhoduje, jen ho uloží.
 
@@ -38,7 +38,7 @@ Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému docház�
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/break
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 
-Počítá se seznamem úkolů v `docs/todo.md` a s navazujícími skilly `/cleanup` a `/continue` ze stejného repozitáře; bez nich zápis vznikne, ale nikdo na něj v nové session sám nenaváže.
+Počítá se seznamem úkolů v `docs/todo.md` a s navazujícími skilly `/end` a `/continue` ze stejného repozitáře; bez nich zápis vznikne, ale nikdo na něj v nové session sám nenaváže.
 
 ---
 
