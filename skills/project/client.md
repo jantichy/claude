@@ -70,7 +70,7 @@ done
 ```
 
    **`@import` starého profilu je nejdůležitější nález:** po převodu by importoval jen odkaz a projekt by o klientovi tiše přestal vědět. Nalezené importy vypiš a **jednou otázkou nabídni jejich přepis** na `@~/Projekty/<Client>/<client>.md` – je to zápis do cizího projektu. Leží-li projekt ve worktree layoutu, do jeho `main/` nezapisuj (`~/.claude/standards/worktree.md`) a vypiš opravu jako úkol pro práci v tom projektu. Ostatní výskyty vypiš k opravě přes `/replace`. Commit zápisu řídí *Zápis mimo projekt* níž.
-5. **Přesun existujících projektů pod klientskou složku skill nedělá.** Mění cesty session i `@import`y a je to jednorázová migrace, ne krok nastavení. Řekni, které projekty podle pole *Projekty* pod klienta patří a že po přesunu přestanou importovat profil (*Podprojekt*).
+5. **Přesun existujících projektů pod klientskou složku skill nedělá.** Mění cesty session i `@import`y a je to jednorázová migrace, ne krok nastavení. Řekni, které projekty podle pole *Projekty* pod klienta patří a že po přesunu přestanou importovat profil (*Podprojekt*). Chce-li je uživatel přesunout, postup ruční migrace drží **dočasně** [`migration.md`](migration.md).
 
 ### Revize
 
