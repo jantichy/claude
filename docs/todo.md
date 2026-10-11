@@ -14,13 +14,22 @@
 
 ## Přerušený běh
 
-### Migrace na novou strukturu disku – přerušeno 2026-10-11
+### Migrace na novou strukturu disku – přerušeno 2026-10-12
 
-Rozdělaná práce, která se dokončuje **jako první**: leží ve větvi `main`, pracovní adresář `~/.claude`. Pokračuje se krokem 3 (převod klientů), pak kroky 4 až 6 v pořadí níž; předtím nemusí nic předcházet. Je to tatáž práce jako položka *Migrace na novou strukturu disku* níž v tomhle souboru – blok nese stav a doporučení, položka zůstává autoritou pro koncepci (`decisions.md`, *Struktura disku: klienti ve vlastní složce, vlastní věci v `~/Dev`*).
+Rozdělaná práce, která se dokončuje **jako první**: leží ve větvi `main`, pracovní adresář `~/.claude`. Pokračuje se krokem 3 (převod klientů) **dalším fakturovaným klientem po FAVI**, pak kroky 4 až 6 v pořadí níž; předtím nemusí nic předcházet. Je to tatáž práce jako položka *Migrace na novou strukturu disku* níž v tomhle souboru – blok nese stav a doporučení, položka zůstává autoritou pro koncepci (`decisions.md`, *Struktura disku: klienti ve vlastní složce, vlastní věci v `~/Dev`*).
 
 **Co přerušilo a co se udělalo.** Práce mimo skill, přerušená 2026-10-11 na konci session po dokončení kroku 1, aby další kroky běžely s čistým kontextem. Krok 1 je hotový: `~/Dev/context` je přesunutý do `~/Context` bez symlinku, odkazy přepsané ve všech repozitářích v `~/Dev` včetně worktree větví, v `~/.claude` a v `~/Depot` (1 923 výskytů ve 268 souborech) a složky historie session `-Users-honza-Dev-context*` přejmenované na `-Users-honza-Context*`. Commit v `~/.claude` je `ff2f06a`, v `~/Context` `a376627`; v ostatních repozitářích jeden commit se zprávou *Znalostní báze se přesunula z ~/Dev/context do ~/Context*, pushnutý tam, kde je remote. Necommitnutá rozdělaná práce žádná není (`stats-cache.json` v `~/.claude` je soubor harnessu, ne práce).
 
 **Krok 2 je hotový** (2026-10-11, navazující session): `/project` má klientskou větev v `skills/project/client.md`, `/invoicing` a `/serviceaccount` hledají soubory klienta v jeho složce a kostry v `~/Context` s tím počítají; rozhodnutí v `decisions.md`, *Klientská větev `/project` a navazující skilly*.
+
+**Krok 3 u FAVI je hotový** (2026-10-11 až 12, další session, pracovní adresář `~/Projekty/Favi`, jediná větev `main`, jen lokální git bez remote):
+
+- `/project` v režimu `create` s převodem: profil a fakturační soubor přesunuté z `~/Context` do `~/Projekty/Favi/favi.md` a `invoicing.md`, v `~/Context` odkazy (`e497165`); `@import` profilu přepsaný ve `~/Dev/veneti` a `~/Dev/costway` (`cc1b4c3`, `aa6009c`, dnes jsou ty commity v historii Favi).
+- `~/Dev/favi`, `~/Dev/veneti` a `~/Dev/costway` sloučené do repozitáře `~/Projekty/Favi` jako `reporting/`, `veneti/` a `costway/` i se všemi 247 commity (`git filter-repo --to-subdirectory-filter` a merge), obsah ověřený proti originálům soubor po souboru; složky session logů přejmenované na `-Users-honza-Projekty-Favi-<sub>`; staré adresáře leží v Koši jako `~/.Trash/dev-<projekt>-2026-10-11` a vysype je uživatel. `activity.py` s jedinou cestou `~/Projekty/Favi` najde commity i session všech tří, včetně `costway`, které v poli *Projekty* dřív chybělo. Commity ve Favi `16b0ad3` až `6b27665`.
+- Roadmapa spolupráce přesunutá z `~/Downloads` do `~/Projekty/Favi/roadmap.pdf`, glosář a `todo.md` v `~/Context` srovnané (`1f452ff`, `d2f1668`).
+- `/project`: výkonnostní reklama dostala vlastní kolo checklistů (`2730f80`); postup přesunu podprojektů zapsaný **dočasně** do `skills/project/migration.md` (`7cb3cac`).
+
+**Zbývá u FAVI mimo skill:** uživatel musí spustit `~/.claude/hooks/verify.sh --allow /Users/honza/Projekty/Favi` – kontrakt (všechny kroky s pomlčkou) se po vydání souhlasu změnil a hook to hlásí po každé odpovědi; v `~/Downloads` leží další podklady FAVI (`FAVI pixel.pdf/.docx`, prezentace z meetupu 18. 6. 2026, CSV a PDF k Veneti) – nabídnuté k zařazení přes `/depot`, nerozhodnuto.
 
 **Zbývající položky**
 
@@ -31,11 +40,16 @@ Rozdělaná práce, která se dokončuje **jako první**: leží ve větvi `main
 
 **Vyvrácené a uzavřené**
 
+- **`git grep -E` se `\b` vrací prázdno**, ne chybu – vypadá to jako čistý výsledek. Staré cesty se hledají `-F`; zapsané v `skills/project/migration.md`, krok 11.
+- **Rozdíly v souborech po sloučení historie nebyly ztráta**: jen konce řádků CRLF při `core.autocrlf=input` a prázdný adresář, který git nenese. Zdrojová data se zkopírovala s původními bajty; zapsané v `migration.md`, krok 4.
+
 - **Měření rozsahu `grep`em je nespolehlivé.** `grep` je v shellu Claude Code funkce obalující `ugrep`, který respektuje `.gitignore`; `/usr/bin/grep` naopak započítá ignorované adresáře harnessu (`file-history` a další) a ukázal 964 souborů proti skutečným 261. Rozsah se měří přes `git grep --untracked -z` po pracovních stromech, mimo git zvlášť. Zapsáno v `decisions.md`, *Provedení přesunu do `~/Context`*.
+
+**Rozhodnuté v běhu FAVI:** podprojekty bez vlastního nasazení, CI ani remote patří do **jednoho repozitáře klientské složky i s historií**; kontrakt příkazů smí být jen v jejím kořeni, kontrola `costway` se proto spouští ručně (`~/Projekty/Favi/costway/decisions.md`); postup přesunu je dočasný a po migraci se z `/project` vyhodí spolu se vším zpětně kompatibilním (`decisions.md`, *Klientská větev `/project` a navazující skilly*, a úkol v *Úkoly*).
 
 **Rozhodnuté v běhu** – vše v `decisions.md`, *Provedení přesunu do `~/Context`*: bez symlinku `~/Dev/context`; `~/.claude.json` se nepřepisuje, harness si ho drží sám; archiv textů, reflogy a transcripty se nepřepisují; větve bez worktree dostanou novou cestu až sloučením.
 
-**Jak pokračovat:** krok 3 – potvrdit s uživatelem zařazení prvního fakturovaného klienta podle soukromého `~/Context/todo.md` a pustit `/project` v jeho klientské složce. Pak kroky 4 až 6 v pořadí výš; s každým hotovým krokem ho odškrtni v položce *Migrace na novou strukturu disku* níž a odstraň z tohohle bloku. Blok i prázdnou sekci smaž, až budou hotové všechny kroky, a celou položku pak přesuň do `done.md`. Běhový soubor neexistuje. **Neprověřené:** session běžící v jiných oknech mají pořád načtené staré cesty, dokud se nerestartují; `~/.claude.json` nese dva výskyty staré cesty, které si harness obnoví sám.
+**Jak pokračovat:** položkou *Krok 3 – převést klienty*, dalším fakturovaným klientem po FAVI – fakturační soubory v `~/Context/business/invoicing/` mají ještě OKsystem, Palatinum a Taste; zařazení potvrdit s uživatelem podle soukromého `~/Context/todo.md` (doporučení u kroku 3, varianta b), pustit `/project` v klientské složce a podprojekty z `~/Dev` přesunout podle `skills/project/migration.md`. Pak kroky 4 až 6 v pořadí výš; s každým hotovým krokem ho odškrtni v položce *Migrace na novou strukturu disku* níž a odstraň z tohohle bloku. Blok i prázdnou sekci smaž, až budou hotové všechny kroky, a celou položku pak přesuň do `done.md`; pak přijde na řadu úkol vyhodit z `/project` zpětně kompatibilní části. Běhový soubor neexistuje. **Neprověřené:** session běžící v jiných oknech mají pořád načtené staré cesty, dokud se nerestartují; `~/.claude.json` nese dva výskyty staré cesty, které si harness obnoví sám.
 
 ## Úkoly
 
