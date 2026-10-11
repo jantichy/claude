@@ -406,9 +406,9 @@ Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů` a **jen ty kl
 
 ## Krok 13 – Doménové checklisty
 
-Zeptej se **ve třech tematických kolech** (`multiSelect: true`, nejvýš čtyři volby na kolo), co všechno se v projektu bude dělat, a vybrané doménové znalosti zapiš do projektového `CLAUDE.md` jako **tvrdé `@import`y**, ne jako odkazy v běžném textu. Volby předvyplň podle typu z kroku 11, ale nech rozhodnout uživatele – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
+Zeptej se **v tematických kolech** (`multiSelect: true`, nejvýš čtyři volby na kolo), co všechno se v projektu bude dělat, a vybrané doménové znalosti zapiš do projektového `CLAUDE.md` jako **tvrdé `@import`y**, ne jako odkazy v běžném textu. Volby předvyplň podle typu z kroku 11, ale nech rozhodnout uživatele – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
-**Znění kol, všech devět checklistů i s cílem importu, předvyplnění podle typu projektu, profil organizace a důvod, proč se importuje a neodkazuje, drží `~/.claude/skills/project/checklists.md`.** Řiď se jím, neopisuj ho z hlavy. Pod `~/Projekty` se profil neimportuje odtamtud: klient podle [`client.md`](client.md), *Klient*, podprojekt ho neimportuje vůbec (*Podprojekt*).
+**Znění kol, všechny checklisty i s cílem importu, předvyplnění podle typu projektu, profil organizace a důvod, proč se importuje a neodkazuje, drží `~/.claude/skills/project/checklists.md`.** Řiď se jím, neopisuj ho z hlavy. Pod `~/Projekty` se profil neimportuje odtamtud: klient podle [`client.md`](client.md), *Klient*, podprojekt ho neimportuje vůbec (*Podprojekt*).
 
 Importuj **jen to, co je pro projekt opravdu relevantní** – každý import stojí kontext v každé session. Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
