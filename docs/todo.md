@@ -29,7 +29,7 @@ Rozdělaná práce, která se dokončuje **jako první**: leží ve větvi `main
 - Roadmapa spolupráce přesunutá z `~/Downloads` do `~/Projekty/Favi/roadmap.pdf`, glosář a `todo.md` v `~/Context` srovnané (`1f452ff`, `d2f1668`).
 - `/project`: výkonnostní reklama dostala vlastní kolo checklistů (`2730f80`); postup přesunu podprojektů zapsaný **dočasně** do `skills/project/migration.md` (`7cb3cac`).
 
-**Zbývá u FAVI mimo skill:** uživatel musí spustit `~/.claude/hooks/verify.sh --allow /Users/honza/Projekty/Favi` – kontrakt (všechny kroky s pomlčkou) se po vydání souhlasu změnil a hook to hlásí po každé odpovědi; v `~/Downloads` leží další podklady FAVI (`FAVI pixel.pdf/.docx`, prezentace z meetupu 18. 6. 2026, CSV a PDF k Veneti) – nabídnuté k zařazení přes `/depot`, nerozhodnuto.
+**Zbývá u FAVI mimo skill:** uživatel musí spustit `~/.claude/hooks/verify.sh --allow /Users/honza/Projekty/Favi` – kontrakt (všechny kroky s pomlčkou) se po vydání souhlasu změnil a hook to hlásí po každé odpovědi. Podklady FAVI z `~/Downloads` uživatel 12. 10. 2026 přesunul do `~/Downloads/FAVI soubory` a dál je neřeší; kopie CSV k Veneti tam zůstaly, originály leží ve `veneti/research/`.
 
 **Zbývající položky**
 
