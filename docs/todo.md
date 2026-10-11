@@ -12,6 +12,8 @@
 
 ------
 
+- [ ] **Rozhodnout, jak vynutit `/end` před `/merge` v bloku *Kudy dál* za běhu** (11. 10. 2026). Pravidlo v `skills/handoff.md` je správně a test `exits_without_end` hlídá text skillů, ale ne to, co model napíše: na konci `/oponent` jsem nabídl „`/merge`, … před koncem session `/end`“, protože jsem `handoff.md` nenačetl, ačkoli Fáze 6 na něj odkazuje – stejné selhání jako 6. 10. 2026 (`decisions.md`, rozhodnutí o pořadí `/end` a `/merge`). Vždy načítaný `standards/rules.md` nese jen půlvětu „`/end` běží na konci každé session, za ním `/merge`“, která se dá číst jako „merge kdykoli, end až na úplném konci“. **Varianty:** (A) `Stop` hook, který vrátí odpověď s `/merge` bez předchozího `/end`, s testem v obou směrech psaným někým jiným než autorem; (B) věta do `standards/rules.md`, že každý odchod včetně `/merge` začíná `/end`; (C) obojí. **Doporučení:** A – textové pravidlo selhalo podruhé. Uživatel zatím rozhodl jen zapsat.
+
 - [ ] **Dotáhnout kontrolu řetězu `/break` → `/continue`** (11. 10. 2026). Oprava doporučení na prahu kontextu je hotová (`done.md`, *Na práh kontextu se u průchodu frontou doporučuje `/break`*), ale testy ji hlídají jen zčásti: `tests/test_hooks.py` ověřuje, že hláška hooku jmenuje `/break`, a `tests/test_skills.py` jen řádek *přerušený průchod frontou* v tabulce řetězců `skills/handoff.md`. Zbývá:
 
   1. **Širší test:** každá odrážka *Kudy dál* s `/continue` v `skills/handoff.md` i ve skillech s frontou (výčet v *Přerušení dlouhého průchodu*) má před sebou `/break`, nebo výslovně říká, že `/break` už proběhl – tak končí sám `/break`. Dnes by `/continue` bez `/break` v cizím skillu nic nechytilo.
