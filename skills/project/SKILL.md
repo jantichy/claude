@@ -286,22 +286,6 @@ Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračn�
 
 **README je pro člověka, ne pro Clauda.** Definici, co do něj patří a co ne, má `~/.claude/standards/structure.md`, sekce `README.md`; drž se jí doslova. U existujícího projektu README **projdi celé** a co je normativní pokyn pro Clauda – pravidla práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit – přesuň do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md` podle povahy. Nekopíruj, přesouvej: informace má žít na jednom místě.
 
-### Migrace staršího pojmenování
-
-*`adopt`:* najdeš-li starší varianty, nabídni přejmenování přes AskUserQuestion (jedna otázka na všechny nálezy dohromady, protože jde o jedno rozhodnutí):
-
-| Staré | Nové |
-|---|---|
-| `TODO.md` v rootu | `todo.md` na místě podle režimu |
-| `rozhodnuti.md` | `decisions.md` |
-| `zasady.md` | `rules.md` |
-| `prd.md` | `requirements.md` |
-| `design.md` | `architecture.md` |
-
-Cílové umístění se řídí režimem z kroku 5. `TODO.md` velkými písmeny v kořeni **není** režim `root` – je to staré pojmenování, které se migruje tak jako tak.
-
-Přejmenovávej přes `git mv`, ať se zachová historie. Po přejmenování **projdi celý repozitář a aktualizuj všechny odkazy** na staré názvy – v `CLAUDE.md`, `README.md`, dokumentaci i komentářích. Existuje-li cílový soubor už taky, obsah **slouč** a na sloučení upozorni; nikdy nepřepisuj.
-
 ### Zápis do CLAUDE.md
 
 Přidej sekci – konkrétní deklaraci, ne opis konvence:
@@ -366,9 +350,9 @@ Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a v
 
 Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď totéž co `/autocommit enable` (viz `~/.claude/skills/autocommit/SKILL.md`).
 
-*`adopt`:* nejdřív **zjisti aktuální stav** – hledej sekci `Autocommit` v projektovém `CLAUDE.md` **bez ohledu na úroveň nadpisu** (`##` i `###`) a bez ohledu na to, pod čím je zanořená. Aktuální stav uveď v otázce, ať uživatel ví, co mění. Je-li zapnutý, ale zapsaný jinak než nadpisem `## Autocommit` v nejvyšší úrovni – typicky podnadpisem pod zaniklou sekcí `## Automatické akce` –, **srovnej ho na dnešní tvar** a řekni to. Jinak ho `/autocommit` příště nenajde a bude ho hlásit jako vypnutý.
+*`adopt`:* nejdřív **zjisti aktuální stav** – sekci `## Autocommit` v projektovém `CLAUDE.md` – a uveď ho v otázce, ať uživatel ví, co mění.
 
-    **Totéž udělej, chybí-li v sekci řádek `@~/.claude/skills/autocommit/autocommit.md`** – bez něj je to přepínač, který nic nespíná, protože pravidla commitování se do projektu dostanou jedině tím importem.
+**Chybí-li v zapnuté sekci řádek `@~/.claude/skills/autocommit/autocommit.md`, doplň ho** a řekni to – bez něj je to přepínač, který nic nespíná, protože pravidla commitování se do projektu dostanou jedině tím importem.
 
 ## Krok 10 – Paměťová politika
 
@@ -459,7 +443,7 @@ Nabízí se do projektu zapsat otisk – datum posledního běhu nebo hash `~/Co
 Vypiš přehledně:
 
 - **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
-- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, provedené migrace názvů, **kontrakt příkazů a zda se tím zapnula průběžná kontrola, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
+- Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, **kontrakt příkazů a zda se tím zapnula průběžná kontrola, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
 - *(klientská složka, `create` a `adopt`)* profil a fakturační soubor – co se založilo nebo převedlo –, odkazy v `~/Context` a jejich commit, a výpis `~/Projekty/*/invoicing.md`, ve kterém fakturovaný klient je; u převodu i nalezené odkazy na starou cestu profilu.
 - *(worktree layout)* **Na jaké větvi výsledek leží**, že je ve větvi commitnutý a že merge do hlavní větve čeká na jeho pokyn. Neměnilo-li se nic, žádná větev nevznikla – řekni to místo toho.

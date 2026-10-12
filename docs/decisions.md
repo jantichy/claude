@@ -2023,3 +2023,13 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 **Rozhodnuto 11. 10. 2026.** Skill, který na konci session zapisuje dohody a probírá nevypořádaná témata, se přejmenoval z `/cleanup` na `/end` – jméno teď říká, kdy se pouští, ne co dělá uvnitř. Přejmenování prošlo všechny soubory včetně historie (`done.md` s řádky průchodů, `decisions.md`, `todo.md`), protože skill v `done.md` hledá svůj minulý průchod podle jména a starý řádek by nenašel. Stejně se přepsaly všechny projekty v `~/Dev` včetně worktree větví.
 
 **Vědomě zůstalo staré slovo** jen tam, kde je předmětem sám řetězec: poučení o hledání v transcriptu (slovo „cleanup“ ze seznamu skillů v systémovém promptu) a doslovná citace uživatele v `done.md`. Dál `cleanupPeriodDays` v `settings.json` a soubor `.last-cleanup`, které patří harnessu Claude Code, a zprávy starých commitů s předponou `cleanup:`.
+
+### Převod profilu v `/project` zůstává, převod fakturačního souboru ne
+
+**Rozhodnuto 12. 10. 2026** při úklidu `/project` po migraci struktury disku. Úkol zněl vyhodit všechno, co slouží jen převodu starého stavu, a jmenoval mezi tím i *Převod* v `skills/project/client.md`. Převod má ale dvě poloviny s různou budoucností:
+
+- **Profil zůstává.** Organizace, pro kterou se nepracuje, má legitimně jen profil v `~/Context/organizations/` (`client.md`, *Rozpoznání*) – takových je dnes pět. Začne-li se pro ni pracovat, dostane složku a profil se do ní přesouvá; to není pozůstatek migrace, ale běžný přechod, který přijde znovu.
+- **Fakturační soubor ne.** Plný soubor v `~/Context/business/invoicing/` dnes nemá nikdo a vzniknout nemůže – `/invoicing` čte jen `~/Projekty/*/invoicing.md` a klientská větev `/project` ho zakládá rovnou ve složce. Totéž platí o cestách mimo složku v poli *Projekty* a o přesunu projektů z `~/Dev` (`migration.md`): organizace bez práce nemá projekty, které by se přesouvaly.
+
+**Zavrženo:** smazat *Převod* celý – při první organizaci, která ze „známé“ přejde na „klienta“, by se profil zakládal znovu vedle starého. **Ponechaná pojistka:** krok 9 `SKILL.md` dál doplní chybějící import pravidel autocommitu, ačkoli ho na disku dnes nikde nechybí – rozbitý přepínač může vzniknout i ručním zápisem, ne jen starou verzí.
+
