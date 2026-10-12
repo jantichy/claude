@@ -31,7 +31,7 @@ Pusť z adresáře session **přesně tenhle příkaz**, nic předtím a nic dal
 git worktree list --porcelain | sed -n 's/^worktree //p' | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o -name todo.md -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; done
 ```
 
-Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`costway/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem. `/break` totiž zapisuje do `todo.md` projektu, ve kterém session stojí, a z kořene klienta by se na zápis v podprojektu jinak nedošlo. Skryté složky, `node_modules` a `vendor` přeskakuje, aby příkaz zůstal pod vteřinou. Vypíše sekci z každého `todo.md`, které ji má, uvozenou řádkem `==> <cesta>`.
+Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem. `/break` totiž zapisuje do `todo.md` projektu, ve kterém session stojí, a z kořene klienta by se na zápis v podprojektu jinak nedošlo. Skryté složky, `node_modules` a `vendor` přeskakuje, aby příkaz zůstal pod vteřinou. Vypíše sekci z každého `todo.md`, které ji má, uvozenou řádkem `==> <cesta>`.
 
 | Výstup | Co dál |
 |---|---|

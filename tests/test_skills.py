@@ -3284,8 +3284,8 @@ class BreakContinueContract(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             client = Path(tmp)
             subprocess.run(["git", "init", "-q", str(client)], check=True)
-            (client / "costway" / "docs").mkdir(parents=True)
-            (client / "costway" / "docs" / "todo.md").write_text(
+            (client / "zakazka" / "docs").mkdir(parents=True)
+            (client / "zakazka" / "docs" / "todo.md").write_text(
                 block.format("podprojekt"), encoding="utf-8"
             )
             (client / "own").mkdir()
