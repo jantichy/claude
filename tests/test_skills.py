@@ -3221,11 +3221,12 @@ class BreakContinueContract(unittest.TestCase):
             for line in HANDOFF.read_text(encoding="utf-8").splitlines()
             if line.startswith("| přerušený průchod frontou")
         )
-        self.assertIn(
-            "/continue", row, "handoff.md nevede přerušený průchod na /continue"
-        )
-        self.assertIn(
-            "| `/break` →", row, "handoff.md nezačíná přerušený průchod /break"
+        cells = [c.strip() for c in row.strip("|").split("|")][1:]
+        self.assertEqual(
+            cells,
+            [INTERRUPTED_CHAIN] * 2,
+            "handoff.md nevede přerušený průchod v obou sloupcích řetězem "
+            "/break → /end → /clear → /continue",
         )
 
     def test_find_command_reads_section_from_other_worktree(self):
@@ -3325,6 +3326,7 @@ class BreakContinueContractActuallyCatch(unittest.TestCase):
 
 
 HANDOFF = ROOT / "skills" / "handoff.md"
+INTERRUPTED_CHAIN = "`/break` → `/end` → `/clear` → `/continue`"
 
 
 def queue_skills() -> set:
@@ -3384,10 +3386,15 @@ EXIT = re.compile(r"`/merge`|`/clear`|`/compact`|nov[éá] session")
 
 
 def navigation_lines(text: str) -> list:
-    """Odrážky bloku `**Kudy dál**` – od popisku po nejbližší nadpis nebo oddělovač."""
-    start = text.find("**Kudy dál**")
-    if start < 0:
+    """Odrážky bloku `**Kudy dál**` – od popisku po nejbližší nadpis nebo oddělovač.
+
+    Blok začíná řádkem, který popiskem začíná; zmínka o bloku uprostřed věty by
+    jinak kontrolu odvedla jinam a skutečný blok by zůstal nezkontrolovaný.
+    """
+    m = re.search(r"^\*\*Kudy dál\*\*", text, re.M)
+    if not m:
         return []
+    start = m.start()
     lines = []
     for line in text[start:].splitlines()[1:]:
         if line.startswith("#") or line.startswith("------"):
@@ -3425,12 +3432,12 @@ def continue_without_break(lines: list) -> list:
     """
     out = []
     for line in lines:
-        at = line.find("`/continue`")
-        if at < 0:
-            continue
-        before = line.find("`/break`")
-        if before < 0 or before > at:
-            out.append(line[:80])
+        # Každý výskyt zvlášť: řádek tabulky nese řetěz ve dvou sloupcích
+        # a `/break` v jednom nesmí krýt druhý.
+        for chunk in line.split("`/continue`")[:-1]:
+            if "`/break`" not in chunk:
+                out.append(line[:80])
+                break
     return out
 
 
@@ -3524,6 +3531,20 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
                 for d in handoff_defects(text, "review", False)
             )
         )
+
+    def test_break_in_one_table_column_does_not_cover_the_other(self):
+        lines = [
+            "| přerušený průchod frontou | `/break` → `/end` → `/clear` → `/continue` "
+            "| `/end` → `/clear` → `/continue` |"
+        ]
+        self.assertTrue(continue_without_break(lines))
+
+    def test_navigation_mentioned_in_prose_does_not_hide_the_block(self):
+        text = (
+            "Odkaz na blok **Kudy dál** uprostřed věty.\n\n## Fáze\n\n"
+            "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
+        )
+        self.assertTrue(continue_without_break(navigation_lines(text)))
 
     def test_break_after_continue_is_reported(self):
         lines = ["- `/end`, pak `/clear`, `/continue`, a když nic nenajde, `/break`"]

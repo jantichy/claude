@@ -1236,6 +1236,22 @@ class PluginHooks(unittest.TestCase):
                 )
 
 
+def interrupted_chain() -> str:
+    """Řetěz přerušeného průchodu z tabulky v `skills/handoff.md`.
+
+    Hláška hooku ho opakuje a nesmí mít jiné znění než tabulka, ze které ho
+    opisují skilly; samotné slovo `/break` by prošlo i v hlášce, která ho
+    odmítá nebo staví za `/continue`.
+    """
+    text = (
+        Path(__file__).resolve().parent.parent / "skills" / "handoff.md"
+    ).read_text()
+    row = next(
+        x for x in text.splitlines() if x.startswith("| přerušený průchod frontou")
+    )
+    return row.strip("|").split("|")[1].strip()
+
+
 class HandoffHook(unittest.TestCase):
     """`handoff.py` hlásí překročení prahu délky session jednou za práh.
 
@@ -1306,7 +1322,11 @@ class HandoffHook(unittest.TestCase):
         msg = self.run_hook()
         self.assertIn("301k", msg)
         self.assertIn("nabídni", msg)
-        self.assertIn("`/break`", msg, "nabídka nevede průchod frontou přes /break")
+        self.assertIn(
+            interrupted_chain(),
+            msg,
+            "nabídka nevede průchod frontou řetězem přes /break",
+        )
         self.add(context=320_000)
         self.assertEqual(self.run_hook(), "", "nabídka zazněla podruhé")
 
@@ -1317,7 +1337,11 @@ class HandoffHook(unittest.TestCase):
         msg = self.run_hook()
         self.assertIn("401k", msg)
         self.assertIn("doporuč rovnou", msg)
-        self.assertIn("`/break`", msg, "doporučení nevede průchod frontou přes /break")
+        self.assertIn(
+            interrupted_chain(),
+            msg,
+            "doporučení nevede průchod frontou řetězem přes /break",
+        )
         self.add(context=450_000)
         self.assertEqual(self.run_hook(), "")
 
