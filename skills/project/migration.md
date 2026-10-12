@@ -35,11 +35,16 @@ Klientská složka už existuje, je to git repozitář a `/project` v ní probě
    ```
 
    Data commitů zůstanou původní – `/invoicing` je dál najde (`activity.py` čte `git log --all` z klientské složky).
-4. **Porovnání s originálem:** `diff -rq -x .git -x .DS_Store -x __pycache__ ~/Dev/<project> <Client>/<sub>`. Dva známé rozdíly nejsou ztráta:
+4. **Porovnání s originálem:** `diff -rq -x .git -x .DS_Store -x __pycache__ ~/Dev/<project> <Client>/<sub>`. Tři známé rozdíly nejsou ztráta:
    - **prázdný adresář** git nenese – v novém chybí,
+   - **jméno souboru s diakritikou** hlásí `diff` jako „Only in“ na obou stranách: na disku leží v rozloženém tvaru (NFD), z gitu přijde ve složeném (NFC). Ověř shodu obsahu `cmp` a jde se dál,
    - **konce řádků** u souborů s CRLF, je-li `core.autocrlf=input`. Ověř, že se liší jen `\r` (`cmp <(tr -d '\r' < a) <(tr -d '\r' < b)`), a zdrojová data zkopíruj s původními bajty (`cp -p`) – podklady v `research/` se nemění. Git je pak vidí jako změněné jen podle stat, věcný diff je prázdný.
 
+   **Soubory, které git ignoruje, `diff` ohlásí jako chybějící** – a na rozdíl od výčtu výš chybějí doopravdy, protože historie je nenese. Projdi `.gitignore` podprojektu a rozhodni po jednom: neverzovaný podklad (sběr auditu, exporty s přihlášenými relacemi) zkopíruj `cp -Rp` a ověř `git check-ignore`; virtuální prostředí (`.venv`) a cache nepřenášej, mají zapsané absolutní cesty a po přesunu by nefungovaly; běhový stav `.claude/run/` nepřenášej.
+
    Cokoliv jiného je chyba – zastav se.
+
+   **Podprojekt bez vlastního gitu** se nepřepisuje ani neslučuje – zkopíruj ho `cp -Rp` jako obsah, porovnej týmž `diff` a commitni. Bylo-li rozhodnuto, že verzovaný být nemá, to rozhodnutí se tím ruší; zapiš to do `decisions.md` klientské složky, ať ho nikdo nevrací.
 5. **Složky session logů** přejmenuj s adresářem, jinak projekt přijde o historii a `/invoicing` o stopy práce: `mv -n ~/.claude/projects/<old> ~/.claude/projects/<new>`, kde jméno je cesta s `/` nahrazeným `-` (`-Users-honza-Dev-<project>` → `-Users-honza-Projekty-<Client>-<sub>`). Nové jméno nesmí existovat. **Opačným směrem to nefunguje:** `/` i `-` dají ve jménu totéž, takže `-Users-honza-Dev-a-b` může být `~/Dev/a-b` i `~/Dev/a/b`. Skutečnou cestu přečti z pole `cwd` v transcriptu (`grep -o '"cwd":"[^"]*"' <složka>/*.jsonl | sort -u`), jinak z dekódovaného jména vyjde neexistující adresář.
 6. **Starý adresář do Koše**, ne `rm`: `mv -n ~/Dev/<project> ~/.Trash/dev-<project>-<date>` (`date +%F`). Vysype ho uživatel.
 7. **Podprojektový `CLAUDE.md` zeštíhli** o to, co dědí z kořene klientské složky – profil, autocommit a paměťovou politiku přebít nejde (`client.md`, *Podprojekt*):
