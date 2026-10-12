@@ -39,7 +39,7 @@ Bez argumentu pracuje se stromem aktuálního projektu. S argumentem (`/slim ~/.
 
 ## Zásady pro celý průběh
 
-- **Rozsah je celý strom načítání**, ne jen repozitář, ve kterém stojíš. Zapisuje se do `~/.claude`, `~/Context` i do projektů v `~/Dev`, jejichž odkazy zásah rozbije. Každý repozitář se commituje zvlášť a jmenovanými cestami.
+- **Rozsah je celý strom načítání**, ne jen repozitář, ve kterém stojíš. Zapisuje se do `~/.claude`, `~/Context` i do projektů v `~/Dev` a `~/Projekty`, jejichž odkazy zásah rozbije. Každý repozitář se commituje zvlášť a jmenovanými cestami.
 - **V cizím projektu:** jen přesměrování odkazů jde přímo do hlavní větve podle výjimky pro hromadnou migraci (`~/.claude/standards/worktree.md`, *`main/` se nemaže a nepracuje se v něm*); zásah do obsahu jde do větve a merguje se jen na pokyn.
 - **Rozbor dělá hlavní session na nejsilnějším modelu** – chyba v něm se násobí do každého zásahu a projeví se až tehdy, když pravidlo chybí (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*).
 - **Sporné předkládej po jednom** přes `AskUserQuestion`; co má jedinou podobu, udělej a vypiš. Hranici drží `~/.claude/skills/findings.md`. **Přesuny se stejným rizikem a jasným cílem smí jít jednou otázkou** se seznamem a s tím, že výjimky jde napsat do *Other*.
@@ -53,7 +53,7 @@ Bez argumentu pracuje se stromem aktuálního projektu. S argumentem (`/slim ~/.
 Společný začátek drží `~/.claude/skills/preflight.md`. Navíc:
 
 1. **Cíl.** Je-li v argumentu jméno souboru, najdi ho ve stromu z *Fáze 1*. Není-li ve stromu, ale existuje, zjisti přes `measure.py refs`, kdo a kdy ho načítá – **často čtený soubor je plnohodnotný cíl** ([`catalog.md`](catalog.md), *Soubory čtené odkazem*), ne vedlejší. Neexistuje-li, nabídni nejbližší jména ze stromu.
-2. **Stav repozitářů, na které se sáhne** – `git status --porcelain` v `~/.claude`, `~/Context` a projektu, a **před přesměrováním odkazů i v každém projektu v `~/Dev`, kam míří**. Rozpracované cizí změny v souboru, který chceš upravit, zastaví zásah do toho souboru; ohlas to. Bez stavu předem nejde po zásahu poznat, který řádek diffu je tvůj.
+2. **Stav repozitářů, na které se sáhne** – `git status --porcelain` v `~/.claude`, `~/Context` a projektu, a **před přesměrováním odkazů i v každém projektu v `~/Dev` a `~/Projekty`, kam míří**. Rozpracované cizí změny v souboru, který chceš upravit, zastaví zásah do toho souboru; ohlas to. Bez stavu předem nejde po zásahu poznat, který řádek diffu je tvůj.
 3. **Rozřazovací sekce „co sem nepatří“** každého velkého souboru ve stromu i jeho repozitáře si přečti, než navrhneš přesun – říkají, kam co patří, a přesun proti nim vyrobí rozpor.
 4. **Dřívější běhy `/slim`** nad týmiž soubory – `grep` v `decisions.md` dotčených repozitářů. Co tehdy padlo, neopakuj; co se zamítlo, je vstup, ne zákaz ([`catalog.md`](catalog.md), *Kategorie zásahů*).
 
@@ -114,7 +114,7 @@ Po repozitářích, v každém stejně:
 2. **Přesun, ne kopie.** Text zmizí ze zdroje v tomtéž kroku, ve kterém vznikne v cíli. Relativní odkazy v přesunutém textu přepočítej na nové místo.
 3. **Řež podle čísel řádků s ověřeným obsahem na obou koncích**, ne podle hledaného řetězce (`~/.claude/standards/rules.md`, *Mazání ověř diffem, ne grepem*).
 4. **Nadpisy zůstávajících sekcí a tučné úvody pravidel neměň** – odkazuje se na ně odjinud. Přejmenování je samostatné rozhodnutí.
-5. **Přesměruj odkazy** na přesunuté sekce (`` `soubor`, *Sekce* ``) ve všech repozitářích: `~/.claude`, `~/Context` a projekty v `~/Dev`. Hledej po jménu sekce, ne po jménu souboru – odkaz bývá zkrácený i zalomený. **Přesunula-li se podsekce, odkaz často jmenuje nadřazenou sekci** (`` `structure.md`, *`done.md`* `` míněno o průchodech) – rozhodni podle slov na řádku a nepřímé zmínky („tvar drží `structure.md`“) projdi ručně. Hromadnou náhradu dělej skriptem s přesnými tvary a pak vypiš, co ze starých tvarů zbylo.
+5. **Přesměruj odkazy** na přesunuté sekce (`` `soubor`, *Sekce* ``) ve všech repozitářích: `~/.claude`, `~/Context` a projekty v `~/Dev` a `~/Projekty`. Hledej po jménu sekce, ne po jménu souboru – odkaz bývá zkrácený i zalomený. **Přesunula-li se podsekce, odkaz často jmenuje nadřazenou sekci** (`` `structure.md`, *`done.md`* `` míněno o průchodech) – rozhodni podle slov na řádku a nepřímé zmínky („tvar drží `structure.md`“) projdi ručně. Hromadnou náhradu dělej skriptem s přesnými tvary a pak vypiš, co ze starých tvarů zbylo.
    - **Ve worktree layoutu jen `main/`.** Pracovní adresář jiné větve drží rozdělaná práce jiné session; oprava se tam dostane mergem. Seznam dá `git -C <kontejner> worktree list`; zásah, který tam omylem doletí, vrať opačnou náhradou a ověř čistý strom.
    - **V každém cizím repozitáři porovnej diff se stavem z *Fáze 0*** – commitovat smíš jen řádky, které jsou tvoje.
 6. **Dorovnej věty, které přesunutý obsah popisují**: úvod souboru, rozcestníky v `CLAUDE.md`, `README.md`, přípravu skillů, rozřazovací sekce „co sem nepatří“. Grep po přesunutém textu je nenajde – hledej po jménu zdrojového i cílového souboru.

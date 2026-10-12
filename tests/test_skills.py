@@ -534,7 +534,7 @@ def link_target(ref: str):
     adresáři. Původní verze resolvovala přes `$HOME` a v CI i po cizím klonu
     hlásila všech 27 souborů jako plných rozbitých odkazů.
 
-    `~/Dev/…` je knowledge base mimo repozitář. Kde není, není co ověřovat –
+    `~/Context/…` je knowledge base mimo repozitář. Kde není, není co ověřovat –
     kolik odkazů tím zůstalo nezkontrolovaných, hlásí vlastní test.
     """
     if ref.startswith("~/.claude/"):
@@ -1912,7 +1912,6 @@ class StandardCompliance(unittest.TestCase):
     STANDARD = ROOT / "skills" / "skills.md"
     PREFLIGHT = ROOT / "skills" / "preflight.md"
 
-    #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
     #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
     #: Prázdný od 15. 9. 2026 – celá sada je na normě. Zůstává schválně:
     #: až norma přituhne znovu, je kam zapsat, co ještě nedorovnalo, a test

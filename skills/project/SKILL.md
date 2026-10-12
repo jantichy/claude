@@ -82,7 +82,6 @@ Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) 
 - `.git`, `.bare`, `README.md`, `.gitignore`,
 - `CLAUDE.md` **i `main/CLAUDE.md`** – ve worktree layoutu je v kořeni jen rozcestník bez bloku metadat, takže otisk hledej v `main/` (viz *Projektový adresář* výš),
 - standardní soubory **na obou možných místech**: `docs/todo.md` i kořenový `todo.md`, totéž pro `backlog.md`, `decisions.md`, `done.md` a `rules.md` – podle toho se v kroku 5 pozná režim,
-- starší pojmenování `TODO.md` v kořeni,
 - zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim `create`.
@@ -101,7 +100,6 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 | Projektový `CLAUDE.md` | existuje? co v něm už je (autocommit, paměť, typ, importy)? |
 | Standardní struktura | existuje `README.md`, `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` – a **kde**, v `docs/` nebo v kořeni? (určuje režim, viz krok 5) |
 | *(worktree layout)* rozdělení souborů | leží projektové soubory v `main/`, nebo omylem v kořeni kontejneru? je v kořeni rozcestník s `@main/CLAUDE.md`? |
-| Starší pojmenování | existuje `TODO.md` v rootu, `rozhodnuti.md`, `zasady.md` (na místě podle režimu z kroku 5)? (viz krok 5) |
 | Typ projektu | odvoď z obsahu – `package.json`, zdrojové adresáře, převaha MD souborů |
 
 *`adopt`:* pak řekni, že se teď budeš ptát postupně, a pokračuj krokem 1. V dalších krocích platí: **co už je nastavené a odpovídá volbě, nech být a jen to zmiň.** *`update`:* neptej se na nic a pokračuj krokem 14.

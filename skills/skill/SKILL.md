@@ -280,7 +280,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<name>`“ |
 | `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních README skillů. Osiřelý odkaz na `../<name>/README.md` testy shodí, ale samy ho nevyškrtnou |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
-| projektové `CLAUDE.md` v `~/Dev` | sekce, které skill zakládal |
+| projektové `CLAUDE.md` v `~/Dev` a `~/Projekty` | sekce, které skill zakládal |
 | Memory | záznamy, které ho vyžadují |
 
 Hledej **grepem přes všechny ty kořeny**, ne z paměti. Po smazání **projeď kontrolní průchod na jméno skillu** – musí vrátit nulu mimo místa vědomě ponechaná.

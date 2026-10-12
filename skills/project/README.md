@@ -20,10 +20,9 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 6. **Zvládne i uspořádání s jedním pracovním adresářem na větev**, takže nad projektem může běžet víc sezení naráz, aniž si přepisují soubory. Přijde-li do projektu, který tak už uspořádaný je, **hlavní větev nechá být** a vlastní si založí, teprve až se má opravdu něco změnit; merge nechává na vás.
 7. **Založí dokumentační strukturu** – co je odložené, co je jen nezávazný nápad, co hotové, co se rozhodlo a proč, jaké principy platí – a nechá vás vybrat, jestli má ležet ve vlastní složce, nebo v kořeni.
 8. **Nabídne produktové podklady** – doklady poptávky, analýzu konkurence, registr rizik, scénáře, glosář, ceník. Nezakládá je prázdné; jen si zapíše, které z nich projekt vede, aby se pak poznal chybějící dokument od nechtěného.
-9. **Zmigruje starší pojmenování souborů** a projde celý repozitář, aby nezůstal rozbitý odkaz.
-10. **Zapne kontroly kvality** – zapíše, čím se v projektu pouštějí testy, typová kontrola, linter, build a formátovač, a řekne, co se tím nebude kontrolovat, když projekt některý z nich nemá. K tomu language server pro jazyk projektu a zákazy, které model nesmí obejít – u převzatého kódu bez testů jako první úkol testy, které zachytí jeho dnešní chování.
-11. **Napojí doménové checklisty** podle povahy projektu.
-12. **Drží pohromadě všechno pro jednoho klienta.** Ve složce klienta založí kromě běžného projektu i profil klienta – kdo to je, kdo tam rozhoduje, jak se s nimi pracuje – a fakturační dohodu, profil napojí tak, aby ho znal každý projekt pro toho klienta, a klienta vedeného dřív jinde do složky převede.
+9. **Zapne kontroly kvality** – zapíše, čím se v projektu pouštějí testy, typová kontrola, linter, build a formátovač, a řekne, co se tím nebude kontrolovat, když projekt některý z nich nemá. K tomu language server pro jazyk projektu a zákazy, které model nesmí obejít – u převzatého kódu bez testů jako první úkol testy, které zachytí jeho dnešní chování.
+10. **Napojí doménové checklisty** podle povahy projektu.
+11. **Drží pohromadě všechno pro jednoho klienta.** Ve složce klienta založí kromě běžného projektu i profil klienta – kdo to je, kdo tam rozhoduje, jak se s nimi pracuje – a fakturační dohodu, profil napojí tak, aby ho znal každý projekt pro toho klienta, a klienta vedeného dřív jinde do složky převede.
 
 ## Proč zrovna tenhle
 

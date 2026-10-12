@@ -66,8 +66,6 @@ Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systém
 
 **Rozsah** je klient z argumentu, nebo všichni, kdo mají `~/Projekty/<Client>/invoicing.md`. Klient se jmenuje podle své složky; jméno z argumentu s ní porovnej bez ohledu na velikost písmen. **Jinde se soubor klienta nehledá** – každý fakturovaný klient má klientskou složku a druhé umístění by se muselo pamatovat. V `~/Context/business/invoicing/` leží jen odkaz pro člověka.
 
-**Projdi zároveň `~/Context/business/invoicing/*.md` a každý soubor s nadpisem `## Dohoda` ohlas jako nepřevedeného klienta, kterého skill nevidí**, i s doporučením `/project` v jeho klientské složce. Odkaz ten nadpis nemá, plný soubor ano. Mlčky přeskočený klient je nevystavená faktura.
-
 **Období se každému klientovi počítá zvlášť** a nikdy se neodhaduje:
 
 1. Vytáhni ze systému **poslední fakturu tomu klientovi** a přečti z ní konec fakturovaného období. **Žádná tam není?** Pak se tomu klientovi ještě nikdy nefakturovalo a hranici drží **soubor klienta** – deník výjimek nebo dohoda. Přečti ho; není-li tam, zeptej se a odpověď do deníku zapiš (v režimu `full`; v `preview` se nezapisuje nic). **Nepleť si to s prázdným obdobím** – to je stav, kdy fakturovat není co, ne kdy se ještě nezačalo.

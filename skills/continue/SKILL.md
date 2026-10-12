@@ -40,7 +40,7 @@ Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedl
 | jeden blok `### ` | pokračuj *Fází 2* |
 | víc bloků `### `, v jedné sekci i napříč worktree | zeptej se přes `AskUserQuestion`, kterým začít – nadpis bloku jako `label`, první věta *Jak pokračovat* jako `description`, v pořadí, ve kterém stojí; žádný neoznačuj za doporučený, pořadí nerozhodl nikdo |
 
-**Sekce bez nadpisu `### `** je zápis ze starší podoby `/break`: ber celou sekci jako jeden blok a odstavec *Jak pokračovat* v ní hledej podle textu. **Chybí-li `**Jak pokračovat:**` úplně**, nehádej – vypiš, co v bloku je, a zeptej se, čím začít.
+**Chybí-li `**Jak pokračovat:**` úplně**, nehádej – vypiš, co v bloku je, a zeptej se, čím začít.
 
 ## Fáze 2 – Navázání
 

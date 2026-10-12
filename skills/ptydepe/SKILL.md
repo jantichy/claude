@@ -38,7 +38,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 Společný začátek je v `~/.claude/skills/preflight.md`. **Skill neběží nad jedním projektem**, ale nad všemi naráz, takže body 1 až 3 nahrazuje vlastními předpoklady:
 
-1. **Kořeny.** `~/.claude`, `~/Context` a **každý další git repozitář v `~/Dev`**. Posledně jmenované se do rozsahu berou, jen když se v nich termín vyskytuje – zjistí to inventura, ne domněnka.
+1. **Kořeny.** `~/.claude`, `~/Context` a **každý další git repozitář v `~/Dev` a `~/Projekty`**. Posledně jmenované se do rozsahu berou, jen když se v nich termín vyskytuje – zjistí to inventura, ne domněnka.
 2. **Zjisti, co je už rozhodnuté** – termín, který v tom seznamu je, ať nahrazený, nebo vědomě ponechaný, se znovu neprojednává. Kolik k tomu potřebuješ přečíst, se liší podle režimu: `suggest` si vystačí s `~/.claude/standards/ptydepe.md` a **s *Obsahem*** `terms.md` v adresáři skillu, protože k vytipování kandidátů stačí jména; `add` čte **oba soubory celé**, protože rozhoduje o termínu a potřebuje k tomu úvahy i zamítnuté varianty. Rozvaha roste s každým vypořádaným termínem, takže tahat ji do běhu, který ji nepoužije, je táž vada, kvůli které se 10. 9. 2026 dělila sama tabulka.
 3. **Vypiš rozpracované změny v každém známém kořeni a pokračuj.** Blokuje jedině soubor, na který pak náhrada sáhne – ten by se s ní smíchal a přestalo by být poznat, co je čí. **Rozhodnout se to tady ale nedá**, protože rozsah zjistí až *Fáze 4*; výpis odsud je jen podklad pro ni. Na cizí rozpracovanou práci **se neptej**: do commitu se nedostane, protože se commitují jmenované cesty (`~/.claude/standards/rules.md`, *Commituj jmenované cesty, ne `-A`*), a dotaz, který nic nerozhoduje, se naučí odklikávat bez čtení.
 

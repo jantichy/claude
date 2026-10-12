@@ -25,7 +25,7 @@ Společný začátek drží `~/.claude/skills/preflight.md`; body 4 a 5 odpadaj�
 
 1. **Urči, kde práce leží:** větev (`git branch --show-current`) a pracovní adresář. Ve worktree layoutu (`~/.claude/standards/worktree.md`) je to adresář větve, ne `main/` – a právě to nová session jinak nemá odkud zjistit.
 2. **Najdi běhový stav** v `.claude/run/` (`~/.claude/skills/skills.md`, *Běhový stav*). Nese-li přerušený skill frontu tam, je to výchozí podklad – ale **ne úplný**: kontext kolem položek, doporučení a návaznosti bývají jen v konverzaci.
-3. **Podívej se, jestli `## Přerušený běh` už existuje.** Leží-li v ní zbytek jiného přerušení, nový blok jde pod něj; starý se nepřepisuje, je to cizí rozdělaná práce. **Nemá-li starý blok nadpis `### `** (zápis ze starší podoby skillu), nech ho, jak je, a ohlas uživateli, že `/continue` v sekci neodliší, kde končí – takový zápis je přechodný a zmizí, až se jeho fronta dojde.
+3. **Podívej se, jestli `## Přerušený běh` už existuje.** Leží-li v ní zbytek jiného přerušení, nový blok jde pod něj; starý se nepřepisuje, je to cizí rozdělaná práce.
 4. **Prošla-li session kompaktací**, načti nejdřív transcript (`~/.claude/skills/session.md`). Shrnutí z kompaktace je přesně ta parafráze, ve které se detail ztrácí.
 
 ## Fáze 1 – Inventura rozdělané práce

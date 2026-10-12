@@ -288,7 +288,7 @@ Hlavička je proti tomu jen **jméno pro blok** – klíče uvnitř (`name`, `de
 
 **Zamítnuto:** *popis mailingu* – zní jako datové pole a plete se s katalogem mailingů, který mailingy popisuje pro vývojáře, ne pro pořadatele; *průvodní text* – zní jako text, který odchází se mailem k zákazníkovi; *doložení* – znamená důkaz nebo podklad k tvrzení a v pravidlech se tak používá („doloženo“, „dolož příkazem“), kdežto nápověda nic nedokazuje.
 
-**Kde starý tvar vědomě zůstává:** `~/Context/archive/twitter/Twitter 2017.md` – matriční rodný list, jiný význam a publikovaný text. V rezervacích zůstal na `main` a ve větvi `docs/stranky`, dokud do nich nedorazí větev `docs/podminky`, kde se nahradil.
+**Kde starý tvar vědomě zůstává:** `~/Context/archive/twitter/Twitter 2017.md` – matriční rodný list, jiný význam a publikovaný text.
 
 ### prompt, zpráva uživatele
 
@@ -461,4 +461,4 @@ Revize 5. 10. 2026 rozložila „kotvu“ na asi deset významů a většinu nah
 - **cenová kotva** – psychologické ukotvení ceny, drahá varianta, vedle které ostatní vypadají rozumně (projekty `ai`, `byt`). Ne „pracovní kotva“ ve smyslu ceny, se kterou se počítá – ta je *pracovní cena*;
 - **kotva v CSS anchor positioning** – prvek, ke kterému se váže popover (`score`); tak se ta vlastnost jmenuje (`anchor-name`).
 
-**Kde starý tvar zůstává i v nahrazených významech:** `done.md` všech projektů (`kotvy N/N`), `~/Context/archive/`, `compose/_analysis/`, vendor CKEditor a eventoid ve větvi `stitch`, dokud do ní nedorazí `main`.
+**Kde starý tvar zůstává i v nahrazených významech:** `done.md` všech projektů (`kotvy N/N`), `~/Context/archive/`, `compose/_analysis/`, vendor CKEditor.

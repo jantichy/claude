@@ -179,17 +179,11 @@ repo_id() {
   canon "$d"
 }
 
-# Soubor se souhlasem pro daný pracovní adresář, existuje-li. Souhlasy vydané
-# před přechodem na klíč podle repozitáře se při prvním použití přeznačí – bez
-# migrace by se změnou klíče kontrola ze dne na den vypnula ve všech projektech.
+# Soubor se souhlasem pro daný pracovní adresář, existuje-li.
 allow_file() {
   k=$(proj_key "$(repo_id "$1")")
-  if [ -f "$ALLOW_DIR/$k" ]; then printf '%s' "$ALLOW_DIR/$k"; return 0; fi
-  old=$(proj_key "$1")
-  if [ -f "$ALLOW_DIR/$old" ] && mv "$ALLOW_DIR/$old" "$ALLOW_DIR/$k" 2>/dev/null; then
-    printf '%s' "$ALLOW_DIR/$k"; return 0
-  fi
-  return 1
+  [ -f "$ALLOW_DIR/$k" ] || return 1
+  printf '%s' "$ALLOW_DIR/$k"
 }
 
 # Adresář, ve kterém se příkazy spustí. U kontraktu v .claude/CLAUDE.md je to

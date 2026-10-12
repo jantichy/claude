@@ -378,7 +378,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 Seznam nálezů, které se vyhodnotily jako „neopravovat“. Píše do něj **`/review` i `/attack`** – jsou to odpovědi na tutéž otázku a hledat je na dvou místech nemá smysl. (`/consistency` má vlastní kapitolu `## Consistency`, protože se ptá na jinou otázku.) Definice je tady; ostatní skilly sem odkazují.
 
-**Kde:** projektový `CLAUDE.md`. Když neexistuje, vytvoř ho s hlavičkou a kapitolou; když chybí kapitola, doplň ji na konec souboru. U staršího projektu může mít ještě starý název `## Standards` – přečti obojí a při prvním zápisu ji přejmenuj. **Zápisy se přidávají na konec kapitoly.**
+**Kde:** projektový `CLAUDE.md`. Když neexistuje, vytvoř ho s hlavičkou a kapitolou; když chybí kapitola, doplň ji na konec souboru. **Zápisy se přidávají na konec kapitoly.**
 
 **Formát:**
 
@@ -392,7 +392,7 @@ nezmění kód, kterého se týkají.
   - Lokace: <file:line, ...>
 ```
 
-`zdroj` říká, odkud nález přišel, a nahrazuje dřívější pole `role`, které nález z útoku neměl čím vyplnit; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo doménové znalosti, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+`zdroj` říká, odkud nález přišel; `podklad` je u `/review` scénář, bod seznamu zranitelností nebo pravidlo doménové znalosti, u `/attack` reprodukční postup. Datum vyrob `date +%F` a hash `git rev-parse --short HEAD` – **obojí příkazem, ne z kontextu** (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
 **Umlčení commituj samostatně, až po opravách.** Hash se vyrábí z `HEAD` **před** commitem, takže musí ukazovat na stav, ve kterém se nález posuzoval – tedy na commit s opravami. Kdyby šel zápis do téhož commitu jako ony, ten commit by se dotkl i souborů z pole *Lokace*, expirační kontrola níž by hlásila změnu a **umlčení by vypršelo dřív, než ho kdo přečte**. Pořadí je proto: commitni opravy → zjisti `HEAD` → zapiš záznam → commitni sám zápis. Druhý commit mění jen `CLAUDE.md`, takže se lokací netýká a filtr drží.
 
