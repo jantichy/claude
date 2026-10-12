@@ -44,6 +44,7 @@ Kvalita signálu je to jediné, co u zdroje rozhoduje – **nese sám o sobě d�
 | **Prohlížeč** | navštívená URL, čas návštěvy **a doba na stránce** | střední – u výlučné URL použitelné, u sdílené ne |
 | **Sdílené dokumenty** | zápisy ze schůzek, **odevzdané výstupy**, zmínky o tom, co bylo dodáno | silný – nese obsah i hotové výsledky, viz *Odevzdaný výstup jako stopa* |
 | **Pracovní poznámky v cizím nástroji** | názvy stránek a časy návštěv z historie prohlížeče | **silný** – hustý shluk návštěv jedné stránky je práce na ní, viz níž |
+| **Nástroj na úkoly** (s přístupem) | vlastní komentáře, založené, upravené a dokončené úkoly s časem | střední – razítko je konec práce jako u commitu; komentář často nese i obsah, co se dělalo |
 | **Mail** | čas odeslání, předmět, obsah | slabý – odeslání je špička ledovce, ne práce sama |
 | **Notifikace z nástroje bez přístupu** | mailová oznámení o úkolech a zprávách | slabý sám o sobě, **silný jako potvrzení** – doloží, že se něco dělo v ten čas |
 
