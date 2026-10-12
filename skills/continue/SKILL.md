@@ -28,10 +28,10 @@ Režimy ani argument nemá. Tvar zápisu, ze kterého čte, drží `/break` – 
 Pusť z adresáře session **přesně tenhle příkaz**, nic předtím a nic dalšího:
 
 ```bash
-git worktree list --porcelain | sed -n 's/^worktree //p' | while read -r d; do for f in "$d/docs/todo.md" "$d/todo.md"; do if [ -f "$f" ]; then awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; fi; done; done
+git worktree list --porcelain | sed -n 's/^worktree //p' | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o -name todo.md -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; done
 ```
 
-Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a vypíše sekci z každého `todo.md`, které ji má, uvozenou řádkem `==> <cesta>`.
+Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`costway/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem. `/break` totiž zapisuje do `todo.md` projektu, ve kterém session stojí, a z kořene klienta by se na zápis v podprojektu jinak nedošlo. Skryté složky, `node_modules` a `vendor` přeskakuje, aby příkaz zůstal pod vteřinou. Vypíše sekci z každého `todo.md`, které ji má, uvozenou řádkem `==> <cesta>`.
 
 | Výstup | Co dál |
 |---|---|
@@ -44,7 +44,7 @@ Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedl
 
 ## Fáze 2 – Navázání
 
-1. **Přepni se do worktree, kde zápis leží** – adresář nad `docs/todo.md` z řádku `==>` (nebo nad `todo.md` u projektu bez `docs/`). Stojí-li session jinde, přejdi tam a řekni to jednou větou; ve worktree layoutu je to jediná věc, kterou nová session jinak nemá odkud vědět.
+1. **Přepni se do projektu, kde zápis leží** – adresář nad `docs/todo.md` z řádku `==>` (nebo nad `todo.md` u projektu bez `docs/`); u podprojektu je to jeho podsložka, ne kořen worktree. Stojí-li session jinde, přejdi tam a řekni to jednou větou; ve worktree layoutu je to jediná věc, kterou nová session jinak nemá odkud vědět.
 2. **Přečti blok celý** – výstup příkazu ho už obsahuje, `todo.md` znovu neotevírej. Mimo *Jak pokračovat* nese úvodní větu s tím, **co musí předcházet**: stojí-li tam krok, který se ještě neudělal (uživatel chystal změnu rozhodnutí), zeptej se, jestli proběhl, dřív než začneš – fronta nad neplatným stavem je práce nazmar.
 3. **Shrň ve třech až pěti řádcích:** co se přerušilo a kdy, kde to leží, kolik položek zbývá, co předchází a čím se teď pokračuje.
 4. **Řekni závěrečnou větu a proveď první akci z *Jak pokračovat*:**

@@ -4,7 +4,7 @@ Když dlouhou session přerušíte skillem `/break`, zapíše rozdělanou práci
 
 ## Co umí
 
-- **Najde zápis přerušené práce kdekoliv v repozitáři** – i v jiné větvi, když každá větev leží ve vlastním adresáři.
+- **Najde zápis přerušené práce kdekoliv v repozitáři** – i v jiné větvi, když každá větev leží ve vlastním adresáři, a i v podsložce s vlastním projektem, třeba v zakázce uvnitř složky klienta.
 - **Přejde tam, kde práce leží**, a řekne to.
 - **Zkontroluje, co mělo předcházet** – chystali jste před pokračováním nějakou změnu? Zeptá se, jestli proběhla.
 - **Hned pokračuje první akcí ze zápisu** – spustí skill, kterým se má navázat, nebo se pustí do první zbývající položky i s variantami a doporučením, jak je zapsané.

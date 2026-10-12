@@ -3269,6 +3269,49 @@ class BreakContinueContract(unittest.TestCase):
         self.assertIn("**Jak pokračovat:** `/review branch`.", out)
         self.assertNotIn("cizí položka", out, "příkaz nezastavil na další sekci")
 
+    def test_find_command_reads_section_from_subproject(self):
+        """Zápis v podprojektu klientské složky se najde i z jejího kořene.
+
+        `/break` píše do `todo.md` projektu, ve kterém session stojí; u podprojektu
+        je to jeho podsložka a s vlastním repozitářem ji klientský `.gitignore`
+        skrývá. Dřívější příkaz četl jen kořen worktree a ohlásil, že navázat není
+        na co (doloženo 12. 10. 2026 v klientské složce). Skrytá složka se naopak
+        procházet nemá – leží v ní cizí worktree a běhový stav, ne práce.
+        """
+        command = re.search(r"```bash\n(.+?)\n```", self.continue_body, re.S).group(1)
+        block = "# T\n\n## Přerušený běh\n\n### {} – přerušeno 2026-10-12\n\n## Úkoly\n"
+        with tempfile.TemporaryDirectory() as tmp:
+            client = Path(tmp)
+            subprocess.run(["git", "init", "-q", str(client)], check=True)
+            (client / "costway" / "docs").mkdir(parents=True)
+            (client / "costway" / "docs" / "todo.md").write_text(
+                block.format("podprojekt"), encoding="utf-8"
+            )
+            (client / "own").mkdir()
+            subprocess.run(["git", "init", "-q", str(client / "own")], check=True)
+            (client / ".gitignore").write_text("own/\n", encoding="utf-8")
+            (client / "own" / "todo.md").write_text(
+                block.format("vlastní repozitář"), encoding="utf-8"
+            )
+            (client / ".claude" / "x").mkdir(parents=True)
+            (client / ".claude" / "x" / "todo.md").write_text(
+                block.format("skrytá"), encoding="utf-8"
+            )
+            out = subprocess.run(
+                ["sh", "-c", command],
+                cwd=client,
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout
+        self.assertIn("### podprojekt", out, "příkaz nenašel zápis v podprojektu")
+        self.assertIn(
+            "### vlastní repozitář",
+            out,
+            "příkaz nenašel podprojekt s vlastním repozitářem",
+        )
+        self.assertNotIn("### skrytá", out, "příkaz prochází skryté složky")
+
 
 class BreakContinueContractActuallyCatch(unittest.TestCase):
     """Mutační test: návěstí vyříznuté z jedné strany musí kontrolu shodit."""
