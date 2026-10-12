@@ -260,6 +260,8 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-10-12** · `/end` · `5d78992` · session `5f38435d-4ee4-4436-a01e-847764f606b0` · prompty 20/20 · 0 témat · mimo rozsah: ruční dokončení migrace (souhlas průběžné kontroly, dialogy importů, zneplatnění tokenu, vysypání Koše, doplnění profilů) přesunuté ze soukromého `done.md`, kam se dostalo s uzavřeným roztříděním, do soukromého `todo.md` · meze: 137 bloků myšlení (prázdné z principu formátu), výstupy Skill a Write
 - **2026-10-12** · `/end` · `e40aa66` · session `53858f77-d99d-4a43-91ee-8d9bea4cae21` · prompty 8/8 · 1 téma (1 rozhodnuto: zmínka o smazaném `~/Dev/akademie` vypuštěná z `~/Context/depot/depot.md`) · mimo rozsah: žádné · meze: 56 bloků myšlení (prázdné z principu formátu), 1 výstup Read, 1 odložený výstup Bash (hromadný grep nahrazený užším)
 
+- **2026-10-12** · `/end` · `88c756c` · session `2178841c-d165-41bd-87d4-34fb9eefaa4a` · prompty 5/5 (3 z inventury, `/next` a `/end` doplněny ručně – známá díra v `todo.md`) · 1 téma (1 rozhodnuto: jméno klienta v historii gitu se nevymazává, `decisions.md`) · mimo rozsah: třetí doklad k položce o id session ve scratchpadu připsán do `todo.md` · meze: 43 bloků myšlení (prázdné z principu formátu), 7 výstupů Edit a 1 Read
+
 ## Odvedená práce
 
 - [x] **`done.md` vedle `todo.md` pro hotové úkoly.** (2026-09-01) (zadáno 1. 9. 2026) Dnes drží `todo.md` nehotové i hotové, takže není přehledně vidět, co zbývá, a vzniká zbytečná otázka, kam hotové patří (konec souboru vs. pod sekci). Nově: `todo.md` jen nehotové, `done.md` jen hotové. U strukturovaného `todo.md` se sekce zrcadlí i v `done.md`.
