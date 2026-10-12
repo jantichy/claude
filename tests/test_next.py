@@ -320,6 +320,63 @@ class PlanAndQueueParsing(unittest.TestCase):
             ["První", "Druhý"],
         )
 
+    def test_interrupted_block_is_one_item(self):
+        """Blok `### ` v `## Přerušený běh` je jedna položka, ne podsekce.
+
+        `/break` píše každé přerušení jako blok pod nadpisem `### ` a obecný
+        parser v něm viděl podsekci, ve které počítal jen zaškrtávátka – sekce
+        vyšla s nulou položek a `/next` ji, ačkoli ji má řadit úplně první,
+        nenabídl vůbec. Doloženo 11. 10. 2026 při přerušení migrace disku.
+        Výčet zbývající práce uvnitř bloku se za položky fronty počítat nesmí.
+        """
+        todo, _, _ = self.c.parse_todo(
+            "# TODO\n\n## Přerušený běh\n\n"
+            "### /review branch – přerušeno 2026-10-08\n\n"
+            "Rozdělaná práce, dokončuje se jako první.\n\n"
+            "- [ ] **Nález o zámku.** Varianty a doporučení.\n"
+            "- [ ] **Nález o mailu.** Varianty.\n\n"
+            "**Jak pokračovat:** `/review branch` od začátku. Fronta se dojde podle\n"
+            "výčtu výš.\n\n"
+            "### Migrace disku – přerušeno 2026-10-11\n\n"
+            "**Jak pokračovat:** položkou Přesun klientů. Pak zbytek.\n\n"
+            "## Úkoly\n\n- [ ] **Běžný úkol.** Text.\n"
+        )
+        self.assertEqual(
+            [
+                (
+                    s["section"],
+                    [(i["title"], i["text"]) for p in s["parts"] for i in p["items"]],
+                )
+                for s in todo
+            ],
+            [
+                (
+                    "Přerušený běh",
+                    [
+                        (
+                            "/review branch – přerušeno 2026-10-08",
+                            "`/review branch` od začátku.",
+                        ),
+                        (
+                            "Migrace disku – přerušeno 2026-10-11",
+                            "položkou Přesun klientů.",
+                        ),
+                    ],
+                ),
+                ("Úkoly", [("Běžný úkol", "Text.")]),
+            ],
+        )
+
+    def test_interrupted_section_in_old_shape_keeps_its_items(self):
+        """Druhý směr: zápis přerušení odrážkami bez bloků `### ` nezmizí."""
+        todo, _, _ = self.c.parse_todo(
+            "# TODO\n\n## Přerušený běh\n\n- [ ] **Zbylý nález.** Text.\n"
+        )
+        self.assertEqual(
+            [i["title"] for s in todo for p in s["parts"] for i in p["items"]],
+            ["Zbylý nález"],
+        )
+
     def test_sections_still_separate_items_that_have_headings(self):
         """Druhý směr: fronta s `## ` sekcemi se nesmí slít do jedné bezejmenné."""
         todo, _, _ = self.c.parse_todo(

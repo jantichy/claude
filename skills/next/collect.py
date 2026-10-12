@@ -224,6 +224,34 @@ def parse_rounds(lines):
     return rounds
 
 
+CONTINUE_MARK = "**Jak pokračovat:**"
+SENTENCE = re.compile(r"(.+?[.!?])(?=\s+[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ*`]|\s*$)", re.S)
+
+
+def parse_interrupted(body):
+    """Bloky `### ` sekce `## Přerušený běh`, každý jako jedna položka.
+
+    `/break` píše přerušení jako blok s nadpisem a odstavcem `**Jak pokračovat:**`,
+    ne jako odrážky – obecný parser by v něm viděl podsekci se seznamy uvnitř
+    a položky vyrobil z výčtu zbývající práce, nebo žádnou. Textem položky je
+    první věta *Jak pokračovat*, protože ta je jediná první akce navázání.
+    """
+    items = []
+    for title, lines in sections("\n".join(body), "### "):
+        start = next((i for i, x in enumerate(lines) if CONTINUE_MARK in x), None)
+        text = ""
+        if start is not None:
+            para = [lines[start].split(CONTINUE_MARK, 1)[1]]
+            for line in lines[start + 1 :]:
+                if not line.strip():
+                    break
+                para.append(line)
+            m = SENTENCE.match(" ".join(x.strip() for x in para).strip())
+            text = m.group(1) if m else " ".join(para).strip()
+        items.append({"title": title, "text": short(text), "done": False})
+    return items
+
+
 def parse_todo(text):
     out, rounds, stitched = [], [], False
     # Nese-li fronta zaškrtávátka, jsou položkami jen ona; holý seznam je pak
@@ -233,6 +261,17 @@ def parse_todo(text):
         if title == "Kola návrhu":
             rounds = parse_rounds(body)
             stitched = any("Návrh sešitý" in line for line in body)
+            continue
+        # Sekce bez bloků `### ` je zápis ve starém tvaru odrážkami – ten
+        # zvládne obecný parser níž.
+        interrupted = parse_interrupted(body) if title == "Přerušený běh" else []
+        if interrupted:
+            out.append(
+                {
+                    "section": title,
+                    "parts": [{"subsection": None, "items": interrupted}],
+                }
+            )
             continue
         subs = [(None, body)] + sections("\n".join(body), "### ")
         head = body[
