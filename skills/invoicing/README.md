@@ -12,6 +12,7 @@ Konec měsíce znamenal pokaždé totéž: projít timetracking, sečíst hodiny
 6. **U dohledávání i volba období**, takže jde zpětně zjistit, kolik času systematicky uniká.
 7. **Umí navázat na přerušený běh** – klienta s hotovou fakturou, ale bez draftu, dokončí, nezaloží znovu.
 8. **Vede deník dohod.** Co se u klienta dohodne odchylně, zapíše se datovaně, aby se za rok nevedl spor proti paměti.
+9. **Umí předplacený kredit.** Zaplatil-li klient hodiny dopředu, místo faktury je každý měsíc odepíše z kreditu, pošle výkaz se zbytkem kreditu a ohlásí, až dojde – od té chvíle zase fakturuje.
 
 ## Proč zrovna tenhle
 

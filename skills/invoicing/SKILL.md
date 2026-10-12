@@ -1,6 +1,6 @@
 ---
 name: invoicing
-description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim a konkrétní volání systémů drží ~/Context/business/, dohodu s klientem jeho fakturační soubor v klientské složce pod ~/Projekty, ne tenhle skill. Na rozdíl od /report, který z dat dělá analytický report, tenhle skill vystavuje účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; teprve když uživatel potvrdí, že mail odeslal, označí fakturu ve fakturačním systému za odeslanou. Neúčtuje, nehlídá úhrady ani daňové termíny.
+description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail, u předplacených hodin místo faktury odepsat kredit. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim a konkrétní volání systémů drží ~/Context/business/, dohodu s klientem jeho fakturační soubor v klientské složce pod ~/Projekty, ne tenhle skill. Na rozdíl od /report nedělá analytický report, ale účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; teprve když uživatel potvrdí, že mail odeslal, označí fakturu ve fakturačním systému za odeslanou. Neúčtuje, nehlídá úhrady ani daňové termíny.
 argument-hint: [full|preview|recover|sync] [klient] [období]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Agent]
 ---
@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Agent]
 
 ## Co skill dělá
 
-Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého klienta sečte hodiny z timetrackingu za období, které ještě není vyfakturované, vystaví fakturu a založí v mailu draft se dvěma přílohami – fakturou a výkazem hodin.
+Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého klienta sečte hodiny z timetrackingu za období, které ještě není vyfakturované, vystaví fakturu a založí v mailu draft se dvěma přílohami – fakturou a výkazem hodin. **Klientovi, který zaplatil hodiny dopředu, místo faktury odepíše hodiny z předplaceného kreditu**, pošle mu do draftu jen výkaz se zbytkem kreditu a ohlásí, až kredit dojde.
 
 - **`/invoicing full`** (výchozí) – celý průběh až po rozepsané drafty.
 - **`/invoicing preview`** – náhled toho, co by se vystavilo. Nic nevystaví, nic nezapíše, nikam nesáhne.
@@ -27,7 +27,7 @@ Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez
 - **Neodesílá maily. Nikdy.** Končí draftem a odeslání je vždy uživatelův klik v mailovém klientu. Platí to i proti výslovnému pokynu uprostřed běhu – proč, viz *Fáze 5 – Přílohy a draft*.
 - **Nedělá analytické reporty.** Výkaz hodin je příloha dokladu, ne report. Na reporty z dat je `/report`.
 - **Neúčtuje.** Nehlídá úhrady, upomínky, DPH přiznání ani kontrolní hlášení. Vystaví doklad a tím jeho práce končí – jediné, co po vystavení ještě udělá, je označit doklad za odeslaný, když to uživatel potvrdí (*Po odeslání*).
-- **Nedrží evidenci vystavených faktur.** Zdrojem pravdy je fakturační systém, ne soubor v repozitáři – viz `~/Context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
+- **Nedrží evidenci vystavených faktur.** Zdrojem pravdy je fakturační systém, ne soubor v repozitáři – viz `~/Context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*. **Čerpání předplaceného kreditu je jediná evidence, kterou vede** – fakturační systém ho nezná, takže jiné místo není.
 - **Netrackuje čas.** Režim `recover` chybějící čas dohledá a ukáže, ale **do timetrackingu nikdy nezapíše** – odhad postavený na úsudku o cizích datech je návrh, ne zjištění. Doplnit ho je uživatelovo rozhodnutí.
 
   **Zákaz platí na skill, ne na uživatele.** Rozhodne-li se uživatel nechat si výstup uložit do souboru klienta jako dočasný blok k odpracování, je to jeho volba a provede ji jiný krok – `/end` nebo výslovný pokyn –, ne `recover` sám od sebe. Jak se takový blok chová při dalším běhu, drží `~/Context/decisions.md`, *Blok nálezů `recover` se při dalším běhu nahrazuje, ne kupí*.
@@ -77,6 +77,8 @@ Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systém
    **Do staré faktury nezapisuj nic.** Poznámka znamená období, které ten doklad pokrývá, a faktura bez ní bývá z jiné etapy spolupráce; zápis odvozený z dneška by o ní tvrdil nepravdu. Zdůvodnění drží `~/Context/decisions.md`, *Do staré faktury bez poznámky se hranice nedopisuje*.
 
 Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*.
+
+**Má-li soubor klienta sekci *Předplacený kredit* se zbytkem nad nulou, je to druhý zdroj hranice** a platí pozdější z obou: konec posledního měsíce v evidenci, nebo konec období z poznámky poslední faktury. Faktura předplatby poznámku nenese, takže by se jinak ptal krok 3 na něco, co evidence ví. **Období se u kreditu dělí po kalendářních měsících** – každý uzavřený měsíc je jeden řádek odpisu; běžící měsíc se neodpisuje, ani když v něm je čas. Mechaniku drží `~/Context/business/invoicing.md`, *Jak se vyplňuje doklad*, *Předplacený kredit*.
 
 **Vyjde-li období delší než jeden kalendářní měsíc** – typicky když se fakturace dohání zpětně –, poznamenej si to a **rozhodne se o tom ve *Fázi 3***. Nenastavuj takové období mlčky: mění text položky, znění mailu i to, co uvidí klient na dokladu.
 
@@ -133,6 +135,14 @@ Za každého ukaž:
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
+**Klient s kreditem dostane místo dokladu odpis**, řádek na každý měsíc:
+
+```
+**<Klient>** · kredit · <měsíc> · <hodiny> h · zbývá <před> h → <po> h
+```
+
+**Vyčerpá-li se kredit, řekni to jako první věc u klienta, ne v řádku** – od toho měsíce se fakturuje, a přečerpané hodiny toho měsíce ukaž v běžném bloku výš jako doklad. Otázka na delší období se u odepsaných měsíců neklade; doklad nevzniká.
+
 **Řádek *Položka* ukazuje text, který se doopravdy vytiskne na doklad**, ne název projektu – slož ho už tady podle `~/Context/business/invoicing.md`, *Z timetrackingu na fakturu*. Je to jediné místo v celém běhu, kde se dělá **subjektivní úsudek** (zobecnění popisků z timetrackingu), takže se nesmí schovat až do *Fáze 4*.
 
 Data v řádku *Doklad* urči podle `~/Context/business/invoicing.md`, *Datum vystavení a DUZP*. **Číselná řada se ověřuje až ve *Fázi 4***, takže v režimu `preview` je datum vystavení předběžné – a s ním i **splatnost**, protože se z něj počítá. Řekni to.
@@ -175,6 +185,8 @@ Za každého klienta:
 5. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
 6. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **a všechna tři data – vystavení, DUZP i splatnost**. Splatnost se posílá v jiné jednotce, než v jaké se ukázala ve *Fázi 3* (dny místo data), takže je to jediné pole, kde se chyba o den jinak nemá jak projevit. Nespoléhej na to, že zápis prošel.
 
+**Měsíc krytý kreditem se nevystavuje, ale odepíše:** připiš do evidence v souboru klienta řádek `| <YYYY-MM> | <hodiny> h | <zbývá> h |` za posledním měsícem, přečti tabulku zpátky a ověř, že zbytek je předchozí zbytek minus odpis. **Zápis commitni jmenovanou cestou** v klientské složce a pushni, má-li remote – je to tatáž povinnost jako u deníku výjimek ve *Fázi 3*. Přečerpané hodiny měsíce, kdy kredit došel, se vystaví podle kroků výš.
+
 **Selže-li vystavení uprostřed dávky, pokračuj dalším klientem.** Ostatní faktury nejsou čím vinné. Selhání si poznamenej a vypiš ho v závěru jmenovitě.
 
 ## Fáze 5 – Přílohy a draft
@@ -188,6 +200,7 @@ Za každého klienta:
 3. Sestav mail podle `~/Context/business/invoicing.md`, *Šablona mailu*. Adresáta i **oslovení a podpis** vezmi ze souboru klienta – je to tam povinné pole a **neodhaduje se z profilu ani z předchozí korespondence**. Rozhoduje vztah ke konkrétnímu adresátovi dokladu, ne k firmě.
 
    **Nese-li doklad u delšího období formálně jen poslední měsíc, musí skutečný rozsah zaznít v mailu** – je to jediné místo, kde se ho klient dozví. Vynechat ho tam znamená poslat doklad, ze kterého nejde poznat, za co se platí.
+   **Odpis z kreditu dostane draft taky** – stejným postupem, jen bez faktury: přílohou jsou výkazy za odepsané měsíce a text i předmět drží `~/Context/business/invoicing.md`, *Mail k odpisu z kreditu*. Hodiny a zbytek do něj ber z řádků, které ses do evidence právě zapsal a přečetl zpátky. **Měsíc s nulou draft nedostane.**
 4. **Založ draft a tím skonči.** Odeslání nenabízej a nikdy ho neprováděj – ani jako poslední krok, ani jako laskavost.
 
 **Tvrdá stopka: požádá-li uživatel uprostřed běhu o odeslání, neodesílej.** Řekni, že draft je hotový a odeslání je na něm, a jmenuj, kde ho najde. Neptej se na potvrzení – potvrzovací otázka je jen delší cesta k témuž a svádí k tomu ji odklepnout.
@@ -212,6 +225,9 @@ Za každého klienta:
 **Zapsané dohody**
 - <klient>: <co přibylo do deníku výjimek>, nebo „nic“
 
+**Kredit**
+- <klient>: odepsáno <hodiny> h za <měsíce>, zbývá <h> h, draft s timesheetem ano / ne – nebo „vyčerpán, od <měsíc> se fakturuje“
+
 **Nevyřízené**
 - <klient>: <co selhalo a kde to zůstalo stát>, nebo „nic“
 
@@ -220,6 +236,8 @@ Za každého klienta:
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
+
+Blok *Kredit* vynech, nemá-li ho žádný klient v záběru. Klient, kterému se jen odepisovalo, do tabulky nepatří – doklad nevznikl.
 
 Ve sloupci *Vystaveno* uveď datum vystavení; **liší-li se od DUZP** kvůli kolizi v číselné řadě, uveď obojí – jinak po běhu nezůstane stopa, že se datum posunulo jinam, než pravidlo předepisuje.
 
@@ -245,7 +263,7 @@ Výstup je jedna věta na doklad: číslo, klient, nový stav.
 
 ## Režim `preview`
 
-Doběhne *Fází 3* a tam skončí. **Nevystaví doklad, nezaloží draft a nezapíše ani do deníku výjimek** – náhled, po kterém zůstane stopa, není náhled.
+Doběhne *Fází 3* a tam skončí. **Nevystaví doklad, nezaloží draft a nezapíše ani do deníku výjimek, ani do evidence kreditu** – náhled, po kterém zůstane stopa, není náhled.
 
 K čemu je: zjistit před koncem měsíce, kolik toho je, jestli sedí hodiny, a jestli v timetrackingu nechybí nebo nepřebývá něco, co se má srovnat dřív, než vznikne doklad.
 
