@@ -3371,6 +3371,12 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
             f"odchod ze session bez `/end` před ním: {line}"
             for line in exits_without_end(text)
         ]
+    # `/break` je sám krokem před `/continue`, jeho odrážka ho jmenovat nemusí.
+    if name != "break":
+        out += [
+            f"`/continue` bez `/break` před ním: {line}"
+            for line in continue_without_break(navigation_lines(text))
+        ]
     return out
 
 
@@ -3406,6 +3412,24 @@ def exits_without_end(text: str) -> list:
             continue
         end_at = line.find("`/end`")
         if end_at < 0 or end_at > exit_at.start():
+            out.append(line[:80])
+    return out
+
+
+def continue_without_break(lines: list) -> list:
+    """Řádky, které vedou na `/continue` a `/break` před ním nejmenují.
+
+    `/continue` čte jen zápis, který tam nechal `/break`; bez něj nenajde nic,
+    nebo – hůř – naváže na starší přerušení, než o kterém si uživatel myslí, že
+    na něj navazuje.
+    """
+    out = []
+    for line in lines:
+        at = line.find("`/continue`")
+        if at < 0:
+            continue
+        before = line.find("`/break`")
+        if before < 0 or before > at:
             out.append(line[:80])
     return out
 
@@ -3448,6 +3472,19 @@ class HandoffContract(unittest.TestCase):
             offenders, "práh kontextu opsaný do skillu: " + ", ".join(offenders)
         )
 
+    def test_handoff_chains_to_continue_start_with_break(self):
+        """Řádek tabulky řetězů i vzorová odrážka v handoff.md, které končí
+        `/continue`, začínají `/break` – skilly z nich řetěz opisují."""
+        lines = [
+            line for line in HANDOFF.read_text().splitlines() if "`/continue`" in line
+        ]
+        self.assertTrue(lines, "handoff.md nevede na /continue vůbec")
+        self.assertFalse(
+            continue_without_break(lines),
+            "řetěz na /continue bez /break: "
+            + "; ".join(continue_without_break(lines)),
+        )
+
     def test_no_dialog_at_the_end(self):
         """Na konci hotového běhu se nemá ptát dialogem, jen doporučit."""
         self.assertIn("Neptej se na to přes `AskUserQuestion`", HANDOFF.read_text())
@@ -3478,6 +3515,40 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
     def test_end_first_passes(self):
         text = "**Kudy dál**\n\n- `/end`, pak `/merge`, pak `/clear`\n- `/review`\n"
         self.assertFalse(exits_without_end(text))
+
+    def test_continue_without_break_is_reported(self):
+        text = "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
+        self.assertTrue(
+            any(
+                d.startswith("`/continue` bez")
+                for d in handoff_defects(text, "review", False)
+            )
+        )
+
+    def test_break_after_continue_is_reported(self):
+        lines = ["- `/end`, pak `/clear`, `/continue`, a když nic nenajde, `/break`"]
+        self.assertTrue(continue_without_break(lines))
+
+    def test_break_before_continue_passes(self):
+        text = (
+            "**Kudy dál**\n\n"
+            "- `/break`, pak `/end`, pak `/clear`, a v nové session `/continue`\n"
+        )
+        self.assertFalse(
+            any(
+                d.startswith("`/continue` bez")
+                for d in handoff_defects(text, "review", False)
+            )
+        )
+
+    def test_break_itself_need_not_name_break(self):
+        text = "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
+        self.assertFalse(
+            any(
+                d.startswith("`/continue` bez")
+                for d in handoff_defects(text, "break", False)
+            )
+        )
 
     def test_missing_interruption_rule_is_reported(self):
         name = sorted(queue_skills())[0]
