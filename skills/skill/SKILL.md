@@ -173,7 +173,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | `skills/<name>/README.md` | **README skillu pro člověka zvenčí** podle `skills.md`, *README skillu* – sekce, hromadná instalace u skillu ze životního cyklu, odkaz do repozitáře |
 | `~/.claude/README.md` | sekce podle `~/.claude/standards/structure.md`, *`README.md`* – právě jeden odstavec o tom, k čemu skill je. **Odkaz na README skillu nese nadpis sekce** (`### [`/<name>`](skills/<name>/)`), ne zvláštní řádek pod odstavcem; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
 | `~/.claude/standards/rules.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
-| `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – do `MIGRATION` se **nedoplňuje**, ten seznam se jen zkracuje |
+| `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – výjimky se nevedou |
 | `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních README cyklu**. Testy to chytí, ale samy to nedopíšou |
 | `~/.claude/skills/<name>/` | vedlejší soubory, skripty, jejich kontrola závislostí |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
@@ -254,7 +254,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Nenajdeš-li nic, řekni to a skonči.** Běh bez zásahu je platný výsledek revize.
 
-**Vyškrtni ze seznamu `MIGRATION`** skill, u kterého jsi vypořádal **všechny** jeho nálezy – vyškrtává se po celých skillech, ne po jednotlivých nálezech, takže skill s jedním zbylým nálezem v seznamu zůstává v `~/.claude/tests/test_skills.py`. Ten seznam **musí přesně sedět se skutečností**: nesmí v něm chybět skill mimo normu ani zůstat skill, který se opravil. Opravený a nevyškrtnutý skill proto shodí testy stejně jako regrese. Je to schválně – bez toho by výjimka tiše přežila dokončenou migraci a přestala cokoliv měřit.
+**Nález, který měří `test_skills_match_standard` v `~/.claude/tests/test_skills.py`, se odložit nedá** – výjimky pro skilly mimo normu se nevedou, takže skill s takovým nálezem shodí testy, dokud se neopraví.
 
 Pak pokračuj *Fází 7* – i `update` sahá na `README.md` a testy.
 
@@ -276,7 +276,7 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 | `~/.claude/README.md` | jeho sekce |
 | `~/.claude/standards/rules.md` | rámeček v *Životním cyklu projektu* a zmínky u sousedů |
 | `~/.claude/standards/lifecycle.md` | **byl-li to krok cyklu**, jeho číslovaná odrážka; bez ní se rozejde s rámečkem a testy to shodí |
-| `~/.claude/tests/` | testy, které se ho týkají – **a jeho jméno v seznamu `MIGRATION`**, je-li tam; jinak `test_migration_names_only_existing_skills` spadne na výjimku pro nikoho |
+| `~/.claude/tests/` | testy, které se ho týkají |
 | ostatní skilly | odkazy a předávání práce – „další krok: `/<name>`“ |
 | `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních README skillů. Osiřelý odkaz na `../<name>/README.md` testy shodí, ale samy ho nevyškrtnou |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |

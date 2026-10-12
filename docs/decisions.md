@@ -2033,3 +2033,7 @@ Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli
 
 **Zavrženo:** smazat *Převod* celý – při první organizaci, která ze „známé“ přejde na „klienta“, by se profil zakládal znovu vedle starého. **Ponechaná pojistka:** krok 9 `SKILL.md` dál doplní chybějící import pravidel autocommitu, ačkoli ho na disku dnes nikde nechybí – rozbitý přepínač může vzniknout i ručním zápisem, ne jen starou verzí.
 
+### Norma skillů se vynucuje bez seznamu výjimek
+
+**Rozhodnuto 12. 10. 2026** (uživatel) při úklidu pozůstatků převodu starého stavu. `tests/test_skills.py` držel seznam `MIGRATION` – skilly, které ještě nesplňovaly normu `skills/skills.md`, test u nich mlčel a hlídal, že se seznam jen zkracuje. Od 15. 9. 2026 byl prázdný a zůstával schválně jako připravené místo pro příští zpřísnění normy. **Smazán i se dvěma testy kolem něj a třemi místy v `/skill`:** skill mimo normu dnes shodí `test_skills_match_standard` bez výjimky a zpřísnění normy se dorovnává ve stejné změně. **Zavrženo:** nechat prázdný seznam – mechanismus, který se možná jednou použije, nafukuje test i skill a jeho obnova je na pár řádků. Bude-li zpřísnění příliš velké na jednu změnu, vrátí se seznam s ním, ne předem.
+

@@ -878,9 +878,7 @@ class CoreParts(unittest.TestCase):
         """
         text = body(ROOT / "skills/end/SKILL.md")
         heading = "## Fáze 5 – Fronta rozhodnutí"
-        self.assertIn(
-            heading, text, "/end přišel o fázi, ve které se fronta probírá"
-        )
+        self.assertIn(heading, text, "/end přišel o fázi, ve které se fronta probírá")
         phase = text[text.index(heading) :]
         phase = phase[: phase.index("\n## ")]
         for fragment in ("AskUserQuestion", "Bezpředmětné", "nevypořádan"):
@@ -1897,26 +1895,13 @@ def _appendix_defects(order: dict, first_phase, conclusion) -> list:
 class StandardCompliance(unittest.TestCase):
     """Skilly proti `skills/skills.md`. Jediné místo, kde se norma vynucuje strojem.
 
-    Norma vznikla později než skilly, takže je bylo potřeba na ni převést.
-    Převod je vědomý běh `/skill update`, ne vedlejší efekt jiné práce – proto
-    seznam `MIGRATION` místo hromady padajících testů. **Kolik skillů ještě čeká,
-    se tu schválně nepíše** – zmizelo by to s prvním převedeným a docstring by
-    lhal o tom, co sám hlídá; aktuální stav drží `MIGRATION` níž.
-
-    Seznam ale neumlčuje – **musí přesně sedět se skutečností** a test to hlídá
-    v obou směrech. Skill, který se opraví a nezmizí ze seznamu, test shodí
-    stejně jako skill, který se rozbije. Bez toho by seznam tiše zůstal i po dokončení migrace a přestal by
-    cokoliv měřit.
+    Výjimky se nevedou: skill mimo normu shodí test. Zpřísní-li se norma,
+    skilly se dorovnají ve stejné změně – seznam čekajících by tiše přežil
+    převod a přestal cokoliv měřit.
     """
 
     STANDARD = ROOT / "skills" / "skills.md"
     PREFLIGHT = ROOT / "skills" / "preflight.md"
-
-    #: Skilly, které ještě neprošly `/skill update`. Zkracuje se, nikdy nedoplňuje.
-    #: Prázdný od 15. 9. 2026 – celá sada je na normě. Zůstává schválně:
-    #: až norma přituhne znovu, je kam zapsat, co ještě nedorovnalo, a test
-    #: pořád hlídá oba směry (skill mimo normu i skill, který ji už splňuje).
-    MIGRATION = set()
 
     #: Odkaz dovnitř fáze jiného skillu. Cizí fáze se přečíslují a odkaz pak
     #: tiše ukazuje jinam – proto to má být v preflight.md, ne v odkazu.
@@ -2075,7 +2060,7 @@ class StandardCompliance(unittest.TestCase):
     def test_description_fits_limit(self):
         """Delší popis se nemusí přenést celý – a pak se skill nevyvolá vůbec.
 
-        Bez výjimky pro migraci: limit platí pro všechny a dnes ho nikdo neporušuje.
+        Limit platí pro všechny skilly.
         """
         for skill in SKILLS:
             with self.subTest(skill=skill.parent.name):
@@ -2086,27 +2071,17 @@ class StandardCompliance(unittest.TestCase):
                     f"{skill.parent.name}: description má {len(description)} znaků",
                 )
 
-    def test_migration_names_only_existing_skills(self):
-        """Zmizelý skill v seznamu by tiše držel výjimku pro nikoho."""
-        extra = sorted(self.MIGRATION - {s.parent.name for s in SKILLS})
-        self.assertFalse(extra, f"MIGRATION jmenuje neexistující skilly: {extra}")
-
     def test_skills_match_standard(self):
-        """Seznam MIGRATION musí přesně sedět: skill mimo normu nechybí ani nepřebývá."""
+        """Každý skill splňuje normu, bez výjimek."""
         noncompliant = {
             s.parent.name: self.defects(s) for s in SKILLS if self.defects(s)
         }
-
-        regressed = sorted(set(noncompliant) - self.MIGRATION)
         self.assertFalse(
-            regressed,
-            "skilly mimo normu, které v MIGRATION nejsou: "
-            + "; ".join(f"{n}: {', '.join(noncompliant[n])}" for n in regressed),
-        )
-
-        fixed = sorted(self.MIGRATION - set(noncompliant))
-        self.assertFalse(
-            fixed, f"tyhle skilly už normu splňují – vyškrtni je z MIGRATION: {fixed}"
+            noncompliant,
+            "skilly mimo normu: "
+            + "; ".join(
+                f"{n}: {', '.join(d)}" for n, d in sorted(noncompliant.items())
+            ),
         )
 
 
