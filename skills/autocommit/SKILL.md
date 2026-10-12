@@ -19,7 +19,7 @@ Stav v projektu = přítomnost nadpisu `## Autocommit` v projektovém `CLAUDE.md
 
 - **Necommituje ani nepushuje.** Zapisuje přepínač; commituje pak Claude při běžné práci podle pravidel v `~/.claude/skills/autocommit/autocommit.md`.
 - **Nezakládá projekt ani nenastavuje git.** Celé nastavení projektu včetně autocommitu vede `/project`, který se na něj ptá jako na jeden ze svých kroků. Tenhle skill je přepínač pro projekt, který už existuje.
-- **Nedorovnává projekt na dnešní standardy.** Starý tvar sekce srovná (viz *Starý tvar zápisu* níž), ale nic dalšího nemigruje – od toho je `/project` v režimu `adopt`.
+- **Nedorovnává projekt na dnešní standardy.** Doplní jen chybějící import ve vlastní sekci (viz *Sekce bez importu* níž), nic dalšího nemigruje – od toho je `/project` v režimu `adopt`.
 
 ## Fáze 0 – Příprava
 
@@ -33,7 +33,7 @@ Společný začátek je v `~/.claude/skills/preflight.md`; platí z něj **body 
 
 Stav zjisti podle definice v *Co skill dělá* výš – **obě možná umístění projektového `CLAUDE.md`**, kanonické místo nadpisu i to, že nadpis v globálním souboru se nepočítá. Nalezeno → zapnutý. Nenalezeno (nebo soubor neexistuje) → vypnutý.
 
-Je-li zapnutý, podívej se rovnou i na to, jestli sekce nese import – bez něj je to starý tvar, viz níž.
+Je-li zapnutý, podívej se rovnou i na to, jestli sekce nese import – viz *Sekce bez importu* níž.
 
 ## Fáze 2 – Proveď režim
 
@@ -59,21 +59,13 @@ Import je **nutná část zápisu**, ne ozdoba: bez něj má projekt přepínač
 
 Je-li už vypnutý → jen oznam, nic neměň. Jinak odstraň celou sekci `## Autocommit` z projektového `CLAUDE.md` – tedy včetně řádku s importem.
 
-### Starý tvar zápisu
+### Sekce bez importu
 
-Dva pozůstatky staršího mechanismu, oba se srovnávají bez ptaní na svolení: je to zápis, který skill sám vyrábí, a nechat ho ležet znamená nechat projekt s přepínačem, který nic nespíná.
-
-| Co najdeš | Co udělej |
-|---|---|
-| sekce `## Autocommit` **bez importu** | doplň řádek s importem a oznam to |
-| sekce `Autocommit` na jiné úrovni nebo zanořená pod jiným nadpisem – typicky pod zaniklou sekcí `## Automatické akce` | povyš ji na `## Autocommit`, doplň import a oznam to. Zastřešující sekci zruš, ale jen **nezbyl-li pod ní jiný podnadpis** – v cizí instalaci tam může viset něco dalšího |
-| sekce `## Autocommit v projektech` v **globálním** `~/.claude/CLAUDE.md` | zruš ji a oznam to. Pravidla dnes žijí ve skillu a importují se do projektu; kopie v globálním souboru by platila i tam, kde je autocommit vypnutý |
-
-**To všechno platí pro globální soubor a pro sekci, kterou skill sám zapisuje.** Do zbytku projektového `CLAUDE.md` se nesahá – ten patří projektu a přepisovat v něm mimochodem cizí sekce skillu nepřísluší.
+Najdeš-li zapnutou sekci `## Autocommit` bez řádku s importem, doplň ho bez ptaní na svolení a oznam to: je to zápis, který skill sám vyrábí, a bez importu je to přepínač, který nic nespíná. Do zbytku projektového `CLAUDE.md` se nesahá – ten patří projektu a přepisovat v něm mimochodem cizí sekce skillu nepřísluší.
 
 ## Fáze 3 – Závěr
 
-Oznam výsledný stav a co jsi kvůli němu změnil – u `enable` a `disable` konkrétní soubor a sekci, u `status` nic. Srovnal-jsi cestou starý tvar nebo ohlásil rozpor mezi nadpisem a textem pod ním, zopakuj to i tady; jinak to zapadne mezi ostatní výpisy.
+Oznam výsledný stav a co jsi kvůli němu změnil – u `enable` a `disable` konkrétní soubor a sekci, u `status` nic. Doplnil-li jsi cestou import nebo ohlásil rozpor mezi nadpisem a textem pod ním, zopakuj to i tady; jinak to zapadne mezi ostatní výpisy.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
