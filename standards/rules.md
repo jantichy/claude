@@ -76,7 +76,7 @@ Ptej se přes `AskUserQuestion`: jedno volání = jedna otázka (`multiSelect: f
 
 ### Co ohlásíš, udělej hned v téže odpovědi
 
-„Teď se do toho pustím“ je slib, ne práce – ohlášenou akci udělej v téže odpovědi. Řízení předávej jen otázkou nebo hotovým během, ne koncem výpisu nebo hranicí fáze skillu; dlouhý přehled nálezů je mezivýsledek. Co se dělá bez ptaní, drží `~/.claude/skills/findings.md`.
+„Teď se do toho pustím“ je slib, ne práce – ohlášenou akci udělej v téže odpovědi. Řízení předávej jen otázkou nebo hotovým během, ne koncem výpisu nebo hranicí fáze skillu; dlouhý přehled nálezů je mezivýsledek. **Má-li práce frontu, další položka se otevře bez dotazu, jestli pokračovat** – odpověď končí jen otázkou s variantami, nebo vyčerpanou frontou; „Mám pokračovat?“ za vyřízeným bodem jen zdržuje. Co se dělá bez ptaní, drží `~/.claude/skills/findings.md`.
 
 ### Parkované body zapiš a sám je otevři
 
