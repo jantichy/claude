@@ -61,6 +61,7 @@ K rozhodnutí: záznam 12. 8. bez popisu (2 h)
 Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/invoicing a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Vezmi k tomu i soubor https://github.com/jantichy/claude/blob/main/skills/timeline.py a dej ho do `~/.claude/skills/`, vedle adresáře skillu.
 
 Tím to ale nekončí: **sám o sobě skill neběží**, je to rámec bez pravidel. Sazby, daňový režim, dohody s jednotlivými klienty, šablonu mailu i to, jak se sahá do vašich systémů, drží samostatná soukromá knowledge base, která v tomhle repozitáři není – bez ní skill nemá podle čeho fakturovat a rovnou to řekne. Vzít si odsud jde postup a pojistky, ne hotová konfigurace; **nechte si od Clauda tu svou bázi založit podle toho, jak fakturujete vy**.
 

@@ -2073,3 +2073,36 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 ### `/explain` rozlišuje opakované vyvolání po mezipráci a hned za sebou
 
 **Rozhodnuto 13. 10. 2026** (uživatel) při revizi skillu po session, ve které selhal dvakrát za sebou. Uživatel ho po vyvrácení mylného faktu zavolal znovu, aby dostal **totéž vysvětlení s opravou** a nemusel se vracet nahoru a filtrovat, co z něj platí; dostal místo toho čísla kapitol a citace a napotřetí otázku „čemu nerozumíš“. **Rozhodnutí:** opakované vyvolání po mezipráci zopakuje totéž vysvětlení ve stejné podobě se změnou řečenou jednou větou; hned za sebou znamená, že předchozí nezabralo, a začne se znovu jinak – nikdy přidáním přesnosti. Zákaz odkazů na neviděné výslovně zahrnuje čísla kapitol, bodů a citace; otázka „čemu nerozumíš“ se nepokládá, když je jasné, co se vysvětluje. Dál: tvrzení od subagenta se ověřuje u zdroje dřív, než se na něm postaví příběh (mylný fakt z oponentury v téže session), a padne-li tím podklad otázky, ptá se na to, co z ní zbylo; skill se spouští i odpovědí v dialogu, kde ho harness nevloží; odpověď na znovu položenou otázku zpracuje skill, jehož frontu `/explain` přerušil. **Zamítnuto – opakované vyvolání vždy brát jako „zkus to jinak“:** po mezipráci uživatel chce stabilní text, na který je zvyklý, ne nový. **Bezpředmětné – rozpor s pravidlem o samostatné odpovědi bez dialogu:** pravidlo zrušilo rozhodnutí *Vysvětlení na žádost smí následovat dialog* výš; revizní agent četl starší znění.
+
+### `/clauding` měří čas v Claudovi nad společným proudem událostí a sdílí jádro s `/invoicing recover`
+
+**Rozhodnuto 13. 10. 2026** (uživatel) při zakládání skillu `/clauding`. Otázka zněla, kolik času se strávilo v Claude Code, a měřeno je **čas v Claudovi, ne čas u klávesnice**: čekání, než Claude doběhne, se počítá. Metodika se ladila nad daty, ne od stolu. Výsledná pravidla drží `skills/clauding/SKILL.md`, *Metodika*, a provádí je `skills/timeline.py`.
+
+**Co bylo k dispozici:** transcripty sessions od 6. 8. 2026 (starší smazal výchozí třicetidenní úklid, dnes je `cleanupPeriodDays` na 3650), `history.jsonl` s prompty od 2. 4. 2026 a git. `stats-cache.json` nese jen počty zpráv za den, čas z něj vyčíst nejde.
+
+**Měření, na kterých rozhodnutí stojí:**
+
+- Mezery nad 15 minut uvnitř Claudovy odpovědi byly skoro všechny **čekání na odpověď v dialogu** – 392 mezer, dohromady 857 h. Započtené jako Claudova práce by výsledek znehodnotily.
+- Všech 13 dlouhých mezer u příkazů v popředí přesahovalo timeout příkazu, šlo tedy o čekání na schválení, ne o běh.
+- Všechny záznamy s časem dávají o 2,5 % víc než výběr promptů, odpovědí a výsledků nástrojů (441,7 h proti 430,7 h). Osamocené záznamy navíc jsou příkazy harnessu, hooky startu session a shrnutí po návratu – doklady pobytu v Claudovi.
+- Sessions z `claude -p` daly 2,8 h a všechny leží uvnitř času interaktivních sessions; na výsledku nemění nic.
+- Claudova práce víc než 30 minut od poslední interakce uživatele tvoří 0,4 h z 415 h.
+- Den s 16,7 h (2. 9.) má interakce v každé hodině – je to skutečná práce, ne artefakt.
+
+**Rozhodnutí:** události ze všech sessions se slijí do jednoho proudu; událostí je každý záznam s časem včetně subagentů a `claude -p`; mezera do 20 minut se počítá, delší je pauza; příkaz v popředí se započte do výše svého timeoutu; vlastní commit je událost, jen když leží do 20 minut od aktivity v Claudovi. Den, pro který chybí transcript, se spočte jen z promptů v `history.jsonl` a commitů a vynásobí koeficientem, který se při každém běhu měří na dnech s oběma sadami dat (uživatel). Výpis po dnech, týdnech nebo měsících, výchozí měsíce přes celou historii, se součtem, průměrem na kalendářní i aktivní den a se zajímavostmi.
+
+**Společné jádro s `/invoicing recover`:** `recover` skládal bloky práce ze stejných transcriptů vlastním skriptem a vlastními pravidly. Uživatel rozhodl, že otázka „kolik času v tom bylo“ má jednu odpověď: práh je společných 20 minut, blok bez promptu se počítá v obou a obě strany berou proud událostí z `skills/timeline.py`. Liší se jen tím, co se do proudu pouští – `recover` projekty jednoho klienta a commity jako stopu práce i mimo Clauda, `/clauding` všechno a commity jen u aktivity v Claudovi. Převedený `activity.py` dal nad zářím pro `~/.claude` tytéž bloky jako původní (148 bloků, 6 411 minut).
+
+**Zamítnuto:**
+
+- **Mezery v každé session zvlášť a pak sjednocení.** Při práci ve dvou oknech střídavě má každé okno samé pauzy a nezapočte se nic, ani po sjednocení (uživatel).
+- **Práh 15 minut** z ohybu křivky pauz – nahradily ho společné 20 minuty, aby `/clauding` a `recover` počítaly stejně (uživatel).
+- **Jedno pravidlo bez rozlišení nástroje** – uživatel chtěl odlišit běh příkazu od čekání na schválení; v datech na to je opora v timeoutu.
+- **Jen vybrané typy záznamů** – to byla odpověď na „čas u klávesnice“, kterou uživatel zrušil.
+- **Vynechat `claude -p`** – úvaha o měřicích bězích se ukázala jako zbytečná, na výsledku nic nemění.
+- **Pevné datum 5. 8. jako hranice odhadu** – hranici určí data sama podle promptů bez transcriptu, a pokryje to i díru uprostřed.
+- **Den jako odhad při jakémkoliv promptu bez transcriptu** – `/resume` nebo `exit` v session, která nic nezapsala, by udělal odhad z celého dne; z 5 517 promptů za září a říjen jich takových bylo 92.
+- **Zvláštní pravidlo pro Claudovu práci bez návratu uživatele** – 0,4 h z 415 h nestojí za pravidlo.
+- **Commity bez omezení** – staré repozitáře posunuly začátek historie do roku 2024, kdy Claude nebyl.
+
+**Vědomě nepokryto:** dny se dělí podle pražského času napevno; rozložení podle hodiny dne a nejdelší blok se počítají jen z dnů bez odhadu; commity se hledají jen v repozitářích, ve kterých kdy běžela session. Srovnávací běh bez skillu se nedělal – jádro je skript a selhání agenta bez něj ukázala sama session, ve které skill vznikl (mezery po sessions, čekání na dialog jako práce). Ladění `description` se neměřilo – jméno se nekryje s žádným jiným skillem.

@@ -252,7 +252,11 @@ Přepne projekt do uspořádání, kde má každá rozdělaná větev vlastní a
 
 ### Údržba konfigurační vrstvy
 
-Jediné tři, jejichž předmětem není projekt, ale tenhle repozitář, slovník sdílený napříč všemi projekty a instrukce, které se do každé session načítají.
+Skilly, jejichž předmětem není projekt, ale práce s Claudem sama: tenhle repozitář, slovník sdílený napříč všemi projekty, instrukce, které se do každé session načítají, a čas, který s Claudem trávím.
+
+#### [`/clauding`](skills/clauding/) – kolik času doopravdy trávím v Claude Code
+
+Spočítá z toho, co Claude Code zapisuje na disk, kolik hodin jsem v něm strávil, a vypíše to po dnech, týdnech nebo měsících se součtem, průměrem na kalendářní i na pracovní den a se zajímavostmi jako nejdelší den nebo rozložení do hodin dne. Souběžná okna nesčítá, čekání na Claudovu práci počítá a odchod od rozdělané session ne; starší období, ze kterého se podrobné záznamy smazaly, dopočítá z promptů koeficientem změřeným na novějších datech a výslovně ho označí jako odhad.
 
 #### [`/ptydepe`](skills/ptydepe/) – slova, kterým rozumíme jenom my dva
 

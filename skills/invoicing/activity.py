@@ -10,113 +10,18 @@
 # Git se čte jen z cest, které na disku jsou a jsou to repozitáře.
 #
 # Bloky se dělí podle mezery mezi dvěma sousedními záznamy; delší mezera než `--gap`
-# minut blok ukončí. Výstup je JSON, jeden blok na položku, časy v místním pásmu.
+# minut blok ukončí. Proud událostí a pravidlo mezery jsou ze `skills/timeline.py`, sdíleného
+# s `/clauding` – obě otázky „kolik času v tom bylo“ tak mají jednu odpověď. Výstup je JSON,
+# jeden blok na položku, časy v místním pásmu.
 
 import argparse
 import json
-import re
-import subprocess
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-PROJECTS = Path.home() / ".claude" / "projects"
-
-
-def encode(path: Path) -> str:
-    # Claude Code nahradí v cestě každý znak mimo [A-Za-z0-9] pomlčkou – i každé písmeno s diakritikou zvlášť.
-    return re.sub(r"[^A-Za-z0-9]", "-", str(path))
-
-
-HARNESS_PREFIXES = (
-    "<task-notification>",
-    "<system-reminder>",
-    "<local-command-",
-    "Caveat:",
-)
-
-
-def is_prompt(record: dict, in_subagent: bool) -> bool:
-    # Zpráva, kterou napsal uživatel – ne výsledek nástroje, ne zpráva uvnitř subagenta a ne to,
-    # co do konverzace vložil harness sám (dokončený agent na pozadí, připomínka). Ty nesou
-    # roli `user`, ale u klávesnice přitom nikdo být nemusel.
-    if (
-        record.get("type") != "user"
-        or record.get("isSidechain")
-        or record.get("isMeta")
-        or in_subagent
-    ):
-        return False
-    content = record.get("message", {}).get("content")
-    if isinstance(content, list):
-        if not any(
-            isinstance(part, dict) and part.get("type") == "text" for part in content
-        ):
-            return False
-    elif not isinstance(content, str):
-        return False
-    return not prompt_text(record).startswith(HARNESS_PREFIXES)
-
-
-def prompt_text(record: dict) -> str:
-    content = record["message"]["content"]
-    if isinstance(content, list):
-        content = " ".join(
-            part.get("text", "")
-            for part in content
-            if isinstance(part, dict) and part.get("type") == "text"
-        )
-    return " ".join(content.split())[:100]
-
-
-def session_events(prefix: Path, start: datetime, end: datetime):
-    code = encode(prefix)
-    for project in sorted(PROJECTS.iterdir()):
-        if not project.is_dir() or not (
-            project.name == code or project.name.startswith(code + "-")
-        ):
-            continue
-        for log in project.rglob("*.jsonl"):
-            in_subagent = "subagents" in log.parts
-            for line in log.open(encoding="utf-8", errors="replace"):
-                try:
-                    record = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                stamp = record.get("timestamp")
-                if not stamp:
-                    continue
-                moment = datetime.fromisoformat(
-                    stamp.replace("Z", "+00:00")
-                ).astimezone()
-                if not start <= moment < end:
-                    continue
-                if is_prompt(record, in_subagent):
-                    yield moment, "prompt", project.name, prompt_text(record)
-                else:
-                    yield moment, "claude", project.name, None
-
-
-def git_events(prefix: Path, start: datetime, end: datetime):
-    if not prefix.is_dir():
-        return
-    top = subprocess.run(
-        ["git", "-C", str(prefix), "rev-parse", "--show-toplevel"],
-        capture_output=True,
-        text=True,
-    )
-    if top.returncode != 0:
-        return
-    log = subprocess.run(
-        ["git", "-C", str(prefix), "log", "--all", "--format=%aI%x09%s"],
-        capture_output=True,
-        text=True,
-        check=True,
-    ).stdout
-    for line in log.splitlines():
-        stamp, _, subject = line.partition("\t")
-        moment = datetime.fromisoformat(stamp).astimezone()
-        if start <= moment < end:
-            yield moment, "commit", top.stdout.strip(), subject
+sys.path.insert(0, str(Path.home() / ".claude" / "skills"))
+import timeline  # noqa: E402
 
 
 def main():
@@ -126,8 +31,8 @@ def main():
     parser.add_argument(
         "--gap",
         type=int,
-        default=20,
-        help="mezera v minutách, která ukončí blok (výchozí 20)",
+        default=int(timeline.GAP.total_seconds() // 60),
+        help="mezera v minutách, která ukončí blok (výchozí podle timeline.GAP)",
     )
     parser.add_argument("since", help="od YYYY-MM-DD včetně")
     parser.add_argument("until", help="do YYYY-MM-DD včetně")
@@ -145,8 +50,8 @@ def main():
     events = []
     for raw in args.paths:
         prefix = Path(raw).expanduser().resolve()
-        events += session_events(prefix, start, end)
-        events += git_events(prefix, start, end)
+        events += timeline.session_events([prefix], start, end)
+        events += timeline.git_events(prefix, start, end)
     events.sort(key=lambda event: event[0])
 
     blocks = []
