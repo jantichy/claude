@@ -15,7 +15,8 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 - `layout` – `worktree` nebo `plain`; `main` – hlavní větev; `fetch` – výsledek `git fetch`
 - `docs` – `docs/`, `root`, nebo null, když projekt `todo.md` nemá
 - `current` – větev a necommitnuté soubory tam, kde session stojí (null v kořeni kontejneru)
-- `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`)
+- `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`); sekce
+  `Přerušený běh` nese i bloky z `todo.md` podprojektů, u nich s cestou v `project`
 - `rounds` – bloky kol návrhu s poli a stavem ve větvi kola; `stitch_pending` – čeká sešití
 - `plan` – počet otevřených a hotových úkolů a první otevřené; `artifacts` – které návrhové dokumenty existují
 - `passes` – posledních pět záznamů `## Průchody životním cyklem`; `lifecycle` – kroky cyklu z `~/.claude/standards/rules.md` po vrstvách (`osa`, `kontroly`)
@@ -31,6 +32,7 @@ Pravidla, podle kterých se tu rozhoduje, drží `SKILL.md`; tenhle docstring je
 
 import datetime
 import json
+import os
 import re
 import subprocess
 import sys
@@ -47,6 +49,8 @@ TEXT_LIMIT = 300
 BUDGET = 25000
 TEXT_STEPS = (200, 160, 120, 80, 40, 0)
 DIFF_LINES = 12
+# Složky, do kterých hledání `todo.md` podprojektů nesestupuje – stejně jako `/continue`.
+SKIP_DIRS = {"node_modules", "vendor"}
 RULES = Path.home() / ".claude" / "standards" / "rules.md"
 
 
@@ -296,6 +300,72 @@ def parse_todo(text):
         if parts or title is not None:
             out.append({"section": title, "parts": parts})
     return out, rounds, stitched
+
+
+def todo_files(top: Path):
+    """`todo.md` podprojektů pod `top`, do téže hloubky a se stejnými výjimkami jako `/continue`.
+
+    Soubor smí ležet nejvýš o tři úrovně níž (`zakazka/docs/todo.md`), skryté
+    složky, `node_modules` a `vendor` se nenavštěvují – sběr musí zůstat rychlý.
+    Vlastní `todo.md` projektu (`todo.md`, `docs/todo.md`) se vynechává, to čte
+    `main` z hlavní větve.
+    """
+    found = []
+    for path, dirs, files in os.walk(top):
+        rel = Path(path).relative_to(top)
+        depth = len(rel.parts)
+        dirs[:] = sorted(
+            d
+            for d in dirs
+            if depth < 2 and not d.startswith(".") and d not in SKIP_DIRS
+        )
+        if "todo.md" in files and rel.parts not in ((), ("docs",)):
+            found.append(rel / "todo.md")
+    return found
+
+
+def nested_interrupted(repo: Repo):
+    """Bloky `## Přerušený běh` z `todo.md` podprojektů ve všech worktree repozitáře.
+
+    `/break` zapisuje do `todo.md` projektu, ve kterém session stojí – u podprojektu
+    klientské složky tedy do podsložky. Ze zbytku jeho fronty se nebere nic, ta
+    patří k jinému projektu. Každá položka nese v `project` cestu podprojektu
+    vůči kořeni worktree; v jiném worktree se tentýž blok počítá jednou.
+    """
+    tops = [
+        Path(line[9:])
+        for line in (repo.git("worktree", "list", "--porcelain") or "").splitlines()
+        if line.startswith("worktree ")
+    ]
+    items, seen = [], set()
+    for top in tops:
+        if not (top / ".git").exists():
+            continue
+        for rel in todo_files(top):
+            project = rel.parent
+            if project.name == "docs":
+                project = project.parent
+            text = (top / rel).read_text(encoding="utf-8", errors="replace")
+            for title, body in sections(text):
+                if title != "Přerušený běh":
+                    continue
+                for item in parse_interrupted(body):
+                    key = (str(project), item["title"])
+                    if key not in seen:
+                        seen.add(key)
+                        items.append({**item, "project": str(project)})
+    return items
+
+
+def add_interrupted(todo, items):
+    """Přidá přerušené běhy podprojektů do sekce `Přerušený běh`, případně ji založí."""
+    if not items:
+        return
+    section = next((s for s in todo if s["section"] == "Přerušený běh"), None)
+    if section is None:
+        section = {"section": "Přerušený běh", "parts": []}
+        todo.insert(0, section)
+    section["parts"].append({"subsection": None, "items": items})
 
 
 def parse_done(text):
@@ -588,6 +658,7 @@ def main() -> int:
     prefix = docs_prefix(read)
     base = prefix or ""
     todo, rounds, stitched = parse_todo(read(f"{base}todo.md") or "")
+    add_interrupted(todo, nested_interrupted(repo))
     passes, rounds_open = parse_done(read(f"{base}done.md"))
     plan = parse_plan(read(f"{base}plan.md"))
     current = current_info(repo)

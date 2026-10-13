@@ -618,6 +618,41 @@ class QueueCollection(unittest.TestCase):
         )
         self.assertEqual({b["state"] for b in self.branches().values()}, {"uncertain"})
 
+    def test_interrupted_run_in_subproject_is_offered(self):
+        """Přerušený běh v podprojektu se nabídne i z kořene, zbytek jeho fronty ne.
+
+        `/break` zapisuje do `todo.md` projektu, kde session stojí, u podprojektu
+        klientské složky tedy do podsložky – často s vlastním repozitářem, který
+        git ignoruje. `/continue` ho najde do třetí úrovně, `/next` četl jen
+        kořen a přerušenou práci, kterou má řadit první, neviděl. Hledá se stejně
+        hluboko a se stejnými výjimkami: hlubší soubor ani `node_modules` se
+        nečtou, a ostatní úkoly podprojektu patří k jinému projektu.
+        """
+        block = (
+            "# TODO\n\n## Přerušený běh\n\n### {}\n\n"
+            "**Jak pokračovat:** položkou Import. Pak zbytek.\n\n"
+            "## Úkoly\n\n- [ ] **Úkol podprojektu.** Text.\n"
+        )
+        for rel, title in (
+            ("zakazka/docs", "Migrace – přerušeno 2026-10-12"),
+            ("node_modules/balik/docs", "Z node_modules"),
+            ("a/b/c", "Příliš hluboko"),
+        ):
+            (self.box / "main" / rel).mkdir(parents=True)
+            (self.box / "main" / rel / "todo.md").write_text(block.format(title))
+        todo = self.collect()["todo"]
+        items = [
+            (s["section"], i) for s in todo for p in s["parts"] for i in p["items"]
+        ]
+        self.assertEqual(
+            [(s, i["title"], i.get("project")) for s, i in items],
+            [
+                ("Přerušený běh", "Migrace – přerušeno 2026-10-12", "zakazka"),
+                ("Probíhá", "Export faktur", None),
+            ],
+        )
+        self.assertEqual(items[0][1]["text"], "položkou Import.")
+
 
 class LifecycleLayers(unittest.TestCase):
     """`lifecycle()` rozhoduje, jestli `/next` nabídne chybějící krok cyklu.
