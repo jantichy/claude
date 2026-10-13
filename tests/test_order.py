@@ -143,10 +143,79 @@ class Findings(unittest.TestCase):
     def test_czech_date_elsewhere_is_ignored(self):
         """České datum mimo úvod záznamu dál nic neznamená – odkazuje na událost, ne na zápis."""
         path = self.write(
+            "- **2026-09-01** · úvodní záznam, ať soubor není bez dat\n\n"
             "### Nové\n\nText, který zmiňuje 28. 9. 2026.\n\n"
             "### Starší\n\n**Upřesněno 27. 9. 2026.** text\n"
         )
         self.assertEqual(self.order.check([path]), [])
+
+    def test_level_two_heading_with_italic_date_is_a_record(self):
+        """Rozhodnutí jako `## ` s `*D. M. RRRR*` pod sebou je záznam, ne sekce.
+
+        Bez toho měl každý takový nadpis sekci sám pro sebe a dva nové zápisy
+        na začátku souboru před staršími prošly jako „v pořádku“.
+        """
+        path = self.write(
+            "# Rozhodnutí\n\n## Nové\n\n*3. 10. 2026*\n\ntext\n\n"
+            "## Také nové\n\n*3. 10. 2026*\n\ntext\n\n"
+            "## Starší\n\n*27. 8. 2026*\n\ntext\n\n"
+            "## Nejnovější\n\n*5. 10. 2026*\n\ntext\n"
+        )
+        [finding] = self.order.check([path])
+        self.assertIn("2026-08-27", finding)
+        self.assertIn("1 ×", finding)
+
+    def test_level_two_headings_with_italic_date_in_order_pass(self):
+        path = self.write(
+            "# Rozhodnutí\n\n## Starší\n\n*27. 8. 2026*\n\ntext\n\n"
+            "## Nové\n\n*3. 10. 2026*\n\ntext\n"
+        )
+        self.assertEqual(self.order.check([path]), [])
+
+    def test_undated_subheading_of_a_record_does_not_split_the_scale(self):
+        """Podnadpis uvnitř rozhodnutí (`### Zamítnuto`) nesmí oddělit rozhodnutí od sebe.
+
+        Kolize obou oprav: `## ` s datem je záznam, nedatovaný `### ` hranice
+        škály – ale jen tematická podsekce s datovanými záznamy pod sebou.
+        """
+        path = self.write(
+            "## Nové\n\n*3. 10. 2026*\n\ntext\n\n### Zamítnuto\n\n- varianta\n\n"
+            "## Starší\n\n*27. 8. 2026*\n\ntext\n"
+        )
+        self.assertEqual(len(self.order.check([path])), 1)
+
+    def test_undated_record_does_not_split_the_scale(self):
+        """Jeden zapomenutý `**Rozhodnuto …**` nesmí vyřadit z kontroly zbytek souboru."""
+        path = self.write(
+            "### Nové\n\n**Rozhodnuto 28. 9. 2026.** text\n\n"
+            "### Bez data\n\ntext\n\n- **Zamítnuto:** varianta\n\n"
+            "### Starší\n\n**Rozhodnuto 27. 9. 2026.** text\n"
+        )
+        self.assertEqual(len(self.order.check([path])), 1)
+
+    def test_undated_subsections_are_separate_scales(self):
+        """Tematické podsekce mají každá vlastní řadu; pokles přes jejich hranici není vada."""
+        path = self.write(
+            "## Hotovo\n\n- **2026-09-20** · nové\n- **2026-09-28** · novější\n\n"
+            "### Archiv\n\n- **2026-08-01** · staré\n- **2026-08-15** · méně staré\n\n"
+            "### Starší archiv\n\n- **2026-06-01** · nejstarší\n"
+        )
+        self.assertEqual(self.order.check([path]), [])
+
+    def test_descending_inside_a_subsection_is_reported(self):
+        path = self.write(
+            "## Hotovo\n\n- **2026-09-28** · nové\n\n"
+            "### Archiv\n\n- **2026-08-15** · méně staré\n- **2026-08-01** · staré\n"
+        )
+        [finding] = self.order.check([path])
+        self.assertIn("podsekce *Archiv*", finding)
+        self.assertIn("2026-08-01", finding)
+
+    def test_file_without_dated_records_is_a_finding(self):
+        """Nula záznamů znamená, že skript tvar nezná – mlčky projít nesmí."""
+        path = self.write("# Rozhodnutí\n\n## Něco\n\n3. 10. 2026\n\ntext\n")
+        [finding] = self.order.check([path])
+        self.assertIn("žádný datovaný záznam", finding)
 
     def test_one_finding_per_section(self):
         """Jeden obrácený zápis nahoře nesmí vypsat celý soubor.
@@ -191,6 +260,14 @@ class ExitCodes(unittest.TestCase):
         )
         self.assertEqual(self.run_script(str(path)).returncode, 1)
 
+    def test_no_dated_record_returns_one(self):
+        """`/end` bere za čisto jedině `0`; soubor, který skript nepřečetl, čistý není."""
+        path = Path(self.tmp.name) / "a.md"
+        path.write_text("# H\n\n## Bez data\n\ntext\n", encoding="utf-8")
+        run = self.run_script(str(path))
+        self.assertEqual(run.returncode, 1)
+        self.assertNotIn("v pořádku", run.stdout)
+
     def test_clean_returns_zero(self):
         path = Path(self.tmp.name) / "a.md"
         path.write_text(
@@ -222,6 +299,18 @@ class Mutation(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
         self.assertEqual(self.order.check([str(path)]), [])
         self.order.outside_fences = lambda t: list(enumerate(t.splitlines(), 1))
+        self.assertEqual(len(self.order.check([str(path)])), 1)
+
+    def test_without_scales_the_archive_becomes_a_finding(self):
+        """Čisto u členěné sekce musí plynout z hranice škály, ne z nerozpoznání záznamů."""
+        text = (
+            "## Hotovo\n\n- **2026-09-28** · nové\n\n"
+            "### Archiv\n\n- **2026-08-01** · staré\n"
+        )
+        path = Path(self.tmp.name) / "a.md"
+        path.write_text(text, encoding="utf-8")
+        self.assertEqual(self.order.check([str(path)]), [])
+        self.order.opens_scale = lambda rows, start: False
         self.assertEqual(len(self.order.check([str(path)])), 1)
 
 
