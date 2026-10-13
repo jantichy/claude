@@ -54,7 +54,7 @@ Skill si najde plán, ověří stav projektu, nechá vás vybrat režim a pak je
 
 **Průběžná kontrola:** npm test → 0
 
-**Další krok:** /review
+**Další krok:** kontroly z mezery před nasazením, první /review, a pak /release
 ```
 
 ## Co nedělá

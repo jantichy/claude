@@ -367,8 +367,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/end`, pak `/clear`, a `/consistency` až v nové session – tahle už v panelu i v opravách spotřebovala kontext a na vlastní opravy je zaujatá
-- `/end` – je-li práce hotová a další kontrola nepřijde; stojí-li na větvi, za ním `/merge`
+- `/end`, pak `/clear`, a další kontrolní krok téže mezery až v nové session – tahle už v panelu i v opravách spotřebovala kontext a na vlastní opravy je zaujatá; které to v které mezeře jsou, drží `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*
+- `/end` – zbývá-li z mezery už jen on; stojí-li na větvi, za ním `/merge`, a pak se pokračuje krokem osy, za kterým mezera stojí
 - běžel-li jen výchozí rozsah nad starším projektem, volitelně `/end`, pak `/clear`, a `/review full` až v nové session
 
 

@@ -330,5 +330,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/end` – zápis toho, co se v běhu domluvilo; a byla-li práce na větvi, za ním `/merge`
+- `/end` – zápis toho, co se v běhu domluvilo; a byla-li práce na větvi, za ním `/merge`; zbytek mezery a krok osy za ní drží `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*
 - byla-li některá oprava rozsáhlá, `/end`, pak `/clear`, a audit znovu až v nové session, protože tahle už opravovala a na vlastní opravy je zaujatá
