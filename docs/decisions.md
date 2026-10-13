@@ -2040,3 +2040,11 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 ### Jméno klienta, které proniklo do veřejné historie, se z ní nevymazává
 
 **Rozhodnuto 12. 10. 2026** (uživatel) při `/end`. Jméno klienta a jeho podprojektu se dostalo do souborů veřejného repozitáře v rozporu s *Výjimkami z obecných pravidel* v `.claude/CLAUDE.md`: do položky `todo.md`, odtud do tří commitů s opravou `/continue` a už dřív do měření v `skills/invoicing/recover.md`. Ze sledovaných souborů je pryč (commity `e7be1ec` a `88c756c`), v historii zůstává. **Důvod:** přepis historie (`git filter-repo` a force push) by změnil hashe všech commitů od prvního výskytu, a na ty odkazují záznamy průchodů v `done.md` a rozhodnutí tady; jméno navíc už veřejné bylo a přepis ho z cizích kopií nevymaže. **Zavrženo:** přepsat historii. Ochranou je pravidlo psát úkoly bez jména klienta už při zápisu – oprava po pushi umí jen soubory, ne historii.
+
+### Vysvětlení na žádost smí následovat dialog; zakázané je vysvětlení jen v myšlení
+
+**Rozhodnuto 13. 10. 2026.** Dopoledne téhož dne vzniklo pravidlo „vysvětlení, o které si uživatel řekl, je samostatná odpověď bez dialogu – delší text před dialogem umí zapadnout“. Rozbor patnácti případů z jednoho dne, kdy uživatel otázce v dialogu nerozuměl, ukázal jinou příčinu: v devíti z nich před dialogem **žádný viditelný text nebyl** a vysvětlení existovalo jen v bloku myšlení, který uživatel nevidí. Uživatel pak citoval souhrn myšlení „vysvětlil jsem…“ a ptal se, kde to vysvětlení je. Text tedy nezapadl, nevznikl. Kde vysvětlení opravdu stálo v odpovědi a dialog za ním, odpověděl uživatel napoprvé.
+
+**Rozhodnutí:** pravidlo v `standards/rules.md`, *Ptej se postupně, ne všechno najednou*, říká, že kontext i vysvětlení patří do textu odpovědi, ne do myšlení, a že po napsaném vysvětlení smí dialog hned následovat.
+
+**Zamítnuto – nechat zákaz dialogu a udělat výjimku jen pro `/explain`:** léčil by se příznak, který s příčinou nesouvisí, a mimo skill by uživatel místo výběru z variant musel psát odpověď. Uživatel výslovně chce po vysvětlení zpátky dialog, protože výběr je pohodlnější než psaní.
