@@ -69,7 +69,7 @@ ze čtení souborů (obsah je v souborech samotných)
 
 ## Co nedělá
 
-- **Neposuzuje kvalitu dokumentace.** Ptá se, jestli je v souborech všechno z konverzace – ne jestli se v projektu někdo vyzná. Na to je [`/consistency`](../consistency/README.md), který běží o krok dřív.
+- **Neposuzuje kvalitu dokumentace.** Ptá se, jestli je v souborech všechno z konverzace – ne jestli se v projektu někdo vyzná. Na to je [`/consistency`](../consistency/README.md).
 - **Nedělá revizi projektu.** Testy, linter ani build nepouští proto, aby prověřil cizí práci. To, co sám zapsal, si naopak ověřit musí – pustí na to tu kontrolu projektu, která na zapsané soubory doopravdy sahá, a její výsledek vypíše.
 - **Nezakládá potichu chybějící soubory.** Vypíše, které chybí, a nabídne `/project`.
 - **Nemerguje větev sám od sebe.** Nabídne to a vyberete-li to, předá práci skillu [`/merge`](../merge/README.md).

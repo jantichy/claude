@@ -14,7 +14,7 @@ Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, im
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*. Plán píše `/breakdown` a opravit ho patří jemu; tady se odpracovává.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md` nebo `docs/backlog.md`, ne do kódu.
-- **Neuzavírá feature.** Hotovou práci prověřuje `/review` hned po tomhle, vnitřní konzistenci `/consistency` a úklid `/end` – samostatné kroky, viz `~/.claude/standards/lifecycle.md`, druhá půlka životního cyklu.
+- **Neuzavírá feature.** Hotovou práci prověřuje `/review`, vnitřní konzistenci `/consistency` a zápis session `/end` – samostatné kontrolní kroky, viz `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*.
 
 ## Jak je to postavené uvnitř
 
@@ -145,10 +145,10 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Plán je odpracovaný a průběžná kontrola je zelená, můžeš jít na /review.`
+- `Plán je odpracovaný a průběžná kontrola je zelená, můžeš pustit kontrolní kroky z mezery a pak /release.`
 - `Odpracovaný není – zbývá: <konkrétní seznam>.`
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/end`, pak `/clear`, a `/review` až v nové session – prověření hotové práce, kterou tahle session psala; za ním zbytek uzavírání (`~/.claude/standards/rules.md`, *Životní cyklus projektu*)
+- `/end`, pak `/clear`, a `/review` až v nové session – prověření hotové práce, kterou tahle session psala; za ním zbytek mezery před `/release` (`~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*)
 - zbyl-li v plánu zablokovaný úkol, je další krok jeho odblokování, ne revize – pojmenuj, co k němu chybí

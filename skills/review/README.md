@@ -64,7 +64,7 @@ Panel: 31 nálezů → 22 po deduplikaci → 22 ověřeno → 13 přežilo:
 ## Co nedělá
 
 - **Neaudituje vnitřní konzistenci.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`.
-- **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
+- **Neposuzuje, jestli je záměr dobrý.** Měří proti předpisu – zadání a doménovým znalostem; co žádný předpis nemá, posoudí `/oponent`. U projektu bez kódu, ke kterému žádná doménová znalost neexistuje, proto skoro nemá co dělat.
 - **Nevytěžuje konverzaci** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/end`.
 - **Nenasazuje.** To je `/release`.
 - **Nezačne nad rozbitým stavem.** Nejsou-li testy zelené, zastaví se a pošle to dodělat.

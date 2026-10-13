@@ -33,9 +33,9 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **Nepíše fuzzing ani property-based testy.** Ty jsou druh testu, píšou se v `/implement` a běží pak v `test` jako všechno ostatní. Tenhle skill je jednorázový průzkum, ne trvalé pokrytí. Co ale najde, se do trvalého pokrytí převede – viz Fáze 5.
 - **Nečte kód kvůli nálezům.** Na to je `/review`. Kód se tu čte jen proto, aby se aplikace dala spustit a aby se pochopilo, co pozorované chování způsobilo.
 - **Neaudituje vnitřní konzistenci** (`/consistency`) ani **neposuzuje záměr** (`/oponent`).
-- **Neopakuje `/review`.** Ten proběhl dřív a nad čteným kódem; tady se hlásí jen to, co se povedlo doopravdy rozbít. Nález, který jde vidět z kódu a nepodařilo se ho vyvolat, sem nepatří.
+- **Neopakuje `/review`.** Ten kód čte; tady se hlásí jen to, co se povedlo doopravdy rozbít. Nález, který jde vidět z kódu a nepodařilo se ho vyvolat, sem nepatří.
 - **Nenasazuje.** To je `/release`, a ten se pouští vědomě a zvlášť.
-- **Neuklízí po session.** To udělal `/end` před ním; vlastní nálezy si ale zapisuje sám.
+- **Nevytěžuje session.** To dělá `/end`; vlastní nálezy si ale zapisuje sám.
 
 ## Kdy se pouští a kdy se přeskakuje
 

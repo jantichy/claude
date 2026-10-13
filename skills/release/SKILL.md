@@ -17,7 +17,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to sedmý krok
 
 - **Nevyhodnocuje, jestli je nasazená věc k něčemu.** Sledovací okno měří **pády** a má odpověď za hodiny; otázku „používá se to a co si lidé vyžádali“ řeší `/evaluate` za týdny. Tenhle skill mu jen zapíše datum, kdy na to bude čas.
 - **Neopravuje.** Najde-li kontrola problém, skill **skončí** a pošle to zpátky do `/implement` nebo `/review`. Neopravuj v předvečer nasazení – změna, která neprošla review, je přesně ta, která spadne.
-- **Neprověřuje, jestli to obstojí.** Rozbít hotovou práci spuštěním zkouší `/attack` před tímhle; sem se přichází se stavem, který tím prošel, a nasazuje se, ne testuje.
+- **Neprověřuje, jestli to obstojí.** Rozbít hotovou práci spuštěním zkouší `/attack`, má-li projekt co spustit; tady se nasazuje, ne testuje.
 - **Nerozhoduje o obsahu vydání.** Co se nasazuje, je to, co je na větvi. Vybírat commity na poslední chvíli je cesta k tomu nasadit půlku feature.
 - **Nezakládá infrastrukturu.** Nastavení prostředí, domén a proměnných je jednorázová práce, ne součást každého vydání.
 
@@ -225,7 +225,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Datum vyrob příkazem, nepiš ho z hlavy (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš*) – u běžného vydání `date -v+3w +%F`, u něčeho, co člověk použije zřídka, odpovídajícím delším odstupem. **Je to odstup, ne termín:** dřív vrátí `/evaluate` šum, později nic nepokazí.
 
-**Další krok:** `/end` podruhé – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Viz `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*.
+**V mezeře za nasazením stojí jen `/end`, tentokrát podruhé** – nasazení vyrobilo zápisy (stav migrací, potíže, změny postupu), které má ověřit záchranná síť. Pouští se až na konci session, ne tady – sledovací okno teprve následuje. Viz `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*.
 
 ------
 
@@ -272,7 +272,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/evaluate` až od data zapsaného v `todo.md` – dřív nejsou data, ze kterých by se dalo cokoliv vyčíst
-- běží-li ještě sledovací okno, je další krok jeho uzavření podle Fáze 7, ne nový krok cyklu
+- běží-li ještě sledovací okno, je další krok jeho uzavření podle Fáze 7, ne krok osy
 - `/end` před koncem session – vždy, i když se zdá, že z nasazení nic nezapsaného nezbylo
 
 ## Když chyba projde vším

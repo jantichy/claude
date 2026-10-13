@@ -464,4 +464,5 @@ V režimu `update` jednou z těchto:
 
 - `/discovery`, staví-li se cokoliv pro lidi – u projektu bez trhu z něj odpadá jen konkurence, ne poptávka a rizika
 - `/specify` rovnou jen u přírůstku, kde je „proč“ rozhodnuté a zapsané
+- stojí-li výsledek na větvi, `/end`, pak `/merge`, pak `/clear`, a krok osy až v nové session v `<container>/main` – v mezeře za tímhle skillem nic jiného nestojí, `/review` ani `/oponent` ne (`~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*)
 - u dorovnaného projektu (`update`, `adopt`) se rovnou pracuje – další krok je `/next`, ne krok osy

@@ -54,13 +54,13 @@ Skill si najde plán, ověří stav projektu, nechá vás vybrat režim a pak je
 
 **Průběžná kontrola:** npm test → 0
 
-**Další krok:** /review
+**Další krok:** kontroly z mezery před nasazením, první /review, a pak /release
 ```
 
 ## Co nedělá
 
 - **Nemění plán potichu.** Ukáže-li se, že je špatně, zastaví se a řekne, jak hluboko problém sahá.
-- **Neuzavírá práci.** Revize, audit konzistence a úklid jsou samostatné kroky po tomhle.
+- **Neuzavírá práci.** Revize, audit konzistence a úklid jsou samostatné kontrolní kroky.
 - **Nehledá si práci navíc.** Je-li plán odpracovaný, řekne to a skončí.
 
 ## Jak si ho nainstalovat

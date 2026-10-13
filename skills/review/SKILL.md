@@ -26,9 +26,9 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 ## Co skill nedělá
 
 - **Průběžnou kontrolu nenahrazuje, ale ověřuje ji jako vstupní podmínku.** Běží průběžně u každého úkolu (viz `~/Context/coding/quality.md`), takže sem se přichází se stavem, který už zelený byl. Ověřuje se přesto znovu, a je pro to důvod: hook ji vynutil po **poslední odpovědi**, kdežto tady se pouští **na celém rozsahu větve** a proti aktuálnímu stromu – „prošlo to po posledním úkolu“ a „prochází to jako celek“ jsou dvě různá tvrzení. Není-li zelená, skill se zastaví a pošle tě to dodělat.
-- **Neaudituje vnitřní konzistenci projektu.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`, který běží až po tomhle.
-- **Nedopisuje, co v plánu zbylo.** Úkoly odpracovává `/implement` před tímhle; sem se přichází s hotovou prací a opravuje se jen to, co panel sám našel.
-- **Neposuzuje, jestli je záměr dobrý.** Na to je `/oponent`.
+- **Neaudituje vnitřní konzistenci projektu.** Ptá se „je to správně a drží to předpis?“, ne „sedí si projekt sám se sebou?“ – na to je `/consistency`.
+- **Nedopisuje, co v plánu zbylo.** Úkoly odpracovává `/implement`; tenhle skill měří hotový artefakt a opravuje jen to, co panel sám našel.
+- **Neposuzuje obsah bez předpisu.** Měří proti měřítku v souboru – specifikaci a doménovým znalostem –, takže se jeho nález vyvrací ukázáním na pravidlo; jestli je dobrý sám záměr, posuzuje argumentem `/oponent`, který žádné měřítko nemá. Nad projektem bez kódu, ke kterému žádná relevantní doménová znalost neexistuje, je proto skoro prázdný a má se přeskočit (`~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*).
 - **Nevytěžuje session** a nedělá revizi dokumentace nad rámec vlastních nálezů – to je `/end`. Vlastní nálezy si ale zapisuje sám: odložené do `docs/todo.md`, zamítnuté do `## Review` v `CLAUDE.md`.
 - **Neaudituje cizí web zvenčí.** Čte repozitář a měří proti specifikaci; na cizí běžící web, ke kterému není zdroják ani zadání, je `/audit` – ten ho spustí, projde jako návštěvník a měří proti auditnímu postupu domény.
 - **Nenasazuje.** To je `/release`, a ten se pouští vědomě a zvlášť.
@@ -371,8 +371,8 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- `/end`, pak `/clear`, a `/consistency` až v nové session – tahle už v panelu i v opravách spotřebovala kontext a na vlastní opravy je zaujatá
-- `/end` – je-li práce hotová a další kontrola nepřijde; stojí-li na větvi, za ním `/merge`
+- `/end`, pak `/clear`, a další kontrolní krok téže mezery až v nové session – tahle už v panelu i v opravách spotřebovala kontext a na vlastní opravy je zaujatá; které to v které mezeře jsou, drží `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*
+- `/end` – zbývá-li z mezery už jen on; stojí-li na větvi, za ním `/merge`, a pak se pokračuje krokem osy, za kterým mezera stojí
 - běžel-li jen výchozí rozsah nad starším projektem, volitelně `/end`, pak `/clear`, a `/review full` až v nové session
 
 
