@@ -17,7 +17,8 @@ Skript má dva režimy:
   bez něj se hranice vytěžení přiznává odhadem, a co se nepřiznalo, nezjistí
   nikdo. Navíc vypíše číslovaný seznam uživatelských promptů – ty se
   odškrtávají v evidenci, protože u každého se dá říct, jestli se z něj něco
-  zapsalo. **Prompt je i odpověď z dialogu `AskUserQuestion`** – výběr
+  zapsalo. Prompt je i slash příkaz a zpráva s vloženým obsahem, které
+  harness balí do značek. **Prompt je i odpověď z dialogu `AskUserQuestion`** – výběr
   nabídnuté volby stejně jako *Other* s vlastním textem: rozhodnutí z nabídky
   mívá větší dopad než dovětek v promptu a evidence, která ho mine, hlásí
   čistý výsledek, přestože nic neměřila.
@@ -213,19 +214,50 @@ def compactions(rows):
 
 #: Hlášky harnessu, které mají tvar uživatelského textu, ale nikdo je nenapsal.
 HARNESS_NOTES = ("[Request interrupted", "[SYSTEM")
+#: Značky, do kterých harness balí text, **který napsal uživatel**: slash
+#: příkaz i s argumenty, vložený obsah a příkaz shellu za vykřičníkem. Ostatní
+#: značky – `<system-reminder>`, `<local-command-stdout>`, `<task-notification>`
+#: a hlášky hooků – vkládá harness sám, takže se za prompt nepočítají.
+USER_TAGS = (
+    "command-name",
+    "command-message",
+    "command-args",
+    "pasted_content",
+    "bash-input",
+)
+TAG = re.compile(r"<([\w-]+)")
+COMMAND = re.compile(r"<command-name>(.*?)</command-name>", re.S)
+COMMAND_ARGS = re.compile(r"<command-args>(.*?)</command-args>", re.S)
 
 
-def written_by_user(text):
-    """Napsal to uživatel, nebo to do fronty vložil harness?
+def user_text(text):
+    """Text promptu, jak ho uživatel napsal, nebo None, vložil-li ho harness.
 
-    Do fronty padají i notifikace o dokončení úlohy a zprávy subagentů. Mají
-    tvar značky nebo hlášky systému, takže se poznají podle prvního znaku –
-    uživatelův text značkou nezačíná. Přerušení běhu je zvláštní případ: čte
-    se jako věta, ale je to záznam o akci, ne obsah k zapsání.
+    Do fronty i do záznamů s rolí uživatele padají notifikace o dokončení
+    úlohy, zprávy subagentů, výstupy lokálních příkazů a upomínky. Mají tvar
+    značky nebo hlášky systému, takže rozhoduje začátek textu: bez značky je to
+    prompt, se značkou jen tehdy, je-li to značka z `USER_TAGS`. Slash příkaz se
+    vrátí jako `/jméno argumenty`, aby se v evidenci četl tak, jak se psal.
+    Přerušení běhu je zvláštní případ: čte se jako věta, ale je to záznam
+    o akci, ne obsah k zapsání.
     """
     text = text.strip()
+    if not text or text.startswith(HARNESS_NOTES):
+        return None
+    if not text.startswith("<"):
+        return text
+    tag = TAG.match(text)
+    if not tag or tag.group(1) not in USER_TAGS:
+        return None
+    command = COMMAND.search(text)
+    if not command:
+        return text
+    args = COMMAND_ARGS.search(text)
     return (
-        bool(text) and not text.startswith("<") and not text.startswith(HARNESS_NOTES)
+        " ".join(
+            part.strip() for part in (command.group(1), args.group(1) if args else "")
+        ).strip()
+        or text
     )
 
 
@@ -262,43 +294,85 @@ def run_filter(rows):
 def prompts(rows):
     """Co uživatel v session skutečně napsal – prompty do evidence.
 
-    Patří sem prompty bez `isMeta` a za prompt se počítá i zpráva poslaná
-    uprostřed odpovědi, která přichází jinou cestou (`queue-operation`) a snadno
-    se přehlédne, a každá odpověď z dialogu. Naopak sem nepatří vsuvky s rolí
-    uživatele, které nenapsal on.
+    Patří sem prompty bez `isMeta` včetně slash příkazů a vloženého obsahu, za
+    prompt se počítá i zpráva poslaná uprostřed odpovědi, která přichází jinou
+    cestou (`queue-operation`) a snadno se přehlédne, a každá odpověď z dialogu.
+    Naopak sem nepatří vsuvky s rolí uživatele, které nenapsal on.
+
+    **Stejný text dvakrát jsou dva prompty.** Dvě odpovědi „ano“ na dvě různé
+    otázky jsou dvě rozhodnutí; jediné, co se tu slučuje, je zpráva z fronty
+    se svým vlastním doručením (`Queue`).
     """
     names = tool_names(rows)
-    found, seen = [], set()
-
-    def add(number, text):
-        # Zpráva poslaná uprostřed odpovědi je v transcriptu **dvakrát**: jako
-        # `queue-operation` při zařazení a jako `queued_command` při doručení.
-        # Bez deduplikace by evidence žádala dva řádky na jednu větu a poměr
-        # by nikdy nesedl. Odhaleno prvním ostrým během 26. 9. 2026.
-        key = " ".join(text.split())
-        if not written_by_user(text) or key in seen:
-            return
-        seen.add(key)
-        found.append((number, text.strip()))
-
+    queue = Queue()
+    found, turn = [], 0
     for number, record in rows:
-        for _, _, text in extra_rows(number, record):
-            add(number, text)
-        if (record.get("message") or {}).get("role") != "user" or record.get("isMeta"):
+        role = (record.get("message") or {}).get("role")
+        turn += role == "assistant"
+        for text in queue.texts(record):
+            found.append((number, text, None))
+        if role != "user" or record.get("isMeta"):
             continue
         for block in blocks(record):
             if block.get("type") == "text":
-                add(number, block.get("text", ""))
+                text = queue.delivered(block.get("text", ""))
+                if text:
+                    found.append((number, text, turn))
             elif (
                 block.get("type") == "tool_result"
                 and names.get(block.get("tool_use_id")) == DIALOG_TOOL
             ):
-                for text in dialog_answers(record, block):
-                    add(number, text)
-    return sorted(drop_prefixes(found))
+                found.extend((number, t, None) for t in dialog_answers(record, block))
+    return sorted(drop_drafts(found))
 
 
-def drop_prefixes(found):
+class Queue:
+    """Páruje zprávu z fronty s jejím doručením.
+
+    Zpráva poslaná uprostřed odpovědi je v transcriptu **dvakrát**: jako
+    `queue-operation` při zařazení a jako `queued_command` při doručení. Bez
+    párování by evidence žádala dva řádky na jednu větu a poměr by nikdy
+    nesedl (odhaleno prvním ostrým během 26. 9. 2026). Páruje se **jen zařazení
+    s doručením** – dřív se slučoval každý stejný text a druhé „ano“ na jinou
+    otázku z inventury tiše vypadlo.
+    """
+
+    def __init__(self):
+        self.pending = Counter()
+
+    def texts(self, record):
+        """Prompty ze záznamu fronty; doručení už spočítané zprávy přeskočí."""
+        found = []
+        for _, _, raw in extra_rows(0, record):
+            text = user_text(raw)
+            if not text:
+                continue
+            if record.get("type") == "queue-operation":
+                self.pending[flat(text)] += 1
+                found.append(text)
+            elif not self.consume(text):
+                found.append(text)
+        return found
+
+    def delivered(self, raw):
+        """Text promptu, nebo None, je-li to doručení zprávy z fronty."""
+        text = user_text(raw)
+        return None if not text or self.consume(text) else text
+
+    def consume(self, text):
+        key = flat(text)
+        if self.pending[key]:
+            self.pending[key] -= 1
+            return True
+        return False
+
+
+def flat(text):
+    """Text bez rozdílů v bílých znacích – podle něj se porovnává."""
+    return " ".join(text.split())
+
+
+def drop_drafts(found):
     """Zahodí prompt, který je jen rozepsanou verzí jiného.
 
     Harness uloží prompt i ve stavu před doplněním, a to pod **jiným**
@@ -306,11 +380,20 @@ def drop_prefixes(found):
     Kratší verze je prefixem delší a nenese nic, co by v ní nebylo – zůstává
     proto ta delší. Bez toho by evidence žádala dva řádky na jednu větu
     a poměr by nikdy nesedl.
+
+    **Rozepsaná verze se pozná i podle toho, že na ni nikdo neodpověděl:**
+    slučují se jen prompty bez odpovědi mezi sebou (`turn`). Prompt, na který
+    přišla odpověď, je samostatný, i když ho další prompt doslova opakuje
+    a rozvádí – typicky opakovaně vložený a postupně upravovaný text. Zprávy
+    z fronty a odpovědi z dialogu (`turn` None) se nikdy neslučují.
     """
-    texts = [(number, " ".join(text.split()), text) for number, text in found]
+    texts = [(number, flat(text), text, turn) for number, text, turn in found]
     kept = []
-    for number, flat, text in texts:
-        if any(other.startswith(flat) and other != flat for _, other, _ in texts):
+    for number, short, text, turn in texts:
+        if turn is not None and any(
+            other_turn == turn and other.startswith(short) and other != short
+            for _, other, _, other_turn in texts
+        ):
             continue
         kept.append((number, text))
     return kept
