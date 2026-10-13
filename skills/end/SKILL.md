@@ -104,7 +104,7 @@ python3 ~/.claude/skills/end/scripts/extract.py filter <transcript> > <scratchpa
 
 Z inventury si vezmi pět věcí a **všechny si zapiš, protože je budeš vykazovat v závěru**:
 
-- **kolik je promptů** – za prompt se počítá i zpráva poslaná uprostřed odpovědi a každá odpovězená otázka z dialogu, výběr nabídnuté volby stejně jako *Other*. To je ta množina, která se v *Fázi 3* odškrtává.
+- **kolik je promptů** – za prompt se počítá i zpráva poslaná uprostřed odpovědi, slash příkaz i s argumenty, zpráva s vloženým obsahem a každá odpovězená otázka z dialogu, výběr nabídnuté volby stejně jako *Other*. Stejný text poslaný dvakrát jsou dva prompty; výstup lokálního příkazu ani jiná vložka harnessu prompt není. To je ta množina, která se v *Fázi 3* odškrtává.
 - **co se čte** a v jakém objemu,
 - **co se nečte** – to jde celé do *Mezí běhu* a nedá se to vynechat,
 - **kolik bylo kompaktací** – podle toho se rozhoduje hned v následujícím odstavci,

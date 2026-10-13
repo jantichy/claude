@@ -432,10 +432,99 @@ class ZpravyUzivatele(PredfiltrBase):
         ]
         self.assertEqual(self.user_messages(records), [])
 
-    def test_prikaz_skillu_neni_zprava_uzivatele(self):
-        self.assertEqual(
-            self.user_messages([self.user("<command-name>/end</command-name>")]), []
+    def reply(self, text="Hotovo."):
+        return {
+            "type": "assistant",
+            "message": {
+                "role": "assistant",
+                "content": [{"type": "text", "text": text}],
+            },
+        }
+
+    def queued(self, text):
+        """Zpráva z fronty v obou podobách: zařazení a doručení."""
+        return [
+            {"type": "queue-operation", "operation": "enqueue", "content": text},
+            {
+                "type": "attachment",
+                "attachment": {"type": "queued_command", "prompt": text},
+            },
+        ]
+
+    def test_slash_prikaz_je_zprava_uzivatele(self):
+        """Slash příkaz napsal uživatel, i když ho harness zabalí do značek."""
+        command = (
+            "<command-message>review</command-message>\n"
+            "<command-name>/review</command-name>\n"
+            "<command-args>branch</command-args>"
         )
+        self.assertEqual(self.user_messages([self.user(command)]), ["/review branch"])
+
+    def test_slash_prikaz_bez_argumentu(self):
+        command = "<command-name>/end</command-name>\n<command-args></command-args>"
+        self.assertEqual(self.user_messages([self.user(command)]), ["/end"])
+
+    def test_vlozeny_obsah_je_zprava_uzivatele(self):
+        text = '<pasted_content id="1">dlouhý vložený text</pasted_content>\nshrň to'
+        self.assertEqual(self.user_messages([self.user(text)]), [text])
+
+    def test_zabalene_prompty_se_vsechny_spocitaji(self):
+        """Tři zprávy – dva slash příkazy a vložený obsah – jsou tři prompty."""
+        records = [
+            self.user("<command-name>/next</command-name>"),
+            self.reply(),
+            self.user('<pasted_content id="1">podklad</pasted_content>'),
+            self.reply(),
+            self.user("<command-name>/end</command-name>"),
+        ]
+        self.assertEqual(len(self.user_messages(records)), 3)
+
+    def test_vlozky_harnessu_nejsou_zprava_uzivatele(self):
+        """Výstup lokálního příkazu, upomínka a hláška hooku nejsou prompt."""
+        records = [
+            self.user("<local-command-stdout>Set model to X</local-command-stdout>"),
+            self.user("<local-command-caveat>Caveat: …</local-command-caveat>"),
+            self.user("<system-reminder>pozor</system-reminder>"),
+            self.user("<user-prompt-submit-hook>hláška</user-prompt-submit-hook>"),
+            self.user("<bash-stdout>výstup</bash-stdout>"),
+        ]
+        self.assertEqual(self.user_messages(records), [])
+
+    def test_zabaleny_prikaz_z_fronty_se_pocita(self):
+        """Slash příkaz poslaný uprostřed odpovědi jde frontou a počítá se jednou."""
+        self.assertEqual(
+            self.user_messages(self.queued("<command-name>/end</command-name>")),
+            ["/end"],
+        )
+
+    def test_dve_stejne_odpovedi_jsou_dva_prompty(self):
+        """Dvě „ano“ na dvě různé otázky jsou dvě rozhodnutí, ne jedno."""
+        records = [
+            self.user("ano"),
+            self.reply("A ještě tohle?"),
+            self.user("ano"),
+        ]
+        self.assertEqual(self.user_messages(records), ["ano", "ano"])
+
+    def test_dve_stejne_zpravy_z_fronty_jsou_dva_prompty(self):
+        """Párování zařazení s doručením nesmí sloučit dvě samostatné zprávy."""
+        records = self.queued("ano") + [self.reply()] + self.queued("ano")
+        self.assertEqual(self.user_messages(records), ["ano", "ano"])
+
+    def test_opakovane_vlozeny_text_se_nepocita_jednou(self):
+        """Týž vložený blok s postupně upraveným textem je pokaždé nový prompt."""
+        paste = '<pasted_content id="7">'
+        texts = [
+            paste + "návrh</pasted_content>",
+            paste + "návrh</pasted_content> uprav",
+            paste + "návrh</pasted_content> uprav úvod",
+            paste + "návrh v2</pasted_content>",
+            paste + "návrh v2</pasted_content>",
+        ]
+        records = []
+        for text in texts:
+            records += [self.user(text), self.reply()]
+        self.assertEqual(len(self.user_messages(records)), len(texts))
 
     def test_zprava_z_fronty_se_nepocita_dvakrat(self):
         """Fronta ukládá zprávu dvakrát: při zařazení a při doručení."""
@@ -463,6 +552,18 @@ class ZpravyUzivatele(PredfiltrBase):
         ]
         self.assertEqual(
             self.user_messages(records), ["Zhodnoť ten skill a řekni, co s ním dál"]
+        )
+
+    def test_prompt_s_odpovedi_neni_rozepsany(self):
+        """Na rozepsanou verzi nikdo neodpovídá; prompt s odpovědí je samostatný."""
+        records = [
+            self.user("Uprav ten text"),
+            self.reply(),
+            self.user("Uprav ten text a zkrať úvod"),
+        ]
+        self.assertEqual(
+            self.user_messages(records),
+            ["Uprav ten text", "Uprav ten text a zkrať úvod"],
         )
 
     def test_preruseni_behu_neni_zprava_uzivatele(self):
@@ -550,8 +651,8 @@ class MutacePredfiltru(PredfiltrBase):
 
     def test_bez_ismeta_se_vsuvka_stane_zpravou_uzivatele(self):
         source = EXTRACT.read_text(encoding="utf-8").replace(
-            'if (record.get("message") or {}).get("role") != "user" or record.get("isMeta"):',
-            'if (record.get("message") or {}).get("role") != "user":',
+            'if role != "user" or record.get("isMeta"):',
+            'if role != "user":',
             1,
         )
         mutant = self.dir / "extract_mutant.py"
