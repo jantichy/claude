@@ -354,6 +354,15 @@
             "command": "/Users/honza/.config/iterm2/cc-status"
           }
         ]
+      },
+      {
+        "matcher": "clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/hooks/workdir.py"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -372,6 +381,14 @@
           {
             "type": "command",
             "command": "/Users/honza/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/hooks/workdir.py"
           }
         ]
       }

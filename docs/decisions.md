@@ -2048,3 +2048,14 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Rozhodnutí:** pravidlo v `standards/rules.md`, *Ptej se postupně, ne všechno najednou*, říká, že kontext i vysvětlení patří do textu odpovědi, ne do myšlení, a že po napsaném vysvětlení smí dialog hned následovat.
 
 **Zamítnuto – nechat zákaz dialogu a udělat výjimku jen pro `/explain`:** léčil by se příznak, který s příčinou nesouvisí, a mimo skill by uživatel místo výběru z variant musel psát odpověď. Uživatel výslovně chce po vysvětlení zpátky dialog, protože výběr je pohodlnější než psaní.
+
+### Pracovní adresář se přes `/clear` přenáší pokynem v kontextu, ne přepnutím
+
+**Rozhodnuto 13. 10. 2026.** `/clear` vrací session do adresáře, ve kterém se `claude` spustil. Když se mezitím přesunula do worktree větve, nová session o ní neví a status line, který jen vypisuje `workspace.current_dir` od Claude Code, ukazuje kořen projektu. Úvodní záhlaví po `/clear` sice ukazuje ještě adresář větve, ale to se podle všeho vykreslí dřív, než se adresář vrátí.
+
+**Rozhodnutí:** hook `hooks/workdir.py` si na `Stop` uloží `cwd` pod klíč záložky terminálu (`ITERM_SESSION_ID`, `TERM_SESSION_ID`) a na `SessionStart` s `source: clear` vloží nové session pokyn přepnout se zpátky. Pokyn je **podmíněný**: nezačíná-li první zpráva zjevně jiné téma. Po `/clear` se totiž často začíná nové téma a slepé přepnutí by ho poslalo do cizí větve.
+
+**Zamítnuto:**
+- **Skutečné přepnutí adresáře hookem** – hook pracovní adresář session změnit neumí, takže přepnutí musí udělat model.
+- **Klíč podle projektu nebo session** – ID session se při `/clear` mění a klíč podle projektu by spojil dvě záložky nad týmž repozitářem. Bez proměnné záložky hook proto mlčí.
+- **Jen spouštět `claude` rovnou ve worktree** – to nepomůže, když větev vznikne až v běžící session, a to je běžný případ.

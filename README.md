@@ -90,6 +90,10 @@ Testy nad textem, který nikdo nespouští, a nad vrstvami, které tu něco doop
 
 `UserPromptSubmit` hook, který při každé zprávě změří z transcriptu velikost kontextu a počet volání nástrojů a nad prahem řekne modelu, že má nabídnout úklid a novou session. Model velikost kontextu sám nevidí – ukazuje ji jen status line člověku –, takže práh dřív odhadoval z dojmu a ozval se o celé pásmo pozdě. Pod prahem mlčí, nad každým se ozve jednou; subagenty nepočítá a po kompaktaci měří od začátku.
 
+#### [`workdir.py`](hooks/workdir.py) – po `/clear` se pokračuje ve větvi, kde se pracovalo
+
+`/clear` vrátí session do adresáře, ve kterém se `claude` spustil, takže když se mezitím přesunula do worktree větve, nová session o ní neví a status line ukazuje kořen projektu. Hook si po každé odpovědi uloží pracovní adresář pro danou záložku terminálu a po `/clear` ho nové session připomene: nezačíná-li první zpráva zjevně jiné téma, má se tam Claude prvním příkazem přepnout. Sám adresář změnit neumí – to hooky nedokážou –, takže přepnutí dělá model.
+
 #### [`standards/bypass.md`](standards/bypass.md) – čím se dají obejít vlastní kontroly
 
 Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběžná kontrola, oba git hooky, CI, permission systém, status line –, stojí čím se dá obejít, co to chytí a co je vědomě přijaté riziko. Většina řádků je „accepted“ a u každého je důvod. Zákaz se totiž dá obejít i dodržet a nikde po tom nezůstane stopa, kdežto katalog se dá přečíst a rozporovat. Kompletnost hlídá test, který seznam vrstev čte z disku, takže nová vrstva bez řádku shodí testy.
@@ -223,6 +227,8 @@ Když je session dlouhá nebo se musím k práci vrátit jindy, zapíše do sezn
 V nové session po `/break` najde zápis přerušené práce, přejde do adresáře, kde leží, krátce shrne, kde se stojí, a rovnou pokračuje tím, co zápis určil jako první krok – bez sbírání a řazení všeho ostatního, co v projektu čeká. Je to druhá strana `/break` a obě stojí na stejném tvaru zápisu.
 
 #### [`/diagram`](skills/diagram/) – datový model jako mapa, na kterou se dá kliknout
+
+PLACEHOLDER_DIAGRAM
 
 Z dokumentace navrženého modelu nakreslí interaktivní stránku: ER diagram všech tabulek, ve kterém po kliknutí vidím popis entity, vazby, sloupce a constrainty, a stavový prostor s přechody mezi stavy. Žije jako soukromý artefakt a při dalším zavolání se překreslí na stejném odkazu, klidně z jiné rozdělané větve. Nekreslí nic, co v dokumentaci není, a do projektu nezapisuje.
 

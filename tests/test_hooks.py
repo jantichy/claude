@@ -749,10 +749,10 @@ class BypassRegistry(unittest.TestCase):
     REGISTRY = ROOT / "standards" / "bypass.md"
 
     #: Vrstvy, které se v registru záměrně neuvádějí – nic nevynucují.
-    #: Prázdné od chvíle, kdy `iterm-notify.sh` nahradila vestavěná integrace
-    #: iTerm2: její `cc-status` nevynucuje taky nic, ale řádek v registru má,
-    #: protože je to cizí binárka běžící nad každým repozitářem.
-    NON_ENFORCING: set[str] = set()
+    #: `cc-status` z integrace iTerm2 nevynucuje taky nic, ale řádek v registru
+    #: má, protože je to cizí binárka běžící nad každým repozitářem.
+    #: `workdir.py` jen zapisuje vlastní stav a vkládá pokyn do kontextu.
+    NON_ENFORCING: set[str] = {"workdir.py"}
 
     def layers(self):
         """Soubory, které běží automaticky a něco vynucují."""
@@ -1425,3 +1425,118 @@ class HandoffHook(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WorkdirHook(unittest.TestCase):
+    """`workdir.py` přenese pracovní adresář přes `/clear`.
+
+    Mlčení po `/clear` vrací stav, kvůli kterému hook vznikl: nová session
+    neví, že se pracovalo ve worktree větve. Pokyn tam, kam nepatří – do jiné
+    záložky, po startu bez `/clear`, do smazaného adresáře – pošle session
+    pracovat do cizí větve.
+    """
+
+    HOOK = ROOT / "hooks" / "workdir.py"
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="workdir-test-"))
+        self.root = self.tmp / "eventoid"
+        self.branch = self.root / "widget"
+        self.branch.mkdir(parents=True)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def run_hook(self, event, cwd, tab="w0t0p0:AAA", source=None):
+        payload = {"hook_event_name": event, "cwd": str(cwd), "session_id": "s"}
+        if source:
+            payload["source"] = source
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if k not in ("ITERM_SESSION_ID", "TERM_SESSION_ID")
+        }
+        env["HOME"] = str(self.tmp)
+        if tab:
+            env["ITERM_SESSION_ID"] = tab
+        r = subprocess.run(
+            [sys.executable, str(self.HOOK)],
+            input=json.dumps(payload),
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
+        self.assertEqual(r.returncode, 0, r.stderr)
+        if not r.stdout.strip():
+            return ""
+        out = json.loads(r.stdout)["hookSpecificOutput"]
+        self.assertEqual(out["hookEventName"], "SessionStart")
+        return out["additionalContext"]
+
+    def test_clear_points_back_to_branch(self):
+        self.run_hook("Stop", self.branch)
+        msg = self.run_hook("SessionStart", self.root, source="clear")
+        self.assertIn(f"cd {self.branch}", msg)
+        self.assertIn("jiné téma", msg, "pokyn k přepnutí není podmíněný")
+
+    def test_silent_when_directory_did_not_change(self):
+        self.run_hook("Stop", self.root)
+        self.assertEqual(self.run_hook("SessionStart", self.root, source="clear"), "")
+
+    def test_silent_on_startup_and_resume(self):
+        self.run_hook("Stop", self.branch)
+        for source in ("startup", "resume", "compact"):
+            self.assertEqual(
+                self.run_hook("SessionStart", self.root, source=source), "", source
+            )
+
+    def test_tabs_are_independent(self):
+        self.run_hook("Stop", self.branch, tab="w0t0p0:AAA")
+        self.assertEqual(
+            self.run_hook("SessionStart", self.root, tab="w0t1p0:BBB", source="clear"),
+            "",
+            "pokyn přišel do jiné záložky",
+        )
+
+    def test_silent_without_tab_id(self):
+        self.run_hook("Stop", self.branch, tab=None)
+        self.assertEqual(
+            self.run_hook("SessionStart", self.root, tab=None, source="clear"), ""
+        )
+
+    def test_silent_when_saved_directory_is_gone(self):
+        self.run_hook("Stop", self.branch)
+        shutil.rmtree(self.branch)
+        self.assertEqual(self.run_hook("SessionStart", self.root, source="clear"), "")
+
+    def test_broken_input_is_silent(self):
+        r = subprocess.run(
+            [sys.executable, str(self.HOOK)],
+            input="garbage",
+            capture_output=True,
+            text=True,
+            env={**os.environ, "HOME": str(self.tmp)},
+            check=False,
+        )
+        self.assertEqual((r.returncode, r.stdout), (0, ""))
+
+    def test_registered_for_stop_and_clear(self):
+        settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        hooks = settings["hooks"]
+
+        def registered(event, matcher=None):
+            return any(
+                g.get("matcher") == matcher
+                and any(
+                    h.get("command", "").endswith("hooks/workdir.py")
+                    for h in g["hooks"]
+                )
+                for g in hooks.get(event, [])
+            )
+
+        self.assertTrue(registered("Stop"), "workdir.py nevisí na Stop")
+        self.assertTrue(
+            registered("SessionStart", "clear"),
+            "workdir.py nevisí na SessionStart s matcherem clear",
+        )
