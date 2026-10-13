@@ -68,6 +68,56 @@ class Walk(unittest.TestCase):
             self.assertEqual(rows, [(0, "CLAUDE.md"), (1, "x.md"), (1, "y.md")])
 
 
+class Rules(unittest.TestCase):
+    """Rules bez `paths` jsou paušál, s `paths` jen podmíněné načítání."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.project = Path(self.tmp.name).resolve() / "project"
+        rules = self.project / ".claude/rules"
+        (rules / "frontend").mkdir(parents=True)
+        (self.project / "docs").mkdir()
+        (rules / "always.md").write_text(
+            "---\ndescription: x\n---\nvždy @../../docs/x.md", encoding="utf-8"
+        )
+        (rules / "frontend/nested.md").write_text("vnořené", encoding="utf-8")
+        (rules / "scoped.md").write_text(
+            '---\npaths:\n  - "src/**/*.ts"\n---\njen nad TS', encoding="utf-8"
+        )
+        (self.project / "docs/x.md").write_text("import z rule", encoding="utf-8")
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def local(self, paths):
+        return sorted(p.name for p in paths if self.project in p.parents)
+
+    def test_split_by_paths(self):
+        always, conditional = measure.rules(self.project)
+        self.assertEqual(self.local(always), ["always.md", "nested.md"])
+        self.assertEqual(self.local(conditional), ["scoped.md"])
+
+    def test_rules_from_parent_directory(self):
+        sub = self.project / "sub"
+        sub.mkdir()
+        always, _ = measure.rules(sub)
+        self.assertEqual(self.local(always), ["always.md", "nested.md"])
+
+    def test_walk_counts_rule_and_its_import(self):
+        rows = {
+            p.name: (d, parent)
+            for d, p, parent in measure.walk(self.project)
+            if self.project in p.parents
+        }
+        self.assertEqual(rows["always.md"], (0, "rules"))
+        self.assertEqual(rows["x.md"][0], 1)
+        self.assertNotIn("scoped.md", rows)
+
+    def test_frontmatter_is_not_counted(self):
+        path = self.project / ".claude/rules/always.md"
+        self.assertEqual(measure.size(path, True), len("vždy @../../docs/x.md"))
+
+
 class Sections(unittest.TestCase):
     def test_markers_are_counted(self):
         body = "## A\nDoloženo 6. 9. 2026.\n**Proč:** protože.\n## B\nnic"

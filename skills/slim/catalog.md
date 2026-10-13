@@ -17,10 +17,11 @@ Co `/slim` v souboru hledá, jak to pozná a co s tím. Čte se ve *Fázi 2* a *
 
 ## Kdy text smí z paušálu pryč
 
-Paušál je to, co se načte do každé session bez ptaní – soubory, které Claude Code najde sám, a jejich `@` importy. Rozhodující otázka u každé sekce: **kdo ten text čte a kdy.**
+Paušál je to, co se načte do každé session bez ptaní – soubory, které Claude Code najde sám, a jejich `@` importy. **Patří sem i každý `.md` v `~/.claude/rules/` a v `.claude/rules/` projektu, rekurzivně, pokud nemá v hlavičce klíč `paths`** – Claude Code ho načte při startu stejně jako `CLAUDE.md` a `measure.py tree` ho tak i počítá. Rozhodující otázka u každé sekce: **kdo ten text čte a kdy.**
 
 - **Zůstává, co se uplatní v každé odpovědi** nebo co model potřebuje, aniž ví, že to potřebuje – prevence. Tabulka zakázaných termínů pryč nesmí, protože model neví, že sahá po nezavedeném slově; smí ale ztenčit na „místo X piš Y, platí na Z“.
 - **Pryč smí, co se uplatní jen při určité činnosti** – zakládání projektu, zápis do `docs/`, pouštění agentů, měření, návrh modelu –, ale jen když **tu činnost opravdu něco spustí**: skill si soubor přečte v přípravě, test ho vynucuje, nebo v paušálu zůstane jednořádkový spouštěč („než pustíš agenta, načti si `delegation.md`“). Odkaz bez mechanismu je přání.
+- **`paths` v hlavičce rule je další cesta z paušálu**, ale jen pro text vázaný na druh souboru: rule s `paths` se načte, teprve když Claude čte, zapisuje nebo edituje soubor odpovídající vzoru (`**/*.ts`, `src/api/**`). Činnost, kterou cesta souboru neprozradí – krok cyklu, puštění agenta, rozhodnutí –, tím nespustíš. `tree` takové rules vypíše zvlášť jako podmíněné a do součtu je nedá.
 - **Nejvýš jeden krok od místa, které se čte pokaždé.** Soubor, na který odkazuje soubor načítaný odkazem, se v praxi nenačte. Spouštěč proto stojí v paušálu nebo v souboru, který si čte každý skill (`~/.claude/skills/preflight.md`).
 - **Kde je cena nedodržení vysoká a spouštěč nejistý, pravidlo zůstává** (typicky git: `add -A`, heredoc, řetězení za blokovatelný příkaz) – jen zkrácené.
 - **Čte-li soubor jediný skill, patří k němu**; čte-li ho víc skillů, do sdíleného místa (`~/.claude/`, `~/.claude/skills/`), ne dovnitř cizího skillu.

@@ -4,9 +4,13 @@
 Čtyři režimy:
 
 - `tree [adresář]` – strom načítání: uživatelský `CLAUDE.md`, projektové
-  `CLAUDE.md` z adresáře a všech nad ním a rekurzivně jejich `@` importy.
-  U každého souboru znaky, hloubku a to, kdo ho importuje; součet proti limitu.
-  Nakonec druhá řada: popisy vlastních skillů, které jdou do kontextu taky.
+  `CLAUDE.md` z adresáře a všech nad ním, rules bez `paths` v hlavičce
+  (`~/.claude/rules/` a `.claude/rules/` téhož adresáře a všech nad ním,
+  rekurzivně) a rekurzivně jejich `@` importy. U každého souboru znaky,
+  hloubku a to, kdo ho importuje; součet proti limitu. Rules s `paths` se
+  načítají jen nad odpovídajícím souborem, do součtu nejdou a vypíšou se
+  zvlášť jako podmíněné. Nakonec druhá řada: popisy vlastních skillů, které
+  jdou do kontextu taky.
 - `sections <soubor>` – rozpad souboru po nadpisech `##` a `###` se znaky
   a počtem značek dokladů (data, „Doloženo“, „Proč:“, „Zrádné“).
 - `history <soubor>` – velikost souboru v gitu po dnech, ať je vidět, jak rychle roste.
@@ -33,6 +37,8 @@ PROJECT_FILES = ("CLAUDE.md", ".claude/CLAUDE.md", "CLAUDE.local.md")
 FENCE = re.compile(r"^(```|~~~).*?^\1[^\n]*$", re.S | re.M)
 CODE_SPAN = re.compile(r"(`+)(?:(?!\1).)+?\1", re.S)
 IMPORT = re.compile(r"(?<![\w`@])@([^\s`)\]>\"']+)")
+FRONTMATTER = re.compile(r"\A---\n(.*?)^---[ \t]*\n?", re.S | re.M)
+PATHS = re.compile(r"^paths[ \t]*:", re.M)
 HEADING = re.compile(r"^(#{2,3}) (.+)$", re.M)
 LOAD = re.compile(r"[Nn]a(?:čti|čte|čítá|čtou)\b[^\n]{0,240}?")
 MD_PATH = re.compile(r"`(~/[^`\s]+\.md)`")
@@ -77,6 +83,39 @@ def roots(start: Path) -> list:
     return [p.resolve() for p in result if p.is_file()]
 
 
+def frontmatter(text: str) -> tuple:
+    """(hlavička, text bez ní) – Claude Code hlavičku rule před načtením odřízne."""
+    match = FRONTMATTER.match(text)
+    return (match.group(1), text[match.end() :]) if match else ("", text)
+
+
+def rules(start: Path) -> tuple:
+    """(paušální, podmíněné) soubory rules, které Claude Code najde sám.
+
+    Uživatelské `~/.claude/rules/` a projektové `.claude/rules/` v adresáři
+    a všech nad ním, každé rekurzivně. Rule s klíčem `paths` v hlavičce se
+    načte jen nad souborem, který odpovídá vzoru, takže do paušálu nejde.
+    """
+    dirs = [Path.home() / ".claude" / "rules"]
+    dirs += [d / ".claude" / "rules" for d in [start, *start.parents]]
+    always, conditional, seen = [], [], set()
+    for directory in dirs:
+        for path in sorted(directory.rglob("*.md")) if directory.is_dir() else []:
+            path = path.resolve()
+            if path in seen or not path.is_file():
+                continue
+            seen.add(path)
+            head, _ = frontmatter(read(path))
+            (conditional if PATHS.search(head) else always).append(path)
+    return always, conditional
+
+
+def size(path: Path, rule: bool) -> int:
+    """Znaky, které jdou do kontextu – u rule bez hlavičky."""
+    text = read(path)
+    return len(frontmatter(text)[1] if rule else text)
+
+
 def walk(start: Path) -> list:
     """(hloubka, soubor, kdo ho importuje) pro celý strom, bez opakování.
 
@@ -85,6 +124,7 @@ def walk(start: Path) -> list:
     """
     seen, rows = set(), []
     queue = deque((0, path, "start") for path in roots(start))
+    queue.extend((0, path, "rules") for path in rules(start)[0])
     while queue:
         depth, path, parent = queue.popleft()
         if path in seen or depth > MAX_DEPTH:
@@ -109,17 +149,27 @@ def skill_descriptions() -> tuple:
 
 
 def cmd_tree(args) -> int:
-    rows = walk(Path(args.path).resolve())
+    start = Path(args.path).resolve()
+    rows = walk(start)
     total = 0
     print(f"{'hloubka':>7} {'znaků':>8} {'součet':>8}  soubor  ← importuje")
     for depth, path, parent in rows:
-        size = len(read(path))
-        total += size
-        print(f"{depth:>7} {size:>8} {total:>8}  {short(path)}  ← {parent}")
+        chars = size(path, parent == "rules")
+        total += chars
+        print(f"{depth:>7} {chars:>8} {total:>8}  {short(path)}  ← {parent}")
     state = "NAD LIMITEM" if total > args.limit else "pod limitem"
     print(
         f"\ncelkem {total} znaků v {len(rows)} souborech · limit {args.limit} · {state}"
     )
+    conditional = rules(start)[1]
+    if conditional:
+        chars = sum(size(path, True) for path in conditional)
+        print(
+            f"podmíněně: {len(conditional)} rules s `paths` {chars} znaků "
+            "(načtou se jen nad odpovídajícím souborem, do součtu nejdou)"
+        )
+        for path in conditional:
+            print(f"{size(path, True):>8}  {short(path)}")
     count, chars = skill_descriptions()
     print(
         f"druhá řada: popisy {count} vlastních skillů {chars} znaků "
