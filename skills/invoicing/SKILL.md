@@ -1,6 +1,6 @@
 ---
 name: invoicing
-description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury za odpracovaný čas – sečíst hodiny z timetrackingu za období, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail, u předplacených hodin místo faktury odepsat kredit. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim a konkrétní volání systémů drží ~/Context/business/, dohodu s klientem jeho fakturační soubor v klientské složce pod ~/Projekty, ne tenhle skill. Na rozdíl od /report nedělá analytický report, ale účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; teprve když uživatel potvrdí, že mail odeslal, označí fakturu ve fakturačním systému za odeslanou. Neúčtuje, nehlídá úhrady ani daňové termíny.
+description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury klientům – podle fakturační dohody každého klienta sestavit doklad z hodin v timetrackingu, paušálů, jednorázových a dalších dohodnutých položek, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail, u předplacených hodin místo faktury odepsat kredit. Režim recover navíc dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim a konkrétní volání systémů drží ~/Context/business/, dohodu s klientem jeho fakturační soubor v klientské složce pod ~/Projekty, ne tenhle skill. Na rozdíl od /report nedělá analytický report, ale účetní doklady. Mail neodesílá nikdy, za žádných okolností – končí draftem a odeslání je vždy uživatelův klik; teprve když uživatel potvrdí, že mail odeslal, označí fakturu ve fakturačním systému za odeslanou. Neúčtuje, nehlídá úhrady ani daňové termíny.
 argument-hint: [full|preview|recover|sync] [klient] [období]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Agent]
 ---
@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Agent]
 
 ## Co skill dělá
 
-Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého klienta sečte hodiny z timetrackingu za období, které ještě není vyfakturované, vystaví fakturu a založí v mailu draft se dvěma přílohami – fakturou a výkazem hodin. **Klientovi, který zaplatil hodiny dopředu, místo faktury odepíše hodiny z předplaceného kreditu**, pošle mu do draftu jen výkaz se zbytkem kreditu a ohlásí, až kredit dojde.
+Vystaví faktury klientům a připraví je k odeslání. **Zadáním faktury je u každého klienta jeho fakturační soubor**, ne timesheet. Podle něj skill za období, které ještě není vyfakturované, sestaví doklad ze všeho, co dohoda předepisuje: z hodin v timetrackingu, měsíčního paušálu, pevné částky, fáze spolupráce nebo dohodnutých položek mimo timetracking. Pak fakturu vystaví a založí v mailu draft se dvěma přílohami – fakturou a výkazem hodin. **Klientovi, který zaplatil hodiny dopředu, místo faktury odepíše hodiny z předplaceného kreditu**, pošle mu do draftu jen výkaz se zbytkem kreditu a ohlásí, až kredit dojde.
 
 - **`/invoicing full`** (výchozí) – celý průběh až po rozepsané drafty.
 - **`/invoicing preview`** – náhled toho, co by se vystavilo. Nic nevystaví, nic nezapíše, nikam nesáhne.
@@ -79,7 +79,7 @@ Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Context/business/
 
 **Vyjde-li období delší než jeden kalendářní měsíc** – typicky když se fakturace dohání zpětně –, poznamenej si to a **rozhodne se o tom ve *Fázi 3***. Nenastavuj takové období mlčky: mění text položky, znění mailu i to, co uvidí klient na dokladu.
 
-**Vyjde-li období prázdné**, klienta vynech a řekni to. Faktura na nula hodin je chyba, ne prázdná faktura.
+**Klienta vynech, jen když mu podle jeho souboru za období nepatří na doklad nic**, a řekni to. Faktura na nula hodin je chyba, ne prázdná faktura. Prázdný timetracking ale k vynechání nestačí. Paušál, pevná částka nebo čekající položka mimo timetracking (*Fáze 2*) vyrobí doklad i bez jediné hodiny.
 
 **Hlídej zákonnou lhůtu na vystavení.** Je to **15 dnů od DUZP** (`~/Context/business/invoicing.md`, *Datum vystavení a DUZP*) – žádný „15. den následujícího měsíce“, ten by u období končícího uprostřed měsíce sliboval víc, než zákon dává. DUZP je konec fakturovaného období, takže se to dá spočítat hned tady.
 
@@ -94,9 +94,13 @@ Tvar toho záznamu i důvod, proč se dělá takhle, drží `~/Context/business/
 
 ## Fáze 2 – Podklad
 
-**Nejdřív si přečti model fakturace v souboru klienta** – hodinovka podle skutečných hodin, pevná částka, částky po fázích, měsíční fee (`~/Context/business/invoicing.md`, *Jak se vyplňuje doklad*). **Neodvozuj ho z toho, že v timetrackingu jsou hodiny**; ty se logují i u paušálů. Není-li zapsaný, zeptej se a odpověď rovnou zapiš. Model určuje, co má vůbec smysl počítat – u paušálu se hodiny nesčítají do částky.
+**Doklad se skládá podle souboru klienta, ne podle timesheetu.** Přečti soubor celý, ne jen sazbu: *Dohodu*, *Položky mimo timetracking*, *Předplacený kredit* i deník výjimek. Pak z něj sestav seznam toho, co za období patří na doklad. Timetracking je jen jeden z možných zdrojů a u některých klientů žádný:
 
-Za každého klienta vytáhni odpracovaný čas za jeho období a **aplikuj pravidla v tomhle pořadí**: obecná z `~/Context/business/invoicing.md`, *Z timetrackingu na fakturu*, pak dohoda v souboru klienta, která je přebíjí.
+- **Model fakturace** určuje základ dokladu. Může to být hodinovka podle skutečných hodin, pevná částka, částky po fázích nebo měsíční paušál (`~/Context/business/invoicing.md`, *Jak se vyplňuje doklad*). **Neodvozuj ho z toho, že v timetrackingu jsou hodiny**, protože ty se logují i u paušálů. Není-li model zapsaný, zeptej se a odpověď rovnou zapiš. U paušálu se hodiny do částky nesčítají.
+- **Kombinace se nevylučují.** Klient může mít paušál a hodiny nad něj, hodinovku a k ní jednorázovou položku, nebo různé sazby podle projektu či prefixu. Na doklad patří všechno, co dohoda za tohle období předepisuje.
+- **Ujednání, které nezapadá do žádného kroku skillu, nevynechávej.** Uveď ho ve *Fázi 3* mezi body *K rozhodnutí* i s tím, jak bys ho promítl na doklad. Skill nemá rozhodnout, že se ho dohoda netýká, jen proto, že pro ni nemá připravený krok.
+
+Kde jsou hodiny součástí dokladu, vytáhni odpracovaný čas za období a **aplikuj pravidla v tomhle pořadí**: obecná z `~/Context/business/invoicing.md`, *Z timetrackingu na fakturu*, pak dohoda v souboru klienta, která je přebíjí.
 
 **Fakturuje-li se klientovi z jeho systému**, ber podklad odtamtud, ne z Clockify (`~/.claude/skills/invoicing/sync.md`, *Uzávěrka dřív než faktura*). **Neřiď se přitom příznakem fakturovatelnosti ve vzdáleném systému** – ten odpovídá na otázku klienta, ne na otázku faktury. Třídy sazeb rozliš stejně jako v Clockify, tedy podle prefixů v popisu.
 
@@ -112,6 +116,14 @@ Za každého klienta vytáhni odpracovaný čas za jeho období a **aplikuj prav
 
 **Má-li klient v dohodě očekávaný měsíční rozsah, porovnej ho se součtem.** Liší-li se řádově, **řekni to ve *Fázi 3*** a nabídni pustit napřed `recover` – po vystavení faktury se nenatrackovaný čas doplnit nedá, protože hranice období se posune a starší záznamy spadnou pod ni (`~/Context/business/invoicing.md`, *Z timetrackingu na fakturu*).
 
+**Sekci *Položky mimo timetracking* přečti vždycky, u každého klienta a v každém režimu.** Patří do ní dohodnuté položky, které na doklad přijdou bez podkladu v timetrackingu (`~/Context/business/invoicing.md`, *Jak se vyplňuje doklad*, *Položky mimo timetracking*). **Chybí-li sekce, řekni to ve *Fázi 3*.** Nepředpokládej, že je prázdná. U každé položky rozhodni:
+
+- **Měsíc položky spadá do fakturovaného období** → položka jde na doklad.
+- **Měsíc je pozdější** → položka čeká. Ve *Fázi 3* ji uveď jako čekající.
+- **Měsíc je dřívější než začátek období** → položka se vynechala. Patří mezi body *K rozhodnutí*.
+
+**Zadá-li uživatel položku přímo v běhu, nejdřív ji zapiš do té sekce** ve tvaru podle šablony a commitni ji. Teprve potom s ní počítej. V `preview` ji nezapisuj a na konci řekni, že zapsaná není.
+
 **Nezaokrouhluj jednotlivé záznamy.** Sečti je a zaokrouhli až součet – zaokrouhlené patnáctiminutovky nafouknou měsíc o hodiny a klient to pozná dřív než ty. **Na jakou jednotku a kterým směrem, drží `~/Context/business/invoicing.md`, *Z timetrackingu na fakturu*** – neurčuj to sám.
 
 ## Fáze 3 – Kontrola s uživatelem
@@ -121,11 +133,12 @@ Nic se nevystavuje, dokud tohle neprojde. **Klientů bývá pár, tak jdi klient
 Za každého ukaž:
 
 ```
-**<Klient>** · <období> · <hodiny> h × <sazba> = <částka> <daňový režim>
+**<Klient>** · <období> · <celková částka> <daňový režim>
 
 - **Doklad:** vystavení <datum>, DUZP <datum>, splatnost <datum>
 - **Na dokladu bude:** <období, které ponese text položky – liší-li se od skutečného, řekni to>
-- **Položka:** <text, který se vytiskne na doklad> – <hodiny> h
+- **Položky:** <každá položka dokladu na řádek – text, který se vytiskne, množství × cena = částka a odkud je: timetracking, paušál, položka mimo timetracking, jiné ujednání>
+- **Čeká:** <položky mimo timetracking odložené na pozdější měsíc, s tím měsícem>, nebo „nic“
 - **Vyřazeno:** <co a proč>
 - **K rozhodnutí:** <podezřelé záznamy, jeden po druhém>
 ```
@@ -140,7 +153,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Vyčerpá-li se kredit, řekni to jako první věc u klienta, ne v řádku** – od toho měsíce se fakturuje, a přečerpané hodiny toho měsíce ukaž v běžném bloku výš jako doklad. Otázka na delší období se u odepsaných měsíců neklade; doklad nevzniká.
 
-**Řádek *Položka* ukazuje text, který se doopravdy vytiskne na doklad**, ne název projektu – slož ho už tady podle `~/Context/business/invoicing.md`, *Z timetrackingu na fakturu*. Je to jediné místo v celém běhu, kde se dělá **subjektivní úsudek** (zobecnění popisků z timetrackingu), takže se nesmí schovat až do *Fáze 4*.
+**Řádek *Položky* ukazuje texty, které se doopravdy vytisknou na doklad**, ne názvy projektů – slož je už tady podle `~/Context/business/invoicing.md`, *Z timetrackingu na fakturu*. Je to jediné místo v celém běhu, kde se dělá **subjektivní úsudek** (zobecnění popisků z timetrackingu), takže se nesmí schovat až do *Fáze 4*.
 
 Data v řádku *Doklad* urči podle `~/Context/business/invoicing.md`, *Datum vystavení a DUZP*. **Číselná řada se ověřuje až ve *Fázi 4***, takže v režimu `preview` je datum vystavení předběžné – a s ním i **splatnost**, protože se z něj počítá. Řekni to.
 
@@ -178,9 +191,12 @@ Za každého klienta:
 
    - **U hodinovky vyplň množství, měrnou jednotku a jednotkovou cenu zvlášť** a součin nech spočítat systém. Jen celková částka nestačí – `~/Context/business/invoicing.md`, *Jak se vyplňuje doklad*. **Sazbu ber ze souboru klienta; nemá-li ji, z `~/Context/business/pricing.md`** – ceník je zdroj pravdy a klient ho smí přebít, ne naopak.
    - **Text položky slož** podle *Z timetrackingu na fakturu* v témže souboru: typ práce **zobecni** z popisků v Clockify, neopisuj je. Pokrývá-li období víc měsíců, řiď se navíc volbou z *Fáze 3*.
+   - **Položky, které nevznikly z timetrackingu**, tedy paušál, pevnou částku, fázi nebo jiné ujednání, vyplň tak, jak je předepisuje soubor klienta. Částku ani text si nedomýšlej. Nepředepisuje-li soubor text, použij ten, který uživatel odsouhlasil ve *Fázi 3*.
+   - **Položky mimo timetracking** odsouhlasené ve *Fázi 3* přidej každou jako samostatný řádek dokladu. Nesčítej je s hodinami z timetrackingu, ani když mají stejný projekt a sazbu. Do interní poznámky `clockify:` se nepromítají.
    - **Daňový režim a povinné údaje** ber ze souboru klienta a z *Daně a náležitosti* – **nedomýšlej je**.
 5. **Zapiš do dokladu období strojově čitelně.** Bez toho příští běh neví, odkud počítat, a začne se ptát na něco, co se dalo zapsat teď.
 6. Přečti doklad zpátky ze systému a ověř číslo, částku, odběratele, období **a všechna tři data – vystavení, DUZP i splatnost**. Splatnost se posílá v jiné jednotce, než v jaké se ukázala ve *Fázi 3* (dny místo data), takže je to jediné pole, kde se chyba o den jinak nemá jak projevit. Nespoléhej na to, že zápis prošel.
+7. **Byla na dokladu položka mimo timetracking, smaž ji teď ze sekce v souboru klienta.** Do deníku výjimek k ní zapiš, na kterém dokladu skončila. Obojí commitni jmenovanou cestou. Dokud položka v sekci zůstává, příští běh ji přidá znovu. Ze sekce ji proto smaž, až když je doklad zpátky přečtený.
 
 **Měsíc krytý kreditem se nevystavuje, ale odepíše:** připiš do evidence v souboru klienta řádek `| <YYYY-MM> | <hodiny> h | <zbývá> h |` za posledním měsícem, přečti tabulku zpátky a ověř, že zbytek je předchozí zbytek minus odpis. **Zápis commitni jmenovanou cestou** v klientské složce a pushni, má-li remote – je to tatáž povinnost jako u deníku výjimek ve *Fázi 3*. Přečerpané hodiny měsíce, kdy kredit došel, se vystaví podle kroků výš.
 
@@ -260,7 +276,7 @@ Výstup je jedna věta na doklad: číslo, klient, nový stav.
 
 ## Režim `preview`
 
-Doběhne *Fází 3* a tam skončí. **Nevystaví doklad, nezaloží draft a nezapíše ani do deníku výjimek, ani do evidence kreditu** – náhled, po kterém zůstane stopa, není náhled.
+Doběhne *Fází 3* a tam skončí. **Nevystaví doklad, nezaloží draft a nezapíše ani do deníku výjimek, ani do evidence kreditu, ani do položek mimo timetracking** – náhled, po kterém zůstane stopa, není náhled.
 
 K čemu je: zjistit před koncem měsíce, kolik toho je, jestli sedí hodiny, a jestli v timetrackingu nechybí nebo nepřebývá něco, co se má srovnat dřív, než vznikne doklad.
 
