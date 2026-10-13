@@ -13,9 +13,10 @@ Při dlouhé práci si Claude nasbírá kontext, který vy nemáte: přečetl so
 
 ## Proč zrovna tenhle
 
-- **Krátké.** Jeden až dva odstavce, ne přednáška.
+- **Krátké.** Tak krátké, aby se každá varianta stihla ukázat na příkladu, ne přednáška.
 - **Konkrétní.** Příběh místo obecné formulace – z něj je hned vidět, co která varianta znamená v praxi.
-- **Vysvětlení je opravdu napsané.** Nestane se, že Claude tvrdí „vysvětlil jsem“, ale vysvětlení proběhlo jen v jeho hlavě.
+- **Vysvětlení je opravdu napsané** v odpovědi, ne jen promyšlené.
+- **Napodruhé ví, co chcete.** Zavoláte-li ho znovu po tom, co se mezitím něco opravilo, zopakuje totéž vysvětlení s opravou; zavoláte-li ho hned znovu, zkusí to jinak.
 - **Jeden příkaz** místo psaní „nechápu, mluvíš moc stručně, co je to…“ pokaždé znovu.
 
 ## Jak se to používá
@@ -25,7 +26,7 @@ Při dlouhé práci si Claude nasbírá kontext, který vy nemáte: přečetl so
 /explain variantu B
 ```
 
-Stačí i napsat „nechápu, vysvětli mi to“.
+Stačí i napsat „nechápu, vysvětli mi to“, i jako odpověď v okně s volbami.
 
 ## Co nedělá
 
