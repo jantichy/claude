@@ -261,6 +261,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-10-12** · `/end` · `e40aa66` · session `53858f77-d99d-4a43-91ee-8d9bea4cae21` · prompty 8/8 · 1 téma (1 rozhodnuto: zmínka o smazaném `~/Dev/akademie` vypuštěná z `~/Context/depot/depot.md`) · mimo rozsah: žádné · meze: 56 bloků myšlení (prázdné z principu formátu), 1 výstup Read, 1 odložený výstup Bash (hromadný grep nahrazený užším)
 
 - **2026-10-12** · `/end` · `88c756c` · session `2178841c-d165-41bd-87d4-34fb9eefaa4a` · prompty 5/5 (3 z inventury, `/next` a `/end` doplněny ručně – známá díra v `todo.md`) · 1 téma (1 rozhodnuto: jméno klienta v historii gitu se nevymazává, `decisions.md`) · mimo rozsah: třetí doklad k položce o id session ve scratchpadu připsán do `todo.md` · meze: 43 bloků myšlení (prázdné z principu formátu), 7 výstupů Edit a 1 Read
+- **2026-10-13** · `/end` · `e6ea8b8` · session `2adf1c64-4415-4480-8c92-9e8860deff0b` · prompty 2/2 · 0 témat · mimo rozsah: prázdný stash `agent-a994-check` po agentovi (git-guard nedovolí `stash drop`, předáno uživateli k ručnímu smazání), test `hooksPath` červený ve worktree agentů (do `todo.md`), rozhodnutí bez data v `decisions.md` (doplněno) · meze: 33 bloků myšlení (prázdné z podstaty formátu), 2 výstupy ScheduleWakeup; slash příkaz `/login` je v transcriptu záznam `system`, ne zpráva uživatele, inventura ho nepočítá – nic k zápisu nenesl
 
 ## Odvedená práce
 

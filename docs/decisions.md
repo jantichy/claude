@@ -1934,7 +1934,7 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 
 ### Necommitnutou rozdělanou práci po `/break` commituje `/end`, ne `/break`
 
-Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli nijak neřeší – commitoval jen `todo.md`. `/end`, který po něm jde vždycky, to dělat má, jen to v něm stálo dvojznačně: Fáze 0 zakazuje commitovat soubory sahající **před session**, kdežto oddíl *Git* říkal „před začátkem **běhu**“, což jde číst jako běh úklidu. Opraveno na „session“ a doplněno, že rozdělaná práce se commituje i nedodělaná, zvlášť. `/break` ji jen vypíše do zápisu i se stavem, aby nová session poznala, co je v commitu záměr a co nedodělek.
+**Rozhodnuto 8. 10. 2026.** Průchod nanečisto ukázal, že `/break` necommitnutý kód nebo návrh v půli nijak neřeší – commitoval jen `todo.md`. `/end`, který po něm jde vždycky, to dělat má, jen to v něm stálo dvojznačně: Fáze 0 zakazuje commitovat soubory sahající **před session**, kdežto oddíl *Git* říkal „před začátkem **běhu**“, což jde číst jako běh úklidu. Opraveno na „session“ a doplněno, že rozdělaná práce se commituje i nedodělaná, zvlášť. `/break` ji jen vypíše do zápisu i se stavem, aby nová session poznala, co je v commitu záměr a co nedodělek.
 
 **Zamítnuto:**
 - **`/break` commituje rozdělanou práci sám** – commit by vznikal na dvou místech a dvojznačnost v `/end` by zůstala.
