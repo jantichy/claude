@@ -81,7 +81,7 @@ Nejdřív otázka, která rozhoduje, jestli se vůbec pokračuje:
 Pak zbytek:
 
 2. **Co skill dělá a kdy se má vyvolat.** Doslovné spouštěče i situace.
-3. **Stojí v *Životním cyklu projektu*** (`~/.claude/standards/rules.md`)? Pokud ano, **proti kterým dvěma sousedům se vymezuje** – to je vstup pro *Co skill nedělá* a bez něj sekce vznikne jako prázdná negace.
+3. **Stojí v *Životním cyklu projektu*** (`~/.claude/standards/rules.md`)? Pokud ano, **ve které vrstvě** (`~/.claude/standards/lifecycle.md`, *Kroky cyklu a jejich uspořádání*): krok osy se vymezuje **proti dvěma sousedům na ose**, kontrolní krok proti těm, **čí práci nepřebírá**, a místo sousedů se u něj určí, **ve kterých mezerách stojí**. To je vstup pro *Co skill dělá* a *Co skill nedělá* a bez něj sekce vznikne jako prázdná negace.
 4. **Má režimy?** Určuje `argument-hint`.
 5. **Co je jeho výstup** a podle čeho se pozná, že je hotový. Vstup pro závěrečný verdikt.
 6. **Které doménové znalosti** z `~/Context/` se na něj vztahují.
@@ -171,8 +171,10 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | Kam | Co |
 |---|---|
 | `skills/<name>/README.md` | **README skillu pro člověka zvenčí** podle `skills.md`, *README skillu* – sekce, hromadná instalace u skillu ze životního cyklu, odkaz do repozitáře |
-| `~/.claude/README.md` | sekce podle `~/.claude/standards/structure.md`, *`README.md`* – právě jeden odstavec o tom, k čemu skill je. **Odkaz na README skillu nese nadpis sekce** (`### [`/<name>`](skills/<name>/)`), ne zvláštní řádek pod odstavcem; do části *Skilly životního cyklu projektu* v pořadí kroků, nebo *Skilly mimo životní cyklus* abecedně |
-| `~/.claude/standards/rules.md` | zařazení do *Životního cyklu projektu*, stojí-li v něm – a doplnění u sousedů, čí práci nepřebírá |
+| `~/.claude/README.md` | sekce podle `~/.claude/standards/structure.md`, *`README.md`* – právě jeden odstavec o tom, k čemu skill je. **Odkaz na README skillu nese nadpis sekce** (`### [`/<name>`](skills/<name>/)`), ne zvláštní řádek pod odstavcem; do které skupiny patří a na kterém místě v ní, drží `skills.md`, *Sekce v hlavním README repozitáře* – osa a kontroly mají každá svou skupinu |
+| `~/.claude/standards/rules.md` | zařazení do rámečku *Životního cyklu projektu*, stojí-li v něm – krok osy na své místo v řadě **Osa**, kontrolní krok do výčtu **Kontroly** |
+| `~/.claude/standards/lifecycle.md` | stojí-li v cyklu: odrážka v *Hlavní ose*, nebo v *Kontrolních krocích*, a zápis do tabulky *Co smí stát v které mezeře* – u kroku osy nové mezery z obou jeho stran, u kontrolního kroku každá mezera, ve které stojí |
+| *Co skill nedělá* ostatních skillů z cyklu | doplnění, čí práci nový skill nepřebírá – u kroku osy u obou sousedů na ose, u kontrolního kroku u těch, se kterými se jeho otázka může plést |
 | `~/.claude/tests/test_skills.py` | nese-li skill něco, co má hlídat stroj, přidej test na **nosnou část**, ne na tvar hlavičky. U nového skillu ověř, že normu splňuje – výjimky se nevedou |
 | `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních README cyklu**. Testy to chytí, ale samy to nedopíšou |
 | `~/.claude/skills/<name>/` | vedlejší soubory, skripty, jejich kontrola závislostí |
@@ -223,7 +225,7 @@ Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez j
 |---|---|
 | Hlavička | `name` sedí s adresářem; `description` má spouštěč i situaci a vejde se do 1024 znaků; `argument-hint` sedí s režimy v těle; `allowed-tools` nemá nástroje, které skill nepoužívá |
 | Povinné sekce | jsou tam všechny a v pořadí z normy; žádná zaniklá nepřebývá |
-| *Co skill nedělá* | jmenuje souseda, ne obecnou činnost; u kroku životního cyklu jsou to sousedé z obou stran |
+| *Co skill nedělá* | jmenuje souseda, ne obecnou činnost; u kroku osy jsou to sousedé z obou stran, u kontrolního kroku ti, čí práci nepřebírá, bez tvrzení o pořadí |
 | Příprava | odkazuje na `preflight.md` a neopisuje jeho obsah |
 | Závěrečný verdikt | jsou tam obě znění a ve tvaru z normy |
 | Délka | proti mezím z normy; nad měkkou mez navrhni, co vytáhnout |
@@ -274,10 +276,10 @@ Nejdřív **vypiš, co všechno se najde**, a nech to potvrdit. Teprve pak maž.
 |---|---|
 | `~/.claude/skills/<name>/` | celý adresář včetně vedlejších souborů a skriptů |
 | `~/.claude/README.md` | jeho sekce |
-| `~/.claude/standards/rules.md` | rámeček v *Životním cyklu projektu* a zmínky u sousedů |
-| `~/.claude/standards/lifecycle.md` | **byl-li to krok cyklu**, jeho číslovaná odrážka; bez ní se rozejde s rámečkem a testy to shodí |
+| `~/.claude/standards/rules.md` | jeho jméno v rámečku *Životního cyklu projektu* – v řadě **Osa**, nebo ve výčtu **Kontroly** |
+| `~/.claude/standards/lifecycle.md` | **byl-li to krok cyklu**, jeho odrážka v *Hlavní ose*, nebo v *Kontrolních krocích*, a jeho výskyty v tabulce *Co smí stát v které mezeře*; bez toho se rozejde s rámečkem a testy to shodí. U kroku osy se tím dvě mezery slévají v jednu – co v ní zůstane stát, rozhoduje uživatel, ne úklid |
 | `~/.claude/tests/` | testy, které se ho týkají |
-| ostatní skilly | odkazy a předávání práce – „další krok: `/<name>`“ |
+| ostatní skilly | odkazy a předávání práce – verdikty a *Kudy dál*, které na něj míří, a zmínky v *Co skill nedělá* |
 | `skills/*/README.md` | **byl-li to krok cyklu**, jeho jméno v rámečku a v hromadné instalaci ostatních README skillů. Osiřelý odkaz na `../<name>/README.md` testy shodí, ale samy ho nevyškrtnou |
 | `~/.claude/settings.json` | hooky a oprávnění, které existovaly kvůli němu |
 | projektové `CLAUDE.md` v `~/Dev` a `~/Projekty` | sekce, které skill zakládal |
