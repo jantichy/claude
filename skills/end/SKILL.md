@@ -25,7 +25,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 ## Co skill nedělá
 
-**Neopakuje, co udělal `/consistency`.** Ten se ptá „sedí si projekt sám se sebou?“ a běží o krok dřív. Tenhle skill se ptá „je v souborech všechno, co v session padlo?“ – vytěžuje konverzaci, ne dokumentaci.
+**Neopakuje, co udělal `/consistency`.** Ten se ptá „sedí si projekt sám se sebou?“, tenhle skill se ptá „je v souborech všechno, co v session padlo?“ – vytěžuje konverzaci, ne dokumentaci.
 
 **Neposuzuje kvalitu dokumentace.** Do 26. 9. 2026 na to pouštěl dva čtenáře bez kontextu: jeden hledal, jestli se z dokumentace pozná další krok, druhý pozůstatky po zápisu. Zrušeni – byli **40,8 % ceny běhu** při 3,1 spuštění a posuzovali jinou otázku než tu, kvůli které se skill pouští. Rozbor v `decisions.md`. Odkazy a mrtvé kotvy po zápisu dál hlídá skript; věta, která zápisem přestala platit, se chytí až v příštím `/consistency`, a to je vědomě přijatá cena.
 
@@ -49,7 +49,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 **Session se vytěžuje vždycky celá** – to je smysl skillu a nedá se to zúžit ani rozšířit.
 
-**Audit celé dokumentace sem nepatří** – je to jiná otázka a dělá ho `/consistency full` o krok dřív.
+**Audit celé dokumentace sem nepatří** – je to jiná otázka a odpovídá na ni `/consistency full`.
 
 ## Zásady pro celý průběh
 

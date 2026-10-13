@@ -29,7 +29,7 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 - **Nesmaže kód jen proto, že vypadá mrtvý.** Může se volat dynamicky, z konfigurace nebo z jiného repozitáře – proto je to vždycky sporné.
 - **U hromadných nálezů neodklikáváte padesát otázek.** Ukáže vzorec, počet a tři příklady a nabídne to udělat najednou.
 - **Po každé své opravě si ověří, že nic nerozbil**, a pouští k tomu jen ty příkazy, které projekt sám deklaruje. Co spustit nemohl, vypíše jako nezkontrolované.
-- **Neopakuje práci, která už proběhla.** Testy a linter běžely o krok dřív, takže se před auditem nespouštějí znovu – jen po vlastních opravách.
+- **Neopakuje práci, která už proběhla.** Kde testy a linter pouští po každé odpovědi průběžná kontrola, před auditem je znovu nespouští – jen po vlastních opravách.
 - **Co se dá změřit, neodhaduje.** Mechanické vady hledá nástroj a jejich výčet je úplný; posuzování zbývá jen na to, co změřit nejde. Ušetřené místo padne na vlastní úsudek.
 - **Řekne, kdy se vyplatí pustit ho znovu.** Po rozsáhlé opravě má čerstvě napsaný text vad nejvíc; po drobných opravách by další běh hledal hlavně sám sebe.
 

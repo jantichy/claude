@@ -14,7 +14,7 @@ Vezme **`docs/plan.md`** a odpracuje ho úkol po úkolu – u každého test, im
 
 - **Nemění plán.** Ukáže-li se, že je plán špatně, zastaví se – viz *Když plán neplatí*. Plán píše `/breakdown` a opravit ho patří jemu; tady se odpracovává.
 - **Nedodělává, co v plánu není.** Nápad nad rámec plánu jde do `docs/todo.md` nebo `docs/backlog.md`, ne do kódu.
-- **Neuzavírá feature.** Hotovou práci prověřuje `/review` hned po tomhle, vnitřní konzistenci `/consistency` a úklid `/end` – samostatné kroky, viz `~/.claude/standards/lifecycle.md`, druhá půlka životního cyklu.
+- **Neuzavírá feature.** Hotovou práci prověřuje `/review`, vnitřní konzistenci `/consistency` a zápis session `/end` – samostatné kontrolní kroky, viz `~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*.
 
 ## Jak je to postavené uvnitř
 

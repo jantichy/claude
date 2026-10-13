@@ -18,13 +18,13 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **Nehledá chyby v kódu.** Na korektnost provedených změn je `/review` – ten uvnitř volá vestavěné `/code-review` jako jednoho ze svých specialistů, takže poslat uživatele rovnou na něj by ho připravilo o zbytek panelu i o ověření nálezů.
 - **Nekontroluje soulad s doménovými znalostmi.** Na odchylky od předpisů v `~/Context/` je `/review`. Tenhle skill se ptá „sedí si projekt sám se sebou?“, ne „drží předpis?“ – projekt může být dokonale konzistentní a přitom konzistentně porušovat pravidla.
 - **Neposuzuje, jestli je návrh dobrý.** Na to je `/oponent`.
-- **Nevytěžuje session.** Zápis dohod do souborů dělá `/end`, který běží až po tomhle.
+- **Nevytěžuje session.** Zápis dohod do souborů dělá `/end` – ten se ptá „je v souborech všechno, co v session padlo?“, tenhle „sedí si projekt sám se sebou?“.
 - **Nemění chování.** Nálezy, které by ho změnily, jsou vždy sporné a jdou přes uživatele.
-- **Neopakuje, co udělal `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství se **před auditem nespouští** – proběhly o krok dřív a od té doby se nic nezměnilo. **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže doklad od `/review` už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který předchozí kroky životního cyklu nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
+- **Neměří, co měří průběžná kontrola a `/review`.** Typecheck, linter, testy, audit závislostí ani scan tajemství nejsou jeho otázka; průběžnou kontrolu před auditem pouští jen tehdy, když stav pracovního stromu nikdo neověřil (*Fáze 0*). **Po každé vlastní opravě ano** (Fáze 4 a 5): tou se stav změnil, takže dřívější doklad už neplatí. Tenhle skill dorovnává jen ten konzistenční zbytek, který ostatní kroky životního cyklu nepokrývají – ve výchozím rozsahu nad tím, čeho se dotkla větev, s `full` nad celým projektem.
 
 ## Jak je to postavené uvnitř
 
-**Deterministickou vrstvu skill nepíše sám** (*Spusť nástroje, které předchozí kroky životního cyklu nedělají*): mrtvý kód a nepoužité závislosti měří `knip`, odkazy a kotvy v Markdownu `~/.claude/skills/links.py`, zbytek grep a `git blame`. **Který nástroj to je, je implementační detail** – vymění se, jakmile bude lepší, a na tom, jak se `/consistency` volá a co vrací, se tím nezmění nic.
+**Deterministickou vrstvu skill nepíše sám** (*Spusť nástroje, které jiné kroky životního cyklu nedělají*): mrtvý kód a nepoužité závislosti měří `knip`, odkazy a kotvy v Markdownu `~/.claude/skills/links.py`, zbytek grep a `git blame`. **Který nástroj to je, je implementační detail** – vymění se, jakmile bude lepší, a na tom, jak se `/consistency` volá a co vrací, se tím nezmění nic.
 
 **Závazné je proti tomu tohle a tiše se to změnit nesmí:** co jde změřit nástrojem, nehledá agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula); nespuštěná kontrola se vypisuje jako nespuštěná, nikdy jako nula nálezů; a nálezy z nástrojů nesou tag `toolchain` a neprocházejí posouzením, protože nástroj nehalucinuje.
 
@@ -35,15 +35,15 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **`/consistency`** nebo **`/consistency branch`** (výchozí) – soubory dotčené prací na aktuální větvi **a soubory, které na ně odkazují**. Ten druhý půlkruh je podstatný: nekonzistence skoro nikdy nežije v jednom souboru, ale mezi změněným a tím, co o něm mluví.
 - **`/consistency full`** – celý projekt bez ohledu na diff. Použij, když uživatel napíše `full`, jinak nikdy.
 
-**Proč výchozí rozsah není celý projekt.** Skill je krok uzavírání, tedy běží **po každé feature**, ale cena kompletního auditu je úměrná velikosti projektu, ne velikosti změny. Na projektu s dvěma sty soubory to znamená, že se při každém uzavření znovu najde tentýž starý dluh – a uživatel má dvě možnosti: znovu ho odklikat, nebo ho umlčet do `## Consistency`. Druhá je levnější, takže se stane výchozí, a tím z ní roste umlčovací seznam. Ze stejného důvodu se `/consistency` jako první vynechá, jakmile se spěchá.
+**Proč výchozí rozsah není celý projekt.** Skill se pouští opakovaně – **pokaždé, když se v projektu nasbírá dost změn** –, ale cena kompletního auditu je úměrná velikosti projektu, ne velikosti změny. Na projektu s dvěma sty soubory to znamená, že se při každém běhu znovu najde tentýž starý dluh – a uživatel má dvě možnosti: znovu ho odklikat, nebo ho umlčet do `## Consistency`. Druhá je levnější, takže se stane výchozí, a tím z ní roste umlčovací seznam. Ze stejného důvodu se `/consistency` jako první vynechá, jakmile se spěchá.
 
-**`full` se vyplatí jednou za čas a před `/release`**, ne po každé feature. U staršího projektu předem upozorni, kolik souborů se bude procházet, a při řádově stovkách se zeptej přes `AskUserQuestion`, jestli pokračovat, nebo omezit rozsah na konkrétní adresář – stejně jako to dělá `/review full`.
+**`full` se vyplatí jednou za čas a před `/release`**, ne při každém běhu. U staršího projektu předem upozorni, kolik souborů se bude procházet, a při řádově stovkách se zeptej přes `AskUserQuestion`, jestli pokračovat, nebo omezit rozsah na konkrétní adresář – stejně jako to dělá `/review full`.
 
 ------
 
 ## Fáze 0 – Příprava: kontext a konvence
 
-**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím; krok *Urči rozsah* níž rozvíjí jeho bod 5 o druhý půlkruh. Bod 4 odpadá, průběžnou kontrolu pustil `/review` o krok dřív a tenhle skill na kód nesahá, dokud neprojde nález s uživatelem.
+**Společný začátek drží `~/.claude/skills/preflight.md`** – načti si ho a řiď se jím; krok *Urči rozsah* níž rozvíjí jeho bod 5 o druhý půlkruh. Bod 4 se řídí tím, jestli stav pracovního stromu už někdo ověřil, ne tím, který krok běžel před tímhle: **má-li projekt průběžnou kontrolu zapnutou** (souhlas vypíše `~/.claude/hooks/verify.sh --list`), pustil ji `Stop` hook nad aktuálním stromem po poslední odpovědi a znovu se nepouští; **nemá-li ji, pusť ji podle bodu 4**, dřív než se dotkneš prvního souboru.
 
 Nad rámec toho nasbírej konvence projektu, ať má agent proti čemu měřit.
 
@@ -80,9 +80,9 @@ Z těchto souborů sestav **soupis konvencí** – co je v projektu explicitně 
 
 Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. Položky tam uvedené (s důvodem) **vůbec neuváděj** v nálezech – uživatel je dřív označil jako „won't fix“.
 
-### 0.4 Spusť nástroje, které předchozí kroky životního cyklu nedělají
+### 0.4 Spusť nástroje, které jiné kroky životního cyklu nedělají
 
-**Typecheck ani linter tady před auditem nespouštěj.** Pustil je `/review` o krok dřív a po každé své opravě je pustil znovu, takže stav, se kterým sem přicházíš, byl naposledy ověřený jím – opakovat je znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/standards/lifecycle.md`, *Povolená opakování*.
+**Typecheck ani linter tady před auditem znovu nespouštěj.** Stav, se kterým sem přicházíš, ověřila průběžná kontrola podle *Fáze 0* – opakovat je nad týmž stromem znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/standards/lifecycle.md`, *Povolená opakování*.
 
 Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
 
@@ -115,7 +115,7 @@ Výstupy si zapamatuj a předej je agentovi. Nálezy z toolchainu se označí ta
 
 **Proč to tady je:** prázdné pole nálezů vypadá stejně, ať agent prošel dvě stě souborů, nebo dvanáct – a „prošel jsem to systematicky“ je tvrzení, které nemá čím být doložené. Je to táž vada, kterou u `/end` vyřešil měřený poměr odškrtnutých promptů; zdůvodnění drží `~/.claude/docs/decisions.md`, *`/end` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*.
 
-Spusť subagenta typu `reader` s tímto zadáním (předej mu absolutní cestu k projektu, **seznam souborů v rozsahu**, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které předchozí kroky životního cyklu nedělají*):
+Spusť subagenta typu `reader` s tímto zadáním (předej mu absolutní cestu k projektu, **seznam souborů v rozsahu**, konvence z *Načti dokumentaci konvencí*, seznam ignorovaných z *Načti seznam ignorovaných položek* a výstupy nástrojů z *Spusť nástroje, které jiné kroky životního cyklu nedělají*):
 
 ```
 Prohledej zadaný rozsah (viz *Rozsah* výš) a najdi všechny případy vnitřní nekonzistence. Procházej systematicky.

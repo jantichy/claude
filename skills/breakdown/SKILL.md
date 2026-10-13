@@ -16,7 +16,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to pátý krok
 
 - **Neimplementuje.** Ani první úkol „na ukázku“. Implementaci dělá `/implement`.
 - **Nepíše zadání.** Když chybí, pošle tě na `/specify`.
-- **Neoponuje zadání.** Jestli dává smysl, posoudil `/oponent` o krok dřív. Tady se bere jako platné a rozpad se dělá proti němu, ne proti vlastnímu názoru na něj.
+- **Neoponuje zadání.** Jestli dává smysl, je otázka pro `/oponent`, ne pro rozpad. Tady se bere jako platné a rozpad se dělá proti němu, ne proti vlastnímu názoru na něj.
 - **Neřeže rozsah sám.** Co je v MVP, rozhodl `/specify`. Tady se to jen respektuje.
 
 ## Jak je to postavené uvnitř

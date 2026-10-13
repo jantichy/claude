@@ -17,7 +17,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to sedmý krok
 
 - **Nevyhodnocuje, jestli je nasazená věc k něčemu.** Sledovací okno měří **pády** a má odpověď za hodiny; otázku „používá se to a co si lidé vyžádali“ řeší `/evaluate` za týdny. Tenhle skill mu jen zapíše datum, kdy na to bude čas.
 - **Neopravuje.** Najde-li kontrola problém, skill **skončí** a pošle to zpátky do `/implement` nebo `/review`. Neopravuj v předvečer nasazení – změna, která neprošla review, je přesně ta, která spadne.
-- **Neprověřuje, jestli to obstojí.** Rozbít hotovou práci spuštěním zkouší `/attack` před tímhle; sem se přichází se stavem, který tím prošel, a nasazuje se, ne testuje.
+- **Neprověřuje, jestli to obstojí.** Rozbít hotovou práci spuštěním zkouší `/attack`, má-li projekt co spustit; tady se nasazuje, ne testuje.
 - **Nerozhoduje o obsahu vydání.** Co se nasazuje, je to, co je na větvi. Vybírat commity na poslední chvíli je cesta k tomu nasadit půlku feature.
 - **Nezakládá infrastrukturu.** Nastavení prostředí, domén a proměnných je jednorázová práce, ne součást každého vydání.
 
