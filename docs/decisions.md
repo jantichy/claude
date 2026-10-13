@@ -2059,3 +2059,13 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 - **Skutečné přepnutí adresáře hookem** – hook pracovní adresář session změnit neumí, takže přepnutí musí udělat model.
 - **Klíč podle projektu nebo session** – ID session se při `/clear` mění a klíč podle projektu by spojil dvě záložky nad týmž repozitářem. Bez proměnné záložky hook proto mlčí.
 - **Jen spouštět `claude` rovnou ve worktree** – to nepomůže, když větev vznikne až v běžící session, a to je běžný případ.
+
+### `/explain` jako oprava na vyžádání vedle pravidel prevence
+
+**Rozhodnuto 13. 10. 2026.** Pravidla *Krátkost neruší kontext*, *Interní značky ven nepatří* a *Před otázkou stojí v textu odpovědi kontext* v `standards/rules.md` měla zabránit otázkám, kterým uživatel nerozumí. Za jeden den jich přesto v jednom projektu bylo patnáct: odkaz na nenapsanou věc („z jakého náhledu?“), nevysvětlená zkratka (BEM, `ops_`), slovo ve významu známém jen z dokumentace („mail se nabízí“), chybějící dnešní stav, varianty popsané jen mechanikou a vysvětlení, které zůstalo v myšlení.
+
+**Rozhodnutí:** skill `/explain`, který uživatel zavolá místo věty „nerozumím“. Postup – co v původním textu hledat, stavba vysvětlení na jednom příběhu, varianty přehrané na něm, otázka znovu dialogem – se načítá jen při zavolání. Prevence zůstává v `rules.md`.
+
+**Zamítnuto – rozepsat postup do `rules.md`:** stál by kontext v každé session, i v těch, kde se nic nevysvětluje, a prevenci by to nezlepšilo, protože ta už v pravidlech je a selhává při psaní, ne pro nedostatek návodu.
+
+**Zamítnuto – srovnávací běh bez skillu:** nahradilo ho patnáct skutečných selhání z transcriptů, která jsou lepším podkladem než uměle navozená situace. Nastavení `description` se neměřilo – jméno se nekryje s žádným jiným skillem.

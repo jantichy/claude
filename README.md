@@ -228,9 +228,11 @@ V nové session po `/break` najde zápis přerušené práce, přejde do adresá
 
 #### [`/diagram`](skills/diagram/) – datový model jako mapa, na kterou se dá kliknout
 
-PLACEHOLDER_DIAGRAM
-
 Z dokumentace navrženého modelu nakreslí interaktivní stránku: ER diagram všech tabulek, ve kterém po kliknutí vidím popis entity, vazby, sloupce a constrainty, a stavový prostor s přechody mezi stavy. Žije jako soukromý artefakt a při dalším zavolání se překreslí na stejném odkazu, klidně z jiné rozdělané větve. Nekreslí nic, co v dokumentaci není, a do projektu nezapisuje.
+
+#### [`/explain`](skills/explain/) – když Claude mluví v náznacích
+
+Když se mě Claude na něco ptá a já nerozumím, protože odkazuje na nález, který jsem neviděl, používá zkratku nebo nabízí „variantu A, nebo B“ bez popisu, stačí napsat `/explain`. Řekne to znovu v jednom až dvou odstavcích: čeho se věc týká, jak je to dnes a proč to nestačí, to všechno na jednom konkrétním příběhu z projektu, na kterém přehraje i každou variantu, a pak otázku položí znovu.
 
 #### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
 
