@@ -16,7 +16,7 @@ Vystaví faktury za odpracovaný čas a připraví je k odeslání. Za každého
 - **`/invoicing recover`** – dohledá čas, který se zapomněl natrackovat, a ukáže tipy s doložením. Taky nic nevystaví a **sám od sebe nezapíše ani do timetrackingu, ani do souboru klienta**.
 - **`/invoicing sync`** – přepíše odpracovaný čas do timetrackingu klienta, má-li ho klient vyplněný. Nic nevystavuje; **jako jediný režim zapisuje do cizího systému**.
 
-Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají **fakturační soubor ve své klientské složce** – kde se hledá, drží *Fáze 1*. **Klienta bez vyplněné části *Dohoda* vynech a řekni to** – takový soubor existuje kvůli `recover`, který identifikátory potřebuje dřív, než se začne fakturovat, a fakturovat podle nevyplněné dohody nejde. **Stejně vynech a ohlas klienta, který má ve *Stavu spolupráce* hodnotu `uzavřená`** – fakturovat se mu už nebude a jeho zbylý čas drží deník propadlého času (`~/Context/business/invoicing.md`, *Soubor klienta*).
+Za režimem smí stát **jméno klienta**. S ním jede skill jen přes něj, bez něj přes všechny, kteří mají **fakturační soubor ve své klientské složce** – kde se hledá, drží *Fáze 0*, bod 4. **Klienta bez vyplněné části *Dohoda* vynech a řekni to** – takový soubor existuje kvůli `recover`, který identifikátory potřebuje dřív, než se začne fakturovat, a fakturovat podle nevyplněné dohody nejde. **Stejně vynech a ohlas klienta, který má ve *Stavu spolupráce* hodnotu `uzavřená`** – fakturovat se mu už nebude a jeho zbylý čas drží deník propadlého času (`~/Context/business/invoicing.md`, *Soubor klienta*).
 
 **Jen u `recover` smí za jménem klienta stát ještě období** (`2026-05`), kterým se přebije výchozí rozsah. **`sync` období nepřijímá** – to, do čeho smí sáhnout, si určuje sám z otevřeného okna a přebít se nedá.
 
@@ -58,13 +58,12 @@ Společný začátek je v `~/.claude/skills/preflight.md`. **Body 1 až 3 se tad
 1. **Načti `~/Context/business/invoicing.md` celý** a k němu **`~/Context/business/pricing.md`**. Nespoléhej na paměť – sazby a dohody se mění. Chybí-li `invoicing.md`, řekni to a **skonči**; skill bez něj nemá podle čeho fakturovat. `pricing.md` drží sazebník pro klienty, kteří vlastní sazbu zapsanou nemají.
 2. **Zjisti dnešní datum** příkazem `date +%F` (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 3. **Ověř přístupy k timetrackingu i fakturačnímu systému** dřív, než začneš cokoliv počítat – způsobem, který popisuje `~/Context/business/invoicing.md`, *Přístupy*. **Selže-li kterýkoli přístup, skonči a řekni který** – běh, který spočítá podklad a pak nemá čím vystavit, je jen ztracená práce. **Projdi zároveň seznam `~/Context/business/invoicing.md`, *Co ještě není vyplněné*** – je nadřazený a nese i blokátory, které se jinak projeví až uprostřed běhu nebo po vystavení dokladu. Nedořešená položka není důvod skončit, ale **musí zaznít předem**, ne ve chvíli, kdy už doklad existuje.
-4. **Zjisti, jestli není rozdělaný běh z minula** – klient s hotovou fakturou, ale bez draftu. Poznáš to tak, že poslední faktura klienta ve fakturačním systému **už nese poznámku s obdobím**, ale v mailu k ní není draft. Navaž na něj, nezakládej znovu.
+4. **Urči rozsah.** Rozsahem je klient z argumentu, nebo všichni, kdo mají `~/Projekty/<Client>/invoicing.md`. Klient se jmenuje podle své složky; jméno z argumentu s ní porovnej bez ohledu na velikost písmen. **Jinde se soubor klienta nehledá** – každý fakturovaný klient má klientskou složku a druhé umístění by se muselo pamatovat. V `~/Context/business/invoicing/` leží jen odkaz pro člověka. Bod 5 i závěr přípravy s rozsahem počítají, proto se určuje už tady.
+5. **Zjisti, jestli není rozdělaný běh z minula** – klient s hotovou fakturou, ale bez draftu. Poznáš to tak, že poslední faktura klienta ve fakturačním systému **už nese poznámku s obdobím**, ale v mailu k ní není draft. Navaž na něj, nezakládej znovu.
 
 Na konci shrň, co jsi zjistil: kolik klientů je v záběru, do jakých systémů se sáhne a v jakém režimu se jede.
 
-## Fáze 1 – Rozsah a období
-
-**Rozsah** je klient z argumentu, nebo všichni, kdo mají `~/Projekty/<Client>/invoicing.md`. Klient se jmenuje podle své složky; jméno z argumentu s ní porovnej bez ohledu na velikost písmen. **Jinde se soubor klienta nehledá** – každý fakturovaný klient má klientskou složku a druhé umístění by se muselo pamatovat. V `~/Context/business/invoicing/` leží jen odkaz pro člověka.
+## Fáze 1 – Období
 
 **Období se každému klientovi počítá zvlášť** a nikdy se neodhaduje:
 

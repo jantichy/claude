@@ -150,6 +150,8 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Počty se měří bash skriptem ve scratchpadu.** Inline příkaz v shellu se u téhle práce rozbije spolehlivě: vnořené uvozovky spolknou proměnnou, `zsh` rozbalí `--include=*.md` jako glob, znaková třída uložená v proměnné s hranatými závorkami zničí negaci a `grep` na stroji může být `ugrep` s jinou syntaxí. Šest takových selhání v řadě stálo jeden běh víc času než celý přepis.
 
+**Rozsah souborů měř `git grep --untracked -z` po každém pracovním stromu, soubory mimo git zvlášť.** `grep` v shellu Claude Code je funkce, která volá `ugrep` s `--ignore-files`, takže vynechá, co git ignoruje, kdežto `/usr/bin/grep` projde i ignorované adresáře harnessu – tentýž dotaz pak dá dva různé rozsahy a žádný z nich není ten, který se má měnit. `-z` je tam kvůli jménům s diakritikou, která git jinak uvozuje a další krok skriptu je nenajde.
+
 **A nejdřív ověř měřidlo, teprve pak výsledek.** Stejné číslo u různých hledaných slov je porucha nástroje, ne nález – vypadá ale úplně stejně jako výsledek. Kontrolní otázka: **liší se počty mezi slovy tak, jak se lišit mají?**
 
 **Odhad ze zadání neber za rozsah.** Čísla, která ti dá uživatel nebo fronta, jsou orientace – změř si to sám. Doloženo: odhad 750 míst proti skutečným 1 082, a odhad 37 výjimek proti skutečným 150. Rozdíl byl v tom, že odhad počítal základní tvary a skutečnost všechny pády.

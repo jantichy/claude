@@ -14,8 +14,8 @@ Ptají se, jestli je to správně:
 
 | Specialista | Ptá se | Zapíná se, když v rozsahu je | Typ |
 |---|---|---|---|
-| **Korektnost** | dělá to, co má, scénář po scénáři? | jakýkoliv kód | – (vestavěné `/code-review`) |
-| **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven, **a vždy změna manifestu nebo lockfile závislostí** | – (vestavěné `/security-review`); vlastní agent navíc `Explore` |
+| **Korektnost** | dělá to, co má, scénář po scénáři? | jakýkoliv kód; v rozsahu bez kódu návrh v `docs/` – požadavky, scénáře, architektura | – (vestavěné `/code-review`); v rozsahu bez kódu vlastní agent `Explore` (`SKILL.md`, Fáze 2) |
+| **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven, **a vždy změna manifestu nebo lockfile závislostí**; v rozsahu bez kódu návrh, který se dotýká oprávnění, guardů nebo citlivé oblasti | – (vestavěné `/security-review`); vlastní agent navíc `Explore`, v rozsahu bez kódu jen on (`SKILL.md`, Fáze 2) |
 | **Data a stavy** | migrace, konzistence, souběh, idempotence | datový model, migrace, stavový automat, fronta, plánované úlohy | `Explore` |
 | **Provoz a chyby** | co se stane, když to spadne? | volání cizích systémů, I/O, dlouhé operace, cokoliv s timeoutem | `Explore` |
 | **Testy** | co není pokryté a které testy jsou falešně zelené? | jakýkoliv kód, u kterého projekt má `test` v kontraktu příkazů | `Explore` |
