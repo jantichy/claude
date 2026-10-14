@@ -62,7 +62,7 @@ Archiv se nikdy nepřepisuje, jen doplňuje. Báze naopak ano – opravuje se po
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/compose
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.

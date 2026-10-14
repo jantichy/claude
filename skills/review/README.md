@@ -71,7 +71,7 @@ Panel: 31 nálezů → 22 po deduplikaci → 22 ověřeno → 13 přežilo:
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/review a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi

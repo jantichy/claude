@@ -36,6 +36,8 @@ Vypíše, kolik konverzací se bude vytěžovat, projde je, ukáže seznam toho,
 
 ## Jak si ho nainstalovat
 
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
+
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/scenarios
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 

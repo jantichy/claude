@@ -52,7 +52,7 @@ Limity dat  čemu se nedá věřit a proč
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/report a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 > Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`.

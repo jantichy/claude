@@ -68,7 +68,7 @@ Nepotvrzeno
 
 ## Jak si ho nainstalovat
 
-Řekněte svému Claudovi tohle:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/evaluate
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.

@@ -36,6 +36,8 @@ Stačí i napsat „nechápu, vysvětli mi to“, i jako odpověď v okně s vol
 
 ## Jak si ho nainstalovat
 
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
+
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/explain
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 

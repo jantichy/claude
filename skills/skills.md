@@ -325,9 +325,11 @@ Pravidlo *Nepiš, co model už ví* z odstavce **Jak se píše text uvnitř** ta
 
 **`## Co nedělá`** – 2 až 4 odrážky, lidský překlad `## Co skill nedělá` ze `SKILL.md`. Šetří zklamání i dotazy.
 
-**`## Jak si ho nainstalovat`** – **napsané jako pokyn, který člověk předá svému Claudovi**, ne jako postup, který si odklikává sám. Nikdo si dnes skill neinstaluje ručním kopírováním adresáře; řekne si o to. Tvar je tedy citovaný prompt s odkazem do repozitáře:
+**`## Jak si ho nainstalovat`** – **napsané jako pokyn, který člověk předá svému Claudovi**, ne jako postup, který si odklikává sám. Nikdo si dnes skill neinstaluje ručním kopírováním adresáře; řekne si o to. Tvar je tedy citovaný prompt s odkazem do repozitáře a nad ním úvodní věta, **doslova stejná ve všech README**, aby čtenář hned věděl, co s citací udělat:
 
 ```
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
+
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/<name>
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 ```

@@ -65,7 +65,7 @@ Napíšete `/specify` a skill se zeptá, co už máte, provede vás vyptávání
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/specify a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 

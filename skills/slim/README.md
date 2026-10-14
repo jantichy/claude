@@ -47,6 +47,8 @@ Claude Code načítá na začátku každé session váš `CLAUDE.md` a všechno,
 
 ## Jak si ho nainstalovat
 
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
+
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/slim
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 

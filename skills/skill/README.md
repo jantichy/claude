@@ -58,7 +58,7 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/skill a nainstaluj mi ten skill k sobě do `~/.claude/skills/`. Vezmi k němu i soubor `skills/skills.md`, na kterém stojí.
 

@@ -58,7 +58,7 @@ K rozhodnutí: záznam 12. 8. bez popisu (2 h)
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/invoicing a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 > Vezmi k tomu i soubor https://github.com/jantichy/claude/blob/main/skills/timeline.py a dej ho do `~/.claude/skills/`, vedle adresáře skillu.

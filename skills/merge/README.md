@@ -58,7 +58,7 @@ Ověřeno
 
 ## Jak si ho nainstalovat
 
-Řekněte svému Claudovi:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/merge
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.

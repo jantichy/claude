@@ -56,6 +56,8 @@ Mimo směrování: recovery-codes.txt – přístupové údaje, rozhoduje člov�
 
 ## Jak si ho nainstalovat
 
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
+
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/depot
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 

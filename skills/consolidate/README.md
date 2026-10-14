@@ -59,7 +59,7 @@ U obou shluků má každá záplata doložený důvod a navržená alternativa n
 
 ## Jak si ho nainstalovat
 
-Řekněte svému Claudovi:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/consolidate
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.

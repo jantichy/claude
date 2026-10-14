@@ -33,7 +33,7 @@ Claude si najde kořen projektu, zapíše přepínač do jeho instrukcí a od t�
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/autocommit a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 

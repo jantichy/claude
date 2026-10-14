@@ -35,6 +35,8 @@ Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému docház�
 
 ## Jak si ho nainstalovat
 
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
+
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/break
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 

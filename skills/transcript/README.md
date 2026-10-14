@@ -74,7 +74,7 @@ A na konci shrnutí:
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/transcript a nainstaluj mi ten skill k sobě do `~/.claude/skills/` a rovnou mi doinstaluj i to, co potřebuje ke svému běhu.
 

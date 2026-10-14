@@ -46,7 +46,7 @@ Sessions v `payments/` a `export/` na sebe nevidí a nešlapou si po souborech.
 
 ## Jak si ho nainstalovat
 
-Nechte to na Claudovi. Otevřete si Claude Code a napište mu:
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/worktree
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`. Vezmi k němu i

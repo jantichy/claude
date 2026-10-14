@@ -32,6 +32,8 @@ Zavolá se jako první věc v nové session po `/break`. `/break` ho sám doporu
 
 ## Jak si ho nainstalovat
 
+Je to snadné, zadejte do svého Claude Code tenhle prompt:
+
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/continue
 > a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
 

@@ -2545,6 +2545,7 @@ REPO_URL = "https://github.com/jantichy/claude/tree/main/skills/"
 
 FRAME = "**Součást životního cyklu projektu.**"
 BULK_INSTALL = "Nebo celou sadu naráz."
+INSTALL_LEAD = "Je to snadné, zadejte do svého Claude Code tenhle prompt:"
 
 
 def readme_defects(text: str, name: str, in_cycle: bool) -> list:
@@ -2595,11 +2596,13 @@ def _install_defects(text: str, name: str) -> list:
     section = text[begin : stop if stop > 0 else len(text)]
     url = REPO_URL + name
     quotes = [r for r in section.splitlines() if r.lstrip().startswith(">")]
+    lead = section.startswith(f"## Jak si ho nainstalovat\n\n{INSTALL_LEAD}\n\n")
+    defects = [] if lead else [f"instalační sekce nezačíná větou „{INSTALL_LEAD}“"]
     if url not in section:
-        return [f"instalační sekce neodkazuje na {url}"]
+        return defects + [f"instalační sekce neodkazuje na {url}"]
     if not any(url in r for r in quotes):
-        return ["odkaz na repozitář není v citovaném pokynu pro Clauda"]
-    return []
+        return defects + ["odkaz na repozitář není v citovaném pokynu pro Clauda"]
+    return defects
 
 
 def _frame_defects(text: str, in_cycle: bool) -> list:
@@ -3055,6 +3058,13 @@ class ReadmeChecksActuallyCatch(unittest.TestCase):
         )
         defects = readme_defects(text, "report", False)
         self.assertTrue(any("hromadnou instalaci" in v for v in defects), defects)
+
+    def test_missing_install_lead_is_reported(self):
+        """Bez úvodní věty čtenář neví, co s citovaným pokynem udělat."""
+        defects = self.defects(
+            self.OUTSIDE, "report", False, (INSTALL_LEAD + "\n\n", "")
+        )
+        self.assertTrue(any("nezačíná větou" in v for v in defects), defects)
 
     def test_install_outside_quoted_instruction_is_reported(self):
         """URL kdekoliv v souboru nestačí – musí být v pokynu pro Clauda."""
