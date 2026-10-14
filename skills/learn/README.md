@@ -62,12 +62,9 @@ Nezapracuje se
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/learn
-> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
-> Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
-> i definice typů subagentů do `~/.claude/agents/`.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/learn a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Zeptej se mě, jestli chci i skill `/transcript` – bez něj skill nepřepíše zvukový záznam. Nakonec mi řekni, co musím doplnit sám.
 
-Chcete-li mu předhazovat i nahrávky, **vezměte si s sebou rovnou `skills/transcript`** – bez něj skill zvládne text, obrázky a PDF, ale zvukový záznam přepsat nemá čím. Kde vaše knihovna leží, mu říkat dopředu nemusíte – řeknete mu to při každém zavolání. **Skill se ale odkazuje na dva soubory z téhož repozitáře**, které kopie samotného adresáře nepřinese: `skills/preflight.md` (společný začátek běhu) a `~/.claude/standards/rules.md` (obecná pravidla práce). Bez nich doběhne, jen přijde o kus opatrnosti na začátku – vezměte si je s sebou, nebo si o ně řekněte rovnou v tom pokynu.
+Kde vaše knihovna leží, mu říkat dopředu nemusíte – řeknete mu to při každém zavolání.
 
 ---
 

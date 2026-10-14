@@ -64,10 +64,9 @@ Archiv se nikdy nepřepisuje, jen doplňuje. Báze naopak ano – opravuje se po
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/compose
-> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/compose a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nakonec mi řekni, co musím doplnit sám.
 
-Ať vezme i podadresář `scripts/` – bez něj se exporty ze sociálních sítí nemají čím převést. Znalostní bázi v repozitáři nenajdete, ta je u každého vlastní a soukromá; postaví se prvním během `/compose collect` a `/compose profile`. Cestu k ní i k archivu si skill zapíše do vašeho `~/.claude/CLAUDE.md`, aby ji příště našel sám.
+Znalostní bázi v repozitáři nenajdete, ta je u každého vlastní a soukromá; postaví se prvním během `/compose collect` a `/compose profile`. Cestu k ní i k archivu si skill zapíše do vašeho `~/.claude/CLAUDE.md`, aby ji příště našel sám.
 
 ---
 

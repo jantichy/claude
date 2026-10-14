@@ -2546,6 +2546,19 @@ REPO_URL = "https://github.com/jantichy/claude/tree/main/skills/"
 FRAME = "**Součást životního cyklu projektu.**"
 BULK_INSTALL = "Nebo celou sadu naráz."
 INSTALL_LEAD = "Je to snadné, zadejte do svého Claude Code tenhle prompt:"
+INSTALL_HEAD = (
+    "> Jdi na https://github.com/jantichy/claude/tree/main/skills/{name} a nainstaluj mi"
+    " ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu"
+    " z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze"
+    " `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů,"
+    " které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž"
+    " mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na"
+    " soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit"
+    " na můj vlastní soubor, nebo odkaz smazat."
+)
+INSTALL_TAIL = " Nakonec mi řekni, co musím doplnit sám."
+# Pokyn pro Clauda pod citací místo v ní: čtenář ho přehlédne, nebo píše druhý prompt.
+LOOSE_INSTRUCTION = re.compile(r"[Řř]ekněte (svému )?Claudovi|[Řř]ekněte mu|Ať vezme")
 
 
 def readme_defects(text: str, name: str, in_cycle: bool) -> list:
@@ -2598,6 +2611,12 @@ def _install_defects(text: str, name: str) -> list:
     quotes = [r for r in section.splitlines() if r.lstrip().startswith(">")]
     lead = section.startswith(f"## Jak si ho nainstalovat\n\n{INSTALL_LEAD}\n\n")
     defects = [] if lead else [f"instalační sekce nezačíná větou „{INSTALL_LEAD}“"]
+    prompt = INSTALL_HEAD.format(name=name)
+    if not any(r.startswith(prompt) and r.endswith(INSTALL_TAIL) for r in quotes):
+        defects.append("instalační prompt nemá společné jádro z normy")
+    loose = [r for r in section.splitlines() if not r.startswith(">")]
+    if any(LOOSE_INSTRUCTION.search(r) for r in loose):
+        defects.append("pod instalačním promptem je pokyn pro Clauda, patří do promptu")
     if url not in section:
         return defects + [f"instalační sekce neodkazuje na {url}"]
     if not any(url in r for r in quotes):
@@ -3058,6 +3077,26 @@ class ReadmeChecksActuallyCatch(unittest.TestCase):
         )
         defects = readme_defects(text, "report", False)
         self.assertTrue(any("hromadnou instalaci" in v for v in defects), defects)
+
+    def test_incomplete_install_prompt_is_reported(self):
+        """Prompt bez společného jádra nestáhne sdílené soubory, na kterých skill stojí."""
+        defects = self.defects(
+            self.OUTSIDE, "report", False, (" – celý adresář i s podadresáři", "")
+        )
+        self.assertTrue(any("společné jádro" in v for v in defects), defects)
+
+    def test_loose_instruction_under_prompt_is_reported(self):
+        """Pokyn pro Clauda pod citací si čtenář musí napsat sám jako druhý prompt."""
+        defects = self.defects(
+            self.OUTSIDE,
+            "report",
+            False,
+            (
+                INSTALL_TAIL + "\n",
+                INSTALL_TAIL + "\n\nŘekněte Claudovi, ať vezme i x.\n",
+            ),
+        )
+        self.assertTrue(any("patří do promptu" in v for v in defects), defects)
 
     def test_missing_install_lead_is_reported(self):
         """Bez úvodní věty čtenář neví, co s citovaným pokynem udělat."""

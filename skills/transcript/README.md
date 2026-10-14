@@ -76,9 +76,9 @@ A na konci shrnutí:
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/transcript a nainstaluj mi ten skill k sobě do `~/.claude/skills/` a rovnou mi doinstaluj i to, co potřebuje ke svému běhu.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/transcript a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Doinstaluj mi i to, co skill potřebuje ke svému běhu. Nakonec mi řekni, co musím doplnit sám.
 
-Skill si závislosti umí zkontrolovat i doinstalovat sám při prvním spuštění a přesně vypíše, co chybí. **Výjimkou je rozlišení mluvčích** – to po vás navíc chce založit účet na HuggingFace, vyrobit si přístupový token a **v prohlížeči ručně odsouhlasit licenci tří repozitářů**. To za vás nikdo neudělá; bez toho funguje všechno ostatní beze změny.
+**Sami musíte udělat jediné: připravit rozlišení mluvčích.** To po vás chce založit účet na HuggingFace, vyrobit si přístupový token a **v prohlížeči ručně odsouhlasit licenci tří repozitářů**. To za vás nikdo neudělá; bez toho funguje všechno ostatní beze změny.
 
 ---
 

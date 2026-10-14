@@ -54,10 +54,9 @@ Limity dat  čemu se nedá věřit a proč
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/report a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
-> Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/report a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nakonec mi řekni, co musím doplnit sám.
 
-Skill si načítá **moje soukromé doménové znalosti** pro psaní česky a českou typografii, pro webové rozhraní a pro analytiku – ty v tomhle repozitáři nejsou. Bez nich funguje, jen si nepohlídá tonalitu a typografii; **řekněte Claudovi, ať ty odkazy nahradí vašimi, nebo je smaže**.
+Skill si načítá moje soukromé doménové znalosti pro psaní česky a českou typografii, pro webové rozhraní a pro analytiku – ty v tomhle repozitáři nejsou. Bez nich funguje, jen si nepohlídá tonalitu a typografii.
 
 ---
 

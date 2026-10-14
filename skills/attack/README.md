@@ -67,14 +67,13 @@ Nezkoušelo se: platby (míří na cizí platební bránu)
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/attack a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/attack a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nainstaluj mi k tomu i skill `/review`, sdílí s ním část postupu. Nakonec mi řekni, co musím doplnit sám.
 
-Aby skill věděl, čím vaši aplikaci lokálně zvednout, potřebuje mít projekt v instrukcích zapsané spouštěcí příkazy – **když chybějí, skill se zeptá a nabídne, že je rovnou doplní**. Sdílí část postupu se `/review` (určení rozsahu, evidence přeskočených nálezů), takže si nechte nainstalovat rovnou oba.
+Aby skill věděl, čím vaši aplikaci lokálně zvednout, potřebuje mít projekt v instrukcích zapsané spouštěcí příkazy – když chybějí, skill se zeptá a nabídne, že je rovnou doplní.
 
+**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, zadejte do svého Claude Code tenhle prompt:
 
-**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
-
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency, attack, end a merge. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README a řekni mi, co k nim potřebuju doplnit.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency, attack, end a merge. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
 
 ---
 

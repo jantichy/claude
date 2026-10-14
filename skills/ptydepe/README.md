@@ -60,10 +60,9 @@ Ze `add`, po dokončení:
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/ptydepe
-> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/ptydepe a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Termíny ve slovníku (`standards/ptydepe.md` a `skills/ptydepe/terms.md`) jsou autorovy, ne moje – v obou souborech mi nech jen úvod a prázdný seznam. Tabulku `~/.claude/standards/ptydepe.md` mi pak naimportuj do `~/.claude/CLAUDE.md`. Nakonec mi řekni, co musím doplnit sám.
 
-Skill si vede slovník rozhodnutých termínů na dvou místech: tabulku náhrad v `~/.claude/standards/ptydepe.md` a rozvahu k nim v `terms.md` u sebe. Obojí si vytvoří sám při prvním běhu, ale **tabulku si musíte naimportovat do svého `~/.claude/CLAUDE.md`**, jinak o dohodnutých termínech Claude v dalších session neví a začne je zavádět znovu. Rozvaha se schválně neimportuje – do každé session by rostla s každým dalším termínem.
+Bez importu tabulky by Claude o dohodnutých termínech v dalších session nevěděl a začal by je zavádět znovu. Rozvaha v `terms.md` se schválně neimportuje – do každé session by rostla s každým dalším termínem.
 
 ---
 

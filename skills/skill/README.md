@@ -60,9 +60,9 @@ Zakládá nové vlastní skilly, vytěží skill z rozdělané konverzace, prož
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/skill a nainstaluj mi ten skill k sobě do `~/.claude/skills/`. Vezmi k němu i soubor `skills/skills.md`, na kterém stojí.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/skill a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Zeptej se mě, jestli chci i nástroj `skill-creator` od Anthropicu a plugin superpowers (https://github.com/obra/superpowers) – bez prvního odpadne vytěžení konverzace a měřicí část, bez druhého tlakové scénáře. Nakonec mi řekni, co musím doplnit sám.
 
-**Norma tvaru v `skills.md` je povinná součást** – bez ní nemá skill proti čemu revidovat. Volitelně navíc: nástroj `skill-creator` od Anthropicu (bez něj odpadne vytěžení konverzace a celá měřicí část – skill si na to sám posvítí a řekne, co se tím neověřilo) a plugin [superpowers](https://github.com/obra/superpowers) kvůli tlakovým scénářům.
+Norma tvaru v `skills/skills.md` je povinná součást – bez ní nemá skill proti čemu revidovat; prompt ji stáhne spolu se skillem.
 
 ---
 

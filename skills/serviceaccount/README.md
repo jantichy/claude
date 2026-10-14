@@ -50,10 +50,9 @@ A pod tím kroky: kde účty založit, jak vygenerovat klíče, jediný příkaz
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/serviceaccount
-> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/serviceaccount a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Pak se mnou založ soubor s konvencí pro servisní účty – zeptej se mě na tvar jmen účtů, systémy a jejich zkratky, úrovně oprávnění a ukládání klíčů. Nakonec mi řekni, co musím doplnit sám.
 
-**Skill sám o sobě nestačí.** Opírá se o soubor s konvencí, který je součástí soukromé znalostní báze a v repozitáři není – musíte si ho vytvořit. Patří do něj tvar jmen účtů, seznam systémů i s jejich zkratkami, úrovně oprávnění, o které se žádá klient, a pravidlo pro ukládání klíčů. Bez něj se skill odmítne rozjet, což je záměr: vymyšlené jméno účtu je neměnné.
+**Skill sám o sobě nestačí.** Opírá se o soubor s konvencí, který je součástí soukromé znalostní báze a v repozitáři není. Bez něj se skill odmítne rozjet, což je záměr: vymyšlené jméno účtu je neměnné.
 
 ---
 

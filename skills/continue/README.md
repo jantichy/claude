@@ -34,10 +34,7 @@ Zavolá se jako první věc v nové session po `/break`. `/break` ho sám doporu
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/continue
-> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
-
-Bez skillu `/break` ze stejného repozitáře nemá na co navázat – nainstalujte si oba.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/continue a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nainstaluj mi k tomu i skill `/break` – bez něj nemá na co navázat. Nakonec mi řekni, co musím doplnit sám.
 
 ---
 

@@ -325,27 +325,19 @@ Pravidlo *Nepiš, co model už ví* z odstavce **Jak se píše text uvnitř** ta
 
 **`## Co nedělá`** – 2 až 4 odrážky, lidský překlad `## Co skill nedělá` ze `SKILL.md`. Šetří zklamání i dotazy.
 
-**`## Jak si ho nainstalovat`** – **napsané jako pokyn, který člověk předá svému Claudovi**, ne jako postup, který si odklikává sám. Nikdo si dnes skill neinstaluje ručním kopírováním adresáře; řekne si o to. Tvar je tedy citovaný prompt s odkazem do repozitáře a nad ním úvodní věta, **doslova stejná ve všech README**, aby čtenář hned věděl, co s citací udělat:
+**`## Jak si ho nainstalovat`** – **napsané jako pokyn, který člověk předá svému Claudovi**, ne jako postup, který si odklikává sám. Nikdo si dnes skill neinstaluje ručním kopírováním adresáře; řekne si o to. Tvar je tedy citovaný prompt s odkazem do repozitáře a nad ním úvodní věta, **obojí doslova stejné ve všech README** až na jméno skillu a kroky navíc:
 
 ```
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/<name>
-> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/<name> a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. <kroky navíc> Nakonec mi řekni, co musím doplnit sám.
 ```
 
-Pod ním jedna dvě věty o tom, co je ještě potřeba doplnit. **Opírá-li se skill o něco, co v repozitáři není, řekne se to rovnou tady**, ne až v poznámce pod čarou – jinak si to člověk nainstaluje a ono to nefunguje.
+**Prompt je úplný: člověk ho zkopíruje a nic dalšího Claudovi psát nemusí.** Co se má při instalaci udělat navíc – doinstalovat závislosti, plugin nebo sesterský skill, přizpůsobit odkazy, založit soubor s vlastními pravidly, naimportovat soubor do `CLAUDE.md` –, patří do promptu na místo `<kroky navíc>`, ne do textu pod ním. Pokyn typu „řekněte Claudovi, ať…“ pod citací je vada: čtenář ho přehlédne, nebo musí psát druhý prompt.
 
-**Pouští-li skill subagenty vlastním typem, pokyn bere i `agents/`:**
+**Závislosti se v promptu nevyjmenovávají, Claude si je dohledá z odkazů.** Skoro každý skill stojí na sdílených souborech mimo svůj adresář (`skills/preflight.md`, `standards/rules.md` a další) a vyjmenovaný seznam by se rozešel s prvním novým odkazem. Ze stejného důvodu se do README nepíšou **jména typů subagentů** – jsou to implementační detaily (viz tabulka výš) a zestárnou dřív než zbytek textu.
 
-```
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/<name>
-> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
-> Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
-> i definice typů subagentů do `~/.claude/agents/`.
-```
-
-**Jména typů se do README nepíšou** – jsou to implementační detaily (viz tabulka výš) a zestárnou dřív než zbytek textu. Řeší se to **instalací, ne dokumentací**: přijde-li celý adresář, není co vyjmenovávat. Tím se obě pravidla přestanou křížit.
+**Text pod citací nese jen to, co Claude udělat nemůže, a co je dobré vědět** – krok, který musí udělat člověk sám (účet, souhlas s licencí v prohlížeči), a o co se skill opírá, ačkoli to v repozitáři není. Říká se to rovnou tady, ne až v poznámce pod čarou – jinak si to člověk nainstaluje a ono to nefunguje.
 
 **`### Požadavky a omezení`** pod čarou – platforma, nástroje, účty, licence, cena, meze. Krátce a úplně.
 
@@ -377,14 +369,9 @@ Rozejde-li se rámeček s životním cyklem v `~/.claude/standards/rules.md`, pl
 **Sekce `## Jak si ho nainstalovat` má u skillu ze životního cyklu druhý odstavec** s hromadnou instalací celé sady, opět doslova stejný ve všech:
 
 ```
-**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, napište mu tohle:
+**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do
-> `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect,
-> breakdown, implement, release, evaluate, oponent, consolidate, review, consistency,
-> attack, end a merge. Z https://github.com/jantichy/claude/tree/main/agents k tomu vezmi
-> i definice typů subagentů do `~/.claude/agents/`. U každého si přečti README
-> a řekni mi, co k nim potřebuju doplnit.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency, attack, end a merge. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
 ```
 
 **Skilly mimo životní cyklus rámeček ani hromadnou instalaci nemají.** Pouštějí se samostatně a předstírat u nich sadu by mátlo.

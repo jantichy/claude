@@ -49,10 +49,7 @@ Claude Code načítá na začátku každé session váš `CLAUDE.md` a všechno,
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/slim
-> a nainstaluj mi ten skill k sobě do `~/.claude/skills/`.
-
-Skill si bere pomocné skripty ze sdílených souborů `skills/links.py` a `skills/order.py` a k ověření pouští typ subagenta `reader` – vezměte si proto z https://github.com/jantichy/claude/tree/main/skills i ty dva skripty a z https://github.com/jantichy/claude/tree/main/agents definice typů subagentů do `~/.claude/agents/`.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/slim a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nakonec mi řekni, co musím doplnit sám.
 
 ---
 
