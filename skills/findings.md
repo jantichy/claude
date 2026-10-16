@@ -109,11 +109,15 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 **`header` má napříč skilly týž tvar:** `Nález N/celkem`, u položky, která nálezem není, `Položka N/celkem`.
 
+**`celkem` je počet položek, na které se v průchodu ptáš – číslo „zbývá na rozhodnutí“ z přehledu**, ne všechny nálezy. Platí pro titulní řádek i `header` a `N` jde od 1 bez mezer. Jen tak uživatel z čísla vyčte, kolik otázek ho ještě čeká; opravy bez ptaní se vypíšou a do řady nepatří. Přibude-li položka za běhu (ověřovatel narazí na vedlejší vadu, odpověď otevře navazující otázku), `celkem` se od té položky zvedne a řekne se to v potvrzení předchozí.
+
 **Výjimka pro položku, která není vadou, ale novou prací** – tam se neopravuje, takže *Neopravovat* nedává smysl a platí čtveřice *Vyřešit teď / Zapsat do todo / Zapsat do backlogu / Zahodit*. Používá ji `/end` u položek mimo rozsah a `/evaluate` u vyžádaných funkcí; podmínku, kdy je legitimní, drží *Volby v otázce jsou varianty řešení* výš.
 
 ## Přehled na začátku vyčísluje obojí
 
 **Kolik se opraví rovnou a kolik doopravdy zbývá na rozhodnutí** – to druhé číslo je jediné, které uživateli říká, jak dlouhý bude interaktivní průchod. Report, který vypíše „mechanických 12, sporných 40“ a pak se u třiceti z těch čtyřiceti nemá na co ptát, to číslo nadsazuje a průchod působí dráž, než je.
+
+**Pod tím číslem vypiš položky na rozhodnutí jako očíslovaný seznam**, v pořadí průchodu a s týmiž čísly, která pak dostanou v `[N/celkem]` – každou jednou větou se značkou závažnosti. Uživatel tak vidí celou frontu dřív, než se začne rozhodovat, a na položku z přehledu se dá odkázat číslem.
 
 ## Ohlášená akce patří do téže odpovědi
 

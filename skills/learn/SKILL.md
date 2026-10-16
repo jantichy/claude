@@ -199,6 +199,8 @@ Napadne-li tě kterákoliv z těchhle vět, právě obcházíš plán:
 
 Proberte rozpory **jeden po druhém**, v pořadí, ve kterém na sebe navazují – od obecnějších ke konkrétnějším, ať pozdější rozhodnutí staví na dřívějším.
 
+**Tvar výpisu a číslování drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – titulní řádek `**[N/celkem] NÁZEV POLOŽKY**`, `header` `Položka N/celkem`; `celkem` je počet rozporů. Volby jsou ale vlastní, níž: rozpor není vada, kterou by šlo neopravit – nechat obě verze stát znamená dvě pravdy v bázi.
+
 U každého napiš **podstatu rozporu vlastními slovy** a **ocituj obě verze**, když to bez citace není jasné. Pak se zeptej přes `AskUserQuestion` a **nabídni rovnou hotová řešení**, ne otevřenou otázku:
 
 - **Platí nová verze** – stávající text se přepíše, protože zdroj je novější nebo přesnější.

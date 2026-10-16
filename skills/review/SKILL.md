@@ -269,6 +269,9 @@ Při pochybnosti patří nález mezi sporné.
 
 - **Opravím rovnou:** N – z toho mechanických (nemění chování) X a jednoznačných (mění, ale podoba opravy je jedna) Y. Jen je vypíšu.
 - **Zbývá na rozhodnutí:** M – ty projdeme spolu od nejzávažnějších; u každého navrhnu varianty.
+
+1. 🔴/🟡/🔵 [název nálezu – jednou větou]
+2. …
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
@@ -308,7 +311,7 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 1. **Zobraz ho.** **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce doménové znalosti), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku.
 
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text. Jedno volání = jeden nález = jedna otázka (`multiSelect: false`):
-   - `header`: `Nález N/celkem`, případně zkrácené na `N/celkem`
+   - `header`: `Nález N/celkem` (co je `celkem`, drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*)
    - `question`: název nálezu a v čem je, jednou větou
    - `options`: **první jsou konkrétní varianty opravy** – čím se ten rozpor zavře, u každé v `description` co se stane a čím to platí. Za nimi dvě záchytné volby, jejichž pojmenování a význam drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*; u `batch` nálezu smí jednu z nich nahradit **Rozbalit** (vypíšu všechny lokace a projdeme je jednotlivě).
 

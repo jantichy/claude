@@ -2108,3 +2108,11 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 - **Commity bez omezení** – staré repozitáře posunuly začátek historie do roku 2024, kdy Claude nebyl.
 
 **Vědomě nepokryto:** dny se dělí podle pražského času napevno; rozložení podle hodiny dne a nejdelší blok se počítají jen z dnů bez odhadu; commity se hledají jen v repozitářích, ve kterých kdy běžela session. Srovnávací běh bez skillu se nedělal – jádro je skript a selhání agenta bez něj ukázala sama session, ve které skill vznikl (mezery po sessions, čekání na dialog jako práce). Ladění `description` se neměřilo – jméno se nekryje s žádným jiným skillem.
+
+### Číslování položek v průchodu: `celkem` je počet otázek a přehled je očíslovaný
+
+**Rozhodnuto 16. 10. 2026** (uživatel) po běhu `/consistency` v jiném projektu, kde session vypsala „Nález 2:“ v běžné větě a do `header` dala název tématu místo `Nález N/celkem`. Norma ve `skills/findings.md` přitom tvar předepisovala; chyběla jí jen definice, z čeho se `celkem` počítá, `/review` povoloval zkrácený `header` a `/learn` u rozporů číslování neměl vůbec.
+
+**Rozhodnutí:** `celkem` je počet položek, na které se v průchodu ptá (číslo „zbývá na rozhodnutí“ z přehledu), `N` jde od 1 bez mezer; přibude-li položka za běhu, `celkem` se zvedne a řekne se to. Přehled pod tím číslem vypíše položky na rozhodnutí očíslované týmiž čísly. `header` je všude `Nález N/celkem`, respektive `Položka N/celkem`, bez zkrácení. `/learn` přebírá u rozporů tvar a číslování, volby si nechává vlastní.
+
+**Zamítnuto:** `celkem` jako všechny nálezy včetně oprav bez ptaní – číslo by sedělo s přehledem, ale v průchodu by mělo mezery (2/28, 7/28) a neříkalo by, kdy průchod skončí. Zkrácený `header` `N/celkem` povolený všude – `Nález 12/34` se do doporučených dvanácti znaků vejde, zkrácení nic neřeší a rozbíjí jednotný tvar. Celá norma nálezů pro rozpory v `/learn` včetně záchytných voleb – „neopravovat“ rozpor znamená nechat v bázi dvě pravdy. Přehled jen s počty podle závažnosti – uživatel do průchodu šel naslepo a na položku nešlo předem odkázat.

@@ -242,6 +242,9 @@ Zobraz uživateli přehled před tím, než začneš procházet problémy:
 
 - **Opravím rovnou:** N – z toho mechanických (nemění chování) X a jednoznačných (mění, ale podoba opravy je jedna) Y. Jen je vypíšu.
 - **Zbývá na rozhodnutí:** M – ty projdeme spolu od nejzávažnějších; u každého navrhnu varianty a zeptám se, kterou zvolit.
+
+1. 🔴/🟡/🔵 [název nálezu – jednou větou]
+2. …
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
