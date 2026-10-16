@@ -83,6 +83,16 @@ Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. 
 | Úprava samotného `~/.claude/hooks/envkeys.py` tak, aby hodnoty vypsal | Nic – hook věří souboru, ne jeho obsahu | **accepted**: zápis do `~/.claude` je táž hranice jako zápis do hooku samotného; změnu nese diff a commit. |
 | Soubor s tajemstvím mimo deny seznam (`config/database.yml`) | Nic | **accepted**: hook hlídá přesně deny seznam, nic navíc. Chybí-li v něm vzor, doplňuje se tam a hook ho převezme sám. |
 
+## Tvar otázky na nález (`findings-guard.py` jako `PreToolUse` hook)
+
+`skills/findings.md` předepisuje `header` `Nález N/celkem` nebo `Položka N/celkem`, ale test hlídal jen text skillů a session do `header` dala název tématu. Hook pozná otázku na položku podle záchytné volby (`Neopravovat`, `Zapsat do backlogu`, `Bezpředmětné`) a zastaví ji, nemá-li `header` ten tvar s pořadím od 1 do `celkem`.
+
+| Čím se obejde | Co to chytí | Stav |
+|---|---|---|
+| Otázka na položku bez záchytné volby (rozpor v `/learn`, položka, u které session záchytné volby vynechala) | Nic – bez nich hook otázku na položku od jiné otázky nerozezná | **accepted**: jiný spolehlivý signál v otázce není a poplach nad otázkou na rozsah nebo výběr výstupů by hook vyřadil z provozu. Vynechané záchytné volby jsou samy porušení normy, které hlídá text skillu. |
+| Špatné `celkem` (`Nález 2/9`, když se ptá na šest položek) | Nic – hook nezná délku fronty | **accepted**: počet drží přehled v téže odpovědi a hook vidí jen jednu otázku. |
+| Titulní řádek `[N/celkem]` v textu nad otázkou | Nic – hook vidí volání nástroje, ne text odpovědi | **accepted**: text odpovědi žádný hook před zobrazením nevidí. |
+
 ## Permission systém (`settings.json`)
 
 | Čím se obejde | Co to chytí | Stav |

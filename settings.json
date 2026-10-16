@@ -334,6 +334,15 @@
             "command": "/Users/honza/.claude/hooks/secret-guard.py"
           }
         ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/honza/.claude/hooks/findings-guard.py"
+          }
+        ]
       }
     ],
     "SessionEnd": [

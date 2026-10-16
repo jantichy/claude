@@ -267,6 +267,8 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 - **2026-10-14** · `/end` · `1e4ec62` · session `e99f279d-87d1-4e22-b087-725a637f53a2` · prompty 4/4 · 1 téma (0 rozhodnuto, 1 bezpředmětné: ověření instalačního promptu naostro) · mimo rozsah: žádné · meze: 30 bloků myšlení (prázdné ve formátu), 1 výstup Skill, 1 výstup Write
 
+- **2026-10-16** · `/end` · `918974d` · session `cd797f6d-8925-4a92-bdfa-949077942624` · prompty 8/8 · 1 téma (1 rozhodnuto: místo zápisu postaven hook) · mimo rozsah: žádné · meze: 21 bloků myšlení (prázdné z formátu), 5 výstupů Edit, 1 obrázek (snímek dialogu z eventoidu), odložený výstup `tool-results/bifn8ewsd.txt` neotevřen – šlo o přerušený výpis grepu, který další volání zopakovalo
+
 ## Odvedená práce
 
 - [x] **`done.md` vedle `todo.md` pro hotové úkoly.** (2026-09-01) (zadáno 1. 9. 2026) Dnes drží `todo.md` nehotové i hotové, takže není přehledně vidět, co zbývá, a vzniká zbytečná otázka, kam hotové patří (konec souboru vs. pod sekci). Nově: `todo.md` jen nehotové, `done.md` jen hotové. U strukturovaného `todo.md` se sekce zrcadlí i v `done.md`.
@@ -605,3 +607,5 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - [x] **Instalační prompty skillů jsou úplný pokyn pro Clauda.** (2026-10-14) Ve všech README skillů stojí nad promptem jednotná věta „Je to snadné, zadejte do svého Claude Code tenhle prompt:“ a prompt má doslova stejné jádro: celý adresář skillu, sdílené soubory ze `skills/` a `standards/` a typy subagentů podle odkazů, bez přepisu existujících souborů a s dotazem na sesterské skilly a soukromé odkazy. Kroky jen pro jeden skill jdou do promptu, pod citací zůstává jen to, co Claude udělat nemůže; opraven i odkaz na `worktree.md`, který leží ve `standards/`. Norma v `skills/skills.md`, *README skillu*, test v `tests/test_skills.py`, rozhodnutí v `decisions.md`, *README skillu je pro člověka zvenčí, ne dokumentace*.
 
 - [x] **Jednotné číslování položek v průchodu nálezy.** (2026-10-16) `skills/findings.md` definuje `celkem` jako počet otázek v průchodu a přidává očíslovaný seznam do přehledu; `/review` přišel o zkrácený `header`, `/review` a `/consistency` mají v šabloně přehledu očíslované položky a `/learn` u rozporů přebírá titulní řádek i `header`. Rozhodnutí v `decisions.md`, *Číslování položek v průchodu*.
+
+- [x] **Hook `findings-guard.py` vynucuje tvar `header` u otázky na položku.** (2026-10-16) Zastaví `AskUserQuestion` se záchytnou volbou a `header` mimo `Nález|Položka N/celkem`; testy v obou směrech v `tests/test_hooks.py`, meze v `standards/bypass.md`.

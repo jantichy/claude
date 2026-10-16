@@ -1171,6 +1171,129 @@ class SecretGuard(unittest.TestCase):
         )
 
 
+class FindingsGuard(unittest.TestCase):
+    """`findings-guard.py` zastaví otázku na položku s `header` mimo normu.
+
+    Test v `test_skills.py` hlídá jen text skillů; session přesto dala do
+    `header` název tématu místo `Nález N/celkem`. Testují se oba směry:
+    propuštěná otázka vrací díru, poplach nad otázkou, která položkou není
+    (rozsah běhu, hromadná otázka `/oponent`), by hook vyřadil z provozu.
+    """
+
+    GUARD = ROOT / "hooks" / "findings-guard.py"
+
+    def run_guard(self, header, labels):
+        event = json.dumps(
+            {
+                "tool_name": "AskUserQuestion",
+                "tool_input": {
+                    "questions": [
+                        {
+                            "question": "Jak to opravit?",
+                            "header": header,
+                            "multiSelect": False,
+                            "options": [
+                                {"label": label, "description": "…"} for label in labels
+                            ],
+                        }
+                    ]
+                },
+            }
+        )
+        return subprocess.run(
+            [sys.executable, str(self.GUARD)],
+            input=event,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    def assertBlocked(self, header, labels):
+        done = self.run_guard(header, labels)
+        self.assertEqual(2, done.returncode, f"nezastaveno: {header!r} {labels}")
+        self.assertIn("findings-guard", done.stderr)
+
+    def assertPassed(self, header, labels):
+        done = self.run_guard(header, labels)
+        self.assertEqual(
+            0, done.returncode, f"zastaveno: {header!r} {labels}: {done.stderr}"
+        )
+
+    def test_blocks_topic_as_header(self):
+        """Případ, kvůli kterému hook vznikl."""
+        self.assertBlocked(
+            "Kódy registrů",
+            ["Úzká výjimka (Recommended)", "Holé 503", "Neopravovat", "Zapsat do todo"],
+        )
+
+    def test_blocks_bare_and_inverted_numbering(self):
+        labels = ["Varianta A", "Neopravovat", "Zapsat do todo"]
+        self.assertBlocked("2/6", labels)
+        self.assertBlocked("Nález 2", labels)
+        self.assertBlocked("Nález 7/6", labels)
+        self.assertBlocked("Nález 0/6", labels)
+
+    def test_blocks_item_from_end(self):
+        self.assertBlocked("Téma", ["Zapsat", "Bezpředmětné"])
+        self.assertBlocked(
+            "Mimo rozsah",
+            ["Vyřešit teď", "Zapsat do todo", "Zapsat do backlogu", "Zahodit"],
+        )
+
+    def test_passes_conforming_headers(self):
+        self.assertPassed("Nález 2/6", ["Varianta A", "Neopravovat", "Zapsat do todo"])
+        self.assertPassed("Položka 1/1", ["Do backlogu (Recommended)", "Bezpředmětné"])
+        self.assertPassed("Nález 12/34", ["Rozbalit", "Neopravovat (Recommended)"])
+
+    def test_passes_questions_that_are_not_items(self):
+        self.assertPassed("Rozsah", ["Pokračovat", "Omezit na adresář"])
+        self.assertPassed(
+            "Nízké",
+            [
+                "Zapracovat všechny",
+                "Projít po jednom",
+                "Neopravovat žádný",
+                "Zapsat do todo",
+            ],
+        )
+
+    def test_passes_other_tools(self):
+        event = json.dumps({"tool_name": "Bash", "tool_input": {"command": "ls"}})
+        done = subprocess.run(
+            [sys.executable, str(self.GUARD)],
+            input=event,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(0, done.returncode)
+
+    def test_malformed_input_passes(self):
+        """Rozbitý vstup nesmí zastavit práci – hook je pojistka, ne blokující kontrola."""
+        done = subprocess.run(
+            [sys.executable, str(self.GUARD)],
+            input="{tohle není JSON",
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(0, done.returncode)
+
+    def test_registered_for_askuserquestion(self):
+        """Hook, který není v `settings.json` u `AskUserQuestion`, nehlídá nic."""
+        settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        registered = [
+            h.get("command", "")
+            for g in settings.get("hooks", {}).get("PreToolUse", [])
+            if g.get("matcher") == "AskUserQuestion"
+            for h in g.get("hooks", [])
+        ]
+        self.assertTrue(
+            any("findings-guard.py" in c for c in registered),
+            "findings-guard.py není mezi PreToolUse hooky u AskUserQuestion",
+        )
+
+
 class PluginHooks(unittest.TestCase):
     """Plugin smí do session přidat hooky, a registr o nich dosud nevěděl.
 

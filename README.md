@@ -86,6 +86,10 @@ Testy nad textem, který nikdo nespouští, a nad vrstvami, které tu něco doop
 
 `PreToolUse` hook, který zastaví příkaz čtoucí soubor s tajemstvím – `. ./.env`, `grep KEY .env`, `cat`, `cp` i kód předaný Pythonu. Zákaz čtení `.env` v `settings.json` totiž hlídá jen nástroj na čtení souborů a shell kolem něj procházel, takže se klíč mohl objevit v konverzaci třeba v chybové hlášce. Seznam tajemství si bere z týchž zákazů, takže se drží na jednom místě. Zmínku o `.env` v dokumentaci nebo ve zprávě commitu propustí, stejně jako ověření, že soubor existuje; tajemství, které úkol opravdu potřebuje, spustí člověk sám. Jedinou výjimkou je [`envkeys.py`](hooks/envkeys.py), který ze souboru vypíše jen jména klíčů a jestli jsou prázdné, zástupné, nebo vyplněné – hlášku hooku na něj odkáže, takže model nestojí před slepou zdí.
 
+#### [`findings-guard.py`](hooks/findings-guard.py) – otázka na nález vždycky řekne, kolikátá je
+
+`PreToolUse` hook nad dialogem s otázkou. Pozná otázku na jeden nález nebo položku podle voleb, které se nikde jinde nenabízejí (*Neopravovat*, *Zapsat do backlogu*, *Bezpředmětné*), a zastaví ji, když se v záhlaví nejmenuje `Nález 3/7` nebo `Položka 3/7`. Pravidlo stálo v textu skillů a session ho přesto minula: do záhlaví dala název tématu a člověk ztratil přehled, kolik otázek ho ještě čeká. Jiné otázky – na rozsah běhu, výběr výstupů – propustí.
+
 #### [`handoff.py`](hooks/handoff.py) – nový začátek nabídnutý včas, ne podle dojmu
 
 `UserPromptSubmit` hook, který při každé zprávě změří z transcriptu velikost kontextu a počet volání nástrojů a nad prahem řekne modelu, že má nabídnout úklid a novou session. Model velikost kontextu sám nevidí – ukazuje ji jen status line člověku –, takže práh dřív odhadoval z dojmu a ozval se o celé pásmo pozdě. Pod prahem mlčí, nad každým se ozve jednou; subagenty nepočítá a po kompaktaci měří od začátku.

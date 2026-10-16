@@ -111,6 +111,8 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 **`celkem` je počet položek, na které se v průchodu ptáš – číslo „zbývá na rozhodnutí“ z přehledu**, ne všechny nálezy. Platí pro titulní řádek i `header` a `N` jde od 1 bez mezer. Jen tak uživatel z čísla vyčte, kolik otázek ho ještě čeká; opravy bez ptaní se vypíšou a do řady nepatří. Přibude-li položka za běhu (ověřovatel narazí na vedlejší vadu, odpověď otevře navazující otázku), `celkem` se od té položky zvedne a řekne se to v potvrzení předchozí.
 
+**Tvar `header` vynucuje hook `hooks/findings-guard.py`**: otázku se záchytnou volbou (*Neopravovat*, *Zapsat do backlogu*, *Bezpředmětné*) a jiným `header` zastaví. Co nevidí, eviduje `standards/bypass.md`.
+
 **Výjimka pro položku, která není vadou, ale novou prací** – tam se neopravuje, takže *Neopravovat* nedává smysl a platí čtveřice *Vyřešit teď / Zapsat do todo / Zapsat do backlogu / Zahodit*. Používá ji `/end` u položek mimo rozsah a `/evaluate` u vyžádaných funkcí; podmínku, kdy je legitimní, drží *Volby v otázce jsou varianty řešení* výš.
 
 ## Přehled na začátku vyčísluje obojí
