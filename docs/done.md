@@ -269,6 +269,8 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 - **2026-10-16** · `/end` · `918974d` · session `cd797f6d-8925-4a92-bdfa-949077942624` · prompty 8/8 · 1 téma (1 rozhodnuto: místo zápisu postaven hook) · mimo rozsah: žádné · meze: 21 bloků myšlení (prázdné z formátu), 5 výstupů Edit, 1 obrázek (snímek dialogu z eventoidu), odložený výstup `tool-results/bifn8ewsd.txt` neotevřen – šlo o přerušený výpis grepu, který další volání zopakovalo
 
+- **2026-10-16** · `/end` · `31de495` · session `7865a3e6-2165-4f6b-941d-a2c372761823` · prompty 5/5 · 0 témat · mimo rozsah: nesledovaný `stats-cache.json` z doby před session ponechán, řeší ho nápad o obráceném `.gitignore` v `docs/backlog.md` · meze: 15 bloků myšlení (prázdné z formátu), 1 výstup Edit
+
 ## Odvedená práce
 
 - [x] **`done.md` vedle `todo.md` pro hotové úkoly.** (2026-09-01) (zadáno 1. 9. 2026) Dnes drží `todo.md` nehotové i hotové, takže není přehledně vidět, co zbývá, a vzniká zbytečná otázka, kam hotové patří (konec souboru vs. pod sekci). Nově: `todo.md` jen nehotové, `done.md` jen hotové. U strukturovaného `todo.md` se sekce zrcadlí i v `done.md`.
