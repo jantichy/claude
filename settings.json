@@ -110,6 +110,7 @@
       "Bash(npm audit)",
       "Bash(npm audit --json:*)",
       "Bash(npm audit --omit=dev:*)",
+      "Bash(npm ls:*)",
       "Bash(composer audit:*)",
       "Bash(gitleaks detect:*)",
       "Bash(semgrep:*)",
