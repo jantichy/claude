@@ -2118,3 +2118,20 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Zamítnuto:** `celkem` jako všechny nálezy včetně oprav bez ptaní – číslo by sedělo s přehledem, ale v průchodu by mělo mezery (2/28, 7/28) a neříkalo by, kdy průchod skončí. Zkrácený `header` `N/celkem` povolený všude – `Nález 12/34` se do doporučených dvanácti znaků vejde, zkrácení nic neřeší a rozbíjí jednotný tvar. Celá norma nálezů pro rozpory v `/learn` včetně záchytných voleb – „neopravovat“ rozpor znamená nechat v bázi dvě pravdy. Přehled jen s počty podle závažnosti – uživatel do průchodu šel naslepo a na položku nešlo předem odkázat.
 
 **Doplněno týž den (uživatel, v `/end`):** norma bez mechanismu se minula právě v běhu, který rozhodnutí vyvolal, takže vzniklo vynucení hned. `PreToolUse` hook `hooks/findings-guard.py` nad `AskUserQuestion` pozná otázku na položku podle záchytné volby (*Neopravovat*, *Zapsat do backlogu*, *Bezpředmětné*) a zastaví ji, nemá-li `header` tvar `Nález|Položka N/celkem`. *Zapsat do todo* signálem není, protože ho nabízí i hromadná otázka `/oponent` nad nízkými nálezy. **Zamítnuto:** poznávat průchod podle běžícího skillu z transcriptu – tytéž skilly kladou i otázky, které položkou nejsou (rozsah, výběr výstupů), a poplach nad nimi by hook vyřadil z provozu. Co hook nevidí (titulní řádek v textu, správnost `celkem`, otázku bez záchytných voleb), eviduje `standards/bypass.md`.
+
+### Panel `/review` a `/oponent` se na nástroj `Workflow` nepřevádí
+
+**Rozhodnuto 19. 10. 2026**, uzavírá úkol z 25. 9. 2026. `Workflow` je vestavěný nástroj Claude Code, který skriptem v JavaScriptu deterministicky orchestruje subagenty (`agent()`, `parallel()`, `pipeline()`); ukázka v jeho dokumentaci je doslova panel hledisek s ověřením každého nálezu, tedy Fáze 2 a 3 `/review` a panel `/oponent`. Posouzeno z referenční dokumentace `workflow-authoring` a schématu nástrojů, ne zkušebním během.
+
+**Proč ne – slibované zisky se rozplynuly:**
+
+- **Effort pro každého agenta** byl jediný zisk, který zavíral doloženou mezeru. Mezitím ho umí i nástroj `Agent` parametrem `effort`, takže se zavřel bez workflow.
+- **Průběžné ověřování přes `pipeline()`** nepomůže: `/review` i `/audit` před ověřením deduplikují nálezy napříč celým panelem, a to je bariéra z podstaty věci.
+- **Stropy počtu agentů a tvar nálezu vynucený schématem** by byly mechanismus místo věty, ale ani jedno nemá doložené selhání – strop se nikdy nepřekročil a vadný tvar nálezu se nezapsal.
+- **Úspora kontextu je skutečná** (vyvrácené nálezy a verdikty ověřovatelů by do hlavní session nepřišly), řádově desítky kB na běh – znatelná, ne rozhodující.
+
+**Cena proti tomu:** druhý artefakt vedle `SKILL.md` (skript, jehož syntaxi dnes žádná kontrola v kontraktu příkazů neověřuje), závislost na čerstvém nástroji a nevyzkoušené riziko, že vestavěné `/code-review` a `/security-review`, které `/review` volá uvnitř panelu, v agentovi workflow nepoběží (*Hloubka delegace je jedna*). Obnovení běhu přes `resumeFromRunId` je navíc jen v téže session, takže `.claude/run/review.json` by zůstal tak jako tak.
+
+**Zamítnuté varianty:** převod rovnou (cena bez doloženého zisku) a zkušební běh jedné `/review` přes workflow (měřil by hlavně úsporu kontextu, o které se ví, že je menší než rozhodující).
+
+**Kdy se k tomu vrátit:** doloží-li se, že agent panelu vrátil nález ve vadném tvaru nebo skill překročil strop agentů; naroste-li panel tak, že úspora kontextu začne rozhodovat; nebo přibude-li skill, jehož panel ověřuje bez deduplikace, takže by `pipeline()` opravdu zkrátil běh.

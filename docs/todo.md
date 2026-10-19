@@ -247,33 +247,6 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Kritérium, podle kterého se o delegaci kontrolních kroků rozhoduje, drží `decisions.md`, *Kontrolní kroky patří do subagenta, kroky osy a nevratné kroky ne*.** Vědomě zamítnuté varianty (evidence uklizených session, nástroje na úsporu tokenů) drží `decisions.md`, *Tvar `/end` po přesunu do subagenta*, a *Úspora nákladů míří na kontext, ne na délku odpovědí* – nenavrhovat znovu bez nového argumentu.
 
-- [ ] **Posoudit, jestli panel a ověřování v `/review` a `/oponent` převést na nástroj `Workflow`** (zadáno 25. 9. 2026). Je to samostatné téma na vlastní session – souvisí s přepisem `/end` do subagenta (`done.md`) a s položkou o témž přepisu `/review` a `/consistency` výš – obojí je o delegaci kontrolních kroků, ale řeší jinou osu: ta se ptá **kde** skill běží, tahle **čím se orchestruje jeho panel**.
-
-  **Co `Workflow` je** (ověřeno 25. 9. 2026, ne převzato): **vestavěný nástroj Claude Code**, ne plugin ani nic vlastního – v binárce verze 2.1.274 je zadrátovaný včetně `ultracode`, `workflow-authoring` a `.claude/workflows`; v `~/.claude/plugins/` nic takového není. Přibyl s aktualizací z 2.1.267 na 2.1.274. Spouští JavaScriptový skript, který deterministicky orchestruje víc subagentů – `agent()`, `parallel()`, `pipeline()`, `phase()` –, běží na pozadí, průběh je vidět přes `/workflows` a výstup agenta jde vynutit schématem. **Volat ho smí Claude jen na výslovný pokyn uživatele**, protože umí roztočit desítky agentů; tahle instalace má navíc strop „medium“, tedy pod deset agentů. Dokumentaci k psaní skriptů drží skill `workflow-authoring` – **načíst až ve chvíli, kdy se to bude psát**, ne kvůli rozhodnutí, jestli do toho jít.
-
-  **Proč zrovna `/review`:** ukázkový příklad v dokumentaci toho nástroje je doslova „review changed files across dimensions, verify each finding“, což je přesně jeho Fáze 2 a 3. Převést by šly **jen ty dvě**: Fáze 0 je úsudek a výpis vybraných specialistů uživateli, Fáze 1 jsou příkazy za nulu tokenů, Fáze 4 a 5 je syntéza a Fáze 6 až 8 interakce. Totéž platí pro `/oponent` – panel hledisek a ověřovatel na každý nález.
-
-  **Tři věci by se tím získaly a všechny tři dnes drží jen text v pravidlech:**
-
-  - **Ověřování by běželo průběžně, ne až po celém panelu.** Dnes jsou to dvě bariéry za sebou; `pipeline()` pustí ověření nálezů prvního specialisty ve chvíli, kdy doběhne, zatímco ostatní ještě čtou.
-  - **Tvar nálezu by vynutilo schéma**, ne věta v zadání. `severity` a `basis` podle `~/.claude/skills/severity.md` dnes drží text, který si agent vykládá sám – schéma to zamkne strojově. Je to *Ověřitelná kontrola místo dojmu* posunutá o vrstvu níž.
-  - **Stropy by přestaly být prosbou.** „Nad sedm specialistů nechoď“ a „nejvýš 12 ověřovatelů“ vykonává tentýž model, který ta pravidla čte.
-
-  **Dvě věci se musí ověřit dřív, než se do toho půjde** – na obojím to může padnout:
-
-  - **Umí `agent()` ve skriptu nastavit model pro jednotlivého agenta?** `/review` rozlišuje pečlivě: doménoví specialisté na výchozím modelu s `medium`–`high`, Bezpečnost a Data a stavy na nejsilnějším s `xhigh`. Jeden model pro všechny by byl krok zpátky, ne dopředu.
-  - **Nahradí `resumeFromRunId` soubor `.claude/run/review.json`?** Dokumentace nástroje říká, že obnovení běhu je **jen v rámci téže session**, kdežto ten soubor existuje právě proto, aby rozpracovaná fronta nálezů přežila kompaktaci **i novou session**. Pak by to byla náhrada jen z poloviny a soubor musí zůstat.
-
-  **Třetí nejistota:** Fáze 2 volá `/code-review` a `/security-review` jako vestavěné skilly Claude Code. Agent v workflow nástroj `Skill` nejspíš má (běžný subagent ho má – ověřeno), ale nevyzkoušelo se to.
-
-  **Odpovědi z referenční dokumentace `workflow-authoring` a ze schématu nástrojů (19. 10. 2026, přečteno, ne vyzkoušeno):**
-
-  - **Model i effort jdou nastavit každému agentovi zvlášť** – `agent(prompt, {model, effort, agentType, schema, isolation})`. První podmínka tedy padá. `agentType` bere vlastní typy z téhož registru jako `Agent`, takže `reader` a `researcher` bez shellu zůstanou zachované i ve workflow.
-  - **Obnovení přes `resumeFromRunId` je jen v rámci téže session** (schéma nástroje to říká výslovně). `.claude/run/review.json` proto zůstává; workflow by nahradil jen běh panelu, ne frontu nálezů k rozhodnutí.
-  - **Spouštěč je vyřešený:** Workflow smí Claude volat i tehdy, když ho k tomu vede instrukce skillu, který uživatel zavolal – pokyn uživatele tedy dá samo zavolání `/review`, žádný další souhlas se nečeká.
-  - **Průběžné ověřování je menší výhra, než se tu čekalo.** `/review` i `/audit` před ověřením slučují překrývající se nálezy specialistů; to je podle dokumentace legitimní bariéra (deduplikace napříč všemi výsledky). `pipeline()` by tedy ověřování zrychlilo jen tam, kde se nededuplikuje.
-  - **Effort jde předat i nástrojem `Agent`** (parametr `effort`); vědomá mezera v `/review`, `/oponent`, `/audit` a v normě skillů je zavřená 19. 10. 2026 bez workflow.
-
 - [ ] **Není jasné, jestli se práh z *Dlouhá session je dražší než dvě krátké* vztahuje i na běh skillu.** Od 4. 10. 2026 práh 150 volání (`skills/handoff.md`) ohlašuje hook `handoff.py` při každé zprávě uživatele – tedy i při odpovědi na otázku uprostřed běhu skillu; změřeno je, že `/end` dělá zhruba 150 volání bez ohledu na to, co uklízí. Ohlášení uprostřed vlastního běhu by nemělo komu pomoct, ale pravidlo tu výjimku nezná. Přepis skillu do subagenta to nerozhodl, jen zúžil: 25. 9. 2026 dělal rodič ve celém běhu řádově desítky volání a agent 33, takže se práh nepřekročil ani u jednoho a otázka zůstala nevyzkoušená. (Zjistil čtenář bez kontextu 25. 9. 2026.)
 
 - [ ] **Pustit `/slim` poprvé naostro a změřit tlakové scénáře.** Skill vznikl 1. 10. 2026 ze tří ručních běhů; závěr `/skill` skončil „hotový není“, protože se neověřilo, že pod tlakem („spěchám, zkrať to a neptej se“) nesmaže pravidlo bez rozhodnutí. Změřit to jde jen během proti skutečným souborům – nabízí se `/slim web.md` v jednom z projektů (24 000 znaků, zatím nečištěný). *Časté chyby* v `skills/slim/SKILL.md` jsou zatím z ručních běhů, ne z běhů skillu.
