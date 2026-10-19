@@ -264,6 +264,14 @@ Zbývá pět nálezů. Všechny jsou vědomě odložené, ne přehlédnuté – 
 
   **Třetí nejistota:** Fáze 2 volá `/code-review` a `/security-review` jako vestavěné skilly Claude Code. Agent v workflow nástroj `Skill` nejspíš má (běžný subagent ho má – ověřeno), ale nevyzkoušelo se to.
 
+  **Odpovědi z referenční dokumentace `workflow-authoring` a ze schématu nástrojů (19. 10. 2026, přečteno, ne vyzkoušeno):**
+
+  - **Model i effort jdou nastavit každému agentovi zvlášť** – `agent(prompt, {model, effort, agentType, schema, isolation})`. První podmínka tedy padá. `agentType` bere vlastní typy z téhož registru jako `Agent`, takže `reader` a `researcher` bez shellu zůstanou zachované i ve workflow.
+  - **Obnovení přes `resumeFromRunId` je jen v rámci téže session** (schéma nástroje to říká výslovně). `.claude/run/review.json` proto zůstává; workflow by nahradil jen běh panelu, ne frontu nálezů k rozhodnutí.
+  - **Spouštěč je vyřešený:** Workflow smí Claude volat i tehdy, když ho k tomu vede instrukce skillu, který uživatel zavolal – pokyn uživatele tedy dá samo zavolání `/review`, žádný další souhlas se nečeká.
+  - **Průběžné ověřování je menší výhra, než se tu čekalo.** `/review` i `/audit` před ověřením slučují překrývající se nálezy specialistů; to je podle dokumentace legitimní bariéra (deduplikace napříč všemi výsledky). `pipeline()` by tedy ověřování zrychlilo jen tam, kde se nededuplikuje.
+  - **Nově zastaralé tvrzení mimo workflow:** nástroj `Agent` dnes bere i parametr `effort`. Věty „effort subagentovi předepsat neumíš“ v `skills/review/SKILL.md` (Fáze 3) a `skills/audit/SKILL.md` (Fáze 4) přestaly platit a vědomá mezera se dá zavřít i bez workflow.
+
 - [ ] **Není jasné, jestli se práh z *Dlouhá session je dražší než dvě krátké* vztahuje i na běh skillu.** Od 4. 10. 2026 práh 150 volání (`skills/handoff.md`) ohlašuje hook `handoff.py` při každé zprávě uživatele – tedy i při odpovědi na otázku uprostřed běhu skillu; změřeno je, že `/end` dělá zhruba 150 volání bez ohledu na to, co uklízí. Ohlášení uprostřed vlastního běhu by nemělo komu pomoct, ale pravidlo tu výjimku nezná. Přepis skillu do subagenta to nerozhodl, jen zúžil: 25. 9. 2026 dělal rodič ve celém běhu řádově desítky volání a agent 33, takže se práh nepřekročil ani u jednoho a otázka zůstala nevyzkoušená. (Zjistil čtenář bez kontextu 25. 9. 2026.)
 
 - [ ] **Pustit `/slim` poprvé naostro a změřit tlakové scénáře.** Skill vznikl 1. 10. 2026 ze tří ručních běhů; závěr `/skill` skončil „hotový není“, protože se neověřilo, že pod tlakem („spěchám, zkrať to a neptej se“) nesmaže pravidlo bez rozhodnutí. Změřit to jde jen během proti skutečným souborům – nabízí se `/slim web.md` v jednom z projektů (24 000 znaků, zatím nečištěný). *Časté chyby* v `skills/slim/SKILL.md` jsou zatím z ručních běhů, ne z běhů skillu.
