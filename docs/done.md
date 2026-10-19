@@ -273,6 +273,8 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 - **2026-10-19** · `/end` · `d4b943a` · session `c9472ab5-ea22-4ec2-9aa8-0de877fa992f` · prompty 5/5 · 0 témat · mimo rozsah: nesledovaný `stats-cache.json` z doby před session ponechán · meze: 17 bloků myšlení (prázdné z formátu), 6 výstupů Read, 6 výstupů Edit, 1 výstup Skill
 
+- **2026-10-19** · `/end` · `cbc36ca` · session `0e322484-513f-4ee8-9829-b4da4d8aa43f` · prompty 3/3 · 0 témat · mimo rozsah: nesledovaný `stats-cache.json` z doby před session, nechán být · meze: 8 bloků myšlení prázdných z formátu, 1 výstup Edit
+
 ## Odvedená práce
 
 - [x] **`done.md` vedle `todo.md` pro hotové úkoly.** (2026-09-01) (zadáno 1. 9. 2026) Dnes drží `todo.md` nehotové i hotové, takže není přehledně vidět, co zbývá, a vzniká zbytečná otázka, kam hotové patří (konec souboru vs. pod sekci). Nově: `todo.md` jen nehotové, `done.md` jen hotové. U strukturovaného `todo.md` se sekce zrcadlí i v `done.md`.
@@ -615,3 +617,5 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - [x] **Hook `findings-guard.py` vynucuje tvar `header` u otázky na položku.** (2026-10-16) Zastaví `AskUserQuestion` se záchytnou volbou a `header` mimo `Nález|Položka N/celkem`; testy v obou směrech v `tests/test_hooks.py`, meze v `standards/bypass.md`.
 
 - [x] **Posouzen převod panelu `/review` a `/oponent` na nástroj `Workflow`.** (2026-10-19) Rozhodnuto nepřevádět; důvody a podmínky návratu drží `decisions.md`, *Panel `/review` a `/oponent` se na nástroj `Workflow` nepřevádí*. Cestou zavřena mezera s effortem: nástroj `Agent` bere parametr `effort`, takže `/review`, `/oponent`, `/audit` a norma skillů ho ověřovatelům předepisují.
+
+- [x] **Status line zaokrouhluje procenta u teploměrů, místo aby je ořezávala.** (2026-10-19) BSD awk v českém locale četl `99.6` jako 99, takže číslo i prahy barev se ořezávaly; `statusline.sh` teď nastavuje `LC_NUMERIC=C` a číslo zaokrouhluje poloviny nahoru stejně jako pruh. Testy včetně mutačního v `tests/test_statusline.py`, třída `PercentRounding`.
