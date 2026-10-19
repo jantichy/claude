@@ -274,6 +274,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-10-19** · `/end` · `d4b943a` · session `c9472ab5-ea22-4ec2-9aa8-0de877fa992f` · prompty 5/5 · 0 témat · mimo rozsah: nesledovaný `stats-cache.json` z doby před session ponechán · meze: 17 bloků myšlení (prázdné z formátu), 6 výstupů Read, 6 výstupů Edit, 1 výstup Skill
 
 - **2026-10-19** · `/end` · `cbc36ca` · session `0e322484-513f-4ee8-9829-b4da4d8aa43f` · prompty 3/3 · 0 témat · mimo rozsah: nesledovaný `stats-cache.json` z doby před session, nechán být · meze: 8 bloků myšlení prázdných z formátu, 1 výstup Edit
+- **2026-10-19** · `/end` · `9435c01` · session `03229135-bc15-4bd1-97cd-380e4cc5767e` · prompty 3/3 · 0 témat · mimo rozsah: žádné · meze: 7 bloků myšlení (prázdné z formátu)
 
 ## Odvedená práce
 
