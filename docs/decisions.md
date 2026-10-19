@@ -2135,3 +2135,13 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Zamítnuté varianty:** převod rovnou (cena bez doloženého zisku) a zkušební běh jedné `/review` přes workflow (měřil by hlavně úsporu kontextu, o které se ví, že je menší než rozhodující).
 
 **Kdy se k tomu vrátit:** doloží-li se, že agent panelu vrátil nález ve vadném tvaru nebo skill překročil strop agentů; naroste-li panel tak, že úspora kontextu začne rozhodovat; nebo přibude-li skill, jehož panel ověřuje bez deduplikace, takže by `pipeline()` opravdu zkrátil běh.
+
+### Vlastní typy agentů zůstávají malými písmeny, i když `Explore` a `Plan` mají velké
+
+**Rozhodnuto 19. 10. 2026** (uživatel). Podnět: v seznamu typů agentů vypadá nejednotně, že vestavěný `Explore` začíná velkým písmenem a vlastní `reader` a `researcher` z `agents/` malým.
+
+**Proč se nesjednocuje:** dokumentace Claude Code pro pole `name` subagenta předepisuje „Unique identifier (lowercase, hyphens/numbers only)“ (code.claude.com/docs/en/sub-agents), takže `name: Reader` by bylo mimo specifikaci a mohlo by tiše přestat fungovat s kteroukoli verzí. A vestavění agenti sami jednotní nejsou: velké písmeno mají jen `Explore` a `Plan`, kdežto `general-purpose`, `claude-code-guide` a `statusline-setup` jsou malými. Přejmenování by nic nesjednotilo, jen přesunulo dva typy do menšiny.
+
+**Zamítnuto:** přejmenovat `reader` a `researcher` na velké (proti specifikaci, nesjednotí); přepsat vestavěný `Explore` vlastním souborem s malým jménem (vestavěné typy se přejmenovat nedají, jen zastínit, a tím by se ztratily jejich vestavěné instrukce a údržba by přešla na nás); přejmenovat bez ohledu na cenu – zmínky jsou zhruba ve třiceti souborech a v seznamu `AGENT_TYPES` v `tests/test_skills.py`.
+
+**Kdy se k tomu vrátit:** změní-li Claude Code pravidlo pro jména subagentů, nebo sjednotí-li jména vestavěných typů.
