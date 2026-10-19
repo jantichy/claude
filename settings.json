@@ -244,7 +244,6 @@
       "Bash(uv venv:*)",
       "Bash(uv pip install:*)",
       "Bash(uv tool install:*)",
-      "Bash(uv run:*)",
       "Bash(brew upgrade:*)",
       "Bash(curl -s:*)",
       "Bash(curl -L:*)",
