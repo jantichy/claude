@@ -63,6 +63,10 @@ Sem patří i to, co bylo v návrhu a vyhodilo se – ať to nikdo nevymyslí zn
 
 ## Jak poznáme, že to funguje
 Success metrics. Konkrétní, měřitelné, s cílovou hodnotou a termínem.
+Cílovou hodnotu a termín jen s oporou – od autora, z dat nebo ze závazku;
+vymyšlené číslo se pak měří, i když nic nerozhoduje. U nástroje pro vlastní
+potřebu (~/Context/coding/architecture.md) žádné cílové hodnoty nenavrhuj,
+jen kvalitativní kritéria: běží bez zásahu, dělá, co má.
 
 ## Otevřené otázky
 Co ještě není rozhodnuté a co to blokuje.
