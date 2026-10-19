@@ -4,6 +4,12 @@
 
 input=$(cat)
 
+# awk čte desetinná čísla podle LC_NUMERIC: v českém locale čeká čárku, z „99.6“
+# přečte 99 a procenta se místo zaokrouhlení ořežou, včetně prahů barev.
+# LC_ALL by LC_NUMERIC přebilo, proto pryč.
+unset LC_ALL
+export LC_NUMERIC=C
+
 # ---------------------------------------------------------------------------
 # 1. UKAZATEL KONTEXTU A LIMITŮ
 # ---------------------------------------------------------------------------
@@ -22,6 +28,13 @@ make_bar() {
   i=0
   while [ "$i" -lt "$empty" ];  do bar="${bar}░"; i=$((i + 1)); done
   echo "$bar"
+}
+
+# Zaokrouhlí procenta na celé číslo, poloviny nahoru – stejně jako `make_bar`.
+# Ne `printf "%.0f"`: to zaokrouhluje poloviny k sudé (2.5 → 2), takže by číslo
+# a pruh u téže hodnoty zaokrouhlovaly každé jinak.
+round_pct() {
+  echo "$1" | awk '{printf "%d", int($1 + 0.5)}'
 }
 
 # Naformátuje počet tokenů: 1234567 → "1.2M", 49883 → "50k", 999 → "999"
@@ -69,7 +82,7 @@ usage_part=""
 
 if [ -n "$ctx_used" ]; then
   bar=$(make_bar "$ctx_used")
-  ctx_int=$(echo "$ctx_used" | awk '{printf "%.0f", $1}')
+  ctx_int=$(round_pct "$ctx_used")
   # Barva: zelená < 60 %, tlumená žlutá < 80 %, žlutá < 85 %, červená >= 85 %
   if [ "$ctx_int" -ge 85 ]; then
     color="\033[31m"     # svítivá červená
@@ -92,7 +105,7 @@ fi
 
 # Přidej rate limit info pokud je k dispozici
 if [ -n "$five_pct" ]; then
-  five_int=$(echo "$five_pct" | awk '{printf "%.0f", $1}')
+  five_int=$(round_pct "$five_pct")
   bar5=$(make_bar "$five_pct")
   if [ "$five_int" -ge 80 ]; then
     limit_color="\033[35m"    # svítivá magenta
@@ -119,7 +132,7 @@ fi
 
 # Přidej týdenní rate limit info pokud je k dispozici
 if [ -n "$week_pct" ]; then
-  week_int=$(echo "$week_pct" | awk '{printf "%.0f", $1}')
+  week_int=$(round_pct "$week_pct")
   barw=$(make_bar "$week_pct")
   if [ "$week_int" -ge 80 ]; then
     week_color="\033[36m"    # svítivá cyan

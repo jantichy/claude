@@ -190,6 +190,86 @@ class UsageBar(unittest.TestCase):
         self.assertNotIn("\u2591", self.bar(100))
 
 
+class PercentRounding(unittest.TestCase):
+    """Procenta se zaokrouhlují, ne ořezávají – i v českém locale.
+
+    awk čte desetinné číslo podle `LC_NUMERIC`. BSD awk na macOS v českém
+    locale čeká čárku, takže z „99.6“ přečetl 99 a status line ukazovala 99 %
+    místo 100 %. Ořezané číslo přitom rozhoduje i o barvě: kontext na 84,6 %
+    zůstal žlutý, i když už patří do červené.
+
+    Mutační test potřebuje awk, který chybu v českém locale opravdu udělá;
+    gawk ani mawk desetinnou čárku na vstupu nečtou, takže tam se přeskočí.
+    """
+
+    CS_ENV = {
+        "LANG": "cs_CZ.UTF-8",
+        "LC_ALL": "cs_CZ.UTF-8",
+        "LC_NUMERIC": "cs_CZ.UTF-8",
+    }
+
+    def run_statusline(self, pct, script=STATUSLINE):
+        payload = json.dumps(
+            {
+                "context_window": {"used_percentage": pct},
+                "rate_limits": {
+                    "five_hour": {"used_percentage": pct},
+                    "seven_day": {"used_percentage": pct},
+                },
+                "workspace": {"current_dir": "/tmp"},
+                "model": {"display_name": "T"},
+            }
+        )
+        env = {"PATH": "/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin", **self.CS_ENV}
+        r = subprocess.run(
+            ["bash", str(script)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=env,
+            timeout=30,
+        )
+        return r.stdout
+
+    def test_fraction_rounds_up(self):
+        out = self.run_statusline(99.6)
+        self.assertEqual(out.count("100%"), 3, out)
+
+    def test_half_rounds_up_like_bar(self):
+        out = self.run_statusline(2.5)
+        self.assertEqual(out.count(" 3%"), 3, out)
+
+    def test_color_threshold_uses_rounded_value(self):
+        out = self.run_statusline(84.6)
+        self.assertIn("\033[31mContext: [", out)
+        self.assertIn("85%", out)
+
+    def test_without_locale_fix_fraction_is_truncated(self):
+        """Mutace: bez nastavení locale musí 99.6 vyjít jako 99 – jinak test neměří opravu."""
+        probe = subprocess.run(
+            ["awk", '{printf "%d", int($1 + 0.5)}'],
+            input="99.6",
+            capture_output=True,
+            text=True,
+            check=False,
+            env={"PATH": "/usr/bin:/bin", **self.CS_ENV},
+        )
+        if probe.stdout != "99":
+            self.skipTest("tenhle awk čte desetinnou tečku i v českém locale")
+        text = STATUSLINE.read_text()
+        mutation = text.replace("unset LC_ALL\nexport LC_NUMERIC=C\n", "")
+        self.assertNotEqual(
+            text, mutation, "nastavení locale v statusline.sh se změnilo"
+        )
+        with tempfile.TemporaryDirectory(prefix="sl-locale-") as tmp:
+            broken = Path(tmp) / "statusline.sh"
+            broken.write_text(mutation)
+            out = self.run_statusline(99.6, broken)
+        self.assertIn("99%", out)
+        self.assertNotIn("100%", out)
+
+
 class InputNumbersDoNotRunCommand(unittest.TestCase):
     """Hodnota z JSONu se nesmí dostat rovnou do `$(( ))`.
 
