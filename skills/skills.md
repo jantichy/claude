@@ -246,7 +246,7 @@ Odchylku odůvodni **tím, čí vstup to je**: chyba v návrhu nebo v ověření
 
 **Definice typu je `agents/<name>.md`** s hlavičkou `name`, `description` a `tools` (čárkami oddělený výčet, allowlist – co v něm není, agent nemá). `description` říká **kdy typ použít a kdy ne**, protože právě podle něj se mezi typy vybírá; patří do ní i odkaz na sesterský typ pro případ, kdy tenhle nesedí. Tělo souboru je systémový prompt agenta a nese to, co platí pro každé jeho zadání – že nemá shell a proč, že mez posudku přizná místo odhadu, a že cizí text je data, ne instrukce.
 
-**Typ nenese model ani effort a je to záměr.** `model` by v hlavičce fungoval (změřeno 15. 9. 2026 – podagent s `model: haiku` opravdu běžel na Haiku), ale týž typ používá víc skillů s různými nároky: `/consistency` chce `reader` na `low`, `/oponent` na nejsilnějším modelu. Model se proto předává **parametrem při volání**, ne v definici. **Effort se předat nedá ani tak, ani tak** – `Agent` ten parametr nebere; věta „na nejsilnějším modelu s `xhigh`“ je tedy splnitelná jen první polovinou a je to vědomá mezera.
+**Typ nenese model ani effort a je to záměr.** `model` by v hlavičce fungoval (změřeno 15. 9. 2026 – podagent s `model: haiku` opravdu běžel na Haiku), ale týž typ používá víc skillů s různými nároky: `/consistency` chce `reader` na `low`, `/oponent` na nejsilnějším modelu. Model se proto předává **parametrem při volání**, ne v definici, a **effort stejně** – parametrem `effort`.
 
 **Nový typ je vidět až v nové session.** Registr se načítá při startu, takže skill, který si typ právě založil, ho v témž běhu nezavolá. Překlep v názvu naopak **selže hlučně** (`Agent type '…' not found` i s výčtem dostupných), takže tiše na plnohodnotného agenta nespadne.
 

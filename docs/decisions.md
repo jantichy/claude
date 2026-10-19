@@ -1169,7 +1169,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 | cesta ke scratchpadu | **nese session-id rodiče**, ne vlastní |
 | `Write`, `Edit`, `Skill` | má |
 | `AskUserQuestion` | **nemá** – je jen mezi odloženými nástroji |
-| effort | **nejde nastavit**; `Agent` bere `model`, ne `effort` |
+| effort | **tehdy nešel nastavit**, `Agent` bral jen `model`; **od 19. 10. 2026 neplatí** – schéma nástroje parametr `effort` má |
 
 **Nejdůležitější důsledek:** agent si **najde transcript rodičovské session sám**, protože jeho scratchpad ukazuje na ni – nemusí se mu předávat žádné id. To dělá z delegace úplně jinou možnost, než jaká se jevila, dokud se počítalo s `/clear`em.
 
