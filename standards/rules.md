@@ -302,9 +302,8 @@ Osa        /project → /discovery → /specify → /architect →
            /breakdown → /implement → /release → /evaluate
 
 Kontroly   /oponent, /consolidate, /review, /consistency, /attack
-           stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
 ```
 
-Kroky **osy** něco tvoří a čekají na výstup předchozího; `/evaluate` čeká na čas, protože data o provozu vznikají týdny po nasazení. **Kontrolní kroky** nezvětšují rozsah práce – měří a uklízejí, co vzniklo. **Session a větev do cyklu nepatří:** každá session končí uzavíracím skillem `/end`, `/merge` nebo `/break`, podle stavu práce, ne podle místa v cyklu (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*).
+Kroky **osy** něco tvoří a čekají na výstup předchozího; `/evaluate` čeká na čas, protože data o provozu vznikají týdny po nasazení. **Kontrolní kroky** nezvětšují rozsah práce – měří a uklízejí, co vzniklo, a stojí v mezerách mezi kroky osy, některé ve víc mezerách. **Session a větev do cyklu nepatří:** každá session končí uzavíracím skillem `/end`, `/merge` nebo `/break`, podle stavu práce, ne podle místa v cyklu (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*).
 
 **Načti si `~/.claude/standards/lifecycle.md`, jakmile v některém kroku stojíš** – drží rozhraní kroků, co smí stát ve které mezeře, povolená opakování a kritéria přeskočení. Krok se přeskakuje jen tam, kde pro něj není důvod, a **nahlas i s důvodem**. Žádný krok neopakuje práci předchozího.
