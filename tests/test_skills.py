@@ -2643,6 +2643,32 @@ def _frame_defects(text: str, in_cycle: bool) -> list:
     )
 
 
+def session_skills() -> list:
+    """Skilly skupiny *Začátek a konec session* z kořenového README, v pořadí.
+
+    Je to zdroj řádku *Session* v rámečku README skillů cyklu
+    (`skills/skills.md`, *Skill ze životního cyklu*). Session do cyklu nepatří,
+    takže ho rámeček v `standards/rules.md` nenese.
+    """
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    block = _section(readme, "### Začátek a konec session")
+    # Skupina končí dalším `###`, ne až koncem kapitoly `## Skilly`.
+    block = re.split(r"^### ", block, flags=re.M)[0]
+    return re.findall(r"^#### \[`/([a-z][a-z-]*)`\]", block, re.M)
+
+
+def session_row_defects(text: str) -> list:
+    """Řádek *Session* v rámečku: přesně skilly ze skupiny, v jejím pořadí."""
+    row = next((r for r in text.splitlines() if r.startswith("> **Session**")), None)
+    if row is None:
+        return ["rámeček nemá řádek *Session*"]
+    found = re.findall(r"\(\.\./([a-z][a-z-]*)/README\.md\)", row)
+    expected = session_skills()
+    if found != expected:
+        return [f"řádek *Session* jmenuje {found} místo {expected}"]
+    return []
+
+
 class SkillReadme(unittest.TestCase):
     """README skillu proti `skills/skills.md`, *README skillu*.
 
@@ -2722,6 +2748,35 @@ class SkillReadme(unittest.TestCase):
                         f"(../{step}/README.md)" in text,
                         f"{readme}: rámeček neodkazuje na `/{step}`",
                     )
+
+    def test_cycle_frame_lists_session_skills(self):
+        """Skilly cyklu odkazují na uzavírací skilly v každém *Kudy dál*;
+        čtenář o nich má vědět z rámečku, ne až z konce běhu."""
+        self.assertTrue(session_skills(), "skupina session se z README nepřečetla")
+        for skill in SKILLS:
+            if skill.parent.name not in self.CYCLE:
+                continue
+            readme = self._readme(skill)
+            if not readme.exists():
+                continue
+            text = readme.read_text(encoding="utf-8")
+            with self.subTest(skill=skill.parent.name):
+                self.assertFalse(session_row_defects(text), f"{readme}")
+                bulk = text[text.find("Nebo celou sadu naráz.") :]
+                for name in session_skills():
+                    self.assertRegex(
+                        bulk,
+                        rf"\b{name}\b",
+                        f"{readme}: hromadná instalace nejmenuje `{name}`",
+                    )
+
+    def test_session_row_check_catches(self):
+        good = "> **Session** " + " · ".join(
+            f"[`/{n}`](../{n}/README.md)" for n in session_skills()
+        )
+        self.assertFalse(session_row_defects(good))
+        self.assertTrue(session_row_defects(good.replace("(../next/README.md)", "")))
+        self.assertTrue(session_row_defects("> **Kontroly** x"))
 
     def test_bulk_install_names_all_steps(self):
         """Přibude-li krok, musí ho vyjmenovat i pokyn na instalaci celé sady.

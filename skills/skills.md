@@ -347,16 +347,18 @@ Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
 **Znění je doslova stejné ve všech**, liší se jen tím, který krok je tučný. **Počet kroků se v něm neuvádí číslovkou** – ta se při přidání dalšího kroku rozejde ve všech rámečcích naráz a nic ji nehlídá; čtenář si počet spočítá z rámečku pod tím.
 
-**Rámeček má dva bloky, protože cyklus má dvě vrstvy** (`~/.claude/standards/lifecycle.md`, *Kroky cyklu a jejich uspořádání*): kroky **osy** něco tvoří a stojí v pořadí, **kontrolní kroky** nezvětšují rozsah práce a stojí v mezerách mezi nimi – některé z nich ve víc mezerách naráz. Jednořádková šipková řada, která tu stála do 20. 9. 2026, obojí slévala a tvrdila tím pořadí, které neexistuje.
+**Rámeček má dva bloky, protože cyklus má dvě vrstvy** (`~/.claude/standards/lifecycle.md`, *Kroky cyklu a jejich uspořádání*): kroky **osy** něco tvoří a stojí v pořadí, **kontrolní kroky** nezvětšují rozsah práce a stojí v mezerách mezi nimi – některé z nich ve víc mezerách naráz. Jednořádková šipková řada, která tu stála do 20. 9. 2026, obojí slévala a tvrdila tím pořadí, které neexistuje. **Třetí blok *Session* do cyklu nepatří** – drží skilly, kterými každá session začíná a končí, protože na ně skilly cyklu odkazují v každém bloku *Kudy dál*. Jeho zdrojem je skupina *Začátek a konec session* v kořenovém `README.md`, ne rámeček v `~/.claude/standards/rules.md`, a stojí ve stejném pořadí.
 
 ```
 > **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci
-> od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci
-> toho vedle:
+> od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo, třetími každá session
+> začíná a končí – a žádný nedělá práci toho vedle:
 >
 > **Osa** [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/evaluate`](../evaluate/README.md)
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** · …
+>
+> **Session** [`/next`](../next/README.md) · [`/continue`](../continue/README.md) · [`/end`](../end/README.md) · [`/merge`](../merge/README.md) · [`/break`](../break/README.md)
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 ```
@@ -370,7 +372,7 @@ Rozejde-li se rámeček s životním cyklem v `~/.claude/standards/rules.md`, pl
 ```
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency a attack, a k nim skilly, kterými se session uzavírá: end, merge a break. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency a attack, a k nim skilly, kterými session začíná a končí: next, continue, end, merge a break. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
 ```
 
 **Skilly mimo životní cyklus rámeček ani hromadnou instalaci nemají.** Pouštějí se samostatně a předstírat u nich sadu by mátlo.
