@@ -179,6 +179,7 @@ def insert(lines: list[str], added: list[dict]) -> list[str]:
 
 
 def write_atomic(path: Path, lines: list[str]) -> None:
+    path = Path(os.path.realpath(path))  # seznam jako odkaz: nahradit cíl, odkaz zůstane
     fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
