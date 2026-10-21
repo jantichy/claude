@@ -176,7 +176,7 @@ Před opuštěním nebo zkompaktováním session přečte celou konverzaci – v
 
 ### Podklady, znalost a texty
 
-Jeden proud od přijatého souboru k hotovému textu: co přijde, se zařadí, nahrávka se přepíše, přepis se rozpustí do znalostní báze a z ní se pak píše.
+Jeden proud od přijatého souboru k hotovému textu: co se má stáhnout, jde do fronty, co přijde, se zařadí, nahrávka se přepíše, přepis se rozpustí do znalostní báze a z ní se pak píše.
 
 #### [`/compose`](skills/compose/) – texty, co znějí jako já
 
@@ -185,6 +185,10 @@ Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem �
 #### [`/depot`](skills/depot/) – stažený soubor doputuje tam, kam patří, a rovnou se zpracuje
 
 Řeknu mu soubor nebo celou dávku z Downloads a on pozná, o jaký podklad jde, uloží ho na správné místo pod správným názvem a hned spustí, co po tom má následovat – přepis nahrávky, vytěžení do knowledge base, zápis do evidence. Rozsah je přesně to, co zadám: neuklízí okolí, nic nepřepíše a při kolizi se zeptá místo toho, aby přilepil `(1)`. Konkrétní pravidla, co kam patří, v tomhle repozitáři nejsou – skill je jen rámec a tabulku si čte z mojí privátní knowledge base.
+
+#### [`/download`](skills/download/) – složka z Google Drive do fronty ke stažení jedním příkazem
+
+Dám mu odkaz na složku na Google Drive nebo na libovolný soubor a on z toho udělá řádky v seznamu, který na pozadí stahuje můj nástroj clockwork – každý soubor zvlášť, i z podsložek, pod nadpisem cílové složky v Downloads a seřazené tak, jak je čte člověk. Co už ve frontě je, nepřidá podruhé, ani když je to tentýž soubor v jiném tvaru odkazu, a dokumenty Google, které jako soubor stáhnout nejdou, jen vypíše. Sám nic nestahuje a stažené nezařazuje – na to je `/depot`.
 
 #### [`/learn`](skills/learn/) – nová znalost dovnitř té staré, ne vedle ní
 

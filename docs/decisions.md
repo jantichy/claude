@@ -2145,3 +2145,15 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Zamítnuto:** přejmenovat `reader` a `researcher` na velké (proti specifikaci, nesjednotí); přepsat vestavěný `Explore` vlastním souborem s malým jménem (vestavěné typy se přejmenovat nedají, jen zastínit, a tím by se ztratily jejich vestavěné instrukce a údržba by přešla na nás); přejmenovat bez ohledu na cenu – zmínky jsou zhruba ve třiceti souborech a v seznamu `AGENT_TYPES` v `tests/test_skills.py`.
 
 **Kdy se k tomu vrátit:** změní-li Claude Code pravidlo pro jména subagentů, nebo sjednotí-li jména vestavěných typů.
+
+### `/download` plní frontu clockworku a zápis drží skript, ne model
+
+**Rozhodnuto 21. 10. 2026** (uživatel). Podnět: návrh úlohy `download` v clockworku rozhodl, že seznam `~/Downloads/downloads.md` plní kdokoliv zvenku a clockwork ho jen odbavuje; rozbalení složky na Google Drive a určení cílové složky tím zbylo na samostatný skill.
+
+**Co platí:** cílovou složku určuje argument, jinak jméno rozbalené složky na Drive, jejíž podsložky se zrcadlí jako `## Složka/Podsložka`; samostatný soubor jde do kořene `~/Downloads`. Jméno za šipkou se píše jen na pokyn uživatele – jinak ho clockwork vezme ze zdroje a jméno se určuje na jednom místě. Duplicita je normalizovaná adresa kdekoliv v seznamu, čekající i stažená; znovu se přidá jen výslovně. Dokumenty Google a složky mimo Drive se nezapíšou, jen vypíšou – do seznamu jde jen to, co clockwork opravdu stáhne.
+
+**Proč skript:** normalizace adres, hledání duplicit, zařazení pod nadpis a atomický zápis mají jedinou správnou cestu a clockwork soubor čte i odškrtává souběžně, takže napůl zapsaný soubor by přečetl jako kratší seznam. `skills/download/add.py` přebírá tvar řádku a normalizaci z clockworku a `tests/test_download.py` ověřuje, že zapsaný seznam přečte parser clockworku stejně (přeskočí se, když clockwork na disku není).
+
+**Zamítnuto:** navrhovat cílovou složku podle obsahu nebo se na ni pokaždé ptát (otázka navíc v každém běhu bez přínosu proti jménu složky); psát vždy jméno ze zdroje za šipku (jméno z cesty adresy bývá horší než to, které clockwork zjistí z hlavičky); blokovat duplicitu jen v téže složce nebo jen čekající (opakovaně vložená složka by se stáhla podruhé); rozbalovat i výpisy adresářů na webu (každý typ stránky se chová jinak a výsledek nejde ověřit); srovnávací běh bez skillu (selhání, která by stálo měřit, nese skript a jeho testy).
+
+**Co se vědomě nepokrylo:** jestli konektor Google Drive vidí do Sdílených disků – ověří se prvním ostrým během. Clockwork se v tomhle repozitáři smí jmenovat (`.claude/CLAUDE.md`, *Výjimky z obecných pravidel*).
