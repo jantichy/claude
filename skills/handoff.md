@@ -50,7 +50,13 @@ Vyhrává první kritérium, které sedí:
 
 **Odrážka, jejíž krok nemá běžet v téhle session, nesmí být jen jméno skillu.** Vypíše se celý řetěz včetně ukončení session, jinak si ho uživatel spustí tady – a přesně to je chyba, kterou to má odchytit.
 
-**Každý odchod ze session začíná `/end`, bezpodmínečně.** Odchodem je `/clear`, `/compact`, nová session, zavření okna i `/merge`; odrážka, která kterýkoliv z nich jmenuje, jmenuje `/end` před ním. **Nepodmiňuj ho tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/end` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi `/end` a odchodem nesmí stát jiná práce než `/merge`**, jinak ji zase nikdo nezapíše. `/merge` jde za `/end` a před `/clear`: do hlavní větve má jít i to, co úklid zapsal, a sám nic nezapisuje, takže druhý `/end` nepotřebuje.
+**Každý odchod ze session vede přes jeden ze tří uzavíracích skillů a uživatel volí jen mezi nimi.** Odchodem je `/clear`, `/compact`, nová session i zavření okna; odrážka, která kterýkoliv z nich jmenuje, jmenuje uzavírací skill před ním. Volí se podle stavu práce:
+
+- **`/end`** – práce je zapsatelná a větev pokračuje, nebo se pracuje bez větví
+- **`/merge`** – větev je hotová; úklid session pouští sám na začátku, takže do hlavní větve jde i to, co úklid zapsal
+- **`/break`** – práce je rozdělaná a pokračuje se v nové session; úklid session pouští sám na konci
+
+**Úklid session (`/end`) tedy proběhne v každém z nich a před `/merge` ani za `/break` se nepíše** – řetěz, který si má uživatel pamatovat, by se mu rozpadl přesně na konci session, kdy už myslí jinde. **Nepodmiňuj uzavírací skill tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/end` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi uzavíracím skillem a odchodem nesmí stát jiná práce**, jinak ji zase nikdo nezapíše.
 
 Úplný výčet řetězů – jiná pořadí nedávají smysl. **Bez větví `/merge` odpadá**: pracuje se rovnou v hlavní větvi a do ní práci dostane commit a push, které dělá `/end` sám. Řádky, které se liší jen mergem, tam proto splývají:
 
@@ -58,19 +64,19 @@ Vyhrává první kritérium, které sedí:
 |---|---|---|
 | další krok patří do téhle session | `/X` | `/X` |
 | další krok v nové session, práce na věci pokračuje | `/end` → `/clear` → `/X` | `/end` → `/clear` → `/X` |
-| věc je hotová a dál se nic nedělá | `/end` → `/merge` | `/end` |
-| věc je hotová a další krok běží nad hlavní větví | `/end` → `/merge` → `/clear` → `/X` | `/end` → `/clear` → `/X` |
-| ještě musí v nové session proběhnout kontrola | `/end` → `/clear` → `/X`, merge až po jejím `/end` | `/end` → `/clear` → `/X` |
-| přerušený průchod frontou | `/break` → `/end` → `/clear` → `/continue` | `/break` → `/end` → `/clear` → `/continue` |
+| věc je hotová a dál se nic nedělá | `/merge` | `/end` |
+| věc je hotová a další krok běží nad hlavní větví | `/merge` → `/clear` → `/X` | `/end` → `/clear` → `/X` |
+| ještě musí v nové session proběhnout kontrola | `/end` → `/clear` → `/X`, merge až v té session | `/end` → `/clear` → `/X` |
+| přerušený průchod frontou | `/break` → `/clear` → `/continue` | `/break` → `/clear` → `/continue` |
 | rozdělaná úvaha, která se zapsat nedá | `/end` → `/compact` | `/end` → `/compact` |
-| konec práce | `/end` → zavřít okno; je-li větev hotová, `/merge` před tím | `/end` → zavřít okno |
+| konec práce | `/end` → zavřít okno; je-li větev hotová, `/merge` místo něj | `/end` → zavřít okno |
 
 **Který sloupec platí, rozhoduje ověřitelný stav, ne dojem:** stojí-li session na jiné než hlavní větvi (`git branch --show-current`), platí *S větví*. Odrážka ve skillu, která jmenuje `/merge`, ho proto vždy podmiňuje tím, že práce na větvi stojí.
 
 ```
 - `/end`, pak `/clear`, a `/consistency` až v nové session – kontext je na <N>k
-- `/end`, pak `/merge` – větev je hotová
-- `/end`, pak `/merge`, pak `/clear`, a `/next` až v nové session v `<container>/main` – větev je hotová
+- `/merge` – větev je hotová
+- `/merge`, pak `/clear`, a `/next` až v nové session v `<container>/main` – větev je hotová
 ```
 
 **Kdy krok do téhle session nepatří** – stačí jedno:

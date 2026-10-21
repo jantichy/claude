@@ -190,4 +190,4 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/end`, pak `/clear`, a `/context` až v nové session – ověření, že úspora platí
-- zůstala-li práce ve větvi cizího projektu – `/end`, pak `/merge` v něm
+- zůstala-li práce ve větvi cizího projektu – `/merge` v něm

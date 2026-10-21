@@ -25,11 +25,11 @@ Dlouhá session jednou narazí na strop: konverzace je tak velká, že se v ní 
 /break
 ```
 
-Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému dochází místo. Na konci doporučí `/end`, `/clear` a v nové session `/continue`, který na zápis rovnou naváže.
+Zavolá se kdykoliv uprostřed práce, nebo ho nabídne skill, kterému dochází místo. Na konci sám pustí `/end`, aby se zapsala i zbylá session, a doporučí `/clear` a v nové session `/continue`, který na zápis rovnou naváže.
 
 ## Co nedělá
 
-- Nezapisuje dohody a poznatky z celé session – na to je `/end`, který jde hned po něm.
+- Nezapisuje dohody a poznatky z celé session sám – na to je `/end`, kterého na konci zavolá.
 - Sám v práci nepokračuje – to v nové session udělá `/continue`.
 - Zbytek práce nedodělává ani nerozhoduje, jen ho uloží.
 

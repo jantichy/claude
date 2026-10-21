@@ -1,20 +1,20 @@
 ---
 name: break
-description: Skill se použije, když uživatel zadá "/break", nebo chce rozdělanou práci přerušit uprostřed a ukončit session – "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, anebo když běh jiného skillu narazí na práh kontextu a uživatel přerušení přijme. Zapíše do docs/todo.md, sekce Přerušený běh, všechno, co nová session potřebuje, aby v práci pokračovala bez ztráty čehokoliv podstatného: kde práce leží, co předchází, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří a commitne a skončí doporučením /end, /clear a /continue, který v nové session na zápis rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci mimo skill. Na rozdíl od /end, který vytěžuje dohody a nevypořádaná témata celé session, tenhle skill ukládá rozdělanou práci jako frontu k navázání; na rozdíl od /continue nic neprovádí, jen připraví, čím se naváže.
-allowed-tools: [Read, Glob, Grep, Bash, Edit, Write, AskUserQuestion]
+description: Skill se použije, když uživatel zadá "/break", nebo chce rozdělanou práci přerušit uprostřed a ukončit session – "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, anebo když běh jiného skillu narazí na práh kontextu a uživatel přerušení přijme. Zapíše do docs/todo.md, sekce Přerušený běh, všechno, co nová session potřebuje, aby v práci pokračovala bez ztráty čehokoliv podstatného: kde práce leží, co předchází, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří a commitne, sám pak pustí /end, aby se zapsala i zbylá session, a skončí doporučením /clear a /continue, který v nové session na zápis rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci mimo skill. Na rozdíl od /end, který vytěžuje dohody a nevypořádaná témata celé session, tenhle skill ukládá rozdělanou práci jako frontu k navázání; na rozdíl od /continue nic neprovádí, jen připraví, čím se naváže.
+allowed-tools: [Read, Glob, Grep, Bash, Edit, Write, AskUserQuestion, Skill]
 ---
 
 # Break
 
 ## Co skill dělá
 
-Přeruší rozdělanou práci a uloží ji tak, aby ji nová session dokončila **bez kontextu téhle**. Zapisuje do `docs/todo.md`, sekce `## Přerušený běh`, na kterou v nové session naváže `/continue` (a `/next` ji nabízí jako první): kde práce leží, co jí musí předcházet, co se už udělalo, **každou zbývající položku celou**, co se vyvrátilo a co se v běhu rozhodlo. Pak zápis přečte zpátky, pustí kontrakt příkazů projektu, commitne a skončí blokem *Kudy dál*.
+Přeruší rozdělanou práci a uloží ji tak, aby ji nová session dokončila **bez kontextu téhle**. Zapisuje do `docs/todo.md`, sekce `## Přerušený běh`, na kterou v nové session naváže `/continue` (a `/next` ji nabízí jako první): kde práce leží, co jí musí předcházet, co se už udělalo, **každou zbývající položku celou**, co se vyvrátilo a co se v běhu rozhodlo. Pak zápis přečte zpátky, pustí kontrakt příkazů projektu, commitne, pustí úklid session `/end` a skončí blokem *Kudy dál*.
 
 Rozdělanou prací je **fronta kteréhokoliv skillu** – nálezy `/review`, úkoly `/implement`, poznatky `/evaluate` – i **práce mimo skill**: rozepsaný návrh, oprava v půli, rozprava, ve které zbývají otázky. Režimy nemá.
 
 ## Co skill nedělá
 
-- **Nevytěžuje session.** Dohody, poznatky a nevypořádaná témata zapisuje `/end`, který běží **za ním** – `/break` ukládá jen rozdělanou práci jako frontu k navázání a `/end` ji pak nepřebírá ani nepřepisuje.
+- **Nevytěžuje session.** Dohody, poznatky a nevypořádaná témata zapisuje `/end`, kterého tenhle skill na konci **sám zavolá** (*Fáze 4*) – `/break` ukládá jen rozdělanou práci jako frontu k navázání a `/end` ji pak nepřebírá ani nepřepisuje.
 - **Nepokračuje.** Navázání dělá `/continue` v nové session – je to druhá strana téhož předání a čte přesně to, co tenhle skill zapíše. Přehled všeho rozdělaného včetně tohohle sestavuje `/next`.
 - **Nerozhoduje ani neopravuje.** Co se do přerušení nevypořádalo, zůstane otevřené – přerušení není místo, kde se zbytek fronty „rychle doklepne“.
 - **Nehlídá práh kontextu.** Ten drží `~/.claude/skills/handoff.md`, *Práh kontextu*, a ohlašuje hook `handoff.py`; skill s frontou podle něj přerušení nabídne a na souhlas zavolá tenhle skill.
@@ -76,7 +76,7 @@ Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj klíčem `int
 
 1. **Přečti blok zpátky a spočítej v něm položky** – musí jich být tolik, kolik jich ve frontě zbývalo (`~/.claude/standards/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Nesedí-li to, doplň chybějící; nehlas přerušení s polovinou fronty.
 2. **Pusť kontrakt příkazů projektu** (`## Kontrakt příkazů` v jeho `CLAUDE.md`). Projekty mívají kontroly tvaru dokumentace – holé odkazy, kotvy, formát výčtu – a zápis na ně narazí stejně jako každý jiný text. Selže-li na zápisu, oprav zápis, ne kontrolu. Selže-li na rozdělané práci, nic neopravuj – výsledek patří do *Jak pokračovat* jako stav, ve kterém se navazuje. Chybí-li kontrakt, řekni to a v závěru uveď, že se nic nespustilo.
-3. **Commitni jmenovitě `todo.md`** – rozdělanou práci ne, tu commitne `/end`, který jde po tomhle skillu – a pushni, má-li projekt autocommit (`~/.claude/skills/autocommit/autocommit.md`).
+3. **Commitni jmenovitě `todo.md`** – rozdělanou práci ne, tu commitne `/end` ve *Fázi 4* – a pushni, má-li projekt autocommit (`~/.claude/skills/autocommit/autocommit.md`).
 
 **Pokyn ke spěchu zkracuje odpověď, ne ověření.** Čtení zpátky a commit odcházejícího uživatele nezdrží a ověřený zápis je to, s čím odchází.
 
@@ -90,7 +90,13 @@ Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj klíčem `int
 - **Zapomene se, co předchází.** Chystá-li uživatel změnu, která frontu zreviduje, musí stát v první větě – jinak se fronta dojde nad stavem, který už neplatí.
 - **Zápis neprojde kontrolou projektu.** Holé odkazy na kapitolu rozhodnutí v zápisu shodily test tvaru dokumentace; proto se pouští kontrakt, ne jen čtení zpátky.
 
-## Fáze 4 – Závěr
+## Fáze 4 – Úklid session
+
+**Pusť `/end` nástrojem `Skill` a nech ho proběhnout celý.** Zápis přerušení uloží jen frontu; dohody, poznatky a nevypořádaná témata session zapíše až on – a uživatel ho za `/break` nepíše (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*). Stojí až za *Fází 3*, protože commitne i rozdělanou práci a zápis přerušení má být v tu chvíli hotový a ověřený.
+
+Skončí-li `/end` druhým zněním – zapsané to není celé –, vydej v závěru nehotový verdikt a jmenuj, co `/end` brání: uživatel odchází ze session a nezapsaný zbytek by odešel s ní.
+
+## Fáze 5 – Závěr
 
 ```
 ## Přerušeno
@@ -100,6 +106,7 @@ Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj klíčem `int
 - **Zapsáno:** `<cesta k todo.md>`, `## Přerušený běh` – <N> položek z <N> zbývajících · běhový soubor `<cesta>` ponechán, existuje-li
 - **Před pokračováním:** <co musí předcházet, nebo „nic“>
 - **Ověřeno:** <příkazy kontraktu a návratové kódy, nebo „kontrakt chybí“> · commit `<hash>`
+- **Úklid session:** <verdikt `/end` a jeho commit>
 ```
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
@@ -113,4 +120,4 @@ Přerušený skill svůj vlastní verdikt nevydává – hotový není a tenhle 
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar drží `~/.claude/skills/handoff.md`, řádek *přerušený průchod frontou* v tabulce řetězů:
 
-- `/end`, pak `/clear`, a v nové session `/continue` – naváže rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění
+- `/clear`, a v nové session `/continue` – naváže rovnou na zápis; úklid session už proběhl; zůstáváš v `<pracovní adresář>`, clear adresář nemění

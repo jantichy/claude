@@ -36,7 +36,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 - **Zapisuje i důvody.** Samotný závěr bez zdůvodnění je pro příští práci málo – nebude vědět, proč to tak je, a hraniční případy vyhodnotí špatně.
 - **Přizná, co nepřečetl.** Do trvalého záznamu o úklidu jde i to, co zůstalo mimo – takže příští sezení nedostane řádek, který se čte jako „uklizeno“, ačkoliv část záznamu nikdo neviděl.
 - **Hlásí i čistý výsledek.** Že se nic nedoplňovalo, se řekne nahlas – a bez komentáře k tomu.
-- **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Hned potom se zeptá, co dál: pokračovat v práci, a stojíte-li na jiné než hlavní větvi, i přimergovat ji – to pak vyřídí [`/merge`](../merge/README.md).
+- **Verdikt je jednoznačný.** Buď je zapsané všechno a můžete pokračovat, zkompaktovat i odejít, nebo se jmenuje, co tomu brání. Hned potom řekne, co dál: pokračovat v práci, nebo – stojíte-li na hotové větvi – [`/merge`](../merge/README.md).
 
 ## Jak se to používá
 
@@ -72,7 +72,7 @@ ze čtení souborů (obsah je v souborech samotných)
 - **Neposuzuje kvalitu dokumentace.** Ptá se, jestli je v souborech všechno z konverzace – ne jestli se v projektu někdo vyzná. Na to je [`/consistency`](../consistency/README.md).
 - **Nedělá revizi projektu.** Testy, linter ani build nepouští proto, aby prověřil cizí práci. To, co sám zapsal, si naopak ověřit musí – pustí na to tu kontrolu projektu, která na zapsané soubory doopravdy sahá, a její výsledek vypíše.
 - **Nezakládá potichu chybějící soubory.** Vypíše, které chybí, a nabídne `/project`.
-- **Nemerguje větev sám od sebe.** Nabídne to a vyberete-li to, předá práci skillu [`/merge`](../merge/README.md).
+- **Nemerguje.** Je to obráceně: [`/merge`](../merge/README.md) i [`/break`](../break/README.md) ho pouštějí samy, takže když končíte hotovou větví nebo přerušenou prací, napíšete rovnou je.
 
 ## Jak si ho nainstalovat
 

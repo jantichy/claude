@@ -1,7 +1,7 @@
 ---
 name: end
 description: Skill se použije, když uživatel zadá "/end", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je. Na rozdíl od `/consistency`, který se ptá, jestli si projekt sedí sám se sebou, tenhle skill vytěžuje konverzaci.
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
 # End
@@ -31,7 +31,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 **Není to audit projektu ani technická kontrola.** Nespouštěj `/consistency`, `/code-review` ani `/attack` – ty volá uživatel zvlášť. Nespouštěj testy, lint ani build **jako revizi projektu**. **Zákaz míří na revizi, ne na ověření vlastního zápisu:** co skill sám napsal, se před commitem kontroluje (`~/.claude/standards/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*) – podmínky drží *Fáze 6*.
 
-**Výjimka pro dokončení větve:** vybere-li uživatel v závěru *Přimergovat do main*, zavoláš `/merge` nástrojem `Skill` a necháš ho proběhnout celý. **Merge sám neprovádíš ani nepopisuješ** – nabídka je zkratka k volání navazujícího kroku, ne jeho součást.
+**Nemerguje a `/merge` nevolá – je to obráceně.** `/merge` pouští tenhle skill na svém začátku a `/break` na svém konci, takže uživatel před ně ani za ně `/end` nepíše (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*). **Volá-li tě některý z nich, blok *Kudy dál* vynech** – odpověď uzavře on a tvoje odrážka by stála uprostřed jeho výstupu.
 
 ## Jak je to postavené uvnitř
 
@@ -337,7 +337,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- **stojíš-li na pushnuté větvi** – `/merge`; nabídni to jednou odrážkou, neptej se na to dialogem
+- **stojíš-li na pushnuté větvi a v `docs/todo.md` není `## Přerušený běh`** – `/merge`, je-li větev hotová; úklid, který právě proběhl, pozná podle průchodu v `done.md` a znovu ho nepustí. Nabídni to jednou odrážkou, neptej se na to dialogem
 - **zbyla-li rozbitá věc** – pojmenuj ji a řekni, že ji vyřeší příští session, nebo ji doděláte teď
 - **jinak** – zavřít session; a míří-li práce dál na kontrolní krok, patří do odrážky celý řetěz s `/clear`, protože tenhle skill běží právě proto, že kontext nabyl
 

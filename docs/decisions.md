@@ -2157,3 +2157,23 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Zamítnuto:** navrhovat cílovou složku podle obsahu nebo se na ni pokaždé ptát (otázka navíc v každém běhu bez přínosu proti jménu složky); psát vždy jméno ze zdroje za šipku (jméno z cesty adresy bývá horší než to, které clockwork zjistí z hlavičky); blokovat duplicitu jen v téže složce nebo jen čekající (opakovaně vložená složka by se stáhla podruhé); rozbalovat i výpisy adresářů na webu (každý typ stránky se chová jinak a výsledek nejde ověřit); srovnávací běh bez skillu (selhání, která by stálo měřit, nese skript a jeho testy).
 
 **Ověřeno týž den:** konektor vidí do Sdílených disků; složku jiného Google účtu (odkaz s `/u/2/`) nevidí, dokud se nenasdílí účtu konektoru. Clockwork se v tomhle repozitáři smí jmenovat (`.claude/CLAUDE.md`, *Výjimky z obecných pravidel*).
+
+### Session končí jedním ze tří uzavíracích skillů: `/end`, `/merge`, `/break`
+
+**Rozhodnuto 21. 10. 2026.** Na konci session si uživatel musel pamatovat řetěz: `/end` před `/merge`, `/end` za `/break`, a teprve pak `/clear`, `/compact` nebo `/exit`. Řetěz se pamatuje právě ve chvíli, kdy už člověk myslí jinde, a vypadne z něj vždycky úklid.
+
+**Rozhodnutí:** uživatel volí jen jeden ze tří skillů podle stavu práce – `/end` (práce pokračuje, nebo bez větví), `/merge` (větev je hotová), `/break` (práce je rozdělaná) – a po něm vestavěný příkaz. Úklid session je v každém z nich: `/merge` pouští `/end` jako svou *Fázi 1*, `/break` jako *Fázi 4* před závěrem. Volaný `/end` vynechává blok *Kudy dál*, protože odpověď uzavře volající skill. `/end` už `/merge` nevolá, jinak by vznikla smyčka `/end` → `/merge` → `/end`; merge jen nabídne odrážkou, a to ne po `/break`. Tabulku řetězů drží `skills/handoff.md`, odrážky hlídá `tests/test_skills.py` (`exits_without_closer`, `redundant_end`).
+
+**Pravidla uvnitř `/merge`:**
+- **`/end` stojí první, před natažením `main`.** Je dlouhý a ptá se. Uprostřed by roztáhl okno mezi natažením `main` a mergem do něj a skoro jistě vynutil další kolo. Co zapíše na začátku, projde stejným řešením konfliktů jako zbytek práce. **Zamítnuto – `/end` až po vyřešení konfliktů:** jeho jedinou výhodou bylo, že by zapsal i obsahové rozhodnutí z konfliktu. To teď zapisuje `/merge` sám do `decisions.md` ve větvi, ještě než pustí kontrakt.
+- **Přeskočí se,** když se slučuje jiná větev, než na které session stojí (ta měla úklid ve vlastní session), nebo když už tahle session řádek `/end` v `done.md` má a od něj se nepracovalo.
+- **Merge pokračuje jen po hotovém verdiktu `/end`.** Jinak by do hlavní větve šla práce s nedopsanou dokumentací.
+
+**Reviduje tři dřívější rozhodnutí:**
+- *Merge je samostatný krok, ne fáze `/end`* – `/merge` zůstává samostatný, ale už ho nenabízí `/end` voláním. Naopak `/merge` volá `/end`.
+- *Každý odchod ze session začíná `/end`, bez podmínky* – bezpodmínečnost úklidu platí dál, jen ho místo uživatele pouští uzavírací skill.
+- *Necommitnutou rozdělanou práci po `/break` commituje `/end`* – tamní zamítnutí „`/break` pouští `/end` sám“ padá. Námitka, že `/end` se ptá, když uživatel odchází, neobstála: uživatel ten `/end` pouštěl stejně hned po `/break`. Rizikem bylo to, že ho zapomene.
+
+**Zamítnuto – hook, který `/end` pustí sám před `/clear`, `/compact` nebo `/exit`:** podle dokumentace Claude Code k tomu žádný mechanismus není. `SessionEnd` nemůže zastavit konec session ani pustit model, `PreCompact` umí kompaktaci jen zablokovat a `UserPromptSubmit` prompt nenahradí. U vestavěných příkazů navíc není doložené, že se vůbec spouští. Vlastní skill `clear` by vestavěný příkaz překryl, ale kontext by nevyčistil. Pojistka, která by `/compact` bez `/end` zablokovala, se nedělá: psaní neušetří a uzavírací skilly řeší tutéž díru přímo.
+
+**Zároveň se v kořenovém `README.md` skilly `/next`, `/continue`, `/end`, `/merge` a `/break` přesunuly do nové první skupiny *Začátek a konec session*.** Stojí v pořadí průběhu session, ne abecedně (`skills/skills.md`, *Sekce v hlavním README repozitáře*). `/end` a `/merge` zůstávají kontrolními kroky cyklu, jen je člověk volí podle toho, jak session končí.

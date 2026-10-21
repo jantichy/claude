@@ -3275,7 +3275,7 @@ class BreakContinueContract(unittest.TestCase):
             cells,
             [INTERRUPTED_CHAIN] * 2,
             "handoff.md nevede přerušený průchod v obou sloupcích řetězem "
-            "/break → /end → /clear → /continue",
+            "/break → /clear → /continue",
         )
 
     def test_find_command_reads_section_from_other_worktree(self):
@@ -3375,7 +3375,7 @@ class BreakContinueContractActuallyCatch(unittest.TestCase):
 
 
 HANDOFF = ROOT / "skills" / "handoff.md"
-INTERRUPTED_CHAIN = "`/break` → `/end` → `/clear` → `/continue`"
+INTERRUPTED_CHAIN = "`/break` → `/clear` → `/continue`"
 
 
 def queue_skills() -> set:
@@ -3416,12 +3416,16 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
             out.append("blok `**Kudy dál**` stojí před závěrečným verdiktem")
     if name in queue_skills() and "Přerušení dlouhého průchodu" not in text:
         out.append("prochází frontu a nenese pravidlo o jejím přerušení")
-    # `/end` je sám úklidem a `/merge` za ním stojí přímo, druhý nepotřebuje.
-    if name not in ("end", "merge"):
+    # Uzavírací skill sám odrážku s odchodem před sebou nepotřebuje – je jím.
+    if name not in CLOSERS:
         out += [
-            f"odchod ze session bez `/end` před ním: {line}"
-            for line in exits_without_end(text)
+            f"odchod ze session bez uzavíracího skillu před ním: {line}"
+            for line in exits_without_closer(text)
         ]
+    out += [
+        f"`/end` vedle `/merge` nebo `/break`, které ho pouštějí samy: {line}"
+        for line in redundant_end(navigation_lines(text))
+    ]
     # `/break` je sám krokem před `/continue`, jeho odrážka ho jmenovat nemusí.
     if name != "break":
         out += [
@@ -3431,7 +3435,9 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
     return out
 
 
-EXIT = re.compile(r"`/merge`|`/clear`|`/compact`|nov[éá] session")
+EXIT = re.compile(r"`/clear`|`/compact`|nov[éá] session")
+CLOSERS = ("end", "merge", "break")
+CLOSER = re.compile(r"`/(?:end|merge|break)`")
 
 
 def navigation_lines(text: str) -> list:
@@ -3453,23 +3459,38 @@ def navigation_lines(text: str) -> list:
     return lines
 
 
-def exits_without_end(text: str) -> list:
-    """Odrážky, které opouštějí session a `/end` před tím nejmenují.
+def exits_without_closer(text: str) -> list:
+    """Odrážky, které opouštějí session a uzavírací skill před tím nejmenují.
 
-    Odchodem je `/merge`, `/clear`, `/compact` i nová session a pořadí drží `handoff.md`,
-    *Řetěz, který nepatří do téhle session*, i s výčtem všech platných řetězů.
-    Bez kontroly se z odrážky `/end` vytratí jako první, protože skill si
-    ho podmíní dojmem, že nic nezapsaného nezbylo – a session se zahodí i s tím.
+    Odchodem je `/clear`, `/compact` i nová session, uzavíracím skillem `/end`,
+    `/merge` nebo `/break` – poslední dva pouštějí úklid session samy. Pořadí
+    drží `handoff.md`, *Řetěz, který nepatří do téhle session*, i s výčtem
+    všech platných řetězů. Bez kontroly se z odrážky úklid vytratí jako první,
+    protože skill si ho podmíní dojmem, že nic nezapsaného nezbylo – a session
+    se zahodí i s tím.
     """
     out = []
     for line in navigation_lines(text):
         exit_at = EXIT.search(line)
         if not exit_at:
             continue
-        end_at = line.find("`/end`")
-        if end_at < 0 or end_at > exit_at.start():
+        closer = CLOSER.search(line)
+        if not closer or closer.start() > exit_at.start():
             out.append(line[:80])
     return out
+
+
+def redundant_end(lines: list) -> list:
+    """Odrážky, které jmenují `/end` vedle `/merge` nebo `/break`.
+
+    Oba úklid session pouštějí samy, takže `/end` vedle nich je pozůstatek
+    starého řetězu – a uživatel, který ho poslechne, pustí úklid dvakrát.
+    """
+    return [
+        line[:80]
+        for line in lines
+        if "`/end`" in line and ("`/merge`" in line or "`/break`" in line)
+    ]
 
 
 def continue_without_break(lines: list) -> list:
@@ -3560,17 +3581,32 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
             handoff_defects(text, "merge", True),
         )
 
-    def test_exit_without_end_is_reported(self):
+    def test_exit_without_closer_is_reported(self):
         text = "**Kudy dál**\n\n- `/consistency` až v nové session\n"
-        self.assertTrue(exits_without_end(text))
+        self.assertTrue(exits_without_closer(text))
 
-    def test_merge_before_end_is_reported(self):
-        text = "**Kudy dál**\n\n- `/merge`, pak `/end`\n"
-        self.assertTrue(exits_without_end(text))
+    def test_clear_before_closer_is_reported(self):
+        text = "**Kudy dál**\n\n- `/clear`, pak `/merge`\n"
+        self.assertTrue(exits_without_closer(text))
 
-    def test_end_first_passes(self):
-        text = "**Kudy dál**\n\n- `/end`, pak `/merge`, pak `/clear`\n- `/review`\n"
-        self.assertFalse(exits_without_end(text))
+    def test_closer_first_passes(self):
+        for closer in ("end", "merge", "break"):
+            text = f"**Kudy dál**\n\n- `/{closer}`, pak `/clear`\n- `/review`\n"
+            self.assertFalse(exits_without_closer(text), closer)
+
+    def test_end_next_to_merge_or_break_is_reported(self):
+        for line in (
+            "- `/end`, pak `/merge`, pak `/clear`",
+            "- `/break`, pak `/end`, pak `/clear`, a v nové session `/continue`",
+        ):
+            text = "**Kudy dál**\n\n" + line + "\n"
+            self.assertTrue(
+                any(
+                    d.startswith("`/end` vedle")
+                    for d in handoff_defects(text, "review", False)
+                ),
+                line,
+            )
 
     def test_continue_without_break_is_reported(self):
         text = "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
@@ -3601,8 +3637,7 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
 
     def test_break_before_continue_passes(self):
         text = (
-            "**Kudy dál**\n\n"
-            "- `/break`, pak `/end`, pak `/clear`, a v nové session `/continue`\n"
+            "**Kudy dál**\n\n- `/break`, pak `/clear`, a v nové session `/continue`\n"
         )
         self.assertFalse(
             any(

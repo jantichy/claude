@@ -104,7 +104,31 @@ Mapa známého povrchu: u každé vrstvy, která tu něco vynucuje – průběž
 
 ## Skilly
 
-První dvě skupiny tvoří životní cyklus projektu a stojí v pořadí, ve kterém se pouštějí. Zbytek se pouští podle potřeby, nezávisle na fázi projektu, a uvnitř své skupiny stojí abecedně.
+První skupina provází každou session od začátku po konec. Další dvě tvoří životní cyklus projektu a stojí v pořadí, ve kterém se pouštějí. Zbytek se pouští podle potřeby, nezávisle na fázi projektu, a uvnitř své skupiny stojí abecedně.
+
+### Začátek a konec session
+
+Čím session začíná a čím končí. Na začátku si vyberete, s čím pokračovat, nebo navážete na přerušenou práci; na konci napíšete jen jeden ze tří příkazů podle toho, jak práce stojí – úklid session v sobě mají všechny tři, takže řetěz, co má jít před čím, si pamatovat nemusíte. Stojí tu v tomhle pořadí, ne abecedně. `/end` a `/merge` jsou zároveň kontrolními kroky životního cyklu.
+
+#### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
+
+Na začátku session posbírá všechno, co v projektu čeká – seznam úkolů, zbytek plánu, kola rozpracovaného návrhu, rozdělané větve a necommitnuté změny –, vypíše zvlášť, na čem se právě pracuje v jiné session, nabídne pokračování v zapomenutých větvích, zbytek seřadí podle závislostí, u každého úkolu řekne, v čem spočívá a jak je velký, a nejaktuálnější mi nabídne k výběru. Po výběru se do toho rovnou pustí. Nahrazuje dlouhý prompt, který jsem psal do každé nové session.
+
+#### [`/continue`](skills/continue/) – navázat na přerušenou práci hned
+
+V nové session po `/break` najde zápis přerušené práce, přejde do adresáře, kde leží, krátce shrne, kde se stojí, a rovnou pokračuje tím, co zápis určil jako první krok – bez sbírání a řazení všeho ostatního, co v projektu čeká. Je to druhá strana `/break` a obě stojí na stejném tvaru zápisu.
+
+#### [`/end`](skills/end/) – ať po mně zůstane čisto a jasno
+
+Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. **Úplnost přitom měří, ne tvrdí:** transcript si nejdřív skriptem očistí od balastu, který je v něm z devíti desetin, vytáhne z něj seznam všech míst, kde jsem něco napsal, a u každého odškrtne, co se s tím stalo – v závěru pak stojí poměr, který jde ověřit, a vedle něj jmenovitě to, co se nepřečetlo. Všechno, co potřebuje moje rozhodnutí, projde jednou frontou podle váhy a nabídne, co dál.
+
+#### [`/merge`](skills/merge/) – dokončení větve, ne jeden příkaz
+
+„Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Úklid session přitom pustí sám na začátku, takže před ním `/end` psát nemusíte – a sám od sebe se nespustí nikdy.
+
+#### [`/break`](skills/break/) – přerušit rozdělanou práci bez ztráty kontextu
+
+Když je session dlouhá nebo se musím k práci vrátit jindy, zapíše do seznamu úkolů všechno, co nová session potřebuje, aby pokračovala, jako by ji nikdo nepřerušil: kde práce leží, co jí musí předcházet, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří kontrolami projektu, commitne, sám pustí úklid session a doporučí novou session, ve které na něj `/continue` rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci, která skillem neběží.
 
 ### Kroky životního cyklu projektu
 
@@ -144,7 +168,7 @@ Za pár týdnů po nasazení nikdo neví, jestli tu věc někdo používá, kde 
 
 ### Kontroly a úklid životního cyklu
 
-Druhá vrstva téhož cyklu. Tyhle kroky nezvětšují rozsah práce, jen se starají o to, co už vzniklo – měří to, uklízejí to a uzavírají. Stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz, takže je nečtěte jako pokračování té řady.
+Druhá vrstva téhož cyklu. Tyhle kroky nezvětšují rozsah práce, jen se starají o to, co už vzniklo – měří to, uklízejí to a uzavírají. Stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz, takže je nečtěte jako pokračování té řady. Patří sem i `/end` a `/merge`, ty ale stojí výš u začátku a konce session, protože je člověk volí podle toho, jak session končí.
 
 #### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 
@@ -165,14 +189,6 @@ Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zby
 #### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 
 Zvedne aplikaci lokálně a pošle na ni agenty, kteří ji zkouší rozbít – každý s jedním vektorem: nesmyslné vstupy, přeskočené a zopakované kroky, cizí ID v adrese, mezní data, výpadek sítě uprostřed odesílání. Na rozdíl od `/review`, který kód čte, tenhle ho spouští. Každý nález musí mít reprodukční postup a každá oprava regresní test; útočí se výhradně na lokální instanci nad testovacími daty, a že tomu tak opravdu je, se dokládá příkazem, ne slibem.
-
-#### [`/end`](skills/end/) – ať po mně zůstane čisto a jasno
-
-Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. **Úplnost přitom měří, ne tvrdí:** transcript si nejdřív skriptem očistí od balastu, který je v něm z devíti desetin, vytáhne z něj seznam všech míst, kde jsem něco napsal, a u každého odškrtne, co se s tím stalo – v závěru pak stojí poměr, který jde ověřit, a vedle něj jmenovitě to, co se nepřečetlo. Všechno, co potřebuje moje rozhodnutí, projde jednou frontou podle váhy a nabídne, co dál: ve větvi i rovnou merge.
-
-#### [`/merge`](skills/merge/) – dokončení větve, ne jeden příkaz
-
-„Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Zavoláte ho sami, nebo ho vyberete z nabídky na konci `/end`, aby se nemusel psát ručně – sám od sebe se nespustí nikdy.
 
 ### Podklady, znalost a texty
 
@@ -220,19 +236,11 @@ Připraví service account pro přístup do klientské analytiky nebo Tag Manage
 
 ### Práce v projektu
 
-Sahají na projekt, ale nestojí v jeho životním cyklu – přerušení a orientace ve frontě práce, hromadné přejmenování, mapa modelu i dva přepínače uspořádání.
+Sahají na projekt, ale nestojí v jeho životním cyklu – hromadné přejmenování, mapa modelu, vysvětlení nejasné otázky, situace, na které se v návrhu zapomnělo, i dva přepínače uspořádání.
 
 #### [`/autocommit`](skills/autocommit/) – každá změna hned do Gitu
 
 Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
-
-#### [`/break`](skills/break/) – přerušit rozdělanou práci bez ztráty kontextu
-
-Když je session dlouhá nebo se musím k práci vrátit jindy, zapíše do seznamu úkolů všechno, co nová session potřebuje, aby pokračovala, jako by ji nikdo nepřerušil: kde práce leží, co jí musí předcházet, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří kontrolami projektu, commitne a doporučí úklid a novou session, ve které na něj `/continue` rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci, která skillem neběží.
-
-#### [`/continue`](skills/continue/) – navázat na přerušenou práci hned
-
-V nové session po `/break` najde zápis přerušené práce, přejde do adresáře, kde leží, krátce shrne, kde se stojí, a rovnou pokračuje tím, co zápis určil jako první krok – bez sbírání a řazení všeho ostatního, co v projektu čeká. Je to druhá strana `/break` a obě stojí na stejném tvaru zápisu.
 
 #### [`/diagram`](skills/diagram/) – datový model jako mapa, na kterou se dá kliknout
 
@@ -241,10 +249,6 @@ Z dokumentace navrženého modelu nakreslí interaktivní stránku: ER diagram v
 #### [`/explain`](skills/explain/) – když Claude mluví v náznacích
 
 Když se mě Claude na něco ptá a já nerozumím, protože odkazuje na nález, který jsem neviděl, používá zkratku nebo nabízí „variantu A, nebo B“ bez popisu, stačí napsat `/explain`. Řekne to znovu v jednom až dvou odstavcích: čeho se věc týká, jak je to dnes a proč to nestačí, to všechno na jednom konkrétním příběhu z projektu, na kterém přehraje i každou variantu, a pak otázku položí znovu.
-
-#### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
-
-Na začátku session posbírá všechno, co v projektu čeká – seznam úkolů, zbytek plánu, kola rozpracovaného návrhu, rozdělané větve a necommitnuté změny –, vypíše zvlášť, na čem se právě pracuje v jiné session, nabídne pokračování v zapomenutých větvích, zbytek seřadí podle závislostí, u každého úkolu řekne, v čem spočívá a jak je velký, a nejaktuálnější mi nabídne k výběru. Po výběru se do toho rovnou pustí. Nahrazuje dlouhý prompt, který jsem psal do každé nové session.
 
 #### [`/replace`](skills/replace/) – přejmenovat něco a fakt všude
 

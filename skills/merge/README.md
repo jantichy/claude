@@ -12,13 +12,14 @@
 
 ## Co umí
 
-1. **Zastaví merge, který nemá proběhnout** – necommitnutá práce, rozdělaná hlavní větev, nebo projekt, který se z hlavní větve automaticky nasazuje (tam je merge samotné nasazení a patří jinam).
-2. **Zjistí, jestli se hlavní větev mezitím posunula.** Pokud ne, merguje rovnou; stav už jednou prošel kontrolou.
-3. **Přihraje hlavní větev do té vaší a ověří ji tam** – včetně konfliktů. Mechanické spojí sám, ptá se jen tam, kde obě strany rozhodly tutéž věc jinak.
-4. **Pustí nad spojeným stavem kontroly projektu** – testy, lint, typecheck, podle toho, co projekt deklaruje. Nemá-li co pustit, řekne to nahlas místo aby mlčel.
-5. **Zopakuje to, posunula-li se hlavní větev znovu** – a po třetím kole se zastaví a zeptá, místo aby donekonečna doháněl.
-6. **Slučuje se shrnující zprávou**, která říká, co větev přinesla, ne jak se jmenovala. V historii hlavní větve je to jediný řádek za celou práci.
-7. **Uklidí až po ověřeném mergi** – větev, její pracovní adresář i větev na serveru, a jen když merge opravdu prošel.
+1. **Nejdřív uklidí session** – pustí [`/end`](../end/README.md), aby do hlavní větve šlo i to, co se domluvilo, a pokračuje jen tehdy, když je zapsané všechno. Před `/merge` ho tedy psát nemusíte.
+2. **Zastaví merge, který nemá proběhnout** – necommitnutá práce, rozdělaná hlavní větev, nebo projekt, který se z hlavní větve automaticky nasazuje (tam je merge samotné nasazení a patří jinam).
+3. **Zjistí, jestli se hlavní větev mezitím posunula.** Pokud ne, merguje rovnou; stav už jednou prošel kontrolou.
+4. **Přihraje hlavní větev do té vaší a ověří ji tam** – včetně konfliktů. Mechanické spojí sám, ptá se jen tam, kde obě strany rozhodly tutéž věc jinak – a co rozhodnete, rovnou zapíše.
+5. **Pustí nad spojeným stavem kontroly projektu** – testy, lint, typecheck, podle toho, co projekt deklaruje. Nemá-li co pustit, řekne to nahlas místo aby mlčel.
+6. **Zopakuje to, posunula-li se hlavní větev znovu** – a po třetím kole se zastaví a zeptá, místo aby donekonečna doháněl.
+7. **Slučuje se shrnující zprávou**, která říká, co větev přinesla, ne jak se jmenovala. V historii hlavní větve je to jediný řádek za celou práci.
+8. **Uklidí až po ověřeném mergi** – větev, její pracovní adresář i větev na serveru, a jen když merge opravdu prošel.
 
 ## Proč zrovna tenhle
 

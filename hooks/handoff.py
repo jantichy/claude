@@ -37,9 +37,9 @@ STATE_DIR = Path.home() / ".local" / "state" / "claude-handoff"
 # a kontext kolem položek se s `/clear` ztratil.
 CHAINS = (
     "Prochází-li běh frontu jednu položku po druhé (`~/.claude/skills/handoff.md`, "
-    "*Přerušení dlouhého průchodu*), řetěz je `/break` → `/end` → `/clear` "
-    "→ `/continue` v nové session – zbytek fronty uloží `/break`, ne běhový "
-    "soubor. Jinak `/end` → `/clear` a další krok v nové session."
+    "*Přerušení dlouhého průchodu*), řetěz je `/break` → `/clear` → `/continue` "
+    "v nové session – zbytek fronty uloží `/break`, ne běhový soubor, a úklid "
+    "session pustí sám. Jinak `/end` → `/clear` a další krok v nové session."
 )
 OFFER = (
     "Podle `~/.claude/skills/handoff.md`, *Práh kontextu*, jednou nabídni "
