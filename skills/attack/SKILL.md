@@ -23,7 +23,7 @@ Rozdíl proti `/review` je v jednom slově: ten kód **čte**, tenhle ho **spou�
 
 **Nález odsud má jinou váhu než nález z panelu.** Panel tvrdí, že něco *nastane*; útok přiloží postup, kterým to nastalo. Proto se nálezy z `/attack` nedávají ověřovateli – ověřuje se tvrzení, ne pozorování.
 
-V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní krok, ne bod na ose: stojí v poslední mezeře, **až za `/endem` a před `/release`**.
+V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní krok, ne bod na ose: stojí v poslední mezeře, **až po sloučení větve `/merge` a před `/release`**, protože běží nad hlavní větví.
 
 **Proč tam a ne po každé feature:** `/review` je levný, čte diff a snese, aby běžel pokaždé, když se něco dodělá. Tenhle skill je drahý – zvedá prostředí, potřebuje celé toky a trvá desítky minut – a nad rozestavěnou aplikací hlásí hlavně nedodělanost, ne chyby. Dává smysl jednou za čas nad **hotovým celkem**, který se chystá ven.
 

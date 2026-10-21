@@ -108,7 +108,7 @@ První skupina provází každou session od začátku po konec. Další dvě tvo
 
 ### Začátek a konec session
 
-Čím session začíná a čím končí. Na začátku si vyberete, s čím pokračovat, nebo navážete na přerušenou práci; na konci napíšete jen jeden ze tří příkazů podle toho, jak práce stojí – úklid session v sobě mají všechny tři, takže řetěz, co má jít před čím, si pamatovat nemusíte. Stojí tu v tomhle pořadí, ne abecedně. `/end` a `/merge` jsou zároveň kontrolními kroky životního cyklu.
+Čím session začíná a čím končí. Na začátku si vyberete, s čím pokračovat, nebo navážete na přerušenou práci; na konci napíšete jen jeden ze tří příkazů podle toho, jak práce stojí – úklid session v sobě mají všechny tři, takže řetěz, co má jít před čím, si pamatovat nemusíte. Stojí tu v tomhle pořadí, ne abecedně, a do životního cyklu nepatří – pouštějí se podle toho, jak session končí, ne podle fáze projektu.
 
 #### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
 
@@ -168,7 +168,7 @@ Za pár týdnů po nasazení nikdo neví, jestli tu věc někdo používá, kde 
 
 ### Kontroly a úklid životního cyklu
 
-Druhá vrstva téhož cyklu. Tyhle kroky nezvětšují rozsah práce, jen se starají o to, co už vzniklo – měří to, uklízejí to a uzavírají. Stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz, takže je nečtěte jako pokračování té řady. Patří sem i `/end` a `/merge`, ty ale stojí výš u začátku a konce session, protože je člověk volí podle toho, jak session končí.
+Druhá vrstva téhož cyklu. Tyhle kroky nezvětšují rozsah práce, jen se starají o to, co už vzniklo – měří to a uklízejí to. Stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách naráz, takže je nečtěte jako pokračování té řady.
 
 #### [`/oponent`](skills/oponent/) – oponentura na to, co nejde otestovat
 

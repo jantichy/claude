@@ -21,7 +21,7 @@ Skill je **opakovatelný**. Spustí-li ho uživatel podruhé, druhý průchod vy
 
 **Uklízí se vždycky ta session, ve které stojíš, a jinak to nejde.** Transcript si najdeš přes session-id z cesty ke scratchpadu, takže není co vybírat.
 
-V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní krok, ne bod na ose: **stojí v každé mezeře a vždycky jako poslední**, protože jako jediný odolá kompaktaci – co zapíše, přežije ztrátu kontextu. Jeho spouštěčem není pozice, ale konec session, takže běží i uprostřed rozdělané práce.
+Do *Životního cyklu projektu* nepatří (`~/.claude/standards/lifecycle.md`, *Session a větev do cyklu nepatří*): je to jeden ze tří skillů, kterými session končí, a **po něm už v session nic nestojí**, protože jako jediný odolá kompaktaci – co zapíše, přežije ztrátu kontextu. Jeho spouštěčem není pozice, ale konec session, takže běží i uprostřed rozdělané práce.
 
 ## Co skill nedělá
 

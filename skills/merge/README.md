@@ -1,13 +1,5 @@
 # /merge – dokončení větve, ne jeden příkaz
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
->
-> **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
->
-> **Kontroly** [`/oponent`](../oponent/README.md) · [`/consolidate`](../consolidate/README.md) · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · [`/end`](../end/README.md) · **`/merge`** – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
->
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
-
 „Přimerguj to“ vypadá jako jeden příkaz. Ve skutečnosti je to postup, ve kterém se dá přijít o práci – a nejčastěji se to stane tak, že se dvě větve rozejdou obsahově, ne textově: jedna přejmenuje funkci, druhá ji nově volá, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: spojený stav nechá vzniknout a ověřit **ve vaší větvi**, a do hlavní pustí až to, co prošlo.
 
 ## Co umí
@@ -64,10 +56,6 @@ Je to snadné, zadejte do svého Claude Code tenhle prompt:
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/merge a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nakonec mi řekni, co musím doplnit sám.
 
 Ověřování spojeného stavu se opírá o sekci `## Kontrakt příkazů` v projektových instrukcích; nemáte-li ji, skill to řekne a mergne bez ní.
-
-**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, zadejte do svého Claude Code tenhle prompt:
-
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency, attack, end a merge. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
 
 ---
 

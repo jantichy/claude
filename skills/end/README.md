@@ -1,13 +1,5 @@
 # /end – ať po mně zůstane čisto a jasno
 
-> **Součást životního cyklu projektu.** Tenhle skill patří do ucelené sady skillů, které vedou práci od založení projektu až po vyhodnocení provozu. Jedny tvoří, druhé se starají o to, co už vzniklo – a žádný nedělá práci toho vedle:
->
-> **Osa** [`/project`](../project/README.md) → [`/discovery`](../discovery/README.md) → [`/specify`](../specify/README.md) → [`/architect`](../architect/README.md) → [`/breakdown`](../breakdown/README.md) → [`/implement`](../implement/README.md) → [`/release`](../release/README.md) → [`/evaluate`](../evaluate/README.md)
->
-> **Kontroly** [`/oponent`](../oponent/README.md) · [`/consolidate`](../consolidate/README.md) · [`/review`](../review/README.md) · [`/consistency`](../consistency/README.md) · [`/attack`](../attack/README.md) · **`/end`** · [`/merge`](../merge/README.md) – stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách
->
-> Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
-
 Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat, tíží vás pokaždé totéž: neztratí se něco? Tenhle skill to vyřeší. Přečte si **celý záznam konverzace** – tedy včetně části, kterou už kompaktace z paměti vyhodila –, vytáhne z něj všechno, co se domluvilo, a zapíše to tam, kam to patří. Pak si otočí pohled a hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání.
 
 **Hlavní rozdíl proti ručnímu úklidu je v tom, že si vede evidenci.** Ze záznamu si vytáhne seznam všech míst, kde jste něco napsali, a u každého odškrtne, co se s tím stalo: zapsáno tam a tam, později přebito jiným rozhodnutím, nebo čeká na vaše rozhodnutí. Na konci vám řekne poměr – odškrtnuto 23 z 23. Není to tedy tvrzení „přečetl jsem to celé“, ale číslo, které jde ověřit.
@@ -81,10 +73,6 @@ Je to snadné, zadejte do svého Claude Code tenhle prompt:
 > Jdi na https://github.com/jantichy/claude/tree/main/skills/end a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nainstaluj mi k tomu i skill `/merge` – nabídku merge na konci vyřizuje on. Zeptej se mě, jak mám uspořádanou dokumentaci projektu – kam zapisuju rozhodnutí a odložené věci –, a odkazy ve skillu tomu přizpůsob. Nakonec mi řekni, co musím doplnit sám.
 
 Skill předpokládá, že má projekt ustálenou dokumentační strukturu – ví, co patří do instrukcí, co mezi rozhodnutí, co mezi odložené věci. Sada, kterou používám já, je popsaná v `standards/structure.md`.
-
-**Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, zadejte do svého Claude Code tenhle prompt:
-
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency, attack, end a merge. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
 
 ---
 

@@ -13,7 +13,7 @@ Dokončí hotovou větev: sloučí ji do hlavní a uklidí po ní. Není to jede
 
 Jádrem je **pořadí**: spojený stav vzniká a ověřuje se **ve větvi**, ne v hlavní větvi. Do ní jde až to, co prošlo kontrolou.
 
-V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní krok: nic nevyrábí, jen převádí hotovou práci tam, kam patří. Stojí v mezerách mezi kroky osy na místě `/end`, který uzavírá větev – a pouští ho sám jako první krok, takže uživatel při dokončení větve píše jen `/merge` (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*).
+Do *Životního cyklu projektu* nepatří: nic nevyrábí, jen převádí hotovou práci tam, kam patří, a pouští se, když je hotová větev, ne podle místa v cyklu (`~/.claude/standards/lifecycle.md`, *Session a větev do cyklu nepatří*). Je to jeden ze tří skillů, kterými session končí – na místě `/end`, kterého pouští sám jako první krok, takže uživatel při dokončení větve píše jen `/merge` (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*).
 
 Bez argumentu pracuje s větví, na které stojíš; se jménem větve v argumentu s ní. Funguje ve worktree layoutu (`~/.claude/standards/worktree.md`) i v obyčejném repozitáři s jednou pracovní kopií.
 

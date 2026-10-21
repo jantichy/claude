@@ -119,7 +119,7 @@ U lineárního skillu bez příloh se nic nemění a `## Časté chyby` zůstáv
 
 **`## Co skill dělá`** – co to je a jaké má režimy. 3 až 10 řádků. Ne převyprávěný postup; ten je níž.
 
-**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/standards/rules.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/end` stojí ve všech mezerách a `/review` v šesti, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
+**`## Co skill nedělá`** – vymezení proti **jmenovaným** sousedům, ne obecná negace. „Nepíše kód“ je bezcenné; *„Neaudituje projekt. Na vnitřní konzistenci je `/consistency`.“* je vymezení. U skillu, který stojí v *Životním cyklu projektu* (`~/.claude/standards/rules.md`), je tahle sekce povinná a musí jmenovat sousedy z obou stran – bez ní se práce buď zdvojí, nebo neudělá vůbec. **U kontrolního kroku to neplatí** – `/review` stojí v šesti mezerách a `/consistency` ve dvou, takže „soused z obou stran“ u nich není definovaný; místo něj jmenují, **čí práci nepřebírají**, bez tvrzení o pořadí. Upřesněno 20. 9. 2026 s rozdělením cyklu na dvě vrstvy.
 
 **`## Jak je to postavené uvnitř`** – deleguje-li skill na cizí nástroj, **nebo nese-li vlastní spustitelný vnitřek** (skripty ve svém adresáři). Řekne, co volá nebo pouští, **a výslovně že je to implementační detail, ne rozhraní**, plus co je naopak závazné a nesmí se změnit tiše. Důvod je v obou případech týž: co se nepřizná jako vyměnitelné, na to si někdo zvykne jako na rozhraní. Viz *Skládej, nepiš znovu*.
 
@@ -356,8 +356,7 @@ Je to snadné, zadejte do svého Claude Code tenhle prompt:
 >
 > **Osa** [`/project`](../project/README.md) → … → **`/jméno`** → … → [`/evaluate`](../evaluate/README.md)
 >
-> **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** · … – stojí v mezerách mezi
-> kroky osy, některé z nich ve víc mezerách
+> **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** · …
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 ```
@@ -371,7 +370,7 @@ Rozejde-li se rámeček s životním cyklem v `~/.claude/standards/rules.md`, pl
 ```
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency, attack, end a merge. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency a attack, a k nim skilly, kterými se session uzavírá: end, merge a break. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
 ```
 
 **Skilly mimo životní cyklus rámeček ani hromadnou instalaci nemají.** Pouštějí se samostatně a předstírat u nich sadu by mátlo.
@@ -398,9 +397,9 @@ Odkaz míří na **adresář skillu**, protože GitHub v něm `README.md` rovnou
 
 **Sekce skillu je o úroveň níž než skupina, do které patří.** Všechny skilly stojí pod nadpisem `## Skilly` ve skupinách s vlastním nadpisem `###`, takže sekce jednotlivého skillu je `####`. **Skupiny jsou ploché, ne zanořené do sebe:** skilly mimo cyklus mají vlastní tematické skupiny na téže úrovni jako obě cyklové, protože zanoření pod společný nadpis by z jejich sekcí udělalo `#####` a ty se na GitHubu od `####` skoro neliší. Do 28. 9. 2026 byly skupiny jen nadpisy druhé úrovně a skilly `###`; skupinový nadpis se tehdy zamítl s tím, že by stál na téže úrovni jako skilly a v osnově vypadal jako další skill v řadě. To platí pro nadpis **téže** úrovně, ne pro zanoření – zanořený skupinu opravdu obsahuje a v osnově je vidět, co do ní patří.
 
-**Pořadí skillů v hlavním README je dané, ne libovolné.** Kroky osy stojí v pořadí, ve kterém se pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Uvnitř skupiny kontrol platí pořadí z rámečku v `~/.claude/standards/rules.md`. Skilly mimo životní cyklus se dělí **tematicky podle toho, na čem pracují**, a uvnitř své skupiny stojí **abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu. Že se pouštějí nezávisle na fázi projektu, říká úvod celé kapitoly, ne každá skupina zvlášť. **Úplně první stojí skupina *Začátek a konec session*** se skilly, kterými session začíná a končí – včetně kontrolních kroků `/end` a `/merge`, protože je člověk volí podle toho, jak session končí, ne podle místa v cyklu. Uvnitř stojí v pořadí průběhu session, ne abecedně.
+**Pořadí skillů v hlavním README je dané, ne libovolné.** Kroky osy stojí v pořadí, ve kterém se pouštějí – ne abecedně a ne podle důležitosti; čtenář ten seznam čte jako postup. Uvnitř skupiny kontrol platí pořadí z rámečku v `~/.claude/standards/rules.md`. Skilly mimo životní cyklus se dělí **tematicky podle toho, na čem pracují**, a uvnitř své skupiny stojí **abecedně** – žádné pořadí mezi nimi neplatí, takže cokoliv jiného než abeceda by tvrdilo něco, co není pravda, a při přidání dalšího skillu by se muselo rozhodovat znovu. Že se pouštějí nezávisle na fázi projektu, říká úvod celé kapitoly, ne každá skupina zvlášť. **Úplně první stojí skupina *Začátek a konec session*** se skilly, kterými session začíná a končí . Do životního cyklu nepatří, protože se volí podle toho, jak session končí, ne podle místa v cyklu (`~/.claude/standards/lifecycle.md`, *Session a větev do cyklu nepatří*). Uvnitř stojí v pořadí průběhu session, ne abecedně.
 
-**Rozdělení cyklu na dvě skupiny je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/end` je ve všech a `/review` za každým krokem osy, který vyrobil artefakt. Úvodní odstavec skupiny proto říká, čím se ta vrstva liší; **bold řádek mezi sekcemi to nezastane**, protože spadne dovnitř té předchozí a poruší pravidlo jednoho odstavce na sekci.
+**Rozdělení cyklu na dvě skupiny je nutnost, ne úprava:** kontrolní krok stojí v několika mezerách naráz, takže jeho místo v jedné řadě není určené – `/review` stojí za každým krokem osy, který vyrobil artefakt. Úvodní odstavec skupiny proto říká, čím se ta vrstva liší; **bold řádek mezi sekcemi to nezastane**, protože spadne dovnitř té předchozí a poruší pravidlo jednoho odstavce na sekci.
 
 **Obě README se aktualizují spolu se skillem**, ne na vyžádání. Změní-li se, co skill umí, je to součást té změny – stejně jako hlavička nebo test.
 
