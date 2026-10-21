@@ -67,7 +67,7 @@ Neodmítej ručně to, co odmítne skript – třídění z tabulky je jen kvůl
 
 **Nad 50 souborů v rozbalené složce se před zápisem zeptej**, jestli to opravdu chce celé. Clockwork se pustí do stahování bez dalšího ptaní a omylem vložená velká složka zabere disk i linku na hodiny.
 
-**Nenajde-li konektor složku**, nehádej. Řekni to a dodej, že konektor nemusí vidět do Sdílených disků, nebo účet ke složce nemá přístup. Položku vypiš jako nezpracovanou.
+**Nenajde-li konektor složku**, nehádej. Konektor je připojený k jednomu Google účtu a do Sdílených disků vidí, takže skoro vždycky jde o složku jiného účtu – odkaz s `/u/<číslo>/` ukazuje na jiný účet přihlášený v prohlížeči. Řekni to a nabídni nejjednodušší cestu: nasdílet složku účtu, ke kterému je připojený konektor a přihlášený clockwork. Položku vypiš jako nezpracovanou.
 
 ## Fáze 3 – Zápis
 

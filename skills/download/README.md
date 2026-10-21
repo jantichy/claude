@@ -54,5 +54,5 @@ Clockwork, který seznam stahuje, je soukromý nástroj a v repozitáři není. 
 
 - Claude Code s konektorem Google Drive (jen pro odkazy na Drive) a Python 3.10 a novější.
 - Program, který seznam `~/Downloads/downloads.md` odbavuje; skill sám nestahuje.
-- Nemusí vidět do Sdílených disků Google; složku, kterou konektor nenajde, ohlásí.
+- Vidí jen to, k čemu má přístup účet připojený ke konektoru, Sdílené disky včetně; složku jiného účtu je potřeba nejdřív nasdílet.
 - Velkou složku (nad 50 souborů) zapíše až po potvrzení.

@@ -275,6 +275,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 - **2026-10-19** · `/end` · `cbc36ca` · session `0e322484-513f-4ee8-9829-b4da4d8aa43f` · prompty 3/3 · 0 témat · mimo rozsah: nesledovaný `stats-cache.json` z doby před session, nechán být · meze: 8 bloků myšlení prázdných z formátu, 1 výstup Edit
 - **2026-10-19** · `/end` · `9435c01` · session `03229135-bc15-4bd1-97cd-380e4cc5767e` · prompty 3/3 · 0 témat · mimo rozsah: žádné · meze: 7 bloků myšlení (prázdné z formátu)
+- **2026-10-21** · `/end` · `0189f40` · session `f74d443e-badd-4b39-b117-98d5622bee96` · prompty 42/42 · 1 téma (1 rozhodnuto a provedeno: `/depot` prochází podsložky clockworku a čáru vede podle `ctime`, `~/Context` `bdcf680`) · mimo rozsah: nesledované `stats-cache.json` a `state/` nejsou z téhle session, ponechány · meze: 92 bloků myšlení (prázdné z formátu), výstupy Edit 8, Read 6, Write 6, ToolSearch 4, Skill 2 se nečtou z principu; přepisy agentů tlakových scénářů se nečetly, čtou se jen jejich hlášení ověřená obsahem pískovišť
 
 ## Odvedená práce
 
@@ -620,3 +621,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - [x] **Posouzen převod panelu `/review` a `/oponent` na nástroj `Workflow`.** (2026-10-19) Rozhodnuto nepřevádět; důvody a podmínky návratu drží `decisions.md`, *Panel `/review` a `/oponent` se na nástroj `Workflow` nepřevádí*. Cestou zavřena mezera s effortem: nástroj `Agent` bere parametr `effort`, takže `/review`, `/oponent`, `/audit` a norma skillů ho ověřovatelům předepisují.
 
 - [x] **Status line zaokrouhluje procenta u teploměrů, místo aby je ořezávala.** (2026-10-19) BSD awk v českém locale četl `99.6` jako 99, takže číslo i prahy barev se ořezávaly; `statusline.sh` teď nastavuje `LC_NUMERIC=C` a číslo zaokrouhluje poloviny nahoru stejně jako pruh. Testy včetně mutačního v `tests/test_statusline.py`, třída `PercentRounding`.
+
+- [x] **Skill `/download` plní frontu ke stažení clockworku.** (2026-10-21) Zadání vzniklo v návrhu clockworku; skill rozbalí složku na Google Drive, určí cílovou podsložku a skriptem `add.py` zapíše řádky bez duplicit a atomicky. Ověřeno: testy skriptu včetně čtení parserem clockworku, první ostrý zápis 12 přednášek ze Sdíleného disku, tlakové scénáře 3/3 a vyvolání 28/28. Rozhodnutí drží `decisions.md`, *`/download` plní frontu clockworku a zápis drží skript, ne model*; první stažení clockworkem čeká v `todo.md`.
+
+- [x] **`/depot` prochází podsložky, do kterých stahuje clockwork.** (2026-10-21) Zdroj `~/Downloads` v doméně depot zahrnuje kořen a podsložky jmenované nadpisem v `downloads.md`, čára se počítá z času příchodu (`ctime`), protože clockwork stahuje s `--remote-time`, a prázdná podsložka jde po přesunu do koše, když pod jejím nadpisem nic nečeká. Pravidla a zamítnuté varianty drží `~/Context` (`depot/depot.md`, *Zdroje*; `decisions.md`).

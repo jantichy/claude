@@ -2156,4 +2156,4 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 
 **Zamítnuto:** navrhovat cílovou složku podle obsahu nebo se na ni pokaždé ptát (otázka navíc v každém běhu bez přínosu proti jménu složky); psát vždy jméno ze zdroje za šipku (jméno z cesty adresy bývá horší než to, které clockwork zjistí z hlavičky); blokovat duplicitu jen v téže složce nebo jen čekající (opakovaně vložená složka by se stáhla podruhé); rozbalovat i výpisy adresářů na webu (každý typ stránky se chová jinak a výsledek nejde ověřit); srovnávací běh bez skillu (selhání, která by stálo měřit, nese skript a jeho testy).
 
-**Co se vědomě nepokrylo:** jestli konektor Google Drive vidí do Sdílených disků – ověří se prvním ostrým během. Clockwork se v tomhle repozitáři smí jmenovat (`.claude/CLAUDE.md`, *Výjimky z obecných pravidel*).
+**Ověřeno týž den:** konektor vidí do Sdílených disků; složku jiného Google účtu (odkaz s `/u/2/`) nevidí, dokud se nenasdílí účtu konektoru. Clockwork se v tomhle repozitáři smí jmenovat (`.claude/CLAUDE.md`, *Výjimky z obecných pravidel*).
