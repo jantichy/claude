@@ -7,7 +7,7 @@ cílová složka je nadpis `## <cesta>` relativně k `~/Downloads`, položky př
 prvním nadpisem jdou rovnou do `~/Downloads`. Clockwork soubor čte souběžně
 a hotové řádky odškrtává, takže se nikdy nesmí potkat s napůl zapsaným souborem:
 skript zapisuje dočasný soubor ve stejné složce a nahradí jím seznam přes
-`os.replace`.
+`os.replace`, celé pod zámkem seznamu sdíleným s clockworkem (`.<seznam>.lock`).
 
 Použití: `add.py [--list SOUBOR]` a na stdin JSON
 
@@ -21,12 +21,15 @@ každá přidaná položka v souboru opravdu najde. Kód 1 znamená, že zápis 
 """
 
 import argparse
+import fcntl
 import json
 import os
 import re
 import sys
 import tempfile
 import unicodedata
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
@@ -196,8 +199,28 @@ def snapshot(path: Path) -> tuple | None:
     return st.st_mtime_ns, st.st_size
 
 
+@contextmanager
+def locked(path: Path) -> Iterator[None]:
+    """Zámek seznamu sdílený s clockworkem: `flock` na `.<seznam>.lock` vedle seznamu.
+
+    Kontrola otisku sama nestačí – clockwork mezi ní a `os.replace` zapisuje dočasný soubor
+    a řádek připsaný v tom okně by jeho odškrtnutí smazalo.
+    """
+    fd = os.open(path.with_name(f".{path.name}.lock"), os.O_RDWR | os.O_CREAT, 0o644)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        yield
+    finally:
+        os.close(fd)
+
+
 def run(path: Path, items: list[dict]) -> dict:
-    """Načte seznam, vybere, co přidat, a zapíše; změnil-li se soubor mezitím, zkusí to znovu."""
+    """Načte seznam, vybere, co přidat, a zapíše pod zámkem; změnil-li se soubor, zkusí znovu."""
+    with locked(path):
+        return _attempts(path, items)
+
+
+def _attempts(path: Path, items: list[dict]) -> dict:
     for _ in range(ATTEMPTS):
         before = snapshot(path)
         text = path.read_text(encoding="utf-8") if before else ""
