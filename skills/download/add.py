@@ -37,8 +37,8 @@ DEFAULT_LIST = Path("~/Downloads/downloads.md").expanduser()
 
 # Tytéž tvary, které čte clockwork (`tasks/download/listing.py` a `source.py`):
 # kdyby se rozešly, skript by duplicitu přehlédl, nebo zapsal řádek, který clockwork nepřečte.
-ENTRY = re.compile(r"^- \[( |x|X)\] (\S+)(?:\s+(?:→|->)\s+(.+?))?\s*$")
-HEADING = re.compile(r"^## (.+?)\s*$")
+ENTRY = re.compile(r"^- \[( |x|X)\] (\S+)(?:\s+(?:→|->)\s+(.*\S|\s))?\s*$")
+HEADING = re.compile(r"^## (.*\S|\s)\s*$")
 DRIVE_HOSTS = frozenset({"drive.google.com", "docs.google.com"})
 FILE_PATH = re.compile(r"^/file/d/([^/]+)")
 FOLDER_PATH = re.compile(r"^/drive/(?:u/\d+/)?folders/[^/]+")
