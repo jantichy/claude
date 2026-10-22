@@ -40,7 +40,7 @@ DEFAULT_LIST = Path("~/Downloads/downloads.md").expanduser()
 ENTRY = re.compile(
     r"^[ \t]*(?:[-*+]|\d{1,9}[.)])[ \t]+\[( |x|X)\][ \t]+(\S+)(?:\s+(?:→|->)\s+(.*\S|\s))?\s*$"
 )
-HEADING = re.compile(r"^## (.*\S|\s)\s*$")
+HEADING = re.compile(r"^ {0,3}##(?:[ \t](.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 DRIVE_HOSTS = frozenset({"drive.google.com", "docs.google.com"})
 FILE_PATH = re.compile(r"^/file/d/([^/]+)")
@@ -117,6 +117,15 @@ def fenced(lines: list[str]) -> set[int]:
     return inside
 
 
+def heading_text(raw: str | None) -> str:
+    """Text nadpisu bez uzavíracích `#`, které od něj dělí mezera (CommonMark)."""
+    text = (raw or "").strip()
+    bare = text.rstrip("#")
+    if not bare:
+        return ""
+    return bare.strip() if bare != text and bare[-1] in " \t" else text
+
+
 def parse(lines: list[str]) -> tuple[dict, dict]:
     """Rozdělí seznam na sekce a posbírá adresy, které v něm už jsou.
 
@@ -129,7 +138,8 @@ def parse(lines: list[str]) -> tuple[dict, dict]:
         if i in code:
             continue
         if heading := HEADING.match(line):
-            current = folder_path(heading.group(1)) or heading.group(1)
+            text = heading_text(heading.group(1))
+            current = folder_path(text) or text
             sections.setdefault(current, i)
         elif entry := ENTRY.match(line):
             present.setdefault(
@@ -281,7 +291,8 @@ def verify(path: Path, added: list[dict]) -> bool:
         if i in code:
             continue
         if heading := HEADING.match(line):
-            current = folder_path(heading.group(1)) or heading.group(1)
+            text = heading_text(heading.group(1))
+            current = folder_path(text) or text
         elif (entry := ENTRY.match(line)) and entry.group(1) == " ":
             found.add((current, entry.group(2), entry.group(3)))
     return all((a["folder"], a["url"], a["name"]) in found for a in added)

@@ -154,6 +154,17 @@ class AddToList(unittest.TestCase):
             "```\n- [ ] https://e.org/b\n## Kurz\n```\n",
         )
 
+    def test_commonmark_heading_is_the_existing_section(self):
+        self.list.write_text(
+            " ##\tKurz ##\n- [ ] https://e.org/a\n## Jiný\n", encoding="utf-8"
+        )
+        out = self.add({"url": "https://e.org/b", "folder": "Kurz"})
+        self.assertTrue(out["verified"])
+        self.assertEqual(
+            self.list.read_text(),
+            " ##\tKurz ##\n- [ ] https://e.org/a\n- [ ] https://e.org/b\n\n## Jiný\n",
+        )
+
     @unittest.skipUnless(CLOCKWORK_LISTING.exists(), "clockwork na disku není")
     def test_clockwork_parser_reads_what_was_written(self):
         """Formát je rozhraní dvou repozitářů; rozejití chytí jen čtení jeho parserem."""
