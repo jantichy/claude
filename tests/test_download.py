@@ -133,6 +133,27 @@ class AddToList(unittest.TestCase):
                 module.run(self.list, [{"url": "https://e.org/1"}])
         self.assertEqual(self.list.read_text(), "", "nic se nesmí zapsat napůl")
 
+    def test_hand_written_checkbox_shapes_count_as_present(self):
+        self.list.write_text(
+            "  * [ ] https://e.org/a\n1. [x] https://e.org/b → b\n", encoding="utf-8"
+        )
+        out = self.add({"url": "https://e.org/a"}, {"url": "https://e.org/b"})
+        self.assertEqual(out["added"], [])
+        self.assertEqual(len(out["skipped"]), 2)
+
+    def test_code_block_is_neither_present_nor_insertion_point(self):
+        self.list.write_text(
+            "- [ ] https://e.org/a\n```\n- [ ] https://e.org/b\n## Kurz\n```\n",
+            encoding="utf-8",
+        )
+        out = self.add({"url": "https://e.org/b"}, {"url": "https://e.org/c"})
+        self.assertTrue(out["verified"])
+        self.assertEqual(
+            self.list.read_text(),
+            "- [ ] https://e.org/a\n- [ ] https://e.org/b\n- [ ] https://e.org/c\n"
+            "```\n- [ ] https://e.org/b\n## Kurz\n```\n",
+        )
+
     @unittest.skipUnless(CLOCKWORK_LISTING.exists(), "clockwork na disku není")
     def test_clockwork_parser_reads_what_was_written(self):
         """Formát je rozhraní dvou repozitářů; rozejití chytí jen čtení jeho parserem."""

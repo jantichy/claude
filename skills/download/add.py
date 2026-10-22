@@ -37,8 +37,11 @@ DEFAULT_LIST = Path("~/Downloads/downloads.md").expanduser()
 
 # Tytéž tvary, které čte clockwork (`tasks/download/listing.py` a `source.py`):
 # kdyby se rozešly, skript by duplicitu přehlédl, nebo zapsal řádek, který clockwork nepřečte.
-ENTRY = re.compile(r"^- \[( |x|X)\] (\S+)(?:\s+(?:→|->)\s+(.*\S|\s))?\s*$")
+ENTRY = re.compile(
+    r"^[ \t]*(?:[-*+]|\d{1,9}[.)])[ \t]+\[( |x|X)\][ \t]+(\S+)(?:\s+(?:→|->)\s+(.*\S|\s))?\s*$"
+)
 HEADING = re.compile(r"^## (.*\S|\s)\s*$")
+FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 DRIVE_HOSTS = frozenset({"drive.google.com", "docs.google.com"})
 FILE_PATH = re.compile(r"^/file/d/([^/]+)")
 FOLDER_PATH = re.compile(r"^/drive/(?:u/\d+/)?folders/[^/]+")
@@ -96,6 +99,24 @@ def folder_path(folder: str | None) -> str | None:
     return "/".join(parts)
 
 
+def fenced(lines: list[str]) -> set[int]:
+    """Indexy řádků v blocích kódu i s ohraničením (CommonMark); clockwork je nečte."""
+    inside, fence = set(), None
+    for i, line in enumerate(lines):
+        match = FENCE.match(line)
+        if fence is None:
+            if match:
+                inside.add(i)
+                fence = match.group(1)
+            continue
+        inside.add(i)
+        if match and not line[match.end() :].strip():
+            mark = match.group(1)
+            if mark[0] == fence[0] and len(mark) >= len(fence):
+                fence = None
+    return inside
+
+
 def parse(lines: list[str]) -> tuple[dict, dict]:
     """Rozdělí seznam na sekce a posbírá adresy, které v něm už jsou.
 
@@ -103,7 +124,10 @@ def parse(lines: list[str]) -> tuple[dict, dict]:
     (normalizovaná adresa → (složka, staženo)) – kdekoliv v souboru, čekající i odškrtnuté.
     """
     sections, present, current = {"": -1}, {}, ""
+    code = fenced(lines)
     for i, line in enumerate(lines):
+        if i in code:
+            continue
         if heading := HEADING.match(line):
             current = folder_path(heading.group(1)) or heading.group(1)
             sections.setdefault(current, i)
@@ -116,12 +140,13 @@ def parse(lines: list[str]) -> tuple[dict, dict]:
 
 def insertion_point(lines: list[str], start: int) -> int:
     """Index za poslední položkou sekce, která začíná za řádkem `start`."""
+    code = fenced(lines)
     end = start + 1
-    while end < len(lines) and not HEADING.match(lines[end]):
+    while end < len(lines) and (end in code or not HEADING.match(lines[end])):
         end += 1
     point = start + 1
     for i in range(start + 1, end):
-        if ENTRY.match(lines[i]):
+        if i not in code and ENTRY.match(lines[i]):
             point = i + 1
     if start == -1 and point == 0:
         # Kořen bez položek: nad první nadpis, ne nad úvodní text, který tam autor má.
@@ -179,7 +204,9 @@ def insert(lines: list[str], added: list[dict]) -> list[str]:
 
 
 def write_atomic(path: Path, lines: list[str]) -> None:
-    path = Path(os.path.realpath(path))  # seznam jako odkaz: nahradit cíl, odkaz zůstane
+    path = Path(
+        os.path.realpath(path)
+    )  # seznam jako odkaz: nahradit cíl, odkaz zůstane
     fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
@@ -248,7 +275,11 @@ def verify(path: Path, added: list[dict]) -> bool:
     if not added:
         return True
     current, found = "", set()
-    for line in path.read_text(encoding="utf-8").splitlines():
+    lines = path.read_text(encoding="utf-8").splitlines()
+    code = fenced(lines)
+    for i, line in enumerate(lines):
+        if i in code:
+            continue
         if heading := HEADING.match(line):
             current = folder_path(heading.group(1)) or heading.group(1)
         elif (entry := ENTRY.match(line)) and entry.group(1) == " ":
