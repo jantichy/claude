@@ -146,6 +146,258 @@ Celý *Životní cyklus projektu* předpokládá **jednu interaktivní session j
 
 **Zamítnuto – souhlas průběžné kontroly vydávat per repozitář souborem v repu:** zavřelo by to díru v CI, ale otevřelo horší – souhlas by pak byl součástí toho, co se schvaluje, tedy by si ho repozitář mohl vydat sám. Bezpečnostní model stojí na tom, že souhlas leží mimo repozitář.
 
+### `/release` preview nestaví ani neověřuje
+
+**Rozhodnuto 2. 9. 2026.** Skill původně nabízel ve fázi potvrzení volby *Nasadit* / *Nejdřív na preview* / *Zrušit*, zatímco následující fáze preview vyžadovala bezpodmínečně. Jedna z těch dvou věcí byla vždycky lež. Při volbě prostředí navíc padla varianta, jejíž popis obsahoval „ověření preview“ jako součást `/release`.
+
+**Rozhodnutí:** `/release` preview **nestaví ani neověřuje**. Volby jsou *Nasadit* / *Zrušit* a skill jde rovnou na kontroly, migrace, povýšení `main` → `production` a ověření na produkční URL.
+
+**Proč:** v modelu s oddělenou nasazovací větví vzniká preview **mergem do `main`** a testuje se průběžně, ještě než na `/release` vůbec dojde. Znovu ho stavět nebo na něj čekat by znamenalo čekat na něco, co už proběhlo. Hodnota `/release` není v tom, že něco ukáže ještě jednou, ale v tom, co preview neumí: produkční proměnné prostředí, produkční data, migrace a existující cesta zpět.
+
+**Výjimka:** u ručně zadaného cíle (`/release <větev|tag|hash>`) se skill zeptá, jestli uživatel ten konkrétní bod historie viděl – průběžné testování `main` na jiný commit neplatí.
+
+**Zamítnuto – nechat volbu a doplnit důsledek:** nabízet možnost preview přeskočit znamená nabízet, že se přeskočí ve spěchu. **Zamítnuto – „jen preview, nepovýšit“:** vyrábělo by to krok, který v tomhle modelu dělá `git merge` do `main`.
+
+### Přestavba proběhla najednou, ne ve třech sezeních
+
+**Rozhodnuto 2. 9. 2026.** Návrh z úvodní diskuze zněl vzít přestavbu na tři sezení v pořadí: (1) průběžná kontrola a kontrakt příkazů, (2) `/review` jako paralelní panel – **a před ním vyzkoušet vestavěné `/code-review ultra` a `/security-review`**, ať se staví jen zbytek, (3) `/release` samostatně a v klidu.
+
+**Rozhodnutí:** proběhlo to jako jeden průběh, na pokyn „pusť se do toho“.
+
+**Důsledek, který je potřeba znát:** bod 1 je ověřený v provozu (hook běžel naostro, prošel regresními testy). **Body 2 a 3 jsou napsané, ale nikdy nespuštěné** – `/review` se poprvé pustil až na vlastní práci na konci session a hned našel tři kritické vady průběžné kontroly, `/release` neběžel dodnes. Ověřovací krok, který byl výslovnou součástí bodu 2, se vynechal: vestavěné skilly se nevyzkoušely a vlastní panel je na nich přitom postavený.
+
+**Proč se to zapisuje:** aby se z „hotovo“ nestalo „ověřeno“. Zbytek visí v `todo.md`.
+
+### `/standards` se rušil bez výslovného souhlasu
+
+**Rozhodnuto 2. 9. 2026.** Zrušení skillu `/standards` a jeho nahrazení skillem `/review` byl nejhlubší strukturální zásah celé přestavby. Byl položen jako otázka, uživatel ji odmítl s tím, že chce věc vyjasnit, a v mezičase poslal „pokračuj v ptaní na další otázky“. Odpověď na to zněla „nezdržuju se dalšími otázkami a rozhoduju sám“ a rozhodlo se.
+
+**Rozhodnutí:** výsledek se ponechává – `/review` pohltil `/standards`, `/consistency` zůstal samostatný, a zdůvodnění je zapsané v `~/.claude/docs/decisions.md`, *`/standards` se stal `/review`, `/consistency` zůstal samostatný*.
+
+**Proč se to zapisuje:** věcně to dopadlo dobře, ale schválení chybí. Kdyby se ukázalo, že to byla chyba, je poctivé vědět, že se nerozhodovalo společně. A příště je to signál: „pokračuj v ptaní“ znamená ptát se, ne přestat.
+
+### Průběžná kontrola zastaví jednou, ne napořád
+
+**Rozhodnuto 2. 9. 2026.** Hook byl zaveden jako **tvrdá kontrola** („skript neumožní ukončit odpověď, dokud kontrola neprojde“). Implementace ale obsahuje únik: neprojde-li druhý pokus nad týmž stavem stromu, hook pustí dál a stav si zapamatuje.
+
+**Rozhodnutí:** únik zůstává a texty ho přiznávají. `README.md` i `~/Context/coding/coding.md` původně tvrdily, že hook „prostě nepustí skončit“ – to bylo nepravdivé a v případě README to viselo na veřejném GitHubu.
+
+**Proč:** bez úniku by se práce zasekla na chybě, kterou model opravit nedokáže – nezvednutá databáze, cizí regrese na `main`, chybějící služba. Nekonečná smyčka končí tím, že si člověk kontrolu vypne úplně, což je horší výsledek než jedna propuštěná odpověď s hlasitým varováním.
+
+**Cena, kterou je potřeba unést:** kontrola je tvrdá jednou, ne napořád. Kdo chce záruku bez výjimky, musí vyřešit, co dělat s neopravitelným stavem – a to není otázka skriptu, ale provozu.
+
+### Souhlas se spouštěním chrání repozitář, ne příkazy
+
+**Rozhodnuto 2. 9. 2026.** `verify.sh` spouští příkazy z projektového `CLAUDE.md`, tedy verzovaný obsah repozitáře, a hooky běží mimo permission systém Claude Code. Klon cizího repozitáře by tak stačil ke spuštění cizího kódu. Jako obrana vznikl souhlas per projekt (`--allow`).
+
+**Rozhodnutí:** souhlas se váže na **repozitář**, ne na otisk kontraktu, a text to říká na rovinu.
+
+**Proč:** první verze podepisovala otisk sekce `## Kontrakt příkazů`. Bezpečnostní role při review ukázala, že to chrání řetězec, ne chování: `- test: npm test` je nevinný řádek, ale spustí to, co stojí v `package.json` toho repozitáře – a to se neschvaluje. Kontrakty jsou navíc standardizované a krátké, takže je útočník uhodne a otisk zkopíruje; kolize v klíči projektu (dřívější „posledních 40 alfanumerických znaků z cesty“) to umožňovala i mezi různými projekty. Doloženo spuštěním.
+
+**Zamítnuto – ponechat otisk kontraktu jako bezpečnostní prvek:** dával by falešný pocit bezpečí, což je horší než nechránit nic, protože by se mu věřilo.
+
+### Žádný krok životního cyklu neopakuje, co udělal krok před ním
+
+**Rozhodnuto 2. 9. 2026.** Při kontrole se ukázalo, že se táž práce dělá na několika místech za sebou. `/consistency` spouštěl typecheck a linter, které o krok dřív pustil `/review` jako průběžnou kontrolu. `/end` posílal čtenáře bez kontextu s otázkami „rozpory a nepravdy“ a „zastaralé zbytky“ – tedy doslova zadání `/consistency`, který běží těsně předtím.
+
+**Rozhodnutí:** každý krok *Životního cyklu projektu* dělá jen to, co kroky před ním nepokrývají, a v sekci *Co skill nedělá* to má napsané jmenovitě. Konkrétně: `/consistency` neopakuje kontroly `/review` a zůstává mu hledání mrtvého kódu a nepoužitých závislostí; `/end` neopakuje audit `/consistency` a rozpory hledá jen v tom, co sám dnes zapsal.
+
+**Proč:** opakovaný běh nad nezměněným stavem stojí čas i tokeny a nic nepřinese. Horší ale je, že rozmazává odpovědnost – když tutéž věc hlídají tři kroky, přestane být jasné, který z nich ji má hlídat pořádně, a v praxi ji pak neudělá pořádně žádný.
+
+**Co překryv naopak není a nechává se:** `/implement` pouští levné `/code-review` po větším celku, přestože plný panel přijde v `/review` (chyba nalezená hned stojí minuty, ne odpoledne). `/review` i `/consistency` po vlastní opravě spouštějí průběžnou kontrolu – každý ověřuje **svůj** zásah. `/oponent` i `/end` posílají agenta bez kontextu, ale ptají se ho na jiné věci („je ten záměr dobrý?“ vs. „dá se na to navázat?“).
+
+**Test, kterým se to pozná:** kdyby ten krok neproběhl, zjistil by to někdo jiný? Když ano, je to duplicita. Když ne, patří tam.
+
+### Průběžná kontrola stojí na `Stop` hooku, ne na `PostToolUse`
+
+**Rozhodnuto 2. 9. 2026.** Claude Code nabízí několik míst, kam kontrolu pověsit. `PostToolUse` po každém zápisu souboru, `SubagentStop` po doběhnutí subagenta, `Stop` na konci odpovědi.
+
+**Rozhodnutí:** `Stop`.
+
+**Proč:** kontrola má odpovědět na otázku *„smí tahle práce skončit?“*, a ta se dá položit jedině na konci odpovědi. `PostToolUse` by běžel po každém uloženém souboru, tedy uprostřed rozpracované změny, kde je červený stav normální a očekávaný – blokovat tam znamená blokovat pořád. Navíc by běžel desítkykrát za odpověď, což u test suite není přijatelné ani časem, ani zátěží.
+
+Druhý důvod je věcný: `Stop` je jediné místo, kde má „hotovo“ vůbec smysl. Právě tam Claude tvrdí, že práci uzavírá, a právě to tvrzení má kontrola ověřit.
+
+**Zamítnuto – `PostToolUse` s filtrem na testovací soubory:** chytalo by editaci testů, ale nikoliv to hlavní, tedy uzavření práce nad rozbitým stavem. Jako doplněk to smysl dává a je to zapsané v `todo.md` – jako náhrada ne.
+
+**Cena:** kontrola běží až na konci, takže se o chybě dozvíš později, než kdyby hlídal každý zápis. Vyvažuje to průběžná kontrola po každém *úkolu* uvnitř `/implement`, která je věcí plánu, ne hooku.
+
+### Souhlas průběžné kontroly jde i vypsat a odebrat
+
+**Rozhodnuto 2. 9. 2026.** Skript uměl souhlas jen vydat (`--allow`). Zjistit, pro které projekty platí, nebo ho odebrat, šlo jedině ruční prací v `~/.local/state/claude-verify/allowed/`.
+
+**Rozhodnutí:** doplněny `--list` a `--revoke <project>`.
+
+**Proč:** u bezpečnostního prvku je jednosměrnost provozní díra. Souhlas znamená „v tomhle repozitáři smí běžet jeho vlastní příkazy“ – když ho omylem dostane naklonovaný cizí repozitář, musí existovat cesta zpět, a to bez editace stavového adresáře naslepo. Že to není teoretické, ukázal první běh `--list`: vypsal souhlas pro testovací adresář, který už dávno neexistoval.
+
+`--revoke` porovnává **obsah** souboru se souhlasem, ne hash zadané cesty. Ve worktree layoutu se souhlas ukládá pro adresář s `CLAUDE.md`, tedy `<container>/main`, takže hash zadaného kontejneru by ho netrefil. Ze stejného důvodu `--revoke` cestu nenormalizuje přes `cd`: odebrat se musí dát i souhlas pro adresář, který mezitím zmizel.
+
+### Pomlčka v kontraktu příkazů znamená „neaplikuje se“
+
+**Rozhodnuto 2. 9. 2026.** Kontrakt rozlišoval jen dva stavy: řádek je, nebo není. Chybějící řádek hlásí průběžná kontrola jako nezkontrolované – správně u projektu, který lint mít má a nemá ho; jenže u konfiguračního repozitáře bez typů a bez testů by ta hláška padala po každé odpovědi napořád.
+
+**Rozhodnutí:** hodnota `-` znamená, že se krok v projektu vědomě neaplikuje. Hook ho přeskočí a mlčí.
+
+**Proč:** trvale pravdivá a trvale neakční hláška je šum, a šum se přestane číst – i ve chvíli, kdy začne hlásit něco jiného. Rozdíl proti chybějícímu řádku je zachovaný schválně: díra v kontraktu se má ozvat, rozhodnutí ne.
+
+**Zamítnuto – nechat řádky chybět a hlášku ignorovat:** naučilo by mě přehlížet výstup kontroly, což je přesně opačný návyk, než kvůli kterému kontrola existuje.
+
+**Riziko:** pomlčkou se dá umlčet krok, který projekt mít má, jen ho ještě nemá. Proto pravidla v `~/Context/coding/coding.md` požadují k pomlčce napsaný důvod pod seznam.
+
+### Průběžná kontrola hledá kontrakt i v `.claude/CLAUDE.md`
+
+**Rozhodnuto 2. 9. 2026.** Repozitář `~/.claude` má kořenový `CLAUDE.md` obsazený – je uživatelský a rozbaluje se do každé session v každém projektu, takže projektová metadata i kontrakt příkazů leží v `.claude/CLAUDE.md`. Hook tam nehledal, takže repozitář, který průběžnou kontrolu vynalezl, ji na sebe neměl.
+
+**Rozhodnutí:** hledání rozšířeno o `.claude/CLAUDE.md`, ale **projektem zůstává kořen repozitáře**, ne adresář `.claude/`.
+
+**Proč:** kdyby se projekt určoval prostým `dirname`, běžely by příkazy o adresář níž a `shellcheck ./*.sh` by nenašel nic. Cesta ke kontraktu a adresář, ve kterém se spouští, jsou dvě různé věci a od téhle změny je skript rozlišuje.
+
+**Zamítnuto – zapsat `~/.claude` mezi výjimky a kontrolu tam nemít:** repozitář obsahuje šest shellových skriptů a `/review` na shell předepisuje `shellcheck`. Výjimka by znamenala, že jediné místo bez kontroly je to, kde se kontroly píšou.
+
+### Explorativní útok je samostatný krok životního cyklu, a stojí až před nasazením
+
+**Rozhodnuto 2. 9. 2026.** Testování bez předem daných kritérií – „spusť to a zkus to rozbít“ – bylo v původní diskuzi povýšené na třetí druh záruky vedle deterministických kontrol a posouzení modelem. Při přestavbě workflow z něj neimplementovalo nic: všechny tři vrstvy `/review` kód jen **čtou**.
+
+**Rozhodnutí:** nový skill `/attack`, samostatný krok životního cyklu, zařazený jako krok 8 – **před `/release`, ne v uzavírání**.
+
+**Proč samostatný skill a ne specialista v panelu `/review`:** ten by musel zvednout prostředí, což z levného kroku dělá drahý. `/review` má zůstat použitelný i nad obsahovým projektem a snést, aby běžel po každé feature.
+
+**Proč až před nasazením:** první návrh ho dával mezi `/implement` a `/review` s tím, že reprodukovaný pád je tvrdší doklad než posouzení modelem. Uživatel to obrátil a má pravdu: `/review` je levný a čte diff, takže patří do opakované kadence, kdežto útok potřebuje běžící prostředí, celé toky a desítky minut. Nad rozestavěnou aplikací navíc hlásí hlavně nedodělanost, ne chyby. Správná kadence je tedy **`/review` často, `/attack` zřídka nad hotovým celkem**.
+
+**Zamítnuto – vědomě to nedělat vůbec:** posouzení modelem a spuštění nejsou dvě míry téhož. Přehlédnutá větev je z kódu skoro neviditelná a v běžící aplikaci je to bílá stránka.
+
+**Fuzzing a property-based testy do skillu nepatří** – jsou to testy, píšou se v `/implement` a běží v `test`. Zapsáno v `~/Context/coding/quality.md`, *Tři druhy záruk, ani jedna nenahrazuje ostatní*.
+
+**Nálezy z útoku nedostane ověřovatel.** Ověřuje se tvrzení, ne pozorování: každý nález musí mít reprodukční postup a ten se přehraje. Nepřehraje-li se, zahodí se.
+
+**Tvrdá hranice:** útočí se výhradně na lokální instanci nad testovacími daty a nedá se přebít zadáním uvnitř běhu skillu. Destruktivní vstupy jsou smyslem té práce, takže spletený cíl je nevratný průšvih. Zátěžový test se nedělá vůbec.
+
+**Cena:** krok se v praxi bude přeskakovat, protože je drahý a nemá tvrdý spouštěč. Proto se `/release` na jeho proběhnutí ptá stejně, jako se ptá na `/review`.
+
+### První ostrý běh `/attack` a sedm oprav, které si vyžádal
+
+**Rozhodnuto 2. 9. 2026.** Skill se poprvé pustil na `kdojekde`. Našel šest reprodukovatelných nálezů (autorizace a RLS obstály beze zbytku, XSS neprošlo), ale hlavní výnos byl v tom, co chybělo jemu samotnému.
+
+**Co běh potvrdil:** příprava zastavil práci správně. Projekt jede v produkci proti jediné Supabase instanci, takže `next dev` na localhostu by psal reálným uživatelům. Izolace se vyrobila zvednutím lokálního stacku (Docker + supabase CLI) a útok proběhl nad testovacími daty.
+
+**Sedm doplněných míst:**
+
+1. **Prázdný diff na hlavní větvi** – výchozí rozsah nedával nic a skill neříkal, co dělat. `/review` to ošetřené má.
+2. **Důkaz, kam instance opravdu míří** – hranice zakazovala produkci, ale nedávala postup. Nově se vyžaduje doklad z chování: identifikátor produkčního projektu se nesmí objevit v klientském bundlu a zápis musí být vidět v lokální databázi. Nestačí „nastavil jsem proměnné“ – konfigurace se skládá z vrstev a soubor v repozitáři může proměnnou z prostředí přebít.
+3. **Obsah testovací databáze** – lokální stack obsahoval 177 profilů neznámého původu. Původ se teď ověřuje rozložením e-mailových domén a stářím záznamů; reálné domény znamenají zastavit.
+4. **Dělba dat mezi agenty** – agenti běží nad jednou instancí a přepisovali si navzájem tentýž profil, takže popisovali stav, který nenastal. Každý dostává vlastní účty a záznamy.
+5. **Prohlížeč se subagentům nedává** – `chrome-devtools` řídí jednu instanci Chrome. Vektory potřebující rozhraní zůstávají v hlavní session, subagenti dostávají to, co jde přes `curl` a databázi.
+6. **Vektor *vykreslení*** – v tabulce chyběl, přestože je to klasika: uložit `<script>` a pak otevřít každé místo, kde se text zobrazuje. Doklad je odchycený `alert`, ne escapovaný HTML výstup – knihovna, které se předává HTML řetězec, ho spustí i z escapované odpovědi.
+7. **Úklid zvednuté infrastruktury** – Fáze 6 řešila dev server, ne kontejnerový runtime a databázový stack, které si skill zapnul sám. Nově se na jejich zastavení ptá.
+
+**Co se nezměnilo, protože se osvědčilo:** přehrávání nálezů místo ověřovatele. Všech šest se reprodukovalo, u dvou se ale reprodukce ukázala jinak, než agent tvrdil – jeden nález se po hydrataci sám opraví (dopad je 9,6 s špatných dat na pomalé síti, ne trvalý stav) a u druhého obrazovka uživatele částečně varuje. Bez vlastního přehrání by obojí šlo dál nadsazené.
+
+### Ekonomika modelů: base v `~/.claude/standards/rules.md`, delta v každém skillu
+
+**Rozhodnuto 2. 9. 2026.** Volba modelu byla jediný požadavek z úvodní diskuze, ze kterého se do výsledku nedostalo skoro nic: jména modelů se nevyskytovala nikde a jediný skill, který model určoval, byl `/review`. Přitom deleguje deset skillů.
+
+**Rozhodnutí:** obecné pravidlo *Model a effort podle úkolu* do `~/.claude/standards/rules.md` (dnes `~/.claude/standards/delegation.md`), konkrétní volba na každém místě, kde se spouští subagent.
+
+**Proč `~/.claude/standards/rules.md` a ne `~/Context/coding/agentic.md`,** jak předpokládala položka v `~/Context/todo.md`: delegují i skilly, které s kódem nemají nic společného – `/oponent` nad strategickým dokumentem, `/report` při vzorkování dat, `/transcript` při přepisech. Doména `coding` by pravidlo schovala právě před polovinou míst, kde platí. Soubor `~/Context/coding/agentic.md` se tím ruší jako plán, ne odkládá.
+
+**Rozdělení podle toho, čí výstup je vstupem pro koho.** Chyba v návrhu nebo v ověření nálezu se násobí do všeho, co po ní přijde; chyba v mechanickém sběru se pozná hned. Proto `xhigh` na `/specify` Fázi 3b, `/breakdown`, ověřovatele v `/review` a útočníky v `/attack`, a `low` na Explore v `/consistency`, vytěžení transcriptu v `/end`, vzorkování dat a přepisy.
+
+**Dvě opravy proti rešerši z úvodní diskuze**, která je po roce zastaralá:
+
+- **„Sonnet jako výchozí“ neplatí.** Dnešní doporučení Anthropicu zní *„start with Claude Opus 5 for most workloads“*. Tabulka proto nemluví o jménech, ale o rolích (nejlevnější / výchozí model session / nejsilnější), a jména uvádí jen jako dnešní příklad s odkazem na dokumentaci.
+- **Effort je primární páka na náklady, ne výměna modelu.** Pět úrovní, výchozí `high`; dokumentace k Opusu doporučuje `low` a `medium` používat *liberally*, a `low` má jako typický případ uvedené doslova „subagents“. Odtud pravidlo **effort lad dřív než model**: eskalace je `high` → `xhigh` → `max` → teprve pak silnější model. Haiku effort nepodporuje vůbec.
+
+**Nejvyšší tier není výchozí volba pro těžkou práci.** Fable je dvojnásobně drahý než Opus a pomalejší; dokumentace ho doporučuje *„when your evals on Opus 5 at higher effort still fall short“*. V `/attack` je proto uvedený jako druhý krok eskalace, ne jako výchozí model útočníků.
+
+**Zamítnuto – `/breakdown` na levnějším modelu.** Uživatel to navrhl s tím, že „výroba dokumentace“ je mechanická. Není: plán řídí veškerou práci pod sebou a špatně nařezaný úkol se projeví až u posledního kroku. Odpovídá tomu i vestavěný režim `opusplan` (silný model plánuje, levnější provádí) a doporučení trhu. Uživatel po vysvětlení souhlasil.
+
+### Otisk stavu v průběžné kontrole musí zahrnovat obsah, ne jen jména
+
+**Rozhodnuto 2. 9. 2026.** Hook si pamatuje otisk stavu, nad kterým už kontrola prošla, aby ji nepouštěl dvakrát nad týmž. Otisk se skládal z `HEAD` a `git status --porcelain`. Jenže porcelain vypisuje **jména a příznaky, ne obsah**: `" M soubor"` vypadá stejně pro první i desátou úpravu téhož souboru.
+
+**Důsledek:** jakmile byl soubor jednou rozpracovaný a kontrola nad ním prošla, šlo ho libovolně rozbít a hook odpověděl „tenhle stav už prošel“ a pustil dál **bez spuštění čehokoliv**. V běžné práci se tentýž soubor edituje pořád dokola, takže kontrola po první zelené kontrole prakticky mlčela. Nalezeno při závěrečné kontrole vlastních oprav, doloženo experimentem.
+
+**Rozhodnutí:** otisk nově zahrnuje `git hash-object` každého souboru, který porcelain vyjmenoval.
+
+**Strop 200 souborů:** nad ním by hashování stálo víc než kontrola sama, takže se otisk znehodnotí a kontrola se pustí pokaždé. Selhání směrem k „radši zkontroluj“, ne k „radši pusť dál“.
+
+**Zamítnuto – hashovat `git diff HEAD`:** nepokrývá untracked soubory, tedy přesně nově založené soubory, které se během práce nejvíc mění.
+
+### Krok, který nejde spustit, není padající kontrola
+
+**Rozhodnuto 2. 9. 2026.** Hook hlásil chybějící nástroj (`command not found`, návratový kód 127) stejně jako padající test: „Průběžná kontrola není zelená, oprav to.“ Jenže opravovat není co – kód je v pořádku a chybí prostředí. Model pak buď opravuje nevinný kód, nebo ohne kontrakt, aby kontrola zmlkla.
+
+**Rozhodnutí:** návratové kódy 126 a 127 se hlásí zvlášť („neopravuj kód, oprav prostředí nebo kontrakt“) a **odpověď neblokují** (exit 1 místo 2).
+
+**Proč to neblokuje:** rozbité prostředí model neopraví a blokování by ho jen hnalo do slepé uličky. Přesto se stav **neuloží jako zelený** – jinak by kontrola po nápravě prostředí mlčela, protože otisk už zná.
+
+Inspirováno rozlišením *„a failure status is information, not an error“* z `claude-leverage` Filipa Podstavce.
+
+### `~/.claude` má meta-testy místo pomlčky u `test`
+
+**Rozhodnuto 2. 9. 2026.** Kontrakt měl `- test: -` s odůvodněním, že konfigurační repozitář nemá spustitelnou jednotku. Průzkum `claude-leverage` ukázal, že to není pravda: skilly jsou text, který nikdo nespouští, takže se jejich vady projeví až za běhu a tiše.
+
+**Rozhodnutí:** `tests/test_skills.py` – hlídá hlavičky skillů, shodu `name` s adresářem, režimy popsané v těle proti `argument-hint`, existenci odkazovaných souborů, odkazy na kroky životního cyklu místo na jejich vnitřky, sekci *Co skill nedělá* u kroků životního cyklu a zastoupení v README.
+
+**Jen stdlib, `unittest` místo `pytest`:** kontrola, která si žádá instalaci balíčku, se v cizím prostředí neprojeví jako nález, ale jako rozbitý nástroj – a ten se podle rozhodnutí výš neblokuje, takže by tiše nikdy neběžela.
+
+**Cena:** první běh našel tři reálné vady (chybějící `argument-hint` u `/attack`, slovní místo parametrické určení úrovně `/code-review` v `/implement`, třetí zapomenutý odkaz na `/code-review` v `/oponent`) – tedy přesně to, co ruční revize třikrát přehlédla.
+
+### Levný model se vyplatí jen tam, kde se jeho chyba pozná levně
+
+**Rozhodnuto 2. 9. 2026.** Při zavádění tabulky volby modelu jsem poslal vytěžení transcriptu v `/end` na nejlevnější model s odůvodněním „je to výtah podle seznamu, ne posouzení“. **Byla to chyba a projevila se hned:** výstup obsahoval tvrzení, která byla prokazatelně mimo, musel se zahodit a práce se dělala znovu. Uživatel to zachytil na prvním ostrém běhu.
+
+**Rozhodnutí:** k tabulce přibylo kritérium, které tam chybělo. Před nasazením levného modelu se ptám: *poznám špatný výstup, aniž bych šel ke zdroji?* · *násobí se jeho výstup do další práce?* · *co se stane, když to udělá špatně a nikdo si nevšimne?*
+
+**Proč:** vytěžení dlouhé konverzace vypadá mechanicky, ale agent musí poznat, která dohoda později přestala platit a co je korekce. Chybu v tom nepoznáš jinak než tím, že si transcript přečteš sám – tedy uděláš práci, kvůli které jsi agenta poslal. **Úspora je tedy nulová v lepším případě a záporná v horším:** zahozený výtah stojí dvakrát, nezahozený je horší, protože nová session pak staví na dohodě, která neplatí.
+
+**Přeřazeno z nejlevnějšího na výchozí model:** vytěžení transcriptu v `/end` (`medium`), přepisy v `/transcript` (`low` – vymyšlená věta v přepisu vypadá stejně věrohodně jako správná a nepozná se jinak než poslechem), průzkumník v `/review` (`low` – jeho mapa jde do zadání všech rolí naráz, takže se chyba násobí pětkrát). **Ponecháno na nejlevnějším:** vzorkování dat v `/report`, kde je špatný popis sloupců vidět okamžitě.
+
+**Obecné poučení:** „mechanická práce“ ve smyslu tohohle pravidla není nudná práce, ale práce, u které je **zjevné, že je hotová špatně**.
+
+### Tři kritéria, kdy se delegace vyplatí i za vyšší cenu
+
+**Rozhodnuto 2. 9. 2026.** Z průzkumu `claude-leverage`. Delegace subagentovi je proti běhu v hlavní session obvykle **dražší**, protože agent si musí načíst kontext, který hlavní session už má. Vyplatí se přesto, když platí aspoň jedno: **vynucený tvar výstupu** (vrací strukturu, ne souvislý text), **izolace kontextu** (read-only kontrolor se nemůže stát opravářem uprostřed kontroly – celá třída chyb, která jinak vzniká), nebo **neamortizovatelná práce** (jeden vstup, jeden výstup, nemá z čeho těžit rozehraný kontext).
+
+Neplatí-li ani jedno, patří práce do hlavní session. Zapsáno v `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*; doplňuje dřívější pravidlo, že rozeslání práce agentům šetří kontext, ne tokeny.
+
+### Hodnotu, kterou čte stroj, nepíšeme z kontextu
+
+**Rozhodnuto 2. 9. 2026.** Skilly zapisovaly datum do `decisions.md` a `CLAUDE.md` podle věty „vezmi ho z `Today's date is …` v system-reminderu“.
+
+**Rozhodnutí:** takové hodnoty se **vyrábějí příkazem** (`date +%F`, `git rev-parse --short HEAD`) a instrukce ten příkaz jmenuje, místo aby popisovala, co má být uvnitř. Zapsáno v `~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*.
+
+**Proč:** zapamatovaná hodnota se tiše rozejde se skutečností a nikdo si toho nevšimne, protože vypadá správně. Datum o dva měsíce vedle nikoho netrkne, ale filtr nebo řazení nad ním dá špatný výsledek. U hodnoty vyrobené příkazem je nejhorší možný výsledek to, že příkaz selže – a to je vidět.
+
+**Odkud:** z průzkumu `claude-leverage` Filipa Podstavce, kde je pravidlo zdůvodněné konkrétní chybou – obsah souboru a jeho `mtime` se rozešly o dva měsíce.
+
+### Čtyři průchody `/consistency` za sebou a co z toho plyne
+
+**Rozhodnuto 2. 9. 2026.** Konzistenční audit `~/.claude` proběhl **čtyřikrát po sobě** na výslovné přání uživatele. Nálezy: **14 → 8 → 10 → 5**, celkem 37, všechny vypořádané.
+
+**Zásadní pozorování: většina nálezů každého kola vznikla opravami z kola předchozího.** Druhý průchod 7 z 8, třetí 8 z 10, čtvrtý 1 z 5.
+
+**Třetí průchod našel víc než druhý**, což vyvrátilo odhad, že to konverguje. Důvod: druhý průchod skončil velkým novým blokem textu, a **čerstvě napsaný text má vad nejvíc**. Odtud pravidlo, které stojí za zapamatování: **největší riziko nese poslední oprava, ne původní stav.** Teprve čtvrté kolo konvergovalo – a jen proto, že předchozí opravy byly pět jednovětých změn.
+
+**Praktický závěr:** po velké opravě má smysl pustit audit znovu; po drobné ne. Pátý průchod se nedoporučil, protože by hledal hlavně sám sebe.
+
+**Doplněno 2026-09-04:** dva průchody nad vznikem normy tvaru skillu přidaly do řady další bod – **4 z 5** nálezů druhého kola vyrobily opravy z kola prvního. Řada je tedy 7 z 8, 8 z 10, 1 z 5, 4 z 5. Nejlépe to ilustruje číslo, které zestárlo **vlastní opravou**: text tvrdil „deset skillů opisuje přípravu“, což bylo změřené správně – jenže táž session pak upřesnila detekci z hledání slova „Příprava“ na přítomnost `Fáze 0`, čímž do množiny přibyly dva skilly a platná hodnota se stala dvanáct. **Nebyla to chyba měření, ale posun sémantiky pod ručně zapsaným číslem** – proto se od té doby k takovým číslům v textu připisuje, čím se dají vyrobit.
+
+**Doplněno 2026-09-11:** dva průchody `/consistency full` nad `~/Context` (121 souborů) přidaly do řady bod **6 z 12** – tedy polovinu, ne většinu. Řada je teď 7 z 8, 8 z 10, 1 z 5, 4 z 5, 6 z 12. **Nižší podíl má vysvětlení a to je samo poučné:** zbylých šest nálezů druhého kola nevzniklo opravami z prvního, ale tím, že **první kolo jednu třídu kontrol vůbec nepustilo** – ověřovalo existenci souborů, ne existenci sekcí, na které se odkazuje jménem (`` `soubor.md`, *Název sekce* ``). Druhý průchod jich prověřil 164 a sedm nesedělo.
+
+**Plyne z toho, že opakovaný průchod neslouží jen k úklidu po předchozím kole.** Najde i to, co předchozí kolo nekontrolovalo – a to je důvod pustit ho i tam, kde se nic velkého nepřepisovalo. Praktický závěr výš tím není zrušen, jen doplněn: po velké opravě znovu proto, že čerstvý text má vad nejvíc; po jakémkoli průchodu proto, že druhé kolo hledá jinak.
+
+**Nejpoučnější nález:** při opravě „kontrola nemá vlastníka“ se do tabulky v `~/Context/coding/coding.md` doplnil sloupec *Kdo ji zapíná* – a u tří kontrol se vlastník **napsal, aniž se ověřilo, že to dělá**. Vznikl tím **horší stav než původní**: dřív byla díra vidět, potom vypadala zalepeně. Odtud věta v `~/Context/coding/coding.md`: *„Kontrola bez sloupce vpravo je dekorace.“*
+
+**Druhý nejpoučnější:** `/project` měl u metrik složitosti napsáno „u existujícího projektu je nastav jako varování“ – jenže varování `lint` neshodí, takže se kontrola nikdy nepustí. Byl to **návod, jak tiše obejít vlastní kontrolu**, napsaný dvacet minut po jejím zavedení. Změkčení prahu teď vyžaduje souhlas člověka a zápis do `docs/decisions.md`.
+
+**Dílčí rozhodnutí z těch čtyř průchodů:**
+
+- **`/oponent` zůstává v README uvnitř životního cyklu**, jen označený jako volitelný krok mimo ni. *Zamítnuto – přesunout ho mezi skilly mimo životní cyklus:* utrhlo by ho to od kroků, ke kterým věcně patří (posuzuje dokument z `/specify` a `/breakdown`).
+- **`permissions.allow` rozšířen o `Bash(date:*)` a `Bash(shellcheck:*)`.** Návrh přišel od subagenta a **oprávnění se na návrh agenta nemění automaticky** – agent není oprávněný rozhodovat o uživatelových oprávněních, takže o tom rozhodl uživatel. Oba nástroje jsou read-only bez vedlejších účinků a `date` se po zavedení pravidla výš volá běžně.
+- **Zdůvodnění opakovaného auditu závislostí žije jen v `/release`**, `/review` na ně odkazuje – tentýž argument byl napsaný dvakrát vlastními slovy, což porušovalo *Single source of truth*.
+- **`/end` a `/project` mají „Další krok“ podmíněně** („nasazuje-li se“, „zakládá-li se něco nového“) – na rozdíl od ostatních kroků životního cyklu u nich následník jednoznačný není.
+
 ### `/end` ve worktree větve jen konstatuje, nenabízí merge
 
 **Rozhodnuto 3. 9. 2026.** Závěrečný verdikt `/end` zněl *„můžeš ji opustit nebo zkompaktovat“*. Ve worktree layoutu to neodpovídá na otázku, kterou má člověk v hlavě – totiž co s tou větví –, a zároveň nabízí odchod jako jedinou cestu, přestože zápis do souborů neznamená hotovou práci.
@@ -490,6 +742,12 @@ Krok 0b (Soulad se standardem) není druhý výstup Kroku 0 (Zjisti režim a sta
 
 **Zamítnuto – `~/.claude/standards/` jako podadresář.** Dnes by to byl obal nad jedním souborem. Otevře se, až jich v kořeni bude víc; do té doby `structure.md` leží vedle `~/.claude/standards/rules.md`, se kterým sdílí status závazného pravidla importovaného přes `@`.
 
+### Termín „guard“ se ponechává, a plyne z toho obecné pravidlo
+
+**Rozhodnuto 7. 9. 2026.** Revize neustálených termínů skončila u „guardu“ rozhodnutím **nic neměnit**, protože je to zároveň identifikátor v kódu tohohle repozitáře. Zápis tu ležel celý do 11. 9. 2026; tehdy se přestěhoval do `~/.claude/skills/ptydepe/terms.md`, sekce *Ponechané termíny* – konsolidace z 10. 9. ho minula, protože prošla jen sekci `## Claude` a tenhle zápis leží v `## coding`.
+
+**Obecné pravidlo z něj zůstává v platnosti:** termín, který je zároveň identifikátorem v kódu nebo klíčovým slovem jazyka, se nepřekládá. Nese ho `/ptydepe`, *Fáze 3*.
+
 ### `deny` v `settings.json` je ochrana proti omylu, ne proti obejití
 
 **Rozhodnuto 8. 9. 2026.** `/review full` nad konfigurační vrstvou našel třídu děr, kde `deny` a `ask` nedosáhnou na cestu, kterou si vynutí interpret nebo správce balíčků. **Tři z nich zůstaly vědomě otevřené** – jediná účinná oprava by přesunula běžné nástroje do `ask` a odklikávala by se u každého spuštění, takže by ji první kolize vypnula.
@@ -763,6 +1021,7 @@ Zavedeny dva typy v `~/.claude/agents/`: **`reader`** (`Read, Grep, Glob`) a **`
 **Typ subagenta je výchozí, ne `reader` ani `Explore`, a je to vědomé.** Agent musí pouštět `jq` nad JSONL (tedy potřebuje shell) a zapsat dlouhý strukturovaný výstup do souboru (tedy potřebuje `Write`). `reader` nemá první, `Explore` druhé. Hranice se proto nepředstírá – zákaz zápisu do repozitáře projektu je v zadání jako pokyn a je to ve skillu napsané.
 
 **Srovnávací běh se vědomě nedělal.** Místo něj stojí dva skutečné ostré běhy, ve kterých je zaznamenané, jak práce bez skillu selhala – to je silnější doklad než syntetický pokus.
+
 ### Souhlas s průběžnou kontrolou platí na repozitář, ne na obsah příkazů, a dialog to teď říká
 
 **Rozhodnuto 18. 9. 2026.** Nález `/review full` nad rezervačním systémem (specialista na agentní infrastrukturu): `Stop` hook po každé odpovědi vykoná `test` z kontraktu, což u toho projektu znamená naimportovat a spustit všechny `tests/test_*.py`. Souhlas se přitom otiskuje výhradně z řádků `- klíč: příkaz`, takže obsah těch souborů do něj nevstupuje. **Kdo dostane commit do `tests/` – smerguje PR, předá větev, přesvědčí agenta –, dostane spuštění svého kódu s právy uživatele po první další odpovědi, bez promptu a bez nového souhlasu.** Sedí to vedle `.env` s přístupovými údaji, které deny pravidla chrání proti nástroji `Read`, ne proti procesu, který si hook spustí sám.
