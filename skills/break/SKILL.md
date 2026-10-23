@@ -68,6 +68,8 @@ Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~
 
 **Předávej doslova, neparafrázuj.** Strukturovaný výstup agentů a znění nálezů jdou do zápisu tak, jak jsou; parafráze ztratí právě ten detail, kvůli kterému položka vznikla, a ztratí ho tiše, protože shrnutí vypadá úplně (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*).
 
+**Poučení z chyby zapiš v rozsahu její příčiny, ne jako plošný zákaz.** Selhala-li v běhu jedna třída oprav (vrácený commit, odmítnutá oprava), napiš, která třída to byla a proč – „rozpor dvou odborných pravidel se bral jako jednoznačný“ –, a nech třídění skillu platit pro ostatní. Nová session plní zápis doslova, takže zákaz širší než příčina („bez souhlasu se nic neopravuje“) přebije pravidlo skillu a přinutí ji ptát se i na mrtvý odkaz.
+
 **Ve worktree layoutu se zápis nezrcadlí do `main/`.** Větev je před mergem a sekce v ní leží tam, kde se v práci pokračuje; do hlavní větve se dostane mergem.
 
 Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj klíčem `interrupted` cestu k zápisu (`"interrupted": "docs/todo.md"`). Podle toho klíče přerušený skill na startu pozná, že autoritou je zápis, ne běhový soubor (`~/.claude/skills/skills.md`, *Běhový stav*). Smaže ho až session, která frontu dojde.

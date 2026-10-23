@@ -14,6 +14,8 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/severity.md`.
 | **Jednoznačné** | oprava chování nebo strukturu mění, ale má **právě jednu zjevně správnou podobu** – dorovnání toho, co už je rozhodnuté jinde, doplnění chybějícího kusu, jehož tvar určuje okolí | oprav rovnou, vypiš **i s tím, co se změnilo a proč** |
 | **Sporné** | oprava má víc obhajitelných podob; nebo chybí údaj, který ví jen uživatel a **nedá se zjistit z repozitáře**; nebo je zásah nevratný, sahá mimo repozitář či do cizího systému | zeptej se, jeden nález = jedna otázka |
 
+**Novější, podrobnější nebo početnější strana rozporu není rozhodnutí.** Rozpor dvou míst je jednoznačný, jen když jednu stranu dokládá něco mimo ně – rozhodnutí v `decisions.md`, katalog, ze kterého se druhé místo odvozuje, změřený nebo citovaný fakt. Odporují-li si dvě odborná pravidla (doporučené nastavení, co se kam posílá) a doklad chybí, je nález sporný, i když jedna strana vypadá jako oprava té druhé. Jinak skill potichu vybere stranu a přepíše odborné rozhodnutí, jako by to byl překlep.
+
 **Váhání je odpověď.** Nepřemlouvej se, že nález do prvních dvou skupin „nejspíš patří“ – patří tam jen to, u čeho je to zřejmé na první pohled.
 
 ### Nejistotu nejdřív zkus odstranit
