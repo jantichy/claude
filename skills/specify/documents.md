@@ -10,7 +10,7 @@
 
 ## Jak se píše
 
-Česky, věcně, bez omáčky, podle `~/Context/text/text.md` a `~/Context/text/typography.md`. Konkrétně – „rychlé načítání“ je nic, „LCP pod 2,5 s na 4G“ je požadavek. **Bez placeholderů**; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
+Česky, věcně, bez omáčky, podle `~/Context/Text/text.md` a `~/Context/Text/typography.md`. Konkrétně – „rychlé načítání“ je nic, „LCP pod 2,5 s na 4G“ je požadavek. **Bez placeholderů**; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
 
 ------
 
@@ -65,7 +65,7 @@ Sem patří i to, co bylo v návrhu a vyhodilo se – ať to nikdo nevymyslí zn
 Success metrics. Konkrétní, měřitelné, s cílovou hodnotou a termínem.
 Cílovou hodnotu a termín jen s oporou – od autora, z dat nebo ze závazku;
 vymyšlené číslo se pak měří, i když nic nerozhoduje. U nástroje pro vlastní
-potřebu (~/Context/coding/architecture.md) žádné cílové hodnoty nenavrhuj,
+potřebu (~/Context/Coding/architecture.md) žádné cílové hodnoty nenavrhuj,
 jen kvalitativní kritéria: běží bez zásahu, dělá, co má.
 
 ## Otevřené otázky

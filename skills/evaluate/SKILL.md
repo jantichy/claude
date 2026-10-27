@@ -57,7 +57,7 @@ Společný začátek je v `~/.claude/skills/preflight.md`. Body 4 a 5 odpadají 
 
 1. **Načti si `~/.claude/standards/lifecycle.md`** – stojíš v kroku cyklu a potřebuješ vědět, co po tobě platí a čí práci nepřebíráš.
 2. **Načti si `~/.claude/standards/structure.md` a `~/.claude/standards/product.md`** – zapisuješ do standardních souborů projektu a do produktového podkladu, jehož tvar drží druhý z nich.
-3. **Má-li projekt napojenou webovou analytiku, načti si `~/Context/analytics/analytics.md`.** Bez ní si spleteš, co která metrika měří, a poznatek postavený na špatně čtené metrice je horší než žádný.
+3. **Má-li projekt napojenou webovou analytiku, načti si `~/Context/Analytics/analytics.md`.** Bez ní si spleteš, co která metrika měří, a poznatek postavený na špatně čtené metrice je horší než žádný.
 4. **Zjisti, kdy se nasazovalo a kdy tenhle krok běžel naposledy.** Datum posledního nasazení najdeš v `done.md`, v tagu nebo v historii gitu; datum posledního běhu v hlavičce `docs/operation.md`, existuje-li. **Období, za které se měří, je od jednoho k druhému** – bez něj se čísla nedají srovnat s ničím.
 
 ## Fáze 1 – Inventura zdrojů

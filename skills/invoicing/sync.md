@@ -1,6 +1,6 @@
 # Synchronizace do timetrackingu klienta
 
-Referenční soubor k režimu `sync` skillu `/invoicing`. Drží **mechaniku zrcadlení a pravidla oken**; postup, kdy se co dělá, je v `SKILL.md`, *Režim `sync`*. Přístupy, tokeny a konkrétní volání do systémů drží `~/Context/business/invoicing.md`, *Vzdálený timetracking klienta* – **sem se nikdy neopisují**, tenhle soubor je veřejný.
+Referenční soubor k režimu `sync` skillu `/invoicing`. Drží **mechaniku zrcadlení a pravidla oken**; postup, kdy se co dělá, je v `SKILL.md`, *Režim `sync`*. Přístupy, tokeny a konkrétní volání do systémů drží `~/Context/Business/invoicing.md`, *Vzdálený timetracking klienta* – **sem se nikdy neopisují**, tenhle soubor je veřejný.
 
 ## Obsah
 
@@ -38,7 +38,7 @@ Je to obecné pravidlo pro každý vzdálený timetracking, ne vlastnost jednoho
 
 **Jsou to dvě okna a pletou se snadno.** *Okno zápisu* je tohle – kam se smí sáhnout. *Okno čtení* sahá o tři měsíce dál do minulosti a slouží jen k tomu, aby se našel zpětný a propadlý čas (*Zpětný čas po uzávěrce*). Čtení nikdy neopravňuje k zápisu.
 
-**Hranice se čte odtud, odkud ji čte fakturace** – `~/Context/business/invoicing.md`, *Odkud se ví, co už je vyfakturované*. Vlastní hranici si režim neurčuje.
+**Hranice se čte odtud, odkud ji čte fakturace** – `~/Context/Business/invoicing.md`, *Odkud se ví, co už je vyfakturované*. Vlastní hranici si režim neurčuje.
 
 ## Uzávěrka dřív než faktura
 

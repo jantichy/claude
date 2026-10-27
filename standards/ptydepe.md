@@ -30,7 +30,7 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | chirurgický zásah | cílený zásah | editace dokumentace po jednotlivých větách. **Ne** „zacílený“, **ne** „cílená změna“ |
 | koncové věty | závěrečný verdikt | povinná závěrečná věta skillu – hotovo a čím pokračovat, nebo co tomu brání |
 | kotva (co uživatel v session napsal) | prompt; jako role v testech `/end` **zpráva uživatele** | položka inventury `/end` a poměr `prompty N/N`. Prompt je i zpráva poslaná uprostřed odpovědi |
-| kotva (datum, od kterého se počítá jiné datum) | referenční datum; u lhůt **počátek lhůty**; cena tak zadaná je **vázaná na termín akce** | relativně zadaná data, hlavně eventoid a `coding/modeling.md` |
+| kotva (datum, od kterého se počítá jiné datum) | referenční datum; u lhůt **počátek lhůty**; cena tak zadaná je **vázaná na termín akce** | relativně zadaná data, hlavně eventoid a `Coding/modeling.md` |
 | kotva (řádek po výmazu účtu) | anonymizovaný záznam, anonymizovaný účet | řádek bez osobních údajů, na který dál ukazuje historie |
 | kotva (místo pro skriptovou úpravu textu) | hledaný řetězec | podle čeho skript vkládá nebo kde řeže |
 | kotva (ostatní přenesené významy), ukotvit | konkrétní slovo podle smyslu – doklad, srovnávací ukázka, modelový rozpočet, pracovní cena, rodič v selektoru, opěrný bod, „kontrola, že test něco našel“; sloveso konkrétním slovesem | **Zůstává:** kotva odkazu (`#nadpis`), ukotvení vzoru v regexu, cenová kotva v psychologii ceny a CSS anchor positioning |
@@ -52,6 +52,6 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | úhel | hledisko | jeden kritický pohled, se kterým `/oponent` pouští agenta. `/attack` má **vektory útoku** a nesjednocuje se |
 | viséc, viséci | pozůstatek | zbytek po zásahu do textu, který přestal platit – odkaz na přejmenovanou sekci, věta o něčem, co už není |
 | vizitka | README skillu | text pro člověka zvenčí. „Vizitka“ dál znamená jednostránkový firemní web |
-| voda | vata | text, který nic nepřidává. Katalog drží `~/Context/text/text.md` |
+| voda | vata | text, který nic nepřidává. Katalog drží `~/Context/Text/text.md` |
 | zamluvené téma | nevypořádané téma | co v konverzaci padlo a nikdy se nedořešilo; hledá je `/end` |
 | zelená linka | průběžná kontrola | mechanismus, který po každé odpovědi pouští blokující kontroly. Anglicky `verify` |

@@ -8,7 +8,7 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 
 **Kdo ho udržuje.** Nepatří žádnému skillu a nikdo si ho nenačítá při běhu – je to referenční soupis k nahlédnutí ve chvíli, kdy se o nějaké kontrole rozhoduje. **Zapisuje do něj ten, kdo vrstvu zakládá nebo mění**, ve stejném commitu; objeví-li se nová cesta, jak něco obejít, patří sem dřív, než se zavře. Že tu každá vrstva má řádek, hlídá test v `tests/test_hooks.py`, a ten čte seznam vrstev z disku – **pravdivost řádku ale změřit neumí**, ta drží na tom, kdo ho psal.
 
-**Rozsah je tenhle repozitář.** Obecné pravidlo, že takový registr má vzniknout, drží `~/Context/coding/quality.md`.
+**Rozsah je tenhle repozitář.** Obecné pravidlo, že takový registr má vzniknout, drží `~/Context/Coding/quality.md`.
 
 ## Průběžná kontrola (`verify.sh` jako `Stop` hook)
 
@@ -136,7 +136,7 @@ Nic nezastavuje – při odeslání zprávy změří z transcriptu velikost kont
 
 ## Hooky z pluginů (`enabledPlugins` v `settings.json`)
 
-Plugin smí přinést vlastní `hooks/hooks.json` a zapíná se **jedním řádkem** v `enabledPlugins`. Do 27. 9. 2026 o téhle vrstvě registr nevěděl vůbec: test čte hooky ze `settings.json`, `githooks/` a `.github/`, tedy z míst, kde pluginové hooky nestojí. Dnes to hlídá `PluginHooks` v `tests/test_hooks.py` – **mlčí ale, když plugin na disku není**, protože `plugins/` je v `.gitignore` a v CI se nemá co měřit. Co se s pluginem dělá, než přibude, a jak se zachází s jeho aktualizacemi, drží `~/Context/coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*.
+Plugin smí přinést vlastní `hooks/hooks.json` a zapíná se **jedním řádkem** v `enabledPlugins`. Do 27. 9. 2026 o téhle vrstvě registr nevěděl vůbec: test čte hooky ze `settings.json`, `githooks/` a `.github/`, tedy z míst, kde pluginové hooky nestojí. Dnes to hlídá `PluginHooks` v `tests/test_hooks.py` – **mlčí ale, když plugin na disku není**, protože `plugins/` je v `.gitignore` a v CI se nemá co měřit. Co se s pluginem dělá, než přibude, a jak se zachází s jeho aktualizacemi, drží `~/Context/Coding/quality.md`, *Plugin a MCP server jsou kód s tvými právy*.
 
 **`superpowers@claude-plugins-official`** – `SessionStart` (i po `/clear` a `/compact`) vloží do kontextu obsah svého skillu `using-superpowers` obaleného do `<EXTREMELY_IMPORTANT>`.
 

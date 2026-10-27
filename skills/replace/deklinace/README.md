@@ -29,4 +29,4 @@ Převod označil 3 294 míst za jistá a 528 za nejistá. **Nejistá se přečet
 
 **Co se ověřit deterministicky dá a co ne.** Tvar proti předložce před ním ano – je to uzavřená tabulka a vyšlo z ní čisto. Shoda s přívlastkem ne: heuristika neodliší přívlastek od vztažného zájmena a slovesa, takže ze 40 nálezů byly 2 skutečné. Zbytek je úsudek nad větou.
 
-Rozbor konkrétního běhu drží `~/Dev/eventoid/main/docs/decisions.md`, §121.
+Rozbor konkrétního běhu drží `~/Projects/Eventoid/main/docs/decisions.md`, §121.

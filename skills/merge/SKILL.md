@@ -80,7 +80,7 @@ Ve větvi, ne v hlavní větvi:
 
 1. **`git merge --no-commit main`** – bez `--no-commit` by git čistý merge commitnul hned a kontrola by přišla až po něm.
 2. **Vyřeš konflikty.** Mechanické jsou ty, kde obě strany jen přidaly – typicky nové záznamy na konci `done.md`, `decisions.md` nebo `todo.md`: ponech oba za sebou. **Ptej se jen na konflikt, kde obě strany rozhodly tutéž věc jinak** – to je rozhodnutí o obsahu, ne postup mergování. **To rozhodnutí zapiš do `docs/decisions.md` ve větvi** i s variantou, která neprošla, ještě než pustíš kontrakt: úklid session proběhl ve *Fázi 1*, takže by se jinak nezapsalo nikam.
-3. **Pusť příkazy z *Kontraktu příkazů*** projektu (`~/Context/coding/quality.md`). Nemá-li projekt kontrakt, **řekni nahlas, že spojený stav nic neověřilo** – a pokračuj. Padne-li kontrola, oprav to v rozpracovaném mergi a pusť znovu; do `main` nejde nic, co neprošlo.
+3. **Pusť příkazy z *Kontraktu příkazů*** projektu (`~/Context/Coding/quality.md`). Nemá-li projekt kontrakt, **řekni nahlas, že spojený stav nic neověřilo** – a pokračuj. Padne-li kontrola, oprav to v rozpracovaném mergi a pusť znovu; do `main` nejde nic, co neprošlo.
 4. **Commitni a pushni**, má-li repozitář remote. Zpráva merge commitu do větve omezená není – hook hlídá jen hlavní větev.
 5. **Vrať se na *Fázi 3*.** Během řešení se `main` mohl posunout znovu; nad projektem běží souběžné session. **Po třetím kole zastav a ohlas to**: `main` se hýbe rychleji, než se dá dohnat, a o dalším postupu rozhodne uživatel.
 

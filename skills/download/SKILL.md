@@ -13,7 +13,7 @@ Doplní do `~/Downloads/downloads.md` položky ke stažení. Ten seznam na pozad
 
 Režimy nemá. Argument tvoří odkazy a volitelně cílová složka – všechno, co není adresa, je složka (`/download https://drive.google.com/drive/folders/… Kosmologie 2024`). Požadované jméno souboru se píše jen tehdy, když ho uživatel sám řekne.
 
-**Formát seznamu je rozhraní clockworku, ne tohohle skillu.** Drží ho `~/Dev/clockwork/docs/architecture.md`, sekce *Úloha `download`*. Skript `add.py` z něj přebírá tvar řádku i normalizaci adres a `tests/test_download.py` ověřuje, že zapsaný seznam přečte parser clockworku stejně.
+**Formát seznamu je rozhraní clockworku, ne tohohle skillu.** Drží ho `~/Projects/Clockwork/docs/architecture.md`, sekce *Úloha `download`*. Skript `add.py` z něj přebírá tvar řádku i normalizaci adres a `tests/test_download.py` ověřuje, že zapsaný seznam přečte parser clockworku stejně.
 
 ## Co skill nedělá
 

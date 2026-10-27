@@ -2,7 +2,7 @@
 
 Obecná pravidla pro práci na jakémkoli projektu – programátorském, znalostním i obsahovém. Co do tohoto souboru nepatří a kam to jde, drží `~/.claude/.claude/CLAUDE.md`, *Co do `~/.claude/standards/rules.md` nepatří*.
 
-Doménové znalosti z `~/Context/` si projekt importuje tvrdým `@import`em v `CLAUDE.md` – jen ty relevantní (rozcestník `~/Context/CLAUDE.md`, importy zakládá `/project`). Profil klienta importuje jeho složka pod `~/Projekty` a podprojekty ho dědí; projekt mimo ni si profil organizace importuje z `~/Context/organizations/`. **Ukázka importu v textu stojí v apostrofech**, jinak se soubor načte; skutečný import je naopak nesnese (`~/.claude/standards/structure.md`, *`CLAUDE.md`*).
+Doménové znalosti z `~/Context/` si projekt importuje tvrdým `@import`em v `CLAUDE.md` – jen ty relevantní (rozcestník `~/Context/CLAUDE.md`, importy zakládá `/project`). Profil klienta importuje jeho složka pod `~/Clients` a podprojekty ho dědí; projekt mimo ni si profil organizace importuje z `~/Context/Organizations/`. **Ukázka importu v textu stojí v apostrofech**, jinak se soubor načte; skutečný import je naopak nesnese (`~/.claude/standards/structure.md`, *`CLAUDE.md`*).
 
 ------
 
@@ -260,7 +260,7 @@ Před mazáním, přepisem, zrušením nebo hromadnou změnou se podívej na akt
 
 ### Nástroje instaluj správcem balíčků, v daném pořadí
 
-Nástroj do počítače instaluj v pořadí **homebrew → npm → uv → pip**; vyhrává první zdroj, který ho má. `pip` jen ve venv (globální je na macOS blokovaný), `uvx` spustí nástroj bez instalace. Závislosti projektu se řídí jeho manifestem, ne tímhle (`~/Context/coding/quality.md`). Před instalací ověř, že nástroj už není; mimo žebříček (`curl | sh`, binárka, instalátor) si to nech potvrdit.
+Nástroj do počítače instaluj v pořadí **homebrew → npm → uv → pip**; vyhrává první zdroj, který ho má. `pip` jen ve venv (globální je na macOS blokovaný), `uvx` spustí nástroj bez instalace. Závislosti projektu se řídí jeho manifestem, ne tímhle (`~/Context/Coding/quality.md`). Před instalací ověř, že nástroj už není; mimo žebříček (`curl | sh`, binárka, instalátor) si to nech potvrdit.
 
 ### Commituj jmenované cesty, ne `-A`
 
@@ -291,7 +291,7 @@ Mažeš-li funkci, pravidlo, pole nebo soubor, které mají jméno v cizím syst
 
 ### Ověřitelná kontrola místo dojmu
 
-Práce, u které jde spustit kontrola, se **nehlásí jako hotová bez jejího výstupu** – doklad je příkaz a návratový kód, ne věta „funguje to“. U kódu to zajišťuje **průběžná kontrola** po každém dokončeném úkolu podle *Kontraktu příkazů* v projektovém `CLAUDE.md`; chybějící příkaz se přeskočí nahlas i s tím, co zůstalo nezkontrolované. Definice a prahy drží `~/Context/coding/quality.md`. Mimo kód: tvrzení, které jde ověřit, ověř, než ho napíšeš.
+Práce, u které jde spustit kontrola, se **nehlásí jako hotová bez jejího výstupu** – doklad je příkaz a návratový kód, ne věta „funguje to“. U kódu to zajišťuje **průběžná kontrola** po každém dokončeném úkolu podle *Kontraktu příkazů* v projektovém `CLAUDE.md`; chybějící příkaz se přeskočí nahlas i s tím, co zůstalo nezkontrolované. Definice a prahy drží `~/Context/Coding/quality.md`. Mimo kód: tvrzení, které jde ověřit, ověř, než ho napíšeš.
 
 **Vrstva, která něco vynucuje** (git hook, kontrola v CI, pravidlo lintru, guard), **se zakládá spolu s testem, který ji zkusí obejít** – v obou směrech: že propustí, co nemá, i že zastaví, co nemá. Rozbitá vynucovací vrstva mlčí stejně jako funkční, a falešný poplach vede k tomu, že ji někdo vypne. Test má psát někdo jiný než autor vrstvy.
 

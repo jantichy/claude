@@ -4,7 +4,7 @@ Měřidlo existuje proto, aby se o stavbě skillů rozhodovalo čísly, ne dojme
 `/end` se podle dojmu dvakrát přepsal špatně a stálo to dva dny práce.
 Tím se z něj ale stala vrstva, na které rozhodnutí stojí, a **měřidlo, které
 lže, je horší než žádné**: čísla vypadají stejně věrohodně, ať jsou z celého
-vzorku, nebo z jeho poloviny (`~/Context/coding/quality.md`, *Měřidlo musí
+vzorku, nebo z jeho poloviny (`~/Context/Coding/quality.md`, *Měřidlo musí
 odlišit vlastní selhání od nálezu*).
 
 Testují se proto oba směry selhání:

@@ -1,6 +1,6 @@
 ---
 name: project
-description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři, přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty), anebo dorovnat dřív nastavený projekt na aktuální podobu standardů a konfigurační vrstvy – revize souladu struktury, dokumentace, sekcí CLAUDE.md, kontraktů a importů. Pod ~/Projekty zakládá a převádí i klientskou složku – profil klienta, fakturační soubor a odkazy na ně v ~/Context – a podprojekty, které profil dědí. Umí i operativní projekt: adresář s vlastními dokumenty uživatele, ve kterém Claude bez pokynu nic nemění a všechno si zapisuje jen do CLAUDE.md. Interaktivní wizard, který se ptá krok po kroku.
+description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři, přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty), anebo dorovnat dřív nastavený projekt na aktuální podobu standardů a konfigurační vrstvy – revize souladu struktury, dokumentace, sekcí CLAUDE.md, kontraktů a importů. Pod ~/Clients zakládá a převádí i klientskou složku – profil klienta, fakturační soubor a odkazy na ně v ~/Context – a podprojekty, které profil dědí. Umí i operativní projekt: adresář s vlastními dokumenty uživatele, ve kterém Claude bez pokynu nic nemění a všechno si zapisuje jen do CLAUDE.md. Interaktivní wizard, který se ptá krok po kroku.
 argument-hint: [create|adopt|update]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
@@ -17,7 +17,7 @@ Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do proje
 
 **Vedle standardního projektu, ve kterém Claude sám tvoří, zakládá i operativní projekt** – adresář s uživatelovými vlastními dokumenty, nad kterým Claude jen pracuje a jehož jedinou stopou je `CLAUDE.md`. Průvodce je v něm zkrácený na pár otázek; drží ho [`operative.md`](operative.md).
 
-**Pod `~/Projekty` rozliší klientskou složku a podprojekt klienta** a ke kterémukoliv režimu přidá, co k nim patří: profil klienta, fakturační soubor a odkazy na ně v `~/Context`. Drží to [`client.md`](client.md).
+**Pod `~/Clients` rozliší klientskou složku a podprojekt klienta** a ke kterémukoliv režimu přidá, co k nim patří: profil klienta, fakturační soubor a odkazy na ně v `~/Context`. Drží to [`client.md`](client.md).
 
 Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a skilly se vyvíjejí dál, kdežto projekty založené za starého nastavení zůstávají stát – a rozdíl se z projektu sám nepozná. Druhý běh je tedy plnohodnotná kontrola, ne jen verifikace, že se nic nezměnilo.
 
@@ -90,7 +90,7 @@ Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) 
 - **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 14 – u operativního projektu revizí v [`operative.md`](operative.md) (*Standardní, nebo operativní projekt* níž).
 - **Cokoliv jiného** → režim `adopt`.
 
-**Leží-li projektový adresář pod `~/Projekty`, načti si [`client.md`](client.md)** a řiď se jím ve všech krocích, které jmenuje – rozliší klientskou složku od podprojektu a u klienta pozná převod profilu, který už leží v `~/Context` – režim se tím nemění.
+**Leží-li projektový adresář pod `~/Clients`, načti si [`client.md`](client.md)** a řiď se jím ve všech krocích, které jmenuje – rozliší klientskou složku od podprojektu a u klienta pozná převod profilu, který už leží v `~/Context` – režim se tím nemění.
 
 Řekni nahlas, který režim to je a podle čeho jsi to poznal. Trvá-li uživatel na plném průchodu průvodcem i nad nastaveným projektem, ber to jako pokyn a jeď režim `adopt`.
 
@@ -99,7 +99,7 @@ Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) 
 **Operativní projekt** je adresář, který patří uživateli a má jeho vlastní pořádek – smlouvy, výpisy, dokumenty, tabulky, videa –, a Claude nad ním jen pracuje; jedinou jeho stopou je `CLAUDE.md` (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*). Standardní projekt je všechno ostatní – to, kde Claude sám tvoří kód, dokumentaci nebo texty.
 
 - *`update`:* má-li blok metadat `- **Struktura:** CLAUDE.md`, je to operativní projekt – neptej se a jdi rovnou na *Revizi* v [`operative.md`](operative.md).
-- *`create` a `adopt`:* hned po určení režimu se zeptej (AskUserQuestion): **Standardní projekt** / **Operativní projekt**. Doporučenou volbu odvoď z adresáře: převaha uživatelových dokumentů (`.docx`, `.pdf`, `.xlsx`, video) bez kódu i bez `docs/`, nebo umístění pod `~/Documents`, ukazuje na operativní; kód, `docs/`, `~/Dev` nebo `~/Projekty` na standardní.
+- *`create` a `adopt`:* hned po určení režimu se zeptej (AskUserQuestion): **Standardní projekt** / **Operativní projekt**. Doporučenou volbu odvoď z adresáře: převaha uživatelových dokumentů (`.docx`, `.pdf`, `.xlsx`, video) bez kódu i bez `docs/`, nebo umístění pod `~/Documents`, ukazuje na operativní; kód, `docs/`, `~/Projects` nebo `~/Clients` na standardní.
 
 Padne-li operativní, **načti si [`operative.md`](operative.md) a řiď se jen jím** – kroky 1–15 se neprocházejí a celý zbytek tohohle souboru se týká standardního projektu. Je to dělené proto, že operativní projekt má jiný cíl, ne jen méně kroků: zatímco standardní projekt Claude staví, v operativním má na disku zanechat co nejmenší stopu.
 
@@ -385,23 +385,23 @@ Do `CLAUDE.md` z něj vzejde sekce `## Typ projektu` s krátkým popisem. **Krok
 
 **Tenhle krok se nepřeskakuje podle typu projektu.** Dřív se u obsahového a znalostního projektu vynechával celý, protože „kontrakt tam nemá co dělat“ – to bylo špatně. Testovat jde i projekt bez aplikace: netestuje se chování, ale **tvar** – mrtvé odkazy, existence sekcí, povinná struktura záznamu, schéma dat a soulad seznamu v dokumentaci s tím, co je na disku. Doklad je `~/.claude`, konfigurace bez jediné aplikace a s nejsilnější kontrolní vrstvou ze všech projektů.
 
-Liší se tedy **co se vybere**, ne jestli se krok udělá. Rozhoduj podle `~/Context/coding/quality.md`, *Vrstvy kontroly a co do které patří*: u vývojářského projektu bývá celý kontrakt a CI, u znalostního typicky jen `test` a `lint` nad vlastní strukturou. **Nemá-li projekt opravdu co spustit ani čím, řekni to i s tím, co tím odpadá** – to je legitimní výsledek, ale musí být výsledkem rozhodnutí, ne přeskočení.
+Liší se tedy **co se vybere**, ne jestli se krok udělá. Rozhoduj podle `~/Context/Coding/quality.md`, *Vrstvy kontroly a co do které patří*: u vývojářského projektu bývá celý kontrakt a CI, u znalostního typicky jen `test` a `lint` nad vlastní strukturou. **Nemá-li projekt opravdu co spustit ani čím, řekni to i s tím, co tím odpadá** – to je legitimní výsledek, ale musí být výsledkem rozhodnutí, ne přeskočení.
 
-**Kam patří soubory s testy**, říká `~/Context/coding/quality.md`, *Vrstvy kontroly a co do které patří*; řídí se runnerem projektu, ne preferencí.
+**Kam patří soubory s testy**, říká `~/Context/Coding/quality.md`, *Vrstvy kontroly a co do které patří*; řídí se runnerem projektu, ne preferencí.
 
 **Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
 
 Zapiš do projektového `CLAUDE.md` sekci `## Kontrakt příkazů` a **jen ty klíče, které projekt opravdu umí spustit**; u klíče, který chybí, napiš pod seznam, co tím odpadne. Vypiš uživateli příkaz `~/.claude/hooks/verify.sh --allow <project-directory>` a nech ho spustit **jeho** – souhlasem se zapíná kontrola, která nepustí Clauda ukončit práci nad červeným stavem, a spustit si ji za něj by ji zbavilo smyslu. Ve worktree layoutu vypiš `main/` nebo svou větev, **nikdy kořen kontejneru**: souhlas se počítá z `git rev-parse --git-common-dir`, takže z kteréhokoliv worktree platí pro celý repozitář, ale v kořeni kontejneru žádný kontrakt neleží.
 
-*`adopt`:* **má-li projekt kód, ale žádné testy** (kontrakt bez `test`, nebo `test`, který nic nespouští), zapiš do jeho `todo.md` jako **první položku** charakterizační testy podle `~/Context/coding/quality.md`, *Převzatý kód bez testů* – zmapovat klíčové moduly, zachytit dnešní chování v pořadí podle citlivých míst, teprve pak měnit. Řekni to v souhrnu: do té doby je průběžná kontrola zelená z prázdnoty.
+*`adopt`:* **má-li projekt kód, ale žádné testy** (kontrakt bez `test`, nebo `test`, který nic nespouští), zapiš do jeho `todo.md` jako **první položku** charakterizační testy podle `~/Context/Coding/quality.md`, *Převzatý kód bez testů* – zmapovat klíčové moduly, zachytit dnešní chování v pořadí podle citlivých míst, teprve pak měnit. Řekni to v souhrnu: do té doby je průběžná kontrola zelená z prázdnoty.
 
-**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly, založení CI i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Context/coding/quality.md`.
+**Šablonu sekce, význam klíčů, mechaniku průběžné kontroly, založení CI i to, co se nenastavuje příkazem, ale konfigurací** (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy), **drží `~/.claude/skills/project/checks.md`.** Řiď se jím; prahy jsou v `~/Context/Coding/quality.md`.
 
 ## Krok 13 – Doménové checklisty
 
 Zeptej se **v tematických kolech** (`multiSelect: true`, nejvýš čtyři volby na kolo), co všechno se v projektu bude dělat, a vybrané doménové znalosti zapiš do projektového `CLAUDE.md` jako **tvrdé `@import`y**, ne jako odkazy v běžném textu. Volby předvyplň podle typu z kroku 11, ale nech rozhodnout uživatele – vývojářský projekt bývá zároveň web, web bývá zároveň administrace.
 
-**Znění kol, všechny checklisty i s cílem importu, předvyplnění podle typu projektu, profil organizace a důvod, proč se importuje a neodkazuje, drží `~/.claude/skills/project/checklists.md`.** Řiď se jím, neopisuj ho z hlavy. Pod `~/Projekty` se profil neimportuje odtamtud: klient podle [`client.md`](client.md), *Klient*, podprojekt ho neimportuje vůbec (*Podprojekt*).
+**Znění kol, všechny checklisty i s cílem importu, předvyplnění podle typu projektu, profil organizace a důvod, proč se importuje a neodkazuje, drží `~/.claude/skills/project/checklists.md`.** Řiď se jím, neopisuj ho z hlavy. Pod `~/Clients` se profil neimportuje odtamtud: klient podle [`client.md`](client.md), *Klient*, podprojekt ho neimportuje vůbec (*Podprojekt*).
 
 Importuj **jen to, co je pro projekt opravdu relevantní** – každý import stojí kontext v každé session. Upozorni uživatele, že při příštím spuštění dostane dialog na schválení externího importu a **musí ho odsouhlasit**.
 
@@ -423,7 +423,7 @@ Importuj **jen to, co je pro projekt opravdu relevantní** – každý import st
 
 - `~/.claude/standards/structure.md` **celý** – definuje, které soubory jsou, co do kterého patří a jak je uvnitř seřazený;
 - `~/.claude/standards/rules.md` – zejména *Životní cyklus projektu* (jaké kroky životního cyklu dnes existují) a *Kam co zapsat* (kam co patří);
-- `~/Context/coding/quality.md` – jen u projektu, ve kterém se něco spouští;
+- `~/Context/Coding/quality.md` – jen u projektu, ve kterém se něco spouští;
 - `~/.claude/standards/worktree.md` – jen u worktree layoutu;
 - výpisy `ls ~/.claude/skills/` a `ls ~/Context/*/` – aktuální inventář skillů a doménových znalostí, proti kterému se ověřují odkazy a importy.
 
@@ -454,7 +454,7 @@ Vypiš přehledně:
 - **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
 - Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, **kontrakt příkazů a zda se tím zapnula průběžná kontrola, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
 - **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
-- *(klientská složka, `create` a `adopt`)* profil a fakturační soubor – co se založilo nebo převedlo –, odkazy v `~/Context` a jejich commit, a výpis `~/Projekty/*/invoicing.md`, ve kterém fakturovaný klient je; u převodu i nalezené odkazy na starou cestu profilu.
+- *(klientská složka, `create` a `adopt`)* profil a fakturační soubor – co se založilo nebo převedlo –, odkazy v `~/Context` a jejich commit, a výpis `~/Clients/*/invoicing.md`, ve kterém fakturovaný klient je; u převodu i nalezené odkazy na starou cestu profilu.
 - *(worktree layout)* **Na jaké větvi výsledek leží**, že je ve větvi commitnutý a že merge do hlavní větve čeká na jeho pokyn. Neměnilo-li se nic, žádná větev nevznikla – řekni to místo toho.
 
 V režimu `adopt` vypiš i **co jsi záměrně nechal být a proč** – ať je vidět, že to nebylo opomenutí. A protože v tomhle režimu proběhl těsně předtím krok 14, **připoj za souhrn i jeho tři skupiny** (dorovnáno / čeká na rozhodnutí / vědomě nechal být) – jinak revize proběhne, ale její výsledek se nikde neukáže.

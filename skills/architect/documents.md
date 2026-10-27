@@ -11,7 +11,7 @@
 
 ## Jak se píše
 
-Česky, věcně, bez omáčky, podle `~/Context/text/text.md` a `~/Context/text/typography.md`. Konkrétně – „rychlé načítání“ je nic, „LCP pod 2,5 s na 4G“ je požadavek. **Bez placeholderů**; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
+Česky, věcně, bez omáčky, podle `~/Context/Text/text.md` a `~/Context/Text/typography.md`. Konkrétně – „rychlé načítání“ je nic, „LCP pod 2,5 s na 4G“ je požadavek. **Bez placeholderů**; co nevíš, patří do *Otevřených otázek* s tím, kdo to má rozhodnout.
 
 ------
 
@@ -19,7 +19,7 @@
 
 Vzniká v dialogu s uživatelem, po sekcích a se schválením po každé. Sekci, která pro projekt nedává smysl, vynech – ale **řekni, že jsi ji vynechal a proč**.
 
-**Je-li projekt *aplikace*** (rozlišení drží `~/Context/coding/architecture.md` a zapisuje ho `/project` do sekce *Typ projektu*), **načti si ta pravidla dřív, než začneš psát.** Nesou kontrolní seznam *Minimum hotové aplikace*, proti kterému se návrh posuzuje – a řadu sekcí téhle šablony přímo předepisují: vrstvy, cestu k datům, hranici transakce kolem cizího systému, souběh, běhy na pozadí. **Na konci projdi ten seznam položku po položce** a u každé řekni, kde je v návrhu vyřešená, nebo že se vědomě nedělá a proč; nevyřešená položka bez zápisu je nedodělek, ne zjednodušení. U *nástroje* se tohle přeskakuje a řekne se to nahlas.
+**Je-li projekt *aplikace*** (rozlišení drží `~/Context/Coding/architecture.md` a zapisuje ho `/project` do sekce *Typ projektu*), **načti si ta pravidla dřív, než začneš psát.** Nesou kontrolní seznam *Minimum hotové aplikace*, proti kterému se návrh posuzuje – a řadu sekcí téhle šablony přímo předepisují: vrstvy, cestu k datům, hranici transakce kolem cizího systému, souběh, běhy na pozadí. **Na konci projdi ten seznam položku po položce** a u každé řekni, kde je v návrhu vyřešená, nebo že se vědomě nedělá a proč; nevyřešená položka bez zápisu je nedodělek, ne zjednodušení. U *nástroje* se tohle přeskakuje a řekne se to nahlas.
 
 ```markdown
 # <Lidský název> – návrh řešení
@@ -76,13 +76,13 @@ Konkrétní volba a proč – proti omezením z requirements.md.
 
 ## Testovací strategie
 Co se testuje a na jaké úrovni. Co se mockuje – u aplikace s vlastní
-databází platí, že se mockuje ven, ne dovnitř (`~/Context/coding/quality.md`),
+databází platí, že se mockuje ven, ne dovnitř (`~/Context/Coding/quality.md`),
 takže sem patří i to, čím se skutečná databáze v testech poskytne. U každého scénáře a *Varianty* řekni, čím bude
 pokrytý – akceptačním testem, jednotkovým, nebo vědomě ničím a proč.
 Scénáře ber z `scenarios.md`, vede-li ho projekt; jinak ze sekce *Hlavní
 scénáře* v requirements.md.
 Dál prahy, které bude projekt držet (pokrytí, mutation score) a čím se měří.
-Výchozí hodnoty a nástroje viz `~/Context/coding/quality.md`,
+Výchozí hodnoty a nástroje viz `~/Context/Coding/quality.md`,
 *Kontroly, které nestojí tokeny*.
 Zvlášť rozhodni o **generativních testech** – fuzzingu a property-based testech.
 Vyplatí se u parserů, validace vstupu, převodů formátů, výpočtů nad rozsahy

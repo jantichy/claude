@@ -25,27 +25,27 @@ Ptají se, jestli je to správně:
 
 Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Context/`:
 
-**Většina jich nic nespouští** – měří text proti textu, takže jedou na `reader` a odrážka o `evidence` pro ně neplatí (viz [`agents.md`](agents.md)). Tři výjimky mají `Explore`, protože jejich předmět leží mimo čtení souborů: `coding/quality.md` ověřuje kontrakt příkazů a CI, `analytics/` a `advertising/` sahají na běžící měření a na cizí reklamní účty.
+**Většina jich nic nespouští** – měří text proti textu, takže jedou na `reader` a odrážka o `evidence` pro ně neplatí (viz [`agents.md`](agents.md)). Tři výjimky mají `Explore`, protože jejich předmět leží mimo čtení souborů: `Coding/quality.md` ověřuje kontrakt příkazů a CI, `Analytics/` a `Advertising/` sahají na běžící měření a na cizí reklamní účty.
 
 | Sada | Kdy se aplikuje | Typ |
 |---|---|---|
-| `coding/coding.md` | jakýkoliv kód, migrace, konfigurace, CI | `reader` |
-| `coding/modeling.md` | datový model, stavy a přechody, guardy a autorizace, tvar API, napojení na vnější systém, konfigurace a dědění (**navíc** k `coding/coding.md`) | `reader` |
-| `coding/architecture.md` | vrstvy a jejich hranice, cesta k datům, transakce kolem cizích volání, souběh, běhy na pozadí – a u projektu, který je v `CLAUDE.md` vedený jako **aplikace**, i kontrolní seznam *Minimum hotové aplikace* (**navíc** k `coding/coding.md`) | `reader` |
-| `coding/quality.md` | kontroly kvality, kontrakt příkazů, CI, testovací infrastruktura, závislosti (**navíc** k `coding/coding.md`) | `Explore` |
-| `web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky; jsou-li v rozsahu strukturovaná data nebo `og:image`, i `web/metadata.md`; je-li v rozsahu konfigurace serveru nebo buildu, přesměrování, `robots.txt`, sitemapa, chybové stránky, cookie lišta nebo zpracování osobních údajů, i `web/server.md` | `reader` |
-| `web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `web/web.md`, ne místo něj) | `reader` |
-| `analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `web/web.md`) | `Explore` |
-| `advertising/` | vedení placených kampaní – struktura účtu, biddovací strategie, konverzní akce jako vstup pro bidding, kreativy a cesta po prokliku (měřicí stranu téhož drží `analytics/`) | `Explore` |
-| `text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `text/copy.md`). **Tři pravidla jeho sekce *Stylistika* mají užší rozsah** – vyhýbání se pomlčkám, závorkám a středníkům, neopakování slova blízko sebe a vyhýbání se opisnému pasivu neplatí na interní pracovní text, na autorský hlas ani na mikrocopy, takže se v `docs/` projektu nehlásí; rozsah čti v té sekci, ne z tohohle řádku | `reader` |
-| `text/copy.md` | texty v rozhraní – popisky tlačítek a polí, stavy, chybové hlášky, potvrzování, prázdné stavy, texty u částek a dokladů (**navíc** k `web/web.md`, který řeší stránku jako celek) | `reader` |
-| `text/typography.md` | česká sazba čehokoliv psaného česky – interpunkce, mezery, čísla, data, výčty (**navíc** k `text/text.md`, ale platí i tam, kde souvislý text nevzniká) | `reader` |
-| `design/design.md` | vizuální výstupy – grafika, barevné systémy, práce s písmem, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu (sazbu znaků drží `text/typography.md`) | `reader` |
-| `design/slides.md` | promítané prezentace (**navíc** k `design/design.md`) | `reader` |
-| `training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) | `reader` |
-| `legal/legal.md` | dokumentace nebo kód, které se opírají o právní úpravu – lhůta, náležitost dokladu, povinnost vůči spotřebiteli, místo plnění, retenční doba. Měří **doložení, ne výklad**: má tvrzení doslovnou citaci, číslo paragrafu nebo článku, odkud to je (primární zdroj proti reprodukci) a míru jistoty? Nezávazná metodika jako opora právního stavu je nález | `reader` |
+| `Coding/coding.md` | jakýkoliv kód, migrace, konfigurace, CI | `reader` |
+| `Coding/modeling.md` | datový model, stavy a přechody, guardy a autorizace, tvar API, napojení na vnější systém, konfigurace a dědění (**navíc** k `Coding/coding.md`) | `reader` |
+| `Coding/architecture.md` | vrstvy a jejich hranice, cesta k datům, transakce kolem cizích volání, souběh, běhy na pozadí – a u projektu, který je v `CLAUDE.md` vedený jako **aplikace**, i kontrolní seznam *Minimum hotové aplikace* (**navíc** k `Coding/coding.md`) | `reader` |
+| `Coding/quality.md` | kontroly kvality, kontrakt příkazů, CI, testovací infrastruktura, závislosti (**navíc** k `Coding/coding.md`) | `Explore` |
+| `Web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky; jsou-li v rozsahu strukturovaná data nebo `og:image`, i `Web/metadata.md`; je-li v rozsahu konfigurace serveru nebo buildu, přesměrování, `robots.txt`, sitemapa, chybové stránky, cookie lišta nebo zpracování osobních údajů, i `Web/server.md` | `reader` |
+| `Web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `Web/web.md`, ne místo něj) | `reader` |
+| `Analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `Web/web.md`) | `Explore` |
+| `Advertising/` | vedení placených kampaní – struktura účtu, biddovací strategie, konverzní akce jako vstup pro bidding, kreativy a cesta po prokliku (měřicí stranu téhož drží `Analytics/`) | `Explore` |
+| `Text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `Text/copy.md`). **Tři pravidla jeho sekce *Stylistika* mají užší rozsah** – vyhýbání se pomlčkám, závorkám a středníkům, neopakování slova blízko sebe a vyhýbání se opisnému pasivu neplatí na interní pracovní text, na autorský hlas ani na mikrocopy, takže se v `docs/` projektu nehlásí; rozsah čti v té sekci, ne z tohohle řádku | `reader` |
+| `Text/copy.md` | texty v rozhraní – popisky tlačítek a polí, stavy, chybové hlášky, potvrzování, prázdné stavy, texty u částek a dokladů (**navíc** k `Web/web.md`, který řeší stránku jako celek) | `reader` |
+| `Text/typography.md` | česká sazba čehokoliv psaného česky – interpunkce, mezery, čísla, data, výčty (**navíc** k `Text/text.md`, ale platí i tam, kde souvislý text nevzniká) | `reader` |
+| `Design/design.md` | vizuální výstupy – grafika, barevné systémy, práce s písmem, cokoliv, u čeho se rozhoduje o čitelnosti a kontrastu (sazbu znaků drží `Text/typography.md`) | `reader` |
+| `Design/slides.md` | promítané prezentace (**navíc** k `Design/design.md`) | `reader` |
+| `Training/training.md` | obsah školení a kurzů – osnovy, lekce, cvičení, materiály (**navíc** k `Text/text.md`: text řeší, jak je to napsané, training to, jak je to postavené) | `reader` |
+| `Legal/legal.md` | dokumentace nebo kód, které se opírají o právní úpravu – lhůta, náležitost dokladu, povinnost vůči spotřebiteli, místo plnění, retenční doba. Měří **doložení, ne výklad**: má tvrzení doslovnou citaci, číslo paragrafu nebo článku, odkud to je (primární zdroj proti reprodukci) a míru jistoty? Nezávazná metodika jako opora právního stavu je nález | `reader` |
 
-`~/.claude/standards/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `organizations/` ani `brand/`: **je to korpus, ne metodika.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
+`~/.claude/standards/worktree.md` mezi sadami schválně není – popisuje layout repozitáře, ne pravidla pro zdrojové soubory. Ze stejného důvodu tu není `Organizations/` ani `Brand/`: **je to korpus, ne metodika.** Korpus říká, jak to je (kdo Honza je, s kým pracuje), ne jak se to má dělat – nedá se proti němu auditovat, protože nemá prověřitelná pravidla. Soulad textu s brandem je posouzení, ne kontrola; na to je `/oponent`.
 
 ## Zadání pro Agentní infrastrukturu
 

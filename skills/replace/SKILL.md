@@ -233,7 +233,7 @@ Místa, kde staré slovo zůstává, se před náhradou nahradí zástupným zna
 3. **Rozbité odkazy.** Ověř, že každý odkaz na přejmenovaný soubor, sekci nebo kotvu míří někam, co existuje.
    **Zvlášť hledej kotvu, ve které je mezera** – `grep` na `](…# … )`. Test nad odkazy ji totiž najít nemusí: rozpoznávač odkazu se na mezeře zlomí a takový text za odkaz vůbec nepovažuje, takže **mlčí stejně, jako když je všechno v pořádku**. Doloženo: 34 rozbitých odkazů, které sada testů propustila, a jedna kotva zbyla rozbitá i po první opravě – proto se tenhle `grep` pouští **po každé dávce**, ne jednou na konci.
 4. **Odvozené údaje.** Souhrnné počty, přehledové tabulky a seznamy na začátku dokumentů – viz `~/.claude/standards/rules.md`, *Propagace změny*, kde se přehlížejí nejčastěji.
-5. **Vnější místa.** Byl-li přejmenovaný celý projekt: remote, popis repozitáře, odkazy z jiných projektů v `~/Dev` a `~/Projekty`.
+5. **Vnější místa.** Byl-li přejmenovaný celý projekt: remote, popis repozitáře, odkazy z jiných projektů v `~/Projects` a `~/Clients`.
 6. **Testy a build**, existují-li a jde-li to rychle.
 
 **Vzor, kterým měříš úplnost, nesmí být zúžený kvůli výjimce.** Vylučuješ-li z náhrady zvláštní případ, **neřeš to zúžením vzoru, kterým pak měříš, co zbylo** – jinak přestane vidět celou třídu výskytů. Doloženo: vyloučení tečky za slovem kvůli jménu souboru `port.ts` způsobilo, že vzor neviděl **žádný `port` na konci věty**, takže jeden zbytek prošel přepisem i kontrolou. Výjimka se vylučuje **samostatnou podmínkou**, ne ohnutou hranicí slova.

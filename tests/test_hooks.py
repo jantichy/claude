@@ -662,7 +662,7 @@ class PermissionRuleSyntax(unittest.TestCase):
         deny = self.permissions().get("deny", [])
         for command in (
             "verify.sh --allow .",
-            "~/.claude/hooks/verify.sh --allow /Users/honza/Dev/x",
+            "~/.claude/hooks/verify.sh --allow /Users/honza/Projects/X",
             "/Users/honza/.claude/hooks/verify.sh --revoke .",
             "./verify.sh --revoke .",
         ):
@@ -707,7 +707,7 @@ class SettingsFormat(unittest.TestCase):
 
     def test_checker_distinguishes_formats(self):
         data = {
-            "permissions": {"allow": ["Grep", "Read(~/Dev/**)"]},
+            "permissions": {"allow": ["Grep", "Read(~/Projects/**)"]},
             "model": "opus",
             "note": "čeština",
         }

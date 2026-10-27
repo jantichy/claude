@@ -19,42 +19,42 @@ Přehled všech checklistů i s cílem importu:
 
 | Volba | Import |
 |---|---|
-| Psaní kódu | `@~/Context/coding/coding.md` |
-| Webové rozhraní | `@~/Context/web/web.md` |
-| Administrace / backoffice | `@~/Context/web/admin.md` |
-| Webová analytika a měření | `@~/Context/analytics/analytics.md` |
-| Výkonnostní reklama a správa kampaní | `@~/Context/advertising/advertising.md` |
-| Psaní českých textů | `@~/Context/text/text.md` |
-| Česká typografie | `@~/Context/text/typography.md` |
-| Školení a kurzy | `@~/Context/training/training.md` |
-| Vizuální tvorba a grafika | `@~/Context/design/design.md` |
-| Prezentace a slajdy | `@~/Context/design/slides.md` |
+| Psaní kódu | `@~/Context/Coding/coding.md` |
+| Webové rozhraní | `@~/Context/Web/web.md` |
+| Administrace / backoffice | `@~/Context/Web/admin.md` |
+| Webová analytika a měření | `@~/Context/Analytics/analytics.md` |
+| Výkonnostní reklama a správa kampaní | `@~/Context/Advertising/advertising.md` |
+| Psaní českých textů | `@~/Context/Text/text.md` |
+| Česká typografie | `@~/Context/Text/typography.md` |
+| Školení a kurzy | `@~/Context/Training/training.md` |
+| Vizuální tvorba a grafika | `@~/Context/Design/design.md` |
+| Prezentace a slajdy | `@~/Context/Design/slides.md` |
 
-`~/Context/legal/legal.md` se do importů **nedává ze stejného důvodu** – čte se, když se o právní úpravu opírá rozhodnutí, ne při každé práci. Projekt, který právní požadavky nese (lhůty dokladů, povinnosti vůči spotřebiteli, retenční doby), na něj narazí přes `~/.claude/CLAUDE.md`, kde je vedený jako podmíněná doménová znalost.
+`~/Context/Legal/legal.md` se do importů **nedává ze stejného důvodu** – čte se, když se o právní úpravu opírá rozhodnutí, ne při každé práci. Projekt, který právní požadavky nese (lhůty dokladů, povinnosti vůči spotřebiteli, retenční doby), na něj narazí přes `~/.claude/CLAUDE.md`, kde je vedený jako podmíněná doménová znalost.
 
-`~/Context/coding/quality.md` ani `~/Context/coding/architecture.md` se do importů **nedávají** – čtou se jen při zakládání projektu, návrhu jeho stavby, revizi a nasazení, ne při každé práci na kódu. Skilly, které je potřebují, si je načtou samy; `coding.md` na oba odkazuje. U architektury nese závaznost navíc věta v sekci `## Typ projektu`, kterou zapisuje krok 11.
+`~/Context/Coding/quality.md` ani `~/Context/Coding/architecture.md` se do importů **nedávají** – čtou se jen při zakládání projektu, návrhu jeho stavby, revizi a nasazení, ne při každé práci na kódu. Skilly, které je potřebují, si je načtou samy; `coding.md` na oba odkazuje. U architektury nese závaznost navíc věta v sekci `## Typ projektu`, kterou zapisuje krok 11.
 
-U typu **Nasazení webové analytiky** přihraj napevno `analytics/analytics.md` a `web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `text/text.md` i `text/typography.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
+U typu **Nasazení webové analytiky** přihraj napevno `Analytics/analytics.md` a `Web/web.md` (analytika se nasazuje do webu a překrývá se s ním v consentu a GDPR) a předvyplň `Text/text.md` i `Text/typography.md`, protože výstupem bývá auditní report nebo dokumentace pro klienta. `Coding/coding.md` nabídni jen tehdy, když se v projektu opravdu píše kód – šablony, serverový endpoint, vlastní CMP.
 
-U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvyplň `training/training.md` spolu s `text/text.md` a `text/typography.md` – materiály pro účastníky jsou text a řídí se vším trojím. Přihoď i `design/slides.md`, pokud k tomu vzniká promítaná prezentace.
+U typu projektu, kde se připravuje **školení, kurz nebo workshop**, předvyplň `Training/training.md` spolu s `Text/text.md` a `Text/typography.md` – materiály pro účastníky jsou text a řídí se vším trojím. Přihoď i `Design/slides.md`, pokud k tomu vzniká promítaná prezentace.
 
-`design/slides.md` nabízej i mimo školení – všude, kde se dělá deck: konferenční přednáška, prodejní pitch, prezentace výsledků klientovi. Importuje se **navíc** k `design/design.md`, ne místo něj.
+`Design/slides.md` nabízej i mimo školení – všude, kde se dělá deck: konferenční přednáška, prodejní pitch, prezentace výsledků klientovi. Importuje se **navíc** k `Design/design.md`, ne místo něj.
 
 `worktree.md` se tu nenabízí schválně – importuje se už v kroku 4, když si uživatel zvolí worktree layout.
 
-`brand/brand.md` se tu nenabízí taky schválně, ale z jiného důvodu: je to **korpus, ne checklist**. Neříká, jak se něco dělá, ale jak to je – a projekt, který píše ven, si ho načte podle potřeby přes `~/.claude/CLAUDE.md`, kde je vedený mezi podmíněnými doménovými znalostmi. Importovat ho natvrdo do každého takového projektu by znamenalo vozit korpus tam, kde stačí sáhnout.
+`Brand/brand.md` se tu nenabízí taky schválně, ale z jiného důvodu: je to **korpus, ne checklist**. Neříká, jak se něco dělá, ale jak to je – a projekt, který píše ven, si ho načte podle potřeby přes `~/.claude/CLAUDE.md`, kde je vedený mezi podmíněnými doménovými znalostmi. Importovat ho natvrdo do každého takového projektu by znamenalo vozit korpus tam, kde stačí sáhnout.
 
 ### Profil organizace
 
-**Pod `~/Projekty` tenhle odstavec neplatí** – klient má profil ve vlastní složce a podprojekty ho dědí, viz [`client.md`](client.md). Platí jen pro projekt mimo ni, který se organizace týká, ale práce pro ni to není (osobní projekt v `~/Dev`).
+**Pod `~/Clients` tenhle odstavec neplatí** – klient má profil ve vlastní složce a podprojekty ho dědí, viz [`client.md`](client.md). Platí jen pro projekt mimo ni, který se organizace týká, ale práce pro ni to není (osobní projekt v `~/Projects`).
 
-Když projekt vzniká **pro konkrétní organizaci**, zeptej se, jestli má profil v `~/Context/organizations/`, a když ano, přidej ho do importů:
+Když projekt vzniká **pro konkrétní organizaci**, zeptej se, jestli má profil v `~/Context/Organizations/`, a když ano, přidej ho do importů:
 
 ```
-@~/Context/organizations/<organizace>.md
+@~/Context/Organizations/<organizace>.md
 ```
 
-**Není to metodika, ale korpus** – kdo v organizaci sedí, kdo co schvaluje, jaké mají systémy. Profil zůstává v knowledge base a projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil. Když profil neexistuje a jde o **opakovaný vztah, u kterého je potřeba znát vnitřek organizace**, navrhni jeho založení – kritérium je v `~/Context/organizations/organizations.md`, sekce *Kdo dostane profil*.
+**Není to metodika, ale korpus** – kdo v organizaci sedí, kdo co schvaluje, jaké mají systémy. Profil zůstává v knowledge base a projekt na něj jen odkazuje; jedna organizace může mít víc projektů a všechny sdílejí týž profil. Když profil neexistuje a jde o **opakovaný vztah, u kterého je potřeba znát vnitřek organizace**, navrhni jeho založení – kritérium je v `~/Context/Organizations/organizations.md`, sekce *Kdo dostane profil*.
 
 Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako odkazy v běžném textu:
 
@@ -63,8 +63,8 @@ Vybrané zapiš do `CLAUDE.md` jako **tvrdé `@import`y**, ne jako odkazy v bě�
 
 Závazné pro tenhle projekt:
 
-@~/Context/coding/coding.md
-@~/Context/web/web.md
+@~/Context/Coding/coding.md
+@~/Context/Web/web.md
 ```
 
 **Proč `@import` a ne odkaz:** `@import` Claude Code při startu session textově rozbalí do kontextu, takže obsah platí vždy. Prozaický odkaz („řiď se souborem X“) je jen instrukce, kterou si model musí sám všimnout a sám se rozhodnout ji splnit – to se v praxi dodržuje nespolehlivě.

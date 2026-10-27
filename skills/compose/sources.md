@@ -16,7 +16,7 @@ Katalog pro režim `collect`: odkud se dají dostat autorovy texty, jak je přev
 Není to jedna hromada textů. Archiv se člení **podle média**, protože kontext vydání je součástí dokladu – týž autor píše na svůj blog jinak než do odborného magazínu.
 
 ```
-archive/
+Archive/
   <domain-or-medium>/       YYYYMMDD - Title.md     (jeden text = jeden soubor)
   <network>/                Network YYYY.md         (příspěvky po letech)
 ```

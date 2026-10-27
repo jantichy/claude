@@ -6,9 +6,9 @@ Mechanika hledání a čtení nahrané konverzace. Stojí mimo jednotlivé skill
 
 ## 1. Najdi soubor
 
-Leží v `~/.claude/projects/<working-directory-slug>/<session-id>.jsonl`, kde slug vznikne z absolutní cesty nahrazením `/` a `.` pomlčkami (`/Users/honza/Dev/score` → `-Users-honza-Dev-score`).
+Leží v `~/.claude/projects/<working-directory-slug>/<session-id>.jsonl`, kde slug vznikne z absolutní cesty nahrazením `/` a `.` pomlčkami (`/Users/honza/Projects/Score` → `-Users-honza-Projects-Score`).
 
-**`<session-id>` si vezmi z cesty ke scratchpadu**, kterou máš v systémovém promptu – je v ní jako **předposlední** komponenta – cesta končí na `/scratchpad`, takže id je adresář nad ním (`…/-Users-honza-Dev/<session-id>/scratchpad`). To je jediný spolehlivý klíč.
+**`<session-id>` si vezmi z cesty ke scratchpadu**, kterou máš v systémovém promptu – je v ní jako **předposlední** komponenta – cesta končí na `/scratchpad`, takže id je adresář nad ním (`…/-Users-honza-Projects/<session-id>/scratchpad`). To je jediný spolehlivý klíč.
 
 **Platí jedině cesta ke scratchpadu, ne libovolná cesta pod `/private/tmp` s podobným tvarem.** Vedle scratchpadu tam leží i adresář s výstupy subagentů (`…/<session-id>/tasks/…`) a ten může nést **id předchozí session** téhož projektu. Kdo id vezme odtamtud, sáhne po cizím transcriptu a nic mu to neřekne – oba soubory existují a oba se parsují. Doloženo 25. 9. 2026.
 

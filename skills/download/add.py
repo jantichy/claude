@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Připíše položky do seznamu ke stažení, který odbavuje clockwork – bez duplicit a atomicky.
 
-Formát seznamu je rozhraní clockworku (`~/Dev/clockwork/docs/architecture.md`,
+Formát seznamu je rozhraní clockworku (`~/Projects/Clockwork/docs/architecture.md`,
 *Úloha `download`*): položka `- [ ] <adresa>` nebo `- [ ] <adresa> → <jméno>`,
 cílová složka je nadpis `## <cesta>` relativně k `~/Downloads`, položky před
 prvním nadpisem jdou rovnou do `~/Downloads`. Clockwork soubor čte souběžně

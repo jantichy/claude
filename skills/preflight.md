@@ -63,7 +63,7 @@ U skillu, který nic nemění – čte, hlásí, radí – to stačí zmínit; b
 
 *Jen u skillů, které mění kód.*
 
-Pusť příkazy z kontraktu dřív, než se dotkneš prvního souboru. **Dědíš-li červený stav z dřívějška, ohlas to a zeptej se** – jinak nepůjde poznat, co jsi rozbil ty. Podrobně `~/Context/coding/quality.md`.
+Pusť příkazy z kontraktu dřív, než se dotkneš prvního souboru. **Dědíš-li červený stav z dřívějška, ohlas to a zeptej se** – jinak nepůjde poznat, co jsi rozbil ty. Podrobně `~/Context/Coding/quality.md`.
 
 ## 5. Rozsah změn na větvi
 

@@ -22,7 +22,7 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "skills" / "download" / "add.py"
 CLOCKWORK_LISTING = Path(
-    "~/Dev/clockwork/src/clockwork/tasks/download/listing.py"
+    "~/Projects/Clockwork/src/clockwork/tasks/download/listing.py"
 ).expanduser()
 DRIVE = "https://drive.google.com/file/d/{}/view"
 

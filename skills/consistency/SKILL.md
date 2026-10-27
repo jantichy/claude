@@ -84,7 +84,7 @@ Pokud projektový `CLAUDE.md` obsahuje kapitolu `## Consistency`, přečti ji. P
 
 **Typecheck ani linter tady před auditem znovu nespouštěj.** Stav, se kterým sem přicházíš, ověřila průběžná kontrola podle *Fáze 0* – opakovat je nad týmž stromem znamená platit časem i tokeny za tentýž výsledek. **Platí to jen pro tenhle soupis: po každé opravě, kterou uděláš ty, se ověřuje znovu** (Fáze 4, bod 1). Viz `~/.claude/standards/lifecycle.md`, *Povolená opakování*.
 
-Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Context/coding/quality.md`, *Kontroly, které nestojí tokeny*:
+Spusť jen to, co je vlastní téhle otázce, tedy „sedí si projekt sám se sebou?“. Na to se `/review` neptá. Všechno tohle je **měřitelné**, takže to nemá hledat agent čtením (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula). Prahy a majitele drží `~/Context/Coding/quality.md`, *Kontroly, které nestojí tokeny*:
 
 | Co | Čím | Kdy má smysl |
 |---|---|---|
@@ -257,7 +257,7 @@ Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
 Mechanické **i jednoznačné** nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
 
-1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Context/coding/quality.md`): celou **průběžnou kontrolu** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj kontrolu znovu těsně před koncem odpovědi – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
+1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Context/Coding/quality.md`): celou **průběžnou kontrolu** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj kontrolu znovu těsně před koncem odpovědi – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
 2. Vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N – X mechanických, Y jednoznačných)

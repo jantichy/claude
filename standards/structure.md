@@ -51,7 +51,7 @@ Povinný je jen **`CLAUDE.md`**. Zbytek:
 | `todo.md` + `backlog.md` + `done.md` | výběrem při `/project`, **jen jako trojice** |
 | `requirements.md`, `architecture.md`, `plan.md`, tematické dokumenty kol, produktové podklady (`demand.md`, `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md`, `operation.md`) | až prací – co v nich smí stát, drží **`~/.claude/standards/product.md`**; načti si ho, než do některého z nich zapíšeš |
 | `research/` | až je co uložit |
-| testy | s první kontrolou – kam patří, drží `~/Context/coding/quality.md`, *Vrstvy kontroly a co do které patří* |
+| testy | s první kontrolou – kam patří, drží `~/Context/Coding/quality.md`, *Vrstvy kontroly a co do které patří* |
 
 Nezaložený soubor **není odchylka** – prázdný `decisions.md` u projektu, kde se nic nerozhoduje, je horší než žádný. Běhový stav skillů v `.claude/run/` standardní soubor není (`~/.claude/skills/skills.md`, *Běhový stav*).
 
@@ -84,7 +84,7 @@ Blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj nadpis a prvn
 
 Další sekce:
 
-- **`## Kontrakt příkazů`** – **má ho každý projekt, ve kterém se něco spouští**: čím se tam spouštějí abstraktní kroky (`test`, `typecheck`, `lint`, `build`…). Zakládá ho `/project`, čte průběžná kontrola a skilly, které pouštějí testy; seznam klíčů drží `~/Context/coding/quality.md`, *Kontrakt příkazů*. Projekt bez kódu ho nemá.
+- **`## Kontrakt příkazů`** – **má ho každý projekt, ve kterém se něco spouští**: čím se tam spouštějí abstraktní kroky (`test`, `typecheck`, `lint`, `build`…). Zakládá ho `/project`, čte průběžná kontrola a skilly, které pouštějí testy; seznam klíčů drží `~/Context/Coding/quality.md`, *Kontrakt příkazů*. Projekt bez kódu ho nemá.
 - **`## Zákazy`** – na co model nesahá nebo co nedělá bez ptaní, a proč. **Hranici drží `permissions` v `.claude/settings.json`** – co se nesmí vůbec, do `deny`, co jen bez ptaní, do `ask`; sekce je seznam s důvody a zákaz bez mechanismu se v ní označí jako jen napsaný. Zakládá ji `/project`, a jen má-li projekt co zakázat.
 - **`## Nasazení`** – jak se projekt dostane do produkce, hlavně která větev je nasazovací. Zakládá ji `/project` nebo první `/release`.
 - **`## Review` a `## Consistency`** – nálezy vyhodnocené jako „neopravovat“, aby se nehlásily znovu. Do první píší `/review` i `/attack` (formát drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*), do druhé `/consistency`. Píší je skilly, ne člověk.

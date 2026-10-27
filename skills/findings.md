@@ -105,7 +105,7 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 | **Neopravovat** | zeptej se na důvod a zapiš ho do kapitoly `## Review` (u `/consistency` `## Consistency`) v projektovém `CLAUDE.md`; umlčení vyprší změnou kódu, kterého se týká | zamítnuto |
 | **Zapsat do todo** | zapiš do `docs/todo.md` i s úvahou a doložením, ať se na to dá navázat bez téhle session | odloženo |
 
-**Popisek říká, co se stane** (`~/Context/text/copy.md`, *Popisky akcí*). Proto ne *Přeskočit* – to se čte jako „teď ne“, přestože to znamená natrvalo a se zápisem –, a ne *Nechat být* ani *Vrátit se k tomu později*, které mlčí o tom, že se nález někam zapíše. Sjednoceno 28. 9. 2026; do té doby měly kontrolní skilly tři různé slovníky pro tytéž dva konce.
+**Popisek říká, co se stane** (`~/Context/Text/copy.md`, *Popisky akcí*). Proto ne *Přeskočit* – to se čte jako „teď ne“, přestože to znamená natrvalo a se zápisem –, a ne *Nechat být* ani *Vrátit se k tomu později*, které mlčí o tom, že se nález někam zapíše. Sjednoceno 28. 9. 2026; do té doby měly kontrolní skilly tři různé slovníky pro tytéž dva konce.
 
 **Věcné varianty jsou nejvýš dvě.** Tool má strop čtyři volby a dvě z nich patří záchytným. Je-li rozumných cest víc, vyber dvě nejsilnější a ostatní zmiň v `Kontextu`. U hromadného nálezu smí jednu záchytnou volbu nahradit **Rozbalit** (vypíšu všechny lokace a projdeme je jednotlivě).
 
