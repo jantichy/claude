@@ -2,7 +2,7 @@
 
 Konvence pro každý projekt, kde se něco průběžně rozhoduje a vyvíjí; jednorázový scratch ani cizí repozitář, do kterého jen nahlížíš, ji nepotřebuje. Zakládá a udržuje ji `/project`. Tenhle soubor konvenci **definuje**; projektový `CLAUDE.md` jen deklaruje, že ji projekt drží, a popisuje odchylky.
 
-## Dva režimy umístění
+## Režimy umístění
 
 Standardní soubory jsou vždycky tytéž. **Kde leží, je volba ze dvou rovnocenných režimů:**
 
@@ -23,6 +23,12 @@ režim  docs/                       režim  root
 
 **Konvence zápisu.** Obecné texty (tenhle soubor, `~/.claude/standards/rules.md`, skilly) píšou cesty v podobě `docs/todo.md` a myslí tím soubor na místě podle režimu projektu. Texty o jednom projektu – jeho `CLAUDE.md` a `README.md` – píšou skutečnou cestu.
 
+### Operativní projekt: režim `CLAUDE.md`
+
+Třetí režim není rovnocenná volba, ale jiný druh projektu: **adresář, který patří uživateli a má jeho vlastní pořádek** (smlouvy, výpisy, dokumenty, videa), a Claude nad ním odpovídá, dohledává, na pokyn přeskupuje a občas něco vyrobí. Standardní soubory ani `README.md` nevznikají; Claudovou stopou je jen projektový `CLAUDE.md` (a `.git`, zvolí-li ho uživatel). Pointa: adresář zůstane, jak ho uživatel uspořádal, a vše, co si Claude pamatuje, leží na jednom místě, které uživatel vidí.
+
+Co by šlo do standardního souboru, jde do sekcí `CLAUDE.md`: zjištění a rozhodnutí k tématu, kterého se týkají; otevřené body taky, a bez tématu do `## Otevřené body`; hotové se nevede, jen se u tématu aktualizuje stav. **Skill, který zapisuje do `docs/…`, píše tady do `CLAUDE.md`** – svou sekci (`## Přerušený běh`) založí tam. Do trvalé Memory nic.
+
 ### Deklarace režimu
 
 Režim říká řádek v bloku metadat projektového `CLAUDE.md`:
@@ -30,6 +36,8 @@ Režim říká řádek v bloku metadat projektového `CLAUDE.md`:
 ```
 - **Struktura:** docs/
 ```
+
+Hodnoty jsou `docs/`, `root` a `CLAUDE.md`.
 
 Bez něj se režim odvodí z umístění souborů; deklarace je ale závazná – podle ní se zakládá další soubor.
 

@@ -117,7 +117,7 @@ Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu 
 | Kdo co udělá v jakém pořadí? | `plan.md` |
 | Odkud to máme? | `research/` |
 
-**Než do některého z nich zapíšeš, načti si `~/.claude/standards/structure.md`** – tabulka říká, kam zápis míří, ne co v tom souboru smí stát. Cesty `docs/…` znamenají soubor podle režimu projektu (`~/.claude/standards/structure.md`, *Dva režimy umístění*).
+**Než do některého z nich zapíšeš, načti si `~/.claude/standards/structure.md`** – tabulka říká, kam zápis míří, ne co v tom souboru smí stát. Cesty `docs/…` znamenají soubor podle režimu projektu (`~/.claude/standards/structure.md`, *Režimy umístění*).
 
 ### Pravda v souborech, ne v konverzaci
 

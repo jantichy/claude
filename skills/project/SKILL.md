@@ -1,6 +1,6 @@
 ---
 name: project
-description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři, přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty), anebo dorovnat dřív nastavený projekt na aktuální podobu standardů a konfigurační vrstvy – revize souladu struktury, dokumentace, sekcí CLAUDE.md, kontraktů a importů. Pod ~/Projekty zakládá a převádí i klientskou složku – profil klienta, fakturační soubor a odkazy na ně v ~/Context – a podprojekty, které profil dědí. Interaktivní wizard, který se ptá krok po kroku.
+description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři, přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty), anebo dorovnat dřív nastavený projekt na aktuální podobu standardů a konfigurační vrstvy – revize souladu struktury, dokumentace, sekcí CLAUDE.md, kontraktů a importů. Pod ~/Projekty zakládá a převádí i klientskou složku – profil klienta, fakturační soubor a odkazy na ně v ~/Context – a podprojekty, které profil dědí. Umí i operativní projekt: adresář s vlastními dokumenty uživatele, ve kterém Claude bez pokynu nic nemění a všechno si zapisuje jen do CLAUDE.md. Interaktivní wizard, který se ptá krok po kroku.
 argument-hint: [create|adopt|update]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
@@ -14,6 +14,8 @@ Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do proje
 - **`create`** *(nový projekt)* – čistý adresář, všechno se zakládá od nuly.
 - **`adopt`** *(existující projekt)* – adresář, ve kterém už něco je, ale chybí v něm otisk `/project` (blok metadat v `CLAUDE.md`) – ať proto, že skill v něm nikdy neběžel, nebo proto, že ho nastavovala starší verze. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i krok 14. Nic se nepřepisuje naslepo.
 - **`update`** *(revize)* – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/.claude/standards/structure.md`, `~/.claude/standards/rules.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 14.
+
+**Vedle standardního projektu, ve kterém Claude sám tvoří, zakládá i operativní projekt** – adresář s uživatelovými vlastními dokumenty, nad kterým Claude jen pracuje a jehož jedinou stopou je `CLAUDE.md`. Průvodce je v něm zkrácený na pár otázek; drží ho [`operative.md`](operative.md).
 
 **Pod `~/Projekty` rozliší klientskou složku a podprojekt klienta** a ke kterémukoliv režimu přidá, co k nim patří: profil klienta, fakturační soubor a odkazy na ně v `~/Context`. Drží to [`client.md`](client.md).
 
@@ -85,12 +87,21 @@ Pomocí **Glob** (ne Bash `git`, aby nenaskočila zbytečná chybová hláška) 
 - zdrojové soubory.
 
 - **Prázdný nebo skoro prázdný adresář** → režim `create`.
-- **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 14.
+- **Projekt, kterým už `/project` prošel** → režim `update`. Poznáš ho podle **bloku metadat na začátku projektového `CLAUDE.md`** – řádku `- **Slug:**`. Ten blok nezakládá nic jiného, takže je to spolehlivý otisk. Pokračuj krokem 14 – u operativního projektu revizí v [`operative.md`](operative.md) (*Standardní, nebo operativní projekt* níž).
 - **Cokoliv jiného** → režim `adopt`.
 
 **Leží-li projektový adresář pod `~/Projekty`, načti si [`client.md`](client.md)** a řiď se jím ve všech krocích, které jmenuje – rozliší klientskou složku od podprojektu a u klienta pozná převod profilu, který už leží v `~/Context` – režim se tím nemění.
 
 Řekni nahlas, který režim to je a podle čeho jsi to poznal. Trvá-li uživatel na plném průchodu průvodcem i nad nastaveným projektem, ber to jako pokyn a jeď režim `adopt`.
+
+### Standardní, nebo operativní projekt
+
+**Operativní projekt** je adresář, který patří uživateli a má jeho vlastní pořádek – smlouvy, výpisy, dokumenty, tabulky, videa –, a Claude nad ním jen pracuje; jedinou jeho stopou je `CLAUDE.md` (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*). Standardní projekt je všechno ostatní – to, kde Claude sám tvoří kód, dokumentaci nebo texty.
+
+- *`update`:* má-li blok metadat `- **Struktura:** CLAUDE.md`, je to operativní projekt – neptej se a jdi rovnou na *Revizi* v [`operative.md`](operative.md).
+- *`create` a `adopt`:* hned po určení režimu se zeptej (AskUserQuestion): **Standardní projekt** / **Operativní projekt**. Doporučenou volbu odvoď z adresáře: převaha uživatelových dokumentů (`.docx`, `.pdf`, `.xlsx`, video) bez kódu i bez `docs/`, nebo umístění pod `~/Documents`, ukazuje na operativní; kód, `docs/`, `~/Dev` nebo `~/Projekty` na standardní.
+
+Padne-li operativní, **načti si [`operative.md`](operative.md) a řiď se jen jím** – kroky 1–15 se neprocházejí a celý zbytek tohohle souboru se týká standardního projektu. Je to dělené proto, že operativní projekt má jiný cíl, ne jen méně kroků: zatímco standardní projekt Claude staví, v operativním má na disku zanechat co nejmenší stopu.
 
 V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uživateli v pár řádcích**, ať oba víte, z čeho se vychází:
 

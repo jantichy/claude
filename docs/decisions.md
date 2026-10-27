@@ -2447,3 +2447,16 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Reviduje** *Merge je samostatný krok, ne fáze `/end`*, část *Proč mezi kontroly, když mění hlavní větev*. Kritérium „nezvětšuje rozsah práce“ `/merge` splňuje dál, jenže samo do cyklu nezařazuje. Rozhoduje, podle čeho se krok spouští, a `/merge` se spouští hotovou větví. **Zamítnutí třetí vrstvy cyklu platí dál:** uzavírací skilly nejsou vrstvou cyklu, ale stojí mimo něj, takže `/next` a `tests/test_next.py` dál pracují se dvěma vrstvami.
 
 **Doplněno týž den:** rámeček v README skillů cyklu má třetí řádek *Session* (`/next`, `/continue`, `/end`, `/merge`, `/break`). Hromadná instalace jmenuje všech pět, protože bloky *Kudy dál* skillů cyklu na ně odkazují a `/continue` je druhou polovinou `/break`. Zdrojem řádku je skupina *Začátek a konec session* v kořenovém `README.md`, ne rámeček v `standards/rules.md`, který zůstává dvouvrstvý kvůli `/next`. Shodu hlídá `tests/test_skills.py`, `session_row_defects`. Z rámečků v README i v `standards/rules.md` zmizel dovětek „stojí v mezerách mezi kroky osy, některé z nich ve víc mezerách“. V `rules.md` ho nahradila věta pod rámečkem, takže rámeček je všude stejný.
+
+### Operativní projekt je třetí režim struktury, ne výjimka v projektu
+
+**Rozhodnuto 27. 10. 2026.** Vedle projektů, ve kterých Claude sám tvoří (kód, dokumentace, texty), vznikají adresáře, které patří uživateli a mají jeho vlastní pořádek – smlouvy, výpisy, dokumenty, videa –, a Claude nad nimi jen odpovídá, dohledává a na pokyn přeskupuje. Uživatel je dosud zakládal ručně větou „vše zapisuj jen do projektového CLAUDE.md“ a Claude to zapisoval jako výjimku z obecných pravidel. `/project` takový adresář neuměl: nabídl by `docs/`, typ, kontrakt i worktree.
+
+**Rozhodnutí:** `/project` zakládá **operativní projekt** jako druhou variantu vedle standardního (`skills/project/operative.md`). `standards/structure.md` dostal třetí režim umístění `CLAUDE.md`: standardní soubory nevznikají a co by do nich šlo, jde do sekcí projektového `CLAUDE.md`. Průvodce se ptá jen na popis, git (ano/ne nad celým adresářem, bez remote a worktree), autocommit a doménové importy. Trvalá Memory je zakázaná napevno.
+
+**Proč třetí režim, a ne jen výjimka v projektu:** skilly, které zapisují do `docs/…`, se řídí režimem ze `structure.md`. Výjimka v projektu je přebije jen přes přednost pravidel, kdežto režim jim to řekne přímo, a `/project update` podle řádku `Struktura` pozná, že nemá hledat `docs/`.
+
+**Zamítnuto – git verzující jen `CLAUDE.md`:** uživatel chce volbu jednoduchou, ano/ne nad celým adresářem. Cenou jsou binárky v historii, proto průvodce u volby uvádí velikost adresáře.
+
+**Zamítnuto – zákaz změn vynutit oprávněními v `.claude/settings.local.json`:** přidal by do adresáře `.claude/` a pravidla `ask` se vyhodnocují před `allow`, takže výjimku pro zápis do `CLAUDE.md` nejde napsat. Zákaz proto drží jen text v sekci `## Operativní projekt`.
+

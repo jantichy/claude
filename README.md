@@ -136,7 +136,7 @@ Kroky **osy** životního cyklu – ty, které něco tvoří: vyrobí soubor, k�
 
 #### [`/project`](skills/project/) – projekt nastavený na pár kliknutí
 
-Zeptá se postupně na všechno, co se u nového projektu řeší pokaždé znovu – název, git a remote, uspořádání na disku, dokumentační strukturu, autocommit, typ projektu, spouštěcí příkazy, kontrolní vrstvy včetně CI, doménové checklisty – a rovnou to nastaví. Práci pro klienta drží pohromadě v jeho složce i s profilem klienta a fakturační dohodou. Umí i projekty, které už existují, a hlavně se k nim po čase vrátit: pozná svůj vlastní otisk a místo otázek projde projekt proti tomu, jak standardy vypadají dnes. Tím řeší nepříjemnou vlastnost celé téhle vrstvy – konfigurace se vyvíjí dál, ale projekt založený loni zůstane stát a sám o tom neřekne.
+Zeptá se postupně na všechno, co se u nového projektu řeší pokaždé znovu – název, git a remote, uspořádání na disku, dokumentační strukturu, autocommit, typ projektu, spouštěcí příkazy, kontrolní vrstvy včetně CI, doménové checklisty – a rovnou to nastaví. Práci pro klienta drží pohromadě v jeho složce i s profilem klienta a fakturační dohodou. Umí založit i operativní projekt nad složkou vlastních dokumentů, ve které Claude bez pokynu nic nemění a všechno si zapisuje jen do jednoho souboru. Umí i projekty, které už existují, a hlavně se k nim po čase vrátit: pozná svůj vlastní otisk a místo otázek projde projekt proti tomu, jak standardy vypadají dnes. Tím řeší nepříjemnou vlastnost celé téhle vrstvy – konfigurace se vyvíjí dál, ale projekt založený loni zůstane stát a sám o tom neřekne.
 
 #### [`/discovery`](skills/discovery/) – co je venku, než začnete stavět
 

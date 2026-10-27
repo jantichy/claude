@@ -89,7 +89,7 @@ Navíc si zjisti tohle:
 
 3. **Co bylo v pracovním stromu už před tebou** – `git status --porcelain`. Jsou to soubory, které nemůžeš připsat téhle session: nad jedním repozitářem běžívá víc session naráz. **Žádný z nich nekomituj**, pokud jsi do něj sám nezapsal.
 4. **Projektový `CLAUDE.md`** – z něj `## Výjimky z obecných pravidel`, tedy co je v tomhle projektu vědomá odchylka, a tedy **není nález** (`~/.claude/skills/preflight.md`, bod 2). Ve worktree layoutu je to ten ve worktree větve, ne rozcestník v kořeni kontejneru.
-5. **Režim umístění standardních souborů** – `docs/`, nebo kořen repozitáře (`~/.claude/standards/structure.md`, *Dva režimy umístění*). [`obligations.md`](obligations.md) píše cesty pro `docs/`, takže se v kořenovém režimu překládají.
+5. **Režim umístění standardních souborů** – `docs/`, kořen repozitáře, nebo jen `CLAUDE.md` u operativního projektu (`~/.claude/standards/structure.md`, *Režimy umístění*). [`obligations.md`](obligations.md) píše cesty pro `docs/`, takže se v kořenovém režimu překládají a v operativním projektu míří do sekcí `CLAUDE.md`.
 
 ------
 

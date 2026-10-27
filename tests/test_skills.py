@@ -2313,6 +2313,7 @@ class TemplatesPrintMarkdown(unittest.TestCase):
         ("project/SKILL.md", "## Paměť"),
         ("project/checklists.md", "## Doménové znalosti"),
         ("project/client.md", "## Klient"),
+        ("project/operative.md", "## Operativní projekt"),
         ("review/SKILL.md", "## Review"),
         ("skill/SKILL.md", "| Krok | Kdo | Proč zrovna on |"),
     }
