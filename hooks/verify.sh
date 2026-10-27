@@ -370,8 +370,22 @@ if [ "${1:-}" = "--allow" ]; then
   # stačil. A po `rm -rf` a klonu cizího repozitáře na tutéž cestu se souhlas
   # zdědil celý. Uloží se proto i cesta ke kontraktu a otisk jeho sekce; běh
   # obojí porovná a při neshodě si vyžádá nový souhlas.
-  printf '%s\n%s\n%s\n' "$(canon "$P")" "$MD" "$(contract_fingerprint "$MD")" \
-    > "$ALLOW_DIR/$RKEY" || die "nelze zapsat souhlas do $ALLOW_DIR"
+  #
+  # Otisků je víc, jeden na řádek od třetího dál. Souhlas je klíčovaný repozitářem,
+  # takže ho sdílejí všechny worktree – a každá větev smí mít jiný kontrakt. S jediným
+  # otiskem přepsal souhlas vydaný v jednom worktree souhlas druhého a kontrola se
+  # mezi nimi točila dokola. Dřív schválené otisky proto zůstávají; odvolává je
+  # jedině --revoke, které maže celý soubor.
+  FP=$(contract_fingerprint "$MD")
+  OLD_FPS=""
+  [ -f "$ALLOW_DIR/$RKEY" ] && OLD_FPS=$(sed -n '3,$p' "$ALLOW_DIR/$RKEY" | grep -vxF "$FP" || true)
+  TMP_ALLOW=$(mktemp "$ALLOW_DIR/.allow.XXXXXX") || die "nelze zapsat souhlas do $ALLOW_DIR"
+  {
+    printf '%s\n%s\n' "$(canon "$P")" "$MD"
+    [ -n "$OLD_FPS" ] && printf '%s\n' "$OLD_FPS"
+    printf '%s\n' "$FP"
+  } > "$TMP_ALLOW" || { rm -f "$TMP_ALLOW"; die "nelze zapsat souhlas do $ALLOW_DIR"; }
+  mv "$TMP_ALLOW" "$ALLOW_DIR/$RKEY" || { rm -f "$TMP_ALLOW"; die "nelze zapsat souhlas do $ALLOW_DIR"; }
   [ -s "$ALLOW_DIR/$RKEY" ] || die "souhlas se nezapsal."
   echo "Průběžná kontrola poběží v $P, podle kontraktu v $MD."
   echo
@@ -579,8 +593,9 @@ TOPLEVEL=$(git -C "$PROJ" rev-parse --show-toplevel 2>/dev/null || true)
 if [ -n "$TOPLEVEL" ] && [ "$(canon "$TOPLEVEL")" != "$PROJ" ]; then
   die "kontrakt $CLAUDE_MD leží v podadresáři, ne v kořeni pracovního stromu ($TOPLEVEL). Souhlas pro repozitář na něj neplatí, nespustil jsem nic."
 fi
-if [ "$(contract_fingerprint "$CLAUDE_MD")" != "$STORED_FINGERPRINT" ]; then
-  die "kontrakt v $CLAUDE_MD se od vydání souhlasu změnil, nespustil jsem nic. Projdi si ho a potvrď: ~/.claude/hooks/verify.sh --allow $PROJ"
+# grep -c, ne -q: s pipefail by předčasný konec grepu shodil rouru (viz výš).
+if [ "$(sed -n '3,$p' "$AF" | grep -cxF "$(contract_fingerprint "$CLAUDE_MD")")" -eq 0 ]; then
+  die "kontrakt v $CLAUDE_MD se od vydání souhlasu změnil, nebo patří větvi, pro kterou souhlas ještě nikdo nevydal – souhlas repozitáře platí jen pro kontrakty, které už jednou prošly --allow, a jiné větve tím nevypneš. Nespustil jsem nic. Projdi si ho a potvrď z terminálu (ne přes ! v Claude Code): ~/.claude/hooks/verify.sh --allow $PROJ"
 fi
 
 # Rozlišit "není to repozitář" (v pořádku, mlčky ven) od "git nefunguje" (nahlas):

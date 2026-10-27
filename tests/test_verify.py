@@ -964,6 +964,45 @@ class ConsentBoundToContract(unittest.TestCase):
         self.assertNotIn("není vydaný souhlas", v.stderr)
         self.assertNotIn("podadresáři", v.stderr)
 
+    def test_worktrees_with_different_contracts_keep_both_consents(self):
+        """Souhlas sdílí všechny worktree repozitáře, ale každá větev smí mít jiný kontrakt.
+
+        S jediným uloženým otiskem přepsal souhlas vydaný v jednom worktree souhlas
+        druhého a kontrola se mezi nimi točila dokola – doloženo 27. 10. 2026
+        na větvích `main` a `docs/closing` projektu Eventoid.
+        """
+        self.write_contract(self.repo, "true")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        wt = self.tmp / "wt"
+        self.assertEqual(
+            git(self.repo, "worktree", "add", "-q", str(wt), "-b", "feat").returncode, 0
+        )
+        self.write_contract(wt, "true && true")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        self.assertEqual(self.allow(wt).returncode, 0)
+        for where in (self.repo, wt):
+            v = self.run_verify(where)
+            self.assertNotIn(
+                "změnil", v.stderr, f"souhlas pro {where.name} přepsal druhý worktree"
+            )
+
+    def test_unapproved_contract_in_other_worktree_still_blocks(self):
+        """Víc otisků nesmí znamenat volnou ruku: neschválený kontrakt dál neběží."""
+        marker = self.tmp / "NESMI-VZNIKNOUT"
+        self.write_contract(self.repo, "true")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        wt = self.tmp / "wt"
+        self.assertEqual(
+            git(self.repo, "worktree", "add", "-q", str(wt), "-b", "feat").returncode, 0
+        )
+        self.write_contract(wt, f"touch {marker}")
+        v = self.run_verify(wt)
+        self.assertFalse(marker.exists(), "spustil se kontrakt, který nikdo neodsouhlasil")
+        self.assertIn("změnil", v.stderr)
+
 
 class MarkdownBodyParser(unittest.TestCase):
     """`md_body()` musí číst Markdown tak, jak ho čte člověk v náhledu.
