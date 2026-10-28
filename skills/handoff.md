@@ -125,6 +125,8 @@ Dva skilly s vlastní frontou tu vědomě **nejsou** – ten, který rozpouští
 
 Jednou odrážkou, ne otázkou přes `AskUserQuestion`: kolik položek zbývá, kde kontext je, a že zbytek se uloží celý. Souhlas je uživatelův.
 
+**U průchodu po kolech** (`~/.claude/skills/findings.md`, *Průchod jde po kolech*) **se přerušení nabízí jen při ptaní**, nejpozději na hranici kol před první otázkou dalšího kola. **Zapracování se kvůli kontextu nepřerušuje nikdy:** uživatel u něj není, takže nabídka by ho jen zastavila do jeho návratu, a automatickou kompaktaci kryje zápis `## Rozhodnuto k zapracování` i commit za každou položku.
+
 ### Kdo zápis dělá
 
 **Řekne-li uživatel ano, zbytek fronty uloží skill [`/break`](break/SKILL.md)** a běh tím končí. Co se zapisuje, kam, jak se zápis ověří a čím odpověď skončí, drží on – tady zůstává jen to, **kdy** se přerušení nabízí. Přerušený skill pak vlastní závěr nevydává: hotový není a závěr `/break` ho nahrazuje.

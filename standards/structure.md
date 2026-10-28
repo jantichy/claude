@@ -84,7 +84,7 @@ Blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj nadpis a prvn
 
 Další sekce:
 
-- **`## Kontrakt příkazů`** – **má ho každý projekt, ve kterém se něco spouští**: čím se tam spouštějí abstraktní kroky (`test`, `typecheck`, `lint`, `build`…). Zakládá ho `/project`, čte průběžná kontrola a skilly, které pouštějí testy; seznam klíčů drží `~/Context/Coding/quality.md`, *Kontrakt příkazů*. Projekt bez kódu ho nemá.
+- **`## Kontrakt příkazů`** – **má ho každý projekt, ve kterém se něco spouští**: čím se tam spouštějí abstraktní kroky (`test`, `typecheck`, `lint`, `build`…). Zakládá ho `/project`, čte průběžná kontrola a skilly, které pouštějí testy; seznam klíčů drží `~/Context/Coding/quality.md`, *Kontrakt příkazů*.
 - **`## Zákazy`** – na co model nesahá nebo co nedělá bez ptaní, a proč. **Hranici drží `permissions` v `.claude/settings.json`** – co se nesmí vůbec, do `deny`, co jen bez ptaní, do `ask`; sekce je seznam s důvody a zákaz bez mechanismu se v ní označí jako jen napsaný. Zakládá ji `/project`, a jen má-li projekt co zakázat.
 - **`## Nasazení`** – jak se projekt dostane do produkce, hlavně která větev je nasazovací. Zakládá ji `/project` nebo první `/release`.
 - **`## Review` a `## Consistency`** – nálezy vyhodnocené jako „neopravovat“, aby se nehlásily znovu. Do první píší `/review` i `/attack` (formát drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*), do druhé `/consistency`. Píší je skilly, ne člověk.
@@ -114,7 +114,8 @@ Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – �
 - **Má-li položka smysl až od určitého dne**, napiš **hned za název** `od <YYYY-MM-DD>` – `/next` ji do té doby nenabídne, jen zmíní. Datum uvnitř popisu odklad nezakládá. Je to odstup, ne termín.
 - **Drží jen nehotové položky.** Hotové **přesuň hned do `done.md`**.
 - **`## Parkované v session`** – bod odložený v rámci session; po vyřešení se maže, prázdná sekce se ruší.
-- **`## Přerušený běh`** – rozdělaná práce přerušená uprostřed – zbytek fronty skillu (nálezy, úkoly) i práce mimo skill. Stojí první v souboru, navazuje na ni `/continue` a `/next` ji nabízí přednostně; zapisuje ji a tvar drží `/break`. Vypořádaná položka jde do `done.md`, jen je-li to odvedená práce, jinak se maže; prázdná sekce se ruší.
+- **`## Přerušený běh`** – zbytek přerušené fronty skillu i práce mimo skill. Stojí první, navazuje na ni `/continue`, `/next` ji nabízí přednostně a tvar drží `/break`. Vypořádaná položka jde do `done.md`, jen je-li to odvedená práce, jinak se maže; prázdná sekce se ruší.
+- **`## Rozhodnuto k zapracování`** – nezapracované odpovědi průchodu nálezy (`~/.claude/skills/findings.md`).
 - **`## Kola návrhu`** – mapa kol návrhu; tvar drží `~/.claude/skills/architect/rounds.md`.
 
 ### `backlog.md`
@@ -155,7 +156,7 @@ Existuje jen spolu s `todo.md`.
 
 ### `rules.md`
 
-**Obecné principy tohoto projektu** – věty, které rozhodují, ne popis systému. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně; `decisions.md` drží konkrétní rozhodnutí, tady je rámec, proti kterému se rozhoduje. Patří sem **jen to, co je specifické pro projekt** – obecná pravidla jsou v `~/.claude/standards/rules.md`, doménové znalosti v importované doméně, provoz worktree v `~/.claude/standards/worktree.md`.
+**Obecné principy tohoto projektu** – věty, které rozhodují, ne popis systému. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně jako rámec, proti kterému se rozhoduje; rozhodnutí drží `decisions.md`. Patří sem **jen to, co je specifické pro projekt** – obecná pravidla jsou v `~/.claude/standards/rules.md`, doménové znalosti v importované doméně, provoz worktree v `~/.claude/standards/worktree.md`.
 
 ---
 

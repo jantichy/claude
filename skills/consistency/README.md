@@ -26,6 +26,7 @@ Projde projekt a najde všechno, co si v něm navzájem odporuje, opakuje se, je
 
 ## Proč zrovna tenhle
 
+- **Nejdřív se zeptá, pak pracuje.** Na všechno, co musíte rozhodnout vy, se zeptá v jednom zátahu, jednu otázku za druhou, a teprve pak všechno zapracuje sám – mezitím od toho můžete odejít. Na co přijde až při práci, nechá na další kolo otázek.
 - **Umlčení má datum spotřeby.** Rozhodnutí „tohle neopravovat“ se zapíše i se stavem repozitáře; jakmile se dotčený kód změní, nález se předloží znovu i s původním odůvodněním. Bez toho by z výjimek postupně vznikl seznam, kterým se dá umlčet cokoliv.
 - **Neptá se na každou drobnost.** Bezriziková oprava se udělá rovnou a jen se vypíše; ptá se jen na to, kde se dá rozhodnout jinak.
 - **Nesmaže kód jen proto, že vypadá mrtvý.** Může se volat dynamicky, z konfigurace nebo z jiného repozitáře – proto je to vždycky sporné.

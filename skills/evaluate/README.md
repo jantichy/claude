@@ -25,6 +25,7 @@ Nasadit a jít dál je nejběžnější konec práce. Za pár týdnů nikdo nev�
 
 ## Proč zrovna tenhle
 
+- **Nejdřív se zeptá, pak pracuje.** Na všechno, co musíte rozhodnout vy, se zeptá v jednom zátahu, jednu otázku za druhou, a teprve pak všechno zapracuje sám – mezitím od toho můžete odejít. Na co přijde až při práci, nechá na další kolo otázek.
 - **Ptá se na hodnotu, ne na chyby.** Hlášení chyb vám řekne, že něco spadlo. Tohle řekne, že to nespadlo a stejně to nikdo nepoužívá.
 - **Nepředstírá data, která nemáte.** Zdroje bere v pořadí podle toho, kolik si u nich musíte domyslet – čísla z databáze nejsou totéž co dojem z jednoho mailu, a skill to u každého poznatku napíše.
 - **Nejsilnější zjištění nechá zkusit vyvrátit někomu jinému.** Kdo nález našel, ten ho hájí, ne prověřuje – a stav v databázi znamená v každé aplikaci něco jiného. Co ověření nepřežije, se do podkladu vůbec nedostane.

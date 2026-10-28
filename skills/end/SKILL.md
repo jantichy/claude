@@ -195,6 +195,8 @@ git log --name-only --format='%h' <základ session>..HEAD && git status --porcel
 
 ## Fáze 4 – Zápis toho, co má jedinou podobu
 
+**Celá tahle fáze proběhne až v zapracování prvního kola**, za poslední otázkou *Fáze 5* – tady si zápisy jen připrav i s hotovým textem a hned pokračuj frontou rozhodnutí, ať uživatel na zápisy před první otázkou nečeká (`~/.claude/skills/findings.md`, *Průchod jde po kolech*).
+
 **Zapiš všechno, co má jedinou zjevně správnou podobu, a neodkládej to do fronty.** Chybějící zápis dohody, zastaralá věta proti tomu, co v session padlo, duplicita s jasným vítězem – to je dorovnání toho, co už je rozhodnuté, ne rozhodnutí. Hranici drží `~/.claude/skills/findings.md`: **nejistotu nejdřív zkus odstranit**, a jde-li odpověď dohledat v repozitáři, není to položka k rozhodnutí, ale práce.
 
 **Nezapisuj to, co závisí na nevypořádaném tématu** z kategorie 7. Odpověď uživatele mění, co se zapíše, takže bys zapsal něco, co vzápětí přestane platit. Takové položce připrav **hotový text zápisu ke každé variantě** a nech ji do *Fáze 5*.
@@ -225,7 +227,7 @@ Hlásí sekci, ve které datum mezi sousedními záznamy klesá – nový zápis
 
 ## Fáze 5 – Fronta rozhodnutí
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, pak zapracování bez uživatele, kam patří i zápisy z *Fáze 4*; co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). Odpovědi se během ptaní zapisují do `## Rozhodnuto k zapracování`, ne rovnou do cílových souborů. **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 Sem přišlo všechno, co potřebuje uživatelovu volbu: **nevypořádaná témata** z kategorie 7, **položky, u kterých je z čeho vybírat** (nejasné zařazení, dvě obhajitelné podoby téhož zápisu, dvě protichůdné informace bez vítěze) a **položky mimo rozsah** – starší dluh a to, co ze session zůstalo rozbité.
 
@@ -253,7 +255,7 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na jednu polo�
 
 | Odpověď znamená | Co uděláš |
 |---|---|
-| rozhodnutí | zapiš ho – i se zdůvodněním, které tady padlo |
+| rozhodnutí | v zapracování ho zapiš – i se zdůvodněním, které tady padlo |
 | „vrátíme se k tomu“ | do `docs/todo.md` s celým kontextem, ne jako holá odrážka |
 | „někdy by šlo“, nezávazný nápad | do `docs/backlog.md` – **ne do todo**; hranici drží `~/.claude/standards/structure.md`, *`backlog.md`* |
 | bezpředmětné | nic nezapisuj; v přehledu to ale uveď, ať je vidět, že se to probralo |

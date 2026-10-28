@@ -18,6 +18,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 
 ## Proč zrovna tenhle
 
+- **Nejdřív se zeptá, pak pracuje.** Na všechno, co musíte rozhodnout vy, se zeptá v jednom zátahu, jednu otázku za druhou, a teprve pak všechno zapracuje sám – mezitím od toho můžete odejít. Na co přijde až při práci, nechá na další kolo otázek.
 - **Úplnost se měří, ne tvrdí.** Poměr odškrtnutých míst je číslo, které jde ověřit – a nevyplněný řádek nejde vydat za hotovo.
 - **Čte záznam, ne paměť.** Právě v té části, kterou kompaktace vyhodila, bývají uzavřené dohody, o které jde.
 - **Nenechá si utéct zprávy poslané uprostřed běhu.** Ty se ukládají jinak než ostatní a kdo je nezná, tiše o ně přijde – a přitom to bývají důležité dovětky.

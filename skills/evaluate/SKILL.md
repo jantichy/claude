@@ -155,7 +155,7 @@ U každého poznatku: čeho se týká, číslo, zdroj, jak se to dá zopakovat, 
 
 ## Fáze 5 – Rozhodnutí u každého poznatku
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, odpovědi do `## Rozhodnuto k zapracování`, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 **Tohle je fáze, kvůli které krok existuje.** Bez ní je to evidence, kterou nikdo nečte.
 
@@ -163,11 +163,11 @@ Nejdřív **vypiš přehled**: kolik poznatků je vad, kolik nové práce, kolik
 
 **Pak pokračuj hned v téže odpovědi**, nekonči na přehledu. **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název poznatku na samostatném řádku a pod ním souvislý text, ve kterém uvnitř věty řekneš, z čeho se to ví a co z toho plyne; žádná mřížka popisků.
 
-- **Vady** vypořádej podle `findings.md` – mechanické a jednoznačné zapiš jako úkol rovnou, sporné předlož po jedné.
+- **Vady** vypořádej podle `findings.md` – mechanické a jednoznačné zapiš jako úkol bez ptaní v zapracování, sporné předlož po jedné.
 - **Nová práce** jde k uživateli vždy, jeden poznatek = jedna otázka, s volbami *do `todo.md`* / *do `backlog.md`* / *vědomě neděláme*. **Vylučuje-li tu věc zadání, rozliš rozhodnutí od jeho odůvodnění:** rozhodnutí smí platit dál, ale **vyvrácený důvod se hlásí vždy**. Věta „kapacity se plní z 80 %, takže čekací listina by byla funkce pro nikoho“ přestane být pravdivá ve chvíli, kdy jsou tři z pěti kroužků plné – a dokud v zadání stojí, čte ji každý příští běh jako fakt. Ptej se tedy na jednu větu odůvodnění, ne na to, jestli se ta funkce postaví. Vymyslel to tlakový scénář 22. 9. 2026 a je to lepší rozlišení, než skill měl. U třetí volby se ptej na důvod a zapiš ho – bez něj to za rok někdo navrhne znovu (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*).
 - **Zjištění bez akce** neprobírej po jednom, jen je vypiš.
 
-Každé rozhodnutí **zapiš na dvě místa**: k poznatku do `operation.md` a jako úkol do `todo.md`, nápad do `backlog.md`, nebo zdůvodněné „neděláme“ do `decisions.md`. Není to dvojí pravda – v podkladu stojí, **jak se rozhodlo**, ve frontě práce, **co se má udělat**.
+Každé rozhodnutí v zapracování **zapiš na dvě místa**: k poznatku do `operation.md` a jako úkol do `todo.md`, nápad do `backlog.md`, nebo zdůvodněné „neděláme“ do `decisions.md`. Není to dvojí pravda – v podkladu stojí, **jak se rozhodlo**, ve frontě práce, **co se má udělat**.
 
 **Vyšlo-li z běhu, že se neměří nic**, je rozhodnutí jedno: co začít měřit. Jde do `todo.md` jako běžný úkol.
 

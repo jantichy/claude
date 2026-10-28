@@ -18,12 +18,13 @@ Zvedne aplikaci lokálně a pošle na ni útočníky, jejichž zadání zní jed
 2. **`/attack full`** – celá aplikace bez ohledu na to, co se měnilo. U větší aplikace se předem domluví, kolik času tomu dát.
 3. **Šest vektorů útoku**, z nichž vybírá podle povahy projektu: **vstupy** (prázdno, obří čísla, emodži, 10 000 znaků, pokusy o vlezení do systému), **stavy a pořadí** (přeskočený krok, zopakovaný krok, dvě záložky nad týmž záznamem, odeslání dvakrát rychle po sobě), **oprávnění** (cizí identifikátor v adrese, přímé volání mimo rozhraní, akce po vypršení přihlášení), **prostředí** (výpadek sítě uprostřed odesílání, pomalá síť, úzké okno, ovládání bez myši), **data** (prázdný seznam, jediná položka, tisíc položek, smazaná vazba) a **vykreslení** (uložený škodlivý text a pak kontrola všech míst, kde se zobrazuje).
 4. **Každý útočník má svůj vektor a svoje účty**, takže si navzájem nepřepisují data a nepopisují stav, který nikdy nenastal.
-5. **Projde s vámi nálezy jeden po druhém** a u opravy rovnou napíše regresní test.
+5. **Projde s vámi nálezy jeden po druhém**, pak opravy zapracuje sám a ke každé napíše regresní test.
 6. **Uklidí po sobě** – zastaví, co zvedl, a řekne, co kvůli útoku nastartoval a nechal běžet.
 7. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 
+- **Nejdřív se zeptá, pak pracuje.** Na všechno, co musíte rozhodnout vy, se zeptá v jednom zátahu, jednu otázku za druhou, a teprve pak všechno zapracuje sám – mezitím od toho můžete odejít. Na co přijde až při práci, nechá na další kolo otázek.
 - **Nález má reprodukční postup, ne domněnku.** Panel čtoucí kód tvrdí, že něco *nastane*; útok přiloží kroky, kterými to nastalo.
 - **Každý nález si skill přehraje sám.** Co se nepodaří zopakovat, se zahodí a spočítá – postup, který nejde zopakovat, nález není.
 - **Nikdy se neútočí na produkci.** A není to slib, ale **doklad**: že cíl je opravdu lokální a že databáze je opravdu testovací, se ověřuje příkazem a jeho doslovný výstup jde do přehledu. Bez obou dokladů se útok nespustí, ani když řeknete, že je to v pořádku.

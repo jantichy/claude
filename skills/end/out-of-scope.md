@@ -32,7 +32,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
    **Objem důvod k dotazu není.** Zdlouhavá, ale jednoznačná oprava se dělá, ne předkládá; naopak jednořádková změna pravidla se předkládá, i když trvá vteřinu. Rozhoduje, čí je to rozhodnutí, ne kolik je s ním práce.
 
-3. **Vyřeš první skupinu rovnou**, celou, ještě než se přejde ke druhé, a vypiš, cos udělal. Vypsat znamená uvést to v přehledu závěru, ne se na to ptát – rozhodnuté věci se nepředkládají k odsouhlasení.
+3. **Vyřeš první skupinu bez ptaní**, celou – v zapracování prvního kola spolu s odpověďmi z bodu 5 (`~/.claude/skills/findings.md`, *Průchod jde po kolech*) –, a vypiš, cos udělal. Vypsat znamená uvést to v přehledu závěru, ne se na to ptát – rozhodnuté věci se nepředkládají k odsouhlasení.
 
    **Rodiči pak platí, že výpisem odpověď nekončí** – bod 4 i první otázka bodu 5 patří do téže odpovědi (`~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*). Šablona výpisu je tahle:
 
@@ -80,7 +80,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
    | Volba | Co uděláš |
    |---|---|
-   | **Vyřešit teď** | Vyřeš položku **hned**, ještě než se zeptáš na další – ne až po posledním dotazu. Rozhodnutí odložené na konec ztratí kontext, ve kterém padlo. |
+   | **Vyřešit teď** | Zapiš ji do `## Rozhodnuto k zapracování` i s kontextem, ve kterém rozhodnutí padlo, a vyřeš ji v zapracování za poslední otázkou kola (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). Kontext se neztratí, protože leží v zápisu, ne v konverzaci. |
    | **Zapsat do todo** | Zapiš ji do `docs/todo.md` – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. Volí se u položky, o které je rozhodnuto, že se udělá. |
    | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/standards/structure.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Fáze 3 – Evidence a konfrontace se soubory*). |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |

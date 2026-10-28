@@ -184,7 +184,7 @@ Prověří hotovou práci před uzavřením ze tří stran: nejdřív nástroje 
 
 #### [`/consistency`](skills/consistency/) – skill proti bordelu v projektu
 
-Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, rozejití mezi vrstvami. Jednoznačné opravy udělá rovnou, o sporných se mnou mluví jednu po druhé. A pamatuje si, co jsem rozhodl neopravovat – jen do chvíle, než se ten kód změní.
+Audit vnitřní konzistence: protichůdné instrukce, duplicity, zapomenuté zbytky po smazaných částech, mrtvý kód, rozejití mezi vrstvami. O sporných se mnou mluví jednu po druhé a teprve pak všechno včetně jednoznačných oprav zapracuje sám, zatímco já dělám něco jiného. A pamatuje si, co jsem rozhodl neopravovat – jen do chvíle, než se ten kód změní.
 
 #### [`/attack`](skills/attack/) – zkusit aplikaci rozbít
 

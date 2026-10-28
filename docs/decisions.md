@@ -2462,3 +2462,24 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 
 **Zamítnuto – zákaz změn vynutit oprávněními v `.claude/settings.local.json`:** přidal by do adresáře `.claude/` a pravidla `ask` se vyhodnocují před `allow`, takže výjimku pro zápis do `CLAUDE.md` nejde napsat. Zákaz proto drží jen text v sekci `## Operativní projekt`.
 
+### Průchod nálezy jde po kolech: nejdřív všechny otázky, pak zapracování bez uživatele
+
+**Rozhodnuto 28. 10. 2026.** Kontrolní skilly dosud opravovaly sporný nález hned po odpovědi, takže uživatel po každé otázce čekal minuty na další a nemohl od průchodu odejít. Pokus z 27. 10. 2026 (průchod oponentury v eventoidu, 25 otázek rychle za sebou, zapracování až potom čtyřmi agenty postupně, pět doplňujících otázek položených stejnou cestou) ukázal, že to jde a že to uživateli vyhovuje.
+
+**Rozhodnutí:** průchod má kola (`skills/findings.md`, *Průchod jde po kolech*). V kole se nejdřív v kuse položí všechny otázky – po tématech, 🔵 nálezy hromadně na konci – a každá odpověď se hned zapíše do `docs/todo.md`, sekce `## Rozhodnuto k zapracování`. Pak se zapracuje všechno, co jde udělat bez dalšího rozhodnutí, a to bez jediné otázky; sporné objevy a selhání se sbírají do dalšího kola. Zapracovávají subagenti po tematických dávkách, jeden po druhém, každý v pomocném git worktree, a hlavní session dávku přimerguje do větve session. Hlavní session zapracovává sama u `/attack` (ověření potřebuje běžící instanci) a v repozitáři mimo worktree layout s netrackovaným lokálním stavem. Kvůli kontextu se zapracování nepřerušuje; `/break` se nabízí jen při ptaní. Platí pro `/review`, `/consistency`, `/end`, `/consolidate`, `/oponent`, `/evaluate` a `/attack`; `/audit` nic neopravuje.
+
+**Hlavní kritérium uživatele:** odklikat všechno, u čeho je potřeba, v jednom zátahu, a pak odejít a spolehnout se, že se odpracuje co nejvíc bez jeho zásahu. Z něj plynou všechna dílčí rozhodnutí níž.
+
+**Zamítnuto – oprava hned po odpovědi** (dosavadní stav, hájený v `/end` větou „rozhodnutí odložené na konec ztratí kontext, ve kterém padlo“). Riziko ztráty kontextu je skutečné, ale kryje ho zápis odpovědi i s kontextem do `todo.md`, ne okamžitá oprava.
+
+**Zamítnuto – dávky na pozadí už během ptaní** (agent zapracovává uzavřenou dávku, zatímco uživatel odpovídá na další, včetně mechanických oprav hned od začátku). Uživatel ji nejdřív sám navrhl a pak opustil: nutí ho u průchodu sedět a hlídat, jestli ho výsledek dávky nepřeruší, a objev z rozpracované dávky může zneplatnit otázky, na které se mezitím odpovídá.
+
+**Zamítnuto – agent se s objevem vrací hned, nebo podle dosahu.** Každé přerušení zapracování čeká na uživatele; objev, který zneplatní jiné rozhodnutí, místo toho odloží jen to rozhodnutí a zbytek pokračuje.
+
+**Zamítnuto – agenti ve stejném pracovním stromu jako hlavní session.** Agenti běží na pozadí, odpověď hlavní session mezitím končí a `Stop` hook průběžné kontroly by chytil rozdělané soubory agenta a vrátil je hlavní session jako chybu k opravě. Obejít to vypnutím kontroly nebo čekáním uvnitř jedné odpovědi je horší než pomocný worktree, který se při sekvenčním běhu merguje fast-forwardem.
+
+**Zamítnuto – rozšířit `githooks/post-checkout` na obyčejné repozitáře**, aby převzal `.env*` a `node_modules/` i do pomocného worktree mimo kontejner. Uživatel zvolil zapracování v hlavní session; cenou je, že dlouhé zapracování v takovém repozitáři roste v kontextu hlavní session.
+
+**Zamítnuto – zastavit zapracování nad prahem kontextu (400k) a čekat na `/break`.** Zastavení by čekalo na uživatele, který u toho není. Automatickou kompaktaci kryje zápis `## Rozhodnuto k zapracování` a commit za každou položku.
+
+**Odloženo:** `/attack` přejde na zapracování v pomocném worktree, až bude hotové přidělování portů pro worktree (`docs/todo.md`).

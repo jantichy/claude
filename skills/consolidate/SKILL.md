@@ -141,7 +141,7 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 ## Fáze 4 – Průchod s uživatelem
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, odpovědi do `## Rozhodnuto k zapracování`, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 **Nejdřív vypiš přehled** – kolik shluků, kolik návrhů padlo v ověření a kolik zbývá k rozhodnutí, plus kolik vedlejších vad se našlo. Pak **hned v téže odpovědi** pokračuj první otázkou; ohlásit průchod a skončit je porušení `~/.claude/standards/rules.md`, *Co ohlásíš, udělej hned v téže odpovědi*.
 
@@ -149,7 +149,7 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 **O každém návrhu rozhoduje uživatel**, jeden po druhém. U každého ukaž kroniku shluku (co vzniklo kdy a z jakého podnětu), návrh, verdikt ověřovatele a cenu přepisu.
 
-**Zamítnutý návrh zapiš do `docs/decisions.md`** k rozhodnutí, jehož alternativou byl – jako zavrženou variantu i s důvodem zamítnutí a s verdiktem ověřovatele. Filtr proti opakovanému předkládání tím funguje sám: `decisions.md` je vstup tohohle skillu, takže si ho příští běh přečte ve *Fázi 1*. **Nezakládej kvůli tomu kapitolu v `CLAUDE.md`** – výjimka z `~/.claude/standards/rules.md` pro umlčené nálezy prověřovacích kroků tady neplatí, protože stojí na tom, že `decisions.md` by nikdo nečetl.
+**V zapracování** pak platí: **zamítnutý návrh zapiš do `docs/decisions.md`** k rozhodnutí, jehož alternativou byl – jako zavrženou variantu i s důvodem zamítnutí a s verdiktem ověřovatele. Filtr proti opakovanému předkládání tím funguje sám: `decisions.md` je vstup tohohle skillu, takže si ho příští běh přečte ve *Fázi 1*. **Nezakládej kvůli tomu kapitolu v `CLAUDE.md`** – výjimka z `~/.claude/standards/rules.md` pro umlčené nálezy prověřovacích kroků tady neplatí, protože stojí na tom, že `decisions.md` by nikdo nečetl.
 
 **Přijatý návrh zapiš do `docs/todo.md`** jako práci i s cenou přepisu a předej `/breakdown`.
 

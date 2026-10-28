@@ -20,12 +20,13 @@ Prověří hotovou práci před uzavřením z několika nezávislých hledisek n
 4. **Panel specialistů, který se skládá podle toho, čeho se změny týkají** – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, konfigurace agentní vrstvy. K tomu specialisté měřící soulad s doménovými znalostmi: kód, web, administrace, analytika, texty, vizuál, prezentace, školení. Mění-li se jen dokumentace, měří se korektnost a bezpečnost proti scénářům, oprávněním a citlivým oblastem v návrhu, ne proti kódu, který tam není.
 5. **Přísnější režim v citlivých oblastech.** Dotkne-li se změna přihlašování, oprávnění, plateb, nahrávání souborů, osobních údajů, mazání dat nebo odesílání pošty ven, je specialista na bezpečnost povinný a dostane úplný jmenný seznam tříd zranitelností.
 6. **Umí navázat na přerušený běh** – ověřený seznam nálezů se ukládá na disk, takže se nejdražší část práce neplatí dvakrát.
-7. **Mechanické opravy udělá rovnou**, sporné projde s vámi jednu po druhé, a u opravy hlášené pracovním specialistou rovnou doplní test.
+7. **Sporné nálezy projde s vámi jeden po druhém**, pak všechno včetně mechanických oprav zapracuje sám a u opravy hlášené pracovním specialistou doplní test.
 8. **Pamatuje si, co jste rozhodli neopravovat** – a příště se na to už neptá, dokud se dotčený kód nezmění.
 9. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
 
+- **Nejdřív se zeptá, pak pracuje.** Na všechno, co musíte rozhodnout vy, se zeptá v jednom zátahu, jednu otázku za druhou, a teprve pak všechno zapracuje sám – mezitím od toho můžete odejít. Na co přijde až při práci, nechá na další kolo otázek.
 - **Nespuštěný nástroj není nula.** Kontrola, kterou nešlo spustit, se vypisuje jako nespuštěná – tři nespuštěné kontroly vypsané jako tři nuly by vypadaly jako tři čisté výsledky.
 - **Vykazuje, co kdo doopravdy přečetl.** Každý specialista odevzdá seznam souborů, které prošel, a skill z toho spočítá poměr proti rozsahu; co nepřečetl nikdo, se vypíše jmenovitě. **Prázdný výstup agenta tím přestal znamenat „je čisto“** – bez toho poměru se totiž nedá odlišit od toho, že spadl.
 - **Vypisuje poměry, ne jen počty.** „Pět nálezů“ vypadá stejně po řádném i po odbytém běhu; skill ukazuje, kolik jich panel našel, kolik jich zbylo po sloučení, kolik se jich ověřilo a kolik přežilo.

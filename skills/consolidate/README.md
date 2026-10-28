@@ -25,6 +25,7 @@ Návrh se obvykle nerodí naráz. Vede se po kolech, v každém vyplave další 
 
 ## Proč zrovna tenhle
 
+- **Nejdřív se zeptá, pak pracuje.** Na všechno, co musíte rozhodnout vy, se zeptá v jednom zátahu, jednu otázku za druhou, a teprve pak všechno zapracuje sám – mezitím od toho můžete odejít. Na co přijde až při práci, nechá na další kolo otázek.
 - **Ptá se jako jediný „bylo by to dnes navržené jinak?“.** Ostatní kontroly se ptají „je to špatně?“ – a na tuhle otázku zní odpověď „ne“, takže dluh propadne každým jiným sítem.
 - **Čím poctivěji se záplata zanesla všude, tím je neviditelnější.** Kontrola hledající rozpory tenhle dluh nenajde nikdy, protože je dokonale bezrozporný.
 - **Nevyrábí regrese převlečené za úklid.** Kdo dostane zadání „navrhni to elegantněji“, vždycky něco navrhne – a bude to působit čistěji právě proto, že nezná zatáčky, kvůli kterým dnešní řešení vzniklo. Proti tomu stojí povinná zpětná zkouška: každý doložený případ z minulosti se projde položku po položce.

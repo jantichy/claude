@@ -50,6 +50,7 @@ Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedl
 4. **Řekni závěrečnou větu a proveď první akci z *Jak pokračovat*:**
    - **Je to skill** (`/review branch`, `/implement`) → vyvolej ho přes nástroj `Skill` s argumentem ze zápisu. Blok mu neopakuj jako zadání – zbývající položky si přečte z `todo.md` sám, a říká-li zápis, že se s nimi má porovnat výsledek, stojí to v *Jak pokračovat*, ne v tvém shrnutí.
    - **Je to položka nebo krok práce** → načti soubory, na které ta položka odkazuje, a pusť se do ní. Další položky ber v pořadí zápisu; každá nese varianty a doporučení, takže je předkládej tak, jak jsou zapsané, ne od nuly.
+   - **Je to zapracování sekce `## Rozhodnuto k zapracování`** → zapracuj ji podle `~/.claude/skills/findings.md`, *Zapracování* – odpovědi tam už padly, takže se na ně neptej znovu.
 
 Od té chvíle běží běžná práce podle pravidel projektu, ne tenhle skill.
 

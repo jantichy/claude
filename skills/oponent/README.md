@@ -17,7 +17,7 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 1. **Vybere hlediska z katalogu sedmnácti** – a vybírá je podle **vlastnosti dokumentu**, ne podle jeho typu: „slibuje výsledek“, „sbírají se údaje o lidech“, „stojí to na cizí službě“. Výběr vám předloží ke schválení dřív, než kdokoliv začne pracovat.
 2. **Katalog má dvě poloviny.** *Metody* říkají, jak se dívat – vnitřní rozpor, co chybí, nevyslovené předpoklady, pohled zpětně z budoucího selhání, alternativy, měřitelnost cíle, zneužití, nevratnost, čtenář bez kontextu. *Domény* říkají, na co se dívat – ekonomika provozu, osobní údaje, závazky vůči druhé straně, data a proveditelnost, nepřítomní dotčení, závislosti, konkurence, cílová skupina.
 3. **Každou závažnou námitku pošle ověřit** někomu dalšímu, kdo má jediný úkol: **vyvrátit ji**. Co ověření nepřežije, se vám vůbec nezobrazí.
-4. **Projde s vámi nálezy jeden po druhém**, od nejzávažnějšího, a u každého nabídne konkrétní varianty řešení – ne jen „opravit“.
+4. **Projde s vámi nálezy jeden po druhém**, od nejzávažnějšího, a u každého nabídne konkrétní varianty řešení – ne jen „opravit“. Drobnosti nakonec schválíte jedním kliknutím a zapracuje se to až po poslední otázce.
 5. **Zapíše i to, co jste zamítli**, i s důvodem, aby to příští oponentura nenašla znovu jako nový nález.
 6. **Umí navázat na přerušený běh.** Ověřený seznam nálezů se ukládá na disk, takže se nejdražší část práce neplatí dvakrát.
 7. **Je určený k opakování.** Nález, který se vrátí, znamená, že se neopravil, jen přeformuloval – a skill to řekne výslovně.
@@ -25,6 +25,7 @@ Máte hotovou strategii, pozicování, produktovou specifikaci, cenotvorbu, dato
 
 ## Proč zrovna tenhle
 
+- **Nejdřív se zeptá, pak pracuje.** Na všechno, co musíte rozhodnout vy, se zeptá v jednom zátahu, jednu otázku za druhou, a teprve pak všechno zapracuje sám – mezitím od toho můžete odejít. Na co přijde až při práci, nechá na další kolo otázek.
 - **Oponenti nemají váš kontext.** To není omezení, ale celý smysl: nezávislost se nedá nasimulovat u někoho, kdo u vzniku dokumentu byl.
 - **Vždycky dostanou i seznam toho, co jste vědomě zamítli** – i s důvody. Bez toho by první běh přinesl námitky, které umíte vyvrátit z hlavy, a druhý byste už nepustili.
 - **Rozdílná hlediska, ne víc stejných kritiků.** Redundantní oponenti najdou tolikrát totéž, kolik jich pustíte.

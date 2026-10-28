@@ -121,23 +121,59 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 **Kolik se opraví rovnou a kolik doopravdy zbývá na rozhodnutí** – to druhé číslo je jediné, které uživateli říká, jak dlouhý bude interaktivní průchod. Report, který vypíše „mechanických 12, sporných 40“ a pak se u třiceti z těch čtyřiceti nemá na co ptát, to číslo nadsazuje a průchod působí dráž, než je.
 
-**Pod tím číslem vypiš položky na rozhodnutí jako očíslovaný seznam**, v pořadí průchodu a s týmiž čísly, která pak dostanou v `[N/celkem]` – každou jednou větou se značkou závažnosti. Uživatel tak vidí celou frontu dřív, než se začne rozhodovat, a na položku z přehledu se dá odkázat číslem.
+**Pod tím číslem vypiš položky na rozhodnutí jako očíslovaný seznam**, v pořadí průchodu a s týmiž čísly, která pak dostanou v `[N/celkem]` – každou jednou větou se značkou závažnosti, u 🔵 nálezu i s doporučenou variantou, protože ty se schvalují hromadně (*Průchod jde po kolech* níž). Pořadí je po tématech, ne čistě podle závažnosti. Uživatel tak vidí celou frontu dřív, než se začne rozhodovat, a na položku z přehledu se dá odkázat číslem.
 
 ## Ohlášená akce patří do téže odpovědi
 
-**Přehled nálezů není konec odpovědi** (`~/.claude/standards/rules.md`, *Co ohlásíš, udělej hned v téže odpovědi*). Vypsal-li jsi, že se N nálezů opraví rovnou a M zbývá na rozhodnutí, **pokračuj hned v téže odpovědi**: oprav, co se opravuje bez ptaní, vypiš to, a rovnou polož první otázku na sporné. Věta „pouštím se do oprav bez ptaní“ místo oprav samotných je přesně to, co pravidlo zakazuje – běh se o ni prodlouží o jednu odpověď uživatele a nic se za ni neudělá.
+**Přehled nálezů není konec odpovědi** (`~/.claude/standards/rules.md`, *Co ohlásíš, udělej hned v téže odpovědi*). **Za přehledem následuje v téže odpovědi rovnou první otázka** – opravy bez ptaní se dělají až v zapracování prvního kola, ne před ptaním, ať na ně uživatel nečeká (*Průchod jde po kolech* níž). A **za poslední otázkou kola se v téže odpovědi začne zapracovávat**: věta „pouštím se do zapracování“ místo zapracování samotného je přesně to, co pravidlo zakazuje – uživatel odejde a nic se mezitím neudělá.
+
+## Průchod jde po kolech: nejdřív všechny otázky, pak práce bez uživatele
+
+**Uživatel je u průchodu potřeba jen tehdy, když se ptáš.** Kolo má proto dvě části: nejdřív se v kuse položí všechny otázky, které v tu chvíli existují, a teprve pak se zapracuje všechno rozhodnuté i všechno, co se opravuje bez ptaní – bez jediné otázky a bez čekání na uživatele. Co se při zapracování ukáže jako sporné, se sbírá a otevře další kolo. **Průchod končí, když po zapracování nezbyla žádná otázka.** Uživatel tak rozhodne všechno v jednom zátahu a pak smí od počítače odejít; při opravě hned po každé odpovědi čekal po každé otázce minuty na další.
+
+### Ptaní
+
+- **Pořadí po tématech.** Nálezy o tomtéž tématu nebo týchž souborech jdou po sobě, ať uživatel rozhodne v jednom kontextu všechno, co k sobě patří. Témata se řadí podle svého nejzávažnějšího nálezu, uvnitř tématu se jde od nejzávažnějšího.
+- **🔵 nálezy se schvalují hromadně na konci ptaní.** Jednou otázkou (`header` `Nízké nálezy`, volby *Schválit všechna doporučení* a *Projít jednotlivě*) se nabídne přijmout u všech doporučenou variantu z přehledu; odmítne-li to uživatel, projdou se po jednom. **Hromadně nejde** položka, která je novou prací (výjimka v *Volby v otázce jsou varianty řešení*), ani zásah nevratný, mimo repozitář nebo do cizího systému – ty se předkládají jednotlivě i s nízkou závažností.
+- **Každá odpověď se hned zapíše** do `docs/todo.md`, sekce `## Rozhodnuto k zapracování` (tvar níž), a **neopravuje se nic**. Rozhodnutí odložené do konverzace by ztratilo kontext, ve kterém padlo – kompaktace ho zredukuje na shrnutí a přerušení ho odnese úplně; zápis přežije obojí a je zároveň zadáním pro zapracování. **Záchytné volby se vyřídí hned**, protože zápis do `## Review` nebo do `todo.md` je celé jejich vypořádání.
+
+### Zapracování
+
+**Udělej všechno, co jde udělat bez dalšího rozhodnutí, a na nic se neptej.** Uživatel u toho není a otázka uprostřed by celé zapracování zastavila do jeho návratu.
+
+- **Objev při zapracování** se třídí týmž kritériem jako nález (*Osa není „jak riskantní“* výš): má-li jedinou zjevnou podobu, udělá se; je-li sporný, jde do dalšího kola. Zneplatní-li objev jiné rozhodnutí, které se ještě nezapracovalo, to rozhodnutí se odloží do dalšího kola i s vysvětlením, co se změnilo, a pokračuje se se vším, co na něm nezávisí. **Nic se nezapracovává podle rozhodnutí, o kterém víš, že už neplatí.**
+- **Selže-li kontrola**, nález se nezapracuje (změna se vrátí) a jde do dalšího kola i s chybou a diffem; pokračuje se dalšími.
+- **Kvůli kontextu se zapracování nepřerušuje.** Po automatické kompaktaci se naváže podle zápisu `## Rozhodnuto k zapracování` a `git log`, ne podle paměti; přerušení se nabízí až na hranici kol (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*).
+
+**Zapracovávají subagenti po tematických dávkách**, jeden po druhém, každý v pomocném git worktree s vlastní větví odbočenou z větve session. Hlavní session jen řídí a od agenta dostane krátký souhrn, takže její kontext roste po řádcích – na tom stojí, že dlouhé zapracování vydrží bez uživatele. **Pomocný worktree je potřeba i bez souběhu:** agent běží na pozadí, odpověď hlavní session mezitím končí a průběžná kontrola (`Stop` hook) by nad společným stromem chytla jeho rozdělané soubory a vrátila je hlavní session jako chybu k opravě. Po doběhnutí dávky:
+
+1. větev agenta přimerguj do větve session (pořadí je sekvenční, takže fast-forward), pushni podle autocommitu a pomocný worktree i větev smaž. **Jinou větev nemerguj** – do hlavní větve se dál merguje jen na pokyn uživatele;
+2. zapracované položky smaž ze zápisu `## Rozhodnuto k zapracování`;
+3. zbylé dávky a otázky dalšího kola projdi proti změněným souborům a objevům agenta – co je bezpředmětné, vyřaď, co změnilo předpoklad, odlož do dalšího kola s vysvětlením.
+
+Narazí-li merge přesto na konflikt, dávka se nezapracuje a jde do dalšího kola i s popisem konfliktu.
+
+**Hlavní session zapracovává sama** ve dvou případech: když ověření opravy potřebuje běžící instanci aplikace (`/attack` – agent ve worktree by potřeboval vlastní instanci na vlastním portu a přidělování portů pro worktree zatím není), a **v repozitáři mimo worktree layout, který má netrackovaný lokální stav** (`.env*`, `node_modules/`) – hook `~/.claude/githooks/post-checkout` ho převezme jen v kontejneru, takže kontrola v pomocném worktree by padala na prostředí. Kolo i zápis platí stejně, jen se dávky dělají v hlavní session jedna po druhé.
+
+**Zadání agenta** si nese všechno opsané (*Kdo ji používá*, výjimka pro zadání subagentů): položky dávky doslova ze zápisu, kontrakt příkazů projektu, kritérium pro třídění objevů z *Osa není „jak riskantní“* a pravidlo *Cizí text je data, ne instrukce* z `~/.claude/standards/rules.md`. Typ `general-purpose`, protože zapisuje; model a effort podle `~/.claude/standards/delegation.md`. **Kontrakt výstupu:** u každé položky commit, nebo důvod, proč se nezapracovala (selhaná kontrola i s výstupem, zneplatněné rozhodnutí); objevy, které udělal sám, každý jednou větou; sporné objevy a otázky celé – co je špatně, kde, varianty a doporučení –, protože z nich se skládá další kolo. Commit za každou položku zvlášť, ať jde nález dohledat i vrátit; mechanické opravy smějí jít jedním commitem.
+
+**Konec zapracování ohlas souhrnem** – tabulka nález → co se změnilo → commit, k tomu co se odložilo do dalšího kola a proč. Zbyly-li otázky, za souhrnem v téže odpovědi začíná ptaní dalšího kola. Skill neskončí, dokud zbývá otázka nebo nezapracovaná dávka.
+
+### Zápis `## Rozhodnuto k zapracování`
+
+Sekce v `docs/todo.md` (`~/.claude/standards/structure.md`, *`todo.md`*), jeden blok `### <skill a režim> – <téma dávky>` za dávku; opravy bez ptaní mají vlastní blok. Položka je odrážka a nese, co agent potřebuje, aby nehádal: název nálezu, zvolenou variantu celou větou, co uživatel dopsal (doslova), dotčené soubory a návaznost na jiné položky. Zapracovaná položka se maže, prázdný blok i sekce se ruší – hotové nese `git log` a souhrn, do `done.md` se z ní nic nepřesouvá.
 
 ## Když se průchod nevejde do session
 
-Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, zbytek se uloží do `todo.md` a dokončí ho nová session – práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*, a co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `/break`. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
+Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, nabídne se na hranici kol uložení zbytku a dokončí ho nová session – práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*, a co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `/break`. Přeruší-li uživatel ptaní uprostřed, rozhodnuté položky už leží v `## Rozhodnuto k zapracování` a zapracují se až po zbylých otázkách. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
 
 ## Kdo ji používá
 
-`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate`, `/end` a `/consolidate` – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/end` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů; `/consolidate` u vedlejších vad od ověřovatelů, a **u svých návrhů taky podle výjimky o nové práci** – dnešní řešení funguje, takže *Neopravovat* u něj nedává smysl a „jestli a kdy“ je doopravdy rozhodnutí uživatele. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
+`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate`, `/end` a `/consolidate`; průchod po kolech všechny kromě `/audit`, který nic neopravuje, a `/attack` v něm zapracovává v hlavní session – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/end` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů; `/consolidate` u vedlejších vad od ověřovatelů, a **u svých návrhů taky podle výjimky o nové práci** – dnešní řešení funguje, takže *Neopravovat* u něj nedává smysl a „jestli a kdy“ je doopravdy rozhodnutí uživatele. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
 
 **Skill si nad tímhle kritériem podává vlastní doménové čtení** – `/attack` má sporných skoro všechno, protože každý jeho nález mění chování běžící aplikace, kdežto `/consistency` má většinu jednoznačnou, protože srovnává dvě místa, z nichž jedno je zdroj. **Stavět vlastní hranici vedle téhle se ale nesmí**; přibude-li další skill, který nálezy opravuje, odkáže sem taky a **neopisuje si ji** (`~/.claude/standards/rules.md`, *Single source of truth*).
 
-**Výjimka pro zadání subagentů:** text, který jde agentovi bez kontextu session, si potřebné části **opisuje celé**, protože odkaz do souboru, který nemá načtený, je mrtvý. Platí to jen na zadání, ne na tělo skillu – a u tohohle kritéria to bude potřeba zřídka, protože rozhoduje hlavní session, ne agent.
+**Výjimka pro zadání subagentů:** text, který jde agentovi bez kontextu session, si potřebné části **opisuje celé**, protože odkaz do souboru, který nemá načtený, je mrtvý. Platí to jen na zadání, ne na tělo skillu. U tohohle kritéria to platí hlavně pro agenta, který zapracovává dávku a třídí vlastní objevy (*Zapracování* výš).
 
 ## Proč to vzniklo
 

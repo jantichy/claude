@@ -263,11 +263,11 @@ Když se nic rozbít nepodařilo, řekni to. **Nedomýšlej nálezy, aby výstup
 
 ## Fáze 5 – Průchod s uživatelem
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, odpovědi do `## Rozhodnuto k zapracování`, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Zapracovává tu hlavní session sama**, ne agenti v pomocném worktree: ověření opravy přehrává reprodukční postup proti instanci, kterou zvedla *Fáze 1*, a agent by potřeboval vlastní instanci na vlastním portu. **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 **Skoro všechny nálezy jsou sporné, a je to doménové čtení, ne výjimka** (`~/.claude/skills/findings.md`). Nález z útoku znamená změnu chování běžící aplikace a **kterou** cestou se díra zavře, je obvykle volba: guard versus validace vstupu, odmítnutí versus tolerance, opravit versus omezit rozsah. Mechanická větev tady proto není.
 
-**Jednoznačný nález ale nastat může** a pak se opraví rovnou bez ptaní: typicky když útok narazil na chybějící kus něčeho, co je **jinde v dokumentaci rozhodnuté** – guard, který rodina má u všech ostatních přechodů, nebo normalizace vstupu, kterou standard předepisuje jmenovitě. Nerozhoduje se tam *jak*, jen se to musí udělat.
+**Jednoznačný nález ale nastat může** a pak se opraví bez ptaní v zapracování prvního kola: typicky když útok narazil na chybějící kus něčeho, co je **jinde v dokumentaci rozhodnuté** – guard, který rodina má u všech ostatních přechodů, nebo normalizace vstupu, kterou standard předepisuje jmenovitě. Nerozhoduje se tam *jak*, jen se to musí udělat.
 
 Pro každý, jeden po druhém, od nejzávažnějšího:
 
@@ -277,13 +277,13 @@ Pro každý, jeden po druhém, od nejzávažnějšího:
 
 Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby jsou **konkrétní varianty, kterou cestou díru zavřít**, a za nimi dvě záchytné – ne trojice *Opravit / Odložit / Přeskočit*, u které je odpověď předem známá. Pojmenování obou záchytných voleb i tvar `header` drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*. Chování volby *Other* viz `~/.claude/standards/rules.md`, *Ptej se postupně, ne všechno najednou*.
 
-Při volbě **Opravit**:
+Věcnou variantu zapiš do `## Rozhodnuto k zapracování` a nic neopravuj. **V zapracování** pak u každého nálezu:
 
 1. Proveď změnu.
 2. **Napiš regresní test, který ten postup pokrývá.** U nálezu z útoku to není volitelné: reprodukční postup je hotové zadání testu a bez něj se chyba vrátí a nikdo se to nedozví. Tímhle krokem se z jednorázového průzkumu stává trvalé pokrytí.
 3. **Ověř** – průběžná kontrola podle kontraktu příkazů, a pak **přehraj reprodukční postup znovu** proti opravené instanci. Test může projít i nad chybou, kterou pokrývá špatně.
-4. Když kontrola selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
-5. Commit dle autocommit nastavení projektu.
+4. Když kontrola nebo přehrání selže, změnu vrať a nález zařaď do dalšího kola i s chybou a diffem; pokračuj dalším.
+5. Commit za každý nález zvlášť, dle autocommit nastavení projektu.
 
 Při volbě **Zapsat do todo** ulož nález do `docs/todo.md` **i s reprodukčním postupem** – bez něj je za měsíc nepoužitelný.
 

@@ -243,11 +243,11 @@ Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který F
 
 ## Fáze 5 – Průchod nálezy
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, odpovědi do `## Rozhodnuto k zapracování`, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 Podle `~/.claude/standards/rules.md` (*Ptej se postupně, ne všechno najednou*) projdi nálezy **jeden po druhém**, od nejzávažnějšího. **Jednotlivě jen KRITICKÉ a STŘEDNÍ** – nízké jdou nakonec jedním blokem (viz níž).
 
-**NÍZKÉ nálezy neprocházej po jednom.** Vypiš je naráz jako očíslovaný seznam a zeptej se jedním voláním: *Zapracovat všechny* / *Projít po jednom* / *Neopravovat žádný* / *Zapsat do todo*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Neprošly navíc ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany. (Bez ověření jdou dál i nálezy nad stropem – ty se ale procházejí jednotlivě, protože jsou závažné; jen se u nich řekne, že ověřené nejsou.)
+**NÍZKÉ nálezy neprocházej po jednom.** Na konci ptaní je schval hromadně podle doporučení z přehledu – otázku a co do ní nepatří drží `~/.claude/skills/findings.md`, *Průchod jde po kolech*. Dialog na každý z nich zvlášť stojí to nejdražší v celém běhu – tvoje rozhodnutí – a kupuje za něj zpřesnění. Neprošly navíc ověřením (Fáze 3), takže by se za ně platilo rozhodování bez protistrany. (Bez ověření jdou dál i nálezy nad stropem – ty se ale procházejí jednotlivě, protože jsou závažné; jen se u nich řekne, že ověřené nejsou.)
 
 U každého nejdřív vypiš:
 
@@ -259,7 +259,7 @@ Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Vo
 
 **Zpracování odpovědi:**
 
-- **Přijato** → zapracuj do dokumentu rovnou a zapiš rozhodnutí do `docs/decisions.md`.
+- **Přijato** → zapiš do `## Rozhodnuto k zapracování`; v zapracování ho zapracuj do dokumentu a zapiš rozhodnutí do `docs/decisions.md`.
 - **Zamítnuto** → zapiš do `docs/decisions.md` **taky**, i s důvodem. Zamítnutý nález je cenný záznam – brání tomu, aby ho příští oponentura našla znovu jako nový.
 - **Odloženo** → do `docs/todo.md`, ve tvaru podle `~/.claude/standards/rules.md`, *Odložené věci pojmenuj a zaparkuj*.
 

@@ -158,7 +158,7 @@ Zvlášť to platí pro bezpečnost: nálezy od toho specialisty jsou ze své po
 
 Na každý nález ze závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** typu `Explore` – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Shell potřebuje**: jeho zadání mu ukládá postavit si vlastní případ v `/tmp` a přehrát `cmd` z nálezu, takže na typ bez něj nepatří. **Text zadání drží [`agents.md`](agents.md)** vedle ostatních zadání pro agenty; načti si ho ve chvíli, kdy ověřovatele pouštíš.
 
-**Vyvrácené KRITICKÉ bez vyplněného `guard` neplatí** – ber je jako potvrzené a pusť je do Fáze 7. Je to jediná pojistka proti tomu, aby se z ověření stalo razítko obráceným směrem.
+**Vyvrácené KRITICKÉ bez vyplněného `guard` neplatí** – ber je jako potvrzené a pusť je do Fáze 6. Je to jediná pojistka proti tomu, aby se z ověření stalo razítko obráceným směrem.
 
 **Nález s vyplněným `evidence` jde ověřovateli taky, ale s jiným zadáním:** *„Spusť `cmd` a porovnej návratový kód a výstup s tím, co nález tvrdí. Nesedí-li to, `refuted: true`.“* Nediskutuje se, přehrává se.
 
@@ -278,33 +278,13 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Když nálezy nejsou, řekni to a skonči.
 
-**Přehledem odpověď nekonči.** Pokračuj **v téže odpovědi** rovnou Fází 6 a za ní první otázkou Fáze 7 – `~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*.
+**Přehledem odpověď nekonči.** Pokračuj **v téže odpovědi** rovnou první otázkou Fáze 6 – `~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*. Opravy bez ptaní se dělají až v zapracování prvního kola (Fáze 7). Nejsou-li žádné sporné nálezy, jdi rovnou do Fáze 7.
 
 ------
 
-## Fáze 6 – Opravy bez ptaní
+## Fáze 6 – Interaktivní průchod
 
-Mechanické **i jednoznačné** nálezy oprav **rovnou, bez ptaní** (`~/.claude/skills/findings.md`). Pak:
-
-1. **Ověř** – spusť průběžnou kontrolu podle kontraktu příkazů. Když selže, zastav se, ukaž chybu a diff a zeptej se, jak pokračovat.
-2. Vypiš, co jsi opravil – jeden řádek na nález:
-   ```
-   ## Opraveno rovnou (N mechanických)
-   - 🔵 [název] – soubor:řádek – [co konkrétně změněno] (podklad: [basis])
-   ```
-
-   Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
-3. Commit dle autocommit nastavení projektu – mechanické opravy **jedním commitem** dohromady.
-
-Když uživatel na některou opravu zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
-
-Nejsou-li žádné sporné nálezy, přeskoč Fázi 7 rovnou na shrnutí.
-
-------
-
-## Fáze 7 – Interaktivní průchod
-
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo. Pořadí otázek, hromadné schválení 🔵 nálezů, zápis odpovědí a konec průchodu drží `~/.claude/skills/findings.md`, *Průchod jde po kolech*. **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 
@@ -315,24 +295,31 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
    - `question`: název nálezu a v čem je, jednou větou
    - `options`: **první jsou konkrétní varianty opravy** – čím se ten rozpor zavře, u každé v `description` co se stane a čím to platí. Za nimi dvě záchytné volby, jejichž pojmenování a význam drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*; u `batch` nálezu smí jednu z nich nahradit **Rozbalit** (vypíšu všechny lokace a projdeme je jednotlivě).
 
-   **Vyjdou-li ti volby *Opravit / Odložit / Přeskočit*, nález mezi sporné nepatří** – patří mezi jednoznačné a máš ho opravit ve Fázi 6 (`~/.claude/skills/findings.md`, *Volby v otázce jsou varianty řešení*). Vrať ho tam a neptej se.
+   **Vyjdou-li ti volby *Opravit / Odložit / Přeskočit*, nález mezi sporné nepatří** – patří mezi jednoznačné a opraví se bez ptaní ve Fázi 7 (`~/.claude/skills/findings.md`, *Volby v otázce jsou varianty řešení*). Vrať ho tam a neptej se.
 
    Tool má strop **4 volby** na otázku. Je-li variant víc než dvě, vejdou se dvě nejsilnější a zbytek popiš v textu před otázkou.
 
    Chování volby **Other** viz `~/.claude/standards/rules.md`, *Ptej se postupně, ne všechno najednou*.
 
-3. Při volbě **Opravit**:
-   a. Proveď změnu. U `batch` nálezu hromadně – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
-   b. **Ověř – vždy, ne občas.** Průběžná kontrola podle kontraktu příkazů. U opravy, kterou hlásil pracovní specialista, **doplň test, který ten případ pokrývá** – jinak se chyba vrátí a nikdo se to nedozví.
+3. **Odpověď zapiš do sekce `## Rozhodnuto k zapracování` v `docs/todo.md` a nic neopravuj** – tvar drží `~/.claude/skills/findings.md`, *Zápis `## Rozhodnuto k zapracování`*. U nálezu od pracovního specialisty k položce připiš, že k opravě patří test.
 
-      **Dávkuj podle rizika, ne po jednom.** Opravy od **pracovních specialistů** ověřuj každou zvlášť: mění chování a hledat mezi pěti změnami tu, která rozbila test, stojí víc než těch pár sekund. Sérii oprav od **doménových specialistů**, kteří sahají jen na text a značky, ověř **jednou na konci série**. 
-      A **nepouštěj kontrolu ještě jednou před koncem odpovědi**: `Stop` hook ji spustí nad tímtéž stromem hned po něm, takže je to čekání navíc bez nové informace. U projektu, kde 3 kroky trvají 40 s, byla dosavadní podoba při 10 opravách 7 minut čistého čekání – a to uprostřed nejdelšího interaktivního průchodu, kdy je vytrvalost nejtenčí.
-   c. Když kontrola selže: **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat. Nepokračuj automaticky na další nález.
-   d. Po opravě rootu projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Vyřešené vyhoď z fronty a započítej do „vyřešeno automaticky“.
-   e. Commit dle autocommit nastavení projektu.
-   f. **Ohlas, co se udělalo, samostatným odstavcem** a další nález začni až za prázdným řádkem jeho titulním řádkem – `~/.claude/skills/findings.md`, *Jak nález vypadá*.
+4. Zápis do `## Review` v projektovém `CLAUDE.md` (volba Neopravovat) se dělá hned – **formát a mechanika jsou popsané níž v kapitole *Kapitola `## Review`*.** Píše do ní i `/attack`, takže formát je společný a definuje se na jednom místě.
 
-4. Zápis do `## Review` v projektovém `CLAUDE.md` (volba Neopravovat) – **formát a mechanika jsou popsané níž v kapitole *Kapitola `## Review`*.** Píše do ní i `/attack`, takže formát je společný a definuje se na jednom místě.
+Za poslední otázkou kola pokračuj v téže odpovědi Fází 7.
+
+------
+
+## Fáze 7 – Zapracování
+
+**Kdo zapracovává, po jakých dávkách, jak se výsledek přimerguje a co se děje s objevem nebo selháním, drží `~/.claude/skills/findings.md`, *Zapracování*** – tady je jen to, co je specifické pro review a jde do zadání agenta opsané. V prvním kole k rozhodnutým nálezům patří i mechanické a jednoznačné, které se opravují bez ptaní; uživatel, který s takovou opravou v souhrnu nesouhlasí, ji vrátí do dalšího kola mezi sporné.
+
+1. **`batch` nález hromadně** – find-replace, codemod, scripted edit přes Bash; **ne** desítky Edit volání po jednom.
+2. **Ověř – vždy, ne občas.** Průběžná kontrola podle kontraktu příkazů. U opravy, kterou hlásil pracovní specialista, **doplň test, který ten případ pokrývá** – jinak se chyba vrátí a nikdo se to nedozví.
+
+   **Dávkuj podle rizika, ne po jednom.** Opravy od **pracovních specialistů** ověřuj každou zvlášť: mění chování a hledat mezi pěti změnami tu, která rozbila test, stojí víc než těch pár sekund. Sérii oprav od **doménových specialistů**, kteří sahají jen na text a značky, ověř **jednou na konci série**. U projektu, kde 3 kroky trvají 40 s, by ověření každé z 10 oprav stálo 7 minut čistého čekání.
+3. **Po opravě rootu** projdi položky s `related_root === <title opraveného>` a ověř (Read/Grep), jestli už nejsou neaktuální. Vyřešené vyřaď a započítej do „vyřešeno automaticky“.
+4. **Nepotvrdí-li se nález při zapracování** (kód už vypadá jinak, než říká), nezapracuj ho a ohlas to v souhrnu – je to objev, ne oprava.
+5. Commit za každý nález zvlášť, dle autocommit nastavení projektu.
 
 ------
 
@@ -341,7 +328,9 @@ Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 ```
 ## Hotovo
 
-Rozsah: [změny na větvi / celý projekt] · Specialisté: [kteří] · Agentů celkem: [N]
+Rozsah: [změny na větvi / celý projekt] · Specialisté: [kteří] · Agentů celkem: [N] · Kol průchodu: [N]
+
+[Tabulka nález → co se změnilo → commit přes všechna kola]
 
 - ⚡ Opraveno rovnou (mechanické i jednoznačné): N
 - ✅ Opraveno po odsouhlasení: N

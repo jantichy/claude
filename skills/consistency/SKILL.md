@@ -251,14 +251,14 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Pokud nebyly nalezeny žádné problémy, řekni to a skonči.
 
-**Přehledem odpověď nekonči.** Pokračuj **v téže odpovědi** rovnou Fází 4 a za ní první otázkou Fáze 5 – `~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*. Věta „pouštím se do oprav bez ptaní“ místo oprav samotných je přesně ta chyba, kterou to pravidlo zakazuje.
+**Přehledem odpověď nekonči.** Pokračuj **v téže odpovědi** rovnou první otázkou Fáze 5 – `~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*. Opravy bez ptaní z Fáze 4 se dělají až v zapracování prvního kola, ať na ně uživatel před první otázkou nečeká.
 
 ## Fáze 4 – Opravy bez ptaní
 
-Mechanické **i jednoznačné** nálezy (viz Fáze 2) oprav **rovnou, bez ptaní**. Pak:
+Mechanické **i jednoznačné** nálezy (viz Fáze 2) oprav **bez ptaní** – ale až **v zapracování prvního kola**, za poslední otázkou Fáze 5, spolu s rozhodnutými nálezy (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). Kdo zapracovává a po jakých dávkách, drží tamtéž *Zapracování*; tady je jen to, co jde do zadání opsané:
 
-1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Context/Coding/quality.md`): celou **průběžnou kontrolu** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj kontrolu znovu těsně před koncem odpovědi – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, **zastav se**, ukaž chybu a diff a zeptej se, jak pokračovat.
-2. Vypiš, co jsi opravil – jeden řádek na nález:
+1. **Ověř, že jsi nic nerozbil.** Spouštěj **jen příkazy z `## Kontrakt příkazů` v projektovém `CLAUDE.md`** (*Kontrakt příkazů*, viz `~/Context/Coding/quality.md`): celou **průběžnou kontrolu** (`typecheck`, `lint`, `test`), `build` jen když je rychlý a oprava se ho týká. **Dávkuj podle rizika** stejně jako `/review` (viz jeho *Fáze 7*): opravu, která mění chování, ověř zvlášť, sérii úprav textu a značek jednou na konci. A nepouštěj kontrolu znovu těsně před koncem odpovědi – `Stop` hook ji nad tímtéž stromem spustí hned po něm. Chybí-li řádek, krok **přeskoč nahlas** a napiš, co se tím neověřilo; nevymýšlej příkazy, které jsi neověřil. Nemá-li projekt kontrakt vůbec (obsahový, znalostní), verifikace odpadá – ale u opravy, která sáhla do odkazů nebo cest, si aspoň ověř čtením, že cíl existuje. Když kontrola selže, nález se nezapracuje a jde do dalšího kola i s chybou a diffem (`~/.claude/skills/findings.md`, *Zapracování*).
+2. V souhrnu zapracování vypiš, co jsi opravil – jeden řádek na nález:
    ```
    ## Opraveno rovnou (N – X mechanických, Y jednoznačných)
    - 🔵 [název] – soubor:řádek – [co konkrétně změněno]
@@ -267,15 +267,15 @@ Mechanické **i jednoznačné** nálezy (viz Fáze 2) oprav **rovnou, bez ptaní
    Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 3. Commit dle autocommit nastavení projektu. Mechanické opravy commituj **jedním commitem** dohromady, ne po jedné; jednoznačné, které měnily strukturu, po tematických celcích, ať je v `git blame` vidět důvod.
 
-Pokud uživatel na některou z těchto oprav zareaguje nesouhlasem, vrať ji a zařaď mezi sporné.
+Pokud uživatel na některou z těchto oprav zareaguje nesouhlasem, vrať ji a zařaď do dalšího kola mezi sporné.
 
-Pokud nejsou žádné sporné nálezy, přeskoč Fázi 5 rovnou na závěrečné shrnutí.
+Pokud nejsou žádné sporné nálezy, ptaní odpadá a zapracuje se rovnou.
 
 ## Fáze 5 – Interaktivní průchod
 
-**Přeruš včas, nabyl-li kontext.** Průchod dlouhou frontou je nejčastější místo, kde session narazí na strop okna a vynutí si kompaktaci v nejhorší možný okamžik – uprostřed nevypořádaného nálezu. Práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li uživatel přerušení, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, pak zapracování bez uživatele (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
-**Postup je společný s `/review`** – volání `AskUserQuestion` (jeden nález = jedna otázka, **volby jsou konkrétní varianty opravy**, za nimi dvě záchytné, u `batch` navíc *Rozbalit*), zpracování odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Interaktivní průchod*. **Tvar výpisu nálezu i pojmenování záchytných voleb drží `~/.claude/skills/findings.md`** (*Jak nález vypadá*, *Dvě záchytné volby a co znamenají*), takže platí i tehdy, kdyby se `/review` rozešel. Řiď se jimi a lišíš se jen v těchhle bodech:
+**Postup je společný s `/review`** – volání `AskUserQuestion` (jeden nález = jedna otázka, **volby jsou konkrétní varianty opravy**, za nimi dvě záchytné, u `batch` navíc *Rozbalit*), zápis odpovědí i pravidla pro hromadné opravy jsou v `~/.claude/skills/review/SKILL.md`, *Interaktivní průchod* a *Zapracování*. **Tvar výpisu nálezu i pojmenování záchytných voleb drží `~/.claude/skills/findings.md`** (*Jak nález vypadá*, *Dvě záchytné volby a co znamenají*), takže platí i tehdy, kdyby se `/review` rozešel. Řiď se jimi a lišíš se jen v těchhle bodech:
 
 **Kam se zapisuje volba Neopravovat.** Do kapitoly `## Consistency` v projektovém `CLAUDE.md`, ne `## Review` – jsou to odpovědi na jinou otázku a nemají se míchat. Kapitolu založ, když chybí, a zapisuj na její konec:
 
@@ -293,7 +293,7 @@ se neuvádějí, dokud se nezmění kód, kterého se týkají.
 
 Datum vyrob příkazem `date +%F`, nepiš ho z kontextu (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**Verifikace po opravě.** Po každé odsouhlasené opravě platí bod 1 z *Fáze 4* – příkazy z *Kontraktu příkazů*, chybějící krok přeskočit nahlas, u projektu bez kontraktu ověřit aspoň čtením, že cíl opravovaného odkazu existuje.
+**Verifikace v zapracování.** U každé odsouhlasené opravy platí bod 1 z *Fáze 4* – příkazy z *Kontraktu příkazů*, chybějící krok přeskočit nahlas, u projektu bez kontraktu ověřit aspoň čtením, že cíl opravovaného odkazu existuje.
 
 **Co tu nehrozí.** `/consistency` nemění chování, takže odpadá pravidlo z `/review` o doplnění testu k opravě – nálezy, které by chování měnily, jsou tu vždy sporné a jdou přes uživatele.
 
