@@ -850,7 +850,8 @@ if [ -n "$SKIPPED" ]; then
   # píše model. Stav je uložený jako zelený, takže další volání skončí exit 0.
   { echo "Průběžná kontrola prošla, ale nekontrolovalo se: $SKIPPED (chybí v kontraktu v $CLAUDE_MD)."
     echo "Do shrnutí to napiš jako nezkontrolované. Netvrď, že prošlo všechno."
-    echo "Nepotřebuje-li projekt ten krok vůbec, zapiš ho do kontraktu s pomlčkou (třeba \`test: -\`) – pak se nehlásí."; } >&2
+    echo "Nepotřebuje-li projekt ten krok vůbec, zapiš ho do kontraktu s pomlčkou (třeba \`test: -\`) – pak se nehlásí."
+    echo "Test, který nic neověřuje, jen aby hláška zmizela, odpovědí není: díru schová, nezavře."; } >&2
   exit 2
 fi
 exit 0
