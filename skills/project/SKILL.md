@@ -119,7 +119,7 @@ V režimech `adopt` i `update` si nejdřív udělej inventuru a **vypiš ji uži
 
 Formát bloku metadat definuje `~/.claude/standards/structure.md`, sekce *`CLAUDE.md`* – **neopisuj ho z hlavy, přečti si ho.** Řeší se čtyři údaje: **slug**, **lidský název**, **popisek** a **URL projektu**.
 
-Slug je daný adresářem. Zbylé tři **navrhni sám** – u nového projektu z toho, co ti uživatel řekl, u existujícího z toho, co v repozitáři najdeš (`CLAUDE.md`, `README.md`, `package.json`, obsah). Předlož návrh k odsouhlasení, ať ho uživatel může jen potvrdit, nebo přepsat:
+Slug odvoď z názvu projektu: malými, bez diakritiky, spojovníky místo mezer (`structure.md`, *`CLAUDE.md`*). Nese ho repozitář, adresář ne – ten se řídí konvencí disku (`~/Projects/<Name>` s velkým počátečním písmenem), takže se od slugu smí lišit. Zbylé tři **navrhni sám** – u nového projektu z toho, co ti uživatel řekl, u existujícího z toho, co v repozitáři najdeš (`CLAUDE.md`, `README.md`, `package.json`, obsah). Předlož návrh k odsouhlasení, ať ho uživatel může jen potvrdit, nebo přepsat:
 
 ```
 - **Slug:** rezervace
@@ -162,7 +162,7 @@ Zeptej se (AskUserQuestion), 4 možnosti:
 - **Nic** – git se neřeší, přeskoč i kroky 4 a 8.
 - **Jen lokální** – `git init`, žádný remote.
 - **Remote (napojit na existující)** – `git init`, pak se v chatu zeptej na URL a spusť `git remote add origin <url>`.
-- **Remote (založit nový)** – `git init`, pak AskUserQuestion na hostitele (GitHub / GitLab). U GitHubu s dostupným `gh` (`which gh`) se zeptej na viditelnost a spusť `gh repo create <directory-name> --private|--public --source=. --remote=origin`. Jinak vypiš instrukci „Založ prázdné repo na <platforma>, pak mi dej URL“ a počkej.
+- **Remote (založit nový)** – `git init`, pak AskUserQuestion na hostitele (GitHub / GitLab). U GitHubu s dostupným `gh` (`which gh`) se zeptej na viditelnost a spusť `gh repo create <slug> --private|--public --source=. --remote=origin`. Jinak vypiš instrukci „Založ prázdné repo na <platforma>, pak mi dej URL“ a počkej.
 
 *`adopt`:* je-li git už inicializovaný, `git init` nespouštěj. **Ověř remote přes `git remote get-url origin`**, ne jen `git remote -v` – remote může existovat s prázdnou URL a `-v` to nepozná. Chybí-li nebo je-li rozbitý, nabídni doplnění.
 

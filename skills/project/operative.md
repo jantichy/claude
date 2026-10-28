@@ -29,14 +29,14 @@ Průvodce je schválně krátký: ptá se jen na popis, git, autocommit a domén
 
 ### Popis
 
-Navrhni název a popisek – **co se v adresáři řeší**, ne co v něm leží – a zeptej se v chatu. Blok metadat má jen slug (jméno adresáře) a strukturu; `Web` ani `Repozitář` operativní projekt nemá:
+Navrhni název a popisek – **co se v adresáři řeší**, ne co v něm leží – a zeptej se v chatu. Blok metadat má jen slug (`structure.md`, *`CLAUDE.md`*) a strukturu; `Web` ani `Repozitář` operativní projekt nemá:
 
 ```
 # Rekonstrukce bytu
 
 Smlouvy, rozpočty a korespondence k rekonstrukci bytu – co je objednané, zaplacené a reklamované.
 
-- **Slug:** `Rekonstrukce`
+- **Slug:** `rekonstrukce`
 - **Struktura:** CLAUDE.md
 ```
 

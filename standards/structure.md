@@ -76,7 +76,7 @@ Rezervační systém pro školení, konference a webináře – správa událost
 - **Repozitář:** https://github.com/jantichy/rezervace
 ```
 
-Nadpis je **lidský název** („Rezervační systém“, ne `rezervace`), odstavec pod ním **popisek** – jedna věta bez odkazů a formátování do 350 znaků (limit GitHub description). Slug je adresář a název repozitáře, Struktura režim umístění. Web a Repozitář se uvádějí, jen když existují – jinak řádek vynech, nepiš „zatím není“.
+Nadpis je **lidský název** („Rezervační systém“, ne `rezervace`), odstavec pod ním **popisek** – jedna věta bez odkazů a formátování do 350 znaků (limit GitHub description). Slug je jméno malými se spojovníky a nese ho repozitář, ne adresář; Struktura režim umístění. Web a Repozitář vynech, nejsou-li – nepiš „zatím není“.
 
 Blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj nadpis a první odstavec `README.md` (tam se popisek smí rozvést) a Repository details na GitHubu (`gh repo edit <owner>/<slug> -d "<description>" -h "<web>"`). **Změní-li se název, popisek nebo URL, propiš to hned na všechna tři místa.**
 
