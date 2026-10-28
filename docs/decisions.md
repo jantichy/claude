@@ -2483,3 +2483,5 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Zamítnuto – zastavit zapracování nad prahem kontextu (400k) a čekat na `/break`.** Zastavení by čekalo na uživatele, který u toho není. Automatickou kompaktaci kryje zápis `## Rozhodnuto k zapracování` a commit za každou položku.
 
 **Odloženo:** `/attack` přejde na zapracování v pomocném worktree, až bude hotové přidělování portů pro worktree (`docs/todo.md`).
+
+**Mez velikosti `standards/structure.md` se kvůli nové sekci nezvedla** (rozhodl uživatel; zamítnuto zvednout mez i nechat sekci jen ve `findings.md`). Místo uvolnilo zkrácení řádků o `## Přerušený běh` a o principech v `rules.md` beze ztráty obsahu a smazání věty „Projekt bez kódu ho nemá.“ u kontraktu příkazů – neplatila, kontrakt mají i projekty bez kódu, které kontrolují tvar dokumentace (eventoid, tenhle repozitář); kritérium „má ho každý projekt, ve kterém se něco spouští“ zůstává.

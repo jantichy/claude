@@ -280,6 +280,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-10-21** · `/end` · `f34f5d8` · session `171c741d-4de1-44eb-99e1-aaf0cf2d2364` · prompty 18/18 · 1 téma (1 rozhodnuto: dovětek o mezerách smazán i z rámečku v `standards/rules.md`, informace přešla do věty pod ním) · mimo rozsah: nesledované `stats-cache.json` a `state/` z doby před session ponechány · meze: 57 bloků myšlení (prázdné z formátu)
 - **2026-10-27** · `/end` · `1bc6118` · session `3967825e-7f12-4081-bc1c-50f488cb07e2` · prompty 9/9 · 1 téma (0 rozhodnuto, 1 bezpředmětné: ostrou zkoušku operativní varianty `/project` uživatel udělal v souběžných sessions) · mimo rozsah: žádné · meze: 32 bloků myšlení, 3 výstupy Read, 3 Edit, 1 Write (nečtou se z principu)
 - **2026-10-27** · `/end` · `e929c77` · session `40e0e8a1-3103-4c51-9407-ef1fb34d6ad1` · prompty 8/8 · 1 téma (0 rozhodnuto k zápisu, 1 bez zápisu: větev `feat/sgtm-bigquery` v Consentrate zůstává na pokyn uživatele jen lokálně) · mimo rozsah: žádné · meze: 150 bloků myšlení (ve formátu prázdné), 2 výstupy Write; odložené výstupy žádné, kompaktace žádná
+- **2026-10-28** · `/end` · `23fdbaf` · session `770fed69-4318-49ba-bfb8-2838e6eb820a` · prompty 25/25 · 0 témat (návrh průchodu po kolech prošel otázkou po otázce a celý se zapracoval v session; session stála v eventoidu, ale pracovala jen v konfigurační vrstvě, proto se průchod zapisuje sem) · mimo rozsah: žádné · meze: 75 bloků myšlení, výstupy 10× Edit, 5× Read, 2× Write
 
 ## Odvedená práce
 
