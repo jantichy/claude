@@ -849,7 +849,8 @@ if [ -n "$SKIPPED" ]; then
   # exit 2 ze stejného důvodu jako výš: díra v kontraktu musí do shrnutí, a to
   # píše model. Stav je uložený jako zelený, takže další volání skončí exit 0.
   { echo "Průběžná kontrola prošla, ale nekontrolovalo se: $SKIPPED (chybí v kontraktu v $CLAUDE_MD)."
-    echo "Do shrnutí to napiš jako nezkontrolované. Netvrď, že prošlo všechno."; } >&2
+    echo "Do shrnutí to napiš jako nezkontrolované. Netvrď, že prošlo všechno."
+    echo "Nepotřebuje-li projekt ten krok vůbec, zapiš ho do kontraktu s pomlčkou (třeba \`test: -\`) – pak se nehlásí."; } >&2
   exit 2
 fi
 exit 0
