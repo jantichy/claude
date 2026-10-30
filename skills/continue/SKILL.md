@@ -1,6 +1,6 @@
 ---
 name: continue
-description: Skill se použije, když uživatel zadá "/continue", nebo chce v nové session rovnou navázat na práci přerušenou skillem /break – "pokračuj, kde jsme skončili", "naváž na přerušenou práci", "jedeme dál od přerušení". Najde v docs/todo.md kteréhokoliv worktree repozitáře sekci Přerušený běh, přepne se do adresáře, kde práce leží, a hned provede, co zápis říká v odstavci Jak pokračovat – zavolá uvedený skill, nebo se pustí do první zbývající položky. Je jednoúčelový a rychlý: nic nesbírá, nenačítá standardy a nevolá síť. Na rozdíl od /next, který sestavuje a řadí nabídku ze všeho rozdělaného v projektu, tenhle skill nic nenabízí a navazuje jen na zápis z /break; na rozdíl od /break nic nezapisuje, jen čte.
+description: Skill se použije, když uživatel zadá "/continue", nebo chce v nové session rovnou navázat na práci přerušenou skillem /break – "pokračuj, kde jsme skončili", "naváž na přerušenou práci", "jedeme dál od přerušení". Najde sekci Přerušený běh v docs/todo.md kteréhokoliv worktree repozitáře, v operativním projektu v CLAUDE.md, přepne se do adresáře, kde práce leží, a hned provede, co zápis říká v odstavci Jak pokračovat – zavolá uvedený skill, nebo se pustí do první zbývající položky. Je jednoúčelový a rychlý: nic nesbírá, nenačítá standardy a nevolá síť. Na rozdíl od /next, který sestavuje a řadí nabídku ze všeho rozdělaného v projektu, tenhle skill nic nenabízí a navazuje jen na zápis z /break; na rozdíl od /break nic nezapisuje, jen čte.
 allowed-tools: [Read, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
