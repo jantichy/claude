@@ -8,7 +8,8 @@
 # git, ne model, takže deny ho nevidí; výjimka je zapsaná v ~/.claude/standards/bypass.md.
 #
 # Obsah tajemství hook nikdy nečte ani nepřepisuje – jen zakládá odkaz do main/,
-# respektive klonuje soubor, a existující soubor ve větvi nechá být.
+# respektive klonuje soubor, a existující soubor ve větvi nechá být. Jedinou
+# výjimkou je řádek PORT= v kopii .env.local, kterou právě založil (viz níž).
 
 # Delegace na lokální hook repozitáře – globální core.hooksPath ho jinak vypne.
 # Důvody i tvar cesty viz githooks/commit-msg.
@@ -43,6 +44,7 @@ else
 fi
 
 taken=""
+copied_local=""
 for f in "$main"/.env "$main"/.env.*; do
       [ -f "$f" ] || continue
       name="$(basename "$f")"
@@ -52,10 +54,36 @@ for f in "$main"/.env "$main"/.env.*; do
       fi
       case "$name" in
               # .env.local je soubor pro odchylky jedné instance (PORT), smí se rozejít.
-              .env.local) cp -c "$f" "$worktree/$name" 2>/dev/null || cp "$f" "$worktree/$name" ;;
+              .env.local) { cp -c "$f" "$worktree/$name" 2>/dev/null || cp "$f" "$worktree/$name"; } && copied_local=1 ;;
               *) ln -s "$source_dir/$name" "$worktree/$name" ;;
       esac && taken="$taken $name"
 done
+
+# Vlastní port větve. Dev server ve víc větvích naráz potřebuje každý svůj port
+# a model ho do .env.local zapsat nesmí (deny na .env.*). Větev dostane nejnižší
+# port nad PORT z main/, který nemá žádný jiný worktree – port smazané větve se
+# tak použije znovu. Sahá se jen na řádek PORT= v kopii, kterou hook právě založil;
+# bez něj projekt port v .env.local nevede a nic se nemění.
+port_of() {
+      sed -n "s/^PORT=[\"']\{0,1\}\([0-9][0-9]*\)[\"']\{0,1\}[[:space:]]*\$/\1/p" "$1" 2>/dev/null | tail -n 1
+}
+local_env="$worktree/.env.local"
+base_port="$( [ -n "$copied_local" ] && port_of "$local_env")"
+if [ -n "$base_port" ]; then
+      used="$(git worktree list --porcelain | sed -n 's/^worktree //p' | while read -r d; do
+              [ "$d" = "$worktree" ] || port_of "$d/.env.local"
+      done)"
+      port=$((base_port + 1))
+      while printf '%s\n' "$used" | grep -qx "$port"; do
+              port=$((port + 1))
+      done
+      # Přes dočasný soubor a `cat >`, ať zůstanou práva kopie (.env.local bývá 600).
+      tmp="$local_env.port.$$"
+      if sed "s/^PORT=.*/PORT=$port/" "$local_env" > "$tmp" && cat "$tmp" > "$local_env"; then
+              taken="$taken PORT=$port"
+      fi
+      rm -f "$tmp"
+fi
 
 # Symlink by `npm install` ve větvi přepsal balíčky v main/. Klon jen na APFS,
 # kde je instantní a nezabere místo; plná kopie by zakládání větve zdržela.

@@ -37,7 +37,7 @@ Tahle vrstva nic nehlídá, ale **sama je výjimkou z kontroly**: deny `Edit(//*
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
-| Model nechá založit symlink na `.env` gitem, přestože jemu samotnému to deny zakazuje | Nic – hook deny pravidla nevidí | **accepted**: hook jen zakládá odkaz do `main/`, respektive kopíruje `.env.local`, obsah nečte ani neposílá dál. Čtení obsahu ve větvi hlídá totéž, co v `main/` – nástroj Read deny `Read(//**/.env)`, shell `secret-guard.py` –, takže se riziko proti `main/` nemění. |
+| Model nechá založit symlink na `.env` gitem, přestože jemu samotnému to deny zakazuje | Nic – hook deny pravidla nevidí | **accepted**: hook jen zakládá odkaz do `main/`, respektive kopíruje `.env.local`, obsah nečte ani neposílá dál – jedinou výjimkou je řádek `PORT=`, který v té kopii a ve `.env.local` ostatních worktree přečte, aby větvi přidělil volný port, a nic z něj nevypisuje. Čtení obsahu ve větvi hlídá totéž, co v `main/` – nástroj Read deny `Read(//**/.env)`, shell `secret-guard.py` –, takže se riziko proti `main/` nemění. |
 | Hook běží nad každým repozitářem na stroji a mohl by zasáhnout mimo layout | Spustí se jen při nulovém předchozím HEAD (založení worktree) a jen tehdy, když je společný git adresář `<kontejner>/.bare` a vedle leží `main/`; existující soubor ve větvi nepřepíše | hlídáno, `tests/test_hooks.py` |
 | Vlastní `core.hooksPath` v projektu | Nic – hook se nespustí a větev vznikne bez `.env` | **accepted**: projekt s vlastními hooky si je volí sám; `worktree.md` říká, že chybějící převzetí se ohlásí, ne obchází ručně. |
 

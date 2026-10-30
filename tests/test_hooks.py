@@ -342,6 +342,75 @@ class WorktreeLocalState(unittest.TestCase):
             ".env.local není samostatná kopie",
         )
 
+    def test_branch_gets_its_own_port(self):
+        """Dev server ve dvou větvích naráz potřebuje dva porty; model je do
+        `.env.local` zapsat nesmí, takže je musí přidělit hook. Ostatní řádky
+        kopie i její práva zůstávají, `main/` se nemění."""
+        (self.main / ".env.local").write_text("API_KEY=k\nPORT=3000\n")
+        os.chmod(self.main / ".env.local", 0o600)
+        self.add_worktree("payments", "feat/payments")
+        self.add_worktree("invoices", "feat/invoices")
+        payments = self.container / "payments" / ".env.local"
+        self.assertEqual(payments.read_text(), "API_KEY=k\nPORT=3001\n")
+        self.assertEqual(
+            (self.container / "invoices" / ".env.local").read_text(),
+            "API_KEY=k\nPORT=3002\n",
+        )
+        self.assertEqual(payments.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(
+            (self.main / ".env.local").read_text(), "API_KEY=k\nPORT=3000\n"
+        )
+
+    def test_port_of_removed_branch_is_reused(self):
+        self.add_worktree("payments", "feat/payments")
+        self.add_worktree("invoices", "feat/invoices")
+        git(
+            self.container,
+            "worktree",
+            "remove",
+            "--force",
+            str(self.container / "payments"),
+        )
+        self.add_worktree("reports", "feat/reports")
+        self.assertEqual(
+            (self.container / "reports" / ".env.local").read_text(), "PORT=3001\n"
+        )
+
+    def test_env_local_without_port_is_copied_unchanged(self):
+        """Projekt, který port v `.env.local` nevede, nesmí řádek `PORT=` dostat."""
+        (self.main / ".env.local").write_text("DEBUG=1\n")
+        self.add_worktree("payments", "feat/payments")
+        self.assertEqual(
+            (self.container / "payments" / ".env.local").read_text(), "DEBUG=1\n"
+        )
+
+    def test_existing_env_local_in_branch_keeps_its_port(self):
+        """`.env.local`, který větev už má, hook nezaložil, a tak na něj nesahá."""
+        saved = self.tmp / "saved"
+        (self.main / ".env.local").rename(saved)
+        git(self.main, "checkout", "-q", "-b", "with-local")
+        (self.main / ".env.local").write_text("PORT=4000\n")
+        git(self.main, "add", "-f", ".env.local")
+        git(self.main, "commit", "-qm", "local")
+        git(self.main, "checkout", "-q", "main")
+        saved.rename(self.main / ".env.local")
+        v = git(
+            self.container,
+            "-c",
+            f"core.hooksPath={POST_CHECKOUT_HOOK.parent}",
+            "worktree",
+            "add",
+            "-q",
+            "-b",
+            "feat/local",
+            str(self.container / "local"),
+            "with-local",
+        )
+        self.assertEqual(v.returncode, 0, v.stderr)
+        self.assertEqual(
+            (self.container / "local" / ".env.local").read_text(), "PORT=4000\n"
+        )
+
     def test_tracked_file_is_not_overwritten(self):
         self.add_worktree("payments", "feat/payments")
         example = self.container / "payments" / ".env.example"
