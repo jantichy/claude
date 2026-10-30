@@ -166,7 +166,7 @@ Dřív takový nález ověření **vynechával** a přehrával si ho orchestrát
 
 **Deduplikuj ještě před ověřením**, ne až po něm. Specialisté se překrývají schválně, takže tentýž problém přijde třikrát jinými slovy – posílat na něj tři ověřovatele je trojnásobná cena za tutéž odpověď.
 
-**Strop na počet ověřovatelů: nejvýš 20 v jedné dávce a nejvýš 40 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů – `/review full` na starším projektu vrátí klidně dvě stě nálezů a to je dvě stě agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 7 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat.
+**Strop na počet ověřovatelů: nejvýš 20 v jedné dávce a nejvýš 40 na běh.** Druhá dávka jde až po doběhnutí první – do stropu souběhu harnessu se počítá každý agent, který ještě běží (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*). Bez stropu roste nejdražší část běhu lineárně s počtem nálezů – `/review full` na starším projektu vrátí klidně dvě stě nálezů a to je dvě stě agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 7 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat.
 
 **Nález s prázdným `locations` ověřovateli neposílej.** Nemá co číst, a podle pravidla o pochybnosti by ho zahodil, i kdyby platil. Zařaď ho rovnou mezi sporné s poznámkou „bez lokace, ověř ručně“.
 

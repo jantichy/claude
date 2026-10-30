@@ -191,7 +191,7 @@ Zadání specialistů, jejich povinná pole a text o cizím obsahu drží `~/.cl
 
 **Ověřuj jen nálezy, které půjdou klientovi.** Drobnost, jejíž ověření stojí víc než její oprava, se neověřuje – označí se jako neověřená.
 
-**Strop: nejvýš 20 ověřovatelů v jedné dávce a 40 na běh**, stejně jako u `/review`. Důvod je tu ale navíc jiný: tam jde o cenu, tady i o cizí web. Každý ověřovatel projde hlavní scénář znovu a odešle do klientových měřicích systémů další sadu zásahů. Desítky souběžných průchodů navíc vypadají z druhé strany jako zátěž, a ta patří do druhého pásma. Přes strop se ověřují **nejdřív ty nejzávažnější**. Co se nevejde, jde do registru se stavem **neověřeno** a spočítá se v závěru. Tiché vynechání ne: neověřený nález se od ověřeného musí poznat.
+**Strop: nejvýš 20 ověřovatelů v jedné dávce a 40 na běh**, stejně jako u `/review`, a druhá dávka jde až po doběhnutí první (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*). Důvod je tu ale navíc jiný: tam jde o cenu, tady i o cizí web. Každý ověřovatel projde hlavní scénář znovu a odešle do klientových měřicích systémů další sadu zásahů. Desítky souběžných průchodů navíc vypadají z druhé strany jako zátěž, a ta patří do druhého pásma. Přes strop se ověřují **nejdřív ty nejzávažnější**. Co se nevejde, jde do registru se stavem **neověřeno** a spočítá se v závěru. Tiché vynechání ne: neověřený nález se od ověřeného musí poznat.
 
 Na každý zbylý nález pusť ověřovatele s jediným úkolem: **vyvrátit ho** – projít tutéž cestu ve vlastní záložce a podívat se, jestli to tak opravdu je. Běží v čerstvém kontextu, který nevidí ani panel, ani tuhle konverzaci.
 
