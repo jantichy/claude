@@ -149,6 +149,8 @@ Tři vrstvy, každá měří něco jiného. Chybí-li nástroj pro některou, vy
 
    **Měř na skutečném kanálu:** pusť každý testovací prompt přes `claude -p --output-format stream-json` v čistém adresáři a sleduj, jestli mezi voláními nástrojů padne `Skill` se jménem toho skillu.
 
+   **Nástroje měřicího běhu vyjmenuj kladně: `--tools Skill,Read --strict-mcp-config`.** Měřený skill se spustí doopravdy, a zapisuje-li, zapíše do ostrých dat – při měření `/download` tak do skutečné fronty stahování přibyla vymyšlená adresa. Zákaz `--disallowedTools Bash Edit Write` to nezastaví: vyjmenované nástroje sice drží i proti `allowed-tools` skillu, jenže model sám hledá „jiný nástroj“, kterým zápis udělat, a zbytek sady i MCP servery mu zůstávají. Kladný výčet zápis zavře a vyvolání dál ukáže, protože volání `Skill` v něm je. Ověřeno 30. 10. 2026 dočasným skillem, který zapisuje přes Bash: bez omezení zapsal, s `--tools Skill,Read --strict-mcp-config` vyvolání proběhlo a soubor nevznikl.
+
    **Pozor: doslovný `/jméno` se takhle změřit nedá.** Napíše-li uživatel jméno skillu s lomítkem, harness mu **vloží tělo `SKILL.md` rovnou do zadání** a model žádný nástroj `Skill` nevolá – není proč. Detektor postavený na volání nástroje pak hlásí propad tam, kde skill zabral **spolehlivěji** než jindy, protože o jeho načtení nerozhodoval model. Je to táž vada jako u `run_eval.py` o odstavec výš: měřidlo, které neodliší vlastní selhání od nálezu.
 
    **Doslovné slash prompty proto měř znalostí obsahu těla** – zeptej se na něco, co je jen v `SKILL.md` a není v `description` (třeba na názvy fází), a ověř, že to model zná. Ověřeno 7. 9. 2026 na `/ptydepe`: detektor podle volání nástroje dal 20/24, skutečnost byla 24/24.
