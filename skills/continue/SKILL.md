@@ -28,14 +28,13 @@ Režimy ani argument nemá. Tvar zápisu, ze kterého čte, drží `/break` – 
 Pusť z adresáře session **přesně tenhle příkaz**, nic předtím a nic dalšího:
 
 ```bash
-git worktree list --porcelain | sed -n 's/^worktree //p' | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o -name todo.md -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; done
+{ git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | grep . || pwd; } | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o \( -name todo.md -o -name CLAUDE.md \) -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; done
 ```
 
-Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem. `/break` totiž zapisuje do `todo.md` projektu, ve kterém session stojí, a z kořene klienta by se na zápis v podprojektu jinak nedošlo. Skryté složky, `node_modules` a `vendor` přeskakuje, aby příkaz zůstal pod vteřinou. Vypíše sekci z každého `todo.md`, které ji má, uvozenou řádkem `==> <cesta>`.
+Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem. `/break` totiž zapisuje do `todo.md` projektu, ve kterém session stojí, a z kořene klienta by se na zápis v podprojektu jinak nedošlo. Skryté složky, `node_modules` a `vendor` přeskakuje, aby příkaz zůstal pod vteřinou. **Čte i `CLAUDE.md`**, protože operativní projekt (`- **Struktura:** CLAUDE.md`) `todo.md` nemá a `/break` v něm zapisuje do projektového `CLAUDE.md` (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*); takový projekt navíc často nemá git, a mimo git proto příkaz hledá od adresáře session. Vypíše sekci z každého souboru, který ji má, uvozenou řádkem `==> <cesta>`.
 
 | Výstup | Co dál |
 |---|---|
-| `fatal: not a git repository` | řekni to a skonči druhou závěrečnou větou |
 | prázdný | zápis nikde není; skonči druhou závěrečnou větou a doporuč `/next` |
 | jeden blok `### ` | pokračuj *Fází 2* |
 | víc bloků `### `, v jedné sekci i napříč worktree | zeptej se přes `AskUserQuestion`, kterým začít – nadpis bloku jako `label`, první věta *Jak pokračovat* jako `description`, v pořadí, ve kterém stojí; žádný neoznačuj za doporučený, pořadí nerozhodl nikdo |
@@ -44,8 +43,8 @@ Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedl
 
 ## Fáze 2 – Navázání
 
-1. **Přepni se do projektu, kde zápis leží** – adresář nad `docs/todo.md` z řádku `==>` (nebo nad `todo.md` u projektu bez `docs/`); u podprojektu je to jeho podsložka, ne kořen worktree. Stojí-li session jinde, přejdi tam a řekni to jednou větou; ve worktree layoutu je to jediná věc, kterou nová session jinak nemá odkud vědět.
-2. **Přečti blok celý** – výstup příkazu ho už obsahuje, `todo.md` znovu neotevírej. Mimo *Jak pokračovat* nese úvodní větu s tím, **co musí předcházet**: stojí-li tam krok, který se ještě neudělal (uživatel chystal změnu rozhodnutí), zeptej se, jestli proběhl, dřív než začneš – fronta nad neplatným stavem je práce nazmar.
+1. **Přepni se do projektu, kde zápis leží** – adresář nad `docs/todo.md` z řádku `==>` (nebo nad `todo.md` u projektu bez `docs/`, nad `CLAUDE.md` u operativního projektu); u podprojektu je to jeho podsložka, ne kořen worktree. Stojí-li session jinde, přejdi tam a řekni to jednou větou; ve worktree layoutu je to jediná věc, kterou nová session jinak nemá odkud vědět.
+2. **Přečti blok celý** – výstup příkazu ho už obsahuje, soubor se zápisem znovu neotevírej. Mimo *Jak pokračovat* nese úvodní větu s tím, **co musí předcházet**: stojí-li tam krok, který se ještě neudělal (uživatel chystal změnu rozhodnutí), zeptej se, jestli proběhl, dřív než začneš – fronta nad neplatným stavem je práce nazmar.
 3. **Shrň ve třech až pěti řádcích:** co se přerušilo a kdy, kde to leží, kolik položek zbývá, co předchází a čím se teď pokračuje.
 4. **Řekni závěrečnou větu a proveď první akci z *Jak pokračovat*:**
    - **Je to skill** (`/review branch`, `/implement`) → vyvolej ho přes nástroj `Skill` s argumentem ze zápisu. Blok mu neopakuj jako zadání – zbývající položky si přečte z `todo.md` sám, a říká-li zápis, že se s nimi má porovnat výsledek, stojí to v *Jak pokračovat*, ne v tvém shrnutí.
@@ -61,4 +60,4 @@ Od té chvíle běží běžná práce podle pravidel projektu, ne tenhle skill.
 - `Navazuju na: <nadpis bloku>, pokračuju <skillem / položkou „…“> v <pracovní adresář>.`
 - `Navázat není na co – brání tomu: <konkrétní seznam>.`
 
-Druhá věta jmenuje, co se prošlo a proč nic: *„sekce `## Přerušený běh` není v `todo.md` žádného worktree – pro přehled všeho rozdělaného pusť `/next`“*.
+Druhá věta jmenuje, co se prošlo a proč nic: *„sekce `## Přerušený běh` není v `todo.md` ani `CLAUDE.md` žádného worktree – pro přehled všeho rozdělaného pusť `/next`“*.

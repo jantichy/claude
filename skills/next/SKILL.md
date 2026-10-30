@@ -43,7 +43,8 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 
 Pusť `python3 ~/.claude/skills/next/collect.py` z adresáře session – bez `head` a bez dalšího zpracování v shellu, výstup je jeden řádek JSON a skript si jeho velikost hlídá sám. Nic dalšího nečti – **každé další volání stojí vteřiny čekání**, a výstup skriptu na nabídku stačí. Soubor otevři jen tehdy, když bez něj položku opravdu nejde popsat.
 
-- **Skript skončil chybou** (není to git repozitář, nejde určit hlavní větev) → řekni to a skonči závěrečným verdiktem.
+- **Skript skončil chybou** (není to git repozitář ani operativní projekt, nejde určit hlavní větev) → řekni to a skonči závěrečným verdiktem.
+- **`docs` je `CLAUDE.md`** → operativní projekt (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*): fronta jsou jen sekce `## Přerušený běh` a `## Otevřené body` jeho `CLAUDE.md`. Otevřené body zapsané u témat skript nesbírá – řekni to v poznámkách. Místo v cyklu neodvozuj, operativní projekt do cyklu nevstupuje; `layout` `none` znamená, že nemá git, takže práce ve větvích odpadá.
 - **`docs` je null a nic dalšího nenašel** → projekt frontu nevede; řekni to a skonči.
 - **`fetch` je `failed`** → pokračuj, ale v poznámkách řekni, že hlavní větev může být stará.
 

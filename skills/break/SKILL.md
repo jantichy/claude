@@ -48,7 +48,7 @@ Sepiš si, co do zápisu půjde – **nejdřív celé, teprve pak piš**. Zápis
 
 ## Fáze 2 – Zápis
 
-Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~/.claude/standards/structure.md`, *`todo.md`*). Projekt bez `docs/` ji má v kořenovém `todo.md`; neexistuje-li `todo.md` vůbec, založ ho podle režimu umístění projektu jen s touhle sekcí. **Pod sekcí musí stát nadpis `## `** – `/continue` i `/next` čtou sekci až k dalšímu `## `, takže stojí-li zbytek fronty pod blokem bez vlastního nadpisu, sekce ho celý pohltí a odrážky se začnou číst jako součást přerušení. Má-li `todo.md` položky bez nadpisu sekce, založ nad nimi `## Úkoly`. Před zápisem si načti `~/Context/Text/typography.md`; zápis je český text.
+Do `docs/todo.md`, sekce `## Přerušený běh` – **první sekce souboru** (`~/.claude/standards/structure.md`, *`todo.md`*). Projekt bez `docs/` ji má v kořenovém `todo.md`; neexistuje-li `todo.md` vůbec, založ ho podle režimu umístění projektu jen s touhle sekcí. **Pod sekcí musí stát nadpis `## `** – `/continue` i `/next` čtou sekci až k dalšímu `## `, takže stojí-li zbytek fronty pod blokem bez vlastního nadpisu, sekce ho celý pohltí a odrážky se začnou číst jako součást přerušení. Má-li `todo.md` položky bez nadpisu sekce, založ nad nimi `## Úkoly`. **Operativní projekt** (`- **Struktura:** CLAUDE.md` v bloku metadat) `todo.md` nemá a nezakládá – sekci zapiš do jeho projektového `CLAUDE.md` jako první `## ` pod blokem metadat (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*); `/continue` i `/next` ji tam najdou a všechno, co tenhle skill říká o `todo.md`, platí pro ten soubor. Před zápisem si načti `~/Context/Text/typography.md`; zápis je český text.
 
 **Každé přerušení je samostatný blok pod nadpisem `### <práce> – přerušeno <YYYY-MM-DD>`** (datum z `date +%F`), třeba `### /review branch – přerušeno 2026-10-08`. Nadpis je hranice bloku, podle které `/continue` pozná, kolik přerušení v sekci leží a kde které končí; bez něj se dva bloky pod sebou slijí v jeden.
 
@@ -79,7 +79,7 @@ Běhový soubor v `.claude/run/` **nech ležet** a poznač do něj klíčem `int
 
 1. **Přečti blok zpátky a spočítej v něm položky** – musí jich být tolik, kolik jich ve frontě zbývalo (`~/.claude/standards/rules.md`, *Co jsi vygeneroval, přečti zpátky, než to ohlásíš jako hotové*). Nesedí-li to, doplň chybějící; nehlas přerušení s polovinou fronty.
 2. **Pusť kontrakt příkazů projektu** (`## Kontrakt příkazů` v jeho `CLAUDE.md`). Projekty mívají kontroly tvaru dokumentace – holé odkazy, kotvy, formát výčtu – a zápis na ně narazí stejně jako každý jiný text. Selže-li na zápisu, oprav zápis, ne kontrolu. Selže-li na rozdělané práci, nic neopravuj – výsledek patří do *Jak pokračovat* jako stav, ve kterém se navazuje. Chybí-li kontrakt, řekni to a v závěru uveď, že se nic nespustilo.
-3. **Commitni jmenovitě `todo.md`** – rozdělanou práci ne, tu commitne `/end` ve *Fázi 4* – a pushni, má-li projekt autocommit (`~/.claude/skills/autocommit/autocommit.md`).
+3. **Commitni jmenovitě soubor se zápisem** (`todo.md`, v operativním projektu `CLAUDE.md`; bez gitu řekni, že se necommitovalo nic) – rozdělanou práci ne, tu commitne `/end` ve *Fázi 4* – a pushni, má-li projekt autocommit (`~/.claude/skills/autocommit/autocommit.md`).
 
 **Pokyn ke spěchu zkracuje odpověď, ne ověření.** Čtení zpátky a commit odcházejícího uživatele nezdrží a ověřený zápis je to, s čím odchází.
 
@@ -106,7 +106,7 @@ Skončí-li `/end` druhým zněním – zapsané to není celé –, vydej v zá
 
 - **Práce:** <skill a rozsah, nebo popis práce mimo skill>
 - **Leží:** větev `<branch>`, `<pracovní adresář>`
-- **Zapsáno:** `<cesta k todo.md>`, `## Přerušený běh` – <N> položek z <N> zbývajících · běhový soubor `<cesta>` ponechán, existuje-li
+- **Zapsáno:** `<cesta k todo.md nebo CLAUDE.md>`, `## Přerušený běh` – <N> položek z <N> zbývajících · běhový soubor `<cesta>` ponechán, existuje-li
 - **Před pokračováním:** <co musí předcházet, nebo „nic“>
 - **Ověřeno:** <příkazy kontraktu a návratové kódy, nebo „kontrakt chybí“> · commit `<hash>`
 - **Úklid session:** <verdikt `/end` a jeho commit>

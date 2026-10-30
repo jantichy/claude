@@ -142,9 +142,7 @@ def operative(path: Path):
 def operative_queue(text):
     """Z `CLAUDE.md` operativního projektu jen sekce, které jsou frontou, jako `todo.md`."""
     return "\n".join(
-        f"## {t}\n" + "\n".join(b)
-        for t, b in sections(text)
-        if t in OPERATIVE_SECTIONS
+        f"## {t}\n" + "\n".join(b) for t, b in sections(text) if t in OPERATIVE_SECTIONS
     )
 
 

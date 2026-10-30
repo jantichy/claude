@@ -727,6 +727,85 @@ class QueueCollection(unittest.TestCase):
         self.assertEqual(items[1]["text"], "krokem B.")
 
 
+OPERATIVE_CLAUDE = """# Firma
+
+- **Slug:** `firma`
+- **Struktura:** CLAUDE.md
+
+## Přerušený běh
+
+### Přejmenování smluv – přerušeno 2026-10-29
+
+**Jak pokračovat:** dokončit plán přesunu v adresáři `Smlouvy`. Pak zbytek.
+
+## Smlouvy
+
+- **Bod u tématu.** Patří k zápisu o tématu, ne do fronty.
+
+## Otevřené body
+
+- **Doplnit výpis za září.** Text.
+"""
+
+
+class OperativeProject(unittest.TestCase):
+    """`collect.py` nad operativním projektem, který má jen `CLAUDE.md` a často ani git.
+
+    `/break` v něm zapisuje přerušení do `CLAUDE.md`, protože `todo.md` tam
+    nevzniká; sběr, který četl jen `todo.md` a bez gitu skončil chybou, ho
+    neviděl. Hlídá se i opačný směr: soubory v adresáři patří uživateli, takže
+    jeho `plan.md` se nesmí vydávat za implementační plán, a adresář bez
+    deklarace režimu dál chybou končí.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name) / "firma"
+        (self.dir / "Smlouvy").mkdir(parents=True)
+        (self.dir / "plan.md").write_text("- [ ] Úkol uživatele\n")
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def collect(self, cwd):
+        return subprocess.run(
+            [sys.executable, str(COLLECT)],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            env=dict(os.environ, GIT_CEILING_DIRECTORIES=self.tmp.name),
+        )
+
+    def test_queue_read_from_claude_md_without_git(self):
+        (self.dir / "CLAUDE.md").write_text(OPERATIVE_CLAUDE)
+        run = self.collect(self.dir / "Smlouvy")
+        self.assertEqual(run.returncode, 0, run.stderr)
+        data = json.loads(run.stdout)
+        self.assertEqual((data["layout"], data["docs"]), ("none", "CLAUDE.md"))
+        self.assertEqual(
+            [
+                (s["section"], i["title"])
+                for s in data["todo"]
+                for p in s["parts"]
+                for i in p["items"]
+            ],
+            [
+                ("Přerušený běh", "Přejmenování smluv – přerušeno 2026-10-29"),
+                ("Otevřené body", "Doplnit výpis za září"),
+            ],
+        )
+        self.assertIsNone(data["plan"])
+        self.assertEqual(data["branches"], [])
+
+    def test_directory_without_declaration_is_not_a_project(self):
+        (self.dir / "CLAUDE.md").write_text(
+            OPERATIVE_CLAUDE.replace("CLAUDE.md\n", "docs/\n", 1)
+        )
+        run = self.collect(self.dir)
+        self.assertNotEqual(run.returncode, 0)
+        self.assertIn("není git repozitář", run.stderr)
+
+
 class LifecycleLayers(unittest.TestCase):
     """`lifecycle()` rozhoduje, jestli `/next` nabídne chybějící krok cyklu.
 
