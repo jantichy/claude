@@ -653,6 +653,54 @@ class QueueCollection(unittest.TestCase):
         )
         self.assertEqual(items[0][1]["text"], "položkou Import.")
 
+    def test_interrupted_run_in_branch_worktree_is_offered_once(self):
+        """Přerušený běh zapsaný ve worktree větve se najde, blok z hlavní větve jen jednou.
+
+        Ve worktree layoutu zapíše `/break` blok do `todo.md` větve, ve které
+        session stála; fronta se přitom čte z hlavní větve, takže blok zůstal
+        neviditelný a na přerušenou práci se došlo jen ručním grepem. Blok, který
+        leží v hlavní větvi a větev ho smazala nebo zdědila beze změny, se nesmí
+        nabídnout dvakrát.
+        """
+        block = (
+            "## Přerušený běh\n\n### {}\n\n**Jak pokračovat:** krokem {}. Pak dál.\n\n"
+        )
+        main_todo = self.box / "main" / "docs" / "todo.md"
+        main_todo.write_text(
+            TODO.replace(
+                "## Probíhá", block.format("Z hlavní větve", "A") + "## Probíhá"
+            )
+        )
+        self.git("-C", str(self.box / "main"), "commit", "-qam", "přerušeno v main")
+        # Větev dph hlavní blok nemá (smazala ho) a nese vlastní.
+        vat_todo = self.box / "dph" / "docs" / "todo.md"
+        vat_todo.write_text(
+            vat_todo.read_text().replace(
+                "## Probíhá", block.format("Kroky po sešití", "B") + "## Probíhá"
+            )
+        )
+        self.git("-C", str(self.box / "dph"), "commit", "-qam", "přerušeno ve větvi")
+        # Worktree, které hlavní blok zdědilo beze změny, ho nesmí zdvojit.
+        self.git(
+            *self.bare,
+            "worktree",
+            "add",
+            "-q",
+            "-b",
+            "kopie",
+            str(self.box / "kopie"),
+            "main",
+        )
+        [section] = [
+            s for s in self.collect()["todo"] if s["section"] == "Přerušený běh"
+        ]
+        items = [i for p in section["parts"] for i in p["items"]]
+        self.assertEqual(
+            [(i["title"], i.get("branch"), i.get("project")) for i in items],
+            [("Z hlavní větve", None, None), ("Kroky po sešití", "specify-dph", None)],
+        )
+        self.assertEqual(items[1]["text"], "krokem B.")
+
 
 class LifecycleLayers(unittest.TestCase):
     """`lifecycle()` rozhoduje, jestli `/next` nabídne chybějící krok cyklu.

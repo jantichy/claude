@@ -16,7 +16,8 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 - `docs` – `docs/`, `root`, nebo null, když projekt `todo.md` nemá
 - `current` – větev a necommitnuté soubory tam, kde session stojí (null v kořeni kontejneru)
 - `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`); sekce
-  `Přerušený běh` nese i bloky z `todo.md` podprojektů, u nich s cestou v `project`
+  `Přerušený běh` nese i bloky z `todo.md` ostatních worktree a podprojektů, u nich
+  s větví v `branch` a u podprojektu s cestou v `project`
 - `rounds` – bloky kol návrhu s poli a stavem ve větvi kola; `stitch_pending` – čeká sešití
 - `plan` – počet otevřených a hotových úkolů a první otevřené; `artifacts` – které návrhové dokumenty existují
 - `passes` – posledních pět záznamů `## Průchody životním cyklem`; `lifecycle` – kroky cyklu z `~/.claude/standards/rules.md` po vrstvách (`osa`, `kontroly`)
@@ -324,37 +325,60 @@ def todo_files(top: Path):
     return found
 
 
-def nested_interrupted(repo: Repo):
-    """Bloky `## Přerušený běh` z `todo.md` podprojektů ve všech worktree repozitáře.
+def nested_interrupted(repo: Repo, base, known):
+    """Bloky `## Přerušený běh` ze všech worktree repozitáře, které fronta hlavní větve nemá.
 
     `/break` zapisuje do `todo.md` projektu, ve kterém session stojí – u podprojektu
-    klientské složky tedy do podsložky. Ze zbytku jeho fronty se nebere nic, ta
-    patří k jinému projektu. Každá položka nese v `project` cestu podprojektu
-    vůči kořeni worktree; v jiném worktree se tentýž blok počítá jednou.
+    klientské složky tedy do podsložky, ve worktree layoutu do `todo.md` větve.
+    Hlavní větev ani jedno nevidí. Ze zbytku fronty podprojektu se nebere nic,
+    ta patří k jinému projektu. Položka nese v `branch` větev worktree a u
+    podprojektu v `project` jeho cestu vůči kořeni worktree; blok, který už je
+    ve frontě hlavní větve (`known`) nebo v jiném worktree, se počítá jednou.
     """
-    tops = [
-        Path(line[9:])
-        for line in (repo.git("worktree", "list", "--porcelain") or "").splitlines()
-        if line.startswith("worktree ")
-    ]
-    items, seen = [], set()
-    for top in tops:
+    own = Path(f"{base}todo.md")
+    items, seen = [], {(".", t) for t in known}
+    for top, branch in worktree_branches(repo).items():
         if not (top / ".git").exists():
             continue
-        for rel in todo_files(top):
-            project = rel.parent
+        for rel in [own, *todo_files(top)]:
+            if not (top / rel).is_file():
+                continue
+            project = Path(".") if rel == own else rel.parent
             if project.name == "docs":
                 project = project.parent
-            text = (top / rel).read_text(encoding="utf-8", errors="replace")
-            for title, body in sections(text):
-                if title != "Přerušený běh":
+            for item in interrupted_in(top / rel):
+                key = (str(project), item["title"])
+                if key in seen:
                     continue
-                for item in parse_interrupted(body):
-                    key = (str(project), item["title"])
-                    if key not in seen:
-                        seen.add(key)
-                        items.append({**item, "project": str(project)})
+                seen.add(key)
+                item["branch"] = branch
+                if rel != own:
+                    item["project"] = str(project)
+                items.append(item)
     return items
+
+
+def worktree_branches(repo: Repo):
+    """Kořen každého worktree a jeho větev (None u odpojené hlavy)."""
+    out, top = {}, None
+    for line in (repo.git("worktree", "list", "--porcelain") or "").splitlines():
+        if line.startswith("worktree "):
+            top = Path(line[9:])
+            out[top] = None
+        elif line.startswith("branch refs/heads/") and top:
+            out[top] = line[18:]
+    return out
+
+
+def interrupted_in(path: Path):
+    """Položky sekce `## Přerušený běh` jednoho `todo.md`."""
+    text = path.read_text(encoding="utf-8", errors="replace")
+    return [
+        item
+        for title, body in sections(text)
+        if title == "Přerušený běh"
+        for item in parse_interrupted(body)
+    ]
 
 
 def add_interrupted(todo, items):
@@ -658,7 +682,14 @@ def main() -> int:
     prefix = docs_prefix(read)
     base = prefix or ""
     todo, rounds, stitched = parse_todo(read(f"{base}todo.md") or "")
-    add_interrupted(todo, nested_interrupted(repo))
+    known = [
+        i["title"]
+        for s in todo
+        if s["section"] == "Přerušený běh"
+        for p in s["parts"]
+        for i in p["items"]
+    ]
+    add_interrupted(todo, nested_interrupted(repo, base, known))
     passes, rounds_open = parse_done(read(f"{base}done.md"))
     plan = parse_plan(read(f"{base}plan.md"))
     current = current_info(repo)
