@@ -249,7 +249,14 @@ def subagents(path):
     out = []
     pattern = os.path.join(os.path.dirname(path), sid, "subagents", "agent-*.jsonl")
     for sp in glob.glob(pattern):
-        sr, _ = load(sp)
+        # Transcript subagenta bývá symlink do jiného projektu a po jeho
+        # přejmenování vede do prázdna. Přeskočit, ale nahlas: chybějící
+        # agent podhodnotí cenu běhu.
+        try:
+            sr, _ = load(sp)
+        except OSError:
+            print(f"nečitelný transcript subagenta, přeskočen: {sp}", file=sys.stderr)
+            continue
         ts = next((r["timestamp"] for r in sr if r.get("timestamp")), None)
         if ts:
             out.append((ts, sr))

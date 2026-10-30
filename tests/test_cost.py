@@ -30,7 +30,9 @@ Spouští se: python3 -m unittest discover -s tests -q
 Jen stdlib.
 """
 
+import contextlib
 import importlib.util
+import io
 import json
 import os
 import tempfile
@@ -211,6 +213,28 @@ class Subagenti(Fixture):
         runs, _ = self.scan()
         self.assertEqual(runs[0]["na"], 0)
         self.assertAlmostEqual(runs[0]["tot"], 110 * 75 / 1e6, places=9)
+
+    def test_rozbity_odkaz_na_agenta_nezastavi_mereni(self):
+        """Transcript subagenta bývá symlink do jiného projektu.
+
+        Přejmenuje-li se ten projekt, odkaz vede do prázdna. Měřidlo kvůli
+        jednomu takovému agentovi dřív spadlo celé; teď ho přeskočí a řekne
+        to, protože chybějící agent znamená podhodnocenou cenu běhu.
+        """
+        self.session(
+            [
+                user("<command-name>/demo</command-name>"),
+                call("pouštím agenta", 100, "2026-09-27T10:00:00Z"),
+                call("## Hotovo", 10, "2026-09-27T10:05:00Z"),
+            ]
+        )
+        self.subagent("sess", "2026-09-27T10:02:00Z", 400)
+        broken = self.root / "proj" / "sess" / "subagents" / "agent-2.jsonl"
+        broken.symlink_to(self.root / "neexistuje" / "agent-2.jsonl")
+        with contextlib.redirect_stderr(io.StringIO()) as err:
+            runs, _ = self.scan()
+        self.assertEqual(runs[0]["na"], 1)
+        self.assertIn("agent-2.jsonl", err.getvalue())
 
 
 class Marker(Fixture):
