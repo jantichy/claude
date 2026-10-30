@@ -175,7 +175,9 @@ Do žádného souboru nezapisuj.
 
 **Deduplikuj ještě před ověřením**, ne až po něm: tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď. **Dva nálezy jsou tentýž**, když míří na totéž místo dokumentu a navrhují změnit touž věc – formulace i závažnost se lišit můžou. Sloučený nález si ponech v obou zněních a poznamenej, které hlediska ho našly; Fáze 4 s tím dál pracuje jako se signálem závažnosti.
 
-Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** typu `reader` – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. Jeho doklad je citace z dokumentu, ne výstup příkazu, takže shell nepotřebuje a nemá ho mít. **Nejsilnější model, `xhigh`**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko.
+Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. Jeho doklad je citace, ne výstup příkazu, takže shell nepotřebuje a nemá ho mít.
+
+**Typ ověřovatele podle toho, na čem nález stojí:** přišel-li z hlediska s ✔ ve sloupci *Web*, nebo opírá-li se o vnější zdroj (URL, dokumentace dodavatele, ceník, předpis), jede na `researcher`; jinak na `reader`. Nález o cizí platformě by `reader` bez webu vrátil jako NEOVĚŘITELNÉ, a ověření by tak mlčky odpadlo právě u tvrzení, která autor dokumentu sám ověřit nejde. Oba typy nemají shell a nezapisují, takže záruka, že ověřovatel do dokumentu nesáhne, platí u obou. **Nejsilnější model, `xhigh`**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko.
 
 **Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti hledisek vrátí klidně 30 nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat. (Strop je nižší než v `/review`, protože tam ho odlehčuje deterministická vrstva, která část nálezů odčerpá bez ověřování; tady žádná není.)
 
@@ -192,6 +194,7 @@ NÁLEZ K OVĚŘENÍ: <kde, co, proč to vadí, návrh, závažnost>
 
 Tvůj úkol není nález potvrdit, ale pokusit se ho vyvrátit. Ptej se:
 - Stojí na tom, co v dokumentu doopravdy je? Ověř citaci.
+- Opírá-li se o vnější zdroj, říká ten zdroj opravdu, co nález tvrdí? Otevři ho, nehádej.
 - Neřeší to dokument někde jinde, kde se oponent nedíval?
 - Neplyne z kontextu projektu, že to tak je schválně?
 - Je důsledek doložený, nebo je to obecná obava? („Nebude to škálovat“ je nic.)
