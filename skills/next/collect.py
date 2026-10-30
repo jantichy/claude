@@ -194,7 +194,7 @@ def parse_items(lines, checkbox_only=False):
         entry = {"title": title, "text": short(full), "done": i["done"]}
         # Závislost bývá na konci dlouhého popisu, který `short` ořízne – vytáhne se zvlášť.
         waits = WAITS.search(full)
-        if waits:
+        if waits and not NO_WAIT.match(waits.group(1).strip("* ")):
             entry["waits"] = short(waits.group(1))
         # Položka odložená k datu se do té doby nemá nabízet. Datum musí stát hned
         # za názvem – uvnitř popisu bývá datum ze zdůvodnění, které odklad neznamená.
@@ -206,7 +206,14 @@ def parse_items(lines, checkbox_only=False):
     return out
 
 
-WAITS = re.compile(r"\b[Čč]ek(?:á|ají)\s+na\b[:\s]*\**\s*([^.;\n]{3,160})")
+# Závislost je vlastní zápis položky: velké „Čeká na“, holé nebo tučné. Malé
+# „čeká na“ je vedlejší věta a kurzíva či uvozovky citace (`měl *Čeká na: nic*`) –
+# obojí popisuje něco jiného než tuhle položku.
+WAITS = re.compile(
+    r"(?<!\w)(?<![^*]\*)(?<!„)Ček(?:á|ají)\s+na\b[:\s]*\**\s*([^.;\n]{1,160})"
+)
+# Hodnota, která říká, že položka na nic nečeká.
+NO_WAIT = re.compile(r"(?:nic|–|-)\W*$")
 NOT_BEFORE = re.compile(r"[–—:-]?\s*od\s+\**(\d{4}-\d{2}-\d{2})")
 CHECKBOX = re.compile(r"\s*[-*] \[( |x|X)\]")
 

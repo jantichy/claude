@@ -221,6 +221,40 @@ class PlanAndQueueParsing(unittest.TestCase):
         [item] = self.c.parse_items([long_item])
         self.assertEqual(item["waits"], "odpověď podpory")
 
+    def test_dependency_as_bold_field(self):
+        [item] = self.c.parse_items(
+            ["- [ ] **Úkol.** Popis. **Čeká na:** kolo o fakturaci"]
+        )
+        self.assertEqual(item["waits"], "kolo o fakturaci")
+
+    def test_quoted_dependency_inside_sentence_is_not_dependency(self):
+        """Citace *Čeká na: nic* z popisu incidentu není závislost položky.
+
+        Skript ji dřív vytáhl a uřízl na tečce, takže hotová položka vypadala
+        jako čekající a model ji odsunul mezi položky, které na něco čekají.
+        """
+        [item] = self.c.parse_items(
+            [
+                "- [ ] **Kolo mimo verzi.** Blok v `todo.md` měl *Čeká na: nic*, "
+                "ačkoli zadání tu funkci 1. 10. 2026 vyřadilo."
+            ]
+        )
+        self.assertNotIn("waits", item)
+
+    def test_lowercase_clause_is_not_dependency(self):
+        [item] = self.c.parse_items(
+            [
+                "- [ ] **Dorovnat.** Splnit to nešlo, protože `/consolidate` čeká na pilotní běh."
+            ]
+        )
+        self.assertNotIn("waits", item)
+
+    def test_nothing_is_not_dependency(self):
+        for value in ("nic", "–", "**nic**"):
+            with self.subTest(value=value):
+                [item] = self.c.parse_items([f"- [ ] **Úkol.** Čeká na: {value}"])
+                self.assertNotIn("waits", item)
+
     def test_future_date_after_title_parks_item(self):
         """Odložená položka se do fronty nesmí dostat dřív, než datum nastane.
 
