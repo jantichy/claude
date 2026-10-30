@@ -446,6 +446,22 @@ class HookDeployment(unittest.TestCase):
         )
 
 
+def main_worktree(checkout):
+    """Hlavní pracovní strom repozitáře, do kterého `checkout` patří.
+
+    Ve worktree agenta (`.claude/worktrees/<name>`) je to kořen hlavního stromu,
+    ne checkout sám – globální `core.hooksPath` míří jen na jeden z nich.
+    """
+    common = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=checkout,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    return Path(common).resolve().parent
+
+
 class GlobalHookDeployment(unittest.TestCase):
     """Že hook funguje, když ho zavoláš, neznamená, že ho někdo volá.
 
@@ -472,13 +488,57 @@ class GlobalHookDeployment(unittest.TestCase):
             check=False,
         )
         path = Path(v.stdout.strip()).expanduser() if v.stdout.strip() else None
+        expected = main_worktree(ROOT) / "githooks"
         self.assertEqual(
             path,
-            COMMIT_MSG_HOOK.parent,
+            expected,
             "git hook není nasazený – `git log --first-parent` se zaplní zprávami "
             "'Merge branch ...'. Naprav příkazem:\n"
-            f"    git config --global core.hooksPath {COMMIT_MSG_HOOK.parent}",
+            f"    git config --global core.hooksPath {expected}",
         )
+
+    def test_main_worktree_resolves_worktree_to_main_tree(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp).resolve()
+            main, other = tmp / "main", tmp / "other"
+            for repo in (main, other):
+                subprocess.run(["git", "init", "-q", str(repo)], check=True)
+                subprocess.run(
+                    [
+                        "git",
+                        "-C",
+                        str(repo),
+                        "-c",
+                        "user.name=t",
+                        "-c",
+                        "user.email=t@t",
+                        "-c",
+                        "core.hooksPath=/dev/null",
+                        "commit",
+                        "-q",
+                        "--allow-empty",
+                        "-m",
+                        "init",
+                    ],
+                    check=True,
+                )
+            wt = main / ".claude" / "worktrees" / "agent"
+            subprocess.run(
+                ["git", "-C", str(main), "worktree", "add", "-q", "--detach", str(wt)],
+                check=True,
+            )
+            self.assertEqual(main_worktree(main), main)
+            self.assertEqual(
+                main_worktree(wt),
+                main,
+                "worktree agenta se má porovnávat s hlavním stromem, ne s vlastním checkoutem",
+            )
+            self.assertEqual(
+                main_worktree(other),
+                other,
+                "cizí repozitář se nesmí vydávat za hlavní strom – test by pak "
+                "propustil `core.hooksPath` mířící jinam",
+            )
 
 
 class VerifyHookIsRegistered(unittest.TestCase):
