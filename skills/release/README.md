@@ -39,9 +39,12 @@ Nasadí hotovou práci do produkce: projde kontroly předtím, ošetří migrace
 ```
 /release              # nasadí hlavní větev
 /release v1.4.0       # nasadí konkrétní tag
+/release hotfix/login # nasadí opravu vyrostlou přímo z produkce
 ```
 
 Skill projde kontroly, ukáže přehled, počká na potvrzení, nasadí, ověří a otevře sledovací okno.
+
+Oprava smí jít do produkce i mimo hlavní větev: hotfix založený na produkční větvi se nasadí stejnými kontrolami a hned potom se produkce sloučí zpátky do hlavní větve. Produkce tak hlavní větev nikdy nepředběhne o víc než o právě nasazenou opravu – a kdyby se sloučení zapomnělo, příští `/release` se zastaví a řekne to.
 
 ## Ukázka výstupu
 

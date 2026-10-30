@@ -72,12 +72,19 @@ Skill ale bere **volitelný argument**: `/release <větev>`, `/release <tag>` ne
 | Zjištění | Co s tím |
 |---|---|
 | Commit není pushnutý | **Zastav se.** Platforma o něm neví a nemá co nasadit. |
+| Nasazovací větev předbíhá `main` (`git log --oneline main..production` není prázdný) | Předchozí hotfix se nevrátil do `main`. **Zastav se** a nabídni nejdřív sloučení `production` do `main` – jinak by další fast-forward z `main` nešel, nebo by hotfix z produkce tiše zmizel. |
 | Cíl není potomkem nasazovací větve | Fast-forward nejde. Řekni to a nabídni volby; nikdy neřeš silou (`--force`) bez výslovného pokynu. |
 | Cíl je **starší** než to, co je v produkci | **Tohle je návrat, ne vydání.** Řekni to nahlas – a hlavně viz *Migrace* níž, protože data se s kódem nevrátí. |
-| Cíl není na `main` (feature větev) | Nasazuje se něco, co neprošlo integrací. Legitimní u hotfixu, jinak varovný signál – zeptej se, jestli to je záměr. |
+| Cíl není na `main` (feature větev) | Nasazuje se něco, co neprošlo integrací. Legitimní u hotfixu (*Hotfix* níž), jinak varovný signál – zeptej se, jestli to je záměr. |
 | Cíl je zadaný ručně (větev, tag, hash) | **Zeptej se, jestli uživatel ten konkrétní bod historie viděl na preview.** U výchozího `main` se neptej: preview vzniklo mergem a testování proběhlo průběžně, o to se `/release` nestará. |
 
 **Kontroly běží nad nasazovaným commitem, ne nad pracovním stromem.** Zadal-li uživatel jiný cíl než `main`, přepni se na něj (nejlépe do samostatného worktree) a průběžnou kontrolu, build i audit spusť tam. Kontrolovat něco jiného, než se nasazuje, je horší než nekontrolovat nic – dává to falešnou jistotu.
+
+### Hotfix
+
+**Oprava smí jít do produkce mimo `main`** – fast-forward z `main` je většinový postup, ne jediný. Hotfix je commit vyrostlý přímo z `production` (větev založená na `production`, ne na `main`), nasazuje se jako `/release <hotfix větev nebo hash>` a prochází všemi fázemi jako každé jiné vydání.
+
+**Produkce nikdy nepředběhne `main` o víc než nasazený hotfix.** Proto se hned po nasazení `production` sloučí zpátky do `main` (*Fáze 4*). Bez toho by další vydání z `main` neprošlo fast-forwardem, nebo by hotfix z produkce tiše zmizel. Kontrola v tabulce výš to hlídá i zpětně: nevrácený hotfix zastaví příští `/release`.
 
 ------
 
@@ -173,11 +180,12 @@ Bez výslovné odpovědi se nenasazuje. Ticho není souhlas.
 
 **Platforma s auto-deployem** (Vercel, Netlify, Cloudflare Pages) – nasazuje se pushnutím, ne příkazem:
 
-1. **Povýšení do nasazovací větve** – fast-forward merge `main` → `production`, ať je produkce vždy přesně nějakým bodem historie `main`, ne samostatnou linií. **Tenhle krok je samotné nasazení**, takže se dělá vědomě a jako poslední, ne mimochodem uprostřed jiné práce.
+1. **Povýšení do nasazovací větve** – fast-forward `production` na nasazovaný cíl: výchozí `main`, u hotfixu commit vyrostlý z `production` (*Hotfix*). Produkce tak nikdy není samostatnou linií – předbíhá `main` nanejvýš o právě nasazený hotfix. **Tenhle krok je samotné nasazení**, takže se dělá vědomě a jako poslední, ne mimochodem uprostřed jiné práce.
 
    **Preview se tu nestaví ani neověřuje.** Vzniklo samo mergem do `main` a otestované bylo předtím – to je celý smysl oddělené nasazovací větve. Opakovat ho tady by znamenalo čekat na něco, co už proběhlo.
 2. **Sleduj build na platformě** a jeho log. Build padá jinak než lokální – kvůli proměnným, verzi Node a cache. **Tohle je první místo, kde se nový kód potká s produkčním prostředím**, takže se to nepřeskakuje ani u změny, která na preview běžela bez problému.
 3. **Tag.** Označ vydání tagem, ať je co vrátit a proti čemu příště diffovat.
+4. **U hotfixu vrať `production` do `main`** – sloučením (`git merge production` na `main`) a pushem, hned jak build doběhl. Konflikt s prací, která mezitím přibyla na `main`, řeš tady a hned; odložený se příště ukáže jako zablokovaný `/release`.
 
 **Jiné prostředí** (VPS, kontejner, klasický hosting) – použij příkaz z `## Nasazení`; chybí-li, vyžádej si ho a zapiš. Nikdy nevymýšlej deploy příkaz sám: špatně odhadnutý cíl přepíše cizí web.
 
