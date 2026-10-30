@@ -263,7 +263,7 @@ Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Vo
 **Zpracování odpovědi:**
 
 - **Přijato** → zapiš do `## Rozhodnuto k zapracování`; v zapracování ho zapracuj do dokumentu a zapiš rozhodnutí do `docs/decisions.md`.
-- **Zamítnuto** → zapiš do `docs/decisions.md` **taky**, i s důvodem. Zamítnutý nález je cenný záznam – brání tomu, aby ho příští oponentura našla znovu jako nový.
+- **Zamítnuto** → zapiš do `docs/decisions.md` i s důvodem, a dotýká-li se důvod návrhu, i do dokumentu, kterého se týká. **Do `## Review` v `CLAUDE.md` ne** – zamítnutý oponentský nález je produktové rozhodnutí, ne umlčená vada kódu (`~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*). Zamítnutý nález je cenný záznam – brání tomu, aby ho příští oponentura našla znovu jako nový.
 - **Odloženo** → do `docs/todo.md`, ve tvaru podle `~/.claude/standards/rules.md`, *Odložené věci pojmenuj a zaparkuj*.
 
 **Odbočky.** Uživatel u nálezu často rozvine úvahu, která zasáhne jinam. Tu úvahu zapiš celou – bývá cennější než původní nález. Pak se vrať k seznamu a pokračuj; sám si hlídej, které nálezy zbývají.

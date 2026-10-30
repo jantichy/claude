@@ -102,7 +102,7 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 | Volba | Co se stane | Stav |
 |---|---|---|
-| **Neopravovat** | zeptej se na důvod a zapiš ho do kapitoly `## Review` (u `/consistency` `## Consistency`) v projektovém `CLAUDE.md`; umlčení vyprší změnou kódu, kterého se týká | zamítnuto |
+| **Neopravovat** | zeptej se na důvod a zapiš ho do kapitoly `## Review` (u `/consistency` `## Consistency`) v projektovém `CLAUDE.md`; umlčení vyprší změnou kódu, kterého se týká. **U nálezu, který je rozhodnutím o návrhu, ne vadou kódu** (`/oponent`), jde důvod do `docs/decisions.md` a do dokumentace, které se týká – ne do `## Review`, protože to je filtr nálezů nad kódem a produktové rozhodnutí v něm nikdo nehledá | zamítnuto |
 | **Zapsat do todo** | zapiš do `docs/todo.md` i s úvahou a doložením, ať se na to dá navázat bez téhle session | odloženo |
 
 **Popisek říká, co se stane** (`~/Context/Text/copy.md`, *Popisky akcí*). Proto ne *Přeskočit* – to se čte jako „teď ne“, přestože to znamená natrvalo a se zápisem –, a ne *Nechat být* ani *Vrátit se k tomu později*, které mlčí o tom, že se nález někam zapíše. Sjednoceno 28. 9. 2026; do té doby měly kontrolní skilly tři různé slovníky pro tytéž dva konce.
