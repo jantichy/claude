@@ -146,9 +146,10 @@ Odjede **jedno kolo** návrhu: vezme blok ze sekce *Kola návrhu* v `docs/todo.m
 
 ### 1. Příprava kola
 
-1. **Větev** podle *Fáze 0*, bod 6. Jméno větve se řídí zvykem projektu (`~/.claude/standards/worktree.md`), jméno tematického dokumentu je jednoslovné anglicky (`~/.claude/standards/rules.md`, *Naming*), nadpis bloku česky. Existuje-li tematický dokument z dřívější várky, **rozšiř ho**. Nastav v bloku *Stav* na `rozhoduje se` a commitni.
-2. **Načti blok kola**, `requirements.md`, dokumenty z řádků *Dokument* a *Sahá na*, `decisions.md` a `rules.md`. Kolo, na které tohle čeká, musí mít záznam v `docs/done.md` **za posledním řádkem *Návrh uzavřen*** – starší záznam téhož jména patří dřívější várce. Nemá-li ho, řekni to a zeptej se, jestli pokračovat.
-3. **Zadání kola ověř, ne převezmi.** Blok je zadání, ne odpověď. Ukáže-li se při prvním pohledu do podkladů, že otázky v něm jsou neúplné nebo špatně položené, řekni to a nech nové zadání potvrdit – kolo smí své zadání přepsat.
+1. **Než založíš větev, ověř, že téma kola patří do verze, na které se pracuje** – podle *MVP* a *Mimo rozsah* v `requirements.md`. Zadání mohlo téma odložit až po tom, co blok vznikl, a řádek *Čeká na* to nemusí vědět. Je-li téma odložené, řekni to i s místem v požadavcích a zeptej se, jestli kolo přesto otevřít; zůstane-li odložené, zapiš verzi do řádku *Čeká na* (`~/.claude/skills/architect/rounds.md`) a skonči. Jinak kolo založí větev, přepíše zadání a rozhodne věci, které se pak vracejí.
+2. **Větev** podle *Fáze 0*, bod 6. Jméno větve se řídí zvykem projektu (`~/.claude/standards/worktree.md`), jméno tematického dokumentu je jednoslovné anglicky (`~/.claude/standards/rules.md`, *Naming*), nadpis bloku česky. Existuje-li tematický dokument z dřívější várky, **rozšiř ho**. Nastav v bloku *Stav* na `rozhoduje se` a commitni.
+3. **Načti blok kola**, `requirements.md`, dokumenty z řádků *Dokument* a *Sahá na*, `decisions.md` a `rules.md`. Kolo, na které tohle čeká, musí mít záznam v `docs/done.md` **za posledním řádkem *Návrh uzavřen*** – starší záznam téhož jména patří dřívější várce. Nemá-li ho, řekni to a zeptej se, jestli pokračovat.
+4. **Zadání kola ověř, ne převezmi.** Blok je zadání, ne odpověď. Ukáže-li se při prvním pohledu do podkladů, že otázky v něm jsou neúplné nebo špatně položené, řekni to a nech nové zadání potvrdit – kolo smí své zadání přepsat.
 
 ### 2. Rozhodování
 

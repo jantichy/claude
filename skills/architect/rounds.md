@@ -12,7 +12,7 @@ Jak se v souborech projektu zapisuje návrh rozdělený na tematická kola. Co j
 - **Stav:** čeká | rozhoduje se | rozhodnuto
 - **Větev:** `<větev podle zvyku projektu>`
 - **Dokument:** `docs/<topic>.md`
-- **Čeká na:** <kola, bez jejichž výsledku nejde začít, nebo „nic“>
+- **Čeká na:** <kola, bez jejichž výsledku nejde začít, verze, do které zadání téma odložilo, nebo „nic“>
 - **Sahá na:** <sdílené dokumenty, do kterých kolo nejspíš zapíše>
 
 **Co rozhodnout.** <otázky, na které má kolo odpovědět – zadání, ne odpověď>
@@ -25,6 +25,7 @@ Jak se v souborech projektu zapisuje návrh rozdělený na tematická kola. Co j
 - **Blok musí stačit čisté session.** Kolo se typicky otevírá v jiné session a jiné větvi, takže blok nese celé zadání a neodkazuje na konverzaci, ve které vznikl.
 - **Otázka odložená na kolo se zapisuje do jeho bloku**, ne jako samostatná položka s poznámkou „patří ke kolu o …“. Jinak se ztratí, jakmile kolo proběhne bez ní: položka dál čeká na něco, co už se nestane, a nerozezná se od fronty.
 - **O pořadí rozhoduje řádek *Čeká na*, ne pořadí bloků.** Kola bez nesplněné závislosti smí běžet souběžně; řádek *Sahá na* říká, kde se jejich větve můžou srazit.
+- **Kolo, jehož téma zadání odložilo do pozdější verze, nese tu verzi v řádku *Čeká na*** (`verzi 2 – zadání téma vyřadilo z první verze`), ne „nic“. `/next` bere závislost jen z toho řádku, takže odložené kolo s „nic“ nabídne jako připravené k otevření. Kdo téma do jiné verze přesune, opraví i řádek.
 - **Hotové kolo se přesune do stejnojmenné sekce `done.md`**, v tvaru popsaném tam. Blok se maže až tímhle přesunem, a ten proběhne ve větvi kola těsně před sloučením.
 - Sekce žije jen po dobu návrhu po kolech; po posledním kole do ní `/architect` zapíše řádek *Návrh sešitý* a při dočištění ji zruší – kromě bloků kol puštěných až za sešití, které zůstanou jako další várka. Chybějící sekce znamená totéž co sekce bez bloků.
 
