@@ -193,6 +193,35 @@ class SkillFrontmatter(unittest.TestCase):
                     f"{skill}: chybí `allowed-tools` – skill běží s celou sadou včetně MCP",
                 )
 
+    def test_allowed_tools_does_not_preapprove_denied(self):
+        """Co `settings.json` zakazuje, nesmí žádný skill předschvalovat.
+
+        `deny` vyhrává nad `allowed-tools`, takže dnes by se takový nástroj
+        zavolat nedal i tak. Jenže hlavička pak tvrdí, že ho skill potřebuje –
+        a kdo to později čte, uvolní `deny`, aby skill „fungoval“. U Gmailu je
+        za tou čarou odeslání pošty, které `/invoicing` nesmí udělat nikdy.
+        Jména nástrojů z konektorů claude.ai na disku nikde neleží, takže
+        jejich překlep tenhle test nechytí – hlídá jen hranici.
+        """
+        import json as _json
+
+        settings = _json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        deny = {
+            rule
+            for rule in settings.get("permissions", {}).get("deny", [])
+            if rule.startswith("mcp__")
+        }
+        for skill in SKILLS:
+            listed = set(
+                re.findall(r"mcp__[\w-]+", frontmatter(skill).get("allowed-tools", ""))
+            )
+            with self.subTest(skill=skill.parent.name):
+                clash = sorted(listed & deny)
+                self.assertFalse(
+                    clash,
+                    f"{skill.parent.name} předschvaluje nástroje zakázané v settings.json: {clash}",
+                )
+
     def test_description_says_when_to_use(self):
         """Popis rozhoduje, jestli se skill vyvolá – musí říct, kdy se použije."""
         for skill in SKILLS:

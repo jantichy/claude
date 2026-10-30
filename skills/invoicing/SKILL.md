@@ -2,7 +2,7 @@
 name: invoicing
 description: Skill se použije, když uživatel zadá "/invoicing" (volitelně s režimem full, preview, recover nebo sync a se jménem klienta), nebo chce vystavit faktury klientům – sestavit doklad podle fakturační dohody klienta z hodin v timetrackingu, paušálů a dalších dohodnutých položek, vystavit faktury, přiložit PDF faktury i výkazu hodin a nechat rozepsaný mail, u předplacených hodin místo faktury odepsat kredit. Režim recover dohledá čas, který se zapomněl natrackovat, a nabídne tipy k doplnění; režim sync přepíše odpracovaný čas z primárního timetrackingu do timetrackingu klienta, má-li klient vlastní. Sazby, daňový režim a volání systémů drží ~/Context/Business/, dohodu s klientem jeho fakturační soubor pod ~/Clients, ne tenhle skill. Na rozdíl od /report nedělá analytický report, ale účetní doklady. Mail neodesílá nikdy – končí draftem a odeslání je vždy uživatelův klik; teprve když uživatel potvrdí, že mail odeslal, označí fakturu ve fakturačním systému za odeslanou. Neúčtuje, nehlídá úhrady ani daňové termíny.
 argument-hint: [full|preview|recover|sync] [klient] [období]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Agent]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Agent, mcp__claude_ai_Gmail__create_draft, mcp__claude_ai_Gmail__update_draft, mcp__claude_ai_Gmail__list_drafts, mcp__claude_ai_Gmail__search_threads, mcp__claude_ai_Gmail__get_thread, mcp__claude_ai_Google_Drive__get_file_metadata, mcp__claude_ai_Google_Drive__read_file_content]
 ---
 
 # Invoicing
@@ -224,7 +224,7 @@ Za každého klienta:
 
 **Hranice vede u odeslání a nevratného zásahu, ne u konceptu.** Povolené zůstávají nástroje pracující s koncepty a štítky (`create_draft`, `update_draft`, `list_drafts`, značkování): skill je potřebuje a jejich následek jde vzít zpět. Zakázané je to, co pošle poštu ven nebo nevratně sáhne na cizí zprávu. Je to vědomá čára, ne výčet toho, co padlo do oka.
 
-**Nezkoušej to řešit přes `allowed-tools` v hlavičce.** Podle dokumentace Claude Code to pole nástroje **neomezuje**, jen předschvaluje: *„It does not restrict which tools are available: every tool remains callable.“* Skill hlavičku kdysi měl, zrušil ji commit 622fa4f s odůvodněním, že „zakazoval Gmail MCP“ – jenže nic nezakazoval, jen se pak na `create_draft` doptával. Vrátit ji tedy zákaz nezajistí; jedinou hranicí je `deny` (`~/.claude/standards/rules.md`, *Přednost pravidel*: kde má hranice držet, tam k ní patří mechanismus).
+**Nezkoušej to řešit přes `allowed-tools` v hlavičce.** Podle dokumentace Claude Code to pole nástroje **neomezuje**, jen předschvaluje: *„It does not restrict which tools are available: every tool remains callable.“* Skill hlavičku kdysi měl, zrušil ji commit 622fa4f s odůvodněním, že „zakazoval Gmail MCP“ – jenže nic nezakazoval, jen se pak na `create_draft` doptával. Dnes v ní MCP nástroje zase stojí, a jen proto, aby se na koncepty a čtení pošty a sdílených dokumentů neptal: odesílací nástroje v ní chybí, ale zákaz to nezajistí; jedinou hranicí je `deny` (`~/.claude/standards/rules.md`, *Přednost pravidel*: kde má hranice držet, tam k ní patří mechanismus).
 
 ## Fáze 6 – Závěr
 
