@@ -6,6 +6,10 @@ okně (úkol se **nesmí** nabídnout), od větve, která zůstala rozdělaná a
 (nabídne se pokračování i s ID session pro `/resume`). Session ve worktree layoutu
 startuje v kořeni kontejneru, takže pracovní adresář procesu větev neprozradí –
 prozradí ji až poslední zpráva v transcriptu, která nese `cwd` a `gitBranch`.
+Rozhoduje přitom `cwd`: leží-li pod některým worktree, je větev session větví toho
+worktree. `gitBranch` je jen větev adresáře, odkud se naposled pouštěl git, a u
+session, která pracuje ve worktree, ale git volá z kořene kontejneru, hlásí hlavní
+větev – živá session by se pak u své větve nenašla a ta by se nabídla jako opuštěná.
 
 Zdroje (formát Claude Code, oficiálně nedokumentovaný – proto výstup nese i to,
 co se přečíst nepodařilo, a nikdy si nic nedomýšlí):
@@ -108,7 +112,35 @@ def first_cwd(transcript: Path):
     return None
 
 
-def live_sessions(home: Path) -> list:
+def worktree_map(project: Path) -> dict:
+    """Kořen každého worktree projektu → jeho větev; prázdné, když to git neřekne."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(project), "worktree", "list", "--porcelain"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    except (subprocess.CalledProcessError, OSError):
+        return {}
+    trees, top = {}, None
+    for line in out.splitlines():
+        if line.startswith("worktree "):
+            top = line[9:]
+        elif line.startswith("branch refs/heads/") and top:
+            trees[top] = line[18:]
+    return trees
+
+
+def tree_branch(cwd, trees: dict, fallback):
+    """Větev nejhlubšího worktree, pod kterým `cwd` leží, jinak `fallback`."""
+    hits = [t for t in trees if inside(cwd, Path(t))]
+    if not hits:
+        return fallback
+    return trees[max(hits, key=lambda t: len(Path(t).resolve().parts))]
+
+
+def live_sessions(home: Path, trees: dict | None = None) -> list:
     mine = ancestors()
     out = []
     for path in sorted((home / "sessions").glob("*.json")):
@@ -122,6 +154,8 @@ def live_sessions(home: Path) -> list:
         sid = record.get("sessionId")
         found = sorted(home.glob(f"projects/*/{sid}.jsonl")) if sid else []
         cwd, branch = last_location(found[0]) if found else (None, None)
+        if branch:
+            branch = tree_branch(cwd, trees or {}, branch)
         out.append(
             {
                 "pid": pid,
@@ -146,7 +180,9 @@ def inside(path, project: Path) -> bool:
     return p == project or project in p.parents
 
 
-def idle_sessions(home: Path, project: Path, live_ids: set) -> list:
+def idle_sessions(
+    home: Path, project: Path, live_ids: set, trees: dict | None = None
+) -> list:
     """Poslední neběžící session pro každou větev projektu."""
     latest = {}
     for transcript in home.glob("projects/*/*.jsonl"):
@@ -156,6 +192,7 @@ def idle_sessions(home: Path, project: Path, live_ids: set) -> list:
         cwd, branch = last_location(transcript)
         if not branch or not inside(cwd, project):
             continue
+        branch = tree_branch(cwd, trees or {}, branch)
         updated = transcript.stat().st_mtime
         if branch not in latest or updated > latest[branch]["updated"]:
             latest[branch] = {
@@ -176,8 +213,9 @@ def main() -> int:
     if not (home / "sessions").is_dir():
         print(f"registr session {home / 'sessions'} neexistuje", file=sys.stderr)
         return 2
+    trees = worktree_map(Path(args.project)) if args.project else {}
     try:
-        result = {"sessions": live_sessions(home)}
+        result = {"sessions": live_sessions(home, trees)}
     except Unreadable as err:
         print(err, file=sys.stderr)
         return 2
@@ -188,7 +226,7 @@ def main() -> int:
                 s["cwd"], project
             )
         live_ids = {s["session_id"] for s in result["sessions"] if s["session_id"]}
-        result["idle"] = idle_sessions(home, project, live_ids)
+        result["idle"] = idle_sessions(home, project, live_ids, trees)
     json.dump(result, sys.stdout, ensure_ascii=False, indent=2)
     print()
     return 0

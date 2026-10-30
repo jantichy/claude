@@ -552,6 +552,31 @@ class QueueCollection(unittest.TestCase):
         b = self.branches()["specify-faktury"]
         self.assertEqual((b["state"], b["session"]), ("occupied", "ziva"))
 
+    def test_session_in_worktree_reporting_main_occupies_its_branch(self):
+        """Živá session ve worktree větve obsadí tu větev, i když transcript hlásí `main`.
+
+        Session startuje v kořeni kontejneru a `gitBranch` je větev adresáře, odkud
+        se naposled pouštěl git – u práce ve worktree, kde se git volá z kořene,
+        tedy hlavní větev. Větev se proto bere z worktree pod `cwd`; jinak se živá
+        session u své větve nenajde a ta se nabídne jako opuštěná k rozjetí podruhé.
+        """
+        self.session(self.sleeper.pid, "ziva", str(self.box / "dph" / "docs"), "main")
+        b = self.branches()["specify-dph"]
+        self.assertEqual((b["state"], b.get("session")), ("occupied", "ziva"))
+
+    def test_idle_session_in_worktree_reporting_main_resumes_its_branch(self):
+        """Opuštěná session ve worktree se nabídne k obnovení u větve toho worktree."""
+        self.session(self.dead_pid(), "stara", str(self.box / "dph"), "main")
+        b = self.branches()["specify-dph"]
+        self.assertEqual(
+            (b["state"], b["resume"]["session_id"]), ("abandoned", "stara")
+        )
+
+    def test_session_in_container_root_keeps_branch_from_transcript(self):
+        """`cwd` mimo každý worktree (kořen kontejneru) nechá větev z transcriptu."""
+        self.session(self.sleeper.pid, "ziva", str(self.box), "specify-dph")
+        self.assertEqual(self.branches()["specify-dph"]["state"], "occupied")
+
     def test_clean_main_not_reported_as_occupied(self):
         # Session, která startuje v kořeni kontejneru a vlastní větev si ještě nezaložila,
         # hlásí jako svou hlavní větev. Dokud v ní nic neleží, nesmí se vypsat vůbec –

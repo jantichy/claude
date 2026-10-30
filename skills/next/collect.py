@@ -13,7 +13,9 @@ worktree kontejneru, jeho pracovní adresář i běžný repozitář.
 Výstup: jeden řádek JSON na stdout. Klíče:
 
 - `layout` – `worktree` nebo `plain`; `main` – hlavní větev; `fetch` – výsledek `git fetch`
-- `docs` – `docs/`, `root`, nebo null, když projekt `todo.md` nemá
+- `layout` – u operativního projektu bez gitu `none`
+- `docs` – `docs/`, `root`, `CLAUDE.md` u operativního projektu (fronta je pak jen sekce
+  `## Přerušený běh` a `## Otevřené body` jeho `CLAUDE.md`), nebo null, když projekt `todo.md` nemá
 - `current` – větev a necommitnuté soubory tam, kde session stojí (null v kořeni kontejneru)
 - `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`); sekce
   `Přerušený běh` nese i bloky z `todo.md` ostatních worktree a podprojektů, u nich
@@ -72,9 +74,18 @@ class Repo:
                 self.worktree = container / start.relative_to(container).parts[0]
         else:
             top = run(["git", "-C", str(start), "rev-parse", "--show-toplevel"])
-            if top is None:
-                raise SystemExit(f"{start} není git repozitář")
-            self.root, self.layout, self.worktree = Path(top), "plain", Path(top)
+            if top is not None:
+                self.root, self.layout, self.worktree = Path(top), "plain", Path(top)
+            else:
+                # Operativní projekt git mít nemusí – výchozí volba v `/project` je bez něj.
+                # Gitová volání pak vracejí None a fronta se čte jen z `CLAUDE.md`.
+                self.root = next(
+                    (p for p in [start, *start.parents] if operative(p / "CLAUDE.md")),
+                    None,
+                )
+                if self.root is None:
+                    raise SystemExit(f"{start} není git repozitář")
+                self.layout = "none"
         self.base = (
             ["git", "--git-dir", str(self.root / ".bare")]
             if self.layout == "worktree"
@@ -116,6 +127,25 @@ def reader(repo: Repo, ref):
         return f.read_text(encoding="utf-8") if f.is_file() else None
 
     return from_tree
+
+
+OPERATIVE = re.compile(r"^- \*\*Struktura:\*\* `?CLAUDE\.md`?\s*$", re.M)
+# Sekce `CLAUDE.md` operativního projektu, které jsou frontou (`structure.md`, *Operativní
+# projekt*). Otevřené body u témat se nesbírají – jsou součástí zápisu o tématu.
+OPERATIVE_SECTIONS = ("Přerušený běh", "Otevřené body")
+
+
+def operative(path: Path):
+    return path.is_file() and OPERATIVE.search(path.read_text(errors="replace"))
+
+
+def operative_queue(text):
+    """Z `CLAUDE.md` operativního projektu jen sekce, které jsou frontou, jako `todo.md`."""
+    return "\n".join(
+        f"## {t}\n" + "\n".join(b)
+        for t, b in sections(text)
+        if t in OPERATIVE_SECTIONS
+    )
 
 
 def docs_prefix(read):
@@ -499,18 +529,18 @@ def branch_diff(repo: Repo, ref, branch, prefix):
     }
 
 
-def live_state(project: Path):
+def live_state(project: Path, trees: dict):
     try:
         if not (sessions.Path.home() / ".claude" / "sessions").is_dir():
             return [], [], "registr session neexistuje"
         home = Path.home() / ".claude"
-        live = sessions.live_sessions(home)
+        live = sessions.live_sessions(home, trees)
         for s in live:
             s["in_project"] = sessions.inside(
                 s["start_cwd"], project
             ) or sessions.inside(s["cwd"], project)
         idle = sessions.idle_sessions(
-            home, project, {s["session_id"] for s in live if s["session_id"]}
+            home, project, {s["session_id"] for s in live if s["session_id"]}, trees
         )
     except (sessions.Unreadable, OSError) as err:
         # Transcript, který zmizel mezi výpisem a čtením, nesmí shodit celý běh –
@@ -542,9 +572,9 @@ def classify_branch(branch, others, idle, error, work):
 
 def collect_branches(repo, ref, prefix, rounds, current_branch, project):
     local = ref.split("/", 1)[1] if ref.startswith("origin/") else ref
-    live, idle, error = live_state(project)
-    others = [s for s in live if s.get("in_project") and not s["self"]]
     trees = worktrees(repo)
+    live, idle, error = live_state(project, {p: b for b, p in trees.items()})
+    others = [s for s in live if s.get("in_project") and not s["self"]]
     names = set(
         (
             repo.git("branch", "--no-merged", ref, "--format=%(refname:short)") or ""
@@ -676,12 +706,16 @@ def main() -> int:
             else "failed"
         )
     ref, _ = main_branch(repo)
-    if ref is None:
+    if ref is None and repo.layout != "none":
         raise SystemExit("hlavní větev se nepodařilo určit")
     read = reader(repo, ref)
-    prefix = docs_prefix(read)
-    base = prefix or ""
-    todo, rounds, stitched = parse_todo(read(f"{base}todo.md") or "")
+    claude = read("CLAUDE.md")
+    is_operative = claude is not None and OPERATIVE.search(claude) is not None
+    prefix = "CLAUDE.md" if is_operative else docs_prefix(read)
+    base = "" if is_operative else prefix or ""
+    todo, rounds, stitched = parse_todo(
+        operative_queue(claude) if is_operative else read(f"{base}todo.md") or ""
+    )
     known = [
         i["title"]
         for s in todo
@@ -689,13 +723,21 @@ def main() -> int:
         for p in s["parts"]
         for i in p["items"]
     ]
-    add_interrupted(todo, nested_interrupted(repo, base, known))
-    passes, rounds_open = parse_done(read(f"{base}done.md"))
-    plan = parse_plan(read(f"{base}plan.md"))
+    # Soubory v operativním projektu patří uživateli – `plan.md` nebo `done.md` mezi nimi
+    # je jeho dokument, ne fronta. Podprojekty ani worktree takový projekt nemá.
+    own = (lambda path: None) if is_operative else read
+    if not is_operative:
+        add_interrupted(todo, nested_interrupted(repo, base, known))
+    passes, rounds_open = parse_done(own(f"{base}done.md"))
+    plan = parse_plan(own(f"{base}plan.md"))
     current = current_info(repo)
     round_states(repo, rounds, base)
-    branches, error = collect_branches(
-        repo, ref, base, rounds, current and current["branch"], repo.root
+    branches, error = (
+        ([], None)
+        if repo.layout == "none"
+        else collect_branches(
+            repo, ref, base, rounds, current and current["branch"], repo.root
+        )
     )
     queue_empty = (
         not any(p["items"] for s in todo for p in s["parts"])
@@ -716,7 +758,7 @@ def main() -> int:
         "passes": passes,
         "lifecycle": lifecycle(),
         "artifacts": {
-            n: read(f"{base}{n}.md") is not None
+            n: own(f"{base}{n}.md") is not None
             for n in ("requirements", "architecture", "plan")
         },
         "branches": branches,
@@ -724,7 +766,7 @@ def main() -> int:
         "backlog": (
             [
                 i["title"]
-                for i in parse_items((read(f"{base}backlog.md") or "").splitlines())
+                for i in parse_items((own(f"{base}backlog.md") or "").splitlines())
             ]
             if queue_empty
             else None
