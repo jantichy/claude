@@ -12,6 +12,8 @@ file-history/
 downloads/
 telemetry/
 mcp-needs-auth-cache.json
+stats-cache.json
+state/
 
 # Per-project data (paths, contexts, settings per project)
 projects/
