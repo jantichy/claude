@@ -14,29 +14,29 @@ Ptají se, jestli je to správně:
 
 | Specialista | Ptá se | Zapíná se, když v rozsahu je | Typ |
 |---|---|---|---|
-| **Korektnost** | dělá to, co má, scénář po scénáři? | jakýkoliv kód; v rozsahu bez kódu návrh v `docs/` – požadavky, scénáře, architektura | – (vestavěné `/code-review`); v rozsahu bez kódu vlastní agent `Explore` (`SKILL.md`, Fáze 2) |
-| **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven, **a vždy změna manifestu nebo lockfile závislostí**; v rozsahu bez kódu návrh, který se dotýká oprávnění, guardů nebo citlivé oblasti | – (vestavěné `/security-review`); vlastní agent navíc `Explore`, v rozsahu bez kódu jen on (`SKILL.md`, Fáze 2) |
-| **Data a stavy** | migrace, konzistence, souběh, idempotence | datový model, migrace, stavový automat, fronta, plánované úlohy | `Explore` |
-| **Provoz a chyby** | co se stane, když to spadne? | volání cizích systémů, I/O, dlouhé operace, cokoliv s timeoutem | `Explore` |
-| **Testy** | co není pokryté a které testy jsou falešně zelené? | jakýkoliv kód, u kterého projekt má `test` v kontraktu příkazů | `Explore` |
-| **Agentní infrastruktura** | co běží mimo permission systém a co si to pouští? | `.claude/settings*.json`, hooky, `.mcp.json`, `allowed-tools` ve skillech, `.semgrep/`, cokoliv v `.claude/` | `Explore` |
+| **Korektnost** | dělá to, co má, scénář po scénáři? | jakýkoliv kód; v rozsahu bez kódu návrh v `docs/` – požadavky, scénáře, architektura | – (vestavěné `/code-review`); v rozsahu bez kódu vlastní agent `general-purpose` (`SKILL.md`, Fáze 2) |
+| **Bezpečnost** | dá se to zneužít? | kód, který zpracovává vstup, autorizuje, pracuje s daty uživatelů nebo sahá ven, **a vždy změna manifestu nebo lockfile závislostí**; v rozsahu bez kódu návrh, který se dotýká oprávnění, guardů nebo citlivé oblasti | – (vestavěné `/security-review`); vlastní agent navíc `general-purpose`, v rozsahu bez kódu jen on (`SKILL.md`, Fáze 2) |
+| **Data a stavy** | migrace, konzistence, souběh, idempotence | datový model, migrace, stavový automat, fronta, plánované úlohy | `general-purpose` |
+| **Provoz a chyby** | co se stane, když to spadne? | volání cizích systémů, I/O, dlouhé operace, cokoliv s timeoutem | `general-purpose` |
+| **Testy** | co není pokryté a které testy jsou falešně zelené? | jakýkoliv kód, u kterého projekt má `test` v kontraktu příkazů | `general-purpose` |
+| **Agentní infrastruktura** | co běží mimo permission systém a co si to pouští? | `.claude/settings*.json`, hooky, `.mcp.json`, `allowed-tools` ve skillech, `.semgrep/`, cokoliv v `.claude/` | `general-purpose` |
 
 ## Doménoví specialisté
 
 Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Context/`:
 
-**Většina jich nic nespouští** – měří text proti textu, takže jedou na `reader` a odrážka o `evidence` pro ně neplatí (viz [`agents.md`](agents.md)). Tři výjimky mají `Explore`, protože jejich předmět leží mimo čtení souborů: `Coding/quality.md` ověřuje kontrakt příkazů a CI, `Analytics/` a `Advertising/` sahají na běžící měření a na cizí reklamní účty.
+**Většina jich nic nespouští** – měří text proti textu, takže jedou na `reader` a odrážka o `evidence` pro ně neplatí (viz [`agents.md`](agents.md)). Tři výjimky mají `general-purpose`, protože jejich předmět leží mimo čtení souborů: `Coding/quality.md` ověřuje kontrakt příkazů a CI, `Analytics/` a `Advertising/` sahají na běžící měření a na cizí reklamní účty.
 
 | Sada | Kdy se aplikuje | Typ |
 |---|---|---|
 | `Coding/coding.md` | jakýkoliv kód, migrace, konfigurace, CI | `reader` |
 | `Coding/modeling.md` | datový model, stavy a přechody, guardy a autorizace, tvar API, napojení na vnější systém, konfigurace a dědění (**navíc** k `Coding/coding.md`) | `reader` |
 | `Coding/architecture.md` | vrstvy a jejich hranice, cesta k datům, transakce kolem cizích volání, souběh, běhy na pozadí – a u projektu, který je v `CLAUDE.md` vedený jako **aplikace**, i kontrolní seznam *Minimum hotové aplikace* (**navíc** k `Coding/coding.md`) | `reader` |
-| `Coding/quality.md` | kontroly kvality, kontrakt příkazů, CI, testovací infrastruktura, závislosti (**navíc** k `Coding/coding.md`) | `Explore` |
+| `Coding/quality.md` | kontroly kvality, kontrakt příkazů, CI, testovací infrastruktura, závislosti (**navíc** k `Coding/coding.md`) | `general-purpose` |
 | `Web/web.md` | webové rozhraní – šablony, komponenty, styly, stránky; jsou-li v rozsahu strukturovaná data nebo `og:image`, i `Web/metadata.md`; je-li v rozsahu konfigurace serveru nebo buildu, přesměrování, `robots.txt`, sitemapa, chybové stránky, cookie lišta nebo zpracování osobních údajů, i `Web/server.md` | `reader` |
 | `Web/admin.md` | administrace, backoffice, interní nástroj (**navíc** k `Web/web.md`, ne místo něj) | `reader` |
-| `Analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `Web/web.md`) | `Explore` |
-| `Advertising/` | vedení placených kampaní – struktura účtu, biddovací strategie, konverzní akce jako vstup pro bidding, kreativy a cesta po prokliku (měřicí stranu téhož drží `Analytics/`) | `Explore` |
+| `Analytics/` | implementace měření – GTM kontejnery a jejich export, dataLayer pushe, měřicí kódy v šablonách, CMP a consent (**navíc** k `Web/web.md`) | `general-purpose` |
+| `Advertising/` | vedení placených kampaní – struktura účtu, biddovací strategie, konverzní akce jako vstup pro bidding, kreativy a cesta po prokliku (měřicí stranu téhož drží `Analytics/`) | `general-purpose` |
 | `Text/text.md` | souvislé české texty – dokumentace, obsah stránek, články, newslettery (o textech v rozhraní rozhoduje `Text/copy.md`). **Tři pravidla jeho sekce *Stylistika* mají užší rozsah** – vyhýbání se pomlčkám, závorkám a středníkům, neopakování slova blízko sebe a vyhýbání se opisnému pasivu neplatí na interní pracovní text, na autorský hlas ani na mikrocopy, takže se v `docs/` projektu nehlásí; rozsah čti v té sekci, ne z tohohle řádku | `reader` |
 | `Text/copy.md` | texty v rozhraní – popisky tlačítek a polí, stavy, chybové hlášky, potvrzování, prázdné stavy, texty u částek a dokladů (**navíc** k `Web/web.md`, který řeší stránku jako celek) | `reader` |
 | `Text/typography.md` | česká sazba čehokoliv psaného česky – interpunkce, mezery, čísla, data, výčty (**navíc** k `Text/text.md`, ale platí i tam, kde souvislý text nevzniká) | `reader` |

@@ -2485,3 +2485,13 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Odloženo:** `/attack` přejde na zapracování v pomocném worktree, až bude hotové přidělování portů pro worktree (`docs/todo.md`).
 
 **Mez velikosti `standards/structure.md` se kvůli nové sekci nezvedla** (rozhodl uživatel; zamítnuto zvednout mez i nechat sekci jen ve `findings.md`). Místo uvolnilo zkrácení řádků o `## Přerušený běh` a o principech v `rules.md` beze ztráty obsahu a smazání věty „Projekt bez kódu ho nemá.“ u kontraktu příkazů – neplatila, kontrakt mají i projekty bez kódu, které kontrolují tvar dokumentace (eventoid, tenhle repozitář); kritérium „má ho každý projekt, ve kterém se něco spouští“ zůstává.
+
+### Agent, kterému zadání ukládá pracovat v `/tmp`, jede na `general-purpose`, ne na `Explore`
+
+**Rozhodnuto 30. 10. 2026** (uživatel). Podnět: `/review` v clockworku (21. 10. 2026) – z devíti ověřovatelů nálezů o chybějících testech sedm ověřovalo jen čtením („režim jen pro čtení“), dva obešli zápis mutací v paměti procesu a specialista na testy téhož typu mutace v `/tmp` spustil.
+
+**Příčina:** vestavěný `Explore` má v systémovém promptu „READ-ONLY MODE – NO FILE MODIFICATIONS“, zákaz „Creating temporary files anywhere, including /tmp“ a shell „ONLY for read-only operations“. Zadání `/review` přitom po ověřovateli i po specialistech chce postavit případ v `/tmp`. Dva pokyny proti sobě dají chování podle toho, který v běhu vyhraje. Ověřeno pokusem: agent `Explore` `touch /tmp/…` odmítl a zákaz doslova odcitoval.
+
+**Proč `general-purpose`:** norma už říkala, že agent, který zapisuje, patří na něj; `/review` se od ní odchyloval. Hranice „do projektu nezapisuj“ je pokyn tak jako tak – `Explore` má shell a zapsat jím jde (`skills/review/agents.md` to přiznává). Cenou je, že `general-purpose` má i nástroj `Agent`, takže hloubku delegace drží jen pravidlo v zadání, stejně jako u každého agenta se shellem (`standards/delegation.md`).
+
+**Zamítnuto – vlastní typ s `Read, Grep, Glob, Bash` a promptem „zapisuj jen do `/tmp`“.** Vynutil by hloubku delegace a neměl by `Edit` ani `Write`, ale přidal by typ k údržbě kvůli omezení, které stejně nevynucuje (shell zapíše kamkoliv). **Zamítnuto – ověřovat jen čtením.** Nejlevnější, ale ztratí se přehrání `cmd` a mutace, tedy nejsilnější doklad u KRITICKÝCH nálezů.
