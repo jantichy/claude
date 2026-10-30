@@ -242,6 +242,10 @@ Sahají na projekt, ale nestojí v jeho životním cyklu – hromadné přejmeno
 
 Zapne pro daný projekt režim, kdy Claude po každém logickém celku automaticky commituje, a pokud je nastavený remote, taky pushuje. Nehodí se do všech projektů, ale tam, kde mám hromadu rychlých iterací, mi to šetří desítky až stovky commit instrukcí za den.
 
+#### [`/autopilot`](skills/autopilot/) – práce, která na mě nečeká, se udělá beze mě
+
+Z úkolů projektu vybere jen ty, ke kterým mě Claude nepotřebuje – žádné rozhodování mezi variantami, žádné přístupy ani texty mým hlasem, nic nevratného – a odpracuje je jeden po druhém celé až po commit a push, bez jediné otázky. Narazí-li uprostřed na rozhodnutí, vrátí rozdělanou změnu a otázku i s variantami zapíše k úkolu. Po každém úkolu si změří délku session, a když se kontext naplní, dokončí rozdělaný úkol a řekne, jak pokračovat v nové session. Nahrazuje dlouhý prompt „pracuj beze mě a ber jen to, co zvládneš sám“, který jsem psal pořád dokola.
+
 #### [`/diagram`](skills/diagram/) – datový model jako mapa, na kterou se dá kliknout
 
 Z dokumentace navrženého modelu nakreslí interaktivní stránku: ER diagram všech tabulek, ve kterém po kliknutí vidím popis entity, vazby, sloupce a constrainty, a stavový prostor s přechody mezi stavy. Žije jako soukromý artefakt a při dalším zavolání se překreslí na stejném odkazu, klidně z jiné rozdělané větve. Nekreslí nic, co v dokumentaci není, a do projektu nezapisuje.

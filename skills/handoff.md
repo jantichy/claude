@@ -121,6 +121,8 @@ Platí pro každý běh, který **prochází frontu jedna položka po druhé** �
 
 Dva skilly s vlastní frontou tu vědomě **nejsou** – ten, který rozpouští nový zdroj do znalostní báze, a ten, který vytahuje scénáře ze starých konverzací. Jejich fronta bývá krátká a pravidlo, které se nikdy neuplatní, je jen text k údržbě (`decisions.md`, 28. 9. 2026).
 
+**`/autopilot` tu taky není, ale z jiného důvodu:** jeho fronta žije v `todo.md` a běh končí na hranici úkolu, takže zapisovat není co. Přerušení nenabízí – uživatel u něj není – a na prahu doporučení skončí sám řetězem `/end` → `/clear` → `/autopilot`. Práh si měří vlastním skriptem, protože hook výš se v autonomním běhu neozve.
+
 **Nabídni přerušení, jakmile kontext překročí práh a ve frontě zbývají aspoň dvě položky.** Ne po každé položce – **jednou za práh**, jinak se z připomínky stane šum a přestane se čítat.
 
 Jednou odrážkou, ne otázkou přes `AskUserQuestion`: kolik položek zbývá, kde kontext je, a že zbytek se uloží celý. Souhlas je uživatelův.
