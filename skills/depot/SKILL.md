@@ -1,7 +1,7 @@
 ---
 name: depot
-description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty nebo adresář, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, nemaže a v ~/Depot nepřejmenovává.
-argument-hint: [full|store] <cesty…> | workflow
+description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty, adresář nebo zdroj jako downloads či email, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, mimo ověřený duplikát nemaže a v ~/Depot nepřejmenovává.
+argument-hint: [full|store] <cesty…|zdroj> [interval] | workflow
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
@@ -10,6 +10,8 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ## Co skill dělá
 
 Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o jaký podklad jde, uloží ho tam, kam podle pravidel patří, a spustí navazující zpracování. Volá se přirozeně: `/depot ~/Downloads/prednaska.m4a`.
+
+**Místo cest umí vzít i zdroj** – `/depot downloads`, `/depot email`, případně s intervalem (`/depot downloads za poslední týden`). Zdroj je **proud**, ke kterému se skill opakovaně vrací, takže si pamatuje, co už viděl a vypořádal, a podruhé to nenabízí. Jména zdrojů jsou anglická, protože jsou to identifikátory (`~/.claude/standards/rules.md`, *Jazyk*); česky zadané (`/depot stažené`, `/depot pošta`) skill rozpozná jako totéž, ne jako vlastní režim.
 
 **Sám nenese jediné konkrétní pravidlo.** Co se jak pozná, kam to jde a co se s tím pak stane, drží privátní doména `depot` v `~/Context/`. Tenhle skill říká, jak se k tomu dojde, a hlídá, aby se cestou nic neztratilo.
 
@@ -23,7 +25,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 
 - **Nevytěžuje znalost.** Rozpouštění zdroje do knowledge base a řádek v `sources.md` je práce `/learn`; tenhle skill ho volá a nikdy nepíše evidenci sám.
 - **Nepřepisuje nahrávky.** To je `/transcript`. Skill mu předá uložený adresář a dál se do přepisu neplete.
-- **Neuklízí `~/Downloads` ani nic jiného plošně.** Rozsahem je vždycky jen to, co stojí v argumentu – viz *Rozsah*.
+- **Neuklízí `~/Downloads` ani nic jiného plošně.** Rozsahem je vždycky jen to, co stojí v argumentu: jmenované cesty, nebo zdroj omezený intervalem a čárou – viz *Rozsah*.
 - **Nesahá na to, co už je uložené.** Nepřejmenovává, nepřesouvá podruhé, nemaže a **neposuzuje obsah `~/Depot`** (`~/Depot/CLAUDE.md`, *Obsah Depotu neposuzuj*). Jeho práce končí u příchozího souboru.
 - **Nezakládá projekty ani domény.** Má-li podklad jít do projektu, který neexistuje, řekne to a skončí; projekt zakládá `/project`, novou doménu **navrhne** `/learn` a zakládá ji uživatel.
 
@@ -38,6 +40,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 | Přepis nahrávky | `/transcript` | Lokální přepis i shrnutí má hotové |
 | Vytěžení do knowledge base a řádek v `sources.md` | `/learn` | Rozpouštění znalosti do textů je jeho práce |
 | Cokoliv dalšího | podle domény | Skill spustí to, co má workflow zapsané ve sloupci *Zpracování* |
+| Čára, rejstřík vypořádaných dokumentů a jejich tvar | doména | Je to provozní stav domény; skill ho čte a zapisuje, ale co v něm stojí a kde leží, drží doména (*Zdroje*) |
 
 **Volání cizích nástrojů je implementační detail, ne rozhraní** – vyměnit se smí kdykoliv. Závazné je: rozsah daný argumentem, plán odsouhlasený před prvním přesunem, rozhodnutí o kolizi nad oběma soubory a to, že se skill bez domény nerozjede.
 
@@ -46,10 +49,13 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 **Rozsahem je přesně to, co stojí v argumentu.** Ani o soubor víc.
 
 - **Adresář v argumentu** znamená soubory v něm, **jednu úroveň a bez skrytých**. Je-li v něm podadresář nebo víc než dvacet položek, vypiš počet a nech potvrdit, než se cokoliv začne rozpoznávat.
+- **Zdroj v argumentu** znamená jen místa, která u něj jmenuje doména (*Zdroje*, sloupec *Jak se k němu sahá*), a z nich jen položky, které projdou **průnikem intervalu a čáry**: zadaný interval je horní mez, čára ho ořízne zespodu. Bez intervalu se bere všechno nad čárou.
 - **Nikdy nerozšiřuj rozsah na okolí.** Ani „když už jsem v Downloads“, ani „tyhle tři zjevně patří k sobě“. Sousední soubor, který podle tebe patří do téže dávky, **nabídni a nech rozhodnout**.
 - **Chybí-li argument úplně**, zeptej se, co zařadit. Nepouštěj se do žádného adresáře sám.
 
 **Proč to stojí takhle tvrdě:** agent puštěný na tenhle úkol bez skillu si rozsah sám rozšířil z předaných souborů na celé `~/Downloads`, narazil na pět tisíc položek a kvůli tomu rozsahu se zastavil, aniž hnul jediným souborem. Rozšíření rozsahu se přitom tváří jako služba navíc.
+
+**Zdroj tu ochranu neruší, jen ji drží jiným nástrojem.** Do 22. 9. 2026 ji nesl výčet cest a skill do žádného adresáře sám nesměl; u proudu ji nesou výčet míst v doméně, interval a čára. Pět tisíc položek z původního případu leží v podsložkách, které doména nejmenuje, a pod čárou – do rozsahu se tedy nedostanou. **Nejde o zmírnění pravidla**: kdo by ho při revizi vracel k výčtu cest, zruší zdroj, ne díru.
 
 ## Hranice
 
@@ -61,7 +67,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 - **Nerozpoznaný soubor se nepřesouvá nikam**, dokud se o něm nerozhodne. Ani „zatím do Depotu“.
 - **Originál se přesouvá, ne kopíruje.** Dvě kopie téhož podkladu znamenají, že se příště nepozná, která je ta zaevidovaná.
 - **Citlivý obsah se nesměruje automaticky.** Co doména označuje za obsah, o kterém rozhoduje člověk, se vypíše a nechá rozhodnout. Skill takový soubor **neotevírá**, aby zjistil víc.
-- **Mažeš-li něco, nemažeš.** Skill nemá jediný důvod volat `rm`. Selhal-li přesun, zůstává zdroj na místě a řekne se to.
+- **Nemaže se – s jedinou výjimkou, ověřeným duplikátem.** Skill nemá jediný důvod volat `rm` a nevolá ho nikdy. Selhal-li přesun, zůstává zdroj na místě a řekne se to. **Zúžení platí jen pro duplikát, který doména u zdroje posílá do koše** (*Zdroje*): jde tam až po ověření, že originál na cílovém místě leží a jeho hash sedí s rejstříkem, a jen nástrojem, který maže do koše (`trash`), ne `rm`. Bez toho by zdroj nikdy nevypořádal položku, která se neukládá, a čára by se o ni zasekla; koš místo `rm` nechává omyl vratný.
 
 ------
 
@@ -73,7 +79,7 @@ Společný začátek je v `~/.claude/skills/preflight.md`. Odchylky:
 2. **Kontrola závislostí.** Ověř, že existuje doména `depot` – hledej ji přes rozcestník knowledge base (u autora `~/Context/CLAUDE.md`). **Chybí-li, skonči** a řekni, že bez ní není podle čeho směrovat – viz *Fáze 1*. **V režimu `workflow` je to naopak:** chybějící doména je tam běžný výchozí stav, protože právě tím se zakládá. Nabídni její založení a pokračuj; končit by znamenalo, že si první pravidlo nemá kdo napsat.
    **Ověř i nástroje, na které se deleguje** – `/transcript` a `/learn`. Chybí-li některý, **neselhávej, ale řekni to před přesunem**: po něm už je soubor jinde a zbude z toho jen hlášení o nespuštěném zpracování.
 3. **Leží-li doména v repozitáři se zapnutým autocommitem**, je doplnění workflow změna v něm. Commitni ji **sám a samostatně**, ať ji neposbírá jiná session spolu s něčím nesouvisejícím. Není-li doména ve verzování, tenhle bod odpadá.
-4. **Rozliš režim od cesty.** První argument je režim jen tehdy, když je to `store` nebo `workflow` **a zároveň neexistuje jako cesta**. Existuje-li soubor toho jména, je to cesta a běží `full`.
+4. **Rozliš režim, cestu a zdroj.** První argument je režim jen tehdy, když je to `store` nebo `workflow` **a zároveň neexistuje jako cesta**. Existuje-li soubor toho jména, je to cesta a běží `full`. Totéž platí pro zdroj: `downloads` a `email` – i česky zadané – jsou zdroj jen tehdy, když toho jména neexistuje cesta. Zdroj, který doména v tabulce *Zdroje* nemá, neexistuje, a zdroj, u kterého nemá vyplněné, co se stane s položkou, se nespouští: řekni, co v doméně chybí, a skonči. Bez toho by vypořádaná položka zůstala ve zdroji a nabízela se znovu, nebo by skill rozhodl za doménu.
 
 ## Fáze 1 – Pravidla domény
 
@@ -86,6 +92,7 @@ Doména je zdroj pravdy. Najdi ji přes rozcestník knowledge base (u autora `~/
 | **pravidla pojmenování cílového místa** | *Fáze 3* |
 | **obsah, o kterém rozhoduje člověk** | *Fáze 2*, vyřazení ze směrování |
 | **vědomé mezery** – co doména schválně nemá a proč | *Fáze 2*, ať nenabízíš zapsat pravidlo tam, kde už jednou padlo rozhodnutí ho nemít |
+| **zdroje** – kde se k nim sahá, co se stane s položkou, čára a rejstřík vypořádaných dokumentů | *Rozsah*, *Fáze 2* až *Fáze 4*; jen zadal-li se zdroj |
 | **pravidla zápisu nového workflow** | *Režim `workflow`* |
 
 **Hledej ty věci, ne ta jména.** Doména si soubory pojmenovává po svém a může být rozdělená do víc souborů; rozhoduje obsah, ne nadpis.
@@ -94,7 +101,14 @@ Doména je zdroj pravdy. Najdi ji přes rozcestník knowledge base (u autora `~/
 
 ## Fáze 2 – Rozpoznání
 
-Pro každý soubor v rozsahu zjisti, které workflow sedí. Postupuj od nejlevnějšího:
+**Je-li v argumentu zdroj, sestav nejdřív dávku z proudu:**
+
+1. **Načti čáru a rejstřík vypořádaných dokumentů** tam, kde je doména drží (*Zdroje*). Nemá-li zdroj v doméně čáru, je interval povinný – chybí-li, zeptej se na něj, ať se nejde do celé historie.
+2. **Vypiš položky** z míst, která doména u zdroje jmenuje, a ponech jen ty v průniku intervalu a čáry. **Spočítej, kolik jich čára odfiltrovala** – patří to do plánu.
+3. **Identitu spočítej až teď a jen u ponechaných** – tak, jak ji doména pro ten zdroj určuje (u souboru hash obsahu a velikost). Shoduje-li se velikost i čas změny s řádkem rejstříku, soubor se znovu nečte.
+4. **Porovnej s rejstříkem.** Bajtová shoda je **duplikát** a hlásí se jako fakt: dokument je vypořádaný, zbývá vypořádat jen zdroj. Položka, kterou rejstřík vede jako odloženou, se **připomene**; vedená jako nezajímavá se nenabízí. Ostatní úrovně duplicity platí, jak je doména popisuje – co zatím nefunguje, neber jako funkční.
+
+Pak pro každý soubor v dávce zjisti, které workflow sedí. Postupuj od nejlevnějšího:
 
 1. **Název, přípona a cesta.** U většiny podkladů to stačí.
 2. **Metadata.** `stat`, u médií délka a datum pořízení. **Datum události ber z názvu**, a není-li tam, z metadat pořízení – nikdy z času stažení.
@@ -110,6 +124,9 @@ Výsledkem je pro každý soubor jeden ze čtyř stavů:
 | **Sedí víc workflow** | `AskUserQuestion` s kandidáty – label je jméno workflow, description říká **kam by to šlo a co by se spustilo** |
 | **Nesedí žádné** | `AskUserQuestion` se třemi cestami: *zapsat nové workflow do domény* · *vyřešit jednorázově bez zápisu pravidla* · *odložit bez zpracování* |
 | **Rozhoduje člověk** | vypiš, řekni proč, dál nesměruj |
+| **Duplikát** (jen u zdroje) | neukládá se; zdroj se s ním vypořádá, jak doména říká – u souboru do koše po ověření originálu (*Hranice*) |
+
+**Vědomé přeskočení je plnohodnotný výsledek, ne nedodělek.** U zdroje nabízej u každé položky i *přeskočit* se dvěma důvody, které doména rozlišuje: **nezajímavé** (příště se neptej) a **odloženo** (příště připomeň). Zapisuje se do rejstříku stejně jako uložení. Bez něj se čára nepohne nikdy: zastaví se před první položkou, o které nikdo nerozhodl, a newsletter se nabídne každý týden znovu.
 
 **Ptej se až tady, ne v půlce přesouvání.** Rozhodnutí o všech souborech padne dřív, než se hne první z nich.
 
@@ -126,7 +143,10 @@ Vypiš plán celé dávky a **nech ho potvrdit**. Nic se do téhle chvíle nepř
 
 **Mimo směrování:** <soubory, o kterých rozhoduje člověk, a proč>
 **Kolize:** <cílové cesty, které už existují>
+**Zdroj:** <zdroj> · interval <od–do> · čára <hodnota> odfiltrovala <N> položek · duplikáty do koše: <N> · přeskočeno vědomě: <N>
 ```
+
+Řádek *Zdroj* patří do plánu jen u zdroje. **Počet odfiltrovaný čárou je povinný** – bez něj není vidět, že se něco přeskočilo, a uživatel nemá podle čeho čáru přepsat, když zná položku, která pod ní zapadla.
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*.
 
@@ -148,6 +168,14 @@ Soubor po souboru:
 4. **Ověř přenos** – cíl existuje, velikost sedí, zdroj zmizel. Nesedí-li cokoliv, **zastav celou dávku** a řekni, co je kde; neopravuj to dalším přesunem.
 
 **Selže-li přesun, zdroj zůstává.** Nezkoušej kopii s následným smazáním.
+
+**U zdroje se vypořádá i to, co se neukládá:** duplikát jde do koše až po ověření originálu (*Hranice*) a s položkou se dál stane, co doména u zdroje uvádí – a nic víc. Zásah do cizího systému (schránka) jen tam, kde ho workflow výslovně říká, a až po potvrzení plánu.
+
+**Zápis rejstříku a posun čáry jsou poslední krok před závěrem** – v režimu `store` tady, jinak až za *Fází 5*, ať záznam nese i výsledek zpracování (číslo dokladu, kam se co připojilo). Pravidla drží doména (*Zdroje*); zvlášť:
+
+- **Do rejstříku jde každá vypořádaná položka** – uložená, duplikát i vědomě přeskočená, v tvaru, který doména popisuje. Rejstřík se jen doplňuje, nepřepisuje.
+- **Čára se posune jen tam, kde je pod ní všechno vypořádané.** Zůstala-li v dávce položka bez rozhodnutí – kolize, nerozpoznaný soubor, selhaný přesun –, zastaví se před ní. **Novou hodnotou je čas příchodu nejnovější vypořádané položky**, ne čas běhu; jinak se přeskočí, co přibylo během zpracování.
+- **Stav se necommituje.** Doména ho drží mimo verzování, protože je to provozní stav, ne znalost.
 
 Tady končí režim **`store`** – vypiš, co se uložilo, a jdi na *Fázi 6*.
 
@@ -174,6 +202,9 @@ Pro každý uložený podklad spusť to, co má jeho workflow ve sloupci *Zpraco
 
 **Doména**
 - <nové workflow, nebo „beze změny“>
+
+**Zdroj** (jen u zdroje)
+- čára <stará> → <nová, nebo „neposunuta: <před kterou položkou se zastavila>“> · rejstřík +<N> · do koše <N> · přeskočeno vědomě <N>
 
 **Nedokončené zpracování**
 - <co selhalo a čím se to dá dohnat, nebo „nic“>
@@ -212,3 +243,5 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 - **Uhnutí při kolizi.** Přípona `(1)` v názvu vyrobí duplikát, na který se žádná evidence neodkazuje – a v Depotu se to už nedá přejmenovat zpátky.
 - **Zápis evidence vlastní rukou.** `sources.md` patří `/learn`; druhý zapisovatel se s ním rozejde při první opravě.
 - **Otevření citlivého souboru kvůli rozpoznání.** U obsahu, o kterém rozhoduje člověk, je čtení součástí problému, ne řešení.
+- **Čára posunutá přes nevypořádanou položku.** Proud není monotónní; položka pod čárou, která se nezapsala do rejstříku, se už nikdy nenabídne a nikde to nesvítí.
+- **Čára podle času běhu.** Co přibylo během zpracování, spadne pod čáru nevypořádané.

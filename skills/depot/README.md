@@ -9,6 +9,7 @@ Podstatné je, že **sám nerozhoduje podle ničeho vlastního.** Všechna pravi
 - **`/depot <cesty…>`** (výchozí, jmenuje se `full`) – rozpozná, ukáže plán celé dávky, po odsouhlasení přesune a spustí navazující zpracování.
 - **`/depot store <cesty…>`** – jen zařadí a skončí. Na vyklizení Downloads, když na zpracování není čas.
 - **`/depot workflow`** – otázku po otázce s vámi založí nové pravidlo, nebo upraví stávající.
+- **`/depot downloads`**, případně s intervalem (`/depot downloads za poslední týden`) – místo jmenovaných souborů vezme celý zdroj a pamatuje si, kam minule došel. Co už jednou zařadil nebo co jste vědomě přeskočili, podruhé nenabídne; odložené připomene. Česky zadaný zdroj (`/depot stažené`) pozná jako totéž.
 - Zvládne jeden soubor, víc souborů, masku i adresář. Soubory z jedné události uloží do jednoho místa pohromadě.
 - Nepozná-li, o co jde, nebo sedí-li pravidel víc, **nabídne varianty k výběru** – a u každé rovnou říká, kam by soubor šel a co by se spustilo.
 - Nové pravidlo vám nabídne zapsat rovnou za běhu, takže se totéž příště neptá.
@@ -16,8 +17,8 @@ Podstatné je, že **sám nerozhoduje podle ničeho vlastního.** Všechna pravi
 ## Proč zrovna tenhle
 
 - **Zařazení a zpracování je jeden úkon, ne dva.** Rozdělené na dvě chvíle se ta druhá nekoná.
-- **Rozsah je přesně to, co zadáte.** Nesáhne na okolní soubory, nezačne uklízet celou složku a nerozbalí podadresáře bez zeptání – tohle je přesně to, na čem obecný asistent selže a proslulé „když už jsem tady“ skončí nevratným hromadným přesunem.
-- **Nic nepřepíše bez vašeho rozhodnutí a nesmaže nikdy nic.** Při kolizi se zastaví, ukáže oba soubory a zeptá se – místo aby přilepil `(1)` a vyrobil duplikát, o kterém pak nikdo neví.
+- **Rozsah je přesně to, co zadáte.** Nesáhne na okolní soubory, nezačne uklízet celou složku a nerozbalí podadresáře bez zeptání – tohle je přesně to, na čem obecný asistent selže a proslulé „když už jsem tady“ skončí nevratným hromadným přesunem. U zdroje drží rozsah místa, která pravidla u něj jmenují, a čára, kam minule došel – a v plánu vždycky uvidíte, kolik položek čára odfiltrovala.
+- **Nic nepřepíše bez vašeho rozhodnutí a nemaže.** Při kolizi se zastaví, ukáže oba soubory a zeptá se – místo aby přilepil `(1)` a vyrobil duplikát, o kterém pak nikdo neví. Jediná výjimka je soubor, který je prokazatelně stejný jako už zařazený originál: ten po ověření originálu pošle do koše, nikdy ho nesmaže natrvalo.
 - **Uloží to pod čistým názvem.** Číslo, které souboru přilepil operační systém při druhém stažení (`smlouva (1).pdf`), do Depotu nepatří a při přesunu zmizí – leda že byste stejným tahem ukládali celou tu kolizní řadu naráz, kde ta čísla jediná odlišují jeden soubor od druhého.
 - **Neptá se v půlce práce.** Všechna rozhodnutí padnou nad plánem, než se hne první soubor.
 - **Citlivé věci nesměruje sám.** Přístupové kódy, smlouvy a osobní doklady vypíše a nechá rozhodnout vás – a kvůli rozpoznání je ani neotevře.
@@ -29,6 +30,7 @@ Podstatné je, že **sám nerozhoduje podle ničeho vlastního.** Všechna pravi
 /depot ~/Downloads/prednaska-measurecamp.m4a
 /depot store ~/Downloads/*.pdf
 /depot workflow
+/depot downloads za poslední týden
 ```
 
 Skill ukáže tabulku „soubor → co to je → kam to jde → co se pak spustí“, počká na odsouhlasení a pak to provede.
