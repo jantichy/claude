@@ -2,7 +2,7 @@
 name: project
 description: Skill se použije, když uživatel zadá "/project", nebo chce založit nový projekt v čistém adresáři, přenastavit už existující projekt (metadata projektu a jejich propsání do Repository details na GitHubu, git, worktree layout, standardní struktura docs/, autocommit, paměťová politika, typ projektu, doménové checklisty), anebo dorovnat dřív nastavený projekt na aktuální podobu standardů a konfigurační vrstvy – revize souladu struktury, dokumentace, sekcí CLAUDE.md, kontraktů a importů. Pod ~/Clients zakládá a převádí i klientskou složku – profil klienta, fakturační soubor a odkazy na ně v ~/Context – a podprojekty, které profil dědí. Umí i operativní projekt: adresář s vlastními dokumenty uživatele, ve kterém Claude bez pokynu nic nemění a všechno si zapisuje jen do CLAUDE.md. Interaktivní wizard, který se ptá krok po kroku.
 argument-hint: [create|adopt|update]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
 # Project
@@ -242,6 +242,14 @@ Standardní soubory leží buď v `docs/`, nebo přímo v kořeni projektu. Oboj
 | `root` | Soubory přímo v kořeni. Sedí na knowledge base a malé projekty, kde by `docs/` byl prázdný obal. |
 
 *`adopt`:* režim **detekuj a rovnou zapiš**, neptej se. Leží-li `todo.md` nebo `decisions.md` v kořeni → `root`; leží-li v `docs/` → `docs/`; nenajdeš-li ani jedno → `docs/`. Co jsi zjistil a zapsal, **řekni nahlas** v závěrečném souhrnu. Najdeš-li soubory na obou místech, je to nepořádek, ne třetí režim – vypiš, co je kde, a nech si vybrat, na který režim to srovnat.
+
+**Přepnutí režimu `docs/` ↔ `root`** se dělá jen na pokyn uživatele, nebo když se v `adopt` srovnávají soubory z obou míst. `update` ho sám nenabízí, protože oba režimy jsou rovnocenné a projekt v kterémkoliv z nich je v souladu. Postup, ve kterém se nic nesmí vynechat:
+
+1. **Čistý pracovní strom**, ve worktree layoutu vlastní větev (*Zásady pro celý průběh*). Přesun smíchaný s cizí rozdělanou prací se pak nedá vrátit.
+2. **`git mv` každý soubor a adresář, který `structure.md` umisťuje podle režimu** a v projektu existuje – standardní soubory, produktové podklady i `research/`. Nevypisuj si je z hlavy, ber je z `structure.md`. Existuje-li na cílovém místě soubor téhož jména, nepřesouvej ho, ukaž oba a zeptej se.
+3. **Přepis odkazů předej `/replace`** přes nástroj `Skill`, s dvojicemi starých a nových cest. Upozorni ho, že relativní odkazy uvnitř přesunutých souborů (`../README.md`) mění hloubku. Ruční `sed` jednoho vzoru tyhle odkazy i zmínky v běžném textu mine.
+4. **Přepiš řádek `Struktura`** v bloku metadat a sekci *Struktura a dokumentace* podle *Kroku 7*.
+5. **Ověř a commitni jako jeden celek:** na starém místě nezůstal žádný standardní soubor, kontrola odkazů z kontraktu příkazů prošla, nebo ji nahraď grepem starých cest. Commit, který soubory přesune bez přepsaných odkazů, nechá v historii stav s mrtvými odkazy.
 
 **Ve worktree layoutu** se tím vším myslí projektový adresář – `main/`, nebo tvá větev –, ne kořen kontejneru (krok 0, *Projektový adresář*).
 
