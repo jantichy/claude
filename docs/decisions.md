@@ -2462,6 +2462,8 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 
 **Zamítnuto – zákaz změn vynutit oprávněními v `.claude/settings.local.json`:** přidal by do adresáře `.claude/` a pravidla `ask` se vyhodnocují před `allow`, takže výjimku pro zápis do `CLAUDE.md` nejde napsat. Zákaz proto drží jen text v sekci `## Operativní projekt`.
 
+**Zamítnuto – vypnout v gitu převod konců řádků (`core.autocrlf false`), aby historie držela přesné kopie dokumentů:** převod nemění soubory na disku, jen kopie v historii, a projeví se až obnovou z gitu. Dokumenty Office, PDF a obrázky bere git jako binární a nepřevádí; zasáhne to jen textové soubory s konci řádků z Windows, typicky uložený mail, a tam vadí leda u elektronicky podepsaného. Uživatel dal přednost jednotnému nastavení gitu (31. 10. 2026).
+
 ### Průchod nálezy jde po kolech: nejdřív všechny otázky, pak zapracování bez uživatele
 
 **Rozhodnuto 28. 10. 2026.** Kontrolní skilly dosud opravovaly sporný nález hned po odpovědi, takže uživatel po každé otázce čekal minuty na další a nemohl od průchodu odejít. Pokus z 27. 10. 2026 (průchod oponentury v eventoidu, 25 otázek rychle za sebou, zapracování až potom čtyřmi agenty postupně, pět doplňujících otázek položených stejnou cestou) ukázal, že to jde a že to uživateli vyhovuje.
