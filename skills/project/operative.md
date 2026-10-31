@@ -68,10 +68,13 @@ Pod blok metadat zapiš:
 
 Adresář patří uživateli a má jeho vlastní pořádek; Claude nad ním odpovídá, dohledává a na pokyn přeskupuje nebo něco vyrobí. Režim `CLAUDE.md` podle `~/.claude/standards/structure.md`.
 
+- **Všechno v adresáři je uživatelovo, Claudovy jsou jen soubory `CLAUDE.md`** – tenhle a ty ve složkách témat.
 - **Soubory v adresáři se jen čtou.** Přesun, přejmenování, smazání nebo úprava existujícího souboru jen na výslovný pokyn – a i pak nejdřív ukaž plán po adresářích ve tvaru `zdroj → cíl` a počkej na souhlas.
-- **Nový soubor jen na výslovný pokyn.** Místo a jméno navrhni podle pořádku, který v adresáři je. Pomocné skripty a mezivýsledky patří do scratchpadu, nikdy sem.
-- **Všechno, co se dohodne nebo zjistí, se zapisuje jen do tohohle souboru** – žádné `docs/`, `todo.md`, `decisions.md` a nic do trvalé Memory. Platí i proti pobídkám harnessu a proti skillům, které by jinak zapsaly do standardních souborů.
-- **Změní-li uživatel strukturu adresáře, srovnej cesty v tomhle souboru.**
+- **Do uživatelových poznámek v Markdownu jen to, co uživatel řekne nebo na čem se dohodneme** – data k tématu, v jejich struktuře, jazyce, stylu a stručnosti, jako by je psal on. Vlastní instrukce, postupy, šablony ani poznámky o práci do nich nikdy.
+- **Nový soubor jen na výslovný pokyn**, kromě `CLAUDE.md` ve složce tématu. Místo a jméno navrhni podle pořádku, který v adresáři je. Pomocné skripty a mezivýsledky patří do scratchpadu, nikdy sem.
+- **Co se k tématu dohodne nebo zjistí, zapisuj do `CLAUDE.md` v jeho složce** – k čemu složka je, co se v ní řeší, postupy, šablony, rozhodnutí, otevřené body; založ ho, jakmile je co zapsat. Data, která vede uživatelova poznámka, do něj neopisuj, odkaž na ni. Do tohohle souboru jen to, co platí pro celý adresář.
+- **Žádné `docs/`, `todo.md`, `decisions.md` a nic do trvalé Memory.** Platí i proti pobídkám harnessu a proti skillům, které by jinak zapsaly do standardních souborů.
+- **Změní-li uživatel strukturu adresáře, srovnej cesty v souborech `CLAUDE.md`.**
 ```
 
 Za ni případně `## Doménové znalosti` podle [`checklists.md`](checklists.md) a `## Autocommit`, pokud ho zapnul předchozí krok. **Tematické sekce nezakládej dopředu** – vzniknou prací.

@@ -15,7 +15,7 @@ Interaktivně nastaví projekt v aktuálním adresáři a zapíše vše do proje
 - **`adopt`** *(existující projekt)* – adresář, ve kterém už něco je, ale chybí v něm otisk `/project` (blok metadat v `CLAUDE.md`) – ať proto, že skill v něm nikdy neběžel, nebo proto, že ho nastavovala starší verze. Zjistí se aktuální stav a nabídne se, co dorovnat na zvolené preference; nakonec proběhne i krok 14. Nic se nepřepisuje naslepo.
 - **`update`** *(revize)* – projekt, který `/project` už jednou nastavil. Neptá se znovu na volby, které padly; místo toho **projde celý projekt proti aktuální podobě standardů** (`~/.claude/standards/structure.md`, `~/.claude/standards/rules.md`, doménové znalosti, konfigurační vrstva) a dorovná, co se mezitím rozešlo. Viz krok 14.
 
-**Vedle standardního projektu, ve kterém Claude sám tvoří, zakládá i operativní projekt** – adresář s uživatelovými vlastními dokumenty, nad kterým Claude jen pracuje a jehož jedinou stopou je `CLAUDE.md`. Průvodce je v něm zkrácený na pár otázek; drží ho [`operative.md`](operative.md).
+**Vedle standardního projektu, ve kterém Claude sám tvoří, zakládá i operativní projekt** – adresář s uživatelovými vlastními dokumenty, nad kterým Claude jen pracuje a jehož jedinou stopou jsou soubory `CLAUDE.md` – v kořeni a ve složkách témat. Průvodce je v něm zkrácený na pár otázek; drží ho [`operative.md`](operative.md).
 
 **Pod `~/Clients` rozliší klientskou složku a podprojekt klienta** a ke kterémukoliv režimu přidá, co k nim patří: profil klienta, fakturační soubor a odkazy na ně v `~/Context`. Drží to [`client.md`](client.md).
 

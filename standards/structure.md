@@ -25,9 +25,9 @@ režim  docs/                       režim  root
 
 ### Operativní projekt: režim `CLAUDE.md`
 
-Třetí režim není rovnocenná volba, ale jiný druh projektu: **adresář, který patří uživateli a má jeho vlastní pořádek** (smlouvy, výpisy, dokumenty, videa), a Claude nad ním odpovídá, dohledává, na pokyn přeskupuje a občas něco vyrobí. Standardní soubory ani `README.md` nevznikají; Claudovou stopou je jen projektový `CLAUDE.md` (a `.git`, zvolí-li ho uživatel). Pointa: adresář zůstane, jak ho uživatel uspořádal, a vše, co si Claude pamatuje, leží na jednom místě, které uživatel vidí.
+Jiný druh projektu: **adresář, který patří uživateli a má jeho pořádek** (smlouvy, dokumenty), a Claude nad ním odpovídá, dohledává a na pokyn přeskupuje. Standardní soubory ani `README.md` nevznikají, Claudovy jsou jen soubory `CLAUDE.md`. **Vše ostatní je uživatelovo, i jeho poznámky v Markdownu:** dopíše se do nich jen, co uživatel řekne nebo co se dohodne, v jejich tvaru a stylu, nikdy Claudovy instrukce. Pointa: obojí zůstane jeho.
 
-Co by šlo do standardního souboru, jde do sekcí `CLAUDE.md`: zjištění a rozhodnutí k tématu, kterého se týkají; otevřené body taky, a bez tématu do `## Otevřené body`; hotové se nevede, jen se u tématu aktualizuje stav. **Skill, který zapisuje do `docs/…`, píše tady do `CLAUDE.md`** – svou sekci (`## Přerušený běh`) založí tam. Do trvalé Memory nic.
+Claudova paměť jde do `CLAUDE.md` **ve složce tématu**, který si založí sám – k čemu složka je, postupy, šablony, rozhodnutí, otevřené body; data z poznámky neopisuje. Kořenový drží, co platí celému adresáři, a `## Otevřené body` bez tématu. Hotové se nevede, jen stav u tématu. **Skill, který zapisuje do `docs/…`, píše tady do `CLAUDE.md`**, `## Přerušený běh` do kořenového. Do trvalé Memory nic.
 
 ### Deklarace režimu
 

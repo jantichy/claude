@@ -2509,3 +2509,17 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Srovnávací běh bez skillu** (agent s původním promptem nad ukázkovým `todo.md` se známou odpovědí, jen třídění, bez provedení): roztřídil správně všech dvanáct položek, ale u jedné si sám schválil výjimku z *Single source of truth*, neměl žádnou mez délky, otázky držel jen v konverzaci a přepočítal se ve vlastním výčtu. Z toho jsou v `SKILL.md` pravidla o odchylce od pravidla projektu, o měření, o zápisu otázky k položce a o výpisu fronty se spočítanými počty.
 
 **Zamítnuto – každý úkol delegovat na subagenta s čistým kontextem.** Prodloužilo by to běh na víc úkolů, ale hloubka delegace je jedna (subagent by nesměl delegovat mechanickou práci dál), uživatel práci nevidí a předání výsledku ztrácí detail.
+
+### Operativní projekt: uživatelovy poznámky a Claudův `CLAUDE.md` u každého tématu
+
+**Rozhodnuto 31. 10. 2026.** Operativní projekt měl jediný `CLAUDE.md` v kořeni, do kterého šlo všechno, co se Claude dozvěděl. V praxi si ale uživatel u jednotlivých témat (složka dodavatele, smlouvy) vede vlastní poznámku v Markdownu – evidenci smlouvy, průběžné záznamy, kontakty – a Claude do ní má občas dopsat nový údaj. Pravidlo neříkalo, co se smí do takové poznámky psát, ani kam patří postup a šablona mailu k tématu.
+
+**Rozhodnutí:** všechno v adresáři je uživatelovo, Claudovy jsou jen soubory `CLAUDE.md` (`standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*). Do uživatelovy poznámky jde jen to, co uživatel řekne nebo na čem se dohodnou, v její struktuře a stylu, nikdy Claudovy instrukce. Co si Claude k tématu pamatuje – k čemu složka je, postupy, šablony, rozhodnutí, otevřené body –, zapisuje do `CLAUDE.md` v její složce a ten si založí sám, bez pokynu. Kořenový `CLAUDE.md` drží jen to, co platí pro celý adresář. Šablona v `skills/project/operative.md` to nese do každého nového projektu a revize `/project update` doplní chybějící odrážky do starších.
+
+**Proč `CLAUDE.md` ve složce tématu:** Claude Code ho načte sám, jakmile se v té složce čte, takže pravidla tématu jsou v kontextu přesně tehdy, kdy jsou potřeba, a kořenový soubor nebobtná všemi tématy naráz.
+
+**Zamítnuto – Claudovy poznámky do uživatelovy poznámky:** zarostla by pokyny pro stroj a přestala by být uživatelovou znalostní bází.
+
+**Zamítnuto – všechno do kořenového `CLAUDE.md`:** načítá se do každé session v adresáři, i když se řeší jiné téma, a postupy různých témat by se v něm míchaly.
+
+**Zamítnuto – seznam tematických `CLAUDE.md` v kořenovém:** je to seznam, který vzniká jinde, a rozešel by se s diskem; Claude Code je najde sám.

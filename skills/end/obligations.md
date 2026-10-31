@@ -4,7 +4,7 @@ Referenční tabulka pro *Fázi 3* skillu [`/end`](SKILL.md). Je to **obrácený
 
 Obsah jednotlivých souborů definuje `~/.claude/standards/structure.md`; tahle tabulka není druhá definice, ale spouštěč.
 
-**Cesty jsou psané pro režim `docs/`.** V projektu s kořenovým režimem (`~/.claude/standards/structure.md`, *Režimy umístění*) se překládají do kořene repozitáře, v operativním projektu do sekcí projektového `CLAUDE.md`.
+**Cesty jsou psané pro režim `docs/`.** V projektu s kořenovým režimem (`~/.claude/standards/structure.md`, *Režimy umístění*) se překládají do kořene repozitáře, v operativním projektu do `CLAUDE.md` ve složce tématu, nebo do kořenového (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*).
 
 ## Které soubory prověřit
 
