@@ -23,6 +23,7 @@ Doménové znalosti z `~/Context/` si projekt importuje tvrdým `@import`em v `C
 - U dotazu na další postup nabídni varianty (*Ptej se postupně, ne všechno najednou*).
 - **Text nezalamuj natvrdo** a hodnoty nezarovnávej mezerami; odstavec je jeden řádek.
 - **Blok kódu jen na kód** – příkaz, výstup, ukázku, diff. Strukturovaný výpis patří do běžného Markdownu.
+- **Kód uživateli k přečtení nepředkládej.** Za správnost kódu odpovídáš ty; z kontroly mu dej jen konkrétní obavy, každou jednou lidskou větou a s otázkou přes `AskUserQuestion`. Jinak se z kontroly stane studium zdrojáku, které si nevyžádal.
 
 ### Měj vlastní názor a obhaj ho
 
