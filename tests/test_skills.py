@@ -2376,10 +2376,6 @@ class TemplatesPrintMarkdown(unittest.TestCase):
     #: stejně jako nová šablona bez pokynu.
     WRITTEN_TO_FILE = {
         ("autocommit/SKILL.md", "## Autocommit"),
-        (
-            "end/SKILL.md",
-            "| # | řádek | co uživatel napsal (zkráceně) | stav | kde |",
-        ),
         ("consistency/SKILL.md", "## Consistency"),
         ("project/SKILL.md", "- **Struktura:** docs/"),
         ("project/SKILL.md", "## Struktura a dokumentace"),

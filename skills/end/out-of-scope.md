@@ -18,7 +18,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
    | **Vyřeš sám** – musí platit všechno | řešení má právě jednu zjevně správnou podobu, ne volbu mezi variantami; je to oprava nebo dorovnání toho, co už je rozhodnuté, ne nová práce ani nové rozhodnutí; **zásah celý vidíš a umíš ho po sobě ověřit**; **je vratný** – mění verzované soubory, nic nemaže nenávratně a nesahá mimo repozitář |
    | **Zeptej se** – stačí jedna | řešení má víc obhajitelných podob a volba mezi nimi je uživatelova; je to nová práce, změna pravidla, rozhodnutí nebo struktury; chybí ti údaj, který ví jen uživatel a **nedá se zjistit z repozitáře**; zásah je nevratný, sahá mimo repozitář nebo do cizího systému |
 
-   **Takhle vypadají položky, u kterých se nemá co ptát** – všechny tři jsou z jednoho běhu (18. 9. 2026) a u všech uživatel odpověděl „vyřešit teď“:
+   **Takhle vypadají položky, u kterých se nemá co ptát:**
 
    - Úkol je v `done.md` jako hotový a v `todo.md` pořád visí. Dva soubory tvrdí opak, jeden z nich se dá ověřit – a pak se ta odrážka smaže.
    - Záznam v `done.md` cituje čísla rozhodnutí posunutá o deset. Správná čísla jsou v `decisions.md`, oprava je přepsat je.
@@ -74,7 +74,7 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
 
    Pak se zeptej samostatným voláním `AskUserQuestion` – jedno volání na jednu položku, `header` `Položka N/celkem` jako v hlavní frontě (`~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*). Volby:
 
-   **Nejdřív ale rozhodni, do které fronty položka věcně patří.** *Zapsat do todo* i *Zapsat do backlogu* míří na soubory **uklízeného projektu**. Položka, která patří jinam – obecné pravidlo do `~/.claude/standards/rules.md`, úkol na konfigurační vrstvě do `~/.claude/docs/todo.md`, doménová znalost do `~/Context/` –, do nich nepatří: obecné pravidlo zapsané do `docs/todo.md` jednoho projektu se schová tam, kde ho nikdo nehledá. U takové položky **skládej volby věcně** – kam a v jaké podobě ten zápis patří –, ne z předepsané čtveřice. Mimo uklízený projekt se nezapisuje bez rozhodnutí (`SKILL.md`, *Zásady pro celý průběh*), takže se na to ptáš vždycky. **Poznámka o `/end` samotném sem nepatří** – ta jde do fronty konfigurační vrstvy. Doloženo 25. 9. 2026.
+   **Nejdřív ale rozhodni, do které fronty položka věcně patří.** *Zapsat do todo* i *Zapsat do backlogu* míří na soubory **uklízeného projektu**. Položka, která patří jinam – obecné pravidlo do `~/.claude/standards/rules.md`, úkol na konfigurační vrstvě do `~/.claude/docs/todo.md`, doménová znalost do `~/Context/` –, do nich nepatří: obecné pravidlo zapsané do `docs/todo.md` jednoho projektu se schová tam, kde ho nikdo nehledá. U takové položky **skládej volby věcně** – kam a v jaké podobě ten zápis patří –, ne z předepsané čtveřice. Mimo uklízený projekt se nezapisuje bez rozhodnutí (`SKILL.md`, *Zásady pro celý průběh*), takže se na to ptáš vždycky. **Poznámka o `/end` samotném sem nepatří** – ta jde do fronty konfigurační vrstvy.
 
    **Tahle čtveřice je zapsaná výjimka z jednotného tvaru voleb** (`~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*): u položky, která není vadou, se neopravuje, takže *Neopravovat* nedává smysl. **Volby v tabulce níž platí pro položku, která je novou prací nebo nápadem** – tam je „jestli a kdy“ doopravdy uživatelovo rozhodnutí. **Je-li položka vadou** – dvě místa si odporují, odkaz nikam nevede, číslo nesedí se zdrojem –, je volba „kdy“ falešná a položka patřila do bodu 3 (`~/.claude/skills/findings.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*). **Objeví-li se v nabídce *Vyřešit teď*, ověř si proto ještě jednou, proč ji tam dáváš**: u vady, kterou umíš opravit, je to doklad, že se nemáš ptát.
 
@@ -85,10 +85,8 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
    | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/standards/structure.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Fáze 3 – Evidence a konfrontace se soubory*). |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
 
-   Když jsi vyřídil poslední položku, pokračuj *Fází 6* – tam na tebe čekají nálezy čtenářů.
+   Když jsi vyřídil poslední položku, pokračuj *Fází 6*.
 
-   **Neptej se předtím hromadně**, co s celou skupinou. Dřív tady stála meziotázka, jestli položky vyřešit všechny naráz, zapsat všechny do todo, nebo je projít po jedné – a v provozu z ní vždycky vyšlo „po jedné“, protože položky se povahou liší skoro vždycky; zrušena 7. 9. 2026. Volba, která má jediný reálný výsledek, stojí jednu odpověď navíc a nic nerozhoduje. **Platí to na tuhle skupinu, ne obecně:** kde jsou položky stejnorodé, je hromadná volba na místě a jinde ve skillech se schválně používá.
+   **Neptej se předtím hromadně**, co s celou skupinou – položky se povahou skoro vždycky liší, takže hromadná volba má jediný reálný výsledek a stojí odpověď navíc. **Platí to na tuhle skupinu, ne obecně:** kde jsou položky stejnorodé, je hromadná volba na místě a jinde ve skillech se schválně používá.
 
-6. Ať se rozhodne jakkoli, v přehledu v závěru pak u sekce *Mimo rozsah úklidu* uveď, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu. **Vyřešené z bodu 3 patří do téhož seznamu**, ne stranou: uživatel má na jednom místě vidět všechno, co bylo mimo rozsah, a u každé položky, kdo o ní rozhodl.
-
-**Proč se dnes část řeší bez ptaní:** dřív se tady vypisovalo všechno a nedělalo nic, pak se skill začal ptát na každou položku zvlášť. Druhá podoba vyřešila mizení položek se session, ale u jednoznačných oprav se ptala zbytečně – uživatel měl odklikávat, že se má opravit rozbitý odkaz, kterého si model všiml jen náhodou. Rozhodnuto 18. 9. 2026.
+6. Ať se rozhodne jakkoli, zapiš do pole `mimo rozsah` řádku průchodu v `done.md`, **jak se s položkami naložilo** – nikdy jen jejich výčet bez osudu, a vyřešené z bodu 3 do téhož pole. Příští `/end` podle něj pozná, co už se probralo.

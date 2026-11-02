@@ -45,6 +45,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LINKS = ROOT / "skills" / "links.py"
 EXTRACT = ROOT / "skills" / "end" / "scripts" / "extract.py"
+FINISH = ROOT / "skills" / "end" / "scripts" / "finish.py"
 
 
 def load(path, name):
@@ -744,6 +745,46 @@ class KontextProtiTranscriptu(PredfiltrBase):
         citace = "Nese jen náhled a věsuvku `Full output saved to: <cesta>`; plná verze leží jinde."
         rows = self.extract.load(str(self.transcript(self.tool("Bash", citace))))
         self.assertEqual(self.extract.persisted(rows), [])
+
+
+class EvidencePromptu(unittest.TestCase):
+    """`finish.py` je jediné, co pokrytí promptů měří – musí chytit díru i propustit úplnou evidenci."""
+
+    def setUp(self):
+        self.finish = load(FINISH, "finish_module")
+        self.dir = Path(tempfile.mkdtemp())
+
+    def check(self, text, total=6):
+        path = self.dir / "end-states.txt"
+        path.write_text(text, encoding="utf-8")
+        covered, errors = self.finish.states(path, total)
+        missing = [n for n in range(1, total + 1) if n not in covered]
+        return missing, errors
+
+    def test_uplna_evidence_projde(self):
+        text = "1-4 bez zápisu\n5 zapsáno docs/decisions.md\n6 přebito\n"
+        self.assertEqual(self.check(text), ([], []))
+
+    def test_chybejici_prompt_se_pozna(self):
+        missing, _ = self.check("1-4 bez zápisu\n6 přebito\n")
+        self.assertEqual(missing, [5])
+
+    def test_dva_stavy_jsou_chyba(self):
+        _, errors = self.check("1-6 bez zápisu\n3 přebito\n")
+        self.assertTrue(any("dva stavy" in e for e in errors))
+
+    def test_zapsano_bez_mista_je_chyba(self):
+        _, errors = self.check("1-5 bez zápisu\n6 zapsáno\n")
+        self.assertTrue(any("neplatný" in e for e in errors))
+
+    def test_nekonecny_stav_neprojde(self):
+        """Stav *k rozhodnutí* smí žít jen během fronty, ne v závěru."""
+        _, errors = self.check("1-5 bez zápisu\n6 k rozhodnutí\n")
+        self.assertTrue(any("neplatný" in e for e in errors))
+
+    def test_prompt_za_koncem_je_chyba(self):
+        _, errors = self.check("1-7 bez zápisu\n")
+        self.assertTrue(any("neexistuje" in e for e in errors))
 
 
 if __name__ == "__main__":

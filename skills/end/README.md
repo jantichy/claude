@@ -42,23 +42,12 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 ```
 ## Úklid dokončen
 
-**Pokrytí:** prompty 23/23 odškrtnuto · přečteno 312 kB z 3,0 MB záznamu
+Zapsáno: rozhodnutí o řezu skillu do decisions.md, tři odložené body do todo.md.
 
-**Zapsáno** – 12 zápisů
-- decisions.md – rozhodnutí o řezu skillu i se dvěma zamítnutými variantami
-- todo.md – tři odložené body s celým kontextem
-
-**Fronta rozhodnutí** – 4 položky: 2 rozhodnuty, 1 do todo, 1 bezpředmětná
-
-**Mimo rozsah úklidu** – hotový úkol visící mezi nedodělanými (přesunut)
-
-**Kontrola odkazů:** 0 · dvě mrtvé kotvy opraveny
-**Kontrakt příkazů:** test → 0
-**Git:** 4 commity · pushnuto · cizí rozdělaná práce: žádná
-
-**Meze běhu:** 68 bloků vnitřního přemýšlení (v záznamu jsou prázdné), 41 výpisů
-ze čtení souborů (obsah je v souborech samotných)
+Ze session je všechno zapsané a ověřené – prompty 23/23, můžeš zavřít session.
 ```
+
+Přehled ukazuje jen to, co od vás něco chce nebo dopadlo jinak, než mělo – selhanou kontrolu, nepushnutý commit, nepřečtenou část záznamu. Úplný záznam běhu, i s tím, jak se naložilo s každou položkou, zůstává v `done.md`.
 
 ## Co nedělá
 
