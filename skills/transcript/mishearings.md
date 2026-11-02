@@ -18,8 +18,6 @@ Zkomoleniny, které whisper dělá **opakovaně u kohokoliv**, kdo mluví o dan�
 
 ## PPC a webová analytika, čeština
 
-Změřeno na hodinové konzultaci o PPC (14. 9. 2026).
-
 | Whisper píše | Správně | Poznámka |
 |---|---|---|
 | T-Maxka, T-Max | PMax, PMaxka | Performance Max; skloňuje se česky |

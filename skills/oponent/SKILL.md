@@ -25,12 +25,6 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **Nevytěžuje session.** Že je všechno dohodnuté zapsané v souborech, hlídá `/end`.
 - **Nechválí.** Věci, které jsou v pořádku, se nevypisují.
 
-**Vědomé volby, ať je nikdo neřeší znovu** (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*):
-
-- **Hledisko *Vnitřní rozpor* se s `/consistency` částečně překrývá a je to přijatá cena.** Ano, „sedí čísla a výčty“ najde i `/consistency`. Ale oponentura běží i nad dokumentem, který `/consistency` nevidí (cizí podklad, text mimo projekt), a rozpor mezi dvěma tvrzeními ve věci samé je jiná práce než rozpor mezi součtem a tabulkou. Nález se vrací při každé oponentuře skillu; není to omyl, je to volba.
-- **Katalog se jednou vědomě zmenšil z devatenácti na sedmnáct** a ta hlediska nepatří zpátky: *Hraniční případy* splynuly s *Co chybí* (byl to týž generátor okrajů dvakrát), *Skeptik* s *Předpoklady* (tatáž otázka zprava a zleva) a *Technická proveditelnost* s *Daty* (měla nejchudší zadání a nad datovým modelem sahala po témže). Navrhne-li je někdo znovu jako „chybějící pokrytí“, tohle je odpověď. Naopak **Reverzibilita a závislosti se rozdělila na dva hlediska**, protože držela dvě různé otázky najednou – proto devatenáct minus tři sloučení plus jedno rozdělení dá sedmnáct, ne šestnáct.
-- **Katalog nemá strop na počet hledisek.** Brzdou je jen kontrola překryvu při přidávání (viz Fáze 1). Tvrdý strop by nutil vyhodit hledisko pokaždé, když nějaký skutečně chybí – a chybějící hledisko nevrátí nula nálezů, ale neexistenci.
-
 ## Fáze 0 – Co se oponuje
 
 **Tenhle skill neběží nad kódem projektu, takže body 1 až 3 z `~/.claude/skills/preflight.md` nahrazuje vlastními předpoklady níž** – posuzuje dokument, který může ležet i mimo projekt. Body 4 a 5 odpadají ze stejného důvodu: nic nespouští a nesahá na diff větve. Načti si ho přesto; platí z něj závěr o shrnutí zjištěného, než se cokoliv stane.
@@ -113,7 +107,7 @@ Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku
 
 **Nejdřív si vyrob inventuru předmětu, pak pouštěj oponenty.** Vypiš nadpisy posuzovaných dokumentů příkazem (`grep -n '^#' <cesty>`) a **zapamatuj si jejich počet** – proti němu se v *Konsolidaci* vykazuje, kolik z předmětu který oponent doopravdy prošel. Neodhaduj to (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
 
-**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a u pěti dokumentů se proletnutí od přečtení nepozná. Posudek, který pokryl třetinu předmětu, přitom vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní. Je to táž vada, kterou u `/end` vyřešil měřený poměr odškrtnutých promptů (`~/.claude/docs/decisions.md`, *`/end` se zúžil na jádro, zrušil čtenáře i subagenta a úplnost začal měřit*).
+**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a posudek, který pokryl třetinu předmětu, vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní.
 
 Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
 
@@ -179,7 +173,7 @@ Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatn�
 
 **Typ ověřovatele podle toho, na čem nález stojí:** přišel-li z hlediska s ✔ ve sloupci *Web*, nebo opírá-li se o vnější zdroj (URL, dokumentace dodavatele, ceník, předpis), jede na `researcher`; jinak na `reader`. Nález o cizí platformě by `reader` bez webu vrátil jako NEOVĚŘITELNÉ, a ověření by tak mlčky odpadlo právě u tvrzení, která autor dokumentu sám ověřit nejde. Oba typy nemají shell a nezapisují, takže záruka, že ověřovatel do dokumentu nesáhne, platí u obou. **Nejsilnější model, `xhigh`**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko.
 
-**Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti hledisek vrátí klidně 30 nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat. (Strop je nižší než v `/review`, protože tam ho odlehčuje deterministická vrstva, která část nálezů odčerpá bez ověřování; tady žádná není.)
+**Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti hledisek vrátí klidně 30 nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat.
 
 **Ověřovatel má tentýž kontext jako oponenti** – to není jeho výhoda a nedělej z toho výhodu. Rozdíl je jinde: ověřovatel **nemá zadané hledisko**, a tím pádem ani tlak vrátit nález. Oponent, který ze svého hlediska nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanismus, ne přístup k souborům.
 
@@ -256,7 +250,7 @@ U každého nejdřív vypiš:
 
 **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Ve větě řekni, **v čem je problém a jaký má důsledek**, a odkud to je (soubor, sekce, citace). Za titulní název připoj `· <hledisko>`, případně „2 oponenti nezávisle“ – čtenář tím pozná, odkud námitka přišla.
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“: u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Jejich počet, `header`, pojmenování obou záchytných voleb i to, který stav která znamená, drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají* – **tvar otázky platí pro celou rodinu kontrolních skillů** a vznikl 20. 9. 2026 zobecněním právě odsud.
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“: u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Jejich počet, `header`, pojmenování obou záchytných voleb i to, který stav která znamená, drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají* – **tvar otázky platí pro celou rodinu kontrolních skillů**.
 
 **Věcná varianta znamená stav Přijato**; oba záchytné stavy překládá tabulka v `findings.md`.
 

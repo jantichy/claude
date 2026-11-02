@@ -78,7 +78,7 @@ jobs:
       install: python3 -m pip install --quiet ruff==0.16.7
 ```
 
-Ten jeden SHA připíná workflow i nástroje: job si `jantichy/claude` naklonuje přesně v téhle verzi (`job.workflow_sha`) a proměnnou `CLAUDE_CONFIG` nastaví na ten klon. Volání přes `@main` nebo značku workflow odmítne. Projekt **nekopíruje workflow, runner ani jejich testy** – dřív to dělal a kopie se rozešly.
+Ten jeden SHA připíná workflow i nástroje: job si `jantichy/claude` naklonuje přesně v téhle verzi (`job.workflow_sha`) a proměnnou `CLAUDE_CONFIG` nastaví na ten klon. Volání přes `@main` nebo značku workflow odmítne. Projekt **nekopíruje workflow, runner ani jejich testy** – kopie se rozejdou.
 
 Volání se liší jen vstupy:
 
@@ -106,7 +106,7 @@ Stejně se v testech projektu dostane k `skills/links.py` a `order.py` – přes
 
 ## Dependabot: podmínka toho, aby připínání dávalo smysl
 
-**Co je v CI staženo za běhu, patří připnout na konkrétní commit** – `uses: actions/checkout@v5` je pohyblivá značka, kterou může majitel akce kdykoliv přesměrovat jinam, a doložené útoky na dodavatelský řetěz (trivy-action, kics-github-action) šly přesně touhle cestou.
+**Co je v CI staženo za běhu, patří připnout na konkrétní commit** – `uses: actions/checkout@v5` je pohyblivá značka, kterou může majitel akce kdykoliv přesměrovat jinam – a tudy vede útok na dodavatelský řetěz.
 
 **Připnutí samo o sobě je ale jednosměrná sázka:** commit se nezmění pod rukama, jenže zmrazí i chyby, které v něm jsou. Proto se **zakládá spolu s `.github/dependabot.yml`** – ten sleduje, co je připnuté, a sám otevře pull request, jakmile vyjde novější verze. Bez něj je poctivější značka než SHA, které za půl roku nikdo neaktualizuje.
 
@@ -121,7 +121,7 @@ updates:
       default-days: 7
 ```
 
-**`cooldown` není volitelný.** Bez něj Dependabot navrhne aktualizaci na balíček zveřejněný před hodinou – a čerstvě publikovaná verze je typická cesta útoku na dodavatelský řetěz, protože škodlivý balíček bývá stažen dřív, než si toho někdo všimne. Týden odstupu aktualizace nezastaví, jen je posune za okno, ve kterém se to stihne odhalit. Semgrep to hlídá pravidlem `dependabot-missing-cooldown`, takže konfigurace bez něj shodí CI – doloženo 15. 9. 2026.
+**`cooldown` není volitelný.** Bez něj Dependabot navrhne aktualizaci na balíček zveřejněný před hodinou – a čerstvě publikovaná verze je typická cesta útoku na dodavatelský řetěz, protože škodlivý balíček bývá stažen dřív, než si toho někdo všimne. Týden odstupu aktualizace nezastaví, jen je posune za okno, ve kterém se to stihne odhalit. Semgrep to hlídá pravidlem `dependabot-missing-cooldown`, takže konfigurace bez něj shodí CI.
 
 **Ekosystémů přidej tolik, kolik jich projekt má** – `npm`, `composer`, `gomod`, `pip` podle manifestu. `github-actions` patří k workflow, které samo používá akce; **projekt, jehož workflow jen volá sdílený `contract.yml`, ho nepotřebuje** – akce uvnitř hlídá Dependabot v `~/.claude` a SHA volání Dependabot posouvat neumí (viz výš). Nemá-li projekt ani žádný jiný ekosystém, `dependabot.yml` nezakládá.
 
@@ -129,7 +129,7 @@ updates:
 
 **Bez remote to nemá smysl** – je to služba GitHubu. U projektu bez remote krok přeskoč a řekni to.
 
-**Neplatí to jen na nové projekty.** Najdeš-li v existujícím workflow nepřipnuté akce, je to nález: buď se připnou a přibude Dependabot, nebo se zapíše, proč ne. Vědomé zamítnutí, které stojí na argumentu „bez Dependabota to zastará“, padá ve chvíli, kdy se Dependabot zavede – **projdi tedy i `## Review` v `CLAUDE.md` a registr obcházení**, jestli tam takový záznam neleží; doloženo 15. 9. 2026, kdy zamítnutí z 13. 9. přežilo v obou.
+**Neplatí to jen na nové projekty.** Najdeš-li v existujícím workflow nepřipnuté akce, je to nález: buď se připnou a přibude Dependabot, nebo se zapíše, proč ne. Vědomé zamítnutí, které stojí na argumentu „bez Dependabota to zastará“, padá ve chvíli, kdy se Dependabot zavede – **projdi tedy i `## Review` v `CLAUDE.md` a registr obcházení**, jestli tam takový záznam neleží.
 
 **Badge do `README.md`** – u veřejného repozitáře je to jediné místo, kde je stav vidět zvenčí.
 

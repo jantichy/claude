@@ -145,21 +145,21 @@ Tři vrstvy, každá měří něco jiného. Chybí-li nástroj pro některou, vy
 1. **Tvar** – pusť `python3 -m unittest discover -s tests` z `~/.claude`. Je to nejlevnější kontrola a stojí nula tokenů.
 2. **Vyvolání** – ladění `description`. Měří, jestli se skill chytí na situace, pro které vznikl, a nechytá se na cizí. **U skillu, jehož jméno se překrývá s cizím skillem, je tenhle krok povinný.**
 
-   **Neměř to skriptem `run_eval.py` ze `skill-creatoru` u skillu, který je nainstalovaný.** Registruje popis jako dočasný slash command a hledá volání toho dočasného jména; model přitom zavolá skutečný nainstalovaný skill, takže se **správné vyvolání počítá jako propadlé**. Ověřeno 6. 9. 2026 na `/compose`: 8/16, všech osm propadů byly pozitivní případy, a kontrolní běh s maximálně dotěrným popisem dal 0/2 – měřil nástroj, ne popis.
+   **Neměř to skriptem `run_eval.py` ze `skill-creatoru` u skillu, který je nainstalovaný.** Registruje popis jako dočasný slash command a hledá volání toho dočasného jména; model přitom zavolá skutečný nainstalovaný skill, takže se **správné vyvolání počítá jako propadlé**.
 
    **Měř na skutečném kanálu:** pusť každý testovací prompt přes `claude -p --output-format stream-json` v čistém adresáři a sleduj, jestli mezi voláními nástrojů padne `Skill` se jménem toho skillu.
 
-   **Nástroje měřicího běhu vyjmenuj kladně: `--tools Skill,Read --strict-mcp-config`.** Měřený skill se spustí doopravdy, a zapisuje-li, zapíše do ostrých dat – při měření `/download` tak do skutečné fronty stahování přibyla vymyšlená adresa. Zákaz `--disallowedTools Bash Edit Write` to nezastaví: vyjmenované nástroje sice drží i proti `allowed-tools` skillu, jenže model sám hledá „jiný nástroj“, kterým zápis udělat, a zbytek sady i MCP servery mu zůstávají. Kladný výčet zápis zavře a vyvolání dál ukáže, protože volání `Skill` v něm je. Ověřeno 30. 10. 2026 dočasným skillem, který zapisuje přes Bash: bez omezení zapsal, s `--tools Skill,Read --strict-mcp-config` vyvolání proběhlo a soubor nevznikl.
+   **Nástroje měřicího běhu vyjmenuj kladně: `--tools Skill,Read --strict-mcp-config`.** Měřený skill se spustí doopravdy, a zapisuje-li, zapíše do ostrých dat. Zákaz `--disallowedTools Bash Edit Write` to nezastaví – model si najde jiný nástroj, kterým zápis udělá, a zbytek sady i MCP servery mu zůstávají. Kladný výčet zápis zavře a vyvolání dál ukáže, protože volání `Skill` v něm je.
 
    **Pozor: doslovný `/jméno` se takhle změřit nedá.** Napíše-li uživatel jméno skillu s lomítkem, harness mu **vloží tělo `SKILL.md` rovnou do zadání** a model žádný nástroj `Skill` nevolá – není proč. Detektor postavený na volání nástroje pak hlásí propad tam, kde skill zabral **spolehlivěji** než jindy, protože o jeho načtení nerozhodoval model. Je to táž vada jako u `run_eval.py` o odstavec výš: měřidlo, které neodliší vlastní selhání od nálezu.
 
-   **Doslovné slash prompty proto měř znalostí obsahu těla** – zeptej se na něco, co je jen v `SKILL.md` a není v `description` (třeba na názvy fází), a ověř, že to model zná. Ověřeno 7. 9. 2026 na `/ptydepe`: detektor podle volání nástroje dal 20/24, skutečnost byla 24/24.
+   **Doslovné slash prompty proto měř znalostí obsahu těla** – zeptej se na něco, co je jen v `SKILL.md` a není v `description` (třeba na názvy fází), a ověř, že to model zná.
 
    Ostatní skilly jsou přitom reálně v nabídce, takže se rovnou měří i překryv s nimi. Dva běhy na prompt, aspoň 6 pozitivních a 6 negativních – near-missy volit tak, aby braly jednotlivá slova z popisu („posbírej články konkurence“ proti režimu `collect`).
 
    **Třetí vada měřidla: prompt musí mít o čem mluvit.** Odkazuje-li testovací prompt na vstup („zapracuj **tenhle článek**“, „přepiš **tuhle nahrávku**“) a v adresáři, kde měření běží, žádný takový soubor není, model se **doptá, místo aby jednal** – a detektor to započítá jako propad. Není to vada popisu: s existujícím souborem projde týž prompt na první pokus.
 
-   **Založ proto v měřicím adresáři vstup, na který se prompty odvolávají**, a propadlý pozitivní případ vždycky přeměř se souborem, než začneš přepisovat `description`. Ověřeno 10. 9. 2026 na `/learn`: z 8 promptů propadly 2 a **jen jeden z nich byl dírou v `description`**. Druhý mizel proto, že v adresáři nebyl soubor, o kterém prompt mluvil, a po jeho vložení prošel na první pokus.
+   **Založ proto v měřicím adresáři vstup, na který se prompty odvolávají**, a propadlý pozitivní případ vždycky přeměř se souborem, než začneš přepisovat `description`.
 
    Kdyby se to nerozlišilo, opravoval by se popis kvůli propadu, který s ním nemá nic společného. Je to táž třída chyby jako obě předchozí – měřidlo, které neodliší vlastní selhání od nálezu –, a **poznáš ji podle toho, že propadají jen pozitivní případy**.
 3. **Dodržení pod tlakem** – `superpowers:writing-skills`, tlakové scénáře. **Povinné u skillu, který něco zakazuje nebo vynucuje** (nesahat na testy, nepokračovat bez potvrzení, nespouštět proti produkci). U takového skillu je totiž funkce právě to omezení, a ta se tvarem ověřit nedá.
@@ -181,7 +181,7 @@ Skill nežije sám. Tohle je jediné místo, kde je to napsané, takže se to ji
 | `skills/*/README.md` **ostatních skillů z cyklu** | zakládáš-li krok *Životního cyklu projektu*, patří jeho jméno do rámečku i do hromadné instalace **ve všech ostatních README cyklu**. Testy to chytí, ale samy to nedopíšou |
 | `~/.claude/skills/<name>/` | vedlejší soubory, skripty, jejich kontrola závislostí |
 | `/project` | nabízí-li se skill při zakládání projektu, doplň ho do jeho doménových voleb |
-| `~/.claude/docs/decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo |
+| `skills/<name>/decisions.md` | proč vznikl, jaké varianty byly zavrženy, co se vědomě nepokrylo, měření ze srovnávacího běhu – `skills.md`, *Jak se píše text uvnitř*; do `SKILL.md` z toho jde jen věta pointy |
 
 **Commitni**, má-li repozitář zapnutý autocommit.
 
@@ -233,6 +233,7 @@ Projde skilly proti **dnešní** podobě normy a dorovná, co se rozešlo. Bez j
 | Délka | proti mezím z normy; nad měkkou mez navrhni, co vytáhnout |
 | Odkazy | každá cesta a každý zmíněný skill existuje; **žádný odkaz nemíří dovnitř fáze jiného skillu** |
 | Názvosloví | „Fáze“ vs. „Krok“; jeden termín pro jednu věc |
+| Historie a doklady | `SKILL.md` ani vedlejší soubory nenesou data, měření, incidenty, zavržené varianty ani rozbor návrhu – u pravidla zůstává věta pointy, zbytek se přesune do `skills/<name>/decisions.md` rovnou, bez ptaní |
 | Delegace | volané nástroje existují; sekce *Jak je to postavené uvnitř* je tam, kde se deleguje, a označuje vnitřek za vyměnitelný |
 | README skillu | existuje, má povinné sekce v pořadí z normy, instalace je psaná jako pokyn pro Clauda a u skillu ze životního cyklu nechybí rámeček ani hromadná instalace |
 | Proveditelnost | každý krok jde provést nástroji z `allowed-tools` a soubory, na které odkazuje, existují – ověřuje průchod nanečisto níž |
@@ -260,11 +261,9 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Nález, který měří `test_skills_match_standard` v `~/.claude/tests/test_skills.py`, se odložit nedá** – výjimky pro skilly mimo normu se nevedou, takže skill s takovým nálezem shodí testy, dokud se neopraví.
 
+**Datum ani otisk poslední revize nikam nezapisuj a revizi nezužuj na to, co se v normě od té doby změnilo** – minula by rozejití, které se tehdy nepropsalo, protože ho nikdo nezpropagoval.
+
 Pak pokračuj *Fází 7* – i `update` sahá na `README.md` a testy.
-
-### Proč se nikam neukládá, proti čemu se revidovalo naposledy
-
-Nabízí se zapsat datum poslední revize a příště projít jen to, co se od té doby v normě změnilo. **Vědomě se to nedělá.** Stav skillu je odvoditelný z toho, jak vypadá teď, kdežto zapsaný otisk je tvrzení, které nikdo neověřuje. Hlavně by ale zúžil revizi na diff normy, a tím minul přesně ten případ, kvůli kterému vznikla – rozejití, které se nikdy nepropsalo, protože ho tehdy nikdo nezpropagoval.
 
 ------
 

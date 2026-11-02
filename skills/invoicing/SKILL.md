@@ -220,11 +220,11 @@ Za každého klienta:
 
 **Proč to přebíjí i výslovný pokyn.** Vypadá to jako rozpor s pravidlem, že potvrzený požadavek uživatele je jeho rozhodnutí (`~/.claude/standards/rules.md`, *Přednost pravidel*, bod 1). Není: tenhle zákaz **je** uživatelovo rozhodnutí, jen učiněné předem a s chladnou hlavou. Proto „pošli to, spěchám“ uprostřed běhu neruší předchozí volbu – je to přesně ta situace, kvůli které si ji nastavil. Zrušit ji jde jedině změnou tohohle skillu, ne pobídkou za běhu.
 
-**Drží to mechanismus, ne jen tenhle text.** Odesílací nástroje Gmailu (`send_message`, `reply`, `forward`, obojí `trash_*`) jsou od 8. 9. 2026 v `deny` v `~/.claude/settings.json`, takže je nelze zavolat ani omylem, ani po pobídce. `create_draft` zakázaný není – ten skill potřebuje.
+**Drží to mechanismus, ne jen tenhle text.** Odesílací nástroje Gmailu (`send_message`, `reply`, `forward`, obojí `trash_*`) jsou v `deny` v `~/.claude/settings.json`, takže je nelze zavolat ani omylem, ani po pobídce. `create_draft` zakázaný není – ten skill potřebuje.
 
 **Hranice vede u odeslání a nevratného zásahu, ne u konceptu.** Povolené zůstávají nástroje pracující s koncepty a štítky (`create_draft`, `update_draft`, `list_drafts`, značkování): skill je potřebuje a jejich následek jde vzít zpět. Zakázané je to, co pošle poštu ven nebo nevratně sáhne na cizí zprávu. Je to vědomá čára, ne výčet toho, co padlo do oka.
 
-**Nezkoušej to řešit přes `allowed-tools` v hlavičce.** Podle dokumentace Claude Code to pole nástroje **neomezuje**, jen předschvaluje: *„It does not restrict which tools are available: every tool remains callable.“* Skill hlavičku kdysi měl, zrušil ji commit 622fa4f s odůvodněním, že „zakazoval Gmail MCP“ – jenže nic nezakazoval, jen se pak na `create_draft` doptával. Dnes v ní MCP nástroje zase stojí, a jen proto, aby se na koncepty a čtení pošty a sdílených dokumentů neptal: odesílací nástroje v ní chybí, ale zákaz to nezajistí; jedinou hranicí je `deny` (`~/.claude/standards/rules.md`, *Přednost pravidel*: kde má hranice držet, tam k ní patří mechanismus).
+**Nezkoušej to řešit přes `allowed-tools` v hlavičce.** To pole nástroje **neomezuje**, jen předschvaluje. MCP nástroje v něm stojí jen proto, aby se skill na koncepty a čtení pošty a sdílených dokumentů neptal: odesílací nástroje v něm chybí, ale zákaz to nezajistí; jedinou hranicí je `deny` (`~/.claude/standards/rules.md`, *Přednost pravidel*: kde má hranice držet, tam k ní patří mechanismus).
 
 ## Fáze 6 – Závěr
 
@@ -295,7 +295,7 @@ Dohledá **čas, který se zapomněl natrackovat**, a ukáže tipy s doložením
 
 **Proběhl-li nad klientem `recover` už dřív**, přečti si jeho blok dřív, než začneš – ne abys z něj opisoval, ale abys na konci uměl říct, co z něj po dnešním ověření padlo. **Vyvrácený nález z minula je nejcennější výstup, jaký druhý běh má**: ukazuje, která třída doložení neobstojí, a proto se vypisuje jmenovitě (výjimka ze zákazu v `recover.md`, *Ověření nálezů*).
 
-**Jméno je `recover` a nepřejmenovává se.** Zvažovalo se `restore` a `rescue`; obojí zamítnuto, protože slibuje, že se něco opraví – a tenhle režim nic nezapisuje. `reconcile` je odborně přesnější, ale česky se o něm nedá mluvit, a `gaps` pojmenovává výstup místo akce.
+**Jméno je `recover` a nepřejmenovává se.**
 
 Katalog zdrojů, heuristiky a tvar zadání pro sběrače drží `~/.claude/skills/invoicing/recover.md`. Přístupy a identifikátory drží `~/Context/Business/invoicing.md`, *Stopy práce*. **Tenhle režim si zdroje nevymýšlí** – sáhne jen na ty, které má klient vyjmenované; na ostatní se nedívá a vypíše je jako slepá místa.
 

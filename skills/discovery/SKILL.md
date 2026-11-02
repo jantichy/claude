@@ -179,9 +179,7 @@ Projdi nálezy s uživatelem a sepiš závěr do sekce `## Naše pozice a odliš
 
   **Stav „máme to, nebo ne“ se u každého řádku ověřuje proti návrhu, ne odhaduje.** Běží-li skill nad projektem, který už návrh má – `docs/model.md`, `docs/transitions.md`, `docs/architecture.md` –, **otevři ho a najdi tu funkci**, než napíšeš, že chybí. Totéž platí pro každý nález, který odsud odchází do `docs/todo.md`.
 
-  **Proč se na to musí upozorňovat:** celý tenhle krok se dívá ven a jeho vstupem jsou podklady o trhu, ne dokumentace vlastního řešení. Nález tvaru *„tohle systém nemá“* proto vzniká z toho, co skill **nevidí**, a vypadá doloženě, protože doložená je ta půlka o konkurenci. **Vymyšlený požadavek stojí víc než vynechaný:** dostane se do fronty jako práce, projde řezem MVP a rozhoduje se o něm znovu, přestože je hotový.
-
-  **Doloženo 25. 9. 2026** v rezervačním systému: z osmi řádků se stavem **nemá** byly dva neplatné – volba mezi zálohovkou a daňovým dokladem, kterou drží zděděné nastavení `document`, a vynechání platebního kroku u nulové ceny, které řeší `payFree` a stav `FREE_PAID`. Obojí bylo rozhodnuté měsíce předtím a našlo se až při práci na té položce. **Zbylé nálezy platily**, takže to není argument proti kroku, ale proti psaní stavu zpaměti.
+  **Proč se na to musí upozorňovat:** krok se dívá ven, takže nález *„tohle systém nemá“* vzniká z toho, co skill **nevidí**, a přesto vypadá doloženě – a vymyšlený požadavek stojí víc než vynechaný, protože se dostane do fronty jako práce, přestože je hotový.
 - **Co děláme jinak** a proč si kvůli tomu někdo vybere nás. U každého bodu **řekni, čím je to doložené** – co v rešerši ukazuje, že to konkurence nemá nebo dělá špatně. Odlišení bez opory v datech je přání, ne pozice.
 - **Kde vědomě zaostáváme** a proč nám to nevadí. Neprázdné: prázdná skupina znamená, že se tvrdí „budeme lepší ve všem“, což neplatí nikdy.
 

@@ -42,8 +42,6 @@ Vyhrává první kritérium, které sedí:
 - **Blok nikdy není prázdný.** Nevede-li dál nic, řekne se to i s důvodem – „tady osa cyklu v tomhle projektu končí, protože se nenasazuje“ je platná odrážka, mlčení ne.
 - **Neptej se na to přes `AskUserQuestion`.** Je to doporučení, ne rozhodnutí, které by běh potřeboval, aby mohl skončit – a otázka na konci hotového běhu nutí uživatele kliknout, i když chtěl jen vidět, že je hotovo. Kde otázka na konci dnes je, zruší se.
 
-**Proč to nese verdikt nedostatečně:** verdikt má předepsaná dvě znění a v hotovém z nich bývá „můžeš na `/breakdown`“. To funguje, dokud je ten další krok jeden a patří do téhle session. Jakmile jsou dva, nebo jakmile se mezi ně vejde ukončení session, věta to neunese a navigace z ní tiše vypadne.
-
 ------
 
 ## Řetěz, který nepatří do téhle session
@@ -119,7 +117,7 @@ Volání se počítají jen v hlavní session, ne v subagentech, a obojí se mě
 
 Platí pro každý běh, který **prochází frontu jedna položka po druhé** – nálezy `/review`, `/consistency`, `/attack`, `/oponent`, `/consolidate`, poznatky `/evaluate`, frontu rozhodnutí `/end`, úkoly `/implement`, sporné nálezy `/audit`.
 
-Dva skilly s vlastní frontou tu vědomě **nejsou** – ten, který rozpouští nový zdroj do znalostní báze, a ten, který vytahuje scénáře ze starých konverzací. Jejich fronta bývá krátká a pravidlo, které se nikdy neuplatní, je jen text k údržbě (`decisions.md`, 28. 9. 2026).
+Dva skilly s vlastní frontou tu vědomě **nejsou** – ten, který rozpouští nový zdroj do znalostní báze, a ten, který vytahuje scénáře ze starých konverzací. Jejich fronta bývá krátká a pravidlo, které se nikdy neuplatní, je jen text k údržbě.
 
 **`/autopilot` tu taky není, ale z jiného důvodu:** jeho fronta žije v `todo.md` a běh končí na hranici úkolu, takže zapisovat není co. Přerušení nenabízí – uživatel u něj není – a na prahu doporučení skončí sám řetězem `/end` → `/clear` → `/autopilot`. Práh si měří vlastním skriptem, protože hook výš se v autonomním běhu neozve.
 

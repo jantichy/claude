@@ -1,6 +1,6 @@
 # Příprava skillu
 
-Společný začátek běhu, který si skilly opisovaly. Odkazují se sem místo toho, aby ho měly každý svůj – změna se pak dělá na jednom místě, ne v deseti.
+Společný začátek běhu, který sdílí víc skillů. Odkazují se sem místo toho, aby ho měly každý svůj – změna se pak dělá na jednom místě, ne v deseti.
 
 **Jak se to používá.** Skill má fázi `## Fáze 0 – Příprava`, v ní odkaz sem a **jen to, co má vlastního**: co dalšího si musí načíst, co ověřit, na co se zeptat. Nekopíruj sem nic zpátky a neopisuj odsud do skillu.
 
@@ -24,7 +24,7 @@ Kořen projektu je adresář s `.git`. Hledej ho **přes Glob, ne přes `git` v 
 
 **Najdeš-li vedle `.git` taky `.bare/`, stojíš v kořeni kontejneru worktree layoutu** (`~/.claude/standards/worktree.md`). Ten není pracovní strom: `git diff` ani `git status` v něm neprojdou a commitovat se tam nedá. Přesuň se do adresáře té větve, na které se má pracovat. Projektový `CLAUDE.md` je pak ten ve worktree, ne rozcestník v kořeni kontejneru.
 
-**Není-li to git repozitář vůbec, rozhoduje, jestli ho tvůj skill potřebuje** – a to jsou dvě různé věci, které tenhle bod do 22. 9. 2026 sléval do jedné:
+**Není-li to git repozitář vůbec, rozhoduje, jestli ho tvůj skill potřebuje** – a to jsou dvě různé věci:
 
 **Rozhoduje kritérium, ne seznam jmen** – jmenovitý výčet by při dalším skillu zestárnul a nikdo by ho nepřepsal:
 
@@ -36,8 +36,6 @@ Kořen projektu je adresář s `.git`. Hledej ho **přes Glob, ne přes `git` v 
 **Kořen projektu se hledá v obou případech stejně** – adresář s projektovým `CLAUDE.md`, i když v něm `.git` není.
 
 **Pokračuješ-li bez gitu, odpadají s ním i body 3 až 5**, protože všechny tři na něm stojí: stav pracovního stromu, průběžná kontrola před startem i rozsah změn na větvi. Zbývá tedy jen tenhle bod a bod 2. **Řekni to nahlas jako jednu věc**, ne u každého bodu zvlášť – a ber to jako meze celého běhu: bez stavu pracovního stromu nepoznáš cizí rozdělanou práci, takže si nesmíš přisvojit ani vyloučit nic, co v souborech najdeš.
-
-**Proč to má vlastní rozlišení:** pravidlo psané jako tvrdá podmínka pro všechny **obešli tři agenti nezávisle na sobě** (21. a 22. 9. 2026, běhy `/evaluate`) se shodným odůvodněním, že jejich skill nic nemění a necommituje. Opakované obcházení je podle `~/.claude/standards/rules.md`, *Mechanická pravidla nad rozhodováním případ od případu*, nejdřív signál, že je pravidlo špatně formulované – a tohle bylo: mísilo *zjisti, kde stojíš* s *bez gitu nepokračuj*, přičemž to první potřebuje každý skill nad projektem a to druhé jen část z nich.
 
 ## 2. Projektový `CLAUDE.md`
 

@@ -42,6 +42,24 @@ def glob_matches(path, pattern):
     return True
 
 
+HISTORY_DATE = re.compile(r"\b\d{1,2}\. ?\d{1,2}\. ?20\d{2}\b")
+
+# Soubory, které se za běhu čtou, ale datum v nich je obsah, ne doklad:
+# rozvaha termínů je to, co /ptydepe čte jako vstup.
+HISTORY_EXEMPT = {"ptydepe/terms.md"}
+
+
+def runtime_files():
+    """Markdowny v `skills/`, které skill za běhu čte – bez README, decisions.md a cizích."""
+    for path in sorted((ROOT / "skills").rglob("*.md")):
+        rel = path.relative_to(ROOT / "skills")
+        if rel.parts[0] == "synced" or path.name in ("README.md", "decisions.md"):
+            continue
+        if str(rel) in HISTORY_EXEMPT:
+            continue
+        yield path
+
+
 def frontmatter(path: Path) -> dict:
     """Minimální parser YAML hlavičky – jen klíč: hodnota na první úrovni."""
     text = path.read_text(encoding="utf-8")
@@ -1074,6 +1092,32 @@ class CoreParts(unittest.TestCase):
                     text,
                     f"{skill.parent.name}: zapisuje datovaný záznam, ale nejmenuje `date +%F`",
                 )
+
+    def test_runtime_files_carry_no_history(self):
+        """Doklad v souboru čteném za běhu se platí při každém vyvolání a nic neřídí.
+
+        `~/.claude/skills/skills.md`, *Jak se píše text uvnitř*: historie, měření a
+        rozvaha patří do `skills/<name>/decisions.md`, který se za běhu nečte.
+        Česky psané datum je spolehlivý příznak dokladu; ISO datum bývá šablona.
+        """
+        self.assertTrue(HISTORY_DATE.search("vzniklo 2. 11. 2026"))
+        self.assertTrue(HISTORY_DATE.search("do 26.9.2026"))
+        self.assertFalse(HISTORY_DATE.search("- **2026-11-02** · `/end`"))
+        for path in runtime_files():
+            rel = path.relative_to(ROOT / "skills")
+            text = path.read_text(encoding="utf-8")
+            with self.subTest(file=str(rel)):
+                found = HISTORY_DATE.findall(text)
+                self.assertFalse(
+                    found,
+                    f"{rel}: nese datum dokladu {found[:3]} – přesuň ho do decisions.md skillu, u sdíleného souboru do docs/decisions.md",
+                )
+                if len(rel.parts) > 1:
+                    self.assertNotRegex(
+                        text,
+                        rf"skills/{re.escape(rel.parts[0])}/decisions\.md|\]\(decisions\.md\)",
+                        f"{rel}: odkazuje na decisions.md skillu, který se za běhu číst nemá",
+                    )
 
     def test_runtime_state_is_gitignored(self):
         """Stav, který se mění po každé odpovědi, nesmí skončit v gitu.

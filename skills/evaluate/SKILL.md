@@ -82,7 +82,7 @@ Společný začátek je v `~/.claude/skills/preflight.md`. Body 4 a 5 odpadají 
 
 **Nejdřív rozhodni, jestli se delegace vyplatí.** Deleguje se kvůli kontextu, ne kvůli úspoře (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*) – a u projektu, kde je všech pět zdrojů dohromady pár kilobajtů, je levnější je přečíst rovnou. Rozeslání agentů má smysl, až když by sběr hlavní session kontext ucpal: export o tisících řádků, dlouhý log, databáze, ze které se dotazuje po částech.
 
-**Čteš-li to sám, čti to rovnou** a *Fáze 2* se scvrkne na dotazy a výpisy. Doloženo prvním ostrým během (21. 9. 2026): agent delegaci vědomě neprovedl, protože zdroje byly pětikilobajtové, a bylo to správné rozhodnutí – každý agent by si načetl totéž a výstup by se vrátil převyprávěný.
+**Čteš-li to sám, čti to rovnou** a *Fáze 2* se scvrkne na dotazy a výpisy.
 
 **Vyplatí-li se to, pusť na každý zdroj jednoho agenta typu `Explore`** (má shell, který sběr potřebuje) a **pusť je naráz**. Model výchozí, effort `low` – je to mechanický sběr s úzkým zadáním a jeho chyba se pozná hned u čísla, které nejde zopakovat.
 
@@ -107,7 +107,7 @@ Ze surových údajů složíš **poznatky**: tvrzení o provozu, každé s čís
 
 1. **Používá se to?** Kolik lidí, jak často, vrací se.
 2. **Kde to lidé nedokončili?** Kde se cesta láme a kolik lidí tam zůstalo.
-3. **Co si vyžádali?** I to, co je v zadání vědomě vyloučené – dvě nezávislé žádosti o totéž jsou doklad, který tam při psaní zadání nebyl. **Použití nepostavené funkce ale v datech být nemůže:** není-li cesta postavená, nemá aplikace čím ji zaznamenat, takže záznam, který se jí tváří, měří něco jiného. Doloženo tlakovým scénářem (22. 9. 2026), kde by týž řádek sloužil zároveň jako doklad, že funkce chybí, i jako doklad, že ji lidé použili.
+3. **Co si vyžádali?** I to, co je v zadání vědomě vyloučené – dvě nezávislé žádosti o totéž jsou doklad, který tam při psaní zadání nebyl. **Použití nepostavené funkce ale v datech být nemůže:** není-li cesta postavená, nemá aplikace čím ji zaznamenat, takže záznam, který se jí tváří, měří něco jiného.
 4. **Co jim systém odmítl?** Zamítnutá akce, vypršelý limit, odmítnuté zrušení. **Nejsou to pády, takže o nich sledovací okno neví**, a přitom je to nejpřesnější seznam míst, kde návrh nesouhlasí se životem.
 5. **Co z `risks.md` se projevilo?** U rizika, které nastalo, doplň, čím se projevilo.
 6. **Co nepoužil nikdo?** Funkce, která stála práci a nemá jediné použití.
@@ -116,18 +116,14 @@ Ze surových údajů složíš **poznatky**: tvrzení o provozu, každé s čís
 
 **Na nejsilnější poznatky pusť ověřovatele** – agenta typu `Explore` (přepočítává, takže shell potřebuje) s jediným úkolem: **ten poznatek vyvrátit.** Dostane tvrzení, jeho číslo a příkaz k zopakování, nic víc, a vrací `vyvráceno` s dokladem, `obstálo`, nebo `nerozhodnutelné` s tím, co v datech chybí – to poslední je stejně platná odpověď a vede na *nepotvrzené v obou směrech* níž. Vlastní ověření to nenahradí a je to celá podstata téhle vrstvy: poznatky jsi našel ty, takže máš zájem na tom, aby platily (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, odrážka o izolaci kontextu). Model nejsilnější, protože vyvrácený nález je to, co se do podkladu nedostane – chyba ověřovatele se násobí do všeho, co pak na podkladu stojí.
 
-**Doloženo prvním ostrým během (21. 9. 2026).** Ověřovatel tehdy přinesl doklad, který nikdo nehledal: u poloviny sousedních záznamů podle rostoucího klíče **nerostlo `created_at`**. U autoinkrementovaného klíče to nemůže nastat, takže se časy přiřadily nezávisle na pořadí vkládání – a padla tím celá číselná vrstva běhu. Bez ověřovatele by z toho byla analýza chování lidí postavená na datech, která o lidech neříkají nic.
-
 **Vyjde-li z ověření, že jsou data nedůvěryhodná, není to důvod běh zahodit.** Zapiš to jako **verdikt o důvěryhodnosti** do hlavičky podkladu a **poznatky rozděl podle toho, na čem stojí:**
 
 - **Stojí na struktuře** – platí bez ohledu na čísla: chybějící omezení v databázi, chybějící čas přechodu stavu, pravidlo, které odmítá akci tam, kde nemělo. Tyhle se hlásí normálně.
 - **Stojí na čísle** – konverze, počty, trendy. Ty se zapíšou s verdiktem u sebe a **nesmí se z nich argumentovat**, dokud se data nevyjasní; první úkol z běhu je pak zjistit, čemu v datech věřit.
 
-Rozdělení navrhl první ostrý běh a obě zjevné alternativy jsou horší: odložit celé vyhodnocení by zahodilo i nálezy, které na datech nezávisí, a poznámka „data jsou možná nedůvěryhodná“ někde v úvodu se s konkrétním číslem o dva odstavce dál nikdy nespojí.
-
 **Poznatek, který se nepodařilo zopakovat, se nehlásí.** Zmizí, a v závěru se řekne, že se nepotvrdil.
 
-**Platí to i pro poznatek uklidňující, ne jen pro alarmující.** „Nic se neztratilo“ je tvrzení jako každé jiné a musí ověření přežít taky – jinak se z chybějícího dokladu o škodě stane doklad, že škoda není. Doloženo tlakovým scénářem (22. 9. 2026): log hlásil pětkrát ztracenou objednávku, všech pět jich v databázi bylo jako zaplacené, a přesto nešlo tvrdit ani jedno – v datech nebylo čím řádek s logem spárovat. **Nedá-li se tvrzení ani doložit, ani vyvrátit, patří to do závěru jako nepotvrzené v obou směrech**, ne jako dobrá zpráva.
+**Platí to i pro poznatek uklidňující, ne jen pro alarmující.** „Nic se neztratilo“ je tvrzení jako každé jiné a musí ověření přežít taky – jinak se z chybějícího dokladu o škodě stane doklad, že škoda není. **Nedá-li se tvrzení ani doložit, ani vyvrátit, patří to do závěru jako nepotvrzené v obou směrech**, ne jako dobrá zpráva.
 
 **Závažnost pak odvoď z toho, co nejde vyloučit, ne z toho, co se prokázalo.** Nedoložená ztráta dat, kterou data neumí vyvrátit, je KRITICKÁ podle `~/.claude/skills/severity.md`, protože chybějící stopa je sama tou vadou.
 
@@ -164,7 +160,7 @@ Nejdřív **vypiš přehled**: kolik poznatků je vad, kolik nové práce, kolik
 **Pak pokračuj hned v téže odpovědi**, nekonči na přehledu. **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název poznatku na samostatném řádku a pod ním souvislý text, ve kterém uvnitř věty řekneš, z čeho se to ví a co z toho plyne; žádná mřížka popisků.
 
 - **Vady** vypořádej podle `findings.md` – mechanické a jednoznačné zapiš jako úkol bez ptaní v zapracování, sporné předlož po jedné.
-- **Nová práce** jde k uživateli vždy, jeden poznatek = jedna otázka, s volbami *do `todo.md`* / *do `backlog.md`* / *vědomě neděláme*. **Vylučuje-li tu věc zadání, rozliš rozhodnutí od jeho odůvodnění:** rozhodnutí smí platit dál, ale **vyvrácený důvod se hlásí vždy**. Věta „kapacity se plní z 80 %, takže čekací listina by byla funkce pro nikoho“ přestane být pravdivá ve chvíli, kdy jsou tři z pěti kroužků plné – a dokud v zadání stojí, čte ji každý příští běh jako fakt. Ptej se tedy na jednu větu odůvodnění, ne na to, jestli se ta funkce postaví. Vymyslel to tlakový scénář 22. 9. 2026 a je to lepší rozlišení, než skill měl. U třetí volby se ptej na důvod a zapiš ho – bez něj to za rok někdo navrhne znovu (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*).
+- **Nová práce** jde k uživateli vždy, jeden poznatek = jedna otázka, s volbami *do `todo.md`* / *do `backlog.md`* / *vědomě neděláme*. **Vylučuje-li tu věc zadání, rozliš rozhodnutí od jeho odůvodnění:** rozhodnutí smí platit dál, ale **vyvrácený důvod se hlásí vždy**. Vyvrácené odůvodnění čte každý příští běh jako fakt, dokud v zadání stojí. Ptej se tedy na jednu větu odůvodnění, ne na to, jestli se ta funkce postaví. U třetí volby se ptej na důvod a zapiš ho – bez něj to za rok někdo navrhne znovu (`~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*).
 - **Zjištění bez akce** neprobírej po jednom, jen je vypiš.
 
 Každé rozhodnutí v zapracování **zapiš na dvě místa**: k poznatku do `operation.md` a jako úkol do `todo.md`, nápad do `backlog.md`, nebo zdůvodněné „neděláme“ do `decisions.md`. Není to dvojí pravda – v podkladu stojí, **jak se rozhodlo**, ve frontě práce, **co se má udělat**.

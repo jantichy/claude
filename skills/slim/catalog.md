@@ -83,7 +83,7 @@ Dvě kopie téhož pravidla ve dvou souborech, které se **vždy načtou spolu**
 | **Redukce na jádro** | pravidlo nese výklad, příklady, popis vnitřku skillů | ponechat jen to, bez čeho by model jednal špatně | uživatel |
 | **Tenké jádro + výklad stranou** | soubor nese pravidlo i jeho rozvahu; roste s každým záznamem | v paušálu jen tabulka nebo pravidla, výklad do souboru ke správci | uživatel |
 | **Jiný čtenář** | text je dokumentace, ne instrukce – co která kontrola hlídá, historie kontraktu | do souboru pro toho čtenáře (`tests/README.md`), v paušálu odkaz | uživatel |
-| **Doklad** | datum, incident, citace, jméno projektu, historie pravidla („do té doby tu stálo“, „upřesněno …“), měření sloužící jen jako důkaz | škrt; pointa zůstane jednou větou, doklad nese commit | rovnou |
+| **Doklad** | datum, incident, citace, jméno projektu, historie pravidla („do té doby tu stálo“, „upřesněno …“), měření sloužící jen jako důkaz | škrt; pointa zůstane jednou větou, doklad nese commit – **v souboru skillu** ho přesuň do `skills/<name>/decisions.md` (`skills/skills.md`, *Jak se píše text uvnitř*) | rovnou |
 | **Slabé pravidlo** | viz níž | zrušení | uživatel |
 | **Duplicita s jasným vítězem** | totéž na dvou místech, jedno je zjevně domov – včetně dvojic podle *Duplicit mezi soubory načítanými spolu* | ve druhém odkaz nebo nic | rovnou |
 | **Duplicita bez vítěze** | dvě místa, obě obhajitelná, nebo se liší obsahem | sloučení; které místo vyhraje | uživatel |

@@ -53,9 +53,9 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 - **Nikdy nerozšiřuj rozsah na okolí.** Ani „když už jsem v Downloads“, ani „tyhle tři zjevně patří k sobě“. Sousední soubor, který podle tebe patří do téže dávky, **nabídni a nech rozhodnout**.
 - **Chybí-li argument úplně**, zeptej se, co zařadit. Nepouštěj se do žádného adresáře sám.
 
-**Proč to stojí takhle tvrdě:** agent puštěný na tenhle úkol bez skillu si rozsah sám rozšířil z předaných souborů na celé `~/Downloads`, narazil na pět tisíc položek a kvůli tomu rozsahu se zastavil, aniž hnul jediným souborem. Rozšíření rozsahu se přitom tváří jako služba navíc.
+**Proč to stojí takhle tvrdě:** rozšíření rozsahu se tváří jako služba navíc, a přitom je to nevratný hromadný přesun.
 
-**Zdroj tu ochranu neruší, jen ji drží jiným nástrojem.** Do 22. 9. 2026 ji nesl výčet cest a skill do žádného adresáře sám nesměl; u proudu ji nesou výčet míst v doméně, interval a čára. Pět tisíc položek z původního případu leží v podsložkách, které doména nejmenuje, a pod čárou – do rozsahu se tedy nedostanou. **Nejde o zmírnění pravidla**: kdo by ho při revizi vracel k výčtu cest, zruší zdroj, ne díru.
+**Zdroj tu ochranu neruší, jen ji drží jiným nástrojem:** u proudu ji nesou výčet míst v doméně, interval a čára. **Nejde o zmírnění pravidla.**
 
 ## Hranice
 
@@ -238,7 +238,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 ## Časté chyby
 
-- **Rozšíření rozsahu na okolí.** „Když už jsem v Downloads“ vypadá jako služba navíc a je to nevratný hromadný přesun. Doloženo srovnávacím během: agent bez skillu sáhl z dvou předaných souborů na pět tisíc.
+- **Rozšíření rozsahu na okolí.** „Když už jsem v Downloads“ vypadá jako služba navíc a je to nevratný hromadný přesun.
 - **Ptaní se před rozhodnutím místo po něm.** Otázky položené dřív, než je hotový plán, skončí tím, že se nepřesune nic.
 - **Uhnutí při kolizi.** Přípona `(1)` v názvu vyrobí duplikát, na který se žádná evidence neodkazuje – a v Depotu se to už nedá přejmenovat zpátky.
 - **Zápis evidence vlastní rukou.** `sources.md` patří `/learn`; druhý zapisovatel se s ním rozejde při první opravě.

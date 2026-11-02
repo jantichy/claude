@@ -27,9 +27,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 
 **Všechno, co jde zjistit mechanicky, posbírá jedním během skript `collect.py`** v adresáři skillu a vrátí to jako JSON: kořen a uspořádání projektu, hlavní větev po `git fetch`, položky `todo.md` rozdělené podle sekcí, bloky kol se stavem z jejich větví, stav plánu, návrhové dokumenty, poslední průchody cyklem, rámeček cyklu z `~/.claude/standards/rules.md`, necommitnuté změny a nesloučené větve i s tím, jestli nad nimi běží session. **Živé a opuštěné session zjišťuje `sessions.py`**, který `collect.py` volá – čte registr běžících session Claude Code (`~/.claude/sessions/`), ověří, že proces žije, a větev bere z posledního záznamu transcriptu, protože session ve worktree layoutu startuje v kořeni kontejneru.
 
-**Proč skript, a ne pokyny:** dřív skill vedl model přes desítky volání gitu a čtení souborů, každé s čekáním na model, a k tomu si pokaždé načítal `structure.md`, `preflight.md` a `lifecycle.md`. Běh trval přes minutu, přestože uživatel chce jen rychlý návrh. Skript běží pár vteřin – z toho zhruba polovina je `git fetch` po síti – a model dělá jen úsudek. Druhý důvod je spolehlivost: **registr i transcript jsou vnitřní formát Claude Code bez dokumentace** a o obsazenosti větve rozhoduje testovaný kód (`tests/test_next.py`), ne úvaha modelu.
-
-**Nástroj `ListAgents` je nenahradí, ověřeno 20. 9. 2026.** Vypisuje sice běžící session na stroji, ale jen jejich jméno, stav a stáří – ne větev ani adresář projektu. Rozhodnutí *nabídnout, nebo skrýt* stojí právě na větvi, takže registr i transcript se čtou dál vlastním skriptem.
+**Nástroj `ListAgents` je nenahradí** – nevrací větev ani adresář projektu, a právě na větvi stojí rozhodnutí *nabídnout, nebo skrýt*.
 
 **Skripty jsou implementační detail.** Závazné je jen to, co z nich plyne pro nabídku: úkol ve větvi, nad kterou běží živá session, se nenabízí; **session, která běží – i obnovená v jiném okně –, se k obnovení nenabízí nikdy**; opuštěná větev se nabídne jako první; a **nedá-li se to zjistit, bere se větev jako obsazená** a řekne se to nahlas.
 
@@ -61,7 +59,7 @@ Co z výstupu je položka fronty:
 | `branches` | práce ve větvi – viz *Práce ve větvích* |
 | `backlog` | skript ho vrací jen při prázdné frontě – viz *Fáze 2* |
 
-**Popis položky může být zkrácený a dolovat ho zpátky se nesmí.** Výstup nad ~30 kB harness do kontextu nevloží – uloží ho do souboru a dá jen náhled –, takže skript si sám hlídá rozpočet a popisy položek dokrátí. Na kolik, říká `text_limit`: `null` znamená celé popisy, číslo zkrácení na tolik znaků, `0` popisy zahozené a zbylý název. **Jednořádkový výpis *Fáze 3* vystačí se jménem vždycky**; teprve u tří čtyř položek, které jdou do nabídky, otevři `todo.md` na jejím místě – a jen tehdy, když se z názvu `description` napsat nedá. Číst kvůli tomu celou frontu znovu je přesně ta ztráta, kvůli které skript vznikl (změřeno 29. 9. 2026: useknutý výstup a dolování zpátky protáhly běh na 4:30).
+**Popis položky může být zkrácený a dolovat ho zpátky se nesmí.** Výstup nad ~30 kB harness do kontextu nevloží – uloží ho do souboru a dá jen náhled –, takže skript si sám hlídá rozpočet a popisy položek dokrátí. Na kolik, říká `text_limit`: `null` znamená celé popisy, číslo zkrácení na tolik znaků, `0` popisy zahozené a zbylý název. **Jednořádkový výpis *Fáze 3* vystačí se jménem vždycky**; teprve u tří čtyř položek, které jdou do nabídky, otevři `todo.md` na jejím místě – a jen tehdy, když se z názvu `description` napsat nedá. Číst kvůli tomu celou frontu znovu je přesně ta ztráta, kvůli které skript vznikl.
 
 ### Položka odložená k datu
 
@@ -91,7 +89,7 @@ Obsazenost už rozhodl skript, pole `state`:
 
 **Na položku z fronty větev přiřaď** podle pole `rounds` (kola s řádkem *Větev*), podle `changes` (které položky větev v `todo.md` a `plan.md` mění nebo odškrtává; `adds_stitch` znamená sešití návrhu) a nakonec podle jména větve a `commits` – shoda jen podle jména je **domněnka** a řekni to. Položka přiřazená obsazené nebo nejisté větvi se **z fronty vyřadí**; větev bez přiřazené položky se vypíše sama, s tím, co v ní podle commitů je.
 
-**Větev s `current: true`** je ta, ve které session stojí: je-li `abandoned`, je to rozdělaná práce tady; je-li `occupied`, pracuje nad ní ještě jiné okno a platí totéž co pro jiné obsazené větve – **i když je to hlavní větev** (`main: true`). **Hlavní větev skript vypíše jedině tehdy, když v ní opravdu něco leží** – commit nad hlavní referencí, nebo neuložená změna v jejím worktree. **Živá session to nestačí a je to opravené 28. 9. 2026:** session, která ve worktree layoutu startuje v kořeni kontejneru a vlastní větev si ještě nezaložila, hlásí jako svou hlavní větev – a ta se pak vypisovala jako `occupied`, takže ji skill podle vlastního pravidla přestal nabízet. Stačilo tedy druhé otevřené okno nad projektem a práce mířící do hlavní větve zmizela z nabídky. Hlídají to dva testy v obou směrech.
+**Větev s `current: true`** je ta, ve které session stojí: je-li `abandoned`, je to rozdělaná práce tady; je-li `occupied`, pracuje nad ní ještě jiné okno a platí totéž co pro jiné obsazené větve – **i když je to hlavní větev** (`main: true`). **Hlavní větev skript vypíše jedině tehdy, když v ní opravdu něco leží** – commit nad hlavní referencí, nebo neuložená změna v jejím worktree. **Živá session to nestačí:** session, která ve worktree layoutu startuje v kořeni kontejneru a vlastní větev si ještě nezaložila, hlásí jako svou hlavní větev – a stačilo by druhé otevřené okno nad projektem, aby práce mířící do hlavní větve zmizela z nabídky.
 
 ### Kola návrhu
 
@@ -145,11 +143,11 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*. Prázdnou část vynech.
 
-**Pořadí je schválně od kontextu k výběru** (vyžádal si ho uživatel 16. 9. 2026): poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky jsou holý odstavec bez popisku** a stojí úplně nahoře; **práce jinde a čekající položky jsou každá jeden odstavec** s tučným popiskem, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
+**Pořadí je schválně od kontextu k výběru:** poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky jsou holý odstavec bez popisku** a stojí úplně nahoře; **práce jinde a čekající položky jsou každá jeden odstavec** s tučným popiskem, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
 
-**Tučný je jen nadpis a popisky částí, položky ne.** Položka je kolečko velikosti a název, nic víc – **stav „připravené“ ani velikost slovem se nepíšou**. Do závorky za název patří jen to, co mění rozhodnutí: nesplněná závislost, opuštěná větev, rozdělaná práce tady. Připravená položka bez závislosti závorku nemá. Tvar si výslovně vyžádal uživatel (16. 9. 2026): výpis se čte očima, ne jako tabulka, a slova navíc na každém řádku ho zahlcovala.
+**Tučný je jen nadpis a popisky částí, položky ne.** Položka je kolečko velikosti a název, nic víc – **stav „připravené“ ani velikost slovem se nepíšou**. Do závorky za název patří jen to, co mění rozhodnutí: nesplněná závislost, opuštěná větev, rozdělaná práce tady. Připravená položka bez závislosti závorku nemá. Výpis se čte očima, ne jako tabulka, a slova navíc na každém řádku ho zahlcují.
 
-**Velikost** je kolečko hned za číslem – obyčejný textový znak, ne barevné emoji: přebírá barvu textu terminálu, takže nesvítí, a napůl plné kolečko se čte jako napůl velký úkol. Barevné kuličky uživatel odmítl jako moc křiklavé. Velikost odhaduj podle toho, co práce obnáší, ne podle délky zápisu:
+**Velikost** je kolečko hned za číslem – obyčejný textový znak, ne barevné emoji: přebírá barvu textu terminálu, takže nesvítí, a napůl plné kolečko se čte jako napůl velký úkol. Velikost odhaduj podle toho, co práce obnáší, ne podle délky zápisu:
 
 | Kolečko | Velikost |
 |---|---|

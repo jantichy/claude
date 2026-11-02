@@ -10,9 +10,9 @@ Leží v `~/.claude/projects/<working-directory-slug>/<session-id>.jsonl`, kde s
 
 **`<session-id>` si vezmi z cesty ke scratchpadu**, kterou máš v systémovém promptu – je v ní jako **předposlední** komponenta – cesta končí na `/scratchpad`, takže id je adresář nad ním (`…/-Users-honza-Projects/<session-id>/scratchpad`). To je jediný spolehlivý klíč.
 
-**Platí jedině cesta ke scratchpadu, ne libovolná cesta pod `/private/tmp` s podobným tvarem.** Vedle scratchpadu tam leží i adresář s výstupy subagentů (`…/<session-id>/tasks/…`) a ten může nést **id předchozí session** téhož projektu. Kdo id vezme odtamtud, sáhne po cizím transcriptu a nic mu to neřekne – oba soubory existují a oba se parsují. Doloženo 25. 9. 2026.
+**Platí jedině cesta ke scratchpadu, ne libovolná cesta pod `/private/tmp` s podobným tvarem.** Vedle scratchpadu tam leží i adresář s výstupy subagentů (`…/<session-id>/tasks/…`) a ten může nést **id předchozí session** téhož projektu. Kdo id vezme odtamtud, sáhne po cizím transcriptu a nic mu to neřekne – oba soubory existují a oba se parsují.
 
-**Nesahej po naposledy modifikovaném `.jsonl` v tom adresáři.** Nad jedním projektem běžívají dvě session naráz a ta druhá do svého souboru zapisuje taky – heuristika pak ukáže na cizí konverzaci, kterou vytěžíš místo své vlastní. Doloženo 10. 9. 2026: nad `~/.claude` běžela souběžná session a „nejnovější soubor“ byl její. Zbude-li ti opravdu jen tahle cesta, **ověř obsah** proti tomu, co si z konverzace pamatuješ, dřív než z něj cokoliv vytěžíš.
+**Nesahej po naposledy modifikovaném `.jsonl` v tom adresáři.** Nad jedním projektem běžívají dvě session naráz a ta druhá do svého souboru zapisuje taky – heuristika pak ukáže na cizí konverzaci, kterou vytěžíš místo své vlastní. Zbude-li ti opravdu jen tahle cesta, **ověř obsah** proti tomu, co si z konverzace pamatuješ, dřív než z něj cokoliv vytěžíš.
 
 ## 2. Přečti ho od úplného začátku
 
@@ -24,7 +24,7 @@ U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti ko
 
 **Jsi-li sám ten subagent, nedeleguj dál a ověření si nech.** Dělení „agent dělá úplnost, ty děláš ověření“ platí pro hlavní session, která transcript nemá v ruce. Poběží-li celý úklid nebo celá revize v subagentovi, je ten agent zároveň čtenář i ověřovatel: vnuk by načítal totéž co on a jeho nález by šel nahoru přes prostředníka (`~/.claude/standards/delegation.md`, *Velké průzkumné úkoly deleguj*). **Citace s číslem řádku u každé položky zůstává povinná i tehdy** – rodičovská session podle nich ověřuje grepem, aniž transcript sama čte.
 
-**Do zadání patří pokyn hlásit, co se v session rozhodlo dvakrát.** Dlouhá session totéž často rozhodne podruhé jinak a agent vytáhne to první. Nech si u položky vracet **poslední platný stav** v rámci té session a k tomu značku, že k obratu došlo, i s tím, co platilo dřív – a nejde-li to rozhodnout, ať to napíše, místo aby jednu verzi vybral. Doloženo 15. 9. 2026: agent vrátil rozhodnutí „do země bez vyplněné sazby DPH se neprodá“, které bylo **ještě týž den** přebito na opak. Zapsalo se do dokumentace jako platné a odhalilo to až ověření proti zdrojovým souborům. V téže dávce jiný agent naopak označil dvakrát rozhodnutou věc sám a ušetřil tím zastaralý zápis.
+**Do zadání patří pokyn hlásit, co se v session rozhodlo dvakrát.** Dlouhá session totéž často rozhodne podruhé jinak a agent vytáhne to první. Nech si u položky vracet **poslední platný stav** v rámci té session a k tomu značku, že k obratu došlo, i s tím, co platilo dřív – a nejde-li to rozhodnout, ať to napíše, místo aby jednu verzi vybral.
 
 ## 3. Pasti ve formátu
 
@@ -34,11 +34,9 @@ U dlouhé session (řádově stovky kB a víc) na to pošli subagenta, ať ti ko
 jq -r 'select(.timestamp) | .timestamp' <transcript> | head -1
 ```
 
-Doloženo 25. 9. 2026 dvakrát v jednom dni, ve dvou ze tří ostrých běhů `/end`.
-
 **Session po `/clear` začíná záznamem `/clear`, ne první zprávou.** `/clear` nepokračuje ve starém souboru: založí novou session s vlastním id a vlastním `.jsonl`, takže konverzace před ním v transcriptu **není**. Nový soubor ale otevírá sám záznam `<command-name>/clear</command-name>` a za ním upozornění k lokálnímu příkazu a přílohy s kontextem – všechno o pár sekund dřív než první uživatelův prompt. **První `timestamp` proto nejde brát jako začátek konverzace a porovnávat s tím, kdy začala tvoje práce:** vyjde o chvilku dřív a svádí k závěru, že transcript sahá před `/clear` a v kontextu ti část chybí jako po kompaktaci. Nechybí. Kompaktaci pozná jen záznam s `"isCompactSummary": true`; nemá-li ho soubor, máš v kontextu celou session.
 
-**Podstata může ležet ve výstupech nástrojů, ne v textu odpovědi.** Uživatelovy prompty a textové bloky odpovědí jsou jen část konverzace: naměřená čísla, odpovědi cizích systémů a výsledky dotazů se vracejí jako **výsledky volání nástrojů**, uložené v záznamech `type: "user"` jako blok `tool_result`, kde jméno nástroje nese odpovídající `tool_use` v předchozí odpovědi. Session, která dělala datovou analýzu, má tedy podstatu tam – doloženo 25. 9. 2026, kdy vytěžení prošlo jen proto, že hlavní session každý výsledek dotazu převyprávěla v textu včetně čísel.
+**Podstata může ležet ve výstupech nástrojů, ne v textu odpovědi.** Uživatelovy prompty a textové bloky odpovědí jsou jen část konverzace: naměřená čísla, odpovědi cizích systémů a výsledky dotazů se vracejí jako **výsledky volání nástrojů**, uložené v záznamech `type: "user"` jako blok `tool_result`, kde jméno nástroje nese odpovídající `tool_use` v předchozí odpovědi. Session, která dělala datovou analýzu, má tedy podstatu tam.
 
 **Čti je selektivně podle jména nástroje.** Dělítko je, jestli výstup nese obsah, který nikde jinde není: `Bash`, MCP dotazy, **zprávy subagentů (`Agent`, `Task`) a stažené stránky (`WebFetch`, `WebSearch`)** ano – u session s panelem specialistů leží podstata právě ve zprávách agentů. `Read`, `Grep` a `Glob` ne: jejich výstupem je obsah souborů, který si přečteš přímo ze zdroje, a číst ho z transcriptu by u velkého souboru nafouklo vstup mnohonásobně.
 
@@ -48,9 +46,9 @@ jq -rs '(map(select(.type=="assistant") | .message.content[]? | select(.type=="t
   | .[] | if type=="string" then . else (.[]? | .text? // empty) end' <transcript>
 ```
 
-**Velký výstup nástroje je v transcriptu uříznutý stejně jako v kontextu.** Nese jen náhled a věsuvku `Full output saved to: <cesta>`; plná verze leží v `tool-results/<id>.txt` vedle transcriptu. **Transcript tedy není nadmnožina kontextu ve všem** – navíc má jen to, co vyhodila kompaktace, kdežto tuhle díru mají oba stejnou. U session, která měřila nebo se ptala cizího systému, tam bývá celá podstata. Ověřeno 26. 9. 2026; `skills/end/scripts/extract.py inventory` ty cesty vypisuje.
+**Velký výstup nástroje je v transcriptu uříznutý stejně jako v kontextu.** Nese jen náhled a vsuvku `Full output saved to: <cesta>`; plná verze leží v `tool-results/<id>.txt` vedle transcriptu. **Transcript tedy není nadmnožina kontextu ve všem** – navíc má jen to, co vyhodila kompaktace, kdežto tuhle díru mají oba stejnou. U session, která měřila nebo se ptala cizího systému, tam bývá celá podstata. `skills/end/scripts/extract.py inventory` ty cesty vypisuje.
 
-**Bloky myšlení (`thinking`) a obrázky se nečtou vůbec** – u myšlení to není volba, ale vlastnost formátu: v transcriptu je zapsané **prázdné** (změřeno 26. 9. 2026 na šesti transcriptech – pět mělo 0 kB při desítkách až stovkách bloků), takže ten obsah tam není. Snímek obrazovky se z transcriptu vytěžit nedá. Kde na nich něco viselo, je to **mez vytěžení a musí se přiznat**, ne dopočítat.
+**Bloky myšlení (`thinking`) a obrázky se nečtou vůbec** – u myšlení to není volba, ale vlastnost formátu: v transcriptu je zapsané **prázdné**, takže ten obsah tam není. Snímek obrazovky se z transcriptu vytěžit nedá. Kde na nich něco viselo, je to **mez vytěžení a musí se přiznat**, ne dopočítat.
 
 **Zprávy poslané uprostřed rozepsané odpovědi nejsou uložené jako `type: "user"`**, ale jako `type: "queue-operation"` s `operation: "enqueue"` a textem v poli `content`. Kdo filtruje jen `type=="user"`, tiše o ně přijde – a přitom to bývají důležité dovětky („ještě ať to udělá i…“). Vytáhni je vždy taky:
 
@@ -58,7 +56,7 @@ jq -rs '(map(select(.type=="assistant") | .message.content[]? | select(.type=="t
 jq -r 'select(.type=="queue-operation" and .operation=="enqueue") | .content' <transcript>
 ```
 
-**Táž past hrozí u `type: "attachment"`, a je horší, protože vypadá jako příloha.** Zpráva, kterou uživatel poslal jako zařazený příkaz, se ukládá jako `attachment` s `type: "queued_command"` a **textem v poli `.prompt`**, ne v `.content`. Doloženo 28. 9. 2026 při vytěžování konverzací: v jedné session takhle ležely **tři ze čtyř uživatelových vstupů** včetně toho, kterým vyvolal přejmenování entity napříč repozitářem – a filtr na `type=="user"` by z ní vrátil jedinou větu.
+**Táž past hrozí u `type: "attachment"`, a je horší, protože vypadá jako příloha.** Zpráva, kterou uživatel poslal jako zařazený příkaz, se ukládá jako `attachment` s `type: "queued_command"` a **textem v poli `.prompt`**, ne v `.content`.
 
 ```
 jq -r 'select(.type=="attachment") | .attachment | select(.type=="queued_command") | .prompt' <transcript>

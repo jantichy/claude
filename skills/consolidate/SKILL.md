@@ -60,7 +60,7 @@ Bez téhle hranice by z něj byl `/oponent` s právem měnit zadání, a to je j
 
 **„Uživatel to zamítl" přitom zeď není a skill přes ni smí.** Rozhodnutí vzniklo v tehdejším rozpoložení a kontextu, a ten se vývojem projektu mohl změnit – platí to i pro rozhodnutí, která udělal uživatel sám. **Podmínka je pojmenovat, co se od té doby změnilo**; „udělal bych to jinak" bez toho je jen jiný názor na tutéž věc.
 
-Z toho plyne **tvrdý zákaz pro ověřovatele**: odvolat se na to, že něco už jednou bylo zamítnuto, **není argument**. Musí doložit, co konkrétně se rozbije – jmenovat guard, invariant, text pro zákazníka. V pilotním běhu ověřovatel argumentoval větou „to je přesně ta varianta, kterou §125 zamítlo", a ten bod se udržel jen proto, že k němu vedle toho vypsal šest skutečných čtenářů. Bez zákazu skill jen potvrzuje, že co je rozhodnuté, je rozhodnuté.
+Z toho plyne **tvrdý zákaz pro ověřovatele**: odvolat se na to, že něco už jednou bylo zamítnuto, **není argument**. Musí doložit, co konkrétně se rozbije – jmenovat guard, invariant, text pro zákazníka. Bez zákazu skill jen potvrzuje, že co je rozhodnuté, je rozhodnuté.
 
 ## Kdy se pouští a kdy se přeskakuje
 
@@ -72,7 +72,7 @@ Spouštěče jsou tři a rozhoduje mezi nimi člověk:
 - po několika kolech `/architect`,
 - **kdykoli to člověku leží v hlavě** – což je signál sám o sobě.
 
-**Číselný práh vědomě není.** Jeden pilotní běh nestačí na to, aby se dal odvodit, a práh z hlavy by buď překážel, nebo nechytal nic. Místo něj skill v přípravě **spočítá a vypíše**, kolik kol `/architect` a kolik záznamů v `decisions.md` přibylo od posledního běhu – jako informaci, ne jako mez. Čísla se tím hromadí v `done.md` a práh se po několika bězích dá dofitovat místo hádání.
+**Číselný práh vědomě není.** Místo něj skill v přípravě **spočítá a vypíše**, kolik kol `/architect` a kolik záznamů v `decisions.md` přibylo od posledního běhu – jako informaci, ne jako mez. Čísla se tím hromadí v `done.md`, aby se z nich práh dal jednou odvodit.
 
 **Pouští se nad sloučeným stavem**, ne nad rozdělanou větví. Jinak označí za záplatu něco, co je mezitím vyřešené jinde, a chybí mu část dokladů.
 
@@ -107,7 +107,7 @@ Nad rámec toho:
 
 **Bez zkušební sady není proti čemu měřit návrh**, takže se nevynechává ani u malé oblasti. Vynechat se smí inventura, je-li oblast malá – pak stačí dva sběrači.
 
-**Každý výstup nese povinnou sekci *Meze posudku***. Tu mez **nezahazuj**: past doložená pilotem je, že sběrač uvede nález s mezí („v obou prohledaných souborech"), hlavní session ji odřízne a ohlásí závěr, který ověřovatel vzápětí vyvrátí.
+**Každý výstup nese povinnou sekci *Meze posudku***. Tu mez **nezahazuj**: sběrač uvede nález s mezí („v obou prohledaných souborech"), a kdo ji odřízne, ohlásí závěr, který ověřovatel vzápětí vyvrátí.
 
 ## Fáze 2 – Shluky a návrh
 
@@ -135,9 +135,9 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 1. **Pokrývá nové řešení úplně všechno**, na co se v minulosti narazilo a co dnešní řešení pokrývá – i tam, kde to dnešek zvládá nedokonale nebo neúplně?
 2. **Je to opravdu zlepšení** – jednodušší, systematičtější, přímočařejší, bez hacků –, a ne jen přepsání jednoho řešení za jiné stejně dobré? Výměna hacku za jiný hack projde první zkouškou hladce.
 
-**Co ověření nepřežije, se uživateli vůbec nezobrazí.** V pilotu padly dva ze dvou velkých návrhů – a **to je platný výsledek, ne selhání běhu**.
+**Co ověření nepřežije, se uživateli vůbec nezobrazí.** Padnou-li všechny návrhy, **je to platný výsledek, ne selhání běhu**.
 
-**Vedlejší vady, na které ověřovatelé narazí, se nezahazují.** Jsou to normální nálezy: hlásí se se závažností podle `~/.claude/skills/severity.md` a rozhoduje se o nich podle `~/.claude/skills/findings.md`. V pilotu byly cennější než návrhy samotné.
+**Vedlejší vady, na které ověřovatelé narazí, se nezahazují.** Jsou to normální nálezy: hlásí se se závažností podle `~/.claude/skills/severity.md` a rozhoduje se o nich podle `~/.claude/skills/findings.md`.
 
 ## Fáze 4 – Průchod s uživatelem
 
@@ -155,11 +155,11 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 ## Časté chyby
 
-- **Sběrač přečte jen část dokumentů a hlavní session z toho udělá závěr.** Doloženo pilotem u hodnoty `UNDOCUMENTED`: sběrač našel jednoho čtenáře a poctivě uvedl mez („v obou prohledaných souborech"), hlavní session mez zahodila a ohlásila nález, který ověřovatel vzápětí vyvrátil šesti čtenáři. Proto jmenovitý výčet souborů v zadání a povinná sekce *Meze posudku*.
+- **Sběrač přečte jen část dokumentů a hlavní session z toho udělá závěr**, protože mez posudku zahodila. Proto jmenovitý výčet souborů v zadání a povinná sekce *Meze posudku*.
 - **Výstup rozsahu se omezí podle jeho vstupu.** Pak se odřízne přesně ten cenný nález – viz *Rozsah*.
 - **Ověřovatel se odvolá na dřívější zamítnutí.** Není to argument; musí jmenovat, co konkrétně se rozbije.
-- **Věta „nenavrhovat znovu“ se vezme za pokus o manipulaci.** Doloženo tlakovým scénářem 28. 9. 2026: ověřovatel ji ohlásil jako podezřelý obsah tvářící se jako pokyn. Je to ale **běžný a legitimní zápis** u zamítnutého rozhodnutí – a tenhle skill tam sám ukládá svoje. Nemá se hlásit, jen neuznat jako argument.
-- **Opatrnost obrácená naruby: zamítnutí se stane zdí i tam, kde podmínka pravidla je splněná.** Týmž měřením: agent doložil, že premisa zamítnutí padla jedenáct dní po něm, **a návrh přesto nepředložil** s odkazem na to, že u něj stojí „nenavrhovat znovu“. Přitom právě tím doložením splnil podmínku, kterou *Hranice* kladou. **Pojmenuješ-li, co se od zamítnutí změnilo, návrh předlož** – rozhodnutí je uživatelovo, ne tvoje.
+- **Věta „nenavrhovat znovu“ se vezme za pokus o manipulaci.** Je to ale **běžný a legitimní zápis** u zamítnutého rozhodnutí – a tenhle skill tam sám ukládá svoje. Nemá se hlásit, jen neuznat jako argument.
+- **Opatrnost obrácená naruby: zamítnutí se stane zdí i tam, kde podmínka pravidla je splněná.** Agent doloží, že premisa zamítnutí padla, **a návrh přesto nepředloží**, protože u něj stojí „nenavrhovat znovu“ – přitom právě tím doložením splnil podmínku, kterou *Hranice* kladou. **Pojmenuješ-li, co se od zamítnutí změnilo, návrh předlož** – rozhodnutí je uživatelovo, ne tvoje.
 - **Návrh se předloží bez zpětné zkoušky.** Vypadá čistěji, protože nezná zatáčky – a je to regrese převlečená za úklid.
 
 ## Fáze 5 – Závěr

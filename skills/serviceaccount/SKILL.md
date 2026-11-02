@@ -75,7 +75,7 @@ Vypiš **čtyři kroky pod sebou**, nic mezi ně nevkládej a mluvnicky je přiz
 
 **2. Vygenerovat klíče** na záložce *Keys* každého účtu, typ JSON. Stáhnou se do složky stažených souborů pod náhodnými jmény.
 
-**3. Uložit klíče a smazat soubory.** Skript vezmi z `access.md` a **vypiš do něj jmenovitě účty, které se právě zakládají**. Nikdy nezpracovávej všechno, co matchuje maska – ve složce stažených souborů leží i klíče k jiným účtům a hvězdička je slije do jedné položky. Doloženo 18. 9. 2026, kdy se takhle sešly čtyři klíče v jedné položce a tři patřily cizím účtům.
+**3. Uložit klíče a smazat soubory.** Skript vezmi z `access.md` a **vypiš do něj jmenovitě účty, které se právě zakládají**. Nikdy nezpracovávej všechno, co matchuje maska – ve složce stažených souborů leží i klíče k jiným účtům a hvězdička je slije do jedné položky.
 
 **Řekni u toho, co ten příkaz dělá s tajemstvím:** klíč jde do Keychainu a soubor se maže, na výstup jdou jen `client_email` a `client_id`. **A řekni i mez** – Keychain není hranice proti modelu a klientské klíče se podle něj neukládají, dokud nepadne rozhodnutí popsané v `access.md`.
 

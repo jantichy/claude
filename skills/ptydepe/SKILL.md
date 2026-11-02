@@ -26,7 +26,7 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 
 ## Jak je to postavené uvnitř
 
-**Skill si dělá všechno sám**, delegace na `/replace` se neosvědčila a 7. 9. 2026 vypadla: umí odvozené tvary, ale ne to, co náhradu termínu doopravdy komplikuje – změnu rodu a s ní shodu přívlastků, homonyma, opačné významy a repetice, které náhrada vyrobí. Ve třiadvaceti termínech jednoho dne nebyl použitelný ani jednou.
+**Skill si dělá všechno sám a na `/replace` nedeleguje** – ten umí odvozené tvary, ale ne to, co náhradu termínu doopravdy komplikuje: změnu rodu a s ní shodu přívlastků, homonyma, opačné významy a repetice, které náhrada vyrobí.
 
 **Náhrada se proto píše jako mapa frází, ne jako záměna slova.** Ke každé vazbě se starým termínem se napíše její nová podoba i se shodou (*„vyber čtyři až pět úhlů“* → *„vyber čtyři až pět hledisek“*), a teprve ta mapa se pustí přes soubory z `git ls-files`. Je to pracnější než `sed` a je to schválně: plošná záměna slova rozbije každou větu, kde se změnil rod nebo kde slovo znamená něco jiného.
 
@@ -39,10 +39,10 @@ Jméno je po umělém jazyce z Havlova *Vyrozumění*: řeč, které nikdo neroz
 Společný začátek je v `~/.claude/skills/preflight.md`. **Skill neběží nad jedním projektem**, ale nad všemi naráz, takže body 1 až 3 nahrazuje vlastními předpoklady:
 
 1. **Kořeny.** `~/.claude`, `~/Context` a **každý další git repozitář v `~/Projects` a `~/Clients`**. Posledně jmenované se do rozsahu berou, jen když se v nich termín vyskytuje – zjistí to inventura, ne domněnka.
-2. **Zjisti, co je už rozhodnuté** – termín, který v tom seznamu je, ať nahrazený, nebo vědomě ponechaný, se znovu neprojednává. Kolik k tomu potřebuješ přečíst, se liší podle režimu: `suggest` si vystačí s `~/.claude/standards/ptydepe.md` a **s *Obsahem*** `terms.md` v adresáři skillu, protože k vytipování kandidátů stačí jména; `add` čte **oba soubory celé**, protože rozhoduje o termínu a potřebuje k tomu úvahy i zamítnuté varianty. Rozvaha roste s každým vypořádaným termínem, takže tahat ji do běhu, který ji nepoužije, je táž vada, kvůli které se 10. 9. 2026 dělila sama tabulka.
+2. **Zjisti, co je už rozhodnuté** – termín, který v tom seznamu je, ať nahrazený, nebo vědomě ponechaný, se znovu neprojednává. Kolik k tomu potřebuješ přečíst, se liší podle režimu: `suggest` si vystačí s `~/.claude/standards/ptydepe.md` a **s *Obsahem*** `terms.md` v adresáři skillu, protože k vytipování kandidátů stačí jména; `add` čte **oba soubory celé**, protože rozhoduje o termínu a potřebuje k tomu úvahy i zamítnuté varianty. Rozvaha roste s každým vypořádaným termínem, takže tahat ji do běhu, který ji nepoužije, je kontext placený zbytečně.
 3. **Vypiš rozpracované změny v každém známém kořeni a pokračuj.** Blokuje jedině soubor, na který pak náhrada sáhne – ten by se s ní smíchal a přestalo by být poznat, co je čí. **Rozhodnout se to tady ale nedá**, protože rozsah zjistí až *Fáze 4*; výpis odsud je jen podklad pro ni. Na cizí rozpracovanou práci **se neptej**: do commitu se nedostane, protože se commitují jmenované cesty (`~/.claude/standards/rules.md`, *Commituj jmenované cesty, ne `-A`*), a dotaz, který nic nerozhoduje, se naučí odklikávat bez čtení.
 
-   **Proč se nečeká na čistý strom:** nad `~/.claude` běží souběžné session skoro pořád, takže tvrdý požadavek by buď zablokoval každý běh, nebo se začal mlčky obcházet – a to druhé je horší, protože se pak přestane obcházet vědomě. **Jinde ten důvod neplatí**, ale pravidlo se kvůli tomu neštěpí: blokující je i tam jen průnik s rozsahem, a ten se posuzuje stejně. **Zamítnuto – nechat tvrdý požadavek a ptát se pokaždé** (2026-09-11).
+   **Na čistý strom se nečeká v žádném kořeni** – nad `~/.claude` běží souběžné session skoro pořád a tvrdý požadavek by se začal mlčky obcházet. Blokující je všude jen průnik s rozsahem.
 
    **Výpis odsud zestárne** – souběžná session mezitím commituje i rozpracovává. *Fáze 4* ho proto nepoužívá jako pravdu, ale jen jako upozornění, a kolizi měří čerstvým `git status`.
 4. **Zjisti režim a termín** z argumentu. Bez argumentu jede `suggest`.
@@ -188,13 +188,11 @@ Na konci nabídni **zapsání fronty do souboru**. Seznam v konverzaci nepřeži
 
 ## Časté chyby
 
-Všechny z ostrých běhů, každá se opravdu stala:
-
-- **Skript jel rekurzivně přes adresář místo přes `git ls-files`** a přepsal 1 120 transkriptů, cache a souborů historie. Nevratné, protože nejsou v gitu.
+- **Skript jel rekurzivně přes adresář místo přes `git ls-files`** a přepsal transkripty, cache a soubory historie. Nevratné, protože nejsou v gitu.
 - **Inventura zkrácená `cut -c1-230`** minula polovinu výskytů – ty, které stály dál na řádku. Objevily se až po commitu.
-- **Fronta kandidátů si přepsala vlastní položku**, protože nebyla vyloučená z náhrady. Dvakrát po sobě.
+- **Fronta kandidátů si přepsala vlastní položku**, protože nebyla vyloučená z náhrady.
 - **Náhrada zasáhla homonymum** – „platební brána“ se změnila na „platební kontrolu“ ve větě o penězích.
-- **Změna rodu rozbila shodu.** „Úhel“ je mužský, „hledisko“ střední, a jedenáct přívlastků zůstalo v původním tvaru.
-- **Termín se obhajoval z paměti místo ze souborů.** Vznikla tím tabulka tří vrstev, kterou zdrojový dokument nikdy neobsahoval. **U preventivního zápisu je to naopak jediný možný postup** – výskyty nejsou –, ale i tam se z paměti neberou fakta o **cizích souborech**: doklad, že je protějšek zavedený, se cituje z grepu, ne z dojmu. Právě takový doklad se 11. 9. 2026 ukázal jako vymyšlený: heslo *hlavička* dokládalo zavedenost `/autocommitem`, který mluví o něčem jiném.
+- **Změna rodu rozbila shodu.** „Úhel“ je mužský, „hledisko“ střední, a přívlastky zůstaly v původním tvaru.
+- **Termín se obhajoval z paměti místo ze souborů.** **U preventivního zápisu je to naopak jediný možný postup** – výskyty nejsou –, ale i tam se z paměti neberou fakta o **cizích souborech**: doklad, že je protějšek zavedený, se cituje z grepu, ne z dojmu.
 - **Náhrada se začala dělat před souhlasem.** Uživatel se rozhodl jinak a muselo se to vracet.
 - **Náhrada minula popisky ve formuláři.** Podstatné jméno se v `/end` nahradilo všude, ale v `header`u a v šabloně zbyl tvar odvozený ze slovesa: krok se jmenoval „Viselo 4/4“. Prošlo to kontrolním průchodem i testy a všimlo si toho až oko nad běžícím formulářem.

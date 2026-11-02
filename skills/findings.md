@@ -24,7 +24,7 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/severity.md`.
 
 **Pracnost není spornost.** „Tohle bych musel projít celé a přepočítat“ je popis práce, ne důvod k otázce. Uživatel má na tutéž práci tytéž soubory, takže ho dotazem nešetříš – jen mu ji přehazuješ zpátky i s kontextem, který máš načtený ty a on ne.
 
-**Proto tu není podmínka „netroufáš si“**, která tu do 21. 9. 2026 stála. Byla to jediná položka v celé tabulce bez vnějšího kritéria – pocit, kterým se dá odůvodnit skoro cokoliv, a nejspolehlivěji zrovna nález, jehož vyřešení by dalo práci. **Doloženo v běhu `/end` (21. 9. 2026):** dva dokumenty uváděly různý počet akcí u téže věci a skill se na to zeptal s odůvodněním, že si netroufá určit hranici mezi dvěma pojmy bez uživatelova výkladu. Ta hranice přitom byla v katalogu, ze kterého se obě čísla počítala – šlo o půlhodinu počítání, ne o rozhodnutí. **Zbylo-li ti po téhle zkoušce „nevím“, formuluj, co přesně nevíš**; nejde-li to napsat jednou větou, je to nedodělaná rešerše, ne sporný nález.
+**„Netroufám si“ důvod k otázce není** – je to pocit bez vnějšího kritéria, kterým se dá odůvodnit skoro cokoliv, a nejspolehlivěji zrovna nález, jehož vyřešení by dalo práci. **Zbylo-li ti po téhle zkoušce „nevím“, formuluj, co přesně nevíš**; nejde-li to napsat jednou větou, je to nedodělaná rešerše, ne sporný nález.
 
 **Objem důvod k dotazu není.** Zdlouhavá, ale jednoznačná oprava se dělá, ne předkládá; naopak jednořádková změna pravidla se předkládá, i když trvá vteřinu. Rozhoduje, čí je to rozhodnutí, ne kolik je s ním práce.
 
@@ -32,7 +32,7 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/severity.md`.
 
 **Vyjdou-li ti volby *Opravit / Odložit / Přeskočit*, je to doklad, že nález mezi sporné nepatří.** U takové trojice je odpověď předem známá – odložit opravu, kterou umíš udělat hned, nechce nikdo, a nechat vadu vyhnít taky ne. Otázka tedy nic nerozhoduje a stojí pozornost, kterou pak uživatel nemá na otázky, kde na jeho odpovědi opravdu záleží.
 
-**Zákaz míří na tvar, ne na ta tři slova.** Přejmenovat volby nic nemění: *Vyřešit teď / Zapsat do todo / Zahodit* je přesně táž trojice jako *Opravit / Odložit / Přeskočit*, jen jinak pojmenovaná, a projde i tam, kde ji skill sám předepisuje tabulkou. **Test před každým voláním `AskUserQuestion`: je aspoň jedna volba podobou řešení – tedy odpovědí na otázku „jak“?** Odpovídají-li všechny jen na „kdy“ (teď / potom / nikdy), otázka nerozhoduje o ničem, co bys nerozhodl sám, a nemá se položit. Doplněno 21. 9. 2026, protože verze psaná na konkrétní slova tenhle případ nechytila.
+**Zákaz míří na tvar, ne na ta tři slova.** Přejmenovat volby nic nemění: *Vyřešit teď / Zapsat do todo / Zahodit* je přesně táž trojice jako *Opravit / Odložit / Přeskočit*, jen jinak pojmenovaná, a projde i tam, kde ji skill sám předepisuje tabulkou. **Test před každým voláním `AskUserQuestion`: je aspoň jedna volba podobou řešení – tedy odpovědí na otázku „jak“?** Odpovídají-li všechny jen na „kdy“ (teď / potom / nikdy), otázka nerozhoduje o ničem, co bys nerozhodl sám, a nemá se položit.
 
 **Jediná výjimka: položka, která není vadou, ale novou prací nebo nápadem.** Tam je „jestli a kdy“ doopravdy uživatelovo rozhodnutí – rozšíření, které nikdo nezadal, se nedá „opravit“, protože není co. Test tedy zní: **existuje stav, který je prokazatelně špatně?** Když ano (dvě místa si odporují, odkaz nikam nevede, číslo nesedí se zdrojem), je to vada a volba „kdy“ je falešná. Když ne, je to návrh a trojice je na místě.
 
@@ -60,9 +60,9 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`
 
 **Tučný je jen název, zbytek ne.** Odstavec, ve kterém svítí tučně každý druhý popisek, se nedá číst – oko skáče po zvýrazněních místo aby četlo větu.
 
-**Titulní řádek je samostatný odstavec a nekončí tečkou.** Do 29. 9. 2026 na něj text navazoval na témž řádku a tučný název tečku měl, aby se od té věty oddělil; osamocený nadpis ji nepotřebuje. Rozhodl uživatel: název se tím dá přehlédnout očima jako nadpis a delší nález nezačíná zdí textu přilepenou k závažnosti. **Platí to i pro titulní řádek s příponou** – hledisko `/oponent` (`· <hledisko>`) i jméno specialisty nebo vektoru v hranatých závorkách patří na ten řádek, ne do odstavce pod ním.
+**Titulní řádek je samostatný odstavec a nekončí tečkou.** Název se tak dá přehlédnout očima jako nadpis a delší nález nezačíná zdí textu přilepenou k závažnosti; osamocený nadpis tečku nepotřebuje. **Platí to i pro titulní řádek s příponou** – hledisko `/oponent` (`· <hledisko>`) i jméno specialisty nebo vektoru v hranatých závorkách patří na ten řádek, ne do odstavce pod ním.
 
-**Emoji je jediná barva, kterou v odpovědi máš, a značka závažnosti zůstává za číslováním.** Odrážka, kterou terminál vykresluje před každým blokem, patří harnessu – barvu si vybírá podle druhu bloku, ne podle obsahu, takže se k ní text nedostane. **ANSI escape sekvence neprojdou**: změřeno 29. 9. 2026 výpisem do terminálu, vypsaly se doslova jako `[31m●`. Zbývalo by přesunout kolečko před `[N/celkem]`, což uživatel téhož dne zamítl – přilepené za bílou odrážkou harnessu vypadá hůř než uprostřed řádku.
+**Emoji je jediná barva, kterou v odpovědi máš, a značka závažnosti zůstává za číslováním.** Odrážka, kterou terminál vykresluje před každým blokem, patří harnessu – barvu si vybírá podle druhu bloku, ne podle obsahu, takže se k ní text nedostane. **ANSI escape sekvence neprojdou** – vypíšou se doslova.
 
 **Platí to na každou položku, o které se uživatel rozhoduje**, ne jen na nález: nevypořádané téma, položka mimo rozsah, poznatek z provozu i návrh alternativy. Liší se jen slovo v titulním řádku (`NÁZEV NÁLEZU`, `NÁZEV POLOŽKY`), ne tvar.
 
@@ -78,9 +78,9 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`
 
 **Titulní řádek nesmí chybět ani tady** – navazující položka není pokračování předchozí věty, ale nová položka, a bez čísla a názvu uživatel nepozná, kde jedna končí a druhá začíná. Bez toho se v jednom odstavci slije hotová věc s otázkou, o které se teprve rozhoduje, a uživatel musí hledat, kde se téma zlomilo.
 
-**Seznam popisků typu `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` se nepoužívá.** Do 28. 9. 2026 ho měly tři kontrolní skilly, každý jinou sadu, a **uživatel je označil za nečitelné**. Heslo za dvojtečkou vypadá úplně a přitom vynechá právě to, proč na tom záleží; kde nález je a čím je doložený, se řekne uvnitř věty a odkazy se dávají do textu.
+**Seznam popisků typu `Kde` / `Co` / `Problém` / `Proč to vadí` / `Podklad` se nepoužívá.** Heslo za dvojtečkou vypadá úplně a přitom vynechá právě to, proč na tom záleží; kde nález je a čím je doložený, se řekne uvnitř věty a odkazy se dávají do textu.
 
-**Zákaz míří na tvar, ne na těch pět jmen.** Přejmenovat popisky nic nemění – `Druh` / `O co jde` / `Doložení` / `Prověřeno` je táž mřížka jako `Kde` / `Co` / `Problém`, jen jinak nadepsaná, a projde i tam, kde si ji skill předepisuje vlastní šablonou. **Test před každým výpisem: stojí pod titulním řádkem dvě a víc odrážek tvaru `- **Popisek:** …`?** Pak je to mřížka, ať se popisky jmenují jakkoliv. Doplněno 28. 9. 2026, protože verze psaná na konkrétní slova dvě místa v `/end` nechytila a uživatel je dostal do rozhraní hned první běh po sjednocení.
+**Zákaz míří na tvar, ne na těch pět jmen.** Přejmenovat popisky nic nemění – `Druh` / `O co jde` / `Doložení` / `Prověřeno` je táž mřížka jako `Kde` / `Co` / `Problém`, jen jinak nadepsaná, a projde i tam, kde si ji skill předepisuje vlastní šablonou. **Test před každým výpisem: stojí pod titulním řádkem dvě a víc odrážek tvaru `- **Popisek:** …`?** Pak je to mřížka, ať se popisky jmenují jakkoliv.
 
 **Delší nález smí mít druhý odstavec** – typicky tam, kde je potřeba dodat, proč navrhované cesty nejsou rovnocenné. Pořád je to souvislý text.
 
@@ -90,11 +90,9 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo (`
 
 **Varianty musí sedět s volbami v otázce** – otázka je jejich zrcadlo, ne druhá sada. Vypsat jedno řešení a pak se zeptat na tři je rozpor, který uživatele donutí číst obojí a hledat, čím se to liší.
 
-**Kde mřížka naopak legitimně zůstává, aby se nesrovnávala i tam.** Tvar míří na **položku předloženou k rozhodnutí**, ne na všechno, co skill vypíše. Odrážky s popisky proto zůstávají ve třech případech: u **tabulkových dat**, kde je odstavec horší (kontrola faktury ve `/invoicing` – datumy, hodiny, sazba, text položky), v **dokumentu pro třetí stranu** (nález v auditním reportu, který dostane klient) a v **závěrečném souhrnu** skillu, kde čtenář hledá počty a stavy, ne vysvětlení. Rozhodnuto 28. 9. 2026; bez tohohle odstavce to vypadá jako tři místa, na která se zapomnělo.
+**Kde mřížka naopak legitimně zůstává, aby se nesrovnávala i tam.** Tvar míří na **položku předloženou k rozhodnutí**, ne na všechno, co skill vypíše. Odrážky s popisky proto zůstávají ve třech případech: u **tabulkových dat**, kde je odstavec horší (kontrola faktury ve `/invoicing` – datumy, hodiny, sazba, text položky), v **dokumentu pro třetí stranu** (nález v auditním reportu, který dostane klient) a v **závěrečném souhrnu** skillu, kde čtenář hledá počty a stavy, ne vysvětlení.
 
 **Pole ve schématu nálezu tím dotčená nejsou.** Závažnost, lokace a doložení, které vracejí agenti, zůstávají – stojí na nich ověřování a zápis do `CLAUDE.md`. Mění se jen to, **jak se nález ukazuje člověku**: pole jsou vstup, odstavec je výstup.
-
-**Proč zrovna tenhle tvar:** změřeno 28. 9. 2026 při sjednocování. Uživatel označil za srozumitelný výpis nálezu, který **nevyrobil žádný skill** – vznikl v běžné rozpravě, kde žádná šablona neplatila. Tři tehdejší šablony se proti němu lišily jen tím, že souvislý text nahradily popisky. **Šablona tedy výsledek nezlepšovala, ale zhoršovala**, protože svedla k heslům tam, kde se má vysvětlovat.
 
 ## Dvě záchytné volby a co znamenají
 
@@ -105,7 +103,7 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 | **Neopravovat** | zeptej se na důvod a zapiš ho do kapitoly `## Review` (u `/consistency` `## Consistency`) v projektovém `CLAUDE.md`; umlčení vyprší změnou kódu, kterého se týká. **U nálezu, který je rozhodnutím o návrhu, ne vadou kódu** (`/oponent`), jde důvod do `docs/decisions.md` a do dokumentace, které se týká – ne do `## Review`, protože to je filtr nálezů nad kódem a produktové rozhodnutí v něm nikdo nehledá | zamítnuto |
 | **Zapsat do todo** | zapiš do `docs/todo.md` i s úvahou a doložením, ať se na to dá navázat bez téhle session | odloženo |
 
-**Popisek říká, co se stane** (`~/Context/Text/copy.md`, *Popisky akcí*). Proto ne *Přeskočit* – to se čte jako „teď ne“, přestože to znamená natrvalo a se zápisem –, a ne *Nechat být* ani *Vrátit se k tomu později*, které mlčí o tom, že se nález někam zapíše. Sjednoceno 28. 9. 2026; do té doby měly kontrolní skilly tři různé slovníky pro tytéž dva konce.
+**Popisek říká, co se stane** (`~/Context/Text/copy.md`, *Popisky akcí*). Proto ne *Přeskočit* – to se čte jako „teď ne“, přestože to znamená natrvalo a se zápisem –, a ne *Nechat být* ani *Vrátit se k tomu později*, které mlčí o tom, že se nález někam zapíše.
 
 **Věcné varianty jsou nejvýš dvě.** Tool má strop čtyři volby a dvě z nich patří záchytným. Je-li rozumných cest víc, vyber dvě nejsilnější a ostatní zmiň v `Kontextu`. U hromadného nálezu smí jednu záchytnou volbu nahradit **Rozbalit** (vypíšu všechny lokace a projdeme je jednotlivě).
 
@@ -129,7 +127,7 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 ## Průchod jde po kolech: nejdřív všechny otázky, pak práce bez uživatele
 
-**Uživatel je u průchodu potřeba jen tehdy, když se ptáš.** Kolo má proto dvě části: nejdřív se v kuse položí všechny otázky, které v tu chvíli existují, a teprve pak se zapracuje všechno rozhodnuté i všechno, co se opravuje bez ptaní – bez jediné otázky a bez čekání na uživatele. Co se při zapracování ukáže jako sporné, se sbírá a otevře další kolo. **Průchod končí, když po zapracování nezbyla žádná otázka.** Uživatel tak rozhodne všechno v jednom zátahu a pak smí od počítače odejít; při opravě hned po každé odpovědi čekal po každé otázce minuty na další.
+**Uživatel je u průchodu potřeba jen tehdy, když se ptáš.** Kolo má proto dvě části: nejdřív se v kuse položí všechny otázky, které v tu chvíli existují, a teprve pak se zapracuje všechno rozhodnuté i všechno, co se opravuje bez ptaní – bez jediné otázky a bez čekání na uživatele. Co se při zapracování ukáže jako sporné, se sbírá a otevře další kolo. **Průchod končí, když po zapracování nezbyla žádná otázka.** Uživatel tak rozhodne všechno v jednom zátahu a pak smí od počítače odejít.
 
 ### Ptaní
 
@@ -169,14 +167,8 @@ Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, na
 
 ## Kdo ji používá
 
-`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate`, `/end` a `/consolidate`; průchod po kolech všechny kromě `/audit`, který nic neopravuje – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/end` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů; `/consolidate` u vedlejších vad od ověřovatelů, a **u svých návrhů taky podle výjimky o nové práci** – dnešní řešení funguje, takže *Neopravovat* u něj nedává smysl a „jestli a kdy“ je doopravdy rozhodnutí uživatele. `/oponent` se k ní hlásí taky, i když ji dodržoval odjakživa: jeho volby jsou varianty řešení už od začátku.
+`/review`, `/consistency`, `/attack`, `/audit`, `/evaluate`, `/end` a `/consolidate`; průchod po kolech všechny kromě `/audit`, který nic neopravuje – `/evaluate` u poznatků z provozu, kde zvlášť platí výjimka o nové práci, protože vyžádaná funkce není vada; `/end` u položek mimo rozsah i u nálezů čtenářů, kde platí táž hranice jako u vlastních nálezů; `/consolidate` u vedlejších vad od ověřovatelů, a **u svých návrhů taky podle výjimky o nové práci** – dnešní řešení funguje, takže *Neopravovat* u něj nedává smysl a „jestli a kdy“ je doopravdy rozhodnutí uživatele. `/oponent` se k ní hlásí taky.
 
 **Skill si nad tímhle kritériem podává vlastní doménové čtení** – `/attack` má sporných skoro všechno, protože každý jeho nález mění chování běžící aplikace, kdežto `/consistency` má většinu jednoznačnou, protože srovnává dvě místa, z nichž jedno je zdroj. **Stavět vlastní hranici vedle téhle se ale nesmí**; přibude-li další skill, který nálezy opravuje, odkáže sem taky a **neopisuje si ji** (`~/.claude/standards/rules.md`, *Single source of truth*).
 
 **Výjimka pro zadání subagentů:** text, který jde agentovi bez kontextu session, si potřebné části **opisuje celé**, protože odkaz do souboru, který nemá načtený, je mrtvý. Platí to jen na zadání, ne na tělo skillu. U tohohle kritéria to platí hlavně pro agenta, který zapracovává dávku a třídí vlastní objevy (*Zapracování* výš).
-
-## Proč to vzniklo
-
-**Zadal uživatel 20. 9. 2026** uprostřed `/consistency full`, po jedenácti otázkách, ze kterých ani jedna nenabízela volbu: *„když jsou ty opravy takhle jednoznačné a není se mezi čím rozhodovat (a dáváš mi stejně jen na výběr, jestli opravit hned nebo opravit později nebo se na to vykašlat a nechat to špatně), tak se mě ani neptej a hned to všechno oprav“*. Ze 37 nálezů označených za sporné jich 18 po té větě padlo bez jediné otázky.
-
-**Chyba byla v ose, ne v pečlivosti.** Dosavadní kritérium znělo „je oprava bezriziková a nemění chování?“, což je otázka o **zásahu**. Ptát se má ale podle toho, jestli existuje **volba** – a ta dvě kritéria se rozcházejí přesně u nálezů, které něco mění a přitom je jasné jak. Těch je v dokumentačním projektu většina.
