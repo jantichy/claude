@@ -50,7 +50,7 @@ Vyhrává první kritérium, které sedí:
 
 **Každý odchod ze session vede přes jeden ze dvou uzavíracích skillů a uživatel volí jen mezi nimi.** Odchodem je `/clear`, `/compact`, nová session i zavření okna; odrážka, která kterýkoliv z nich jmenuje, jmenuje uzavírací skill před ním. Volí se podle stavu práce:
 
-- **`/end`** – větev pokračuje, nebo se pracuje bez větví; končí-li session uprostřed rozdělané práce, uloží ji sám k navázání přes `/continue`
+- **`/end`** – větev pokračuje, nebo se pracuje bez větví; končí-li session uprostřed rozdělané práce, uloží ji sám k navázání přes `/next`
 - **`/merge`** – větev je hotová; úklid session pouští sám na začátku, takže do hlavní větve jde i to, co úklid zapsal
 
 **Úklid session (`/end`) tedy proběhne v obou a před `/merge` se nepíše** – řetěz, který si má uživatel pamatovat, by se mu rozpadl přesně na konci session, kdy už myslí jinde. **Nepodmiňuj uzavírací skill tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/end` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi uzavíracím skillem a odchodem nesmí stát jiná práce**, jinak ji zase nikdo nezapíše.
@@ -64,7 +64,7 @@ Vyhrává první kritérium, které sedí:
 | věc je hotová a dál se nic nedělá | `/merge` | `/end` |
 | věc je hotová a další krok běží nad hlavní větví | `/merge` → `/clear` → `/X` | `/end` → `/clear` → `/X` |
 | ještě musí v nové session proběhnout kontrola | `/end` → `/clear` → `/X`, merge až v té session | `/end` → `/clear` → `/X` |
-| přerušený průchod frontou | `/end` → `/clear` → `/continue` | `/end` → `/clear` → `/continue` |
+| přerušený průchod frontou | `/end` → `/clear` → `/next` | `/end` → `/clear` → `/next` |
 | rozdělaná úvaha, která se zapsat nedá | `/end` → `/compact` | `/end` → `/compact` |
 | konec práce | `/end` → zavřít okno; je-li větev hotová, `/merge` místo něj | `/end` → zavřít okno |
 

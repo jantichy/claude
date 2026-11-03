@@ -3350,15 +3350,15 @@ class DepotCorePartsActuallyCatch(unittest.TestCase):
         )
 
 
-class BreakContinueContract(unittest.TestCase):
-    """/end zapisuje přerušení a /continue ho čte – dvě strany jednoho předání.
+class InterruptionContract(unittest.TestCase):
+    """/end zapisuje přerušení a /next ho čte – dvě strany jednoho předání.
 
-    /continue je rychlý jen proto, že nic nedomýšlí: blok pozná podle nadpisu
-    s „– přerušeno“ a první akci podle návěstí `**Jak pokračovat:**`. Přejmenuje-li
-    se značka na jedné straně, druhá ji přestane nacházet a /continue se začne
-    ptát – tedy přesně to zdržení, kvůli kterému vznikl. Proto se tu porovnávají
-    obě strany proti sobě a příkaz, kterým /continue zápis hledá, se doopravdy
-    spustí nad repozitářem s druhým worktree.
+    Navázání v /next je rychlé jen proto, že nic nedomýšlí: blok pozná podle
+    nadpisu s „– přerušeno“ a první akci podle návěstí `**Jak pokračovat:**`.
+    Přejmenuje-li se značka na jedné straně, druhá ji přestane nacházet a /next
+    se začne ptát – tedy přesně to zdržení, kvůli kterému navázání nesbírá nic
+    dalšího. Proto se tu porovnávají obě strany proti sobě a příkaz, kterým /next
+    zápis hledá, se doopravdy spustí nad repozitářem s druhým worktree.
     """
 
     LABEL = "`**Jak pokračovat:**`"
@@ -3369,14 +3369,14 @@ class BreakContinueContract(unittest.TestCase):
             encoding="utf-8"
         )
         self.end_body = body(ROOT / "skills" / "end" / "SKILL.md")
-        self.continue_body = body(ROOT / "skills" / "continue" / "SKILL.md")
+        self.next_body = body(ROOT / "skills" / "next" / "SKILL.md")
 
     def test_both_sides_name_the_same_label(self):
         self.assertIn(
             self.LABEL, self.break_body, "/end nepíše návěstí Jak pokračovat doslova"
         )
         self.assertIn(
-            self.LABEL, self.continue_body, "/continue nehledá návěstí Jak pokračovat"
+            self.LABEL, self.next_body, "/next nehledá návěstí Jak pokračovat"
         )
 
     def test_break_heads_each_block(self):
@@ -3385,13 +3385,13 @@ class BreakContinueContract(unittest.TestCase):
             self.break_body,
             "/end nedává bloku nadpis s datem přerušení",
         )
-        self.assertIn("### ", self.continue_body, "/continue nepočítá s nadpisem bloku")
+        self.assertIn("### ", self.next_body, "/next nepočítá s nadpisem bloku")
 
-    def test_chain_leads_to_continue(self):
+    def test_chain_leads_to_next(self):
         self.assertIn(
-            "v nové session `/continue`",
+            "v nové session `/next`",
             self.end_body,
-            "Kudy dál u /end nevede po přerušení na /continue",
+            "Kudy dál u /end nevede po přerušení na /next",
         )
         row = next(
             line
@@ -3403,11 +3403,11 @@ class BreakContinueContract(unittest.TestCase):
             cells,
             [INTERRUPTED_CHAIN] * 2,
             "handoff.md nevede přerušený průchod v obou sloupcích řetězem "
-            "/end → /clear → /continue",
+            "/end → /clear → /next",
         )
 
     def test_find_command_reads_section_from_other_worktree(self):
-        command = re.search(r"```bash\n(.+?)\n```", self.continue_body, re.S).group(1)
+        command = re.search(r"```bash\n(.+?)\n```", self.next_body, re.S).group(1)
         with tempfile.TemporaryDirectory() as tmp:
             repo, other = Path(tmp) / "main", Path(tmp) / "feature"
             git = ["git", "-c", "user.name=t", "-c", "user.email=t@t"]
@@ -3456,7 +3456,7 @@ class BreakContinueContract(unittest.TestCase):
         na co (doloženo 12. 10. 2026 v klientské složce). Skrytá složka se naopak
         procházet nemá – leží v ní cizí worktree a běhový stav, ne práce.
         """
-        command = re.search(r"```bash\n(.+?)\n```", self.continue_body, re.S).group(1)
+        command = re.search(r"```bash\n(.+?)\n```", self.next_body, re.S).group(1)
         block = "# T\n\n## Přerušený běh\n\n### {} – přerušeno 2026-10-12\n\n## Úkoly\n"
         with tempfile.TemporaryDirectory() as tmp:
             client = Path(tmp)
@@ -3491,19 +3491,19 @@ class BreakContinueContract(unittest.TestCase):
         self.assertNotIn("### skrytá", out, "příkaz prochází skryté složky")
 
 
-class BreakContinueContractActuallyCatch(unittest.TestCase):
+class InterruptionContractActuallyCatch(unittest.TestCase):
     """Mutační test: návěstí vyříznuté z jedné strany musí kontrolu shodit."""
 
     def test_label_missing_on_one_side_is_reported(self):
-        case = BreakContinueContract("test_both_sides_name_the_same_label")
+        case = InterruptionContract("test_both_sides_name_the_same_label")
         case.setUp()
-        case.continue_body = case.continue_body.replace(case.LABEL, "Jak pokračovat")
+        case.next_body = case.next_body.replace(case.LABEL, "Jak pokračovat")
         with self.assertRaises(AssertionError):
             case.test_both_sides_name_the_same_label()
 
 
 HANDOFF = ROOT / "skills" / "handoff.md"
-INTERRUPTED_CHAIN = "`/end` → `/clear` → `/continue`"
+INTERRUPTED_CHAIN = "`/end` → `/clear` → `/next`"
 
 
 def queue_skills() -> set:
@@ -3554,12 +3554,6 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
         f"`/end` vedle `/merge`, který ho pouští sám: {line}"
         for line in redundant_end(navigation_lines(text))
     ]
-    # `/end` je sám krokem před `/continue`, jeho odrážka ho jmenovat nemusí.
-    if name != "end":
-        out += [
-            f"`/continue` bez `/end` před ním: {line}"
-            for line in continue_without_end(navigation_lines(text))
-        ]
     return out
 
 
@@ -3617,24 +3611,6 @@ def redundant_end(lines: list) -> list:
     return [line[:80] for line in lines if "`/end`" in line and "`/merge`" in line]
 
 
-def continue_without_end(lines: list) -> list:
-    """Řádky, které vedou na `/continue` a `/end` před ním nejmenují.
-
-    `/continue` čte jen zápis přerušení, který tam nechal `/end`; bez něj
-    nenajde nic, nebo – hůř – naváže na starší přerušení, než o kterém si
-    uživatel myslí, že na něj navazuje.
-    """
-    out = []
-    for line in lines:
-        # Každý výskyt zvlášť: řádek tabulky nese řetěz ve dvou sloupcích
-        # a `/end` v jednom nesmí krýt druhý.
-        for chunk in line.split("`/continue`")[:-1]:
-            if "`/end`" not in chunk:
-                out.append(line[:80])
-                break
-    return out
-
-
 class HandoffContract(unittest.TestCase):
     """Konec běhu: kudy dál a co když se průchod nevejde do session."""
 
@@ -3671,18 +3647,6 @@ class HandoffContract(unittest.TestCase):
         ]
         self.assertFalse(
             offenders, "práh kontextu opsaný do skillu: " + ", ".join(offenders)
-        )
-
-    def test_handoff_chains_to_continue_start_with_end(self):
-        """Řádek tabulky řetězů i vzorová odrážka v handoff.md, které končí
-        `/continue`, začínají `/end` – skilly z nich řetěz opisují."""
-        lines = [
-            line for line in HANDOFF.read_text().splitlines() if "`/continue`" in line
-        ]
-        self.assertTrue(lines, "handoff.md nevede na /continue vůbec")
-        self.assertFalse(
-            continue_without_end(lines),
-            "řetěz na /continue bez /end: " + "; ".join(continue_without_end(lines)),
         )
 
     def test_no_dialog_at_the_end(self):
@@ -3731,52 +3695,12 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
                 line,
             )
 
-    def test_continue_without_end_is_reported(self):
-        text = (
-            "**Kudy dál**\n\n- `/merge`, pak `/clear`, a v nové session `/continue`\n"
-        )
-        self.assertTrue(
-            any(
-                d.startswith("`/continue` bez")
-                for d in handoff_defects(text, "review", False)
-            )
-        )
-
-    def test_end_in_one_table_column_does_not_cover_the_other(self):
-        lines = [
-            "| přerušený průchod frontou | `/end` → `/clear` → `/continue` "
-            "| `/clear` → `/continue` |"
-        ]
-        self.assertTrue(continue_without_end(lines))
-
     def test_navigation_mentioned_in_prose_does_not_hide_the_block(self):
         text = (
             "Odkaz na blok **Kudy dál** uprostřed věty.\n\n## Fáze\n\n"
-            "**Kudy dál**\n\n- `/clear`, a v nové session `/continue`\n"
+            "**Kudy dál**\n\n- `/clear`, a v nové session `/next`\n"
         )
-        self.assertTrue(continue_without_end(navigation_lines(text)))
-
-    def test_end_after_continue_is_reported(self):
-        lines = ["- `/clear`, `/continue`, a když nic nenajde, `/end`"]
-        self.assertTrue(continue_without_end(lines))
-
-    def test_end_before_continue_passes(self):
-        text = "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
-        self.assertFalse(
-            any(
-                d.startswith("`/continue` bez")
-                for d in handoff_defects(text, "review", False)
-            )
-        )
-
-    def test_end_itself_need_not_name_end(self):
-        text = "**Kudy dál**\n\n- `/clear`, a v nové session `/continue`\n"
-        self.assertFalse(
-            any(
-                d.startswith("`/continue` bez")
-                for d in handoff_defects(text, "end", False)
-            )
-        )
+        self.assertTrue(exits_without_closer(text))
 
     def test_missing_interruption_rule_is_reported(self):
         name = sorted(queue_skills())[0]

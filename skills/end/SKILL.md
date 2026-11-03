@@ -1,6 +1,6 @@
 ---
 name: end
-description: Skill se použije, když uživatel zadá "/end", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je. Končí-li session uprostřed rozdělané práce – fronty skillu nebo práce mimo skill, "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, uloží ji navíc do sekce Přerušený běh v docs/todo.md tak, aby na ni v nové session rovnou navázal /continue; režim "break" to vynutí bez rozpoznávání. Na rozdíl od `/consistency`, který se ptá, jestli si projekt sedí sám se sebou, tenhle skill vytěžuje konverzaci.
+description: Skill se použije, když uživatel zadá "/end", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je. Končí-li session uprostřed rozdělané práce – fronty skillu nebo práce mimo skill, "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, uloží ji navíc do sekce Přerušený běh v docs/todo.md tak, aby na ni v nové session rovnou navázal /next; režim "break" to vynutí bez rozpoznávání. Na rozdíl od `/consistency`, který se ptá, jestli si projekt sedí sám se sebou, tenhle skill vytěžuje konverzaci.
 argument-hint: [session|break]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
@@ -16,7 +16,7 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 3. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
 4. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
 
-**Končí-li session uprostřed rozdělané práce**, uloží ji navíc jako frontu k navázání: do `docs/todo.md`, sekce `## Přerušený běh`, na kterou v nové session naváže `/continue` (*Fáze 3*). Rozdělanou prací je fronta kteréhokoliv skillu i práce mimo skill.
+**Končí-li session uprostřed rozdělané práce**, uloží ji navíc jako frontu k navázání: do `docs/todo.md`, sekce `## Přerušený běh`, na kterou v nové session naváže `/next` (*Fáze 3*). Rozdělanou prací je fronta kteréhokoliv skillu i práce mimo skill.
 
 **Režimy jsou dva.** **`session`** je výchozí a platí i bez argumentu: úklid session, ve kterém skill rozdělanou práci rozpozná sám. **`break`** říká, že rozdělaná práce je jistě – volá ho tak skill s frontou, když uživatel na prahu kontextu přijme přerušení (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*), a rozpoznání pak nic neodhaduje.
 
@@ -36,9 +36,9 @@ Do *Životního cyklu projektu* nepatří (`~/.claude/standards/lifecycle.md`, *
 
 **Není to audit projektu ani technická kontrola.** Nespouštěj `/consistency`, `/code-review` ani `/attack` – ty volá uživatel zvlášť – a testy, lint ani build nepouštěj **jako revizi projektu**. Co skill sám napsal, se ale před commitem ověřuje (*Fáze 7*).
 
-**Nemerguje a `/merge` nevolá – je to obráceně.** `/merge` pouští tenhle skill na svém začátku (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*). **Volá-li tě `/merge`, blok *Kudy dál* vynech** – odpověď uzavře on. Volá-li tě skill s frontou v režimu `break`, blok ponech: vede na `/continue` a přerušený skill vlastní závěr nevydává.
+**Nemerguje a `/merge` nevolá – je to obráceně.** `/merge` pouští tenhle skill na svém začátku (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*). **Volá-li tě `/merge`, blok *Kudy dál* vynech** – odpověď uzavře on. Volá-li tě skill s frontou v režimu `break`, blok ponech: vede na `/next` a přerušený skill vlastní závěr nevydává.
 
-**V přerušené práci nepokračuje.** Navázání dělá `/continue` v nové session – je to druhá strana téhož předání a čte přesně to, co *Fáze 3* zapíše. Co se do přerušení nevypořádalo, zůstane otevřené.
+**V přerušené práci nepokračuje.** Navázání dělá `/next` v nové session – je to druhá strana téhož předání a čte přesně to, co *Fáze 3* zapíše. Co se do přerušení nevypořádalo, zůstane otevřené.
 
 ## Jak je to postavené uvnitř
 
@@ -152,7 +152,7 @@ Nepředkládej řečnické otázky, zdvořilostní nabídky („mám to ještě 
 |---|---|
 | režim `break` | rozdělaná práce je – volající skill nabídl přerušení a uživatel ho přijal; nic neodhaduj |
 | `ROZDĚLANÁ PRÁCE` hlásí signál | rozdělaná práce je. **Běhový soubor skillu, který v téhle session neběžel**, je souběžná práce jiné session – nech ho být a rozhoduj podle zbytku tabulky |
-| na rozdělanou práci ukazuje jen konverzace – fronta skillu se nedošla, změna zůstala v půli, rozprava skončila s otevřenými otázkami | **jedna otázka** přes `AskUserQuestion`, `header` `Přerušení`: zapsat jako přerušený běh, na který naváže `/continue`, nebo jen úklid, ve kterém nedodělky jdou do `todo.md` jako úkoly. Ptáš se proto, že mylně zapsaný přerušený běh by `/continue` v nové session rovnou začal provádět |
+| na rozdělanou práci ukazuje jen konverzace – fronta skillu se nedošla, změna zůstala v půli, rozprava skončila s otevřenými otázkami | **jedna otázka** přes `AskUserQuestion`, `header` `Přerušení`: zapsat jako přerušený běh, na který naváže `/next`, nebo jen úklid, ve kterém nedodělky jdou do `todo.md` jako úkoly. Ptáš se proto, že mylně zapsaný přerušený běh by `/next` v nové session rovnou začal provádět místo nabídky |
 | nic z toho | rozdělaná práce není, pokračuj *Fází 4* |
 
 **Vědomě odložený úkol (kategorie 4) rozdělaná práce není** – jde do `todo.md` jako vždy. Otázku polož jen nad prací, kterou session měla rozjetou, když skončila; nad samými odloženými úkoly by zdržovala každý běžný úklid.
@@ -304,7 +304,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- **zapsal-li se přerušený běh** – `/clear`, a v nové session `/continue`: naváže rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění
+- **zapsal-li se přerušený běh** – `/clear`, a v nové session `/next`: naváže rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění
 - **stojíš-li na pushnuté větvi a v `docs/todo.md` není `## Přerušený běh`** – `/merge`, je-li větev hotová; úklid, který právě proběhl, pozná podle průchodu v `done.md` a znovu ho nepustí. Nabídni to jednou odrážkou, neptej se na to dialogem
 - **zbyla-li rozbitá věc** – pojmenuj ji a řekni, že ji vyřeší příští session, nebo ji doděláte teď
 - **jinak** – zavřít session; a míří-li práce dál na kontrolní krok, patří do odrážky celý řetěz s `/clear`, protože tenhle skill běží právě proto, že kontext nabyl

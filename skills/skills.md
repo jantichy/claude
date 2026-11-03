@@ -363,7 +363,7 @@ Je to snadné, zadejte do svého Claude Code tenhle prompt:
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** · …
 >
-> **Session** [`/next`](../next/README.md) · [`/continue`](../continue/README.md) · [`/end`](../end/README.md) · [`/merge`](../merge/README.md)
+> **Session** [`/next`](../next/README.md) · [`/end`](../end/README.md) · [`/merge`](../merge/README.md)
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 ```
@@ -377,7 +377,7 @@ Rozejde-li se rámeček s životním cyklem v `~/.claude/standards/rules.md`, pl
 ```
 **Nebo celou sadu naráz.** Chcete-li místo jednoho skillu rovnou celý životní cyklus, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency a attack, a k nim skilly, kterými session začíná a končí: next, continue, end, merge a break. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills a nainstaluj mi do `~/.claude/skills/` celý životní cyklus: project, discovery, specify, architect, breakdown, implement, release, evaluate, oponent, consolidate, review, consistency a attack, a k nim skilly, kterými session začíná a končí: next, end a merge. Každý z nich nainstaluj přesně podle promptu v sekci „Jak si ho nainstalovat“ v jeho README; na skilly z téhle sady se mě při tom neptej, beru je všechny.
 ```
 
 **Skilly mimo životní cyklus rámeček ani hromadnou instalaci nemají.** Pouštějí se samostatně a předstírat u nich sadu by mátlo.
@@ -420,9 +420,9 @@ Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jedno
 
 **Nikdy se z něj nečte jako z pravdy o projektu.** Říká jen, kde skončil přerušený běh; co z toho má trvalou platnost, se zapíše do `todo.md`, `decisions.md` nebo `done.md` jako všechno ostatní.
 
-**Není to cesta k navázání, kterou se přerušení doporučuje.** Nese stav položek, ne kontext kolem nich – doporučení, varianty a návaznosti zůstávají v konverzaci a s `/clear` zmizí. Přerušení průchodu proto vždycky jde přes `/end` a navázání přes `/continue` (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*); věta „skill v nové session naváže na běhový soubor“ do nabídky přerušení nepatří. Skill, který na startu svůj běhový soubor najde, rozliší dva případy:
+**Není to cesta k navázání, kterou se přerušení doporučuje.** Nese stav položek, ne kontext kolem nich – doporučení, varianty a návaznosti zůstávají v konverzaci a s `/clear` zmizí. Přerušení průchodu proto vždycky jde přes `/end` a navázání přes `/next` (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*); věta „skill v nové session naváže na běhový soubor“ do nabídky přerušení nepatří. Skill, který na startu svůj běhový soubor najde, rozliší dva případy:
 
-- **Soubor nese klíč `interrupted`**, kterým ho poznačil zápis přerušení v `/end` → autoritou je zápis v `docs/todo.md`, sekce `## Přerušený běh`, na který klíč ukazuje; z běhového souboru se bere jen stav položek. Spustil-li skill `/continue`, pokračuje podle zápisu bez ptaní; spustil-li ho uživatel přímo, nabídne navázání podle zápisu.
+- **Soubor nese klíč `interrupted`**, kterým ho poznačil zápis přerušení v `/end` → autoritou je zápis v `docs/todo.md`, sekce `## Přerušený běh`, na který klíč ukazuje; z běhového souboru se bere jen stav položek. Spustil-li skill `/next` při navázání na zápis, pokračuje podle něj bez ptaní; spustil-li ho uživatel přímo, nabídne navázání podle zápisu.
 - **Klíč chybí** → běh skončil bez zápisu přerušení (kompaktace, zavřené okno, pád). Teprve tehdy skill nabídne navázání z běhového souboru a řekne, že kontext kolem položek chybí a doporučení u nich sestaví znovu.
 
 ------

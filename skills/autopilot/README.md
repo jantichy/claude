@@ -31,7 +31,7 @@ Na začátku vypíše, co odpracuje a co přeskočí a proč, a hned se do toho 
 
 - Nevybírá z úkolů za vás tam, kde je z čeho vybírat – k tomu je `/next`.
 - Neodpracovává implementační plán; na ten je `/implement`.
-- Nenavazuje na přerušenou práci; to dělá `/continue`.
+- Nenavazuje na přerušenou práci; to dělá `/next`.
 - Nedělá revizi vlastní práce – tu doporučí pustit v nové session.
 
 ## Jak si ho nainstalovat

@@ -17,7 +17,7 @@ Režimy nemá. Argument je **volné zúžení** jako u `/next` – `/autopilot r
 
 - **Nenabízí a nenechává vybírat.** Seřadit všechno rozdělané a nechat uživatele zvolit je `/next`; tenhle skill bere jen to, u čeho volit není co, a zbytek přeskočí.
 - **Neodpracovává implementační plán.** Úkoly z `docs/plan.md` s jejich akceptačními kritérii drží `/implement`.
-- **Nenavazuje na přerušený běh.** Sekce `## Přerušený běh` patří `/continue`, i když by její položky splnily kritéria – nesou kontext, podle kterého se má navázat, a ten čte on.
+- **Nenavazuje na přerušený běh.** Sekce `## Přerušený běh` patří navázání v `/next`, i když by její položky splnily kritéria – nesou kontext, podle kterého se má navázat, a ten čte on.
 - **Nezapisuje zbytek práce k navázání.** Přerušení dlouhého průchodu s frontou, která se má zapsat, je `/end` v režimu `break`; tady se nic nepřerušuje – běh končí na hranici úkolu a fronta zůstává v `todo.md`, kde byla.
 - **Neuklízí session.** Řetěz konce session drží `/end` a pouští ho uživatel.
 - **Nedělá revizi vlastní práce.** Průběžná kontrola je povinná po každém úkolu; posudek toho, co běh vyrobil, je `/review` v nové session.

@@ -114,7 +114,7 @@ Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – �
 - **Má-li položka smysl až od určitého dne**, napiš **hned za název** `od <YYYY-MM-DD>` – `/next` ji do té doby nenabídne, jen zmíní. Datum uvnitř popisu odklad nezakládá. Je to odstup, ne termín.
 - **Drží jen nehotové položky.** Hotové **přesuň hned do `done.md`**.
 - **`## Parkované v session`** – bod odložený v rámci session; po vyřešení se maže, prázdná sekce se ruší.
-- **`## Přerušený běh`** – zbytek přerušené fronty skillu i práce mimo skill. Stojí první, navazuje na ni `/continue`, `/next` ji nabízí přednostně a tvar drží `/end`. Vypořádaná položka jde do `done.md`, jen je-li to odvedená práce, jinak se maže; prázdná sekce se ruší.
+- **`## Přerušený běh`** – zbytek přerušené fronty skillu i práce mimo skill. Stojí první, `/next` na ni rovnou naváže a tvar drží `/end`. Vypořádaná položka jde do `done.md`, jen je-li to odvedená práce, jinak se maže; prázdná sekce se ruší.
 - **`## Rozhodnuto k zapracování`** – nezapracované odpovědi průchodu nálezy (`~/.claude/skills/findings.md`).
 - **`## Kola návrhu`** – mapa kol návrhu; tvar drží `~/.claude/skills/architect/rounds.md`.
 

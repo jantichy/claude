@@ -14,7 +14,7 @@ Když je práce u konce a chystáte se sezení opustit nebo nechat zkompaktovat,
 6. **Ptá se i na produktové podklady**, vede-li je projekt – jestli přibyl doklad poptávky, jestli se změnilo, co víme o konkurenci, jestli přibylo riziko, jestli se posunul některý scénář nebo pojem. Jsou to soubory, na které se při běžné práci nesahá, takže tiše zastarávají jako první.
 7. **Ptá se na jednu frontu, ne na čtyři.** Všechno, co potřebuje vaše rozhodnutí, projde jedním seznamem seřazeným podle váhy – ať je to nevypořádané téma, nejasné zařazení zápisu, nebo starší dluh, na který u toho narazil.
 8. **Uklidí Git** a ověří výsledek, ne že ho předpokládá.
-9. **Pozná, že končíte uprostřed rozdělané práce.** Zbyla-li fronta nálezů nebo úkolů, změna v půli nebo rozprava s otevřenými otázkami, zapíše do seznamu úkolů všechno, co nová session potřebuje, aby pokračovala, jako by ji nikdo nepřerušil: kde práce leží, co jí musí předcházet, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří a commitne ještě dřív, než se začne ptát, a v nové session na něj [`/continue`](../continue/README.md) rovnou naváže. Ptá se jen tehdy, když na rozdělanou práci ukazuje jen konverzace a nic v souborech – mylně zapsané přerušení by nová session začala rovnou provádět.
+9. **Pozná, že končíte uprostřed rozdělané práce.** Zbyla-li fronta nálezů nebo úkolů, změna v půli nebo rozprava s otevřenými otázkami, zapíše do seznamu úkolů všechno, co nová session potřebuje, aby pokračovala, jako by ji nikdo nepřerušil: kde práce leží, co jí musí předcházet, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří a commitne ještě dřív, než se začne ptát, a v nové session na něj [`/next`](../next/README.md) rovnou naváže. Ptá se jen tehdy, když na rozdělanou práci ukazuje jen konverzace a nic v souborech – mylně zapsané přerušení by nová session začala rovnou provádět.
 10. **Nedojde-li seznam do konce, nabídne přerušení.** Roste-li konverzace do velikosti, ve které už se pracuje pomalu a nepřesně, řekne to a zbývající položky i s tím, co je u nich potřeba rozhodnout, uloží do seznamu úkolů – další session pak pokračuje přesně tam, kde jste skončili, a s čistou hlavou.
 
 ## Proč zrovna tenhle
@@ -59,7 +59,7 @@ Přehled ukazuje jen to, co od vás něco chce nebo dopadlo jinak, než mělo �
 - **Nedělá revizi projektu.** Testy, linter ani build nepouští proto, aby prověřil cizí práci. To, co sám zapsal, si naopak ověřit musí – pustí na to tu kontrolu projektu, která na zapsané soubory doopravdy sahá, a její výsledek vypíše.
 - **Nezakládá potichu chybějící soubory.** Vypíše, které chybí, a nabídne `/project`.
 - **Nemerguje.** Je to obráceně: [`/merge`](../merge/README.md) ho pouští sám, takže když končíte hotovou větví, napíšete rovnou jeho.
-- **V přerušené práci nepokračuje.** Navazuje [`/continue`](../continue/README.md) v nové session.
+- **V přerušené práci nepokračuje.** Navazuje [`/next`](../next/README.md) v nové session.
 
 ## Jak si ho nainstalovat
 

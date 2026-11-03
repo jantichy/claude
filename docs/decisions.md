@@ -2562,3 +2562,22 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **`/merge` volá `/end` bez potlačení rozpoznání** (potvrdil uživatel při úklidu session 3. 11. 2026). Zvažovalo se, že `/merge` pustí `/end` v režimu, který přerušení nehledá. Zamítnuto: rozdělaná práce na větvi před mergem je přesně důvod merge zastavit, takže `/merge` se teď zastaví, když úklid přerušení zapíše.
 
 **Co se tím vědomě ztratilo:** samostatný příkaz, kterým uživatel výslovně řekne „přerušuji“. Nahrazuje ho `/end break`, který ale ručně psát nemusí – v nejistém případě se `/end` zeptá sám.
+
+### `/continue` sloučený do `/next`: na začátku session jeden příkaz, přerušená práce má přednost
+
+**Rozhodnuto 3. 11. 2026** (uživatel), hned po sloučení `/break` do `/end`. Na začátku session uživatel volil mezi `/continue` a `/next` podle toho, jestli si pamatuje, že minulá session něco přerušila – stejný úsudek ve chvíli, kdy ještě nemá kontext, jaký sloučení na konci session odstranilo. **Podmínka uživatele:** navázání se nesmí zpomalit oproti `/continue`, který byl rychlý, kdežto `/next` je pomalý.
+
+**Rozhodnutí:** `/next` bez argumentu začíná příkazem `/continue`, obaleným tak, že při prázdném výsledku pustí `collect.py` v témže volání. Navázání tedy stojí stejně jako dřív (jen se načte delší `SKILL.md`) a nabídka nečeká na kolo navíc. Mechanika navázání stojí přímo v `SKILL.md`, ne ve vedlejším souboru, protože čtení navíc by stálo právě ty vteřiny, kvůli kterým cesta existuje. **Revize zamítnutí z 8. 10. 2026** (*Navázání na přerušenou práci má vlastní skill `/continue`*, „zúžení `/next Přerušený běh` by stejně pustilo celý sběr“): důvod padá, protože levný příkaz stojí před sběrem, ne v něm.
+
+**Zúžení navázání vypíná.** Kdo zužuje, chce frontu; a `/architect` volá `/next Kola návrhu` – bez téhle výjimky by místo nabídky kol skončil v cizí přerušené práci. Přerušený blok pak stojí ve frontě jako první položka a spouští navázání.
+
+**Zrušena kontrola `continue_without_end`** v `tests/test_skills.py`. Hlídala, že před každým `/continue` v bloku *Kudy dál* stojí `/end`, protože `/continue` bez zápisu nenašel nic, nebo navázal na starší přerušení. `/next` bez předchozího `/end` je ale legitimní – nabídne frontu –, takže by kontrola hlásila každou běžnou odrážku. Řetěz přerušení dál hlídá řádek tabulky v `handoff.md` a hláška hooku, odchod ze session bez uzavíracího skillu `exits_without_closer`.
+
+**Zamítnuto:**
+- **Navázat i při zúžení** – rozbilo by rozhraní s `/architect` a vzalo uživateli jediný způsob, jak frontu vidět, když přerušená práce leží.
+- **Nabídnout přerušenou práci jen jako první položku, jako dřív** – vrátilo by čekání na sběr a nabídku, kvůli kterému `/continue` vznikl.
+- **Ponechat `/continue` jako alias** – dvě jména pro jednu cestu (`~/.claude/standards/rules.md`, *Jeden termín pro jednu věc*), a popis aliasu by se rozešel s tělem `/next`.
+- **Kontrolovat živou session i při navázání** – zamítnuto z téhož důvodu jako u `/continue`: přerušení končí `/clear` v téže session, která má pokračovat.
+
+**Co se tím vědomě ztratilo:** příkaz, který nikdy nespustí sběr. Kdyby se zápis přerušení neočekávaně nenašel, `/next` místo hlášky „navázat není na co“ postaví nabídku – to je delší čekání, ne chybný krok, protože přerušená práce, kterou příkaz nevidí, by se ve frontě stejně neobjevila.
+

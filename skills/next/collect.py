@@ -52,7 +52,7 @@ TEXT_LIMIT = 300
 BUDGET = 25000
 TEXT_STEPS = (200, 160, 120, 80, 40, 0)
 DIFF_LINES = 12
-# Složky, do kterých hledání `todo.md` podprojektů nesestupuje – stejně jako `/continue`.
+# Složky, do kterých hledání `todo.md` podprojektů nesestupuje – stejně jako příkaz *Fáze 1* v `SKILL.md`.
 SKIP_DIRS = {"node_modules", "vendor"}
 RULES = Path.home() / ".claude" / "standards" / "rules.md"
 
@@ -339,7 +339,7 @@ def parse_todo(text):
 
 
 def todo_files(top: Path):
-    """`todo.md` podprojektů pod `top`, do téže hloubky a se stejnými výjimkami jako `/continue`.
+    """`todo.md` podprojektů pod `top`, do téže hloubky a se stejnými výjimkami jako příkaz *Fáze 1* v `SKILL.md`.
 
     Soubor smí ležet nejvýš o tři úrovně níž (`zakazka/docs/todo.md`), skryté
     složky, `node_modules` a `vendor` se nenavštěvují – sběr musí zůstat rychlý.

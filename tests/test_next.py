@@ -32,6 +32,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "skills" / "next" / "sessions.py"
 COLLECT = ROOT / "skills" / "next" / "collect.py"
+SKILL = ROOT / "skills" / "next" / "SKILL.md"
 
 
 class LiveSessionsAndBranches(unittest.TestCase):
@@ -682,7 +683,7 @@ class QueueCollection(unittest.TestCase):
 
         `/end` zapisuje do `todo.md` projektu, kde session stojí, u podprojektu
         klientské složky tedy do podsložky – často s vlastním repozitářem, který
-        git ignoruje. `/continue` ho najde do třetí úrovně, `/next` četl jen
+        git ignoruje. Příkaz *Fáze 1* ho najde do třetí úrovně, `collect.py` četl jen
         kořen a přerušenou práci, kterou má řadit první, neviděl. Hledá se stejně
         hluboko a se stejnými výjimkami: hlubší soubor ani `node_modules` se
         nečtou, a ostatní úkoly podprojektu patří k jinému projektu.
@@ -982,6 +983,91 @@ class OutputBudget(unittest.TestCase):
         for item in items:
             self.assertTrue(item["title"], "položka přišla o název")
             self.assertNotIn("text", item, "popis zůstal i v kroku, který je zahazuje")
+
+
+BLOCK = "## Přerušený běh\n\n### {}\n\n**Jak pokračovat:** krokem A.\n\n## Další\n\n- Mimo.\n"
+
+
+def find_command():
+    """Příkaz *Fáze 1* vytažený ze `SKILL.md` – skill ho pouští doslova."""
+    [cmd] = re.findall(r"```bash\n(.+?)\n```", SKILL.read_text(), re.S)
+    return cmd
+
+
+class FindInterrupted(unittest.TestCase):
+    """Příkaz, kterým `/next` hledá zápis přerušené práce, než postaví nabídku.
+
+    Chyba je tichá v obou směrech. Nenajde-li příkaz zápis, který existuje,
+    skill postaví nabídku a přerušená práce zůstane ležet – hlídá se proto
+    zápis v `CLAUDE.md` operativního projektu bez gitu, kam ho `/end` píše,
+    protože `todo.md` takový projekt nemá, i zápis v `docs/todo.md` běžného
+    repozitáře. A nepustí-li bez zápisu `collect.py`, skill nemá z čeho stavět
+    a musí ho volat znovu – tedy kolo navíc, kterému se příkaz vyhýbá.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.base = Path(self.tmp.name)
+        self.env = dict(
+            os.environ,
+            GIT_CEILING_DIRECTORIES=self.tmp.name,
+            GIT_AUTHOR_NAME="t",
+            GIT_AUTHOR_EMAIL="t@t",
+            GIT_COMMITTER_NAME="t",
+            GIT_COMMITTER_EMAIL="t@t",
+        )
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def run_in(self, cwd):
+        run = subprocess.run(
+            ["bash", "-c", find_command()],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            env=self.env,
+        )
+        self.assertEqual(run.returncode, 0, run.stderr)
+        return run.stdout
+
+    def test_claude_md_of_operative_project_without_git(self):
+        d = self.base / "firma"
+        d.mkdir()
+        (d / "CLAUDE.md").write_text(
+            "# Firma\n\n- **Struktura:** CLAUDE.md\n\n" + BLOCK.format("Smlouvy")
+        )
+        out = self.run_in(d)
+        self.assertRegex(out, r"(?m)^==> .*/firma/CLAUDE\.md$")
+        self.assertIn("### Smlouvy", out)
+        self.assertNotIn("Mimo.", out)
+
+    def test_todo_in_git_repository_still_found(self):
+        d = self.base / "repo"
+        (d / "docs").mkdir(parents=True)
+        (d / "docs" / "todo.md").write_text("# TODO\n\n" + BLOCK.format("Review"))
+        (d / "CLAUDE.md").write_text("# Repo\n\n- **Struktura:** docs/\n")
+        subprocess.run(["git", "init", "-q", str(d)], check=True, env=self.env)
+        out = self.run_in(d)
+        self.assertEqual(out.count("==> "), 1, out)
+        self.assertIn("docs/todo.md", out)
+        self.assertIn("### Review", out)
+
+    def test_without_interruption_falls_through_to_collect(self):
+        d = self.base / "repo"
+        (d / "docs").mkdir(parents=True)
+        (d / "docs" / "todo.md").write_text("# TODO\n\n## Úkoly\n\n- [ ] Něco.\n")
+        subprocess.run(
+            ["git", "init", "-q", "-b", "main", str(d)], check=True, env=self.env
+        )
+        subprocess.run(
+            ["git", "-C", str(d), "commit", "-q", "--allow-empty", "-m", "x"],
+            check=True,
+            env=self.env,
+        )
+        out = self.run_in(d)
+        self.assertNotIn("==> ", out)
+        self.assertEqual(Path(json.loads(out)["root"]).resolve(), d.resolve())
 
 
 if __name__ == "__main__":

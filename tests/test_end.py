@@ -31,7 +31,7 @@ a že prompty v evidenci nesou jen to, co uživatel skutečně napsal.
 Třetí, `prepare.py`, navíc hlásí **signály rozdělané práce**, podle kterých
 `/end` bez otázky zapíše přerušený běh. Tady jsou oba směry stejně drahé:
 signál, který mlčí, nechá frontu odejít s `/clear`, a signál, který hlásí
-cizí nebo už zapsanou práci, vyrobí přerušení, na které `/continue` v nové
+cizí nebo už zapsanou práci, vyrobí přerušení, na které `/next` v nové
 session rovnou naváže.
 
 Spouští se: python3 -m unittest discover -s tests -q

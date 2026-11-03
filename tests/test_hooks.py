@@ -1566,7 +1566,7 @@ def interrupted_chain() -> str:
 
     Hláška hooku ho opakuje a nesmí mít jiné znění než tabulka, ze které ho
     opisují skilly; samotné slovo `/end` by prošlo i v hlášce, která ho
-    staví za `/continue`.
+    staví za `/next`.
     """
     text = (
         Path(__file__).resolve().parent.parent / "skills" / "handoff.md"

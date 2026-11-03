@@ -37,7 +37,7 @@ STATE_DIR = Path.home() / ".local" / "state" / "claude-handoff"
 # a kontext kolem položek se s `/clear` ztratil.
 CHAINS = (
     "Prochází-li běh frontu jednu položku po druhé (`~/.claude/skills/handoff.md`, "
-    "*Přerušení dlouhého průchodu*), řetěz je `/end` → `/clear` → `/continue` "
+    "*Přerušení dlouhého průchodu*), řetěz je `/end` → `/clear` → `/next` "
     "v nové session – na souhlas pusť `/end` v režimu `break`, zbytek fronty "
     "uloží on, ne běhový soubor. Jinak `/end` → `/clear` a další krok v nové "
     "session."

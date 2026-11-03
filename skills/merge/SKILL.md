@@ -50,7 +50,7 @@ Společný začátek je v `~/.claude/skills/preflight.md`. Navíc:
 - **slučuješ jinou větev, než na které session stojí** – argument se liší od `git branch --show-current`. Ta větev měla úklid ve vlastní session a tahle s ní nemá nic společného.
 - **tahle session už úklid má** – v `docs/done.md`, sekce `## Průchody životním cyklem`, stojí řádek `/end` s jejím session-id (vezmi ho z cesty ke scratchpadu) a od toho běhu se v session nepracovalo, jen padl pokyn k mergi. Pracovalo-li se, pusť ho znovu.
 
-**Pokračuj jen po hotovém verdiktu `/end`.** Skončí-li druhým zněním – zapsané to není celé –, merge zastav a vydej nehotový verdikt s tím, co `/end` brání. Do hlavní větve by jinak šla práce s nedopsanou dokumentací. **Zapsal-li `/end` přerušenou práci, merge zastav taky** – větev s rozdělanou prací hotová není a zápis má zůstat v ní, kde na něj naváže `/continue`.
+**Pokračuj jen po hotovém verdiktu `/end`.** Skončí-li druhým zněním – zapsané to není celé –, merge zastav a vydej nehotový verdikt s tím, co `/end` brání. Do hlavní větve by jinak šla práce s nedopsanou dokumentací. **Zapsal-li `/end` přerušenou práci, merge zastav taky** – větev s rozdělanou prací hotová není a zápis má zůstat v ní, kde na něj naváže `/next`.
 
 ## Fáze 2 – Co merge zastaví
 
