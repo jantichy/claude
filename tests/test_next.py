@@ -1073,6 +1073,12 @@ class SortedQueue(unittest.TestCase):
             self.c.legacy_shape(self.c.parse_todo(text)[0], text),
         )
 
+    def test_checkbox_outside_work_bands_does_not_hide_plain_items(self):
+        text = "# Fronta\n\n## Parkované v session\n\n- [ ] Bod.\n\n## Teď\n\n- **Holá.** Text.\n"
+        todo = self.c.parse_todo(text)[0]
+        self.assertEqual([i["title"] for i in self.c.queue_items(todo)], ["Holá"])
+        self.assertIn("položky nejsou zaškrtávátka", self.c.legacy_shape(todo, text))
+
     def test_nested_checklist_does_not_hide_plain_items(self):
         text = "# TODO\n\n## Úkoly\n\n- **Položka.** Text.\n  - [ ] krok\n"
         items = self.c.queue_items(self.c.parse_todo(text)[0])

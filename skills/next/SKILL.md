@@ -48,7 +48,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 **Bez argumentu** pusť z adresáře session **přesně tenhle příkaz**, nic předtím a nic dalšího:
 
 ```bash
-out=$({ git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | grep . || pwd; } | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o \( -name todo.md -o -name CLAUDE.md \) -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^##? /{exit} s' "$f"; done); if [ -n "$out" ]; then printf '%s\n' "$out"; else python3 ~/.claude/skills/next/collect.py; fi
+out=$({ git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | grep . || pwd; } | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o \( -name todo.md -o -name CLAUDE.md \) -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; done); if [ -n "$out" ]; then printf '%s\n' "$out"; else python3 ~/.claude/skills/next/collect.py; fi
 ```
 
 Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem; `/end` zapisuje do `todo.md` projektu, ve kterém session stojí. Skryté složky, `node_modules` a `vendor` přeskakuje, aby hledání zůstalo pod vteřinou. **Čte i `CLAUDE.md`**, protože operativní projekt `todo.md` nemá a `/end` v něm zapisuje do projektového `CLAUDE.md` (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*); mimo git hledá od adresáře session.
@@ -85,7 +85,7 @@ Výstup `collect.py` máš z *Fáze 1*; se zúžením ho pusť z adresáře sess
 - **`docs` je null a nic dalšího nenašel** → projekt frontu nevede; řekni to a skonči.
 - **`fetch` je `failed`** → pokračuj, ale v poznámkách řekni, že hlavní větev může být stará.
 
-**Srovnaný `todo.md` čti mechanicky.** V pásmech priority pod `# Fronta` je pořadí priorita a velikost nese každá položka v poli `size` (`~/.claude/standards/structure.md`, *`todo.md`*), takže skript vrátil jen vrchol fronty – nejvýš deset připravených položek v pořadí souboru – a u sekce, ze které se něco nevešlo, počet v `more`. Pořadí ani velikost neposuzuj znovu; právě to je úsudek, který se přesunul k zápisu položky.
+**Srovnaný `todo.md` čti mechanicky.** V pásmech práce (`Teď`, `Potom`, `Později` pod `# Fronta`) je pořadí priorita a velikost nese každá položka v poli `size` (`~/.claude/standards/structure.md`, *`todo.md`*), takže skript vrátil jen vrchol fronty – nejvýš deset připravených položek v pořadí souboru – a u sekce, ze které se něco nevešlo, počet v `more`. Pořadí ani velikost neposuzuj znovu; právě to je úsudek, který se přesunul k zápisu položky.
 
 **`legacy` není `null`** → `todo.md` srovnaný není: skript vrátil celou frontu jako dřív a v `legacy` důvody. Seřaď ji podle *Fáze 3* a velikosti odhadni podle `structure.md`, *`todo.md`* a do poznámek napiš jednu větu: fronta není srovnaná (důvody z `legacy`), takže pořadí i velikosti jsou odhad, a srovnat ji jde dorovnáním projektu přes `/project`. Nic víc – nesrovnaný soubor je okolnost, ne práce, kterou by se mělo začít.
 

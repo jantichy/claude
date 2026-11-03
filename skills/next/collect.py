@@ -17,7 +17,8 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 - `docs` – `docs/`, `root`, `CLAUDE.md` u operativního projektu (fronta je pak jen sekce
   `## Přerušený běh` a `## Otevřené body` jeho `CLAUDE.md`), nebo null, když projekt `todo.md` nemá
 - `current` – větev a necommitnuté soubory tam, kde session stojí (null v kořeni kontejneru)
-- `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`); sekce
+- `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`, `size`);
+  u srovnaného souboru jen vrchol pásem práce a u sekce, ze které se nevešlo, počet v `more`; sekce
   `Přerušený běh` nese i bloky z `todo.md` ostatních worktree a podprojektů, u nich
   s větví v `branch` a u podprojektu s cestou v `project`
 - `rounds` – bloky kol návrhu s poli a stavem ve větvi kola; `stitch_pending` – čeká sešití
@@ -26,6 +27,7 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 - `branches` – nesloučené větve a větve živých session: `state` (`occupied`, `abandoned`,
   `uncertain`, `empty`), session, commity, změny `todo.md`/`plan.md`/`done.md` a přiřazená kola
 - `sessions_error` – proč se živé session nedaly zjistit (pak jsou všechny větve `uncertain`)
+- `legacy` – proč `todo.md` není ve srovnaném tvaru, nebo null; pak `todo` nese celou frontu
 - `backlog` – názvy nápadů, jen když je fronta prázdná
 - `text_limit` – na kolik znaků se popisy položek dokrátily, aby se výstup vešel
   do kontextu; `null` znamená, že se krátit nemuselo, `0` že popisy odpadly celé
@@ -312,7 +314,7 @@ def parse_todo(text):
     out, rounds, stitched = [], [], False
     # Nese-li fronta zaškrtávátka, jsou položkami jen ona; holý seznam je pak
     # komentář k nim. Fronta psaná bez zaškrtávátek si ponechá starý výklad.
-    boxed = any(CHECKBOX.match(line) for line in text.splitlines())
+    boxed = work_boxed(text)
     for title, body in sections(text, preamble=True):
         if title == "Kola návrhu":
             rounds = parse_rounds(body)
@@ -362,6 +364,21 @@ def parse_todo(text):
     return out, rounds, stitched
 
 
+def work_boxed(text):
+    """Nese některé pásmo práce zaškrtávátko první úrovně?
+
+    Rozhoduje se jen nad pásmy práce: zaškrtávátko v parkovaných bodech nebo
+    v sekci mimo frontu by jinak přepnulo výklad celého souboru a holé položky
+    pásem by zmizely bez varování.
+    """
+    return any(
+        CHECKBOX.match(line)
+        for title, body in sections(text, preamble=True)
+        if title not in SPECIAL and title != "Kola návrhu"
+        for line in body
+    )
+
+
 def queue_items(todo):
     """Otevřené položky pásem priority, v pořadí souboru."""
     return [
@@ -382,7 +399,7 @@ def legacy_shape(todo, text):
     """
     reasons = []
     items = queue_items(todo)
-    if items and not any(CHECKBOX.match(line) for line in text.splitlines()):
+    if items and not work_boxed(text):
         reasons.append("položky nejsou zaškrtávátka")
     if items and not re.search(r"(?m)^# Fronta\s*$", text):
         reasons.append("chybí nadpis `# Fronta`")
@@ -395,7 +412,7 @@ def legacy_shape(todo, text):
 def top_of_queue(todo, limit=TOP):
     """Nechá ve frontě jen prvních `limit` připravených položek v pořadí souboru.
 
-    Zvláštní sekce zůstávají celé a položka, která na něco čeká, se do limitu
+    Přerušený běh, parkované body a sekce mimo frontu zůstávají celé a položka, která na něco čeká, se do limitu
     nepočítá – vypisuje se zvlášť a stačí jí název a závislost. Co se nevešlo,
     nese sekce jako počet v `more`.
     """
