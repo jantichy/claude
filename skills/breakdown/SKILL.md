@@ -86,6 +86,7 @@ Navíc si ověř tohle:
 - že **volbu způsobu implementace na konci nenabízí** – tu řeší `/implement`,
 - že každý úkol musí mít **ověřitelné akceptační kritérium** – viz Fáze 3.
 - že každý úkol odkazuje na **konkrétní sekce dokumentace s kotvou**, ne na celé soubory – viz Fáze 3.
+- že **nadpis úkolu zní doslova `### Task <N>: <název>`** i v českém plánu – slovo `Task` a číslo čtou skripty implementace, takže jsou identifikátor; česky je jen název.
 
 ------
 

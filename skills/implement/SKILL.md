@@ -36,12 +36,13 @@ Navíc si ověř tohle:
    |---|---|
    | `docs/plan.md` neexistuje | **Zastav se.** Nabídni `/breakdown`, a pokud chybí i zadání, `/specify`. |
    | Existuje, nic není odškrtnuté | Normální běh od prvního úkolu. |
-   | Existuje, část odškrtnutá | **Naváž na prvním neodškrtnutém úkolu.** Nejdřív ale ověř, že odškrtnuté opravdu hotové jsou – viz bod 5. |
+   | Existuje, část odškrtnutá | **Naváž na prvním neodškrtnutém úkolu.** Nejdřív ale ověř, že odškrtnuté opravdu hotové jsou – viz bod 3. |
    | Vše odškrtnuté | Řekni to a nabídni uzavírání podle *Životního cyklu projektu*. Nehledej si práci navíc. |
 
 2. **Rozpracované změny jsou tu riziko navíc.** Smíchají se s prací podle plánu a přestane být poznat, co je čí. Vypiš je a zeptej se, jestli je commitnout, odložit, nebo pokračovat i tak.
 3. **Ověř skutečný stav proti plánu.** U navazování nevěř zaškrtávátkům – podívej se, jestli soubory a testy z odškrtnutých úkolů opravdu existují a procházejí. Plán mohl zůstat odškrtnutý po přerušené session, kde se práce nedokončila. Nesedí-li to, ohlas to a zeptej se, než začneš.
 4. **Izolace větve.** Má-li projekt worktree layout, pracuje se v už existující větvi – **nezakládej další worktree**. Nemá-li ho a jde o větší práci, nabídni izolaci; pokud ji uživatel chce, použij `superpowers:using-git-worktrees`.
+5. **Nadpis úkolu musí znít `Task <N>`.** Podle něj úkol hledají skripty obou režimů z *Fáze 1*; přeložený nadpis (`### Úkol 3`) nenajdou a zadání i záznam postupu by se dělaly ručně. Má-li plán nadpisy úkolů přeložené, přejmenuj v nich jen to slovo (`### Úkol 3: Export` → `### Task 3: Export`), ověř, že počet nadpisů sedí, řekni to a commitni zvlášť, než začneš.
 
 ------
 
