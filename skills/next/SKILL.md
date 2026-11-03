@@ -48,7 +48,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 **Bez argumentu** pusť z adresáře session **přesně tenhle příkaz**, nic předtím a nic dalšího:
 
 ```bash
-out=$({ git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | grep . || pwd; } | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o \( -name todo.md -o -name CLAUDE.md \) -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; done); if [ -n "$out" ]; then printf '%s\n' "$out"; else python3 ~/.claude/skills/next/collect.py; fi
+out=$({ git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | grep . || pwd; } | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o \( -name todo.md -o -name CLAUDE.md \) -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^##? /{exit} s' "$f"; done); if [ -n "$out" ]; then printf '%s\n' "$out"; else python3 ~/.claude/skills/next/collect.py; fi
 ```
 
 Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem; `/end` zapisuje do `todo.md` projektu, ve kterém session stojí. Skryté složky, `node_modules` a `vendor` přeskakuje, aby hledání zůstalo pod vteřinou. **Čte i `CLAUDE.md`**, protože operativní projekt `todo.md` nemá a `/end` v něm zapisuje do projektového `CLAUDE.md` (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*); mimo git hledá od adresáře session.
@@ -62,19 +62,19 @@ Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedl
 
 ### Navázání
 
-**Víc bloků `### `**, v jedné sekci i napříč worktree → zeptej se přes `AskUserQuestion`, kterým začít: nadpis bloku jako `label`, první věta *Jak pokračovat* jako `description`, v pořadí výpisu. Žádný neoznačuj za doporučený, pořadí nerozhodl nikdo. **Blok se stejným nadpisem z víc worktree je jeden zápis**, který zdědil pomocný worktree odbočený z větve (`~/.claude/skills/findings.md`, *Zapracování*); nabídni ho jednou, s worktree, které blok sám jmenuje jako pracovní adresář, a nejmenuje-li žádné, s prvním ve výpisu. **Chybí-li `**Jak pokračovat:**` úplně**, nehádej – vypiš, co v bloku je, a zeptej se, čím začít.
+**Blok se stejným nadpisem z víc worktree je jeden zápis**, který zdědil pomocný worktree odbočený z větve (`~/.claude/skills/findings.md`, *Zapracování*) – slouč je dřív, než bloky spočítáš; platí ten z worktree, které blok sám jmenuje jako pracovní adresář, a nejmenuje-li žádné, první ve výpisu. **Zbude-li víc bloků `### `**, v jedné sekci i napříč worktree → zeptej se přes `AskUserQuestion`, kterým začít: nadpis bloku jako `label`, první věta *Jak pokračovat* jako `description` a před ní worktree nebo podprojekt, leží-li bloky v různých – jinak uživatel nepozná, nad čím který poběží –, v pořadí výpisu. Žádný neoznačuj za doporučený, pořadí nerozhodl nikdo. **Chybí-li `**Jak pokračovat:**` úplně**, nehádej – vypiš, co v bloku je, a zeptej se, čím začít.
 
 U jednoho bloku, nebo toho vybraného:
 
 1. **Přepni se do projektu, kde zápis leží** – adresář nad `docs/todo.md` z řádku `==>` (nad `todo.md` u projektu bez `docs/`, nad `CLAUDE.md` u operativního projektu); u podprojektu je to jeho podsložka, ne kořen worktree. Stojí-li session jinde, přejdi tam a řekni to jednou větou; ve worktree layoutu je to jediná věc, kterou nová session jinak nemá odkud vědět.
-2. **Přečti blok celý** – výstup příkazu ho už obsahuje, soubor se zápisem znovu neotevírej. Mimo *Jak pokračovat* nese úvodní větu s tím, **co musí předcházet**: stojí-li tam krok, který se ještě neudělal (uživatel chystal změnu rozhodnutí), zeptej se, jestli proběhl, dřív než začneš – fronta nad neplatným stavem je práce nazmar.
+2. **Přečti blok celý** – po příkazu *Fáze 1* ho výstup už obsahuje a soubor se zápisem znovu neotevírej; přicházíš-li k bloku z fronty (zúžení, odmítnuté navázání), přečti ho v `todo.md` na jeho místě, protože `collect.py` z něj vrací jen první větu *Jak pokračovat*. Mimo *Jak pokračovat* nese úvodní větu s tím, **co musí předcházet**: stojí-li tam krok, který se ještě neudělal (uživatel chystal změnu rozhodnutí), zeptej se, jestli proběhl, dřív než začneš – fronta nad neplatným stavem je práce nazmar.
 3. **Shrň ve třech až pěti řádcích:** co se přerušilo a kdy, kde to leží, kolik položek zbývá, co předchází a čím se teď pokračuje.
 4. **Řekni první závěrečnou větu z *Fáze 5* a proveď první akci z *Jak pokračovat*:**
    - **Je to skill** (`/review branch`, `/implement`) → vyvolej ho přes nástroj `Skill` s argumentem ze zápisu. Blok mu neopakuj jako zadání – zbývající položky si přečte z `todo.md` sám, a říká-li zápis, že se s nimi má porovnat výsledek, stojí to v *Jak pokračovat*, ne v tvém shrnutí.
    - **Je to položka nebo krok práce** → načti soubory, na které ta položka odkazuje, a pusť se do ní. Další položky ber v pořadí zápisu; každá nese varianty a doporučení, takže je předkládej tak, jak jsou zapsané, ne od nuly.
    - **Je to zapracování sekce `## Rozhodnuto k zapracování`** → zapracuj ji podle `~/.claude/skills/findings.md`, *Zapracování* – odpovědi tam už padly, takže se na ně neptej znovu.
 
-Od té chvíle běží běžná práce podle pravidel projektu, ne tenhle skill. **Řekne-li uživatel, že chce místo navázání vidět frontu**, pusť `python3 ~/.claude/skills/next/collect.py` a pokračuj *Fází 2*; přerušený blok v ní stojí jako položka.
+Od té chvíle běží běžná práce podle pravidel projektu, ne tenhle skill. **Přeruší-li uživatel navázání s tím, že chce vidět frontu**, zastav rozběhnutou práci, pusť `python3 ~/.claude/skills/next/collect.py` a pokračuj *Fází 2*; přerušený blok v ní stojí jako položka, ale za doporučenou ho neoznač – právě ho odmítl. U jednoho bloku se předem neptá, protože navázání má být okamžité a přerušit ho uživatel může kdykoliv.
 
 ## Fáze 2 – Sběr
 

@@ -17,12 +17,15 @@ N. <okrajový vstup> – <co chybí>
 U každého vstupu jdi skillem krok po kroku, jako bys ho vykonával:
 - vypiš kroky v pořadí, ve kterém by proběhly, a u každého nástroj harnessu, který k němu
   potřebuješ – i tam, kde ho skill nejmenuje a popisuje jen činnost („pusť agenta“, „zeptej se“);
-- porovnej ten nástroj s ALLOWED-TOOLS; chybí-li v nich, krok nejde provést;
+- porovnej ten nástroj s ALLOWED-TOOLS; chybí-li v nich, krok jde provést, ale harness se na něj
+  zeptá na souhlas – ALLOWED-TOOLS nástroje jen předem schvalují, neomezují; neproveditelný je
+  krok jen tehdy, když nástroj harness vůbec nemá nebo chybí soubor;
 - odkazuje-li krok na soubor, otevři ho jen kvůli ověření, že existuje; jiné soubory nečti;
 - kde ti skill neřekl, co dělat, a musel jsi hádat, zapiš to.
 
 VRAŤ u každého vstupu:
 - NEPROVEDITELNÉ: <krok> – <chybějící nástroj nebo soubor> – <citace ze skillu s řádkem>
+- SE SOUHLASEM: <krok> – <nástroj mimo ALLOWED-TOOLS> – <citace ze skillu s řádkem>
 - HÁDÁNÍ: <citace ze skillu s řádkem> – <co jsi musel domyslet>
 - SLABŠÍ MODEL: <místo> – <jak by se slabší model nejspíš odchýlil>
 

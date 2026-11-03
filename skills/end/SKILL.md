@@ -151,8 +151,9 @@ Nepředkládej řečnické otázky, zdvořilostní nabídky („mám to ještě 
 | Situace | Co uděláš |
 |---|---|
 | režim `break` | rozdělaná práce je – volající skill nabídl přerušení a uživatel ho přijal; nic neodhaduj |
-| `ROZDĚLANÁ PRÁCE` hlásí signál | rozdělaná práce je. **Běhový soubor skillu, který v téhle session neběžel**, je souběžná práce jiné session – nech ho být a rozhoduj podle zbytku tabulky |
-| na rozdělanou práci ukazuje jen konverzace – fronta skillu se nedošla, změna zůstala v půli, rozprava skončila s otevřenými otázkami | **jedna otázka** přes `AskUserQuestion`, `header` `Přerušení`: zapsat jako přerušený běh, na který naváže `/next`, nebo jen úklid, ve kterém nedodělky jdou do `todo.md` jako úkoly. Ptáš se proto, že mylně zapsaný přerušený běh by `/next` v nové session rovnou začal provádět místo nabídky |
+| `ROZDĚLANÁ PRÁCE` hlásí jen **běhový soubor skillu, který v téhle session neběžel** | to je souběžná práce jiné session – nech ho být a rozhoduj podle dalších řádků |
+| `ROZDĚLANÁ PRÁCE` hlásí cokoliv jiného | rozdělaná práce je |
+| na rozdělanou práci ukazuje jen konverzace – fronta skillu se nedošla, změna zůstala v půli, rozepsaná práce skončila s otevřenými otázkami; nevypořádané téma bez rozepsané práce sem nepatří, to jde do *Fáze 6* | **jedna otázka** přes `AskUserQuestion`, `header` `Přerušení`: zapsat jako přerušený běh, na který naváže `/next`, nebo jen úklid, ve kterém nedodělky jdou do `todo.md` jako úkoly. Ptáš se proto, že mylně zapsaný přerušený běh by `/next` v nové session rovnou začal provádět místo nabídky |
 | nic z toho | rozdělaná práce není, pokračuj *Fází 4* |
 
 **Vědomě odložený úkol (kategorie 4) rozdělaná práce není** – jde do `todo.md` jako vždy. Otázku polož jen nad prací, kterou session měla rozjetou, když skončila; nad samými odloženými úkoly by zdržovala každý běžný úklid.
