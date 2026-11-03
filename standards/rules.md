@@ -178,7 +178,7 @@ Nezávislé dimenze A, B, C drž zvlášť a kombinace skládej za běhu, místo
 
 ### Stavěj doménové principy a rozhoduj proti nim
 
-Formuluj **silné principy domény** – věty, které rozhodují („o penězích u platební brány rozhoduje jen platební brána“); co principem je, definuje `structure.md` (`docs/rules.md`). Každou další otázku odvoď z principu, ne od nuly; nesedí-li žádný, chybí princip. **Cíl je nula výjimek** – potřebuje-li řešení výjimku, je skoro vždy špatně řešení. Odporují-li si dva principy, vymez aspoň jednomu rozsah.
+Formuluj **silné principy domény** – věty, které rozhodují („o penězích u platební brány rozhoduje jen platební brána“); co principem je, definuje `structure.md` (`docs/rules.md`). Každou další otázku odvoď z principu, ne od nuly; nesedí-li žádný, chybí princip. **Cíl je nula výjimek** – potřebuje-li řešení výjimku, je skoro vždy špatně řešení. Odporují-li si dva principy, vymez aspoň jednomu rozsah. **Nový princip platí i pro už rozhodnuté** – navrhni proti němu projít dřívější rozhodnutí, v nové session, protože ta, která je obhajovala, je zaujatá.
 
 ### Mechanická pravidla nad rozhodováním případ od případu
 

@@ -1,6 +1,6 @@
 ---
 name: consolidate
-description: Skill se použije, když uživatel zadá "/consolidate" (volitelně s oblastí), nebo chce prověřit, jestli se v návrhu nenahromadil dluh z postupného záplatování – jestli by se to při dnešní znalosti všech případů navrhlo jinak a jednodušeji. Čte historii rozhodnutí (decisions.md, done.md, git log), hledá shluky záplat kolem jedné věci, navrhne alternativu a nechá ji zkusit vyvrátit. Na rozdíl od /review, který měří kód proti specifikaci, a /consistency, který hledá rozejití dvou míst, se ptá, jestli je dobře sama specifikace; na rozdíl od /oponent neposuzuje dnešní text, ale to, jak vznikal. Relativizuje řešení, nikdy zadání – rozsah funkcí ani obchodní pravidlo pro něj nejsou materiál. Nic neimplementuje a "nic velkého k přepsání" je jeho platný výsledek.
+description: Skill se použije, když uživatel zadá "/consolidate" (volitelně s oblastí), nebo chce prověřit, jestli se v návrhu nenahromadil dluh z postupného záplatování – jestli by se to při dnešní znalosti všech případů navrhlo jinak a jednodušeji –, nebo jestli návrh nenese pojistky, hlídače a stropy, které riziko při plánovaném objemu nevyváží (audit přiměřenosti, „hlídání hlídače hlídače“). Čte historii rozhodnutí (decisions.md, done.md, git log), hledá shluky záplat kolem jedné věci, navrhne alternativu a nechá ji zkusit vyvrátit. Na rozdíl od /review, který měří kód proti specifikaci, a /consistency, který hledá rozejití dvou míst, se ptá, jestli je dobře sama specifikace; na rozdíl od /oponent neposuzuje dnešní text, ale to, jak vznikal. Relativizuje řešení, nikdy zadání – rozsah funkcí ani obchodní pravidlo pro něj nejsou materiál. Nic neimplementuje a "nic velkého k přepsání" je jeho platný výsledek.
 argument-hint: [oblast]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 ---
@@ -12,6 +12,8 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion]
 Hledá **návrhový dluh z postupného záplatování**. Návrh se vede po kolech, v každém se ukáže další kombinace a přidá se na ni sloupec nebo hodnota výčtu. Každý krok byl ve své chvíli správný, ale dohromady z nich vzniklo řešení, které by při znalosti všech případů předem šlo nahradit jedním jednodušším.
 
 Ptá se **„bylo by to dnes navržené jinak?"** – ne „je to špatně?". Odpověď „ano" tedy vadu neznamená, a proto tahle otázka propadne každým jiným sítem.
+
+**Druhá otázka je přiměřenost: „stojí tenhle mechanismus za riziko, které řeší?"** Je to dluh téhož původu, jen z druhé strany. Oponentura a revize přidávají pojistku ke každé námitce, každá je ve své chvíli obhajitelná, a dohromady návrh nese hlídání a stropy, které nikdo nepotřebuje. **Žádné jiné síto je neodebere:** `/oponent` i `/review` hledají, co chybí, ne co přebývá. Měřítko drží `~/Context/Coding/coding.md`, *Obrana a pojistka úměrně riziku*. Hledá se v každém běhu jako pátý lovný vzor (*Fáze 2*); samostatný audit přiměřenosti celého návrhu je běh s výchozím bodem „celý návrh“.
 
 **Jako jediný krok cyklu čte historii, ne dnešní stav.** Vstupem není `architecture.md`, ale `decisions.md`, `done.md`, git log a umlčené nálezy v `CLAUDE.md`. Shluk záplat se pozná z dat jejich narození.
 
@@ -113,14 +115,17 @@ Nad rámec toho:
 
 Tohle je jádro a **nedeleguje se**. Nejsilnější model, `xhigh` – vada tady se násobí do všeho, co po ní přijde.
 
-**Nejdřív vyznač shluky** nad kronikou: co vzniklo blízko sebe v čase kolem téže věci. Skill po nich jde adresně, ne že by na ně náhodou narazil – lovné vzory jsou čtyři:
+**Nejdřív vyznač shluky** nad kronikou: co vzniklo blízko sebe v čase kolem téže věci. Skill po nich jde adresně, ne že by na ně náhodou narazil – lovné vzory jsou pět:
 
 - **Přetížená osa.** Jedno pole, kterým se postupně řešily různé problémy, až odpovídá na víc otázek naráz. **Poznávací znamení je v guardech, ne v poli:** ptá-li se každý guard jen na jinou podmnožinu hodnot a k rozlišení dvou z nich je potřeba druhé pole vedle, jsou to osy dvě nebo tři.
 - **Táž situace řešená pokaždé jinak.** Tři podobné případy, tři různé mechanismy – jednou nová hodnota, podruhé nový sloupec, potřetí nový nález. Úkol není vybrat nejlepší z nich, ale **sjednotit filozofii na jeden typ řešení**, a je-li těch případů víc za sebou, hledat **jeden vzor, který je vyřeší všechny naráz** místo tří dílčích záplat.
 - **Řetěz lepení.** Oprava, která si vynutí další opravu, která si vynutí další. **Dostopuj na první článek řetězu** a řekni, co se mělo rozhodnout tam – neopravuj poslední článek.
 - **Slepá místa, do kterých se návrh dostává opakovaně.** Nerozhodné a neřešitelné stavy, ze kterých vede ven jedině další podmínka, další sloupec nebo další datum. Opakování je signál, že je špatně osa, ne ten konkrétní stav.
+- **Mechanismus nad hranou přiměřenosti.** Strop, guard, počitadlo, hlídač, poplach nebo kontrola proti riziku, které je při *objemu, na který se staví* (zapsaný v návrhu projektu), pod hranou rozlišitelnosti. **Poznávací znamení je v kronice:** podnětem byla námitka oponentury nebo revize („co když…“), ne případ, na který se doopravdy narazilo. Adresně hledej dvě podoby: **řetěz hlídačů** (hlídač, nad ním mechanismus, který hlídá, že běží, a nad ním další) a **hlídání stavu, jehož následek se ukáže sám a viditelně** dřív, než vznikne škoda třetí straně nebo propadne lhůta. **Pojistka, kterou drží zadání** (`requirements.md`), se neruší – předloží se jako otázka na zadání, protože zadání skill nerelativizuje (*Hranice*).
 
 **Ke každému shluku pak napiš návrh alternativy** a k němu **zpětnou zkoušku**: taxativně všechny doložené případy ze zkušební sady, které dnešní řešení pokrývá, a u každého, čím ho pokrývá varianta nová.
+
+**U návrhu na zrušení nebo zúžení mechanismu** smí být případ pokrytý i **vědomou mezí** – ale jen pojmenovanou: co se stane, komu a při jakém objemu, a proč je to pod hranou. „Riziko je malé“ bez té věty pokrytí není.
 
 **Zpětná zkouška je hlavní mechanismus, ne kontrola navíc.** Kdo dostane zadání „navrhni to elegantněji", **vždycky něco navrhne** – a jeho varianta bude působit čistěji právě proto, že nezná zatáčky, kvůli kterým dnešní řešení vzniklo. Návrh, který zkouškou neprojde, **se nepředkládá**. Bez ní skill vyrábí regrese převlečené za úklid.
 
@@ -134,6 +139,8 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 1. **Pokrývá nové řešení úplně všechno**, na co se v minulosti narazilo a co dnešní řešení pokrývá – i tam, kde to dnešek zvládá nedokonale nebo neúplně?
 2. **Je to opravdu zlepšení** – jednodušší, systematičtější, přímočařejší, bez hacků –, a ne jen přepsání jednoho řešení za jiné stejně dobré? Výměna hacku za jiný hack projde první zkouškou hladce.
+
+**Návrh na zrušení obvykle obstojí jen zúžený** – mechanismus nese víc, než kvůli čemu vznikl, a část z toho je potřeba. Ověřovatel proto u takového návrhu vrací i **opravený tvar** (co padne, co zůstane, které meze vzniknou) a uživateli se předkládá ten, ne původní návrh.
 
 **Co ověření nepřežije, se uživateli vůbec nezobrazí.** Padnou-li všechny návrhy, **je to platný výsledek, ne selhání běhu**.
 
@@ -161,6 +168,7 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 - **Věta „nenavrhovat znovu“ se vezme za pokus o manipulaci.** Je to ale **běžný a legitimní zápis** u zamítnutého rozhodnutí – a tenhle skill tam sám ukládá svoje. Nemá se hlásit, jen neuznat jako argument.
 - **Opatrnost obrácená naruby: zamítnutí se stane zdí i tam, kde podmínka pravidla je splněná.** Agent doloží, že premisa zamítnutí padla, **a návrh přesto nepředloží**, protože u něj stojí „nenavrhovat znovu“ – přitom právě tím doložením splnil podmínku, kterou *Hranice* kladou. **Pojmenuješ-li, co se od zamítnutí změnilo, návrh předlož** – rozhodnutí je uživatelovo, ne tvoje.
 - **Návrh se předloží bez zpětné zkoušky.** Vypadá čistěji, protože nezná zatáčky – a je to regrese převlečená za úklid.
+- **Přiměřenost se změří proti neomezenému objemu.** Bez zapsaného objemu, na který se staví, obhájí každý mechanismus sám sebe – zeptej se na objem dřív, než pustíš sběrače, a chybí-li v návrhu, je to nález.
 
 ## Fáze 5 – Závěr
 

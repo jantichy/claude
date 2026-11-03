@@ -124,6 +124,8 @@ které si přečteš. Autor dokumentu tě neslyší, takže nemá smysl být ohl
 DOKUMENT: <absolutní cesty>
 KONTEXT PROJEKTU (přečti, ale neoponuj to): <CLAUDE.md, docs/rules.md, docs/decisions.md>
 VĚDOMĚ ZAMÍTNUTÉ V TÉHLE PRÁCI (nenavrhuj znovu bez nového argumentu): <výčet i s důvody>
+OBJEM, NA KTERÝ SE STAVÍ: <z návrhu projektu; u nástroje „jeden uživatel, autor“ a celá sekce
+*Co platí i pro nástroj* z ~/Context/Coding/architecture.md opsaná sem; chybí-li, napiš to>
 
 TVOJE HLEDISKO: <hledisko a jeho otázky ze sloupce *Ptá se*>
 
@@ -151,6 +153,12 @@ PRAVIDLA:
   Výjimka: myslíš-li si, že to rozhodnutí bylo chybné, řekni to výslovně jako revizi
   rozhodnutí a zdůvodni, který jeho předpoklad neplatí.
 - Neopírej nález o neověřené tvrzení. Stojí-li na faktu, ověř ho.
+- Obrana i pojistka se staví úměrně pravděpodobnosti a škodě při objemu výš. Nenavrhuj
+  strop, guard, hlídač, poplach ani kontrolu proti riziku, které je při tom objemu pod
+  hranou rozlišitelnosti, a nehlídej stav, jehož následek se ukáže sám a viditelně. Proti
+  zlovůli smluvní strany, kterou provozovatel osobně schvaluje, technickou obranu
+  nenavrhuj (převzatý účet té strany je jiná hrozba). Co jedním selháním zasáhne všechny
+  tenanty, peníze třetí strany, data nebo zákonnou lhůtu, hlas vždy.
 - Nešetři kritikou. Ale kritizuj dokument, ne autora.
 - Nenavrhuj přeformulování textu kvůli stylu – od toho tu nejsi.
 

@@ -60,6 +60,8 @@ Typ **`reader`**, výchozí model, effort `medium`.
 >
 > Projdi tyhle soubory: <výčet>. **Nic mimo ně nedomýšlej**; co jsi neprošel, patří do *Mezí posudku*.
 >
+> U každého **ochranného mechanismu** – strop, limit, guard proti zneužití, hlídač, poplach, kontrola, oznámení – navíc uveď, **proti čemu chrání** (citace zdůvodnění) a **jestli ho hlídá jiný mechanismus**.
+>
 > **Nehodnoť, jestli je to dobře.** Úkolem je úplný soupis, ne posudek.
 
 ------
@@ -92,6 +94,8 @@ Typ **`reader`**, **nejsilnější model**. Jeden ověřovatel na jeden návrh.
 >
 > 1. **Pokrývá nové řešení úplně všechno**, na co se v minulosti narazilo a co dnešní řešení pokrývá – i tam, kde to dnešek zvládá nedokonale nebo neúplně? Projdi zkušební sadu **položku po položce** a u každé napiš, čím ji nové řešení pokrývá. Kde to nedokážeš, je to nepokrytá situace.
 > 2. **Je to opravdu zlepšení** – jednodušší, systematičtější, přímočařejší, bez hacků –, a ne jen přepsání jednoho řešení za jiné stejně nebo obdobně dobré? Tahle zkouška je ta, na kterou se zapomíná: výměna hacku za jiný hack projde první zkouškou hladce.
+>
+> **Je-li návrh zrušením nebo zúžením ochranného mechanismu**, měř ho tímhle měřítkem: obrana i pojistka se staví úměrně pravděpodobnosti a škodě při objemu, na který se staví (<objem z návrhu projektu>); co jedním selháním zasáhne všechny tenanty, váží víc. Riziko pod hranou se nepojišťuje, ale zapíše jako vědomá mez. Zkus doložit, **co dalšího ten mechanismus nese** kromě důvodu, kvůli kterému vznikl – a vrať **opravený tvar**: co padne, co zůstane a jaké vědomé meze vzniknou (co se stane, komu, při jakém objemu).
 >
 > **Tvrdý zákaz: odvolat se na to, že něco už jednou bylo zamítnuto, není argument.** Ani na rozhodnutí uživatele, ani na zápis v `decisions.md`. Rozhodnutí vzniklo v tehdejším kontextu, a ten se mohl změnit. Musíš doložit, **co konkrétně se rozbije** – jmenovat guard, invariant, přechod nebo text, který vidí zákazník.
 >

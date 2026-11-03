@@ -115,6 +115,10 @@ Za věcnými variantami stojí vždy tytéž dvě volby, v tomhle pořadí a s t
 
 **Výjimka pro položku, která není vadou, ale novou prací** – tam se neopravuje, takže *Neopravovat* nedává smysl a platí čtveřice *Vyřešit teď / Zapsat do todo / Zapsat do backlogu / Zahodit*. Používá ji `/end` u položek mimo rozsah a `/evaluate` u vyžádaných funkcí; podmínku, kdy je legitimní, drží *Volby v otázce jsou varianty řešení* výš.
 
+## Bagatelní nálezy se zamítají hromadně
+
+**Nálezy se třídí podle skutečné škody při objemu, na který projekt staví, ne podle síly námitky.** Nález, který navrhuje obranu nebo pojistku proti riziku pod hranou rozlišitelnosti (měřítko `~/Context/Coding/coding.md`, *Obrana a pojistka úměrně riziku*), se nepředkládá po jednom: v přehledu stojí jako samostatná skupina a na začátku ptaní jde **jedna otázka** na celou skupinu (`header` `Bagatelní`, volby *Zamítnout všechny* a *Projít jednotlivě*). Zamítnutí se zapíše jedním bodem se společným důvodem, ale **s názvem každého nálezu**, ať ho najde ten, kdo by se k němu chtěl vrátit (u návrhu do `docs/decisions.md`, u kódu do `## Review`). **Proč:** obhajitelná námitka u každé pojistky vypadá stejně silně, a průchod po jednom skončí opravováním bagatel a návrhem, který nese složitost, kterou nikdo nepotřebuje. **Nepatří sem** nic, co sahá na peníze třetí strany, ztrátu dat, zákonnou lhůtu nebo škodu napříč všemi tenanty – to se předkládá jednotlivě, i když je to nepravděpodobné.
+
 ## Přehled na začátku vyčísluje obojí
 
 **Kolik se opraví rovnou a kolik doopravdy zbývá na rozhodnutí** – to druhé číslo je jediné, které uživateli říká, jak dlouhý bude interaktivní průchod. Report, který vypíše „mechanických 12, sporných 40“ a pak se u třiceti z těch čtyřiceti nemá na co ptát, to číslo nadsazuje a průchod působí dráž, než je.
