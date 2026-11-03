@@ -445,7 +445,7 @@ Postupuj po oblastech z katalogu níž. U každé platí **dvourychlostní reži
 
 Než začneš cokoliv měnit, **vypiš nálezy jako seznam** – co je v pořádku shrň jednou větou, každý rozpor uveď zvlášť s tím, co se s ním stane (opravím rovnou / potřebuju rozhodnout). Teprve pak jednej. Uživatel tak vidí rozsah dřív, než se sáhne na soubory.
 
-Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady – tedy skoro vždy, protože nález má typicky dvě až tři možná vyústění (opravit / nechat být / rozhodnout jinak). Volný text si nech na to, co se z možností vybrat nedá.
+Otázky pokládej **přes AskUserQuestion**, kdykoliv jde o volbu z pevné sady – tedy skoro vždy, protože nález má typicky dvě až tři možná vyústění (opravit / nechat být / rozhodnout jinak). Volný text si nech na to, co se z možností vybrat nedá. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
 
 **Nenajdeš-li nic, řekni to a skonči** – běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
 

@@ -36,6 +36,9 @@ TRIGGERS = {"Neopravovat", "Zapsat do backlogu", "Bezpředmětné"}
 HEADER = re.compile(r"^(?:Nález|Položka) (\d+)/(\d+)$")
 RECOMMENDED = re.compile(r"\s*\(Recommended\)\s*$")
 TITLE = re.compile(r"\*\*\[(\d+)/(\d+)\]")
+# Dočasně vypnuto: kontext má jít do odpovědi díky pravidlu v rules.md a ve
+# skillech; zkoušíme, jestli stačí samo. Vrátit = True.
+CONTEXT_CHECK = False
 
 
 def is_item(question: dict) -> bool:
@@ -120,7 +123,7 @@ def main() -> int:
             continue
         header = str(q.get("header", ""))
         defect = header_defect(header)
-        if not defect and event.get("transcript_path"):
+        if not defect and CONTEXT_CHECK and event.get("transcript_path"):
             defect = context_defect(str(event["transcript_path"]), header)
         if defect:
             print(f"findings-guard: {defect}.", file=sys.stderr)

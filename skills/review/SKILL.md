@@ -288,7 +288,7 @@ Když nálezy nejsou, řekni to a skonči.
 
 Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 
-1. **Zobraz ho.** **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce doménové znalosti), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku.
+1. **Zobraz ho.** **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Řekni ve větě, **čím je nález podepřený** (scénář z `requirements.md`, bod ASVS, sekce doménové znalosti), **jak selže** (vstupy nebo stav → co se stane špatně) a **kde to je** (soubory:řádky, u hromadného nálezu „X výskytů, např. …“); jméno specialisty a tagy patří do hranatých závorek v titulním řádku. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
 
 2. Zeptej se **vždy přes tool `AskUserQuestion`** – nikdy ne vypsáním voleb jako text. Jedno volání = jeden nález = jedna otázka (`multiSelect: false`):
    - `header`: `Nález N/celkem` (co je `celkem`, drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*)

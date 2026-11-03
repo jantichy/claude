@@ -191,7 +191,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **V odstavci musí zaznít čtyři věci, jako věty, ne popisky za dvojtečkou:** čeho se to týká a jak to dnes je, **odkud to víš** (citace a číslo řádku transcriptu, nebo soubor a sekce), **co je na tom uživatelova volba**, a u nevypořádaného tématu i **čím jsi vyloučil, že se to mezitím vyřešilo jinudy**. Druh položky patří do hranatých závorek v titulním řádku.
 
-Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na položku, `header` `Položka N/celkem`. **Volby dej věcné** – varianty, které byly ve hře, konkrétní cílové soubory, konkrétní podoby zápisu – a ke každé měj **hotový text zápisu**. U nevypořádaného tématu vždy přidej volbu **„Bezpředmětné“**. **Trojici *Zapsat / Odložit / Přeskočit* nenabízej** (`~/.claude/skills/findings.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*).
+Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na položku, `header` `Položka N/celkem`. **Volby dej věcné** – varianty, které byly ve hře, konkrétní cílové soubory, konkrétní podoby zápisu – a ke každé měj **hotový text zápisu**. U nevypořádaného tématu vždy přidej volbu **„Bezpředmětné“**. **Trojici *Zapsat / Odložit / Přeskočit* nenabízej** (`~/.claude/skills/findings.md`, *Volby v otázce jsou varianty řešení, ne „teď nebo později“*). **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
 
 | Odpověď znamená | Co uděláš |
 |---|---|

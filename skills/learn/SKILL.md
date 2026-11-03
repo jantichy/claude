@@ -199,7 +199,7 @@ Napadne-li tě kterákoliv z těchhle vět, právě obcházíš plán:
 
 Proberte rozpory **jeden po druhém**, v pořadí, ve kterém na sebe navazují – od obecnějších ke konkrétnějším, ať pozdější rozhodnutí staví na dřívějším.
 
-**Tvar výpisu a číslování drží `~/.claude/skills/findings.md`** (*Jak nález vypadá*, `header` a `celkem` v *Dvě záchytné volby a co znamenají*) – titulní řádek `**[N/celkem] NÁZEV POLOŽKY**`, `header` `Položka N/celkem`; `celkem` je počet rozporů. Volby jsou ale vlastní, níž: rozpor není vada, kterou by šlo neopravit – nechat obě verze stát znamená dvě pravdy v bázi.
+**Tvar výpisu a číslování drží `~/.claude/skills/findings.md`** (*Jak nález vypadá*, `header` a `celkem` v *Dvě záchytné volby a co znamenají*) – titulní řádek `**[N/celkem] NÁZEV POLOŽKY**`, `header` `Položka N/celkem`; `celkem` je počet rozporů. Volby jsou ale vlastní, níž: rozpor není vada, kterou by šlo neopravit – nechat obě verze stát znamená dvě pravdy v bázi. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
 
 U každého napiš **podstatu rozporu vlastními slovy** a **ocituj obě verze**, když to bez citace není jasné. Pak se zeptej přes `AskUserQuestion` a **nabídni rovnou hotová řešení**, ne otevřenou otázku:
 
