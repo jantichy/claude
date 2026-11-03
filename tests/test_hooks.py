@@ -1311,9 +1311,10 @@ class FindingsGuard(unittest.TestCase):
 
     GUARD = ROOT / "hooks" / "findings-guard.py"
 
-    def run_guard(self, header, labels):
+    def run_guard(self, header, labels, transcript=None):
         event = json.dumps(
             {
+                **({"transcript_path": str(transcript)} if transcript else {}),
                 "tool_name": "AskUserQuestion",
                 "tool_input": {
                     "questions": [
@@ -1407,6 +1408,55 @@ class FindingsGuard(unittest.TestCase):
             check=False,
         )
         self.assertEqual(0, done.returncode)
+
+    LABELS = ["A) Mez (Recommended)", "B) Varovat", "Neopravovat", "Zapsat do todo"]
+
+    def transcript(self, *rows):
+        """Transkript ve tvaru JSONL, jak ho Claude Code zapisuje: řádek na blok."""
+        path = Path(tempfile.mkdtemp()) / "session.jsonl"
+        lines = []
+        for kind, block in rows:
+            if kind == "user":
+                content = [{"type": "tool_result", "content": block}]
+            elif kind == "text":
+                content = [{"type": "text", "text": block}]
+            else:
+                content = [{"type": kind, kind: block}]
+            role = "user" if kind == "user" else "assistant"
+            lines.append(json.dumps({"type": role, "message": {"role": role, "content": content}}))
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        return path
+
+    def test_blocks_context_left_in_thinking(self):
+        """Případ, kvůli kterému kontrola kontextu vznikla: po nástroji jen myšlení."""
+        path = self.transcript(
+            ("text", "**[8/21] 🔵 NÁVRH N3**\n\nkontext"),
+            ("user", "zapsáno"),
+            ("thinking", "Vyvrácená položka closeCard se ruší…"),
+        )
+        done = self.run_guard("Položka 10/21", self.LABELS, path)
+        self.assertEqual(2, done.returncode, "otázka bez kontextu v odpovědi prošla")
+        self.assertIn("titulním řádkem", done.stderr)
+
+    def test_blocks_text_without_matching_title(self):
+        path = self.transcript(("user", "ok"), ("text", "Zapsáno. Další položka je o párování."))
+        self.assertEqual(2, self.run_guard("Položka 9/21", self.LABELS, path).returncode)
+        path = self.transcript(("user", "ok"), ("text", "**[8/21] 🟡 PÁROVÁNÍ**\n\nkontext"))
+        self.assertEqual(2, self.run_guard("Položka 9/21", self.LABELS, path).returncode)
+
+    def test_passes_context_written_as_text(self):
+        path = self.transcript(
+            ("user", "zapsáno"),
+            ("thinking", "…"),
+            ("text", "Zapsáno.\n\n**[9/21] 🟡 PÁROVÁNÍ PLATEB**\n\nkontext"),
+        )
+        done = self.run_guard("Položka 9/21", self.LABELS, path)
+        self.assertEqual(0, done.returncode, done.stderr)
+
+    def test_unreadable_transcript_passes(self):
+        """Chybějící transkript nesmí zastavit práci – hook o kontextu pak nerozhoduje."""
+        missing = Path(tempfile.mkdtemp()) / "missing.jsonl"
+        self.assertEqual(0, self.run_guard("Položka 9/21", self.LABELS, missing).returncode)
 
     def test_registered_for_askuserquestion(self):
         """Hook, který není v `settings.json` u `AskUserQuestion`, nehlídá nic."""
