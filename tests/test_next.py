@@ -994,6 +994,160 @@ def find_command():
     return cmd
 
 
+SORTED_TODO = (
+    "# Fronta\n\n## Přerušený běh\n\n### Review – přerušeno 2026-11-03\n\n**Jak pokračovat:** `/review`.\n\n## Teď\n\n"
+    + "".join(f"- [ ] ◐ **Úkol {n}.** Popis {n}.\n" for n in range(1, 13))
+    + "- [ ] ○ **Čekající.** Čeká na odpověď podpory.\n\n## Později\n\n- [ ] ● **Velký.** Popis.\n"
+)
+
+
+class SortedQueue(unittest.TestCase):
+    """Srovnaný `todo.md` čte `collect.py` mechanicky: pořadí i velikost nese soubor.
+
+    Vrátí jen vrchol fronty a zbytek jako počet, protože výpis celé fronty byl
+    největší položka času běhu. Chyba je tichá v obou směrech: nesrovnaný soubor
+    zkrácený na vrchol by ukázal náhodné pořadí jako prioritu, a srovnaný, který
+    se nezkrátí, vrátí běh na dřívějších 36 s.
+    """
+
+    def setUp(self):
+        import importlib.util
+
+        sys.path.insert(0, str(COLLECT.parent))
+        spec = importlib.util.spec_from_file_location("collect", COLLECT)
+        self.c = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.c)
+
+    def parsed(self, text=SORTED_TODO):
+        return self.c.parse_todo(text)[0]
+
+    def test_size_is_read_and_stripped_from_title(self):
+        items = self.c.queue_items(self.parsed())
+        self.assertEqual((items[0]["title"], items[0]["size"]), ("Úkol 1", "◐"))
+
+    def test_sorted_file_is_not_legacy(self):
+        self.assertIsNone(self.c.legacy_shape(self.parsed(), SORTED_TODO))
+
+    def test_unsized_item_makes_file_legacy(self):
+        text = SORTED_TODO.replace("- [ ] ◐ **Úkol 3.**", "- [ ] **Úkol 3.**")
+        self.assertEqual(
+            self.c.legacy_shape(self.parsed(text), text),
+            ["1 z 14 položek bez velikosti"],
+        )
+
+    def test_plain_bullets_make_file_legacy(self):
+        text = "# Fronta\n\n## Teď\n\n- ◐ **Jedna.** Text.\n"
+        self.assertIn(
+            "položky nejsou zaškrtávátka", self.c.legacy_shape(self.parsed(text), text)
+        )
+
+    def test_special_section_needs_no_size_and_takes_no_slot(self):
+        text = SORTED_TODO.replace(
+            "## Teď\n",
+            "## Parkované v session\n\n- [ ] **Bod bez velikosti.**\n\n## Teď\n",
+        )
+        todo = self.c.parse_todo(text)[0]
+        self.assertIsNone(self.c.legacy_shape(todo, text))
+        todo = self.c.top_of_queue(todo)
+        parked = next(s for s in todo if s["section"] == "Parkované v session")
+        self.assertEqual(len(parked["parts"][0]["items"]), 1)
+        now = next(s for s in todo if s["section"] == "Teď")
+        self.assertEqual(now["more"], 2)
+
+    def test_decided_answers_are_plain_bullets_and_kept(self):
+        text = (
+            SORTED_TODO
+            + "\n# Mimo frontu\n\n## Rozhodnuto k zapracování\n\n### /review – dávka\n\n- N1: přijato.\n"
+        )
+        todo = self.c.top_of_queue(self.c.parse_todo(text)[0])
+        decided = next(s for s in todo if s["section"] == "Rozhodnuto k zapracování")
+        self.assertEqual(
+            [i["title"] for p in decided["parts"] for i in p["items"]], ["N1: přijato."]
+        )
+        self.assertIsNone(self.c.legacy_shape(self.c.parse_todo(text)[0], text))
+
+    def test_missing_queue_heading_makes_file_legacy(self):
+        text = SORTED_TODO.replace("# Fronta\n", "# TODO\n")
+        self.assertIn(
+            "chybí nadpis `# Fronta`",
+            self.c.legacy_shape(self.c.parse_todo(text)[0], text),
+        )
+
+    def test_nested_checklist_does_not_hide_plain_items(self):
+        text = "# TODO\n\n## Úkoly\n\n- **Položka.** Text.\n  - [ ] krok\n"
+        items = self.c.queue_items(self.c.parse_todo(text)[0])
+        self.assertEqual([i["title"] for i in items], ["Položka"])
+
+    def test_top_keeps_limit_in_file_order_and_counts_rest(self):
+        todo = self.c.top_of_queue(self.parsed())
+        now = next(s for s in todo if s["section"] == "Teď")
+        titles = [i["title"] for p in now["parts"] for i in p["items"]]
+        self.assertEqual(titles[:10], [f"Úkol {n}" for n in range(1, 11)])
+        self.assertEqual(now["more"], 2)
+        later = next(s for s in todo if s["section"] == "Později")
+        self.assertEqual((later["parts"], later["more"]), ([], 1))
+
+    def test_waiting_item_does_not_take_a_slot(self):
+        todo = self.c.top_of_queue(self.parsed())
+        items = self.c.queue_items(todo)
+        waiting = [i for i in items if i.get("waits")]
+        self.assertEqual([i["title"] for i in waiting], ["Čekající"])
+        self.assertNotIn("text", waiting[0])
+        self.assertEqual(len(items), 11)
+
+    def test_interrupted_run_is_kept_whole(self):
+        todo = self.c.top_of_queue(self.parsed(), limit=0)
+        self.assertEqual(
+            [
+                i["title"]
+                for s in todo
+                if s["section"] == "Přerušený běh"
+                for p in s["parts"]
+                for i in p["items"]
+            ],
+            ["Review – přerušeno 2026-11-03"],
+        )
+
+    def test_cli_cuts_sorted_queue_unless_all(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            env = dict(
+                os.environ,
+                GIT_CEILING_DIRECTORIES=tmp,
+                GIT_AUTHOR_NAME="t",
+                GIT_AUTHOR_EMAIL="t@t",
+                GIT_COMMITTER_NAME="t",
+                GIT_COMMITTER_EMAIL="t@t",
+            )
+            (d / "docs").mkdir()
+            (d / "docs" / "todo.md").write_text(
+                SORTED_TODO.split("## Teď")[0].split("## Přerušený běh")[0]
+                + "## Teď"
+                + SORTED_TODO.split("## Teď")[1]
+            )
+            subprocess.run(
+                ["git", "init", "-q", "-b", "main", str(d)], check=True, env=env
+            )
+            subprocess.run(["git", "-C", str(d), "add", "-A"], check=True, env=env)
+            subprocess.run(
+                ["git", "-C", str(d), "commit", "-q", "-m", "x"], check=True, env=env
+            )
+
+            def count(*flags):
+                out = subprocess.run(
+                    [sys.executable, str(COLLECT), *flags, str(d)],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    env=env,
+                ).stdout
+                data = json.loads(out)
+                return data["legacy"], len(self.c.queue_items(data["todo"]))
+
+            self.assertEqual(count(), (None, 11))
+            self.assertEqual(count("--all"), (None, 14))
+
+
 class FindInterrupted(unittest.TestCase):
     """Příkaz, kterým `/next` hledá zápis přerušené práce, než postaví nabídku.
 

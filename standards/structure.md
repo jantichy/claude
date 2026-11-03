@@ -19,7 +19,7 @@ režim  docs/                       režim  root
     └── rules.md
 ```
 
-**Výchozí je `docs/`**, který odděluje meta-vrstvu od vlastní práce; `root` sedí na knowledge base a malé projekty, kde by `docs/` byl prázdný obal. Režim se volí jednou při `/project` a pak se drží – míchat obojí je nepořádek.
+**Výchozí je `docs/`**, který odděluje meta-vrstvu od vlastní práce; `root` sedí na knowledge base a malé projekty. Režim se volí jednou při `/project` a pak se drží.
 
 **Konvence zápisu.** Obecné texty (tenhle soubor, `~/.claude/standards/rules.md`, skilly) píšou cesty v podobě `docs/todo.md` a myslí tím soubor na místě podle režimu projektu. Texty o jednom projektu – jeho `CLAUDE.md` a `README.md` – píšou skutečnou cestu.
 
@@ -49,17 +49,19 @@ Povinný je jen **`CLAUDE.md`**. Zbytek:
 |---|---|
 | `README.md`, `decisions.md`, `rules.md` | výběrem při `/project` (výchozí ano) |
 | `todo.md` + `backlog.md` + `done.md` | výběrem při `/project`, **jen jako trojice** |
-| `requirements.md`, `architecture.md`, `plan.md`, tematické dokumenty kol, produktové podklady (`demand.md`, `competition.md`, `risks.md`, `scenarios.md`, `glossary.md`, `pricing.md`, `operation.md`) | až prací – co v nich smí stát, drží **`~/.claude/standards/product.md`**; načti si ho, než do některého z nich zapíšeš |
+| `requirements.md`, `architecture.md`, `plan.md`, tematické dokumenty kol, produktové podklady | až prací – co v nich smí stát, drží **`~/.claude/standards/product.md`**; načti si ho, než do některého z nich zapíšeš |
 | `research/` | až je co uložit |
 | testy | s první kontrolou – kam patří, drží `~/Context/Coding/quality.md`, *Vrstvy kontroly a co do které patří* |
 
 Nezaložený soubor **není odchylka** – prázdný `decisions.md` u projektu, kde se nic nerozhoduje, je horší než žádný. Běhový stav skillů v `.claude/run/` standardní soubor není (`~/.claude/skills/skills.md`, *Běhový stav*).
 
-**Ve worktree layoutu** (`~/.claude/standards/worktree.md`) je projekt pracovní adresář větve, takže celá struktura žije v `main/` – i v režimu `root`. Kořen kontejneru není pracovní strom a nese jen rozcestník.
+**Ve worktree layoutu** (`~/.claude/standards/worktree.md`) je projekt pracovní adresář větve, takže celá struktura žije v `main/` – i v režimu `root`. Kořen kontejneru nese jen rozcestník.
 
 ---
 
 ## Co patří do kterého souboru
+
+**Zápis ve špatném souboru přesuň** tam, kam patří – podle tohoto oddílu, u produktových dokumentů podle `~/.claude/standards/product.md`.
 
 ### `CLAUDE.md`
 
@@ -68,7 +70,7 @@ Instrukce pro Clauda v tomhle projektu. **Začíná blokem metadat**, kterým se
 ```
 # Rezervační systém
 
-Rezervační systém pro školení, konference a webináře – správa událostí, účastníků, objednávek a faktur.
+Rezervační systém pro školení a konference.
 
 - **Slug:** `rezervace`
 - **Struktura:** docs/
@@ -76,16 +78,16 @@ Rezervační systém pro školení, konference a webináře – správa událost
 - **Repozitář:** https://github.com/jantichy/rezervace
 ```
 
-Nadpis je **lidský název** („Rezervační systém“, ne `rezervace`), odstavec pod ním **popisek** – jedna věta bez odkazů a formátování do 350 znaků (limit GitHub description). Slug je jméno malými se spojovníky a nese ho repozitář, ne adresář; Struktura režim umístění. Web a Repozitář vynech, nejsou-li – nepiš „zatím není“.
+Nadpis je **lidský název** („Rezervační systém“, ne `rezervace`), odstavec pod ním **popisek** – jedna věta bez odkazů a formátování do 350 znaků (limit GitHubu). Slug je jméno malými se spojovníky a nese ho repozitář, ne adresář; Struktura režim umístění. Web a Repozitář vynech, nejsou-li – nepiš „zatím není“.
 
 Blok je **kanonický zdroj** názvu a popisku. Odvozují se z něj nadpis a první odstavec `README.md` (tam se popisek smí rozvést) a Repository details na GitHubu (`gh repo edit <owner>/<slug> -d "<description>" -h "<web>"`). **Změní-li se název, popisek nebo URL, propiš to hned na všechna tři místa.**
 
-**Import musí stát holý, ne v apostrofech.** `@~/cesta/soubor.md` uvnitř code spanu se nenačte, a to tiše. Chceš-li cestu vysázet jako kód, napiš ji dvakrát; odkaz, který se importovat nemá, naopak v apostrofech nech.
+**Import musí stát holý, ne v apostrofech** – v code spanu se tiše nenačte. Chceš-li cestu ukázat i jako kód, napiš ji dvakrát; odkaz, který se importovat nemá, v apostrofech nech.
 
 Další sekce:
 
-- **`## Kontrakt příkazů`** – **má ho každý projekt, ve kterém se něco spouští**: čím se tam spouštějí abstraktní kroky (`test`, `typecheck`, `lint`, `build`…). Zakládá ho `/project`, čte průběžná kontrola a skilly, které pouštějí testy; seznam klíčů drží `~/Context/Coding/quality.md`, *Kontrakt příkazů*.
-- **`## Zákazy`** – na co model nesahá nebo co nedělá bez ptaní, a proč. **Hranici drží `permissions` v `.claude/settings.json`** – co se nesmí vůbec, do `deny`, co jen bez ptaní, do `ask`; sekce je seznam s důvody a zákaz bez mechanismu se v ní označí jako jen napsaný. Zakládá ji `/project`, a jen má-li projekt co zakázat.
+- **`## Kontrakt příkazů`** – **má ho každý projekt, ve kterém se něco spouští**: čím se spouštějí kroky (`test`, `lint`…). Zakládá ho `/project`, klíče drží `~/Context/Coding/quality.md`, *Kontrakt příkazů*.
+- **`## Zákazy`** – na co model nesahá nebo co nedělá bez ptaní, a proč. **Hranici drží `permissions` v `.claude/settings.json`** (co se nesmí → `deny`, co jen s dotazem → `ask`); zákaz bez mechanismu se v sekci označí jako jen napsaný. Zakládá ji `/project`, jen má-li projekt co zakázat.
 - **`## Nasazení`** – jak se projekt dostane do produkce, hlavně která větev je nasazovací. Zakládá ji `/project` nebo první `/release`.
 - **`## Review` a `## Consistency`** – nálezy vyhodnocené jako „neopravovat“, aby se nehlásily znovu. Do první píší `/review` i `/attack` (formát drží `~/.claude/skills/review/SKILL.md`, *Kapitola `## Review`*), do druhé `/consistency`. Píší je skilly, ne člověk.
 
@@ -105,18 +107,19 @@ Test: **jde ta věta škrtnout, aniž čtenář přestane vědět, k čemu ta v�
 - instrukce pro Clauda (pravidla práce, konvence, povinnosti) → `CLAUDE.md`, **ani odkazem** na ně,
 - principy → `docs/rules.md`, co zbývá → `docs/todo.md`.
 
-Postup, který potřebuje znát člověk pracující v projektu sám (jak to spustit, kam uložit podklad), do README patří, i když ho pak vykonává Claude – většina takových vět je ale ve skutečnosti pokyn pro Clauda a patří jinam.
+Postup, který potřebuje znát člověk pracující v projektu sám (jak to spustit, kam uložit podklad), do README patří, i když ho vykonává Claude.
 
 ### `todo.md`
 
-Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – úkol, otázka, kterou je nutné zodpovědět, rozhodnutí, které padnout musí. **S celou úvahou**, ne jako holá odrážka. Odklad po termín („až po spuštění“, „ve druhé fázi“) z úkolu nápad nedělá; nápad, o kterém nikdo nerozhodl, patří do `backlog.md`.
+Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – úkol, otázka, kterou je nutné zodpovědět, rozhodnutí, které padnout musí. **S celou úvahou**, ne jako holá odrážka. **Jen jednorázové** – trvalý kontrolní seznam patří k testům, pravidlo stavby do návrhu. **Jen nehotové** – hotové přesuň hned do `done.md`.
 
-- **Má-li položka smysl až od určitého dne**, napiš **hned za název** `od <YYYY-MM-DD>` – `/next` ji do té doby nenabídne, jen zmíní. Datum uvnitř popisu odklad nezakládá. Je to odstup, ne termín.
-- **Drží jen nehotové položky.** Hotové **přesuň hned do `done.md`**.
-- **`## Parkované v session`** – bod odložený v rámci session; po vyřešení se maže, prázdná sekce se ruší.
-- **`## Přerušený běh`** – zbytek přerušené fronty skillu i práce mimo skill. Stojí první, `/next` na ni rovnou naváže a tvar drží `/end`. Vypořádaná položka jde do `done.md`, jen je-li to odvedená práce, jinak se maže; prázdná sekce se ruší.
-- **`## Rozhodnuto k zapracování`** – nezapracované odpovědi průchodu nálezy (`~/.claude/skills/findings.md`).
-- **`## Kola návrhu`** – mapa kol návrhu; tvar drží `~/.claude/skills/architect/rounds.md`.
+**`todo.md` má dvě části.** Pod `# Fronta` (nadpis souboru) stojí pásma; v pásmech práce je pořadí priorita a spolu s velikostí ho určuje ten, kdo položku zapisuje – `/next` vypíše jen vrchol. Pod `# Mimo frontu` stojí sekce, které se neřadí: `## Rozhodnuto k zapracování` (nezapracované odpovědi průchodu nálezy, `~/.claude/skills/findings.md`) a `## Kola návrhu` (tvar, pořadí i život drží `~/.claude/skills/architect/rounds.md`).
+
+- **Pásma `##`** jsou v pořadí naléhavosti: `## Přerušený běh` a `## Parkované v session` (pořadí zápisu, vlastní tvar), pak pásma práce (`Teď`, `Potom`, `Později`), ne témata. **Prázdné pásmo i sekce se ruší** (kromě kol) a s první položkou vznikne znovu, `# Mimo frontu` taky. **`Později` je rozhodnutá práce s nízkou prioritou**, ne nápad – ten patří do `backlog.md`.
+- **Položka pásma práce je řádek první úrovně `- [ ] ◐ **Název.** …`** – velikost ○ drobnost, ◐ střední (session), ● velký (víc sessions). Nová jde nad první méně naléhavou. Co patří neoddělitelně k sobě, jsou její podbody; zaškrtávátko má jen podúkol, a záleží-li na pořadí, číslují se.
+- **Má-li položka smysl až od určitého dne**, napiš **hned za název** `od <YYYY-MM-DD>` – `/next` ji do té doby nenabídne, jen zmíní. Datum uvnitř popisu odklad nezakládá.
+- **`## Přerušený běh`** – přerušená fronta skillu i práce mimo skill; `/next` na něj rovnou naváže, tvar drží `/end`. Vypořádaná položka jde do `done.md`, jen je-li to odvedená práce, jinak se maže.
+- **`## Parkované v session`** – bod odložený v rámci session; po vyřešení se maže.
 
 ### `backlog.md`
 
@@ -134,7 +137,7 @@ Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – �
 **Konkrétní rozhodnutí a cesta k nim:** problém, varianty, proč vyhrála tahle a proč padly ostatní. Zapisuj hned, jak rozhodnutí padne. Změna názoru se nepřepisuje – přibude revize s odůvodněním.
 
 - **Nejstarší nahoře, nový zápis na konec** své sekce – i bez dat (pořadí vzniku); kapitoly tematicky členěného souboru drží svou logiku.
-- **Datum patří do prvního odstavce kapitoly, ne do nadpisu** (`**Rozhodnuto 15. 9. 2026.**`) – nadpis je kotva a datum v ní se při opravě tiše rozbije. Počet v nadpisu katalogu („Akce nad objednávkou (9)“) se toho netýká.
+- **Datum patří do prvního odstavce kapitoly, ne do nadpisu** (`**Rozhodnuto 15. 9. 2026.**`) – nadpis je kotva a datum v ní se při opravě tiše rozbije. Počet v nadpisu katalogu se toho netýká.
 - **`## Co proklouzlo`** – defekty, které prošly všemi kontrolami; tvar drží `~/.claude/skills/release/SKILL.md`, *Když chyba projde vším*.
 - **Kapitola kola návrhu** se píše bez čísla – `~/.claude/skills/architect/rounds.md`, *V `decisions.md`*.
 
@@ -144,7 +147,7 @@ Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – �
 
 - Přesouvej **průběžně**, ve chvíli, kdy je položka hotová.
 - **Nejstarší nahoře**, nové na konec sekce; **datum dokončení** za názvem `(2026-08-28)`, vyrobené `date +%F`.
-- **Zrcadlí sekce `todo.md`** – položka jde do sekce, do které patřila.
+- **Sekce `todo.md` nezrcadlí** (kromě kol) – jsou to pásma priority, hotová práce leží pod `## Odvedená práce`.
 - **Přesouvá se úkol, ne odškrtnutý krok uvnitř něj** – odškrtnuté řádky checklistu zůstávají u nedokončené položky.
 - **`## Průchody životním cyklem`** – záznamy běhů kontrolních kroků; tvar a kdo zapisuje drží `~/.claude/skills/passes.md`. **`## Kola návrhu`** – `~/.claude/skills/architect/rounds.md`. Běhový stav skillů sem nepatří.
 
@@ -159,10 +162,6 @@ Existuje jen spolu s `todo.md`.
 **Obecné principy tohoto projektu** – věty, které rozhodují, ne popis systému. Vznikají z konkrétních rozhodnutí, ale zapisují se obecně jako rámec, proti kterému se rozhoduje; rozhodnutí drží `decisions.md`. Patří sem **jen to, co je specifické pro projekt** – obecná pravidla jsou v `~/.claude/standards/rules.md`, doménové znalosti v importované doméně, provoz worktree v `~/.claude/standards/worktree.md`.
 
 ---
-
-## Průběžná aktualizace je povinná
-
-Tyhle soubory doplňuj **sám, průběžně a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží – nečekej na `/end` (`~/.claude/standards/rules.md`, *Pravda v souborech, ne v konverzaci*); kam zápis míří, drží tamtéž *Kam co zapsat*. Patří-li zápis jinam, přesuň ho (*Živá struktura*).
 
 ## Prázdný soubor je v pořádku
 

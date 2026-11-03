@@ -4,7 +4,7 @@ Jak se v souborech projektu zapisuje návrh rozdělený na tematická kola. Co j
 
 ## V `todo.md`
 
-**Sekce `## Kola návrhu`** je mapa kol, na která `/architect` rozdělil větší návrh. Co je kolo, kdy vzniká a jak běží, drží `~/.claude/skills/architect/SKILL.md`; jak se kola čtou a nabízejí, `~/.claude/skills/next/SKILL.md`, *Kola návrhu*. Na každé kolo připadá jeden blok v tomhle tvaru:
+**Sekce `## Kola návrhu`** stojí v `todo.md` pod `# Mimo frontu`, který se zakládá s první sekcí pod ním a ruší s poslední (`~/.claude/standards/structure.md`, *`todo.md`*). Je to mapa kol, na která `/architect` rozdělil větší návrh. Co je kolo, kdy vzniká a jak běží, drží `~/.claude/skills/architect/SKILL.md`; jak se kola čtou a nabízejí, `~/.claude/skills/next/SKILL.md`, *Kola návrhu*. Na každé kolo připadá jeden blok v tomhle tvaru:
 
 ```markdown
 ### Kolo o <tématu>

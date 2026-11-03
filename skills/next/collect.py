@@ -51,6 +51,15 @@ TEXT_LIMIT = 300
 # Rozpočet je proto tvrdý a `fit_budget` pod něj popisy položek dokrátí.
 BUDGET = 25000
 TEXT_STEPS = (200, 160, 120, 80, 40, 0)
+# Kolik položek srovnané fronty jde do výpisu. Pořadí i velikost nese `todo.md`
+# sám (`~/.claude/standards/structure.md`, *`todo.md`*), takže zbytek fronty
+# model nepotřebuje číst – a na délce výpisu stojí většina času běhu.
+TOP = 10
+SIZE = re.compile(r"([○◐●])\s*")
+# Sekce s vlastním tvarem a pořadím (`structure.md`, *`todo.md`*): do vrcholu
+# se nepočítají, vracejí se celé, velikost u nich chybět smí a položkou je
+# i holá odrážka – `## Rozhodnuto k zapracování` zaškrtávátka nemá.
+SPECIAL = {"Přerušený běh", "Parkované v session", "Rozhodnuto k zapracování"}
 DIFF_LINES = 12
 # Složky, do kterých hledání `todo.md` podprojektů nesestupuje – stejně jako příkaz *Fáze 1* v `SKILL.md`.
 SKIP_DIRS = {"node_modules", "vendor"}
@@ -189,9 +198,12 @@ def parse_items(lines, checkbox_only=False):
             cur["rest"].append(line)
     out = []
     for i in items:
-        title, rest = item_title(i["first"])
+        size = SIZE.match(i["first"])
+        title, rest = item_title(i["first"][size.end() :] if size else i["first"])
         full = " ".join([rest] + i["rest"])
         entry = {"title": title, "text": short(full), "done": i["done"]}
+        if size:
+            entry["size"] = size.group(1)
         # Závislost bývá na konci dlouhého popisu, který `short` ořízne – vytáhne se zvlášť.
         waits = WAITS.search(full)
         if waits and not NO_WAIT.match(waits.group(1).strip("* ")):
@@ -215,7 +227,11 @@ WAITS = re.compile(
 # Hodnota, která říká, že položka na nic nečeká.
 NO_WAIT = re.compile(r"(?:nic|–|-)\W*$")
 NOT_BEFORE = re.compile(r"[–—:-]?\s*od\s+\**(\d{4}-\d{2}-\d{2})")
-CHECKBOX = re.compile(r"\s*[-*] \[( |x|X)\]")
+# Jen zaškrtávátko první úrovně dělá z fronty frontu zaškrtávátek – odsazený
+# checklist uvnitř položky by jinak zahodil všechny holé odrážky nad ním.
+CHECKBOX = re.compile(r"[-*] \[( |x|X)\]")
+# V plánu bývají kroky úkolu vnořené, tam se počítá i odsazené zaškrtávátko.
+PLAN_BOX = re.compile(r"\s*[-*] \[( |x|X)\]")
 
 
 def sections(text, level="## ", preamble=False):
@@ -320,13 +336,21 @@ def parse_todo(text):
         entries = [
             {
                 "subsection": None,
-                "items": [i for i in parse_items(head, boxed) if not i["done"]],
+                "items": [
+                    i
+                    for i in parse_items(head, boxed and title not in SPECIAL)
+                    if not i["done"]
+                ],
             }
         ]
         entries += [
             {
                 "subsection": t,
-                "items": [i for i in parse_items(b, boxed) if not i["done"]],
+                "items": [
+                    i
+                    for i in parse_items(b, boxed and title not in SPECIAL)
+                    if not i["done"]
+                ],
             }
             for t, b in subs[1:]
         ]
@@ -336,6 +360,66 @@ def parse_todo(text):
         if parts or title is not None:
             out.append({"section": title, "parts": parts})
     return out, rounds, stitched
+
+
+def queue_items(todo):
+    """Otevřené položky pásem priority, v pořadí souboru."""
+    return [
+        i
+        for s in todo
+        if s["section"] not in SPECIAL
+        for p in s["parts"]
+        for i in p["items"]
+    ]
+
+
+def legacy_shape(todo, text):
+    """Proč `todo.md` není ve srovnaném tvaru, nebo `None`, když je.
+
+    Srovnaný tvar nese velikost u každé položky a položky jsou zaškrtávátka,
+    takže skript vrchol fronty určí sám. Rozhoduje se v témže průchodu, kterým
+    se soubor parsuje – srovnanou frontu kontrola nesmí zdržet ani o volání.
+    """
+    reasons = []
+    items = queue_items(todo)
+    if items and not any(CHECKBOX.match(line) for line in text.splitlines()):
+        reasons.append("položky nejsou zaškrtávátka")
+    if items and not re.search(r"(?m)^# Fronta\s*$", text):
+        reasons.append("chybí nadpis `# Fronta`")
+    unsized = sum("size" not in i for i in items)
+    if unsized:
+        reasons.append(f"{unsized} z {len(items)} položek bez velikosti")
+    return reasons or None
+
+
+def top_of_queue(todo, limit=TOP):
+    """Nechá ve frontě jen prvních `limit` připravených položek v pořadí souboru.
+
+    Zvláštní sekce zůstávají celé a položka, která na něco čeká, se do limitu
+    nepočítá – vypisuje se zvlášť a stačí jí název a závislost. Co se nevešlo,
+    nese sekce jako počet v `more`.
+    """
+    left = limit
+    for s in todo:
+        more = 0
+        for p in s["parts"]:
+            keep = []
+            for i in p["items"]:
+                if s["section"] in SPECIAL:
+                    keep.append(i)
+                elif i.get("waits") or i.get("waiting"):
+                    i.pop("text", None)
+                    keep.append(i)
+                elif left > 0:
+                    keep.append(i)
+                    left -= 1
+                else:
+                    more += 1
+            p["items"] = keep
+        s["parts"] = [p for p in s["parts"] if p["items"]]
+        if more:
+            s["more"] = more
+    return todo
 
 
 def todo_files(top: Path):
@@ -464,14 +548,14 @@ def parse_plan(text):
                 tasks.append((title, all(boxes)))
             title, boxes = heading.group(1).strip(), []
         else:
-            m = CHECKBOX.match(line)
+            m = PLAN_BOX.match(line)
             if m:
                 boxes.append(m.group(1).lower() == "x")
     if not tasks:
         tasks = [
             (line.strip(), m.group(1).lower() == "x")
             for line in text.splitlines()
-            if (m := CHECKBOX.match(line))
+            if (m := PLAN_BOX.match(line))
         ]
     open_ = [short(name)[:120] for name, done in tasks if not done]
     return {"open": len(open_), "done": len(tasks) - len(open_), "next": open_[:3]}
@@ -702,7 +786,9 @@ def fit_budget(result):
 
 
 def main() -> int:
-    repo = Repo(Path(sys.argv[1] if len(sys.argv) > 1 else "."))
+    args = [a for a in sys.argv[1:] if a != "--all"]
+    whole = "--all" in sys.argv[1:]
+    repo = Repo(Path(args[0] if args else "."))
     fetch = None
     if repo.git("remote", "get-url", "origin") is not None:
         fetch = (
@@ -718,9 +804,11 @@ def main() -> int:
     is_operative = claude is not None and OPERATIVE.search(claude) is not None
     prefix = "CLAUDE.md" if is_operative else docs_prefix(read)
     base = "" if is_operative else prefix or ""
-    todo, rounds, stitched = parse_todo(
+    queue_text = (
         operative_queue(claude) if is_operative else read(f"{base}todo.md") or ""
     )
+    todo, rounds, stitched = parse_todo(queue_text)
+    legacy = None if is_operative else legacy_shape(todo, queue_text)
     known = [
         i["title"]
         for s in todo
@@ -744,6 +832,8 @@ def main() -> int:
             repo, ref, base, rounds, current and current["branch"], repo.root
         )
     )
+    if not legacy and not whole:
+        todo = top_of_queue(todo)
     queue_empty = (
         not any(p["items"] for s in todo for p in s["parts"])
         and not rounds
@@ -757,6 +847,7 @@ def main() -> int:
         "docs": None if prefix is None else (prefix or "root"),
         "current": current,
         "todo": todo,
+        "legacy": legacy,
         "rounds": rounds,
         "stitch_pending": (rounds_open or stitched) and not rounds,
         "plan": plan,

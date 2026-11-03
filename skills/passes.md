@@ -21,4 +21,4 @@ Datum vyrob `date +%F`, hash `git rev-parse --short HEAD` – obojí příkazem,
 
 **Běžel-li krok nad jiným repozitářem, než ve kterém záznam leží, uveď u hashe i zdroj:** `` `~/.claude@574dade` `` – typicky když repozitář bez vlastního `done.md` odkládá záznamy do sousedního. **Holý hash z cizího repozitáře je horší než žádný:** příští běh ho hledá ve špatném stromu a `git log <hash>..HEAD` tam selže, nebo tiše vrátí něco jiného.
 
-**Výjimka z pravidla o zrcadlení:** jako jediná sekce `done.md` nemá protějšek v `todo.md` – průchod není odložený úkol.
+**Průchod není odložený úkol**, takže stojí ve vlastní sekci vedle `## Odvedená práce`, ne mezi hotovými položkami.

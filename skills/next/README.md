@@ -7,7 +7,7 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 1. **Naváže na přerušenou práci** – když ji `/end` při ukončení session zapsal, najde ten zápis i ve vedlejší větvi nebo v podprojektu, přejde tam, kde práce leží, krátce shrne, kde se stojí, a pokračuje tím, co zápis určil jako první krok. Nic dalšího přitom nesbírá, takže navázání trvá jen pár vteřin. Zbylo-li přerušených prací víc, zeptá se, kterou začít.
 2. **Hned nahoře ukáže, na čem se už pracuje jinde** – projde rozdělané větve, pozná, kterého úkolu se týkají, a podívá se, jestli nad nimi zrovna běží Claude v jiném okně terminálu. Takové úkoly nenabízí, aby se nerozjely podruhé. **Větev, ve které se začalo a pak se na ni zapomnělo, naopak nabídne jako první** – a když k ní najde i starou konverzaci, řekne vám přesný příkaz, kterým ji obnovíte i s celým kontextem. Konverzaci, kterou máte otevřenou v jiném okně, nenabídne nikdy.
 3. **Posbírá celou frontu práce** – úkoly a odložené body ze seznamu úkolů, zbytek implementačního plánu, tematická kola rozpracovaného návrhu, necommitnuté změny a krok životního cyklu, který po poslední práci chybí.
-4. **Seřadí ji podle závislostí**: nejdřív zapomenuté a rozdělané věci, pak to, na co nic nečeká, a mezi tím hlavně úkoly, které odblokují nejvíc dalších. Co na něco čeká, vypíše zvlášť i s tím, na co.
+4. **Bere pořadí ze seznamu úkolů** – pořadí v něm je priorita a velikost má každý úkol zapsanou u sebe, takže je nemusí pokaždé odhadovat. Nejdřív dá zapomenuté a rozdělané věci, pak úkoly v pořadí seznamu; co na něco čeká, vypíše zvlášť i s tím, na co. Vypíše jen vrchol fronty a zbytek jako počet – celou frontu na požádání. Seznam úkolů ve starém tvaru přečte taky, jen pořadí a velikosti odhadne a nabídne jeho srovnání.
 5. **U každého úkolu ukáže, jak je velký** – drobnost, práce na jednu session, nebo velký úkol –, a u těch nabízených řekne i to, v čem spočívá a čím se začíná.
 6. **Tři až čtyři nejaktuálnější nabídne k výběru** – a pořád můžete napsat, že chcete jít úplně jinudy.
 7. **Po výběru se do toho rovnou pustí** – má-li úkol vlastní skill, zavolá ho, jinak načte podklady a začne.
@@ -16,9 +16,9 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 ## Proč zrovna tenhle
 
 - **Místo dlouhého promptu jedno slovo** – a pokaždé stejně důkladně, ne podle toho, jak moc se vám zrovna chtělo psát.
-- **Rychlý.** Všechno, co jde zjistit mechanicky – seznam úkolů, větve, běžící konverzace –, posbírá jeden skript za pár vteřin – a většinu z nich čeká na síť, když si stahuje aktuální stav větví. Claude pak jen posoudí a nabídne, místo aby se sám proklikával desítkami souborů a příkazů, a výpis drží na jednom řádku na úkol.
+- **Rychlý.** Všechno, co jde zjistit mechanicky – seznam úkolů, větve, běžící konverzace –, posbírá jeden skript za pár vteřin – a většinu z nich čeká na síť, když si stahuje aktuální stav větví. Claude pak jen posoudí a nabídne, místo aby se sám proklikával desítkami souborů a příkazů, a výpis drží na jednom řádku na úkol a jen na vrcholu fronty.
 - **Dívá se i do gitu.** Neuložené změny a rozdělaná práce v seznamu úkolů nejsou, a přitom jsou to první věci, ke kterým je potřeba se vrátit. A když souběžně běží víc sessions v různých větvích, nenabídne vám úkol, na kterém už dělá jiná.
-- **Pořadí podle závislostí, ne podle toho, co je v seznamu nahoře.** Závislosti bere jen ze zápisu; tušenou závislost řekne jako domněnku.
+- **Priorita se rozhoduje jednou, při zápisu úkolu, ne při každém spuštění.** Proto je výpis rychlý i u dlouhé fronty a pořadí se mezi dvěma běhy nemění podle nálady. Závislosti bere jen ze zápisu; tušenou závislost řekne jako domněnku.
 - **U každého úkolu velikost.** Když máte hodinu, vidíte hned, co se do ní vejde.
 - **Nemíchá rozhodnutou práci s nápady.** Nezávazné nápady ukáže až tehdy, když skutečné úkoly dojdou.
 - **Nic nepřepisuje.** Jen čte; zastaralý seznam úkolů ohlásí, ale neuklízí.
@@ -44,6 +44,8 @@ Otevřete novou session nad rozdělaným projektem a první otázka je pokaždé
 2. ◐ Validace formuláře objednávky (rozdělané tady)
 3. ◐ Kolo o DPH
 4. ○ Přejmenovat „rezervace“ na „objednávka“ v administraci
+
++ 54 dalších v seznamu úkolů – celou frontu vypíšu na požádání
 
 ○ drobnost · ◐ střední · ● velký
 

@@ -48,7 +48,7 @@ Režimy nemá. Argument je **volné zúžení** – `/next review`, `/next DPH`,
 **Bez argumentu** pusť z adresáře session **přesně tenhle příkaz**, nic předtím a nic dalšího:
 
 ```bash
-out=$({ git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | grep . || pwd; } | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o \( -name todo.md -o -name CLAUDE.md \) -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; done); if [ -n "$out" ]; then printf '%s\n' "$out"; else python3 ~/.claude/skills/next/collect.py; fi
+out=$({ git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | grep . || pwd; } | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o \( -name todo.md -o -name CLAUDE.md \) -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^##? /{exit} s' "$f"; done); if [ -n "$out" ]; then printf '%s\n' "$out"; else python3 ~/.claude/skills/next/collect.py; fi
 ```
 
 Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem; `/end` zapisuje do `todo.md` projektu, ve kterém session stojí. Skryté složky, `node_modules` a `vendor` přeskakuje, aby hledání zůstalo pod vteřinou. **Čte i `CLAUDE.md`**, protože operativní projekt `todo.md` nemá a `/end` v něm zapisuje do projektového `CLAUDE.md` (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*); mimo git hledá od adresáře session.
@@ -78,19 +78,23 @@ Od té chvíle běží běžná práce podle pravidel projektu, ne tenhle skill.
 
 ## Fáze 2 – Sběr
 
-Výstup `collect.py` máš z *Fáze 1*; se zúžením ho pusť z adresáře session jako `python3 ~/.claude/skills/next/collect.py` – bez `head` a bez dalšího zpracování v shellu, výstup je jeden řádek JSON a skript si jeho velikost hlídá sám. Nic dalšího nečti – **každé další volání stojí vteřiny čekání**, a výstup skriptu na nabídku stačí. Soubor otevři jen tehdy, když bez něj položku opravdu nejde popsat.
+Výstup `collect.py` máš z *Fáze 1*; se zúžením ho pusť z adresáře session jako `python3 ~/.claude/skills/next/collect.py --all` – `--all` vrátí celou frontu, protože zúžení filtruje i to, co by se do vrcholu nevešlo. Bez `head` a bez dalšího zpracování v shellu, výstup je jeden řádek JSON a skript si jeho velikost hlídá sám. Nic dalšího nečti – **každé další volání stojí vteřiny čekání**, a výstup skriptu na nabídku stačí. Soubor otevři jen tehdy, když bez něj položku opravdu nejde popsat.
 
 - **Skript skončil chybou** (není to git repozitář ani operativní projekt, nejde určit hlavní větev) → řekni to a skonči závěrečným verdiktem.
 - **`docs` je `CLAUDE.md`** → operativní projekt (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*): fronta jsou jen sekce `## Přerušený běh` a `## Otevřené body` jeho `CLAUDE.md`. Otevřené body zapsané u témat skript nesbírá – řekni to v poznámkách. Místo v cyklu neodvozuj, operativní projekt do cyklu nevstupuje; `layout` `none` znamená, že nemá git, takže práce ve větvích odpadá.
 - **`docs` je null a nic dalšího nenašel** → projekt frontu nevede; řekni to a skonči.
 - **`fetch` je `failed`** → pokračuj, ale v poznámkách řekni, že hlavní větev může být stará.
 
+**Srovnaný `todo.md` čti mechanicky.** V pásmech priority pod `# Fronta` je pořadí priorita a velikost nese každá položka v poli `size` (`~/.claude/standards/structure.md`, *`todo.md`*), takže skript vrátil jen vrchol fronty – nejvýš deset připravených položek v pořadí souboru – a u sekce, ze které se něco nevešlo, počet v `more`. Pořadí ani velikost neposuzuj znovu; právě to je úsudek, který se přesunul k zápisu položky.
+
+**`legacy` není `null`** → `todo.md` srovnaný není: skript vrátil celou frontu jako dřív a v `legacy` důvody. Seřaď ji podle *Fáze 3* a velikosti odhadni podle `structure.md`, *`todo.md`* a do poznámek napiš jednu větu: fronta není srovnaná (důvody z `legacy`), takže pořadí i velikosti jsou odhad, a srovnat ji jde dorovnáním projektu přes `/project`. Nic víc – nesrovnaný soubor je okolnost, ne práce, kterou by se mělo začít.
+
 Co z výstupu je položka fronty:
 
 | Klíč | Položka |
 |---|---|
 | `current.uncommitted` | necommitnuté změny tam, kde session stojí – rozdělaná práce tady |
-| `todo` | každá položka ze všech sekcí (hotové skript vynechal) |
+| `todo` | položka ze sekcí – u srovnaného souboru jen vrchol a `more`, jinak všechny; hotové skript vynechal |
 | `rounds` | kolo návrhu – viz *Kola návrhu* |
 | `stitch_pending` | položka *sešít návrh po kolech*, spouštěč `/architect` |
 | `plan.open` | jedna položka „dokončit plán“ s počtem zbývajících, spouštěč `/implement` |
@@ -98,7 +102,7 @@ Co z výstupu je položka fronty:
 | `branches` | práce ve větvi – viz *Práce ve větvích* |
 | `backlog` | skript ho vrací jen při prázdné frontě – viz *Fáze 3* |
 
-**Popis položky může být zkrácený a dolovat ho zpátky se nesmí.** Výstup nad ~30 kB harness do kontextu nevloží – uloží ho do souboru a dá jen náhled –, takže skript si sám hlídá rozpočet a popisy položek dokrátí. Na kolik, říká `text_limit`: `null` znamená celé popisy, číslo zkrácení na tolik znaků, `0` popisy zahozené a zbylý název. **Jednořádkový výpis *Fáze 4* vystačí se jménem vždycky**; teprve u tří čtyř položek, které jdou do nabídky, otevři `todo.md` na jejím místě – a jen tehdy, když se z názvu `description` napsat nedá. Číst kvůli tomu celou frontu znovu je přesně ta ztráta, kvůli které skript vznikl.
+**Popis položky může být zkrácený a dolovat ho zpátky se nesmí.** Výstup nad ~30 kB harness do kontextu nevloží – uloží ho do souboru a dá jen náhled –, takže skript si sám hlídá rozpočet a popisy položek dokrátí. Na kolik, říká `text_limit`: `null` znamená celé popisy, číslo zkrácení na tolik znaků, `0` popisy zahozené a zbylý název. **Jednořádkový výpis *Fáze 4* vystačí se jménem a velikostí vždycky**; teprve u tří čtyř položek, které jdou do nabídky, otevři `todo.md` na jejím místě – a jen tehdy, když se z názvu `description` napsat nedá. Číst kvůli tomu celou frontu znovu je přesně ta ztráta, kvůli které skript vznikl.
 
 ### Položka odložená k datu
 
@@ -152,12 +156,12 @@ Obsazené a nejisté větve ani položky s `waiting: true` do řazení nevstupuj
 
 0. **Položky ze sekce `## Přerušený běh`** – zbytek práce, kterou předchozí session nedokončila, protože jí nabyl kontext nebo ji uživatel přerušil (zapisuje ji `/end`, podnět drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*). Jdou **první, před opuštěnými větvemi**, a v pořadí, ve kterém je ta session zapsala. Je to práce rozdělaná do půlky, u které navíc nikdo nedrží kontext – čím dýl leží, tím spíš se přestane rozumět tomu, proč nález nálezem je. **Položkou je celý blok `### `**, ne jednotlivé nálezy v něm: název je nadpis bloku, `text` první věta *Jak pokračovat* a spouštěč je *Navázání* z *Fáze 1*, které na blok naváže i se vším, co v něm leží. Do fronty se dostane jen se zúžením, nebo když uživatel navázání odmítl. **Položka s `branch` leží v `todo.md` worktree té větve**, ne v hlavní větvi – `/end` zapisuje tam, kde session stála; přiřaď ji větvi podle *Práce ve větvích*, takže u obsazené větve se nenabízí a opuštěná větev se nabídne jako tenhle blok, ne podruhé. **Položka s `project` leží v podprojektu** – `/end` zapisuje do `todo.md` projektu, kde session stála, takže z kořene klientské složky by se na ni jinak nedošlo. `collect.py` ji hledá stejně hluboko jako příkaz *Fáze 1* a u položky řekni, ve kterém podprojektu leží; zbytek fronty podprojektu skript nebere, patří k jinému projektu.
 1. **Opuštěné větve** – od nejčerstvější (`last_ts`). Větev bez session k obnovení, na kterou nikdo nesáhl déle než měsíc, nedávej na první místo – je to spíš zapomenutý pokus než rozdělaná práce; nabídni ji mezi ostatními a řekni její stáří.
-2. **Rozdělaná práce tady** – necommitnuté změny, rozpracovaný plán.
-3. **Položky bez nesplněné závislosti** před těmi, které na něco čekají.
-4. Mezi nimi ty, **na které čeká nejvíc dalších**.
-5. Pak **pořadí v `todo.md`**.
+2. **Rozdělaná práce tady** – necommitnuté změny, rozpracovaný plán, `## Parkované v session` a `## Rozhodnuto k zapracování`; obě sekce skript vrací celé.
+3. **Kola návrhu** v pořadí podle *Čeká na* a chybějící krok cyklu.
+4. **Položky pásem v pořadí `todo.md`** – pořadí je priorita a nepřeřazuje se.
+5. **Jen u nesrovnaného `todo.md`** (`legacy`) pořadí souboru nestačí: položky bez nesplněné závislosti dej před ty, které na něco čekají, mezi nimi ty, na které čeká nejvíc dalších, a pak pořadí v souboru.
 
-Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je na konci.
+Položky, které čekají na nesplněnou závislost (`waits`), nevynechávej – patří do *Čeká na něco*.
 
 **Je-li fronta prázdná a volání není zúžené**, vypiš `backlog` odděleně jako nezávazné nápady s upozorněním, že výběr znamená nejdřív rozhodnout o přesunu do `todo.md`. Do nabídky je nedávej.
 
@@ -177,6 +181,8 @@ Položky, které čekají na nesplněnou závislost, nevynechávej – vypiš je
 1. <kolečko> <název> <(jen je-li co: čeká na …, opuštěná větev `<branch>`, rozdělané tady)>
 2. …
 
+<jen je-li co: + N dalších v `todo.md` – celou frontu vypíšu na požádání>
+
 ○ drobnost · ◐ střední · ● velký
 ```
 
@@ -186,13 +192,9 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Tučný je jen nadpis a popisky částí, položky ne.** Položka je kolečko velikosti a název, nic víc – **stav „připravené“ ani velikost slovem se nepíšou**. Do závorky za název patří jen to, co mění rozhodnutí: nesplněná závislost, opuštěná větev, rozdělaná práce tady. Připravená položka bez závislosti závorku nemá. Výpis se čte očima, ne jako tabulka, a slova navíc na každém řádku ho zahlcují.
 
-**Velikost** je kolečko hned za číslem – obyčejný textový znak, ne barevné emoji: přebírá barvu textu terminálu, takže nesvítí, a napůl plné kolečko se čte jako napůl velký úkol. Velikost odhaduj podle toho, co práce obnáší, ne podle délky zápisu:
+**Velikost** je kolečko hned za číslem – obyčejný textový znak, ne barevné emoji: přebírá barvu textu terminálu, takže nesvítí, a napůl plné kolečko se čte jako napůl velký úkol. U položky `todo.md` ho ber z pole `size`; odhaduješ ho jen tam, kde chybí – u nesrovnaného souboru, sekce mimo pásma práce, kola, kroku cyklu nebo větve –, podle `~/.claude/standards/structure.md`, *`todo.md`*.
 
-| Kolečko | Velikost |
-|---|---|
-| ○ | drobnost – jedna, dvě odpovědi |
-| ◐ | střední – session, jedno kolo, pár úkolů z plánu |
-| ● | velký – víc sessions nebo celý krok cyklu |
+**Počet zbylých** je součet `more` přes sekce. **Řekne-li uživatel, že chce celou frontu**, pusť `python3 ~/.claude/skills/next/collect.py --all` a vypiš ji stejným tvarem.
 
 **Spouštěč** je skill, když ho položka jmenuje nebo když jde o krok cyklu, kolo či plán; u opuštěné větve obnovení session nebo pokračování ve větvi; jinak první konkrétní krok. Skill si nevymýšlej k položce, se kterou nemá nic společného.
 

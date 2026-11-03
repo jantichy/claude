@@ -2581,3 +2581,38 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 
 **Co se tím vědomě ztratilo:** příkaz, který nikdy nespustí sběr. Kdyby se zápis přerušení neočekávaně nenašel, `/next` místo hlášky „navázat není na co“ postaví nabídku – to je delší čekání, ne chybný krok, protože přerušená práce, kterou příkaz nevidí, by se ve frontě stejně neobjevila.
 
+### Pořadí v `todo.md` je priorita a velikost nese položka: `/next` čte frontu mechanicky
+
+**Rozhodnuto 3. 11. 2026** (uživatel). Měření ostrého běhu `/next` ukázalo 36 s do otázky, z toho 23 s rostlo s délkou fronty: model nad 66 položkami pokaždé odhadoval velikost a pořadí a ke každé psal řádek výpisu. Úsudek, který se opakuje při každém běhu, se proto přesunul tam, kde vzniká položka: **pořadí v souboru je priorita a velikost (○ ◐ ●) stojí u položky**. `collect.py` u srovnaného souboru vrátí jen prvních deset připravených položek a zbytek jako počet; model je jen vypíše. Pravidla drží `standards/structure.md`, *`todo.md`*, a platí ve všech projektech.
+
+**Tvar, na kterém se uživatel dohodl po průzkumu 33 souborů** (plochý seznam, tematické sekce, fázové sekce, nadpis jako úkol, hierarchie, sekce, které nejsou úkoly):
+
+- **Sekce `##` jsou pásma priority nebo fáze**, ne témata; `## Přerušený běh` je vždy první pásmo. Podobná témata smějí v pásmu stát u sebe – blízkost tématu a priority z toho vyplyne sama.
+- **Jednotkou fronty je položka první úrovně.** Co patří neoddělitelně k sobě (všechno, nebo nic; případně v pořadí), jsou její podbody – číslované, záleží-li na pořadí – a prioritu i velikost má jen rodič.
+- **Položka je řádek `- [ ] ◐ **Název.**`**; zaškrtávátko odliší položku od textu, což dřív selhalo na návodu k pořadí, který `collect.py` vydával za úkoly. Podbod má zaškrtávátko, jen když je to podúkol, který jde odškrtnout.
+- **V `todo.md` je jen úkol** – co se jednou udělá a odškrtne. Jednorázové kontroly po implementaci jsou jedna položka s podbody; trvalý kontrolní seznam patří k testům, pravidlo stavby do návrhu, ručně psaný návod k pořadí zaniká.
+- **`done.md` přestává zrcadlit sekce `todo.md`** – pásmo priority hotové práci nic neříká. Důsledek prvního bodu, ne samostatná volba.
+
+**Starý tvar `/next` rozpozná trvale, ale srovnaný soubor nezdrží ani o volání** (požadavek uživatele: skilly si instalují i jiní lidé). Rozpoznání dělá `collect.py` v témže průchodu, kterým soubor parsuje, a příznak `legacy` vrací jen u nesrovnaného souboru; tehdy vrátí celou frontu jako dřív a `/next` nabídne dorovnání přes `/project`. **Zúžení** pouští `collect.py --all`, protože filtrovat jen vrchol by nedávalo smysl.
+
+**Zamítnuto:**
+- **Model vybere vrchol podle důležitosti** – úsudek by dál vyžadoval přečíst celou frontu, takže by se ušetřil jen výpis.
+- **Značka priority u položky** – další pole, které musí někdo udržovat, když pozice v souboru nese totéž.
+- **Tematické sekce s prioritou uvnitř** – vrchol by byl řádek za každé téma a prořazení zase úsudek.
+- **Hotové řádky výpisu ze skriptu** – výstup nástroje uživatel nevidí, takže by je model stejně psal; šetřilo by to jen část myšlení.
+- **Kritérium „na co čeká nejvíc dalších“** zůstává jen u nesrovnaného souboru; u srovnaného ho promítá pořadí, které určil zapisující.
+
+**`structure.md` se kvůli tomu vešel pod mez přes `/slim`** (12 469 → 12 494 znaků, mez 12 500): sekce *Průběžná aktualizace je povinná* zmizela, protože její jádro nese paušálně načítaný `standards/rules.md` (*Pravda v souborech*) a nic na ni neodkazovalo – pokyn přesunout zápis ze špatného souboru, který `rules.md` nenese (*Živá struktura* mluví o souborech a jen o návrhu reorganizace), zůstal jednou větou pod *Co patří do kterého souboru*; zkrácen popis kontraktu a zákazů, odstavec o holém importu a poslední věta oddílu *`README.md`* (bez varování, že většina takových vět je pokyn pro Clauda – opakovalo odrážku výš). Ověřovatel `reader` (Opus, `xhigh`) našel šest odchylek – mezi nimi „Jen úkoly“, které by z `todo.md` vyloučilo otázky a rozhodnutí, ztracené rušení prázdné *Parkované v session* a chybějící výjimku pro *Kola návrhu* v `done.md` – a všechny jsou opravené; místo na ně daly zkrácený příklad popisku a vypuštěný doklad o limitu GitHubu. **Zamítnuto:** zvýšit mez na 13 500, a přesunout podrobnosti bloku metadat do `/project` – uživatel zvolil `/slim`.
+
+**Doplněno týž den při upřesňování tvaru (uživatel):**
+
+- **`todo.md` má dvě části:** `# Fronta` s pásmy priority (`## Přerušený běh`, `## Parkované v session`, pak pásma práce jako `Teď`, `Potom`, `Později`) a `# Mimo frontu` s `## Rozhodnuto k zapracování` a `## Kola návrhu`. Přerušený běh je rovnocenné pásmo, jen nejnaléhavější; *Parkované v session* je úkol s prioritou „ještě v téhle session“, takže patří do fronty. Ty dvě mimo frontu úkoly nejsou: schránka odpovědí a mapa kol s vlastním pořadím podle *Čeká na*. Pásma a sekce zůstaly na úrovni `##`, aby se nerozbily skilly, které je zapisují a čtou.
+- **Zvláštní sekce `## Probíhá` se nezavádí.** Rozjetá práce buď skončila přes `/end` (pak je to přerušený běh), nebo běží a je první položkou prvního pásma práce. Sekce by neměla vlastníka tvaru a mátla by se s přerušeným během. Eventoidu ji převede dorovnání.
+- **„Přerušený běh“ se nepřejmenovává na „Probíhá“** – jméno je strojový klíč v `/next`, `collect.py`, `/end` a cizích instalacích, a „Probíhá“ by zvalo psát tam i práci bez předání.
+- **`Později` je rozhodnutá práce s nízkou prioritou, ne nápad** – výslovně, protože právě tam se plete s `backlog.md`.
+- **Prázdné pásmo i sekce se ruší a s první položkou vznikne znovu**, kromě kol, jejichž život drží `rounds.md`.
+
+Třetí ověřovatel našel, že `collect.py` v srovnaném souboru zahazoval odrážky `## Rozhodnuto k zapracování` (položkou bylo jen zaškrtávátko, findings.md ale píše holé odrážky); zvláštní sekce se nově parsují bez toho omezení a hlídá to test ověřený mutací. Místo pro doplnění daly ve `structure.md` výčet produktových podkladů v tabulce souborů (celý ho drží `product.md`) a příklad počtu v nadpisu katalogu. Popis `structure.md` v kořenovém `CLAUDE.md` přestal jmenovat smazanou povinnost průběžné aktualizace.
+
+**Čtvrté kolo ověření** našlo devět nesrovnalostí, opravených týž den: *Parkované v session* se vrátilo na „po vyřešení se maže“ (`rules.md`); přerušený běh a parkované body drží pořadí zápisu a vlastní tvar, priorita pořadím a tvar položky platí jen v pásmech práce; `/end` zakládá nový `todo.md` s `# Fronta` a položky bez sekce dává do `## Teď` místo `## Úkoly`; hledací příkaz *Fáze 1* končí sekci i na nadpisu `#`; `collect.py` bere za frontu zaškrtávátek jen zaškrtávátko první úrovně (odsazený checklist uvnitř holé položky dřív zahodil celou frontu a `/next` ohlásil prázdnou – vada starší než dnešek), plán dál počítá i odsazená; `legacy` hlásí i chybějící `# Fronta`, tematické sekce poznat neumí a `/project` je hledá sám; `rounds.md` a `findings.md` říkají, že `# Mimo frontu` se zakládá s první sekcí pod ním a ruší s poslední; vrácen důvod limitu 350 znaků.
+

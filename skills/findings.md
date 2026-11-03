@@ -163,7 +163,7 @@ Narazí-li merge přesto na konflikt, dávka se nezapracuje a jde do dalšího k
 
 ### Zápis `## Rozhodnuto k zapracování`
 
-Sekce v `docs/todo.md` (`~/.claude/standards/structure.md`, *`todo.md`*), jeden blok `### <skill a režim> – <téma dávky>` za dávku; opravy bez ptaní mají vlastní blok. Položka je odrážka a nese, co agent potřebuje, aby nehádal: název nálezu, zvolenou variantu celou větou, co uživatel dopsal (doslova), dotčené soubory a návaznost na jiné položky. Zapracovaná položka se maže, prázdný blok i sekce se ruší – hotové nese `git log` a souhrn, do `done.md` se z ní nic nepřesouvá.
+Sekce v `docs/todo.md` pod `# Mimo frontu` – nadpis se zakládá s první sekcí pod ním a ruší s poslední (`~/.claude/standards/structure.md`, *`todo.md`*) –, jeden blok `### <skill a režim> – <téma dávky>` za dávku; opravy bez ptaní mají vlastní blok. Položka je odrážka a nese, co agent potřebuje, aby nehádal: název nálezu, zvolenou variantu celou větou, co uživatel dopsal (doslova), dotčené soubory a návaznost na jiné položky. Zapracovaná položka se maže, prázdný blok i sekce se ruší – hotové nese `git log` a souhrn, do `done.md` se z ní nic nepřesouvá.
 
 ## Když se průchod nevejde do session
 
