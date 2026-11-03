@@ -1,4 +1,5 @@
 {
+  "cleanupPeriodDays": 1825,
   "permissions": {
     "allow": [
       "Grep",
@@ -271,7 +272,7 @@
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable"
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "hooks": {
     "Notification": [
       {
@@ -459,6 +460,12 @@
         "source": "github",
         "repo": "anthropics/skills"
       }
+    },
+    "rodokmen-skill": {
+      "source": {
+        "source": "github",
+        "repo": "sarsonj/rodokmen-skill"
+      }
     }
   },
   "language": "Czech",
@@ -475,10 +482,10 @@
     "enabled": true,
     "mode": "hold"
   },
+  "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "preferredNotifChannel": "iterm2",
   "autoCompactEnabled": false,
-  "cleanupPeriodDays": 3650,
   "autoContinueAtUsageLimit": true,
   "terminalProgressBarEnabled": false,
   "remoteControlAtStartup": false,
