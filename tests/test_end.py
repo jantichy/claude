@@ -28,13 +28,21 @@ kategorii, která obsah nese, nikdo to nepozná**, protože výsledek vypadá
 úplně. Testuje se proto obojí: že se vynechává jen to, co se vynechávat má,
 a že prompty v evidenci nesou jen to, co uživatel skutečně napsal.
 
+Třetí, `prepare.py`, navíc hlásí **signály rozdělané práce**, podle kterých
+`/end` bez otázky zapíše přerušený běh. Tady jsou oba směry stejně drahé:
+signál, který mlčí, nechá frontu odejít s `/clear`, a signál, který hlásí
+cizí nebo už zapsanou práci, vyrobí přerušení, na které `/continue` v nové
+session rovnou naváže.
+
 Spouští se: python3 -m unittest discover -s tests -q
 
 Jen stdlib.
 """
 
+import datetime
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -46,6 +54,7 @@ ROOT = Path(__file__).resolve().parent.parent
 LINKS = ROOT / "skills" / "links.py"
 EXTRACT = ROOT / "skills" / "end" / "scripts" / "extract.py"
 FINISH = ROOT / "skills" / "end" / "scripts" / "finish.py"
+PREPARE = ROOT / "skills" / "end" / "scripts" / "prepare.py"
 
 
 def load(path, name):
@@ -785,6 +794,77 @@ class EvidencePromptu(unittest.TestCase):
     def test_prompt_za_koncem_je_chyba(self):
         _, errors = self.check("1-7 bez zápisu\n")
         self.assertTrue(any("neexistuje" in e for e in errors))
+
+
+class RozdelanaPrace(unittest.TestCase):
+    """`prepare.py` hlásí rozdělanou práci jen tehdy, když je téhle session a nezapsaná."""
+
+    DECIDED = "## Rozhodnuto k zapracování"
+
+    def setUp(self):
+        self.prepare = load(PREPARE, "prepare_module")
+        self.cwd = os.getcwd()
+        self.dir = Path(tempfile.mkdtemp())
+        os.chdir(self.dir)
+        self.start = datetime.datetime.now(datetime.timezone.utc)
+        git = ["git", "-c", "user.name=t", "-c", "user.email=t@t"]
+        subprocess.run(["git", "init", "-q"], check=True)
+        Path("docs").mkdir()
+        Path("docs/todo.md").write_text(
+            f"# Todo\n\n{self.DECIDED}\n\n- stará odpověď\n\n## Úkoly\n",
+            encoding="utf-8",
+        )
+        subprocess.run(git + ["add", "docs/todo.md"], check=True)
+        subprocess.run(git + ["commit", "-q", "-m", "x"], check=True)
+        self.root = self.prepare.git("rev-parse", "HEAD")
+        Path(".claude/run").mkdir(parents=True)
+
+    def tearDown(self):
+        os.chdir(self.cwd)
+
+    def signals(self):
+        return self.prepare.unfinished(self.start, self.root)
+
+    def test_bez_rozdelane_prace_nic(self):
+        self.assertEqual(self.signals(), [])
+
+    def test_behovy_soubor_session_se_hlasi(self):
+        Path(".claude/run/review.json").write_text('{"queue": [1]}')
+        self.assertEqual(self.signals(), ["běhový soubor .claude/run/review.json"])
+
+    def test_zapsane_preruseni_se_nehlasi(self):
+        Path(".claude/run/review.json").write_text('{"interrupted": "docs/todo.md"}')
+        self.assertEqual(self.signals(), [])
+
+    def test_starsi_behovy_soubor_se_nehlasi(self):
+        path = Path(".claude/run/oponent.json")
+        path.write_text('{"queue": [1]}')
+        old = self.start.timestamp() - 3600
+        os.utime(path, (old, old))
+        self.assertEqual(self.signals(), [])
+
+    def test_necitelny_behovy_soubor_se_hlasi(self):
+        Path(".claude/run/attack.json").write_text("{nedopsaný")
+        self.assertEqual(len(self.signals()), 1)
+
+    def test_odpoved_zapsana_v_session_se_hlasi(self):
+        Path("docs/todo.md").write_text(
+            f"# Todo\n\n{self.DECIDED}\n\n- stará odpověď\n- nová odpověď\n\n"
+            "## Úkoly\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(self.signals(), [f"docs/todo.md: {self.DECIDED}"])
+
+    def test_odpovedi_ze_zakladu_se_nehlasi(self):
+        """Sekce beze změny od základu session je zapsaná fronta jiné session."""
+        self.assertEqual(self.prepare.decided(self.root), [])
+
+    def test_bez_gitu_se_neprazdna_sekce_hlasi(self):
+        self.assertEqual(self.prepare.decided(None), [f"docs/todo.md: {self.DECIDED}"])
+
+    def test_sekce_konci_dalsim_nadpisem(self):
+        text = f"{self.DECIDED}\n\n## Úkoly\n\n- [ ] úkol\n"
+        self.assertEqual(self.prepare.section(text, self.DECIDED), "")
 
 
 if __name__ == "__main__":

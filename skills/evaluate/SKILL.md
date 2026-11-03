@@ -151,7 +151,7 @@ U každého poznatku: čeho se týká, číslo, zdroj, jak se to dá zopakovat, 
 
 ## Fáze 5 – Rozhodnutí u každého poznatku
 
-**Průchod jde po kolech** – nejdřív všechny otázky, odpovědi do `## Rozhodnuto k zapracování`, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, odpovědi do `## Rozhodnuto k zapracování`, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/end` v režimu `break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 **Tohle je fáze, kvůli které krok existuje.** Bez ní je to evidence, kterou nikdo nečte.
 

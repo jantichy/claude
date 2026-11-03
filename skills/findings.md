@@ -167,7 +167,7 @@ Sekce v `docs/todo.md` (`~/.claude/standards/structure.md`, *`todo.md`*), jeden 
 
 ## Když se průchod nevejde do session
 
-Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, nabídne se na hranici kol uložení zbytku a dokončí ho nová session – práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*, a co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `/break`. Přeruší-li uživatel ptaní uprostřed, rozhodnuté položky už leží v `## Rozhodnuto k zapracování` a zapracují se až po zbylých otázkách. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
+Fronta nálezů se **nemusí dojít celá v jednom běhu**. Nabyl-li kontext, nabídne se na hranici kol uložení zbytku a dokončí ho nová session – práh a tvar nabídky drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*, a co všechno o nálezu musí jít do zápisu, aby se z něj dalo rozhodnout bez původního kontextu, drží `~/.claude/skills/end/break.md`. Přeruší-li uživatel ptaní uprostřed, rozhodnuté položky už leží v `## Rozhodnuto k zapracování` a zapracují se až po zbylých otázkách. **Tenhle soubor tím dotčený není:** i přerušený průchod rozhoduje o každém nálezu podle týchž pravidel, jen o části z nich rozhodne jindy a jiná session.
 
 ## Kdo ji používá
 

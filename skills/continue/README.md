@@ -1,6 +1,6 @@
 # /continue – navázat na přerušenou práci hned, bez přehledu všeho ostatního
 
-Když dlouhou session přerušíte skillem `/break`, zapíše rozdělanou práci do seznamu úkolů projektu. V nové session pak chcete jediné: pokračovat přesně tam, kde se skončilo. Tenhle skill zápis najde, přejde do adresáře, kde práce leží, krátce shrne, kde se stojí, a rovnou pokračuje. Hodí se každému, kdo práci přerušuje uprostřed a nechce v nové session čekat, než se sestaví přehled úplně všeho, co v projektu čeká.
+Když dlouhou session ukončíte uprostřed rozdělané práce, `/end` ji zapíše do seznamu úkolů projektu. V nové session pak chcete jediné: pokračovat přesně tam, kde se skončilo. Tenhle skill zápis najde, přejde do adresáře, kde práce leží, krátce shrne, kde se stojí, a rovnou pokračuje. Hodí se každému, kdo práci přerušuje uprostřed a nechce v nové session čekat, než se sestaví přehled úplně všeho, co v projektu čeká.
 
 ## Co umí
 
@@ -14,7 +14,7 @@ Když dlouhou session přerušíte skillem `/break`, zapíše rozdělanou práci
 
 - **Je rychlý.** Jeden dotaz do repozitáře, žádný sběr dat, žádná síť, žádné čtení pravidel – za pár vteřin pracuje.
 - **Nic nedomýšlí.** Čím začít, rozhodla už předchozí session, když práci přerušovala; tenhle skill to jen provede.
-- **Rozumí si s `/break`.** Oba stojí na stejném tvaru zápisu a test hlídá, aby se nerozešly.
+- **Rozumí si s `/end`.** Oba stojí na stejném tvaru zápisu a test hlídá, aby se nerozešly.
 
 ## Jak se to používá
 
@@ -22,11 +22,11 @@ Když dlouhou session přerušíte skillem `/break`, zapíše rozdělanou práci
 /continue
 ```
 
-Zavolá se jako první věc v nové session po `/break`. `/break` ho sám doporučí na konci.
+Zavolá se jako první věc v nové session po `/end`, který práci přerušil. `/end` ho sám doporučí na konci.
 
 ## Co nedělá
 
-- Nic nezapisuje – rozdělanou práci ukládá `/break`.
+- Nic nezapisuje – rozdělanou práci ukládá `/end`.
 - Nesestavuje přehled všeho, co v projektu čeká – na to je `/next`.
 - Zápis po dokončení nemaže sám; kdy se smaže, říká zápis.
 
@@ -34,11 +34,11 @@ Zavolá se jako první věc v nové session po `/break`. `/break` ho sám doporu
 
 Je to snadné, zadejte do svého Claude Code tenhle prompt:
 
-> Jdi na https://github.com/jantichy/claude/tree/main/skills/continue a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nainstaluj mi k tomu i skill `/break` – bez něj nemá na co navázat. Nakonec mi řekni, co musím doplnit sám.
+> Jdi na https://github.com/jantichy/claude/tree/main/skills/continue a nainstaluj mi ten skill k sobě do `~/.claude/skills/` – celý adresář i s podadresáři. Stáhni k němu z téhož repozitáře na odpovídající místo pod `~/.claude/` i sdílené soubory ze `skills/` a `standards/`, na které jeho soubory odkazují, a definice typů subagentů, které pouští, z `agents/` do `~/.claude/agents/`. Co už u sebe mám, nepřepisuj a ukaž mi rozdíl. Odkazuje-li na jiný skill, zeptej se mě, jestli ho chci taky. Odkazy na soubory, které v repozitáři nejsou, mi vypiš a u každého se zeptej, jestli ho napojit na můj vlastní soubor, nebo odkaz smazat. Nainstaluj mi k tomu i skill `/end` – bez něj nemá na co navázat. Nakonec mi řekni, co musím doplnit sám.
 
 ---
 
 ### Požadavky a omezení
 
 - Claude Code, projekt v Gitu.
-- Čte jen zápis ve tvaru, který píše `/break`; ručně psanou poznámku o rozdělané práci nenajde.
+- Čte jen zápis ve tvaru, který píše `/end`; ručně psanou poznámku o rozdělané práci nenajde.

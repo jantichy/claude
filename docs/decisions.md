@@ -2550,3 +2550,15 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Zamítnuto – všechno jen do `docs/decisions.md`:** je to jeden dlouhý soubor přes všechny skilly a rozvaha jednoho skillu se v něm hledá grepem napříč tématy. **Zamítnuto – doklad jen škrtnout a nechat ho gitu:** měření, ze kterých údržba vychází (srovnání ceny před a po změně), by se pak dohledávala v historii commitů.
 
 **Co zůstává:** starší záznamy o jednotlivých skillech zůstávají tady, dokud se nepřestěhují. Test chytá jen data; rozvaha bez data (pilotní běhy, „ukázalo se“) se ve skillech dál najde a vyčistí ji až `/slim` po skillech.
+
+### `/break` sloučený do `/end`: uživatel končí session jedním příkazem, přerušení se rozpozná
+
+**Motivace:** uživatel na konci session volil mezi třemi uzavíracími skilly a `/break` se od `/end` lišil jen tím, že před úklidem uložil rozdělanou práci. Volba stála na úsudku uživatele ve chvíli, kdy už myslí jinde, a `/break` stejně celý `/end` pouštěl. Rozhodnuto 2. 11. 2026, provedeno 3. 11. 2026 až po zrychlení `/end` a jeho přeměření, ať se z měření pozná, co za co může.
+
+**Rozhodnutí:** `/end` rozdělanou práci pozná sám a uloží ji do `## Přerušený běh` tvarem, který dřív psal `/break`; mechanika leží v `skills/end/break.md` a načte se jen při nálezu, takže běžný úklid nenaroste. Rozpoznání nestojí žádné kolo navíc: mechanické signály vrací `prepare.py` v témže volání jako inventuru. Otázka padá jen tehdy, když na rozdělanou práci ukazuje jen konverzace, protože mylně zapsané přerušení by `/continue` v nové session rovnou začal provádět. Skilly s frontou volají na prahu kontextu `/end break`, aby rozpoznání nic neodhadovalo. Zápis přerušení se commitne hned za rozpoznáním, před frontou otázek – dřív to drželo pořadí `/break` → `/end`.
+
+**Signály:** běhový soubor v `.claude/run/` **změněný během session** bez klíče `interrupted` a `## Rozhodnuto k zapracování` **změněná proti základu session**. Starší běhový soubor i sekce beze změny patří jiné session; hlásit je by vyrobilo přerušení, které tahle session nemá čím popsat.
+
+**`/merge` volá `/end` bez potlačení rozpoznání.** Zvažovalo se, že `/merge` pustí `/end` v režimu, který přerušení nehledá. Zamítnuto: rozdělaná práce na větvi před mergem je přesně důvod merge zastavit, takže `/merge` se teď zastaví, když úklid přerušení zapíše.
+
+**Co se tím vědomě ztratilo:** samostatný příkaz, kterým uživatel výslovně řekne „přerušuji“. Nahrazuje ho `/end break`, který ale ručně psát nemusí – v nejistém případě se `/end` zeptá sám.

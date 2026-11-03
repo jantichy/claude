@@ -3,7 +3,8 @@
 
 Vrátí všechno, co `/end` potřebuje před prvním zápisem: id session a cestu
 k jejímu transcriptu, základ session, větev a remote, necommitnuté soubory,
-co se během session změnilo, a inventuru transcriptu. Očištěný transcript
+co se během session změnilo, signály rozdělané práce a inventuru transcriptu.
+Očištěný transcript
 uloží do scratchpadu jako `end-clean.txt` a stav pro `finish.py` jako
 `end-state.json`.
 
@@ -26,6 +27,9 @@ sys.path.insert(0, str(Path("~/.claude/skills/end/scripts").expanduser()))
 import extract  # noqa: E402
 
 PROJECTS = Path("~/.claude/projects").expanduser()
+RUN = Path(".claude/run")
+TODOS = ("docs/todo.md", "todo.md", "CLAUDE.md")
+DECIDED = "## Rozhodnuto k zapracování"
 EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 
 
@@ -93,6 +97,64 @@ def report_git(start):
     return root
 
 
+def section(text, heading):
+    """Tělo sekce od nadpisu po další `## `, bez prázdných řádků na okrajích."""
+    lines = text.splitlines()
+    if heading not in lines:
+        return ""
+    body = []
+    for line in lines[lines.index(heading) + 1 :]:
+        if line.startswith("## "):
+            break
+        body.append(line)
+    return "\n".join(body).strip()
+
+
+def run_files(start):
+    """Běhové soubory změněné během session, které `interrupted` nenesou.
+
+    Starší soubor patří běhu jiné session a klíč `interrupted` znamená, že
+    přerušení už zapsané je (`~/.claude/skills/skills.md`, *Běhový stav*).
+    Nečitelný soubor se hlásí, protože o něm nejde říct, že zapsaný je.
+    """
+    if not RUN.is_dir():
+        return []
+    out = []
+    for path in sorted(p for p in RUN.iterdir() if p.is_file()):
+        if path.stat().st_mtime < start.timestamp():
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (ValueError, UnicodeDecodeError):
+            data = None
+        if not (isinstance(data, dict) and "interrupted" in data):
+            out.append(f"běhový soubor {path}")
+    return out
+
+
+def decided(root):
+    """Neprázdná `## Rozhodnuto k zapracování`, do které session zapsala.
+
+    Sekce, která stála beze změny už v základu session, je zapsaná fronta
+    jiné session, ne rozdělaná práce téhle.
+    """
+    out = []
+    for name in TODOS:
+        path = Path(name)
+        if not path.is_file():
+            continue
+        now = section(path.read_text(encoding="utf-8"), DECIDED)
+        before = git("show", f"{root}:./{name}") if root else None
+        if now and now != section(before or "", DECIDED):
+            out.append(f"{name}: {DECIDED}")
+    return out
+
+
+def unfinished(start, root):
+    """Mechanické signály, že session končí uprostřed rozdělané práce."""
+    return run_files(start) + decided(root)
+
+
 def main(argv):
     if len(argv) != 1:
         print("Použití: prepare.py <scratchpad>", file=sys.stderr)
@@ -110,6 +172,8 @@ def main(argv):
         return 2
     print(f"SESSION: {sid}\nTRANSCRIPT: {path}\nZAČÁTEK: {start.isoformat()}")
     root = report_git(start)
+    signals = unfinished(start, root)
+    print("ROZDĚLANÁ PRÁCE:" + ("\n" + "\n".join(signals) if signals else " nic"))
     print(
         f"DONE.MD: {'ano' if Path('docs/done.md').exists() or Path('done.md').exists() else 'ne'}\n"
     )

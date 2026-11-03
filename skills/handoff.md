@@ -48,13 +48,12 @@ Vyhrává první kritérium, které sedí:
 
 **Odrážka, jejíž krok nemá běžet v téhle session, nesmí být jen jméno skillu.** Vypíše se celý řetěz včetně ukončení session, jinak si ho uživatel spustí tady – a přesně to je chyba, kterou to má odchytit.
 
-**Každý odchod ze session vede přes jeden ze tří uzavíracích skillů a uživatel volí jen mezi nimi.** Odchodem je `/clear`, `/compact`, nová session i zavření okna; odrážka, která kterýkoliv z nich jmenuje, jmenuje uzavírací skill před ním. Volí se podle stavu práce:
+**Každý odchod ze session vede přes jeden ze dvou uzavíracích skillů a uživatel volí jen mezi nimi.** Odchodem je `/clear`, `/compact`, nová session i zavření okna; odrážka, která kterýkoliv z nich jmenuje, jmenuje uzavírací skill před ním. Volí se podle stavu práce:
 
-- **`/end`** – práce je zapsatelná a větev pokračuje, nebo se pracuje bez větví
+- **`/end`** – větev pokračuje, nebo se pracuje bez větví; končí-li session uprostřed rozdělané práce, uloží ji sám k navázání přes `/continue`
 - **`/merge`** – větev je hotová; úklid session pouští sám na začátku, takže do hlavní větve jde i to, co úklid zapsal
-- **`/break`** – práce je rozdělaná a pokračuje se v nové session; úklid session pouští sám na konci
 
-**Úklid session (`/end`) tedy proběhne v každém z nich a před `/merge` ani za `/break` se nepíše** – řetěz, který si má uživatel pamatovat, by se mu rozpadl přesně na konci session, kdy už myslí jinde. **Nepodmiňuj uzavírací skill tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/end` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi uzavíracím skillem a odchodem nesmí stát jiná práce**, jinak ji zase nikdo nezapíše.
+**Úklid session (`/end`) tedy proběhne v obou a před `/merge` se nepíše** – řetěz, který si má uživatel pamatovat, by se mu rozpadl přesně na konci session, kdy už myslí jinde. **Nepodmiňuj uzavírací skill tím, jestli „zbylo něco nezapsaného“** – právě to zjišťuje až `/end` a skill, který se na to ptá sám sebe, odpoví „ne“ a session zahodí i s tím, co nezapsal. **Mezi uzavíracím skillem a odchodem nesmí stát jiná práce**, jinak ji zase nikdo nezapíše.
 
 Úplný výčet řetězů – jiná pořadí nedávají smysl. **Bez větví `/merge` odpadá**: pracuje se rovnou v hlavní větvi a do ní práci dostane commit a push, které dělá `/end` sám. Řádky, které se liší jen mergem, tam proto splývají:
 
@@ -65,7 +64,7 @@ Vyhrává první kritérium, které sedí:
 | věc je hotová a dál se nic nedělá | `/merge` | `/end` |
 | věc je hotová a další krok běží nad hlavní větví | `/merge` → `/clear` → `/X` | `/end` → `/clear` → `/X` |
 | ještě musí v nové session proběhnout kontrola | `/end` → `/clear` → `/X`, merge až v té session | `/end` → `/clear` → `/X` |
-| přerušený průchod frontou | `/break` → `/clear` → `/continue` | `/break` → `/clear` → `/continue` |
+| přerušený průchod frontou | `/end` → `/clear` → `/continue` | `/end` → `/clear` → `/continue` |
 | rozdělaná úvaha, která se zapsat nedá | `/end` → `/compact` | `/end` → `/compact` |
 | konec práce | `/end` → zavřít okno; je-li větev hotová, `/merge` místo něj | `/end` → zavřít okno |
 
@@ -102,8 +101,8 @@ Rozhoduje **absolutní velikost kontextu**, ne to, kolik z něj sežral start pr
 | Session | Co s tím |
 |---|---|
 | **do 300k a do 150 volání** | komfortní pásmo, neřeší se nic |
-| **nad 300k** nebo **nad 150 volání** | **nabídni přerušení** – dlouhý průchod nedokončuj, nové velké téma neotevírej; průchod frontou přerušuje `/break` (*Přerušení dlouhého průchodu* níž) |
-| **nad 400k** | přerušení už **nenabízej, doporuč ho rovnou** i s řetězem – u průchodu frontou začíná `/break` (*Přerušení dlouhého průchodu* níž); pokračování tady je volba uživatele, ne výchozí stav |
+| **nad 300k** nebo **nad 150 volání** | **nabídni přerušení** – dlouhý průchod nedokončuj, nové velké téma neotevírej; průchod frontou přerušuje `/end` v režimu `break` (*Přerušení dlouhého průchodu* níž) |
+| **nad 400k** | přerušení už **nenabízej, doporuč ho rovnou** i s řetězem – u průchodu frontou začíná `/end` v režimu `break` (*Přerušení dlouhého průchodu* níž); pokračování tady je volba uživatele, ne výchozí stav |
 
 Volání se počítají jen v hlavní session, ne v subagentech, a obojí se měří od poslední kompaktace.
 
@@ -129,4 +128,4 @@ Jednou odrážkou, ne otázkou přes `AskUserQuestion`: kolik položek zbývá, 
 
 ### Kdo zápis dělá
 
-**Řekne-li uživatel ano, zbytek fronty uloží skill [`/break`](break/SKILL.md)** a běh tím končí. Co se zapisuje, kam, jak se zápis ověří a čím odpověď skončí, drží on – tady zůstává jen to, **kdy** se přerušení nabízí. Přerušený skill pak vlastní závěr nevydává: hotový není a závěr `/break` ho nahrazuje.
+**Řekne-li uživatel ano, pusť [`/end`](end/SKILL.md) nástrojem `Skill` v režimu `break`** – zbytek fronty uloží do `## Přerušený běh`, uklidí session a běh tím končí. Co se zapisuje, kam, jak se zápis ověří a čím odpověď skončí, drží on (`~/.claude/skills/end/break.md`) – tady zůstává jen to, **kdy** se přerušení nabízí. Přerušený skill pak vlastní závěr nevydává: hotový není a závěr `/end` ho nahrazuje.

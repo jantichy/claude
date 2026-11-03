@@ -924,7 +924,7 @@ class CoreParts(unittest.TestCase):
         záminka ztratit kategorii, kterou nikdo jiný nehledá.
         """
         text = body(ROOT / "skills/end/SKILL.md")
-        heading = "## Fáze 5 – Fronta rozhodnutí"
+        heading = "## Fáze 6 – Fronta rozhodnutí"
         self.assertIn(heading, text, "/end přišel o fázi, ve které se fronta probírá")
         phase = text[text.index(heading) :]
         phase = phase[: phase.index("\n## ")]
@@ -932,7 +932,7 @@ class CoreParts(unittest.TestCase):
             self.assertIn(
                 fragment,
                 phase,
-                f"/end, Fáze 5 přišla o {fragment!r} – zbyl jen nadpis",
+                f"/end, Fáze 6 přišla o {fragment!r} – zbyl jen nadpis",
             )
 
         # Síto – ověření kandidáta proti zbytku transcriptu a práh důležitosti –
@@ -3351,7 +3351,7 @@ class DepotCorePartsActuallyCatch(unittest.TestCase):
 
 
 class BreakContinueContract(unittest.TestCase):
-    """/break zapisuje a /continue čte – dvě strany jednoho předání.
+    """/end zapisuje přerušení a /continue ho čte – dvě strany jednoho předání.
 
     /continue je rychlý jen proto, že nic nedomýšlí: blok pozná podle nadpisu
     s „– přerušeno“ a první akci podle návěstí `**Jak pokračovat:**`. Přejmenuje-li
@@ -3365,12 +3365,15 @@ class BreakContinueContract(unittest.TestCase):
     HEADING = "– přerušeno <YYYY-MM-DD>"
 
     def setUp(self):
-        self.break_body = body(ROOT / "skills" / "break" / "SKILL.md")
+        self.break_body = (ROOT / "skills" / "end" / "break.md").read_text(
+            encoding="utf-8"
+        )
+        self.end_body = body(ROOT / "skills" / "end" / "SKILL.md")
         self.continue_body = body(ROOT / "skills" / "continue" / "SKILL.md")
 
     def test_both_sides_name_the_same_label(self):
         self.assertIn(
-            self.LABEL, self.break_body, "/break nepíše návěstí Jak pokračovat doslova"
+            self.LABEL, self.break_body, "/end nepíše návěstí Jak pokračovat doslova"
         )
         self.assertIn(
             self.LABEL, self.continue_body, "/continue nehledá návěstí Jak pokračovat"
@@ -3380,15 +3383,15 @@ class BreakContinueContract(unittest.TestCase):
         self.assertIn(
             self.HEADING,
             self.break_body,
-            "/break nedává bloku nadpis s datem přerušení",
+            "/end nedává bloku nadpis s datem přerušení",
         )
         self.assertIn("### ", self.continue_body, "/continue nepočítá s nadpisem bloku")
 
     def test_chain_leads_to_continue(self):
         self.assertIn(
             "v nové session `/continue`",
-            self.break_body,
-            "Kudy dál u /break nevede na /continue",
+            self.end_body,
+            "Kudy dál u /end nevede po přerušení na /continue",
         )
         row = next(
             line
@@ -3400,7 +3403,7 @@ class BreakContinueContract(unittest.TestCase):
             cells,
             [INTERRUPTED_CHAIN] * 2,
             "handoff.md nevede přerušený průchod v obou sloupcích řetězem "
-            "/break → /clear → /continue",
+            "/end → /clear → /continue",
         )
 
     def test_find_command_reads_section_from_other_worktree(self):
@@ -3447,7 +3450,7 @@ class BreakContinueContract(unittest.TestCase):
     def test_find_command_reads_section_from_subproject(self):
         """Zápis v podprojektu klientské složky se najde i z jejího kořene.
 
-        `/break` píše do `todo.md` projektu, ve kterém session stojí; u podprojektu
+        `/end` píše do `todo.md` projektu, ve kterém session stojí; u podprojektu
         je to jeho podsložka a s vlastním repozitářem ji klientský `.gitignore`
         skrývá. Dřívější příkaz četl jen kořen worktree a ohlásil, že navázat není
         na co (doloženo 12. 10. 2026 v klientské složce). Skrytá složka se naopak
@@ -3500,7 +3503,7 @@ class BreakContinueContractActuallyCatch(unittest.TestCase):
 
 
 HANDOFF = ROOT / "skills" / "handoff.md"
-INTERRUPTED_CHAIN = "`/break` → `/clear` → `/continue`"
+INTERRUPTED_CHAIN = "`/end` → `/clear` → `/continue`"
 
 
 def queue_skills() -> set:
@@ -3548,21 +3551,21 @@ def handoff_defects(text: str, name: str, in_cycle: bool) -> list:
             for line in exits_without_closer(text)
         ]
     out += [
-        f"`/end` vedle `/merge` nebo `/break`, které ho pouštějí samy: {line}"
+        f"`/end` vedle `/merge`, který ho pouští sám: {line}"
         for line in redundant_end(navigation_lines(text))
     ]
-    # `/break` je sám krokem před `/continue`, jeho odrážka ho jmenovat nemusí.
-    if name != "break":
+    # `/end` je sám krokem před `/continue`, jeho odrážka ho jmenovat nemusí.
+    if name != "end":
         out += [
-            f"`/continue` bez `/break` před ním: {line}"
-            for line in continue_without_break(navigation_lines(text))
+            f"`/continue` bez `/end` před ním: {line}"
+            for line in continue_without_end(navigation_lines(text))
         ]
     return out
 
 
 EXIT = re.compile(r"`/clear`|`/compact`|nov[éá] session")
-CLOSERS = ("end", "merge", "break")
-CLOSER = re.compile(r"`/(?:end|merge|break)`")
+CLOSERS = ("end", "merge")
+CLOSER = re.compile(r"`/(?:end|merge)`")
 
 
 def navigation_lines(text: str) -> list:
@@ -3588,7 +3591,7 @@ def exits_without_closer(text: str) -> list:
     """Odrážky, které opouštějí session a uzavírací skill před tím nejmenují.
 
     Odchodem je `/clear`, `/compact` i nová session, uzavíracím skillem `/end`,
-    `/merge` nebo `/break` – poslední dva pouštějí úklid session samy. Pořadí
+    nebo `/merge`, který úklid session pouští sám. Pořadí
     drží `handoff.md`, *Řetěz, který nepatří do téhle session*, i s výčtem
     všech platných řetězů. Bez kontroly se z odrážky úklid vytratí jako první,
     protože skill si ho podmíní dojmem, že nic nezapsaného nezbylo – a session
@@ -3606,31 +3609,27 @@ def exits_without_closer(text: str) -> list:
 
 
 def redundant_end(lines: list) -> list:
-    """Odrážky, které jmenují `/end` vedle `/merge` nebo `/break`.
+    """Odrážky, které jmenují `/end` vedle `/merge`.
 
-    Oba úklid session pouštějí samy, takže `/end` vedle nich je pozůstatek
+    `/merge` úklid session pouští sám, takže `/end` vedle něj je pozůstatek
     starého řetězu – a uživatel, který ho poslechne, pustí úklid dvakrát.
     """
-    return [
-        line[:80]
-        for line in lines
-        if "`/end`" in line and ("`/merge`" in line or "`/break`" in line)
-    ]
+    return [line[:80] for line in lines if "`/end`" in line and "`/merge`" in line]
 
 
-def continue_without_break(lines: list) -> list:
-    """Řádky, které vedou na `/continue` a `/break` před ním nejmenují.
+def continue_without_end(lines: list) -> list:
+    """Řádky, které vedou na `/continue` a `/end` před ním nejmenují.
 
-    `/continue` čte jen zápis, který tam nechal `/break`; bez něj nenajde nic,
-    nebo – hůř – naváže na starší přerušení, než o kterém si uživatel myslí, že
-    na něj navazuje.
+    `/continue` čte jen zápis přerušení, který tam nechal `/end`; bez něj
+    nenajde nic, nebo – hůř – naváže na starší přerušení, než o kterém si
+    uživatel myslí, že na něj navazuje.
     """
     out = []
     for line in lines:
         # Každý výskyt zvlášť: řádek tabulky nese řetěz ve dvou sloupcích
-        # a `/break` v jednom nesmí krýt druhý.
+        # a `/end` v jednom nesmí krýt druhý.
         for chunk in line.split("`/continue`")[:-1]:
-            if "`/break`" not in chunk:
+            if "`/end`" not in chunk:
                 out.append(line[:80])
                 break
     return out
@@ -3674,17 +3673,16 @@ class HandoffContract(unittest.TestCase):
             offenders, "práh kontextu opsaný do skillu: " + ", ".join(offenders)
         )
 
-    def test_handoff_chains_to_continue_start_with_break(self):
+    def test_handoff_chains_to_continue_start_with_end(self):
         """Řádek tabulky řetězů i vzorová odrážka v handoff.md, které končí
-        `/continue`, začínají `/break` – skilly z nich řetěz opisují."""
+        `/continue`, začínají `/end` – skilly z nich řetěz opisují."""
         lines = [
             line for line in HANDOFF.read_text().splitlines() if "`/continue`" in line
         ]
         self.assertTrue(lines, "handoff.md nevede na /continue vůbec")
         self.assertFalse(
-            continue_without_break(lines),
-            "řetěz na /continue bez /break: "
-            + "; ".join(continue_without_break(lines)),
+            continue_without_end(lines),
+            "řetěz na /continue bez /end: " + "; ".join(continue_without_end(lines)),
         )
 
     def test_no_dialog_at_the_end(self):
@@ -3715,14 +3713,14 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
         self.assertTrue(exits_without_closer(text))
 
     def test_closer_first_passes(self):
-        for closer in ("end", "merge", "break"):
+        for closer in CLOSERS:
             text = f"**Kudy dál**\n\n- `/{closer}`, pak `/clear`\n- `/review`\n"
             self.assertFalse(exits_without_closer(text), closer)
 
-    def test_end_next_to_merge_or_break_is_reported(self):
+    def test_end_next_to_merge_is_reported(self):
         for line in (
             "- `/end`, pak `/merge`, pak `/clear`",
-            "- `/break`, pak `/end`, pak `/clear`, a v nové session `/continue`",
+            "- `/merge`, pak `/end`, pak `/clear`",
         ):
             text = "**Kudy dál**\n\n" + line + "\n"
             self.assertTrue(
@@ -3733,8 +3731,10 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
                 line,
             )
 
-    def test_continue_without_break_is_reported(self):
-        text = "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
+    def test_continue_without_end_is_reported(self):
+        text = (
+            "**Kudy dál**\n\n- `/merge`, pak `/clear`, a v nové session `/continue`\n"
+        )
         self.assertTrue(
             any(
                 d.startswith("`/continue` bez")
@@ -3742,28 +3742,26 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
             )
         )
 
-    def test_break_in_one_table_column_does_not_cover_the_other(self):
+    def test_end_in_one_table_column_does_not_cover_the_other(self):
         lines = [
-            "| přerušený průchod frontou | `/break` → `/end` → `/clear` → `/continue` "
-            "| `/end` → `/clear` → `/continue` |"
+            "| přerušený průchod frontou | `/end` → `/clear` → `/continue` "
+            "| `/clear` → `/continue` |"
         ]
-        self.assertTrue(continue_without_break(lines))
+        self.assertTrue(continue_without_end(lines))
 
     def test_navigation_mentioned_in_prose_does_not_hide_the_block(self):
         text = (
             "Odkaz na blok **Kudy dál** uprostřed věty.\n\n## Fáze\n\n"
-            "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
+            "**Kudy dál**\n\n- `/clear`, a v nové session `/continue`\n"
         )
-        self.assertTrue(continue_without_break(navigation_lines(text)))
+        self.assertTrue(continue_without_end(navigation_lines(text)))
 
-    def test_break_after_continue_is_reported(self):
-        lines = ["- `/end`, pak `/clear`, `/continue`, a když nic nenajde, `/break`"]
-        self.assertTrue(continue_without_break(lines))
+    def test_end_after_continue_is_reported(self):
+        lines = ["- `/clear`, `/continue`, a když nic nenajde, `/end`"]
+        self.assertTrue(continue_without_end(lines))
 
-    def test_break_before_continue_passes(self):
-        text = (
-            "**Kudy dál**\n\n- `/break`, pak `/clear`, a v nové session `/continue`\n"
-        )
+    def test_end_before_continue_passes(self):
+        text = "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
         self.assertFalse(
             any(
                 d.startswith("`/continue` bez")
@@ -3771,12 +3769,12 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
             )
         )
 
-    def test_break_itself_need_not_name_break(self):
-        text = "**Kudy dál**\n\n- `/end`, pak `/clear`, a v nové session `/continue`\n"
+    def test_end_itself_need_not_name_end(self):
+        text = "**Kudy dál**\n\n- `/clear`, a v nové session `/continue`\n"
         self.assertFalse(
             any(
                 d.startswith("`/continue` bez")
-                for d in handoff_defects(text, "break", False)
+                for d in handoff_defects(text, "end", False)
             )
         )
 

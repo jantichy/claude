@@ -1,6 +1,7 @@
 ---
 name: end
-description: Skill se použije, když uživatel zadá "/end", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je. Na rozdíl od `/consistency`, který se ptá, jestli si projekt sedí sám se sebou, tenhle skill vytěžuje konverzaci.
+description: Skill se použije, když uživatel zadá "/end", nebo chce před koncem či kompaktací session zapsat všechno, co se v ní domluvilo a zjistilo, do souborů – aby nová session navázala bez ztráty kontextu a nevycházela z něčeho, co už neplatí. Zároveň dohledá témata, která v konverzaci zůstala bez vypořádání, a probere je. Končí-li session uprostřed rozdělané práce – fronty skillu nebo práce mimo skill, "přeruš to", "zapiš, co zbývá, a skončíme", "pokračujeme v nové session" –, uloží ji navíc do sekce Přerušený běh v docs/todo.md tak, aby na ni v nové session rovnou navázal /continue; režim "break" to vynutí bez rozpoznávání. Na rozdíl od `/consistency`, který se ptá, jestli si projekt sedí sám se sebou, tenhle skill vytěžuje konverzaci.
+argument-hint: [session|break]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
@@ -15,13 +16,17 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 3. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
 4. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
 
+**Končí-li session uprostřed rozdělané práce**, uloží ji navíc jako frontu k navázání: do `docs/todo.md`, sekce `## Přerušený běh`, na kterou v nové session naváže `/continue` (*Fáze 3*). Rozdělanou prací je fronta kteréhokoliv skillu i práce mimo skill.
+
+**Režimy jsou dva.** **`session`** je výchozí a platí i bez argumentu: úklid session, ve kterém skill rozdělanou práci rozpozná sám. **`break`** říká, že rozdělaná práce je jistě – volá ho tak skill s frontou, když uživatel na prahu kontextu přijme přerušení (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*), a rozpoznání pak nic neodhaduje.
+
 **Záruka číslo 1 se měří, ne tvrdí.** Inventura transcriptu vypíše **prompty** – všechno, co uživatel napsal, včetně zpráv poslaných uprostřed odpovědi a odpovědí z dialogu `AskUserQuestion` – a každý dostane v evidenci stav. Pokrytí je pak počet, který ověří skript, ne dojem.
 
 Skill je **opakovatelný**; druhý běh vytěžuje transcript celý znovu a cenu má hlavně tam, kde od prvního přibyla práce.
 
 **Uklízí se vždycky ta session, ve které stojíš** – transcript se najde podle id session z cesty ke scratchpadu, takže není co vybírat.
 
-Do *Životního cyklu projektu* nepatří (`~/.claude/standards/lifecycle.md`, *Session a větev do cyklu nepatří*): je to jeden ze tří skillů, kterými session končí, a **po něm už v session nic nestojí**, protože co zapíše, přežije ztrátu kontextu. Běží i uprostřed rozdělané práce.
+Do *Životního cyklu projektu* nepatří (`~/.claude/standards/lifecycle.md`, *Session a větev do cyklu nepatří*): je to jeden ze dvou skillů, kterými session končí, a **po něm už v session nic nestojí**, protože co zapíše, přežije ztrátu kontextu. Běží i uprostřed rozdělané práce.
 
 ## Co skill nedělá
 
@@ -29,23 +34,26 @@ Do *Životního cyklu projektu* nepatří (`~/.claude/standards/lifecycle.md`, *
 
 **Neposuzuje kvalitu dokumentace.** Věta, která zápisem přestala platit, se chytí až v příštím `/consistency`; odkazy a kotvy po zápisu hlídá skript.
 
-**Není to audit projektu ani technická kontrola.** Nespouštěj `/consistency`, `/code-review` ani `/attack` – ty volá uživatel zvlášť – a testy, lint ani build nepouštěj **jako revizi projektu**. Co skill sám napsal, se ale před commitem ověřuje (*Fáze 6*).
+**Není to audit projektu ani technická kontrola.** Nespouštěj `/consistency`, `/code-review` ani `/attack` – ty volá uživatel zvlášť – a testy, lint ani build nepouštěj **jako revizi projektu**. Co skill sám napsal, se ale před commitem ověřuje (*Fáze 7*).
 
-**Nemerguje a `/merge` nevolá – je to obráceně.** `/merge` pouští tenhle skill na svém začátku a `/break` na svém konci (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*). **Volá-li tě některý z nich, blok *Kudy dál* vynech** – odpověď uzavře on.
+**Nemerguje a `/merge` nevolá – je to obráceně.** `/merge` pouští tenhle skill na svém začátku (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*). **Volá-li tě `/merge`, blok *Kudy dál* vynech** – odpověď uzavře on. Volá-li tě skill s frontou v režimu `break`, blok ponech: vede na `/continue` a přerušený skill vlastní závěr nevydává.
+
+**V přerušené práci nepokračuje.** Navázání dělá `/continue` v nové session – je to druhá strana téhož předání a čte přesně to, co *Fáze 3* zapíše. Co se do přerušení nevypořádalo, zůstane otevřené.
 
 ## Jak je to postavené uvnitř
 
-- **`scripts/prepare.py`** – jedním voláním najde transcript, základ session, větev, remote, necommitnuté soubory a commity session, uloží očištěný transcript do `<scratchpad>/end-clean.txt` a vypíše inventuru: co se čte, co ne, kompaktace, odložené výstupy a číslovaný seznam promptů.
+- **`scripts/prepare.py`** – jedním voláním najde transcript, základ session, větev, remote, necommitnuté soubory a commity session, uloží očištěný transcript do `<scratchpad>/end-clean.txt`, nahlásí signály rozdělané práce a vypíše inventuru: co se čte, co ne, kompaktace, odložené výstupy a číslovaný seznam promptů.
 - **`scripts/finish.py`** – jedním voláním ověří evidenci promptů proti transcriptu **v tu chvíli** (i s odpověďmi z dialogů úklidu), pustí `~/.claude/skills/links.py` nad Markdowny změněnými od základu session a `~/.claude/skills/order.py` nad změněnými `done.md` a `decisions.md`. Při čistém výsledku vypíše jeden řádek.
 - **`scripts/extract.py`** – očištění a inventura transcriptu; volá ho `prepare.py`.
-- **[`obligations.md`](obligations.md)** – co v session zakládá povinnost zápisu, kam co patří a v jakých stavech položku najdeš. Referenční tabulka pro *Fázi 3*.
+- **[`obligations.md`](obligations.md)** – co v session zakládá povinnost zápisu, kam co patří a v jakých stavech položku najdeš. Referenční tabulka pro *Fázi 4*.
 - **[`out-of-scope.md`](out-of-scope.md)** – jak se naloží s položkami mimo rozsah úklidu.
+- **[`break.md`](break.md)** – jak se zapíše, ověří a commitne přerušená práce. Čte se jen v *Fázi 3*, když rozdělanou práci najde, takže běžný úklid nezdržuje.
 
 **Skripty jsou implementační detail, ne rozhraní** – přepínače, výstup i existence se smí změnit. Nesmí se tiše změnit **pravidlo za nimi**: mechanické vady a počty hledá deterministický nástroj, ne model (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*, pravidlo nula), a pokrytí transcriptu se měří. Vynucovací vrstvu drží `tests/test_end.py`.
 
 **Skill běží v hlavní session, ne v subagentovi** – hlavní session má konverzaci v kontextu zaplacenou, agent by ji rekonstruoval z transcriptu a nálezy by šly přes prostředníka.
 
-**Každé kolo mezi tebou a nástrojem stojí nad velkým kontextem končící session sekundy.** Proto: nezávislá volání dávej do jedné odpovědi paralelně, zápisy do více souborů slučuj do jednoho volání a kontroly i commit pouštěj jedním příkazem, jak to říká *Fáze 6*.
+**Každé kolo mezi tebou a nástrojem stojí nad velkým kontextem končící session sekundy.** Proto: nezávislá volání dávej do jedné odpovědi paralelně, zápisy do více souborů slučuj do jednoho volání a kontroly i commit pouštěj jedním příkazem, jak to říká *Fáze 7*.
 
 ## Rozsah
 
@@ -75,9 +83,10 @@ python3 ~/.claude/skills/end/scripts/prepare.py <scratchpad>
 
 Z výstupu platí:
 
-- **`ZÁKLAD SESSION`** – commit, na kterém session stála, než cokoliv zapsala; podle něj se ve *Fázi 3* pozná, co se během session změnilo.
+- **`ZÁKLAD SESSION`** – commit, na kterém session stála, než cokoliv zapsala; podle něj se ve *Fázi 4* pozná, co se během session změnilo.
 - **`NECOMMITNUTO`** – soubory, které nemůžeš připsat téhle session, pokud jsi do nich sám nezapsal: nad repozitářem běžívá víc session naráz. **Žádný z nich nekomituj**, pokud jsi do něj nezapsal.
 - **`COMMITY SESSION`** – co se během session změnilo; nečti to znovu po souborech.
+- **`ROZDĚLANÁ PRÁCE`** – běhové soubory v `.claude/run/` změněné během session bez klíče `interrupted` a `## Rozhodnuto k zapracování`, do které session zapsala. Rozhoduje se podle nich v *Fázi 3*.
 - **Inventura** – prompty, kompaktace, odložené výstupy, co se nečte.
 
 Navíc si zjisti, ať v témže kole paralelně, nebo z kontextu:
@@ -111,7 +120,7 @@ Tohle je jádro: vychází z něj všechno ostatní. Vytěž **osm kategorií**:
 3. **Odvedená práce** – co se reálně změnilo v souborech a kódu.
 4. **Nedořešené** – **vědomě** odložené úkoly, „na to se ještě podíváme“.
 5. **Postřehy mimo hlavní téma** – „ať se to neztratí“, „poznamenej si to“; zapadají nejčastěji.
-6. **Korekce** – kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze.** Věty, které v nějaké chvíli platily a padly, si drž jako samostatný seznam – ve *Fázi 3* podle nich hledáš, jestli někde nezůstaly tvrzené jako platné.
+6. **Korekce** – kde uživatel změnil směr, opravil tě nebo něco zavrhl. **Platí vždy poslední verze.** Věty, které v nějaké chvíli platily a padly, si drž jako samostatný seznam – ve *Fázi 4* podle nich hledáš, jestli někde nezůstaly tvrzené jako platné.
 7. **Nevypořádaná témata** – co v konverzaci padlo a nikdy se nedořešilo. Podrobně níž.
 8. **Co zůstalo rozbité nebo nedodělané** – padající test, rozpracovaná změna, krok, který selhal. **Neověřuj to spuštěním** a neopravuj; ber jen to, co v session zaznělo. Bez téhle kategorie by běh nad větví s padajícím testem ohlásil „všechno zapsané“.
 
@@ -127,7 +136,7 @@ Rozdíl proti kategorii 4: tam jde o odložení, které někdo vyslovil; tady o 
 
 ### Jak ověřit, že to opravdu není vypořádané
 
-**U každého kandidáta projdi zbytek konverzace až do konce** a hledej, jestli se to nevyřešilo jinudy: pozdější odpovědí jinými slovy, změnou v souborech, která z otázky udělala fakt, nebo rozhodnutím, které téma zrušilo. Do fronty pouštěj jen to, co sítem projde, a **u každého si drž, co jsi prověřil** – ve *Fázi 5* to uživateli řekneš.
+**U každého kandidáta projdi zbytek konverzace až do konce** a hledej, jestli se to nevyřešilo jinudy: pozdější odpovědí jinými slovy, změnou v souborech, která z otázky udělala fakt, nebo rozhodnutím, které téma zrušilo. Do fronty pouštěj jen to, co sítem projde, a **u každého si drž, co jsi prověřil** – ve *Fázi 6* to uživateli řekneš.
 
 ### Práh důležitosti
 
@@ -135,17 +144,34 @@ Nepředkládej řečnické otázky, zdvořilostní nabídky („mám to ještě 
 
 ------
 
-## Fáze 3 – Evidence a konfrontace se soubory
+## Fáze 3 – Přerušená práce
+
+**Rozhodni, jestli session končí uprostřed rozdělané práce** – jestli zbývá fronta nebo rozepsaná práce, na kterou má nová session navázat. Platí první řádek, který sedí:
+
+| Situace | Co uděláš |
+|---|---|
+| režim `break` | rozdělaná práce je – volající skill nabídl přerušení a uživatel ho přijal; nic neodhaduj |
+| `ROZDĚLANÁ PRÁCE` hlásí signál | rozdělaná práce je. **Běhový soubor skillu, který v téhle session neběžel**, je souběžná práce jiné session – nech ho být a rozhoduj podle zbytku tabulky |
+| na rozdělanou práci ukazuje jen konverzace – fronta skillu se nedošla, změna zůstala v půli, rozprava skončila s otevřenými otázkami | **jedna otázka** přes `AskUserQuestion`, `header` `Přerušení`: zapsat jako přerušený běh, na který naváže `/continue`, nebo jen úklid, ve kterém nedodělky jdou do `todo.md` jako úkoly. Ptáš se proto, že mylně zapsaný přerušený běh by `/continue` v nové session rovnou začal provádět |
+| nic z toho | rozdělaná práce není, pokračuj *Fází 4* |
+
+**Vědomě odložený úkol (kategorie 4) rozdělaná práce není** – jde do `todo.md` jako vždy. Otázku polož jen nad prací, kterou session měla rozjetou, když skončila; nad samými odloženými úkoly by zdržovala každý běžný úklid.
+
+**Je-li rozdělaná práce, načti si [`break.md`](break.md) a podle něj ji zapiš, ověř a commitni hned teď** – před evidencí i frontou rozhodnutí, ať je zápis v gitu, i kdyby úklid dál nedoběhl. Prompty, které zápis pokryl, mají v evidenci stav *zapsáno* a do fronty rozhodnutí se neopakují: položky přerušené fronty rozhodne nová session, ne úklid.
+
+------
+
+## Fáze 4 – Evidence a konfrontace se soubory
 
 **Ke každému promptu z inventury urči stav** – právě jeden z těchto, nic mezi nimi:
 
 - **zapsáno** – je v souboru; uveď který,
 - **přebito** – později v session to přestalo platit,
-- **k rozhodnutí** – jde do *Fáze 5*,
-- **mimo rozsah** – jde do *Fáze 5* podle [`out-of-scope.md`](out-of-scope.md),
+- **k rozhodnutí** – jde do *Fáze 6*,
+- **mimo rozsah** – jde do *Fáze 6* podle [`out-of-scope.md`](out-of-scope.md),
 - **bez zápisu** – nic k zapsání: dotaz, příkaz, potvrzení.
 
-Stavy si zatím drž v hlavě; do souboru je zapíšeš jednou, až budou konečné (*Fáze 6*). **Žádný prompt nesmí zůstat bez stavu** – skript to v závěru ověří proti transcriptu.
+Stavy si zatím drž v hlavě; do souboru je zapíšeš jednou, až budou konečné (*Fáze 7*). **Žádný prompt nesmí zůstat bez stavu** – skript to v závěru ověří proti transcriptu.
 
 Pak **pro každou položku z *Fáze 2* ověř čtením souborů, jestli už je zapsaná a v jakém stavu.** Stavy, cílová místa a co dělat s chybějícím souborem drží [`obligations.md`](obligations.md).
 
@@ -155,13 +181,13 @@ Pak **pro každou položku z *Fáze 2* ověř čtením souborů, jestli už je z
 
 ------
 
-## Fáze 4 – Zápis toho, co má jedinou podobu
+## Fáze 5 – Zápis toho, co má jedinou podobu
 
-**Zápisy proběhnou až za poslední otázkou *Fáze 5*** – tady si je jen připrav i s hotovým textem a hned pokračuj frontou, ať uživatel na první otázku nečeká (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). Je-li fronta prázdná, zapiš hned.
+**Zápisy proběhnou až za poslední otázkou *Fáze 6*** – tady si je jen připrav i s hotovým textem a hned pokračuj frontou, ať uživatel na první otázku nečeká (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). Je-li fronta prázdná, zapiš hned.
 
 **Zapiš všechno, co má jedinou zjevně správnou podobu**, a neodkládej to do fronty: chybějící zápis dohody, zastaralá věta proti tomu, co v session padlo, duplicita s jasným vítězem. **Nejistotu nejdřív zkus odstranit** – jde-li odpověď dohledat v repozitáři, je to práce, ne otázka.
 
-**Nezapisuj to, co závisí na nevypořádaném tématu** z kategorie 7 – odpověď uživatele mění, co se zapíše. Takové položce připrav **hotový text zápisu ke každé variantě** a nech ji do *Fáze 5*.
+**Nezapisuj to, co závisí na nevypořádaném tématu** z kategorie 7 – odpověď uživatele mění, co se zapíše. Takové položce připrav **hotový text zápisu ke každé variantě** a nech ji do *Fáze 6*.
 
 **Piš čistě, systematicky a přímočaře.** Je-li okolní text rozbředlý, redundantní nebo si protiřečí, přestrukturuj ho – to je smyslem úklidu.
 
@@ -171,9 +197,9 @@ Pak **pro každou položku z *Fáze 2* ověř čtením souborů, jestli už je z
 
 ------
 
-## Fáze 5 – Fronta rozhodnutí
+## Fáze 6 – Fronta rozhodnutí
 
-**Průchod jde po kolech** – nejdřív všechny otázky, pak zapracování bez uživatele, kam patří i zápisy z *Fáze 4*; co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). Odpovědi se během ptaní zapisují do `## Rozhodnuto k zapracování`, ne rovnou do cílových souborů. **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break`.
+**Průchod jde po kolech** – nejdřív všechny otázky, pak zapracování bez uživatele, kam patří i zápisy z *Fáze 5*; co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). Odpovědi se během ptaní zapisují do `## Rozhodnuto k zapracování`, ne rovnou do cílových souborů. **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zapiš zbytek fronty jako přerušený běh podle [`break.md`](break.md) a pokračuj *Fází 7*.
 
 Sem patří všechno, co potřebuje uživatelovu volbu: **nevypořádaná témata** z kategorie 7, **položky, u kterých je z čeho vybírat** (nejasné zařazení, dvě obhajitelné podoby zápisu, dvě protichůdné informace bez vítěze) a **položky mimo rozsah** – starší dluh a to, co ze session zůstalo rozbité. **Je to jedna fronta**; zdroj položky je metadatum, ne důvod k dalšímu kolu.
 
@@ -219,7 +245,7 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na položku, `
 
 ------
 
-## Fáze 6 – Git a závěr
+## Fáze 7 – Git a závěr
 
 **Připrav tři soubory jedním voláním:**
 
@@ -249,7 +275,7 @@ python3 ~/.claude/skills/end/scripts/finish.py <scratchpad> && <krok kontraktu, 
 
 - **Kontrola `finish.py`** – `0` čisto, `1` nálezy (prompt bez stavu, mrtvý odkaz, datum mimo pořadí), `2` chyba volání. Nálezy oprav a pusť příkaz znovu; pořadí opravuj **přesunem celého bloku záznamu**, ne přepsáním data.
 - **Krok kontraktu** – ten krok *Kontraktu příkazů* projektového `CLAUDE.md`, který prověřuje soubory, do kterých se zapsalo, typicky `test` u sady hlídající tvar dokumentace. Hlídají-li testy jen kód, nepouští se nic. **Selže-li na tom, co jsi zapsal**, oprav to; **selže-li na něčem, do čeho jsi nesahal**, není to nález úklidu – vyjmi krok z příkazu a uveď to v závěru.
-- **Commituj jmenované cesty**, do kterých se v session zapsalo – ne `git add -A` ani adresář. **Rozdělaná práce session se commituje i nedodělaná**, zvlášť a s tím ve zprávě – po `/break` ji nikdo jiný necommitne. Soubory z `NECOMMITNUTO`, do kterých jsi nezapsal, nech být.
+- **Commituj jmenované cesty**, do kterých se v session zapsalo – ne `git add -A` ani adresář. **Rozdělaná práce session se commituje i nedodělaná**, zvlášť a s tím ve zprávě – po zápisu přerušení ji nikdo jiný necommitne. Soubory z `NECOMMITNUTO`, do kterých jsi nezapsal, nech být.
 - **Pokračuje-li uživatel v práci nad týmž repozitářem souběžně**, zeptej se ho, čeho se dotkl, a ty cesty z commitu vyjmi.
 - **`git status` musí vyjít čistý** – kromě cizí rozdělané práce, kterou jsi vyňal. Co tam být nemá, patří do `.gitignore`.
 - *Worktree layout:* pracuj ve worktree větve, ne v kořeni kontejneru; navíc zkontroluj `git -C <container>/main status` – rozpracované v `main/` ohlas.
@@ -262,6 +288,7 @@ python3 ~/.claude/skills/end/scripts/finish.py <scratchpad> && <krok kontraktu, 
 
 Zapsáno: <jedna věta – kolik čeho a kam, např. „2 dohody do decisions.md, 1 úkol do todo.md“>
 
+<jen po zápisu přerušené práce: Přerušeno: <skill a rozsah, nebo popis práce> · leží ve větvi `<branch>`, `<pracovní adresář>` · `## Přerušený běh` v `<todo.md nebo CLAUDE.md>` – <N> položek z <N> zbývajících · před pokračováním: <co předchází, nebo „nic“> · commit `<hash>`>
 <jen při selhání: co selhalo – kontrola, kontrakt, push, prompty bez stavu>
 <jen mimořádné meze: nepřečtená část transcriptu, neotevřený odložený výstup, snímky obrazovky>
 ```
@@ -270,13 +297,14 @@ Vypisuj to jako **Markdown, ne jako blok kódu**. **Řádek *Zapsáno* vynech**,
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Ze session je všechno zapsané a ověřené – prompty N/N, můžeš <zavřít session | přimergovat větev>.`
+- `Ze session je všechno zapsané a ověřené – prompty N/N, můžeš <zavřít session | přimergovat větev | pokračovat v nové session>.`
 - `Zapsané to není celé – brání tomu: <konkrétní seznam: prompty bez stavu, selhaná kontrola, nepřečtená část transcriptu>.`
 
 **Nepřečtená část transcriptu patří do druhé věty** – prompty `N/M` znamenají, že úklid úplný není. Meze z principu (myšlení, výstupy čtecích nástrojů) hotovost nezpochybňují.
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
+- **zapsal-li se přerušený běh** – `/clear`, a v nové session `/continue`: naváže rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění
 - **stojíš-li na pushnuté větvi a v `docs/todo.md` není `## Přerušený běh`** – `/merge`, je-li větev hotová; úklid, který právě proběhl, pozná podle průchodu v `done.md` a znovu ho nepustí. Nabídni to jednou odrážkou, neptej se na to dialogem
 - **zbyla-li rozbitá věc** – pojmenuj ji a řekni, že ji vyřeší příští session, nebo ji doděláte teď
 - **jinak** – zavřít session; a míří-li práce dál na kontrolní krok, patří do odrážky celý řetěz s `/clear`, protože tenhle skill běží právě proto, že kontext nabyl

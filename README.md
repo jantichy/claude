@@ -108,7 +108,7 @@ První skupina provází každou session od začátku po konec. Další dvě tvo
 
 ### Začátek a konec session
 
-Čím session začíná a čím končí. Na začátku si vyberete, s čím pokračovat, nebo navážete na přerušenou práci; na konci napíšete jen jeden ze tří příkazů podle toho, jak práce stojí – úklid session v sobě mají všechny tři, takže řetěz, co má jít před čím, si pamatovat nemusíte. Stojí tu v tomhle pořadí, ne abecedně, a do životního cyklu nepatří – pouštějí se podle toho, jak session končí, ne podle fáze projektu.
+Čím session začíná a čím končí. Na začátku si vyberete, s čím pokračovat, nebo navážete na přerušenou práci; na konci napíšete jen jeden ze dvou příkazů podle toho, jak práce stojí – úklid session v sobě mají oba, takže řetěz, co má jít před čím, si pamatovat nemusíte. Stojí tu v tomhle pořadí, ne abecedně, a do životního cyklu nepatří – pouštějí se podle toho, jak session končí, ne podle fáze projektu.
 
 #### [`/next`](skills/next/) – s čím pokračovat, když se k projektu vrátím
 
@@ -116,19 +116,15 @@ Na začátku session posbírá všechno, co v projektu čeká – seznam úkolů
 
 #### [`/continue`](skills/continue/) – navázat na přerušenou práci hned
 
-V nové session po `/break` najde zápis přerušené práce, přejde do adresáře, kde leží, krátce shrne, kde se stojí, a rovnou pokračuje tím, co zápis určil jako první krok – bez sbírání a řazení všeho ostatního, co v projektu čeká. Je to druhá strana `/break` a obě stojí na stejném tvaru zápisu.
+V nové session po `/end`, který práci přerušil, najde zápis přerušené práce, přejde do adresáře, kde leží, krátce shrne, kde se stojí, a rovnou pokračuje tím, co zápis určil jako první krok – bez sbírání a řazení všeho ostatního, co v projektu čeká. Je to druhá strana přerušení v `/end` a obě stojí na stejném tvaru zápisu.
 
 #### [`/end`](skills/end/) – ať po mně zůstane čisto a jasno
 
-Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. **Úplnost přitom měří, ne tvrdí:** transcript si nejdřív skriptem očistí od balastu, který je v něm z devíti desetin, vytáhne z něj seznam všech míst, kde jsem něco napsal, a u každého odškrtne, co se s tím stalo – v závěru pak stojí poměr, který jde ověřit, a vedle něj jmenovitě to, co se nepřečetlo. Všechno, co potřebuje moje rozhodnutí, projde jednou frontou podle váhy a nabídne, co dál.
+Před opuštěním nebo zkompaktováním session přečte celou konverzaci – včetně části, kterou už compact vyhodil z kontextu – a zapíše všechno dohodnuté tam, kam to patří, i s důvody a zavrženými variantami. Pak hledá druhou věc: co v konverzaci zůstalo viset bez vypořádání, a probere to se mnou, dokud je koho se ptát. **Úplnost přitom měří, ne tvrdí:** transcript si nejdřív skriptem očistí od balastu, který je v něm z devíti desetin, vytáhne z něj seznam všech míst, kde jsem něco napsal, a u každého odškrtne, co se s tím stalo – v závěru pak stojí poměr, který jde ověřit, a vedle něj jmenovitě to, co se nepřečetlo. Všechno, co potřebuje moje rozhodnutí, projde jednou frontou podle váhy a nabídne, co dál. **Končím-li uprostřed rozdělané práce**, pozná to sám a zapíše do seznamu úkolů všechno, co nová session potřebuje, aby pokračovala, jako by ji nikdo nepřerušil: kde práce leží, co jí musí předcházet, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením. Zápis přečte zpátky, ověří kontrolami projektu, commitne a doporučí novou session, ve které na něj `/continue` rovnou naváže.
 
 #### [`/merge`](skills/merge/) – dokončení větve, ne jeden příkaz
 
 „Přimerguj to“ vypadá jako jediný příkaz, ale je to postup, ve kterém se dá přijít o práci – nejčastěji tak, že se dvě větve rozejdou obsahově, ne textově, merge projde bez konfliktu a rozbitý stav vznikne poprvé až na hlavní větvi, kde na něm stojí všichni ostatní. Tenhle skill to dělá obráceně: hlavní větev nejdřív přihraje do té pracovní, tam nechá vyřešit konflikty a pustí kontroly projektu, a do hlavní pustí jen to, co prošlo. Pak slučuje se zprávou, která říká, co větev přinesla, a uklízí – ale až po ověřeném mergi, nikdy souběžně s ním. Úklid session přitom pustí sám na začátku, takže před ním `/end` psát nemusíte – a sám od sebe se nespustí nikdy.
-
-#### [`/break`](skills/break/) – přerušit rozdělanou práci bez ztráty kontextu
-
-Když je session dlouhá nebo se musím k práci vrátit jindy, zapíše do seznamu úkolů všechno, co nová session potřebuje, aby pokračovala, jako by ji nikdo nepřerušil: kde práce leží, co jí musí předcházet, co se už udělalo, každou zbývající položku i s kontextem, variantami a doporučením, co se vyvrátilo a co se rozhodlo. Zápis přečte zpátky, ověří kontrolami projektu, commitne, sám pustí úklid session a doporučí novou session, ve které na něj `/continue` rovnou naváže. Funguje pro frontu kteréhokoliv skillu i pro práci, která skillem neběží.
 
 ### Kroky životního cyklu projektu
 

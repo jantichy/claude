@@ -3,7 +3,7 @@
 Příkaz stojí v `skills/continue/SKILL.md` a skill ho pouští doslova, takže se
 testuje vytažený odtamtud, ne jeho opis. Chyba je tichá: prázdný výstup skill
 čte jako „navázat není na co“ a přerušená práce zůstane ležet. Hlídá se proto
-zápis v `CLAUDE.md` operativního projektu bez gitu – `/break` ho tam píše,
+zápis v `CLAUDE.md` operativního projektu bez gitu – `/end` ho tam píše,
 protože `todo.md` takový projekt nemá – i to, že se dál najde zápis v
 `docs/todo.md` běžného repozitáře.
 

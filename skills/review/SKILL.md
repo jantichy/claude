@@ -56,7 +56,7 @@ Navíc si načti tohle:
 
 ### 0.1 Načti kontext projektu
 
-- **`.claude/run/review.json`**, pokud existuje – přerušený běh. Viz *Fáze 3*, kde vzniká; nabídni navázání dřív, než začneš cokoliv počítat znovu – podle zápisu z `/break`, nese-li soubor klíč `interrupted`, jinak z něj (`~/.claude/skills/skills.md`, *Běhový stav*).
+- **`.claude/run/review.json`**, pokud existuje – přerušený běh. Viz *Fáze 3*, kde vzniká; nabídni navázání dřív, než začneš cokoliv počítat znovu – podle zápisu přerušení, nese-li soubor klíč `interrupted`, jinak z něj (`~/.claude/skills/skills.md`, *Běhový stav*).
 - Projektový `CLAUDE.md` – zejména `## Kontrakt příkazů` (*Kontrakt příkazů*), `## Autocommit`, `## Výjimky z obecných pravidel` a kapitolu `## Review`, pokud existuje.
 - **Kapitola `## Review`** obsahuje dřív zamítnuté nálezy (won't fix). Neuvádějí se – ale **jen dokud platí**: u každého záznamu ověř příkazem, jestli se dotčený kód od zápisu nezměnil. Mechanika i formát jsou v kapitole *Kapitola `## Review`* níž; bez toho ověření se z filtru stane odkladiště, které jen narůstá.
 - **`## Výjimky z obecných pravidel`** – vědomé odchylky projektu. Co je tam popsané jako výjimka, není nález.
@@ -284,7 +284,7 @@ Když nálezy nejsou, řekni to a skonči.
 
 ## Fáze 6 – Interaktivní průchod
 
-**Průchod jde po kolech** – nejdřív všechny otázky, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo. Pořadí otázek, hromadné schválení 🔵 nálezů, zápis odpovědí a konec průchodu drží `~/.claude/skills/findings.md`, *Průchod jde po kolech*. **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo. Pořadí otázek, hromadné schválení 🔵 nálezů, zápis odpovědí a konec průchodu drží `~/.claude/skills/findings.md`, *Průchod jde po kolech*. **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/end` v režimu `break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 Pro KAŽDÝ **sporný** nález, jeden po druhém, nikdy víc najednou:
 

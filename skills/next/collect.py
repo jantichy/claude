@@ -271,7 +271,7 @@ SENTENCE = re.compile(r"(.+?[.!?])(?=\s+[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ*`]|\s
 def parse_interrupted(body):
     """Bloky `### ` sekce `## Přerušený běh`, každý jako jedna položka.
 
-    `/break` píše přerušení jako blok s nadpisem a odstavcem `**Jak pokračovat:**`,
+    `/end` píše přerušení jako blok s nadpisem a odstavcem `**Jak pokračovat:**`,
     ne jako odrážky – obecný parser by v něm viděl podsekci se seznamy uvnitř
     a položky vyrobil z výčtu zbývající práce, nebo žádnou. Textem položky je
     první věta *Jak pokračovat*, protože ta je jediná první akce navázání.
@@ -363,7 +363,7 @@ def todo_files(top: Path):
 def nested_interrupted(repo: Repo, base, known):
     """Bloky `## Přerušený běh` ze všech worktree repozitáře, které fronta hlavní větve nemá.
 
-    `/break` zapisuje do `todo.md` projektu, ve kterém session stojí – u podprojektu
+    `/end` zapisuje do `todo.md` projektu, ve kterém session stojí – u podprojektu
     klientské složky tedy do podsložky, ve worktree layoutu do `todo.md` větve.
     Hlavní větev ani jedno nevidí. Ze zbytku fronty podprojektu se nebere nic,
     ta patří k jinému projektu. Položka nese v `branch` větev worktree a u

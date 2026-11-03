@@ -22,4 +22,4 @@ Rozvaha, měření a historie skillu `/end`. Za běhu se nečte. Starší rozhod
 
 **Zamítnuto – snížit effort nebo přemýšlení:** hledání nevypořádaných témat stojí na úsudku a hlavička skillu effort nastavit neumí ověřeně. **Zamítnuto – nečíst inventuru ani evidenci:** stojí skoro nic a jsou jádrem záruky úplnosti.
 
-**Odhad:** běh bez dotazů z kolem 90 s na kolem 50 až 60 s. **Ověřit** `skills/cost.py end --since 2026-11-03` po několika ostrých bězích proti mediánům výš; teprve pak se slučuje `/break` (`docs/todo.md`).
+**Odhad:** běh bez dotazů z kolem 90 s na kolem 50 až 60 s. **Ověřit** `skills/cost.py end --since 2026-11-03` po několika ostrých bězích proti mediánům výš; teprve pak se slučoval `/break` – sloučený je od 3. 11. 2026 (`docs/decisions.md`).

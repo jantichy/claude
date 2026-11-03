@@ -1,6 +1,6 @@
 ---
 name: continue
-description: Skill se použije, když uživatel zadá "/continue", nebo chce v nové session rovnou navázat na práci přerušenou skillem /break – "pokračuj, kde jsme skončili", "naváž na přerušenou práci", "jedeme dál od přerušení". Najde sekci Přerušený běh v docs/todo.md kteréhokoliv worktree repozitáře, v operativním projektu v CLAUDE.md, přepne se do adresáře, kde práce leží, a hned provede, co zápis říká v odstavci Jak pokračovat – zavolá uvedený skill, nebo se pustí do první zbývající položky. Je jednoúčelový a rychlý: nic nesbírá, nenačítá standardy a nevolá síť. Na rozdíl od /next, který sestavuje a řadí nabídku ze všeho rozdělaného v projektu, tenhle skill nic nenabízí a navazuje jen na zápis z /break; na rozdíl od /break nic nezapisuje, jen čte.
+description: Skill se použije, když uživatel zadá "/continue", nebo chce v nové session rovnou navázat na práci, kterou při ukončení session přerušil /end – "pokračuj, kde jsme skončili", "naváž na přerušenou práci", "jedeme dál od přerušení". Najde sekci Přerušený běh v docs/todo.md kteréhokoliv worktree repozitáře, v operativním projektu v CLAUDE.md, přepne se do adresáře, kde práce leží, a hned provede, co zápis říká v odstavci Jak pokračovat – zavolá uvedený skill, nebo se pustí do první zbývající položky. Je jednoúčelový a rychlý: nic nesbírá, nenačítá standardy a nevolá síť. Na rozdíl od /next, který sestavuje a řadí nabídku ze všeho rozdělaného v projektu, tenhle skill nic nenabízí a navazuje jen na zápis přerušení z /end; na rozdíl od /end nic nezapisuje, jen čte.
 allowed-tools: [Read, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
 
@@ -8,16 +8,16 @@ allowed-tools: [Read, Glob, Grep, Bash, AskUserQuestion, Skill]
 
 ## Co skill dělá
 
-Druhá strana `/break`. Na začátku čisté session najde zápis přerušené práce v sekci `## Přerušený běh`, přepne se tam, kde práce leží, a **okamžitě pokračuje** podle odstavce `**Jak pokračovat:**`, který mu tam `/break` nechal. Jeden příkaz shellu, krátké shrnutí, a práce běží dál.
+Druhá strana přerušení v `/end`. Na začátku čisté session najde zápis přerušené práce v sekci `## Přerušený běh`, přepne se tam, kde práce leží, a **okamžitě pokračuje** podle odstavce `**Jak pokračovat:**`, který mu tam `/end` nechal. Jeden příkaz shellu, krátké shrnutí, a práce běží dál.
 
-Režimy ani argument nemá. Tvar zápisu, ze kterého čte, drží `/break` – tenhle skill z něj spoléhá jen na dvě značky: nadpis bloku `### ` uvnitř sekce a odstavec `**Jak pokračovat:**`, jehož první věta je jediná první akce.
+Režimy ani argument nemá. Tvar zápisu, ze kterého čte, drží `~/.claude/skills/end/break.md` – tenhle skill z něj spoléhá jen na dvě značky: nadpis bloku `### ` uvnitř sekce a odstavec `**Jak pokračovat:**`, jehož první věta je jediná první akce.
 
 ## Co skill nedělá
 
-- **Nezapisuje rozdělanou práci.** To dělá `/break`; když zápis chybí nebo je neúplný, nedomýšlí ho z hlavy.
+- **Nezapisuje rozdělanou práci.** To dělá `/end`; když zápis chybí nebo je neúplný, nedomýšlí ho z hlavy.
 - **Nesestavuje nabídku.** Projít celé `todo.md`, plán, kola, větve a místo v cyklu a vybrat z toho je `/next` – a právě ta šíře je to, co tady nechceme. Není-li na co navázat, odkáže na něj.
 - **Nemaže sekci ani běhový soubor.** Kdy se smažou, říká *Jak pokračovat* v zápisu; dělá to až práce, která frontu dojde.
-- **Nehlídá, jestli nad větví běží jiná session.** `/break` končí řetězem `/end` → `/clear` v téže session, takže by kontrola hlásila jako obsazenou právě tu, která má pokračovat – a byla by to nejpomalejší část běhu. Druhé okno nad týmž worktree je tedy věc uživatele, ne tohohle skillu.
+- **Nehlídá, jestli nad větví běží jiná session.** Přerušení končí řetězem `/end` → `/clear` v téže session, takže by kontrola hlásila jako obsazenou právě tu, která má pokračovat – a byla by to nejpomalejší část běhu. Druhé okno nad týmž worktree je tedy věc uživatele, ne tohohle skillu.
 
 ## Fáze 0 – Příprava
 
@@ -31,7 +31,7 @@ Pusť z adresáře session **přesně tenhle příkaz**, nic předtím a nic dal
 { git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | grep . || pwd; } | while read -r d; do find "$d" -maxdepth 3 \( -path "$d/.*" -o -name node_modules -o -name vendor \) -prune -o \( -name todo.md -o -name CLAUDE.md \) -type f -print; done | while read -r f; do awk -v f="$f" '/^## Přerušený běh/{print "==> " f; s=1; next} s && /^## /{exit} s' "$f"; done
 ```
 
-Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem. `/break` totiž zapisuje do `todo.md` projektu, ve kterém session stojí, a z kořene klienta by se na zápis v podprojektu jinak nedošlo. Skryté složky, `node_modules` a `vendor` přeskakuje, aby příkaz zůstal pod vteřinou. **Čte i `CLAUDE.md`**, protože operativní projekt (`- **Struktura:** CLAUDE.md`) `todo.md` nemá a `/break` v něm zapisuje do projektového `CLAUDE.md` (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*); takový projekt navíc často nemá git, a mimo git proto příkaz hledá od adresáře session. Vypíše sekci z každého souboru, který ji má, uvozenou řádkem `==> <cesta>`.
+Projde všechny worktree repozitáře – ve worktree layoutu tedy i větve vedle té, kde session stojí, a funguje i z kořene kontejneru – a v každém i podsložky do třetí úrovně, aby našel zápis v podprojektu klientské složky (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*), i když má podprojekt vlastní repozitář ignorovaný gitem. `/end` totiž zapisuje do `todo.md` projektu, ve kterém session stojí, a z kořene klienta by se na zápis v podprojektu jinak nedošlo. Skryté složky, `node_modules` a `vendor` přeskakuje, aby příkaz zůstal pod vteřinou. **Čte i `CLAUDE.md`**, protože operativní projekt (`- **Struktura:** CLAUDE.md`) `todo.md` nemá a `/end` v něm zapisuje do projektového `CLAUDE.md` (`~/.claude/standards/structure.md`, *Operativní projekt: režim `CLAUDE.md`*); takový projekt navíc často nemá git, a mimo git proto příkaz hledá od adresáře session. Vypíše sekci z každého souboru, který ji má, uvozenou řádkem `==> <cesta>`.
 
 | Výstup | Co dál |
 |---|---|

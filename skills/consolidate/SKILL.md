@@ -148,7 +148,7 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 ## Fáze 4 – Průchod s uživatelem
 
-**Průchod jde po kolech** – nejdřív všechny otázky, odpovědi do `## Rozhodnuto k zapracování`, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/break` tak, aby z něj nová session rozhodla bez tvého kontextu.
+**Průchod jde po kolech** – nejdřív všechny otázky, odpovědi do `## Rozhodnuto k zapracování`, pak zapracování bez uživatele, a co se při něm ukáže sporné, otevře další kolo (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). **Přerušení při ptaní** nabízí `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; přijme-li ho uživatel, zbytek fronty uloží `/end` v režimu `break` tak, aby z něj nová session rozhodla bez tvého kontextu.
 
 **Nejdřív vypiš přehled** – kolik shluků, kolik návrhů padlo v ověření a kolik zbývá k rozhodnutí, plus kolik vedlejších vad se našlo. Pak **hned v téže odpovědi** pokračuj první otázkou; ohlásit průchod a skončit je porušení `~/.claude/standards/rules.md`, *Co ohlásíš, udělej hned v téže odpovědi*.
 

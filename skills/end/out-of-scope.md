@@ -2,10 +2,10 @@
 
 Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely by se session. Stojí mimo `SKILL.md`, protože se čte až ve chvíli, kdy je opravdu potřeba.
 
-**Čte se na dvou místech běhu.** Body 2 a 3 – rozdělení položek a vyřešení těch jednoznačných – platí už při zápisu (`SKILL.md`, *Fáze 4 – Zápis toho, co má jedinou podobu*). Body 4 až 6 – přehled, průchod položka po položce a zápis osudu – patří do fronty rozhodnutí (`SKILL.md`, *Fáze 5 – Fronta rozhodnutí*), kde se o položkách ptá uživatele.
+**Čte se na dvou místech běhu.** Body 2 a 3 – rozdělení položek a vyřešení těch jednoznačných – platí už při zápisu (`SKILL.md`, *Fáze 5 – Zápis toho, co má jedinou podobu*). Body 4 až 6 – přehled, průchod položka po položce a zápis osudu – patří do fronty rozhodnutí (`SKILL.md`, *Fáze 6 – Fronta rozhodnutí*), kde se o položkách ptá uživatele.
 
 ------
-**Patří sem i to, co jsi během běhu sám odložil jako „mimo rozsah“** – vymezení drží `SKILL.md`, *Fáze 5 – Fronta rozhodnutí*.
+**Patří sem i to, co jsi během běhu sám odložil jako „mimo rozsah“** – vymezení drží `SKILL.md`, *Fáze 6 – Fronta rozhodnutí*.
 
 **Vyřídit ale neznamená zeptat se.** Položka mimo rozsah je nález zadarmo – všiml sis jí jen proto, že jsi u toho zrovna byl, a příště u toho nebude nikdo. Co umíš opravit jednoznačně, **oprav proto rovnou a bez ptaní, i když je to mimo rozsah úklidu**. Otázka, u které je předem jasné, jak zní jediná rozumná odpověď, nic nerozhoduje a stojí uživatele pozornost, kterou pak nemá na otázky, kde na jeho odpovědi opravdu záleží. Ptej se jen na to, co rozhodnout neumíš.
 
@@ -82,10 +82,10 @@ Jak se naloží s položkami, které do rozsahu úklidu nepatří, ale zmizely b
    |---|---|
    | **Vyřešit teď** | Zapiš ji do `## Rozhodnuto k zapracování` i s kontextem, ve kterém rozhodnutí padlo, a vyřeš ji v zapracování za poslední otázkou kola (`~/.claude/skills/findings.md`, *Průchod jde po kolech*). Kontext se neztratí, protože leží v zápisu, ne v konverzaci. |
    | **Zapsat do todo** | Zapiš ji do `docs/todo.md` – ne jako holou odrážku, ale s kontextem a odůvodněním, aby se na ni dalo navázat bez téhle session. Volí se u položky, o které je rozhodnuto, že se udělá. |
-   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/standards/structure.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Fáze 3 – Evidence a konfrontace se soubory*). |
+   | **Zapsat do backlogu** | Totéž, ale do `docs/backlog.md` – u nápadu, který nikdo neschválil ani nezamítl. **Nenabízej obě volby jako totéž**: rozhoduje se tím, jestli položka bude v seznamu, který se odpracovává. Nemá-li projekt `backlog.md`, **založ ho** a řekni to – nezávazný nápad do fronty úkolů nepatří a jinam ho zapsat nelze (`~/.claude/standards/structure.md`, *`backlog.md`*; totéž říká `SKILL.md`, *Fáze 4 – Evidence a konfrontace se soubory*). |
    | **Zahodit** | Nic s ní nedělej. Volí se vědomě, ne mlčením. |
 
-   Když jsi vyřídil poslední položku, pokračuj *Fází 6*.
+   Když jsi vyřídil poslední položku, pokračuj *Fází 7*.
 
    **Neptej se předtím hromadně**, co s celou skupinou – položky se povahou skoro vždycky liší, takže hromadná volba má jediný reálný výsledek a stojí odpověď navíc. **Platí to na tuhle skupinu, ne obecně:** kde jsou položky stejnorodé, je hromadná volba na místě a jinde ve skillech se schválně používá.
 

@@ -158,7 +158,7 @@ Ten verdikt je celá bezpečnostní pojistka skillu: nutí odlišit „udělal j
 
 **Proč je až za verdiktem, a ne v něm:** verdikt tvrdí, jestli je věc hotová, tenhle blok říká, co se s tím dělá.
 
-**Pouští-li skill dlouhý průchod frontou** – nálezy, poznatky, úkoly –, nese navíc pravidlo o jeho přerušení při nabytém kontextu; drží ho týž soubor, kapitola *Přerušení dlouhého průchodu*, a odkazuje se na něj z té fáze, která frontou prochází. Zápis zbytku fronty dělá skill `/break`, na který se z nabídky přerušení předává.
+**Pouští-li skill dlouhý průchod frontou** – nálezy, poznatky, úkoly –, nese navíc pravidlo o jeho přerušení při nabytém kontextu; drží ho týž soubor, kapitola *Přerušení dlouhého průchodu*, a odkazuje se na něj z té fáze, která frontou prochází. Zápis zbytku fronty dělá `/end` v režimu `break`, na který se z nabídky přerušení předává.
 
 ## 5. Číslování a názvosloví
 
@@ -363,7 +363,7 @@ Je to snadné, zadejte do svého Claude Code tenhle prompt:
 >
 > **Kontroly** [`/oponent`](../oponent/README.md) · … · **`/jméno`** · …
 >
-> **Session** [`/next`](../next/README.md) · [`/continue`](../continue/README.md) · [`/end`](../end/README.md) · [`/merge`](../merge/README.md) · [`/break`](../break/README.md)
+> **Session** [`/next`](../next/README.md) · [`/continue`](../continue/README.md) · [`/end`](../end/README.md) · [`/merge`](../merge/README.md)
 >
 > Projít se nemusí celý – u drobné změny odpadá zadání i plán, u projektu bez kódu nasazení i vyhodnocení provozu.
 ```
@@ -420,10 +420,10 @@ Skilly, které běží dlouho a dají se přerušit, si odkládají **stav jedno
 
 **Nikdy se z něj nečte jako z pravdy o projektu.** Říká jen, kde skončil přerušený běh; co z toho má trvalou platnost, se zapíše do `todo.md`, `decisions.md` nebo `done.md` jako všechno ostatní.
 
-**Není to cesta k navázání, kterou se přerušení doporučuje.** Nese stav položek, ne kontext kolem nich – doporučení, varianty a návaznosti zůstávají v konverzaci a s `/clear` zmizí. Přerušení průchodu proto vždycky jde přes `/break` a navázání přes `/continue` (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*); věta „skill v nové session naváže na běhový soubor“ do nabídky přerušení nepatří. Skill, který na startu svůj běhový soubor najde, rozliší dva případy:
+**Není to cesta k navázání, kterou se přerušení doporučuje.** Nese stav položek, ne kontext kolem nich – doporučení, varianty a návaznosti zůstávají v konverzaci a s `/clear` zmizí. Přerušení průchodu proto vždycky jde přes `/end` a navázání přes `/continue` (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*); věta „skill v nové session naváže na běhový soubor“ do nabídky přerušení nepatří. Skill, který na startu svůj běhový soubor najde, rozliší dva případy:
 
-- **Soubor nese klíč `interrupted`**, kterým ho poznačil `/break` → autoritou je zápis v `docs/todo.md`, sekce `## Přerušený běh`, na který klíč ukazuje; z běhového souboru se bere jen stav položek. Spustil-li skill `/continue`, pokračuje podle zápisu bez ptaní; spustil-li ho uživatel přímo, nabídne navázání podle zápisu.
-- **Klíč chybí** → běh skončil bez `/break` (kompaktace, zavřené okno, pád). Teprve tehdy skill nabídne navázání z běhového souboru a řekne, že kontext kolem položek chybí a doporučení u nich sestaví znovu.
+- **Soubor nese klíč `interrupted`**, kterým ho poznačil zápis přerušení v `/end` → autoritou je zápis v `docs/todo.md`, sekce `## Přerušený běh`, na který klíč ukazuje; z běhového souboru se bere jen stav položek. Spustil-li skill `/continue`, pokračuje podle zápisu bez ptaní; spustil-li ho uživatel přímo, nabídne navázání podle zápisu.
+- **Klíč chybí** → běh skončil bez zápisu přerušení (kompaktace, zavřené okno, pád). Teprve tehdy skill nabídne navázání z běhového souboru a řekne, že kontext kolem položek chybí a doporučení u nich sestaví znovu.
 
 ------
 

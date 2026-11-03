@@ -1300,9 +1300,9 @@ class SecretGuard(unittest.TestCase):
         )
 
 
-CONTEXT_CHECK = "CONTEXT_CHECK = True" in (ROOT / "hooks" / "findings-guard.py").read_text(
-    encoding="utf-8"
-)
+CONTEXT_CHECK = "CONTEXT_CHECK = True" in (
+    ROOT / "hooks" / "findings-guard.py"
+).read_text(encoding="utf-8")
 
 
 class FindingsGuard(unittest.TestCase):
@@ -1428,7 +1428,11 @@ class FindingsGuard(unittest.TestCase):
             else:
                 content = [{"type": kind, kind: block}]
             role = "user" if kind == "user" else "assistant"
-            lines.append(json.dumps({"type": role, "message": {"role": role, "content": content}}))
+            lines.append(
+                json.dumps(
+                    {"type": role, "message": {"role": role, "content": content}}
+                )
+            )
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
         return path
 
@@ -1446,10 +1450,18 @@ class FindingsGuard(unittest.TestCase):
 
     @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
     def test_blocks_text_without_matching_title(self):
-        path = self.transcript(("user", "ok"), ("text", "Zapsáno. Další položka je o párování."))
-        self.assertEqual(2, self.run_guard("Položka 9/21", self.LABELS, path).returncode)
-        path = self.transcript(("user", "ok"), ("text", "**[8/21] 🟡 PÁROVÁNÍ**\n\nkontext"))
-        self.assertEqual(2, self.run_guard("Položka 9/21", self.LABELS, path).returncode)
+        path = self.transcript(
+            ("user", "ok"), ("text", "Zapsáno. Další položka je o párování.")
+        )
+        self.assertEqual(
+            2, self.run_guard("Položka 9/21", self.LABELS, path).returncode
+        )
+        path = self.transcript(
+            ("user", "ok"), ("text", "**[8/21] 🟡 PÁROVÁNÍ**\n\nkontext")
+        )
+        self.assertEqual(
+            2, self.run_guard("Položka 9/21", self.LABELS, path).returncode
+        )
 
     @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
     def test_passes_context_written_as_text(self):
@@ -1465,7 +1477,9 @@ class FindingsGuard(unittest.TestCase):
     def test_unreadable_transcript_passes(self):
         """Chybějící transkript nesmí zastavit práci – hook o kontextu pak nerozhoduje."""
         missing = Path(tempfile.mkdtemp()) / "missing.jsonl"
-        self.assertEqual(0, self.run_guard("Položka 9/21", self.LABELS, missing).returncode)
+        self.assertEqual(
+            0, self.run_guard("Položka 9/21", self.LABELS, missing).returncode
+        )
 
     def test_registered_for_askuserquestion(self):
         """Hook, který není v `settings.json` u `AskUserQuestion`, nehlídá nic."""
@@ -1551,8 +1565,8 @@ def interrupted_chain() -> str:
     """Řetěz přerušeného průchodu z tabulky v `skills/handoff.md`.
 
     Hláška hooku ho opakuje a nesmí mít jiné znění než tabulka, ze které ho
-    opisují skilly; samotné slovo `/break` by prošlo i v hlášce, která ho
-    odmítá nebo staví za `/continue`.
+    opisují skilly; samotné slovo `/end` by prošlo i v hlášce, která ho
+    staví za `/continue`.
     """
     text = (
         Path(__file__).resolve().parent.parent / "skills" / "handoff.md"
@@ -1636,7 +1650,7 @@ class HandoffHook(unittest.TestCase):
         self.assertIn(
             interrupted_chain(),
             msg,
-            "nabídka nevede průchod frontou řetězem přes /break",
+            "nabídka nevede průchod frontou řetězem přes /end",
         )
         self.add(context=320_000)
         self.assertEqual(self.run_hook(), "", "nabídka zazněla podruhé")
@@ -1651,7 +1665,7 @@ class HandoffHook(unittest.TestCase):
         self.assertIn(
             interrupted_chain(),
             msg,
-            "doporučení nevede průchod frontou řetězem přes /break",
+            "doporučení nevede průchod frontou řetězem přes /end",
         )
         self.add(context=450_000)
         self.assertEqual(self.run_hook(), "")

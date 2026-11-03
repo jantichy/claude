@@ -104,7 +104,7 @@ Pak dvěma rychlostmi:
 - **Rovnou**, co [`catalog.md`](catalog.md) značí „rovnou“ – doklady, komprese bez změny významu, duplicita s jasným vítězem. Jen vypiš, co se udělá.
 - **Po jednom**, co značí „uživatel“ – přesun, rozdělení, zrušení pravidla, sloučení bez vítěze, revize nabobtnávacího pravidla. U každého kontext (čeho se týká, jak to je, proč to nestačí), varianty s úsporou a doporučení; tvar drží `~/.claude/skills/findings.md`, *Jak nález vypadá*. Přesun má vždy i variantu „nechat, jen zkrátit“. Dříve zamítnutý zásah, který je mezi největšími pákami, předlož znovu i s tehdejším důvodem. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
 
-Dlouhou frontu přeruš podle `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; zápis dělá `/break`.
+Dlouhou frontu přeruš podle `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*; zápis dělá `/end` v režimu `break`.
 
 ## Fáze 5 – Provedení
 

@@ -357,7 +357,7 @@ class PlanAndQueueParsing(unittest.TestCase):
     def test_interrupted_block_is_one_item(self):
         """Blok `### ` v `## Přerušený běh` je jedna položka, ne podsekce.
 
-        `/break` píše každé přerušení jako blok pod nadpisem `### ` a obecný
+        `/end` píše každé přerušení jako blok pod nadpisem `### ` a obecný
         parser v něm viděl podsekci, ve které počítal jen zaškrtávátka – sekce
         vyšla s nulou položek a `/next` ji, ačkoli ji má řadit úplně první,
         nenabídl vůbec. Doloženo 11. 10. 2026 při přerušení migrace disku.
@@ -680,7 +680,7 @@ class QueueCollection(unittest.TestCase):
     def test_interrupted_run_in_subproject_is_offered(self):
         """Přerušený běh v podprojektu se nabídne i z kořene, zbytek jeho fronty ne.
 
-        `/break` zapisuje do `todo.md` projektu, kde session stojí, u podprojektu
+        `/end` zapisuje do `todo.md` projektu, kde session stojí, u podprojektu
         klientské složky tedy do podsložky – často s vlastním repozitářem, který
         git ignoruje. `/continue` ho najde do třetí úrovně, `/next` četl jen
         kořen a přerušenou práci, kterou má řadit první, neviděl. Hledá se stejně
@@ -715,7 +715,7 @@ class QueueCollection(unittest.TestCase):
     def test_interrupted_run_in_branch_worktree_is_offered_once(self):
         """Přerušený běh zapsaný ve worktree větve se najde, blok z hlavní větve jen jednou.
 
-        Ve worktree layoutu zapíše `/break` blok do `todo.md` větve, ve které
+        Ve worktree layoutu zapíše `/end` blok do `todo.md` větve, ve které
         session stála; fronta se přitom čte z hlavní větve, takže blok zůstal
         neviditelný a na přerušenou práci se došlo jen ručním grepem. Blok, který
         leží v hlavní větvi a větev ho smazala nebo zdědila beze změny, se nesmí
@@ -785,7 +785,7 @@ OPERATIVE_CLAUDE = """# Firma
 class OperativeProject(unittest.TestCase):
     """`collect.py` nad operativním projektem, který má jen `CLAUDE.md` a často ani git.
 
-    `/break` v něm zapisuje přerušení do `CLAUDE.md`, protože `todo.md` tam
+    `/end` v něm zapisuje přerušení do `CLAUDE.md`, protože `todo.md` tam
     nevzniká; sběr, který četl jen `todo.md` a bez gitu skončil chybou, ho
     neviděl. Hlídá se i opačný směr: soubory v adresáři patří uživateli, takže
     jeho `plan.md` se nesmí vydávat za implementační plán, a adresář bez
