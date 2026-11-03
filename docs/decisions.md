@@ -2559,6 +2559,6 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 
 **Signály:** běhový soubor v `.claude/run/` **změněný během session** bez klíče `interrupted` a `## Rozhodnuto k zapracování` **změněná proti základu session**. Starší běhový soubor i sekce beze změny patří jiné session; hlásit je by vyrobilo přerušení, které tahle session nemá čím popsat.
 
-**`/merge` volá `/end` bez potlačení rozpoznání.** Zvažovalo se, že `/merge` pustí `/end` v režimu, který přerušení nehledá. Zamítnuto: rozdělaná práce na větvi před mergem je přesně důvod merge zastavit, takže `/merge` se teď zastaví, když úklid přerušení zapíše.
+**`/merge` volá `/end` bez potlačení rozpoznání** (potvrdil uživatel při úklidu session 3. 11. 2026). Zvažovalo se, že `/merge` pustí `/end` v režimu, který přerušení nehledá. Zamítnuto: rozdělaná práce na větvi před mergem je přesně důvod merge zastavit, takže `/merge` se teď zastaví, když úklid přerušení zapíše.
 
 **Co se tím vědomě ztratilo:** samostatný příkaz, kterým uživatel výslovně řekne „přerušuji“. Nahrazuje ho `/end break`, který ale ručně psát nemusí – v nejistém případě se `/end` zeptá sám.
