@@ -242,6 +242,26 @@ class PlanAndQueueParsing(unittest.TestCase):
         )
         self.assertNotIn("waits", item)
 
+    def test_dependency_inside_code_span_is_not_dependency(self):
+        """Zápis `**Čeká na rozhodnutí:**` v apostrofech cituje cizí tvar.
+
+        Skript z něj dřív vytáhl útržek věty jako závislost a model pak nad
+        nesmyslnou hodnotou přemýšlel a položku odsunul mezi čekající.
+        """
+        [item] = self.c.parse_items(
+            [
+                "- [ ] **Ověřit.** Úkol skončí odstavcem `**Čeká na rozhodnutí:**` "
+                "a vrácenými změnami."
+            ]
+        )
+        self.assertNotIn("waits", item)
+
+    def test_code_in_dependency_value_is_kept(self):
+        [item] = self.c.parse_items(
+            ["- [ ] **Úkol.** Popis. Čeká na: `/review` nad větví"]
+        )
+        self.assertEqual(item["waits"], "`/review` nad větví")
+
     def test_lowercase_clause_is_not_dependency(self):
         [item] = self.c.parse_items(
             [

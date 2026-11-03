@@ -207,7 +207,7 @@ def parse_items(lines, checkbox_only=False):
         if size:
             entry["size"] = size.group(1)
         # Závislost bývá na konci dlouhého popisu, který `short` ořízne – vytáhne se zvlášť.
-        waits = WAITS.search(full)
+        waits = find_waits(full)
         if waits and not NO_WAIT.match(waits.group(1).strip("* ")):
             entry["waits"] = short(waits.group(1))
         # Položka odložená k datu se do té doby nemá nabízet. Datum musí stát hned
@@ -226,6 +226,18 @@ def parse_items(lines, checkbox_only=False):
 WAITS = re.compile(
     r"(?<!\w)(?<![^*]\*)(?<!„)Ček(?:á|ají)\s+na\b[:\s]*\**\s*([^.;\n]{1,160})"
 )
+CODE_SPAN = re.compile(r"`[^`\n]*`")
+
+
+def find_waits(text):
+    """První závislost mimo úsek kódu – `**Čeká na:**` v apostrofech je citace tvaru."""
+    spans = [m.span() for m in CODE_SPAN.finditer(text)]
+    for m in WAITS.finditer(text):
+        if not any(a <= m.start() < b for a, b in spans):
+            return m
+    return None
+
+
 # Hodnota, která říká, že položka na nic nečeká.
 NO_WAIT = re.compile(r"(?:nic|–|-)\W*$")
 NOT_BEFORE = re.compile(r"[–—:-]?\s*od\s+\**(\d{4}-\d{2}-\d{2})")
