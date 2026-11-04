@@ -73,7 +73,7 @@ Fakt, na kterém stojí rozhodnutí nebo argument, ověř dřív, než ho zapí�
 
 **Před otázkou stojí v textu odpovědi kontext:** čeho se týká, jak to je dnes a proč to nestačí. Do `question` a `description` se nevejde. Test: dala by se otázka zodpovědět bez předchozí odpovědi? **Kontext i vysvětlení patří do textu odpovědi, ne do myšlení** – uživatel myšlení nevidí, takže „vysvětlil jsem“ bez napsaného textu je pro něj prázdný dialog; po napsaném vysvětlení smí dialog hned následovat. **Text pro uživatele proto v myšlení neformuluj vůbec:** tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení je přesně ten, který uživatel neuvidí – místo něj dostane jednořádkový souhrn myšlení a otázku bez kontextu.
 
-Ptej se přes `AskUserQuestion`: jedno volání = jedna otázka (`multiSelect: false`), krátký `header` (doporučeně do dvanácti znaků), `description` říká, co se stane. Volba **Other** je doplňující instrukce, ne odmítnutí – vyřeš ji a zeptej se znovu. Otázku bez variant (název, text, číslo) polož v textu.
+Ptej se přes `AskUserQuestion`: jedno volání = jedna otázka (`multiSelect: false`), krátký `header` (doporučeně do dvanácti znaků), `description` říká, co se stane. Volba **Other** je doplňující instrukce, ne odmítnutí – vyřeš ji a zeptej se znovu; ptá-li se, je to dotaz, i když začíná písmenem varianty. Otázku bez variant (název, text, číslo) polož v textu.
 
 ### Co ohlásíš, udělej hned v téže odpovědi
 

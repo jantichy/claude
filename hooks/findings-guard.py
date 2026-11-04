@@ -18,8 +18,10 @@ výstupů, rozpor v `/learn`) se nekontroluje; eviduje to `standards/bypass.md`.
 blok s titulním řádkem `**[N/celkem] …**` a kontextem. Session ho umí napsat do
 bloku thinking místo do odpovědi – uživatel pak místo kontextu vidí jen
 jednořádkový souhrn myšlení. Hook proto v transkriptu (`transcript_path`) najde
-bloky asistenta od posledního výsledku nástroje nebo zprávy uživatele a zastaví
-otázku, mezi nimiž není text s titulním řádkem téhož `N/celkem`. Nečitelný nebo
+bloky asistenta od poslední zprávy uživatele nebo odpovědi z dialogu a zastaví
+otázku, mezi nimiž není text s titulním řádkem téhož `N/celkem`. Výsledek
+ostatních nástrojů odpověď nekončí: v průchodu se odpověď hned zapisuje do
+`todo.md` a text napsaný před tím zápisem uživatel vidí. Nečitelný nebo
 chybějící transkript otázku propustí.
 
 Vrací 2 a důvod na stderr, což je pro PreToolUse zastavení nástroje.
@@ -36,9 +38,7 @@ TRIGGERS = {"Neopravovat", "Zapsat do backlogu", "Bezpředmětné"}
 HEADER = re.compile(r"^(?:Nález|Položka) (\d+)/(\d+)$")
 RECOMMENDED = re.compile(r"\s*\(Recommended\)\s*$")
 TITLE = re.compile(r"\*\*\[(\d+)/(\d+)\]")
-# Dočasně vypnuto: kontext má jít do odpovědi díky pravidlu v rules.md a ve
-# skillech; zkoušíme, jestli stačí samo. Vrátit = True.
-CONTEXT_CHECK = False
+CONTEXT_CHECK = True
 
 
 def is_item(question: dict) -> bool:
@@ -66,8 +66,22 @@ def header_defect(header: str) -> str | None:
     )
 
 
+def is_input(row: dict) -> bool:
+    """Záznam, kterým začíná nová odpověď: zpráva uživatele nebo odpověď z dialogu."""
+    if isinstance(row.get("toolUseResult"), dict) and "answers" in row["toolUseResult"]:
+        return True
+    if row.get("isMeta"):
+        return False
+    content = (row.get("message") or {}).get("content")
+    if isinstance(content, str):
+        return True
+    return isinstance(content, list) and any(
+        isinstance(c, dict) and c.get("type") == "text" for c in content
+    )
+
+
 def turn_texts(path: str) -> list[str] | None:
-    """Texty asistenta od posledního výsledku nástroje nebo zprávy uživatele.
+    """Texty asistenta od poslední zprávy uživatele nebo odpovědi z dialogu.
 
     `None`, když transkript nejde přečíst – pak hook nerozhoduje.
     """
@@ -83,7 +97,9 @@ def turn_texts(path: str) -> list[str] | None:
         except json.JSONDecodeError:
             continue
         if row.get("type") == "user":
-            break
+            if is_input(row):
+                break
+            continue
         if row.get("type") != "assistant":
             continue
         content = (row.get("message") or {}).get("content")

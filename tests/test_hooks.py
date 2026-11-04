@@ -1421,16 +1421,23 @@ class FindingsGuard(unittest.TestCase):
         path = Path(tempfile.mkdtemp()) / "session.jsonl"
         lines = []
         for kind, block in rows:
-            if kind == "user":
+            extra = {}
+            if kind in ("user", "answer"):
                 content = [{"type": "tool_result", "content": block}]
-            elif kind == "text":
+                if kind == "answer":
+                    extra = {"toolUseResult": {"answers": {"Otázka?": block}}}
+            elif kind == "text" or kind == "prompt":
                 content = [{"type": "text", "text": block}]
             else:
                 content = [{"type": kind, kind: block}]
-            role = "user" if kind == "user" else "assistant"
+            role = "user" if kind in ("user", "answer", "prompt") else "assistant"
             lines.append(
                 json.dumps(
-                    {"type": role, "message": {"role": role, "content": content}}
+                    {
+                        "type": role,
+                        "message": {"role": role, "content": content},
+                        **extra,
+                    }
                 )
             )
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -1472,6 +1479,30 @@ class FindingsGuard(unittest.TestCase):
         )
         done = self.run_guard("Položka 9/21", self.LABELS, path)
         self.assertEqual(0, done.returncode, done.stderr)
+
+    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
+    def test_passes_context_written_before_other_tool(self):
+        """Průchod zapisuje odpověď do todo.md; text před zápisem uživatel vidí."""
+        path = self.transcript(
+            ("answer", "A"),
+            ("text", "**[9/21] 🟡 PÁROVÁNÍ PLATEB**\n\nkontext"),
+            ("user", "The file docs/todo.md has been updated"),
+            ("thinking", "…"),
+        )
+        done = self.run_guard("Položka 9/21", self.LABELS, path)
+        self.assertEqual(0, done.returncode, done.stderr)
+
+    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
+    def test_blocks_title_from_before_user_input(self):
+        """Text z minulé odpovědi kontextem nové otázky není – uživatel mezitím odpověděl."""
+        for kind in ("answer", "prompt"):
+            path = self.transcript(
+                ("text", "**[9/21] 🟡 PÁROVÁNÍ PLATEB**\n\nkontext"),
+                (kind, "Jak to myslíš?"),
+                ("thinking", "Vysvětlení jen v myšlení…"),
+            )
+            done = self.run_guard("Položka 9/21", self.LABELS, path)
+            self.assertEqual(2, done.returncode, f"{kind}: otázka prošla bez textu")
 
     @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
     def test_unreadable_transcript_passes(self):
