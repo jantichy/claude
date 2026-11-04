@@ -605,6 +605,27 @@ class ZpravyUzivatele(PredfiltrBase):
         records = self.dialog({"První?": "Ano", "Druhá?": "Ne"})
         self.assertEqual(self.user_messages(records), ["Druhá? → Ne", "První? → Ano"])
 
+    def test_snimek_pozadavku_neni_druha_kopie(self):
+        """Harness ukládá i snímek požadavku na API, který zprávy opakuje."""
+        dialog = self.dialog({"Jak?": "Takhle"})
+        snapshot = {
+            "type": "api-request-blob",
+            "message": {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "tool_result",
+                        "tool_use_id": "id-AskUserQuestion",
+                        "content": 'Your questions have been answered: "Jak?"="Takhle"',
+                    },
+                    {"type": "text", "text": "ahoj"},
+                    {"type": "text", "text": "Tool loaded."},
+                ],
+            },
+        }
+        records = [self.user("ahoj"), *dialog, snapshot]
+        self.assertEqual(self.user_messages(records), ["ahoj", "Jak? → Takhle"])
+
     def test_dialog_bez_struktury_se_neztrati(self):
         """Změní-li harness tvar záznamu, dialog se počítá dál ze surového textu."""
         records = self.tool("AskUserQuestion", '"Jak?"="Takhle"')

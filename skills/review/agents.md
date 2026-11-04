@@ -151,6 +151,7 @@ Pouští se ve *Fázi 3* na každý nález se závažností KRITICKÉ a STŘEDN�
 ```
 Tenhle nález se snaž VYVRÁTIT. Tvým úkolem není ho potvrdit.
 
+PROJEKT: <absolutní cesta ke kopii ze snapshot.py> – čti a spouštěj jen v ní
 NÁLEZ: <title>
 ZÁVAŽNOST: <severity>
 TVRZENÍ: <description>

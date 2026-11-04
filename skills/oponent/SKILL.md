@@ -203,7 +203,8 @@ Tvůj úkol není nález potvrdit, ale pokusit se ho vyvrátit. Ptej se:
 - Sedí navržená závažnost, nebo je nafouknutá?
 
 Vrať: POTVRZENO / VYVRÁCENO / PŘEKVALIFIKOVÁNO NA <závažnost> / NEOVĚŘITELNÉ, jednou
-větou proč, a u vyvráceného doklad – citaci z dokumentu nebo kontextu, která ho boří.
+větou proč, kde <závažnost> je jen KRITICKÉ, STŘEDNÍ nebo NÍZKÉ – jinou škálu
+nepoužívej, a u vyvráceného doklad – citaci z dokumentu nebo kontextu, která ho boří.
 NEOVĚŘITELNÉ vrať, stojí-li nález na faktu, který v dokumentu ani kontextu není,
 a napiš, co chybí – je to stejně platná odpověď jako vyvrácení.
 

@@ -33,6 +33,9 @@ Skript má dva režimy:
 - **Výstupy `Read`, `Grep`, `Glob`** – jejich obsahem jsou soubory, které se
   čtou přímo ze zdroje, kde jsou navíc aktuální.
 - **Hooky, upomínky, snímky promptu, výpisy nástrojů** – balast bez obsahu.
+- **Snímky požadavku na API** (`api-request-blob`) – opakují zprávy, které
+  v transcriptu už jsou, takže se vyřazují už při načtení a nepočítají se
+  ani do inventury.
 - **Obrázky** – z transcriptu se vytěžit nedají.
 
 **Transcript není nadmnožina kontextu ve všem.** Navíc má to, co kompaktace
@@ -64,10 +67,15 @@ CONTENT_ATTACHMENTS = ("queued_command",)
 # nadmnožina kontextu ve všem – tady mají oba stejnou díru a podstata měřicí
 # session může být právě v ní. Ověřeno 26. 9. 2026.
 PERSISTED = re.compile(r"Full output saved to:\s*(\S+)")
+# Snímek požadavku na API opakuje zprávy, které už v transcriptu jsou – první
+# zprávu, slash příkaz, rozbalený skill, zprávu z fronty, odpověď z dialogu
+# i zprávu subagenta – a nic, co by v běžných záznamech chybělo. Bez vyřazení
+# by z každé takové zprávy byly dva prompty a v `filter` dva výpisy.
+SNAPSHOTS = ("api-request-blob",)
 
 
 def load(path):
-    """Vrátí [(číslo řádku, záznam)]; nečitelné řádky přeskočí."""
+    """Vrátí [(číslo řádku, záznam)]; nečitelné řádky a snímky požadavku přeskočí."""
     rows = []
     with open(path, encoding="utf-8", errors="replace") as handle:
         for number, line in enumerate(handle, 1):
@@ -75,9 +83,12 @@ def load(path):
             if not line:
                 continue
             try:
-                rows.append((number, json.loads(line)))
+                record = json.loads(line)
             except ValueError:
                 continue
+            if isinstance(record, dict) and record.get("type") in SNAPSHOTS:
+                continue
+            rows.append((number, record))
     return rows
 
 

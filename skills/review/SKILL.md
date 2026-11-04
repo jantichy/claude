@@ -37,6 +37,8 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 **Dva specialisty z panelu skill nepíše sám: Korektnost a Bezpečnost uvnitř volá jako vestavěné skilly Claude Code** (Fáze 2). **Je to implementační detail, ne rozhraní** – kdyby zmizely nebo přestaly stačit, nahradí je vlastní zadání, a v rozsahu bez kódu to dělá už dnes (Fáze 2) a na tom, jak se `/review` volá a co vrací, se nezmění nic. **Závazné je proti tomu tohle a tiše se to změnit nesmí:** korektnost a bezpečnost v panelu být musí, ať je dělá kdokoliv; v citlivé oblasti běží k bezpečnosti navíc vlastní agent na nejsilnějším modelu; každý nález prochází ověřovatelem a co ověření nepřežije, se uživateli nezobrazí; nálezy nesou `severity` a `basis` podle `~/.claude/skills/severity.md`.
 
+**Vlastní skript má jeden:** `snapshot.py` udělá pro ověřovatele kopii projektu bez zápisů o starších nálezech (Fáze 3).
+
 ## Rozsah
 
 - **`/review`** nebo **`/review branch`** (výchozí) – jen změny na aktuální větvi, tedy diff proti hlavní větvi plus necommitnuté změny.
@@ -157,6 +159,8 @@ Vlastní zadání piš jen pro specialisty, kteří vestavěný protějšek nema
 Zvlášť to platí pro bezpečnost: nálezy od toho specialisty jsou ze své podstaty tvrzení o **absenci** (chybí kontrola oprávnění, chybí limit pokusů, chybí auditní stopa). Na „chybí kontrola“ se otázka „nastane to selhání doopravdy?“ nedá z kódu zodpovědět bez pochybnosti nikdy – vždycky *mohl* být guard o vrstvu výš. Kdyby na ni platilo „při pochybnosti vyvracej“, mizely by nálezy toho specialisty systematicky.
 
 Na každý nález ze závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** typu `general-purpose` – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. **Shell a zápis do `/tmp` potřebuje**: jeho zadání mu ukládá postavit si vlastní případ v `/tmp` a přehrát `cmd` z nálezu, takže na `reader` nepatří a na `Explore` taky ne, protože ten zápis i do `/tmp` odmítá (`skills/skills.md`, *Model, effort a delegace*). **Text zadání drží [`agents.md`](agents.md)** vedle ostatních zadání pro agenty; načti si ho ve chvíli, kdy ověřovatele pouštíš.
+
+**Ověřovatelé pracují nad kopií projektu, ne nad ním:** `python3 ~/.claude/skills/review/snapshot.py <kořen> <scratchpad>/verify` a do zadání jde jen cesta ke kopii. Kopie nemá sekce `## Přerušený běh` a `## Rozhodnuto k zapracování` ani `.claude/run/`, kde leží starší nálezy i s verdikty – ověřovatel, který je přečte, posuzuje cizí hodnocení místo kódu, a zákaz v zadání to neudržel. Ostatní soubory jsou v kopii tak, jak leží v pracovním stromu, závislosti nalinkované. Cestu k originálu ověřovatel nedostane ani v `KDE`, ani v `cmd` z `evidence` – přepiš je na kopii.
 
 **Vyvrácené KRITICKÉ bez vyplněného `guard` neplatí** – ber je jako potvrzené a pusť je do Fáze 6. Je to jediná pojistka proti tomu, aby se z ověření stalo razítko obráceným směrem.
 
