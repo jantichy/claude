@@ -151,7 +151,11 @@ Pouští se ve *Fázi 3* na každý nález se závažností KRITICKÉ a STŘEDN�
 ```
 Tenhle nález se snaž VYVRÁTIT. Tvým úkolem není ho potvrdit.
 
-PROJEKT: <absolutní cesta ke kopii ze snapshot.py> – čti a spouštěj jen v ní
+PROJEKT: <absolutní cesta ke kopii ze snapshot.py> – čti a spouštěj jen v ní.
+  Závislosti jsou v ní nalinkované z originálu, takže spustitelné soubory
+  z `.venv/bin` i editovatelně nainstalovaný balík můžou sahat na originál.
+  Měníš-li v kopii kód, pouštěj testy přes `python -m` a ověř, odkud se balík
+  načetl (`<balík>.__file__`); míří-li do originálu, nález tím neověřuješ.
 NÁLEZ: <title>
 ZÁVAŽNOST: <severity>
 TVRZENÍ: <description>

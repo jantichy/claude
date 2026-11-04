@@ -25,11 +25,10 @@ Skript má dva režimy:
 
 **Co se nečte a proč:**
 
-- **Bloky myšlení** – v transcriptu jsou zapsané prázdné. Změřeno 26. 9. 2026
-  na šesti transcriptech: pět z nich mělo 0 kB při desítkách až stovkách
-  bloků, jeden 12,8 kB na 302 bloků. Není to tedy volba, ale vlastnost
-  formátu: ten obsah tam není. Inventura to i tak vypíše, aby bylo vidět,
-  kolik bloků se minulo.
+- **Bloky myšlení** – většinou jsou zapsané prázdné (4. 11. 2026 mělo obsah
+  18 % z 1 036 bloků ve 40 transcriptech) a co v nich je, uživatel nikdy
+  neviděl, takže to není nic, na čem se v session domluvilo. Inventura je
+  i tak vypíše, aby bylo vidět, kolik bloků se minulo.
 - **Výstupy `Read`, `Grep`, `Glob`** – jejich obsahem jsou soubory, které se
   čtou přímo ze zdroje, kde jsou navíc aktuální.
 - **Hooky, upomínky, snímky promptu, výpisy nástrojů** – balast bez obsahu.

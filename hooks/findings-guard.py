@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PreToolUse hook: zastaví otázku na nález, jejíž `header` nemá tvar z normy.
+"""PreToolUse hook: zastaví otázku bez kontextu a otázku na nález s `header` mimo normu.
 
 `skills/findings.md` předepisuje `header` `Nález N/celkem`, u položky, která
 nálezem není, `Položka N/celkem`. Test v `tests/test_skills.py` hlídá jen text
@@ -11,15 +11,18 @@ kolik otázek ho ještě čeká.
 běží: `Neopravovat` (vada), `Zapsat do backlogu` (nová práce) a `Bezpředmětné`
 (nevypořádané téma v `/end`) se v jiné otázce nenabízejí. `Zapsat do todo`
 signálem není – nabízí ho i hromadná otázka `/oponent` nad nízkými nálezy,
-která jedna položka není. Otázka bez záchytné volby (rozsah běhu, výběr
-výstupů, rozpor v `/learn`) se nekontroluje; eviduje to `standards/bypass.md`.
+která jedna položka není. U otázky bez záchytné volby (rozsah běhu, výběr
+výstupů, rozpor v `/learn`) se tvar `header` nekontroluje; eviduje to
+`standards/bypass.md`. Kontext ano – viz níž.
 
 **Kontext nad otázkou hlídá z transkriptu.** Norma chce nad otázkou textový
 blok s titulním řádkem `**[N/celkem] …**` a kontextem. Session ho umí napsat do
 bloku thinking místo do odpovědi – uživatel pak místo kontextu vidí jen
 jednořádkový souhrn myšlení. Hook proto v transkriptu (`transcript_path`) najde
 bloky asistenta od poslední zprávy uživatele nebo odpovědi z dialogu a zastaví
-otázku, mezi nimiž není text s titulním řádkem téhož `N/celkem`. Výsledek
+otázku, mezi nimiž není text s titulním řádkem téhož `N/celkem`; u každé jiné
+otázky stačí, že tam stojí aspoň nějaký text – pravidlo o kontextu před
+otázkou (`standards/rules.md`, *Ptej se postupně*) platí pro všechny. Výsledek
 ostatních nástrojů odpověď nekončí: v průchodu se odpověď hned zapisuje do
 `todo.md` a text napsaný před tím zápisem uživatel vidí. Nečitelný nebo
 chybějící transkript otázku propustí.
@@ -126,6 +129,19 @@ def context_defect(path: str, header: str) -> str | None:
     )
 
 
+def bare_defect(path: str) -> str | None:
+    """Otázka mimo průchod nálezy: v odpovědi před ní musí stát aspoň nějaký text."""
+    texts = turn_texts(path)
+    if texts is None or any(t.strip() for t in texts):
+        return None
+    return (
+        "nad otázkou nestojí v odpovědi žádný text – kontext napsaný jen do myšlení "
+        "uživatel nevidí a dostane jednořádkový souhrn "
+        "(~/.claude/standards/rules.md, *Ptej se postupně*). Napiš, čeho se otázka "
+        "týká, jak to je dnes a proč to nestačí, a otázku polož znovu"
+    )
+
+
 def main() -> int:
     try:
         event = json.load(sys.stdin)
@@ -134,13 +150,20 @@ def main() -> int:
     if event.get("tool_name") != "AskUserQuestion":
         return PASS
     questions = (event.get("tool_input") or {}).get("questions") or []
+    transcript = CONTEXT_CHECK and event.get("transcript_path")
     for q in questions:
-        if not isinstance(q, dict) or not is_item(q):
+        if not isinstance(q, dict):
+            continue
+        if not is_item(q):
+            defect = bare_defect(str(transcript)) if transcript else None
+            if defect:
+                print(f"findings-guard: {defect}.", file=sys.stderr)
+                return BLOCK
             continue
         header = str(q.get("header", ""))
         defect = header_defect(header)
-        if not defect and CONTEXT_CHECK and event.get("transcript_path"):
-            defect = context_defect(str(event["transcript_path"]), header)
+        if not defect and transcript:
+            defect = context_defect(str(transcript), header)
         if defect:
             print(f"findings-guard: {defect}.", file=sys.stderr)
             return BLOCK

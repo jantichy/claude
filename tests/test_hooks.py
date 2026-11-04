@@ -1505,6 +1505,29 @@ class FindingsGuard(unittest.TestCase):
             self.assertEqual(2, done.returncode, f"{kind}: otázka prošla bez textu")
 
     @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
+    def test_blocks_any_question_without_text(self):
+        """Pravidlo o kontextu platí pro každou otázku, ne jen pro průchod nálezy."""
+        path = self.transcript(
+            ("text", "Starý kontext z minulé odpovědi"),
+            ("answer", "A"),
+            ("thinking", "Kontext jen v myšlení…"),
+        )
+        done = self.run_guard("Rozsah", ["Pokračovat", "Omezit na adresář"], path)
+        self.assertEqual(2, done.returncode, "otázka bez textu v odpovědi prošla")
+        self.assertIn("žádný text", done.stderr)
+
+    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
+    def test_passes_any_question_with_text(self):
+        """Mimo průchod se titulní řádek nečeká – stačí, že kontext stojí v textu."""
+        path = self.transcript(
+            ("prompt", "co dál?"),
+            ("text", "Zbývají dva body, oba jsou rozhodnutí."),
+            ("user", "výstup nástroje"),
+        )
+        done = self.run_guard("Rozsah", ["Pokračovat", "Omezit na adresář"], path)
+        self.assertEqual(0, done.returncode, done.stderr)
+
+    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
     def test_unreadable_transcript_passes(self):
         """Chybějící transkript nesmí zastavit práci – hook o kontextu pak nerozhoduje."""
         missing = Path(tempfile.mkdtemp()) / "missing.jsonl"
