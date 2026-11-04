@@ -1589,7 +1589,7 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Čím se nahrazuje, co zmizelo:** mrtvé odkazy a kotvy po zápisu dál hlídá `links.py`. Věta, která zápisem přestala platit, se chytí až v příštím `/consistency` – **to je vědomě přijatá cena**, ne opomenutí. Navazitelnost dokumentace neposuzuje nikdo; kdyby se ukázalo, že chybí, patří to do `/consistency`, který čte dokumentaci tak jako tak.
 
-**Bloky myšlení se nečtou, a není to volba.** Změřeno na šesti transcriptech: pět mělo 0 kB při desítkách až stovkách bloků, jeden 12,8 kB na 302 bloků. V transcriptu jsou zapsané prázdné, takže ten obsah tam není. Dřív to stálo v `session.md` jako rozhodnutí „myšlení není závazek“, což svádělo k dojmu, že se něco čitelného vědomě přeskakuje.
+**Bloky myšlení se nečtou.** Změřeno na šesti transcriptech: pět mělo 0 kB při desítkách až stovkách bloků, jeden 12,8 kB na 302 bloků; 4. 11. 2026 mělo obsah 190 z 1 036 bloků (18 %) v 16 ze 40 transcriptů. Obsah tam tedy bývá jen místy, a hlavně ho uživatel nikdy neviděl – na tom, co v myšlení stojí, se v session nikdo nedomluvil. To je důvod, proč se nečte; dřívější „není to volba, obsah tam není“ neplatí. Dřív to stálo v `session.md` jako rozhodnutí „myšlení není závazek“, což svádělo k dojmu, že se něco čitelného vědomě přeskakuje.
 
 **Zaniklé soubory:** `skills/end/agent.md` (zadání vytěžovacího agenta) a `skills/end/readers.md` (zadání čtenářů). Jádro z prvního je v `SKILL.md`, tabulka povinností v novém `obligations.md`. Stopa je tady, protože obojí se dá zkopírovat zpátky z historie gitu a vypadalo by to jako regrese.
 
@@ -2329,6 +2329,8 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 **Rozhodnutí:** pravidlo v `standards/rules.md`, *Ptej se postupně, ne všechno najednou*, říká, že kontext i vysvětlení patří do textu odpovědi, ne do myšlení, a že po napsaném vysvětlení smí dialog hned následovat.
 
 **Zamítnuto – nechat zákaz dialogu a udělat výjimku jen pro `/explain`:** léčil by se příznak, který s příčinou nesouvisí, a mimo skill by uživatel místo výběru z variant musel psát odpověď. Uživatel výslovně chce po vysvětlení zpátky dialog, protože výběr je pohodlnější než psaní.
+
+**Doplněno 4. 11. 2026 – pravidlo samo nestačilo, vynucuje ho hook u každé otázky.** Kontrola kontextu ve `hooks/findings-guard.py` byla od 3. 11. 2026 vypnutá, aby se ukázalo, jestli pravidlo stačí samo. Neukázalo: v session založených po jeho zavedení šlo 15 z 25 otázek průchodu nálezy a 81 ze 142 ostatních otázek bez jediného textového bloku v odpovědi. Oba starší doklady „zkráceného textu“ (19. a 28. 10. 2026) i případ textu „spolknutého“ před agentem na pozadí (27. 10. 2026) byly odpovědi bez textu, rozhraní nic nezkracuje. **Rozhodnutí (uživatel):** hook hlídá každou otázku přes `AskUserQuestion` – u průchodu nálezy chce titulní řádek `[N/celkem]`, u ostatních aspoň jeden neprázdný text od poslední zprávy uživatele nebo odpovědi z dialogu; výsledek jiného nástroje odpověď nekončí, protože text před zápisem do `todo.md` uživatel vidí. **Zamítnuto:** hlídat jen průchod nálezy a jinde se spoléhat na pravidlo – měření ukázalo, že mimo průchod je díra větší; rozhodnutí odložit do `todo.md` – data už byla; smazat kontrolu – bylo by to proti kritériu revize, které padlo předem. Opisy pravidla v 16 skillech zůstávají, protože podmínka jejich odebrání (pravidlo v `rules.md` a `findings.md` stačí) se nesplnila.
 
 ### Pracovní adresář se přes `/clear` přenáší pokynem v kontextu, ne přepnutím
 

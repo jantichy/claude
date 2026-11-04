@@ -107,7 +107,7 @@ Navíc si zjisti, ať v témže kole paralelně, nebo z kontextu:
 
 **Odložené výstupy** – velký výstup nástroje je uříznutý v transcriptu i v kontextu a plná verze leží v `tool-results/<id>.txt`; u session, která měřila nebo se ptala cizího systému, v nich bývá celá podstata. **Otevři výstup tehdy, když jeho čísla nikdo nepřevyprávěl v odpovědi**; co neotevřeš, patří do mezí.
 
-**Co se nečte z principu** – bloky myšlení (v transcriptu jsou prázdné), výstupy `Read`, `Grep` a `Glob` (soubory čteš ze zdroje) a obrázky. Jsou to meze nástroje, ne nedodělaná práce, a v závěru se nevypisují.
+**Co se nečte z principu** – bloky myšlení (v transcriptu většinou prázdné a uživatel je neviděl), výstupy `Read`, `Grep` a `Glob` (soubory čteš ze zdroje) a obrázky. Jsou to meze nástroje, ne nedodělaná práce, a v závěru se nevypisují.
 
 ------
 
