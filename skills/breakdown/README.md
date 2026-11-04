@@ -19,7 +19,7 @@ Udělá ze zadání seřazený seznam úkolů velikosti pár minut. U každého 
 3. **Rozdělí příliš velkou práci na víc plánů**, z nichž každý sám o sobě dá funkční, otestovatelný výsledek.
 4. **Neplánuje naslepo.** Chybí-li zadání, pošle vás nejdřív napsat ho a skončí.
 5. **Umí navázat na existující plán** – doplnit další fázi, dopsat chybějící část, nebo promítnout změnu zadání jen do nehotových úkolů. Nikdy nepřepíše to, co už je v kódu.
-6. **Zkontroluje se sám** – že plán pokrývá všechno, co pokrýt měl, že nedělá nic navíc, že se v pozdějších úkolech nepoužívají jiné názvy než v dřívějších a že se zadání během psaní nezměnilo pod rukama.
+6. **Zkontroluje se sám** – že plán pokrývá všechno, co pokrýt měl, že nedělá nic navíc, že se v pozdějších úkolech nepoužívají jiné názvy než v dřívějších a že se zadání během psaní nezměnilo pod rukama. Ohlídá i jména souborů: soubor, na který by Claude podle vašich zákazů v nastavení nesměl sáhnout (třeba `credentials.py`), přejmenuje ještě v plánu, ne až uprostřed implementace.
 7. **Ověří pokrytí scénářů testem**, ne pokrytí řádků.
 
 ## Proč zrovna tenhle

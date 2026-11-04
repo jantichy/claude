@@ -21,7 +21,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to pátý krok
 
 ## Jak je to postavené uvnitř
 
-Skill dnes řídí **`superpowers:writing-plans`**. To je **implementační detail, ne rozhraní** – může se kdykoliv změnit za jiný nástroj nebo za vlastní postup, aniž se změní, jak se skill volá a co z něj leze. Volající se o vnitřek nestará.
+Skill dnes řídí **`superpowers:writing-plans`** a jména souborů v plánu prověří skript `denied.py` v adresáři skillu. Obojí je **implementační detail, ne rozhraní** – může se kdykoliv změnit za jiný nástroj nebo za vlastní postup, aniž se změní, jak se skill volá a co z něj leze. Volající se o vnitřek nestará.
 
 Co je naopak **závazné a nesmí se změnit tiše**:
 
@@ -86,6 +86,7 @@ Navíc si ověř tohle:
 - že **volbu způsobu implementace na konci nenabízí** – tu řeší `/implement`,
 - že každý úkol musí mít **ověřitelné akceptační kritérium** – viz Fáze 3.
 - že každý úkol odkazuje na **konkrétní sekce dokumentace s kotvou**, ne na celé soubory – viz Fáze 3.
+- že **jména souborů nesmějí odpovídat vzorům `Read`, `Edit` a `Write` v `permissions.deny`** (`~/.claude/settings.json` a nastavení projektu) – zákaz by zápis zablokoval až uprostřed implementace; nejčastěji jde o slova `credentials` a `secrets` ve jménu,
 - že **nadpis úkolu zní doslova `### Task <N>: <název>`** i v českém plánu – slovo `Task` a číslo čtou skripty implementace, takže jsou identifikátor; česky je jen název.
 
 ------
@@ -103,6 +104,7 @@ Navíc si ověř tohle:
 7. **Testy pokrývají scénáře, ne řádky.** Projdi scénáře a *Varianty* a ukaž, který úkol je pokrývá testem. Nepokrytý scénář je nález. Scénáře ber ze `docs/scenarios.md`, vede-li ho projekt – je taxativní, takže pokrytí jde spočítat; jinak ze sekce *Hlavní scénáře* v `docs/requirements.md`.
 8. **Testy jsou psané tak, aby šly schválit teď.** Tenhle plán je jediné místo, kde si člověk testy přečte dřív, než existuje kód – potom už je nemůže nezaujatě posoudit, protože bude posuzovat, jestli procházejí. Piš je konkrétně, včetně vstupů a očekávaných hodnot.
 9. **Úkol unese svůj kontext.** Každý úkol odkazuje na konkrétní sekce dokumentace s kotvou (`model.md#order`), ne na celý soubor ani na kapitolu, a kód nebo cestu v backticku nebere jako odkaz. Implementující agent dostane jen to, nač úkol ukazuje: odkaz na soubor o stovkách tisíc znaků znamená, že buď čte obří text a ztratí zadání, nebo hádá. Hlavičkové pole `**Spec:**` nese cestu v backticku, ne odkaz. Má-li projekt mez velikosti sekce a součtu za úkol hlídanou testem, plán ji musí splnit; úkol nad mezí se rozdělí, nebo odkáže na podsekci.
+10. **Žádný soubor plánu nezakazuje `permissions.deny`.** Pusť `python3 ~/.claude/skills/breakdown/denied.py docs/plan.md .` z kořene projektu; každý vypsaný soubor přejmenuj v celém plánu i v návrhu, který ho jmenuje, a skript pusť znovu, dokud neskončí kódem 0. Kód 2 znamená, že plán nejde přečíst – řekni to.
 
 Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuestion`. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
 
