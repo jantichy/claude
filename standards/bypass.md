@@ -85,17 +85,12 @@ Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. 
 
 ## Tvar otázky na nález (`findings-guard.py` jako `PreToolUse` hook)
 
-`skills/findings.md` předepisuje `header` `Nález N/celkem` nebo `Položka N/celkem`, ale test hlídal jen text skillů a session do `header` dala název tématu. Hook pozná otázku na položku podle záchytné volby (`Neopravovat`, `Zapsat do backlogu`, `Bezpředmětné`) a zastaví ji, nemá-li `header` ten tvar s pořadím od 1 do `celkem`, nebo nestojí-li nad ní v textu odpovědi titulní řádek téhož `[N/celkem]` – kontext napsaný jen do myšlení uživatel nevidí.
+`skills/findings.md` předepisuje `header` `Nález N/celkem` nebo `Položka N/celkem`, ale test hlídal jen text skillů a session do `header` dala název tématu. Hook pozná otázku na položku podle záchytné volby (`Neopravovat`, `Zapsat do backlogu`, `Bezpředmětné`) a zastaví ji, nemá-li `header` ten tvar s pořadím od 1 do `celkem`.
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
 | Otázka na položku bez záchytné volby (rozpor v `/learn`, položka, u které session záchytné volby vynechala) | Nic – bez nich hook otázku na položku od jiné otázky nerozezná | **accepted**: jiný spolehlivý signál v otázce není a poplach nad otázkou na rozsah nebo výběr výstupů by hook vyřadil z provozu. Vynechané záchytné volby jsou samy porušení normy, které hlídá text skillu. |
 | Špatné `celkem` (`Nález 2/9`, když se ptá na šest položek) | Nic – hook nezná délku fronty | **accepted**: počet drží přehled v téže odpovědi a hook vidí jen jednu otázku. |
-| Kontext nad otázkou napsaný do myšlení místo do odpovědi | Hook – v transkriptu (`transcript_path`) hledá od poslední zprávy uživatele nebo odpovědi z dialogu textový blok s titulním řádkem téhož `**[N/celkem]`** a bez něj otázku zastaví; výsledek jiného nástroje odpověď nekončí | hlídáno, `tests/test_hooks.py` |
-| Kontext nad otázkou mimo průchod nálezy napsaný do myšlení | Hook – stejnou cestou hledá u každé jiné otázky aspoň jeden neprázdný textový blok a bez něj otázku zastaví | hlídáno, `tests/test_hooks.py` |
-| Text nad otázkou mimo průchod, který kontextem není (jen „Ptám se.“) | Nic – hook ověří, že text stojí, ne co v něm je | **accepted**: posoudit, jestli text otázku vysvětluje, je úsudek; jakýkoli práh by dával falešné poplachy. |
-| Titulní řádek bez kontextu (jen `**[N/celkem] …**` a hned otázka) | Nic – hook ověří titulní řádek, ne délku ani obsah textu pod ním | **accepted**: posuzovat, jestli kontext stačí, je úsudek; prahová délka by dávala falešné poplachy u krátkých položek. |
-| Nečitelný nebo chybějící transkript | Nic – hook o kontextu pak nerozhoduje a otázku propustí | **accepted**: hook je pojistka a nesmí zastavit práci kvůli změně formátu transkriptu; testy formát hlídají na vzorku. |
 
 ## Permission systém (`settings.json`)
 

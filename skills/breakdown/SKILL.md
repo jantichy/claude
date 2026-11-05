@@ -106,7 +106,7 @@ Navíc si ověř tohle:
 9. **Úkol unese svůj kontext.** Každý úkol odkazuje na konkrétní sekce dokumentace s kotvou (`model.md#order`), ne na celý soubor ani na kapitolu, a kód nebo cestu v backticku nebere jako odkaz. Implementující agent dostane jen to, nač úkol ukazuje: odkaz na soubor o stovkách tisíc znaků znamená, že buď čte obří text a ztratí zadání, nebo hádá. Hlavičkové pole `**Spec:**` nese cestu v backticku, ne odkaz. Má-li projekt mez velikosti sekce a součtu za úkol hlídanou testem, plán ji musí splnit; úkol nad mezí se rozdělí, nebo odkáže na podsekci.
 10. **Žádný soubor plánu nezakazuje `permissions.deny`.** Pusť `python3 ~/.claude/skills/breakdown/denied.py docs/plan.md .` z kořene projektu; každý vypsaný soubor přejmenuj v celém plánu i v návrhu, který ho jmenuje, a skript pusť znovu, dokud neskončí kódem 0. Kód 2 znamená, že plán nejde přečíst – řekni to.
 
-Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuestion`. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
+Nálezy oprav rovnou. Sporné předlož uživateli po jednom přes `AskUserQuestion`.
 
 **Commitni**, má-li projekt zapnutý autocommit.
 

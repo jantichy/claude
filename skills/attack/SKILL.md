@@ -275,7 +275,7 @@ Pro každý, jeden po druhém, od nejzávažnějšího:
 
 **Reprodukční postup je tu výjimka a zůstává číslovaným seznamem** pod tím odstavcem, uvozený tučným slovem *Reprodukce*. Je to návod ke spuštění, ne vysvětlení – souvislý text by z něj udělal to, co se nedá přepsat do terminálu.
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby jsou **konkrétní varianty, kterou cestou díru zavřít**, a za nimi dvě záchytné – ne trojice *Opravit / Odložit / Přeskočit*, u které je odpověď předem známá. Pojmenování obou záchytných voleb i tvar `header` drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*. Chování volby *Other* viz `~/.claude/standards/rules.md`, *Ptej se postupně, ne všechno najednou*. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání = jeden nález (`multiSelect: false`), `header` `Nález N/celkem`, volby jsou **konkrétní varianty, kterou cestou díru zavřít**, a za nimi dvě záchytné – ne trojice *Opravit / Odložit / Přeskočit*, u které je odpověď předem známá. Pojmenování obou záchytných voleb i tvar `header` drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*. Chování volby *Other* viz `~/.claude/standards/rules.md`, *Ptej se postupně, ne všechno najednou*.
 
 Věcnou variantu zapiš do `## Rozhodnuto k zapracování` a nic neopravuj. **V zapracování** pak u každého nálezu:
 

@@ -1300,11 +1300,6 @@ class SecretGuard(unittest.TestCase):
         )
 
 
-CONTEXT_CHECK = "CONTEXT_CHECK = True" in (
-    ROOT / "hooks" / "findings-guard.py"
-).read_text(encoding="utf-8")
-
-
 class FindingsGuard(unittest.TestCase):
     """`findings-guard.py` zastaví otázku na položku s `header` mimo normu.
 
@@ -1316,10 +1311,9 @@ class FindingsGuard(unittest.TestCase):
 
     GUARD = ROOT / "hooks" / "findings-guard.py"
 
-    def run_guard(self, header, labels, transcript=None):
+    def run_guard(self, header, labels):
         event = json.dumps(
             {
-                **({"transcript_path": str(transcript)} if transcript else {}),
                 "tool_name": "AskUserQuestion",
                 "tool_input": {
                     "questions": [
@@ -1413,130 +1407,6 @@ class FindingsGuard(unittest.TestCase):
             check=False,
         )
         self.assertEqual(0, done.returncode)
-
-    LABELS = ["A) Mez (Recommended)", "B) Varovat", "Neopravovat", "Zapsat do todo"]
-
-    def transcript(self, *rows):
-        """Transkript ve tvaru JSONL, jak ho Claude Code zapisuje: řádek na blok."""
-        path = Path(tempfile.mkdtemp()) / "session.jsonl"
-        lines = []
-        for kind, block in rows:
-            extra = {}
-            if kind in ("user", "answer"):
-                content = [{"type": "tool_result", "content": block}]
-                if kind == "answer":
-                    extra = {"toolUseResult": {"answers": {"Otázka?": block}}}
-            elif kind == "text" or kind == "prompt":
-                content = [{"type": "text", "text": block}]
-            else:
-                content = [{"type": kind, kind: block}]
-            role = "user" if kind in ("user", "answer", "prompt") else "assistant"
-            lines.append(
-                json.dumps(
-                    {
-                        "type": role,
-                        "message": {"role": role, "content": content},
-                        **extra,
-                    }
-                )
-            )
-        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        return path
-
-    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
-    def test_blocks_context_left_in_thinking(self):
-        """Případ, kvůli kterému kontrola kontextu vznikla: po nástroji jen myšlení."""
-        path = self.transcript(
-            ("text", "**[8/21] 🔵 NÁVRH N3**\n\nkontext"),
-            ("user", "zapsáno"),
-            ("thinking", "Vyvrácená položka closeCard se ruší…"),
-        )
-        done = self.run_guard("Položka 10/21", self.LABELS, path)
-        self.assertEqual(2, done.returncode, "otázka bez kontextu v odpovědi prošla")
-        self.assertIn("titulním řádkem", done.stderr)
-        # Bez rady, jak text ukotvit, se opakovaný pokus spolkne stejně
-        self.assertIn("v Bashi", done.stderr)
-
-    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
-    def test_blocks_text_without_matching_title(self):
-        path = self.transcript(
-            ("user", "ok"), ("text", "Zapsáno. Další položka je o párování.")
-        )
-        self.assertEqual(
-            2, self.run_guard("Položka 9/21", self.LABELS, path).returncode
-        )
-        path = self.transcript(
-            ("user", "ok"), ("text", "**[8/21] 🟡 PÁROVÁNÍ**\n\nkontext")
-        )
-        self.assertEqual(
-            2, self.run_guard("Položka 9/21", self.LABELS, path).returncode
-        )
-
-    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
-    def test_passes_context_written_as_text(self):
-        path = self.transcript(
-            ("user", "zapsáno"),
-            ("thinking", "…"),
-            ("text", "Zapsáno.\n\n**[9/21] 🟡 PÁROVÁNÍ PLATEB**\n\nkontext"),
-        )
-        done = self.run_guard("Položka 9/21", self.LABELS, path)
-        self.assertEqual(0, done.returncode, done.stderr)
-
-    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
-    def test_passes_context_written_before_other_tool(self):
-        """Průchod zapisuje odpověď do todo.md; text před zápisem uživatel vidí."""
-        path = self.transcript(
-            ("answer", "A"),
-            ("text", "**[9/21] 🟡 PÁROVÁNÍ PLATEB**\n\nkontext"),
-            ("user", "The file docs/todo.md has been updated"),
-            ("thinking", "…"),
-        )
-        done = self.run_guard("Položka 9/21", self.LABELS, path)
-        self.assertEqual(0, done.returncode, done.stderr)
-
-    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
-    def test_blocks_title_from_before_user_input(self):
-        """Text z minulé odpovědi kontextem nové otázky není – uživatel mezitím odpověděl."""
-        for kind in ("answer", "prompt"):
-            path = self.transcript(
-                ("text", "**[9/21] 🟡 PÁROVÁNÍ PLATEB**\n\nkontext"),
-                (kind, "Jak to myslíš?"),
-                ("thinking", "Vysvětlení jen v myšlení…"),
-            )
-            done = self.run_guard("Položka 9/21", self.LABELS, path)
-            self.assertEqual(2, done.returncode, f"{kind}: otázka prošla bez textu")
-
-    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
-    def test_blocks_any_question_without_text(self):
-        """Pravidlo o kontextu platí pro každou otázku, ne jen pro průchod nálezy."""
-        path = self.transcript(
-            ("text", "Starý kontext z minulé odpovědi"),
-            ("answer", "A"),
-            ("thinking", "Kontext jen v myšlení…"),
-        )
-        done = self.run_guard("Rozsah", ["Pokračovat", "Omezit na adresář"], path)
-        self.assertEqual(2, done.returncode, "otázka bez textu v odpovědi prošla")
-        self.assertIn("žádný text", done.stderr)
-        self.assertIn("v Bashi", done.stderr)
-
-    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
-    def test_passes_any_question_with_text(self):
-        """Mimo průchod se titulní řádek nečeká – stačí, že kontext stojí v textu."""
-        path = self.transcript(
-            ("prompt", "co dál?"),
-            ("text", "Zbývají dva body, oba jsou rozhodnutí."),
-            ("user", "výstup nástroje"),
-        )
-        done = self.run_guard("Rozsah", ["Pokračovat", "Omezit na adresář"], path)
-        self.assertEqual(0, done.returncode, done.stderr)
-
-    @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
-    def test_unreadable_transcript_passes(self):
-        """Chybějící transkript nesmí zastavit práci – hook o kontextu pak nerozhoduje."""
-        missing = Path(tempfile.mkdtemp()) / "missing.jsonl"
-        self.assertEqual(
-            0, self.run_guard("Položka 9/21", self.LABELS, missing).returncode
-        )
 
     def test_registered_for_askuserquestion(self):
         """Hook, který není v `settings.json` u `AskUserQuestion`, nehlídá nic."""

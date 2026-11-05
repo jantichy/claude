@@ -259,7 +259,7 @@ U každého nejdřív vypiš:
 
 **Tvar výpisu drží `~/.claude/skills/findings.md`, *Jak nález vypadá*** – tučný název na samostatném řádku a pod ním souvislý text, žádná mřížka popisků. Ve větě řekni, **v čem je problém a jaký má důsledek**, a odkud to je (soubor, sekce, citace). Za titulní název připoj `· <hledisko>`, případně „2 oponenti nezávisle“ – čtenář tím pozná, odkud námitka přišla.
 
-Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“: u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Jejich počet, `header`, pojmenování obou záchytných voleb i to, který stav která znamená, drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají* – **tvar otázky platí pro celou rodinu kontrolních skillů**. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
+Pak se zeptej **přes `AskUserQuestion`** – jedno volání na jeden nález. Volby jsou **konkrétní varianty řešení**, ne „Opravit / Odložit / Přeskočit“: u oponentského nálezu existuje víc věcných cest a „opravit“ neříká kterou. Jejich počet, `header`, pojmenování obou záchytných voleb i to, který stav která znamená, drží `~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají* – **tvar otázky platí pro celou rodinu kontrolních skillů**.
 
 **Věcná varianta znamená stav Přijato**; oba záchytné stavy překládá tabulka v `findings.md`.
 

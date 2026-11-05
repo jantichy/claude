@@ -42,7 +42,7 @@ Závažnost nálezu je jiná otázka a drží ji `~/.claude/skills/severity.md`.
 
 ## Jak nález vypadá
 
-**Odstavcem, ne mřížkou popisků.** Titulní řádek stojí sám a text začíná až pod ním, odstavcem: **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
+**Odstavcem, ne mřížkou popisků.** Titulní řádek stojí sám a text začíná až pod ním, odstavcem:
 
 ```
 **[N/celkem] 🔴/🟡/🔵 NÁZEV NÁLEZU**

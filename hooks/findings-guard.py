@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PreToolUse hook: zastaví otázku bez kontextu a otázku na nález s `header` mimo normu.
+"""PreToolUse hook: zastaví otázku na nález s `header` mimo normu.
 
 `skills/findings.md` předepisuje `header` `Nález N/celkem`, u položky, která
 nálezem není, `Položka N/celkem`. Test v `tests/test_skills.py` hlídá jen text
@@ -13,19 +13,7 @@ běží: `Neopravovat` (vada), `Zapsat do backlogu` (nová práce) a `Bezpředm�
 signálem není – nabízí ho i hromadná otázka `/oponent` nad nízkými nálezy,
 která jedna položka není. U otázky bez záchytné volby (rozsah běhu, výběr
 výstupů, rozpor v `/learn`) se tvar `header` nekontroluje; eviduje to
-`standards/bypass.md`. Kontext ano – viz níž.
-
-**Kontext nad otázkou hlídá z transkriptu.** Norma chce nad otázkou textový
-blok s titulním řádkem `**[N/celkem] …**` a kontextem. Session ho umí napsat do
-bloku thinking místo do odpovědi – uživatel pak místo kontextu vidí jen
-jednořádkový souhrn myšlení. Hook proto v transkriptu (`transcript_path`) najde
-bloky asistenta od poslední zprávy uživatele nebo odpovědi z dialogu a zastaví
-otázku, mezi nimiž není text s titulním řádkem téhož `N/celkem`; u každé jiné
-otázky stačí, že tam stojí aspoň nějaký text – pravidlo o kontextu před
-otázkou (`standards/rules.md`, *Ptej se postupně*) platí pro všechny. Výsledek
-ostatních nástrojů odpověď nekončí: v průchodu se odpověď hned zapisuje do
-`todo.md` a text napsaný před tím zápisem uživatel vidí. Nečitelný nebo
-chybějící transkript otázku propustí.
+`standards/bypass.md`.
 
 Vrací 2 a důvod na stderr, což je pro PreToolUse zastavení nástroje.
 """
@@ -40,14 +28,6 @@ PASS = 0
 TRIGGERS = {"Neopravovat", "Zapsat do backlogu", "Bezpředmětné"}
 HEADER = re.compile(r"^(?:Nález|Položka) (\d+)/(\d+)$")
 RECOMMENDED = re.compile(r"\s*\(Recommended\)\s*$")
-TITLE = re.compile(r"\*\*\[(\d+)/(\d+)\]")
-CONTEXT_CHECK = True
-# Opakovat text a otázku v téže odpovědi nestačí – spolkne se stejně. Text, za
-# kterým následuje jiný nástroj, se do odpovědi zapíše.
-RETRY = (
-    ". Text nepiš rovnou před dialog, spolkl by se znovu: napiš ho, zavolej `true` "
-    "v Bashi a otázku polož až po něm"
-)
 
 
 def is_item(question: dict) -> bool:
@@ -75,79 +55,6 @@ def header_defect(header: str) -> str | None:
     )
 
 
-def is_input(row: dict) -> bool:
-    """Záznam, kterým začíná nová odpověď: zpráva uživatele nebo odpověď z dialogu."""
-    if isinstance(row.get("toolUseResult"), dict) and "answers" in row["toolUseResult"]:
-        return True
-    if row.get("isMeta"):
-        return False
-    content = (row.get("message") or {}).get("content")
-    if isinstance(content, str):
-        return True
-    return isinstance(content, list) and any(
-        isinstance(c, dict) and c.get("type") == "text" for c in content
-    )
-
-
-def turn_texts(path: str) -> list[str] | None:
-    """Texty asistenta od poslední zprávy uživatele nebo odpovědi z dialogu.
-
-    `None`, když transkript nejde přečíst – pak hook nerozhoduje.
-    """
-    try:
-        with open(path, encoding="utf-8") as f:
-            lines = f.readlines()
-    except OSError:
-        return None
-    texts: list[str] = []
-    for line in reversed(lines):
-        try:
-            row = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        if row.get("type") == "user":
-            if is_input(row):
-                break
-            continue
-        if row.get("type") != "assistant":
-            continue
-        content = (row.get("message") or {}).get("content")
-        if isinstance(content, list):
-            texts += [
-                str(c.get("text", ""))
-                for c in content
-                if isinstance(c, dict) and c.get("type") == "text"
-            ]
-    return texts
-
-
-def context_defect(path: str, header: str) -> str | None:
-    texts = turn_texts(path)
-    if texts is None:
-        return None
-    wanted = HEADER.match(header.strip()).groups()
-    if any(m.groups() == wanted for t in texts for m in TITLE.finditer(t)):
-        return None
-    return (
-        f"nad otázkou chybí v odpovědi text s titulním řádkem **[{wanted[0]}/{wanted[1]}] …** "
-        "a kontextem – je-li jen v myšlení, uživatel ho nevidí a dostane jednořádkový "
-        "souhrn. Napiš kontext jako text odpovědi a otázku polož znovu" + RETRY
-    )
-
-
-def bare_defect(path: str) -> str | None:
-    """Otázka mimo průchod nálezy: v odpovědi před ní musí stát aspoň nějaký text."""
-    texts = turn_texts(path)
-    if texts is None or any(t.strip() for t in texts):
-        return None
-    return (
-        "nad otázkou nestojí v odpovědi žádný text – kontext napsaný jen do myšlení "
-        "uživatel nevidí a dostane jednořádkový souhrn "
-        "(~/.claude/standards/rules.md, *Ptej se postupně*). Napiš, čeho se otázka "
-        "týká, jak to je dnes a proč to nestačí, a otázku polož znovu" + RETRY
-    )
-
-
 def main() -> int:
     try:
         event = json.load(sys.stdin)
@@ -156,20 +63,10 @@ def main() -> int:
     if event.get("tool_name") != "AskUserQuestion":
         return PASS
     questions = (event.get("tool_input") or {}).get("questions") or []
-    transcript = CONTEXT_CHECK and event.get("transcript_path")
     for q in questions:
-        if not isinstance(q, dict):
+        if not isinstance(q, dict) or not is_item(q):
             continue
-        if not is_item(q):
-            defect = bare_defect(str(transcript)) if transcript else None
-            if defect:
-                print(f"findings-guard: {defect}.", file=sys.stderr)
-                return BLOCK
-            continue
-        header = str(q.get("header", ""))
-        defect = header_defect(header)
-        if not defect and transcript:
-            defect = context_defect(str(transcript), header)
+        defect = header_defect(str(q.get("header", "")))
         if defect:
             print(f"findings-guard: {defect}.", file=sys.stderr)
             return BLOCK

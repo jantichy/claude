@@ -154,7 +154,7 @@ Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 
 **Tvar nálezu i volby drží `~/.claude/skills/findings.md`** – neopisuj si je sem. U návrhu platí výjimka o položce, která není vadou: dnešní řešení funguje, takže *Neopravovat* nedává smysl a volba „jestli a kdy" je legitimní.
 
-**O každém návrhu rozhoduje uživatel**, jeden po druhém. U každého ukaž kroniku shluku (co vzniklo kdy a z jakého podnětu), návrh, verdikt ověřovatele a cenu přepisu. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
+**O každém návrhu rozhoduje uživatel**, jeden po druhém. U každého ukaž kroniku shluku (co vzniklo kdy a z jakého podnětu), návrh, verdikt ověřovatele a cenu přepisu.
 
 **V zapracování** pak platí: **zamítnutý návrh zapiš do `docs/decisions.md`** k rozhodnutí, jehož alternativou byl – jako zavrženou variantu i s důvodem zamítnutí a s verdiktem ověřovatele. Filtr proti opakovanému předkládání tím funguje sám: `decisions.md` je vstup tohohle skillu, takže si ho příští běh přečte ve *Fázi 1*. **Nezakládej kvůli tomu kapitolu v `CLAUDE.md`** – výjimka z `~/.claude/standards/rules.md` pro umlčené nálezy prověřovacích kroků tady neplatí, protože stojí na tom, že `decisions.md` by nikdo nečetl.
 

@@ -51,8 +51,6 @@ Přečti původní text **očima člověka, který vidí jen viditelný text odp
 
 ## Fáze 2 – Vysvětlení
 
-**Piš ho do textu odpovědi, nikdy jen do myšlení.** Uživatel myšlení nevidí; „vysvětlil jsem“ bez napsaného textu je pro něj prázdná odpověď (`~/.claude/standards/rules.md`, *Ptej se postupně, ne všechno najednou*).
-
 Stavba – v tomhle pořadí, ale jako souvislý text, ne jako formulář s nadpisy:
 
 1. **Čeho se to týká** – jednou větou, slovy domény, ne jménem souboru nebo pole.
@@ -85,7 +83,7 @@ Ze skutečných případů, ze kterých skill vznikl:
 
 ## Fáze 3 – Závěr
 
-**Čekala-li otázka, polož ji hned za vysvětlením znovu přes `AskUserQuestion`.** Tentokrát mířenou na situaci z příběhu (*„Má se adminovi po odebrání Petry ze zrušené akce ukázat odkaz na mail stejně jako u Jana?“*), ale **volby jsou pravidla, ne rozhodnutí o jednom případu**, a s variantami, jejichž `label` i `description` nepoužívají nic, co vysvětlení nezavedlo. Ptá-li se otázka na nález, nese i záchytné volby skillu, který frontu vede (`~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*). Výběr z variant je pro uživatele pohodlnější než psát odpověď, a teď už ví, na co se ho ptáš. Nečekala-li žádná otázka, vrať se k práci, u které jste byli. **Kontext piš do odpovědi, ne do myšlení:** text, který má uživatel číst – titulní řádek, kontext, varianty, doporučení –, v myšlení neformuluj; tam jen rozhodni, co řekneš, a větu napiš až v odpovědi. Hotový odstavec v myšlení uživatel nevidí – dostane místo něj jednořádkový souhrn a otázku bez kontextu (`~/.claude/standards/rules.md`, *Ptej se postupně*).
+**Čekala-li otázka, polož ji hned za vysvětlením znovu přes `AskUserQuestion`.** Tentokrát mířenou na situaci z příběhu (*„Má se adminovi po odebrání Petry ze zrušené akce ukázat odkaz na mail stejně jako u Jana?“*), ale **volby jsou pravidla, ne rozhodnutí o jednom případu**, a s variantami, jejichž `label` i `description` nepoužívají nic, co vysvětlení nezavedlo. Ptá-li se otázka na nález, nese i záchytné volby skillu, který frontu vede (`~/.claude/skills/findings.md`, *Dvě záchytné volby a co znamenají*). Výběr z variant je pro uživatele pohodlnější než psát odpověď, a teď už ví, na co se ho ptáš. Nečekala-li žádná otázka, vrať se k práci, u které jste byli.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím – stojí-li za vysvětlením dialog, řekni ji těsně před ním:
 
