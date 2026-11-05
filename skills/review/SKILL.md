@@ -44,6 +44,8 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 - **`/review`** nebo **`/review branch`** (výchozí) – jen změny na aktuální větvi, tedy diff proti hlavní větvi plus necommitnuté změny.
 - **`/review full`** – celý projekt. Použij, když uživatel napíše `full`, jinak nikdy.
 
+**Na hlavní větvi s prázdným diffem** (projekt s autocommitem přímo do `main`) je výchozím rozsahem **rozpětí od posledního průchodu `/review` do `HEAD`** a k tomu necommitnuté změny. Hash vezmi z posledního záznamu `/review` v `docs/done.md`, sekci `## Průchody životním cyklem` (`~/.claude/skills/passes.md`), ověř ho `git cat-file -e <hash>^{commit}` a rozsah ohlas v souhrnu přípravy – bez dialogu. Nabídka celého projektu z přípravy, bod 5, platí jen tehdy, když žádný průchod zapsaný není, hash v historii chybí, nebo od něj nic nepřibylo. Rozsah se tak bere od místa, kde minulá revize skončila, ne od milníku, který by uživatel musel dohledávat.
+
 U `full` na starším projektu počítej s tím, že vyplave existující dluh. **Předem uživatele upozorni**, kolik souborů se bude procházet, a pokud jich je hodně (řádově stovky), zeptej se přes `AskUserQuestion`, jestli chce pokračovat, nebo omezit rozsah na konkrétní adresář.
 
 ------
