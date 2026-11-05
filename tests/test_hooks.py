@@ -1454,6 +1454,8 @@ class FindingsGuard(unittest.TestCase):
         done = self.run_guard("Položka 10/21", self.LABELS, path)
         self.assertEqual(2, done.returncode, "otázka bez kontextu v odpovědi prošla")
         self.assertIn("titulním řádkem", done.stderr)
+        # Bez rady, jak text ukotvit, se opakovaný pokus spolkne stejně
+        self.assertIn("v Bashi", done.stderr)
 
     @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
     def test_blocks_text_without_matching_title(self):
@@ -1515,6 +1517,7 @@ class FindingsGuard(unittest.TestCase):
         done = self.run_guard("Rozsah", ["Pokračovat", "Omezit na adresář"], path)
         self.assertEqual(2, done.returncode, "otázka bez textu v odpovědi prošla")
         self.assertIn("žádný text", done.stderr)
+        self.assertIn("v Bashi", done.stderr)
 
     @unittest.skipUnless(CONTEXT_CHECK, "kontrola kontextu je dočasně vypnutá")
     def test_passes_any_question_with_text(self):

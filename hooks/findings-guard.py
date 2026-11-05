@@ -42,6 +42,12 @@ HEADER = re.compile(r"^(?:Nález|Položka) (\d+)/(\d+)$")
 RECOMMENDED = re.compile(r"\s*\(Recommended\)\s*$")
 TITLE = re.compile(r"\*\*\[(\d+)/(\d+)\]")
 CONTEXT_CHECK = True
+# Opakovat text a otázku v téže odpovědi nestačí – spolkne se stejně. Text, za
+# kterým následuje jiný nástroj, se do odpovědi zapíše.
+RETRY = (
+    ". Text nepiš rovnou před dialog, spolkl by se znovu: napiš ho, zavolej `true` "
+    "v Bashi a otázku polož až po něm"
+)
 
 
 def is_item(question: dict) -> bool:
@@ -125,7 +131,7 @@ def context_defect(path: str, header: str) -> str | None:
     return (
         f"nad otázkou chybí v odpovědi text s titulním řádkem **[{wanted[0]}/{wanted[1]}] …** "
         "a kontextem – je-li jen v myšlení, uživatel ho nevidí a dostane jednořádkový "
-        "souhrn. Napiš kontext jako text odpovědi a otázku polož znovu"
+        "souhrn. Napiš kontext jako text odpovědi a otázku polož znovu" + RETRY
     )
 
 
@@ -138,7 +144,7 @@ def bare_defect(path: str) -> str | None:
         "nad otázkou nestojí v odpovědi žádný text – kontext napsaný jen do myšlení "
         "uživatel nevidí a dostane jednořádkový souhrn "
         "(~/.claude/standards/rules.md, *Ptej se postupně*). Napiš, čeho se otázka "
-        "týká, jak to je dnes a proč to nestačí, a otázku polož znovu"
+        "týká, jak to je dnes a proč to nestačí, a otázku polož znovu" + RETRY
     )
 
 
