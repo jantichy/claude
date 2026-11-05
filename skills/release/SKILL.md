@@ -164,7 +164,7 @@ Teprve teď se ptáš, a ptáš se **jednou otázkou přes `AskUserQuestion`** n
 - **Kontroly:** průběžná kontrola ✅ · build ✅ · e2e ✅/– · review ✅/❓ · attack ✅/❓ · audit ✅ · tajemství ✅
 - **Migrace:** <žádné / expand krok N, záloha z HH:MM>
 - **Citlivé oblasti:** <které se mění, nebo „žádné“>
-- **Návrat:** <konkrétně – revert commitu a redeploy / promote předchozí verze / obnovení ze zálohy>
+- **Návrat:** <konkrétně – revert commitu a redeploy / promote předchozí verze / obnovení ze zálohy> · **zastaví:** <co návrat přeruší a jestli to jde dohnat, nebo „nic“>
 - **Po nasazení sleduji:** <co konkrétně a jak dlouho>
 ```
 
@@ -204,6 +204,10 @@ Nasazeno neznamená funguje. Ověř, a ověř na **produkční URL**, ne na loca
 5. **Měření**, má-li ho projekt implementované (`~/Context/Analytics/`). Projdi hlavní konverzní tok s otevřenou síťovou záložkou a ověř **jmenovitě očekávané eventy a stav consentu**, ne jen že se stránka načte. Přejmenovaná třída nebo přesunutý formulář, kvůli kterému přestane chodit konverzní event, **projde vším ostatním**: typy sedí, testy jsou zelené, panel se do měřicích souborů nemusel trefit a `/attack` sleduje pády, ne to, co se neodeslalo. Projeví se to za týden dírou v datech, kterou nejde zpětně dopočítat.
 
 **Když je zle:** vrať se cestou, kterou jsi popsal v poli `**Návrat:**` ve Fázi 3, hned. Neladí se to v produkci pod tlakem – nejdřív návrat, potom hledání příčiny.
+
+**Před návratem si odpověz, co návrat zastaví a jestli to jde dohnat** – pole *zastaví* z Fáze 3. Návrat sám škodí, když přeruší sběr dat, která cizí systém po čase maže (cloud s omezenou retencí, log s rotací), nebo když vadná část nic nepoškozuje a funkční část dál dodává, co dodávat má. Pak nevracej sám: řekni to a nabídni **částečné ponechání** (funkční část nechat běžet, vadnou vypnout) vedle úplného návratu; rozhodne uživatel. Poškozuje-li vadná část data nebo ji vidí uživatelé, platí návrat hned.
+
+**Po návratu zapiš do `docs/todo.md` opravu i s tím, co čekání stojí** – co se do nasazení opravy ztrácí a od kdy nevratně („každý den bez opravy vypadne z cloudu den měřicích bodů“). Bez toho se oprava řadí jako každá jiná položka a ztráta se ukáže, až je pozdě.
 
 ------
 
