@@ -2,8 +2,8 @@
 """Kopie projektu pro ověřovatele `/review` – bez zápisů o předchozích nálezech.
 
 Ověřovatel má nález posoudit z kódu, ne podle toho, jak ho kdo hodnotil dřív.
-Sekce `## Přerušený běh` a `## Rozhodnuto k zapracování` v `todo.md` a běhová
-fronta v `.claude/run/` přitom nesou právě starší nálezy i s verdikty, a zákaz
+Sekce `## Přerušený běh`, `## Rozhodnuto k zapracování` a `## Otázky dalšího
+kola` v `todo.md` a běhová fronta v `.claude/run/` přitom nesou právě starší nálezy i s verdikty, a zákaz
 číst je v zadání nedrží. Kopie bez nich je hranice, kterou ověřovatel obejít
 nemůže, protože o originálu neví.
 
@@ -24,7 +24,11 @@ import sys
 from pathlib import Path
 
 #: Sekce se staršími nálezy a jejich vypořádáním.
-HIDDEN_SECTIONS = ("## Přerušený běh", "## Rozhodnuto k zapracování")
+HIDDEN_SECTIONS = (
+    "## Přerušený běh",
+    "## Rozhodnuto k zapracování",
+    "## Otázky dalšího kola",
+)
 #: Soubory, ve kterých ty sekce stojí – `todo.md` podle režimu umístění,
 #: `CLAUDE.md` u operativního projektu.
 HIDDEN_IN = ("todo.md", "CLAUDE.md")

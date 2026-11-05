@@ -1086,6 +1086,19 @@ class SortedQueue(unittest.TestCase):
         )
         self.assertIsNone(self.c.legacy_shape(self.c.parse_todo(text)[0], text))
 
+    def test_next_round_questions_are_kept_whole(self):
+        """Otázky, které zapsal agent zapracování, nejsou pásmo práce a nesmí se zkrátit na vrchol."""
+        questions = "".join(f"- **[{n}/12] 🟡 OTÁZKA {n}**\n" for n in range(1, 13))
+        text = (
+            SORTED_TODO
+            + "\n# Mimo frontu\n\n## Otázky dalšího kola\n\n### /review – dávka\n\n"
+            + questions
+        )
+        todo = self.c.top_of_queue(self.c.parse_todo(text)[0])
+        asked = next(s for s in todo if s["section"] == "Otázky dalšího kola")
+        self.assertEqual(sum(len(p["items"]) for p in asked["parts"]), 12)
+        self.assertIsNone(self.c.legacy_shape(self.c.parse_todo(text)[0], text))
+
     def test_missing_queue_heading_makes_file_legacy(self):
         text = SORTED_TODO.replace("# Fronta\n", "# TODO\n")
         self.assertIn(

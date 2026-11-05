@@ -61,7 +61,12 @@ SIZE = re.compile(r"([○◐●])\s*")
 # Sekce s vlastním tvarem a pořadím (`structure.md`, *`todo.md`*): do vrcholu
 # se nepočítají, vracejí se celé, velikost u nich chybět smí a položkou je
 # i holá odrážka – `## Rozhodnuto k zapracování` zaškrtávátka nemá.
-SPECIAL = {"Přerušený běh", "Parkované v session", "Rozhodnuto k zapracování"}
+SPECIAL = {
+    "Přerušený běh",
+    "Parkované v session",
+    "Rozhodnuto k zapracování",
+    "Otázky dalšího kola",
+}
 DIFF_LINES = 12
 # Složky, do kterých hledání `todo.md` podprojektů nesestupuje – stejně jako příkaz *Fáze 1* v `SKILL.md`.
 SKIP_DIRS = {"node_modules", "vendor"}

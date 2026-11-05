@@ -34,6 +34,11 @@ TODO = """# Fronta
 
 - **Nález 3** → opravit guardem
 
+## Otázky dalšího kola
+
+### /review branch – dávka 1
+- **[1/1] 🟡 SOUBĚH** – zamknout řádek, nebo verzovat?
+
 ```
 ## Teď
 ```
@@ -94,6 +99,8 @@ class Snapshot(unittest.TestCase):
         self.assertNotIn("POTVRZENO", todo)
         self.assertNotIn("Rozhodnuto k zapracování", todo)
         self.assertNotIn("opravit guardem", todo)
+        self.assertNotIn("Otázky dalšího kola", todo)
+        self.assertNotIn("zamknout řádek", todo)
 
     def test_zbytek_todo_zustane(self):
         """Řez končí nadpisem první i druhé úrovně, ne až dalším skrytým."""
