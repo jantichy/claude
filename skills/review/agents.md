@@ -67,7 +67,10 @@ PRAVIDLA HLÁŠENÍ:
   poli: `cmd` (přesný příkaz), `exit_code` (jeho návratový kód) a `stdout_tail`
   (posledních pár řádků výstupu). Uveď jen to, co jsi opravdu spustil; ta trojice se
   přehrává. Pracuj přitom výhradně v `/tmp` a s absolutními cestami; do auditovaného
-  projektu nezapisuj.
+  projektu nezapisuj. V kopii projektu pouštěj testy přes `python -m` (`uv run python
+  -m pytest`), ne přes `.venv/bin/…`: zkopírovaný spustitelný soubor i editovatelně
+  nainstalovaný balík míří do originálu, takže by testy běžely nad ním a každá mutace
+  by „přežila“. Ověř, odkud se balík načetl (`<balík>.__file__`).
 - Nehlas soubory v cestách legacy/vendored/generated.
 - Když je totéž porušené na mnoha místech (>20 výskytů), neuváděj jednotlivé řádky –
   uveď pattern, počet, tři příklady a navrhni hromadnou opravu. Označ tagem `batch`.
