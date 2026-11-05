@@ -14,7 +14,7 @@ Prověří hotovou práci před uzavřením z několika nezávislých hledisek n
 
 ## Co umí
 
-1. **`/review`**, případně **`/review branch`** (výchozí) – prověří změny na aktuální větvi.
+1. **`/review`**, případně **`/review branch`** (výchozí) – prověří změny na aktuální větvi. Na hlavní větvi bez změn – u projektu, který commituje rovnou do `main` – vezme změny od posledního zapsaného průchodu `/review`.
 2. **`/review full`** – celý projekt. U staršího projektu předem řekne, kolik souborů to bude, a při stovkách se zeptá, jestli pokračovat.
 3. **Deterministická vrstva** – typová kontrola, linter, testy, produkční build, audit závislostí, hledání tajemství v repozitáři, statická analýza, mutační testování, přístupnost, výkon a pokrytí. Vypisuje naměřenou hodnotu i práh, ne jen počet.
 4. **Panel specialistů, který se skládá podle toho, čeho se změny týkají** – korektnost, bezpečnost, data a stavy, provoz a chyby, testy, konfigurace agentní vrstvy. K tomu specialisté měřící soulad s doménovými znalostmi: kód, web, administrace, analytika, texty, vizuál, prezentace, školení. Mění-li se jen dokumentace, měří se korektnost a bezpečnost proti scénářům, oprávněním a citlivým oblastem v návrhu, ne proti kódu, který tam není.

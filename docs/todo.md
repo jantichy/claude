@@ -16,6 +16,8 @@
 
 ## Potom
 
+- [ ] ○ **`/end` nezná sekci `## Otázky dalšího kola`** (6. 11. 2026, vzniklo s tou sekcí v `findings.md`). `prepare.py` hlásí jako rozdělanou práci jen `## Rozhodnuto k zapracování`, do které session zapsala, a tabulka v `skills/end/break.md` sekci otázek nezná. Průchod přerušený s nezodpovězenými otázkami v ní by úklid nepoznal jako rozdělanou práci. Doplnit detekci v `prepare.py` s testem v `tests/test_end.py` a řádek v `break.md`.
+
 - [ ] ○ **`/next`: sjednotit, co znamená „fronta“** (4. 11. 2026, odloženo z ověření `structure.md`). V `/next` slovo „fronta“ znamená všechno, co skill nabízí, včetně sekcí pod `# Mimo frontu` v `todo.md`; sjednotit buď jméno nadpisu, nebo řeč `/next`.
 
 - [ ] ○ **`collect.py` pozná pásmo podle jména sekce, ne podle nadpisu `#` nad ní** (4. 11. 2026, odloženo z ověření `structure.md`). Pásmo zapsané omylem pod `# Mimo frontu` se počítá jako pásmo práce a text pod `# Mimo frontu` před prvním `## ` se přilepí k poslednímu pásmu. Sekce číst v kontextu nadpisu `#` a test v obou směrech.
