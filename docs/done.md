@@ -766,3 +766,5 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 - [x] **`/review` v projektu s autocommitem na `main`: výchozí rozsah od posledního průchodu** (2026-11-05) (zadáno 21. 10. 2026 z clockworku, znovu 2. a 3. 11. 2026 ve Fotovoltaice). Na hlavní větvi s prázdným diffem bere `/review` bez dialogu rozpětí od hashe posledního průchodu `/review` v `done.md` do `HEAD` a necommitnuté změny; celý projekt nabídne, jen když průchod zapsaný není, hash v historii chybí nebo od něj nic nepřibylo. Rozhodl uživatel, zamítnuté varianty drží `decisions.md`.
 
+- [x] **Průběžná kontrola pod zátěží z `/review` hlásila nedoběhnutý test jako chybu** (2026-11-05) (zadáno 21. 10. 2026 z clockworku). `/review` pouští mutation testing až po doběhnutí panelu specialistů, ne souběžně s agenty, kteří si pouštějí vlastní testy. Strop `LIMIT` ani hláška `hooks/verify.sh` se neměnily. Rozhodl uživatel; zamítnutá varianta – hlásit timeout jako „nedoběhlo“ místo padajícího testu – zůstává v `decisions.md`.
+
