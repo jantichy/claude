@@ -25,7 +25,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to sedmý krok
 
 Tahle pětice platí bez výjimky a bez ohledu na to, jak triviální změna to je:
 
-1. **Nikdy se nespouští sám.** Ani jako pokračování `/implement`, `/review` nebo `/end`. Ani když uživatel řekl „a nasaď to“ na začátku dlouhé session – to byl záměr, ne potvrzení. Potvrzení se dává **teď a k tomuhle konkrétnímu nasazení**.
+1. **Nikdy se nespouští sám.** Ani jako pokračování `/implement`, `/review` nebo `/end`. Ani když uživatel řekl „a nasaď to“ na začátku dlouhé session – to byl záměr, ne potvrzení. Potvrzení se dává **teď a k tomuhle konkrétnímu nasazení**. **Potvrzením je i výslovný pokyn spustit `/release` bez ptaní jako článek řetězu, který uživatel zadal** („po `/implement` bez přerušení i `/release`, nebudu tu“) – živý pokyn má přednost (`~/.claude/standards/rules.md`, *Přednost pravidel*). Platí jen pro nasazení, na které ten řetěz vede, a ruší jen otázku *Nasadit / Zrušit*: souhrn se vypíše a nasazuje se. Pravidla 2 až 5 zastavují dál – selže-li kontrola, chybí `/review` nebo návrat, skill se zastaví a počká na uživatele.
 2. **Nasazuje se jen zelený, prověřený stav.** Neproběhlo `/review`? Řekni to a zeptej se, jestli opravdu chce nasadit neprověřenou práci.
 3. **Návrat musí existovat dřív, než se nasadí.** Když neumíš odpovědět na otázku „jak se vrátíme za deset minut zpátky“, nenasazuj a vyřeš nejdřív ji.
 4. **Migrace dat se nikdy nemíchá s nasazením kódu do jednoho nevratného kroku.** Viz *Migrace*.
@@ -172,7 +172,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Volby: **Nasadit** / **Zrušit**.
 
-Bez výslovné odpovědi se nenasazuje. Ticho není souhlas.
+Bez výslovné odpovědi – nebo výslovného pokynu z pravidla 1 – se nenasazuje. Ticho není souhlas.
 
 ------
 
