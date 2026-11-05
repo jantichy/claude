@@ -59,6 +59,7 @@ Tahle vrstva nic nehlídá, ale **sama je výjimkou z kontroly**: deny `Edit(//*
 | Přeházet argumenty (`git push origin main --force`) | Hook čte celý příkaz a posuzuje přepínač jako **celé slovo**, ne prefix – právě proto vznikl | hlídáno, `tests/test_hooks.py` |
 | Slepit krátké přepínače (`git clean -fx`, `-xdf`, `-ffd`) | U `clean` rozhoduje **obsah** přepínače, ne jeho tvar – výčet slepenin je vždycky děravý a `-fx` jím prošel | hlídáno, doplněno 20. 9. 2026 |
 | Vypnout `clean.requireForce` a mazat holým `git clean` | U `clean` se neptáme na `-f`, ale na to, jestli je běh suchý – projde jen `-n` a `--dry-run` | hlídáno, doplněno 20. 9. 2026 |
+| Oddělit příkaz bez mezery, závorkou nebo novým řádkem (`git status&&git push --force`, `(git push -f)`, přepsání na řádku pod heredocem) | Operátory shellu jsou samostatná slova i bez mezery, takže každý příkaz se posuzuje zvlášť – a argument dalšího příkazu (`date '+%F'` za `git push -q;`) se naopak nepočítá k pushi | hlídáno, doplněno 5. 11. 2026 |
 | Schovat příkaz do aliasu (`git pf`, `git test`) | Alias se rozbalí z konfigurace gitu a posoudí znovu, do tří úrovní zanoření | hlídáno |
 | Shellový alias (`!sh -c '…'`) | Nerozebírá se, ale **zastaví se** – u shellu nejde poznat, co spustí | hlídáno |
 | Schovat příkaz do skriptu, který se spustí (`./deploy.sh`) | Nic – hook vidí jen text příkazu | **accepted**: skript je kód a čte ho člověk při psaní i revizi; hook brání ukliknutí, ne útoku. |

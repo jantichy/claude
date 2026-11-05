@@ -1090,6 +1090,29 @@ class GitGuard(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertAllowed(command)
 
+    def test_argument_of_next_command_is_not_push_argument(self):
+        """Falešný poplach z Fotovoltaiky: `+` z `date` za `git push -q;` bez mezery."""
+        for command in [
+            "git push -q origin v0.2.0; git rev-parse --short HEAD; date '+%F %T'",
+            "(git remote get-url origin >/dev/null 2>&1 && git push -q; echo $?); date +%F",
+            "git commit -q -F - <<'EOF'\nrelease: 0.2.0\nEOF\n"
+            "git tag -a v0.2.0 -m \"v0.2.0\" && git push -q; date '+%F'",
+        ]:
+            with self.subTest(command=command):
+                self.assertAllowed(command)
+
+    def test_rewrite_behind_operator_without_space_is_blocked(self):
+        """Oddělovač bez mezery, závorka ani nový řádek nesmí přepsání schovat."""
+        for command in [
+            "date +%F;git push origin +main",
+            "git status&&git push --force",
+            "(git push -f origin main)",
+            "cd repo;(git push --force)",
+            "git commit -m x\ngit push origin main --force",
+        ]:
+            with self.subTest(command=command):
+                self.assertBlocked(command)
+
     def test_other_tools_pass(self):
         """Hook má matcher na Bash, ale nesmí spoléhat jen na něj."""
         event = json.dumps({"tool_name": "Read", "tool_input": {"file_path": "/tmp/x"}})

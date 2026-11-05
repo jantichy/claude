@@ -30,7 +30,10 @@ import sys
 BLOCK = 2
 PASS = 0
 
-SEPARATORS = {";", "&&", "||", "|", "&", "\n"}
+# Operátory shellu, které začínají nový příkaz. Lexer je vrací jako samostatná
+# slova i bez mezery (`main;`, `);`), takže `date '+%F'` za `git push -q;`
+# nezůstane argumentem pushe a závorka nezakryje `git`, který za ní stojí.
+OPERATORS = ";&|()\n"
 
 # podpříkaz → (přepínače, které zastavují, věta pro člověka)
 FORBIDDEN = {
@@ -65,11 +68,19 @@ GLOBAL_WITH_VALUE = {
 }
 
 
+def split_words(command):
+    """Rozloží příkaz na slova; operátory shellu jsou samostatná slova."""
+    lexer = shlex.shlex(command, posix=True, punctuation_chars=OPERATORS)
+    lexer.whitespace = " \t\r"
+    lexer.whitespace_split = True
+    return list(lexer)
+
+
 def segments(words):
     """Rozdělí příkaz na části oddělené operátory shellu."""
     out, cur = [], []
     for w in words:
-        if w in SEPARATORS:
+        if w and all(ch in OPERATORS for ch in w):
             if cur:
                 out.append(cur)
             cur = []
@@ -197,7 +208,7 @@ def main():
     if not re.search(r"\bgit\b", command):
         return PASS
     try:
-        words = shlex.split(command, comments=True)
+        words = split_words(command)
     except ValueError:
         return PASS
 
