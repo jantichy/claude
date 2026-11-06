@@ -205,6 +205,8 @@ Pak návrh sám, nad celkem i u jednoho zátahu:
 
 **Kontrola proti požadavkům:** projdi scénáře (ze `scenarios.md`, nebo ze sekce *Hlavní scénáře*), *Varianty* a *Nefunkční požadavky* a u každého ukaž, co v návrhu ho pokrývá. Nepokryté je nález, ne detail. Vede-li projekt `risks.md`, projdi i **mitigace**: riziko s vyplněným *Promítnutím do produktu* musí mít v návrhu protějšek, jinak se mitigace nestala.
 
+**Objem, na který se staví, se zapíše dřív než první mechanismus.** Vezmi ho z *Nefunkčních požadavků*; nestojí-li tam, zeptej se a zapiš ho do sekce *Objem, na který se staví*. Bez něj obhájí každý strop, guard a hlídač sám sebe – a `/oponent` i `/consolidate` objem čtou právě odtud.
+
 **Bezpečnost se navrhuje, neaudituje.** Zhruba polovina kódu psaného modely obsahuje bezpečnostní chybu a je to předvídatelná množina. Nejúčinnější obrana není kontrola na konci, ale struktura, ve které díra nejde udělat – jedna vrstva autorizace, kterou nelze obejít, výhradně parametrizované dotazy, validace na hranici, tajemství jen z prostředí. Proto má návrh sekci *Bezpečnostní model*, a proto v ní nesmí stát „ošetříme to při implementaci“.
 
 **Doménové znalosti.** Návrh se řídí tím, co si projekt importuje v `CLAUDE.md` – `~/Context/Coding/coding.md` a `~/Context/Coding/modeling.md` vždy, dál podle povahy `Web/web.md`, `Web/admin.md`, `Analytics/analytics.md`. Načti je, **než začneš navrhovat**, ne až při kontrole.
@@ -228,6 +230,7 @@ Běží **po každém dokumentu zvlášť** – tematickém dokumentu kola i ná
 7. **Rozsah** – vejde se to do jednoho implementačního plánu? Pokud ne, dekomponuj.
 8. **Sada, ne hromada** – odpovídá každý dokument návrhu na otázku, na kterou žádný jiný neodpovídá? Vznikl-li nový jen proto, že byl ten starý dlouhý, je to kapitola, ne dokument.
 9. **Glosář** – vede-li ho projekt: má každá entita, která v návrhu dostala jméno, záznam i tam?
+10. **Přiměřenost** – změř každý strop, guard, počitadlo, hlídač, poplach a kontrolu proti zapsanému objemu podle `~/Context/Coding/coding.md`, *Obrana a pojistka úměrně riziku*. Co je pod hranou rozlišitelnosti, vyškrtni a zapiš jako vědomou mez.
 
 **Oponentura.** Dokument jsi psal ty a jsi na něj zaujatý. `/oponent` je **krok životního cyklu**, ne nabídka: pusť ho, nebo nahlas řekni, proč se u téhle změny přeskakuje. Nabízej ho pro každý dokument zvlášť (`/oponent docs/architecture.md`, `/oponent docs/<topic>.md`).
 

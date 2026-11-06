@@ -10,8 +10,6 @@
 
 ## Teď
 
-- [ ] ◐ **`/architect` zatím nepředává měřítko přiměřenosti** (3. 11. 2026, zbytek položky o `/oponent` nad nástrojem, ta je v `done.md`). `/oponent`, `/consolidate` a třídění nálezů ve `findings.md` měřítko (`~/Context/Coding/coding.md`, *Obrana a pojistka úměrně riziku*) a objem, na který se staví, nesou; `/architect` ne, takže pojistky pod hranou dál vznikají už v návrhu. Zvážit, jestli má `/architect` objem vyžadovat jako vstup a mechanismy proti němu měřit při zápisu.
-
 ## Potom
 
 - [ ] ○ **`/next`: sjednotit, co znamená „fronta“** (4. 11. 2026, odloženo z ověření `structure.md`). V `/next` slovo „fronta“ znamená všechno, co skill nabízí, včetně sekcí pod `# Mimo frontu` v `todo.md`; sjednotit buď jméno nadpisu, nebo řeč `/next`.

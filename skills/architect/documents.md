@@ -30,6 +30,14 @@ tady je, jak.
 ## Zvolený přístup
 Jaké varianty byly ve hře, která vyhrála a proč. Zamítnuté i s důvodem.
 
+## Objem, na který se staví
+Odhad provozu, na který se návrh dimenzuje – uživatelé, tenanti, záznamy,
+události za den –, k němu datum odhadu a spouštěč revize („přehodnotit při
+1 000 tenantech“). U nástroje stačí „jeden uživatel, autor“.
+Proti tomuhle objemu se měří každá obrana a pojistka (`~/Context/Coding/coding.md`,
+*Obrana a pojistka úměrně riziku*); co se rozbije až při jeho násobku, je
+vědomá mez s hranicí, kde přestane platit, ne mechanismus v návrhu.
+
 ## Architektura
 Komponenty, jejich odpovědnosti a hranice. U každé: co dělá, jak se
 používá, na čem závisí.
