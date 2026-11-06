@@ -1099,6 +1099,28 @@ class SortedQueue(unittest.TestCase):
         self.assertEqual(sum(len(p["items"]) for p in asked["parts"]), 12)
         self.assertIsNone(self.c.legacy_shape(self.c.parse_todo(text)[0], text))
 
+    def test_band_under_outside_heading_is_not_work(self):
+        """Pásmo zapsané omylem pod `# Mimo frontu` nezabírá místo ve vrcholu fronty."""
+        text = (
+            SORTED_TODO
+            + "\n# Mimo frontu\n\n## Potom\n\n- [ ] ○ **Zbloudilá.** Text.\n"
+        )
+        todo = self.c.parse_todo(text)[0]
+        self.assertNotIn("Zbloudilá", [i["title"] for i in self.c.queue_items(todo)])
+        stray = next(s for s in todo if s.get("outside"))
+        self.assertEqual(stray["parts"][0]["items"][0]["title"], "Zbloudilá")
+
+    def test_text_under_outside_heading_does_not_stick_to_last_band(self):
+        text = SORTED_TODO + "\n# Mimo frontu\n\n- [ ] ○ **Úvod mimo frontu.**\n"
+        todo = self.c.parse_todo(text)[0]
+        titles = [i["title"] for s in todo for p in s["parts"] for i in p["items"]]
+        self.assertNotIn("Úvod mimo frontu", titles)
+
+    def test_bands_under_queue_heading_stay_work(self):
+        todo = self.parsed()
+        self.assertFalse(any(s.get("outside") for s in todo))
+        self.assertTrue(self.c.queue_items(todo))
+
     def test_missing_queue_heading_makes_file_legacy(self):
         text = SORTED_TODO.replace("# Fronta\n", "# TODO\n")
         self.assertIn(

@@ -94,7 +94,7 @@ Co z výstupu je položka fronty:
 | Klíč | Položka |
 |---|---|
 | `current.uncommitted` | necommitnuté změny tam, kde session stojí – rozdělaná práce tady |
-| `todo` | položka ze sekcí – u srovnaného souboru jen vrchol a `more`, jinak všechny; hotové skript vynechal |
+| `todo` | položka ze sekcí – u srovnaného souboru jen vrchol a `more`, jinak všechny; hotové skript vynechal. Sekce pod `# Mimo frontu` nese `outside: true`, neřadí se jako pásmo a vrací se celá |
 | `rounds` | kolo návrhu – viz *Kola návrhu* |
 | `stitch_pending` | položka *sešít návrh po kolech*, spouštěč `/architect` |
 | `plan.open` | jedna položka „dokončit plán“ s počtem zbývajících, spouštěč `/implement` |

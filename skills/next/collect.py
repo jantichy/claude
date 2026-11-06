@@ -67,6 +67,8 @@ SPECIAL = {
     "Rozhodnuto k zapracování",
     "Otázky dalšího kola",
 }
+# Nadpis části `todo.md`, jejíž sekce se neřadí (`~/.claude/standards/structure.md`, *`todo.md`*).
+OUTSIDE = "Mimo frontu"
 DIFF_LINES = 12
 # Složky, do kterých hledání `todo.md` podprojektů nesestupuje – stejně jako příkaz *Fáze 1* v `SKILL.md`.
 SKIP_DIRS = {"node_modules", "vendor"}
@@ -276,6 +278,26 @@ def sections(text, level="## ", preamble=False):
     ]
 
 
+def todo_sections(text):
+    """Sekce `## ` souboru `todo.md` jako [(nadpis, řádky, mimo frontu)].
+
+    Část pod `# Mimo frontu` se čte zvlášť: jinak by se pásmo zapsané omylem
+    tam počítalo jako práce a text před jejím prvním `## ` by se přilepil
+    k poslednímu pásmu fronty.
+    """
+    out = []
+    for top, chunk in sections(text, "# ", preamble=True):
+        outside = top == OUTSIDE
+        for title, body in sections("\n".join(chunk), preamble=not outside):
+            out.append((title, body, outside))
+    return out
+
+
+def ranked(section):
+    """Je sekce pásmem práce, jehož pořadí je priorita?"""
+    return section["section"] not in SPECIAL and not section.get("outside")
+
+
 # Pole bloku kola: popisek v Markdownu je česky, klíč ve výstupu anglicky.
 FIELD_KEYS = {
     "Stav": "status",
@@ -332,7 +354,8 @@ def parse_todo(text):
     # Nese-li fronta zaškrtávátka, jsou položkami jen ona; holý seznam je pak
     # komentář k nim. Fronta psaná bez zaškrtávátek si ponechá starý výklad.
     boxed = work_boxed(text)
-    for title, body in sections(text, preamble=True):
+    for title, body, outside in todo_sections(text):
+        boxed_here = boxed and not outside and title not in SPECIAL
         if title == "Kola návrhu":
             rounds = parse_rounds(body)
             stitched = any("Návrh sešitý" in line for line in body)
@@ -355,21 +378,13 @@ def parse_todo(text):
         entries = [
             {
                 "subsection": None,
-                "items": [
-                    i
-                    for i in parse_items(head, boxed and title not in SPECIAL)
-                    if not i["done"]
-                ],
+                "items": [i for i in parse_items(head, boxed_here) if not i["done"]],
             }
         ]
         entries += [
             {
                 "subsection": t,
-                "items": [
-                    i
-                    for i in parse_items(b, boxed and title not in SPECIAL)
-                    if not i["done"]
-                ],
+                "items": [i for i in parse_items(b, boxed_here) if not i["done"]],
             }
             for t, b in subs[1:]
         ]
@@ -377,7 +392,10 @@ def parse_todo(text):
         # Bezejmenná preambule se vypisuje jen tehdy, když v ní opravdu něco čeká –
         # jinak by každá fronta s úvodním odstavcem začínala prázdnou sekcí.
         if parts or title is not None:
-            out.append({"section": title, "parts": parts})
+            entry = {"section": title, "parts": parts}
+            if outside:
+                entry["outside"] = True
+            out.append(entry)
     return out, rounds, stitched
 
 
@@ -390,21 +408,15 @@ def work_boxed(text):
     """
     return any(
         CHECKBOX.match(line)
-        for title, body in sections(text, preamble=True)
-        if title not in SPECIAL and title != "Kola návrhu"
+        for title, body, outside in todo_sections(text)
+        if not outside and title not in SPECIAL and title != "Kola návrhu"
         for line in body
     )
 
 
 def queue_items(todo):
     """Otevřené položky pásem priority, v pořadí souboru."""
-    return [
-        i
-        for s in todo
-        if s["section"] not in SPECIAL
-        for p in s["parts"]
-        for i in p["items"]
-    ]
+    return [i for s in todo if ranked(s) for p in s["parts"] for i in p["items"]]
 
 
 def legacy_shape(todo, text):
@@ -439,7 +451,7 @@ def top_of_queue(todo, limit=TOP):
         for p in s["parts"]:
             keep = []
             for i in p["items"]:
-                if s["section"] in SPECIAL:
+                if not ranked(s):
                     keep.append(i)
                 elif i.get("waits") or i.get("waiting"):
                     i.pop("text", None)

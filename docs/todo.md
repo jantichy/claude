@@ -8,13 +8,9 @@
 
 **Hotové věci se sem nevracejí** – jakmile je úkol hotový, přesune se do `done.md`.
 
-## Teď
-
 ## Potom
 
 - [ ] ○ **`/next`: sjednotit, co znamená „fronta“** (4. 11. 2026, odloženo z ověření `structure.md`). V `/next` slovo „fronta“ znamená všechno, co skill nabízí, včetně sekcí pod `# Mimo frontu` v `todo.md`; sjednotit buď jméno nadpisu, nebo řeč `/next`.
-
-- [ ] ○ **`collect.py` pozná pásmo podle jména sekce, ne podle nadpisu `#` nad ní** (4. 11. 2026, odloženo z ověření `structure.md`). Pásmo zapsané omylem pod `# Mimo frontu` se počítá jako pásmo práce a text pod `# Mimo frontu` před prvním `## ` se přilepí k poslednímu pásmu. Sekce číst v kontextu nadpisu `#` a test v obou směrech.
 
 - [ ] ◐ **`/oponent` s velkým panelem: posudky tečou do kontextu hlavní session a skill neřeší limit souběhu ani strop ověřovatelů** (30. 10. 2026, `/oponent docs/architecture.md` v eventoidu, 22 oponentů a 30 ověřovatelů). (1) Posudky 22 oponentů (po 10–17 kB) a 30 ověřovatelů přišly do hlavní session jako zprávy agentů a kontext přerostl 400 tisíc tokenů ještě před Fází 5 – průchod se musel přerušit `/break`. Návrh: oponent i ověřovatel vrací jen krátké shrnutí a plné znění si hlavní session vytáhne skriptem z výstupu agenta do `.claude/run/oponent/` (tak se to v téhle session nakonec udělalo, `extract` z `tasks/<id>.output` podle volání `SubagentHandback`). (2) Harness pustí nejvýš 20 agentů naráz; skill s tím nepočítá, dva oponenti se nespustili a museli se dopouštět ručně po uvolnění místa. (3) Strop 12 ověřovatelů skill drží pevně; uživatel ho na pokyn „nelimituj se“ zvedl na 30 – zvážit, jestli strop odvozovat od počtu kritických a středních nálezů. (4) Fáze 4 ukládá frontu do `.claude/run/`, ale plná znění nálezů, na která fronta odkazuje, skill nikam neukládá. (5) Session běžela v `main/` worktree layoutu; skill neříká, že průchod (který bude měnit dokumentaci) patří na větev – `/break` ji musel založit až při zápisu.
 
