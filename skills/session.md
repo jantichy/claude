@@ -10,7 +10,7 @@ Leží v `~/.claude/projects/<working-directory-slug>/<session-id>.jsonl`, kde s
 
 **`<session-id>` si vezmi z cesty ke scratchpadu**, kterou máš v systémovém promptu – je v ní jako **předposlední** komponenta – cesta končí na `/scratchpad`, takže id je adresář nad ním (`…/-Users-honza-Projects/<session-id>/scratchpad`). To je jediný spolehlivý klíč.
 
-**Platí jedině cesta ke scratchpadu, ne libovolná cesta pod `/private/tmp` s podobným tvarem.** Vedle scratchpadu tam leží i adresář s výstupy subagentů (`…/<session-id>/tasks/…`) a ten může nést **id předchozí session** téhož projektu. Kdo id vezme odtamtud, sáhne po cizím transcriptu a nic mu to neřekne – oba soubory existují a oba se parsují.
+**Platí jedině cesta ke scratchpadu, ne libovolná cesta pod `/private/tmp` s podobným tvarem.** Vedle scratchpadu tam leží i adresář s výstupy subagentů (`…/<session-id>/tasks/…`) a ten nese **id session, se kterou proces startoval** – po `/clear` tedy id některé předchozí session téhož projektu, protože `/clear` mění id session, ale ne adresář úloh. Kdo id vezme odtamtud, sáhne po cizím transcriptu a nic mu to neřekne – oba soubory existují a oba se parsují.
 
 **Nesahej po naposledy modifikovaném `.jsonl` v tom adresáři.** Nad jedním projektem běžívají dvě session naráz a ta druhá do svého souboru zapisuje taky – heuristika pak ukáže na cizí konverzaci, kterou vytěžíš místo své vlastní. Zbude-li ti opravdu jen tahle cesta, **ověř obsah** proti tomu, co si z konverzace pamatuješ, dřív než z něj cokoliv vytěžíš.
 

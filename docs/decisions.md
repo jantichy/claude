@@ -1450,6 +1450,8 @@ Co smí stát v které mezeře a v jakém pořadí, drží tabulka v `~/.claude/
 
 **Pozor na jednu nekonzistenci:** adresář, do kterého agent ukládá svůj výstup (`…/tasks/<agentId>.output`), leží pod **jiným** UUID než scratchpad session. Vypadá to jako změna session-id a není to ona – transcript pod tím druhým UUID neexistuje. Kdo bude odvozovat session-id z cesty, musí brát tu ze systémového promptu, ne z cesty k výstupu agenta.
 
+**Odkud to druhé UUID je, se ověřilo 2026-11-06:** adresář úloh nese id session, se kterou **proces startoval**, a `/clear` ho nemění. Proces `41890` startoval 5. 11. 2026 v 09:59:10 a transcript `fbf63411-…` začíná ve stejné vteřině; po `/clear` v témže procesu vznikla session `06091fb3-…`, scratchpad i registr procesu (`~/.claude/sessions/41890.json`, pole `sessionId`) nesly její id, kdežto úloha na pozadí zapsala výstup do `…/fbf63411-…/tasks/`. Domněnka z dřívějších dokladů se tím potvrdila; cesta ke scratchpadu vedla na správný transcript ve všech čtyřech případech. Druhý spolehlivý zdroj id je registr `~/.claude/sessions/<pid>.json`, který `/clear` přepisuje.
+
 ### Řádek `/end` v `done.md` nese i id uklizené session
 
 **Rozhodnuto 25. 9. 2026.**
