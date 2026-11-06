@@ -300,6 +300,8 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-11-04** · `/end` · `671b1ed` · session `3a8cf68a-3707-4a8a-b131-efdaf8db78c9` · prompty 6/6 · 0 témat · mimo rozsah: žádné · meze: žádné
 - **2026-11-06** · `/end` · `d7defeb` · session `fbf63411-39a0-4bc4-b18a-4d525b7b4e02` · prompty 24/24 · 0 témat · mimo rozsah: žádné · meze: žádné
 
+- **2026-11-06** · `/end` · `315be2c` · session `06091fb3-6363-47d3-a4a2-3e31800ba967` · prompty 10/10 · 0 témat · mimo rozsah: žádné · meze: žádné
+
 ## Odvedená práce
 
 - [x] **Sloučit `/break` do `/end`** (rozhodnuto 2. 11. 2026, dělat **až po zrychlení `/end` a jeho přeměření**, ať se z měření pozná, co za co může; **přeměřeno 3. 11. 2026, podmínka splněná** – srovnávací čísla drží `done.md`, *Zredukovat počet volání uvnitř `/end`*). Uživatel volá jen `/end`; ten sám pozná, že session končí uprostřed rozdělané práce, a uloží ji jako dnes `/break` do `## Přerušený běh`. **Podmínka: běžný `/end` bez rozdělané práce se tím nesmí zpomalit.** Navržený tvar:
