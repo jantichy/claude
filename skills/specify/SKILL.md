@@ -113,7 +113,7 @@ Nemá-li nic, přeskoč. Ale zeptej se – v praxi něco má skoro vždycky a ne
 **Vyvolej `superpowers:brainstorming`.** Předej mu:
 
 - co ses dozvěděl z podkladů v *Fázi 1*,
-- že se má ptát přes `AskUserQuestion`, jednu otázku na volání,
+- že se má ptát přes `AskUserQuestion`, jednu otázku na volání – **i u otevřené otázky**, kterou sám začíná: varianty sestaví z podkladů a vlastní popis nechá na *Other*, v textu se ptá jen na holou hodnotu (jméno, číslo). Jinak vezme výjimku *Otázku bez variant polož v textu* z `~/.claude/standards/rules.md` jako svolení pro každou otevřenou otázku,
 - že **návrhovou část nepíše vůbec** – ta patří `/architect`, a to až po schválení požadavků.
 
 **Co udělat s klasifikací:**

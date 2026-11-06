@@ -10,8 +10,6 @@
 
 ## Teď
 
-- [ ] ○ **`/specify` předává `superpowers:brainstorming` ptaní přes `AskUserQuestion`, ale brainstorming velí začít otevřenou otázkou v textu** (1. 11. 2026, `/specify` ve Fotovoltaice). Brainstorming chce otevřené otázky bez nabídky odpovědí, menu jen když člověk neví; `/specify` mu do zadání píše „ptej se přes `AskUserQuestion`, jednu otázku na volání“ a `~/.claude/standards/rules.md` pouští otázku bez variant v textu. Výsledek: dvě otázky v textu, kontrola na konci odpovědi je zopakovala a uživatel napsal „ptej se mě přes askuserquestions“. Rozhodnout, co platí: `/specify` výslovně řekne, že i otevřená otázka jde přes `AskUserQuestion` s variantami vytěženými z podkladů (a *Other* pro vlastní popis), nebo `rules.md` zpřesní, kdy je otázka v textu přípustná.
-
 - [ ] ◐ **`/architect` zatím nepředává měřítko přiměřenosti** (3. 11. 2026, zbytek položky o `/oponent` nad nástrojem, ta je v `done.md`). `/oponent`, `/consolidate` a třídění nálezů ve `findings.md` měřítko (`~/Context/Coding/coding.md`, *Obrana a pojistka úměrně riziku*) a objem, na který se staví, nesou; `/architect` ne, takže pojistky pod hranou dál vznikají už v návrhu. Zvážit, jestli má `/architect` objem vyžadovat jako vstup a mechanismy proti němu měřit při zápisu.
 
 ## Potom
