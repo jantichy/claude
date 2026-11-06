@@ -30,6 +30,7 @@ PROJECTS = Path("~/.claude/projects").expanduser()
 RUN = Path(".claude/run")
 TODOS = ("docs/todo.md", "todo.md", "CLAUDE.md")
 DECIDED = "## Rozhodnuto k zapracování"
+ASKED = "## Otázky dalšího kola"
 EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 
 
@@ -133,7 +134,8 @@ def run_files(start):
 
 
 def decided(root):
-    """Neprázdná `## Rozhodnuto k zapracování`, do které session zapsala.
+    """Neprázdná `## Rozhodnuto k zapracování` nebo `## Otázky dalšího kola`,
+    do které session zapsala.
 
     Sekce, která stála beze změny už v základu session, je zapsaná fronta
     jiné session, ne rozdělaná práce téhle.
@@ -143,10 +145,12 @@ def decided(root):
         path = Path(name)
         if not path.is_file():
             continue
-        now = section(path.read_text(encoding="utf-8"), DECIDED)
+        text = path.read_text(encoding="utf-8")
         before = git("show", f"{root}:./{name}") if root else None
-        if now and now != section(before or "", DECIDED):
-            out.append(f"{name}: {DECIDED}")
+        for heading in (DECIDED, ASKED):
+            now = section(text, heading)
+            if now and now != section(before or "", heading):
+                out.append(f"{name}: {heading}")
     return out
 
 

@@ -880,6 +880,23 @@ class RozdelanaPrace(unittest.TestCase):
         """Sekce beze změny od základu session je zapsaná fronta jiné session."""
         self.assertEqual(self.prepare.decided(self.root), [])
 
+    def test_otazky_zapsane_v_session_se_hlasi(self):
+        asked = "## Otázky dalšího kola"
+        Path("docs/todo.md").write_text(
+            f"# Todo\n\n{self.DECIDED}\n\n- stará odpověď\n\n{asked}\n\n"
+            "### /review – dávka\n\n- otázka\n\n## Úkoly\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(self.signals(), [f"docs/todo.md: {asked}"])
+
+    def test_prazdne_otazky_se_nehlasi(self):
+        Path("docs/todo.md").write_text(
+            f"# Todo\n\n{self.DECIDED}\n\n- stará odpověď\n\n"
+            "## Otázky dalšího kola\n\n## Úkoly\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(self.signals(), [])
+
     def test_bez_gitu_se_neprazdna_sekce_hlasi(self):
         self.assertEqual(self.prepare.decided(None), [f"docs/todo.md: {self.DECIDED}"])
 

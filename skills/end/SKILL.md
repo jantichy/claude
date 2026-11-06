@@ -86,7 +86,7 @@ Z výstupu platí:
 - **`ZÁKLAD SESSION`** – commit, na kterém session stála, než cokoliv zapsala; podle něj se ve *Fázi 4* pozná, co se během session změnilo.
 - **`NECOMMITNUTO`** – soubory, které nemůžeš připsat téhle session, pokud jsi do nich sám nezapsal: nad repozitářem běžívá víc session naráz. **Žádný z nich nekomituj**, pokud jsi do něj nezapsal.
 - **`COMMITY SESSION`** – co se během session změnilo; nečti to znovu po souborech.
-- **`ROZDĚLANÁ PRÁCE`** – běhové soubory v `.claude/run/` změněné během session bez klíče `interrupted` a `## Rozhodnuto k zapracování`, do které session zapsala. Rozhoduje se podle nich v *Fázi 3*.
+- **`ROZDĚLANÁ PRÁCE`** – běhové soubory v `.claude/run/` změněné během session bez klíče `interrupted` a sekce `## Rozhodnuto k zapracování` a `## Otázky dalšího kola`, do kterých session zapsala. Rozhoduje se podle nich v *Fázi 3*.
 - **Inventura** – prompty, kompaktace, odložené výstupy, co se nečte.
 
 Navíc si zjisti, ať v témže kole paralelně, nebo z kontextu:

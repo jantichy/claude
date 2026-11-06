@@ -23,6 +23,7 @@ Rozdělanou prací je **fronta kteréhokoliv skillu** – nálezy `/review`, úk
 | **co se už udělalo** | `COMMITY SESSION`, běhový soubor | jinak nepozná, jestli má před sebou celou frontu, nebo zbytek, a opravené hledá znovu |
 | **zbývající položky** | běhový soubor a konverzace | je to vlastní předmět zápisu |
 | **rozhodnuté, ale nezapracované položky** | sekce `## Rozhodnuto k zapracování` v `todo.md` | odpověď už padla; bez odkazu na ni se nová session zeptá znovu, nebo ji nezapracuje |
+| **otázky dalšího kola, které se ještě nepoložily** | sekce `## Otázky dalšího kola` v `todo.md` | zapracování z nich vyrobilo rozhodnutí, na které se čeká; bez odkazu na ně nová session kolo nedokončí a zapracuje jen to, co už bylo rozhodnuté |
 | **co se vyvrátilo nebo uzavřelo** | ověření, odpovědi uživatele | jinak se k tomu vrátí a odpracuje to znovu |
 | **co se v běhu rozhodlo** | commity, `decisions.md`, konverzace | zbylé položky na tom stojí a varianty u nich se bez toho čtou jinak |
 | **u práce mimo frontu** rozepsaný stav, otevřené otázky a další krok | konverzace | fronta nemusí existovat, otázky ano |

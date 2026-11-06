@@ -773,3 +773,5 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 
 - [x] **`/specify` předává brainstormingu ptaní i u otevřené otázky** (2026-11-06) (zadáno 1. 11. 2026 z `/specify` v jednom projektu). Zadání `superpowers:brainstorming` ve *Fázi 2* výslovně říká, že i otevřená otázka jde přes `AskUserQuestion` s variantami z podkladů a *Other* pro vlastní popis, v textu jen holá hodnota; `rules.md` zůstává beze změny. Rozvaha v `skills/specify/decisions.md`.
+
+- [x] **`/end` pozná sekci `## Otázky dalšího kola` jako rozdělanou práci** (2026-11-06) (zadáno 6. 11. 2026, vzniklo s tou sekcí v `findings.md`). `prepare.py` hlásí vedle `## Rozhodnuto k zapracování` i neprázdnou sekci otázek, do které session zapsala, s testy v `tests/test_end.py` v obou směrech; `break.md` ji má v tabulce toho, co zápis přerušení nese.
