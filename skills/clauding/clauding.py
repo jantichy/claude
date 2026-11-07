@@ -90,10 +90,21 @@ def incomplete_days(known: set) -> set:
     }
 
 
+def decisions_per_day(events) -> dict:
+    """Zodpovězené otázky z dialogu po dnech v pražském čase."""
+    days = defaultdict(int)
+    for at, kind, _, questions in events:
+        if kind == "decision":
+            days[at.astimezone(ZONE).date()] += len(questions)
+    return days
+
+
 def measure():
-    """Vrátí (hodiny po dnech, odhadnuté dny, koeficient, počet dnů kalibrace, intervaly)."""
+    """Vrátí (hodiny po dnech, odhadnuté dny, koeficient, počet dnů kalibrace, intervaly,
+    rozhodnutí po dnech)."""
     work = commits()
-    claude = [at for at, *_ in timeline.session_events()]
+    events = list(timeline.session_events())
+    claude = [at for at, *_ in events]
     prompts = [at for at, *_ in timeline.history_prompts()]
     full_intervals = timeline.intervals(claude + near(work, claude))
     full = per_day(full_intervals)
@@ -116,7 +127,7 @@ def measure():
     measured = [
         i for i in full_intervals if i[0].astimezone(ZONE).date() not in guessed
     ]
-    return hours, guessed, factor, len(calibration), measured
+    return hours, guessed, factor, len(calibration), measured, decisions_per_day(events)
 
 
 def period_key(day: date, granularity: str) -> date:
@@ -136,13 +147,37 @@ def period_label(key: date, granularity: str) -> str:
     return f"{WEEKDAYS[key.weekday()]} {czech_date(key)}"
 
 
-def table(days, hours, guessed, granularity) -> list:
+def decision_figures(members, hours, guessed, decisions):
+    """(počet, na hodinu) rozhodnutí za skupinu dnů jako text.
+
+    Za odhadnutý den chybí transcript aspoň jedné session, takže počet je jen dolní mez
+    a nese `≥`. Poměr na hodinu se bere jen ze dnů bez odhadu, protože odhadnuté hodiny
+    proti neúplnému počtu by dávaly poměr, který neplatí.
+    """
+    full = [d for d in members if d not in guessed]
+    if not any(hours.get(d, 0) > 0 for d in full) and any(
+        d in guessed for d in members
+    ):
+        return "–", "–"
+    mark = "≥" if any(d in guessed for d in members) else ""
+    count = sum(decisions.get(d, 0) for d in members)
+    full_hours = sum(hours.get(d, 0) for d in full)
+    rate = (
+        number(sum(decisions.get(d, 0) for d in full) / full_hours)
+        if full_hours
+        else "–"
+    )
+    return f"{mark}{count}", rate
+
+
+def table(days, hours, guessed, decisions, granularity) -> list:
     groups = defaultdict(list)
     for day in days:
         groups[period_key(day, granularity)].append(day)
     rows = [
-        "| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny |",
-        "|---|---:|---:|---:|---:|",
+        "| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny "
+        "| Rozhodnutí | Rozhodnutí na hodinu |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
     for key in sorted(groups):
         members = groups[key]
@@ -150,10 +185,11 @@ def table(days, hours, guessed, granularity) -> list:
         active = [d for d in members if hours.get(d, 0) > 0]
         mark = "~" if any(d in guessed for d in members) else ""
         per_active = number(total / len(active)) if active else "–"
+        count, rate = decision_figures(members, hours, guessed, decisions)
         rows.append(
             f"| {period_label(key, granularity)} | {mark}{number(total)} "
             f"| {mark}{number(total / len(members))} | {mark}{per_active} "
-            f"| {len(active)} z {len(members)} |"
+            f"| {len(active)} z {len(members)} | {count} | {rate} |"
         )
     return rows
 
@@ -231,12 +267,18 @@ def longest_block(measured, days):
     return max(inside, key=lambda i: i[1] - i[0], default=None)
 
 
-def highlights(days, hours, guessed, measured) -> list:
+def highlights(days, hours, guessed, measured, decisions) -> list:
     top = max(days, key=lambda d: hours.get(d, 0))
     mark = "~" if top in guessed else ""
     rows = [
         f"- **Nejdelší den:** {period_label(top, 'day')} – {mark}{number(hours.get(top, 0))} h"
     ]
+    busiest = max(days, key=lambda d: decisions.get(d, 0))
+    if decisions.get(busiest, 0):
+        rows.append(
+            f"- **Nejvíc rozhodnutí za den:** {period_label(busiest, 'day')} – "
+            f"{'≥' if busiest in guessed else ''}{decisions[busiest]}"
+        )
     block = longest_block(measured, days)
     if block:
         start, end = (x.astimezone(ZONE) for x in block)
@@ -255,7 +297,7 @@ def highlights(days, hours, guessed, measured) -> list:
 
 
 def report(granularity, since, until) -> str:
-    hours, guessed, factor, calibrated, measured = measure()
+    hours, guessed, factor, calibrated, measured, decisions = measure()
     if not any(h > 0 for h in hours.values()):
         return "V transcriptech ani v `history.jsonl` není žádná aktivita."
     first = since or min(d for d, h in hours.items() if h > 0)
@@ -265,6 +307,7 @@ def report(granularity, since, until) -> str:
         return "Zadané období neobsahuje ani jeden den."
     total = sum(hours.get(d, 0) for d in days)
     active = sum(1 for d in days if hours.get(d, 0) > 0)
+    count, rate = decision_figures(days, hours, guessed, decisions)
     out = [
         f"## Čas v Claude Code – {czech_date(first)} až {czech_date(last)}",
         "",
@@ -275,11 +318,13 @@ def report(granularity, since, until) -> str:
             else ""
         ),
         "",
-        *table(days, hours, guessed, granularity),
+        f"**Rozhodnutí v dialogu:** {count} · {rate} na hodinu",
+        "",
+        *table(days, hours, guessed, decisions, granularity),
         "",
         "### Zajímavosti",
         "",
-        *highlights(days, hours, guessed, measured),
+        *highlights(days, hours, guessed, measured, decisions),
         "",
         *histogram(days, hours),
         "",
@@ -292,7 +337,9 @@ def report(granularity, since, until) -> str:
             "",
             f"`~` odhad: pro den chybí transcript, spočteno z promptů v `history.jsonl` a z commitů "
             f"× koeficient {number(factor, 2)} (změřen na {calibrated} dnech s úplnými daty). "
-            "Rozložení podle hodiny dne a nejdelší blok jsou jen z dnů bez odhadu.",
+            "Rozložení podle hodiny dne a nejdelší blok jsou jen z dnů bez odhadu. "
+            "`≥` u rozhodnutí: za odhadnutý den chybí záznamy, počet je jen dolní mez; "
+            "rozhodnutí na hodinu jsou jen ze dnů bez odhadu.",
         ]
     return "\n".join(out)
 

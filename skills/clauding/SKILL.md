@@ -1,6 +1,6 @@
 ---
 name: clauding
-description: Skill se použije, když uživatel zadá "/clauding" (volitelně s režimem day, week nebo month a s obdobím), nebo se ptá, kolik času strávil v Claude Code – za den, týden, měsíc či celou dobu, kolik hodin denně v průměru, který den byl nejdelší, jak se práce rozkládá do dnů v týdnu a hodin dne. Spočítá to z transcriptů všech sessions, z history.jsonl a z vlastních commitů slitých do jednoho proudu událostí, takže souběžné sessions se nesčítají a čekání na Claudovu práci se počítá. Vypíše součet hodin, průměr na kalendářní i na aktivní den po obdobích a k tomu zajímavosti; dny, pro které transcript chybí, odhadne a označí. Na rozdíl od /invoicing recover nehledá čas k fakturaci pro klienta a nic nedoplňuje do timetrackingu. Nic nezapisuje.
+description: Skill se použije, když uživatel zadá "/clauding" (volitelně s režimem day, week nebo month a s obdobím), nebo se ptá, kolik času strávil v Claude Code – za den, týden, měsíc či celou dobu, kolik hodin denně v průměru, který den byl nejdelší, jak se práce rozkládá do dnů v týdnu a hodin dne, nebo kolik rozhodnutí musel v dialogu udělat. Spočítá to z transcriptů všech sessions, z history.jsonl a z vlastních commitů slitých do jednoho proudu událostí, takže souběžné sessions se nesčítají a čekání na Claudovu práci se počítá. Vypíše součet hodin, průměr na kalendářní i na aktivní den a počet odpovědí v dialogu po obdobích a k tomu zajímavosti; dny, pro které transcript chybí, odhadne a označí. Na rozdíl od /invoicing recover nehledá čas k fakturaci pro klienta a nic nedoplňuje do timetrackingu. Nic nezapisuje.
 argument-hint: [day|week|month] [období]
 allowed-tools: [Bash]
 ---
@@ -9,7 +9,7 @@ allowed-tools: [Bash]
 
 ## Co skill dělá
 
-Spočítá, kolik času se strávilo v Claude Code, a vypíše to po obdobích. Za každé období součet hodin, průměr na kalendářní den, průměr na aktivní den a počet aktivních dnů; pod tabulkou nejdelší den, nejdelší blok v kuse, nejdelší řadu dnů po sobě, rozložení dnů podle počtu hodin, průměr podle dne v týdnu a rozložení podle hodiny dne.
+Spočítá, kolik času se strávilo v Claude Code, a vypíše to po obdobích. Za každé období součet hodin, průměr na kalendářní den, průměr na aktivní den, počet aktivních dnů a kolik rozhodnutí uživatel udělal v dialogu, celkem i na hodinu; pod tabulkou nejdelší den, den s nejvíc rozhodnutími, nejdelší blok v kuse, nejdelší řadu dnů po sobě, rozložení dnů podle počtu hodin, průměr podle dne v týdnu a rozložení podle hodiny dne.
 
 Tři režimy, liší se jen členěním tabulky:
 
@@ -35,7 +35,7 @@ Za režimem volitelně období česky: „září“, „posledních 14 dní“,
 | Součty, průměry, odhad a zajímavosti | `clauding.py` | deterministický výpočet nad 3–4 GB transcriptů; model by ho dělal pomaleji a s chybou |
 | Výpis | vlastní | odpověď na konkrétní dotaz nad tabulkou |
 
-**Oba skripty jsou implementační detail, ne rozhraní** – jejich jména, parametry i rozdělení práce se smějí změnit bez ohlášení. **Závazná je *Metodika* níž a tvar výstupu:** tabulka se součtem a oběma průměry, zajímavosti a značka odhadu. Změna metodiky se dělá v `timeline.py` a v této sekci zároveň, protože jinak by `/clauding` a `/invoicing recover` odpovídaly na tutéž otázku jinak.
+**Oba skripty jsou implementační detail, ne rozhraní** – jejich jména, parametry i rozdělení práce se smějí změnit bez ohlášení. **Závazná je *Metodika* níž a tvar výstupu:** tabulka se součtem, oběma průměry a rozhodnutími, zajímavosti a značky odhadu a dolní meze. Změna metodiky se dělá v `timeline.py` a v této sekci zároveň, protože jinak by `/clauding` a `/invoicing recover` odpovídaly na tutéž otázku jinak.
 
 ## Metodika
 
@@ -49,6 +49,7 @@ Měří se **čas v Claudovi**, ne čas u klávesnice: čekání, než Claude do
 6. **Dny se dělí podle pražského času**, interval přes půlnoc se rozdělí.
 7. **Den, pro který chybí transcript, se odhadne.** Úklid starých sessions transcripty maže, `history.jsonl` s prompty ne. Pozná se podle skutečného promptu z `history.jsonl`, jehož session transcript nemá (příkaz harnessu typu `/resume` nebo `exit` transcript nezakládá, takže se nepočítá). Na takový den se spočte týmž pravidlem čas jen z promptů a commitů a vynásobí se **koeficientem**: poměrem plné metody a metody jen z promptů na dnech, kde jsou obě sady dat. Koeficient se počítá při každém běhu, takže se s každým dalším dnem zpřesní a nikdy se nerozejde s daty. Chybí-li jen část sessions dne, platí větší z obou hodnot. Odhadnutý den nese značku `~`; rozložení podle hodiny dne a nejdelší blok se z něj nepočítají, protože prompty samy neříkají, kdy Claude doběhl.
 8. **Aktivní den** je den s nenulovým časem. Průměr na kalendářní den dělí počtem dnů období, u běžícího jen do dneška; průměr na aktivní den počtem aktivních dnů.
+9. **Rozhodnutím je každá zodpovězená otázka v dialogu, kterým se Claude ptá s nabídnutými variantami, v hlavní session**, ne volání – jedno volání nese až čtyři otázky. Zavřený dialog nerozhodl nic a subagent se uživatele zeptat nemůže. **Otázky položené v textu odpovědi se nepočítají:** spolehlivě je pozná jen úsudek modelu nad každou odpovědí, a heuristika „odpověď končí otazníkem“ by započetla i řečnické „Mám pokračovat?“ – přesné číslo smíchané s odhadem by nešlo věřit ani v přesné části. Za den s odhadem `history.jsonl` odpovědi z dialogu nedrží, takže počet je jen dolní mez se značkou `≥`, a do poměru na hodinu jdou jen dny bez odhadu; období jen z odhadnutých dnů má u rozhodnutí `–`.
 
 ## Fáze 0 – Příprava
 
@@ -86,7 +87,7 @@ Ze session, ve které skill vznikl – každá z nich dala věrohodné, ale špa
 
 ## Fáze 3 – Závěr
 
-Výstup skriptu je hotový Markdown. **Vypiš ho beze změny** – nezaokrouhluj jinak, nepřepočítávej a nevynechávej poznámku o odhadu, protože bez ní vypadá odhad jako změřené číslo. Ptal-li se uživatel na konkrétní věc („kolik jsem byl v Claudovi včera“), odpověz nad tabulkou jednou větou s číslem z ní.
+Výstup skriptu je hotový Markdown. **Vypiš ho beze změny** – nezaokrouhluj jinak, nepřepočítávej a nevynechávej poznámku o odhadu, protože bez ní vypadá odhad jako změřené číslo a dolní mez jako úplný počet. Ptal-li se uživatel na konkrétní věc („kolik jsem byl v Claudovi včera“), odpověz nad tabulkou jednou větou s číslem z ní.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

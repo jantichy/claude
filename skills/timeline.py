@@ -112,6 +112,36 @@ def foreground_bash(record: dict):
             yield part.get("id"), tool_input.get("timeout") or BASH_TIMEOUT_MS
 
 
+def asked_questions(record: dict):
+    """(id, otázky) pro každé volání `AskUserQuestion`, které záznam odpovědi nese."""
+    content = (record.get("message") or {}).get("content")
+    if record.get("type") != "assistant" or not isinstance(content, list):
+        return
+    for part in content:
+        if (
+            isinstance(part, dict)
+            and part.get("type") == "tool_use"
+            and part.get("name") == "AskUserQuestion"
+        ):
+            # Vadné volání, které harness odmítl, nese otázky v jiném tvaru – nic se jím nezeptalo.
+            questions = (part.get("input") or {}).get("questions")
+            if not isinstance(questions, list):
+                questions = []
+            yield (
+                part.get("id"),
+                [q.get("question", "") for q in questions if isinstance(q, dict)],
+            )
+
+
+def answered_questions(record: dict, asked: list) -> list:
+    """Otázky, na které uživatel v dialogu odpověděl; zavřený dialog nerozhodl nic."""
+    content = record["message"]["content"]
+    if content[0].get("is_error"):
+        return []
+    answers = (record.get("toolUseResult") or {}).get("answers")
+    return list(answers) if isinstance(answers, dict) else asked
+
+
 def tool_result_id(record: dict):
     content = (record.get("message") or {}).get("content")
     if record.get("type") == "user" and isinstance(content, list) and content:
@@ -128,8 +158,11 @@ def log_events(log: Path, in_subagent: bool):
     spuštěné hooky i shrnutí po návratu jsou doklad, že se v Claudovi něco dělo.
     K tomu umělá událost na konci povoleného běhu příkazu, jehož výsledek přišel
     později – tím se doba běhu započte a zbytek mezery zůstane pauzou.
+
+    Záznam s odpovědí v dialogu `AskUserQuestion` je druhu `decision` a místo textu
+    nese seznam zodpovězených otázek; jinak je to táž událost jako každá jiná.
     """
-    running = {}
+    running, asking = {}, {}
     for record in records(log):
         stamp = record.get("timestamp")
         if not stamp:
@@ -137,11 +170,17 @@ def log_events(log: Path, in_subagent: bool):
         at = moment(stamp)
         for tool_id, limit in foreground_bash(record):
             running[tool_id] = at + timedelta(milliseconds=limit)
-        allowed_end = running.pop(tool_result_id(record), None)
+        if not in_subagent and not record.get("isSidechain"):
+            asking.update(asked_questions(record))
+        result_id = tool_result_id(record)
+        allowed_end = running.pop(result_id, None)
         if allowed_end is not None and allowed_end < at:
             yield allowed_end, "claude", None
+        asked = asking.pop(result_id, None)
         if is_prompt(record, in_subagent):
             yield at, "prompt", prompt_text(record)
+        elif asked is not None:
+            yield at, "decision", answered_questions(record, asked)
         else:
             yield at, "claude", None
 

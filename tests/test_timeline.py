@@ -9,7 +9,7 @@ import json
 import sys
 import tempfile
 import unittest
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -146,6 +146,42 @@ class Timeline(unittest.TestCase):
         )
         self.assertEqual(counted_minutes(self.stream()), 40)
 
+    def decisions(self):
+        return [
+            text for _, kind, _, text in timeline.session_events() if kind == "decision"
+        ]
+
+    def ask(self, minutes: float, *questions: str) -> dict:
+        return tool_use(
+            minutes,
+            "AskUserQuestion",
+            {"questions": [{"question": q} for q in questions]},
+        )
+
+    def test_dialog_answer_counts_each_question(self):
+        """Jedno volání dialogu nese až čtyři otázky – rozhodnutím je každá zodpovězená."""
+        result = tool_result(3)
+        result["toolUseResult"] = {"answers": {"Kam?": "sem", "Kdy?": "hned"}}
+        self.session("-a", "s1", [prompt(0), self.ask(1, "Kam?", "Kdy?"), result])
+        self.assertEqual(self.decisions(), [["Kam?", "Kdy?"]])
+
+    def test_answer_without_result_detail_counts_asked_questions(self):
+        self.session("-a", "s1", [prompt(0), self.ask(1, "Kam?"), tool_result(3)])
+        self.assertEqual(self.decisions(), [["Kam?"]])
+
+    def test_closed_dialog_decides_nothing(self):
+        result = tool_result(3)
+        result["message"]["content"][0]["is_error"] = True
+        self.session("-a", "s1", [prompt(0), self.ask(1, "Kam?"), result])
+        self.assertEqual(self.decisions(), [[]])
+
+    def test_subagent_dialog_is_no_decision(self):
+        """Subagent se uživatele zeptat nemůže – jeho záznam rozhodnutí není."""
+        asked = self.ask(1, "Kam?")
+        asked["isSidechain"] = True
+        self.session("-a", "s1", [prompt(0), asked, tool_result(3)])
+        self.assertEqual(self.decisions(), [])
+
     def test_prefix_limits_projects(self):
         """`recover` počítá jen projekty klienta – cizí session do proudu nesmí."""
         self.session("-Users-x-Dev-client", "s1", [prompt(0), prompt(10)])
@@ -173,6 +209,20 @@ class Clauding(unittest.TestCase):
         start = datetime(2026, 9, 14, 21, 30, tzinfo=timezone.utc)  # 23:30 v Praze
         days = clauding.per_day([[start, start + timedelta(hours=1)]])
         self.assertEqual(sorted(v / 60 for v in days.values()), [30, 30])
+
+    def test_decisions_on_estimated_day_are_lower_bound(self):
+        """Za odhadnutý den chybí záznamy – počet je dolní mez a do poměru nejde."""
+        full, guessed = date(2026, 9, 14), date(2026, 9, 15)
+        hours = {full: 2.0, guessed: 5.0}
+        decisions = {full: 6, guessed: 1}
+        self.assertEqual(
+            clauding.decision_figures([full, guessed], hours, {guessed}, decisions),
+            ("≥7", "3,0"),
+        )
+        self.assertEqual(
+            clauding.decision_figures([guessed], hours, {guessed}, decisions),
+            ("–", "–"),
+        )
 
     def test_rounding_is_half_up(self):
         """`round()` by z 2,25 udělal 2,2 – člověk čeká 2,3."""

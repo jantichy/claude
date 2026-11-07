@@ -9,8 +9,9 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **`/clauding day`** – po dnech.
 - **Libovolné období česky** za režimem: „září“, „posledních 14 dní“, „minulý týden“, „od 1. 9.“.
 - **U každého období** součet hodin, průměr na kalendářní den, průměr na den, kdy jste s Claudem opravdu pracovali, a kolik takových dnů bylo.
+- **Kolik rozhodnutí jste museli udělat** – na kolik Claudových otázek s nabídnutými variantami jste odpověděli, celkem i na hodinu práce. Je z toho vidět, kolik práce na vás Claude nechává.
 - **Zajímavosti**: nejdelší den, nejdelší blok v kuse, nejdelší řada dnů po sobě, kolik dnů jste strávili kolika hodinami, které dny v týdnu a hodiny dne jsou nejsilnější.
-- **Starší období dopočítá odhadem**, když se podrobné záznamy už smazaly, a takové údaje označí.
+- **Starší období dopočítá odhadem**, když se podrobné záznamy už smazaly, a takové údaje označí. Rozhodnutí se odhadnout nedají, u takového období je počet jen spodní hranice, nebo chybí.
 
 ## Proč zrovna tenhle
 
@@ -18,6 +19,7 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **Čekání na Clauda se počítá.** Když Claude dvacet minut pracuje a vy se díváte, je to čas strávený s ním.
 - **Odchod se nepočítá.** Otázka, na kterou odpovíte až druhý den, ani příkaz, který přes noc čekal na vaše schválení, si nepřipíšou noc práce.
 - **Commity se započtou, jen když vznikly při práci s Claudem**, ne ruční práce v repozitáři mimo něj.
+- **Rozhodnutí se počítají přesně, nebo vůbec.** Počítá se jen odpověď v dialogu s variantami, kterou Claude Code zapíše. Otázku v běžném textu odpovědi by šlo jen hádat, a odhad smíchaný s přesným počtem by znehodnotil oboje.
 - **Odhad se kalibruje na vašich datech.** Kde podrobné záznamy chybí, změří si na dnech, kde jsou, jak moc se hrubý výpočet z promptů liší od plného, a tím poměrem ho opraví.
 - **Každé číslo vzniká skriptem**, ne odhadem modelu – stejná data dají pokaždé stejný výsledek.
 
@@ -33,12 +35,12 @@ Stačí se i zeptat „kolik jsem tento měsíc strávil s Claudem?“.
 
 ## Ukázka výstupu
 
-| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny |
-|---|---:|---:|---:|---:|
-| červenec 2026 | ~14,9 | ~0,5 | ~1,5 | 10 z 31 |
-| srpen 2026 | ~108,8 | ~3,5 | ~4,5 | 24 z 31 |
-| září 2026 | ~269,4 | ~9,0 | ~9,0 | 30 z 30 |
-| říjen 2026 | 92,3 | 7,1 | 7,1 | 13 z 13 |
+| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny | Rozhodnutí | Rozhodnutí na hodinu |
+|---|---:|---:|---:|---:|---:|---:|
+| červenec 2026 | ~15,2 | ~0,5 | ~1,5 | 10 z 31 | – | – |
+| srpen 2026 | ~115,8 | ~3,7 | ~4,8 | 24 z 31 | ≥631 | 14,7 |
+| září 2026 | ~272,7 | ~9,1 | ~9,1 | 30 z 30 | ≥3236 | 12,1 |
+| říjen 2026 | 198,8 | 6,4 | 6,9 | 29 z 31 | 1877 | 9,4 |
 
 - **Nejdelší den:** st 2. 9. 2026 – 17,0 h
 - **Nejdelší blok v kuse:** 7. 9. 2026 07:45–17:45 – 10,0 h
