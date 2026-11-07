@@ -28,7 +28,16 @@ HARNESS_PREFIXES = (
     "<system-reminder>",
     "<local-command-",
     "Caveat:",
+    "[Request interrupted",
 )
+
+# Harness zapíše místo promptu, když uživatel zastaví Clauda klávesou Esc. Varianta „for tool use“
+# provází zamítnutí nástroje a počítá se jako zamítnutí, ne podruhé jako přerušení.
+INTERRUPT = "[Request interrupted by user]"
+REJECTION = "The user doesn't want to proceed"
+
+# Přitakání v Claudově textu: „máš pravdu“, „Máš pravdu.“
+AGREEMENT = re.compile(r"\bmáš pravdu\b", re.IGNORECASE)
 
 
 def encode(path: Path) -> str:
@@ -151,42 +160,127 @@ def tool_result_id(record: dict):
     return None
 
 
+def tool_calls(record: dict):
+    """(id volání, id zprávy) pro každé volání nástroje v záznamu odpovědi."""
+    message = record.get("message") or {}
+    content = message.get("content")
+    if record.get("type") != "assistant" or not isinstance(content, list):
+        return
+    for part in content:
+        if isinstance(part, dict) and part.get("type") == "tool_use":
+            yield part.get("id"), message.get("id")
+
+
+def is_rejection(record: dict) -> bool:
+    first = record["message"]["content"][0]
+    text = first.get("content")
+    if isinstance(text, list):
+        text = " ".join(p.get("text", "") for p in text if isinstance(p, dict))
+    return bool(first.get("is_error")) and str(text).startswith(REJECTION)
+
+
+def is_interrupt(record: dict, in_subagent: bool) -> bool:
+    if record.get("type") != "user" or record.get("isSidechain") or in_subagent:
+        return False
+    content = (record.get("message") or {}).get("content")
+    if isinstance(content, list):
+        content = " ".join(
+            p.get("text", "")
+            for p in content
+            if isinstance(p, dict) and p.get("type") == "text"
+        )
+    return isinstance(content, str) and content.strip() == INTERRUPT
+
+
+def agreements(record: dict, in_subagent: bool) -> int:
+    """Kolikrát Claude v záznamu odpovědi uživateli přitakal; subagent mluví k Claudovi, ne k němu."""
+    content = (record.get("message") or {}).get("content")
+    if (
+        record.get("type") != "assistant"
+        or in_subagent
+        or not isinstance(content, list)
+    ):
+        return 0
+    text = " ".join(
+        p.get("text", "")
+        for p in content
+        if isinstance(p, dict) and p.get("type") == "text"
+    )
+    return len(AGREEMENT.findall(text))
+
+
+class Session:
+    """Stav jednoho transcriptu, ze kterého se pozná, jakého druhu je další záznam."""
+
+    def __init__(self, in_subagent: bool):
+        self.in_subagent = in_subagent
+        self.running, self.asking, self.calls = {}, {}, {}
+        self.rejected = set()
+
+    def remember(self, record: dict, at: datetime) -> None:
+        for tool_id, limit in foreground_bash(record):
+            self.running[tool_id] = at + timedelta(milliseconds=limit)
+        self.calls.update(tool_calls(record))
+        if not self.in_subagent and not record.get("isSidechain"):
+            self.asking.update(asked_questions(record))
+
+    def rejection(self, result_id) -> bool:
+        # Zamítnuté volání odmítne i ostatní souběžná volání téže zprávy – zamítnutí je jedno.
+        message = self.calls.pop(result_id, None)
+        if message is not None and message in self.rejected:
+            return False
+        self.rejected.add(message)
+        return True
+
+    def classify(self, record: dict, result_id):
+        """(druh, data) záznamu; viz `log_events`."""
+        asked = self.asking.pop(result_id, None)
+        if result_id is not None and is_rejection(record):
+            return (
+                ("rejection", None) if self.rejection(result_id) else ("claude", None)
+            )
+        self.calls.pop(result_id, None)
+        if is_interrupt(record, self.in_subagent):
+            return "interrupt", None
+        if is_prompt(record, self.in_subagent):
+            return "prompt", prompt_text(record)
+        if asked is not None:
+            return "decision", answered_questions(record, asked)
+        return "claude", agreements(record, self.in_subagent) or None
+
+
 def log_events(log: Path, in_subagent: bool):
-    """(okamžik, druh, text) pro každý záznam s časem v jednom transcriptu.
+    """(okamžik, druh, data) pro každý záznam s časem v jednom transcriptu.
 
     Aktivitou je **každý** záznam s časem, nejen prompt a odpověď: příkaz harnessu,
     spuštěné hooky i shrnutí po návratu jsou doklad, že se v Claudovi něco dělo.
     K tomu umělá událost na konci povoleného běhu příkazu, jehož výsledek přišel
     později – tím se doba běhu započte a zbytek mezery zůstane pauzou.
 
-    Záznam s odpovědí v dialogu `AskUserQuestion` je druhu `decision` a místo textu
-    nese seznam zodpovězených otázek; jinak je to táž událost jako každá jiná.
+    Druhy a jejich data:
+
+    - `prompt` – zpráva od uživatele, data jsou začátek jejího textu,
+    - `decision` – odpověď v dialogu `AskUserQuestion`, data jsou zodpovězené otázky,
+    - `rejection` – zamítnuté volání nástroje nebo zavřený dialog, jedno na Claudovu zprávu,
+    - `interrupt` – uživatel zastavil Clauda klávesou Esc,
+    - `claude` – cokoliv jiného; data jsou počet přitakání „máš pravdu“, nebo None.
     """
-    running, asking = {}, {}
+    session = Session(in_subagent)
     for record in records(log):
         stamp = record.get("timestamp")
         if not stamp:
             continue
         at = moment(stamp)
-        for tool_id, limit in foreground_bash(record):
-            running[tool_id] = at + timedelta(milliseconds=limit)
-        if not in_subagent and not record.get("isSidechain"):
-            asking.update(asked_questions(record))
+        session.remember(record, at)
         result_id = tool_result_id(record)
-        allowed_end = running.pop(result_id, None)
+        allowed_end = session.running.pop(result_id, None)
         if allowed_end is not None and allowed_end < at:
             yield allowed_end, "claude", None
-        asked = asking.pop(result_id, None)
-        if is_prompt(record, in_subagent):
-            yield at, "prompt", prompt_text(record)
-        elif asked is not None:
-            yield at, "decision", answered_questions(record, asked)
-        else:
-            yield at, "claude", None
+        yield (at, *session.classify(record, result_id))
 
 
 def session_events(prefixes=None, start=None, end=None):
-    """(okamžik, druh, zdroj, text) ze všech transcriptů, volitelně omezené na projekty a období."""
+    """(okamžik, druh, zdroj, data) ze všech transcriptů, volitelně omezené na projekty a období."""
     for project in project_dirs(prefixes):
         for log in project.rglob("*.jsonl"):
             in_subagent = "subagents" in log.parts

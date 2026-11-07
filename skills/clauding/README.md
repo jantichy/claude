@@ -9,9 +9,11 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **`/clauding day`** – po dnech.
 - **Libovolné období česky** za režimem: „září“, „posledních 14 dní“, „minulý týden“, „od 1. 9.“.
 - **U každého období** součet hodin, průměr na kalendářní den, průměr na den, kdy jste s Claudem opravdu pracovali, a kolik takových dnů bylo.
-- **Kolik rozhodnutí jste museli udělat** – na kolik Claudových otázek s nabídnutými variantami jste odpověděli, celkem i na hodinu práce. Je z toho vidět, kolik práce na vás Claude nechává.
+- **Kolik vaší pozornosti Claude spotřebuje** – na kolik jeho otázek s nabídnutými variantami jste odpověděli, kolikrát jste ho zastavili klávesou Esc a kolikrát jste mu zamítli akci, každé zvlášť i dohromady na hodinu práce.
+- **Kolik práce za tím je** – počet commitů, kolik znaků jste do promptů napsali a jak dlouhý je průměrný prompt.
+- **Hříčky navíc**: kolikrát vám Claude řekl „máš pravdu“, co mu píšete nejčastěji, nejdelší prompt, který jste kdy napsali, a v kolik jste nejpozději šli od rozdělané práce spát.
 - **Zajímavosti**: nejdelší den, nejdelší blok v kuse, nejdelší řada dnů po sobě, kolik dnů jste strávili kolika hodinami, které dny v týdnu a hodiny dne jsou nejsilnější.
-- **Starší období dopočítá odhadem**, když se podrobné záznamy už smazaly, a takové údaje označí. Rozhodnutí se odhadnout nedají, u takového období je počet jen spodní hranice, nebo chybí.
+- **Starší období dopočítá odhadem**, když se podrobné záznamy už smazaly, a takové údaje označí. Rozhodnutí, přerušení a zamítnutí se odhadnout nedají, u takového období je počet jen spodní hranice, nebo chybí.
 
 ## Proč zrovna tenhle
 
@@ -19,7 +21,7 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **Čekání na Clauda se počítá.** Když Claude dvacet minut pracuje a vy se díváte, je to čas strávený s ním.
 - **Odchod se nepočítá.** Otázka, na kterou odpovíte až druhý den, ani příkaz, který přes noc čekal na vaše schválení, si nepřipíšou noc práce.
 - **Commity se započtou, jen když vznikly při práci s Claudem**, ne ruční práce v repozitáři mimo něj.
-- **Rozhodnutí se počítají přesně, nebo vůbec.** Počítá se jen odpověď v dialogu s variantami, kterou Claude Code zapíše. Otázku v běžném textu odpovědi by šlo jen hádat, a odhad smíchaný s přesným počtem by znehodnotil oboje.
+- **Rozhodnutí se počítají přesně, nebo vůbec.** Počítá se jen odpověď v dialogu s variantami, zastavení a zamítnutí, které Claude Code zapíše, a zamítnutí několika souběžných akcí jedním klikem je jedno zamítnutí. Otázku v běžném textu odpovědi by šlo jen hádat, a odhad smíchaný s přesným počtem by znehodnotil oboje.
 - **Odhad se kalibruje na vašich datech.** Kde podrobné záznamy chybí, změří si na dnech, kde jsou, jak moc se hrubý výpočet z promptů liší od plného, a tím poměrem ho opraví.
 - **Každé číslo vzniká skriptem**, ne odhadem modelu – stejná data dají pokaždé stejný výsledek.
 
@@ -35,16 +37,22 @@ Stačí se i zeptat „kolik jsem tento měsíc strávil s Claudem?“.
 
 ## Ukázka výstupu
 
-| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny | Rozhodnutí | Rozhodnutí na hodinu |
-|---|---:|---:|---:|---:|---:|---:|
-| červenec 2026 | ~15,2 | ~0,5 | ~1,5 | 10 z 31 | – | – |
-| srpen 2026 | ~115,8 | ~3,7 | ~4,8 | 24 z 31 | ≥631 | 14,7 |
-| září 2026 | ~272,7 | ~9,1 | ~9,1 | 30 z 30 | ≥3236 | 12,1 |
-| říjen 2026 | 198,8 | 6,4 | 6,9 | 29 z 31 | 1877 | 9,4 |
+| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny |
+|---|---:|---:|---:|---:|
+| červenec 2026 | ~15,2 | ~0,5 | ~1,5 | 10 z 31 |
+| srpen 2026 | ~115,7 | ~3,7 | ~4,8 | 24 z 31 |
+| září 2026 | ~272,7 | ~9,1 | ~9,1 | 30 z 30 |
+| říjen 2026 | 198,8 | 6,4 | 6,9 | 29 z 31 |
 
-- **Nejdelší den:** st 2. 9. 2026 – 17,0 h
+| Období | Rozhodnutí | Přerušení | Zamítnutí | Zásahů na hodinu | Commity | Napsaných znaků | Ø znaků na prompt |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| září 2026 | ≥3 236 | ≥97 | ≥150 | 13,0 | 2 433 | 677 929 | 223 |
+| říjen 2026 | 1 877 | 61 | 78 | 10,1 | 1 834 | 414 011 | 176 |
+
+- **Nejdelší den:** st 19. 8. 2026 – ~17,3 h
 - **Nejdelší blok v kuse:** 7. 9. 2026 07:45–17:45 – 10,0 h
-- **Nejdelší řada dnů po sobě:** 44 (31. 8. – 13. 10. 2026)
+- **Nejdelší řada dnů po sobě:** 47 (31. 8. – 16. 10. 2026)
+- **Nejčastější prompty:** „ano“ 106×, „pokračuj“ 80×, „a“ 53×
 
 Pod tím následuje rozložení dnů podle počtu hodin, dnů v týdnu a hodin dne jako malé sloupcové grafy.
 
@@ -53,6 +61,7 @@ Pod tím následuje rozložení dnů podle počtu hodin, dnů v týdnu a hodin d
 - Neměří čas u klávesnice obecně, jen čas v Claude Code.
 - Nefakturuje a nehledá zapomenutý čas pro klienta – na to je [`/invoicing`](../invoicing/README.md).
 - Nepočítá, kolik vás to stojí peněz nebo tokenů.
+- Nepočítá úhozy do klávesnice – jen napsaný text, takže opravy se nezapočtou a krátké vložení textu se od psaní nerozliší.
 - Nic nikam nezapisuje.
 
 ## Jak si ho nainstalovat

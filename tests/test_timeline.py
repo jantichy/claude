@@ -9,8 +9,10 @@ import json
 import sys
 import tempfile
 import unittest
+from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "skills"))
@@ -169,11 +171,61 @@ class Timeline(unittest.TestCase):
         self.session("-a", "s1", [prompt(0), self.ask(1, "Kam?"), tool_result(3)])
         self.assertEqual(self.decisions(), [["Kam?"]])
 
-    def test_closed_dialog_decides_nothing(self):
-        result = tool_result(3)
-        result["message"]["content"][0]["is_error"] = True
-        self.session("-a", "s1", [prompt(0), self.ask(1, "Kam?"), result])
-        self.assertEqual(self.decisions(), [[]])
+    def kinds(self):
+        return [kind for _, kind, _, _ in timeline.session_events()]
+
+    def rejected(self, minutes: float, tool_id: str = "t1") -> dict:
+        result = tool_result(minutes)
+        result["message"]["content"][0].update(
+            tool_use_id=tool_id,
+            is_error=True,
+            content=timeline.REJECTION + " with this tool use.",
+        )
+        return result
+
+    def test_closed_dialog_is_rejection_not_decision(self):
+        self.session("-a", "s1", [prompt(0), self.ask(1, "Kam?"), self.rejected(3)])
+        self.assertEqual(self.decisions(), [])
+        self.assertEqual(self.kinds().count("rejection"), 1)
+
+    def test_parallel_calls_are_one_rejection(self):
+        """Zamítnuté volání odmítne i souběžná volání téže zprávy – rozhodl uživatel jednou."""
+        calls = answer(
+            1,
+            [
+                {"type": "tool_use", "id": "t1", "name": "Bash", "input": {}},
+                {"type": "tool_use", "id": "t2", "name": "Bash", "input": {}},
+            ],
+        )
+        calls["message"]["id"] = "m1"
+        self.session(
+            "-a",
+            "s1",
+            [prompt(0), calls, self.rejected(2, "t1"), self.rejected(2, "t2")],
+        )
+        self.assertEqual(self.kinds().count("rejection"), 1)
+
+    def test_escape_is_interrupt_not_prompt(self):
+        """Esc zapíše harness jako zprávu od uživatele – prompt to není."""
+        rows = [
+            prompt(0),
+            prompt(1, timeline.INTERRUPT),
+            prompt(2, "[Request interrupted by user for tool use]"),
+        ]
+        self.session("-a", "s1", rows)
+        self.assertEqual(self.kinds(), ["prompt", "interrupt", "claude"])
+
+    def test_agreement_counts_in_main_session_only(self):
+        """Subagent přitakává Claudovi, ne uživateli."""
+        said = [{"type": "text", "text": "Máš pravdu, a máš pravdu i tady."}]
+        self.session("-a", "s1", [prompt(0), answer(1, said)])
+        sub = self.projects / "-a" / "s1" / "subagents"
+        sub.mkdir(parents=True)
+        (sub / "agent-x.jsonl").write_text(
+            json.dumps(answer(2, said)), encoding="utf-8"
+        )
+        data = [d for _, kind, _, d in timeline.session_events() if kind == "claude"]
+        self.assertEqual(sorted(data, key=str), [2, None])
 
     def test_subagent_dialog_is_no_decision(self):
         """Subagent se uživatele zeptat nemůže – jeho záznam rozhodnutí není."""
@@ -210,19 +262,38 @@ class Clauding(unittest.TestCase):
         days = clauding.per_day([[start, start + timedelta(hours=1)]])
         self.assertEqual(sorted(v / 60 for v in days.values()), [30, 30])
 
-    def test_decisions_on_estimated_day_are_lower_bound(self):
-        """Za odhadnutý den chybí záznamy – počet je dolní mez a do poměru nejde."""
+    def data(self):
         full, guessed = date(2026, 9, 14), date(2026, 9, 15)
-        hours = {full: 2.0, guessed: 5.0}
-        decisions = {full: 6, guessed: 1}
-        self.assertEqual(
-            clauding.decision_figures([full, guessed], hours, {guessed}, decisions),
-            ("≥7", "3,0"),
+        return (
+            SimpleNamespace(
+                hours={full: 2.0, guessed: 5.0},
+                guessed={guessed},
+                counts={full: Counter(decision=6), guessed: Counter(decision=1)},
+            ),
+            full,
+            guessed,
         )
+
+    def test_counts_on_estimated_day_are_lower_bound(self):
+        """Za odhadnutý den chybí záznamy – počet je dolní mez a do poměru nejde."""
+        data, full, guessed = self.data()
+        kinds = ("decision",)
+        self.assertEqual(clauding.lower_bound([full, guessed], data, kinds), "≥7")
+        self.assertEqual(clauding.per_hour([full, guessed], data, kinds), "3,0")
+        self.assertEqual(clauding.lower_bound([guessed], data, kinds), "–")
+        self.assertEqual(clauding.per_hour([guessed], data, kinds), "–")
+
+    def test_pasted_text_is_not_typed(self):
         self.assertEqual(
-            clauding.decision_figures([guessed], hours, {guessed}, decisions),
-            ("–", "–"),
+            clauding.typed("oprav [Pasted text #1 +20 lines] [Image #2]"), 5
         )
+
+    def test_bedtime_needs_sleep_after_it(self):
+        """Prompt v pět ráno, po kterém se pracuje dál, je začátek dne, ne konec noci."""
+        night = datetime(2026, 9, 15, 2, 30, tzinfo=clauding.ZONE)
+        morning = datetime(2026, 9, 16, 5, 0, tzinfo=clauding.ZONE)
+        prompts = [(night, ""), (morning, ""), (morning + timedelta(minutes=10), "")]
+        self.assertEqual(clauding.bedtimes(prompts), [night])
 
     def test_rounding_is_half_up(self):
         """`round()` by z 2,25 udělal 2,2 – člověk čeká 2,3."""

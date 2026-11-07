@@ -10,8 +10,10 @@
 
 import argparse
 import bisect
+import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
+from types import SimpleNamespace
 from datetime import date, datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
@@ -27,11 +29,25 @@ MONTHS = (
 WEEKDAYS = "po út st čt pá so ne".split()
 BAR = 30
 
+# Co uživatel nenapsal, ale vložil: delší vložený text a obrázek stojí v promptu jen jako značka.
+PASTED = re.compile(r"\[(?:Pasted text #\d+[^\]]*|Image #\d+)\]")
+
+# Zásahy, kterými uživatel řídí Clauda – z transcriptů, takže za odhadnutý den neúplné.
+INTERVENTIONS = ("decision", "interrupt", "rejection")
+
+# Pauza po nočním promptu, od které je to spánek, ne přestávka.
+SLEEP = timedelta(hours=3)
+
 
 def number(value: float, places: int = 1) -> str:
     # Čte to člověk, takže polovina nahoru, ne k sudému číslu jako `round()`.
     quantum = Decimal(1).scaleb(-places)
     return str(Decimal(str(value)).quantize(quantum, ROUND_HALF_UP)).replace(".", ",")
+
+
+def count(value: int) -> str:
+    # Tisíce odděluje nezlomitelná mezera, ať se číslo nerozdělí na konci řádku.
+    return f"{value:,}".replace(",", "\u00a0")
 
 
 def czech_date(day: date, year: bool = True) -> str:
@@ -90,22 +106,32 @@ def incomplete_days(known: set) -> set:
     }
 
 
-def decisions_per_day(events) -> dict:
-    """Zodpovězené otázky z dialogu po dnech v pražském čase."""
-    days = defaultdict(int)
-    for at, kind, _, questions in events:
+def counts_per_day(events) -> dict:
+    """Počty zásahů a přitakání po dnech v pražském čase, podle druhu události."""
+    days = defaultdict(Counter)
+    for at, kind, _, data in events:
+        day = days[at.astimezone(ZONE).date()]
         if kind == "decision":
-            days[at.astimezone(ZONE).date()] += len(questions)
+            day["decision"] += len(data)
+        elif kind in ("interrupt", "rejection"):
+            day[kind] += 1
+        elif kind == "claude" and data:
+            day["agreement"] += data
     return days
 
 
-def measure():
-    """Vrátí (hodiny po dnech, odhadnuté dny, koeficient, počet dnů kalibrace, intervaly,
-    rozhodnutí po dnech)."""
+def typed(text: str) -> int:
+    """Znaky, které uživatel do promptu napsal, bez delšího vloženého textu a obrázků."""
+    return len(PASTED.sub("", text).strip())
+
+
+def measure() -> SimpleNamespace:
+    """Všechno, co výpis potřebuje: čas, odhad, zásahy, commity a prompty po dnech."""
     work = commits()
     events = list(timeline.session_events())
     claude = [at for at, *_ in events]
-    prompts = [at for at, *_ in timeline.history_prompts()]
+    history = [(at, text) for at, _, _, text in timeline.history_prompts()]
+    prompts = [at for at, _ in history]
     full_intervals = timeline.intervals(claude + near(work, claude))
     full = per_day(full_intervals)
     sparse = per_day(timeline.intervals(prompts + near(work, prompts)))
@@ -127,7 +153,19 @@ def measure():
     measured = [
         i for i in full_intervals if i[0].astimezone(ZONE).date() not in guessed
     ]
-    return hours, guessed, factor, len(calibration), measured, decisions_per_day(events)
+    commit_days = Counter(
+        at.astimezone(ZONE).date() for at in near(work, claude + prompts)
+    )
+    return SimpleNamespace(
+        hours=hours,
+        guessed=guessed,
+        factor=factor,
+        calibrated=len(calibration),
+        measured=measured,
+        counts=counts_per_day(events),
+        commits=commit_days,
+        prompts=[(at.astimezone(ZONE), text) for at, text in history],
+    )
 
 
 def period_key(day: date, granularity: str) -> date:
@@ -147,49 +185,82 @@ def period_label(key: date, granularity: str) -> str:
     return f"{WEEKDAYS[key.weekday()]} {czech_date(key)}"
 
 
-def decision_figures(members, hours, guessed, decisions):
-    """(počet, na hodinu) rozhodnutí za skupinu dnů jako text.
+def lower_bound(members, data, kinds):
+    """Součet druhů z transcriptů za skupinu dnů jako text.
 
     Za odhadnutý den chybí transcript aspoň jedné session, takže počet je jen dolní mez
-    a nese `≥`. Poměr na hodinu se bere jen ze dnů bez odhadu, protože odhadnuté hodiny
-    proti neúplnému počtu by dávaly poměr, který neplatí.
+    a nese `≥`; skupina jen z odhadnutých dnů nemá číslo vůbec.
     """
-    full = [d for d in members if d not in guessed]
-    if not any(hours.get(d, 0) > 0 for d in full) and any(
-        d in guessed for d in members
+    marked = [d for d in members if d in data.guessed]
+    if marked and not any(
+        data.hours.get(d, 0) > 0 for d in members if d not in data.guessed
     ):
-        return "–", "–"
-    mark = "≥" if any(d in guessed for d in members) else ""
-    count = sum(decisions.get(d, 0) for d in members)
-    full_hours = sum(hours.get(d, 0) for d in full)
-    rate = (
-        number(sum(decisions.get(d, 0) for d in full) / full_hours)
-        if full_hours
-        else "–"
-    )
-    return f"{mark}{count}", rate
+        return "–"
+    total = sum(data.counts[d][k] for d in members for k in kinds if d in data.counts)
+    return f"{'≥' if marked else ''}{count(total)}"
 
 
-def table(days, hours, guessed, decisions, granularity) -> list:
-    groups = defaultdict(list)
+def per_hour(members, data, kinds) -> str:
+    """Kolik událostí daných druhů připadá na hodinu – jen ze dnů bez odhadu.
+
+    Odhadnuté hodiny proti neúplnému počtu by daly poměr, který neplatí.
+    """
+    full = [d for d in members if d not in data.guessed]
+    hours = sum(data.hours.get(d, 0) for d in full)
+    if not hours:
+        return "–"
+    total = sum(data.counts[d][k] for d in full for k in kinds if d in data.counts)
+    return number(total / hours)
+
+
+def groups(days, granularity) -> dict:
+    grouped = defaultdict(list)
     for day in days:
-        groups[period_key(day, granularity)].append(day)
+        grouped[period_key(day, granularity)].append(day)
+    return grouped
+
+
+def table(days, data, granularity) -> list:
     rows = [
-        "| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny "
-        "| Rozhodnutí | Rozhodnutí na hodinu |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        "| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny |",
+        "|---|---:|---:|---:|---:|",
     ]
-    for key in sorted(groups):
-        members = groups[key]
-        total = sum(hours.get(d, 0) for d in members)
-        active = [d for d in members if hours.get(d, 0) > 0]
-        mark = "~" if any(d in guessed for d in members) else ""
+    for key, members in sorted(groups(days, granularity).items()):
+        total = sum(data.hours.get(d, 0) for d in members)
+        active = [d for d in members if data.hours.get(d, 0) > 0]
+        mark = "~" if any(d in data.guessed for d in members) else ""
         per_active = number(total / len(active)) if active else "–"
-        count, rate = decision_figures(members, hours, guessed, decisions)
         rows.append(
             f"| {period_label(key, granularity)} | {mark}{number(total)} "
             f"| {mark}{number(total / len(members))} | {mark}{per_active} "
-            f"| {len(active)} z {len(members)} | {count} | {rate} |"
+            f"| {len(active)} z {len(members)} |"
+        )
+    return rows
+
+
+def prompt_figures(members, data):
+    """(napsané znaky, Ø znaků na prompt) za skupinu dnů; příkazy do průměru nejdou."""
+    inside = set(members)
+    texts = [text for at, text in data.prompts if at.date() in inside]
+    written = [typed(t) for t in texts if not is_command(t) and typed(t)]
+    average = number(sum(written) / len(written), 0) if written else "–"
+    return count(sum(typed(t) for t in texts)), average
+
+
+def attention(days, data, granularity) -> list:
+    rows = [
+        "| Období | Rozhodnutí | Přerušení | Zamítnutí | Zásahů na hodinu "
+        "| Commity | Napsaných znaků | Ø znaků na prompt |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for key, members in sorted(groups(days, granularity).items()):
+        figures = [lower_bound(members, data, (k,)) for k in INTERVENTIONS]
+        written, average = prompt_figures(members, data)
+        commits_count = count(sum(data.commits.get(d, 0) for d in members))
+        rows.append(
+            f"| {period_label(key, granularity)} | {' | '.join(figures)} "
+            f"| {per_hour(members, data, INTERVENTIONS)} | {commits_count} "
+            f"| {written} | {average} |"
         )
     return rows
 
@@ -267,26 +338,27 @@ def longest_block(measured, days):
     return max(inside, key=lambda i: i[1] - i[0], default=None)
 
 
-def highlights(days, hours, guessed, measured, decisions) -> list:
-    top = max(days, key=lambda d: hours.get(d, 0))
-    mark = "~" if top in guessed else ""
+def top_day(days, data, kind):
+    busiest = max(days, key=lambda d: data.counts[d][kind] if d in data.counts else 0)
+    value = data.counts[busiest][kind] if busiest in data.counts else 0
+    mark = "≥" if busiest in data.guessed else ""
+    return busiest, f"{mark}{count(value)}" if value else None
+
+
+def time_highlights(days, data) -> list:
+    top = max(days, key=lambda d: data.hours.get(d, 0))
+    mark = "~" if top in data.guessed else ""
     rows = [
-        f"- **Nejdelší den:** {period_label(top, 'day')} – {mark}{number(hours.get(top, 0))} h"
+        f"- **Nejdelší den:** {period_label(top, 'day')} – {mark}{number(data.hours.get(top, 0))} h"
     ]
-    busiest = max(days, key=lambda d: decisions.get(d, 0))
-    if decisions.get(busiest, 0):
-        rows.append(
-            f"- **Nejvíc rozhodnutí za den:** {period_label(busiest, 'day')} – "
-            f"{'≥' if busiest in guessed else ''}{decisions[busiest]}"
-        )
-    block = longest_block(measured, days)
+    block = longest_block(data.measured, days)
     if block:
         start, end = (x.astimezone(ZONE) for x in block)
         rows.append(
             f"- **Nejdelší blok v kuse:** {czech_date(start.date())} "
             f"{start:%H:%M}–{end:%H:%M} – {number((end - start).total_seconds() / 3600)} h"
         )
-    streak, streak_end = longest_streak(days, hours)
+    streak, streak_end = longest_streak(days, data.hours)
     if streak:
         streak_start = streak_end - timedelta(days=streak - 1)
         rows.append(
@@ -296,18 +368,97 @@ def highlights(days, hours, guessed, measured, decisions) -> list:
     return rows
 
 
+def claude_highlights(days, data) -> list:
+    rows = []
+    busiest, value = top_day(days, data, "decision")
+    if value:
+        rows.append(
+            f"- **Nejvíc rozhodnutí za den:** {period_label(busiest, 'day')} – {value}"
+        )
+    agreed = lower_bound(days, data, ("agreement",))
+    if agreed not in ("–", "0"):
+        rate = per_hour(days, data, ("agreement",))
+        rows.append(f"- **Claude ti dal za pravdu:** {agreed}× ({rate} na hodinu)")
+    return rows
+
+
+def bedtimes(prompts) -> list:
+    """Konce noční práce: poslední prompt bloku, který skončil mezi půlnocí a šestou.
+
+    Blok jsou prompty bez pauzy delší než `SLEEP`. Blok, který začal až mezi čtvrtou
+    a šestou ráno, je brzký začátek dne, ne pozdní konec noci.
+    """
+    moments = sorted(at for at, _ in prompts)
+    ends = []
+    start = None
+    for at, after in zip(moments, moments[1:] + [None]):
+        start = start or at
+        if after is not None and after - at < SLEEP:
+            continue
+        early = 4 <= start.hour < 6 and start.date() == at.date()
+        if at.hour < 6 and not early:
+            ends.append(at)
+        start = None
+    return ends
+
+
+def night(prompts) -> list:
+    ends = bedtimes(prompts)
+    if not ends:
+        return []
+    latest = max(ends, key=lambda at: at.time())
+    after_two = len({at.date() for at in ends if at.hour >= 2})
+    return [
+        f"- **Noční sova:** nejpozději jsi skončil v {latest:%H:%M} "
+        f"(noc z {czech_date(latest.date() - timedelta(days=1), False)} "
+        f"na {czech_date(latest.date())}), po druhé hodině jsi končil {after_two}× "
+        f"z {len(ends)} nocí, kdy jsi pracoval po půlnoci"
+    ]
+
+
+def prompt_highlights(days, data) -> list:
+    inside = set(days)
+    prompts = [(at, t) for at, t in data.prompts if at.date() in inside and t.strip()]
+    if not prompts:
+        return []
+    # Příkazy harnessu (`exit`, `/clear`) by první místa obsadily vždycky a nic by neřekly.
+    common = Counter(
+        " ".join(t.lower().split()) for _, t in prompts if not is_command(t)
+    ).most_common(3)
+    quoted = ", ".join(f"„{t[:40]}“ {count(n)}×" for t, n in common)
+    longest_at, longest = max(prompts, key=lambda p: typed(p[1]))
+    return [
+        f"- **Nejčastější prompty:** {quoted}",
+        f"- **Nejdelší napsaný prompt:** {czech_date(longest_at.date())} – "
+        f"{count(typed(longest))} znaků",
+        *night(prompts),
+    ]
+
+
+def footnote(days, data) -> list:
+    if not any(d in data.guessed for d in days):
+        return []
+    return [
+        "",
+        f"`~` odhad: pro den chybí transcript, spočteno z promptů v `history.jsonl` a z commitů "
+        f"× koeficient {number(data.factor, 2)} (změřen na {data.calibrated} dnech s úplnými daty). "
+        "Rozložení podle hodiny dne a nejdelší blok jsou jen z dnů bez odhadu. "
+        "`≥` u rozhodnutí, přerušení, zamítnutí a přitakání: za odhadnutý den chybí záznamy, "
+        "počet je jen dolní mez; poměr na hodinu je jen ze dnů bez odhadu.",
+    ]
+
+
 def report(granularity, since, until) -> str:
-    hours, guessed, factor, calibrated, measured, decisions = measure()
-    if not any(h > 0 for h in hours.values()):
+    data = measure()
+    if not any(h > 0 for h in data.hours.values()):
         return "V transcriptech ani v `history.jsonl` není žádná aktivita."
-    first = since or min(d for d, h in hours.items() if h > 0)
+    first = since or min(d for d, h in data.hours.items() if h > 0)
     last = min(until or date.today(), date.today())
     days = [first + timedelta(days=n) for n in range((last - first).days + 1)]
     if not days:
         return "Zadané období neobsahuje ani jeden den."
-    total = sum(hours.get(d, 0) for d in days)
-    active = sum(1 for d in days if hours.get(d, 0) > 0)
-    count, rate = decision_figures(days, hours, guessed, decisions)
+    total = sum(data.hours.get(d, 0) for d in days)
+    active = sum(1 for d in days if data.hours.get(d, 0) > 0)
     out = [
         f"## Čas v Claude Code – {czech_date(first)} až {czech_date(last)}",
         "",
@@ -318,29 +469,28 @@ def report(granularity, since, until) -> str:
             else ""
         ),
         "",
-        f"**Rozhodnutí v dialogu:** {count} · {rate} na hodinu",
+        *table(days, data, granularity),
         "",
-        *table(days, hours, guessed, decisions, granularity),
+        "### Pozornost a práce",
+        "",
+        "Zásahy jsou rozhodnutí v dialogu, přerušení klávesou Esc a zamítnutí nástroje dohromady. "
+        "Napsané znaky jsou bez delšího vloženého textu a obrázků.",
+        "",
+        *attention(days, data, granularity),
         "",
         "### Zajímavosti",
         "",
-        *highlights(days, hours, guessed, measured, decisions),
+        *time_highlights(days, data),
+        *claude_highlights(days, data),
+        *prompt_highlights(days, data),
         "",
-        *histogram(days, hours),
+        *histogram(days, data.hours),
         "",
-        *weekdays(days, hours),
+        *weekdays(days, data.hours),
         "",
-        *day_hours(measured, days),
+        *day_hours(data.measured, days),
+        *footnote(days, data),
     ]
-    if any(d in guessed for d in days):
-        out += [
-            "",
-            f"`~` odhad: pro den chybí transcript, spočteno z promptů v `history.jsonl` a z commitů "
-            f"× koeficient {number(factor, 2)} (změřen na {calibrated} dnech s úplnými daty). "
-            "Rozložení podle hodiny dne a nejdelší blok jsou jen z dnů bez odhadu. "
-            "`≥` u rozhodnutí: za odhadnutý den chybí záznamy, počet je jen dolní mez; "
-            "rozhodnutí na hodinu jsou jen ze dnů bez odhadu.",
-        ]
     return "\n".join(out)
 
 
