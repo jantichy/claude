@@ -55,8 +55,8 @@ Stačí se i zeptat „kolik jsem tento měsíc strávil s Claudem?“.
 - V Claude Code mám za sebou zhruba 797,5 h za 221 dní (2. 4. 2026 – 8. 11. 2026): v průměru 3,6 h denně včetně víkendů, ve dnech s prací (138 z 221) 5,8 h.
 - Nejsilnější měsíc: září 2026 – zhruba 272,7 h, tedy 9,1 h denně včetně víkendů.
 - 47 dní v řadě bez jediného volného dne (31. 8. – 16. 10. 2026).
-- Nejméně 6 319 rozhodnutí – odpovědí na Claudovy otázky s nabídnutými variantami, tedy 11,0 za hodinu práce.
-- Claude mi řekl „máš pravdu“ nejméně 339×, zhruba jednou za 2,0 h práce.
+- 6 319+ rozhodnutí – odpovědí na Claudovy otázky s nabídnutými variantami, tedy 11,0 za hodinu práce.
+- „Máš pravdu“ mi Claude řekl 339+ krát, zhruba jednou za 2,0 h práce.
 - Nejčastější prompty: „ano“ (106×), „pokračuj“ (80×), „a“ (53×).
 
 Nad zajímavostmi je rozložení dnů podle počtu hodin, dnů v týdnu a hodin dne jako malé sloupcové grafy; každá tabulka končí součtovým řádkem.

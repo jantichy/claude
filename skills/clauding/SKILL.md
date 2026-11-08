@@ -95,7 +95,7 @@ Ze session, ve které skill vznikl – každá z nich dala věrohodné, ale špa
 
 ## Fáze 3 – Závěr
 
-Výstup skriptu je hotový Markdown. **Vypiš ho beze změny** – nezaokrouhluj jinak, nepřepočítávej a nevynechávej poznámku o odhadu ani vysvětlivku nad tabulkou pozornosti, protože bez nich vypadá odhad jako změřené číslo a dolní mez jako úplný počet. **Zajímavosti jsou text ke sdílení** – uživatel je vykopíruje na sociální síť, kde je čte člověk bez tabulek a bez legendy. Proto stojí na konci, každá je ucelená věta, mluví v první osobě bez rodu („mám za sebou“, ne „strávil jsem“), aby seděla každému, kdo skill pustí, a značky `~` a `≥` jsou v nich přepsané na „zhruba“ a „nejméně“. Neupravuj je ani nezkracuj; nová zajímavost se přidává do skriptu, ne do výpisu.
+Výstup skriptu je hotový Markdown. **Vypiš ho beze změny** – nezaokrouhluj jinak, nepřepočítávej a nevynechávej poznámku o odhadu ani vysvětlivku nad tabulkou pozornosti, protože bez nich vypadá odhad jako změřené číslo a dolní mez jako úplný počet. **Zajímavosti jsou text ke sdílení** – uživatel je vykopíruje na sociální síť, kde je čte člověk bez tabulek a bez legendy. Proto stojí na konci, každá je ucelená věta, mluví v první osobě bez rodu („mám za sebou“, ne „strávil jsem“), aby seděla každému, kdo skill pustí, a značky `~` a `≥` jsou v nich přepsané na „zhruba“ a plus za číslem (`≥5 113` je „5 113+“). Neupravuj je ani nezkracuj; nová zajímavost se přidává do skriptu, ne do výpisu.
 
 Ptal-li se uživatel na konkrétní věc („kolik jsem byl v Claudovi včera“), odpověz nad tabulkou jednou větou s číslem z ní.
 

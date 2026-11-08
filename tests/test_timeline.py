@@ -308,7 +308,7 @@ class Clauding(unittest.TestCase):
 
     def test_shared_sentences_have_no_table_marks(self):
         """Věty ke sdílení čte člověk bez legendy – značky se mění na slova."""
-        self.assertEqual(clauding.worded("≥7"), "nejméně 7")
+        self.assertEqual(clauding.worded("≥7"), "7+")
         self.assertEqual(clauding.worded("~3,0"), "zhruba 3,0")
 
     def test_czech_plural(self):

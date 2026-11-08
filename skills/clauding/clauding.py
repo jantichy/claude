@@ -402,8 +402,10 @@ def pages(chars: int) -> str:
 
 
 def worded(text: str) -> str:
-    """Číslo z tabulky jako slovo do věty: `≥` je „nejméně“, `~` „zhruba“."""
-    return text.replace("≥", "nejméně ").replace("~", "zhruba ")
+    """Číslo z tabulky do věty: dolní mez `≥5` je „5+“, odhad `~` „zhruba“."""
+    if text.startswith("≥"):
+        return text[1:] + "+"
+    return text.replace("~", "zhruba ")
 
 
 def about(members, data) -> str:
@@ -513,7 +515,7 @@ def decision_sentences(days, data, granularity) -> list:
     if total in ("–", "0"):
         return []
     sentence = (
-        f"- {worded(total).capitalize()} rozhodnutí – odpovědí na Claudovy otázky "
+        f"- {worded(total)} rozhodnutí – odpovědí na Claudovy otázky "
         f"s nabídnutými variantami, tedy {per_hour(days, data, ('decision',))} za hodinu práce"
     )
     best = busiest_period(days, data, granularity, ("decision",))
@@ -534,8 +536,8 @@ def intervention_sentences(days, data) -> list:
     if interrupts == "–":
         return []
     return [
-        f"- Zastavení Clauda klávesou Esc: {worded(interrupts)}×, zamítnutých akcí "
-        f"{worded(rejections)}×; i s rozhodnutími {per_hour(days, data, INTERVENTIONS)} "
+        f"- Zastavení Clauda klávesou Esc: {worded(interrupts)}, zamítnutých akcí "
+        f"{worded(rejections)}; i s rozhodnutími {per_hour(days, data, INTERVENTIONS)} "
         "zásahů za hodinu práce."
     ]
 
@@ -585,7 +587,7 @@ def fun_sentences(days, data) -> list:
     if agreed not in ("–", "0") and rate not in ("–", "0,0"):
         every = 1 / float(rate.replace(",", "."))
         rows.append(
-            f"- Claude mi řekl „máš pravdu“ {worded(agreed)}×, zhruba jednou "
+            f"- „Máš pravdu“ mi Claude řekl {worded(agreed)} krát, zhruba jednou "
             f"za {number(every)} h práce."
         )
     inside = set(days)
