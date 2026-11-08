@@ -11,6 +11,7 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **U každého období** součet hodin, průměr na kalendářní den, průměr na den, kdy jste s Claudem opravdu pracovali, a kolik takových dnů bylo.
 - **Kolik vaší pozornosti Claude spotřebuje** – na kolik jeho otázek s nabídnutými variantami jste odpověděli, kolikrát jste ho zastavili klávesou Esc a kolikrát jste mu zamítli akci, každé zvlášť i dohromady na hodinu práce.
 - **Kolik práce za tím je** – počet commitů, kolik znaků jste do promptů napsali a jak dlouhý je průměrný prompt.
+- **Seznam zajímavostí ke sdílení** – souhrn, nejsilnější měsíc, rekordy a extrémy jako hotové věty v první osobě, které můžete rovnou vykopírovat na LinkedIn nebo jinam.
 - **Hříčky navíc**: kolikrát vám Claude řekl „máš pravdu“, co mu píšete nejčastěji, nejdelší prompt, který jste kdy napsali, a v kolik jste nejpozději šli od rozdělané práce spát.
 - **Zajímavosti**: nejdelší den, nejdelší blok v kuse, nejdelší řada dnů po sobě, kolik dnů jste strávili kolika hodinami, které dny v týdnu a hodiny dne jsou nejsilnější.
 - **Starší období dopočítá odhadem**, když se podrobné záznamy už smazaly, a takové údaje označí. Rozhodnutí, přerušení a zamítnutí se odhadnout nedají, u takového období je počet jen spodní hranice, nebo chybí.
@@ -49,12 +50,16 @@ Stačí se i zeptat „kolik jsem tento měsíc strávil s Claudem?“.
 | září 2026 | ≥3 236 | ≥97 | ≥150 | 13,0 | 2 433 | 677 929 | 223 |
 | říjen 2026 | 1 877 | 61 | 78 | 10,1 | 1 834 | 414 011 | 176 |
 
-- **Nejdelší den:** st 19. 8. 2026 – ~17,3 h
-- **Nejdelší blok v kuse:** 7. 9. 2026 07:45–17:45 – 10,0 h
-- **Nejdelší řada dnů po sobě:** 47 (31. 8. – 16. 10. 2026)
-- **Nejčastější prompty:** „ano“ 106×, „pokračuj“ 80×, „a“ 53×
+### Zajímavosti
 
-Pod tím následuje rozložení dnů podle počtu hodin, dnů v týdnu a hodin dne jako malé sloupcové grafy.
+- V Claude Code mám za sebou zhruba 797,5 h za 221 dní (2. 4. 2026 – 8. 11. 2026): v průměru 3,6 h denně včetně víkendů, ve dnech s prací (138 z 221) 5,8 h.
+- Nejsilnější měsíc: září 2026 – zhruba 272,7 h, tedy 9,1 h denně včetně víkendů.
+- 47 dní v řadě bez jediného volného dne (31. 8. – 16. 10. 2026).
+- Nejméně 6 319 rozhodnutí – odpovědí na Claudovy otázky s nabídnutými variantami, tedy 11,0 za hodinu práce.
+- Claude mi řekl „máš pravdu“ nejméně 339×, zhruba jednou za 2,0 h práce.
+- Nejčastější prompty: „ano“ (106×), „pokračuj“ (80×), „a“ (53×).
+
+Nad zajímavostmi je rozložení dnů podle počtu hodin, dnů v týdnu a hodin dne jako malé sloupcové grafy; každá tabulka končí součtovým řádkem.
 
 ## Co nedělá
 

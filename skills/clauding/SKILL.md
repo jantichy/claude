@@ -9,7 +9,7 @@ allowed-tools: [Bash]
 
 ## Co skill dělá
 
-Spočítá, kolik času se strávilo v Claude Code, a vypíše to po obdobích. Za každé období součet hodin, průměr na kalendářní den, průměr na aktivní den a počet aktivních dnů. Ve druhé tabulce pozornost a práce: rozhodnutí v dialogu, přerušení, zamítnutí, tyhle zásahy dohromady na hodinu, commity, napsané znaky a průměrná délka promptu. Pod tím nejdelší den, den s nejvíc rozhodnutími, kolikrát Claude přitakal „máš pravdu“, nejčastější prompty, nejdelší napsaný prompt, nejpozdější konec noční práce, nejdelší blok v kuse, nejdelší řadu dnů po sobě, rozložení dnů podle počtu hodin, průměr podle dne v týdnu a rozložení podle hodiny dne.
+Spočítá, kolik času se strávilo v Claude Code, a vypíše to po obdobích ve třech částech. **Tabulka času:** za každé období součet hodin, průměr na kalendářní den, průměr na aktivní den a počet aktivních dnů. **Tabulka pozornosti a práce:** rozhodnutí v dialogu, přerušení, zamítnutí, tyhle zásahy dohromady na hodinu, commity, napsané znaky a průměrná délka promptu. **Rozložení:** dny podle počtu hodin, průměr podle dne v týdnu a hodiny podle denní doby. Každá tabulka končí součtovým řádkem za celé období. Na konci **zajímavosti** – souhrn, rekordy, extrémy a hříčky jako ucelené věty, které jdou vykopírovat a sdílet.
 
 Tři režimy, liší se jen členěním tabulky:
 
@@ -35,7 +35,7 @@ Za režimem volitelně období česky: „září“, „posledních 14 dní“,
 | Součty, průměry, odhad a zajímavosti | `clauding.py` | deterministický výpočet nad 3–4 GB transcriptů; model by ho dělal pomaleji a s chybou |
 | Výpis | vlastní | odpověď na konkrétní dotaz nad tabulkou |
 
-**Oba skripty jsou implementační detail, ne rozhraní** – jejich jména, parametry i rozdělení práce se smějí změnit bez ohlášení. **Závazná je *Metodika* níž a tvar výstupu:** tabulka času se součtem a oběma průměry, tabulka pozornosti a práce, zajímavosti a značky odhadu a dolní meze. Změna metodiky se dělá v `timeline.py` a v této sekci zároveň, protože jinak by `/clauding` a `/invoicing recover` odpovídaly na tutéž otázku jinak.
+**Oba skripty jsou implementační detail, ne rozhraní** – jejich jména, parametry i rozdělení práce se smějí změnit bez ohlášení. **Závazná je *Metodika* níž a tvar výstupu:** tabulka času, tabulka pozornosti a práce a rozložení, každá se součtovým řádkem, značky odhadu a dolní meze a na konci zajímavosti ke sdílení. Změna metodiky se dělá v `timeline.py` a v této sekci zároveň, protože jinak by `/clauding` a `/invoicing recover` odpovídaly na tutéž otázku jinak.
 
 ## Metodika
 
@@ -95,7 +95,9 @@ Ze session, ve které skill vznikl – každá z nich dala věrohodné, ale špa
 
 ## Fáze 3 – Závěr
 
-Výstup skriptu je hotový Markdown. **Vypiš ho beze změny** – nezaokrouhluj jinak, nepřepočítávej a nevynechávej poznámku o odhadu ani vysvětlivku nad tabulkou pozornosti, protože bez nich vypadá odhad jako změřené číslo a dolní mez jako úplný počet. Ptal-li se uživatel na konkrétní věc („kolik jsem byl v Claudovi včera“), odpověz nad tabulkou jednou větou s číslem z ní.
+Výstup skriptu je hotový Markdown. **Vypiš ho beze změny** – nezaokrouhluj jinak, nepřepočítávej a nevynechávej poznámku o odhadu ani vysvětlivku nad tabulkou pozornosti, protože bez nich vypadá odhad jako změřené číslo a dolní mez jako úplný počet. **Zajímavosti jsou text ke sdílení** – uživatel je vykopíruje na sociální síť, kde je čte člověk bez tabulek a bez legendy. Proto stojí na konci, každá je ucelená věta, mluví v první osobě bez rodu („mám za sebou“, ne „strávil jsem“), aby seděla každému, kdo skill pustí, a značky `~` a `≥` jsou v nich přepsané na „zhruba“ a „nejméně“. Neupravuj je ani nezkracuj; nová zajímavost se přidává do skriptu, ne do výpisu.
+
+Ptal-li se uživatel na konkrétní věc („kolik jsem byl v Claudovi včera“), odpověz nad tabulkou jednou větou s číslem z ní.
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 

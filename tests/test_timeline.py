@@ -295,6 +295,29 @@ class Clauding(unittest.TestCase):
         prompts = [(night, ""), (morning, ""), (morning + timedelta(minutes=10), "")]
         self.assertEqual(clauding.bedtimes(prompts), [night])
 
+    def test_weekday_total_averages_days_not_rows(self):
+        """Dva pondělky a jedno úterý: průměr sedmi řádků by dal jiné číslo než průměr dnů."""
+        days = [date(2026, 9, 14), date(2026, 9, 15), date(2026, 9, 21)]
+        hours = {days[0]: 2.0, days[1]: 8.0, days[2]: 2.0}
+        self.assertEqual(clauding.weekdays(days, hours)[-1], "| **Celkem** | 4,0 | |")
+
+    def test_histogram_total_counts_days(self):
+        days = [date(2026, 9, 14), date(2026, 9, 15)]
+        rows = clauding.histogram(days, {days[0]: 3.0})
+        self.assertEqual(rows[-1], "| **Celkem** | 2 | |")
+
+    def test_shared_sentences_have_no_table_marks(self):
+        """Věty ke sdílení čte člověk bez legendy – značky se mění na slova."""
+        self.assertEqual(clauding.worded("≥7"), "nejméně 7")
+        self.assertEqual(clauding.worded("~3,0"), "zhruba 3,0")
+
+    def test_czech_plural(self):
+        forms = ("den", "dny", "dní")
+        self.assertEqual(
+            [clauding.plural(n, *forms) for n in (1, 2, 4, 5, 0)],
+            ["den", "dny", "dny", "dní", "dní"],
+        )
+
     def test_rounding_is_half_up(self):
         """`round()` by z 2,25 udělal 2,2 – člověk čeká 2,3."""
         self.assertEqual(clauding.number(2.25), "2,3")

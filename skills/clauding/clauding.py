@@ -27,6 +27,7 @@ MONTHS = (
     "leden únor březen duben květen červen červenec srpen září říjen listopad prosinec"
 ).split()
 WEEKDAYS = "po út st čt pá so ne".split()
+WEEKDAY_NAMES = "pondělí úterý středa čtvrtek pátek sobota neděle".split()
 BAR = 30
 
 # Co uživatel nenapsal, ale vložil: delší vložený text a obrázek stojí v promptu jen jako značka.
@@ -37,6 +38,9 @@ INTERVENTIONS = ("decision", "interrupt", "rejection")
 
 # Pauza po nočním promptu, od které je to spánek, ne přestávka.
 SLEEP = timedelta(hours=3)
+
+# Normostrana – ať se dá napsaný text představit.
+PAGE = 1800
 
 
 def number(value: float, places: int = 1) -> str:
@@ -220,22 +224,30 @@ def groups(days, granularity) -> dict:
     return grouped
 
 
+def period_hours(members, data) -> float:
+    return sum(data.hours.get(d, 0) for d in members)
+
+
+def time_row(label, members, data) -> str:
+    total = period_hours(members, data)
+    active = [d for d in members if data.hours.get(d, 0) > 0]
+    mark = "~" if any(d in data.guessed for d in members) else ""
+    per_active = number(total / len(active)) if active else "–"
+    return (
+        f"| {label} | {mark}{number(total)} "
+        f"| {mark}{number(total / len(members))} | {mark}{per_active} "
+        f"| {len(active)} z {len(members)} |"
+    )
+
+
 def table(days, data, granularity) -> list:
     rows = [
         "| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny |",
         "|---|---:|---:|---:|---:|",
     ]
     for key, members in sorted(groups(days, granularity).items()):
-        total = sum(data.hours.get(d, 0) for d in members)
-        active = [d for d in members if data.hours.get(d, 0) > 0]
-        mark = "~" if any(d in data.guessed for d in members) else ""
-        per_active = number(total / len(active)) if active else "–"
-        rows.append(
-            f"| {period_label(key, granularity)} | {mark}{number(total)} "
-            f"| {mark}{number(total / len(members))} | {mark}{per_active} "
-            f"| {len(active)} z {len(members)} |"
-        )
-    return rows
+        rows.append(time_row(period_label(key, granularity), members, data))
+    return rows + [time_row("**Celkem**", days, data)]
 
 
 def prompt_figures(members, data):
@@ -243,8 +255,23 @@ def prompt_figures(members, data):
     inside = set(members)
     texts = [text for at, text in data.prompts if at.date() in inside]
     written = [typed(t) for t in texts if not is_command(t) and typed(t)]
-    average = number(sum(written) / len(written), 0) if written else "–"
-    return count(sum(typed(t) for t in texts)), average
+    average = sum(written) / len(written) if written else None
+    return sum(typed(t) for t in texts), average
+
+
+def commit_count(members, data) -> int:
+    return sum(data.commits.get(d, 0) for d in members)
+
+
+def attention_row(label, members, data) -> str:
+    figures = [lower_bound(members, data, (k,)) for k in INTERVENTIONS]
+    written, average = prompt_figures(members, data)
+    shown = number(average, 0) if average is not None else "–"
+    return (
+        f"| {label} | {' | '.join(figures)} "
+        f"| {per_hour(members, data, INTERVENTIONS)} | {count(commit_count(members, data))} "
+        f"| {count(written)} | {shown} |"
+    )
 
 
 def attention(days, data, granularity) -> list:
@@ -254,15 +281,8 @@ def attention(days, data, granularity) -> list:
         "|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for key, members in sorted(groups(days, granularity).items()):
-        figures = [lower_bound(members, data, (k,)) for k in INTERVENTIONS]
-        written, average = prompt_figures(members, data)
-        commits_count = count(sum(data.commits.get(d, 0) for d in members))
-        rows.append(
-            f"| {period_label(key, granularity)} | {' | '.join(figures)} "
-            f"| {per_hour(members, data, INTERVENTIONS)} | {commits_count} "
-            f"| {written} | {average} |"
-        )
-    return rows
+        rows.append(attention_row(period_label(key, granularity), members, data))
+    return rows + [attention_row("**Celkem**", days, data)]
 
 
 def bar(value: float, peak: float) -> str:
@@ -279,25 +299,31 @@ def histogram(days, hours) -> list:
     for bucket in range(-1, max(buckets) + 1):
         label = "0" if bucket == -1 else f"{bucket}–{bucket + 1}"
         rows.append(f"| {label} | {buckets[bucket]} | {bar(buckets[bucket], peak)} |")
-    return rows
+    return rows + [f"| **Celkem** | {len(days)} | |"]
 
 
-def weekdays(days, hours) -> list:
+def weekday_averages(days, hours) -> dict:
     totals, counts = defaultdict(float), defaultdict(int)
     for day in days:
         totals[day.weekday()] += hours.get(day, 0)
         counts[day.weekday()] += 1
-    averages = {w: totals[w] / counts[w] for w in counts}
+    return {w: totals[w] / counts[w] for w in counts}
+
+
+def weekdays(days, hours) -> list:
+    averages = weekday_averages(days, hours)
     peak = max(averages.values())
     rows = ["| Den v týdnu | Ø hodin | |", "|---|---:|---|"]
     for w in sorted(averages):
         rows.append(
             f"| {WEEKDAYS[w]} | {number(averages[w])} | {bar(averages[w], peak)} |"
         )
-    return rows
+    # Průměr přes všechny dny, ne průměr sedmi řádků – dnů v týdnu nemusí být v období stejně.
+    overall = sum(hours.get(d, 0) for d in days) / len(days)
+    return rows + [f"| **Celkem** | {number(overall)} | |"]
 
 
-def day_hours(measured, days) -> list:
+def two_hour_slots(measured, days) -> dict:
     """Kolik hodin připadá na každou dvouhodinovku dne; jen dny bez odhadu."""
     slots = defaultdict(float)
     first, last = days[0], days[-1]
@@ -312,6 +338,10 @@ def day_hours(measured, days) -> list:
             if first <= cursor.date() <= last:
                 slots[cursor.hour // 2] += (stop - cursor).total_seconds() / 3600
             cursor = stop
+    return slots
+
+
+def day_hours(slots) -> list:
     if not slots:
         return []
     peak = max(slots.values())
@@ -320,7 +350,7 @@ def day_hours(measured, days) -> list:
         rows.append(
             f"| {2 * slot}–{2 * slot + 2} | {number(slots[slot])} | {bar(slots[slot], peak)} |"
         )
-    return rows
+    return rows + [f"| **Celkem** | {number(sum(slots.values()))} | |"]
 
 
 def longest_streak(days, hours):
@@ -336,50 +366,6 @@ def longest_block(measured, days):
     first, last = days[0], days[-1]
     inside = [i for i in measured if first <= i[0].astimezone(ZONE).date() <= last]
     return max(inside, key=lambda i: i[1] - i[0], default=None)
-
-
-def top_day(days, data, kind):
-    busiest = max(days, key=lambda d: data.counts[d][kind] if d in data.counts else 0)
-    value = data.counts[busiest][kind] if busiest in data.counts else 0
-    mark = "≥" if busiest in data.guessed else ""
-    return busiest, f"{mark}{count(value)}" if value else None
-
-
-def time_highlights(days, data) -> list:
-    top = max(days, key=lambda d: data.hours.get(d, 0))
-    mark = "~" if top in data.guessed else ""
-    rows = [
-        f"- **Nejdelší den:** {period_label(top, 'day')} – {mark}{number(data.hours.get(top, 0))} h"
-    ]
-    block = longest_block(data.measured, days)
-    if block:
-        start, end = (x.astimezone(ZONE) for x in block)
-        rows.append(
-            f"- **Nejdelší blok v kuse:** {czech_date(start.date())} "
-            f"{start:%H:%M}–{end:%H:%M} – {number((end - start).total_seconds() / 3600)} h"
-        )
-    streak, streak_end = longest_streak(days, data.hours)
-    if streak:
-        streak_start = streak_end - timedelta(days=streak - 1)
-        rows.append(
-            f"- **Nejdelší řada dnů po sobě:** {streak} "
-            f"({czech_date(streak_start, False)} – {czech_date(streak_end)})"
-        )
-    return rows
-
-
-def claude_highlights(days, data) -> list:
-    rows = []
-    busiest, value = top_day(days, data, "decision")
-    if value:
-        rows.append(
-            f"- **Nejvíc rozhodnutí za den:** {period_label(busiest, 'day')} – {value}"
-        )
-    agreed = lower_bound(days, data, ("agreement",))
-    if agreed not in ("–", "0"):
-        rate = per_hour(days, data, ("agreement",))
-        rows.append(f"- **Claude ti dal za pravdu:** {agreed}× ({rate} na hodinu)")
-    return rows
 
 
 def bedtimes(prompts) -> list:
@@ -402,6 +388,225 @@ def bedtimes(prompts) -> list:
     return ends
 
 
+# Zajímavosti jsou věty ke sdílení: první osoba bez rodu, aby seděly každému, kdo skill
+# pustí, a slova místo značek – čtenář na sociální síti `~` ani `≥` neprečte.
+
+
+def plural(n: int, one: str, few: str, many: str) -> str:
+    return one if n == 1 else few if 2 <= n <= 4 else many
+
+
+def pages(chars: int) -> str:
+    n = round(chars / PAGE)
+    return f"{count(n)} {plural(n, 'normostrana', 'normostrany', 'normostran')}"
+
+
+def worded(text: str) -> str:
+    """Číslo z tabulky jako slovo do věty: `≥` je „nejméně“, `~` „zhruba“."""
+    return text.replace("≥", "nejméně ").replace("~", "zhruba ")
+
+
+def about(members, data) -> str:
+    return "zhruba " if any(d in data.guessed for d in members) else ""
+
+
+def full_date(day: date) -> str:
+    return f"{WEEKDAY_NAMES[day.weekday()]} {czech_date(day)}"
+
+
+def unit(granularity: str) -> str:
+    return {"month": "měsíc", "week": "týden"}[granularity]
+
+
+def summary(days, data) -> list:
+    total = period_hours(days, data)
+    active = [d for d in days if data.hours.get(d, 0) > 0]
+    span = f"{len(days)} {plural(len(days), 'den', 'dny', 'dní')}"
+    return [
+        f"- V Claude Code mám za sebou {about(days, data)}{number(total)} h za {span} "
+        f"({czech_date(days[0])} – {czech_date(days[-1])}): v průměru "
+        f"{number(total / len(days))} h denně včetně víkendů, ve dnech s prací "
+        f"({len(active)} z {len(days)}) {number(total / len(active))} h."
+    ]
+
+
+def period_sentences(days, data, granularity) -> list:
+    grouped = groups(days, granularity)
+    if granularity == "day" or len(grouped) < 2:
+        return []
+    key, members = max(grouped.items(), key=lambda g: period_hours(g[1], data))
+    hours = period_hours(members, data)
+    label = period_label(key, granularity)
+    return [
+        f"- Nejsilnější {unit(granularity)}: {label} – {about(members, data)}{number(hours)} h, "
+        f"tedy {number(hours / len(members))} h denně včetně víkendů."
+    ]
+
+
+def record_sentences(days, data) -> list:
+    top = max(days, key=lambda d: data.hours.get(d, 0))
+    rows = [
+        f"- Nejdelší den: {full_date(top)} – {about([top], data)}"
+        f"{number(data.hours.get(top, 0))} h v Claude Code."
+    ]
+    block = longest_block(data.measured, days)
+    if block:
+        start, end = (x.astimezone(ZONE) for x in block)
+        rows.append(
+            f"- Nejdelší souvislý blok: {number((end - start).total_seconds() / 3600)} h "
+            f"bez pauzy delší než 20 minut ({czech_date(start.date())}, "
+            f"{start:%H:%M}–{end:%H:%M})."
+        )
+    streak, streak_end = longest_streak(days, data.hours)
+    if streak > 1:
+        streak_start = streak_end - timedelta(days=streak - 1)
+        rows.append(
+            f"- {streak} {plural(streak, 'den', 'dny', 'dní')} v řadě bez jediného volného dne "
+            f"({czech_date(streak_start, False)} – {czech_date(streak_end)})."
+        )
+    return rows
+
+
+def rhythm_sentences(days, data, slots) -> list:
+    averages = weekday_averages(days, data.hours)
+    best = max(averages, key=averages.get)
+    weekend = [d for d in days if d.weekday() >= 5]
+    rows = [
+        f"- Nejsilnější den v týdnu: {WEEKDAY_NAMES[best]} s průměrem {number(averages[best])} h"
+        + (
+            f", o víkendu v průměru {number(period_hours(weekend, data) / len(weekend))} h."
+            if weekend
+            else "."
+        )
+    ]
+    total = sum(slots.values())
+    if total:
+        evening = sum(slots[s] for s in (0, 1, 2, 10, 11))
+        peak = max(slots, key=slots.get)
+        rows.append(
+            f"- Večer a v noci (20–6 h) padá {number(100 * evening / total, 0)} % času, "
+            f"nejsilnější dvouhodinovka dne je {2 * peak}–{2 * peak + 2} h."
+        )
+    return rows
+
+
+def busiest_period(days, data, granularity, kinds):
+    grouped = groups(days, granularity)
+    if granularity == "day" or len(grouped) < 2:
+        return None
+    key, members = max(
+        grouped.items(),
+        key=lambda g: sum(
+            data.counts[d][k] for d in g[1] for k in kinds if d in data.counts
+        ),
+    )
+    return period_label(key, granularity), worded(lower_bound(members, data, kinds))
+
+
+def top_day(days, data, kind):
+    busiest = max(days, key=lambda d: data.counts[d][kind] if d in data.counts else 0)
+    return busiest, data.counts[busiest][kind] if busiest in data.counts else 0
+
+
+def decision_sentences(days, data, granularity) -> list:
+    total = lower_bound(days, data, ("decision",))
+    if total in ("–", "0"):
+        return []
+    sentence = (
+        f"- {worded(total).capitalize()} rozhodnutí – odpovědí na Claudovy otázky "
+        f"s nabídnutými variantami, tedy {per_hour(days, data, ('decision',))} za hodinu práce"
+    )
+    best = busiest_period(days, data, granularity, ("decision",))
+    if best:
+        sentence += f"; nejvíc za {unit(granularity)} {best[0]} ({best[1]})"
+    rows = [sentence + "."]
+    day, value = top_day(days, data, "decision")
+    if value:
+        rows.append(
+            f"- Rekord: {count(value)} rozhodnutí za jediný den ({full_date(day)})."
+        )
+    return rows
+
+
+def intervention_sentences(days, data) -> list:
+    interrupts = lower_bound(days, data, ("interrupt",))
+    rejections = lower_bound(days, data, ("rejection",))
+    if interrupts == "–":
+        return []
+    return [
+        f"- Zastavení Clauda klávesou Esc: {worded(interrupts)}×, zamítnutých akcí "
+        f"{worded(rejections)}×; i s rozhodnutími {per_hour(days, data, INTERVENTIONS)} "
+        "zásahů za hodinu práce."
+    ]
+
+
+def work_sentences(days, data, granularity) -> list:
+    rows = []
+    commits_total = commit_count(days, data)
+    if commits_total:
+        sentence = f"- {count(commits_total)} commitů"
+        grouped = groups(days, granularity)
+        if granularity != "day" and len(grouped) > 1:
+            key, members = max(grouped.items(), key=lambda g: commit_count(g[1], data))
+            sentence += (
+                f", nejvíc za {unit(granularity)} {period_label(key, granularity)} "
+                f"({count(commit_count(members, data))})"
+            )
+        rows.append(sentence + ".")
+    written, average = prompt_figures(days, data)
+    if written:
+        rows.append(
+            f"- Do promptů napsáno {count(written)} znaků, zhruba "
+            f"{pages(written)}; průměrný prompt má "
+            f"{number(average, 0)} znaků."
+        )
+    return rows
+
+
+def prompt_trend(days, data, granularity) -> list:
+    grouped = sorted(groups(days, granularity).items())
+    averages = [(key, prompt_figures(members, data)[1]) for key, members in grouped]
+    averages = [(k, a) for k, a in averages if a is not None]
+    if granularity == "day" or len(averages) < 2:
+        return []
+    (first, start), (last, end) = averages[0], averages[-1]
+    verb = "zkrátil" if end < start else "prodloužil"
+    return [
+        f"- Průměrný prompt se {verb} z {number(start, 0)} znaků "
+        f"({period_label(first, granularity)}) na {number(end, 0)} "
+        f"({period_label(last, granularity)})."
+    ]
+
+
+def fun_sentences(days, data) -> list:
+    rows = []
+    agreed = lower_bound(days, data, ("agreement",))
+    rate = per_hour(days, data, ("agreement",))
+    if agreed not in ("–", "0") and rate not in ("–", "0,0"):
+        every = 1 / float(rate.replace(",", "."))
+        rows.append(
+            f"- Claude mi řekl „máš pravdu“ {worded(agreed)}×, zhruba jednou "
+            f"za {number(every)} h práce."
+        )
+    inside = set(days)
+    prompts = [(at, t) for at, t in data.prompts if at.date() in inside and t.strip()]
+    if not prompts:
+        return rows
+    # Příkazy harnessu (`exit`, `/clear`) by první místa obsadily vždycky a nic by neřekly.
+    common = Counter(
+        " ".join(t.lower().split()) for _, t in prompts if not is_command(t)
+    ).most_common(3)
+    if common:
+        quoted = ", ".join(f"„{t[:40]}“ ({count(n)}×)" for t, n in common)
+        rows.append(f"- Nejčastější prompty: {quoted}.")
+    longest_at, longest = max(prompts, key=lambda p: typed(p[1]))
+    rows.append(
+        f"- Nejdelší napsaný prompt: {count(typed(longest))} znaků "
+        f"({czech_date(longest_at.date())}), tedy {number(typed(longest) / PAGE)} normostrany."
+    )
+    return rows + night(prompts)
+
+
 def night(prompts) -> list:
     ends = bedtimes(prompts)
     if not ends:
@@ -409,29 +614,11 @@ def night(prompts) -> list:
     latest = max(ends, key=lambda at: at.time())
     after_two = len({at.date() for at in ends if at.hour >= 2})
     return [
-        f"- **Noční sova:** nejpozději jsi skončil v {latest:%H:%M} "
-        f"(noc z {czech_date(latest.date() - timedelta(days=1), False)} "
-        f"na {czech_date(latest.date())}), po druhé hodině jsi končil {after_two}× "
-        f"z {len(ends)} nocí, kdy jsi pracoval po půlnoci"
-    ]
-
-
-def prompt_highlights(days, data) -> list:
-    inside = set(days)
-    prompts = [(at, t) for at, t in data.prompts if at.date() in inside and t.strip()]
-    if not prompts:
-        return []
-    # Příkazy harnessu (`exit`, `/clear`) by první místa obsadily vždycky a nic by neřekly.
-    common = Counter(
-        " ".join(t.lower().split()) for _, t in prompts if not is_command(t)
-    ).most_common(3)
-    quoted = ", ".join(f"„{t[:40]}“ {count(n)}×" for t, n in common)
-    longest_at, longest = max(prompts, key=lambda p: typed(p[1]))
-    return [
-        f"- **Nejčastější prompty:** {quoted}",
-        f"- **Nejdelší napsaný prompt:** {czech_date(longest_at.date())} – "
-        f"{count(typed(longest))} znaků",
-        *night(prompts),
+        f"- Nejpozdější konec práce: {latest:%-H:%M} ráno (noc z "
+        f"{czech_date(latest.date() - timedelta(days=1), False)} na "
+        f"{czech_date(latest.date())}); nocí s prací po půlnoci {len(ends)}, "
+        f"z toho {after_two} {plural(after_two, 'skončila', 'skončily', 'skončilo')} "
+        "až po druhé hodině."
     ]
 
 
@@ -448,6 +635,20 @@ def footnote(days, data) -> list:
     ]
 
 
+def highlights(days, data, granularity, slots) -> list:
+    return [
+        *summary(days, data),
+        *period_sentences(days, data, granularity),
+        *record_sentences(days, data),
+        *rhythm_sentences(days, data, slots),
+        *decision_sentences(days, data, granularity),
+        *intervention_sentences(days, data),
+        *work_sentences(days, data, granularity),
+        *prompt_trend(days, data, granularity),
+        *fun_sentences(days, data),
+    ]
+
+
 def report(granularity, since, until) -> str:
     data = measure()
     if not any(h > 0 for h in data.hours.values()):
@@ -457,17 +658,9 @@ def report(granularity, since, until) -> str:
     days = [first + timedelta(days=n) for n in range((last - first).days + 1)]
     if not days:
         return "Zadané období neobsahuje ani jeden den."
-    total = sum(data.hours.get(d, 0) for d in days)
-    active = sum(1 for d in days if data.hours.get(d, 0) > 0)
+    slots = two_hour_slots(data.measured, days)
     out = [
         f"## Čas v Claude Code – {czech_date(first)} až {czech_date(last)}",
-        "",
-        f"**Celkem:** {number(total)} h · Ø {number(total / len(days))} h na kalendářní den"
-        + (
-            f" · Ø {number(total / active)} h na aktivní den ({active} z {len(days)})"
-            if active
-            else ""
-        ),
         "",
         *table(days, data, granularity),
         "",
@@ -478,18 +671,18 @@ def report(granularity, since, until) -> str:
         "",
         *attention(days, data, granularity),
         "",
-        "### Zajímavosti",
-        "",
-        *time_highlights(days, data),
-        *claude_highlights(days, data),
-        *prompt_highlights(days, data),
+        "### Rozložení",
         "",
         *histogram(days, data.hours),
         "",
         *weekdays(days, data.hours),
         "",
-        *day_hours(data.measured, days),
+        *day_hours(slots),
         *footnote(days, data),
+        "",
+        "### Zajímavosti",
+        "",
+        *highlights(days, data, granularity, slots),
     ]
     return "\n".join(out)
 
