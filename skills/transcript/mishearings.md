@@ -34,3 +34,5 @@ Zkomoleniny, které whisper dělá **opakovaně u kohokoliv**, kdo mluví o dan�
 | ESP | USP | unique selling proposition |
 | na slepot | naslepo | |
 | kampáň | kampaň | |
+| Klout, Cloth, Koled, klód | Claude | AI asistent; zkomoleno v různých tvarech i v jedné nahrávce |
+| GetMko | GTM | Google Tag Manager, vyslovováno „gé té emko“ |
