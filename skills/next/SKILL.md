@@ -95,6 +95,7 @@ Co z výstupu je položka fronty:
 |---|---|
 | `current.uncommitted` | necommitnuté změny tam, kde session stojí – rozdělaná práce tady |
 | `todo` | položka ze sekcí – u srovnaného souboru jen vrchol a `more`, jinak všechny; hotové skript vynechal. Sekce pod `# Mimo frontu` nese `outside: true`, neřadí se jako pásmo a vrací se celá |
+| `projects` | fronta podprojektu klientské složky – viz *Podprojekty* |
 | `rounds` | kolo návrhu – viz *Kola návrhu* |
 | `stitch_pending` | položka *sešít návrh po kolech*, spouštěč `/architect` |
 | `plan.open` | jedna položka „dokončit plán“ s počtem zbývajících, spouštěč `/implement` |
@@ -103,6 +104,14 @@ Co z výstupu je položka fronty:
 | `backlog` | skript ho vrací jen při prázdné frontě – viz *Fáze 3* |
 
 **Popis položky může být zkrácený a dolovat ho zpátky se nesmí.** Výstup nad ~30 kB harness do kontextu nevloží – uloží ho do souboru a dá jen náhled –, takže skript si sám hlídá rozpočet a popisy položek dokrátí. Na kolik, říká `text_limit`: `null` znamená celé popisy, číslo zkrácení na tolik znaků, `0` popisy zahozené a zbylý název. **Jednořádkový výpis *Fáze 4* vystačí se jménem a velikostí vždycky**; teprve u tří čtyř položek, které jdou do nabídky, otevři `todo.md` na jejím místě – a jen tehdy, když se z názvu `description` napsat nedá. Číst kvůli tomu celou frontu znovu je přesně ta ztráta, kvůli které skript vznikl.
+
+### Podprojekty
+
+Klientská složka drží podprojekty s vlastní frontou (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*). Skript je hledá stejně hluboko jako příkaz *Fáze 1* ve worktree, kde session stojí, a vrací v `projects`:
+
+- **Podprojekt s `current: true`** je ten, ve kterém session stojí, i z jeho podsložky bez vlastního `todo.md`. Jeho `todo` čti jako kořenové – vrchol fronty, `more`, `legacy` – a u položek řekni, že jsou z něj. Je to projekt, kvůli kterému session vznikla.
+- **Ostatní podprojekty** nesou jen `open` (počet otevřených položek), `first` (první připravenou) a `due`. Do nabídky nejdou, patří k jinému projektu; celé fronty skript nevrací, protože by jen prodloužily výpis.
+- **`due`** jsou položky odložené k datu, jejichž den už nastal (*Položka odložená k datu*) – z každého podprojektu, protože jinde by se nepřipomněly. Řadí se jako každá jiná položka a u položky řekni podprojekt.
 
 ### Položka odložená k datu
 
@@ -154,11 +163,11 @@ Chybějící krok odvoď z `artifacts` a `passes` proti `lifecycle`, a **jen pro
 
 Obsazené a nejisté větve ani položky s `waiting: true` do řazení nevstupují. Zbytek seřaď:
 
-0. **Položky ze sekce `## Přerušený běh`** – zbytek práce, kterou předchozí session nedokončila, protože jí nabyl kontext nebo ji uživatel přerušil (zapisuje ji `/end`, podnět drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*). Jdou **první, před opuštěnými větvemi**, a v pořadí, ve kterém je ta session zapsala. Je to práce rozdělaná do půlky, u které navíc nikdo nedrží kontext – čím dýl leží, tím spíš se přestane rozumět tomu, proč nález nálezem je. **Položkou je celý blok `### `**, ne jednotlivé nálezy v něm: název je nadpis bloku, `text` první věta *Jak pokračovat* a spouštěč je *Navázání* z *Fáze 1*, které na blok naváže i se vším, co v něm leží. Do fronty se dostane jen se zúžením, nebo když uživatel navázání odmítl. **Položka s `branch` leží v `todo.md` worktree té větve**, ne v hlavní větvi – `/end` zapisuje tam, kde session stála; přiřaď ji větvi podle *Práce ve větvích*, takže u obsazené větve se nenabízí a opuštěná větev se nabídne jako tenhle blok, ne podruhé. **Položka s `project` leží v podprojektu** – `/end` zapisuje do `todo.md` projektu, kde session stála, takže z kořene klientské složky by se na ni jinak nedošlo. `collect.py` ji hledá stejně hluboko jako příkaz *Fáze 1* a u položky řekni, ve kterém podprojektu leží; zbytek fronty podprojektu skript nebere, patří k jinému projektu.
+0. **Položky ze sekce `## Přerušený běh`** – zbytek práce, kterou předchozí session nedokončila, protože jí nabyl kontext nebo ji uživatel přerušil (zapisuje ji `/end`, podnět drží `~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*). Jdou **první, před opuštěnými větvemi**, a v pořadí, ve kterém je ta session zapsala. Je to práce rozdělaná do půlky, u které navíc nikdo nedrží kontext – čím dýl leží, tím spíš se přestane rozumět tomu, proč nález nálezem je. **Položkou je celý blok `### `**, ne jednotlivé nálezy v něm: název je nadpis bloku, `text` první věta *Jak pokračovat* a spouštěč je *Navázání* z *Fáze 1*, které na blok naváže i se vším, co v něm leží. Do fronty se dostane jen se zúžením, nebo když uživatel navázání odmítl. **Položka s `branch` leží v `todo.md` worktree té větve**, ne v hlavní větvi – `/end` zapisuje tam, kde session stála; přiřaď ji větvi podle *Práce ve větvích*, takže u obsazené větve se nenabízí a opuštěná větev se nabídne jako tenhle blok, ne podruhé. **Položka s `project` leží v podprojektu** – `/end` zapisuje do `todo.md` projektu, kde session stála, takže z kořene klientské složky by se na ni jinak nedošlo. `collect.py` ji hledá stejně hluboko jako příkaz *Fáze 1* a u položky řekni, ve kterém podprojektu leží; zbytek fronty podprojektu nese `projects` (*Podprojekty*), ne tahle sekce.
 1. **Opuštěné větve** – od nejčerstvější (`last_ts`). Větev bez session k obnovení, na kterou nikdo nesáhl déle než měsíc, nedávej na první místo – je to spíš zapomenutý pokus než rozdělaná práce; nabídni ji mezi ostatními a řekni její stáří.
 2. **Rozdělaná práce tady** – necommitnuté změny, rozpracovaný plán, `## Parkované v session`, `## Rozhodnuto k zapracování` a `## Otázky dalšího kola`; všechny tři skript vrací celé. Otázky dalšího kola se vypořádají ptaním podle `~/.claude/skills/findings.md`, *Ptaní*.
 3. **Kola návrhu** v pořadí podle *Čeká na* a chybějící krok cyklu.
-4. **Položky pásem v pořadí `todo.md`** – pořadí je priorita a nepřeřazuje se.
+4. **Položky pásem v pořadí `todo.md`** – pořadí je priorita a nepřeřazuje se. Stojí-li session v podprojektu, jdou jeho položky před kořenovými, a za nimi položky z `due` ostatních podprojektů.
 5. **Jen u nesrovnaného `todo.md`** (`legacy`) pořadí souboru nestačí: položky bez nesplněné závislosti dej před ty, které na něco čekají, mezi nimi ty, na které čeká nejvíc dalších, a pak pořadí v souboru.
 
 Položky, které čekají na nesplněnou závislost (`waits`), nevynechávej – patří do *Čeká na něco*.
@@ -176,6 +185,8 @@ Položky, které čekají na nesplněnou závislost (`waits`), nevynechávej –
 
 **Čeká na něco:** <název> (na <co>) · …
 
+**Další podprojekty:** `<project>` (<open>, první <kolečko> <název>) · …
+
 **S čím můžeme pokračovat**
 
 1. <kolečko> <název> <(jen je-li co: čeká na …, opuštěná větev `<branch>`, rozdělané tady)>
@@ -188,7 +199,7 @@ Položky, které čekají na nesplněnou závislost (`waits`), nevynechávej –
 
 Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo – `~/.claude/standards/rules.md`, *Styl odpovědí*. Prázdnou část vynech.
 
-**Pořadí je schválně od kontextu k výběru:** poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky jsou holý odstavec bez popisku** a stojí úplně nahoře; **práce jinde a čekající položky jsou každá jeden odstavec** s tučným popiskem, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
+**Pořadí je schválně od kontextu k výběru:** poznámky, práce jinde a čekající položky jsou okolnosti, které je dobré znát dřív, než se čte nabídka – a nabídka stojí poslední, těsně nad otázkou, ze které se vybírá. **Poznámky jsou holý odstavec bez popisku** a stojí úplně nahoře; **práce jinde, čekající položky a další podprojekty jsou každá jeden odstavec** s tučným popiskem, položky za sebou oddělené `·`, ne seznam – jsou to informace, ze kterých se nevybírá.
 
 **Tučný je jen nadpis a popisky částí, položky ne.** Položka je kolečko velikosti a název, nic víc – **stav „připravené“ ani velikost slovem se nepíšou**. Do závorky za název patří jen to, co mění rozhodnutí: nesplněná závislost, opuštěná větev, rozdělaná práce tady. Připravená položka bez závislosti závorku nemá. Výpis se čte očima, ne jako tabulka, a slova navíc na každém řádku ho zahlcují.
 

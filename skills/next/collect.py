@@ -21,6 +21,10 @@ Výstup: jeden řádek JSON na stdout. Klíče:
   u srovnaného souboru jen vrchol pásem práce a u sekce, ze které se nevešlo, počet v `more`; sekce
   `Přerušený běh` nese i bloky z `todo.md` ostatních worktree a podprojektů, u nich
   s větví v `branch` a u podprojektu s cestou v `project`
+- `projects` – fronty podprojektů v `todo.md` pod worktree, kde session stojí: podprojekt,
+  ve kterém session stojí, s `current` a vrcholem fronty v `todo` (a `legacy`) jako u kořene,
+  ostatní jen počet otevřených položek v `open`, první připravenou v `first` a v `due`
+  položky odložené k datu, které už nastalo; přerušené běhy z nich nesou `todo` výš
 - `rounds` – bloky kol návrhu s poli a stavem ve větvi kola; `stitch_pending` – čeká sešití
 - `plan` – počet otevřených a hotových úkolů a první otevřené; `artifacts` – které návrhové dokumenty existují
 - `passes` – posledních pět záznamů `## Průchody životním cyklem`; `lifecycle` – kroky cyklu z `~/.claude/standards/rules.md` po vrstvách (`osa`, `kontroly`)
@@ -80,7 +84,7 @@ class Repo:
 
     def __init__(self, start: Path):
         start = start.resolve()
-        self.worktree = None
+        self.start, self.worktree = start, None
         # Kontejner se hledá mezi všemi předky, ne jen o úroveň výš: session stojí
         # klidně v `main/docs/` a jako běžný repozitář by pak minula ostatní worktree.
         container = next(
@@ -523,6 +527,83 @@ def nested_interrupted(repo: Repo, base, known):
     return items
 
 
+def subproject_dir(rel: Path):
+    """Složka podprojektu, jehož je `rel` frontou (`zakazka/docs/todo.md` → `zakazka`)."""
+    return rel.parent.parent if rel.parent.name == "docs" else rel.parent
+
+
+def subproject_queues(top: Path, start: Path, whole=False):
+    """Fronty podprojektů pod `top` (`todo.md` z `todo_files`).
+
+    Podprojekt, ve kterém session stojí – nejbližší, jehož složka je `start`,
+    nebo leží nad ním –, je její vlastní projekt a vrací se vrchol jeho fronty
+    jako u kořene. Ostatní patří k jinému projektu: stačí počet, první položka
+    a odložené položky, jejichž den nastal – ty by se jinak nepřipomněly nikde.
+    Sekce `Přerušený běh` se vynechává, tu přidává `nested_interrupted`.
+    """
+    files = {}
+    # Projekt s `docs/todo.md` i `todo.md` čte frontu z `docs/`, jako `docs_prefix`.
+    for rel in todo_files(top):
+        project = subproject_dir(rel)
+        if project not in files or rel.parent.name == "docs":
+            files[project] = rel
+    here = next(
+        (
+            p
+            for p in sorted(files, key=lambda p: len(p.parts), reverse=True)
+            if (top / p) == start or (top / p) in start.parents
+        ),
+        None,
+    )
+    out = []
+    for project, rel in sorted(files.items()):
+        text = (top / rel).read_text(encoding="utf-8", errors="replace")
+        todo, _, _ = parse_todo(text)
+        todo = [s for s in todo if s["section"] != "Přerušený běh"]
+        if project == here:
+            legacy = legacy_shape(todo, text)
+            if not legacy and not whole:
+                todo = top_of_queue(todo)
+            if any(p["items"] for s in todo for p in s["parts"]):
+                out.append(
+                    {
+                        "project": str(project),
+                        "current": True,
+                        "todo": todo,
+                        "legacy": legacy,
+                    }
+                )
+            continue
+        items = queue_items(todo)
+        if not items:
+            continue
+        ready = [i for i in items if not i.get("waits") and not i.get("waiting")]
+        brief = ("title", "size", "not_before")
+        out.append(
+            {
+                "project": str(project),
+                "open": len(items),
+                "first": {k: ready[0][k] for k in brief if k in ready[0]}
+                if ready
+                else None,
+                "due": [
+                    {k: i[k] for k in brief if k in i}
+                    for i in items
+                    if i.get("not_before") and not i["waiting"]
+                ],
+            }
+        )
+    return out
+
+
+def session_tree(repo: Repo, ref):
+    """Worktree, jehož podprojekty se čtou: ten, kde session stojí, v kořeni kontejneru hlavní větev."""
+    if repo.worktree is not None or repo.layout != "worktree":
+        return repo.worktree
+    main = (ref or "").removeprefix("origin/")
+    return next((t for t, b in worktree_branches(repo).items() if b == main), None)
+
+
 def worktree_branches(repo: Repo):
     """Kořen každého worktree a jeho větev (None u odpojené hlavy)."""
     out, top = {}, None
@@ -811,9 +892,13 @@ def fit_budget(result):
     """
     if encoded_size(result) <= BUDGET:
         return None
+    todos = [result["todo"]] + [
+        p["todo"] for p in result.get("projects", []) if "todo" in p
+    ]
     texts = [
         (item, item["text"])
-        for section in result["todo"]
+        for todo in todos
+        for section in todo
         for part in section["parts"]
         for item in part["items"]
         if item.get("text")
@@ -880,8 +965,11 @@ def main() -> int:
     )
     if not legacy and not whole:
         todo = top_of_queue(todo)
+    tree = None if is_operative else session_tree(repo, ref)
+    projects = subproject_queues(tree, repo.start, whole) if tree else []
     queue_empty = (
         not any(p["items"] for s in todo for p in s["parts"])
+        and not projects
         and not rounds
         and not (plan and plan["open"])
     )
@@ -894,6 +982,7 @@ def main() -> int:
         "current": current,
         "todo": todo,
         "legacy": legacy,
+        "projects": projects,
         "rounds": rounds,
         "stitch_pending": (rounds_open or stitched) and not rounds,
         "plan": plan,

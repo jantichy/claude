@@ -552,9 +552,9 @@ class QueueCollection(unittest.TestCase):
             + "\n"
         )
 
-    def collect(self):
+    def collect(self, start=None):
         run = subprocess.run(
-            [sys.executable, str(COLLECT), str(self.box)],
+            [sys.executable, str(COLLECT), str(start or self.box)],
             capture_output=True,
             text=True,
             env=self.env,
@@ -699,7 +699,7 @@ class QueueCollection(unittest.TestCase):
         self.assertEqual({b["state"] for b in self.branches().values()}, {"uncertain"})
 
     def test_interrupted_run_in_subproject_is_offered(self):
-        """Přerušený běh v podprojektu se nabídne i z kořene, zbytek jeho fronty ne.
+        """Přerušený běh v podprojektu se nabídne i z kořene, zbytek jeho fronty v `todo` ne.
 
         `/end` zapisuje do `todo.md` projektu, kde session stojí, u podprojektu
         klientské složky tedy do podsložky – často s vlastním repozitářem, který
@@ -732,6 +732,70 @@ class QueueCollection(unittest.TestCase):
             ],
         )
         self.assertEqual(items[0][1]["text"], "položkou Import.")
+
+    def test_queue_of_subproject_where_session_stands(self):
+        """Fronta podprojektu, ve kterém session stojí, je její; ostatní jen souhrnem.
+
+        Session spuštěná v podsložce podprojektu, která vlastní `todo.md` nemá,
+        dostávala jen kořenovou frontu. Teď nejbližší podprojekt nad ní vrací
+        vrchol fronty jako kořen, ostatní podprojekty počet a první položku –
+        celé fronty by zpomalily výpis – a položka odložená k datu se vrací
+        z každého, jakmile den nastal, jinak by se nepřipomněla nikde.
+        """
+        fronta = (
+            "# TODO\n\n# Fronta\n\n## Teď\n\n{}\n"
+            "## Přerušený běh\n\n### Blok\n\n**Jak pokračovat:** dál.\n"
+        )
+        main = self.box / "main"
+        for rel, items in (
+            (
+                "zakazka/docs",
+                "- [ ] ○ **Import dat.** Text.\n- [ ] ◐ **Report.** Text.\n",
+            ),
+            (
+                "jina",
+                "- [ ] ○ **Čekající.** – od 2099-01-01. Text.\n"
+                "- [ ] ○ **Přehled.** Text.\n"
+                "- [ ] ○ **Připomínka.** – od 2020-01-01. Text.\n",
+            ),
+            ("prazdna", "- [x] ○ **Hotovo.** Text.\n"),
+        ):
+            (main / rel).mkdir(parents=True)
+            (main / rel / "todo.md").write_text(fronta.format(items))
+        (main / "zakazka" / "data").mkdir()
+        projects = {
+            p["project"]: p for p in self.collect(main / "zakazka" / "data")["projects"]
+        }
+        self.assertEqual(sorted(projects), ["jina", "zakazka"])
+        here = projects["zakazka"]
+        self.assertTrue(here["current"])
+        self.assertIsNone(here["legacy"])
+        self.assertEqual(
+            [
+                (s["section"], i["title"])
+                for s in here["todo"]
+                for p in s["parts"]
+                for i in p["items"]
+            ],
+            [("Teď", "Import dat"), ("Teď", "Report")],
+        )
+        other = projects["jina"]
+        self.assertNotIn("todo", other)
+        self.assertEqual(
+            (other["open"], other["first"]), (3, {"title": "Přehled", "size": "○"})
+        )
+        self.assertEqual([i["title"] for i in other["due"]], ["Připomínka"])
+
+    def test_subprojects_from_container_root_are_only_summarised(self):
+        """Z kořene kontejneru žádný podprojekt vlastní není – čtou se z hlavní větve."""
+        sub = self.box / "main" / "zakazka"
+        sub.mkdir()
+        (sub / "todo.md").write_text("# Fronta\n\n## Teď\n\n- [ ] ○ **Úkol.** T.\n")
+        [project] = self.collect()["projects"]
+        self.assertEqual(
+            (project["project"], project["open"], "current" in project),
+            ("zakazka", 1, False),
+        )
 
     def test_interrupted_run_in_branch_worktree_is_offered_once(self):
         """Přerušený běh zapsaný ve worktree větve se najde, blok z hlavní větve jen jednou.
