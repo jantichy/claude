@@ -109,7 +109,7 @@ Co z výstupu je položka fronty:
 
 Klientská složka drží podprojekty s vlastní frontou (`zakazka/docs/todo.md`, `~/.claude/skills/project/client.md`, *Podprojekt*). Skript je hledá stejně hluboko jako příkaz *Fáze 1* ve worktree, kde session stojí, a vrací v `projects`:
 
-- **Podprojekt s `current: true`** je ten, ve kterém session stojí, i z jeho podsložky bez vlastního `todo.md`. Jeho `todo` čti jako kořenové – vrchol fronty, `more`, `legacy` – a u položek řekni, že jsou z něj. Je to projekt, kvůli kterému session vznikla.
+- **Podprojekt s `current: true`** je ten, ve kterém session stojí, i z jeho podsložky bez vlastního `todo.md`; stojí-li session v mezilehlé složce, je to jediný nejbližší podprojekt pod ní. Jeho `todo` čti jako kořenové – vrchol fronty, `more`, `legacy` – a u položek řekni, že jsou z něj. Je to projekt, kvůli kterému session vznikla.
 - **Ostatní podprojekty** nesou jen `open` (počet otevřených položek), `first` (první připravenou) a `due`. Do nabídky nejdou, patří k jinému projektu; celé fronty skript nevrací, protože by jen prodloužily výpis.
 - **`due`** jsou položky odložené k datu, jejichž den už nastal (*Položka odložená k datu*) – z každého podprojektu, protože jinde by se nepřipomněly. Řadí se jako každá jiná položka a u položky řekni podprojekt.
 

@@ -535,9 +535,8 @@ def subproject_dir(rel: Path):
 def subproject_queues(top: Path, start: Path, whole=False):
     """Fronty podprojektů pod `top` (`todo.md` z `todo_files`).
 
-    Podprojekt, ve kterém session stojí – nejbližší, jehož složka je `start`,
-    nebo leží nad ním –, je její vlastní projekt a vrací se vrchol jeho fronty
-    jako u kořene. Ostatní patří k jinému projektu: stačí počet, první položka
+    Podprojekt, ve kterém session stojí (`own_subproject`), je její vlastní
+    projekt a vrací se vrchol jeho fronty jako u kořene. Ostatní patří k jinému projektu: stačí počet, první položka
     a odložené položky, jejichž den nastal – ty by se jinak nepřipomněly nikde.
     Sekce `Přerušený běh` se vynechává, tu přidává `nested_interrupted`.
     """
@@ -547,14 +546,7 @@ def subproject_queues(top: Path, start: Path, whole=False):
         project = subproject_dir(rel)
         if project not in files or rel.parent.name == "docs":
             files[project] = rel
-    here = next(
-        (
-            p
-            for p in sorted(files, key=lambda p: len(p.parts), reverse=True)
-            if (top / p) == start or (top / p) in start.parents
-        ),
-        None,
-    )
+    here = own_subproject(list(files), top, start)
     out = []
     for project, rel in sorted(files.items()):
         text = (top / rel).read_text(encoding="utf-8", errors="replace")
@@ -594,6 +586,24 @@ def subproject_queues(top: Path, start: Path, whole=False):
             }
         )
     return out
+
+
+def own_subproject(projects, top: Path, start: Path):
+    """Podprojekt session: nejbližší, jehož složka je `start` nebo leží nad ním.
+
+    Nestojí-li session v žádném, ale v mezilehlé složce pod `top`, je jejím
+    projektem jediný nejbližší podprojekt pod ní. Leží-li jich v téže hloubce
+    víc, není jak vybrat a všechny zůstanou souhrnem – stejně jako z kořene.
+    """
+    above = [p for p in projects if (top / p) == start or (top / p) in start.parents]
+    if above:
+        return max(above, key=lambda p: len(p.parts))
+    if start == top or top not in start.parents:
+        return None
+    below = [p for p in projects if start in (top / p).parents]
+    nearest = min((len(p.parts) for p in below), default=None)
+    closest = [p for p in below if len(p.parts) == nearest]
+    return closest[0] if len(closest) == 1 else None
 
 
 def session_tree(repo: Repo, ref):

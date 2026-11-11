@@ -786,6 +786,28 @@ class QueueCollection(unittest.TestCase):
         )
         self.assertEqual([i["title"] for i in other["due"]], ["Připomínka"])
 
+    def test_single_subproject_below_session_is_its_own(self):
+        """Session v mezilehlé složce bere za vlastní jediný nejbližší podprojekt pod sebou.
+
+        Leží-li jich pod ní v téže hloubce víc, není jak vybrat a zůstanou
+        souhrnem, stejně jako z kořene.
+        """
+        main = self.box / "main"
+        fronta = "# Fronta\n\n## Teď\n\n- [ ] ○ **Úkol.** T.\n"
+        for rel in ("oblast/zakazka", "obe/prvni", "obe/druha"):
+            (main / rel).mkdir(parents=True)
+            (main / rel / "todo.md").write_text(fronta)
+
+        def own(start):
+            return [
+                p["project"]
+                for p in self.collect(start)["projects"]
+                if p.get("current")
+            ]
+
+        self.assertEqual(own(main / "oblast"), ["oblast/zakazka"])
+        self.assertEqual(own(main / "obe"), [])
+
     def test_subprojects_from_container_root_are_only_summarised(self):
         """Z kořene kontejneru žádný podprojekt vlastní není – čtou se z hlavní větve."""
         sub = self.box / "main" / "zakazka"
