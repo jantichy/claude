@@ -21,3 +21,7 @@ Soubor drží rozvahu a doklady skillu `/next`; za běhu skillu se nečte.
 **Session v mezilehlé složce** (doplněno při `/end` téže session) bere za vlastní jediný nejbližší podprojekt pod sebou – zadání („ve kterém session stojí nebo nad kterým stojí“) myslelo oba směry. Leží-li jich v téže hloubce víc, zůstanou souhrnem, protože mezi nimi není jak vybrat.
 
 **Hloubka hledání zůstává tři úrovně** (rozhodnuto při `/end` téže session) – stejně jako příkaz *Fáze 1*. Hlubší podprojekt (`a/b/docs/todo.md`) se nenajde ani pro přerušený běh, ani pro frontu; kdo v něm pracuje, spustí `/next` přímo v něm. **Zamítnuto – zvýšit o úroveň:** uživatel to nechtěl.
+
+### „Nabídka“ pro celek, „fronta“ jen pro `todo.md`
+
+**Rozhodnuto 11. 11. 2026.** `/next` slovem „fronta“ myslel všechno, co nabízí, i sekce pod `# Mimo frontu` v `todo.md`, takže jedno slovo znamenalo dvě věci a vznikaly věty jako „fronta obsahuje sekce mimo frontu“. Celek se teď jmenuje **nabídka**; **fronta** zůstává v řeči `/next` jen pro `todo.md` (pásma, jejich vrchol, celá fronta přes `--all`) a pro frontu přerušeného běhu. **Zamítnuto – přejmenovat nadpis `# Mimo frontu`:** zásah do `structure.md`, `collect.py`, testů, skillů a `todo.md` všech projektů včetně klientských, kvůli řeči jednoho skillu. **Zamítnuto – jen vymezit „frontu“ v `/next` jednou větou:** jedno slovo by dál znamenalo dvě věci.
