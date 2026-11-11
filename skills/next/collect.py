@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Posbírá pro `/next` všechno, co jde o frontě práce zjistit mechanicky – jedním během.
+"""Posbírá pro `/next` všechno, co jde o nabídce práce zjistit mechanicky – jedním během.
 
 Dřív to skill dělal přes desítky volání gitu a čtení souborů, každé s čekáním na model,
 a k tomu si pokaždé načítal `structure.md` a `lifecycle.md`, aby věděl, jak soubory
@@ -14,7 +14,7 @@ Výstup: jeden řádek JSON na stdout. Klíče:
 
 - `layout` – `worktree` nebo `plain`; `main` – hlavní větev; `fetch` – výsledek `git fetch`
 - `layout` – u operativního projektu bez gitu `none`
-- `docs` – `docs/`, `root`, `CLAUDE.md` u operativního projektu (fronta je pak jen sekce
+- `docs` – `docs/`, `root`, `CLAUDE.md` u operativního projektu (nabídka se pak staví jen ze sekcí
   `## Přerušený běh` a `## Otevřené body` jeho `CLAUDE.md`), nebo null, když projekt `todo.md` nemá
 - `current` – větev a necommitnuté soubory tam, kde session stojí (null v kořeni kontejneru)
 - `todo` – sekce `todo.md`, v každé položky (`title`, `text` zkrácený, `done`, `size`);
@@ -32,7 +32,7 @@ Výstup: jeden řádek JSON na stdout. Klíče:
   `uncertain`, `empty`), session, commity, změny `todo.md`/`plan.md`/`done.md` a přiřazená kola
 - `sessions_error` – proč se živé session nedaly zjistit (pak jsou všechny větve `uncertain`)
 - `legacy` – proč `todo.md` není ve srovnaném tvaru, nebo null; pak `todo` nese celou frontu
-- `backlog` – názvy nápadů, jen když je fronta prázdná
+- `backlog` – názvy nápadů, jen když je nabídka prázdná
 - `text_limit` – na kolik znaků se popisy položek dokrátily, aby se výstup vešel
   do kontextu; `null` znamená, že se krátit nemuselo, `0` že popisy odpadly celé
 
@@ -499,8 +499,8 @@ def nested_interrupted(repo: Repo, base, known):
 
     `/end` zapisuje do `todo.md` projektu, ve kterém session stojí – u podprojektu
     klientské složky tedy do podsložky, ve worktree layoutu do `todo.md` větve.
-    Hlavní větev ani jedno nevidí. Ze zbytku fronty podprojektu se nebere nic,
-    ta patří k jinému projektu. Položka nese v `branch` větev worktree a u
+    Hlavní větev ani jedno nevidí. Zbytek fronty podprojektu nese
+    `subproject_queues`. Položka nese v `branch` větev worktree a u
     podprojektu v `project` jeho cestu vůči kořeni worktree; blok, který už je
     ve frontě hlavní větve (`known`) nebo v jiném worktree, se počítá jednou.
     """
