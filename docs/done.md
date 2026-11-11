@@ -302,7 +302,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 - **2026-11-06** · `/end` · `315be2c` · session `06091fb3-6363-47d3-a4a2-3e31800ba967` · prompty 10/10 · 0 témat · mimo rozsah: žádné · meze: žádné
 
-- **2026-11-11** · `/end` · `150afc2` · session `2c74ac6f-2090-42cc-bc02-5f92774ea154` · prompty 2/2 · 2 témata (2 rozhodnuta, 0 bezpředmětných) · mimo rozsah: žádné · meze: žádné
+- **2026-11-11** · `/end` · `150afc2` · session `2c74ac6f-2090-42cc-bc02-5f92774ea154` · prompty 4/4 · 2 témata (2 rozhodnuta, 0 bezpředmětných) · mimo rozsah: žádné · meze: žádné
 
 ## Odvedená práce
 
