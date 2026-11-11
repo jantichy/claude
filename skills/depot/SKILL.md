@@ -1,6 +1,6 @@
 ---
 name: depot
-description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty, adresář nebo zdroj jako downloads či email, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, mimo ověřený duplikát nemaže a v ~/Depot nepřejmenovává.
+description: Skill se použije, když uživatel zadá "/depot" (volitelně s režimem store nebo workflow) a k tomu soubory, cesty, adresář nebo zdroj jako downloads či email, anebo chce uklidit stažený soubor tam, kam patří, zařadit podklad, nahrávku, prezentaci či cizí dokument a rovnou ho podle jeho povahy zpracovat. Rozpozná, o jaký podklad jde, přesune ho na cílové místo a spustí navazující workflow. Konkrétní pravidla – jak se co pozná, kam to jde a co se s tím pak stane – drží privátní doména depot v ~/Context; sám žádné nenese a bez ní se nerozjede. Na rozdíl od /learn, který znalost rozpouští do knowledge base, a /transcript, který přepisuje nahrávky, tenhle skill jen směruje a oba je volá. Existující soubor nepřepíše, dokud o tom uživatel nerozhodne nad oběma soubory, mimo ověřený duplikát a dokument připojený do uloženého souboru nemaže a v ~/Depot nepřejmenovává.
 argument-hint: [full|store] <cesty…|zdroj> [interval] | workflow
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill]
 ---
@@ -26,7 +26,7 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
 - **Nevytěžuje znalost.** Rozpouštění zdroje do knowledge base a řádek v `sources.md` je práce `/learn`; tenhle skill ho volá a nikdy nepíše evidenci sám.
 - **Nepřepisuje nahrávky.** To je `/transcript`. Skill mu předá uložený adresář a dál se do přepisu neplete.
 - **Neuklízí `~/Downloads` ani nic jiného plošně.** Rozsahem je vždycky jen to, co stojí v argumentu: jmenované cesty, nebo zdroj omezený intervalem a čárou – viz *Rozsah*.
-- **Nesahá na to, co už je uložené.** Nepřejmenovává, nepřesouvá podruhé, nemaže a **neposuzuje obsah `~/Depot`** (`~/Depot/CLAUDE.md`, *Obsah Depotu neposuzuj*). Jeho práce končí u příchozího souboru.
+- **Nesahá na to, co už je uložené.** Nepřejmenovává, nepřesouvá podruhé, nemaže a **neposuzuje obsah `~/Depot`** (`~/Depot/CLAUDE.md`, *Obsah Depotu neposuzuj*). Jeho práce končí u příchozího souboru. **Jedinou výjimkou je připojení** příchozího dokumentu do už uloženého souboru, které doména u workflow výslovně zapisuje – viz *Hranice*.
 - **Nezakládá projekty ani domény.** Má-li podklad jít do projektu, který neexistuje, řekne to a skončí; projekt zakládá `/project`, novou doménu **navrhne** `/learn` a zakládá ji uživatel.
 
 ## Jak je to postavené uvnitř
@@ -64,10 +64,12 @@ Vezme soubor nebo dávku souborů – typicky z `~/Downloads` –, rozpozná, o 
   **Číslo, které do názvu dal operační systém při stahování, se naopak odstraňuje** – viz *Fáze 3*. Není to uhnutí před kolizí, ale opak: stopa po kolizi v `~/Downloads`, která do Depotu nepatří.
 
   **Není to zákaz nad uživatelem** (`~/.claude/standards/rules.md`, *Přednost pravidel*), ale pořadí prací opřené o důvod. Dovolení dané dopředu („kdyby tam něco bylo, přepiš to“) je ale vydané naslepo, protože v tu chvíli ještě nikdo neví, co tam leží – **ukaž tedy nejdřív oba soubory** a nech rozhodnout o téhle konkrétní dvojici. Rozhodne-li se uživatel i pak pro přepis, je to jeho volba: proveď ji a **zapiš do závěru, co bylo přepsáno**.
+
+  **Připojení, které workflow výslovně zapisuje, kolize není** – typicky další doklad k nákupu, který má podle domény ležet v jednom souboru s už uloženými. Uložený soubor se nahradí spojeným, ale jen za tří podmínek: připojení **stojí v plánu** a potvrdí se s ním, cíl je **verzovaný**, takže předchozí verze zůstává v historii, a spojený soubor se před nahrazením **ověří proti všem dokumentům**, ze kterých vznikl (počet stran, text každého z nich). Nesedí-li cokoliv z toho, je to obyčejná kolize. Bez téhle výjimky by se dokumenty, které doména chce mít pohromadě, rozpadly do souborů vedle sebe.
 - **Nerozpoznaný soubor se nepřesouvá nikam**, dokud se o něm nerozhodne. Ani „zatím do Depotu“.
 - **Originál se přesouvá, ne kopíruje.** Dvě kopie téhož podkladu znamenají, že se příště nepozná, která je ta zaevidovaná.
 - **Citlivý obsah se nesměruje automaticky.** Co doména označuje za obsah, o kterém rozhoduje člověk, se vypíše a nechá rozhodnout. Skill takový soubor **neotevírá**, aby zjistil víc.
-- **Nemaže se – s jedinou výjimkou, ověřeným duplikátem.** Skill nemá jediný důvod volat `rm` a nevolá ho nikdy. Selhal-li přesun, zůstává zdroj na místě a řekne se to. **Zúžení platí jen pro duplikát, který doména u zdroje posílá do koše** (*Zdroje*): jde tam až po ověření, že originál na cílovém místě leží a jeho hash sedí s rejstříkem, a jen nástrojem, který maže do koše (`trash`), ne `rm`. Bez toho by zdroj nikdy nevypořádal položku, která se neukládá, a čára by se o ni zasekla; koš místo `rm` nechává omyl vratný.
+- **Nemaže se – se dvěma výjimkami, ověřeným duplikátem a připojeným originálem.** Skill nemá jediný důvod volat `rm` a nevolá ho nikdy. Selhal-li přesun, zůstává zdroj na místě a řekne se to. **Zúžení platí jen pro duplikát, který doména u zdroje posílá do koše** (*Zdroje*): jde tam až po ověření, že originál na cílovém místě leží a jeho hash sedí s rejstříkem, a jen nástrojem, který maže do koše (`trash`), ne `rm`. Bez toho by zdroj nikdy nevypořádal položku, která se neukládá, a čára by se o ni zasekla; koš místo `rm` nechává omyl vratný. **Originál připojený do uloženého souboru** (viz *Nic se nepřepisuje*) jde do koše stejným nástrojem, až po ověření, že spojený soubor leží na cílovém místě a obsahuje ho – jinak by zůstal ve zdroji jako druhá kopie téhož dokumentu.
 
 ------
 
@@ -143,6 +145,7 @@ Vypiš plán celé dávky a **nech ho potvrdit**. Nic se do téhle chvíle nepř
 
 **Mimo směrování:** <soubory, o kterých rozhoduje člověk, a proč>
 **Kolize:** <cílové cesty, které už existují>
+**Připojení:** <příchozí soubor → uložený soubor, do kterého se připojí, a na které místo>
 **Zdroj:** <zdroj> · interval <od–do> · čára <hodnota> odfiltrovala <N> položek · duplikáty do koše: <N> · přeskočeno vědomě: <N>
 ```
 
@@ -162,7 +165,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Soubor po souboru:
 
-1. **Ověř, že cíl neexistuje.** Existuje-li, přeskoč ho a zapiš do kolizí – rozhoduje se o něm zvlášť, viz *Hranice*.
+1. **Ověř, že cíl neexistuje.** Existuje-li, přeskoč ho a zapiš do kolizí – rozhoduje se o něm zvlášť, viz *Hranice*. **Výjimkou je připojení z potvrzeného plánu:** spoj soubory mimo cíl, ověř výsledek a teprve pak uložený soubor nahraď (*Hranice*, *Nic se nepřepisuje*).
 2. **Založ cílový adresář**, je-li potřeba.
 3. **Přesuň** (`mv`). Patří-li víc souborů k jedné události, jdou do jednoho adresáře.
 4. **Ověř přenos** – cíl existuje, velikost sedí, zdroj zmizel. Nesedí-li cokoliv, **zastav celou dávku** a řekni, co je kde; neopravuj to dalším přesunem.
