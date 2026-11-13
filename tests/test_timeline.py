@@ -383,6 +383,66 @@ class Clauding(unittest.TestCase):
         self.assertEqual(rows[3], "| /next | 1 | 1 | 0 | 0 |")
         self.assertEqual(rows[-1], "| **Celkem** | ≥4 | 3 | 0 | ≥1 |")
 
+    def test_project_is_first_folder_under_root(self):
+        """Worktrees i podprojekty jednoho klienta jsou jeden projekt."""
+        home = Path.home()
+        original = clauding.folders
+        clauding.folders = lambda: {"gtm": home / "Projects" / "Gtm"}
+        try:
+            cases = {
+                home / "Projects" / "Eventoid" / "billing": "Projects/Eventoid",
+                home / "Clients" / "Acme" / "web" / "src": "Clients/Acme",
+                home / ".claude" / "skills": ".claude",
+                home / "Dev" / "gtm" / "main": "Projects/Gtm",
+                home / "Dev" / "jinak": "Dev/jinak",
+            }
+            for path, project in cases.items():
+                self.assertEqual(clauding.project_of(path), project, path)
+        finally:
+            clauding.folders = original
+
+    def test_scratchpad_session_belongs_to_its_parent(self):
+        """Běh `claude -p` ve scratchpadu je práce na projektu, který ho pustil."""
+        names = {"-Users-x--claude": str(Path.home() / ".claude")}
+        uid = "03cd7123-e74c-42a3-8f9b-d1a8b88d9730"
+        for path in (
+            f"/private/tmp/claude-501/-Users-x--claude/{uid}/scratchpad/run",
+            f"-private-tmp-claude-501--Users-x--claude-{uid}-scratchpad-run",
+        ):
+            self.assertEqual(clauding.project_of(path, names), ".claude")
+
+    def projects_data(self):
+        day = date(2026, 9, 14)
+        at = datetime(2026, 9, 14, 10, 0, tzinfo=clauding.ZONE)
+
+        def span(a, b):
+            return [at + timedelta(hours=a), at + timedelta(hours=b)]
+
+        return day, SimpleNamespace(
+            guessed=set(),
+            hours={day: 3.0},
+            measured=[span(0, 3)],
+            projects={
+                "a": ({day: 2.0}, [span(0, 2)]),
+                "b": ({day: 2.0}, [span(1, 3)]),
+                "c": ({day: 0.5}, [span(1.5, 2)]),
+            },
+        )
+
+    def test_parallel_projects_overlap(self):
+        """Dva projekty souběžně hodinu, chvíli tři naráz."""
+        day, data = self.projects_data()
+        shared, peak, _ = clauding.overlap([day], data)
+        self.assertEqual((shared, peak), (1.0, 3))
+
+    def test_project_sum_exceeds_time_in_claude(self):
+        """Souběžný čas se počítá každému projektu – součet je větší než celek."""
+        day, data = self.projects_data()
+        rows = clauding.project_table([day], data)
+        self.assertEqual(rows[2], "| a | 2,0 | 1 | 67 % |")
+        self.assertEqual(rows[-2], "| **Součet projektů** | 4,5 | | 150 % |")
+        self.assertEqual(rows[-1], "| **Čas v Claude Code** | 3,0 | | 100 % |")
+
     def test_rounding_is_half_up(self):
         """`round()` by z 2,25 udělal 2,2 – člověk čeká 2,3."""
         self.assertEqual(clauding.number(2.25), "2,3")

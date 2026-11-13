@@ -44,6 +44,15 @@ SLEEP = timedelta(hours=3)
 # Normostrana – ať se dá napsaný text představit.
 PAGE = 1800
 
+# Scratchpad session: `/private/tmp/claude-501/<zakódovaný projekt>/<id session>/…`,
+# v názvu adresáře s transcriptem totéž zakódované: `-private-tmp-claude-501--Users-…-<id>-…`.
+SCRATCHPAD = re.compile(
+    r"claude-\d+[/-](-[^/]+?)[/-][0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+)
+
+# Složky, pod kterými je projektem až jejich první podsložka.
+PROJECT_ROOTS = ("Projects", "Clients", "Dev", "Documents")
+
 # Jak se skill spustil: zadaný příkazem, Claudem na pokyn slovy, uvnitř jiného skillu či agenta.
 ORIGINS = ("typed", "asked", "nested")
 
@@ -78,14 +87,114 @@ def per_day(merged) -> dict:
     return days
 
 
-def commits() -> list:
-    """Okamžiky vlastních commitů ze všech repozitářů, ve kterých kdy běžela session."""
-    tops = {timeline.repository(Path(d)) for d in timeline.working_dirs()}
+def commits(dirs) -> list:
+    """(okamžik, repozitář) vlastních commitů ze všech repozitářů, ve kterých kdy běžela session."""
+    tops = {timeline.repository(Path(d)) for d in dirs}
     return [
-        at
+        (at, top)
         for top in sorted(t for t in tops if t)
         for at, *_ in timeline.git_events(Path(top), own=True)
     ]
+
+
+def project_of(path, names=None) -> str:
+    """Projekt, do kterého adresář patří: první podsložka pod `~/Projects`, `~/Clients` a `~/Dev`.
+
+    Worktrees i podprojekty jednoho klienta jsou tak jeden projekt. Mimo tyhle složky je
+    projektem první úroveň pod domovskou složkou (`.claude`, `Context`) a pod `~/Documents`
+    první podsložka, jako u projektů. Session ve scratchpadu jiné session patří projektu,
+    který ji pustil – jinak by vlastní běhy `claude -p` vypadaly jako práce na dalším projektu.
+    """
+    parent = SCRATCHPAD.search(str(path))
+    if parent and names and parent.group(1) in names:
+        return project_of(names[parent.group(1)])
+    try:
+        parts = Path(path).relative_to(Path.home()).parts
+    except ValueError:
+        return "dočasné adresáře"
+    if not parts:
+        return "~"
+    if parts[0] == "Dev" and len(parts) > 1 and parts[1].lower() in folders():
+        # `~/Dev` se rozstěhoval; projekt, který dnes leží jinde pod týmž jménem, je tentýž.
+        return project_of(folders()[parts[1].lower()])
+    depth = 2 if parts[0] in PROJECT_ROOTS and len(parts) > 1 else 1
+    return "/".join(parts[:depth])
+
+
+@cache
+def folders() -> dict:
+    """Dnešní složky, kde může projekt ležet, podle jména malými písmeny; první vyhrává."""
+    home = Path.home()
+    places = [home / r for r in ("Projects", "Clients", "Documents", "Context")]
+    places += sorted((home / "Clients").glob("*/")) + [home]
+    found = {}
+    for place in places:
+        for folder in sorted(place.glob("*/")):
+            if folder.name != "Dev":
+                found.setdefault(folder.name.lower(), folder)
+    return found
+
+
+def located(source: str, names: dict) -> str:
+    """Cesta k adresáři s transcripty – ze záznamu, z dnešních složek, nebo odhadem z názvu.
+
+    Adresář s transcripty se při stěhování projektu přejmenovává, ale záznamy v něm nesou
+    starou cestu; dnešní cestu tedy prozradí jen složka na disku, jejíž kód název začíná.
+    """
+    if source in names:
+        return names[source]
+    matches = [
+        f
+        for f in folders().values()
+        if source == timeline.encode(f) or source.startswith(timeline.encode(f) + "-")
+    ]
+    if matches:
+        return str(max(matches, key=lambda f: len(str(f))))
+    home = timeline.encode(Path.home()) + "-"
+    if source.startswith(home):
+        return str(Path.home().joinpath(*source[len(home) :].split("-")[:2]))
+    return source
+
+
+def estimate(full: dict, sparse: dict, guessed: set, factor: float) -> dict:
+    """Hodiny po dnech; den bez úplných dat se odhadne z promptů a commitů krát koeficient."""
+    hours = {d: full.get(d, 0) / 3600 for d in full}
+    for d in guessed:
+        # Den, kde chybí jen část sessions, by plná metoda podhodnotila – platí větší z obou.
+        estimated = max(full.get(d, 0), sparse.get(d, 0) * factor) / 3600
+        if estimated:
+            hours[d] = estimated
+    return hours
+
+
+def measured_only(intervals, guessed) -> list:
+    return [i for i in intervals if i[0].astimezone(ZONE).date() not in guessed]
+
+
+def per_project(events, history, work, guessed, factor, names) -> dict:
+    """Projekt → (hodiny po dnech, změřené intervaly), týmž pravidlem jako celkový čas."""
+    claude, prompts, repos = defaultdict(list), defaultdict(list), defaultdict(list)
+    for at, _, source, _ in events:
+        claude[project_of(located(source, names), names)].append(at)
+    for at, _, cwd, _ in history:
+        if cwd:
+            prompts[project_of(cwd, names)].append(at)
+    for at, top in work:
+        repos[project_of(top, names)].append(at)
+    result = {}
+    for project in set(claude) | set(prompts):
+        full_intervals = timeline.intervals(
+            claude[project] + near(repos[project], claude[project])
+        )
+        sparse = per_day(
+            timeline.intervals(
+                prompts[project] + near(repos[project], prompts[project])
+            )
+        )
+        hours = estimate(per_day(full_intervals), sparse, guessed, factor)
+        if any(hours.values()):
+            result[project] = (hours, measured_only(full_intervals, guessed))
+    return result
 
 
 def near(work: list, anchors: list) -> list:
@@ -201,10 +310,13 @@ def typed(text: str) -> int:
 
 def measure() -> SimpleNamespace:
     """Všechno, co výpis potřebuje: čas, odhad, zásahy, commity a prompty po dnech."""
-    work = commits()
+    dirs = timeline.working_dirs()
+    repo_commits = commits(dirs)
+    work = [at for at, _ in repo_commits]
     events = list(timeline.session_events())
     claude = [at for at, *_ in events]
-    history = [(at, text) for at, _, _, text in timeline.history_prompts()]
+    raw_history = list(timeline.history_prompts())
+    history = [(at, text) for at, _, _, text in raw_history]
     prompts = [at for at, _ in history]
     full_intervals = timeline.intervals(claude + near(work, claude))
     full = per_day(full_intervals)
@@ -220,13 +332,12 @@ def measure() -> SimpleNamespace:
         if covered_sparse
         else 1.0
     )
-    hours = {d: full.get(d, 0) / 3600 for d in full}
+    hours = estimate(full, sparse, guessed, factor)
     for d in guessed:
-        # Den, kde chybí jen část sessions, by plná metoda podhodnotila – platí větší z obou.
-        hours[d] = max(full.get(d, 0), sparse.get(d, 0) * factor) / 3600
-    measured = [
-        i for i in full_intervals if i[0].astimezone(ZONE).date() not in guessed
-    ]
+        hours.setdefault(d, 0.0)
+    measured = measured_only(full_intervals, guessed)
+    # Transcript leží v adresáři pojmenovaném po zakódované cestě; skutečnou cestu nese záznam.
+    names = {timeline.encode(Path(d)): d for d in dirs}
     commit_days = Counter(
         at.astimezone(ZONE).date() for at in near(work, claude + prompts)
     )
@@ -240,6 +351,7 @@ def measure() -> SimpleNamespace:
         skills=skills_per_day(events, history, own_skills()),
         commits=commit_days,
         prompts=[(at.astimezone(ZONE), text) for at, text in history],
+        projects=per_project(events, raw_history, repo_commits, guessed, factor, names),
     )
 
 
@@ -399,6 +511,64 @@ def skill_table(days, data) -> list:
         out.append(f"| {label} | {skill_cells(counts, mark)} |")
     sums = [sum(r[1][i] for r in rows) for i in range(len(ORIGINS))]
     return out + [f"| **Celkem** | {skill_cells(sums, mark)} |"]
+
+
+def project_rows(days, data) -> list:
+    """(projekt, hodiny, aktivní dny) za období, sestupně podle hodin."""
+    rows = []
+    for project, (hours, _) in data.projects.items():
+        total = sum(hours.get(d, 0) for d in days)
+        active = sum(1 for d in days if hours.get(d, 0) > 0)
+        if total:
+            rows.append((project, total, active))
+    return sorted(rows, key=lambda r: (-r[1], r[0]))
+
+
+def overlap(days, data):
+    """(hodin s víc projekty zároveň, nejvíc projektů naráz, kdy) ze dnů bez odhadu."""
+    first, last = days[0], days[-1]
+    edges = []
+    for _, measured in data.projects.values():
+        for start, end in measured:
+            if first <= start.astimezone(ZONE).date() <= last:
+                edges += [(start, 1), (end, -1)]
+    edges.sort(key=lambda e: (e[0], e[1]))
+    running, peak, when, shared, previous = 0, 0, None, 0.0, None
+    for at, step in edges:
+        if running >= 2 and previous is not None:
+            shared += (at - previous).total_seconds() / 3600
+        running += step
+        if running > peak:
+            peak, when = running, at
+        previous = at
+    return shared, peak, when
+
+
+def parallelism(days, data, rows) -> float:
+    total = period_hours(days, data)
+    return sum(r[1] for r in rows) / total if total else 0.0
+
+
+def project_table(days, data) -> list:
+    rows = project_rows(days, data)
+    if not rows:
+        return ["Za období se nepracovalo v žádném projektu."]
+    total = period_hours(days, data)
+    mark = "~" if any(d in data.guessed for d in days) else ""
+    out = [
+        "| Projekt | Hodiny | Aktivní dny | Podíl času v Claude Code |",
+        "|---|---:|---:|---:|",
+    ]
+    for project, hours, active in rows:
+        out.append(
+            f"| {project} | {mark}{number(hours)} | {active} "
+            f"| {number(100 * hours / total, 0)} % |"
+        )
+    summed = sum(r[1] for r in rows)
+    return out + [
+        f"| **Součet projektů** | {mark}{number(summed)} | | {number(100 * summed / total, 0)} % |",
+        f"| **Čas v Claude Code** | {mark}{number(total)} | | 100 % |",
+    ]
 
 
 def bar(value: float, peak: float) -> str:
@@ -721,6 +891,35 @@ def skill_sentences(days, data) -> list:
     return sentences
 
 
+def project_sentences(days, data) -> list:
+    rows = project_rows(days, data)
+    if not rows:
+        return []
+    word = about(days, data)
+    top = ", ".join(f"{p} ({word}{number(h, 0)} h)" for p, h, _ in rows[:3])
+    n = len(rows)
+    sentences = [
+        f"- S Claudem mám odpracovaný čas v {n} "
+        f"{'projektu' if n == 1 else 'projektech'}, nejintenzivnější jsou {top}."
+    ]
+    shared, peak, when = overlap(days, data)
+    ratio = parallelism(days, data, rows)
+    if peak > 1:
+        measured_hours = sum(
+            (e - s).total_seconds() / 3600
+            for s, e in data.measured
+            if days[0] <= s.astimezone(ZONE).date() <= days[-1]
+        )
+        share = number(100 * shared / measured_hours, 0) if measured_hours else "–"
+        at = when.astimezone(ZONE)
+        sentences.append(
+            f"- V průměru mám naráz rozdělaných {number(ratio)} projektu, víc projektů "
+            f"zároveň běží {share} % času a nejvíc jich naráz bylo {peak} "
+            f"({czech_date(at.date())}, {at:%H:%M})."
+        )
+    return sentences
+
+
 def fun_sentences(days, data) -> list:
     rows = []
     agreed = lower_bound(days, data, ("agreement",))
@@ -789,6 +988,7 @@ def highlights(days, data, granularity, slots) -> list:
         *intervention_sentences(days, data),
         *work_sentences(days, data, granularity),
         *skill_sentences(days, data),
+        *project_sentences(days, data),
         *prompt_trend(days, data, granularity),
         *fun_sentences(days, data),
     ]
@@ -823,6 +1023,16 @@ def report(granularity, since, until) -> str:
         "z jiného skillu je třeba /end, který spouští /merge.",
         "",
         *skill_table(days, data),
+        "",
+        "### Projekty",
+        "",
+        "Čas v každém projektu zvlášť, týmž pravidlem jako celkový čas. Projekt je první "
+        "podsložka pod `~/Projects`, `~/Clients`, `~/Dev` a `~/Documents`, jinak první úroveň "
+        "pod domovskou složkou. Ve víc projektech naráz se čas započte každému, proto je "
+        "součet projektů větší než čas v Claude Code – poměr obou je průměrný počet "
+        "projektů rozdělaných naráz.",
+        "",
+        *project_table(days, data),
         "",
         "### Rozložení",
         "",

@@ -12,6 +12,7 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **Kolik vaší pozornosti Claude spotřebuje** – na kolik jeho otázek s nabídnutými variantami jste odpověděli, kolikrát jste ho zastavili klávesou Esc a kolikrát jste mu zamítli akci, každé zvlášť i dohromady na hodinu práce.
 - **Kolik práce za tím je** – počet commitů, kolik znaků jste do promptů napsali a jak dlouhý je průměrný prompt.
 - **Které skilly používáte** – tabulka vlastních skillů seřazená podle počtu spuštění, u každého zvlášť, kolikrát jste ho zadali příkazem, kolikrát ho Claude spustil na pokyn slovy („přimerguj to“) a kolikrát ho pustil jiný skill – když `/merge` pouští `/end`, připíše se čárka i k `/end`.
+- **Kolik času jste strávili v kterém projektu** – každý projekt zvlášť, i když jste jich měli otevřených víc naráz. Hodina ve třech projektech souběžně se připíše každému z nich, takže z toho vyjde i to, kolik projektů máte v průměru rozdělaných naráz, kolik času běží víc projektů zároveň a kolik jich nejvíc bylo najednou.
 - **Seznam zajímavostí ke sdílení** – souhrn, nejsilnější měsíc, rekordy a extrémy jako hotové věty v první osobě, které můžete rovnou vykopírovat na LinkedIn nebo jinam.
 - **Hříčky navíc**: kolikrát vám Claude řekl „máš pravdu“, co mu píšete nejčastěji, nejdelší prompt, který jste kdy napsali, a v kolik jste nejpozději šli od rozdělané práce spát.
 - **Zajímavosti**: nejdelší den, nejdelší blok v kuse, nejdelší řada dnů po sobě, kolik dnů jste strávili kolika hodinami, které dny v týdnu a hodiny dne jsou nejsilnější.
@@ -26,6 +27,7 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **Rozhodnutí se počítají přesně, nebo vůbec.** Počítá se jen odpověď v dialogu s variantami, zastavení a zamítnutí, které Claude Code zapíše, a zamítnutí několika souběžných akcí jedním klikem je jedno zamítnutí. Otázku v běžném textu odpovědi by šlo jen hádat, a odhad smíchaný s přesným počtem by znehodnotil oboje.
 - **Odhad se kalibruje na vašich datech.** Kde podrobné záznamy chybí, změří si na dnech, kde jsou, jak moc se hrubý výpočet z promptů liší od plného, a tím poměrem ho opraví.
 - **Přejmenovaný skill se počítá pod dnešním jménem**, zrušený nebo sloučený do jiného zůstává pod svým. Spuštění příkazem pozná i v nejstarších datech, spuštění Claudem jen tam, kde jsou podrobné záznamy, a jinde ho označí jako spodní hranici.
+- **Projekt pozná i po přestěhování.** Worktrees a podprojekty jednoho klienta spojí do jednoho projektu, a když se projekt přestěhoval do jiné složky pod týmž jménem, starší čas mu připíše taky. Běhy Clauda, které si pustila jiná session, připíše projektu, ze kterého vzešly.
 - **Každé číslo vzniká skriptem**, ne odhadem modelu – stejná data dají pokaždé stejný výsledek.
 
 ## Jak se to používá
@@ -65,10 +67,11 @@ Stačí se i zeptat „kolik jsem tento měsíc strávil s Claudem?“.
 - 47 dní v řadě bez jediného volného dne (31. 8. – 16. 10. 2026).
 - 6 319+ rozhodnutí – odpovědí na Claudovy otázky s nabídnutými variantami, tedy 11,0 za hodinu práce.
 - Nejčastější skilly podle počtu spuštění: /end (677+), /next (149+), /consistency (118+); z dnešních 37 skillů přišlo na řadu 36.
+- V průměru mám naráz rozdělaných 1,4 projektu, víc projektů zároveň běží 37 % času a nejvíc jich naráz bylo 6 (12. 9. 2026, 11:39).
 - „Máš pravdu“ mi Claude řekl 339+ krát, zhruba jednou za 2,0 h práce.
 - Nejčastější prompty: „ano“ (106×), „pokračuj“ (80×), „a“ (53×).
 
-Tabulka skillů pokračuje všemi skilly, které se v období spustily. Nad zajímavostmi je rozložení dnů podle počtu hodin, dnů v týdnu a hodin dne jako malé sloupcové grafy; každá tabulka končí součtovým řádkem.
+Tabulka skillů pokračuje všemi skilly, které se v období spustily, a za ní je stejně stavěná tabulka projektů s hodinami, aktivními dny a podílem času v Claude Code. Nad zajímavostmi je rozložení dnů podle počtu hodin, dnů v týdnu a hodin dne jako malé sloupcové grafy; každá tabulka končí součtovým řádkem.
 
 ## Co nedělá
 
