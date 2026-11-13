@@ -47,6 +47,10 @@ Nemáš jasný podklad, pokyn nebo kritérium → zeptej se; netipuj. Co jde doh
 
 Platí zejména pro **technické názvy** (proměnné, API, event names, ID, klíče) a **chybějící podklady** (šablona, schéma, příklad) – vymyšlený název je horší než žádný. **Kotva odkazu** je technický název: slug odvoď z dohledaného nadpisu, ne z paměti; uhodnutá kotva vypadá správně a test ji nemusí chytit.
 
+### Soubor, o který si řekneš, chodí přes `~/Downloads`
+
+Potřebuješ-li od uživatele soubor (export, výsledek dotazu, screenshot), řekni jen, ať ho uloží do `~/Downloads` pod výchozím jménem – žádné cílové místo ani jméno. Pak ho tam sám najdi (nejnovější soubor, který sedí typem, časem a obsahem), přečti, přesuň (`mv`) na místo v projektu a pojmenuj podle jeho konvence; sedí-li víc kandidátů, zeptej se. Pointa: uživatel u každého exportu neopisuje cestu a jméno, a co se přesune, nezůstane v Downloads pro `/depot`.
+
 ### Zapiš i to, co vědomě nemáš
 
 Rozhodnutí něco **nemít** (vrstvu, nástroj, režim) patří do `docs/decisions.md` i s důvodem a s tím, **čím se to nahrazuje** – zvlášť u věcí, které vypadají jako opomenutí. Chceš a nemáš → `todo.md`; mít nechceš → `decisions.md`; nikdo nerozhodl → `backlog.md`.
