@@ -198,6 +198,27 @@ def per_project(events, history, work, guessed, factor, names) -> dict:
     return grouped_time(claude, prompts, repos, guessed, factor)
 
 
+def agents(names) -> list:
+    """(den, projekt) pro každého subagenta i agenta workflow podle jeho prvního záznamu.
+
+    Každý agent má vlastní transcript, takže stačí soubory spočítat a přečíst první čas;
+    `journal.jsonl` workflow agent není. Agenti ve scratchpadu se nepočítají, jako jejich session.
+    """
+    found = []
+    for log in timeline.PROJECTS.glob("*/*/subagents/**/agent-*.jsonl"):
+        project = log.relative_to(timeline.PROJECTS).parts[0]
+        path = located(project, names)
+        if SCRATCHPAD.search(path):
+            continue
+        stamp = next(
+            (r["timestamp"] for r in timeline.records(log) if r.get("timestamp")), None
+        )
+        if stamp:
+            day = timeline.moment(stamp).astimezone(ZONE).date()
+            found.append((day, project_of(path, names)))
+    return found
+
+
 def per_session(events, history, guessed, factor, names):
     """(session → (hodiny po dnech, změřené intervaly), session → projekt).
 
@@ -376,6 +397,7 @@ def measure() -> SimpleNamespace:
         projects=per_project(events, raw_history, repo_commits, guessed, factor, names),
         sessions=sessions,
         owners=owners,
+        agents=agents(names),
     )
 
 
@@ -442,6 +464,21 @@ def active_groups(members, groups) -> list:
     ]
 
 
+def agent_count(members, data, project=None) -> int:
+    inside = set(members)
+    return sum(1 for d, p in data.agents if d in inside and project in (None, p))
+
+
+def agent_cell(members, data, project=None) -> str:
+    """Počet agentů jako text; za odhadnutý den chybí transcripty, takže je to dolní mez."""
+    marked = any(d in data.guessed for d in members)
+    if marked and not any(
+        data.hours.get(d, 0) > 0 for d in members if d not in data.guessed
+    ):
+        return "–"
+    return f"{'≥' if marked else ''}{count(agent_count(members, data, project))}"
+
+
 def time_row(label, members, data) -> str:
     total = period_hours(members, data)
     active = [d for d in members if data.hours.get(d, 0) > 0]
@@ -452,6 +489,7 @@ def time_row(label, members, data) -> str:
         f"| {mark}{number(total / len(members))} | {mark}{per_active} "
         f"| {len(active)} z {len(members)} "
         f"| {count(len(active_groups(members, data.sessions)))} "
+        f"| {agent_cell(members, data)} "
         f"| {count(len(active_groups(members, data.projects)))} |"
     )
 
@@ -459,8 +497,8 @@ def time_row(label, members, data) -> str:
 def table(days, data, granularity) -> list:
     rows = [
         "| Období | Hodiny | Ø na kalendářní den | Ø na aktivní den | Aktivní dny "
-        "| Sessions | Projekty |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        "| Sessions | Subagenti | Projekty |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for key, members in sorted(groups(days, granularity).items()):
         rows.append(time_row(period_label(key, granularity), members, data))
@@ -595,20 +633,21 @@ def project_table(days, data) -> list:
     mark = "~" if any(d in data.guessed for d in days) else ""
     sessions = Counter(data.owners.get(s) for s in active_groups(days, data.sessions))
     out = [
-        "| Projekt | Hodiny | Aktivní dny | Sessions | Podíl času v Claude Code |",
-        "|---|---:|---:|---:|---:|",
+        "| Projekt | Hodiny | Aktivní dny | Sessions | Subagenti | Podíl času v Claude Code |",
+        "|---|---:|---:|---:|---:|---:|",
     ]
     for project, hours, active in rows:
         out.append(
             f"| {project} | {mark}{number(hours)} | {active} | {count(sessions[project])} "
-            f"| {number(100 * hours / total, 0)} % |"
+            f"| {agent_cell(days, data, project)} | {number(100 * hours / total, 0)} % |"
         )
     summed = sum(r[1] for r in rows)
     share = number(100 * summed / total, 0)
     all_sessions = count(sum(sessions.values()))
     return out + [
-        f"| **Součet projektů** | {mark}{number(summed)} | | {all_sessions} | {share} % |",
-        f"| **Čas v Claude Code** | {mark}{number(total)} | | | 100 % |",
+        f"| **Součet projektů** | {mark}{number(summed)} | | {all_sessions} "
+        f"| {agent_cell(days, data)} | {share} % |",
+        f"| **Čas v Claude Code** | {mark}{number(total)} | | | | 100 % |",
     ]
 
 
@@ -969,6 +1008,23 @@ def concurrency(days, data, groups, rows):
     return ratio, share, peak, when.astimezone(ZONE)
 
 
+def agent_sentences(days, data) -> list:
+    total = agent_cell(days, data)
+    if total in ("–", "0"):
+        return []
+    # Poměr na session jen ze dnů bez odhadu – za odhadnutý den agenti chybí, sessions ne.
+    full = [d for d in days if d not in data.guessed]
+    sessions = len(active_groups(full, data.sessions))
+    sentence = f"- Claude za mě pustil {worded(total)} subagentů"
+    if sessions:
+        sentence += (
+            f", v průměru {number(agent_count(full, data) / sessions)} na session"
+        )
+    per_day = Counter(d for d, _ in data.agents if d in set(days))
+    day, top = max(per_day.items(), key=lambda kv: (kv[1], kv[0]))
+    return [sentence + f"; nejvíc za jediný den {count(top)} ({full_date(day)})."]
+
+
 def session_sentences(days, data) -> list:
     rows = group_rows(days, data.sessions)
     together = concurrency(days, data, data.sessions, rows)
@@ -1034,7 +1090,7 @@ def footnote(days, data) -> list:
         f"`~` odhad: pro den chybí transcript, spočteno z promptů v `history.jsonl` a z commitů "
         f"× koeficient {number(data.factor, 2)} (změřen na {data.calibrated} dnech s úplnými daty). "
         "Rozložení podle hodiny dne a nejdelší blok jsou jen z dnů bez odhadu. "
-        "`≥` u rozhodnutí, přerušení, zamítnutí, přitakání a skillů spuštěných Claudem: "
+        "`≥` u rozhodnutí, přerušení, zamítnutí, přitakání, skillů spuštěných Claudem a subagentů: "
         "za odhadnutý den chybí záznamy, počet je jen dolní mez; poměr na hodinu je jen "
         "ze dnů bez odhadu.",
     ]
@@ -1052,6 +1108,7 @@ def highlights(days, data, granularity, slots) -> list:
         *skill_sentences(days, data),
         *project_sentences(days, data),
         *session_sentences(days, data),
+        *agent_sentences(days, data),
         *prompt_trend(days, data, granularity),
         *fun_sentences(days, data),
     ]
@@ -1093,7 +1150,8 @@ def report(granularity, since, until) -> str:
         "podsložka pod `~/Projects`, `~/Clients`, `~/Dev` a `~/Documents`, jinak první úroveň "
         "pod domovskou složkou. Ve víc projektech naráz se čas započte každému, proto je "
         "součet projektů větší než čas v Claude Code – poměr obou je průměrný počet "
-        "projektů rozdělaných naráz. Sessions jsou ty, které v projektu za období běžely.",
+        "projektů rozdělaných naráz. Sessions jsou ty, které v projektu za období běžely, "
+        "subagenti ti, které v nich Claude pustil, včetně agentů workflow.",
         "",
         *project_table(days, data),
         "",

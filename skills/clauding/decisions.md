@@ -30,3 +30,11 @@
 - **Session ve scratchpadu se nepočítá**, ze stejného důvodu jako u projektů: pustil ji Claude a jako samostatná by vypadala jako další okno.
 - **Čas session bez commitů.** Commit patří repozitáři, ne oknu; přiřadit ho session by znamenalo hádat, ve kterém z několika souběžných oken vznikl.
 - **`session_events` zůstal ve tvaru čtveřice**, protože ho tak čte `/invoicing recover`; id session nese nová varianta `tagged_events`, ze které se `session_events` odvozuje.
+
+## Počty subagentů
+
+**Rozhodnuto 13. 11. 2026.** Kolik subagentů Claude pustil, po obdobích a projektech.
+
+- **Počítají se soubory, ne volání nástroje.** Každý agent má vlastní transcript a stačí přečíst jeho první čas; volání nástroje by se muselo párovat s výsledkem a agenta workflow by nezachytilo vůbec.
+- **Agent workflow je subagent.** Z pohledu otázky „kolik agentů za mě pracovalo“ se neliší; `journal.jsonl` workflow agentem není.
+- **Průměr na session jen ze dnů bez odhadu.** Za odhadnutý den sessions z `history.jsonl` známe, agenty ne – poměr by vyšel nízký.

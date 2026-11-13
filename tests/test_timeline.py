@@ -277,6 +277,9 @@ class Timeline(unittest.TestCase):
         sub = self.projects / "-a" / "s1" / "subagents"
         sub.mkdir(parents=True)
         (sub / "agent-x.jsonl").write_text(json.dumps(answer(2)), encoding="utf-8")
+        flow = sub / "workflows" / "wf_1"
+        flow.mkdir(parents=True)
+        (flow / "agent-y.jsonl").write_text(json.dumps(answer(3)), encoding="utf-8")
         sessions = {session for *_, session in timeline.tagged_events()}
         self.assertEqual(sessions, {"s1"})
 
@@ -442,6 +445,7 @@ class Clauding(unittest.TestCase):
                 "s3": ({day: 2.0}, [span(1, 3)]),
             },
             owners={"s1": "a", "s2": "a", "s3": "b"},
+            agents=[(day, "a"), (day, "a"), (day, "b")],
         )
 
     def test_parallel_projects_overlap(self):
@@ -454,14 +458,14 @@ class Clauding(unittest.TestCase):
         """Souběžný čas se počítá každému projektu – součet je větší než celek."""
         day, data = self.projects_data()
         rows = clauding.project_table([day], data)
-        self.assertEqual(rows[2], "| a | 2,0 | 1 | 2 | 67 % |")
-        self.assertEqual(rows[-2], "| **Součet projektů** | 4,5 | | 3 | 150 % |")
-        self.assertEqual(rows[-1], "| **Čas v Claude Code** | 3,0 | | | 100 % |")
+        self.assertEqual(rows[2], "| a | 2,0 | 1 | 2 | 2 | 67 % |")
+        self.assertEqual(rows[-2], "| **Součet projektů** | 4,5 | | 3 | 3 | 150 % |")
+        self.assertEqual(rows[-1], "| **Čas v Claude Code** | 3,0 | | | | 100 % |")
 
     def test_time_table_counts_sessions_and_projects(self):
         day, data = self.projects_data()
         row = clauding.time_row("x", [day], data)
-        self.assertTrue(row.endswith("| 1 z 1 | 3 | 3 |"), row)
+        self.assertTrue(row.endswith("| 1 z 1 | 3 | 3 | 3 |"), row)
 
     def test_rounding_is_half_up(self):
         """`round()` by z 2,25 udělal 2,2 – člověk čeká 2,3."""

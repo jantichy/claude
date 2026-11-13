@@ -341,8 +341,8 @@ def tagged_events(prefixes=None, start=None, end=None):
     for project in project_dirs(prefixes):
         for log in project.rglob("*.jsonl"):
             in_subagent = "subagents" in log.parts
-            # Subagent leží v `<projekt>/<id session>/subagents/agent-….jsonl`.
-            session = log.parents[1].name if in_subagent else log.stem
+            # Subagent leží v `<projekt>/<id session>/subagents/…`, agent workflow o dvě úrovně hlouběji.
+            session = log.relative_to(project).parts[0] if in_subagent else log.stem
             for at, kind, text in log_events(log, in_subagent):
                 if (start is None or start <= at) and (end is None or at < end):
                     yield at, kind, project.name, text, session
