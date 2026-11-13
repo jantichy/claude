@@ -11,8 +11,10 @@
 import argparse
 import bisect
 import re
+import subprocess
 import sys
 from collections import Counter, defaultdict
+from functools import cache
 from types import SimpleNamespace
 from datetime import date, datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
@@ -41,6 +43,9 @@ SLEEP = timedelta(hours=3)
 
 # Normostrana – ať se dá napsaný text představit.
 PAGE = 1800
+
+# Jak se skill spustil: zadaný příkazem, Claudem na pokyn slovy, uvnitř jiného skillu či agenta.
+ORIGINS = ("typed", "asked", "nested")
 
 
 def number(value: float, places: int = 1) -> str:
@@ -124,6 +129,71 @@ def counts_per_day(events) -> dict:
     return days
 
 
+@cache
+def own_skills():
+    """(dnešní skilly, staré jméno → dnešní, zrušené) z `skills/*/SKILL.md` a jejich historie.
+
+    Přejmenovaný skill je pořád tentýž, takže se jeho stará volání počítají pod dnešním
+    jménem. Skill sloučený do jiného nebo zrušený zůstává pod svým jménem – byl to jiný skill.
+    """
+    skills = timeline.CLAUDE / "skills"
+    current = {p.parent.name for p in skills.glob("*/SKILL.md")}
+    log = subprocess.run(
+        ["git", "-C", str(timeline.CLAUDE), "log", "--all", "-M", "--name-status"]
+        + ["--format=", "--", "skills/*/SKILL.md"],
+        capture_output=True,
+        text=True,
+    ).stdout
+    renamed, ever = {}, set()
+    for line in log.splitlines():
+        status, *paths = line.split("\t")
+        names = [Path(path).parent.name for path in paths]
+        ever.update(names)
+        if status.startswith("R") and len(names) == 2:
+            renamed.setdefault(names[0], names[1])
+    aliases = {}
+    for old in renamed:
+        new = renamed[old]
+        while new in renamed and new not in current:
+            new = renamed[new]
+        aliases[old] = new
+    return current, aliases, ever - current - set(aliases)
+
+
+def skill_name(name: str, skills):
+    """Dnešní jméno vlastního skillu, nebo None u příkazu harnessu a cizího skillu."""
+    current, aliases, retired = skills
+    name = aliases.get(name, name)
+    return name if name in current or name in retired else None
+
+
+def typed_skill(text: str):
+    """Jméno skillu z ručně zadaného promptu (`/clauding month` → `clauding`)."""
+    found = re.match(r"/([\w:-]+)", text.strip())
+    return found.group(1) if found else None
+
+
+def skills_per_day(events, history, skills) -> dict:
+    """Spuštění vlastních skillů po dnech, podle jména a původu.
+
+    Zadané příkazem jsou z `history.jsonl`, takže pokrývají celou historii; spuštěné
+    Claudem jsou z transcriptů a za odhadnutý den jsou jen dolní mez.
+    """
+    days = defaultdict(Counter)
+    for at, text in history:
+        name = skill_name(typed_skill(text) or "", skills)
+        if name:
+            days[at.astimezone(ZONE).date()][(name, "typed")] += 1
+    for at, kind, _, data in events:
+        if kind != "skill":
+            continue
+        for raw, origin in data:
+            name = skill_name(raw, skills)
+            if name:
+                days[at.astimezone(ZONE).date()][(name, origin)] += 1
+    return days
+
+
 def typed(text: str) -> int:
     """Znaky, které uživatel do promptu napsal, bez delšího vloženého textu a obrázků."""
     return len(PASTED.sub("", text).strip())
@@ -167,6 +237,7 @@ def measure() -> SimpleNamespace:
         calibrated=len(calibration),
         measured=measured,
         counts=counts_per_day(events),
+        skills=skills_per_day(events, history, own_skills()),
         commits=commit_days,
         prompts=[(at.astimezone(ZONE), text) for at, text in history],
     )
@@ -283,6 +354,51 @@ def attention(days, data, granularity) -> list:
     for key, members in sorted(groups(days, granularity).items()):
         rows.append(attention_row(period_label(key, granularity), members, data))
     return rows + [attention_row("**Celkem**", days, data)]
+
+
+def skill_totals(members, data) -> Counter:
+    """Spuštění za skupinu dnů podle (jméno, původ)."""
+    totals = Counter()
+    for d in members:
+        totals.update(data.skills.get(d, {}))
+    return totals
+
+
+def skill_rows(members, data) -> list:
+    """(jméno, počty podle původu, celkem) seřazené sestupně podle celku."""
+    totals = skill_totals(members, data)
+    names = {name for name, _ in totals}
+    rows = [(n, [totals[(n, o)] for o in ORIGINS]) for n in names]
+    return sorted(
+        ((n, counts, sum(counts)) for n, counts in rows), key=lambda r: (-r[2], r[0])
+    )
+
+
+def skill_cells(counts, mark) -> str:
+    # Zadané příkazem jsou z `history.jsonl` úplné, spuštěné Claudem jen z transcriptů.
+    typed, *claude = counts
+    total = (
+        f"{mark}{count(sum(counts))}" if mark and sum(claude) else count(sum(counts))
+    )
+    marked = [f"{mark}{count(n)}" if mark and n else count(n) for n in claude]
+    return " | ".join([total, count(typed), *marked])
+
+
+def skill_table(days, data) -> list:
+    rows = skill_rows(days, data)
+    if not rows:
+        return ["Za období se nespustil žádný vlastní skill."]
+    mark = "≥" if any(d in data.guessed for d in days) else ""
+    retired = own_skills()[2]
+    out = [
+        "| Skill | Celkem | Zadáno příkazem | Na pokyn slovy | Z jiného skillu nebo agenta |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    for name, counts, _ in rows:
+        label = f"/{name}" + (" (zrušený)" if name in retired else "")
+        out.append(f"| {label} | {skill_cells(counts, mark)} |")
+    sums = [sum(r[1][i] for r in rows) for i in range(len(ORIGINS))]
+    return out + [f"| **Celkem** | {skill_cells(sums, mark)} |"]
 
 
 def bar(value: float, peak: float) -> str:
@@ -580,6 +696,31 @@ def prompt_trend(days, data, granularity) -> list:
     ]
 
 
+def skill_sentences(days, data) -> list:
+    rows = skill_rows(days, data)
+    if not rows:
+        return []
+    word = "+" if any(d in data.guessed for d in days) else ""
+    top = ", ".join(f"/{n} ({count(total)}{word})" for n, _, total in rows[:3])
+    current = own_skills()[0]
+    used = len({n for n, *_ in rows if n in current})
+    total = sum(r[2] for r in rows)
+    sentences = [
+        f"- Nejčastější skilly podle počtu spuštění: {top}; z dnešních {len(current)} "
+        f"skillů přišlo na řadu {used}."
+    ]
+    typed = sum(r[1][0] for r in rows)
+    nested = max(rows, key=lambda r: r[1][2])
+    if nested[1][2]:
+        sentences.append(
+            f"- Skilly se spustily {count(total)}{word}krát, z toho "
+            f"{number(100 * typed / total, 0)} % příkazem, zbytek spustil Claude na pokyn "
+            f"slovy nebo z jiného skillu; nejčastěji takhle vnořený je /{nested[0]} "
+            f"({count(nested[1][2])}{word}krát)."
+        )
+    return sentences
+
+
 def fun_sentences(days, data) -> list:
     rows = []
     agreed = lower_bound(days, data, ("agreement",))
@@ -632,8 +773,9 @@ def footnote(days, data) -> list:
         f"`~` odhad: pro den chybí transcript, spočteno z promptů v `history.jsonl` a z commitů "
         f"× koeficient {number(data.factor, 2)} (změřen na {data.calibrated} dnech s úplnými daty). "
         "Rozložení podle hodiny dne a nejdelší blok jsou jen z dnů bez odhadu. "
-        "`≥` u rozhodnutí, přerušení, zamítnutí a přitakání: za odhadnutý den chybí záznamy, "
-        "počet je jen dolní mez; poměr na hodinu je jen ze dnů bez odhadu.",
+        "`≥` u rozhodnutí, přerušení, zamítnutí, přitakání a skillů spuštěných Claudem: "
+        "za odhadnutý den chybí záznamy, počet je jen dolní mez; poměr na hodinu je jen "
+        "ze dnů bez odhadu.",
     ]
 
 
@@ -646,6 +788,7 @@ def highlights(days, data, granularity, slots) -> list:
         *decision_sentences(days, data, granularity),
         *intervention_sentences(days, data),
         *work_sentences(days, data, granularity),
+        *skill_sentences(days, data),
         *prompt_trend(days, data, granularity),
         *fun_sentences(days, data),
     ]
@@ -672,6 +815,14 @@ def report(granularity, since, until) -> str:
         "Napsané znaky jsou bez delšího vloženého textu a obrázků.",
         "",
         *attention(days, data, granularity),
+        "",
+        "### Skilly",
+        "",
+        "Vlastní skilly podle počtu spuštění. Přejmenovaný skill se počítá pod dnešním jménem. "
+        "Na pokyn slovy je skill, který Claude spustil sám podle zadání bez příkazu; "
+        "z jiného skillu je třeba /end, který spouští /merge.",
+        "",
+        *skill_table(days, data),
         "",
         "### Rozložení",
         "",

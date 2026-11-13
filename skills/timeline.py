@@ -39,6 +39,10 @@ REJECTION = "The user doesn't want to proceed"
 # Přitakání v Claudově textu: „máš pravdu“, „Máš pravdu.“
 AGREEMENT = re.compile(r"\bmáš pravdu\b", re.IGNORECASE)
 
+# Ručně zadaný příkaz harness zapíše místo promptu jako
+# `<command-message>merge</command-message> <command-name>/merge</command-name>`.
+COMMAND = re.compile(r"<command-name>/?([^<\s]+)</command-name>")
+
 
 def encode(path: Path) -> str:
     # Claude Code nahradí v cestě každý znak mimo [A-Za-z0-9] pomlčkou – i každé písmeno s diakritikou zvlášť.
@@ -49,7 +53,7 @@ def moment(stamp: str) -> datetime:
     return datetime.fromisoformat(stamp.replace("Z", "+00:00")).astimezone()
 
 
-def prompt_text(record: dict) -> str:
+def message_text(record: dict) -> str:
     content = record["message"]["content"]
     if isinstance(content, list):
         content = " ".join(
@@ -57,7 +61,17 @@ def prompt_text(record: dict) -> str:
             for part in content
             if isinstance(part, dict) and part.get("type") == "text"
         )
-    return " ".join(content.split())[:100]
+    return content
+
+
+def prompt_text(record: dict) -> str:
+    return " ".join(message_text(record).split())[:100]
+
+
+def command_name(record: dict):
+    """Jméno ručně zadaného příkazu (`merge`), nebo None u běžného promptu."""
+    found = COMMAND.search(message_text(record))
+    return found.group(1) if found else None
 
 
 def is_prompt(record: dict, in_subagent: bool) -> bool:
@@ -171,6 +185,21 @@ def tool_calls(record: dict):
             yield part.get("id"), message.get("id")
 
 
+def skill_calls(record: dict) -> list:
+    """Jména skillů, které záznam odpovědi spouští nástrojem `Skill`."""
+    content = (record.get("message") or {}).get("content")
+    if record.get("type") != "assistant" or not isinstance(content, list):
+        return []
+    return [
+        str((part.get("input") or {}).get("skill"))
+        for part in content
+        if isinstance(part, dict)
+        and part.get("type") == "tool_use"
+        and part.get("name") == "Skill"
+        and (part.get("input") or {}).get("skill")
+    ]
+
+
 def is_rejection(record: dict) -> bool:
     first = record["message"]["content"][0]
     text = first.get("content")
@@ -216,6 +245,8 @@ class Session:
         self.in_subagent = in_subagent
         self.running, self.asking, self.calls = {}, {}, {}
         self.rejected = set()
+        # Skilly běžící v odpovědi na poslední prompt; ručně zadaný čeká na své první volání.
+        self.turn, self.typed = [], None
 
     def remember(self, record: dict, at: datetime) -> None:
         for tool_id, limit in foreground_bash(record):
@@ -243,10 +274,28 @@ class Session:
         if is_interrupt(record, self.in_subagent):
             return "interrupt", None
         if is_prompt(record, self.in_subagent):
+            self.typed = command_name(record)
+            self.turn = [self.typed] if self.typed else []
             return "prompt", prompt_text(record)
         if asked is not None:
             return "decision", answered_questions(record, asked)
+        invoked = self.invoked(record)
+        if invoked:
+            return "skill", invoked
         return "claude", agreements(record, self.in_subagent) or None
+
+    def invoked(self, record: dict) -> list:
+        """(jméno, původ) pro každý skill, který záznam spouští; viz `log_events`."""
+        found = []
+        for name in skill_calls(record):
+            if name == self.typed:
+                # Ručně zadaný skill už spustil harness – Claude ho jen zavolal podruhé.
+                self.typed = None
+                continue
+            nested = self.turn or self.in_subagent or record.get("isSidechain")
+            found.append((name, "nested" if nested else "asked"))
+            self.turn.append(name)
+        return found
 
 
 def log_events(log: Path, in_subagent: bool):
@@ -263,6 +312,8 @@ def log_events(log: Path, in_subagent: bool):
     - `decision` – odpověď v dialogu `AskUserQuestion`, data jsou zodpovězené otázky,
     - `rejection` – zamítnuté volání nástroje nebo zavřený dialog, jedno na Claudovu zprávu,
     - `interrupt` – uživatel zastavil Clauda klávesou Esc,
+    - `skill` – Claude spustil skill nástrojem `Skill`; data jsou dvojice (jméno, původ), kde
+      původ `asked` je na pokyn slovy a `nested` uvnitř jiného skillu nebo subagenta,
     - `claude` – cokoliv jiného; data jsou počet přitakání „máš pravdu“, nebo None.
     """
     session = Session(in_subagent)

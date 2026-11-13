@@ -234,6 +234,43 @@ class Timeline(unittest.TestCase):
         self.session("-a", "s1", [prompt(0), asked, tool_result(3)])
         self.assertEqual(self.decisions(), [])
 
+    def skills(self):
+        return [d for _, kind, _, d in timeline.session_events() if kind == "skill"]
+
+    def test_nested_skill_is_told_from_skill_on_request(self):
+        """`/merge` pouští `/end` – i ten se počítá, ale jako vnořený, ne na pokyn slovy."""
+        rows = [
+            prompt(0, "přimerguj to"),
+            tool_use(1, "Skill", {"skill": "merge"}),
+            tool_use(2, "Skill", {"skill": "end"}),
+        ]
+        self.session("-a", "s1", rows)
+        self.assertEqual(self.skills(), [[("merge", "asked")], [("end", "nested")]])
+
+    def test_typed_skill_called_again_is_one_run(self):
+        """Ručně zadaný skill spustil harness – jeho druhé volání Claudem nové spuštění není."""
+        typed = (
+            "<command-message>end</command-message> <command-name>/end</command-name>"
+        )
+        rows = [
+            prompt(0, typed),
+            tool_use(1, "Skill", {"skill": "end"}),
+            tool_use(2, "Skill", {"skill": "next"}),
+            prompt(3, "a teď review"),
+            tool_use(4, "Skill", {"skill": "review"}),
+        ]
+        self.session("-a", "s1", rows)
+        self.assertEqual(self.skills(), [[("next", "nested")], [("review", "asked")]])
+
+    def test_skill_in_subagent_is_nested(self):
+        sub = self.projects / "-a" / "s1" / "subagents"
+        sub.mkdir(parents=True)
+        rows = [prompt(0), tool_use(1, "Skill", {"skill": "oponent"})]
+        (sub / "agent-x.jsonl").write_text(
+            "\n".join(json.dumps(r) for r in rows), encoding="utf-8"
+        )
+        self.assertEqual(self.skills(), [[("oponent", "nested")]])
+
     def test_prefix_limits_projects(self):
         """`recover` počítá jen projekty klienta – cizí session do proudu nesmí."""
         self.session("-Users-x-Dev-client", "s1", [prompt(0), prompt(10)])
@@ -317,6 +354,34 @@ class Clauding(unittest.TestCase):
             [clauding.plural(n, *forms) for n in (1, 2, 4, 5, 0)],
             ["den", "dny", "dny", "dní", "dní"],
         )
+
+    def test_renamed_skill_counts_under_today_name(self):
+        """Přejmenovaný skill je tentýž; sloučený nebo zrušený zůstává pod svým jménem."""
+        skills = ({"end", "next"}, {"cleanup": "end"}, {"break"})
+        self.assertEqual(clauding.skill_name("cleanup", skills), "end")
+        self.assertEqual(clauding.skill_name("break", skills), "break")
+        self.assertIsNone(clauding.skill_name("clear", skills))
+        self.assertIsNone(clauding.skill_name("superpowers:brainstorming", skills))
+
+    def test_skill_table_is_sorted_and_marks_lower_bound(self):
+        """Zadané příkazem jsou z `history.jsonl` úplné, spuštěné Claudem za odhadnutý den ne."""
+        full, guessed = date(2026, 9, 14), date(2026, 9, 15)
+        data = SimpleNamespace(
+            guessed={guessed},
+            skills={
+                full: Counter({("next", "typed"): 1, ("end", "typed"): 2}),
+                guessed: Counter({("end", "nested"): 1}),
+            },
+        )
+        original = clauding.own_skills
+        clauding.own_skills = lambda: ({"end", "next"}, {}, set())
+        try:
+            rows = clauding.skill_table([full, guessed], data)
+        finally:
+            clauding.own_skills = original
+        self.assertEqual(rows[2], "| /end | ≥3 | 2 | 0 | ≥1 |")
+        self.assertEqual(rows[3], "| /next | 1 | 1 | 0 | 0 |")
+        self.assertEqual(rows[-1], "| **Celkem** | ≥4 | 3 | 0 | ≥1 |")
 
     def test_rounding_is_half_up(self):
         """`round()` by z 2,25 udělal 2,2 – člověk čeká 2,3."""

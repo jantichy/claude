@@ -1,6 +1,6 @@
 ---
 name: clauding
-description: Skill se použije, když uživatel zadá "/clauding" (volitelně s režimem day, week nebo month a s obdobím), nebo se ptá, kolik času strávil v Claude Code – za den, týden, měsíc či celou dobu, kolik hodin denně v průměru, který den byl nejdelší, jak se práce rozkládá do dnů v týdnu a hodin dne, kolik rozhodnutí, přerušení a zamítnutí ho práce stála, kolik commitů a znaků napsal. Spočítá to z transcriptů všech sessions, z history.jsonl a z vlastních commitů slitých do jednoho proudu událostí, takže souběžné sessions se nesčítají a čekání na Claudovu práci se počítá. Vypíše součet hodin, průměr na kalendářní i na aktivní den a vedle toho zásahy, commity a napsané znaky po obdobích a k tomu zajímavosti; dny, pro které transcript chybí, odhadne a označí. Na rozdíl od /invoicing recover nehledá čas k fakturaci pro klienta a nic nedoplňuje do timetrackingu. Nic nezapisuje.
+description: Skill se použije, když uživatel zadá "/clauding" (volitelně s režimem day, week nebo month a s obdobím), nebo se ptá, kolik času strávil v Claude Code – za den, týden, měsíc či celou dobu, kolik hodin denně v průměru, který den byl nejdelší, jak se práce rozkládá do dnů v týdnu a hodin dne, kolik rozhodnutí, přerušení a zamítnutí ho práce stála, kolik commitů a znaků napsal, kolikrát spustil který skill. Spočítá to z transcriptů všech sessions, z history.jsonl a z vlastních commitů slitých do jednoho proudu událostí, takže souběžné sessions se nesčítají a čekání na Claudovu práci se počítá. Vypíše součet hodin, průměr na kalendářní i na aktivní den, vedle toho zásahy, commity a napsané znaky po obdobích, spuštění vlastních skillů včetně těch, které pouští jiný skill, a k tomu zajímavosti; dny, pro které transcript chybí, odhadne a označí. Na rozdíl od /invoicing recover nehledá čas k fakturaci pro klienta a nic nedoplňuje do timetrackingu. Nic nezapisuje.
 argument-hint: [day|week|month] [období]
 allowed-tools: [Bash]
 ---
@@ -9,9 +9,9 @@ allowed-tools: [Bash]
 
 ## Co skill dělá
 
-Spočítá, kolik času se strávilo v Claude Code, a vypíše to po obdobích ve třech částech. **Tabulka času:** za každé období součet hodin, průměr na kalendářní den, průměr na aktivní den a počet aktivních dnů. **Tabulka pozornosti a práce:** rozhodnutí v dialogu, přerušení, zamítnutí, tyhle zásahy dohromady na hodinu, commity, napsané znaky a průměrná délka promptu. **Rozložení:** dny podle počtu hodin, průměr podle dne v týdnu a hodiny podle denní doby. Každá tabulka končí součtovým řádkem za celé období. Na konci **zajímavosti** – souhrn, rekordy, extrémy a hříčky jako ucelené věty, které jdou vykopírovat a sdílet.
+Spočítá, kolik času se strávilo v Claude Code, a vypíše to ve čtyřech částech. **Tabulka času:** za každé období součet hodin, průměr na kalendářní den, průměr na aktivní den a počet aktivních dnů. **Tabulka pozornosti a práce:** rozhodnutí v dialogu, přerušení, zamítnutí, tyhle zásahy dohromady na hodinu, commity, napsané znaky a průměrná délka promptu. **Skilly:** kolikrát se za celé období spustil který vlastní skill, sestupně, a zvlášť kolikrát příkazem, kolikrát ho Claude spustil na pokyn slovy a kolikrát z jiného skillu – `/end`, který pouští `/merge`, se tak započte taky. **Rozložení:** dny podle počtu hodin, průměr podle dne v týdnu a hodiny podle denní doby. Tabulky po obdobích i tabulka skillů končí součtovým řádkem za celé období. Na konci **zajímavosti** – souhrn, rekordy, extrémy a hříčky jako ucelené věty, které jdou vykopírovat a sdílet.
 
-Tři režimy, liší se jen členěním tabulky:
+Tři režimy, liší se jen členěním tabulek času a pozornosti:
 
 - **`/clauding month`** – po měsících. **Výchozí**, bez období vypíše celou historii.
 - **`/clauding week`** – po týdnech od pondělí do neděle.
@@ -35,7 +35,7 @@ Za režimem volitelně období česky: „září“, „posledních 14 dní“,
 | Součty, průměry, odhad a zajímavosti | `clauding.py` | deterministický výpočet nad 3–4 GB transcriptů; model by ho dělal pomaleji a s chybou |
 | Výpis | vlastní | odpověď na konkrétní dotaz nad tabulkou |
 
-**Oba skripty jsou implementační detail, ne rozhraní** – jejich jména, parametry i rozdělení práce se smějí změnit bez ohlášení. **Závazná je *Metodika* níž a tvar výstupu:** tabulka času, tabulka pozornosti a práce a rozložení, každá se součtovým řádkem, značky odhadu a dolní meze a na konci zajímavosti ke sdílení. Změna metodiky se dělá v `timeline.py` a v této sekci zároveň, protože jinak by `/clauding` a `/invoicing recover` odpovídaly na tutéž otázku jinak.
+**Oba skripty jsou implementační detail, ne rozhraní** – jejich jména, parametry i rozdělení práce se smějí změnit bez ohlášení. **Závazná je *Metodika* níž a tvar výstupu:** tabulka času, tabulka pozornosti a práce, tabulka skillů a rozložení, každá se součtovým řádkem, značky odhadu a dolní meze a na konci zajímavosti ke sdílení. Změna metodiky se dělá v `timeline.py` a v této sekci zároveň, protože jinak by `/clauding` a `/invoicing recover` odpovídaly na tutéž otázku jinak.
 
 ## Metodika
 
@@ -58,6 +58,9 @@ Měří se **čas v Claudovi**, ne čas u klávesnice: čekání, než Claude do
 15. **Commit se počítá, leží-li do 20 minut od aktivity v Claudovi**, ať z transcriptu, nebo z promptu v `history.jsonl` – týmž pravidlem jako v bodě 5, jen nad celou historií.
 16. **Napsané znaky a prompty jsou z `history.jsonl`**, takže pokrývají celou historii bez odhadu. Delší vložený text a obrázek v něm stojí jen jako značka a nepočítají se; krátké vložení se od psaní rozlišit nedá a opravy (Backspace, pohyb kurzorem) se nezapisují – je to tedy napsaný text, ne úhozy. Průměrná délka a nejčastější prompty vynechávají příkazy (`/clear`, `exit`), které by jinak obsadily první místa a nic neřekly.
 17. **Konec noční práce je poslední prompt bloku, který skončil mezi půlnocí a šestou ráno**; blok jsou prompty bez pauzy delší než tři hodiny. Blok, který začal až mezi čtvrtou a šestou, je brzký začátek dne, ne pozdní konec noci.
+18. **Vlastní skill je ten, který má nebo měl `SKILL.md` v `~/.claude/skills/`**; příkazy harnessu (`/clear`) a skilly z pluginů se nepočítají. Přejmenovaný skill (git ho u `SKILL.md` pozná jako přejmenování) se počítá pod dnešním jménem, protože je to tentýž skill. Skill sloučený do jiného nebo zrušený zůstává pod svým jménem se značkou „zrušený“ – byl to jiný skill a jeho volání by jinak nafouklo ten, do kterého se rozpustil.
+19. **Spuštění skillu je ručně zadaný příkaz, nebo volání nástroje Skill.** Zadané příkazem jsou z `history.jsonl`, takže pokrývají celou historii. Volání nástroje je z transcriptů a za odhadnutý den je jen dolní mez se značkou `≥`, jako v bodě 14. Volá-li Claude nástrojem skill, který uživatel v téže odpovědi zadal příkazem, je to totéž spuštění a znovu se nepočítá.
+20. **Spuštěný Claudem je na pokyn slovy, nebo z jiného skillu.** Z jiného skillu je volání v odpovědi, ve které už nějaký skill běží – zadaný příkazem, nebo dřív spuštěný nástrojem –, a každé volání v subagentovi, protože subagenta pouští práce, ne uživatel. Ostatní volání jsou na pokyn slovy: „přimerguj to“, nebo jméno skillu zmíněné uprostřed promptu.
 
 ## Fáze 0 – Příprava
 
@@ -95,7 +98,7 @@ Ze session, ve které skill vznikl – každá z nich dala věrohodné, ale špa
 
 ## Fáze 3 – Závěr
 
-Výstup skriptu je hotový Markdown. **Vypiš ho beze změny** – nezaokrouhluj jinak, nepřepočítávej a nevynechávej poznámku o odhadu ani vysvětlivku nad tabulkou pozornosti, protože bez nich vypadá odhad jako změřené číslo a dolní mez jako úplný počet. **Zajímavosti jsou text ke sdílení** – uživatel je vykopíruje na sociální síť, kde je čte člověk bez tabulek a bez legendy. Proto stojí na konci, každá je ucelená věta, mluví v první osobě bez rodu („mám za sebou“, ne „strávil jsem“), aby seděla každému, kdo skill pustí, a značky `~` a `≥` jsou v nich přepsané na „zhruba“ a plus za číslem (`≥5 113` je „5 113+“). Neupravuj je ani nezkracuj; nová zajímavost se přidává do skriptu, ne do výpisu.
+Výstup skriptu je hotový Markdown. **Vypiš ho beze změny** – nezaokrouhluj jinak, nepřepočítávej a nevynechávej poznámku o odhadu ani vysvětlivky nad tabulkou pozornosti a skillů, protože bez nich vypadá odhad jako změřené číslo a dolní mez jako úplný počet. **Zajímavosti jsou text ke sdílení** – uživatel je vykopíruje na sociální síť, kde je čte člověk bez tabulek a bez legendy. Proto stojí na konci, každá je ucelená věta, mluví v první osobě bez rodu („mám za sebou“, ne „strávil jsem“), aby seděla každému, kdo skill pustí, a značky `~` a `≥` jsou v nich přepsané na „zhruba“ a plus za číslem (`≥5 113` je „5 113+“). Neupravuj je ani nezkracuj; nová zajímavost se přidává do skriptu, ne do výpisu.
 
 Ptal-li se uživatel na konkrétní věc („kolik jsem byl v Claudovi včera“), odpověz nad tabulkou jednou větou s číslem z ní.
 

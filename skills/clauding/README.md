@@ -11,6 +11,7 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **U každého období** součet hodin, průměr na kalendářní den, průměr na den, kdy jste s Claudem opravdu pracovali, a kolik takových dnů bylo.
 - **Kolik vaší pozornosti Claude spotřebuje** – na kolik jeho otázek s nabídnutými variantami jste odpověděli, kolikrát jste ho zastavili klávesou Esc a kolikrát jste mu zamítli akci, každé zvlášť i dohromady na hodinu práce.
 - **Kolik práce za tím je** – počet commitů, kolik znaků jste do promptů napsali a jak dlouhý je průměrný prompt.
+- **Které skilly používáte** – tabulka vlastních skillů seřazená podle počtu spuštění, u každého zvlášť, kolikrát jste ho zadali příkazem, kolikrát ho Claude spustil na pokyn slovy („přimerguj to“) a kolikrát ho pustil jiný skill – když `/merge` pouští `/end`, připíše se čárka i k `/end`.
 - **Seznam zajímavostí ke sdílení** – souhrn, nejsilnější měsíc, rekordy a extrémy jako hotové věty v první osobě, které můžete rovnou vykopírovat na LinkedIn nebo jinam.
 - **Hříčky navíc**: kolikrát vám Claude řekl „máš pravdu“, co mu píšete nejčastěji, nejdelší prompt, který jste kdy napsali, a v kolik jste nejpozději šli od rozdělané práce spát.
 - **Zajímavosti**: nejdelší den, nejdelší blok v kuse, nejdelší řada dnů po sobě, kolik dnů jste strávili kolika hodinami, které dny v týdnu a hodiny dne jsou nejsilnější.
@@ -24,6 +25,7 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **Commity se započtou, jen když vznikly při práci s Claudem**, ne ruční práce v repozitáři mimo něj.
 - **Rozhodnutí se počítají přesně, nebo vůbec.** Počítá se jen odpověď v dialogu s variantami, zastavení a zamítnutí, které Claude Code zapíše, a zamítnutí několika souběžných akcí jedním klikem je jedno zamítnutí. Otázku v běžném textu odpovědi by šlo jen hádat, a odhad smíchaný s přesným počtem by znehodnotil oboje.
 - **Odhad se kalibruje na vašich datech.** Kde podrobné záznamy chybí, změří si na dnech, kde jsou, jak moc se hrubý výpočet z promptů liší od plného, a tím poměrem ho opraví.
+- **Přejmenovaný skill se počítá pod dnešním jménem**, zrušený nebo sloučený do jiného zůstává pod svým. Spuštění příkazem pozná i v nejstarších datech, spuštění Claudem jen tam, kde jsou podrobné záznamy, a jinde ho označí jako spodní hranici.
 - **Každé číslo vzniká skriptem**, ne odhadem modelu – stejná data dají pokaždé stejný výsledek.
 
 ## Jak se to používá
@@ -50,16 +52,23 @@ Stačí se i zeptat „kolik jsem tento měsíc strávil s Claudem?“.
 | září 2026 | ≥3 236 | ≥97 | ≥150 | 13,0 | 2 433 | 677 929 | 223 |
 | říjen 2026 | 1 877 | 61 | 78 | 10,1 | 1 834 | 414 011 | 176 |
 
+| Skill | Celkem | Zadáno příkazem | Na pokyn slovy | Z jiného skillu nebo agenta |
+|---|---:|---:|---:|---:|
+| /end | ≥677 | 575 | ≥60 | ≥42 |
+| /next | ≥149 | 116 | ≥30 | ≥3 |
+| /merge | ≥101 | 71 | ≥14 | ≥16 |
+
 ### Zajímavosti
 
 - V Claude Code mám za sebou zhruba 797,5 h za 221 dní (2. 4. 2026 – 8. 11. 2026): v průměru 3,6 h denně včetně víkendů, ve dnech s prací (138 z 221) 5,8 h.
 - Nejsilnější měsíc: září 2026 – zhruba 272,7 h, tedy 9,1 h denně včetně víkendů.
 - 47 dní v řadě bez jediného volného dne (31. 8. – 16. 10. 2026).
 - 6 319+ rozhodnutí – odpovědí na Claudovy otázky s nabídnutými variantami, tedy 11,0 za hodinu práce.
+- Nejčastější skilly podle počtu spuštění: /end (677+), /next (149+), /consistency (118+); z dnešních 37 skillů přišlo na řadu 36.
 - „Máš pravdu“ mi Claude řekl 339+ krát, zhruba jednou za 2,0 h práce.
 - Nejčastější prompty: „ano“ (106×), „pokračuj“ (80×), „a“ (53×).
 
-Nad zajímavostmi je rozložení dnů podle počtu hodin, dnů v týdnu a hodin dne jako malé sloupcové grafy; každá tabulka končí součtovým řádkem.
+Tabulka skillů pokračuje všemi skilly, které se v období spustily. Nad zajímavostmi je rozložení dnů podle počtu hodin, dnů v týdnu a hodin dne jako malé sloupcové grafy; každá tabulka končí součtovým řádkem.
 
 ## Co nedělá
 
