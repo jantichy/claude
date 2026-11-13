@@ -306,6 +306,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 - **2026-11-11** · `/end` · `e97f62a` · session `2c74ac6f-2090-42cc-bc02-5f92774ea154` · prompty 9/9 · 0 témat · mimo rozsah: žádné · meze: žádné
 - **2026-11-13** · `/end` · `b52da09` · session `d5ecd70d-5163-4f8e-9a03-37bde3c8d3a1` · prompty 20/20 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: zastaralé věty o doméně `Text/` v `~/Context/README.md` a `~/Context/todo.md` opraveny rovnou · meze: žádné
+- **2026-11-13** · `/end` · `c5a9eed` · session `d5ecd70d-5163-4f8e-9a03-37bde3c8d3a1` · prompty 25/25 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: žádné
 
 ## Odvedená práce
 
@@ -795,4 +796,4 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 - [x] **`/next` mluví o nabídce, „fronta“ zůstává pásmům `todo.md`** (2026-11-11) (zadáno 4. 11. 2026, odloženo z ověření `structure.md`). Celek toho, co `/next` posbírá a nabízí – včetně sekcí pod `# Mimo frontu`, kol, plánu a větví –, se v `SKILL.md` a README skillu jmenuje „nabídka“; „fronta“ tam zůstala jen pro `todo.md` (vrchol fronty, `--all`, srovnaná fronta) a pro frontu přerušeného běhu. Nadpisy v `todo.md` projektů se neměnily. Rozvaha v `skills/next/decisions.md`.
 
-- [x] **Skill `/proofread` a angličtina v doméně `Text/`** (2026-11-13) (zadáno 13. 11. 2026). Korektura a redakce hotového textu česky i anglicky ve třech patrech oprav: jednoznačné rovnou, menší stylistika dávkou, větší přepis po jednom; věcná kontrola odborníkem na téma jen jako otázka, u cizího jazyka průchod rodilého mluvčího. Pravidla nese doména: v `~/Context/Text/` přibyl katalog obratů `phrases.md` a podadresář `english/` jako rozdíly proti české bázi (`text.md`, `typography.md` podle Chicaga s domácími volbami, `czenglish.md` ze Sparlinga). Rozvaha, srovnávací běh, tlakové scénáře a měření vyvolání leží v `skills/proofread/decisions.md`.
+- [x] **Skill `/proofread` a angličtina v doméně `Text/`** (2026-11-13) (zadáno 13. 11. 2026). Korektura a redakce hotového textu česky i anglicky ve třech patrech oprav: jednoznačné rovnou, menší stylistika dávkou, větší přepis po jednom; věcná kontrola odborníkem na téma jen jako otázka, u cizího jazyka průchod rodilého mluvčího. Do dokumentu Wordu (`.docx`) zapíše všechna patra jako revize a komentáře, o kterých autor rozhodne ve Wordu. Pravidla nese doména: v `~/Context/Text/` přibyl katalog obratů `phrases.md` a podadresář `english/` jako rozdíly proti české bázi (`text.md`, `typography.md` podle Chicaga s domácími volbami, `czenglish.md` ze Sparlinga). Rozvaha, srovnávací běh, tlakové scénáře a měření vyvolání leží v `skills/proofread/decisions.md`.
