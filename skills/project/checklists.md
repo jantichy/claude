@@ -26,6 +26,7 @@ Přehled všech checklistů i s cílem importu:
 | Výkonnostní reklama a správa kampaní | `@~/Context/Advertising/advertising.md` |
 | Psaní českých textů | `@~/Context/Text/text.md` |
 | Česká typografie | `@~/Context/Text/typography.md` |
+| Psaní anglických textů | `@~/Context/Text/english/text.md` a `@~/Context/Text/english/typography.md`, vždy spolu s oběma českými výš |
 | Školení a kurzy | `@~/Context/Training/training.md` |
 | Vizuální tvorba a grafika | `@~/Context/Design/design.md` |
 | Prezentace a slajdy | `@~/Context/Design/slides.md` |

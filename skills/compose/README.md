@@ -57,7 +57,7 @@ Archiv se nikdy nepřepisuje, jen doplňuje. Báze naopak ano – opravuje se po
 
 - **Nevymýšlí obsah ani stanoviska.** Bez vašeho vstupu k tématu se nerozjede.
 - **Nepřepisuje nahrávky.** Na mluvené slovo je `/transcript`.
-- **Nedělá korekturu cizích textů.** Uplatňuje styl při psaní, není to redakční služba.
+- **Nedělá korekturu hotových textů.** Uplatňuje styl při psaní; na korekturu je `/proofread`.
 - **Nepublikuje.** Výstupem je text, ne příspěvek někde venku.
 
 ## Jak si ho nainstalovat

@@ -202,6 +202,10 @@ Dám mu odkaz na složku na Google Drive nebo na libovolný soubor a on z toho u
 
 Vezme přepis školení, článek, poznámky, ale i rovnou nahrávku, obrázek nebo PDF a zapracuje je do mojí knihovny know-how – rozebere zdroj na jednotlivé poznatky a rozpustí je na místa, kam patří, klidně i s přestavbou textu kolem. Rozliší přitom skutečný rozpor od toho, že jsem na školení něco jen řekl jednodušeji, a ptá se opravdu jen tam, kde neví. Metodiku přepisuje volně, ručně psané texty jen doplňuje a doslovných přetisků se nedotkne.
 
+#### [`/proofread`](skills/proofread/) – korektura, po které je text lepší, ne jen bez chyb
+
+Dám mu soubor, Google Doc, stránku nebo vložený text, česky nebo anglicky, a on z něj udělá lepší text – nejen opraví překlepy, čárky a typografii, ale podívá se i na stavbu, pořadí, ve kterém se text rozvíjí, a styl; u angličtiny hledá czenglish a místa, která by rodilý mluvčí řekl jinak. Co má jedinou správnou podobu, opraví sám, menší stylistické úpravy mi předloží ke schválení naráz a větší přepisy po jednom s variantami, takže mi nepřepíše hlas ani záměrnou ukázku chyby. Fakta, čísla a citace nechá na pokoji a po zápisu ověří, že se žádné neztratilo. Pravidla si čte z mojí privátní znalostní báze o psaní, sám žádná nenese.
+
 #### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
 Ze zvukových i obrazových nahrávek udělá čitelný přepis a strukturované shrnutí se soupisem domluv a úkolů na konci; na vyžádání rozliší i mluvčí, takže úkoly mají majitele. Přepis běží **lokálně a offline**, takže nahrávka neopustí můj počítač. Než začne, podstrčí rozpoznávači jména a názvy, které v nahrávce padnou – ta pak nekomolí lidi ani firmy. Leží-li v adresáři víc souborů, zeptá se, jestli to není **jedna schůzka rozřezaná na části** – diktafon se zastavil, spadl hovor –, a spojí ji ještě před přepisem: vznikne jeden souvislý přepis a jedno rozlišení mluvčích místo několika oddělených, mezi kterými by se stejní lidé nedali spárovat. A když se rozpoznávač uprostřed dlouhé nahrávky zakousne, umí ji dopřepsat po úsecích: problémový kus přeskočí a o zbytek nepřijdu.

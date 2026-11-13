@@ -52,6 +52,6 @@ Je to data k pravidlům *Nezaváděj neustálené termíny* a *Jeden termín pro
 | úhel | hledisko | jeden kritický pohled, se kterým `/oponent` pouští agenta. `/attack` má **vektory útoku** a nesjednocuje se |
 | viséc, viséci | pozůstatek | zbytek po zásahu do textu, který přestal platit – odkaz na přejmenovanou sekci, věta o něčem, co už není |
 | vizitka | README skillu | text pro člověka zvenčí. „Vizitka“ dál znamená jednostránkový firemní web |
-| voda | vata | text, který nic nepřidává. Katalog drží `~/Context/Text/text.md` |
+| voda | vata | text, který nic nepřidává. Katalog drží `~/Context/Text/phrases.md` |
 | zamluvené téma | nevypořádané téma | co v konverzaci padlo a nikdy se nedořešilo; hledá je `/end` |
 | zelená linka | průběžná kontrola | mechanismus, který po každé odpovědi pouští blokující kontroly. Anglicky `verify` |
