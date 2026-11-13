@@ -229,3 +229,5 @@
   **Proč se to nerozhodlo hned:** není odzkoušené, jestli rešerše doopravdy vymýšlí. Doplnit panel naslepo znamená zaplatit ho při každém běhu; nedoplnit ho znamená riskovat, že se produkt postaví na odlišení, které konkurence dávno má. Rozhodne se po prvním běhu na skutečném projektu – tehdy bude vidět, kolik nálezů neprošlo fází *Ověření* a jestli mezi zapsanými zůstalo něco nepravdivého.
 
   **Zapsáno 2026-09-07**, protože mezera dnes není nikde přiznaná a `~/.claude/standards/rules.md`, *Zapiš i to, co vědomě nemáš*, to žádá.
+
+- **`/explain` a `AskUserQuestion` v jedné odpovědi: uživatel vysvětlení nevidí** (OKsystem, 13. 11. 2026). Vysvětlení napsané jako text těsně před voláním `AskUserQuestion` uživatel neviděl, viděl jen dialog („Opět vypisuješ ven jen otázku a veškerý /explain si jen myslíš“). Obešlo se to tak, že vysvětlení i otázka šly jen jako text a odpověď uživatel napsal. Zvážit v `/explain`, *Fáze 3*, a v `rules.md`, *Ptej se postupně*: když stojí před dialogem delší vysvětlení, otázku položit textem, nebo vysvětlení dát do `description`/`preview`.
