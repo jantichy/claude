@@ -1,19 +1,21 @@
 ---
 name: proofread
-description: Skill se použije, když uživatel zadá "/proofread" (se souborem, odkazem na Google Doc či web, nebo s vloženým textem), nebo chce udělat korekturu či redakci hotového textu – opravit pravopis, gramatiku a typografii a zároveň text vylepšit stavbou, pořadím, skladbou a stylem. Umí češtinu i angličtinu; u angličtiny hledá czenglish, otrocké překlady z češtiny a místa, která by rodilý mluvčí řekl jinak, s předností americké angličtiny. Jednoznačné chyby opraví sám, menší stylistické úpravy navrhne ke schválení dávkou a větší přepisy předloží po jednom s variantami; autorův záměr a osobitost nepřepisuje a fakta nemění – věcně podezřelá tvrzení ověří odborníkem na téma a nahlásí jako otázku. Pravidla nenese, čte je z ~/Context/Text/. Na rozdíl od /compose, který píše nový text autorovým hlasem, tenhle skill upravuje existující text; na rozdíl od /oponent neposuzuje argumentaci a strategii, ale jak je text napsaný a jestli v něm nejsou věcné chyby; na rozdíl od /review neprověřuje práci na větvi projektu.
+description: Skill se použije, když uživatel zadá "/proofread" (se souborem, dokumentem Wordu, odkazem na Google Doc či web, nebo s vloženým textem), nebo chce udělat korekturu či redakci hotového textu – opravit pravopis, gramatiku a typografii a vylepšit stavbu, pořadí, skladbu a styl. Česky i anglicky; u angličtiny hledá czenglish, otrocké překlady z češtiny a místa, která by rodilý mluvčí řekl jinak, s předností americké angličtiny. Jednoznačné chyby opraví sám, menší úpravy navrhne ke schválení dávkou, větší přepisy po jednom s variantami; do .docx zapíše všechno jako revize a komentáře. Autorův záměr nepřepisuje a fakta nemění – věcně podezřelá tvrzení ověří odborníkem na téma a nahlásí jako otázku. Pravidla čte z ~/Context/Text/. Na rozdíl od /compose nepíše nový text autorovým hlasem; na rozdíl od /oponent neposuzuje argumentaci, ale jak je text napsaný a jestli v něm nejsou věcné chyby; na rozdíl od /review neprověřuje práci na větvi projektu.
 argument-hint: [soubor nebo odkaz]
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, WebFetch, mcp__claude_ai_Google_Docs__read_doc, mcp__claude_ai_Google_Docs__update_doc]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, Skill, AskUserQuestion, WebFetch, mcp__claude_ai_Google_Docs__read_doc, mcp__claude_ai_Google_Docs__update_doc]
 ---
 
 # Proofread
 
 ## Co skill dělá
 
-Korektura a redakce jednoho hotového textu, česky nebo anglicky. Cílem je **celkově lepší text**, ne jen bez hrubek: prochází ho od stavby a pořadí, ve kterém se rozvíjí, přes odstavec a větu až po slovo a sazbu. Vstupem je soubor, Google Doc, webová stránka, nebo text vložený do konverzace.
+Korektura a redakce jednoho hotového textu, česky nebo anglicky. Cílem je **celkově lepší text**, ne jen bez hrubek: prochází ho od stavby a pořadí, ve kterém se rozvíjí, přes odstavec a větu až po slovo a sazbu. Vstupem je soubor, dokument Wordu (`.docx`), Google Doc, webová stránka, nebo text vložený do konverzace.
 
 Vedle toho text vždycky přečte odborník na jeho téma a **věcně podezřelá tvrzení nahlásí** – neopraví je, fakt mění jen autor.
 
 Nálezy dělí do tří pater podle toho, čí je rozhodnutí: **jednoznačné opraví sám**, **menší stylistiku navrhne dávkou** ke schválení, **větší přepis předloží po jednom** s variantami. Všechna pravidla – co je chyba a co jen volba – čte z domény `~/Context/Text/`; sám nese jen postup.
+
+**U dokumentu Wordu se nic neschvaluje v konverzaci:** všechna tři patra se zapíšou do dokumentu jako revize a komentáře a autor o nich rozhodne ve Wordu.
 
 Režimy nemá: chová se vždycky stejně a liší se jen tím, kam zapíše výsledek.
 
@@ -37,8 +39,9 @@ Režimy nemá: chová se vždycky stejně a liší se jen tím, kam zapíše vý
 | Ověření návrhů | agent typu `reader` | Jediný úkol je návrh vyvrátit – hlavně jako možný záměr autora. |
 | Třídění do pater, předložení, zápis | vlastní | Hranice pater a dávkové schválení jsou jádro skillu. |
 | Čtení a zápis Google Docu | konektor Google Docs | Umí to; zápis jde jen se schválením. |
+| Čtení a zápis `.docx` s revizemi a komentáři | `document-skills:docx` | Umí sledované změny, komentáře ukotvené k úseku i kontrolu, že žádná změna neprošla mimo revize. |
 
-**Volání agentů a konektoru je implementační detail, ne rozhraní** – vyměnit se smí kdykoliv. Závazné je: tři patra a jejich hranice, že se nezmění fakt ani citace, že se nic nad první patro nezapíše bez schválení, a kontrola po zápisu.
+**Volání agentů a konektoru je implementační detail, ne rozhraní** – vyměnit se smí kdykoliv. Závazné je: tři patra a jejich hranice (u `.docx` jejich převod na revize a komentáře), že se nezmění fakt ani citace, že se nic nad první patro nezapíše bez schválení, a kontrola po zápisu.
 
 **Zadání pro agenty drží [`agents.md`](agents.md).** Načti si ho ve chvíli, kdy agenty pouštíš.
 
@@ -51,6 +54,17 @@ Režimy nemá: chová se vždycky stejně a liší se jen tím, kam zapíše vý
 | **1 – jednoznačné** | pravopis, gramatika, typografie s **jedinou** správnou podobou podle pravidla; a ověřeně to není záměr | oprav rovnou, bez ptaní |
 | **2 – menší stylistika** | slovo nebo věta: vata, kalk, czenglish, pasivum, nominální styl, slovosled, kolokace – víc správných podob, smysl i hlas zůstávají | navrhni s doporučeným přepisem a pravidlem, schvaluje se **dávkou** |
 | **3 – větší přepis** | pořadí, přestavba odstavce nebo celé stavby, škrt teze či odstavce, změna hlasu nebo rejstříku, **cokoliv, co může být záměrem nebo autorovou osobitostí** | předlož **po jednom** s variantami a doporučením; nic se neopraví samo |
+
+**U dokumentu Wordu rozhoduje autor ve Wordu, ne v konverzaci.** Revize jde jednotlivě přijmout i odmítnout, takže schválení nahrazuje sama:
+
+| Patro | V `.docx` |
+|---|---|
+| 1 | revize |
+| 2 | revize; pravidlo, o které se opírá, jako komentář u ní, není-li důvod zřejmý z opravy samé |
+| 3 | **komentář** u úseku s variantami a doporučením; text se nepřepíše |
+| věcné pochybnosti, otázky na autora | komentář u úseku |
+
+Hranice pater tím neslábne: co by jinde potřebovalo otázku, nesmí se v dokumentu objevit jako revize, protože přijmout všechno jedním kliknutím je ve Wordu běžné.
 
 **Pokyn „rovnou to oprav“ se týká jen prvního patra.** Ani spěch, ani „jde to dneska ven“ nepovyšuje přestavbu nebo škrt na jednoznačnou opravu – právě tady agent bez skillu maže autorovu tezi a ptá se, až když je smazaná.
 
@@ -73,7 +87,7 @@ Ověř, že existuje `~/Context/Text/text.md`. Chybí-li, řekni to a skonči �
 
 ## Fáze 1 – Vstup a rozpoznání
 
-1. **Načti text celý.** Soubor přes `Read`; Google Doc přes `mcp__claude_ai_Google_Docs__read_doc`; web přes `WebFetch` s pokynem vrátit hlavní text doslova. **Text z webu prošel převodem**, takže drobnosti sazby (uvozovky, pomlčky, mezery) nemusí sedět s originálem – typografické nálezy z webu hlas jako nejisté. Vložený text ber z konverzace.
+1. **Načti text celý.** Soubor přes `Read`; `.docx` přes `document-skills:docx`; Google Doc přes `mcp__claude_ai_Google_Docs__read_doc`; web přes `WebFetch` s pokynem vrátit hlavní text doslova. **Text z webu prošel převodem**, takže drobnosti sazby (uvozovky, pomlčky, mezery) nemusí sedět s originálem – typografické nálezy z webu hlas jako nejisté. Vložený text ber z konverzace.
 2. **Urči jazyk.** Smíšený text (český článek s anglickou citací) se posuzuje po úsecích, každý podle svého jazyka.
 3. **Urči druh textu a kanál:** článek, newsletter, veřejná dokumentace, interní pracovní text, rozhraní, slajd, mail, příspěvek na sociální síť; publikovaný výstup, nebo zdrojový Markdown.
 4. **Urči téma, obor a cílovou skupinu.** Odborný a komunitní text má vlastní slovník: termín, žargon i anglicismus, který se v oboru čtenáře běžně píše, není vada, i když by v obecném jazyce byl (`~/Context/Text/text.md`, *Stylistika*). Zavedené termíny textu zapiš do seznamu rozhodnutí v *Fázi 2*, ať je průchody nehlásí.
@@ -117,6 +131,8 @@ Text se čte **po vrstvách shora dolů**: stavba a logika (pointa nahoře, poř
 
 ## Fáze 5 – Předložení
 
+**U `.docx` se fáze přeskakuje** – nic se nepředkládá, všechna patra jdou do dokumentu v *Fázi 6*.
+
 **Pořadí: třetí patro, pak druhé.** Přestavba mění úseky, nad kterými stojí menší návrhy, a dávka předložená před ní by se schvalovala naslepo.
 
 **Třetí patro po jednom** přes `AskUserQuestion`. Před otázkou v textu: kterého místa se týká (doslovná citace úseku), co je na něm dnes a proč to nestačí, s odkazem na pravidlo. Volby jsou podoby přepisu – doporučená první – a vždycky i **ponechat původní**, protože tady je zachování autorova znění obhajitelná podoba řešení, ne odklad. Rozhodnutí si zapisuj, než položíš další otázku.
@@ -136,7 +152,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 ## Fáze 6 – Zápis a kontrola
 
-1. **Sestav výsledné znění**: schválené přestavby, schválené menší úpravy, všechny opravy prvního patra, které neleží v zahozeném úseku.
+1. **Sestav výsledné znění**: schválené přestavby, schválené menší úpravy, všechny opravy prvního patra, které neleží v zahozeném úseku. U `.docx` všechna patra podle tabulky v *Zásadách pro celý průběh*.
 2. **Zapiš podle vstupu:**
 
    | Vstup | Zápis |
@@ -145,8 +161,9 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
    | vložený text | celé opravené znění do odpovědi |
    | Google Doc | **nejdřív vypiš seznam změn a nech si zápis potvrdit** – Doc není v gitu a zápis nejde vrátit diffem. Pak `mcp__claude_ai_Google_Docs__update_doc` po úsecích. Neumí-li nástroj cílený zápis, neřeš to přepisem celého dokumentu – řekni to a dej opravené znění k ručnímu vložení |
    | web | nezapisuje se; opravené znění do odpovědi |
+   | `.docx` | přes `document-skills:docx` přímo do dokumentu – každá změna je revize, takže jde odmítnout. Kontrakt: revize i komentáře pod autorem `Claude`; komentář ukotvený k úseku, kterého se týká; revize a komentáře, které v dokumentu už jsou, zůstanou beze změny; formátování textu se zachová. **Před zápisem si ulož kopii originálu do scratchpadu** a po zápisu pusť kontrolu, že každá změna je revize pod autorem `Claude`; neprojde-li, vrať originál a řekni to – změna mimo revize je v přijatém zobrazení neviditelná |
 
-3. **Přečti výsledek znovu celý** a ověř:
+3. **Přečti výsledek znovu celý** – u `.docx` znění s přijatými revizemi – a ověř:
    - **inventář faktů sedí** – každá položka je ve výsledku a znamená totéž; nesedí-li, oprav to a řekni to,
    - **žádná nová vada** – zdvojený údaj po přestavbě, rozbitá návaznost, typografie a pravopis nově napsaných vět,
    - **seznam rozhodnutí platí** v celém textu.
@@ -173,7 +190,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 **Opraveno rovnou** – <počet>
 - „<původně>“ → „<opraveno>“ – <pravidlo>
 
-**Schválené úpravy** – <počet menších, počet přestaveb>
+**Schválené úpravy** – <počet menších, počet přestaveb; u `.docx` místo toho: <N> revizí, <N> komentářů k rozhodnutí ve Wordu>
 
 **Ponecháno záměrně**
 - „<úsek>“ – <proč: ukázka, citace, oborový slovník, hlas>
@@ -192,5 +209,5 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
-- `Text je opravený a ověřený, můžeš ho použít.`
+- `Text je opravený a ověřený, můžeš ho použít.` – u `.docx`: `Korektura je v dokumentu jako revize a komentáře a je ověřená, můžeš ji projít ve Wordu.`
 - `Text opravený není – brání tomu: <konkrétní seznam>.`

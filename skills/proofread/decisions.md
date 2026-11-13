@@ -91,3 +91,9 @@ Všechna selhání srovnávacího běhu se neopakovala. Věcná kontrola v tomhl
 ### Měření vyvolání
 
 **13. 11. 2026.** `claude -p --output-format stream-json --tools Skill,Read --strict-mcp-config` v čistém adresáři se vstupními soubory, 6 pozitivních a 6 negativních promptů, dva běhy na prompt. **Pozitivní 12/12** (korektura, pravopis a typografie před blogem, *proofread* anglicky, „ať to zní jako od rodilého mluvčího“, stylistické vylepšení bez přepisu hlasu, redakce před vydáním). **Negativní 0/12** – psaní vlastním hlasem, oponentura textu (šla na `/oponent`), překlad, konzistence pojmenování (`/consistency`), přepis nahrávky (`/transcript`), zapracování do znalostní báze (`/learn`). `description` se proto neladila.
+
+### Dokument Wordu: všechna patra jako revize a komentáře
+
+**Rozhodnuto 13. 11. 2026 (Honza).** U `.docx` se nic neschvaluje v konverzaci: patro 1 a 2 se zapíšou jako revize, patro 3, věcné pochybnosti a otázky na autora jako komentáře u úseku. Revizi jde ve Wordu přijmout i odmítnout jednotlivě, takže schválení nahrazuje sama, a autor rozhoduje tam, kde text čte. Patro 3 je komentář, ne revize, protože „přijmout vše“ je ve Wordu jedno kliknutí – přestavba v revizi by tak prošla bez rozhodnutí. Zapisuje se **přímo do dokumentu** (každá změna jde odmítnout), s kopií originálu ve scratchpadu a s kontrolou, že žádná změna neprošla mimo revize. Zápis deleguje na `document-skills:docx`, který sledované změny, komentáře i tu kontrolu umí.
+
+**Zamítnuto:** patro 3 probrat v konverzaci a schválenou variantu zapsat revizí – otázky v chatu i revize ve Wordu znamenají dvě místa rozhodování; zachovat dosavadní tok a revize jen jako záznam změn – revize by pak jen opakovaly schválení. **Starý `.doc` se neřeší** (Honza) – převod na `.docx` by vrátil jiný soubor, než jaký autor poslal.

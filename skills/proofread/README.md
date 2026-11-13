@@ -11,6 +11,7 @@ Projde hotový text – článek, dokumentaci, mail, post – a udělá z něj l
 - **Nechá text přečíst odborníkem na téma**, který hledá věcné chyby – zastaralý údaj, chybně popsaný nástroj, číslo, které nesedí – a ověří je u zdroje. Nic z toho neopraví, jen se zeptá.
 - **Pozná, čí a pro koho text je.** U vlastního textu autora nehlásí jako vadu to, co je pro jeho styl typické, a v odborném textu neopravuje oborový slovník – termín nebo anglicismus, který je v oboru běžný, nechá být.
 - **Bere text odkudkoliv** – soubor, Google Doc (do něj i zapíše, co se schválilo), webovou stránku, nebo text vložený do konverzace.
+- **Do dokumentu Wordu píše revize.** Opravy a menší úpravy vloží jako sledované změny, větší přepisy, věcné pochybnosti a otázky jako komentáře u textu – o všem pak rozhodnete ve Wordu, bez otázek v konverzaci.
 
 ## Proč zrovna tenhle
 
@@ -48,4 +49,4 @@ Pravidla psaní v repozitáři nenajdete – leží v soukromé znalostní bázi
 
 ### Požadavky a omezení
 
-Claude Code; pro Google Doc připojený konektor Google Docs. Jazyky jsou ty, pro které máte pravidla – dnes čeština a angličtina. Text z webu prochází převodem, takže drobnosti sazby u něj nemusí sedět s originálem.
+Claude Code; pro Google Doc připojený konektor Google Docs, pro dokument Wordu (`.docx`) skill `docx` z oficiálního balíčku document-skills. Jazyky jsou ty, pro které máte pravidla – dnes čeština a angličtina. Text z webu prochází převodem, takže drobnosti sazby u něj nemusí sedět s originálem.
