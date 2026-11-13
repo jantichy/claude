@@ -1,6 +1,6 @@
 ---
 name: proofread
-description: Skill se použije, když uživatel zadá "/proofread" (se souborem, odkazem na Google Doc či web, nebo s vloženým textem), nebo chce udělat korekturu či redakci hotového textu – opravit pravopis, gramatiku a typografii a zároveň text vylepšit stavbou, pořadím, skladbou a stylem. Umí češtinu i angličtinu; u angličtiny hledá czenglish, otrocké překlady z češtiny a místa, která by rodilý mluvčí řekl jinak, s předností americké angličtiny. Jednoznačné chyby opraví sám, menší stylistické úpravy navrhne ke schválení dávkou a větší přepisy předloží po jednom s variantami; autorův záměr a osobitost nepřepisuje a fakta nemění. Pravidla nenese, čte je z ~/Context/Text/. Na rozdíl od /compose, který píše nový text autorovým hlasem, tenhle skill upravuje existující text; na rozdíl od /oponent neposuzuje, jestli obsah platí, ale jak je napsaný; na rozdíl od /review neprověřuje práci na větvi projektu.
+description: Skill se použije, když uživatel zadá "/proofread" (se souborem, odkazem na Google Doc či web, nebo s vloženým textem), nebo chce udělat korekturu či redakci hotového textu – opravit pravopis, gramatiku a typografii a zároveň text vylepšit stavbou, pořadím, skladbou a stylem. Umí češtinu i angličtinu; u angličtiny hledá czenglish, otrocké překlady z češtiny a místa, která by rodilý mluvčí řekl jinak, s předností americké angličtiny. Jednoznačné chyby opraví sám, menší stylistické úpravy navrhne ke schválení dávkou a větší přepisy předloží po jednom s variantami; autorův záměr a osobitost nepřepisuje a fakta nemění – věcně podezřelá tvrzení ověří odborníkem na téma a nahlásí jako otázku. Pravidla nenese, čte je z ~/Context/Text/. Na rozdíl od /compose, který píše nový text autorovým hlasem, tenhle skill upravuje existující text; na rozdíl od /oponent neposuzuje argumentaci a strategii, ale jak je text napsaný a jestli v něm nejsou věcné chyby; na rozdíl od /review neprověřuje práci na větvi projektu.
 argument-hint: [soubor nebo odkaz]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, WebFetch, mcp__claude_ai_Google_Docs__read_doc, mcp__claude_ai_Google_Docs__update_doc]
 ---
@@ -11,6 +11,8 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Web
 
 Korektura a redakce jednoho hotového textu, česky nebo anglicky. Cílem je **celkově lepší text**, ne jen bez hrubek: prochází ho od stavby a pořadí, ve kterém se rozvíjí, přes odstavec a větu až po slovo a sazbu. Vstupem je soubor, Google Doc, webová stránka, nebo text vložený do konverzace.
 
+Vedle toho text vždycky přečte odborník na jeho téma a **věcně podezřelá tvrzení nahlásí** – neopraví je, fakt mění jen autor.
+
 Nálezy dělí do tří pater podle toho, čí je rozhodnutí: **jednoznačné opraví sám**, **menší stylistiku navrhne dávkou** ke schválení, **větší přepis předloží po jednom** s variantami. Všechna pravidla – co je chyba a co jen volba – čte z domény `~/Context/Text/`; sám nese jen postup.
 
 Režimy nemá: chová se vždycky stejně a liší se jen tím, kam zapíše výsledek.
@@ -18,7 +20,7 @@ Režimy nemá: chová se vždycky stejně a liší se jen tím, kam zapíše vý
 ## Co skill nedělá
 
 - **Nepíše nový text a nevnucuje autorský hlas.** Psaní Honzovým hlasem je `/compose`; tady se hlas jen chrání před uhlazením.
-- **Neposuzuje, jestli obsah platí.** Oponenturu tvrzení, strategie a argumentace dělá `/oponent`. Tady se hlásí, jak je tvrzení napsané, a nanejvýš že chybí doklad (`Text/text.md`, *Obsah a postoj*) – fakta se neověřují ani nemění.
+- **Neposuzuje argumentaci a strategii.** Oponenturu toho, jestli úvaha drží a co nebude fungovat, dělá `/oponent`. Tady se ověřují jen jednotlivá věcná tvrzení – a i ta se jen hlásí jako otázka, nemění.
 - **Neprověřuje práci na větvi projektu.** Soulad dokumentace s doménou `Text` jako součást revize hotové práce dělá `/review`; tenhle skill bere jeden text a udělá z něj lepší text.
 - **Nenese pravidla jazyka.** Co v doméně chybí, se doplní do `~/Context/Text/` (`/learn`), ne sem.
 
@@ -31,6 +33,7 @@ Režimy nemá: chová se vždycky stejně a liší se jen tím, kam zapíše vý
 | Průchod stavbou a stylem | agent typu `reader` | Čte text bez kontextu session, jako čtenář, ne jako autor; zápis mu chybí schválně. |
 | Průchod jazykem a sazbou | agent typu `reader` | Totéž; odděleně, aby se drobné opravy neztratily v přestavbě. |
 | Průchod rodilého mluvčího | agent typu `reader`, jen u textu v cizím jazyce | Czenglish a idiomatičnost jsou u cizího jazyka hlavní důraz; agent, který by je hledal mezi deseti dalšími věcmi, je odbude. |
+| Věcná kontrola | agent typu `researcher` | Čte jako odborník na téma a smí si tvrzení ověřit na webu; zápis nemá, takže fakt sám nezmění. |
 | Ověření návrhů | agent typu `reader` | Jediný úkol je návrh vyvrátit – hlavně jako možný záměr autora. |
 | Třídění do pater, předložení, zápis | vlastní | Hranice pater a dávkové schválení jsou jádro skillu. |
 | Čtení a zápis Google Docu | konektor Google Docs | Umí to; zápis jde jen se schválením. |
@@ -53,7 +56,7 @@ Režimy nemá: chová se vždycky stejně a liší se jen tím, kam zapíše vý
 
 **Než opravíš cokoliv, ověř, že to není záměr.** Chybný tvar uvedený jako ukázka („ne *vyjímka*, ale *výjimka*“), přímá řeč, nářečí, hříčka, vlastní jméno, značka, název produktu. Nejde-li záměr z kontextu vyloučit, oprava jednoznačná není a jde o patro výš. Místo, které necháš kvůli záměru, jednou větou zmíň.
 
-**Fakta jsou nedotknutelná.** Čísla, data, jména, citace, kód, cesty a cíle odkazů se nemění ani při přestavbě věty; tvrzení nesmí zmizet ani posunout smysl. Rozpor dvou údajů v textu je otázka na autora, ne oprava.
+**Fakta jsou nedotknutelná.** Čísla, data, jména, citace, kód, cesty a cíle odkazů se nemění ani při přestavbě věty; tvrzení nesmí zmizet ani posunout smysl. Rozpor dvou údajů v textu i věcně podezřelé tvrzení je **otázka na autora**, ne oprava – i když je chyba zjevná.
 
 **Citace si nechává svou podobu.** Slova a překlepy v doslovné citaci se nemění; co se na ní smí upravit při sazbě, drží `~/Context/Text/typography.md`, *Kde se nesází*. **Jazyková varianta textu se řídí pravidlem, ne citací:** britský pravopis v citaci nepřepíná na britštinu zbytek textu.
 
@@ -101,13 +104,15 @@ Text se čte **po vrstvách shora dolů**: stavba a logika (pointa nahoře, poř
 
 **Krátký text do 300 slov projdi sám** všemi vrstvami – panel by stál víc, než přinese. **Delší text** rozešli agentům typu `reader` paralelně podle [`agents.md`](agents.md): jeden na stavbu a styl, druhý na jazyk a sazbu, **u textu v cizím jazyce třetí jako rodilý mluvčí** na czenglish a idiomatičnost, každý s cestou k textu, seznamem pravidel z *Fáze 1*, oborem a cílovou skupinou, hlasem a seznamem rozhodnutí. Model a effort podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu* – kontrola proti doménovým znalostem.
 
+**Věcnou kontrolu pusť vždycky**, u krátkého i dlouhého textu a v každém jazyce: jeden agent typu `researcher` podle [`agents.md`](agents.md) jako odborník na téma a cílovou skupinu z *Fáze 1*, na výchozím modelu s `high`. Text bez věcných tvrzení (báseň, pozvánka bez údajů) ji nepotřebuje – pak to řekni.
+
 **Text předávej souborem ve scratchpadu**, ne v zadání; u vloženého textu, Docu a webu ho tam nejdřív ulož. Prefix souboru odvoď ze jména vstupu.
 
 ## Fáze 4 – Třídění a ověření
 
 1. **Sluč nálezy** všech průchodů a odstraň duplicity. Nález ve stejném úseku, který leží pod návrhem třetího patra, si poznamenej jako závislý – platí, jen když se přestavba odmítne.
 2. **Zařaď každý nález do patra** podle *Zásad pro celý průběh*. Agent patro navrhuje, rozhoduješ ty; při váhání vždycky vyšší patro.
-3. **Ověř návrhy druhého a třetího patra** u delšího textu jedním agentem typu `reader` podle [`agents.md`](agents.md), na nejsilnějším modelu s `xhigh` – ověřování nálezů. Jeho úkol je návrh vyvrátit: je to záměr, mění to smysl nebo fakt, porušuje to hlas, je původní znění podle pravidla v pořádku? Co ověření nepřežije, se nepředkládá. U krátkého textu projdi tytéž otázky sám.
+3. **Ověř návrhy druhého a třetího patra i nálezy věcné kontroly** u delšího textu jedním agentem typu `reader` podle [`agents.md`](agents.md), na nejsilnějším modelu s `xhigh` – ověřování nálezů. Jeho úkol je návrh vyvrátit: je to záměr, mění to smysl nebo fakt, porušuje to hlas, je původní znění podle pravidla v pořádku? Co ověření nepřežije, se nepředkládá. U krátkého textu projdi tytéž otázky sám.
 4. **U prvního patra ověř záměr sám** – každý nález proti okolní větě. Ověřovatel na ně nejde: jednoznačná oprava se nevyvrací, jen se zkontroluje, že je opravdu jednoznačná.
 
 ## Fáze 5 – Předložení
@@ -172,6 +177,9 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a řádky nezalamuj natvrdo �
 
 **Ponecháno záměrně**
 - „<úsek>“ – <proč: ukázka, citace, oborový slovník, hlas>
+
+**Věcné pochybnosti**
+- „<tvrzení>“ – <co je podle oboru jinak> – <zdroj, nebo „odborný úsudek, neověřeno“>
 
 **Otázky na autora**
 - <rozpor údajů, chybějící doklad – co skill nerozhodne, nebo „žádné“>

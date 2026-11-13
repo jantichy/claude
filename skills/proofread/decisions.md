@@ -70,3 +70,24 @@ První verze proto stojí na modelu a vrstva nástrojů je v `~/.claude/docs/tod
 **Rozhodnuto 13. 11. 2026 (Honza).** Czenglish a idiomatičnost jsou u anglického textu hlavní důraz zadání, ale v původním návrhu je hledal agent na stavbu a styl mezi deseti dalšími věcmi. U textu v cizím jazyce proto běží třetí agent, který čte jen jako rodilý mluvčí; agentovi na stavbu a styl se idiomatičnost ubrala, aby se nedělala dvakrát. Český text zůstává u dvou průchodů.
 
 **Zamítnuto:** nechat dva agenty – hlavní důraz by se dělil o pozornost; samostatný agent na každou vrstvu (čtyři až pět) – každý si načte všechna pravidla a cena roste zhruba dvojnásobně, aniž by se zúžilo něco, co dnes selhává.
+
+### Věcná kontrola odborníkem na téma, jen jako otázka
+
+**Rozhodnuto 13. 11. 2026 (Honza).** Korektura před vydáním je chvíle, kdy se věcná chyba ještě dá chytit, a Honza chce, aby na ni skill upozornil, i když to přesahuje proofreading. Vždycky, v každém jazyce a u každé délky běží agent typu `researcher` jako odborník na téma a cílovou skupinu; smí tvrzení ověřit na webu. **Neopravuje:** nálezy jdou do *Věcných pochybností* se zdrojem nebo s přiznaným „odborný úsudek, neověřeno“ a fakt mění jen autor – zásada nedotknutelných faktů tak platí dál. Nálezy prochází i ověřovatel.
+
+**Proč tady a ne v `/review`:** `/review` měří práci na větvi projektu proti zadání; tady jde o jeden text před vydáním, často mimo jakýkoliv projekt. **Proti `/oponent`:** ten posuzuje, jestli úvaha a strategie drží; věcná kontrola bere jednotlivá tvrzení.
+
+**Jméno skillu zůstává `/proofread`:** *proofread* je běžné anglické sloveso a skilly se tu jmenují slovesem (`/compose`, `/review`, `/learn`); *proofreading* by z řady vybočovalo.
+
+### Tlakový scénář: tytéž texty se skillem
+
+**13. 11. 2026.** Tytéž dva texty, agent `general-purpose` se skillem, tlak „spěchám, jde to za hodinu ven, rovnou to celé oprav, žádné otázky“; otázky a dávku jen vypisoval jako nezodpovězené. Ověřeno diffem proti originálu.
+
+- **Česky:** zapsal jen první patro (*Vám*, *měřicí*, *výjimky*, mezera u %, pomlčky, uvozovky, výpustka); ukázku *vyjímka* a citaci bez diakritiky ponechal; perex, závěr a odstavec o názvosloví předložil jako třetí patro s volbou ponechat; nic nezdvojil.
+- **Anglicky:** zapsal americký pravopis a sazbu, britskou citaci nechal a výslovně řekl, že text tím na britštinu nepřepíná; *according to me*, *in the frame of*, *realize* a *comma splice* šly do dávky; inventář faktů sedí.
+
+Všechna selhání srovnávacího běhu se neopakovala. Věcná kontrola v tomhle běhu ještě nebyla – přibyla až po něm.
+
+### Měření vyvolání
+
+**13. 11. 2026.** `claude -p --output-format stream-json --tools Skill,Read --strict-mcp-config` v čistém adresáři se vstupními soubory, 6 pozitivních a 6 negativních promptů, dva běhy na prompt. **Pozitivní 12/12** (korektura, pravopis a typografie před blogem, *proofread* anglicky, „ať to zní jako od rodilého mluvčího“, stylistické vylepšení bez přepisu hlasu, redakce před vydáním). **Negativní 0/12** – psaní vlastním hlasem, oponentura textu (šla na `/oponent`), překlad, konzistence pojmenování (`/consistency`), přepis nahrávky (`/transcript`), zapracování do znalostní báze (`/learn`). `description` se proto neladila.

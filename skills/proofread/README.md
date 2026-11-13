@@ -8,6 +8,7 @@ Projde hotový text – článek, dokumentaci, mail, post – a udělá z něj l
 - **Navrhne menší stylistické úpravy** – vatu, úřední obraty, kalky z angličtiny, převlečená slovesa – a nechá je schválit naráz: „vše“, nebo „vše kromě 3 a 7“.
 - **Větší přepisy předloží po jednom** – přesunutí pointy nahoru, přestavbu odstavce, škrt – vždycky s variantami a s možností nechat to, jak to je.
 - **U angličtiny hledá czenglish** – falešné přátele, české předložky, chybějící členy, slovosled a věty, které vznikly překladem v hlavě –, a drží americkou angličtinu i americkou sazbu.
+- **Nechá text přečíst odborníkem na téma**, který hledá věcné chyby – zastaralý údaj, chybně popsaný nástroj, číslo, které nesedí – a ověří je u zdroje. Nic z toho neopraví, jen se zeptá.
 - **Pozná, čí a pro koho text je.** U vlastního textu autora nehlásí jako vadu to, co je pro jeho styl typické, a v odborném textu neopravuje oborový slovník – termín nebo anglicismus, který je v oboru běžný, nechá být.
 - **Bere text odkudkoliv** – soubor, Google Doc (do něj i zapíše, co se schválilo), webovou stránku, nebo text vložený do konverzace.
 
@@ -32,7 +33,7 @@ Nebo prostě „udělej korekturu tohohle textu“ a vložit ho. Skill řekne, j
 ## Co nedělá
 
 - **Nepíše nový text.** Na psaní vlastním hlasem je `/compose`.
-- **Nehodnotí, jestli obsah platí.** Fakta neověřuje – rozpor dvou údajů v textu jen nahlásí jako otázku.
+- **Fakta neopravuje.** Věcně podezřelé tvrzení i rozpor dvou údajů jen nahlásí jako otázku; argumentaci a strategii neposuzuje, na to je `/oponent`.
 - **Nezveřejňuje.** Text opraví tam, kde leží, nebo ho vrátí.
 
 ## Jak si ho nainstalovat

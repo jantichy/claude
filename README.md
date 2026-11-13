@@ -204,7 +204,7 @@ Vezme přepis školení, článek, poznámky, ale i rovnou nahrávku, obrázek n
 
 #### [`/proofread`](skills/proofread/) – korektura, po které je text lepší, ne jen bez chyb
 
-Dám mu soubor, Google Doc, stránku nebo vložený text, česky nebo anglicky, a on z něj udělá lepší text – nejen opraví překlepy, čárky a typografii, ale podívá se i na stavbu, pořadí, ve kterém se text rozvíjí, a styl; u angličtiny hledá czenglish a místa, která by rodilý mluvčí řekl jinak. Co má jedinou správnou podobu, opraví sám, menší stylistické úpravy mi předloží ke schválení naráz a větší přepisy po jednom s variantami, takže mi nepřepíše hlas ani záměrnou ukázku chyby. Fakta, čísla a citace nechá na pokoji a po zápisu ověří, že se žádné neztratilo. Pravidla si čte z mojí privátní znalostní báze o psaní, sám žádná nenese.
+Dám mu soubor, Google Doc, stránku nebo vložený text, česky nebo anglicky, a on z něj udělá lepší text – nejen opraví překlepy, čárky a typografii, ale podívá se i na stavbu, pořadí, ve kterém se text rozvíjí, a styl; u angličtiny hledá czenglish a místa, která by rodilý mluvčí řekl jinak. Co má jedinou správnou podobu, opraví sám, menší stylistické úpravy mi předloží ke schválení naráz a větší přepisy po jednom s variantami, takže mi nepřepíše hlas ani záměrnou ukázku chyby. Fakta, čísla a citace nechá na pokoji a po zápisu ověří, že se žádné neztratilo; věcně podezřelá tvrzení nechá přečíst odborníkem na téma a zeptá se na ně. Pravidla si čte z mojí privátní znalostní báze o psaní, sám žádná nenese.
 
 #### [`/transcript`](skills/transcript/) – nahrávky na přepis a chytré shrnutí
 
