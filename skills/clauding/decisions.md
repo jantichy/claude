@@ -21,3 +21,12 @@
 - **Adresář s transcripty se při stěhování přejmenovává, záznamy v něm ne.** Proto se projekt bere z názvu adresáře porovnaného se složkami na disku, ne z cesty v záznamu.
 - **Scratchpad session patří projektu, který ji pustil.** Bez toho tvořily běhy `claude -p` při měření skillů 180 hodin samostatného „projektu“ a nadsazovaly souběh.
 - **Jména projektů stojí v zajímavostech všechna, i klientská.** Rozhodl uživatel: věta je nejinformativnější a před sdílením ji projde sám. Zavrženo: anonymizovat klienty a věta bez jmen.
+
+## Souběh sessions
+
+**Rozhodnuto 13. 11. 2026.** Táž statistika souběhu jako u projektů i pro sessions a počty sessions a projektů jako sloupce tabulek.
+
+- **Sloupce jen tam, kde odpovídají na otázku řádku:** v tabulce času (kolik sessions a projektů v období běželo) a v tabulce projektů (kolik sessions v projektu). V tabulce pozornosti by počet sessions jen opakoval tabulku času; tabulka sessions po jednotlivých sessions by měla stovky řádků bez čitelného jména.
+- **Session ve scratchpadu se nepočítá**, ze stejného důvodu jako u projektů: pustil ji Claude a jako samostatná by vypadala jako další okno.
+- **Čas session bez commitů.** Commit patří repozitáři, ne oknu; přiřadit ho session by znamenalo hádat, ve kterém z několika souběžných oken vznikl.
+- **`session_events` zůstal ve tvaru čtveřice**, protože ho tak čte `/invoicing recover`; id session nese nová varianta `tagged_events`, ze které se `session_events` odvozuje.

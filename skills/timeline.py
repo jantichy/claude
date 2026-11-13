@@ -332,12 +332,20 @@ def log_events(log: Path, in_subagent: bool):
 
 def session_events(prefixes=None, start=None, end=None):
     """(okamžik, druh, zdroj, data) ze všech transcriptů, volitelně omezené na projekty a období."""
+    for at, kind, source, data, _ in tagged_events(prefixes, start, end):
+        yield at, kind, source, data
+
+
+def tagged_events(prefixes=None, start=None, end=None):
+    """Totéž jako `session_events`, navíc id session – u subagenta té, která ho pustila."""
     for project in project_dirs(prefixes):
         for log in project.rglob("*.jsonl"):
             in_subagent = "subagents" in log.parts
+            # Subagent leží v `<projekt>/<id session>/subagents/agent-….jsonl`.
+            session = log.parents[1].name if in_subagent else log.stem
             for at, kind, text in log_events(log, in_subagent):
                 if (start is None or start <= at) and (end is None or at < end):
-                    yield at, kind, project.name, text
+                    yield at, kind, project.name, text, session
 
 
 def transcript_sessions() -> set:

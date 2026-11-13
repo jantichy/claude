@@ -8,11 +8,11 @@ Po pár měsících s Claude Code se člověk začne ptát, kolik času mu to vl
 - **`/clauding week`** – po týdnech od pondělí do neděle.
 - **`/clauding day`** – po dnech.
 - **Libovolné období česky** za režimem: „září“, „posledních 14 dní“, „minulý týden“, „od 1. 9.“.
-- **U každého období** součet hodin, průměr na kalendářní den, průměr na den, kdy jste s Claudem opravdu pracovali, a kolik takových dnů bylo.
+- **U každého období** součet hodin, průměr na kalendářní den, průměr na den, kdy jste s Claudem opravdu pracovali, kolik takových dnů bylo a v kolika sessions a projektech se pracovalo.
 - **Kolik vaší pozornosti Claude spotřebuje** – na kolik jeho otázek s nabídnutými variantami jste odpověděli, kolikrát jste ho zastavili klávesou Esc a kolikrát jste mu zamítli akci, každé zvlášť i dohromady na hodinu práce.
 - **Kolik práce za tím je** – počet commitů, kolik znaků jste do promptů napsali a jak dlouhý je průměrný prompt.
 - **Které skilly používáte** – tabulka vlastních skillů seřazená podle počtu spuštění, u každého zvlášť, kolikrát jste ho zadali příkazem, kolikrát ho Claude spustil na pokyn slovy („přimerguj to“) a kolikrát ho pustil jiný skill – když `/merge` pouští `/end`, připíše se čárka i k `/end`.
-- **Kolik času jste strávili v kterém projektu** – každý projekt zvlášť, i když jste jich měli otevřených víc naráz. Hodina ve třech projektech souběžně se připíše každému z nich, takže z toho vyjde i to, kolik projektů máte v průměru rozdělaných naráz, kolik času běží víc projektů zároveň a kolik jich nejvíc bylo najednou.
+- **Kolik času jste strávili v kterém projektu** – každý projekt zvlášť, i když jste jich měli otevřených víc naráz. Hodina ve třech projektech souběžně se připíše každému z nich, takže z toho vyjde i to, kolik projektů máte v průměru rozdělaných naráz, kolik času běží víc projektů zároveň a kolik jich nejvíc bylo najednou. Totéž spočítá i pro jednotlivé sessions – kolik oken s Claudem máte otevřených naráz.
 - **Seznam zajímavostí ke sdílení** – souhrn, nejsilnější měsíc, rekordy a extrémy jako hotové věty v první osobě, které můžete rovnou vykopírovat na LinkedIn nebo jinam.
 - **Hříčky navíc**: kolikrát vám Claude řekl „máš pravdu“, co mu píšete nejčastěji, nejdelší prompt, který jste kdy napsali, a v kolik jste nejpozději šli od rozdělané práce spát.
 - **Zajímavosti**: nejdelší den, nejdelší blok v kuse, nejdelší řada dnů po sobě, kolik dnů jste strávili kolika hodinami, které dny v týdnu a hodiny dne jsou nejsilnější.
@@ -68,6 +68,7 @@ Stačí se i zeptat „kolik jsem tento měsíc strávil s Claudem?“.
 - 6 319+ rozhodnutí – odpovědí na Claudovy otázky s nabídnutými variantami, tedy 11,0 za hodinu práce.
 - Nejčastější skilly podle počtu spuštění: /end (677+), /next (149+), /consistency (118+); z dnešních 37 skillů přišlo na řadu 36.
 - V průměru mám naráz rozdělaných 1,4 projektu, víc projektů zároveň běží 37 % času a nejvíc jich naráz bylo 6 (12. 9. 2026, 11:39).
+- Sessions mám za sebou 660; v průměru mi jich naráz běží 1,8, víc sessions zároveň běží 49 % času a nejvíc jich naráz bylo 8 (17. 9. 2026, 17:10).
 - „Máš pravdu“ mi Claude řekl 339+ krát, zhruba jednou za 2,0 h práce.
 - Nejčastější prompty: „ano“ (106×), „pokračuj“ (80×), „a“ (53×).
 

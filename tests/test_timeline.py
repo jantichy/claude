@@ -271,6 +271,15 @@ class Timeline(unittest.TestCase):
         )
         self.assertEqual(self.skills(), [[("oponent", "nested")]])
 
+    def test_subagent_belongs_to_its_session(self):
+        """Subagent je práce session, která ho pustila – ne další session."""
+        self.session("-a", "s1", [prompt(0)])
+        sub = self.projects / "-a" / "s1" / "subagents"
+        sub.mkdir(parents=True)
+        (sub / "agent-x.jsonl").write_text(json.dumps(answer(2)), encoding="utf-8")
+        sessions = {session for *_, session in timeline.tagged_events()}
+        self.assertEqual(sessions, {"s1"})
+
     def test_prefix_limits_projects(self):
         """`recover` počítá jen projekty klienta – cizí session do proudu nesmí."""
         self.session("-Users-x-Dev-client", "s1", [prompt(0), prompt(10)])
@@ -427,21 +436,32 @@ class Clauding(unittest.TestCase):
                 "b": ({day: 2.0}, [span(1, 3)]),
                 "c": ({day: 0.5}, [span(1.5, 2)]),
             },
+            sessions={
+                "s1": ({day: 2.0}, [span(0, 2)]),
+                "s2": ({day: 1.0}, [span(0, 1)]),
+                "s3": ({day: 2.0}, [span(1, 3)]),
+            },
+            owners={"s1": "a", "s2": "a", "s3": "b"},
         )
 
     def test_parallel_projects_overlap(self):
         """Dva projekty souběžně hodinu, chvíli tři naráz."""
         day, data = self.projects_data()
-        shared, peak, _ = clauding.overlap([day], data)
+        shared, peak, _ = clauding.overlap([day], data.projects)
         self.assertEqual((shared, peak), (1.0, 3))
 
     def test_project_sum_exceeds_time_in_claude(self):
         """Souběžný čas se počítá každému projektu – součet je větší než celek."""
         day, data = self.projects_data()
         rows = clauding.project_table([day], data)
-        self.assertEqual(rows[2], "| a | 2,0 | 1 | 67 % |")
-        self.assertEqual(rows[-2], "| **Součet projektů** | 4,5 | | 150 % |")
-        self.assertEqual(rows[-1], "| **Čas v Claude Code** | 3,0 | | 100 % |")
+        self.assertEqual(rows[2], "| a | 2,0 | 1 | 2 | 67 % |")
+        self.assertEqual(rows[-2], "| **Součet projektů** | 4,5 | | 3 | 150 % |")
+        self.assertEqual(rows[-1], "| **Čas v Claude Code** | 3,0 | | | 100 % |")
+
+    def test_time_table_counts_sessions_and_projects(self):
+        day, data = self.projects_data()
+        row = clauding.time_row("x", [day], data)
+        self.assertTrue(row.endswith("| 1 z 1 | 3 | 3 |"), row)
 
     def test_rounding_is_half_up(self):
         """`round()` by z 2,25 udělal 2,2 – člověk čeká 2,3."""
