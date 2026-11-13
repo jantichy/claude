@@ -34,6 +34,12 @@ Vyloučení úvahou je **odložení** a smí se tak nazvat jen tam, kde by měř
 
 **Nenalezení není doklad neexistence** – věc chybí, nebo ji hledáš špatně (`grep` nad souborem, který vezme za binární, mlčí stejně jako nad souborem bez shody; `grep -a` to obejde). Než z nenalezení uděláš tvrzení, ověř, že by tvůj postup věc našel, kdyby tam byla.
 
+## Padlá hypotéza bere s sebou i rámec, který kvůli ní vznikl
+
+Členění vzniklé kvůli hypotéze – období, segmenty, metriky, kontrolní skupiny – přežívá ve skriptech, tabulkách a závěrech, i když hypotéza dávno padla, a další rozbory ho přebírají jako danost. **Když nový poznatek vyvrátí hypotézu, vypiš, co se kvůli ní zavedlo, a u každé položky rozhodni, jestli má jiný důvod, nebo jde pryč.** Proto se u každého členění zapisuje, proč vzniklo: padne-li důvod, jde dohledat, co padá s ním.
+
+**Nosný závěr se ověří i v jiném rozumném členění.** Obrátí-li se při změně období nebo segmentu, je křehký: buď se uvede s tou výhradou, nebo se z něj nevyvozuje. Bod 3 předchozí sekce je táž povinnost z druhé strany – tam nový poznatek otevírá vyloučené, tady ruší zavedené.
+
 ## Než odpovíš z dat, ověř, že v nich ta věc je
 
 Ptá-li se někdo na konkrétní věc – zdroj, kanál, segment, období, metriku –, prvním krokem je najít soubor a sloupec, ve kterém ta věc stojí **pod svým jménem a v tom rozlišení, na které se ptá**. Nenajdeš-li ho, odpověď začíná tím, co v podkladech chybí a jaký podklad by otázku rozhodl – s dimenzí, filtrem, obdobím a metrikou, aby se o něj dalo rovnou požádat.
