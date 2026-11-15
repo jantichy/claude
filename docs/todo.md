@@ -109,6 +109,8 @@
 - [ ] ○ **`/proofread`: deterministická vrstva před modelem** (zadáno 13. 11. 2026 při zakládání skillu). První verze stojí jen na modelu, protože čeština nemá použitelný offline nástroj a Opravidlo 2.0 posílá text na cizí server (nejde u textů pod NDA). Zbývá rozhodnout a postavit: (A) Vale pro angličtinu tak, aby jeho pravidla nevznikala podruhé vedle `Text/english/` – generovat je z katalogů v Markdownu, nebo do Vale dát jen to, co v Markdownu není (rovné uvozovky, dvojitá mezera, `--`); (B) vlastní levnou kontrolu typografie, jejíž vzory leží v doméně, ne ve skillu; (C) Opravidlo jen na výslovný souhlas u textu bez osobních a klientských údajů. Rozvaha leží v `skills/proofread/decisions.md`, *Odložené: nástroje před modelem*.
 
 
+- [ ] ○ **`/next`: položku odloženou k datu popsat jako úkol, ne jako stav věci.** Zadáno 15. 11. 2026 v projektu `byt`: nabídka opakovaně psala „úrok z kauce je odložený do 2. 1. 2027“ o úkolu *spočítat a poslat úrok* s polem `od 2027-01-02`, a uživatel to četl jako tvrzení, že se kauce do té doby neúročí ("to už tu píšeš poněkolikáté … TO přece není pravda"). Do *Položka odložená k datu* v `skills/next/SKILL.md` doplnit tvar poznámky: název úkolu a „nabídne se od <datum>“, nikdy „<věc> je odložená“.
+
 ## Později
 
 - [ ] ● **Rozhodnout jazyk konfigurační vrstvy dřív než cokoliv dalšího.** Zadal uživatel 2026-09-21. Celá vrstva je česky – pravidla, skilly, README i `description` hlaviček –, a zatím to nikdo nerozhodl, jen to tak vzniklo. Pro české publikum je to výhoda, pro kohokoliv dalšího blokující: skill se nevyvolá popisem, kterému uživatel nerozumí, a README skillu je psané pro člověka zvenčí, tedy přesně pro toho, koho čeština vyřadí.
