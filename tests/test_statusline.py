@@ -346,5 +346,48 @@ class InputNumbersDoNotRunCommand(unittest.TestCase):
         )
 
 
+class TestLimitLabels(unittest.TestCase):
+    """Tarif bez 5h limitu (Ultra) ho ve vstupu vůbec nepošle.
+
+    Pak zbývá jediný limit a „Weekly“ by naznačovalo, že vedle něj nějaký další
+    chybí – popisek je proto „Usage“. Kde 5h limit je, zůstává „Limit“ a „Weekly“.
+    """
+
+    def run_statusline(self, rate_limits):
+        payload = json.dumps(
+            {
+                "rate_limits": rate_limits,
+                "workspace": {"current_dir": "/tmp"},
+                "model": {"display_name": "T"},
+            }
+        )
+        r = subprocess.run(
+            ["bash", str(STATUSLINE)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        return r.stdout
+
+    def test_both_limits_keep_labels(self):
+        out = self.run_statusline(
+            {
+                "five_hour": {"used_percentage": 10},
+                "seven_day": {"used_percentage": 20},
+            }
+        )
+        self.assertIn("Limit: ", out)
+        self.assertIn("Weekly: ", out)
+        self.assertNotIn("Usage: ", out)
+
+    def test_weekly_only_is_usage(self):
+        out = self.run_statusline({"seven_day": {"used_percentage": 20}})
+        self.assertIn("Usage: ", out)
+        self.assertNotIn("Weekly: ", out)
+        self.assertNotIn("Limit: ", out)
+
+
 if __name__ == "__main__":
     unittest.main()

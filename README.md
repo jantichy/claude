@@ -18,7 +18,7 @@ Allowlist/denylist/asklist se snažím držet ve vyváženém poměru mezi bezpe
 
 #### [`statusline.sh`](statusline/statusline.sh) – všechno podstatné na jednom řádku
 
-Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání 5hodinového i týdenního limitu, aktuální adresář i stav Gitu. Čerpání vizualizuje teploměrem, procenty i zbývajícím časem a mění barvy podle toho, jak je na tom blízko limitu.
+Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání týdenního limitu a na tarifu, který ho má, i 5hodinového, aktuální adresář i stav Gitu. Čerpání vizualizuje teploměrem, procenty i zbývajícím časem a mění barvy podle toho, jak je na tom blízko limitu.
 
 ![Status line](statusline/statusline.png)
 

@@ -151,10 +151,16 @@ if [ -n "$week_pct" ]; then
   else
     week_label="7d"   # fallback pokud data ještě nejsou k dispozici
   fi
-  if [ -n "$usage_part" ]; then
-    usage_part=$(printf "%s  ${week_color}Weekly: %s [%s] %d%%\033[0m" "$usage_part" "$week_label" "$barw" "$week_int")
+  # Tarif bez 5h limitu (Ultra) má jen týdenní, takže není od čeho ho odlišovat
+  if [ -n "$five_pct" ]; then
+    week_name="Weekly"
   else
-    usage_part=$(printf "${week_color}Weekly: %s [%s] %d%%\033[0m" "$week_label" "$barw" "$week_int")
+    week_name="Usage"
+  fi
+  if [ -n "$usage_part" ]; then
+    usage_part=$(printf "%s  ${week_color}%s: %s [%s] %d%%\033[0m" "$usage_part" "$week_name" "$week_label" "$barw" "$week_int")
+  else
+    usage_part=$(printf "${week_color}%s: %s [%s] %d%%\033[0m" "$week_name" "$week_label" "$barw" "$week_int")
   fi
 fi
 
