@@ -458,10 +458,10 @@ class InputNumbersDoNotRunCommand(unittest.TestCase):
 
 
 class TestLimitLabels(unittest.TestCase):
-    """Tarif bez 5h limitu (Ultra) ho ve vstupu vůbec nepošle.
+    """První limit v řádku se jmenuje vždycky „Usage“.
 
-    Pak zbývá jediný limit a „Weekly“ by naznačovalo, že vedle něj nějaký další
-    chybí – popisek je proto „Usage“. Kde 5h limit je, zůstává „Limit“ a „Weekly“.
+    Kde 5h limit je, nese „Usage“ on a týdenní za ním „Weekly“. Tarif bez 5h
+    limitu (Ultra) ho ve vstupu vůbec nepošle, a pak „Usage“ dostane týdenní.
     """
 
     def run_statusline(self, rate_limits):
@@ -482,22 +482,22 @@ class TestLimitLabels(unittest.TestCase):
         )
         return r.stdout
 
-    def test_both_limits_keep_labels(self):
+    def test_both_limits_usage_then_weekly(self):
         out = self.run_statusline(
             {
                 "five_hour": {"used_percentage": 10},
                 "seven_day": {"used_percentage": 20},
             }
         )
-        self.assertIn("Limit: ", out)
-        self.assertIn("Weekly: ", out)
-        self.assertNotIn("Usage: ", out)
+        self.assertIn("Usage: ", out)
+        self.assertLess(out.index("Usage: "), out.index("Weekly: "))
+        self.assertEqual(out.count("Usage: "), 1, out)
 
     def test_weekly_only_is_usage(self):
         out = self.run_statusline({"seven_day": {"used_percentage": 20}})
         self.assertIn("Usage: ", out)
         self.assertNotIn("Weekly: ", out)
-        self.assertNotIn("Limit: ", out)
+        self.assertEqual(out.count("Usage: "), 1, out)
 
 
 if __name__ == "__main__":

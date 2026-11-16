@@ -174,9 +174,9 @@ if [ -n "$five_pct" ]; then
     five_label="5h"   # fallback pokud data ještě nejsou k dispozici
   fi
   if [ -n "$usage_part" ]; then
-    usage_part=$(printf "%s  ${limit_color}Limit: %s [%s] %d%%\033[0m" "$usage_part" "$five_label" "$bar5" "$five_int")
+    usage_part=$(printf "%s  ${limit_color}Usage: %s [%s] %d%%\033[0m" "$usage_part" "$five_label" "$bar5" "$five_int")
   else
-    usage_part=$(printf "${limit_color}Limit: %s [%s] %d%%\033[0m" "$five_label" "$bar5" "$five_int")
+    usage_part=$(printf "${limit_color}Usage: %s [%s] %d%%\033[0m" "$five_label" "$bar5" "$five_int")
   fi
 fi
 
@@ -201,7 +201,7 @@ if [ -n "$week_pct" ]; then
   else
     week_label="7d"   # fallback pokud data ještě nejsou k dispozici
   fi
-  # Tarif bez 5h limitu (Ultra) má jen týdenní, takže není od čeho ho odlišovat
+  # Bez 5h limitu (Ultra) nese „Usage“ týdenní, jinak ho má 5h limit před ním
   if [ -n "$five_pct" ]; then
     week_name="Weekly"
   else
