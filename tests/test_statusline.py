@@ -20,6 +20,7 @@ Spouští se: python3 -m unittest discover -s tests -q
 Schválně jen stdlib – stejný důvod jako u `test_verify.py`.
 """
 
+import hashlib
 import json
 import re
 import shutil
@@ -218,6 +219,72 @@ class AheadOfUpstream(unittest.TestCase):
         out = self.run_statusline()
         self.assertIn("main: Clean", out)
         self.assertNotIn("\u2191", out)
+
+
+class VerifyResult(unittest.TestCase):
+    """Samostatná položka s výsledkem posledního běhu průběžné kontroly.
+
+    Čte jen stav, který si vede `hooks/verify.sh` – soubor pojmenovaný hashem
+    cesty ke sdílenému `.git` s řádkem „OK_SIG SKIP_SIG“. Kdyby status line
+    počítala klíč jinak než hook, soubor nenajde a položka tiše zmizí.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="statusline-verify-"))
+        self.home = self.tmp / "home"
+        self.repo = self.tmp / "repo"
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", "-b", "main", ".")
+        common = Path(git(self.repo, "rev-parse", "--git-common-dir").stdout.strip())
+        key = hashlib.sha1(str((self.repo / common).resolve()).encode()).hexdigest()
+        self.state = self.home / ".local/state/claude-verify/runs" / key
+        self.state.parent.mkdir(parents=True)
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def run_statusline(self):
+        payload = json.dumps(
+            {
+                "workspace": {"current_dir": str(self.repo)},
+                "model": {"display_name": "T"},
+            }
+        )
+        r = subprocess.run(
+            ["bash", str(STATUSLINE)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+            env={
+                "PATH": "/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin",
+                "HOME": str(self.home),
+            },
+        )
+        return re.sub(r"\033\[[0-9;]*m", "", r.stdout)
+
+    def test_passed(self):
+        self.state.write_text("abc -\n")
+        self.assertIn("\u2502 \u2713 ok \u2502 main:", self.run_statusline())
+
+    def test_failed_twice(self):
+        self.state.write_text("abc def\n")
+        self.assertIn("\u2717 failed", self.run_statusline())
+
+    def test_never_passed(self):
+        self.state.write_text("- def\n")
+        self.assertIn("\u2717 failed", self.run_statusline())
+
+    def test_step_cannot_run(self):
+        self.state.write_text("- -\n")
+        self.assertIn("\u26a0 can't run", self.run_statusline())
+
+    def test_without_state_nothing(self):
+        out = self.run_statusline()
+        self.assertNotIn("\u2713", out)
+        self.assertNotIn("\u2717", out)
+        self.assertNotIn("\u26a0", out)
 
 
 class UsageBar(unittest.TestCase):

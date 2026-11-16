@@ -121,6 +121,7 @@ five_reset=$(num "$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // e
 week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
 week_reset=$(num "$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')" "")
 
+ctx_part=""
 usage_part=""
 
 if [ -n "$ctx_used" ]; then
@@ -147,9 +148,9 @@ if [ -n "$ctx_used" ]; then
   if [ -n "$ctx_size" ] && [ "$ctx_used_tokens" -gt 0 ]; then
     used_str=$(fmt_tokens "$ctx_used_tokens")
     size_str=$(fmt_tokens "$ctx_size")
-    usage_part=$(printf "${color}Context: %s/%s [%s] %d%%${reset}" "$used_str" "$size_str" "$bar" "$ctx_int")
+    ctx_part=$(printf "${color}Context: %s/%s [%s] %d%%${reset}" "$used_str" "$size_str" "$bar" "$ctx_int")
   else
-    usage_part=$(printf "${color}Context: [%s] %d%%${reset}" "$bar" "$ctx_int")
+    ctx_part=$(printf "${color}Context: [%s] %d%%${reset}" "$bar" "$ctx_int")
   fi
 fi
 
@@ -272,6 +273,7 @@ short_cwd=$(echo "$cwd" | awk -F'/' '{
 # 4. GIT ZMĚNY V SESSION (počet změněných souborů)
 # ---------------------------------------------------------------------------
 git_part=""
+verify_part=""
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir // empty')
 if [ -z "$project_dir" ]; then project_dir="$cwd"; fi
 # Rozvinout ~ pokud je potřeba
@@ -315,6 +317,31 @@ config_runs_program() {
 if [ -d "$git_root_candidate" ] \
    && git_ro -C "$git_root_candidate" rev-parse --git-dir >/dev/null 2>&1 \
    && [ "$(git_ro -C "$git_root_candidate" rev-parse --is-bare-repository 2>/dev/null)" = "false" ]; then
+  # Výsledek posledního běhu průběžné kontroly. Čte se jen stav, který si vede
+  # hooks/verify.sh: soubor pojmenovaný hashem cesty ke sdílenému .git (jeho
+  # proj_key a repo_id) s řádkem "OK_SIG SKIP_SIG". Po průchodu "<otisk> -",
+  # po druhém selhání v řadě SKIP_SIG s otiskem, u nespustitelného kroku "- -".
+  # První selhání hook nezapíše a status line pak ukazuje předchozí stav – je to
+  # přijaté, výsledek se schválně nikam dalšího nezapisuje. Jméno padajícího kroku
+  # hook neukládá. Bez souboru (projekt bez kontraktu, běh starší než 4 hodiny,
+  # které hook maže) se položka neukazuje.
+  common_dir=$(git_ro -C "$git_root_candidate" rev-parse --git-common-dir 2>/dev/null)
+  case "$common_dir" in /*) ;; *) common_dir="$git_root_candidate/$common_dir" ;; esac
+  common_dir=$( (cd "$common_dir" 2>/dev/null && pwd -P) )
+  if [ -n "$common_dir" ]; then
+    verify_state="$HOME/.local/state/claude-verify/runs/$(printf '%s' "$common_dir" | shasum | cut -d' ' -f1)"
+    if [ -f "$verify_state" ]; then
+      ok_sig=""; skip_sig=""
+      read -r ok_sig skip_sig < "$verify_state" 2>/dev/null || true
+      if [ -n "$skip_sig" ] && [ "$skip_sig" != "-" ]; then
+        verify_part=$(printf "\033[31m✗ failed\033[0m")
+      elif [ "$ok_sig" = "-" ]; then
+        verify_part=$(printf "\033[33m⚠ can't run\033[0m")
+      elif [ -n "$ok_sig" ]; then
+        verify_part=$(printf "\033[2;32m✓ ok\033[0m")
+      fi
+    fi
+  fi
   # Jméno větve; u odpojené HEAD krátký hash, v prázdném repozitáři fallback "Git"
   branch=$(git_ro -C "$git_root_candidate" symbolic-ref --quiet --short HEAD 2>/dev/null)
   if [ -z "$branch" ]; then
@@ -361,7 +388,9 @@ append() {
 
 append "$(printf "\033[2;33m%s\033[0m" "$short_cwd")"
 append "$(printf "${model_color}%s\033[0m" "$model_short")"
+append "$ctx_part"
 append "$usage_part"
+append "$verify_part"
 [ -n "$git_part" ] && append "$git_part"
 
 # %s, ne %b: jednotlivé části si svoje \033 rozvinuly samy ve formátu vlastního
