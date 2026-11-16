@@ -308,6 +308,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-11-13** · `/end` · `b52da09` · session `d5ecd70d-5163-4f8e-9a03-37bde3c8d3a1` · prompty 20/20 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: zastaralé věty o doméně `Text/` v `~/Context/README.md` a `~/Context/todo.md` opraveny rovnou · meze: žádné
 - **2026-11-13** · `/end` · `c5a9eed` · session `d5ecd70d-5163-4f8e-9a03-37bde3c8d3a1` · prompty 25/25 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: žádné
 - **2026-11-16** · `/end` · `e96f80f` · session `b83bb910-bac9-4e9a-955a-1f8b47d5de6a` · prompty 21/21 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: tři body rámce NDA proti GDPR a § 2898 OZ do `~/Context/todo.md`, nálezy panelu ke smlouvám do `docs/todo.md` projektu Byt · meze: žádné
+- **2026-11-16** · `/end` · `1f85514` · session `aee12c10-95a1-4209-b5c7-7e80274d1fe4` · prompty 29/29 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: žádné
 
 ## Odvedená práce
 
