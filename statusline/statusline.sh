@@ -327,10 +327,16 @@ if [ -d "$git_root_candidate" ] \
     unstaged=$(git_ro -C "$git_root_candidate" diff --name-only 2>/dev/null | wc -l | tr -d ' ')
     staged=$(git_ro -C "$git_root_candidate" diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')
     total=$(( unstaged + staged ))
+    # Commity, které nejsou na upstreamu – selhaný push autocommitu jinak nikdo
+    # neuvidí. rev-list čte jen reference a objekty, obsah pracovních souborů ne.
+    # Větev bez upstreamu nic neukazuje.
+    ahead=$(num "$(git_ro -C "$git_root_candidate" rev-list --count '@{upstream}..HEAD' 2>/dev/null)")
+    ahead_part=""
+    if [ "$ahead" -gt 0 ]; then ahead_part=$(printf " ↑%d" "$ahead"); fi
     if [ "$total" -gt 0 ]; then
-      git_part=$(printf "\033[33m%s: ~%d changes\033[0m" "$branch" "$total")
+      git_part=$(printf "\033[33m%s: ~%d changes%s\033[0m" "$branch" "$total" "$ahead_part")
     else
-      git_part=$(printf "\033[2;32m%s: Clean\033[0m" "$branch")
+      git_part=$(printf "\033[2;32m%s: Clean%s\033[0m" "$branch" "$ahead_part")
     fi
   fi
 fi

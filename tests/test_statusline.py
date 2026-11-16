@@ -159,6 +159,67 @@ class StatusLineOverForeignRepo(unittest.TestCase):
         )
 
 
+class AheadOfUpstream(unittest.TestCase):
+    """Větev ukazuje počet commitů, které nejsou na upstreamu.
+
+    Autocommit po commitu pushuje a selhaný push by jinak nikdo neviděl. Větev
+    bez upstreamu ani větev srovnaná s ním šipku nemá.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="statusline-ahead-"))
+        self.remote = self.tmp / "remote.git"
+        self.repo = self.tmp / "repo"
+        git(self.tmp, "init", "-q", "--bare", "-b", "main", str(self.remote))
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", "-b", "main", ".")
+        git(self.repo, "config", "user.email", "t@t")
+        git(self.repo, "config", "user.name", "t")
+        self.commit("init")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def commit(self, msg):
+        git(self.repo, "commit", "-q", "--allow-empty", "-m", msg)
+
+    def track(self):
+        git(self.repo, "remote", "add", "origin", str(self.remote))
+        git(self.repo, "push", "-q", "-u", "origin", "main")
+
+    def run_statusline(self):
+        payload = json.dumps(
+            {
+                "workspace": {"current_dir": str(self.repo)},
+                "model": {"display_name": "T"},
+            }
+        )
+        r = subprocess.run(
+            ["bash", str(STATUSLINE)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        return re.sub(r"\033\[[0-9;]*m", "", r.stdout)
+
+    def test_unpushed_commits_show_arrow(self):
+        self.track()
+        self.commit("a")
+        self.commit("b")
+        self.assertIn("main: Clean \u21912", self.run_statusline())
+
+    def test_in_sync_has_no_arrow(self):
+        self.track()
+        self.assertNotIn("\u2191", self.run_statusline())
+
+    def test_without_upstream_has_no_arrow(self):
+        out = self.run_statusline()
+        self.assertIn("main: Clean", out)
+        self.assertNotIn("\u2191", out)
+
+
 class UsageBar(unittest.TestCase):
     """Pruh musí mít vždycky přesně `BAR_WIDTH` znaků, i v krajních hodnotách.
 
