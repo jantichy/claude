@@ -33,7 +33,7 @@ make_bar() {
 
 # Pruh limitu s proporčním tempem okna: kostička je 1/BAR_WIDTH okna (u týdne
 # den). Vyčerpané nad tempo je █ v sytém odstínu barvy položky, nevyčerpaný
-# zbytek tempa ▒ v její tlumené barvě – položka si drží jednu barvu.
+# zbytek tempa ▓ v její tlumené barvě – položka si drží jednu barvu.
 # Rozběhnutá kostička tempa se počítá celá – dnešní příděl je k dispozici hned.
 # Argumenty: procenta, resets_at (epoch, smí být prázdné), délka okna v
 # sekundách, barva pruhu, do které se po odlišení vrací, a sytý odstín pro
@@ -57,7 +57,7 @@ make_pace_bar() {
     elif [ "$i" -le "$filled" ]; then
       bar="${bar}█"
     elif [ "$i" -le "$pace" ]; then
-      bar="${bar}▒"
+      bar="${bar}▓"
     else
       bar="${bar}░"
     fi

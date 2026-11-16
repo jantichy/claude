@@ -196,7 +196,7 @@ class PaceBar(unittest.TestCase):
     """Pruh limitu odlišuje čerpání proti proporčnímu tempu okna.
 
     U týdne je kostička den. Vyčerpané nad tempo je █ v sytém odstínu barvy
-    položky, nevyčerpaný zbytek tempa ▒ v její tlumené barvě – položka si drží
+    položky, nevyčerpaný zbytek tempa ▓ v její tlumené barvě – položka si drží
     jednu barvu jako ostatní části status line. Rozběhnutý den se počítá celý,
     takže dnešní příděl je k dispozici hned a sytý odstín se ukáže až po jeho
     přečerpání.
@@ -206,7 +206,7 @@ class PaceBar(unittest.TestCase):
     DAY = 86400
     BASE = "\033[2;36m"
     OVER = "\033[22;96m\u2588\033[2;36m"
-    SPARE = "\u2592"
+    SPARE = "\u2593"
 
     def bar(self, pct, days_left, window=WEEK):
         reset = (
