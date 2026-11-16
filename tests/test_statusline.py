@@ -21,9 +21,11 @@ Schválně jen stdlib – stejný důvod jako u `test_verify.py`.
 """
 
 import json
+import re
 import shutil
 import subprocess
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -188,6 +190,74 @@ class UsageBar(unittest.TestCase):
 
     def test_hundred_percent_has_no_empty_block(self):
         self.assertNotIn("\u2591", self.bar(100))
+
+
+class PaceBar(unittest.TestCase):
+    """Pruh limitu odli\u0161uje \u010derp\u00e1n\u00ed proti propor\u010dn\u00edmu tempu okna.
+
+    U t\u00fddne je kosti\u010dka den. Vy\u010derpan\u00e9 nad tempo je \u017elut\u00e9 \u2588, nevy\u010derpan\u00fd zbytek
+    tempa zelen\u00e9 \u2592. Rozb\u011bhnut\u00fd den se po\u010d\u00edt\u00e1 cel\u00fd, tak\u017ee dne\u0161n\u00ed p\u0159\u00edd\u011bl je k
+    dispozici hned a \u017elut\u00e1 se uk\u00e1\u017ee a\u017e po jeho p\u0159e\u010derp\u00e1n\u00ed.
+    """
+
+    WEEK = 604800
+    DAY = 86400
+    OVER = "\033[33m\u2588"
+    SPARE = "\033[32m\u2592"
+
+    def bar(self, pct, days_left, window=WEEK):
+        reset = (
+            "" if days_left is None else str(int(time.time() + days_left * self.DAY))
+        )
+        r = subprocess.run(
+            [
+                "bash",
+                "-c",
+                f'source "{STATUSLINE}" >/dev/null 2>&1; '
+                'make_pace_bar "$1" "$2" "$3" "\\033[2;36m"',
+                "_",
+                str(pct),
+                reset,
+                str(window),
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+            stdin=subprocess.DEVNULL,
+        )
+        return r.stdout.strip().splitlines()[-1]
+
+    def visible(self, bar):
+        return re.sub(r"\033\[[0-9;]*m", "", bar)
+
+    def test_overshoot_is_yellow_full_block(self):
+        bar = self.bar(
+            60, 5 - 0.01
+        )  # po 2 dnech, rozb\u011bhnut\u00fd t\u0159et\u00ed den
+        self.assertEqual(bar.count(self.OVER), 1, repr(bar))
+        self.assertNotIn(self.SPARE, bar)
+
+    def test_reserve_is_green(self):
+        bar = self.bar(
+            10, 2 - 0.01
+        )  # po 5 dnech, rozb\u011bhnut\u00fd \u0161est\u00fd den
+        self.assertEqual(bar.count(self.SPARE), 5, repr(bar))
+        self.assertNotIn(self.OVER, bar)
+
+    def test_started_day_counts_whole(self):
+        bar = self.bar(
+            14, 7 - 0.01
+        )  # prvn\u00ed hodiny t\u00fddne, dne\u0161n\u00ed p\u0159\u00edd\u011bl
+        self.assertNotIn(self.OVER, bar)
+
+    def test_width_is_constant(self):
+        for pct, left in ((0, 7), (60, 5), (10, 2), (100, 0), (100, 7), (50, None)):
+            with self.subTest(pct=pct, left=left):
+                self.assertEqual(len(self.visible(self.bar(pct, left))), 7)
+
+    def test_without_reset_falls_back_to_plain_bar(self):
+        bar = self.bar(50, None)
+        self.assertNotIn("\033", bar)
 
 
 class PercentRounding(unittest.TestCase):

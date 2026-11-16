@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Claude Code status line – globální konfigurace
 # Zobrazuje: cwd | model | context bar | 5h limit | týdenní limit | git změny
+# U limitů pruh odlišuje vyčerpané nad proporční tempo okna a nevyčerpanou rezervu.
 
 input=$(cat)
 
@@ -27,6 +28,37 @@ make_bar() {
   while [ "$i" -lt "$filled" ]; do bar="${bar}█"; i=$((i + 1)); done
   i=0
   while [ "$i" -lt "$empty" ];  do bar="${bar}░"; i=$((i + 1)); done
+  echo "$bar"
+}
+
+# Pruh limitu s proporčním tempem okna: kostička je 1/BAR_WIDTH okna (u týdne
+# den). Vyčerpané nad tempo je žluté, nevyčerpaný zbytek tempa zelený ▒.
+# Rozběhnutá kostička tempa se počítá celá – dnešní příděl je k dispozici hned.
+# Argumenty: procenta, resets_at (epoch, smí být prázdné), délka okna v
+# sekundách, barva pruhu (escape sekvence), do které se po odlišení vrací.
+make_pace_bar() {
+  local pct="$1" reset="$2" window="$3" base
+  base=$(printf '%b' "$4")
+  if [ -z "$reset" ]; then make_bar "$pct"; return; fi
+  local filled elapsed pace
+  filled=$(echo "$pct $BAR_WIDTH" | awk '{printf "%d", int($1 / 100 * $2 + 0.5)}')
+  elapsed=$(( window - (reset - $(date +%s)) ))
+  if [ "$elapsed" -lt 0 ]; then elapsed=0; fi
+  pace=$(( elapsed * BAR_WIDTH / window + 1 ))
+  if [ "$pace" -gt "$BAR_WIDTH" ]; then pace=$BAR_WIDTH; fi
+  local over=$'\033[33m' spare=$'\033[32m' bar="" i=1
+  while [ "$i" -le "$BAR_WIDTH" ]; do
+    if [ "$i" -le "$filled" ] && [ "$i" -gt "$pace" ]; then
+      bar="${bar}${over}█${base}"
+    elif [ "$i" -le "$filled" ]; then
+      bar="${bar}█"
+    elif [ "$i" -le "$pace" ]; then
+      bar="${bar}${spare}▒${base}"
+    else
+      bar="${bar}░"
+    fi
+    i=$((i + 1))
+  done
   echo "$bar"
 }
 
@@ -106,12 +138,12 @@ fi
 # Přidej rate limit info pokud je k dispozici
 if [ -n "$five_pct" ]; then
   five_int=$(round_pct "$five_pct")
-  bar5=$(make_bar "$five_pct")
   if [ "$five_int" -ge 80 ]; then
     limit_color="\033[35m"    # svítivá magenta
   else
     limit_color="\033[2;35m"  # tlumená magenta
   fi
+  bar5=$(make_pace_bar "$five_pct" "$five_reset" 18000 "$limit_color")
   # Vypočítat zbývající čas do resetu limitu
   if [ -n "$five_reset" ]; then
     now=$(date +%s)
@@ -133,12 +165,12 @@ fi
 # Přidej týdenní rate limit info pokud je k dispozici
 if [ -n "$week_pct" ]; then
   week_int=$(round_pct "$week_pct")
-  barw=$(make_bar "$week_pct")
   if [ "$week_int" -ge 80 ]; then
     week_color="\033[36m"    # svítivá cyan
   else
     week_color="\033[2;36m"  # tlumená cyan
   fi
+  barw=$(make_pace_bar "$week_pct" "$week_reset" 604800 "$week_color")
   # Vypočítat zbývající čas do resetu týdenního limitu ve formátu Xd H:MM
   if [ -n "$week_reset" ]; then
     now=$(date +%s)
