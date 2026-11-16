@@ -10,7 +10,7 @@
 
 - **Vstup je cokoliv** – jeden i víc skillů, doména z `~/Context/`, jejich kombinace. Zamítnuto „jen jeden skill“ (dva skilly by znamenaly dva balíčky se zdvojenými pravidly) a „jen skilly“ (doména se dá chtít předat i bez skillu).
 - **Výstup je adresář, nebo zip – skill se zeptá pokaždé.** Pevně jen jedno by nutilo balit nebo rozbalovat ručně.
-- **Místo je `~/Downloads`.** Zamítnuta plocha (doporučená kvůli `/depot`) i ptaní pokaždé. Kolizi s `/depot` řeší výjimka v doméně `Depot`: zip s `INSTALL.md` v kořeni se přeskakuje; adresář v kořeni `/depot` neprochází sám.
+- **Místo je `~/Downloads`.** Zamítnuta plocha (doporučená kvůli `/depot`) i ptaní pokaždé. **Výjimka v `/depot` zamítnuta:** zip balíčku v `~/Downloads` `/depot` při dalším běhu vezme jako jakýkoliv jiný soubor. Nechce-li ho Honza zpracovat, smaže ho nebo to řekne – vazba mezi skilly by jen přidávala pravidlo, které se nikde jinde nečte.
 - **Pokyny k nástrojům vždy pro Windows, macOS i Linux.** Zamítnuta otázka na platformu příjemce – balíček se může předat dál.
 - **Ověření je skript a čtenář bez kontextu.** Zamítnut jen grep (větu, která po úpravě přestala dávat smysl, nenajde) i zkušební instalace do dočasného domovského adresáře s ostrým během (drahá a u domény bez skillu nemá co spustit).
 - **Žádná autorova cesta nesmí do balíčku, ani do `INSTALL.md`, a umístění volí příjemce.** Odkazy jsou relativní; Claude příjemce se zeptá, kam co uložit, a odkazy přepíše, jen když části rozdělí. První ruční verze balíčku měla napevno `~/.claude/skills/proofread/rules/` a `INSTALL.md` s tabulkou „kam to patří u autora“ – obojí Honza odmítl.
