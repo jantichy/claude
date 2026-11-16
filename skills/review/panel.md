@@ -1,6 +1,6 @@
 # Katalog specialistů
 
-Kdo se v panelu `/review` zapíná a kdy. Vytažené ze `SKILL.md`, protože je to referenční katalog k nahlédnutí při sestavování panelu, ne text, který se čte v každém běhu. Texty zadání pro agenty drží [`agents.md`](agents.md) – s jedinou výjimkou, zadáním pro *Agentní infrastrukturu*, které stojí tady; proč, je napsané u něj.
+Kdo se v panelu `/review` zapíná a kdy. Vytažené ze `SKILL.md`, protože je to referenční katalog k nahlédnutí při sestavování panelu, ne text, který se čte v každém běhu. Texty zadání pro agenty drží [`briefs.md`](briefs.md) – s jedinou výjimkou, zadáním pro *Agentní infrastrukturu*, které stojí tady; proč, je napsané u něj.
 
 - [Pracovní specialisté](#pracovní-specialisté)
 - [Doménoví specialisté](#doménoví-specialisté)
@@ -25,7 +25,7 @@ Ptají se, jestli je to správně:
 
 Ptají se, jestli to drží předpis. Každý je jedna sada z `~/Context/`:
 
-**Většina jich nic nespouští** – měří text proti textu, takže jedou na `reader` a odrážka o `evidence` pro ně neplatí (viz [`agents.md`](agents.md)). Tři výjimky mají `general-purpose`, protože jejich předmět leží mimo čtení souborů: `Coding/quality.md` ověřuje kontrakt příkazů a CI, `Analytics/` a `Advertising/` sahají na běžící měření a na cizí reklamní účty.
+**Většina jich nic nespouští** – měří text proti textu, takže jedou na `reader` a odrážka o `evidence` pro ně neplatí (viz [`briefs.md`](briefs.md)). Tři výjimky mají `general-purpose`, protože jejich předmět leží mimo čtení souborů: `Coding/quality.md` ověřuje kontrakt příkazů a CI, `Analytics/` a `Advertising/` sahají na běžící měření a na cizí reklamní účty.
 
 | Sada | Kdy se aplikuje | Typ |
 |---|---|---|

@@ -1986,7 +1986,7 @@ class StandardCompliance(unittest.TestCase):
     )
     #
     # Zkoušelo se to rozšířit i na odkaz do **vedlejšího souboru** cizího skillu
-    # (`/attack` → `skills/review/agents.md`), ale širší vzor hlásil falešné
+    # (`/attack` → `skills/review/briefs.md`), ale širší vzor hlásil falešné
     # poplachy na šesti skillech naráz: chytal odkazy na **jména sekcí**, které
     # jsou legitimní a dnes se právě zaváděly jako náprava odkazů na čísla fází.
     #

@@ -44,7 +44,7 @@ Je to **kontrolní krok, ne bod na ose**: stojí v mezeře před `/breakdown` a 
 
 **Rozdělení na tři sběrače a počet ověřovatelů je implementační detail** – vyměnit se smí kdykoliv a u malé oblasti stačí sběrači dva. **Závazné je rozhraní:** zpětná zkouška je blokující, ověřovatel dostane úkol vyvrátit, a návrh, který zkouškou neprojde, se uživateli vůbec nepředloží.
 
-Zadání pro agenty drží `agents.md` v adresáři skillu.
+Zadání pro agenty drží `briefs.md` v adresáři skillu.
 
 ## Rozsah
 
@@ -95,7 +95,7 @@ Nad rámec toho:
 
 ## Fáze 1 – Sběr
 
-**Rozešli agenty naráz** a mezitím nic nečti sám – jejich výstup je tvůj vstup. Zadání drží `agents.md`; každému předej výchozí bod, jmenovitý výčet souborů k projití a **vlastní prefix pro pomocné soubory**.
+**Rozešli agenty naráz** a mezitím nic nečti sám – jejich výstup je tvůj vstup. Zadání drží `briefs.md`; každému předej výchozí bod, jmenovitý výčet souborů k projití a **vlastní prefix pro pomocné soubory**.
 
 | Agent | Typ | Co vrací |
 |---|---|---|
@@ -133,7 +133,7 @@ Tohle je jádro a **nedeleguje se**. Nejsilnější model, `xhigh` – vada tady
 
 ## Fáze 3 – Ověření
 
-**Jeden ověřovatel na jeden návrh**, typ `reader`, **nejsilnější model**. Zadání drží `agents.md`.
+**Jeden ověřovatel na jeden návrh**, typ `reader`, **nejsilnější model**. Zadání drží `briefs.md`.
 
 Obě zkoušky jsou **blokující** a druhá je ta, na kterou se zapomíná:
 

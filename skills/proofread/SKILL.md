@@ -43,7 +43,7 @@ Režimy nemá: chová se vždycky stejně a liší se jen tím, kam zapíše vý
 
 **Volání agentů a konektoru je implementační detail, ne rozhraní** – vyměnit se smí kdykoliv. Závazné je: tři patra a jejich hranice (u `.docx` jejich převod na revize a komentáře), že se nezmění fakt ani citace, že se nic nad první patro nezapíše bez schválení, a kontrola po zápisu.
 
-**Zadání pro agenty drží [`agents.md`](agents.md).** Načti si ho ve chvíli, kdy agenty pouštíš.
+**Zadání pro agenty drží [`briefs.md`](briefs.md).** Načti si ho ve chvíli, kdy agenty pouštíš.
 
 ## Zásady pro celý průběh
 
@@ -116,9 +116,9 @@ Než se cokoliv navrhne, sepiš si do scratchpadu dvě věci. Jsou měřítkem p
 
 Text se čte **po vrstvách shora dolů**: stavba a logika (pointa nahoře, pořadí, kostra nadpisů, návaznost odstavců, opakování), odstavec a věta (stylistika, vata, nominální styl, stopy strojového textu), u cizího jazyka idiomatičnost (co by rodilý mluvčí řekl jinak), slovo (pravopis, gramatika, kolokace), sazba. Pořadí rozhoduje o tom, co se pak provede: oprava čárky v odstavci, který se přestaví, se zahodí.
 
-**Krátký text do 300 slov projdi sám** všemi vrstvami – panel by stál víc, než přinese. **Delší text** rozešli agentům typu `reader` paralelně podle [`agents.md`](agents.md): jeden na stavbu a styl, druhý na jazyk a sazbu, **u textu v cizím jazyce třetí jako rodilý mluvčí** na czenglish a idiomatičnost, každý s cestou k textu, seznamem pravidel z *Fáze 1*, oborem a cílovou skupinou, hlasem a seznamem rozhodnutí. Model a effort podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu* – kontrola proti doménovým znalostem.
+**Krátký text do 300 slov projdi sám** všemi vrstvami – panel by stál víc, než přinese. **Delší text** rozešli agentům typu `reader` paralelně podle [`briefs.md`](briefs.md): jeden na stavbu a styl, druhý na jazyk a sazbu, **u textu v cizím jazyce třetí jako rodilý mluvčí** na czenglish a idiomatičnost, každý s cestou k textu, seznamem pravidel z *Fáze 1*, oborem a cílovou skupinou, hlasem a seznamem rozhodnutí. Model a effort podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu* – kontrola proti doménovým znalostem.
 
-**Věcnou kontrolu pusť vždycky**, u krátkého i dlouhého textu a v každém jazyce: jeden agent typu `researcher` podle [`agents.md`](agents.md) jako odborník na téma a cílovou skupinu z *Fáze 1*, na výchozím modelu s `high`. Text bez věcných tvrzení (báseň, pozvánka bez údajů) ji nepotřebuje – pak to řekni.
+**Věcnou kontrolu pusť vždycky**, u krátkého i dlouhého textu a v každém jazyce: jeden agent typu `researcher` podle [`briefs.md`](briefs.md) jako odborník na téma a cílovou skupinu z *Fáze 1*, na výchozím modelu s `high`. Text bez věcných tvrzení (báseň, pozvánka bez údajů) ji nepotřebuje – pak to řekni.
 
 **Text předávej souborem ve scratchpadu**, ne v zadání; u vloženého textu, Docu a webu ho tam nejdřív ulož. Prefix souboru odvoď ze jména vstupu.
 
@@ -126,7 +126,7 @@ Text se čte **po vrstvách shora dolů**: stavba a logika (pointa nahoře, poř
 
 1. **Sluč nálezy** všech průchodů a odstraň duplicity. Nález ve stejném úseku, který leží pod návrhem třetího patra, si poznamenej jako závislý – platí, jen když se přestavba odmítne.
 2. **Zařaď každý nález do patra** podle *Zásad pro celý průběh*. Agent patro navrhuje, rozhoduješ ty; při váhání vždycky vyšší patro.
-3. **Ověř návrhy druhého a třetího patra i nálezy věcné kontroly** u delšího textu jedním agentem typu `reader` podle [`agents.md`](agents.md), na nejsilnějším modelu s `xhigh` – ověřování nálezů. Jeho úkol je návrh vyvrátit: je to záměr, mění to smysl nebo fakt, porušuje to hlas, je původní znění podle pravidla v pořádku? Co ověření nepřežije, se nepředkládá. U krátkého textu projdi tytéž otázky sám.
+3. **Ověř návrhy druhého a třetího patra i nálezy věcné kontroly** u delšího textu jedním agentem typu `reader` podle [`briefs.md`](briefs.md), na nejsilnějším modelu s `xhigh` – ověřování nálezů. Jeho úkol je návrh vyvrátit: je to záměr, mění to smysl nebo fakt, porušuje to hlas, je původní znění podle pravidla v pořádku? Co ověření nepřežije, se nepředkládá. U krátkého textu projdi tytéž otázky sám.
 4. **U prvního patra ověř záměr sám** – každý nález proti okolní větě. Ověřovatel na ně nejde: jednoznačná oprava se nevyvrací, jen se zkontroluje, že je opravdu jednoznačná.
 
 ## Fáze 5 – Předložení
