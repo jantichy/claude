@@ -266,7 +266,7 @@ class VerifyResult(unittest.TestCase):
 
     def test_passed(self):
         self.state.write_text("abc -\n")
-        self.assertIn("\u2502 \u2713 ok \u2502 main:", self.run_statusline())
+        self.assertIn("\u00b7 \u2713 ok \u00b7 main:", self.run_statusline())
 
     def test_failed_twice(self):
         self.state.write_text("abc def\n")

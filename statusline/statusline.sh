@@ -16,6 +16,8 @@ export LC_NUMERIC=C
 # ---------------------------------------------------------------------------
 BAR_WIDTH=7
 CTX_SPARE_CELLS=3
+# Oddělovač položek, i mezi 5h a týdenním limitem
+sep=$(printf "\033[90m·\033[0m")
 
 make_bar() {
   local pct="$1"
@@ -175,7 +177,7 @@ if [ -n "$five_pct" ]; then
     five_label="5h"   # fallback pokud data ještě nejsou k dispozici
   fi
   if [ -n "$usage_part" ]; then
-    usage_part=$(printf "%s  ${limit_color}Usage: %s [%s] %d%%\033[0m" "$usage_part" "$five_label" "$bar5" "$five_int")
+    usage_part=$(printf "%s ${sep} ${limit_color}Usage: %s [%s] %d%%\033[0m" "$usage_part" "$five_label" "$bar5" "$five_int")
   else
     usage_part=$(printf "${limit_color}Usage: %s [%s] %d%%\033[0m" "$five_label" "$bar5" "$five_int")
   fi
@@ -209,7 +211,7 @@ if [ -n "$week_pct" ]; then
     week_name="Usage"
   fi
   if [ -n "$usage_part" ]; then
-    usage_part=$(printf "%s  ${week_color}%s: %s [%s] %d%%\033[0m" "$usage_part" "$week_name" "$week_label" "$barw" "$week_int")
+    usage_part=$(printf "%s ${sep} ${week_color}%s: %s [%s] %d%%\033[0m" "$usage_part" "$week_name" "$week_label" "$barw" "$week_int")
   else
     usage_part=$(printf "${week_color}%s: %s [%s] %d%%\033[0m" "$week_name" "$week_label" "$barw" "$week_int")
   fi
@@ -371,7 +373,6 @@ fi
 # ---------------------------------------------------------------------------
 # VÝSLEDNÝ ŘÁDEK
 # ---------------------------------------------------------------------------
-sep=$(printf "\033[90m│\033[0m")
 
 line=""
 
