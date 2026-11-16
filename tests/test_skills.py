@@ -1512,6 +1512,31 @@ def root_readme_defects(text: str) -> list:
 class Structure(unittest.TestCase):
     CYCLE = cycle_from_rules()
 
+    # Jména, která jiné AI nástroje čtou jako svoje instrukce, i ve vnořeném adresáři.
+    RESERVED = {
+        "agents.md",
+        "gemini.md",
+        "copilot-instructions.md",
+        ".cursorrules",
+        ".windsurfrules",
+    }
+
+    def test_no_skill_file_has_reserved_name(self):
+        """Soubor ve skillu se jménem instrukcí jiného nástroje by ten nástroj četl jako svoje pokyny."""
+        clash = sorted(
+            str(p.relative_to(ROOT))
+            for p in (ROOT / "skills").rglob("*")
+            if p.is_file() and p.name.lower() in self.RESERVED
+        )
+        self.assertFalse(clash, f"soubory s vyhrazeným jménem jiného nástroje: {clash}")
+
+    def test_reserved_name_check_catches_lowercase(self):
+        """Kontrola musí chytit i malá písmena – tak vznikl `agents.md` ve čtyřech skillech."""
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "agents.md").write_text("x")
+            names = [p.name.lower() for p in Path(tmp).rglob("*")]
+        self.assertTrue(any(n in self.RESERVED for n in names))
+
     def test_cycle_was_read(self):
         """Kdyby se blok v ~/.claude/standards/rules.md přeformátoval, testy životního cyklu by tiše zmlkly."""
         self.assertGreaterEqual(

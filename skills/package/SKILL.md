@@ -55,7 +55,7 @@ Zadání pro čtenáře drží [`briefs.md`](briefs.md), kostru `INSTALL.md` [`t
 | zdroj nebo citace s cestou k soukromé kopii | zdroj ponech, cestu smaž |
 | nástroj mimo Clauda – program, plugin, konektor, balíček Pythonu | **nepřibaluj**; zapiš ho do závislostí v `INSTALL.md` |
 
-**Jednoznačně osobní odstraň rovnou, sporné předlož.** Jméno autora, jeho soukromá cesta a odkaz na jeho hlas jsou jednoznačné. Sporné je všechno, co o autorovi prozrazuje příklad v pravidle: osobní preference vydávaná za obecnou, firmy, ve kterých pracoval, jeho produkty, kurzy a ceny, klienti, adresa sídla nebo bydliště, interní údaje firmy. Rozhoduje uživatel, protože jen on ví, co smí k příjemci. **Dokud nerozhodne, sporný úsek v balíčku není** – nahraď ho neutrálním příkladem se stejným pravidlem, nebo ho odstraň, a v předložení řekni, co jsi udělal; vrátit ho jde, odeslaný balíček ne.
+**Jednoznačně osobní odstraň rovnou, sporné předlož.** Jméno autora, jeho soukromá cesta a odkaz na jeho hlas jsou jednoznačné. Sporné je všechno, co o autorovi prozrazuje příklad v pravidle: osobní preference vydávaná za obecnou, firmy, ve kterých pracoval, jeho produkty, kurzy a ceny, klienti, adresa sídla nebo bydliště, interní údaje firmy. **Sporné je i celé pravidlo, které popisuje autorův vlastní web, nabídku nebo produkt** (jak se jmenují jeho kurzy v boxech, jak zaokrouhluje svůj ceník) – tváří se jako obecné, ale korektura by ho u příjemce vymáhala jako vadu. Rozhoduje uživatel, protože jen on ví, co smí k příjemci. **Dokud nerozhodne, sporný úsek v balíčku není** – nahraď ho neutrálním příkladem se stejným pravidlem, nebo ho odstraň, a v předložení řekni, co jsi udělal; vrátit ho jde, odeslaný balíček ne.
 
 **Žádný soubor v balíčku se nejmenuje jako instrukce jiného nástroje** (`AGENTS.md`, `GEMINI.md` a obdoby, bez ohledu na velikost písmen). Jiný AI nástroj u příjemce by ho četl jako svoje pokyny. Má-li ho zdroj, přejmenuj ho v balíčku a odkazy srovnej.
 
@@ -89,9 +89,10 @@ Společný začátek je v `~/.claude/skills/preflight.md`. **Body 1 až 3 vynech
 1. **Rozvrh balíčku:** v kořeni `INSTALL.md`, každý skill ve vlastním podadresáři. Soubor, který čte jen jeden skill, leží v jeho adresáři (u pravidel `rules/`), aby se skill nainstaloval jako jeden celek. Soubor, který čtou dva a víc skillů, nebo doména zadaná sama, leží v kořeni balíčku pod vlastním jménem – jen jednou.
 2. **Zkopíruj** soubory podle mapy. Skripty a vedlejší soubory skillu jdou celé, `__pycache__` a podobné ne.
 3. **Uprav kopie** podle mapy: vepiš, smaž, přepiš odkazy na relativní, nahraď typy agentů. Ve hlavičce skillu vyřaď z `description` sousedy, kteří v balíčku nejsou – popis rozhoduje o vyvolání a cizí jména by u příjemce mátla.
-4. **Po každém smazání přečti okolí**: věta, která na smazané místo navazovala („viz výš“, výčet, úvod sekce), se musí opravit hned.
-5. **README skillu:** sekci o instalaci nahraď odkazem na `INSTALL.md` – prompt na GitHub u příjemce nedává smysl.
-6. **Napiš `INSTALL.md`** podle [`template.md`](template.md). Česky podle `~/Context/Text/text.md` a `~/Context/Text/typography.md`; čte ho Claude, ale rozhoduje podle něj člověk. Instalační příkazy nástrojů ověř přes `WebSearch`, nehádej je.
+4. **Řekni ve skillu, vůči čemu jeho relativní cesty platí.** Kde skill čte vlastní soubory (`rules/…`), dopiš do jeho přípravy, že cesty jsou relativní k adresáři skillu, ne k pracovnímu adresáři, a že agentům se předávají absolutně – agent adresář skillu nezná a relativní cestu by hledal v projektu.
+5. **Po každém smazání přečti okolí**: věta, která na smazané místo navazovala („viz výš“, výčet, úvod sekce), se musí opravit hned.
+6. **README skillu:** sekci o instalaci nahraď odkazem na `INSTALL.md` – prompt na GitHub u příjemce nedává smysl.
+7. **Napiš `INSTALL.md`** podle [`template.md`](template.md). Česky podle `~/Context/Text/text.md` a `~/Context/Text/typography.md`; čte ho Claude, ale rozhoduje podle něj člověk. Instalační příkazy nástrojů ověř přes `WebSearch`, nehádej je.
 
 ## Fáze 3 – Kontrola skriptem
 

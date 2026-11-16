@@ -194,6 +194,8 @@ Tělo `SKILL.md` se načte celé, jakmile se skill vyvolá – včetně větví,
 
 **Vedlejší soubory leží jednu úroveň hluboko** od `SKILL.md`, v jeho adresáři, a odkazuje se na ně **přímo z něj**. Odkaz na odkaz se čte jen zčásti – model si soubor namátkou prohlédne, místo aby ho přečetl celý, a vezme si z něj polovinu.
 
+**Vedlejší soubor se nejmenuje jako instrukce jiného AI nástroje** – `AGENTS.md`, `GEMINI.md`, `copilot-instructions.md`, `.cursorrules` a obdoby, bez ohledu na velikost písmen. Codex, Cursor a další je čtou i ve vnořeném adresáři jako svoje pokyny a na souborovém systému bez rozlišení velikosti písmen najdou i `agents.md`; zadání pro subagenty proto leží v `briefs.md`. Hlídá to test.
+
 **Soubor nad 100 řádků začíná obsahem**, ať je z náhledu vidět celý rozsah.
 
 ## 7. Jak se píše text uvnitř

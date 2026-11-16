@@ -1,6 +1,6 @@
 # Zadání pro agenty – /proofread
 
-Texty zadání pro průchody a ověřovatele. Vytažené ze `SKILL.md`, protože se čtou jen u delšího textu, kdy se agenti pouštějí. Doplň do nich místa ve špičatých závorkách; nic dalšího do nich nepiš z hlavy.
+Texty zadání pro průchody a ověřovatele. Vytažené ze `SKILL.md`, protože se čtou jen tehdy, když se agenti pouštějí – věcná kontrola vždycky, průchody a ověřovatel jen u delšího textu. Doplň do nich místa ve špičatých závorkách; nic dalšího do nich nepiš z hlavy.
 
 - [Průchod stavbou a stylem](#průchod-stavbou-a-stylem)
 - [Průchod jazykem a sazbou](#průchod-jazykem-a-sazbou)
