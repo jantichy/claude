@@ -15,6 +15,7 @@ export LC_NUMERIC=C
 # 1. UKAZATEL KONTEXTU A LIMITŮ
 # ---------------------------------------------------------------------------
 BAR_WIDTH=7
+CTX_SPARE_CELLS=3
 
 make_bar() {
   local pct="$1"
@@ -31,25 +32,17 @@ make_bar() {
   echo "$bar"
 }
 
-# Pruh limitu s proporčním tempem okna: kostička je 1/BAR_WIDTH okna (u týdne
-# den). Vyčerpané nad tempo je █ v sytém odstínu barvy položky, nevyčerpaný
-# zbytek tempa ▓ v její tlumené barvě – položka si drží jednu barvu.
-# Rozběhnutá kostička tempa se počítá celá – dnešní příděl je k dispozici hned.
-# Argumenty: procenta, resets_at (epoch, smí být prázdné), délka okna v
-# sekundách, barva pruhu, do které se po odlišení vrací, a sytý odstín pro
-# předstřelení (obojí escape sekvence). Sytý odstín je jasná varianta barvy
-# (9x), ne svítivá 3x – ta od 80 % barví celou položku a předstřelení by splynulo.
-make_pace_bar() {
-  local pct="$1" reset="$2" window="$3" base over
-  base=$(printf '%b' "$4")
-  over=$(printf '%b' "$5")
-  if [ -z "$reset" ]; then make_bar "$pct"; return; fi
-  local filled elapsed pace
+# Pruh s hranicí: vyčerpané do hranice █, nad ní █ v sytém odstínu barvy
+# položky, nevyčerpaný zbytek do hranice ▓ v její tlumené barvě – položka si
+# drží jednu barvu. Argumenty: procenta, hranice v kostičkách, barva pruhu, do
+# které se po odlišení vrací, a sytý odstín (obojí escape sekvence). Sytý odstín
+# je jasná varianta barvy (9x), ne svítivá 3x – ta od 80 % barví celou položku
+# a přečerpání by v ní splynulo.
+make_split_bar() {
+  local pct="$1" pace="$2" base over filled
+  base=$(printf '%b' "$3")
+  over=$(printf '%b' "$4")
   filled=$(echo "$pct $BAR_WIDTH" | awk '{printf "%d", int($1 / 100 * $2 + 0.5)}')
-  elapsed=$(( window - (reset - $(date +%s)) ))
-  if [ "$elapsed" -lt 0 ]; then elapsed=0; fi
-  pace=$(( elapsed * BAR_WIDTH / window + 1 ))
-  if [ "$pace" -gt "$BAR_WIDTH" ]; then pace=$BAR_WIDTH; fi
   local bar="" i=1
   while [ "$i" -le "$BAR_WIDTH" ]; do
     if [ "$i" -le "$filled" ] && [ "$i" -gt "$pace" ]; then
@@ -64,6 +57,20 @@ make_pace_bar() {
     i=$((i + 1))
   done
   echo "$bar"
+}
+
+# Pruh limitu s proporčním tempem okna jako hranicí: kostička je 1/BAR_WIDTH
+# okna (u týdne den). Rozběhnutá kostička tempa se počítá celá – dnešní příděl
+# je k dispozici hned. Argumenty: procenta, resets_at (epoch, smí být prázdné),
+# délka okna v sekundách, barva pruhu a sytý odstín jako u `make_split_bar`.
+make_pace_bar() {
+  local pct="$1" reset="$2" window="$3" elapsed pace
+  if [ -z "$reset" ]; then make_bar "$pct"; return; fi
+  elapsed=$(( window - (reset - $(date +%s)) ))
+  if [ "$elapsed" -lt 0 ]; then elapsed=0; fi
+  pace=$(( elapsed * BAR_WIDTH / window + 1 ))
+  if [ "$pace" -gt "$BAR_WIDTH" ]; then pace=$BAR_WIDTH; fi
+  make_split_bar "$pct" "$pace" "$4" "$5"
 }
 
 # Zaokrouhlí procenta na celé číslo, poloviny nahoru – stejně jako `make_bar`.
@@ -117,18 +124,25 @@ week_reset=$(num "$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // e
 usage_part=""
 
 if [ -n "$ctx_used" ]; then
-  bar=$(make_bar "$ctx_used")
   ctx_int=$(round_pct "$ctx_used")
-  # Barva: zelená < 60 %, tlumená žlutá < 80 %, žlutá < 85 %, červená >= 85 %
+  # Barva: zelená < 60 %, tlumená žlutá < 80 %, žlutá < 85 %, červená >= 85 %.
+  # Přečerpané kostičky mají jasnou variantu téže barvy.
   if [ "$ctx_int" -ge 85 ]; then
     color="\033[31m"     # svítivá červená
+    ctx_over="\033[22;91m"
   elif [ "$ctx_int" -ge 80 ]; then
     color="\033[33m"     # svítivá žlutá
+    ctx_over="\033[22;93m"
   elif [ "$ctx_int" -ge 60 ]; then
     color="\033[2;33m"   # tlumená žlutá
+    ctx_over="\033[22;93m"
   else
     color="\033[2;32m"   # tlumená zelená
+    ctx_over="\033[22;92m"
   fi
+  # Prvních CTX_SPARE_CELLS kostiček je prostor, ve kterém se dá pracovat
+  # (u 1M okna zhruba 430k); co je nad ně, je kontext přetažený.
+  bar=$(make_split_bar "$ctx_used" "$CTX_SPARE_CELLS" "$color" "$ctx_over")
   reset="\033[0m"
   if [ -n "$ctx_size" ] && [ "$ctx_used_tokens" -gt 0 ]; then
     used_str=$(fmt_tokens "$ctx_used_tokens")

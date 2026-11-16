@@ -261,6 +261,46 @@ class PaceBar(unittest.TestCase):
         self.assertNotIn(self.SPARE, bar)
 
 
+class ContextBar(unittest.TestCase):
+    """Kontext má pevnou hranici: první tři kostičky jsou prostor k práci.
+
+    Pod hranicí zbývající prostor ukazuje ▓, nad ní je přetažený kontext █ v
+    jasné variantě barvy, kterou má kontext zrovna podle zaplnění.
+    """
+
+    def run_statusline(self, pct):
+        payload = json.dumps(
+            {
+                "context_window": {"used_percentage": pct},
+                "workspace": {"current_dir": "/tmp"},
+                "model": {"display_name": "T"},
+            }
+        )
+        r = subprocess.run(
+            ["bash", str(STATUSLINE)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        return r.stdout
+
+    def test_below_limit_shows_spare(self):
+        out = self.run_statusline(15)  # 1 kostička ze 3
+        self.assertEqual(out.count("\u2593"), 2, repr(out))
+        self.assertNotIn("\033[22;9", out)
+
+    def test_over_limit_is_saturated_same_hue(self):
+        out = self.run_statusline(58)  # 4 kostičky, zelená položka
+        self.assertEqual(out.count("\033[22;92m\u2588"), 1, repr(out))
+        self.assertNotIn("\u2593", out)
+
+    def test_saturated_follows_item_color(self):
+        out = self.run_statusline(90)  # 6 kostiček, červená položka
+        self.assertEqual(out.count("\033[22;91m\u2588"), 3, repr(out))
+
+
 class PercentRounding(unittest.TestCase):
     """Procenta se zaokrouhlují, ne ořezávají – i v českém locale.
 
