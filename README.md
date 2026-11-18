@@ -222,6 +222,10 @@ Zaudituje cizí web v zadané oblasti – analytiku, SEO, použitelnost, příst
 
 Sečte hodiny z timetrackingu po klientech, ukáže mi, co napočítal a co je mu podezřelé, vystaví faktury a nechá v mailu rozepsaný draft s fakturou a výkazem hodin v příloze. **Odeslat ho musím vždycky já** – tvrdá stopka, která platí i tehdy, když ho o odeslání sám uprostřed běhu poprosím. Umí i opačný směr: dohledat čas, který jsem si zapomněl natrackovat. Sazby a dohody s klienty v tomhle repozitáři nejsou, skill je jen rámec.
 
+#### [`/legal`](skills/legal/) – připomínky ke smlouvě za jednu stranu, ne za obě
+
+Posoudí smlouvu, NDA nebo obchodní podmínky **výslovně za mou stranu**. Pošle na text několik nezávislých posuzovatelů, mezi nimi advokáta protistrany, který předpoví, co protistrana napadne a odmítne. Každou závažnou námitku nechá vyvrátit, u zákona proti doslovnému znění předpisu. Projde ji se mnou a teprve pak připraví revize do Wordu pod mým jménem, interní soubor s mými mezemi a koncept mailu, který neprozradí, kam jsem ochoten ustoupit. Když protistrana smlouvu vrátí, porovná ji s odeslanou verzí a chytí i změny provedené potichu. Není to posudek advokáta a nic neodesílá.
+
 #### [`/report`](skills/report/) – data do jednoho souboru, co jde poslat komukoliv
 
 Z exportu z GA4, CSV nebo výsledku dotazu do BigQuery udělá jeden interaktivní HTML soubor, který jde otevřít dvojklikem odkudkoliv: žádné CDN, aby fungoval offline i za pět let, a datum vygenerování zapsané natvrdo. Než ho pustí ven, projde hotový soubor na osobní údaje a na přístupové údaje, které do reportu protečou samy z výpočetního skriptu nebo ze screenshotu administrace.

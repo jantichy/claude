@@ -883,10 +883,16 @@ class CoreParts(unittest.TestCase):
             ("consistency", '"covered"', "Pokrytí:"),
             ("review", '"covered"', "Pokrytí panelem:"),
             ("oponent", "PROŠEL JSEM:", "Pokrytí předmětu:"),
+            ("legal", "PROŠEL JSEM:", "Pokrytí dokumentu:"),
         )
+        # Mechanika panelu sdílená `/oponent` a `/legal` leží v `skills/panel.md`;
+        # skill, který na něj odkazuje, ji nese, jako by ji měl ve vlastním adresáři.
+        shared = ROOT / "skills" / "panel.md"
         for skill, in_brief, in_summary in CASES:
             with self.subTest(skill=skill):
                 files = sorted((ROOT / "skills" / skill).glob("*.md"))
+                if "skills/panel.md" in body(ROOT / "skills" / skill / "SKILL.md"):
+                    files.append(shared)
                 everything = "\n".join(body(path) for path in files)
                 self.assertIn(
                     in_brief,
@@ -2409,6 +2415,7 @@ class TemplatesPrintMarkdown(unittest.TestCase):
         ("project/client.md", "## Klient"),
         ("project/operative.md", "## Operativní projekt"),
         ("review/SKILL.md", "## Review"),
+        ("legal/outputs.md", "| Článek | Dnešní znění | Navržené znění | Zdůvodnění |"),
         ("skill/SKILL.md", "| Krok | Kdo | Proč zrovna on |"),
     }
 

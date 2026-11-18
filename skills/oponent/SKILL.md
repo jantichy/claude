@@ -19,6 +19,7 @@ V *Životním cyklu projektu* (`~/.claude/standards/rules.md`) je to kontrolní 
 
 - **Není to kontrola kódu.** Na kód je `/review`.
 - **Není to kontrola proti předpisu.** Žádné měřítko v souboru nemá a nález obhajuje argumentem; soulad se specifikací a s doménovými znalostmi v `~/Context/*` měří `/review`, jehož nález se vyvrací ukázáním na pravidlo. Proto oponentura funguje i tam, kde `/review` nemá proti čemu měřit (`~/.claude/standards/lifecycle.md`, *Co smí stát v které mezeře*).
+- **Neposuzuje smlouvu.** Smlouvu, obchodní podmínky, smluvní ustanovení i obchodní rozhodnutí v právním rámci posuzuje `/legal`: hájí určenou stranu, měří proti rozhodnému právu a vrací revize do Wordu. Oponent se ptá, jestli je dokument dobře vymyšlený, ne kdo na něm prodělá.
 - **Není to audit vnitřní konzistence projektu.** Na to je `/consistency`. Oponent se ptá „je to dobře vymyšlené?“, ne „sedí to na sebe?“.
 - **Nic sám nemění.** Výchozí režim je diskuze. Změny až po schválení jednotlivých nálezů.
 - **Nepíše zadání, návrh ani plán.** Sám nenavrhuje – jen posuzuje hotový dokument, ať ho napsal `/discovery`, `/specify`, nebo `/architect` –, a rozpad na úkoly nechává `/breakdown`.
@@ -105,15 +106,9 @@ Sloupec *Web* říká, které hledisko dostane ve Fázi 2 svolení hledat zvenku
 
 ## Fáze 2 – Nezávislé posudky
 
-**Nejdřív si vyrob inventuru předmětu, pak pouštěj oponenty.** Vypiš nadpisy posuzovaných dokumentů příkazem (`grep -n '^#' <cesty>`) a **zapamatuj si jejich počet** – proti němu se v *Konsolidaci* vykazuje, kolik z předmětu který oponent doopravdy prošel. Neodhaduj to (`~/.claude/standards/rules.md`, *Hodnotu, kterou čte stroj, nepiš – nech ji vyrobit příkazem*).
+**Inventura předmětu, spuštění panelu a jeho model drží `~/.claude/skills/panel.md`**, *Inventura předmětu* a *Spuštění panelu*. Inventurou jsou tu nadpisy posuzovaných dokumentů.
 
-**Proč to tady je:** zadání oponentovi říká „přečti dokument celý“, ale nic to neměří – a posudek, který pokryl třetinu předmětu, vypadá stejně věrohodně jako úplný, protože nálezy v něm jsou pravé; chybí jen ty ostatní.
-
-Pusť subagenty **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
-
-**Typ agenta podle sloupce *Web*:** hledisko bez ✔ jede na `reader`, hledisko s ✔ na `researcher`. Oba posuzují hotový text a **nemají shell**, takže do dokumentu nemůžou zapsat; `researcher` má navíc `WebSearch` a `WebFetch`. Viz `~/.claude/skills/skills.md`, *Model, effort a delegace*.
-
-**Nejsilnější model, `xhigh`** (Volba modelu a effortu podle `~/.claude/standards/delegation.md`, *Model a effort podle úkolu*.) Oponentura je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
+**Typ agenta podle sloupce *Web*:** hledisko bez ✔ jede na `reader`, hledisko s ✔ na `researcher`; výjimku má sloupec *Typ* (viz níž).
 
 Zadání pro každého (doplň hledisko, cesty a projektový kontext):
 
@@ -173,75 +168,17 @@ Do žádného souboru nezapisuj.
 
 ## Fáze 3 – Ověření nálezů
 
-**Nálezy z panelu nejsou závěry, ale tvrzení.** Oponent bez kontextu vyrobí i nález, který stojí na tom, co nemohl vědět – a nález, který nevyrobí nic, vypadá jako selhání běhu, takže tlak na produkci je vestavěný. Kdyby se falešné vyřazovaly až v konsolidaci, dělal by to spoluautor, tedy ten jediný aktér, jehož slepotu má celý skill obcházet. To je přesně ten tichý filtr, který si Fáze 4 zakazuje – jenže bez téhle fáze nemá čím ho nahradit.
-
-**Deduplikuj ještě před ověřením**, ne až po něm: tři ověřovatelé na jednu věc jsou trojnásobná cena za tutéž odpověď. **Dva nálezy jsou tentýž**, když míří na totéž místo dokumentu a navrhují změnit touž věc – formulace i závažnost se lišit můžou. Sloučený nález si ponech v obou zněních a poznamenej, které hlediska ho našly; Fáze 4 s tím dál pracuje jako se signálem závažnosti.
-
-Na každý nález se závažností **KRITICKÉ a STŘEDNÍ** pošli **samostatného ověřovatele** – paralelně, v čerstvém kontextu, který nevidí ani panel, ani tvou konverzaci. Jeho doklad je citace, ne výstup příkazu, takže shell nepotřebuje a nemá ho mít.
-
-**Typ ověřovatele podle toho, na čem nález stojí:** přišel-li z hlediska s ✔ ve sloupci *Web*, nebo opírá-li se o vnější zdroj (URL, dokumentace dodavatele, ceník, předpis), jede na `researcher`; jinak na `reader`. Nález o cizí platformě by `reader` bez webu vrátil jako NEOVĚŘITELNÉ, a ověření by tak mlčky odpadlo právě u tvrzení, která autor dokumentu sám ověřit nejde. Oba typy nemají shell a nezapisují, takže záruka, že ověřovatel do dokumentu nesáhne, platí u obou. **Nejsilnější model, `xhigh`**, i u nálezu z levného hlediska: slabý ověřovatel nález nepotvrdí ani nevyvrátí, jen přizvukuje tomu, co má před sebou, a z ověření se stane razítko.
-
-**Strop na počet ověřovatelů: nejvýš 12 na běh.** Bez něj roste nejdražší část běhu lineárně s počtem nálezů a panel pěti hledisek vrátí klidně 30 nálezů, tedy třicet agentů na nejsilnějším modelu. Přes strop se ověřují **nejdřív všechny KRITICKÉ**, teprve pak STŘEDNÍ; co se nevejde, jde do Fáze 5 označené jako **`neověřeno`** a spočítá se v souhrnu. Tiché vynechání ne – neověřený nález se od ověřeného musí poznat.
-
-**Ověřovatel má tentýž kontext jako oponenti** – to není jeho výhoda a nedělej z toho výhodu. Rozdíl je jinde: ověřovatel **nemá zadané hledisko**, a tím pádem ani tlak vrátit nález. Oponent, který ze svého hlediska nic nenajde, vypadá jako selhání běhu; ověřovatel, který nález vyvrátí, odvedl práci. Ta asymetrie je celý mechanismus, ne přístup k souborům.
-
-```
-Ověřuješ jedno tvrzení nezávislého oponenta. Nemáš kontext z předchozích rozhovorů.
-
-DOKUMENT: <absolutní cesty>
-KONTEXT PROJEKTU: <CLAUDE.md, docs/rules.md, docs/decisions.md>
-VĚDOMĚ ZAMÍTNUTÉ V TÉHLE PRÁCI: <výčet i s důvody>
-
-NÁLEZ K OVĚŘENÍ: <kde, co, proč to vadí, návrh, závažnost>
-
-Tvůj úkol není nález potvrdit, ale pokusit se ho vyvrátit. Ptej se:
-- Stojí na tom, co v dokumentu doopravdy je? Ověř citaci.
-- Opírá-li se o vnější zdroj, říká ten zdroj opravdu, co nález tvrdí? Otevři ho, nehádej.
-- Neřeší to dokument někde jinde, kde se oponent nedíval?
-- Neplyne z kontextu projektu, že to tak je schválně?
-- Je důsledek doložený, nebo je to obecná obava? („Nebude to škálovat“ je nic.)
-- Sedí navržená závažnost, nebo je nafouknutá?
-
-Vrať: POTVRZENO / VYVRÁCENO / PŘEKVALIFIKOVÁNO NA <závažnost> / NEOVĚŘITELNÉ, jednou
-větou proč, kde <závažnost> je jen KRITICKÉ, STŘEDNÍ nebo NÍZKÉ – jinou škálu
-nepoužívej, a u vyvráceného doklad – citaci z dokumentu nebo kontextu, která ho boří.
-NEOVĚŘITELNÉ vrať, stojí-li nález na faktu, který v dokumentu ani kontextu není,
-a napiš, co chybí – je to stejně platná odpověď jako vyvrácení.
-
-Do žádného souboru nezapisuj.
-```
-
-**NEOVĚŘITELNÉ jde do Fáze 5 jako `neověřeno`**, stejně jako nález nad stropem – nezahazuje se ani nepotvrzuje.
-
-**Výsledky ověření hlas obsahem, ne značkou.** Identifikátory, pod kterými se nálezy vracejí od oponentů a ověřovatelů, jsou interní – uživatel je nikdy neviděl a „N1 je širší, než oponent hlásil“ mu neřekne nic. Pojmenuj, čeho se to týká (`~/.claude/standards/rules.md`, *Interní značky ven nepatří*). Čísla z přehledu v kroku 5 níž jsou naopak v pořádku – ta uživatel viděl i s obsahem.
-
-**NÍZKÉ nálezy se neověřují** – ne proto, že by ověření bylo drahé (stojí strojový čas), ale proto, že se ani nevypořádávají jednotlivě: jdou ve Fázi 5 jedním blokem, takže na nich nestojí žádné rozhodnutí, které by ověření chránilo. **Vyvrácené zahoď a spočítej je do souhrnu**; kolik jich bylo, se říká nahlas, ne potichu.
+**Deduplikaci, ověřovatele, jejich strop i zadání drží `~/.claude/skills/panel.md`**, *Ověření nálezů*. Hledisko „s rešerší“ je tu hledisko s ✔ ve sloupci *Web*; do řádku `KONTEXT PROJEKTU` jdou cesty k `CLAUDE.md`, `docs/rules.md` a `docs/decisions.md`.
 
 ------
 
 ## Fáze 4 – Konsolidace
 
-Než cokoliv předložíš, nálezy **zpracuj**:
+**Pokrytí, pořadí zpracování nálezů i přehled drží `~/.claude/skills/panel.md`**, *Konsolidace*; ověřený seznam se ukládá podle jeho sekce *Ověřený seznam na disku*.
 
-**Nejdřív pokrytí, teprve pak nálezy.** U každého oponenta si z jeho úvodního řádku vezmi, které sekce prošel, a porovnej s inventurou. **Posudek bez toho řádku není čistý výsledek, ale selhání běhu** – pusť ho znovu, a nepovede-li se to podruhé, řekni nahlas, že jeho pokrytí není doložené. Hledisko, které prošlo výrazně méně než ostatní, **uveď v přehledu jmenovitě**: jeho mlčení nic netvrdí.
+### Kam se ukládá ověřený seznam
 
-Pak nálezy:
-
-1. **Duplicity už jsou sloučené** – dedup proběhl před ověřením (Fáze 3). Zůstává jen poznamenat u nálezu, že ho našli dva oponenti z různých hledisek; je to signál závažnosti.
-2. **Vyvrácené nálezy vyřadil ověřovatel**, ne ty. Sám nefiltruj: nález, u kterého máš pochybnost, ale ověřením prošel, předlož s poznámkou. Tichý filtr je přesně to, co má tenhle skill obcházet, a spoluautor je ten poslední, kdo ho má dělat.
-3. **Vyřaď už rozhodnuté.** Nález, který navrhuje zamítnutou variantu bez nového argumentu, zahoď a **řekni, kolik jsi jich zahodil a proč** – ne potichu.
-4. **Seřaď podle závažnosti**, ne podle pořadí v dokumentu.
-5. **Vypiš přehled** – všechny nálezy jednou větou, očíslované, se závažností. Uživatel musí vidět, co ho čeká, než se ho začneš ptát. **Přehledem ale odpověď nekonči** – první otázka Fáze 5 jde v téže odpovědi (`~/.claude/skills/findings.md`, *Ohlášená akce patří do téže odpovědi*).
-
-### Ověřený seznam zapiš na disk, než půjdeš dál
-
-Hotovou frontu ulož do **`.claude/run/oponent.json`** (`~/.claude/skills/skills.md`, *Běhový stav*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "subject": [...], "perspectives": [...], "findings": [{...nález..., "verified": true/false, "status": "open"}]}`.
-
-**Proč to není zdržení:** tenhle seznam je nejdražší artefakt celého běhu – stojí panel i ověřovatele na nejsilnějším modelu. Fáze 5 s ním pak dlouze interaguje **v hlavní session**, tedy přesně tam, kde kontext dochází nejrychleji, protože do něj předtím natekly výstupy všech agentů. Bez zápisu znamená kompaktace uprostřed průchodu, že se celý běh platí znovu.
-
-**Na startu skillu** (Fáze 0) se proto podívej, jestli `.claude/run/oponent.json` už neexistuje. Existuje-li, **nabídni navázání** místo nového běhu – a řekni, kolik nálezů v něm zbývá nevypořádaných. Odkud se navazuje, rozhoduje klíč `interrupted` (`~/.claude/skills/skills.md`, *Běhový stav*). Změnil-li se od té doby oponovaný dokument, řekni to a zeptej se: část nálezů může být neaktuální.
-
-**Průběžně do něj zapisuj stav** každého nálezu (`accepted`, `rejected`, `deferred`, `open`), jak jimi procházíš. Po dokončení Fáze 6 soubor smaž.
+Do **`.claude/run/oponent.json`** (`~/.claude/skills/skills.md`, *Běhový stav*; adresář patří do `.gitignore`). Formát: `{"created": "<datum a čas>", "subject": [...], "perspectives": [...], "findings": [{...nález..., "verified": true/false, "status": "open"}]}`. Odkud se při navázání bere kontext, rozhoduje klíč `interrupted` (tamtéž). Po dokončení Fáze 6 soubor smaž.
 
 Panel je v tom souboru jen po dobu běhu; **trvale přežije v řádku, který Fáze 6 zapisuje do `docs/done.md`** – z něj vychází příští oponentura při volbě hledisek.
 

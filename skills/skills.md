@@ -176,7 +176,7 @@ Skill, který volí „krok“, to musí ve svých zásadách zdůvodnit tímhle
 
 **Neodkazuj se na číslo fáze cizího skillu.** Cizí fáze se přečíslují a odkaz tiše ukáže jinam. **Na jméno sekce odkazovat lze** – to se mění zřídka a při změně je to vidět; rozhoduje křehkost odkazu, ne to, že vede jinam.
 
-**Potřebují-li tentýž obsah dva skilly, nepatří ani do jednoho.** Patří do sdíleného souboru přímo v `skills/` – tak vznikly `preflight.md` (začátek běhu), `session.md` (čtení nahrané konverzace), `severity.md` (škála závažnosti nálezu) a `findings.md` (kdo o nálezu rozhoduje). Odkaz do přílohy souseda je horší než odkaz na jeho sekci: tváří se jako detail, ale ve skutečnosti si dva skilly sdílejí obsah, o kterém ani jeden neví, že ho sdílí.
+**Potřebují-li tentýž obsah dva skilly, nepatří ani do jednoho.** Patří do sdíleného souboru přímo v `skills/` – tak vznikly `preflight.md` (začátek běhu), `session.md` (čtení nahrané konverzace), `severity.md` (škála závažnosti nálezu), `findings.md` (kdo o nálezu rozhoduje) a `panel.md` (panel agentů bez kontextu a ověření jeho nálezů). Odkaz do přílohy souseda je horší než odkaz na jeho sekci: tváří se jako detail, ale ve skutečnosti si dva skilly sdílejí obsah, o kterém ani jeden neví, že ho sdílí.
 
 **Jeden termín pro jednu věc** (`~/.claude/standards/rules.md`, *Jeden termín pro jednu věc*). Ve skillech to platí navíc **napříč nimi**, ne jen uvnitř jednoho: skilly se čtou jeden po druhém v jednom životním cyklu a rozdílné pojmenování téhož kroku vypadá jako rozdílný krok.
 
