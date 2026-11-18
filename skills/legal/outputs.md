@@ -33,7 +33,7 @@ V režimu `counter` dostane revize i mail číslo kola (`<stem>-pripominky-2.doc
 ## Deník kol
 
 - **<YYYY-MM-DD>** · kolo 1 · `review` · posouzeno: <soubor> · hlediska: <seznam> · <N nálezů> · výstupy: <soubory> · připraveno
-- **<YYYY-MM-DD>** · kolo 1 · odesláno <komu>
+- **<YYYY-MM-DD>** · kolo 1 · odesláno <komu> · <odeslaný soubor>
 
 ## Kolo <N> – nálezy
 
@@ -66,7 +66,7 @@ praxe; nebo jen úvaha.>
 
 **Stav nálezu se zapisuje hned po odpovědi uživatele.** Pracovní soubor je zároveň ověřený seznam běhu (`~/.claude/skills/panel.md`, *Ověřený seznam na disku*). Otevřený nález v něm znamená přerušený průchod.
 
-Datum do deníku vyrob `date +%F`.
+Datum do deníku vyrob `date +%F`. U odeslání platí den, kdy dokument podle uživatele odešel, ne den zápisu. Jméno odeslaného souboru tam stojí proto, že podle něj *Fáze 0* pozná protinávrh.
 
 ## Revize ve Wordu
 

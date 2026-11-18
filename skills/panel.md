@@ -26,7 +26,7 @@ Společná mechanika skillů, které pošlou na dokument panel agentů bez konte
 
 Pusť členy panelu **paralelně, jedním voláním s víc tool calls**. Každý dostane vlastní hledisko a **žádný kontext z téhle session** – to je celý smysl.
 
-**Kontext projektu dostane cestou k souboru, ne opsaný.** Agent si ho přečte z disku sám, v okamžiku běhu. Opis do zadání je snímek a rozejde se se souborem, který se mezitím změnil – posudek pak hájí verzi, kterou už nikdo nemá.
+**Kontext projektu dostane cestou k souboru, ne opsaný.** Agent si ho přečte z disku sám, v okamžiku běhu. Opis do zadání je snímek a rozejde se se souborem, který se mezitím změnil – posudek pak hájí verzi, kterou už nikdo nemá. **U velkého souboru smíš čtení zúžit**, ale zase odkazem: nadpis sekce, kterou má přečíst celou, a pokyn číst ze zbytku jen nadpisy a k místu nálezu cíleně dočíst, co se ho týká.
 
 **Nejsilnější model, `xhigh`** (`~/.claude/standards/delegation.md`, *Model a effort podle úkolu*). Posudek je verifikace, ne sběr: slabý model námitku nevymyslí ani neobhájí, jen zdvořile přizvukuje tomu, co má před sebou – a posudek, který všechno schválí, je horší než žádný, protože dodá falešnou jistotu.
 

@@ -312,6 +312,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 ## Odvedená práce
 
+- [x] **Nový skill `/legal`** (18. 11. 2026). Právní oponentura smlouvy za jednu stranu s režimy `review` a `counter`, povinným advokátem protistrany a *Co chybí*, výstupy do Wordu, pracovního souboru a konceptu mailu. Mechanika panelu a ověřování se vytáhla z `/oponent` do sdíleného `skills/panel.md`. Ověřeno: testy tvaru, vyvolání (12/12 pozitivních, 12/12 sousedních správně jinam) a čtyři tlakové scénáře. Scénář „pošli to“ napoprvé selhal, proto je odeslání v něm tvrdá stopka. Co zbývá, drží `todo.md`.
 - [x] **Sloučit `/break` do `/end`** (rozhodnuto 2. 11. 2026, dělat **až po zrychlení `/end` a jeho přeměření**, ať se z měření pozná, co za co může; **přeměřeno 3. 11. 2026, podmínka splněná** – srovnávací čísla drží `done.md`, *Zredukovat počet volání uvnitř `/end`*). Uživatel volá jen `/end`; ten sám pozná, že session končí uprostřed rozdělané práce, a uloží ji jako dnes `/break` do `## Přerušený běh`. **Podmínka: běžný `/end` bez rozdělané práce se tím nesmí zpomalit.** Navržený tvar:
   - **Rozpoznání bez kola navíc.** Mechanické signály vrátí přípravný skript `/end` v témže volání jako inventuru: běhový soubor v `.claude/run/` bez klíče `interrupted` a neprázdná `## Rozhodnuto k zapracování`. Nedodělky z konverzace `/end` už dnes třídí v *Rekonstrukci session* (kategorie nedořešené a rozbité).
   - **Mechanika přerušení se přestěhuje do `skills/end/break.md`** a načte se jen při nálezu – běžný běh tím nenaroste.

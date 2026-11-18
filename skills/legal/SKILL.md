@@ -24,7 +24,7 @@ Který režim platí, pozná skill z pracovního souboru vedle dokumentu (*Fáze
 - **Neopravuje jazyk ani typografii.** Korekturu dělá `/proofread`. Formulace se tu mění jen tam, kde mění význam.
 - **Nezařazuje příchozí soubory.** Dokument z `~/Downloads` nejdřív uloží `/depot` na jeho místo. Teprve tam vzniknou výstupy.
 - **Nezapisuje do Wordu sám.** Revize, komentáře i porovnání verzí dělá `document-skills:docx`, tenhle skill mu jen předá zadání.
-- **Nenahrazuje advokáta a nic neodesílá.** Verdikt to řekne výslovně. Mail zůstane konceptem a revize kopií.
+- **Nenahrazuje advokáta a nic neodesílá.** Verdikt to řekne výslovně. Mail zůstane konceptem a revize kopií. Odeslání je tvrdá stopka (*Zásady pro celý průběh*).
 - **Nezmírňuje vyjednávací linii sám.** Každý ústupek je rozhodnutí uživatele.
 
 ## Jak je to postavené uvnitř
@@ -45,7 +45,8 @@ Který režim platí, pozná skill z pracovního souboru vedle dokumentu (*Fáze
 - **Pracovní soubor je interní a nikdy nejde ven.** Nese naše meze, ústupky a pasti. Komentáře ve Wordu a mail čte protistrana, takže z nich nesmí vyčíst nic z toho.
 - **Kontext se čte z disku v okamžiku běhu, ne z paměti session.** Platí to pro `decisions.md` projektu, mantinely i předchozí kolo. Snímek v kontextu bývá starší než soubor a posudek pak hájí verzi, kterou už nikdo nemá.
 - **Výstupy leží vedle dokumentu a nikde jinde.** Žádné kopie do scratchpadu ani do cizích adresářů, protože podle zapsaného místa se pozná režim příštího kola.
-- **Ústupek nikdy nevznikne mimochodem.** Ani ve formulaci revize, ani ve variantě otázky, ani v mailu. Kde hledisko navrhne měkčí znění, předloží se jako varianta k rozhodnutí.
+- **Ústupek nikdy nevznikne mimochodem.** Ani ve formulaci revize, ani ve variantě otázky, ani v mailu. Kde hledisko navrhne měkčí znění, předloží se jako varianta k rozhodnutí. **Požádá-li uživatel, ať kompromisy vybereš sám**, nevybírej: polož jednu otázku na celou vyjednávací linii (třeba *kritické navržené, zbytek záložní* / *záložní u všech* / *navržené u všech*) s doporučením a důsledkem každé volby. Jeho odpověď je rozhodnutí o každém nálezu a zapíše se k nim.
+- **Odeslat musí vždycky uživatel, i když o to sám požádá uprostřed běhu.** Skill neodesílá mail, nesdílí dokument ani nezakládá koncept v cizím systému. Odeslaný návrh smlouvy nejde vzít zpátky a jedna záměna přílohy prozradí protistraně celé vyjednávání. Na takovou žádost řekni, že odeslání je jeho krok, a dej mu cesty k revizi a ke konceptu mailu.
 
 ## Fáze 0 – Příprava
 
@@ -114,6 +115,8 @@ Deduplikaci, ověřovatele, jejich strop i zadání drží `~/.claude/skills/pan
 - **Do zadání ověřovatele jde i rámec** (naše strana, protistrana, rozhodné právo, rozhodný den).
 - **Nález, který stojí na znění předpisu nebo rozhodnutí soudu, ověřuje `Explore`** podle doplňku k zadání ověřovatele v [`briefs.md`](briefs.md). Ověřovatel si text stáhne `curl` z primárního zdroje a cituje ho doslova. `researcher` by z webového nástroje dostal jen úryvek nebo parafrázi a potvrdil by tvrzení, které nečetl.
 - **Ověřovatel bez doslovné citace pramene vrací NEOVĚŘITELNÉ**, ne POTVRZENO. Nález pak jde do průchodu jako `neověřeno` a ve verdiktu se počítá mezi důvody pro advokáta.
+- **Pod stropem mají přednost kritické nálezy opřené o pramen**, pak ostatní kritické, pak střední. Na nich nejčastěji stojí přepis smlouvy a člen panelu je obvykle „zná“, ale nečetl.
+- **Na žádost uživatele jde ověření zúžit, ne vypnout.** Kritické nálezy opřené o pramen se ověří vždycky. Ostatní jdou do průchodu jako `neověřeno` a ve verdiktu se uvede, že se ověřovalo zúženě na jeho přání.
 
 ## Fáze 6 – Konsolidace a mapa souvislostí
 

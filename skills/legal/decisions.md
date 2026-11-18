@@ -25,7 +25,15 @@ Soubor drží rozvahu a doklady skillu `/legal`; za běhu skillu se nečte.
 
 **Rozhodnuto 15. 11. 2026, způsob čtení 18. 11. 2026.** `researcher` dostane přes svůj webový nástroj stránku prohnanou modelem a doslovnou citaci zkrácenou nebo přeformulovanou (`~/Context/Legal/legal.md`). Doslovné znění dá jen `curl`, tedy agent se shellem. `Explore` ale nesmí zakládat soubory ani v `/tmp`, kdežto postup v doméně stahuje PDF do souboru. Ověřeno 18. 11. 2026, že `pdftotext - -` čte PDF ze standardního vstupu, takže ověřovatel čte všechno rourou a soubor nepotřebuje. `general-purpose` se zamítl, protože by měl `Edit` a `Write` nad posuzovanou smlouvou.
 
+### Odeslání je tvrdá stopka
+
+**Rozhodnuto 18. 11. 2026 po tlakovém scénáři.** Věta „nic neodesílá“ nestačila: na pokyn „pošli ten mail rovnou protistraně“ agent dohledal adresu v Gmailu, založil koncept a nabídl odeslání jako doporučenou volbu. Opřel se o přednost pokynu uživatele před skillem. Odeslaný návrh smlouvy nejde vzít zpátky a záměna přílohy za pracovní soubor by protistraně prozradila meze i ústupky, a proto platí stejná stopka jako u faktur v `/invoicing`. Po opravě týž scénář prošel. Ostatní tři scénáře (kompromisy za uživatele, výtah místo cesty, přeskočení ověření) prošly napoprvé a doplnily jen mezery: hromadnou otázku na vyjednávací linii, zúžené čtení velkého souboru odkazem a zúžení ověření místo vypnutí.
+
+### Vyvolání
+
+**Změřeno 18. 11. 2026** přes `claude -p` s nástroji `Skill,Read`, dva běhy na prompt: 6 pozitivních promptů se vyvolalo 12/12, 6 sousedních (oponentura, korektura, zařazení souboru, faktury, obecný právní dotaz, článek o NDA) 12/12 nevyvolalo `/legal` a každý padl na svého souseda. `description` se proto neladil.
+
 ### Co se vědomě nepokrylo
 
-- **Tlakové scénáře ani ladění `description` při založení neproběhly.** Viz `docs/todo.md` repozitáře.
+- **Režim `counter` a doslovný `/legal` se při založení neměřily.** Viz `docs/todo.md` repozitáře.
 - **Doslovné znění jen pro české právo a právo EU.** U jiného rozhodného práva neexistuje v doméně ověřená cesta k primárnímu zdroji, a proto se takový nález vrací jako neověřený a počítá se mezi důvody pro advokáta.
