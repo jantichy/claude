@@ -19,10 +19,18 @@ CTX_SPARE_CELLS=3
 # Oddělovač položek, i mezi 5h a týdenním limitem
 sep=$(printf "\033[90m·\033[0m")
 
+# Počet plných kostiček: rozběhnutá kostička se počítá celá (zaokrouhlení
+# nahoru), stejně jako tempo v `make_pace_bar`. Pruh je varování, ne měření –
+# plný má být dřív, než se session nebo limit opravdu zastaví; přesnost nese
+# číslo vedle něj.
+filled_cells() {
+  echo "$1 $BAR_WIDTH" | awk '{x = $1 / 100 * $2; n = int(x); if (x > n) n++; printf "%d", n}'
+}
+
 make_bar() {
   local pct="$1"
   local filled
-  filled=$(echo "$pct $BAR_WIDTH" | awk '{printf "%d", int($1 / 100 * $2 + 0.5)}')
+  filled=$(filled_cells "$pct")
   local empty=$(( BAR_WIDTH - filled ))
   local bar=""
   # Vlastní smyčka, ne `seq`: BSD seq při `seq 1 0` počítá dolů a vypíše "1 0",
@@ -44,7 +52,7 @@ make_split_bar() {
   local pct="$1" pace="$2" base over filled
   base=$(printf '%b' "$3")
   over=$(printf '%b' "$4")
-  filled=$(echo "$pct $BAR_WIDTH" | awk '{printf "%d", int($1 / 100 * $2 + 0.5)}')
+  filled=$(filled_cells "$pct")
   local bar="" i=1
   while [ "$i" -le "$BAR_WIDTH" ]; do
     if [ "$i" -le "$filled" ] && [ "$i" -gt "$pace" ]; then
@@ -63,21 +71,20 @@ make_split_bar() {
 
 # Pruh limitu s proporčním tempem okna jako hranicí: kostička je 1/BAR_WIDTH
 # okna (u týdne den). Rozběhnutá kostička tempa se počítá celá – dnešní příděl
-# je k dispozici hned. Argumenty: procenta, resets_at (epoch, smí být prázdné),
+# je k dispozici hned, stejně jako u čerpání v `filled_cells`. Argumenty: procenta, resets_at (epoch, smí být prázdné),
 # délka okna v sekundách, barva pruhu a sytý odstín jako u `make_split_bar`.
 make_pace_bar() {
   local pct="$1" reset="$2" window="$3" elapsed pace
   if [ -z "$reset" ]; then make_bar "$pct"; return; fi
   elapsed=$(( window - (reset - $(date +%s)) ))
   if [ "$elapsed" -lt 0 ]; then elapsed=0; fi
-  pace=$(( elapsed * BAR_WIDTH / window + 1 ))
-  if [ "$pace" -gt "$BAR_WIDTH" ]; then pace=$BAR_WIDTH; fi
+  pace=$(( (elapsed * BAR_WIDTH + window - 1) / window ))
   make_split_bar "$pct" "$pace" "$4" "$5"
 }
 
-# Zaokrouhlí procenta na celé číslo, poloviny nahoru – stejně jako `make_bar`.
-# Ne `printf "%.0f"`: to zaokrouhluje poloviny k sudé (2.5 → 2), takže by číslo
-# a pruh u téže hodnoty zaokrouhlovaly každé jinak.
+# Zaokrouhlí procenta na celé číslo, poloviny nahoru. Ne `printf "%.0f"`: to
+# zaokrouhluje poloviny k sudé (2.5 → 2). Pruh naproti tomu zaokrouhluje nahoru
+# (`filled_cells`), takže proti číslu schválně nadsazuje nejvýš o kostičku.
 round_pct() {
   echo "$1" | awk '{printf "%d", int($1 + 0.5)}'
 }

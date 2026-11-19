@@ -362,10 +362,15 @@ class PaceBar(unittest.TestCase):
         return re.sub(r"\033\[[0-9;]*m", "", bar)
 
     def test_overshoot_is_saturated_and_returns_to_base(self):
-        # po 2 dnech, rozběhnutý třetí den
+        # po 2 dnech, rozběhnutý třetí den; 60 % je rozběhnutá pátá kostička
         bar = self.bar(60, 5 - 0.01)
-        self.assertEqual(bar.count(self.OVER), 1, repr(bar))
+        self.assertEqual(bar.count(self.OVER), 2, repr(bar))
         self.assertNotIn(self.SPARE, bar)
+
+    def test_saturated_starts_with_next_portion(self):
+        # po 2 dnech, rozběhnutý třetí den: příděl končí na 3/7 = 42,86 %
+        self.assertNotIn("\033", self.bar(42, 5 - 0.01))
+        self.assertEqual(self.bar(43, 5 - 0.01).count(self.OVER), 1)
 
     def test_reserve_keeps_item_color(self):
         # po 5 dnech, rozběhnutý šestý den
@@ -379,7 +384,16 @@ class PaceBar(unittest.TestCase):
         self.assertNotIn("\033", bar)
 
     def test_width_is_constant(self):
-        for pct, left in ((0, 7), (60, 5), (10, 2), (100, 0), (100, 7), (50, None)):
+        # -1: zastaralý resets_at, tempo vyjde přes šířku pruhu
+        for pct, left in (
+            (0, 7),
+            (60, 5),
+            (10, 2),
+            (100, 0),
+            (100, 7),
+            (100, -1),
+            (50, None),
+        ):
             with self.subTest(pct=pct, left=left):
                 self.assertEqual(len(self.visible(self.bar(pct, left))), 7)
 
@@ -415,18 +429,22 @@ class ContextBar(unittest.TestCase):
         return r.stdout
 
     def test_below_limit_shows_spare(self):
-        out = self.run_statusline(15)  # 1 kostička ze 3
+        out = self.run_statusline(14)  # 1 kostička ze 3
         self.assertEqual(out.count("\u2593"), 2, repr(out))
+
+    def test_started_cell_counts_whole(self):
+        out = self.run_statusline(15)  # rozběhnutá druhá kostička
+        self.assertEqual(out.count("\u2593"), 1, repr(out))
         self.assertNotIn("\033[22;9", out)
 
     def test_over_limit_is_saturated_same_hue(self):
-        out = self.run_statusline(58)  # 4 kostičky, zelená položka
+        out = self.run_statusline(50)  # 4 kostičky, zelená položka
         self.assertEqual(out.count("\033[22;92m\u2588"), 1, repr(out))
         self.assertNotIn("\u2593", out)
 
     def test_saturated_follows_item_color(self):
-        out = self.run_statusline(90)  # 6 kostiček, červená položka
-        self.assertEqual(out.count("\033[22;91m\u2588"), 3, repr(out))
+        out = self.run_statusline(86)  # plný pruh, červená položka
+        self.assertEqual(out.count("\033[22;91m\u2588"), 4, repr(out))
 
 
 class PercentRounding(unittest.TestCase):
@@ -475,7 +493,7 @@ class PercentRounding(unittest.TestCase):
         out = self.run_statusline(99.6)
         self.assertEqual(out.count("100%"), 3, out)
 
-    def test_half_rounds_up_like_bar(self):
+    def test_half_rounds_up(self):
         out = self.run_statusline(2.5)
         self.assertEqual(out.count(" 3%"), 3, out)
 
