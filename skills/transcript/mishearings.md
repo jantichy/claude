@@ -36,3 +36,14 @@ Zkomoleniny, které whisper dělá **opakovaně u kohokoliv**, kdo mluví o dan�
 | kampáň | kampaň | |
 | Klout, Cloth, Koled, klód | Claude | AI asistent; zkomoleno v různých tvarech i v jedné nahrávce |
 | GetMko | GTM | Google Tag Manager, vyslovováno „gé té emko“ |
+
+## AI a cloud, čeština
+
+| Whisper píše | Správně | Poznámka |
+|---|---|---|
+| Jiminy | Gemini | model Googlu |
+| Out-Out, OFem | OAuth | přihlášení; skloňuje se česky („OAuthem“) |
+| igres | egress | odchozí provoz ze sandboxu nebo sítě |
+| logsync | log sink | export logů v Google Cloudu |
+| dícen | JSON | vyslovováno „džejsn“ |
+| kodex | Codex | agent OpenAI. **Rozhoduje kontext:** kodex jako soubor pravidel existuje taky |
