@@ -272,7 +272,7 @@
     "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable"
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -493,5 +493,8 @@
   "terminalProgressBarEnabled": false,
   "remoteControlAtStartup": false,
   "inputNeededNotifEnabled": false,
-  "agentPushNotifEnabled": false
+  "agentPushNotifEnabled": false,
+  "sandbox": {
+    "enabled": false
+  }
 }
