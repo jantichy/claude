@@ -18,7 +18,7 @@ Allowlist/denylist/asklist se snažím držet ve vyváženém poměru mezi bezpe
 
 #### [`statusline.sh`](statusline/statusline.sh) – všechno podstatné na jednom řádku
 
-Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání týdenního limitu a na tarifu, který ho má, i 5hodinového, aktuální adresář, výsledek posledního běhu průběžné kontroly a stav Gitu včetně commitů, které ještě nejsou pushnuté. Čerpání vizualizuje teploměrem, procenty i zbývajícím časem a mění barvy podle toho, jak je na tom blízko limitu. Teploměr limitu navíc ukazuje proporční tempo okna – u týdne jedna kostička na den: co vyčerpám nad něj, svítí sytějším odstínem barvy položky, a nevyčerpanou rezervu do něj ukazuje jiným vzorem kostičky. Stejně se kreslí kontext s pevnou hranicí tří kostiček, za kterou už je kontext přetažený.
+Jednořádková status line, která mi ukazuje všechno, co potřebuju průběžně vidět: aktuální model, zaplnění kontextového okna, čerpání týdenního limitu a na tarifu, který ho má, i 5hodinového, aktuální adresář, výsledek posledního běhu průběžné kontroly a stav Gitu včetně commitů, které ještě nejsou pushnuté. Čerpání vizualizuje teploměrem, procenty i zbývajícím časem a mění barvy podle toho, jak je na tom blízko limitu. Teploměr limitu navíc ukazuje proporční tempo okna – u týdne jedna kostička na den: co vyčerpám nad něj, svítí sytějším odstínem barvy položky, a nevyčerpanou rezervu do něj ukazuje jiným vzorem kostičky. Stejně se kreslí kontext s pevnou hranicí tří kostiček, za kterou už je kontext přetažený. Rozběhnutá kostička se počítá celá, takže teploměr varuje spíš dřív než pozdě.
 
 ![Status line](statusline/statusline.png)
 
