@@ -47,6 +47,8 @@ daemon-auth-status.json
 jobs/
 .last-cleanup
 .last-update-result.json
+# Stav Claude Code, když běží s CLAUDE_CONFIG_DIR=~/.claude (machineID, userID)
+.claude.json
 
 # Python – meta-testy v tests/ vyrábějí bytecode cache
 __pycache__/
