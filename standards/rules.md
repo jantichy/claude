@@ -264,6 +264,10 @@ Soubory leží tam, kam dnes patří podle smyslu, ne kde vznikly. Dělají-li d
 
 Před mazáním, přepisem, zrušením nebo hromadnou změnou se podívej na aktuální stav cíle, ne na poznámky. Nevratnou akci ohlas nahlas a nech si potvrdit.
 
+### Než založíš připomínku, podívej se, jestli už není
+
+Připomínku nebo úkol (Things, kalendář) navrhuj až po kontrole, že tam už není – i jako opakovaný úkol, na kterém termín zvenku vidět není. Duplicitní připomínka naučí přehlížet obě. Things se čte přes `osascript` (jména všech otevřených úkolů jedním voláním `name of (to dos whose status is open)`), jeho databáze je pro shell zamčená.
+
 ### Nástroje instaluj správcem balíčků, v daném pořadí
 
 Nástroj do počítače instaluj v pořadí **homebrew → npm → uv → pip**; vyhrává první zdroj, který ho má. `pip` jen ve venv (globální je na macOS blokovaný), `uvx` spustí nástroj bez instalace. Závislosti projektu se řídí jeho manifestem, ne tímhle (`~/Context/Coding/quality.md`). Před instalací ověř, že nástroj už není; mimo žebříček (`curl | sh`, binárka, instalátor) si to nech potvrdit.
