@@ -310,7 +310,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-11-16** · `/end` · `e96f80f` · session `b83bb910-bac9-4e9a-955a-1f8b47d5de6a` · prompty 21/21 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: tři body rámce NDA proti GDPR a § 2898 OZ do `~/Context/todo.md`, nálezy panelu ke smlouvám do `docs/todo.md` projektu Byt · meze: žádné
 - **2026-11-16** · `/end` · `1f85514` · session `aee12c10-95a1-4209-b5c7-7e80274d1fe4` · prompty 29/29 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: žádné
 - **2026-11-19** · `/end` · `fed458e` · session `3937f946-ee2b-4b60-b043-3f264f0964eb` · prompty 9/9 · 0 témat · mimo rozsah: žádné · meze: žádné
-- **2026-11-23** · `/end` · `3b9de4d` · session `dcd2564c-9605-4db7-935e-b5302184b36a` · prompty 11/11 · 0 témat · mimo rozsah: zastaralá věta o souhlasu z terminálu v `CLAUDE.md` Eventoidu – opravena tam na `main` · meze: žádné
+- **2026-11-23** · `/end` · `3b9de4d` · session `dcd2564c-9605-4db7-935e-b5302184b36a` · prompty 12/12 · 0 témat · mimo rozsah: zastaralá věta o souhlasu z terminálu v `CLAUDE.md` Eventoidu – opravena tam na `main` · meze: žádné
 
 ## Odvedená práce
 
