@@ -221,6 +221,62 @@ class AheadOfUpstream(unittest.TestCase):
         self.assertNotIn("\u2191", out)
 
 
+class GithubLink(unittest.TestCase):
+    """Git položka je odkaz na repozitář na GitHubu, má-li origin na github.com.
+
+    Adresu remotu píše ten, kdo config repozitáře napsal: odkaz smí vést jen na
+    github.com a do sekvence nesmí projít nic kromě vlastníka a jména repozitáře.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="statusline-github-"))
+        self.repo = self.tmp / "repo"
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", "-b", "main", ".")
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def link(self, origin):
+        git(self.repo, "remote", "add", "origin", origin)
+        payload = json.dumps(
+            {
+                "workspace": {"current_dir": str(self.repo)},
+                "model": {"display_name": "T"},
+            }
+        )
+        r = subprocess.run(
+            ["bash", str(STATUSLINE)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        links = re.findall(r"\033\]8;;(https://[^\a]*)\a", r.stdout)
+        return links[0] if links else None
+
+    def test_ssh_remote(self):
+        self.assertEqual(
+            self.link("git@github.com:owner/repo.git"), "https://github.com/owner/repo"
+        )
+
+    def test_https_remote(self):
+        self.assertEqual(
+            self.link("https://github.com/owner/my.repo"),
+            "https://github.com/owner/my.repo",
+        )
+
+    def test_other_host_has_no_link(self):
+        self.assertIsNone(self.link("git@gitlab.com:owner/repo.git"))
+
+    def test_lookalike_host_has_no_link(self):
+        self.assertIsNone(self.link("https://github.com.evil.example/owner/repo"))
+
+    def test_control_char_has_no_link(self):
+        self.assertIsNone(self.link("https://github.com/owner/repo\a\033]8;;x"))
+
+
 class VerifyResult(unittest.TestCase):
     """Samostatná položka s výsledkem posledního běhu průběžné kontroly.
 

@@ -361,6 +361,15 @@ if [ -d "$git_root_candidate" ] \
     branch=$(git_ro -C "$git_root_candidate" rev-parse --short HEAD 2>/dev/null)
   fi
   if [ -z "$branch" ]; then branch="Git"; fi
+  # Odkaz na repozitář na GitHubu (OSC 8), má-li origin na github.com. Čte se
+  # jen konfigurace, nic se nespouští. Adresu si určuje ten, kdo config napsal,
+  # proto se z ní bere jen vlastník a jméno ve tvaru, který GitHub povoluje –
+  # odkaz pak vede vždycky na github.com a nic jiného do sekvence neprojde.
+  github_url=""
+  origin_url=$(git_ro -C "$git_root_candidate" config --get remote.origin.url 2>/dev/null)
+  if [[ "$origin_url" =~ ^(git@github\.com:|ssh://git@github\.com/|https://github\.com/)([A-Za-z0-9-]+)/([A-Za-z0-9._-]+)$ ]]; then
+    github_url="https://github.com/${BASH_REMATCH[2]}/${BASH_REMATCH[3]%.git}"
+  fi
   if config_runs_program "$git_root_candidate"; then
     git_part=$(printf "\033[31m%s: ⚠ config spouští program\033[0m" "$branch")
   else
@@ -403,6 +412,9 @@ append "$(printf "${model_color}%s\033[0m" "$model_short")"
 append "$ctx_part"
 append "$usage_part"
 append "$verify_part"
+if [ -n "$git_part" ] && [ -n "$github_url" ]; then
+  git_part=$(printf "\033]8;;%s\a%s\033]8;;\a" "$github_url" "$git_part")
+fi
 [ -n "$git_part" ] && append "$git_part"
 
 # %s, ne %b: jednotlivé části si svoje \033 rozvinuly samy ve formátu vlastního
