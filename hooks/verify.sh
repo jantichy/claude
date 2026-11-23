@@ -6,8 +6,8 @@
 # pokyn, co dodělat. Definice viz ~/Context/Coding/quality.md.
 #
 # BEZPEČNOST: kontrakt je kód ležící v repozitáři a hooky běží mimo permission
-# systém. Proto se v projektu nespustí nic, dokud pro něj člověk jednou nevydá
-# souhlas:  verify.sh --allow <project>
+# systém. Proto se v projektu nespustí nic, dokud pro něj nevznikne souhlas:
+#   verify.sh --allow <project>   (Claude Code se na něj ptá dialogem, viz pravidlo ask)
 # Vydané souhlasy vypíše  --list , odebere  --revoke <project> .
 # Kontrakt projektu vypíše  --contract <project>  (pro CI; nic nespouští).
 # Ten souhlas znamená "spouštěj v tomhle repozitáři jeho vlastní příkazy", ne
@@ -179,6 +179,23 @@ repo_id() {
   canon "$d"
 }
 
+# Identita OBSAHU repozitáře: jeho kořenový commit (nejmenší, má-li jich víc).
+# Klíč souhlasu je cesta ke `.git`, takže po `rm -rf` a klonu cizího repozitáře
+# na tutéž cestu by se souhlas zdědil; kořenový commit cizího repozitáře je jiný.
+# Repozitář bez commitu má identitu `root -` a první běh s commitem ji doplní.
+root_id() {
+  r=$(git -C "$1" rev-list --max-parents=0 HEAD 2>/dev/null | sort | sed -n 1p) || r=""
+  printf 'root %s' "${r:--}"
+}
+
+# Zapíše souhlas atomicky: cesta projektu, cesta ke kontraktu, identita repozitáře.
+write_consent() {
+  tmp=$(mktemp "$ALLOW_DIR/.allow.XXXXXX") || return 1
+  if printf '%s\n%s\n%s\n' "$1" "$2" "$3" > "$tmp" && mv "$tmp" "$4"; then return 0; fi
+  rm -f "$tmp"
+  return 1
+}
+
 # Soubor se souhlasem pro daný pracovní adresář, existuje-li.
 allow_file() {
   k=$(proj_key "$(repo_id "$1")")
@@ -213,12 +230,9 @@ find_contract() {
 # Sekce ## Kontrakt příkazů, vždy z těla bez bloků kódu. Jedna definice pro --allow i běh.
 contract_section() { md_body "$1" | sed -n '/^## Kontrakt příkazů/,/^## /p'; }
 
-# Otisk kontraktu pro souhlas: JEN spouštěné řádky `- klíč: příkaz`, ne celá sekce.
-# Souhlas se vydává na to, co se bude spouštět – kdežto sekce nese i vysvětlující
-# text pod seznamem, takže otisk z celé sekce si vyžádal nové odsouhlasení po každé
-# editaci komentáře. Doloženo 14. 9. 2026 hodinu po zavedení: přepsaný odstavec
-# o testech zablokoval kontrolu, přestože se žádný příkaz nezměnil. Falešný poplach
-# je u vynucovací vrstvy horší směr selhání než propuštěná chyba – vede k vypnutí.
+# Otisk kontraktu: JEN spouštěné řádky `- klíč: příkaz`, ne celá sekce. Souhlas se
+# na něj dřív vázal; dnes ho potřebuje jen převod takových souhlasů na vazbu
+# k repozitáři (viz běh níž). Tvar se proto nesmí měnit, jinak převod nesedne.
 contract_fingerprint() {
   contract_section "$1" \
     | sed -n 's/^[[:space:]]*[-*][[:space:]]*\('"$KEY_RE"'\):[[:space:]]\{1,\}\(.*\)$/\1=\2/p' \
@@ -248,12 +262,11 @@ if [ "${1:-}" = "--list" ]; then
   for f in "$ALLOW_DIR"/*; do
     [ -f "$f" ] || continue
     P=$(head -1 "$f")
-    # Souhlas bez uloženého otisku kontraktu je z doby před vazbou na kontrakt.
-    # Neplatí (hook ho odmítne), ale ve výpisu vypadal jako rovnocenný – a protože
-    # se vedle něj mezitím vydal nový, tvářil se výpis, že je projekt povolený
-    # dvakrát. Mrtvý záznam, který vypadá živě, je horší než žádný.
+    # Souhlas bez třetího řádku je z doby před jakoukoliv vazbou. Neplatí (hook ho
+    # odmítne), ale ve výpisu vypadal jako rovnocenný – mrtvý záznam, který vypadá
+    # živě, je horší než žádný.
     if [ "$(wc -l < "$f" | tr -d ' ')" -lt 3 ]; then
-      printf '%s\n    NEPLATNÝ – souhlas ve starém formátu bez otisku kontraktu.\n' "$P"
+      printf '%s\n    NEPLATNÝ – souhlas ve starém formátu bez vazby na repozitář.\n' "$P"
       printf '    Ukliď ho: rm %s\n' "$f"
       INVALID=$((INVALID+1))
       N=$((N+1))
@@ -326,66 +339,38 @@ if [ "${1:-}" = "--allow" ]; then
   MD=$(find_contract "$P") || die "v ${2:-$PWD} není CLAUDE.md se sekcí ## Kontrakt příkazů."
   P=$(proj_for_md "$MD")
 
-  # Souhlas musí vydat ČLOVĚK U TERMINÁLU, ne proces.
+  # Spuštění příkazu JE souhlas; skript se na nic dalšího neptá. Potvrzení drží
+  # pravidlo `ask` v settings.json: Claude Code se na každé volání `--allow`
+  # zeptá permission dialogem, a to i v auto módu a uvnitř složeného příkazu.
   #
-  # Je to jediná věc, která stojí mezi cizím repozitářem a spuštěním jeho příkazů
-  # s právy uživatele. Chránila ho šest deny pravidel v settings.json, jenže ta
-  # porovnávají text příkazu: volání přes `python3 -c`, `node -e` nebo `osascript`
-  # jméno skriptu do příkazové řádky vůbec nedostane, takže pravidla nemají na čem
-  # zabrat. A 14. 9. 2026 se ukázalo, že neplatí ani v přímém tvaru, je-li volání
-  # součástí složeného příkazu s přesměrováním – doloženo tím, že jsem si ten
-  # souhlas omylem vydal sám.
+  # Hranice proti modelu to není a nebyla jí ani dřívější odpověď "ano" z /dev/tty:
+  # souhlas je obyčejný soubor pod $HOME a bez sandboxu ho proces s právy
+  # uživatele zapíše i bez tohohle skriptu. Souhlas zavírá jinou díru – aby se
+  # kód cizího repozitáře nespustil hookem sám, bez jakékoliv akce modelu. Dialog
+  # k tomu přidává jen to, že si ho model nevydá mimochodem.
   #
-  # Tady proti tomu nepomáhá žádný seznam vzorů. Pomáhá jen to, co proces nemá:
-  # terminál. Interaktivní běh čte ze stdin, neinteraktivní z /dev/tty (a ta
-  # v procesu bez řídicího terminálu neexistuje, takže skončí chybou).
   # Bez gitu se hook níž ukončí `exit 0` a neudělá nic. Samo o sobě je to
   # správně – nad rozbaleným tarballem se nemá nic spouštět –, jenže člověk,
   # který si tady vydal souhlas na konkrétní příkazy, čeká pravý opak. Tichý
   # rozdíl mezi „běží a je zeleno“ a „neběží vůbec“ je ta nejhorší podoba
-  # selhání vynucovací vrstvy, a poznat se dá jedině tady, u terminálu.
+  # selhání vynucovací vrstvy, a poznat se dá jedině tady, při vydání souhlasu.
   if ! git -C "$P" rev-parse --show-toplevel >/dev/null 2>&1; then
     printf 'Pozor: %s není gitový repozitář, takže průběžná kontrola nepoběží,\n' "$P" >&2
-    printf 'i když souhlas vydáš. Spusť v něm git init, nebo souhlas nevydávej.\n' >&2
+    printf 'ani když souhlas platí. Spusť v něm git init, nebo souhlas odeber (--revoke).\n' >&2
   fi
-
-  ANSWER=""
-  printf 'Vydat souhlas pro %s?\n' "$P"
-  printf 'Kontrakt: %s\n' "$MD"
-  printf 'Napiš "ano" (cokoliv jiného souhlas nevydá): '
-  if [ -t 0 ]; then
-    read -r ANSWER
-  else
-    read -r ANSWER < /dev/tty 2>/dev/null || die "souhlas se vydává jen z terminálu. Spusť to v samostatném okně shellu – ani \`!\` prefix v Claude Code nestačí, ten běží jako nástroj a nemá řídicí terminál."
-  fi
-  [ "$ANSWER" = "ano" ] || die "nepotvrzeno, souhlas jsem nevydal."
 
   mkdir -p "$ALLOW_DIR" 2>/dev/null || die "nelze založit $ALLOW_DIR"
   chmod 700 "$(dirname "$ALLOW_DIR")" "$ALLOW_DIR" 2>/dev/null || true
   RKEY=$(proj_key "$(repo_id "$P")")
   SEC=$(contract_section "$MD")
-  # Souhlas se váže na KONTRAKT, ne jen na repozitář. Samotný klíč z `.git` platí
-  # pro celý strom, takže si jakýkoliv podadresář mohl přinést vlastní CLAUDE.md
-  # a jeho příkazy se spustily bez dotazu – rozbalený cizí projekt ve `vendor/`
-  # stačil. A po `rm -rf` a klonu cizího repozitáře na tutéž cestu se souhlas
-  # zdědil celý. Uloží se proto i cesta ke kontraktu a otisk jeho sekce; běh
-  # obojí porovná a při neshodě si vyžádá nový souhlas.
-  #
-  # Otisků je víc, jeden na řádek od třetího dál. Souhlas je klíčovaný repozitářem,
-  # takže ho sdílejí všechny worktree – a každá větev smí mít jiný kontrakt. S jediným
-  # otiskem přepsal souhlas vydaný v jednom worktree souhlas druhého a kontrola se
-  # mezi nimi točila dokola. Dřív schválené otisky proto zůstávají; odvolává je
-  # jedině --revoke, které maže celý soubor.
-  FP=$(contract_fingerprint "$MD")
-  OLD_FPS=""
-  [ -f "$ALLOW_DIR/$RKEY" ] && OLD_FPS=$(sed -n '3,$p' "$ALLOW_DIR/$RKEY" | grep -vxF "$FP" || true)
-  TMP_ALLOW=$(mktemp "$ALLOW_DIR/.allow.XXXXXX") || die "nelze zapsat souhlas do $ALLOW_DIR"
-  {
-    printf '%s\n%s\n' "$(canon "$P")" "$MD"
-    [ -n "$OLD_FPS" ] && printf '%s\n' "$OLD_FPS"
-    printf '%s\n' "$FP"
-  } > "$TMP_ALLOW" || { rm -f "$TMP_ALLOW"; die "nelze zapsat souhlas do $ALLOW_DIR"; }
-  mv "$TMP_ALLOW" "$ALLOW_DIR/$RKEY" || { rm -f "$TMP_ALLOW"; die "nelze zapsat souhlas do $ALLOW_DIR"; }
+  # Souhlas se váže na REPOZITÁŘ (klíč ze sdíleného `.git`, identita z kořenového
+  # commitu), ne na znění kontraktu. Kdo umí commitnout změnu kontraktu, umí
+  # commitnout i package.json nebo testy, které schválené příkazy spustí bez
+  # nového souhlasu – opakovaný dotaz po každé změně kontraktu tak nic nechránil,
+  # jen otravoval. Cizí podadresář s vlastním CLAUDE.md hlídá kontrola kořene
+  # pracovního stromu při běhu, ne tenhle zápis.
+  write_consent "$(canon "$P")" "$MD" "$(root_id "$P")" "$ALLOW_DIR/$RKEY" \
+    || die "nelze zapsat souhlas do $ALLOW_DIR"
   [ -s "$ALLOW_DIR/$RKEY" ] || die "souhlas se nezapsal."
   echo "Průběžná kontrola poběží v $P, podle kontraktu v $MD."
   echo
@@ -412,13 +397,13 @@ if [ "${1:-}" = "--allow" ]; then
   echo "Neplatí ale pro podadresáře s vlastním CLAUDE.md: rozbalený cizí projekt"
   echo "ve vendor/ nebo stažený tarball si souhlas nepůjčí."
   echo
-  echo "Souhlas je vydaný na TENHLE kontrakt. Jakmile se sekce ## Kontrakt příkazů"
-  echo "změní, hook se zastaví a vyžádá si nové odsouhlasení – ať se spouštěné"
-  echo "příkazy nedají vyměnit commitem, který si nikdo nepřečte."
+  echo "Souhlas je vydaný na TENHLE repozitář, poznaný podle prvního commitu: cizí"
+  echo "repozitář naklonovaný později na stejnou cestu si ho nepůjčí. Změna kontraktu"
+  echo "o nový souhlas neříká."
   echo
   echo "Co ty příkazy udělají, ale určuje package.json, Makefile nebo konfigurace"
-  echo "v tomhle repu, a to se neschvaluje. Do cizího naklonovaného repozitáře"
-  echo "souhlas nedávej."
+  echo "v tomhle repu, a to se neschvaluje. Je-li to cizí naklonovaný repozitář,"
+  echo "souhlas hned odeber: ~/.claude/hooks/verify.sh --revoke \"$P\""
   echo
   echo "A platí to i do budoucna: souhlas se vydává jednou, kdežto soubory, které"
   echo "ty příkazy vykonají – testy, skripty, konfigurace – se mění dál a nový"
@@ -561,26 +546,23 @@ if ! allow_file "$PROJ" >/dev/null; then
   [ "$MODE" = format ] && exit 0   # hlásí Stop hook, viz die()
   {
     echo "Průběžná kontrola: pro $PROJ není vydaný souhlas, nespustil jsem nic."
-    echo "Kontrakt je kód z repozitáře. Projdi si ho a jestli tomu repozitáři věříš:"
-    echo "  ~/.claude/hooks/verify.sh --allow $PROJ"
+    echo "Kontrakt je kód z repozitáře. Projdi si ho, a jestli tomu repozitáři věříš,"
+    echo "řekni Claudovi, ať souhlas vydá – Claude Code se tě na to zeptá dialogem:"
+    echo "  ~/.claude/hooks/verify.sh --allow \"$PROJ\""
     contract_section "$CLAUDE_MD" \
       | sed -n 's/^[[:space:]]*[-*][[:space:]]*\('"$KEY_RE"'\):[[:space:]]\{1,\}/  \1: /p' || true
   } >&2
   exit 1
 fi
 
-# Souhlas platí pro TENHLE kontrakt, ne pro cokoliv, co se v repozitáři najde.
-# Bez téhle kontroly stačilo do odsouhlaseného repozitáře rozbalit cizí projekt
-# s vlastním CLAUDE.md a jeho příkazy se spustily; a po klonu jiného repozitáře
-# na tutéž cestu se zdědil celý souhlas i s ním.
-#
-# Souhlas vydaný před zavedením téhle kontroly má jen jeden řádek. Neplatí – ale
-# řekne se to nahlas i s tím, čím se obnoví; tichý degradovaný režim by z opravy
-# udělal dekoraci.
+# Souhlas platí pro TENHLE repozitář, ne pro cokoliv, co se v jeho stromu najde.
+# Souhlas s jediným řádkem je z doby před jakoukoliv vazbou a neplatí – řekne se
+# to nahlas i s tím, čím se obnoví; tichý degradovaný režim by z kontroly udělal
+# dekoraci.
 AF=$(allow_file "$PROJ")
-STORED_FINGERPRINT=$(sed -n 3p "$AF")
-if [ -z "$STORED_FINGERPRINT" ]; then
-  die "souhlas pro $PROJ je ve starém formátu bez otisku kontraktu, nespustil jsem nic. Obnov ho: ~/.claude/hooks/verify.sh --allow $PROJ"
+STORED_ID=$(sed -n 3p "$AF")
+if [ -z "$STORED_ID" ]; then
+  die "souhlas pro $PROJ je ve starém formátu bez vazby na repozitář, nespustil jsem nic. Obnov ho (Claude Code se uživatele zeptá dialogem): ~/.claude/hooks/verify.sh --allow \"$PROJ\""
 fi
 
 # Kontrakt musí ležet v KOŘENI pracovního stromu, ne v podadresáři pod ním.
@@ -593,10 +575,35 @@ TOPLEVEL=$(git -C "$PROJ" rev-parse --show-toplevel 2>/dev/null || true)
 if [ -n "$TOPLEVEL" ] && [ "$(canon "$TOPLEVEL")" != "$PROJ" ]; then
   die "kontrakt $CLAUDE_MD leží v podadresáři, ne v kořeni pracovního stromu ($TOPLEVEL). Souhlas pro repozitář na něj neplatí, nespustil jsem nic."
 fi
-# grep -c, ne -q: s pipefail by předčasný konec grepu shodil rouru (viz výš).
-if [ "$(sed -n '3,$p' "$AF" | grep -cxF "$(contract_fingerprint "$CLAUDE_MD")")" -eq 0 ]; then
-  die "kontrakt v $CLAUDE_MD se od vydání souhlasu změnil, nebo patří větvi, pro kterou souhlas ještě nikdo nevydal – souhlas repozitáře platí jen pro kontrakty, které už jednou prošly --allow, a jiné větve tím nevypneš. Nespustil jsem nic. Projdi si ho a potvrď z terminálu (ne přes ! v Claude Code): ~/.claude/hooks/verify.sh --allow $PROJ"
-fi
+# Identita repozitáře. Tři tvary uloženého třetího řádku:
+# - `root <sha>` – ten commit musí v repozitáři existovat; chybí-li, je na téže
+#   cestě jiný repozitář a souhlas neplatí. Ověřuje se existence objektu, ne
+#   výpočet kořene, protože ten prochází celou historii a běží po každé odpovědi.
+# - `root -` – souhlas vydaný nad repozitářem bez commitu; první běh s commitem
+#   identitu doplní.
+# - cokoliv jiného je otisk kontraktu z doby, kdy se souhlas vázal na kontrakt.
+#   Sedí-li některý na dnešní kontrakt, je to přesně ta kontrola, která dřív
+#   platila, takže se souhlas převede na identitu repozitáře bez dotazu; jinak
+#   se vydá znovu.
+case "$STORED_ID" in
+  "root -")
+    CURRENT_ID=$(root_id "$PROJ")
+    if [ "$CURRENT_ID" != "root -" ]; then
+      write_consent "$(sed -n 1p "$AF")" "$(sed -n 2p "$AF")" "$CURRENT_ID" "$AF" \
+        || die "nelze doplnit identitu repozitáře do souhlasu $AF, nespustil jsem nic."
+    fi ;;
+  "root "*)
+    git -C "$PROJ" cat-file -e "${STORED_ID#root }^{commit}" 2>/dev/null \
+      || die "repozitář v $PROJ nemá první commit repozitáře, pro který byl souhlas vydaný – nejspíš je to jiný repozitář naklonovaný na tutéž cestu. Nespustil jsem nic. Je-li to tvůj repozitář, vypiš uživateli spouštěné příkazy (~/.claude/hooks/verify.sh --contract \"$PROJ\") a spusť ~/.claude/hooks/verify.sh --allow \"$PROJ\" – Claude Code se ho zeptá dialogem." ;;
+  *)
+    # grep -c, ne -q: s pipefail by předčasný konec grepu shodil rouru (viz výš).
+    if [ "$(sed -n '3,$p' "$AF" | grep -cxF "$(contract_fingerprint "$CLAUDE_MD")")" -gt 0 ]; then
+      write_consent "$(sed -n 1p "$AF")" "$(sed -n 2p "$AF")" "$(root_id "$PROJ")" "$AF" \
+        || die "nelze převést souhlas $AF na vazbu k repozitáři, nespustil jsem nic."
+    else
+      die "souhlas pro $PROJ je vydaný na jiné znění kontraktu (starý tvar vazby). Nespustil jsem nic. Vypiš uživateli spouštěné příkazy (~/.claude/hooks/verify.sh --contract \"$PROJ\") a spusť ~/.claude/hooks/verify.sh --allow \"$PROJ\" – Claude Code se ho zeptá dialogem."
+    fi ;;
+esac
 
 # Rozlišit "není to repozitář" (v pořádku, mlčky ven) od "git nefunguje" (nahlas):
 # rozbitý git by jinak kontrolu tiše vypnul a nikdo by se to nedozvěděl.

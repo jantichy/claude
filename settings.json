@@ -232,8 +232,6 @@
       "Bash(git rmb:*)",
       "Bash(git test:*)",
       "Bash(git selenium:*)",
-      "Bash(*verify.sh --allow*)",
-      "Bash(*verify.sh --revoke*)",
       "mcp__claude_ai_Gmail__send_message",
       "mcp__claude_ai_Gmail__reply",
       "mcp__claude_ai_Gmail__forward",
@@ -241,6 +239,8 @@
       "mcp__claude_ai_Gmail__trash_thread"
     ],
     "ask": [
+      "Bash(*verify.sh --allow*)",
+      "Bash(*verify.sh --revoke*)",
       "Bash(go install:*)",
       "Bash(brew install:*)",
       "Bash(uv venv:*)",

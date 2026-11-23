@@ -29,7 +29,7 @@ Rozhoduje cesta projektového adresáře, ve worktree layoutu cesta kontejneru:
 - **Mezi krokem 3 a 5:** založ profil a fakturační soubor (*Profil a fakturační soubor*); existující profil převeď (*Převod*). Až tady, protože repozitář už existuje a krok 13 bude importovat soubor, který je na disku.
 - **Krok 8:** do `.gitignore` patří každá podsložka s vlastním repozitářem (*Podprojekt* níž).
 - **Krok 11:** složka bez vlastního kódu – profil, dokumenty, analýzy – je typ **Psaní a obsah**; kód leží v podprojektech.
-- **Krok 12:** ve složce bez kódu není co spouštět; řekni to podle kroku 12 a `verify.sh --allow` nevypisuj.
+- **Krok 12:** ve složce bez kódu není co spouštět; řekni to podle kroku 12 a `verify.sh --allow` nespouštěj.
 - **Krok 13:** místo *Profilu organizace* z `checklists.md` zapiš do `CLAUDE.md` sekci s importem profilu ze složky:
 
 ```

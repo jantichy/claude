@@ -19,7 +19,6 @@ ani na skutečný běhový stav.
 
 import json
 import os
-import pty
 import shutil
 import subprocess
 import tempfile
@@ -37,33 +36,22 @@ PASSES = 0  # v pořádku, nebo se vědomě nic nespouští
 
 
 def grant_consent(path, home):
-    """Spustí `--allow` přes pseudoterminál a odpoví „ano“.
+    """Vydá souhlas tak, jak ho vydá Claude: bez terminálu a bez další odpovědi.
 
-    Skript souhlas úmyslně nevydá procesu bez terminálu: deny pravidla na něj
-    porovnávají text příkazu, takže je obejde volání přes interpret i složený
-    příkaz s přesměrováním. Terminál je to jediné, co běžící nástroj nemá.
-
-    Test tu podmínku proto nesmí obcházet proměnnou prostředí – tím by z ní
-    udělal vypínač. Místo toho si terminál opatří: `pty.openpty()` dá pár, jehož
-    slave konec je skutečné tty, takže `[ -t 0 ]` ve skriptu platí.
+    Potvrzení drží permission dialog Claude Code (pravidlo `ask` v
+    `settings.json`), ne skript – ten souhlas zapíše, jakmile ho někdo spustí.
     """
-    master, slave = pty.openpty()
-    try:
-        os.write(master, b"ano\n")
-        env = dict(os.environ, HOME=str(home))
-        env.pop("XDG_STATE_HOME", None)
-        env.pop("CLAUDE_NO_VERIFY", None)
-        return subprocess.run(
-            [str(VERIFY), "--allow", str(path)],
-            stdin=slave,
-            capture_output=True,
-            text=True,
-            env=env,
-            check=False,
-        )
-    finally:
-        os.close(master)
-        os.close(slave)
+    env = dict(os.environ, HOME=str(home))
+    env.pop("XDG_STATE_HOME", None)
+    env.pop("CLAUDE_NO_VERIFY", None)
+    return subprocess.run(
+        [str(VERIFY), "--allow", str(path)],
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
 
 
 def git(cwd, *args):
@@ -712,17 +700,13 @@ class ContinuousCheck(unittest.TestCase):
                 )
 
 
-class ConsentGrantedByHuman(unittest.TestCase):
-    """`--allow` nesmí projít procesu, který nemá terminál.
+class ConsentGrant(unittest.TestCase):
+    """`--allow` zapíše souhlas bez dalšího dotazu.
 
-    Souhlas je jediná věc mezi cizím repozitářem a spuštěním jeho příkazů. Deny
-    pravidla v `settings.json` ho chránit neumějí: porovnávají text příkazu,
-    takže volání přes `python3 -c` nebo `node -e` jméno skriptu do příkazové řádky
-    vůbec nedostane. 14. 9. 2026 se navíc ukázalo, že neplatí ani v přímém tvaru,
-    je-li volání součástí složeného příkazu – doloženo tím, že si agent souhlas
-    omylem vydal sám uprostřed revize.
-
-    Terminál je to, co proces nemá a nemůže si opatřit obejitím vzoru.
+    Potvrzení drží permission dialog Claude Code (pravidlo `ask`, hlídá ho
+    `tests/test_hooks.py`), ne skript. Dřívější odpověď „ano“ z terminálu hranicí
+    nebyla – souhlas je soubor pod `$HOME`, který proces s právy uživatele zapíše
+    i bez skriptu – a jen nutila člověka kopírovat příkaz do jiného okna.
     """
 
     def setUp(self):
@@ -782,61 +766,34 @@ class ConsentGrantedByHuman(unittest.TestCase):
         self.assertEqual(v.returncode, 0, v.stderr)
         self.assertNotIn("test:unit", v.stdout)
 
-    def test_without_terminal_no_consent(self):
-        v = self.without_terminal()
-        self.assertNotEqual(v.returncode, 0)
-        self.assertEqual(self.consents(), [], "souhlas vznikl procesu bez terminálu")
-
-    def test_ano_from_pipe_is_not_enough(self):
-        """Roura není terminál, i když v ní stojí správná odpověď.
-
-        Jinak by stačilo `echo ano | verify.sh --allow .` a pojistka by byla
-        k ničemu – přesně tímhle tvarem ji nástroj obejde nejsnáz.
-        """
-        p = subprocess.Popen(["echo", "ano"], stdout=subprocess.PIPE)
-        v = self.without_terminal(stdin_data=p.stdout)
-        p.wait()
-        self.assertNotEqual(v.returncode, 0)
-        self.assertEqual(self.consents(), [], "souhlas vznikl z roury")
-
-    def test_terminal_and_confirmation_grant_consent(self):
-        """Propustit, co propustit má: člověk u terminálu, který napíše „ano“."""
+    def test_allow_without_terminal_grants_consent(self):
         v = grant_consent(self.repo, self.home)
         self.assertEqual(v.returncode, 0, v.stderr)
-        self.assertEqual(len(self.consents()), 1)
-
-    def test_other_answer_grants_no_consent(self):
-        master, slave = pty.openpty()
-        try:
-            os.write(master, b"jo\n")
-            env = dict(os.environ, HOME=str(self.home))
-            env.pop("XDG_STATE_HOME", None)
-            v = subprocess.run(
-                [str(VERIFY), "--allow", str(self.repo)],
-                stdin=slave,
-                capture_output=True,
-                text=True,
-                env=env,
-                check=False,
-            )
-        finally:
-            os.close(master)
-            os.close(slave)
-        self.assertNotEqual(v.returncode, 0)
-        self.assertEqual(self.consents(), [], "souhlas vznikl bez slova „ano“")
+        self.assertNotIn(
+            "ano", v.stdout.lower().split(), "skript se pořád ptá na „ano“"
+        )
+        consents = self.consents()
+        self.assertEqual(len(consents), 1)
+        self.assertEqual(
+            consents[0].read_text().splitlines()[2],
+            "root -",
+            "souhlas nad repozitářem bez commitu nenese prázdnou identitu",
+        )
 
 
-class ConsentBoundToContract(unittest.TestCase):
+class ConsentBoundToRepository(unittest.TestCase):
     """Souhlas pokrývá repozitář, ale ne cokoliv, co se v něm najde.
 
     Klíč souhlasu je odvozený ze sdíleného `.git`, aby platil i pro worktree
     ostatních větví. Bez dalších pojistek to ale znamenalo, že si **jakýkoliv
     podadresář** mohl přinést vlastní `CLAUDE.md` a jeho příkazy se spustily bez
     dotazu – rozbalený cizí projekt ve `vendor/`, stažený tarball, obnovená
-    záloha. Ověřeno v `/review full` (14. 9. 2026): neverzovaný soubor stačil.
+    záloha. To hlídá kontrola kořene pracovního stromu.
 
-    Druhá cesta k témuž: `rm -rf projekt && git clone cizi projekt` zdědil celý
-    souhlas, protože klíč se počítá z cesty ke `.git`.
+    Druhá cesta k témuž: `rm -rf projekt && git clone cizi projekt` by zdědil
+    celý souhlas, protože klíč se počítá z cesty ke `.git`. To hlídá identita
+    repozitáře, tedy jeho první commit. Změna kontraktu souhlas nezneplatní:
+    kdo ji umí commitnout, umí commitnout i testy, které se spustí tak jako tak.
     """
 
     def setUp(self):
@@ -920,22 +877,89 @@ class ConsentBoundToContract(unittest.TestCase):
             "změnil", v.stderr, "změna textu pod kontraktem si vyžádala nový souhlas"
         )
 
-    def test_changed_contract_does_not_run(self):
-        """Souhlas se vydává na konkrétní kontrakt, ne na repozitář navždy."""
-        marker = self.tmp / "NESMI-VZNIKNOUT"
+    def test_changed_contract_keeps_consent(self):
+        """Změna kontraktu si o nový souhlas neříká – souhlas patří repozitáři."""
+        marker = self.tmp / "SMI-VZNIKNOUT"
         self.write_contract(self.repo, "true")
         git(self.repo, "add", "-A")
         git(self.repo, "commit", "-qm", "init")
         self.assertEqual(self.allow(self.repo).returncode, 0)
         self.write_contract(self.repo, f"touch {marker}")
         v = self.run_verify(self.repo)
+        self.assertTrue(marker.exists(), f"změněný kontrakt neběžel: {v.stderr}")
+
+    def replace_repository(self, command):
+        """Smaže repozitář a na tutéž cestu založí jiný – jako klon cizího."""
+        shutil.rmtree(self.repo)
+        self.repo.mkdir()
+        git(self.repo, "init", "-q", ".")
+        git(self.repo, "config", "user.email", "c@c")
+        git(self.repo, "config", "user.name", "c")
+        self.write_contract(self.repo, command)
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "cizi")
+
+    def test_other_repository_on_same_path_does_not_run(self):
+        marker = self.tmp / "NESMI-VZNIKNOUT"
+        self.write_contract(self.repo, "true")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        self.replace_repository(f"touch {marker}")
+        v = self.run_verify(self.repo)
+        self.assertFalse(marker.exists(), "cizí repozitář na téže cestě zdědil souhlas")
+        self.assertIn("první commit", v.stderr)
+        self.assertEqual(v.returncode, 2)
+
+    def test_consent_on_empty_repository_binds_first_commit(self):
+        """Souhlas vydaný před prvním commitem si identitu doplní při prvním běhu."""
+        marker = self.tmp / "NESMI-VZNIKNOUT"
+        self.write_contract(self.repo, "true")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        v = self.run_verify(self.repo)
+        self.assertIn("kontrola prošla", v.stderr)
+        file = next((self.home / ".local/state/claude-verify/allowed").glob("*"))
+        root = git(self.repo, "rev-list", "--max-parents=0", "HEAD").stdout.strip()
+        self.assertEqual(file.read_text().splitlines()[2], f"root {root}")
+        self.replace_repository(f"touch {marker}")
+        self.run_verify(self.repo)
         self.assertFalse(
-            marker.exists(), "spustil se příkaz, který nikdo neodsouhlasil"
+            marker.exists(), "doplněná identita cizí repozitář nezastavila"
         )
-        self.assertIn("změnil", v.stderr)
+
+    def legacy_consent(self, contract_line):
+        """Souhlas ve tvaru z doby vazby na kontrakt: třetí řádek je otisk."""
+        import hashlib
+
+        self.write_contract(self.repo, "true")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "init")
+        self.assertEqual(self.allow(self.repo).returncode, 0)
+        file = next((self.home / ".local/state/claude-verify/allowed").glob("*"))
+        lines = file.read_text().splitlines()
+        fp = hashlib.sha1(f"{contract_line}\n".encode()).hexdigest()
+        file.write_text(f"{lines[0]}\n{lines[1]}\n{fp}\n")
+        return file
+
+    def test_legacy_consent_with_matching_fingerprint_is_migrated(self):
+        """Starý souhlas, který by prošel i dřív, se převede bez dotazu."""
+        file = self.legacy_consent("test=true")
+        v = self.run_verify(self.repo)
+        self.assertIn("kontrola prošla", v.stderr)
+        self.assertTrue(file.read_text().splitlines()[2].startswith("root "))
+
+    def test_legacy_consent_with_other_fingerprint_does_not_run(self):
+        """Starý souhlas na jiný kontrakt by neprošel ani dřív – převod ho nevylepší."""
+        file = self.legacy_consent("test=jiny prikaz")
+        v = self.run_verify(self.repo)
+        self.assertEqual(v.returncode, 2)
+        self.assertIn("jiné znění kontraktu", v.stderr)
+        self.assertFalse(file.read_text().splitlines()[2].startswith("root "))
 
     def test_legacy_format_consent_is_invalid(self):
-        """Souhlas bez otisku se nedá ověřit, takže se nepoužije – a řekne se to.
+        """Souhlas bez vazby se nedá ověřit, takže se nepoužije – a řekne se to.
 
         Tichý degradovaný režim by z téhle opravy udělal dekoraci: běželo by se
         dál pod souhlasem, o kterém není jisté, na co byl vydaný.
@@ -965,11 +989,10 @@ class ConsentBoundToContract(unittest.TestCase):
         self.assertNotIn("podadresáři", v.stderr)
 
     def test_worktrees_with_different_contracts_keep_both_consents(self):
-        """Souhlas sdílí všechny worktree repozitáře, ale každá větev smí mít jiný kontrakt.
+        """Souhlas sdílí všechny worktree repozitáře, i když má každá větev jiný kontrakt.
 
-        S jediným uloženým otiskem přepsal souhlas vydaný v jednom worktree souhlas
-        druhého a kontrola se mezi nimi točila dokola – doloženo 27. 10. 2026
-        na větvích `main` a `docs/closing` projektu Eventoid.
+        Dokud se souhlas vázal na otisk kontraktu, přepsal souhlas vydaný v jednom
+        worktree souhlas druhého a kontrola se mezi nimi točila dokola.
         """
         self.write_contract(self.repo, "true")
         git(self.repo, "add", "-A")
@@ -986,22 +1009,6 @@ class ConsentBoundToContract(unittest.TestCase):
             self.assertNotIn(
                 "změnil", v.stderr, f"souhlas pro {where.name} přepsal druhý worktree"
             )
-
-    def test_unapproved_contract_in_other_worktree_still_blocks(self):
-        """Víc otisků nesmí znamenat volnou ruku: neschválený kontrakt dál neběží."""
-        marker = self.tmp / "NESMI-VZNIKNOUT"
-        self.write_contract(self.repo, "true")
-        git(self.repo, "add", "-A")
-        git(self.repo, "commit", "-qm", "init")
-        self.assertEqual(self.allow(self.repo).returncode, 0)
-        wt = self.tmp / "wt"
-        self.assertEqual(
-            git(self.repo, "worktree", "add", "-q", str(wt), "-b", "feat").returncode, 0
-        )
-        self.write_contract(wt, f"touch {marker}")
-        v = self.run_verify(wt)
-        self.assertFalse(marker.exists(), "spustil se kontrakt, který nikdo neodsouhlasil")
-        self.assertIn("změnil", v.stderr)
 
 
 class MarkdownBodyParser(unittest.TestCase):
@@ -1262,7 +1269,7 @@ class FormatAfterEdit(unittest.TestCase):
     Hook běží mimo permission systém po **každé** editaci a spouští binárku
     z repozitáře. Proto se testuje v obou směrech: že soubor opravdu naformátuje
     (jinak je to dekorace) a že ho nechá být všude, kde nesmí – bez souhlasu,
-    po změně kontraktu, u ignorovaného souboru, mimo projekt, přes symbolický
+    v jiném repozitáři na téže cestě, u ignorovaného souboru, mimo projekt, přes symbolický
     odkaz. Druhý směr je ten nebezpečný: propustit tam znamená spustit cizí kód.
 
     Formátovač je skript ležící v repozitáři, tedy přesně ten případ, kvůli
@@ -1344,16 +1351,20 @@ class FormatAfterEdit(unittest.TestCase):
             "formátovač z repozitáře běžel bez souhlasu",
         )
 
-    def test_changed_contract_is_not_run(self):
-        """Souhlas platí pro kontrakt, který člověk viděl, ne pro vyměněný příkaz."""
+    def test_other_repository_on_same_path_is_not_run(self):
+        """Souhlas patří repozitáři, ne cestě: cizí klon na jeho místě ho nezdědí."""
         self.commit_contract(format="true")
         grant_consent(self.repo, self.home)
+        shutil.rmtree(self.repo / ".git")
+        git(self.repo, "init", "-q", ".")
+        git(self.repo, "config", "user.email", "c@c")
+        git(self.repo, "config", "user.name", "c")
         self.commit_contract(format="sh fmt.sh")
         r = self.edit(self.repo / "app.py")
         self.assertEqual(r.returncode, PASSES)
         self.assertFalse(
             self.formatted(self.repo / "app.py"),
-            "vyměněný formátovač běžel na starý souhlas",
+            "formátovač cizího repozitáře běžel na cizí souhlas",
         )
 
     def test_ignored_file_is_left_alone(self):

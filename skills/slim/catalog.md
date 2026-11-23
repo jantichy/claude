@@ -101,7 +101,7 @@ Pravidlo, které nic nerozhoduje, zabírá místo každé session a navíc řed�
 
 - **Model to dělá i bez něj** – „piš srozumitelně“, „buď pečlivý“, „ověř si, že kód funguje“.
 - **Je vágní** – nejde podle něj rozhodnout konkrétní případ; test: dala by se podle něj zamítnout konkrétní změna?
-- **Opakuje hranici vynucenou jinde** – kontrolou, hookem, souhlasem z terminálu. Věta v kontextu je druhá kopie téže hranice.
+- **Opakuje hranici vynucenou jinde** – kontrolou, hookem, potvrzovacím dialogem. Věta v kontextu je druhá kopie téže hranice.
 - **Míří na situaci, která už nenastává** – odstraněný nástroj, zrušený skill, vyřešený incident.
 - **Popisuje místo předepisování** – vysvětluje, jak něco funguje, a z výkladu neplyne žádný pokyn.
 - **Je výjimka pro jeden projekt** v souboru, který platí pro všechny.

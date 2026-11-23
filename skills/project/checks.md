@@ -28,13 +28,13 @@ Chybí-li projektu něco z toho úplně (typicky testy u nového projektu), **ř
 
 **Co tím vzniká.** Globální `Stop` hook `~/.claude/hooks/verify.sh` od téhle chvíle po každé odpovědi spustí `typecheck`, `lint` a `test` a **nepustí Clauda ukončit práci nad červeným stavem**. Hook je registrovaný jednou v `~/.claude/settings.json`, takže se nikde nic dalšího **neinstaluje** – ale spustit se v projektu ještě nesmí: chybí mu souhlas, viz níž. Vypnout se dá přepínačem `~/.claude/hooks/verify.sh --disable <project>`, který si stav drží mimo repozitář, nebo proměnnou `CLAUDE_NO_VERIFY=1` – soubor v projektu se k tomu nepoužívá, protože by se commitnul a vypnul kontrolu v každém klonu (`~/Context/Coding/quality.md`, *Průběžná kontrola*).
 
-**Uživatel musí vydat souhlas, jinak průběžná kontrola neběží.** Kontrakt je kód v repozitáři a hook běží mimo permission systém, takže se souhlas dává jednou za projekt. Vypiš uživateli příkaz, ať ho spustí sám – **nespouštěj ho za něj**, tím by celá kontrola ztratila smysl:
+**Bez souhlasu průběžná kontrola neběží.** Kontrakt je kód v repozitáři a hook běží mimo permission systém, takže se souhlas dává jednou za repozitář. Spusť ho sám: Claude Code se uživatele zeptá dialogem (pravidlo `ask` v `~/.claude/settings.json`), takže rozhodnutí zůstává jeho, ale nemusí nic kopírovat do terminálu:
 
 ```
 ~/.claude/hooks/verify.sh --allow <project-root>
 ```
 
-Řekni mu u toho pravdu o tom, co schvaluje. Souhlas platí **pro repozitář včetně jeho worktree, ale jen pro ten kontrakt, který právě viděl**: podadresář s vlastním `CLAUDE.md` si ho nepůjčí a změna některého příkazu si vyžádá nové odsouhlasení. Co ty příkazy udělají, ale schválené není – `npm test` spustí, co je v `package.json`. **Vydat souhlas jde jen z terminálu**, takže ho za uživatele nespustí žádný nástroj ani skript. Do cizího naklonovaného repozitáře souhlas nepatří.
+Před spuštěním mu řekni pravdu o tom, co schvaluje. Souhlas platí **pro repozitář včetně jeho worktree a i po změně kontraktu**; nepůjčí si ho podadresář s vlastním `CLAUDE.md` ani jiný repozitář naklonovaný na tutéž cestu. Co ty příkazy udělají, ale schválené není – `npm test` spustí, co je v `package.json`. Do cizího naklonovaného repozitáře souhlas nepatří.
 
 Definice a prahy jednotlivých kontrol jsou v `~/Context/Coding/quality.md`. Řekni uživateli jednou větou, co se právě zapnulo – ne aby ho to překvapilo, až mu hook poprvé zablokuje konec odpovědi.
 

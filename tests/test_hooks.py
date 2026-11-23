@@ -740,13 +740,13 @@ class PermissionRuleSyntax(unittest.TestCase):
 
     Claude Code zná dvě syntaxe: prefix `Bash(příkaz:*)` a wildcard
     `Bash(a*b)`. Smíchané (`Bash(*verify.sh --allow:*)`) se čte jako prefix,
-    takže `*` na začátku je doslovný znak a pravidlo nechytí nic. Deny
+    takže `*` na začátku je doslovný znak a pravidlo nechytí nic. Pravidlo
     na souhlas `verify.sh` takhle nedrželo od svého vzniku a nikdo si toho
-    nevšiml, protože nefunkční deny mlčí stejně jako funkční.
+    nevšiml, protože nefunkční pravidlo mlčí stejně jako funkční.
 
     Testují se oba směry: kontrola musí chytit smíchaný tvar, ale nesmí hlásit
     čistý prefix ani čistý wildcard – jinak by kvůli ní někdo syntaxi rozbil.
-    Třetí test ověřuje, že deny na souhlas skutečně pokryje volání s cestou
+    Třetí test ověřuje, že `ask` na souhlas skutečně pokryje volání s cestou
     i bez ní; porovnání napodobuje wildcard, kde `*` znamená cokoliv.
     """
 
@@ -787,22 +787,40 @@ class PermissionRuleSyntax(unittest.TestCase):
         self.assertFalse(self.is_mixed("Bash(*verify.sh --allow*)"))
         self.assertFalse(self.is_mixed("Read(/Users/honza/.claude/**)"))
 
-    def test_verify_consent_is_denied_in_every_form(self):
-        deny = self.permissions().get("deny", [])
+    def test_verify_consent_asks_in_every_form(self):
+        """Souhlas vydává Claude a potvrzuje ho člověk v dialogu Claude Code.
+
+        `ask` se ptá i v auto módu a u složeného příkazu; `deny` by souhlas
+        zakázal úplně a `allow` by ho propustil bez dotazu.
+        """
+        perms = self.permissions()
         for command in (
             "verify.sh --allow .",
-            "~/.claude/hooks/verify.sh --allow /Users/honza/Projects/X",
+            '~/.claude/hooks/verify.sh --allow "/Users/honza/Projects/X Y"',
             "/Users/honza/.claude/hooks/verify.sh --revoke .",
             "./verify.sh --revoke .",
         ):
             with self.subTest(command=command):
                 self.assertTrue(
-                    any(self.wildcard_matches(r, command) for r in deny),
-                    f"deny v settings.json nezastaví `{command}`",
+                    any(
+                        self.wildcard_matches(r, command) for r in perms.get("ask", [])
+                    ),
+                    f"ask v settings.json se na `{command}` nezeptá",
                 )
+                for kind in ("allow", "deny"):
+                    self.assertFalse(
+                        any(
+                            self.wildcard_matches(r, command)
+                            for r in perms.get(kind, [])
+                        ),
+                        f"{kind} v settings.json přebíjí dotaz na `{command}`",
+                    )
         self.assertFalse(
-            any(self.wildcard_matches(r, "~/.claude/hooks/verify.sh") for r in deny),
-            "deny zastavuje i samotnou kontrolu, ne jen souhlas",
+            any(
+                self.wildcard_matches(r, "~/.claude/hooks/verify.sh")
+                for r in perms.get("ask", [])
+            ),
+            "ask se ptá i na samotnou kontrolu, ne jen na souhlas",
         )
 
 

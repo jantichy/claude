@@ -14,8 +14,11 @@ Mapa známého povrchu, ne seznam vyřešených problémů. U každé vynucovac�
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
-| Kontrakt v `CLAUDE.md` je kód z repozitáře – dá se do něj dopsat cokoliv | Souhlas se vydává **na konkrétní znění kontraktu**; změna ho zneplatní a hook se zastaví | hlídáno, `tests/test_verify.py` |
-| Souhlas si vydá proces sám | Vydání čte `/dev/tty`, kterou proces bez řídicího terminálu nemá – neprojde ani `!` prefix v Claude Code | hlídáno |
+| Kontrakt v `CLAUDE.md` je kód z repozitáře – dá se do něj dopsat cokoliv | Nic – souhlas patří repozitáři, ne znění kontraktu | **accepted**: kdo umí commitnout změnu kontraktu, umí commitnout i testy nebo `package.json`, které schválené příkazy spustí tak jako tak. Opakovaný souhlas po změně nic nechránil. |
+| Naklonovat cizí repozitář na cestu odsouhlaseného | Souhlas nese první commit repozitáře; nemá-li ho nový repozitář, hook nespustí nic | hlídáno, `tests/test_verify.py` |
+| Naklonovat na tutéž cestu fork odsouhlaseného repozitáře | Nic – fork má týž první commit | **accepted**: předpokládá smazat vlastní repozitář a nahradit ho cizím forkem. Kdo umí dostat commit do repozitáře, má spuštění i bez toho. |
+| Souhlas si vydá Claude sám | Na `verify.sh --allow` i `--revoke` se pravidlo `ask` ptá dialogem Claude Code, i v auto módu a ve složeném příkazu | hlídáno, `tests/test_hooks.py` |
+| Zapsat souhlas přímo do `~/.local/state/claude-verify/allowed/`, nebo volat skript přes interpret | Nic – sandbox je vypnutý a souhlas je obyčejný soubor | **accepted**: proti modelu, který jde cíleně, nedrží ani dialog, ani dřívější odpověď z terminálu; hranici by dal jen sandbox. Souhlas zavírá jinou díru – aby se cizí kód nespustil hookem bez jakékoliv akce modelu. |
 | Přesměrovat stav běhu a podstrčit „tenhle strom už prošel“ | `RUN_DIR` je natvrdo pod `$HOME`, `XDG_STATE_HOME` se ignoruje | hlídáno, od 14. 9. 2026 |
 | Podvrhnout sekci `## Kontrakt příkazů` v komentáři nebo v bloku kódu nad tou pravou | Tělo se čte parserem podle CommonMarku; dvě sekce téhož jména běh zastaví | hlídáno |
 | `CLAUDE_NO_VERIFY=1` | Nic – proměnná kontrolu vypne | **accepted**: je to únikový východ pro případ, kdy je kontrola sama rozbitá. Kdo ho použije, ví to; v logu session je to vidět. |
@@ -97,7 +100,7 @@ Deny `Read(//**/…)` hlídá jen nástroj Read; Bash kolem něj procházel (`. 
 
 | Čím se obejde | Co to chytí | Stav |
 |---|---|---|
-| Zavolat zakázaný příkaz přes interpret (`python3 -c`, `osascript`) | Nic – deny porovnává text příkazu | **accepted**, je to vlastnost mechanismu. Proto se na deny nespoléhá tam, kde má držet skutečná hranice (souhlas průběžné kontroly čte `/dev/tty`). |
+| Zavolat zakázaný příkaz přes interpret (`python3 -c`, `osascript`) | Nic – deny porovnává text příkazu | **accepted**, je to vlastnost mechanismu a platí stejně pro `ask`. Skutečnou hranici proti modelu by dal jen sandbox; viz řádek o přímém zápisu souhlasu průběžné kontroly. |
 | Git alias z `~/.gitconfig` (`git cc` = `add -A` + `--amend` + `--force`) | Delší aliasy jsou v deny jmenovitě | **částečně**: jednopísmenné (`a`, `c`, `p`, `m`) pokrýt nejdou, vzor `git c:*` by zablokoval i `git commit`. Drží to pravidlo v `~/.claude/standards/rules.md`, *Commituj jmenované cesty, ne `-A`*. |
 | Pustit session v režimu bypass (`--dangerously-skip-permissions`), který vypne deny i hooky na povolení | `disableBypassPermissionsMode: "disable"` v `settings.json` | hlídáno, `tests/test_hooks.py`; zámek se dá smazat z téhož souboru, ale změna `settings.json` jde přes diff a commit |
 | Model upraví `settings.json` nebo skript v `hooks/` a tím si vypne kontrolu nebo rozšíří oprávnění | Nic – deny `Edit` na ně v `settings.json` není | **nerozhodnuto**: deny by v tomhle repozitáři blokoval běžný vývoj hooků, a bez něj změnu zachytí jen diff, který autocommit rovnou pushne. |

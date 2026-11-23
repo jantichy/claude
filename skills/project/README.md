@@ -33,7 +33,7 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 - **Nepřepisuje nic naslepo.** Chybějící soubor založí; u rozporu ukáže rozdíl a zeptá se.
 - **Nevymýšlí příkazy, které projekt neumí.** Řádek, který nikam nevede, je horší než chybějící řádek – a co chybí, se výslovně vypíše i s tím, co se tím nebude kontrolovat.
 - **Kontroly kvality nezměkčuje sám.** Zapnutí přísného režimu u staršího projektu vyplaví stovky chyb naráz; snížit laťku smí jen člověk a s důvodem zapsaným do projektu, včetně termínu, kdy se přitvrdí.
-- **Nespouští za vás souhlas s automatickou kontrolou.** Vypíše příkaz, který si spustíte sami – jinak by celá kontrola ztratila smysl – a řekne pravdu o tom, co tím schvalujete.
+- **Souhlas s automatickou kontrolou nevydá bez vás.** Příkaz spustí sám, ale Claude Code se vás na něj zeptá dialogem – a předem řekne pravdu o tom, co tím schvalujete.
 - **Ptá se postupně**, jednu otázku za druhou, a to, co jde odvodit, navrhne rovnou k odsouhlasení. Nastavení typu ano/ne – autocommit, Memory, rozložení na disku – posbírá do jedné otázky se zaškrtávátky: co zaškrtnete, to se zapne. U existujícího projektu nic potichu nevypne – co by se proti dnešku vypnulo, nechá potvrdit.
 - **Nezakládá soubory do zásoby.** U projektu, kde se nic nerozhoduje, je prázdný soubor pro rozhodnutí horší než žádný – a vy neodklikáváte seznam, o kterém se na začátku stejně nedá rozhodnout.
 - **Hlídá, aby popis projektu nestál na třech místech různě** – v instrukcích, v přehledu pro lidi a v nastavení repozitáře.
