@@ -44,16 +44,16 @@ Smlouvy, rozpočty a korespondence k rekonstrukci bytu – co je objednané, zap
 
 ### Git
 
-Zeptej se (AskUserQuestion), dvě volby:
+Zeptej se jednou otázkou na git i autocommit (AskUserQuestion, `multiSelect: true`). Nezaškrtnutá volba znamená ne, protože předvybrat ji nástroj neumí:
 
-- **Ne (výchozí)** – nic dalšího nevznikne.
 - **Lokální git nad celým adresářem** – `git init`, `.gitignore` s řádky `.DS_Store` a `~$*` (zámky otevřených dokumentů Office) a první commit celého stavu se zprávou „Výchozí stav adresáře“. Dovolí vrátit hromadné přejmenování nebo přesun; cenou je, že historie nese binárky a `.git` naroste zhruba o velikost adresáře – tu do popisu volby napiš (`du -sh .`).
+- **Autocommit** – viz *Autocommit* níž.
 
-*`adopt`:* je-li git už založený, neptej se a jen to zmiň.
+*`adopt`:* je-li git už založený, na něj se neptej a jen to zmiň; autocommit pak polož jako obyčejnou otázku ano/ne.
 
 ### Autocommit
 
-*Jen s gitem.* Zeptej se (AskUserQuestion): Ano/Ne. Při ano proveď totéž co `/autocommit enable`. Commituje se jen to, na co Claude sáhl (`~/.claude/standards/rules.md`, *Commituj jmenované cesty, ne `-A`*), takže uživatelovy ruční změny v adresáři zůstanou necommitnuté, dokud je necommitne sám.
+*Jen s gitem*; volba padla spolu s gitem. Zaškrtl-li ji uživatel bez gitu, řekni, že se neuplatnila. Při zapnutí proveď totéž co `/autocommit enable`. Commituje se jen to, na co Claude sáhl (`~/.claude/standards/rules.md`, *Commituj jmenované cesty, ne `-A`*), takže uživatelovy ruční změny v adresáři zůstanou necommitnuté, dokud je necommitne sám.
 
 ### Doménové znalosti
 

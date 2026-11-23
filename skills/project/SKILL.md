@@ -35,7 +35,7 @@ Režim **`update` je hlavní důvod, proč je skill opakovatelný.** Standardy a
 
 - **Postup se tu člení na kroky, ne na fáze** – jako v jediném skillu životního cyklu. Kritérium normy (`~/.claude/skills/skills.md`, *Číslování a názvosloví*) zní, čí odpovědi tvoří výsledek: tady je výsledkem to, co uživatel naodpovídal, takže postup je sled otázek. Ostatní skilly něco samy najdou nebo vyrobí a ptají se až na nálezy – ty mají fáze, i když se ptají stejně často. Číslují se **plochou vzestupnou řadou bez písmen** (`~/.claude/skills/skills.md`, *Číslování a názvosloví*). Kroky 5–8 zakládají standardní strukturu a byly kdysi jedním krokem s podkroky `6a`–`6c`; kritériu normy pro písmennou podfázi ale nevyhověly – jsou to fáze jedné volby, ne samostatné výstupy –, tak se z nich staly samostatné kroky.
 - **Ve worktree layoutu nepracuj v `main/`.** Přijdeš-li do projektu, který ten layout **už má**, zapisuj do vlastní větve a jejího worktree – viz krok 0, *Nejdřív zjisti, kde stojíš*. Zakazuje to `~/.claude/standards/worktree.md`, *`main/` se nemaže a nepracuje se v něm*, a pro `/project` to platí dvojnásob: přepisuje `CLAUDE.md`, `README.md` a celé `docs/` – tedy soubory, které mají ostatní session rozečtené a rozepsané. (Zapíná-li layout teprve tenhle běh, výjimku a důvod má krok 0.)
-- **Otázky pokládej jednu po druhé**, ne všechny najednou. U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
+- **Otázky pokládej jednu po druhé**, ne všechny najednou – kromě přepínačů ano/ne, které jdou naráz v jedné otázce (krok 3, *Přepínače*). U pevné sady možností použij **AskUserQuestion**, u otevřených otázek (popis projektu, URL remote) se ptej v chatu a počkej na odpověď.
 - **Dvourychlostní režim.** Mechanické a jednoznačné věci udělej rovnou a jen je vypiš (založení chybějícího souboru, doplnění chybějící sekce). Sporné předlož uživateli – zejména cokoliv, co **přepisuje nebo maže existující obsah**.
 - **Nikdy nepřepiš existující soubor bez zeptání.** Chybí-li soubor, založ ho. Existuje-li a je v rozporu se zvolenou preferencí, ukaž rozdíl a zeptej se.
 - **V režimu `update` se na hotové volby neptej znovu.** Co je v `CLAUDE.md` zapsané a dává smysl, platí. Otázka se pokládá jen tam, kde `update` našel rozpor nebo mezeru – a klade se o tom rozporu, ne o celém kroku.
@@ -180,11 +180,26 @@ Do bloku metadat v `CLAUDE.md` zároveň doplň řádek `Repozitář` s URL remo
 
 U GitLabu a jiných hostitelů tenhle krok přeskoč a řekni uživateli, že popisek si tam musí nastavit ručně.
 
+### Přepínače pro kroky 4, 5, 9 a 10
+
+Hned po gitu – i když padlo „Nic“ – polož **jednu** otázku (AskUserQuestion, `multiSelect: true`) se všemi dvojvolbami, které na projekt sedí. Kroky 4, 5, 9 a 10 se pak už neptají, jen provedou, co tady padlo. Pointa: čtyři otázky ano/ne za sebou zdržují víc, než kolik rozhodnutí nesou.
+
+**Nezaškrtnutá volba znamená výchozí stav, zaškrtnutím se mění.** AskUserQuestion volbu předvybrat neumí, takže každou formuluj jako odchylku – u nového projektu od doporučené hodnoty, u existujícího od dnešního stavu. Uživatel tak zaškrtává jen to, co chce jinak, a prázdný výběr nic nerozbije.
+
+| Volba, když je zaškrtnutá | Nabídni ji | Nezaškrtnutá znamená | Provede |
+|---|---|---|---|
+| **Worktree layout** – víc Claude session nad projektem naráz | je-li git a projekt layout ještě nemá | jeden pracovní adresář | krok 4 |
+| **Dokumentace v kořeni** místo v `docs/` | jen v `create` | `docs/` | krok 5 |
+| **Autocommit** | je-li git | bez autocommitu | krok 9 |
+| **Povolit trvalou Memory** | vždy | vše jen do lokálních `.md` (doporučeno) | krok 10 |
+
+*`adopt` a `update`:* dnešní stav zjisti **před** otázkou – layout z kroku 0, autocommit ze sekce `## Autocommit`, paměť ze sekce `## Paměť` v projektovém `CLAUDE.md`. Nastavenou volbu formuluj jako změnu („Vypnout autocommit“) a dnešní stav napiš do `description`; v `update` nabídni jen to, kde se našel rozpor (*Zásady pro celý průběh*). Zbude-li jediná volba, polož ji jako obyčejnou otázku ano/ne; nezbude-li žádná, otázku vynech.
+
 ## Krok 4 – Layout repozitáře
 
 *Jen pokud v kroku 3 padla jiná volba než „Nic“.*
 
-Zeptej se (AskUserQuestion): jak má být projekt rozbalený na disku?
+Volba padla v kroku 3, *Přepínače*; popis do jejího `description` ber odsud:
 
 - **Jeden pracovní adresář (jednoduché)** – klasika: `.git` a rozbalený projekt přímo v adresáři. Vhodné, když nad projektem pracuješ vždy v jedné session.
 - **Worktree layout (paralelní práce)** – kontejner s `.bare` a jedním pracovním podadresářem na větev. Vhodné, když chceš nad projektem běžet ve víc Claude session naráz, aniž si přepisují soubory. Popis viz `~/.claude/standards/worktree.md`.
@@ -234,7 +249,7 @@ Kroky 5 až 8 zakládají standardní strukturu. **Řiď se `~/.claude/standards
 
 Standardní soubory leží buď v `docs/`, nebo přímo v kořeni projektu. Obojí je rovnocenné.
 
-*`create`:* zeptej se (AskUserQuestion, jedna otázka):
+*`create`:* volba padla v kroku 3, *Přepínače*; popis do jejího `description` ber odsud:
 
 | Volba | Popis pro uživatele |
 |---|---|
@@ -309,17 +324,15 @@ Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a v
 
 ## Krok 9 – Autocommit
 
-Zeptej se (AskUserQuestion): zapnout autocommit? Ano/Ne. Při ano proveď totéž co `/autocommit enable` (viz `~/.claude/skills/autocommit/SKILL.md`).
+Volba padla v kroku 3, *Přepínače*. Při zapnutí proveď totéž co `/autocommit enable` (viz `~/.claude/skills/autocommit/SKILL.md`).
 
-*`adopt`:* nejdřív **zjisti aktuální stav** – sekci `## Autocommit` v projektovém `CLAUDE.md` – a uveď ho v otázce, ať uživatel ví, co mění.
+*`adopt`:* aktuální stav se zjišťuje před přepínači a otázka ho uvádí (krok 3, *Přepínače*), ať uživatel ví, co mění.
 
 **Chybí-li v zapnuté sekci řádek `@~/.claude/skills/autocommit/autocommit.md`, doplň ho** a řekni to – bez něj je to přepínač, který nic nespíná, protože pravidla commitování se do projektu dostanou jedině tím importem.
 
 ## Krok 10 – Paměťová politika
 
-Zeptej se (AskUserQuestion): „Má Claude v tomto projektu ukládat poznatky do trvalé Memory, nebo vše explicitně do lokálních .md souborů?“ Možnosti: **Jen lokální .md soubory (doporučeno)** / **Normální chování (Memory povolena)**.
-
-Při první volbě přidej do `CLAUDE.md`:
+Volba padla v kroku 3, *Přepínače*. Není-li trvalá Memory povolená, přidej do `CLAUDE.md`:
 
 ```
 ## Paměť
