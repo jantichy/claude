@@ -288,7 +288,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-10-30** · `/end` · `2abca12` · session `07f6a6f2-25ac-4f57-832e-ed8d054613b8` · prompty 14/14 · 1 téma (1 rozhodnuto: přesun do `done.md` počkal, až souběžná session commitne své rozdělané `todo.md` a `done.md`) · mimo rozsah: nesledované `stats-cache.json` a `state/` ponechány · meze: 44 bloků myšlení (ve formátu prázdné), 7 výstupů Edit, 4 výstupy Read; nabídka připsat výskyt k položce o `-A` se nepředkládala, výskyt z 30. 10. 2026 zapsala souběžná session
 - **2026-10-30** · `/end` · `20d7c0a` · session `07f6a6f2-25ac-4f57-832e-ed8d054613b8` · prompty 18/18 · 0 témat · mimo rozsah: žádné · meze: 287 bloků myšlení (ve formátu prázdné), 17 výstupů Edit, 9 výstupů Read; druhý průchod téže session – od prvního přibyla oprava `.gitignore` a autonomní běh nad frontou, každá jeho položka se commitnula i se zápisem v `todo.md` nebo `done.md` už za běhu; do `todo.md` přibyl první ostrý doklad k `handoff.py`
 - **2026-10-30** · `/end` · `ee6362c` · session `f879d3ed-7b84-4add-9e40-989011dbc8f0` · prompty 15/15 · 0 témat · mimo rozsah: žádné · meze: 87 bloků myšlení (ve formátu prázdné), 18 výstupů Edit, 5 výstupů Write a 2 výstupy Read nečteny, transcript nečten celý (0 kompaktací, prompty prošly z kontextu)
-- **2026-11-02** · `/end` · `46c31af` · session `0115c311-ca9b-4ea4-95c5-ff67ccc6bdb2` · prompty 15/15 · 1 téma (1 rozhodnuto: stopa slova `favicon` v historii repozitáře se nechává být) · mimo rozsah: žádné · meze: 2 odložené výstupy neotevřeny (výpis grepu nad decisions.md, obsah převyprávěn čtením souborů); inventura nadsazuje prompty duplicitami (`docs/todo.md`)
+- **2026-11-02** · `/end` · `46c31af` · session `0115c311-ca9b-4ea4-95c5-ff67ccc6bdb2` · prompty 16/16 · 1 téma (1 rozhodnuto: stopa slova `favicon` v historii repozitáře se nechává být) · mimo rozsah: žádné · meze: 2 odložené výstupy neotevřeny (výpis grepu nad decisions.md, obsah převyprávěn čtením souborů); inventura nadsazuje prompty duplicitami (`docs/todo.md`)
 - **2026-11-02** · `/end` · `0eb57b5` · session `0115c311-ca9b-4ea4-95c5-ff67ccc6bdb2` · prompty 18/18 · 0 témat · mimo rozsah: žádné · meze: žádné nové od předchozího průchodu
 - **2026-11-02** · `/end` · `70e37ff` · session `0115c311-ca9b-4ea4-95c5-ff67ccc6bdb2` · prompty 20/20 · 0 témat · mimo rozsah: žádné · meze: žádné nové od předchozího průchodu
 
@@ -311,6 +311,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-11-16** · `/end` · `1f85514` · session `aee12c10-95a1-4209-b5c7-7e80274d1fe4` · prompty 29/29 · 0 témat (0 rozhodnuto, 0 bezpředmětných) · mimo rozsah: žádné · meze: žádné
 - **2026-11-19** · `/end` · `fed458e` · session `3937f946-ee2b-4b60-b043-3f264f0964eb` · prompty 9/9 · 0 témat · mimo rozsah: žádné · meze: žádné
 - **2026-11-23** · `/end` · `3b9de4d` · session `dcd2564c-9605-4db7-935e-b5302184b36a` · prompty 12/12 · 0 témat · mimo rozsah: zastaralá věta o souhlasu z terminálu v `CLAUDE.md` Eventoidu – opravena tam na `main` · meze: žádné
+- **2026-11-23** · `/end` · `e2de753` · session `be302a9b-6781-4ead-bcac-26c736467845` · prompty 16/16 · 1 téma (1 rozhodnuto) · mimo rozsah: žádné · meze: 55 bloků myšlení a 3 výstupy ToolSearch nečteny z principu; obsah prošel z kontextu, kompaktací 0
 
 ## Odvedená práce
 
