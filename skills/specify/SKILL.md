@@ -72,9 +72,9 @@ Výjimka je jediná: **ověřovací pokus**, když na odpovědi stojí rozhodnut
 
 Navíc si zjisti tohle:
 
-1. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Pokračuj až pak; specifikace bez místa, kam zapisovat rozhodnutí, je poloviční práce. **Chybějící `backlog.md` sám o sobě neblokuje** – není kam zapisovat, ale je co číst; zmiň ho ve výpisu a pokračuj (*Fáze 1*, bod 5 s tím počítá).
+1. **Zkontroluj strukturu.** Má blok metadat v `CLAUDE.md` řádek `Struktura`? Chybí-li, nabídni `/project` – bez něj není jasné, kam soubory zakládat. Chybějící standardní soubor vadou není, vznikne prvním zápisem (`~/.claude/standards/structure.md`, *Které soubory vůbec vzniknou*); chybějící `backlog.md` jen znamená, že není z čeho vybírat (*Fáze 1*, bod 5 s tím počítá).
 
-   **Přečti si i `## Struktura a dokumentace` v `CLAUDE.md`** – jsou-li tam vypsané *Produktové podklady*, projekt se zavázal je vést. **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md`; `demand.md`, `competition.md` a `risks.md` patří `/discovery` a `operation.md` vzniká až po nasazení v `/evaluate`. Chybí-li ty tři, přestože jsou zapsané, **nabídni `/discovery`**: bez poptávky, konkurence a rizik se píše zadání naslepo.
+   **Produktové podklady, které projekt vede, poznáš podle toho, že existují.** **Tenhle skill z nich píše tři** – `scenarios.md`, `glossary.md` a `pricing.md`; `demand.md`, `competition.md` a `risks.md` patří `/discovery` a `operation.md` vzniká až po nasazení v `/evaluate`. Staví-li se produkt pro lidi zvenčí a `demand.md` neexistuje, **nabídni `/discovery`**: bez poptávky, konkurence a rizik se píše zadání naslepo.
 2. **Existující podklady.** Projdi, co v projektu už je – zadání, brief, zápis ze schůzky, starý systém, exporty, `docs/research/`. **Cizí podklady jsou read-only** – kopírovat si z nich do projektu smíš a máš, zapisovat do nich nikdy.
 3. **Urči vstupní bod.** Skill se dá spustit i uprostřed – neběží vždycky celý:
 
@@ -134,9 +134,9 @@ Zapiš do **`docs/requirements.md`**. Šablona je v `~/.claude/skills/specify/do
 
 ### Scénáře, glosář a ceník
 
-Tři z *Produktových podkladů*, které projekt vede volitelně (`## Struktura a dokumentace` v `CLAUDE.md`, viz *Fáze 0*). Vede-li projekt některý z téhle trojice, **sepiš ho v tomhle kroku spolu s požadavky**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/.claude/standards/product.md`, *Produktové podklady*.
+Tři z *Produktových podkladů*, o kterých rozhoduje tenhle skill. **Sepiš v tomhle kroku spolu s požadavky ty, na které projekt sedí**: všechny tři jsou produktové, ne technické, a vznikají z téhož dialogu. Šablony a pravidla drží `~/.claude/skills/specify/documents.md`; definici toho, co který dokument je, `~/.claude/standards/product.md`, *Produktové podklady*.
 
-**Nevede-li projekt žádný z nich, nic nezakládej** a jdi rovnou na kontrolu. Zdá-li se ti přitom, že by se některý hodil, řekni to jednou větou a nech rozhodnout – závazek vede `CLAUDE.md`, ne tenhle běh.
+**Který z nich zakládáš, rozhodni sám podle kritérií** v `~/.claude/standards/product.md`, *Produktové podklady* – `scenarios.md` u produktu, ke kterému se píše nápověda nebo se testuje na lidech, `glossary.md` u domény, kde se plete víc entit naráz, `pricing.md` jen u produktu, který se prodává. Co zakládáš a co ne, řekni jednou větou i s důvodem, ať to uživatel může zvrátit; neptej se. Existující podklad aktualizuj.
 
 **Glosář se ještě rozroste.** Entita, která dostane jméno až v návrhu řešení, do něj přibude v `/architect` – tady se zakládá, neuzavírá.
 

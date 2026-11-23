@@ -20,8 +20,8 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 4. **Režim pozná sám** podle otisku, který si v projektu nechává – nemusíte ho zadávat.
 5. **Nastaví Git** včetně založení vzdáleného repozitáře a propíše do jeho popisku a odkazu totéž, co je v projektu, aby na obou místech nestálo něco jiného.
 6. **Zvládne i uspořádání s jedním pracovním adresářem na větev**, takže nad projektem může běžet víc sezení naráz, aniž si přepisují soubory. Přijde-li do projektu, který tak už uspořádaný je, **hlavní větev nechá být** a vlastní si založí, teprve až se má opravdu něco změnit; merge nechává na vás.
-7. **Založí dokumentační strukturu** – co je odložené, co je jen nezávazný nápad, co hotové, co se rozhodlo a proč, jaké principy platí – a nechá vás vybrat, jestli má ležet ve vlastní složce, nebo v kořeni.
-8. **Nabídne produktové podklady** – doklady poptávky, analýzu konkurence, registr rizik, scénáře, glosář, ceník. Nezakládá je prázdné; jen si zapíše, které z nich projekt vede, aby se pak poznal chybějící dokument od nechtěného.
+7. **Určí, kde bude ležet dokumentace** – co je odložené, co je jen nezávazný nápad, co hotové, co se rozhodlo a proč, jaké principy platí. Zeptá se jen, jestli ve vlastní složce, nebo v kořeni.
+8. **Na jednotlivé soubory se neptá.** Úkoly, rozhodnutí, pravidla i produktové podklady jako analýzu konkurence nebo glosář si Claude zakládá sám, až do nich je co zapsat – dopředu by se jen hádalo, co projekt bude potřebovat.
 9. **Zapne kontroly kvality** – zapíše, čím se v projektu pouštějí testy, typová kontrola, linter, build a formátovač, a řekne, co se tím nebude kontrolovat, když projekt některý z nich nemá. K tomu language server pro jazyk projektu a zákazy, které model nesmí obejít – u převzatého kódu bez testů jako první úkol testy, které zachytí jeho dnešní chování.
 10. **Napojí doménové checklisty** podle povahy projektu.
 11. **Drží pohromadě všechno pro jednoho klienta.** Ve složce klienta založí kromě běžného projektu i profil klienta – kdo to je, kdo tam rozhoduje, jak se s nimi pracuje – a fakturační dohodu, profil napojí tak, aby ho znal každý projekt pro toho klienta, a klienta vedeného dřív jinde do složky převede.
@@ -35,7 +35,7 @@ Postupně se zeptá na všechno, co se u nového projektu řeší pokaždé znov
 - **Kontroly kvality nezměkčuje sám.** Zapnutí přísného režimu u staršího projektu vyplaví stovky chyb naráz; snížit laťku smí jen člověk a s důvodem zapsaným do projektu, včetně termínu, kdy se přitvrdí.
 - **Nespouští za vás souhlas s automatickou kontrolou.** Vypíše příkaz, který si spustíte sami – jinak by celá kontrola ztratila smysl – a řekne pravdu o tom, co tím schvalujete.
 - **Ptá se postupně**, jednu otázku za druhou, a to, co jde odvodit, navrhne rovnou k odsouhlasení.
-- **Nezakládá soubory do zásoby.** U projektu, kde se nic nerozhoduje, je prázdný soubor pro rozhodnutí horší než žádný.
+- **Nezakládá soubory do zásoby.** U projektu, kde se nic nerozhoduje, je prázdný soubor pro rozhodnutí horší než žádný – a vy neodklikáváte seznam, o kterém se na začátku stejně nedá rozhodnout.
 - **Hlídá, aby popis projektu nestál na třech místech různě** – v instrukcích, v přehledu pro lidi a v nastavení repozitáře.
 - **Ověřuje, že odkazy vedou někam.** Každá zmíněná cesta i každý zmíněný skill musí existovat; tím se chytí přejmenované a zrušené věci, aniž byste museli vědět, co se změnilo.
 - **Nenajde-li nic, řekne to.** Běh bez zásahu je platný výsledek revize, ne důvod něco vymýšlet.
@@ -70,7 +70,7 @@ Vědomě ponecháno (1)
 
 - **Nepíše zadání ani plán.** Co se staví, řeší `/specify`, rozpad na úkoly `/breakdown`.
 - **Neprogramuje.** Ani scaffold, ani závislosti. Nastavuje projekt, ne aplikaci.
-- **Nenaplňuje soubory obsahem.** Zakládá je prázdné, jen s nadpisem.
+- **Nenaplňuje soubory obsahem.** Kromě README s názvem a popiskem nezakládá nic; soubory vznikají až prací.
 - **Nerediguje dokumentaci.** Hlídá tvar – kde soubor leží, jak se jmenuje, jak je seřazený. Jestli je zapsané rozhodnutí správné, řeší `/consistency` a `/review`.
 
 ## Jak si ho nainstalovat

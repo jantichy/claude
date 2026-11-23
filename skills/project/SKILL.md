@@ -259,85 +259,29 @@ Zapiš do bloku metadat v `CLAUDE.md`, za řádek `Slug`:
 - **Struktura:** docs/
 ```
 
-## Krok 6 – Standardní struktura: které soubory založit
+## Krok 6 – Standardní struktura: co se zakládá
 
-Povinný je jen `CLAUDE.md`. U zbytku se zeptej (AskUserQuestion, `multiSelect: true`, vše předvybrané):
+**Na výběr souborů se neptej** – ani na standardní soubory, ani na produktové podklady. Hned vzniká jen `README.md`, protože obsah má: název a popisek z kroku 1 (krok 7). Ostatní standardní soubory vznikají prvním zápisem, podklady prací v `/discovery` a `/specify`, `requirements.md`, `architecture.md` a `plan.md` přes `/specify`, `/architect` a `/breakdown` (`~/.claude/standards/structure.md`, *Které soubory vůbec vzniknou*). Pointa: o souboru se rozhoduje, až je co do něj zapsat – při založení projektu by se jen hádalo.
 
-| Soubor | Popis pro uživatele |
-|---|---|
-| `README.md` | Co projekt je, pro člověka. U privátního projektu bez publika nemusí být. |
-| `todo.md` + `backlog.md` + `done.md` | Fronta rozhodnutých úkolů, zásobník nezávazných nápadů a záznam hotového. **Jedna volba pro všechny tři** – samostatně nedávají smysl. |
-| `decisions.md` | Co jsme rozhodli a proč, včetně zamítnutých variant. |
-| `rules.md` | Principy, ve kterých se projekt pohybuje. |
-
-Nezaložený soubor **není odchylka** – vznikne, až bude potřeba. Do `CLAUDE.md` (krok 7, *Zápis*) vypiš jen ty, které vznikly.
-
-`requirements.md`, `architecture.md` a `plan.md` **nezakládej**, vznikají prací přes `/specify`, `/architect` a `/breakdown`.
-
-### Produktové podklady
-
-Druhá otázka, **jen u projektu, kde se staví produkt** – ne u konfiguračního repozitáře, znalostní báze pro sebe ani jednorázového nástroje. Jejich definici drží `~/.claude/standards/product.md`, *Produktové podklady*; tady se jen vybírá.
-
-`AskUserQuestion`, `multiSelect: true`, **nic předvybrané** – opačně než u standardních souborů. Většina projektů nemá ani jeden a předvybraný seznam by je odklikl všechny:
-
-| Soubor | Popis pro uživatele |
-|---|---|
-| `demand.md` | Proč to vůbec stavět – kdo má ten problém, jak ho dnes řeší a čím je doložené, že ho chce řešit jinak. Má smysl i u interního nástroje a zakázky. |
-| `competition.md` | Kdo je konkurence, co umí, za kolik – a čím se proti nim vymezíme. Nemá smysl u interního nástroje ani zakázky. |
-| `risks.md` | Co je na produktu rizikové a co se kvůli tomu v návrhu změní. |
-| `scenarios.md` | Co s produktem uživatel dělá, krok za krokem. Slouží i testování, nápovědě a FAQ. |
-| `glossary.md` | Jak se v téhle doméně čemu říká. Vyplatí se, plete-li se víc entit naráz. |
-| `pricing.md` | Tarify, limity, trial, co po expiraci – jen u produktu, který se prodává. |
-
-**`operation.md` se tady nevybírá a není to opomenutí.** Zakládá ho až první běh `/evaluate` nad nasazeným projektem – dokud není co nasadit, není o čem rozhodovat, a závazek vést podklad o provozu by u projektu před prvním vydáním nic neznamenal. Ostatní podklady jsou naopak rozhodnutí, které se dá udělat hned.
-
-**Soubory nezakládej.** Prázdný `competition.md` předstírá úvahu, která se nestala. Vybrané jen **zapiš do `CLAUDE.md`** (krok 7, *Zápis*) jako závazek; vzniknou prací v `/discovery` a `/specify`, a `/end` pak podle toho seznamu pozná chybějící dokument od nechtěného.
-
-*`adopt` a `update`:* co už existuje, ber jako zvolené. Existuje-li soubor, který v `CLAUDE.md` zapsaný není, doplň zápis; je-li zapsaný a nevznikl, zmiň to a nech rozhodnout, jestli se čeká, nebo se závazek ruší.
-
-*`adopt`:* co už existuje, ber jako zvolené; ptej se jen na to, co chybí.
+*`adopt` a `update`:* chybějící soubor nedoplňuj, ani prázdný.
 
 ## Krok 7 – Standardní struktura: obsah
 
-`README.md` u nového projektu: nadpis s **lidským názvem** a popiskem z kroku 1 jako prvním odstavcem – tam se popisek smí rozvést do víc vět. U existujícího projektu zkontroluj, že nadpis a první odstavec sedí s blokem metadat v `CLAUDE.md`; rozcházejí-li se, srovnej je. Soubory v `docs/` zakládej **prázdné, jen s nadpisem** – obsah nevymýšlej dopředu.
+`README.md` u nového projektu: nadpis s **lidským názvem** a popiskem z kroku 1 jako prvním odstavcem – tam se popisek smí rozvést do víc vět. U existujícího projektu zkontroluj, že nadpis a první odstavec sedí s blokem metadat v `CLAUDE.md`; rozcházejí-li se, srovnej je. Jiné soubory tady nezakládej (krok 6).
 
 **README je pro člověka, ne pro Clauda.** Definici, co do něj patří a co ne, má `~/.claude/standards/structure.md`, sekce `README.md`; drž se jí doslova. U existujícího projektu README **projdi celé** a co je normativní pokyn pro Clauda – pravidla práce v repozitáři, konvence pojmenování, povinnost něco udržovat, odkaz na to, čím se má Claude řídit – přesuň do `CLAUDE.md`, `docs/rules.md` nebo `docs/decisions.md` podle povahy. Nekopíruj, přesouvej: informace má žít na jednom místě.
 
 ### Zápis do CLAUDE.md
 
-Přidej sekci – konkrétní deklaraci, ne opis konvence:
-
-Vypiš **jen soubory, které v projektu opravdu jsou**, s cestou podle zvoleného režimu:
+Přidej sekci. **Soubory v ní nevypisuj:** co do kterého patří, drží `structure.md`, cesty plynou z řádku `Struktura` a opsaný výčet by se s nimi tiše rozešel.
 
 ```
 ## Struktura a dokumentace
 
-Projekt drží standardní strukturu podle `~/.claude/standards/structure.md`:
+Projekt drží standardní strukturu podle `~/.claude/standards/structure.md`, na místě podle řádku `Struktura` v bloku metadat.
 
-- `README.md` – co projekt je, pro člověka (ne instrukce pro Clauda)
-- `docs/todo.md` – co je odložené na později, ale rozhodnuté, že se to udělá
-- `docs/backlog.md` – nezávazné nápady, o kterých se nerozhodlo; vybírá se z nich, když se řeší, co dál
-- `docs/done.md` – co je hotové
-- `docs/decisions.md` – co jsme rozhodli a proč, včetně zamítnutých variant
-- `docs/rules.md` – principy, ve kterých se projekt pohybuje
-
-Všechny tyhle soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/end`.
+Standardní soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/end`.
 ```
-
-Vybral-li uživatel v kroku 6 nějaké **produktové podklady**, připoj pod ten seznam druhý – i u těch, které ještě nevznikly. Je to závazek, ne inventura:
-
-```
-**Produktové podklady**, které tenhle projekt vede (zakládají se prací, ne dopředu):
-
-- `docs/demand.md` – proč to stavíme, čím je poptávka doložená a jaký je verdikt (`/discovery`)
-- `docs/competition.md` – kdo je konkurence, co umí a jaká je proti nim naše pozice (`/discovery`)
-- `docs/risks.md` – co je na produktu rizikové a co se kvůli tomu v návrhu změnilo (`/discovery`)
-- `docs/scenarios.md` – co s produktem uživatel dělá, krok za krokem (`/specify`)
-
-Platí pro ně táž povinnost průběžné aktualizace jako pro soubory výš.
-```
-
-Nevybral-li žádný, **sekci nezakládej** – prázdný nadpis tvrdí, že se na to zapomnělo.
 
 ## Krok 8 – .gitignore
 

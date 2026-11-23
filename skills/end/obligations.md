@@ -10,11 +10,9 @@ Obsah jednotlivých souborů definuje `~/.claude/standards/structure.md`; tahle 
 
 Vždycky: `CLAUDE.md`, `README.md`, `docs/todo.md`, `docs/backlog.md`, `docs/done.md`, `docs/decisions.md`, `docs/rules.md`.
 
-Má-li projekt zadání, k tomu `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`. **Vede-li produktové podklady** – poznáš z `## Struktura a dokumentace` v `CLAUDE.md` – ještě `docs/demand.md`, `docs/competition.md`, `docs/risks.md`, `docs/scenarios.md`, `docs/glossary.md` a `docs/pricing.md`.
+Má-li projekt zadání, k tomu `docs/requirements.md`, `docs/architecture.md` a `docs/plan.md`. Z produktových podkladů ty, které existují: `docs/demand.md`, `docs/competition.md`, `docs/risks.md`, `docs/scenarios.md`, `docs/glossary.md`, `docs/pricing.md` a `docs/operation.md`.
 
-**`docs/operation.md` posuzuj podle toho, jestli soubor existuje, ne podle seznamu v `CLAUDE.md`** – ten se při `/project` nevybírá, protože ho zakládá až první běh `/evaluate`. V seznamu by tedy nestál nikdy a jeho řádek v tabulce níž by se neuplatnil.
-
-**Neexistující soubory přeskoč, nezakládají se tady.** A **zapsaný podklad, který dosud nevznikl, není nález** – je to závazek čekající na svůj krok cyklu. Nález je podklad, kterému se během session rozešel obsah se skutečností.
+**Neexistující dokument přeskoč** – vzniká ve svém kroku cyklu, ne tady. Nález je podklad, kterému se během session rozešel obsah se skutečností.
 
 ## Tabulka
 
@@ -66,4 +64,4 @@ Druhý směr téže otázky – od nalezené položky k souboru:
 
 **Chybějící zápis doplň zpětně v plné kvalitě**, ne jako holou odrážku: u rozhodnutí i proč a jaké varianty padly, u odložených věcí celou úvahu, u principů obecnou formulaci místo popisu jednoho případu. Zároveň přeformuluj, co bylo zapsáno ve spěchu nebo se od té doby posunulo.
 
-**Chybí-li některý ze standardních souborů úplně, nezakládej ho** – vypiš, které chybí, a nabídni `/project`, který strukturu doplní celou a konzistentně. Výjimka: má-li session obsah, který do chybějícího souboru jednoznačně patří, soubor založ a obsah zapiš – jinak by se ztratil. Nedává-li standardní struktura pro tenhle projekt smysl (jednorázový scratch, cizí read-only repozitář), konstatuj to jednou větou a přeskoč to.
+**Chybí-li standardní soubor, do kterého patří obsah ze session, založ ho** na místě podle řádku `Struktura` a obsah zapiš (`~/.claude/standards/structure.md`, *Které soubory vůbec vzniknou*); chybí-li řádek `Struktura`, nabídni `/project`. Soubor, do kterého session nic nepřinesla, nezakládej. Nedává-li standardní struktura pro tenhle projekt smysl (jednorázový scratch, cizí read-only repozitář), konstatuj to jednou větou a přeskoč to.

@@ -94,7 +94,7 @@ Výjimka je jediná: **ověřovací pokus**, když na odpovědi stojí rozhodnut
 Navíc si zjisti tohle:
 
 1. **Projdi bránu** – *Kdy se návrh píše a kdy ne* výš. Vyjde-li, že se nepíše, skonči tam a dál nepokračuj.
-2. **Zkontroluj strukturu.** Existují standardní soubory `todo.md`, `done.md`, `decisions.md`, `rules.md` (v `docs/`, nebo v kořeni podle režimu)? Chybí-li, **nezakládej je potichu** – vypiš, co chybí, a nabídni `/project`. Návrh bez místa, kam zapisovat rozhodnutí, je poloviční práce.
+2. **Zkontroluj strukturu.** Má blok metadat v `CLAUDE.md` řádek `Struktura`? Chybí-li, nabídni `/project` – bez něj není jasné, kam soubory zakládat. Chybějící standardní soubor vadou není, vznikne prvním zápisem (`~/.claude/standards/structure.md`, *Které soubory vůbec vzniknou*).
 3. **Načti vstupy.** `docs/requirements.md`, existující dokumenty návrhu, `decisions.md`, `rules.md` a – vede-li je projekt – `scenarios.md`, `risks.md` a `glossary.md`. **Cizí podklady jsou read-only.**
 4. **Zorientuj se ve stavu.** Vyhrává **první řádek, který sedí**; je to tabulka, ne úsudek:
 

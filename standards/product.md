@@ -32,7 +32,7 @@ Projekt bez kódu (znalostní, obsahový, obchodní) má smysluplně jen `requir
 
 ## Produktové podklady
 
-**Podklady, ze kterých se staví produkt** – ne obchodní plán a ne marketing. Vybírají se při `/project`, který je **nezakládá**, jen si zapíše, které z nich projekt vede. Vznikají prací. **Výjimkou je `operation.md`** – ten se nevybírá, protože dokud není co nasadit, není o čem rozhodovat; zakládá ho až první běh `/evaluate`:
+**Podklady, ze kterých se staví produkt** – ne obchodní plán a ne marketing. **O tom, které z nich projekt vede, rozhoduje krok ve sloupci *Plní*** podle povahy projektu a kritérií níž, a podklad vzniká jeho prací; projekt vede právě ty, které existují. `/project` se na ně neptá – dopředu by se jen hádalo. `operation.md` vzniká až prvním během `/evaluate`, protože dokud není co nasadit, není o čem psát:
 
 | Soubor | Odpovídá na otázku | Plní |
 |---|---|---|

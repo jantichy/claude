@@ -72,7 +72,7 @@ Pokud existují, přečti:
 - `.editorconfig`
 - `package.json` (engines, scripts, workspaces)
 
-**Vede-li projekt `docs/glossary.md`** (poznáš z `## Struktura a dokumentace` v `CLAUDE.md`), přečti ho jako **závaznou konvenci pojmenování**. Je to jediné místo, kde stojí, jak se čemu v téhle doméně říká, takže odchylka od něj není kosmetika, ale rozpor s dohodou – hlas ji důsledněji než odchylku, kterou jsi odvodil z kódu. Platí to obousměrně: **pojem, který v kódu žije a v glosáři chybí, je taky nález**, protože slovník, který se přestal doplňovat, začne lhát.
+**Vede-li projekt `docs/glossary.md`**, přečti ho jako **závaznou konvenci pojmenování**. Je to jediné místo, kde stojí, jak se čemu v téhle doméně říká, takže odchylka od něj není kosmetika, ale rozpor s dohodou – hlas ji důsledněji než odchylku, kterou jsi odvodil z kódu. Platí to obousměrně: **pojem, který v kódu žije a v glosáři chybí, je taky nález**, protože slovník, který se přestal doplňovat, začne lhát.
 
 Z těchto souborů sestav **soupis konvencí** – co je v projektu explicitně dohodnuto. Co projekt sám aktivně dodržuje, nehlas jako nízkou odchylku; naopak rozpor s dohodnutými konvencemi hlas důsledněji.
 

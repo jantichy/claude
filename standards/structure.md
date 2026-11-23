@@ -47,8 +47,8 @@ Povinný je jen **`CLAUDE.md`**. Zbytek:
 
 | Soubor | Zakládá se |
 |---|---|
-| `README.md`, `decisions.md`, `rules.md` | výběrem při `/project` (výchozí ano) |
-| `todo.md` + `backlog.md` + `done.md` | výběrem při `/project`, **jen jako trojice** |
+| `README.md` | při `/project`, protože obsah má hned – název a popisek projektu |
+| `todo.md`, `backlog.md`, `done.md`, `decisions.md`, `rules.md` | **prvním zápisem** – kdo má co zapsat a soubor chybí, založí ho podle režimu; `/project` se na ně neptá |
 | `requirements.md`, `architecture.md`, `plan.md`, tematické dokumenty kol, produktové podklady | až prací – co v nich smí stát, drží **`~/.claude/standards/product.md`**; načti si ho, než do některého z nich zapíšeš |
 | `research/` | až je co uložit |
 | testy | s první kontrolou – kam patří, drží `~/Context/Coding/quality.md`, *Vrstvy kontroly a co do které patří* |
@@ -130,7 +130,6 @@ Co padne mimo aktuální rozsah, ale **je rozhodnuté, že se to udělá** – �
 - **Nápad smí být rozepsaný do detailu** i se zavrženými cestami. Jeho vnitřní závěry **nejsou rozhodnutí projektu** – platí jen *kdyby* se dělal; do `decisions.md` patří jen závěr, který váže **dnešní** návrh.
 - **Vybírá z něj jen `/specify`** před novým zadáním; `/next` ho při prázdné frontě jen vypíše. O přesunu každé položky rozhoduje uživatel.
 - Člení se podle témat; pořadí nic neurčuje.
-- **Chybí-li a je co zapsat, založ ho** a řekni to. Existuje jen spolu s `todo.md`.
 
 ### `decisions.md`
 
@@ -163,6 +162,6 @@ Existuje jen spolu s `todo.md`.
 
 ---
 
-## Prázdný soubor je v pořádku
+## Soubor vzniká s prvním obsahem
 
-Nový projekt má `todo.md`, `backlog.md`, `done.md`, `decisions.md` a `rules.md` založené jen s nadpisem. Nevymýšlej do nich obsah dopředu.
+Standardní soubor se zakládá rovnou s tím, co se do něj zapisuje – nadpis a první záznam. Nevymýšlej do něj obsah dopředu, aby nevypadal prázdně.

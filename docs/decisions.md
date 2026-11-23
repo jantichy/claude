@@ -2674,3 +2674,17 @@ Soubory se zadáními pro subagenty se ve skillech `/audit`, `/consolidate`, `/p
 ### Indikátor průběhu v terminálu je vypnutý (`terminalProgressBarEnabled: false`)
 
 **Rozhodnuto 17. 11. 2026.** Výchozí hodnota je `true`: Claude Code během práce posílá terminálu sekvenci OSC 9;4 a iTerm2 od 3.6.6 podle ní ukazuje proužek průběhu. Uživatel si ho vyzkoušel a nechce ho, takže `false` je vědomá odchylka od výchozí hodnoty, ne pozůstatek. Původní `false` se do repozitáře dostalo 20. 9. 2026 v nesouvisejícím commitu bez důvodu, a když ho 17. 11. 2026 něco přepnulo na `true`, nedalo se dohledat proč – tenhle zápis tomu má příště předejít. Že session ještě pracuje, ukazuje místo toho titulek záložky, který Claude Code nastavuje sám.
+
+### Standardní soubory vznikají prvním zápisem, `/project` se na ně neptá
+
+**Rozhodnuto 23. 11. 2026.** `/project` se po volbě umístění (`docs/` nebo kořen) ptal ještě dvakrát: které standardní soubory založit (README, trojice todo/backlog/done, decisions, rules) a které produktové podklady projekt povede. Obě otázky chtěly rozhodnutí ve chvíli, kdy se o něm nedá nic vědět – jestli projekt bude mít pravidla nebo konkurenci, ukáže až práce. Odpověď se pak stejně hádala a seznam se odklikával.
+
+**Teď:** `/project` se ptá jen na umístění a hned zakládá jen `README.md`, protože má obsah z kroku 1. Ostatní standardní soubory zakládá kdokoliv, kdo do nich má co zapsat – pravidlo stojí jednou v `standards/rules.md`, *Kam co zapsat*, které se načítá do každé session, takže ho zná každý skill i práce mimo skill; podrobnost drží `structure.md`, *Které soubory vůbec vzniknou*. O produktových podkladech rozhoduje krok, který je plní (`/discovery`, `/specify`), podle kritérií v `product.md`, a projekt vede právě ty, které existují. Sekce *Struktura a dokumentace* v `CLAUDE.md` projektu soubory nevypisuje, odkazuje na `structure.md`; `/project update` starý tvar přepíše.
+
+**Zamítnuto – pravidlo opsat do každého skillu, který zapisuje do `docs/`:** dvacet kopií téže věty, které se rozejdou, a práce mimo skill by ho neznala. Ve skillech se jen odstranily věty, které tvrdily opak („nezakládej potichu, nabídni `/project`“ v `/specify`, `/architect`, `/end`).
+
+**Zamítnuto – nechat otázku na produktové podklady jako závazek pro `/end`:** závazek sloužil jen k rozlišení chybějícího dokumentu od nechtěného. To rozlišení teď dělá `/specify` sám, když podklad zakládá nebo nezakládá a jednou větou to zdůvodní. Ztrácí se tím upozornění, že zapsaný podklad dosud nevznikl – vědomě, protože ten seznam vznikal hádáním při založení projektu.
+
+**Pravidlo o trojici todo/backlog/done padlo:** každý z nich vznikne, až do něj je co zapsat; hotová věc bez fronty je legitimní záznam.
+
+**Vedlejší nález:** krok 6 chtěl `AskUserQuestion` s `multiSelect` a „vším předvybraným“. To nástroj neumí – volba nemá výchozí stav –, takže instrukce se nikdy nedala splnit.
