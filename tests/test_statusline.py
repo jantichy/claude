@@ -447,6 +447,38 @@ class ContextBar(unittest.TestCase):
         self.assertEqual(out.count("\033[22;91m\u2588"), 4, repr(out))
 
 
+class DirectoryLink(unittest.TestCase):
+    """Pracovní adresář je odkaz (OSC 8) na file:// URL, klik ho otevře ve Finderu.
+
+    Název adresáře pochází z disku, ne od uživatele: řídicí znak v něm nesmí
+    projít do URL, jinak ukončí sekvenci odkazu a zbytek názvu terminál vykoná.
+    """
+
+    def run_statusline(self, cwd):
+        payload = json.dumps(
+            {"workspace": {"current_dir": cwd}, "model": {"display_name": "T"}}
+        )
+        r = subprocess.run(
+            ["bash", str(STATUSLINE)],
+            input=payload,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        return r.stdout
+
+    def test_directory_is_link(self):
+        out = self.run_statusline("/tmp/a b")
+        self.assertIn("\033]8;;file:///tmp/a%20b\a", out, repr(out))
+        self.assertIn("\033]8;;\a", out, repr(out))
+
+    def test_control_char_does_not_end_link(self):
+        out = self.run_statusline("/tmp/x\ay\033]8;;evil")
+        url = re.search(r"\033\]8;;([^\a]*)\a", out).group(1)
+        self.assertEqual(url, "file:///tmp/x%07y%1B%5D8%3B%3Bevil")
+
+
 class PercentRounding(unittest.TestCase):
     """Procenta se zaokrouhlují, ne ořezávají – i v českém locale.
 

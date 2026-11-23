@@ -262,6 +262,10 @@ esac
 # ---------------------------------------------------------------------------
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 if [ -z "$cwd" ]; then cwd=$(pwd); fi
+# Odkaz na adresář (OSC 8): klik v terminálu, který OSC 8 umí, otevře file://
+# URL, a ta adresář otevře ve Finderu. Každý segment cesty se kóduje zvlášť
+# (@uri), takže v URL neprojde řídicí znak z názvu adresáře a neukončí sekvenci.
+cwd_url=$(jq -rn --arg p "$cwd" '"file://" + ($p | split("/") | map(@uri) | join("/"))')
 # Předřadit ~, pokud je cesta v $HOME
 home_prefix="${HOME}"
 if [[ "$cwd" == "$home_prefix"* ]]; then
@@ -394,7 +398,7 @@ append() {
   fi
 }
 
-append "$(printf "\033[2;33m%s\033[0m" "$short_cwd")"
+append "$(printf "\033]8;;%s\a\033[2;33m%s\033[0m\033]8;;\a" "$cwd_url" "$short_cwd")"
 append "$(printf "${model_color}%s\033[0m" "$model_short")"
 append "$ctx_part"
 append "$usage_part"
