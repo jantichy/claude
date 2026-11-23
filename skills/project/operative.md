@@ -44,7 +44,7 @@ Smlouvy, rozpočty a korespondence k rekonstrukci bytu – co je objednané, zap
 
 ### Git
 
-Zeptej se jednou otázkou na git i autocommit (AskUserQuestion, `multiSelect: true`). Nezaškrtnutá volba znamená ne, protože předvybrat ji nástroj neumí:
+Zeptej se jednou otázkou na git i autocommit (AskUserQuestion, `multiSelect: true`). Zaškrtnutá volba zapíná, nezaškrtnutá znamená ne:
 
 - **Lokální git nad celým adresářem** – `git init`, `.gitignore` s řádky `.DS_Store` a `~$*` (zámky otevřených dokumentů Office) a první commit celého stavu se zprávou „Výchozí stav adresáře“. Dovolí vrátit hromadné přejmenování nebo přesun; cenou je, že historie nese binárky a `.git` naroste zhruba o velikost adresáře – tu do popisu volby napiš (`du -sh .`).
 - **Autocommit** – viz *Autocommit* níž.

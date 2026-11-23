@@ -184,16 +184,18 @@ U GitLabu a jiných hostitelů tenhle krok přeskoč a řekni uživateli, že po
 
 Hned po gitu – i když padlo „Nic“ – polož **jednu** otázku (AskUserQuestion, `multiSelect: true`) se všemi dvojvolbami, které na projekt sedí. Kroky 4, 5, 9 a 10 se pak už neptají, jen provedou, co tady padlo. Pointa: čtyři otázky ano/ne za sebou zdržují víc, než kolik rozhodnutí nesou.
 
-**Nezaškrtnutá volba znamená výchozí stav, zaškrtnutím se mění.** AskUserQuestion volbu předvybrat neumí, takže každou formuluj jako odchylku – u nového projektu od doporučené hodnoty, u existujícího od dnešního stavu. Uživatel tak zaškrtává jen to, co chce jinak, a prázdný výběr nic nerozbije.
+**Zaškrtnutá volba zapíná, nezaškrtnutá vypíná** – bez ohledu na to, co je doporučené. `AskUserQuestion` volbu předvybrat neumí, takže uživatel zaškrtává všechno, co chce mít, a každé zapnutí je vědomé. Volby pojmenuj přesně takhle:
 
-| Volba, když je zaškrtnutá | Nabídni ji | Nezaškrtnutá znamená | Provede |
-|---|---|---|---|
-| **Worktree layout** – víc Claude session nad projektem naráz | je-li git a projekt layout ještě nemá | jeden pracovní adresář | krok 4 |
-| **Dokumentace v kořeni** místo v `docs/` | jen v `create` | `docs/` | krok 5 |
-| **Autocommit** | je-li git | bez autocommitu | krok 9 |
-| **Povolit trvalou Memory** | vždy | vše jen do lokálních `.md` (doporučeno) | krok 10 |
+| Volba | Nabídni ji | Zaškrtnutá | Nezaškrtnutá | Provede |
+|---|---|---|---|---|
+| **Worktree layout** | je-li git a projekt layout ještě nemá | kontejner s `.bare`, adresář na větev | jeden pracovní adresář | krok 4 |
+| **Podadresář docs místo kořene** | jen v `create` | `docs/` | kořen | krok 5 |
+| **Zapnout autocommit** | je-li git | autocommit | bez autocommitu | krok 9 |
+| **MDčka místo Memory** | vždy | sekce `## Paměť`, vše do lokálních `.md` | trvalá Memory povolená | krok 10 |
 
-*`adopt` a `update`:* dnešní stav zjisti **před** otázkou – layout z kroku 0, autocommit ze sekce `## Autocommit`, paměť ze sekce `## Paměť` v projektovém `CLAUDE.md`. Nastavenou volbu formuluj jako změnu („Vypnout autocommit“) a dnešní stav napiš do `description`; v `update` nabídni jen to, kde se našel rozpor (*Zásady pro celý průběh*). Zbude-li jediná volba, polož ji jako obyčejnou otázku ano/ne; nezbude-li žádná, otázku vynech.
+Doporučení napiš do `description` volby (u `docs/` a lokálních `.md`), ne do jejího stavu.
+
+*`adopt` a `update`:* dnešní stav zjisti **před** otázkou – layout z kroku 0, autocommit ze sekce `## Autocommit`, paměť ze sekce `## Paměť` v projektovém `CLAUDE.md` – a napiš ho do `description` každé volby. **Co by výběr proti dnešku vypnul, vyjmenuj a nech si potvrdit**, než to provedeš: neodškrtnutá volba nesmí potichu zrušit, co projekt má. V `update` nabídni jen to, kde se našel rozpor (*Zásady pro celý průběh*). Zbude-li jediná volba, polož ji jako obyčejnou otázku ano/ne; nezbude-li žádná, otázku vynech.
 
 ## Krok 4 – Layout repozitáře
 
@@ -326,13 +328,13 @@ Existuje-li, **nepřepisuj ho** – jen doplň chybějící řádky z jádra a v
 
 Volba padla v kroku 3, *Přepínače*. Při zapnutí proveď totéž co `/autocommit enable` (viz `~/.claude/skills/autocommit/SKILL.md`).
 
-*`adopt`:* aktuální stav se zjišťuje před přepínači a otázka ho uvádí (krok 3, *Přepínače*), ať uživatel ví, co mění.
+*`adopt`:* aktuální stav se zjišťuje před přepínači a otázka ho uvádí (krok 3, *Přepínače*), ať uživatel ví, co mění; vypnutí zapnutého autocommitu se tam potvrzuje zvlášť.
 
 **Chybí-li v zapnuté sekci řádek `@~/.claude/skills/autocommit/autocommit.md`, doplň ho** a řekni to – bez něj je to přepínač, který nic nespíná, protože pravidla commitování se do projektu dostanou jedině tím importem.
 
 ## Krok 10 – Paměťová politika
 
-Volba padla v kroku 3, *Přepínače*. Není-li trvalá Memory povolená, přidej do `CLAUDE.md`:
+Volba padla v kroku 3, *Přepínače*. Je-li zaškrtnutá volba *MDčka místo Memory*, přidej do `CLAUDE.md`:
 
 ```
 ## Paměť
