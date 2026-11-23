@@ -2710,3 +2710,11 @@ Soubory se zadáními pro subagenty se ve skillech `/audit`, `/consolidate`, `/p
 **Zamítnuto – zapnout sandbox:** jen ten by z jakéhokoliv souhlasu udělal skutečnou hranici proti modelu, ale omezil by zápis a síť v každé session.
 
 **Vědomá mez:** fork odsouhlaseného repozitáře má týž první commit. Projde jen tehdy, když někdo vlastní repozitář smaže a na jeho cestu naklonuje cizí fork; zapsáno v `standards/bypass.md`.
+
+### Testy běží souběžně, strop průběžné kontroly zůstává
+
+**Rozhodnuto 23. 11. 2026.** Sada `tests/` za sebou trvala kolem 100 s (104 s už před změnami toho dne) a průběžná kontrola ji po 90 s ukončila, takže v tomhle repozitáři nikdy nedoběhla. Nejpomalejší jsou moduly, které staví dočasné repozitáře: `test_verify`, `test_next`, `test_statusline`, `test_hooks`.
+
+**Rozhodnutí:** klíč `test` pouští `tests/run.py`, který spustí každý modul přes `discover -p` ve vlastním procesu souběžně – kolem 27 s. Moduly mají vlastní dočasné adresáře a přesměrovaný `HOME`, takže souběh nemění, co měří. Ověřeno oběma směry: padající modul vrátí 1 i s výstupem.
+
+**Zamítnuto – zvýšit strop:** mez se nezvedá mimochodem a kontrola po každé odpovědi by trvala přes minutu a půl. **Zamítnuto – zrychlit pomalé testy:** víc práce, a s rostoucí sadou by se problém vrátil.
