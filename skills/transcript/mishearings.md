@@ -36,6 +36,9 @@ Zkomoleniny, které whisper dělá **opakovaně u kohokoliv**, kdo mluví o dan�
 | kampáň | kampaň | |
 | Klout, Cloth, Koled, klód | Claude | AI asistent; zkomoleno v různých tvarech i v jedné nahrávce |
 | GetMko | GTM | Google Tag Manager, vyslovováno „gé té emko“ |
+| GTNka | GTMka | Google Tag Manager, hovorově se skloňuje |
+| prefererů, referéru | refererů, refereru | HTTP referer, zdroj návštěvy |
+| debug moc | debug mode | ladicí režim GA4 a GTM |
 
 ## AI a cloud, čeština
 
@@ -47,3 +50,30 @@ Zkomoleniny, které whisper dělá **opakovaně u kohokoliv**, kdo mluví o dan�
 | logsync | log sink | export logů v Google Cloudu |
 | dícen | JSON | vyslovováno „džejsn“ |
 | kodex | Codex | agent OpenAI. **Rozhoduje kontext:** kodex jako soubor pravidel existuje taky |
+| cloud kód, Cloud Code | Claude Code | **Rozhoduje kontext:** Cloud Code je i rozšíření Google Cloudu do IDE |
+| antropik, Andromik, Andropik | Anthropic | firma za Claudem |
+| Bixvery | BigQuery | |
+| eskujelko, kvělek, SPL-ko | SQLko | dotaz v SQL; skloňuje se česky |
+| lapičko, aptičku | APIčko | skloňuje se česky |
+| jojnovat | joinovat | spojování tabulek |
+| enžin | engine | |
+| rautuje | routuje | |
+| skily | skilly | skilly Claude Code |
+| dry ramy | dry runy | zkušební běh dotazu bez provedení, typicky v BigQuery |
+| rýtníčko | README | |
+| EI agent, PI agent | AI agent | |
+
+## AI a data, angličtina
+
+| Whisper píše | Správně | Poznámka |
+|---|---|---|
+| Cloud, Claud, close | Claude | AI asistent. **Rozhoduje kontext:** Cloud Run, Google Cloud apod. zůstávají |
+| float code | Claude Code | |
+| Coursera | Cursor | editor s AI. **Rozhoduje kontext:** Coursera je i vzdělávací platforma |
+| content | context | v souvislosti s AI („business context“, „AI context“). **Rozhoduje kontext:** content se v marketingu říká běžně |
+| post hoc | PostHog | produktová analytika. **Rozhoduje kontext:** post hoc je i běžné spojení |
+| league scoring | lead scoring | |
+| context analyst | Cortex Analyst | služba Snowflake |
+| LookerML | LookML | modelovací jazyk Lookeru |
+| Jason files, Jason | JSON files, JSON | |
+| workhouse | warehouse | datový sklad |
