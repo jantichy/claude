@@ -60,6 +60,16 @@ Vyloučení i potvrzení platí, jen když měření sedí na tvrzení ve třech
 
 Před filtrem, agregací nebo výčtem vypiš, jaké hodnoty v poli doopravdy jsou, s počty. Jinak se filtruje podle podoby, ve které se nález čeká – a podmínka, která nesedne na nic, vypadá jako nález (prázdnota uložená zástupným řetězcem, podřetězec, který propustí nečitelný zápis). Platí na každé vrstvě: dotaz do databáze, parametry požadavku, klíče v JSONu, konfigurace, stavy v evidenci.
 
+## Než sečteš nebo zprůměruješ, ověř, že metrika jde sčítat
+
+**Unikátní počty se přes období ani přes hodnoty dimenze nesčítají.** Uživatelé, zákazníci nebo návštěvy za jednotlivé dny dají sečtené víc než za celý měsíc a uživatelé po zdrojích víc než celkem, protože tentýž člověk přišel víckrát nebo víc cestami. Celek se spočítá znovu nad celým obdobím či celou populací, ne součtem dílčích řádků.
+
+**Podíl se nepočítá průměrem dílčích podílů.** Konverzní poměr, míra okamžitého opuštění nebo průměrná hodnota objednávky se za celek počítá ze součtu čitatelů a součtu jmenovatelů; průměr denních podílů dává každému dni stejnou váhu bez ohledu na jeho objem. Proto se z cizího nástroje berou tabulky s čitatelem a jmenovatelem, ne s hotovým podílem.
+
+**Tabulku z cizího nástroje ověř proti celku, který hlásí sám.** Nesedí-li součet řádků na jeho celek, nástroj deduplikuje, skrývá řádky nebo je slučuje – a sčítat se nesmí, dokud se neví, které z toho.
+
+Pointa: výsledek té chyby vypadá věrohodně, nesedí jen proti zdroji, takže si ho bez kontroly nikdo nevšimne.
+
 ## Tvrzení z webu je jen tvrzení, dokud skript nepřečte stránku
 
 Odkaz, který vrátí agent, je tvrzení, a jeho „ověřil jsem to“ taky – agent umí vymyslet věrohodnou citaci i adresu. **Než tvrzení z webu skončí v souboru** (rešerše, `competition.md`, znalostní báze, kód), ověř ho skriptem: zapiš pole `{"id", "url", "quote"}` nástrojem Write do scratchpadu a pusť `python3 ~/.claude/skills/sources.py --batch <soubor> --compact`. URL ani text stránky na příkazovou řádku nepatří, shell v nich spustí `$(...)`. Odpověď v konverzaci smí tvrzení předat i neověřené, ale označené jako hlášení agenta.
