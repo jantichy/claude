@@ -17,15 +17,9 @@ Moje osobní konfigurace Claude Code – pravidla, skilly, hooky a status line, 
 
 ## Struktura a dokumentace
 
-Projekt drží standardní strukturu podle `~/.claude/standards/structure.md`:
+Projekt drží standardní strukturu podle `~/.claude/standards/structure.md`, na místě podle řádku `Struktura` v bloku metadat.
 
-- `README.md` – co projekt je, pro člověka (ne instrukce pro Clauda)
-- `docs/todo.md` – co je odložené na později, ale rozhodnuté, že se to udělá
-- `docs/backlog.md` – nezávazné nápady, o kterých se nerozhodlo; vybírá se z nich, když se řeší, co dál
-- `docs/done.md` – co je hotové
-- `docs/decisions.md` – co jsme rozhodli a proč, včetně zamítnutých variant
-
-Všechny tyhle soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/end`.
+Standardní soubory **aktualizuj průběžně sám a bez vyžádání**, ve chvíli, kdy rozhodnutí padne, princip se vybrousí nebo se něco odloží. Nečekej na konec session ani na `/end`.
 
 **`docs/rules.md` tu není a nezakládá se:** pravidla téhle vrstvy jsou samy jejím obsahem (`standards/`), ne meta-vrstvou nad ním.
 
