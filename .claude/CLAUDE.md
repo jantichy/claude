@@ -60,7 +60,7 @@ Kontrakt příkazů (`~/Context/Coding/quality.md`). Průběžná kontrola ho ta
 
 - typecheck: swiftc -typecheck -warnings-as-errors skills/*/*.swift
 - lint: shellcheck -x --severity=info hooks/*.sh statusline/*.sh .github/*.sh skills/*/*.sh githooks/* && ruff check --isolated --select F,E9,C901 --config 'lint.mccabe.max-complexity = 10' hooks/*.py .github/*.py skills/*.py skills/*/*.py skills/*/*/*.py tests/*.py
-- test: python3 -m unittest discover -s tests
+- test: python3 tests/run.py
 - format: sh -c 'case "$1" in *.py) exec ruff format --isolated -q "$1" ;; esac' --
 - build: -
 - e2e: -

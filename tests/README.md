@@ -3,8 +3,10 @@
 Regresní a meta-testy nad tímhle repozitářem. Pouští je `test` z *Kontraktu příkazů* v `.claude/CLAUDE.md`:
 
 ```
-python3 -m unittest discover -s tests
+python3 tests/run.py
 ```
+
+`run.py` pouští moduly souběžně, protože za sebou by sada přelezla strop průběžné kontroly (90 s na příkaz) a kontrola by tu nedoběhla nikdy. Každý modul běží přes `discover`, takže importy platí stejně jako u ručního `python3 -m unittest discover -s tests`.
 
 Tenhle soubor říká, **co která vrstva hlídá a proč je tak přísná, jak je**. Kontrakt samotný – tedy které příkazy se spouštějí – drží `.claude/CLAUDE.md`; sem se přesunul jeho popis, protože je to dokumentace k přečtení, ne pravidlo pro každou session (`~/.claude/standards/rules.md`, *Co vložíš do kontextu, platíš do konce session*).
 
