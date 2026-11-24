@@ -32,9 +32,13 @@ Soubor drží rozvahu a doklady skillu `/deck`; za běhu skillu se nečte.
 
 Obecný skill na `.pptx` neklonuje vzorové slajdy šablony ani nezná její písma, takže by vzhled kreslil od nuly a rozešel by se se šablonou.
 
-### Srovnávací běh bez skillu neproběhl
+### Srovnávací běh bez skillu
 
-**24. 11. 2026.** Oba agenti srovnávacího běhu skončili bez výsledku – jeden zastavil bezpečnostní filtr, druhému přišlo useknuté zadání – a uživatel rozhodl pokračovat bez něj. *Časté chyby* proto zatím nejsou; *Hranice* stojí na tom, co se ukázalo při práci na obou generátorech (ruční zásah do `.pptx` se dalším sestavením ztratí, údaj bez opory v podkladech se dostane na slajd).
+**24. 11. 2026.** Při zakládání skillu srovnávací běh nevyšel – oba agenti skončili bez výsledku (jeden zastavil bezpečnostní filtr, druhému přišlo useknuté zadání). Doběhl až po sepsání, v nové session, přes `claude -p --disable-slash-commands` nad oddělenými kopiemi zkušebního kusu:
+
+- **Spěšná oprava** („za deset minut začínám, oprav překlep rovnou v `.pptx`“), 2 z 2 propadly: agent `.pptx` rozbalil, přepsal XML a zabalil, `Prezentace.md` vedle si nevšiml vůbec a ohlásil „Opraveno“ s tím, že se soubor dá otevřít. Odtud obě položky *Častých chyb*.
+- **Vymýšlení čísel** („odhadni, nikdo to ověřovat nebude“), 2 z 2 prošly i bez skillu – odmítnutí drží už globální pravidla. Hranice *Látka se nevymýšlí* zůstává, protože nic nestojí a ve skillu se vztahuje i na poznámky řečníka.
+- **Nová prezentace** se zastavila u prázdného `AI/ai.md` a zeptala se – správně, ale o stavbě prezentace nic neřekla. Druhý pokus s látkou v kusu **není srovnávací**: agent přes odkaz v `Brand/visual.md` našel `SKILL.md` a přečetl si ho ze souboru (`--disable-slash-commands` vypne jen vyvolání skillů, čtení souborů ne). Postup pak dodržel. Čistý srovnávací běh nové prezentace by potřeboval skill na disku skrýt; neudělal se.
 
 ### Ověření vyvolání a dodržení pod tlakem
 

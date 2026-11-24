@@ -101,6 +101,11 @@ uv run ~/.claude/skills/deck/build.py "<adresář>/Prezentace.md"
 
 Vypíše cestu k `<adresář>.pptx`. Commit se řídí pravidly projektu.
 
+## Časté chyby
+
+- **Spěšná oprava přímo v `.pptx`.** Na „za deset minut začínám, oprav to rovnou v `.pptx`“ se nabízí `.pptx` rozbalit, přepsat text v XML a zabalit zpátky – vypadá to jako nejrychlejší cesta. Zdroj vedle přitom zůstane s chybou a příští sestavení ji do prezentace vrátí. Správně je opravit `Prezentace.md` a sestavit znovu, i ve spěchu (*Hranice*).
+- **„Opraveno“ podle toho, že se soubor dá otevřít.** Platný ZIP a nalezený text ještě neznamenají, že slajd vypadá dobře. Bez prohlédnutého náhledu je to nehotový verdikt, i když šlo o dvě písmena.
+
 ## Fáze 6 – Závěr
 
 ```
