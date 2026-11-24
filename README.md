@@ -190,6 +190,10 @@ Jeden proud od přijatého souboru k hotovému textu: co se má stáhnout, jde d
 
 Napíše článek, post na sociální sítě nebo vlákno mým hlasem a stylem – ne obecnou AI-češtinou. Táhne to ze znalostní báze mého psaní a k tématu si dohledá nejpodobnější texty z archivu jako živé vzory. Tu bázi umí i postavit: `collect` provede posbíráním všeho, co člověk kdy napsal – exporty ze sociálních sítí, články z webů, zálohy po webech, které už nestojí –, a `profile` z toho vydestiluje popis hlasu a později ho doplňuje o to, co přibylo. Moje názory a pointy si ale nikdy nevymýšlí, ty musím dodat sám.
 
+#### [`/deck`](skills/deck/) – prezentace z Markdownu ve vlastní šabloně
+
+Napíše nebo upraví prezentaci k přednášce, školení nebo webináři z toho, co o tématu vím a jak ho učím, a sestaví z ní PowerPoint v mé šabloně – vzhled se nekreslí od nuly, ale skládá ze vzorových slajdů šablony, takže písma, okraje i barvy sedí. Prezentace žije jako obyčejný textový soubor s nadpisy, odrážkami a poznámkami řečníka; po každé úpravě se z něj PowerPoint sestaví znovu, vykreslí se náhledy a skill na nich sám zkontroluje přetékající text, kontrast a to, jestli slajd obstojí i před publikem, které zrovna neposlouchá. Co v podkladech chybí, si nedomýšlí – nechá to v poznámkách k dohledání.
+
 #### [`/depot`](skills/depot/) – stažený soubor doputuje tam, kam patří, a rovnou se zpracuje
 
 Řeknu mu soubor, celou dávku, nebo jen zdroj jako Downloads, u kterého si pamatuje, kam minule došel – a on pozná, o jaký podklad jde, uloží ho na správné místo pod správným názvem a hned spustí, co po tom má následovat – přepis nahrávky, vytěžení do knowledge base, zápis do evidence. Rozsah je přesně to, co zadám: neuklízí okolí, nic nepřepíše a při kolizi se zeptá místo toho, aby přilepil `(1)`. Konkrétní pravidla, co kam patří, v tomhle repozitáři nejsou – skill je jen rámec a tabulku si čte z mojí privátní knowledge base.
