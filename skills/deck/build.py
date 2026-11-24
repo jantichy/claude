@@ -12,6 +12,7 @@ se naklonují a vymění se v nich jen text. Odrážky, okraje a písmo tak sed�
 Typ slajdu, který tenhle skript nezná, si načte ze stejnojmenného <typ>.py vedle zdroje:
 modul má funkci render(slide, args) a kreslí pod nadpis, který už na slajdu stojí.
 """
+
 import copy
 import importlib.util
 import io
@@ -33,33 +34,46 @@ ALIGN = {"CENTER": PP_ALIGN.CENTER, "START": PP_ALIGN.LEFT, "END": PP_ALIGN.RIGH
 VALIGN = {"MIDDLE": MSO_ANCHOR.MIDDLE, "TOP": MSO_ANCHOR.TOP}
 
 TEMPLATE = Path.home() / "Context/Brand/template.pptx"
-KIND = re.compile(r"[a-z][a-z0-9_]*")   # jméno typu slajdu je zároveň jméno modulu s kresbou
+KIND = re.compile(
+    r"[a-z][a-z0-9_]*"
+)  # jméno typu slajdu je zároveň jméno modulu s kresbou
 
 # vzorové slajdy v šabloně (číslováno od 1) a které jejich tvary se berou
 SAMPLES = {
-    "title": 1,     # titulek, linka, podtitulek
-    "cards": 2,     # karta světlá, karta tmavá, nadpis, linka, text světlé, text tmavé
-    "grid": 3,      # čtyři karty, nadpis, linka, text 1, text 2, pointa, text 3, text 4
-    "bullets": 4,   # nadpis, linka, odrážky
-    "section": 7,   # nadpis, linka
+    "title": 1,  # titulek, linka, podtitulek
+    "cards": 2,  # karta světlá, karta tmavá, nadpis, linka, text světlé, text tmavé
+    "grid": 3,  # čtyři karty, nadpis, linka, text 1, text 2, pointa, text 3, text 4
+    "bullets": 4,  # nadpis, linka, odrážky
+    "section": 7,  # nadpis, linka
     "cards_text": 8,  # karty s textem místo odrážek – berou se z něj jen styly odstavců
     "numbers": 21,  # nadpis, linka, číslo, popisek, číslo, popisek, prázdný box, pruh, text pruhu
-    "end": 24,      # titulek, linka, odkazy
+    "end": 24,  # titulek, linka, odkazy
 }
 
-SECTION_SUB_Y = 3.5                   # podtitulek mezislajdu pod linkou (ta je na 3,33″)
-QR_BOX = (7.75, 3.3, 1.9)             # levý horní roh a strana QR kódu na mezislajdu; podtitulek končí před ním
-IMAGE_BOX = (0.42, 2.0, 9.15, 3.3)    # plocha pro obrázek pod linkou nadpisu: levý horní roh, šířka, výška
+SECTION_SUB_Y = 3.5  # podtitulek mezislajdu pod linkou (ta je na 3,33″)
+QR_BOX = (
+    7.75,
+    3.3,
+    1.9,
+)  # levý horní roh a strana QR kódu na mezislajdu; podtitulek končí před ním
+IMAGE_BOX = (
+    0.42,
+    2.0,
+    9.15,
+    3.3,
+)  # plocha pro obrázek pod linkou nadpisu: levý horní roh, šířka, výška
 
 # odhad výšky karty: znaků na řádek, výška řádku a mezery v palcích, meze výšky
 CARD_CHARS, CARD_LINE, CARD_GAP, CARD_HEAD, CARD_PAD = 26, 0.36, 0.09, 0.45, 0.45
 CARD_MIN, CARD_MAX = 1.6, 3.15
-CARD_TEXT_INSET = 0.275              # o kolik je textové pole nižší než karta
+CARD_TEXT_INSET = 0.275  # o kolik je textové pole nižší než karta
 
 # krátké předložky a spojky a číslo před slovem nesmí zůstat na konci řádku
 # (Honzova volba pro vlastní výstupy, ~/Context/Text/typography.md, Mezery)
 SHORT = "k s v z o u a i na do od po za ze ve se ke ku pro při pod nad bez než ale ani aby či jak že"
-NBSP = re.compile(r"(?<![\w\xa0])(" + "|".join(SHORT.split()) + r"|\d+) ", re.IGNORECASE)
+NBSP = re.compile(
+    r"(?<![\w\xa0])(" + "|".join(SHORT.split()) + r"|\d+) ", re.IGNORECASE
+)
 
 
 def nbsp(text):
@@ -68,6 +82,7 @@ def nbsp(text):
 
 # ---------- zdroj prezentace ----------
 
+
 def parse(path):
     """Slajd začíná `## typ argumenty`; `#` řádky nadpisu, `###` blok, `-` odrážka, `=` pruh nebo pointa, `>` poznámky."""
     slides = []
@@ -75,7 +90,17 @@ def parse(path):
         line = raw.rstrip()
         if line.startswith("## "):
             kind, *args = line[3:].split()
-            slides.append({"type": kind, "args": args, "title": [], "body": [], "blocks": [], "banner": [], "notes": []})
+            slides.append(
+                {
+                    "type": kind,
+                    "args": args,
+                    "title": [],
+                    "body": [],
+                    "blocks": [],
+                    "banner": [],
+                    "notes": [],
+                }
+            )
             continue
         if not line or not slides:
             continue
@@ -96,15 +121,21 @@ def parse(path):
 
 # ---------- klonování a text ----------
 
+
 def sample_shapes(prs):
     """Hluboké kopie pozadí a tvarů vzorových slajdů, dokud šablona ještě slajdy má."""
     out = {}
     for kind, n in SAMPLES.items():
         el = prs.slides[n - 1]._element
         bg = el.cSld.bg
-        out[kind] = {"bg": copy.deepcopy(bg) if bg is not None else None,
-                     "shapes": [copy.deepcopy(sp) for sp in el.cSld.spTree.iterchildren()
-                                if sp.tag in (qn("p:sp"), qn("p:cxnSp"))]}
+        out[kind] = {
+            "bg": copy.deepcopy(bg) if bg is not None else None,
+            "shapes": [
+                copy.deepcopy(sp)
+                for sp in el.cSld.spTree.iterchildren()
+                if sp.tag in (qn("p:sp"), qn("p:cxnSp"))
+            ],
+        }
     return out
 
 
@@ -186,6 +217,7 @@ def text_run(proto, text, mono):
 
 # ---------- kreslení tabulky ----------
 
+
 def rgb(hex_color):
     return RGBColor.from_string(hex_color.lstrip("#"))
 
@@ -224,8 +256,13 @@ def table(slide, rows):
         for c, cell in enumerate(row):
             x = x0 if c == 0 else x0 + first_w + gap + (c - 1) * (col_w + gap)
             w = first_w if c == 0 else col_w
-            sp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x), Inches(y0 + r * (row_h + gap)),
-                                        Inches(w), Inches(row_h))
+            sp = slide.shapes.add_shape(
+                MSO_SHAPE.ROUNDED_RECTANGLE,
+                Inches(x),
+                Inches(y0 + r * (row_h + gap)),
+                Inches(w),
+                Inches(row_h),
+            )
             plain(sp)
             header = r == 0 or c == 0
             if header:
@@ -234,18 +271,34 @@ def table(slide, rows):
                 sp.fill.solid()
                 sp.fill.fore_color.rgb = rgb(CARD)
             sp.line.fill.background()
-            write(sp, [nbsp(cell)], 16, header, NAVY, align="START" if c == 0 else "CENTER", inset=0.08)
+            write(
+                sp,
+                [nbsp(cell)],
+                16,
+                header,
+                NAVY,
+                align="START" if c == 0 else "CENTER",
+                inset=0.08,
+            )
 
 
 def set_height(sp, inches):
-    sp.find(qn("p:spPr")).find(qn("a:xfrm")).find(qn("a:ext")).set("cy", str(int(inches * 914400)))
+    sp.find(qn("p:spPr")).find(qn("a:xfrm")).find(qn("a:ext")).set(
+        "cy", str(int(inches * 914400))
+    )
 
 
 def card_height(block):
     """Odhad výšky karty podle délky textu; vzorová karta má 2,4″ a začíná na 2,24″."""
+
     def rows(text):
         return max(1, -(-len(text.replace("`", "")) // CARD_CHARS)) + text.count("|")
-    h = CARD_PAD + CARD_HEAD + sum(rows(t) * CARD_LINE + CARD_GAP for _, t in block["items"])
+
+    h = (
+        CARD_PAD
+        + CARD_HEAD
+        + sum(rows(t) * CARD_LINE + CARD_GAP for _, t in block["items"])
+    )
     return min(max(h, CARD_MIN), CARD_MAX)
 
 
@@ -254,6 +307,7 @@ def lines(texts, kind="line"):
 
 
 # ---------- typy slajdů ----------
+
 
 def render(prs, samples, s, base):
     kind = s["type"]
@@ -286,7 +340,9 @@ def slide_section(prs, samples, s, base):
         # světlé okraje kolem kódu, aby se dal načíst i z tmavého pozadí
         x, y, size = QR_BOX
         png = io.BytesIO()
-        segno.make(qr, error="m").save(png, kind="png", scale=20, border=2, dark=NAVY, light="#FFFFFF")
+        segno.make(qr, error="m").save(
+            png, kind="png", scale=20, border=2, dark=NAVY, light="#FFFFFF"
+        )
         png.seek(0)
         slide.shapes.add_picture(png, Inches(x), Inches(y), Inches(size), Inches(size))
         if s["body"]:
@@ -296,11 +352,17 @@ def slide_section(prs, samples, s, base):
 
 
 def slide_grid(prs, samples, s, base):
-    slide, shapes = new_slide(prs, samples["grid"], [0, 1, 2, 3, 4, 5, 6, 7, 9, 10] + ([8] if s["banner"] else []))
+    slide, shapes = new_slide(
+        prs,
+        samples["grid"],
+        [0, 1, 2, 3, 4, 5, 6, 7, 9, 10] + ([8] if s["banner"] else []),
+    )
     title = shapes[4]
     set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
     if len(s["blocks"]) != 4:
-        sys.exit(f"Slajd „{' '.join(s['title'])}“: mřížka potřebuje čtyři bloky, má {len(s['blocks'])}")
+        sys.exit(
+            f"Slajd „{' '.join(s['title'])}“: mřížka potřebuje čtyři bloky, má {len(s['blocks'])}"
+        )
     for box, block in zip(shapes[6:10], s["blocks"]):
         set_text(box, [("line", block["head"])], {"line": paragraphs(box)[0]})
     if s["banner"]:
@@ -318,18 +380,27 @@ def slide_table(prs, samples, s, base):
 def slide_bullets(prs, samples, s, base):
     slide, (title, _, body) = new_slide(prs, samples["bullets"], [0, 1, 2])
     set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-    set_text(body, s["body"], {"bullet": paragraphs(body)[0], "text": paragraphs(body)[0]})
+    set_text(
+        body, s["body"], {"bullet": paragraphs(body)[0], "text": paragraphs(body)[0]}
+    )
     return slide
 
 
 def slide_cards(prs, samples, s, base):
-    slide, (card_light, card_dark, title, _, light, dark) = new_slide(prs, samples["cards"], [0, 1, 2, 3, 4, 5])
+    slide, (card_light, card_dark, title, _, light, dark) = new_slide(
+        prs, samples["cards"], [0, 1, 2, 3, 4, 5]
+    )
     new_cards = (card_light, card_dark)
     set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
     text_samples = samples["cards_text"]["shapes"]
-    for box, block, text_sample in zip((light, dark), s["blocks"], (text_samples[4], text_samples[5])):
-        protos = {"head": paragraphs(box)[0], "bullet": paragraphs(box)[1],
-                  "text": paragraphs(text_sample)[1]}
+    for box, block, text_sample in zip(
+        (light, dark), s["blocks"], (text_samples[4], text_samples[5])
+    ):
+        protos = {
+            "head": paragraphs(box)[0],
+            "bullet": paragraphs(box)[1],
+            "text": paragraphs(text_sample)[1],
+        }
         set_text(box, [("head", block["head"])] + block["items"], protos)
     h = max(card_height(b) for b in s["blocks"])
     for sp in new_cards:
@@ -344,9 +415,13 @@ def slide_numbers(prs, samples, s, base):
     slide, shapes = new_slide(prs, samples["numbers"], keep)
     title = shapes[0]
     set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-    for (num, cap), block in zip(((shapes[2], shapes[3]), (shapes[4], shapes[5])), s["blocks"]):
+    for (num, cap), block in zip(
+        ((shapes[2], shapes[3]), (shapes[4], shapes[5])), s["blocks"]
+    ):
         set_text(num, [("line", block["head"])], {"line": paragraphs(num)[0]})
-        set_text(cap, [("line", t) for _, t in block["items"]], {"line": paragraphs(cap)[0]})
+        set_text(
+            cap, [("line", t) for _, t in block["items"]], {"line": paragraphs(cap)[0]}
+        )
     if s["banner"]:
         set_text(shapes[7], lines(s["banner"]), {"line": paragraphs(shapes[7])[0]})
     return slide
@@ -357,10 +432,14 @@ def slide_image(prs, samples, s, base):
     set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
     src = next((a[4:] for a in s["args"] if a.startswith("src=")), None)
     if not src or not (base / src).is_file():
-        sys.exit(f"Slajd „{' '.join(s['title'])}“: obrázek potřebuje argument src= s existující cestou vůči {base}, má {src!r}")
+        sys.exit(
+            f"Slajd „{' '.join(s['title'])}“: obrázek potřebuje argument src= s existující cestou vůči {base}, má {src!r}"
+        )
     # obrázek se vejde do plochy celý a stojí uprostřed její šířky
     x, y, w, h = IMAGE_BOX
-    pic = slide.shapes.add_picture(str(base / src), Inches(x), Inches(y), width=Inches(w))
+    pic = slide.shapes.add_picture(
+        str(base / src), Inches(x), Inches(y), width=Inches(w)
+    )
     if pic.height > Inches(h):
         pic.width = int(pic.width * Inches(h) / pic.height)
         pic.height = Inches(h)
