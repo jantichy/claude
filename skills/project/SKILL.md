@@ -420,7 +420,7 @@ Vypiš přehledně:
 
 - **Co bylo založeno** (`create`) nebo **co se změnilo a co zůstalo** (`adopt`).
 - Metadata projektu (název, popisek, web) a kam všude se propsala, git a remote, layout repozitáře, standardní struktura, **kontrakt příkazů a zda se tím zapnula průběžná kontrola, konfigurační kontroly (přísnost překladače, metriky složitosti, `.semgrep/`, LSP plugin, zákazy) – co se změnilo, co se jen navrhlo a co čeká na potvrzení**, autocommit, paměťová politika, typ, importované checklisty.
-- **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění.
+- **Co uživatel musí udělat ručně** – zejména odsouhlasení dialogu externích importů při příštím spuštění. Volba se pamatuje v `~/.claude.json` u klíče projektu (cesta tak, jak byla napsaná při spuštění – jiná velikost písmen založí samostatný záznam bez schválení): natrvalo odmítnuté importy mají `hasClaudeMdExternalIncludesApproved: false` a `hasClaudeMdExternalIncludesWarningShown: true`, opraví se přepsáním prvního na `true`.
 - *(klientská složka, `create` a `adopt`)* profil a fakturační soubor – co se založilo nebo převedlo –, odkazy v `~/Context` a jejich commit, a výpis `~/Clients/*/invoicing.md`, ve kterém fakturovaný klient je; u převodu i nalezené odkazy na starou cestu profilu.
 - *(worktree layout)* **Na jaké větvi výsledek leží**, že je ve větvi commitnutý a že merge do hlavní větve čeká na jeho pokyn. Neměnilo-li se nic, žádná větev nevznikla – řekni to místo toho.
 
