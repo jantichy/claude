@@ -10,6 +10,8 @@
 
 ## Potom
 
+- [ ] ◐ **`/learn`: víc cílových vrstev v jedné bázi** (zadal uživatel 24. 11. 2026). Znalostní báze může z jednoho zdroje (typicky přepisu vlastní přednášky nebo školení) plnit víc vrstev s pevným vztahem mezi sebou: věcnou látku v doméně oboru, didaktickou vrstvu tématu, evidenci proběhlé akce. Skill dnes zná jen „cílová doména“ a „mimo doménu“, takže by druhou vrstvu bral jako odbočku, na kterou se ptá zvlášť, nebo by ji minul. **Úprava:** skill si v *Fázi 1* přečte, jestli báze vztahy mezi vrstvami deklaruje (v jejím `CLAUDE.md`), a vrstvy svázané s cílovou doménou bere jako součást cíle, ne jako „mimo doménu“; u každého poznatku rozhodne, do které vrstvy patří, podle dělicího pravidla báze. **Samotná pravidla dělení do skillu nepatří**, protože skill je veřejný a obecný – drží je báze (u `~/Context` jeho `CLAUDE.md`), stejně jako u `/depot`. **Až potom**, co se v `~/Context` dořeší struktura vrstev (jméno projektu pro vystoupení, termíny, rozsah domén) a zapíše se do jeho `CLAUDE.md`; dřív by skill četl nehotová pravidla.
+
 - [ ] ◐ **`/legal`: třetí měření panelu a první ostrý běh** (skill napsaný 18. 11. 2026). Tvar panelu je rozhodnutý předběžně a měření 1 a 2 i zamítnutou variantu drží `skills/legal/decisions.md`, *Úzký panel, ne jeden široký posudek*. Zbývá:
   - **Měření 3** na další smlouvě, kterou uživatel dodá: dvojí běh, tedy jeden agent bez skillu proti `/legal`. Rozhodne, jestli se k variantě se širokým posudkem vrátit.
   - **Režim `counter` ostře neběžel.** Porovnání verzí přes `document-skills:docx` a roztřídění rozdílů jsou ověřené jen čtením.
