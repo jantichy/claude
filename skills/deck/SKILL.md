@@ -1,7 +1,7 @@
 ---
 name: deck
-description: Skill se použije, když uživatel zadá "/deck" (volitelně s kusem nebo akcí), nebo chce napsat, upravit či sestavit prezentaci k přednášce, školení nebo webináři v ~/Projects/Speaking – připravit slajdy z popisu kusu, didaktiky a látky ve znalostní bázi, předělat existující slajdy, opravit přetékající text nebo vyrobit .pptx v autorově šabloně. Napíše nebo upraví zdroj Prezentace.md, sestaví z něj PowerPoint nad šablonou, vykreslí náhledy a zkontroluje je. Pro prezentace v ~/Projects/Speaking má přednost před obecnou prací se soubory .pptx. Látku si nevymýšlí – co v podkladech chybí, jde nejdřív přes /learn. Na rozdíl od /compose nepíše souvislý text autorovým hlasem a na rozdíl od /proofread nedělá korekturu hotového textu; prezentaci, jejímž originálem je Google Slides, nestaví a do hotového .pptx nesahá.
-argument-hint: [kus nebo akce]
+description: Skill se použije, když uživatel zadá "/deck" (volitelně s přednáškou, školením, webinářem nebo akcí), nebo chce napsat, upravit či sestavit prezentaci k přednášce, školení nebo webináři v ~/Projects/Speaking – připravit slajdy z popisu přednášky, školení či webináře, didaktiky a látky ve znalostní bázi, předělat existující slajdy, opravit přetékající text nebo vyrobit .pptx v autorově šabloně. Napíše nebo upraví zdroj Prezentace.md, sestaví z něj PowerPoint nad šablonou, vykreslí náhledy a zkontroluje je. Pro prezentace v ~/Projects/Speaking má přednost před obecnou prací se soubory .pptx. Látku si nevymýšlí – co v podkladech chybí, jde nejdřív přes /learn. Na rozdíl od /compose nepíše souvislý text autorovým hlasem a na rozdíl od /proofread nedělá korekturu hotového textu; prezentaci, jejímž originálem je Google Slides, nestaví a do hotového .pptx nesahá.
+argument-hint: [přednáška, školení, webinář nebo akce]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 
 ## Co skill dělá
 
-Napíše nebo upraví prezentaci kusu či akce v `~/Projects/Speaking` a dotáhne ji do hotového `.pptx`. Zdrojem pravdy je `Prezentace.md` vedle popisu kusu nebo akce: skill ho napíše z popisu kusu, didaktiky tématu a látky z domén, sestaví z něj PowerPoint nad autorovou šablonou, vykreslí náhledy a zkontroluje je proti pravidlům slajdů. Co na náhledu nesedí, opraví ve zdroji a sestaví znovu.
+Napíše nebo upraví prezentaci přednášky, školení, webináře či akce v `~/Projects/Speaking` a dotáhne ji do hotového `.pptx`. Zdrojem pravdy je `Prezentace.md` vedle popisu přednášky, školení, webináře nebo akce: skill ho napíše z jejich popisu, didaktiky tématu a látky z domén, sestaví z něj PowerPoint nad autorovou šablonou, vykreslí náhledy a zkontroluje je proti pravidlům slajdů. Co na náhledu nesedí, opraví ve zdroji a sestaví znovu.
 
 Režimy nemá. Jestli se prezentace píše nově, nebo upravuje, pozná podle toho, jestli `Prezentace.md` už existuje.
 
@@ -20,7 +20,7 @@ Režimy nemá. Jestli se prezentace píše nově, nebo upravuje, pozná podle to
 - **Nedělá korekturu hotového textu.** Na tu je `/proofread`; tenhle skill drží sazbu jen na slajdech, které sám píše.
 - **Nestaví v Google Slides.** Postup pro ně drží `~/Context/Design/google-slides.md`, ne skill.
 - **Nepřepisuje nahrávky.** Přepis akce dělá `/transcript`.
-- **Nerozhoduje, co kus obsahuje.** Výběr modulů, cílovka a délka stojí v popisu kusu; skill z nich prezentaci staví, ne je mění.
+- **Nerozhoduje, co přednáška, školení nebo webinář obsahuje.** Výběr modulů, cílovka a délka stojí v jejich popisu; skill z nich prezentaci staví, ne je mění.
 
 ## Jak je to postavené uvnitř
 
@@ -48,29 +48,29 @@ Platí ve všech fázích a pod tlakem termínu taky:
 
 Společný začátek je v `~/.claude/skills/preflight.md`. Odchylky:
 
-1. **Kořenem je `~/Projects/Speaking`**, i když session stojí jinde – kus i akce leží tam. Pojmenování kusů a akcí drží jeho `CLAUDE.md`.
+1. **Kořenem je `~/Projects/Speaking`**, i když session stojí jinde – přednášky, školení, webináře i akce leží tam. Jejich pojmenování drží jeho `CLAUDE.md`.
 2. **Kontrola závislostí:** `uv`, `soffice`, `pdftoppm` a `magick` (`command -v`) a šablona `~/Context/Brand/template.pptx`. Chybí-li náhledové nástroje, sestavit jde, ale kontrola náhledů odpadá – řekni to a zapiš do závěru jako nezkontrolované. Chybí-li `uv` nebo šablona, skonči.
 3. **Načti domény:** `~/Context/Design/slides.md`, `~/Context/Design/design.md`, `~/Context/Brand/visual.md`, `~/Context/Text/typography.md`, `~/Context/Training/training.md`, a jde-li v poznámkách o souvislý text, `~/Context/Text/text.md`. Didaktiku tématu načti až ve *Fázi 2*, kdy je jasné, o jaké téma jde.
 4. **Načti `format.md`** z adresáře skillu – bez něj nevíš, co který typ slajdu nese.
 
-## Fáze 1 – Kus nebo akce
+## Fáze 1 – Přednáška, školení, webinář nebo akce
 
-Najdi v `~/Projects/Speaking` adresář podle argumentu. Bez argumentu, nebo sedí-li víc adresářů, se zeptej přes `AskUserQuestion` s kusy a akcemi jako variantami.
+Najdi v `~/Projects/Speaking` adresář podle argumentu. Bez argumentu, nebo sedí-li víc adresářů, se zeptej přes `AskUserQuestion` s přednáškami, školeními, webináři a akcemi jako variantami.
 
-- **Kus** má `<kus>.md` a `Prezentace.md` je jeho hlavní prezentace.
-- **Akce** má `<akce>.md`. Vlastní `Prezentace.md` dostane, jen když se pro ni generuje vlastní prezentace; jinak se promítá prezentace kusu. Říká-li popis akce, že originálem je Google Slides, skonči podle *Hranic*.
+- **Přednáška, školení nebo webinář** má `<název>.md` a `Prezentace.md` je jeho hlavní prezentace.
+- **Akce** má `<akce>.md`. Vlastní `Prezentace.md` dostane, jen když se pro ni generuje vlastní prezentace; jinak se promítá prezentace přednášky, školení nebo webináře, pod kterou akce leží. Říká-li popis akce, že originálem je Google Slides, skonči podle *Hranic*.
 
 Existuje-li `Prezentace.md`, jde o úpravu: přečti ho celý a měň jen to, co zadání žádá. Neexistuje-li, píše se nová. Leží-li v adresáři `.pptx` bez `Prezentace.md`, zastav se podle *Hranic*.
 
 ## Fáze 2 – Podklady
 
-Přečti popis kusu (u akce i popis akce s odchylkami od kusu). Z něj plyne cílovka, délka a moduly v pořadí. Pak načti didaktiku tématu `~/Context/Training/<téma>.md` a látku z domén, na kterou moduly vedou.
+Přečti popis přednášky, školení nebo webináře (u akce i popis akce s odchylkami od něj). Z něj plyne cílovka, délka a moduly v pořadí. Pak načti didaktiku tématu `~/Context/Training/<téma>.md` a látku z domén, na kterou moduly vedou.
 
 **Chybí-li látka k modulu**, nepiš ho. Vypiš, co chybí, a navrhni `/learn` se zdrojem, je-li nějaký známý. Zbytek prezentace psát smíš, chybějící modul zůstane jako mezislajd s poznámkou `DOHLEDAT:`.
 
 ## Fáze 3 – Zdroj prezentace
 
-Piš nebo uprav `Prezentace.md` podle `format.md` a pravidel `~/Context/Design/slides.md` – rozsah a tempo z délky kusu, nadpis jako tvrzení, jedna myšlenka na slajd. Co řečník řekne, patří do poznámek `>`, ne na slajd. Česká sazba podle `typography.md` platí i na slajdu.
+Piš nebo uprav `Prezentace.md` podle `format.md` a pravidel `~/Context/Design/slides.md` – rozsah a tempo z délky přednášky, školení nebo webináře, nadpis jako tvrzení, jedna myšlenka na slajd. Co řečník řekne, patří do poznámek `>`, ne na slajd. Česká sazba podle `typography.md` platí i na slajdu.
 
 **Kresba** – schéma, které se z typů slajdů poskládat nedá – vzniká jako `<typ>.py` vedle zdroje podle `format.md`, *Kresba jedné prezentace*. Napřed zkus vestavěný typ; kresba je kód, který se s každou úpravou šablony musí ověřit znovu.
 
