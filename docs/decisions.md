@@ -2718,3 +2718,13 @@ Soubory se zadáními pro subagenty se ve skillech `/audit`, `/consolidate`, `/p
 **Rozhodnutí:** klíč `test` pouští `tests/run.py`, který spustí každý modul přes `discover -p` ve vlastním procesu souběžně – kolem 27 s. Moduly mají vlastní dočasné adresáře a přesměrovaný `HOME`, takže souběh nemění, co měří. Ověřeno oběma směry: padající modul vrátí 1 i s výstupem.
 
 **Zamítnuto – zvýšit strop:** mez se nezvedá mimochodem a kontrola po každé odpovědi by trvala přes minutu a půl. **Zamítnuto – zrychlit pomalé testy:** víc práce, a s rostoucí sadou by se problém vrátil.
+
+### Uzavírací skill vypisuje prompt pro novou session vedle `/next`
+
+**Rozhodnuto 24. 11. 2026.** Uživatel po `/end` i `/merge` často ví, čím chce pokračovat, a `/next` ho stejně provede nabídkou – u přerušené práce jen tehdy, leží-li bloků víc, u volného pokračování vždycky. Hotový prompt si zkopíruje před `/clear` a po něm vloží, což je rychlejší. `/next` zůstává rovnocennou cestou a prompt ho nenahrazuje: o tom, kdy se zápis přerušení maže, rozhoduje dál *Jak pokračovat* v bloku, takže prompt jen pošle novou session tam.
+
+**Pravidlo leží v `skills/handoff.md`, ne v `/end`,** protože prompt vypisuje i `/merge`, který závěr `/end` potlačuje a odpověď uzavírá sám. Odkaz jednoho skillu dovnitř fáze druhého zakazuje norma. **Prompt vzniká jen u jediné zjevné cesty.** U rovnocenných cest by prompt vybral za uživatele, a to je práce `/next`.
+
+**Prompt nesmí nést kontext, jen odkaz na soubor.** Prompt, který by opisoval, co se v session domluvilo, by byl druhá kopie zápisu – a hlavně cesta, jak kontext do nové session dostat, aniž by ho kdo zapsal. Potřebuje-li prompt něco, co v souborech není, je to nezapsaná povinnost úklidu; proto se sestavuje před commitem.
+
+**Zamítnuto – citace místo bloku kódu:** terminál ji zkopíruje i se znakem rámečku na začátku řádku. **Zamítnuto – prompt začínající slash příkazem přerušeného skillu:** text za ním by skill dostal jako argument a vyložil ho jako rozsah.

@@ -11,7 +11,7 @@
 5. **Pustí nad spojeným stavem kontroly projektu** – testy, lint, typecheck, podle toho, co projekt deklaruje. Nemá-li co pustit, řekne to nahlas místo aby mlčel.
 6. **Zopakuje to, posunula-li se hlavní větev znovu** – a po třetím kole se zastaví a zeptá, místo aby donekonečna doháněl.
 7. **Slučuje se shrnující zprávou**, která říká, co větev přinesla, ne jak se jmenovala. V historii hlavní větve je to jediný řádek za celou práci.
-8. **Uklidí až po ověřeném mergi** – větev, její pracovní adresář i větev na serveru, a jen když merge opravdu prošel.
+8. **Uklidí až po ověřeném mergi** – větev, její pracovní adresář i větev na serveru, a jen když merge opravdu prošel. Vede-li ze sloučené práce zjevné pokračování, vypíše na konci hotový prompt, kterým ho v nové session nad hlavní větví rovnou spustíte.
 
 ## Proč zrovna tenhle
 

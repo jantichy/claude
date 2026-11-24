@@ -23,13 +23,3 @@ Rozvaha, měření a historie skillu `/end`. Za běhu se nečte. Starší rozhod
 **Zamítnuto – snížit effort nebo přemýšlení:** hledání nevypořádaných témat stojí na úsudku a hlavička skillu effort nastavit neumí ověřeně. **Zamítnuto – nečíst inventuru ani evidenci:** stojí skoro nic a jsou jádrem záruky úplnosti.
 
 **Odhad:** běh bez dotazů z kolem 90 s na kolem 50 až 60 s. **Ověřit** `skills/cost.py end --since 2026-11-03` po několika ostrých bězích proti mediánům výš; teprve pak se slučoval `/break` – sloučený je od 3. 11. 2026 (`docs/decisions.md`).
-
-### Závěr vypisuje prompt pro novou session vedle `/next`
-
-**Rozhodnuto 24. 11. 2026.** Uživatel po `/end` často ví, čím chce pokračovat, a `/next` ho stejně provede nabídkou – u přerušené práce jen tehdy, leží-li bloků víc, u volného pokračování vždycky. Hotový prompt si zkopíruje před `/clear` a po něm vloží, což je rychlejší. `/next` zůstává rovnocennou cestou a prompt ho nenahrazuje: o tom, kdy se zápis přerušení maže, rozhoduje dál *Jak pokračovat* v bloku, takže prompt jen pošle novou session tam.
-
-**Prompt vzniká jen u jediné zjevné cesty.** U rovnocenných cest by prompt vybral za uživatele, a to je práce `/next`.
-
-**Prompt nesmí nést kontext, jen odkaz na soubor.** Prompt, který by opisoval, co se v session domluvilo, by byl druhá kopie zápisu – a hlavně cesta, jak kontext do nové session dostat, aniž by ho kdo zapsal. Potřebuje-li prompt něco, co v souborech není, je to nezapsaná povinnost úklidu; proto se sestavuje před commitem.
-
-**Zamítnuto – citace místo bloku kódu:** terminál ji zkopíruje i se znakem rámečku na začátku řádku. **Zamítnuto – prompt začínající slash příkazem přerušeného skillu:** text za ním by skill dostal jako argument a vyložil ho jako rozsah.

@@ -6,6 +6,7 @@
 
 - [Blok Kudy dál](#blok-kudy-dál)
 - [Řetěz, který nepatří do téhle session](#řetěz-který-nepatří-do-téhle-session)
+- [Prompt pro novou session](#prompt-pro-novou-session)
 - [Práh kontextu](#práh-kontextu)
 - [Přerušení dlouhého průchodu](#přerušení-dlouhého-průchodu)
 
@@ -39,7 +40,7 @@ Vyhrává první kritérium, které sedí:
 - **První odrážka je ta jedna nejpotřebnější cesta**, ne výčet. Vede-li dál jediný rozumný krok, ať je v bloku jediná odrážka.
 - **Rovnocenné možnosti vypiš všechny**, každou vlastní odrážkou. Nevybírej za uživatele tam, kde se vybrat nedá.
 - **Volitelný předkrok stojí pod tím nezbytným**, ne nad ním, a je označený jako volitelný. Typicky `/oponent` nad rozsáhlým dokumentem: smí předcházet, ale nezbytný není, a kdyby stál první, vypadá jako povinnost.
-- **Odrážka smí nést pod sebou prompt k vložení do nové session** – vypisuje ho `/end`, který jako jediný stojí těsně před `/clear`; kdy vzniká a co nese, drží on (`~/.claude/skills/end/SKILL.md`, *Fáze 7 – Git a závěr*).
+- **Odrážka smí nést pod sebou prompt k vložení do nové session** – viz *Prompt pro novou session* níž.
 - **Blok nikdy není prázdný.** Nevede-li dál nic, řekne se to i s důvodem – „tady osa cyklu v tomhle projektu končí, protože se nenasazuje“ je platná odrážka, mlčení ne.
 - **Neptej se na to přes `AskUserQuestion`.** Je to doporučení, ne rozhodnutí, které by běh potřeboval, aby mohl skončit – a otázka na konci hotového běhu nutí uživatele kliknout, i když chtěl jen vidět, že je hotovo. Kde otázka na konci dnes je, zruší se.
 
@@ -92,6 +93,26 @@ Vyhrává první kritérium, které sedí:
 ```
 
 **Neprodlužuj to, když krok patří sem.** Řetěz `/end → /clear → nová session` u kroku, který má proběhnout hned, je zbytečná režie: start session stojí načtení `CLAUDE.md` a všech jeho importů. Kontrolní krok nad malou změnou v čerstvé session se pouští tady.
+
+------
+
+## Prompt pro novou session
+
+Prompt stojí pod odrážkou bloku *Kudy dál*, která na něj ukazuje, jako blok kódu bez jazyka odsazený do odrážky – uživatel si ho před `/clear` zkopíruje a po něm vloží místo `/next`, a ušetří si tak nabídku. Blok kódu proto, že ho terminál zkopíruje bez znaků rámečku, které by nesla citace. Vypisuje ho uzavírací skill – `/end`, respektive `/merge` –, protože jen on stojí těsně před `/clear`. Píše se doslova, jako hotový text:
+
+- **Kdy:** vždycky po zápisu přerušeného běhu – za každý blok, který tahle session zapsala, jeden. Mimo přerušení jen tehdy, když z práce session vede do nové session **jediná** konkrétní práce: další kolo, zbytek rozdělené změny, kontrolní krok nad tím, co session vyrobila, úkol, který session založila jako svůj další krok. Jsou-li cesty rovnocenné, nebo nevede-li dál nic, prompt nevzniká – vybírat má uživatel, a na to je `/next`.
+- **Stojí jen na souborech.** Nová session konverzaci nemá, takže prompt neopisuje kontext ani neříká „jak jsme se domluvili“ – jmenuje práci a odkáže na místo, kde je zapsaná. **Potřebuje-li kontext, který v souborech není, je to nezapsaná povinnost:** zapiš ji, typicky jako úkol do `todo.md`, a prompt odkaž na ni – proto ho uzavírací skill sestaví dřív, než commitne, ne až při psaní závěru.
+- **U přerušení** jmenuje nadpis bloku a soubor, kde leží, a řekne, ať se blok přečte celý, nejdřív se udělá, co podle něj musí předcházet, a pokračuje se podle *Jak pokračovat* – i s jeho první akcí, ať uživatel vidí, co se spustí. Postup tím kopíruje navázání v `/next`, včetně toho, že blok smaže jen práce, která frontu dojde.
+- **U pokračování** je to skill s přesným argumentem, nebo úkol jménem položky v `todo.md`.
+- **Krátký:** jedna až dvě věty, cesty relativně k pracovnímu adresáři session, protože `/clear` ho nemění. **Leží-li práce jinde** – po mergi ve worktree layoutu v `<container>/main`, protože merge adresář větve smaže –, začíná prompt tou cestou a ostatní cesty se počítají od ní.
+
+```
+Naváž na přerušenou práci `### /review branch – přerušeno 2026-11-24` v sekci `## Přerušený běh` v `docs/todo.md`: přečti blok celý, udělej nejdřív, co podle něj musí předcházet, a pokračuj podle jeho „Jak pokračovat“ – začíná se položkou Volba objednatele po zrušení akce.
+```
+
+```
+Pusť se do úkolu „Import faktur přes nové API“ v `docs/todo.md` – jeho první polovinu, export, dodělala předchozí session.
+```
 
 ------
 
