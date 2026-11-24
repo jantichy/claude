@@ -5,7 +5,7 @@ Máte vlastní knihovnu know-how – metodiky, pravidla, postupy – a pořád d
 ## Co umí
 
 - **Vytěží zdroj do posledního detailu.** Nejen hlavní myšlenky, ale i prahy, čísla, výjimky, pořadí kroků a hlavně **důvody** – ty se ztrácejí první. Hotový seznam pak nechá zkontrolovat druhým, nezávislým průchodem, který hledá jen to, co v něm chybí. Počítá se s tím, že zdroj už příště nemusí být po ruce – co se nevytěží, se nedohledá.
-- **Pozná, co je skutečný rozpor.** Školení říká věci hruběji než metodika a rozebírá jen jednu variantu – to není chyba, to je jiná hloubka. Skill rozliší zjednodušení, zúžení, prohloubení a zastarání od případu, kdy dvě tvrzení opravdu nemohou platit obě.
+- **Pozná, co je skutečný rozpor.** Školení říká věci hruběji než metodika a rozebírá jen jednu variantu – to není chyba, to je jiná hloubka. Skill rozliší zjednodušení, zúžení, prohloubení a zastarání od případu, kdy dvě tvrzení opravdu nemohou platit obě. **Jiný přístup nebo jiná míra opatření není rozpor, ale další varianta:** zapíše ji do škály vedle stávajících i s tím, co přináší a co riskuje, místo aby soudil, která je správná.
 - **Rozpory předloží po jednom.** Vysvětlí, v čem je spor, ocituje obě verze a nabídne hotová řešení včetně toho nejčastějšího: obojí platí, jen za jiných podmínek – tak se to zapíše.
 - **Nesahá na to, na co se sahat nemá.** Návod a metodiku přepisuje volně. Profily, ceníky a texty psané ručně jen doplňuje. Doslovné přetisky, citace a datované záznamy nepřepisuje vůbec – pozná je podle toho, na co odpovídají, ne podle jména složky.
 - **Vezme i nahrávku.** Zvukový nebo obrazový záznam nechá nejdřív přepsat přepisovacím skillem a připraví si k tomu seznam jmen a termínů z cílové oblasti, aby je rozpoznávání nekomolilo. U videa se navíc zeptá, co s obrazem – půlka obsahu bývá na slajdech.
@@ -36,7 +36,7 @@ Když cíl neurčíte přesně, skill si ho vybere sám a nechá si ho potvrdit.
 ```
 ## Plán zapracování – skoleni.md → analytics
 
-Poznatků: 47 · nové 12 · doplnění 18 · prohloubení 8 · zúžení 3 · překonání 2 · zjednodušení 0 · rozpory 3 · mimo cíl 0 · nezapracováno 1
+Poznatků: 47 · nové 12 · doplnění 18 · prohloubení 8 · zúžení 3 · varianty 0 · překonání 2 · zjednodušení 0 · rozpory 3 · mimo cíl 0 · nezapracováno 1
 
 Zásahy do obsahu
 - consent.md › Sběr před načtením – přestavba sekce, poznatky 3, 7–11

@@ -139,12 +139,17 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 | **Prohloubení** | Báze to má nastřelené jednou větou, zdroj to rozebírá | Rozšiř – zdroj je tu ten přesnější |
 | **Zjednodušení** | Zdroj říká hrubší verzi toho, co báze má přesněji | **Není rozpor.** Bázi nech být; zvaž jen, jestli se zjednodušená formulace nehodí jako úvodní věta pro pochopení |
 | **Zúžení** | Zdroj mluví jen o jedné variantě z několika | **Není rozpor.** Zařaď jako konkrétní případ pod obecnější pravidlo |
+| **Varianta** | Zdroj popisuje jiný způsob, jak dojít k témuž cíli – jinou míru opatření, jiný přístup, jinou volbu na škále pohodlí a rizika –, než jaký báze zapisuje | **Není rozpor.** Zapiš ji do škály vedle stávajících, i s tím, co přináší, co riskuje a kdy se hodí – viz odstavec níž |
 | **Překonání** | Rozdíl plyne prokazatelně z toho, že se svět venku pohnul – nová verze nástroje, změněné API, zrušená funkce | Aktualizuj a **nech stopu**, co platilo dřív. Není-li ta prokazatelnost, je to rozpor |
 | **Rozpor** | Obě tvrzení míří na tutéž věc za týchž podmínek a nemohou platit obě | **Do *Fáze 6*.** Neřeš sám |
 
 **Test na rozpor je jediný: jednal by čtenář ve stejné situaci podle každé verze jinak?** Když ne – protože jedno je obecnější, hrubší, novější nebo platí jinde – rozpor to není a **nehlas ho**. Falešný rozpor stojí uživatele rozhodnutí, které nemá co rozhodovat, a po třetím takovém přestane odpovědi číst.
 
 **Druhý test, když si nejsi jistý:** *odkud ten rozdíl plyne?* Z hloubky, z rozsahu nebo z času → zapracuj sám. Ze samotného tvrzení → zeptej se.
+
+**Odlišná praxe je nejdřív varianta, ne rozpor – i tehdy, když báze tvrdí jednu správnou cestu.** Většina rozhodnutí v praxi je otázka míry: jak moc pohodlí, jak velké riziko, za jakou cenu. Práva agenta (jen čtení, úpravy, publikace), napojení pošty, zpracování dat skriptem nebo modelem i nasazení měření přes kontejner nebo do kódu mají každé víc rozumných poloh. Zní-li báze „jen X, nikdy Y“ a zdroj dělá Y, **nerozhoduj, která verze je správná, a nenabízej to tak uživateli**. Doplň Y do škály s jeho přínosem, rizikem, slabým místem a případy, kdy je spíš v pohodě a kdy spíš ne, a výchozí volbu báze ponech jako výchozí. Platí to i proti absolutní formulaci v bázi samotné: ta je pak nález k přepisu na škálu, ne argument proti zdroji. **Rozpor zůstává jen tam, kde se dvě tvrzení rozcházejí ve faktu** – co varianta přináší, co riskuje, jak funguje.
+
+**Proč:** znalost má čtenáři umožnit vybrat si podle konkrétního případu, ne vybrat za něj. Skill, který mezi variantami soudí „jedna dobře, ostatní špatně“, z báze tiše vyřízne přesně ty možnosti, ze kterých se pak staví výklad o tom, co která volba stojí – a uživatele zaměstná rozhodováním, které rozhodovat nemělo. Platí to bez ohledu na to, jestli to cílová báze sama o sobě říká.
 
 **Má-li cíl víc vrstev, urči u každého poznatku, do které patří** – podle dělicího pravidla, které k vrstvám drží báze; deklarace v jejím `CLAUDE.md` říká, kde leží. **Do skillu ani do plánu ho neopisuj**: drží ho báze, a opsané by se s ní tiše rozešlo. Míří-li poznatek do dvou vrstev naráz, jsou to dva poznatky – třeba fakt a to, jak ho podat –, takže ho rozděl a druhý dostane další volné číslo; každý pak jde na jedno místo.
 
@@ -163,9 +168,9 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 ```
 ## Plán zapracování – <zdroj> → <cíl>
 
-**Poznatků:** <N> · nové <n> · doplnění <n> · prohloubení <n> · zúžení <n> · překonání <n> · zjednodušení <n> · rozpory <n> · mimo cíl <n> · nezapracováno <n>
+**Poznatků:** <N> · nové <n> · doplnění <n> · prohloubení <n> · zúžení <n> · varianty <n> · překonání <n> · zjednodušení <n> · rozpory <n> · mimo cíl <n> · nezapracováno <n>
 
-Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky mířící mimo cíl a nepřenositelné. Zjednodušení se nezapracovává a přesto není „nezapracováno“: báze už tu znalost má líp.
+Součet **musí dát <N>** – všech osm zařazení z *Fáze 4* plus poznatky mířící mimo cíl a nepřenositelné. Zjednodušení se nezapracovává a přesto není „nezapracováno“: báze už tu znalost má líp.
 
 **Zásahy do obsahu** *(má-li cíl víc vrstev, seskupené po vrstvách)*
 - `<file>` › *<sekce>* – <typ zásahu>, poznatky <čísla>
@@ -234,6 +239,7 @@ Zapisuj podle odsouhlaseného plánu. Platí přitom:
 
 - **Zdroj skončí jako nový soubor.** Je to nejsnazší cesta a vypadá jako práce, ale znalost tím do báze nevstoupí – zůstane vedle ní a nikdo ji nenajde. Zapracovat znamená rozpustit.
 - **Zjednodušení se nahlásí jako rozpor.** Školení říká věci hruběji schválně. Rozpor je jen tam, kde by čtenář jednal ve stejné situaci jinak.
+- **Varianta se nahlásí jako rozpor.** Zdroj pustí agenta publikovat, báze říká „jen čtení“ – a uživatel dostane otázku, která verze platí. Neplatí jedna: jsou to dvě polohy na škále a obě patří do báze i s tím, co stojí.
 - **Lidsky psaný text se přeorá celý.** Profil, ceník nebo medailonek někdo psal ručně a pozná to na první pohled. Doplňuje se, nepřestavuje.
 - **Vytěží se jen to hlavní.** Detaily, prahy a hlavně důvody vypadají jako vata, dokud zdroj existuje. Pak zmizí a nikdo neví, že chyběly.
 - **Plán se přeskočí, i když ho skill zná.** Nejde o nevědomost: znalost pravidla jeho dodržení nezaručuje – proto červené vlajky ve *Fázi 5*.

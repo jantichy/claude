@@ -2,6 +2,14 @@
 
 Soubor drží rozvahu a doklady skillu `/learn`; za běhu skillu se nečte.
 
+### Odlišná praxe je varianta na škále, ne rozpor
+
+**Rozhodnuto 24. 11. 2026.** Při vytěžení webináře o analytice s AI skill předložil jako rozpory tři věci, které rozpory nebyly: měřicí kód natvrdo u malého webu proti principu „jen snippet GTM“, agenta s právem publikace v GTM proti „jen čtení“ a napojenou osobní poštu proti „mail nepřipojovat“. Nabídl k nim „platí nová / platí stávající / obojí za jiných podmínek“, tedy soud, která poloha je správná. Uživatel to odmítl: jsou to polohy na škále pohodlí a rizika a báze má držet všechny i s tím, co stojí – jinak z ní nejde postavit ani výklad, který právě tu škálu vede, ani rozhodnutí v konkrétní práci.
+
+**Proto zařazení *Varianta* v *Fázi 4*** a pravidlo, že absolutní formulace v bázi je sama nález, ne argument proti zdroji. Rozpor zůstává jen pro fakta. Pravidlo stojí ve skillu, ne jen v bázi, protože skill mezi variantami soudí sám, ať cílová báze říká cokoliv; autorova báze má totéž jako vlastní princip (`~/Context/CLAUDE.md`, *Znalost je škála variant*).
+
+**Zavrženo:** spolehnout se na třetí volbu „obojí za jiných podmínek“ – nechává rozhodnutí na uživateli u každé varianty zvlášť a vymezuje rozsah místo ceny a rizika.
+
 ### Víc cílových vrstev v jedné bázi: deklaraci i dělicí pravidlo drží báze
 
 **Rozhodnuto 24. 11. 2026.** Znalostní báze autora začala z jednoho zdroje plnit víc vrstev s pevným vztahem – věcnou látku v doméně oboru, didaktiku tématu, popis vystoupení v projektu a evidenci akce. Skill do té doby znal jen „cílová doména“ a „mimo doménu“, takže druhou vrstvu bral jako odbočku, na kterou se ptá zvlášť, nebo ji minul.
