@@ -2026,13 +2026,13 @@ Sekce se nahradila `[push] default = current`. Push se chová stejně (aktuáln�
 
 **Argument o režii, kvůli kterému byl hook 28. 9. zamítnut, neplatí:** pod prahem hook do kontextu nevloží nic a nad ním jednu větu za práh, takže trvalá režie je jen čtení transcriptu při odeslání zprávy. **Zamítnuto měřit po každém nástroji (`PostToolUse`):** četl by celý transcript po každém volání kvůli případu, kdy dlouhý běh proběhne uvnitř jedné odpovědi; pro ten zůstává v `handoff.md` odhad z rozsahu běhu. **Zamítnuto ukazovat hlášku přímo uživateli:** čísla vidí ve status line a nabídka s tím, co by se zapsalo a kde navázat, je práce modelu.
 
-### Transcripty se drží deset let (`cleanupPeriodDays: 3650`)
+### Transcripty se drží pět let (`cleanupPeriodDays: 1825`)
 
 **Rozhodnuto 5. 10. 2026.** Claude Code maže transcripty session po 30 dnech, dokud `settings.json` neřekne jinak – a neříkal. 5. 10. 2026 byl nejstarší ze 739 transcriptů z 5. 9. Na transcriptech přitom stojí skilly, které jdou zpětně přes uzavřené session (`/scenarios`, dohledání nenatrackovaného času v `/invoicing recover`, vytěžení konverzace v `/skill`), a mez 30 dní se popisovala jako vlastnost zdroje, ne jako nastavení. Podnět přišel z prohlídky cizího startovního balíku konfigurace, který hodnotu nastavuje.
 
-**Rozhodnutí:** `cleanupPeriodDays: 3650`. Co se smazalo do 5. 10. 2026, se nevrátí.
+**Rozhodnutí:** `cleanupPeriodDays: 1825`. Co se smazalo do 5. 10. 2026, se nevrátí. Do 3. 11. 2026 platilo `3650` (deset let); na pět let ho zkrátil commit `2edcbb7` a důvod zkrácení zapsaný není.
 
-**Zamítnuto – `0` jako „nemazat nikdy“:** podle autorů toho balíku hodnota `0` kvůli chybě vypne ukládání transcriptů úplně; neověřeno, ale riziko nestojí za ověřování. **Zamítnuto – 365 dní:** historie by po roce mizela zase a disk tím nic podstatného neušetří.
+**Zamítnuto – `0` jako „nemazat nikdy“:** nejde nastavit – podle dokumentace Claude Code (`settings-reference#cleanupperioddays`, ověřeno 24. 11. 2026) je minimum 1 a `0` neprojde validací. Vyvrácená domněnka: autoři toho balíku tvrdili, že `0` kvůli chybě vypne ukládání transcriptů úplně. **Zamítnuto – 365 dní:** historie by po roce mizela zase a disk tím nic podstatného neušetří.
 
 ### Tvrzení z webu ověřuje skript, ne model
 
@@ -2365,7 +2365,7 @@ Zbytek (`CLAUDE.md`, `README.md`, `todo.md`, `backlog.md`, `decisions.md`, `done
 
 **Rozhodnuto 13. 10. 2026** (uživatel) při zakládání skillu `/clauding`. Otázka zněla, kolik času se strávilo v Claude Code, a měřeno je **čas v Claudovi, ne čas u klávesnice**: čekání, než Claude doběhne, se počítá. Metodika se ladila nad daty, ne od stolu. Výsledná pravidla drží `skills/clauding/SKILL.md`, *Metodika*, a provádí je `skills/timeline.py`.
 
-**Co bylo k dispozici:** transcripty sessions od 6. 8. 2026 (starší smazal výchozí třicetidenní úklid, dnes je `cleanupPeriodDays` na 3650), `history.jsonl` s prompty od 2. 4. 2026 a git. `stats-cache.json` nese jen počty zpráv za den, čas z něj vyčíst nejde.
+**Co bylo k dispozici:** transcripty sessions od 6. 8. 2026 (starší smazal výchozí třicetidenní úklid, dnes je `cleanupPeriodDays` na 1825), `history.jsonl` s prompty od 2. 4. 2026 a git. `stats-cache.json` nese jen počty zpráv za den, čas z něj vyčíst nejde.
 
 **Měření, na kterých rozhodnutí stojí:**
 
