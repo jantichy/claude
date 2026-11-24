@@ -307,7 +307,19 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- **zapsal-li se přerušený běh, nebo vede-li z práce session zjevné pokračování** – odrážka v pevném znění „`/clear` a v nové session `/next` nebo prompt:“ a pod ní prompt; obojí drží `~/.claude/skills/handoff.md`, *Prompt pro novou session*
+- **zapsal-li se přerušený běh, nebo vede-li z práce session zjevné pokračování** – odrážka s promptem přesně podle šablony níž; kdy prompt vzniká a co nese, drží `~/.claude/skills/handoff.md`, *Prompt pro novou session*
 - **stojíš-li na pushnuté větvi a v `docs/todo.md` není `## Přerušený běh`** – `/merge`, je-li větev hotová; úklid, který právě proběhl, pozná podle průchodu v `done.md` a znovu ho nepustí. Nabídni to jednou odrážkou, neptej se na to dialogem
 - **zbyla-li rozbitá věc** – pojmenuj ji a řekni, že ji vyřeší příští session, nebo ji doděláte teď
 - **jinak** – zavřít session; a míří-li práce dál na kontrolní krok, patří do odrážky celý řetěz s `/clear`, protože tenhle skill běží právě proto, že kontext nabyl
+
+**Odrážka s promptem** – jediný povolený tvar, i když v bloku stojí další odrážky:
+
+```
+**Kudy dál**
+
+- `/clear` a v nové session `/next` nebo prompt:
+
+  `<prompt: celý v tomhle jednom páru zpětných apostrofů, uvnitř žádné další – cesty holé, nadpisy v českých uvozovkách>`
+```
+
+Vypisuj to jako **Markdown, ne jako blok kódu**, a prompt nikdy jako citace (`>`).

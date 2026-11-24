@@ -3686,6 +3686,61 @@ class HandoffContract(unittest.TestCase):
         self.assertIn("Neptej se na to přes `AskUserQuestion`", HANDOFF.read_text())
 
 
+PROMPT_USERS = ("end", "merge")
+
+
+def prompt_template(text: str) -> str:
+    """První blok kódu v kapitole *Prompt pro novou session* – kanonická šablona."""
+    section = _section(text, "## Prompt pro novou session")
+    match = re.search(r"```\n(.*?)\n```", section, re.S)
+    return match.group(1) if match else ""
+
+
+def prompt_template_defects(template: str, skills: dict) -> list:
+    """Stojí šablona odrážky s promptem doslova u každého skillu, který prompt vypisuje?
+
+    Proč opsaná a ne odkazem: závěr se píše podle toho, co má skill před očima,
+    a odkaz do `handoff.md` si v ostrých bězích nikdo neotevřel – prompt pak
+    skončil jako citace s cestami ve zpětných apostrofech. Opsaná kopie je vada
+    jen tam, kde ji nikdo neměří; tady ji měří tenhle test.
+    """
+    defects = []
+    if not template:
+        return ["handoff.md nemá v kapitole Prompt pro novou session šablonu"]
+    prompt = template.strip().splitlines()[-1].strip()
+    if prompt.count("`") != 2 or not (prompt.startswith("`") and prompt.endswith("`")):
+        defects.append("prompt v šabloně není jeden kód v řádku")
+    for name, text in skills.items():
+        if template not in text:
+            defects.append(
+                f"{name}: šablona odrážky s promptem chybí nebo se liší od handoff.md"
+            )
+    return defects
+
+
+class PromptTemplateIsShared(unittest.TestCase):
+    """Odrážka s promptem pro novou session vypadá ve všech skillech stejně."""
+
+    def test_template_is_identical_everywhere(self):
+        skills = {n: body(ROOT / "skills" / n / "SKILL.md") for n in PROMPT_USERS}
+        self.assertEqual(
+            prompt_template_defects(prompt_template(HANDOFF.read_text()), skills), []
+        )
+
+    def test_changed_copy_is_reported(self):
+        template = prompt_template(HANDOFF.read_text())
+        skills = {"end": template.replace("nebo prompt:", "nebo napiš prompt:")}
+        self.assertTrue(prompt_template_defects(template, skills))
+
+    def test_quoted_prompt_is_reported(self):
+        template = prompt_template(HANDOFF.read_text())
+        broken = template.replace("  `<prompt", "  > <prompt").replace(">`", ">")
+        self.assertIn(
+            "prompt v šabloně není jeden kód v řádku",
+            prompt_template_defects(broken, {"end": broken}),
+        )
+
+
 class HandoffChecksActuallyCatch(unittest.TestCase):
     """Mutační testy: poškoď vzor a ověř, že kontrola nález opravdu nahlásí."""
 

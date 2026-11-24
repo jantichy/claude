@@ -101,19 +101,23 @@ Vyhrává první kritérium, které sedí:
 Prompt stojí v bloku *Kudy dál* v odrážce, která má **vždycky tohle znění** – po přerušení i u pokračování, v `/end` i v `/merge` –, a sám je na samostatném řádku pod ní:
 
 ```
+**Kudy dál**
+
 - `/clear` a v nové session `/next` nebo prompt:
 
-  `Naváž na přerušenou práci „/review branch – přerušeno 2026-11-24“ v sekci „Přerušený běh“ v docs/todo.md: přečti blok celý, udělej nejdřív, co podle něj musí předcházet, a pokračuj podle jeho „Jak pokračovat“ – začíná se položkou Volba objednatele po zrušení akce.`
+  `<prompt: celý v tomhle jednom páru zpětných apostrofů, uvnitř žádné další – cesty holé, nadpisy v českých uvozovkách>`
 ```
 
-Vypisuje se to jako **Markdown, ne jako blok kódu** – ukázka výš je zápis, ne pokyn k formátu. Uživatel si prompt před `/clear` zkopíruje a po něm vloží místo `/next`, a ušetří si tak nabídku. Vypisuje ho uzavírací skill – `/end`, respektive `/merge` –, protože jen on stojí těsně před `/clear`.
+Vypisuj to jako **Markdown, ne jako blok kódu**, a prompt nikdy jako citace (`>`).
+
+**Šablona stojí doslova i v `/end` a `/merge`**, u jejich bloku *Kudy dál*: závěr se píše podle toho, co má skill před očima, a odkaz sem si při psaní závěru nikdo neotevřel. Shodu všech tří kopií hlídá `tests/test_skills.py`, takže se mění jen naráz. Uživatel si prompt před `/clear` zkopíruje a po něm vloží místo `/next`, a ušetří si tak nabídku. Vypisuje ho uzavírací skill – `/end`, respektive `/merge` –, protože jen on stojí těsně před `/clear`.
 
 - **Znění odrážky se nemění.** Žádné „vlož tenhle prompt“, „`/clear`: …“ ani jiné obměny – uživatel má odrážku poznat na první pohled, a volné znění se pokaždé poskládá jinak a jindy nedává smysl. Nic dalšího za dvojtečku ani pod prompt nepatří; co by odrážka jinak nesla (kde práce leží), nese sám prompt.
 - **Prompt stojí na vlastním řádku jako jeden kód v řádku** – celý mezi jedním párem zpětných apostrofů, odsazený o dvě mezery, aby byl druhým odstavcem téže odrážky. Terminál ho tak vykreslí celý jednou barvou a odliší od textu kolem. **Jiný tvar není:** ne uprostřed věty ani jen v uvozovkách, kde splývá s odrážkou; **ne jako citace** (`>`), kterou terminál vykreslí se svislou čarou a kurzívou, a ta se zkopíruje s promptem; ne jako blok kódu, který terminál vykreslí jinak než kód v řádku.
 - **Uvnitř promptu nejsou zpětné apostrofy – ani u cest, sekcí a příkazů, které by jinde dostaly.** Ukončily by kód v řádku uprostřed a rozpadl by se na kusy různé barvy; právě tahle chyba svádí k únikové citaci. Cesty, příkazy a jména souborů se v promptu píšou holé (docs/todo.md, git status), nadpisy sekcí a jména položek v českých uvozovkách („Celý repozitář“) – bez `##`.
 - **Kdy:** vždycky po zápisu přerušeného běhu – za každý blok, který tahle session zapsala, jeden. Mimo přerušení jen tehdy, když z práce session vede do nové session **jediná** konkrétní práce: další kolo, zbytek rozdělené změny, kontrolní krok nad tím, co session vyrobila, úkol, který session založila jako svůj další krok. Jsou-li cesty rovnocenné, nebo nevede-li dál nic, prompt nevzniká – vybírat má uživatel, a na to je `/next`.
 - **Stojí jen na souborech.** Nová session konverzaci nemá, takže prompt neopisuje kontext ani neříká „jak jsme se domluvili“ – jmenuje práci a odkáže na místo, kde je zapsaná. **Potřebuje-li kontext, který v souborech není, je to nezapsaná povinnost:** zapiš ji, typicky jako úkol do `todo.md`, a prompt odkaž na ni – proto ho uzavírací skill sestaví dřív, než commitne, ne až při psaní závěru.
-- **U přerušení** jmenuje nadpis bloku a soubor, kde leží, a řekne, ať se blok přečte celý, nejdřív se udělá, co podle něj musí předcházet, a pokračuje se podle *Jak pokračovat* – i s jeho první akcí, ať uživatel vidí, co se spustí. Postup tím kopíruje navázání v `/next`, včetně toho, že blok smaže jen práce, která frontu dojde.
+- **U přerušení** jmenuje nadpis bloku a soubor, kde leží, a řekne, ať se blok přečte celý, nejdřív se udělá, co podle něj musí předcházet, a pokračuje se podle *Jak pokračovat* – i s jeho první akcí, ať uživatel vidí, co se spustí: `Naváž na přerušenou práci „/review branch – přerušeno 2026-11-24“ v sekci „Přerušený běh“ v docs/todo.md: přečti blok celý, udělej nejdřív, co podle něj musí předcházet, a pokračuj podle jeho „Jak pokračovat“ – začíná se položkou Volba objednatele po zrušení akce.` Postup tím kopíruje navázání v `/next`, včetně toho, že blok smaže jen práce, která frontu dojde.
 - **U pokračování** je to skill s přesným argumentem, nebo úkol jménem položky v `todo.md` – třeba `Pusť se do úkolu „Import faktur přes nové API“ v docs/todo.md – jeho první polovinu, export, dodělala předchozí session.`
 - **Krátký:** jedna až dvě věty, cesty relativně k pracovnímu adresáři session, protože `/clear` ho nemění. **Leží-li práce jinde** – po mergi ve worktree layoutu v `<container>/main`, protože merge adresář větve smaže –, začíná prompt tou cestou („V ~/Projects/eventoid/main: …“) a ostatní cesty se počítají od ní.
 
