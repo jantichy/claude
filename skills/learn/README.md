@@ -10,6 +10,7 @@ Máte vlastní knihovnu know-how – metodiky, pravidla, postupy – a pořád d
 - **Nesahá na to, na co se sahat nemá.** Návod a metodiku přepisuje volně. Profily, ceníky a texty psané ručně jen doplňuje. Doslovné přetisky, citace a datované záznamy nepřepisuje vůbec – pozná je podle toho, na co odpovídají, ne podle jména složky.
 - **Vezme i nahrávku.** Zvukový nebo obrazový záznam nechá nejdřív přepsat přepisovacím skillem a připraví si k tomu seznam jmen a termínů z cílové oblasti, aby je rozpoznávání nekomolilo. U videa se navíc zeptá, co s obrazem – půlka obsahu bývá na slajdech.
 - **Vezme i obrázky a PDF.** Nafocený flipchart, screenshot, oskenovaný leták, slajdy ke školení. Přečte je a vytěží; do knihovny je nekopíruje, ale co je na nich, překreslí do textu.
+- **Rozdělí zdroj i mezi související vrstvy.** Přepis vlastního školení nese víc věcí naráz: nový fakt patří do odborné metodiky, to, že se na něj lidé ptali a jak odpovědět, do didaktiky, a že akce proběhla, do evidence. Říká-li knihovna sama, které vrstvy spolu takhle drží a podle čeho se mezi ně dělí, skill je bere jako součást cíle – neptá se na každou zvlášť a žádnou nemine. Pravidla dělení si nevymýšlí, čte je z knihovny.
 - **Celý plán ukáže předem.** Kolik poznatků, kam půjdou, co se přepíše, o čem se bude rozhodovat a co se nezapracuje. Teprve po odsouhlasení píše.
 - **Přestavbu struktury si vyžádá zvlášť.** Zakládat, přesouvat nebo rušit soubory smí až poté, co vysvětlí, jak to má vypadat a proč se nová znalost do stávající struktury nevejde. Platí to i pro krajní případ: když pro znalost není v knihovně místo vůbec, navrhne založit celou novou tematickou oblast – necpe ji tam, kam nepatří.
 
@@ -35,7 +36,7 @@ Když cíl neurčíte přesně, skill si ho vybere sám a nechá si ho potvrdit.
 ```
 ## Plán zapracování – skoleni.md → analytics
 
-Poznatků: 47 · nové 12 · doplnění 18 · prohloubení 8 · zúžení 3 · překonání 2 · zjednodušení 0 · rozpory 3 · mimo doménu 0 · nezapracováno 1
+Poznatků: 47 · nové 12 · doplnění 18 · prohloubení 8 · zúžení 3 · překonání 2 · zjednodušení 0 · rozpory 3 · mimo cíl 0 · nezapracováno 1
 
 Zásahy do obsahu
 - consent.md › Sběr před načtením – přestavba sekce, poznatky 3, 7–11

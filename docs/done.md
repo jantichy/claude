@@ -315,6 +315,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 
 ## Odvedená práce
 
+- [x] **`/learn` plní víc vrstev cíle v jedné bázi** (24. 11. 2026). Deklaruje-li báze ve svém `CLAUDE.md` vrstvy svázané s cílovou doménou (látka, didaktika, evidence), skill je bere jako součást cíle a u každého poznatku rozhodne vrstvu podle dělicího pravidla báze, které sám nenese. Poznatek do dvou vrstev se dělí na dva, evidence se jen doplňuje o nový záznam, štítek „mimo doménu“ je nově „mimo cíl“. Rozvaha v `skills/learn/decisions.md`.
 - [x] **Souhlas průběžné kontroly potvrzuje dialog Claude Code a váže se na repozitář** (23. 11. 2026). `verify.sh --allow` už nechce „ano“ z terminálu; vydává ho Claude a pravidlo `ask` se ptá dialogem i v auto módu. Souhlas nese první commit repozitáře místo otisku kontraktu, takže změna kontraktu o nový souhlas neříká a cizí klon na téže cestě ho nezdědí. Dosavadní souhlasy se převádějí při běhu, sedí-li otisk. Rozhodnutí v `decisions.md`.
 - [x] **Testy běží souběžně přes `tests/run.py`** (23. 11. 2026). Sada za sebou trvala ~100 s a průběžná kontrola ji po 90 s ukončila; souběžně ~27 s, počet testů beze změny.
 - [x] **Nový screenshot status line v README** (23. 11. 2026).

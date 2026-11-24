@@ -72,6 +72,8 @@ Volný popis za `/learn` nese obojí. Co v něm chybí, doplň z adresáře, ve 
 
 **Uvnitř zadané domény si vybíráš soubory a sekce sám** – to je celá práce skillu, ne rozhodnutí uživatele.
 
+**Cíl může mít víc vrstev.** Báze smí ve svém `CLAUDE.md` deklarovat, že z jednoho zdroje plní několik vrstev s pevným vztahem mezi sebou – typicky věcnou látku v doméně oboru, didaktiku tématu a evidenci proběhlé akce. Přečti si to tam (`CLAUDE.md` čteš i kvůli *Fázi 3*) a **vrstvy svázané s cílovou doménou ber jako součást cíle**: zadání domény je svolení i pro ně a zvlášť se na ně neptáš. Bez toho se druhá vrstva vyřizuje jako odbočka mimo doménu, nebo se mine úplně. Nedeklaruje-li báze nic, cílem je jen zadaná doména. **Leží-li vrstva v jiném repozitáři** než báze, platí pro něj *Fáze 0* stejně – čistý strom i autocommit.
+
 **Není-li zdrojem text** – je to nahrávka, video, obrázek nebo PDF –, řídí se jeho převzetí souborem [`sources.md`](sources.md): jak se nechá přepsat nahrávka, co s obrazem videa, jak se čte dlouhé PDF a proč se do báze nekopíruje. **Cíl urči dřív, než tam sáhneš** – slovník pro přepis i rozhodnutí o obrazu z něj vycházejí. Vytěžení samo se pak ničím neliší a řídí ho *Fáze 2*.
 
 ## Fáze 2 – Vytěžení zdroje
@@ -116,6 +118,8 @@ Nastuduj cílovou doménu: strukturu souborů, jak se v ní člení obsah, jaký
 
 **Kritérium je povaha textu, ne jméno adresáře** – doklad může ležet uvnitř metodické domény a naopak.
 
+**Mapuj i vrstvy cíle**, deklaruje-li je báze (*Fáze 1*). **Evidence jako vrstva cíle se jen doplňuje o nový záznam** – ten, který v ní už stojí, je doklad jako každý jiný a platí pro něj řádek *Doklad*.
+
 **Trvá-li uživatel na zásahu do dokladu, neprováděj ho mlčky.** Jeho pokyn stojí nad tímhle skillem (`~/.claude/standards/rules.md`, *Přednost pravidel*), takže „ne“ není odpověď – ale tiché provedení taky ne. **Řekni, co je ten soubor zač a co se zásahem ztrácí** (doslovnost citace, datová stopa evidence), **nabídni místo toho zápis jinam** a proveď to teprve tehdy, když uživatel potvrdí i po tomhle upozornění.
 
 **Říká-li ale cílová báze sama, kam se nesahá, platí to nad tvým úsudkem.** Znalostní báze mívá ve svém `CLAUDE.md` jmenovaná místa, která jsou doslovné přetisky nebo historické artefakty a nemění se ani kvůli typografii. **Přečti si ho a ber ten výčet jako závazný**; není to konfigurace, kterou by si skill zaváděl, ale zapsané rozhodnutí, které tam bylo dřív než on.
@@ -142,7 +146,9 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 
 **Druhý test, když si nejsi jistý:** *odkud ten rozdíl plyne?* Z hloubky, z rozsahu nebo z času → zapracuj sám. Ze samotného tvrzení → zeptej se.
 
-**Poznatky mimo zadanou doménu neztrácej.** Patří-li poznatek zřetelně jinam, posbírej je a v plánu předlož **jedním dotazem za celou skupinu**, jestli je zapracovat i tam. Bez souhlasu se mimo zadaný cíl nesahá.
+**Má-li cíl víc vrstev, urči u každého poznatku, do které patří** – podle dělicího pravidla, které k vrstvám drží báze; deklarace v jejím `CLAUDE.md` říká, kde leží. **Do skillu ani do plánu ho neopisuj**: drží ho báze, a opsané by se s ní tiše rozešlo. Míří-li poznatek do dvou vrstev naráz, jsou to dva poznatky – třeba fakt a to, jak ho podat –, takže ho rozděl a druhý dostane další volné číslo; každý pak jde na jedno místo.
+
+**Poznatky mimo cíl neztrácej.** Patří-li poznatek zřetelně jinam než do zadané domény a jejích vrstev, posbírej je a v plánu předlož **jedním dotazem za celou skupinu**, jestli je zapracovat i tam. Bez souhlasu se mimo zadaný cíl nesahá.
 
 **Co není přenositelná znalost** – specifika jednoho klienta, dohody, osobní věci, historky – **nezapracovávej**, ale odlož si to do seznamu pro závěr i s důvodem. Rozdíl mezi „posoudil jsem a nepatří to tam“ a „přehlédl jsem to“ musí být vidět.
 
@@ -155,11 +161,11 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 ```
 ## Plán zapracování – <zdroj> → <cíl>
 
-**Poznatků:** <N> · nové <n> · doplnění <n> · prohloubení <n> · zúžení <n> · překonání <n> · zjednodušení <n> · rozpory <n> · mimo doménu <n> · nezapracováno <n>
+**Poznatků:** <N> · nové <n> · doplnění <n> · prohloubení <n> · zúžení <n> · překonání <n> · zjednodušení <n> · rozpory <n> · mimo cíl <n> · nezapracováno <n>
 
-Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky mířící mimo doménu a nepřenositelné. Zjednodušení se nezapracovává a přesto není „nezapracováno“: báze už tu znalost má líp.
+Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky mířící mimo cíl a nepřenositelné. Zjednodušení se nezapracovává a přesto není „nezapracováno“: báze už tu znalost má líp.
 
-**Zásahy do obsahu**
+**Zásahy do obsahu** *(má-li cíl víc vrstev, seskupené po vrstvách)*
 - `<file>` › *<sekce>* – <typ zásahu>, poznatky <čísla>
 - …
 
@@ -168,7 +174,7 @@ Součet **musí dát <N>** – všech sedm zařazení z *Fáze 4* plus poznatky 
 
 **K rozhodnutí**
 - <N> rozporů – proberu je po jednom v další fázi
-- <N> poznatků míří mimo zadanou doménu, do `<domain>`
+- <N> poznatků míří mimo cíl, do `<domain>`
 
 **Nezapracuje se**
 - <co a proč>
@@ -254,7 +260,7 @@ Nevede-li doména evidenci, **nabídni ji založit** – jako každou jinou změ
 ```
 ## Zapracováno
 
-- **Zdroj:** <cesta> · **Cíl:** <doména>
+- **Zdroj:** <cesta> · **Cíl:** <doména, a má-li je, i její vrstvy>
 - **Poznatků:** <N>, z toho zapracováno <n>
 
 **Kam to šlo**
