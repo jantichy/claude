@@ -121,6 +121,15 @@
 
 - [ ] ○ **Zjistit, proč se Claude Code každý den odhlašuje.** Přihlašovací údaje leží v macOS Klíčence (záznam `Claude Code-credentials` v `login.keychain-db`), ukládání tedy funguje – při `/login` 23. 11. 2026 se záznam přepsal. Debug logy Claude Code se nezapisují, takže příčina zatím nejde vidět. Dvě hypotézy: **souběžné sessions** si obnovují přihlášení naráz, a protože každé obnovení zneplatní předchozí klíč, jedna z nich skončí s neplatným; nebo je **Klíčenka při obnovení zamčená** (po probuzení ze spánku) a nové údaje se neuloží. Ověření: hned po příštím odhlášení spustit `security find-generic-password -s "Claude Code-credentials"` a porovnat pole `mdat` s časem posledního přihlášení – přepisoval-li se záznam během dne, obnovování funguje a vede to na souběžné sessions; nepřepisoval-li se, na Klíčenku.
 
+  **Stav k 24. 11. 2026 (další odhlášení toho rána):** porovnání `mdat` nešlo udělat, uživatel se přihlásil dřív, než se záznam přečetl – na příště tedy **nejdřív `mdat`, pak `/login`**. Z transcriptů, `history.jsonl` a záznamu v Klíčence se ale dalo zjistit tohle:
+  - **Vyvráceno – krátká platnost refresh tokenu.** Záznam nese `expiresAt` přístupového tokenu 8 h po přihlášení a `refreshTokenExpiresAt` zhruba měsíc dopředu; odhlášení po dni tedy není vypršení, ale zneplatnění.
+  - **Vyvráceno – obnovování nefunguje vůbec.** Po přihlášení 23. 11. v 8:50 sessions pracovaly bez chyby ještě po 19. hodině, tedy přes osmihodinovou platnost přístupového tokenu; obnovení během dne aspoň jednou proběhlo.
+  - **Oslabeno – zamčená Klíčenka.** `security show-keychain-info` hlásí u `login.keychain-db` jen `no-timeout`, tedy bez zamykání po čase i při spánku.
+  - **Vyvráceno – nová verze Claude Code.** Odhlášení se v transcriptech objevuje od 6. 11. na 2.1.311, každé jeden až tři dny; s instalací 2.1.323 20. 11. jen zhoustlo.
+  - **Podpořeno – souběžné sessions.** U každého z odhlášení 21.–24. 11. byly otevřené aspoň dvě sessions běžící přes noc (procesy z předchozího dne běží i teď), a 24. 11. dostaly první ranní požadavek dvě takové sessions s hláškou „Login expired“ tři sekundy po sobě. Sedí to na rotaci refresh tokenu: po probuzení se obnovují dvě sessions naráz, jedna použije už spotřebovaný token a server zneplatní celé přihlášení. Na GitHubu je podobných hlášení víc (claude-code #19078, #72017), potvrzená příčina ani oprava ale ne.
+
+  **Rozhodující test zbývá:** odhlásí se to i tehdy, když přes noc neběží žádná session? Buď všechny sessions na noc zavírat, nebo pouštět hlídač, který co pár minut zapíše `mdat`, `expiresAt` (ne tokeny) a seznam běžících procesů `claude` – příští odhlášení pak ukáže, kdy a při kolika procesech se přihlášení naposledy obnovilo.
+
 ## Později
 
 - [ ] ● **Rozhodnout jazyk konfigurační vrstvy dřív než cokoliv dalšího.** Zadal uživatel 2026-09-21. Celá vrstva je česky – pravidla, skilly, README i `description` hlaviček –, a zatím to nikdo nerozhodl, jen to tak vzniklo. Pro české publikum je to výhoda, pro kohokoliv dalšího blokující: skill se nevyvolá popisem, kterému uživatel nerozumí, a README skillu je psané pro člověka zvenčí, tedy přesně pro toho, koho čeština vyřadí.
