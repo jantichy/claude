@@ -98,21 +98,24 @@ Vyhrává první kritérium, které sedí:
 
 ## Prompt pro novou session
 
-Prompt stojí pod odrážkou bloku *Kudy dál*, která na něj ukazuje, jako blok kódu bez jazyka odsazený do odrážky – uživatel si ho před `/clear` zkopíruje a po něm vloží místo `/next`, a ušetří si tak nabídku. Blok kódu proto, že ho terminál zkopíruje bez znaků rámečku, které by nesla citace. Vypisuje ho uzavírací skill – `/end`, respektive `/merge` –, protože jen on stojí těsně před `/clear`. Píše se doslova, jako hotový text:
+Prompt stojí v bloku *Kudy dál* v odrážce, která má **vždycky tohle znění** – po přerušení i u pokračování, v `/end` i v `/merge` –, a sám je na samostatném řádku pod ní:
 
+```
+- `/clear` a pak v nové session `/next`, nebo napiš následující prompt:
+
+  `Naváž na přerušenou práci „/review branch – přerušeno 2026-11-24“ v sekci „Přerušený běh“ v docs/todo.md: přečti blok celý, udělej nejdřív, co podle něj musí předcházet, a pokračuj podle jeho „Jak pokračovat“ – začíná se položkou Volba objednatele po zrušení akce.`
+```
+
+Vypisuje se to jako **Markdown, ne jako blok kódu** – ukázka výš je zápis, ne pokyn k formátu. Uživatel si prompt před `/clear` zkopíruje a po něm vloží místo `/next`, a ušetří si tak nabídku. Vypisuje ho uzavírací skill – `/end`, respektive `/merge` –, protože jen on stojí těsně před `/clear`.
+
+- **Znění odrážky se nemění.** Žádné „vlož tenhle prompt“, „`/clear`: …“ ani jiné obměny – uživatel má odrážku poznat na první pohled, a volné znění se pokaždé poskládá jinak a jindy nedává smysl. Nic dalšího za dvojtečku ani pod prompt nepatří; co by odrážka jinak nesla (kde práce leží), nese sám prompt.
+- **Prompt stojí na vlastním řádku jako kód v řádku** – mezi jednoduchými zpětnými apostrofy a odsazený o dvě mezery, aby byl druhým odstavcem téže odrážky. Terminál ho tak vykreslí barevně a odliší od textu kolem. **Nikdy uprostřed věty ani v uvozovkách** – tam splývá s odrážkou a nejde zkopírovat celý; **ani jako blok kódu**, ten terminál vykreslí jinak než kód v řádku.
+- **Uvnitř promptu nejsou zpětné apostrofy** – ukončily by kód v řádku uprostřed. Soubory se v něm píšou holé a nadpisy a jména položek v českých uvozovkách.
 - **Kdy:** vždycky po zápisu přerušeného běhu – za každý blok, který tahle session zapsala, jeden. Mimo přerušení jen tehdy, když z práce session vede do nové session **jediná** konkrétní práce: další kolo, zbytek rozdělené změny, kontrolní krok nad tím, co session vyrobila, úkol, který session založila jako svůj další krok. Jsou-li cesty rovnocenné, nebo nevede-li dál nic, prompt nevzniká – vybírat má uživatel, a na to je `/next`.
 - **Stojí jen na souborech.** Nová session konverzaci nemá, takže prompt neopisuje kontext ani neříká „jak jsme se domluvili“ – jmenuje práci a odkáže na místo, kde je zapsaná. **Potřebuje-li kontext, který v souborech není, je to nezapsaná povinnost:** zapiš ji, typicky jako úkol do `todo.md`, a prompt odkaž na ni – proto ho uzavírací skill sestaví dřív, než commitne, ne až při psaní závěru.
 - **U přerušení** jmenuje nadpis bloku a soubor, kde leží, a řekne, ať se blok přečte celý, nejdřív se udělá, co podle něj musí předcházet, a pokračuje se podle *Jak pokračovat* – i s jeho první akcí, ať uživatel vidí, co se spustí. Postup tím kopíruje navázání v `/next`, včetně toho, že blok smaže jen práce, která frontu dojde.
-- **U pokračování** je to skill s přesným argumentem, nebo úkol jménem položky v `todo.md`.
-- **Krátký:** jedna až dvě věty, cesty relativně k pracovnímu adresáři session, protože `/clear` ho nemění. **Leží-li práce jinde** – po mergi ve worktree layoutu v `<container>/main`, protože merge adresář větve smaže –, začíná prompt tou cestou a ostatní cesty se počítají od ní.
-
-```
-Naváž na přerušenou práci `### /review branch – přerušeno 2026-11-24` v sekci `## Přerušený běh` v `docs/todo.md`: přečti blok celý, udělej nejdřív, co podle něj musí předcházet, a pokračuj podle jeho „Jak pokračovat“ – začíná se položkou Volba objednatele po zrušení akce.
-```
-
-```
-Pusť se do úkolu „Import faktur přes nové API“ v `docs/todo.md` – jeho první polovinu, export, dodělala předchozí session.
-```
+- **U pokračování** je to skill s přesným argumentem, nebo úkol jménem položky v `todo.md` – třeba `Pusť se do úkolu „Import faktur přes nové API“ v docs/todo.md – jeho první polovinu, export, dodělala předchozí session.`
+- **Krátký:** jedna až dvě věty, cesty relativně k pracovnímu adresáři session, protože `/clear` ho nemění. **Leží-li práce jinde** – po mergi ve worktree layoutu v `<container>/main`, protože merge adresář větve smaže –, začíná prompt tou cestou („V ~/Projects/eventoid/main: …“) a ostatní cesty se počítají od ní.
 
 ------
 

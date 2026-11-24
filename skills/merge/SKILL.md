@@ -154,7 +154,7 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
 - `/clear`, a `/next` v `<container>/main`, respektive v hlavní větvi – fronta práce nad sloučeným stavem; úklid session proběhl na začátku mergi
-- vede-li ze sloučené práce zjevné pokračování – `/clear`, a v nové session vlož prompt pod touhle odrážkou, nebo zadej `/next` a vyber z jeho nabídky
+- vede-li ze sloučené práce zjevné pokračování – odrážka v pevném znění s promptem pod ní, místo té předchozí
 - zbývá-li k témuž záměru další větev, pojmenuj ji
 
 **Prompt pro novou session** drží `~/.claude/skills/handoff.md`, *Prompt pro novou session*, včetně cesty `<container>/main`, kterou ve worktree layoutu začíná. Přerušená práce tu nenastane – ta merge zastaví.
