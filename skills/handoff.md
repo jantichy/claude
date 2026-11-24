@@ -39,6 +39,7 @@ Vyhrává první kritérium, které sedí:
 - **První odrážka je ta jedna nejpotřebnější cesta**, ne výčet. Vede-li dál jediný rozumný krok, ať je v bloku jediná odrážka.
 - **Rovnocenné možnosti vypiš všechny**, každou vlastní odrážkou. Nevybírej za uživatele tam, kde se vybrat nedá.
 - **Volitelný předkrok stojí pod tím nezbytným**, ne nad ním, a je označený jako volitelný. Typicky `/oponent` nad rozsáhlým dokumentem: smí předcházet, ale nezbytný není, a kdyby stál první, vypadá jako povinnost.
+- **Odrážka smí nést pod sebou prompt k vložení do nové session** – vypisuje ho `/end`, který jako jediný stojí těsně před `/clear`; kdy vzniká a co nese, drží on (`~/.claude/skills/end/SKILL.md`, *Fáze 7 – Git a závěr*).
 - **Blok nikdy není prázdný.** Nevede-li dál nic, řekne se to i s důvodem – „tady osa cyklu v tomhle projektu končí, protože se nenasazuje“ je platná odrážka, mlčení ne.
 - **Neptej se na to přes `AskUserQuestion`.** Je to doporučení, ne rozhodnutí, které by běh potřeboval, aby mohl skončit – a otázka na konci hotového běhu nutí uživatele kliknout, i když chtěl jen vidět, že je hotovo. Kde otázka na konci dnes je, zruší se.
 

@@ -16,7 +16,7 @@ Uživatel je na konci nějakého problému a chystá se session opustit nebo zko
 3. **Nic není nepravdivé** – nová session nesmí vycházet z něčeho, co v průběhu session přestalo platit.
 4. **Je to commitnuté** – práce není hotová, dokud sedí jen v pracovním stromu.
 
-**Končí-li session uprostřed rozdělané práce**, uloží ji navíc jako frontu k navázání: do `docs/todo.md`, sekce `## Přerušený běh`, na kterou v nové session naváže `/next` (*Fáze 3*). Rozdělanou prací je fronta kteréhokoliv skillu i práce mimo skill.
+**Končí-li session uprostřed rozdělané práce**, uloží ji navíc jako frontu k navázání: do `docs/todo.md`, sekce `## Přerušený běh`, na kterou v nové session naváže `/next` (*Fáze 3*). Rozdělanou prací je fronta kteréhokoliv skillu i práce mimo skill. **V závěru k tomu vypíše doslovný prompt**, kterým uživatel v nové session naváže i bez `/next` – stejně jako tam, kde přerušení není, ale z práce session vede zjevné pokračování (*Fáze 7*).
 
 **Režimy jsou dva.** **`session`** je výchozí a platí i bez argumentu: úklid session, ve kterém skill rozdělanou práci rozpozná sám. **`break`** říká, že rozdělaná práce je jistě – volá ho tak skill s frontou, když uživatel na prahu kontextu přijme přerušení (`~/.claude/skills/handoff.md`, *Přerušení dlouhého průchodu*), a rozpoznání pak nic neodhaduje.
 
@@ -38,7 +38,7 @@ Do *Životního cyklu projektu* nepatří (`~/.claude/standards/lifecycle.md`, *
 
 **Nemerguje a `/merge` nevolá – je to obráceně.** `/merge` pouští tenhle skill na svém začátku (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*). **Volá-li tě `/merge`, blok *Kudy dál* vynech** – odpověď uzavře on. Volá-li tě skill s frontou v režimu `break`, blok ponech: vede na `/next` a přerušený skill vlastní závěr nevydává.
 
-**V přerušené práci nepokračuje.** Navázání dělá `/next` v nové session – je to druhá strana téhož předání a čte přesně to, co *Fáze 3* zapíše. Co se do přerušení nevypořádalo, zůstane otevřené.
+**V přerušené práci nepokračuje.** Navázání dělá `/next` nebo prompt ze závěru v nové session – je to druhá strana téhož předání a čte přesně to, co *Fáze 3* zapíše. Co se do přerušení nevypořádalo, zůstane otevřené.
 
 ## Jak je to postavené uvnitř
 
@@ -248,7 +248,9 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na položku, `
 
 ## Fáze 7 – Git a závěr
 
-**Připrav tři soubory jedním voláním:**
+**Nejdřív sestav prompt pro novou session**, patří-li do závěru (*Prompt pro novou session* níž) – vynutí-li si zápis navíc, musí jít do commitu.
+
+**Pak připrav tři soubory jedním voláním:**
 
 - **Řádek průchodu** do `docs/done.md`, sekce `## Průchody životním cyklem` (`~/.claude/skills/passes.md`) – čte ho příští `/end`, který jinak nepozná, co zůstalo mimo rozsah a jak se s tím naložilo. **Nemá-li projekt `done.md`, krok přeskoč nahlas.**
 
@@ -305,7 +307,24 @@ Zakonči jednou z těchto vět, nikdy ničím vágním mezi tím:
 
 **Kudy dál** je poslední blok odpovědi, za verdiktem – tvar a pravidla, kdy odrážka musí vypsat celý řetěz včetně ukončení session, drží `~/.claude/skills/handoff.md`. Odtud vede:
 
-- **zapsal-li se přerušený běh** – `/clear`, a v nové session `/next`: naváže rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění
+- **zapsal-li se přerušený běh** – `/clear`, a v nové session `/next`, nebo místo něj vlož prompt níž: oba navážou rovnou na zápis; zůstáváš v `<pracovní adresář>`, clear adresář nemění
+- **vede-li z práce session zjevné pokračování** – `/clear`, a v nové session vlož prompt níž, nebo zadej `/next` a vyber z jeho nabídky
 - **stojíš-li na pushnuté větvi a v `docs/todo.md` není `## Přerušený běh`** – `/merge`, je-li větev hotová; úklid, který právě proběhl, pozná podle průchodu v `done.md` a znovu ho nepustí. Nabídni to jednou odrážkou, neptej se na to dialogem
 - **zbyla-li rozbitá věc** – pojmenuj ji a řekni, že ji vyřeší příští session, nebo ji doděláte teď
 - **jinak** – zavřít session; a míří-li práce dál na kontrolní krok, patří do odrážky celý řetěz s `/clear`, protože tenhle skill běží právě proto, že kontext nabyl
+
+**Prompt pro novou session** stojí pod odrážkou, která na něj ukazuje, jako blok kódu bez jazyka odsazený do odrážky – uživatel si ho před `/clear` zkopíruje a po něm vloží místo `/next`, a ušetří si tak nabídku. Blok kódu proto, že ho terminál zkopíruje bez znaků rámečku, které by nesla citace. Vypisuje se doslova, jako hotový text:
+
+- **Kdy:** vždycky po zápisu přerušeného běhu – za každý blok, který tahle session zapsala, jeden. Mimo přerušení jen tehdy, když z práce session vede do nové session **jediná** konkrétní práce: další kolo, zbytek rozdělené změny, kontrolní krok nad tím, co session vyrobila, úkol, který session založila jako svůj další krok. Jsou-li cesty rovnocenné, nebo nevede-li dál nic, prompt nevzniká – vybírat má uživatel, a na to je `/next`.
+- **Stojí jen na souborech.** Nová session konverzaci nemá, takže prompt neopisuje kontext ani neříká „jak jsme se domluvili“ – jmenuje práci a odkáže na místo, kde je zapsaná. **Potřebuje-li kontext, který v souborech není, je to nezapsaná povinnost:** zapiš ji, typicky jako úkol do `todo.md`, a prompt odkaž na ni – proto se prompt sestavuje na začátku fáze, ne až při psaní závěru.
+- **U přerušení** jmenuje nadpis bloku a soubor, kde leží, a řekne, ať se blok přečte celý, nejdřív se udělá, co podle něj musí předcházet, a pokračuje se podle *Jak pokračovat* – i s jeho první akcí, ať uživatel vidí, co se spustí. Postup tím kopíruje navázání v `/next`, včetně toho, že blok smaže jen práce, která frontu dojde.
+- **U pokračování** je to skill s přesným argumentem, nebo úkol jménem položky v `todo.md`.
+- **Krátký:** jedna až dvě věty, cesty relativně k pracovnímu adresáři session, protože `/clear` ho nemění.
+
+```
+Naváž na přerušenou práci `### /review branch – přerušeno 2026-11-24` v sekci `## Přerušený běh` v `docs/todo.md`: přečti blok celý, udělej nejdřív, co podle něj musí předcházet, a pokračuj podle jeho „Jak pokračovat“ – začíná se položkou Volba objednatele po zrušení akce.
+```
+
+```
+Pusť se do úkolu „Import faktur přes nové API“ v `docs/todo.md` – jeho první polovinu, export, dodělala předchozí session.
+```
