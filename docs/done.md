@@ -314,6 +314,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-11-23** · `/end` · `e2de753` · session `be302a9b-6781-4ead-bcac-26c736467845` · prompty 16/16 · 1 téma (1 rozhodnuto) · mimo rozsah: žádné · meze: 55 bloků myšlení a 3 výstupy ToolSearch nečteny z principu; obsah prošel z kontextu, kompaktací 0
 - **2026-11-24** · `/end` · `d50a3f9` · session `3c84be35-1743-4ab7-8ae7-dc0cec0ba332` · prompty 5/5 · 0 témat · mimo rozsah: jméno klienta ve veřejném `docs/todo.md` (položka o `/explain` a `AskUserQuestion`) – odstraněno · meze: žádné
 - **2026-11-24** · `/end` · `1eac9bc` · session `3c84be35-1743-4ab7-8ae7-dc0cec0ba332` · prompty 7/7 · 0 témat · mimo rozsah: žádné · meze: žádné
+- **2026-11-24** · `/end` · `60b5c78` · session `3c84be35-1743-4ab7-8ae7-dc0cec0ba332` · prompty 13/13 · 0 témat · mimo rozsah: žádné · meze: žádné
 
 ## Odvedená práce
 
