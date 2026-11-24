@@ -152,6 +152,8 @@ Každý poznatek postav proti tomu, co báze říká dnes, a zařaď ho. **Tohle
 
 **Co není přenositelná znalost** – specifika jednoho klienta, dohody, osobní věci, historky – **nezapracovávej**, ale odlož si to do seznamu pro závěr i s důvodem. Rozdíl mezi „posoudil jsem a nepatří to tam“ a „přehlédl jsem to“ musí být vidět.
 
+**Tip praktika na nástroj nebo postup přenositelná znalost je**, i když ho řekl jeden člověk mimochodem – „stavím to přes brainstorming ze Superpowers“, „na audit beru vyšší model, vyjde levněji“. Historkou není, protože ho jde zopakovat jinde. Zapiš ho jako zkušenost zdroje, ne jako ověřený fakt; zahozený tip se ze zdroje už nikdy nevytáhne.
+
 ## Fáze 5 – Plán
 
 **Předlož celý plán najednou, dřív než se sáhne na první soubor.** Platí to **i pro jednovětou změnu**. Zápis do jediného souboru se totiž nejeví jako práce, která by potřebovala plán, a tím pravidlo tiše mizí.
