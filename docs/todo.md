@@ -130,6 +130,8 @@
 
   **Rozhodující test zbývá:** odhlásí se to i tehdy, když přes noc neběží žádná session? Buď všechny sessions na noc zavírat, nebo pouštět hlídač, který co pár minut zapíše `mdat`, `expiresAt` (ne tokeny) a seznam běžících procesů `claude` – příští odhlášení pak ukáže, kdy a při kolika procesech se přihlášení naposledy obnovilo.
 
+- [ ] ○ **`/skill`: srovnávací běh jen se schovaným skillem.** Rozhodnuto 24. 11. 2026 (dřív nápad v `backlog.md`). *Fáze 4* má změřit, jak agent selže **bez** skillu, ale potřetí změřila dodržení: u `/merge` a `/evaluate` (21. 9. 2026) si agent nový skill našel na disku a jel podle něj, u `/deck` (24. 11. 2026) si `SKILL.md` přečetl přes odkaz v `~/Context/Brand/visual.md`, ačkoli běžel s `claude -p --disable-slash-commands` – přepínač vypne jen vyvolání skillů, čtení souborů ne. Udělat z toho podmínku v těle `/skill`, *Fáze 4*: srovnávací běh se pouští jedině s dočasně schovaným adresářem skillu (a vrácením i při selhání), nebo v prostředí bez něj; jinak se přizná jako neproveditelný a do závěru jde jako nezkontrolovaný. Zavržené proti, které stálo v backlogu – že jde o omezení kvůli prostředí a dá se číst jako výmluva k vynechání fáze – oslabily tři neplatné běhy ze stejné příčiny; podmínka fázi nevynechává, ale říká, jak ji udělat platně.
+
 ## Později
 
 - [ ] ● **Rozhodnout jazyk konfigurační vrstvy dřív než cokoliv dalšího.** Zadal uživatel 2026-09-21. Celá vrstva je česky – pravidla, skilly, README i `description` hlaviček –, a zatím to nikdo nerozhodl, jen to tak vzniklo. Pro české publikum je to výhoda, pro kohokoliv dalšího blokující: skill se nevyvolá popisem, kterému uživatel nerozumí, a README skillu je psané pro člověka zvenčí, tedy přesně pro toho, koho čeština vyřadí.
