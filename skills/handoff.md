@@ -101,7 +101,7 @@ Vyhrává první kritérium, které sedí:
 Prompt stojí v bloku *Kudy dál* v odrážce, která má **vždycky tohle znění** – po přerušení i u pokračování, v `/end` i v `/merge` –, a sám je na samostatném řádku pod ní:
 
 ```
-- `/clear` a pak v nové session `/next` nebo napiš následující prompt:
+- `/clear` a v nové session `/next` nebo prompt:
 
   `Naváž na přerušenou práci „/review branch – přerušeno 2026-11-24“ v sekci „Přerušený běh“ v docs/todo.md: přečti blok celý, udělej nejdřív, co podle něj musí předcházet, a pokračuj podle jeho „Jak pokračovat“ – začíná se položkou Volba objednatele po zrušení akce.`
 ```
