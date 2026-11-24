@@ -77,7 +77,7 @@ Piš nebo uprav `Prezentace.md` podle `format.md` a pravidel `~/Context/Design/s
 ## Fáze 4 – Sestavení a náhled
 
 ```bash
-zsh ~/.claude/skills/deck/preview.sh "<adresář>/Prezentace.md"
+bash ~/.claude/skills/deck/preview.sh "<adresář>/Prezentace.md"
 ```
 
 Vypíše adresář s náhledy a počet slajdů. Skončí-li chybou, oprav zdroj podle hlášky (typ slajdu, počet bloků, chybějící obrázek) a pusť znovu.

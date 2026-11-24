@@ -142,38 +142,46 @@ def set_text(sp, items, protos):
     for p in body.findall(qn("a:p")):
         body.remove(p)
     for kind, text in items:
-        p = copy.deepcopy(protos[kind])
-        run_proto = p.find(qn("a:r"))
-        for child in list(p):
-            if child.tag in (qn("a:r"), qn("a:br"), qn("a:fld")):
-                p.remove(child)
-        end = p.find(qn("a:endParaRPr"))
+        body.append(paragraph(protos[kind], text))
 
-        def add(el):
-            if end is not None:
-                end.addprevious(el)
-            else:
-                p.append(el)
 
-        for n, segment in enumerate(text.split("|")):
-            if n:
-                br = p.makeelement(qn("a:br"), {})
-                br.append(copy.deepcopy(run_proto.find(qn("a:rPr"))))
-                add(br)
-            for i, part in enumerate(nbsp(segment.strip()).split("`")):
-                if not part:
-                    continue
-                r = copy.deepcopy(run_proto)
-                r.find(qn("a:t")).text = part
-                if i % 2:
-                    rpr = r.find(qn("a:rPr"))
-                    latin = rpr.find(qn("a:latin"))
-                    if latin is None:
-                        latin = rpr.makeelement(qn("a:latin"), {})
-                        rpr.append(latin)
-                    latin.set("typeface", "Roboto Mono")
-                add(r)
-        body.append(p)
+def paragraph(proto, text):
+    """Odstavec podle vzoru s textem; `|` zalamuje řádek, `kód` jde písmem Roboto Mono."""
+    p = copy.deepcopy(proto)
+    run_proto = p.find(qn("a:r"))
+    for child in list(p):
+        if child.tag in (qn("a:r"), qn("a:br"), qn("a:fld")):
+            p.remove(child)
+    end = p.find(qn("a:endParaRPr"))
+
+    def add(el):
+        if end is not None:
+            end.addprevious(el)
+        else:
+            p.append(el)
+
+    for n, segment in enumerate(text.split("|")):
+        if n:
+            br = p.makeelement(qn("a:br"), {})
+            br.append(copy.deepcopy(run_proto.find(qn("a:rPr"))))
+            add(br)
+        for i, part in enumerate(nbsp(segment.strip()).split("`")):
+            if part:
+                add(text_run(run_proto, part, mono=i % 2))
+    return p
+
+
+def text_run(proto, text, mono):
+    r = copy.deepcopy(proto)
+    r.find(qn("a:t")).text = text
+    if mono:
+        rpr = r.find(qn("a:rPr"))
+        latin = rpr.find(qn("a:latin"))
+        if latin is None:
+            latin = rpr.makeelement(qn("a:latin"), {})
+            rpr.append(latin)
+        latin.set("typeface", "Roboto Mono")
+    return r
 
 
 # ---------- kreslení tabulky ----------
@@ -249,98 +257,145 @@ def lines(texts, kind="line"):
 
 def render(prs, samples, s, base):
     kind = s["type"]
-    if kind == "title":
-        slide, (title, _, sub) = new_slide(prs, samples["title"], [0, 1, 2])
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        set_text(sub, lines(t for _, t in s["body"]), {"line": paragraphs(sub)[0]})
-    elif kind == "section":
-        slide, (title, _) = new_slide(prs, samples["section"], [0, 1])
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        if s["body"]:
-            # podtitulek ze vzoru titulního slajdu, pod linku mezislajdu
-            sub = copy.deepcopy(samples["title"]["shapes"][2])
-            slide.shapes._spTree.append(sub)
-            slide.shapes[-1].top = Inches(SECTION_SUB_Y)
-            set_text(sub, lines(t for _, t in s["body"]), {"line": paragraphs(sub)[0]})
-        qr = next((a[3:] for a in s["args"] if a.startswith("qr=")), None)
-        if qr:
-            # světlé okraje kolem kódu, aby se dal načíst i z tmavého pozadí
-            x, y, size = QR_BOX
-            png = io.BytesIO()
-            segno.make(qr, error="m").save(png, kind="png", scale=20, border=2, dark=NAVY, light="#FFFFFF")
-            png.seek(0)
-            slide.shapes.add_picture(png, Inches(x), Inches(y), Inches(size), Inches(size))
-            if s["body"]:
-                sub = next(sh for sh in slide.shapes if sh.top == Inches(SECTION_SUB_Y))
-                sub.width = Inches(x - 0.2) - sub.left
-    elif kind == "grid":
-        slide, shapes = new_slide(prs, samples["grid"], [0, 1, 2, 3, 4, 5, 6, 7, 9, 10] + ([8] if s["banner"] else []))
-        title = shapes[4]
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        if len(s["blocks"]) != 4:
-            sys.exit(f"Slajd „{' '.join(s['title'])}“: mřížka potřebuje čtyři bloky, má {len(s['blocks'])}")
-        for box, block in zip(shapes[6:10], s["blocks"]):
-            set_text(box, [("line", block["head"])], {"line": paragraphs(box)[0]})
-        if s["banner"]:
-            set_text(shapes[10], lines(s["banner"]), {"line": paragraphs(shapes[10])[0]})
-    elif kind == "table":
-        slide, (title, _) = new_slide(prs, samples["bullets"], [0, 1])
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        table(slide, [[c.strip() for c in t.split("|")] for _, t in s["body"]])
-    elif kind == "bullets":
-        slide, (title, _, body) = new_slide(prs, samples["bullets"], [0, 1, 2])
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        set_text(body, s["body"], {"bullet": paragraphs(body)[0], "text": paragraphs(body)[0]})
-    elif kind == "cards":
-        slide, (card_light, card_dark, title, _, light, dark) = new_slide(prs, samples["cards"], [0, 1, 2, 3, 4, 5])
-        new_cards = (card_light, card_dark)
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        text_samples = samples["cards_text"]["shapes"]
-        for box, block, text_sample in zip((light, dark), s["blocks"], (text_samples[4], text_samples[5])):
-            protos = {"head": paragraphs(box)[0], "bullet": paragraphs(box)[1],
-                      "text": paragraphs(text_sample)[1]}
-            set_text(box, [("head", block["head"])] + block["items"], protos)
-        h = max(card_height(b) for b in s["blocks"])
-        for sp in new_cards:
-            set_height(sp, h)
-        for sp in (light, dark):
-            set_height(sp, h - CARD_TEXT_INSET)
-    elif kind == "numbers":
-        keep = [0, 1, 2, 3, 4, 5] + ([7, 8] if s["banner"] else [])
-        slide, shapes = new_slide(prs, samples["numbers"], keep)
-        title = shapes[0]
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        for (num, cap), block in zip(((shapes[2], shapes[3]), (shapes[4], shapes[5])), s["blocks"]):
-            set_text(num, [("line", block["head"])], {"line": paragraphs(num)[0]})
-            set_text(cap, [("line", t) for _, t in block["items"]], {"line": paragraphs(cap)[0]})
-        if s["banner"]:
-            set_text(shapes[7], lines(s["banner"]), {"line": paragraphs(shapes[7])[0]})
-    elif kind == "image":
-        slide, (title, _) = new_slide(prs, samples["bullets"], [0, 1])
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        src = next((a[4:] for a in s["args"] if a.startswith("src=")), None)
-        if not src or not (base / src).is_file():
-            sys.exit(f"Slajd „{' '.join(s['title'])}“: obrázek potřebuje argument src= s existující cestou vůči {base}, má {src!r}")
-        # obrázek se vejde do plochy celý a stojí uprostřed její šířky
-        x, y, w, h = IMAGE_BOX
-        pic = slide.shapes.add_picture(str(base / src), Inches(x), Inches(y), width=Inches(w))
-        if pic.height > Inches(h):
-            pic.width = int(pic.width * Inches(h) / pic.height)
-            pic.height = Inches(h)
-        pic.left = Inches(x) + (Inches(w) - pic.width) // 2
-        pic.line.color.rgb = rgb("#D5DCE4")
-        pic.line.width = Pt(0.75)
-    elif kind == "end":
-        slide, (title, _, links) = new_slide(prs, samples["end"], [0, 1, 2])
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        set_text(links, lines(t for _, t in s["body"]), {"line": paragraphs(links)[0]})
+    if kind in SLIDES:
+        slide = SLIDES[kind](prs, samples, s, base)
     else:
-        drawing = extension(base, kind)
-        slide, (title, _) = new_slide(prs, samples["bullets"], [0, 1])
-        set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
-        drawing.render(slide, s["args"])
+        slide = slide_extension(prs, samples, s, base, kind)
     if s["notes"]:
         slide.notes_slide.notes_text_frame.text = "\n".join(s["notes"])
+
+
+def slide_title(prs, samples, s, base):
+    slide, (title, _, sub) = new_slide(prs, samples["title"], [0, 1, 2])
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    set_text(sub, lines(t for _, t in s["body"]), {"line": paragraphs(sub)[0]})
+    return slide
+
+
+def slide_section(prs, samples, s, base):
+    slide, (title, _) = new_slide(prs, samples["section"], [0, 1])
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    if s["body"]:
+        # podtitulek ze vzoru titulního slajdu, pod linku mezislajdu
+        sub = copy.deepcopy(samples["title"]["shapes"][2])
+        slide.shapes._spTree.append(sub)
+        slide.shapes[-1].top = Inches(SECTION_SUB_Y)
+        set_text(sub, lines(t for _, t in s["body"]), {"line": paragraphs(sub)[0]})
+    qr = next((a[3:] for a in s["args"] if a.startswith("qr=")), None)
+    if qr:
+        # světlé okraje kolem kódu, aby se dal načíst i z tmavého pozadí
+        x, y, size = QR_BOX
+        png = io.BytesIO()
+        segno.make(qr, error="m").save(png, kind="png", scale=20, border=2, dark=NAVY, light="#FFFFFF")
+        png.seek(0)
+        slide.shapes.add_picture(png, Inches(x), Inches(y), Inches(size), Inches(size))
+        if s["body"]:
+            sub = next(sh for sh in slide.shapes if sh.top == Inches(SECTION_SUB_Y))
+            sub.width = Inches(x - 0.2) - sub.left
+    return slide
+
+
+def slide_grid(prs, samples, s, base):
+    slide, shapes = new_slide(prs, samples["grid"], [0, 1, 2, 3, 4, 5, 6, 7, 9, 10] + ([8] if s["banner"] else []))
+    title = shapes[4]
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    if len(s["blocks"]) != 4:
+        sys.exit(f"Slajd „{' '.join(s['title'])}“: mřížka potřebuje čtyři bloky, má {len(s['blocks'])}")
+    for box, block in zip(shapes[6:10], s["blocks"]):
+        set_text(box, [("line", block["head"])], {"line": paragraphs(box)[0]})
+    if s["banner"]:
+        set_text(shapes[10], lines(s["banner"]), {"line": paragraphs(shapes[10])[0]})
+    return slide
+
+
+def slide_table(prs, samples, s, base):
+    slide, (title, _) = new_slide(prs, samples["bullets"], [0, 1])
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    table(slide, [[c.strip() for c in t.split("|")] for _, t in s["body"]])
+    return slide
+
+
+def slide_bullets(prs, samples, s, base):
+    slide, (title, _, body) = new_slide(prs, samples["bullets"], [0, 1, 2])
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    set_text(body, s["body"], {"bullet": paragraphs(body)[0], "text": paragraphs(body)[0]})
+    return slide
+
+
+def slide_cards(prs, samples, s, base):
+    slide, (card_light, card_dark, title, _, light, dark) = new_slide(prs, samples["cards"], [0, 1, 2, 3, 4, 5])
+    new_cards = (card_light, card_dark)
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    text_samples = samples["cards_text"]["shapes"]
+    for box, block, text_sample in zip((light, dark), s["blocks"], (text_samples[4], text_samples[5])):
+        protos = {"head": paragraphs(box)[0], "bullet": paragraphs(box)[1],
+                  "text": paragraphs(text_sample)[1]}
+        set_text(box, [("head", block["head"])] + block["items"], protos)
+    h = max(card_height(b) for b in s["blocks"])
+    for sp in new_cards:
+        set_height(sp, h)
+    for sp in (light, dark):
+        set_height(sp, h - CARD_TEXT_INSET)
+    return slide
+
+
+def slide_numbers(prs, samples, s, base):
+    keep = [0, 1, 2, 3, 4, 5] + ([7, 8] if s["banner"] else [])
+    slide, shapes = new_slide(prs, samples["numbers"], keep)
+    title = shapes[0]
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    for (num, cap), block in zip(((shapes[2], shapes[3]), (shapes[4], shapes[5])), s["blocks"]):
+        set_text(num, [("line", block["head"])], {"line": paragraphs(num)[0]})
+        set_text(cap, [("line", t) for _, t in block["items"]], {"line": paragraphs(cap)[0]})
+    if s["banner"]:
+        set_text(shapes[7], lines(s["banner"]), {"line": paragraphs(shapes[7])[0]})
+    return slide
+
+
+def slide_image(prs, samples, s, base):
+    slide, (title, _) = new_slide(prs, samples["bullets"], [0, 1])
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    src = next((a[4:] for a in s["args"] if a.startswith("src=")), None)
+    if not src or not (base / src).is_file():
+        sys.exit(f"Slajd „{' '.join(s['title'])}“: obrázek potřebuje argument src= s existující cestou vůči {base}, má {src!r}")
+    # obrázek se vejde do plochy celý a stojí uprostřed její šířky
+    x, y, w, h = IMAGE_BOX
+    pic = slide.shapes.add_picture(str(base / src), Inches(x), Inches(y), width=Inches(w))
+    if pic.height > Inches(h):
+        pic.width = int(pic.width * Inches(h) / pic.height)
+        pic.height = Inches(h)
+    pic.left = Inches(x) + (Inches(w) - pic.width) // 2
+    pic.line.color.rgb = rgb("#D5DCE4")
+    pic.line.width = Pt(0.75)
+    return slide
+
+
+def slide_end(prs, samples, s, base):
+    slide, (title, _, links) = new_slide(prs, samples["end"], [0, 1, 2])
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    set_text(links, lines(t for _, t in s["body"]), {"line": paragraphs(links)[0]})
+    return slide
+
+
+def slide_extension(prs, samples, s, base, kind):
+    drawing = extension(base, kind)
+    slide, (title, _) = new_slide(prs, samples["bullets"], [0, 1])
+    set_text(title, lines(s["title"]), {"line": paragraphs(title)[0]})
+    drawing.render(slide, s["args"])
+    return slide
+
+
+SLIDES = {
+    "title": slide_title,
+    "section": slide_section,
+    "grid": slide_grid,
+    "table": slide_table,
+    "bullets": slide_bullets,
+    "cards": slide_cards,
+    "numbers": slide_numbers,
+    "image": slide_image,
+    "end": slide_end,
+}
 
 
 EXTENSIONS = {}
