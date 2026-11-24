@@ -10,6 +10,8 @@
 
 ## Potom
 
+- [ ] **`/next`: po výběru nebo navázání ověřit, že na položce nepracuje jiná session.** Uživatel o to 24. 11. 2026 požádal uprostřed navázání na přerušený běh (session `46533d08`, Context). Dnes skill u přerušené práce kontrolu vědomě vynechává (*Co skill nedělá*: kontrola by hlásila jako obsazenou právě session po `/end` → `/clear` a zdržela rychlou cestu) a dělá ji jen u opuštěných větví. Ručně se to udělalo přes `sessions.py` a hledání v transcriptech živých session; ukázalo se, že ve stejné větvi `main` běžely tři další session a jedna dělala sousední položku téže fronty. Rozhodnout: přidat po navázání levnou kontrolu, která vyloučí vlastní session, ale ohlásí živé session nad projektem a jejich téma; nebo nechat a zapsat důvod.
+
 - [ ] ◐ **`/legal`: třetí měření panelu a první ostrý běh** (skill napsaný 18. 11. 2026). Tvar panelu je rozhodnutý předběžně a měření 1 a 2 i zamítnutou variantu drží `skills/legal/decisions.md`, *Úzký panel, ne jeden široký posudek*. Zbývá:
   - **Měření 3** na další smlouvě, kterou uživatel dodá: dvojí běh, tedy jeden agent bez skillu proti `/legal`. Rozhodne, jestli se k variantě se širokým posudkem vrátit.
   - **Režim `counter` ostře neběžel.** Porovnání verzí přes `document-skills:docx` a roztřídění rozdílů jsou ověřené jen čtením.
