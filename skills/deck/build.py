@@ -176,9 +176,25 @@ def set_text(sp, items, protos):
         body.append(paragraph(protos[kind], text))
 
 
+def hang_bullet(p):
+    """Zalomený řádek odrážky lícuje s textem prvního řádku, ne podteče pod odrážku.
+
+    Vzory v šabloně (export z Google Slides) mají předsazení větší než levý okraj
+    (marL 0,25″, indent −0,375″): první řádek začne za odrážkou, další na okraji.
+    Okraj se srovná s předsazením, odrážka tak zůstane na místě a text začíná stejně.
+    """
+    ppr = p.find(qn("a:pPr"))
+    if ppr is None or ppr.find(qn("a:buChar")) is None:
+        return
+    indent = int(ppr.get("indent", "0"))
+    if indent < 0 and int(ppr.get("marL", "0")) < -indent:
+        ppr.set("marL", str(-indent))
+
+
 def paragraph(proto, text):
     """Odstavec podle vzoru s textem; `|` zalamuje řádek, `kód` jde písmem Roboto Mono."""
     p = copy.deepcopy(proto)
+    hang_bullet(p)
     run_proto = p.find(qn("a:r"))
     for child in list(p):
         if child.tag in (qn("a:r"), qn("a:br"), qn("a:fld")):
