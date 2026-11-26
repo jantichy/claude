@@ -50,6 +50,12 @@ SAMPLES = {
     "end": 24,  # titulek, linka, odkazy
 }
 
+CLAIM_SIZE = 36  # velikost tvrzení: mezi nadpisem slajdu (27) a mezislajdu (44)
+CLAIM_TITLE = (0.42, 0.6, 9.15, 2.55)  # plocha tvrzení, text sedí na její spodní hraně
+CLAIM_LINE_Y = 3.3  # linka pod tvrzením
+CLAIM_SUB = (0.42, 3.5, 9.15, 1.2)  # podtitulek pod linkou
+CLAIM_SUB_SIZE, CLAIM_SUB_COLOR = 18, "#3B404C"  # jako tělo slajdu s odrážkami
+
 SECTION_SUB_Y = 3.5  # podtitulek mezislajdu pod linkou (ta je na 3,33″)
 QR_BOX = (
     7.75,
@@ -367,6 +373,38 @@ def slide_section(prs, samples, s, base):
     return slide
 
 
+def slide_claim(prs, samples, s, base):
+    """Samostatné sdělení: světlé pozadí jako běžný slajd, tvrzení velkým písmem uprostřed.
+
+    Schválně nevypadá jako mezislajd – tmavé inverzní pozadí ohlašuje začátek nové
+    části a sdělení v něm by publiku rozhodilo orientaci ve struktuře přednášky.
+    """
+    slide, (title_el, _) = new_slide(prs, samples["bullets"], [0, 1])
+    set_text(title_el, lines(s["title"]), {"line": paragraphs(title_el)[0]})
+    title, line = slide.shapes[0], slide.shapes[1]
+    x, y, w, h = CLAIM_TITLE
+    title.left, title.top, title.width, title.height = (Inches(v) for v in (x, y, w, h))
+    title.text_frame.vertical_anchor = MSO_ANCHOR.BOTTOM
+    for p in title.text_frame.paragraphs:
+        for r in p.runs:
+            r.font.size = Pt(CLAIM_SIZE)
+    line.top = Inches(CLAIM_LINE_Y)
+    if s["body"]:
+        x, y, w, h = CLAIM_SUB
+        box = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+        write(
+            box,
+            [nbsp(part.strip()) for _, t in s["body"] for part in t.split("|")],
+            CLAIM_SUB_SIZE,
+            False,
+            CLAIM_SUB_COLOR,
+            align="START",
+            valign="TOP",
+            inset=0.1,
+        )
+    return slide
+
+
 def slide_grid(prs, samples, s, base):
     slide, shapes = new_slide(
         prs,
@@ -483,6 +521,7 @@ def slide_extension(prs, samples, s, base, kind):
 SLIDES = {
     "title": slide_title,
     "section": slide_section,
+    "claim": slide_claim,
     "grid": slide_grid,
     "table": slide_table,
     "bullets": slide_bullets,

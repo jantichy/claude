@@ -28,7 +28,8 @@ Uvnitř textu:
 | Typ | Co nese |
 |---|---|
 | `title` | `#` titulek, běžné řádky podtitulek |
-| `section` | mezislajd: `#` nadpis, běžné řádky podtitulek. Argument `qr=<adresa>` přidá vpravo dole QR kód na tu adresu |
+| `section` | mezislajd – **jen předěl, kterým začíná nová část přednášky**: `#` nadpis, běžné řádky podtitulek. Argument `qr=<adresa>` přidá vpravo dole QR kód na tu adresu |
+| `claim` | samostatné sdělení – pointa nebo tvrzení, které má zaznít samo: `#` tvrzení velkým písmem na světlém pozadí, běžné řádky podtitulek. **Na sdělení se nepoužívá `section`** – tmavý mezislajd ohlašuje začátek nové části a publikum by se ve struktuře ztratilo |
 | `bullets` | `#` nadpis, pod ním odrážky a běžné řádky |
 | `cards` | `#` nadpis a dva bloky `###` – světlá a tmavá karta; v bloku odrážky a běžné řádky. Výšku karet generátor odhadne podle delšího textu |
 | `grid` | `#` nadpis a **právě čtyři** bloky `###`, z bloku se bere jen jeho řádek; `=` pointa pod mřížkou. Jiný počet bloků sestavení zastaví |
