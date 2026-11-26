@@ -39,6 +39,11 @@ Zkomoleniny, které whisper dělá **opakovaně u kohokoliv**, kdo mluví o dan�
 | GTNka | GTMka | Google Tag Manager, hovorově se skloňuje |
 | prefererů, referéru | refererů, refereru | HTTP referer, zdroj návštěvy |
 | debug moc | debug mode | ladicí režim GA4 a GTM |
+| HREF, HREFs | Ahrefs | SEO nástroj |
+| GetSlit | gclid | identifikátor prokliku z Google Ads |
+| Kebula | Keboola | datová platforma |
+| S-click | Sklik | reklamní systém Seznamu |
+| tablu | Tableau | BI nástroj; skloňuje se česky |
 
 ## AI a cloud, čeština
 
@@ -62,6 +67,11 @@ Zkomoleniny, které whisper dělá **opakovaně u kohokoliv**, kdo mluví o dan�
 | dry ramy | dry runy | zkušební běh dotazu bez provedení, typicky v BigQuery |
 | rýtníčko | README | |
 | EI agent, PI agent | AI agent | |
+| perfil | prefill | fáze zpracování promptu u LLM |
+| robot z TXT | robots.txt | |
+| PSU Go | pay-as-you-go | platba za využití |
+| výjezdkoudu | z VS Codu | editor VS Code; skloňuje se česky |
+| Cloudbot | ClaudeBot | crawler Anthropicu. **Rozhoduje kontext:** Cloud bez „bot“ bývá i skutečný cloud |
 
 ## AI a data, angličtina
 
