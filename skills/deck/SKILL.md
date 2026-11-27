@@ -30,6 +30,7 @@ Režimy nemá. Jestli se prezentace píše nově, nebo upravuje, pozná podle to
 | Sestavení `.pptx` | `build.py` v adresáři skillu | klonuje vzorové slajdy šablony, takže okraje, písma a odrážky sedí se šablonou |
 | Náhled | `preview.sh` v adresáři skillu | sestaví prezentaci, vykreslí ji v LibreOffice s písmy šablony a složí přehled |
 | Kontrola náhledů | vlastní | posuzuje slajd proti `~/Context/Design/slides.md`, což skript nezměří |
+| Soubory design systému a startovního decku na claude.ai | `design.py` v adresáři skillu | ze zdroje `~/Context/Brand/design/` vyrobí `deck.css`, `bundle.css` a náhledy komponent k publikaci; pokus, ne součást postupu (`~/Clients/OKsystem/OKškolení/Výkonnostní kampaně/experiment.md`) |
 
 `document-skills:pptx` se nepoužije: neklonuje vzorové slajdy šablony a nezná její písma.
 
