@@ -34,6 +34,12 @@ Režimy nemá. Jestli se prezentace píše nově, nebo upravuje, pozná podle to
 
 `document-skills:pptx` se nepoužije: neklonuje vzorové slajdy šablony a nezná její písma.
 
+**Publikace výstupu `design.py` a decků na claude.ai nástrojem Artifact má tři pasti** (Honza, 28. 11. 2026: chybám předcházet, ne je hasit). Na každou nástroj odpoví chybou a nic nepublikuje, takže se volání skládá předem takhle:
+
+- **Před první publikací do artefaktu v session ho přečti celý** – `read` jen s `url`, bez `path`, `paths` a `out_dir`, které `read` s `url` odmítne. Čtení jednotlivých souborů přes `path` nebo `paths` se jako přečtení artefaktu nepočítá. Po vlastní publikaci v téže session se znovu číst nemusí. Celé čtení vrací i instrukce typu (kolem 40 kB), takže jednou na artefakt a session, hned na začátku a paralelně.
+- **Každá publikace do artefaktu z typu potřebuje `file_path` s vlastním datovým souborem** a `root` na adresář, ve kterém leží jako `project/…`. Samotné `files`, i s kopiemi ze serveru `{"artifact", "path"}`, nástroj odmítne. Mění-li se v decku jen kopie (`deck.css`, tokeny, písma), jde jako `file_path` beze změny stažený `project/deck.json` – server ho jako shodný přeskočí.
+- **K ověření otiskem stačí hlavička výsledku `read` s `path`** (sha256). Text CSS nebo HTML se ale vypíše celý do kontextu, JSON ne; ověřuj proto jen soubory, na kterých záleží.
+
 **Skripty jsou implementační detail**, smí se vyměnit kdykoliv. Závazné je: formát zdroje v `format.md`, šablona v `~/Context/Brand/template.pptx`, výstup `<adresář zdroje>.pptx` vedle zdroje a to, že prezentace se dá kdykoliv znovu sestavit ze zdroje.
 
 ## Hranice
