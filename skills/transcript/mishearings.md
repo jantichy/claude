@@ -73,6 +73,18 @@ Zkomoleniny, které whisper dělá **opakovaně u kohokoliv**, kdo mluví o dan�
 | výjezdkoudu | z VS Codu | editor VS Code; skloňuje se česky |
 | Cloudbot | ClaudeBot | crawler Anthropicu. **Rozhoduje kontext:** Cloud bez „bot“ bývá i skutečný cloud |
 
+## Astronomie a dalekohledy, čeština
+
+| Whisper píše | Správně | Poznámka |
+|---|---|---|
+| ZVOčko | ZWO | výrobce kamer a montáží; skloňuje se česky („ZWOčko“) |
+| Lusmanny | Losmandy | montáže a standard rybiny |
+| EKV6 | EQ6 | řada montáží Sky-Watcheru; obdobně EQ3, EQ5 |
+| MIDE, míde | Meade | výrobce dalekohledů |
+| hypersnávská | HyperStar | kamera v primárním ohnisku Schmidt-Cassegrainu |
+| váderácká | baaderovská | fólie a filtry Baader |
+| hygienci | Huygensy | konstrukční typ okuláru |
+
 ## AI a data, angličtina
 
 | Whisper píše | Správně | Poznámka |
