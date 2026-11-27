@@ -50,7 +50,7 @@ Platí zejména pro **technické názvy** (proměnné, API, event names, ID, kl�
 
 ### Soubor, o který si řekneš, chodí přes `~/Downloads`
 
-Potřebuješ-li od uživatele soubor (export, výsledek dotazu, screenshot), řekni jen, ať ho uloží do `~/Downloads` pod výchozím jménem – žádné cílové místo ani jméno. Pak ho tam sám najdi (nejnovější soubor, který sedí typem, časem a obsahem), přečti, přesuň (`mv`) na místo v projektu a pojmenuj podle jeho konvence; sedí-li víc kandidátů, zeptej se. Pointa: uživatel u každého exportu neopisuje cestu a jméno, a co se přesune, nezůstane v Downloads pro `/depot`.
+Potřebuješ-li od uživatele soubor (export, výsledek dotazu, screenshot), řekni jen, ať ho uloží do `~/Downloads` pod výchozím jménem – žádné cílové místo ani jméno, **ani když je znáš z konvence projektu** a ani v návodu, kde ukládání je jen jeden z kroků (export kontejneru po publikaci, výsledek dotazu). Pak ho tam sám najdi (nejnovější soubor, který sedí typem, časem a obsahem), přečti, přesuň (`mv`) na místo v projektu a pojmenuj podle jeho konvence; sedí-li víc kandidátů, zeptej se. Pointa: uživatel u každého exportu neopisuje cestu a jméno, a co se přesune, nezůstane v Downloads pro `/depot`.
 
 ### Zapiš i to, co vědomě nemáš
 
