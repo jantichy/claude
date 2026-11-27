@@ -6,7 +6,9 @@ Zdroj (výchozí ~/Context/Brand/design/):
   layout.css         rozvržení slajdů jt-* (část 3 deck.css i bundle.css)
   components.json    podtitulek náhledu každé komponenty
   components/<Typ>/README.md, components/Cover/preview.html
+  fonts/             soubory písem, které tokens.json jmenuje v type.fonts
   starter/deck.json, starter/slides/<id>.html   startovní deck, vzorový slajd na typ
+                     (deck.json bez faces – ty skript vyrobí z type.fonts)
 
 Výstup do <out>/system/ a <out>/starter/ se stromem project/… přesně tak, jak se
 publikuje (Artifact s `files` a `root` na tyhle adresáře). Sám nic nepublikuje.
@@ -72,13 +74,30 @@ def deck_css(tokens, layout):
     )
 
 
-def bundle_css(faces, layout):
-    imports = "".join(
-        f'@import url("{f["href"]}");\n' for f in faces.values() if "href" in f
-    )
+def faces(tokens):
+    """Písma decku: na rodinu jeden soubor, nainstalovaný z design systému pod project/ds/."""
+    return {
+        f["family"].lower().replace(" ", "-"): {
+            "family": f["family"],
+            "src": f"project/ds/{NAMESPACE}/{f['file']}",
+        }
+        for f in tokens["type"]["fonts"]
+    }
+
+
+def deck_json(deck, tokens):
+    """Index startovního decku: zdroj bez písem, `faces` se doplní z tokens.json."""
+    result = {}
+    for key, value in deck.items():
+        if key == "designSystems":
+            result["faces"] = faces(tokens)
+        result[key] = value
+    return json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+
+
+def bundle_css(layout):
     return (
-        imports + "\n"
-        "/* Jan Tichý – slajdy. Barvy, mezery a typové styly jdou z tokens.json (tokens.css); tady je\n"
+        "/* Jan Tichý – slajdy. Písma načítá design systém z tokens.json (type.fonts). Barvy, mezery a typové styly jdou z tokens.json (tokens.css); tady je\n"
         "   jen rozvržení. Vygenerované skriptem design.py skillu /deck ze zdroje\n"
         "   ~/Context/Brand/design/layout.css, stejně jako část 3 deck.css startovního decku\n"
         f"   ({STARTER_URL}). Neupravuj tady, ale ve zdroji. */\n\n"
@@ -137,6 +156,18 @@ def check(src, deck, subtitles, slides):
     return errors
 
 
+def check_fonts(src, tokens, deck):
+    """Každé písmo z tokens.json má soubor a zdrojový deck.json písma neopisuje."""
+    errors = [
+        f"chybí {f['file']} z tokens.json"
+        for f in tokens["type"]["fonts"]
+        if not (src / f["file"]).is_file()
+    ]
+    if "faces" in deck:
+        errors.append("starter/deck.json nese faces – ty skript vyrábí z tokens.json")
+    return errors
+
+
 def write(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
@@ -153,7 +184,7 @@ def build(src, out):
         p.stem: p.read_text(encoding="utf-8")
         for p in (src / "starter/slides").glob("*.html")
     }
-    errors = check(src, deck, subtitles, slides)
+    errors = check(src, deck, subtitles, slides) + check_fonts(src, tokens, deck)
     if errors:
         sys.exit("Zdroj nesedí:\n- " + "\n- ".join(errors))
 
@@ -163,7 +194,14 @@ def build(src, out):
 
     write(system / "tokens.json", tokens_text)
     write(system / "README.md", (src / "brandbook.md").read_text(encoding="utf-8"))
-    write(system / "components/bundle.css", bundle_css(deck["faces"], layout))
+    write(system / "components/bundle.css", bundle_css(layout))
+    for font in tokens["type"]["fonts"]:
+        for target in (
+            system / font["file"],
+            starter / "ds" / NAMESPACE / font["file"],
+        ):
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(src / font["file"], target)
     write(
         system / "components/Cover/preview.html",
         (src / "components/Cover/preview.html").read_text(encoding="utf-8"),
@@ -182,7 +220,7 @@ def build(src, out):
         )
 
     write(starter / "deck.css", deck_css(tokens, layout))
-    write(starter / "deck.json", deck_text)
+    write(starter / "deck.json", deck_json(deck, tokens))
     write(starter / "ds" / NAMESPACE / "tokens.json", tokens_text)
     for slide_id, html in slides.items():
         write(starter / "slides" / f"{slide_id}.html", html)
