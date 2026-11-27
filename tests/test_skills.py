@@ -3798,3 +3798,92 @@ class HandoffChecksActuallyCatch(unittest.TestCase):
             "prochází frontu a nenese pravidlo o jejím přerušení",
             handoff_defects(text, name, True),
         )
+
+
+#: Odrážka v uživatelském `CLAUDE.md`, která jako jediná vyjmenovává repozitáře.
+ROOTS_LINE = "- **Všechny repozitáře:**"
+#: Kořen ve tvaru, v jakém ho píše výčet: v apostrofech, bez podsložky.
+BARE_ROOT = re.compile(r"`(~/[^`/\s]+)`")
+#: Smyčka v `client.md`: přímé repozitáře přes `echo`, kontejnery přes `find`.
+LOOP_ECHO = re.compile(r"echo (~/\S+?);")
+LOOP_FIND = re.compile(r"find ((?:~/\S+ )+)-mindepth")
+
+
+def repository_roots(claude_md: str):
+    """Přímé repozitáře a kontejnery repozitářů z odrážky *Všechny repozitáře*."""
+    line = next(l for l in claude_md.splitlines() if l.startswith(ROOTS_LINE))
+    direct, _, containers = line.partition("každý git repozitář v")
+    return set(BARE_ROOT.findall(direct)), set(BARE_ROOT.findall(containers))
+
+
+def loop_roots(client_md: str):
+    """Přímé repozitáře a kontejnery, které prochází smyčka v `client.md`."""
+    found = LOOP_FIND.search(client_md)
+    return set(LOOP_ECHO.findall(client_md)), set(
+        found.group(1).split()
+    ) if found else set()
+
+
+def copied_root_lists(texts: dict, roots: set) -> list:
+    """Řádky, které opisují výčet repozitářů: oba kontejnery a k nim další kořen.
+
+    Samotná zmínka o `~/Clients` nebo `~/Projects` výčtem není; výčtem je řádek,
+    který je jmenuje spolu s dalším kořenem z odrážky *Všechny repozitáře*.
+    """
+    direct, containers = roots
+    defects = []
+    for name, text in texts.items():
+        for number, line in enumerate(text.splitlines(), 1):
+            named = set(BARE_ROOT.findall(line))
+            if containers <= named and named & direct:
+                defects.append(f"{name}:{number}")
+    return defects
+
+
+def runtime_texts() -> dict:
+    """Markdown skillů a standardů, který se čte za běhu – bez `decisions.md`."""
+    paths = [*(ROOT / "skills").rglob("*.md"), *(ROOT / "standards").glob("*.md")]
+    return {
+        str(p.relative_to(ROOT)): p.read_text(encoding="utf-8")
+        for p in paths
+        if p.name not in ("decisions.md", "README.md")
+    }
+
+
+class RepositoryRoots(unittest.TestCase):
+    """Výčet repozitářů stojí jen v `CLAUDE.md`; skilly na něj odkazují."""
+
+    def roots(self):
+        return repository_roots((ROOT / "CLAUDE.md").read_text(encoding="utf-8"))
+
+    def test_line_names_roots(self):
+        direct, containers = self.roots()
+        self.assertIn("~/.claude", direct)
+        self.assertTrue(containers, "odrážka nejmenuje kontejnery repozitářů")
+
+    def test_client_loop_matches_line(self):
+        client = (ROOT / "skills/project/client.md").read_text(encoding="utf-8")
+        self.assertEqual(loop_roots(client), self.roots())
+
+    def test_no_copied_list(self):
+        self.assertEqual(copied_root_lists(runtime_texts(), self.roots()), [])
+
+
+class RepositoryRootsActuallyCatch(unittest.TestCase):
+    ROOTS = ({"~/.claude", "~/Context", "~/Speaking"}, {"~/Projects", "~/Clients"})
+
+    def test_copied_list_is_reported(self):
+        text = "Zapisuje se do `~/.claude`, `~/Speaking` a projektů v `~/Projects` a `~/Clients`."
+        self.assertEqual(copied_root_lists({"x.md": text}, self.ROOTS), ["x.md:1"])
+
+    def test_lone_container_is_not_a_list(self):
+        text = "Pod `~/Clients` tenhle odstavec neplatí; osobní projekt patří do `~/Projects`."
+        self.assertEqual(copied_root_lists({"x.md": text}, self.ROOTS), [])
+
+    def test_loop_missing_root_differs(self):
+        loop = "{ echo ~/Context; echo ~/.claude; find ~/Projects ~/Clients -mindepth 1"
+        self.assertNotEqual(loop_roots(loop), self.ROOTS)
+
+    def test_loop_with_all_roots_matches(self):
+        loop = "{ echo ~/Context; echo ~/.claude; echo ~/Speaking; find ~/Projects ~/Clients -mindepth 1"
+        self.assertEqual(loop_roots(loop), self.ROOTS)
