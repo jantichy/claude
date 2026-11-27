@@ -167,7 +167,7 @@ Soubory a adresáře pojmenuj **jedním sémantickým slovem**, anglicky; víc s
 
 ### Jeden termín pro jednu věc
 
-Jeden pojem má **jedno jméno** v kódu, dokumentaci, UI i řeči. Dvě jména čtenář bere jako dvě věci a grep najde jen polovinu výskytů; jedno jméno pro dvě věci je táž vada z druhé strany. Ustálený termín se mění jen s důvodem a všude naráz (`/replace`); termíny napříč projekty drží `~/.claude/standards/ptydepe.md`.
+Jeden pojem má **jedno jméno** v kódu, dokumentaci, UI i řeči. Dvě jména čtenář bere jako dvě věci a grep najde jen polovinu výskytů; jedno jméno pro dvě věci je táž vada z druhé strany. Ustálený termín se mění jen s důvodem a všude naráz (`/replace`); termíny napříč projekty drží `~/.claude/standards/ptydepe.md`. **Počet odkazů na staré jméno není argument proti přiléhavějšímu** – přepis se propaguje `/replace` a jeho cena roste s každým dalším odkazem, takže odkládání špatné jméno jen zakonzervuje.
 
 ### Generic-base + delta
 
