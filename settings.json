@@ -469,6 +469,9 @@
     }
   },
   "language": "Czech",
+  "sandbox": {
+    "enabled": false
+  },
   "effortLevel": "medium",
   "modelSettings": {
     "claude-opus-5": {
@@ -493,8 +496,5 @@
   "terminalProgressBarEnabled": false,
   "remoteControlAtStartup": false,
   "inputNeededNotifEnabled": false,
-  "agentPushNotifEnabled": false,
-  "sandbox": {
-    "enabled": false
-  }
+  "agentPushNotifEnabled": false
 }
