@@ -275,6 +275,7 @@ Nástroj do počítače instaluj v pořadí **homebrew → npm → uv → pip**;
 ### Commituj jmenované cesty, ne `-A`
 
 - **Do commitu vyjmenuj cesty**, kterých se tvoje práce dotkla; před commitem se podívej na `git status` a cizí změny nech být. `git add -A`, `git add .`, `git add <directory>` a `git commit -a` seberou i práci souběžné session – a rozejde se zdůvodnění: commit popisuje diff, který v něm není, a pushnutá historie se už opravit nedá.
+- **Jmenuj cesty i v samotném commitu, ne jen v `git add`:** `git commit -- <cesty>`. Holý `git commit` vezme všechno připravené ke commitu, i soubory, které tam připravila souběžná session, a vyjmenované `git add` tomu nezabrání. Výjimkou je commit vlastních úseků přes `git apply --cached` (odrážka níž), kde by `git commit -- <cesty>` vzal celý soubor z pracovního stromu – tam se před commitem ověří, že `git diff --cached --name-only` vypíše jen tvoje cesty. Pointa: cizí soubor pod tvou zprávou se v pushnuté historii už neopraví.
 - **Píše-li do téhož souboru souběžně jiná session, commituj jen vlastní úseky změn:** patch jen s nimi, postavený proti `HEAD`, a `git apply --cached`; cizí úseky zůstanou v pracovním stromu. Jmenovaná cesta by jinak commitla i cizí rozdělanou práci.
 - **Nepoužívej git aliasy**, piš rozbalený příkaz. Aliasy z `~/.gitconfig` skrývají `add -A` i `--force` a textový deny seznam je nevidí (hook `~/.claude/hooks/git-guard.py` hlídá jen nevratné příkazy).
 - **Zprávu commitu předávej heredocem a nic za něj neřetěz** – `&&` za heredocem umí vložit kus dalšího příkazu do zprávy.

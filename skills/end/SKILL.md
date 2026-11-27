@@ -273,12 +273,12 @@ Pak se zeptej **přes tool `AskUserQuestion`** – jedno volání na položku, `
 **Pak jedním příkazem ověř, commitni a pushni:**
 
 ```sh
-python3 ~/.claude/skills/end/scripts/finish.py <scratchpad> && <krok kontraktu, je-li> && git add <jmenované cesty> && git commit -q -F <scratchpad>/end-commit.txt && git push -q && git status --porcelain && git log --oneline -1
+python3 ~/.claude/skills/end/scripts/finish.py <scratchpad> && <krok kontraktu, je-li> && git add <jmenované cesty> && git commit -q -F <scratchpad>/end-commit.txt -- <jmenované cesty> && git push -q && git status --porcelain && git log --oneline -1
 ```
 
 - **Kontrola `finish.py`** – `0` čisto, `1` nálezy (prompt bez stavu, mrtvý odkaz, datum mimo pořadí), `2` chyba volání. Nálezy oprav a pusť příkaz znovu; pořadí opravuj **přesunem celého bloku záznamu**, ne přepsáním data.
 - **Krok kontraktu** – ten krok *Kontraktu příkazů* projektového `CLAUDE.md`, který prověřuje soubory, do kterých se zapsalo, typicky `test` u sady hlídající tvar dokumentace. Hlídají-li testy jen kód, nepouští se nic. **Selže-li na tom, co jsi zapsal**, oprav to; **selže-li na něčem, do čeho jsi nesahal**, není to nález úklidu – vyjmi krok z příkazu a uveď to v závěru.
-- **Commituj jmenované cesty**, do kterých se v session zapsalo – ne `git add -A` ani adresář. **Rozdělaná práce session se commituje i nedodělaná**, zvlášť a s tím ve zprávě – po zápisu přerušení ji nikdo jiný necommitne. Soubory z `NECOMMITNUTO`, do kterých jsi nezapsal, nech být.
+- **Commituj jmenované cesty**, do kterých se v session zapsalo – ne `git add -A` ani adresář, a zopakuj je i za `git commit --`, jinak commit sebere i to, co ke commitu připravila souběžná session. **Rozdělaná práce session se commituje i nedodělaná**, zvlášť a s tím ve zprávě – po zápisu přerušení ji nikdo jiný necommitne. Soubory z `NECOMMITNUTO`, do kterých jsi nezapsal, nech být.
 - **Pokračuje-li uživatel v práci nad týmž repozitářem souběžně**, zeptej se ho, čeho se dotkl, a ty cesty z commitu vyjmi.
 - **`git status` musí vyjít čistý** – kromě cizí rozdělané práce, kterou jsi vyňal. Co tam být nemá, patří do `.gitignore`.
 - *Worktree layout:* pracuj ve worktree větve, ne v kořeni kontejneru; navíc zkontroluj `git -C <container>/main status` – rozpracované v `main/` ohlas.
