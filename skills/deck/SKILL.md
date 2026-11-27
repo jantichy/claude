@@ -31,10 +31,11 @@ Režimy nemá. Jestli se prezentace píše nově, nebo upravuje, pozná podle to
 | Náhled | `preview.sh` v adresáři skillu | sestaví prezentaci, vykreslí ji v LibreOffice s písmy šablony a složí přehled |
 | Kontrola náhledů | vlastní | posuzuje slajd proti `~/Context/Design/slides.md`, což skript nezměří |
 | Soubory design systému a startovního decku na claude.ai | `design.py` v adresáři skillu | ze zdroje `~/Context/Brand/design/` vyrobí `deck.css`, `bundle.css` a náhledy komponent k publikaci; pokus, ne součást postupu (`~/Clients/OKsystem/OKškolení/Výkonnostní kampaně/experiment.md`) |
+| Převod obsahu na HTML slajdy decku na claude.ai | `slides.py` v adresáři skillu | funkce slajdů podle typu, grafů a nezlomitelných mezer se třídami `jt-*`, které generátor decku importuje – změna stavby typu se tak dělá jednou pro všechny decky; pokus, ne součást postupu (týž `experiment.md`) |
 
 `document-skills:pptx` se nepoužije: neklonuje vzorové slajdy šablony a nezná její písma.
 
-**Publikace výstupu `design.py` a decků na claude.ai nástrojem Artifact má tři pasti** (Honza, 28. 11. 2026: chybám předcházet, ne je hasit). Na každou nástroj odpoví chybou a nic nepublikuje, takže se volání skládá předem takhle:
+**Publikace výstupu `design.py` a decků na claude.ai nástrojem Artifact má tři pasti**. Na každou nástroj odpoví chybou a nic nepublikuje, takže se volání skládá předem takhle:
 
 - **Před první publikací do artefaktu v session ho přečti celý** – `read` jen s `url`, bez `path`, `paths` a `out_dir`, které `read` s `url` odmítne. Čtení jednotlivých souborů přes `path` nebo `paths` se jako přečtení artefaktu nepočítá. Po vlastní publikaci v téže session se znovu číst nemusí. Celé čtení vrací i instrukce typu (kolem 40 kB), takže jednou na artefakt a session, hned na začátku a paralelně.
 - **Každá publikace do artefaktu z typu potřebuje `file_path` s vlastním datovým souborem** a `root` na adresář, ve kterém leží jako `project/…`. Samotné `files`, i s kopiemi ze serveru `{"artifact", "path"}`, nástroj odmítne. Mění-li se v decku jen kopie (`deck.css`, tokeny, písma), jde jako `file_path` beze změny stažený `project/deck.json` – server ho jako shodný přeskočí.
