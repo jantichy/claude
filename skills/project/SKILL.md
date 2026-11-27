@@ -354,7 +354,7 @@ Do `CLAUDE.md` z něj vzejde sekce `## Typ projektu` s krátkým popisem. **Krok
 
 Liší se tedy **co se vybere**, ne jestli se krok udělá. Rozhoduj podle `~/Context/Coding/quality.md`, *Vrstvy kontroly a co do které patří*: u vývojářského projektu bývá celý kontrakt a CI, u znalostního typicky jen `test` a `lint` nad vlastní strukturou. **Nemá-li projekt opravdu co spustit ani čím, řekni to i s tím, co tím odpadá** – to je legitimní výsledek, ale musí být výsledkem rozhodnutí, ne přeskočení.
 
-**Kam patří soubory s testy**, říká `~/Context/Coding/quality.md`, *Vrstvy kontroly a co do které patří*; řídí se runnerem projektu, ne preferencí.
+**Kam patří soubory s testy**, říká `~/Context/Coding/quality.md`, *Vrstvy kontroly a co do které patří*: u vývojářského projektu runner, u obsahového a operativního skrytý `.tests/`. **Zeptej se na to u každého projektu** (AskUserQuestion) s doporučením podle toho, co testy zkoušejí – kód, nebo tvar obsahu; ve smíšeném projektu se strojově rozhodnout nedá. V režimu `update` se neptej znovu, volba je vidět v příkazu `test`.
 
 **Návrh napiš sám, uživatel ho jen potvrdí.** Přečti `package.json` (`scripts`), `composer.json`, `Makefile` nebo obdobu a vyplň, co projekt opravdu má. **Nevymýšlej příkazy, které v projektu nejsou** – řádek, který nikam nevede, je horší než chybějící řádek.
 
