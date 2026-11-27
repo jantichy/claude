@@ -84,7 +84,9 @@ Vyhrává první kritérium, které sedí:
 |---|---|
 | **Kontext je nad prahem** | viz *Práh kontextu* níž |
 | **Je to posudek toho, co tahle session právě vyrobila** | session, která návrh obhajovala, je na něj zaujatá a nález odmítne snáz (`~/.claude/standards/rules.md`, *Dlouhá session je dražší než dvě krátké*). Tenhle důvod platí vždy, nezávisle na běhu – `/oponent` nad dokumentem, který krok osy právě napsal, nebo `/review` za `/implement` –, takže ho skill píše do své odrážky rovnou celým řetězem |
-| **Krok nedědí nic z rozmyšleného tady** | soubory si nová session načte znovu a levně; platí se jen kontext rozpravy, a ten ten krok nepotřebuje |
+| **Krok potřebuje čerstvý start** | ověří se až v nové session, protože instrukce, registr agentů nebo nastavení se načítají jen při startu – `/context` po `/slim` |
+
+**Že krok nestaví na ničem, co se tu rozmyslelo, důvod není.** Pod prahem se pouští tady: `/clear` a nová session uživatele zdrží a nic nezachrání, kontext na ně ještě nedošel.
 
 **Řekni, kde ta práce leží.** `/clear` vyprázdní konverzaci v běžící session, ale **neukončí ji** – pracovní adresář zůstane ten samý, takže po něm nikam přecházet netřeba a odrážka to nemá komplikovat. Co odrážka **má** nést, je jméno adresáře, kde práce leží, stojí-li projekt ve worktree layoutu (`~/.claude/standards/worktree.md`): jeden pracovní adresář na větev znamená, že v jiném okně je session jinde, a `cd` do správného worktree je pak jediná věc, kterou nová session nemá odkud zjistit. **Po `/merge` je to `<container>/main`**, protože merge pracovní adresář větve smaže a práce nad sloučeným stavem leží v hlavní větvi.
 
@@ -92,7 +94,7 @@ Vyhrává první kritérium, které sedí:
 - `/end`, pak `/clear`, a `/consistency` až v nové session – zůstáváš v `<cesta k worktree>`, clear adresář nemění
 ```
 
-**Neprodlužuj to, když krok patří sem.** Řetěz `/end → /clear → nová session` u kroku, který má proběhnout hned, je zbytečná režie: start session stojí načtení `CLAUDE.md` a všech jeho importů. Kontrolní krok nad malou změnou v čerstvé session se pouští tady.
+**Neprodlužuj to, když krok patří sem.** Řetěz `/end → /clear → nová session` u kroku, kterému nebrání žádný důvod z tabulky, je zbytečná režie: start session stojí načtení `CLAUDE.md` a všech jeho importů a uživatele zdrží. Odrážka pak je jen jméno skillu s argumentem – `/learn <přepis>`, ne „nejlépe v nové session“. Kontrolní krok nad malou změnou v čerstvé session se pouští tady.
 
 ------
 
@@ -112,6 +114,7 @@ Vypisuj to jako **Markdown, ne jako blok kódu**, a prompt nikdy jako citace (`>
 
 **Šablona stojí doslova i v `/end` a `/merge`**, u jejich bloku *Kudy dál*: závěr se píše podle toho, co má skill před očima, a odkaz sem si při psaní závěru nikdo neotevřel. Shodu všech tří kopií hlídá `tests/test_skills.py`, takže se mění jen naráz. Uživatel si prompt před `/clear` zkopíruje a po něm vloží místo `/next`, a ušetří si tak nabídku. Vypisuje ho uzavírací skill – `/end`, respektive `/merge` –, protože jen on stojí těsně před `/clear`.
 
+- **Odrážka patří jen do `/end` a `/merge`.** Nechybí v ní uzavírací skill, protože ten už v tu chvíli doběhl. Jiný skill, jehož další krok do téhle session nepatří (*Řetěz, který nepatří do téhle session* výš), ji nepřebírá. Píše řetěz `` `/end`, pak `/clear`, a `/X` až v nové session `` a prompt nechá na `/end`, který ho vypíše sám.
 - **Znění odrážky se nemění.** Žádné „vlož tenhle prompt“, „`/clear`: …“ ani jiné obměny – uživatel má odrážku poznat na první pohled, a volné znění se pokaždé poskládá jinak a jindy nedává smysl. Nic dalšího za dvojtečku ani pod prompt nepatří; co by odrážka jinak nesla (kde práce leží), nese sám prompt.
 - **Prompt stojí na vlastním řádku jako jeden kód v řádku** – celý mezi jedním párem zpětných apostrofů, odsazený o dvě mezery, aby byl druhým odstavcem téže odrážky. Terminál ho tak vykreslí celý jednou barvou a odliší od textu kolem. **Jiný tvar není:** ne uprostřed věty ani jen v uvozovkách, kde splývá s odrážkou; **ne jako citace** (`>`), kterou terminál vykreslí se svislou čarou a kurzívou, a ta se zkopíruje s promptem; ne jako blok kódu, který terminál vykreslí jinak než kód v řádku.
 - **Uvnitř promptu nejsou zpětné apostrofy – ani u cest, sekcí a příkazů, které by jinde dostaly.** Ukončily by kód v řádku uprostřed a rozpadl by se na kusy různé barvy; právě tahle chyba svádí k únikové citaci. Cesty, příkazy a jména souborů se v promptu píšou holé (docs/todo.md, git status), nadpisy sekcí a jména položek v českých uvozovkách („Celý repozitář“) – bez `##`.

@@ -98,7 +98,7 @@ Vložený obsah se čte znovu v každém dalším volání – čtení kontextu 
 
 ### Dlouhá session je dražší než dvě krátké
 
-Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu délky session ohlásí hook `handoff.py`; na jeho hlášku jednou za práh nabídni** `/end` a novou session – s tím, co by se zapsalo a kde by se navázalo; rozhodne uživatel. Prahy drží `~/.claude/skills/handoff.md`, *Práh kontextu*. Do téže session patří práce, která staví na tom, co se v ní promyslelo; práce, která jen sahá na tytéž soubory, do nové. Posudek vlastní práce patří do nové session – ta, která návrh obhajovala, je zaujatá. Kvůli pár voláním gitu novou session nezakládej.
+Náklad session roste s její délkou zhruba kvadraticky. **Překročení prahu délky session ohlásí hook `handoff.py`; na jeho hlášku jednou za práh nabídni** `/end` a novou session – s tím, co by se zapsalo a kde by se navázalo; rozhodne uživatel. Prahy drží `~/.claude/skills/handoff.md`, *Práh kontextu*. Pod prahem patří další práce do téže session, i když na ničem rozmyšleném nestaví – `/clear` a novou session nenabízej bez nezbytného důvodu (`~/.claude/skills/handoff.md`, *Řetěz, který nepatří do téhle session*). Posudek vlastní práce patří do nové session – ta, která návrh obhajovala, je zaujatá. Kvůli pár voláním gitu novou session nezakládej.
 
 ### Mechanickou práci deleguj
 
