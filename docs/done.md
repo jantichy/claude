@@ -316,6 +316,7 @@ Záznamy běhů `/review`, `/oponent`, `/consistency` a `/end` nad tímhle repoz
 - **2026-11-24** · `/end` · `1eac9bc` · session `3c84be35-1743-4ab7-8ae7-dc0cec0ba332` · prompty 7/7 · 0 témat · mimo rozsah: žádné · meze: žádné
 - **2026-11-24** · `/end` · `60b5c78` · session `3c84be35-1743-4ab7-8ae7-dc0cec0ba332` · prompty 13/13 · 0 témat · mimo rozsah: žádné · meze: žádné
 - **2026-11-24** · `/end` · `bfcb8f9` · session `3c84be35-1743-4ab7-8ae7-dc0cec0ba332` · prompty 16/16 · 0 témat · mimo rozsah: žádné · meze: 2 snímky obrazovky přečtené jen jako obraz
+- **2026-11-27** · `/end` · `2fd4902` · session `56d5cbea-dd56-4cb4-bdbc-27d51e355d68` · prompty 4/4 · 0 témat · mimo rozsah: žádné · meze: 1 snímek obrazovky přečtený jen jako obraz
 
 ## Odvedená práce
 
