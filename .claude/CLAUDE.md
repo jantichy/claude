@@ -73,7 +73,7 @@ Kontrakt příkazů (`~/Context/Coding/quality.md`). Průběžná kontrola ho ta
 
 **Pomlčky jsou rozhodnutí, ne díra.** `dev` mezi nimi stojí schválně: `/attack` se tu nikdy nepouští (viz *Výjimky z obecných pravidel* výš), takže není co zvedat – a chybějící klíč se od vědomé pomlčky nepozná. Repozitář nemá manifest závislostí, nic se z něj nebuildí ani nenasazuje a není tu aplikace, kterou by šlo projít; `coverage` a `mutation` nad sadou, která z devadesáti procent testuje Markdown, měří délku textu, ne sílu testů. Bez pomlčky by je `/review` i CI hlásily jako nezkontrolované kroky – tedy jako trvalý šum místo informace (`~/Context/Coding/quality.md`, *Kontrakt příkazů*).
 
-**Co která vrstva hlídá, proč jsou prahy tam, kde jsou, a proč se nesnižují, drží [`tests/README.md`](../tests/README.md).** Sáhni tam, než změníš některý příkaz výš nebo než začneš snižovat práh, který překáží; při běžné práci ho nepotřebuješ. Změna příkazu v kontraktu si navíc vyžádá nový souhlas průběžné kontroly z terminálu, takže práh nejde snížit tiše.
+**Co která vrstva hlídá, proč jsou prahy tam, kde jsou, a proč se nesnižují, drží [`tests/README.md`](../tests/README.md).** Sáhni tam, než změníš některý příkaz výš nebo než začneš snižovat práh, který překáží; při běžné práci ho nepotřebuješ.
 
 ## Review
 
