@@ -275,6 +275,7 @@ Nástroj do počítače instaluj v pořadí **homebrew → npm → uv → pip**;
 ### Commituj jmenované cesty, ne `-A`
 
 - **Do commitu vyjmenuj cesty**, kterých se tvoje práce dotkla; před commitem se podívej na `git status` a cizí změny nech být. `git add -A`, `git add .`, `git add <directory>` a `git commit -a` seberou i práci souběžné session – a rozejde se zdůvodnění: commit popisuje diff, který v něm není, a pushnutá historie se už opravit nedá.
+- **Píše-li do téhož souboru souběžně jiná session, commituj jen vlastní úseky změn:** patch jen s nimi, postavený proti `HEAD`, a `git apply --cached`; cizí úseky zůstanou v pracovním stromu. Jmenovaná cesta by jinak commitla i cizí rozdělanou práci.
 - **Nepoužívej git aliasy**, piš rozbalený příkaz. Aliasy z `~/.gitconfig` skrývají `add -A` i `--force` a textový deny seznam je nevidí (hook `~/.claude/hooks/git-guard.py` hlídá jen nevratné příkazy).
 - **Zprávu commitu předávej heredocem a nic za něj neřetěz** – `&&` za heredocem umí vložit kus dalšího příkazu do zprávy.
 
